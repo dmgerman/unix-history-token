@@ -5023,6 +5023,10 @@ case|case
 literal|0x83
 case|:
 comment|/* CS4236 */
+case|case
+literal|0x03
+case|:
+comment|/* CS4236 on Intel PR440FX motherboard */
 name|name
 operator|=
 literal|"CS4236"
@@ -5530,6 +5534,17 @@ if|if
 condition|(
 name|vend_id
 operator|==
+literal|0x360b630e
+condition|)
+name|s
+operator|=
+literal|"CS4236"
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|vend_id
+operator|==
 literal|0x3242630e
 condition|)
 name|s
@@ -5723,6 +5738,32 @@ name|tmp_d
 operator|=
 name|mss_op_desc
 expr_stmt|;
+switch|switch
+condition|(
+name|vend_id
+condition|)
+block|{
+case|case
+literal|0x3742630e
+case|:
+comment|/* CS4237 */
+case|case
+literal|0x3642630e
+case|:
+comment|/* CS4236 */
+case|case
+literal|0x360b630e
+case|:
+comment|/* CS4236 on Intel PR440FX motherboard */
+name|tmp_d
+operator|.
+name|bd_id
+operator|=
+name|MD_CS4236
+expr_stmt|;
+comment|/* to short-circuit the detect routine */
+break|break;
+default|default:
 name|tmp_d
 operator|.
 name|bd_id
@@ -5730,6 +5771,8 @@ operator|=
 name|MD_CS4232
 expr_stmt|;
 comment|/* to short-circuit the detect routine */
+break|break;
+block|}
 name|tmp_d
 operator|.
 name|alt_base
@@ -5815,6 +5858,12 @@ index|[
 literal|1
 index|]
 operator|)
+expr_stmt|;
+name|dev
+operator|->
+name|id_alive
+operator|=
+literal|1
 expr_stmt|;
 name|pcmattach
 argument_list|(
