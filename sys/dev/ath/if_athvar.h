@@ -83,6 +83,44 @@ begin_comment
 comment|/* number of descriptors per buffer */
 end_comment
 
+begin_struct
+struct|struct
+name|ath_recv_hist
+block|{
+name|int
+name|arh_ticks
+decl_stmt|;
+comment|/* sample time by system clock */
+name|u_int8_t
+name|arh_rssi
+decl_stmt|;
+comment|/* rssi */
+name|u_int8_t
+name|arh_antenna
+decl_stmt|;
+comment|/* antenna */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|ATH_RHIST_SIZE
+value|16
+end_define
+
+begin_comment
+comment|/* number of samples */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATH_RHIST_NOTIME
+value|(~0)
+end_define
+
 begin_comment
 comment|/* driver-specific node */
 end_comment
@@ -120,6 +158,17 @@ name|u_int
 name|an_rx_antenna
 decl_stmt|;
 comment|/* antenna for last rcvd frame */
+name|struct
+name|ath_recv_hist
+name|an_rx_hist
+index|[
+name|ATH_RHIST_SIZE
+index|]
+decl_stmt|;
+name|u_int
+name|an_rx_hist_next
+decl_stmt|;
+comment|/* index of next ``free entry'' */
 block|}
 struct|;
 end_struct
