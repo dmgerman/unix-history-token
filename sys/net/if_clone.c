@@ -275,9 +275,9 @@ parameter_list|(
 name|ifc
 parameter_list|)
 define|\
-value|do {								\ 		IF_CLONE_LOCK_ASSERT(ifc);				\ 		KASSERT((ifc)->ifc_refcnt> 0,				\ 		    ("bogus refcnt %ld", (ifc)->ifc_refcnt));		\ 		if (--(ifc)->ifc_refcnt == 0) {				\ 			IF_CLONE_UNLOCK(ifc);				\ 			if_clone_free(ifc);				\ 		}							\
+value|do {								\ 		IF_CLONE_LOCK_ASSERT(ifc);				\ 		KASSERT((ifc)->ifc_refcnt> 0,				\ 		    ("bogus refcnt %ld", (ifc)->ifc_refcnt));		\ 		if (--(ifc)->ifc_refcnt == 0) {				\ 			IF_CLONE_UNLOCK(ifc);				\ 			if_clone_free(ifc);				\ 		} else {						\
 comment|/* silently free the lock */
-value|\ 		IF_CLONE_UNLOCK(ifc);					\ 	} while (0)
+value|\ 			IF_CLONE_UNLOCK(ifc);				\ 		}							\ 	} while (0)
 end_define
 
 begin_expr_stmt
