@@ -36,20 +36,6 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|TULIP_EISA_CSRSIZE
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
-name|TULIP_EISA_CSROFFSET
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
 name|TULIP_PCI_CSRSIZE
 value|8
 end_define
@@ -631,7 +617,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * The various controllers support.  Technically the DE425 is just  * a 21040 on EISA.  But since it remarkably difference from normal  * 21040s, we give it its own chip id.  */
+comment|/*  * The various controllers support.  */
 end_comment
 
 begin_typedef
@@ -639,8 +625,6 @@ typedef|typedef
 enum|enum
 block|{
 name|TULIP_21040
-block|,
-name|TULIP_DE425
 block|,
 name|TULIP_21041
 block|,
@@ -1468,7 +1452,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Now to important stuff.  This is softc structure (where does softc  * come from??? No idea) for the tulip device.    *  */
+comment|/*  * Now to important stuff.  This is softc structure (where does softc  * come from??? No idea) for the tulip device.    */
 end_comment
 
 begin_struct
@@ -2218,20 +2202,6 @@ init|=
 block|{
 literal|"21040 [10Mb/s]"
 block|,
-if|#
-directive|if
-name|defined
-argument_list|(
-name|TULIP_EISA
-argument_list|)
-literal|"DE425 [10Mb/s]"
-block|,
-else|#
-directive|else
-name|NULL
-block|,
-endif|#
-directive|endif
 literal|"21041 [10Mb/s]"
 block|,
 literal|"21140 [10-100Mb/s]"
@@ -3253,20 +3223,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_typedef
-typedef|typedef
-name|void
-name|ifnet_ret_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|u_long
-name|ioctl_cmd_t
-typedef|;
-end_typedef
-
 begin_if
 if|#
 directive|if
@@ -3286,29 +3242,6 @@ name|TULIP_MAX_DEVICES
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|TULIP_KVATOPHYS
-parameter_list|(
-name|sc
-parameter_list|,
-name|va
-parameter_list|)
-value|kvtop(va)
-end_define
 
 begin_endif
 endif|#
@@ -3342,50 +3275,9 @@ end_endif
 begin_define
 define|#
 directive|define
-name|TULIP_UNIT_TO_SOFTC
-parameter_list|(
-name|unit
-parameter_list|)
-value|(tulips[unit])
-end_define
-
-begin_define
-define|#
-directive|define
-name|TULIP_BURSTSIZE
-parameter_list|(
-name|unit
-parameter_list|)
-value|pci_max_burst_len
-end_define
-
-begin_define
-define|#
-directive|define
 name|loudprintf
 value|if (bootverbose) printf
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|TULIP_BURSTSIZE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|TULIP_BURSTSIZE
-parameter_list|(
-name|unit
-parameter_list|)
-value|3
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
