@@ -3495,6 +3495,9 @@ break|break;
 case|case
 name|WI_NIC_EVB3
 case|:
+case|case
+name|WI_NIC_3842
+case|:
 name|printf
 argument_list|(
 literal|"RF:PRISM II MAC:HFA3842"
@@ -3512,6 +3515,9 @@ expr_stmt|;
 break|break;
 case|case
 name|WI_NIC_P2_SST
+case|:
+case|case
+name|WI_NIC_EVB2_SST
 case|:
 name|printf
 argument_list|(
@@ -3543,6 +3549,24 @@ case|:
 name|printf
 argument_list|(
 literal|"RF:PRISM2.5 MAC:ISL37300P"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|WI_P3_SST
+case|:
+name|printf
+argument_list|(
+literal|"RF:PRISM3"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|WI_P3_PCI
+case|:
+name|printf
+argument_list|(
+literal|"RF:PRISM3"
 argument_list|)
 expr_stmt|;
 break|break;

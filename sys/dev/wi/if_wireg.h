@@ -1858,6 +1858,15 @@ value|0x8008
 comment|/* Prism2 with SST flush */
 define|#
 directive|define
+name|WI_NIC_EVB2_SST
+value|0x8009
+define|#
+directive|define
+name|WI_NIC_3842
+value|0x800A
+comment|/* 3482 Evaluation Board */
+define|#
+directive|define
 name|WI_NIC_PRISM2_5
 value|0x800C
 define|#
@@ -1869,6 +1878,16 @@ define|#
 directive|define
 name|WI_NIC_37300P
 value|0x801a
+define|#
+directive|define
+name|WI_NIC_P3_SST
+value|0x801B
+comment|/* Prism3 PCMCIA */
+define|#
+directive|define
+name|WI_NIC_P3_PCI
+value|0x8022
+comment|/* Prism3 Mini-PCI */
 block|}
 struct|;
 end_struct
