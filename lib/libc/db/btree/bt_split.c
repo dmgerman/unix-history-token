@@ -1696,6 +1696,16 @@ name|flags
 operator|&
 name|P_TYPE
 expr_stmt|;
+comment|/* XXX: Workaround for broken page data access. */
+name|r
+operator|->
+name|linp
+index|[
+literal|0
+index|]
+operator|=
+literal|0xffff
+expr_stmt|;
 comment|/* 	 * If we're splitting the last page on a level because we're appending 	 * a key to it (skip is NEXTINDEX()), it's likely that the data is 	 * sorted.  Adding an empty page on the side of the level is less work 	 * and can push the fill factor much higher than normal.  If we're 	 * wrong it's no big deal, we'll just do the split the right way next 	 * time.  It may look like it's equally easy to do a similar hack for 	 * reverse sorted data, that is, split the tree left, but it's not. 	 * Don't even try. 	 */
 if|if
 condition|(
