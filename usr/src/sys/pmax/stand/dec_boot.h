@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)dec_boot.h	7.3 (Berkeley) %G%  *  * devDiskLabel.h --  *  *      This defines the disk label that Sun writes on the 0'th sector of  *      the 0'th cylinder of its SMD disks.  The disk label contains some  *      geometry information and also the division of the disk into a  *      number of partitions.  Each partition is identified to the drive  *      by a different unit number.  *  * from: $Header: /sprite/src/kernel/dev/RCS/devDiskLabel.h,  *	v 9.4 90/03/01 12:22:36 jhh Exp $ SPRITE (Berkeley)  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)dec_boot.h	8.1 (Berkeley) %G%  *  * devDiskLabel.h --  *  *      This defines the disk label that Sun writes on the 0'th sector of  *      the 0'th cylinder of its SMD disks.  The disk label contains some  *      geometry information and also the division of the disk into a  *      number of partitions.  Each partition is identified to the drive  *      by a different unit number.  *  * from: $Header: /sprite/src/kernel/dev/RCS/devDiskLabel.h,  *	v 9.4 90/03/01 12:22:36 jhh Exp $ SPRITE (Berkeley)  */
 end_comment
 
 begin_comment
