@@ -6440,6 +6440,9 @@ if|if
 condition|(
 name|isprint
 argument_list|(
+operator|(
+name|uch
+operator|)
 name|ch
 argument_list|)
 operator|||

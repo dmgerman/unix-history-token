@@ -339,7 +339,7 @@ name|uch
 name|mask
 decl_stmt|;
 comment|/* bit within array */
-name|uch
+name|short
 name|hash
 decl_stmt|;
 comment|/* hash code */
@@ -369,7 +369,7 @@ name|cs
 parameter_list|,
 name|c
 parameter_list|)
-value|((cs)->ptr[(uch)(c)] |= (cs)->mask, (cs)->hash += (c))
+value|((cs)->ptr[(uch)(c)] |= (cs)->mask, (cs)->hash += (uch)(c))
 end_define
 
 begin_define
@@ -381,7 +381,7 @@ name|cs
 parameter_list|,
 name|c
 parameter_list|)
-value|((cs)->ptr[(uch)(c)]&= ~(cs)->mask, (cs)->hash -= (c))
+value|((cs)->ptr[(uch)(c)]&= ~(cs)->mask, (cs)->hash -= (uch)(c))
 end_define
 
 begin_define
@@ -599,7 +599,7 @@ name|ISWORD
 parameter_list|(
 name|c
 parameter_list|)
-value|(isalnum(c) || (c) == '_')
+value|(isalnum((uch)(c)) || (c) == '_')
 end_define
 
 end_unit
