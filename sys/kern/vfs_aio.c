@@ -5119,12 +5119,6 @@ expr_stmt|;
 comment|/* 	 * Get a copy of the kva from the physical buffer. 	 */
 name|bp
 operator|->
-name|b_caller1
-operator|=
-name|p
-expr_stmt|;
-name|bp
-operator|->
 name|b_dev
 operator|=
 name|vp
@@ -5243,7 +5237,7 @@ name|bp
 expr_stmt|;
 name|bp
 operator|->
-name|b_caller2
+name|b_caller1
 operator|=
 operator|(
 name|void
@@ -10488,7 +10482,7 @@ operator|*
 operator|)
 name|bp
 operator|->
-name|b_caller2
+name|b_caller1
 expr_stmt|;
 if|if
 condition|(
@@ -10497,9 +10491,9 @@ condition|)
 block|{
 name|p
 operator|=
-name|bp
+name|aiocbe
 operator|->
-name|b_caller1
+name|userproc
 expr_stmt|;
 name|aiocbe
 operator|->
