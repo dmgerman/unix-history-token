@@ -4073,6 +4073,24 @@ argument_list|)
 block|}
 block|,
 block|{
+literal|" Taiwan #4"
+block|,
+literal|"ftp4.tw.freebsd.org"
+block|,
+name|NULL
+block|,
+name|dmenuSetVariable
+block|,
+name|NULL
+block|,
+name|VAR_FTP_PATH
+name|_AP
+argument_list|(
+literal|"=ftp://ftp4.tw.freebsd.org"
+argument_list|)
+block|}
+block|,
+block|{
 literal|" Thailand"
 block|,
 literal|"ftp.nectec.or.th"
