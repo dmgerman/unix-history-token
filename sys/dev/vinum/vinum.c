@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinum.c,v 1.34 2001/05/22 04:07:22 grog Exp grog $  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinum.c,v 1.41 2003/04/28 06:15:36 grog Exp grog $  * $FreeBSD$  */
 end_comment
 
 begin_define
@@ -143,7 +143,6 @@ comment|/* Called by main() during pseudo-device attachment. */
 end_comment
 
 begin_function_decl
-name|STATIC
 name|void
 name|vinumattach
 parameter_list|(
@@ -326,7 +325,7 @@ argument_list|(
 operator|&
 name|vinum_cdevsw
 argument_list|,
-name|VINUM_DAEMON_DEV
+name|VINUM_DAEMON_MINOR
 argument_list|,
 name|UID_ROOT
 argument_list|,
@@ -346,7 +345,7 @@ argument_list|(
 operator|&
 name|vinum_cdevsw
 argument_list|,
-name|VINUM_SUPERDEV
+name|VINUM_SUPERDEV_MINOR
 argument_list|,
 name|UID_ROOT
 argument_list|,
@@ -591,7 +590,7 @@ argument_list|,
 literal|1000
 argument_list|)
 expr_stmt|;
-comment|/*      * See if the loader has passed us any of the      * autostart options.      */
+comment|/*      * See if the loader has passed us any of the autostart      * options.      */
 name|cp
 operator|=
 name|drivep
@@ -655,7 +654,7 @@ name|log
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"sysctlbyname(\"kern.disks\") failed, rv = %d\n"
+literal|"sysctlbyname (\"kern.disks\") failed, rv = %d\n"
 argument_list|,
 name|rv
 argument_list|)
@@ -670,13 +669,9 @@ name|alloclen
 argument_list|,
 name|M_TEMP
 argument_list|,
-literal|0
-comment|/* M_WAITOK */
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|kernel_sysctlbyname
 argument_list|(
 operator|&
@@ -813,8 +808,7 @@ argument_list|)
 argument_list|,
 name|M_TEMP
 argument_list|,
-literal|0
-comment|/* M_WAITOK */
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|drives
@@ -828,12 +822,10 @@ block|}
 if|if
 condition|(
 name|i
-operator|==
+operator|!=
 literal|0
 condition|)
-goto|goto
-name|bailout
-goto|;
+block|{
 name|rv
 operator|=
 name|vinum_scandisk
@@ -856,8 +848,7 @@ argument_list|,
 name|rv
 argument_list|)
 expr_stmt|;
-name|bailout
-label|:
+block|}
 name|freeenv
 argument_list|(
 name|cp
@@ -1297,6 +1288,13 @@ name|vinum_conf
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|vinum_conf
+operator|.
+name|version
+operator|=
+name|VINUMVERSION
+expr_stmt|;
+comment|/* reinstate version number */
 block|}
 end_function
 
@@ -1676,6 +1674,69 @@ block|{
 case|case
 name|VINUM_VOLUME_TYPE
 case|:
+comment|/* 	 * The super device and daemon device are the last two 	 * volume numbers, so check for them first. 	 */
+if|if
+condition|(
+operator|(
+name|devminor
+operator|==
+name|VINUM_DAEMON_MINOR
+operator|)
+comment|/* daemon device */
+operator|||
+operator|(
+name|devminor
+operator|==
+name|VINUM_SUPERDEV_MINOR
+operator|)
+condition|)
+block|{
+comment|/* or normal super device */
+name|error
+operator|=
+name|suser
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+comment|/* are we root? */
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* yes, can do */
+if|if
+condition|(
+name|devminor
+operator|==
+name|VINUM_DAEMON_MINOR
+condition|)
+comment|/* daemon device */
+name|vinum_conf
+operator|.
+name|flags
+operator||=
+name|VF_DAEMONOPEN
+expr_stmt|;
+comment|/* we're open */
+else|else
+comment|/* superdev */
+name|vinum_conf
+operator|.
+name|flags
+operator||=
+name|VF_OPEN
+expr_stmt|;
+comment|/* we're open */
+block|}
+return|return
+name|error
+return|;
+block|}
+comment|/* Must be a real volume.  Check. */
 name|index
 operator|=
 name|Volno
@@ -1746,24 +1807,6 @@ block|}
 case|case
 name|VINUM_PLEX_TYPE
 case|:
-if|if
-condition|(
-name|Volno
-argument_list|(
-name|dev
-argument_list|)
-operator|>=
-name|vinum_conf
-operator|.
-name|volumes_allocated
-condition|)
-return|return
-name|ENXIO
-return|;
-comment|/* FALLTHROUGH */
-case|case
-name|VINUM_RAWPLEX_TYPE
-case|:
 name|index
 operator|=
 name|Plexno
@@ -1800,10 +1843,13 @@ name|state
 condition|)
 block|{
 case|case
-name|plex_referenced
-case|:
-case|case
 name|plex_unallocated
+case|:
+return|return
+name|ENXIO
+return|;
+case|case
+name|plex_referenced
 case|:
 return|return
 name|EINVAL
@@ -1823,39 +1869,8 @@ block|}
 case|case
 name|VINUM_SD_TYPE
 case|:
-if|if
-condition|(
-operator|(
-name|Volno
-argument_list|(
-name|dev
-argument_list|)
-operator|>=
-name|vinum_conf
-operator|.
-name|volumes_allocated
-operator|)
-comment|/* no such volume */
-operator|||
-operator|(
-name|Plexno
-argument_list|(
-name|dev
-argument_list|)
-operator|>=
-name|vinum_conf
-operator|.
-name|plexes_allocated
-operator|)
-condition|)
-comment|/* or no such plex */
-return|return
-name|ENXIO
-return|;
-comment|/* no such device */
-comment|/* FALLTHROUGH */
 case|case
-name|VINUM_RAWSD_TYPE
+name|VINUM_SD2_TYPE
 case|:
 name|index
 operator|=
@@ -1867,27 +1882,13 @@ expr_stmt|;
 comment|/* get the subdisk number */
 if|if
 condition|(
-operator|(
 name|index
 operator|>=
 name|vinum_conf
 operator|.
 name|subdisks_allocated
-operator|)
-comment|/* not a valid SD entry */
-operator|||
-operator|(
-name|SD
-index|[
-name|index
-index|]
-operator|.
-name|state
-operator|<
-name|sd_init
-operator|)
 condition|)
-comment|/* or SD is not real */
+comment|/* not a valid SD entry */
 return|return
 name|ENXIO
 return|;
@@ -1900,7 +1901,7 @@ index|[
 name|index
 index|]
 expr_stmt|;
-comment|/* 	 * Opening a subdisk is always a special operation, so we 	 * ignore the state as long as it represents a real subdisk 	 */
+comment|/* 	 * Opening a subdisk is always a special operation, so 	 * we ignore the state as long as it represents a real 	 * subdisk. 	 */
 switch|switch
 condition|(
 name|sd
@@ -1911,8 +1912,14 @@ block|{
 case|case
 name|sd_unallocated
 case|:
+return|return
+name|ENXIO
+return|;
 case|case
 name|sd_uninit
+case|:
+case|case
+name|sd_referenced
 case|:
 return|return
 name|EINVAL
@@ -1929,73 +1936,11 @@ return|return
 literal|0
 return|;
 block|}
-case|case
-name|VINUM_SUPERDEV_TYPE
-case|:
-name|error
-operator|=
-name|suser
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
-comment|/* are we root? */
-if|if
-condition|(
-name|error
-operator|==
+block|}
+return|return
 literal|0
-condition|)
-block|{
-comment|/* yes, can do */
-if|if
-condition|(
-name|devminor
-operator|==
-name|VINUM_DAEMON_DEV
-condition|)
-comment|/* daemon device */
-name|vinum_conf
-operator|.
-name|flags
-operator||=
-name|VF_DAEMONOPEN
-expr_stmt|;
-comment|/* we're open */
-elseif|else
-if|if
-condition|(
-name|devminor
-operator|==
-name|VINUM_SUPERDEV
-condition|)
-name|vinum_conf
-operator|.
-name|flags
-operator||=
-name|VF_OPEN
-expr_stmt|;
-comment|/* we're open */
-else|else
-name|error
-operator|=
-name|ENODEV
-expr_stmt|;
-comment|/* nothing, maybe a debug mismatch */
-block|}
-return|return
-name|error
 return|;
-comment|/* Vinum drives are disks.  We already have a disk 	 * driver, so don't handle them here */
-case|case
-name|VINUM_DRIVE_TYPE
-case|:
-default|default:
-return|return
-name|ENODEV
-return|;
-comment|/* don't know what to do with these */
-block|}
+comment|/* to keep the compiler happy */
 block|}
 end_function
 
@@ -2041,13 +1986,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-name|index
-operator|=
-name|Volno
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 comment|/* First, decide what we're looking at */
 switch|switch
 condition|(
@@ -2060,6 +1998,80 @@ block|{
 case|case
 name|VINUM_VOLUME_TYPE
 case|:
+comment|/* 	 * The super device and daemon device are the last two 	 * volume numbers, so check for them first. 	 */
+if|if
+condition|(
+operator|(
+name|devminor
+operator|==
+name|VINUM_DAEMON_MINOR
+operator|)
+comment|/* daemon device */
+operator|||
+operator|(
+name|devminor
+operator|==
+name|VINUM_SUPERDEV_MINOR
+operator|)
+condition|)
+block|{
+comment|/* or normal super device */
+comment|/* 	     * don't worry about whether we're root: 	     * nobody else would get this far. 	     */
+if|if
+condition|(
+name|devminor
+operator|==
+name|VINUM_SUPERDEV_MINOR
+condition|)
+comment|/* normal superdev */
+name|vinum_conf
+operator|.
+name|flags
+operator|&=
+operator|~
+name|VF_OPEN
+expr_stmt|;
+comment|/* no longer open */
+else|else
+block|{
+comment|/* the daemon device */
+name|vinum_conf
+operator|.
+name|flags
+operator|&=
+operator|~
+name|VF_DAEMONOPEN
+expr_stmt|;
+comment|/* no longer open */
+if|if
+condition|(
+name|vinum_conf
+operator|.
+name|flags
+operator|&
+name|VF_STOPPING
+condition|)
+comment|/* we're trying to stop, */
+name|wakeup
+argument_list|(
+operator|&
+name|vinumclose
+argument_list|)
+expr_stmt|;
+comment|/* we can continue now */
+block|}
+return|return
+literal|0
+return|;
+block|}
+comment|/* Real volume */
+name|index
+operator|=
+name|Volno
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|index
@@ -2140,43 +2152,6 @@ name|ENXIO
 return|;
 comment|/* FALLTHROUGH */
 case|case
-name|VINUM_RAWPLEX_TYPE
-case|:
-name|index
-operator|=
-name|Plexno
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-comment|/* get plex index in vinum_conf */
-if|if
-condition|(
-name|index
-operator|>=
-name|vinum_conf
-operator|.
-name|plexes_allocated
-condition|)
-return|return
-name|ENXIO
-return|;
-comment|/* no such device */
-name|PLEX
-index|[
-name|index
-index|]
-operator|.
-name|flags
-operator|&=
-operator|~
-name|VF_OPEN
-expr_stmt|;
-comment|/* reset our flags */
-return|return
-literal|0
-return|;
-case|case
 name|VINUM_SD_TYPE
 case|:
 if|if
@@ -2210,102 +2185,6 @@ name|ENXIO
 return|;
 comment|/* no such device */
 comment|/* FALLTHROUGH */
-case|case
-name|VINUM_RAWSD_TYPE
-case|:
-name|index
-operator|=
-name|Sdno
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-comment|/* get the subdisk number */
-if|if
-condition|(
-name|index
-operator|>=
-name|vinum_conf
-operator|.
-name|subdisks_allocated
-condition|)
-return|return
-name|ENXIO
-return|;
-comment|/* no such device */
-name|SD
-index|[
-name|index
-index|]
-operator|.
-name|flags
-operator|&=
-operator|~
-name|VF_OPEN
-expr_stmt|;
-comment|/* reset our flags */
-return|return
-literal|0
-return|;
-case|case
-name|VINUM_SUPERDEV_TYPE
-case|:
-comment|/* 	 * don't worry about whether we're root: 	 * nobody else would get this far. 	 */
-if|if
-condition|(
-name|devminor
-operator|==
-name|VINUM_SUPERDEV
-condition|)
-comment|/* normal superdev */
-name|vinum_conf
-operator|.
-name|flags
-operator|&=
-operator|~
-name|VF_OPEN
-expr_stmt|;
-comment|/* no longer open */
-elseif|else
-if|if
-condition|(
-name|devminor
-operator|==
-name|VINUM_DAEMON_DEV
-condition|)
-block|{
-comment|/* the daemon device */
-name|vinum_conf
-operator|.
-name|flags
-operator|&=
-operator|~
-name|VF_DAEMONOPEN
-expr_stmt|;
-comment|/* no longer open */
-if|if
-condition|(
-name|vinum_conf
-operator|.
-name|flags
-operator|&
-name|VF_STOPPING
-condition|)
-comment|/* we're stopping, */
-name|wakeup
-argument_list|(
-operator|&
-name|vinumclose
-argument_list|)
-expr_stmt|;
-comment|/* we can continue stopping now */
-block|}
-return|return
-literal|0
-return|;
-case|case
-name|VINUM_DRIVE_TYPE
-case|:
 default|default:
 return|return
 name|ENODEV
@@ -2419,7 +2298,7 @@ comment|/* Local Variables: */
 end_comment
 
 begin_comment
-comment|/* fill-column: 50 */
+comment|/* fill-column: 60 */
 end_comment
 
 begin_comment
