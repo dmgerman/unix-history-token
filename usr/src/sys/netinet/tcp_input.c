@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_input.c	1.68	82/06/20	*/
+comment|/*	tcp_input.c	1.69	82/06/24	*/
 end_comment
 
 begin_include
@@ -2517,6 +2517,10 @@ name|tiflags
 operator|&
 name|TH_URG
 operator|)
+operator|&&
+name|ti
+operator|->
+name|ti_urp
 operator|&&
 name|TCPS_HAVERCVDFIN
 argument_list|(
