@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)fdesc_vfsops.c	1.1 (Berkeley) %G%  *  * $Id: fdesc_vfsops.c,v 1.6 1992/05/30 10:25:59 jsp Exp jsp $  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)fdesc_vfsops.c	1.2 (Berkeley) %G%  *  * $Id: fdesc_vfsops.c,v 1.6 1992/05/30 10:25:59 jsp Exp jsp $  */
 end_comment
 
 begin_comment
@@ -710,21 +710,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * Return locked reference to root. 	 */
-ifdef|#
-directive|ifdef
-name|FDESC_DIAGNOSTIC
-name|printf
-argument_list|(
-literal|"fdesc_root: fdesc = %x\n"
-argument_list|,
-name|VFSTOFDESC
-argument_list|(
-name|mp
-argument_list|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|vp
 operator|=
 name|VFSTOFDESC
@@ -734,67 +719,21 @@ argument_list|)
 operator|->
 name|f_root
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|FDESC_DIAGNOSTIC
-name|printf
-argument_list|(
-literal|"fdesc_root: root = %x\n"
-argument_list|,
-name|vp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|VREF
 argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|FDESC_DIAGNOSTIC
-name|printf
-argument_list|(
-literal|"fdesc_root: calling VOP_LOCK\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|VOP_LOCK
 argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|FDESC_DIAGNOSTIC
-name|printf
-argument_list|(
-literal|"fdesc_root: back from VOP_LOCK\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 operator|*
 name|vpp
 operator|=
 name|vp
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|FDESC_DIAGNOSTIC
-name|printf
-argument_list|(
-literal|"fdesc_root(mp = %x) = %x\n"
-argument_list|,
-name|mp
-argument_list|,
-name|vp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
