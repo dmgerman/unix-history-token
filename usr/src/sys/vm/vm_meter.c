@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_meter.c	4.14	82/03/31	*/
+comment|/*	vm_meter.c	4.15	82/09/06	*/
 end_comment
 
 begin_include
@@ -55,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|"../h/cmap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/kernel.h"
 end_include
 
 begin_decl_stmt
@@ -1644,6 +1650,8 @@ block|}
 if|if
 condition|(
 name|time
+operator|.
+name|tv_sec
 operator|%
 literal|5
 operator|==
@@ -1748,8 +1756,23 @@ block|}
 block|}
 end_block
 
+begin_define
+define|#
+directive|define
+name|RATETOSCHEDPAGING
+value|4
+end_define
+
+begin_comment
+comment|/* hz that is */
+end_comment
+
+begin_comment
+comment|/*  * Schedule rate for paging.  * Rate is linear interpolation between  * slowscan with lotsfree and fastscan when out of memory.  */
+end_comment
+
 begin_macro
-name|vmpago
+name|schedpaging
 argument_list|()
 end_macro
 
@@ -1758,12 +1781,9 @@ block|{
 specifier|register
 name|int
 name|vavail
-decl_stmt|;
-specifier|register
-name|int
+decl_stmt|,
 name|scanrate
 decl_stmt|;
-comment|/* 	 * Compute new rate for clock; if 	 * nonzero, restart clock. 	 * Rate ranges linearly from one rev per 	 * slowscan seconds when there is lotsfree memory 	 * available to one rev per fastscan seconds when 	 * there is no memory available. 	 */
 name|nscan
 operator|=
 name|desscan
@@ -1817,6 +1837,7 @@ expr_stmt|;
 name|desscan
 operator|=
 operator|(
+operator|(
 name|LOOPPAGES
 operator|/
 name|CLSIZE
@@ -1826,11 +1847,9 @@ name|nz
 argument_list|(
 name|scanrate
 argument_list|)
-expr_stmt|;
-comment|/* 	 * DIVIDE BY 4 TO ACCOUNT FOR RUNNING 4* A SECOND (see clock.c) 	 */
-name|desscan
-operator|/=
-literal|4
+operator|)
+operator|/
+name|RATETOSCHEDPAGING
 expr_stmt|;
 name|wakeup
 argument_list|(
@@ -1842,6 +1861,17 @@ name|proc
 index|[
 literal|2
 index|]
+argument_list|)
+expr_stmt|;
+name|timeout
+argument_list|(
+name|schedpaging
+argument_list|,
+literal|0
+argument_list|,
+name|hz
+operator|/
+name|RATETOSCHEDPAGING
 argument_list|)
 expr_stmt|;
 block|}

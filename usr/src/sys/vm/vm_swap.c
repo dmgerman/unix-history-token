@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vm_swap.c	4.8	82/08/22	*/
+comment|/*	vm_swap.c	4.9	82/09/06	*/
 end_comment
 
 begin_include
@@ -327,7 +327,7 @@ comment|/*  * System call swapon(name) enables swapping on device name,  * which
 end_comment
 
 begin_macro
-name|vswapon
+name|oswapon
 argument_list|()
 end_macro
 
