@@ -2695,7 +2695,7 @@ operator|==
 name|SRUN
 operator|)
 operator|)
-operator|||
+operator|&&
 operator|(
 name|show_idle
 operator|||
