@@ -90,12 +90,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<termios.h>
 end_include
 
@@ -244,12 +238,6 @@ begin_include
 include|#
 directive|include
 file|"ncpaddr.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ip.h"
 end_include
 
 begin_include

@@ -18,18 +18,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if_types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/route.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/in.h>
 end_include
 
@@ -55,12 +43,6 @@ begin_include
 include|#
 directive|include
 file|<sys/un.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<limits.h>
 end_include
 
 begin_include
@@ -150,31 +132,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ip.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ipcp.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"filter.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"descriptor.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"route.h"
 end_include
 
 begin_include
@@ -219,23 +183,6 @@ directive|include
 file|"mp.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NORADIUS
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|"radius.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -246,12 +193,6 @@ begin_include
 include|#
 directive|include
 file|"ncp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"bundle.h"
 end_include
 
 begin_define

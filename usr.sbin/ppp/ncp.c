@@ -30,31 +30,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arpa/inet.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/socket.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<net/if.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/route.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netdb.h>
 end_include
 
 begin_include
@@ -67,12 +49,6 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
 end_include
 
 begin_include
@@ -96,31 +72,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<termios.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"layer.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ua.h"
 end_include
 
 begin_include
@@ -157,12 +115,6 @@ begin_include
 include|#
 directive|include
 file|"fsm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"proto.h"
 end_include
 
 begin_include
@@ -210,12 +162,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ip.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ipcp.h"
 end_include
 
@@ -229,12 +175,6 @@ begin_include
 include|#
 directive|include
 file|"descriptor.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"vjcomp.h"
 end_include
 
 begin_include
@@ -305,24 +245,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"id.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"arp.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"systems.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"prompt.h"
 end_include
 
@@ -354,12 +276,6 @@ begin_include
 include|#
 directive|include
 file|"chap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"pap.h"
 end_include
 
 begin_include

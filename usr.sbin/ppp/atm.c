@@ -547,6 +547,8 @@ block|,
 name|NULL
 block|,
 name|NULL
+block|,
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt

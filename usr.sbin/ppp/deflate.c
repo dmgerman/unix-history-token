@@ -24,19 +24,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<termios.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<zlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"defs.h"
 end_include
 
 begin_include
@@ -61,24 +49,6 @@ begin_include
 include|#
 directive|include
 file|"fsm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lqr.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"hdlc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"lcp.h"
 end_include
 
 begin_include

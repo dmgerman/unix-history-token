@@ -18,12 +18,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arpa/inet.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netdb.h>
 end_include
 
@@ -66,7 +60,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<strings.h>
+file|<string.h>
 end_include
 
 begin_include
@@ -169,12 +163,6 @@ begin_include
 include|#
 directive|include
 file|"ncpaddr.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ip.h"
 end_include
 
 begin_include

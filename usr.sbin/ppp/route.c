@@ -72,12 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netdb.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<errno.h>
 end_include
 
@@ -211,12 +205,6 @@ begin_include
 include|#
 directive|include
 file|"ncpaddr.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ip.h"
 end_include
 
 begin_include
@@ -995,6 +983,16 @@ expr_stmt|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|static
+name|int
+name|route_nifs
+init|=
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|const
 name|char
@@ -1015,16 +1013,14 @@ decl_stmt|;
 comment|/* Figure these out once */
 specifier|static
 name|int
-name|nifs
-decl_stmt|,
 name|debug_done
 decl_stmt|;
-comment|/* Figure out how many once, and debug once */
+comment|/* Debug once */
 if|if
 condition|(
 name|idx
 operator|>
-name|nifs
+name|route_nifs
 operator|||
 operator|(
 name|idx
@@ -1089,7 +1085,7 @@ name|ifs
 operator|=
 name|NULL
 expr_stmt|;
-name|nifs
+name|route_nifs
 operator|=
 literal|0
 expr_stmt|;
@@ -1398,7 +1394,7 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|nifs
+name|route_nifs
 operator|=
 literal|0
 expr_stmt|;
@@ -1533,13 +1529,13 @@ literal|'\0'
 expr_stmt|;
 if|if
 condition|(
-name|nifs
+name|route_nifs
 operator|<
 name|ifm
 operator|->
 name|ifm_index
 condition|)
-name|nifs
+name|route_nifs
 operator|=
 name|ifm
 operator|->
@@ -1602,7 +1598,7 @@ literal|0
 init|;
 name|f
 operator|<
-name|nifs
+name|route_nifs
 condition|;
 name|f
 operator|++
@@ -1645,7 +1641,7 @@ literal|1
 operator|||
 name|idx
 operator|>
-name|nifs
+name|route_nifs
 operator|||
 name|ifs
 index|[
@@ -3052,38 +3048,34 @@ block|{
 name|int
 name|idx
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|got
-decl_stmt|;
 name|idx
 operator|=
 literal|1
 expr_stmt|;
 while|while
 condition|(
+name|route_nifs
+operator|==
+operator|-
+literal|1
+operator|||
+name|idx
+operator|<
+name|route_nifs
+condition|)
+if|if
+condition|(
 name|strcmp
 argument_list|(
-name|got
-operator|=
 name|Index2Nam
 argument_list|(
 name|idx
 argument_list|)
 argument_list|,
-literal|"???"
-argument_list|)
-condition|)
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|got
-argument_list|,
 name|name
 argument_list|)
+operator|==
+literal|0
 condition|)
 return|return
 name|idx

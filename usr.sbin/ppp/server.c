@@ -24,12 +24,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arpa/inet.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/un.h>
 end_include
 
@@ -85,12 +79,6 @@ begin_include
 include|#
 directive|include
 file|"server.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"id.h"
 end_include
 
 begin_include
