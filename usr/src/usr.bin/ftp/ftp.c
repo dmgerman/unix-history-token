@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftp.c	4.12 (Berkeley) %G%"
+literal|"@(#)ftp.c	4.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2114,18 +2114,33 @@ name|dir
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
+name|d
+operator|=
 name|access
 argument_list|(
 name|dir
 condition|?
-name|dir
+name|local
 else|:
 literal|"."
 argument_list|,
 literal|2
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dir
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|dir
+operator|=
+literal|'/'
+expr_stmt|;
+if|if
+condition|(
+name|d
 operator|<
 literal|0
 condition|)
@@ -2139,17 +2154,6 @@ goto|goto
 name|bad
 goto|;
 block|}
-if|if
-condition|(
-name|dir
-operator|!=
-name|NULL
-condition|)
-operator|*
-name|dir
-operator|=
-literal|'/'
-expr_stmt|;
 block|}
 if|if
 condition|(
