@@ -1239,7 +1239,7 @@ name|CHN_F_DEAD
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"play interrupt timeout, channel dead\n"
+literal|"%s: play interrupt timeout, channel dead\n"
 argument_list|,
 name|c
 operator|->
@@ -1789,7 +1789,7 @@ name|CHN_F_DEAD
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s record interrupt timeout, channel dead\n"
+literal|"%s: record interrupt timeout, channel dead\n"
 argument_list|,
 name|c
 operator|->

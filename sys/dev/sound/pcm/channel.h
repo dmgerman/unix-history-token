@@ -56,6 +56,9 @@ block|{
 name|kobj_t
 name|methods
 decl_stmt|;
+name|int
+name|num
+decl_stmt|;
 name|pid_t
 name|pid
 decl_stmt|;

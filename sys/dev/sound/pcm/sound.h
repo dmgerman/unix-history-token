@@ -790,6 +790,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|SND_DEV_DSPREC
+value|11
+end_define
+
+begin_comment
+comment|/* recording channels */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DSP_DEFAULT_SPEED
 value|8000
 end_define
@@ -956,6 +967,9 @@ name|direction
 parameter_list|,
 name|pid_t
 name|pid
+parameter_list|,
+name|int
+name|chnum
 parameter_list|)
 function_decl|;
 end_function_decl
