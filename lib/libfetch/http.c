@@ -4474,6 +4474,8 @@ condition|(
 name|url
 operator|->
 name|offset
+operator|>
+literal|0
 condition|)
 name|_http_cmd
 argument_list|(
@@ -5179,6 +5181,12 @@ block|}
 comment|/* too far? */
 if|if
 condition|(
+name|URL
+operator|->
+name|offset
+operator|>
+literal|0
+operator|&&
 name|offset
 operator|>
 name|URL
