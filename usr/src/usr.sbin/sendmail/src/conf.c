@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.189 (Berkeley) %G%"
+literal|"@(#)conf.c	8.190 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2372,8 +2372,6 @@ operator|!=
 name|NULL
 condition|)
 do|;
-break|break;
-block|}
 name|fclose
 argument_list|(
 name|fp
@@ -2382,6 +2380,13 @@ expr_stmt|;
 return|return
 name|svcno
 return|;
+block|}
+comment|/* service was not found -- use compiled in default */
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
 block|}
 endif|#
 directive|endif
