@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)timed.c	2.9 (Berkeley) %G%"
+literal|"@(#)timed.c	2.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1752,22 +1752,6 @@ block|{
 operator|(
 name|void
 operator|)
-name|ioctl
-argument_list|(
-name|s
-argument_list|,
-name|TIOCNOTTY
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
 name|close
 argument_list|(
 name|s
@@ -1985,6 +1969,12 @@ name|checkignorednets
 argument_list|()
 expr_stmt|;
 block|}
+name|makeslave
+argument_list|(
+name|firstslavenet
+argument_list|()
+argument_list|)
+expr_stmt|;
 name|makeslave
 argument_list|(
 name|firstslavenet
