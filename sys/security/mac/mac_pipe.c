@@ -770,6 +770,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MAC_DEBUG
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|unsigned
@@ -1028,6 +1034,11 @@ literal|"number of devfs dirents inuse"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -4695,6 +4706,9 @@ operator|.
 name|label
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC_DEBUG
 name|atomic_add_int
 argument_list|(
 operator|&
@@ -4703,6 +4717,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -4745,6 +4761,9 @@ operator|.
 name|label
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC_DEBUG
 name|atomic_subtract_int
 argument_list|(
 operator|&
@@ -4753,6 +4772,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -4786,6 +4807,9 @@ operator|->
 name|cr_label
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC_DEBUG
 name|atomic_add_int
 argument_list|(
 operator|&
@@ -4794,6 +4818,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -4827,6 +4853,9 @@ operator|->
 name|cr_label
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC_DEBUG
 name|atomic_subtract_int
 argument_list|(
 operator|&
@@ -4835,6 +4864,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -4868,6 +4899,9 @@ operator|->
 name|if_label
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC_DEBUG
 name|atomic_add_int
 argument_list|(
 operator|&
@@ -4876,6 +4910,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -4909,6 +4945,9 @@ operator|->
 name|if_label
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC_DEBUG
 name|atomic_subtract_int
 argument_list|(
 operator|&
@@ -4917,6 +4956,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -4950,6 +4991,9 @@ operator|->
 name|ipq_label
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC_DEBUG
 name|atomic_add_int
 argument_list|(
 operator|&
@@ -4958,6 +5002,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -4991,6 +5037,9 @@ operator|->
 name|ipq_label
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC_DEBUG
 name|atomic_subtract_int
 argument_list|(
 operator|&
@@ -4999,6 +5048,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -5045,6 +5096,9 @@ operator|->
 name|so_peerlabel
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC_DEBUG
 name|atomic_add_int
 argument_list|(
 operator|&
@@ -5053,6 +5107,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -5099,6 +5155,9 @@ operator|->
 name|so_peerlabel
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC_DEBUG
 name|atomic_subtract_int
 argument_list|(
 operator|&
@@ -5107,6 +5166,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -5172,6 +5233,9 @@ operator|->
 name|pipe_label
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC_DEBUG
 name|atomic_add_int
 argument_list|(
 operator|&
@@ -5180,6 +5244,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -5220,6 +5286,9 @@ argument_list|,
 name|M_MACPIPELABEL
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC_DEBUG
 name|atomic_subtract_int
 argument_list|(
 operator|&
@@ -5228,6 +5297,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -5261,6 +5332,9 @@ operator|->
 name|bd_label
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC_DEBUG
 name|atomic_add_int
 argument_list|(
 operator|&
@@ -5269,6 +5343,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -5302,6 +5378,9 @@ operator|->
 name|bd_label
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC_DEBUG
 name|atomic_subtract_int
 argument_list|(
 operator|&
@@ -5310,6 +5389,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -5356,6 +5437,9 @@ operator|->
 name|mnt_fslabel
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC_DEBUG
 name|atomic_add_int
 argument_list|(
 operator|&
@@ -5364,6 +5448,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -5410,6 +5496,9 @@ operator|->
 name|mnt_mntlabel
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC_DEBUG
 name|atomic_subtract_int
 argument_list|(
 operator|&
@@ -5418,6 +5507,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -5444,6 +5535,9 @@ argument_list|,
 name|label
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC_DEBUG
 name|atomic_add_int
 argument_list|(
 operator|&
@@ -5452,6 +5546,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -5478,6 +5574,9 @@ argument_list|(
 name|label
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC_DEBUG
 name|atomic_subtract_int
 argument_list|(
 operator|&
@@ -5486,6 +5585,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -5519,6 +5620,9 @@ operator|->
 name|v_label
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC_DEBUG
 name|atomic_add_int
 argument_list|(
 operator|&
@@ -5527,6 +5631,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -5560,6 +5666,9 @@ operator|->
 name|v_label
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC_DEBUG
 name|atomic_subtract_int
 argument_list|(
 operator|&
@@ -5568,6 +5677,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -5601,6 +5712,9 @@ operator|->
 name|de_label
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC_DEBUG
 name|atomic_add_int
 argument_list|(
 operator|&
@@ -5609,6 +5723,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -5642,6 +5758,9 @@ operator|->
 name|de_label
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC_DEBUG
 name|atomic_subtract_int
 argument_list|(
 operator|&
@@ -5650,6 +5769,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
