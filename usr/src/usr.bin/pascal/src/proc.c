@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)proc.c 1.12 %G%"
+literal|"@(#)proc.c 1.13 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3716,6 +3716,24 @@ operator|==
 name|NIL
 condition|)
 return|return;
+if|if
+condition|(
+operator|(
+name|ap
+operator|->
+name|nl_flags
+operator|&
+name|NFILES
+operator|)
+operator|&&
+name|op
+operator|==
+name|O_DISPOSE
+condition|)
+name|op
+operator|=
+name|O_DFDISP
+expr_stmt|;
 name|argv
 operator|=
 name|argv
