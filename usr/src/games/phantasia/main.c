@@ -28,10 +28,6 @@ comment|/*  * Put one line of text into the file 'motd' for announcements, etc. 
 end_comment
 
 begin_comment
-comment|/*  * If ENEMY is #defined, a list of restricted login names is checked  * in the file 'enemy'.  These names are listed, one per line, with  * no trailing blanks.  */
-end_comment
-
-begin_comment
 comment|/*  * The scoreboard file is updated when someone dies, and keeps track  * of the highest character to date for that login.  * Being purged from the character file does not cause the scoreboard  * to be updated.  */
 end_comment
 
@@ -104,15 +100,6 @@ name|initialstate
 argument_list|()
 expr_stmt|;
 comment|/* init globals */
-ifdef|#
-directive|ifdef
-name|ENEMY
-name|checkenemy
-argument_list|()
-expr_stmt|;
-comment|/* check if denied access */
-endif|#
-directive|endif
 comment|/* process arguments */
 while|while
 condition|(
@@ -191,12 +178,9 @@ case|:
 comment|/* set 'Wizard' */
 name|Wizard
 operator|=
-operator|(
+operator|!
 name|getuid
 argument_list|()
-operator|==
-name|UID
-operator|)
 expr_stmt|;
 break|break;
 case|case
@@ -231,38 +215,6 @@ expr_stmt|;
 name|cleanup
 argument_list|(
 name|TRUE
-argument_list|)
-expr_stmt|;
-comment|/*NOTREACHED*/
-case|case
-literal|'h'
-case|:
-comment|/* help */
-name|cleanup
-argument_list|(
-name|FALSE
-argument_list|)
-expr_stmt|;
-name|strcpy
-argument_list|(
-name|Databuf
-argument_list|,
-literal|"cat "
-argument_list|)
-expr_stmt|;
-name|system
-argument_list|(
-name|strcat
-argument_list|(
-name|Databuf
-argument_list|,
-name|_PATH_HELP
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|0
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
@@ -2301,115 +2253,6 @@ comment|/*
 comment|*/
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ENEMY
-end_ifdef
-
-begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: checkenemy() / / FUNCTION: check login name against enemy list / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: fopen(), fgets(), strcmp(), fclose(), printf(), cleanup() / / GLOBAL INPUTS: *Login, Databuf[] / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	The enemy file has a list of login names which are denied /	access to Phantasia. /	We scan this list and exit if the current login name is /	found in the list. / /************************************************************************/
-end_comment
-
-begin_macro
-name|checkenemy
-argument_list|()
-end_macro
-
-begin_block
-block|{
-name|FILE
-modifier|*
-name|fp
-decl_stmt|;
-comment|/* to open enemy file */
-comment|/* check hit list of restricted accounts */
-if|if
-condition|(
-operator|(
-name|fp
-operator|=
-name|fopen
-argument_list|(
-name|_PATH_ENEMY
-argument_list|,
-literal|"r"
-argument_list|)
-operator|)
-operator|!=
-name|NULL
-condition|)
-block|{
-while|while
-condition|(
-name|fgets
-argument_list|(
-name|Databuf
-argument_list|,
-name|SZ_DATABUF
-argument_list|,
-name|fp
-argument_list|)
-operator|!=
-name|NULL
-condition|)
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|Login
-argument_list|,
-name|Databuf
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"The Phantasia privileges for the account \"%s\" have been revoked.\n"
-argument_list|,
-name|Login
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Mail comments to %s.\n"
-argument_list|,
-name|WIZARD
-argument_list|)
-expr_stmt|;
-name|fclose
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
-name|cleanup
-argument_list|(
-name|TRUE
-argument_list|)
-expr_stmt|;
-comment|/*NOTREACHED*/
-block|}
-name|fclose
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*
-comment|*/
-end_comment
-
 begin_comment
 comment|/************************************************************************ / / FUNCTION NAME: titlelist() / / FUNCTION: print title page / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: fread(), fseek(), fopen(), fgets(), wmove(), strcpy(),  /	fclose(), strlen(), waddstr(), sprintf(), wrefresh() / / GLOBAL INPUTS: Lines, Other, *stdscr, Databuf[], *Playersfp / / GLOBAL OUTPUTS: Lines / / DESCRIPTION: /	Print important information about game, players, etc. / /************************************************************************/
 end_comment
@@ -3213,9 +3056,7 @@ argument_list|)
 expr_stmt|;
 name|printw
 argument_list|(
-literal|"you may quit and mail your reason to '%s'.\n"
-argument_list|,
-name|WIZARD
+literal|"you may quit and mail your reason to 'root'.\n"
 argument_list|)
 expr_stmt|;
 name|addstr
