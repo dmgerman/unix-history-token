@@ -21,7 +21,7 @@ operator|)
 name|savemail
 operator|.
 name|c
-literal|3.37
+literal|3.38
 operator|%
 name|G
 operator|%
@@ -95,6 +95,23 @@ modifier|*
 name|newenvelope
 parameter_list|()
 function_decl|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|Debug
+condition|)
+name|printf
+argument_list|(
+literal|"\nsavemail: exclusive %d\n"
+argument_list|,
+name|exclusive
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|DEBUG
 if|if
 condition|(
 name|exclusive
@@ -419,7 +436,7 @@ literal|0
 condition|)
 return|return;
 block|}
-comment|/* 	**  Save the message in dead.letter. 	**	If we weren't mailing back, and the user is local, we 	**	should save the message in dead.letter so that the 	**	poor person doesn't have to type it over again -- 	**	and we all know what poor typists programmers are. 	*/
+comment|/* 	**  Save the message in dead.letter. 	**	If we weren't mailing back, and the user is local, we 	**	should save the message in dead.letter so that the 	**	poor person doesn't have to type it over again -- 	**	and we all know what poor typists programmers are. 	**	However, if we are running a "smart" protocol, we don't 	**	bother to return the message, since the other end is 	**	expected to handle that. 	*/
 if|if
 condition|(
 name|ArpaMode
@@ -507,12 +524,6 @@ name|DEBUG
 name|p
 operator|=
 literal|"/usr/tmp"
-expr_stmt|;
-else|#
-directive|else
-name|p
-operator|=
-name|NULL
 expr_stmt|;
 endif|#
 directive|endif
