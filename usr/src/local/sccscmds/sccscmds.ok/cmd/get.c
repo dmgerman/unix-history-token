@@ -21,7 +21,7 @@ operator|)
 name|get
 operator|.
 name|c
-literal|4.2
+literal|4.3
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1286,7 +1286,7 @@ name|Gfile
 argument_list|,
 name|HADK
 condition|?
-literal|0644
+literal|0666
 else|:
 literal|0444
 argument_list|)
@@ -3873,7 +3873,7 @@ name|xfcreat
 argument_list|(
 name|p
 argument_list|,
-literal|0644
+literal|0666
 argument_list|)
 expr_stmt|;
 name|fseek
