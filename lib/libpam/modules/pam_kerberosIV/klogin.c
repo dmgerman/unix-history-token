@@ -118,7 +118,7 @@ end_define
 begin_decl_stmt
 specifier|extern
 name|int
-name|notickets
+name|_pam_notickets
 decl_stmt|;
 end_decl_stmt
 
@@ -126,7 +126,14 @@ begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
-name|krbtkfile_env
+name|_pam_krbtkfile_env
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|_pam_noticketsdontcomplain
 decl_stmt|;
 end_decl_stmt
 
@@ -136,7 +143,7 @@ end_comment
 
 begin_function
 name|int
-name|klogin
+name|_pam_klogin
 parameter_list|(
 name|pw
 parameter_list|,
@@ -190,10 +197,6 @@ modifier|*
 name|krb_get_phost
 parameter_list|()
 function_decl|;
-specifier|extern
-name|int
-name|noticketsdontcomplain
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|KLOGIN_PARANOID
@@ -212,7 +215,7 @@ name|unsigned
 name|long
 name|faddr
 decl_stmt|;
-name|noticketsdontcomplain
+name|_pam_noticketsdontcomplain
 operator|=
 literal|0
 expr_stmt|;
@@ -247,7 +250,7 @@ operator|(
 literal|1
 operator|)
 return|;
-name|noticketsdontcomplain
+name|_pam_noticketsdontcomplain
 operator|=
 literal|0
 expr_stmt|;
@@ -298,7 +301,7 @@ operator|->
 name|pw_uid
 argument_list|)
 expr_stmt|;
-name|krbtkfile_env
+name|_pam_krbtkfile_env
 operator|=
 name|tkt_location
 expr_stmt|;
@@ -494,7 +497,7 @@ argument_list|,
 name|savehost
 argument_list|)
 expr_stmt|;
-name|notickets
+name|_pam_notickets
 operator|=
 literal|0
 expr_stmt|;
@@ -620,7 +623,7 @@ operator|==
 name|KSUCCESS
 condition|)
 block|{
-name|notickets
+name|_pam_notickets
 operator|=
 literal|0
 expr_stmt|;
@@ -696,7 +699,7 @@ operator|)
 return|;
 else|#
 directive|else
-name|notickets
+name|_pam_notickets
 operator|=
 literal|0
 expr_stmt|;
