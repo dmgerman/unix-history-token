@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdi.c,v 1.93 2001/12/24 21:36:15 augustss Exp $	*/
+comment|/*	$NetBSD: usbdi.c,v 1.94 2001/12/30 20:26:59 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -5208,6 +5208,28 @@ name|bus
 operator|->
 name|use_polling
 operator|--
+expr_stmt|;
+comment|/* When polling we need to make sure there is nothing pending to do. */
+if|if
+condition|(
+name|dev
+operator|->
+name|bus
+operator|->
+name|use_polling
+condition|)
+name|dev
+operator|->
+name|bus
+operator|->
+name|methods
+operator|->
+name|soft_intr
+argument_list|(
+name|dev
+operator|->
+name|bus
+argument_list|)
 expr_stmt|;
 block|}
 end_function
