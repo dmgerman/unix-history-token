@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: memalloc.c,v 1.12 1998/09/13 19:24:57 tegge Exp $"
+literal|"$Id: memalloc.c,v 1.13 1999/04/12 14:23:36 cracauer Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -529,26 +529,6 @@ operator|->
 name|stackp
 condition|)
 block|{
-if|if
-condition|(
-name|stackp
-operator|==
-name|NULL
-condition|)
-block|{
-name|write
-argument_list|(
-literal|2
-argument_list|,
-literal|"Oops, stackp deleted\n"
-argument_list|,
-literal|21
-argument_list|)
-expr_stmt|;
-name|abort
-argument_list|()
-expr_stmt|;
-block|}
 name|sp
 operator|=
 name|stackp
