@@ -5495,7 +5495,7 @@ return|;
 case|case
 literal|1
 case|:
-comment|/* 			 * OpemBSD randomized scheme 			 */
+comment|/* 			 * OpenBSD randomized scheme 			 */
 return|return
 name|tcp_rndiss_next
 argument_list|()
