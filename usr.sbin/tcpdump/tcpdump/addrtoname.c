@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: addrtoname.c,v 1.37 94/06/16 00:42:28 mccanne Exp $ (LBL)"
+literal|"@(#) $Header: /home/ncvs/src/usr.sbin/tcpdump/tcpdump/addrtoname.c,v 1.2 1995/03/08 12:52:07 olah Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1780,7 +1780,9 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|buf
+name|tp
+operator|->
+name|e_name
 operator|)
 return|;
 block|}
