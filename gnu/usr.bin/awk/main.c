@@ -4,7 +4,7 @@ comment|/*  * main.c -- Expression tree constructors and main program for gawk. 
 end_comment
 
 begin_comment
-comment|/*   * Copyright (C) 1986, 1988, 1989, 1991, 1992 the Free Software Foundation, Inc.  *   * This file is part of GAWK, the GNU implementation of the  * AWK Progamming Language.  *   * GAWK is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *   * GAWK is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with GAWK; see the file COPYING.  If not, write to  * the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/*   * Copyright (C) 1986, 1988, 1989, 1991, 1992, 1993 the Free Software Foundation, Inc.  *   * This file is part of GAWK, the GNU implementation of the  * AWK Progamming Language.  *   * GAWK is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *   * GAWK is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with GAWK; see the file COPYING.  If not, write to  * the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_include
@@ -327,19 +327,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|long
 name|NF
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|long
 name|NR
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|long
 name|FNR
 decl_stmt|;
 end_decl_stmt
@@ -824,6 +824,22 @@ name|char
 modifier|*
 name|scan
 decl_stmt|;
+comment|/* the + on the front tells GNU getopt not to rearrange argv */
+specifier|const
+name|char
+modifier|*
+name|optlist
+init|=
+literal|"+F:f:v:W:m:"
+decl_stmt|;
+name|int
+name|stopped_early
+init|=
+literal|0
+decl_stmt|;
+name|int
+name|old_optind
+decl_stmt|;
 specifier|extern
 name|int
 name|optind
@@ -837,9 +853,40 @@ name|char
 modifier|*
 name|optarg
 decl_stmt|;
-name|int
-name|i
-decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__EMX__
+name|_response
+argument_list|(
+operator|&
+name|argc
+argument_list|,
+operator|&
+name|argv
+argument_list|)
+expr_stmt|;
+name|_wildcard
+argument_list|(
+operator|&
+name|argc
+argument_list|,
+operator|&
+name|argv
+argument_list|)
+expr_stmt|;
+name|setvbuf
+argument_list|(
+name|stdout
+argument_list|,
+name|NULL
+argument_list|,
+name|_IOLBF
+argument_list|,
+name|BUFSIZ
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 operator|(
 name|void
 operator|)
@@ -1058,14 +1105,33 @@ comment|/* Tell the regex routines how they should work. . . */
 name|resetup
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|fpsetmask
+name|fpsetmask
+argument_list|(
+operator|~
+literal|0xff
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* we do error messages ourselves on invalid options */
 name|opterr
 operator|=
 literal|0
 expr_stmt|;
-comment|/* the + on the front tells GNU getopt not to rearrange argv */
-while|while
-condition|(
+comment|/* option processing. ready, set, go! */
+for|for
+control|(
+name|optopt
+operator|=
+literal|0
+operator|,
+name|old_optind
+operator|=
+literal|1
+init|;
 operator|(
 name|c
 operator|=
@@ -1075,7 +1141,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"+F:f:v:W:"
+name|optlist
 argument_list|,
 name|optab
 argument_list|,
@@ -1084,7 +1150,15 @@ argument_list|)
 operator|)
 operator|!=
 name|EOF
-condition|)
+condition|;
+name|optopt
+operator|=
+literal|0
+operator|,
+name|old_optind
+operator|=
+name|optind
+control|)
 block|{
 if|if
 condition|(
@@ -1181,6 +1255,50 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'m'
+case|:
+comment|/* 			 * Research awk extension. 			 *	-mf=nnn		set # fields, gawk ignores 			 *	-mr=nnn		set record length, ditto 			 */
+if|if
+condition|(
+name|do_lint
+condition|)
+name|warning
+argument_list|(
+literal|"-m[fr] option irrelevant"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|optarg
+index|[
+literal|0
+index|]
+operator|!=
+literal|'r'
+operator|&&
+name|optarg
+index|[
+literal|0
+index|]
+operator|!=
+literal|'f'
+operator|)
+operator|||
+name|optarg
+index|[
+literal|1
+index|]
+operator|!=
+literal|'='
+condition|)
+name|warning
+argument_list|(
+literal|"-m option usage: -m[fn]=nnn"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'W'
 case|:
 comment|/* gawk specific options */
@@ -1219,12 +1337,12 @@ literal|'s'
 case|:
 if|if
 condition|(
-name|strlen
-argument_list|(
 name|optarg
-argument_list|)
-operator|==
+index|[
 literal|0
+index|]
+operator|==
+literal|'\0'
 condition|)
 name|warning
 argument_list|(
@@ -1268,18 +1386,66 @@ break|break;
 endif|#
 directive|endif
 case|case
+literal|0
+case|:
+comment|/* 			 * getopt_long found an option that sets a variable 			 * instead of returning a letter. Do nothing, just 			 * cycle around for the next one. 			 */
+break|break;
+case|case
 literal|'?'
 case|:
 default|default:
-comment|/* 			 * New behavior.  If not posix, an unrecognized 			 * option stops argument processing so that it can 			 * go into ARGV for the awk program to see. This 			 * makes use of ``#! /bin/gawk -f'' easier. 			 */
+comment|/* 			 * New behavior.  If not posix, an unrecognized 			 * option stops argument processing so that it can 			 * go into ARGV for the awk program to see. This 			 * makes use of ``#! /bin/gawk -f'' easier. 			 * 			 * However, it's never simple. If optopt is set, 			 * an option that requires an argument didn't get the 			 * argument. We care because if opterr is 0, then 			 * getopt_long won't print the error message for us. 			 */
 if|if
 condition|(
 operator|!
 name|do_posix
+operator|&&
+operator|(
+name|optopt
+operator|==
+literal|0
+operator|||
+name|strchr
+argument_list|(
+name|optlist
+argument_list|,
+name|optopt
+argument_list|)
+operator|==
+name|NULL
+operator|)
 condition|)
+block|{
+comment|/* 				 * can't just do optind--. In case of an 				 * option with>=2 letters, getopt_long 				 * won't have incremented optind. 				 */
+name|optind
+operator|=
+name|old_optind
+expr_stmt|;
+name|stopped_early
+operator|=
+literal|1
+expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
+elseif|else
+if|if
+condition|(
+name|optopt
+condition|)
+comment|/* Use 1003.2 required message format */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: option requires an argument -- %c\n"
+argument_list|,
+name|myname
+argument_list|,
+name|optopt
+argument_list|)
+expr_stmt|;
 comment|/* else 				let getopt print error message for us */
 break|break;
 block|}
@@ -1293,6 +1459,34 @@ condition|)
 name|nostalgia
 argument_list|()
 expr_stmt|;
+comment|/* check for POSIXLY_CORRECT environment variable */
+if|if
+condition|(
+operator|!
+name|do_posix
+operator|&&
+name|getenv
+argument_list|(
+literal|"POSIXLY_CORRECT"
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|do_posix
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|do_lint
+condition|)
+name|warning
+argument_list|(
+literal|"environment variable `POSIXLY_CORRECT' set: turning on --posix"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* POSIX compliance also implies no Unix extensions either */
 if|if
 condition|(
@@ -1349,8 +1543,10 @@ operator|>
 name|argc
 operator|-
 literal|1
+operator|||
+name|stopped_early
 condition|)
-comment|/* no args left */
+comment|/* no args left or no program */
 name|usage
 argument_list|(
 literal|1
@@ -1419,6 +1615,27 @@ expr_stmt|;
 comment|/* Set up the field variables */
 name|init_fields
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|do_lint
+operator|&&
+name|begin_block
+operator|==
+name|NULL
+operator|&&
+name|expression_value
+operator|==
+name|NULL
+operator|&&
+name|end_block
+operator|==
+name|NULL
+condition|)
+name|warning
+argument_list|(
+literal|"no program"
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1521,32 +1738,59 @@ name|int
 name|exitval
 decl_stmt|;
 block|{
+specifier|const
 name|char
 modifier|*
 name|opt1
 init|=
 literal|" -f progfile [--]"
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|MSDOS
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|OS2
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|VMS
+argument_list|)
+specifier|const
+name|char
+modifier|*
+name|opt2
+init|=
+literal|" [--] \"program\""
+decl_stmt|;
+else|#
+directive|else
+specifier|const
 name|char
 modifier|*
 name|opt2
 init|=
 literal|" [--] 'program'"
 decl_stmt|;
+endif|#
+directive|endif
+specifier|const
 name|char
 modifier|*
 name|regops
 init|=
 literal|" [POSIX or GNU style options]"
 decl_stmt|;
-name|version
-argument_list|()
-expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s%s%s file ...\n       %s%s%s file ...\n"
+literal|"Usage:\t%s%s%s file ...\n\t%s%s%s file ...\n"
 argument_list|,
 name|myname
 argument_list|,
@@ -1564,7 +1808,7 @@ expr_stmt|;
 comment|/* GNU long options info. Gack. */
 name|fputs
 argument_list|(
-literal|"\nPOSIX options:\t\tGNU long options:\n"
+literal|"POSIX options:\t\tGNU long options:\n"
 argument_list|,
 name|stderr
 argument_list|)
@@ -1586,6 +1830,13 @@ expr_stmt|;
 name|fputs
 argument_list|(
 literal|"\t-v var=val\t\t--assign=var=val\n"
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+name|fputs
+argument_list|(
+literal|"\t-m[fr]=val\n"
 argument_list|,
 name|stderr
 argument_list|)
@@ -1625,10 +1876,16 @@ argument_list|,
 name|stderr
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|fputs("\t-W nostalgia\t\t--nostalgia\n", stderr);
+ifdef|#
+directive|ifdef
+name|NOSTALGIA
+name|fputs
+argument_list|(
+literal|"\t-W nostalgia\t\t--nostalgia\n"
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 ifdef|#
@@ -1706,9 +1963,6 @@ index|[]
 init|=
 literal|"You should have received a copy of the GNU General Public License\n\ along with this program; if not, write to the Free Software\n\ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.\n"
 decl_stmt|;
-name|version
-argument_list|()
-expr_stmt|;
 name|fputs
 argument_list|(
 name|blurb_part1
@@ -1756,14 +2010,8 @@ modifier|*
 modifier|*
 name|tmp
 decl_stmt|;
-name|int
-name|len
-init|=
-name|strlen
-argument_list|(
-name|str
-argument_list|)
-decl_stmt|;
+comment|/* int len = strlen(str); */
+comment|/* don't do that - we want to 	                               avoid mismatched types */
 name|tmp
 operator|=
 name|get_lhs
@@ -1832,7 +2080,10 @@ name|make_str_node
 argument_list|(
 name|str
 argument_list|,
-name|len
+name|strlen
+argument_list|(
+name|str
+argument_list|)
 argument_list|,
 name|SCAN
 argument_list|)
@@ -2043,6 +2294,7 @@ modifier|*
 modifier|*
 name|spec
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
@@ -2050,6 +2302,7 @@ decl_stmt|;
 name|NODETYPE
 name|type
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|strval
@@ -2186,7 +2439,7 @@ literal|"FILENAME"
 block|,
 name|Node_var
 block|,
-literal|"-"
+literal|""
 block|,
 literal|0
 block|,
@@ -2380,6 +2633,10 @@ operator|)
 operator|=
 name|install
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|vp
 operator|->
 name|name
@@ -2401,6 +2658,10 @@ argument_list|)
 else|:
 name|make_string
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|vp
 operator|->
 name|strval
@@ -2457,6 +2718,12 @@ operator|!
 name|defined
 argument_list|(
 name|MSDOS
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|OS2
 argument_list|)
 operator|&&
 operator|!
@@ -2644,6 +2911,12 @@ block|{
 name|char
 modifier|*
 name|cp
+decl_stmt|,
+modifier|*
+name|cp2
+decl_stmt|;
+name|int
+name|badvar
 decl_stmt|;
 name|Func_ptr
 name|after_assign
@@ -2684,6 +2957,80 @@ name|cp
 operator|++
 operator|=
 literal|'\0'
+expr_stmt|;
+comment|/* first check that the variable name has valid syntax */
+name|badvar
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|isalpha
+argument_list|(
+name|arg
+index|[
+literal|0
+index|]
+argument_list|)
+operator|&&
+name|arg
+index|[
+literal|0
+index|]
+operator|!=
+literal|'_'
+condition|)
+name|badvar
+operator|=
+literal|1
+expr_stmt|;
+else|else
+for|for
+control|(
+name|cp2
+operator|=
+name|arg
+operator|+
+literal|1
+init|;
+operator|*
+name|cp2
+condition|;
+name|cp2
+operator|++
+control|)
+if|if
+condition|(
+operator|!
+name|isalnum
+argument_list|(
+operator|*
+name|cp2
+argument_list|)
+operator|&&
+operator|*
+name|cp2
+operator|!=
+literal|'_'
+condition|)
+block|{
+name|badvar
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+name|badvar
+condition|)
+name|fatal
+argument_list|(
+literal|"illegal name `%s' in variable assignment"
+argument_list|,
+name|arg
+argument_list|)
 expr_stmt|;
 comment|/* 		 * Recent versions of nawk expand escapes inside assignments. 		 * This makes sense, so we do it too. 		 */
 name|it
@@ -3253,12 +3600,12 @@ literal|7
 expr_stmt|;
 if|if
 condition|(
-name|strlen
-argument_list|(
 name|cp
-argument_list|)
-operator|==
+index|[
 literal|0
+index|]
+operator|==
+literal|'\0'
 condition|)
 name|warning
 argument_list|(
@@ -3352,11 +3699,17 @@ argument_list|,
 name|PATCHLEVEL
 argument_list|)
 expr_stmt|;
+comment|/* per GNU coding standards, exit successfully, do nothing else */
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/* static */
+comment|/* this mess will improve in 2.16 */
 end_comment
 
 begin_function
@@ -3470,26 +3823,56 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
+name|OS2
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|atarist
 argument_list|)
 name|char
 modifier|*
 name|q
 decl_stmt|;
+for|for
+control|(
+name|p
+operator|=
+name|filespec
+init|;
+operator|(
+name|p
+operator|=
+name|strchr
+argument_list|(
+name|p
+argument_list|,
+literal|'\\'
+argument_list|)
+operator|)
+condition|;
+operator|*
+name|p
+operator|=
+literal|'/'
+control|)
+empty_stmt|;
 name|p
 operator|=
 name|filespec
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|q
 operator|=
 name|strrchr
 argument_list|(
 name|p
 argument_list|,
-literal|'\\'
+literal|'/'
 argument_list|)
+operator|)
 condition|)
 name|p
 operator|=
@@ -3499,6 +3882,7 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|q
 operator|=
 name|strchr
@@ -3507,6 +3891,7 @@ name|p
 argument_list|,
 literal|'.'
 argument_list|)
+operator|)
 condition|)
 operator|*
 name|q

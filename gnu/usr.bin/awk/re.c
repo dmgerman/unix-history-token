@@ -4,7 +4,7 @@ comment|/*  * re.c - compile regular expressions.  */
 end_comment
 
 begin_comment
-comment|/*   * Copyright (C) 1991, 1992 the Free Software Foundation, Inc.  *   * This file is part of GAWK, the GNU implementation of the  * AWK Progamming Language.  *   * GAWK is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *   * GAWK is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with GAWK; see the file COPYING.  If not, write to  * the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/*   * Copyright (C) 1991, 1992, 1993 the Free Software Foundation, Inc.  *   * This file is part of GAWK, the GNU implementation of the  * AWK Progamming Language.  *   * GAWK is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *   * GAWK is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with GAWK; see the file COPYING.  If not, write to  * the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_include
@@ -34,7 +34,7 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
-name|int
+name|size_t
 name|len
 decl_stmt|;
 name|int
@@ -48,9 +48,10 @@ name|Regexp
 modifier|*
 name|rp
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
-name|err
+name|rerr
 decl_stmt|;
 name|char
 modifier|*
@@ -278,20 +279,15 @@ argument_list|)
 expr_stmt|;
 name|emalloc
 argument_list|(
-name|rp
-operator|->
-name|pat
-operator|.
-name|buffer
+argument|rp->pat.buffer
 argument_list|,
-name|char
-operator|*
+argument|unsigned char *
 argument_list|,
 literal|16
 argument_list|,
 literal|"make_regexp"
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 name|rp
 operator|->
 name|pat
@@ -346,15 +342,12 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|err
+name|rerr
 operator|=
 name|re_compile_pattern
 argument_list|(
 name|temp
 argument_list|,
-operator|(
-name|size_t
-operator|)
 name|len
 argument_list|,
 operator|&
@@ -372,7 +365,7 @@ name|fatal
 argument_list|(
 literal|"%s: /%s/"
 argument_list|,
-name|err
+name|rerr
 argument_list|,
 name|temp
 argument_list|)
@@ -385,7 +378,7 @@ operator|!
 name|ignorecase
 condition|)
 block|{
-name|regcompile
+name|dfacomp
 argument_list|(
 name|temp
 argument_list|,
@@ -453,7 +446,7 @@ name|int
 name|start
 decl_stmt|;
 specifier|register
-name|int
+name|size_t
 name|len
 decl_stmt|;
 name|int
@@ -474,10 +467,7 @@ name|dfa
 condition|)
 block|{
 name|char
-name|save1
-decl_stmt|;
-name|char
-name|save2
+name|save
 decl_stmt|;
 name|int
 name|count
@@ -487,38 +477,19 @@ decl_stmt|;
 name|int
 name|try_backref
 decl_stmt|;
-name|save1
+comment|/* 		 * dfa likes to stick a '\n' right after the matched 		 * text.  So we just save and restore the character. 		 */
+name|save
 operator|=
 name|str
 index|[
 name|start
 operator|+
 name|len
-index|]
-expr_stmt|;
-name|str
-index|[
-name|start
-operator|+
-name|len
-index|]
-operator|=
-literal|'\n'
-expr_stmt|;
-name|save2
-operator|=
-name|str
-index|[
-name|start
-operator|+
-name|len
-operator|+
-literal|1
 index|]
 expr_stmt|;
 name|ret
 operator|=
-name|regexecute
+name|dfaexec
 argument_list|(
 operator|&
 operator|(
@@ -536,8 +507,6 @@ operator|+
 name|start
 operator|+
 name|len
-operator|+
-literal|1
 argument_list|,
 literal|1
 argument_list|,
@@ -555,18 +524,7 @@ operator|+
 name|len
 index|]
 operator|=
-name|save1
-expr_stmt|;
-name|str
-index|[
-name|start
-operator|+
-name|len
-operator|+
-literal|1
-index|]
-operator|=
-name|save2
+name|save
 expr_stmt|;
 block|}
 if|if
@@ -660,7 +618,7 @@ name|rp
 operator|->
 name|dfa
 condition|)
-name|reg_free
+name|dfafree
 argument_list|(
 operator|&
 operator|(
@@ -680,7 +638,7 @@ end_function
 
 begin_function
 name|void
-name|reg_error
+name|dfaerror
 parameter_list|(
 name|s
 parameter_list|)
@@ -935,17 +893,22 @@ name|void
 name|resetup
 parameter_list|()
 block|{
+name|reg_syntax_t
+name|syn
+init|=
+name|RE_SYNTAX_AWK
+decl_stmt|;
 operator|(
 name|void
 operator|)
 name|re_set_syntax
 argument_list|(
-name|RE_SYNTAX_AWK
+name|syn
 argument_list|)
 expr_stmt|;
-name|regsyntax
+name|dfasyntax
 argument_list|(
-name|RE_SYNTAX_AWK
+name|syn
 argument_list|,
 literal|0
 argument_list|)

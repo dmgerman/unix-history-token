@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Declarations for getopt.    Copyright (C) 1989, 1990, 1991, 1992 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify it    under the terms of the GNU Library General Public License as published    by the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU Library General Public    License along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Declarations for getopt.    Copyright (C) 1989, 1990, 1991, 1992, 1993 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by the    Free Software Foundation; either version 2, or (at your option) any    later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_ifndef
@@ -44,12 +44,17 @@ specifier|extern
 name|int
 name|opterr
 decl_stmt|;
+comment|/* Set to an option character which was unrecognized.  */
+specifier|extern
+name|int
+name|optopt
+decl_stmt|;
 comment|/* Describe the long-named options requested by the application.    The LONG_OPTIONS argument to getopt_long or getopt_long_only is a vector    of `struct option' terminated by an element containing a name which is    zero.     The field `has_arg' is:    no_argument		(or 0) if the option does not take an argument,    required_argument	(or 1) if the option requires an argument,    optional_argument 	(or 2) if the option takes an optional argument.     If the field `flag' is not NULL, it points to a variable that is set    to the value given in the field `val' when the option is found, but    left unchanged if the option is not found.     To have a long-named option do something other than set an `int' to    a compiled-in constant, such as set a value from `optarg', set the    option's `flag' field to zero and its `val' field to a nonzero    value (the equivalent single-letter option character, if there is    one).  For long options that have a zero `flag' field, `getopt'    returns the contents of the `val' field.  */
 struct|struct
 name|option
 block|{
-if|#
-directive|if
+ifdef|#
+directive|ifdef
 name|__STDC__
 specifier|const
 name|char
@@ -78,18 +83,20 @@ decl_stmt|;
 block|}
 struct|;
 comment|/* Names for the values of the `has_arg' field of `struct option'.  */
-enum|enum
-name|_argtype
-block|{
+define|#
+directive|define
 name|no_argument
-block|,
+value|0
+define|#
+directive|define
 name|required_argument
-block|,
+value|1
+define|#
+directive|define
 name|optional_argument
-block|}
-enum|;
-if|#
-directive|if
+value|2
+ifdef|#
+directive|ifdef
 name|__STDC__
 if|#
 directive|if

@@ -4,7 +4,7 @@ comment|/*  * protos.h -- function prototypes for when the headers don't have th
 end_comment
 
 begin_comment
-comment|/*   * Copyright (C) 1991, 1992, the Free Software Foundation, Inc.  *   * This file is part of GAWK, the GNU implementation of the  * AWK Progamming Language.  *   * GAWK is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *   * GAWK is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with GAWK; see the file COPYING.  If not, write to  * the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/*   * Copyright (C) 1991, 1992, 1993 the Free Software Foundation, Inc.  *   * This file is part of GAWK, the GNU implementation of the  * AWK Progamming Language.  *   * GAWK is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2 of the License, or  * (at your option) any later version.  *   * GAWK is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with GAWK; see the file COPYING.  If not, write to  * the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_ifdef
@@ -84,6 +84,22 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|sun
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__sun__
+argument_list|)
+end_if
+
 begin_decl_stmt
 specifier|extern
 name|void
@@ -97,6 +113,11 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|extern
 name|char
@@ -105,6 +126,7 @@ name|getenv
 name|P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -152,6 +174,25 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|strcmp
+name|P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|char
 modifier|*
 name|strncpy
@@ -165,26 +206,7 @@ specifier|const
 name|char
 operator|*
 operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|strcmp
-name|P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
+name|size_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -205,7 +227,7 @@ specifier|const
 name|char
 operator|*
 operator|,
-name|int
+name|size_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -317,7 +339,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|size_t
 name|strlen
 name|P
 argument_list|(
@@ -369,7 +391,7 @@ end_if
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|size_t
 name|strftime
 name|P
 argument_list|(
@@ -377,7 +399,7 @@ operator|(
 name|char
 operator|*
 operator|,
-name|int
+name|size_t
 operator|,
 specifier|const
 name|char
@@ -397,6 +419,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|time_t
@@ -410,6 +438,24 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function_decl
+specifier|extern
+name|long
+name|time
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -501,10 +547,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* extern int fprintf P((FILE *, char *, ...)); */
-end_comment
-
 begin_decl_stmt
 specifier|extern
 name|int
@@ -512,6 +554,14 @@ name|fprintf
 name|P
 argument_list|(
 operator|(
+name|FILE
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+operator|...
 operator|)
 argument_list|)
 decl_stmt|;
@@ -533,20 +583,25 @@ name|__GNU_LIBRARY__
 argument_list|)
 end_if
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
-name|int
+name|size_t
 name|fwrite
 name|P
 argument_list|(
 operator|(
 specifier|const
-name|char
-operator|*
+name|aptr_t
 operator|,
-name|int
+name|size_t
 operator|,
-name|int
+name|size_t
 operator|,
 name|FILE
 operator|*
@@ -554,6 +609,24 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function_decl
+specifier|extern
+name|int
+name|fwrite
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -715,7 +788,15 @@ name|sscanf
 name|P
 argument_list|(
 operator|(
-comment|/* char *, char *, ... */
+specifier|const
+name|char
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+operator|...
 operator|)
 argument_list|)
 decl_stmt|;
@@ -793,6 +874,7 @@ name|atof
 name|P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -910,6 +992,11 @@ name|creat
 name|P
 argument_list|(
 operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+name|mode_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -922,6 +1009,13 @@ name|open
 name|P
 argument_list|(
 operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+operator|...
 operator|)
 argument_list|)
 decl_stmt|;
@@ -994,6 +1088,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__STDC__
+end_ifndef
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -1011,6 +1111,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -1039,58 +1144,57 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__STDC__
-end_ifndef
-
-begin_decl_stmt
-specifier|extern
-name|long
-name|time
-name|P
-argument_list|(
-operator|(
-name|long
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|NON_STD_SPRINTF
 end_ifdef
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|char
 modifier|*
 name|sprintf
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+operator|...
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_else
 else|#
 directive|else
 end_else
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|int
 name|sprintf
-parameter_list|()
-function_decl|;
-end_function_decl
+name|P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+specifier|const
+name|char
+operator|*
+operator|,
+operator|...
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

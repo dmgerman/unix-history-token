@@ -4,7 +4,7 @@ comment|/*  * config.h -- configuration definitions for gawk.  *  * For generic 
 end_comment
 
 begin_comment
-comment|/*   * Copyright (C) 1991, 1992 the Free Software Foundation, Inc.  *   * This file is part of GAWK, the GNU implementation of the  * AWK Progamming Language.  *   * GAWK is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2, or (at your option)  * any later version.  *   * GAWK is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with GAWK; see the file COPYING.  If not, write to  * the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/*   * Copyright (C) 1991, 1992, 1993 the Free Software Foundation, Inc.  *   * This file is part of GAWK, the GNU implementation of the  * AWK Progamming Language.  *   * GAWK is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License as published by  * the Free Software Foundation; either version 2, or (at your option)  * any later version.  *   * GAWK is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  * GNU General Public License for more details.  *   * You should have received a copy of the GNU General Public License  * along with GAWK; see the file COPYING.  If not, write to  * the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_comment
@@ -65,6 +65,14 @@ directive|define
 name|HAVE_UNDERSCORE_SETJMP
 value|1
 end_define
+
+begin_comment
+comment|/*  * LIMITS_H_MISSING  *  * You don't have a<limits.h> include file.  */
+end_comment
+
+begin_comment
+comment|/* #define LIMITS_H_MISSING	1 */
+end_comment
 
 begin_comment
 comment|/***********************************************/
@@ -131,7 +139,7 @@ comment|/*  * STRTOD_MISSING  *  * Your system does not have the strtod() routin
 end_comment
 
 begin_comment
-comment|/* #define	STRTOD_MISSING  1 */
+comment|/* #define STRTOD_MISSING	1 */
 end_comment
 
 begin_comment
@@ -156,6 +164,14 @@ end_comment
 
 begin_comment
 comment|/* #define TZNAME_MISSING	1 */
+end_comment
+
+begin_comment
+comment|/*  * TM_ZONE_MISSING  *  * Your "struct tm" is missing the tm_zone field.  * If this is the case *and* strftime() is missing *and* tzname is missing,  * define this.  */
+end_comment
+
+begin_comment
+comment|/* #define TM_ZONE_MISSING	1 */
 end_comment
 
 begin_comment
@@ -294,6 +310,61 @@ directive|define
 name|SRANDOM_PROTO
 value|1
 end_define
+
+begin_comment
+comment|/*  * getpgrp() in sysvr4 and POSIX takes no argument  */
+end_comment
+
+begin_comment
+comment|/* #define GETPGRP_NOARG	0 */
+end_comment
+
+begin_comment
+comment|/*  * define const to nothing if not __STDC__  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__STDC__
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|const
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* If svr4 and not gcc */
+end_comment
+
+begin_comment
+comment|/* #define SVR4		0 */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SVR4
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|__svr4__
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* anything that follows is for system-specific short-term kludges */
