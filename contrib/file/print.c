@@ -93,7 +93,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$Id: print.c,v 1.31 2000/08/05 17:36:49 christos Exp $"
+literal|"@(#)$Id: print.c,v 1.32 2001/03/11 20:29:16 christos Exp $"
 argument_list|)
 end_macro
 
@@ -218,9 +218,7 @@ comment|/* Note: in.type is unsigned */
 operator|(
 name|m
 operator|->
-name|in
-operator|.
-name|type
+name|in_type
 operator|<
 name|SZOF
 argument_list|(
@@ -232,18 +230,14 @@ name|typ
 index|[
 name|m
 operator|->
-name|in
-operator|.
-name|type
+name|in_type
 index|]
 else|:
 literal|"*bad*"
 argument_list|,
 name|m
 operator|->
-name|in
-operator|.
-name|offset
+name|in_offset
 argument_list|)
 expr_stmt|;
 operator|(
