@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)getopt.c	4.13 (Berkeley) %G%"
+literal|"@(#)getopt.c	5.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,11 +72,14 @@ literal|1
 decl_stmt|,
 comment|/* index into parent argv vector */
 name|optopt
+decl_stmt|,
+comment|/* character checked for validity */
+name|optreset
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* character checked for validity */
+comment|/* reset getopt */
 end_comment
 
 begin_decl_stmt
@@ -95,6 +98,13 @@ define|#
 directive|define
 name|BADCH
 value|(int)'?'
+end_define
+
+begin_define
+define|#
+directive|define
+name|BADARG
+value|(int)':'
 end_define
 
 begin_define
@@ -149,12 +159,18 @@ name|p
 decl_stmt|;
 if|if
 condition|(
+name|optreset
+operator|||
 operator|!
 operator|*
 name|place
 condition|)
 block|{
 comment|/* update scanning pointer */
+name|optreset
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|optind
@@ -272,6 +288,11 @@ expr_stmt|;
 if|if
 condition|(
 name|opterr
+operator|&&
+operator|*
+name|ostr
+operator|!=
+literal|':'
 condition|)
 block|{
 if|if
@@ -394,6 +415,18 @@ else|else
 operator|++
 name|p
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|ostr
+operator|==
+literal|':'
+condition|)
+return|return
+operator|(
+name|BADARG
+operator|)
+return|;
 if|if
 condition|(
 name|opterr
