@@ -5815,20 +5815,14 @@ operator|&
 name|fh
 argument_list|)
 expr_stmt|;
+comment|/* IP6F_OFF_MASK = 0xfff8(BigEndian), 0xf8ff(LittleEndian) */
 if|if
 condition|(
-operator|(
-name|ntohs
-argument_list|(
 name|fh
 operator|.
 name|ip6f_offlg
-argument_list|)
 operator|&
 name|IP6F_OFF_MASK
-operator|)
-operator|!=
-literal|0
 condition|)
 return|return
 operator|-
