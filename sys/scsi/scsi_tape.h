@@ -8,7 +8,7 @@ comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial S
 end_comment
 
 begin_comment
-comment|/*  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id: scsi_tape.h,v 1.15 1995/12/09 20:42:32 phk Exp $  */
+comment|/*  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef

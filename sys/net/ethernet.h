@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Fundamental constants relating to ethernet.  *  * $Id: ethernet.h,v 1.1 1996/08/05 14:02:38 phk Exp $  *  */
+comment|/*  * Fundamental constants relating to ethernet.  *  * $FreeBSD$  *  */
 end_comment
 
 begin_ifndef

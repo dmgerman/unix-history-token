@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_devar.h,v 1.21 1997/10/16 22:02:32 matt Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id$ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment

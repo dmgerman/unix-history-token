@@ -4,7 +4,7 @@ comment|/*	$NetBSD: krpc.h,v 1.4 1995/12/19 23:07:11 cgd Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: krpc.h,v 1.1.4.1 1997/05/11 18:01:25 tegge Exp $	*/
+comment|/* $FreeBSD$	*/
 end_comment
 
 begin_include

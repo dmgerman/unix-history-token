@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: isp_pci.c,v 1.24.2.2 1999/07/05 20:28:16 mjacob Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment

@@ -12,7 +12,7 @@ comment|/*  * Copyright (c) 1996 Charles M. Hannum.  All rights reserved.  * Cop
 end_comment
 
 begin_comment
-comment|/* $Id: bus.h,v 1.2 1998/04/19 15:28:30 bde Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_ifndef

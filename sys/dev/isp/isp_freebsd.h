@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: isp_freebsd.h,v 1.16.2.1 1999/07/02 23:58:43 mjacob Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment

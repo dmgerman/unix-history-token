@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  *      form: @(#)lptreg.h	1.1 (Berkeley) 12/19/90  *	$Id: lptreg.h,v 1.2.16.1 1996/11/09 21:08:45 phk Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  *      form: @(#)lptreg.h	1.1 (Berkeley) 12/19/90  * $FreeBSD$  */
 end_comment
 
 begin_comment

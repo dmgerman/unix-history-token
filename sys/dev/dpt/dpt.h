@@ -8,7 +8,7 @@ comment|/*  *  *  dpt.h:	Definitions and constants used by the SCSI side of the 
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt.h,v 1.1.2.3 1998/03/23 07:57:20 jkh Exp $"
+empty|#ident "$FreeBSD$"
 end_empty
 
 begin_ifndef

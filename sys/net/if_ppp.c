@@ -4,7 +4,7 @@ comment|/*  * if_ppp.c - Point-to-Point Protocol (PPP) Asynchronous driver.  *  
 end_comment
 
 begin_comment
-comment|/* $Id: if_ppp.c,v 1.59 1998/06/20 16:28:01 peter Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment

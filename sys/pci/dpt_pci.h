@@ -4,7 +4,7 @@ comment|/*  *       Copyright (c) 1997 by Simon Shapiro  *       All Rights Rese
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_pci.h,v 1.1.2.1 1998/03/06 23:45:09 julian Exp $"
+empty|#ident "$FreeBSD$"
 end_empty
 
 begin_define

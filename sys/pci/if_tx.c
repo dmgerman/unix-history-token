@@ -4,7 +4,7 @@ comment|/*	$OpenBSD: if_tx.c,v 1.3 1998/10/10 04:30:09 jason Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_tx.c,v 1.1.2.6 1998/11/13 01:47:43 jdp Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment

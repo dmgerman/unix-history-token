@@ -4,7 +4,7 @@ comment|/*	$NetBSD: dc21040reg.h,v 1.13 1997/10/17 09:26:58 matt Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: dc21040reg.h,v 1.1.1.2.2.2 1997/10/18 18:23:55 peter Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment

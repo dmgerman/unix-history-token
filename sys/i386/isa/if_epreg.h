@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1993 Herb Peyerl (hpeyerl@novatel.ca) All rights res
 end_comment
 
 begin_comment
-comment|/*  *  $Id: if_epreg.h,v 1.17.2.2 1997/11/10 23:53:31 itojun Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
+comment|/*  * $FreeBSD$  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
 end_comment
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* MD5.H - header file for MD5C.C  * $Id: md5.h,v 1.6 1996/12/22 10:31:34 phk Exp $  */
+comment|/* MD5.H - header file for MD5C.C  * $FreeBSD$  */
 end_comment
 
 begin_comment

@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1992 William F. Jolitz, TeleMuse  * All rights reser
 end_comment
 
 begin_comment
-comment|/*  * Changes Copyright (C) 1995, David Greenman& John Dyson; This software may  * be used, modified, copied, distributed, and sold, in both source and  * binary form provided that the above copyright and these terms are  * retained. Under no circumstances is the author responsible for the proper  * functioning of this software, nor does the author assume any responsibility  * for damages incurred with its use.  *  *	$Id: subr_rlist.c,v 1.19.2.1 1998/07/07 05:23:48 gibbs Exp $  */
+comment|/*  * Changes Copyright (C) 1995, David Greenman& John Dyson; This software may  * be used, modified, copied, distributed, and sold, in both source and  * binary form provided that the above copyright and these terms are  * retained. Under no circumstances is the author responsible for the proper  * functioning of this software, nor does the author assume any responsibility  * for damages incurred with its use.  *  * $FreeBSD$  */
 end_comment
 
 begin_include

@@ -12,7 +12,7 @@ comment|/**  * IMPORTANT:  *	There are two critical section "levels" used in thi
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_scsi.c,v 1.4.2.6 1998/06/02 23:28:15 eivind Exp $"
+empty|#ident "$FreeBSD$"
 end_empty
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: bootp_subr.c,v 1.1.4.3 1997/08/15 13:31:16 tegge Exp $	*/
+comment|/* $FreeBSD$	*/
 end_comment
 
 begin_comment
