@@ -87,6 +87,13 @@ end_comment
 
 begin_typedef
 typedef|typedef
+name|int
+name|__nl_item
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|__int64_t
 name|__off_t
 typedef|;

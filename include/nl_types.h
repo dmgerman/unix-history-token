@@ -39,12 +39,29 @@ name|NL_CAT_LOCALE
 value|1
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_NL_ITEM_DECLARED
+end_ifndef
+
 begin_typedef
 typedef|typedef
-name|int
+name|__nl_item
 name|nl_item
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|_NL_ITEM_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
