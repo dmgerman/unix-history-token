@@ -52,7 +52,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: zic.c,v 1.8 1999/01/21 17:12:49 wollman Exp $"
+literal|"$Id: zic.c,v 1.8 1999/01/21 17:46:19 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2759,7 +2759,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|uid_t
-name|oflag
+name|uflag
 init|=
 operator|(
 name|uid_t
