@@ -1865,7 +1865,7 @@ operator|&
 literal|0x7F
 operator|)
 operator|<
-name|NSIG
+name|sys_nsig
 operator|&&
 name|sys_siglist
 index|[
@@ -4989,7 +4989,7 @@ operator|&
 literal|0x7F
 operator|)
 operator|<
-name|NSIG
+name|sys_nsig
 operator|&&
 name|sys_siglist
 index|[

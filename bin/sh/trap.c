@@ -407,13 +407,18 @@ literal|1
 init|;
 name|n
 operator|<
-name|NSIG
+name|sys_nsig
 condition|;
 name|n
 operator|++
 control|)
 if|if
 condition|(
+name|sys_signame
+index|[
+name|n
+index|]
+operator|&&
 name|strcasecmp
 argument_list|(
 name|sys_signame
@@ -464,7 +469,7 @@ literal|1
 init|;
 name|n
 operator|<
-name|NSIG
+name|sys_nsig
 condition|;
 name|n
 operator|++
@@ -552,7 +557,7 @@ literal|0
 init|;
 name|signo
 operator|<
-name|NSIG
+name|sys_nsig
 condition|;
 name|signo
 operator|++
