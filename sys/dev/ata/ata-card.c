@@ -106,6 +106,15 @@ comment|/* NetBSD has a few others that need to migrate into pccarddevs */
 comment|/* XXX */
 name|PCMCIA_CARD
 argument_list|(
+name|FREECOM
+argument_list|,
+name|PCCARDIDE
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|PCMCIA_CARD
+argument_list|(
 name|EXP
 argument_list|,
 name|EXPMULTIMEDIA
