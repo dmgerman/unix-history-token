@@ -1082,6 +1082,8 @@ name|format_cmd
 argument_list|(
 name|cmd
 argument_list|,
+name|FILENAME_MAX
+argument_list|,
 name|p
 operator|->
 name|name
