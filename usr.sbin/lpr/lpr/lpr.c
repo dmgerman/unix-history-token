@@ -41,7 +41,7 @@ name|sccsid
 index|[]
 init|=
 literal|"From: @(#)lpr.c	8.4 (Berkeley) 4/28/95"
-literal|"\n$Id: lpr.c,v 1.10 1996/10/27 03:06:46 imp Exp $\n"
+literal|"\n$Id: lpr.c,v 1.10.2.1 1997/02/26 02:31:53 mpp Exp $\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -824,6 +824,7 @@ name|ncopies
 operator|=
 name|i
 expr_stmt|;
+break|break;
 case|case
 literal|'1'
 case|:
