@@ -1378,7 +1378,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * These "functions" are declared with archaic `extern's because they are  * actually pointers in the !ATAPI_STATIC case.  */
+end_comment
+
 begin_function_decl
+specifier|extern
 name|int
 name|atapi_start
 parameter_list|(
@@ -1389,6 +1394,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
 name|int
 name|atapi_intr
 parameter_list|(
@@ -1399,6 +1405,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
 name|void
 name|atapi_debug
 parameter_list|(
@@ -1414,6 +1421,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
 name|struct
 name|atapires
 name|atapi_request_wait
@@ -1485,6 +1493,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
 name|void
 name|atapi_request_callback
 parameter_list|(
@@ -1567,6 +1576,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|extern
 name|struct
 name|atapires
 name|atapi_request_immediate

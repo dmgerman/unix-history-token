@@ -4,7 +4,7 @@ comment|/*	from Id: if_pppvar.h,v 1.1 1994/12/15 22:28:09 paulus Exp	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_pppvar.h,v 1.3 1996/01/30 22:57:49 mpp Exp $	*/
+comment|/*	$Id: if_pppvar.h,v 1.4 1996/02/06 18:51:13 wollman Exp $	*/
 end_comment
 
 begin_comment
@@ -277,6 +277,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|ppp_softc
 name|ppp_softc
