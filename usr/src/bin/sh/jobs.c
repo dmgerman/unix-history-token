@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)jobs.c	8.1 (Berkeley) %G%"
+literal|"@(#)jobs.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -100,12 +100,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"signames.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"syntax.h"
 end_include
 
@@ -155,6 +149,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_ifdef
@@ -1249,10 +1249,10 @@ name|i
 operator|&
 literal|0x7F
 operator|)
-operator|<=
-name|MAXSIG
+operator|<
+name|NSIG
 operator|&&
-name|sigmesg
+name|sys_siglist
 index|[
 name|i
 operator|&
@@ -1261,7 +1261,7 @@ index|]
 condition|)
 name|scopy
 argument_list|(
-name|sigmesg
+name|sys_siglist
 index|[
 name|i
 operator|&
@@ -3591,17 +3591,17 @@ directive|endif
 if|if
 condition|(
 name|status
-operator|<=
-name|MAXSIG
+operator|<
+name|NSIG
 operator|&&
-name|sigmesg
+name|sys_siglist
 index|[
 name|status
 index|]
 condition|)
 name|out2str
 argument_list|(
-name|sigmesg
+name|sys_siglist
 index|[
 name|status
 index|]
