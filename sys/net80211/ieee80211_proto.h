@@ -97,7 +97,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-specifier|extern
 name|void
 name|ieee80211_proto_attach
 parameter_list|(
@@ -109,7 +108,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|ieee80211_proto_detach
 parameter_list|(
@@ -127,7 +125,6 @@ struct_decl|;
 end_struct_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|ieee80211_input
 parameter_list|(
@@ -151,7 +148,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|ieee80211_recv_mgmt
 parameter_list|(
@@ -177,7 +173,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|ieee80211_send_nulldata
 parameter_list|(
@@ -193,7 +188,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|ieee80211_send_mgmt
 parameter_list|(
@@ -213,7 +207,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|ieee80211_classify
 parameter_list|(
@@ -233,7 +226,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|mbuf
 modifier|*
@@ -255,7 +247,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|ieee80211_pwrsave
 parameter_list|(
@@ -275,7 +266,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|ieee80211_reset_erp
 parameter_list|(
@@ -287,7 +277,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|ieee80211_set_shortslottime
 parameter_list|(
@@ -302,7 +291,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|ieee80211_iserp_rateset
 parameter_list|(
@@ -318,7 +306,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|ieee80211_set11gbasicrates
 parameter_list|(
@@ -582,7 +569,6 @@ struct|;
 end_struct
 
 begin_function_decl
-specifier|extern
 name|void
 name|ieee80211_authenticator_register
 parameter_list|(
@@ -598,7 +584,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|ieee80211_authenticator_unregister
 parameter_list|(
@@ -609,7 +594,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 specifier|const
 name|struct
 name|ieee80211_authenticator
@@ -752,7 +736,6 @@ struct|;
 end_struct
 
 begin_function_decl
-specifier|extern
 name|void
 name|ieee80211_aclator_register
 parameter_list|(
@@ -765,7 +748,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|ieee80211_aclator_unregister
 parameter_list|(
@@ -778,7 +760,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 specifier|const
 name|struct
 name|ieee80211_aclator
@@ -842,7 +823,6 @@ comment|/* delete ignore rate */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|int
 name|ieee80211_fix_rate
 parameter_list|(
@@ -999,7 +979,6 @@ struct|;
 end_struct
 
 begin_function_decl
-specifier|extern
 name|void
 name|ieee80211_wme_initparams
 parameter_list|(
@@ -1011,7 +990,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|ieee80211_wme_updateparams
 parameter_list|(
@@ -1023,7 +1001,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|ieee80211_wme_updateparams_locked
 parameter_list|(
@@ -1050,7 +1027,6 @@ value|(((_ic)->ic_newstate)((_ic), (_nstate), (_arg)))
 end_define
 
 begin_function_decl
-specifier|extern
 name|void
 name|ieee80211_print_essid
 parameter_list|(
@@ -1064,7 +1040,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|ieee80211_dump_pkt
 parameter_list|(
@@ -1144,7 +1119,6 @@ struct|;
 end_struct
 
 begin_function_decl
-specifier|extern
 name|struct
 name|mbuf
 modifier|*
@@ -1166,7 +1140,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|ieee80211_beacon_update
 parameter_list|(
@@ -1197,7 +1170,6 @@ comment|/*  * Notification methods called from the 802.11 state machine.  * Note
 end_comment
 
 begin_function_decl
-specifier|extern
 name|void
 name|ieee80211_notify_node_join
 parameter_list|(
@@ -1216,7 +1188,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|ieee80211_notify_node_leave
 parameter_list|(
@@ -1232,7 +1203,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|ieee80211_notify_scan_done
 parameter_list|(

@@ -537,7 +537,6 @@ struct_decl|;
 end_struct_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|ieee80211_node_attach
 parameter_list|(
@@ -549,7 +548,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|ieee80211_node_lateattach
 parameter_list|(
@@ -561,7 +559,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|ieee80211_node_detach
 parameter_list|(
@@ -598,7 +595,6 @@ block|}
 end_function
 
 begin_function_decl
-specifier|extern
 name|void
 name|ieee80211_node_authorize
 parameter_list|(
@@ -614,7 +610,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|ieee80211_node_unauthorize
 parameter_list|(
@@ -630,7 +625,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|ieee80211_begin_scan
 parameter_list|(
@@ -644,7 +638,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|ieee80211_next_scan
 parameter_list|(
@@ -656,7 +649,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|ieee80211_create_ibss
 parameter_list|(
@@ -672,7 +664,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|ieee80211_reset_bss
 parameter_list|(
@@ -684,7 +675,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|ieee80211_cancel_scan
 parameter_list|(
@@ -696,7 +686,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|ieee80211_end_scan
 parameter_list|(
@@ -708,7 +697,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|ieee80211_ibss_merge
 parameter_list|(
@@ -724,7 +712,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|ieee80211_sta_join
 parameter_list|(
@@ -740,7 +727,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|ieee80211_sta_leave
 parameter_list|(
@@ -829,7 +815,6 @@ struct|;
 end_struct
 
 begin_function_decl
-specifier|extern
 name|void
 name|ieee80211_node_table_reset
 parameter_list|(
@@ -841,7 +826,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|ieee80211_node
 modifier|*
@@ -859,7 +843,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|ieee80211_node
 modifier|*
@@ -883,7 +866,6 @@ name|IEEE80211_DEBUG_REFCNT
 end_ifdef
 
 begin_function_decl
-specifier|extern
 name|void
 name|ieee80211_free_node_debug
 parameter_list|(
@@ -903,7 +885,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|ieee80211_node
 modifier|*
@@ -929,7 +910,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|ieee80211_node
 modifier|*
@@ -956,7 +936,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|ieee80211_node
 modifier|*
@@ -982,7 +961,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|ieee80211_node
 modifier|*
@@ -1013,7 +991,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|ieee80211_node
 modifier|*
@@ -1135,7 +1112,6 @@ directive|else
 end_else
 
 begin_function_decl
-specifier|extern
 name|void
 name|ieee80211_free_node
 parameter_list|(
@@ -1147,7 +1123,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|ieee80211_node
 modifier|*
@@ -1165,7 +1140,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|ieee80211_node
 modifier|*
@@ -1184,7 +1158,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|ieee80211_node
 modifier|*
@@ -1202,7 +1175,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|ieee80211_node
 modifier|*
@@ -1225,7 +1197,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|ieee80211_node
 modifier|*
@@ -1272,7 +1243,6 @@ function_decl|;
 end_typedef
 
 begin_function_decl
-specifier|extern
 name|void
 name|ieee80211_iterate_nodes
 parameter_list|(
@@ -1290,7 +1260,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|ieee80211_dump_node
 parameter_list|(
@@ -1306,7 +1275,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|ieee80211_dump_nodes
 parameter_list|(
@@ -1318,7 +1286,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|ieee80211_node
 modifier|*
@@ -1327,7 +1294,6 @@ parameter_list|(
 name|struct
 name|ieee80211_node_table
 modifier|*
-name|nt
 parameter_list|,
 specifier|const
 name|u_int8_t
@@ -1338,7 +1304,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|ieee80211_node_join
 parameter_list|(
@@ -1356,7 +1321,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|ieee80211_node_leave
 parameter_list|(
@@ -1372,7 +1336,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|u_int8_t
 name|ieee80211_getrssi
 parameter_list|(

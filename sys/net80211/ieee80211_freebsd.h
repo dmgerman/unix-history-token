@@ -445,7 +445,6 @@ struct_decl|;
 end_struct_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|ieee80211_node_dectestref
 parameter_list|(
@@ -468,7 +467,6 @@ value|(_ni)->ni_refcnt
 end_define
 
 begin_function_decl
-specifier|extern
 name|struct
 name|mbuf
 modifier|*
@@ -591,7 +589,6 @@ value|(m->m_pkthdr.csum_data -= adj)
 end_define
 
 begin_function_decl
-specifier|extern
 name|void
 name|get_random_bytes
 parameter_list|(

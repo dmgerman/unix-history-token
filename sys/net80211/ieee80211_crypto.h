@@ -354,7 +354,6 @@ struct|;
 end_struct
 
 begin_function_decl
-specifier|extern
 name|void
 name|ieee80211_crypto_attach
 parameter_list|(
@@ -366,7 +365,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|ieee80211_crypto_detach
 parameter_list|(
@@ -378,7 +376,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|ieee80211_crypto_newkey
 parameter_list|(
@@ -397,7 +394,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|ieee80211_crypto_delkey
 parameter_list|(
@@ -413,7 +409,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|ieee80211_crypto_setkey
 parameter_list|(
@@ -436,7 +431,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|ieee80211_crypto_delglobalkeys
 parameter_list|(
@@ -592,7 +586,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-specifier|extern
 name|void
 name|ieee80211_crypto_register
 parameter_list|(
@@ -605,7 +598,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|ieee80211_crypto_unregister
 parameter_list|(
@@ -618,7 +610,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|int
 name|ieee80211_crypto_available
 parameter_list|(
@@ -629,7 +620,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|ieee80211_key
 modifier|*
@@ -651,7 +641,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|struct
 name|ieee80211_key
 modifier|*
@@ -859,7 +848,6 @@ comment|/*  * Crypt-related notification methods.  */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|void
 name|ieee80211_notify_replay_failure
 parameter_list|(
@@ -884,7 +872,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|ieee80211_notify_michael_failure
 parameter_list|(
