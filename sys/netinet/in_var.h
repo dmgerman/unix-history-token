@@ -183,14 +183,6 @@ end_ifdef
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|in_addr
-name|zeroin_addr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
 name|u_char
 name|inetctlerrmap
 index|[]

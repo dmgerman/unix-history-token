@@ -265,13 +265,6 @@ begin_comment
 comment|/* FAST_IPSEC */
 end_comment
 
-begin_decl_stmt
-name|struct
-name|in_addr
-name|zeroin_addr
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * These configure the range of local port addresses assigned to  * "unspecified" outgoing connections/packets/whatever.  */
 end_comment
