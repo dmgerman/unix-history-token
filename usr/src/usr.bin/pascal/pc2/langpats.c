@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)langpats.c 1.6 %G%"
+literal|"@(#)langpats.c 1.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -467,20 +467,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"name = %s\n"
-argument_list|,
-operator|(
-operator|*
-name|hp
-operator|)
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|lp
