@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_lookup.c	4.17	82/07/15	*/
+comment|/*	ufs_lookup.c	4.18	82/07/22	*/
 end_comment
 
 begin_comment
@@ -998,6 +998,31 @@ operator|>
 name|i
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"bad reclen: dir#=<%d,%d>, e#=%d, reclen=%d, i=%d, loc=%d\n"
+argument_list|,
+name|dp
+operator|->
+name|i_dev
+argument_list|,
+name|dp
+operator|->
+name|i_number
+argument_list|,
+name|ep
+operator|->
+name|d_ino
+argument_list|,
+name|ep
+operator|->
+name|d_reclen
+argument_list|,
+name|i
+argument_list|,
+name|loc
+argument_list|)
+expr_stmt|;
 name|loc
 operator|+=
 name|i
