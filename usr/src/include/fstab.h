@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	fstab.h	4.2	83/05/19	*/
+comment|/*	fstab.h	4.3	83/05/24	*/
 end_comment
 
 begin_comment
-comment|/*  * File system table, see fstab (5)  *  * Used by dump, mount, umount, swapon, fsck, df, ...  *  * The fs_spec field is the block special name.  * Programs that want to use the character special name must  * create that name by prepending a 'r' after the right most slash.  */
+comment|/*  * File system table, see fstab (5)  *  * Used by dump, mount, umount, swapon, fsck, df, ...  *  * The fs_spec field is the block special name.  Programs  * that want to use the character special name must create  * that name by prepending a 'r' after the right most slash.  * Quota files are always named "quotas", so if type is "rq",  * then use concatenation of fs_file and "quotas" to locate  * quota file.  */
 end_comment
 
 begin_define
@@ -22,7 +22,18 @@ value|"rw"
 end_define
 
 begin_comment
-comment|/* read write device */
+comment|/* read/write device */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FSTAB_RQ
+value|"rq",
+end_define
+
+begin_comment
+comment|/* read/write with quotas */
 end_comment
 
 begin_define
@@ -33,7 +44,7 @@ value|"ro"
 end_define
 
 begin_comment
-comment|/* read only device */
+comment|/* read-only device */
 end_comment
 
 begin_define
@@ -76,12 +87,7 @@ name|char
 modifier|*
 name|fs_type
 decl_stmt|;
-comment|/* rw,ro,sw or xx */
-name|char
-modifier|*
-name|fs_quotafile
-decl_stmt|;
-comment|/* name of quota file if used */
+comment|/* FSTAB_* */
 name|int
 name|fs_freq
 decl_stmt|;
@@ -117,6 +123,15 @@ name|struct
 name|fstab
 modifier|*
 name|getfsfile
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|fstab
+modifier|*
+name|getfstype
 parameter_list|()
 function_decl|;
 end_function_decl
