@@ -89,6 +89,10 @@ modifier|*
 name|osf_sigtramp
 decl_stmt|;
 comment|/* user-level signal trampoline */
+name|u_int
+name|md_kernnest
+decl_stmt|;
+comment|/* nesting level in the kernel */
 block|}
 struct|;
 end_struct

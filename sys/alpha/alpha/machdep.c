@@ -3866,6 +3866,19 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* 0 used for proc0 pmap */
+ifdef|#
+directive|ifdef
+name|SMP
+name|proc0
+operator|.
+name|p_md
+operator|.
+name|md_kernnest
+operator|=
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 comment|/* 	 * Initialize the virtual memory system, and set the 	 * page table base register in proc 0's PCB. 	 */
 name|pmap_bootstrap
