@@ -667,7 +667,9 @@ literal|'\0'
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|i
+operator|)
 return|;
 block|}
 end_function

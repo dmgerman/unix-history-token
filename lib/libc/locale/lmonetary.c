@@ -208,9 +208,11 @@ name|CHAR_MAX
 expr_stmt|;
 return|return
 operator|(
+operator|(
 name|char
 operator|)
 name|i
+operator|)
 return|;
 block|}
 end_function
@@ -328,7 +330,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|ret
+operator|)
 return|;
 block|}
 end_function
