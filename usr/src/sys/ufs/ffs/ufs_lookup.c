@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_lookup.c	7.51 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_lookup.c	7.52 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -119,7 +119,7 @@ value|((vp)->v_mount->mnt_maxsymlinklen<= 0)
 end_define
 
 begin_comment
-comment|/*  * Convert a component of a pathname into a pointer to a locked inode.  * This is a very central and rather complicated routine.  * If the file system is not maintained in a strict tree hierarchy,  * this can result in a deadlock situation (see comments in code below).  *  * The cnp->cn_nameiop argument is LOOKUP, CREATE, RENAME, or DELETE depending  * on whether the name is to be looked up, created, renamed, or deleted.  * When CREATE, RENAME, or DELETE is specified, information usable in  * creating, renaming, or deleting a directory entry may be calculated.  * If flag has LOCKPARENT or'ed into it and the target of the pathname  * exists, lookup returns both the target and its parent directory locked.  * When creating or renaming and LOCKPARENT is specified, the target may  * not be ".".  When deleting and LOCKPARENT is specified, the target may  * be "."., but the caller must check to ensure it does an vrele and iput  * instead of two iputs.  *  * Overall outline of ufs_lookup:  *  *	check accessibility of directory  *	look for name in cache, if found, then if at end of path  *	  and deleting or creating, drop it, else return name  *	search for name in directory, to found or notfound  * notfound:  *	if creating, return locked directory, leaving info on available slots  *	else return error  * found:  *	if at end of path and deleting, return information to allow delete  *	if at end of path and rewriting (RENAME and LOCKPARENT), lock target  *	  inode and return info to allow rewrite  *	if not at end, add name to cache; if at end and neither creating  *	  nor deleting, add name to cache  *  * NOTE: (LOOKUP | LOCKPARENT) currently returns the parent inode unlocked.  */
+comment|/*  * Convert a component of a pathname into a pointer to a locked inode.  * This is a very central and rather complicated routine.  * If the file system is not maintained in a strict tree hierarchy,  * this can result in a deadlock situation (see comments in code below).  *  * The cnp->cn_nameiop argument is LOOKUP, CREATE, RENAME, or DELETE depending  * on whether the name is to be looked up, created, renamed, or deleted.  * When CREATE, RENAME, or DELETE is specified, information usable in  * creating, renaming, or deleting a directory entry may be calculated.  * If flag has LOCKPARENT or'ed into it and the target of the pathname  * exists, lookup returns both the target and its parent directory locked.  * When creating or renaming and LOCKPARENT is specified, the target may  * not be ".".  When deleting and LOCKPARENT is specified, the target may  * be "."., but the caller must check to ensure it does an vrele and vput  * instead of two vputs.  *  * Overall outline of ufs_lookup:  *  *	check accessibility of directory  *	look for name in cache, if found, then if at end of path  *	  and deleting or creating, drop it, else return name  *	search for name in directory, to found or notfound  * notfound:  *	if creating, return locked directory, leaving info on available slots  *	else return error  * found:  *	if at end of path and deleting, return information to allow delete  *	if at end of path and rewriting (RENAME and LOCKPARENT), lock target  *	  inode and return info to allow rewrite  *	if not at end, add name to cache; if at end and neither creating  *	  nor deleting, add name to cache  *  * NOTE: (LOOKUP | LOCKPARENT) currently returns the parent inode unlocked.  */
 end_comment
 
 begin_function
@@ -205,7 +205,7 @@ name|prevoff
 decl_stmt|;
 comment|/* prev entry dp->i_offset */
 name|struct
-name|inode
+name|vnode
 modifier|*
 name|pdp
 decl_stmt|;
@@ -395,7 +395,7 @@ return|;
 comment|/* 		 * Get the next vnode in the path. 		 * See comment below starting `Step through' for 		 * an explaination of the locking protocol. 		 */
 name|pdp
 operator|=
-name|dp
+name|vdp
 expr_stmt|;
 name|dp
 operator|=
@@ -420,7 +420,7 @@ if|if
 condition|(
 name|pdp
 operator|==
-name|dp
+name|vdp
 condition|)
 block|{
 comment|/* lookup on "." */
@@ -442,7 +442,7 @@ operator|&
 name|ISDOTDOT
 condition|)
 block|{
-name|IUNLOCK
+name|VOP_UNLOCK
 argument_list|(
 name|pdp
 argument_list|)
@@ -467,7 +467,9 @@ operator|&
 name|ISLASTCN
 operator|)
 condition|)
-name|ILOCK
+name|error
+operator|=
+name|VOP_LOCK
 argument_list|(
 name|pdp
 argument_list|)
@@ -496,7 +498,7 @@ operator|&
 name|ISLASTCN
 operator|)
 condition|)
-name|IUNLOCK
+name|VOP_UNLOCK
 argument_list|(
 name|pdp
 argument_list|)
@@ -522,9 +524,9 @@ operator|(
 literal|0
 operator|)
 return|;
-name|ufs_iput
+name|vput
 argument_list|(
-name|dp
+name|vdp
 argument_list|)
 expr_stmt|;
 if|if
@@ -533,7 +535,7 @@ name|lockparent
 operator|&&
 name|pdp
 operator|!=
-name|dp
+name|vdp
 operator|&&
 operator|(
 name|flags
@@ -541,26 +543,35 @@ operator|&
 name|ISLASTCN
 operator|)
 condition|)
-name|IUNLOCK
+name|VOP_UNLOCK
 argument_list|(
 name|pdp
 argument_list|)
 expr_stmt|;
 block|}
-name|ILOCK
+if|if
+condition|(
+name|error
+operator|=
+name|VOP_LOCK
 argument_list|(
 name|pdp
 argument_list|)
-expr_stmt|;
-name|dp
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+name|vdp
 operator|=
 name|pdp
 expr_stmt|;
-name|vdp
-operator|=
-name|ITOV
-argument_list|(
 name|dp
+operator|=
+name|VTOI
+argument_list|(
+name|pdp
 argument_list|)
 expr_stmt|;
 operator|*
@@ -1369,9 +1380,9 @@ condition|(
 operator|!
 name|lockparent
 condition|)
-name|IUNLOCK
+name|VOP_UNLOCK
 argument_list|(
-name|dp
+name|vdp
 argument_list|)
 expr_stmt|;
 return|return
@@ -1686,9 +1697,9 @@ condition|(
 operator|!
 name|lockparent
 condition|)
-name|IUNLOCK
+name|VOP_UNLOCK
 argument_list|(
-name|dp
+name|vdp
 argument_list|)
 expr_stmt|;
 return|return
@@ -1790,9 +1801,9 @@ condition|(
 operator|!
 name|lockparent
 condition|)
-name|IUNLOCK
+name|VOP_UNLOCK
 argument_list|(
-name|dp
+name|vdp
 argument_list|)
 expr_stmt|;
 return|return
@@ -1801,10 +1812,10 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * Step through the translation in the name.  We do not `iput' the 	 * directory because we may need it again if a symbolic link 	 * is relative to the current directory.  Instead we save it 	 * unlocked as "pdp".  We must get the target inode before unlocking 	 * the directory to insure that the inode will not be removed 	 * before we get it.  We prevent deadlock by always fetching 	 * inodes from the root, moving down the directory tree. Thus 	 * when following backward pointers ".." we must unlock the 	 * parent directory before getting the requested directory. 	 * There is a potential race condition here if both the current 	 * and parent directories are removed before the `iget' for the 	 * inode associated with ".." returns.  We hope that this occurs 	 * infrequently since we cannot avoid this race condition without 	 * implementing a sophisticated deadlock detection algorithm. 	 * Note also that this simple deadlock detection scheme will not 	 * work if the file system has any hard links other than ".." 	 * that point backwards in the directory structure. 	 */
+comment|/* 	 * Step through the translation in the name.  We do not `vput' the 	 * directory because we may need it again if a symbolic link 	 * is relative to the current directory.  Instead we save it 	 * unlocked as "pdp".  We must get the target inode before unlocking 	 * the directory to insure that the inode will not be removed 	 * before we get it.  We prevent deadlock by always fetching 	 * inodes from the root, moving down the directory tree. Thus 	 * when following backward pointers ".." we must unlock the 	 * parent directory before getting the requested directory. 	 * There is a potential race condition here if both the current 	 * and parent directories are removed before the `iget' for the 	 * inode associated with ".." returns.  We hope that this occurs 	 * infrequently since we cannot avoid this race condition without 	 * implementing a sophisticated deadlock detection algorithm. 	 * Note also that this simple deadlock detection scheme will not 	 * work if the file system has any hard links other than ".." 	 * that point backwards in the directory structure. 	 */
 name|pdp
 operator|=
-name|dp
+name|vdp
 expr_stmt|;
 if|if
 condition|(
@@ -1813,7 +1824,7 @@ operator|&
 name|ISDOTDOT
 condition|)
 block|{
-name|IUNLOCK
+name|VOP_UNLOCK
 argument_list|(
 name|pdp
 argument_list|)
@@ -1838,7 +1849,7 @@ name|tdp
 argument_list|)
 condition|)
 block|{
-name|ILOCK
+name|VOP_LOCK
 argument_list|(
 name|pdp
 argument_list|)
@@ -1858,12 +1869,28 @@ name|flags
 operator|&
 name|ISLASTCN
 operator|)
-condition|)
-name|ILOCK
+operator|&&
+operator|(
+name|error
+operator|=
+name|VOP_LOCK
 argument_list|(
 name|pdp
 argument_list|)
+operator|)
+condition|)
+block|{
+name|vput
+argument_list|(
+name|tdp
+argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
 operator|*
 name|vpp
 operator|=
@@ -1931,7 +1958,7 @@ operator|&
 name|ISLASTCN
 operator|)
 condition|)
-name|IUNLOCK
+name|VOP_UNLOCK
 argument_list|(
 name|pdp
 argument_list|)
@@ -3592,7 +3619,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check if source directory is in the path of the target directory.  * Target is supplied locked, source is unlocked.  * The target is always iput before returning.  */
+comment|/*  * Check if source directory is in the path of the target directory.  * Target is supplied locked, source is unlocked.  * The target is always vput before returning.  */
 end_comment
 
 begin_function
@@ -3626,16 +3653,6 @@ end_decl_stmt
 begin_block
 block|{
 name|struct
-name|dirtemplate
-name|dirbuf
-decl_stmt|;
-specifier|register
-name|struct
-name|inode
-modifier|*
-name|ip
-decl_stmt|;
-name|struct
 name|vnode
 modifier|*
 name|vp
@@ -3647,13 +3664,20 @@ name|rootino
 decl_stmt|,
 name|namlen
 decl_stmt|;
-name|ip
+name|struct
+name|dirtemplate
+name|dirbuf
+decl_stmt|;
+name|vp
 operator|=
+name|ITOV
+argument_list|(
 name|target
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ip
+name|target
 operator|->
 name|i_number
 operator|==
@@ -3680,7 +3704,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|ip
+name|target
 operator|->
 name|i_number
 operator|==
@@ -3697,15 +3721,11 @@ control|)
 block|{
 if|if
 condition|(
-operator|(
-name|ip
+name|vp
 operator|->
-name|i_mode
-operator|&
-name|IFMT
-operator|)
+name|v_type
 operator|!=
-name|IFDIR
+name|VDIR
 condition|)
 block|{
 name|error
@@ -3714,13 +3734,6 @@ name|ENOTDIR
 expr_stmt|;
 break|break;
 block|}
-name|vp
-operator|=
-name|ITOV
-argument_list|(
-name|ip
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|vn_rdwr
@@ -3870,9 +3883,9 @@ operator|==
 name|rootino
 condition|)
 break|break;
-name|ufs_iput
+name|vput
 argument_list|(
-name|ip
+name|vp
 argument_list|)
 expr_stmt|;
 if|if
@@ -3893,14 +3906,13 @@ operator|&
 name|vp
 argument_list|)
 condition|)
-break|break;
-name|ip
-operator|=
-name|VTOI
-argument_list|(
+block|{
 name|vp
-argument_list|)
+operator|=
+name|NULL
 expr_stmt|;
+break|break;
+block|}
 block|}
 name|out
 label|:
@@ -3917,13 +3929,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ip
+name|vp
 operator|!=
 name|NULL
 condition|)
-name|ufs_iput
+name|vput
 argument_list|(
-name|ip
+name|vp
 argument_list|)
 expr_stmt|;
 return|return
