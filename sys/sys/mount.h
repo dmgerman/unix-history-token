@@ -1799,23 +1799,6 @@ define|\
 value|static struct vfsconf fsname ## _vfsconf = {		\&vfsops,					\ 		#fsname,					\ 		-1,						\ 		0,						\ 		flags						\ 	};							\ 	static moduledata_t fsname ## _mod = {			\ 		#fsname,					\ 		vfs_modevent,					\& fsname ## _vfsconf				\ 	};							\ 	DECLARE_MODULE(fsname, fsname ## _mod, SI_SUB_VFS, SI_ORDER_MIDDLE)
 end_define
 
-begin_include
-include|#
-directive|include
-file|<net/radix.h>
-end_include
-
-begin_define
-define|#
-directive|define
-name|AF_MAX
-value|35
-end_define
-
-begin_comment
-comment|/* XXX */
-end_comment
-
 begin_comment
 comment|/*  * Network address lookup element  */
 end_comment
