@@ -567,6 +567,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|waitpid
+value|_waitpid
+end_define
+
+begin_define
+define|#
+directive|define
 name|write
 value|_write
 end_define
@@ -733,13 +740,6 @@ define|#
 directive|define
 name|wait
 value|_wait
-end_define
-
-begin_define
-define|#
-directive|define
-name|waitpid
-value|_waitpid
 end_define
 
 begin_endif

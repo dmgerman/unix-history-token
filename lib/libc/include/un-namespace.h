@@ -474,6 +474,12 @@ end_undef
 begin_undef
 undef|#
 directive|undef
+name|waitpid
+end_undef
+
+begin_undef
+undef|#
+directive|undef
 name|write
 end_undef
 
@@ -613,12 +619,6 @@ begin_undef
 undef|#
 directive|undef
 name|wait
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|waitpid
 end_undef
 
 begin_endif
