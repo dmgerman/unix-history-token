@@ -117,13 +117,12 @@ name|logout
 parameter_list|(
 name|line
 parameter_list|)
-specifier|register
+specifier|const
 name|char
 modifier|*
 name|line
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|fd
 decl_stmt|;

@@ -112,6 +112,7 @@ name|logout
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 name|_line
