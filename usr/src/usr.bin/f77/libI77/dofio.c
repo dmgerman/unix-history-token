@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_dofio[] = "@(#)dofio.c	1.6";  *  * fortran format executer  */
+comment|/* char id_dofio[] = "@(#)dofio.c	1.7";  *  * fortran format executer  */
 end_comment
 
 begin_include
@@ -56,6 +56,12 @@ modifier|*
 name|dfio
 init|=
 literal|"dofio"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|used_data
 decl_stmt|;
 end_decl_stmt
 
@@ -306,6 +312,10 @@ operator|(
 name|OK
 operator|)
 return|;
+name|used_data
+operator|=
+name|YES
+expr_stmt|;
 name|DO
 argument_list|(
 argument|(*doed)(p,ptr,len)
@@ -463,6 +473,25 @@ operator|(
 name|OK
 operator|)
 return|;
+if|if
+condition|(
+name|used_data
+operator|==
+name|NO
+condition|)
+name|err
+argument_list|(
+name|errflag
+argument_list|,
+name|F_ERFMT
+argument_list|,
+literal|"\nNo more editing terms in format"
+argument_list|)
+expr_stmt|;
+name|used_data
+operator|=
+name|NO
+expr_stmt|;
 name|rp
 operator|=
 name|cp
@@ -672,6 +701,10 @@ literal|0
 index|]
 operator|=
 literal|0
+expr_stmt|;
+name|used_data
+operator|=
+name|NO
 expr_stmt|;
 block|}
 end_block

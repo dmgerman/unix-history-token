@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_rdfmt[] = "@(#)rdfmt.c	1.7";  *  * formatted read routines  */
+comment|/* char id_rdfmt[] = "@(#)rdfmt.c	1.8";  *  * formatted read routines  */
 end_comment
 
 begin_include
@@ -40,6 +40,13 @@ specifier|extern
 name|char
 modifier|*
 name|s_init
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|used_data
 decl_stmt|;
 end_decl_stmt
 
@@ -1735,6 +1742,10 @@ name|ch
 init|=
 literal|0
 decl_stmt|;
+name|used_data
+operator|=
+name|YES
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1812,6 +1823,10 @@ name|ch
 init|=
 literal|0
 decl_stmt|;
+name|used_data
+operator|=
+name|YES
+expr_stmt|;
 name|quote
 operator|=
 operator|*
