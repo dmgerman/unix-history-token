@@ -27,7 +27,7 @@ operator|&&
 operator|!
 name|defined
 argument_list|(
-name|__386BSD__
+name|__FreeBSD__
 argument_list|)
 end_if
 
@@ -58,7 +58,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__386BSD__
+name|__FreeBSD__
 end_ifdef
 
 begin_comment
@@ -356,7 +356,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __386BSD__ */
+comment|/* __FreeBSD__ */
 end_comment
 
 begin_ifdef

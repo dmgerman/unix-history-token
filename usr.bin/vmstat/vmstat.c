@@ -462,7 +462,7 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|__386BSD__
+name|__FreeBSD__
 define|#
 directive|define
 name|X_FREE
@@ -513,7 +513,7 @@ block|}
 block|,
 endif|#
 directive|endif
-comment|/* __386BSD__ */
+comment|/* __FreeBSD__ */
 block|{
 literal|""
 block|}
@@ -591,7 +591,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__386BSD__
+name|__FreeBSD__
 end_ifdef
 
 begin_comment
@@ -1659,7 +1659,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__386BSD__
+name|__FreeBSD__
 end_ifdef
 
 begin_comment
@@ -2072,7 +2072,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|__386BSD__
+name|__FreeBSD__
 name|fill_in_vm_stat
 argument_list|(
 operator|&
@@ -2147,7 +2147,7 @@ literal|"%5ld %5ld "
 argument_list|,
 ifdef|#
 directive|ifdef
-name|__386BSD__
+name|__FreeBSD__
 name|pgtok
 argument_list|(
 name|vm_stat
@@ -2984,7 +2984,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|__386BSD__
+name|__FreeBSD__
 name|fill_in_vm_stat
 argument_list|(
 operator|&
