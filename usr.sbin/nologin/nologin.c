@@ -46,7 +46,15 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|void
+name|__unused
+name|int
+name|argc
+parameter_list|,
+name|__unused
+name|char
+modifier|*
+name|argv
+index|[]
 parameter_list|)
 block|{
 specifier|const
