@@ -862,7 +862,7 @@ end_struct
 
 begin_struct_decl
 struct_decl|struct
-name|softc
+name|mn_softc
 struct_decl|;
 end_struct_decl
 
@@ -906,7 +906,7 @@ name|void
 name|mn_create_channel
 parameter_list|(
 name|struct
-name|softc
+name|mn_softc
 modifier|*
 name|sc
 parameter_list|,
@@ -922,7 +922,7 @@ name|int
 name|mn_reset
 parameter_list|(
 name|struct
-name|softc
+name|mn_softc
 modifier|*
 name|sc
 parameter_list|)
@@ -995,7 +995,7 @@ name|void
 name|m32_dump
 parameter_list|(
 name|struct
-name|softc
+name|mn_softc
 modifier|*
 name|sc
 parameter_list|)
@@ -1008,7 +1008,7 @@ name|void
 name|f54_dump
 parameter_list|(
 name|struct
-name|softc
+name|mn_softc
 modifier|*
 name|sc
 parameter_list|)
@@ -1045,7 +1045,7 @@ name|void
 name|f54_init
 parameter_list|(
 name|struct
-name|softc
+name|mn_softc
 modifier|*
 name|sc
 parameter_list|)
@@ -1168,7 +1168,7 @@ block|}
 name|state
 enum|;
 name|struct
-name|softc
+name|mn_softc
 modifier|*
 name|sc
 decl_stmt|;
@@ -1268,7 +1268,7 @@ end_enum
 
 begin_struct
 struct|struct
-name|softc
+name|mn_softc
 block|{
 name|int
 name|unit
@@ -1462,7 +1462,7 @@ name|ret
 parameter_list|)
 block|{
 name|struct
-name|softc
+name|mn_softc
 modifier|*
 name|sc
 decl_stmt|;
@@ -1644,7 +1644,7 @@ name|lasthook
 parameter_list|)
 block|{
 name|struct
-name|softc
+name|mn_softc
 modifier|*
 name|sc
 decl_stmt|;
@@ -2405,7 +2405,7 @@ decl_stmt|,
 name|chan
 decl_stmt|;
 name|struct
-name|softc
+name|mn_softc
 modifier|*
 name|sc
 decl_stmt|;
@@ -3096,7 +3096,7 @@ modifier|*
 name|sch
 decl_stmt|;
 name|struct
-name|softc
+name|mn_softc
 modifier|*
 name|sc
 decl_stmt|;
@@ -3523,7 +3523,7 @@ modifier|*
 name|m
 decl_stmt|;
 name|struct
-name|softc
+name|mn_softc
 modifier|*
 name|sc
 decl_stmt|;
@@ -4199,7 +4199,7 @@ decl_stmt|,
 name|i
 decl_stmt|;
 name|struct
-name|softc
+name|mn_softc
 modifier|*
 name|sc
 decl_stmt|;
@@ -4544,7 +4544,7 @@ name|void
 name|mn_create_channel
 parameter_list|(
 name|struct
-name|softc
+name|mn_softc
 modifier|*
 name|sc
 parameter_list|,
@@ -4642,7 +4642,7 @@ name|void
 name|m32_dump
 parameter_list|(
 name|struct
-name|softc
+name|mn_softc
 modifier|*
 name|sc
 parameter_list|)
@@ -4863,7 +4863,7 @@ name|void
 name|f54_dump
 parameter_list|(
 name|struct
-name|softc
+name|mn_softc
 modifier|*
 name|sc
 parameter_list|)
@@ -4979,7 +4979,7 @@ name|void
 name|m32_init
 parameter_list|(
 name|struct
-name|softc
+name|mn_softc
 modifier|*
 name|sc
 parameter_list|)
@@ -5082,7 +5082,7 @@ name|void
 name|f54_init
 parameter_list|(
 name|struct
-name|softc
+name|mn_softc
 modifier|*
 name|sc
 parameter_list|)
@@ -5333,7 +5333,7 @@ name|int
 name|mn_reset
 parameter_list|(
 name|struct
-name|softc
+name|mn_softc
 modifier|*
 name|sc
 parameter_list|)
@@ -5702,7 +5702,7 @@ name|void
 name|f54_intr
 parameter_list|(
 name|struct
-name|softc
+name|mn_softc
 modifier|*
 name|sc
 parameter_list|)
@@ -5973,7 +5973,7 @@ name|void
 name|mn_tx_intr
 parameter_list|(
 name|struct
-name|softc
+name|mn_softc
 modifier|*
 name|sc
 parameter_list|,
@@ -6151,7 +6151,7 @@ name|void
 name|mn_rx_intr
 parameter_list|(
 name|struct
-name|softc
+name|mn_softc
 modifier|*
 name|sc
 parameter_list|,
@@ -6658,7 +6658,7 @@ name|xsc
 parameter_list|)
 block|{
 name|struct
-name|softc
+name|mn_softc
 modifier|*
 name|sc
 decl_stmt|;
@@ -7009,7 +7009,7 @@ init|=
 literal|0
 decl_stmt|;
 name|struct
-name|softc
+name|mn_softc
 modifier|*
 name|sc
 decl_stmt|;
@@ -7222,7 +7222,7 @@ name|self
 parameter_list|)
 block|{
 name|struct
-name|softc
+name|mn_softc
 modifier|*
 name|sc
 decl_stmt|;
@@ -7273,7 +7273,7 @@ name|sc
 operator|=
 operator|(
 expr|struct
-name|softc
+name|mn_softc
 operator|*
 operator|)
 name|malloc
@@ -7369,6 +7369,13 @@ argument_list|,
 literal|"Could not map memory\n"
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|sc
+argument_list|,
+name|M_MN
+argument_list|)
+expr_stmt|;
 return|return
 name|ENXIO
 return|;
@@ -7430,6 +7437,13 @@ argument_list|(
 name|self
 argument_list|,
 literal|"Could not map memory\n"
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|sc
+argument_list|,
+name|M_MN
 argument_list|)
 expr_stmt|;
 return|return
@@ -7498,6 +7512,13 @@ argument_list|(
 literal|"couldn't map interrupt\n"
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|sc
+argument_list|,
+name|M_MN
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENXIO
@@ -7534,6 +7555,13 @@ block|{
 name|printf
 argument_list|(
 literal|"couldn't set up irq\n"
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|sc
+argument_list|,
+name|M_MN
 argument_list|)
 expr_stmt|;
 return|return
