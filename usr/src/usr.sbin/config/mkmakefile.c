@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkmakefile.c	5.35 (Berkeley) %G%"
+literal|"@(#)mkmakefile.c	5.36 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2970,12 +2970,6 @@ operator|->
 name|f_next
 init|;
 name|fl
-operator|&&
-name|fl
-operator|->
-name|f_type
-operator|==
-name|SWAPSPEC
 condition|;
 name|fl
 operator|=
@@ -2983,7 +2977,15 @@ name|fl
 operator|->
 name|f_next
 control|)
-empty_stmt|;
+if|if
+condition|(
+name|fl
+operator|->
+name|f_type
+operator|!=
+name|SWAPSPEC
+condition|)
+break|break;
 return|return
 operator|(
 name|fl
