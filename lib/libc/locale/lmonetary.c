@@ -87,7 +87,7 @@ comment|/* int_curr_symbol */
 name|empty
 block|,
 comment|/* currency_symbol */
-literal|"."
+name|empty
 block|,
 comment|/* mon_decimal_point */
 name|empty
