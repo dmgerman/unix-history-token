@@ -651,6 +651,17 @@ begin_comment
 comment|/* the loopback interface */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|INT_MULTICAST
+value|8
+end_define
+
+begin_comment
+comment|/* multicasting enabled */
+end_comment
+
 begin_comment
 comment|/*  * Define flasher bits (tests 1 through 8 in packet procedure)  * These reveal the state at the last grumble from the peer and are  * most handy for diagnosing problems, even if not strictly a state  * variable in the spec. These are recorded in the peer structure.  */
 end_comment
@@ -867,8 +878,9 @@ name|associd
 decl_stmt|;
 comment|/* association ID, a unique integer */
 name|u_char
-name|unused
+name|ttl
 decl_stmt|;
+comment|/* time to live (multicast) */
 comment|/* **Start of clear-to-zero area.*** */
 comment|/* Everything that is cleared to zero goes below here */
 name|u_char
@@ -972,7 +984,6 @@ name|u_fp
 name|selectdisp
 decl_stmt|;
 comment|/* select dispersion */
-comment|/* 	 * Stuff related to the experimental broadcast delay 	 * determination code.  The registers will probably go away 	 * later. 	 */
 name|U_LONG
 name|estbdelay
 decl_stmt|;
@@ -2355,14 +2366,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|PROTO_MAXSKEW
+name|PROTO_MULTICAST_ADD
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|PROTO_SELECT
+name|PROTO_MULTICAST_DEL
 value|7
 end_define
 
@@ -2475,6 +2486,17 @@ end_define
 
 begin_comment
 comment|/* 8 ms.  This is round trip delay */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INADDR_NTP
+value|0xe0000101
+end_define
+
+begin_comment
+comment|/* NTP multicast address 224.0.1.1 */
 end_comment
 
 begin_comment

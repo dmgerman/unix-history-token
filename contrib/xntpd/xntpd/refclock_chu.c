@@ -2235,9 +2235,9 @@ operator|=
 name|current_time
 expr_stmt|;
 comment|/* 	 * Just for fun, we can debug the whole frame if 	 * we want. 	 */
-ifndef|#
-directive|ifndef
-name|NO_CHU_DEBUG
+ifdef|#
+directive|ifdef
+name|CHU_DEBUG
 name|syslog
 argument_list|(
 name|LOG_DEBUG

@@ -35,6 +35,11 @@ name|defined
 argument_list|(
 name|SYS_PTX
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SYS_UNIXWARE1
+argument_list|)
 end_if
 
 begin_define

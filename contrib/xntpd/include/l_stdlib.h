@@ -636,7 +636,7 @@ argument_list|(
 operator|(
 name|int
 operator|,
-name|char
+name|void
 operator|*
 operator|,
 name|unsigned
@@ -671,10 +671,11 @@ argument_list|(
 operator|(
 name|int
 operator|,
-name|char
+specifier|const
+name|void
 operator|*
 operator|,
-name|int
+name|unsigned
 operator|)
 argument_list|)
 decl_stmt|;
@@ -687,6 +688,7 @@ name|unlink
 name|P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -701,9 +703,11 @@ name|link
 name|P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|,
+specifier|const
 name|char
 operator|*
 operator|)
