@@ -213,8 +213,18 @@ comment|/* Each of PQ_FREE, and PQ_CACHE have PQ_HASH_SIZE entries */
 end_comment
 
 begin_comment
-comment|/* Define one of the following */
+comment|/* Backward compatibility for existing PQ_*CACHE config options. */
 end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|PQ_CACHESIZE
+argument_list|)
+end_if
 
 begin_if
 if|#
@@ -223,6 +233,87 @@ name|defined
 argument_list|(
 name|PQ_HUGECACHE
 argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|PQ_CACHESIZE
+value|1024
+end_define
+
+begin_empty
+empty|#elsif defined(PQ_LARGECACHE)
+end_empty
+
+begin_define
+define|#
+directive|define
+name|PQ_CACHESIZE
+value|512
+end_define
+
+begin_empty
+empty|#elsif defined(PQ_MEDIUMCACHE)
+end_empty
+
+begin_define
+define|#
+directive|define
+name|PQ_CACHESIZE
+value|256
+end_define
+
+begin_empty
+empty|#elsif defined(PQ_NORMALCACHE)
+end_empty
+
+begin_define
+define|#
+directive|define
+name|PQ_CACHESIZE
+value|64
+end_define
+
+begin_empty
+empty|#elsif defined(PQ_NOOPT)
+end_empty
+
+begin_define
+define|#
+directive|define
+name|PQ_CACHESIZE
+value|0
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|PQ_CACHESIZE
+value|128
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|PQ_CACHESIZE
+operator|>=
+literal|1024
 end_if
 
 begin_define
@@ -258,23 +349,9 @@ begin_comment
 comment|/* A number of colors opt for 1M cache */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Define one of the following */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|PQ_LARGECACHE
-argument_list|)
-end_if
+begin_empty
+empty|#elsif PQ_CACHESIZE>= 512
+end_empty
 
 begin_define
 define|#
@@ -309,105 +386,9 @@ begin_comment
 comment|/* A number of colors opt for 512K cache */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * Use 'options PQ_NOOPT' to disable page coloring  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|PQ_NOOPT
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|PQ_PRIME1
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|PQ_PRIME2
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|PQ_L2_SIZE
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|PQ_NORMALCACHE
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|PQ_PRIME1
-value|5
-end_define
-
-begin_comment
-comment|/* Prime number somewhat less than PQ_HASH_SIZE */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PQ_PRIME2
-value|3
-end_define
-
-begin_comment
-comment|/* Prime number somewhat less than PQ_HASH_SIZE */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PQ_L2_SIZE
-value|16
-end_define
-
-begin_comment
-comment|/* A reasonable number of colors (opt for 64K cache) */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|PQ_MEDIUMCACHE
-argument_list|)
-end_if
+begin_empty
+empty|#elsif PQ_CACHESIZE>= 256
+end_empty
 
 begin_define
 define|#
@@ -442,20 +423,9 @@ begin_comment
 comment|/* A number of colors opt for 256K cache */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|PQ_L2_SIZE
-argument_list|)
-end_if
+begin_empty
+empty|#elsif PQ_CACHESIZE>= 128
+end_empty
 
 begin_define
 define|#
@@ -487,8 +457,75 @@ value|32
 end_define
 
 begin_comment
-comment|/* 512KB or smaller, 4-way set-associative cache */
+comment|/* A number of colors opt for 128k cache */
 end_comment
+
+begin_empty
+empty|#elsif PQ_CACHESIZE>= 64
+end_empty
+
+begin_define
+define|#
+directive|define
+name|PQ_PRIME1
+value|5
+end_define
+
+begin_comment
+comment|/* Prime number somewhat less than PQ_HASH_SIZE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PQ_PRIME2
+value|3
+end_define
+
+begin_comment
+comment|/* Prime number somewhat less than PQ_HASH_SIZE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PQ_L2_SIZE
+value|16
+end_define
+
+begin_comment
+comment|/* A reasonable number of colors (opt for 64K cache) */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|PQ_PRIME1
+value|1
+end_define
+
+begin_comment
+comment|/* Disable page coloring. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PQ_PRIME2
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PQ_L2_SIZE
+value|1
+end_define
 
 begin_endif
 endif|#
