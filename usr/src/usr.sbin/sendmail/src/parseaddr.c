@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	8.4 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1467,7 +1467,7 @@ condition|)
 block|{
 name|usrerr
 argument_list|(
-literal|"553 Unbalanced '\"'"
+literal|"653 Unbalanced '\"'"
 argument_list|)
 expr_stmt|;
 name|c
@@ -1485,7 +1485,7 @@ condition|)
 block|{
 name|usrerr
 argument_list|(
-literal|"553 Unbalanced '('"
+literal|"653 Unbalanced '('"
 argument_list|)
 expr_stmt|;
 name|c
@@ -1507,7 +1507,7 @@ literal|'>'
 expr_stmt|;
 name|usrerr
 argument_list|(
-literal|"553 Unbalanced '<'"
+literal|"653 Unbalanced '<'"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1659,7 +1659,7 @@ condition|)
 block|{
 name|usrerr
 argument_list|(
-literal|"553 Unbalanced ')'"
+literal|"653 Unbalanced ')'"
 argument_list|)
 expr_stmt|;
 name|c
@@ -1710,7 +1710,7 @@ condition|)
 block|{
 name|usrerr
 argument_list|(
-literal|"553 Unbalanced '>'"
+literal|"653 Unbalanced '>'"
 argument_list|)
 expr_stmt|;
 name|c

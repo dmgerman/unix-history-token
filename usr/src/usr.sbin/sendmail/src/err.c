@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	8.3 (Berkeley) %G%"
+literal|"@(#)err.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -624,21 +624,17 @@ name|e_xfp
 operator|!=
 name|NULL
 operator|&&
-operator|(
+name|strchr
+argument_list|(
+literal|"456"
+argument_list|,
 name|msg
 index|[
 literal|0
 index|]
-operator|==
-literal|'4'
-operator|||
-name|msg
-index|[
-literal|0
-index|]
-operator|==
-literal|'5'
-operator|)
+argument_list|)
+operator|!=
+name|NULL
 condition|)
 name|fprintf
 argument_list|(
@@ -669,6 +665,23 @@ literal|'0'
 operator|)
 condition|)
 return|return;
+comment|/* map warnings to something SMTP can handle */
+if|if
+condition|(
+name|msg
+index|[
+literal|0
+index|]
+operator|==
+literal|'6'
+condition|)
+name|msg
+index|[
+literal|0
+index|]
+operator|=
+literal|'5'
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -839,6 +852,14 @@ end_decl_stmt
 
 begin_block
 block|{
+name|char
+name|msgcode
+init|=
+name|msg
+index|[
+literal|0
+index|]
+decl_stmt|;
 comment|/* output the message as usual */
 name|putoutmsg
 argument_list|(
@@ -848,15 +869,29 @@ name|HoldErrs
 argument_list|)
 expr_stmt|;
 comment|/* signal the error */
+if|if
+condition|(
+name|msgcode
+operator|==
+literal|'6'
+condition|)
+block|{
+comment|/* notify the postmaster */
+name|CurEnv
+operator|->
+name|e_flags
+operator||=
+name|EF_PM_NOTIFY
+expr_stmt|;
+block|}
+else|else
+block|{
 name|Errors
 operator|++
 expr_stmt|;
 if|if
 condition|(
-name|msg
-index|[
-literal|0
-index|]
+name|msgcode
 operator|==
 literal|'5'
 operator|&&
@@ -875,6 +910,7 @@ name|e_flags
 operator||=
 name|EF_FATALERRS
 expr_stmt|;
+block|}
 block|}
 end_block
 
