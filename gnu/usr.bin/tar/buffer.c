@@ -194,8 +194,6 @@ begin_decl_stmt
 name|FILE
 modifier|*
 name|msg_file
-init|=
-name|stdout
 decl_stmt|;
 end_decl_stmt
 
