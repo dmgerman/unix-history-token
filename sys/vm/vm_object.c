@@ -5086,7 +5086,19 @@ name|object
 operator|->
 name|backing_object
 decl_stmt|;
-name|GIANT_REQUIRED
+name|VM_OBJECT_LOCK_ASSERT
+argument_list|(
+name|object
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
+name|VM_OBJECT_LOCK_ASSERT
+argument_list|(
+name|backing_object
+argument_list|,
+name|MA_OWNED
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -5259,12 +5271,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* XXX */
-name|VM_OBJECT_UNLOCK
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
 comment|/* 		 * We know that we can either collapse the backing object (if 		 * the parent is the only reference to it) or (perhaps) have 		 * the parent bypass the object if the parent happens to shadow 		 * all the resident pages in the entire backing object. 		 * 		 * This is ignoring pager-backed pages such as swap pages. 		 * vm_object_backing_scan fails the shadowing test in this 		 * case. 		 */
 if|if
 condition|(
@@ -5275,6 +5281,12 @@ operator|==
 literal|1
 condition|)
 block|{
+comment|/* XXX */
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 comment|/* 			 * If there is exactly one reference to the backing 			 * object, we can collapse it into the parent.   			 */
 name|vm_object_backing_scan
 argument_list|(
@@ -5588,12 +5600,6 @@ argument_list|(
 name|backing_object
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
-name|VM_OBJECT_LOCK
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
 break|break;
 block|}
 comment|/* 			 * Make the parent shadow the next object in the 			 * chain.  Deallocating backing_object will not remove 			 * it, since its reference count is at least 2. 			 */
@@ -5617,6 +5623,12 @@ expr_stmt|;
 name|VM_OBJECT_UNLOCK
 argument_list|(
 name|backing_object
+argument_list|)
+expr_stmt|;
+comment|/* XXX */
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
 argument_list|)
 expr_stmt|;
 name|new_backing_object
