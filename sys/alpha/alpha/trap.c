@@ -408,6 +408,28 @@ endif|#
 directive|endif
 end_endif
 
+begin_function_decl
+name|void
+name|alpha_clear_resched
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|alpha_clear_resched
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|clear_resched
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Define the code needed before returning to user mode, for  * trap and syscall.  */
 end_comment
