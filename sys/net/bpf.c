@@ -6274,6 +6274,37 @@ end_function
 
 begin_function
 name|void
+name|bpfattach2
+parameter_list|(
+name|ifp
+parameter_list|,
+name|dlt
+parameter_list|,
+name|hdrlen
+parameter_list|,
+name|driverp
+parameter_list|)
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
+name|u_int
+name|dlt
+decl_stmt|,
+name|hdrlen
+decl_stmt|;
+name|struct
+name|bpf_if
+modifier|*
+modifier|*
+name|driverp
+decl_stmt|;
+block|{ }
+end_function
+
+begin_function
+name|void
 name|bpfdetach
 parameter_list|(
 name|ifp
