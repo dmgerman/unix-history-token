@@ -115,17 +115,6 @@ comment|/* 16 bytes of I/O space used. */
 end_comment
 
 begin_comment
-comment|/*  * some macros to acces long named fields  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BASE
-value|(sc->ep_io_addr)
-end_define
-
-begin_comment
 comment|/*  * Commands to read/write EEPROM trough EEPROM command register (Window 0,  * Offset 0xa)  */
 end_comment
 
@@ -196,9 +185,9 @@ define|#
 directive|define
 name|is_eeprom_busy
 parameter_list|(
-name|b
+name|sc
 parameter_list|)
-value|(inw((b)+EP_W0_EEPROM_COMMAND)&EEPROM_BUSY)
+value|(EP_READ_2(sc, EP_W0_EEPROM_COMMAND)&EEPROM_BUSY)
 end_define
 
 begin_define
@@ -208,7 +197,7 @@ name|GO_WINDOW
 parameter_list|(
 name|x
 parameter_list|)
-value|outw(BASE+EP_COMMAND, WINDOW_SELECT|(x))
+value|EP_WRITE_2(sc, EP_COMMAND, WINDOW_SELECT|(x))
 end_define
 
 begin_comment
@@ -1374,11 +1363,11 @@ define|#
 directive|define
 name|SET_IRQ
 parameter_list|(
-name|base
+name|sc
 parameter_list|,
 name|irq
 parameter_list|)
-value|outw((base) + EP_W0_RESOURCE_CFG, \                               ((inw((base) + EP_W0_RESOURCE_CFG)& 0x0fff) | \                               ((u_short)(irq)<<12))  )
+value|EP_WRITE_2((sc), EP_W0_RESOURCE_CFG, \                               ((EP_READ_2((sc), EP_W0_RESOURCE_CFG)& 0x0fff) | \                               ((u_short)(irq)<<12))  )
 end_define
 
 begin_comment

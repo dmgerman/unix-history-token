@@ -210,6 +210,7 @@ operator|(
 name|error
 operator|)
 return|;
+comment|/* 	 * It appears that the eeprom comes in two sizes.  There's 	 * a 512 byte eeprom and a 2k eeprom.  Bit 13 of the eeprom 	 * command register is supposed to contain the size of the 	 * eeprom. 	 */
 comment|/* 	 * XXX - Certain (newer?) 3Com cards need epb->cmd_off == 	 * 2. Sadly, you need to have a correct cmd_off in order to 	 * identify the card.  So we have to hit it with both and 	 * cross our virtual fingers.  There's got to be a better way 	 * to do this.  jyoung@accessus.net 09/11/1999 	 */
 name|epb
 operator|->
@@ -498,10 +499,6 @@ case|case
 literal|0x4b57
 case|:
 comment|/* 3C574B */
-case|case
-literal|0x0010
-case|:
-comment|/* 3C1 */
 name|epb
 operator|->
 name|mii_trans
@@ -521,6 +518,10 @@ case|case
 literal|0x9058
 case|:
 comment|/* 3C589 */
+case|case
+literal|0x0010
+case|:
+comment|/* 3C1 */
 name|epb
 operator|->
 name|mii_trans
@@ -725,10 +726,10 @@ argument_list|)
 expr_stmt|;
 comment|/* ROM size = 0, ROM base = 0 */
 comment|/* For now, ignore AUTO SELECT feature of 3C589B and later. */
-name|outw
+name|EP_WRITE_2
 argument_list|(
-name|BASE
-operator|+
+name|sc
+argument_list|,
 name|EP_W0_ADDRESS_CFG
 argument_list|,
 name|result
@@ -737,10 +738,10 @@ literal|0xc000
 argument_list|)
 expr_stmt|;
 comment|/* Fake IRQ must be 3 */
-name|outw
+name|EP_WRITE_2
 argument_list|(
-name|BASE
-operator|+
+name|sc
+argument_list|,
 name|EP_W0_RESOURCE_CFG
 argument_list|,
 operator|(
@@ -756,10 +757,10 @@ operator||
 literal|0x3000
 argument_list|)
 expr_stmt|;
-name|outw
+name|EP_WRITE_2
 argument_list|(
-name|BASE
-operator|+
+name|sc
+argument_list|,
 name|EP_W0_PRODUCT_ID
 argument_list|,
 name|sc
@@ -784,10 +785,10 @@ argument_list|(
 literal|3
 argument_list|)
 expr_stmt|;
-name|outw
+name|EP_WRITE_2
 argument_list|(
-name|BASE
-operator|+
+name|sc
+argument_list|,
 name|EP_W3_OPTIONS
 argument_list|,
 literal|0x8040
@@ -798,28 +799,28 @@ argument_list|(
 literal|1000
 argument_list|)
 expr_stmt|;
-name|outw
+name|EP_WRITE_2
 argument_list|(
-name|BASE
-operator|+
+name|sc
+argument_list|,
 name|EP_W3_OPTIONS
 argument_list|,
 literal|0xc040
 argument_list|)
 expr_stmt|;
-name|outw
+name|EP_WRITE_2
 argument_list|(
-name|BASE
-operator|+
+name|sc
+argument_list|,
 name|EP_COMMAND
 argument_list|,
 name|RX_RESET
 argument_list|)
 expr_stmt|;
-name|outw
+name|EP_WRITE_2
 argument_list|(
-name|BASE
-operator|+
+name|sc
+argument_list|,
 name|EP_COMMAND
 argument_list|,
 name|TX_RESET
@@ -827,10 +828,10 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
-name|inw
+name|EP_READ_2
 argument_list|(
-name|BASE
-operator|+
+name|sc
+argument_list|,
 name|EP_STATUS
 argument_list|)
 operator|&
@@ -842,10 +843,10 @@ argument_list|(
 literal|1000
 argument_list|)
 expr_stmt|;
-name|outw
+name|EP_WRITE_2
 argument_list|(
-name|BASE
-operator|+
+name|sc
+argument_list|,
 name|EP_W3_OPTIONS
 argument_list|,
 literal|0x8040
