@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imp.c	4.46	82/12/17	*/
+comment|/*	if_imp.c	4.47	83/02/10	*/
 end_comment
 
 begin_include
@@ -67,6 +67,18 @@ begin_include
 include|#
 directive|include
 file|"../h/vmmac.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/time.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/kernel.h"
 end_include
 
 begin_include
