@@ -156,6 +156,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|at_ifaddr
 modifier|*
@@ -164,6 +165,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|ifqueue
 name|atintrq1

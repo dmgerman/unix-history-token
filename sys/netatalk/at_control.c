@@ -129,6 +129,14 @@ directive|include
 file|<netatalk/at_extern.h>
 end_include
 
+begin_decl_stmt
+name|struct
+name|at_ifaddr
+modifier|*
+name|at_ifaddr
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|int

@@ -118,6 +118,15 @@ file|<netatalk/at_extern.h>
 end_include
 
 begin_decl_stmt
+name|struct
+name|ifqueue
+name|atintrq1
+decl_stmt|,
+name|atintrq2
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|ddp_forward
 init|=
