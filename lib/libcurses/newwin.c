@@ -639,6 +639,10 @@ operator|+
 name|win
 operator|->
 name|begy
+operator|-
+name|orig
+operator|->
+name|begy
 index|]
 expr_stmt|;
 name|lp
@@ -652,7 +656,7 @@ name|line
 index|[
 name|win
 operator|->
-name|begx
+name|ch_off
 index|]
 expr_stmt|;
 name|lp
