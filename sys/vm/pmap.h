@@ -313,6 +313,7 @@ name|__P
 argument_list|(
 operator|(
 name|vm_offset_t
+operator|*
 operator|,
 name|vm_offset_t
 operator|,
