@@ -1421,10 +1421,6 @@ argument_list|(
 name|rt
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|rt
-condition|)
 name|rt
 operator|->
 name|rt_rmx
