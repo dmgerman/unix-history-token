@@ -1492,10 +1492,6 @@ name|argv
 decl_stmt|;
 block|{
 name|int
-name|what
-decl_stmt|;
-comment|/* what we are sending this time */
-name|int
 name|count
 decl_stmt|;
 comment|/* how many bytes we are going to need to send */
@@ -1870,6 +1866,8 @@ name|NET2ADD
 argument_list|(
 name|IAC
 argument_list|,
+name|s
+operator|->
 name|what
 argument_list|)
 expr_stmt|;
@@ -1879,6 +1877,8 @@ literal|"SENT"
 argument_list|,
 name|IAC
 argument_list|,
+name|s
+operator|->
 name|what
 argument_list|)
 expr_stmt|;
