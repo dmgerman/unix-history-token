@@ -59,6 +59,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|GEM_MAXTXFREE
+value|(GEM_NTXDESC - 1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|GEM_NTXDESC_MASK
 value|(GEM_NTXDESC - 1)
 end_define
@@ -243,57 +250,11 @@ name|gem_softc
 modifier|*
 name|txd_sc
 decl_stmt|;
-name|int
-name|txd_nexttx
+name|struct
+name|gem_txsoft
+modifier|*
+name|txd_txs
 decl_stmt|;
-name|int
-name|txd_lasttx
-decl_stmt|;
-name|int
-name|txd_nsegs
-decl_stmt|;
-name|int
-name|txd_flags
-decl_stmt|;
-define|#
-directive|define
-name|GTXD_FIRST
-value|1
-define|#
-directive|define
-name|GTXD_LAST
-value|2
-name|int
-name|txd_error
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* Transmit job descriptor */
-end_comment
-
-begin_struct
-struct|struct
-name|gem_txjob
-block|{
-name|int
-name|txj_nexttx
-decl_stmt|;
-name|int
-name|txj_lasttx
-decl_stmt|;
-name|int
-name|txj_nsegs
-decl_stmt|;
-name|STAILQ_HEAD
-argument_list|(
-argument_list|,
-argument|gem_txsoft
-argument_list|)
-name|txj_txsq
-expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -370,9 +331,13 @@ name|sc_pdmatag
 decl_stmt|;
 comment|/* parent bus dma tag */
 name|bus_dma_tag_t
-name|sc_dmatag
+name|sc_rdmatag
 decl_stmt|;
-comment|/* bus dma tag */
+comment|/* RX bus dma tag */
+name|bus_dma_tag_t
+name|sc_tdmatag
+decl_stmt|;
+comment|/* TX bus dma tag */
 name|bus_dma_tag_t
 name|sc_cdmatag
 decl_stmt|;
@@ -513,29 +478,6 @@ decl_stmt|;
 name|int
 name|sc_ifflags
 decl_stmt|;
-comment|/* Special hardware hooks */
-name|void
-function_decl|(
-modifier|*
-name|sc_hwreset
-function_decl|)
-parameter_list|(
-name|struct
-name|gem_softc
-modifier|*
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|sc_hwinit
-function_decl|)
-parameter_list|(
-name|struct
-name|gem_softc
-modifier|*
-parameter_list|)
-function_decl|;
 block|}
 struct|;
 end_struct
@@ -591,16 +533,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|GEM_CDSPADDR
-parameter_list|(
-name|sc
-parameter_list|)
-value|((sc)->sc_cddma + GEM_CDSPOFF)
-end_define
-
-begin_define
-define|#
-directive|define
 name|GEM_CDTXSYNC
 parameter_list|(
 name|sc
@@ -612,20 +544,7 @@ parameter_list|,
 name|ops
 parameter_list|)
 define|\
-value|bus_dmamap_sync((sc)->sc_dmatag, (sc)->sc_cddmamap, (ops));	\  #define	GEM_CDRXSYNC(sc, x, ops)					\ 	bus_dmamap_sync((sc)->sc_dmatag, (sc)->sc_cddmamap, (ops))
-end_define
-
-begin_define
-define|#
-directive|define
-name|GEM_CDSPSYNC
-parameter_list|(
-name|sc
-parameter_list|,
-name|ops
-parameter_list|)
-define|\
-value|bus_dmamap_sync((sc)->sc_dmatag, (sc)->sc_cddmamap, (ops))
+value|bus_dmamap_sync((sc)->sc_cdmatag, (sc)->sc_cddmamap, (ops));	\  #define	GEM_CDRXSYNC(sc, x, ops)					\ 	bus_dmamap_sync((sc)->sc_cdmatag, (sc)->sc_cddmamap, (ops))
 end_define
 
 begin_define
