@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	8.71 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	8.72 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -9397,6 +9397,12 @@ name|p
 init|=
 name|args
 decl_stmt|;
+name|map
+operator|->
+name|map_mflags
+operator||=
+name|MF_KEEPQUOTES
+expr_stmt|;
 for|for
 control|(
 init|;
