@@ -32,11 +32,11 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|(a< b ? a : b)
+value|(a> b ? a : b)
 end_define
 
 begin_comment
-comment|/*  *	This routine writes win1 on win2 non-destructively.  *  * %G% (Berkeley) @(#)overlay.c	1.3  */
+comment|/*  *	This routine writes win1 on win2 non-destructively.  *  * %G% (Berkeley) @(#)overlay.c	1.4  */
 end_comment
 
 begin_macro
