@@ -892,6 +892,17 @@ begin_struct
 struct|struct
 name|cdevsw
 block|{
+name|int
+name|d_maj
+decl_stmt|;
+name|u_int
+name|d_flags
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|d_name
+decl_stmt|;
 name|d_open_t
 modifier|*
 name|d_open
@@ -924,27 +935,10 @@ name|d_strategy_t
 modifier|*
 name|d_strategy
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|d_name
-decl_stmt|;
-comment|/* base device name, e.g. 'vn' */
-name|int
-name|d_maj
-decl_stmt|;
 name|dumper_t
 modifier|*
 name|d_dump
 decl_stmt|;
-name|void
-modifier|*
-name|__d_unused_was_psize
-decl_stmt|;
-name|u_int
-name|d_flags
-decl_stmt|;
-comment|/* additions below are not binary compatible with 4.2 and below */
 name|d_kqfilter_t
 modifier|*
 name|d_kqfilter
