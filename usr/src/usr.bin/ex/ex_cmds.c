@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_cmds.c	5.1 %G%"
+literal|"@(#)ex_cmds.c	5.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1632,17 +1632,32 @@ expr_stmt|;
 name|setnoaddr
 argument_list|()
 expr_stmt|;
-name|eol
+if|if
+condition|(
+operator|!
+name|exclam
 argument_list|()
-expr_stmt|;
+condition|)
+block|{
 name|ckaw
 argument_list|()
 expr_stmt|;
-name|ignore
+if|if
+condition|(
+name|chng
+operator|&&
+name|dol
+operator|>
+name|zero
+condition|)
+name|error
 argument_list|(
-name|quickly
-argument_list|()
+literal|"No write@since last chage (:rewind! overrides)"
 argument_list|)
+expr_stmt|;
+block|}
+name|eol
+argument_list|()
 expr_stmt|;
 name|erewind
 argument_list|()
@@ -2240,7 +2255,7 @@ argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"@(#) Version 3.5, %G%"
+literal|"@(#) Version 3.5, %G%."
 operator|+
 literal|5
 argument_list|)

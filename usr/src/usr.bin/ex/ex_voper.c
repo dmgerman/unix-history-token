@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_voper.c	4.2 %G%"
+literal|"@(#)ex_voper.c	5.1 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -638,13 +638,9 @@ operator|!=
 name|c
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|Xhadcnt
-condition|)
-name|vsetsiz
+name|forbid
 argument_list|(
-name|Xcnt
+name|Xhadcnt
 argument_list|)
 expr_stmt|;
 name|vsave
@@ -1537,13 +1533,9 @@ operator|==
 name|NOLINE
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|Xhadcnt
-condition|)
-name|vsetsiz
+name|forbid
 argument_list|(
-name|Xcnt
+name|Xhadcnt
 argument_list|)
 expr_stmt|;
 name|vmoving
@@ -1690,13 +1682,9 @@ case|:
 case|case
 literal|'?'
 case|:
-if|if
-condition|(
-name|Xhadcnt
-condition|)
-name|vsetsiz
+name|forbid
 argument_list|(
-name|Xcnt
+name|Xhadcnt
 argument_list|)
 expr_stmt|;
 name|vsave

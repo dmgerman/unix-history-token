@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_vmain.c	5.1 %G%"
+literal|"@(#)ex_vmain.c	5.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2132,13 +2132,9 @@ argument_list|(
 operator|^
 argument_list|)
 case|:
-if|if
-condition|(
-name|hadcnt
-condition|)
-name|vsetsiz
+name|forbid
 argument_list|(
-name|cnt
+name|hadcnt
 argument_list|)
 expr_stmt|;
 name|vsave
@@ -2271,13 +2267,9 @@ comment|/* 		 * :		Read a command from the echo area and 		 *		execute it in com
 case|case
 literal|':'
 case|:
-if|if
-condition|(
-name|hadcnt
-condition|)
-name|vsetsiz
+name|forbid
 argument_list|(
-name|cnt
+name|hadcnt
 argument_list|)
 expr_stmt|;
 name|vsave
