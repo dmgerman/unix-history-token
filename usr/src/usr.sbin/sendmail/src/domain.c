@@ -21,7 +21,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	5.12 (Berkeley) %G%"
+literal|"@(#)domain.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -238,7 +238,7 @@ name|h_errno
 condition|)
 block|{
 case|case
-name|NO_ADDRESS
+name|NO_DATA
 case|:
 case|case
 name|NO_RECOVERY
