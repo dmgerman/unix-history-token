@@ -1070,14 +1070,14 @@ directive|define
 name|SBP_DEV_RESET
 value|0
 comment|/* accept login */
-if|#
-directive|if
-literal|0
 define|#
 directive|define
 name|SBP_DEV_LOGIN
 value|1
 comment|/* to login */
+if|#
+directive|if
+literal|0
 define|#
 directive|define
 name|SBP_DEV_RECONN
@@ -1115,11 +1115,7 @@ name|status
 range|:
 literal|4
 decl_stmt|,
-define|#
-directive|define
-name|SBP_DEV_TIMEOUT
-value|1
-name|flags
+name|timeout
 range|:
 literal|4
 decl_stmt|;
@@ -1340,7 +1336,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
-name|sbp_login_callback
+name|sbp_mgm_callback
 name|__P
 argument_list|(
 operator|(
@@ -1550,6 +1546,21 @@ operator|(
 expr|struct
 name|sbp_target
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|sbp_mgm_timeout
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+name|arg
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4231,7 +4242,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|sbp_login_callback
+name|sbp_reset_start_callback
 parameter_list|(
 name|struct
 name|fw_xfer
@@ -4239,14 +4250,242 @@ modifier|*
 name|xfer
 parameter_list|)
 block|{
-name|SBP_DEBUG
+name|struct
+name|sbp_dev
+modifier|*
+name|tsdev
+decl_stmt|,
+modifier|*
+name|sdev
+init|=
+operator|(
+expr|struct
+name|sbp_dev
+operator|*
+operator|)
+name|xfer
+operator|->
+name|sc
+decl_stmt|;
+name|struct
+name|sbp_target
+modifier|*
+name|target
+init|=
+name|sdev
+operator|->
+name|target
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+if|if
+condition|(
+name|xfer
+operator|->
+name|resp
+operator|!=
+literal|0
+condition|)
+block|{
+name|sbp_show_sdev_info
 argument_list|(
-literal|1
+name|sdev
+argument_list|,
+literal|2
 argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"sbp_reset_start failed: resp=%d\n"
+argument_list|,
+name|xfer
+operator|->
+name|resp
+argument_list|)
+expr_stmt|;
+block|}
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|target
+operator|->
+name|num_lun
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|tsdev
+operator|=
+operator|&
+name|target
+operator|->
+name|luns
+index|[
+name|i
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|tsdev
+operator|->
+name|status
+operator|==
+name|SBP_DEV_LOGIN
+condition|)
+name|sbp_login
+argument_list|(
+name|sdev
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|sbp_reset_start
+parameter_list|(
 name|struct
 name|sbp_dev
 modifier|*
 name|sdev
+parameter_list|)
+block|{
+name|struct
+name|fw_xfer
+modifier|*
+name|xfer
+decl_stmt|;
+name|struct
+name|fw_pkt
+modifier|*
+name|fp
+decl_stmt|;
+name|SBP_DEBUG
+argument_list|(
+literal|0
+argument_list|)
+name|sbp_show_sdev_info
+argument_list|(
+name|sdev
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"sbp_reset_start\n"
+argument_list|)
+expr_stmt|;
+name|END_DEBUG
+name|xfer
+init|=
+name|sbp_write_cmd
+argument_list|(
+name|sdev
+argument_list|,
+name|FWTCODE_WREQQ
+argument_list|,
+literal|0
+argument_list|)
+decl_stmt|;
+name|xfer
+operator|->
+name|act
+operator|.
+name|hand
+operator|=
+name|sbp_reset_start_callback
+expr_stmt|;
+name|fp
+operator|=
+operator|(
+expr|struct
+name|fw_pkt
+operator|*
+operator|)
+name|xfer
+operator|->
+name|send
+operator|.
+name|buf
+expr_stmt|;
+name|fp
+operator|->
+name|mode
+operator|.
+name|wreqq
+operator|.
+name|dest_hi
+operator|=
+literal|0xffff
+expr_stmt|;
+name|fp
+operator|->
+name|mode
+operator|.
+name|wreqq
+operator|.
+name|dest_lo
+operator|=
+literal|0xf0000000
+operator||
+name|RESET_START
+expr_stmt|;
+name|fp
+operator|->
+name|mode
+operator|.
+name|wreqq
+operator|.
+name|data
+operator|=
+name|htonl
+argument_list|(
+literal|0xf
+argument_list|)
+expr_stmt|;
+name|fw_asyreq
+argument_list|(
+name|xfer
+operator|->
+name|fc
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+name|xfer
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|sbp_mgm_callback
+parameter_list|(
+name|struct
+name|fw_xfer
+modifier|*
+name|xfer
+parameter_list|)
+block|{
+name|struct
+name|sbp_dev
+modifier|*
+name|sdev
+decl_stmt|;
+name|int
+name|resp
 decl_stmt|;
 name|sdev
 operator|=
@@ -4259,6 +4498,10 @@ name|xfer
 operator|->
 name|sc
 expr_stmt|;
+name|SBP_DEBUG
+argument_list|(
+literal|1
+argument_list|)
 name|sbp_show_sdev_info
 argument_list|(
 name|sdev
@@ -4268,15 +4511,27 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"sbp_login_callback\n"
+literal|"sbp_mgm_callback\n"
 argument_list|)
 expr_stmt|;
 name|END_DEBUG
+name|resp
+init|=
+name|xfer
+operator|->
+name|resp
+decl_stmt|;
 name|sbp_xfer_free
 argument_list|(
 name|xfer
 argument_list|)
-decl_stmt|;
+expr_stmt|;
+if|#
+directive|if
+literal|0
+block|if (resp != 0) { 		sbp_show_sdev_info(sdev, 2); 		printf("management ORB failed(%d) ... RESET_START\n", resp); 		sbp_reset_start(sdev); 	}
+endif|#
+directive|endif
 return|return;
 block|}
 end_function
@@ -5012,11 +5267,37 @@ literal|"sbp_cmd_callback\n"
 argument_list|)
 expr_stmt|;
 name|END_DEBUG
+if|if
+condition|(
+name|xfer
+operator|->
+name|resp
+operator|!=
+literal|0
+condition|)
+block|{
+name|sbp_show_sdev_info
+argument_list|(
+name|sdev
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"sbp_cmd_callback resp=%d\n"
+argument_list|,
+name|xfer
+operator|->
+name|resp
+argument_list|)
+expr_stmt|;
+block|}
 name|sbp_xfer_free
 argument_list|(
 name|xfer
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|sdev
@@ -5362,18 +5643,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static void sbp_reset_start(struct sbp_dev *sdev) { 	struct fw_xfer *xfer; 	struct fw_pkt *fp;  SBP_DEBUG(0) 	sbp_show_sdev_info(sdev, 2); 	printf("sbp_reset_start\n"); END_DEBUG 	xfer = sbp_write_cmd(sdev, FWTCODE_WREQQ, 0);  	xfer->act.hand = sbp_busy_timeout; 	fp = (struct fw_pkt *)xfer->send.buf; 	fp->mode.wreqq.dest_hi = 0xffff; 	fp->mode.wreqq.dest_lo = 0xf0000000 | RESET_START; 	fp->mode.wreqq.data = htonl(0xf); 	fw_asyreq(xfer->fc, -1, xfer); }
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -6414,7 +6683,7 @@ literal|5
 operator|*
 name|hz
 argument_list|,
-name|sbp_timeout
+name|sbp_mgm_timeout
 argument_list|,
 operator|(
 name|caddr_t
@@ -6448,7 +6717,7 @@ name|act
 operator|.
 name|hand
 operator|=
-name|sbp_login_callback
+name|sbp_mgm_callback
 expr_stmt|;
 name|fp
 operator|=
@@ -7933,7 +8202,7 @@ argument|if (sbp_status->dead) { 		if (sdev->path) { 			xpt_freeze_devq(sdev->pa
 literal|1
 argument|); 			sdev->freeze ++; 		} 		reset_agent =
 literal|1
-argument|; 	}  	if (ocb == NULL) 		goto done;  	sdev->flags&= ~SBP_DEV_TIMEOUT;  	switch(ntohl(ocb->orb[
+argument|; 	}  	if (ocb == NULL) 		goto done;  	switch(ntohl(ocb->orb[
 literal|4
 argument|])& ORB_FMT_MSK){ 	case ORB_FMT_NOP: 		break; 	case ORB_FMT_VED: 		break; 	case ORB_FMT_STD: 		switch(ocb->flags) { 		case OCB_ACT_MGM: 			orb_fun = ntohl(ocb->orb[
 literal|4
@@ -7977,7 +8246,9 @@ argument|); END_DEBUG 					sbp_login(sdev); 				} 				break; 			case ORB_FUN_LGO
 literal|2
 argument|); 				printf(
 literal|"unknown function %d\n"
-argument|, orb_fun); 				break; 			} 			sbp_mgm_orb(sdev, ORB_FUN_RUNQUEUE, NULL); 			break; 		case OCB_ACT_CMD: 			if(ocb->ccb != NULL){ 				union ccb *ccb;
+argument|, orb_fun); 				break; 			} 			sbp_mgm_orb(sdev, ORB_FUN_RUNQUEUE, NULL); 			break; 		case OCB_ACT_CMD: 			sdev->timeout =
+literal|0
+argument|; 			if(ocb->ccb != NULL){ 				union ccb *ccb;
 comment|/* 				u_int32_t *ld; 				ld = ocb->ccb->csio.data_ptr; 				if(ld != NULL&& ocb->ccb->csio.dxfer_len != 0) 					printf("ptr %08x %08x %08x %08x\n", ld[0], ld[1], ld[2], ld[3]); 				else 					printf("ptr NULL\n"); printf("len %d\n", sbp_status->len); */
 argument|ccb = ocb->ccb; 				if(sbp_status->len>
 literal|1
@@ -8148,21 +8419,64 @@ argument|, target->target_id); END_DEBUG 		callout_stop(&target->scan_callout); 
 literal|0
 argument|; i< target->num_lun; i++) { 			sdev =&target->luns[i]; 			if (sdev->status == SBP_DEV_DEAD) 				continue; 			if (sdev->status == SBP_DEV_RESET) 				continue; 			if (sdev->path) { 				xpt_release_devq(sdev->path, 						 sdev->freeze, TRUE); 				sdev->freeze =
 literal|0
-argument|; 				xpt_async(AC_LOST_DEVICE, sdev->path, NULL); 				xpt_free_path(sdev->path); 				sdev->path = NULL; 			} 			sbp_abort_all_ocbs(sdev, CAM_DEV_NOT_THERE); 		} 	} }  static void sbp_timeout(void *arg) { 	struct sbp_ocb *ocb = (struct sbp_ocb *)arg; 	struct sbp_dev *sdev = ocb->sdev;  	sbp_show_sdev_info(sdev,
+argument|; 				xpt_async(AC_LOST_DEVICE, sdev->path, NULL); 				xpt_free_path(sdev->path); 				sdev->path = NULL; 			} 			sbp_abort_all_ocbs(sdev, CAM_DEV_NOT_THERE); 		} 	} }  static void sbp_target_reset(struct sbp_dev *sdev, int method) { 	int i; 	struct sbp_target *target = sdev->target; 	struct sbp_dev *tsdev;  	for (i =
+literal|0
+argument|; i< target->num_lun; i++) { 		tsdev =&target->luns[i]; 		if (tsdev->status == SBP_DEV_DEAD) 			continue; 		if (tsdev->status == SBP_DEV_RESET) 			continue; 		xpt_freeze_devq(tsdev->path,
+literal|1
+argument|); 		tsdev->freeze ++; 		sbp_abort_all_ocbs(tsdev, CAM_CMD_TIMEOUT); 		if (method ==
+literal|2
+argument|) 			tsdev->status = SBP_DEV_LOGIN; 	} 	switch(method) { 	case
+literal|1
+argument|: 		printf(
+literal|"target reset\n"
+argument|); 		sbp_mgm_orb(sdev, ORB_FUN_RST, NULL); 		break; 	case
+literal|2
+argument|: 		printf(
+literal|"reset start\n"
+argument|); 		sbp_reset_start(sdev); 		break; 	} 			 }  static void sbp_mgm_timeout(void *arg) { 	struct sbp_ocb *ocb = (struct sbp_ocb *)arg; 	struct sbp_dev *sdev = ocb->sdev; 	struct sbp_target *target = sdev->target;  	sbp_show_sdev_info(sdev,
+literal|2
+argument|); 	printf(
+literal|"management ORB timeout\n"
+argument|); 	target->mgm_ocb_cur = NULL; 	sbp_free_ocb(sdev, ocb);
+if|#
+directive|if
+literal|0
+comment|/* XXX */
+argument|sbp_mgm_orb(sdev, ORB_FUN_RUNQUEUE, NULL);
+endif|#
+directive|endif
+if|#
+directive|if
+literal|0
+argument|sbp_reset_start(sdev);
+endif|#
+directive|endif
+argument|}  static void sbp_timeout(void *arg) { 	struct sbp_ocb *ocb = (struct sbp_ocb *)arg; 	struct sbp_dev *sdev = ocb->sdev;  	sbp_show_sdev_info(sdev,
 literal|2
 argument|); 	printf(
 literal|"request timeout ... "
-argument|);  	if (ocb->flags == OCB_ACT_MGM) { 		printf(
-literal|"management ORB\n"
-argument|);
-comment|/* XXX just ignore for now */
-argument|sdev->target->mgm_ocb_cur = NULL; 		sbp_free_ocb(sdev, ocb); 		sbp_mgm_orb(sdev, ORB_FUN_RUNQUEUE, NULL); 		return; 	}  	xpt_freeze_devq(sdev->path,
+argument|);  	sdev->timeout ++; 	switch(sdev->timeout) { 	case
 literal|1
-argument|); 	sdev->freeze ++; 	sbp_abort_all_ocbs(sdev, CAM_CMD_TIMEOUT); 	if (sdev->flags& SBP_DEV_TIMEOUT) { 		printf(
-literal|"target reset\n"
-argument|); 		sbp_mgm_orb(sdev, ORB_FUN_RST, NULL); 		sdev->flags&= ~SBP_DEV_TIMEOUT; 	} else { 		printf(
+argument|: 		printf(
 literal|"agent reset\n"
-argument|); 		sdev->flags |= SBP_DEV_TIMEOUT; 		sbp_agent_reset(sdev); 	} 	return; }  static void sbp_action1(struct cam_sim *sim, union ccb *ccb) {  	struct sbp_softc *sbp = (struct sbp_softc *)sim->softc; 	struct sbp_target *target = NULL; 	struct sbp_dev *sdev = NULL;
+argument|); 		xpt_freeze_devq(sdev->path,
+literal|1
+argument|); 		sdev->freeze ++; 		sbp_abort_all_ocbs(sdev, CAM_CMD_TIMEOUT); 		sbp_agent_reset(sdev); 		break; 	case
+literal|2
+argument|: 	case
+literal|3
+argument|: 		sbp_target_reset(sdev, sdev->timeout -
+literal|1
+argument|); 		break;
+if|#
+directive|if
+literal|0
+argument|default:
+comment|/* XXX give up */
+argument|sbp_cam_detach_target(target); 		if (target->luns != NULL) 			free(target->luns, M_SBP); 		target->num_lun = 0;; 		target->luns = NULL; 		target->fwdev = NULL;
+endif|#
+directive|endif
+argument|} }  static void sbp_action1(struct cam_sim *sim, union ccb *ccb) {  	struct sbp_softc *sbp = (struct sbp_softc *)sim->softc; 	struct sbp_target *target = NULL; 	struct sbp_dev *sdev = NULL;
 comment|/* target:lun -> sdev mapping */
 argument|if (sbp != NULL&& ccb->ccb_h.target_id != CAM_TARGET_WILDCARD&& ccb->ccb_h.target_id< SBP_NUM_TARGETS) { 		target =&sbp->targets[ccb->ccb_h.target_id]; 		if (target->fwdev != NULL&& ccb->ccb_h.target_lun != CAM_LUN_WILDCARD&& ccb->ccb_h.target_lun< target->num_lun) { 			sdev =&target->luns[ccb->ccb_h.target_lun]; 			if (sdev->status != SBP_DEV_ATTACHED&& 				sdev->status != SBP_DEV_PROBE) 				sdev = NULL; 		} 	}  SBP_DEBUG(
 literal|1
@@ -8274,8 +8588,29 @@ argument|); 			ccb->ccb_h.status = CAM_REQ_INVALID; 			xpt_done(ccb); 			break; 
 literal|1
 argument|) 		printf(
 literal|"%s:%d:%d:%d:XPT_CALC_GEOMETRY: "
-literal|"Volume size = %lld\n"
-argument|, 			device_get_nameunit(sbp->fd.dev), cam_sim_path(sbp->sim), 			ccb->ccb_h.target_id, ccb->ccb_h.target_lun, 			(u_int64_t)ccg->volume_size); END_DEBUG  		size_mb = ccg->volume_size 			/ ((
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
+literal|"Volume size = %jd\n"
+argument|,
+else|#
+directive|else
+literal|"Volume size = %d\n"
+argument|,
+endif|#
+directive|endif
+argument|device_get_nameunit(sbp->fd.dev), 			cam_sim_path(sbp->sim), 			ccb->ccb_h.target_id, ccb->ccb_h.target_lun,
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500000
+argument|(uintmax_t)
+endif|#
+directive|endif
+argument|ccg->volume_size); END_DEBUG  		size_mb = ccg->volume_size 			/ ((
 literal|1024L
 argument|*
 literal|1024L

@@ -618,11 +618,15 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* IEEE-1394a Table C-2 Gap count as a function of hops*/
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MAX_GAPHOP
-value|16
+value|15
 end_define
 
 begin_decl_stmt
@@ -631,39 +635,37 @@ name|gap_cnt
 index|[]
 init|=
 block|{
-literal|1
+literal|5
 block|,
-literal|1
+literal|5
 block|,
-literal|4
+literal|7
 block|,
-literal|6
+literal|8
 block|,
-literal|9
+literal|10
 block|,
-literal|12
+literal|13
 block|,
-literal|14
+literal|16
 block|,
-literal|17
+literal|18
 block|,
-literal|20
+literal|21
 block|,
-literal|23
+literal|24
 block|,
-literal|25
+literal|26
 block|,
-literal|28
+literal|29
 block|,
-literal|31
+literal|32
 block|,
-literal|33
+literal|35
 block|,
-literal|36
+literal|37
 block|,
-literal|39
-block|,
-literal|42
+literal|40
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -4899,7 +4901,6 @@ block|{
 if|#
 directive|if
 literal|1
-comment|/* this could happen if we call fwohci_arcv() before fwohci_txd() */
 if|if
 condition|(
 name|xfer
@@ -4908,7 +4909,8 @@ name|state
 operator|==
 name|FWXF_START
 condition|)
-name|panic
+comment|/* 			 * This could happen if: 			 *  1. We call fwohci_arcv() before fwohci_txd(). 			 *  2. firewire_watch() is called. 			 */
+name|printf
 argument_list|(
 literal|"fw_xfer_free FWXF_START\n"
 argument_list|)
@@ -6056,20 +6058,9 @@ name|fc
 operator|->
 name|irm
 operator|==
-operator|(
-operator|(
-name|CSRARC
-argument_list|(
 name|fc
-argument_list|,
-name|NODE_IDS
-argument_list|)
-operator|>>
-literal|16
-operator|)
-operator|&
-literal|0x3f
-operator|)
+operator|->
+name|nodeid
 condition|)
 block|{
 name|fc
@@ -6094,6 +6085,11 @@ argument_list|,
 name|fc
 operator|->
 name|irm
+argument_list|)
+expr_stmt|;
+name|fw_bmr
+argument_list|(
+name|fc
 argument_list|)
 expr_stmt|;
 block|}
@@ -6132,49 +6128,12 @@ expr_stmt|;
 block|}
 block|}
 else|else
-block|{
 name|fc
 operator|->
 name|status
 operator|=
 name|FWBUSMGRDONE
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|device_printf(fc->bdev, "BMR = %x\n", 				CSRARC(fc, BUS_MGR_ID));
-endif|#
-directive|endif
-block|}
-if|if
-condition|(
-name|fc
-operator|->
-name|irm
-operator|==
-operator|(
-operator|(
-name|CSRARC
-argument_list|(
-name|fc
-argument_list|,
-name|NODE_IDS
-argument_list|)
-operator|>>
-literal|16
-operator|)
-operator|&
-literal|0x3f
-operator|)
-condition|)
-block|{
-comment|/* I am BMGR */
-name|fw_bmr
-argument_list|(
-name|fc
-argument_list|)
-expr_stmt|;
-block|}
 name|callout_reset
 argument_list|(
 operator|&
@@ -9594,13 +9553,9 @@ argument|]); 	if (bmr ==
 literal|0x3f
 argument|) 		bmr = fc->nodeid;  	CSRARC(fc, BUS_MGR_ID) = fc->set_bmr(fc, bmr&
 literal|0x3f
-argument|); 	device_printf(fc->bdev,
-literal|"new bus manager %d "
-argument|, 		CSRARC(fc, BUS_MGR_ID)); 	if(bmr == fc->nodeid){ 		printf(
-literal|"(me)\n"
-argument|); 		fw_bmr(fc); 	}else{ 		printf(
-literal|"\n"
-argument|); 	} error: 	fw_xfer_free(xfer); }
+argument|); 	fw_xfer_free(xfer); 	fw_bmr(fc); 	return;  error: 	device_printf(fc->bdev,
+literal|"bus manager election failed\n"
+argument|); 	fw_xfer_free(xfer); }
 comment|/*  * To candidate Bus Manager election process.  */
 argument|static void fw_try_bmr(void *arg) { 	struct fw_xfer *xfer; 	struct firewire_comm *fc = (struct firewire_comm *)arg; 	struct fw_pkt *fp; 	int err =
 literal|0
@@ -9735,14 +9690,28 @@ argument|; 	} 	return((u_int16_t) crc); }  static int fw_bmr(struct firewire_com
 comment|/* Check to see if the current root node is cycle master capable */
 argument|self_id =&fc->topology_map->self_id[fc->max_node]; 	if (fc->max_node>
 literal|0
-argument|) { 		if (self_id->p0.contender) 			cmstr = fc->max_node; 		else
-comment|/* XXX shall we be cycle master? */
+argument|) {
+comment|/* XXX check cmc bit of businfo block rather than contender */
+argument|if (self_id->p0.link_active&& self_id->p0.contender) 			cmstr = fc->max_node; 		else { 			device_printf(fc->bdev,
+literal|"root node is not cycle master capable\n"
+argument|);
+comment|/* XXX shall we be the cycle master? */
 argument|cmstr = fc->nodeid;
-comment|/* XXX bus reset? */
-argument|} else 		cmstr = -
+comment|/* XXX need bus reset */
+argument|} 	} else 		cmstr = -
 literal|1
-argument|;
-comment|/* If I am the bus manager, optimize gapcount */
+argument|;  	device_printf(fc->bdev,
+literal|"bus manager %d "
+argument|, CSRARC(fc, BUS_MGR_ID)); 	if(CSRARC(fc, BUS_MGR_ID) != fc->nodeid) {
+comment|/* We are not the bus manager */
+argument|printf(
+literal|"\n"
+argument|); 		return(
+literal|0
+argument|); 	} 	printf(
+literal|"(me)\n"
+argument|);
+comment|/* Optimize gapcount */
 argument|if(fc->max_hop<= MAX_GAPHOP ) 		fw_phy_config(fc, cmstr, gap_cnt[fc->max_hop]);
 comment|/* If we are the cycle master, nothing to do */
 argument|if (cmstr == fc->nodeid || cmstr == -
@@ -9769,7 +9738,7 @@ literal|0xf0000000
 argument|| STATE_SET, htonl(
 literal|1
 argument|<<
-literal|16
+literal|8
 argument|), 		fw_asy_callback_free);  	return
 literal|0
 argument|; }  DRIVER_MODULE(firewire,fwohci,firewire_driver,firewire_devclass,
