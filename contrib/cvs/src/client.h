@@ -702,7 +702,7 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|CLIENT_SUPPORT
-comment|/*      * Function to carry out the response.  ARGS is the text of the      * command after name and, if present, a single space, have been      * stripped off.  The function can scribble into ARGS if it wants.      */
+comment|/*      * Function to carry out the response.  ARGS is the text of the      * command after name and, if present, a single space, have been      * stripped off.  The function can scribble into ARGS if it wants.      * Note that although LEN is given, ARGS is also guaranteed to be      * '\0' terminated.      */
 name|void
 argument_list|(
 argument|*func
