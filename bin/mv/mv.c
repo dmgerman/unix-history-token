@@ -163,6 +163,8 @@ name|fflg
 decl_stmt|,
 name|iflg
 decl_stmt|,
+name|nflg
+decl_stmt|,
 name|vflg
 decl_stmt|;
 end_decl_stmt
@@ -304,7 +306,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"fiv"
+literal|"finv"
 argument_list|)
 operator|)
 operator|!=
@@ -325,6 +327,8 @@ literal|1
 expr_stmt|;
 name|fflg
 operator|=
+name|nflg
+operator|=
 literal|0
 expr_stmt|;
 break|break;
@@ -335,6 +339,22 @@ name|fflg
 operator|=
 literal|1
 expr_stmt|;
+name|iflg
+operator|=
+name|nflg
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|'n'
+case|:
+name|nflg
+operator|=
+literal|1
+expr_stmt|;
+name|fflg
+operator|=
 name|iflg
 operator|=
 literal|0
@@ -725,6 +745,29 @@ name|ask
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|nflg
+condition|)
+block|{
+if|if
+condition|(
+name|vflg
+condition|)
+name|printf
+argument_list|(
+literal|"%s not overwritten\n"
+argument_list|,
+name|to
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+elseif|else
 if|if
 condition|(
 name|iflg
@@ -1940,9 +1983,9 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: mv [-f | -i] [-v] source target"
+literal|"usage: mv [-f | -i | -n] [-v] source target"
 argument_list|,
-literal|"       mv [-f | -i] [-v] source ... directory"
+literal|"       mv [-f | -i | -n] [-v] source ... directory"
 argument_list|)
 expr_stmt|;
 name|exit
