@@ -1550,7 +1550,7 @@ operator|->
 name|fw_dst
 argument_list|)
 argument_list|,
-name|AF_INET
+name|AF_INET6
 argument_list|)
 expr_stmt|;
 if|if
