@@ -324,6 +324,12 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
+name|pr
+operator|->
+name|pr_securelevel
+operator|=
+name|securelevel
+expr_stmt|;
 name|error
 operator|=
 name|copyinstr
