@@ -168,11 +168,6 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
-name|int
-name|useenvpath
-init|=
-literal|0
-decl_stmt|;
 while|while
 condition|(
 operator|(
@@ -184,7 +179,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"p"
+literal|""
 argument_list|)
 operator|)
 operator|!=
@@ -196,15 +191,6 @@ condition|(
 name|ch
 condition|)
 block|{
-case|case
-literal|'p'
-case|:
-name|useenvpath
-operator|=
-literal|1
-expr_stmt|;
-comment|/* use environment for PATH */
-break|break;
 case|case
 literal|'?'
 case|:
@@ -230,34 +216,6 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|useenvpath
-condition|)
-block|{
-if|if
-condition|(
-operator|(
-name|std
-operator|=
-name|getenv
-argument_list|(
-literal|"PATH"
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-name|err
-argument_list|(
-literal|1
-argument_list|,
-literal|"getenv: PATH"
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
 comment|/* Retrieve the standard path. */
 name|mib
 index|[
@@ -375,7 +333,6 @@ argument_list|,
 literal|"sysctl: user_cs_path"
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/* For each path, for each program... */
 for|for
@@ -520,7 +477,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: whereis [-p] program [...]\n"
+literal|"usage: whereis program [...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
