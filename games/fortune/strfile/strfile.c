@@ -127,7 +127,7 @@ file|"strfile.h"
 end_include
 
 begin_comment
-comment|/*  *	This program takes a file composed of strings seperated by  * lines starting with two consecutive delimiting character (default  * character is '%') and creates another file which consists of a table  * describing the file (structure from "strfile.h"), a table of seek  * pointers to the start of the strings, and the strings, each terminated  * by a null byte.  Usage:  *  *	% strfile [-iorsx] [ -cC ] sourcefile [ datafile ]  *  *	c - Change delimiting character from '%' to 'C'  *	s - Silent.  Give no summary of data processed at the end of  *	    the run.  *	o - order the strings in alphabetic order  *	i - if ordering, ignore case  *	r - randomize the order of the strings  *	x - set rotated bit  *  *		Ken Arnold	Sept. 7, 1978 --  *  *	Added ordering options.  */
+comment|/*  *	This program takes a file composed of strings seperated by  * lines starting with two consecutive delimiting character (default  * character is '%') and creates another file which consists of a table  * describing the file (structure from "strfile.h"), a table of seek  * pointers to the start of the strings, and the strings, each terminated  * by a null byte.  Usage:  *  *	% strfile [-iorsx] [ -cC ] sourcefile [ datafile ]  *  *	C - Allow comments marked by a double delimiter at line's beginning  *	c - Change delimiting character from '%' to 'C'  *	s - Silent.  Give no summary of data processed at the end of  *	    the run.  *	o - order the strings in alphabetic order  *	i - if ordering, ignore case  *	r - randomize the order of the strings  *	x - set rotated bit  *  *		Ken Arnold	Sept. 7, 1978 --  *  *	Added ordering options.  */
 end_comment
 
 begin_define
@@ -227,6 +227,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* delimiting character */
+end_comment
+
+begin_decl_stmt
+name|int
+name|Cflag
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* embedded comments */
 end_comment
 
 begin_decl_stmt
@@ -819,6 +831,16 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
+name|Cflag
+condition|)
+name|Tbl
+operator|.
+name|str_flags
+operator||=
+name|STR_COMMENTS
+expr_stmt|;
+if|if
+condition|(
 name|Oflag
 condition|)
 name|do_order
@@ -1109,7 +1131,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"c:iorsx"
+literal|"Cc:iorsx"
 argument_list|)
 operator|)
 operator|!=
@@ -1120,6 +1142,14 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'C'
+case|:
+comment|/* embedded comments */
+name|Cflag
+operator|++
+expr_stmt|;
+break|break;
 case|case
 literal|'c'
 case|:
