@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)input.c	5.7 (Berkeley) %G%"
+literal|"@(#)input.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -80,6 +80,15 @@ operator|.
 name|sns_family
 operator|=
 name|AF_NS
+expr_stmt|;
+name|sxn
+operator|.
+name|sns_len
+operator|=
+sizeof|sizeof
+argument_list|(
+name|sxn
+argument_list|)
 expr_stmt|;
 name|sxn
 operator|.

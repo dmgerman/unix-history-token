@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)af.c	5.8 (Berkeley) %G%"
+literal|"@(#)af.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -147,6 +147,12 @@ name|sockaddr_ns
 name|xnnet_default
 init|=
 block|{
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sockaddr_ns
+argument_list|)
+block|,
 name|AF_NS
 block|}
 decl_stmt|;
