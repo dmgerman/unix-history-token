@@ -26,54 +26,18 @@ end_define
 begin_if
 if|#
 directive|if
+operator|!
 name|defined
 argument_list|(
-name|__GNUC__
-argument_list|)
-end_if
-
-begin_undef
-undef|#
-directive|undef
-name|alloca
-end_undef
-
-begin_define
-define|#
-directive|define
-name|alloca
-value|__builtin_alloca
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sparc
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|HAVE_ALLOCA_H
+name|PRAGMA_ALLOCA
 argument_list|)
 end_if
 
 begin_include
 include|#
 directive|include
-file|<alloca.h>
+file|"memalloc.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -373,6 +337,12 @@ name|defined
 argument_list|(
 name|USGr3
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|XENIX_22
+argument_list|)
 end_if
 
 begin_if
@@ -406,7 +376,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* USGr3 */
+comment|/* USGr3&& !XENIX_22 */
 end_comment
 
 begin_endif
@@ -739,11 +709,29 @@ name|Linux
 argument_list|)
 end_if
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_SYS_STREAM_H
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<sys/stream.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_SYS_STREAM_H */
+end_comment
 
 begin_if
 if|#
@@ -989,20 +977,6 @@ begin_comment
 comment|/* HAVE_VARARGS_H */
 end_comment
 
-begin_comment
-comment|/* This definition is needed by readline.c, rltty.c, and signals.c. */
-end_comment
-
-begin_comment
-comment|/* If on, then readline handles signals in a way that doesn't screw. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HANDLE_SIGNALS
-end_define
-
 begin_if
 if|#
 directive|if
@@ -1038,6 +1012,108 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* If you cast map[key].function to type (Keymap) on a Cray,    the compiler takes the value of map[key].function and    divides it by 4 to convert between pointer types (pointers    to functions and pointers to structs are different sizes).    This is not what is wanted. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CRAY
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|FUNCTION_TO_KEYMAP
+parameter_list|(
+name|map
+parameter_list|,
+name|key
+parameter_list|)
+value|(Keymap)((int)map[key].function)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KEYMAP_TO_FUNCTION
+parameter_list|(
+name|data
+parameter_list|)
+value|(Function *)((int)(data))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|FUNCTION_TO_KEYMAP
+parameter_list|(
+name|map
+parameter_list|,
+name|key
+parameter_list|)
+value|(Keymap)(map[key].function)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KEYMAP_TO_FUNCTION
+parameter_list|(
+name|data
+parameter_list|)
+value|(Function *)(data)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Possible values for _rl_bell_preference. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NO_BELL
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUDIBLE_BELL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|VISIBLE_BELL
+value|2
+end_define
+
+begin_comment
+comment|/* CONFIGURATION SECTION */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"rlconf.h"
+end_include
 
 begin_endif
 endif|#

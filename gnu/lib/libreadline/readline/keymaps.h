@@ -185,6 +185,7 @@ comment|/* Return a new, empty keymap.    Free it with free() when you are done.
 end_comment
 
 begin_function_decl
+specifier|extern
 name|Keymap
 name|rl_make_bare_keymap
 parameter_list|()
@@ -196,6 +197,7 @@ comment|/* Return a new keymap which is a copy of MAP. */
 end_comment
 
 begin_function_decl
+specifier|extern
 name|Keymap
 name|rl_copy_keymap
 parameter_list|()
@@ -207,8 +209,17 @@ comment|/* Return a new keymap with the printing characters bound to rl_insert, 
 end_comment
 
 begin_function_decl
+specifier|extern
 name|Keymap
 name|rl_make_keymap
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|rl_discard_keymap
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -218,6 +229,7 @@ comment|/* Return the keymap corresponding to a given name.  Names look like    
 end_comment
 
 begin_function_decl
+specifier|extern
 name|Keymap
 name|rl_get_keymap_by_name
 parameter_list|()
@@ -229,6 +241,7 @@ comment|/* Return the current keymap. */
 end_comment
 
 begin_function_decl
+specifier|extern
 name|Keymap
 name|rl_get_keymap
 parameter_list|()
@@ -240,6 +253,7 @@ comment|/* Set the current keymap to MAP. */
 end_comment
 
 begin_function_decl
+specifier|extern
 name|void
 name|rl_set_keymap
 parameter_list|()

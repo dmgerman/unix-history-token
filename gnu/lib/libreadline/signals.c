@@ -255,6 +255,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|char
+modifier|*
+name|term_cr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|int
 name|_rl_meta_flag
 decl_stmt|;
@@ -262,7 +270,7 @@ end_decl_stmt
 
 begin_function_decl
 specifier|extern
-name|void
+name|int
 name|_rl_output_character_function
 parameter_list|()
 function_decl|;
@@ -330,7 +338,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|_GO32_
+name|__GO32__
 argument_list|)
 end_if
 
@@ -346,7 +354,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _GO32_ */
+comment|/* __GO32__ */
 end_comment
 
 begin_if
@@ -559,6 +567,30 @@ operator|)
 name|NULL
 decl_stmt|,
 modifier|*
+name|old_alrm
+init|=
+operator|(
+name|SigHandler
+operator|*
+operator|)
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|SHELL
+argument_list|)
+end_if
+
+begin_decl_stmt
+specifier|static
+name|SigHandler
+modifier|*
 name|old_tstp
 init|=
 operator|(
@@ -593,17 +625,17 @@ name|SigHandler
 operator|*
 operator|)
 name|NULL
-decl_stmt|,
-modifier|*
-name|old_alrm
-init|=
-operator|(
-name|SigHandler
-operator|*
-operator|)
-name|NULL
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !SHELL */
+end_comment
 
 begin_comment
 comment|/* Handle an interrupt character. */
@@ -1202,6 +1234,9 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* SIGWINCH */
+return|return
+literal|0
+return|;
 block|}
 end_block
 
@@ -1289,6 +1324,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+return|return
+literal|0
+return|;
 block|}
 end_block
 
@@ -1302,11 +1340,6 @@ name|void
 name|cr
 parameter_list|()
 block|{
-specifier|extern
-name|char
-modifier|*
-name|term_cr
-decl_stmt|;
 if|if
 condition|(
 name|term_cr

@@ -211,7 +211,7 @@ name|lowercase_p
 parameter_list|(
 name|c
 parameter_list|)
-value|(((c)> ('a' - 1)&& (c)< ('z' + 1)))
+value|islower(c)
 end_define
 
 begin_define
@@ -221,7 +221,7 @@ name|uppercase_p
 parameter_list|(
 name|c
 parameter_list|)
-value|(((c)> ('A' - 1)&& (c)< ('Z' + 1)))
+value|isupper(c)
 end_define
 
 begin_define
@@ -231,7 +231,7 @@ name|pure_alphabetic
 parameter_list|(
 name|c
 parameter_list|)
-value|(lowercase_p(c) || uppercase_p(c))
+value|isalpha(c)
 end_define
 
 begin_ifndef
@@ -247,7 +247,7 @@ name|to_upper
 parameter_list|(
 name|c
 parameter_list|)
-value|(lowercase_p(c) ? ((c) - 32) : (c))
+value|toupper(c)
 end_define
 
 begin_define
@@ -257,7 +257,7 @@ name|to_lower
 parameter_list|(
 name|c
 parameter_list|)
-value|(uppercase_p(c) ? ((c) + 32) : (c))
+value|tolower(c)
 end_define
 
 begin_endif
@@ -284,6 +284,27 @@ name|c
 parameter_list|)
 value|((c)> meta_character_threshold)
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|digit_value
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|digit_value
+parameter_list|(
+name|x
+parameter_list|)
+value|((x) - '0')
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -331,7 +352,7 @@ begin_define
 define|#
 directive|define
 name|RUBOUT
-value|0x07f
+value|0x7f
 end_define
 
 begin_endif
@@ -426,7 +447,7 @@ begin_define
 define|#
 directive|define
 name|SPACE
-value|0x020
+value|0x20
 end_define
 
 begin_ifdef

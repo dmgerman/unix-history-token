@@ -118,7 +118,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|_GO32_
+name|__GO32__
 argument_list|)
 end_if
 
@@ -140,7 +140,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _GO32_ */
+comment|/* __GO32__ */
 end_comment
 
 begin_comment
@@ -413,9 +413,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* **************************************************************** */
 end_comment
@@ -425,7 +422,7 @@ comment|/*								    */
 end_comment
 
 begin_comment
-comment|/*		      Controlling the Meta Key			    */
+comment|/*	 	Controlling the Meta Key and Keypad		    */
 end_comment
 
 begin_comment
@@ -459,9 +456,25 @@ name|term_mo
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|term_ks
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|term_ke
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
-name|void
+name|int
 name|outchar
 parameter_list|(
 name|c
@@ -470,13 +483,14 @@ name|int
 name|c
 decl_stmt|;
 block|{
+return|return
 name|putc
 argument_list|(
 name|c
 argument_list|,
 name|rl_outstream
 argument_list|)
-expr_stmt|;
+return|;
 block|}
 end_function
 
@@ -536,8 +550,51 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
+begin_function
+specifier|static
+name|void
+name|control_keypad
+parameter_list|(
+name|on
+parameter_list|)
+name|int
+name|on
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|on
+operator|&&
+name|term_ks
+condition|)
+name|tputs
+argument_list|(
+name|term_ks
+argument_list|,
+literal|1
+argument_list|,
+name|outchar
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|on
+operator|&&
+name|term_ke
+condition|)
+name|tputs
+argument_list|(
+name|term_ke
+argument_list|,
+literal|1
+argument_list|,
+name|outchar
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/* **************************************************************** */
@@ -1049,7 +1106,7 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|_GO32_
+name|__GO32__
 argument_list|)
 name|readline_echoing_p
 operator|=
@@ -1365,7 +1422,7 @@ directive|endif
 comment|/* TIOCGLTC */
 endif|#
 directive|endif
-comment|/* !_GO32_ */
+comment|/* !__GO32__ */
 block|}
 end_block
 
@@ -1978,7 +2035,7 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|_GO32_
+name|__GO32__
 argument_list|)
 name|int
 name|tty
@@ -2055,6 +2112,11 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+name|control_keypad
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 name|terminal_prepped
 operator|=
 literal|1
@@ -2064,7 +2126,7 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* !_GO32_ */
+comment|/* !__GO32__ */
 block|}
 end_function
 
@@ -2082,7 +2144,7 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|_GO32_
+name|__GO32__
 argument_list|)
 name|int
 name|tty
@@ -2125,6 +2187,11 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+name|control_keypad
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 name|terminal_prepped
 operator|=
 literal|0
@@ -2134,7 +2201,7 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* !_GO32_ */
+comment|/* !__GO32__ */
 block|}
 end_function
 
@@ -2297,6 +2364,9 @@ comment|/* !TERMIOS_TTY_DRIVER */
 endif|#
 directive|endif
 comment|/* !TIOCSTART */
+return|return
+literal|0
+return|;
 block|}
 end_block
 
@@ -2418,6 +2488,9 @@ comment|/* !TERMIOS_TTY_DRIVER */
 endif|#
 directive|endif
 comment|/* !TIOCSTOP */
+return|return
+literal|0
+return|;
 block|}
 end_block
 

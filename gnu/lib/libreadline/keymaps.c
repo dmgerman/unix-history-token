@@ -45,6 +45,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"rlconf.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"keymaps.h"
 end_include
 
@@ -70,6 +76,25 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function_decl
+specifier|extern
+name|int
+name|rl_do_lowercase_version
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|rl_rubout
+argument_list|()
+decl_stmt|,
+name|rl_insert
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_if
 if|#
@@ -335,14 +360,6 @@ name|Keymap
 name|rl_make_keymap
 parameter_list|()
 block|{
-specifier|extern
-name|int
-name|rl_insert
-argument_list|()
-decl_stmt|,
-name|rl_rubout
-argument_list|()
-decl_stmt|;
 specifier|register
 name|int
 name|i
@@ -474,20 +491,18 @@ begin_comment
 comment|/* Free the storage associated with MAP. */
 end_comment
 
-begin_macro
+begin_function_decl
+name|void
 name|rl_discard_keymap
-argument_list|(
-argument|map
-argument_list|)
-end_macro
-
-begin_expr_stmt
-name|Keymap
-argument_list|(
+parameter_list|(
 name|map
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+parameter_list|)
+function_decl|Keymap
+parameter_list|(
+name|map
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_block
 block|{

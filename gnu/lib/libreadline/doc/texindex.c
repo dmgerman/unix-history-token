@@ -1,7 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Prepare Tex index dribble output into an actual index.    Copyright (C) 1987 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 1, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Prepare TeX index dribble output into an actual index.     Version 1.45     Copyright (C) 1987, 1991, 1992 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
 end_comment
+
+begin_escape
+end_escape
 
 begin_include
 include|#
@@ -21,6 +24,28 @@ directive|include
 file|<errno.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"getopt.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"bashansi.h"
+end_include
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|errno
+argument_list|)
+end_if
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -28,71 +53,25 @@ name|errno
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VMS
-end_ifdef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|VAX11C
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|noshare
-end_define
-
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|<perror.h>
-end_include
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_UNISTD_H
+argument_list|)
+end_if
 
 begin_include
 include|#
 directive|include
-file|<file.h>
+file|<unistd.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|EXIT_SUCCESS
-value|((1<< 28) | 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|EXIT_FATAL
-value|((1<< 28) | 4)
-end_define
-
-begin_define
-define|#
-directive|define
-name|unlink
-value|delete
-end_define
-
-begin_define
-define|#
-directive|define
-name|tell
-parameter_list|(
-name|fd
-parameter_list|)
-value|lseek(fd, 0L, 1)
-end_define
 
 begin_else
 else|#
@@ -100,51 +79,16 @@ directive|else
 end_else
 
 begin_comment
-comment|/* Not VMS */
+comment|/* !HAVE_UNISTD_H */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USG
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/fcntl.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|<sys/file.h>
-end_include
-
-begin_define
-define|#
-directive|define
-name|EXIT_SUCCESS
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|EXIT_FATAL
-value|1
-end_define
+begin_function_decl
+specifier|extern
+name|long
+name|lseek
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -152,19 +96,129 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Not VMS */
+comment|/* !HAVE_UNISTD_H */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|L_XTND
-end_ifndef
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|mktemp
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|HAVE_STRERROR
+argument_list|)
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|sys_nerr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|sys_errlist
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_AIX
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|_POSIX_VERSION
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/file.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
 
 begin_define
 define|#
 directive|define
-name|L_XTND
+name|TI_NO_ERROR
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|TI_FATAL_ERROR
+value|1
+end_define
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|SEEK_SET
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|SEEK_SET
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SEEK_CUR
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SEEK_END
 value|2
 end_define
 
@@ -173,58 +227,12 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VMS
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|noshare
-name|int
-name|sys_nerr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|noshare
-name|char
-modifier|*
-name|sys_errlist
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|sys_nerr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|sys_errlist
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* !SEEK_SET */
+end_comment
 
 begin_comment
-comment|/* When sorting in core, this structure describes one line  and the position and length of its first keyfield.  */
+comment|/* When sorting in core, this structure describes one line    and the position and length of its first keyfield.  */
 end_comment
 
 begin_struct
@@ -235,31 +243,31 @@ name|char
 modifier|*
 name|text
 decl_stmt|;
-comment|/* The actual text of the line */
+comment|/* The actual text of the line. */
 union|union
 block|{
-comment|/* The start of the key (for textual comparison) */
 name|char
 modifier|*
 name|text
 decl_stmt|;
+comment|/* The start of the key (for textual comparison). */
 name|long
 name|number
 decl_stmt|;
-comment|/* or the numeric value (for numeric comparison) */
+comment|/* The numeric value (for numeric comparison). */
 block|}
 name|key
 union|;
 name|long
 name|keylen
 decl_stmt|;
-comment|/* Length of key field */
+comment|/* Length of KEY field. */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/* This structure describes a field to use as a sort key */
+comment|/* This structure describes a field to use as a sort key. */
 end_comment
 
 begin_struct
@@ -269,48 +277,49 @@ block|{
 name|int
 name|startwords
 decl_stmt|;
-comment|/* # words to skip  */
+comment|/* Number of words to skip. */
 name|int
 name|startchars
 decl_stmt|;
-comment|/*  and # additional chars to skip, to start of field */
+comment|/* Number of additional chars to skip. */
 name|int
 name|endwords
 decl_stmt|;
-comment|/* similar, from beg (or end) of line, to find end of field */
+comment|/* Number of words to ignore at end. */
 name|int
 name|endchars
 decl_stmt|;
+comment|/* Ditto for characters of last word. */
 name|char
 name|ignore_blanks
 decl_stmt|;
-comment|/* Ignore spaces and tabs within the field */
+comment|/* Non-zero means ignore spaces and tabs. */
 name|char
 name|fold_case
 decl_stmt|;
-comment|/* Convert upper case to lower before comparing */
+comment|/* Non-zero means case doesn't matter. */
 name|char
 name|reverse
 decl_stmt|;
-comment|/* Compare in reverse order */
+comment|/* Non-zero means compare in reverse order. */
 name|char
 name|numeric
 decl_stmt|;
-comment|/* Parse text as an integer and compare the integers */
+comment|/* Non-zeros means field is ASCII numeric. */
 name|char
 name|positional
 decl_stmt|;
-comment|/* Sort according to position within the file */
+comment|/* Sort according to file position. */
 name|char
 name|braced
 decl_stmt|;
-comment|/* Count balanced-braced groupings as fields */
+comment|/* Count balanced-braced groupings as fields. */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/* Vector of keyfields to use */
+comment|/* Vector of keyfields to use. */
 end_comment
 
 begin_decl_stmt
@@ -336,7 +345,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Vector of input file names, terminated with a zero (null pointer) */
+comment|/* Vector of input file names, terminated with a null pointer. */
 end_comment
 
 begin_decl_stmt
@@ -348,7 +357,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Vector of corresponding output file names, or zero meaning default it */
+comment|/* Vector of corresponding output file names, or NULL, meaning default it    (add an `s' to the end). */
 end_comment
 
 begin_decl_stmt
@@ -360,7 +369,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Length of `infiles' */
+comment|/* Length of `infiles'. */
 end_comment
 
 begin_decl_stmt
@@ -370,7 +379,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Pointer to the array of pointers to lines being sorted */
+comment|/* Pointer to the array of pointers to lines being sorted. */
 end_comment
 
 begin_decl_stmt
@@ -424,7 +433,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Number of last temporary file already deleted.  Temporary files are deleted by `flush_tempfiles' in order of creation.  */
+comment|/* Number of last temporary file already deleted.    Temporary files are deleted by `flush_tempfiles' in order of creation.  */
 end_comment
 
 begin_decl_stmt
@@ -434,7 +443,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* During in-core sort, this points to the base of the data block  which contains all the lines of data.  */
+comment|/* During in-core sort, this points to the base of the data block    which contains all the lines of data.  */
 end_comment
 
 begin_decl_stmt
@@ -445,7 +454,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Additional command switches */
+comment|/* Additional command switches .*/
+end_comment
+
+begin_comment
+comment|/* Nonzero means do not delete tempfiles -- for debugging. */
 end_comment
 
 begin_decl_stmt
@@ -455,11 +468,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Nonzero means do not delete tempfiles -- for debugging */
+comment|/* The name this program was run with. */
 end_comment
 
+begin_decl_stmt
+name|char
+modifier|*
+name|program_name
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/* Forward declarations of functions in this file */
+comment|/* Forward declarations of functions in this file. */
 end_comment
 
 begin_function_decl
@@ -540,6 +560,13 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|compare_field
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|compare_full
 parameter_list|()
 function_decl|;
@@ -565,6 +592,39 @@ name|merge_direct
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|void
+name|pfatal_with_name
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|fatal
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|error
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+name|void
+modifier|*
+name|xmalloc
+argument_list|()
+decl_stmt|,
+modifier|*
+name|xrealloc
+argument_list|()
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|char
@@ -597,15 +657,6 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|mktemp
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_escape
 end_escape
 
@@ -617,7 +668,7 @@ value|500000
 end_define
 
 begin_function
-name|int
+name|void
 name|main
 parameter_list|(
 name|argc
@@ -644,8 +695,15 @@ name|last_deleted_tempcount
 operator|=
 literal|0
 expr_stmt|;
+name|program_name
+operator|=
+name|argv
+index|[
+literal|0
+index|]
+expr_stmt|;
 comment|/* Describe the kind of sorting to do. */
-comment|/* The first keyfield uses the first braced field and folds case */
+comment|/* The first keyfield uses the first braced field and folds case. */
 name|keyfields
 index|[
 literal|0
@@ -684,7 +742,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-comment|/* The second keyfield uses the second braced field, numerically */
+comment|/* The second keyfield uses the second braced field, numerically. */
 name|keyfields
 index|[
 literal|1
@@ -732,7 +790,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-comment|/* The third keyfield (which is ignored while discarding duplicates)      compares the whole line */
+comment|/* The third keyfield (which is ignored while discarding duplicates)      compares the whole line. */
 name|keyfields
 index|[
 literal|2
@@ -799,10 +857,6 @@ name|char
 modifier|*
 name|outfile
 decl_stmt|;
-name|char
-modifier|*
-name|p
-decl_stmt|;
 name|desc
 operator|=
 name|open
@@ -812,7 +866,7 @@ index|[
 name|i
 index|]
 argument_list|,
-literal|0
+name|O_RDONLY
 argument_list|,
 literal|0
 argument_list|)
@@ -835,16 +889,20 @@ name|lseek
 argument_list|(
 name|desc
 argument_list|,
-literal|0
+literal|0L
 argument_list|,
-name|L_XTND
+name|SEEK_END
 argument_list|)
 expr_stmt|;
 name|ptr
 operator|=
-name|tell
+name|lseek
 argument_list|(
 name|desc
+argument_list|,
+literal|0L
+argument_list|,
+name|SEEK_CUR
 argument_list|)
 expr_stmt|;
 name|close
@@ -886,7 +944,7 @@ name|ptr
 operator|<
 name|MAX_IN_CORE_SORT
 condition|)
-comment|/* Sort a small amount of data */
+comment|/* Sort a small amount of data. */
 name|sort_in_core
 argument_list|(
 name|infiles
@@ -920,7 +978,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|EXIT_SUCCESS
+name|TI_NO_ERROR
 argument_list|)
 expr_stmt|;
 block|}
@@ -929,8 +987,30 @@ end_function
 begin_escape
 end_escape
 
+begin_function
+name|void
+name|usage
+parameter_list|()
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\ Usage: %s [-k] infile [-o outfile] ...\n"
+argument_list|,
+name|program_name
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
-comment|/* This page decodes the command line arguments to set the parameter variables  and set up the vector of keyfields and the vector of input files */
+comment|/* Decode the command line arguments to set the parameter variables    and set up the vector of keyfields and the vector of input files. */
 end_comment
 
 begin_function
@@ -951,7 +1031,7 @@ name|argv
 decl_stmt|;
 block|{
 name|int
-name|i
+name|optc
 decl_stmt|;
 name|char
 modifier|*
@@ -963,27 +1043,41 @@ modifier|*
 modifier|*
 name|op
 decl_stmt|;
-comment|/* Store default values into parameter variables */
-ifdef|#
-directive|ifdef
-name|VMS
+comment|/* Store default values into parameter variables. */
 name|tempdir
 operator|=
-literal|"sys$scratch:"
+name|getenv
+argument_list|(
+literal|"TMPDIR"
+argument_list|)
 expr_stmt|;
-else|#
-directive|else
+if|if
+condition|(
+name|tempdir
+operator|==
+name|NULL
+condition|)
 name|tempdir
 operator|=
 literal|"/tmp/"
 expr_stmt|;
-endif|#
-directive|endif
+else|else
+name|tempdir
+operator|=
+name|concat
+argument_list|(
+name|tempdir
+argument_list|,
+literal|"/"
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 name|keep_tempfiles
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Allocate argc input files, which must be enough.  */
+comment|/* Allocate ARGC input files, which must be enough.  */
 name|infiles
 operator|=
 operator|(
@@ -1027,172 +1121,47 @@ expr_stmt|;
 name|op
 operator|=
 name|outfiles
-expr_stmt|;
-comment|/* First find all switches that control the default kind-of-sort */
-for|for
-control|(
-name|i
-operator|=
-literal|1
-init|;
-name|i
-operator|<
-name|argc
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|int
-name|tem
-init|=
-name|classify_arg
-argument_list|(
-name|argv
-index|[
-name|i
-index|]
-argument_list|)
-decl_stmt|;
-name|char
-name|c
-decl_stmt|;
-name|char
-modifier|*
-name|p
-decl_stmt|;
-if|if
-condition|(
-name|tem
-operator|<=
-literal|0
-condition|)
-block|{
-operator|*
-name|ip
-operator|++
-operator|=
-name|argv
-index|[
-name|i
-index|]
-expr_stmt|;
-operator|*
-name|op
-operator|++
-operator|=
-literal|0
-expr_stmt|;
-continue|continue;
-block|}
-if|if
-condition|(
-name|tem
-operator|>
-literal|1
-condition|)
-block|{
-if|if
-condition|(
-name|i
-operator|+
-literal|1
-operator|==
-name|argc
-condition|)
-name|fatal
-argument_list|(
-literal|"switch %s given with no argument following it"
-argument_list|,
-name|argv
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|argv
-index|[
-name|i
-index|]
-argument_list|,
-literal|"-T"
-argument_list|)
-condition|)
-name|tempdir
-operator|=
-name|argv
-index|[
-name|i
-operator|+
-literal|1
-index|]
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|argv
-index|[
-name|i
-index|]
-argument_list|,
-literal|"-o"
-argument_list|)
-condition|)
-operator|*
-operator|(
-name|op
-operator|-
-literal|1
-operator|)
-operator|=
-name|argv
-index|[
-name|i
-operator|+
-literal|1
-index|]
-expr_stmt|;
-name|i
-operator|+=
-name|tem
-operator|-
-literal|1
-expr_stmt|;
-continue|continue;
-block|}
-name|p
-operator|=
-operator|&
-name|argv
-index|[
-name|i
-index|]
-index|[
-literal|1
-index|]
 expr_stmt|;
 while|while
 condition|(
-name|c
+operator|(
+name|optc
 operator|=
-operator|*
-name|p
-operator|++
-condition|)
-switch|switch
-condition|(
-name|c
+name|getopt
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|,
+literal|"-ko:"
+argument_list|)
+operator|)
+operator|!=
+name|EOF
 condition|)
 block|{
+switch|switch
+condition|(
+name|optc
+condition|)
+block|{
+case|case
+literal|1
+case|:
+comment|/* Non-option filename. */
+operator|*
+name|ip
+operator|++
+operator|=
+name|optarg
+expr_stmt|;
+operator|*
+name|op
+operator|++
+operator|=
+name|NULL
+expr_stmt|;
+break|break;
 case|case
 literal|'k'
 case|:
@@ -1201,20 +1170,32 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+case|case
+literal|'o'
+case|:
+if|if
+condition|(
+name|op
+operator|>
+name|outfiles
+condition|)
+operator|*
+operator|(
+name|op
+operator|-
+literal|1
+operator|)
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
 default|default:
-name|fatal
-argument_list|(
-literal|"invalid command switch %c"
-argument_list|,
-name|c
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 block|}
-name|switchdone
-label|:
-empty_stmt|;
 block|}
-comment|/* Record number of keyfields, terminate list of filenames */
+comment|/* Record number of keyfields and terminate list of filenames. */
 name|num_infiles
 operator|=
 name|ip
@@ -1226,60 +1207,15 @@ name|ip
 operator|=
 literal|0
 expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/* Return 0 for an argument that is not a switch;  for a switch, return 1 plus the number of following arguments that the switch swallows. */
-end_comment
-
-begin_function
-name|int
-name|classify_arg
-parameter_list|(
-name|arg
-parameter_list|)
-name|char
-modifier|*
-name|arg
-decl_stmt|;
-block|{
 if|if
 condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|arg
-argument_list|,
-literal|"-T"
-argument_list|)
-operator|||
-operator|!
-name|strcmp
-argument_list|(
-name|arg
-argument_list|,
-literal|"-o"
-argument_list|)
-condition|)
-return|return
-literal|2
-return|;
-if|if
-condition|(
-name|arg
-index|[
-literal|0
-index|]
+name|num_infiles
 operator|==
-literal|'-'
-condition|)
-return|return
-literal|1
-return|;
-return|return
 literal|0
-return|;
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -1287,7 +1223,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Create a name for a temporary file */
+comment|/* Return a name for a temporary file. */
 end_comment
 
 begin_function
@@ -1330,7 +1266,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Delete all temporary files up to the specified count */
+comment|/* Delete all temporary files up to TO_COUNT. */
 end_comment
 
 begin_function
@@ -1367,7 +1303,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Copy an input file into a temporary file, and return the temporary file name */
+comment|/* Copy the input file open on IDESC into a temporary file    and return the temporary file name. */
 end_comment
 
 begin_define
@@ -1479,7 +1415,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Compare two lines, provided as pointers to pointers to text,  according to the specified set of keyfields */
+comment|/* Compare LINE1 and LINE2 according to the specified set of keyfields. */
 end_comment
 
 begin_function
@@ -1506,7 +1442,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-comment|/* Compare using the first keyfield;      if that does not distinguish the lines, try the second keyfield; and so on. */
+comment|/* Compare using the first keyfield;      if that does not distinguish the lines, try the second keyfield;      and so on. */
 for|for
 control|(
 name|i
@@ -1620,12 +1556,12 @@ block|}
 return|return
 literal|0
 return|;
-comment|/* Lines match exactly */
+comment|/* Lines match exactly. */
 block|}
 end_block
 
 begin_comment
-comment|/* Compare two lines described by structures  in which the first keyfield is identified in advance.  For positional sorting, assumes that the order of the lines in core  reflects their nominal order.  */
+comment|/* Compare LINE1 and LINE2, described by structures    in which the first keyfield is identified in advance.    For positional sorting, assumes that the order of the lines in core    reflects their nominal order.  */
 end_comment
 
 begin_function
@@ -1661,7 +1597,7 @@ decl_stmt|,
 modifier|*
 name|text2
 decl_stmt|;
-comment|/* Compare using the first keyfield, which has been found for us already */
+comment|/* Compare using the first keyfield, which has been found for us already. */
 if|if
 condition|(
 name|keyfields
@@ -1778,7 +1714,7 @@ name|line2
 operator|->
 name|text
 expr_stmt|;
-comment|/* Compare using the second keyfield;      if that does not distinguish the lines, try the third keyfield; and so on. */
+comment|/* Compare using the second keyfield;      if that does not distinguish the lines, try the third keyfield;      and so on. */
 for|for
 control|(
 name|i
@@ -1888,12 +1824,12 @@ block|}
 return|return
 literal|0
 return|;
-comment|/* Lines match exactly */
+comment|/* Lines match exactly. */
 block|}
 end_block
 
 begin_comment
-comment|/* Like compare_full but more general.  You can pass any strings, and you can say how many keyfields to use.  `pos1' and `pos2' should indicate the nominal positional ordering of  the two lines in the input.  */
+comment|/* Like compare_full but more general.    You can pass any strings, and you can say how many keyfields to use.    POS1 and POS2 should indicate the nominal positional ordering of    the two lines in the input.  */
 end_comment
 
 begin_function
@@ -1938,7 +1874,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-comment|/* Compare using the first keyfield;      if that does not distinguish the lines, try the second keyfield; and so on. */
+comment|/* Compare using the first keyfield;      if that does not distinguish the lines, try the second keyfield;      and so on. */
 for|for
 control|(
 name|i
@@ -2044,12 +1980,12 @@ block|}
 return|return
 literal|0
 return|;
-comment|/* Lines match exactly */
+comment|/* Lines match exactly. */
 block|}
 end_block
 
 begin_comment
-comment|/* Find the start and length of a field in `str' according to `keyfield'.  A pointer to the starting character is returned, and the length  is stored into the int that `lengthptr' points to.  */
+comment|/* Find the start and length of a field in STR according to KEYFIELD.    A pointer to the starting character is returned, and the length    is stored into the int that LENGTHPTR points to.  */
 end_comment
 
 begin_function
@@ -2224,7 +2160,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Find a pointer to a specified place within `str',  skipping (from the beginning) `words' words and then `chars' chars.  If `ignore_blanks' is nonzero, we skip all blanks  after finding the specified word.  */
+comment|/* Return a pointer to a specified place within STR,    skipping (from the beginning) WORDS words and then CHARS chars.    If IGNORE_BLANKS is nonzero, we skip all blanks    after finding the specified word.  */
 end_comment
 
 begin_function
@@ -2392,7 +2328,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Like find_pos but assumes that each field is surrounded by braces  and that braces within fields are balanced. */
+comment|/* Like find_pos but assumes that each field is surrounded by braces    and that braces within fields are balanced. */
 end_comment
 
 begin_function
@@ -2472,6 +2408,7 @@ literal|'\n'
 operator|&&
 name|c
 condition|)
+comment|/* Do nothing. */
 empty_stmt|;
 if|if
 condition|(
@@ -2513,13 +2450,6 @@ condition|)
 name|bracelevel
 operator|--
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (c == '\\' || c == '@') c = *p++;
-comment|/* \ quotes braces and \ */
-endif|#
-directive|endif
 if|if
 condition|(
 name|c
@@ -2555,6 +2485,7 @@ literal|'\n'
 operator|&&
 name|c
 condition|)
+comment|/* Do nothing. */
 empty_stmt|;
 if|if
 condition|(
@@ -2626,7 +2557,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Find the end of the balanced-brace field which starts at `str'.   The position returned is just before the closing brace. */
+comment|/* Find the end of the balanced-brace field which starts at STR.    The position returned is just before the closing brace. */
 end_comment
 
 begin_function
@@ -2686,12 +2617,6 @@ condition|)
 name|bracelevel
 operator|--
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if (c == '\\' || c == '@') c = *p++;
-endif|#
-directive|endif
 if|if
 condition|(
 name|c
@@ -2779,12 +2704,10 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|init_char_order
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|i
@@ -2867,10 +2790,10 @@ name|i
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/* Compare two fields (each specified as a start pointer and a character count)  according to `keyfield'.  The sign of the value reports the relation between the fields */
+comment|/* Compare two fields (each specified as a start pointer and a character count)    according to KEYFIELD.    The sign of the value reports the relation between the fields. */
 end_comment
 
 begin_function
@@ -3015,13 +2938,6 @@ init|=
 name|start2
 operator|+
 name|length2
-decl_stmt|;
-name|int
-name|fold_case
-init|=
-name|keyfield
-operator|->
-name|fold_case
 decl_stmt|;
 while|while
 condition|(
@@ -3180,7 +3096,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* A `struct linebuffer' is a structure which holds a line of text.  `readline' reads a line from a stream into a linebuffer  and works regardless of the length of the line.  */
+comment|/* A `struct linebuffer' is a structure which holds a line of text.    `readline' reads a line from a stream into a linebuffer    and works regardless of the length of the line.  */
 end_comment
 
 begin_struct
@@ -3199,7 +3115,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* Initialize a linebuffer for use */
+comment|/* Initialize LINEBUFFER for use. */
 end_comment
 
 begin_function
@@ -3237,7 +3153,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Read a line of text from `stream' into `linebuffer'.  Return the length of the line.  */
+comment|/* Read a line of text from STREAM into LINEBUFFER.    Return the length of the line.  */
 end_comment
 
 begin_function
@@ -3400,6 +3316,9 @@ name|char
 modifier|*
 name|infile
 decl_stmt|;
+name|int
+name|nfiles
+decl_stmt|;
 name|long
 name|total
 decl_stmt|;
@@ -3408,6 +3327,7 @@ modifier|*
 name|outfile
 decl_stmt|;
 block|{
+comment|/* More than enough. */
 name|int
 name|ntemps
 init|=
@@ -3423,7 +3343,6 @@ operator|)
 operator|/
 name|MAX_IN_CORE_SORT
 decl_stmt|;
-comment|/* More than enough */
 name|char
 modifier|*
 modifier|*
@@ -3518,7 +3437,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Split up the input into `ntemps' temporary files, or maybe fewer,     and put the new files' names into `tempfiles' */
+comment|/* Split up the input into `ntemps' temporary files, or maybe fewer,      and put the new files' names into `tempfiles' */
 for|for
 control|(
 name|i
@@ -3576,7 +3495,7 @@ index|]
 operator|=
 name|outname
 expr_stmt|;
-comment|/* Copy lines into this temp file as long as it does not make file "too big" 	or until there are no more lines.  */
+comment|/* Copy lines into this temp file as long as it does not make file 	 "too big" or until there are no more lines.  */
 while|while
 condition|(
 name|tempsize
@@ -3697,7 +3616,7 @@ name|ntemps
 operator|=
 name|i
 expr_stmt|;
-comment|/* Sort each tempfile into another tempfile.     Delete the first set of tempfiles and put the names of the second into `tempfiles' */
+comment|/* Sort each tempfile into another tempfile.     Delete the first set of tempfiles and put the names of the second     into `tempfiles'. */
 for|for
 control|(
 name|i
@@ -3761,7 +3680,7 @@ condition|(
 name|failure
 condition|)
 return|return;
-comment|/* Merge the tempfiles together and indexify */
+comment|/* Merge the tempfiles together and indexify. */
 name|merge_files
 argument_list|(
 name|tempfiles
@@ -3778,7 +3697,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Sort `infile', whose size is `total',  assuming that is small enough to be done in-core,  then indexify it and send the output to `outfile' (or to stdout).  */
+comment|/* Sort INFILE, whose size is TOTAL,    assuming that is small enough to be done in-core,    then indexify it and send the output to OUTFILE (or to stdout).  */
 end_comment
 
 begin_function
@@ -3844,7 +3763,7 @@ name|lineinfo
 modifier|*
 name|lineinfo
 decl_stmt|;
-comment|/* Read the contents of the file into the moby array `data' */
+comment|/* Read the contents of the file into the moby array `data'. */
 name|int
 name|desc
 init|=
@@ -3852,7 +3771,7 @@ name|open
 argument_list|(
 name|infile
 argument_list|,
-literal|0
+name|O_RDONLY
 argument_list|,
 literal|0
 argument_list|)
@@ -3879,9 +3798,6 @@ init|;
 condition|;
 control|)
 block|{
-if|if
-condition|(
-operator|(
 name|i
 operator|=
 name|read
@@ -3896,7 +3812,10 @@ name|total
 operator|-
 name|file_size
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|i
 operator|<=
 literal|0
 condition|)
@@ -3955,12 +3874,12 @@ block|}
 name|init_char_order
 argument_list|()
 expr_stmt|;
-comment|/* Sort routines want to know this address */
+comment|/* Sort routines want to know this address. */
 name|text_base
 operator|=
 name|data
 expr_stmt|;
-comment|/* Create the array of pointers to lines, with a default size frequently enough.  */
+comment|/* Create the array of pointers to lines, with a default size      frequently enough.  */
 name|nlines
 operator|=
 name|total
@@ -4029,8 +3948,8 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* Sort the lines */
-comment|/* If we have enough space, find the first keyfield of each line in advance.     Make a `struct lineinfo' for each line, which records the keyfield     as well as the line, and sort them.  */
+comment|/* Sort the lines. */
+comment|/* If we have enough space, find the first keyfield of each line in advance.      Make a `struct lineinfo' for each line, which records the keyfield      as well as the line, and sort them.  */
 name|lineinfo
 operator|=
 operator|(
@@ -4209,7 +4128,7 @@ argument_list|,
 name|compare_full
 argument_list|)
 expr_stmt|;
-comment|/* Open the output file */
+comment|/* Open the output file. */
 if|if
 condition|(
 name|outfile
@@ -4449,11 +4368,11 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Indexification is a filter applied to the sorted lines  as they are being written to the output file.  Multiple entries for the same name, with different page numbers,  get combined into a single entry with multiple page numbers.  The first braced field, which is used for sorting, is discarded.  However, its first character is examined, folded to lower case,  and if it is different from that in the previous line fed to us  a \initial line is written with one argument, the new initial.   If an entry has four braced fields, then the second and third  constitute primary and secondary names.  In this case, each change of primary name  generates a \primary line which contains only the primary name,  and in between these are \secondary lines which contain  just a secondary name and page numbers. */
+comment|/* Indexification is a filter applied to the sorted lines    as they are being written to the output file.    Multiple entries for the same name, with different page numbers,    get combined into a single entry with multiple page numbers.    The first braced field, which is used for sorting, is discarded.    However, its first character is examined, folded to lower case,    and if it is different from that in the previous line fed to us    a \initial line is written with one argument, the new initial.     If an entry has four braced fields, then the second and third    constitute primary and secondary names.    In this case, each change of primary name    generates a \primary line which contains only the primary name,    and in between these are \secondary lines which contain    just a secondary name and page numbers. */
 end_comment
 
 begin_comment
-comment|/* The last primary name we wrote a \primary entry for.  If only one level of indexing is being done, this is the last name seen */
+comment|/* The last primary name we wrote a \primary entry for.    If only one level of indexing is being done, this is the last name seen. */
 end_comment
 
 begin_decl_stmt
@@ -4463,15 +4382,15 @@ name|lastprimary
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Length of storage allocated for lastprimary. */
+end_comment
+
 begin_decl_stmt
 name|int
 name|lastprimarylength
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* Length of storage allocated for lastprimary */
-end_comment
 
 begin_comment
 comment|/* Similar, for the secondary name. */
@@ -4491,7 +4410,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Zero if we are not in the middle of writing an entry.  One if we have written the beginning of an entry but have not   yet written any page numbers into it.  Greater than one if we have written the beginning of an entry   plus at least one page number. */
+comment|/* Zero if we are not in the middle of writing an entry.    One if we have written the beginning of an entry but have not    yet written any page numbers into it.    Greater than one if we have written the beginning of an entry    plus at least one page number. */
 end_comment
 
 begin_decl_stmt
@@ -4501,7 +4420,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The initial (for sorting purposes) of the last primary entry written.  When this changes, a \initial {c} line is written */
+comment|/* The initial (for sorting purposes) of the last primary entry written.    When this changes, a \initial {c} line is written */
 end_comment
 
 begin_decl_stmt
@@ -4531,8 +4450,49 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Initialize static storage for writing an index */
+comment|/* Initialize static storage for writing an index. */
 end_comment
+
+begin_function
+specifier|static
+name|void
+name|xbzero
+parameter_list|(
+name|s
+parameter_list|,
+name|n
+parameter_list|)
+name|char
+modifier|*
+name|s
+decl_stmt|;
+name|int
+name|n
+decl_stmt|;
+block|{
+specifier|register
+name|char
+modifier|*
+name|p
+decl_stmt|;
+for|for
+control|(
+name|p
+operator|=
+name|s
+init|;
+name|n
+operator|--
+condition|;
+control|)
+operator|*
+name|p
+operator|++
+operator|=
+literal|'\0'
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 name|void
@@ -4582,7 +4542,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|bzero
+name|xbzero
 argument_list|(
 name|lastprimary
 argument_list|,
@@ -4608,7 +4568,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|bzero
+name|xbzero
 argument_list|(
 name|lastsecondary
 argument_list|,
@@ -4621,33 +4581,25 @@ block|}
 end_function
 
 begin_comment
-comment|/* Indexify.  Merge entries for the same name,  insert headers for each initial character, etc.  */
+comment|/* Indexify.  Merge entries for the same name,    insert headers for each initial character, etc.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|indexify
-argument_list|(
-argument|line
-argument_list|,
-argument|ostream
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|line
+parameter_list|,
+name|ostream
+parameter_list|)
 name|char
 modifier|*
 name|line
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|FILE
 modifier|*
 name|ostream
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 modifier|*
@@ -4663,16 +4615,10 @@ name|int
 name|primarylength
 decl_stmt|,
 name|secondarylength
+init|=
+literal|0
 decl_stmt|,
 name|pagelength
-decl_stmt|;
-name|int
-name|len
-init|=
-name|strlen
-argument_list|(
-name|line
-argument_list|)
 decl_stmt|;
 name|int
 name|nosecondary
@@ -4695,7 +4641,7 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-comment|/* First, analyze the parts of the entry fed to us this time */
+comment|/* First, analyze the parts of the entry fed to us this time. */
 name|p
 operator|=
 name|find_braced_pos
@@ -4721,7 +4667,7 @@ name|initial
 operator|=
 name|p
 expr_stmt|;
-comment|/* Get length of inner pair of braces starting at p, 	 including that inner pair of braces.  */
+comment|/* Get length of inner pair of braces starting at `p', 	 including that inner pair of braces.  */
 name|initiallength
 operator|=
 name|find_braced_end
@@ -4871,7 +4817,7 @@ argument_list|)
 operator|-
 name|secondary
 expr_stmt|;
-comment|/* If the primary is different from before, make a new primary entry */
+comment|/* If the primary is different from before, make a new primary entry. */
 if|if
 condition|(
 name|strncmp
@@ -4884,7 +4830,7 @@ name|primarylength
 argument_list|)
 condition|)
 block|{
-comment|/* Close off current secondary entry first, if one is open */
+comment|/* Close off current secondary entry first, if one is open. */
 if|if
 condition|(
 name|pending
@@ -4902,7 +4848,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* If this primary has a different initial, include an entry for the initial */
+comment|/* If this primary has a different initial, include an entry for 	 the initial. */
 if|if
 condition|(
 name|initiallength
@@ -5032,7 +4978,7 @@ argument_list|,
 name|ostream
 argument_list|)
 expr_stmt|;
-comment|/* Record name of most recent primary */
+comment|/* Record name of most recent primary. */
 if|if
 condition|(
 name|lastprimarylength
@@ -5078,7 +5024,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-comment|/* There is no current secondary within this primary, now */
+comment|/* There is no current secondary within this primary, now. */
 name|lastsecondary
 index|[
 literal|0
@@ -5087,7 +5033,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* Should not have an entry with no subtopic following one with a subtopic */
+comment|/* Should not have an entry with no subtopic following one with a subtopic. */
 if|if
 condition|(
 name|nosecondary
@@ -5102,7 +5048,7 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
-comment|/* Start a new secondary entry if necessary */
+comment|/* Start a new secondary entry if necessary. */
 if|if
 condition|(
 operator|!
@@ -5165,7 +5111,7 @@ name|pending
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Record name of most recent secondary */
+comment|/* Record name of most recent secondary. */
 if|if
 condition|(
 name|lastsecondarylength
@@ -5212,7 +5158,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* Here to add one more page number to the current entry */
+comment|/* Here to add one more page number to the current entry. */
 if|if
 condition|(
 name|pending
@@ -5227,7 +5173,7 @@ argument_list|,
 name|ostream
 argument_list|)
 expr_stmt|;
-comment|/* Punctuate first, if this is not the first */
+comment|/* Punctuate first, if this is not the first. */
 name|fwrite
 argument_list|(
 name|pagenumber
@@ -5240,10 +5186,10 @@ name|ostream
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/* Close out any unfinished output entry */
+comment|/* Close out any unfinished output entry. */
 end_comment
 
 begin_function
@@ -5285,7 +5231,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Copy the lines in the sorted order.  Each line is copied out of the input file it was found in. */
+comment|/* Copy the lines in the sorted order.    Each line is copied out of the input file it was found in. */
 end_comment
 
 begin_function
@@ -5328,7 +5274,7 @@ decl_stmt|;
 name|init_index
 argument_list|()
 expr_stmt|;
-comment|/* Output the text of the lines, and free the buffer space */
+comment|/* Output the text of the lines, and free the buffer space. */
 for|for
 control|(
 name|next_line
@@ -5349,7 +5295,7 @@ condition|(
 name|next_line
 operator|==
 name|linearray
-comment|/* Compare previous line with this one, using only the explicitly specd keyfields */
+comment|/* Compare previous line with this one, using only the          explicitly specd keyfields. */
 operator|||
 name|compare_general
 argument_list|(
@@ -5397,6 +5343,7 @@ name|c
 operator|!=
 literal|'\n'
 condition|)
+comment|/* Do nothing. */
 empty_stmt|;
 operator|*
 operator|(
@@ -5429,7 +5376,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Assume (and optionally verify) that each input file is sorted;  merge them and output the result.  Returns nonzero if any input file fails to be sorted.   This is the high-level interface that can handle an unlimited number of files.  */
+comment|/* Assume (and optionally verify) that each input file is sorted;    merge them and output the result.    Returns nonzero if any input file fails to be sorted.     This is the high-level interface that can handle an unlimited    number of files.  */
 end_comment
 
 begin_define
@@ -5628,7 +5575,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* Assume (and optionally verify) that each input file is sorted;  merge them and output the result.  Returns nonzero if any input file fails to be sorted.   This version of merging will not work if the number of  input files gets too high.  Higher level functions  use it only with a bounded number of input files.  */
+comment|/* Assume (and optionally verify) that each input file is sorted;    merge them and output the result.    Returns nonzero if any input file fails to be sorted.     This version of merging will not work if the number of    input files gets too high.  Higher level functions    use it only with a bounded number of input files.  */
 end_comment
 
 begin_function
@@ -5654,13 +5601,6 @@ modifier|*
 name|outfile
 decl_stmt|;
 block|{
-name|char
-modifier|*
-modifier|*
-name|ip
-init|=
-name|infiles
-decl_stmt|;
 name|struct
 name|linebuffer
 modifier|*
@@ -5761,7 +5701,7 @@ literal|0
 return|;
 block|}
 comment|/* For each file, make two line buffers.      Also, for each file, there is an element of `thisline'      which points at any time to one of the file's two buffers,      and an element of `prevline' which points to the other buffer.      `thisline' is supposed to point to the next available line from the file,      while `prevline' holds the last file line used,      which is remembered so that we can verify that the file is properly sorted. */
-comment|/* lb1 and lb2 contain one buffer each per file */
+comment|/* lb1 and lb2 contain one buffer each per file. */
 name|lb1
 operator|=
 operator|(
@@ -5819,7 +5759,7 @@ operator|*
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* prevline[i] points to the linebuffer holding the last used line from file i.      This is just for verifying that file i is properly sorted.  */
+comment|/* prevline[i] points to the linebuffer holding the last used line      from file i.  This is just for verifying that file i is properly      sorted.  */
 name|prevline
 operator|=
 operator|(
@@ -5859,7 +5799,7 @@ operator|*
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* file_lossage[i] is nonzero if we already know file i is not properly sorted.  */
+comment|/* file_lossage[i] is nonzero if we already know file i is not      properly sorted.  */
 name|file_lossage
 operator|=
 operator|(
@@ -5876,7 +5816,7 @@ name|int
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Allocate and initialize all that storage */
+comment|/* Allocate and initialize all that storage. */
 for|for
 control|(
 name|i
@@ -5983,7 +5923,7 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Keep count of number of files not at eof */
+comment|/* Keep count of number of files not at eof. */
 name|nleft
 operator|=
 name|nfiles
@@ -6083,7 +6023,7 @@ name|i
 expr_stmt|;
 block|}
 block|}
-comment|/* Output that line, unless it matches the previous one and we don't want duplicates */
+comment|/* Output that line, unless it matches the previous one and we 	 don't want duplicates. */
 if|if
 condition|(
 operator|!
@@ -6124,7 +6064,7 @@ name|prev_out
 operator|=
 name|best
 expr_stmt|;
-comment|/* Now make the line the previous of its file, and fetch a new line from that file */
+comment|/* Now make the line the previous of its file, and fetch a new 	 line from that file.  */
 name|exch
 operator|=
 name|prevline
@@ -6154,7 +6094,7 @@ condition|(
 literal|1
 condition|)
 block|{
-comment|/* If the file has no more, mark it empty */
+comment|/* If the file has no more, mark it empty. */
 if|if
 condition|(
 name|feof
@@ -6173,10 +6113,10 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
+comment|/* Update the number of files still not empty. */
 name|nleft
 operator|--
 expr_stmt|;
-comment|/* Update the number of files still not empty */
 break|break;
 block|}
 name|readline
@@ -6221,7 +6161,7 @@ argument_list|(
 name|ostream
 argument_list|)
 expr_stmt|;
-comment|/* Free all storage and close all input streams */
+comment|/* Free all storage and close all input streams. */
 for|for
 control|(
 name|i
@@ -6317,24 +6257,22 @@ begin_comment
 comment|/* Print error message and exit.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|fatal
-argument_list|(
-argument|s1
-argument_list|,
-argument|s2
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|s1
+parameter_list|,
+name|s2
+parameter_list|)
 name|char
 modifier|*
 name|s1
 decl_stmt|,
-modifier|*
+decl|*
 name|s2
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -6347,40 +6285,40 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|EXIT_FATAL
+name|TI_FATAL_ERROR
 argument_list|)
 expr_stmt|;
 block|}
 end_block
 
 begin_comment
-comment|/* Print error message.  `s1' is printf control string, `s2' is arg for it. */
+comment|/* Print error message.  S1 is printf control string, S2 is arg for it. */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|error
-argument_list|(
-argument|s1
-argument_list|,
-argument|s2
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|s1
+parameter_list|,
+name|s2
+parameter_list|)
 name|char
 modifier|*
 name|s1
 decl_stmt|,
-modifier|*
+decl|*
 name|s2
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
 name|printf
 argument_list|(
-literal|"texindex: "
+literal|"%s: "
+argument_list|,
+name|program_name
 argument_list|)
 expr_stmt|;
 name|printf
@@ -6398,50 +6336,98 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
-name|perror_with_name
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
 argument_list|(
-argument|name
+name|HAVE_STRERROR
 argument_list|)
-end_macro
+end_if
 
-begin_decl_stmt
+begin_function
+specifier|static
+name|char
+modifier|*
+name|strerror
+parameter_list|(
+name|n
+parameter_list|)
+name|int
+name|n
+decl_stmt|;
+block|{
+specifier|static
+name|char
+name|ebuf
+index|[
+literal|40
+index|]
+decl_stmt|;
+if|if
+condition|(
+name|n
+operator|<
+name|sys_nerr
+condition|)
+return|return
+name|sys_errlist
+index|[
+name|n
+index|]
+return|;
+else|else
+block|{
+name|sprintf
+argument_list|(
+name|ebuf
+argument_list|,
+literal|"Unknown error %d"
+argument_list|,
+name|n
+argument_list|)
+expr_stmt|;
+return|return
+name|ebuf
+return|;
+block|}
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+name|void
+name|perror_with_name
+parameter_list|(
+name|name
+parameter_list|)
 name|char
 modifier|*
 name|name
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 modifier|*
 name|s
 decl_stmt|;
-if|if
-condition|(
-name|errno
-operator|<
-name|sys_nerr
-condition|)
 name|s
 operator|=
 name|concat
 argument_list|(
 literal|""
 argument_list|,
-name|sys_errlist
-index|[
+name|strerror
+argument_list|(
 name|errno
-index|]
+argument_list|)
 argument_list|,
 literal|" for %s"
 argument_list|)
-expr_stmt|;
-else|else
-name|s
-operator|=
-literal|"cannot open %s"
 expr_stmt|;
 name|error
 argument_list|(
@@ -6451,52 +6437,36 @@ name|name
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|pfatal_with_name
-argument_list|(
-argument|name
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|name
+parameter_list|)
 name|char
 modifier|*
 name|name
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 modifier|*
 name|s
 decl_stmt|;
-if|if
-condition|(
-name|errno
-operator|<
-name|sys_nerr
-condition|)
 name|s
 operator|=
 name|concat
 argument_list|(
 literal|""
 argument_list|,
-name|sys_errlist
-index|[
+name|strerror
+argument_list|(
 name|errno
-index|]
+argument_list|)
 argument_list|,
 literal|" for %s"
 argument_list|)
-expr_stmt|;
-else|else
-name|s
-operator|=
-literal|"cannot open %s"
 expr_stmt|;
 name|fatal
 argument_list|(
@@ -6506,10 +6476,10 @@ name|name
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
-comment|/* Return a newly-allocated string whose contents concatenate those of s1, s2, s3.  */
+comment|/* Return a newly-allocated string whose contents concatenate those of    S1, S2, S3.  */
 end_comment
 
 begin_function
@@ -6625,204 +6595,188 @@ block|}
 end_block
 
 begin_comment
-comment|/* Like malloc but get fatal error if memory is exhausted.  */
+comment|/* Just like malloc, but kills the program in case of fatal error. */
 end_comment
 
 begin_function
-name|int
+name|void
+modifier|*
 name|xmalloc
 parameter_list|(
-name|size
+name|nbytes
 parameter_list|)
 name|int
-name|size
+name|nbytes
 decl_stmt|;
 block|{
-name|int
-name|result
+name|void
+modifier|*
+name|temp
 init|=
+operator|(
+name|void
+operator|*
+operator|)
 name|malloc
 argument_list|(
-name|size
+name|nbytes
 argument_list|)
 decl_stmt|;
 if|if
 condition|(
-operator|!
-name|result
+name|nbytes
+operator|&&
+name|temp
+operator|==
+operator|(
+name|void
+operator|*
+operator|)
+name|NULL
 condition|)
-name|fatal
+name|memory_error
 argument_list|(
-literal|"virtual memory exhausted"
+literal|"xmalloc"
 argument_list|,
-literal|0
+name|nbytes
 argument_list|)
 expr_stmt|;
 return|return
-name|result
+operator|(
+name|temp
+operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* Like realloc (), but barfs if there isn't enough memory. */
+end_comment
 
 begin_function
-name|int
+name|void
+modifier|*
 name|xrealloc
 parameter_list|(
-name|ptr
+name|pointer
 parameter_list|,
-name|size
+name|nbytes
 parameter_list|)
-name|char
+name|void
 modifier|*
-name|ptr
+name|pointer
 decl_stmt|;
 name|int
-name|size
+name|nbytes
 decl_stmt|;
 block|{
-name|int
-name|result
-init|=
-name|realloc
-argument_list|(
-name|ptr
-argument_list|,
-name|size
-argument_list|)
+name|void
+modifier|*
+name|temp
 decl_stmt|;
 if|if
 condition|(
 operator|!
-name|result
+name|pointer
 condition|)
-name|fatal
+name|temp
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|xmalloc
 argument_list|(
-literal|"virtual memory exhausted"
+name|nbytes
+argument_list|)
+expr_stmt|;
+else|else
+name|temp
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|realloc
+argument_list|(
+name|pointer
+argument_list|,
+name|nbytes
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nbytes
+operator|&&
+operator|!
+name|temp
+condition|)
+name|memory_error
+argument_list|(
+literal|"xrealloc"
+argument_list|,
+name|nbytes
 argument_list|)
 expr_stmt|;
 return|return
-name|result
+operator|(
+name|temp
+operator|)
 return|;
 block|}
 end_function
 
-begin_expr_stmt
-name|bzero
+begin_macro
+name|memory_error
 argument_list|(
-name|b
+argument|callers_name
 argument_list|,
-name|length
+argument|bytes_wanted
 argument_list|)
-specifier|register
-name|char
-operator|*
-name|b
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_decl_stmt
-specifier|register
+name|char
+modifier|*
+name|callers_name
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
-name|length
+name|bytes_wanted
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
-ifdef|#
-directive|ifdef
-name|VMS
-name|short
-name|zero
-init|=
-literal|0
+name|char
+name|printable_string
+index|[
+literal|80
+index|]
 decl_stmt|;
-name|long
-name|max_str
-init|=
-literal|65535
-decl_stmt|;
-name|long
-name|len
-decl_stmt|;
-while|while
-condition|(
-name|length
-operator|>
-name|max_str
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|LIB$MOVC5
+name|sprintf
 argument_list|(
-operator|&
-name|zero
+name|printable_string
 argument_list|,
-operator|&
-name|zero
+literal|"Virtual memory exhausted in %s ()!  Needed %d bytes."
 argument_list|,
-operator|&
-name|zero
+name|callers_name
 argument_list|,
-operator|&
-name|max_str
-argument_list|,
-name|b
+name|bytes_wanted
 argument_list|)
 expr_stmt|;
-name|length
-operator|-=
-name|max_str
-expr_stmt|;
-name|b
-operator|+=
-name|max_str
-expr_stmt|;
-block|}
-name|len
-operator|=
-name|length
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|LIB$MOVC5
+name|error
 argument_list|(
-operator|&
-name|zero
+name|printable_string
 argument_list|,
-operator|&
-name|zero
-argument_list|,
-operator|&
-name|zero
-argument_list|,
-operator|&
-name|len
-argument_list|,
-name|b
+literal|""
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-while|while
-condition|(
-name|length
-operator|--
-operator|>
-literal|0
-condition|)
-operator|*
-name|b
-operator|++
-operator|=
-literal|0
+name|abort
+argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* not VMS */
 block|}
 end_block
 
