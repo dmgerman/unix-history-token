@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket2.c	4.15	81/12/12	*/
+comment|/*	uipc_socket2.c	4.16	81/12/19	*/
 end_comment
 
 begin_include
@@ -870,6 +870,32 @@ condition|)
 block|{
 if|if
 condition|(
+name|m
+operator|->
+name|m_len
+operator|==
+literal|0
+operator|&&
+operator|(
+name|int
+operator|)
+name|m
+operator|->
+name|m_act
+operator|==
+literal|0
+condition|)
+block|{
+name|m
+operator|=
+name|m
+operator|->
+name|m_next
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
 name|n
 operator|&&
 name|n
@@ -1255,6 +1281,12 @@ argument_list|(
 literal|"sbflush"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sb
+operator|->
+name|sb_cc
+condition|)
 name|sbdrop
 argument_list|(
 name|sb
@@ -1407,6 +1439,10 @@ name|m
 expr_stmt|;
 block|}
 end_block
+
+begin_comment
+comment|/* printm(m) 	struct mbuf *m; {  	printf("<"); 	while (m) { 		printf("%d,", m->m_len); 		m = m->m_next; 	} 	printf(">"); 	printf("\n"); } */
+end_comment
 
 end_unit
 
