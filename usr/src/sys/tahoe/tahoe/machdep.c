@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	1.4	86/01/24	*/
+comment|/*	machdep.c	1.5	86/07/16	*/
 end_comment
 
 begin_include
@@ -529,10 +529,10 @@ argument_list|)
 expr_stmt|;
 name|valloc
 argument_list|(
-name|nch
+name|namecache
 argument_list|,
 expr|struct
-name|nch
+name|namecache
 argument_list|,
 name|nchsize
 argument_list|)
@@ -1529,7 +1529,7 @@ operator|*
 name|scp
 argument_list|)
 argument_list|,
-literal|1
+name|B_WRITE
 argument_list|)
 operator|==
 literal|0
