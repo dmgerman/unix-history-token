@@ -1771,6 +1771,12 @@ name|BKVASIZE
 operator|)
 argument_list|)
 expr_stmt|;
+name|buffer_map
+operator|->
+name|system_map
+operator|=
+literal|1
+expr_stmt|;
 name|pager_map
 operator|=
 name|kmem_suballoc
