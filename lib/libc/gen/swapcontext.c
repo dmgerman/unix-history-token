@@ -57,6 +57,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_warning
+warning|#
+directive|warning
+literal|"FIX __swapcontext on non i386 please!"
+end_warning
+
 begin_function
 name|int
 name|__swapcontext
@@ -74,6 +80,10 @@ block|{
 name|int
 name|ret
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__i386__
+comment|/* XXX PLEASE FIX! XXX */
 if|if
 condition|(
 operator|(
@@ -126,6 +136,8 @@ literal|1
 operator|)
 return|;
 block|}
+endif|#
+directive|endif
 name|oucp
 operator|->
 name|uc_flags
