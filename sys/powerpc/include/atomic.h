@@ -851,7 +851,7 @@ literal|"eieio\n"
 comment|/* memory barrier */
 literal|"2:\t\n"
 operator|:
-literal|"=r"
+literal|"=&r"
 operator|(
 name|ret
 operator|)
