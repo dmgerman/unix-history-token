@@ -37,7 +37,7 @@ comment|/* Written by Richard Stallman with some help from Eric Albert.    Set, 
 end_comment
 
 begin_comment
-comment|/*  *	$Id: ld.c,v 1.28 1995/06/14 06:25:09 joerg Exp $  */
+comment|/*  *	$Id: ld.c,v 1.29 1995/07/13 08:30:07 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -4041,7 +4041,7 @@ expr_stmt|;
 if|if
 condition|(
 name|fd
-operator|>
+operator|>=
 literal|0
 condition|)
 block|{
@@ -9955,7 +9955,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"open: %s"
+literal|"fopen: %s"
 argument_list|,
 name|output_filename
 argument_list|)
