@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  parsetime.c - parse time for at(1)  *  Copyright (C) 1993, 1994  Thomas Koenig  *  *  modifications for english-language times  *  Copyright (C) 1993  David Parsons  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author(s) may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  at [NOW] PLUS NUMBER MINUTES|HOURS|DAYS|WEEKS  *     /NUMBER [DOT NUMBER] [AM|PM]\ /[MONTH NUMBER [NUMBER]]             \  *     |NOON                       | |[TOMORROW]                          |  *     |MIDNIGHT                   | |[DAY OF WEEK]                       |  *     \TEATIME                    / |NUMBER [SLASH NUMBER [SLASH NUMBER]]|  *                                   \PLUS NUMBER MINUTES|HOURS|DAYS|WEEKS/  */
+comment|/*   *  parsetime.c - parse time for at(1)  *  Copyright (C) 1993, 1994  Thomas Koenig  *  *  modifications for english-language times  *  Copyright (C) 1993  David Parsons  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author(s) may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR(S) BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  at [NOW] PLUS NUMBER MINUTES|HOURS|DAYS|WEEKS  *     /NUMBER [DOT NUMBER] [AM|PM]\ /[MONTH NUMBER [NUMBER]]             \  *     |NOON                       | |[TOMORROW]                          |  *     |MIDNIGHT                   | |[DAY OF WEEK]                       |  *     \TEATIME                    / |NUMBER [SLASH NUMBER [SLASH NUMBER]]|  *                                   \PLUS NUMBER MINUTES|HOURS|DAYS|WEEKS/  */
 end_comment
 
 begin_comment
@@ -94,7 +94,6 @@ end_comment
 
 begin_enum
 enum|enum
-name|tok
 block|{
 comment|/* symbols */
 name|MIDNIGHT
@@ -181,14 +180,12 @@ end_comment
 begin_struct
 struct|struct
 block|{
-specifier|const
 name|char
 modifier|*
 name|name
 decl_stmt|;
 comment|/* token name */
-name|enum
-name|tok
+name|int
 name|value
 decl_stmt|;
 comment|/* token id */
@@ -632,8 +629,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|enum
-name|tok
+name|int
 name|sc_tokid
 decl_stmt|;
 end_decl_stmt
@@ -659,7 +655,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: parsetime.c,v 1.4 1995/05/30 06:29:25 rgrimes Exp $"
+literal|"$Id: parsetime.c,v 1.1 1995/05/24 15:07:32 ig25 Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -673,11 +669,9 @@ end_comment
 
 begin_function
 specifier|static
-name|enum
-name|tok
+name|int
 name|parse_token
 parameter_list|(
-specifier|const
 name|char
 modifier|*
 name|arg
@@ -792,8 +786,8 @@ literal|1
 expr_stmt|;
 while|while
 condition|(
-operator|--
 name|argc
+operator|--
 operator|>
 literal|0
 condition|)
@@ -802,8 +796,8 @@ operator|+=
 name|strlen
 argument_list|(
 operator|*
-operator|++
 name|argv
+operator|++
 argument_list|)
 expr_stmt|;
 name|sc_token
@@ -830,8 +824,7 @@ end_comment
 
 begin_function
 specifier|static
-name|enum
-name|tok
+name|int
 name|token
 parameter_list|()
 block|{
@@ -1120,7 +1113,7 @@ comment|/* plonk */
 end_comment
 
 begin_comment
-comment|/*  * expect() gets a token and dies most horribly if it's not the token we want  */
+comment|/*   * expect() gets a token and dies most horribly if it's not the token we want  */
 end_comment
 
 begin_function
@@ -1128,8 +1121,7 @@ specifier|static
 name|void
 name|expect
 parameter_list|(
-name|enum
-name|tok
+name|int
 name|desired
 parameter_list|)
 block|{
@@ -1740,7 +1732,7 @@ comment|/* assign_date */
 end_comment
 
 begin_comment
-comment|/*  * month() picks apart a month specification  *  *  /[<month> NUMBER [NUMBER]]           \  *  |[TOMORROW]                          |  *  |[DAY OF WEEK]                       |  *  |NUMBER [SLASH NUMBER [SLASH NUMBER]]|  *  \PLUS NUMBER MINUTES|HOURS|DAYS|WEEKS/  */
+comment|/*   * month() picks apart a month specification  *  *  /[<month> NUMBER [NUMBER]]           \  *  |[TOMORROW]                          |  *  |[DAY OF WEEK]                       |  *  |NUMBER [SLASH NUMBER [SLASH NUMBER]]|  *  \PLUS NUMBER MINUTES|HOURS|DAYS|WEEKS/  */
 end_comment
 
 begin_function
@@ -2018,8 +2010,7 @@ operator|==
 name|DOT
 condition|)
 block|{
-name|enum
-name|tok
+name|int
 name|sep
 decl_stmt|;
 name|sep
