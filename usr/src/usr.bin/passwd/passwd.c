@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)passwd.c	4.24 (Berkeley) %G%"
+literal|"@(#)passwd.c	4.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1946,6 +1946,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|setusershell
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|arg
