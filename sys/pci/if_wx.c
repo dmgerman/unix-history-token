@@ -6713,6 +6713,9 @@ index|[
 name|idx
 index|]
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
 if|if
 condition|(
 name|ifp
@@ -6731,6 +6734,8 @@ name|mb
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|ifp
 operator|->
 name|if_ipackets

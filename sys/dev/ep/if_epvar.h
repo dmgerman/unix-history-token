@@ -133,9 +133,6 @@ name|short
 name|rx_no_mbuf
 decl_stmt|;
 name|short
-name|rx_bpf_disc
-decl_stmt|;
-name|short
 name|rx_overrunf
 decl_stmt|;
 name|short

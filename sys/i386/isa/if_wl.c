@@ -4653,52 +4653,7 @@ name|len
 operator|=
 name|clen
 expr_stmt|;
-comment|/*      * Check if there's a BPF listener on this interface. If so, hand off      * the raw packet to bpf.      */
-if|if
-condition|(
-name|ifp
-operator|->
-name|if_bpf
-condition|)
-block|{
-comment|/* bpf assumes header is in mbufs.  It isn't.  We can 	 * fool it without allocating memory as follows. 	 * Trick borrowed from if_ie.c 	 */
-name|struct
-name|mbuf
-name|m0
-decl_stmt|;
-name|m0
-operator|.
-name|m_len
-operator|=
-sizeof|sizeof
-name|eh
-expr_stmt|;
-name|m0
-operator|.
-name|m_data
-operator|=
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|eh
-expr_stmt|;
-name|m0
-operator|.
-name|m_next
-operator|=
-name|m
-expr_stmt|;
-name|bpf_mtap
-argument_list|(
-name|ifp
-argument_list|,
-operator|&
-name|m0
-argument_list|)
-expr_stmt|;
-block|}
-comment|/*      * If hw is in promiscuous mode (note that I said hardware, not if      * IFF_PROMISC is set in ifnet flags), then if this is a unicast      * packet and the MAC dst is not us, drop it.  This check was formerly      * inside the bpf if, above, but IFF_MULTI causes hw promisc without      * a bpf listener, so this is wrong.      *		Greg Troxel<gdt@ir.bbn.com>, 1998-08-07      */
+comment|/*      * If hw is in promiscuous mode (note that I said hardware, not if      * IFF_PROMISC is set in ifnet flags), then if this is a unicast      * packet and the MAC dst is not us, drop it.  This check in normally      * inside ether_input(), but IFF_MULTI causes hw promisc without      * a bpf listener, so this is wrong.      *		Greg Troxel<gdt@ir.bbn.com>, 1998-08-07      */
 comment|/*      * TBD: also discard packets where NWID does not match.      * However, there does not appear to be a way to read the nwid      * for a received packet.  -gdt 1998-08-07      */
 if|if
 condition|(

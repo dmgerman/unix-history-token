@@ -107,9 +107,14 @@ modifier|*
 name|bridge_in
 parameter_list|(
 name|struct
-name|mbuf
+name|ifnet
 modifier|*
-name|m
+name|ifp
+parameter_list|,
+name|struct
+name|ether_header
+modifier|*
+name|eh
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -126,7 +131,12 @@ name|struct
 name|mbuf
 modifier|*
 modifier|*
-name|m
+name|m0
+parameter_list|,
+name|struct
+name|ether_header
+modifier|*
+name|eh
 parameter_list|,
 name|struct
 name|ifnet
@@ -344,22 +354,9 @@ name|ifnet
 operator|*
 name|bridge_dst_lookup
 argument_list|(
-argument|struct mbuf *m
+argument|struct ether_header *eh
 argument_list|)
 block|{     struct
-name|ether_header
-operator|*
-name|eh
-operator|=
-name|mtod
-argument_list|(
-name|m
-argument_list|,
-expr|struct
-name|ether_header
-operator|*
-argument_list|)
-block|;     struct
 name|ifnet
 operator|*
 name|dst
