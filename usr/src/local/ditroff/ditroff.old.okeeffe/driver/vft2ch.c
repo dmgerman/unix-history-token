@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vft2ch.c	(Berkeley)	1.1	85/02/04  *  * Font translation for vfont-style fonts to character format.  *  *	Use:  vft2ch  fontfile  [ character_list ]  *  *		Reads "fontfile" from current directory (or if not found,  *	from BITDIR defined below) and converts it to a character font format  *	editable by real people, and convertable BACK to vfont format by the  *	ch2vft program.  Output goes to stdout.  */
+comment|/*	vft2ch.c	(Berkeley)	1.2	85/04/29  *  * Font translation for vfont-style fonts to character format.  *  *	Use:  vft2ch  fontfile  [ character_list ]  *  *		Reads "fontfile" from current directory (or if not found,  *	from BITDIR defined below) and converts it to a character font format  *	editable by real people, and convertable BACK to vfont format by the  *	ch2vft program.  Output goes to stdout.  */
 end_comment
 
 begin_include
@@ -29,12 +29,23 @@ name|MAGICNO
 value|0436
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BITDIR
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|BITDIR
 value|"/usr/lib/vfont"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|struct
