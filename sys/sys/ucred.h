@@ -15,24 +15,6 @@ directive|define
 name|_SYS_UCRED_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<sys/queue.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/_lock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/_mutex.h>
-end_include
-
 begin_comment
 comment|/*  * Credentials.  *  * Please do not inspect cr_uid directly to determine superuserness.  * Only the suser() or suser_cred() function should be used for this.  */
 end_comment
@@ -115,13 +97,6 @@ end_struct
 begin_define
 define|#
 directive|define
-name|cr_gid
-value|cr_groups[0]
-end_define
-
-begin_define
-define|#
-directive|define
 name|NOCRED
 value|((struct ucred *)0)
 end_define
@@ -142,7 +117,7 @@ comment|/* filesystem credential */
 end_comment
 
 begin_comment
-comment|/*  * This is the external representation of struct ucred, based upon the  * size of a 4.2-RELEASE struct ucred.  There will probably never be  * any need to change the size of this or layout of its used fields.  */
+comment|/*  * This is the external representation of struct ucred.  */
 end_comment
 
 begin_struct
@@ -184,11 +159,28 @@ name|XUCRED_VERSION
 value|0
 end_define
 
+begin_comment
+comment|/* This can be used for both ucred and xucred structures. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|cr_gid
+value|cr_groups[0]
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_struct_decl
+struct_decl|struct
+name|thread
+struct_decl|;
+end_struct_decl
 
 begin_ifdef
 ifdef|#
