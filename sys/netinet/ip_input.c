@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ip_input.c	8.2 (Berkeley) 1/4/94  * $Id: ip_input.c,v 1.102 1998/10/16 03:55:01 peter Exp $  *	$ANA: ip_input.c,v 1.5 1996/09/18 14:34:59 wollman Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ip_input.c	8.2 (Berkeley) 1/4/94  * $Id: ip_input.c,v 1.103 1998/10/27 09:11:41 dfr Exp $  *	$ANA: ip_input.c,v 1.5 1996/09/18 14:34:59 wollman Exp $  */
 end_comment
 
 begin_define
@@ -3098,7 +3098,13 @@ name|fp
 operator|->
 name|ipq_frags
 operator|=
-literal|0
+name|m
+expr_stmt|;
+name|m
+operator|->
+name|m_nextpkt
+operator|=
+name|NULL
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -3117,12 +3123,8 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
-name|q
-operator|=
-literal|0
-expr_stmt|;
 goto|goto
-name|insert
+name|inserted
 goto|;
 block|}
 define|#
@@ -3171,7 +3173,7 @@ operator|->
 name|ip_off
 condition|)
 break|break;
-comment|/* 	 * If there is a preceding segment, it may provide some of 	 * our data already.  If so, drop the data from the incoming 	 * segment.  If it provides all of our data, drop us. 	 */
+comment|/* 	 * If there is a preceding segment, it may provide some of 	 * our data already.  If so, drop the data from the incoming 	 * segment.  If it provides all of our data, drop us, otherwise 	 * stick new segment in the proper place. 	 */
 if|if
 condition|(
 name|p
@@ -3238,6 +3240,37 @@ operator|-=
 name|i
 expr_stmt|;
 block|}
+name|m
+operator|->
+name|m_nextpkt
+operator|=
+name|p
+operator|->
+name|m_nextpkt
+expr_stmt|;
+name|p
+operator|->
+name|m_nextpkt
+operator|=
+name|m
+expr_stmt|;
+block|}
+else|else
+block|{
+name|m
+operator|->
+name|m_nextpkt
+operator|=
+name|fp
+operator|->
+name|ipq_frags
+expr_stmt|;
+name|fp
+operator|->
+name|ipq_frags
+operator|=
+name|m
+expr_stmt|;
 block|}
 comment|/* 	 * While we overlap succeeding segments trim them or, 	 * if they are completely covered, dequeue them. 	 */
 for|for
@@ -3331,20 +3364,9 @@ name|q
 operator|->
 name|m_nextpkt
 expr_stmt|;
-if|if
-condition|(
-name|p
-condition|)
-name|p
+name|m
 operator|->
 name|m_nextpkt
-operator|=
-name|nq
-expr_stmt|;
-else|else
-name|fp
-operator|->
-name|ipq_frags
 operator|=
 name|nq
 expr_stmt|;
@@ -3354,7 +3376,7 @@ name|q
 argument_list|)
 expr_stmt|;
 block|}
-name|insert
+name|inserted
 label|:
 ifdef|#
 directive|ifdef
@@ -3388,46 +3410,7 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Stick new segment in its place; 	 * check for complete reassembly. 	 */
-if|if
-condition|(
-name|p
-operator|==
-name|NULL
-condition|)
-block|{
-name|m
-operator|->
-name|m_nextpkt
-operator|=
-name|fp
-operator|->
-name|ipq_frags
-expr_stmt|;
-name|fp
-operator|->
-name|ipq_frags
-operator|=
-name|m
-expr_stmt|;
-block|}
-else|else
-block|{
-name|m
-operator|->
-name|m_nextpkt
-operator|=
-name|p
-operator|->
-name|m_nextpkt
-expr_stmt|;
-name|p
-operator|->
-name|m_nextpkt
-operator|=
-name|m
-expr_stmt|;
-block|}
+comment|/* 	 * Check for complete reassembly. 	 */
 name|next
 operator|=
 literal|0
