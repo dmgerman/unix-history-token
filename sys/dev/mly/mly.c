@@ -3057,6 +3057,14 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* Remove the management device */
+name|destroy_dev
+argument_list|(
+name|sc
+operator|->
+name|mly_dev_t
+argument_list|)
+expr_stmt|;
 comment|/* detach from CAM */
 name|mly_cam_detach
 argument_list|(
