@@ -376,6 +376,10 @@ name|ipx_pexseq
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Locked with ipxpcb_list_mtx. */
+end_comment
+
 begin_function_decl
 specifier|static
 name|int
