@@ -41,28 +41,18 @@ end_decl_stmt
 
 begin_struct_decl
 struct_decl|struct
-name|disk_parms
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|scsi_link
+name|ccb_calc_geometry
 struct_decl|;
 end_struct_decl
 
 begin_decl_stmt
 name|int
-name|sd_bios_parms
+name|scsi_da_bios_params
 name|__P
 argument_list|(
 operator|(
 expr|struct
-name|disk_parms
-operator|*
-operator|,
-expr|struct
-name|scsi_link
+name|ccb_calc_geometry
 operator|*
 operator|)
 argument_list|)
