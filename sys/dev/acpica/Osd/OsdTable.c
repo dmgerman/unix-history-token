@@ -48,6 +48,21 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|TUNABLE_STR
+argument_list|(
+literal|"hw.acpi.os_name"
+argument_list|,
+name|acpi_os_name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|acpi_os_name
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|ACPI_STATUS
 name|AcpiOsPredefinedOverride
@@ -82,7 +97,6 @@ name|NewVal
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* Allow both _OS and _OS_ to be overridden. */
 if|if
 condition|(
 name|strncmp
@@ -91,9 +105,9 @@ name|InitVal
 operator|->
 name|Name
 argument_list|,
-literal|"_OS"
+literal|"_OS_"
 argument_list|,
-literal|3
+literal|4
 argument_list|)
 operator|==
 literal|0
