@@ -3016,6 +3016,12 @@ operator|->
 name|prefix
 argument_list|)
 expr_stmt|;
+name|pp
+operator|->
+name|rainfo
+operator|==
+name|rai
+expr_stmt|;
 comment|/* counter increment */
 name|rai
 operator|->
