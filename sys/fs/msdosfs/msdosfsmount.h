@@ -607,10 +607,6 @@ name|mode_t
 name|mask
 decl_stmt|;
 comment|/* file mask to be applied for msdosfs perms */
-name|mode_t
-name|dirmask
-decl_stmt|;
-comment|/* dir  mask to be applied for msdosfs perms */
 name|int
 name|flags
 decl_stmt|;
@@ -641,6 +637,10 @@ modifier|*
 name|cs_local
 decl_stmt|;
 comment|/* Local Charset */
+name|mode_t
+name|dirmask
+decl_stmt|;
+comment|/* dir  mask to be applied for msdosfs perms */
 block|}
 struct|;
 end_struct
