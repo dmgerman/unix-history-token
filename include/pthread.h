@@ -337,18 +337,18 @@ name|pthread_condattr_default
 value|NULL
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PTHREAD_KERNEL
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|pthread_mutexattr_default
 value|NULL
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|PTHREAD_KERNEL
-end_ifndef
 
 begin_define
 define|#
@@ -361,6 +361,24 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_enum
+enum|enum
+name|pthread_mutextype
+block|{
+name|MUTEX_TYPE_FAST
+init|=
+literal|1
+block|,
+name|MUTEX_TYPE_COUNTING_FAST
+init|=
+literal|2
+block|,
+comment|/* Recursive */
+name|MUTEX_TYPE_MAX
+block|}
+enum|;
+end_enum
 
 begin_comment
 comment|/*  * Thread function prototype definitions:  */
@@ -881,16 +899,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|void
+modifier|*
 name|pthread_getspecific
 name|__P
 argument_list|(
 operator|(
 name|pthread_key_t
-operator|,
-name|void
-operator|*
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;
