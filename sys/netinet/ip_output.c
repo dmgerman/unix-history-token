@@ -6708,7 +6708,7 @@ case|case
 name|IP_FAITH
 case|:
 case|case
-name|IP_EF
+name|IP_EVIL_INTENT
 case|:
 switch|switch
 condition|(
@@ -6834,7 +6834,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|IP_EF
+name|IP_EVIL_INTENT
 case|:
 name|optval
 operator|=
@@ -6843,6 +6843,7 @@ argument_list|(
 name|INP_EVIL
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
 name|error
 operator|=
