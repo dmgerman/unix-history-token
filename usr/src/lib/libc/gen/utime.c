@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utime.c	5.4 (Berkeley) %G%"
+literal|"@(#)utime.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -75,7 +75,15 @@ name|tv
 index|[
 literal|2
 index|]
+decl_stmt|,
+modifier|*
+name|tvp
 decl_stmt|;
+if|if
+condition|(
+name|times
+condition|)
+block|{
 name|tv
 index|[
 literal|0
@@ -114,13 +122,23 @@ name|tv_usec
 operator|=
 literal|0
 expr_stmt|;
+name|tvp
+operator|=
+name|tv
+expr_stmt|;
+block|}
+else|else
+name|tvp
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 operator|(
 name|utimes
 argument_list|(
 name|path
 argument_list|,
-name|tv
+name|tvp
 argument_list|)
 operator|)
 return|;
