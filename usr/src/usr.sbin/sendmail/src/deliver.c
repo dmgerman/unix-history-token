@@ -33,7 +33,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.118
+literal|3.119
 operator|%
 name|G
 operator|%
@@ -261,6 +261,9 @@ name|m
 operator|->
 name|m_flags
 argument_list|)
+operator|&&
+operator|!
+name|Verbose
 condition|)
 block|{
 for|for
