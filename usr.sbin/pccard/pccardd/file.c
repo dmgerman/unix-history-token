@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: file.c,v 1.17 1999/06/17 21:07:58 markm Exp $"
+literal|"$Id: file.c,v 1.16.2.1 1999/08/13 15:58:25 kuriyama Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -132,6 +132,9 @@ comment|/* 10 */
 literal|"remove"
 block|,
 comment|/* 11 */
+literal|"iosize"
+block|,
+comment|/* 12 */
 literal|0
 block|}
 decl_stmt|;
@@ -212,6 +215,13 @@ define|#
 directive|define
 name|KWD_REMOVE
 value|11
+end_define
+
+begin_define
+define|#
+directive|define
+name|KWD_IOSIZE
+value|12
 end_define
 
 begin_struct
@@ -336,6 +346,16 @@ name|new_driver
 parameter_list|(
 name|char
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|iosize_tok
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -765,6 +785,8 @@ name|cp
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|iosize
 decl_stmt|;
 name|struct
 name|card_config
@@ -774,6 +796,10 @@ decl_stmt|,
 modifier|*
 name|lastp
 decl_stmt|;
+name|confp
+operator|=
+literal|0
+expr_stmt|;
 name|man
 operator|=
 name|newstr
@@ -1107,6 +1133,48 @@ name|cp
 operator|->
 name|remove
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|KWD_IOSIZE
+case|:
+comment|/* iosize */
+name|iosize
+operator|=
+name|iosize_tok
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|iosize
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"Illegal cardio arguments"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+operator|!
+name|confp
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"iosize should be placed after config"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+name|cp
+operator|->
+name|iosize
+operator|=
+name|iosize
 expr_stmt|;
 break|break;
 default|default:
@@ -1684,6 +1752,85 @@ operator|(
 operator|-
 literal|1
 operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  *	iosize token  *	iosize {<size>|auto}  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|iosize_tok
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|int
+name|iosize
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+literal|"auto"
+argument_list|,
+name|next_tok
+argument_list|()
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|iosize
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* wildcard */
+else|else
+block|{
+name|pusht
+operator|=
+literal|1
+expr_stmt|;
+name|iosize
+operator|=
+name|num_tok
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|iosize
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+literal|0
+return|;
+block|}
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|verbose
+condition|)
+name|printf
+argument_list|(
+literal|"iosize: size=%x\n"
+argument_list|,
+name|iosize
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+return|return
+name|iosize
 return|;
 block|}
 end_function
