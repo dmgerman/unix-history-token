@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)sys_process.c	7.21 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.proprietary.c%  *  *	@(#)sys_process.c	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -112,7 +112,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * sys-trace system call.  */
+comment|/*  * Process debugging system call.  */
 end_comment
 
 begin_macro
@@ -460,7 +460,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Code that the child process  * executes to implement the command  * of the parent process in tracing.  */
+comment|/*  * Transmit a tracing request from the parent to the child process  * being debugged. This code runs in the context of the child process  * to fulfill the command requested by the parent.  */
 end_comment
 
 begin_expr_stmt
@@ -1239,6 +1239,10 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_comment
+comment|/*  * Process debugging system call.  */
+end_comment
 
 begin_comment
 comment|/* ARGSUSED */
