@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)addch.c	5.10 (Berkeley) %G%"
+literal|"@(#)addch.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,6 @@ name|int
 name|ch
 decl_stmt|;
 block|{
-specifier|static
 name|__LDATA
 name|buf
 decl_stmt|;
@@ -101,7 +100,6 @@ modifier|*
 name|dp
 decl_stmt|;
 block|{
-specifier|static
 name|char
 name|buf
 index|[
