@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.34 (Berkeley) %G%"
+literal|"@(#)util.c	8.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -165,6 +165,17 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+comment|/* some systems can't handle size zero mallocs */
+if|if
+condition|(
+name|sz
+operator|<=
+literal|0
+condition|)
+name|sz
+operator|=
+literal|1
+expr_stmt|;
 name|p
 operator|=
 name|malloc
@@ -4585,6 +4596,10 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+name|char
+modifier|*
+name|fmtstr
+decl_stmt|;
 name|struct
 name|sockaddr_in
 name|sin
@@ -5067,11 +5082,29 @@ directive|endif
 default|default:
 name|defprint
 label|:
+if|if
+condition|(
+sizeof|sizeof
+name|st
+operator|.
+name|st_size
+operator|>
+literal|4
+condition|)
+name|fmtstr
+operator|=
+literal|"dev=%d/%d, ino=%d, nlink=%d, u/gid=%d/%d, size=%qd"
+operator|,
+else|else
+name|fmtstr
+operator|=
+literal|"dev=%d/%d, ino=%d, nlink=%d, u/gid=%d/%d, size=%ld"
+operator|,
 name|sprintf
 argument_list|(
 name|p
 argument_list|,
-literal|"dev=%d/%d, ino=%d, nlink=%d, u/gid=%d/%d, size=%ld"
+name|fmtstr
 argument_list|,
 name|major
 argument_list|(
