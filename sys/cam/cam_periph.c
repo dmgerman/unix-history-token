@@ -365,7 +365,7 @@ operator|*
 name|newdrivers
 argument_list|)
 operator|*
-name|ndrivers
+name|nperiph_drivers
 argument_list|)
 expr_stmt|;
 name|newdrivers
