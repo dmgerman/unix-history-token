@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ping.c,v 1.42 1999/01/06 07:54:28 imp Exp $"
+literal|"$Id: ping.c,v 1.43 1999/04/25 22:33:30 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1354,8 +1354,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|getuid
-argument_list|()
+name|uid
 condition|)
 block|{
 name|errno
@@ -1370,10 +1369,6 @@ literal|"-l flag"
 argument_list|)
 expr_stmt|;
 block|}
-name|options
-operator||=
-name|F_FLOOD
-expr_stmt|;
 name|preload
 operator|=
 name|ultmp
@@ -2959,6 +2954,14 @@ expr_stmt|;
 if|if
 condition|(
 name|n
+operator|<
+literal|0
+condition|)
+continue|continue;
+comment|/* Must be EINTR. */
+if|if
+condition|(
+name|n
 operator|==
 literal|1
 condition|)
@@ -3151,6 +3154,10 @@ condition|(
 name|n
 operator|==
 literal|0
+operator|||
+name|options
+operator|&
+name|F_FLOOD
 condition|)
 block|{
 if|if
@@ -3175,6 +3182,12 @@ break|break;
 name|almost_done
 operator|=
 literal|1
+expr_stmt|;
+name|intvl
+operator|.
+name|tv_usec
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
