@@ -4404,8 +4404,6 @@ name|MAP_ANON
 operator||
 name|MAP_FIXED
 operator||
-name|MAP_INHERIT
-operator||
 name|MAP_SHARED
 argument_list|,
 operator|-
@@ -4650,8 +4648,6 @@ name|MAP_ANON
 operator||
 name|MAP_FIXED
 operator||
-name|MAP_INHERIT
-operator||
 name|MAP_SHARED
 argument_list|,
 operator|-
@@ -4686,8 +4682,6 @@ argument_list|,
 name|MAP_FILE
 operator||
 name|MAP_FIXED
-operator||
-name|MAP_INHERIT
 operator||
 name|MAP_SHARED
 argument_list|,
