@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * @(#)extern.h	2.2 83/11/03  */
+comment|/*  * @(#)extern.h	2.3 83/12/17  */
 end_comment
 
 begin_include
@@ -74,7 +74,7 @@ name|grappled
 parameter_list|(
 name|a
 parameter_list|)
-value|Snagged(a, 1)
+value|((a)->file->ngrap)
 end_define
 
 begin_define
@@ -84,7 +84,7 @@ name|fouled
 parameter_list|(
 name|a
 parameter_list|)
-value|Snagged(a, 0)
+value|((a)->file->nfoul)
 end_define
 
 begin_define
@@ -94,7 +94,7 @@ name|snagged
 parameter_list|(
 name|a
 parameter_list|)
-value|(Snagged(a, 0) || Snagged(a, 1))
+value|(grappled(a) + fouled(a))
 end_define
 
 begin_define
@@ -106,7 +106,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|Snagged2(a, b, 1, 0)
+value|((a)->file->grap[(b)->file->index].sn_count)
 end_define
 
 begin_define
@@ -118,7 +118,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|Snagged2(a, b, 0, 0)
+value|((a)->file->foul[(b)->file->index].sn_count)
 end_define
 
 begin_define
@@ -130,7 +130,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|(Snagged2(a, b, 0, 0) || Snagged2(a, b, 1, 0))
+value|(grappled2(a, b) + fouled2(a, b))
 end_define
 
 begin_define
@@ -142,7 +142,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|Snagged2(a, b, 1, 1)
+value|((a)->file->grap[(b)->file->index].sn_turn< turn-1 ? grappled2(a, b) : 0)
 end_define
 
 begin_define
@@ -154,7 +154,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|Snagged2(a, b, 0, 1)
+value|((a)->file->foul[(b)->file->index].sn_turn< turn-1 ? fouled2(a, b) : 0)
 end_define
 
 begin_define
@@ -166,7 +166,49 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|(Snagged2(a, b, 0, 1) || Snagged2(a, b, 1, 1))
+value|(Xgrappled2(a, b) + Xfouled2(a, b))
+end_define
+
+begin_define
+define|#
+directive|define
+name|cleangrapple
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|Cleansnag(a, b, c, 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|cleanfoul
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|Cleansnag(a, b, c, 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|cleansnag
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|)
+value|Cleansnag(a, b, c, 3)
 end_define
 
 begin_define
@@ -429,7 +471,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|W_LAST
+name|W_MOVE
 value|13
 end_define
 
@@ -447,9 +489,12 @@ name|W_PCREW
 value|15
 end_define
 
-begin_comment
-comment|/* 16 */
-end_comment
+begin_define
+define|#
+directive|define
+name|W_UNFOUL
+value|16
+end_define
 
 begin_define
 define|#
@@ -465,9 +510,12 @@ name|W_QUAL
 value|18
 end_define
 
-begin_comment
-comment|/* 19 */
-end_comment
+begin_define
+define|#
+directive|define
+name|W_UNGRAP
+value|19
+end_define
 
 begin_define
 define|#
@@ -479,21 +527,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|W_SHIPCOL
+name|W_COL
 value|21
 end_define
 
 begin_define
 define|#
 directive|define
-name|W_SHIPDIR
+name|W_DIR
 value|22
 end_define
 
 begin_define
 define|#
 directive|define
-name|W_SHIPROW
+name|W_ROW
 value|23
 end_define
 
@@ -652,12 +700,10 @@ struct|struct
 name|snag
 block|{
 name|short
-name|turnfoul
+name|sn_count
 decl_stmt|;
-name|struct
-name|ship
-modifier|*
-name|toship
+name|short
+name|sn_turn
 decl_stmt|;
 block|}
 struct|;
@@ -751,6 +797,9 @@ begin_struct
 struct|struct
 name|File
 block|{
+name|int
+name|index
+decl_stmt|;
 name|char
 name|captain
 index|[
@@ -809,7 +858,7 @@ name|pcrew
 decl_stmt|;
 comment|/* 70 */
 name|char
-name|last
+name|movebuf
 index|[
 literal|10
 index|]
@@ -819,9 +868,15 @@ name|char
 name|drift
 decl_stmt|;
 comment|/* 82 */
+name|short
+name|nfoul
+decl_stmt|;
+name|short
+name|ngrap
+decl_stmt|;
 name|struct
 name|snag
-name|fouls
+name|foul
 index|[
 name|NSHIP
 index|]
@@ -829,7 +884,7 @@ decl_stmt|;
 comment|/* 84 */
 name|struct
 name|snag
-name|grapples
+name|grap
 index|[
 name|NSHIP
 index|]

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sccsid = "@(#)player.h	2.4 %G%";  */
+comment|/*  * sccsid = "@(#)player.h	2.5 %G%";  */
 end_comment
 
 begin_include
@@ -405,7 +405,15 @@ begin_decl_stmt
 name|char
 name|movebuf
 index|[
-literal|10
+sizeof|sizeof
+name|SHIP
+operator|(
+literal|0
+operator|)
+operator|->
+name|file
+operator|->
+name|movebuf
 index|]
 decl_stmt|;
 end_decl_stmt

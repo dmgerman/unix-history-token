@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pl_1.c	2.4 83/12/09"
+literal|"@(#)pl_1.c	2.5 83/12/17"
 decl_stmt|;
 end_decl_stmt
 
@@ -496,6 +496,19 @@ name|sp
 operator|->
 name|file
 operator|->
+name|index
+operator|=
+name|sp
+operator|-
+name|SHIP
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|sp
+operator|->
+name|file
+operator|->
 name|stern
 operator|=
 name|nat
@@ -746,11 +759,10 @@ argument_list|(
 literal|"  %2d:  %-10s %-15s  (%-2d pts)   %s\n"
 argument_list|,
 name|sp
-operator|-
-name|SHIP
-argument_list|(
-literal|0
-argument_list|)
+operator|->
+name|file
+operator|->
+name|index
 argument_list|,
 name|countryname
 index|[
@@ -1390,12 +1402,6 @@ name|persons
 decl_stmt|;
 name|float
 name|net
-decl_stmt|;
-name|char
-name|message
-index|[
-literal|60
-index|]
 decl_stmt|;
 specifier|register
 name|int
