@@ -162,9 +162,14 @@ name|AcpiHwDisableNonWakeupGpes
 argument_list|()
 expr_stmt|;
 comment|/* flush caches */
+ifdef|#
+directive|ifdef
+name|__i386__
 name|wbinvd
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* write the value to command port and wait until we enter sleep state */
 do|do
 block|{
