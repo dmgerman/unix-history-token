@@ -5674,7 +5674,7 @@ name|nd6log
 argument_list|(
 argument|(LOG_ERR,
 literal|"nd6_prefix_onlink: %s/%d is already on-link\n"
-argument|, 		    ip6_sprintf(&pr->ndpr_prefix.sin6_addr), pr->ndpr_plen); 		return(EEXIST)
+argument|, 		    ip6_sprintf(&pr->ndpr_prefix.sin6_addr), pr->ndpr_plen); 		return (EEXIST)
 argument_list|)
 empty_stmt|;
 block|}

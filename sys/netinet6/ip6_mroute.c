@@ -1104,7 +1104,9 @@ operator|!=
 name|ip6_mrouter
 condition|)
 return|return
+operator|(
 name|EACCES
+operator|)
 return|;
 switch|switch
 condition|(
@@ -1160,11 +1162,6 @@ name|caddr_t
 name|data
 decl_stmt|;
 block|{
-name|int
-name|error
-init|=
-literal|0
-decl_stmt|;
 switch|switch
 condition|(
 name|cmd
@@ -1186,8 +1183,6 @@ name|data
 argument_list|)
 operator|)
 return|;
-break|break;
-comment|/* for safety */
 case|case
 name|SIOCGETMIFCNT_IN6
 case|:
@@ -1204,19 +1199,13 @@ name|data
 argument_list|)
 operator|)
 return|;
-break|break;
-comment|/* for safety */
 default|default:
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
-break|break;
 block|}
-return|return
-name|error
-return|;
 block|}
 end_function
 
@@ -1317,7 +1306,9 @@ block|req->pktcnt = req->bytecnt = req->wrong_if = 0xffffffff;
 endif|#
 directive|endif
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1353,7 +1344,9 @@ operator|>=
 name|nummifs
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 name|req
 operator|->
@@ -1400,7 +1393,9 @@ operator|.
 name|m6_bytes_out
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1434,7 +1429,9 @@ literal|0
 operator|)
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 name|pim6
 operator|=
@@ -1442,7 +1439,9 @@ operator|*
 name|i
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1523,7 +1522,9 @@ operator|!=
 name|IPPROTO_ICMPV6
 condition|)
 return|return
+operator|(
 name|EOPNOTSUPP
+operator|)
 return|;
 if|if
 condition|(
@@ -1543,7 +1544,9 @@ argument_list|)
 operator|)
 condition|)
 return|return
+operator|(
 name|ENOPROTOOPT
+operator|)
 return|;
 name|v
 operator|=
@@ -1563,7 +1566,9 @@ operator|!=
 literal|1
 condition|)
 return|return
+operator|(
 name|ENOPROTOOPT
+operator|)
 return|;
 if|if
 condition|(
@@ -1572,7 +1577,9 @@ operator|!=
 name|NULL
 condition|)
 return|return
+operator|(
 name|EADDRINUSE
+operator|)
 return|;
 name|ip6_mrouter
 operator|=
@@ -1642,7 +1649,9 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1990,7 +1999,9 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -2069,7 +2080,9 @@ operator|>=
 name|MAXMIFS
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 name|mifp
 operator|=
@@ -2086,7 +2099,9 @@ operator|->
 name|m6_ifp
 condition|)
 return|return
+operator|(
 name|EADDRINUSE
+operator|)
 return|;
 comment|/* XXX: is it appropriate? */
 if|if
@@ -2104,7 +2119,9 @@ operator|>
 name|if_index
 condition|)
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 name|ifp
 operator|=
@@ -2185,7 +2202,9 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|EOPNOTSUPP
+operator|)
 return|;
 name|s
 operator|=
@@ -2211,7 +2230,9 @@ condition|(
 name|error
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 name|s
@@ -2327,7 +2348,9 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -2377,7 +2400,9 @@ operator|>=
 name|nummifs
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 if|if
 condition|(
@@ -2388,7 +2413,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 name|s
 operator|=
@@ -2539,7 +2566,9 @@ expr_stmt|;
 endif|#
 directive|endif
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -2672,7 +2701,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 comment|/* 	 * Find the entry for which the upcall was made and update 	 */
@@ -3216,7 +3247,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOBUFS
+operator|)
 return|;
 block|}
 comment|/* insert new entry at head of hash chain */
@@ -3308,7 +3341,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -3593,7 +3628,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EADDRNOTAVAIL
+operator|)
 return|;
 block|}
 operator|*
@@ -3616,7 +3653,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -3688,7 +3727,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 block|}
@@ -3698,8 +3739,10 @@ name|mm
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -3819,7 +3862,9 @@ name|ip6_dst
 argument_list|)
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|ip6
 operator|->
@@ -3895,7 +3940,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 comment|/* 	 * Determine forwarding mifs from the forwarding cache table 	 */
@@ -4050,7 +4097,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOBUFS
+operator|)
 return|;
 block|}
 name|mb0
@@ -4119,7 +4168,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOBUFS
+operator|)
 return|;
 block|}
 comment|/* is there an upcall waiting for this packet? */
@@ -4264,7 +4315,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOBUFS
+operator|)
 return|;
 block|}
 comment|/* 			 * Make a copy of the header to send to the user 			 * level process 			 */
@@ -4315,7 +4368,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOBUFS
+operator|)
 return|;
 block|}
 comment|/* 			 * Send message to routing daemon 			 */
@@ -4430,7 +4485,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 ifdef|#
@@ -4562,7 +4619,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOBUFS
+operator|)
 return|;
 block|}
 name|mrt6stat
@@ -4754,7 +4813,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 comment|/* Add this entry to the end of the queue */
@@ -4800,7 +4861,9 @@ name|s
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 block|}
@@ -5320,7 +5383,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|ENOBUFS
+operator|)
 return|;
 ifdef|#
 directive|ifdef
@@ -5406,7 +5471,9 @@ name|mm
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 for|for
@@ -5527,14 +5594,18 @@ operator|.
 name|mrt6s_upq_sockfull
 expr_stmt|;
 return|return
+operator|(
 name|ENOBUFS
+operator|)
 return|;
 block|}
 comment|/* if socket Q full */
 block|}
 comment|/* if PIM */
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 comment|/* if wrong iif */
@@ -5747,7 +5818,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -6345,7 +6418,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|ENOBUFS
+operator|)
 return|;
 name|mm
 operator|->
@@ -6397,7 +6472,9 @@ name|mm
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOBUFS
+operator|)
 return|;
 block|}
 name|i
@@ -6435,7 +6512,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|ENOBUFS
+operator|)
 return|;
 comment|/* TODO: check it! */
 name|mm
@@ -6535,11 +6614,15 @@ operator|.
 name|mrt6s_upq_sockfull
 expr_stmt|;
 return|return
+operator|(
 name|ENOBUFS
+operator|)
 return|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -6758,7 +6841,9 @@ name|pim6s_rcv_tooshort
 operator|++
 expr_stmt|;
 return|return
+operator|(
 name|IPPROTO_DONE
+operator|)
 return|;
 block|}
 endif|#

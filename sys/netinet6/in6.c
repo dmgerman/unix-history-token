@@ -3879,7 +3879,7 @@ comment|/* disable this mechanism for now */
 comment|/* update prefix list */
 block|if (hostIsNew&& 	    (ifra->ifra_flags& IN6_IFF_NOPFX) == 0) {
 comment|/* XXX */
-block|int iilen;  		iilen = (sizeof(ia->ia_prefixmask.sin6_addr)<< 3) - plen; 		if ((error = in6_prefix_add_ifid(iilen, ia)) != 0) { 			in6_purgeaddr((struct ifaddr *)ia); 			return(error); 		} 	}
+block|int iilen;  		iilen = (sizeof(ia->ia_prefixmask.sin6_addr)<< 3) - plen; 		if ((error = in6_prefix_add_ifid(iilen, ia)) != 0) { 			in6_purgeaddr((struct ifaddr *)ia); 			return (error); 		} 	}
 endif|#
 directive|endif
 if|if

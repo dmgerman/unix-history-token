@@ -1802,12 +1802,12 @@ comment|/* 	 * If the source address is explicitly specified by the caller, 	 * 
 end_comment
 
 begin_comment
-unit|if (opts&& (pi = opts->ip6po_pktinfo)&& 	    !IN6_IS_ADDR_UNSPECIFIED(&pi->ipi6_addr)) 		return(&pi->ipi6_addr);
+unit|if (opts&& (pi = opts->ip6po_pktinfo)&& 	    !IN6_IS_ADDR_UNSPECIFIED(&pi->ipi6_addr)) 		return (&pi->ipi6_addr);
 comment|/* 	 * If the source address is not specified but the socket(if any) 	 * is already bound, use the bound address. 	 */
 end_comment
 
 begin_comment
-unit|if (laddr&& !IN6_IS_ADDR_UNSPECIFIED(laddr)) 		return(laddr);
+unit|if (laddr&& !IN6_IS_ADDR_UNSPECIFIED(laddr)) 		return (laddr);
 comment|/* 	 * If the caller doesn't specify the source address but 	 * the outgoing interface, use an address associated with 	 * the interface. 	 */
 end_comment
 
@@ -1817,7 +1817,7 @@ comment|/* XXX boundary check is assumed to be already done. */
 end_comment
 
 begin_comment
-unit|ia6 = in6_ifawithscope(ifnet_byindex(pi->ipi6_ifindex), dst); 		if (ia6 == 0) { 			*errorp = EADDRNOTAVAIL; 			return(0); 		} 		return(&satosin6(&ia6->ia_addr)->sin6_addr); 	}
+unit|ia6 = in6_ifawithscope(ifnet_byindex(pi->ipi6_ifindex), dst); 		if (ia6 == 0) { 			*errorp = EADDRNOTAVAIL; 			return (0); 		} 		return (&satosin6(&ia6->ia_addr)->sin6_addr); 	}
 comment|/* 	 * If the destination address is a link-local unicast address or 	 * a multicast address, and if the outgoing interface is specified 	 * by the sin6_scope_id filed, use an address associated with the 	 * interface. 	 * XXX: We're now trying to define more specific semantics of 	 *      sin6_scope_id field, so this part will be rewritten in 	 *      the near future. 	 */
 end_comment
 
@@ -1832,17 +1832,17 @@ comment|/* XXX: better error? */
 end_comment
 
 begin_comment
-unit|return(0); 		} 		ia6 = in6_ifawithscope(ifnet_byindex(dstsock->sin6_scope_id), 				       dst); 		if (ia6 == 0) { 			*errorp = EADDRNOTAVAIL; 			return(0); 		} 		return(&satosin6(&ia6->ia_addr)->sin6_addr); 	}
+unit|return (0); 		} 		ia6 = in6_ifawithscope(ifnet_byindex(dstsock->sin6_scope_id), 				       dst); 		if (ia6 == 0) { 			*errorp = EADDRNOTAVAIL; 			return (0); 		} 		return (&satosin6(&ia6->ia_addr)->sin6_addr); 	}
 comment|/* 	 * If the destination address is a multicast address and 	 * the outgoing interface for the address is specified 	 * by the caller, use an address associated with the interface. 	 * There is a sanity check here; if the destination has node-local 	 * scope, the outgoing interfacde should be a loopback address. 	 * Even if the outgoing interface is not specified, we also 	 * choose a loopback interface as the outgoing interface. 	 */
 end_comment
 
 begin_comment
-unit|if (IN6_IS_ADDR_MULTICAST(dst)) { 		struct ifnet *ifp = mopts ? mopts->im6o_multicast_ifp : NULL;  		if (ifp == NULL&& IN6_IS_ADDR_MC_NODELOCAL(dst)) { 			ifp =&loif[0]; 		}  		if (ifp) { 			ia6 = in6_ifawithscope(ifp, dst); 			if (ia6 == 0) { 				*errorp = EADDRNOTAVAIL; 				return(0); 			} 			return(&ia6->ia_addr.sin6_addr); 		} 	}
+unit|if (IN6_IS_ADDR_MULTICAST(dst)) { 		struct ifnet *ifp = mopts ? mopts->im6o_multicast_ifp : NULL;  		if (ifp == NULL&& IN6_IS_ADDR_MC_NODELOCAL(dst)) { 			ifp =&loif[0]; 		}  		if (ifp) { 			ia6 = in6_ifawithscope(ifp, dst); 			if (ia6 == 0) { 				*errorp = EADDRNOTAVAIL; 				return (0); 			} 			return (&ia6->ia_addr.sin6_addr); 		} 	}
 comment|/* 	 * If the next hop address for the packet is specified 	 * by caller, use an address associated with the route 	 * to the next hop. 	 */
 end_comment
 
 begin_comment
-unit|{ 		struct sockaddr_in6 *sin6_next; 		struct rtentry *rt;  		if (opts&& opts->ip6po_nexthop) { 			sin6_next = satosin6(opts->ip6po_nexthop); 			rt = nd6_lookup(&sin6_next->sin6_addr, 1, NULL); 			if (rt) { 				ia6 = in6_ifawithscope(rt->rt_ifp, dst); 				if (ia6 == 0) 					ia6 = ifatoia6(rt->rt_ifa); 			} 			if (ia6 == 0) { 				*errorp = EADDRNOTAVAIL; 				return(0); 			} 			return(&satosin6(&ia6->ia_addr)->sin6_addr); 		} 	}
+unit|{ 		struct sockaddr_in6 *sin6_next; 		struct rtentry *rt;  		if (opts&& opts->ip6po_nexthop) { 			sin6_next = satosin6(opts->ip6po_nexthop); 			rt = nd6_lookup(&sin6_next->sin6_addr, 1, NULL); 			if (rt) { 				ia6 = in6_ifawithscope(rt->rt_ifp, dst); 				if (ia6 == 0) 					ia6 = ifatoia6(rt->rt_ifa); 			} 			if (ia6 == 0) { 				*errorp = EADDRNOTAVAIL; 				return (0); 			} 			return (&satosin6(&ia6->ia_addr)->sin6_addr); 		} 	}
 comment|/* 	 * If route is known or can be allocated now, 	 * our src addr is taken from the i/f, else punt. 	 */
 end_comment
 
@@ -1867,12 +1867,12 @@ comment|/* no route */
 end_comment
 
 begin_comment
-unit|return(0); 		} 		return(&satosin6(&ia6->ia_addr)->sin6_addr); 	}  	*errorp = EADDRNOTAVAIL; 	return(0); }
+unit|return (0); 		} 		return (&satosin6(&ia6->ia_addr)->sin6_addr); 	}  	*errorp = EADDRNOTAVAIL; 	return (0); }
 comment|/*  * Default hop limit selection. The precedence is as follows:  * 1. Hoplimit valued specified via ioctl.  * 2. (If the outgoing interface is detected) the current  *     hop limit of the interface specified by router advertisement.  * 3. The system default hoplimit. */
 end_comment
 
 begin_endif
-unit|int in6_selecthlim(in6p, ifp) 	struct in6pcb *in6p; 	struct ifnet *ifp; { 	if (in6p&& in6p->in6p_hops>= 0) 		return(in6p->in6p_hops); 	else if (ifp) 		return(nd_ifinfo[ifp->if_index].chlim); 	else 		return(ip6_defhlim); }
+unit|int in6_selecthlim(in6p, ifp) 	struct in6pcb *in6p; 	struct ifnet *ifp; { 	if (in6p&& in6p->in6p_hops>= 0) 		return (in6p->in6p_hops); 	else if (ifp) 		return (nd_ifinfo[ifp->if_index].chlim); 	else 		return (ip6_defhlim); }
 endif|#
 directive|endif
 end_endif

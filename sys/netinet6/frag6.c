@@ -491,7 +491,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|IPPROTO_DONE
+operator|)
 return|;
 endif|#
 directive|endif
