@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkproto.c	5.9 (Berkeley) %G%"
+literal|"@(#)mkproto.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2105,15 +2105,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|daddr_t
-name|d
-decl_stmt|,
-name|alloc
-argument_list|()
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
 name|struct
 name|dinode
 name|buf
@@ -2127,20 +2118,47 @@ name|dinode
 argument_list|)
 index|]
 decl_stmt|;
+name|daddr_t
+name|d
+decl_stmt|,
+name|alloc
+argument_list|()
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+name|struct
+name|timeval
+name|t
+decl_stmt|;
 operator|(
 name|void
 operator|)
 name|gettimeofday
 argument_list|(
 operator|&
+name|t
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|ip
 operator|->
 name|di_atime
 operator|.
+name|ts_sec
+operator|=
+name|t
+operator|.
 name|tv_sec
-argument_list|,
-name|NULL
-argument_list|)
+expr_stmt|;
+name|ip
+operator|->
+name|di_atime
+operator|.
+name|ts_nsec
+operator|=
+literal|0
 expr_stmt|;
 name|ip
 operator|->
