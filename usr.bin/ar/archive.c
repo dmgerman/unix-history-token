@@ -964,7 +964,7 @@ name|sb
 operator|->
 name|st_mtimespec
 operator|.
-name|ts_sec
+name|tv_sec
 argument_list|,
 name|sb
 operator|->
@@ -1026,7 +1026,7 @@ name|sb
 operator|->
 name|st_mtimespec
 operator|.
-name|ts_sec
+name|tv_sec
 argument_list|,
 name|sb
 operator|->
@@ -1070,7 +1070,7 @@ name|sb
 operator|->
 name|st_mtimespec
 operator|.
-name|ts_sec
+name|tv_sec
 argument_list|,
 name|sb
 operator|->
