@@ -750,7 +750,7 @@ operator|&
 name|_stackq
 argument_list|)
 expr_stmt|;
-comment|/* Create the red zone for the main stack. */
+comment|/* 		 * Create a red zone below the main stack.  All other stacks are 		 * constrained to a maximum size by the paramters passed to 		 * mmap(), but this stack is only limited by resource limits, so 		 * this stack needs an explicitly mapped red zone to protect the 		 * thread stack that is just beyond. 		 */
 if|if
 condition|(
 name|mmap
