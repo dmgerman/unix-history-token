@@ -427,6 +427,7 @@ break|break;
 name|ch
 operator|=
 operator|(
+operator|(
 operator|*
 name|p
 operator|<<
@@ -434,7 +435,9 @@ literal|4
 operator|)
 operator|&
 literal|060
+operator|)
 operator||
+operator|(
 operator|(
 name|p
 index|[
@@ -445,6 +448,7 @@ literal|4
 operator|)
 operator|&
 literal|017
+operator|)
 expr_stmt|;
 name|ch
 operator|=
@@ -466,6 +470,7 @@ break|break;
 name|ch
 operator|=
 operator|(
+operator|(
 name|p
 index|[
 literal|1
@@ -475,7 +480,9 @@ literal|2
 operator|)
 operator|&
 literal|074
+operator|)
 operator||
+operator|(
 operator|(
 name|p
 index|[
@@ -486,6 +493,7 @@ literal|6
 operator|)
 operator|&
 literal|03
+operator|)
 expr_stmt|;
 name|ch
 operator|=
