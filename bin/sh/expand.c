@@ -992,6 +992,8 @@ operator|(
 name|EXP_FULL
 operator||
 name|EXP_CASE
+operator||
+name|EXP_REDIR
 operator|)
 decl_stmt|;
 comment|/* do CTLESC */
@@ -1286,6 +1288,8 @@ operator|(
 name|EXP_FULL
 operator||
 name|EXP_CASE
+operator||
+name|EXP_REDIR
 operator|)
 decl_stmt|;
 while|while
@@ -1694,6 +1698,8 @@ operator|(
 name|EXP_FULL
 operator||
 name|EXP_CASE
+operator||
+name|EXP_REDIR
 operator|)
 decl_stmt|;
 name|int
@@ -2010,6 +2016,8 @@ operator|(
 name|EXP_FULL
 operator||
 name|EXP_CASE
+operator||
+name|EXP_REDIR
 operator|)
 decl_stmt|;
 name|INTOFF
@@ -3031,6 +3039,8 @@ operator|(
 name|EXP_FULL
 operator||
 name|EXP_CASE
+operator||
+name|EXP_REDIR
 operator|)
 decl_stmt|;
 name|varflags
