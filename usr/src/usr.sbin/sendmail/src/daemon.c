@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.11 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.12 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.11 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.12 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -181,6 +181,30 @@ end_decl_stmt
 
 begin_comment
 comment|/* size of listen queue */
+end_comment
+
+begin_decl_stmt
+name|int
+name|TcpRcvBufferSize
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* size of TCP receive buffer */
+end_comment
+
+begin_decl_stmt
+name|int
+name|TcpSndBufferSize
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* size of TCP send buffer */
 end_comment
 
 begin_macro
@@ -1281,6 +1305,84 @@ goto|goto
 name|failure
 goto|;
 block|}
+ifdef|#
+directive|ifdef
+name|SO_SNDBUF
+if|if
+condition|(
+name|TcpSndBufferSize
+operator|>
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|setsockopt
+argument_list|(
+name|s
+argument_list|,
+name|SOL_SOCKET
+argument_list|,
+name|SO_SNDBUF
+argument_list|,
+operator|&
+name|TcpSndBufferSize
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|TcpSndBufferSize
+argument_list|)
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|syserr
+argument_list|(
+literal|"makeconnection: setsockopt(SO_SNDBUF)"
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|SO_RCVBUF
+if|if
+condition|(
+name|TcpRcvBufferSize
+operator|>
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|setsockopt
+argument_list|(
+name|s
+argument_list|,
+name|SOL_SOCKET
+argument_list|,
+name|SO_RCVBUF
+argument_list|,
+operator|&
+name|TcpRcvBufferSize
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|TcpRcvBufferSize
+argument_list|)
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|syserr
+argument_list|(
+literal|"makeconnection: setsockopt(SO_RCVBUF)"
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|tTd
