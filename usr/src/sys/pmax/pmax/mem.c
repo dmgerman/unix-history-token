@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: mem.c 1.14 90/10/12$  *  *	@(#)mem.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: mem.c 1.14 90/10/12$  *  *	@(#)mem.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -58,13 +58,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"vm/pmap.h"
+file|"vm/vm_prot.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vm/vm_prot.h"
+file|"vm/pmap.h"
 end_include
 
 begin_comment
@@ -105,7 +105,7 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
-name|off_t
+name|u_long
 name|v
 decl_stmt|;
 specifier|register
@@ -199,6 +199,9 @@ literal|0
 case|:
 name|v
 operator|=
+operator|(
+name|u_long
+operator|)
 name|uio
 operator|->
 name|uio_offset
@@ -250,6 +253,9 @@ literal|1
 case|:
 name|v
 operator|=
+operator|(
+name|u_long
+operator|)
 name|uio
 operator|->
 name|uio_offset
