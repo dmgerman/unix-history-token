@@ -2334,6 +2334,21 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+name|splsofttqassert
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+name|msg
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|splstatclockassert
 name|__P
 argument_list|(
