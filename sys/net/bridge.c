@@ -78,8 +78,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/ethernet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<net/if_arp.h>
+end_include
+
+begin_comment
+comment|/* for struct arpcom */
+end_comment
 
 begin_include
 include|#
@@ -99,10 +115,6 @@ directive|include
 file|<netinet/in.h>
 end_include
 
-begin_comment
-comment|/* for struct arpcom */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -120,16 +132,6 @@ include|#
 directive|include
 file|<netinet/ip.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/if_ether.h>
-end_include
-
-begin_comment
-comment|/* for struct arpcom */
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -1093,9 +1095,9 @@ name|u_int16_t
 name|cluster_id
 parameter_list|,
 name|struct
-name|arpcom
+name|ifnet
 modifier|*
-name|ac
+name|ifp
 parameter_list|)
 block|{
 name|struct
@@ -1431,7 +1433,10 @@ index|]
 operator|.
 name|etheraddr
 argument_list|,
-name|ac
+name|IFP2AC
+argument_list|(
+name|ifp
+argument_list|)
 operator|->
 name|ac_enaddr
 argument_list|)
@@ -2193,11 +2198,6 @@ argument_list|(
 name|cluster
 argument_list|)
 argument_list|,
-operator|(
-expr|struct
-name|arpcom
-operator|*
-operator|)
 name|ifp
 argument_list|)
 expr_stmt|;
