@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dmfreg.h	6.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dmfreg.h	6.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -120,23 +120,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|dmflcr
-value|dmfun.dmfirc[0]
+name|dmflctms
+value|dmfun.dmfirw
 end_define
 
 begin_comment
-comment|/* line control register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|dmftms
-value|dmfun.dmfirc[1]
-end_define
-
-begin_comment
-comment|/* transmit modem status */
+comment|/* line control, transmit modem status */
 end_comment
 
 begin_define
@@ -579,7 +568,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* bits in dmflcr */
+comment|/* bits in dmflctms */
 end_comment
 
 begin_define
@@ -768,19 +757,6 @@ end_define
 begin_comment
 comment|/* line enable */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|SETLCR
-parameter_list|(
-name|pt
-parameter_list|,
-name|exp
-parameter_list|)
-define|\
-value|pt->dmfun.dmfirw = (((pt)->dmftms)<<8) | ((exp)&0xff)
-end_define
 
 begin_comment
 comment|/* dmf line printer csr def */
