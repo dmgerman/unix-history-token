@@ -222,6 +222,13 @@ name|MATH_LIBRARY_PROFILE
 value|"-lm_p"
 end_define
 
+begin_define
+define|#
+directive|define
+name|FORTRAN_LIBRARY_PROFILE
+value|"-lg2c_p"
+end_define
+
 begin_comment
 comment|/* FreeBSD is 4.4BSD derived */
 end_comment

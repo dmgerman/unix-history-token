@@ -4,6 +4,10 @@ comment|/* Specific flags and argument handling of the Fortran front-end.    Cop
 end_comment
 
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/* This file contains a filter for the main `gcc' driver, which is    replicated for the `g77' driver by adding this filter.  The purpose    of this filter is to be basically identical to gcc (in that    it faithfully passes all of the original arguments to gcc) but,    unless explicitly overridden by the user in certain ways, ensure    that the needs of the language supported by this wrapper are met.     For GNU Fortran (g77), we do the following to the argument list    before passing it to `gcc':     1.  Make sure `-lg2c -lm' is at the end of the list.     2.  Make sure each time `-lg2c' or `-lm' is seen, it forms        part of the series `-lg2c -lm'.     #1 and #2 are not done if `-nostdlib' or any option that disables    the linking phase is present, or if `-xfoo' is in effect.  Note that    a lack of source files or -l options disables linking.     This program was originally made out of gcc/cp/g++spec.c, but the    way it builds the new argument list was rewritten so it is much    easier to maintain, improve the way it decides to add or not add    extra arguments, etc.  And several improvements were made in the    handling of arguments, primarily to make it more consistent with    `gcc' itself.  */
 end_comment
 
@@ -52,6 +56,24 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|MATH_LIBRARY_PROFILE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MATH_LIBRARY_PROFILE
+value|"-lm"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|FORTRAN_INIT
 end_ifndef
 
@@ -70,6 +92,24 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|FORTRAN_INIT_PROFILE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|FORTRAN_INIT_PROFILE
+value|"-lfrtbegin"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|FORTRAN_LIBRARY
 end_ifndef
 
@@ -77,6 +117,24 @@ begin_define
 define|#
 directive|define
 name|FORTRAN_LIBRARY
+value|"-lg2c"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FORTRAN_LIBRARY_PROFILE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|FORTRAN_LIBRARY_PROFILE
 value|"-lg2c"
 end_define
 
@@ -131,6 +189,9 @@ comment|/* Aka --no-standard-libraries, or 				   -nodefaultlibs. */
 name|OPTION_o
 block|,
 comment|/* Aka --output. */
+name|OPTION_p
+block|,
+comment|/* Aka --profile. */
 name|OPTION_S
 block|,
 comment|/* Aka --assemble. */
@@ -582,6 +643,58 @@ condition|)
 name|opt
 operator|=
 name|OPTION_o
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|(
+name|text
+index|[
+literal|1
+index|]
+operator|==
+literal|'p'
+operator|)
+operator|&&
+operator|(
+name|text
+index|[
+literal|2
+index|]
+operator|==
+literal|'\0'
+operator|)
+operator|||
+operator|(
+name|text
+index|[
+literal|1
+index|]
+operator|==
+literal|'p'
+operator|)
+operator|&&
+operator|(
+name|text
+index|[
+literal|2
+index|]
+operator|==
+literal|'g'
+operator|)
+operator|&&
+operator|(
+name|text
+index|[
+literal|3
+index|]
+operator|==
+literal|'\0'
+operator|)
+condition|)
+name|opt
+operator|=
+name|OPTION_p
 expr_stmt|;
 elseif|else
 if|if
@@ -1185,6 +1298,12 @@ operator|!=
 literal|'\0'
 operator|)
 decl_stmt|;
+comment|/* If non-zero, the user gave us the `-p' or `-pg' flag.  */
+name|int
+name|saw_profile_flag
+init|=
+literal|0
+decl_stmt|;
 comment|/* The number of input and output files in the incoming arg list.  */
 name|int
 name|n_infiles
@@ -1360,6 +1479,18 @@ name|OPTION_o
 case|:
 operator|++
 name|n_outfiles
+expr_stmt|;
+break|break;
+case|case
+name|OPTION_p
+case|:
+name|saw_profile_flag
+operator|=
+literal|1
+expr_stmt|;
+name|library
+operator|=
+name|FORTRAN_LIBRARY_PROFILE
 expr_stmt|;
 break|break;
 case|case
@@ -1564,6 +1695,10 @@ condition|)
 comment|/* -l<library>. */
 name|append_arg
 argument_list|(
+name|saw_profile_flag
+condition|?
+name|MATH_LIBRARY_PROFILE
+else|:
 name|MATH_LIBRARY
 argument_list|)
 expr_stmt|;
@@ -1755,6 +1890,10 @@ condition|)
 block|{
 name|append_arg
 argument_list|(
+name|saw_profile_flag
+condition|?
+name|FORTRAN_INIT_PROFILE
+else|:
 name|FORTRAN_INIT
 argument_list|)
 expr_stmt|;
@@ -1765,6 +1904,10 @@ expr_stmt|;
 block|}
 name|append_arg
 argument_list|(
+name|saw_profile_flag
+condition|?
+name|FORTRAN_LIBRARY_PROFILE
+else|:
 name|FORTRAN_LIBRARY
 argument_list|)
 expr_stmt|;
@@ -1803,6 +1946,10 @@ name|need_math
 condition|)
 name|append_arg
 argument_list|(
+name|saw_profile_flag
+condition|?
+name|MATH_LIBRARY_PROFILE
+else|:
 name|MATH_LIBRARY
 argument_list|)
 expr_stmt|;
@@ -1854,6 +2001,10 @@ condition|)
 block|{
 name|append_arg
 argument_list|(
+name|saw_profile_flag
+condition|?
+name|FORTRAN_INIT_PROFILE
+else|:
 name|FORTRAN_INIT
 argument_list|)
 expr_stmt|;
@@ -1876,6 +2027,10 @@ name|need_math
 condition|)
 name|append_arg
 argument_list|(
+name|saw_profile_flag
+condition|?
+name|MATH_LIBRARY_PROFILE
+else|:
 name|MATH_LIBRARY
 argument_list|)
 expr_stmt|;
