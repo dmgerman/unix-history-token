@@ -250,6 +250,10 @@ name|int
 name|squest
 decl_stmt|;
 comment|/* when this is positive, we have seen a ? 				 * without the matching : in a<c>?<s>:<s> 				 * construct */
+name|int
+name|use_tabs
+decl_stmt|;
+comment|/* true if using tabs to indent to var name */
 specifier|const
 name|char
 modifier|*
@@ -4184,7 +4188,6 @@ condition|;
 control|)
 empty_stmt|;
 comment|/* get length of token */
-comment|/* 	     * dec_ind = e_code - s_code + (ps.decl_indent>i ? ps.decl_indent 	     * : i); 	     */
 name|dec_ind
 operator|=
 name|ps
@@ -4198,6 +4201,14 @@ operator|.
 name|decl_indent
 else|:
 name|i
+expr_stmt|;
+name|use_tabs
+operator|=
+name|ps
+operator|.
+name|decl_indent
+operator|>
+literal|0
 expr_stmt|;
 goto|goto
 name|copy_id
@@ -4302,6 +4313,11 @@ name|pos
 operator|=
 name|startpos
 expr_stmt|;
+if|if
+condition|(
+name|use_tabs
+condition|)
+block|{
 while|while
 condition|(
 operator|(
@@ -4335,6 +4351,7 @@ operator|)
 operator|+
 literal|8
 expr_stmt|;
+block|}
 block|}
 while|while
 condition|(
