@@ -1,7 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  *	$Id$  *  *  This driver and the associated header files support the ISA PC/Xem  *  Digiboards.  Its evolutionary roots are described below.  *  Jack O'Neill<jack@diamond.xtalwind.net>  *  *  Digiboard driver.  *  *  Stage 1. "Better than nothing".  *  Stage 2. "Gee, it works!".  *  *  Based on sio driver by Bruce Evans and on Linux driver by Troy   *  De Jongh<troyd@digibd.com> or<troyd@skypoint.com>   *  which is under GNU General Public License version 2 so this driver   *  is forced to be under GPL 2 too.  *  *  Written by Serge Babkin,  *      Joint Stock Commercial Bank "Chelindbank"  *      (Chelyabinsk, Russia)  *      babkin@hq.icb.chel.su  *  *  Assorted hacks to make it more functional and working under 3.0-current.  *  Fixed broken routines to prevent processes hanging on closed (thanks  *  to Bruce for his patience and assistance). Thanks also to Maxim Bolotin  *<max@run.net> for his patches which did most of the work to get this  *  running under 2.2/3.0-current.  *  Implemented ioctls: TIOCMSDTRWAIT, TIOCMGDTRWAIT, TIOCTIMESTAMP&  *  TIOCDCDTIMESTAMP.  *  Sysctl debug flag is now a bitflag, to filter noise during debugging.  *	David L. Nugent<davidn@blaze.net.au>  */
+comment|/*-  *	$Id: dgm.c,v 1.2 1998/08/05 20:19:03 brian Exp $  *  *  This driver and the associated header files support the ISA PC/Xem  *  Digiboards.  Its evolutionary roots are described below.  *  Jack O'Neill<jack@diamond.xtalwind.net>  *  *  Digiboard driver.  *  *  Stage 1. "Better than nothing".  *  Stage 2. "Gee, it works!".  *  *  Based on sio driver by Bruce Evans and on Linux driver by Troy   *  De Jongh<troyd@digibd.com> or<troyd@skypoint.com>   *  which is under GNU General Public License version 2 so this driver   *  is forced to be under GPL 2 too.  *  *  Written by Serge Babkin,  *      Joint Stock Commercial Bank "Chelindbank"  *      (Chelyabinsk, Russia)  *      babkin@hq.icb.chel.su  *  *  Assorted hacks to make it more functional and working under 3.0-current.  *  Fixed broken routines to prevent processes hanging on closed (thanks  *  to Bruce for his patience and assistance). Thanks also to Maxim Bolotin  *<max@run.net> for his patches which did most of the work to get this  *  running under 2.2/3.0-current.  *  Implemented ioctls: TIOCMSDTRWAIT, TIOCMGDTRWAIT, TIOCTIMESTAMP&  *  TIOCDCDTIMESTAMP.  *  Sysctl debug flag is now a bitflag, to filter noise during debugging.  *	David L. Nugent<davidn@blaze.net.au>  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"opt_compat.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_devfs.h"
+end_include
 
 begin_include
 include|#
@@ -76,12 +88,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/reboot.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/tty.h>
 end_include
 
@@ -112,12 +118,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/uio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -125,18 +125,6 @@ begin_include
 include|#
 directive|include
 file|<sys/sysctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/malloc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/syslog.h>
 end_include
 
 begin_ifdef
@@ -171,12 +159,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_param.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/pmap.h>
 end_include
 
@@ -203,23 +185,6 @@ include|#
 directive|include
 file|<gnu/i386/isa/dgmreg.h>
 end_include
-
-begin_comment
-comment|/* This avoids warnings: we're an isa device only  * so it does not matter...  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|outb
-end_undef
-
-begin_define
-define|#
-directive|define
-name|outb
-value|outbv
-end_define
 
 begin_define
 define|#
@@ -569,11 +534,11 @@ name|u_char
 name|altpin
 decl_stmt|;
 comment|/* do we need alternate pin setting ? */
-name|ushort
+name|int
 name|numports
 decl_stmt|;
 comment|/* number of ports on card */
-name|ushort
+name|int
 name|port
 decl_stmt|;
 comment|/* I/O port */
@@ -676,10 +641,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/*static void	dgmintr		__P((int unit));*/
-end_comment
 
 begin_comment
 comment|/* Device switch entry points. */
@@ -1459,6 +1420,7 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
+name|__inline
 name|int
 name|setwin
 name|__P
@@ -1478,6 +1440,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|__inline
 name|void
 name|hidewin
 name|__P
@@ -1494,6 +1457,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|__inline
 name|void
 name|towin
 name|__P
@@ -1520,10 +1484,11 @@ typedef|typedef
 struct|struct
 block|{
 comment|/* If we were called and don't want to disturb we need: */
-name|short
+name|int
 name|port
-decl_stmt|,
+decl_stmt|;
 comment|/* write to this port */
+name|u_char
 name|data
 decl_stmt|;
 comment|/* this data on exit */
@@ -1911,7 +1876,7 @@ name|DPRINT4
 argument_list|(
 name|DB_INFO
 argument_list|,
-literal|"dgm%d: port 0x%x mem 0x%x\n"
+literal|"dgm%d: port 0x%x mem 0x%lx\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -3851,7 +3816,7 @@ operator|=
 name|devfs_add_devswf
 argument_list|(
 operator|&
-name|dgb_cdevsw
+name|dgm_cdevsw
 argument_list|,
 operator|(
 name|unit
@@ -3887,7 +3852,7 @@ operator|=
 name|devfs_add_devswf
 argument_list|(
 operator|&
-name|dgb_cdevsw
+name|dgm_cdevsw
 argument_list|,
 operator|(
 name|unit
@@ -3925,7 +3890,7 @@ operator|=
 name|devfs_add_devswf
 argument_list|(
 operator|&
-name|dgb_cdevsw
+name|dgm_cdevsw
 argument_list|,
 operator|(
 name|unit
@@ -3963,7 +3928,7 @@ operator|=
 name|devfs_add_devswf
 argument_list|(
 operator|&
-name|dgb_cdevsw
+name|dgm_cdevsw
 argument_list|,
 operator|(
 name|unit
@@ -4001,7 +3966,7 @@ operator|=
 name|devfs_add_devswf
 argument_list|(
 operator|&
-name|dgb_cdevsw
+name|dgm_cdevsw
 argument_list|,
 operator|(
 name|unit
@@ -4039,7 +4004,7 @@ operator|=
 name|devfs_add_devswf
 argument_list|(
 operator|&
-name|dgb_cdevsw
+name|dgm_cdevsw
 argument_list|,
 operator|(
 name|unit
@@ -6369,6 +6334,7 @@ expr_stmt|;
 block|}
 name|end_of_data
 label|:
+empty_stmt|;
 block|}
 if|if
 condition|(
@@ -7015,6 +6981,7 @@ block|}
 block|}
 name|end_of_buffer
 label|:
+empty_stmt|;
 block|}
 name|bc
 operator|->
@@ -7111,18 +7078,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static void dgmintr(unit) 	int	unit; { }
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -7940,8 +7895,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
-operator|>=
-literal|0
+operator|!=
+name|ENOIOCTL
 condition|)
 return|return
 name|error
@@ -7983,8 +7938,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
-operator|>=
-literal|0
+operator|!=
+name|ENOIOCTL
 condition|)
 block|{
 name|splx
@@ -9750,7 +9705,7 @@ name|fepcflag
 operator|=
 name|cflag
 expr_stmt|;
-name|DPRINT6
+name|DPRINT5
 argument_list|(
 name|DB_PARAM
 argument_list|,
@@ -9759,14 +9714,6 @@ argument_list|,
 name|unit
 argument_list|,
 name|pnum
-argument_list|,
-name|cflag
-operator|&
-operator|(
-name|FEP_CBAUD
-operator||
-name|FEP_FASTBAUD
-operator|)
 argument_list|,
 name|cflag
 argument_list|,
@@ -10745,21 +10692,6 @@ init|=
 name|bmws_get
 argument_list|()
 decl_stmt|;
-name|DPRINT3
-argument_list|(
-name|DB_WR
-argument_list|,
-literal|"dgm%d: port%d: stop\n"
-argument_list|,
-name|port
-operator|->
-name|unit
-argument_list|,
-name|port
-operator|->
-name|pnum
-argument_list|)
-expr_stmt|;
 name|unit
 operator|=
 name|MINOR_TO_UNIT
@@ -10807,6 +10739,21 @@ operator|=
 name|port
 operator|->
 name|brdchan
+expr_stmt|;
+name|DPRINT3
+argument_list|(
+name|DB_WR
+argument_list|,
+literal|"dgm%d: port%d: stop\n"
+argument_list|,
+name|port
+operator|->
+name|unit
+argument_list|,
+name|port
+operator|->
+name|pnum
+argument_list|)
 expr_stmt|;
 name|s
 operator|=
@@ -11385,7 +11332,6 @@ modifier|*
 name|t
 decl_stmt|;
 block|{
-comment|/* 	 * XXX can skip a lot more cases if Smarts.  Maybe 	 * (IGNCR | ISTRIP | IXON) in c_iflag.  But perhaps we 	 * shouldn't skip if (TS_CNTTB | TS_LNCH) is set in t_state. 	 */
 if|if
 condition|(
 operator|!
