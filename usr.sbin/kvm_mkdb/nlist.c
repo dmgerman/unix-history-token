@@ -657,10 +657,25 @@ decl_stmt|;
 ifndef|#
 directive|ifndef
 name|KERNTEXTOFF
+comment|/*  * XXX  * The FreeBSD bootloader loads the kernel at the a_entry address, meaning  * that this is where the kernel starts.  (not at KERNBASE)  *   * This may be introducing an i386 dependency.  */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+define|#
+directive|define
+name|KERNTEXTOFF
+value|ebuf.a_entry
+else|#
+directive|else
 define|#
 directive|define
 name|KERNTEXTOFF
 value|KERNBASE
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/* 			 * Calculate offset relative to a normal (non-kernel) 			 * a.out.  KERNTEXTOFF is where the kernel is really 			 * loaded; N_TXTADDR is where a normal file is loaded. 			 * From there, locate file offset in text or data. 			 */
