@@ -1518,6 +1518,7 @@ name|v2
 expr_stmt|;
 comment|/* set to yesterday */
 else|else
+block|{
 name|day
 operator|=
 name|tp
@@ -1526,6 +1527,18 @@ name|tm_mday
 operator|-
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|day
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 block|}
 comment|/* first, second ... +1 ... +5 */
 else|else
@@ -1591,6 +1604,7 @@ name|v2
 expr_stmt|;
 comment|/* set to yesterday */
 else|else
+block|{
 name|day
 operator|=
 name|tp
@@ -1599,6 +1613,18 @@ name|tm_mday
 operator|-
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|day
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 block|}
 block|}
 comment|/* wired */
