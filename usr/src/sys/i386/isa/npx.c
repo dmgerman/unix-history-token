@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 William Jolitz.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)npx.c	7.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 William Jolitz.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)npx.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -56,7 +56,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"machine/pcb.h"
+file|"user.h"
 end_include
 
 begin_include
@@ -447,7 +447,7 @@ argument_list|(
 literal|"npxintr"
 argument_list|)
 expr_stmt|;
-asm|asm ("	fnsave %0 " : : "g" (npxpcb->pcb_savefpu) );
+asm|asm ("	fnsave %0 " : : "g" (npxproc->p_addr->u_pcb.pcb_savefpu) );
 comment|/* 	 * Prepair a trap frame for our generic exception processing routine, trap() 	 */
 name|bcopy
 argument_list|(
@@ -534,6 +534,48 @@ operator|)
 return|;
 if|if
 condition|(
+name|npxproc
+operator|==
+name|curproc
+condition|)
+name|load_cr0
+argument_list|(
+name|rcr0
+argument_list|()
+operator|&
+operator|~
+name|CR0_EM
+argument_list|)
+expr_stmt|;
+comment|/* stop emulating */
+else|else
+block|{
+name|load_cr0
+argument_list|(
+name|rcr0
+argument_list|()
+operator|&
+operator|~
+name|CR0_EM
+argument_list|)
+expr_stmt|;
+comment|/* stop emulating */
+if|if
+condition|(
+name|npxproc
+condition|)
+asm|asm(" fnsave %0 "::"g" (npxproc->p_addr->u_pcb.pcb_savefpu));
+asm|asm("	frstor %0 " : : "g" (curpcb->pcb_savefpu));
+name|npxproc
+operator|=
+name|curproc
+expr_stmt|;
+block|}
+ifdef|#
+directive|ifdef
+name|garbage
+if|if
+condition|(
 operator|!
 operator|(
 name|curpcb
@@ -586,15 +628,22 @@ name|npxpcb
 operator|=
 name|curpcb
 expr_stmt|;
+block|}
+name|load_cr0
+argument_list|(
+name|rcr0
+argument_list|()
+operator|&
+operator|~
+name|CR0_EM
+argument_list|)
+expr_stmt|;
+comment|/* stop emulating */
+endif|#
+directive|endif
 return|return
 operator|(
 literal|1
-operator|)
-return|;
-block|}
-return|return
-operator|(
-literal|0
 operator|)
 return|;
 block|}
