@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.13 (Berkeley) 10/24/93 (with SMTP)"
+literal|"@(#)usersmtp.c	8.17 (Berkeley) 1/5/94 (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.13 (Berkeley) 10/24/93 (without SMTP)"
+literal|"@(#)usersmtp.c	8.17 (Berkeley) 1/5/94 (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -733,6 +733,15 @@ goto|goto
 name|tempfail2
 goto|;
 block|}
+if|if
+condition|(
+name|mci
+operator|->
+name|mci_state
+operator|!=
+name|MCIS_CLOSED
+condition|)
+block|{
 name|mci
 operator|->
 name|mci_state
@@ -740,6 +749,8 @@ operator|=
 name|MCIS_OPEN
 expr_stmt|;
 return|return;
+block|}
+comment|/* got a 421 error code during startup */
 name|tempfail1
 label|:
 name|tempfail2
@@ -1078,6 +1089,10 @@ name|int
 name|r
 decl_stmt|;
 name|char
+modifier|*
+name|bufp
+decl_stmt|;
+name|char
 name|buf
 index|[
 name|MAXNAME
@@ -1201,6 +1216,56 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|buf
+index|[
+literal|0
+index|]
+operator|==
+literal|'<'
+condition|)
+block|{
+comment|/* strip off<angle brackets> (put back on below) */
+name|bufp
+operator|=
+operator|&
+name|buf
+index|[
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+operator|-
+literal|1
+index|]
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|bufp
+operator|==
+literal|'>'
+condition|)
+operator|*
+name|bufp
+operator|=
+literal|'\0'
+expr_stmt|;
+name|bufp
+operator|=
+operator|&
+name|buf
+index|[
+literal|1
+index|]
+expr_stmt|;
+block|}
+else|else
+name|bufp
+operator|=
+name|buf
+expr_stmt|;
+if|if
+condition|(
 name|e
 operator|->
 name|e_from
@@ -1228,7 +1293,7 @@ name|m
 argument_list|,
 name|mci
 argument_list|,
-name|buf
+name|bufp
 argument_list|,
 name|optbuf
 argument_list|)
@@ -1246,10 +1311,8 @@ name|mci
 argument_list|,
 name|MyHostName
 argument_list|,
-name|buf
-index|[
-literal|0
-index|]
+operator|*
+name|bufp
 operator|==
 literal|'@'
 condition|?
@@ -1257,7 +1320,7 @@ literal|','
 else|:
 literal|':'
 argument_list|,
-name|buf
+name|bufp
 argument_list|,
 name|optbuf
 argument_list|)
@@ -2310,9 +2373,16 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
-name|i
+name|bool
+name|oldSuprErrs
+init|=
+name|SuprErrs
 decl_stmt|;
+comment|/* 	**	Suppress errors here -- we may be processing a different 	**	job when we do the quit connection, and we don't want the  	**	new job to be penalized for something that isn't it's 	**	problem. 	*/
+name|SuprErrs
+operator|=
+name|TRUE
+expr_stmt|;
 comment|/* send the quit message if we haven't gotten I/O error */
 if|if
 condition|(
@@ -2354,6 +2424,10 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|SuprErrs
+operator|=
+name|oldSuprErrs
+expr_stmt|;
 if|if
 condition|(
 name|mci
@@ -2362,41 +2436,30 @@ name|mci_state
 operator|==
 name|MCIS_CLOSED
 condition|)
+block|{
+name|SuprErrs
+operator|=
+name|oldSuprErrs
+expr_stmt|;
 return|return;
 block|}
+block|}
 comment|/* now actually close the connection and pick up the zombie */
-name|i
-operator|=
+operator|(
+name|void
+operator|)
 name|endmailer
 argument_list|(
 name|mci
 argument_list|,
 name|e
 argument_list|,
-name|m
-operator|->
-name|m_argv
+name|NULL
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|i
-operator|!=
-name|EX_OK
-condition|)
-name|syserr
-argument_list|(
-literal|"451 smtpquit %s: stat %d"
-argument_list|,
-name|m
-operator|->
-name|m_argv
-index|[
-literal|0
-index|]
-argument_list|,
-name|i
-argument_list|)
+name|SuprErrs
+operator|=
+name|oldSuprErrs
 expr_stmt|;
 block|}
 end_block

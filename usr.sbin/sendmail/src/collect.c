@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	8.6 (Berkeley) 10/27/93"
+literal|"@(#)collect.c	8.8 (Berkeley) 1/8/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -429,9 +429,16 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
-goto|goto
-name|readerr
-goto|;
+block|{
+name|freebuf
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+break|break;
+block|}
 comment|/* is this a continuation line? */
 if|if
 condition|(
@@ -764,9 +771,15 @@ break|break;
 comment|/* check for transparent dot */
 if|if
 condition|(
+operator|(
 name|OpMode
 operator|==
 name|MD_SMTP
+operator|||
+name|OpMode
+operator|==
+name|MD_DAEMON
+operator|)
 operator|&&
 name|bp
 index|[
@@ -863,6 +876,20 @@ condition|)
 block|{
 name|readerr
 label|:
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|30
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"collect: read error\n"
+argument_list|)
+expr_stmt|;
 name|inputerr
 operator|=
 name|TRUE
@@ -922,9 +949,15 @@ if|if
 condition|(
 name|inputerr
 operator|&&
+operator|(
 name|OpMode
 operator|==
 name|MD_SMTP
+operator|||
+name|OpMode
+operator|==
+name|MD_DAEMON
+operator|)
 condition|)
 block|{
 name|char

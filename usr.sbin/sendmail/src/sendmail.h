@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)sendmail.h	8.26 (Berkeley) 10/31/93  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)sendmail.h	8.38 (Berkeley) 1/5/94  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	8.26		10/31/93"
+literal|"@(#)sendmail.h	8.38		1/5/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -128,12 +128,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/un.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"conf.h"
 end_include
 
@@ -174,6 +168,23 @@ begin_include
 include|#
 directive|include
 file|<sys/socket.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NETUNIX
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/un.h>
 end_include
 
 begin_endif
@@ -582,6 +593,28 @@ end_define
 
 begin_comment
 comment|/* report this address in return message */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QBOGUSSHELL
+value|002000
+end_define
+
+begin_comment
+comment|/* this entry has an invalid shell listed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QUNSAFEADDR
+value|004000
+end_define
+
+begin_comment
+comment|/* address aquired through an unsafe path */
 end_comment
 
 begin_define
@@ -1321,6 +1354,10 @@ name|long
 name|e_msgsize
 decl_stmt|;
 comment|/* size of the message in bytes */
+name|long
+name|e_flags
+decl_stmt|;
+comment|/* flags, see below */
 name|int
 name|e_nrcpts
 decl_stmt|;
@@ -1329,10 +1366,6 @@ name|short
 name|e_class
 decl_stmt|;
 comment|/* msg class (priority, junk, etc.) */
-name|short
-name|e_flags
-decl_stmt|;
-comment|/* flags, see below */
 name|short
 name|e_hopcount
 decl_stmt|;
@@ -1475,7 +1508,7 @@ begin_define
 define|#
 directive|define
 name|EF_OLDSTYLE
-value|000001
+value|0x0000001
 end_define
 
 begin_comment
@@ -1486,7 +1519,7 @@ begin_define
 define|#
 directive|define
 name|EF_INQUEUE
-value|000002
+value|0x0000002
 end_define
 
 begin_comment
@@ -1497,7 +1530,7 @@ begin_define
 define|#
 directive|define
 name|EF_CLRQUEUE
-value|000010
+value|0x0000008
 end_define
 
 begin_comment
@@ -1508,7 +1541,7 @@ begin_define
 define|#
 directive|define
 name|EF_SENDRECEIPT
-value|000020
+value|0x0000010
 end_define
 
 begin_comment
@@ -1519,7 +1552,7 @@ begin_define
 define|#
 directive|define
 name|EF_FATALERRS
-value|000040
+value|0x0000020
 end_define
 
 begin_comment
@@ -1530,7 +1563,7 @@ begin_define
 define|#
 directive|define
 name|EF_KEEPQUEUE
-value|000100
+value|0x0000040
 end_define
 
 begin_comment
@@ -1541,7 +1574,7 @@ begin_define
 define|#
 directive|define
 name|EF_RESPONSE
-value|000200
+value|0x0000080
 end_define
 
 begin_comment
@@ -1552,7 +1585,7 @@ begin_define
 define|#
 directive|define
 name|EF_RESENT
-value|000400
+value|0x0000100
 end_define
 
 begin_comment
@@ -1563,7 +1596,7 @@ begin_define
 define|#
 directive|define
 name|EF_VRFYONLY
-value|001000
+value|0x0000200
 end_define
 
 begin_comment
@@ -1574,7 +1607,7 @@ begin_define
 define|#
 directive|define
 name|EF_WARNING
-value|002000
+value|0x0000400
 end_define
 
 begin_comment
@@ -1585,7 +1618,7 @@ begin_define
 define|#
 directive|define
 name|EF_QUEUERUN
-value|004000
+value|0x0000800
 end_define
 
 begin_comment
@@ -1596,7 +1629,7 @@ begin_define
 define|#
 directive|define
 name|EF_GLOBALERRS
-value|010000
+value|0x0001000
 end_define
 
 begin_comment
@@ -1607,7 +1640,7 @@ begin_define
 define|#
 directive|define
 name|EF_PM_NOTIFY
-value|020000
+value|0x0002000
 end_define
 
 begin_comment
@@ -1618,11 +1651,22 @@ begin_define
 define|#
 directive|define
 name|EF_METOO
-value|040000
+value|0x0004000
 end_define
 
 begin_comment
 comment|/* send to me too */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_LOGSENDER
+value|0x0008000
+end_define
+
+begin_comment
+comment|/* need to log the sender */
 end_comment
 
 begin_decl_stmt
@@ -3575,6 +3619,54 @@ value|0
 end_define
 
 begin_comment
+comment|/* **  Flags passed to safefile. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SFF_ANYFILE
+value|0
+end_define
+
+begin_comment
+comment|/* no special restrictions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SFF_MUSTOWN
+value|0x0001
+end_define
+
+begin_comment
+comment|/* user must own this file */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SFF_NOSLINK
+value|0x0002
+end_define
+
+begin_comment
+comment|/* file cannot be a symbolic link */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SFF_ROOTOK
+value|0x0004
+end_define
+
+begin_comment
+comment|/* ok for root to own this file */
+end_comment
+
+begin_comment
 comment|/* **  Regular UNIX sockaddrs are too small to handle ISO addresses, so **  we are forced to declare a supertype here. */
 end_comment
 
@@ -3587,11 +3679,16 @@ name|sockaddr
 name|sa
 decl_stmt|;
 comment|/* general version */
+ifdef|#
+directive|ifdef
+name|NETUNIX
 name|struct
 name|sockaddr_un
 name|sunix
 decl_stmt|;
 comment|/* UNIX family */
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|NETINET
@@ -4257,7 +4354,7 @@ comment|/* if we are the best MX, try host directly */
 end_comment
 
 begin_decl_stmt
-name|EXTERN
+specifier|extern
 name|bool
 name|CheckLoopBack
 decl_stmt|;
@@ -4495,7 +4592,7 @@ comment|/* don't prune source routes */
 end_comment
 
 begin_decl_stmt
-name|EXTERN
+specifier|extern
 name|bool
 name|BrokenSmtpPeers
 decl_stmt|;
@@ -4574,6 +4671,13 @@ end_decl_stmt
 begin_comment
 comment|/* file in which to log all traffic */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* **  Timeouts ** **	Indicated values are the MINIMUM per RFC 1123 section 5.3.2. */
@@ -5004,8 +5108,32 @@ operator|,
 name|char
 index|[]
 operator|,
+name|int
+operator|,
 name|char
 operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|rewrite
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|ENVELOPE
 operator|*
 operator|)
 argument_list|)
@@ -5324,6 +5452,37 @@ operator|(
 name|int
 operator|,
 name|sigfunc_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|shortenstring
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|usershellok
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

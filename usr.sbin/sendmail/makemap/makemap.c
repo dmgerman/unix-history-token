@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)makemap.c	8.5 (Berkeley) 9/22/93"
+literal|"@(#)makemap.c	8.6 (Berkeley) 11/22/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -809,16 +809,43 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
 name|p
 operator|!=
-literal|'\0'
+name|NULL
 condition|)
 operator|*
 name|p
 operator|=
 literal|'\0'
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|feof
+argument_list|(
+name|stdin
+argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: %s: line %d: line too long (%d bytes max)\n"
+argument_list|,
+name|progname
+argument_list|,
+name|mapname
+argument_list|,
+name|lineno
+argument_list|,
+sizeof|sizeof
+name|ibuf
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 if|if
 condition|(
 name|ibuf

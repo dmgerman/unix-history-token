@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.27 (Berkeley) 10/29/93 (with queueing)"
+literal|"@(#)queue.c	8.36 (Berkeley) 1/9/94 (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.27 (Berkeley) 10/29/93 (without queueing)"
+literal|"@(#)queue.c	8.36 (Berkeley) 1/9/94 (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -340,9 +340,12 @@ name|syslog
 argument_list|(
 name|LOG_ALERT
 argument_list|,
-literal|"queueup: cannot create %s: %s"
+literal|"queueup: cannot create %s, uid=%d: %s"
 argument_list|,
 name|tf
+argument_list|,
+name|geteuid
+argument_list|()
 argument_list|,
 name|errstring
 argument_list|(
@@ -352,8 +355,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-continue|continue;
 block|}
+else|else
+block|{
 if|if
 condition|(
 name|lockfile
@@ -409,6 +413,7 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
@@ -465,13 +470,23 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|syserr
+block|{
+name|printopenfds
 argument_list|(
-literal|"!queueup: cannot create queue temp file %s"
-argument_list|,
-name|tf
+name|TRUE
 argument_list|)
 expr_stmt|;
+name|syserr
+argument_list|(
+literal|"!queueup: cannot create queue temp file %s, uid=%d"
+argument_list|,
+name|tf
+argument_list|,
+name|geteuid
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -634,11 +649,14 @@ name|NULL
 condition|)
 name|syserr
 argument_list|(
-literal|"!queueup: cannot create data temp file %s"
+literal|"!queueup: cannot create data temp file %s, uid=%d"
 argument_list|,
 name|e
 operator|->
 name|e_df
+argument_list|,
+name|geteuid
+argument_list|()
 argument_list|)
 expr_stmt|;
 call|(
@@ -1223,7 +1241,8 @@ name|nullmailer
 operator|.
 name|m_sh_rwset
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
 end_expr_stmt
 
@@ -1315,6 +1334,51 @@ name|e_flags
 argument_list|)
 condition|)
 continue|continue;
+comment|/* expand macros; if null, don't output header at all */
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|H_DEFAULT
+argument_list|,
+name|h
+operator|->
+name|h_flags
+argument_list|)
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|expand
+argument_list|(
+name|h
+operator|->
+name|h_value
+argument_list|,
+name|buf
+argument_list|,
+operator|&
+name|buf
+index|[
+sizeof|sizeof
+name|buf
+index|]
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|buf
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+condition|)
+continue|continue;
+block|}
 comment|/* output this header */
 name|fprintf
 argument_list|(
@@ -1417,27 +1481,6 @@ name|h_flags
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|expand
-argument_list|(
-name|h
-operator|->
-name|h_value
-argument_list|,
-name|buf
-argument_list|,
-operator|&
-name|buf
-index|[
-sizeof|sizeof
-name|buf
-index|]
-argument_list|,
-name|e
-argument_list|)
-expr_stmt|;
 name|fprintf
 argument_list|(
 name|tfp
@@ -1628,7 +1671,7 @@ literal|0
 condition|)
 name|syserr
 argument_list|(
-literal|"cannot rename(%s, %s), df=%s"
+literal|"cannot rename(%s, %s), df=%s, uid=%d"
 argument_list|,
 name|tf
 argument_list|,
@@ -1637,6 +1680,9 @@ argument_list|,
 name|e
 operator|->
 name|e_df
+argument_list|,
+name|geteuid
+argument_list|()
 argument_list|)
 expr_stmt|;
 comment|/* close and unlock old (locked) qf */
@@ -2066,6 +2112,26 @@ block|{
 name|int
 name|pid
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SIGCHLD
+specifier|extern
+name|void
+name|reapchild
+parameter_list|()
+function_decl|;
+operator|(
+name|void
+operator|)
+name|setsignal
+argument_list|(
+name|SIGCHLD
+argument_list|,
+name|reapchild
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|pid
 operator|=
 name|dofork
@@ -2078,11 +2144,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-specifier|extern
-name|void
-name|reapchild
-parameter_list|()
-function_decl|;
 comment|/* parent -- pick up intermediate zombie */
 ifndef|#
 directive|ifndef
@@ -2093,19 +2154,6 @@ operator|)
 name|waitfor
 argument_list|(
 name|pid
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-comment|/* SIGCHLD */
-operator|(
-name|void
-operator|)
-name|setsignal
-argument_list|(
-name|SIGCHLD
-argument_list|,
-name|reapchild
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3510,6 +3558,23 @@ return|return
 literal|0
 return|;
 block|}
+elseif|else
+if|if
+condition|(
+name|pid
+operator|>
+literal|0
+condition|)
+block|{
+comment|/* parent -- clean out connection cache */
+name|mci_flush
+argument_list|(
+name|FALSE
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -3625,9 +3690,6 @@ operator|!
 name|readqf
 argument_list|(
 name|e
-argument_list|,
-operator|!
-name|requeueflag
 argument_list|)
 condition|)
 block|{
@@ -3726,7 +3788,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  READQF -- read queue file and set up environment. ** **	Parameters: **		e -- the envelope of the job to run. **		announcefile -- if set, announce the name of the queue **			file in error messages. ** **	Returns: **		TRUE if it successfully read the queue file. **		FALSE otherwise. ** **	Side Effects: **		The queue file is returned locked. */
+comment|/* **  READQF -- read queue file and set up environment. ** **	Parameters: **		e -- the envelope of the job to run. ** **	Returns: **		TRUE if it successfully read the queue file. **		FALSE otherwise. ** **	Side Effects: **		The queue file is returned locked. */
 end_comment
 
 begin_function
@@ -3734,16 +3796,11 @@ name|bool
 name|readqf
 parameter_list|(
 name|e
-parameter_list|,
-name|announcefile
 parameter_list|)
 specifier|register
 name|ENVELOPE
 modifier|*
 name|e
-decl_stmt|;
-name|bool
-name|announcefile
 decl_stmt|;
 block|{
 specifier|register
@@ -4125,13 +4182,16 @@ argument_list|(
 name|e
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|announcefile
-condition|)
-name|FileName
-operator|=
-name|qf
+name|define
+argument_list|(
+literal|'i'
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+name|e
+argument_list|)
 expr_stmt|;
 name|LineNumber
 operator|=
@@ -4559,11 +4619,9 @@ break|break;
 default|default:
 name|syserr
 argument_list|(
-literal|"readqf: bad line \"%s\""
+literal|"readqf: %s: line %s: bad line \"%s\""
 argument_list|,
-name|e
-operator|->
-name|e_id
+name|qf
 argument_list|,
 name|LineNumber
 argument_list|,
@@ -4603,10 +4661,6 @@ name|bp
 argument_list|)
 expr_stmt|;
 block|}
-name|FileName
-operator|=
-name|NULL
-expr_stmt|;
 comment|/* 	**  If we haven't read any lines, this queue file is empty. 	**  Arrange to remove it without referencing any null pointers. 	*/
 if|if
 condition|(

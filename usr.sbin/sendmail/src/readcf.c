@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.14 (Berkeley) 10/31/93"
+literal|"@(#)readcf.c	8.18 (Berkeley) 1/9/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -177,7 +177,9 @@ decl_stmt|;
 name|char
 name|pvpbuf
 index|[
-name|PSBUFSIZE
+name|MAXLINE
+operator|+
+name|MAXATOM
 index|]
 decl_stmt|;
 specifier|extern
@@ -724,6 +726,9 @@ literal|'\t'
 argument_list|,
 name|pvpbuf
 argument_list|,
+sizeof|sizeof
+name|pvpbuf
+argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -983,6 +988,9 @@ name|exbuf
 argument_list|,
 literal|'\t'
 argument_list|,
+name|pvpbuf
+argument_list|,
+sizeof|sizeof
 name|pvpbuf
 argument_list|,
 name|NULL
@@ -2041,6 +2049,9 @@ argument_list|,
 literal|"host host"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NAMED_BIND
 if|if
 condition|(
 name|ConfigLevel
@@ -2054,6 +2065,8 @@ argument_list|,
 literal|" -a."
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|makemapentry
 argument_list|(
 name|buf
@@ -3733,6 +3746,11 @@ literal|"dnsrch"
 block|,
 name|RES_DNSRCH
 block|,
+literal|"true"
+block|,
+literal|0
+block|,
+comment|/* to avoid error on old syntax */
 name|NULL
 block|,
 literal|0
@@ -4600,6 +4618,22 @@ literal|0
 condition|)
 break|break;
 block|}
+if|if
+condition|(
+name|rfp
+operator|->
+name|rf_name
+operator|==
+name|NULL
+condition|)
+name|syserr
+argument_list|(
+literal|"readcf: I option value %s unrecognized"
+argument_list|,
+name|q
+argument_list|)
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|clearmode

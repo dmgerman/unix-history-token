@@ -33,7 +33,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.21 (Berkeley) 10/31/93 (with daemon mode)"
+literal|"@(#)daemon.c	8.30 (Berkeley) 1/8/94 (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,7 +48,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.21 (Berkeley) 10/31/93 (without daemon mode)"
+literal|"@(#)daemon.c	8.30 (Berkeley) 1/8/94 (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -193,12 +193,6 @@ block|{
 name|int
 name|t
 decl_stmt|;
-specifier|register
-name|struct
-name|servent
-modifier|*
-name|sp
-decl_stmt|;
 name|int
 name|on
 init|=
@@ -212,6 +206,9 @@ decl_stmt|;
 name|FILE
 modifier|*
 name|pidf
+decl_stmt|;
+name|int
+name|socksize
 decl_stmt|;
 specifier|extern
 name|void
@@ -270,6 +267,12 @@ operator|==
 literal|0
 condition|)
 block|{
+specifier|register
+name|struct
+name|servent
+modifier|*
+name|sp
+decl_stmt|;
 name|sp
 operator|=
 name|getservbyname
@@ -291,10 +294,19 @@ argument_list|(
 literal|"554 service \"smtp\" unknown"
 argument_list|)
 expr_stmt|;
-goto|goto
-name|severe
-goto|;
+name|DaemonAddr
+operator|.
+name|sin
+operator|.
+name|sin_port
+operator|=
+name|htons
+argument_list|(
+literal|25
+argument_list|)
+expr_stmt|;
 block|}
+else|else
 name|DaemonAddr
 operator|.
 name|sin
@@ -515,7 +527,7 @@ name|NETINET
 case|case
 name|AF_INET
 case|:
-name|t
+name|socksize
 operator|=
 sizeof|sizeof
 name|DaemonAddr
@@ -531,7 +543,7 @@ name|NETISO
 case|case
 name|AF_ISO
 case|:
-name|t
+name|socksize
 operator|=
 sizeof|sizeof
 name|DaemonAddr
@@ -542,7 +554,7 @@ break|break;
 endif|#
 directive|endif
 default|default:
-name|t
+name|socksize
 operator|=
 sizeof|sizeof
 name|DaemonAddr
@@ -560,7 +572,7 @@ name|DaemonAddr
 operator|.
 name|sa
 argument_list|,
-name|t
+name|socksize
 argument_list|)
 operator|<
 literal|0
@@ -780,8 +792,7 @@ literal|0
 expr_stmt|;
 name|lotherend
 operator|=
-sizeof|sizeof
-name|RealHostAddr
+name|socksize
 expr_stmt|;
 name|t
 operator|=
@@ -908,10 +919,6 @@ name|SIGCHLD
 argument_list|,
 name|SIG_DFL
 argument_list|)
-expr_stmt|;
-name|OpMode
-operator|=
-name|MD_SMTP
 expr_stmt|;
 comment|/* determine host name */
 name|p
@@ -2086,9 +2093,12 @@ name|sin
 operator|.
 name|sin_addr
 argument_list|,
-name|hp
-operator|->
-name|h_length
+sizeof|sizeof
+name|addr
+operator|.
+name|sin
+operator|.
+name|sin_addr
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2160,12 +2170,15 @@ argument_list|(
 literal|"554 makeconnection: service \"smtp\" unknown"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|EX_OSERR
-operator|)
-return|;
+name|port
+operator|=
+name|htons
+argument_list|(
+literal|25
+argument_list|)
+expr_stmt|;
 block|}
+else|else
 name|port
 operator|=
 name|sp
@@ -2590,9 +2603,12 @@ name|sin
 operator|.
 name|sin_addr
 argument_list|,
-name|hp
-operator|->
-name|h_length
+sizeof|sizeof
+name|addr
+operator|.
+name|sin
+operator|.
+name|sin_addr
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2932,11 +2948,11 @@ begin_comment
 comment|/* **  GETAUTHINFO -- get the real host name asociated with a file descriptor ** **	Uses RFC1413 protocol to try to get info from the other end. ** **	Parameters: **		fd -- the descriptor ** **	Returns: **		The user@host information associated with this descriptor. ** **	Side Effects: **		Sets RealHostName to the name of the host at the other end. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|IDENTPROTO
-end_ifdef
+end_if
 
 begin_decl_stmt
 specifier|static
@@ -2983,8 +2999,8 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|IDENTPROTO
 name|SOCKADDR
 name|la
@@ -3058,6 +3074,14 @@ operator|||
 name|falen
 operator|<=
 literal|0
+operator|||
+name|fa
+operator|.
+name|sa
+operator|.
+name|sa_family
+operator|==
+literal|0
 condition|)
 block|{
 name|RealHostName
@@ -3115,8 +3139,8 @@ name|RealHostAddr
 operator|=
 name|fa
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|IDENTPROTO
 name|lalen
 operator|=
@@ -3775,12 +3799,6 @@ modifier|*
 name|s
 decl_stmt|;
 name|char
-modifier|*
-name|timeoutmsg
-init|=
-literal|"Recipient domain nameserver timed out"
-decl_stmt|;
-name|char
 name|hbuf
 index|[
 name|MAXNAME
@@ -3883,15 +3901,31 @@ name|statp
 operator|==
 name|EX_TEMPFAIL
 condition|)
+block|{
+name|sprintf
+argument_list|(
+name|hbuf
+argument_list|,
+literal|"%s: Name server timeout"
+argument_list|,
+name|shortenstring
+argument_list|(
+name|name
+argument_list|,
+literal|33
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|CurEnv
 operator|->
 name|e_message
 operator|=
 name|newstr
 argument_list|(
-name|timeoutmsg
+name|hbuf
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|s
 operator|->
@@ -4064,9 +4098,25 @@ condition|(
 name|UseNameServer
 condition|)
 block|{
+name|sprintf
+argument_list|(
+name|hbuf
+argument_list|,
+literal|"%s: Name server timeout"
+argument_list|,
+name|shortenstring
+argument_list|(
+name|name
+argument_list|,
+literal|33
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|message
 argument_list|(
-name|timeoutmsg
+literal|"%s"
+argument_list|,
+name|hbuf
 argument_list|)
 expr_stmt|;
 if|if
@@ -4083,7 +4133,7 @@ name|e_message
 operator|=
 name|newstr
 argument_list|(
-name|timeoutmsg
+name|hbuf
 argument_list|)
 expr_stmt|;
 block|}
@@ -4449,6 +4499,9 @@ ifdef|#
 directive|ifdef
 name|MAYBENEXTRELEASE
 comment|/*** UNTESTED *** UNTESTED *** UNTESTED ***/
+ifdef|#
+directive|ifdef
+name|NETUNIX
 case|case
 name|AF_UNIX
 case|:
@@ -4489,6 +4542,8 @@ expr_stmt|;
 return|return
 name|buf
 return|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 ifdef|#

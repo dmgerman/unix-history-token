@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	8.14 (Berkeley) 10/29/93"
+literal|"@(#)err.c	8.19 (Berkeley) 1/8/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -370,14 +370,6 @@ endif|#
 directive|endif
 block|{
 name|VA_LOCAL_DECL
-specifier|extern
-name|char
-name|SuprErrs
-decl_stmt|;
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
 if|if
 condition|(
 name|SuprErrs
@@ -763,6 +755,10 @@ condition|(
 name|OpMode
 operator|==
 name|MD_SMTP
+operator|||
+name|OpMode
+operator|==
+name|MD_DAEMON
 condition|)
 name|fprintf
 argument_list|(
@@ -802,9 +798,15 @@ argument_list|,
 name|getpid
 argument_list|()
 argument_list|,
+operator|(
 name|OpMode
 operator|==
 name|MD_SMTP
+operator|||
+name|OpMode
+operator|==
+name|MD_DAEMON
+operator|)
 condition|?
 name|msg
 else|:
@@ -1332,6 +1334,10 @@ name|int
 name|errno
 decl_stmt|;
 block|{
+name|char
+modifier|*
+name|dnsmsg
+decl_stmt|;
 specifier|static
 name|char
 name|buf
@@ -1365,18 +1371,27 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* SMTP */
-ifdef|#
-directive|ifdef
-name|DAEMON
-ifdef|#
-directive|ifdef
-name|ETIMEDOUT
 comment|/* 	**  Handle special network error codes. 	** 	**	These are 4.2/4.3bsd specific; they should be in daemon.c. 	*/
+name|dnsmsg
+operator|=
+name|NULL
+expr_stmt|;
 switch|switch
 condition|(
 name|errno
 condition|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DAEMON
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|ETIMEDOUT
+argument_list|)
 case|case
 name|ETIMEDOUT
 case|:
@@ -1511,6 +1526,8 @@ operator|(
 name|buf
 operator|)
 return|;
+endif|#
+directive|endif
 case|case
 name|EOPENTIMEOUT
 case|:
@@ -1525,48 +1542,110 @@ name|HOST_NOT_FOUND
 operator|+
 name|E_DNSBASE
 case|:
-return|return
-operator|(
-literal|"Name server: host not found"
-operator|)
-return|;
+name|dnsmsg
+operator|=
+literal|"host not found"
+expr_stmt|;
+break|break;
 case|case
 name|TRY_AGAIN
 operator|+
 name|E_DNSBASE
 case|:
-return|return
-operator|(
-literal|"Name server: host name lookup failure"
-operator|)
-return|;
+name|dnsmsg
+operator|=
+literal|"host name lookup failure"
+expr_stmt|;
+break|break;
 case|case
 name|NO_RECOVERY
 operator|+
 name|E_DNSBASE
 case|:
-return|return
-operator|(
-literal|"Name server: non-recoverable error"
-operator|)
-return|;
+name|dnsmsg
+operator|=
+literal|"non-recoverable error"
+expr_stmt|;
+break|break;
 case|case
 name|NO_DATA
 operator|+
 name|E_DNSBASE
 case|:
+name|dnsmsg
+operator|=
+literal|"no data known"
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+case|case
+name|EPERM
+case|:
+comment|/* SunOS gives "Not owner" -- this is the POSIX message */
 return|return
-operator|(
-literal|"Name server: no data known for name"
-operator|)
+literal|"Operation not permitted"
 return|;
-endif|#
-directive|endif
 block|}
-endif|#
-directive|endif
-endif|#
-directive|endif
+if|if
+condition|(
+name|dnsmsg
+operator|!=
+name|NULL
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|strcpy
+argument_list|(
+name|buf
+argument_list|,
+literal|"Name server: "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|CurHostName
+operator|!=
+name|NULL
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|strcat
+argument_list|(
+name|buf
+argument_list|,
+name|CurHostName
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strcat
+argument_list|(
+name|buf
+argument_list|,
+literal|": "
+argument_list|)
+expr_stmt|;
+block|}
+operator|(
+name|void
+operator|)
+name|strcat
+argument_list|(
+name|buf
+argument_list|,
+name|dnsmsg
+argument_list|)
+expr_stmt|;
+return|return
+name|buf
+return|;
+block|}
 if|if
 condition|(
 name|errno

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mci.c	8.6 (Berkeley) 10/23/93"
+literal|"@(#)mci.c	8.9 (Berkeley) 12/1/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -812,6 +812,27 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|m
+operator|->
+name|m_mno
+operator|<
+literal|0
+condition|)
+name|syserr
+argument_list|(
+literal|"negative mno %d (%s)"
+argument_list|,
+name|m
+operator|->
+name|m_mno
+argument_list|,
+name|m
+operator|->
+name|m_name
+argument_list|)
+expr_stmt|;
 name|s
 operator|=
 name|stab
@@ -1148,7 +1169,7 @@ name|logit
 condition|)
 name|syslog
 argument_list|(
-name|LOG_INFO
+name|LOG_DEBUG
 argument_list|,
 literal|"%s"
 argument_list|,
@@ -1192,6 +1213,13 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+name|MciCache
+operator|==
+name|NULL
+condition|)
+return|return;
 for|for
 control|(
 name|i

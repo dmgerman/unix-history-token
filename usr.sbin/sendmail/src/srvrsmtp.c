@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.18 (Berkeley) 10/28/93 (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.23 (Berkeley) 12/21/93 (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.18 (Berkeley) 10/28/93 (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.23 (Berkeley) 12/21/93 (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -388,6 +388,17 @@ begin_comment
 comment|/* one xaction only this run */
 end_comment
 
+begin_decl_stmt
+name|char
+modifier|*
+name|CurSmtpClient
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* who's at the other end of channel */
+end_comment
+
 begin_function_decl
 specifier|static
 name|char
@@ -538,11 +549,30 @@ name|CurHostName
 operator|=
 name|RealHostName
 expr_stmt|;
+name|CurSmtpClient
+operator|=
+name|macvalue
+argument_list|(
+literal|'_'
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|CurSmtpClient
+operator|==
+name|NULL
+condition|)
+name|CurSmtpClient
+operator|=
+name|RealHostName
+expr_stmt|;
 name|setproctitle
 argument_list|(
 literal|"server %s startup"
 argument_list|,
-name|CurHostName
+name|CurSmtpClient
 argument_list|)
 expr_stmt|;
 name|expand
@@ -728,7 +758,7 @@ literal|"421 %s Lost input channel from %s"
 argument_list|,
 name|MyHostName
 argument_list|,
-name|CurHostName
+name|CurSmtpClient
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -752,7 +782,7 @@ name|LOG_NOTICE
 argument_list|,
 literal|"lost input channel from %s"
 argument_list|,
-name|CurHostName
+name|CurSmtpClient
 argument_list|)
 expr_stmt|;
 endif|#
@@ -807,9 +837,9 @@ name|NULL
 condition|)
 name|setproctitle
 argument_list|(
-literal|"%s: %s"
+literal|"%s: %.80s"
 argument_list|,
-name|CurHostName
+name|CurSmtpClient
 argument_list|,
 name|inp
 argument_list|)
@@ -817,13 +847,13 @@ expr_stmt|;
 else|else
 name|setproctitle
 argument_list|(
-literal|"%s %s: %s"
+literal|"%s %s: %.80s"
 argument_list|,
 name|e
 operator|->
 name|e_id
 argument_list|,
-name|CurHostName
+name|CurSmtpClient
 argument_list|,
 name|inp
 argument_list|)
@@ -1051,25 +1081,6 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
-name|p
-operator|=
-name|macvalue
-argument_list|(
-literal|'_'
-argument_list|,
-name|e
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|p
-operator|==
-name|NULL
-condition|)
-name|p
-operator|=
-name|RealHostName
-expr_stmt|;
 name|gothello
 operator|=
 name|TRUE
@@ -1090,7 +1101,7 @@ literal|"250 %s Hello %s, pleased to meet you"
 argument_list|,
 name|MyHostName
 argument_list|,
-name|p
+name|CurSmtpClient
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1294,15 +1305,21 @@ name|nrcpts
 operator|=
 literal|0
 expr_stmt|;
+name|e
+operator|->
+name|e_flags
+operator||=
+name|EF_LOGSENDER
+expr_stmt|;
 name|setproctitle
 argument_list|(
-literal|"%s %s: %s"
+literal|"%s %s: %.80s"
 argument_list|,
 name|e
 operator|->
 name|e_id
 argument_list|,
-name|CurHostName
+name|CurSmtpClient
 argument_list|,
 name|inp
 argument_list|)
@@ -2373,9 +2390,31 @@ expr_stmt|;
 else|else
 name|message
 argument_list|(
-literal|"502 That's none of your business"
+literal|"502 Sorry, we do not allow this operation"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|5
+condition|)
+name|syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"%s: %s [rejected]"
+argument_list|,
+name|CurSmtpClient
+argument_list|,
+name|inp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 break|break;
 block|}
 elseif|else
@@ -2434,7 +2473,7 @@ name|LOG_INFO
 argument_list|,
 literal|"%s: %s"
 argument_list|,
-name|CurHostName
+name|CurSmtpClient
 argument_list|,
 name|inp
 argument_list|)
@@ -3512,6 +3551,26 @@ argument_list|(
 literal|"%s: lost child"
 argument_list|,
 name|label
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|WIFEXITED
+argument_list|(
+name|st
+argument_list|)
+condition|)
+name|syserr
+argument_list|(
+literal|"%s: died on signal %d"
+argument_list|,
+name|label
+argument_list|,
+name|st
+operator|&
+literal|0177
 argument_list|)
 expr_stmt|;
 comment|/* if we exited on a QUIT command, complete the process */

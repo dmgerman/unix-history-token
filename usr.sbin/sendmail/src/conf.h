@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)conf.h	8.44 (Berkeley) 10/29/93  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)conf.h	8.75 (Berkeley) 1/8/94  */
 end_comment
 
 begin_comment
@@ -196,17 +196,6 @@ begin_comment
 comment|/* max # of alias databases */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PSBUFSIZE
-value|(MAXLINE + MAXATOM)
-end_define
-
-begin_comment
-comment|/* size of prescan buffer */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -253,6 +242,17 @@ end_define
 
 begin_comment
 comment|/* output ugly UUCP From lines */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NETUNIX
+value|1
+end_define
+
+begin_comment
+comment|/* include unix domain support */
 end_comment
 
 begin_define
@@ -333,19 +333,45 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  Due to a "feature" in some operating systems such as Ultrix 4.3 and **  HPUX 8.0, if you receive a "No route to host" message (ICMP message **  ICMP_UNREACH_HOST) on _any_ connection, all connections to that host **  are closed.  Some firewalls return this error if you try to connect **  to the IDENT port (113), so you can't receive email from these hosts **  on these systems.  The firewall really should use a more specific **  message such as ICMP_UNREACH_PROTOCOL or _PORT or _NET_PROHIB.  This **  will get #undefed below as needed. */
+comment|/* **  Most systems have symbolic links today, so default them on.  You **  can turn them off by #undef'ing this below. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IDENTPROTO
+name|HASLSTAT
 value|1
 end_define
 
 begin_comment
-comment|/* use IDENT proto (RFC 1413) */
+comment|/* has lstat(2) call */
 end_comment
+
+begin_comment
+comment|/* **  General "standard C" defines. ** **	These may be undone later, to cope with systems that claim to **	be Standard C but aren't.  Gcc is the biggest offender -- it **	doesn't realize that the library is part of the language. ** **	Life would be much easier if we could get rid of this sort **	of bozo problems. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|HASSETVBUF
+value|1
+end_define
+
+begin_comment
+comment|/* we have setvbuf(3) in libc */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/********************************************************************** **  Operating system configuration. ** **	Unless you are porting to a new OS, you shouldn't have to **	change these. **********************************************************************/
@@ -356,7 +382,7 @@ comment|/* **  Per-Operating System defines */
 end_comment
 
 begin_comment
-comment|/* **  HP-UX -- tested for 8.07 */
+comment|/* **  HP-UX -- tested for 8.07, 9.00, and 9.01. */
 end_comment
 
 begin_ifdef
@@ -441,19 +467,111 @@ end_define
 begin_define
 define|#
 directive|define
+name|GIDSET_T
+value|gid_t
+end_define
+
+begin_define
+define|#
+directive|define
 name|_PATH_UNIX
 value|"/hp-ux"
 end_define
 
-begin_undef
-undef|#
-directive|undef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_SENDMAILCF
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_SENDMAILCF
+value|"/usr/lib/sendmail.cf"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|IDENTPROTO
-end_undef
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IDENTPROTO
+value|0
+end_define
 
 begin_comment
 comment|/* TCP/IP implementation is broken */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HASGETUSERSHELL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|HASGETUSERSHELL
+value|0
+end_define
+
+begin_comment
+comment|/* getusershell(3) causes core dumps */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|syslog
+value|hard_syslog
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
+begin_function_decl
+specifier|extern
+name|int
+name|syslog
+parameter_list|(
+name|int
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -479,6 +597,39 @@ end_define
 
 begin_comment
 comment|/* has initgroups(3) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSTATFS
+value|1
+end_define
+
+begin_comment
+comment|/* has the statfs(2) syscall */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASUNAME
+value|1
+end_define
+
+begin_comment
+comment|/* use System V uname(2) system call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASGETUSERSHELL
+value|0
+end_define
+
+begin_comment
+comment|/* does not have getusershell(3) call */
 end_comment
 
 begin_define
@@ -559,6 +710,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|HASGETUSERSHELL
+value|0
+end_define
+
+begin_comment
+comment|/* does not have getusershell(3) call */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|FORK
 value|fork
 end_define
@@ -598,7 +760,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  SunOS */
+comment|/* **  SunOS and Solaris ** **	Tested on SunOS 4.1.x (a.k.a. Solaris 1.1.x) and **	Solaris 2.2 (a.k.a. SunOS 5.2). */
 end_comment
 
 begin_if
@@ -626,17 +788,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|HASSETREUID
-value|1
-end_define
-
-begin_comment
-comment|/* has setreuid(2) call */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|HASINITGROUPS
 value|1
 end_define
@@ -644,6 +795,45 @@ end_define
 begin_comment
 comment|/* has initgroups(3) call */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|HASUNAME
+value|1
+end_define
+
+begin_comment
+comment|/* use System V uname(2) system call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASGETUSERSHELL
+value|1
+end_define
+
+begin_comment
+comment|/* DOES have getusershell(3) call in libc */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SOLARIS_2_3
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SOLARIS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -655,34 +845,26 @@ begin_comment
 comment|/* Solaris 2.x (a.k.a. SunOS 5.x) */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__svr4__
+end_ifndef
+
 begin_define
 define|#
 directive|define
-name|SYSTEM5
-value|1
+name|__svr4__
 end_define
 
 begin_comment
-comment|/* use System V definitions */
+comment|/* use all System V Releae 4 defines below */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|setreuid
-parameter_list|(
-name|r
-parameter_list|,
-name|e
-parameter_list|)
-value|seteuid(e)
-end_define
-
-begin_include
-include|#
-directive|include
-file|<sys/sysmacros.h>
-end_include
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -694,7 +876,7 @@ begin_define
 define|#
 directive|define
 name|gethostbyname
-value|__switch_gethostbyname
+value|solaris_gethostbyname
 end_define
 
 begin_comment
@@ -705,7 +887,7 @@ begin_define
 define|#
 directive|define
 name|gethostbyaddr
-value|__switch_gethostbyaddr
+value|solaris_gethostbyaddr
 end_define
 
 begin_comment
@@ -715,9 +897,27 @@ end_comment
 begin_define
 define|#
 directive|define
+name|GIDSET_T
+value|gid_t
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_UNIX
+end_ifndef
+
+begin_define
+define|#
+directive|define
 name|_PATH_UNIX
 value|"/kernel/unix"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -761,7 +961,18 @@ directive|else
 end_else
 
 begin_comment
-comment|/* SunOS 4.1.x */
+comment|/* SunOS 4.0.3 or 4.1.x */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSETREUID
+value|1
+end_define
+
+begin_comment
+comment|/* has setreuid(2) call */
 end_comment
 
 begin_define
@@ -775,8 +986,15 @@ begin_comment
 comment|/* has the statfs(2) syscall */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HASFLOCK
+value|1
+end_define
+
 begin_comment
-comment|/* #  define HASFLOCK	1	/* has flock(2) call */
+comment|/* has flock(2) call */
 end_comment
 
 begin_include
@@ -785,6 +1003,90 @@ directive|include
 file|<vfork.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SUNOS403
+end_ifdef
+
+begin_comment
+comment|/* special tweaking for SunOS 4.0.3 */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<malloc.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|SYS5SIGNALS
+value|1
+end_define
+
+begin_comment
+comment|/* SysV signal semantics -- reset on each sig */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WAITUNION
+value|1
+end_define
+
+begin_comment
+comment|/* use "union wait" as wait argument type */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|WIFEXITED
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|WEXITSTATUS
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|HASUNAME
+end_undef
+
+begin_define
+define|#
+directive|define
+name|setpgid
+value|setpgrp
+end_define
+
+begin_typedef
+typedef|typedef
+name|int
+name|pid_t
+typedef|;
+end_typedef
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|getenv
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
@@ -796,7 +1098,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ** DG/UX 5.4.2 */
+comment|/* **  DG/UX ** **	Tested on 5.4.2 */
 end_comment
 
 begin_ifdef
@@ -874,32 +1176,49 @@ begin_comment
 comment|/* has initgroups(3) call */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IDENTPROTO
+end_ifndef
+
 begin_define
 define|#
 directive|define
-name|HASSETVBUF
-value|1
-end_define
-
-begin_comment
-comment|/* we have setvbuf(3) in libc */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
 name|IDENTPROTO
-end_undef
+value|0
+end_define
 
 begin_comment
 comment|/* TCP/IP implementation is broken */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_undef
 undef|#
 directive|undef
 name|SETPROCTITLE
 end_undef
+
+begin_comment
+comment|/* these include files must be included early on DG/UX */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
+end_include
 
 begin_define
 define|#
@@ -989,6 +1308,35 @@ end_comment
 begin_define
 define|#
 directive|define
+name|HASGETUSERSHELL
+value|0
+end_define
+
+begin_comment
+comment|/* does not have getusershell(3) call */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|vax
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|LA_TYPE
+value|LA_FLOAT
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
 name|LA_TYPE
 value|LA_INT
 end_define
@@ -1000,15 +1348,32 @@ name|LA_AVENRUN
 value|"avenrun"
 end_define
 
-begin_undef
-undef|#
-directive|undef
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|IDENTPROTO
-end_undef
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IDENTPROTO
+value|0
+end_define
 
 begin_comment
 comment|/* TCP/IP implementation is broken */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1069,8 +1434,15 @@ begin_comment
 comment|/* has initgroups(3) call */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HASFLOCK
+value|1
+end_define
+
 begin_comment
-comment|/* # define HASFLOCK	1	/* has flock(2) call */
+comment|/* has flock(2) call */
 end_comment
 
 begin_define
@@ -1079,6 +1451,24 @@ directive|define
 name|LA_TYPE
 value|LA_INT
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_SENDMAILPID
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_SENDMAILPID
+value|"/var/run/sendmail.pid"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1254,7 +1644,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  4.4 BSD */
+comment|/* **  4.4 BSD ** **	See also BSD defines. */
 end_comment
 
 begin_ifdef
@@ -1325,14 +1715,27 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  386BSD / FreeBSD 1.0E (works) / NetBSD (not tested) ** **  4.3BSD clone, closer to 4.4BSD */
+comment|/* **  386BSD / FreeBSD 1.0E / NetBSD (all architectures, all versions) ** **  4.3BSD clone, closer to 4.4BSD ** **	See also BSD defines. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__386BSD__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -1394,6 +1797,185 @@ define|#
 directive|define
 name|LA_TYPE
 value|LA_SUBR
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* **  Mach386 ** **	For mt Xinu's Mach386 system. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|MACH
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|i386
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|MACH386
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HASUNSETENV
+value|1
+end_define
+
+begin_comment
+comment|/* has unsetenv(3) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASINITGROUPS
+value|1
+end_define
+
+begin_comment
+comment|/* has initgroups(3) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASFLOCK
+value|1
+end_define
+
+begin_comment
+comment|/* has flock(2) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSTATFS
+value|1
+end_define
+
+begin_comment
+comment|/* has the statfs(2) syscall */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NEEDGETOPT
+value|1
+end_define
+
+begin_comment
+comment|/* need a replacement for getopt(3) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NEEDSTRTOL
+value|1
+end_define
+
+begin_comment
+comment|/* need the strtol() function */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|setpgid
+value|setpgrp
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LA_TYPE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LA_TYPE
+value|LA_FLOAT
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_undef
+undef|#
+directive|undef
+name|HASSETVBUF
+end_undef
+
+begin_comment
+comment|/* don't actually have setvbuf(3) */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|WEXITSTATUS
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|WIFEXITED
+end_undef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_SENDMAILCF
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_SENDMAILCF
+value|"/usr/lib/sendmail.cf"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_SENDMAILPID
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_SENDMAILPID
+value|"/etc/sendmail.pid"
 end_define
 
 begin_endif
@@ -1488,11 +2070,18 @@ endif|#
 directive|endif
 end_endif
 
-begin_undef
-undef|#
-directive|undef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|IDENTPROTO
-end_undef
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IDENTPROTO
+value|0
+end_define
 
 begin_comment
 comment|/* TCP/IP implementation is broken */
@@ -1503,9 +2092,111 @@ endif|#
 directive|endif
 end_endif
 
+begin_undef
+undef|#
+directive|undef
+name|WEXITSTATUS
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|WIFEXITED
+end_undef
+
+begin_typedef
+typedef|typedef
+name|short
+name|pid_t
+typedef|;
+end_typedef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/* **  SCO Unix */
+comment|/* **  SCO Unix ** **	This includes two parts -- the first is for SCO Open Server 3.2v4 **	(contributed by Philippe Brand<phb@colombo.telesys-innov.fr>). **	The second is, I believe, for an older version. */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_SCO_unix_4_2
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_SCO_unix_
+end_define
+
+begin_define
+define|#
+directive|define
+name|HASSETREUID
+value|1
+end_define
+
+begin_comment
+comment|/* has setreuid(2) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_PATH_UNIX
+value|"/unix"
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_SENDMAILCF
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_SENDMAILCF
+value|"/usr/lib/sendmail.cf"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_SENDMAILPID
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_SENDMAILPID
+value|"/etc/sendmail.pid"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -1549,6 +2240,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|HASGETUSERSHELL
+value|0
+end_define
+
+begin_comment
+comment|/* does not have getusershell(3) call */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|FORK
 value|fork
 end_define
@@ -1566,6 +2268,16 @@ directive|define
 name|LA_TYPE
 value|LA_SHORT
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|NETUNIX
+end_undef
+
+begin_comment
+comment|/* no unix domain socket support */
+end_comment
 
 begin_endif
 endif|#
@@ -1644,11 +2356,27 @@ name|LA_TYPE
 value|LA_FLOAT
 end_define
 
-begin_undef
-undef|#
-directive|undef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|IDENTPROTO
-end_undef
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IDENTPROTO
+value|0
+end_define
+
+begin_comment
+comment|/* TCP/IP implementation is broken */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1656,7 +2384,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  RISC/os 4.51 ** **	Untested... */
+comment|/* **  RISC/os 4.52 ** **	Gives a ton of warning messages, but otherwise compiles. */
 end_comment
 
 begin_ifdef
@@ -1676,8 +2404,37 @@ begin_comment
 comment|/* has unsetenv(3) call */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HASFLOCK
+value|1
+end_define
+
 begin_comment
-comment|/* # define HASFLOCK	1	/* has flock(2) call */
+comment|/* has flock(2) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WAITUNION
+value|1
+end_define
+
+begin_comment
+comment|/* use "union wait" as wait argument type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NEEDGETOPT
+value|1
+end_define
+
+begin_comment
+comment|/* need a replacement for getopt(3) */
 end_comment
 
 begin_define
@@ -1700,6 +2457,68 @@ directive|define
 name|_PATH_UNIX
 value|"/unix"
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|WIFEXITED
+end_undef
+
+begin_define
+define|#
+directive|define
+name|setpgid
+value|setpgrp
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
+end_decl_stmt
+
+begin_typedef
+typedef|typedef
+name|int
+name|pid_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|SIGFUNC_DEFINED
+end_define
+
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+modifier|*
+name|sigfunc_t
+function_decl|)
+parameter_list|()
+function_decl|;
+end_typedef
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|getenv
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+modifier|*
+name|malloc
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -1784,13 +2603,20 @@ directive|include
 file|<sys/sysmacros.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|GIDSET_T
+value|gid_t
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* **  DELL SVR4 Issue 2.2, and others **	From Kimmo Suominen<kim@grendel.lut.fi> ** **	It's on #ifdef DELL_SVR4 because Solaris also gets __svr4__ **	defined, and the definitions conflict. */
+comment|/* **  DELL SVR4 Issue 2.2, and others **	From Kimmo Suominen<kim@grendel.lut.fi> ** **	It's on #ifdef DELL_SVR4 because Solaris also gets __svr4__ **	defined, and the definitions conflict. ** **	Peter Wemm<peter@perth.DIALix.oz.au> claims that the setreuid **	trick works on DELL 2.2 (SVR4.0/386 version 4.0) and ESIX 4.0.3A **	(SVR4.0/386 version 3.0). */
 end_comment
 
 begin_ifdef
@@ -1799,63 +2625,13 @@ directive|ifdef
 name|DELL_SVR4
 end_ifdef
 
-begin_define
-define|#
-directive|define
-name|SYSTEM5
-value|1
-end_define
-
 begin_comment
-comment|/* # define setreuid(r, e)	seteuid(e) */
+comment|/* no changes necessary */
 end_comment
 
 begin_comment
-comment|/* # include<sys/time.h> */
+comment|/* see general __svr4__ defines below */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|_PATH_UNIX
-value|"/unix"
-end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_PATH_SENDMAILCF
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_PATH_SENDMAILCF
-value|"/usr/ucblib/sendmail.cf"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_PATH_SENDMAILPID
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_PATH_SENDMAILPID
-value|"/usr/ucblib/sendmail.pid"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -1942,15 +2718,27 @@ begin_comment
 comment|/* sigfunc_t already defined */
 end_comment
 
-begin_undef
-undef|#
-directive|undef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|IDENTPROTO
-end_undef
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IDENTPROTO
+value|0
+end_define
 
 begin_comment
 comment|/* TCP/IP implementation is broken */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -2075,6 +2863,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|HASGETUSERSHELL
+value|0
+end_define
+
+begin_comment
+comment|/* does not have getusershell(3) call */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SYS5SIGNALS
 value|1
 end_define
@@ -2166,6 +2965,222 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* **  Stardent Titan 3000 running TitanOS 4.2. ** **	Must be compiled in "cc -43" mode. ** **	From Kate Hedstrom<kate@ahab.rutgers.edu>. ** **	Note the tweaking below after the BSD defines are set. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|titan
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|setpgid
+value|setpgrp
+end_define
+
+begin_typedef
+typedef|typedef
+name|int
+name|pid_t
+typedef|;
+end_typedef
+
+begin_undef
+undef|#
+directive|undef
+name|WIFEXITED
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|WEXITSTATUS
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* **  Sequent DYNIX 3.2.0 ** **	From Jim Davis<jdavis@cs.arizona.edu>. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|sequent
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|BSD
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HASUNSETENV
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|BSD4_3
+value|1
+end_define
+
+begin_comment
+comment|/* to get signal() in conf.c */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WAITUNION
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|LA_TYPE
+value|LA_FLOAT
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_POSIX_VERSION
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|_POSIX_VERSION
+end_undef
+
+begin_comment
+comment|/* set in<unistd.h> */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_undef
+undef|#
+directive|undef
+name|HASSETVBUF
+end_undef
+
+begin_comment
+comment|/* don't actually have setvbuf(3) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|setpgid
+value|setpgrp
+end_define
+
+begin_comment
+comment|/* Have to redefine WIFEXITED to take an int, to work with waitfor() */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|WIFEXITED
+end_undef
+
+begin_define
+define|#
+directive|define
+name|WIFEXITED
+parameter_list|(
+name|s
+parameter_list|)
+value|(((union wait*)&(s))->w_stopval != WSTOPPED&& \ 			 ((union wait*)&(s))->w_termsig == 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WEXITSTATUS
+parameter_list|(
+name|s
+parameter_list|)
+value|(((union wait*)&(s))->w_retcode)
+end_define
+
+begin_typedef
+typedef|typedef
+name|int
+name|pid_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|isgraph
+parameter_list|(
+name|c
+parameter_list|)
+value|(isprint(c)&& (c != ' '))
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_UNIX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_UNIX
+value|"/dynix"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_SENDMAILCF
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_SENDMAILCF
+value|"/usr/lib/sendmail.cf"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/********************************************************************** **  End of Per-Operating System defines **********************************************************************/
 end_comment
 
@@ -2233,6 +3248,145 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* general System V Release 4 defines */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__svr4__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SYSTEM5
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HASSETREUID
+value|1
+end_define
+
+begin_comment
+comment|/* has seteuid(2) call& working saved uids */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HASGETUSERSHELL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|HASGETUSERSHELL
+value|0
+end_define
+
+begin_comment
+comment|/* does not have getusershell(3) call */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|setreuid
+parameter_list|(
+name|r
+parameter_list|,
+name|e
+parameter_list|)
+value|seteuid(e)
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_UNIX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_UNIX
+value|"/unix"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_SENDMAILCF
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_SENDMAILCF
+value|"/usr/ucblib/sendmail.cf"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_SENDMAILPID
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_SENDMAILPID
+value|"/usr/ucblib/sendmail.pid"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SYSLOG_BUFSIZE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SYSLOG_BUFSIZE
+value|128
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* general System V defines */
 end_comment
 
@@ -2241,6 +3395,12 @@ ifdef|#
 directive|ifdef
 name|SYSTEM5
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/sysmacros.h>
+end_include
 
 begin_define
 define|#
@@ -2273,6 +3433,17 @@ end_define
 
 begin_comment
 comment|/* use System V setpgrp(2) syscall */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSETVBUF
+value|1
+end_define
+
+begin_comment
+comment|/* we have setvbuf(3) in libc */
 end_comment
 
 begin_ifndef
@@ -2339,40 +3510,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* general "standard C" defines */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__STDC__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|SYSTEM5
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|HASSETVBUF
-value|1
-end_define
-
-begin_comment
-comment|/* we have setvbuf(3) in libc */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* general POSIX defines */
 end_comment
 
@@ -2432,6 +3569,79 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* **  Tweaking for systems that (for example) claim to be BSD but **  don't have all the standard BSD routines (boo hiss). */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|titan
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|HASINITGROUPS
+end_undef
+
+begin_comment
+comment|/* doesn't have initgroups(3) call */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* **  Due to a "feature" in some operating systems such as Ultrix 4.3 and **  HPUX 8.0, if you receive a "No route to host" message (ICMP message **  ICMP_UNREACH_HOST) on _any_ connection, all connections to that host **  are closed.  Some firewalls return this error if you try to connect **  to the IDENT port (113), so you can't receive email from these hosts **  on these systems.  The firewall really should use a more specific **  message such as ICMP_UNREACH_PROTOCOL or _PORT or _NET_PROHIB.  If **  not explicitly set to zero above, default it on. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IDENTPROTO
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IDENTPROTO
+value|1
+end_define
+
+begin_comment
+comment|/* use IDENT proto (RFC 1413) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HASGETUSERSHELL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|HASGETUSERSHELL
+value|1
+end_define
+
+begin_comment
+comment|/* libc has getusershell(3) call */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/********************************************************************** **  Remaining definitions should never have to be changed.  They are **  primarily to provide back compatibility for older systems -- for **  example, it includes some POSIX compatibility definitions **********************************************************************/
 end_comment
 
@@ -2452,7 +3662,37 @@ name|S_ISREG
 parameter_list|(
 name|foo
 parameter_list|)
-value|((foo& S_IFREG) == S_IFREG)
+value|((foo& S_IFMT) == S_IFREG)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|S_ISLNK
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|S_IFLNK
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|S_ISLNK
+parameter_list|(
+name|foo
+parameter_list|)
+value|((foo& S_IFMT) == S_IFLNK)
 end_define
 
 begin_endif
@@ -3077,6 +4317,28 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* size of syslog buffer */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SYSLOG_BUFSIZE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SYSLOG_BUFSIZE
+value|1024
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* **  Size of tobuf (deliver.c) **	Tweak this to match your syslog implementation.  It will have to **	allow for the extra information printed. */
 end_comment
 
@@ -3086,17 +4348,59 @@ directive|ifndef
 name|TOBUFSIZE
 end_ifndef
 
+begin_if
+if|#
+directive|if
+operator|(
+name|SYSLOG_BUFSIZE
+operator|)
+operator|>
+literal|512
+end_if
+
 begin_define
 define|#
 directive|define
 name|TOBUFSIZE
-value|(1024 - 256)
+value|(SYSLOG_BUFSIZE - 256)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|TOBUFSIZE
+value|256
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* **  Size of prescan buffer. **	Despite comments in the _sendmail_ book, this probably should **	not be changed; there are some hard-to-define dependencies. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSBUFSIZE
+value|(MAXNAME + MAXATOM)
+end_define
+
+begin_comment
+comment|/* size of prescan buffer */
+end_comment
 
 begin_comment
 comment|/* fork routine -- set above using #ifdef _osname_ or in Makefile */

@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	8.3 (Berkeley) 8/25/93 (with USERDB)"
+literal|"@(#)udb.c	8.4 (Berkeley) 11/25/93 (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	8.3 (Berkeley) 8/25/93 (without USERDB)"
+literal|"@(#)udb.c	8.4 (Berkeley) 11/25/93 (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2340,9 +2340,12 @@ name|udb_addr
 operator|.
 name|sin_addr
 argument_list|,
-name|h
+sizeof|sizeof
+name|up
 operator|->
-name|h_length
+name|udb_addr
+operator|.
+name|sin_addr
 argument_list|)
 expr_stmt|;
 name|up

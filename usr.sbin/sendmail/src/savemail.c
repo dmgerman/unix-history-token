@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.17 (Berkeley) 10/31/93"
+literal|"@(#)savemail.c	8.24 (Berkeley) 12/18/93"
 decl_stmt|;
 end_decl_stmt
 
@@ -136,6 +136,24 @@ begin_comment
 comment|/* the message is successfully delivered */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_VARTMP
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_VARTMP
+value|"/usr/tmp/"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_expr_stmt
 name|savemail
 argument_list|(
@@ -203,6 +221,11 @@ function_decl|(
 modifier|*
 name|fnptr
 function_decl|)
+parameter_list|()
+function_decl|;
+specifier|extern
+name|bool
+name|writable
 parameter_list|()
 function_decl|;
 if|if
@@ -1130,11 +1153,44 @@ name|ESM_DONE
 expr_stmt|;
 break|break;
 block|}
+name|strcpy
+argument_list|(
+name|buf
+argument_list|,
+name|_PATH_VARTMP
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
+name|buf
+argument_list|,
+literal|"dead.letter"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|writable
+argument_list|(
+name|buf
+argument_list|,
+name|NULLADDR
+argument_list|,
+name|SFF_NOSLINK
+argument_list|)
+condition|)
+block|{
+name|state
+operator|=
+name|ESM_PANIC
+expr_stmt|;
+break|break;
+block|}
 name|fp
 operator|=
 name|dfopen
 argument_list|(
-literal|"/usr/tmp/dead.letter"
+name|buf
 argument_list|,
 name|O_WRONLY
 operator||
@@ -1262,12 +1318,7 @@ case|:
 comment|/* leave the locked queue& transcript files around */
 name|syserr
 argument_list|(
-literal|"554 savemail: cannot save rejected email anywhere"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|EX_SOFTWARE
+literal|"!554 savemail: cannot save rejected email anywhere"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1523,6 +1574,18 @@ operator|->
 name|e_from
 operator|.
 name|q_paddr
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|define
+argument_list|(
+literal|'u'
+argument_list|,
+name|NULL
 argument_list|,
 name|e
 argument_list|)
@@ -2304,6 +2367,8 @@ operator|!
 name|bitset
 argument_list|(
 name|EF_FATALERRS
+operator||
+name|EF_SENDRECEIPT
 argument_list|,
 name|e
 operator|->

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.17 (Berkeley) 10/31/93"
+literal|"@(#)envelope.c	8.28 (Berkeley) 1/9/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -344,7 +344,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|", flags=%o\n"
+literal|", flags=0x%x\n"
 argument_list|,
 name|e
 operator|->
@@ -392,13 +392,35 @@ if|if
 condition|(
 name|LogLevel
 operator|>
+literal|4
+operator|&&
+name|bitset
+argument_list|(
+name|EF_LOGSENDER
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+condition|)
+name|logsender
+argument_list|(
+name|e
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|LogLevel
+operator|>
 literal|84
 condition|)
 name|syslog
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"dropenvelope, id=%s, flags=%o, pid=%d"
+literal|"dropenvelope, id=%s, flags=0x%x, pid=%d"
 argument_list|,
 name|id
 argument_list|,
@@ -413,6 +435,13 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* LOG */
+name|e
+operator|->
+name|e_flags
+operator|&=
+operator|~
+name|EF_LOGSENDER
+expr_stmt|;
 comment|/* post statistics */
 name|poststats
 argument_list|(
@@ -918,6 +947,13 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
+name|e
+operator|->
+name|e_flags
+operator|&=
+operator|~
+name|EF_SENDRECEIPT
+expr_stmt|;
 block|}
 comment|/* 	**  Arrange to send error messages if there are fatal errors. 	*/
 if|if
@@ -1198,16 +1234,6 @@ name|e_df
 operator|=
 name|NULL
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|XDEBUG
-name|checkfd012
-argument_list|(
-literal|"dropenvelope"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_block
 
@@ -2225,6 +2251,10 @@ operator|||
 name|OpMode
 operator|==
 name|MD_SMTP
+operator|||
+name|OpMode
+operator|==
+name|MD_DAEMON
 condition|)
 name|realname
 operator|=
@@ -2424,7 +2454,12 @@ name|LOG_NOTICE
 argument_list|,
 literal|"setsender: %s: invalid or unparseable, received from %s"
 argument_list|,
+name|shortenstring
+argument_list|(
 name|from
+argument_list|,
+literal|83
+argument_list|)
 argument_list|,
 name|p
 argument_list|)
@@ -2728,6 +2763,9 @@ literal|'\0'
 argument_list|,
 name|pvpbuf
 argument_list|,
+sizeof|sizeof
+name|pvpbuf
+argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -2802,6 +2840,14 @@ operator|=
 name|pw
 operator|->
 name|pw_gid
+expr_stmt|;
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_flags
+operator||=
+name|QGOODUID
 expr_stmt|;
 comment|/* extract full name from passwd file */
 if|if
@@ -2892,6 +2938,10 @@ if|if
 condition|(
 operator|!
 name|internal
+operator|&&
+name|OpMode
+operator|!=
+name|MD_DAEMON
 condition|)
 block|{
 if|if
@@ -2931,6 +2981,14 @@ name|q_gid
 operator|=
 name|RealGid
 expr_stmt|;
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_flags
+operator||=
+name|QGOODUID
+expr_stmt|;
 block|}
 comment|/* 	**  Rewrite the from person to dispose of possible implicit 	**	links in the net. 	*/
 if|if
@@ -2945,8 +3003,11 @@ name|prescan
 argument_list|(
 name|from
 argument_list|,
-literal|'\0'
+name|delimchar
 argument_list|,
+name|pvpbuf
+argument_list|,
+sizeof|sizeof
 name|pvpbuf
 argument_list|,
 name|NULL
@@ -2993,6 +3054,8 @@ name|pvp
 argument_list|,
 literal|3
 argument_list|,
+literal|0
+argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
@@ -3005,6 +3068,8 @@ name|pvp
 argument_list|,
 literal|1
 argument_list|,
+literal|0
+argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
@@ -3016,6 +3081,8 @@ argument_list|(
 name|pvp
 argument_list|,
 literal|4
+argument_list|,
+literal|0
 argument_list|,
 name|e
 argument_list|)
@@ -3088,9 +3155,6 @@ expr_stmt|;
 comment|/* save the domain spec if this mailer wants it */
 if|if
 condition|(
-operator|!
-name|internal
-operator|&&
 name|e
 operator|->
 name|e_from

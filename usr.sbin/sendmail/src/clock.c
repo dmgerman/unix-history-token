@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)clock.c	8.7 (Berkeley) 10/21/93"
+literal|"@(#)clock.c	8.8 (Berkeley) 1/12/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,13 +59,18 @@ begin_comment
 comment|/* **  SETEVENT -- set an event to happen at a specific time. ** **	Events are stored in a sorted list for fast processing. **	An event only applies to the process that set it. ** **	Parameters: **		intvl -- intvl until next event occurs. **		func -- function to call on event. **		arg -- argument to func on event. ** **	Returns: **		none. ** **	Side Effects: **		none. */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
 name|tick
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|EVENT
@@ -272,7 +277,9 @@ name|ev
 argument_list|)
 expr_stmt|;
 name|tick
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -403,7 +410,9 @@ expr_stmt|;
 block|}
 comment|/* restore clocks and pick up anything spare */
 name|tick
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 end_block
@@ -412,14 +421,19 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  TICK -- take a clock tick ** **	Called by the alarm clock.  This routine runs events as needed. ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		calls the next function in EventQueue. */
+comment|/* **  TICK -- take a clock tick ** **	Called by the alarm clock.  This routine runs events as needed. ** **	Parameters: **		One that is ignored; for compatibility with signal handlers. ** **	Returns: **		none. ** **	Side Effects: **		calls the next function in EventQueue. */
 end_comment
 
 begin_function
 specifier|static
 name|void
 name|tick
-parameter_list|()
+parameter_list|(
+name|arg
+parameter_list|)
+name|int
+name|arg
+decl_stmt|;
 block|{
 specifier|register
 name|time_t
