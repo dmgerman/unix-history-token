@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conv.c 1.2.1.1 %G%"
+literal|"@(#)conv.c 1.2.1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -991,12 +991,10 @@ endif|OBJ
 ifdef|#
 directive|ifdef
 name|PC
-comment|/* 		 * what i want to do is make this and some other stuff 		 * arguments to a function call, which will do the rangecheck, 		 * and return the value of the current expression, or abort 		 * if the rangecheck fails. 		 * probably i need one rangecheck routine to return each c-type 		 * of value. 		 * also, i haven't figured out what the `other stuff' is. 		 */
-name|putprintf
+comment|/* 		 *	pc uses precheck() and postcheck(). 		 */
+name|panic
 argument_list|(
-literal|"#	call rangecheck"
-argument_list|,
-literal|0
+literal|"rangechk()"
 argument_list|)
 expr_stmt|;
 endif|#
