@@ -87,6 +87,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* See comments below for why auto-scanning is a bad idea. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCAN_IICBUS
+value|0
+end_define
+
+begin_comment
 comment|/*  * Device methods  */
 end_comment
 
@@ -248,21 +259,106 @@ end_function
 begin_if
 if|#
 directive|if
-literal|0
+name|SCAN_IICBUS
 end_if
 
-begin_comment
-unit|static int  iic_probe_device(device_t dev, u_char addr) { 	int count; 	char byte;  	if ((addr& 1) == 0) {
+begin_function
+specifier|static
+name|int
+name|iic_probe_device
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|u_char
+name|addr
+parameter_list|)
+block|{
+name|int
+name|count
+decl_stmt|;
+name|char
+name|byte
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|addr
+operator|&
+literal|1
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 comment|/* is device writable? */
-end_comment
-
-begin_comment
-unit|if (!iicbus_start(dev, (u_char)addr, 0)) { 			iicbus_stop(dev); 			return (1); 		} 	} else {
+if|if
+condition|(
+operator|!
+name|iicbus_start
+argument_list|(
+name|dev
+argument_list|,
+operator|(
+name|u_char
+operator|)
+name|addr
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+block|{
+name|iicbus_stop
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+block|}
+else|else
+block|{
 comment|/* is device readable? */
-end_comment
+if|if
+condition|(
+operator|!
+name|iicbus_block_read
+argument_list|(
+name|dev
+argument_list|,
+operator|(
+name|u_char
+operator|)
+name|addr
+argument_list|,
+operator|&
+name|byte
+argument_list|,
+literal|1
+argument_list|,
+operator|&
+name|count
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
 
 begin_endif
-unit|if (!iicbus_block_read(dev, (u_char)addr,&byte, 1,&count)) 			return (1); 	}  	return (0); }
 endif|#
 directive|endif
 end_endif
@@ -280,6 +376,15 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+if|#
+directive|if
+name|SCAN_IICBUS
+name|unsigned
+name|char
+name|addr
+decl_stmt|;
+endif|#
+directive|endif
 name|iicbus_reset
 argument_list|(
 name|dev
@@ -294,10 +399,59 @@ expr_stmt|;
 comment|/* device probing is meaningless since the bus is supposed to be 	 * hot-plug. Moreover, some I2C chips do not appreciate random 	 * accesses like stop after start to fast, reads for less than 	 * x bytes... 	 */
 if|#
 directive|if
-literal|0
-block|printf("Probing for devices on iicbus%d:", device_get_unit(dev));
+name|SCAN_IICBUS
+name|printf
+argument_list|(
+literal|"Probing for devices on iicbus%d:"
+argument_list|,
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* probe any devices */
-block|for (addr = FIRST_SLAVE_ADDR; addr<= LAST_SLAVE_ADDR; addr++) { 		if (iic_probe_device(dev, (u_char)addr)) { 			printf("<%x>", addr); 		} 	} 	printf("\n");
+for|for
+control|(
+name|addr
+operator|=
+literal|16
+init|;
+name|addr
+operator|<
+literal|240
+condition|;
+name|addr
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|iic_probe_device
+argument_list|(
+name|dev
+argument_list|,
+operator|(
+name|u_char
+operator|)
+name|addr
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"<%x>"
+argument_list|,
+name|addr
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* attach any known device */
