@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* static	char *sccsid = "@(#)0.h	1.1 (Berkeley) %G%";*/
+comment|/* static	char *sccsid = "@(#)0.h	1.2 (Berkeley) %G%";*/
 end_comment
 
 begin_comment
@@ -687,6 +687,18 @@ include|#
 directive|include
 file|<stdio.h>
 end_include
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|FALSE
+block|,
+name|TRUE
+block|}
+name|bool
+typedef|;
+end_typedef
 
 begin_undef
 undef|#
