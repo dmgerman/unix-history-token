@@ -3282,6 +3282,7 @@ name|pid
 operator|>
 literal|0
 condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -3297,6 +3298,16 @@ argument_list|,
 name|SIGKILL
 argument_list|)
 expr_stmt|;
+name|slaves
+index|[
+name|i
+index|]
+operator|.
+name|sent
+operator|=
+literal|0
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -3701,7 +3712,7 @@ expr_stmt|;
 comment|/* 		 * fixme: Pyramids running OSx return ENOSPC 		 * at EOT on 1/2 inch drives. 		 */
 if|if
 condition|(
-name|size
+name|wrote
 operator|<
 literal|0
 condition|)
