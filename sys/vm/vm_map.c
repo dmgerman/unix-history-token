@@ -4260,7 +4260,7 @@ parameter_list|,
 name|endaddr
 parameter_list|)
 define|\
-value|{ \ 	if (endaddr< entry->end) \ 		_vm_map_clip_end(map, entry, endaddr); \ }
+value|{ \ 	if ((endaddr)< (entry->end)) \ 		_vm_map_clip_end((map), (entry), (endaddr)); \ }
 end_define
 
 begin_comment
