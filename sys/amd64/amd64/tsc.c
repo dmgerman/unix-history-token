@@ -264,6 +264,17 @@ argument_list|,
 name|tsc_freq
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
+end_function
+
+begin_function
+name|void
+name|init_TSC_tc
+parameter_list|(
+name|void
+parameter_list|)
+block|{
 if|if
 condition|(
 name|tsc_freq

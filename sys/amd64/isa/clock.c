@@ -3263,6 +3263,9 @@ argument_list|,
 name|rtc_statusb
 argument_list|)
 expr_stmt|;
+name|init_TSC_tc
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
