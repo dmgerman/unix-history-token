@@ -176,9 +176,9 @@ name|mtx
 name|all_mtx
 init|=
 block|{
-literal|0
-block|,
 name|MTX_UNOWNED
+block|,
+literal|0
 block|,
 literal|0
 block|,
@@ -240,9 +240,9 @@ name|mtx
 name|all_mtx
 init|=
 block|{
-literal|0
-block|,
 name|MTX_UNOWNED
+block|,
+literal|0
 block|,
 literal|0
 block|,
