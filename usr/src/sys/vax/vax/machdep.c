@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3835,28 +3835,6 @@ name|int
 name|devtype
 decl_stmt|;
 comment|/* r10 == major of root dev */
-ifdef|#
-directive|ifdef
-name|lint
-name|howto
-operator|=
-literal|0
-expr_stmt|;
-name|devtype
-operator|=
-literal|0
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"howto %d, devtype %d\n"
-argument_list|,
-name|arghowto
-argument_list|,
-name|devtype
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|howto
 operator|=
 name|arghowto
@@ -3883,6 +3861,17 @@ operator|.
 name|b_forw
 condition|)
 block|{
+specifier|register
+name|struct
+name|buf
+modifier|*
+name|bp
+decl_stmt|;
+name|int
+name|iter
+decl_stmt|,
+name|nbusy
+decl_stmt|;
 name|waittime
 operator|=
 literal|0
@@ -3907,18 +3896,6 @@ expr_stmt|;
 name|update
 argument_list|()
 expr_stmt|;
-block|{
-specifier|register
-name|struct
-name|buf
-modifier|*
-name|bp
-decl_stmt|;
-name|int
-name|iter
-decl_stmt|,
-name|nbusy
-decl_stmt|;
 for|for
 control|(
 name|iter
@@ -3994,7 +3971,16 @@ name|iter
 argument_list|)
 expr_stmt|;
 block|}
-block|}
+if|if
+condition|(
+name|nbusy
+condition|)
+name|printf
+argument_list|(
+literal|"giving up\n"
+argument_list|)
+expr_stmt|;
+else|else
 name|printf
 argument_list|(
 literal|"done\n"
@@ -4107,6 +4093,20 @@ init|;
 condition|;
 control|)
 asm|asm("halt");
+ifdef|#
+directive|ifdef
+name|lint
+name|printf
+argument_list|(
+literal|"howto %d, devtype %d\n"
+argument_list|,
+name|arghowto
+argument_list|,
+name|devtype
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/*NOTREACHED*/
 block|}
 end_block
