@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sed0.c	4.4	87/09/16	*/
+comment|/*	sed0.c	4.5	87/12/21	*/
 end_comment
 
 begin_include
@@ -499,7 +499,7 @@ modifier|*
 name|address
 parameter_list|()
 function_decl|;
-name|union
+name|struct
 name|reptr
 modifier|*
 name|pt
@@ -4253,7 +4253,7 @@ name|label
 modifier|*
 name|lptr
 decl_stmt|;
-name|union
+name|struct
 name|reptr
 modifier|*
 name|rptr

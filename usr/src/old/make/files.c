@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)files.c	4.16 (Berkeley) 87/11/15"
+literal|"@(#)files.c	4.17 (Berkeley) 87/12/21"
 decl_stmt|;
 end_decl_stmt
 
@@ -2481,6 +2481,12 @@ name|struct
 name|stat
 name|buf
 decl_stmt|;
+name|struct
+name|varblock
+modifier|*
+name|varptr
+parameter_list|()
+function_decl|;
 for|for
 control|(
 name|p

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sed.h	4.2	87/09/16	*/
+comment|/*	sed.h	4.3	87/12/21	*/
 end_comment
 
 begin_comment
@@ -176,7 +176,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|union
+name|struct
 name|reptr
 modifier|*
 name|abuf
@@ -187,7 +187,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|union
+name|struct
 name|reptr
 modifier|*
 modifier|*
@@ -290,7 +290,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|union
+name|struct
 name|reptr
 modifier|*
 name|ptrend
@@ -658,67 +658,40 @@ name|lbend
 decl_stmt|;
 end_decl_stmt
 
-begin_union
+begin_struct
+struct|struct
+name|reptr
+block|{
+name|char
+modifier|*
+name|ad1
+decl_stmt|;
+name|char
+modifier|*
+name|ad2
+decl_stmt|;
 union|union
+block|{
+name|char
+modifier|*
+name|real_re1
+decl_stmt|;
+name|struct
 name|reptr
-block|{
-struct|struct
-name|reptr1
-block|{
-name|char
 modifier|*
-name|ad1
+name|real_lb1
 decl_stmt|;
-name|char
-modifier|*
-name|ad2
-decl_stmt|;
-name|char
-modifier|*
+block|}
+name|re_lb
+union|;
+define|#
+directive|define
 name|re1
-decl_stmt|;
-name|char
-modifier|*
-name|rhs
-decl_stmt|;
-name|FILE
-modifier|*
-name|fcode
-decl_stmt|;
-name|char
-name|command
-decl_stmt|;
-name|char
-name|gfl
-decl_stmt|;
-name|char
-name|pfl
-decl_stmt|;
-name|char
-name|inar
-decl_stmt|;
-name|char
-name|negfl
-decl_stmt|;
-block|}
-name|A
-struct|;
-struct|struct
-name|reptr2
-block|{
-name|char
-modifier|*
-name|ad1
-decl_stmt|;
-name|char
-modifier|*
-name|ad2
-decl_stmt|;
-name|union
-name|reptr
-modifier|*
+value|re_lb.real_re1
+define|#
+directive|define
 name|lb1
-decl_stmt|;
+value|re_lb.real_lb1
 name|char
 modifier|*
 name|rhs
@@ -742,19 +715,16 @@ decl_stmt|;
 name|char
 name|negfl
 decl_stmt|;
-block|}
-name|B
-struct|;
 block|}
 name|ptrspace
 index|[
 name|PTRSIZE
 index|]
-union|,
+struct|,
 modifier|*
 name|rep
-union|;
-end_union
+struct|;
+end_struct
 
 begin_decl_stmt
 name|char
@@ -775,12 +745,12 @@ index|[
 literal|9
 index|]
 decl_stmt|;
-name|union
+name|struct
 name|reptr
 modifier|*
 name|chain
 decl_stmt|;
-name|union
+name|struct
 name|reptr
 modifier|*
 name|address
@@ -844,7 +814,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|union
+name|struct
 name|reptr
 modifier|*
 modifier|*
@@ -862,7 +832,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|union
+name|struct
 name|reptr
 modifier|*
 name|pending

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sed1.c	4.2	85/04/05	*/
+comment|/*	sed1.c	4.3	87/12/21	*/
 end_comment
 
 begin_include
@@ -127,7 +127,7 @@ modifier|*
 name|p2
 decl_stmt|;
 specifier|register
-name|union
+name|struct
 name|reptr
 modifier|*
 name|ipc
@@ -1410,7 +1410,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|union
+name|struct
 name|reptr
 modifier|*
 name|ipc
@@ -1814,7 +1814,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|union
+name|struct
 name|reptr
 modifier|*
 name|ipc

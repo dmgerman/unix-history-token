@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setup.c	4.10 (Berkeley) 85/05/09"
+literal|"@(#)setup.c	4.11 (Berkeley) 87/12/21"
 decl_stmt|;
 end_decl_stmt
 
@@ -473,6 +473,8 @@ if|if
 condition|(
 name|sp
 operator|->
+name|n_un
+operator|.
 name|n_strx
 condition|)
 comment|/* SHOULD PERFORM RANGE CHECK HERE */
