@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.34 1997/02/22 16:09:28 peter Exp $"
+literal|"$Id: perform.c,v 1.35 1997/06/06 12:19:11 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -433,6 +433,14 @@ condition|(
 name|PlistOnly
 condition|)
 block|{
+name|check_list
+argument_list|(
+name|home
+argument_list|,
+operator|&
+name|plist
+argument_list|)
+expr_stmt|;
 name|write_plist
 argument_list|(
 operator|&
