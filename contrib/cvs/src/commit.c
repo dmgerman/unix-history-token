@@ -1733,7 +1733,10 @@ literal|1
 argument_list|,
 literal|0
 argument_list|,
-literal|"you are unknown to this system"
+literal|"your apparent username (%s) is unknown to this system"
+argument_list|,
+name|getcaller
+argument_list|()
 argument_list|)
 expr_stmt|;
 if|if
@@ -1753,7 +1756,7 @@ literal|1
 argument_list|,
 literal|0
 argument_list|,
-literal|"cannot commit files as 'root'"
+literal|"'root' is not allowed to commit files"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2226,19 +2229,6 @@ argument_list|,
 name|find_args
 operator|.
 name|ulist
-argument_list|)
-expr_stmt|;
-comment|/* Run the user-defined script to verify/check information in 	 *the log message 	 */
-name|do_verify
-argument_list|(
-operator|&
-name|saved_message
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* We always send some sort of message, even if empty.  */
@@ -6852,7 +6842,7 @@ name|repos
 init|=
 name|Name_Repository
 argument_list|(
-name|dir
+name|NULL
 argument_list|,
 name|update_dir
 argument_list|)
@@ -7908,7 +7898,7 @@ name|rcs
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 operator|)
 operator|!=

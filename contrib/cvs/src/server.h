@@ -93,13 +93,6 @@ name|server_active
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|server_expanding
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Server functions exported to the rest of CVS.  */
 end_comment

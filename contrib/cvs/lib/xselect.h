@@ -7,11 +7,9 @@ begin_comment
 comment|/* This file simply performs the include magic necessary for using select */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
+begin_comment
+comment|/* select also requires<sys/types.h>, "xtime.h", and<unistd.h> */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -29,12 +27,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|"xtime.h"
-end_include
 
 begin_if
 if|#

@@ -293,10 +293,6 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* FIXME: should be documenting all the options here.  They don't    perfectly match rcsdiff options (for example, we always support    --ifdef and --context, but rcsdiff only does if diff does).  */
-end_comment
-
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -307,7 +303,7 @@ name|diff_usage
 index|[]
 init|=
 block|{
-literal|"Usage: %s %s [-lNR] [rcsdiff-options]\n"
+literal|"Usage: %s %s [-lR] [-k kopt] [format_options]\n"
 block|,
 literal|"    [[-r rev1 | -D date1] [-r rev2 | -D date2]] [files...] \n"
 block|,
@@ -315,23 +311,123 @@ literal|"\t-l\tLocal directory only, not recursive\n"
 block|,
 literal|"\t-R\tProcess directories recursively.\n"
 block|,
+literal|"\t-k kopt\tSpecify keyword expansion mode.\n"
+block|,
 literal|"\t-D d1\tDiff revision for date against working file.\n"
 block|,
 literal|"\t-D d2\tDiff rev1/date1 against date2.\n"
-block|,
-literal|"\t-N\tinclude diffs for added and removed files.\n"
 block|,
 literal|"\t-r rev1\tDiff revision for rev1 against working file.\n"
 block|,
 literal|"\t-r rev2\tDiff rev1/date1 against rev2.\n"
 block|,
-literal|"\t--ifdef=arg\tOutput diffs in ifdef format.\n"
+literal|"\nformat_options:\n"
 block|,
-literal|"(consult the documentation for your diff program for rcsdiff-options.\n"
+literal|"  -i  --ignore-case  Consider upper- and lower-case to be the same.\n"
 block|,
-literal|"The most popular is -c for context diffs but there are many more).\n"
+literal|"  -w  --ignore-all-space  Ignore all white space.\n"
 block|,
-literal|"(Specify the --help global option for a list of other help options)\n"
+literal|"  -b  --ignore-space-change  Ignore changes in the amount of white space.\n"
+block|,
+literal|"  -B  --ignore-blank-lines  Ignore changes whose lines are all blank.\n"
+block|,
+literal|"  -I RE  --ignore-matching-lines=RE  Ignore changes whose lines all match RE.\n"
+block|,
+literal|"  --binary  Read and write data in binary mode.\n"
+block|,
+literal|"  -a  --text  Treat all files as text.\n\n"
+block|,
+literal|"  -c  -C NUM  --context[=NUM]  Output NUM (default 2) lines of copied context.\n"
+block|,
+literal|"  -u  -U NUM  --unified[=NUM]  Output NUM (default 2) lines of unified context.\n"
+block|,
+literal|"    -NUM  Use NUM context lines.\n"
+block|,
+literal|"    -L LABEL  --label LABEL  Use LABEL instead of file name.\n"
+block|,
+literal|"    -p  --show-c-function  Show which C function each change is in.\n"
+block|,
+literal|"    -F RE  --show-function-line=RE  Show the most recent line matching RE.\n"
+block|,
+literal|"  --brief  Output only whether files differ.\n"
+block|,
+literal|"  -e  --ed  Output an ed script.\n"
+block|,
+literal|"  -f  --forward-ed  Output something like an ed script in forward order.\n"
+block|,
+literal|"  -n  --rcs  Output an RCS format diff.\n"
+block|,
+literal|"  -y  --side-by-side  Output in two columns.\n"
+block|,
+literal|"    -W NUM  --width=NUM  Output at most NUM (default 130) characters per line.\n"
+block|,
+literal|"    --left-column  Output only the left column of common lines.\n"
+block|,
+literal|"    --suppress-common-lines  Do not output common lines.\n"
+block|,
+literal|"  --ifdef=NAME  Output merged file to show `#ifdef NAME' diffs.\n"
+block|,
+literal|"  --GTYPE-group-format=GFMT  Similar, but format GTYPE input groups with GFMT.\n"
+block|,
+literal|"  --line-format=LFMT  Similar, but format all input lines with LFMT.\n"
+block|,
+literal|"  --LTYPE-line-format=LFMT  Similar, but format LTYPE input lines with LFMT.\n"
+block|,
+literal|"    LTYPE is `old', `new', or `unchanged'.  GTYPE is LTYPE or `changed'.\n"
+block|,
+literal|"    GFMT may contain:\n"
+block|,
+literal|"      %%<  lines from FILE1\n"
+block|,
+literal|"      %%>  lines from FILE2\n"
+block|,
+literal|"      %%=  lines common to FILE1 and FILE2\n"
+block|,
+literal|"      %%[-][WIDTH][.[PREC]]{doxX}LETTER  printf-style spec for LETTER\n"
+block|,
+literal|"        LETTERs are as follows for new group, lower case for old group:\n"
+block|,
+literal|"          F  first line number\n"
+block|,
+literal|"          L  last line number\n"
+block|,
+literal|"          N  number of lines = L-F+1\n"
+block|,
+literal|"          E  F-1\n"
+block|,
+literal|"          M  L+1\n"
+block|,
+literal|"    LFMT may contain:\n"
+block|,
+literal|"      %%L  contents of line\n"
+block|,
+literal|"      %%l  contents of line, excluding any trailing newline\n"
+block|,
+literal|"      %%[-][WIDTH][.[PREC]]{doxX}n  printf-style spec for input line number\n"
+block|,
+literal|"    Either GFMT or LFMT may contain:\n"
+block|,
+literal|"      %%%%  %%\n"
+block|,
+literal|"      %%c'C'  the single character C\n"
+block|,
+literal|"      %%c'\\OOO'  the character with octal code OOO\n\n"
+block|,
+literal|"  -t  --expand-tabs  Expand tabs to spaces in output.\n"
+block|,
+literal|"  -T  --initial-tab  Make tabs line up by prepending a tab.\n\n"
+block|,
+literal|"  -N  --new-file  Treat absent files as empty.\n"
+block|,
+literal|"  -s  --report-identical-files  Report when two files are the same.\n"
+block|,
+literal|"  --horizon-lines=NUM  Keep NUM lines of the common prefix and suffix.\n"
+block|,
+literal|"  -d  --minimal  Try hard to find a smaller set of changes.\n"
+block|,
+literal|"  -H  --speed-large-files  Assume large files and many scattered small changes.\n"
+block|,
+literal|"\n(Specify the --help global option for a list of other help options)\n"
 block|,
 name|NULL
 block|}
@@ -339,7 +435,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* I copied this array directly out of diff.c in diffutils 2.7, after    removing the following entries, none of which seem relevant to use    with CVS:      --help      --version      --recursive      --unidirectional-new-file      --starting-file      --exclude      --exclude-from      --sdiff-merge-assist     I changed the options which take optional arguments (--context and    --unified) to return a number rather than a letter, so that the    optional argument could be handled more easily.  I changed the    --paginate and --brief options to return a number, since -l and -q    mean something else to cvs diff.     The numbers 129- that appear in the fourth element of some entries    tell the big switch in `diff' how to process those options. -- Ian     The following options, which diff lists as "An alias, no longer    recommended" have been removed: --file-label --entire-new-file    --ascii --print.  */
+comment|/* I copied this array directly out of diff.c in diffutils 2.7, after    removing the following entries, none of which seem relevant to use    with CVS:      --help      --version (-v)      --recursive (-r)      --unidirectional-new-file (-P)      --starting-file (-S)      --exclude (-x)      --exclude-from (-X)      --sdiff-merge-assist      --paginate (-l)  (doesn't work with library callbacks)     I changed the options which take optional arguments (--context and    --unified) to return a number rather than a letter, so that the    optional argument could be handled more easily.  I changed the    --brief and --ifdef options to return numbers, since -q  and -D mean    something else to cvs diff.     The numbers 129- that appear in the fourth element of some entries    tell the big switch in `diff' how to process those options. -- Ian     The following options, which diff lists as "An alias, no longer    recommended" have been removed: --file-label --entire-new-file    --ascii --print.  */
 end_comment
 
 begin_decl_stmt
@@ -509,16 +605,6 @@ block|,
 literal|0
 block|,
 literal|'i'
-block|}
-block|,
-block|{
-literal|"paginate"
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|144
 block|}
 block|,
 block|{
@@ -865,7 +951,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"+abcdefhilnpstuwy0123456789BHNRTC:D:F:I:L:U:V:W:k:r:j:"
+literal|"+abcdefhilnpstuwy0123456789BHNRTC:D:F:I:L:U:W:k:r:j:"
 argument_list|,
 name|longopts
 argument_list|,
@@ -883,6 +969,21 @@ condition|(
 name|c
 condition|)
 block|{
+case|case
+literal|'y'
+case|:
+name|xrealloc_and_strcat
+argument_list|(
+operator|&
+name|opts
+argument_list|,
+operator|&
+name|opts_allocated
+argument_list|,
+literal|" --side-by-side"
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 literal|'a'
 case|:
@@ -924,9 +1025,6 @@ literal|'u'
 case|:
 case|case
 literal|'w'
-case|:
-case|case
-literal|'y'
 case|:
 case|case
 literal|'0'
@@ -982,7 +1080,7 @@ operator|)
 name|c
 argument_list|)
 expr_stmt|;
-name|allocate_and_strcat
+name|xrealloc_and_strcat
 argument_list|(
 operator|&
 name|opts
@@ -1019,7 +1117,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|allocate_and_strcat
+name|xrealloc_and_strcat
 argument_list|(
 operator|&
 name|opts
@@ -1030,7 +1128,7 @@ argument_list|,
 literal|" -L"
 argument_list|)
 expr_stmt|;
-name|allocate_and_strcat
+name|xrealloc_and_strcat
 argument_list|(
 operator|&
 name|opts
@@ -1055,9 +1153,6 @@ case|case
 literal|'U'
 case|:
 case|case
-literal|'V'
-case|:
-case|case
 literal|'W'
 case|:
 operator|(
@@ -1075,7 +1170,7 @@ operator|)
 name|c
 argument_list|)
 expr_stmt|;
-name|allocate_and_strcat
+name|xrealloc_and_strcat
 argument_list|(
 operator|&
 name|opts
@@ -1086,7 +1181,7 @@ argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
-name|allocate_and_strcat
+name|xrealloc_and_strcat
 argument_list|(
 operator|&
 name|opts
@@ -1102,7 +1197,7 @@ case|case
 literal|131
 case|:
 comment|/* --ifdef.  */
-name|allocate_and_strcat
+name|xrealloc_and_strcat
 argument_list|(
 operator|&
 name|opts
@@ -1113,7 +1208,7 @@ argument_list|,
 literal|" --ifdef="
 argument_list|)
 expr_stmt|;
-name|allocate_and_strcat
+name|xrealloc_and_strcat
 argument_list|(
 operator|&
 name|opts
@@ -1168,15 +1263,12 @@ case|case
 literal|143
 case|:
 case|case
-literal|144
-case|:
-case|case
 literal|145
 case|:
 case|case
 literal|146
 case|:
-name|allocate_and_strcat
+name|xrealloc_and_strcat
 argument_list|(
 operator|&
 name|opts
@@ -1187,7 +1279,7 @@ argument_list|,
 literal|" --"
 argument_list|)
 expr_stmt|;
-name|allocate_and_strcat
+name|xrealloc_and_strcat
 argument_list|(
 operator|&
 name|opts
@@ -1230,7 +1322,7 @@ name|NULL
 operator|)
 condition|)
 block|{
-name|allocate_and_strcat
+name|xrealloc_and_strcat
 argument_list|(
 operator|&
 name|opts
@@ -1241,7 +1333,7 @@ argument_list|,
 literal|"="
 argument_list|)
 expr_stmt|;
-name|allocate_and_strcat
+name|xrealloc_and_strcat
 argument_list|(
 operator|&
 name|opts
@@ -2079,7 +2171,6 @@ operator|)
 decl_stmt|;
 name|exists
 operator|=
-operator|(
 name|head
 operator|!=
 name|NULL
@@ -2093,7 +2184,6 @@ name|srcfile
 argument_list|,
 name|head
 argument_list|)
-operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -2132,7 +2222,6 @@ argument_list|)
 expr_stmt|;
 name|exists
 operator|=
-operator|(
 name|xvers
 operator|->
 name|vn_rcs
@@ -2150,7 +2239,6 @@ name|xvers
 operator|->
 name|vn_rcs
 argument_list|)
-operator|)
 expr_stmt|;
 name|freevers_ts
 argument_list|(

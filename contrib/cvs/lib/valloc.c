@@ -32,13 +32,11 @@ directive|ifndef
 name|HAVE_GETPAGESIZE
 end_ifndef
 
-begin_define
-define|#
-directive|define
-name|getpagesize
-parameter_list|()
-value|4096
-end_define
+begin_include
+include|#
+directive|include
+file|"getpagesize.h"
+end_include
 
 begin_endif
 endif|#

@@ -348,7 +348,7 @@ argument_list|)
 decl_stmt|;
 endif|#
 directive|endif
-name|size_t
+name|ssize_t
 name|n
 init|=
 name|read
@@ -481,7 +481,7 @@ modifier|*
 name|current
 decl_stmt|;
 block|{
-name|size_t
+name|ssize_t
 name|cc
 decl_stmt|;
 if|if

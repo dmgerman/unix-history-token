@@ -160,6 +160,13 @@ name|__printf__
 value|printf
 end_define
 
+begin_define
+define|#
+directive|define
+name|__noreturn__
+value|noreturn
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -227,18 +234,44 @@ begin_comment
 comment|/* Exit due to an error.  Similar to error (1, 0, "message"), but call    it in the case where the message has already been printed.  */
 end_comment
 
-begin_decl_stmt
-specifier|extern
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
+begin_function_decl
 name|void
 name|error_exit
-name|PROTO
-argument_list|(
-operator|(
+parameter_list|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(__noreturn__
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function_decl
+name|void
+name|error_exit
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* If non-zero, error will use the CVS protocol to report error    messages.  This will only be set in the CVS server parent process;    most other code is run via do_cvs_command, which forks off a child    process and packages up its stderr in the protocol.  */

@@ -767,7 +767,7 @@ name|usg
 index|[]
 init|=
 block|{
-comment|/* CVS usage messages never have followed the GNU convention of        putting metavariables in uppercase.  I don't know whether that        is a good convention or not, but if it changes it would have to        change in all the usage messages.  For now, they consistently        use lowercase, as far as I know.  Puncutation is pretty funky,        though.  Sometimes they use none, as here.  Sometimes they use        single quotes (not the TeX-ish `' stuff), as in --help-options.        Sometimes they use double quotes, as in cvs -H add.         Most (not all) of the usage messages seem to have periods at        the end of each line.  I haven't tried to duplicate this style        in --help as it is a rather different format from the rest.  */
+comment|/* CVS usage messages never have followed the GNU convention of        putting metavariables in uppercase.  I don't know whether that        is a good convention or not, but if it changes it would have to        change in all the usage messages.  For now, they consistently        use lowercase, as far as I know.  Punctuation is pretty funky,        though.  Sometimes they use none, as here.  Sometimes they use        single quotes (not the TeX-ish `' stuff), as in --help-options.        Sometimes they use double quotes, as in cvs -H add.         Most (not all) of the usage messages seem to have periods at        the end of each line.  I haven't tried to duplicate this style        in --help as it is a rather different format from the rest.  */
 literal|"Usage: %s [cvs-options] command [command-options-and-arguments]\n"
 block|,
 literal|"  where cvs-options are -q, -n, etc.\n"
@@ -1316,6 +1316,24 @@ literal|0
 condition|)
 break|break;
 block|}
+if|if
+condition|(
+operator|!
+name|cm
+operator|->
+name|fullname
+condition|)
+name|error
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"unknown command: %s"
+argument_list|,
+name|cmd_name
+argument_list|)
+expr_stmt|;
 return|return
 name|cm
 operator|->
@@ -3118,7 +3136,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"specification of CVSROOT is legal, either via the"
+literal|"specification of CVSROOT is valid, either via the"
 argument_list|)
 expr_stmt|;
 name|error
@@ -3288,7 +3306,9 @@ literal|1
 argument_list|,
 literal|0
 argument_list|,
-literal|"Bad CVSROOT."
+literal|"Bad CVSROOT: `%s'."
+argument_list|,
+name|current_root
 argument_list|)
 expr_stmt|;
 if|if

@@ -385,7 +385,7 @@ end_comment
 
 begin_function
 name|void
-name|allocate_and_strcat
+name|xrealloc_and_strcat
 parameter_list|(
 name|str
 parameter_list|,
@@ -2864,19 +2864,6 @@ operator|*
 name|filename
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|error
-argument_list|(
-literal|1
-argument_list|,
-literal|0
-argument_list|,
-literal|"internal error: islink doesn't like readlink"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|isabsolute
@@ -2969,6 +2956,19 @@ operator|=
 name|fullnewname
 expr_stmt|;
 block|}
+else|#
+directive|else
+name|error
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"internal error: islink doesn't like readlink"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 end_function

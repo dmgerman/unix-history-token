@@ -159,15 +159,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
-name|local
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|char
 modifier|*
 name|options
@@ -334,6 +325,11 @@ block|{
 specifier|register
 name|int
 name|i
+decl_stmt|;
+name|int
+name|local
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|c
@@ -1539,7 +1535,7 @@ name|argv
 operator|+
 literal|1
 argument_list|,
-name|local
+name|local_specified
 argument_list|,
 literal|0
 argument_list|,
@@ -1573,7 +1569,7 @@ name|argv
 operator|+
 literal|1
 argument_list|,
-name|local
+name|local_specified
 argument_list|,
 literal|0
 argument_list|,
@@ -1614,7 +1610,7 @@ name|argv
 operator|+
 literal|1
 argument_list|,
-name|local
+name|local_specified
 argument_list|,
 name|which
 argument_list|,
@@ -1960,6 +1956,9 @@ argument_list|,
 literal|1
 argument_list|)
 operator|==
+operator|(
+name|time_t
+operator|)
 operator|-
 literal|1
 condition|)

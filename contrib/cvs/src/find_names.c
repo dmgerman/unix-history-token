@@ -88,14 +88,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|List
-modifier|*
-name|filelist
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * add the key from entry on entries list to the files list  */
 end_comment
@@ -142,6 +134,16 @@ decl_stmt|;
 name|Node
 modifier|*
 name|fnode
+decl_stmt|;
+name|List
+modifier|*
+name|filelist
+init|=
+operator|(
+name|List
+operator|*
+operator|)
+name|closure
 decl_stmt|;
 name|entnode
 operator|=
@@ -256,8 +258,6 @@ decl_stmt|;
 comment|/* make a list for the files */
 name|files
 operator|=
-name|filelist
-operator|=
 name|getlist
 argument_list|()
 expr_stmt|;
@@ -296,7 +296,7 @@ name|entries
 argument_list|,
 name|add_entries_proc
 argument_list|,
-name|NULL
+name|files
 argument_list|)
 expr_stmt|;
 comment|/* if our caller wanted the entries list, return it; else free it */

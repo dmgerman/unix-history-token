@@ -9,14 +9,11 @@ directive|include
 file|"cvs.h"
 end_include
 
-begin_decl_stmt
-name|char
-modifier|*
-name|version_string
-init|=
-literal|"Concurrent Versions System (CVS) 1.11"
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|"version.h"
+end_include
 
 begin_ifdef
 ifdef|#
@@ -119,6 +116,10 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Output a version string for the client and server.  *  * This function will output the simple version number (for the '--version'  * option) or the version numbers of the client and server (using the 'version'  * command).  */
+end_comment
+
 begin_function
 name|int
 name|version
@@ -158,7 +159,11 @@ directive|ifdef
 name|CLIENT_SUPPORT
 if|if
 condition|(
-name|client_active
+name|current_parsed_root
+operator|&&
+name|current_parsed_root
+operator|->
+name|isremote
 condition|)
 operator|(
 name|void
@@ -198,7 +203,11 @@ directive|ifdef
 name|CLIENT_SUPPORT
 if|if
 condition|(
-name|client_active
+name|current_parsed_root
+operator|&&
+name|current_parsed_root
+operator|->
+name|isremote
 condition|)
 block|{
 operator|(

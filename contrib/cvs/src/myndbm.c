@@ -39,6 +39,9 @@ operator|*
 operator|,
 name|List
 operator|*
+operator|,
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -171,6 +174,8 @@ argument_list|,
 name|db
 operator|->
 name|dbm_list
+argument_list|,
+name|file
 argument_list|)
 expr_stmt|;
 if|if
@@ -908,6 +913,8 @@ parameter_list|(
 name|fp
 parameter_list|,
 name|list
+parameter_list|,
+name|filename
 parameter_list|)
 name|FILE
 modifier|*
@@ -917,6 +924,11 @@ name|List
 modifier|*
 name|list
 decl_stmt|;
+name|char
+modifier|*
+name|filename
+decl_stmt|;
+comment|/* Used in error messages. */
 block|{
 name|char
 modifier|*
@@ -947,6 +959,9 @@ decl_stmt|;
 name|int
 name|line_length
 decl_stmt|;
+name|int
+name|line_num
+decl_stmt|;
 name|value_allocated
 operator|=
 literal|1
@@ -959,6 +974,10 @@ name|value_allocated
 argument_list|)
 expr_stmt|;
 name|cont
+operator|=
+literal|0
+expr_stmt|;
+name|line_num
 operator|=
 literal|0
 expr_stmt|;
@@ -988,6 +1007,9 @@ operator|>=
 literal|0
 condition|)
 block|{
+name|line_num
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|line_length
@@ -1215,6 +1237,11 @@ condition|)
 name|vp
 operator|++
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|vp
+condition|)
 operator|*
 name|vp
 operator|++
@@ -1264,17 +1291,26 @@ operator|==
 literal|'\0'
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|really_quiet
+condition|)
 name|error
 argument_list|(
 literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"warning: NULL value for key `%s'"
+literal|"warning: NULL value for key `%s' at line %d of `%s'"
 argument_list|,
 name|p
 operator|->
 name|key
+argument_list|,
+name|line_num
+argument_list|,
+name|filename
 argument_list|)
 expr_stmt|;
 name|freenode
@@ -1306,17 +1342,26 @@ operator|-
 literal|1
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|really_quiet
+condition|)
 name|error
 argument_list|(
 literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|"duplicate key found for `%s'"
+literal|"duplicate key found for `%s' at line %d of `%s'"
 argument_list|,
 name|p
 operator|->
 name|key
+argument_list|,
+name|line_num
+argument_list|,
+name|filename
 argument_list|)
 expr_stmt|;
 name|freenode

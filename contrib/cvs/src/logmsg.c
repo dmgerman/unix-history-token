@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<assert.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"cvs.h"
 end_include
 
@@ -250,6 +256,18 @@ begin_decl_stmt
 specifier|static
 name|Ctype
 name|type
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*   * Should the logmsg be re-read during the do_verify phase?  * RereadLogAfterVerify=no|stat|yes  * LOGMSG_REREAD_NEVER  - never re-read the logmsg  * LOGMSG_REREAD_STAT   - re-read the logmsg only if it has changed  * LOGMSG_REREAD_ALWAYS - always re-read the logmsg  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|RereadLogAfterVerify
+init|=
+name|LOGMSG_REREAD_ALWAYS
 decl_stmt|;
 end_decl_stmt
 
@@ -888,7 +906,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Builds a temporary file using setup_tmpfile() and invokes the user's  * editor on the file.  The header garbage in the resultant file is then  * stripped and the log message is stored in the "message" argument.  *   * If REPOSITORY is non-NULL, process rcsinfo for that repository; if it  * is NULL, use the CVSADM_TEMPLATE file instead.  */
+comment|/*  * Builds a temporary file using setup_tmpfile() and invokes the user's  * editor on the file.  The header garbage in the resultant file is then  * stripped and the log message is stored in the "message" argument.  *   * If REPOSITORY is non-NULL, process rcsinfo for that repository; if it  * is NULL, use the CVSADM_TEMPLATE file instead.  REPOSITORY should be  * NULL when running in client mode.  */
 end_comment
 
 begin_function
@@ -952,6 +970,23 @@ name|retcode
 init|=
 literal|0
 decl_stmt|;
+name|assert
+argument_list|(
+name|current_parsed_root
+operator|->
+name|isremote
+operator|&&
+operator|!
+name|repository
+operator|||
+operator|!
+name|current_parsed_root
+operator|->
+name|isremote
+operator|&&
+name|repository
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|noexec
@@ -1577,8 +1612,10 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+operator|(
 operator|*
 name|messagep
+operator|)
 index|[
 literal|0
 index|]
@@ -1750,6 +1787,16 @@ name|messagep
 operator|==
 name|NULL
 operator|||
+operator|(
+operator|*
+name|messagep
+operator|)
+index|[
+literal|0
+index|]
+operator|==
+literal|'\0'
+operator|||
 name|strcmp
 argument_list|(
 operator|*
@@ -1761,6 +1808,24 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|*
+name|messagep
+condition|)
+block|{
+name|free
+argument_list|(
+operator|*
+name|messagep
+argument_list|)
+expr_stmt|;
+operator|*
+name|messagep
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 for|for
 control|(
 init|;
@@ -2035,23 +2100,11 @@ name|retcode
 init|=
 literal|0
 decl_stmt|;
-name|char
-modifier|*
-name|line
-decl_stmt|;
-name|int
-name|line_length
-decl_stmt|;
-name|size_t
-name|line_chars_allocated
-decl_stmt|;
-name|char
-modifier|*
-name|p
-decl_stmt|;
 name|struct
 name|stat
-name|stbuf
+name|pre_stbuf
+decl_stmt|,
+name|post_stbuf
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -2116,8 +2169,6 @@ argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
-else|else
-block|{
 name|fprintf
 argument_list|(
 name|fp
@@ -2188,6 +2239,46 @@ argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|RereadLogAfterVerify
+operator|==
+name|LOGMSG_REREAD_STAT
+condition|)
+block|{
+comment|/* Remember the status of the temp file for later */
+if|if
+condition|(
+name|CVS_STAT
+argument_list|(
+name|fname
+argument_list|,
+operator|&
+name|pre_stbuf
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|1
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot stat temp file %s"
+argument_list|,
+name|fname
+argument_list|)
+expr_stmt|;
+comment|/* 	 * See if we need to sleep before running the verification 	 * script to avoid time-stamp races. 	 */
+name|sleep_past
+argument_list|(
+name|pre_stbuf
+operator|.
+name|st_mtime
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Get the name of the verification script to run  */
 if|if
 condition|(
@@ -2247,7 +2338,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* Since following error() exits, delete the temp file 		   now.  */
+comment|/* Since following error() exits, delete the temp file now.  */
 if|if
 condition|(
 name|unlink_file
@@ -2286,47 +2377,18 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* put the entire message back into the *messagep variable */
-name|fp
-operator|=
-name|open_file
-argument_list|(
-name|fname
-argument_list|,
-literal|"r"
-argument_list|)
-expr_stmt|;
+comment|/* Get the mod time and size of the possibly new log message      * in always and stat modes.      */
 if|if
 condition|(
-name|fp
+name|RereadLogAfterVerify
 operator|==
-name|NULL
+name|LOGMSG_REREAD_ALWAYS
+operator|||
+name|RereadLogAfterVerify
+operator|==
+name|LOGMSG_REREAD_STAT
 condition|)
 block|{
-name|error
-argument_list|(
-literal|1
-argument_list|,
-name|errno
-argument_list|,
-literal|"cannot open temporary file %s"
-argument_list|,
-name|fname
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-if|if
-condition|(
-operator|*
-name|messagep
-condition|)
-name|free
-argument_list|(
-operator|*
-name|messagep
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|CVS_STAT
@@ -2334,7 +2396,7 @@ argument_list|(
 name|fname
 argument_list|,
 operator|&
-name|stbuf
+name|post_stbuf
 argument_list|)
 operator|!=
 literal|0
@@ -2350,9 +2412,80 @@ argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
+block|}
+comment|/* And reread the log message in `always' mode or in `stat' mode when it's      * changed      */
 if|if
 condition|(
-name|stbuf
+name|RereadLogAfterVerify
+operator|==
+name|LOGMSG_REREAD_ALWAYS
+operator|||
+operator|(
+name|RereadLogAfterVerify
+operator|==
+name|LOGMSG_REREAD_STAT
+operator|&&
+operator|(
+name|pre_stbuf
+operator|.
+name|st_mtime
+operator|!=
+name|post_stbuf
+operator|.
+name|st_mtime
+operator|||
+name|pre_stbuf
+operator|.
+name|st_size
+operator|!=
+name|post_stbuf
+operator|.
+name|st_size
+operator|)
+operator|)
+condition|)
+block|{
+comment|/* put the entire message back into the *messagep variable */
+if|if
+condition|(
+operator|(
+name|fp
+operator|=
+name|open_file
+argument_list|(
+name|fname
+argument_list|,
+literal|"r"
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|error
+argument_list|(
+literal|1
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot open temporary file %s"
+argument_list|,
+name|fname
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|messagep
+condition|)
+name|free
+argument_list|(
+operator|*
+name|messagep
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|post_stbuf
 operator|.
 name|st_size
 operator|==
@@ -2365,7 +2498,7 @@ name|NULL
 expr_stmt|;
 else|else
 block|{
-comment|/* On NT, we might read less than st_size bytes, but we won't 	       read more.  So this works.  */
+comment|/* On NT, we might read less than st_size bytes, 	       but we won't read more.  So this works.  */
 operator|*
 name|messagep
 operator|=
@@ -2375,7 +2508,7 @@ operator|*
 operator|)
 name|xmalloc
 argument_list|(
-name|stbuf
+name|post_stbuf
 operator|.
 name|st_size
 operator|+
@@ -2391,25 +2524,33 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-name|line
-operator|=
-name|NULL
-expr_stmt|;
-name|line_chars_allocated
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 operator|*
 name|messagep
 condition|)
 block|{
+name|char
+modifier|*
+name|line
+init|=
+name|NULL
+decl_stmt|;
+name|int
+name|line_length
+decl_stmt|;
+name|size_t
+name|line_chars_allocated
+init|=
+literal|0
+decl_stmt|;
+name|char
+modifier|*
 name|p
-operator|=
+init|=
 operator|*
 name|messagep
-expr_stmt|;
+decl_stmt|;
 while|while
 condition|(
 literal|1
@@ -2443,13 +2584,14 @@ argument_list|(
 name|fp
 argument_list|)
 condition|)
+comment|/* Fail in this case because otherwise we will have no 			 * log message 			 */
 name|error
 argument_list|(
-literal|0
+literal|1
 argument_list|,
 name|errno
 argument_list|,
-literal|"warning: cannot read %s"
+literal|"cannot read %s"
 argument_list|,
 name|fname
 argument_list|)
@@ -2485,6 +2627,15 @@ operator|+=
 name|line_length
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|line
+condition|)
+name|free
+argument_list|(
+name|line
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -2506,6 +2657,7 @@ argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Delete the temp file  */
 if|if
 condition|(
@@ -2532,7 +2684,6 @@ argument_list|(
 name|fname
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 

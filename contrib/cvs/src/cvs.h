@@ -344,6 +344,12 @@ directive|include
 file|"hash.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"root.h"
+end_include
+
 begin_if
 if|#
 directive|if
@@ -1611,101 +1617,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Access method specified in CVSroot. */
-end_comment
-
-begin_typedef
-typedef|typedef
-enum|enum
-block|{
-name|null_method
-block|,
-name|local_method
-block|,
-name|server_method
-block|,
-name|pserver_method
-block|,
-name|kserver_method
-block|,
-name|gserver_method
-block|,
-name|ext_method
-block|,
-name|fork_method
-block|}
-name|CVSmethod
-typedef|;
-end_typedef
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|method_names
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* change this in root.c if you change 				   the enum above */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|cvsroot_s
-block|{
-name|char
-modifier|*
-name|original
-decl_stmt|;
-comment|/* the complete source CVSroot string */
-name|CVSmethod
-name|method
-decl_stmt|;
-comment|/* one of the enum values above */
-name|char
-modifier|*
-name|username
-decl_stmt|;
-comment|/* the username or NULL if method == local */
-name|char
-modifier|*
-name|password
-decl_stmt|;
-comment|/* the username or NULL if method == local */
-name|char
-modifier|*
-name|hostname
-decl_stmt|;
-comment|/* the hostname or NULL if method == local */
-name|int
-name|port
-decl_stmt|;
-comment|/* the port or zero if method == local */
-name|char
-modifier|*
-name|directory
-decl_stmt|;
-comment|/* the directory name */
-ifdef|#
-directive|ifdef
-name|CLIENT_SUPPORT
-name|unsigned
-name|char
-name|isremote
-decl_stmt|;
-comment|/* nonzero if we are doing remote access */
-endif|#
-directive|endif
-comment|/* CLIENT_SUPPORT */
-block|}
-name|cvsroot_t
-typedef|;
-end_typedef
-
-begin_comment
 comment|/* This global variable holds the global -d option.  It is NULL if -d    was not used, which means that we must get the CVSroot information    from the CVSROOT environment variable or from a CVS/Root file.  */
 end_comment
 
@@ -1758,7 +1669,8 @@ name|safe_location
 name|PROTO
 argument_list|(
 operator|(
-name|void
+name|char
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1823,6 +1735,46 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|top_level_admin
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|LOGMSG_REREAD_NEVER
+value|0
+end_define
+
+begin_comment
+comment|/* do_verify - never  reread message */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOGMSG_REREAD_ALWAYS
+value|1
+end_define
+
+begin_comment
+comment|/* do_verify - always reread message */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOGMSG_REREAD_STAT
+value|2
+end_define
+
+begin_comment
+comment|/* do_verify - reread message if changed */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|RereadLogAfterVerify
 decl_stmt|;
 end_decl_stmt
 
@@ -2563,7 +2515,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|allocate_and_strcat
+name|xrealloc_and_strcat
 name|PROTO
 argument_list|(
 operator|(
