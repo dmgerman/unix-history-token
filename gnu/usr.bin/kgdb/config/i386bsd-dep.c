@@ -7101,7 +7101,7 @@ literal|7
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"regno  tag  msb              lsb  value\n"
+literal|" regno     tag  msb              lsb  value\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -7118,12 +7118,30 @@ name|fpreg
 operator|--
 control|)
 block|{
+name|int
+name|st_regno
+decl_stmt|;
 name|double
 name|val
 decl_stmt|;
+comment|/* The physical regno `fpreg' is only relevant as an index into the        * tag word.  Logical `%st' numbers are required for indexing `p->regs.        */
+name|st_regno
+operator|=
+operator|(
+name|fpreg
+operator|+
+literal|8
+operator|-
+name|top
+operator|)
+operator|&
+literal|0x7
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s %d: "
+literal|"%%st(%d) %s "
+argument_list|,
+name|st_regno
 argument_list|,
 name|fpreg
 operator|==
@@ -7132,8 +7150,6 @@ condition|?
 literal|"=>"
 else|:
 literal|"  "
-argument_list|,
-name|fpreg
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -7211,7 +7227,7 @@ name|ep
 operator|->
 name|regs
 index|[
-name|fpreg
+name|st_regno
 index|]
 index|[
 name|i
@@ -7224,7 +7240,7 @@ name|ep
 operator|->
 name|regs
 index|[
-name|fpreg
+name|st_regno
 index|]
 argument_list|,
 operator|(
@@ -7243,68 +7259,43 @@ name|val
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|ep
-operator|->
-name|r0
-condition|)
-name|printf
-argument_list|(
-literal|"warning: reserved0 is 0x%x\n"
-argument_list|,
-name|ep
-operator|->
-name|r0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ep
-operator|->
-name|r1
-condition|)
-name|printf
-argument_list|(
-literal|"warning: reserved1 is 0x%x\n"
-argument_list|,
-name|ep
-operator|->
-name|r1
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ep
-operator|->
-name|r2
-condition|)
-name|printf
-argument_list|(
-literal|"warning: reserved2 is 0x%x\n"
-argument_list|,
-name|ep
-operator|->
-name|r2
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ep
-operator|->
-name|r3
-condition|)
-name|printf
-argument_list|(
-literal|"warning: reserved3 is 0x%x\n"
-argument_list|,
-name|ep
-operator|->
-name|r3
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* reserved fields are always 0xffff on 486's */
+block|if (ep->r0)     printf ("warning: reserved0 is 0x%x\n", ep->r0);   if (ep->r1)     printf ("warning: reserved1 is 0x%x\n", ep->r1);   if (ep->r2)     printf ("warning: reserved2 is 0x%x\n", ep->r2);   if (ep->r3)     printf ("warning: reserved3 is 0x%x\n", ep->r3);
+endif|#
+directive|endif
 block|}
 end_block
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__386BSD__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|fpstate
+value|save87
+end_define
+
+begin_define
+define|#
+directive|define
+name|U_FPSTATE
+parameter_list|(
+name|u
+parameter_list|)
+value|u.u_pcb.pcb_savefpu
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -7342,9 +7333,6 @@ comment|/* just for address computations */
 name|int
 name|i
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|__386BSD__
 comment|/* fpstate defined in<sys/user.h> */
 name|struct
 name|fpstate
@@ -7390,6 +7378,10 @@ decl_stmt|;
 name|int
 name|skip
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|__386BSD__
+comment|/* XXX - look at pcb flags */
 name|uaddr
 operator|=
 operator|(
@@ -7436,10 +7428,13 @@ name|data
 operator|=
 name|ptrace
 argument_list|(
-literal|3
+name|PT_READ_U
 argument_list|,
 name|inferior_pid
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|rounded_addr
 argument_list|,
 literal|0
@@ -7526,6 +7521,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+endif|#
+directive|endif
+comment|/* not __386BSD__ */
 name|uaddr
 operator|=
 operator|(
@@ -7629,10 +7627,13 @@ operator|++
 operator|=
 name|ptrace
 argument_list|(
-literal|3
+name|PT_READ_U
 argument_list|,
 name|inferior_pid
 argument_list|,
+operator|(
+name|caddr_t
+operator|)
 name|rounded_addr
 argument_list|,
 literal|0
@@ -7694,6 +7695,23 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|__386BSD__
+name|print_387_status
+argument_list|(
+literal|0
+argument_list|,
+operator|(
+expr|struct
+name|env387
+operator|*
+operator|)
+name|buf
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|fpstatep
 operator|=
 operator|(
