@@ -827,6 +827,21 @@ end_define
 begin_define
 define|#
 directive|define
+name|CIRCLEQ_FOREACH_REVERSE
+parameter_list|(
+name|var
+parameter_list|,
+name|head
+parameter_list|,
+name|field
+parameter_list|)
+define|\
+value|for((var) = (head)->cqh_last;					\ 	    (var) != (void *)(head);					\ 	    (var) = (var)->field.cqe_prev)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CIRCLEQ_INIT
 parameter_list|(
 name|head
