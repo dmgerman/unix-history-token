@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkioconf.c,v 1.32 1997/09/17 06:20:44 charnier Exp $"
+literal|"$Id: mkioconf.c,v 1.33 1997/09/21 22:12:50 gibbs Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4106,6 +4106,16 @@ argument_list|(
 name|fp
 argument_list|,
 literal|"cam"
+argument_list|,
+operator|&
+name|dev_id
+argument_list|)
+expr_stmt|;
+name|isa_devtab
+argument_list|(
+name|fp
+argument_list|,
+literal|"ha"
 argument_list|,
 operator|&
 name|dev_id
