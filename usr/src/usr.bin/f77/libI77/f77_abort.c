@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)f77_abort.c	5.1	%G%  *  *	all f77 aborts eventually call f77_abort.  *	f77_abort cleans up open files and terminates with a dump if needed,  *	with a message otherwise.	  *  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)f77_abort.c	5.2	%G%  *  *	all f77 aborts eventually call f77_abort.  *	f77_abort cleans up open files and terminates with a dump if needed,  *	with a message otherwise.	  *  */
 end_comment
 
 begin_include
@@ -31,14 +31,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
 name|int
-name|_dbsubc
+name|_lg_flag
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* dbsubc is non-zero if -lg was specified to ld */
+comment|/* _lg_flag is non-zero if -lg was specified to ld */
 end_comment
 
 begin_macro
@@ -110,7 +109,7 @@ operator|)
 operator|&&
 operator|(
 operator|(
-name|_dbsubc
+name|_lg_flag
 operator|&&
 operator|(
 name|first_char
