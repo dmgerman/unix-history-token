@@ -8359,7 +8359,7 @@ name|msg
 operator|=
 name|log_only
 condition|?
-literal|"Entry %d logging count reset.\n"
+literal|"ipfw: Entry %d logging count reset.\n"
 else|:
 literal|"ipfw: Entry %d cleared.\n"
 expr_stmt|;
