@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_machdep.c 1.21 91/04/06$  *  *	@(#)vm_machdep.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_machdep.c 1.21 91/04/06$  *  *	@(#)vm_machdep.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -335,7 +335,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Dump the machine specific header information at the start of a core dump.  * XXX should snapshot FPU here?  */
+comment|/*  * Dump the machine specific header information at the start of a core dump.  */
 end_comment
 
 begin_macro
@@ -375,6 +375,24 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|extern
+name|struct
+name|proc
+modifier|*
+name|machFPCurProcPtr
+decl_stmt|;
+comment|/* 	 * Copy floating point state from the FP chip if this process 	 * has state stored there. 	 */
+if|if
+condition|(
+name|p
+operator|==
+name|machFPCurProcPtr
+condition|)
+name|MachSaveCurFPState
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|vn_rdwr
