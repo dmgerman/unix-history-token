@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)indent.c	5.4 (Berkeley) %G%"
+literal|"@(#)indent.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -117,6 +117,11 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
+specifier|extern
+name|int
+name|found_err
+decl_stmt|;
+comment|/* if any error occurred */
 name|int
 name|dec_ind
 decl_stmt|;
@@ -1414,8 +1419,10 @@ argument_list|(
 name|ps
 operator|.
 name|tos
-operator|<=
+operator|>
 literal|1
+operator|||
+name|found_err
 argument_list|)
 expr_stmt|;
 block|}
