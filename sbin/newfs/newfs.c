@@ -276,17 +276,6 @@ comment|/* desired fs_cpg ("infinity") */
 end_comment
 
 begin_comment
-comment|/*  * Once upon a time...  *    ROTDELAY gives the minimum number of milliseconds to initiate  *    another disk transfer on the same cylinder. It is used in  *    determining the rotationally optimal layout for disk blocks  *    within a file; the default of fs_rotdelay is 4ms.  *  * ...but now we make this 0 to disable the rotdelay delay because  * modern drives with read/write-behind achieve higher performance  * without the delay.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ROTDELAY
-value|0
-end_define
-
-begin_comment
 comment|/*  * MAXBLKPG determines the maximum number of data blocks which are  * placed in a single cylinder group. The default is one indirect  * block worth of data blocks.  */
 end_comment
 
@@ -312,33 +301,7 @@ value|4
 end_define
 
 begin_comment
-comment|/*  * Once upon a time...  *    For each cylinder we keep track of the availability of blocks at different  *    rotational positions, so that we can lay out the data to be picked  *    up with minimum rotational latency.  NRPOS is the default number of  *    rotational positions that we distinguish.  With NRPOS of 8 the resolution  *    of our summary information is 2ms for a typical 3600 rpm drive.  *  * ...but now we make this 1 (which essentially disables the rotational  * position table because modern drives with read-ahead and write-behind do  * better without the rotational position table.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NRPOS
-value|1
-end_define
-
-begin_comment
-comment|/* number distinct rotational positions */
-end_comment
-
-begin_comment
 comment|/*  * About the same time as the above, we knew what went where on the disks.  * no longer so, so kill the code which finds the different platters too...  * We do this by saying one head, with a lot of sectors on it.  * The number of sectors are used to determine the size of a cyl-group.  * Kirk suggested one or two meg per "cylinder" so we say two.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NTRACKS
-value|1
-end_define
-
-begin_comment
-comment|/* number of heads */
 end_comment
 
 begin_define
@@ -364,16 +327,6 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|Oflag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* format as an 4.3BSD file system */
-end_comment
-
-begin_decl_stmt
-name|int
 name|Rflag
 decl_stmt|;
 end_decl_stmt
@@ -393,7 +346,7 @@ comment|/* enable soft updates for file system */
 end_comment
 
 begin_decl_stmt
-name|int
+name|u_int
 name|fssize
 decl_stmt|;
 end_decl_stmt
@@ -403,73 +356,15 @@ comment|/* file system size */
 end_comment
 
 begin_decl_stmt
-name|int
-name|ntracks
-init|=
-name|NTRACKS
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* # tracks/cylinder */
-end_comment
-
-begin_decl_stmt
-name|int
-name|nsectors
+name|u_int
+name|secpercyl
 init|=
 name|NSECTORS
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* # sectors/track */
-end_comment
-
-begin_decl_stmt
-name|int
-name|nphyssectors
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* # sectors/track including spares */
-end_comment
-
-begin_decl_stmt
-name|int
-name|secpercyl
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* sectors per cylinder */
-end_comment
-
-begin_decl_stmt
-name|int
-name|trackspares
-init|=
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* spare sectors per track */
-end_comment
-
-begin_decl_stmt
-name|int
-name|cylspares
-init|=
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* spare sectors per cylinder */
 end_comment
 
 begin_decl_stmt
@@ -490,59 +385,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* bytes/sector in hardware */
-end_comment
-
-begin_decl_stmt
-name|int
-name|rpm
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* revolutions/minute of drive */
-end_comment
-
-begin_decl_stmt
-name|int
-name|interleave
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* hardware sector interleave */
-end_comment
-
-begin_decl_stmt
-name|int
-name|trackskew
-init|=
-operator|-
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* sector 0 skew, per track */
-end_comment
-
-begin_decl_stmt
-name|int
-name|headswitch
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* head switch time, usec */
-end_comment
-
-begin_decl_stmt
-name|int
-name|trackseek
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* track-to-track seek, usec */
 end_comment
 
 begin_decl_stmt
@@ -639,36 +481,12 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|rotdelay
-init|=
-name|ROTDELAY
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* rotational delay between blocks */
-end_comment
-
-begin_decl_stmt
-name|int
 name|maxbpg
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* maximum blocks per file in a cyl group */
-end_comment
-
-begin_decl_stmt
-name|int
-name|nrpos
-init|=
-name|NRPOS
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* # of distinguished rotational positions */
 end_comment
 
 begin_decl_stmt
@@ -720,6 +538,7 @@ comment|/* superblock size */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|t_or_u_flag
 init|=
@@ -738,6 +557,7 @@ name|COMPAT
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|disktype
@@ -745,6 +565,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|unlabeled
 decl_stmt|;
@@ -756,6 +577,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|static
 name|char
 name|device
 index|[
@@ -765,30 +587,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|progname
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-specifier|extern
-name|void
-name|mkfs
-parameter_list|(
-name|struct
-name|partition
-modifier|*
-parameter_list|,
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|static
@@ -921,7 +725,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"NORS:T:Ua:b:c:d:e:f:g:h:i:k:l:m:n:o:p:r:s:t:u:vx:"
+literal|"NRS:T:Ua:b:c:e:f:g:h:i:m:o:s:u:v:"
 argument_list|)
 operator|)
 operator|!=
@@ -937,14 +741,6 @@ case|case
 literal|'N'
 case|:
 name|Nflag
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-case|case
-literal|'O'
-case|:
-name|Oflag
 operator|=
 literal|1
 expr_stmt|;
@@ -1078,30 +874,6 @@ operator|++
 expr_stmt|;
 break|break;
 case|case
-literal|'d'
-case|:
-if|if
-condition|(
-operator|(
-name|rotdelay
-operator|=
-name|atoi
-argument_list|(
-name|optarg
-argument_list|)
-operator|)
-operator|<
-literal|0
-condition|)
-name|fatal
-argument_list|(
-literal|"%s: bad rotational delay"
-argument_list|,
-name|optarg
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
 literal|'e'
 case|:
 if|if
@@ -1222,54 +994,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|'k'
-case|:
-if|if
-condition|(
-operator|(
-name|trackskew
-operator|=
-name|atoi
-argument_list|(
-name|optarg
-argument_list|)
-operator|)
-operator|<
-literal|0
-condition|)
-name|fatal
-argument_list|(
-literal|"%s: bad track skew"
-argument_list|,
-name|optarg
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'l'
-case|:
-if|if
-condition|(
-operator|(
-name|interleave
-operator|=
-name|atoi
-argument_list|(
-name|optarg
-argument_list|)
-operator|)
-operator|<=
-literal|0
-condition|)
-name|fatal
-argument_list|(
-literal|"%s: bad interleave"
-argument_list|,
-name|optarg
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
 literal|'m'
 case|:
 if|if
@@ -1295,40 +1019,6 @@ literal|"%s: bad free space %%"
 argument_list|,
 name|optarg
 argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'n'
-case|:
-if|if
-condition|(
-operator|(
-name|nrpos
-operator|=
-name|atoi
-argument_list|(
-name|optarg
-argument_list|)
-operator|)
-operator|<
-literal|0
-condition|)
-name|fatal
-argument_list|(
-literal|"%s: bad rotational layout count"
-argument_list|,
-name|optarg
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|nrpos
-operator|==
-literal|0
-condition|)
-name|nrpos
-operator|=
-literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -1375,54 +1065,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|'p'
-case|:
-if|if
-condition|(
-operator|(
-name|trackspares
-operator|=
-name|atoi
-argument_list|(
-name|optarg
-argument_list|)
-operator|)
-operator|<
-literal|0
-condition|)
-name|fatal
-argument_list|(
-literal|"%s: bad spare sectors per track"
-argument_list|,
-name|optarg
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'r'
-case|:
-if|if
-condition|(
-operator|(
-name|rpm
-operator|=
-name|atoi
-argument_list|(
-name|optarg
-argument_list|)
-operator|)
-operator|<=
-literal|0
-condition|)
-name|fatal
-argument_list|(
-literal|"%s: bad revolutions/minute"
-argument_list|,
-name|optarg
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
 literal|'s'
 case|:
 if|if
@@ -1447,33 +1089,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|'t'
-case|:
-name|t_or_u_flag
-operator|++
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|ntracks
-operator|=
-name|atoi
-argument_list|(
-name|optarg
-argument_list|)
-operator|)
-operator|<
-literal|0
-condition|)
-name|fatal
-argument_list|(
-literal|"%s: bad total tracks"
-argument_list|,
-name|optarg
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
 literal|'u'
 case|:
 name|t_or_u_flag
@@ -1482,7 +1097,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|nsectors
+name|n
 operator|=
 name|atoi
 argument_list|(
@@ -1499,6 +1114,10 @@ argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
+name|secpercyl
+operator|=
+name|n
+expr_stmt|;
 break|break;
 case|case
 literal|'v'
@@ -1506,30 +1125,6 @@ case|:
 name|vflag
 operator|=
 literal|1
-expr_stmt|;
-break|break;
-case|case
-literal|'x'
-case|:
-if|if
-condition|(
-operator|(
-name|cylspares
-operator|=
-name|atoi
-argument_list|(
-name|optarg
-argument_list|)
-operator|)
-operator|<
-literal|0
-condition|)
-name|fatal
-argument_list|(
-literal|"%s: bad spare sectors per cylinder"
-argument_list|,
-name|optarg
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -2060,66 +1655,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|rpm
+name|secpercyl
 operator|==
 literal|0
 condition|)
 block|{
-name|rpm
-operator|=
-name|lp
-operator|->
-name|d_rpm
-expr_stmt|;
-if|if
-condition|(
-name|rpm
-operator|<=
-literal|0
-condition|)
-name|rpm
-operator|=
-literal|3600
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|ntracks
-operator|==
-literal|0
-condition|)
-block|{
-name|ntracks
-operator|=
-name|lp
-operator|->
-name|d_ntracks
-expr_stmt|;
-if|if
-condition|(
-name|ntracks
-operator|<=
-literal|0
-condition|)
-name|fatal
-argument_list|(
-literal|"%s: no default #tracks"
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|nsectors
-operator|==
-literal|0
-condition|)
-block|{
-name|nsectors
+name|secpercyl
 operator|=
 name|lp
 operator|->
@@ -2127,7 +1668,7 @@ name|d_nsectors
 expr_stmt|;
 if|if
 condition|(
-name|nsectors
+name|secpercyl
 operator|<=
 literal|0
 condition|)
@@ -2170,55 +1711,6 @@ index|[
 literal|0
 index|]
 argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|trackskew
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-name|trackskew
-operator|=
-name|lp
-operator|->
-name|d_trackskew
-expr_stmt|;
-if|if
-condition|(
-name|trackskew
-operator|<
-literal|0
-condition|)
-name|trackskew
-operator|=
-literal|0
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|interleave
-operator|==
-literal|0
-condition|)
-block|{
-name|interleave
-operator|=
-name|lp
-operator|->
-name|d_interleave
-expr_stmt|;
-if|if
-condition|(
-name|interleave
-operator|<=
-literal|0
-condition|)
-name|interleave
-operator|=
-literal|1
 expr_stmt|;
 block|}
 if|if
@@ -2351,70 +1843,6 @@ operator|=
 name|FS_OPTSPACE
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|trackspares
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-name|trackspares
-operator|=
-name|lp
-operator|->
-name|d_sparespertrack
-expr_stmt|;
-if|if
-condition|(
-name|trackspares
-operator|<
-literal|0
-condition|)
-name|trackspares
-operator|=
-literal|0
-expr_stmt|;
-block|}
-name|nphyssectors
-operator|=
-name|nsectors
-operator|+
-name|trackspares
-expr_stmt|;
-if|if
-condition|(
-name|cylspares
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-name|cylspares
-operator|=
-name|lp
-operator|->
-name|d_sparespercyl
-expr_stmt|;
-if|if
-condition|(
-name|cylspares
-operator|<
-literal|0
-condition|)
-name|cylspares
-operator|=
-literal|0
-expr_stmt|;
-block|}
-name|secpercyl
-operator|=
-name|nsectors
-operator|*
-name|ntracks
-operator|-
-name|cylspares
-expr_stmt|;
 comment|/* 	 * Only complain if -t or -u have been specified; the default 	 * case (4096 sectors per cylinder) is intended to disagree 	 * with the disklabel. 	 */
 if|if
 condition|(
@@ -2458,18 +1886,6 @@ name|MAXBLKPG
 argument_list|(
 name|bsize
 argument_list|)
-expr_stmt|;
-name|headswitch
-operator|=
-name|lp
-operator|->
-name|d_headswitch
-expr_stmt|;
-name|trackseek
-operator|=
-name|lp
-operator|->
-name|d_trkseek
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -2516,14 +1932,6 @@ decl_stmt|;
 name|sectorsize
 operator|=
 name|DEV_BSIZE
-expr_stmt|;
-name|nsectors
-operator|*=
-name|secperblk
-expr_stmt|;
-name|nphyssectors
-operator|*=
-name|secperblk
 expr_stmt|;
 name|secpercyl
 operator|*=
@@ -2970,16 +2378,6 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t-O create a 4.3BSD format filesystem\n"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
 literal|"\t-R regression test, supress random factors\n"
 argument_list|)
 expr_stmt|;
@@ -3061,16 +2459,6 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t-d rotational delay between contiguous blocks\n"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
 literal|"\t-e maximum blocks per file in a cylinder group\n"
 argument_list|)
 expr_stmt|;
@@ -3121,37 +2509,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t-k sector 0 skew, per track\n"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-l hardware sector interleave\n"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
 literal|"\t-m minimum free space %%\n"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-n number of distinguished rotational positions\n"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3171,16 +2529,6 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t-p spare sectors per track\n"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
 literal|"\t-s file system size (sectors)\n"
 argument_list|)
 expr_stmt|;
@@ -3191,27 +2539,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t-r revolutions/minute\n"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-t tracks/cylinder\n"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-u sectors/track\n"
+literal|"\t-u sectors/cylinder\n"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3222,16 +2550,6 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"\t-v do not attempt to determine partition name from device name\n"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\t-x spare sectors per cylinder\n"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

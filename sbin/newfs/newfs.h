@@ -21,17 +21,6 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|Oflag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* format as an 4.3BSD file system */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|Rflag
 decl_stmt|;
 end_decl_stmt
@@ -53,7 +42,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|u_int
 name|fssize
 decl_stmt|;
 end_decl_stmt
@@ -64,40 +53,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|ntracks
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* # tracks/cylinder */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|nsectors
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* # sectors/track */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|nphyssectors
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* # sectors/track including spares */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
+name|u_int
 name|secpercyl
 decl_stmt|;
 end_decl_stmt
@@ -126,39 +82,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* bytes/sector in hardware*/
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|rpm
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* revolutions/minute of drive */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|interleave
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* hardware sector interleave */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|trackskew
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* sector 0 skew, per track */
 end_comment
 
 begin_decl_stmt
@@ -252,34 +175,12 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|rotdelay
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* rotational delay between blocks */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
 name|maxbpg
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* maximum blocks per file in a cyl group */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|nrpos
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* # of distinguished rotational positions */
 end_comment
 
 begin_decl_stmt
@@ -325,6 +226,24 @@ end_decl_stmt
 begin_comment
 comment|/* expected number of files per directory */
 end_comment
+
+begin_function_decl
+name|void
+name|mkfs
+parameter_list|(
+name|struct
+name|partition
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 end_unit
 
