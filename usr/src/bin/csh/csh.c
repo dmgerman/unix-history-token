@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)csh.c 4.13 %G%"
+literal|"@(#)csh.c 4.14 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2831,6 +2831,8 @@ expr_stmt|;
 if|if
 condition|(
 name|intty
+operator|&&
+name|prompt
 operator|&&
 name|evalvec
 operator|==
