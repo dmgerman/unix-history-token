@@ -81,6 +81,45 @@ name|FE_ALL_EXCEPT
 value|(FE_DIVBYZERO | FE_INEXACT | \ 			 FE_INVALID | FE_OVERFLOW | FE_UNDERFLOW)
 end_define
 
+begin_comment
+comment|/* Rounding modes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FE_TONEAREST
+value|0x0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|FE_TOWARDZERO
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|FE_UPWARD
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|FE_DOWNWARD
+value|0x0003
+end_define
+
+begin_define
+define|#
+directive|define
+name|_ROUND_MASK
+value|(FE_TONEAREST | FE_DOWNWARD | \ 			 FE_UPWARD | FE_TOWARDZERO)
+end_define
+
 begin_decl_stmt
 name|__BEGIN_DECLS
 comment|/* Default floating-point environment */
