@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific written prior permission. This software  * is provided ``as is'' without express or implied warranty.  */
 end_comment
 
 begin_ifndef
@@ -21,8 +21,11 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -36,15 +39,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)more.c	5.13 (Berkeley) %G%"
+literal|"@(#)more.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_comment
 comment|/* ** more.c - General purpose tty output filter and file perusal program ** **	by Eric Shienbrood, UC Berkeley ** **	modified by Geoff Peck, UCB to add underlining, single spacing **	modified by John Foderaro, UCB to add -c and MORE environment variable */
@@ -59,7 +65,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -107,7 +113,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/exec.h>
+file|<a.out.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<varargs.h>
 end_include
 
 begin_define
@@ -1491,7 +1503,7 @@ operator|&&
 operator|(
 name|file_size
 operator|!=
-literal|0x7fffffffffffffffL
+name|LONG_MAX
 operator|)
 condition|)
 if|if
@@ -1876,6 +1888,9 @@ operator|-
 literal|1
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|stdout
@@ -1895,6 +1910,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+operator|(
+name|FILE
+operator|*
+operator|)
 name|NULL
 operator|)
 return|;
@@ -1921,6 +1940,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+operator|(
+name|FILE
+operator|*
+operator|)
 name|NULL
 operator|)
 return|;
@@ -1941,6 +1964,9 @@ operator|==
 name|NULL
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fflush
 argument_list|(
 name|stdout
@@ -1953,37 +1979,32 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+operator|(
+name|FILE
+operator|*
+operator|)
 name|NULL
 operator|)
 return|;
 block|}
-comment|/* Try to see whether it is an ASCII file */
 if|if
 condition|(
 name|magic
 argument_list|(
 name|f
-argument_list|)
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"\n******** %s: Not a text file ********\n\n"
 argument_list|,
 name|fs
 argument_list|)
-expr_stmt|;
-name|fclose
-argument_list|(
-name|f
-argument_list|)
-expr_stmt|;
+condition|)
 return|return
 operator|(
+operator|(
+name|FILE
+operator|*
+operator|)
 name|NULL
 operator|)
 return|;
-block|}
 name|c
 operator|=
 name|Getc
@@ -1991,23 +2012,12 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+operator|*
+name|clearfirst
+operator|=
 name|c
 operator|==
 literal|'\f'
-condition|)
-operator|*
-name|clearfirst
-operator|=
-literal|1
-expr_stmt|;
-else|else
-block|{
-operator|*
-name|clearfirst
-operator|=
-literal|0
 expr_stmt|;
 name|Ungetc
 argument_list|(
@@ -2016,7 +2026,6 @@ argument_list|,
 name|f
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -2031,7 +2040,7 @@ literal|0
 condition|)
 name|file_size
 operator|=
-literal|0x7fffffffffffffffL
+name|LONG_MAX
 expr_stmt|;
 return|return
 operator|(
@@ -2042,91 +2051,117 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check for file magic numbers. This code would best  * be shared with the file(1) program or, perhaps, more  * should not try and be so smart?  */
+comment|/*  * magic --  *	check for file magic numbers.  This code would best be shared with  *	the file(1) program or, perhaps, more should not try and be so smart?  */
 end_comment
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|magic
 argument_list|(
 argument|f
+argument_list|,
+argument|fs
 argument_list|)
-end_macro
+name|FILE
+operator|*
+name|f
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
-name|FILE
+name|char
 modifier|*
-name|f
+name|fs
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
-name|long
-name|magic
+name|struct
+name|exec
+name|ex
 decl_stmt|;
-name|magic
-operator|=
-name|getw
-argument_list|(
-name|f
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|ftell
+name|fread
 argument_list|(
+operator|&
+name|ex
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ex
+argument_list|)
+argument_list|,
+literal|1
+argument_list|,
 name|f
 argument_list|)
-operator|<
-sizeof|sizeof
-name|magic
+operator|==
+literal|1
 condition|)
-name|rewind
+switch|switch
+condition|(
+name|ex
+operator|.
+name|a_magic
+condition|)
+block|{
+case|case
+name|OMAGIC
+case|:
+case|case
+name|NMAGIC
+case|:
+case|case
+name|ZMAGIC
+case|:
+case|case
+literal|0405
+case|:
+case|case
+literal|0411
+case|:
+case|case
+literal|0177545
+case|:
+name|printf
+argument_list|(
+literal|"\n******** %s: Not a text file ********\n\n"
+argument_list|,
+name|fs
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fclose
 argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
-comment|/* reset file position */
-else|else
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+operator|(
+name|void
+operator|)
 name|fseek
 argument_list|(
 name|f
 argument_list|,
-operator|-
-sizeof|sizeof
-argument_list|(
-name|magic
-argument_list|)
+literal|0L
 argument_list|,
-name|L_INCR
+name|L_SET
 argument_list|)
 expr_stmt|;
-comment|/* reset file position */
+comment|/* rewind() not necessary */
 return|return
 operator|(
-name|magic
-operator|==
-literal|0405
-operator|||
-name|magic
-operator|==
-name|OMAGIC
-operator|||
-name|magic
-operator|==
-name|NMAGIC
-operator|||
-name|magic
-operator|==
-literal|0411
-operator|||
-name|magic
-operator|==
-name|ZMAGIC
-operator|||
-name|magic
-operator|==
-literal|0177545
+name|NULL
 operator|)
 return|;
 block|}
