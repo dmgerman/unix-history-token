@@ -353,7 +353,7 @@ name|OUT
 parameter_list|(
 name|s
 parameter_list|)
-value|{ fwrite(s, sizeof(u_char), psl, stdout); putchar('\n'); }
+value|{ fwrite(s, sizeof(u_char), psl, outfile); fputc('\n', outfile); }
 end_define
 
 begin_function
@@ -576,8 +576,10 @@ condition|)
 operator|(
 name|void
 operator|)
-name|printf
+name|fprintf
 argument_list|(
+name|outfile
+argument_list|,
 literal|"%s"
 argument_list|,
 name|cp
@@ -757,8 +759,10 @@ case|:
 operator|(
 name|void
 operator|)
-name|printf
+name|fprintf
 argument_list|(
+name|outfile
+argument_list|,
 literal|"%s"
 argument_list|,
 name|cp
@@ -1252,8 +1256,10 @@ case|:
 operator|(
 name|void
 operator|)
-name|printf
+name|fprintf
 argument_list|(
+name|outfile
+argument_list|,
 literal|"%lu\n"
 argument_list|,
 name|linenum
@@ -2253,7 +2259,7 @@ index|]
 operator|.
 name|len
 argument_list|,
-name|stdout
+name|outfile
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2319,7 +2325,7 @@ argument_list|)
 argument_list|,
 name|count
 argument_list|,
-name|stdout
+name|outfile
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2336,14 +2342,16 @@ if|if
 condition|(
 name|ferror
 argument_list|(
-name|stdout
+name|outfile
 argument_list|)
 condition|)
 name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"stdout: %s"
+literal|"%s: %s"
+argument_list|,
+name|outfname
 argument_list|,
 name|strerror
 argument_list|(
@@ -2397,6 +2405,16 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
+if|if
+condition|(
+name|outfile
+operator|!=
+name|stdout
+condition|)
+name|termwidth
+operator|=
+literal|60
+expr_stmt|;
 if|if
 condition|(
 name|termwidth
@@ -2486,8 +2504,10 @@ block|{
 operator|(
 name|void
 operator|)
-name|printf
+name|fprintf
 argument_list|(
+name|outfile
+argument_list|,
 literal|"\\\n"
 argument_list|)
 expr_stmt|;
@@ -2517,10 +2537,12 @@ block|{
 operator|(
 name|void
 operator|)
-name|putchar
+name|fputc
 argument_list|(
 operator|*
 name|s
+argument_list|,
+name|outfile
 argument_list|)
 expr_stmt|;
 name|count
@@ -2539,17 +2561,21 @@ block|{
 operator|(
 name|void
 operator|)
-name|putchar
+name|fputc
 argument_list|(
 literal|'$'
+argument_list|,
+name|outfile
 argument_list|)
 expr_stmt|;
 operator|(
 name|void
 operator|)
-name|putchar
+name|fputc
 argument_list|(
 literal|'\n'
+argument_list|,
+name|outfile
 argument_list|)
 expr_stmt|;
 name|count
@@ -2566,9 +2592,11 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|putchar
+name|fputc
 argument_list|(
 literal|'\\'
+argument_list|,
+name|outfile
 argument_list|)
 expr_stmt|;
 if|if
@@ -2589,7 +2617,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|putchar
+name|fputc
 argument_list|(
 literal|"\\abfrtv"
 index|[
@@ -2597,6 +2625,8 @@ name|p
 operator|-
 name|escapes
 index|]
+argument_list|,
+name|outfile
 argument_list|)
 expr_stmt|;
 name|count
@@ -2609,8 +2639,10 @@ block|{
 operator|(
 name|void
 operator|)
-name|printf
+name|fprintf
 argument_list|(
+name|outfile
+argument_list|,
 literal|"%03o"
 argument_list|,
 operator|*
@@ -2631,31 +2663,37 @@ block|}
 operator|(
 name|void
 operator|)
-name|putchar
+name|fputc
 argument_list|(
 literal|'$'
+argument_list|,
+name|outfile
 argument_list|)
 expr_stmt|;
 operator|(
 name|void
 operator|)
-name|putchar
+name|fputc
 argument_list|(
 literal|'\n'
+argument_list|,
+name|outfile
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|ferror
 argument_list|(
-name|stdout
+name|outfile
 argument_list|)
 condition|)
 name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"stdout: %s"
+literal|"%s: %s"
+argument_list|,
+name|outfname
 argument_list|,
 name|strerror
 argument_list|(

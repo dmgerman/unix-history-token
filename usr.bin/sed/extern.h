@@ -67,6 +67,20 @@ specifier|const
 name|char
 modifier|*
 name|fname
+decl_stmt|,
+modifier|*
+name|outfname
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|FILE
+modifier|*
+name|infile
+decl_stmt|,
+modifier|*
+name|outfile
 decl_stmt|;
 end_decl_stmt
 
