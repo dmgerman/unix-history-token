@@ -196,7 +196,7 @@ name|p
 parameter_list|,
 name|t
 parameter_list|)
-value|_ALIGNED_POINTER((p),(t))
+value|_ALIGNED_POINTER(p,t)
 end_define
 
 begin_comment
