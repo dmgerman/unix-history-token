@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00139  * --------------------         -----   ----------------------  *  * 19 Aug 93	Peter da Silva		Better errors and Taylor UUCP locks  *  */
 end_comment
 
 begin_ifndef
@@ -27,6 +27,12 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
 
 begin_include
 include|#
@@ -102,6 +108,17 @@ name|off_t
 name|lseek
 parameter_list|()
 function_decl|;
+name|char
+name|text_pid
+index|[
+literal|81
+index|]
+decl_stmt|;
+comment|/* PDS 93 */
+name|int
+name|len
+decl_stmt|;
+comment|/* PDS 93 */
 operator|(
 name|void
 operator|)
@@ -157,7 +174,15 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"lock open"
+name|tbuf
+argument_list|)
+expr_stmt|;
+comment|/* +PDS 93 */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Can't open lock file.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -167,27 +192,34 @@ literal|1
 operator|)
 return|;
 block|}
-if|if
-condition|(
+name|len
+operator|=
 name|read
 argument_list|(
 name|fd
 argument_list|,
-operator|&
-name|pid
+name|text_pid
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|pid
+name|text_pid
 argument_list|)
+operator|-
+literal|1
 argument_list|)
-operator|!=
-sizeof|sizeof
-argument_list|(
-name|pid
-argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|len
+operator|<=
+literal|0
 condition|)
 block|{
+name|perror
+argument_list|(
+name|tbuf
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -196,9 +228,11 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-name|perror
+name|fprintf
 argument_list|(
-literal|"lock read"
+name|stderr
+argument_list|,
+literal|"Can't read lock file.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -208,6 +242,21 @@ literal|1
 operator|)
 return|;
 block|}
+name|text_pid
+index|[
+name|len
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|pid
+operator|=
+name|atol
+argument_list|(
+name|text_pid
+argument_list|)
+expr_stmt|;
+comment|/* -PDS 93 */
 if|if
 condition|(
 name|kill
@@ -241,6 +290,18 @@ operator|)
 return|;
 block|}
 comment|/* 		 * The process that locked the file isn't running, so 		 * we'll lock it ourselves 		 */
+comment|/* +PDS 93 */
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Stale lock on %s PID=%d... overriding.\n"
+argument_list|,
+name|ttyname
+argument_list|,
+name|pid
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|lseek
@@ -255,6 +316,11 @@ operator|<
 literal|0
 condition|)
 block|{
+name|perror
+argument_list|(
+name|tbuf
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -263,9 +329,11 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-name|perror
+name|fprintf
 argument_list|(
-literal|"lock lseek"
+name|stderr
+argument_list|,
+literal|"Can't seek lock file.\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -282,31 +350,37 @@ operator|=
 name|getpid
 argument_list|()
 expr_stmt|;
+name|sprintf
+argument_list|(
+name|text_pid
+argument_list|,
+literal|"%10d\n"
+argument_list|,
+name|pid
+argument_list|)
+expr_stmt|;
+name|len
+operator|=
+name|strlen
+argument_list|(
+name|text_pid
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|write
 argument_list|(
 name|fd
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|pid
+name|text_pid
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|pid
-argument_list|)
+name|len
 argument_list|)
 operator|!=
-sizeof|sizeof
-argument_list|(
-name|pid
-argument_list|)
+name|len
 condition|)
 block|{
+comment|/* -PDS 93 */
 operator|(
 name|void
 operator|)
