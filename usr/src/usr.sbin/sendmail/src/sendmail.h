@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	6.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	6.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	6.8		%G%"
+literal|"@(#)sendmail.h	6.9		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -184,17 +184,6 @@ end_endif
 
 begin_comment
 comment|/* DAEMON */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PSBUFSIZE
-value|(MAXNAME + MAXATOM)
-end_define
-
-begin_comment
-comment|/* size of prescan buffer */
 end_comment
 
 begin_comment
