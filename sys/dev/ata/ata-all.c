@@ -9122,6 +9122,12 @@ case|:
 return|return
 literal|"UDMA133"
 return|;
+case|case
+name|ATA_SA150
+case|:
+return|return
+literal|"SATA150"
+return|;
 default|default:
 return|return
 literal|"???"
