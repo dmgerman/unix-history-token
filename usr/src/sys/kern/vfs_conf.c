@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_conf.c	7.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_conf.c	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -344,6 +344,82 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NULLFS
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|vfsops
+name|null_vfsops
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|NULL_VFSOPS
+value|&null_vfsops
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|NULL_VFSOPS
+value|NULL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|UMAPFS
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|vfsops
+name|umap_vfsops
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|UMAP_VFSOPS
+value|&umap_vfsops
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|UMAP_VFSOPS
+value|NULL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|struct
 name|vfsops
@@ -379,12 +455,19 @@ comment|/* 7 = MOUNT_FDESC */
 name|PORTAL_VFSOPS
 block|,
 comment|/* 8 = MOUNT_PORTAL */
+name|NULL_VFSOPS
+block|,
+comment|/* 9 = MOUNT_NULL */
+name|UMAP_VFSOPS
+block|,
+comment|/* 10 = MOUNT_UMAP */
+literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  *  * vfs_opv_descs enumerates the list of vnode classes, each with it's own  * vnode operation vector.  It is consulted at system boot to build operation  * vectors.  It is NULL terminated.  *  * Out-of-kernel, someone else (more knowlegable about what file systems live  * in this address space) must specify this table.  */
+comment|/*  *  * vfs_opv_descs enumerates the list of vnode classes, each with it's own  * vnode operation vector.  It is consulted at system boot to build operation  * vectors.  It is NULL terminated.  *  */
 end_comment
 
 begin_decl_stmt
@@ -516,6 +599,22 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+name|struct
+name|vnodeopv_desc
+name|null_vnodeop_opv_desc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|vnodeopv_desc
+name|umap_vnodeop_opv_desc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|vnodeopv_desc
 modifier|*
@@ -618,6 +717,22 @@ directive|ifdef
 name|PORTAL
 operator|&
 name|portal_vnodeop_opv_desc
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|NULLFS
+operator|&
+name|null_vnodeop_opv_desc
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|UMAPFS
+operator|&
+name|umap_vnodeop_opv_desc
 block|,
 endif|#
 directive|endif
