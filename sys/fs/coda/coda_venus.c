@@ -763,7 +763,7 @@ operator|)
 name|inp
 operator|+
 operator|(
-name|int
+name|long
 operator|)
 name|inp
 operator|->
@@ -860,7 +860,7 @@ operator|)
 name|outp
 operator|+
 operator|(
-name|int
+name|long
 operator|)
 name|outp
 operator|->
@@ -1336,7 +1336,7 @@ operator|)
 name|outp
 operator|+
 operator|(
-name|int
+name|long
 operator|)
 name|outp
 operator|->
@@ -2771,7 +2771,7 @@ operator|)
 name|outp
 operator|+
 operator|(
-name|int
+name|long
 operator|)
 name|outp
 operator|->
