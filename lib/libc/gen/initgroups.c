@@ -101,16 +101,22 @@ name|agroup
 decl_stmt|;
 block|{
 name|int
+name|ngroups
+decl_stmt|;
+comment|/* 	 * Provide space for one group more than NGROUPS to allow 	 * setgroups to fail and set errno. 	 */
+name|gid_t
 name|groups
 index|[
 name|NGROUPS
+operator|+
+literal|1
 index|]
-decl_stmt|,
-name|ngroups
 decl_stmt|;
 name|ngroups
 operator|=
 name|NGROUPS
+operator|+
+literal|1
 expr_stmt|;
 name|getgrouplist
 argument_list|(
