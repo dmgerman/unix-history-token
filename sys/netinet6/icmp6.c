@@ -1809,6 +1809,7 @@ condition|)
 goto|goto
 name|badcode
 goto|;
+comment|/* validation is made in icmp6_mtudisc_update */
 name|code
 operator|=
 name|PRC_MSGSIZE
@@ -4883,8 +4884,12 @@ block|}
 if|if
 condition|(
 name|mtu
-operator|>=
-name|IPV6_MMTU
+operator|<
+name|tcp_maxmtu6
+argument_list|(
+operator|&
+name|inc
+argument_list|)
 condition|)
 block|{
 name|tcp_hc_updatemtu
