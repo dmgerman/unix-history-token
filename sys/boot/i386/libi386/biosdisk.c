@@ -1117,6 +1117,284 @@ operator|.
 name|dp_typ
 condition|)
 block|{
+operator|,
+block|{
+literal|0x01
+operator|,
+literal|"Primary DOS with 12 bit FAT"
+block|}
+operator|,
+block|{
+literal|0x02
+operator|,
+literal|"XENIX / filesystem"
+block|}
+operator|,
+block|{
+literal|0x03
+operator|,
+literal|"XENIX /usr filesystem"
+block|}
+operator|,
+block|{
+literal|0x04
+operator|,
+literal|"Primary DOS with 16 bit FAT (<= 32MB)"
+block|}
+operator|,
+block|{
+literal|0x05
+operator|,
+literal|"Extended DOS"
+block|}
+operator|,
+block|{
+literal|0x06
+operator|,
+literal|"Primary 'big' DOS (> 32MB)"
+block|}
+operator|,
+block|{
+literal|0x07
+operator|,
+literal|"OS/2 HPFS, NTFS, QNX or Advanced UNIX"
+block|}
+operator|,
+block|{
+literal|0x08
+operator|,
+literal|"AIX filesystem"
+block|}
+operator|,
+block|{
+literal|0x09
+operator|,
+literal|"AIX boot partition or Coherent"
+block|}
+operator|,
+block|{
+literal|0x0A
+operator|,
+literal|"OS/2 Boot Manager or OPUS"
+block|}
+operator|,
+block|{
+literal|0x0B
+operator|,
+literal|"DOS or Windows 95 with 32 bit FAT"
+block|}
+operator|,
+block|{
+literal|0x0C
+operator|,
+literal|"DOS or Windows 95 with 32 bit FAT, LBA"
+block|}
+operator|,
+block|{
+literal|0x0E
+operator|,
+literal|"Primary 'big' DOS (> 32MB, LBA)"
+block|}
+operator|,
+block|{
+literal|0x0F
+operator|,
+literal|"Extended DOS, LBA"
+block|}
+operator|,
+block|{
+literal|0x10
+operator|,
+literal|"OPUS"
+block|}
+operator|,
+block|{
+literal|0x40
+operator|,
+literal|"VENIX 286"
+block|}
+operator|,
+block|{
+literal|0x50
+operator|,
+literal|"DM"
+block|}
+operator|,
+block|{
+literal|0x51
+operator|,
+literal|"DM"
+block|}
+operator|,
+block|{
+literal|0x52
+operator|,
+literal|"CP/M or Microport SysV/AT"
+block|}
+operator|,
+block|{
+literal|0x56
+operator|,
+literal|"GB"
+block|}
+operator|,
+block|{
+literal|0x61
+operator|,
+literal|"Speed"
+block|}
+operator|,
+block|{
+literal|0x63
+operator|,
+literal|"ISC UNIX, other System V/386, GNU HURD or Mach"
+block|}
+operator|,
+block|{
+literal|0x64
+operator|,
+literal|"Novell Netware 2.xx"
+block|}
+operator|,
+block|{
+literal|0x65
+operator|,
+literal|"Novell Netware 3.xx"
+block|}
+operator|,
+block|{
+literal|0x75
+operator|,
+literal|"PCIX"
+block|}
+operator|,
+block|{
+literal|0x80
+operator|,
+literal|"Minix 1.1 ... 1.4a"
+block|}
+operator|,
+block|{
+literal|0x81
+operator|,
+literal|"Minix 1.4b ... 1.5.10"
+block|}
+operator|,
+block|{
+literal|0x82
+operator|,
+literal|"Linux swap or Solaris x86"
+block|}
+operator|,
+block|{
+literal|0x83
+operator|,
+literal|"Linux filesystem"
+block|}
+operator|,
+block|{
+literal|0x93
+operator|,
+literal|"Amoeba filesystem"
+block|}
+operator|,
+block|{
+literal|0x94
+operator|,
+literal|"Amoeba bad block table"
+block|}
+operator|,
+block|{
+literal|0x9F
+operator|,
+literal|"BSD/OS"
+block|}
+operator|,
+block|{
+literal|0xA5
+operator|,
+literal|"FreeBSD/NetBSD/386BSD"
+block|}
+operator|,
+block|{
+literal|0xA6
+operator|,
+literal|"OpenBSD"
+block|}
+operator|,
+block|{
+literal|0xA7
+operator|,
+literal|"NEXTSTEP"
+block|}
+operator|,
+block|{
+literal|0xA9
+operator|,
+literal|"NetBSD"
+block|}
+operator|,
+block|{
+literal|0xB7
+operator|,
+literal|"BSDI BSD/386 filesystem"
+block|}
+operator|,
+block|{
+literal|0xB8
+operator|,
+literal|"BSDI BSD/386 swap"
+block|}
+operator|,
+block|{
+literal|0xDB
+operator|,
+literal|"Concurrent CPM or C.DOS or CTOS"
+block|}
+operator|,
+block|{
+literal|0xE1
+operator|,
+literal|"Speed"
+block|}
+operator|,
+block|{
+literal|0xE3
+operator|,
+literal|"Speed"
+block|}
+operator|,
+block|{
+literal|0xE4
+operator|,
+literal|"Speed"
+block|}
+operator|,
+block|{
+literal|0xF1
+operator|,
+literal|"Speed"
+block|}
+operator|,
+block|{
+literal|0xF2
+operator|,
+literal|"DOS 3.3+ Secondary"
+block|}
+operator|,
+block|{
+literal|0xF4
+operator|,
+literal|"Speed"
+block|}
+operator|,
+block|{
+literal|0xFF
+operator|,
+literal|"BBT (Bad Blocks Table)"
+block|}
+block|}
+empty_stmt|;
 case|case
 name|DOSPTYP_386BSD
 case|:
@@ -1160,11 +1438,10 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-block|}
 end_function
 
 begin_function
-specifier|static
+unit|}  static
 name|void
 name|bd_printslice
 parameter_list|(
@@ -2674,6 +2951,33 @@ name|struct
 name|bcache_devdata
 name|bcd
 decl_stmt|;
+name|struct
+name|open_disk
+modifier|*
+name|od
+init|=
+operator|(
+expr|struct
+name|open_disk
+operator|*
+operator|)
+operator|(
+operator|(
+operator|(
+expr|struct
+name|i386_devdesc
+operator|*
+operator|)
+name|devdata
+operator|)
+operator|->
+name|d_kind
+operator|.
+name|biosdisk
+operator|.
+name|data
+operator|)
+decl_stmt|;
 name|bcd
 operator|.
 name|dv_strategy
@@ -2693,9 +2997,17 @@ argument_list|(
 operator|&
 name|bcd
 argument_list|,
+name|od
+operator|->
+name|od_unit
+argument_list|,
 name|rw
 argument_list|,
 name|dblk
+operator|+
+name|od
+operator|->
+name|od_boff
 argument_list|,
 name|size
 argument_list|,
@@ -2826,13 +3138,9 @@ name|BIOSDISK_SECSIZE
 expr_stmt|;
 name|DEBUG
 argument_list|(
-literal|"read %d from %d+%d to %p"
+literal|"read %d from %d to %p"
 argument_list|,
 name|blks
-argument_list|,
-name|od
-operator|->
-name|od_boff
 argument_list|,
 name|dblk
 argument_list|,
@@ -2857,10 +3165,6 @@ argument_list|(
 name|od
 argument_list|,
 name|dblk
-operator|+
-name|od
-operator|->
-name|od_boff
 argument_list|,
 name|blks
 argument_list|,
@@ -2884,13 +3188,9 @@ directive|ifdef
 name|BD_SUPPORT_FRAGS
 name|DEBUG
 argument_list|(
-literal|"bd_strategy: frag read %d from %d+%d+d to %p"
+literal|"bd_strategy: frag read %d from %d+%d to %p"
 argument_list|,
 name|fragsize
-argument_list|,
-name|od
-operator|->
-name|od_boff
 argument_list|,
 name|dblk
 argument_list|,
@@ -2914,10 +3214,6 @@ argument_list|(
 name|od
 argument_list|,
 name|dblk
-operator|+
-name|od
-operator|->
-name|od_boff
 operator|+
 name|blks
 argument_list|,
