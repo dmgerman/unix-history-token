@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ip_var.h	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ip_var.h	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -252,6 +252,38 @@ name|long
 name|ips_redirectsent
 decl_stmt|;
 comment|/* packets forwarded on same net */
+name|long
+name|ips_noproto
+decl_stmt|;
+comment|/* unknown or unsupported protocol */
+name|long
+name|ips_delivered
+decl_stmt|;
+comment|/* packets consumed here */
+name|long
+name|ips_localout
+decl_stmt|;
+comment|/* total ip packets generated here */
+name|long
+name|ips_odropped
+decl_stmt|;
+comment|/* lost packets due to nobufs, etc. */
+name|long
+name|ips_reassembled
+decl_stmt|;
+comment|/* total packets reassembled ok */
+name|long
+name|ips_fragmented
+decl_stmt|;
+comment|/* output packets fragmented ok */
+name|long
+name|ips_ofragments
+decl_stmt|;
+comment|/* output fragments created */
+name|long
+name|ips_cantfrag
+decl_stmt|;
+comment|/* don't fragment flag was set, etc. */
 block|}
 struct|;
 end_struct
