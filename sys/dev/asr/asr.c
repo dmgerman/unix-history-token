@@ -2253,7 +2253,7 @@ begin_define
 define|#
 directive|define
 name|CDEV_MAJOR
-value|97
+value|154
 end_define
 
 begin_comment
