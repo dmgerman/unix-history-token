@@ -1031,7 +1031,7 @@ specifier|static
 name|int
 name|pci_do_powerstate
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1060,7 +1060,7 @@ argument_list|,
 operator|&
 name|pci_do_powerstate
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 literal|"Power down devices into D3 state when no driver attaches to them.\n\ Otherwise, leave the device in D0 state when no driver attaches."
 argument_list|)
