@@ -251,6 +251,17 @@ name|MAXLINELENGTHLIMIT
 value|(256 * 1024)
 end_define
 
+begin_define
+define|#
+directive|define
+name|GROUP_IGNORE_COMMENTS
+value|1
+end_define
+
+begin_comment
+comment|/* allow comments in /etc/group */
+end_comment
+
 begin_function
 name|struct
 name|group
@@ -1192,6 +1203,11 @@ operator|*
 name|cp
 operator|==
 literal|'#'
+operator|||
+operator|*
+name|cp
+operator|==
+literal|'\0'
 condition|)
 continue|continue;
 endif|#
