@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	1.11 (Berkeley) %G%"
+literal|"@(#)main.c	1.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|"../h/stat.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/ostat.h"
 end_include
 
 begin_include
@@ -1624,7 +1630,7 @@ end_decl_stmt
 begin_block
 block|{
 name|struct
-name|stat
+name|ostat
 name|stslash
 decl_stmt|,
 name|stblock
@@ -1877,7 +1883,7 @@ literal|'/'
 argument_list|)
 decl_stmt|;
 name|struct
-name|stat
+name|ostat
 name|stb
 decl_stmt|;
 if|if
@@ -6576,7 +6582,7 @@ name|dev_t
 name|rootdev
 decl_stmt|;
 name|struct
-name|stat
+name|ostat
 name|statb
 decl_stmt|;
 name|int
