@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)login.c	5.35 (Berkeley) %G%"
+literal|"@(#)login.c	5.36 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1981,7 +1981,7 @@ name|pwd
 operator|->
 name|pw_shell
 argument_list|,
-literal|"/bin/csh"
+name|_PATH_CSHELL
 argument_list|)
 condition|)
 block|{
