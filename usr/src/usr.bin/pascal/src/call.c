@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)call.c 1.4 %G%"
+literal|"@(#)call.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -658,7 +658,6 @@ name|type
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* 					 * and fall through 					 */
 default|default:
 name|q
 operator|=
@@ -676,6 +675,33 @@ argument_list|,
 name|RREQ
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|isa
+argument_list|(
+name|p1
+operator|->
+name|type
+argument_list|,
+literal|"d"
+argument_list|)
+operator|&&
+name|isa
+argument_list|(
+name|q
+argument_list|,
+literal|"i"
+argument_list|)
+condition|)
+block|{
+name|putop
+argument_list|(
+name|P2SCONV
+argument_list|,
+name|P2DOUBLE
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 block|}
 endif|#
