@@ -352,7 +352,7 @@ condition|)
 block|{
 name|suf
 operator|=
-literal|"tbz2"
+literal|"tbz"
 expr_stmt|;
 name|setenv
 argument_list|(
