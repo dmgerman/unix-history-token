@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)parser1.c	3.9 84/01/12"
+literal|"@(#)parser1.c	3.10 84/01/12"
 decl_stmt|;
 end_decl_stmt
 
@@ -1031,6 +1031,12 @@ block|{
 if|if
 condition|(
 name|c
+operator|!=
+literal|0
+condition|)
+if|if
+condition|(
+name|c
 operator|->
 name|lc_arg
 index|[
@@ -1249,6 +1255,7 @@ condition|(
 name|tmp
 condition|)
 block|{
+comment|/* we know c != 0 */
 for|for
 control|(
 name|ap
