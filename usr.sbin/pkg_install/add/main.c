@@ -657,6 +657,22 @@ argument_list|)
 operator|)
 condition|)
 comment|/* let pkg_do() fail later, so that error is reported */
+name|pkgs
+index|[
+name|ch
+index|]
+operator|=
+name|strcpy
+argument_list|(
+name|pkgnames
+index|[
+name|ch
+index|]
+argument_list|,
+operator|*
+name|argv
+argument_list|)
+expr_stmt|;
 else|else
 name|pkgs
 index|[
