@@ -3242,6 +3242,10 @@ name|phys_avail_cnt
 operator|-=
 literal|2
 expr_stmt|;
+name|physmem
+operator|-=
+name|sz
+expr_stmt|;
 block|}
 else|else
 block|{
