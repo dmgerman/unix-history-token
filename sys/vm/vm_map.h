@@ -679,6 +679,24 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|_vm_map_trylock_read
+parameter_list|(
+name|vm_map_t
+name|map
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|_vm_map_lock_upgrade
 parameter_list|(
 name|vm_map_t
@@ -784,6 +802,17 @@ parameter_list|(
 name|map
 parameter_list|)
 value|_vm_map_trylock(map, LOCK_FILE, LOCK_LINE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|vm_map_trylock_read
+parameter_list|(
+name|map
+parameter_list|)
+define|\
+value|_vm_map_trylock_read(map, LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_define
