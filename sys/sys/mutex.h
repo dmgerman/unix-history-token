@@ -307,7 +307,6 @@ begin_struct
 struct|struct
 name|mtx_debug
 block|{
-comment|/* If you add anything here, adjust the mtxf_t definition below */
 name|struct
 name|witness
 modifier|*
