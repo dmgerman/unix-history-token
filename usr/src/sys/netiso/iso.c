@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*  * $Header: iso.c,v 4.11 88/09/19 14:58:35 root Exp $   * $Source: /usr/argo/sys/netiso/RCS/iso.c,v $   *	@(#)iso.c	7.10 (Berkeley) %G%  *  * iso.c: miscellaneous routines to support the iso address family  */
+comment|/*  * $Header: iso.c,v 4.11 88/09/19 14:58:35 root Exp $   * $Source: /usr/argo/sys/netiso/RCS/iso.c,v $   *	@(#)iso.c	7.11 (Berkeley) %G%  *  * iso.c: miscellaneous routines to support the iso address family  */
 end_comment
 
 begin_ifndef
@@ -151,12 +151,6 @@ ifdef|#
 directive|ifdef
 name|ISO
 end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"argoxtwentyfive.h"
-end_include
 
 begin_decl_stmt
 name|int
@@ -3526,9 +3520,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|NARGOXTWENTYFIVE
-name|>
-name|0
+name|TPCONS
 end_ifdef
 
 begin_include
@@ -3540,7 +3532,7 @@ end_include
 begin_endif
 endif|#
 directive|endif
-endif|NARGOXTWENTYFIVE> 0
+endif|TPCONS
 end_endif
 
 begin_comment
@@ -3708,9 +3700,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|NARGOXTWENTYFIVE
-name|>
-name|0
+name|TPCONS
 case|case
 name|CONSOPT_X25CRUD
 case|:
@@ -3776,7 +3766,7 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
-endif|NARGOXTWENTYFIVE> 0
+endif|TPCONS
 default|default:
 name|error
 operator|=
