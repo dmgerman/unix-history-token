@@ -106,6 +106,12 @@ name|pc_fpcurthread
 decl_stmt|;
 comment|/* Fp state owner */
 name|struct
+name|thread
+modifier|*
+name|pc_deadthread
+decl_stmt|;
+comment|/* Zombie thread or NULL */
+name|struct
 name|pcb
 modifier|*
 name|pc_curpcb

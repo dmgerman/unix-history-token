@@ -344,7 +344,7 @@ end_function
 
 begin_function
 name|void
-name|cpu_thread_dtor
+name|cpu_thread_clean
 parameter_list|(
 name|struct
 name|thread

@@ -1666,7 +1666,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Finally, call machine-dependent code to release the remaining 	 * resources including address space, the kernel stack and pcb. 	 * The address space is released by "vmspace_exitfree(p)" in 	 * vm_waitproc(). 	 */
+comment|/* 	 * Finally, call machine-dependent code to release the remaining 	 * resources including address space. 	 * The address space is released by "vmspace_exitfree(p)" in 	 * vm_waitproc(). 	 */
 name|cpu_exit
 argument_list|(
 name|td
@@ -1757,14 +1757,9 @@ name|td
 argument_list|)
 expr_stmt|;
 comment|/* XXXKSE check if this should be in thread_exit */
-comment|/* 	 * Make sure this thread is discarded from the zombie. 	 * This will also release this thread's reference to the ucred. 	 */
+comment|/* 	 * Make sure the scheduler takes this thread out of its tables etc. 	 * This will also release this thread's reference to the ucred.  	 * Other thread parts to release include pcb bits and such. 	 */
 name|thread_exit
 argument_list|()
-expr_stmt|;
-name|panic
-argument_list|(
-literal|"exit1"
-argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -1945,21 +1940,6 @@ name|int
 name|status
 decl_stmt|,
 name|error
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td2
-decl_stmt|;
-name|struct
-name|kse
-modifier|*
-name|ke
-decl_stmt|;
-name|struct
-name|ksegrp
-modifier|*
-name|kg
 decl_stmt|;
 name|q
 operator|=
@@ -2607,82 +2587,12 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* 			 * There should only be one  			 * but do it right anyhow. 			 */
-name|FOREACH_KSEGRP_IN_PROC
+comment|/* 			 * do any thread-system specific cleanups 			 */
+name|thread_wait
 argument_list|(
-argument|p
-argument_list|,
-argument|kg
-argument_list|)
-block|{
-name|FOREACH_KSE_IN_GROUP
-argument_list|(
-argument|kg
-argument_list|,
-argument|ke
-argument_list|)
-block|{
-comment|/* Free the KSE spare thread. */
-if|if
-condition|(
-name|ke
-operator|->
-name|ke_tdspare
-operator|!=
-name|NULL
-condition|)
-block|{
-name|thread_free
-argument_list|(
-name|ke
-operator|->
-name|ke_tdspare
+name|p
 argument_list|)
 expr_stmt|;
-name|ke
-operator|->
-name|ke_tdspare
-operator|=
-name|NULL
-expr_stmt|;
-block|}
-block|}
-block|}
-name|FOREACH_THREAD_IN_PROC
-argument_list|(
-argument|p
-argument_list|,
-argument|td2
-argument_list|)
-block|{
-if|if
-condition|(
-name|td2
-operator|->
-name|td_standin
-operator|!=
-name|NULL
-condition|)
-block|{
-name|thread_free
-argument_list|(
-name|td2
-operator|->
-name|td_standin
-argument_list|)
-expr_stmt|;
-name|td2
-operator|->
-name|td_standin
-operator|=
-name|NULL
-expr_stmt|;
-block|}
-block|}
-name|thread_reap
-argument_list|()
-expr_stmt|;
-comment|/* check for zombie threads */
 comment|/* 			 * Give vm and machine-dependent layer a chance 			 * to free anything that cpu_exit couldn't 			 * release while still running in process context. 			 */
 name|vm_waitproc
 argument_list|(

@@ -1033,7 +1033,7 @@ end_function
 
 begin_function
 name|void
-name|cpu_thread_dtor
+name|cpu_thread_clean
 parameter_list|(
 name|struct
 name|thread
@@ -1064,6 +1064,12 @@ block|{
 comment|/* XXXKSE  XXXSMP  not SMP SAFE.. what locks do we have? */
 comment|/* if (pcb->pcb_ext->ext_refcount-- == 1) ?? */
 comment|/* 		 * XXX do we need to move the TSS off the allocated pages 		 * before freeing them?  (not done here) 		 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|kmem_free
 argument_list|(
 name|kernel_map
@@ -1081,6 +1087,12 @@ name|IOPAGES
 operator|+
 literal|1
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 name|pcb
@@ -1352,6 +1364,12 @@ modifier|*
 name|ke
 parameter_list|)
 block|{
+comment|/*  	 * Do any extra cleaning that needs to be done. 	 * The thread may have optional components 	 * that are not present in a fresh thread. 	 * This may be a recycled thread so make it look 	 * as though it's newly allocated. 	 */
+name|cpu_thread_clean
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Set the trap frame to point at the beginning of the uts 	 * function. 	 */
 name|td
 operator|->

@@ -2119,6 +2119,32 @@ operator|->
 name|td_switchin
 argument_list|()
 expr_stmt|;
+comment|/*  	 * If the last thread was exiting, finish cleaning it up. 	 */
+if|if
+condition|(
+operator|(
+name|td
+operator|=
+name|PCPU_GET
+argument_list|(
+name|deadthread
+argument_list|)
+operator|)
+condition|)
+block|{
+name|PCPU_SET
+argument_list|(
+name|deadthread
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|thread_stash
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
