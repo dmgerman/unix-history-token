@@ -9906,6 +9906,13 @@ name|BCOM_DEVICEID_BCM5701
 value|0x1645
 end_define
 
+begin_define
+define|#
+directive|define
+name|BCOM_DEVICEID_BCM5702X
+value|0x16A6
+end_define
+
 begin_comment
 comment|/*  * Alteon AceNIC PCI vendor/device ID.  */
 end_comment

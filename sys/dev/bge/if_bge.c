@@ -315,6 +315,14 @@ literal|"Broadcom BCM5701 Gigabit Ethernet"
 block|}
 block|,
 block|{
+name|BCOM_VENDORID
+block|,
+name|BCOM_DEVICEID_BCM5702X
+block|,
+literal|"Broadcom BCM5702X Gigabit Ethernet"
+block|}
+block|,
+block|{
 name|SK_VENDORID
 block|,
 name|SK_DEVICEID_ALTIMA
