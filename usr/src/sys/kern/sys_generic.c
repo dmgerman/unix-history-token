@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sys_generic.c	6.9	85/05/22	*/
+comment|/*	sys_generic.c	6.10	85/05/27	*/
 end_comment
 
 begin_include
@@ -1864,6 +1864,15 @@ name|x
 parameter_list|)
 define|\
 value|if (uap->name) { \ 		int error = copyout((caddr_t)obits[x], (caddr_t)uap->name, \ 		    ni * sizeof(int)); \ 		if (error) \ 			u.u_error = error; \ 	}
+if|if
+condition|(
+name|u
+operator|.
+name|u_error
+operator|!=
+name|EINTR
+condition|)
+block|{
 name|putbits
 argument_list|(
 name|in
@@ -1888,6 +1897,7 @@ expr_stmt|;
 undef|#
 directive|undef
 name|putbits
+block|}
 block|}
 end_block
 
