@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)praliases.c	8.4 (Berkeley) 9/25/96"
+literal|"@(#)praliases.c	8.5 (Berkeley) 5/28/97"
 decl_stmt|;
 end_decl_stmt
 
@@ -175,7 +175,8 @@ literal|"f:"
 argument_list|)
 operator|)
 operator|!=
-name|EOF
+operator|-
+literal|1
 condition|)
 switch|switch
 condition|(
@@ -224,6 +225,34 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|NEWDB
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|filename
+argument_list|)
+operator|+
+literal|4
+operator|>=
+sizeof|sizeof
+name|buf
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Alias filename too long: %.30s...\n"
+argument_list|,
+name|filename
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|EX_USAGE
+argument_list|)
+expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  Support for LDAP. ** **	Contributed by Booker C. Bense<bbense@networking.stanford.edu>. **	Please go to him for support -- since I (Eric) don't run LDAP, I **	can't help you at all. ** **	@(#)ldap_map.h	8.2 (Berkeley) 5/22/96 */
+comment|/* **  Support for LDAP. ** **	Contributed by Booker C. Bense<bbense@networking.stanford.edu>. **	Please go to him for support -- since I (Eric) don't run LDAP, I **	can't help you at all. ** **	@(#)ldap_map.h	8.4 (Berkeley) 6/3/97 */
 end_comment
 
 begin_ifndef
@@ -14,6 +14,12 @@ define|#
 directive|define
 name|_LDAP_MAP_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
 
 begin_struct
 struct|struct
@@ -71,6 +77,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|attr
+index|[
+literal|2
+index|]
 decl_stmt|;
 name|int
 name|attrsonly

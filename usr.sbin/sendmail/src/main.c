@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995, 1996 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1983, 1995-1997 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.230 (Berkeley) 1/17/97"
+literal|"@(#)main.c	8.246 (Berkeley) 6/11/97"
 decl_stmt|;
 end_decl_stmt
 
@@ -112,7 +112,7 @@ comment|/* lint */
 end_comment
 
 begin_comment
-comment|/* **  SENDMAIL -- Post mail to a set of destinations. ** **	This is the basic mail router.  All user mail programs should **	call this routine to actually deliver mail.  Sendmail in **	turn calls a bunch of mail servers that do the real work of **	delivering the mail. ** **	Sendmail is driven by tables read in from /usr/lib/sendmail.cf **	(read by readcf.c).  Some more static configuration info, **	including some code that you may want to tailor for your **	installation, is in conf.c.  You may also want to touch **	daemon.c (if you have some other IPC mechanism), acct.c **	(to change your accounting), names.c (to adjust the name **	server mechanism). ** **	Usage: **		/usr/lib/sendmail [flags] addr ... ** **		See the associated documentation for details. ** **	Author: **		Eric Allman, UCB/INGRES (until 10/81). **			     Britton-Lee, Inc., purveyors of fine **				database computers (11/81 - 10/88). **			     International Computer Science Institute **				(11/88 - 9/89). **			     UCB/Mammoth Project (10/89 - 7/95). **			     InReference, Inc. (8/95 - present). **		The support of the my employers is gratefully acknowledged. **			Few of them (Britton-Lee in particular) have had **			anything to gain from my involvement in this project. */
+comment|/* **  SENDMAIL -- Post mail to a set of destinations. ** **	This is the basic mail router.  All user mail programs should **	call this routine to actually deliver mail.  Sendmail in **	turn calls a bunch of mail servers that do the real work of **	delivering the mail. ** **	Sendmail is driven by settings read in from /etc/sendmail.cf **	(read by readcf.c). ** **	Usage: **		/usr/lib/sendmail [flags] addr ... ** **		See the associated documentation for details. ** **	Author: **		Eric Allman, UCB/INGRES (until 10/81). **			     Britton-Lee, Inc., purveyors of fine **				database computers (11/81 - 10/88). **			     International Computer Science Institute **				(11/88 - 9/89). **			     UCB/Mammoth Project (10/89 - 7/95). **			     InReference, Inc. (8/95 - 1/97). **		The support of the my employers is gratefully acknowledged. **			Few of them (Britton-Lee in particular) have had **			anything to gain from my involvement in this project. */
 end_comment
 
 begin_decl_stmt
@@ -207,6 +207,26 @@ end_decl_stmt
 begin_comment
 comment|/* argument vector for re-execing */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NGROUPS_MAX
+end_ifdef
+
+begin_decl_stmt
+name|GIDSET_T
+name|InitialGidSet
+index|[
+name|NGROUPS_MAX
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -929,8 +949,8 @@ name|errno
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|LOG
 ifdef|#
 directive|ifdef
@@ -967,6 +987,55 @@ argument_list|,
 literal|"0-99.1"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NGROUPS_MAX
+comment|/* save initial group set for future checks */
+name|i
+operator|=
+name|getgroups
+argument_list|(
+name|NGROUPS_MAX
+argument_list|,
+name|InitialGidSet
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|==
+literal|0
+condition|)
+name|InitialGidSet
+index|[
+literal|0
+index|]
+operator|=
+operator|(
+name|GID_T
+operator|)
+operator|-
+literal|1
+expr_stmt|;
+while|while
+condition|(
+name|i
+operator|<
+name|NGROUPS_MAX
+condition|)
+name|InitialGidSet
+index|[
+name|i
+operator|++
+index|]
+operator|=
+name|InitialGidSet
+index|[
+literal|0
+index|]
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* drop group id privileges (RunAsUser not yet set) */
 name|drop_privileges
 argument_list|()
@@ -2196,10 +2265,6 @@ block|}
 endif|#
 directive|endif
 block|}
-comment|/* probe interfaces and locate any additional names */
-name|load_if_names
-argument_list|()
-expr_stmt|;
 comment|/* current time */
 name|define
 argument_list|(
@@ -3468,6 +3533,15 @@ argument_list|,
 name|jbuf
 argument_list|)
 expr_stmt|;
+comment|/* probe interfaces and locate any additional names */
+if|if
+condition|(
+operator|!
+name|DontProbeInterfaces
+condition|)
+name|load_if_names
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|tTd
@@ -3697,6 +3771,23 @@ expr_stmt|;
 name|tzset
 argument_list|()
 expr_stmt|;
+comment|/* be sure we don't pick up bogus HOSTALIASES environment variable */
+if|if
+condition|(
+name|queuemode
+operator|&&
+name|RealUid
+operator|!=
+literal|0
+condition|)
+operator|(
+name|void
+operator|)
+name|unsetenv
+argument_list|(
+literal|"HOSTALIASES"
+argument_list|)
+expr_stmt|;
 comment|/* check for sane configuration level */
 if|if
 condition|(
@@ -3777,18 +3868,17 @@ operator|!=
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
 operator|>
 literal|1
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_ALERT
+argument_list|,
+name|NOQID
 argument_list|,
 literal|"user %d attempted to %s"
 argument_list|,
@@ -3803,8 +3893,6 @@ else|:
 literal|"purge host status"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|usrerr
 argument_list|(
 literal|"Permission denied"
@@ -3839,6 +3927,16 @@ name|HostStatDir
 operator|=
 name|NULL
 expr_stmt|;
+name|Verbose
+operator|=
+literal|2
+expr_stmt|;
+name|CurEnv
+operator|->
+name|e_errormode
+operator|=
+name|EM_PRINT
+expr_stmt|;
 break|break;
 case|case
 name|MD_FGDAEMON
@@ -3870,9 +3968,6 @@ operator|=
 name|FALSE
 expr_stmt|;
 comment|/* arrange to restart on hangup signal */
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|SaveArgv
@@ -3892,15 +3987,15 @@ index|]
 operator|!=
 literal|'/'
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_WARNING
+argument_list|,
+name|NOQID
 argument_list|,
 literal|"daemon invoked without full pathname; kill -1 won't work"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|setsignal
 argument_list|(
 name|SIGHUP
@@ -3920,7 +4015,13 @@ name|MD_INITALIAS
 case|:
 name|Verbose
 operator|=
-name|TRUE
+literal|2
+expr_stmt|;
+name|CurEnv
+operator|->
+name|e_errormode
+operator|=
+name|EM_PRINT
 expr_stmt|;
 comment|/* fall through... */
 case|case
@@ -4542,18 +4643,16 @@ directive|endif
 comment|/* operate in queue directory */
 if|if
 condition|(
-name|OpMode
-operator|==
-name|MD_TEST
-condition|)
-comment|/* nothing -- just avoid further if clauses */
-empty_stmt|;
-elseif|else
-if|if
-condition|(
 name|QueueDir
 operator|==
 name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|OpMode
+operator|!=
+name|MD_TEST
 condition|)
 block|{
 name|syserr
@@ -4566,9 +4665,38 @@ operator|=
 name|EX_CONFIG
 expr_stmt|;
 block|}
-elseif|else
+block|}
+else|else
+block|{
+comment|/* test path to get warning messages */
+operator|(
+name|void
+operator|)
+name|safedirpath
+argument_list|(
+name|QueueDir
+argument_list|,
+operator|(
+name|uid_t
+operator|)
+literal|0
+argument_list|,
+operator|(
+name|gid_t
+operator|)
+literal|0
+argument_list|,
+name|NULL
+argument_list|,
+name|SFF_ANYFILE
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
+name|OpMode
+operator|!=
+name|MD_TEST
+operator|&&
 name|chdir
 argument_list|(
 name|QueueDir
@@ -4588,6 +4716,7 @@ name|ExitStat
 operator|=
 name|EX_CONFIG
 expr_stmt|;
+block|}
 block|}
 comment|/* check host status directory for validity */
 if|if
@@ -5010,7 +5139,7 @@ argument_list|)
 condition|)
 name|Verbose
 operator|=
-name|TRUE
+literal|2
 expr_stmt|;
 if|if
 condition|(
@@ -5164,14 +5293,6 @@ operator|==
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|unsetenv
-argument_list|(
-literal|"HOSTALIASES"
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -5332,12 +5453,11 @@ argument_list|,
 literal|"+debugging"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LOG
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_INFO
+argument_list|,
+name|NOQID
 argument_list|,
 literal|"starting daemon (%s): %s"
 argument_list|,
@@ -5348,8 +5468,6 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|XLA
@@ -5382,14 +5500,32 @@ name|OpMode
 operator|!=
 name|MD_DAEMON
 condition|)
+block|{
 for|for
 control|(
 init|;
 condition|;
 control|)
+block|{
 name|pause
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|DoQueueRun
+condition|)
+operator|(
+name|void
+operator|)
+name|runqueue
+argument_list|(
+name|TRUE
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 block|}
 endif|#
 directive|endif
@@ -5737,8 +5873,6 @@ name|InChannel
 argument_list|,
 name|FALSE
 argument_list|,
-name|FALSE
-argument_list|,
 name|NULL
 argument_list|,
 name|CurEnv
@@ -5787,11 +5921,27 @@ operator|||
 name|GrabTo
 condition|)
 block|{
+name|long
+name|savedflags
+init|=
+name|CurEnv
+operator|->
+name|e_flags
+operator|&
+name|EF_FATALERRS
+decl_stmt|;
 name|CurEnv
 operator|->
 name|e_flags
 operator||=
 name|EF_GLOBALERRS
+expr_stmt|;
+name|CurEnv
+operator|->
+name|e_flags
+operator|&=
+operator|~
+name|EF_FATALERRS
 expr_stmt|;
 name|collect
 argument_list|(
@@ -5799,12 +5949,48 @@ name|InChannel
 argument_list|,
 name|FALSE
 argument_list|,
-name|FALSE
-argument_list|,
 name|NULL
 argument_list|,
 name|CurEnv
 argument_list|)
+expr_stmt|;
+comment|/* bail out if there were fatal errors in collect */
+if|if
+condition|(
+name|OpMode
+operator|!=
+name|MD_VERIFY
+operator|&&
+name|bitset
+argument_list|(
+name|EF_FATALERRS
+argument_list|,
+name|CurEnv
+operator|->
+name|e_flags
+argument_list|)
+condition|)
+block|{
+name|CurEnv
+operator|->
+name|e_flags
+operator||=
+name|EF_CLRQUEUE
+expr_stmt|;
+name|finis
+argument_list|()
+expr_stmt|;
+comment|/*NOTREACHED*/
+return|return
+operator|-
+literal|1
+return|;
+block|}
+name|CurEnv
+operator|->
+name|e_flags
+operator||=
+name|savedflags
 expr_stmt|;
 block|}
 name|errno
@@ -5871,6 +6057,11 @@ operator|->
 name|e_to
 operator|=
 name|NULL
+expr_stmt|;
+name|CurrentLA
+operator|=
+name|getla
+argument_list|()
 expr_stmt|;
 name|sendall
 argument_list|(
@@ -5980,6 +6171,22 @@ argument_list|(
 name|FALSE
 argument_list|)
 expr_stmt|;
+comment|/* if we fail in finis(), just exit */
+if|if
+condition|(
+name|setjmp
+argument_list|(
+name|TopFrame
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* failed -- just give it up */
+goto|goto
+name|forceexit
+goto|;
+block|}
 comment|/* clean up temp files */
 name|CurEnv
 operator|->
@@ -6020,18 +6227,21 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* and exit */
-ifdef|#
-directive|ifdef
-name|LOG
+name|forceexit
+label|:
 if|if
 condition|(
 name|LogLevel
 operator|>
 literal|78
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_DEBUG
+argument_list|,
+name|CurEnv
+operator|->
+name|e_id
 argument_list|,
 literal|"finis, pid=%d"
 argument_list|,
@@ -6039,9 +6249,6 @@ name|getpid
 argument_list|()
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* LOG */
 if|if
 condition|(
 name|ExitStat
@@ -6092,36 +6299,23 @@ name|int
 name|sig
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
 operator|>
 literal|79
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s: interrupt"
+name|CurEnv
+operator|->
+name|e_id
 argument_list|,
-name|CurEnv
-operator|->
-name|e_id
-operator|==
-name|NULL
-condition|?
-literal|"[NOQUEUE]"
-else|:
-name|CurEnv
-operator|->
-name|e_id
+literal|"interrupt"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|FileName
 operator|=
 name|NULL
@@ -6523,38 +6717,25 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
 operator|>
 literal|93
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s: disconnect level %d"
+name|e
+operator|->
+name|e_id
 argument_list|,
-name|e
-operator|->
-name|e_id
-operator|==
-name|NULL
-condition|?
-literal|"[NOQUEUE]"
-else|:
-name|e
-operator|->
-name|e_id
+literal|"disconnect level %d"
 argument_list|,
 name|droplev
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* be sure we don't get nasty signals */
 operator|(
 name|void
@@ -6589,7 +6770,7 @@ name|EM_MAIL
 expr_stmt|;
 name|Verbose
 operator|=
-name|FALSE
+literal|0
 expr_stmt|;
 name|DisConnected
 operator|=
@@ -6750,18 +6931,19 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
 operator|>
 literal|71
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_DEBUG
+argument_list|,
+name|e
+operator|->
+name|e_id
 argument_list|,
 literal|"in background, pid=%d"
 argument_list|,
@@ -6769,9 +6951,6 @@ name|getpid
 argument_list|()
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* LOG */
 name|errno
 operator|=
 literal|0
@@ -7257,38 +7436,25 @@ operator|->
 name|e_header
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
 operator|>
 literal|3
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"%s: Authentication-Warning: %.400s"
+name|e
+operator|->
+name|e_id
 argument_list|,
-name|e
-operator|->
-name|e_id
-operator|==
-name|NULL
-condition|?
-literal|"[NOQUEUE]"
-else|:
-name|e
-operator|->
-name|e_id
+literal|"Authentication-Warning: %.400s"
 argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 block|}
 end_function
@@ -7598,9 +7764,6 @@ modifier|*
 name|when
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|LOG
 specifier|register
 name|char
 modifier|*
@@ -7616,9 +7779,13 @@ decl_stmt|;
 name|int
 name|rs
 decl_stmt|;
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_DEBUG
+argument_list|,
+name|CurEnv
+operator|->
+name|e_id
 argument_list|,
 literal|"--- dumping state on %s: $j = %s ---"
 argument_list|,
@@ -7650,26 +7817,38 @@ argument_list|,
 literal|'w'
 argument_list|)
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_DEBUG
+argument_list|,
+name|CurEnv
+operator|->
+name|e_id
 argument_list|,
 literal|"*** $j not in $=w ***"
 argument_list|)
 expr_stmt|;
 block|}
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_DEBUG
+argument_list|,
+name|CurEnv
+operator|->
+name|e_id
 argument_list|,
 literal|"CurChildren = %d"
 argument_list|,
 name|CurChildren
 argument_list|)
 expr_stmt|;
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_DEBUG
+argument_list|,
+name|CurEnv
+operator|->
+name|e_id
 argument_list|,
 literal|"--- open file descriptors: ---"
 argument_list|)
@@ -7679,9 +7858,13 @@ argument_list|(
 name|TRUE
 argument_list|)
 expr_stmt|;
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_DEBUG
+argument_list|,
+name|CurEnv
+operator|->
+name|e_id
 argument_list|,
 literal|"--- connection cache: ---"
 argument_list|)
@@ -7747,9 +7930,13 @@ argument_list|,
 name|CurEnv
 argument_list|)
 expr_stmt|;
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_DEBUG
+argument_list|,
+name|CurEnv
+operator|->
+name|e_id
 argument_list|,
 literal|"--- ruleset debug_dumpstate returns stat %d, pv: ---"
 argument_list|,
@@ -7770,9 +7957,13 @@ condition|;
 name|pvp
 operator|++
 control|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_DEBUG
+argument_list|,
+name|CurEnv
+operator|->
+name|e_id
 argument_list|,
 literal|"%s"
 argument_list|,
@@ -7781,15 +7972,17 @@ name|pvp
 argument_list|)
 expr_stmt|;
 block|}
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_DEBUG
+argument_list|,
+name|CurEnv
+operator|->
+name|e_id
 argument_list|,
 literal|"--- end of state dump ---"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -7837,42 +8030,38 @@ operator|!=
 literal|'/'
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
 operator|>
 literal|3
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_INFO
+argument_list|,
+name|NOQID
 argument_list|,
 literal|"could not restart: need full path"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|exit
 argument_list|(
 name|EX_OSFILE
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
 operator|>
 literal|3
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_INFO
+argument_list|,
+name|NOQID
 argument_list|,
 literal|"restarting %s on signal"
 argument_list|,
@@ -7882,8 +8071,11 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+name|alarm
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 name|releasesignal
 argument_list|(
 name|SIGHUP
@@ -7906,18 +8098,17 @@ operator|<
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
 operator|>
 literal|0
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_ALERT
+argument_list|,
+name|NOQID
 argument_list|,
 literal|"could not set[ug]id(%d, %d): %m"
 argument_list|,
@@ -7926,8 +8117,6 @@ argument_list|,
 name|RealGid
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|exit
 argument_list|(
 name|EX_OSERR
@@ -7947,18 +8136,17 @@ operator|)
 name|SaveArgv
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LOG
 if|if
 condition|(
 name|LogLevel
 operator|>
 literal|0
 condition|)
-name|syslog
+name|sm_syslog
 argument_list|(
 name|LOG_ALERT
+argument_list|,
+name|NOQID
 argument_list|,
 literal|"could not exec %s: %m"
 argument_list|,
@@ -7968,8 +8156,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|exit
 argument_list|(
 name|EX_OSFILE
@@ -9195,6 +9381,30 @@ block|{
 name|printf
 argument_list|(
 literal|"Map named \"%s\" not found\n"
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+operator|!
+name|bitset
+argument_list|(
+name|MF_OPEN
+argument_list|,
+name|map
+operator|->
+name|s_map
+operator|.
+name|map_mflags
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Map named \"%s\" not open\n"
 argument_list|,
 name|p
 argument_list|)
