@@ -4411,16 +4411,6 @@ condition|(
 name|space
 operator|>
 literal|0
-operator|&&
-operator|(
-name|wpipe
-operator|->
-name|pipe_buffer
-operator|.
-name|cnt
-operator|<
-name|PIPE_SIZE
-operator|)
 condition|)
 block|{
 if|if
