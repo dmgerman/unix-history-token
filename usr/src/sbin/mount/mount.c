@@ -1,13 +1,28 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mount.c	4.7 (Berkeley) %G%"
+literal|"@(#)mount.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * mount  */
+end_comment
 
 begin_include
 include|#
@@ -20,10 +35,6 @@ include|#
 directive|include
 file|<fstab.h>
 end_include
-
-begin_comment
-comment|/*  * mount  */
-end_comment
 
 begin_define
 define|#
@@ -436,11 +447,7 @@ block|}
 if|if
 condition|(
 name|argc
-operator|<
-literal|2
-operator|||
-name|argc
-operator|>
+operator|!=
 literal|3
 condition|)
 block|{
