@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)devname.c	5.7 (Berkeley) %G%"
+literal|"@(#)devname.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -128,12 +128,8 @@ name|mode_t
 name|type
 decl_stmt|;
 name|char
+modifier|*
 name|name
-index|[
-name|MAXNAMLEN
-operator|+
-literal|1
-index|]
 decl_stmt|;
 block|}
 struct|;
@@ -255,15 +251,12 @@ name|type
 operator|=
 name|type
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
 name|devp
 operator|->
 name|name
-argument_list|,
+operator|=
+name|strdup
+argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
