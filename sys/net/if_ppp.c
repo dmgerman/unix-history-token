@@ -148,6 +148,12 @@ directive|include
 file|<net/netisr.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<net/bpf.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -200,42 +206,6 @@ include|#
 directive|include
 file|<netipx/ipx_if.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|"bpf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/bpf.h>
-end_include
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|PPP_FILTER
-argument_list|)
-operator|&&
-name|NBPF
-operator|==
-literal|0
-end_if
-
-begin_error
-error|#
-directive|error
-literal|"PPP_FILTER requires bpf"
-end_error
 
 begin_endif
 endif|#
