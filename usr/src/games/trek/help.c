@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)help.c	4.1	(Berkeley)	%G%"
+literal|"@(#)help.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,18 +38,16 @@ name|Cntvect
 index|[
 literal|3
 index|]
+init|=
 block|{
 literal|"first"
-operator|,
+block|,
 literal|"second"
-operator|,
+block|,
 literal|"third"
 block|}
+decl_stmt|;
 end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
 
 begin_macro
 name|help
@@ -131,8 +129,7 @@ comment|/* tut tut, there goes the score */
 name|Game
 operator|.
 name|helps
-operator|=
-operator|+
+operator|+=
 literal|1
 expr_stmt|;
 comment|/* find the closest base */

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)initquad.c	4.1	(Berkeley)	%G%"
+literal|"@(#)initquad.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -376,8 +376,7 @@ operator|=
 name|INHABIT
 expr_stmt|;
 name|nstars
-operator|=
-operator|-
+operator|-=
 literal|1
 expr_stmt|;
 block|}

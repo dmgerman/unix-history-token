@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)move.c	4.1	(Berkeley)	%G%"
+literal|"@(#)move.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -137,8 +137,7 @@ name|SINS
 argument_list|)
 condition|)
 name|angle
-operator|=
-operator|+
+operator|+=
 name|Param
 operator|.
 name|navigcrud
@@ -161,8 +160,7 @@ operator|.
 name|sinsbad
 condition|)
 name|angle
-operator|=
-operator|+
+operator|+=
 name|Param
 operator|.
 name|navigcrud
@@ -217,13 +215,11 @@ operator|=
 name|dist
 expr_stmt|;
 name|dx
-operator|=
-operator|/
+operator|/=
 name|bigger
 expr_stmt|;
 name|dy
-operator|=
-operator|/
+operator|/=
 name|bigger
 expr_stmt|;
 comment|/* check for long range tractor beams */
@@ -299,8 +295,7 @@ condition|)
 block|{
 comment|/* then we got a LRTB */
 name|evtime
-operator|=
-operator|+
+operator|+=
 literal|0.005
 expr_stmt|;
 name|time
@@ -411,8 +406,7 @@ name|ix
 operator|=
 operator|(
 name|x
-operator|=
-operator|+
+operator|+=
 name|dx
 operator|)
 expr_stmt|;
@@ -420,8 +414,7 @@ name|iy
 operator|=
 operator|(
 name|y
-operator|=
-operator|+
+operator|+=
 name|dy
 operator|)
 expr_stmt|;
@@ -725,8 +718,7 @@ expr_stmt|;
 name|Ship
 operator|.
 name|energy
-operator|=
-operator|-
+operator|-=
 name|Param
 operator|.
 name|stopengy

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)externs.c	4.1	(Berkeley)	%G%"
+literal|"@(#)externs.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,80 +31,81 @@ begin_comment
 comment|/* **	global variable definitions */
 end_comment
 
-begin_struct
-struct|struct
+begin_decl_stmt
+name|struct
 name|device
 name|Device
 index|[
 name|NDEV
 index|]
+init|=
 block|{
 literal|"warp drive"
-operator|,
+block|,
 literal|"Scotty"
-operator|,
+block|,
 literal|"S.R. scanners"
-operator|,
+block|,
 literal|"Scotty"
-operator|,
+block|,
 literal|"L.R. scanners"
-operator|,
+block|,
 literal|"Scotty"
-operator|,
+block|,
 literal|"phasers"
-operator|,
+block|,
 literal|"Sulu"
-operator|,
+block|,
 literal|"photon tubes"
-operator|,
+block|,
 literal|"Sulu"
-operator|,
+block|,
 literal|"impulse engines"
-operator|,
+block|,
 literal|"Scotty"
-operator|,
+block|,
 literal|"shield control"
-operator|,
+block|,
 literal|"Sulu"
-operator|,
+block|,
 literal|"computer"
-operator|,
+block|,
 literal|"Spock"
-operator|,
+block|,
 literal|"subspace radio"
-operator|,
+block|,
 literal|"Uhura"
-operator|,
+block|,
 literal|"life support"
-operator|,
+block|,
 literal|"Scotty"
-operator|,
+block|,
 literal|"navigation system"
-operator|,
+block|,
 literal|"Chekov"
-operator|,
+block|,
 literal|"cloaking device"
-operator|,
+block|,
 literal|"Scotty"
-operator|,
+block|,
 literal|"transporter"
-operator|,
+block|,
 literal|"Scotty"
-operator|,
+block|,
 literal|"shuttlecraft"
-operator|,
+block|,
 literal|"Scotty"
-operator|,
+block|,
 literal|"*ERR 14*"
-operator|,
+block|,
 literal|"Nobody"
-operator|,
+block|,
 literal|"*ERR 15*"
-operator|,
+block|,
 literal|"Nobody"
 block|}
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -113,76 +114,74 @@ name|Systemname
 index|[
 name|NINHAB
 index|]
+init|=
 block|{
 literal|"ERROR"
-operator|,
+block|,
 literal|"Talos IV"
-operator|,
+block|,
 literal|"Rigel III"
-operator|,
+block|,
 literal|"Deneb VII"
-operator|,
+block|,
 literal|"Canopus V"
-operator|,
+block|,
 literal|"Icarus I"
-operator|,
+block|,
 literal|"Prometheus II"
-operator|,
+block|,
 literal|"Omega VII"
-operator|,
+block|,
 literal|"Elysium I"
-operator|,
+block|,
 literal|"Scalos IV"
-operator|,
+block|,
 literal|"Procyon IV"
-operator|,
+block|,
 literal|"Arachnid I"
-operator|,
+block|,
 literal|"Argo VIII"
-operator|,
+block|,
 literal|"Triad III"
-operator|,
+block|,
 literal|"Echo IV"
-operator|,
+block|,
 literal|"Nimrod III"
-operator|,
+block|,
 literal|"Nemisis IV"
-operator|,
+block|,
 literal|"Centarurus I"
-operator|,
+block|,
 literal|"Kronos III"
-operator|,
+block|,
 literal|"Spectros V"
-operator|,
+block|,
 literal|"Beta III"
-operator|,
+block|,
 literal|"Gamma Tranguli VI"
-operator|,
+block|,
 literal|"Pyris III"
-operator|,
+block|,
 literal|"Triachus"
-operator|,
+block|,
 literal|"Marcus XII"
-operator|,
+block|,
 literal|"Kaland"
-operator|,
+block|,
 literal|"Ardana"
-operator|,
+block|,
 literal|"Stratos"
-operator|,
+block|,
 literal|"Eden"
-operator|,
+block|,
 literal|"Arrikis"
-operator|,
+block|,
 literal|"Epsilon Eridani IV"
-operator|,
+block|,
 literal|"Exo III"
 block|}
+decl_stmt|;
 end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
 
 end_unit
 

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dumpme.c	4.1	(Berkeley)	%G%"
+literal|"@(#)dumpme.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -104,8 +104,7 @@ name|NSECTS
 argument_list|)
 expr_stmt|;
 name|x
-operator|=
-operator|+
+operator|+=
 literal|1.5
 operator|*
 name|franf
@@ -114,8 +113,7 @@ expr_stmt|;
 name|Move
 operator|.
 name|time
-operator|=
-operator|+
+operator|+=
 name|x
 expr_stmt|;
 if|if

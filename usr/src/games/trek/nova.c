@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nova.c	4.1	(Berkeley)	%G%"
+literal|"@(#)nova.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -182,8 +182,7 @@ name|quady
 index|]
 operator|.
 name|holes
-operator|=
-operator|+
+operator|+=
 literal|1
 expr_stmt|;
 block|}
@@ -200,15 +199,13 @@ name|quady
 index|]
 operator|.
 name|stars
-operator|=
-operator|-
+operator|-=
 literal|1
 expr_stmt|;
 name|Game
 operator|.
 name|kills
-operator|=
-operator|+
+operator|+=
 literal|1
 expr_stmt|;
 for|for
@@ -340,8 +337,7 @@ expr_stmt|;
 name|Game
 operator|.
 name|killb
-operator|=
-operator|+
+operator|+=
 literal|1
 expr_stmt|;
 break|break;
@@ -373,8 +369,7 @@ block|{
 name|Ship
 operator|.
 name|shield
-operator|=
-operator|-
+operator|-=
 name|se
 expr_stmt|;
 name|se
@@ -385,8 +380,7 @@ block|}
 else|else
 block|{
 name|se
-operator|=
-operator|-
+operator|-=
 name|Ship
 operator|.
 name|shield
@@ -401,8 +395,7 @@ block|}
 name|Ship
 operator|.
 name|energy
-operator|=
-operator|-
+operator|-=
 name|se
 expr_stmt|;
 if|if

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)score.c	4.1	(Berkeley)	%G%"
+literal|"@(#)score.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -129,8 +129,7 @@ operator|/
 name|r
 expr_stmt|;
 name|s
-operator|=
-operator|+
+operator|+=
 operator|(
 name|t
 operator|=
@@ -161,8 +160,7 @@ operator|.
 name|klings
 expr_stmt|;
 name|r
-operator|=
-operator|/
+operator|/=
 name|Game
 operator|.
 name|killk
@@ -170,8 +168,7 @@ operator|+
 literal|1
 expr_stmt|;
 name|s
-operator|=
-operator|+
+operator|+=
 operator|(
 name|t
 operator|=
@@ -208,8 +205,7 @@ literal|0
 condition|)
 block|{
 name|s
-operator|=
-operator|+
+operator|+=
 operator|(
 name|t
 operator|=
@@ -258,8 +254,7 @@ name|killed
 condition|)
 block|{
 name|s
-operator|=
-operator|-
+operator|-=
 literal|500
 expr_stmt|;
 name|printf
@@ -269,8 +264,7 @@ argument_list|)
 expr_stmt|;
 block|}
 name|s
-operator|=
-operator|+
+operator|+=
 operator|(
 name|t
 operator|=
@@ -302,8 +296,7 @@ name|t
 argument_list|)
 expr_stmt|;
 name|s
-operator|=
-operator|+
+operator|+=
 operator|(
 name|t
 operator|=
@@ -335,8 +328,7 @@ name|t
 argument_list|)
 expr_stmt|;
 name|s
-operator|=
-operator|+
+operator|+=
 operator|(
 name|t
 operator|=
@@ -368,8 +360,7 @@ name|t
 argument_list|)
 expr_stmt|;
 name|s
-operator|=
-operator|+
+operator|+=
 operator|(
 name|t
 operator|=
@@ -410,8 +401,7 @@ name|ENTERPRISE
 condition|)
 block|{
 name|s
-operator|=
-operator|-
+operator|-=
 literal|200
 expr_stmt|;
 name|printf
@@ -421,8 +411,7 @@ argument_list|)
 expr_stmt|;
 block|}
 name|s
-operator|=
-operator|+
+operator|+=
 operator|(
 name|t
 operator|=
@@ -453,8 +442,7 @@ name|t
 argument_list|)
 expr_stmt|;
 name|s
-operator|=
-operator|+
+operator|+=
 operator|(
 name|t
 operator|=

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)destruct.c	4.1	(Berkeley)	%G%"
+literal|"@(#)destruct.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -256,8 +256,7 @@ expr_stmt|;
 name|Game
 operator|.
 name|deaths
-operator|=
-operator|+
+operator|+=
 name|Ship
 operator|.
 name|crew
@@ -321,9 +320,7 @@ argument_list|)
 expr_stmt|;
 else|else
 name|i
-operator|=
-operator|+
-literal|1
+operator|++
 expr_stmt|;
 block|}
 comment|/* if we didn't kill the last Klingon (detected by killk), */

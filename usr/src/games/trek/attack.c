@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)attack.c	4.1	(Berkeley)	%G%"
+literal|"@(#)attack.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -344,8 +344,7 @@ operator|.
 name|shield
 expr_stmt|;
 name|propor
-operator|=
-operator|/
+operator|/=
 name|Param
 operator|.
 name|shield
@@ -375,8 +374,7 @@ expr_stmt|;
 name|Ship
 operator|.
 name|shield
-operator|=
-operator|-
+operator|-=
 name|shldabsb
 expr_stmt|;
 block|}
@@ -431,8 +429,7 @@ operator|/
 name|hit
 expr_stmt|;
 name|hit
-operator|=
-operator|-
+operator|-=
 name|shldabsb
 expr_stmt|;
 if|if
@@ -457,8 +454,7 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 name|tothit
-operator|=
-operator|+
+operator|+=
 name|hit
 expr_stmt|;
 if|if
@@ -474,8 +470,7 @@ expr_stmt|;
 name|Ship
 operator|.
 name|energy
-operator|=
-operator|-
+operator|-=
 name|hit
 expr_stmt|;
 comment|/* see if damages occurred */
@@ -530,8 +525,7 @@ name|l
 operator|++
 control|)
 name|cas
-operator|=
-operator|-
+operator|-=
 name|Param
 operator|.
 name|damprob
@@ -540,8 +534,7 @@ name|l
 index|]
 expr_stmt|;
 name|l
-operator|=
-operator|-
+operator|-=
 literal|1
 expr_stmt|;
 comment|/* compute amount of damage */
@@ -662,15 +655,13 @@ expr_stmt|;
 name|Game
 operator|.
 name|deaths
-operator|=
-operator|+
+operator|+=
 name|cas
 expr_stmt|;
 name|Ship
 operator|.
 name|crew
-operator|=
-operator|-
+operator|-=
 name|cas
 expr_stmt|;
 block|}

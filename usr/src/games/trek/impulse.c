@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)impulse.c	4.1	(Berkeley)	%G%"
+literal|"@(#)impulse.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -216,8 +216,7 @@ expr_stmt|;
 name|Ship
 operator|.
 name|energy
-operator|=
-operator|-
+operator|-=
 literal|20
 operator|+
 literal|100

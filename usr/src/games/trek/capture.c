@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)capture.c	4.1	(Berkeley)	%G%"
+literal|"@(#)capture.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -136,15 +136,13 @@ operator|.
 name|klingpwr
 expr_stmt|;
 name|x
-operator|=
-operator|*
+operator|*=
 name|Ship
 operator|.
 name|energy
 expr_stmt|;
 name|x
-operator|=
-operator|/
+operator|/=
 name|k
 operator|->
 name|power
@@ -154,8 +152,7 @@ operator|.
 name|nkling
 expr_stmt|;
 name|x
-operator|=
-operator|*
+operator|*=
 name|Param
 operator|.
 name|srndrprob
@@ -243,8 +240,7 @@ expr_stmt|;
 name|Ship
 operator|.
 name|brigfree
-operator|=
-operator|-
+operator|-=
 name|i
 expr_stmt|;
 name|printf

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)snova.c	4.1	(Berkeley)	%G%"
+literal|"@(#)snova.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -212,8 +212,7 @@ if|if
 condition|(
 operator|(
 name|n
-operator|=
-operator|-
+operator|-=
 literal|1
 operator|)
 operator|<=
@@ -391,8 +390,7 @@ expr_stmt|;
 name|Now
 operator|.
 name|klings
-operator|=
-operator|-
+operator|-=
 name|dx
 expr_stmt|;
 if|if
@@ -406,8 +404,7 @@ comment|/* Enterprise caused supernova */
 name|Game
 operator|.
 name|kills
-operator|=
-operator|+
+operator|+=
 name|dy
 expr_stmt|;
 if|if
@@ -429,8 +426,7 @@ expr_stmt|;
 name|Game
 operator|.
 name|killk
-operator|=
-operator|+
+operator|+=
 name|dx
 expr_stmt|;
 block|}

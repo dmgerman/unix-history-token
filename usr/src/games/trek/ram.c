@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ram.c	4.1	(Berkeley)	%G%"
+literal|"@(#)ram.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -165,8 +165,7 @@ condition|)
 name|Game
 operator|.
 name|killb
-operator|=
-operator|+
+operator|+=
 literal|1
 expr_stmt|;
 break|break;
@@ -202,15 +201,13 @@ expr_stmt|;
 name|Game
 operator|.
 name|deaths
-operator|=
-operator|+
+operator|+=
 name|i
 expr_stmt|;
 name|Ship
 operator|.
 name|crew
-operator|=
-operator|-
+operator|-=
 name|i
 expr_stmt|;
 name|printf

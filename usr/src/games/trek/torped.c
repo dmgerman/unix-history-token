@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)torped.c	4.1	(Berkeley)	%G%"
+literal|"@(#)torped.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -269,8 +269,7 @@ operator|=
 literal|1
 expr_stmt|;
 name|course
-operator|=
-operator|-
+operator|-=
 name|burst
 expr_stmt|;
 block|}
@@ -344,13 +343,11 @@ operator|=
 name|x
 expr_stmt|;
 name|dx
-operator|=
-operator|/
+operator|/=
 name|bigger
 expr_stmt|;
 name|dy
-operator|=
-operator|/
+operator|/=
 name|bigger
 expr_stmt|;
 name|x
@@ -380,8 +377,7 @@ condition|)
 name|Ship
 operator|.
 name|torped
-operator|=
-operator|-
+operator|-=
 literal|1
 expr_stmt|;
 name|printf
@@ -419,15 +415,13 @@ block|{
 name|ix
 operator|=
 name|x
-operator|=
-operator|+
+operator|+=
 name|dx
 expr_stmt|;
 name|iy
 operator|=
 name|y
-operator|=
-operator|+
+operator|+=
 name|dy
 expr_stmt|;
 if|if
@@ -541,8 +535,7 @@ name|k
 index|]
 operator|.
 name|power
-operator|=
-operator|-
+operator|-=
 literal|500
 operator|+
 name|ranf
@@ -627,8 +620,7 @@ expr_stmt|;
 name|Game
 operator|.
 name|killb
-operator|=
-operator|+
+operator|+=
 literal|1
 expr_stmt|;
 break|break;
@@ -689,8 +681,7 @@ literal|0
 condition|)
 break|break;
 name|course
-operator|=
-operator|+
+operator|+=
 name|burst
 expr_stmt|;
 block|}
@@ -808,8 +799,7 @@ argument_list|)
 expr_stmt|;
 block|}
 name|d
-operator|=
-operator|*
+operator|*=
 literal|1.0
 operator|+
 literal|2.0
@@ -860,8 +850,7 @@ operator|=
 literal|2.0
 expr_stmt|;
 name|d
-operator|=
-operator|*
+operator|*=
 name|r
 expr_stmt|;
 block|}

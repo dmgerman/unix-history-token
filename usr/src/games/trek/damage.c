@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)damage.c	4.1	(Berkeley)	%G%"
+literal|"@(#)damage.c	4.2	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -113,8 +113,7 @@ operator|==
 name|DOCKED
 condition|)
 name|dam
-operator|=
-operator|*
+operator|*=
 name|Param
 operator|.
 name|dockfac
