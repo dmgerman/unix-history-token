@@ -525,8 +525,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|MBOX_GET_FIRMWARE_OPTIONS
+value|0x28
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBOX_SET_FIRMWARE_OPTIONS
+value|0x38
+end_define
+
+begin_define
+define|#
+directive|define
 name|MBOX_GET_RESOURCE_COUNT
 value|0x42
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBOX_ENHANCED_GET_PDB
+value|0x47
 end_define
 
 begin_define
@@ -921,6 +942,13 @@ define|#
 directive|define
 name|ASYNC_CHANGE_NOTIFY
 value|0x8015
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASYNC_LIP_F8
+value|0x8016
 end_define
 
 begin_define
