@@ -8609,6 +8609,17 @@ name|p
 operator|->
 name|p_aioinfo
 expr_stmt|;
+if|if
+condition|(
+name|ki
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 name|s
 operator|=
 name|splnet
