@@ -618,6 +618,16 @@ literal|'n'
 block|}
 block|,
 block|{
+literal|"no-recursion"
+block|,
+name|no_argument
+block|,
+name|NULL
+block|,
+literal|'n'
+block|}
+block|,
+block|{
 literal|"no-same-owner"
 block|,
 name|no_argument
