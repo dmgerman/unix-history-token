@@ -9455,12 +9455,6 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-name|setuid
-argument_list|(
-name|geteuid
-argument_list|()
-argument_list|)
-expr_stmt|;
 comment|/*          * Reap the intermediate process.  As we're not exiting but the          * intermediate is, we don't want it to become defunct.          */
 name|waitpid
 argument_list|(
@@ -9476,6 +9470,12 @@ comment|/* Tweak our process arguments.... */
 name|ID0setproctitle
 argument_list|(
 literal|"session owner"
+argument_list|)
+expr_stmt|;
+name|setuid
+argument_list|(
+name|geteuid
+argument_list|()
 argument_list|)
 expr_stmt|;
 comment|/*          * Hang around for a HUP.  This should happen as soon as the          * ppp that we passed our ctty descriptor to closes it.          * NOTE: If this process dies, the passed descriptor becomes          *       invalid and will give a select() error by setting one          *       of the error fds, aborting the other ppp.  We don't          *       want that to happen !          */
