@@ -1488,6 +1488,16 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+name|domain
+operator|=
+literal|0
+expr_stmt|;
+comment|/* avoid compile-time warning */
+name|s
+operator|=
+literal|0
+expr_stmt|;
+comment|/* avoid compile-time warning */
 if|if
 condition|(
 name|FD_ISSET
