@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*-  * Copyright (c) 1980 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)support.c	5.6 (Berkeley) %G%"
+literal|"@(#)support.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,6 +32,12 @@ begin_include
 include|#
 directive|include
 file|<curses.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -102,37 +108,25 @@ begin_comment
 comment|/*  * computer chooses what to play in pegging...  * only called if no playable card will score points  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|cchose
-argument_list|(
-argument|h
-argument_list|,
-argument|n
-argument_list|,
-argument|s
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|h
+parameter_list|,
+name|n
+parameter_list|,
+name|s
+parameter_list|)
 name|CARD
 name|h
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|n
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
+decl_stmt|,
 name|s
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -225,6 +219,7 @@ operator|<
 literal|20
 condition|)
 block|{
+comment|/* try for retaliation to 31 */
 for|for
 control|(
 name|i
@@ -239,7 +234,6 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* try for retaliation to 31 */
 if|if
 condition|(
 operator|(
@@ -314,6 +308,7 @@ operator|<
 literal|15
 condition|)
 block|{
+comment|/* for retaliation after 15 */
 for|for
 control|(
 name|i
@@ -328,7 +323,6 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* for retaliation after 15 */
 if|if
 condition|(
 operator|(
@@ -412,6 +406,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+comment|/* remember: h is sorted */
 for|for
 control|(
 name|i
@@ -428,7 +423,6 @@ operator|--
 name|i
 control|)
 block|{
-comment|/* remember: h is sorted */
 name|l
 operator|=
 name|s
@@ -554,37 +548,36 @@ name|j
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * plyrhand:  *	Evaluate and score a player hand or crib  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|plyrhand
-argument_list|(
-argument|hand
-argument_list|,
-argument|s
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|hand
+parameter_list|,
+name|s
+parameter_list|)
 name|CARD
 name|hand
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|s
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
+specifier|static
+name|char
+name|prompt
+index|[
+name|BUFSIZ
+index|]
+decl_stmt|;
 specifier|register
 name|int
 name|i
@@ -594,13 +587,6 @@ decl_stmt|;
 specifier|register
 name|BOOLEAN
 name|win
-decl_stmt|;
-specifier|static
-name|char
-name|prompt
-index|[
-name|BUFSIZ
-index|]
 decl_stmt|;
 name|prhand
 argument_list|(
@@ -766,39 +752,33 @@ name|i
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|win
+operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * comphand:  *	Handle scoring and displaying the computers hand  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|comphand
-argument_list|(
-argument|h
-argument_list|,
-argument|s
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|h
+parameter_list|,
+name|s
+parameter_list|)
 name|CARD
 name|h
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|s
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -855,6 +835,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|chkscr
 argument_list|(
 operator|&
@@ -862,9 +843,10 @@ name|cscore
 argument_list|,
 name|j
 argument_list|)
+operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * chkscr:  *	Add inc to scr and test for> glimit, printing on the scoring  *	board while we're at it.  */
@@ -887,25 +869,20 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|int
 name|chkscr
-argument_list|(
-argument|scr
-argument_list|,
-argument|inc
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|scr
+parameter_list|,
+name|inc
+parameter_list|)
 name|int
 modifier|*
 name|scr
 decl_stmt|,
 name|inc
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|BOOLEAN
 name|myturn
@@ -974,40 +951,32 @@ name|glimit
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * prpeg:  *	Put out the peg character on the score board and put the  *	score up on the board.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|prpeg
-argument_list|(
+parameter_list|(
 name|score
-argument_list|,
+parameter_list|,
 name|peg
-argument_list|,
+parameter_list|,
 name|myturn
-argument_list|)
+parameter_list|)
 specifier|register
 name|int
 name|score
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-name|char
+decl_stmt|;
+name|int
 name|peg
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|BOOLEAN
 name|myturn
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -1162,26 +1131,21 @@ name|score
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * cdiscard -- the computer figures out what is the best discard for  * the crib and puts the best two cards at the end  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|cdiscard
-argument_list|(
-argument|mycrib
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|mycrib
+parameter_list|)
 name|BOOLEAN
 name|mycrib
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|CARD
 name|d
@@ -1652,43 +1616,31 @@ index|]
 index|]
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * returns true if some card in hand can be played without exceeding 31  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|anymove
-argument_list|(
-argument|hand
-argument_list|,
-argument|n
-argument_list|,
-argument|sum
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|hand
+parameter_list|,
+name|n
+parameter_list|,
+name|sum
+parameter_list|)
 name|CARD
 name|hand
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|n
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
+decl_stmt|,
 name|sum
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -1764,47 +1716,35 @@ literal|31
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * anysumto returns the index (0<= i< n) of the card in hand that brings  * the s up to t, or -1 if there is none  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|anysumto
-argument_list|(
-argument|hand
-argument_list|,
-argument|n
-argument_list|,
-argument|s
-argument_list|,
-argument|t
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|hand
+parameter_list|,
+name|n
+parameter_list|,
+name|s
+parameter_list|,
+name|t
+parameter_list|)
 name|CARD
 name|hand
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|n
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
+decl_stmt|,
 name|s
 decl_stmt|,
 name|t
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -1853,43 +1793,31 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * return the number of cards in h having the given rank value  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|numofval
-argument_list|(
-argument|h
-argument_list|,
-argument|n
-argument_list|,
-argument|v
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|h
+parameter_list|,
+name|n
+parameter_list|,
+name|v
+parameter_list|)
 name|CARD
 name|h
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|n
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
+decl_stmt|,
 name|v
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -1939,35 +1867,27 @@ name|j
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * makeknown remembers all n cards in h for future recall  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|makeknown
-argument_list|(
-argument|h
-argument_list|,
-argument|n
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|h
+parameter_list|,
+name|n
+parameter_list|)
 name|CARD
 name|h
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|n
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -1986,7 +1906,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 name|known
 index|[
 name|knownum
@@ -1999,8 +1918,7 @@ name|i
 index|]
 expr_stmt|;
 block|}
-block|}
-end_block
+end_function
 
 end_unit
 

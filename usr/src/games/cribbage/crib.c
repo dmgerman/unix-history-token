@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*-  * Copyright (c) 1980 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -14,7 +14,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1980 Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1980 The Regents of the University of California.\n\  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)crib.c	5.7 (Berkeley) %G%"
+literal|"@(#)crib.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,13 +55,31 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/signal.h>
+file|<curses.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<curses.h>
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -89,6 +107,7 @@ file|"pathnames.h"
 end_include
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -104,53 +123,16 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|p
-decl_stmt|;
-name|int
-name|ch
-decl_stmt|;
 name|BOOLEAN
 name|playing
 decl_stmt|;
-name|char
-modifier|*
-name|s
-decl_stmt|;
-comment|/* for reading arguments */
 name|FILE
 modifier|*
 name|f
 decl_stmt|;
-name|FILE
-modifier|*
-name|fopen
-parameter_list|()
-function_decl|;
-name|char
-modifier|*
-name|getline
-argument_list|()
-decl_stmt|,
-modifier|*
-name|getlogin
-argument_list|()
+name|int
+name|ch
 decl_stmt|;
-name|void
-name|rint
-parameter_list|()
-function_decl|;
 while|while
 condition|(
 operator|(
@@ -220,6 +202,9 @@ block|}
 name|initscr
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGINT
@@ -387,7 +372,7 @@ argument_list|()
 expr_stmt|;
 name|msg
 argument_list|(
-literal|"For the rules of this program, do \"man cribbage\""
+literal|"For cribbage rules, use \"man cribbage\""
 argument_list|)
 expr_stmt|;
 block|}
@@ -545,12 +530,10 @@ begin_comment
 comment|/*  * makeboard:  *	Print out the initial board on the screen  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|makeboard
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|mvaddstr
 argument_list|(
@@ -655,18 +638,16 @@ name|gamescore
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * gamescore:  *	Print out the current game score  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|gamescore
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|extern
 name|int
@@ -728,18 +709,16 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * game:  *	Play one game up to glimit points.  Actually, we only ASK the  *	player what card to turn.  We do a random one, anyway.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|game
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -1151,35 +1130,25 @@ name|gamescore
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * playhand:  *	Do up one hand of the game  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|playhand
-argument_list|(
-argument|mycrib
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|mycrib
+parameter_list|)
 name|BOOLEAN
 name|mycrib
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
 name|deckpos
-decl_stmt|;
-specifier|extern
-name|char
-name|Msgbuf
-index|[]
 decl_stmt|;
 name|werase
 argument_list|(
@@ -1280,20 +1249,21 @@ return|return
 name|FALSE
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * deal cards to both players from deck  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|deal
-argument_list|(
-argument|mycrib
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|mycrib
+parameter_list|)
+name|BOOLEAN
+name|mycrib
+decl_stmt|;
 block|{
 specifier|register
 name|int
@@ -1301,13 +1271,11 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-name|j
-operator|=
-literal|0
-expr_stmt|;
 for|for
 control|(
 name|i
+operator|=
+name|j
 operator|=
 literal|0
 init|;
@@ -1379,26 +1347,21 @@ name|j
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * discard:  *	Handle players discarding into the crib...  * Note: we call cdiscard() after prining first message so player doesn't wait  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|discard
-argument_list|(
-argument|mycrib
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|mycrib
+parameter_list|)
 name|BOOLEAN
 name|mycrib
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -1472,7 +1435,7 @@ index|]
 operator|=
 name|crd
 expr_stmt|;
-comment|/* next four lines same as last four except for cdiscard() */
+comment|/* Next four lines same as last four except for cdiscard(). */
 name|crd
 operator|=
 name|phand
@@ -1569,46 +1532,38 @@ operator|=
 name|EMPTY
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * cut:  *	Cut the deck and set turnover.  Actually, we only ASK the  *	player what card to turn.  We do a random one, anyway.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|cut
-argument_list|(
-argument|mycrib
-argument_list|,
-argument|pos
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|mycrib
+parameter_list|,
+name|pos
+parameter_list|)
 name|BOOLEAN
 name|mycrib
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|pos
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
 name|i
-decl_stmt|,
-name|cardx
 decl_stmt|;
 name|BOOLEAN
 name|win
-init|=
-name|FALSE
 decl_stmt|;
+name|win
+operator|=
+name|FALSE
+expr_stmt|;
 if|if
 condition|(
 name|mycrib
@@ -1790,33 +1745,30 @@ name|FALSE
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|win
+operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * prcrib:  *	Print out the turnover card with crib indicator  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|prcrib
-argument_list|(
-argument|mycrib
-argument_list|,
-argument|blank
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|mycrib
+parameter_list|,
+name|blank
+parameter_list|)
 name|BOOLEAN
 name|mycrib
 decl_stmt|,
 name|blank
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -1901,7 +1853,7 @@ literal|"       "
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * peg:  *	Handle all the pegging...  */
@@ -1924,20 +1876,15 @@ name|Tcnt
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|int
 name|peg
-argument_list|(
-argument|mycrib
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|mycrib
+parameter_list|)
 name|BOOLEAN
 name|mycrib
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|static
 name|CARD
@@ -1950,9 +1897,6 @@ name|ph
 index|[
 name|CINHAND
 index|]
-decl_stmt|;
-name|CARD
-name|crd
 decl_stmt|;
 specifier|register
 name|int
@@ -1985,6 +1929,9 @@ decl_stmt|,
 name|last
 decl_stmt|,
 name|played
+decl_stmt|;
+name|CARD
+name|crd
 decl_stmt|;
 name|cnum
 operator|=
@@ -2126,6 +2073,7 @@ operator|=
 name|TRUE
 expr_stmt|;
 block|}
+comment|/* can player move? */
 if|if
 condition|(
 name|anymove
@@ -2137,7 +2085,6 @@ argument_list|,
 name|sum
 argument_list|)
 condition|)
-comment|/* can player move? */
 name|myturn
 operator|=
 operator|!
@@ -2199,6 +2146,7 @@ name|k
 operator|=
 literal|0
 expr_stmt|;
+comment|/* maximize score */
 for|for
 control|(
 name|i
@@ -2213,7 +2161,6 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* maximize score */
 name|l
 operator|=
 name|pegscore
@@ -2383,6 +2330,7 @@ operator|=
 name|TRUE
 expr_stmt|;
 block|}
+comment|/* can computer play? */
 if|if
 condition|(
 name|anymove
@@ -2394,7 +2342,6 @@ argument_list|,
 name|sum
 argument_list|)
 condition|)
-comment|/* can computer play? */
 name|myturn
 operator|=
 operator|!
@@ -2744,29 +2691,26 @@ name|TRUE
 return|;
 block|}
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * prtable:  *	Print out the table with the current score  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|prtable
-argument_list|(
-argument|score
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|score
+parameter_list|)
 name|int
 name|score
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|prhand
 argument_list|(
@@ -2806,26 +2750,21 @@ name|Tablewin
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * score:  *	Handle the scoring of the hands  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|score
-argument_list|(
-argument|mycrib
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|mycrib
+parameter_list|)
 name|BOOLEAN
 name|mycrib
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|sorthand
 argument_list|(
@@ -2849,7 +2788,9 @@ literal|"hand"
 argument_list|)
 condition|)
 return|return
+operator|(
 name|TRUE
+operator|)
 return|;
 if|if
 condition|(
@@ -2861,7 +2802,9 @@ literal|"hand"
 argument_list|)
 condition|)
 return|return
+operator|(
 name|TRUE
+operator|)
 return|;
 name|do_wait
 argument_list|()
@@ -2876,7 +2819,9 @@ literal|"crib"
 argument_list|)
 condition|)
 return|return
+operator|(
 name|TRUE
+operator|)
 return|;
 block|}
 else|else
@@ -2891,7 +2836,9 @@ literal|"hand"
 argument_list|)
 condition|)
 return|return
+operator|(
 name|TRUE
+operator|)
 return|;
 if|if
 condition|(
@@ -2903,7 +2850,9 @@ literal|"hand"
 argument_list|)
 condition|)
 return|return
+operator|(
 name|TRUE
+operator|)
 return|;
 if|if
 condition|(
@@ -2915,14 +2864,18 @@ literal|"crib"
 argument_list|)
 condition|)
 return|return
+operator|(
 name|TRUE
+operator|)
 return|;
 block|}
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

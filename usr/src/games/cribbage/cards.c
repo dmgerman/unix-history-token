@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*-  * Copyright (c) 1980 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cards.c	5.5 (Berkeley) %G%"
+literal|"@(#)cards.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,25 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<curses.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
 end_include
 
 begin_include
@@ -40,25 +58,26 @@ directive|include
 file|"deck.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"cribbage.h"
+end_include
+
 begin_comment
-comment|/*  * initialize a deck of cards to contain one of each type  */
+comment|/*  * Initialize a deck of cards to contain one of each type.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|makedeck
-argument_list|(
-argument|d
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|d
+parameter_list|)
 name|CARD
 name|d
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -68,19 +87,11 @@ name|j
 decl_stmt|,
 name|k
 decl_stmt|;
-name|long
-name|time
-parameter_list|()
-function_decl|;
 name|i
 operator|=
 name|time
 argument_list|(
-operator|(
-name|long
-operator|*
-operator|)
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 name|i
@@ -129,7 +140,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 for|for
 control|(
 name|j
@@ -165,28 +175,22 @@ name|i
 expr_stmt|;
 block|}
 block|}
-block|}
-end_block
+end_function
 
 begin_comment
-comment|/*  * given a deck of cards, shuffle it -- i.e. randomize it  * see Knuth, vol. 2, page 125  */
+comment|/*  * Given a deck of cards, shuffle it -- i.e. randomize it  * see Knuth, vol. 2, page 125.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|shuffle
-argument_list|(
-argument|d
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|d
+parameter_list|)
 name|CARD
 name|d
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -254,30 +258,25 @@ name|c
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * return true if the two cards are equal...  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|eq
-argument_list|(
-argument|a
-argument_list|,
-argument|b
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
 name|CARD
 name|a
 decl_stmt|,
 name|b
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 operator|(
@@ -303,24 +302,22 @@ operator|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * isone returns TRUE if a is in the set of cards b  */
 end_comment
 
-begin_macro
+begin_decl_stmt
+name|int
 name|isone
 argument_list|(
-argument|a
+name|a
 argument_list|,
-argument|b
+name|b
 argument_list|,
-argument|n
+name|n
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|CARD
 name|a
 decl_stmt|,
@@ -354,7 +351,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 if|if
 condition|(
 name|eq
@@ -372,7 +368,6 @@ operator|(
 name|TRUE
 operator|)
 return|;
-block|}
 return|return
 operator|(
 name|FALSE
@@ -385,18 +380,16 @@ begin_comment
 comment|/*  * remove the card a from the deck d of n cards  */
 end_comment
 
-begin_macro
+begin_decl_stmt
+name|void
 name|cremove
 argument_list|(
-argument|a
+name|a
 argument_list|,
-argument|d
+name|d
 argument_list|,
-argument|n
+name|n
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|CARD
 name|a
 decl_stmt|,
@@ -419,13 +412,11 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-name|j
-operator|=
-literal|0
-expr_stmt|;
 for|for
 control|(
 name|i
+operator|=
+name|j
 operator|=
 literal|0
 init|;
@@ -436,7 +427,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 if|if
 condition|(
 operator|!
@@ -461,7 +451,6 @@ index|[
 name|i
 index|]
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|j
@@ -491,27 +480,22 @@ begin_comment
 comment|/*  * sorthand:  *	Sort a hand of n cards  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|sorthand
-argument_list|(
+parameter_list|(
 name|h
-argument_list|,
+parameter_list|,
 name|n
-argument_list|)
+parameter_list|)
 specifier|register
 name|CARD
 name|h
 index|[]
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|int
 name|n
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|CARD
@@ -607,7 +591,7 @@ name|c
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

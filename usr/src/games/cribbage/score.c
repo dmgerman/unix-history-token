@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*-  * Copyright (c) 1980 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)score.c	5.5 (Berkeley) %G%"
+literal|"@(#)score.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,25 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<curses.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -949,77 +967,47 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* globals from pairuns */
+comment|/* Globals from pairuns. */
 end_comment
 
 begin_comment
 comment|/*  * scorehand:  *	Score the given hand of n cards and the starter card.  *	n must be<= 4  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|scorehand
-argument_list|(
+parameter_list|(
 name|hand
-argument_list|,
+parameter_list|,
 name|starter
-argument_list|,
+parameter_list|,
 name|n
-argument_list|,
+parameter_list|,
 name|crb
-argument_list|,
+parameter_list|,
 name|do_explain
-argument_list|)
+parameter_list|)
 specifier|register
 name|CARD
 name|hand
 index|[]
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|CARD
 name|starter
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|n
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|BOOLEAN
 name|crb
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* true if scoring crib */
-end_comment
-
-begin_decl_stmt
 name|BOOLEAN
 name|do_explain
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* true if must explain this hand */
-end_comment
-
-begin_block
 block|{
-name|CARD
-name|h
-index|[
-operator|(
-name|CINHAND
-operator|+
-literal|1
-operator|)
-index|]
-decl_stmt|;
 specifier|register
 name|int
 name|i
@@ -1033,6 +1021,16 @@ decl_stmt|;
 specifier|register
 name|BOOLEAN
 name|flag
+decl_stmt|;
+name|CARD
+name|h
+index|[
+operator|(
+name|CINHAND
+operator|+
+literal|1
+operator|)
+index|]
 decl_stmt|;
 name|char
 name|buf
@@ -1388,36 +1386,33 @@ literal|", No pairs/runs"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|score
+operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * fifteens:  *	Return number of fifteens in hand of n cards  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|fifteens
-argument_list|(
+parameter_list|(
 name|hand
-argument_list|,
+parameter_list|,
 name|n
-argument_list|)
+parameter_list|)
 specifier|register
 name|CARD
 name|hand
 index|[]
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|int
 name|n
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -1587,35 +1582,27 @@ literal|14
 index|]
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * pairuns returns the number of points in the n card sorted hand  * due to pairs and runs  * this routine only works if n is strictly less than 6  * sets the globals pairpoints and runpoints appropriately  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|pairuns
-argument_list|(
-argument|h
-argument_list|,
-argument|n
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|h
+parameter_list|,
+name|n
+parameter_list|)
 name|CARD
 name|h
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|n
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -1846,6 +1833,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* only if old short */
 if|if
 condition|(
 name|runlength
@@ -1853,7 +1841,6 @@ operator|<
 literal|3
 condition|)
 block|{
-comment|/* only if old short */
 name|run
 operator|=
 name|TRUE
@@ -1875,6 +1862,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* if just ended */
 if|if
 condition|(
 name|run
@@ -1883,7 +1871,6 @@ name|runmult
 operator|*=
 name|lastmult
 expr_stmt|;
-comment|/* if just ended */
 name|run
 operator|=
 name|FALSE
@@ -1925,26 +1912,24 @@ name|runpoints
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * pegscore tells how many points crd would get if played after  * the n cards in tbl during pegging  */
 end_comment
 
-begin_macro
+begin_decl_stmt
+name|int
 name|pegscore
 argument_list|(
-argument|crd
+name|crd
 argument_list|,
-argument|tbl
+name|tbl
 argument_list|,
-argument|n
+name|n
 argument_list|,
-argument|sum
+name|sum
 argument_list|)
-end_macro
-
-begin_decl_stmt
 name|CARD
 name|crd
 decl_stmt|,
@@ -1956,11 +1941,7 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|n
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
+decl_stmt|,
 name|sum
 decl_stmt|;
 end_decl_stmt
@@ -2283,35 +2264,30 @@ begin_comment
 comment|/*  * adjust takes a two card hand that will be put in the crib  * and returns an adjusted normalized score for the number of  * points such a crib will get.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|adjust
-argument_list|(
-argument|cb
-argument_list|,
-argument|tnv
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|cb
+parameter_list|,
+name|tnv
+parameter_list|)
 name|CARD
 name|cb
 index|[]
 decl_stmt|,
 name|tnv
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
+name|long
+name|scr
+decl_stmt|;
 name|int
 name|i
 decl_stmt|,
 name|c0
 decl_stmt|,
 name|c1
-decl_stmt|;
-name|long
-name|scr
 decl_stmt|;
 name|c0
 operator|=
@@ -2424,7 +2400,7 @@ literal|58800
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

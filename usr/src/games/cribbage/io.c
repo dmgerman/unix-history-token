@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*-  * Copyright (c) 1980 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)io.c	5.12 (Berkeley) %G%"
+literal|"@(#)io.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,13 +31,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<curses.h>
+file|<ctype.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<curses.h>
 end_include
 
 begin_include
@@ -49,7 +49,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<termios.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_if
@@ -131,37 +149,6 @@ name|X
 parameter_list|)
 value|(X - 'A' + 1)
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notdef
-end_ifdef
-
-begin_comment
-comment|/* defined in curses.h */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|erasechar
-parameter_list|()
-value|_tty.sg_erase
-end_define
-
-begin_define
-define|#
-directive|define
-name|killchar
-parameter_list|()
-value|_tty.sg_kill
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|char
@@ -292,51 +279,42 @@ begin_comment
 comment|/*  * msgcard:  *	Call msgcrd in one of two forms  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|msgcard
-argument_list|(
-argument|c
-argument_list|,
-argument|brief
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|c
+parameter_list|,
+name|brief
+parameter_list|)
 name|CARD
 name|c
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|BOOLEAN
 name|brief
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
 name|brief
 condition|)
 return|return
+operator|(
 name|msgcrd
 argument_list|(
 name|c
 argument_list|,
 name|TRUE
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 argument_list|,
 name|TRUE
 argument_list|)
+operator|)
 return|;
 else|else
 return|return
+operator|(
 name|msgcrd
 argument_list|(
 name|c
@@ -347,49 +325,39 @@ literal|" of "
 argument_list|,
 name|FALSE
 argument_list|)
+operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * msgcrd:  *	Print the value of a card in ascii  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|msgcrd
-argument_list|(
-argument|c
-argument_list|,
-argument|brfrank
-argument_list|,
-argument|mid
-argument_list|,
-argument|brfsuit
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|c
+parameter_list|,
+name|brfrank
+parameter_list|,
+name|mid
+parameter_list|,
+name|brfsuit
+parameter_list|)
 name|CARD
 name|c
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|mid
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|BOOLEAN
 name|brfrank
 decl_stmt|,
 name|brfsuit
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+name|char
+modifier|*
+name|mid
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -406,7 +374,9 @@ operator|==
 name|EMPTY
 condition|)
 return|return
+operator|(
 name|FALSE
+operator|)
 return|;
 if|if
 condition|(
@@ -474,54 +444,42 @@ index|]
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|TRUE
+operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * printcard:  *	Print out a card.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|printcard
-argument_list|(
-argument|win
-argument_list|,
-argument|cardno
-argument_list|,
-argument|c
-argument_list|,
-argument|blank
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|win
+parameter_list|,
+name|cardno
+parameter_list|,
+name|c
+parameter_list|,
+name|blank
+parameter_list|)
 name|WINDOW
 modifier|*
 name|win
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|cardno
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|CARD
 name|c
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|BOOLEAN
 name|blank
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|prcard
 argument_list|(
@@ -539,55 +497,41 @@ name|blank
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * prcard:  *	Print out a card on the window at the specified location  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|prcard
-argument_list|(
-argument|win
-argument_list|,
-argument|y
-argument_list|,
-argument|x
-argument_list|,
-argument|c
-argument_list|,
-argument|blank
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|win
+parameter_list|,
+name|y
+parameter_list|,
+name|x
+parameter_list|,
+name|c
+parameter_list|,
+name|blank
+parameter_list|)
 name|WINDOW
 modifier|*
 name|win
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|y
 decl_stmt|,
 name|x
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|CARD
 name|c
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|BOOLEAN
 name|blank
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -747,52 +691,38 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * prhand:  *	Print a hand of n cards  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|prhand
-argument_list|(
-argument|h
-argument_list|,
-argument|n
-argument_list|,
-argument|win
-argument_list|,
-argument|blank
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|h
+parameter_list|,
+name|n
+parameter_list|,
+name|win
+parameter_list|,
+name|blank
+parameter_list|)
 name|CARD
 name|h
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|n
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|WINDOW
 modifier|*
 name|win
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|BOOLEAN
 name|blank
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -835,44 +765,33 @@ name|win
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * infrom:  *	reads a card, supposedly in hand, accepting unambigous brief  *	input, returns the index of the card found...  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|infrom
-argument_list|(
-argument|hand
-argument_list|,
-argument|n
-argument_list|,
-argument|prompt
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|hand
+parameter_list|,
+name|n
+parameter_list|,
+name|prompt
+parameter_list|)
 name|CARD
 name|hand
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|n
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|prompt
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -1000,7 +919,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|i
+operator|)
 return|;
 block|}
 block|}
@@ -1097,7 +1018,9 @@ argument_list|)
 expr_stmt|;
 else|else
 return|return
+operator|(
 name|i
+operator|)
 return|;
 block|}
 block|}
@@ -1110,33 +1033,23 @@ expr_stmt|;
 block|}
 comment|/* NOTREACHED */
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * incard:  *	Inputs a card in any format.  It reads a line ending with a CR  *	and then parses it.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|incard
-argument_list|(
-argument|crd
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|crd
+parameter_list|)
 name|CARD
 modifier|*
 name|crd
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-name|char
-modifier|*
-name|getline
-parameter_list|()
-function_decl|;
 specifier|register
 name|int
 name|i
@@ -1560,18 +1473,16 @@ name|retval
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * getuchar:  *	Reads and converts to upper case  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|getuchar
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -1604,48 +1515,37 @@ name|c
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|c
+operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * number:  *	Reads in a decimal number and makes sure it is between "lo" and  *	"hi" inclusive.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|number
-argument_list|(
-argument|lo
-argument_list|,
-argument|hi
-argument_list|,
-argument|prompt
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|lo
+parameter_list|,
+name|hi
+parameter_list|,
+name|prompt
+parameter_list|)
 name|int
 name|lo
 decl_stmt|,
 name|hi
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|prompt
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
-name|char
-modifier|*
-name|getline
-parameter_list|()
-function_decl|;
 specifier|register
 name|char
 modifier|*
@@ -1655,12 +1555,11 @@ specifier|register
 name|int
 name|sum
 decl_stmt|;
+for|for
+control|(
 name|sum
 operator|=
 literal|0
-expr_stmt|;
-for|for
-control|(
 init|;
 condition|;
 control|)
@@ -1776,9 +1675,7 @@ name|sum
 operator|<=
 name|hi
 condition|)
-return|return
-name|sum
-return|;
+break|break;
 if|if
 condition|(
 name|sum
@@ -1805,8 +1702,13 @@ name|hi
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|sum
+operator|)
+return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * msg:  *	Display a message at the top of the screen.  */
@@ -1841,10 +1743,6 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* VARARGS1 */
-end_comment
 
 begin_function
 name|void
@@ -1927,10 +1825,6 @@ end_function
 
 begin_comment
 comment|/*  * addmsg:  *	Add things to the current message  */
-end_comment
-
-begin_comment
-comment|/* VARARGS1 */
 end_comment
 
 begin_function
@@ -2021,13 +1915,17 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|endmsg
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
+specifier|static
+name|int
+name|lastline
+init|=
+literal|0
+decl_stmt|;
 specifier|register
 name|int
 name|len
@@ -2039,13 +1937,7 @@ name|mp
 decl_stmt|,
 modifier|*
 decl_stmt|omp;
-specifier|static
-name|int
-name|lastline
-init|=
-literal|0
-decl_stmt|;
-comment|/*      * All messages should start with uppercase      */
+comment|/* All messages should start with uppercase */
 name|mvaddch
 argument_list|(
 name|lastline
@@ -2178,7 +2070,7 @@ operator|)
 operator|>
 name|MSG_X
 condition|)
-block|{ 	    omp
+block|{ 			omp
 operator|=
 name|mp
 expr_stmt|;
@@ -2279,120 +2171,17 @@ name|Msgwin
 argument_list|)
 expr_stmt|;
 block|}
-end_block
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notdef
-end_ifdef
-
-begin_comment
-comment|/*  * doadd:  *	Perform an add onto the message buffer  */
-end_comment
-
-begin_macro
-name|doadd
-argument_list|(
-argument|fmt
-argument_list|,
-argument|args
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
-name|fmt
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-modifier|*
-name|args
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-specifier|static
-name|FILE
-name|junk
-decl_stmt|;
-comment|/*      * Do the printf into Msgbuf      */
-name|junk
-operator|.
-name|_flag
-operator|=
-name|_IOWRT
-operator|+
-name|_IOSTRG
-expr_stmt|;
-name|junk
-operator|.
-name|_ptr
-operator|=
-operator|&
-name|Msgbuf
-index|[
-name|Newpos
-index|]
-expr_stmt|;
-name|junk
-operator|.
-name|_cnt
-operator|=
-literal|32767
-expr_stmt|;
-name|_doprnt
-argument_list|(
-name|fmt
-argument_list|,
-name|args
-argument_list|,
-operator|&
-name|junk
-argument_list|)
-expr_stmt|;
-name|putc
-argument_list|(
-literal|'\0'
-argument_list|,
-operator|&
-name|junk
-argument_list|)
-expr_stmt|;
-name|Newpos
-operator|=
-name|strlen
-argument_list|(
-name|Msgbuf
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+end_function
 
 begin_comment
 comment|/*  * do_wait:  *	Wait for the user to type ' ' before doing anything else  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|do_wait
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
-specifier|register
-name|int
-name|line
-decl_stmt|;
 specifier|static
 name|char
 name|prompt
@@ -2494,24 +2283,22 @@ literal|' '
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * wait_for  *	Sit around until the guy types the right key  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|wait_for
-argument_list|(
+parameter_list|(
 name|ch
-argument_list|)
+parameter_list|)
 specifier|register
-name|char
+name|int
 name|ch
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|char
@@ -2545,28 +2332,21 @@ name|ch
 condition|)
 continue|continue;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * readchar:  *	Reads and returns a character, checking for gross input errors  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|readchar
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|int
 name|cnt
-decl_stmt|,
-name|y
-decl_stmt|,
-name|x
 decl_stmt|;
-specifier|auto
 name|char
 name|c
 decl_stmt|;
@@ -2580,12 +2360,15 @@ while|while
 condition|(
 name|read
 argument_list|(
-literal|0
+name|STDIN_FILENO
 argument_list|,
 operator|&
 name|c
 argument_list|,
-literal|1
+sizeof|sizeof
+argument_list|(
+name|char
+argument_list|)
 argument_list|)
 operator|<=
 literal|0
@@ -2635,14 +2418,18 @@ operator|==
 literal|'\r'
 condition|)
 return|return
+operator|(
 literal|'\n'
+operator|)
 return|;
 else|else
 return|return
+operator|(
 name|c
+operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * getline:  *      Reads the next line up to '\n' or EOF.  Multiple spaces are  *	compressed to one space; a space is inserted before a ','  */
@@ -2692,7 +2479,7 @@ expr_stmt|;
 name|refresh
 argument_list|()
 expr_stmt|;
-comment|/*      * loop reading in the string, and put it in a temporary buffer      */
+comment|/* loop reading in the string, and put it in a temporary buffer */
 for|for
 control|(
 name|sp
@@ -2782,7 +2569,7 @@ name|killchar
 argument_list|()
 condition|)
 block|{
-comment|/* process kill character */
+comment|/* process kill 							 * character */
 name|sp
 operator|=
 name|linebuf
@@ -2885,17 +2672,22 @@ operator|=
 name|oscr
 expr_stmt|;
 return|return
+operator|(
 name|linebuf
+operator|)
 return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|rint
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|(
+name|signo
+parameter_list|)
+name|int
+name|signo
+decl_stmt|;
 block|{
 name|bye
 argument_list|()
@@ -2906,18 +2698,16 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * bye:  *	Leave the program, cleaning things up as we go.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|bye
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|signal
 argument_list|(
@@ -2955,7 +2745,7 @@ literal|'\n'
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

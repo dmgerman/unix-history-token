@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)instr.c	5.2 (Berkeley) %G%"
+literal|"@(#)instr.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,7 +55,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<curses.h>
 end_include
 
 begin_include
@@ -79,15 +79,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"deck.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"cribbage.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"pathnames.h"
 end_include
 
-begin_macro
+begin_function
+name|void
 name|instructions
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|extern
 name|int
@@ -299,7 +315,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 
