@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: paste.c,v 1.1.1.1.8.1 1997/08/01 06:44:23 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -378,10 +378,6 @@ name|_POSIX2_LINE_MAX
 operator|+
 literal|1
 index|]
-decl_stmt|,
-modifier|*
-name|malloc
-argument_list|()
 decl_stmt|;
 for|for
 control|(
