@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)merge.c	5.1 (Berkeley) %G%"
+literal|"@(#)merge.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -346,7 +346,7 @@ operator|/
 literal|2
 condition|)
 block|{
-comment|/* pointers must fit into 2*size */
+comment|/* Pointers must fit into 2 * size. */
 name|errno
 operator|=
 name|EINVAL
