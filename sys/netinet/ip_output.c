@@ -902,6 +902,17 @@ endif|#
 directive|endif
 if|if
 condition|(
+name|inp
+operator|!=
+name|NULL
+condition|)
+name|INP_LOCK_ASSERT
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|args
 operator|.
 name|rule
