@@ -4227,11 +4227,6 @@ name|k_curthread
 operator|=
 name|NULL
 expr_stmt|;
-name|kse_wakeup_multi
-argument_list|(
-name|curkse
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG_THREAD_KERN
@@ -4336,6 +4331,11 @@ operator|)
 condition|)
 block|{
 comment|/* 		 * Normally this shouldn't return, but it will if there 		 * are other KSEs running that create new threads that 		 * are assigned to this KSE[G].  For instance, if a scope 		 * system thread were to create a scope process thread 		 * and this kse[g] is the initial kse[g], then that newly 		 * created thread would be assigned to us (the initial 		 * kse[g]). 		 */
+name|kse_wakeup_multi
+argument_list|(
+name|curkse
+argument_list|)
+expr_stmt|;
 name|KSE_SCHED_UNLOCK
 argument_list|(
 name|curkse
@@ -4428,11 +4428,6 @@ operator|->
 name|curframe
 operator|=
 name|NULL
-expr_stmt|;
-name|kse_wakeup_multi
-argument_list|(
-name|curkse
-argument_list|)
 expr_stmt|;
 comment|/* 	 * The thread's current signal frame will only be NULL if it 	 * is being resumed after being blocked in the kernel.  In 	 * this case, and if the thread needs to run down pending 	 * signals or needs a cancellation check, we need to add a 	 * signal frame to the thread's context. 	 */
 ifdef|#
@@ -4572,6 +4567,11 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+name|kse_wakeup_multi
+argument_list|(
+name|curkse
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Continue the thread at its current frame: 	 */
 if|if
 condition|(
