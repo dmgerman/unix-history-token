@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)hp.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)hp.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -355,6 +355,11 @@ index|[
 name|unit
 index|]
 decl_stmt|;
+name|struct
+name|disklabel
+modifier|*
+name|dlp
+decl_stmt|;
 if|if
 condition|(
 name|mbainit
@@ -565,10 +570,8 @@ name|EIO
 operator|)
 return|;
 block|}
-operator|*
-name|lp
+name|dlp
 operator|=
-operator|*
 operator|(
 expr|struct
 name|disklabel
@@ -580,18 +583,15 @@ operator|+
 name|LABELOFFSET
 operator|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|SMALL
 if|if
 condition|(
-name|lp
+name|dlp
 operator|->
 name|d_magic
 operator|!=
 name|DISKMAGIC
 operator|||
-name|lp
+name|dlp
 operator|->
 name|d_magic2
 operator|!=
@@ -605,9 +605,18 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|COMPAT_42
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SMALL
+argument_list|)
 name|hpmaptype
 argument_list|(
 name|hpaddr
@@ -636,6 +645,16 @@ return|;
 endif|#
 directive|endif
 block|}
+else|else
+operator|*
+name|lp
+operator|=
+operator|*
+name|dlp
+expr_stmt|;
+ifndef|#
+directive|ifndef
+name|SMALL
 comment|/* 		 * Read in the bad sector table. 		 */
 name|tio
 operator|.
@@ -773,14 +792,14 @@ literal|1
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 name|sc
 operator|->
 name|gottype
 operator|=
 literal|1
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 if|if
 condition|(
