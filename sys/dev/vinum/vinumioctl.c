@@ -201,23 +201,6 @@ operator|)
 name|data
 expr_stmt|;
 comment|/* save the address to reply to */
-name|error
-operator|=
-name|setjmp
-argument_list|(
-name|command_fail
-argument_list|)
-expr_stmt|;
-comment|/* come back here on error */
-if|if
-condition|(
-name|error
-condition|)
-comment|/* bombed out */
-return|return
-literal|0
-return|;
-comment|/* the reply will contain meaningful info */
 switch|switch
 condition|(
 name|cmd
