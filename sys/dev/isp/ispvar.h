@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ispvar.h,v 1.8 1999/01/10 02:51:48 mjacob Exp $ */
+comment|/* $Id: ispvar.h,v 1.8.2.1 1999/05/11 05:54:06 mjacob Exp $ */
 end_comment
 
 begin_comment
@@ -714,7 +714,6 @@ name|MAX_FC_TARG
 index|]
 decl_stmt|;
 comment|/* 	 * Scratch DMA mapped in area to fetch Port Database stuff, etc. 	 */
-specifier|volatile
 name|caddr_t
 name|isp_scratch
 decl_stmt|;
@@ -1046,11 +1045,9 @@ name|RQUEST_QUEUE_LEN
 index|]
 decl_stmt|;
 comment|/* 	 * request/result queues and dma handles for them. 	 */
-specifier|volatile
 name|caddr_t
 name|isp_rquest
 decl_stmt|;
-specifier|volatile
 name|caddr_t
 name|isp_result
 decl_stmt|;
