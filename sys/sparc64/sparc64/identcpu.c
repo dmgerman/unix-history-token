@@ -261,7 +261,7 @@ name|printf
 argument_list|(
 literal|"CPU: unknown; please e-mail the following value together\n"
 literal|"     with the exact name of your processor to "
-literal|"<freebsd-sparc@FreeBSD.org>.\n"
+literal|"<freebsd-sparc64@FreeBSD.org>.\n"
 literal|"     version register:<0x%lx>\n"
 argument_list|,
 name|vers
