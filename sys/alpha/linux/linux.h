@@ -3497,6 +3497,13 @@ name|LINUX_SOUND_MIXER_READ_DEVMASK
 value|0x4dfe
 end_define
 
+begin_define
+define|#
+directive|define
+name|LINUX_OSS_GETVERSION
+value|0x4d76
+end_define
+
 begin_comment
 comment|/* Socket system defines */
 end_comment
