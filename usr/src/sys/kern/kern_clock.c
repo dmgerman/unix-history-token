@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	4.12	%G%	*/
+comment|/*	kern_clock.c	4.13	%G%	*/
 end_comment
 
 begin_include
@@ -1381,13 +1381,13 @@ name|p1
 expr_stmt|;
 name|p3
 operator|=
-operator|&
 name|callout
-index|[
-name|NCALL
+operator|+
+operator|(
+name|ncall
 operator|-
 literal|2
-index|]
+operator|)
 expr_stmt|;
 while|while
 condition|(
