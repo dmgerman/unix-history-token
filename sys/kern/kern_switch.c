@@ -1337,6 +1337,19 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
+name|KASSERT
+argument_list|(
+name|td
+operator|->
+name|td_critnest
+operator|>
+literal|0
+argument_list|,
+operator|(
+literal|"critical_exit:  critnest< 0"
+operator|)
+argument_list|)
+expr_stmt|;
 name|td
 operator|=
 name|curthread
