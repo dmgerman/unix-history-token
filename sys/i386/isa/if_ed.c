@@ -4,7 +4,7 @@ comment|/*  * Device driver for National Semiconductor DS8390 based ethernet  * 
 end_comment
 
 begin_comment
-comment|/*  * Modification history  *  * $Log:	if_ed.c,v $  * Revision 1.7  93/06/22  04:45:01  davidg  * (no additional changes) Second beta release  *   * Revision 1.6  93/06/22  04:40:35  davidg  * minor definition fix to ed_reset()  *   * Revision 1.5  93/06/22  04:37:39  davidg  * fixed some comments  *   * Revision 1.4  93/06/22  04:34:34  davidg  * added support to use the LLC0 'link-level control' flag  * to disable the tranceiver for AUI operation on 3Com boards.  * The default for this flag can be set in the kernel config  * file - 'flags 0x01' sets the flag (disables the tranceiver).  *   * Revision 1.3  93/06/17  03:57:28  davidg  * fixed some printf's  *   * Revision 1.2  93/06/17  03:26:49  davidg  * fixed 3c503 code to determine 8/16bit board  * changed attach printf to work with Interim-0.1.5 and NetBSD  *   * Revision 1.1  93/06/14  22:21:24  davidg  * Beta release of device driver for SMC/WD80x3 and 3C503 ethernet boards.  *   *   */
+comment|/*  * Modification history  *  * $Log:	if_ed.c,v $  * Revision 1.9  93/06/23  03:48:14  davidg  * fixed minor typo introduced when cleaning up probe routine  *   * Revision 1.8  93/06/23  03:37:19  davidg  * cleaned up/added some comments. Also improved readability of a part of  * the probe routine.  *   * Revision 1.7  93/06/22  04:45:01  davidg  * (no additional changes) Second beta release  *   * Revision 1.6  93/06/22  04:40:35  davidg  * minor definition fix to ed_reset()  *   * Revision 1.5  93/06/22  04:37:39  davidg  * fixed some comments  *   * Revision 1.4  93/06/22  04:34:34  davidg  * added support to use the LLC0 'link-level control' flag  * to disable the tranceiver for AUI operation on 3Com boards.  * The default for this flag can be set in the kernel config  * file - 'flags 0x01' sets the flag (disables the tranceiver).  *   * Revision 1.3  93/06/17  03:57:28  davidg  * fixed some printf's  *   * Revision 1.2  93/06/17  03:26:49  davidg  * fixed 3c503 code to determine 8/16bit board  * changed attach printf to work with Interim-0.1.5 and NetBSD  *   * Revision 1.1  93/06/14  22:21:24  davidg  * Beta release of device driver for SMC/WD80x3 and 3C503 ethernet boards.  *   *   */
 end_comment
 
 begin_include
@@ -927,6 +927,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * Check 83C584 interrupt configuration register if this board has one 	 *	XXX - we could also check the IO address register. But why 	 *		bother...if we get past this, it *has* to be correct. 	 */
 if|if
 condition|(
 name|sc
@@ -936,18 +937,21 @@ operator|&
 name|ED_WD_SOFTCONFIG
 condition|)
 block|{
+comment|/* 		 * Assemble together the encoded interrupt number. 		 */
 name|iptr
 operator|=
+operator|(
 name|inb
 argument_list|(
 name|isa_dev
 operator|->
 name|id_iobase
 operator|+
-literal|1
+name|ED_WD_ICR
 argument_list|)
 operator|&
-literal|4
+name|ED_WD_ICR_IR2
+operator|)
 operator||
 operator|(
 operator|(
@@ -957,15 +961,20 @@ name|isa_dev
 operator|->
 name|id_iobase
 operator|+
-literal|4
+name|ED_WD_IRR
 argument_list|)
 operator|&
-literal|0x60
+operator|(
+name|ED_WD_IRR_IR0
+operator||
+name|ED_WD_IRR_IR1
+operator|)
 operator|)
 operator|>>
 literal|5
 operator|)
 expr_stmt|;
+comment|/* 		 * Translate it using translation table, and check for correctness. 		 */
 if|if
 condition|(
 name|ed_intr_mask
@@ -993,13 +1002,14 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/* 		 * Enable the interrupt. 		 */
 name|outb
 argument_list|(
 name|isa_dev
 operator|->
 name|id_iobase
 operator|+
-literal|4
+name|ED_WD_IRR
 argument_list|,
 name|inb
 argument_list|(
@@ -1007,10 +1017,10 @@ name|isa_dev
 operator|->
 name|id_iobase
 operator|+
-literal|4
+name|ED_WD_IRR
 argument_list|)
 operator||
-literal|0x80
+name|ED_WD_IRR_IEN
 argument_list|)
 expr_stmt|;
 block|}
@@ -2291,6 +2301,7 @@ operator||
 name|IFF_NOTRAILERS
 operator|)
 expr_stmt|;
+comment|/* 	 * Attach the interface 	 */
 name|if_attach
 argument_list|(
 name|ifp
@@ -2360,7 +2371,7 @@ name|ifa
 operator|->
 name|ifa_next
 expr_stmt|;
-comment|/* 	 * If we find an AF_LINK type entry we fill in the hardware address 	 */
+comment|/* 	 * If we find an AF_LINK type entry we fill in the hardware address. 	 *	This is useful for netstat(1) to keep track of which interface 	 *	is which. 	 */
 if|if
 condition|(
 operator|(
@@ -2594,6 +2605,10 @@ break|break;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/*  * Device timeout/watchdog routine. Entered if the device neglects to  *	generate an interrupt after a transmit has been started on it.  */
+end_comment
 
 begin_function
 name|int
@@ -3120,6 +3135,10 @@ expr_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/*  * This routine actually starts the transmission on the interface  */
+end_comment
+
 begin_function
 specifier|static
 specifier|inline
@@ -3215,7 +3234,7 @@ operator|>>
 literal|8
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Set page 0, Remote DMA complete, Transmit Packet, and Start 	 */
+comment|/* 	 * Set page 0, Remote DMA complete, Transmit Packet, and *Start* 	 */
 name|outb
 argument_list|(
 name|sc
@@ -3243,6 +3262,7 @@ name|data_buffered
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 	 * Switch buffers if we are doing double-buffered transmits 	 */
 if|if
 condition|(
 operator|(
@@ -3332,6 +3352,7 @@ name|laar_tmp
 decl_stmt|;
 name|outloop
 label|:
+comment|/* 	 * See if there is room to send more data (i.e. one or both of the 	 *	buffers is empty). 	 */
 if|if
 condition|(
 name|sc
@@ -3345,6 +3366,7 @@ operator|->
 name|xmit_busy
 condition|)
 block|{
+comment|/* 			 * No room. Indicate this to the outside world 			 *	and exit. 			 */
 name|ifp
 operator|->
 name|if_flags
@@ -3355,7 +3377,7 @@ return|return;
 block|}
 else|else
 block|{
-comment|/* 			 * Note that ed_xmit() resets the data_buffered flag 			 *  before returning 			 */
+comment|/* 			 * Data is buffered, but we're not transmitting, so 			 *	start the xmit on the buffered data. 			 * Note that ed_xmit() resets the data_buffered flag 			 *	before returning. 			 */
 name|ed_xmit
 argument_list|(
 name|ifp
@@ -3819,6 +3841,7 @@ argument_list|(
 name|m0
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If we are doing double-buffering, a buffer might be free to 	 *	fill with another packet, so loop back to the top. 	 */
 if|if
 condition|(
 name|sc
@@ -4263,7 +4286,7 @@ operator|&=
 operator|~
 name|IFF_OACTIVE
 expr_stmt|;
-comment|/* 			 * reset watchdog timer 			 */
+comment|/* 			 * clear watchdog timer 			 */
 name|sc
 operator|->
 name|arpcom
@@ -4373,7 +4396,7 @@ operator|&=
 operator|~
 name|IFF_OACTIVE
 expr_stmt|;
-comment|/* 			 * reset watchdog timer 			 */
+comment|/* 			 * clear watchdog timer 			 */
 name|sc
 operator|->
 name|arpcom
@@ -5756,7 +5779,7 @@ literal|0
 condition|)
 block|{
 comment|/* no more data in this mbuf, alloc another */
-comment|/* 			 * if there is enough data for an mbuf cluster, attempt 			 * to allocate one of those, otherwise, a regular mbuf 			 * will do. 			 */
+comment|/* 			 * If there is enough data for an mbuf cluster, attempt 			 * 	to allocate one of those, otherwise, a regular 			 *	mbuf will do. 			 * Note that a regular mbuf is always required, even if 			 *	we get a cluster - getting a cluster does not 			 *	allocate any mbufs, and one is needed to assign 			 *	the cluster to. The mbuf that has a cluster 			 *	extension can not be used to contain data - only 			 *	the cluster can contain data. 			 */
 name|dst
 operator|=
 name|m
