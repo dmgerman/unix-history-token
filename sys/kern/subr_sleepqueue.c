@@ -1771,9 +1771,6 @@ parameter_list|(
 name|void
 modifier|*
 name|wchan
-parameter_list|,
-name|int
-name|signal_caught
 parameter_list|)
 block|{
 name|int
@@ -1795,16 +1792,6 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|signal_caught
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-else|else
 return|return
 operator|(
 name|rval

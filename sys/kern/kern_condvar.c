@@ -837,8 +837,6 @@ operator|=
 name|sleepq_timedwait
 argument_list|(
 name|cvp
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 ifdef|#

@@ -885,10 +885,6 @@ operator|=
 name|sleepq_timedwait
 argument_list|(
 name|ident
-argument_list|,
-name|sig
-operator|!=
-literal|0
 argument_list|)
 expr_stmt|;
 elseif|else
