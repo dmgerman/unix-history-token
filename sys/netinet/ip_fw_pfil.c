@@ -386,6 +386,8 @@ name|dn_tag
 argument_list|)
 expr_stmt|;
 block|}
+name|again
+label|:
 name|args
 operator|.
 name|m
@@ -543,7 +545,7 @@ comment|/* packet consumed */
 block|}
 else|else
 goto|goto
-name|pass
+name|again
 goto|;
 comment|/* continue with packet */
 block|}
@@ -806,6 +808,8 @@ name|dn_tag
 argument_list|)
 expr_stmt|;
 block|}
+name|again
+label|:
 name|args
 operator|.
 name|m
@@ -968,7 +972,7 @@ comment|/* packet consumed */
 block|}
 else|else
 goto|goto
-name|pass
+name|again
 goto|;
 comment|/* continue with packet */
 block|}
@@ -1134,7 +1138,7 @@ name|int
 name|tee
 parameter_list|)
 block|{
-comment|/* 	 * ipfw_chk() has already tagged the packet with the divert 	 * tag.  For tee we need to remove the tag. 	 * If tee is set, copy packet and return original. 	 * If not tee, consume packet and send it to divert socket. 	 */
+comment|/* 	 * ipfw_chk() has already tagged the packet with the divert tag. 	 * If tee is set, copy packet and return original. 	 * If not tee, consume packet and send it to divert socket. 	 */
 ifdef|#
 directive|ifdef
 name|IPDIVERT
@@ -1145,11 +1149,6 @@ name|clone
 decl_stmt|,
 modifier|*
 name|reass
-decl_stmt|;
-name|struct
-name|m_tag
-modifier|*
-name|mtag
 decl_stmt|;
 name|struct
 name|ip
@@ -1367,42 +1366,14 @@ argument_list|)
 expr_stmt|;
 name|teeout
 label|:
+comment|/* 	 * For tee we leave the divert tag attached to original packet. 	 * It will then continue rule evaluation after the tee rule. 	 */
 if|if
 condition|(
 name|tee
 condition|)
-block|{
-name|mtag
-operator|=
-name|m_tag_find
-argument_list|(
-operator|*
-name|m
-argument_list|,
-name|PACKET_TAG_DIVERT
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|mtag
-operator|!=
-name|NULL
-condition|)
-name|m_tag_delete
-argument_list|(
-operator|*
-name|m
-argument_list|,
-name|mtag
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
-comment|/* continue with original packet. */
-block|}
 comment|/* Packet diverted and consumed */
 return|return
 literal|1
