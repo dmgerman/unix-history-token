@@ -54,6 +54,74 @@ endif|#
 directive|endif
 end_endif
 
+begin_typedef
+typedef|typedef
+name|int
+name|disk_open_t
+parameter_list|(
+name|struct
+name|disk
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+name|disk_close_t
+parameter_list|(
+name|struct
+name|disk
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
+name|disk_strategy_t
+parameter_list|(
+name|struct
+name|bio
+modifier|*
+name|bp
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+name|disk_ioctl_t
+parameter_list|(
+name|struct
+name|disk
+modifier|*
+parameter_list|,
+name|u_long
+name|cmd
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|int
+name|fflag
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
+comment|/* NB: disk_ioctl_t SHALL be cast'able to d_ioctl_t */
+end_comment
+
 begin_struct_decl
 struct_decl|struct
 name|g_geom
@@ -64,9 +132,7 @@ begin_struct
 struct|struct
 name|disk
 block|{
-name|u_int
-name|d_flags
-decl_stmt|;
+comment|/* Fields which are private to geom_disk */
 name|struct
 name|cdevsw
 modifier|*
@@ -74,17 +140,54 @@ name|d_devsw
 decl_stmt|;
 name|d_open_t
 modifier|*
+name|d_copen
+decl_stmt|;
+comment|/* Compat */
+name|d_close_t
+modifier|*
+name|d_cclose
+decl_stmt|;
+comment|/* Compat */
+name|d_ioctl_t
+modifier|*
+name|d_cioctl
+decl_stmt|;
+comment|/* Compat */
+name|struct
+name|g_geom
+modifier|*
+name|d_geom
+decl_stmt|;
+comment|/* Shared fields */
+name|u_int
+name|d_flags
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|d_name
+decl_stmt|;
+name|u_int
+name|d_unit
+decl_stmt|;
+name|dev_t
+name|d_dev
+decl_stmt|;
+comment|/* Compat */
+comment|/* Disk methods  */
+name|disk_open_t
+modifier|*
 name|d_open
 decl_stmt|;
-name|d_close_t
+name|disk_close_t
 modifier|*
 name|d_close
 decl_stmt|;
-name|d_strategy_t
+name|disk_strategy_t
 modifier|*
 name|d_strategy
 decl_stmt|;
-name|d_ioctl_t
+name|disk_ioctl_t
 modifier|*
 name|d_ioctl
 decl_stmt|;
@@ -92,18 +195,7 @@ name|dumper_t
 modifier|*
 name|d_dump
 decl_stmt|;
-name|dev_t
-name|d_dev
-decl_stmt|;
-name|u_int
-name|d_unit
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|d_name
-decl_stmt|;
-comment|/* These four fields must be valid while opened */
+comment|/* Info fields from driver to geom_disk.c. Valid when open */
 name|u_int
 name|d_sectorsize
 decl_stmt|;
@@ -125,10 +217,10 @@ decl_stmt|;
 name|u_int
 name|d_max_request
 decl_stmt|;
-name|struct
-name|g_geom
+comment|/* Fields private to the driver */
+name|void
 modifier|*
-name|d_softc
+name|d_drv1
 decl_stmt|;
 block|}
 struct|;
