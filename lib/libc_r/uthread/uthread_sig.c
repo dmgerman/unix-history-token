@@ -3199,7 +3199,7 @@ name|PTHREAD_FLAGS_IN_SYNCQ
 expr_stmt|;
 comment|/* 	 * Set up the context: 	 */
 name|stackp
-operator|+=
+operator|-=
 sizeof|sizeof
 argument_list|(
 name|double
