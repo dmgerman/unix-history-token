@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994  *      The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mntopts.h	8.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1994  *      The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mntopts.h	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_struct
@@ -96,10 +96,6 @@ name|MOPT_UPDATE
 value|{ "update",	0, MNT_UPDATE }
 end_define
 
-begin_comment
-comment|/* Support for old-style "ro", "rw" flags. */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -114,12 +110,23 @@ name|MOPT_RW
 value|{ "rw",		1, MNT_RDONLY }
 end_define
 
+begin_comment
+comment|/* This is parsed by mount(8), but is ignored by specific mount_*(8)s. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOPT_AUTO
+value|{ "auto",	0, 0 }
+end_define
+
 begin_define
 define|#
 directive|define
 name|MOPT_FSTAB_COMPAT
 define|\
-value|MOPT_RO,							\ 	MOPT_RW
+value|MOPT_RO,							\ 	MOPT_RW,							\ 	MOPT_AUTO
 end_define
 
 begin_comment
