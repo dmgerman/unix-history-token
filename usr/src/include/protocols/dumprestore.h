@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dumprestore.h	5.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dumprestore.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -38,43 +38,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|TS_TAPE
-value|1
+name|LBLSIZE
+value|16
 end_define
 
 begin_define
 define|#
 directive|define
-name|TS_INODE
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|TS_BITS
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|TS_ADDR
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|TS_END
-value|5
-end_define
-
-begin_define
-define|#
-directive|define
-name|TS_CLRI
-value|6
+name|NAMELEN
+value|64
 end_define
 
 begin_define
@@ -111,43 +83,86 @@ decl_stmt|;
 struct|struct
 name|s_spcl
 block|{
-name|int
+name|long
 name|c_type
 decl_stmt|;
+comment|/* record type (see below) */
 name|time_t
 name|c_date
 decl_stmt|;
+comment|/* date of previous dump */
 name|time_t
 name|c_ddate
 decl_stmt|;
-name|int
+comment|/* date of this dump */
+name|long
 name|c_volume
 decl_stmt|;
+comment|/* dump volume number */
 name|daddr_t
 name|c_tapea
 decl_stmt|;
+comment|/* logical block of this record */
 name|ino_t
 name|c_inumber
 decl_stmt|;
-name|int
+comment|/* number of inode */
+name|long
 name|c_magic
 decl_stmt|;
-name|int
+comment|/* magic number (see above) */
+name|long
 name|c_checksum
 decl_stmt|;
+comment|/* record checksum */
 name|struct
 name|dinode
 name|c_dinode
 decl_stmt|;
-name|int
+comment|/* ownership and mode of inode */
+name|long
 name|c_count
 decl_stmt|;
+comment|/* number of valid c_addr entries */
 name|char
 name|c_addr
 index|[
 name|TP_NINDIR
 index|]
 decl_stmt|;
+comment|/* 1 => data; 0 => hole in inode */
+name|char
+name|c_label
+index|[
+name|LBLSIZE
+index|]
+decl_stmt|;
+comment|/* dump label */
+name|long
+name|c_level
+decl_stmt|;
+comment|/* level of this dump */
+name|char
+name|c_filesys
+index|[
+name|NAMELEN
+index|]
+decl_stmt|;
+comment|/* name of dumpped file system */
+name|char
+name|c_dev
+index|[
+name|NAMELEN
+index|]
+decl_stmt|;
+comment|/* name of dumpped device */
+name|char
+name|c_host
+index|[
+name|NAMELEN
+index|]
+decl_stmt|;
+comment|/* name of dumpped host */
 block|}
 name|s_spcl
 struct|;
@@ -162,6 +177,87 @@ directive|define
 name|spcl
 value|u_spcl.s_spcl
 end_define
+
+begin_comment
+comment|/*  * special record types  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TS_OTAPE
+value|1
+end_define
+
+begin_comment
+comment|/* 4.3BSD and earlier type dump tape header */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TS_TAPE
+value|7
+end_define
+
+begin_comment
+comment|/* dump tape header */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TS_INODE
+value|2
+end_define
+
+begin_comment
+comment|/* beginning of file record */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TS_ADDR
+value|4
+end_define
+
+begin_comment
+comment|/* continuation of file record */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TS_BITS
+value|3
+end_define
+
+begin_comment
+comment|/* map of inodes on tape */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TS_CLRI
+value|6
+end_define
+
+begin_comment
+comment|/* map of inodes deleted since last dump */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TS_END
+value|5
+end_define
+
+begin_comment
+comment|/* end of volume marker */
+end_comment
 
 begin_define
 define|#
