@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tunefs.c	5.5 (Berkeley) %G%"
+literal|"@(#)tunefs.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -489,22 +489,6 @@ name|atoi
 argument_list|(
 operator|*
 name|argv
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|i
-operator|<
-literal|0
-condition|)
-name|fatal
-argument_list|(
-literal|"%s: bad %s"
-argument_list|,
-operator|*
-name|argv
-argument_list|,
-name|name
 argument_list|)
 expr_stmt|;
 name|fprintf
