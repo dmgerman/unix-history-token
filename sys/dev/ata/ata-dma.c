@@ -1702,7 +1702,7 @@ name|pci_get_revid
 argument_list|(
 name|parent
 argument_list|)
-operator|>
+operator|>=
 literal|0x20
 condition|)
 block|{
