@@ -1045,9 +1045,6 @@ block|{
 name|u_int
 name|map
 decl_stmt|;
-name|int
-name|cnt
-decl_stmt|;
 name|printf
 argument_list|(
 literal|"cpu_reset called on cpu#%d\n"
