@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uncompact.c	4.1	83/02/11	*/
+comment|/*	uncompact.c	4.2	83/05/04	*/
 end_comment
 
 begin_comment
@@ -334,7 +334,7 @@ operator|-
 name|m
 operator|)
 operator|>
-literal|15
+literal|256
 condition|)
 block|{
 name|fprintf
