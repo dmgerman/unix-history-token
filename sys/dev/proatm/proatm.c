@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2002, 2003 Christian Bucari, Prosum   * Copyright (c) 2002, 2003 6wind  * Copyright (c) 2000, 2001 Richard Hodges and Matriplex, inc.  * Copyright (c) 1996, 1997, 1998, 1999 Mark Tinguely  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *	notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *	notice, this list of conditions and the following disclaimer in the  *	documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *	must display the following acknowledgement:  *	This product includes software developed by Prosum, 6wind and   *  Matriplex, inc  * 4. The name of the authors may not be used to endorse or promote products   *	derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  ******************************************************************************  *  *  This driver supports the PROATM-155 and PROATM-25 cards based on the IDT77252.  *  *  UBR, CBR and VBR connections are supported    *  *  You must have FreeBSD 3.5, 4.1 or later.  *  * in sys/i386/conf/YOUR_NAME add:  *	options		ATM_CORE	#core ATM protocol family  *	options		ATM_IP		#IP over ATM support  *  at least one (and usually one of the following:  *	options		ATM_SIGPVC	#SIGPVC signalling manager  *	options		ATM_SPANS	#SPANS signalling manager  *	options		ATM_UNI		#UNI signalling manager  *  and the device driver:  *	device		proatm      #PROATM device driver (this file)  *  * Add the following line to /usr/src/sys/conf/files:  *   pci/proatm.c  optional proatm pci  *  ******************************************************************************  *  *  The following sysctl variables are used:  *  * hw.proatm.log_bufstat  (0)   Log free buffers (every few minutes)  * hw.proatm.log_vcs      (0)   Log VC opens, closes, and other events  * hw.proatm.bufs_large  (500)  Max/target number of free 2k buffers  * hw.proatm.bufs_small  (500)  Max/target number of free mbufs  * hw.proatm.cur_large   (R/O)  Current number of free 2k buffers  * hw.proatm.cur_small   (R/O)  Current number of free mbufs  * hw.proatm.qptr_hold    (1)   Optimize TX queue buffer for lowest overhead  *  * Note that the read-only buffer counts will not work with multiple cards.  *  ******************************************************************************  *  *  Assumption: All mbuf clusters are 2048 bytes.  *  ******************************************************************************  *  *  Date: 25-06-2003  *  Version: 1.06  */
+comment|/*  * Copyright (c) 2002, 2003 Christian Bucari, Prosum   * Copyright (c) 2002, 2003 Xavier Heiny, Vincent Jardin, 6WIND  * Copyright (c) 2000, 2001 Richard Hodges and Matriplex, inc.  * Copyright (c) 1996, 1997, 1998, 1999 Mark Tinguely  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *	notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *	notice, this list of conditions and the following disclaimer in the  *	documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *	must display the following acknowledgement:  *	This product includes software developed by Prosum, 6wind and   *  Matriplex, inc  * 4. The name of the authors may not be used to endorse or promote products   *	derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  ******************************************************************************  *  *  This driver supports the PROATM-155 and PROATM-25 cards based on the IDT77252.  *  *  UBR, CBR and VBR connections are supported    *  *  You must have FreeBSD 3.5, 4.1 or later.  *  * in sys/i386/conf/YOUR_NAME add:  *	options		ATM_CORE	#core ATM protocol family  *	options		ATM_IP		#IP over ATM support  *  at least one (and usually one of the following:  *	options		ATM_SIGPVC	#SIGPVC signalling manager  *	options		ATM_SPANS	#SPANS signalling manager  *	options		ATM_UNI		#UNI signalling manager  *  and the device driver:  *	device		proatm      #PROATM device driver (this file)  *  * Add the following line to /usr/src/sys/conf/files:  *   pci/proatm.c  optional proatm pci  *  ******************************************************************************  *  *  The following sysctl variables are used:  *  * hw.proatm.log_bufstat  (0)   Log free buffers (every few minutes)  * hw.proatm.log_vcs      (0)   Log VC opens, closes, and other events  * hw.proatm.bufs_large  (500)  Max/target number of free 2k buffers  * hw.proatm.bufs_small  (500)  Max/target number of free mbufs  * hw.proatm.cur_large   (R/O)  Current number of free 2k buffers  * hw.proatm.cur_small   (R/O)  Current number of free mbufs  * hw.proatm.qptr_hold    (1)   Optimize TX queue buffer for lowest overhead  *  * Note that the read-only buffer counts will not work with multiple cards.  *  ******************************************************************************  *  *  Assumption: All mbuf clusters are 2048 bytes.  *  ******************************************************************************  *  *  Date: 25-06-2003  *  Version: 1.06  */
 end_comment
 
 begin_include
@@ -32,7 +32,7 @@ begin_define
 define|#
 directive|define
 name|PROATM_VERSION
-value|"PROATM 1.0060"
+value|"PROATM 1.0061"
 end_define
 
 begin_comment
@@ -2482,6 +2482,7 @@ operator|->
 name|recv
 argument_list|)
 expr_stmt|;
+comment|/* Enforce close when it is a VBR or UBR connection for which a 	     * PROATM_CLOSE_TAG message has to be sent to the SAR. 	     * It means that no message will be posted. 	     * Only the CBR and UBR0 connections are synchronously closed. 	     */
 name|proatm_connect_txclose
 argument_list|(
 name|proatm
@@ -7921,6 +7922,14 @@ operator|*
 operator|)
 name|connection
 expr_stmt|;
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|header
+operator|=
+name|NULL
+expr_stmt|;
 name|s
 operator|=
 name|splimp
@@ -8079,6 +8088,12 @@ condition|)
 block|{
 if|if
 condition|(
+name|KB_ISPKT
+argument_list|(
+name|m
+argument_list|)
+operator|&&
+operator|(
 name|m
 operator|->
 name|m_pkthdr
@@ -8091,6 +8106,7 @@ name|ifnet
 operator|*
 operator|)
 name|connection
+operator|)
 condition|)
 block|{
 operator|*
@@ -10945,6 +10961,7 @@ name|traf_mbs
 operator|=
 literal|0
 expr_stmt|;
+comment|/* XXX: Is proatm_connect_txstop (proatm, conn) missing ?? */
 name|splx
 argument_list|(
 name|s
@@ -12508,6 +12525,46 @@ name|PROATM_CLOSE_TAG
 operator|<<
 literal|20
 operator|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|top
+operator|->
+name|m_len
+operator|!=
+literal|4
+operator|)
+operator|||
+operator|(
+name|top
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|!=
+literal|0
+operator|)
+condition|)
+name|printf
+argument_list|(
+literal|"proatm%d: trying close (PROATM_CLOSE_TAG) with m_len"
+literal|" %d and m_pkthdr.len %d\n"
+argument_list|,
+name|proatm
+operator|->
+name|unit
+argument_list|,
+name|top
+operator|->
+name|m_len
+argument_list|,
+name|top
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+argument_list|)
 expr_stmt|;
 operator|*
 name|txqueue
@@ -14249,6 +14306,7 @@ operator|.
 name|drv_xm_idlevbr
 operator|++
 expr_stmt|;
+comment|/* XXX: What's about UBR, UBR0 and may be ABR ?? */
 block|}
 block|}
 break|break;
@@ -15478,6 +15536,7 @@ name|len
 operator|=
 name|clen
 expr_stmt|;
+comment|/* M_PKTHDR has already been tested */
 name|mptr
 operator|->
 name|m_pkthdr
@@ -16733,6 +16792,7 @@ argument_list|,
 name|counter
 argument_list|)
 expr_stmt|;
+comment|/* XXX: Should we delay ? */
 comment|/* Read the counter */
 comment|/*   read the low 8 bits */
 name|proatm_util_rd
@@ -17187,7 +17247,16 @@ block|{
 case|case
 name|AIOCS_INF_VST
 case|:
-comment|/* Get vendor statistics */
+comment|/*          * Get vendor statistics          */
+if|if
+condition|(
+name|proatm
+operator|==
+name|NULL
+condition|)
+return|return
+name|ENXIO
+return|;
 name|snprintf
 argument_list|(
 name|ifname
@@ -17208,6 +17277,7 @@ operator|->
 name|pif_unit
 argument_list|)
 expr_stmt|;
+comment|/*          * Cast response structure onto user's buffer          */
 name|avr
 operator|=
 operator|(
@@ -17217,6 +17287,7 @@ operator|*
 operator|)
 name|buf
 expr_stmt|;
+comment|/*          * How large is the response structure          */
 name|len
 operator|=
 sizeof|sizeof
@@ -17225,6 +17296,7 @@ expr|struct
 name|air_vinfo_rsp
 argument_list|)
 expr_stmt|;
+comment|/*          * Sanity check - enough room for response structure?          */
 if|if
 condition|(
 name|buf_len
@@ -17234,6 +17306,7 @@ condition|)
 return|return
 name|ENOSPC
 return|;
+comment|/*          * Copy interface name into response structure          */
 if|if
 condition|(
 operator|(
@@ -17254,6 +17327,7 @@ operator|!=
 literal|0
 condition|)
 break|break;
+comment|/*          * Advance the buffer address and decrement the size          */
 name|buf
 operator|+=
 name|len
@@ -17312,6 +17386,7 @@ name|txqueue_ubr0
 operator|.
 name|scq_cur
 expr_stmt|;
+comment|/*          * Stick as much of it as we have room for          * into the response          */
 name|count
 operator|=
 name|MIN
@@ -17324,6 +17399,7 @@ argument_list|,
 name|buf_len
 argument_list|)
 expr_stmt|;
+comment|/*          * Copy stats into user's buffer. Return value is          * amount of data copied.          */
 if|if
 condition|(
 operator|(
