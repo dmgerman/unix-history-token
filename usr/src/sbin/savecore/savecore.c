@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)savecore.c	4.11 (Berkeley) 83/03/21"
+literal|"@(#)savecore.c	4.12 (Berkeley) 83/05/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -1648,7 +1648,7 @@ decl_stmt|;
 name|int
 name|dfd
 decl_stmt|,
-name|freespace
+name|spacefree
 decl_stmt|;
 name|struct
 name|fs
@@ -1734,7 +1734,7 @@ argument_list|(
 name|dfd
 argument_list|)
 expr_stmt|;
-name|freespace
+name|spacefree
 operator|=
 name|fs
 operator|.
@@ -1755,7 +1755,7 @@ argument_list|(
 literal|"minfree"
 argument_list|)
 operator|>
-name|freespace
+name|spacefree
 condition|)
 block|{
 name|fprintf

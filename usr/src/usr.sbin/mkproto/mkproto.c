@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkproto.c	4.2	(Berkeley)	%G%"
+literal|"@(#)mkproto.c	4.3	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1597,7 +1597,7 @@ name|oldsize
 decl_stmt|,
 name|newsize
 decl_stmt|,
-name|freespace
+name|spacefree
 decl_stmt|;
 name|odp
 operator|=
@@ -1668,7 +1668,7 @@ name|oldsize
 operator|=
 literal|0
 expr_stmt|;
-name|freespace
+name|spacefree
 operator|=
 name|odp
 operator|->
@@ -1716,7 +1716,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|freespace
+name|spacefree
 operator|>=
 name|newsize
 condition|)
@@ -1731,7 +1731,7 @@ name|dp
 operator|->
 name|d_reclen
 operator|=
-name|freespace
+name|spacefree
 expr_stmt|;
 block|}
 else|else
