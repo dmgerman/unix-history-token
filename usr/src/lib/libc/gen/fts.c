@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fts.c	5.21 (Berkeley) %G%"
+literal|"@(#)fts.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -355,14 +355,9 @@ decl_stmt|;
 comment|/* Allocate/initialize the stream */
 if|if
 condition|(
-operator|!
 operator|(
 name|sp
 operator|=
-operator|(
-name|FTS
-operator|*
-operator|)
 name|malloc
 argument_list|(
 operator|(
@@ -374,6 +369,8 @@ name|FTS
 argument_list|)
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 return|return
 operator|(
@@ -2964,7 +2961,7 @@ parameter_list|,
 name|ptr
 parameter_list|)
 define|\
-value|(type *)realloc((void *)ptr, (u_int)((nelem) * sizeof(type)))
+value|realloc((void *)ptr, (u_int)((nelem) * sizeof(type)))
 end_define
 
 begin_function
@@ -3186,14 +3183,9 @@ decl_stmt|;
 comment|/* 	 * Variable sized structures; the name is the last element so 	 * we allocate enough extra space after the structure to store 	 * it. 	 */
 if|if
 condition|(
-operator|!
 operator|(
 name|p
 operator|=
-operator|(
-name|FTSENT
-operator|*
-operator|)
 name|malloc
 argument_list|(
 call|(
@@ -3209,6 +3201,8 @@ name|len
 argument_list|)
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 return|return
 operator|(
