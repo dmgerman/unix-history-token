@@ -7196,10 +7196,6 @@ begin_comment
 comment|/* DDB */
 end_comment
 
-begin_comment
-comment|/*  * XXX I'm not sure the following is good for 64-bit bars.  */
-end_comment
-
 begin_function
 specifier|static
 name|struct
@@ -7271,7 +7267,11 @@ decl_stmt|;
 name|int
 name|mapsize
 decl_stmt|;
-comment|/* 	 * Weed out the bogons, and figure out how large the BAR/map is. 	 */
+comment|/* 	 * Weed out the bogons, and figure out how large the BAR/map 	 * is.  Note: some devices have been found that are '0' after 	 * a write of 0xffffffff.  We view these as 'special' and 	 * allow drivers to allocate whatever they want with them.  So 	 * far, these BARs have only appeared in certain south bridges 	 * and ata controllers made by VIA, nVidia and AMD. 	 */
+name|res
+operator|=
+name|NULL
+expr_stmt|;
 name|map
 operator|=
 name|pci_read_config
@@ -7284,70 +7284,6 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|pci_maptype
-argument_list|(
-name|map
-argument_list|)
-operator|&
-name|PCI_MAPMEM
-condition|)
-block|{
-if|if
-condition|(
-name|type
-operator|!=
-name|SYS_RES_MEMORY
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|child
-argument_list|,
-literal|"rid %#x says memory, driver wants %d failed.\n"
-argument_list|,
-operator|*
-name|rid
-argument_list|,
-name|type
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
-block|}
-else|else
-block|{
-if|if
-condition|(
-name|type
-operator|!=
-name|SYS_RES_IOPORT
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|child
-argument_list|,
-literal|"rid %#x says ioport, driver wants %d failed.\n"
-argument_list|,
-operator|*
-name|rid
-argument_list|,
-name|type
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
-block|}
 name|pci_write_config
 argument_list|(
 name|child
@@ -7372,7 +7308,74 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Allocate enough resource, and then write back the 	 * appropriate bar for that resource (this is the part 	 * I'm not sure is good for 64-bit bars). 	 */
+if|if
+condition|(
+name|testval
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|pci_maptype
+argument_list|(
+name|testval
+argument_list|)
+operator|&
+name|PCI_MAPMEM
+condition|)
+block|{
+if|if
+condition|(
+name|type
+operator|!=
+name|SYS_RES_MEMORY
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|child
+argument_list|,
+literal|"failed: rid %#x is memory, requested %d\n"
+argument_list|,
+operator|*
+name|rid
+argument_list|,
+name|type
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|type
+operator|!=
+name|SYS_RES_IOPORT
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|child
+argument_list|,
+literal|"failed: rid %#x is ioport, requested %d\n"
+argument_list|,
+operator|*
+name|rid
+argument_list|,
+name|type
+argument_list|)
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
+block|}
+comment|/* 		 * For real BARs, we need to override the size that 		 * the driver requests, because that's what the BAR 		 * actually uses and we would otherwise have a 		 * situation where we might allocate the excess to 		 * another driver, which won't work. 		 */
 name|mapsize
 operator|=
 name|pci_mapsize
@@ -7409,6 +7412,19 @@ argument_list|(
 name|mapsize
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* if (bootverbose) */
+name|device_printf
+argument_list|(
+name|child
+argument_list|,
+literal|"BAD BAR: skipping checks\n"
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 	 * Allocate enough resource, and then write back the 	 * appropriate bar for that resource. 	 */
 name|res
 operator|=
 name|BUS_ALLOC_RESOURCE
@@ -7454,23 +7470,9 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
-name|pci_write_config
-argument_list|(
-name|child
-argument_list|,
-operator|*
-name|rid
-argument_list|,
-name|map
-argument_list|,
-literal|4
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+goto|goto
+name|out
+goto|;
 block|}
 name|resource_list_add
 argument_list|(
@@ -7517,6 +7519,7 @@ name|res
 operator|=
 name|res
 expr_stmt|;
+comment|/* if (bootverbose) */
 name|device_printf
 argument_list|(
 name|child
@@ -7536,6 +7539,16 @@ name|res
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|map
+operator|=
+name|rman_get_start
+argument_list|(
+name|res
+argument_list|)
+expr_stmt|;
+name|out
+label|:
+empty_stmt|;
 name|pci_write_config
 argument_list|(
 name|child
@@ -7543,10 +7556,7 @@ argument_list|,
 operator|*
 name|rid
 argument_list|,
-name|rman_get_start
-argument_list|(
-name|res
-argument_list|)
+name|map
 argument_list|,
 literal|4
 argument_list|)
@@ -7825,11 +7835,12 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* if (bootverbose) */
 name|device_printf
 argument_list|(
 name|child
 argument_list|,
-literal|"Bus reserved %#lx bytes for rid %#x type %d at %#lx\n"
+literal|"Reserved %#lx bytes for rid %#x type %d at %#lx\n"
 argument_list|,
 name|rman_get_size
 argument_list|(
