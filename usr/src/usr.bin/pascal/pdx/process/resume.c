@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)resume.c 1.5 %G%"
+literal|"@(#)resume.c 1.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -615,7 +615,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Under the -r option, we offer the opportunity to just get  * the px traceback and not actually enter the debugger.  */
+comment|/*  * Under the -r option, we offer the opportunity to just get  * the px traceback and not actually enter the debugger.  *  * If the standard input is not a tty but standard error is,  * change standard input to be /dev/tty.  */
 end_comment
 
 begin_function
@@ -627,6 +627,61 @@ specifier|register
 name|int
 name|c
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|isatty
+argument_list|(
+name|fileno
+argument_list|(
+name|stdin
+argument_list|)
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|isatty
+argument_list|(
+name|fileno
+argument_list|(
+name|stderr
+argument_list|)
+argument_list|)
+operator|||
+name|freopen
+argument_list|(
+literal|"/dev/tty"
+argument_list|,
+literal|"r"
+argument_list|,
+name|stdin
+argument_list|)
+operator|==
+name|NIL
+condition|)
+block|{
+name|unsetsigtraces
+argument_list|(
+name|process
+argument_list|)
+expr_stmt|;
+name|pcont
+argument_list|(
+name|process
+argument_list|)
+expr_stmt|;
+name|quit
+argument_list|(
+name|process
+operator|->
+name|exitval
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
+block|}
 name|fprintf
 argument_list|(
 name|stderr
@@ -696,6 +751,10 @@ condition|(
 name|c
 operator|!=
 literal|'\n'
+operator|&&
+name|c
+operator|!=
+name|EOF
 condition|)
 block|{
 name|c
