@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_sig.c	6.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_sig.c	6.20 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -122,6 +122,13 @@ define|#
 directive|define
 name|cantmask
 value|(sigmask(SIGKILL)|sigmask(SIGCONT)|sigmask(SIGSTOP))
+end_define
+
+begin_define
+define|#
+directive|define
+name|stopsigmask
+value|(sigmask(SIGSTOP)|sigmask(SIGTSTP)| \ 			sigmask(SIGTTIN)|sigmask(SIGTTOU))
 end_define
 
 begin_comment
@@ -1625,10 +1632,6 @@ operator|=
 name|SIG_DFL
 expr_stmt|;
 block|}
-define|#
-directive|define
-name|stops
-value|(sigmask(SIGSTOP)|sigmask(SIGTSTP)| \ 			sigmask(SIGTTIN)|sigmask(SIGTTOU))
 if|if
 condition|(
 name|sig
@@ -1690,7 +1693,7 @@ operator|->
 name|p_sig
 operator|&=
 operator|~
-name|stops
+name|stopsigmask
 expr_stmt|;
 break|break;
 case|case
@@ -1718,9 +1721,6 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-undef|#
-directive|undef
-name|stops
 comment|/* 	 * Defer further processing for signals which are held. 	 */
 if|if
 condition|(
@@ -2151,37 +2151,10 @@ name|p_flag
 operator|&
 name|SVFORK
 condition|)
-define|#
-directive|define
-name|bit
-parameter_list|(
-name|a
-parameter_list|)
-value|(1<<(a-1))
 name|sigbits
 operator|&=
 operator|~
-operator|(
-name|bit
-argument_list|(
-name|SIGSTOP
-argument_list|)
-operator||
-name|bit
-argument_list|(
-name|SIGTSTP
-argument_list|)
-operator||
-name|bit
-argument_list|(
-name|SIGTTIN
-argument_list|)
-operator||
-name|bit
-argument_list|(
-name|SIGTTOU
-argument_list|)
-operator|)
+name|stopsigmask
 expr_stmt|;
 if|if
 condition|(
