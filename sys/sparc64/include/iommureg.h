@@ -453,8 +453,6 @@ directive|define
 name|IOTSBSLOT
 parameter_list|(
 name|va
-parameter_list|,
-name|sz
 parameter_list|)
 define|\
 value|((u_int)(((vm_offset_t)(va)) - (is->is_dvmabase))>> IO_PAGE_SHIFT)
