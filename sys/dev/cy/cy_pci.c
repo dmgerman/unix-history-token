@@ -523,6 +523,12 @@ operator|&
 name|irq_cookie
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|irq_setup
+operator|=
+name|ENXIO
+expr_stmt|;
 endif|#
 directive|endif
 if|if
