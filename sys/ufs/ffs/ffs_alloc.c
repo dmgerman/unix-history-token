@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ffs_alloc.c	8.8 (Berkeley) 2/21/94  * $Id: ffs_alloc.c,v 1.3 1994/08/02 07:54:17 davidg Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ffs_alloc.c	8.8 (Berkeley) 2/21/94  * $Id: ffs_alloc.c,v 1.4 1994/09/20 05:53:24 bde Exp $  */
 end_comment
 
 begin_include
@@ -397,8 +397,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"dev = 0x%x, bsize = %d, size = %d, fs = %s\n"
+literal|"dev = 0x%lx, bsize = %ld, size = %d, fs = %s\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ip
 operator|->
 name|i_dev
@@ -478,8 +481,6 @@ goto|;
 ifdef|#
 directive|ifdef
 name|QUOTA
-if|if
-condition|(
 name|error
 operator|=
 name|chkdq
@@ -498,6 +499,10 @@ name|cred
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -794,8 +799,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"dev = 0x%x, bsize = %d, osize = %d, nsize = %d, fs = %s\n"
+literal|"dev = 0x%lx, bsize = %d, osize = %d, nsize = %d, fs = %s\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ip
 operator|->
 name|i_dev
@@ -897,8 +905,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Allocate the extra space in the buffer. 	 */
-if|if
-condition|(
 name|error
 operator|=
 name|bread
@@ -917,6 +923,10 @@ argument_list|,
 operator|&
 name|bp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|brelse
@@ -933,8 +943,6 @@ block|}
 ifdef|#
 directive|ifdef
 name|QUOTA
-if|if
-condition|(
 name|error
 operator|=
 name|chkdq
@@ -955,6 +963,10 @@ name|cred
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|brelse
@@ -980,8 +992,6 @@ argument_list|,
 name|bprev
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|bno
 operator|=
 name|ffs_fragextend
@@ -999,6 +1009,10 @@ name|osize
 argument_list|,
 name|nsize
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bno
 condition|)
 block|{
 if|if
@@ -1214,8 +1228,11 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"dev = 0x%x, optim = %d, fs = %s\n"
+literal|"dev = 0x%lx, optim = %ld, fs = %s\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ip
 operator|->
 name|i_dev
@@ -1564,8 +1581,6 @@ decl_stmt|,
 name|end_lbn
 decl_stmt|,
 name|soff
-decl_stmt|,
-name|eoff
 decl_stmt|,
 name|newblk
 decl_stmt|,
@@ -2529,7 +2544,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"mode = 0%o, inum = %d, fs = %s\n"
+literal|"mode = 0%o, inum = %ld, fs = %s\n"
 argument_list|,
 name|ip
 operator|->
@@ -2560,7 +2575,7 @@ block|{
 comment|/* XXX */
 name|printf
 argument_list|(
-literal|"free inode %s/%d had %d blocks\n"
+literal|"free inode %s/%ld had %ld blocks\n"
 argument_list|,
 name|fs
 operator|->
@@ -5982,8 +5997,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"dev = 0x%x, bsize = %d, size = %d, fs = %s\n"
+literal|"dev = 0x%lx, bsize = %ld, size = %ld, fs = %s\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ip
 operator|->
 name|i_dev
@@ -6817,8 +6835,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"dev = 0x%x, ino = %d, fs = %s\n"
+literal|"dev = 0x%lx, ino = %d, fs = %s\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|pip
 operator|->
 name|i_dev
@@ -7320,8 +7341,11 @@ block|}
 block|}
 name|printf
 argument_list|(
-literal|"bno = %d, fs = %s\n"
+literal|"bno = %lu, fs = %s\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|bno
 argument_list|,
 name|fs
