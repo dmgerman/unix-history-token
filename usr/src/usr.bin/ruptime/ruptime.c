@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ruptime.c	4.7 82/12/24"
+literal|"@(#)ruptime.c	4.8 83/04/21"
 decl_stmt|;
 end_decl_stmt
 
@@ -960,7 +960,7 @@ name|sprintf
 argument_list|(
 name|resbuf
 argument_list|,
-literal|"   %s %2d:%02d"
+literal|"%s    %2d:%02d"
 argument_list|,
 name|updown
 argument_list|,
