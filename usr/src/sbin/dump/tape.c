@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)tape.c	1.10 (Berkeley) %G%"
+literal|"@(#)tape.c	1.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -593,7 +593,7 @@ begin_block
 block|{
 name|perror
 argument_list|(
-literal|"dump: pipe error in command to slave"
+literal|"  DUMP: pipe error in command to slave"
 argument_list|)
 expr_stmt|;
 name|dumpabort
@@ -1459,6 +1459,8 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|,
+name|ret
+decl_stmt|,
 name|slavepid
 decl_stmt|;
 name|master
@@ -1634,6 +1636,9 @@ block|{
 comment|/* Insert initial token */
 if|if
 condition|(
+operator|(
+name|ret
+operator|=
 name|write
 argument_list|(
 name|next
@@ -1646,11 +1651,16 @@ name|tok
 argument_list|,
 literal|1
 argument_list|)
+operator|)
 operator|!=
 literal|1
 condition|)
 name|ringerr
-argument_list|()
+argument_list|(
+name|ret
+argument_list|,
+literal|"cannot start token"
+argument_list|)
 expr_stmt|;
 block|}
 name|doslave
@@ -1805,14 +1815,101 @@ end_comment
 
 begin_macro
 name|ringerr
-argument_list|()
+argument_list|(
+argument|code
+argument_list|,
+argument|msg
+argument_list|,
+argument|a1
+argument_list|,
+argument|a2
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|int
+name|code
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|msg
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|a1
+decl_stmt|,
+name|a2
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
+name|char
+name|buf
+index|[
+name|BUFSIZ
+index|]
+decl_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  DUMP: "
+argument_list|)
+expr_stmt|;
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+name|msg
+argument_list|,
+name|a1
+argument_list|,
+name|a2
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|code
+operator|<
+literal|0
+condition|)
 name|perror
 argument_list|(
-literal|"  DUMP: token passing error"
+name|msg
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|code
+operator|==
+literal|0
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: unexpected EOF\n"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: code %d\n"
+argument_list|,
+name|buf
+argument_list|,
+name|code
 argument_list|)
 expr_stmt|;
 name|kill
@@ -1825,6 +1922,29 @@ expr_stmt|;
 name|Exit
 argument_list|(
 name|X_ABORT
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_decl_stmt
+name|int
+name|childnum
+decl_stmt|;
+end_decl_stmt
+
+begin_macro
+name|sigpipe
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|ringerr
+argument_list|(
+name|childnum
+argument_list|,
+literal|"SIGPIPE raised"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1857,6 +1977,9 @@ end_decl_stmt
 
 begin_block
 block|{
+name|int
+name|ret
+decl_stmt|;
 name|tmsg
 argument_list|(
 literal|"slave %d\n"
@@ -1883,8 +2006,12 @@ name|signal
 argument_list|(
 name|SIGPIPE
 argument_list|,
-name|ringerr
+name|sigpipe
 argument_list|)
+expr_stmt|;
+name|childnum
+operator|=
+name|num
 expr_stmt|;
 name|close
 argument_list|(
@@ -1928,6 +2055,9 @@ expr_stmt|;
 block|}
 while|while
 condition|(
+operator|(
+name|ret
+operator|=
 name|readpipe
 argument_list|(
 name|cmd
@@ -1936,6 +2066,7 @@ name|req
 argument_list|,
 name|reqsiz
 argument_list|)
+operator|)
 operator|==
 name|reqsiz
 condition|)
@@ -2030,7 +2161,17 @@ operator|!=
 literal|1
 condition|)
 name|ringerr
-argument_list|()
+argument_list|(
+literal|11
+argument_list|,
+literal|"%d PIPEIN %d"
+argument_list|,
+name|num
+argument_list|,
+name|p
+operator|->
+name|count
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2055,6 +2196,9 @@ block|}
 block|}
 if|if
 condition|(
+operator|(
+name|ret
+operator|=
 name|read
 argument_list|(
 name|prev
@@ -2064,11 +2208,16 @@ name|tok
 argument_list|,
 literal|1
 argument_list|)
+operator|)
 operator|!=
 literal|1
 condition|)
 name|ringerr
-argument_list|()
+argument_list|(
+name|ret
+argument_list|,
+literal|"read token"
+argument_list|)
 expr_stmt|;
 comment|/* Wait your turn */
 name|tmsg
@@ -2177,6 +2326,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
+name|ret
+operator|=
 name|write
 argument_list|(
 name|next
@@ -2186,14 +2338,32 @@ name|tok
 argument_list|,
 literal|1
 argument_list|)
+operator|)
 operator|!=
 literal|1
 condition|)
 name|ringerr
-argument_list|()
+argument_list|(
+name|ret
+argument_list|,
+literal|"write token"
+argument_list|)
 expr_stmt|;
 comment|/* Next slave's turn */
 block|}
+if|if
+condition|(
+name|ret
+operator|!=
+literal|0
+condition|)
+name|ringerr
+argument_list|(
+name|ret
+argument_list|,
+literal|"partial record?"
+argument_list|)
+expr_stmt|;
 name|tmsg
 argument_list|(
 literal|"%d CLOSE\n"
