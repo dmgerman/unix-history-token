@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_usrreq.c	7.39 (Berkeley) %G%  */
+comment|/*  *  * %sccs.include.redist.c%  *  *	@(#)uipc_usrreq.c	7.40 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1508,9 +1508,19 @@ if|if
 condition|(
 name|unp_rights
 condition|)
+block|{
+comment|/* 		 * Normally the receive buffer is flushed later, 		 * in sofree, but if our receive buffer holds references 		 * to descriptors that are now garbage, we will dispose 		 * of those descriptor references after the garbage collector 		 * gets them (resulting in a "panic: closef: count< 0"). 		 */
+name|sorflush
+argument_list|(
+name|unp
+operator|->
+name|unp_socket
+argument_list|)
+expr_stmt|;
 name|unp_gc
 argument_list|()
 expr_stmt|;
+block|}
 block|}
 end_block
 
@@ -3909,15 +3919,6 @@ end_decl_stmt
 
 begin_block
 block|{
-if|if
-condition|(
-name|fp
-operator|->
-name|f_msgcount
-operator|==
-literal|0
-condition|)
-return|return;
 name|fp
 operator|->
 name|f_msgcount
