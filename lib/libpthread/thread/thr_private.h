@@ -1053,6 +1053,21 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|pthread_spinlock
+block|{
+specifier|volatile
+name|int
+name|s_lock
+decl_stmt|;
+name|pthread_t
+name|s_owner
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * Flags for condition variables.  */
 end_comment
@@ -3184,6 +3199,15 @@ parameter_list|,
 specifier|const
 name|void
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_pthread_yield
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
