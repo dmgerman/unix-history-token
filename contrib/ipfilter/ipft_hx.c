@@ -3,11 +3,20 @@ begin_comment
 comment|/*  * Copyright (C) 1995-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__sgi
-end_ifdef
+argument_list|)
+operator|&&
+operator|(
+name|IRIX
+operator|>
+literal|602
+operator|)
+end_if
 
 begin_include
 include|#
@@ -259,7 +268,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipft_hx.c,v 2.2.2.5 2002/02/22 15:32:54 darrenr Exp $"
+literal|"@(#)$Id: ipft_hx.c,v 2.2.2.6 2002/12/06 11:40:25 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 

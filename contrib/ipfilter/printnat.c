@@ -3,11 +3,20 @@ begin_comment
 comment|/*  * Copyright (C) 1993-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * Added redirect stuff and a variety of bug fixes. (mcn@EnGarde.com)  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__sgi
-end_ifdef
+argument_list|)
+operator|&&
+operator|(
+name|IRIX
+operator|>
+literal|602
+operator|)
+end_if
 
 begin_include
 include|#
@@ -357,7 +366,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: printnat.c,v 1.1.2.10 2002/08/28 12:45:51 darrenr Exp $"
+literal|"@(#)$Id: printnat.c,v 1.1.2.13 2002/12/06 11:40:27 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1114,7 +1123,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t\tseq %x len %d junk %d cmds %d\n"
+literal|"\t\tseq %08x%08x len %d junk %d cmds %d\n"
 argument_list|,
 name|ftp
 operator|.
@@ -1124,6 +1133,21 @@ literal|0
 index|]
 operator|.
 name|ftps_seq
+index|[
+literal|1
+index|]
+argument_list|,
+name|ftp
+operator|.
+name|ftp_side
+index|[
+literal|0
+index|]
+operator|.
+name|ftps_seq
+index|[
+literal|0
+index|]
 argument_list|,
 name|ftp
 operator|.
@@ -1181,7 +1205,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t\tseq %x len %d junk %d cmds %d\n"
+literal|"\t\tseq %08x%08x len %d junk %d cmds %d\n"
 argument_list|,
 name|ftp
 operator|.
@@ -1191,6 +1215,21 @@ literal|1
 index|]
 operator|.
 name|ftps_seq
+index|[
+literal|1
+index|]
+argument_list|,
+name|ftp
+operator|.
+name|ftp_side
+index|[
+literal|1
+index|]
+operator|.
+name|ftps_seq
+index|[
+literal|0
+index|]
 argument_list|,
 name|ftp
 operator|.
@@ -2612,6 +2651,21 @@ name|in_age
 index|[
 literal|1
 index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|np
+operator|->
+name|in_mssclamp
+condition|)
+name|printf
+argument_list|(
+literal|" mssclamp %u"
+argument_list|,
+name|np
+operator|->
+name|in_mssclamp
 argument_list|)
 expr_stmt|;
 name|printf

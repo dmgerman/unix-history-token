@@ -3,11 +3,20 @@ begin_comment
 comment|/*  * Copyright (C) 1993-2002 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * Added redirect stuff and a variety of bug fixes. (mcn@EnGarde.com)  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__sgi
-end_ifdef
+argument_list|)
+operator|&&
+operator|(
+name|IRIX
+operator|>
+literal|602
+operator|)
+end_if
 
 begin_include
 include|#
@@ -374,7 +383,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ipnat.c,v 2.16.2.21 2002/06/06 10:49:19 darrenr Exp $"
+literal|"@(#)$Id: ipnat.c,v 2.16.2.22 2002/12/06 11:40:26 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
