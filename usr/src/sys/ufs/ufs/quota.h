@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Robert Elz at The University of Melbourne.  *  * %sccs.include.redist.c%  *  *	@(#)quota.h	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Robert Elz at The University of Melbourne.  *  * %sccs.include.redist.c%  *  *	@(#)quota.h	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -89,44 +89,19 @@ comment|/* GRPQUOTA */
 value|\ 	"undefined", \ };
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|KERNEL
-end_ifndef
+begin_define
+define|#
+directive|define
+name|QUOTAFILENAME
+value|"quota"
+end_define
 
-begin_decl_stmt
-name|char
-modifier|*
-name|qfname
-init|=
-literal|"quota"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|qfextension
-index|[]
-init|=
-name|INITQFNAMES
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|quotagroup
-init|=
-literal|"operator"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|QUOTAGROUP
+value|"operator"
+end_define
 
 begin_comment
 comment|/*  * Command definitions for the 'quotactl' system call.  * The commands are broken into a main command defined below  * and a subcommand that is used to convey the type of  * quota that is being manipulated (see above).  */
