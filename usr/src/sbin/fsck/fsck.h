@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)fsck.h	3.3 (Berkeley) %G% */
+comment|/* @(#)fsck.h	3.4 (Berkeley) %G% */
 end_comment
 
 begin_define
@@ -225,6 +225,9 @@ name|b_bno
 decl_stmt|;
 name|int
 name|b_size
+decl_stmt|;
+name|int
+name|b_errs
 decl_stmt|;
 union|union
 block|{

@@ -11,7 +11,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)dir.c	3.10 (Berkeley) %G%"
+literal|"@(#)dir.c	3.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 

@@ -11,7 +11,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)pass5.c	3.5 (Berkeley) %G%"
+literal|"@(#)pass5.c	3.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -232,8 +232,6 @@ name|c
 operator|++
 control|)
 block|{
-if|if
-condition|(
 name|getblk
 argument_list|(
 operator|&
@@ -251,10 +249,7 @@ name|sblock
 operator|.
 name|fs_cgsize
 argument_list|)
-operator|==
-literal|0
-condition|)
-continue|continue;
+expr_stmt|;
 if|if
 condition|(
 name|cgrp

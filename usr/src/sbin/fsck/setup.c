@@ -11,7 +11,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)setup.c	3.3 (Berkeley) %G%"
+literal|"@(#)setup.c	3.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -392,7 +392,7 @@ name|long
 operator|)
 name|SBSIZE
 argument_list|)
-operator|==
+operator|!=
 literal|0
 condition|)
 return|return
@@ -549,8 +549,6 @@ condition|)
 goto|goto
 name|sbok
 goto|;
-if|if
-condition|(
 name|getblk
 argument_list|(
 operator|&
@@ -572,8 +570,14 @@ name|sblock
 operator|.
 name|fs_sbsize
 argument_list|)
-operator|==
-literal|0
+expr_stmt|;
+if|if
+condition|(
+name|asblk
+operator|.
+name|b_errs
+operator|!=
+name|NULL
 condition|)
 return|return
 operator|(
@@ -895,7 +899,7 @@ argument_list|)
 argument_list|,
 name|size
 argument_list|)
-operator|==
+operator|!=
 literal|0
 condition|)
 return|return

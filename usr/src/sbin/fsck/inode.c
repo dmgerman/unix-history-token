@@ -11,7 +11,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)inode.c	3.10 (Berkeley) %G%"
+literal|"@(#)inode.c	3.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -506,8 +506,6 @@ operator|&
 name|ib
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|getblk
 argument_list|(
 operator|&
@@ -521,7 +519,13 @@ name|sblock
 operator|.
 name|fs_bsize
 argument_list|)
-operator|==
+expr_stmt|;
+if|if
+condition|(
+name|ib
+operator|.
+name|b_errs
+operator|!=
 name|NULL
 condition|)
 return|return
@@ -1051,8 +1055,6 @@ argument_list|,
 name|inumber
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|getblk
 argument_list|(
 operator|&
@@ -1064,16 +1066,7 @@ name|sblock
 operator|.
 name|fs_bsize
 argument_list|)
-operator|==
-name|NULL
-condition|)
-block|{
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
+expr_stmt|;
 name|startinum
 operator|=
 operator|(
