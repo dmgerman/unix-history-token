@@ -3797,7 +3797,7 @@ name|ins
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"%s %x"
+literal|"%s 0x%x"
 argument_list|,
 name|name
 argument_list|,
@@ -8179,7 +8179,7 @@ name|ins
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"%s %x"
+literal|"%s 0x%x"
 argument_list|,
 name|name
 argument_list|,
@@ -9907,7 +9907,7 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 block|,
 name|ia64_print_A1_comma1
