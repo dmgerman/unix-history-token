@@ -1673,7 +1673,7 @@ name|i
 index|]
 condition|)
 block|{
-comment|/* 					 * Ignore SIGCHLD to avoid infinite recursion 					 * if the trap action does a fork. 					 */
+comment|/* 					 * Ignore SIGCHLD to avoid infinite 					 * recursion if the trap action does 					 * a fork. 					 */
 if|if
 condition|(
 name|i
