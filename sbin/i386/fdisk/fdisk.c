@@ -218,13 +218,13 @@ name|disks
 index|[]
 init|=
 block|{
-literal|"/dev/rad0"
+literal|"/dev/ad0"
 block|,
-literal|"/dev/rwd0"
+literal|"/dev/wd0"
 block|,
-literal|"/dev/rda0"
+literal|"/dev/da0"
 block|,
-literal|"/dev/rod0"
+literal|"/dev/od0"
 block|,
 literal|0
 block|}
@@ -644,7 +644,7 @@ block|,
 block|{
 literal|0x07
 block|,
-literal|"OS/2 HPFS, NTFS, QNX or Advanced UNIX"
+literal|"OS/2 HPFS, NTFS, QNX-2 (16 bit) or Advanced UNIX"
 block|}
 block|,
 block|{
@@ -696,9 +696,33 @@ literal|"OPUS"
 block|}
 block|,
 block|{
+literal|0x39
+block|,
+literal|"plan9"
+block|}
+block|,
+block|{
 literal|0x40
 block|,
 literal|"VENIX 286"
+block|}
+block|,
+block|{
+literal|0x4D
+block|,
+literal|"QNX 4.2 Primary"
+block|}
+block|,
+block|{
+literal|0x4E
+block|,
+literal|"QNX 4.2 Secondary"
+block|}
+block|,
+block|{
+literal|0x4F
+block|,
+literal|"QNX 4.2 Tertiary"
 block|}
 block|,
 block|{
