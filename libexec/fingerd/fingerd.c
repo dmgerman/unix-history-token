@@ -331,14 +331,6 @@ expr_stmt|;
 block|}
 comment|/* 	 * Enable server-side Transaction TCP. 	 */
 block|{
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__alpha__
-argument_list|)
-comment|/* XXX FIXME */
 name|int
 name|one
 init|=
@@ -370,8 +362,6 @@ literal|"setsockopt(TCP_NOPUSH) failed: %m"
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 block|}
 if|if
 condition|(
