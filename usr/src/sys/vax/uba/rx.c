@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rx.c	4.10	83/04/04	*/
+comment|/*	rx.c	4.11	83/04/06	*/
 end_comment
 
 begin_include
@@ -114,6 +114,13 @@ include|#
 directive|include
 file|"../vaxuba/rxreg.h"
 end_include
+
+begin_define
+define|#
+directive|define
+name|b_cylin
+value|b_resid
+end_define
 
 begin_comment
 comment|/* per-controller data */
@@ -304,12 +311,21 @@ name|sc_bcnt
 decl_stmt|;
 comment|/* save total transfer count for */
 comment|/* multisector transfers */
+name|long
+name|sc_resid
+decl_stmt|;
+comment|/* no of bytes left to transfer in multisect */
+comment|/* operations */
 name|int
 name|sc_offset
 decl_stmt|;
 comment|/* raw mode kludge: gives the offset into */
 comment|/* a block of DEV_BSIZE for the current */
 comment|/* request */
+name|int
+name|sc_open
+decl_stmt|;
+comment|/* count number of opens */
 block|}
 name|rx_softc
 index|[
@@ -462,17 +478,6 @@ parameter_list|)
 value|(reg&0xffff)
 end_define
 
-begin_define
-define|#
-directive|define
-name|NDPC
-value|2
-end_define
-
-begin_comment
-comment|/* # drives per controller */
-end_comment
-
 begin_comment
 comment|/* constants related to floppy data capacity */
 end_comment
@@ -509,34 +514,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NWPS
-value|(DDSTATE ? 128 : 64)
-end_define
-
-begin_comment
-comment|/* # words per sector */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|RXSIZE
 value|(DDSTATE ? 512512 : 256256)
 end_define
 
 begin_comment
 comment|/* # bytes per disk */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SECSHFT
-value|(DDSTATE ? 8 : 7)
-end_define
-
-begin_comment
-comment|/* # bits to shift for sctr # */
 end_comment
 
 begin_define
@@ -819,15 +802,12 @@ if|if
 condition|(
 name|sc
 operator|->
-name|sc_flags
-operator|&
-name|RXF_OPEN
+name|sc_open
+operator|++
+operator|==
+literal|0
 condition|)
-return|return
-operator|(
-name|EBUSY
-operator|)
-return|;
+block|{
 name|ctlr
 operator|=
 name|ui
@@ -848,8 +828,6 @@ name|sc
 operator|->
 name|sc_flags
 operator|=
-name|RXF_OPEN
-operator||
 operator|(
 name|minor
 argument_list|(
@@ -894,26 +872,25 @@ name|RX_DDEN
 else|:
 name|RX_SDEN
 expr_stmt|;
+if|if
+condition|(
+name|rxwstart
+operator|++
+operator|==
+literal|0
+condition|)
+block|{
 name|rxc
 operator|->
 name|rxc_tocnt
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-name|rxwstart
-operator|==
-literal|0
-condition|)
-block|{
-name|rxwstart
-operator|++
-expr_stmt|;
 name|rxtimo
 argument_list|()
 expr_stmt|;
 comment|/* start watchdog */
+block|}
 block|}
 return|return
 operator|(
@@ -965,65 +942,26 @@ name|dev
 argument_list|)
 index|]
 decl_stmt|;
-name|int
-name|i
-decl_stmt|;
+if|if
+condition|(
+operator|--
 name|sc
 operator|->
-name|sc_flags
-operator|&=
-operator|~
-name|RXF_OPEN
-expr_stmt|;
+name|sc_open
+operator|==
+literal|0
+condition|)
+block|{
 name|sc
 operator|->
 name|sc_csbits
 operator|=
 literal|0
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|NFX
-operator|*
-name|NDPC
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|rx_softc
-index|[
-name|i
-index|]
-operator|.
-name|sc_flags
-operator|&
-name|RXF_OPEN
-condition|)
-break|break;
-block|}
-if|if
-condition|(
-name|i
-operator|==
-name|NFX
-operator|*
-name|NDPC
-condition|)
 name|rxwstart
-operator|=
-literal|0
+operator|--
 expr_stmt|;
-comment|/* Turn off watchdog if all */
-comment|/* devices are closed */
+block|}
 block|}
 end_block
 
@@ -1130,11 +1068,46 @@ condition|)
 goto|goto
 name|bad
 goto|;
+ifdef|#
+directive|ifdef
+name|RXDEBUG
+name|printf
+argument_list|(
+literal|"rxstrategy: bp=0x%x, flgs=0x%x, unit=%d, block=%d, count=%d\n"
+argument_list|,
+name|bp
+argument_list|,
+name|bp
+operator|->
+name|b_flags
+argument_list|,
+name|unit
+argument_list|,
+name|bp
+operator|->
+name|b_blkno
+argument_list|,
+name|bp
+operator|->
+name|b_bcount
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|s
 operator|=
 name|spl5
 argument_list|()
 expr_stmt|;
+name|bp
+operator|->
+name|b_cylin
+operator|=
+name|bp
+operator|->
+name|b_blkno
+expr_stmt|;
+comment|/* don't care to calculate trackno */
 name|dp
 operator|=
 operator|&
@@ -1142,14 +1115,6 @@ name|rxutab
 index|[
 name|unit
 index|]
-expr_stmt|;
-name|bp
-operator|->
-name|b_resid
-operator|=
-name|bp
-operator|->
-name|b_bcount
 expr_stmt|;
 name|disksort
 argument_list|(
@@ -1389,9 +1354,9 @@ name|sc
 operator|->
 name|sc_offset
 operator|-
-name|bp
+name|sc
 operator|->
-name|b_resid
+name|sc_resid
 operator|)
 operator|)
 operator|/
@@ -1426,14 +1391,11 @@ literal|77
 expr_stmt|;
 if|if
 condition|(
-operator|!
-operator|(
 name|sc
 operator|->
 name|sc_flags
 operator|&
 name|RXF_TRKZERO
-operator|)
 condition|)
 name|ptoff
 operator|++
@@ -1624,6 +1586,14 @@ condition|)
 block|{
 name|sc
 operator|->
+name|sc_resid
+operator|=
+name|bp
+operator|->
+name|b_bcount
+expr_stmt|;
+name|sc
+operator|->
 name|sc_uaddr
 operator|=
 name|bp
@@ -1686,9 +1656,9 @@ name|bp
 operator|->
 name|b_bcount
 operator|=
-name|bp
+name|sc
 operator|->
-name|b_resid
+name|sc_resid
 expr_stmt|;
 if|if
 condition|(
@@ -1710,6 +1680,16 @@ name|rxc_tocnt
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|RXDEBUG
+name|printf
+argument_list|(
+literal|"rxstart: "
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|rxaddr
@@ -1808,6 +1788,20 @@ name|track
 argument_list|)
 expr_stmt|;
 comment|/* read */
+ifdef|#
+directive|ifdef
+name|RXDEBUG
+name|printf
+argument_list|(
+literal|"read tr=%d, sc=%d"
+argument_list|,
+name|track
+argument_list|,
+name|sector
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|rxc
 operator|->
 name|rxc_state
@@ -1871,6 +1865,16 @@ expr_stmt|;
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|RXDEBUG
+name|printf
+argument_list|(
+literal|"write"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|rxc
 operator|->
 name|rxc_state
@@ -1901,25 +1905,7 @@ directive|ifdef
 name|RXDEBUG
 name|printf
 argument_list|(
-literal|"rxstart: flgs=0x%x, unit=%d, tr=%d, sc=%d, bl=%d, cnt=%d\n"
-argument_list|,
-name|bp
-operator|->
-name|b_flags
-argument_list|,
-name|unit
-argument_list|,
-name|track
-argument_list|,
-name|sector
-argument_list|,
-name|bp
-operator|->
-name|b_blkno
-argument_list|,
-name|bp
-operator|->
-name|b_bcount
+literal|"\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2256,7 +2242,7 @@ directive|ifdef
 name|RXDEBUG
 name|printf
 argument_list|(
-literal|"rxintr: dev=0x%x, state=0x%x, status=0x%x\n"
+literal|"rxintr: dev=%x, state=%d, status=0x%x"
 argument_list|,
 name|bp
 operator|->
@@ -2355,6 +2341,16 @@ argument_list|(
 name|ui
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|RXDEBUG
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return;
 case|case
 name|RXS_FILL
@@ -2452,6 +2448,16 @@ name|rxdb
 operator|=
 name|track
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|RXDEBUG
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return;
 comment|/* 	 * Possibly completed command. 	 */
 case|case
@@ -2706,7 +2712,7 @@ condition|)
 empty_stmt|;
 name|retry
 label|:
-comment|/* 	 * In case we already have UNIBUS resources, give 	 * them back since we reallocate things in rxstart. 	 * Also, the active flag must be reset, otherwise rxstart 	 * will refuse to restart the transfer 	 */
+comment|/* 	 * In case we already have UNIBUS resources, give 	 * them back since we reallocate things in rxstart. 	 * Also, the active flag must be reset, otherwise rxstart 	 * will not restart the transfer 	 */
 if|if
 condition|(
 name|um
@@ -2806,8 +2812,7 @@ name|b_back
 operator|=
 name|bp
 expr_stmt|;
-comment|/* kludge to save the buffer pointer */
-comment|/* while processing the error */
+comment|/* save the data buffer pointer */
 name|er
 operator|->
 name|rxcs
@@ -2946,9 +2951,9 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|bp
+name|sc
 operator|->
-name|b_resid
+name|sc_resid
 operator|-=
 name|NBPS
 operator|)
@@ -2964,6 +2969,16 @@ name|b_addr
 operator|+=
 name|NBPS
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|RXDEBUG
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|rxstart
 argument_list|(
 name|um
@@ -2995,17 +3010,24 @@ name|sc
 operator|->
 name|sc_bcnt
 expr_stmt|;
+name|dp
+operator|->
+name|b_actf
+operator|=
+name|bp
+operator|->
+name|av_forw
+expr_stmt|;
+name|iodone
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|sc_offset
 operator|=
 literal|0
-expr_stmt|;
-comment|/* move this statement to a more appropriate place! */
-name|iodone
-argument_list|(
-name|bp
-argument_list|)
 expr_stmt|;
 name|rxc
 operator|->
@@ -3035,14 +3057,22 @@ name|b_errcnt
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|RXDEBUG
+name|printf
+argument_list|(
+literal|" old bp=0x%x, new=0x%x\n"
+argument_list|,
+name|bp
+argument_list|,
 name|dp
 operator|->
 name|b_actf
-operator|=
-name|bp
-operator|->
-name|av_forw
+argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * If this unit has more work to do, 	 * start it up right away 	 */
 if|if
 condition|(
@@ -3068,7 +3098,7 @@ comment|/*ARGSUSED*/
 end_comment
 
 begin_comment
-comment|/*   * Wake up every second, check if an interrupt is pending  * on one of the present controllers.  * if it is, but nothing has happened increment a counter.  * If nothing happens for RX_MAXTIMEOUT seconds,   * call the interrupt routine with the 'dead' controller  * as an argument, thereby simulating an interrupt.  * If this occurs, the error bit will probably be set  * in the controller, and the interrupt routine will  * be able to recover ( or at least report) the error  * appropriately.  */
+comment|/*   * Wake up every second, check if an interrupt is pending  * on one (or more) of the present controllers.  * If it is, but nothing has happened increment a counter.  * If nothing happens for RX_MAXTIMEOUT seconds,   * call the interrupt routine with the 'dead' controller  * as an argument, thereby simulating an interrupt.  * If this occurs, the error bit will probably be set  * in the controller, and the interrupt routine will  * be able to recover ( or at least report) the error  * appropriately.  */
 end_comment
 
 begin_macro
