@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	7.9.1.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)machdep.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -283,6 +283,16 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+name|int
+name|msgbufmapped
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* set when safe to use msgbuf */
+end_comment
+
 begin_comment
 comment|/*  * Machine-dependent startup code  */
 end_comment
@@ -408,6 +418,10 @@ name|TBIA
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|msgbufmapped
+operator|=
+literal|1
 expr_stmt|;
 if|#
 directive|if
@@ -4384,6 +4398,10 @@ name|rp_flag
 operator|=
 literal|1
 expr_stmt|;
+name|msgbufmapped
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|dumpdev
@@ -4391,25 +4409,6 @@ operator|==
 name|NODEV
 condition|)
 return|return;
-ifdef|#
-directive|ifdef
-name|notdef
-if|if
-condition|(
-operator|(
-name|minor
-argument_list|(
-name|dumpdev
-argument_list|)
-operator|&
-literal|07
-operator|)
-operator|!=
-literal|1
-condition|)
-return|return;
-endif|#
-directive|endif
 comment|/* 	 * For dumps during autoconfiguration, 	 * if dump device has already configured... 	 */
 if|if
 condition|(
