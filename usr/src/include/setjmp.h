@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)setjmp.h	5.4 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)setjmp.h	5.5 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -15,11 +15,19 @@ directive|define
 name|_SETJMP_H_
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|hp300
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__hp300__
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -33,11 +41,19 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|i386
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -51,11 +67,19 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|tahoe
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__tahoe__
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -69,11 +93,19 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|vax
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__vax__
+argument_list|)
+end_if
 
 begin_define
 define|#
