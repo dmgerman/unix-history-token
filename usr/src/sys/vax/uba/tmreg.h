@@ -1,4 +1,8 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_comment
+comment|/*	tmreg.h	4.2	81/02/19	*/
+end_comment
+
 begin_struct
 struct|struct
 name|device

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mbavar.h	4.6	%G%	*/
+comment|/*	mbavar.h	4.7	81/02/19	*/
 end_comment
 
 begin_comment
