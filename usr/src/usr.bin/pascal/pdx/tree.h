@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tree.h	5.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tree.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,6 +31,39 @@ name|WMASK
 value|(sizeof(int) - 1)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|tahoe
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|push
+parameter_list|(
+name|type
+parameter_list|,
+name|value
+parameter_list|)
+value|((*(type *)sp) = value, sp += (sizeof(type) + WMASK)& ~WMASK, value)
+end_define
+
+begin_define
+define|#
+directive|define
+name|pop
+parameter_list|(
+name|type
+parameter_list|)
+value|(sp -= (sizeof(type) + WMASK)& ~WMASK, (*((type *) sp)))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -53,12 +86,25 @@ parameter_list|)
 value|(*((type *) (sp -= sizeof(type))))
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
 name|alignstack
 parameter_list|()
 value|sp = (char *) (( ((int) sp) + WMASK)&~WMASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|downalignstack
+parameter_list|()
+value|sp = (char *) (( ((int) sp))&~WMASK)
 end_define
 
 begin_decl_stmt

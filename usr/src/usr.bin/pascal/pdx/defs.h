@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)defs.h	5.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)defs.h	5.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -314,7 +314,7 @@ value|{ free((char *) p); p = NIL; }
 end_define
 
 begin_comment
-comment|/*  * macros for doing freads + fwrites  */
+comment|/*  * macro for doing freads  */
 end_comment
 
 begin_define
@@ -327,18 +327,6 @@ parameter_list|,
 name|var
 parameter_list|)
 value|fread((char *)&(var), sizeof(var), 1, fp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|put
-parameter_list|(
-name|fp
-parameter_list|,
-name|var
-parameter_list|)
-value|fwrite((char *)&(var), sizeof(var), 1, fp)
 end_define
 
 begin_comment

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)library.c	5.1 (Berkeley) %G%"
+literal|"@(#)library.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,6 +41,12 @@ directive|include
 file|<errno.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"defs.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -64,48 +70,12 @@ end_define
 begin_define
 define|#
 directive|define
-name|or
-value|||
-end_define
-
-begin_define
-define|#
-directive|define
-name|not
-value|!
-end_define
-
-begin_define
-define|#
-directive|define
-name|ord
-parameter_list|(
-name|enumcon
-parameter_list|)
-value|((int) enumcon)
-end_define
-
-begin_define
-define|#
-directive|define
 name|nil
 parameter_list|(
 name|type
 parameter_list|)
 value|((type) 0)
 end_define
-
-begin_typedef
-typedef|typedef
-enum|enum
-block|{
-name|FALSE
-block|,
-name|TRUE
-block|}
-name|Boolean
-typedef|;
-end_typedef
 
 begin_typedef
 typedef|typedef
@@ -130,52 +100,18 @@ name|Filename
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|char
+name|Boolean
+typedef|;
+end_typedef
+
 begin_undef
 undef|#
 directive|undef
 name|FILE
 end_undef
-
-begin_comment
-comment|/*  * Definitions of standard C library routines that aren't in the  * standard I/O library, but which are generally useful.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|long
-name|atol
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* ascii to long */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|double
-name|atof
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* ascii to floating point */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|mktemp
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* make a temporary file name */
-end_comment
 
 begin_decl_stmt
 name|String
@@ -206,117 +142,6 @@ end_decl_stmt
 begin_comment
 comment|/* line number associated with error */
 end_comment
-
-begin_comment
-comment|/*  * Definitions for doing memory allocation.  */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_define
-define|#
-directive|define
-name|alloc
-parameter_list|(
-name|n
-parameter_list|,
-name|type
-parameter_list|)
-value|((type *) malloc((unsigned) (n) * sizeof(type)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|dispose
-parameter_list|(
-name|p
-parameter_list|)
-value|{ free((char *) p); p = 0; }
-end_define
-
-begin_comment
-comment|/*  * Macros for doing freads + fwrites.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|get
-parameter_list|(
-name|fp
-parameter_list|,
-name|var
-parameter_list|)
-value|fread((char *)&(var), sizeof(var), 1, fp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|put
-parameter_list|(
-name|fp
-parameter_list|,
-name|var
-parameter_list|)
-value|fwrite((char *)&(var), sizeof(var), 1, fp)
-end_define
-
-begin_comment
-comment|/*  * String definitions.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|String
-name|strcpy
-argument_list|()
-decl_stmt|,
-name|index
-argument_list|()
-decl_stmt|,
-name|rindex
-argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-specifier|extern
-name|int
-name|strlen
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_define
-define|#
-directive|define
-name|strdup
-parameter_list|(
-name|s
-parameter_list|)
-value|strcpy(malloc((unsigned) strlen(s) + 1), s)
-end_define
-
-begin_define
-define|#
-directive|define
-name|streq
-parameter_list|(
-name|s1
-parameter_list|,
-name|s2
-parameter_list|)
-value|(strcmp(s1, s2) == 0)
-end_define
 
 begin_typedef
 typedef|typedef
@@ -353,8 +178,17 @@ name|ERR_CATCH
 value|((INTFUNC *) 1)
 end_define
 
+begin_function_decl
+name|public
+name|INTFUNC
+modifier|*
+name|onsyserr
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/*  * Call a program.  *  * Four entries:  *  *	call, callv - call a program and wait for it, returning status  *	back, backv - call a program and don't wait, returning process id  *  * The command's standard input and output are passed as FILE's.  */
+comment|/*  * Call a program.  *  * Three entries:  *  *	call, callv - call a program and wait for it, returning status  *	backv - call a program and don't wait, returning process id  *  * The command's standard input and output are passed as FILE's.  */
 end_comment
 
 begin_define
@@ -494,111 +328,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* VARARGS3 */
-end_comment
-
-begin_function
-name|public
-name|int
-name|back
-parameter_list|(
-name|name
-parameter_list|,
-name|in
-parameter_list|,
-name|out
-parameter_list|,
-name|args
-parameter_list|)
-name|String
-name|name
-decl_stmt|;
-name|File
-name|in
-decl_stmt|;
-name|File
-name|out
-decl_stmt|;
-name|String
-name|args
-decl_stmt|;
-block|{
-name|String
-modifier|*
-name|ap
-decl_stmt|,
-modifier|*
-name|argp
-decl_stmt|;
-name|String
-name|argv
-index|[
-name|MAXNARGS
-index|]
-decl_stmt|;
-name|argp
-operator|=
-operator|&
-name|argv
-index|[
-literal|0
-index|]
-expr_stmt|;
-operator|*
-name|argp
-operator|++
-operator|=
-name|name
-expr_stmt|;
-name|ap
-operator|=
-operator|&
-name|args
-expr_stmt|;
-while|while
-condition|(
-operator|*
-name|ap
-operator|!=
-name|nil
-argument_list|(
-name|String
-argument_list|)
-condition|)
-block|{
-operator|*
-name|argp
-operator|++
-operator|=
-operator|*
-name|ap
-operator|++
-expr_stmt|;
-block|}
-operator|*
-name|argp
-operator|=
-name|nil
-argument_list|(
-name|String
-argument_list|)
-expr_stmt|;
-return|return
-name|backv
-argument_list|(
-name|name
-argument_list|,
-name|in
-argument_list|,
-name|out
-argument_list|,
-name|argv
-argument_list|)
-return|;
-block|}
-end_function
-
 begin_function
 name|public
 name|int
@@ -724,6 +453,9 @@ name|out
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|onsyserr
 argument_list|(
 name|EACCES
@@ -1065,6 +797,18 @@ operator|=
 name|status
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|tahoe
+name|chkret
+argument_list|(
+name|p
+argument_list|,
+name|status
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
@@ -1205,7 +949,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Before calling syserr, the integer errno is set to contain the  * number of the error.  The routine "_mycerror" is a dummy which  * is used to force the loader to get my version of cerror rather  * than the usual one.  */
+comment|/*  * Before calling syserr, the integer errno is set to contain the  * number of the error.  */
 end_comment
 
 begin_decl_stmt
@@ -1214,15 +958,6 @@ name|int
 name|errno
 decl_stmt|;
 end_decl_stmt
-
-begin_extern
-extern|extern _mycerror(
-end_extern
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_comment
 comment|/*  * default error handling  */
@@ -1422,26 +1157,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Catcherrs only purpose is to get this module loaded and make  * sure my cerror is loaded (only applicable when this is in a library).  */
-end_comment
-
-begin_function
-name|public
-name|catcherrs
-parameter_list|()
-block|{
-name|_mycerror
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Change the action on receipt of an error.  */
 end_comment
 
 begin_function
 name|public
+name|INTFUNC
+modifier|*
 name|onsyserr
 parameter_list|(
 name|n
@@ -1456,6 +1178,17 @@ modifier|*
 name|f
 decl_stmt|;
 block|{
+name|INTFUNC
+modifier|*
+name|g
+init|=
+name|errinfo
+index|[
+name|n
+index|]
+operator|.
+name|func
+decl_stmt|;
 name|errinfo
 index|[
 name|n
@@ -1465,26 +1198,13 @@ name|func
 operator|=
 name|f
 expr_stmt|;
+return|return
+operator|(
+name|g
+operator|)
+return|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * Standard error handling routines.  */
-end_comment
-
-begin_decl_stmt
-name|private
-name|short
-name|nerrs
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|private
-name|short
-name|nwarnings
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * Main driver of error message reporting.  */
@@ -1679,91 +1399,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The messages are listed in increasing order of seriousness.  *  * First are warnings.  */
-end_comment
-
-begin_comment
-comment|/* VARARGS1 */
-end_comment
-
-begin_function
-name|public
-name|warning
-parameter_list|(
-name|s
-parameter_list|,
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|,
-name|d
-parameter_list|,
-name|e
-parameter_list|,
-name|f
-parameter_list|,
-name|g
-parameter_list|,
-name|h
-parameter_list|,
-name|i
-parameter_list|,
-name|j
-parameter_list|,
-name|k
-parameter_list|,
-name|l
-parameter_list|,
-name|m
-parameter_list|)
-name|String
-name|s
-decl_stmt|;
-block|{
-name|nwarnings
-operator|++
-expr_stmt|;
-name|errmsg
-argument_list|(
-literal|"warning"
-argument_list|,
-name|FALSE
-argument_list|,
-name|s
-argument_list|,
-name|a
-argument_list|,
-name|b
-argument_list|,
-name|c
-argument_list|,
-name|d
-argument_list|,
-name|e
-argument_list|,
-name|f
-argument_list|,
-name|g
-argument_list|,
-name|h
-argument_list|,
-name|i
-argument_list|,
-name|j
-argument_list|,
-name|k
-argument_list|,
-name|l
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Errors are a little worse, they mean something is wrong,  * but not so bad that processing can't continue.  *  * The routine "erecover" is called to recover from the error,  * a default routine is provided that does nothing.  */
 end_comment
 
@@ -1811,12 +1446,6 @@ extern|extern erecover(
 block|)
 function|;
 end_function
-
-begin_expr_stmt
-name|nerrs
-operator|++
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|errmsg
@@ -2036,58 +1665,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-name|short
-name|numerrors
-parameter_list|()
-block|{
-name|short
-name|r
-decl_stmt|;
-name|r
-operator|=
-name|nerrs
-expr_stmt|;
-name|nerrs
-operator|=
-literal|0
-expr_stmt|;
-return|return
-name|r
-return|;
-block|}
-end_function
-
-begin_function
-name|short
-name|numwarnings
-parameter_list|()
-block|{
-name|short
-name|r
-decl_stmt|;
-name|r
-operator|=
-name|nwarnings
-expr_stmt|;
-name|nwarnings
-operator|=
-literal|0
-expr_stmt|;
-return|return
-name|r
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Recover from an error.  *  * This is the default routine which we aren't using since we have our own.  * public erecover() { }  *  */
-end_comment
-
-begin_comment
-comment|/*  * Default way to quit from a program is just to exit.  * public quit(r) int r; {     exit(r); }  *  */
-end_comment
-
 begin_comment
 comment|/*  * Compare n-byte areas pointed to by s1 and s2  * if n is 0 then compare up until one has a null byte.  */
 end_comment
@@ -2273,7 +1850,6 @@ end_function
 
 begin_decl_stmt
 specifier|register
-name|unsigned
 name|int
 name|n
 decl_stmt|;
@@ -2291,11 +1867,13 @@ name|char
 operator|*
 argument_list|)
 condition|)
+block|{
 name|panic
 argument_list|(
 literal|"mov: nil source"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|dest
@@ -2306,11 +1884,13 @@ name|char
 operator|*
 argument_list|)
 condition|)
+block|{
 name|panic
 argument_list|(
 literal|"mov: nil destination"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|n
