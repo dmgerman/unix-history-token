@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.42.2.22 1995/10/16 15:14:16 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.42.2.23 1995/10/16 23:02:25 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -1286,7 +1286,7 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Select the distributions you wish to install."
 block|,
-literal|"Please check off the distributions you wish to install.  At the\n\ 	very minimum, this should be \"bin\".  WARNING:  Do not export the\n\ 	    DES distribution out of the U.S.!  It is for U.S. customers only."
+literal|"Please check off the distributions you wish to install.  At the\n\ very minimum, this should be \"bin\".  WARNING:  Do not export the\n\ DES distribution out of the U.S.!  It is for U.S. customers only."
 block|,
 name|NULL
 block|,
@@ -1953,9 +1953,7 @@ name|DMENU_NORMAL_TYPE
 block|,
 literal|"XFree86 3.1.2 Distribution"
 block|,
-literal|"Please select the components you need from the XFree86 3.1.2\n"
-literal|"distribution.  We recommend that you select what you need from the basic\n"
-literal|"components set and at least one entry from the Server and Font set menus."
+literal|"Please select the components you need from the XFree86 3.1.2\n\ distribution.  We recommend that you select what you need from the basic\n\ component set and at least one entry from the Server and Font set menus."
 block|,
 literal|"Press F1 to read the XFree86 release notes for FreeBSD"
 block|,
@@ -2431,7 +2429,7 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"X Server selection."
 block|,
-literal|"Please check off the types of X servers you wish to install.\n\ If you are unsure as to which server will work for your graphics card,\n\ it is recommended that try the SVGA or VGA16 servers (the VGA16 and\n\ 						      Mono servers are particularly well-suited to most LCD displays)."
+literal|"Please check off the types of X servers you wish to install.\n\ If you are unsure as to which server will work for your graphics card,\n\ it is recommended that try the SVGA or VGA16 servers (the VGA16 and\n\ Mono servers are particularly well-suited to most LCD displays)."
 block|,
 literal|"Press F1 to read the XFree86 release notes for FreeBSD"
 block|,
@@ -3200,7 +3198,7 @@ name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Network Services Menu"
 block|,
-literal|"You may have already configured one network device (and the\n\ 							 other various hostname/gateway/name server parameters) in the process\n\ of installing FreeBSD.  This menu allows you to configure other\n\ aspects of your system's network configuration."
+literal|"You may have already configured one network device (and the other\n\ various hostname/gateway/name server parameters) in the process\n\ of installing FreeBSD.  This menu allows you to configure other\n\ aspects of your system's network configuration."
 block|,
 name|NULL
 block|,
@@ -3245,6 +3243,22 @@ block|,
 name|DMENU_SET_VARIABLE
 block|,
 literal|"nfs_server=YES"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|dmenuVarCheck
+block|}
+block|,
+block|{
+literal|"Gateway"
+block|,
+literal|"This machine will route packets between interfaces"
+block|,
+name|DMENU_SET_VARIABLE
+block|,
+literal|"gateway=YES"
 block|,
 literal|0
 block|,
@@ -4109,30 +4123,6 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_function
-specifier|static
-name|char
-modifier|*
-name|menuSaverTimeoutCheck
-parameter_list|(
-name|DMenuItem
-modifier|*
-name|item
-parameter_list|)
-block|{
-return|return
-name|variable_get
-argument_list|(
-literal|"blanktime"
-argument_list|)
-condition|?
-literal|"ON"
-else|:
-literal|"OFF"
-return|;
-block|}
-end_function
-
 begin_decl_stmt
 name|DMenu
 name|MenuSysconsSaver
@@ -4224,11 +4214,14 @@ name|DMENU_CALL
 block|,
 name|configSaverTimeout
 block|,
-literal|0
+operator|(
+name|int
+operator|)
+literal|"blanktime"
 block|,
 literal|0
 block|,
-name|menuSaverTimeoutCheck
+name|dmenuVarCheck
 block|}
 block|,
 block|{
