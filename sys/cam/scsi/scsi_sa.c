@@ -10132,7 +10132,7 @@ name|flags
 operator||=
 name|SA_FLAG_EOM_PENDING
 expr_stmt|;
-comment|/* 			 * Grotesque as it seems, the few times 			 * I've actually seen a non-zero resid, 			 * the tape drive actually lied and had 			 * writtent all the data!. 			 */
+comment|/* 			 * Grotesque as it seems, the few times 			 * I've actually seen a non-zero resid, 			 * the tape drive actually lied and had 			 * written all the data!. 			 */
 name|csio
 operator|->
 name|resid
