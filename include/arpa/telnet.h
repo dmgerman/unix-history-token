@@ -304,7 +304,7 @@ block|,
 literal|"IAC"
 block|,
 literal|0
-block|, }
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -921,7 +921,7 @@ block|,
 literal|"NEW-ENVIRON"
 block|,
 literal|0
-block|, }
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -1302,19 +1302,103 @@ end_define
 begin_define
 define|#
 directive|define
+name|SLC_MCL
+value|19
+end_define
+
+begin_define
+define|#
+directive|define
+name|SLC_MCR
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|SLC_MCWL
+value|21
+end_define
+
+begin_define
+define|#
+directive|define
+name|SLC_MCWR
+value|22
+end_define
+
+begin_define
+define|#
+directive|define
+name|SLC_MCBOL
+value|23
+end_define
+
+begin_define
+define|#
+directive|define
+name|SLC_MCEOL
+value|24
+end_define
+
+begin_define
+define|#
+directive|define
+name|SLC_INSRT
+value|25
+end_define
+
+begin_define
+define|#
+directive|define
+name|SLC_OVER
+value|26
+end_define
+
+begin_define
+define|#
+directive|define
+name|SLC_ECR
+value|27
+end_define
+
+begin_define
+define|#
+directive|define
+name|SLC_EWR
+value|28
+end_define
+
+begin_define
+define|#
+directive|define
+name|SLC_EBOL
+value|29
+end_define
+
+begin_define
+define|#
+directive|define
+name|SLC_EEOL
+value|30
+end_define
+
+begin_define
+define|#
+directive|define
 name|NSLC
-value|18
+value|30
 end_define
 
 begin_comment
-comment|/*  * For backwards compatibility, we define SLC_NAMES to be the  * list of names if SLC_NAMES is not defined.  */
+comment|/*  * For backwards compatability, we define SLC_NAMES to be the  * list of names if SLC_NAMES is not defined.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SLC_NAMELIST
-value|"0", "SYNCH", "BRK", "IP", "AO", "AYT", "EOR", \ 			"ABORT", "EOF", "SUSP", "EC", "EL", "EW", "RP", \ 			"LNEXT", "XON", "XOFF", "FORW1", "FORW2", 0,
+value|"0", "SYNCH", "BRK", "IP", "AO", "AYT", "EOR",	\ 			"ABORT", "EOF", "SUSP", "EC", "EL", "EW", "RP",	\ 			"LNEXT", "XON", "XOFF", "FORW1", "FORW2",	\ 			"MCL", "MCR", "MCWL", "MCWR", "MCBOL",		\ 			"MCEOL", "INSRT", "OVER", "ECR", "EWR",		\ 			"EBOL", "EEOL",					\ 			0
 end_define
 
 begin_ifdef
@@ -1635,7 +1719,7 @@ block|,
 literal|"MINK"
 block|,
 literal|0
-block|, }
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -1840,7 +1924,7 @@ block|,
 literal|"DEC-KEYID"
 block|,
 literal|0
-block|, }
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -1858,7 +1942,7 @@ block|,
 literal|"DES_OFB64"
 block|,
 literal|0
-block|, }
+block|}
 decl_stmt|;
 end_decl_stmt
 
