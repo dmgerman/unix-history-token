@@ -10,7 +10,7 @@ name|sgi
 end_ifdef
 
 begin_empty
-empty|#ident "$Revision: 1.15 $"
+empty|#ident "$Revision: 1.1.1.1 $"
 end_empty
 
 begin_endif
@@ -46,6 +46,12 @@ begin_include
 include|#
 directive|include
 file|<arpa/inet.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -170,13 +176,6 @@ end_endif
 begin_comment
 comment|/* sgi */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern

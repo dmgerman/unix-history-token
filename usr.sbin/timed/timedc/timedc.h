@@ -68,13 +68,6 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define

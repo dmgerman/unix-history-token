@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)cmds.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)cmds.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,21 +40,6 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|sgi
-end_ifdef
-
-begin_empty
-empty|#ident "$Revision: 1.10 $"
-end_empty
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -71,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/ip_icmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -354,7 +358,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"sendto(sock)"
 argument_list|)
@@ -420,11 +424,11 @@ block|{
 if|if
 condition|(
 name|errno
-operator|=
+operator|==
 name|EINTR
 condition|)
 continue|continue;
-name|perror
+name|warn
 argument_list|(
 literal|"select(date read)"
 argument_list|)
@@ -473,7 +477,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"recvfrom(date read)"
 argument_list|)
@@ -496,10 +500,8 @@ operator|<
 name|BU
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s says it is before 1970: %lu"
 argument_list|,
 name|hostname
@@ -543,11 +545,9 @@ return|;
 block|}
 block|}
 comment|/* if we get here, we tried too many times */
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s will not tell us the date\n"
+literal|"%s will not tell us the date"
 argument_list|,
 name|hostname
 argument_list|)
@@ -622,7 +622,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Usage: clockdiff host ... \n"
+literal|"usage: timedc clockdiff host ...\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -656,14 +656,9 @@ operator|!
 name|sp
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s/%s is an unknown service\n"
+literal|"%s/%s is an unknown service"
 argument_list|,
 name|DATE_PORT
 argument_list|,
@@ -716,19 +711,17 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"timedc: %s: "
+literal|"%s: %s"
 argument_list|,
 operator|*
 name|argv
-argument_list|)
-expr_stmt|;
-name|herror
+argument_list|,
+name|hstrerror
 argument_list|(
-literal|0
+name|h_errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1088,7 +1081,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Usage: msite [hostname]\n"
+literal|"usage: timedc msite [host ...]\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1109,11 +1102,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"udp/timed: unknown service\n"
+literal|"udp/timed: unknown service"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1180,18 +1171,16 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"timedc: %s: "
+literal|"%s: %s"
 argument_list|,
 name|tgtname
-argument_list|)
-expr_stmt|;
-name|herror
+argument_list|,
+name|hstrerror
 argument_list|(
-literal|0
+name|h_errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1217,14 +1206,35 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strcpy
+name|strncpy
 argument_list|(
 name|msg
 operator|.
 name|tsp_name
 argument_list|,
 name|myname
+argument_list|,
+sizeof|sizeof
+name|msg
+operator|.
+name|tsp_name
+operator|-
+literal|1
 argument_list|)
+expr_stmt|;
+name|msg
+operator|.
+name|tsp_name
+index|[
+sizeof|sizeof
+name|msg
+operator|.
+name|tsp_name
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 name|msg
 operator|.
@@ -1279,7 +1289,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"sendto"
 argument_list|)
@@ -1377,7 +1387,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"recvfrom"
 argument_list|)
@@ -1509,7 +1519,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Usage: election host1 [host2 ...]\n"
+literal|"usage: timedc election host1 [host2 ...]\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1530,11 +1540,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"udp/timed: unknown service\n"
+literal|"udp/timed: unknown service"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1567,19 +1575,17 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"timedc: %s: "
+literal|"%s: %s"
 argument_list|,
 operator|*
 name|argv
-argument_list|)
-expr_stmt|;
-name|herror
+argument_list|,
+name|hstrerror
 argument_list|(
-literal|0
+name|h_errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|argc
@@ -1709,7 +1715,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"sendto"
 argument_list|)
@@ -1782,7 +1788,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Usage: tracing { on | off }\n"
+literal|"usage: timedc trace { on | off }\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1803,11 +1809,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"udp/timed: unknown service\n"
+literal|"udp/timed: unknown service"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1906,14 +1910,35 @@ block|}
 operator|(
 name|void
 operator|)
-name|strcpy
+name|strncpy
 argument_list|(
 name|msg
 operator|.
 name|tsp_name
 argument_list|,
 name|myname
+argument_list|,
+sizeof|sizeof
+name|msg
+operator|.
+name|tsp_name
+operator|-
+literal|1
 argument_list|)
+expr_stmt|;
+name|msg
+operator|.
+name|tsp_name
+index|[
+sizeof|sizeof
+name|msg
+operator|.
+name|tsp_name
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 name|msg
 operator|.
@@ -1962,7 +1987,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"sendto"
 argument_list|)
@@ -2060,7 +2085,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"recvfrom"
 argument_list|)
@@ -2149,7 +2174,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"opening socket"
 argument_list|)
@@ -2239,7 +2264,7 @@ operator|!=
 name|EADDRNOTAVAIL
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"bind"
 argument_list|)
@@ -2269,11 +2294,9 @@ operator|/
 literal|2
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"all reserved ports in use\n"
+literal|"all reserved ports in use"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2309,7 +2332,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
 literal|"opening raw socket"
 argument_list|)
