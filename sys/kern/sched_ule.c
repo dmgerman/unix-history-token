@@ -5477,6 +5477,9 @@ name|struct
 name|thread
 modifier|*
 name|newtd
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|struct

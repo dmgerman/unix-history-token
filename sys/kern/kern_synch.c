@@ -1314,6 +1314,8 @@ argument_list|(
 name|td
 argument_list|,
 name|newtd
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 name|CTR4

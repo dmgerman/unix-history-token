@@ -511,7 +511,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Given a surplus system slot, try assign a new runnable thread to it.  * Called from:  *  sched_thread_exit()  (local)  *  sched_switch()  (local)  *  sched_thread_exit()  (local)  *  remrunqueue()  (local) (commented out)  */
+comment|/*  * Given a surplus system slot, try assign a new runnable thread to it.  * Called from:  *  sched_thread_exit()  (local)  *  sched_switch()  (local)  *  sched_thread_exit()  (local)  *  remrunqueue()  (local)   */
 end_comment
 
 begin_function
@@ -625,33 +625,220 @@ block|}
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SCHED_4BSD
+end_ifdef
 
 begin_comment
 comment|/*  * Remove a thread from its KSEGRP's run queue.  * This in turn may remove it from a KSE if it was already assigned  * to one, possibly causing a new thread to be assigned to the KSE  * and the KSE getting a new priority.  */
 end_comment
 
-begin_comment
-unit|static void remrunqueue(struct thread *td) { 	struct thread *td2, *td3; 	struct ksegrp *kg; 	struct kse *ke;  	mtx_assert(&sched_lock, MA_OWNED); 	KASSERT((TD_ON_RUNQ(td)), ("remrunqueue: Bad state on run queue")); 	kg = td->td_ksegrp; 	ke = td->td_kse; 	CTR1(KTR_RUNQ, "remrunqueue: td%p", td); 	TD_SET_CAN_RUN(td);
+begin_function
+specifier|static
+name|void
+name|remrunqueue
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+block|{
+name|struct
+name|thread
+modifier|*
+name|td2
+decl_stmt|,
+modifier|*
+name|td3
+decl_stmt|;
+name|struct
+name|ksegrp
+modifier|*
+name|kg
+decl_stmt|;
+name|struct
+name|kse
+modifier|*
+name|ke
+decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|TD_ON_RUNQ
+argument_list|(
+name|td
+argument_list|)
+operator|)
+argument_list|,
+operator|(
+literal|"remrunqueue: Bad state on run queue"
+operator|)
+argument_list|)
+expr_stmt|;
+name|kg
+operator|=
+name|td
+operator|->
+name|td_ksegrp
+expr_stmt|;
+name|ke
+operator|=
+name|td
+operator|->
+name|td_kse
+expr_stmt|;
+name|CTR1
+argument_list|(
+name|KTR_RUNQ
+argument_list|,
+literal|"remrunqueue: td%p"
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
+name|TD_SET_CAN_RUN
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If it is not a threaded process, take the shortcut. 	 */
-end_comment
-
-begin_comment
-unit|if ((td->td_proc->p_flag& P_HADTHREADS) == 0) {
-comment|/* Bring its kse with it, leave the thread attached */
-end_comment
-
-begin_comment
-unit|sched_rem(td); 		kg->kg_avail_opennings++; 		ke->ke_state = KES_THREAD;  		return; 	}    	td3 = TAILQ_PREV(td, threadqueue, td_runq); 	TAILQ_REMOVE(&kg->kg_runq, td, td_runq); 	kg->kg_runnable--; 	if (ke->ke_state == KES_ONRUNQ) {
-comment|/* 		 * This thread has been assigned to a KSE. 		 * We need to dissociate it and try assign the 		 * KSE to the next available thread. Then, we should 		 * see if we need to move the KSE in the run queues. 		 */
-end_comment
+if|if
+condition|(
+operator|(
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_flag
+operator|&
+name|P_HADTHREADS
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* remve from sys run queue and free up a slot */
+name|sched_rem
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+name|kg
+operator|->
+name|kg_avail_opennings
+operator|++
+expr_stmt|;
+name|ke
+operator|->
+name|ke_state
+operator|=
+name|KES_THREAD
+expr_stmt|;
+return|return;
+block|}
+name|td3
+operator|=
+name|TAILQ_PREV
+argument_list|(
+name|td
+argument_list|,
+name|threadqueue
+argument_list|,
+name|td_runq
+argument_list|)
+expr_stmt|;
+name|TAILQ_REMOVE
+argument_list|(
+operator|&
+name|kg
+operator|->
+name|kg_runq
+argument_list|,
+name|td
+argument_list|,
+name|td_runq
+argument_list|)
+expr_stmt|;
+name|kg
+operator|->
+name|kg_runnable
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|ke
+operator|->
+name|ke_state
+operator|==
+name|KES_ONRUNQ
+condition|)
+block|{
+comment|/* 		 * This thread has been assigned to the system run queue. 		 * We need to dissociate it and try assign the 		 * KSE to the next available thread. Then, we should 		 * see if we need to move the KSE in the run queues. 		 */
+name|sched_rem
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+name|kg
+operator|->
+name|kg_avail_opennings
+operator|++
+expr_stmt|;
+name|ke
+operator|->
+name|ke_state
+operator|=
+name|KES_THREAD
+expr_stmt|;
+name|td2
+operator|=
+name|kg
+operator|->
+name|kg_last_assigned
+expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|td2
+operator|!=
+name|NULL
+operator|)
+argument_list|,
+operator|(
+literal|"last assigned has wrong value"
+operator|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|td2
+operator|==
+name|td
+condition|)
+name|kg
+operator|->
+name|kg_last_assigned
+operator|=
+name|td3
+expr_stmt|;
+comment|/* slot_fill(kg); */
+comment|/* will replace it with another */
+block|}
+block|}
+end_function
 
 begin_endif
-unit|sched_rem(td); 		kg->kg_avail_opennings++; 		ke->ke_state = KES_THREAD;  		td2 = kg->kg_last_assigned; 		KASSERT((td2 != NULL), ("last assigned has wrong value")); 		if (td2 == td)  			kg->kg_last_assigned = td3; 		slot_fill(kg); 	} }
 endif|#
 directive|endif
 end_endif
