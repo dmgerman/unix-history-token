@@ -2548,7 +2548,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tP_LVL2_LAT=%dms, P_LVL3_LAT=%dms\n"
+literal|"\tP_LVL2_LAT=%d us, P_LVL3_LAT=%d us\n"
 argument_list|,
 name|fadt
 operator|->
