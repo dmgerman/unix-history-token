@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.180.2.10 1999/03/09 12:40:14 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.180.2.11 1999/03/10 02:51:26 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|_AR
+name|_AS
 parameter_list|(
 name|str
 parameter_list|)
@@ -37,7 +37,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|_AR
+name|_AS
 parameter_list|(
 name|str
 parameter_list|)
@@ -48,6 +48,16 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|_AP
+parameter_list|(
+name|str
+parameter_list|)
+value|_AS(str "/pub/FreeBSD/releases/")
+end_define
 
 begin_comment
 comment|/* Miscellaneous work routines for menus */
@@ -451,6 +461,34 @@ argument_list|(
 name|Dists
 argument_list|,
 literal|0
+argument_list|)
+operator|&&
+name|_IS_SET
+argument_list|(
+name|SrcDists
+argument_list|,
+name|DIST_SRC_SYS
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|checkDistXKernDeveloper
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+return|return
+name|IS_DEVELOPER
+argument_list|(
+name|Dists
+argument_list|,
+name|DIST_XF86
 argument_list|)
 operator|&&
 name|_IS_SET
@@ -2483,7 +2521,7 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-name|_AR
+name|_AS
 argument_list|(
 literal|"=ftp://ftp.freebsd.org/pub/FreeBSD/releases/"
 argument_list|)
@@ -2516,7 +2554,7 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-name|_AR
+name|_AS
 argument_list|(
 literal|"=ftp://current.freebsd.org/pub/FreeBSD/snapshots/"
 argument_list|)
@@ -2534,7 +2572,7 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-name|_AR
+name|_AS
 argument_list|(
 literal|"=ftp://releng3.freebsd.org/pub/FreeBSD/snapshots/"
 argument_list|)
@@ -2552,7 +2590,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.ar.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp.ar.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -2567,7 +2608,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.au.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp.au.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -2582,7 +2626,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp2.au.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp2.au.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -2597,7 +2644,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp3.au.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp3.au.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -2612,7 +2662,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp4.au.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp4.au.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -2627,7 +2680,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp5.au.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp5.au.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -2642,7 +2698,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.br.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp.br.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -2657,7 +2716,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp2.br.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp2.br.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -2672,7 +2734,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp3.br.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp3.br.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -2687,7 +2752,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp4.br.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp4.br.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -2702,7 +2770,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp5.br.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp5.br.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -2717,7 +2788,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp6.br.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp6.br.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -2732,7 +2806,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp7.br.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp7.br.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -2747,7 +2824,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.ca.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp.ca.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -2762,7 +2842,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.cz.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp.cz.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -2777,7 +2860,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.dk.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp.dk.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -2792,7 +2878,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp2.dk.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp2.dk.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -2807,7 +2896,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.ee.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp.ee.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -2822,7 +2914,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.fi.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp.fi.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -2837,7 +2932,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.fr.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp.fr.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -2852,7 +2950,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp2.fr.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp2.fr.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -2867,7 +2968,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.de.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp.de.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -2882,7 +2986,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp2.de.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp2.de.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -2897,7 +3004,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp3.de.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp3.de.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -2912,7 +3022,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp4.de.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp4.de.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -2927,7 +3040,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp5.de.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp5.de.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -2942,7 +3058,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp6.de.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp6.de.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -2957,7 +3076,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp7.de.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp7.de.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -2972,7 +3094,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.nl.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp.nl.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -2987,7 +3112,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.hk.super.net/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp.hk.super.net"
+argument_list|)
 block|}
 block|,
 block|{
@@ -3002,7 +3130,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.is.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp.is.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -3017,7 +3148,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.ie.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp.ie.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -3032,7 +3166,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.il.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp.il.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -3047,7 +3184,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp2.il.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp2.il.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -3062,7 +3202,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.jp.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp.jp.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -3077,7 +3220,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp2.jp.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp2.jp.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -3092,7 +3238,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp3.jp.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp3.jp.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -3107,7 +3256,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp4.jp.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp4.jp.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -3122,7 +3274,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp5.jp.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp5.jp.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -3137,7 +3292,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp6.jp.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp6.jp.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -3152,7 +3310,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.kr.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp.kr.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -3167,7 +3328,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp2.kr.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp2.kr.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -3182,7 +3346,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp3.kr.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp3.kr.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -3197,7 +3364,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp4.kr.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp4.kr.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -3212,7 +3382,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp5.kr.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp5.kr.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -3227,7 +3400,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.pl.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp.pl.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -3242,7 +3418,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.pt.freebsd.org/pub/misc/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp.pt.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -3257,7 +3436,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp2.pt.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp2.pt.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -3272,7 +3454,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.ru.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp.ru.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -3287,7 +3472,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp2.ru.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp2.ru.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -3302,7 +3490,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp3.ru.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp3.ru.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -3317,7 +3508,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp4.ru.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp4.ru.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -3332,7 +3526,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.za.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp.za.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -3347,7 +3544,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp2.za.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp2.za.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -3362,7 +3562,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp3.za.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp3.za.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -3377,7 +3580,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp4.za.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp4.za.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -3392,7 +3598,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.es.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp.es.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -3407,7 +3616,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp2.za.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp2.es.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -3422,7 +3634,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.se.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp.se.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -3437,7 +3652,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp2.se.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp2.se.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -3452,7 +3670,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp3.se.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp3.se.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -3467,7 +3688,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.tw.freebsd.org/pub/FreeBSD"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp.tw.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -3482,7 +3706,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp2.tw.freebsd.org/pub/FreeBSD"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp2.tw.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -3497,7 +3724,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp3.tw.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp3.tw.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -3512,7 +3742,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
+name|_AS
+argument_list|(
 literal|"=ftp://ftp.nectec.or.th/pub/mirrors/FreeBSD/"
+argument_list|)
 block|}
 block|,
 block|{
@@ -3527,7 +3760,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.uk.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp.uk.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -3542,7 +3778,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp2.uk.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp2.uk.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -3557,7 +3796,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp3.uk.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp3.uk.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -3572,7 +3814,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp4.uk.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp4.uk.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -3587,7 +3832,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -3602,7 +3850,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp2.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp2.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -3617,7 +3868,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp3.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp3.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -3632,7 +3886,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp4.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp4.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -3647,7 +3904,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp5.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp5.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -3662,7 +3922,10 @@ block|,
 name|NULL
 block|,
 name|VAR_FTP_PATH
-literal|"=ftp://ftp6.freebsd.org/pub/FreeBSD/"
+name|_AP
+argument_list|(
+literal|"=ftp://ftp6.freebsd.org"
+argument_list|)
 block|}
 block|,
 block|{
@@ -3902,7 +4165,7 @@ block|,
 block|{
 literal|"2 X-Developer"
 block|,
-literal|"Same as above, but includes the X Window System"
+literal|"Same as above + X Window System"
 block|,
 name|checkDistXDeveloper
 block|,
@@ -3920,7 +4183,17 @@ name|distSetKernDeveloper
 block|}
 block|,
 block|{
-literal|"4 User"
+literal|"4 X-Kern-Developer"
+block|,
+literal|"Same as above + X Window System"
+block|,
+name|checkDistXKernDeveloper
+block|,
+name|distSetXKernDeveloper
+block|}
+block|,
+block|{
+literal|"5 User"
 block|,
 literal|"Average user - binaries and doc only"
 block|,
@@ -3930,9 +4203,9 @@ name|distSetUser
 block|}
 block|,
 block|{
-literal|"5 X-User"
+literal|"6 X-User"
 block|,
-literal|"Same as above, but includes the X Window System"
+literal|"Same as above + X Window System"
 block|,
 name|checkDistXUser
 block|,
@@ -3940,7 +4213,7 @@ name|distSetXUser
 block|}
 block|,
 block|{
-literal|"6 Minimal"
+literal|"7 Minimal"
 block|,
 literal|"The smallest configuration possible"
 block|,
@@ -3950,7 +4223,7 @@ name|distSetMinimum
 block|}
 block|,
 block|{
-literal|"7 Custom"
+literal|"8 Custom"
 block|,
 literal|"Specify your own distribution set"
 block|,
