@@ -1619,6 +1619,11 @@ goto|goto
 name|skipif
 goto|;
 comment|/* Jump over network iface probing */
+name|close
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 name|ifflags
 operator|=
 name|ifc
@@ -1944,6 +1949,11 @@ expr|struct
 name|sockaddr
 argument_list|)
 operator|)
+expr_stmt|;
+name|close
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 block|}
 name|skipif
