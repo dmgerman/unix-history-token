@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fifo.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)fifo.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -32,17 +32,18 @@ operator|(
 expr|struct
 name|vnode
 operator|*
-name|vp
+name|dvp
 operator|,
 expr|struct
-name|nameidata
+name|vnode
 operator|*
-name|ndp
+operator|*
+name|vpp
 operator|,
 expr|struct
-name|proc
+name|componentname
 operator|*
-name|p
+name|cnp
 operator|)
 argument_list|)
 decl_stmt|;
@@ -52,14 +53,14 @@ begin_define
 define|#
 directive|define
 name|fifo_create
-value|((int (*) __P(( \ 		struct nameidata *ndp, \ 		struct vattr *vap, \ 		struct proc *p))) fifo_badop)
+value|((int (*) __P(( \ 		struct vnode *dvp, \  		struct vnode **vpp, \ 		struct componentname *cnp, \ 		struct vattr *vap))) fifo_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|fifo_mknod
-value|((int (*) __P(( \ 		struct nameidata *ndp, \ 		struct vattr *vap, \ 		struct ucred *cred, \ 		struct proc *p))) fifo_badop)
+value|((int (*) __P(( \ 		struct vnode *dvp, \ 		struct vnode **vpp, \ 		struct componentname *cnp, \ 		struct vattr *vap))) fifo_badop)
 end_define
 
 begin_decl_stmt
@@ -285,42 +286,42 @@ begin_define
 define|#
 directive|define
 name|fifo_remove
-value|((int (*) __P(( \ 		struct nameidata *ndp, \ 		struct proc *p))) fifo_badop)
+value|((int (*) __P(( \ 		struct vnode *dvp, \ 	        struct vnode *vp, \ 		struct componentname *cnp))) fifo_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|fifo_link
-value|((int (*) __P(( \ 		struct vnode *vp, \ 		struct nameidata *ndp, \ 		struct proc *p))) fifo_badop)
+value|((int (*) __P(( \ 		register struct vnode *vp, \ 		struct vnode *tdvp, \ 		struct componentname *cnp))) fifo_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|fifo_rename
-value|((int (*) __P(( \ 		struct nameidata *fndp, \ 		struct nameidata *tdnp, \ 		struct proc *p))) fifo_badop)
+value|((int (*) __P(( \ 		struct vnode *fdvp, \ 	        struct vnode *fvp, \ 		struct componentname *fcnp, \ 		struct vnode *tdvp, \ 		struct vnode *tvp, \ 		struct componentname *tcnp))) fifo_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|fifo_mkdir
-value|((int (*) __P(( \ 		struct nameidata *ndp, \ 		struct vattr *vap, \ 		struct proc *p))) fifo_badop)
+value|((int (*) __P(( \ 		struct vnode *dvp, \ 		struct vnode **vpp, \ 		struct componentname *cnp, \ 		struct vattr *vap))) fifo_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|fifo_rmdir
-value|((int (*) __P(( \ 		struct nameidata *ndp, \ 		struct proc *p))) fifo_badop)
+value|((int (*) __P(( \ 		struct vnode *dvp, \ 		struct vnode *vp, \ 		struct componentname *cnp))) fifo_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|fifo_symlink
-value|((int (*) __P(( \ 		struct nameidata *ndp, \ 		struct vattr *vap, \ 		char *target, \ 		struct proc *p))) fifo_badop)
+value|((int (*) __P(( \ 		struct vnode *dvp, \ 		struct vnode **vpp, \ 		struct componentname *cnp, \ 		struct vattr *vap, \ 		char *target))) fifo_badop)
 end_define
 
 begin_define
@@ -341,7 +342,7 @@ begin_define
 define|#
 directive|define
 name|fifo_abortop
-value|((int (*) __P(( \ 		struct nameidata *ndp))) fifo_badop)
+value|((int (*) __P(( \ 		struct vnode *dvp, \ 		struct componentname *cnp))) fifo_badop)
 end_define
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)specdev.h	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)specdev.h	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -161,6 +161,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|componentname
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|ucred
 struct_decl|;
 end_struct_decl
@@ -202,17 +208,18 @@ operator|(
 expr|struct
 name|vnode
 operator|*
-name|vp
+name|dvp
 operator|,
 expr|struct
-name|nameidata
+name|vnode
 operator|*
-name|ndp
+operator|*
+name|vpp
 operator|,
 expr|struct
-name|proc
+name|componentname
 operator|*
-name|p
+name|cnp
 operator|)
 argument_list|)
 decl_stmt|;
@@ -222,14 +229,14 @@ begin_define
 define|#
 directive|define
 name|spec_create
-value|((int (*) __P(( \ 		struct nameidata *ndp, \ 		struct vattr *vap, \ 		struct proc *p))) spec_badop)
+value|((int (*) __P(( \ 		struct vnode *dvp, \  		struct vnode **vpp, \ 		struct componentname *cnp, \ 		struct vattr *vap))) spec_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|spec_mknod
-value|((int (*) __P(( \ 		struct nameidata *ndp, \ 		struct vattr *vap, \ 		struct ucred *cred, \ 		struct proc *p))) spec_badop)
+value|((int (*) __P(( \ 		struct vnode *dvp, \ 		struct vnode **vpp, \ 		struct componentname *cnp, \ 		struct vattr *vap))) spec_badop)
 end_define
 
 begin_decl_stmt
@@ -455,42 +462,42 @@ begin_define
 define|#
 directive|define
 name|spec_remove
-value|((int (*) __P(( \ 		struct nameidata *ndp, \ 		struct proc *p))) spec_badop)
+value|((int (*) __P(( \ 		struct vnode *dvp, \ 	        struct vnode *vp, \ 		struct componentname *cnp))) spec_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|spec_link
-value|((int (*) __P(( \ 		struct vnode *vp, \ 		struct nameidata *ndp, \ 		struct proc *p))) spec_badop)
+value|((int (*) __P(( \ 		register struct vnode *vp, \ 		struct vnode *tdvp, \ 		struct componentname *cnp))) spec_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|spec_rename
-value|((int (*) __P(( \ 		struct nameidata *fndp, \ 		struct nameidata *tdnp, \ 		struct proc *p))) spec_badop)
+value|((int (*) __P(( \ 		struct vnode *fdvp, \ 	        struct vnode *fvp, \ 		struct componentname *fcnp, \ 		struct vnode *tdvp, \ 		struct vnode *tvp, \ 		struct componentname *tcnp))) spec_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|spec_mkdir
-value|((int (*) __P(( \ 		struct nameidata *ndp, \ 		struct vattr *vap, \ 		struct proc *p))) spec_badop)
+value|((int (*) __P(( \ 		struct vnode *dvp, \ 		struct vnode **vpp, \ 		struct componentname *cnp, \ 		struct vattr *vap))) spec_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|spec_rmdir
-value|((int (*) __P(( \ 		struct nameidata *ndp, \ 		struct proc *p))) spec_badop)
+value|((int (*) __P(( \ 		struct vnode *dvp, \ 		struct vnode *vp, \ 		struct componentname *cnp))) spec_badop)
 end_define
 
 begin_define
 define|#
 directive|define
 name|spec_symlink
-value|((int (*) __P(( \ 		struct nameidata *ndp, \ 		struct vattr *vap, \ 		char *target, \ 		struct proc *p))) spec_badop)
+value|((int (*) __P(( \ 		struct vnode *dvp, \ 		struct vnode **vpp, \ 		struct componentname *cnp, \ 		struct vattr *vap, \ 		char *target))) spec_badop)
 end_define
 
 begin_define
@@ -511,7 +518,7 @@ begin_define
 define|#
 directive|define
 name|spec_abortop
-value|((int (*) __P(( \ 		struct nameidata *ndp))) spec_badop)
+value|((int (*) __P(( \ 		struct vnode *dvp, \ 		struct componentname *cnp))) spec_badop)
 end_define
 
 begin_define
