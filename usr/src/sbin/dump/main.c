@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	1.15 (Berkeley) %G%"
+literal|"@(#)main.c	1.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -513,7 +513,7 @@ operator|=
 literal|"standard output"
 expr_stmt|;
 block|}
-comment|/* 	 * Determine how to default tape size and density 	 * 	 *         	density				tape size 	 * 9-track	1600 bpi (160 bytes/.1")	2300 ft. 	 * 9-track	6250 bpi (625 bytes/.1")	2300 ft. 	 * cartridge	8000 bpi (100 bytes/.1")	4000 ft. (450*9 - slop) 	 */
+comment|/* 	 * Determine how to default tape size and density 	 * 	 *         	density				tape size 	 * 9-track	1600 bpi (160 bytes/.1")	2300 ft. 	 * 9-track	6250 bpi (625 bytes/.1")	2300 ft.  	 * cartridge	8000 bpi (100 bytes/.1")	1700 ft. (450*4 - slop) 	 */
 if|if
 condition|(
 name|density
@@ -538,7 +538,7 @@ name|tsize
 operator|=
 name|cartridge
 condition|?
-literal|4000L
+literal|1700L
 operator|*
 literal|120L
 else|:
