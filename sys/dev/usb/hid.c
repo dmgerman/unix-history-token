@@ -4,7 +4,7 @@ comment|/*	$NetBSD: hid.c,v 1.7 1999/01/08 11:58:25 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id: hid.c,v 1.5 1999/01/07 23:31:29 n_hibma Exp $ */
+comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
@@ -76,7 +76,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|UHID_DEBUG
 end_ifdef
 
 begin_define
@@ -86,7 +86,7 @@ name|DPRINTF
 parameter_list|(
 name|x
 parameter_list|)
-value|if (usbdebug) printf x
+value|if (usbdebug) logprintf x
 end_define
 
 begin_define
@@ -98,7 +98,7 @@ name|n
 parameter_list|,
 name|x
 parameter_list|)
-value|if (usbdebug>(n)) printf x
+value|if (usbdebug>(n)) logprintf x
 end_define
 
 begin_decl_stmt

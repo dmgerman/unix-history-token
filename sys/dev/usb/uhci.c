@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhci.c,v 1.22 1999/01/08 11:58:25 augustss Exp $	*/
+comment|/*	$NetBSD: uhci.c,v 1.24 1999/02/20 23:26:16 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id: uhci.c,v 1.7 1999/01/10 18:42:51 n_hibma Exp $ */
+comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights reser
 end_comment
 
 begin_comment
-comment|/*  * USB Universal Host Controller driver.  * Handles PIIX3 and PIIX4.  *  * Data sheets: ftp://download.intel.com/design/intarch/datashts/29055002.pdf  *              ftp://download.intel.com/design/intarch/datashts/29056201.pdf  * UHCI spec: http://www.intel.com/design/usb/uhci11d.pdf  * USB spec: http://www.teleport.com/cgi-bin/mailmerge.cgi/~usb/cgiform.tpl  */
+comment|/*  * USB Universal Host Controller driver.  * Handles PIIX3 and PIIX4.  *  * Data sheets: ftp://download.intel.com/design/intarch/datashts/29055002.pdf  *              ftp://download.intel.com/design/intarch/datashts/29056201.pdf  * UHCI spec: http://www.intel.com/design/usb/uhci11d.pdf  * USB spec: http://www.usb.org/cgi-usb/mailmerge.cgi/home/usb/docs/developers/ cgiform.tpl  */
 end_comment
 
 begin_include
@@ -169,6 +169,72 @@ parameter_list|(
 name|d
 parameter_list|)
 value|DELAY(d)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|UHCI_DEBUG
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DPRINTF
+parameter_list|(
+name|x
+parameter_list|)
+value|if (uhcidebug) logprintf x
+end_define
+
+begin_define
+define|#
+directive|define
+name|DPRINTFN
+parameter_list|(
+name|n
+parameter_list|,
+name|x
+parameter_list|)
+value|if (uhcidebug>(n)) logprintf x
+end_define
+
+begin_decl_stmt
+name|int
+name|uhcidebug
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|DPRINTF
+parameter_list|(
+name|x
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DPRINTFN
+parameter_list|(
+name|n
+parameter_list|,
+name|x
+parameter_list|)
 end_define
 
 begin_endif
@@ -1169,7 +1235,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|UHCI_DEBUG
 end_ifdef
 
 begin_decl_stmt
@@ -1642,25 +1708,6 @@ name|uhci_ii_free
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|USB_DEBUG
-argument_list|)
-if|if
-condition|(
-name|uhcidebug
-operator|>
-literal|2
-condition|)
-name|uhci_dumpregs
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|uhci_run
 argument_list|(
 name|sc
@@ -2126,7 +2173,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|UHCI_DEBUG
 end_ifdef
 
 begin_function
@@ -2143,8 +2190,8 @@ decl_stmt|;
 block|{
 name|printf
 argument_list|(
-literal|"%s; regs: cmd=%04x, sts=%04x, intr=%04x, frnum=%04x, "
-literal|"flbase=%08x, sof=%04x, portsc1=%04x, portsc2=%04x\n"
+literal|"%s: regs: cmd=%04x, sts=%04x, intr=%04x, frnum=%04x, "
+literal|"flbase=%08x, sof=%02x, portsc1=%04x, portsc2=%04x, "
 argument_list|,
 name|USBDEVNAME
 argument_list|(
@@ -2183,14 +2230,14 @@ argument_list|,
 name|UHCI_FRNUM
 argument_list|)
 argument_list|,
-name|UREAD2
+name|UREAD4
 argument_list|(
 name|sc
 argument_list|,
 name|UHCI_FLBASEADDR
 argument_list|)
 argument_list|,
-name|UREAD2
+name|UREAD1
 argument_list|(
 name|sc
 argument_list|,
@@ -2236,7 +2283,7 @@ decl_stmt|;
 block|{
 name|printf
 argument_list|(
-literal|"TD(%p) at %08lx = 0x%08lx 0x%08lx 0x%08lx 0x%08lx\n"
+literal|"TD(%p) at %08lx link=0x%08lx st=0x%08lx tok=0x%08lx buf=0x%08lx\n"
 argument_list|,
 name|p
 argument_list|,
@@ -2884,6 +2931,22 @@ name|sc
 operator|=
 name|sc
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+name|callout_handle_init
+argument_list|(
+operator|&
+name|ii
+operator|->
+name|timeout_handle
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|ii
 return|;
@@ -3073,7 +3136,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|USB_DEBUG
+name|UHCI_DEBUG
 argument_list|)
 if|if
 condition|(
@@ -3297,7 +3360,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|USB_DEBUG
+name|UHCI_DEBUG
 argument_list|)
 if|if
 condition|(
@@ -3367,23 +3430,26 @@ begin_function
 name|int
 name|uhci_intr
 parameter_list|(
-name|p
+name|priv
 parameter_list|)
 name|void
 modifier|*
-name|p
+name|priv
 decl_stmt|;
 block|{
 name|uhci_softc_t
 modifier|*
 name|sc
 init|=
-name|p
+name|priv
 decl_stmt|;
 name|int
 name|status
-decl_stmt|,
-name|ret
+decl_stmt|;
+name|int
+name|ack
+init|=
+literal|0
 decl_stmt|;
 name|uhci_intr_info_t
 modifier|*
@@ -3398,7 +3464,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|USB_DEBUG
+name|UHCI_DEBUG
 argument_list|)
 if|if
 condition|(
@@ -3409,9 +3475,16 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"uhci_intr %p\n"
+literal|"%s: uhci_intr\n"
 argument_list|,
+name|USBDEVNAME
+argument_list|(
 name|sc
+operator|->
+name|sc_bus
+operator|.
+name|bdev
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|uhci_dumpregs
@@ -3431,54 +3504,26 @@ argument_list|,
 name|UHCI_STS
 argument_list|)
 expr_stmt|;
-name|ret
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|status
 operator|&
 name|UHCI_STS_USBINT
 condition|)
-block|{
-name|UWRITE2
-argument_list|(
-name|sc
-argument_list|,
-name|UHCI_STS
-argument_list|,
+name|ack
+operator||=
 name|UHCI_STS_USBINT
-argument_list|)
 expr_stmt|;
-comment|/* acknowledge */
-name|ret
-operator|=
-literal|1
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|status
 operator|&
 name|UHCI_STS_USBEI
 condition|)
-block|{
-name|UWRITE2
-argument_list|(
-name|sc
-argument_list|,
-name|UHCI_STS
-argument_list|,
+name|ack
+operator||=
 name|UHCI_STS_USBEI
-argument_list|)
 expr_stmt|;
-comment|/* acknowledge */
-name|ret
-operator|=
-literal|1
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|status
@@ -3486,16 +3531,10 @@ operator|&
 name|UHCI_STS_RD
 condition|)
 block|{
-name|UWRITE2
-argument_list|(
-name|sc
-argument_list|,
-name|UHCI_STS
-argument_list|,
+name|ack
+operator||=
 name|UHCI_STS_RD
-argument_list|)
 expr_stmt|;
-comment|/* acknowledge */
 name|printf
 argument_list|(
 literal|"%s: resume detect\n"
@@ -3510,10 +3549,6 @@ name|bdev
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ret
-operator|=
-literal|1
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -3522,16 +3557,36 @@ operator|&
 name|UHCI_STS_HSE
 condition|)
 block|{
-name|UWRITE2
+name|ack
+operator||=
+name|UHCI_STS_HSE
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s: Host Controller Process Error\n"
+argument_list|,
+name|USBDEVNAME
 argument_list|(
 name|sc
-argument_list|,
-name|UHCI_STS
-argument_list|,
-name|UHCI_STS_HSE
+operator|->
+name|sc_bus
+operator|.
+name|bdev
+argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* acknowledge */
+block|}
+if|if
+condition|(
+name|status
+operator|&
+name|UHCI_STS_HCPE
+condition|)
+block|{
+name|ack
+operator||=
+name|UHCI_STS_HCPE
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"%s: Host System Error\n"
@@ -3545,46 +3600,6 @@ operator|.
 name|bdev
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|ret
-operator|=
-literal|1
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|status
-operator|&
-name|UHCI_STS_HCPE
-condition|)
-block|{
-name|UWRITE2
-argument_list|(
-name|sc
-argument_list|,
-name|UHCI_STS
-argument_list|,
-name|UHCI_STS_HCPE
-argument_list|)
-expr_stmt|;
-comment|/* acknowledge */
-name|printf
-argument_list|(
-literal|"%s: Host System Error\n"
-argument_list|,
-name|USBDEVNAME
-argument_list|(
-name|sc
-operator|->
-name|sc_bus
-operator|.
-name|bdev
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|ret
-operator|=
-literal|1
 expr_stmt|;
 block|}
 if|if
@@ -3593,6 +3608,8 @@ name|status
 operator|&
 name|UHCI_STS_HCH
 condition|)
+block|{
+comment|/* no acknowledge needed */
 name|printf
 argument_list|(
 literal|"%s: controller halted\n"
@@ -3607,11 +3624,23 @@ name|bdev
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
-operator|!
-name|ret
+name|ack
 condition|)
+comment|/* acknowledge the ints */
+name|UWRITE2
+argument_list|(
+name|sc
+argument_list|,
+name|UHCI_STS
+argument_list|,
+name|ack
+argument_list|)
+expr_stmt|;
+else|else
+comment|/* nothing to acknowledge */
 return|return
 literal|0
 return|;
@@ -3690,9 +3719,6 @@ decl_stmt|;
 name|uhci_soft_td_t
 modifier|*
 name|std
-decl_stmt|,
-modifier|*
-name|lstd
 decl_stmt|;
 name|u_int32_t
 name|status
@@ -3726,6 +3752,21 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+operator|!
+name|ii
+operator|->
+name|stdend
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"uhci_check_intr: ii->stdend==0\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 endif|#
 directive|endif
 if|if
@@ -3736,34 +3777,12 @@ operator|->
 name|stdstart
 condition|)
 return|return;
-name|lstd
-operator|=
+comment|/* If the last TD is still active we need to check whether there 	 * is a an error somewhere in the middle, or whether there was a 	 * short packet (SPD and not ACTIVE). 	 */
+if|if
+condition|(
 name|ii
 operator|->
 name|stdend
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-if|if
-condition|(
-operator|!
-name|lstd
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"uhci_check_intr: std==0\n"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-endif|#
-directive|endif
-comment|/* If the last TD is still active the whole transfer probably is. */
-if|if
-condition|(
-name|lstd
 operator|->
 name|td
 operator|->
@@ -3772,17 +3791,6 @@ operator|&
 name|UHCI_TD_ACTIVE
 condition|)
 block|{
-name|DPRINTFN
-argument_list|(
-literal|15
-argument_list|,
-operator|(
-literal|"uhci_check_intr: active ii=%p\n"
-operator|,
-name|ii
-operator|)
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|std
@@ -3793,7 +3801,9 @@ name|stdstart
 init|;
 name|std
 operator|!=
-name|lstd
+name|ii
+operator|->
+name|stdend
 condition|;
 name|std
 operator|=
@@ -3813,6 +3823,15 @@ operator|->
 name|td
 operator|->
 name|td_status
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"status=0x%04x\n"
+operator|,
+name|status
+operator|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3838,25 +3857,21 @@ goto|goto
 name|done
 goto|;
 block|}
-name|DPRINTFN
-argument_list|(
-literal|15
-argument_list|,
-operator|(
-literal|"uhci_check_intr: ii=%p std=%p still active\n"
-operator|,
-name|ii
-operator|,
-name|ii
-operator|->
-name|stdstart
-operator|)
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 name|done
 label|:
+name|usb_untimeout
+argument_list|(
+name|uhci_timeout
+argument_list|,
+name|ii
+argument_list|,
+name|ii
+operator|->
+name|timeout_handle
+argument_list|)
+expr_stmt|;
 name|upipe
 operator|=
 operator|(
@@ -3889,17 +3904,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|usb_untimeout
-argument_list|(
-name|uhci_timeout
-argument_list|,
-name|ii
-argument_list|,
-name|ii
-operator|->
-name|timeout_handle
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -3918,6 +3922,7 @@ decl_stmt|;
 name|int
 name|timo
 decl_stmt|;
+comment|/* timeout that triggered function call? */
 block|{
 name|usbd_request_handle
 name|reqh
@@ -3930,16 +3935,18 @@ name|uhci_soft_td_t
 modifier|*
 name|std
 decl_stmt|;
-name|u_int32_t
-name|tst
-decl_stmt|;
 name|int
-name|len
-decl_stmt|,
-name|status
-decl_stmt|,
-name|attr
+name|actlen
+init|=
+literal|0
 decl_stmt|;
+comment|/* accumulated actual length for queue */
+name|int
+name|err
+init|=
+literal|0
+decl_stmt|;
+comment|/* error status of last inactive transfer */
 name|DPRINTFN
 argument_list|(
 literal|10
@@ -3957,6 +3964,7 @@ ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
 block|{
+comment|/* avoid finishing a transfer more than once */
 name|int
 name|s
 init|=
@@ -3970,14 +3978,14 @@ operator|->
 name|isdone
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"uhci_ii_done: is done!\n"
-argument_list|)
-expr_stmt|;
 name|splx
 argument_list|(
 name|s
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"uhci_ii_done: is done!\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3996,17 +4004,10 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* The transfer is done, compute length and status. */
-comment|/* XXX Should stop at first inactive to get toggle right. */
+comment|/* The transfer is done; compute actual length and status */
 comment|/* XXX Is this correct for control xfers? */
 for|for
 control|(
-name|len
-operator|=
-name|status
-operator|=
-literal|0
-operator|,
 name|std
 operator|=
 name|ii
@@ -4014,8 +4015,6 @@ operator|->
 name|stdstart
 init|;
 name|std
-operator|!=
-literal|0
 condition|;
 name|std
 operator|=
@@ -4028,45 +4027,28 @@ operator|.
 name|std
 control|)
 block|{
-name|tst
+if|if
+condition|(
+name|std
+operator|->
+name|td
+operator|->
+name|td_status
+operator|&
+name|UHCI_TD_ACTIVE
+condition|)
+break|break;
+comment|/* error status of last TD for error handling below */
+name|err
 operator|=
 name|std
 operator|->
 name|td
 operator|->
 name|td_status
-expr_stmt|;
-name|status
-operator||=
-name|tst
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|USB_DEBUG
-if|if
-condition|(
-operator|(
-name|tst
 operator|&
 name|UHCI_TD_ERROR
-operator|)
-operator|&&
-name|uhcidebug
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"uhci_ii_done: intr error TD:\n"
-argument_list|)
 expr_stmt|;
-name|uhci_dump_td
-argument_list|(
-name|std
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|UHCI_TD_GET_PID
@@ -4080,34 +4062,34 @@ argument_list|)
 operator|!=
 name|UHCI_TD_PID_SETUP
 condition|)
-name|len
+name|actlen
 operator|+=
 name|UHCI_TD_GET_ACTLEN
 argument_list|(
-name|tst
+name|std
+operator|->
+name|td
+operator|->
+name|td_status
 argument_list|)
 expr_stmt|;
 block|}
-name|status
-operator|&=
-name|UHCI_TD_ERROR
-expr_stmt|;
 name|DPRINTFN
 argument_list|(
 literal|10
 argument_list|,
 operator|(
-literal|"uhci_check_intr: len=%d, status=0x%x\n"
+literal|"uhci_ii_done: actlen=%d, err=0x%x\n"
 operator|,
-name|len
+name|actlen
 operator|,
-name|status
+name|err
 operator|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|status
+name|err
 operator|!=
 literal|0
 condition|)
@@ -4118,14 +4100,19 @@ operator|-
 literal|1
 operator|+
 operator|(
-name|status
-operator|==
+operator|(
+name|err
+operator|&
+operator|~
 name|UHCI_TD_STALLED
+operator|)
+operator|!=
+literal|0
 operator|)
 argument_list|,
 operator|(
 literal|"uhci_ii_done: error, addr=%d, endpt=0x%02x, "
-literal|"status 0x%b\n"
+literal|"err=0x%b\n"
 operator|,
 name|reqh
 operator|->
@@ -4148,7 +4135,7 @@ operator|,
 operator|(
 name|int
 operator|)
-name|status
+name|err
 operator|,
 literal|"\20\22BITSTUFF\23CRCTO\24NAK\25BABBLE\26DBUFFER\27"
 literal|"STALLED\30ACTIVE"
@@ -4157,17 +4144,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|status
-operator|==
+name|err
+operator|&
+operator|~
 name|UHCI_TD_STALLED
 condition|)
-name|reqh
-operator|->
-name|status
-operator|=
-name|USBD_STALLED
-expr_stmt|;
-else|else
+block|{
+comment|/* more then STALLED, like +BABBLE or +CRC/TIMEOUT */
 name|reqh
 operator|->
 name|status
@@ -4175,12 +4158,16 @@ operator|=
 name|USBD_IOERROR
 expr_stmt|;
 comment|/* more info XXX */
+block|}
+else|else
+block|{
 name|reqh
 operator|->
-name|actlen
+name|status
 operator|=
-literal|0
+name|USBD_STALLED
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -4190,25 +4177,19 @@ name|status
 operator|=
 name|USBD_NORMAL_COMPLETION
 expr_stmt|;
+block|}
 name|reqh
 operator|->
 name|actlen
 operator|=
-name|len
+name|actlen
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|timo
 condition|)
 block|{
 comment|/* We got a timeout.  Make sure transaction is not active. */
-name|reqh
-operator|->
-name|status
-operator|=
-name|USBD_TIMEOUT
-expr_stmt|;
 for|for
 control|(
 name|std
@@ -4241,6 +4222,12 @@ operator|~
 name|UHCI_TD_ACTIVE
 expr_stmt|;
 comment|/* XXX should we wait 1 ms */
+name|reqh
+operator|->
+name|status
+operator|=
+name|USBD_TIMEOUT
+expr_stmt|;
 block|}
 name|DPRINTFN
 argument_list|(
@@ -4253,8 +4240,9 @@ name|ii
 operator|)
 argument_list|)
 expr_stmt|;
-name|attr
-operator|=
+comment|/* select the proper type termination of the transfer 	 * based on the transfer type for the queue 	 */
+switch|switch
+condition|(
 name|reqh
 operator|->
 name|pipe
@@ -4264,10 +4252,6 @@ operator|->
 name|edesc
 operator|->
 name|bmAttributes
-expr_stmt|;
-switch|switch
-condition|(
-name|attr
 operator|&
 name|UE_XFERTYPE
 condition|)
@@ -4430,7 +4414,7 @@ name|ii
 decl_stmt|;
 name|DPRINTFN
 argument_list|(
-literal|10
+literal|15
 argument_list|,
 operator|(
 literal|"uhci_waitintr: timeout = %ds\n"
@@ -4657,12 +4641,6 @@ name|n
 decl_stmt|,
 name|running
 decl_stmt|;
-name|run
-operator|=
-name|run
-operator|!=
-literal|0
-expr_stmt|;
 name|s
 operator|=
 name|splusb
@@ -4670,7 +4648,7 @@ argument_list|()
 expr_stmt|;
 name|running
 operator|=
-operator|!
+operator|(
 operator|(
 name|UREAD2
 argument_list|(
@@ -4680,6 +4658,9 @@ name|UHCI_STS
 argument_list|)
 operator|&
 name|UHCI_STS_HCH
+operator|)
+operator|==
+literal|0
 operator|)
 expr_stmt|;
 if|if
@@ -4729,7 +4710,7 @@ control|)
 block|{
 name|running
 operator|=
-operator|!
+operator|(
 operator|(
 name|UREAD2
 argument_list|(
@@ -4739,6 +4720,9 @@ name|UHCI_STS
 argument_list|)
 operator|&
 name|UHCI_STS_HCH
+operator|)
+operator|==
+literal|0
 operator|)
 expr_stmt|;
 comment|/* return when we've entered the state we want */
@@ -5673,7 +5657,7 @@ name|status
 operator|=
 name|UHCI_TD_SET_ERRCNT
 argument_list|(
-literal|2
+literal|3
 argument_list|)
 operator||
 name|UHCI_TD_ACTIVE
@@ -5690,7 +5674,7 @@ name|lowspeed
 condition|)
 name|status
 operator||=
-name|UHCI_TD_LS
+name|UHCI_TD_LOWSPEED
 expr_stmt|;
 if|if
 condition|(
@@ -6222,7 +6206,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|UHCI_DEBUG
 if|if
 condition|(
 name|uhcidebug
@@ -6262,6 +6246,22 @@ name|stdend
 operator|=
 name|xferend
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+name|callout_handle_init
+argument_list|(
+operator|&
+name|ii
+operator|->
+name|timeout_handle
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
@@ -6361,7 +6361,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|UHCI_DEBUG
 if|if
 condition|(
 name|uhcidebug
@@ -6925,7 +6925,7 @@ name|UHCI_TD_IOC
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|UHCI_DEBUG
 if|if
 condition|(
 name|uhcidebug
@@ -7074,7 +7074,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|UHCI_DEBUG
 if|if
 condition|(
 name|uhcidebug
@@ -7686,7 +7686,7 @@ name|dev
 operator|->
 name|lowspeed
 condition|?
-name|UHCI_TD_LS
+name|UHCI_TD_LOWSPEED
 else|:
 literal|0
 expr_stmt|;
@@ -7940,7 +7940,7 @@ name|td_status
 operator|=
 name|UHCI_TD_SET_ERRCNT
 argument_list|(
-literal|2
+literal|3
 argument_list|)
 operator||
 name|ls
@@ -8008,7 +8008,7 @@ name|td_status
 operator|=
 name|UHCI_TD_SET_ERRCNT
 argument_list|(
-literal|2
+literal|3
 argument_list|)
 operator||
 name|ls
@@ -8057,7 +8057,7 @@ literal|0
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|UHCI_DEBUG
 if|if
 condition|(
 name|uhcidebug
@@ -8107,6 +8107,22 @@ name|stdend
 operator|=
 name|stat
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+name|callout_handle_init
+argument_list|(
+operator|&
+name|ii
+operator|->
+name|timeout_handle
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
@@ -8168,7 +8184,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|UHCI_DEBUG
 if|if
 condition|(
 name|uhcidebug
@@ -8428,7 +8444,7 @@ name|pipe
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|UHCI_DEBUG
 name|usbd_device_handle
 name|dev
 init|=
@@ -9541,7 +9557,7 @@ name|UHCI_TD_IOC
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|UHCI_DEBUG
 if|if
 condition|(
 name|uhcidebug
@@ -10244,7 +10260,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|USB_DEBUG
+name|UHCI_DEBUG
 argument_list|)
 if|if
 condition|(
@@ -11657,7 +11673,7 @@ name|buffer
 expr_stmt|;
 name|DPRINTFN
 argument_list|(
-literal|2
+literal|10
 argument_list|,
 operator|(
 literal|"uhci_root_ctrl_control type=0x%02x request=%02x\n"

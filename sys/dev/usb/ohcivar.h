@@ -4,7 +4,7 @@ comment|/*	$NetBSD: ohcivar.h,v 1.4 1998/12/26 12:53:01 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id$ */
+comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
@@ -263,71 +263,6 @@ name|ms
 parameter_list|)
 value|((ms) * hz / 1000)
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USB_DEBUG
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|DPRINTF
-parameter_list|(
-name|x
-parameter_list|)
-value|if (ohcidebug) printf x
-end_define
-
-begin_define
-define|#
-directive|define
-name|DPRINTFN
-parameter_list|(
-name|n
-parameter_list|,
-name|x
-parameter_list|)
-value|if (ohcidebug>(n)) printf x
-end_define
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|ohcidebug
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|DPRINTF
-parameter_list|(
-name|x
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DPRINTFN
-parameter_list|(
-name|n
-parameter_list|,
-name|x
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

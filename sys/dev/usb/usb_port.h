@@ -225,6 +225,13 @@ define|\
 value|((dev)->softc = config_found_sm(parent, args, print, sub))
 end_define
 
+begin_define
+define|#
+directive|define
+name|logprintf
+value|printf
+end_define
+
 begin_elif
 elif|#
 directive|elif
@@ -262,7 +269,7 @@ name|USBDEVNAME
 parameter_list|(
 name|bdev
 parameter_list|)
-value|usbd_devname(&bdev)
+value|usbd_devname(bdev)
 end_define
 
 begin_comment
@@ -401,7 +408,7 @@ define|#
 directive|define
 name|USB_ATTACH_SETUP
 define|\
-value|usbd_device_set_desc(self, devinfo); \ 	sc->sc_dev = self
+value|sc->sc_dev = self; \ 	usbd_device_set_desc(self, devinfo)
 end_define
 
 begin_define
@@ -452,7 +459,7 @@ parameter_list|,
 name|sub
 parameter_list|)
 define|\
-value|(device_probe_and_attach((bdev)) == 0 ? ((dev)->softc = (bdev)) : 0)
+value|(device_probe_and_attach((bdev)) == 0 ?			\ 		((dev)->softc = device_get_softc(bdev)) : 0)
 end_define
 
 begin_comment
@@ -463,7 +470,7 @@ begin_define
 define|#
 directive|define
 name|SIMPLEQ_REMOVE_HEAD
-value|STAILQ_REMOVE_HEAD_UNTIL
+value|STAILQ_REMOVE_HEAD
 end_define
 
 begin_define
@@ -513,6 +520,23 @@ define|#
 directive|define
 name|SIMPLEQ_ENTRY
 value|STAILQ_ENTRY
+end_define
+
+begin_include
+include|#
+directive|include
+file|<sys/syslog.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|logprintf
+parameter_list|(
+name|args
+modifier|...
+parameter_list|)
+value|log(LOG_DEBUG, args);
 end_define
 
 begin_endif

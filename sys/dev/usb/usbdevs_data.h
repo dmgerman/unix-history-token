@@ -115,6 +115,18 @@ literal|"IntelliMouse"
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_MICROSOFT
+block|,
+name|USB_PRODUCT_MICROSOFT_KEYBOARD
+block|,
+literal|0
+block|,
+literal|"Microsoft"
+block|,
+literal|"Keyboard"
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_KENSINGTON
 block|,
 name|USB_PRODUCT_KENSINGTON_MOUSEINABOX
@@ -199,6 +211,18 @@ literal|"QuickCam"
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_LUCENT
+block|,
+name|USB_PRODUCT_LUCENT_EVALKIT
+block|,
+literal|0
+block|,
+literal|"Lucent"
+block|,
+literal|"USS-720 evaluation kit"
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_ACER
 block|,
 name|USB_PRODUCT_ACER_ACERSCAN_C310U
@@ -223,6 +247,18 @@ literal|"mouse"
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_EPSON
+block|,
+name|USB_PRODUCT_EPSON_PRINTER3
+block|,
+literal|0
+block|,
+literal|"Epson"
+block|,
+literal|"ISD USB Smart Cable"
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_3COM
 block|,
 name|USB_PRODUCT_3COM_USR56K
@@ -231,7 +267,19 @@ literal|0
 block|,
 literal|"3Com"
 block|,
-literal|"U.S.Robotics 56000 Voice USB Modem"
+literal|"U.S.Robotics Voice Faxmodem Pro"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_KONICA
+block|,
+name|USB_PRODUCT_KONICA_CAMERA
+block|,
+literal|0
+block|,
+literal|"Konica Corporation"
+block|,
+literal|"Digital Color Camera"
 block|, 	}
 block|,
 block|{
@@ -256,6 +304,30 @@ block|,
 literal|"Jazz"
 block|,
 literal|"J-6502 speakers"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_AKS
+block|,
+name|USB_PRODUCT_AKS_USBHASP
+block|,
+literal|0
+block|,
+literal|"Aladdin Knowledge Systems"
+block|,
+literal|"USB-HASP 0.06"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_VISION
+block|,
+name|USB_PRODUCT_VISION_CAMERA
+block|,
+literal|0
+block|,
+literal|"Vision"
+block|,
+literal|"VC6452V002 Camera"
 block|, 	}
 block|,
 block|{
@@ -319,6 +391,42 @@ literal|"mouse 29UO"
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_ROCKFIRE
+block|,
+name|USB_PRODUCT_ROCKFIRE_GAMEPAD
+block|,
+literal|0
+block|,
+literal|"Rockfire"
+block|,
+literal|"gamepad 203USB"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_IOMEGA
+block|,
+name|USB_PRODUCT_IOMEGA_ZIP100
+block|,
+literal|0
+block|,
+literal|"Iomega"
+block|,
+literal|"Zip 100"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_OMNIVISION
+block|,
+name|USB_PRODUCT_OMNIVISION_OV511
+block|,
+literal|0
+block|,
+literal|"OmniVision"
+block|,
+literal|"OV511 Camera"
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_BELKIN
 block|,
 name|USB_PRODUCT_BELKIN_F5U002
@@ -345,13 +453,13 @@ block|,
 block|{
 name|USB_VENDOR_LOGITECH
 block|,
-name|USB_PRODUCT_LOGITECH_M4848
+name|USB_PRODUCT_LOGITECH_MOUSE1
 block|,
 literal|0
 block|,
 literal|"Logitech"
 block|,
-literal|"M4848 mouse"
+literal|"mouse"
 block|, 	}
 block|,
 block|{
@@ -367,6 +475,18 @@ literal|"mouse"
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_MACALLY
+block|,
+name|USB_PRODUCT_MACALLY_MOUSE1
+block|,
+literal|0
+block|,
+literal|"Macally"
+block|,
+literal|"mouse"
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_ADS
 block|,
 name|USB_PRODUCT_ADS_ENET
@@ -376,18 +496,6 @@ block|,
 literal|"ADS Technologies"
 block|,
 literal|"Ethernet adapter"
-block|, 	}
-block|,
-block|{
-name|USB_VENDOR_PLX
-block|,
-name|USB_PRODUCT_PLX_TESTBOARD
-block|,
-literal|0
-block|,
-literal|"PLX"
-block|,
-literal|"test board"
 block|, 	}
 block|,
 block|{
@@ -412,6 +520,18 @@ block|,
 literal|"Entrega"
 block|,
 literal|"DB25 Serial connector"
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_PLX
+block|,
+name|USB_PRODUCT_PLX_TESTBOARD
+block|,
+literal|0
+block|,
+literal|"PLX"
+block|,
+literal|"test board"
 block|, 	}
 block|,
 block|{
@@ -583,6 +703,18 @@ name|NULL
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_LUCENT
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"Lucent"
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_ACER
 block|,
 literal|0
@@ -607,6 +739,18 @@ name|NULL
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_EPSON
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"Epson"
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_3COM
 block|,
 literal|0
@@ -614,6 +758,18 @@ block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
 literal|"3Com"
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_KONICA
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"Konica Corporation"
 block|,
 name|NULL
 block|, 	}
@@ -638,6 +794,30 @@ block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
 literal|"Jazz"
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_AKS
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"Aladdin Knowledge Systems"
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_VISION
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"Vision"
 block|,
 name|NULL
 block|, 	}
@@ -691,6 +871,42 @@ name|NULL
 block|, 	}
 block|,
 block|{
+name|USB_VENDOR_ROCKFIRE
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"Rockfire"
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_IOMEGA
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"Iomega"
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_OMNIVISION
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"OmniVision"
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_BELKIN
 block|,
 literal|0
@@ -734,6 +950,18 @@ block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
 literal|"Chic Technology"
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_MACALLY
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"Macally"
 block|,
 name|NULL
 block|, 	}

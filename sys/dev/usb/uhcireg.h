@@ -4,7 +4,7 @@ comment|/*	$NetBSD: uhcireg.h,v 1.5 1998/12/27 23:40:52 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id$ */
+comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
@@ -58,6 +58,28 @@ directive|define
 name|PCI_USBREV_1_0
 value|0x10
 end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_LEGSUP
+value|0xc0
+end_define
+
+begin_comment
+comment|/* Legacy Support register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCI_LEGSUP_USBPIRQDEN
+value|0x2000
+end_define
+
+begin_comment
+comment|/* USB PIRQ D Enable */
+end_comment
 
 begin_define
 define|#
@@ -502,7 +524,7 @@ name|UHCI_TD_IOS
 value|0x02000000
 define|#
 directive|define
-name|UHCI_TD_LS
+name|UHCI_TD_LOWSPEED
 value|0x04000000
 define|#
 directive|define

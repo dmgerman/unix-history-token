@@ -4,7 +4,7 @@ comment|/*	$NetBSD: usbdi_util.c,v 1.13 1999/01/08 11:58:26 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id: usbdi_util.c,v 1.5 1999/01/07 23:31:43 n_hibma Exp $ */
+comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
@@ -98,7 +98,7 @@ name|DPRINTF
 parameter_list|(
 name|x
 parameter_list|)
-value|if (usbdebug) printf x
+value|if (usbdebug) logprintf x
 end_define
 
 begin_define
@@ -110,7 +110,7 @@ name|n
 parameter_list|,
 name|x
 parameter_list|)
-value|if (usbdebug>(n)) printf x
+value|if (usbdebug>(n)) logprintf x
 end_define
 
 begin_decl_stmt
@@ -226,7 +226,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|usbd_do_request
+name|usbd_do_request_flags
 argument_list|(
 name|dev
 argument_list|,
@@ -234,6 +234,10 @@ operator|&
 name|req
 argument_list|,
 name|desc
+argument_list|,
+name|USBD_SHORT_XFER_OK
+argument_list|,
+name|NULL
 argument_list|)
 operator|)
 return|;

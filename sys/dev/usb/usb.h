@@ -4,7 +4,7 @@ comment|/*	$NetBSD: usb.h,v 1.17 1999/01/03 01:09:18 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id: usb.h,v 1.6 1999/01/07 23:31:37 n_hibma Exp $ */
+comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
@@ -563,35 +563,85 @@ begin_define
 define|#
 directive|define
 name|UDESC_DEVICE
-value|1
+value|0x01
 end_define
+
+begin_comment
+comment|/* descriptor types */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|UDESC_CONFIG
-value|2
+value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
 name|UDESC_STRING
-value|3
+value|0x03
 end_define
 
 begin_define
 define|#
 directive|define
 name|UDESC_INTERFACE
-value|4
+value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
 name|UDESC_ENDPOINT
-value|5
+value|0x05
+end_define
+
+begin_define
+define|#
+directive|define
+name|UDESC_CS_DEVICE
+value|0x21
+end_define
+
+begin_comment
+comment|/* class specific */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UDESC_CS_CONFIG
+value|0x22
+end_define
+
+begin_define
+define|#
+directive|define
+name|UDESC_CS_STRING
+value|0x23
+end_define
+
+begin_define
+define|#
+directive|define
+name|UDESC_CS_INTERFACE
+value|0x24
+end_define
+
+begin_define
+define|#
+directive|define
+name|UDESC_CS_ENDPOINT
+value|0x25
+end_define
+
+begin_define
+define|#
+directive|define
+name|UDESC_HUB
+value|0x29
 end_define
 
 begin_define
@@ -857,6 +907,11 @@ name|bEndpointAddress
 decl_stmt|;
 define|#
 directive|define
+name|UE_DIR
+value|0x80
+comment|/* mask */
+define|#
+directive|define
 name|UE_IN
 value|0x80
 define|#
@@ -881,6 +936,14 @@ parameter_list|(
 name|a
 parameter_list|)
 value|(((a)>> 7)& 1)
+comment|/* XXX should be removed */
+define|#
+directive|define
+name|UE_GET_DIR
+parameter_list|(
+name|a
+parameter_list|)
+value|((a)& UE_DIR)
 name|uByte
 name|bmAttributes
 decl_stmt|;
@@ -1298,51 +1361,13 @@ end_typedef
 begin_define
 define|#
 directive|define
-name|UDESC_CS_DEVICE
-value|0x21
-end_define
-
-begin_define
-define|#
-directive|define
-name|UDESC_CS_CONFIG
-value|0x22
-end_define
-
-begin_define
-define|#
-directive|define
-name|UDESC_CS_STRING
-value|0x23
-end_define
-
-begin_define
-define|#
-directive|define
-name|UDESC_CS_INTERFACE
-value|0x24
-end_define
-
-begin_define
-define|#
-directive|define
-name|UDESC_CS_ENDPOINT
-value|0x25
-end_define
-
-begin_define
-define|#
-directive|define
-name|UDESC_HUB
-value|0x29
-end_define
-
-begin_define
-define|#
-directive|define
 name|UCLASS_UNSPEC
 value|0
 end_define
+
+begin_comment
+comment|/* Unspecified */
+end_comment
 
 begin_define
 define|#
@@ -1350,6 +1375,10 @@ directive|define
 name|UCLASS_AUDIO
 value|1
 end_define
+
+begin_comment
+comment|/* Audio */
+end_comment
 
 begin_define
 define|#
@@ -1373,8 +1402,15 @@ value|2
 end_define
 
 begin_comment
-comment|/* communication */
+comment|/* Communication */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|USUBCLASS_DIRECT_LINE_CONTROL_MODEL
+value|1
+end_define
 
 begin_define
 define|#
@@ -1386,9 +1422,71 @@ end_define
 begin_define
 define|#
 directive|define
+name|USUBCLASS_TELEPHONE_CONTROL_MODEL
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|USUBCLASS_MULTICHANNEL_CONTROL_MODEL
+end_define
+
+begin_comment
+comment|/*TBD*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USUBCLASS_CAPI_CONTROL_MODEL
+end_define
+
+begin_comment
+comment|/*TBD*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USUBCLASS_ETHERNET_CONTROL_MODEL
+end_define
+
+begin_comment
+comment|/*TBD*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USUBCLASS_ATM_CONTROL_MODEL
+end_define
+
+begin_comment
+comment|/*TBD*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UPROTO_CDC_NONE
+value|0
+end_define
+
+begin_comment
+comment|/* No class spec. protocol required */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|UPROTO_CDC_AT
 value|1
 end_define
+
+begin_comment
+comment|/* V25.ter (AT commands) */
+end_comment
 
 begin_define
 define|#
@@ -1396,6 +1494,10 @@ directive|define
 name|UCLASS_HID
 value|3
 end_define
+
+begin_comment
+comment|/* Human Interface Device */
+end_comment
 
 begin_define
 define|#
@@ -1411,6 +1513,10 @@ name|UCLASS_PRINTER
 value|7
 end_define
 
+begin_comment
+comment|/* Printer/Parallel Port */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1425,11 +1531,126 @@ name|UPROTO_PRINTER_UNI
 value|1
 end_define
 
+begin_comment
+comment|/* Unidirectional */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|UPROTO_PRINTER_BI
 value|2
+end_define
+
+begin_comment
+comment|/* Bidirectional */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UCLASS_MASS
+value|8
+end_define
+
+begin_comment
+comment|/* Mass Storage */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USUBCLASS_RBC
+value|1
+end_define
+
+begin_comment
+comment|/* Reduced Block comm. (e.g. Flash ) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USUBCLASS_SFF8020I
+value|2
+end_define
+
+begin_comment
+comment|/* (e.g. CD ROM) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USUBCLASS_QIC157
+value|3
+end_define
+
+begin_comment
+comment|/* (e.g. tape drives) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USUBCLASS_UFI
+value|4
+end_define
+
+begin_comment
+comment|/* (e.g. floppy drives) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USUBCLASS_SFF8070I
+value|5
+end_define
+
+begin_comment
+comment|/* (e.g. floppy drives) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USUBCLASS_SCSI
+value|6
+end_define
+
+begin_comment
+comment|/* SCSI transparent comman set */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UPROTO_MASS_CBI_I
+value|0
+end_define
+
+begin_comment
+comment|/* CBI protocol with comm. compl. int */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UPROTO_MASS_CBI
+value|1
+end_define
+
+begin_comment
+comment|/* CBI protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UPROTO_MASS_BULK
+comment|/*TBD*/
+value|/ * Bulk only transport * /
 end_define
 
 begin_define
@@ -1438,6 +1659,10 @@ directive|define
 name|UCLASS_HUB
 value|9
 end_define
+
+begin_comment
+comment|/* Hub */
+end_comment
 
 begin_define
 define|#
@@ -1452,6 +1677,167 @@ directive|define
 name|UCLASS_DATA
 value|10
 end_define
+
+begin_comment
+comment|/* Data pipe for CDC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USUBCLASS_DATA
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|UPROTO_DATA_NONE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|UPROTO_DATA_ISDNBRI
+value|0x30
+end_define
+
+begin_comment
+comment|/* Physical iface ISDN BRI */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UPROTO_DATA_HDLC
+value|0x31
+end_define
+
+begin_comment
+comment|/* HDLC */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UPROTO_DATA_TRANSPARENT
+value|0x32
+end_define
+
+begin_comment
+comment|/* Transparent */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UPROTO_DATA_Q921M
+value|0x50
+end_define
+
+begin_comment
+comment|/* Management for Q921 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UPROTO_DATA_Q921
+value|0x51
+end_define
+
+begin_comment
+comment|/* Data for Q921 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UPROTO_DATA_Q921TM
+value|0x52
+end_define
+
+begin_comment
+comment|/* TEI multiplexer for Q921 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UPROTO_DATA_V42BIS
+value|0x90
+end_define
+
+begin_comment
+comment|/* Data compression */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UPROTO_DATA_Q931
+value|0x91
+end_define
+
+begin_comment
+comment|/* Euro-ISDN */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UPROTO_DATA_V120
+value|0x92
+end_define
+
+begin_comment
+comment|/* V.24 rate adaption */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UPROTO_DATA_CAPI
+value|0x93
+end_define
+
+begin_comment
+comment|/* CAPI 2.0 commands */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UPROTO_DATA_HOST_BASED
+value|0xfd
+end_define
+
+begin_comment
+comment|/* Host based driver */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UPROTO_DATA_PUF
+value|0xfe
+end_define
+
+begin_comment
+comment|/* see Prot. Unit Func. Desc. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UPROTO_DATA_VENDOR
+value|0xff
+end_define
+
+begin_comment
+comment|/* Vendor specific */
+end_comment
 
 begin_define
 define|#
@@ -1553,7 +1939,7 @@ begin_define
 define|#
 directive|define
 name|USB_PORT_RESET_DELAY
-value|20
+value|50
 end_define
 
 begin_comment

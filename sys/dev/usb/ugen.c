@@ -163,7 +163,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|UGEN_DEBUG
 end_ifdef
 
 begin_define
@@ -173,7 +173,7 @@ name|DPRINTF
 parameter_list|(
 name|x
 parameter_list|)
-value|if (ugendebug) printf x
+value|if (ugendebug) logprintf x
 end_define
 
 begin_define
@@ -185,7 +185,7 @@ name|n
 parameter_list|,
 name|x
 parameter_list|)
-value|if (ugendebug>(n)) printf x
+value|if (ugendebug>(n)) logprintf x
 end_define
 
 begin_decl_stmt
@@ -349,6 +349,15 @@ block|}
 struct|;
 end_struct
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_if
+
 begin_decl_stmt
 name|int
 name|ugenopen
@@ -468,6 +477,102 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_elif
+
+begin_decl_stmt
+name|d_open_t
+name|ugenopen
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_close_t
+name|ugenclose
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_read_t
+name|ugenread
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_write_t
+name|ugenwrite
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_ioctl_t
+name|ugenioctl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_poll_t
+name|ugenpoll
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|UGEN_CDEV_MAJOR
+value|114
+end_define
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|cdevsw
+name|ugen_cdevsw
+init|=
+block|{
+name|ugenopen
+block|,
+name|ugenclose
+block|,
+name|ugenread
+block|,
+name|ugenwrite
+block|,
+name|ugenioctl
+block|,
+name|nostop
+block|,
+name|nullreset
+block|,
+name|nodevtotty
+block|,
+name|ugenpoll
+block|,
+name|nommap
+block|,
+name|nostrat
+block|,
+literal|"ugen"
+block|,
+name|NULL
+block|,
+operator|-
+literal|1
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|void
 name|ugenintr
@@ -499,13 +604,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|UGEN_CDEV_MAJOR
-value|114
-end_define
 
 begin_decl_stmt
 name|int
@@ -3703,7 +3801,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|UGEN_DEBUG
 case|case
 name|USB_SETDEBUG
 case|:
@@ -5127,24 +5225,18 @@ name|device_t
 name|self
 parameter_list|)
 block|{
-name|char
-modifier|*
-name|devinfo
-init|=
+name|DPRINTF
+argument_list|(
 operator|(
-name|char
-operator|*
-operator|)
-name|device_get_desc
+literal|"%s: disconnected\n"
+operator|,
+name|USBDEVNAME
 argument_list|(
 name|self
 argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|devinfo
-condition|)
-block|{
+operator|)
+argument_list|)
+expr_stmt|;
 name|device_set_desc
 argument_list|(
 name|self
@@ -5152,14 +5244,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|devinfo
-argument_list|,
-name|M_USB
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 literal|0
 return|;
@@ -5167,7 +5251,7 @@ block|}
 end_function
 
 begin_expr_stmt
-name|DRIVER_MODULE
+name|CDEV_DRIVER_MODULE
 argument_list|(
 name|ugen
 argument_list|,
@@ -5176,6 +5260,10 @@ argument_list|,
 name|ugen_driver
 argument_list|,
 name|ugen_devclass
+argument_list|,
+name|UGEN_CDEV_MAJOR
+argument_list|,
+name|ugen_cdevsw
 argument_list|,
 name|usbd_driver_load
 argument_list|,

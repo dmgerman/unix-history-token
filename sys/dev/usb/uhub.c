@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhub.c,v 1.14 1999/01/08 11:58:25 augustss Exp $	*/
+comment|/*	$NetBSD: uhub.c,v 1.16 1999/01/10 19:13:15 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -9,6 +9,10 @@ end_comment
 
 begin_comment
 comment|/*  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Lennart Augustsson (augustss@carlstedt.se) at  * Carlstedt Research& Technology.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+end_comment
+
+begin_comment
+comment|/*  * USB spec: http://www.usb.org/cgi-usb/mailmerge.cgi/home/usb/docs/developers/cgiform.tpl  */
 end_comment
 
 begin_include
@@ -109,7 +113,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|UHUB_DEBUG
 end_ifdef
 
 begin_define
@@ -119,7 +123,7 @@ name|DPRINTF
 parameter_list|(
 name|x
 parameter_list|)
-value|if (usbdebug) printf x
+value|if (usbdebug) logprintf x
 end_define
 
 begin_define
@@ -131,22 +135,13 @@ name|n
 parameter_list|,
 name|x
 parameter_list|)
-value|if (usbdebug>(n)) printf x
+value|if (usbdebug>(n)) logprintf x
 end_define
 
 begin_decl_stmt
 specifier|extern
 name|int
 name|usbdebug
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|usbd_error_strs
-index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -226,7 +221,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
-name|uhub_disconnect
+name|uhub_disconnect_port
 name|__P
 argument_list|(
 operator|(
@@ -269,7 +264,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*void uhub_disco __P((void *));*/
+comment|/* void uhub_disco __P((void *)); */
 end_comment
 
 begin_expr_stmt
@@ -573,7 +568,7 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"%s: configuration failed, error=%d(%s)\n"
+literal|"%s: configuration failed, %s\n"
 operator|,
 name|USBDEVNAME
 argument_list|(
@@ -582,12 +577,10 @@ operator|->
 name|sc_dev
 argument_list|)
 operator|,
+name|usbd_errstr
+argument_list|(
 name|r
-operator|,
-name|usbd_error_strs
-index|[
-name|r
-index|]
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -740,7 +733,7 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"%s: getting hub descriptor failed, error=%d(%s)\n"
+literal|"%s: getting hub descriptor failed, %s\n"
 operator|,
 name|USBDEVNAME
 argument_list|(
@@ -749,12 +742,10 @@ operator|->
 name|sc_dev
 argument_list|)
 operator|,
+name|usbd_errstr
+argument_list|(
 name|r
-operator|,
-name|usbd_error_strs
-index|[
-name|r
-index|]
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1233,65 +1224,18 @@ argument_list|(
 name|self
 argument_list|)
 decl_stmt|;
-name|int
-name|nports
-init|=
-name|sc
-operator|->
-name|sc_hub
-operator|->
-name|hub
-operator|->
-name|hubdesc
-operator|.
-name|bNbrPorts
-decl_stmt|;
-name|int
-name|p
-decl_stmt|;
-for|for
-control|(
-name|p
-operator|=
-literal|0
-init|;
-name|p
-operator|<
-name|nports
-condition|;
-name|p
-operator|++
-control|)
-block|{
-name|struct
-name|usbd_port
-modifier|*
-name|up
-init|=
-operator|&
-name|sc
-operator|->
-name|sc_hub
-operator|->
-name|hub
-operator|->
-name|ports
-index|[
-name|p
-index|]
-decl_stmt|;
-if|if
-condition|(
-name|up
-operator|->
-name|device
-condition|)
-name|uhub_disconnect
+name|DPRINTF
 argument_list|(
-name|up
+operator|(
+literal|"%s: disconnected\n"
+operator|,
+name|USBDEVNAME
+argument_list|(
+name|self
+argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
-block|}
 name|free
 argument_list|(
 name|sc
@@ -1687,15 +1631,14 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"uhub_explore: get port status failed, "
-literal|"error=%d(%s)\n"
+literal|"uhub_explore: get port %d status failed, %s\n"
 operator|,
-name|r
+name|port
 operator|,
-name|usbd_error_strs
-index|[
+name|usbd_errstr
+argument_list|(
 name|r
-index|]
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1763,7 +1706,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: illegal enable change, port %d\n"
+literal|"%s: port %d illegal enable change\n"
 argument_list|,
 name|USBDEVNAME
 argument_list|(
@@ -1791,8 +1734,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: port error, restarting "
-literal|"port %d\n"
+literal|"%s: port %d error, restarting\n"
 argument_list|,
 name|USBDEVNAME
 argument_list|(
@@ -1812,8 +1754,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"%s: port error, giving up "
-literal|"port %d\n"
+literal|"%s: port %d error, giving up\n"
 argument_list|,
 name|USBDEVNAME
 argument_list|(
@@ -1924,7 +1865,7 @@ name|port
 operator|)
 argument_list|)
 expr_stmt|;
-name|uhub_disconnect
+name|uhub_disconnect_port
 argument_list|(
 name|up
 argument_list|)
@@ -2025,15 +1966,12 @@ operator|-
 literal|1
 argument_list|,
 operator|(
-literal|"uhub_explore: usb_new_device failed, "
-literal|"error=%d(%s)\n"
+literal|"uhub_explore: usb_new_device failed, %s\n"
 operator|,
+name|usbd_errstr
+argument_list|(
 name|r
-operator|,
-name|usbd_error_strs
-index|[
-name|r
-index|]
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2050,7 +1988,7 @@ literal|1
 condition|)
 block|{
 comment|/* XXX */
-comment|/* The unit refused to accept a new 				 * address, and since we cannot leave 				 * at 0 we have to disable the port 				 * instead. */
+comment|/* The unit refused to accept a new 				 * address, and since we cannot leave 				 * it at 0 we have to disable the port 				 * instead. */
 name|printf
 argument_list|(
 literal|"%s: device problem, disabling "
@@ -2119,7 +2057,7 @@ end_function
 
 begin_function
 name|void
-name|uhub_disconnect
+name|uhub_disconnect_port
 parameter_list|(
 name|up
 parameter_list|)
@@ -2147,18 +2085,59 @@ decl_stmt|;
 struct|struct
 name|softc
 block|{
+comment|/* all softc begin like this */
 name|bdevice
 name|sc_dev
 decl_stmt|;
 block|}
 struct|;
-comment|/* all softc begin like this */
+name|struct
+name|softc
+modifier|*
+name|sc
+decl_stmt|;
+name|struct
+name|softc
+modifier|*
+name|scp
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|dev
+condition|)
+comment|/* no device driver attached at port */
+return|return;
+name|sc
+operator|=
+operator|(
+expr|struct
+name|softc
+operator|*
+operator|)
+name|dev
+operator|->
+name|softc
+expr_stmt|;
+name|scp
+operator|=
+operator|(
+expr|struct
+name|softc
+operator|*
+operator|)
+name|up
+operator|->
+name|parent
+operator|->
+name|softc
+expr_stmt|;
 name|DPRINTFN
 argument_list|(
 literal|3
 argument_list|,
 operator|(
-literal|"uhub_disconnect: up=%p dev=%p port=%d\n"
+literal|"uhub_disconnect_port: up=%p dev=%p port=%d\n"
 operator|,
 name|up
 operator|,
@@ -2176,34 +2155,14 @@ literal|"%s: at %s port %d (addr %d) disconnected\n"
 argument_list|,
 name|USBDEVNAME
 argument_list|(
-operator|(
-operator|(
-expr|struct
-name|softc
-operator|*
-operator|)
-name|dev
-operator|->
-name|softc
-operator|)
+name|sc
 operator|->
 name|sc_dev
 argument_list|)
 argument_list|,
 name|USBDEVNAME
 argument_list|(
-operator|(
-operator|(
-expr|struct
-name|uhub_softc
-operator|*
-operator|)
-name|up
-operator|->
-name|parent
-operator|->
-name|softc
-operator|)
+name|scp
 operator|->
 name|sc_dev
 argument_list|)
@@ -2247,6 +2206,7 @@ literal|0
 expr_stmt|;
 return|return;
 block|}
+comment|/* Remove the device */
 for|for
 control|(
 name|i
@@ -2311,16 +2271,6 @@ argument_list|(
 name|p
 operator|->
 name|discoarg
-argument_list|)
-expr_stmt|;
-name|usbd_abort_pipe
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-name|usbd_close_pipe
-argument_list|(
-name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -2394,9 +2344,92 @@ name|rup
 operator|->
 name|device
 condition|)
-name|uhub_disconnect
+name|uhub_disconnect_port
 argument_list|(
 name|rup
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+name|device_delete_child
+argument_list|(
+name|scp
+operator|->
+name|sc_dev
+argument_list|,
+name|sc
+operator|->
+name|sc_dev
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* clean up the kitchen */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|dev
+operator|->
+name|cdesc
+operator|->
+name|bNumInterface
+condition|;
+name|i
+operator|++
+control|)
+block|{
+for|for
+control|(
+name|p
+operator|=
+name|LIST_FIRST
+argument_list|(
+operator|&
+name|dev
+operator|->
+name|ifaces
+index|[
+name|i
+index|]
+operator|.
+name|pipes
+argument_list|)
+init|;
+name|p
+condition|;
+name|p
+operator|=
+name|n
+control|)
+block|{
+name|n
+operator|=
+name|LIST_NEXT
+argument_list|(
+name|p
+argument_list|,
+name|next
+argument_list|)
+expr_stmt|;
+name|usbd_abort_pipe
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|usbd_close_pipe
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -2421,46 +2454,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* XXX free */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-name|device_delete_child
-argument_list|(
-name|device_get_parent
-argument_list|(
-operator|(
-operator|(
-expr|struct
-name|softc
-operator|*
-operator|)
-name|dev
-operator|->
-name|softc
-operator|)
-operator|->
-name|sc_dev
-argument_list|)
-argument_list|,
-operator|(
-operator|(
-expr|struct
-name|softc
-operator|*
-operator|)
-name|dev
-operator|->
-name|softc
-operator|)
-operator|->
-name|sc_dev
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 

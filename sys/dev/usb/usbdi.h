@@ -4,7 +4,7 @@ comment|/*	$NetBSD: usbdi.h,v 1.16 1999/01/08 11:58:26 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id: usbdi.h,v 1.4 1999/01/07 23:31:43 n_hibma Exp $ */
+comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
@@ -174,7 +174,13 @@ block|,
 name|USBD_INTERRUPTED
 block|,
 name|USBD_XXX
-block|, }
+block|,
+define|#
+directive|define
+name|USBD_ERROR_MAX
+value|21
+comment|/* used for usbd_error_strs */
+block|}
 name|usbd_status
 typedef|;
 end_typedef
@@ -812,81 +818,10 @@ literal|0
 end_if
 
 begin_endif
-unit|u_int8_t usbd_bus_count __P((void));
+unit|u_int8_t usbd_bus_count __P((void)); usbd_status usbd_get_bus_handle __P((u_int8_t index, usbd_bus_handle *bus)); usbd_status usbd_get_root_hub  	__P((usbd_bus_handle bus, usbd_device_handle *dev)); usbd_status usbd_port_count __P((usbd_device_handle hub, u_int8_t *nports)); usbd_status usbd_hub2device_handle 	__P((usbd_device_handle hub, u_int8_t port, usbd_device_handle *dev));
 endif|#
 directive|endif
 end_endif
-
-begin_decl_stmt
-name|usbd_status
-name|usbd_get_bus_handle
-name|__P
-argument_list|(
-operator|(
-name|u_int8_t
-name|index
-operator|,
-name|usbd_bus_handle
-operator|*
-name|bus
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|usbd_status
-name|usbd_get_root_hub
-name|__P
-argument_list|(
-operator|(
-name|usbd_bus_handle
-name|bus
-operator|,
-name|usbd_device_handle
-operator|*
-name|dev
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|usbd_status
-name|usbd_port_count
-name|__P
-argument_list|(
-operator|(
-name|usbd_device_handle
-name|hub
-operator|,
-name|u_int8_t
-operator|*
-name|nports
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|usbd_status
-name|usbd_hub2device_handle
-name|__P
-argument_list|(
-operator|(
-name|usbd_device_handle
-name|hub
-operator|,
-name|u_int8_t
-name|port
-operator|,
-name|usbd_device_handle
-operator|*
-name|dev
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|usbd_status
@@ -1153,7 +1088,7 @@ name|__P
 argument_list|(
 operator|(
 name|usbd_device_handle
-name|pipe
+name|dev
 operator|,
 name|usb_device_request_t
 operator|*
@@ -1174,7 +1109,7 @@ name|__P
 argument_list|(
 operator|(
 name|usbd_device_handle
-name|pipe
+name|dev
 operator|,
 name|usb_device_request_t
 operator|*
@@ -1195,7 +1130,7 @@ name|__P
 argument_list|(
 operator|(
 name|usbd_device_handle
-name|pipe
+name|dev
 operator|,
 name|usb_device_request_t
 operator|*
@@ -1378,6 +1313,17 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|char
+modifier|*
+name|usbd_errstr
+parameter_list|(
+name|usbd_status
+name|err
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|void
@@ -1837,7 +1783,6 @@ modifier|*
 name|usbd_devname
 parameter_list|(
 name|bdevice
-modifier|*
 name|bdev
 parameter_list|)
 function_decl|;

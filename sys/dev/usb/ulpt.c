@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ulpt.c,v 1.10 1999/01/08 11:58:25 augustss Exp $	*/
+comment|/*	$NetBSD: ulpt.c,v 1.11 1999/01/10 11:13:36 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -9,6 +9,10 @@ end_comment
 
 begin_comment
 comment|/*  * Copyright (c) 1998 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Lennart Augustsson (augustss@carlstedt.se) at  * Carlstedt Research& Technology.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *        This product includes software developed by the NetBSD  *        Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+end_comment
+
+begin_comment
+comment|/*  * Printer Class spec: http://www.usb.org/developers/data/usbprn10.pdf  */
 end_comment
 
 begin_include
@@ -177,7 +181,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|ULPT_DEBUG
 end_ifdef
 
 begin_define
@@ -187,7 +191,7 @@ name|DPRINTF
 parameter_list|(
 name|x
 parameter_list|)
-value|if (ulptdebug) printf x
+value|if (ulptdebug) logprintf x
 end_define
 
 begin_define
@@ -199,7 +203,7 @@ name|n
 parameter_list|,
 name|x
 parameter_list|)
-value|if (ulptdebug>(n)) printf x
+value|if (ulptdebug>(n)) logprintf x
 end_define
 
 begin_decl_stmt
@@ -931,7 +935,7 @@ name|ed
 operator|->
 name|bEndpointAddress
 operator|&
-name|UE_IN
+name|UE_DIR
 operator|)
 operator|!=
 name|UE_OUT
@@ -1375,7 +1379,10 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|USB_DEBUG
+name|defined
+argument_list|(
+name|ULPT_DEBUG
+argument_list|)
 operator|&&
 name|defined
 argument_list|(
@@ -1386,21 +1393,20 @@ if|if
 condition|(
 operator|(
 name|flags
-operator|^
+operator|&
+operator|~
 name|ULPT_NOPRIME
 operator|)
 operator|!=
 literal|0
 condition|)
-name|DPRINTF
+name|printf
 argument_list|(
-operator|(
-literal|"flags ignored: %b\n"
-operator|,
+literal|"ulptopen: flags ignored: %b\n"
+argument_list|,
 name|flags
-operator|,
+argument_list|,
 literal|"\20\3POS_INIT\4POS_ACK\6PRIME_OPEN\7AUTOLF\10BYPASS"
-operator|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1721,13 +1727,6 @@ name|sc_state
 operator|=
 literal|0
 expr_stmt|;
-name|DPRINTF
-argument_list|(
-operator|(
-literal|"ulptclose: closed\n"
-operator|)
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1788,13 +1787,6 @@ name|dev
 argument_list|)
 argument_list|,
 name|sc
-argument_list|)
-expr_stmt|;
-name|DPRINTF
-argument_list|(
-operator|(
-literal|"ulptwrite\n"
-operator|)
 argument_list|)
 expr_stmt|;
 name|reqh
@@ -1919,8 +1911,10 @@ operator|!=
 name|USBD_NORMAL_COMPLETION
 condition|)
 block|{
-name|DPRINTF
+name|DPRINTFN
 argument_list|(
+literal|1
+argument_list|,
 operator|(
 literal|"ulptwrite: error=%d\n"
 operator|,
@@ -2027,24 +2021,18 @@ name|device_t
 name|self
 parameter_list|)
 block|{
-name|char
-modifier|*
-name|devinfo
-init|=
+name|DPRINTF
+argument_list|(
 operator|(
-name|char
-operator|*
-operator|)
-name|device_get_desc
+literal|"%s: disconnected\n"
+operator|,
+name|USBDEVNAME
 argument_list|(
 name|self
 argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|devinfo
-condition|)
-block|{
+operator|)
+argument_list|)
+expr_stmt|;
 name|device_set_desc
 argument_list|(
 name|self
@@ -2052,14 +2040,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|devinfo
-argument_list|,
-name|M_USB
-argument_list|)
-expr_stmt|;
-block|}
 return|return
 literal|0
 return|;

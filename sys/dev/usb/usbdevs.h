@@ -158,6 +158,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|USB_VENDOR_LUCENT
+value|0x047e
+end_define
+
+begin_comment
+comment|/* Lucent */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|USB_VENDOR_ACER
 value|0x04a5
 end_define
@@ -180,12 +191,34 @@ end_comment
 begin_define
 define|#
 directive|define
+name|USB_VENDOR_EPSON
+value|0x04b8
+end_define
+
+begin_comment
+comment|/* Epson */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|USB_VENDOR_3COM
 value|0x04c1
 end_define
 
 begin_comment
 comment|/* 3Com */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_VENDOR_KONICA
+value|0x04c8
+end_define
+
+begin_comment
+comment|/* Konica Corporation */
 end_comment
 
 begin_define
@@ -208,6 +241,28 @@ end_define
 
 begin_comment
 comment|/* Jazz */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_VENDOR_AKS
+value|0x0529
+end_define
+
+begin_comment
+comment|/* Aladdin Knowledge Systems */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_VENDOR_VISION
+value|0x0553
+end_define
+
+begin_comment
+comment|/* Vision */
 end_comment
 
 begin_define
@@ -257,6 +312,39 @@ end_comment
 begin_define
 define|#
 directive|define
+name|USB_VENDOR_ROCKFIRE
+value|0x0583
+end_define
+
+begin_comment
+comment|/* Rockfire */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_VENDOR_IOMEGA
+value|0x059b
+end_define
+
+begin_comment
+comment|/* Iomega */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_VENDOR_OMNIVISION
+value|0x05a9
+end_define
+
+begin_comment
+comment|/* OmniVision */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|USB_VENDOR_BELKIN
 value|0x05ab
 end_define
@@ -296,6 +384,17 @@ end_define
 
 begin_comment
 comment|/* Chic Technology */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_VENDOR_MACALLY
+value|0x0618
+end_define
+
+begin_comment
+comment|/* Macally */
 end_comment
 
 begin_define
@@ -469,6 +568,17 @@ begin_comment
 comment|/* IntelliMouse */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_MICROSOFT_KEYBOARD
+value|0x0009
+end_define
+
+begin_comment
+comment|/* Keyboard */
+end_comment
+
 begin_comment
 comment|/* Kensington products */
 end_comment
@@ -567,6 +677,21 @@ comment|/* QuickCam */
 end_comment
 
 begin_comment
+comment|/* Lucent products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_LUCENT_EVALKIT
+value|0x1001
+end_define
+
+begin_comment
+comment|/* USS-720 evaluation kit */
+end_comment
+
+begin_comment
 comment|/* Acer products */
 end_comment
 
@@ -597,6 +722,21 @@ comment|/* mouse */
 end_comment
 
 begin_comment
+comment|/* Epson products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_EPSON_PRINTER3
+value|0x0003
+end_define
+
+begin_comment
+comment|/* ISD USB Smart Cable */
+end_comment
+
+begin_comment
 comment|/* 3Com products */
 end_comment
 
@@ -608,7 +748,22 @@ value|0x3021
 end_define
 
 begin_comment
-comment|/* U.S.Robotics 56000 Voice USB Modem */
+comment|/* U.S.Robotics Voice Faxmodem Pro */
+end_comment
+
+begin_comment
+comment|/* Konica Corporation Products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_KONICA_CAMERA
+value|0x0720
+end_define
+
+begin_comment
+comment|/* Digital Color Camera */
 end_comment
 
 begin_comment
@@ -639,6 +794,36 @@ end_define
 
 begin_comment
 comment|/* J-6502 speakers */
+end_comment
+
+begin_comment
+comment|/* AKS products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_AKS_USBHASP
+value|0x0001
+end_define
+
+begin_comment
+comment|/* USB-HASP 0.06 */
+end_comment
+
+begin_comment
+comment|/* Vision products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_VISION_CAMERA
+value|0x0002
+end_define
+
+begin_comment
+comment|/* VC6452V002 Camera */
 end_comment
 
 begin_comment
@@ -713,6 +898,51 @@ comment|/* mouse 29UO */
 end_comment
 
 begin_comment
+comment|/* Rockfire products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_ROCKFIRE_GAMEPAD
+value|0x2033
+end_define
+
+begin_comment
+comment|/* gamepad 203USB */
+end_comment
+
+begin_comment
+comment|/* Iomega products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_IOMEGA_ZIP100
+value|0x0001
+end_define
+
+begin_comment
+comment|/* Zip 100 */
+end_comment
+
+begin_comment
+comment|/* OmniVision Technologies Inc. products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_OMNIVISION_OV511
+value|0x0511
+end_define
+
+begin_comment
+comment|/* OV511 Camera */
+end_comment
+
+begin_comment
 comment|/* Belkin products */
 end_comment
 
@@ -745,12 +975,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|USB_PRODUCT_LOGITECH_M4848
+name|USB_PRODUCT_LOGITECH_MOUSE1
 value|0x0301
 end_define
 
 begin_comment
-comment|/* M4848 mouse */
+comment|/* mouse */
 end_comment
 
 begin_comment
@@ -762,6 +992,21 @@ define|#
 directive|define
 name|USB_PRODUCT_CHIC_MOUSE1
 value|0x0001
+end_define
+
+begin_comment
+comment|/* mouse */
+end_comment
+
+begin_comment
+comment|/* Macally products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_MACALLY_MOUSE1
+value|0x0101
 end_define
 
 begin_comment
@@ -784,18 +1029,7 @@ comment|/* Ethernet adapter */
 end_comment
 
 begin_comment
-comment|/* PLX products */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USB_PRODUCT_PLX_TESTBOARD
-value|0x9060
-end_define
-
-begin_comment
-comment|/* test board */
+comment|/* Entrega products */
 end_comment
 
 begin_define
@@ -818,6 +1052,21 @@ end_define
 
 begin_comment
 comment|/* DB25 Serial connector */
+end_comment
+
+begin_comment
+comment|/* PLX products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_PLX_TESTBOARD
+value|0x9060
+end_define
+
+begin_comment
+comment|/* test board */
 end_comment
 
 begin_comment

@@ -4,7 +4,7 @@ comment|/*	$NetBSD: uhcivar.h,v 1.5 1998/12/26 12:53:02 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id$ */
+comment|/*	FreeBSD $Id: uhcivar.h,v 1.5 1999/01/07 23:31:33 n_hibma Exp $ */
 end_comment
 
 begin_comment
@@ -423,71 +423,6 @@ end_if
 
 begin_endif
 unit|void		uhci_reset __P((void *));
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USB_DEBUG
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|DPRINTF
-parameter_list|(
-name|x
-parameter_list|)
-value|if (uhcidebug) printf x
-end_define
-
-begin_define
-define|#
-directive|define
-name|DPRINTFN
-parameter_list|(
-name|n
-parameter_list|,
-name|x
-parameter_list|)
-value|if (uhcidebug>(n)) printf x
-end_define
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|uhcidebug
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|DPRINTF
-parameter_list|(
-name|x
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DPRINTFN
-parameter_list|(
-name|n
-parameter_list|,
-name|x
-parameter_list|)
-end_define
-
-begin_endif
 endif|#
 directive|endif
 end_endif

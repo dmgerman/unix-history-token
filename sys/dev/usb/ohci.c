@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ohci.c,v 1.23 1999/01/07 02:06:05 augustss Exp $	*/
+comment|/*	$NetBSD: ohci.c,v 1.27 1999/01/13 10:33:53 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -175,6 +175,72 @@ parameter_list|(
 name|d
 parameter_list|)
 value|DELAY(d)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OHCI_DEBUG
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DPRINTF
+parameter_list|(
+name|x
+parameter_list|)
+value|if (ohcidebug) logprintf x
+end_define
+
+begin_define
+define|#
+directive|define
+name|DPRINTFN
+parameter_list|(
+name|n
+parameter_list|,
+name|x
+parameter_list|)
+value|if (ohcidebug>(n)) logprintf x
+end_define
+
+begin_decl_stmt
+name|int
+name|ohcidebug
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|DPRINTF
+parameter_list|(
+name|x
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DPRINTFN
+parameter_list|(
+name|n
+parameter_list|,
+name|x
+parameter_list|)
 end_define
 
 begin_endif
@@ -825,7 +891,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|OHCI_DEBUG
 end_ifdef
 
 begin_decl_stmt
@@ -2509,7 +2575,7 @@ goto|;
 block|}
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|OHCI_DEBUG
 name|thesc
 operator|=
 name|sc
@@ -2715,7 +2781,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|OHCI_DEBUG
 if|if
 condition|(
 name|ohcidebug
@@ -2810,7 +2876,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|OHCI_DEBUG
 end_ifdef
 
 begin_function_decl
@@ -3105,8 +3171,6 @@ name|p
 decl_stmt|;
 name|u_int32_t
 name|intrs
-init|=
-literal|0
 decl_stmt|,
 name|eintrs
 decl_stmt|;
@@ -3144,6 +3208,10 @@ literal|0
 operator|)
 return|;
 block|}
+name|intrs
+operator|=
+literal|0
+expr_stmt|;
 name|done
 operator|=
 name|LE
@@ -3503,7 +3571,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|OHCI_DEBUG
 end_ifdef
 
 begin_decl_stmt
@@ -3566,8 +3634,6 @@ block|{
 name|ohci_soft_td_t
 modifier|*
 name|std
-init|=
-name|NULL
 decl_stmt|,
 modifier|*
 name|sdone
@@ -3637,12 +3703,12 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|OHCI_DEBUG
 if|if
 condition|(
 name|ohcidebug
 operator|>
-literal|10
+literal|11
 condition|)
 block|{
 name|printf
@@ -5003,7 +5069,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|OHCI_DEBUG
 if|if
 condition|(
 name|ohcidebug
@@ -5781,9 +5847,9 @@ name|hcpriv
 operator|=
 name|stat
 expr_stmt|;
-if|#
-directive|if
-name|USB_DEBUG
+ifdef|#
+directive|ifdef
+name|OHCI_DEBUG
 if|if
 condition|(
 name|ohcidebug
@@ -5910,42 +5976,13 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-name|USB_DEBUG
-if|if
-condition|(
-name|ohcidebug
-operator|>
-literal|5
-condition|)
-block|{
-name|delay
-argument_list|(
-literal|5000
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"ohci_device_request: status=%x\n"
-argument_list|,
-name|OREAD4
-argument_list|(
-name|sc
-argument_list|,
-name|OHCI_COMMAND_STATUS
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|ohci_dump_ed
-argument_list|(
-name|sed
-argument_list|)
-expr_stmt|;
-name|ohci_dump_tds
-argument_list|(
-name|setup
-argument_list|)
-expr_stmt|;
-block|}
+literal|0
+ifdef|#
+directive|ifdef
+name|OHCI_DEBUG
+block|if (ohcidebug> 15) { 		delay(5000); 		printf("ohci_device_request: status=%x\n", 		       OREAD4(sc, OHCI_COMMAND_STATUS)); 		ohci_dump_ed(sed); 		ohci_dump_tds(setup); 	}
+endif|#
+directive|endif
 endif|#
 directive|endif
 return|return
@@ -6324,7 +6361,22 @@ block|{
 if|#
 directive|if
 literal|0
-block|usbd_request_handle *reqh = addr; 	int s;  	DPRINTF(("ohci_timeout: reqh=%p\n", reqh)); 	s = splusb();
+block|usbd_request_handle *reqh = addr;
+endif|#
+directive|endif
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"ohci_timeout: reqh=%p\n"
+operator|,
+name|reqh
+operator|)
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+literal|0
+block|int s;  	s = splusb();
 comment|/* XXX need to inactivate TD before calling interrupt routine */
 block|ohci_XXX_done(reqh); 	splx(s);
 endif|#
@@ -6335,7 +6387,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
+name|OHCI_DEBUG
 end_ifdef
 
 begin_function
@@ -10554,9 +10606,9 @@ name|hcpriv
 operator|=
 name|xfer
 expr_stmt|;
-if|#
-directive|if
-name|USB_DEBUG
+ifdef|#
+directive|ifdef
+name|OHCI_DEBUG
 if|if
 condition|(
 name|ohcidebug
@@ -10632,47 +10684,17 @@ operator|~
 name|OHCI_ED_SKIP
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
 ifdef|#
 directive|ifdef
-name|USB_DEBUG
-if|if
-condition|(
-name|ohcidebug
-operator|>
-literal|5
-condition|)
-block|{
-name|delay
-argument_list|(
-literal|5000
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"ohci_device_intr_transfer: status=%x\n"
-argument_list|,
-name|OREAD4
-argument_list|(
-name|sc
-argument_list|,
-name|OHCI_COMMAND_STATUS
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|ohci_dump_ed
-argument_list|(
-name|sed
-argument_list|)
-expr_stmt|;
-name|ohci_dump_tds
-argument_list|(
-name|xfer
-argument_list|)
-expr_stmt|;
-block|}
+name|OHCI_DEBUG
+block|if (ohcidebug> 15) { 		delay(5000); 		printf("ohci_device_intr_transfer: status=%x\n", 		       OREAD4(sc, OHCI_COMMAND_STATUS)); 		ohci_dump_ed(sed); 		ohci_dump_tds(xfer); 	}
 endif|#
 directive|endif
-comment|/* moved splx(s) because of indefinite printing of TD's */
+endif|#
+directive|endif
 name|splx
 argument_list|(
 name|s

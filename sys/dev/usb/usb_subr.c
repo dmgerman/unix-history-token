@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usb_subr.c,v 1.27 1999/01/08 11:58:25 augustss Exp $	*/
+comment|/*	$NetBSD: usb_subr.c,v 1.29 1999/03/18 12:08:43 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id: usb_subr.c,v 1.6 1999/01/07 23:31:40 n_hibma Exp $ */
+comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
@@ -167,7 +167,7 @@ name|DPRINTF
 parameter_list|(
 name|x
 parameter_list|)
-value|if (usbdebug) printf x
+value|if (usbdebug) logprintf x
 end_define
 
 begin_define
@@ -179,7 +179,7 @@ name|n
 parameter_list|,
 name|x
 parameter_list|)
-value|if (usbdebug>(n)) printf x
+value|if (usbdebug>(n)) logprintf x
 end_define
 
 begin_decl_stmt
@@ -218,6 +218,65 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_typedef
+typedef|typedef
+name|u_int16_t
+name|usb_vendor_id_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|u_int16_t
+name|usb_product_id_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * Descriptions of of known vendors and devices ("products").  */
+end_comment
+
+begin_struct
+struct|struct
+name|usb_knowndev
+block|{
+name|usb_vendor_id_t
+name|vendor
+decl_stmt|;
+name|usb_product_id_t
+name|product
+decl_stmt|;
+name|int
+name|flags
+decl_stmt|;
+name|char
+modifier|*
+name|vendorname
+decl_stmt|,
+modifier|*
+name|productname
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|USB_KNOWNDEV_NOPROD
+value|0x01
+end_define
+
+begin_comment
+comment|/* match on vendor only */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<dev/usb/usbdevs_data.h>
+end_include
 
 begin_decl_stmt
 specifier|static
@@ -369,143 +428,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USBVERBOSE
-end_ifdef
-
-begin_typedef
-typedef|typedef
-name|u_int16_t
-name|usb_vendor_id_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|u_int16_t
-name|usb_product_id_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/*  * Descriptions of of known vendors and devices ("products").  */
-end_comment
-
-begin_struct
-struct|struct
-name|usb_knowndev
-block|{
-name|usb_vendor_id_t
-name|vendor
-decl_stmt|;
-name|usb_product_id_t
-name|product
-decl_stmt|;
-name|int
-name|flags
-decl_stmt|;
-name|char
-modifier|*
-name|vendorname
-decl_stmt|,
-modifier|*
-name|productname
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|USB_KNOWNDEV_NOPROD
-value|0x01
-end_define
-
-begin_comment
-comment|/* match on vendor only */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<dev/usb/usbdevs_data.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* USBVERBOSE */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USB_DEBUG
-end_ifdef
-
-begin_decl_stmt
-name|char
-modifier|*
-name|usbd_error_strs
-index|[]
-init|=
-block|{
-literal|"NORMAL_COMPLETION"
-block|,
-literal|"IN_PROGRESS"
-block|,
-literal|"PENDING_REQUESTS"
-block|,
-literal|"NOT_STARTED"
-block|,
-literal|"INVAL"
-block|,
-literal|"IS_IDLE"
-block|,
-literal|"NOMEM"
-block|,
-literal|"CANCELLED"
-block|,
-literal|"BAD_ADDRESS"
-block|,
-literal|"IN_USE"
-block|,
-literal|"INTERFACE_NOT_ACTIVE"
-block|,
-literal|"NO_ADDR"
-block|,
-literal|"SET_ADDR_FAILED"
-block|,
-literal|"NO_POWER"
-block|,
-literal|"TOO_DEEP"
-block|,
-literal|"IOERROR"
-block|,
-literal|"NOT_CONFIGURED"
-block|,
-literal|"TIMEOUT"
-block|,
-literal|"SHORT_XFER"
-block|,
-literal|"STALLED"
-block|,
-literal|"XXX"
-block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|usbd_status
@@ -934,24 +856,15 @@ decl_stmt|;
 name|char
 modifier|*
 name|vendor
-init|=
-literal|0
 decl_stmt|,
 modifier|*
 name|product
-init|=
-literal|0
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|USBVERBOSE
 name|struct
 name|usb_knowndev
 modifier|*
 name|kdp
 decl_stmt|;
-endif|#
-directive|endif
 name|vendor
 operator|=
 name|usbd_get_string
@@ -978,9 +891,6 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|USBVERBOSE
 if|if
 condition|(
 operator|!
@@ -1049,12 +959,14 @@ name|vendorname
 operator|==
 name|NULL
 condition|)
+block|{
 name|vendor
 operator|=
 name|product
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 else|else
 block|{
 name|vendor
@@ -1083,8 +995,6 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|vendor
@@ -1519,16 +1429,14 @@ argument_list|(
 literal|1
 argument_list|,
 operator|(
-literal|"usbd_reset_port: port %d reset done, error=%d(%s)\n"
+literal|"usbd_reset_port: port %d reset done, %s\n"
 operator|,
 name|port
 operator|,
+name|usbd_errstr
+argument_list|(
 name|r
-operator|,
-name|usbd_error_strs
-index|[
-name|r
-index|]
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1578,9 +1486,14 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"usbd_reset_port: get status failed %d\n"
+literal|"usbd_reset_port: get port %d status failed %s\n"
 operator|,
+name|port
+operator|,
+name|usbd_errstr
+argument_list|(
 name|r
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1653,7 +1566,9 @@ condition|)
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"usbd_reset_port: clear port feature failed %d\n"
+literal|"usbd_reset_port: clear port %d feature failed %d\n"
+operator|,
+name|port
 operator|,
 name|r
 operator|)
@@ -3078,8 +2993,7 @@ block|}
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"usbd_set_config_index: status=0x%04x, "
-literal|"error=%d(%s)\n"
+literal|"usbd_set_config_index: status=0x%04x, %s\n"
 operator|,
 name|UGETW
 argument_list|(
@@ -3088,12 +3002,10 @@ operator|.
 name|wStatus
 argument_list|)
 operator|,
+name|usbd_errstr
+argument_list|(
 name|r
-operator|,
-name|usbd_error_strs
-index|[
-name|r
-index|]
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3267,19 +3179,16 @@ block|{
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"usbd_set_config_index: setting config=%d failed, "
-literal|"error=%d(%s)\n"
+literal|"usbd_set_config_index: setting config=%d failed, %s\n"
 operator|,
 name|cdp
 operator|->
 name|bConfigurationValue
 operator|,
+name|usbd_errstr
+argument_list|(
 name|r
-operator|,
-name|usbd_error_strs
-index|[
-name|r
-index|]
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3574,6 +3483,18 @@ name|running
 operator|=
 literal|0
 expr_stmt|;
+name|p
+operator|->
+name|disco
+operator|=
+literal|0
+expr_stmt|;
+name|p
+operator|->
+name|discoarg
+operator|=
+literal|0
+expr_stmt|;
 name|SIMPLEQ_INIT
 argument_list|(
 operator|&
@@ -3606,8 +3527,7 @@ operator|-
 literal|1
 argument_list|,
 operator|(
-literal|"usbd_setup_pipe: endpoint=0x%x failed, error=%d"
-literal|"(%s)\n"
+literal|"usbd_setup_pipe: endpoint=0x%x failed, %s\n"
 operator|,
 name|ep
 operator|->
@@ -3615,12 +3535,10 @@ name|edesc
 operator|->
 name|bEndpointAddress
 operator|,
+name|usbd_errstr
+argument_list|(
 name|r
-operator|,
-name|usbd_error_strs
-index|[
-name|r
-index|]
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3780,10 +3698,21 @@ name|dev
 operator|->
 name|ddesc
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+name|int
+name|found
+init|=
+literal|0
+decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|r
-decl_stmt|,
-name|found
 decl_stmt|,
 name|i
 decl_stmt|,
@@ -3977,39 +3906,9 @@ operator|!=
 name|USBD_NORMAL_COMPLETION
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|USB_DEBUG
-name|DPRINTF
-argument_list|(
-operator|(
-literal|"%s: port %d, set config at addr %d failed, "
-literal|"error=%d(%s)\n"
-operator|,
-name|USBDEVNAME
-argument_list|(
-operator|*
-name|parent
-argument_list|)
-operator|,
-name|port
-operator|,
-name|addr
-operator|,
-name|r
-operator|,
-name|usbd_error_strs
-index|[
-name|r
-index|]
-operator|)
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|printf
 argument_list|(
-literal|"%s: port %d, set config at addr %d failed\n"
+literal|"%s: port %d, set config at addr %d failed, %s\n"
 argument_list|,
 name|USBDEVNAME
 argument_list|(
@@ -4020,26 +3919,13 @@ argument_list|,
 name|port
 argument_list|,
 name|addr
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-name|device_delete_child
-argument_list|(
-operator|*
-name|parent
 argument_list|,
-name|bdev
+name|usbd_errstr
+argument_list|(
+name|r
+argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|r
@@ -4104,8 +3990,6 @@ name|nifaces
 expr_stmt|;
 for|for
 control|(
-name|found
-operator|=
 name|i
 operator|=
 literal|0
@@ -4169,6 +4053,12 @@ name|usbd_submatch
 argument_list|)
 condition|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
 name|found
 operator|++
 expr_stmt|;
@@ -4180,8 +4070,28 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* consumed */
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+comment|/* XXX FreeBSD can't handle multiple intfaces 				 *     on 1 device yet */
+return|return
+operator|(
+name|USBD_NORMAL_COMPLETION
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
 block|}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
 if|if
 condition|(
 name|found
@@ -4193,6 +4103,8 @@ operator|(
 name|USBD_NORMAL_COMPLETION
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 comment|/* No interfaces were attached in any of the configurations. */
 if|if
@@ -4859,7 +4771,7 @@ operator|-
 literal|1
 argument_list|,
 operator|(
-literal|"usb_new_device: set address %d failed\n"
+literal|"usbd_new_device: set address %d failed\n"
 operator|,
 name|addr
 operator|)
@@ -5476,6 +5388,12 @@ block|}
 endif|#
 directive|endif
 comment|/* First remove remove old */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
 name|SIMPLEQ_REMOVE_HEAD
 argument_list|(
 operator|&
@@ -5494,6 +5412,24 @@ argument_list|,
 name|next
 argument_list|)
 expr_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+name|SIMPLEQ_REMOVE_HEAD
+argument_list|(
+operator|&
+name|pipe
+operator|->
+name|queue
+argument_list|,
+name|next
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|pipe
