@@ -33,7 +33,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: srvrsmtp.c,v 8.829.2.4 2002/08/16 14:56:01 ca Exp $"
+literal|"@(#)$Id: srvrsmtp.c,v 8.829.2.17 2002/12/09 16:46:18 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1280,6 +1280,44 @@ parameter_list|)
 value|milter_abort((e))
 end_define
 
+begin_if
+if|#
+directive|if
+name|_FFR_MILTER_421
+end_if
+
+begin_define
+define|#
+directive|define
+name|MILTER_SHUTDOWN
+define|\
+value|if (strncmp(response, "421 ", 4) == 0)		\ 			{						\ 				e->e_sendqueue = NULL;			\ 				goto doquit;				\ 			}
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* _FFR_MILTER_421 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MILTER_SHUTDOWN
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_MILTER_421 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1288,7 +1326,7 @@ parameter_list|(
 name|str
 parameter_list|)
 define|\
-value|{								\ 		int savelogusrerrs = LogUsrErrs;			\ 									\ 		switch (state)						\ 		{							\ 		  case SMFIR_REPLYCODE:					\ 			if (MilterLogLevel> 3)				\ 			{						\ 				sm_syslog(LOG_INFO, e->e_id,		\ 					  "Milter: %s=%s, reject=%s",	\ 					  str, addr, response);		\ 				LogUsrErrs = false;			\ 			}						\ 			usrerr(response);				\ 			break;						\ 									\ 		  case SMFIR_REJECT:					\ 			if (MilterLogLevel> 3)				\ 			{						\ 				sm_syslog(LOG_INFO, e->e_id,		\ 					  "Milter: %s=%s, reject=550 5.7.1 Command rejected", \ 					  str, addr);			\ 				LogUsrErrs = false;			\ 			}						\ 			usrerr("550 5.7.1 Command rejected");		\ 			break;						\ 									\ 		  case SMFIR_DISCARD:					\ 			if (MilterLogLevel> 3)				\ 				sm_syslog(LOG_INFO, e->e_id,		\ 					  "Milter: %s=%s, discard",	\ 					  str, addr);			\ 			e->e_flags |= EF_DISCARD;			\ 			break;						\ 									\ 		  case SMFIR_TEMPFAIL:					\ 			if (MilterLogLevel> 3)				\ 			{						\ 				sm_syslog(LOG_INFO, e->e_id,		\ 					  "Milter: %s=%s, reject=%s",	\ 					  str, addr, MSG_TEMPFAIL);	\ 				LogUsrErrs = false;			\ 			}						\ 			usrerr(MSG_TEMPFAIL);				\ 			break;						\ 		}							\ 		LogUsrErrs = savelogusrerrs;				\ 		if (response != NULL)					\ 			sm_free(response);
+value|{								\ 		int savelogusrerrs = LogUsrErrs;			\ 									\ 		switch (state)						\ 		{							\ 		  case SMFIR_REPLYCODE:					\ 			if (MilterLogLevel> 3)				\ 			{						\ 				sm_syslog(LOG_INFO, e->e_id,		\ 					  "Milter: %s=%s, reject=%s",	\ 					  str, addr, response);		\ 				LogUsrErrs = false;			\ 			}						\ 			usrerr(response);				\ 			MILTER_SHUTDOWN					\ 			break;						\ 									\ 		  case SMFIR_REJECT:					\ 			if (MilterLogLevel> 3)				\ 			{						\ 				sm_syslog(LOG_INFO, e->e_id,		\ 					  "Milter: %s=%s, reject=550 5.7.1 Command rejected", \ 					  str, addr);			\ 				LogUsrErrs = false;			\ 			}						\ 			usrerr("550 5.7.1 Command rejected");		\ 			break;						\ 									\ 		  case SMFIR_DISCARD:					\ 			if (MilterLogLevel> 3)				\ 				sm_syslog(LOG_INFO, e->e_id,		\ 					  "Milter: %s=%s, discard",	\ 					  str, addr);			\ 			e->e_flags |= EF_DISCARD;			\ 			break;						\ 									\ 		  case SMFIR_TEMPFAIL:					\ 			if (MilterLogLevel> 3)				\ 			{						\ 				sm_syslog(LOG_INFO, e->e_id,		\ 					  "Milter: %s=%s, reject=%s",	\ 					  str, addr, MSG_TEMPFAIL);	\ 				LogUsrErrs = false;			\ 			}						\ 			usrerr(MSG_TEMPFAIL);				\ 			break;						\ 		}							\ 		LogUsrErrs = savelogusrerrs;				\ 		if (response != NULL)					\ 			sm_free(response);
 comment|/* XXX */
 value|\ 	}
 end_define
@@ -1511,6 +1549,8 @@ name|ok
 decl_stmt|;
 if|#
 directive|if
+name|_FFR_BLOCK_PROXIES
+operator|||
 name|_FFR_ADAPTIVE_EOL
 specifier|volatile
 name|bool
@@ -1518,7 +1558,7 @@ name|first
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* _FFR_ADAPTIVE_EOL */
+comment|/* _FFR_BLOCK_PROXIES || _FFR_ADAPTIVE_EOL */
 specifier|volatile
 name|bool
 name|tempfail
@@ -3068,6 +3108,67 @@ operator|=
 name|false
 expr_stmt|;
 break|break;
+if|#
+directive|if
+name|_FFR_MILTER_421
+case|case
+name|SMFIR_SHUTDOWN
+case|:
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|3
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"Milter: connect: host=%s, addr=%s, shutdown"
+argument_list|,
+name|peerhostname
+argument_list|,
+name|anynet_ntoa
+argument_list|(
+operator|&
+name|RealHostAddr
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|tempfail
+operator|=
+name|true
+expr_stmt|;
+name|smtp
+operator|.
+name|sm_milterize
+operator|=
+name|false
+expr_stmt|;
+name|message
+argument_list|(
+literal|"421 4.7.0 %s closing connection"
+argument_list|,
+name|MyHostName
+argument_list|)
+expr_stmt|;
+comment|/* arrange to ignore send list */
+name|e
+operator|->
+name|e_sendqueue
+operator|=
+name|NULL
+expr_stmt|;
+goto|goto
+name|doquit
+goto|;
+endif|#
+directive|endif
+comment|/* _FFR_MILTER_421 */
 block|}
 if|if
 condition|(
@@ -3438,6 +3539,8 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
+name|_FFR_BLOCK_PROXIES
+operator|||
 name|_FFR_ADAPTIVE_EOL
 name|first
 operator|=
@@ -3445,7 +3548,7 @@ name|true
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* _FFR_ADAPTIVE_EOL */
+comment|/* _FFR_BLOCK_PROXIES || _FFR_ADAPTIVE_EOL */
 name|gothello
 operator|=
 name|false
@@ -3651,7 +3754,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"lost input channel from %.100s to %s after %s"
+literal|"lost input channel from %s to %s after %s"
 argument_list|,
 name|CurSmtpClient
 argument_list|,
@@ -3700,12 +3803,152 @@ goto|;
 block|}
 if|#
 directive|if
+name|_FFR_BLOCK_PROXIES
+operator|||
 name|_FFR_ADAPTIVE_EOL
 if|if
 condition|(
 name|first
 condition|)
 block|{
+if|#
+directive|if
+name|_FFR_BLOCK_PROXIES
+name|size_t
+name|inplen
+decl_stmt|,
+name|cmdlen
+decl_stmt|;
+name|int
+name|idx
+decl_stmt|;
+name|char
+modifier|*
+name|http_cmd
+decl_stmt|;
+specifier|static
+name|char
+modifier|*
+name|http_cmds
+index|[]
+init|=
+block|{
+literal|"GET"
+block|,
+literal|"POST"
+block|,
+literal|"CONNECT"
+block|,
+literal|"USER"
+block|,
+name|NULL
+block|}
+decl_stmt|;
+name|inplen
+operator|=
+name|strlen
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|idx
+operator|=
+literal|0
+init|;
+operator|(
+name|http_cmd
+operator|=
+name|http_cmds
+index|[
+name|idx
+index|]
+operator|)
+operator|!=
+name|NULL
+condition|;
+name|idx
+operator|++
+control|)
+block|{
+name|cmdlen
+operator|=
+name|strlen
+argument_list|(
+name|http_cmd
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cmdlen
+operator|<
+name|inplen
+operator|&&
+name|sm_strncasecmp
+argument_list|(
+name|inp
+argument_list|,
+name|http_cmd
+argument_list|,
+name|cmdlen
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|isascii
+argument_list|(
+name|inp
+index|[
+name|cmdlen
+index|]
+argument_list|)
+operator|&&
+name|isspace
+argument_list|(
+name|inp
+index|[
+name|cmdlen
+index|]
+argument_list|)
+condition|)
+block|{
+comment|/* Open proxy, drop it */
+name|message
+argument_list|(
+literal|"421 4.7.0 %s Rejecting open proxy %s"
+argument_list|,
+name|MyHostName
+argument_list|,
+name|CurSmtpClient
+argument_list|)
+expr_stmt|;
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+literal|"%s: probable open proxy: command=%.40s"
+argument_list|,
+name|CurSmtpClient
+argument_list|,
+name|inp
+argument_list|)
+expr_stmt|;
+goto|goto
+name|doquit
+goto|;
+block|}
+block|}
+endif|#
+directive|endif
+comment|/* _FFR_BLOCK_PROXIES */
+if|#
+directive|if
+name|_FFR_ADAPTIVE_EOL
 name|char
 modifier|*
 name|p
@@ -3771,13 +4014,16 @@ name|LOG_INFO
 argument_list|,
 name|NOQID
 argument_list|,
-literal|"%.100s did not use CRLF"
+literal|"%s did not use CRLF"
 argument_list|,
 name|CurSmtpClient
 argument_list|)
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
+comment|/* _FFR_ADAPTIVE_EOL */
 name|first
 operator|=
 name|false
@@ -3785,7 +4031,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* _FFR_ADAPTIVE_EOL */
+comment|/* _FFR_BLOCK_PROXIES || _FFR_ADAPTIVE_EOL */
 comment|/* clean up end of line */
 name|fixcrlf
 argument_list|(
@@ -3818,6 +4064,8 @@ name|SM_IO_IS_READABLE
 argument_list|,
 name|NULL
 argument_list|)
+operator|>
+literal|0
 condition|)
 block|{
 if|if
@@ -4384,7 +4632,7 @@ name|LOG_INFO
 argument_list|,
 name|NOQID
 argument_list|,
-literal|"AUTH=server, relay=%.100s, authid=%.128s, mech=%.16s, bits=%d"
+literal|"AUTH=server, relay=%s, authid=%.128s, mech=%.16s, bits=%d"
 argument_list|,
 name|CurSmtpClient
 argument_list|,
@@ -5067,7 +5315,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"SMTP AUTH command (%.100s) from %.100s tempfailed (due to previous checks)"
+literal|"SMTP AUTH command (%.100s) from %s tempfailed (due to previous checks)"
 argument_list|,
 name|p
 argument_list|,
@@ -5722,7 +5970,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"SMTP STARTTLS command (%.100s) from %.100s tempfailed (due to previous checks)"
+literal|"SMTP STARTTLS command (%.100s) from %s tempfailed (due to previous checks)"
 argument_list|,
 name|p
 argument_list|,
@@ -6031,6 +6279,68 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|timedout
+operator|&&
+name|FD_SETSIZE
+operator|>
+literal|0
+operator|&&
+operator|(
+name|rfd
+operator|>=
+name|FD_SETSIZE
+operator|||
+operator|(
+name|i
+operator|==
+name|SSL_ERROR_WANT_WRITE
+operator|&&
+name|wfd
+operator|>=
+name|FD_SETSIZE
+operator|)
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|5
+condition|)
+block|{
+name|sm_syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+name|NOQID
+argument_list|,
+literal|"STARTTLS=server, error: fd %d/%d too large"
+argument_list|,
+name|rfd
+argument_list|,
+name|wfd
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|8
+condition|)
+name|tlslogerr
+argument_list|(
+literal|"server"
+argument_list|)
+expr_stmt|;
+block|}
+goto|goto
+name|tlsfail
+goto|;
+block|}
 comment|/* XXX what about SSL_pending() ? */
 if|if
 condition|(
@@ -6207,6 +6517,8 @@ literal|"server"
 argument_list|)
 expr_stmt|;
 block|}
+name|tlsfail
+label|:
 name|tls_ok_srv
 operator|=
 name|false
@@ -6728,7 +7040,7 @@ name|CurEnv
 operator|->
 name|e_id
 argument_list|,
-literal|"invalid domain name (too long) from %.100s"
+literal|"invalid domain name (too long) from %s"
 argument_list|,
 name|CurSmtpClient
 argument_list|)
@@ -6856,7 +7168,7 @@ name|CurEnv
 operator|->
 name|e_id
 argument_list|,
-literal|"invalid domain name (%.100s) from %.100s"
+literal|"invalid domain name (%s) from %.100s"
 argument_list|,
 name|p
 argument_list|,
@@ -7530,7 +7842,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"SMTP MAIL command (%.100s) from %.100s tempfailed (due to previous checks)"
+literal|"SMTP MAIL command (%.100s) from %s tempfailed (due to previous checks)"
 argument_list|,
 name|p
 argument_list|,
@@ -8910,7 +9222,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"%.100s: Possible SMTP RCPT flood, throttling."
+literal|"%s: Possible SMTP RCPT flood, throttling."
 argument_list|,
 name|CurSmtpClient
 argument_list|)
@@ -9886,7 +10198,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"SMTP %s command (%.100s) from %.100s tempfailed (due to previous checks)"
+literal|"SMTP %s command (%.100s) from %s tempfailed (due to previous checks)"
 argument_list|,
 name|vrfy
 condition|?
@@ -9934,16 +10246,29 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|vrfy
+operator|&&
 name|bitset
 argument_list|(
-name|vrfy
-condition|?
 name|PRIV_NOVRFY
-else|:
-name|PRIV_NOEXPN
 argument_list|,
 name|PrivacyFlags
 argument_list|)
+operator|)
+operator|||
+operator|(
+operator|!
+name|vrfy
+operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|SRV_OFFER_EXPN
+argument_list|,
+name|features
+argument_list|)
+operator|)
 condition|)
 block|{
 if|if
@@ -9975,7 +10300,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"%.100s: %s [rejected]"
+literal|"%s: %s [rejected]"
 argument_list|,
 name|CurSmtpClient
 argument_list|,
@@ -10035,7 +10360,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"%.100s: %s"
+literal|"%s: %s"
 argument_list|,
 name|CurSmtpClient
 argument_list|,
@@ -10379,7 +10704,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"%.100s: %s [rejected]"
+literal|"%s: %s [rejected]"
 argument_list|,
 name|CurSmtpClient
 argument_list|,
@@ -10412,7 +10737,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"SMTP ETRN command (%.100s) from %.100s tempfailed (due to previous checks)"
+literal|"SMTP ETRN command (%.100s) from %s tempfailed (due to previous checks)"
 argument_list|,
 name|p
 argument_list|,
@@ -10504,7 +10829,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"%.100s: ETRN %s"
+literal|"%s: ETRN %s"
 argument_list|,
 name|CurSmtpClient
 argument_list|,
@@ -10565,13 +10890,9 @@ name|run_work_group
 argument_list|(
 name|wgrp
 argument_list|,
-name|true
-argument_list|,
-name|false
-argument_list|,
-name|false
-argument_list|,
-name|true
+name|RWG_FORK
+operator||
+name|RWG_RUNALL
 argument_list|)
 expr_stmt|;
 if|if
@@ -10950,7 +11271,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"%.100s did not issue MAIL/EXPN/VRFY/ETRN during connection to %s"
+literal|"%s did not issue MAIL/EXPN/VRFY/ETRN during connection to %s"
 argument_list|,
 name|CurSmtpClient
 argument_list|,
@@ -10958,13 +11279,19 @@ name|d
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|PROFILING
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|93
+argument_list|,
+literal|100
+argument_list|)
+condition|)
+block|{
+comment|/* return to handle next connection */
 return|return;
-endif|#
-directive|endif
-comment|/* PROFILING */
+block|}
 name|finis
 argument_list|(
 name|true
@@ -10986,11 +11313,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|bitset
 argument_list|(
-name|PRIV_NOEXPN
+name|SRV_OFFER_EXPN
 argument_list|,
-name|PrivacyFlags
+name|features
 argument_list|)
 operator|||
 operator|!
@@ -10999,13 +11327,6 @@ argument_list|(
 name|SRV_OFFER_VERB
 argument_list|,
 name|features
-argument_list|)
-operator|||
-name|bitset
-argument_list|(
-name|PRIV_NOVERB
-argument_list|,
-name|PrivacyFlags
 argument_list|)
 condition|)
 block|{
@@ -11142,7 +11463,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"\"%s\" command from %.100s (%.100s)"
+literal|"\"%s\" command from %s (%.100s)"
 argument_list|,
 name|c
 operator|->
@@ -12789,7 +13110,7 @@ name|e
 operator|->
 name|e_id
 argument_list|,
-literal|"%.100s: possible SMTP attack: command=%.40s, count=%u"
+literal|"%s: possible SMTP attack: command=%.40s, count=%u"
 argument_list|,
 name|CurSmtpClient
 argument_list|,
@@ -15566,13 +15887,13 @@ name|TLS_Srv_Opts
 argument_list|,
 name|true
 argument_list|,
-name|SrvCERTfile
+name|SrvCertFile
 argument_list|,
-name|Srvkeyfile
+name|SrvKeyFile
 argument_list|,
-name|CACERTpath
+name|CACertPath
 argument_list|,
-name|CACERTfile
+name|CACertFile
 argument_list|,
 name|DHParams
 argument_list|)
@@ -15628,25 +15949,28 @@ block|,
 name|SRV_OFFER_VERB
 block|}
 block|,
+comment|/* FFR; not documented in 8.12 */
 block|{
 literal|'D'
 block|,
 name|SRV_OFFER_DSN
 block|}
 block|,
+comment|/* FFR; not documented in 8.12 */
 block|{
 literal|'E'
 block|,
 name|SRV_OFFER_ETRN
 block|}
 block|,
+comment|/* FFR; not documented in 8.12 */
 block|{
 literal|'L'
 block|,
 name|SRV_REQ_AUTH
 block|}
 block|,
-comment|/* not documented in 8.12 */
+comment|/* FFR; not documented in 8.12 */
 if|#
 directive|if
 name|PIPELINING
@@ -15677,6 +16001,7 @@ block|,
 name|SRV_VRFY_CLT
 block|}
 block|,
+comment|/* FFR; not documented in 8.12 */
 block|{
 literal|'S'
 block|,
@@ -15696,6 +16021,7 @@ block|,
 name|SRV_OFFER_EXPN
 block|}
 block|,
+comment|/* FFR; not documented in 8.12 */
 comment|/*	{ 'Y',	SRV_OFFER_VRFY	},	*/
 block|{
 literal|'\0'

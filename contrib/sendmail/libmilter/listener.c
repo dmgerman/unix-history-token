@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: listener.c,v 8.85.2.1 2002/08/09 22:13:36 gshapiro Exp $"
+literal|"@(#)$Id: listener.c,v 8.85.2.7 2002/12/10 04:02:25 ca Exp $"
 argument_list|)
 end_macro
 
@@ -30,6 +30,12 @@ begin_include
 include|#
 directive|include
 file|<sm/errstring.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sm/fdset.h>
 end_include
 
 begin_if
@@ -229,6 +235,43 @@ operator|->
 name|xxfi_name
 argument_list|,
 name|conn
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|smutex_unlock
+argument_list|(
+operator|&
+name|L_Mutex
+argument_list|)
+expr_stmt|;
+return|return
+name|MI_FAILURE
+return|;
+block|}
+if|if
+condition|(
+operator|!
+name|SM_FD_OK_SELECT
+argument_list|(
+name|listenfd
+argument_list|)
+condition|)
+block|{
+name|smi_log
+argument_list|(
+name|SMI_LOG_ERR
+argument_list|,
+literal|"%s: fd %d is larger than FD_SETSIZE %d"
+argument_list|,
+name|smfi
+operator|->
+name|xxfi_name
+argument_list|,
+name|listenfd
+argument_list|,
+name|FD_SETSIZE
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1805,6 +1848,9 @@ literal|"%s: can't malloc(%d) for sockpath: %s"
 argument_list|,
 name|name
 argument_list|,
+operator|(
+name|int
+operator|)
 name|len
 argument_list|,
 name|sm_errstring
@@ -2112,7 +2158,7 @@ parameter_list|(
 name|s
 parameter_list|)
 define|\
-value|{									\ 	int rs = 0;							\ 	struct timeval st;						\ 									\ 	st.tv_sec = (s);						\ 	st.tv_usec = 0;							\ 	if (st.tv_sec> 0)						\ 	{								\ 		for (;;)						\ 		{							\ 			rs = select(0, NULL, NULL, NULL,&st);		\ 			if (rs< 0&& errno == EINTR)			\ 				continue;				\ 			if (rs != 0)					\ 			{						\ 				smi_log(SMI_LOG_ERR,			\ 					"MI_SLEEP(): select() returned non-zero result %d, errno = %d",						\ 					rs, errno);			\ 			}						\ 		}							\ 	}								\ }
+value|{									\ 	int rs = 0;							\ 	struct timeval st;						\ 									\ 	st.tv_sec = (s);						\ 	st.tv_usec = 0;							\ 	if (st.tv_sec> 0)						\ 	{								\ 		for (;;)						\ 		{							\ 			rs = select(0, NULL, NULL, NULL,&st);		\ 			if (rs< 0&& errno == EINTR)			\ 				continue;				\ 			if (rs != 0)					\ 			{						\ 				smi_log(SMI_LOG_ERR,			\ 					"MI_SLEEP(): select() returned non-zero result %d, errno = %d",	\ 					rs, errno);			\ 			}						\ 			break;						\ 		}							\ 	}								\ }
 end_define
 
 begin_else
@@ -2264,41 +2310,6 @@ name|clilen
 operator|=
 name|L_socksize
 expr_stmt|;
-if|if
-condition|(
-name|listenfd
-operator|>=
-name|FD_SETSIZE
-condition|)
-block|{
-name|smi_log
-argument_list|(
-name|SMI_LOG_ERR
-argument_list|,
-literal|"%s: fd %d is larger than FD_SETSIZE %d"
-argument_list|,
-name|smfi
-operator|->
-name|xxfi_name
-argument_list|,
-name|listenfd
-argument_list|,
-name|FD_SETSIZE
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|smutex_unlock
-argument_list|(
-operator|&
-name|L_Mutex
-argument_list|)
-expr_stmt|;
-return|return
-name|MI_FAILURE
-return|;
-block|}
 operator|(
 name|void
 operator|)
@@ -2646,6 +2657,38 @@ expr_stmt|;
 name|save_errno
 operator|=
 name|EINVAL
+expr_stmt|;
+block|}
+comment|/* check if acceptable for select() */
+if|if
+condition|(
+name|ValidSocket
+argument_list|(
+name|connfd
+argument_list|)
+operator|&&
+operator|!
+name|SM_FD_OK_SELECT
+argument_list|(
+name|connfd
+argument_list|)
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|closesocket
+argument_list|(
+name|connfd
+argument_list|)
+expr_stmt|;
+name|connfd
+operator|=
+name|INVALID_SOCKET
+expr_stmt|;
+name|save_errno
+operator|=
+name|ERANGE
 expr_stmt|;
 block|}
 if|if

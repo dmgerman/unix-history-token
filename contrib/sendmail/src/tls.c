@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: tls.c,v 8.79 2002/03/21 22:24:13 gshapiro Exp $"
+literal|"@(#)$Id: tls.c,v 8.79.4.1 2002/09/03 17:31:45 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -1383,7 +1383,7 @@ value|0x00000000
 end_define
 
 begin_comment
-comment|/* none yet  */
+comment|/* none yet */
 end_comment
 
 begin_define
@@ -1394,7 +1394,7 @@ value|0x00000001
 end_define
 
 begin_comment
-comment|/* CERT file exists */
+comment|/* cert file exists */
 end_comment
 
 begin_define
@@ -1405,7 +1405,7 @@ value|0x00000002
 end_define
 
 begin_comment
-comment|/* CERT file is ok */
+comment|/* cert file is ok */
 end_comment
 
 begin_define
@@ -1416,7 +1416,7 @@ value|0x00000004
 end_define
 
 begin_comment
-comment|/* KEY file exists */
+comment|/* key file exists */
 end_comment
 
 begin_define
@@ -1427,7 +1427,7 @@ value|0x00000008
 end_define
 
 begin_comment
-comment|/* KEY file is ok */
+comment|/* key file is ok */
 end_comment
 
 begin_define
@@ -1438,7 +1438,7 @@ value|0x00000010
 end_define
 
 begin_comment
-comment|/* CA CERT PATH exists */
+comment|/* CA cert path exists */
 end_comment
 
 begin_define
@@ -1449,7 +1449,7 @@ value|0x00000020
 end_define
 
 begin_comment
-comment|/* CA CERT PATH is ok */
+comment|/* CA cert path is ok */
 end_comment
 
 begin_define
@@ -1460,7 +1460,7 @@ value|0x00000040
 end_define
 
 begin_comment
-comment|/* CA CERT FILE exists */
+comment|/* CA cert file exists */
 end_comment
 
 begin_define
@@ -1471,7 +1471,7 @@ value|0x00000080
 end_define
 
 begin_comment
-comment|/* CA CERT FILE is ok */
+comment|/* CA cert file is ok */
 end_comment
 
 begin_if
@@ -1488,7 +1488,7 @@ value|0x00001000
 end_define
 
 begin_comment
-comment|/* 2nd CERT file exists */
+comment|/* 2nd cert file exists */
 end_comment
 
 begin_define
@@ -1499,7 +1499,7 @@ value|0x00002000
 end_define
 
 begin_comment
-comment|/* 2nd CERT file is ok */
+comment|/* 2nd cert file is ok */
 end_comment
 
 begin_define
@@ -1510,7 +1510,7 @@ value|0x00004000
 end_define
 
 begin_comment
-comment|/* 2nd KEY file exists */
+comment|/* 2nd key file exists */
 end_comment
 
 begin_define
@@ -1521,7 +1521,7 @@ value|0x00008000
 end_define
 
 begin_comment
-comment|/* 2nd KEY file is ok */
+comment|/* 2nd key file is ok */
 end_comment
 
 begin_endif
@@ -2069,7 +2069,7 @@ name|TLS_OK_F
 argument_list|(
 name|cacertpath
 argument_list|,
-literal|"CACERTPath"
+literal|"CACertPath"
 argument_list|,
 name|bitset
 argument_list|(
@@ -2087,7 +2087,7 @@ name|TLS_OK_F
 argument_list|(
 name|cacertfile
 argument_list|,
-literal|"CACERTFile"
+literal|"CACertFile"
 argument_list|,
 name|bitset
 argument_list|(

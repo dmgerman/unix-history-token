@@ -23,7 +23,7 @@ name|SM_IDSTR
 argument_list|(
 argument|id
 argument_list|,
-literal|"@(#)$Id: vacation.c,v 8.137.2.1 2002/08/15 16:23:08 gshapiro Exp $"
+literal|"@(#)$Id: vacation.c,v 8.137.2.2 2002/11/01 16:48:55 ca Exp $"
 argument_list|)
 end_macro
 
@@ -4345,19 +4345,16 @@ decl_stmt|;
 comment|/* skip magic VIT entry */
 if|if
 condition|(
-operator|(
-name|int
-operator|)
 name|db_key
 operator|.
 name|size
-operator|-
-literal|1
 operator|==
 name|strlen
 argument_list|(
 name|VIT
 argument_list|)
+operator|+
+literal|1
 operator|&&
 name|strncmp
 argument_list|(

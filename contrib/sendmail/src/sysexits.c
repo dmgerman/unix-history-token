@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: sysexits.c,v 8.33 2001/09/11 04:05:17 gshapiro Exp $"
+literal|"@(#)$Id: sysexits.c,v 8.33.4.1 2002/09/09 02:42:37 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -56,6 +56,17 @@ literal|'4'
 condition|)
 return|return
 name|EX_TEMPFAIL
+return|;
+comment|/* reject other illegal values */
+if|if
+condition|(
+operator|*
+name|dsncode
+operator|!=
+literal|'5'
+condition|)
+return|return
+name|EX_CONFIG
 return|;
 comment|/* now decode the other two field parts */
 if|if
@@ -181,8 +192,9 @@ case|case
 literal|5
 case|:
 comment|/* Destination address valid */
+comment|/* According to RFC1893, this can't happen */
 return|return
-name|EX_OK
+name|EX_CONFIG
 return|;
 block|}
 break|break;
@@ -314,7 +326,7 @@ name|EX_DATAERR
 return|;
 block|}
 return|return
-name|EX_CONFIG
+name|EX_UNAVAILABLE
 return|;
 block|}
 end_function

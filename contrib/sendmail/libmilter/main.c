@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: main.c,v 8.64 2002/06/04 02:32:32 geir Exp $"
+literal|"@(#)$Id: main.c,v 8.64.2.8 2002/12/18 23:13:45 ca Exp $"
 argument_list|)
 end_macro
 
@@ -293,7 +293,7 @@ name|_FFR_SMFI_OPENSOCKET
 end_if
 
 begin_comment
-comment|/* **  SMFI_OPENSOCKET -- try the socket setup to make sure we'll be **                     able to start up ** **  	Parameters: **  		None. ** **  	Return: **  		MI_SUCCESS/MI_FAILURE */
+comment|/* **  SMFI_OPENSOCKET -- try the socket setup to make sure we'll be **		able to start up ** **	Parameters: **		None. ** **	Return: **		MI_SUCCESS/MI_FAILURE */
 end_comment
 
 begin_function

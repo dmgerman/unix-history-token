@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: usersmtp.c,v 8.437.2.5 2002/08/16 16:48:11 ca Exp $"
+literal|"@(#)$Id: usersmtp.c,v 8.437.2.8 2002/12/12 17:40:07 ca Exp $"
 argument_list|)
 end_macro
 
@@ -485,6 +485,11 @@ name|mci_state
 operator|=
 name|MCIS_OPENING
 expr_stmt|;
+name|clrsessenvelope
+argument_list|(
+name|e
+argument_list|)
+expr_stmt|;
 comment|/* 	**  Get the greeting message. 	**	This should appear spontaneously.  Give it five minutes to 	**	happen. 	*/
 name|SmtpPhase
 operator|=
@@ -950,13 +955,15 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* 	**  If this is expected to be another sendmail, send some internal 	**  commands. 	*/
+if|if
+condition|(
+name|false
 if|#
 directive|if
 operator|!
 name|_FFR_DEPRECATE_MAILER_FLAG_I
-comment|/* 	**  If this is expected to be another sendmail, send some internal 	**  commands. 	*/
-if|if
-condition|(
+operator|||
 name|bitnset
 argument_list|(
 name|M_INTERNAL
@@ -965,6 +972,31 @@ name|m
 operator|->
 name|m_flags
 argument_list|)
+endif|#
+directive|endif
+comment|/* !_FFR_DEPRECATE_MAILER_FLAG_I */
+if|#
+directive|if
+name|_FFR_MSP_VERBOSE
+comment|/* If we're running as MSP, "propagate" -v flag if possible. */
+operator|||
+operator|(
+name|UseMSP
+operator|&&
+name|Verbose
+operator|&&
+name|bitset
+argument_list|(
+name|MCIF_VERB
+argument_list|,
+name|mci
+operator|->
+name|mci_flags
+argument_list|)
+operator|)
+endif|#
+directive|endif
+comment|/* _FFR_MSP_VERBOSE */
 condition|)
 block|{
 comment|/* tell it to be verbose */
@@ -1007,9 +1039,6 @@ goto|goto
 name|tempfail1
 goto|;
 block|}
-endif|#
-directive|endif
-comment|/* !_FFR_DEPRECATE_MAILER_FLAG_I */
 if|if
 condition|(
 name|mci
@@ -1837,6 +1866,24 @@ operator|->
 name|mci_flags
 operator||=
 name|MCIF_PIPELINED
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|sm_strcasecmp
+argument_list|(
+name|line
+argument_list|,
+literal|"verb"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|mci
+operator|->
+name|mci_flags
+operator||=
+name|MCIF_VERB
 expr_stmt|;
 if|#
 directive|if
@@ -9458,6 +9505,8 @@ name|SM_IO_IS_READABLE
 argument_list|,
 name|NULL
 argument_list|)
+operator|>
+literal|0
 condition|)
 block|{
 name|int
@@ -11104,6 +11153,8 @@ name|SM_IO_IS_READABLE
 argument_list|,
 name|NULL
 argument_list|)
+operator|>
+literal|0
 condition|)
 block|{
 comment|/* terminate the message */

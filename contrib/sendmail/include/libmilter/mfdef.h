@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: mfdef.h,v 8.11 2001/09/12 18:02:19 gshapiro Exp $  */
+comment|/*  * Copyright (c) 1999-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: mfdef.h,v 8.11.2.1 2002/11/11 23:22:28 ca Exp $  */
 end_comment
 
 begin_comment
@@ -425,6 +425,32 @@ end_define
 
 begin_comment
 comment|/* tempfail */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|_FFR_MILTER_421
+end_if
+
+begin_define
+define|#
+directive|define
+name|SMFIR_SHUTDOWN
+value|'4'
+end_define
+
+begin_comment
+comment|/* 421: shutdown (internal to MTA) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_MILTER_421 */
 end_comment
 
 begin_define

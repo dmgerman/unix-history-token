@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: mbdb.c,v 1.38 2002/04/05 22:59:56 gshapiro Exp $"
+literal|"@(#)$Id: mbdb.c,v 1.38.2.1 2002/11/20 22:59:06 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -50,6 +50,12 @@ begin_include
 include|#
 directive|include
 file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -1683,21 +1689,6 @@ operator|=
 name|new
 expr_stmt|;
 block|}
-comment|/* No connection yet, connect */
-if|if
-condition|(
-operator|!
-name|sm_ldap_start
-argument_list|(
-name|MBDB_LDAP_LABEL
-argument_list|,
-operator|&
-name|LDAPLMAP
-argument_list|)
-condition|)
-return|return
-name|EX_UNAVAILABLE
-return|;
 return|return
 name|EX_OK
 return|;
@@ -1827,6 +1818,24 @@ expr_stmt|;
 return|return
 name|EX_TEMPFAIL
 return|;
+block|}
+if|if
+condition|(
+name|LDAPLMAP
+operator|.
+name|ldap_pid
+operator|!=
+name|getpid
+argument_list|()
+condition|)
+block|{
+comment|/* re-open map in this child process */
+name|LDAPLMAP
+operator|.
+name|ldap_ld
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 if|if
 condition|(

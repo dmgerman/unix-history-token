@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: signal.c,v 8.37 2002/03/23 00:55:19 ca Exp $"
+literal|"@(#)$Id: signal.c,v 8.37.2.2 2002/10/23 16:52:00 ca Exp $"
 argument_list|)
 end_macro
 
@@ -241,6 +241,14 @@ endif|#
 directive|endif
 comment|/* defined(SOLARIS) || defined(__svr5__) */
 block|{
+comment|/* this can happen on OSF/1 (at least) */
+if|if
+condition|(
+name|errno
+operator|==
+name|EINTR
+condition|)
+continue|continue;
 name|smi_log
 argument_list|(
 name|SMI_LOG_ERR

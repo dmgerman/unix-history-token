@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: engine.c,v 8.109.2.1 2002/07/29 16:40:47 ca Exp $"
+literal|"@(#)$Id: engine.c,v 8.109.2.4 2002/12/03 17:27:32 ca Exp $"
 argument_list|)
 end_macro
 
@@ -763,7 +763,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MASK
+name|MI_MASK
 parameter_list|(
 name|x
 parameter_list|)
@@ -778,70 +778,70 @@ begin_define
 define|#
 directive|define
 name|NX_INIT
-value|(MASK(ST_OPTS))
+value|(MI_MASK(ST_OPTS))
 end_define
 
 begin_define
 define|#
 directive|define
 name|NX_OPTS
-value|(MASK(ST_CONN))
+value|(MI_MASK(ST_CONN))
 end_define
 
 begin_define
 define|#
 directive|define
 name|NX_CONN
-value|(MASK(ST_HELO) | MASK(ST_MAIL))
+value|(MI_MASK(ST_HELO) | MI_MASK(ST_MAIL))
 end_define
 
 begin_define
 define|#
 directive|define
 name|NX_HELO
-value|(MASK(ST_HELO) | MASK(ST_MAIL))
+value|(MI_MASK(ST_HELO) | MI_MASK(ST_MAIL))
 end_define
 
 begin_define
 define|#
 directive|define
 name|NX_MAIL
-value|(MASK(ST_RCPT) | MASK(ST_ABRT))
+value|(MI_MASK(ST_RCPT) | MI_MASK(ST_ABRT))
 end_define
 
 begin_define
 define|#
 directive|define
 name|NX_RCPT
-value|(MASK(ST_HDRS) | MASK(ST_EOHS) | \ 		 MASK(ST_BODY) | MASK(ST_ENDM) | \ 		 MASK(ST_RCPT) | MASK(ST_ABRT))
+value|(MI_MASK(ST_HDRS) | MI_MASK(ST_EOHS) | \ 		 MI_MASK(ST_BODY) | MI_MASK(ST_ENDM) | \ 		 MI_MASK(ST_RCPT) | MI_MASK(ST_ABRT))
 end_define
 
 begin_define
 define|#
 directive|define
 name|NX_HDRS
-value|(MASK(ST_EOHS) | MASK(ST_HDRS) | MASK(ST_ABRT))
+value|(MI_MASK(ST_EOHS) | MI_MASK(ST_HDRS) | MI_MASK(ST_ABRT))
 end_define
 
 begin_define
 define|#
 directive|define
 name|NX_EOHS
-value|(MASK(ST_BODY) | MASK(ST_ENDM) | MASK(ST_ABRT))
+value|(MI_MASK(ST_BODY) | MI_MASK(ST_ENDM) | MI_MASK(ST_ABRT))
 end_define
 
 begin_define
 define|#
 directive|define
 name|NX_BODY
-value|(MASK(ST_ENDM) | MASK(ST_BODY) | MASK(ST_ABRT))
+value|(MI_MASK(ST_ENDM) | MI_MASK(ST_BODY) | MI_MASK(ST_ABRT))
 end_define
 
 begin_define
 define|#
 directive|define
 name|NX_ENDM
-value|(MASK(ST_QUIT) | MASK(ST_MAIL))
+value|(MI_MASK(ST_QUIT) | MI_MASK(ST_MAIL))
 end_define
 
 begin_define
@@ -862,7 +862,7 @@ begin_define
 define|#
 directive|define
 name|NX_SKIP
-value|MASK(ST_SKIP)
+value|MI_MASK(ST_SKIP)
 end_define
 
 begin_decl_stmt
@@ -1419,6 +1419,9 @@ name|ctx_id
 argument_list|,
 name|cmd
 argument_list|,
+operator|(
+name|int
+operator|)
 name|len
 argument_list|)
 expr_stmt|;
@@ -1605,14 +1608,14 @@ name|ctx_id
 argument_list|,
 name|curstate
 argument_list|,
-name|MASK
+name|MI_MASK
 argument_list|(
 name|curstate
 argument_list|)
 argument_list|,
 name|newstate
 argument_list|,
-name|MASK
+name|MI_MASK
 argument_list|(
 name|newstate
 argument_list|)
@@ -2501,6 +2504,9 @@ name|a_ctx
 operator|->
 name|ctx_id
 argument_list|,
+operator|(
+name|int
+operator|)
 name|g
 operator|->
 name|a_len
@@ -3045,8 +3051,14 @@ name|a_ctx
 operator|->
 name|ctx_id
 argument_list|,
+operator|(
+name|int
+operator|)
 name|i
 argument_list|,
+operator|(
+name|int
+operator|)
 name|l
 argument_list|)
 expr_stmt|;
@@ -4399,7 +4411,7 @@ comment|/* is this state transition allowed? */
 if|if
 condition|(
 operator|(
-name|MASK
+name|MI_MASK
 argument_list|(
 name|new
 argument_list|)

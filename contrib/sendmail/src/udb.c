@@ -18,7 +18,7 @@ end_if
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: udb.c,v 8.153 2001/09/11 04:05:17 gshapiro Exp $ (with USERDB)"
+literal|"@(#)$Id: udb.c,v 8.153.4.4 2002/12/03 17:57:41 gshapiro Exp $ (with USERDB)"
 argument_list|)
 end_macro
 
@@ -34,7 +34,7 @@ end_comment
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: udb.c,v 8.153 2001/09/11 04:05:17 gshapiro Exp $ (without USERDB)"
+literal|"@(#)$Id: udb.c,v 8.153.4.4 2002/12/03 17:57:41 gshapiro Exp $ (without USERDB)"
 argument_list|)
 end_macro
 
@@ -62,30 +62,8 @@ end_if
 begin_include
 include|#
 directive|include
-file|<db.h>
+file|"sm/bdb.h"
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|DB_VERSION_MAJOR
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|DB_VERSION_MAJOR
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! DB_VERSION_MAJOR */
-end_comment
 
 begin_else
 else|#
@@ -707,15 +685,9 @@ index|]
 decl_stmt|;
 if|#
 directive|if
-name|defined
-argument_list|(
 name|HESIOD
-argument_list|)
 operator|&&
-name|defined
-argument_list|(
 name|HES_GETMAILHOST
-argument_list|)
 name|char
 name|pobuf
 index|[
@@ -724,7 +696,7 @@ index|]
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* defined(HESIOD)&& defined(HES_GETMAILHOST) */
+comment|/* HESIOD&& HES_GETMAILHOST */
 if|#
 directive|if
 name|defined
@@ -4486,22 +4458,11 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* DB_VERSION_MAJOR> 2 */
-if|#
-directive|if
-operator|!
-name|HASFLOCK
-operator|&&
-name|defined
+name|SM_DB_FLAG_ADD
 argument_list|(
-name|DB_FCNTL_LOCKING
-argument_list|)
 name|flags
-operator||=
-name|DB_FCNTL_LOCKING
+argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* !HASFLOCK&& defined(DB_FCNTL_LOCKING) */
 name|up
 operator|->
 name|udb_dbp
@@ -4567,19 +4528,15 @@ name|udb_dbp
 operator|->
 name|open
 argument_list|(
-name|up
-operator|->
-name|udb_dbp
+argument|up->udb_dbp
 argument_list|,
-name|up
-operator|->
-name|udb_dbname
+argument|DBTXN 								up->udb_dbname
 argument_list|,
-name|NULL
+argument|NULL
 argument_list|,
-name|DB_BTREE
+argument|DB_BTREE
 argument_list|,
-name|flags
+argument|flags
 argument_list|,
 literal|0644
 argument_list|)

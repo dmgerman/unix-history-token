@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: conf.h,v 1.90.2.4 2002/08/26 22:58:37 gshapiro Exp $  */
+comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: conf.h,v 1.90.2.13 2002/12/10 03:08:56 ca Exp $  */
 end_comment
 
 begin_comment
@@ -1624,6 +1624,41 @@ directive|define
 name|SYSLOG_BUFSIZE
 value|512
 end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_SC_NPROC_ONLN
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_SC_NPROCESSORS_ONLN
+argument_list|)
+end_if
+
+begin_comment
+comment|/* _SC_NPROC_ONLN is 'mpadmin -u', total # of unrestricted processors */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_SC_NPROCESSORS_ONLN
+value|_SC_NPROC_ONLN
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* if defined(_SC_NPROC_ONLN)&& !defined(_SC_NPROCESSORS_ONLN) */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -4560,7 +4595,7 @@ comment|/* NeXT */
 end_comment
 
 begin_comment
-comment|/* **  Apple Rhapsody **	Contributed by Wilfredo Sanchez<wsanchez@apple.com> ** **	Also used for Apple Darwin support. */
+comment|/* **  Apple Darwin (aka Rhapsody) ** **      Contributed by Wilfredo Sanchez<wsanchez@mit.edu> */
 end_comment
 
 begin_if
@@ -4580,7 +4615,18 @@ value|1
 end_define
 
 begin_comment
-comment|/* has fchmod(2) syscall */
+comment|/* has fchmod(2) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASFCHOWN
+value|1
+end_define
+
+begin_comment
+comment|/* has fchown(2) */
 end_comment
 
 begin_define
@@ -4591,7 +4637,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* has flock(2) syscall */
+comment|/* has flock(2) */
 end_comment
 
 begin_define
@@ -4602,7 +4648,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* has uname(2) syscall */
+comment|/* has uname(2) */
 end_comment
 
 begin_define
@@ -4612,6 +4658,10 @@ name|HASUNSETENV
 value|1
 end_define
 
+begin_comment
+comment|/* has unsetenv(3) */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -4620,7 +4670,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* has the setsid(2) POSIX syscall */
+comment|/* has the setsid(2) */
 end_comment
 
 begin_define
@@ -4630,12 +4680,20 @@ name|HASINITGROUPS
 value|1
 end_define
 
+begin_comment
+comment|/* has initgroups(3) */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|HASSETVBUF
 value|1
 end_define
+
+begin_comment
+comment|/* has setvbuf (3) */
+end_comment
 
 begin_define
 define|#
@@ -4644,12 +4702,20 @@ name|HASSETREUID
 value|0
 end_define
 
+begin_comment
+comment|/* setreuid(2) unusable */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|HASSETEUID
 value|1
 end_define
+
+begin_comment
+comment|/* has seteuid(2) */
+end_comment
 
 begin_define
 define|#
@@ -4659,7 +4725,40 @@ value|1
 end_define
 
 begin_comment
-comment|/* has usable seteuid(2) call */
+comment|/* has seteuid(2) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSETEGID
+value|1
+end_define
+
+begin_comment
+comment|/* has setegid(2) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSETREGID
+value|1
+end_define
+
+begin_comment
+comment|/* has setregid(2) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSETRESGID
+value|0
+end_define
+
+begin_comment
+comment|/* no setresgid(2) */
 end_comment
 
 begin_define
@@ -4669,6 +4768,10 @@ name|HASLSTAT
 value|1
 end_define
 
+begin_comment
+comment|/* has lstat(2) */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -4676,12 +4779,53 @@ name|HASSETRLIMIT
 value|1
 end_define
 
+begin_comment
+comment|/* has setrlimit(2) */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|HASWAITPID
 value|1
 end_define
+
+begin_comment
+comment|/* has waitpid(2) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASGETDTABLESIZE
+value|1
+end_define
+
+begin_comment
+comment|/* has getdtablesize(2) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAS_ST_GEN
+value|1
+end_define
+
+begin_comment
+comment|/* has st_gen field in struct stat */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASURANDOMDEV
+value|1
+end_define
+
+begin_comment
+comment|/* has urandom(4) */
+end_comment
 
 begin_define
 define|#
@@ -4697,65 +4841,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HASGETDTABLESIZE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
 name|HASGETUSERSHELL
 value|1
 end_define
 
-begin_define
-define|#
-directive|define
-name|HAS_IN_H
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|SM_CONF_GETOPT
-value|0
-end_define
-
 begin_comment
-comment|/* need a replacement for getopt(3) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BSD4_4_SOCKADDR
-end_define
-
-begin_comment
-comment|/* has sa_len */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NETLINK
-value|1
-end_define
-
-begin_comment
-comment|/* supports AF_LINK */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HAS_ST_GEN
-value|1
-end_define
-
-begin_comment
-comment|/* has st_gen field in stat struct */
+comment|/* had getusershell(3) */
 end_comment
 
 begin_define
@@ -4764,6 +4855,10 @@ directive|define
 name|GIDSET_T
 value|gid_t
 end_define
+
+begin_comment
+comment|/* getgroups(2) takes gid_t */
+end_comment
 
 begin_define
 define|#
@@ -4794,15 +4889,8 @@ name|SPT_TYPE
 value|SPT_PSSTRINGS
 end_define
 
-begin_define
-define|#
-directive|define
-name|SPT_PADCHAR
-value|'\0'
-end_define
-
 begin_comment
-comment|/* pad process title with nulls */
+comment|/* use magic PS_STRINGS pointer for setproctitle */
 end_comment
 
 begin_define
@@ -4813,6 +4901,45 @@ end_define
 
 begin_comment
 comment|/* don't declare sys_errlist */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BSD4_4_SOCKADDR
+end_define
+
+begin_comment
+comment|/* struct sockaddr has sa_len */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SAFENFSPATHCONF
+value|0
+end_define
+
+begin_comment
+comment|/* unverified: pathconf(2) doesn't work on NFS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAS_IN_H
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|NETLINK
+value|1
+end_define
+
+begin_comment
+comment|/* supports AF_LINK */
 end_comment
 
 begin_ifndef
@@ -8686,7 +8813,7 @@ comment|/* RISCOS */
 end_comment
 
 begin_comment
-comment|/* **  Linux 0.99pl10 and above... ** **  Thanks to, in reverse order of contact: ** **	John Kennedy<warlock@csuchico.edu> **	Andrew Pam<avatar@aus.xanadu.com> **	Florian La Roche<rzsfl@rz.uni-sb.de> **	Karl London<karl@borg.demon.co.uk> ** **  Last compiled against:	[07/21/98 @ 11:47:34 AM (Tuesday)] **	sendmail 8.9.1		bind-8.1.2		db-2.4.14 **	gcc-2.8.1		glibc-2.0.94		linux-2.1.109 ** **  NOTE: Override HASFLOCK as you will but, as of 1.99.6, mixed-style **	file locking is no longer allowed.  In particular, make sure **	your DBM library and sendmail are both using either flock(2) **	*or* fcntl(2) file locking, but not both. */
+comment|/* **  Linux 0.99pl10 and above... ** **  Thanks to, in reverse order of contact: ** **	John Kennedy<warlock@csuchico.edu> **	Andrew Pam<avatar@aus.xanadu.com> **	Florian La Roche<rzsfl@rz.uni-sb.de> **	Karl London<karl@borg.demon.co.uk> ** **  NOTE: Override HASFLOCK as you will but, as of 1.99.6, mixed-style **	file locking is no longer allowed.  In particular, make sure **	your DBM library and sendmail are both using either flock(2) **	*or* fcntl(2) file locking, but not both. */
 end_comment
 
 begin_ifdef
@@ -8810,17 +8937,6 @@ end_endif
 
 begin_comment
 comment|/* USESETEUID */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SM_CONF_GETOPT
-value|0
-end_define
-
-begin_comment
-comment|/* need a replacement for getopt(3) */
 end_comment
 
 begin_define
@@ -14093,6 +14209,103 @@ comment|/* MOTO */
 end_comment
 
 begin_comment
+comment|/* **  Interix **	Contributed by Nedelcho Stanev<nedelcho.stanev@atlanticsky.com> ** **	Used for Interix support. */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__INTERIX
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HASURANDOMDEV
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HASGETUSERSHELL
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|HASSTRERROR
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HASUNSETENV
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HASFCHOWN
+value|1
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_SYS_ERRLIST
+end_undef
+
+begin_define
+define|#
+directive|define
+name|sys_errlist
+value|__sys_errlist
+end_define
+
+begin_define
+define|#
+directive|define
+name|sys_nerr
+value|__sys_nerr
+end_define
+
+begin_define
+define|#
+directive|define
+name|major
+parameter_list|(
+name|dev
+parameter_list|)
+value|((int)(((dev)>> 8)& 0xff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|minor
+parameter_list|(
+name|dev
+parameter_list|)
+value|((int)((dev)& 0xff)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(__INTERIX) */
+end_comment
+
+begin_comment
 comment|/********************************************************************** **  End of Per-Operating System defines **********************************************************************/
 end_comment
 
@@ -16990,6 +17203,32 @@ end_endif
 
 begin_comment
 comment|/* ! SYSLOG_BUFSIZE */
+end_comment
+
+begin_comment
+comment|/* for FD_SET() */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|FD_SETSIZE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|FD_SETSIZE
+value|256
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ! FD_SETSIZE */
 end_comment
 
 begin_comment

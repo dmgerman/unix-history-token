@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: queue.c,v 8.863.2.6 2002/08/16 16:27:37 gshapiro Exp $"
+literal|"@(#)$Id: queue.c,v 8.863.2.22 2002/12/19 18:00:39 ca Exp $"
 argument_list|)
 end_macro
 
@@ -61,7 +61,7 @@ value|(st).st_ino
 end_define
 
 begin_comment
-comment|/* **  Historical notes: **	QF_VERSION==4 was sendmail 8.10/8.11 without _FFR_QUEUEDELAY **	QF_VERSION==5 was sendmail 8.10/8.11 with    _FFR_QUEUEDELAY */
+comment|/* **  Historical notes: **     QF_VERSION == 4 was sendmail 8.10/8.11 without _FFR_QUEUEDELAY **     QF_VERSION == 5 was sendmail 8.10/8.11 with    _FFR_QUEUEDELAY **     QF_VERSION == 6 is  sendmail 8.12      without _FFR_QUEUEDELAY **     QF_VERSION == 7 is  sendmail 8.12      with    _FFR_QUEUEDELAY */
 end_comment
 
 begin_if
@@ -708,6 +708,19 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|static
+name|int
+name|randi
+init|=
+literal|3
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* index for workcmpf5() */
+end_comment
+
 begin_function_decl
 specifier|static
 name|int
@@ -938,6 +951,13 @@ end_decl_stmt
 begin_comment
 comment|/* pointer to shared queue data */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|size_t
+name|shms
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -5179,13 +5199,11 @@ name|run_work_group
 argument_list|(
 name|wgrp
 argument_list|,
-name|true
-argument_list|,
-name|false
-argument_list|,
-name|true
-argument_list|,
-name|true
+name|RWG_FORK
+operator||
+name|RWG_PERSISTENT
+operator||
+name|RWG_RUNALL
 argument_list|)
 expr_stmt|;
 block|}
@@ -5999,6 +6017,11 @@ name|i
 operator|++
 control|)
 block|{
+name|int
+name|rwgflags
+init|=
+name|RWG_NONE
+decl_stmt|;
 comment|/* 		**  If MaxQueueChildren active then test whether the start 		**  of the next queue group's additional queue runners (maximum) 		**  will result in MaxQueueChildren being exceeded. 		** 		**  Note: do not use continue; even though another workgroup 		**	may have fewer queue runners, this would be "unfair", 		**	i.e., this work group might "starve" then. 		*/
 if|#
 directive|if
@@ -6065,19 +6088,45 @@ index|]
 operator|.
 name|wg_maxact
 expr_stmt|;
+if|if
+condition|(
+name|forkflag
+condition|)
+name|rwgflags
+operator||=
+name|RWG_FORK
+expr_stmt|;
+if|if
+condition|(
+name|verbose
+condition|)
+name|rwgflags
+operator||=
+name|RWG_VERBOSE
+expr_stmt|;
+if|if
+condition|(
+name|persistent
+condition|)
+name|rwgflags
+operator||=
+name|RWG_PERSISTENT
+expr_stmt|;
+if|if
+condition|(
+name|runall
+condition|)
+name|rwgflags
+operator||=
+name|RWG_RUNALL
+expr_stmt|;
 name|ret
 operator|=
 name|run_work_group
 argument_list|(
 name|curnum
 argument_list|,
-name|forkflag
-argument_list|,
-name|verbose
-argument_list|,
-name|persistent
-argument_list|,
-name|runall
+name|rwgflags
 argument_list|)
 expr_stmt|;
 comment|/* 		**  Failure means a message was printed for ETRN 		**  and subsequent queues are likely to fail as well. 		**  Decrement CurRunners in that case because 		**  none have been started. 		*/
@@ -6707,7 +6756,7 @@ name|w_name
 operator|+
 literal|2
 argument_list|,
-name|false
+name|ForkQueueRuns
 argument_list|,
 name|false
 argument_list|,
@@ -6827,7 +6876,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* **  RUN_WORK_GROUP -- run the jobs in a queue group from a work group. ** **	Gets the stuff out of the queue in some presumably logical **	order and processes them. ** **	Parameters: **		wgrp -- work group to process. **		forkflag -- true if the queue scanning should be done in **			a child process.  We double-fork so it is not our **			child and we don't have to clean up after it. **		verbose -- if true, print out status information. **		persistent -- persistent queue runner? **		runall -- true: run all of the queue groups in this work group ** **	Returns: **		true if the queue run successfully began. ** **	Side Effects: **		runs things in the mail queue. */
+comment|/* **  RUN_WORK_GROUP -- run the jobs in a queue group from a work group. ** **	Gets the stuff out of the queue in some presumably logical **	order and processes them. ** **	Parameters: **		wgrp -- work group to process. **		flags -- RWG_* flags ** **	Returns: **		true if the queue run successfully began. ** **	Side Effects: **		runs things in the mail queue. */
 end_comment
 
 begin_comment
@@ -6847,28 +6896,13 @@ name|run_work_group
 parameter_list|(
 name|wgrp
 parameter_list|,
-name|forkflag
-parameter_list|,
-name|verbose
-parameter_list|,
-name|persistent
-parameter_list|,
-name|runall
+name|flags
 parameter_list|)
 name|int
 name|wgrp
 decl_stmt|;
-name|bool
-name|forkflag
-decl_stmt|;
-name|bool
-name|verbose
-decl_stmt|;
-name|bool
-name|persistent
-decl_stmt|;
-name|bool
-name|runall
+name|int
+name|flags
 decl_stmt|;
 block|{
 specifier|register
@@ -6955,7 +6989,12 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|persistent
+name|bitset
+argument_list|(
+name|RWG_PERSISTENT
+argument_list|,
+name|flags
+argument_list|)
 operator|&&
 name|shouldqueue
 argument_list|(
@@ -6973,7 +7012,12 @@ literal|"Skipping queue run -- load average too high"
 decl_stmt|;
 if|if
 condition|(
-name|verbose
+name|bitset
+argument_list|(
+name|RWG_VERBOSE
+argument_list|,
+name|flags
+argument_list|)
 condition|)
 name|message
 argument_list|(
@@ -7006,7 +7050,12 @@ block|}
 comment|/* 	**  See if we already have too many children. 	*/
 if|if
 condition|(
-name|forkflag
+name|bitset
+argument_list|(
+name|RWG_FORK
+argument_list|,
+name|flags
+argument_list|)
 operator|&&
 name|WorkGrp
 index|[
@@ -7018,7 +7067,12 @@ operator|>
 literal|0
 operator|&&
 operator|!
-name|persistent
+name|bitset
+argument_list|(
+name|RWG_PERSISTENT
+argument_list|,
+name|flags
+argument_list|)
 operator|&&
 name|MaxChildren
 operator|>
@@ -7037,7 +7091,12 @@ literal|"Skipping queue run -- too many children"
 decl_stmt|;
 if|if
 condition|(
-name|verbose
+name|bitset
+argument_list|(
+name|RWG_VERBOSE
+argument_list|,
+name|flags
+argument_list|)
 condition|)
 name|message
 argument_list|(
@@ -7074,7 +7133,12 @@ block|}
 comment|/* 	**  See if we want to go off and do other useful work. 	*/
 if|if
 condition|(
-name|forkflag
+name|bitset
+argument_list|(
+name|RWG_FORK
+argument_list|,
+name|flags
+argument_list|)
 condition|)
 block|{
 name|pid_t
@@ -7130,7 +7194,12 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-name|verbose
+name|bitset
+argument_list|(
+name|RWG_VERBOSE
+argument_list|,
+name|flags
+argument_list|)
 condition|)
 name|message
 argument_list|(
@@ -7204,7 +7273,12 @@ index|]
 operator|.
 name|wg_maxact
 argument_list|,
-name|persistent
+name|bitset
+argument_list|(
+name|RWG_PERSISTENT
+argument_list|,
+name|flags
+argument_list|)
 condition|?
 name|wgrp
 else|:
@@ -7391,7 +7465,12 @@ expr_stmt|;
 comment|/* make sure we have disconnected from parent */
 if|if
 condition|(
-name|forkflag
+name|bitset
+argument_list|(
+name|RWG_FORK
+argument_list|,
+name|flags
+argument_list|)
 condition|)
 block|{
 name|disconnect
@@ -7454,7 +7533,7 @@ expr_stmt|;
 comment|/* to not spin endlessly */
 name|domorework
 label|:
-comment|/* 	**  Run a queue group if: 	**  runall is set or the bit for this group is set. 	*/
+comment|/* 	**  Run a queue group if: 	**  RWG_RUNALL bit is set or the bit for this group is set. 	*/
 name|now
 operator|=
 name|curtime
@@ -7512,7 +7591,12 @@ expr_stmt|;
 comment|/* wrap */
 if|if
 condition|(
-name|runall
+name|bitset
+argument_list|(
+name|RWG_RUNALL
+argument_list|,
+name|flags
+argument_list|)
 operator|||
 operator|(
 name|Queue
@@ -7559,7 +7643,12 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
-name|forkflag
+name|bitset
+argument_list|(
+name|RWG_FORK
+argument_list|,
+name|flags
+argument_list|)
 condition|)
 name|finis
 argument_list|(
@@ -7718,7 +7807,12 @@ name|int
 operator|)
 name|CurrentPid
 argument_list|,
-name|forkflag
+name|bitset
+argument_list|(
+name|RWG_FORK
+argument_list|,
+name|flags
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	**  Start making passes through the queue. 	**	First, read and sort the entire queue. 	**	Then, process the work in that order. 	**		But if you take too long, start over. 	*/
@@ -7900,55 +7994,6 @@ name|loop
 operator|++
 control|)
 block|{
-if|#
-directive|if
-name|_FFR_NONSTOP_PERSISTENCE
-comment|/* 			**  Require a free "slot" before processing 			**  this queue runner. 			*/
-while|while
-condition|(
-name|MaxQueueChildren
-operator|>
-literal|0
-operator|&&
-name|CurChildren
-operator|>
-name|MaxQueueChildren
-condition|)
-block|{
-name|int
-name|status
-decl_stmt|;
-name|pid_t
-name|ret
-decl_stmt|;
-while|while
-condition|(
-operator|(
-name|ret
-operator|=
-name|sm_wait
-argument_list|(
-operator|&
-name|status
-argument_list|)
-operator|)
-operator|<=
-literal|0
-condition|)
-continue|continue;
-name|proc_list_drop
-argument_list|(
-name|ret
-argument_list|,
-name|status
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* _FFR_NONSTOP_PERSISTENCE */
 comment|/* 			**  Since the delivery may happen in a child and the 			**  parent does not wait, the parent may close the 			**  maps thereby removing any shared memory used by 			**  the map.  Therefore, close the maps now so the 			**  child will dynamically open them if necessary. 			*/
 name|closemaps
 argument_list|(
@@ -8128,10 +8173,6 @@ argument_list|(
 name|SIGCHLD
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|_FFR_NONSTOP_PERSISTENCE
 comment|/* 		**  Wait until all of the runners have completed before 		**  seeing if there is another queue group in the 		**  work group to process. 		**  XXX Future enhancement: don't wait() for all children 		**  here, just go ahead and make sure that overall the number 		**  of children is not exceeded. 		*/
 while|while
 condition|(
@@ -8171,11 +8212,26 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* !_FFR_NONSTOP_PERSISTENCE */
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|Queue
+index|[
+name|qgrp
+index|]
+operator|->
+name|qg_maxqrun
+operator|>
+literal|0
+operator|||
+name|bitset
+argument_list|(
+name|RWG_FORCE
+argument_list|,
+name|flags
+argument_list|)
+condition|)
 block|{
 comment|/* 		**  When current process will not fork children to do the work, 		**  it will do the work itself. The 'skip' will be 1 since 		**  there are no child runners to divide the work across. 		*/
 name|runner_work
@@ -8251,7 +8307,12 @@ block|}
 comment|/* No more queues in work group to process. Now check persistent. */
 if|if
 condition|(
-name|persistent
+name|bitset
+argument_list|(
+name|RWG_PERSISTENT
+argument_list|,
+name|flags
+argument_list|)
 condition|)
 block|{
 name|sequenceno
@@ -8539,7 +8600,12 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
-name|forkflag
+name|bitset
+argument_list|(
+name|RWG_FORK
+argument_list|,
+name|flags
+argument_list|)
 condition|)
 name|finis
 argument_list|(
@@ -11158,7 +11224,24 @@ operator|==
 name|QSO_RANDOM
 condition|)
 block|{
-comment|/* 		**  Sort randomly. 		**	workcmpf5() returns a random 1 or -1. 		**	As long as nobody does a verification pass over the 		**	sorted list, we should be golden. 		*/
+comment|/* 		**  Sort randomly.  To avoid problems with an instable sort, 		**  use a random index into the queue file name to start 		**  comparison. 		*/
+name|randi
+operator|=
+name|get_rand_mod
+argument_list|(
+name|MAXQFNAME
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|randi
+operator|<
+literal|2
+condition|)
+name|randi
+operator|=
+literal|3
+expr_stmt|;
 name|qsort
 argument_list|(
 operator|(
@@ -12146,18 +12229,44 @@ modifier|*
 name|b
 decl_stmt|;
 block|{
-return|return
-operator|(
-name|get_rand_mod
+if|if
+condition|(
+name|strlen
 argument_list|(
-literal|2
+name|a
+operator|->
+name|w_name
 argument_list|)
-operator|)
-condition|?
-literal|1
-else|:
+operator|<
+name|randi
+operator|||
+name|strlen
+argument_list|(
+name|b
+operator|->
+name|w_name
+argument_list|)
+operator|<
+name|randi
+condition|)
+return|return
 operator|-
 literal|1
+return|;
+return|return
+name|a
+operator|->
+name|w_name
+index|[
+name|randi
+index|]
+operator|-
+name|b
+operator|->
+name|w_name
+index|[
+name|randi
+index|]
 return|;
 block|}
 end_function
@@ -24391,7 +24500,7 @@ name|O_WRONLY
 operator||
 name|O_TRUNC
 argument_list|,
-literal|0644
+name|FileMode
 argument_list|,
 name|sff
 argument_list|)
@@ -24439,8 +24548,6 @@ name|SM_IO_EOF
 expr_stmt|;
 name|ok
 operator|=
-name|ok
-operator|&&
 operator|(
 name|sm_io_close
 argument_list|(
@@ -24451,6 +24558,8 @@ argument_list|)
 operator|!=
 name|SM_IO_EOF
 operator|)
+operator|&&
+name|ok
 expr_stmt|;
 block|}
 return|return
@@ -24516,6 +24625,11 @@ name|SFF_REGONLY
 expr_stmt|;
 if|if
 condition|(
+name|RealUid
+operator|==
+literal|0
+operator|||
+operator|(
 name|TrustedUid
 operator|!=
 literal|0
@@ -24523,6 +24637,7 @@ operator|&&
 name|RealUid
 operator|==
 name|TrustedUid
+operator|)
 condition|)
 name|sff
 operator||=
@@ -24536,7 +24651,7 @@ name|keypath
 argument_list|,
 name|O_RDONLY
 argument_list|,
-literal|0644
+name|FileMode
 argument_list|,
 name|sff
 argument_list|)
@@ -24714,9 +24829,6 @@ name|count
 decl_stmt|;
 name|int
 name|save_errno
-decl_stmt|;
-name|size_t
-name|shms
 decl_stmt|;
 name|count
 operator|=
@@ -30296,6 +30408,17 @@ operator|+
 literal|1
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|lsplits
+operator|!=
+name|NULL
+condition|)
+name|sm_free
+argument_list|(
+name|lsplits
+argument_list|)
+expr_stmt|;
 return|return
 name|SM_SPLIT_FAIL
 return|;
@@ -30468,7 +30591,10 @@ operator|&&
 name|lsplits
 operator|!=
 name|NULL
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|nsplit
 operator|>
 literal|0
@@ -30503,6 +30629,7 @@ argument_list|,
 name|lsplits
 argument_list|)
 expr_stmt|;
+block|}
 name|sm_free
 argument_list|(
 name|lsplits

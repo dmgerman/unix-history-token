@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000-2002 Sendmail, Inc. and its suppliers.  *      All rights reserved.  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: local.h,v 1.51 2002/02/20 02:40:24 ca Exp $  */
+comment|/*  * Copyright (c) 2000-2002 Sendmail, Inc. and its suppliers.  *      All rights reserved.  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *	$Id: local.h,v 1.51.2.1 2002/09/09 21:38:08 gshapiro Exp $  */
 end_comment
 
 begin_comment
@@ -1036,7 +1036,7 @@ name|fd
 parameter_list|,
 name|to
 parameter_list|)
-value|{ \ 	struct timeval sm_io_to_before, sm_io_to_after, sm_io_to_diff; \ 	struct timeval sm_io_to; \ 	int sm_io_to_sel; \ 	fd_set sm_io_to_mask, sm_io_x_mask; \ 	errno = 0; \ 	if ((to) == SM_TIME_DEFAULT) \ 		(to) = (fp)->f_timeout; \ 	if ((to) == SM_TIME_IMMEDIATE) \ 	{ \ 		errno = EAGAIN; \ 		return SM_IO_EOF; \ 	} \ 	else if ((to) == SM_TIME_FOREVER) \ 	{ \ 		errno = EINVAL; \ 		return SM_IO_EOF; \ 	} \ 	else \ 	{ \ 		sm_io_to.tv_sec = (to) / 1000; \ 		sm_io_to.tv_usec = ((to) - (sm_io_to.tv_sec * 1000)) * 10; \ 	} \ 	FD_ZERO(&sm_io_to_mask); \ 	FD_SET((fd),&sm_io_to_mask); \ 	FD_ZERO(&sm_io_x_mask); \ 	FD_SET((fd),&sm_io_x_mask); \ 	if (gettimeofday(&sm_io_to_before, NULL)< 0) \ 		return SM_IO_EOF; \ 	sm_io_to_sel = select((fd) + 1, NULL,&sm_io_to_mask,&sm_io_x_mask, \&sm_io_to); \ 	if (sm_io_to_sel< 0) \ 	{ \
+value|{ \ 	struct timeval sm_io_to_before, sm_io_to_after, sm_io_to_diff; \ 	struct timeval sm_io_to; \ 	int sm_io_to_sel; \ 	fd_set sm_io_to_mask, sm_io_x_mask; \ 	errno = 0; \ 	if ((to) == SM_TIME_DEFAULT) \ 		(to) = (fp)->f_timeout; \ 	if ((to) == SM_TIME_IMMEDIATE) \ 	{ \ 		errno = EAGAIN; \ 		return SM_IO_EOF; \ 	} \ 	else if ((to) == SM_TIME_FOREVER) \ 	{ \ 		errno = EINVAL; \ 		return SM_IO_EOF; \ 	} \ 	else \ 	{ \ 		sm_io_to.tv_sec = (to) / 1000; \ 		sm_io_to.tv_usec = ((to) - (sm_io_to.tv_sec * 1000)) * 10; \ 	} \ 	if (FD_SETSIZE> 0&& (fd)>= FD_SETSIZE) \ 	{ \ 		errno = EINVAL; \ 		return SM_IO_EOF; \ 	} \ 	FD_ZERO(&sm_io_to_mask); \ 	FD_SET((fd),&sm_io_to_mask); \ 	FD_ZERO(&sm_io_x_mask); \ 	FD_SET((fd),&sm_io_x_mask); \ 	if (gettimeofday(&sm_io_to_before, NULL)< 0) \ 		return SM_IO_EOF; \ 	sm_io_to_sel = select((fd) + 1, NULL,&sm_io_to_mask,&sm_io_x_mask, \&sm_io_to); \ 	if (sm_io_to_sel< 0) \ 	{ \
 comment|/* something went wrong, errno set */
 value|\ 		return SM_IO_EOF; \ 	} \ 	else if (sm_io_to_sel == 0) \ 	{ \
 comment|/* timeout */

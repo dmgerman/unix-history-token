@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
+comment|/*  * Copyright (c) 1999-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  */
 end_comment
 
 begin_comment
@@ -53,7 +53,7 @@ name|SM_IDSTR
 argument_list|(
 argument|MilterlId
 argument_list|,
-literal|"@(#)$Id: libmilter.h,v 8.33 2002/04/30 23:52:24 msk Exp $"
+literal|"@(#)$Id: libmilter.h,v 8.33.2.7 2002/12/18 23:15:35 ca Exp $"
 argument_list|)
 end_macro
 
@@ -855,7 +855,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_LIBMILTER_H */
+comment|/* ! _LIBMILTER_H */
 end_comment
 
 end_unit
