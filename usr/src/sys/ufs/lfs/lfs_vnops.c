@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lfs_vnops.c	4.48	83/01/11	*/
+comment|/*	lfs_vnops.c	4.49	83/01/22	*/
 end_comment
 
 begin_include
@@ -4436,6 +4436,26 @@ goto|goto
 name|bad
 goto|;
 block|}
+comment|/* 		 * Disallow rename(foo, foo/bar). 		 */
+if|if
+condition|(
+name|dp
+operator|->
+name|i_number
+operator|==
+name|ip
+operator|->
+name|i_number
+condition|)
+block|{
+name|error
+operator|=
+name|EEXIST
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
 comment|/* 		 * Account for ".." in directory. 		 * When source and destination have the 		 * same parent we don't fool with the 		 * link count -- this isn't required 		 * because we do a similar check below. 		 */
 if|if
 condition|(
@@ -4521,6 +4541,20 @@ goto|goto
 name|bad
 goto|;
 block|}
+comment|/* 		 * Short circuit rename(foo, foo). 		 */
+if|if
+condition|(
+name|xp
+operator|->
+name|i_number
+operator|==
+name|ip
+operator|->
+name|i_number
+condition|)
+goto|goto
+name|bad
+goto|;
 comment|/* 		 * Target must be empty if a directory 		 * and have no links to it. 		 * Also, insure source and target are 		 * compatible (both directories, or both 		 * not directories). 		 */
 if|if
 condition|(
