@@ -8634,7 +8634,7 @@ modifier|*
 name|event
 decl_stmt|;
 block|{
-comment|/* 	 * NDIS events are always synchronization 	 * events, and should be initialized to the 	 * not signaled state. 	 */
+comment|/* 	 * NDIS events are always notification 	 * events, and should be initialized to the 	 * not signaled state. 	 */
 name|ntoskrnl_init_event
 argument_list|(
 operator|&
@@ -8642,7 +8642,7 @@ name|event
 operator|->
 name|ne_event
 argument_list|,
-name|EVENT_TYPE_SYNC
+name|EVENT_TYPE_NOTIFY
 argument_list|,
 name|FALSE
 argument_list|)
