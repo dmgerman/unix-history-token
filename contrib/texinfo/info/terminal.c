@@ -2532,9 +2532,6 @@ operator|&=
 operator|(
 operator|~
 name|ONLCR
-operator|&
-operator|~
-name|OCRNL
 operator|)
 expr_stmt|;
 name|ttybuff
