@@ -271,9 +271,6 @@ specifier|static
 name|struct
 name|rman
 name|tununits
-index|[
-literal|1
-index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -575,6 +572,7 @@ name|r
 operator|=
 name|rman_reserve_resource
 argument_list|(
+operator|&
 name|tununits
 argument_list|,
 literal|0
@@ -828,13 +826,13 @@ return|;
 block|}
 block|}
 name|tununits
-operator|->
+operator|.
 name|rm_type
 operator|=
 name|RMAN_ARRAY
 expr_stmt|;
 name|tununits
-operator|->
+operator|.
 name|rm_descr
 operator|=
 literal|"open if_tun units"
@@ -843,6 +841,7 @@ name|err
 operator|=
 name|rman_init
 argument_list|(
+operator|&
 name|tununits
 argument_list|)
 expr_stmt|;
@@ -876,6 +875,7 @@ name|err
 operator|=
 name|rman_manage_region
 argument_list|(
+operator|&
 name|tununits
 argument_list|,
 literal|0
@@ -901,6 +901,7 @@ argument_list|)
 expr_stmt|;
 name|rman_fini
 argument_list|(
+operator|&
 name|tununits
 argument_list|)
 expr_stmt|;
@@ -931,6 +932,7 @@ name|err
 operator|=
 name|rman_fini
 argument_list|(
+operator|&
 name|tununits
 argument_list|)
 expr_stmt|;
@@ -1458,6 +1460,7 @@ name|r
 operator|=
 name|rman_reserve_resource
 argument_list|(
+operator|&
 name|tununits
 argument_list|,
 name|unit
@@ -2017,6 +2020,7 @@ comment|/*  * Process an ioctl request.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|tunifioctl
 parameter_list|(
@@ -2225,6 +2229,7 @@ comment|/*  * tunoutput - queue packets from higher level ready to put out.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|tunoutput
 parameter_list|(
