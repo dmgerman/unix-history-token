@@ -225,6 +225,128 @@ begin_comment
 comment|/* __POSIX_VISIBLE>= 199309 */
 end_comment
 
+begin_comment
+comment|/* These macros are also in sys/time.h. */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|CLOCK_REALTIME
+argument_list|)
+operator|&&
+name|__POSIX_VISIBLE
+operator|>=
+literal|200112
+end_if
+
+begin_define
+define|#
+directive|define
+name|CLOCK_REALTIME
+value|0
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__BSD_VISIBLE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|CLOCK_VIRTUAL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLOCK_PROF
+value|2
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|CLOCK_MONOTONIC
+value|4
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined(CLOCK_REALTIME)&& __POSIX_VISIBLE>= 200112 */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|TIMER_ABSTIME
+argument_list|)
+operator|&&
+name|__POSIX_VISIBLE
+operator|>=
+literal|200112
+end_if
+
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
+begin_define
+define|#
+directive|define
+name|TIMER_RELTIME
+value|0x0
+end_define
+
+begin_comment
+comment|/* relative timer */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|TIMER_ABSTIME
+value|0x1
+end_define
+
+begin_comment
+comment|/* absolute timer */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined(TIMER_ABSTIME)&& __POSIX_VISIBLE>= 200112 */
+end_comment
+
 begin_struct
 struct|struct
 name|tm
@@ -343,6 +465,10 @@ name|time_t
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* XXX missing: getdate() */
+end_comment
 
 begin_function_decl
 name|struct
@@ -482,6 +608,10 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* XXX missing: clock_nanosleep() */
+end_comment
 
 begin_function_decl
 name|int
@@ -637,6 +767,10 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* XXX XSI conflict */
+end_comment
 
 begin_function_decl
 name|void

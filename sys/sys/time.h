@@ -793,7 +793,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* CLOCK_REALTIME and TIMER_ABSTIME are supposed to be in time.h */
+comment|/* These macros are also in time.h. */
 end_comment
 
 begin_ifndef
@@ -808,11 +808,6 @@ directive|define
 name|CLOCK_REALTIME
 value|0
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -835,6 +830,17 @@ name|CLOCK_MONOTONIC
 value|4
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TIMER_ABSTIME
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -845,12 +851,6 @@ end_define
 begin_comment
 comment|/* relative timer */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|TIMER_ABSTIME
-end_ifndef
 
 begin_define
 define|#
