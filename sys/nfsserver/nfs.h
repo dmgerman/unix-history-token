@@ -1222,6 +1222,12 @@ decl_stmt|;
 name|int
 name|srvvop_writes
 decl_stmt|;
+name|int
+name|accesscache_hits
+decl_stmt|;
+name|int
+name|accesscache_misses
+decl_stmt|;
 block|}
 struct|;
 end_struct

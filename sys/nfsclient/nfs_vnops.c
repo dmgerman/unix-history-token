@@ -1880,61 +1880,17 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|nfsaccess_cache_hits
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_vfs_nfs
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|access_cache_hits
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|nfsaccess_cache_hits
-argument_list|,
+begin_if
+if|#
+directive|if
 literal|0
-argument_list|,
-literal|"NFS ACCESS cache hit count"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+end_if
 
-begin_decl_stmt
-specifier|static
-name|int
-name|nfsaccess_cache_misses
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_vfs_nfs
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|access_cache_misses
-argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|nfsaccess_cache_misses
-argument_list|,
-literal|0
-argument_list|,
-literal|"NFS ACCESS cache miss count"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_endif
+unit|SYSCTL_INT(_vfs_nfs, OID_AUTO, access_cache_hits, CTLFLAG_RD,&nfsstats.accesscache_hits, 0, "NFS ACCESS cache hit count");  SYSCTL_INT(_vfs_nfs, OID_AUTO, access_cache_misses, CTLFLAG_RD,&nfsstats.accesscache_misses, 0, "NFS ACCESS cache miss count");
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -2418,14 +2374,18 @@ name|mode
 operator|)
 condition|)
 block|{
-name|nfsaccess_cache_hits
+name|nfsstats
+operator|.
+name|accesscache_hits
 operator|++
 expr_stmt|;
 block|}
 else|else
 block|{
 comment|/* 			 * Either a no, or a don't know.  Go to the wire. 			 */
-name|nfsaccess_cache_misses
+name|nfsstats
+operator|.
+name|accesscache_misses
 operator|++
 expr_stmt|;
 name|error
@@ -3478,6 +3438,11 @@ operator|>
 literal|0
 condition|)
 block|{
+name|nfsstats
+operator|.
+name|accesscache_misses
+operator|++
+expr_stmt|;
 name|nfs3_access_otw
 argument_list|(
 name|vp
