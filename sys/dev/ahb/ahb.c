@@ -132,13 +132,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/eisa/eisaconf.h>
+file|<dev/eisa/eisaconf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<i386/eisa/ahbreg.h>
+file|<dev/ahb/ahbreg.h>
 end_include
 
 begin_define

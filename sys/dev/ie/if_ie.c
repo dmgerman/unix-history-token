@@ -170,19 +170,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/isa/if_iereg.h>
+file|<dev/ie/if_iereg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<i386/isa/if_ie507.h>
+file|<dev/ie/if_ie507.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<i386/isa/if_iee16.h>
+file|<dev/ie/if_iee16.h>
 end_include
 
 begin_include

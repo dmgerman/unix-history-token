@@ -10155,7 +10155,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|<i386/eisa/eisaconf.h>
+file|<dev/eisa/eisaconf.h>
 end_include
 
 begin_function_decl

@@ -136,7 +136,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/isa/if_exreg.h>
+file|<dev/ex/if_exreg.h>
 end_include
 
 begin_ifdef
