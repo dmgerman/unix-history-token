@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)condevs.c	5.5 (Berkeley) %G%"
+literal|"@(#)condevs.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6084,7 +6084,7 @@ operator|->
 name|D_speed
 argument_list|)
 expr_stmt|;
-comment|/* translate - to % and = to& for VenTel */
+comment|/* translate - to K for Vadic */
 name|DEBUG
 argument_list|(
 literal|4
@@ -6128,6 +6128,10 @@ literal|'='
 case|:
 comment|/* await dial tone */
 case|case
+literal|'-'
+case|:
+comment|/* delay */
+case|case
 literal|'<'
 case|:
 name|telno
@@ -6136,6 +6140,10 @@ name|i
 index|]
 operator|=
 literal|'K'
+expr_stmt|;
+name|delay
+operator|+=
+literal|5
 expr_stmt|;
 break|break;
 block|}
@@ -6147,11 +6155,6 @@ argument_list|,
 literal|"%s\n"
 argument_list|,
 name|telno
-argument_list|)
-expr_stmt|;
-name|sleep
-argument_list|(
-literal|1
 argument_list|)
 expr_stmt|;
 for|for
@@ -6170,13 +6173,11 @@ control|)
 block|{
 comment|/* make 5 tries */
 comment|/* wake up Vadic */
-name|write
+name|sendthem
 argument_list|(
+literal|"\005\\d"
+argument_list|,
 name|dh
-argument_list|,
-literal|"\005\r"
-argument_list|,
-literal|2
 argument_list|)
 expr_stmt|;
 name|DEBUG
@@ -6217,13 +6218,11 @@ operator|!=
 literal|0
 condition|)
 continue|continue;
-name|write
+name|sendthem
 argument_list|(
+literal|"D\\d"
+argument_list|,
 name|dh
-argument_list|,
-literal|"D\r"
-argument_list|,
-literal|2
 argument_list|)
 expr_stmt|;
 comment|/* "D" (enter number) command */
@@ -6266,30 +6265,11 @@ literal|0
 condition|)
 continue|continue;
 comment|/* send telno, send \r */
-name|write
-argument_list|(
-name|dh
-argument_list|,
-name|telno
-argument_list|,
-name|strlen
+name|sendthem
 argument_list|(
 name|telno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|sleep
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-name|write
-argument_list|(
+argument_list|,
 name|dh
-argument_list|,
-literal|"\r"
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|ok
@@ -6336,13 +6316,11 @@ operator|!=
 literal|0
 condition|)
 continue|continue;
-name|write
+name|sendthem
 argument_list|(
+literal|""
+argument_list|,
 name|dh
-argument_list|,
-literal|"\r"
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 comment|/* confirm number */
@@ -6439,6 +6417,14 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|sendthem
+argument_list|(
+literal|"I\\d"
+argument_list|,
+name|dh
+argument_list|)
+expr_stmt|;
+comment|/* back to idle */
 if|if
 condition|(
 name|dh
