@@ -9,7 +9,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /a/cvs/386BSD/src/sys.386bsd/vm/vm_swap.c,v 1.1.1.1 1993/06/12 14:57:39 rgrimes Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sys.386bsd/vm/vm_swap.c,v 1.2 1993/07/16 20:54:00 davidg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -866,11 +866,6 @@ name|sw_vp
 operator|=
 name|vp
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"adding swap: "
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|error
@@ -887,7 +882,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"failed! (unchanged)\n"
+literal|"swap failed! (unchanged)\n"
 argument_list|)
 expr_stmt|;
 name|vrele
