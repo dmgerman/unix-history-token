@@ -28,16 +28,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/sx.h>
-end_include
-
-begin_comment
-comment|/* SX locks */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<sys/selinfo.h>
 end_include
 
