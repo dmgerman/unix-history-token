@@ -608,7 +608,7 @@ modifier|*
 name|localtime
 argument_list|()
 decl_stmt|;
-name|long
+name|time_t
 name|seconds
 decl_stmt|;
 name|time
@@ -712,7 +712,7 @@ name|struct
 name|stat
 name|sbuf
 decl_stmt|;
-name|long
+name|time_t
 name|seconds
 decl_stmt|;
 name|struct
@@ -730,9 +730,6 @@ argument_list|)
 expr_stmt|;
 name|seconds
 operator|=
-operator|(
-name|long
-operator|)
 name|sbuf
 operator|.
 name|st_mtime
