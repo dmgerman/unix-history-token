@@ -1214,7 +1214,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HCFG_LOCKTANKCACHE
+name|HCFG_LOCKTANKCACHE_MASK
 value|0x00000004
 end_define
 
@@ -1719,7 +1719,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|AC97_GENERALPUPOSE
+name|AC97_GENERALPURPOSE
 value|0x20
 end_define
 

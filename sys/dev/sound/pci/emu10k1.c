@@ -7487,7 +7487,7 @@ name|HCFG
 argument_list|,
 name|HCFG_LOCKSOUNDCACHE
 operator||
-name|HCFG_LOCKTANKCACHE
+name|HCFG_LOCKTANKCACHE_MASK
 operator||
 name|HCFG_MUTEBUTTONENABLE
 argument_list|,
@@ -8353,7 +8353,7 @@ name|tmp
 operator|=
 name|HCFG_AUDIOENABLE
 operator||
-name|HCFG_LOCKTANKCACHE
+name|HCFG_LOCKTANKCACHE_MASK
 operator||
 name|HCFG_AUTOMUTE
 expr_stmt|;
@@ -8588,7 +8588,7 @@ name|HCFG
 argument_list|,
 name|HCFG_LOCKSOUNDCACHE
 operator||
-name|HCFG_LOCKTANKCACHE
+name|HCFG_LOCKTANKCACHE_MASK
 operator||
 name|HCFG_MUTEBUTTONENABLE
 argument_list|,
