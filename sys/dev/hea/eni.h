@@ -1874,6 +1874,21 @@ name|Eni_stats
 name|eu_stats
 decl_stmt|;
 comment|/* Statistics */
+name|int
+name|eu_type
+decl_stmt|;
+define|#
+directive|define
+name|TYPE_UNKNOWN
+value|0
+define|#
+directive|define
+name|TYPE_ENI
+value|1
+define|#
+directive|define
+name|TYPE_ADP
+value|2
 block|}
 struct|;
 end_struct
