@@ -2854,7 +2854,7 @@ name|ltgt
 operator|-
 name|pos
 operator|-
-name|loldstr
+name|lnewstr
 argument_list|)
 expr_stmt|;
 name|bcopy
