@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_lookup.c	4.16	82/06/07	*/
+comment|/*	vfs_lookup.c	4.17	82/07/15	*/
 end_comment
 
 begin_comment
@@ -60,6 +60,24 @@ include|#
 directive|include
 file|"../h/conf.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|EFS
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|efs_major
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Convert a pathname into a pointer to  * a locked inode.  *  * func = function called to get next char of name  *&uchar if name is in user space  *&schar if name is in system space  * flag = 0 if name is sought  *	1 if name is to be created  *	2 if name is to be deleted  * follow = 1 if links are to be followed at the end of the name  */
@@ -385,6 +403,45 @@ expr_stmt|;
 name|dirloop
 label|:
 comment|/* 	 * dp must be a directory and 	 * must have X permission. 	 * cp is a path name relative to that directory. 	 */
+ifdef|#
+directive|ifdef
+name|EFS
+comment|/* 	 * But first, if the last component was a character special file 	 * and the major device is the extended file system device 	 * then return even if more pathname exists. 	 */
+if|if
+condition|(
+operator|(
+name|dp
+operator|->
+name|i_mode
+operator|&
+name|IFMT
+operator|)
+operator|==
+name|IFCHR
+operator|&&
+name|major
+argument_list|(
+name|dp
+operator|->
+name|i_rdev
+argument_list|)
+operator|==
+name|efs_major
+condition|)
+block|{
+name|brelse
+argument_list|(
+name|nbp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|dp
+operator|)
+return|;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
