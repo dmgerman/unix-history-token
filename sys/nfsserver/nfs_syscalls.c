@@ -1113,10 +1113,10 @@ name|ns_nam
 operator|=
 name|mynam
 expr_stmt|;
+name|fhold
+argument_list|(
 name|fp
-operator|->
-name|f_count
-operator|++
+argument_list|)
 expr_stmt|;
 name|slp
 operator|->
