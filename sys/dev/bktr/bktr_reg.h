@@ -1860,7 +1860,11 @@ directive|ifdef
 name|DEVFS
 name|void
 modifier|*
-name|devfs_token
+name|devfs_bktr_token
+decl_stmt|;
+name|void
+modifier|*
+name|devfs_tuner_token
 decl_stmt|;
 endif|#
 directive|endif
