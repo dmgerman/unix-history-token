@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)col.c	8.3 (Berkeley) 4/2/94"
+literal|"@(#)col.c	8.5 (Berkeley) 5/4/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -81,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -1269,6 +1275,18 @@ name|cur_col
 operator|++
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|max_line
+operator|==
+literal|0
+condition|)
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* no lines, so just exit */
 comment|/* goto the last line that had a character on it */
 for|for
 control|(
