@@ -44,7 +44,7 @@ end_include
 begin_macro
 name|MODULE_ID
 argument_list|(
-literal|"$Id: lib_termcap.c,v 1.37 2000/09/16 20:30:16 tom Exp $"
+literal|"$Id: lib_termcap.c,v 1.39 2000/12/10 02:56:30 tom Exp $"
 argument_list|)
 end_macro
 
@@ -52,23 +52,33 @@ begin_comment
 comment|/*    some of the code in here was contributed by:    Magnus Bengtsson, d6mbeng@dtek.chalmers.se */
 end_comment
 
-begin_decl_stmt
-name|char
-modifier|*
-name|UP
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
+begin_macro
+name|NCURSES_EXPORT_VAR
+argument_list|(
+argument|char *
+argument_list|)
+end_macro
 
-begin_decl_stmt
-name|char
-modifier|*
-name|BC
-init|=
+begin_expr_stmt
+name|UP
+operator|=
 literal|0
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|NCURSES_EXPORT_VAR
+argument_list|(
+argument|char *
+argument_list|)
+end_macro
+
+begin_expr_stmt
+name|BC
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
 
 begin_ifdef
 ifdef|#
@@ -109,20 +119,23 @@ begin_comment
 comment|/***************************************************************************  *  * tgetent(bufp, term)  *  * In termcap, this function reads in the entry for terminal `term' into the  * buffer pointed to by bufp. It must be called before any of the functions  * below are called.  * In this terminfo emulation, tgetent() simply calls setupterm() (which  * does a bit more than tgetent() in termcap does), and returns its return  * value (1 if successful, 0 if no terminal with the given name could be  * found, or -1 if no terminal descriptions have been installed on the  * system).  The bufp argument is ignored.  *  ***************************************************************************/
 end_comment
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|tgetent
-parameter_list|(
-name|char
-modifier|*
-name|bufp
-name|GCC_UNUSED
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|)
+argument_list|(
+argument|char *bufp GCC_UNUSED
+argument_list|,
+argument|const char *name
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|errcode
@@ -260,21 +273,27 @@ name|errcode
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/***************************************************************************  *  * tgetflag(str)  *  * Look up boolean termcap capability str and return its value (TRUE=1 if  * present, FALSE=0 if not).  *  ***************************************************************************/
 end_comment
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|tgetflag
-parameter_list|(
-name|NCURSES_CONST
-name|char
-modifier|*
-name|id
-parameter_list|)
+argument_list|(
+argument|NCURSES_CONST char *id
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|i
@@ -364,21 +383,27 @@ argument_list|)
 expr_stmt|;
 comment|/* Solaris does this */
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/***************************************************************************  *  * tgetnum(str)  *  * Look up numeric termcap capability str and return its value, or -1 if  * not given.  *  ***************************************************************************/
 end_comment
 
-begin_function
-name|int
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|int
+argument_list|)
+end_macro
+
+begin_macro
 name|tgetnum
-parameter_list|(
-name|NCURSES_CONST
-name|char
-modifier|*
-name|id
-parameter_list|)
+argument_list|(
+argument|NCURSES_CONST char *id
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|i
@@ -484,27 +509,29 @@ name|ABSENT_NUMERIC
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/***************************************************************************  *  * tgetstr(str, area)  *  * Look up string termcap capability str and return a pointer to its value,  * or NULL if not given.  *  ***************************************************************************/
 end_comment
 
-begin_function
-name|char
-modifier|*
+begin_macro
+name|NCURSES_EXPORT
+argument_list|(
+argument|char *
+argument_list|)
+end_macro
+
+begin_macro
 name|tgetstr
-parameter_list|(
-name|NCURSES_CONST
-name|char
-modifier|*
-name|id
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|area
-parameter_list|)
+argument_list|(
+argument|NCURSES_CONST char *id
+argument_list|,
+argument|char **area
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|i
@@ -664,7 +691,7 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 end_unit
 
