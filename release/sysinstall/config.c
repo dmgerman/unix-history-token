@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: config.c,v 1.16.2.26 1995/10/26 08:55:32 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: config.c,v 1.16.2.27 1995/10/27 01:22:52 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -1020,9 +1020,6 @@ block|{
 name|FILE
 modifier|*
 name|fp
-decl_stmt|,
-modifier|*
-name|debug
 decl_stmt|;
 name|char
 modifier|*
@@ -1060,15 +1057,6 @@ argument_list|,
 literal|"rw"
 argument_list|)
 expr_stmt|;
-name|debug
-operator|=
-name|fopen
-argument_list|(
-literal|"/tmp/ack"
-argument_list|,
-literal|"w"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1088,7 +1076,7 @@ return|return;
 block|}
 name|msgNotify
 argument_list|(
-literal|"Constructing /etc/sysconfig file.."
+literal|"Writing configuration changes to /etc/sysconfig file.."
 argument_list|)
 expr_stmt|;
 for|for
@@ -1145,21 +1133,6 @@ operator|->
 name|next
 control|)
 block|{
-name|fprintf
-argument_list|(
-name|debug
-argument_list|,
-literal|"Checking for variable: %s<%s>\n"
-argument_list|,
-name|v
-operator|->
-name|name
-argument_list|,
-name|v
-operator|->
-name|value
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -1294,18 +1267,6 @@ operator|->
 name|value
 argument_list|)
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|debug
-argument_list|,
-literal|"Found a match!  New line is: %s\n"
-argument_list|,
-name|lines
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 block|}
@@ -1332,18 +1293,6 @@ block|{
 name|fprintf
 argument_list|(
 name|fp
-argument_list|,
-name|lines
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|debug
-argument_list|,
-literal|"writing out `%s' to /etc/sysconfig\n"
 argument_list|,
 name|lines
 index|[
@@ -1397,17 +1346,6 @@ argument_list|(
 name|devp
 argument_list|)
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|debug
-argument_list|,
-literal|"Found the %s line, now chewing through %d devices\n"
-argument_list|,
-name|VAR_INTERFACES
-argument_list|,
-name|cnt
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|j
@@ -1446,15 +1384,6 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|debug
-argument_list|,
-literal|"Searching for `%s' variable\n"
-argument_list|,
-name|iname
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1467,17 +1396,6 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|debug
-argument_list|,
-literal|"Writing out `%s=%s' interface line to /etc/sysconfig\n"
-argument_list|,
-name|iname
-argument_list|,
-name|cp
-argument_list|)
-expr_stmt|;
 name|fprintf
 argument_list|(
 name|fp
@@ -1842,6 +1760,9 @@ modifier|*
 name|str
 parameter_list|)
 block|{
+name|int
+name|i
+decl_stmt|;
 if|if
 condition|(
 name|dmenuOpenSimple
@@ -1850,12 +1771,27 @@ operator|&
 name|MenuNetworking
 argument_list|)
 condition|)
-return|return
+block|{
+name|i
+operator|=
 name|installNetworking
 argument_list|(
 name|str
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|!=
+name|RET_FAIL
+condition|)
+name|configSysconfig
+argument_list|()
+expr_stmt|;
+return|return
+name|i
 return|;
+block|}
 else|else
 return|return
 name|RET_FAIL
