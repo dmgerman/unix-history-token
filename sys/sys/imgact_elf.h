@@ -218,8 +218,7 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|char
-modifier|*
+name|int
 name|brand
 decl_stmt|;
 name|char
