@@ -1207,23 +1207,5 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|CDRIOCBLANK
-value|_IO('c',100)
-end_define
-
-begin_comment
-comment|/* Blank a CDRW disc */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CDRIOCNEXTWRITEABLEADDR
-value|_IOR('c',101,int)
-end_define
-
 end_unit
 
