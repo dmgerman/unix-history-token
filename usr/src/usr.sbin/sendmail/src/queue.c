@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.63
+literal|3.64
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.63
+literal|3.64
 operator|%
 name|G
 operator|%
@@ -2489,9 +2489,17 @@ return|return;
 block|}
 name|printf
 argument_list|(
-literal|"\t\tMail Queue (%d requests"
+literal|"\t\tMail Queue (%d request%s"
 argument_list|,
 name|nrequests
+argument_list|,
+name|nrequests
+operator|==
+literal|1
+condition|?
+literal|""
+else|:
+literal|"s"
 argument_list|)
 expr_stmt|;
 if|if
