@@ -241,6 +241,17 @@ name|void
 modifier|*
 name|stack
 decl_stmt|;
+if|if
+condition|(
+name|thread
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 comment|/* 	 * Locking functions in libc are required when there are 	 * threads other than the initial thread. 	 */
 name|__isthreaded
 operator|=
