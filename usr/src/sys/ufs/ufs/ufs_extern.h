@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_extern.h	7.18 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_extern.h	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_struct_decl
@@ -588,6 +588,22 @@ operator|(
 expr|struct
 name|inode
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|vnode
+modifier|*
+name|ufs_ihashlookup
+name|__P
+argument_list|(
+operator|(
+name|dev_t
+operator|,
+name|ino_t
 operator|)
 argument_list|)
 decl_stmt|;
