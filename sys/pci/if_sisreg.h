@@ -2200,7 +2200,7 @@ name|sis_ring_data
 name|sis_cdata
 decl_stmt|;
 name|struct
-name|callout_handle
+name|callout
 name|sis_stat_ch
 decl_stmt|;
 ifdef|#
