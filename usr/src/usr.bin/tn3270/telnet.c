@@ -8910,6 +8910,19 @@ name|DoTerminalOutput
 argument_list|()
 condition|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|unix
+argument_list|)
+name|HaveInput
+operator|=
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* defined(unix) */
 empty_stmt|;
 block|}
 block|}
