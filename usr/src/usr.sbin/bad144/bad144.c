@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bad144.c	5.19 (Berkeley) %G%"
+literal|"@(#)bad144.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -71,12 +71,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ufs/fs.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/file.h>
 end_include
 
@@ -84,6 +78,12 @@ begin_include
 include|#
 directive|include
 file|<sys/disklabel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/ffs/fs.h>
 end_include
 
 begin_include
