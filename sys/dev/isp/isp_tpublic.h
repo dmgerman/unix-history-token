@@ -50,6 +50,10 @@ name|u_int64_t
 name|nt_lun
 decl_stmt|;
 comment|/* logical unit */
+name|u_int32_t
+name|nt_tagval
+decl_stmt|;
+comment|/* tag value */
 name|u_int8_t
 name|nt_bus
 decl_stmt|;
@@ -58,10 +62,6 @@ name|u_int8_t
 name|nt_tagtype
 decl_stmt|;
 comment|/* tag type */
-name|u_int16_t
-name|nt_tagval
-decl_stmt|;
-comment|/* tag value */
 name|u_int8_t
 name|nt_msg
 index|[
@@ -83,11 +83,11 @@ modifier|*
 name|ev_hba
 decl_stmt|;
 comment|/* HBA tag */
-name|u_int16_t
+name|u_int32_t
 name|ev_bus
 decl_stmt|;
 comment|/* bus */
-name|u_int16_t
+name|u_int32_t
 name|ev_event
 decl_stmt|;
 comment|/* type of async event */
@@ -97,50 +97,21 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Suggested Software Target Mode Command Handling structure.  *  * A note about terminology:  *  *   MD stands for "Machine Dependent".  *  *    This driver is structured in three layers: Outer MD, core, and inner MD.  *    The latter also is bus dependent (i.e., is cognizant of PCI bus issues  *    as well as platform issues).  *  *  *   "Outer Layer" means "Other Module"  *  *    Some additional module that actually implements SCSI target command  *    policy is the recipient of incoming commands and the source of the  *    disposition for them.  *  * The command structure below is one suggested possible MD command structure,  * but since the handling of thbis is entirely in the MD layer, there is  * no explicit or implicit requirement that it be used.  *  * The cd_private tag should be used by the MD layer to keep a free list  * of these structures. Code outside of this driver can then use this  * to identify it's own unit structures. That is, when not on the MD  * layer's freelist, the MD layer should shove into it the identifier  * that the outer layer has for it- passed in on an initial QIN_HBA_REG  * call (see below).  *  * The cd_hba tag is a tag that uniquely identifies the HBA this target  * mode command is coming from. The outer layer has to pass this back  * unchanged to avoid chaos.  *  * The cd_iid, cd_tgt, cd_lun and cd_bus tags are used to identify the  * id of the initiator who sent us a command, the target claim to be, the  * lun on the target we claim to be, and the bus instance (for multiple  * bus host adapters) that this applies to (consider it an extra Port  * parameter). The iid, tgt and lun values are deliberately chosen to be  * fat so that, for example, World Wide Names can be used instead of  * the units that the Qlogic firmware uses (in the case where the MD  * layer maintains a port database, for example).  *  * The cd_tagtype field specifies what kind of command tag has been  * sent with the command. The cd_tagval is the tag's value (low 16  * bits). It also contains (in the upper 16 bits) any command handle.  *  *  * N.B.: when the MD layer sends this command to outside software  * the outside software likely *MUST* return the same cd_tagval that  * was in place because this value is likely what the Qlogic f/w uses  * to identify a command.  *  * The cd_cdb contains storage for the passed in command descriptor block.  * This is the maximum size we can get out of the Qlogic f/w. There's no  * passed in length because whoever decodes the command to act upon it  * will know what the appropriate length is.  *  * The tag cd_lflags are the flags set by the MD driver when it gets  * command incoming or when it needs to inform any outside entities  * that the last requested action failed.  *  * The tag cd_hflags should be set by any outside software to indicate  * the validity of sense and status fields (defined below) and to indicate  * the direction data is expected to move. It is an error to have both  * CDFH_DATA_IN and CDFH_DATA_OUT set.  *  * If the CDFH_STSVALID flag is set, the command should be completed (after  * sending any data and/or status). If CDFH_SNSVALID is set and the MD layer  * can also handle sending the associated sense data (either back with an  * FCP RESPONSE IU for Fibre Channel or otherwise automatically handling a  * REQUEST SENSE from the initator for this target/lun), the MD layer will  * set the CDFL_SENTSENSE flag on successful transmission of the sense data.  * It is an error for the CDFH_SNSVALID bit to be set and CDFH_STSVALID not  * to be set. It is an error for the CDFH_SNSVALID be set and the associated  * SCSI status (cd_scsi_status) not be set to CHECK CONDITON.  *   * The tag cd_data points to a data segment to either be filled or  * read from depending on the direction of data movement. The tag  * is undefined if no data direction is set. The MD layer and outer  * layers must agree on the meaning of cd_data.  *  * The tag cd_totlen is the total data amount expected to be moved  * over the life of the command. It *may* be set by the MD layer, possibly  * from the datalen field of an FCP CMND IU unit. If it shows up in the outer  * layers set to zero and the CDB indicates data should be moved, the outer  * layer should set it to the amount expected to be moved.  *  * The tag cd_resid should be the total residual of data not transferred.  * The outer layers need to set this at the begining of command processing  * to equal cd_totlen. As data is successfully moved, this value is decreased.  * At the end of a command, any nonzero residual indicates the number of bytes  * requested but not moved. XXXXXXXXXXXXXXXXXXXXXXX TOO VAGUE!!!   *  * The tag cd_xfrlen is the length of the currently active data transfer.  * This allows several interations between any outside software and the  * MD layer to move data.  *  * The reason that total length and total residual have to be tracked  * is that fibre channel FCP DATA IU units have to have a relative  * offset field.  *  * N.B.: there is no necessary 1-to-1 correspondence between any one  * data transfer segment and the number of CTIOs that will be generated  * satisfy the current data transfer segment. It's not also possible to  * predict how big a transfer can be before it will be 'too big'. Be  * reasonable- a 64KB transfer is 'reasonable'. A 1MB transfer may not  * be. A 32MB transfer is unreasonable. The problem here has to do with  * how CTIOs can be used to map passed data pointers. In systems which  * have page based scatter-gather requirements, each PAGESIZEd chunk will  * consume one data segment descriptor- you get 3 or 4 of them per CTIO.  * The size of the REQUEST QUEUE you drop a CTIO onto is finite (typically  * it's 256, but on some systems it's even smaller, and note you have to  * sure this queue with the initiator side of this driver).  *  * The tags cd_sense and cd_scsi_status are pretty obvious.  *  * The tag cd_error is to communicate between the MD layer and outer software  * the current error conditions.  *  * The tag cd_reserved pads out the structure to 128 bytes. The first  * half of the pad area is reserved to the MD layer, and the second half  * may be used by outer layers, for scratch purposes.  */
+comment|/*  * Suggested Software Target Mode Command Handling structure.  *  * A note about terminology:  *  *   MD stands for "Machine Dependent".  *  *    This driver is structured in three layers: Outer MD, core, and inner MD.  *    The latter also is bus dependent (i.e., is cognizant of PCI bus issues  *    as well as platform issues).  *  *  *   "Outer Layer" means "Other Module"  *  *    Some additional module that actually implements SCSI target command  *    policy is the recipient of incoming commands and the source of the  *    disposition for them.  *  * The command structure below is one suggested possible MD command structure,  * but since the handling of thbis is entirely in the MD layer, there is  * no explicit or implicit requirement that it be used.  *  * The cd_private tag should be used by the MD layer to keep a free list  * of these structures. Code outside of this driver can then use this  * to identify it's own unit structures. That is, when not on the MD  * layer's freelist, the MD layer should shove into it the identifier  * that the outer layer has for it- passed in on an initial QIN_HBA_REG  * call (see below).  *  * The cd_hba tag is a tag that uniquely identifies the HBA this target  * mode command is coming from. The outer layer has to pass this back  * unchanged to avoid chaos.  *  * The cd_iid, cd_tgt, cd_lun and cd_bus tags are used to identify the  * id of the initiator who sent us a command, the target claim to be, the  * lun on the target we claim to be, and the bus instance (for multiple  * bus host adapters) that this applies to (consider it an extra Port  * parameter). The iid, tgt and lun values are deliberately chosen to be  * fat so that, for example, World Wide Names can be used instead of  * the units that the Qlogic firmware uses (in the case where the MD  * layer maintains a port database, for example).  *  * The cd_tagtype field specifies what kind of command tag has been  * sent with the command. The cd_tagval is the tag's value (low 16  * bits). It also contains (in the upper 16 bits) any command handle.  *  *  * N.B.: when the MD layer sends this command to outside software  * the outside software likely *MUST* return the same cd_tagval that  * was in place because this value is likely what the Qlogic f/w uses  * to identify a command.  *  * The cd_cdb contains storage for the passed in command descriptor block.  * This is the maximum size we can get out of the Qlogic f/w. There's no  * passed in length because whoever decodes the command to act upon it  * will know what the appropriate length is.  *  * The tag cd_lflags are the flags set by the MD driver when it gets  * command incoming or when it needs to inform any outside entities  * that the last requested action failed.  *  * The tag cd_hflags should be set by any outside software to indicate  * the validity of sense and status fields (defined below) and to indicate  * the direction data is expected to move. It is an error to have both  * CDFH_DATA_IN and CDFH_DATA_OUT set.  *  * If the CDFH_STSVALID flag is set, the command should be completed (after  * sending any data and/or status). If CDFH_SNSVALID is set and the MD layer  * can also handle sending the associated sense data (either back with an  * FCP RESPONSE IU for Fibre Channel or otherwise automatically handling a  * REQUEST SENSE from the initator for this target/lun), the MD layer will  * set the CDFL_SENTSENSE flag on successful transmission of the sense data.  * It is an error for the CDFH_SNSVALID bit to be set and CDFH_STSVALID not  * to be set. It is an error for the CDFH_SNSVALID be set and the associated  * SCSI status (cd_scsi_status) not be set to CHECK CONDITON.  *   * The tag cd_data points to a data segment to either be filled or  * read from depending on the direction of data movement. The tag  * is undefined if no data direction is set. The MD layer and outer  * layers must agree on the meaning of cd_data.  *  * The tag cd_totlen is the total data amount expected to be moved  * over the life of the command. It *may* be set by the MD layer, possibly  * from the datalen field of an FCP CMND IU unit. If it shows up in the outer  * layers set to zero and the CDB indicates data should be moved, the outer  * layer should set it to the amount expected to be moved.  *  * The tag cd_resid should be the total residual of data not transferred.  * The outer layers need to set this at the begining of command processing  * to equal cd_totlen. As data is successfully moved, this value is decreased.  * At the end of a command, any nonzero residual indicates the number of bytes  * requested but not moved. XXXXXXXXXXXXXXXXXXXXXXX TOO VAGUE!!!   *  * The tag cd_xfrlen is the length of the currently active data transfer.  * This allows several interations between any outside software and the  * MD layer to move data.  *  * The reason that total length and total residual have to be tracked  * is that fibre channel FCP DATA IU units have to have a relative  * offset field.  *  * N.B.: there is no necessary 1-to-1 correspondence between any one  * data transfer segment and the number of CTIOs that will be generated  * satisfy the current data transfer segment. It's not also possible to  * predict how big a transfer can be before it will be 'too big'. Be  * reasonable- a 64KB transfer is 'reasonable'. A 1MB transfer may not  * be. A 32MB transfer is unreasonable. The problem here has to do with  * how CTIOs can be used to map passed data pointers. In systems which  * have page based scatter-gather requirements, each PAGESIZEd chunk will  * consume one data segment descriptor- you get 3 or 4 of them per CTIO.  * The size of the REQUEST QUEUE you drop a CTIO onto is finite (typically  * it's 256, but on some systems it's even smaller, and note you have to  * sure this queue with the initiator side of this driver).  *  * The tags cd_sense and cd_scsi_status are pretty obvious.  *  * The tag cd_error is to communicate between the MD layer and outer software  * the current error conditions.  *  * The tag cd_lreserved, cd_hreserved are scratch areas for use for the MD  * and outer layers respectively.  *   */
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_LP64
+name|TMD_CDBLEN
 end_ifndef
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__alpha__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__sparcv9cpu
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__sparc_v9__
-argument_list|)
-operator|||
-expr|\
-name|defined
-argument_list|(
-name|__ia64__
-argument_list|)
-end_if
 
 begin_define
 define|#
 directive|define
-name|_LP64
+name|TMD_CDBLEN
+value|16
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -150,31 +121,13 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_TMD_PAD_LEN
+name|TMD_SENSELEN
 end_ifndef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_LP64
-end_ifdef
-
 begin_define
 define|#
 directive|define
-name|_TMD_PAD_LEN
-value|12
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|_TMD_PAD_LEN
+name|TMD_SENSELEN
 value|24
 end_define
 
@@ -183,40 +136,17 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ATIO_CDBLEN
+name|QCDS
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|ATIO_CDBLEN
-value|26
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|QLTM_SENSELEN
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|QLTM_SENSELEN
-value|18
+name|QCDS
+value|8
 end_define
 
 begin_endif
@@ -233,7 +163,7 @@ name|void
 modifier|*
 name|cd_private
 decl_stmt|;
-comment|/* layer private data */
+comment|/* private data pointer */
 name|void
 modifier|*
 name|cd_hba
@@ -256,30 +186,15 @@ name|u_int64_t
 name|cd_lun
 decl_stmt|;
 comment|/* logical unit */
-name|u_int8_t
-name|cd_bus
-decl_stmt|;
-comment|/* bus */
-name|u_int8_t
-name|cd_tagtype
-decl_stmt|;
-comment|/* tag type */
 name|u_int32_t
 name|cd_tagval
 decl_stmt|;
 comment|/* tag value */
-name|u_int8_t
-name|cd_cdb
-index|[
-name|ATIO_CDBLEN
-index|]
-decl_stmt|;
-comment|/* Command */
-name|u_int8_t
+name|u_int32_t
 name|cd_lflags
 decl_stmt|;
 comment|/* flags lower level sets */
-name|u_int8_t
+name|u_int32_t
 name|cd_hflags
 decl_stmt|;
 comment|/* flags higher level sets */
@@ -299,26 +214,138 @@ name|int32_t
 name|cd_error
 decl_stmt|;
 comment|/* current error */
+name|u_int32_t
+name|cd_scsi_status
+range|:
+literal|16
+decl_stmt|,
+comment|/* closing SCSI status */
+range|:
+literal|7
+decl_stmt|,
+name|cd_chan
+range|:
+literal|1
+decl_stmt|,
+comment|/* channel on card */
+range|:
+literal|2
+decl_stmt|,
+name|cd_tagtype
+range|:
+literal|6
+decl_stmt|;
+comment|/* tag type */
+name|u_int8_t
+name|cd_senselen
+decl_stmt|;
+name|u_int8_t
+name|cd_cdblen
+decl_stmt|;
 name|u_int8_t
 name|cd_sense
 index|[
-name|QLTM_SENSELEN
+name|TMD_SENSELEN
+index|]
+decl_stmt|;
+name|u_int8_t
+name|cd_cdb
+index|[
+name|TMD_CDBLEN
+index|]
+decl_stmt|;
+comment|/* Command */
+union|union
+block|{
+name|void
+modifier|*
+name|ptrs
+index|[
+name|QCDS
+operator|/
+sizeof|sizeof
+argument_list|(
+name|void
+operator|*
+argument_list|)
+index|]
+decl_stmt|;
+name|u_int64_t
+name|llongs
+index|[
+name|QCDS
+operator|/
+sizeof|sizeof
+argument_list|(
+name|u_int64_t
+argument_list|)
+index|]
+decl_stmt|;
+name|u_int32_t
+name|longs
+index|[
+name|QCDS
+operator|/
+sizeof|sizeof
+argument_list|(
+name|u_int32_t
+argument_list|)
 index|]
 decl_stmt|;
 name|u_int16_t
-name|cd_scsi_status
-decl_stmt|;
-comment|/* closing SCSI status */
-name|u_int8_t
-name|cd_reserved
+name|shorts
 index|[
-name|_TMD_PAD_LEN
+name|QCDS
+operator|/
+sizeof|sizeof
+argument_list|(
+name|u_int16_t
+argument_list|)
 index|]
 decl_stmt|;
+name|u_int8_t
+name|bytes
+index|[
+name|QCDS
+index|]
+decl_stmt|;
+block|}
+name|cd_lreserved
+index|[
+literal|2
+index|]
+union|,
+name|cd_hreserved
+index|[
+literal|2
+index|]
+union|;
 block|}
 name|tmd_cmd_t
 typedef|;
 end_typedef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TMD_SIZE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TMD_SIZE
+value|(sizeof (tmd_cmd_t))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Note that NODISC (obviously) doesn't apply to non-SPI transport.  *  * Note that knowing the data direction and lengh at the time of receipt of  * a command from the initiator is a feature only of Fibre Channel.  *  * The CDFL_BIDIR is in anticipation of the adoption of some newer  * features required by OSD.  *  * The principle selector for MD layer to know whether data is to  * be transferred in any QOUT_TMD_CONT call is cd_xfrlen- the  * flags CDFH_DATA_IN and CDFH_DATA_OUT define which direction.  */
+end_comment
 
 begin_define
 define|#
@@ -328,40 +355,51 @@ value|0x01
 end_define
 
 begin_comment
-comment|/* sense data (from f/w) valid */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CDFL_NODISC
-value|0x02
-end_define
-
-begin_comment
-comment|/* disconnects disabled */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CDFL_SENTSENSE
-value|0x04
-end_define
-
-begin_comment
-comment|/* last action sent sense data */
+comment|/* sense data (from f/w) good */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|CDFL_SENTSTATUS
-value|0x08
+value|0x02
 end_define
 
 begin_comment
 comment|/* last action sent status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CDFL_DATA_IN
+value|0x04
+end_define
+
+begin_comment
+comment|/* target (us) -> initiator (them) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CDFL_DATA_OUT
+value|0x08
+end_define
+
+begin_comment
+comment|/* initiator (them) -> target (us) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CDFL_BIDIR
+value|0x0C
+end_define
+
+begin_comment
+comment|/* bidirectional data */
 end_comment
 
 begin_define
@@ -378,8 +416,30 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CDFL_BUSY
+name|CDFL_NODISC
+value|0x20
+end_define
+
+begin_comment
+comment|/* disconnects disabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CDFL_SENTSENSE
 value|0x40
+end_define
+
+begin_comment
+comment|/* last action sent sense data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CDFL_BUSY
+value|0x80
 end_define
 
 begin_comment
@@ -389,8 +449,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CDFL_PRIVATE_0
-value|0x80
+name|CDFL_PRIVATE
+value|0xFF000000
 end_define
 
 begin_comment
@@ -405,7 +465,7 @@ value|0x01
 end_define
 
 begin_comment
-comment|/* sense data valid */
+comment|/* sense data (from outer layer) good */
 end_comment
 
 begin_define
@@ -417,17 +477,6 @@ end_define
 
 begin_comment
 comment|/* status valid */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CDFH_NODATA
-value|0x00
-end_define
-
-begin_comment
-comment|/* no data transfer expected */
 end_comment
 
 begin_define
@@ -466,8 +515,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CDFH_PRIVATE_0
-value|0x80
+name|CDFH_PRIVATE
+value|0xFF000000
 end_define
 
 begin_comment
@@ -487,6 +536,12 @@ init|=
 literal|0
 block|,
 comment|/* the argument is a pointer to a hba_register_t */
+name|QOUT_ENABLE
+block|,
+comment|/* the argument is a pointer to a enadis_t */
+name|QOUT_DISABLE
+block|,
+comment|/* the argument is a pointer to a enadis_t */
 name|QOUT_TMD_START
 block|,
 comment|/* the argument is a pointer to a tmd_cmd_t */
@@ -499,6 +554,9 @@ comment|/* the argument is a pointer to a tmd_event_t */
 name|QOUT_TMSG
 block|,
 comment|/* the argument is a pointer to a tmd_msg_t */
+name|QOUT_IOCTL
+block|,
+comment|/* the argument is a pointer to a ioctl_cmd_t */
 name|QOUT_HBA_UNREG
 comment|/* the argument is a pointer to a hba_register_t */
 block|}
@@ -516,22 +574,26 @@ enum|enum
 block|{
 name|QIN_HBA_REG
 init|=
-literal|6
+literal|99
 block|,
 comment|/* the argument is a pointer to a hba_register_t */
 name|QIN_ENABLE
 block|,
-comment|/* the argument is a pointer to a tmd_cmd_t */
+comment|/* the argument is a pointer to a enadis_t */
 name|QIN_DISABLE
 block|,
-comment|/* the argument is a pointer to a tmd_cmd_t */
+comment|/* the argument is a pointer to a enadis_t */
 name|QIN_TMD_CONT
 block|,
 comment|/* the argument is a pointer to a tmd_cmd_t */
 name|QIN_TMD_FIN
 block|,
-comment|/* the argument is a pointer to a done tmd_cmd_t */
+comment|/* the argument is a pointer to a tmd_cmd_t */
+name|QIN_IOCTL
+block|,
+comment|/* the argument is a pointer to a ioctl_cmd_t */
 name|QIN_HBA_UNREG
+block|,
 comment|/* the argument is a pointer to a hba_register_t */
 block|}
 name|qact_e
@@ -543,16 +605,57 @@ comment|/*  * A word about the START/CONT/DONE/FIN dance:  *  *	When the HBA is 
 end_comment
 
 begin_comment
-comment|/*  * A word about ENABLE/DISABLE: the argument is a pointer to a tmd_cmd_t  * with cd_hba, cd_bus, cd_tgt and cd_lun filled out. If an error occurs  * in either enabling or disabling the described lun, cd_lflags is set  * with CDFL_ERROR.  *  * Logical unit zero must be the first enabled and the last disabled.  */
+comment|/*  * A word about ENABLE/DISABLE: the argument is a pointer to a enadis_t  * with cd_hba, cd_iid, cd_chan, cd_tgt and cd_lun filled out.  *  * If an error occurs in either enabling or disabling the described lun  * cd_error is set with an appropriate non-zero value.  *  * Logical unit zero must be the first enabled and the last disabled.  */
 end_comment
 
-begin_comment
-comment|/*  * Target handler functions.  * The MD target handler function (the outer layer calls this)  * should be be prototyped like:  *  *	void target_action(qact_e, void *arg)  *  * The outer layer target handler function (the MD layer calls this)  * should be be prototyped like:  *  *	void system_action(tact_e, void *arg)  */
-end_comment
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|void
+modifier|*
+name|cd_private
+decl_stmt|;
+comment|/* for outer layer usage */
+name|void
+modifier|*
+name|cd_hba
+decl_stmt|;
+comment|/* HBA tag */
+name|u_int64_t
+name|cd_iid
+decl_stmt|;
+comment|/* initiator ID */
+name|u_int64_t
+name|cd_tgt
+decl_stmt|;
+comment|/* target id */
+name|u_int64_t
+name|cd_lun
+decl_stmt|;
+comment|/* logical unit */
+name|u_int8_t
+name|cd_chan
+decl_stmt|;
+comment|/* channel on card */
+name|int32_t
+name|cd_error
+decl_stmt|;
+block|}
+name|enadis_t
+typedef|;
+end_typedef
 
 begin_comment
 comment|/*  * This structure is used to register to other software modules the  * binding of an HBA identifier, driver name and instance and the  * lun width capapbilities of this target driver. It's up to each  * platform to figure out how it wants to do this, but a typical  * sequence would be for the MD layer to find some external module's  * entry point and start by sending a QOUT_HBA_REG with info filled  * in, and the external module to call back with a QIN_HBA_REG that  * passes back the corresponding information.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|QR_VERSION
+value|1
+end_define
 
 begin_typedef
 typedef|typedef
@@ -562,6 +665,18 @@ name|void
 modifier|*
 name|r_identity
 decl_stmt|;
+name|void
+function_decl|(
+modifier|*
+name|r_action
+function_decl|)
+parameter_list|(
+name|qact_e
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
 name|char
 name|r_name
 index|[
@@ -572,27 +687,88 @@ name|int
 name|r_inst
 decl_stmt|;
 name|int
-name|r_lunwidth
+name|r_version
 decl_stmt|;
-name|int
-name|r_buswidth
-decl_stmt|;
-name|void
-function_decl|(
-modifier|*
-name|r_action
-function_decl|)
-parameter_list|(
-name|int
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
+enum|enum
+block|{
+name|R_FC
+block|,
+name|R_SCSI
+block|}
+name|r_type
+enum|;
 block|}
 name|hba_register_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|/*  * This structure is used to pass an encapsulated ioctl through to the  * MD layer. In many implementations it's often convenient to open just  * one device, but actions you want to take need to be taken on the  * underlying HBA. Rather than invent a separate protocol for each action,  * an ioctl passthrough seems simpler.  *  * In order to avoid cross domain copy problems, though, the caller will  * be responsible for allocating and providing a staging area for all ioctl  * related data. This, unavoidably, requires some ioctl decode capability  * in the outer layer code.`  *  * And also, albeit being cheesy, we'll define a few internal ioctls here.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|void
+modifier|*
+name|i_identity
+decl_stmt|;
+comment|/* HBA tag */
+name|void
+modifier|*
+name|i_syncptr
+decl_stmt|;
+comment|/* synchronization pointer */
+name|int
+name|i_cmd
+decl_stmt|;
+comment|/* ioctl command */
+name|void
+modifier|*
+name|i_arg
+decl_stmt|;
+comment|/* ioctl argument area */
+name|int
+name|i_errno
+decl_stmt|;
+comment|/* ioctl error return */
+block|}
+name|ioctl_cmd_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|QI_IOC
+value|('Q'<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|QI_SCSI_TINI
+value|QI_IOC|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|QI_SCSI_CMD
+value|QI_IOC|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|QI_WWPN_XLT
+value|QI_IOC|2
+end_define
+
+begin_comment
+comment|/*  * Target handler functions.  *  * The MD target handler function (the outer layer calls this)  * should be be prototyped like:  *  *	void target_action(qact_e, void *arg)  *  * The outer layer target handler function (the MD layer calls this)  * should be be prototyped like:  *  *	void system_target_handler(tact_e, void *arg)  */
+end_comment
 
 end_unit
 
