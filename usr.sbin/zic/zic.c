@@ -3196,6 +3196,10 @@ literal|'/'
 condition|)
 name|fromname
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|fromfile
 expr_stmt|;
 else|else
@@ -3237,6 +3241,10 @@ literal|'/'
 condition|)
 name|toname
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|tofile
 expr_stmt|;
 else|else
