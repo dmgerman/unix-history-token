@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tisink.c	7.10 (Berkeley) %G%"
+literal|"@(#)tisink.c	7.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -313,6 +313,10 @@ init|=
 literal|0
 decl_stmt|,
 name|select_mode
+init|=
+literal|0
+decl_stmt|,
+name|tuba
 init|=
 literal|0
 decl_stmt|;
@@ -867,7 +871,13 @@ name|dgramp
 condition|?
 name|SOCK_DGRAM
 else|:
+operator|(
+name|tuba
+condition|?
+name|SOCK_STREAM
+else|:
 name|SOCK_SEQPACKET
+operator|)
 operator|)
 decl_stmt|;
 name|int
@@ -878,7 +888,13 @@ name|tp0mode
 condition|?
 name|ISOPROTO_TP0
 else|:
+operator|(
+name|tuba
+condition|?
+name|ISOPROTO_TCP
+else|:
 literal|0
+operator|)
 operator|)
 decl_stmt|;
 name|int
