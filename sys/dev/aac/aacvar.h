@@ -379,12 +379,8 @@ name|AAC_ON_AACQ_BUSY
 value|(1<<7)
 define|#
 directive|define
-name|AAC_ON_AACQ_COMPLETE
-value|(1<<8)
-define|#
-directive|define
 name|AAC_ON_AACQ_MASK
-value|((1<<5)|(1<<6)|(1<<7)|(1<<8))
+value|((1<<5)|(1<<6)|(1<<7))
 define|#
 directive|define
 name|AAC_QUEUE_FRZN

@@ -38,15 +38,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|AACQ_COMPLETE
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
 name|AACQ_COUNT
-value|5
+value|4
 end_define
 
 begin_comment

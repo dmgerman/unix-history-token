@@ -3652,7 +3652,7 @@ argument_list|)
 condition|)
 break|break;
 comment|/* nothing to do */
-comment|/* get the command, unmap and queue for later processing */
+comment|/* get the command, unmap and hand off for processing */
 name|cm
 operator|=
 name|sc
@@ -3691,7 +3691,6 @@ argument_list|(
 name|cm
 argument_list|)
 expr_stmt|;
-comment|/* XXX defer? */
 name|cm
 operator|->
 name|cm_flags
@@ -10475,9 +10474,6 @@ name|AACQ_READY
 case|:
 case|case
 name|AACQ_BUSY
-case|:
-case|case
-name|AACQ_COMPLETE
 case|:
 name|bcopy
 argument_list|(
