@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dumprmt.c	1.2 (Berkeley) %G%"
+literal|"@(#)dumprmt.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1037,44 +1037,6 @@ argument_list|)
 expr_stmt|;
 name|rmtconnaborted
 argument_list|()
-expr_stmt|;
-block|}
-end_block
-
-begin_macro
-name|msg
-argument_list|(
-argument|cp
-argument_list|,
-argument|a1
-argument_list|,
-argument|a2
-argument_list|,
-argument|a3
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|char
-modifier|*
-name|cp
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|cp
-argument_list|,
-name|a1
-argument_list|,
-name|a2
-argument_list|,
-name|a3
-argument_list|)
 expr_stmt|;
 block|}
 end_block
