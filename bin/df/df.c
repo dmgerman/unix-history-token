@@ -985,13 +985,6 @@ argument_list|,
 name|vfslist
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|vfslist
-operator|!=
-name|NULL
-condition|)
-block|{
 name|bzero
 argument_list|(
 operator|&
@@ -1028,7 +1021,6 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 for|for
 control|(
 name|i
