@@ -487,6 +487,10 @@ break|break;
 case|case
 literal|'b'
 case|:
+name|InstalledPkg
+operator|=
+name|optarg
+expr_stmt|;
 while|while
 condition|(
 operator|(
