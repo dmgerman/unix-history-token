@@ -6636,7 +6636,6 @@ name|ai
 operator|=
 name|getanswer
 argument_list|(
-operator|&
 name|buf
 argument_list|,
 name|q
