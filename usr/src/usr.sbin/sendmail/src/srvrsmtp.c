@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.40 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.41 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.40 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.41 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1094,6 +1094,95 @@ name|SmtpPhase
 operator|=
 literal|"server HELO"
 expr_stmt|;
+block|}
+comment|/* check for valid domain name (re 1123 5.2.5) */
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+literal|'\0'
+condition|)
+block|{
+name|message
+argument_list|(
+literal|"501 %s requires domain address"
+argument_list|,
+name|cmdbuf
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+else|else
+block|{
+specifier|register
+name|char
+modifier|*
+name|q
+decl_stmt|;
+for|for
+control|(
+name|q
+operator|=
+name|p
+init|;
+operator|*
+name|q
+operator|!=
+literal|'\0'
+condition|;
+name|q
+operator|++
+control|)
+block|{
+if|if
+condition|(
+operator|!
+name|isascii
+argument_list|(
+operator|*
+name|q
+argument_list|)
+condition|)
+break|break;
+if|if
+condition|(
+name|isalnum
+argument_list|(
+operator|*
+name|q
+argument_list|)
+condition|)
+continue|continue;
+if|if
+condition|(
+name|strchr
+argument_list|(
+literal|"[].-_#"
+argument_list|,
+operator|*
+name|q
+argument_list|)
+operator|==
+name|NULL
+condition|)
+break|break;
+block|}
+if|if
+condition|(
+operator|*
+name|q
+operator|!=
+literal|'\0'
+condition|)
+block|{
+name|message
+argument_list|(
+literal|"501 Invalid domain name"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 block|}
 name|sendinghost
 operator|=
