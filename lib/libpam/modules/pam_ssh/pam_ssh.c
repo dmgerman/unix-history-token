@@ -958,11 +958,18 @@ condition|(
 operator|!
 name|authenticated
 condition|)
+block|{
+name|PAM_VERBOSE_ERROR
+argument_list|(
+literal|"SSH authentication refused"
+argument_list|)
+expr_stmt|;
 name|PAM_RETURN
 argument_list|(
 name|PAM_AUTH_ERR
 argument_list|)
 expr_stmt|;
+block|}
 name|PAM_LOG
 argument_list|(
 literal|"Done authenticating; got %d"
@@ -1603,16 +1610,16 @@ expr_stmt|;
 if|if
 condition|(
 name|env_end
-operator|!=
+operator|==
 name|NULL
 condition|)
 continue|continue;
-block|}
 operator|*
 name|env_end
 operator|=
 literal|'\0'
 expr_stmt|;
+block|}
 comment|/* pass to the application ... */
 name|retval
 operator|=
@@ -1650,6 +1657,13 @@ name|PAM_SERVICE_ERR
 argument_list|)
 expr_stmt|;
 block|}
+name|PAM_LOG
+argument_list|(
+literal|"Put to environment: %s"
+argument_list|,
+name|env_string
+argument_list|)
+expr_stmt|;
 operator|*
 name|env_value
 operator|++
@@ -1757,6 +1771,11 @@ condition|)
 name|PAM_RETURN
 argument_list|(
 name|retval
+argument_list|)
+expr_stmt|;
+name|PAM_LOG
+argument_list|(
+literal|"Environment write successful"
 argument_list|)
 expr_stmt|;
 block|}
