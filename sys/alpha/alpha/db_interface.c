@@ -787,6 +787,10 @@ operator|&&
 name|a0
 operator|!=
 name|ALPHA_IF_CODE_BPT
+operator|&&
+name|a0
+operator|!=
+name|ALPHA_IF_CODE_GENTRAP
 operator|)
 condition|)
 block|{
