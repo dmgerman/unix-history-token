@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	5.25 (Berkeley) %G%"
+literal|"@(#)tape.c	5.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4997,6 +4997,7 @@ name|good
 label|:
 if|if
 condition|(
+operator|(
 name|buf
 operator|->
 name|c_dinode
@@ -5004,6 +5005,15 @@ operator|.
 name|di_size
 operator|==
 literal|0
+operator|||
+name|buf
+operator|->
+name|c_dinode
+operator|.
+name|di_size
+operator|>
+literal|0xfffffff
+operator|)
 operator|&&
 operator|(
 name|buf
