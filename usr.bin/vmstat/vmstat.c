@@ -1706,10 +1706,13 @@ name|getuptime
 parameter_list|()
 block|{
 specifier|static
+name|struct
+name|timeval
+name|boottime
+decl_stmt|;
+specifier|static
 name|time_t
 name|now
-decl_stmt|,
-name|boottime
 decl_stmt|;
 name|time_t
 name|uptime
@@ -1717,6 +1720,8 @@ decl_stmt|;
 if|if
 condition|(
 name|boottime
+operator|.
+name|tv_sec
 operator|==
 literal|0
 condition|)
@@ -1747,6 +1752,8 @@ operator|=
 name|now
 operator|-
 name|boottime
+operator|.
+name|tv_sec
 expr_stmt|;
 if|if
 condition|(
