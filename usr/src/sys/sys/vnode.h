@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vnode.h	7.27 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)vnode.h	7.28 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1597,7 +1597,7 @@ name|VREF
 parameter_list|(
 name|vp
 parameter_list|)
-value|(vp)->v_usecount++;
+value|(vp)->v_usecount++
 end_define
 
 begin_comment
@@ -1611,7 +1611,7 @@ name|VHOLD
 parameter_list|(
 name|vp
 parameter_list|)
-value|(vp)->v_holdcnt++;
+value|(vp)->v_holdcnt++
 end_define
 
 begin_comment
@@ -1625,11 +1625,25 @@ name|HOLDRELE
 parameter_list|(
 name|vp
 parameter_list|)
-value|(vp)->v_holdcnt--;
+value|(vp)->v_holdcnt--
 end_define
 
 begin_comment
 comment|/* decrease buf or page ref to vnode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VATTR_NULL
+parameter_list|(
+name|vap
+parameter_list|)
+value|*(vap) = va_null
+end_define
+
+begin_comment
+comment|/* initialize a vattr stucture */
 end_comment
 
 begin_else
@@ -1671,6 +1685,16 @@ parameter_list|)
 value|holdrele(vp)
 end_define
 
+begin_define
+define|#
+directive|define
+name|VATTR_NULL
+parameter_list|(
+name|vap
+parameter_list|)
+value|vattr_null(vap)
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -1709,6 +1733,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* number of vnodes desired */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|vattr
+name|va_null
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* predefined null vattr structure */
 end_comment
 
 begin_endif
