@@ -207,10 +207,6 @@ modifier|*
 name|rt_gateway
 decl_stmt|;
 comment|/* value */
-name|long
-name|rt_refcnt
-decl_stmt|;
-comment|/* # held references */
 name|u_long
 name|rt_flags
 decl_stmt|;
@@ -228,6 +224,15 @@ name|rt_ifa
 decl_stmt|;
 comment|/* the answer: interface address to use */
 name|struct
+name|rt_metrics_lite
+name|rt_rmx
+decl_stmt|;
+comment|/* metrics used by rx'ing protocols */
+name|long
+name|rt_refcnt
+decl_stmt|;
+comment|/* # held references */
+name|struct
 name|sockaddr
 modifier|*
 name|rt_genmask
@@ -238,40 +243,11 @@ name|rt_llinfo
 decl_stmt|;
 comment|/* pointer to link level info cache */
 name|struct
-name|rt_metrics_lite
-name|rt_rmx
-decl_stmt|;
-comment|/* metrics used by rx'ing protocols */
-name|struct
 name|rtentry
 modifier|*
 name|rt_gwroute
 decl_stmt|;
 comment|/* implied entry for gatewayed routes */
-name|int
-function_decl|(
-modifier|*
-name|rt_output
-function_decl|)
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-parameter_list|,
-name|struct
-name|sockaddr
-modifier|*
-parameter_list|,
-name|struct
-name|rtentry
-modifier|*
-parameter_list|)
-function_decl|;
-comment|/* output routine for this (rt,if) */
 name|struct
 name|rtentry
 modifier|*

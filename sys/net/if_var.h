@@ -394,19 +394,6 @@ function_decl|;
 name|int
 function_decl|(
 modifier|*
-name|if_done
-function_decl|)
-comment|/* output complete routine */
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-parameter_list|)
-function_decl|;
-comment|/* (XXX not used; fake prototype) */
-name|int
-function_decl|(
-modifier|*
 name|if_ioctl
 function_decl|)
 comment|/* ioctl routine */
@@ -429,64 +416,6 @@ comment|/* timer routine */
 parameter_list|(
 name|struct
 name|ifnet
-modifier|*
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|if_poll_recv
-function_decl|)
-comment|/* polled receive routine */
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-parameter_list|,
-name|int
-modifier|*
-parameter_list|)
-function_decl|;
-name|int
-function_decl|(
-modifier|*
-name|if_poll_xmit
-function_decl|)
-comment|/* polled transmit routine */
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-parameter_list|,
-name|int
-modifier|*
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|if_poll_intren
-function_decl|)
-comment|/* polled interrupt reenable routine */
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-parameter_list|)
-function_decl|;
-name|void
-function_decl|(
-modifier|*
-name|if_poll_slowinput
-function_decl|)
-comment|/* input routine for slow devices */
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
 modifier|*
 parameter_list|)
 function_decl|;
@@ -527,17 +456,6 @@ name|ifqueue
 name|if_snd
 decl_stmt|;
 comment|/* output queue */
-name|struct
-name|ifqueue
-modifier|*
-name|if_poll_slowq
-decl_stmt|;
-comment|/* input queue for slow devices */
-name|struct
-name|ifprefixhead
-name|if_prefixhead
-decl_stmt|;
-comment|/* list of prefixes per if */
 specifier|const
 name|u_int8_t
 modifier|*
@@ -545,11 +463,23 @@ name|if_broadcastaddr
 decl_stmt|;
 comment|/* linklevel broadcast bytestring */
 name|struct
+name|lltable
+modifier|*
+name|lltables
+decl_stmt|;
+comment|/* list of L3-L2 resolution tables */
+name|struct
 name|label
 modifier|*
 name|if_label
 decl_stmt|;
 comment|/* interface MAC label */
+comment|/* these are only used by IPv6 */
+name|struct
+name|ifprefixhead
+name|if_prefixhead
+decl_stmt|;
+comment|/* list of prefixes per if */
 name|void
 modifier|*
 name|if_afdata
@@ -1976,75 +1906,6 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|if_poll_recv_slow
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-parameter_list|,
-name|int
-modifier|*
-name|quotap
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|if_poll_xmit_slow
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-parameter_list|,
-name|int
-modifier|*
-name|quotap
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|if_poll_throttle
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|if_poll_unthrottle
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|if_poll_init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|if_poll
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl
