@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_compat.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_inet6.h"
 end_include
 
@@ -30,13 +24,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
+file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
+file|<sys/lock.h>
 end_include
 
 begin_include
@@ -48,7 +42,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/sysctl.h>
+file|<sys/mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/protosw.h>
 end_include
 
 begin_include
@@ -66,18 +66,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/protosw.h>
+file|<sys/sysctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/cpu.h>
+file|<sys/systm.h>
 end_include
-
-begin_comment
-comment|/* before tcp_seq.h, for tcp_random18() */
-end_comment
 
 begin_include
 include|#
@@ -94,13 +90,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/in_systm.h>
+file|<netinet/in_pcb.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<netinet/in_pcb.h>
+file|<netinet/in_systm.h>
 end_include
 
 begin_ifdef
@@ -136,12 +132,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/tcp_fsm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/tcp_seq.h>
 end_include
 
 begin_include
