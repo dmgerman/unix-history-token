@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ospf6.c,v 1.6 2000/09/29 04:58:45 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ospf6.c,v 1.7 2001/05/09 01:08:03 fenner Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1694,6 +1694,9 @@ name|printf
 argument_list|(
 literal|" metric %u"
 argument_list|,
+operator|(
+name|u_int32_t
+operator|)
 name|ntohl
 argument_list|(
 name|lsap

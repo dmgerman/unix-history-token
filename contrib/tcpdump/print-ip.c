@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ip.c,v 1.92 2001/01/02 23:00:01 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ip.c,v 1.100 2001/09/17 21:58:03 fenner Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -929,10 +929,10 @@ modifier|*
 name|addr
 parameter_list|,
 specifier|register
-name|int
+name|u_int
 name|len
 parameter_list|,
-name|u_short
+name|int
 name|csum
 parameter_list|)
 block|{
@@ -1310,7 +1310,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"truncated-ip - %d bytes missing!"
+literal|"truncated-ip - %d bytes missing! "
 argument_list|,
 name|len
 operator|-
@@ -1363,6 +1363,15 @@ name|ip
 operator|->
 name|ip_p
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|IPPROTO_SCTP
+define|#
+directive|define
+name|IPPROTO_SCTP
+value|132
+endif|#
+directive|endif
 if|if
 condition|(
 name|nh
@@ -1372,6 +1381,10 @@ operator|&&
 name|nh
 operator|!=
 name|IPPROTO_UDP
+operator|&&
+name|nh
+operator|!=
+name|IPPROTO_SCTP
 condition|)
 block|{
 operator|(
@@ -1463,6 +1476,8 @@ case|:
 block|{
 name|int
 name|enh
+decl_stmt|,
+name|padlen
 decl_stmt|;
 name|advance
 operator|=
@@ -1479,6 +1494,9 @@ name|ip
 argument_list|,
 operator|&
 name|enh
+argument_list|,
+operator|&
+name|padlen
 argument_list|)
 expr_stmt|;
 name|cp
@@ -1488,6 +1506,8 @@ expr_stmt|;
 name|len
 operator|-=
 name|advance
+operator|+
+name|padlen
 expr_stmt|;
 if|if
 condition|(
@@ -1564,6 +1584,24 @@ goto|goto
 name|again
 goto|;
 block|}
+case|case
+name|IPPROTO_SCTP
+case|:
+name|sctp_print
+argument_list|(
+name|cp
+argument_list|,
+operator|(
+specifier|const
+name|u_char
+operator|*
+operator|)
+name|ip
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 name|IPPROTO_TCP
 case|:
@@ -1662,12 +1700,6 @@ break|break;
 case|case
 name|IPPROTO_ND
 case|:
-if|#
-directive|if
-literal|0
-block|(void)printf("%s> %s:", ipaddr_string(&ip->ip_src), 				ipaddr_string(&ip->ip_dst));
-endif|#
-directive|endif
 operator|(
 name|void
 operator|)
@@ -1741,13 +1773,6 @@ argument_list|(
 name|cp
 argument_list|,
 name|len
-argument_list|,
-operator|(
-specifier|const
-name|u_char
-operator|*
-operator|)
-name|ip
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1755,12 +1780,6 @@ case|case
 literal|4
 case|:
 comment|/* DVMRP multicast tunnel (ip-in-ip encapsulation) */
-if|#
-directive|if
-literal|0
-block|if (vflag) 				(void)printf("%s> %s: ", 					     ipaddr_string(&ip->ip_src), 					     ipaddr_string(&ip->ip_dst));
-endif|#
-directive|endif
 name|ip_print
 argument_list|(
 name|cp
@@ -1776,7 +1795,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" (ipip)"
+literal|" (ipip-proto-4)"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1798,12 +1817,6 @@ case|case
 name|IP6PROTO_ENCAP
 case|:
 comment|/* ip6-in-ip encapsulation */
-if|#
-directive|if
-literal|0
-block|if (vflag) 				(void)printf("%s> %s: ", 					     ipaddr_string(&ip->ip_src), 					     ipaddr_string(&ip->ip_dst));
-endif|#
-directive|endif
 name|ip6_print
 argument_list|(
 name|cp
@@ -1811,19 +1824,6 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|vflag
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|" (encap)"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 break|break;
 endif|#
 directive|endif
@@ -1840,34 +1840,6 @@ directive|endif
 case|case
 name|IPPROTO_GRE
 case|:
-if|if
-condition|(
-name|vflag
-condition|)
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|"gre %s> %s: "
-argument_list|,
-name|ipaddr_string
-argument_list|(
-operator|&
-name|ip
-operator|->
-name|ip_src
-argument_list|)
-argument_list|,
-name|ipaddr_string
-argument_list|(
-operator|&
-name|ip
-operator|->
-name|ip_dst
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* do it */
 name|gre_print
 argument_list|(
@@ -1876,19 +1848,6 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|vflag
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|" (gre encap)"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 break|break;
 ifndef|#
 directive|ifndef
@@ -1902,34 +1861,6 @@ directive|endif
 case|case
 name|IPPROTO_MOBILE
 case|:
-if|if
-condition|(
-name|vflag
-condition|)
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|"mobile %s> %s: "
-argument_list|,
-name|ipaddr_string
-argument_list|(
-operator|&
-name|ip
-operator|->
-name|ip_src
-argument_list|)
-argument_list|,
-name|ipaddr_string
-argument_list|(
-operator|&
-name|ip
-operator|->
-name|ip_dst
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|mobile_print
 argument_list|(
 name|cp
@@ -1937,19 +1868,6 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|vflag
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|" (mobile encap)"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 break|break;
 ifndef|#
 directive|ifndef
@@ -1983,34 +1901,6 @@ directive|endif
 case|case
 name|IPPROTO_VRRP
 case|:
-if|if
-condition|(
-name|vflag
-condition|)
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|"vrrp %s> %s: "
-argument_list|,
-name|ipaddr_string
-argument_list|(
-operator|&
-name|ip
-operator|->
-name|ip_src
-argument_list|)
-argument_list|,
-name|ipaddr_string
-argument_list|(
-operator|&
-name|ip
-operator|->
-name|ip_dst
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|vrrp_print
 argument_list|(
 name|cp
@@ -2024,12 +1914,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-if|#
-directive|if
-literal|0
-block|(void)printf("%s> %s:", ipaddr_string(&ip->ip_src), 				ipaddr_string(&ip->ip_dst));
-endif|#
-directive|endif
 operator|(
 name|void
 operator|)
@@ -2198,25 +2082,45 @@ name|ip
 operator|->
 name|ip_tos
 operator|&
-literal|0x02
+literal|0x03
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|",ECT"
-argument_list|)
-expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|ip
 operator|->
 name|ip_tos
 operator|&
-literal|0x01
+literal|0x03
 condition|)
+block|{
+case|case
+literal|1
+case|:
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|",ECT(1)"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|",ECT(0)"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|3
+case|:
 operator|(
 name|void
 operator|)
@@ -2225,6 +2129,7 @@ argument_list|(
 literal|",CE"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 operator|(
 name|void

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-dhcp6.c,v 1.12 2000/10/24 00:56:50 fenner Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-dhcp6.c,v 1.14 2001/09/17 21:57:59 fenner Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -133,7 +133,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static void dhcp6opttab_init (void); static struct dhcp6_opt *dhcp6opttab_byname (char *);
+unit|static void dhcp6opttab_init(void); static struct dhcp6_opt *dhcp6opttab_byname(char *);
 endif|#
 directive|endif
 end_endif
@@ -152,6 +152,7 @@ end_function_decl
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|tstr
 index|[]

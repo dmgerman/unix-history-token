@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-rt6.c,v 1.17 2000/12/13 07:57:05 itojun Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-rt6.c,v 1.18 2001/06/15 22:17:34 fenner Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -187,12 +187,6 @@ name|ep
 operator|=
 name|snapend
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|printf("%s> %s: ", 	       ip6addr_string(&ip->ip6_src), 	       ip6addr_string(&ip->ip6_dst));
-endif|#
-directive|endif
 name|TCHECK
 argument_list|(
 name|dp

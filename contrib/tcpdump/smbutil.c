@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*     Copyright (C) Andrew Tridgell 1995-1999     This software may be distributed either under the terms of the    BSD-style license that accompanies tcpdump or the GNU GPL version 2    or later */
+comment|/*  * Copyright (C) Andrew Tridgell 1995-1999  *  * This software may be distributed either under the terms of the  * BSD-style license that accompanies tcpdump or the GNU GPL version 2  * or later  */
 end_comment
 
 begin_comment
@@ -37,7 +37,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/smbutil.c,v 1.12 2000/12/04 00:35:45 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/smbutil.c,v 1.18 2002/01/17 04:38:29 guy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -115,20 +115,26 @@ end_include
 begin_include
 include|#
 directive|include
+file|"extract.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"smb.h"
 end_include
 
 begin_decl_stmt
 specifier|extern
 specifier|const
-name|uchar
+name|u_char
 modifier|*
 name|startbuf
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*******************************************************************   interpret a 32 bit dos packed date/time to some parameters ********************************************************************/
+comment|/*  * interpret a 32 bit dos packed date/time to some parameters  */
 end_comment
 
 begin_function
@@ -136,35 +142,16 @@ specifier|static
 name|void
 name|interpret_dos_date
 parameter_list|(
-name|uint32
+name|u_int32_t
 name|date
 parameter_list|,
-name|int
+name|struct
+name|tm
 modifier|*
-name|year
-parameter_list|,
-name|int
-modifier|*
-name|month
-parameter_list|,
-name|int
-modifier|*
-name|day
-parameter_list|,
-name|int
-modifier|*
-name|hour
-parameter_list|,
-name|int
-modifier|*
-name|minute
-parameter_list|,
-name|int
-modifier|*
-name|second
+name|tp
 parameter_list|)
 block|{
-name|uint32
+name|u_int32_t
 name|p0
 decl_stmt|,
 name|p1
@@ -221,8 +208,9 @@ operator|)
 operator|&
 literal|0xFF
 expr_stmt|;
-operator|*
-name|second
+name|tp
+operator|->
+name|tm_sec
 operator|=
 literal|2
 operator|*
@@ -232,8 +220,9 @@ operator|&
 literal|0x1F
 operator|)
 expr_stmt|;
-operator|*
-name|minute
+name|tp
+operator|->
+name|tm_min
 operator|=
 operator|(
 operator|(
@@ -255,8 +244,9 @@ operator|<<
 literal|3
 operator|)
 expr_stmt|;
-operator|*
-name|hour
+name|tp
+operator|->
+name|tm_hour
 operator|=
 operator|(
 name|p1
@@ -266,8 +256,9 @@ operator|)
 operator|&
 literal|0xFF
 expr_stmt|;
-operator|*
-name|day
+name|tp
+operator|->
+name|tm_mday
 operator|=
 operator|(
 name|p2
@@ -275,8 +266,9 @@ operator|&
 literal|0x1F
 operator|)
 expr_stmt|;
-operator|*
-name|month
+name|tp
+operator|->
+name|tm_mon
 operator|=
 operator|(
 operator|(
@@ -300,8 +292,9 @@ operator|)
 operator|-
 literal|1
 expr_stmt|;
-operator|*
-name|year
+name|tp
+operator|->
+name|tm_year
 operator|=
 operator|(
 operator|(
@@ -319,38 +312,22 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************   create a unix date from a dos date ********************************************************************/
+comment|/*  * common portion:  * create a unix date from a dos date  */
 end_comment
 
 begin_function
 specifier|static
 name|time_t
-name|make_unix_date
+name|int_unix_date
 parameter_list|(
-specifier|const
-name|void
-modifier|*
-name|date_ptr
+name|u_int32_t
+name|dos_date
 parameter_list|)
 block|{
-name|uint32
-name|dos_date
-init|=
-literal|0
-decl_stmt|;
 name|struct
 name|tm
 name|t
 decl_stmt|;
-name|dos_date
-operator|=
-name|IVAL
-argument_list|(
-name|date_ptr
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|dos_date
@@ -368,33 +345,6 @@ name|dos_date
 argument_list|,
 operator|&
 name|t
-operator|.
-name|tm_year
-argument_list|,
-operator|&
-name|t
-operator|.
-name|tm_mon
-argument_list|,
-operator|&
-name|t
-operator|.
-name|tm_mday
-argument_list|,
-operator|&
-name|t
-operator|.
-name|tm_hour
-argument_list|,
-operator|&
-name|t
-operator|.
-name|tm_min
-argument_list|,
-operator|&
-name|t
-operator|.
-name|tm_sec
 argument_list|)
 expr_stmt|;
 name|t
@@ -428,7 +378,43 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************   create a unix date from a dos date ********************************************************************/
+comment|/*  * create a unix date from a dos date  * in network byte order  */
+end_comment
+
+begin_function
+specifier|static
+name|time_t
+name|make_unix_date
+parameter_list|(
+specifier|const
+name|u_char
+modifier|*
+name|date_ptr
+parameter_list|)
+block|{
+name|u_int32_t
+name|dos_date
+init|=
+literal|0
+decl_stmt|;
+name|dos_date
+operator|=
+name|EXTRACT_LE_32BITS
+argument_list|(
+name|date_ptr
+argument_list|)
+expr_stmt|;
+return|return
+name|int_unix_date
+argument_list|(
+name|dos_date
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * create a unix date from a dos date  * in halfword-swapped network byte order!  */
 end_comment
 
 begin_function
@@ -437,23 +423,21 @@ name|time_t
 name|make_unix_date2
 parameter_list|(
 specifier|const
-name|void
+name|u_char
 modifier|*
 name|date_ptr
 parameter_list|)
 block|{
-name|uint32
+name|u_int32_t
 name|x
 decl_stmt|,
 name|x2
 decl_stmt|;
 name|x
 operator|=
-name|IVAL
+name|EXTRACT_LE_32BITS
 argument_list|(
 name|date_ptr
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|x2
@@ -478,34 +462,17 @@ operator|>>
 literal|16
 operator|)
 expr_stmt|;
-name|SIVAL
+return|return
+name|int_unix_date
 argument_list|(
-operator|&
-name|x
-argument_list|,
-literal|0
-argument_list|,
 name|x2
 argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|make_unix_date
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-operator|&
-name|x
-argument_list|)
-operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/**************************************************************************** interpret an 8 byte "filetime" structure to a time_t It's originally in "100ns units since jan 1st 1601" ****************************************************************************/
+comment|/*  * interpret an 8 byte "filetime" structure to a time_t  * It's originally in "100ns units since jan 1st 1601"  */
 end_comment
 
 begin_function
@@ -514,7 +481,7 @@ name|time_t
 name|interpret_long_date
 parameter_list|(
 specifier|const
-name|char
+name|u_char
 modifier|*
 name|p
 parameter_list|)
@@ -525,25 +492,33 @@ decl_stmt|;
 name|time_t
 name|ret
 decl_stmt|;
+name|TCHECK2
+argument_list|(
+name|p
+index|[
+literal|4
+index|]
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
 comment|/* this gives us seconds since jan 1st 1601 (approx) */
 name|d
 operator|=
 operator|(
-name|IVAL
+name|EXTRACT_LE_32BITS
 argument_list|(
 name|p
-argument_list|,
+operator|+
 literal|4
 argument_list|)
 operator|*
 literal|256.0
 operator|+
-name|CVAL
-argument_list|(
 name|p
-argument_list|,
+index|[
 literal|3
-argument_list|)
+index|]
 operator|)
 operator|*
 operator|(
@@ -613,11 +588,18 @@ operator|(
 name|ret
 operator|)
 return|;
+name|trunc
+label|:
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
 begin_comment
-comment|/**************************************************************************** interpret the weird netbios "name". Return the name type, or -1 if we run past the end of the buffer ****************************************************************************/
+comment|/*  * interpret the weird netbios "name". Return the name type, or -1 if  * we run past the end of the buffer  */
 end_comment
 
 begin_function
@@ -626,12 +608,12 @@ name|int
 name|name_interpret
 parameter_list|(
 specifier|const
-name|uchar
+name|u_char
 modifier|*
 name|in
 parameter_list|,
 specifier|const
-name|uchar
+name|u_char
 modifier|*
 name|maxbuf
 parameter_list|,
@@ -703,6 +685,14 @@ name|len
 operator|--
 condition|)
 block|{
+name|TCHECK2
+argument_list|(
+operator|*
+name|in
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|in
@@ -718,14 +708,6 @@ literal|1
 operator|)
 return|;
 comment|/* name goes past the end of the buffer */
-name|TCHECK2
-argument_list|(
-operator|*
-name|in
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|in
@@ -831,18 +813,18 @@ block|}
 end_function
 
 begin_comment
-comment|/**************************************************************************** find a pointer to a netbios name ****************************************************************************/
+comment|/*  * find a pointer to a netbios name  */
 end_comment
 
 begin_function
 specifier|static
 specifier|const
-name|uchar
+name|u_char
 modifier|*
 name|name_ptr
 parameter_list|(
 specifier|const
-name|uchar
+name|u_char
 modifier|*
 name|buf
 parameter_list|,
@@ -850,17 +832,17 @@ name|int
 name|ofs
 parameter_list|,
 specifier|const
-name|uchar
+name|u_char
 modifier|*
 name|maxbuf
 parameter_list|)
 block|{
 specifier|const
-name|uchar
+name|u_char
 modifier|*
 name|p
 decl_stmt|;
-name|uchar
+name|u_char
 name|c
 decl_stmt|;
 name|p
@@ -906,13 +888,13 @@ operator|==
 literal|0xC0
 condition|)
 block|{
-name|uint16
+name|u_int16_t
 name|l
 init|=
-name|RSVAL
+name|EXTRACT_16BITS
 argument_list|(
 name|buf
-argument_list|,
+operator|+
 name|ofs
 argument_list|)
 operator|&
@@ -986,7 +968,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**************************************************************************** extract a netbios name from a buf ****************************************************************************/
+comment|/*  * extract a netbios name from a buf  */
 end_comment
 
 begin_function
@@ -995,7 +977,7 @@ name|int
 name|name_extract
 parameter_list|(
 specifier|const
-name|uchar
+name|u_char
 modifier|*
 name|buf
 parameter_list|,
@@ -1003,7 +985,7 @@ name|int
 name|ofs
 parameter_list|,
 specifier|const
-name|uchar
+name|u_char
 modifier|*
 name|maxbuf
 parameter_list|,
@@ -1013,7 +995,7 @@ name|name
 parameter_list|)
 block|{
 specifier|const
-name|uchar
+name|u_char
 modifier|*
 name|p
 init|=
@@ -1039,12 +1021,12 @@ literal|1
 operator|)
 return|;
 comment|/* error (probably name going past end of buffer) */
-name|strcpy
-argument_list|(
 name|name
-argument_list|,
-literal|""
-argument_list|)
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 return|return
 operator|(
@@ -1062,7 +1044,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**************************************************************************** return the total storage length of a mangled name ****************************************************************************/
+comment|/*  * return the total storage length of a mangled name  */
 end_comment
 
 begin_function
@@ -1228,24 +1210,12 @@ condition|;
 name|i
 operator|++
 control|)
-name|printf
-argument_list|(
-literal|"%c"
-argument_list|,
-name|isprint
+name|safeputchar
 argument_list|(
 name|buf
 index|[
 name|i
 index|]
-argument_list|)
-condition|?
-name|buf
-index|[
-name|i
-index|]
-else|:
-literal|'.'
 argument_list|)
 expr_stmt|;
 block|}
@@ -1261,7 +1231,6 @@ name|int
 name|name_type
 parameter_list|)
 block|{
-specifier|static
 name|char
 modifier|*
 name|f
@@ -1379,19 +1348,19 @@ name|i
 operator|<
 name|len
 condition|;
+comment|/*nothing*/
 control|)
 block|{
 name|printf
 argument_list|(
 literal|"%02X "
 argument_list|,
-operator|(
-name|int
-operator|)
 name|buf
 index|[
 name|i
 index|]
+operator|&
+literal|0xff
 argument_list|)
 expr_stmt|;
 name|i
@@ -1518,7 +1487,7 @@ argument_list|)
 expr_stmt|;
 name|n
 operator|=
-name|MIN
+name|SMBMIN
 argument_list|(
 literal|8
 argument_list|,
@@ -1626,7 +1595,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|int
+name|size_t
 name|l
 init|=
 name|PTR_DIFF
@@ -1654,6 +1623,9 @@ name|printf
 argument_list|(
 literal|"%.*s "
 argument_list|,
+operator|(
+name|int
+operator|)
 name|l
 argument_list|,
 name|fmt
@@ -1673,7 +1645,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* convert a unicode string */
+comment|/* convert a UCS2 string into iso-8859-1 string */
 end_comment
 
 begin_function
@@ -1886,12 +1858,12 @@ end_function
 begin_function
 specifier|static
 specifier|const
-name|uchar
+name|u_char
 modifier|*
-name|fdata1
+name|smb_fdata1
 parameter_list|(
 specifier|const
-name|uchar
+name|u_char
 modifier|*
 name|buf
 parameter_list|,
@@ -1901,7 +1873,7 @@ modifier|*
 name|fmt
 parameter_list|,
 specifier|const
-name|uchar
+name|u_char
 modifier|*
 name|maxbuf
 parameter_list|)
@@ -1941,12 +1913,10 @@ literal|'a'
 case|:
 name|write_bits
 argument_list|(
-name|CVAL
-argument_list|(
 name|buf
-argument_list|,
+index|[
 literal|0
-argument_list|)
+index|]
 argument_list|,
 name|attrib_fmt
 argument_list|)
@@ -1963,11 +1933,9 @@ literal|'A'
 case|:
 name|write_bits
 argument_list|(
-name|SVAL
+name|EXTRACT_LE_16BITS
 argument_list|(
 name|buf
-argument_list|,
-literal|0
 argument_list|)
 argument_list|,
 name|attrib_fmt
@@ -2037,12 +2005,10 @@ literal|1
 expr_stmt|;
 name|write_bits
 argument_list|(
-name|CVAL
-argument_list|(
 name|buf
-argument_list|,
+index|[
 literal|0
-argument_list|)
+index|]
 argument_list|,
 name|bitfmt
 argument_list|)
@@ -2105,23 +2071,31 @@ block|{
 name|unsigned
 name|int
 name|x
-init|=
+decl_stmt|;
+name|TCHECK2
+argument_list|(
+name|buf
+index|[
+literal|0
+index|]
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+name|x
+operator|=
 name|reverse
 condition|?
-name|RIVAL
+name|EXTRACT_32BITS
 argument_list|(
 name|buf
-argument_list|,
-literal|0
 argument_list|)
 else|:
-name|IVAL
+name|EXTRACT_LE_32BITS
 argument_list|(
 name|buf
-argument_list|,
-literal|0
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"%d (0x%x)"
@@ -2147,48 +2121,55 @@ block|{
 name|unsigned
 name|int
 name|x1
-init|=
-name|reverse
-condition|?
-name|RIVAL
-argument_list|(
-name|buf
-argument_list|,
-literal|0
-argument_list|)
-else|:
-name|IVAL
-argument_list|(
-name|buf
-argument_list|,
-literal|0
-argument_list|)
-decl_stmt|;
-name|unsigned
-name|int
+decl_stmt|,
 name|x2
-init|=
-name|reverse
-condition|?
-name|RIVAL
+decl_stmt|;
+name|TCHECK2
 argument_list|(
 name|buf
+index|[
+literal|4
+index|]
 argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+name|x1
+operator|=
+name|reverse
+condition|?
+name|EXTRACT_32BITS
+argument_list|(
+name|buf
+argument_list|)
+else|:
+name|EXTRACT_LE_32BITS
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
+name|x2
+operator|=
+name|reverse
+condition|?
+name|EXTRACT_32BITS
+argument_list|(
+name|buf
+operator|+
 literal|4
 argument_list|)
 else|:
-name|IVAL
+name|EXTRACT_LE_32BITS
 argument_list|(
 name|buf
-argument_list|,
+operator|+
 literal|4
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|x2
 condition|)
-block|{
 name|printf
 argument_list|(
 literal|"0x%08x:%08x"
@@ -2198,9 +2179,7 @@ argument_list|,
 name|x1
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|printf
 argument_list|(
 literal|"%d (0x%08x%08x)"
@@ -2212,7 +2191,6 @@ argument_list|,
 name|x1
 argument_list|)
 expr_stmt|;
-block|}
 name|buf
 operator|+=
 literal|8
@@ -2229,23 +2207,31 @@ block|{
 name|unsigned
 name|int
 name|x
-init|=
+decl_stmt|;
+name|TCHECK2
+argument_list|(
+name|buf
+index|[
+literal|0
+index|]
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+name|x
+operator|=
 name|reverse
 condition|?
-name|RSVAL
+name|EXTRACT_16BITS
 argument_list|(
 name|buf
-argument_list|,
-literal|0
 argument_list|)
 else|:
-name|SVAL
+name|EXTRACT_LE_16BITS
 argument_list|(
 name|buf
-argument_list|,
-literal|0
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"%d (0x%x)"
@@ -2271,23 +2257,31 @@ block|{
 name|unsigned
 name|int
 name|x
-init|=
+decl_stmt|;
+name|TCHECK2
+argument_list|(
+name|buf
+index|[
+literal|0
+index|]
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+name|x
+operator|=
 name|reverse
 condition|?
-name|RIVAL
+name|EXTRACT_32BITS
 argument_list|(
 name|buf
-argument_list|,
-literal|0
 argument_list|)
 else|:
-name|IVAL
+name|EXTRACT_LE_32BITS
 argument_list|(
 name|buf
-argument_list|,
-literal|0
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"0x%X"
@@ -2311,23 +2305,31 @@ block|{
 name|unsigned
 name|int
 name|x
-init|=
+decl_stmt|;
+name|TCHECK2
+argument_list|(
+name|buf
+index|[
+literal|0
+index|]
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+name|x
+operator|=
 name|reverse
 condition|?
-name|RSVAL
+name|EXTRACT_16BITS
 argument_list|(
 name|buf
-argument_list|,
-literal|0
 argument_list|)
 else|:
-name|SVAL
+name|EXTRACT_LE_16BITS
 argument_list|(
 name|buf
-argument_list|,
-literal|0
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"0x%X"
@@ -2351,14 +2353,22 @@ block|{
 name|unsigned
 name|int
 name|x
-init|=
-name|CVAL
+decl_stmt|;
+name|TCHECK
 argument_list|(
 name|buf
-argument_list|,
+index|[
 literal|0
+index|]
 argument_list|)
-decl_stmt|;
+expr_stmt|;
+name|x
+operator|=
+name|buf
+index|[
+literal|0
+index|]
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"0x%X"
@@ -2382,17 +2392,25 @@ block|{
 name|unsigned
 name|int
 name|x
-init|=
-name|CVAL
+decl_stmt|;
+name|TCHECK
 argument_list|(
 name|buf
-argument_list|,
+index|[
 literal|0
+index|]
 argument_list|)
-decl_stmt|;
+expr_stmt|;
+name|x
+operator|=
+name|buf
+index|[
+literal|0
+index|]
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"%d (0x%x)"
+literal|"%u (0x%x)"
 argument_list|,
 name|x
 argument_list|,
@@ -2412,6 +2430,7 @@ case|case
 literal|'S'
 case|:
 block|{
+comment|/*XXX unistr() */
 name|printf
 argument_list|(
 literal|"%.*s"
@@ -2462,13 +2481,14 @@ literal|2
 condition|)
 name|printf
 argument_list|(
-literal|"Error! ASCIIZ buffer of type %d (safety=%d)\n"
+literal|"Error! ASCIIZ buffer of type %u (safety=%lu)\n"
 argument_list|,
 operator|*
 name|buf
 argument_list|,
 operator|(
-name|int
+name|unsigned
+name|long
 operator|)
 name|PTR_DIFF
 argument_list|(
@@ -2758,14 +2778,14 @@ name|t
 decl_stmt|;
 name|int
 name|x
-init|=
-name|IVAL
+decl_stmt|;
+name|x
+operator|=
+name|EXTRACT_LE_32BITS
 argument_list|(
 name|buf
-argument_list|,
-literal|0
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 switch|switch
 condition|(
 name|atoi
@@ -2950,12 +2970,12 @@ end_function
 
 begin_function
 specifier|const
-name|uchar
+name|u_char
 modifier|*
-name|fdata
+name|smb_fdata
 parameter_list|(
 specifier|const
-name|uchar
+name|u_char
 modifier|*
 name|buf
 parameter_list|,
@@ -2965,7 +2985,7 @@ modifier|*
 name|fmt
 parameter_list|,
 specifier|const
-name|uchar
+name|u_char
 modifier|*
 name|maxbuf
 parameter_list|)
@@ -3012,7 +3032,7 @@ name|maxbuf
 condition|)
 block|{
 specifier|const
-name|uchar
+name|u_char
 modifier|*
 name|buf2
 decl_stmt|;
@@ -3021,7 +3041,7 @@ operator|++
 expr_stmt|;
 name|buf2
 operator|=
-name|fdata
+name|smb_fdata
 argument_list|(
 name|buf
 argument_list|,
@@ -3033,6 +3053,17 @@ expr_stmt|;
 name|depth
 operator|--
 expr_stmt|;
+if|if
+condition|(
+name|buf2
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 if|if
 condition|(
 name|buf2
@@ -3049,7 +3080,11 @@ operator|=
 name|buf2
 expr_stmt|;
 block|}
-break|break;
+return|return
+operator|(
+name|buf
+operator|)
+return|;
 case|case
 literal|'|'
 case|:
@@ -3129,6 +3164,27 @@ argument_list|,
 literal|']'
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|p
+operator|-
+name|fmt
+operator|+
+literal|1
+operator|>
+sizeof|sizeof
+argument_list|(
+name|s
+argument_list|)
+condition|)
+block|{
+comment|/* overrun */
+return|return
+operator|(
+name|buf
+operator|)
+return|;
+block|}
 name|strncpy
 argument_list|(
 name|s
@@ -3140,6 +3196,15 @@ operator|-
 name|fmt
 argument_list|)
 expr_stmt|;
+name|s
+index|[
+name|p
+operator|-
+name|fmt
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|fmt
 operator|=
 name|p
@@ -3148,7 +3213,7 @@ literal|1
 expr_stmt|;
 name|buf
 operator|=
-name|fdata1
+name|smb_fdata1
 argument_list|(
 name|buf
 argument_list|,
@@ -3197,7 +3262,7 @@ operator|<
 name|maxbuf
 condition|)
 block|{
-name|int
+name|size_t
 name|len
 init|=
 name|PTR_DIFF
@@ -3209,8 +3274,12 @@ argument_list|)
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"Data: (%d bytes)\n"
+literal|"Data: (%lu bytes)\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|len
 argument_list|)
 expr_stmt|;
@@ -3241,6 +3310,7 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
@@ -3248,6 +3318,7 @@ decl_stmt|;
 name|int
 name|code
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|message
@@ -3425,7 +3496,7 @@ literal|"ERRlock"
 block|,
 literal|33
 block|,
-literal|"A Lock request conflicted with an existing lock or specified an  invalid mode,  or an Unlock requested attempted to remove a lock held by another process."
+literal|"A Lock request conflicted with an existing lock or specified an  invalid mode,   or an Unlock requested attempted to remove a lock held by another process."
 block|}
 block|,
 block|{
@@ -3433,7 +3504,7 @@ literal|"ERRfilexists"
 block|,
 literal|80
 block|,
-literal|"The file named in a Create Directory, Make  New  File  or  Link  request already exists."
+literal|"The file named in a Create Directory,  Make  New  File  or  Link  request already exists."
 block|}
 block|,
 block|{
@@ -3599,7 +3670,7 @@ literal|"ERRsrverror"
 block|,
 literal|65
 block|,
-literal|"The server encountered an internal error, e.g., system file unavailable."
+literal|"The server encountered an internal error,  e.g.,  system file unavailable."
 block|}
 block|,
 block|{
@@ -3711,7 +3782,7 @@ literal|"ERRusempx"
 block|,
 literal|250
 block|,
-literal|"Temp unable to support Raw, use MPX mode."
+literal|"Temp unable to support Raw,  use MPX mode."
 block|}
 block|,
 block|{
@@ -3719,7 +3790,7 @@ literal|"ERRusestd"
 block|,
 literal|251
 block|,
-literal|"Temp unable to support Raw, use standard read/write."
+literal|"Temp unable to support Raw,  use standard read/write."
 block|}
 block|,
 block|{
@@ -3893,7 +3964,7 @@ literal|"ERRlock"
 block|,
 literal|33
 block|,
-literal|"A Lock request conflicted with an existing lock or specified an invalid mode, or an Unlock requested attempted to remove a lock held by another process."
+literal|"A Lock request conflicted with an existing lock or specified an invalid mode,  or an Unlock requested attempted to remove a lock held by another process."
 block|}
 block|,
 block|{
@@ -4037,7 +4108,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/**************************************************************************** return a SMB error string from a SMB buffer ****************************************************************************/
+comment|/*  * return a SMB error string from a SMB buffer  */
 end_comment
 
 begin_function

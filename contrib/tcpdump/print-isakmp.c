@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-isakmp.c,v 1.26 2000/12/12 09:20:26 itojun Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-isakmp.c,v 1.29 2001/10/26 03:41:29 itojun Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -4205,39 +4205,14 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
-if|if
-condition|(
-name|isprint
+name|safeputchar
 argument_list|(
-name|data
-index|[
-name|i
-index|]
-argument_list|)
-condition|)
-name|printf
-argument_list|(
-literal|"%c"
-argument_list|,
 name|data
 index|[
 name|i
 index|]
 argument_list|)
 expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"\\%03o"
-argument_list|,
-name|data
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
-block|}
 name|len
 operator|=
 literal|0
@@ -4478,14 +4453,6 @@ operator|&&
 name|len
 condition|)
 block|{
-name|len
-operator|-=
-sizeof|sizeof
-argument_list|(
-operator|*
-name|p
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
 literal|" len=%d"
@@ -7133,7 +7100,7 @@ block|{
 comment|/* 		 * encrypted, nothing we can do right now. 		 * we hope to decrypt the packet in the future... 		 */
 name|printf
 argument_list|(
-literal|" [|%s]"
+literal|" [encrypted %s]"
 argument_list|,
 name|NPSTR
 argument_list|(

@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*  * Copyright: (c) 2000 United States Government as represented by the  *	Secretary of the Navy. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *    *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in  *      the documentation and/or other materials provided with the  *      distribution.  *   3. The names of the authors may not be used to endorse or promote  *      products derived from this software without specific prior  *      written permission.  *    * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+end_comment
+
+begin_comment
 comment|/*  * This code unmangles RX packets.  RX is the mutant form of RPC that AFS  * uses to communicate between clients and servers.  *  * In this code, I mainly concern myself with decoding the AFS calls, not  * with the guts of RX, per se.  *  * Bah.  If I never look at rx_packet.h again, it will be too soon.  *  * Ken Hornstein<kenh@cmf.nrl.navy.mil>  *  * $FreeBSD$  */
 end_comment
 
@@ -16,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-rx.c,v 1.20.2.1 2001/07/09 01:40:59 fenner Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-rx.c,v 1.27 2001/10/20 07:41:55 itojun Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -120,22 +124,6 @@ directive|include
 file|"extract.h"
 end_include
 
-begin_undef
-undef|#
-directive|undef
-name|NOERROR
-end_undef
-
-begin_comment
-comment|/* Solaris sucks */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<arpa/nameser.h>
-end_include
-
 begin_include
 include|#
 directive|include
@@ -225,10 +213,25 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_struct
 specifier|static
-name|struct
-name|tok
+struct|struct
+name|double_tok
+block|{
+name|int
+name|flag
+decl_stmt|;
+comment|/* Rx flag */
+name|int
+name|packetType
+decl_stmt|;
+comment|/* Packet type */
+name|char
+modifier|*
+name|s
+decl_stmt|;
+comment|/* Flag string */
+block|}
 name|rx_flags
 index|[]
 init|=
@@ -236,11 +239,15 @@ block|{
 block|{
 name|RX_CLIENT_INITIATED
 block|,
+literal|0
+block|,
 literal|"client-init"
 block|}
 block|,
 block|{
 name|RX_REQUEST_ACK
+block|,
+literal|0
 block|,
 literal|"req-ack"
 block|}
@@ -248,11 +255,15 @@ block|,
 block|{
 name|RX_LAST_PACKET
 block|,
+literal|0
+block|,
 literal|"last-pckt"
 block|}
 block|,
 block|{
 name|RX_MORE_PACKETS
+block|,
+literal|0
 block|,
 literal|"more-pckts"
 block|}
@@ -260,11 +271,29 @@ block|,
 block|{
 name|RX_FREE_PACKET
 block|,
+literal|0
+block|,
 literal|"free-pckt"
 block|}
+block|,
+block|{
+name|RX_SLOW_START_OK
+block|,
+name|RX_PACKET_TYPE_ACK
+block|,
+literal|"slow-start"
 block|}
-decl_stmt|;
-end_decl_stmt
+block|,
+block|{
+name|RX_JUMBO_PACKET
+block|,
+name|RX_PACKET_TYPE_DATA
+block|,
+literal|"jumbogram"
+block|}
+block|}
+struct|;
+end_struct
 
 begin_decl_stmt
 specifier|static
@@ -479,6 +508,12 @@ literal|"dfs-symlink"
 block|}
 block|,
 block|{
+literal|220
+block|,
+literal|"residency"
+block|}
+block|,
+block|{
 literal|0
 block|,
 name|NULL
@@ -559,6 +594,30 @@ block|{
 literal|214
 block|,
 literal|"probeuuid"
+block|}
+block|,
+block|{
+literal|215
+block|,
+literal|"getsrvprefs"
+block|}
+block|,
+block|{
+literal|216
+block|,
+literal|"getcellservdb"
+block|}
+block|,
+block|{
+literal|217
+block|,
+literal|"getlocalcell"
+block|}
+block|,
+block|{
+literal|218
+block|,
+literal|"getcacheconf"
 block|}
 block|,
 block|{
@@ -702,6 +761,12 @@ block|{
 literal|520
 block|,
 literal|"update-entry"
+block|}
+block|,
+block|{
+literal|521
+block|,
+literal|"list-entries"
 block|}
 block|,
 block|{
@@ -917,6 +982,12 @@ block|{
 literal|533
 block|,
 literal|"get-addrs-u"
+block|}
+block|,
+block|{
+literal|534
+block|,
+literal|"list-attrib-n2"
 block|}
 block|,
 block|{
@@ -1460,6 +1531,18 @@ block|{
 literal|114
 block|,
 literal|"get-instance-strings"
+block|}
+block|,
+block|{
+literal|115
+block|,
+literal|"get-restricted"
+block|}
+block|,
+block|{
+literal|116
+block|,
+literal|"set-restricted"
 block|}
 block|,
 block|{
@@ -2514,7 +2597,28 @@ index|[
 name|i
 index|]
 operator|.
-name|v
+name|flag
+operator|&&
+operator|(
+operator|!
+name|rx_flags
+index|[
+name|i
+index|]
+operator|.
+name|packetType
+operator|||
+name|rxh
+operator|->
+name|type
+operator|==
+name|rx_flags
+index|[
+name|i
+index|]
+operator|.
+name|packetType
+operator|)
 condition|)
 block|{
 if|if
@@ -3219,7 +3323,7 @@ name|STROUT
 parameter_list|(
 name|MAX
 parameter_list|)
-value|{ unsigned int i; \ 			TCHECK2(bp[0], sizeof(int32_t)); \ 			i = EXTRACT_32BITS(bp); \ 			if (i> MAX) \ 				goto trunc; \ 			bp += sizeof(int32_t); \ 			printf(" \""); \ 			if (fn_printn(bp, i, snapend)) \ 				goto trunc; \ 			printf("\""); \ 			bp += ((i + sizeof(int32_t) - 1) / sizeof(int32_t)) * sizeof(int32_t); \ 		}
+value|{ unsigned int i; \ 			TCHECK2(bp[0], sizeof(int32_t)); \ 			i = EXTRACT_32BITS(bp); \ 			if (i> (MAX)) \ 				goto trunc; \ 			bp += sizeof(int32_t); \ 			printf(" \""); \ 			if (fn_printn(bp, i, snapend)) \ 				goto trunc; \ 			printf("\""); \ 			bp += ((i + sizeof(int32_t) - 1) / sizeof(int32_t)) * sizeof(int32_t); \ 		}
 end_define
 
 begin_define
@@ -3283,7 +3387,7 @@ name|VECOUT
 parameter_list|(
 name|MAX
 parameter_list|)
-value|{ char *sp; \ 			int k; \ 			TCHECK2(bp[0], MAX * sizeof(int32_t)); \ 			sp = s; \ 			for (k = 0; k< MAX; k++) { \ 				*sp++ = (char) EXTRACT_32BITS(bp); \ 				bp += sizeof(int32_t); \ 			} \ 			s[MAX] = '\0'; \ 			printf(" \""); \ 			fn_print(s, NULL); \ 			printf("\""); \ 		}
+value|{ char *sp; \ 			char s[AFSNAMEMAX]; \ 			int k; \ 			if ((MAX) + 1> sizeof(s)) \ 				goto trunc; \ 			TCHECK2(bp[0], (MAX) * sizeof(int32_t)); \ 			sp = s; \ 			for (k = 0; k< (MAX); k++) { \ 				*sp++ = (char) EXTRACT_32BITS(bp); \ 				bp += sizeof(int32_t); \ 			} \ 			s[(MAX)] = '\0'; \ 			printf(" \""); \ 			fn_print(s, NULL); \ 			printf("\""); \ 		}
 end_define
 
 begin_function
@@ -3554,12 +3658,6 @@ decl_stmt|;
 name|unsigned
 name|long
 name|i
-decl_stmt|;
-name|char
-name|s
-index|[
-name|AFSNAMEMAX
-index|]
 decl_stmt|;
 if|if
 condition|(
@@ -4119,12 +4217,6 @@ block|{
 name|unsigned
 name|long
 name|i
-decl_stmt|;
-name|char
-name|s
-index|[
-name|AFSNAMEMAX
-index|]
 decl_stmt|;
 name|struct
 name|rx_header
@@ -5139,12 +5231,6 @@ name|unsigned
 name|long
 name|i
 decl_stmt|;
-name|char
-name|s
-index|[
-name|AFSNAMEMAX
-index|]
-decl_stmt|;
 name|int
 name|pt_op
 decl_stmt|;
@@ -5636,12 +5722,6 @@ name|unsigned
 name|long
 name|i
 decl_stmt|;
-name|char
-name|s
-index|[
-name|AFSNAMEMAX
-index|]
-decl_stmt|;
 if|if
 condition|(
 name|length
@@ -6010,12 +6090,6 @@ name|unsigned
 name|long
 name|i
 decl_stmt|;
-name|char
-name|s
-index|[
-name|AFSNAMEMAX
-index|]
-decl_stmt|;
 if|if
 condition|(
 name|length
@@ -6368,12 +6442,6 @@ decl_stmt|;
 name|unsigned
 name|long
 name|i
-decl_stmt|;
-name|char
-name|s
-index|[
-name|AFSNAMEMAX
-index|]
 decl_stmt|;
 if|if
 condition|(
@@ -7355,12 +7423,6 @@ block|{
 name|int
 name|kauth_op
 decl_stmt|;
-name|char
-name|s
-index|[
-name|AFSNAMEMAX
-index|]
-decl_stmt|;
 if|if
 condition|(
 name|length
@@ -8017,12 +8079,6 @@ parameter_list|)
 block|{
 name|int
 name|bos_op
-decl_stmt|;
-name|char
-name|s
-index|[
-name|BOSNAMEMAX
-index|]
 decl_stmt|;
 if|if
 condition|(

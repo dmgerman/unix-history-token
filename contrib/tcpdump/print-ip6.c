@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ip6.c,v 1.16 2000/11/17 19:08:15 itojun Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ip6.c,v 1.21 2001/11/16 02:17:36 itojun Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -135,7 +135,7 @@ modifier|*
 name|bp
 parameter_list|,
 specifier|register
-name|int
+name|u_int
 name|length
 parameter_list|)
 block|{
@@ -151,7 +151,7 @@ name|int
 name|advance
 decl_stmt|;
 specifier|register
-name|int
+name|u_int
 name|len
 decl_stmt|;
 specifier|register
@@ -184,7 +184,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LBL_ALIGN
-comment|/* 	 * The IP6 header is not 16-byte aligned, so copy into abuf. 	 * This will never happen with BPF.  It does happen raw packet 	 * dumps from -r. 	 */
+comment|/* 	 * The IP6 header is not 16-byte aligned, so copy into abuf. 	 */
 if|if
 condition|(
 operator|(
@@ -206,6 +206,7 @@ name|abuf
 operator|==
 name|NULL
 condition|)
+block|{
 name|abuf
 operator|=
 name|malloc
@@ -213,6 +214,18 @@ argument_list|(
 name|snaplen
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|abuf
+operator|==
+name|NULL
+condition|)
+name|error
+argument_list|(
+literal|"ip6_print: malloc"
+argument_list|)
+expr_stmt|;
+block|}
 name|memcpy
 argument_list|(
 name|abuf
@@ -250,31 +263,19 @@ operator|*
 operator|)
 name|abuf
 expr_stmt|;
+name|bp
+operator|=
+name|abuf
+expr_stmt|;
 block|}
 endif|#
 directive|endif
-if|if
-condition|(
-operator|(
-name|u_char
-operator|*
-operator|)
-operator|(
-name|ip6
-operator|+
-literal|1
-operator|)
-operator|>
-name|snapend
-condition|)
-block|{
-name|printf
+name|TCHECK
 argument_list|(
-literal|"[|ip6]"
+operator|*
+name|ip6
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
 if|if
 condition|(
 name|length
@@ -368,6 +369,7 @@ condition|(
 name|cp
 operator|==
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -624,6 +626,8 @@ case|:
 block|{
 name|int
 name|enh
+decl_stmt|,
+name|padlen
 decl_stmt|;
 name|advance
 operator|=
@@ -640,6 +644,9 @@ name|ip6
 argument_list|,
 operator|&
 name|enh
+argument_list|,
+operator|&
+name|padlen
 argument_list|)
 expr_stmt|;
 if|if
@@ -656,6 +663,10 @@ operator|=
 name|enh
 operator|&
 literal|0xff
+expr_stmt|;
+name|len
+operator|-=
+name|padlen
 expr_stmt|;
 break|break;
 block|}
@@ -955,6 +966,17 @@ literal|")"
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
+name|trunc
+label|:
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"[|ip6]"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

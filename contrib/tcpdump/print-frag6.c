@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-frag6.c,v 1.12 2000/10/07 05:53:10 itojun Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-frag6.c,v 1.13 2001/09/17 21:58:02 fenner Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -139,21 +139,10 @@ name|u_char
 modifier|*
 name|ep
 decl_stmt|;
-if|#
-directive|if
-literal|0
-define|#
-directive|define
-name|TCHECK
-parameter_list|(
-name|var
-parameter_list|)
-value|if ((u_char *)&(var)>= ep - sizeof(var)) goto trunc
-endif|#
-directive|endif
 name|dp
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|ip6_frag
 operator|*
@@ -163,6 +152,7 @@ expr_stmt|;
 name|ip6
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|ip6_hdr
 operator|*

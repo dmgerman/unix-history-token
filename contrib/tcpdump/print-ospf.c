@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ospf.c,v 1.29 2000/09/29 04:58:45 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ospf.c,v 1.31 2001/06/28 04:34:51 fenner Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1931,11 +1931,6 @@ condition|(
 name|vflag
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|" nbrs"
-argument_list|)
-expr_stmt|;
 name|ap
 operator|=
 name|op
@@ -1943,6 +1938,21 @@ operator|->
 name|ospf_hello
 operator|.
 name|hello_neighbor
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|u_char
+operator|*
+operator|)
+name|ap
+operator|<
+name|dataend
+condition|)
+name|printf
+argument_list|(
+literal|" nbrs"
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -2423,13 +2433,6 @@ operator|*
 operator|)
 name|bp2
 expr_stmt|;
-comment|/* Print the source and destination address  */
-if|#
-directive|if
-literal|0
-block|(void) printf("%s> %s:", 	    ipaddr_string(&ip->ip_src), 	    ipaddr_string(&ip->ip_dst));
-endif|#
-directive|endif
 comment|/* XXX Before we do anything else, strip off the MD5 trailer */
 name|TCHECK
 argument_list|(
@@ -2483,7 +2486,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" OSPFv%d-%s %d:"
+literal|"OSPFv%d-%s %d:"
 argument_list|,
 name|op
 operator|->

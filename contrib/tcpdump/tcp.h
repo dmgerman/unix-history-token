@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/tcp.h,v 1.7 2000/10/03 09:17:41 guy Exp $ (LBL) */
+comment|/* @(#) $Header: /tcpdump/master/tcpdump/tcp.h,v 1.8 2001/05/09 01:16:57 fenner Exp $ (LBL) */
 end_comment
 
 begin_comment
@@ -76,6 +76,16 @@ define|#
 directive|define
 name|TH_URG
 value|0x20
+define|#
+directive|define
+name|TH_ECNECHO
+value|0x40
+comment|/* ECN Echo */
+define|#
+directive|define
+name|TH_CWR
+value|0x80
+comment|/* ECN Cwnd Reduced */
 name|u_int16_t
 name|th_win
 decl_stmt|;
@@ -123,34 +133,24 @@ end_define
 begin_define
 define|#
 directive|define
-name|TCPOPT_WINDOW
+name|TCPOPT_WSCALE
 value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|TCPOLEN_WINDOW
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|TCPOPT_SACK_PERMITTED
-value|4
 end_define
 
 begin_comment
-comment|/* Experimental */
+comment|/* window scale factor (rfc1323) */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TCPOLEN_SACK_PERMITTED
-value|2
+name|TCPOPT_SACKOK
+value|4
 end_define
+
+begin_comment
+comment|/* selective ack ok (rfc2018) */
+end_comment
 
 begin_define
 define|#
@@ -160,7 +160,29 @@ value|5
 end_define
 
 begin_comment
-comment|/* Experimental */
+comment|/* selective ack (rfc2018) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPOPT_ECHO
+value|6
+end_define
+
+begin_comment
+comment|/* echo (rfc1072) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPOPT_ECHOREPLY
+value|7
+end_define
+
+begin_comment
+comment|/* echo (rfc1072) */
 end_comment
 
 begin_define
@@ -169,6 +191,10 @@ directive|define
 name|TCPOPT_TIMESTAMP
 value|8
 end_define
+
+begin_comment
+comment|/* timestamp (rfc1323) */
+end_comment
 
 begin_define
 define|#
@@ -186,6 +212,39 @@ end_define
 
 begin_comment
 comment|/* appendix A */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPOPT_CC
+value|11
+end_define
+
+begin_comment
+comment|/* T/TCP CC options (rfc1644) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPOPT_CCNEW
+value|12
+end_define
+
+begin_comment
+comment|/* T/TCP CC options (rfc1644) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCPOPT_CCECHO
+value|13
+end_define
+
+begin_comment
+comment|/* T/TCP CC options (rfc1644) */
 end_comment
 
 begin_define

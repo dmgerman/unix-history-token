@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-bgp.c,v 1.21 2000/12/05 05:48:35 guy Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-bgp.c,v 1.27 2001/10/18 09:52:17 itojun Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -209,6 +209,17 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|BGP_OPEN_SIZE
+value|29
+end_define
+
+begin_comment
+comment|/* unaligned */
+end_comment
+
 begin_struct
 struct|struct
 name|bgp_opt
@@ -223,6 +234,17 @@ comment|/* variable length */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|BGP_OPT_SIZE
+value|2
+end_define
+
+begin_comment
+comment|/* some compilers may pad to 4 bytes */
+end_comment
 
 begin_struct
 struct|struct
@@ -250,6 +272,17 @@ comment|/* data should follow */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|BGP_NOTIFICATION_SIZE
+value|21
+end_define
+
+begin_comment
+comment|/* unaligned */
+end_comment
 
 begin_struct
 struct|struct
@@ -473,6 +506,8 @@ block|{
 name|NULL
 block|,
 literal|"Authentication Information"
+block|,
+literal|"Capabilities Advertisement"
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -1217,7 +1252,7 @@ name|char
 modifier|*
 name|buf
 parameter_list|,
-name|int
+name|u_int
 name|buflen
 parameter_list|)
 block|{
@@ -1225,7 +1260,7 @@ name|struct
 name|in_addr
 name|addr
 decl_stmt|;
-name|int
+name|u_int
 name|plen
 decl_stmt|;
 name|plen
@@ -1379,7 +1414,7 @@ name|char
 modifier|*
 name|buf
 parameter_list|,
-name|int
+name|u_int
 name|buflen
 parameter_list|)
 block|{
@@ -1387,7 +1422,7 @@ name|struct
 name|in6_addr
 name|addr
 decl_stmt|;
-name|int
+name|u_int
 name|plen
 decl_stmt|;
 name|plen
@@ -1492,7 +1527,7 @@ argument_list|,
 name|getname6
 argument_list|(
 operator|(
-name|char
+name|u_char
 operator|*
 operator|)
 operator|&
@@ -1694,6 +1729,8 @@ name|p
 index|[
 literal|1
 index|]
+operator|*
+literal|2
 condition|;
 name|i
 operator|+=
@@ -1712,13 +1749,8 @@ literal|""
 else|:
 literal|" "
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
-operator|*
-operator|(
-name|u_int16_t
-operator|*
-operator|)
 operator|&
 name|p
 index|[
@@ -1809,16 +1841,8 @@ name|printf
 argument_list|(
 literal|" %u"
 argument_list|,
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
-operator|*
-operator|(
-name|u_int32_t
-operator|*
-operator|)
 name|p
 argument_list|)
 argument_list|)
@@ -1860,13 +1884,8 @@ name|printf
 argument_list|(
 literal|" AS #%u, origin %s"
 argument_list|,
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
-operator|*
-operator|(
-name|u_int16_t
-operator|*
-operator|)
 name|p
 argument_list|)
 argument_list|,
@@ -1916,16 +1935,8 @@ name|comm
 decl_stmt|;
 name|comm
 operator|=
-operator|(
-name|u_int32_t
-operator|)
-name|ntohl
+name|EXTRACT_32BITS
 argument_list|(
-operator|*
-operator|(
-name|u_int32_t
-operator|*
-operator|)
 operator|&
 name|p
 index|[
@@ -1992,13 +2003,8 @@ name|BGPTYPE_MP_REACH_NLRI
 case|:
 name|af
 operator|=
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
-operator|*
-operator|(
-name|u_int16_t
-operator|*
-operator|)
 name|p
 argument_list|)
 expr_stmt|;
@@ -2352,13 +2358,8 @@ name|BGPTYPE_MP_UNREACH_NLRI
 case|:
 name|af
 operator|=
-name|ntohs
+name|EXTRACT_16BITS
 argument_list|(
-operator|*
-operator|(
-name|u_int16_t
-operator|*
-operator|)
 name|p
 argument_list|)
 expr_stmt|;
@@ -2555,10 +2556,7 @@ index|[
 literal|0
 index|]
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|bgpo
-argument_list|)
+name|BGP_OPEN_SIZE
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -2568,10 +2566,7 @@ name|bgpo
 argument_list|,
 name|dat
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|bgpo
-argument_list|)
+name|BGP_OPEN_SIZE
 argument_list|)
 expr_stmt|;
 name|hlen
@@ -2648,6 +2643,7 @@ operator|=
 operator|&
 operator|(
 operator|(
+specifier|const
 expr|struct
 name|bgp_open
 operator|*
@@ -2660,22 +2656,29 @@ expr_stmt|;
 name|opt
 operator|++
 expr_stmt|;
-for|for
-control|(
 name|i
 operator|=
 literal|0
-init|;
+expr_stmt|;
+while|while
+condition|(
 name|i
 operator|<
 name|bgpo
 operator|.
 name|bgpo_optlen
-condition|;
-name|i
-operator|++
-control|)
+condition|)
 block|{
+name|TCHECK2
+argument_list|(
+name|opt
+index|[
+name|i
+index|]
+argument_list|,
+name|BGP_OPT_SIZE
+argument_list|)
+expr_stmt|;
 name|memcpy
 argument_list|(
 operator|&
@@ -2687,10 +2690,7 @@ index|[
 name|i
 index|]
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|bgpopt
-argument_list|)
+name|BGP_OPT_SIZE
 argument_list|)
 expr_stmt|;
 if|if
@@ -2741,10 +2741,7 @@ argument_list|)
 expr_stmt|;
 name|i
 operator|+=
-sizeof|sizeof
-argument_list|(
-name|bgpopt
-argument_list|)
+name|BGP_OPT_SIZE
 operator|+
 name|bgpopt
 operator|.
@@ -2808,10 +2805,7 @@ index|[
 literal|0
 index|]
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|bgp
-argument_list|)
+name|BGP_SIZE
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -2821,10 +2815,7 @@ name|bgp
 argument_list|,
 name|dat
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|bgp
-argument_list|)
+name|BGP_SIZE
 argument_list|)
 expr_stmt|;
 name|hlen
@@ -2861,7 +2852,7 @@ condition|(
 name|len
 condition|)
 block|{
-comment|/*  Without keeping state from the original NLRI message, 		 *  it's not possible to tell if this a v4 or v6 route, 		 *  so only try to decode it if we're not v6 enabled. 	         */
+comment|/* 		 * Without keeping state from the original NLRI message, 		 * it's not possible to tell if this a v4 or v6 route, 		 * so only try to decode it if we're not v6 enabled. 	         */
 ifdef|#
 directive|ifdef
 name|INET6
@@ -3331,10 +3322,7 @@ index|[
 literal|0
 index|]
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|bgpn
-argument_list|)
+name|BGP_NOTIFICATION_SIZE
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -3344,10 +3332,7 @@ name|bgpn
 argument_list|,
 name|dat
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|bgpn
-argument_list|)
+name|BGP_NOTIFICATION_SIZE
 argument_list|)
 expr_stmt|;
 name|hlen
@@ -3423,10 +3408,7 @@ index|[
 literal|0
 index|]
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|bgp
-argument_list|)
+name|BGP_SIZE
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -3436,10 +3418,7 @@ name|bgp
 argument_list|,
 name|dat
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|bgp
-argument_list|)
+name|BGP_SIZE
 argument_list|)
 expr_stmt|;
 name|printf
@@ -3708,10 +3687,7 @@ index|[
 literal|0
 index|]
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|bgp
-argument_list|)
+name|BGP_SIZE
 argument_list|)
 expr_stmt|;
 comment|/*XXX*/
@@ -3722,10 +3698,7 @@ name|bgp
 argument_list|,
 name|p
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|bgp
-argument_list|)
+name|BGP_SIZE
 argument_list|)
 expr_stmt|;
 if|if

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ripng.c,v 1.7 2000/10/07 05:46:21 itojun Exp $"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ripng.c,v 1.10 2001/11/16 08:59:22 itojun Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -196,6 +196,7 @@ name|u_char
 modifier|*
 name|dat
 parameter_list|,
+name|unsigned
 name|int
 name|length
 parameter_list|)
@@ -335,7 +336,7 @@ literal|4
 condition|)
 name|printf
 argument_list|(
-literal|" ripng-req %d[%d]:"
+literal|" ripng-req %d[%u]:"
 argument_list|,
 name|j
 argument_list|,
@@ -399,6 +400,8 @@ block|{
 if|if
 condition|(
 name|vflag
+operator|>
+literal|1
 condition|)
 name|printf
 argument_list|(
@@ -449,7 +452,7 @@ literal|4
 condition|)
 name|printf
 argument_list|(
-literal|" ripng-resp %d[%d]:"
+literal|" ripng-resp %d[%u]:"
 argument_list|,
 name|j
 argument_list|,
@@ -513,6 +516,8 @@ block|{
 if|if
 condition|(
 name|vflag
+operator|>
+literal|1
 condition|)
 name|printf
 argument_list|(
@@ -541,14 +546,14 @@ name|trunc
 condition|)
 name|printf
 argument_list|(
-literal|"[|rip]"
+literal|"[|ripng]"
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
 name|printf
 argument_list|(
-literal|" ripng-%d ?? %d"
+literal|" ripng-%d ?? %u"
 argument_list|,
 name|rp
 operator|->
