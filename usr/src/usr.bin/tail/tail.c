@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tail.c	5.2 (Berkeley) %G%"
+literal|"@(#)tail.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1289,9 +1289,8 @@ operator|)
 operator|>
 literal|0
 condition|)
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|write
 argument_list|(
 literal|1
@@ -1299,6 +1298,13 @@ argument_list|,
 name|bin
 argument_list|,
 name|n
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
