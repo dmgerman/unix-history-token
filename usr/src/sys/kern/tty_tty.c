@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_tty.c	4.9	82/03/31	*/
+comment|/*	tty_tty.c	4.10	82/08/22	*/
 end_comment
 
 begin_comment
@@ -47,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|"../h/proc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/uio.h"
 end_include
 
 begin_comment
@@ -114,8 +120,24 @@ begin_macro
 name|syread
 argument_list|(
 argument|dev
+argument_list|,
+argument|uio
 argument_list|)
 end_macro
+
+begin_decl_stmt
+name|dev_t
+name|dev
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|uio
+modifier|*
+name|uio
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -154,6 +176,8 @@ operator|(
 name|u
 operator|.
 name|u_ttyd
+operator|,
+name|uio
 operator|)
 expr_stmt|;
 block|}
@@ -167,8 +191,24 @@ begin_macro
 name|sywrite
 argument_list|(
 argument|dev
+argument_list|,
+argument|uio
 argument_list|)
 end_macro
+
+begin_decl_stmt
+name|dev_t
+name|dev
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|uio
+modifier|*
+name|uio
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -207,6 +247,8 @@ operator|(
 name|u
 operator|.
 name|u_ttyd
+operator|,
+name|uio
 operator|)
 expr_stmt|;
 block|}
