@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*  * Copyright (c) 1983, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_ifndef
@@ -14,7 +14,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1983 Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1983, 1988 Regents of the University of California.\n\  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -497,9 +497,17 @@ index|[
 name|NPARTITIONS
 index|]
 decl_stmt|;
+name|int
+name|totsize
+init|=
+literal|0
+decl_stmt|;
 name|char
 modifier|*
 name|lp
+decl_stmt|,
+modifier|*
+name|tyname
 decl_stmt|;
 name|argc
 operator|--
@@ -518,7 +526,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: disktab [ -p ] [ -d ] disk-type\n"
+literal|"usage: disktab [ -p ] [ -d ] [ -s size ] disk-type\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -579,6 +587,42 @@ operator|--
 operator|,
 name|argv
 operator|++
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|argc
+operator|>
+literal|1
+operator|&&
+name|strcmp
+argument_list|(
+operator|*
+name|argv
+argument_list|,
+literal|"-s"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|totsize
+operator|=
+name|atoi
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+name|argc
+operator|+=
+literal|2
+operator|,
+name|argv
+operator|+=
+literal|2
 expr_stmt|;
 block|}
 name|dp
@@ -645,21 +689,9 @@ name|d_flags
 operator|&
 name|D_REMOVABLE
 condition|)
-name|strncpy
-argument_list|(
-name|dp
-operator|->
-name|d_typename
-argument_list|,
+name|tyname
+operator|=
 literal|"removable"
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|dp
-operator|->
-name|d_typename
-argument_list|)
-argument_list|)
 expr_stmt|;
 elseif|else
 if|if
@@ -670,38 +702,14 @@ name|d_flags
 operator|&
 name|D_RAMDISK
 condition|)
-name|strncpy
-argument_list|(
-name|dp
-operator|->
-name|d_typename
-argument_list|,
+name|tyname
+operator|=
 literal|"simulated"
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|dp
-operator|->
-name|d_typename
-argument_list|)
-argument_list|)
 expr_stmt|;
 else|else
-name|strncpy
-argument_list|(
-name|dp
-operator|->
-name|d_typename
-argument_list|,
+name|tyname
+operator|=
 literal|"winchester"
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|dp
-operator|->
-name|d_typename
-argument_list|)
-argument_list|)
 expr_stmt|;
 block|}
 name|spc
@@ -710,7 +718,7 @@ name|dp
 operator|->
 name|d_secpercyl
 expr_stmt|;
-comment|/* 	 * Bad sector table contains one track for the replicated 	 * copies of the table and enough full tracks preceding 	 * the last track to hold the pool of free blocks to which 	 * bad sectors are mapped. 	 */
+comment|/* 	 * Bad sector table contains one track for the replicated 	 * copies of the table and enough full tracks preceding 	 * the last track to hold the pool of free blocks to which 	 * bad sectors are mapped. 	 * If disk size was specified explicitly, use specified size. 	 */
 if|if
 condition|(
 name|dp
@@ -724,6 +732,10 @@ operator|->
 name|d_flags
 operator|&
 name|D_BADSECT
+operator|&&
+name|totsize
+operator|==
+literal|0
 condition|)
 block|{
 name|badsecttable
@@ -760,6 +772,36 @@ expr_stmt|;
 name|threshhold
 operator|=
 literal|0
+expr_stmt|;
+block|}
+comment|/* 	 * If disk size was specified, recompute number of cylinders 	 * that may be used, and set badsecttable to any remaining 	 * fraction of the last cylinder. 	 */
+if|if
+condition|(
+name|totsize
+operator|!=
+literal|0
+condition|)
+block|{
+name|dp
+operator|->
+name|d_ncylinders
+operator|=
+name|howmany
+argument_list|(
+name|totsize
+argument_list|,
+name|spc
+argument_list|)
+expr_stmt|;
+name|badsecttable
+operator|=
+name|spc
+operator|*
+name|dp
+operator|->
+name|d_ncylinders
+operator|-
+name|totsize
 expr_stmt|;
 block|}
 comment|/*  	 * Figure out if disk is large enough for 	 * expanded swap area and 'd', 'e', and 'f' 	 * partitions.  Otherwise, use smaller defaults 	 * based on RK07. 	 */
@@ -847,7 +889,7 @@ literal|3
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Calculate number of cylinders allocated to each disk 	 * partition.  We may waste a bit of space here, but it's 	 * in the interest of compatibility (for mixed disk systems). 	 */
+comment|/* 	 * Calculate number of cylinders allocated to each disk 	 * partition.  We may waste a bit of space here, but it's 	 * in the interest of (very backward) compatibility 	 * (for mixed disk systems). 	 */
 for|for
 control|(
 name|curcyl
@@ -1046,9 +1088,19 @@ directive|ifndef
 name|for_now
 if|if
 condition|(
+name|totsize
+operator|||
 operator|!
 name|pflag
 condition|)
+else|#
+directive|else
+if|if
+condition|(
+name|totsize
+condition|)
+endif|#
+directive|endif
 name|defpart
 index|[
 name|def
@@ -1062,8 +1114,6 @@ index|]
 operator|-=
 name|badsecttable
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Calculate starting cylinder number for each partition. 	 * Note the 'h' partition is physically located before the 	 * 'g' or 'd' partition.  This is reflected in the layout 	 * arrays defined above. 	 */
 for|for
 control|(
@@ -1375,9 +1425,7 @@ name|printf
 argument_list|(
 literal|"\t:ty=%s:ns#%d:nt#%d:nc#%d:"
 argument_list|,
-name|dp
-operator|->
-name|d_typename
+name|tyname
 argument_list|,
 name|dp
 operator|->
@@ -1783,7 +1831,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n    Partition\t   Size\t   Range\n"
+literal|"\n    Partition\t   Size\t Offset\t   Range\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -1831,7 +1879,7 @@ continue|continue;
 block|}
 name|printf
 argument_list|(
-literal|"%7d\t%4d - %d\n"
+literal|"%7d\t%7d\t%4d - %d%s\n"
 argument_list|,
 name|defpart
 index|[
@@ -1840,6 +1888,13 @@ index|]
 index|[
 name|part
 index|]
+argument_list|,
+name|startcyl
+index|[
+name|part
+index|]
+operator|*
+name|spc
 argument_list|,
 name|startcyl
 index|[
@@ -1857,6 +1912,20 @@ name|part
 index|]
 operator|-
 literal|1
+argument_list|,
+name|defpart
+index|[
+name|def
+index|]
+index|[
+name|part
+index|]
+operator|%
+name|spc
+condition|?
+literal|"*"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 block|}
