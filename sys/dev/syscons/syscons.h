@@ -393,13 +393,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|FONT_NONE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
 name|FONT_8
 value|2
 end_define
