@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: vidcontrol.c,v 1.5 1995/01/28 22:18:05 sos Exp $  */
+comment|/*-  * Copyright (c) 1994-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: vidcontrol.c,v 1.6 1995/01/30 21:44:07 sos Exp sos $  */
 end_comment
 
 begin_include
@@ -1297,6 +1297,21 @@ name|strcmp
 argument_list|(
 name|appearence
 argument_list|,
+literal|"normal"
+argument_list|)
+condition|)
+name|type
+operator|=
+literal|0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|appearence
+argument_list|,
 literal|"blink"
 argument_list|)
 condition|)
@@ -1312,12 +1327,12 @@ name|strcmp
 argument_list|(
 name|appearence
 argument_list|,
-literal|"noblink"
+literal|"destructive"
 argument_list|)
 condition|)
 name|type
 operator|=
-literal|0
+literal|3
 expr_stmt|;
 else|else
 block|{
@@ -1325,7 +1340,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"argument to -c must be blink or noblink\n"
+literal|"argument to -c must be normal, blink or destructive\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1984,19 +1999,22 @@ argument_list|,
 literal|"Usage: vidcontrol mode             (available modes: VGA_40x25, VGA_80x25,\n"
 literal|"                                                     VGA_80x50, VGA_320x200,\n"
 literal|"                                                     EGA_80x25, EGA_80x43)\n"
-literal|"                                     (experimental)  VGA_80x30, VGA_80x60)\n"
-literal|"                  show               (show available colors)\n"
-literal|"                  fgcol bgcol        (set fore-& background colors)\n"
-literal|"                  -r fgcol bgcol     (set reverse fore-& background colors)\n"
-literal|"                  -b color           (set border color)\n"
-literal|"                  -c blink | noblink (set cursor type)\n"
-literal|"                  -d                 (dump screenmap to stdout)\n"
-literal|"                  -l filename        (load srceenmap file filename)\n"
-literal|"                  -L                 (load default screenmap)\n"
-literal|"                  -f DxL filename    (load font, D dots wide& L lines high)\n"
-literal|"                  -s saver | help    (set screensaver type or help for a list)\n"
-literal|"                  -t N               (set screensaver timeout in seconds)\n"
-literal|"                  -x                 (use hex numbers for output)\n"
+literal|"                                   (experimental)    VGA_80x30, VGA_80x60)\n"
+literal|"\n"
+literal|"                  show             (show available colors)\n"
+literal|"                  fgcol bgcol      (set fore-& background colors)\n"
+literal|"                  -r fgcol bgcol   (set reverse fore-& background colors)\n"
+literal|"                  -b color         (set border color)\n"
+literal|"                  -c normal        (set cursor to inverting block\n"
+literal|"                  -c blink         (set cursor to blinking inverted block\n"
+literal|"                  -c destructive   (set cursor to blinking destructive char\n"
+literal|"                  -d               (dump screenmap to stdout)\n"
+literal|"                  -l filename      (load srceenmap file filename)\n"
+literal|"                  -L               (load default screenmap)\n"
+literal|"                  -f DxL filename  (load font, D dots wide& L lines high)\n"
+literal|"                  -s saver | help  (set screensaver type or help for a list)\n"
+literal|"                  -t N             (set screensaver timeout in seconds)\n"
+literal|"                  -x               (use hex numbers for output)\n"
 argument_list|)
 expr_stmt|;
 block|}
