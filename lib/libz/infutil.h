@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* infutil.h -- types and macros common to blocks and codes  * Copyright (C) 1995-1996 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h   */
+comment|/* infutil.h -- types and macros common to blocks and codes  * Copyright (C) 1995-1998 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h   */
 end_comment
 
 begin_comment
@@ -107,15 +107,6 @@ struct|;
 comment|/* if DTREE, decoding info for trees */
 struct|struct
 block|{
-name|inflate_huft
-modifier|*
-name|tl
-decl_stmt|;
-name|inflate_huft
-modifier|*
-name|td
-decl_stmt|;
-comment|/* trees to free */
 name|inflate_codes_statef
 modifier|*
 name|codes
@@ -141,6 +132,11 @@ name|uLong
 name|bitb
 decl_stmt|;
 comment|/* bit buffer */
+name|inflate_huft
+modifier|*
+name|hufts
+decl_stmt|;
+comment|/* single malloc for tree space */
 name|Bytef
 modifier|*
 name|window

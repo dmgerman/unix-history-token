@@ -1,17 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* zutil.c -- target dependent utility functions for the compression library  * Copyright (C) 1995-1996 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h   */
+comment|/* zutil.c -- target dependent utility functions for the compression library  * Copyright (C) 1995-1998 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h   */
 end_comment
 
 begin_comment
-comment|/* $Id: zutil.c,v 1.17 1996/07/24 13:41:12 me Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
 
 begin_include
 include|#
@@ -104,6 +98,7 @@ begin_function
 specifier|const
 name|char
 modifier|*
+name|ZEXPORT
 name|zlibVersion
 parameter_list|()
 block|{
@@ -118,6 +113,32 @@ ifdef|#
 directive|ifdef
 name|DEBUG
 end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|verbose
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|verbose
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+name|int
+name|z_verbose
+init|=
+name|verbose
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|void
@@ -151,6 +172,32 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* exported to allow conversion of error code to string for compress() and  * uncompress()  */
+end_comment
+
+begin_function
+specifier|const
+name|char
+modifier|*
+name|ZEXPORT
+name|zError
+parameter_list|(
+name|err
+parameter_list|)
+name|int
+name|err
+decl_stmt|;
+block|{
+return|return
+name|ERR_MSG
+argument_list|(
+name|err
+argument_list|)
+return|;
+block|}
+end_function
 
 begin_ifndef
 ifndef|#

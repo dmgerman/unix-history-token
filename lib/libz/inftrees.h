@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* inftrees.h -- header to use inftrees.c  * Copyright (C) 1995-1996 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h   */
+comment|/* inftrees.h -- header to use inftrees.c  * Copyright (C) 1995-1998 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h   */
 end_comment
 
 begin_comment
@@ -66,23 +66,16 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
+begin_comment
+comment|/* Maximum size of dynamic tree.  The maximum found in a long but non-    exhaustive search was 1041 huft structures (875 for length/literals    and 166 for distances, the latter actually the result of an    exhaustive search).  The actual maximum is not known, but the    value below is more than safe. */
+end_comment
 
-begin_decl_stmt
-specifier|extern
-name|uInt
-name|inflate_hufts
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|MANY
+value|1440
+end_define
 
 begin_decl_stmt
 specifier|extern
@@ -105,6 +98,10 @@ name|FAR
 operator|*
 operator|,
 comment|/* bits tree result */
+name|inflate_huft
+operator|*
+operator|,
+comment|/* space for trees */
 name|z_streamp
 operator|)
 argument_list|)
@@ -112,7 +109,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* for zalloc, zfree functions */
+comment|/* for messages */
 end_comment
 
 begin_decl_stmt
@@ -152,6 +149,10 @@ name|FAR
 operator|*
 operator|,
 comment|/* distance tree result */
+name|inflate_huft
+operator|*
+operator|,
+comment|/* space for trees */
 name|z_streamp
 operator|)
 argument_list|)
@@ -159,7 +160,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* for zalloc, zfree functions */
+comment|/* for messages */
 end_comment
 
 begin_decl_stmt
@@ -187,26 +188,8 @@ name|inflate_huft
 operator|*
 name|FAR
 operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* distance tree result */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|inflate_trees_free
-name|OF
-argument_list|(
-operator|(
-name|inflate_huft
-operator|*
 operator|,
-comment|/* tables to free */
+comment|/* distance tree result */
 name|z_streamp
 operator|)
 argument_list|)
@@ -214,7 +197,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* for zfree function */
+comment|/* for memory allocation */
 end_comment
 
 end_unit

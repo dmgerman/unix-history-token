@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* inftrees.c -- generate Huffman trees for efficient decoding  * Copyright (C) 1995-1996 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h   */
+comment|/* inftrees.c -- generate Huffman trees for efficient decoding  * Copyright (C) 1995-1998 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h   */
 end_comment
 
 begin_include
@@ -16,11 +16,12 @@ file|"inftrees.h"
 end_include
 
 begin_decl_stmt
+specifier|const
 name|char
 name|inflate_copyright
 index|[]
 init|=
-literal|" inflate 1.0.4 Copyright 1995-1996 Mark Adler "
+literal|" inflate 1.1.1 Copyright 1995-1998 Mark Adler "
 decl_stmt|;
 end_decl_stmt
 
@@ -112,37 +113,23 @@ name|uIntf
 operator|*
 operator|,
 comment|/* maximum lookup bits (returns actual) */
-name|z_streamp
+name|inflate_huft
+operator|*
+operator|,
+comment|/* space for trees */
+name|uInt
+operator|*
+operator|,
+comment|/* hufts used in space */
+name|uIntf
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* for zalloc function */
-end_comment
-
-begin_decl_stmt
-name|local
-name|voidpf
-name|falloc
-name|OF
-argument_list|(
-operator|(
-name|voidpf
-operator|,
-comment|/* opaque pointer (not used) */
-name|uInt
-operator|,
-comment|/* number of items */
-name|uInt
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* size of item */
+comment|/* space for values */
 end_comment
 
 begin_comment
@@ -476,34 +463,6 @@ begin_comment
 comment|/* maximum bit length of any code */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|N_MAX
-value|288
-end_define
-
-begin_comment
-comment|/* maximum number of codes in any set */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
-begin_decl_stmt
-name|uInt
-name|inflate_hufts
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 name|local
 name|int
@@ -523,7 +482,11 @@ name|t
 parameter_list|,
 name|m
 parameter_list|,
-name|zs
+name|hp
+parameter_list|,
+name|hn
+parameter_list|,
+name|v
 parameter_list|)
 name|uIntf
 modifier|*
@@ -533,7 +496,7 @@ comment|/* code lengths in bits (all assumed<= BMAX) */
 name|uInt
 name|n
 decl_stmt|;
-comment|/* number of codes (assumed<= N_MAX) */
+comment|/* number of codes (assumed<= 288) */
 name|uInt
 name|s
 decl_stmt|;
@@ -562,10 +525,21 @@ modifier|*
 name|m
 decl_stmt|;
 comment|/* maximum lookup bits, returns actual */
-name|z_streamp
-name|zs
+name|inflate_huft
+modifier|*
+name|hp
 decl_stmt|;
-comment|/* for zalloc function */
+comment|/* space for trees */
+name|uInt
+modifier|*
+name|hn
+decl_stmt|;
+comment|/* hufts used in space */
+name|uIntf
+modifier|*
+name|v
+decl_stmt|;
+comment|/* working area: values in order of bit length */
 comment|/* Given a list of code lengths and a maximum table size, make a set of    tables to decode that set of codes.  Return Z_OK on success, Z_BUF_ERROR    if the given code set is incomplete (the tables are still built in this    case), Z_DATA_ERROR if the input is invalid (an over-subscribed set of    lengths), or Z_MEM_ERROR if not enough memory. */
 block|{
 name|uInt
@@ -612,6 +586,10 @@ name|int
 name|l
 decl_stmt|;
 comment|/* bits per table (returned in m) */
+name|uInt
+name|mask
+decl_stmt|;
+comment|/* (1<< w) - 1, to avoid cc -O bug on HP */
 specifier|register
 name|uIntf
 modifier|*
@@ -636,13 +614,6 @@ name|BMAX
 index|]
 decl_stmt|;
 comment|/* table stack */
-name|uInt
-name|v
-index|[
-name|N_MAX
-index|]
-decl_stmt|;
-comment|/* values in order of bit length */
 specifier|register
 name|int
 name|w
@@ -1182,95 +1153,56 @@ operator|<<
 name|j
 expr_stmt|;
 comment|/* table entries for j-bit table */
-comment|/* allocate and link in new table */
+comment|/* allocate new table */
 if|if
 condition|(
-operator|(
-name|q
-operator|=
-operator|(
-name|inflate_huft
 operator|*
-operator|)
-name|ZALLOC
-argument_list|(
-name|zs
-argument_list|,
-name|z
+name|hn
 operator|+
-literal|1
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|inflate_huft
-argument_list|)
-argument_list|)
-operator|)
-operator|==
-name|Z_NULL
+name|z
+operator|>
+name|MANY
 condition|)
-block|{
-if|if
-condition|(
-name|h
-condition|)
-name|inflate_trees_free
-argument_list|(
-name|u
-index|[
-literal|0
-index|]
-argument_list|,
-name|zs
-argument_list|)
-expr_stmt|;
+comment|/* (note: doesn't matter for fixed) */
 return|return
 name|Z_MEM_ERROR
 return|;
 comment|/* not enough memory */
-block|}
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|inflate_hufts
-operator|+=
-name|z
-operator|+
-literal|1
-expr_stmt|;
-endif|#
-directive|endif
-operator|*
-name|t
-operator|=
-name|q
-operator|+
-literal|1
-expr_stmt|;
-comment|/* link to list for huft_free() */
-operator|*
-operator|(
-name|t
-operator|=
-operator|&
-operator|(
-name|q
-operator|->
-name|next
-operator|)
-operator|)
-operator|=
-name|Z_NULL
-expr_stmt|;
 name|u
 index|[
 name|h
 index|]
 operator|=
-operator|++
+name|q
+operator|=
+name|hp
+operator|+
+operator|*
+name|hn
+expr_stmt|;
+operator|*
+name|hn
+operator|+=
+name|z
+expr_stmt|;
+if|if
+condition|(
+name|t
+operator|!=
+name|Z_NULL
+condition|)
+comment|/* first table is returned result */
+block|{
+operator|*
+name|t
+operator|=
 name|q
 expr_stmt|;
-comment|/* table starts after link */
+name|t
+operator|=
+name|Z_NULL
+expr_stmt|;
+block|}
 comment|/* connect to last table, if there is one */
 if|if
 condition|(
@@ -1511,12 +1443,8 @@ operator|^=
 name|j
 expr_stmt|;
 comment|/* backup over finished tables */
-while|while
-condition|(
-operator|(
-name|i
-operator|&
-operator|(
+name|mask
+operator|=
 operator|(
 literal|1
 operator|<<
@@ -1524,7 +1452,14 @@ name|w
 operator|)
 operator|-
 literal|1
-operator|)
+expr_stmt|;
+comment|/* needed on HP, cc -O bug */
+while|while
+condition|(
+operator|(
+name|i
+operator|&
+name|mask
 operator|)
 operator|!=
 name|x
@@ -1540,6 +1475,16 @@ comment|/* don't need to update q */
 name|w
 operator|-=
 name|l
+expr_stmt|;
+name|mask
+operator|=
+operator|(
+literal|1
+operator|<<
+name|w
+operator|)
+operator|-
+literal|1
 expr_stmt|;
 block|}
 block|}
@@ -1571,6 +1516,8 @@ name|bb
 parameter_list|,
 name|tb
 parameter_list|,
+name|hp
+parameter_list|,
 name|z
 parameter_list|)
 name|uIntf
@@ -1590,14 +1537,57 @@ modifier|*
 name|tb
 decl_stmt|;
 comment|/* bits tree result */
+name|inflate_huft
+modifier|*
+name|hp
+decl_stmt|;
+comment|/* space for trees */
 name|z_streamp
 name|z
 decl_stmt|;
-comment|/* for zfree function */
+comment|/* for messages */
 block|{
 name|int
 name|r
 decl_stmt|;
+name|uInt
+name|hn
+init|=
+literal|0
+decl_stmt|;
+comment|/* hufts used in space */
+name|uIntf
+modifier|*
+name|v
+decl_stmt|;
+comment|/* work area for huft_build */
+if|if
+condition|(
+operator|(
+name|v
+operator|=
+operator|(
+name|uIntf
+operator|*
+operator|)
+name|ZALLOC
+argument_list|(
+name|z
+argument_list|,
+literal|19
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|uInt
+argument_list|)
+argument_list|)
+operator|)
+operator|==
+name|Z_NULL
+condition|)
+return|return
+name|Z_MEM_ERROR
+return|;
 name|r
 operator|=
 name|huft_build
@@ -1624,7 +1614,12 @@ name|tb
 argument_list|,
 name|bb
 argument_list|,
-name|z
+name|hp
+argument_list|,
+operator|&
+name|hn
+argument_list|,
+name|v
 argument_list|)
 expr_stmt|;
 if|if
@@ -1656,14 +1651,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|inflate_trees_free
-argument_list|(
-operator|*
-name|tb
-argument_list|,
-name|z
-argument_list|)
-expr_stmt|;
 name|z
 operator|->
 name|msg
@@ -1679,6 +1666,13 @@ operator|=
 name|Z_DATA_ERROR
 expr_stmt|;
 block|}
+name|ZFREE
+argument_list|(
+name|z
+argument_list|,
+name|v
+argument_list|)
+expr_stmt|;
 return|return
 name|r
 return|;
@@ -1702,6 +1696,8 @@ parameter_list|,
 name|tl
 parameter_list|,
 name|td
+parameter_list|,
+name|hp
 parameter_list|,
 name|z
 parameter_list|)
@@ -1742,14 +1738,58 @@ modifier|*
 name|td
 decl_stmt|;
 comment|/* distance tree result */
+name|inflate_huft
+modifier|*
+name|hp
+decl_stmt|;
+comment|/* space for trees */
 name|z_streamp
 name|z
 decl_stmt|;
-comment|/* for zfree function */
+comment|/* for messages */
 block|{
 name|int
 name|r
 decl_stmt|;
+name|uInt
+name|hn
+init|=
+literal|0
+decl_stmt|;
+comment|/* hufts used in space */
+name|uIntf
+modifier|*
+name|v
+decl_stmt|;
+comment|/* work area for huft_build */
+comment|/* allocate work area */
+if|if
+condition|(
+operator|(
+name|v
+operator|=
+operator|(
+name|uIntf
+operator|*
+operator|)
+name|ZALLOC
+argument_list|(
+name|z
+argument_list|,
+literal|288
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|uInt
+argument_list|)
+argument_list|)
+operator|)
+operator|==
+name|Z_NULL
+condition|)
+return|return
+name|Z_MEM_ERROR
+return|;
 comment|/* build literal/length tree */
 name|r
 operator|=
@@ -1769,7 +1809,12 @@ name|tl
 argument_list|,
 name|bl
 argument_list|,
-name|z
+name|hp
+argument_list|,
+operator|&
+name|hn
+argument_list|,
+name|v
 argument_list|)
 expr_stmt|;
 if|if
@@ -1808,14 +1853,6 @@ operator|!=
 name|Z_MEM_ERROR
 condition|)
 block|{
-name|inflate_trees_free
-argument_list|(
-operator|*
-name|tl
-argument_list|,
-name|z
-argument_list|)
-expr_stmt|;
 name|z
 operator|->
 name|msg
@@ -1831,6 +1868,13 @@ operator|=
 name|Z_DATA_ERROR
 expr_stmt|;
 block|}
+name|ZFREE
+argument_list|(
+name|z
+argument_list|,
+name|v
+argument_list|)
+expr_stmt|;
 return|return
 name|r
 return|;
@@ -1856,7 +1900,12 @@ name|td
 argument_list|,
 name|bd
 argument_list|,
-name|z
+name|hp
+argument_list|,
+operator|&
+name|hn
+argument_list|,
+name|v
 argument_list|)
 expr_stmt|;
 if|if
@@ -1911,14 +1960,6 @@ expr_stmt|;
 block|}
 else|#
 directive|else
-name|inflate_trees_free
-argument_list|(
-operator|*
-name|td
-argument_list|,
-name|z
-argument_list|)
-expr_stmt|;
 name|z
 operator|->
 name|msg
@@ -1957,12 +1998,11 @@ operator|=
 name|Z_DATA_ERROR
 expr_stmt|;
 block|}
-name|inflate_trees_free
+name|ZFREE
 argument_list|(
-operator|*
-name|tl
-argument_list|,
 name|z
+argument_list|,
+name|v
 argument_list|)
 expr_stmt|;
 return|return
@@ -1976,6 +2016,16 @@ end_function
 begin_comment
 comment|/* done */
 end_comment
+
+begin_expr_stmt
+name|ZFREE
+argument_list|(
+name|z
+argument_list|,
+name|v
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_return
 return|return
@@ -2001,7 +2051,7 @@ begin_define
 define|#
 directive|define
 name|FIXEDH
-value|530
+value|424
 end_define
 
 begin_comment
@@ -2049,83 +2099,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|local
-name|voidpf
-name|falloc
-parameter_list|(
-name|q
-parameter_list|,
-name|n
-parameter_list|,
-name|s
-parameter_list|)
-name|voidpf
-name|q
-decl_stmt|;
-comment|/* opaque pointer */
-name|uInt
-name|n
-decl_stmt|;
-comment|/* number of items */
-name|uInt
-name|s
-decl_stmt|;
-comment|/* size of item */
-block|{
-name|Assert
-argument_list|(
-name|s
-operator|==
-sizeof|sizeof
-argument_list|(
-name|inflate_huft
-argument_list|)
-operator|&&
-name|n
-operator|<=
-operator|*
-operator|(
-name|intf
-operator|*
-operator|)
-name|q
-argument_list|,
-literal|"inflate_trees falloc overflow"
-argument_list|)
-expr_stmt|;
-operator|*
-operator|(
-name|intf
-operator|*
-operator|)
-name|q
-operator|-=
-name|n
-operator|+
-name|s
-operator|-
-name|s
-expr_stmt|;
-comment|/* s-s to avoid warning */
-return|return
-call|(
-name|voidpf
-call|)
-argument_list|(
-name|fixed_mem
-operator|+
-operator|*
-operator|(
-name|intf
-operator|*
-operator|)
-name|q
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
 name|int
 name|inflate_trees_fixed
 parameter_list|(
@@ -2136,6 +2109,8 @@ parameter_list|,
 name|tl
 parameter_list|,
 name|td
+parameter_list|,
+name|z
 parameter_list|)
 name|uIntf
 modifier|*
@@ -2161,6 +2136,10 @@ modifier|*
 name|td
 decl_stmt|;
 comment|/* distance tree result */
+name|z_streamp
+name|z
+decl_stmt|;
+comment|/* for memory allocation */
 block|{
 comment|/* build fixed tables if not already (multiple overlapped executions ok) */
 if|if
@@ -2173,46 +2152,86 @@ name|int
 name|k
 decl_stmt|;
 comment|/* temporary variable */
-name|unsigned
-name|c
-index|[
-literal|288
-index|]
-decl_stmt|;
-comment|/* length list for huft_build */
-name|z_stream
-name|z
-decl_stmt|;
-comment|/* for falloc function */
-name|int
+name|uInt
 name|f
 init|=
-name|FIXEDH
+literal|0
 decl_stmt|;
-comment|/* number of hufts left in fixed_mem */
-comment|/* set up fake z_stream for memory routines */
-name|z
-operator|.
-name|zalloc
-operator|=
-name|falloc
-expr_stmt|;
-name|z
-operator|.
-name|zfree
-operator|=
-name|Z_NULL
-expr_stmt|;
-name|z
-operator|.
-name|opaque
+comment|/* number of hufts used in fixed_mem */
+name|uIntf
+modifier|*
+name|c
+decl_stmt|;
+comment|/* length list for huft_build */
+name|uIntf
+modifier|*
+name|v
+decl_stmt|;
+comment|/* work area for huft_build */
+comment|/* allocate memory */
+if|if
+condition|(
+operator|(
+name|c
 operator|=
 operator|(
-name|voidpf
+name|uIntf
+operator|*
 operator|)
-operator|&
-name|f
+name|ZALLOC
+argument_list|(
+name|z
+argument_list|,
+literal|288
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|uInt
+argument_list|)
+argument_list|)
+operator|)
+operator|==
+name|Z_NULL
+condition|)
+return|return
+name|Z_MEM_ERROR
+return|;
+if|if
+condition|(
+operator|(
+name|v
+operator|=
+operator|(
+name|uIntf
+operator|*
+operator|)
+name|ZALLOC
+argument_list|(
+name|z
+argument_list|,
+literal|288
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|uInt
+argument_list|)
+argument_list|)
+operator|)
+operator|==
+name|Z_NULL
+condition|)
+block|{
+name|ZFREE
+argument_list|(
+name|z
+argument_list|,
+name|c
+argument_list|)
 expr_stmt|;
+return|return
+name|Z_MEM_ERROR
+return|;
+block|}
 comment|/* literal table */
 for|for
 control|(
@@ -2307,8 +2326,12 @@ argument_list|,
 operator|&
 name|fixed_bl
 argument_list|,
+name|fixed_mem
+argument_list|,
 operator|&
-name|z
+name|f
+argument_list|,
+name|v
 argument_list|)
 expr_stmt|;
 comment|/* distance table */
@@ -2354,18 +2377,27 @@ argument_list|,
 operator|&
 name|fixed_bd
 argument_list|,
+name|fixed_mem
+argument_list|,
 operator|&
-name|z
+name|f
+argument_list|,
+name|v
 argument_list|)
 expr_stmt|;
 comment|/* done */
-name|Assert
+name|ZFREE
 argument_list|(
-name|f
-operator|==
-literal|0
+name|z
 argument_list|,
-literal|"invalid build of fixed tables"
+name|v
+argument_list|)
+expr_stmt|;
+name|ZFREE
+argument_list|(
+name|z
+argument_list|,
+name|c
 argument_list|)
 expr_stmt|;
 name|fixed_built
@@ -2393,116 +2425,6 @@ name|td
 operator|=
 name|fixed_td
 expr_stmt|;
-return|return
-name|Z_OK
-return|;
-block|}
-end_function
-
-begin_function
-name|int
-name|inflate_trees_free
-parameter_list|(
-name|t
-parameter_list|,
-name|z
-parameter_list|)
-name|inflate_huft
-modifier|*
-name|t
-decl_stmt|;
-comment|/* table to free */
-name|z_streamp
-name|z
-decl_stmt|;
-comment|/* for zfree function */
-comment|/* Free the malloc'ed tables built by huft_build(), which makes a linked    list of the tables it made, with the links in a dummy first entry of    each table. */
-block|{
-specifier|register
-name|inflate_huft
-modifier|*
-name|p
-decl_stmt|,
-modifier|*
-name|q
-decl_stmt|,
-modifier|*
-name|r
-decl_stmt|;
-comment|/* Reverse linked list */
-name|p
-operator|=
-name|Z_NULL
-expr_stmt|;
-name|q
-operator|=
-name|t
-expr_stmt|;
-while|while
-condition|(
-name|q
-operator|!=
-name|Z_NULL
-condition|)
-block|{
-name|r
-operator|=
-operator|(
-name|q
-operator|-
-literal|1
-operator|)
-operator|->
-name|next
-expr_stmt|;
-operator|(
-name|q
-operator|-
-literal|1
-operator|)
-operator|->
-name|next
-operator|=
-name|p
-expr_stmt|;
-name|p
-operator|=
-name|q
-expr_stmt|;
-name|q
-operator|=
-name|r
-expr_stmt|;
-block|}
-comment|/* Go through linked list, freeing from the malloced (t[-1]) address. */
-while|while
-condition|(
-name|p
-operator|!=
-name|Z_NULL
-condition|)
-block|{
-name|q
-operator|=
-operator|(
-operator|--
-name|p
-operator|)
-operator|->
-name|next
-expr_stmt|;
-name|ZFREE
-argument_list|(
-name|z
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
-name|p
-operator|=
-name|q
-expr_stmt|;
-block|}
 return|return
 name|Z_OK
 return|;
