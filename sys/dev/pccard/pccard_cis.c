@@ -344,7 +344,7 @@ name|card
 operator|->
 name|manufacturer
 operator|=
-name|PCCARD_VENDOR_INVALID
+name|PCMCIA_VENDOR_INVALID
 expr_stmt|;
 name|state
 operator|.
@@ -352,7 +352,7 @@ name|card
 operator|->
 name|product
 operator|=
-name|PCCARD_PRODUCT_INVALID
+name|PCMCIA_PRODUCT_INVALID
 expr_stmt|;
 name|STAILQ_INIT
 argument_list|(

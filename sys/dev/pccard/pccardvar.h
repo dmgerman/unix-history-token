@@ -530,21 +530,21 @@ name|manufacturer
 decl_stmt|;
 define|#
 directive|define
-name|PCCARD_VENDOR_INVALID
+name|PCMCIA_VENDOR_INVALID
 value|-1
 name|int32_t
 name|product
 decl_stmt|;
 define|#
 directive|define
-name|PCCARD_PRODUCT_INVALID
+name|PCMCIA_PRODUCT_INVALID
 value|-1
 name|u_int16_t
 name|error
 decl_stmt|;
 define|#
 directive|define
-name|PCCARD_CIS_INVALID
+name|PCMCIA_CIS_INVALID
 value|{ NULL, NULL, NULL, NULL }
 name|STAILQ_HEAD
 argument_list|(

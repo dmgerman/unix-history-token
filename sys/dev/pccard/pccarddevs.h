@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.15 2001/11/11 19:36:44 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.16 2001/11/11 20:15:06 imp Exp   */
 end_comment
 
 begin_comment
@@ -22,7 +22,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_FUJITSU
+name|PCMCIA_VENDOR_FUJITSU
 value|0x0004
 end_define
 
@@ -33,7 +33,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_PANASONIC
+name|PCMCIA_VENDOR_PANASONIC
 value|0x0032
 end_define
 
@@ -44,7 +44,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_SANDISK
+name|PCMCIA_VENDOR_SANDISK
 value|0x0045
 end_define
 
@@ -55,7 +55,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_NEWMEDIA
+name|PCMCIA_VENDOR_NEWMEDIA
 value|0x0057
 end_define
 
@@ -66,7 +66,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_INTEL
+name|PCMCIA_VENDOR_INTEL
 value|0x0089
 end_define
 
@@ -77,7 +77,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_IBM
+name|PCMCIA_VENDOR_IBM
 value|0x00a4
 end_define
 
@@ -88,7 +88,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_MOTOROLA
+name|PCMCIA_VENDOR_MOTOROLA
 value|0x0109
 end_define
 
@@ -99,7 +99,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_3COM
+name|PCMCIA_VENDOR_3COM
 value|0x0101
 end_define
 
@@ -110,7 +110,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_MEGAHERTZ
+name|PCMCIA_VENDOR_MEGAHERTZ
 value|0x0102
 end_define
 
@@ -121,7 +121,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_SOCKET
+name|PCMCIA_VENDOR_SOCKET
 value|0x0104
 end_define
 
@@ -132,7 +132,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_TDK
+name|PCMCIA_VENDOR_TDK
 value|0x0105
 end_define
 
@@ -143,7 +143,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_XIRCOM
+name|PCMCIA_VENDOR_XIRCOM
 value|0x0105
 end_define
 
@@ -154,7 +154,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_SMC
+name|PCMCIA_VENDOR_SMC
 value|0x0108
 end_define
 
@@ -165,7 +165,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_NI
+name|PCMCIA_VENDOR_NI
 value|0x010b
 end_define
 
@@ -176,7 +176,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_USROBOTICS
+name|PCMCIA_VENDOR_USROBOTICS
 value|0x0115
 end_define
 
@@ -187,7 +187,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_OLICOM
+name|PCMCIA_VENDOR_OLICOM
 value|0x0121
 end_define
 
@@ -198,7 +198,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_MEGAHERTZ2
+name|PCMCIA_VENDOR_MEGAHERTZ2
 value|0x0128
 end_define
 
@@ -209,7 +209,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_ADAPTEC
+name|PCMCIA_VENDOR_ADAPTEC
 value|0x012f
 end_define
 
@@ -220,7 +220,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_COMPAQ
+name|PCMCIA_VENDOR_COMPAQ
 value|0x0138
 end_define
 
@@ -231,7 +231,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_DLINK_2
+name|PCMCIA_VENDOR_DLINK_2
 value|0x0143
 end_define
 
@@ -242,7 +242,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_LINKSYS
+name|PCMCIA_VENDOR_LINKSYS
 value|0x0149
 end_define
 
@@ -253,7 +253,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_SIMPLETECH
+name|PCMCIA_VENDOR_SIMPLETECH
 value|0x014d
 end_define
 
@@ -264,7 +264,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_LUCENT
+name|PCMCIA_VENDOR_LUCENT
 value|0x0156
 end_define
 
@@ -275,7 +275,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_AIRONET
+name|PCMCIA_VENDOR_AIRONET
 value|0x015f
 end_define
 
@@ -286,7 +286,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_PSION
+name|PCMCIA_VENDOR_PSION
 value|0x016c
 end_define
 
@@ -297,7 +297,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_COMPAQ2
+name|PCMCIA_VENDOR_COMPAQ2
 value|0x0183
 end_define
 
@@ -308,7 +308,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_KINGSTON
+name|PCMCIA_VENDOR_KINGSTON
 value|0x0186
 end_define
 
@@ -319,7 +319,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_DAYNA
+name|PCMCIA_VENDOR_DAYNA
 value|0x0194
 end_define
 
@@ -330,7 +330,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_RAYTHEON
+name|PCMCIA_VENDOR_RAYTHEON
 value|0x01a6
 end_define
 
@@ -341,7 +341,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_IODATA
+name|PCMCIA_VENDOR_IODATA
 value|0x01bf
 end_define
 
@@ -352,7 +352,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_BAY
+name|PCMCIA_VENDOR_BAY
 value|0x01eb
 end_define
 
@@ -363,7 +363,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_FARALLON
+name|PCMCIA_VENDOR_FARALLON
 value|0x0200
 end_define
 
@@ -374,7 +374,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_TELECOMDEVICE
+name|PCMCIA_VENDOR_TELECOMDEVICE
 value|0x021b
 end_define
 
@@ -385,7 +385,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_NOKIA
+name|PCMCIA_VENDOR_NOKIA
 value|0x023d
 end_define
 
@@ -396,7 +396,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_SAMSUNG
+name|PCMCIA_VENDOR_SAMSUNG
 value|0x0250
 end_define
 
@@ -407,7 +407,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_SYMBOL
+name|PCMCIA_VENDOR_SYMBOL
 value|0x026c
 end_define
 
@@ -418,7 +418,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_BUFFALO
+name|PCMCIA_VENDOR_BUFFALO
 value|0x026f
 end_define
 
@@ -429,7 +429,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_IODATA2
+name|PCMCIA_VENDOR_IODATA2
 value|0x028a
 end_define
 
@@ -440,7 +440,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_LASAT
+name|PCMCIA_VENDOR_LASAT
 value|0x3401
 end_define
 
@@ -451,7 +451,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_LEXARMEDIA
+name|PCMCIA_VENDOR_LEXARMEDIA
 value|0x4e01
 end_define
 
@@ -462,7 +462,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_COMPEX
+name|PCMCIA_VENDOR_COMPEX
 value|0x8a01
 end_define
 
@@ -473,7 +473,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_MELCO
+name|PCMCIA_VENDOR_MELCO
 value|0x8a01
 end_define
 
@@ -484,7 +484,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_ZONET
+name|PCMCIA_VENDOR_ZONET
 value|0x8a01
 end_define
 
@@ -495,7 +495,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_CONTEC
+name|PCMCIA_VENDOR_CONTEC
 value|0xc001
 end_define
 
@@ -506,7 +506,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_MACNICA
+name|PCMCIA_VENDOR_MACNICA
 value|0xc00b
 end_define
 
@@ -517,7 +517,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_ROLAND
+name|PCMCIA_VENDOR_ROLAND
 value|0xc00c
 end_define
 
@@ -528,7 +528,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_COREGA
+name|PCMCIA_VENDOR_COREGA
 value|0xc00f
 end_define
 
@@ -539,7 +539,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_ALLIEDTELESIS
+name|PCMCIA_VENDOR_ALLIEDTELESIS
 value|0xc00f
 end_define
 
@@ -550,7 +550,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_HAGIWARASYSCOM
+name|PCMCIA_VENDOR_HAGIWARASYSCOM
 value|0xc012
 end_define
 
@@ -561,7 +561,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_RATOC
+name|PCMCIA_VENDOR_RATOC
 value|0xc015
 end_define
 
@@ -572,7 +572,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_EMTAC
+name|PCMCIA_VENDOR_EMTAC
 value|0xc250
 end_define
 
@@ -583,7 +583,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_ELSA
+name|PCMCIA_VENDOR_ELSA
 value|0xd601
 end_define
 
@@ -602,210 +602,210 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_3COM_3CRWE737A
+name|PCMCIA_CIS_3COM_3CRWE737A
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_3COM_3CRWE737A
+name|PCMCIA_PRODUCT_3COM_3CRWE737A
 value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_3COM_3CRWE737A
+name|PCMCIA_STR_3COM_3CRWE737A
 value|"3Com AirConnect Wireless LAN"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_3COM_3CXM056BNW
+name|PCMCIA_CIS_3COM_3CXM056BNW
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_3COM_3CXM056BNW
+name|PCMCIA_PRODUCT_3COM_3CXM056BNW
 value|0x002f
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_3COM_3CXM056BNW
+name|PCMCIA_STR_3COM_3CXM056BNW
 value|"3Com/NoteWorthy 3CXM056-BNW 56K Modem"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_3COM_3CXEM556
+name|PCMCIA_CIS_3COM_3CXEM556
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_3COM_3CXEM556
+name|PCMCIA_PRODUCT_3COM_3CXEM556
 value|0x0035
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_3COM_3CXEM556
+name|PCMCIA_STR_3COM_3CXEM556
 value|"3Com/Megahertz 3CXEM556 Ethernet/Modem"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_3COM_3CXEM556INT
+name|PCMCIA_CIS_3COM_3CXEM556INT
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_3COM_3CXEM556INT
+name|PCMCIA_PRODUCT_3COM_3CXEM556INT
 value|0x003d
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_3COM_3CXEM556INT
+name|PCMCIA_STR_3COM_3CXEM556INT
 value|"3Com/Megahertz 3CXEM556-INT Ethernet/Modem"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_3COM_3C1
+name|PCMCIA_CIS_3COM_3C1
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_3COM_3C1
+name|PCMCIA_PRODUCT_3COM_3C1
 value|0x0cf1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_3COM_3C1
+name|PCMCIA_STR_3COM_3C1
 value|"3Com Megahertz 3C1 10Mbps LAN CF+ Card"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_3COM_3CCFEM556BI
+name|PCMCIA_CIS_3COM_3CCFEM556BI
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_3COM_3CCFEM556BI
+name|PCMCIA_PRODUCT_3COM_3CCFEM556BI
 value|0x0556
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_3COM_3CCFEM556BI
+name|PCMCIA_STR_3COM_3CCFEM556BI
 value|"3Com/Megahertz 3CCFEM556BI Ethernet/Modem"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_3COM_3C562
+name|PCMCIA_CIS_3COM_3C562
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_3COM_3C562
+name|PCMCIA_PRODUCT_3COM_3C562
 value|0x0562
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_3COM_3C562
+name|PCMCIA_STR_3COM_3C562
 value|"3Com 3c562 33.6 Modem/10Mbps Ethernet"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_3COM_3C589
+name|PCMCIA_CIS_3COM_3C589
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_3COM_3C589
+name|PCMCIA_PRODUCT_3COM_3C589
 value|0x0589
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_3COM_3C589
+name|PCMCIA_STR_3COM_3C589
 value|"3Com 3c589 10Mbps Ethernet"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_3COM_3C574
+name|PCMCIA_CIS_3COM_3C574
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_3COM_3C574
+name|PCMCIA_PRODUCT_3COM_3C574
 value|0x0574
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_3COM_3C574
+name|PCMCIA_STR_3COM_3C574
 value|"3Com 3c574-TX 10/100Mbps Ethernet"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_3COM_3CRWE62092A
+name|PCMCIA_CIS_3COM_3CRWE62092A
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_3COM_3CRWE62092A
+name|PCMCIA_PRODUCT_3COM_3CRWE62092A
 value|0x2092
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_3COM_3CRWE62092A
+name|PCMCIA_STR_3COM_3CRWE62092A
 value|"3Com 3CRWE62092A Wireless LAN"
 end_define
 
@@ -816,42 +816,42 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_ADAPTEC_APA1460
+name|PCMCIA_CIS_ADAPTEC_APA1460
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_ADAPTEC_APA1460
+name|PCMCIA_PRODUCT_ADAPTEC_APA1460
 value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_ADAPTEC_APA1460
+name|PCMCIA_STR_ADAPTEC_APA1460
 value|"Adaptec APA-1460 SlimSCSI"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_ADAPTEC_APA1460A
+name|PCMCIA_CIS_ADAPTEC_APA1460A
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_ADAPTEC_APA1460A
+name|PCMCIA_PRODUCT_ADAPTEC_APA1460A
 value|0x0002
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_ADAPTEC_APA1460A
+name|PCMCIA_STR_ADAPTEC_APA1460A
 value|"Adaptec APA-1460A SlimSCSI"
 end_define
 
@@ -862,63 +862,63 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_AIRONET_PC4500
+name|PCMCIA_CIS_AIRONET_PC4500
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_AIRONET_PC4500
+name|PCMCIA_PRODUCT_AIRONET_PC4500
 value|0x0005
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_AIRONET_PC4500
+name|PCMCIA_STR_AIRONET_PC4500
 value|"Aironet PC4500 Wireless LAN Adapter"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_AIRONET_PC4800
+name|PCMCIA_CIS_AIRONET_PC4800
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_AIRONET_PC4800
+name|PCMCIA_PRODUCT_AIRONET_PC4800
 value|0x0007
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_AIRONET_PC4800
+name|PCMCIA_STR_AIRONET_PC4800
 value|"Aironet PC4800 Wireless LAN Adapter"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_AIRONET_350
+name|PCMCIA_CIS_AIRONET_350
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_AIRONET_350
+name|PCMCIA_PRODUCT_AIRONET_350
 value|0x000a
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_AIRONET_350
+name|PCMCIA_STR_AIRONET_350
 value|"Aironet 350 Wireless LAN Adapter"
 end_define
 
@@ -929,21 +929,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_ALLIEDTELESIS_LA_PCM
+name|PCMCIA_CIS_ALLIEDTELESIS_LA_PCM
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_ALLIEDTELESIS_LA_PCM
+name|PCMCIA_PRODUCT_ALLIEDTELESIS_LA_PCM
 value|0x0002
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_ALLIEDTELESIS_LA_PCM
+name|PCMCIA_STR_ALLIEDTELESIS_LA_PCM
 value|"Allied Telesis LA-PCM"
 end_define
 
@@ -954,63 +954,63 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_BAY_STACK_650
+name|PCMCIA_CIS_BAY_STACK_650
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_BAY_STACK_650
+name|PCMCIA_PRODUCT_BAY_STACK_650
 value|0x0804
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_BAY_STACK_650
+name|PCMCIA_STR_BAY_STACK_650
 value|"BayStack 650 Wireless LAN"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_BAY_SURFER_PRO
+name|PCMCIA_CIS_BAY_SURFER_PRO
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_BAY_SURFER_PRO
+name|PCMCIA_PRODUCT_BAY_SURFER_PRO
 value|0x0806
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_BAY_SURFER_PRO
+name|PCMCIA_STR_BAY_SURFER_PRO
 value|"AirSurfer Pro Wireless LAN"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_BAY_STACK_660
+name|PCMCIA_CIS_BAY_STACK_660
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_BAY_STACK_660
+name|PCMCIA_PRODUCT_BAY_STACK_660
 value|0x0807
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_BAY_STACK_660
+name|PCMCIA_STR_BAY_STACK_660
 value|"BayStack 660 Wireless LAN"
 end_define
 
@@ -1021,21 +1021,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_BUFFALO_WLI_PCM_S11
+name|PCMCIA_CIS_BUFFALO_WLI_PCM_S11
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_BUFFALO_WLI_PCM_S11
+name|PCMCIA_PRODUCT_BUFFALO_WLI_PCM_S11
 value|0x0305
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_BUFFALO_WLI_PCM_S11
+name|PCMCIA_STR_BUFFALO_WLI_PCM_S11
 value|"BUFFALO AirStation 11Mbps WLAN"
 end_define
 
@@ -1046,42 +1046,42 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_COMPAQ_NC5004
+name|PCMCIA_CIS_COMPAQ_NC5004
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_COMPAQ_NC5004
+name|PCMCIA_PRODUCT_COMPAQ_NC5004
 value|0x0002
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_COMPAQ_NC5004
+name|PCMCIA_STR_COMPAQ_NC5004
 value|"Compaq Agency NC5004 Wireless Card"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_COMPAQ2_CPQ_10_100
+name|PCMCIA_CIS_COMPAQ2_CPQ_10_100
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_COMPAQ2_CPQ_10_100
+name|PCMCIA_PRODUCT_COMPAQ2_CPQ_10_100
 value|0x010a
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_COMPAQ2_CPQ_10_100
+name|PCMCIA_STR_COMPAQ2_CPQ_10_100
 value|"Compaq Netelligent 10/100 Ethernet"
 end_define
 
@@ -1092,21 +1092,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_COMPEX_LINKPORT_ENET_B
+name|PCMCIA_CIS_COMPEX_LINKPORT_ENET_B
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_COMPEX_LINKPORT_ENET_B
+name|PCMCIA_PRODUCT_COMPEX_LINKPORT_ENET_B
 value|0x0100
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_COMPEX_LINKPORT_ENET_B
+name|PCMCIA_STR_COMPEX_LINKPORT_ENET_B
 value|"Compex Linkport ENET-B Ethernet"
 end_define
 
@@ -1117,42 +1117,42 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_CONTEC_CNETPC
+name|PCMCIA_CIS_CONTEC_CNETPC
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_CONTEC_CNETPC
+name|PCMCIA_PRODUCT_CONTEC_CNETPC
 value|0x0000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_CONTEC_CNETPC
+name|PCMCIA_STR_CONTEC_CNETPC
 value|"Contec C-NET(PC)C"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_CONTEC_FX_DS110_PCC
+name|PCMCIA_CIS_CONTEC_FX_DS110_PCC
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_CONTEC_FX_DS110_PCC
+name|PCMCIA_PRODUCT_CONTEC_FX_DS110_PCC
 value|0x0008
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_CONTEC_FX_DS110_PCC
+name|PCMCIA_STR_CONTEC_FX_DS110_PCC
 value|"Contec FLEXLAN/FX-DS110-PCC"
 end_define
 
@@ -1163,42 +1163,42 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_DAYNA_COMMUNICARD_E_1
+name|PCMCIA_CIS_DAYNA_COMMUNICARD_E_1
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_DAYNA_COMMUNICARD_E_1
+name|PCMCIA_PRODUCT_DAYNA_COMMUNICARD_E_1
 value|0x002d
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_DAYNA_COMMUNICARD_E_1
+name|PCMCIA_STR_DAYNA_COMMUNICARD_E_1
 value|"Dayna CommuniCard E"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_DAYNA_COMMUNICARD_E_2
+name|PCMCIA_CIS_DAYNA_COMMUNICARD_E_2
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_DAYNA_COMMUNICARD_E_2
+name|PCMCIA_PRODUCT_DAYNA_COMMUNICARD_E_2
 value|0x002f
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_DAYNA_COMMUNICARD_E_2
+name|PCMCIA_STR_DAYNA_COMMUNICARD_E_2
 value|"Dayna CommuniCard E"
 end_define
 
@@ -1209,21 +1209,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_DIGITAL_MOBILE_MEDIA_CDROM
+name|PCMCIA_CIS_DIGITAL_MOBILE_MEDIA_CDROM
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_DIGITAL_MOBILE_MEDIA_CDROM
+name|PCMCIA_PRODUCT_DIGITAL_MOBILE_MEDIA_CDROM
 value|0x0d00
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_DIGITAL_MOBILE_MEDIA_CDROM
+name|PCMCIA_STR_DIGITAL_MOBILE_MEDIA_CDROM
 value|"Digital Mobile Media CD-ROM"
 end_define
 
@@ -1234,21 +1234,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_DLINK_2_DMF560TX
+name|PCMCIA_CIS_DLINK_2_DMF560TX
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_DLINK_2_DMF560TX
+name|PCMCIA_PRODUCT_DLINK_2_DMF560TX
 value|0xc0ab
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_DLINK_2_DMF560TX
+name|PCMCIA_STR_DLINK_2_DMF560TX
 value|"D-Link DMF-650TX"
 end_define
 
@@ -1259,63 +1259,63 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_ELSA_MC2_IEEE
+name|PCMCIA_CIS_ELSA_MC2_IEEE
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_ELSA_MC2_IEEE
+name|PCMCIA_PRODUCT_ELSA_MC2_IEEE
 value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_ELSA_MC2_IEEE
+name|PCMCIA_STR_ELSA_MC2_IEEE
 value|"AirLancer MC-2 IEEE"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_ELSA_XI300_IEEE
+name|PCMCIA_CIS_ELSA_XI300_IEEE
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_ELSA_XI300_IEEE
+name|PCMCIA_PRODUCT_ELSA_XI300_IEEE
 value|0x0002
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_ELSA_XI300_IEEE
+name|PCMCIA_STR_ELSA_XI300_IEEE
 value|"XI300 Wireless LAN"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_ELSA_XI800_IEEE
+name|PCMCIA_CIS_ELSA_XI800_IEEE
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_ELSA_XI800_IEEE
+name|PCMCIA_PRODUCT_ELSA_XI800_IEEE
 value|0x0004
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_ELSA_XI800_IEEE
+name|PCMCIA_STR_ELSA_XI800_IEEE
 value|"XI800 CF Wireless LAN"
 end_define
 
@@ -1326,21 +1326,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_EMTAC_WLAN
+name|PCMCIA_CIS_EMTAC_WLAN
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_EMTAC_WLAN
+name|PCMCIA_PRODUCT_EMTAC_WLAN
 value|0x0002
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_EMTAC_WLAN
+name|PCMCIA_STR_EMTAC_WLAN
 value|"EMTAC A2424i 11Mbps WLAN Card"
 end_define
 
@@ -1351,21 +1351,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_FARALLON_SKYLINE
+name|PCMCIA_CIS_FARALLON_SKYLINE
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_FARALLON_SKYLINE
+name|PCMCIA_PRODUCT_FARALLON_SKYLINE
 value|0x0a01
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_FARALLON_SKYLINE
+name|PCMCIA_STR_FARALLON_SKYLINE
 value|"SkyLINE Wireless"
 end_define
 
@@ -1376,63 +1376,63 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_FUJITSU_SCSI600
+name|PCMCIA_CIS_FUJITSU_SCSI600
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_FUJITSU_SCSI600
+name|PCMCIA_PRODUCT_FUJITSU_SCSI600
 value|0x0401
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_FUJITSU_SCSI600
+name|PCMCIA_STR_FUJITSU_SCSI600
 value|"Fujitsu SCSI 600 Interface"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_FUJITSU_LA10S
+name|PCMCIA_CIS_FUJITSU_LA10S
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_FUJITSU_LA10S
+name|PCMCIA_PRODUCT_FUJITSU_LA10S
 value|0x1003
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_FUJITSU_LA10S
+name|PCMCIA_STR_FUJITSU_LA10S
 value|"Fujitsu Compact Flash Ethernet"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_FUJITSU_LA501
+name|PCMCIA_CIS_FUJITSU_LA501
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_FUJITSU_LA501
+name|PCMCIA_PRODUCT_FUJITSU_LA501
 value|0x2000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_FUJITSU_LA501
+name|PCMCIA_STR_FUJITSU_LA501
 value|"Fujitsu Towa LA501 Ethernet"
 end_define
 
@@ -1443,189 +1443,189 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_IBM_MICRODRIVE
+name|PCMCIA_CIS_IBM_MICRODRIVE
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_IBM_MICRODRIVE
+name|PCMCIA_PRODUCT_IBM_MICRODRIVE
 value|0x0000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_IBM_MICRODRIVE
+name|PCMCIA_STR_IBM_MICRODRIVE
 value|"IBM Microdrive"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_IBM_3270
+name|PCMCIA_CIS_IBM_3270
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_IBM_3270
+name|PCMCIA_PRODUCT_IBM_3270
 value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_IBM_3270
+name|PCMCIA_STR_IBM_3270
 value|"IBM 3270 Emulation"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_IBM_INFOMOVER
+name|PCMCIA_CIS_IBM_INFOMOVER
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_IBM_INFOMOVER
+name|PCMCIA_PRODUCT_IBM_INFOMOVER
 value|0x0002
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_IBM_INFOMOVER
+name|PCMCIA_STR_IBM_INFOMOVER
 value|"IBM InfoMover"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_IBM_5250
+name|PCMCIA_CIS_IBM_5250
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_IBM_5250
+name|PCMCIA_PRODUCT_IBM_5250
 value|0x000b
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_IBM_5250
+name|PCMCIA_STR_IBM_5250
 value|"IBM 5250 Emulation"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_IBM_TROPIC
+name|PCMCIA_CIS_IBM_TROPIC
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_IBM_TROPIC
+name|PCMCIA_PRODUCT_IBM_TROPIC
 value|0x001e
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_IBM_TROPIC
+name|PCMCIA_STR_IBM_TROPIC
 value|"IBM Token Ring 4/16"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_IBM_PORTABLE_CDROM
+name|PCMCIA_CIS_IBM_PORTABLE_CDROM
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_IBM_PORTABLE_CDROM
+name|PCMCIA_PRODUCT_IBM_PORTABLE_CDROM
 value|0x002d
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_IBM_PORTABLE_CDROM
+name|PCMCIA_STR_IBM_PORTABLE_CDROM
 value|"IBM PCMCIA Portable CD-ROM Drive"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_IBM_HOME_AND_AWAY
+name|PCMCIA_CIS_IBM_HOME_AND_AWAY
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_IBM_HOME_AND_AWAY
+name|PCMCIA_PRODUCT_IBM_HOME_AND_AWAY
 value|0x002e
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_IBM_HOME_AND_AWAY
+name|PCMCIA_STR_IBM_HOME_AND_AWAY
 value|"IBM Home and Away Modem"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_IBM_WIRELESS_LAN_ENTRY
+name|PCMCIA_CIS_IBM_WIRELESS_LAN_ENTRY
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_IBM_WIRELESS_LAN_ENTRY
+name|PCMCIA_PRODUCT_IBM_WIRELESS_LAN_ENTRY
 value|0x0032
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_IBM_WIRELESS_LAN_ENTRY
+name|PCMCIA_STR_IBM_WIRELESS_LAN_ENTRY
 value|"IBM Wireless LAN Entry"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_IBM_ETHERJET
+name|PCMCIA_CIS_IBM_ETHERJET
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_IBM_ETHERJET
+name|PCMCIA_PRODUCT_IBM_ETHERJET
 value|0x003f
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_IBM_ETHERJET
+name|PCMCIA_STR_IBM_ETHERJET
 value|"IBM EtherJet Ethernet"
 end_define
 
@@ -1636,42 +1636,42 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_INTEL_PRO_WLAN_2011
+name|PCMCIA_CIS_INTEL_PRO_WLAN_2011
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_INTEL_PRO_WLAN_2011
+name|PCMCIA_PRODUCT_INTEL_PRO_WLAN_2011
 value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_INTEL_PRO_WLAN_2011
+name|PCMCIA_STR_INTEL_PRO_WLAN_2011
 value|"Intel PRO/Wireless 2011 LAN PC Card"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_INTEL_EEPRO100
+name|PCMCIA_CIS_INTEL_EEPRO100
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_INTEL_EEPRO100
+name|PCMCIA_PRODUCT_INTEL_EEPRO100
 value|0x010a
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_INTEL_EEPRO100
+name|PCMCIA_STR_INTEL_EEPRO100
 value|"Intel EtherExpress PRO/100"
 end_define
 
@@ -1682,42 +1682,42 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_IODATA_PCLATE
+name|PCMCIA_CIS_IODATA_PCLATE
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_IODATA_PCLATE
+name|PCMCIA_PRODUCT_IODATA_PCLATE
 value|0x2216
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_IODATA_PCLATE
+name|PCMCIA_STR_IODATA_PCLATE
 value|"I-O DATA PCLA/TE"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_IODATA2_WNB11PCM
+name|PCMCIA_CIS_IODATA2_WNB11PCM
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_IODATA2_WNB11PCM
+name|PCMCIA_PRODUCT_IODATA2_WNB11PCM
 value|0x0002
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_IODATA2_WNB11PCM
+name|PCMCIA_STR_IODATA2_WNB11PCM
 value|"I-O DATA WN-B11/PCM"
 end_define
 
@@ -1728,21 +1728,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_KINGSTON_KNE2
+name|PCMCIA_CIS_KINGSTON_KNE2
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_KINGSTON_KNE2
+name|PCMCIA_PRODUCT_KINGSTON_KNE2
 value|0x0100
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_KINGSTON_KNE2
+name|PCMCIA_STR_KINGSTON_KNE2
 value|"Kingston KNE-PC2 Ethernet"
 end_define
 
@@ -1753,21 +1753,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_LASAT_CREDIT_288
+name|PCMCIA_CIS_LASAT_CREDIT_288
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_LASAT_CREDIT_288
+name|PCMCIA_PRODUCT_LASAT_CREDIT_288
 value|0x2811
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_LASAT_CREDIT_288
+name|PCMCIA_STR_LASAT_CREDIT_288
 value|"Lasat Credit 288 Modem"
 end_define
 
@@ -1778,21 +1778,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_LEXARMEDIA_COMPACTFLASH
+name|PCMCIA_CIS_LEXARMEDIA_COMPACTFLASH
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_LEXARMEDIA_COMPACTFLASH
+name|PCMCIA_PRODUCT_LEXARMEDIA_COMPACTFLASH
 value|0x0100
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_LEXARMEDIA_COMPACTFLASH
+name|PCMCIA_STR_LEXARMEDIA_COMPACTFLASH
 value|"Lexar Media CompactFlash"
 end_define
 
@@ -1803,84 +1803,84 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_LINKSYS_TRUST_COMBO_ECARD
+name|PCMCIA_CIS_LINKSYS_TRUST_COMBO_ECARD
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_LINKSYS_TRUST_COMBO_ECARD
+name|PCMCIA_PRODUCT_LINKSYS_TRUST_COMBO_ECARD
 value|0x021b
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_LINKSYS_TRUST_COMBO_ECARD
+name|PCMCIA_STR_LINKSYS_TRUST_COMBO_ECARD
 value|"Trust (Linksys) Combo EthernetCard"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_LINKSYS_ETHERFAST
+name|PCMCIA_CIS_LINKSYS_ETHERFAST
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_LINKSYS_ETHERFAST
+name|PCMCIA_PRODUCT_LINKSYS_ETHERFAST
 value|0x0230
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_LINKSYS_ETHERFAST
+name|PCMCIA_STR_LINKSYS_ETHERFAST
 value|"Linksys Etherfast 10/100 Ethernet"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_LINKSYS_ECARD_1
+name|PCMCIA_CIS_LINKSYS_ECARD_1
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_LINKSYS_ECARD_1
+name|PCMCIA_PRODUCT_LINKSYS_ECARD_1
 value|0x0265
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_LINKSYS_ECARD_1
+name|PCMCIA_STR_LINKSYS_ECARD_1
 value|"Linksys EthernetCard or D-Link DE-650"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_LINKSYS_COMBO_ECARD
+name|PCMCIA_CIS_LINKSYS_COMBO_ECARD
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_LINKSYS_COMBO_ECARD
+name|PCMCIA_PRODUCT_LINKSYS_COMBO_ECARD
 value|0xc1ab
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_LINKSYS_COMBO_ECARD
+name|PCMCIA_STR_LINKSYS_COMBO_ECARD
 value|"Linksys Combo EthernetCard"
 end_define
 
@@ -1891,21 +1891,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_LUCENT_WAVELAN_IEEE
+name|PCMCIA_CIS_LUCENT_WAVELAN_IEEE
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_LUCENT_WAVELAN_IEEE
+name|PCMCIA_PRODUCT_LUCENT_WAVELAN_IEEE
 value|0x0002
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_LUCENT_WAVELAN_IEEE
+name|PCMCIA_STR_LUCENT_WAVELAN_IEEE
 value|"WaveLAN/IEEE"
 end_define
 
@@ -1916,21 +1916,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_MACNICA_ME1_JEIDA
+name|PCMCIA_CIS_MACNICA_ME1_JEIDA
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_MACNICA_ME1_JEIDA
+name|PCMCIA_PRODUCT_MACNICA_ME1_JEIDA
 value|0x3300
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_MACNICA_ME1_JEIDA
+name|PCMCIA_STR_MACNICA_ME1_JEIDA
 value|"MACNICA ME1 for JEIDA"
 end_define
 
@@ -1941,105 +1941,105 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_MEGAHERTZ_XJEM3336
+name|PCMCIA_CIS_MEGAHERTZ_XJEM3336
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_MEGAHERTZ_XJEM3336
+name|PCMCIA_PRODUCT_MEGAHERTZ_XJEM3336
 value|0x0006
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_MEGAHERTZ_XJEM3336
+name|PCMCIA_STR_MEGAHERTZ_XJEM3336
 value|"Megahertz X-JACK Ethernet Modem"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_MEGAHERTZ_XJ4288
+name|PCMCIA_CIS_MEGAHERTZ_XJ4288
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_MEGAHERTZ_XJ4288
+name|PCMCIA_PRODUCT_MEGAHERTZ_XJ4288
 value|0x0023
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_MEGAHERTZ_XJ4288
+name|PCMCIA_STR_MEGAHERTZ_XJ4288
 value|"Megahertz XJ4288 Modem"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_MEGAHERTZ_XJ4336
+name|PCMCIA_CIS_MEGAHERTZ_XJ4336
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_MEGAHERTZ_XJ4336
+name|PCMCIA_PRODUCT_MEGAHERTZ_XJ4336
 value|0x0027
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_MEGAHERTZ_XJ4336
+name|PCMCIA_STR_MEGAHERTZ_XJ4336
 value|"Megahertz XJ4336 Modem"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_MEGAHERTZ_XJ5560
+name|PCMCIA_CIS_MEGAHERTZ_XJ5560
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_MEGAHERTZ_XJ5560
+name|PCMCIA_PRODUCT_MEGAHERTZ_XJ5560
 value|0x0034
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_MEGAHERTZ_XJ5560
+name|PCMCIA_STR_MEGAHERTZ_XJ5560
 value|"Megahertz X-JACK 56kbps Modem"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_MEGAHERTZ2_XJACK
+name|PCMCIA_CIS_MEGAHERTZ2_XJACK
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_MEGAHERTZ2_XJACK
+name|PCMCIA_PRODUCT_MEGAHERTZ2_XJACK
 value|0x0103
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_MEGAHERTZ2_XJACK
+name|PCMCIA_STR_MEGAHERTZ2_XJACK
 value|"Megahertz X-JACK Ethernet"
 end_define
 
@@ -2050,21 +2050,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_MELCO_LPC3_TX
+name|PCMCIA_CIS_MELCO_LPC3_TX
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_MELCO_LPC3_TX
+name|PCMCIA_PRODUCT_MELCO_LPC3_TX
 value|0xc1ab
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_MELCO_LPC3_TX
+name|PCMCIA_STR_MELCO_LPC3_TX
 value|"Melco LPC3-TX"
 end_define
 
@@ -2075,42 +2075,42 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_MOTOROLA_POWER144
+name|PCMCIA_CIS_MOTOROLA_POWER144
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_MOTOROLA_POWER144
+name|PCMCIA_PRODUCT_MOTOROLA_POWER144
 value|0x0105
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_MOTOROLA_POWER144
+name|PCMCIA_STR_MOTOROLA_POWER144
 value|"Motorola Power 14.4 Modem"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_MOTOROLA_PM100C
+name|PCMCIA_CIS_MOTOROLA_PM100C
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_MOTOROLA_PM100C
+name|PCMCIA_PRODUCT_MOTOROLA_PM100C
 value|0x0302
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_MOTOROLA_PM100C
+name|PCMCIA_STR_MOTOROLA_PM100C
 value|"Motorola Personal Messenger 100C CDPD Modem"
 end_define
 
@@ -2121,42 +2121,42 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_NEWMEDIA_BASICS
+name|PCMCIA_CIS_NEWMEDIA_BASICS
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_NEWMEDIA_BASICS
+name|PCMCIA_PRODUCT_NEWMEDIA_BASICS
 value|0x0019
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_NEWMEDIA_BASICS
+name|PCMCIA_STR_NEWMEDIA_BASICS
 value|"New Media BASICS Ethernet"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_NEWMEDIA_BUSTOASTER
+name|PCMCIA_CIS_NEWMEDIA_BUSTOASTER
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_NEWMEDIA_BUSTOASTER
+name|PCMCIA_PRODUCT_NEWMEDIA_BUSTOASTER
 value|0xc102
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_NEWMEDIA_BUSTOASTER
+name|PCMCIA_STR_NEWMEDIA_BUSTOASTER
 value|"New Media BusToaster SCSI Host Adapter"
 end_define
 
@@ -2167,21 +2167,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_NI_PCMCIA_GPIB
+name|PCMCIA_CIS_NI_PCMCIA_GPIB
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_NI_PCMCIA_GPIB
+name|PCMCIA_PRODUCT_NI_PCMCIA_GPIB
 value|0x4882
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_NI_PCMCIA_GPIB
+name|PCMCIA_STR_NI_PCMCIA_GPIB
 value|"National Instruments PCMCIA-GPIB"
 end_define
 
@@ -2192,21 +2192,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_NOKIA_C020_WLAN
+name|PCMCIA_CIS_NOKIA_C020_WLAN
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_NOKIA_C020_WLAN
+name|PCMCIA_PRODUCT_NOKIA_C020_WLAN
 value|0x20c0
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_NOKIA_C020_WLAN
+name|PCMCIA_STR_NOKIA_C020_WLAN
 value|"Nokia C020 WLAN Card"
 end_define
 
@@ -2217,21 +2217,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_OLICOM_TR
+name|PCMCIA_CIS_OLICOM_TR
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_OLICOM_TR
+name|PCMCIA_PRODUCT_OLICOM_TR
 value|0x2132
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_OLICOM_TR
+name|PCMCIA_STR_OLICOM_TR
 value|"GoCard Token Ring 16/4"
 end_define
 
@@ -2242,63 +2242,63 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_PANASONIC_KXLC002
+name|PCMCIA_CIS_PANASONIC_KXLC002
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_PANASONIC_KXLC002
+name|PCMCIA_PRODUCT_PANASONIC_KXLC002
 value|0x0304
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_PANASONIC_KXLC002
+name|PCMCIA_STR_PANASONIC_KXLC002
 value|"Panasonic 4X CD-ROM Interface Card"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_PANASONIC_KXLC003
+name|PCMCIA_CIS_PANASONIC_KXLC003
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_PANASONIC_KXLC003
+name|PCMCIA_PRODUCT_PANASONIC_KXLC003
 value|0x0504
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_PANASONIC_KXLC003
+name|PCMCIA_STR_PANASONIC_KXLC003
 value|"Panasonic 8X CD-ROM Interface Card"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_PANASONIC_KXLC005
+name|PCMCIA_CIS_PANASONIC_KXLC005
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_PANASONIC_KXLC005
+name|PCMCIA_PRODUCT_PANASONIC_KXLC005
 value|0x2704
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_PANASONIC_KXLC005
+name|PCMCIA_STR_PANASONIC_KXLC005
 value|"Panasonic 16X CD-ROM Interface Card"
 end_define
 
@@ -2309,21 +2309,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_PSION_GOLDCARD
+name|PCMCIA_CIS_PSION_GOLDCARD
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_PSION_GOLDCARD
+name|PCMCIA_PRODUCT_PSION_GOLDCARD
 value|0x0020
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_PSION_GOLDCARD
+name|PCMCIA_STR_PSION_GOLDCARD
 value|"Psion Gold Card"
 end_define
 
@@ -2334,21 +2334,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_RATOC_REX_R280
+name|PCMCIA_CIS_RATOC_REX_R280
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_RATOC_REX_R280
+name|PCMCIA_PRODUCT_RATOC_REX_R280
 value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_RATOC_REX_R280
+name|PCMCIA_STR_RATOC_REX_R280
 value|"RATOC REX-R280"
 end_define
 
@@ -2359,21 +2359,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_RAYTHEON_WLAN
+name|PCMCIA_CIS_RAYTHEON_WLAN
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_RAYTHEON_WLAN
+name|PCMCIA_PRODUCT_RAYTHEON_WLAN
 value|0x0000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_RAYTHEON_WLAN
+name|PCMCIA_STR_RAYTHEON_WLAN
 value|"WLAN Adapter"
 end_define
 
@@ -2384,21 +2384,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_ROLAND_SCP55
+name|PCMCIA_CIS_ROLAND_SCP55
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_ROLAND_SCP55
+name|PCMCIA_PRODUCT_ROLAND_SCP55
 value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_ROLAND_SCP55
+name|PCMCIA_STR_ROLAND_SCP55
 value|"Roland SCP-55"
 end_define
 
@@ -2409,21 +2409,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_SAMSUNG_SWL_2000N
+name|PCMCIA_CIS_SAMSUNG_SWL_2000N
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_SAMSUNG_SWL_2000N
+name|PCMCIA_PRODUCT_SAMSUNG_SWL_2000N
 value|0x0002
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_SAMSUNG_SWL_2000N
+name|PCMCIA_STR_SAMSUNG_SWL_2000N
 value|"Samsung MagicLAN SWL-2000N"
 end_define
 
@@ -2434,21 +2434,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_SANDISK_SDCFB
+name|PCMCIA_CIS_SANDISK_SDCFB
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_SANDISK_SDCFB
+name|PCMCIA_PRODUCT_SANDISK_SDCFB
 value|0x0401
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_SANDISK_SDCFB
+name|PCMCIA_STR_SANDISK_SDCFB
 value|"Sandisk CompactFlash Card"
 end_define
 
@@ -2459,21 +2459,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_SIMPLETECH_COMMUNICATOR288
+name|PCMCIA_CIS_SIMPLETECH_COMMUNICATOR288
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_SIMPLETECH_COMMUNICATOR288
+name|PCMCIA_PRODUCT_SIMPLETECH_COMMUNICATOR288
 value|0x0100
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_SIMPLETECH_COMMUNICATOR288
+name|PCMCIA_STR_SIMPLETECH_COMMUNICATOR288
 value|"Simple Technology 28.8 Communicator"
 end_define
 
@@ -2484,21 +2484,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_SIMPLETECH_SPECTRUM24
+name|PCMCIA_CIS_SIMPLETECH_SPECTRUM24
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_SIMPLETECH_SPECTRUM24
+name|PCMCIA_PRODUCT_SIMPLETECH_SPECTRUM24
 value|0x801
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_SIMPLETECH_SPECTRUM24
+name|PCMCIA_STR_SIMPLETECH_SPECTRUM24
 value|"Symbol Spectrum24 WLAN Adapter"
 end_define
 
@@ -2509,42 +2509,42 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_SMC_8016
+name|PCMCIA_CIS_SMC_8016
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_SMC_8016
+name|PCMCIA_PRODUCT_SMC_8016
 value|0x0105
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_SMC_8016
+name|PCMCIA_STR_SMC_8016
 value|"SMC 8016 EtherCard"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_SMC_EZCARD
+name|PCMCIA_CIS_SMC_EZCARD
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_SMC_EZCARD
+name|PCMCIA_PRODUCT_SMC_EZCARD
 value|0x8022
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_SMC_EZCARD
+name|PCMCIA_STR_SMC_EZCARD
 value|"SMC EZCard 10 PCMCIA"
 end_define
 
@@ -2555,105 +2555,105 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_SOCKET_EA_ETHER
+name|PCMCIA_CIS_SOCKET_EA_ETHER
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_SOCKET_EA_ETHER
+name|PCMCIA_PRODUCT_SOCKET_EA_ETHER
 value|0x0000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_SOCKET_EA_ETHER
+name|PCMCIA_STR_SOCKET_EA_ETHER
 value|"Socket Communications EA"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_SOCKET_PAGECARD
+name|PCMCIA_CIS_SOCKET_PAGECARD
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_SOCKET_PAGECARD
+name|PCMCIA_PRODUCT_SOCKET_PAGECARD
 value|0x0003
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_SOCKET_PAGECARD
+name|PCMCIA_STR_SOCKET_PAGECARD
 value|"Socket Communications PageCard"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_SOCKET_DUAL_RS232
+name|PCMCIA_CIS_SOCKET_DUAL_RS232
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_SOCKET_DUAL_RS232
+name|PCMCIA_PRODUCT_SOCKET_DUAL_RS232
 value|0x0006
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_SOCKET_DUAL_RS232
+name|PCMCIA_STR_SOCKET_DUAL_RS232
 value|"Socket Communications Dual RS232"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_SOCKET_LP_ETHER
+name|PCMCIA_CIS_SOCKET_LP_ETHER
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_SOCKET_LP_ETHER
+name|PCMCIA_PRODUCT_SOCKET_LP_ETHER
 value|0x000d
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_SOCKET_LP_ETHER
+name|PCMCIA_STR_SOCKET_LP_ETHER
 value|"Socket Communications LP-E"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_SOCKET_LP_ETHER_CF
+name|PCMCIA_CIS_SOCKET_LP_ETHER_CF
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_SOCKET_LP_ETHER_CF
+name|PCMCIA_PRODUCT_SOCKET_LP_ETHER_CF
 value|0x0075
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_SOCKET_LP_ETHER_CF
+name|PCMCIA_STR_SOCKET_LP_ETHER_CF
 value|"Socket Communications LP-E CF"
 end_define
 
@@ -2664,21 +2664,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_SYMBOL_LA4100
+name|PCMCIA_CIS_SYMBOL_LA4100
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_SYMBOL_LA4100
+name|PCMCIA_PRODUCT_SYMBOL_LA4100
 value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_SYMBOL_LA4100
+name|PCMCIA_STR_SYMBOL_LA4100
 value|"Symbol Spectrum24 LA4100 Series WLAN"
 end_define
 
@@ -2689,84 +2689,84 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_TDK_LAK_CD011WL
+name|PCMCIA_CIS_TDK_LAK_CD011WL
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_TDK_LAK_CD011WL
+name|PCMCIA_PRODUCT_TDK_LAK_CD011WL
 value|0x0000
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_TDK_LAK_CD011WL
+name|PCMCIA_STR_TDK_LAK_CD011WL
 value|"TDK LAK-CD011WL"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_TDK_LAK_CD021BX
+name|PCMCIA_CIS_TDK_LAK_CD021BX
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_TDK_LAK_CD021BX
+name|PCMCIA_PRODUCT_TDK_LAK_CD021BX
 value|0x0200
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_TDK_LAK_CD021BX
+name|PCMCIA_STR_TDK_LAK_CD021BX
 value|"TDK LAK-CD021BX Ethernet"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_TDK_LAK_CF010
+name|PCMCIA_CIS_TDK_LAK_CF010
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_TDK_LAK_CF010
+name|PCMCIA_PRODUCT_TDK_LAK_CF010
 value|0x0900
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_TDK_LAK_CF010
+name|PCMCIA_STR_TDK_LAK_CF010
 value|"TDK LAC-CF010"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_TDK_DFL9610
+name|PCMCIA_CIS_TDK_DFL9610
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_TDK_DFL9610
+name|PCMCIA_PRODUCT_TDK_DFL9610
 value|0x0d0a
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_TDK_DFL9610
+name|PCMCIA_STR_TDK_DFL9610
 value|"TDK DFL9610 Ethernet& Digital Cellular"
 end_define
 
@@ -2777,21 +2777,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_TELECOMDEVICE_TCD_HPC100
+name|PCMCIA_CIS_TELECOMDEVICE_TCD_HPC100
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_TELECOMDEVICE_TCD_HPC100
+name|PCMCIA_PRODUCT_TELECOMDEVICE_TCD_HPC100
 value|0x0202
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_TELECOMDEVICE_TCD_HPC100
+name|PCMCIA_STR_TELECOMDEVICE_TCD_HPC100
 value|"Telecom Device TCD-HPC100"
 end_define
 
@@ -2802,21 +2802,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_USROBOTICS_WORLDPORT144
+name|PCMCIA_CIS_USROBOTICS_WORLDPORT144
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_USROBOTICS_WORLDPORT144
+name|PCMCIA_PRODUCT_USROBOTICS_WORLDPORT144
 value|0x3330
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_USROBOTICS_WORLDPORT144
+name|PCMCIA_STR_USROBOTICS_WORLDPORT144
 value|"US Robotics WorldPort 14.4 Modem"
 end_define
 
@@ -2827,231 +2827,231 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_XIRCOM_CE
+name|PCMCIA_CIS_XIRCOM_CE
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_XIRCOM_CE
+name|PCMCIA_PRODUCT_XIRCOM_CE
 value|0x0108
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_XIRCOM_CE
+name|PCMCIA_STR_XIRCOM_CE
 value|"Xircom CreditCard Ethernet"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_XIRCOM_CE2
+name|PCMCIA_CIS_XIRCOM_CE2
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_XIRCOM_CE2
+name|PCMCIA_PRODUCT_XIRCOM_CE2
 value|0x010b
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_XIRCOM_CE2
+name|PCMCIA_STR_XIRCOM_CE2
 value|"Xircom CreditCard Ethernet II"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_XIRCOM_CE3
+name|PCMCIA_CIS_XIRCOM_CE3
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_XIRCOM_CE3
+name|PCMCIA_PRODUCT_XIRCOM_CE3
 value|0x010a
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_XIRCOM_CE3
+name|PCMCIA_STR_XIRCOM_CE3
 value|"Xircom CreditCard 10/100 Ethernet"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_XIRCOM_CNW_801
+name|PCMCIA_CIS_XIRCOM_CNW_801
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_XIRCOM_CNW_801
+name|PCMCIA_PRODUCT_XIRCOM_CNW_801
 value|0x0801
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_XIRCOM_CNW_801
+name|PCMCIA_STR_XIRCOM_CNW_801
 value|"Xircom CreditCard Netwave (Canada)"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_XIRCOM_CNW_802
+name|PCMCIA_CIS_XIRCOM_CNW_802
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_XIRCOM_CNW_802
+name|PCMCIA_PRODUCT_XIRCOM_CNW_802
 value|0x0802
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_XIRCOM_CNW_802
+name|PCMCIA_STR_XIRCOM_CNW_802
 value|"Xircom CreditCard Netwave (US)"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_XIRCOM_CT2
+name|PCMCIA_CIS_XIRCOM_CT2
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_XIRCOM_CT2
+name|PCMCIA_PRODUCT_XIRCOM_CT2
 value|0x1101
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_XIRCOM_CT2
+name|PCMCIA_STR_XIRCOM_CT2
 value|"Xircom CreditCard Token Ring II"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_XIRCOM_CEM
+name|PCMCIA_CIS_XIRCOM_CEM
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_XIRCOM_CEM
+name|PCMCIA_PRODUCT_XIRCOM_CEM
 value|0x110a
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_XIRCOM_CEM
+name|PCMCIA_STR_XIRCOM_CEM
 value|"Xircom CreditCard Ethernet + Modem"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_XIRCOM_REM56
+name|PCMCIA_CIS_XIRCOM_REM56
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_XIRCOM_REM56
+name|PCMCIA_PRODUCT_XIRCOM_REM56
 value|0x110a
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_XIRCOM_REM56
+name|PCMCIA_STR_XIRCOM_REM56
 value|"Xircom RealPort Ethernet 10/100 + Modem 56"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_XIRCOM_CEM28
+name|PCMCIA_CIS_XIRCOM_CEM28
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_XIRCOM_CEM28
+name|PCMCIA_PRODUCT_XIRCOM_CEM28
 value|0x110b
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_XIRCOM_CEM28
+name|PCMCIA_STR_XIRCOM_CEM28
 value|"Xircom CreditCard Ethernet + Modem 28"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_XIRCOM_CEM33
+name|PCMCIA_CIS_XIRCOM_CEM33
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_XIRCOM_CEM33
+name|PCMCIA_PRODUCT_XIRCOM_CEM33
 value|0x110b
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_XIRCOM_CEM33
+name|PCMCIA_STR_XIRCOM_CEM33
 value|"Xircom CreditCard Ethernet + Modem 33"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_XIRCOM_CEM56
+name|PCMCIA_CIS_XIRCOM_CEM56
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_XIRCOM_CEM56
+name|PCMCIA_PRODUCT_XIRCOM_CEM56
 value|0x110b
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_XIRCOM_CEM56
+name|PCMCIA_STR_XIRCOM_CEM56
 value|"Xircom CreditCard Ethernet + Modem 56"
 end_define
 
@@ -3062,21 +3062,21 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_ZONET_ZEN
+name|PCMCIA_CIS_ZONET_ZEN
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_ZONET_ZEN
+name|PCMCIA_PRODUCT_ZONET_ZEN
 value|0x0100
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_ZONET_ZEN
+name|PCMCIA_STR_ZONET_ZEN
 value|"Zonet Zen 10/10"
 end_define
 
@@ -3087,7 +3087,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_AMBICOM
+name|PCMCIA_VENDOR_AMBICOM
 value|-1
 end_define
 
@@ -3098,7 +3098,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_ACCTON
+name|PCMCIA_VENDOR_ACCTON
 value|-1
 end_define
 
@@ -3109,7 +3109,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_AMD
+name|PCMCIA_VENDOR_AMD
 value|-1
 end_define
 
@@ -3120,7 +3120,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_BILLIONTON
+name|PCMCIA_VENDOR_BILLIONTON
 value|-1
 end_define
 
@@ -3131,7 +3131,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_CNET
+name|PCMCIA_VENDOR_CNET
 value|-1
 end_define
 
@@ -3142,7 +3142,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_DIGITAL
+name|PCMCIA_VENDOR_DIGITAL
 value|-1
 end_define
 
@@ -3153,7 +3153,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_DLINK
+name|PCMCIA_VENDOR_DLINK
 value|-1
 end_define
 
@@ -3164,7 +3164,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_EIGERLABS
+name|PCMCIA_VENDOR_EIGERLABS
 value|-1
 end_define
 
@@ -3175,7 +3175,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_EPSON
+name|PCMCIA_VENDOR_EPSON
 value|-1
 end_define
 
@@ -3186,7 +3186,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_EXP
+name|PCMCIA_VENDOR_EXP
 value|-1
 end_define
 
@@ -3197,7 +3197,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_ICOM
+name|PCMCIA_VENDOR_ICOM
 value|-1
 end_define
 
@@ -3208,7 +3208,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_INTERSIL
+name|PCMCIA_VENDOR_INTERSIL
 value|-1
 end_define
 
@@ -3219,7 +3219,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_NAKAGAWAMETAL
+name|PCMCIA_VENDOR_NAKAGAWAMETAL
 value|-1
 end_define
 
@@ -3230,7 +3230,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_PLANET
+name|PCMCIA_VENDOR_PLANET
 value|-1
 end_define
 
@@ -3241,7 +3241,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_PLANEX
+name|PCMCIA_VENDOR_PLANEX
 value|-1
 end_define
 
@@ -3252,7 +3252,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_PREMAX
+name|PCMCIA_VENDOR_PREMAX
 value|-1
 end_define
 
@@ -3263,7 +3263,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_RPTI
+name|PCMCIA_VENDOR_RPTI
 value|-1
 end_define
 
@@ -3274,7 +3274,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_SVEC
+name|PCMCIA_VENDOR_SVEC
 value|-1
 end_define
 
@@ -3285,7 +3285,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_SYNERGY21
+name|PCMCIA_VENDOR_SYNERGY21
 value|-1
 end_define
 
@@ -3296,7 +3296,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_TEAC
+name|PCMCIA_VENDOR_TEAC
 value|-1
 end_define
 
@@ -3307,7 +3307,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_VENDOR_YEDATA
+name|PCMCIA_VENDOR_YEDATA
 value|-1
 end_define
 
@@ -3318,378 +3318,378 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_ACCTON_EN2212
+name|PCMCIA_CIS_ACCTON_EN2212
 value|{ "ACCTON", "EN2212", NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_ACCTON_EN2212
+name|PCMCIA_PRODUCT_ACCTON_EN2212
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_ACCTON_EN2212
+name|PCMCIA_STR_ACCTON_EN2212
 value|"Accton EN2212"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_AMBICOM_AMB8002T
+name|PCMCIA_CIS_AMBICOM_AMB8002T
 value|{ "AmbiCom Inc", "AMB8002T", NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_AMBICOM_AMB8002T
+name|PCMCIA_PRODUCT_AMBICOM_AMB8002T
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_AMBICOM_AMB8002T
+name|PCMCIA_STR_AMBICOM_AMB8002T
 value|"AmbiCom AMB8002T"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_AMD_AM79C930
+name|PCMCIA_CIS_AMD_AM79C930
 value|{ "AMD", "Am79C930", NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_AMD_AM79C930
+name|PCMCIA_PRODUCT_AMD_AM79C930
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_AMD_AM79C930
+name|PCMCIA_STR_AMD_AM79C930
 value|"AMD Am79C930"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_BILLIONTON_LNT10TN
+name|PCMCIA_CIS_BILLIONTON_LNT10TN
 value|{ "PCMCIA", "LNT-10TN", NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_BILLIONTON_LNT10TN
+name|PCMCIA_PRODUCT_BILLIONTON_LNT10TN
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_BILLIONTON_LNT10TN
+name|PCMCIA_STR_BILLIONTON_LNT10TN
 value|"Billionton Systems Inc. LNT-10TN NE2000 Compatible Card"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_CNET_NE2000
+name|PCMCIA_CIS_CNET_NE2000
 value|{ "CNet", "CN40BC Ethernet", "D", "NE2000" }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_CNET_NE2000
+name|PCMCIA_PRODUCT_CNET_NE2000
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_CNET_NE2000
+name|PCMCIA_STR_CNET_NE2000
 value|"CNet CN40BC NE2000 Compatible"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_COREGA_ETHER_PCC_T
+name|PCMCIA_CIS_COREGA_ETHER_PCC_T
 value|{ "corega K.K.", "corega Ether PCC-T", NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_COREGA_ETHER_PCC_T
+name|PCMCIA_PRODUCT_COREGA_ETHER_PCC_T
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_COREGA_ETHER_PCC_T
+name|PCMCIA_STR_COREGA_ETHER_PCC_T
 value|"Corega Ether PCC-T"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_COREGA_ETHER_PCC_TD
+name|PCMCIA_CIS_COREGA_ETHER_PCC_TD
 value|{ "corega K.K.", "corega Ether PCC-TD", NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_COREGA_ETHER_PCC_TD
+name|PCMCIA_PRODUCT_COREGA_ETHER_PCC_TD
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_COREGA_ETHER_PCC_TD
+name|PCMCIA_STR_COREGA_ETHER_PCC_TD
 value|"Corega Ether PCC-TD"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_COREGA_ETHER_II_PCC_T
+name|PCMCIA_CIS_COREGA_ETHER_II_PCC_T
 value|{ "corega K.K.", "corega EtherII PCC-T", NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_COREGA_ETHER_II_PCC_T
+name|PCMCIA_PRODUCT_COREGA_ETHER_II_PCC_T
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_COREGA_ETHER_II_PCC_T
+name|PCMCIA_STR_COREGA_ETHER_II_PCC_T
 value|"Corega EtherII PCC-T"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_COREGA_FAST_ETHER_PCC_TX
+name|PCMCIA_CIS_COREGA_FAST_ETHER_PCC_TX
 value|{ "corega K.K.", "corega FastEther PCC-TX", NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_COREGA_FAST_ETHER_PCC_TX
+name|PCMCIA_PRODUCT_COREGA_FAST_ETHER_PCC_TX
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_COREGA_FAST_ETHER_PCC_TX
+name|PCMCIA_STR_COREGA_FAST_ETHER_PCC_TX
 value|"Corega FastEther PCC-TX"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_COREGA_FETHER_PCC_TXD
+name|PCMCIA_CIS_COREGA_FETHER_PCC_TXD
 value|{ "corega K.K.", "corega FEther PCC-TXD", NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_COREGA_FETHER_PCC_TXD
+name|PCMCIA_PRODUCT_COREGA_FETHER_PCC_TXD
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_COREGA_FETHER_PCC_TXD
+name|PCMCIA_STR_COREGA_FETHER_PCC_TXD
 value|"Corega FEther PCC-TXD"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_COREGA_FETHER_PCC_TXF
+name|PCMCIA_CIS_COREGA_FETHER_PCC_TXF
 value|{ "corega", "FEther PCC-TXF", NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_COREGA_FETHER_PCC_TXF
+name|PCMCIA_PRODUCT_COREGA_FETHER_PCC_TXF
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_COREGA_FETHER_PCC_TXF
+name|PCMCIA_STR_COREGA_FETHER_PCC_TXF
 value|"Corega FEther PCC-TXF"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_COREGA_WIRELESS_LAN_PCC_11
+name|PCMCIA_CIS_COREGA_WIRELESS_LAN_PCC_11
 value|{ "corega K.K.", "Wireless LAN PCC-11", NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_COREGA_WIRELESS_LAN_PCC_11
+name|PCMCIA_PRODUCT_COREGA_WIRELESS_LAN_PCC_11
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_COREGA_WIRELESS_LAN_PCC_11
+name|PCMCIA_STR_COREGA_WIRELESS_LAN_PCC_11
 value|"Corega Wireless LAN PCC-11"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_COREGA_WIRELESS_LAN_PCCA_11
+name|PCMCIA_CIS_COREGA_WIRELESS_LAN_PCCA_11
 value|{ "corega K.K.", "Wireless LAN PCCA-11", NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_COREGA_WIRELESS_LAN_PCCA_11
+name|PCMCIA_PRODUCT_COREGA_WIRELESS_LAN_PCCA_11
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_COREGA_WIRELESS_LAN_PCCA_11
+name|PCMCIA_STR_COREGA_WIRELESS_LAN_PCCA_11
 value|"Corega Wireless LAN PCCA-11"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_COREGA_WIRELESS_LAN_PCCB_11
+name|PCMCIA_CIS_COREGA_WIRELESS_LAN_PCCB_11
 value|{ "corega_K.K.", "Wireless_LAN_PCCB-11", NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_COREGA_WIRELESS_LAN_PCCB_11
+name|PCMCIA_PRODUCT_COREGA_WIRELESS_LAN_PCCB_11
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_COREGA_WIRELESS_LAN_PCCB_11
+name|PCMCIA_STR_COREGA_WIRELESS_LAN_PCCB_11
 value|"Corega Wireless LAN PCCB-11"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_DIGITAL_DEPCMXX
+name|PCMCIA_CIS_DIGITAL_DEPCMXX
 value|{ "DIGITAL", "DEPCM-XX", NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_DIGITAL_DEPCMXX
+name|PCMCIA_PRODUCT_DIGITAL_DEPCMXX
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_DIGITAL_DEPCMXX
+name|PCMCIA_STR_DIGITAL_DEPCMXX
 value|"DEC DEPCM-BA"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_DLINK_DE650
+name|PCMCIA_CIS_DLINK_DE650
 value|{ "D-Link", "DE-650", NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_DLINK_DE650
+name|PCMCIA_PRODUCT_DLINK_DE650
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_DLINK_DE650
+name|PCMCIA_STR_DLINK_DE650
 value|"D-Link DE-650"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_DLINK_DE660
+name|PCMCIA_CIS_DLINK_DE660
 value|{ "D-Link", "DE-660", NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_DLINK_DE660
+name|PCMCIA_PRODUCT_DLINK_DE660
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_DLINK_DE660
+name|PCMCIA_STR_DLINK_DE660
 value|"D-Link DE-660"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_DLINK_DE660PLUS
+name|PCMCIA_CIS_DLINK_DE660PLUS
 value|{ "D-Link", "DE-660+", NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_DLINK_DE660PLUS
+name|PCMCIA_PRODUCT_DLINK_DE660PLUS
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_DLINK_DE660PLUS
+name|PCMCIA_STR_DLINK_DE660PLUS
 value|"D-Link DE-660+"
 end_define
 
@@ -3700,357 +3700,357 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_EIGERLABS_EPX_AA2000
+name|PCMCIA_CIS_EIGERLABS_EPX_AA2000
 value|{ "Eiger labs,Inc.", "EPX-AA2000 PC Sound Card", NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_EIGERLABS_EPX_AA2000
+name|PCMCIA_PRODUCT_EIGERLABS_EPX_AA2000
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_EIGERLABS_EPX_AA2000
+name|PCMCIA_STR_EIGERLABS_EPX_AA2000
 value|"EPX-AA2000 PC Sound Card"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_EPSON_EEN10B
+name|PCMCIA_CIS_EPSON_EEN10B
 value|{ "Seiko Epson Corp.", "Ethernet", "P/N: EEN10B Rev. 00", NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_EPSON_EEN10B
+name|PCMCIA_PRODUCT_EPSON_EEN10B
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_EPSON_EEN10B
+name|PCMCIA_STR_EPSON_EEN10B
 value|"Epson EEN10B"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_EXP_EXPMULTIMEDIA
+name|PCMCIA_CIS_EXP_EXPMULTIMEDIA
 value|{ "EXP   ", "PnPIDE", "F1", NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_EXP_EXPMULTIMEDIA
+name|PCMCIA_PRODUCT_EXP_EXPMULTIMEDIA
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_EXP_EXPMULTIMEDIA
+name|PCMCIA_STR_EXP_EXPMULTIMEDIA
 value|"EXP IDE/ATAPI DVD Card"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_GEMTEK_WLAN
+name|PCMCIA_CIS_GEMTEK_WLAN
 value|{ "Intersil", "PRISM 2_5 PCMCIA ADAPTER", "ISL37300P", "Eval-RevA" }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_GEMTEK_WLAN
+name|PCMCIA_PRODUCT_GEMTEK_WLAN
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_GEMTEK_WLAN
+name|PCMCIA_STR_GEMTEK_WLAN
 value|"GEMTEK Prism2_5 WaveLAN Card"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_ICOM_SL200
+name|PCMCIA_CIS_ICOM_SL200
 value|{ "Icom", "SL-200", NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_ICOM_SL200
+name|PCMCIA_PRODUCT_ICOM_SL200
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_ICOM_SL200
+name|PCMCIA_STR_ICOM_SL200
 value|"Icom SL-200"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_INTERSIL_PRISM2
+name|PCMCIA_CIS_INTERSIL_PRISM2
 value|{ "INTERSIL", "HFA384x/IEEE", "Version 01.02", NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_INTERSIL_PRISM2
+name|PCMCIA_PRODUCT_INTERSIL_PRISM2
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_INTERSIL_PRISM2
+name|PCMCIA_STR_INTERSIL_PRISM2
 value|"Intersil Prism II"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_IODATA_CBIDE2
+name|PCMCIA_CIS_IODATA_CBIDE2
 value|{ "IO DATA", "CBIDE2      ", NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_IODATA_CBIDE2
+name|PCMCIA_PRODUCT_IODATA_CBIDE2
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_IODATA_CBIDE2
+name|PCMCIA_STR_IODATA_CBIDE2
 value|"IO-DATA CBIDE2/16-bit mode"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_IODATA_PCLAT
+name|PCMCIA_CIS_IODATA_PCLAT
 value|{ "I-O DATA", "PCLA", "ETHERNET", NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_IODATA_PCLAT
+name|PCMCIA_PRODUCT_IODATA_PCLAT
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_IODATA_PCLAT
+name|PCMCIA_STR_IODATA_PCLAT
 value|"IO-DATA PCLA/T"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_LINKSYS_ECARD_2
+name|PCMCIA_CIS_LINKSYS_ECARD_2
 value|{ "LINKSYS", "E-CARD", NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_LINKSYS_ECARD_2
+name|PCMCIA_PRODUCT_LINKSYS_ECARD_2
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_LINKSYS_ECARD_2
+name|PCMCIA_STR_LINKSYS_ECARD_2
 value|"Linksys E-Card"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_MEGAHERTZ_XJ2288
+name|PCMCIA_CIS_MEGAHERTZ_XJ2288
 value|{ "MEGAHERTZ", "MODEM XJ2288", NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_MEGAHERTZ_XJ2288
+name|PCMCIA_PRODUCT_MEGAHERTZ_XJ2288
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_MEGAHERTZ_XJ2288
+name|PCMCIA_STR_MEGAHERTZ_XJ2288
 value|"Megahertz XJ2288 Modem"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_MELCO_LPC2_TX
+name|PCMCIA_CIS_MELCO_LPC2_TX
 value|{ "MELCO", "LPC2-TX", NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_MELCO_LPC2_TX
+name|PCMCIA_PRODUCT_MELCO_LPC2_TX
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_MELCO_LPC2_TX
+name|PCMCIA_STR_MELCO_LPC2_TX
 value|"Melco LPC2-TX"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_NAKAGAWAMETAL_LNT10TN
+name|PCMCIA_CIS_NAKAGAWAMETAL_LNT10TN
 value|{ "PCMCIA", "LNT-10TN", NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_NAKAGAWAMETAL_LNT10TN
+name|PCMCIA_PRODUCT_NAKAGAWAMETAL_LNT10TN
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_NAKAGAWAMETAL_LNT10TN
+name|PCMCIA_STR_NAKAGAWAMETAL_LNT10TN
 value|"NAKAGAWA METAL LNT-10TN NE2000 Compatible Card"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_NANOSPEED_PRISM2
+name|PCMCIA_CIS_NANOSPEED_PRISM2
 value|{ "NANOSPEED", "HFA384x/IEEE", "Version 01.02", NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_NANOSPEED_PRISM2
+name|PCMCIA_PRODUCT_NANOSPEED_PRISM2
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_NANOSPEED_PRISM2
+name|PCMCIA_STR_NANOSPEED_PRISM2
 value|"NANOSPEED ROOT-RZ2000 WLAN Card"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_NDC_ND5100_E
+name|PCMCIA_CIS_NDC_ND5100_E
 value|{ "NDC", "Ethernet", "A", NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_NDC_ND5100_E
+name|PCMCIA_PRODUCT_NDC_ND5100_E
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_NDC_ND5100_E
+name|PCMCIA_STR_NDC_ND5100_E
 value|"Sohoware ND5100E NE2000 Compatible Card"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_NEC_CMZ_RT_WP
+name|PCMCIA_CIS_NEC_CMZ_RT_WP
 value|{ "NEC", "Wireless Card CMZ-RT-WP", "Version 01.01", NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_NEC_CMZ_RT_WP
+name|PCMCIA_PRODUCT_NEC_CMZ_RT_WP
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_NEC_CMZ_RT_WP
+name|PCMCIA_STR_NEC_CMZ_RT_WP
 value|"NEC Wireless Card CMZ-RT-WP"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_NTT_ME_WLAN
+name|PCMCIA_CIS_NTT_ME_WLAN
 value|{ "NTT-ME", "11Mbps Wireless LAN PC Card", NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_NTT_ME_WLAN
+name|PCMCIA_PRODUCT_NTT_ME_WLAN
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_NTT_ME_WLAN
+name|PCMCIA_STR_NTT_ME_WLAN
 value|"NTT-ME 11Mbps Wireless LAN PC Card"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_PLANET_SMARTCOM2000
+name|PCMCIA_CIS_PLANET_SMARTCOM2000
 value|{ "PCMCIA", "UE2212", NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_PLANET_SMARTCOM2000
+name|PCMCIA_PRODUCT_PLANET_SMARTCOM2000
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_PLANET_SMARTCOM2000
+name|PCMCIA_STR_PLANET_SMARTCOM2000
 value|"Planet SmartCOM 2000"
 end_define
 
@@ -4061,168 +4061,168 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_PLANEX_FNW3600T
+name|PCMCIA_CIS_PLANEX_FNW3600T
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_PLANEX_FNW3600T
+name|PCMCIA_PRODUCT_PLANEX_FNW3600T
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_PLANEX_FNW3600T
+name|PCMCIA_STR_PLANEX_FNW3600T
 value|"Planex FNW-3600-T"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_PLANEX_FNW3700T
+name|PCMCIA_CIS_PLANEX_FNW3700T
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_PLANEX_FNW3700T
+name|PCMCIA_PRODUCT_PLANEX_FNW3700T
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_PLANEX_FNW3700T
+name|PCMCIA_STR_PLANEX_FNW3700T
 value|"Planex FNW-3700-T"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_RPTI_EP400
+name|PCMCIA_CIS_RPTI_EP400
 value|{ "RPTI LTD.", "EP400", "CISV100", NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_RPTI_EP400
+name|PCMCIA_PRODUCT_RPTI_EP400
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_RPTI_EP400
+name|PCMCIA_STR_RPTI_EP400
 value|"RPTI EP400"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_RPTI_EP401
+name|PCMCIA_CIS_RPTI_EP401
 value|{ "RPTI", "EP401 Ethernet NE2000 Compatible", NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_RPTI_EP401
+name|PCMCIA_PRODUCT_RPTI_EP401
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_RPTI_EP401
+name|PCMCIA_STR_RPTI_EP401
 value|"RPTI EP401"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_PREMAX_PE200
+name|PCMCIA_CIS_PREMAX_PE200
 value|{ "PMX   ", "PE-200", NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_PREMAX_PE200
+name|PCMCIA_PRODUCT_PREMAX_PE200
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_PREMAX_PE200
+name|PCMCIA_STR_PREMAX_PE200
 value|"PreMax PE-200"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_SMC_2632W
+name|PCMCIA_CIS_SMC_2632W
 value|{ "SMC", "SMC2632W", "Version 01.02", NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_SMC_2632W
+name|PCMCIA_PRODUCT_SMC_2632W
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_SMC_2632W
+name|PCMCIA_STR_SMC_2632W
 value|"SMC 2632 EZ Connect Wireless PC Card"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_SVEC_COMBOCARD
+name|PCMCIA_CIS_SVEC_COMBOCARD
 value|{ "Ethernet", "Adapter", NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_SVEC_COMBOCARD
+name|PCMCIA_PRODUCT_SVEC_COMBOCARD
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_SVEC_COMBOCARD
+name|PCMCIA_STR_SVEC_COMBOCARD
 value|"SVEC/Hawking Tech. Combo Card"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_SVEC_LANCARD
+name|PCMCIA_CIS_SVEC_LANCARD
 value|{ "SVEC", "FD605 PCMCIA EtherNet Card", "V1-1", NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_SVEC_LANCARD
+name|PCMCIA_PRODUCT_SVEC_LANCARD
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_SVEC_LANCARD
+name|PCMCIA_STR_SVEC_LANCARD
 value|"SVEC PCMCIA Lan Card"
 end_define
 
@@ -4233,126 +4233,126 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_SVEC_PN650TX
+name|PCMCIA_CIS_SVEC_PN650TX
 value|{ NULL, NULL, NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_SVEC_PN650TX
+name|PCMCIA_PRODUCT_SVEC_PN650TX
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_SVEC_PN650TX
+name|PCMCIA_STR_SVEC_PN650TX
 value|"SVEC PN650TX 10/100 Dual Speed Fast Ethernet PC Card"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_SYNERGY21_S21810
+name|PCMCIA_CIS_SYNERGY21_S21810
 value|{ "PCMCIA", "Ethernet", "A", "004743118001" }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_SYNERGY21_S21810
+name|PCMCIA_PRODUCT_SYNERGY21_S21810
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_SYNERGY21_S21810
+name|PCMCIA_STR_SYNERGY21_S21810
 value|"Synergy 21 S21810+ NE2000 Compatible Card"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_TEAC_IDECARDII
+name|PCMCIA_CIS_TEAC_IDECARDII
 value|{ NULL, "NinjaATA-", NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_TEAC_IDECARDII
+name|PCMCIA_PRODUCT_TEAC_IDECARDII
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_TEAC_IDECARDII
+name|PCMCIA_STR_TEAC_IDECARDII
 value|"TEAC IDE Card/II"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_XIRCOM_CFE_10
+name|PCMCIA_CIS_XIRCOM_CFE_10
 value|{ "Xircom", "CompactCard Ethernet", "CFE-10", "1.00" }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_XIRCOM_CFE_10
+name|PCMCIA_PRODUCT_XIRCOM_CFE_10
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_XIRCOM_CFE_10
+name|PCMCIA_STR_XIRCOM_CFE_10
 value|"Xircom CompactCard CFE-10"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_YEDATA_EXTERNAL_FDD
+name|PCMCIA_CIS_YEDATA_EXTERNAL_FDD
 value|{ "Y-E DATA", "External FDD", NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_YEDATA_EXTERNAL_FDD
+name|PCMCIA_PRODUCT_YEDATA_EXTERNAL_FDD
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_YEDATA_EXTERNAL_FDD
+name|PCMCIA_STR_YEDATA_EXTERNAL_FDD
 value|"Y-E DATA External FDD"
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_CIS_ZOOM_AIR_4000
+name|PCMCIA_CIS_ZOOM_AIR_4000
 value|{ "Zoom", "Air-4000", NULL, NULL }
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_PRODUCT_ZOOM_AIR_4000
+name|PCMCIA_PRODUCT_ZOOM_AIR_4000
 value|-1
 end_define
 
 begin_define
 define|#
 directive|define
-name|PCCARD_STR_ZOOM_AIR_4000
+name|PCMCIA_STR_ZOOM_AIR_4000
 value|"Zoom Air-4000"
 end_define
 
