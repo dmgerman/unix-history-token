@@ -1982,6 +1982,12 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG_VFS_LOCKS
+end_ifdef
+
 begin_comment
 comment|/*  * Support code to aid in debugging VFS locking problems.  Not totally  * reliable since if the thread sleeps between changing the lock  * state and checking it with the assert, some other thread could  * change the state.  They are good enough for debugging a single  * filesystem using a single-threaded test.  */
 end_comment
@@ -2020,22 +2026,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|assert_vop_unlocked
-parameter_list|(
-name|struct
-name|vnode
-modifier|*
-name|vp
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|str
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|void	assert_vop_elocked(struct vnode *vp, const char *str); void	assert_vop_elocked_other(struct vnode *vp, const char *str);
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void
@@ -2054,43 +2055,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|assert_vop_slocked
-parameter_list|(
-name|struct
-name|vnode
-modifier|*
-name|vp
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|str
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|voi0	assert_vop_slocked(struct vnode *vp, const char *str);
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void
-name|assert_vop_elocked
-parameter_list|(
-name|struct
-name|vnode
-modifier|*
-name|vp
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|str
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|assert_vop_elocked_other
+name|assert_vop_unlocked
 parameter_list|(
 name|struct
 name|vnode
@@ -2106,55 +2085,8 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* These are called from within the actuall VOPS */
+comment|/* These are called from within the actual VOPS. */
 end_comment
-
-begin_function_decl
-name|void
-name|vop_rename_pre
-parameter_list|(
-name|void
-modifier|*
-name|a
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|vop_strategy_pre
-parameter_list|(
-name|void
-modifier|*
-name|a
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|vop_lookup_pre
-parameter_list|(
-name|void
-modifier|*
-name|a
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|vop_lookup_post
-parameter_list|(
-name|void
-modifier|*
-name|a
-parameter_list|,
-name|int
-name|rc
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|void
@@ -2183,7 +2115,43 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|vop_unlock_pre
+name|vop_lookup_post
+parameter_list|(
+name|void
+modifier|*
+name|a
+parameter_list|,
+name|int
+name|rc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vop_lookup_pre
+parameter_list|(
+name|void
+modifier|*
+name|a
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vop_rename_pre
+parameter_list|(
+name|void
+modifier|*
+name|a
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vop_strategy_pre
 parameter_list|(
 name|void
 modifier|*
@@ -2206,11 +2174,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG_VFS_LOCKS
-end_ifdef
+begin_function_decl
+name|void
+name|vop_unlock_pre
+parameter_list|(
+name|void
+modifier|*
+name|a
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -2236,29 +2209,11 @@ parameter_list|)
 value|assert_vi_unlocked((vp), (str))
 end_define
 
-begin_define
-define|#
-directive|define
-name|ASSERT_VOP_LOCKED
-parameter_list|(
-name|vp
-parameter_list|,
-name|str
-parameter_list|)
-value|assert_vop_locked((vp), (str))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ASSERT_VOP_UNLOCKED
-parameter_list|(
-name|vp
-parameter_list|,
-name|str
-parameter_list|)
-value|assert_vop_unlocked((vp), (str))
-end_define
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_define
 define|#
@@ -2284,6 +2239,29 @@ parameter_list|)
 value|assert_vop_locked_other((vp), (str))
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|ASSERT_VOP_LOCKED
+parameter_list|(
+name|vp
+parameter_list|,
+name|str
+parameter_list|)
+value|assert_vop_locked((vp), (str))
+end_define
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_define
 define|#
 directive|define
@@ -2296,21 +2274,10 @@ parameter_list|)
 value|assert_vop_slocked((vp), (str))
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ASSERT_VOP_LOCKED
-parameter_list|(
-name|vp
-parameter_list|,
-name|str
-parameter_list|)
-end_define
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -2321,7 +2288,45 @@ name|vp
 parameter_list|,
 name|str
 parameter_list|)
+value|assert_vop_unlocked((vp), (str))
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !DEBUG_VFS_LOCKS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASSERT_VI_LOCKED
+parameter_list|(
+name|vp
+parameter_list|,
+name|str
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASSERT_VI_UNLOCKED
+parameter_list|(
+name|vp
+parameter_list|,
+name|str
+parameter_list|)
+end_define
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_define
 define|#
@@ -2345,6 +2350,28 @@ name|str
 parameter_list|)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|ASSERT_VOP_LOCKED
+parameter_list|(
+name|vp
+parameter_list|,
+name|str
+parameter_list|)
+end_define
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_define
 define|#
 directive|define
@@ -2356,21 +2383,15 @@ name|str
 parameter_list|)
 end_define
 
-begin_define
-define|#
-directive|define
-name|ASSERT_VI_UNLOCKED
-parameter_list|(
-name|vp
-parameter_list|,
-name|str
-parameter_list|)
-end_define
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
 directive|define
-name|ASSERT_VI_LOCKED
+name|ASSERT_VOP_UNLOCKED
 parameter_list|(
 name|vp
 parameter_list|,
@@ -2382,6 +2403,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* DEBUG_VFS_LOCKS */
+end_comment
 
 begin_comment
 comment|/*  * VOCALL calls an op given an ops vector.  We break it out because BSD's  * vclean changes the ops vector and then wants to call ops with the old  * vector.  */
