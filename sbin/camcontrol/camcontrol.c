@@ -9721,7 +9721,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"%sfrequencey: %d.%03dMHz\n"
+literal|"%sfrequency: %d.%03dMHz\n"
 argument_list|,
 name|pathstr
 argument_list|,
