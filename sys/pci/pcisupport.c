@@ -6364,6 +6364,30 @@ operator|(
 literal|"VIA 82C586B IDE controller"
 operator|)
 return|;
+case|case
+literal|0x30571106
+case|:
+return|return
+operator|(
+literal|"VIA 82C686 ACPI interface"
+operator|)
+return|;
+case|case
+literal|0x30581106
+case|:
+return|return
+operator|(
+literal|"VIA 82C686 AC97 Audio"
+operator|)
+return|;
+case|case
+literal|0x30681106
+case|:
+return|return
+operator|(
+literal|"VIA 82C686 AC97 Modem"
+operator|)
+return|;
 if|#
 directive|if
 literal|0
