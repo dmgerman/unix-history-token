@@ -97,7 +97,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: perm.c,v 1.5 1997/02/22 19:54:08 peter Exp $"
+literal|"$Id: perm.c,v 1.6 1998/12/06 07:42:09 archie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -321,7 +321,13 @@ name|pw_name
 argument_list|)
 return|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|errno
+operator|==
+name|ENOENT
+condition|)
 block|{
 name|PRIV_START
 name|fp
@@ -354,12 +360,25 @@ name|pw_name
 argument_list|)
 return|;
 block|}
+elseif|else
+if|if
+condition|(
+name|errno
+operator|!=
+name|ENOENT
+condition|)
 name|perror
 argument_list|(
 literal|"at.deny"
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|perror
+argument_list|(
+literal|"at.allow"
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
