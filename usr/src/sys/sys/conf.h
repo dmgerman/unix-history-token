@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.h	4.6	81/03/09	*/
+comment|/*	conf.h	4.7	81/04/03	*/
 end_comment
 
 begin_comment
@@ -267,8 +267,6 @@ name|int
 name|sw_freed
 decl_stmt|;
 block|}
-name|swdevt
-index|[]
 struct|;
 end_struct
 
