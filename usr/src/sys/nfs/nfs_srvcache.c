@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_srvcache.c	7.20 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_srvcache.c	7.21 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -143,7 +143,7 @@ name|NFSRCHASH
 parameter_list|(
 name|xid
 parameter_list|)
-value|(((xid) + ((xid)>> 16))& rheadhash)
+value|(((xid) + ((xid)>> 24))& rheadhash)
 end_define
 
 begin_decl_stmt
@@ -625,18 +625,6 @@ operator|->
 name|rc_state
 operator|==
 name|RC_INPROG
-operator|||
-operator|(
-name|time
-operator|.
-name|tv_sec
-operator|-
-name|rp
-operator|->
-name|rc_timestamp
-operator|)
-operator|<
-name|RC_DELAY
 condition|)
 block|{
 name|nfsstats
@@ -661,7 +649,7 @@ condition|)
 block|{
 name|nfsstats
 operator|.
-name|srvcache_idemdonehits
+name|srvcache_nonidemdonehits
 operator|++
 expr_stmt|;
 name|nfs_rephead
@@ -691,14 +679,6 @@ operator|&
 name|bpos
 argument_list|)
 expr_stmt|;
-name|rp
-operator|->
-name|rc_timestamp
-operator|=
-name|time
-operator|.
-name|tv_sec
-expr_stmt|;
 name|ret
 operator|=
 name|RC_REPLY
@@ -716,7 +696,7 @@ condition|)
 block|{
 name|nfsstats
 operator|.
-name|srvcache_idemdonehits
+name|srvcache_nonidemdonehits
 operator|++
 expr_stmt|;
 operator|*
@@ -735,14 +715,6 @@ argument_list|,
 name|M_WAIT
 argument_list|)
 expr_stmt|;
-name|rp
-operator|->
-name|rc_timestamp
-operator|=
-name|time
-operator|.
-name|tv_sec
-expr_stmt|;
 name|ret
 operator|=
 name|RC_REPLY
@@ -752,7 +724,7 @@ else|else
 block|{
 name|nfsstats
 operator|.
-name|srvcache_nonidemdonehits
+name|srvcache_idemdonehits
 operator|++
 expr_stmt|;
 name|rp
@@ -1354,22 +1326,11 @@ name|rc_state
 operator|=
 name|RC_DONE
 expr_stmt|;
-comment|/* 			 * If we have a valid reply update status and save 			 * the reply for non-idempotent rpc's. 			 * Otherwise invalidate entry by setting the timestamp 			 * to nil. 			 */
+comment|/* 			 * If we have a valid reply update status and save 			 * the reply for non-idempotent rpc's. 			 */
 if|if
 condition|(
 name|repvalid
-condition|)
-block|{
-name|rp
-operator|->
-name|rc_timestamp
-operator|=
-name|time
-operator|.
-name|tv_sec
-expr_stmt|;
-if|if
-condition|(
+operator|&&
 name|nonidempotent
 index|[
 name|nd
@@ -1427,16 +1388,6 @@ operator||=
 name|RC_REPMBUF
 expr_stmt|;
 block|}
-block|}
-block|}
-else|else
-block|{
-name|rp
-operator|->
-name|rc_timestamp
-operator|=
-literal|0
-expr_stmt|;
 block|}
 name|rp
 operator|->

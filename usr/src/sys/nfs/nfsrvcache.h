@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsrvcache.h	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfsrvcache.h	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -48,10 +48,6 @@ name|u_long
 name|rc_xid
 decl_stmt|;
 comment|/* rpc id number */
-name|time_t
-name|rc_timestamp
-decl_stmt|;
-comment|/* Time stamp */
 union|union
 block|{
 name|struct
@@ -225,21 +221,6 @@ directive|define
 name|RC_NAM
 value|0x40
 end_define
-
-begin_comment
-comment|/* Delay time after completion that request is dropped */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RC_DELAY
-value|2
-end_define
-
-begin_comment
-comment|/* seconds */
-end_comment
 
 end_unit
 
