@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cons.c	1.5	86/12/06	*/
+comment|/*	cons.c	1.6	86/12/23	*/
 end_comment
 
 begin_comment
@@ -519,7 +519,20 @@ name|mtpr
 argument_list|(
 name|CPMDCB
 argument_list|,
+name|vtoph
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|)
+literal|0
+argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|cin
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|cnlast
@@ -838,6 +851,7 @@ operator|&
 name|CPTAKE
 condition|)
 block|{
+comment|/* This resets status bits */
 name|consin
 index|[
 name|unit
@@ -849,19 +863,31 @@ name|cp_unit
 operator|=
 name|unit
 expr_stmt|;
-comment|/* This resets status bits */
+comment|/* Ready for new character */
 name|mtpr
 argument_list|(
 name|CPMDCB
 argument_list|,
+name|vtoph
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|)
+literal|0
+argument_list|,
+operator|(
+name|unsigned
+operator|)
 operator|&
 name|consin
 index|[
 name|unit
 index|]
 argument_list|)
+argument_list|)
 expr_stmt|;
-comment|/* Ready for new character */
 name|cnlast
 operator|=
 operator|(
@@ -1774,7 +1800,20 @@ name|mtpr
 argument_list|(
 name|CPMDCB
 argument_list|,
+name|vtoph
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|)
+literal|0
+argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|current
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2001,7 +2040,20 @@ name|mtpr
 argument_list|(
 name|CPMDCB
 argument_list|,
+name|vtoph
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|)
+literal|0
+argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|current
+argument_list|)
 argument_list|)
 expr_stmt|;
 while|while
@@ -2377,7 +2429,20 @@ name|mtpr
 argument_list|(
 name|CPMDCB
 argument_list|,
+name|vtoph
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|)
+literal|0
+argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|current
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|timo
@@ -2456,7 +2521,20 @@ name|mtpr
 argument_list|(
 name|CPMDCB
 argument_list|,
+name|vtoph
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|)
+literal|0
+argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|cin
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|cnlast
