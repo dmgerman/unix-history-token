@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uucpdefs.c	5.3 (Berkeley) %G%"
+literal|"@(#)uucpdefs.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -83,23 +83,10 @@ begin_decl_stmt
 name|char
 name|Myname
 index|[
-literal|16
+name|MAXBASENAME
+operator|+
+literal|1
 index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-name|Myfullname
-index|[
-literal|64
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|Bspeed
 decl_stmt|;
 end_decl_stmt
 
@@ -148,15 +135,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|Packflg
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|long
+name|time_t
 name|Retrytime
 decl_stmt|;
 end_decl_stmt
