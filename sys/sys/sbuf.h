@@ -145,7 +145,7 @@ name|sbuf
 modifier|*
 parameter_list|,
 specifier|const
-name|char
+name|void
 modifier|*
 parameter_list|,
 name|size_t
@@ -162,7 +162,7 @@ name|sbuf
 modifier|*
 parameter_list|,
 specifier|const
-name|char
+name|void
 modifier|*
 parameter_list|,
 name|size_t
