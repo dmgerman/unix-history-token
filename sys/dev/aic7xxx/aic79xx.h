@@ -4614,7 +4614,7 @@ begin_define
 define|#
 directive|define
 name|AHD_SHOW_SG
-value|0x0800
+value|0x1000
 end_define
 
 begin_define
