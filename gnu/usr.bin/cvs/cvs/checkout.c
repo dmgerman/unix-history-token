@@ -196,6 +196,8 @@ literal|"\t-D date\tCheck out revisions as of date. (implies -P)\n"
 block|,
 literal|"\t-d dir\tCheck out into dir instead of module name.\n"
 block|,
+literal|"\t-K key\tUse RCS key -K option on checkout.\n"
+block|,
 literal|"\t-k kopt\tUse RCS kopt -k option on checkout.\n"
 block|,
 literal|"\t-j rev\tMerge in changes made between current revision and rev.\n"
@@ -328,6 +330,16 @@ name|NULL
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|K_flag
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|checkout
@@ -425,7 +437,7 @@ else|else
 block|{
 name|valid_options
 operator|=
-literal|"ANnk:d:flRpQqcsr:D:j:P"
+literal|"ANnk:d:flRpQqcsr:D:j:PK:"
 expr_stmt|;
 name|valid_usage
 operator|=
@@ -673,6 +685,14 @@ name|optarg
 expr_stmt|;
 else|else
 name|join_rev1
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'K'
+case|:
+name|K_flag
 operator|=
 name|optarg
 expr_stmt|;
@@ -2188,6 +2208,8 @@ name|join_rev1
 argument_list|,
 name|join_rev2
 argument_list|,
+name|K_flag
+argument_list|,
 name|preload_update_dir
 argument_list|)
 expr_stmt|;
@@ -2423,6 +2445,8 @@ argument_list|,
 name|join_rev1
 argument_list|,
 name|join_rev2
+argument_list|,
+name|K_flag
 argument_list|,
 name|preload_update_dir
 argument_list|)

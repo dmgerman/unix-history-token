@@ -272,6 +272,26 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|char
+modifier|*
+name|K_flag1
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|K_flag2
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
 name|tmpfile1
 index|[
 name|L_tmpnam
@@ -335,6 +355,8 @@ block|,
 literal|"\t-r rev\tRevision - symbolic or numeric.\n"
 block|,
 literal|"\t-V vers\tUse RCS Version \"vers\" for keyword expansion.\n"
+block|,
+literal|"\t-K key\tUse RCS key -K option on checkout.\n"
 block|,
 name|NULL
 block|}
@@ -401,7 +423,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"V:k:cuftsQqlRD:r:"
+literal|"V:k:cuftsQqlRD:r:K:"
 argument_list|)
 operator|)
 operator|!=
@@ -657,6 +679,40 @@ literal|0
 expr_stmt|;
 break|break;
 case|case
+literal|'K'
+case|:
+if|if
+condition|(
+name|K_flag2
+operator|!=
+name|NULL
+condition|)
+name|error
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"no more than two -K flags can be specified"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|K_flag1
+operator|!=
+name|NULL
+condition|)
+name|K_flag2
+operator|=
+name|optarg
+expr_stmt|;
+else|else
+name|K_flag1
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
 literal|'?'
 case|:
 default|default:
@@ -677,6 +733,61 @@ operator|+=
 name|optind
 expr_stmt|;
 comment|/* Sanity checks */
+comment|/* Check for dummy -K flags */
+if|if
+condition|(
+name|K_flag1
+operator|&&
+name|K_flag1
+index|[
+literal|0
+index|]
+operator|!=
+literal|'e'
+operator|&&
+name|K_flag1
+index|[
+literal|0
+index|]
+operator|!=
+literal|'i'
+condition|)
+name|error
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"-K flag does not start e or i"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|K_flag2
+operator|&&
+name|K_flag2
+index|[
+literal|0
+index|]
+operator|!=
+literal|'e'
+operator|&&
+name|K_flag2
+index|[
+literal|0
+index|]
+operator|!=
+literal|'i'
+condition|)
+name|error
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|"-K flag does not start e or i"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|argc
@@ -1905,7 +2016,7 @@ condition|)
 block|{
 name|run_setup
 argument_list|(
-literal|"%s%s %s -p -q -r%s"
+literal|"%s%s %s -p -q -r%s %s%s"
 argument_list|,
 name|Rcsbin
 argument_list|,
@@ -1914,6 +2025,18 @@ argument_list|,
 name|options
 argument_list|,
 name|vers_tag
+argument_list|,
+name|K_flag1
+condition|?
+literal|"-K"
+else|:
+literal|""
+argument_list|,
+name|K_flag1
+condition|?
+name|K_flag1
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 name|run_arg
@@ -2007,7 +2130,7 @@ condition|)
 block|{
 name|run_setup
 argument_list|(
-literal|"%s%s %s -p -q -r%s"
+literal|"%s%s %s -p -q -r%s %s%s"
 argument_list|,
 name|Rcsbin
 argument_list|,
@@ -2016,6 +2139,18 @@ argument_list|,
 name|options
 argument_list|,
 name|vers_head
+argument_list|,
+name|K_flag2
+condition|?
+literal|"-K"
+else|:
+literal|""
+argument_list|,
+name|K_flag2
+condition|?
+name|K_flag2
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 name|run_arg

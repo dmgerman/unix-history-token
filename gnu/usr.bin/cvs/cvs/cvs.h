@@ -2382,6 +2382,10 @@ name|xjoin_rev2
 parameter_list|,
 name|char
 modifier|*
+name|xK_flag
+parameter_list|,
+name|char
+modifier|*
 name|preload_update_dir
 parameter_list|)
 function_decl|;
