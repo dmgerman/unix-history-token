@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwframe.c	3.14 %G%"
+literal|"@(#)wwframe.c	3.15 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,7 +43,7 @@ name|r
 parameter_list|,
 name|c
 parameter_list|)
-value|(w1 = wwindex[wwsmap[r][c]], \ 	!w1->ww_hasframe || w1->ww_order> (w)->ww_order)
+value|(w1 = wwindex[wwsmap[r][c]], \ 	w1->ww_fmap || w1->ww_order> (w)->ww_order)
 end_define
 
 begin_expr_stmt
