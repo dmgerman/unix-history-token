@@ -1516,6 +1516,14 @@ name|p_xstat
 operator|=
 name|rv
 expr_stmt|;
+name|p
+operator|->
+name|p_xlwpid
+operator|=
+name|td
+operator|->
+name|td_tid
+expr_stmt|;
 operator|*
 name|p
 operator|->

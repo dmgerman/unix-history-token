@@ -2176,6 +2176,10 @@ name|u_short
 name|p_xstat
 decl_stmt|;
 comment|/* (c) Exit status; also stop sig. */
+name|lwpid_t
+name|p_xlwpid
+decl_stmt|;
+comment|/* (c) Thread corresponding p_xstat. */
 name|int
 name|p_numthreads
 decl_stmt|;

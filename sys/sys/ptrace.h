@@ -147,6 +147,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PT_LWPINFO
+value|13
+end_define
+
+begin_comment
+comment|/* Info about the LWP that stopped. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PT_TO_SCE
 value|20
 end_define
@@ -325,6 +336,34 @@ end_define
 begin_comment
 comment|/* Write to I space */
 end_comment
+
+begin_comment
+comment|/* Argument structure for PT_LWPINFO. */
+end_comment
+
+begin_struct
+struct|struct
+name|ptrace_lwpinfo
+block|{
+name|lwpid_t
+name|pl_lwpid
+decl_stmt|;
+comment|/* LWP described. */
+name|int
+name|pl_event
+decl_stmt|;
+comment|/* Event that stopped the LWP. */
+define|#
+directive|define
+name|PL_EVENT_NONE
+value|0
+define|#
+directive|define
+name|PL_EVENT_SIGNAL
+value|1
+block|}
+struct|;
+end_struct
 
 begin_ifdef
 ifdef|#
