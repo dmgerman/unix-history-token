@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)colcrt.c	5.1 (Berkeley) %G%"
+literal|"@(#)colcrt.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -230,6 +230,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 operator|(
 name|f
 operator|=
@@ -243,8 +244,6 @@ argument_list|,
 literal|"r"
 argument_list|)
 operator|)
-operator|<
-literal|0
 condition|)
 block|{
 name|fflush

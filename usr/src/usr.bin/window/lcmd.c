@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lcmd.c	3.28 (Berkeley) %G%"
+literal|"@(#)lcmd.c	3.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -376,8 +376,6 @@ name|struct
 name|lcmd_arg
 name|arg_null
 index|[]
-init|=
-literal|0
 decl_stmt|;
 end_decl_stmt
 

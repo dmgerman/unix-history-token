@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	t..c	4.3	85/09/14	*/
+comment|/*	t..c	4.4	88/07/22	*/
 end_comment
 
 begin_comment
@@ -334,6 +334,20 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* FIXME: kludge for seeing if somebody stuffed a char into col or rcol. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|tx
+parameter_list|(
+name|a
+parameter_list|)
+value|((int)(a)>0&& (int)(a)<128)
+end_define
 
 begin_decl_stmt
 specifier|extern

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tset.c	5.11 (Berkeley) %G%"
+literal|"@(#)tset.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6392,8 +6392,6 @@ argument_list|,
 operator|&
 name|bufp
 argument_list|)
-operator|>
-literal|0
 operator|&&
 name|n
 operator|==

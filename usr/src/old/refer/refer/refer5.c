@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)refer5.c	4.8 (Berkeley) %G%"
+literal|"@(#)refer5.c	4.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -716,7 +716,7 @@ name|sprintf
 argument_list|(
 name|t1
 argument_list|,
-literal|"%s%s\%s\n"
+literal|"%s%s%s\n"
 argument_list|,
 name|stline
 argument_list|,

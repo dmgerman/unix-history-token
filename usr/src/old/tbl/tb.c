@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tb.c	4.3 %G%"
+literal|"@(#)tb.c	4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -394,11 +394,6 @@ if|if
 condition|(
 name|pp
 operator|==
-operator|-
-literal|1
-operator|||
-name|pp
-operator|==
 literal|0
 condition|)
 name|error
@@ -517,8 +512,7 @@ if|if
 condition|(
 name|thisvec
 operator|==
-operator|-
-literal|1
+literal|0
 condition|)
 name|error
 argument_list|(

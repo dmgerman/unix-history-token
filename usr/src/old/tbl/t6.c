@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)t6.c	4.3 %G%"
+literal|"@(#)t6.c	4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,16 +23,6 @@ end_endif
 begin_comment
 comment|/* t6.c: compute tab stops */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|tx
-parameter_list|(
-name|a
-parameter_list|)
-value|(a>0&& a<128)
-end_define
 
 begin_include
 include|#
@@ -296,13 +286,10 @@ name|col
 expr_stmt|;
 if|if
 condition|(
+name|tx
+argument_list|(
 name|s
-operator|>
-literal|0
-operator|&&
-name|s
-operator|<
-literal|128
+argument_list|)
 operator|&&
 name|text
 condition|)

@@ -54,12 +54,13 @@ begin_comment
 comment|/* Used to save terminal control bits */
 end_comment
 
-begin_expr_stmt
+begin_decl_stmt
+name|int
 name|curx
-operator|,
+decl_stmt|,
 name|cury
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Current screen position */

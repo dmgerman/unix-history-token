@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tabqume.c	4.1	83/08/05	*/
+comment|/*	tabqume.c	4.2	88/07/22	*/
 end_comment
 
 begin_define
@@ -477,7 +477,7 @@ comment|/*z*/
 literal|"\001["
 block|,
 comment|/*{*/
-literal|"\001\033\ "
+literal|"\001\033 "
 block|,
 comment|/*|*/
 literal|"\001]"
@@ -774,7 +774,7 @@ comment|/*registered*/
 literal|"\001^"
 block|,
 comment|/*copyright*/
-literal|"\001\033\ "
+literal|"\001\033 "
 block|,
 comment|/*box rule */
 literal|"\001c\b/"
@@ -795,7 +795,7 @@ comment|/*math * */
 literal|"\000\0"
 block|,
 comment|/*bell system sign*/
-literal|"\001\033\ "
+literal|"\001\033 "
 block|,
 comment|/*or (was star)*/
 literal|"\000\0"

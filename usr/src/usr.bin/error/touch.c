@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)touch.c	5.3 (Berkeley) %G%"
+literal|"@(#)touch.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2810,7 +2810,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: Catastrophe: A copy of \"%s\: was saved in \"%s\"\n"
+literal|"%s: Catastrophe: A copy of \"%s\": was saved in \"%s\"\n"
 argument_list|,
 name|processname
 argument_list|,

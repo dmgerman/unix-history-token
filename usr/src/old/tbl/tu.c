@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tu.c	4.2 %G%"
+literal|"@(#)tu.c	4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -375,6 +375,9 @@ name|exhr
 decl_stmt|,
 modifier|*
 name|exhl
+decl_stmt|,
+modifier|*
+name|lnch
 decl_stmt|;
 name|int
 name|lcount
@@ -386,8 +389,6 @@ decl_stmt|,
 name|oldpos
 decl_stmt|,
 name|nodata
-decl_stmt|,
-name|lnch
 decl_stmt|;
 name|lcount
 operator|=

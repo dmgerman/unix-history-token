@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tabnec25-t.c	4.1	86/04/03	*/
+comment|/*	tabnec25-t.c	4.2	88/07/22	*/
 end_comment
 
 begin_define
@@ -494,7 +494,7 @@ comment|/*hyphen*/
 literal|"\001O\b+"
 block|,
 comment|/*bullet*/
-literal|"\002\[]"
+literal|"\002[]"
 block|,
 comment|/*square*/
 literal|"\001-"

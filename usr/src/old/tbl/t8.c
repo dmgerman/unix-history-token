@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)t8.c	4.2 %G%"
+literal|"@(#)t8.c	4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -251,13 +251,10 @@ condition|)
 break|break;
 if|if
 condition|(
+name|tx
+argument_list|(
 name|s
-operator|>
-literal|0
-operator|&&
-name|s
-operator|<
-literal|128
+argument_list|)
 condition|)
 name|fprintf
 argument_list|(

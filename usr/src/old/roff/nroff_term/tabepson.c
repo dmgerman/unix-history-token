@@ -524,7 +524,7 @@ comment|/*hyphen*/
 literal|"\001\033j\003.\033J\003"
 block|,
 comment|/*bullet*/
-literal|"\002\[]"
+literal|"\002[]"
 block|,
 comment|/*square*/
 literal|"\001-"

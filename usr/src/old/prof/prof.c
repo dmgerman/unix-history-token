@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)prof.c	4.4 (Berkeley) %G%"
+literal|"@(#)prof.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,6 +56,7 @@ end_include
 
 begin_typedef
 typedef|typedef
+name|unsigned
 name|short
 name|UNIT
 typedef|;
@@ -190,7 +191,6 @@ comment|/*  * Each discretized pc sample has  * a count of the number of samples
 end_comment
 
 begin_decl_stmt
-name|unsigned
 name|UNIT
 modifier|*
 name|samples
@@ -1560,11 +1560,10 @@ name|nsamples
 operator|=
 name|sampbytes
 operator|/
-expr|sizeof
-operator|(
-name|unsigned
+sizeof|sizeof
+argument_list|(
 name|UNIT
-operator|)
+argument_list|)
 expr_stmt|;
 block|}
 end_block
@@ -1899,7 +1898,6 @@ block|{
 specifier|register
 name|i
 expr_stmt|;
-name|unsigned
 name|UNIT
 name|sample
 decl_stmt|;
@@ -1916,7 +1914,6 @@ block|{
 name|samples
 operator|=
 operator|(
-name|unsigned
 name|UNIT
 operator|*
 operator|)
@@ -1924,11 +1921,10 @@ name|calloc
 argument_list|(
 name|sampbytes
 argument_list|,
-expr|sizeof
-operator|(
-name|unsigned
+sizeof|sizeof
+argument_list|(
 name|UNIT
-operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1944,11 +1940,10 @@ literal|"prof: No room for %d sample pc's\n"
 argument_list|,
 name|sampbytes
 operator|/
-expr|sizeof
-operator|(
-name|unsigned
+sizeof|sizeof
+argument_list|(
 name|UNIT
-operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|done
@@ -1972,11 +1967,10 @@ argument_list|(
 operator|&
 name|sample
 argument_list|,
-expr|sizeof
-operator|(
-name|unsigned
+sizeof|sizeof
+argument_list|(
 name|UNIT
-operator|)
+argument_list|)
 argument_list|,
 literal|1
 argument_list|,
@@ -2043,7 +2037,6 @@ block|{
 specifier|register
 name|j
 expr_stmt|;
-name|unsigned
 name|UNIT
 name|ccnt
 decl_stmt|;
@@ -2394,11 +2387,10 @@ name|np
 operator|->
 name|value
 operator|*
-expr|sizeof
-operator|(
-name|unsigned
+sizeof|sizeof
+argument_list|(
 name|UNIT
-operator|)
+argument_list|)
 expr_stmt|;
 name|kp
 operator|.
@@ -2458,11 +2450,10 @@ name|fwrite
 argument_list|(
 name|samples
 argument_list|,
-expr|sizeof
-operator|(
-name|unsigned
+sizeof|sizeof
+argument_list|(
 name|UNIT
-operator|)
+argument_list|)
 argument_list|,
 name|nsamples
 argument_list|,
@@ -2986,7 +2977,6 @@ name|i
 operator|++
 control|)
 block|{
-name|unsigned
 name|UNIT
 name|ccnt
 decl_stmt|;
