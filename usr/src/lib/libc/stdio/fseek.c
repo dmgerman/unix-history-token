@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)fseek.c	4.2 (Berkeley) %G% */
+comment|/* @(#)fseek.c	4.3 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -216,6 +216,10 @@ name|_flag
 operator|&=
 operator|~
 name|_IOREAD
+expr_stmt|;
+name|resync
+operator|=
+literal|0
 expr_stmt|;
 block|}
 name|p
