@@ -540,12 +540,7 @@ name|fprintf
 argument_list|(
 name|ofp
 argument_list|,
-literal|"IDENT=-D%s"
-argument_list|,
-name|raise
-argument_list|(
-name|ident
-argument_list|)
+literal|"IDENT="
 argument_list|)
 expr_stmt|;
 if|if
