@@ -1190,6 +1190,61 @@ name|UDF_FID_SIZE
 value|38
 end_define
 
+begin_define
+define|#
+directive|define
+name|UDF_FILE_CHAR_VIS
+value|(1<< 0)
+end_define
+
+begin_comment
+comment|/* Visible */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UDF_FILE_CHAR_DIR
+value|(1<< 1)
+end_define
+
+begin_comment
+comment|/* Directory */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UDF_FILE_CHAR_DEL
+value|(1<< 2)
+end_define
+
+begin_comment
+comment|/* Deleted */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UDF_FILE_CHAR_PAR
+value|(1<< 3)
+end_define
+
+begin_comment
+comment|/* Parent Directory */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UDF_FILE_CHAR_META
+value|(1<< 4)
+end_define
+
+begin_comment
+comment|/* Stream metadata */
+end_comment
+
 begin_comment
 comment|/* File Entry [4/14.9] */
 end_comment
