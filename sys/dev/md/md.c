@@ -2086,7 +2086,7 @@ name|si_drv1
 expr_stmt|;
 name|mtx_lock
 argument_list|(
-operator|*
+operator|&
 name|sc
 operator|->
 name|queue_mtx
@@ -2104,7 +2104,7 @@ argument_list|)
 expr_stmt|;
 name|mtx_unlock
 argument_list|(
-operator|*
+operator|&
 name|sc
 operator|->
 name|queue_mtx
@@ -3387,9 +3387,9 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
+block|}
 block|}
 block|}
 end_function
