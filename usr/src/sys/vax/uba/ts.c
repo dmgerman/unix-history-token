@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ts.c	4.13	81/05/05	*/
+comment|/*	ts.c	4.14	81/05/08	*/
 end_comment
 
 begin_include
@@ -1097,7 +1097,11 @@ name|addr
 operator|->
 name|tssr
 operator|&
+operator|(
 name|TS_NBA
+operator||
+name|TS_OFL
+operator|)
 condition|)
 block|{
 name|addr
