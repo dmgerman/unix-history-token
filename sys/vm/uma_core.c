@@ -3423,6 +3423,14 @@ name|uminit
 expr_stmt|;
 name|zone
 operator|->
+name|uz_fini
+operator|=
+name|arg
+operator|->
+name|fini
+expr_stmt|;
+name|zone
+operator|->
 name|uz_align
 operator|=
 name|arg
