@@ -467,6 +467,10 @@ operator|->
 name|b_dev
 decl_stmt|;
 comment|/* decode device number */
+name|int
+name|s
+decl_stmt|;
+comment|/* spl */
 switch|switch
 condition|(
 name|device
@@ -599,11 +603,21 @@ operator|->
 name|b_bcount
 expr_stmt|;
 comment|/* transfer everything */
+name|s
+operator|=
+name|splbio
+argument_list|()
+expr_stmt|;
 name|vinumstart
 argument_list|(
 name|bp
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1047,36 +1061,15 @@ operator|-
 literal|1
 return|;
 block|}
-block|{
-comment|/* XXX */
-name|int
-name|result
-decl_stmt|;
-name|int
-name|s
-init|=
-name|splhigh
-argument_list|()
-decl_stmt|;
-name|result
-operator|=
+return|return
 name|launch_requests
 argument_list|(
 name|rq
 argument_list|,
 name|reviveok
 argument_list|)
-expr_stmt|;
-comment|/* now start the requests if we can */
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-return|return
-name|result
 return|;
-block|}
+comment|/* now start the requests if we can */
 block|}
 else|else
 comment|/* 	 * This is a write operation.  We write to all 	 * plexes.  If this is a RAID 5 plex, we must also 	 * update the parity stripe. 	 */
