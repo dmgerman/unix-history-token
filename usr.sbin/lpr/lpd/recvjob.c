@@ -295,6 +295,11 @@ name|readfile
 name|__P
 argument_list|(
 operator|(
+expr|struct
+name|printer
+operator|*
+name|pp
+operator|,
 name|char
 operator|*
 operator|,
@@ -670,6 +675,7 @@ name|size
 operator|<
 literal|0
 condition|)
+block|{
 name|frecverr
 argument_list|(
 literal|"%s: lost connection"
@@ -679,6 +685,8 @@ operator|->
 name|printer
 argument_list|)
 expr_stmt|;
+comment|/*NOTREACHED*/
+block|}
 return|return
 operator|(
 name|cfcnt
@@ -721,11 +729,18 @@ argument_list|(
 name|line
 argument_list|)
 condition|)
+block|{
 name|frecverr
 argument_list|(
-literal|"readjob overflow"
+literal|"%s: readjob overflow"
+argument_list|,
+name|pp
+operator|->
+name|printer
 argument_list|)
 expr_stmt|;
+comment|/*NOTREACHED*/
+block|}
 operator|*
 operator|--
 name|cp
@@ -910,6 +925,8 @@ condition|(
 operator|!
 name|readfile
 argument_list|(
+name|pp
+argument_list|,
 name|tfname
 argument_list|,
 name|size
@@ -1074,6 +1091,7 @@ argument_list|,
 literal|'/'
 argument_list|)
 condition|)
+block|{
 name|frecverr
 argument_list|(
 literal|"readjob: %s: illegal path name"
@@ -1081,6 +1099,8 @@ argument_list|,
 name|dfname
 argument_list|)
 expr_stmt|;
+comment|/*NOTREACHED*/
+block|}
 name|dfcnt
 operator|++
 expr_stmt|;
@@ -1098,6 +1118,8 @@ name|void
 operator|)
 name|readfile
 argument_list|(
+name|pp
+argument_list|,
 name|dfname
 argument_list|,
 name|size
@@ -1127,6 +1149,7 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
+comment|/*NOTREACHED*/
 block|}
 block|}
 end_function
@@ -1140,10 +1163,17 @@ specifier|static
 name|int
 name|readfile
 parameter_list|(
+name|pp
+parameter_list|,
 name|file
 parameter_list|,
 name|size
 parameter_list|)
+name|struct
+name|printer
+modifier|*
+name|pp
+decl_stmt|;
 name|char
 modifier|*
 name|file
@@ -1197,13 +1227,20 @@ name|fd
 operator|<
 literal|0
 condition|)
+block|{
 name|frecverr
 argument_list|(
-literal|"readfile: %s: illegal path name: %m"
+literal|"%s: readfile: error on open(%s): %m"
+argument_list|,
+name|pp
+operator|->
+name|printer
 argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
+comment|/*NOTREACHED*/
+block|}
 name|ack
 argument_list|()
 expr_stmt|;
@@ -1267,11 +1304,18 @@ name|j
 operator|<=
 literal|0
 condition|)
+block|{
 name|frecverr
 argument_list|(
-literal|"lost connection"
+literal|"%s: lost connection"
+argument_list|,
+name|pp
+operator|->
+name|printer
 argument_list|)
 expr_stmt|;
+comment|/*NOTREACHED*/
+block|}
 name|amt
 operator|-=
 name|j
@@ -1338,13 +1382,20 @@ if|if
 condition|(
 name|err
 condition|)
+block|{
 name|frecverr
 argument_list|(
-literal|"%s: write error"
+literal|"%s: write error on close(%s)"
+argument_list|,
+name|pp
+operator|->
+name|printer
 argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
+comment|/*NOTREACHED*/
+block|}
 if|if
 condition|(
 name|noresponse
@@ -1411,11 +1462,14 @@ argument_list|)
 operator|!=
 literal|1
 condition|)
+block|{
 name|frecverr
 argument_list|(
-literal|"lost connection"
+literal|"lost connection in noresponse()"
 argument_list|)
 expr_stmt|;
+comment|/*NOTREACHED*/
+block|}
 if|if
 condition|(
 name|resp
