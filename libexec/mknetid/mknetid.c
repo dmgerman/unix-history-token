@@ -94,7 +94,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: mknetid.c,v 1.8 1997/11/24 07:31:31 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -258,7 +258,7 @@ literal|"%s\n%s\n"
 argument_list|,
 literal|"usage: mknetid [-q] [-g group_file] [-p passwd_file] [-h hosts_file]"
 argument_list|,
-literal|"       [-d netid_file] [-d domain]"
+literal|"               [-d netid_file] [-d domain]"
 argument_list|)
 expr_stmt|;
 name|exit
