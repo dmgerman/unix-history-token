@@ -1143,12 +1143,6 @@ name|pcb
 modifier|*
 name|pcb2
 decl_stmt|;
-name|td
-operator|->
-name|td_flags
-operator||=
-name|TDF_UPCALLING
-expr_stmt|;
 comment|/* Point the pcb to the top of the stack. */
 name|pcb2
 operator|=
@@ -1303,9 +1297,9 @@ modifier|*
 name|td
 parameter_list|,
 name|struct
-name|kse
+name|kse_upcall
 modifier|*
-name|ke
+name|ku
 parameter_list|)
 block|{
 comment|/*  	 * Do any extra cleaning that needs to be done. 	 * The thread may have optional components 	 * that are not present in a fresh thread. 	 * This may be a recycled thread so make it look 	 * as though it's newly allocated. 	 */
@@ -1324,15 +1318,15 @@ operator|=
 operator|(
 name|int
 operator|)
-name|ke
+name|ku
 operator|->
-name|ke_stack
+name|ku_stack
 operator|.
 name|ss_sp
 operator|+
-name|ke
+name|ku
 operator|->
-name|ke_stack
+name|ku_stack
 operator|.
 name|ss_size
 operator|-
@@ -1347,9 +1341,9 @@ operator|=
 operator|(
 name|int
 operator|)
-name|ke
+name|ku
 operator|->
-name|ke_upcall
+name|ku_func
 expr_stmt|;
 comment|/* 	 * Pass the address of the mailbox for this kse to the uts 	 * function as a parameter on the stack. 	 */
 name|suword
@@ -1375,9 +1369,9 @@ argument_list|,
 operator|(
 name|int
 operator|)
-name|ke
+name|ku
 operator|->
-name|ke_mailbox
+name|ku_mailbox
 argument_list|)
 expr_stmt|;
 block|}

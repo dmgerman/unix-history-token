@@ -113,7 +113,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Select the KSE that will be run next.  From that find the thread, and x  * remove it from the KSEGRP's run queue.  If there is thread clustering,  * this will be what does it.  */
+comment|/*  * Select the KSE that will be run next.  From that find the thread, and  * remove it from the KSEGRP's run queue.  If there is thread clustering,  * this will be what does it.  */
 end_comment
 
 begin_function
@@ -181,10 +181,13 @@ name|ke_ksegrp
 expr_stmt|;
 if|if
 condition|(
-name|TD_IS_UNBOUND
-argument_list|(
 name|td
-argument_list|)
+operator|->
+name|td_proc
+operator|->
+name|p_flag
+operator|&
+name|P_KSES
 condition|)
 block|{
 name|TAILQ_REMOVE
@@ -320,7 +323,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Given a KSE (now surplus or at least loanable), either assign a new  * runable thread to it (and put it in the run queue) or put it in  * the ksegrp's idle KSE list.  * Or maybe give it back to its owner if it's been loaned.  * Assumes that the original thread is either not runnable or  * already on the run queue  */
+comment|/*  * Given a surplus KSE, either assign a new runable thread to it  * (and put it in the run queue) or put it in the ksegrp's idle KSE list.  * Or maybe give it back to its owner if it's been loaned.  * Assumes that the original thread is either not runnable or  * already on the run queue  */
 end_comment
 
 begin_function
@@ -346,49 +349,13 @@ decl_stmt|;
 name|struct
 name|thread
 modifier|*
-name|owner
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
 name|original
 decl_stmt|;
-name|int
-name|loaned
+name|struct
+name|kse_upcall
+modifier|*
+name|ku
 decl_stmt|;
-name|KASSERT
-argument_list|(
-operator|(
-name|ke
-operator|->
-name|ke_owner
-operator|)
-argument_list|,
-operator|(
-literal|"reassigning KSE with no owner"
-operator|)
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-operator|(
-name|ke
-operator|->
-name|ke_thread
-operator|&&
-name|TD_IS_INHIBITED
-argument_list|(
-name|ke
-operator|->
-name|ke_thread
-argument_list|)
-operator|)
-argument_list|,
-operator|(
-literal|"reassigning KSE with no or runnable  thread"
-operator|)
-argument_list|)
-expr_stmt|;
 name|mtx_assert
 argument_list|(
 operator|&
@@ -397,31 +364,40 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|kg
-operator|=
-name|ke
-operator|->
-name|ke_ksegrp
-expr_stmt|;
-name|owner
-operator|=
-name|ke
-operator|->
-name|ke_owner
-expr_stmt|;
-name|loaned
-operator|=
-name|TD_LENDER
-argument_list|(
-name|owner
-argument_list|)
-expr_stmt|;
 name|original
 operator|=
 name|ke
 operator|->
 name|ke_thread
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|original
+operator|==
+name|NULL
+operator|||
+name|TD_IS_INHIBITED
+argument_list|(
+name|original
+argument_list|)
+argument_list|,
+operator|(
+literal|"reassigning KSE with runnable thread"
+operator|)
+argument_list|)
+expr_stmt|;
+name|kg
+operator|=
+name|ke
+operator|->
+name|ke_ksegrp
+expr_stmt|;
+if|if
+condition|(
+name|original
+condition|)
+block|{
+comment|/* 		 * If the outgoing thread is in threaded group and has never 		 * scheduled an upcall, decide whether this is a short 		 * or long term event and thus whether or not to schedule 		 * an upcall. 		 * If it is a short term event, just suspend it in 		 * a way that takes its KSE with it. 		 * Select the events for which we want to schedule upcalls. 		 * For now it's just sleep. 		 * XXXKSE eventually almost any inhibition could do. 		 */
 if|if
 condition|(
 name|TD_CAN_UNBIND
@@ -434,31 +410,32 @@ name|original
 operator|->
 name|td_standin
 operator|)
-condition|)
-block|{
-name|KASSERT
-argument_list|(
-operator|(
-name|owner
-operator|==
-name|original
-operator|)
-argument_list|,
-operator|(
-literal|"Early thread borrowing?"
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* 		 * The outgoing thread is "threaded" and has never 		 * scheduled an upcall. 		 * decide whether this is a short or long term event 		 * and thus whether or not to schedule an upcall. 		 * if it is a short term event, just suspend it in 		 * a way that takes its KSE with it. 		 * Select the events for which we want to schedule upcalls. 		 * For now it's just sleep. 		 * Other threads that still have not fired an upcall 		 * are held to their KSE using the temorary Binding. 		 */
-if|if
-condition|(
+operator|&&
 name|TD_ON_SLEEPQ
 argument_list|(
 name|original
 argument_list|)
 condition|)
 block|{
-comment|/*  			 * An bound thread that can still unbind itself 			 * has been scheduled out. 			 * If it is sleeping, then we need to schedule an 			 * upcall. 			 * XXXKSE eventually almost any inhibition could do. 			 */
+comment|/*  			 * Release ownership of upcall, and schedule an upcall 			 * thread, this new upcall thread becomes the owner of 			 * the upcall structure. 			 */
+name|ku
+operator|=
+name|original
+operator|->
+name|td_upcall
+expr_stmt|;
+name|ku
+operator|->
+name|ku_owner
+operator|=
+name|NULL
+expr_stmt|;
+name|original
+operator|->
+name|td_upcall
+operator|=
+name|NULL
+expr_stmt|;
 name|original
 operator|->
 name|td_flags
@@ -466,96 +443,22 @@ operator|&=
 operator|~
 name|TDF_CAN_UNBIND
 expr_stmt|;
-name|original
-operator|->
-name|td_flags
-operator||=
-name|TDF_UNBOUND
-expr_stmt|;
 name|thread_schedule_upcall
 argument_list|(
 name|original
 argument_list|,
-name|ke
+name|ku
 argument_list|)
 expr_stmt|;
-name|owner
-operator|=
-name|ke
-operator|->
-name|ke_owner
-expr_stmt|;
-name|loaned
-operator|=
-literal|1
-expr_stmt|;
 block|}
-block|}
-comment|/*  	 * If the current thread was borrowing, then make things consistent 	 * by giving it back to the owner for the moment. The original thread 	 * must be unbound and have already used its chance for 	 * firing off an upcall. Threads that have not yet made an upcall 	 * can not borrow KSEs. 	 */
-if|if
-condition|(
-name|loaned
-condition|)
-block|{
-name|TD_CLR_LOAN
-argument_list|(
-name|owner
-argument_list|)
-expr_stmt|;
-name|ke
-operator|->
-name|ke_thread
-operator|=
-name|owner
-expr_stmt|;
 name|original
 operator|->
 name|td_kse
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* give it amnesia */
-comment|/* 		 * Upcalling threads have lower priority than all 		 * in-kernel threads, However threads that have loaned out 		 * their KSE and are NOT upcalling have the priority that 		 * they have. In other words, only look for other work if 		 * the owner is not runnable, OR is upcalling. 		 */
-if|if
-condition|(
-name|TD_CAN_RUN
-argument_list|(
-name|owner
-argument_list|)
-operator|&&
-operator|(
-operator|(
-name|owner
-operator|->
-name|td_flags
-operator|&
-name|TDF_UPCALLING
-operator|)
-operator|==
-literal|0
-operator|)
-condition|)
-block|{
-name|setrunnable
-argument_list|(
-name|owner
-argument_list|)
-expr_stmt|;
-name|CTR2
-argument_list|(
-name|KTR_RUNQ
-argument_list|,
-literal|"kse_reassign: ke%p -> td%p (give back)"
-argument_list|,
-name|ke
-argument_list|,
-name|owner
-argument_list|)
-expr_stmt|;
-return|return;
 block|}
-block|}
-comment|/* 	 * Either the owner is not runnable, or is an upcall. 	 * Find the first unassigned thread 	 * If there is a 'last assigned' then see what's next. 	 * otherwise look at what is first. 	 */
+comment|/* 	 * Find the first unassigned thread 	 */
 if|if
 condition|(
 operator|(
@@ -565,8 +468,9 @@ name|kg
 operator|->
 name|kg_last_assigned
 operator|)
+operator|!=
+name|NULL
 condition|)
-block|{
 name|td
 operator|=
 name|TAILQ_NEXT
@@ -576,9 +480,7 @@ argument_list|,
 name|td_runq
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|td
 operator|=
 name|TAILQ_FIRST
@@ -589,45 +491,12 @@ operator|->
 name|kg_runq
 argument_list|)
 expr_stmt|;
-block|}
-comment|/* 	 * If we found one assign it the kse, otherwise idle the kse. 	 */
+comment|/* 	 * If we found one, assign it the kse, otherwise idle the kse. 	 */
 if|if
 condition|(
 name|td
 condition|)
 block|{
-comment|/*  		 * Assign the new thread to the KSE. 		 * and make the KSE runnable again, 		 */
-if|if
-condition|(
-name|TD_IS_BOUND
-argument_list|(
-name|owner
-argument_list|)
-condition|)
-block|{
-comment|/* 			 * If there is a reason to keep the previous 			 * owner, do so. 			 */
-name|TD_SET_LOAN
-argument_list|(
-name|owner
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* otherwise, cut it free */
-name|ke
-operator|->
-name|ke_owner
-operator|=
-name|td
-expr_stmt|;
-name|owner
-operator|->
-name|td_kse
-operator|=
-name|NULL
-expr_stmt|;
-block|}
 name|kg
 operator|->
 name|kg_last_assigned
@@ -664,102 +533,24 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Now handle any waiting upcall. 	 * Since we didn't make them runnable before. 	 */
-if|if
-condition|(
-name|TD_CAN_RUN
-argument_list|(
-name|owner
-argument_list|)
-condition|)
-block|{
-name|setrunnable
-argument_list|(
-name|owner
-argument_list|)
-expr_stmt|;
-name|CTR2
-argument_list|(
-name|KTR_RUNQ
-argument_list|,
-literal|"kse_reassign: ke%p -> td%p (give back)"
-argument_list|,
-name|ke
-argument_list|,
-name|owner
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-comment|/*  	 * It is possible that this is the last thread in the group 	 * because the KSE is being shut down or the process 	 * is exiting. 	 */
-if|if
-condition|(
-name|TD_IS_EXITING
-argument_list|(
-name|owner
-argument_list|)
-operator|||
-operator|(
 name|ke
 operator|->
-name|ke_flags
-operator|&
-name|KEF_EXIT
-operator|)
-condition|)
-block|{
+name|ke_state
+operator|=
+name|KES_IDLE
+expr_stmt|;
 name|ke
 operator|->
 name|ke_thread
 operator|=
 name|NULL
 expr_stmt|;
-name|owner
-operator|->
-name|td_kse
-operator|=
-name|NULL
-expr_stmt|;
-name|kse_unlink
-argument_list|(
-name|ke
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-comment|/* 	 * At this stage all we know is that the owner 	 * is the same as the 'active' thread in the KSE 	 * and that it is  	 * Presently NOT loaned out. 	 * Put it on the loanable queue. Make it fifo 	 * so that long term sleepers donate their KSE's first. 	 */
-name|KASSERT
-argument_list|(
-operator|(
-name|TD_IS_BOUND
-argument_list|(
-name|owner
-argument_list|)
-operator|)
-argument_list|,
-operator|(
-literal|"kse_reassign: UNBOUND lender"
-operator|)
-argument_list|)
-expr_stmt|;
-name|ke
-operator|->
-name|ke_state
-operator|=
-name|KES_THREAD
-expr_stmt|;
-name|ke
-operator|->
-name|ke_flags
-operator||=
-name|KEF_ONLOANQ
-expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|kg
 operator|->
-name|kg_lq
+name|kg_iq
 argument_list|,
 name|ke
 argument_list|,
@@ -768,14 +559,14 @@ argument_list|)
 expr_stmt|;
 name|kg
 operator|->
-name|kg_loan_kses
+name|kg_idle_kses
 operator|++
 expr_stmt|;
 name|CTR1
 argument_list|(
 name|KTR_RUNQ
 argument_list|,
-literal|"kse_reassign: ke%p on loan queue"
+literal|"kse_reassign: ke%p on idle queue"
 argument_list|,
 name|ke
 argument_list|)
@@ -791,16 +582,16 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * Remove a thread from its KSEGRP's run queue.  * This in turn may remove it from a KSE if it was already assigned  * to one, possibly causing a new thread to be assigned to the KSE  * and the KSE getting a new priority (unless it's a BOUND thread/KSE pair).  */
+comment|/*  * Remove a thread from its KSEGRP's run queue.  * This in turn may remove it from a KSE if it was already assigned  * to one, possibly causing a new thread to be assigned to the KSE  * and the KSE getting a new priority.  */
 end_comment
 
 begin_comment
-unit|static void remrunqueue(struct thread *td) { 	struct thread *td2, *td3; 	struct ksegrp *kg; 	struct kse *ke;  	mtx_assert(&sched_lock, MA_OWNED); 	KASSERT ((TD_ON_RUNQ(td)), ("remrunqueue: Bad state on run queue")); 	kg = td->td_ksegrp; 	ke = td->td_kse;
-comment|/* 	 * If it's a bound thread/KSE pair, take the shortcut. All non-KSE 	 * threads are BOUND. 	 */
+unit|static void remrunqueue(struct thread *td) { 	struct thread *td2, *td3; 	struct ksegrp *kg; 	struct kse *ke;  	mtx_assert(&sched_lock, MA_OWNED); 	KASSERT((TD_ON_RUNQ(td)), ("remrunqueue: Bad state on run queue")); 	kg = td->td_ksegrp; 	ke = td->td_kse; 	CTR1(KTR_RUNQ, "remrunqueue: td%p", td); 	kg->kg_runnable--; 	TD_SET_CAN_RUN(td);
+comment|/* 	 * If it is not a threaded process, take the shortcut. 	 */
 end_comment
 
 begin_comment
-unit|CTR1(KTR_RUNQ, "remrunqueue: td%p", td); 	kg->kg_runnable--; 	TD_SET_CAN_RUN(td); 	if (TD_IS_BOUND(td))  {
+unit|if ((td->td_proc->p_flag& P_KSES) == 0) {
 comment|/* Bring its kse with it, leave the thread attached */
 end_comment
 
@@ -810,7 +601,7 @@ comment|/* 		 * This thread has been assigned to a KSE. 		 * We need to dissocia
 end_comment
 
 begin_endif
-unit|sched_rem(ke); 		ke->ke_state = KES_THREAD;  		td2 = kg->kg_last_assigned; 		KASSERT((td2 != NULL), ("last assigned has wrong value ")); 		if (td2 == td)  			kg->kg_last_assigned = td3; 		kse_reassign(ke); 	} }
+unit|sched_rem(ke); 		ke->ke_state = KES_THREAD;  		td2 = kg->kg_last_assigned; 		KASSERT((td2 != NULL), ("last assigned has wrong value")); 		if (td2 == td)  			kg->kg_last_assigned = td3; 		kse_reassign(ke); 	} }
 endif|#
 directive|endif
 end_endif
@@ -864,7 +655,6 @@ literal|"adjustrunqueue: Bad state on run queue"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If it's a bound thread/KSE pair, take the shortcut. All non-KSE 	 * threads are BOUND. 	 */
 name|ke
 operator|=
 name|td
@@ -880,12 +670,20 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If it is not a threaded process, take the shortcut. 	 */
 if|if
 condition|(
-name|TD_IS_BOUND
-argument_list|(
+operator|(
 name|td
-argument_list|)
+operator|->
+name|td_proc
+operator|->
+name|p_flag
+operator|&
+name|P_KSES
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* We only care about the kse in the run queue. */
@@ -921,7 +719,7 @@ expr_stmt|;
 block|}
 return|return;
 block|}
-comment|/* 	 * An unbound thread. This is not optimised yet. 	 */
+comment|/* It is a threaded process */
 name|kg
 operator|=
 name|td
@@ -1105,97 +903,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/*  	 * If the process is threaded but the thread is bound then 	 * there is still a little extra to do re. KSE loaning. 	 */
-if|if
-condition|(
-name|TD_IS_BOUND
-argument_list|(
-name|td
-argument_list|)
-condition|)
-block|{
-name|KASSERT
-argument_list|(
-operator|(
-name|td
-operator|->
-name|td_kse
-operator|!=
-name|NULL
-operator|)
-argument_list|,
-operator|(
-literal|"queueing BAD thread to run queue"
-operator|)
-argument_list|)
-expr_stmt|;
-name|ke
-operator|=
-name|td
-operator|->
-name|td_kse
-expr_stmt|;
-name|KASSERT
-argument_list|(
-operator|(
-name|ke
-operator|->
-name|ke_owner
-operator|==
-name|ke
-operator|->
-name|ke_thread
-operator|)
-argument_list|,
-operator|(
-literal|"setrunqueue: Hey KSE loaned out"
-operator|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ke
-operator|->
-name|ke_flags
-operator|&
-name|KEF_ONLOANQ
-condition|)
-block|{
-name|ke
-operator|->
-name|ke_flags
-operator|&=
-operator|~
-name|KEF_ONLOANQ
-expr_stmt|;
-name|TAILQ_REMOVE
-argument_list|(
-operator|&
-name|kg
-operator|->
-name|kg_lq
-argument_list|,
-name|ke
-argument_list|,
-name|ke_kgrlist
-argument_list|)
-expr_stmt|;
-name|kg
-operator|->
-name|kg_loan_kses
-operator|--
-expr_stmt|;
-block|}
-name|sched_add
-argument_list|(
-name|td
-operator|->
-name|td_kse
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-comment|/*  	 * Ok, so we are threading with this thread. 	 * We don't have a KSE, see if we can get one.. 	 */
 name|tda
 operator|=
 name|kg
@@ -1215,15 +922,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 		 * We will need a KSE, see if there is one.. 		 * First look for a free one, before getting desperate. 		 * If we can't get one, our priority is not high enough.. 		 * that's ok.. 		 */
 if|if
 condition|(
 name|kg
 operator|->
-name|kg_loan_kses
+name|kg_idle_kses
 condition|)
 block|{
-comment|/* 			 * Failing that see if we can borrow one. 			 */
+comment|/* 			 * There is a free one so it's ours for the asking.. 			 */
 name|ke
 operator|=
 name|TAILQ_FIRST
@@ -1231,7 +937,7 @@ argument_list|(
 operator|&
 name|kg
 operator|->
-name|kg_lq
+name|kg_iq
 argument_list|)
 expr_stmt|;
 name|TAILQ_REMOVE
@@ -1239,7 +945,7 @@ argument_list|(
 operator|&
 name|kg
 operator|->
-name|kg_lq
+name|kg_iq
 argument_list|,
 name|ke
 argument_list|,
@@ -1248,33 +954,13 @@ argument_list|)
 expr_stmt|;
 name|ke
 operator|->
-name|ke_flags
-operator|&=
-operator|~
-name|KEF_ONLOANQ
-expr_stmt|;
-name|ke
-operator|->
 name|ke_state
 operator|=
 name|KES_THREAD
 expr_stmt|;
-name|TD_SET_LOAN
-argument_list|(
-name|ke
-operator|->
-name|ke_owner
-argument_list|)
-expr_stmt|;
-name|ke
-operator|->
-name|ke_thread
-operator|=
-name|NULL
-expr_stmt|;
 name|kg
 operator|->
-name|kg_loan_kses
+name|kg_idle_kses
 operator|--
 expr_stmt|;
 block|}
@@ -1337,26 +1023,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/*  		 * Temporarily disassociate so it looks like the other cases. 		 * If the owner wasn't lending before, then it is now.. 		 */
-if|if
-condition|(
-operator|!
-name|TD_LENDER
-argument_list|(
-name|ke
-operator|->
-name|ke_owner
-argument_list|)
-condition|)
-block|{
-name|TD_SET_LOAN
-argument_list|(
-name|ke
-operator|->
-name|ke_owner
-argument_list|)
-expr_stmt|;
-block|}
+comment|/*  		 * Temporarily disassociate so it looks like the other cases. 		 */
 name|ke
 operator|->
 name|ke_thread
@@ -2414,7 +2081,19 @@ literal|0
 end_if
 
 begin_if
-unit|void panc(char *string1, char *string2) { 	printf("%s", string1); 	Debugger(string2); }  void thread_sanity_check(struct thread *td, char *string) { 	struct proc *p; 	struct ksegrp *kg; 	struct kse *ke; 	struct thread *td2 = NULL; 	unsigned int prevpri; 	int	saw_lastassigned = 0; 	int unassigned = 0; 	int assigned = 0;  	p = td->td_proc; 	kg = td->td_ksegrp; 	ke = td->td_kse;   	if (ke) { 		if (p != ke->ke_proc) { 			panc(string, "wrong proc"); 		} 		if (ke->ke_thread != td) { 			panc(string, "wrong thread"); 		} 	} 	 	if ((p->p_flag& P_KSES) == 0) { 		if (ke == NULL) { 			panc(string, "non KSE thread lost kse"); 		} 	} else { 		prevpri = 0; 		saw_lastassigned = 0; 		unassigned = 0; 		assigned = 0; 		TAILQ_FOREACH(td2,&kg->kg_runq, td_runq) { 			if (td2->td_priority< prevpri) { 				panc(string, "thread runqueue unosorted"); 			} 			if ((td2->td_state == TDS_RUNQ)&& 			    td2->td_kse&& 			    (td2->td_kse->ke_state != KES_ONRUNQ)) { 				panc(string, "KSE wrong state"); 			} 			prevpri = td2->td_priority; 			if (td2->td_kse) { 				assigned++; 				if (unassigned) { 					panc(string, "unassigned before assigned"); 				}  				if  (kg->kg_last_assigned == NULL) { 					panc(string, "lastassigned corrupt"); 				} 				if (saw_lastassigned) { 					panc(string, "last assigned not last"); 				} 				if (td2->td_kse->ke_thread != td2) { 					panc(string, "mismatched kse/thread"); 				} 			} else { 				unassigned++; 			} 			if (td2 == kg->kg_last_assigned) { 				saw_lastassigned = 1; 				if (td2->td_kse == NULL) { 					panc(string, "last assigned not assigned"); 				} 			} 		} 		if (kg->kg_last_assigned&& (saw_lastassigned == 0)) { 			panc(string, "where on earth does lastassigned point?"); 		} 		FOREACH_THREAD_IN_GROUP(kg, td2) { 			if (((td2->td_flags& TDF_UNBOUND) == 0)&&  			    (TD_ON_RUNQ(td2))) { 				assigned++; 				if (td2->td_kse == NULL) { 					panc(string, "BOUND thread with no KSE"); 				} 			} 		}
+unit|void panc(char *string1, char *string2) { 	printf("%s", string1); 	Debugger(string2); }  void thread_sanity_check(struct thread *td, char *string) { 	struct proc *p; 	struct ksegrp *kg; 	struct kse *ke; 	struct thread *td2 = NULL; 	unsigned int prevpri; 	int	saw_lastassigned = 0; 	int unassigned = 0; 	int assigned = 0;  	p = td->td_proc; 	kg = td->td_ksegrp; 	ke = td->td_kse;   	if (ke) { 		if (p != ke->ke_proc) { 			panc(string, "wrong proc"); 		} 		if (ke->ke_thread != td) { 			panc(string, "wrong thread"); 		} 	} 	 	if ((p->p_flag& P_KSES) == 0) { 		if (ke == NULL) { 			panc(string, "non KSE thread lost kse"); 		} 	} else { 		prevpri = 0; 		saw_lastassigned = 0; 		unassigned = 0; 		assigned = 0; 		TAILQ_FOREACH(td2,&kg->kg_runq, td_runq) { 			if (td2->td_priority< prevpri) { 				panc(string, "thread runqueue unosorted"); 			} 			if ((td2->td_state == TDS_RUNQ)&& 			    td2->td_kse&& 			    (td2->td_kse->ke_state != KES_ONRUNQ)) { 				panc(string, "KSE wrong state"); 			} 			prevpri = td2->td_priority; 			if (td2->td_kse) { 				assigned++; 				if (unassigned) { 					panc(string, "unassigned before assigned"); 				}  				if  (kg->kg_last_assigned == NULL) { 					panc(string, "lastassigned corrupt"); 				} 				if (saw_lastassigned) { 					panc(string, "last assigned not last"); 				} 				if (td2->td_kse->ke_thread != td2) { 					panc(string, "mismatched kse/thread"); 				} 			} else { 				unassigned++; 			} 			if (td2 == kg->kg_last_assigned) { 				saw_lastassigned = 1; 				if (td2->td_kse == NULL) { 					panc(string, "last assigned not assigned"); 				} 			} 		} 		if (kg->kg_last_assigned&& (saw_lastassigned == 0)) { 			panc(string, "where on earth does lastassigned point?"); 		}
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|FOREACH_THREAD_IN_GROUP(kg, td2) { 			if (((td2->td_flags& TDF_UNBOUND) == 0)&&  			    (TD_ON_RUNQ(td2))) { 				assigned++; 				if (td2->td_kse == NULL) { 					panc(string, "BOUND thread with no KSE"); 				} 			} 		}
+endif|#
+directive|endif
+end_endif
+
+begin_if
 if|#
 directive|if
 literal|0

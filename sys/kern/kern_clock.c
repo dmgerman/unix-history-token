@@ -1139,10 +1139,8 @@ name|p_flag
 operator|&
 name|P_KSES
 condition|)
-name|thread_add_ticks_intr
+name|thread_statclock
 argument_list|(
-literal|1
-argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
@@ -1217,11 +1215,9 @@ name|p_flag
 operator|&
 name|P_KSES
 condition|)
-name|thread_add_ticks_intr
+name|thread_statclock
 argument_list|(
 literal|0
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|td
