@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)lfs_segment.c	8.5 (Berkeley) 1/4/94  * $Id: lfs_segment.c,v 1.4 1994/08/20 03:49:02 davidg Exp $  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)lfs_segment.c	8.5 (Berkeley) 1/4/94  * $Id: lfs_segment.c,v 1.5 1994/11/17 01:30:49 gibbs Exp $  */
 end_comment
 
 begin_include
@@ -319,6 +319,16 @@ name|reclaimed
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|lfs_freebufs
+index|[
+name|i
+index|]
+operator|.
+name|address
+condition|)
+block|{
 name|splx
 argument_list|(
 name|s
@@ -341,6 +351,7 @@ operator|=
 name|splhigh
 argument_list|()
 expr_stmt|;
+block|}
 name|lfs_total_io_size
 operator|-=
 name|lfs_freebufs
@@ -412,6 +423,7 @@ operator|=
 name|splhigh
 argument_list|()
 expr_stmt|;
+comment|/* XXX can't this just be splbio?? */
 while|while
 condition|(
 operator|(
@@ -920,6 +932,9 @@ name|segment
 modifier|*
 name|sp
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 name|fs
 operator|=
 name|VFSTOUFS
@@ -931,6 +946,7 @@ argument_list|)
 operator|->
 name|um_lfs
 expr_stmt|;
+comment|/* XXX  	 * lfs_segwrite uses lfs_writevnodes to flush dirty vnodes.   	 * lfs_writevnodes (by way of a check with lfs_vref) passes over  	 * locked vnodes.  Since we usually come here with vp locked, anytime 	 * we just happen to call lfs_vflush and we are past the "MAX_ACTIVE" 	 * threshold, we used to call lfs_seqwrite and assume it would take 	 * care of the problem... but of course it didn't.  Now the question  	 * remains, is this the right thing to do, or should lfs_seqwrite or  	 * lfs_writevnodes be fixed to handle locked vnodes?? 	 */
 if|if
 condition|(
 name|fs
@@ -939,8 +955,9 @@ name|lfs_nactive
 operator|>
 name|MAX_ACTIVE
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 name|lfs_segwrite
 argument_list|(
 name|vp
@@ -951,8 +968,17 @@ name|SEGM_SYNC
 operator||
 name|SEGM_CKP
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
 operator|)
 return|;
+block|}
 name|lfs_seglock
 argument_list|(
 name|fs
@@ -1049,6 +1075,21 @@ operator|==
 name|LFS_IFILE_INUM
 condition|)
 do|;
+if|if
+condition|(
+name|vp
+operator|->
+name|v_dirtyblkhd
+operator|.
+name|lh_first
+operator|!=
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"lfs_vflush: dirty bufs!!!\n"
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DOSTATS
@@ -1400,9 +1441,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"segs clean: %d\n"
-argument_list|,
-name|clean
+literal|"lfs_segwrite: ran out of clean segments, waiting for cleaner\n"
 argument_list|)
 expr_stmt|;
 name|wakeup
@@ -4781,7 +4820,6 @@ operator|&
 name|B_INVAL
 operator|)
 condition|)
-comment|/* 					free(bp->b_data, M_SEGMENT); */
 name|lfs_free_buffer
 argument_list|(
 name|bp
@@ -4798,7 +4836,6 @@ name|DEV_BSIZE
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*				free(bp, M_SEGMENT); */
 name|relpbuf
 argument_list|(
 name|bp
@@ -4834,18 +4871,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-operator|++
-name|cbp
-operator|->
-name|b_vp
-operator|->
-name|v_numoutput
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|cbp
 operator|->
 name|b_bcount
@@ -4859,6 +4884,18 @@ operator|)
 name|cbp
 operator|->
 name|b_data
+expr_stmt|;
+operator|++
+name|cbp
+operator|->
+name|b_vp
+operator|->
+name|v_numoutput
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 comment|/* 		 * XXXX This is a gross and disgusting hack.  Since these 		 * buffers are physically addressed, they hang off the 		 * device vnode (devvp).  As a result, they have no way 		 * of getting to the LFS superblock or lfs structure to 		 * keep track of the number of I/O's pending.  So, I am 		 * going to stuff the fs into the saveaddr field of 		 * the buffer (yuk). 		 */
 name|cbp
@@ -5423,18 +5460,15 @@ argument_list|,
 name|DEV_BSIZE
 argument_list|)
 expr_stmt|;
-comment|/*	bp = malloc(sizeof(struct buf), M_SEGMENT, M_WAITOK); */
 name|bp
 operator|=
 name|getpbuf
 argument_list|()
 expr_stmt|;
-comment|/*	bzero(bp, sizeof(struct buf)); */
 if|if
 condition|(
 name|nbytes
 condition|)
-comment|/*		bp->b_data = malloc(nbytes, M_SEGMENT, M_WAITOK); */
 name|bp
 operator|->
 name|b_data
@@ -5574,7 +5608,6 @@ operator|->
 name|lfs_iocount
 argument_list|)
 expr_stmt|;
-comment|/* 	free(bp->b_data, M_SEGMENT); 	free(bp, M_SEGMENT); */
 name|lfs_free_buffer
 argument_list|(
 name|bp
@@ -5638,7 +5671,6 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-comment|/* 	free(bp->b_data, M_SEGMENT); 	free(bp, M_SEGMENT); */
 block|}
 end_function
 
@@ -5846,11 +5878,35 @@ decl_stmt|;
 block|{
 if|if
 condition|(
+operator|(
 name|vp
 operator|->
 name|v_flag
 operator|&
 name|VXLOCK
+operator|)
+operator|||
+operator|(
+name|vp
+operator|->
+name|v_usecount
+operator|==
+literal|0
+operator|&&
+name|vp
+operator|->
+name|v_freelist
+operator|.
+name|tqe_prev
+operator|==
+operator|(
+expr|struct
+name|vnode
+operator|*
+operator|*
+operator|)
+literal|0xdeadb
+operator|)
 condition|)
 return|return
 operator|(
@@ -5883,23 +5939,24 @@ modifier|*
 name|vp
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|lfs_no_inactive
-decl_stmt|;
-comment|/* 	 * This is vrele except that we do not want to VOP_INACTIVE 	 * this vnode. Rather than inline vrele here, we use a global 	 * flag to tell lfs_inactive not to run. Yes, its gross. 	 */
-name|lfs_no_inactive
-operator|=
-literal|1
+comment|/*      * This is vrele except that we do not want to VOP_INACTIVE      * this vnode. Rather than inline vrele here, we flag the vnode      * to tell lfs_inactive not to run on this vnode. Not as gross as      * a global.      */
+name|vp
+operator|->
+name|v_flag
+operator||=
+name|VNINACT
 expr_stmt|;
 name|vrele
 argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-name|lfs_no_inactive
-operator|=
-literal|0
+name|vp
+operator|->
+name|v_flag
+operator|&=
+operator|~
+name|VNINACT
 expr_stmt|;
 block|}
 end_function
