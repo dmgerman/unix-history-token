@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)main.c	8.2 (Berkeley) 1/3/94";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)main.c	8.2 (Berkeley) 1/3/94"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,6 +71,12 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -289,6 +309,19 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
@@ -398,20 +431,8 @@ default|default:
 case|case
 literal|'?'
 case|:
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage:\tsed script [-an] [file ...]\n\tsed [-an] [-e script] ... [-f script_file] ... [file ...]\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 block|}
 name|argc
@@ -496,19 +517,42 @@ argument_list|)
 condition|)
 name|err
 argument_list|(
-name|FATAL
+literal|1
 argument_list|,
-literal|"stdout: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"stdout"
 argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
 literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s\n%s\n"
+argument_list|,
+literal|"usage: sed script [-an] [file ...]"
+argument_list|,
+literal|"       sed [-an] [-e script] ... [-f script_file] ... [file ...]"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -625,18 +669,13 @@ name|NULL
 condition|)
 name|err
 argument_list|(
-name|FATAL
+literal|1
 argument_list|,
-literal|"%s: %s"
+literal|"%s"
 argument_list|,
 name|script
 operator|->
 name|s
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|fname
@@ -943,6 +982,11 @@ block|}
 block|}
 block|}
 comment|/* NOTREACHED */
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 block|}
 end_function
 
@@ -1056,16 +1100,11 @@ name|NULL
 condition|)
 name|err
 argument_list|(
-name|FATAL
+literal|1
 argument_list|,
-literal|"%s: %s"
+literal|"%s"
 argument_list|,
 name|fname
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1145,9 +1184,9 @@ argument_list|(
 name|f
 argument_list|)
 condition|)
-name|err
+name|errx
 argument_list|(
-name|FATAL
+literal|1
 argument_list|,
 literal|"%s: %s"
 argument_list|,
@@ -1266,16 +1305,11 @@ name|NULL
 condition|)
 name|err
 argument_list|(
-name|FATAL
+literal|1
 argument_list|,
-literal|"%s: %s"
+literal|"%s"
 argument_list|,
 name|fname
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

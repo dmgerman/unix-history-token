@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)process.c	8.6 (Berkeley) 4/20/94";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)process.c	8.6 (Berkeley) 4/20/94"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -1051,18 +1070,13 @@ literal|1
 condition|)
 name|err
 argument_list|(
-name|FATAL
+literal|1
 argument_list|,
-literal|"%s: %s\n"
+literal|"%s"
 argument_list|,
 name|cp
 operator|->
 name|t
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1084,18 +1098,13 @@ name|psl
 condition|)
 name|err
 argument_list|(
-name|FATAL
+literal|1
 argument_list|,
-literal|"%s: %s\n"
+literal|"%s"
 argument_list|,
 name|cp
 operator|->
 name|t
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1486,11 +1495,15 @@ name|s
 operator|->
 name|linenum
 expr_stmt|;
-name|err
+name|errx
 argument_list|(
-name|COMPILE
+literal|1
 argument_list|,
-literal|"\\%d not defined in the RE"
+literal|"%lu: %s: \\%d not defined in the RE"
+argument_list|,
+name|linenum
+argument_list|,
+name|fname
 argument_list|,
 name|cp
 operator|->
@@ -2013,9 +2026,9 @@ literal|1
 condition|)
 name|err
 argument_list|(
-name|FATAL
+literal|1
 argument_list|,
-literal|"%s: %s\n"
+literal|"%s"
 argument_list|,
 name|cp
 operator|->
@@ -2024,11 +2037,6 @@ operator|.
 name|s
 operator|->
 name|wfile
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2052,9 +2060,9 @@ name|psl
 condition|)
 name|err
 argument_list|(
-name|FATAL
+literal|1
 argument_list|,
-literal|"%s: %s\n"
+literal|"%s"
 argument_list|,
 name|cp
 operator|->
@@ -2063,11 +2071,6 @@ operator|.
 name|s
 operator|->
 name|wfile
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2184,6 +2187,7 @@ condition|)
 break|break;
 while|while
 condition|(
+operator|(
 name|count
 operator|=
 name|fread
@@ -2202,6 +2206,7 @@ argument_list|)
 argument_list|,
 name|f
 argument_list|)
+operator|)
 condition|)
 operator|(
 name|void
@@ -2237,9 +2242,9 @@ argument_list|(
 name|stdout
 argument_list|)
 condition|)
-name|err
+name|errx
 argument_list|(
-name|FATAL
+literal|1
 argument_list|,
 literal|"stdout: %s"
 argument_list|,
@@ -2307,12 +2312,14 @@ literal|1
 condition|)
 if|if
 condition|(
+operator|(
 name|p
 operator|=
 name|getenv
 argument_list|(
 literal|"COLUMNS"
 argument_list|)
+operator|)
 condition|)
 name|termwidth
 operator|=
@@ -2433,6 +2440,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|p
 operator|=
 name|strchr
@@ -2442,6 +2450,7 @@ argument_list|,
 operator|*
 name|s
 argument_list|)
+operator|)
 condition|)
 block|{
 operator|(
@@ -2509,9 +2518,9 @@ argument_list|(
 name|stdout
 argument_list|)
 condition|)
-name|err
+name|errx
 argument_list|(
-name|FATAL
+literal|1
 argument_list|,
 literal|"stdout: %s"
 argument_list|,
@@ -2578,9 +2587,9 @@ name|defpreg
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
-name|FATAL
+literal|1
 argument_list|,
 literal|"first RE may not be empty"
 argument_list|)
@@ -2673,9 +2682,9 @@ literal|0
 operator|)
 return|;
 block|}
-name|err
+name|errx
 argument_list|(
-name|FATAL
+literal|1
 argument_list|,
 literal|"RE error: %s"
 argument_list|,
@@ -3141,9 +3150,9 @@ argument_list|)
 condition|)
 name|err
 argument_list|(
-name|FATAL
+literal|1
 argument_list|,
-literal|"%s: %s"
+literal|"%s"
 argument_list|,
 name|cp
 operator|->
@@ -3152,11 +3161,6 @@ operator|.
 name|s
 operator|->
 name|wfile
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|cp
@@ -3196,18 +3200,13 @@ argument_list|)
 condition|)
 name|err
 argument_list|(
-name|FATAL
+literal|1
 argument_list|,
-literal|"%s: %s"
+literal|"%s"
 argument_list|,
 name|cp
 operator|->
 name|t
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|cp
