@@ -2541,6 +2541,25 @@ name|id_string
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Put our termination setting into sxfrctl1 now so that the 	 * generic initialization can see it. 	 */
+name|sxfrctl1
+operator||=
+name|ahc_inb
+argument_list|(
+name|ahc
+argument_list|,
+name|SXFRCTL1
+argument_list|)
+expr_stmt|;
+name|ahc_outb
+argument_list|(
+name|ahc
+argument_list|,
+name|SXFRCTL1
+argument_list|,
+name|sxfrctl1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ahc_init
@@ -2562,25 +2581,6 @@ expr_stmt|;
 return|return;
 comment|/* XXX PCI code should take return status */
 block|}
-comment|/* 	 * Put our termination setting into sxfrctl1 now that the 	 * generic initialization is complete. 	 */
-name|sxfrctl1
-operator||=
-name|ahc_inb
-argument_list|(
-name|ahc
-argument_list|,
-name|SXFRCTL1
-argument_list|)
-expr_stmt|;
-name|ahc_outb
-argument_list|(
-name|ahc
-argument_list|,
-name|SXFRCTL1
-argument_list|,
-name|sxfrctl1
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(

@@ -1437,6 +1437,13 @@ name|DFTHRSH_100
 value|0xc0
 end_define
 
+begin_define
+define|#
+directive|define
+name|DFTHRSH_75
+value|0x80
+end_define
+
 begin_comment
 comment|/*  * Host Control (p. 3-47) R/W  * Overal host control of the device.  */
 end_comment
@@ -1624,6 +1631,17 @@ end_define
 
 begin_comment
 comment|/* Residual byte count != 0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ABORT_CMDCMPLT
+value|0x91
+end_define
+
+begin_comment
+comment|/* 						 * Command tagged for abort 						 * completed successfully. 						 */
 end_comment
 
 begin_define
