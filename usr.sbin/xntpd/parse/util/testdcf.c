@@ -2031,6 +2031,7 @@ operator|==
 name|CVT_OK
 condition|)
 block|{
+comment|/* We are only supplied two digits of the year, by the 		   * clock, so we'll just print two digits. 		   */
 name|printf
 argument_list|(
 literal|"%s, %2d:%02d:%02d, %d.%02d.%02d,<%s%s%s%s>"
