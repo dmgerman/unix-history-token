@@ -2620,6 +2620,8 @@ operator|<
 name|mcl_pool_max
 operator|&&
 name|m
+operator|&&
+name|m
 operator|->
 name|m_next
 operator|==
