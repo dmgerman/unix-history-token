@@ -98,6 +98,7 @@ name|np
 operator|=
 name|nprocs
 expr_stmt|;
+comment|/* sx_slock(&allproc_lock); */
 if|if
 condition|(
 operator|!
@@ -209,6 +210,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+comment|/* PROC_LOCK(p); */
 name|pp
 operator|=
 name|p
@@ -459,6 +461,7 @@ name|p_comm
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* PROC_UNLOCK(p); */
 name|p
 operator|=
 name|LIST_NEXT
@@ -487,6 +490,7 @@ name|zombproc
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* sx_sunlock(&allproc_lock); */
 block|}
 end_function
 
