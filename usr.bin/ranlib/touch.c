@@ -176,6 +176,11 @@ argument_list|(
 name|afd
 argument_list|)
 expr_stmt|;
+name|close_archive
+argument_list|(
+name|afd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
