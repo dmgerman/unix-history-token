@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)logger.c	6.1 (Berkeley) %G%"
+literal|"@(#)logger.c	6.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -511,6 +511,10 @@ block|,
 literal|"mail"
 block|,
 name|LOG_MAIL
+block|,
+literal|"daemon"
+block|,
+name|LOG_DAEMON
 block|,
 literal|"auth"
 block|,

@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslogd.c	5.6 (Berkeley) %G%"
+literal|"@(#)syslogd.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4795,6 +4795,10 @@ block|,
 literal|"mail"
 block|,
 name|LOG_MAIL
+block|,
+literal|"daemon"
+block|,
+name|LOG_DAEMON
 block|,
 literal|"auth"
 block|,
