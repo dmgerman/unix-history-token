@@ -26,7 +26,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
+file|<sys/dirent.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/domain.h>
 end_include
 
 begin_include
@@ -38,7 +44,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/socket.h>
+file|<sys/lock.h>
 end_include
 
 begin_include
@@ -62,25 +68,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/radix.h>
+file|<sys/mutex.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/domain.h>
+file|<sys/socket.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/dirent.h>
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/vnode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/radix.h>
 end_include
 
 begin_expr_stmt
