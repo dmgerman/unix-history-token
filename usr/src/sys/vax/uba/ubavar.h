@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ubavar.h	4.10	81/02/22	*/
+comment|/*	ubavar.h	4.11	81/02/23	*/
 end_comment
 
 begin_comment
@@ -986,6 +986,10 @@ modifier|*
 name|ud_minfo
 decl_stmt|;
 comment|/* backpointers to ubminit structs */
+name|short
+name|ud_xclu
+decl_stmt|;
+comment|/* want exclusive use of bdp's */
 block|}
 struct|;
 end_struct
