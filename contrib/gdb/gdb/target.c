@@ -3,10 +3,6 @@ begin_comment
 comment|/* Select target systems and architectures at runtime for GDB.    Copyright 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,    2000, 2001, 2002    Free Software Foundation, Inc.    Contributed by Cygnus Support.     This file is part of GDB.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
-begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -5634,31 +5630,6 @@ operator|++
 name|t
 control|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-if|if
-condition|(
-operator|(
-operator|*
-name|t
-operator|)
-operator|->
-name|to_stratum
-operator|==
-operator|(
-name|kernel_debugging
-condition|?
-name|kcore_stratum
-else|:
-name|core_stratum
-operator|)
-condition|)
-else|#
-directive|else
 if|if
 condition|(
 operator|(
@@ -5670,8 +5641,6 @@ name|to_stratum
 operator|==
 name|core_stratum
 condition|)
-endif|#
-directive|endif
 block|{
 name|runable
 operator|=
