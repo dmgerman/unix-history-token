@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dip.c	1.6	(Berkeley)	84/01/03  *	dip  *	driver for impress/imagen canon laser printer  */
+comment|/*	dip.c	1.7	(Berkeley)	84/03/14  *	dip  *	driver for impress/imagen canon laser printer  */
 end_comment
 
 begin_comment
@@ -1554,6 +1554,8 @@ case|case
 literal|'D'
 case|:
 comment|/* draw function */
+if|if
+condition|(
 name|fgets
 argument_list|(
 name|buf
@@ -1564,6 +1566,15 @@ name|buf
 argument_list|)
 argument_list|,
 name|fp
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|error
+argument_list|(
+name|FATAL
+argument_list|,
+literal|"unexpected end of input"
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -2013,35 +2024,33 @@ case|case
 literal|'n'
 case|:
 comment|/* end of line */
-while|while
-condition|(
-name|getc
-argument_list|(
-name|fp
-argument_list|)
-operator|!=
-literal|'\n'
-condition|)
-empty_stmt|;
 name|hpos
 operator|=
 literal|0
 expr_stmt|;
-break|break;
 case|case
 literal|'#'
 case|:
 comment|/* comment */
-while|while
-condition|(
+do|do
+name|c
+operator|=
 name|getc
 argument_list|(
 name|fp
 argument_list|)
+expr_stmt|;
+do|while
+condition|(
+name|c
 operator|!=
 literal|'\n'
+operator|&&
+name|c
+operator|!=
+name|EOF
 condition|)
-empty_stmt|;
+do|;
 break|break;
 case|case
 literal|'x'
