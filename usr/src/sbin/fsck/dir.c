@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dir.c	5.1 (Berkeley) %G%"
+literal|"@(#)dir.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2348,9 +2348,7 @@ literal|'/'
 expr_stmt|;
 name|bcopy
 argument_list|(
-name|idesc
-operator|.
-name|id_name
+name|tempname
 argument_list|,
 name|pathp
 argument_list|,
