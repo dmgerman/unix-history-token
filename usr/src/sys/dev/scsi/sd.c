@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * %sccs.include.redist.c%  *  *	@(#)sd.c	5.1 (Berkeley) %G%  *  * from: $Header: sd.c,v 1.18 92/06/11 17:55:56 torek Exp $  */
+comment|/*  * Copyright (c) 1990, 1992 The Regents of the University of California.  * All rights reserved.  *  * This software was developed by the Computer Systems Engineering group  * at Lawrence Berkeley Laboratory under DARPA contract BG 91-66 and  * contributed to Berkeley.  *  * %sccs.include.redist.c%  *  *	@(#)sd.c	5.2 (Berkeley) %G%  *  * from: $Header: sd.c,v 1.18 92/06/11 17:55:56 torek Exp $  */
 end_comment
 
 begin_comment
@@ -11,6 +11,12 @@ begin_include
 include|#
 directive|include
 file|"sys/param.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sys/systm.h"
 end_include
 
 begin_include
@@ -2309,7 +2315,7 @@ operator|++
 expr_stmt|;
 name|count
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|resid
 argument_list|,
