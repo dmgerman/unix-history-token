@@ -325,6 +325,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Since "struct ifreq" is composed of various union members, callers  * should pay special attention to interprete the value.  * (.e.g. little/big endian difference in the structure.)  */
+end_comment
+
 begin_decl_stmt
 name|struct
 name|ifreq
@@ -3501,6 +3505,8 @@ name|afp
 parameter_list|)
 block|{
 name|int
+name|af
+decl_stmt|,
 name|s
 decl_stmt|;
 if|if
@@ -3517,11 +3523,7 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-name|ifr
-operator|.
-name|ifr_addr
-operator|.
-name|sa_family
+name|af
 operator|=
 name|afp
 operator|->
@@ -3534,6 +3536,14 @@ else|:
 name|afp
 operator|->
 name|af_af
+expr_stmt|;
+name|ifr
+operator|.
+name|ifr_addr
+operator|.
+name|sa_family
+operator|=
+name|af
 expr_stmt|;
 name|strncpy
 argument_list|(
@@ -3556,11 +3566,7 @@ name|s
 operator|=
 name|socket
 argument_list|(
-name|ifr
-operator|.
-name|ifr_addr
-operator|.
-name|sa_family
+name|af
 argument_list|,
 name|SOCK_DGRAM
 argument_list|,
@@ -3789,11 +3795,7 @@ directive|ifdef
 name|INET6
 if|if
 condition|(
-name|ifr
-operator|.
-name|ifr_addr
-operator|.
-name|sa_family
+name|af
 operator|==
 name|AF_INET6
 operator|&&
@@ -3825,11 +3827,7 @@ if|if
 condition|(
 name|setipdst
 operator|&&
-name|ifr
-operator|.
-name|ifr_addr
-operator|.
-name|sa_family
+name|af
 operator|==
 name|AF_IPX
 condition|)
@@ -3890,11 +3888,7 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|ifr
-operator|.
-name|ifr_addr
-operator|.
-name|sa_family
+name|af
 operator|==
 name|AF_APPLETALK
 condition|)
