@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)io.c	5.10 (Berkeley) %G%"
+literal|"@(#)io.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1283,6 +1283,30 @@ operator|-
 literal|1
 index|]
 expr_stmt|;
+name|paren_target
+operator|=
+operator|(
+name|ps
+operator|.
+name|paren_level
+operator|>
+literal|0
+condition|?
+operator|-
+name|ps
+operator|.
+name|paren_indents
+index|[
+name|ps
+operator|.
+name|paren_level
+operator|-
+literal|1
+index|]
+else|:
+literal|0
+operator|)
+expr_stmt|;
 name|not_first_line
 operator|=
 literal|1
@@ -1584,6 +1608,12 @@ name|p
 expr_stmt|;
 if|if
 condition|(
+name|p
+operator|-
+name|in_buffer
+operator|>
+literal|3
+operator|&&
 name|p
 index|[
 operator|-
