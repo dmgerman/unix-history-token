@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP Link Control Protocol (LCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lcp.c,v 1.73 1999/05/08 11:06:51 brian Exp $  *  */
+comment|/*  *	      PPP Link Control Protocol (LCP) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lcp.c,v 1.74 1999/05/09 20:02:21 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -2621,6 +2621,8 @@ operator|)
 name|o
 operator|-
 name|buff
+argument_list|,
+name|MB_LCPOUT
 argument_list|)
 expr_stmt|;
 block|}
@@ -2662,6 +2664,8 @@ argument_list|,
 name|option
 argument_list|,
 name|count
+argument_list|,
+name|MB_LCPOUT
 argument_list|)
 expr_stmt|;
 block|}
@@ -2737,6 +2741,8 @@ argument_list|,
 name|NULL
 argument_list|,
 literal|0
+argument_list|,
+name|MB_LCPOUT
 argument_list|)
 expr_stmt|;
 block|}
@@ -6927,6 +6933,13 @@ name|bp
 parameter_list|)
 block|{
 comment|/* Got PROTO_LCP from link */
+name|mbuf_SetType
+argument_list|(
+name|bp
+argument_list|,
+name|MB_LCPIN
+argument_list|)
+expr_stmt|;
 name|fsm_Input
 argument_list|(
 operator|&

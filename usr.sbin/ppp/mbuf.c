@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP Memory handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: mbuf.c,v 1.25 1999/05/08 11:07:07 brian Exp $  *  */
+comment|/*  *	      PPP Memory handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: mbuf.c,v 1.26 1999/05/09 20:02:24 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -101,7 +101,7 @@ name|MemMap
 index|[
 name|MB_MAX
 operator|+
-literal|2
+literal|1
 index|]
 struct|;
 end_struct
@@ -187,6 +187,7 @@ name|type
 operator|>
 name|MB_MAX
 condition|)
+block|{
 name|log_Printf
 argument_list|(
 name|LogERROR
@@ -196,6 +197,11 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
+name|type
+operator|=
+name|MB_UNKNOWN
+expr_stmt|;
+block|}
 name|bp
 operator|=
 name|malloc
@@ -754,7 +760,7 @@ name|bp
 operator|->
 name|type
 else|:
-name|MB_FSM
+name|MB_UNKNOWN
 argument_list|)
 expr_stmt|;
 name|head
@@ -991,25 +997,83 @@ name|mbuftype
 index|[]
 init|=
 block|{
-literal|"async"
+literal|"ip in"
 block|,
-literal|"fsm"
+literal|"ip out"
 block|,
-literal|"cbcp"
+literal|"alias in"
 block|,
-literal|"hdlcout"
+literal|"alias out"
 block|,
-literal|"ipin"
+literal|"mp in"
 block|,
-literal|"echo"
+literal|"mp out"
 block|,
-literal|"lqr"
+literal|"vj in"
 block|,
-literal|"vjcomp"
+literal|"vj out"
 block|,
-literal|"ipq"
+literal|"icompd in"
 block|,
-literal|"mp"
+literal|"icompd out"
+block|,
+literal|"compd in"
+block|,
+literal|"compd out"
+block|,
+literal|"lqr in"
+block|,
+literal|"lqr out"
+block|,
+literal|"echo in"
+block|,
+literal|"echo out"
+block|,
+literal|"proto in"
+block|,
+literal|"proto out"
+block|,
+literal|"acf in"
+block|,
+literal|"acf out"
+block|,
+literal|"sync in"
+block|,
+literal|"sync out"
+block|,
+literal|"hdlc in"
+block|,
+literal|"hdlc out"
+block|,
+literal|"async in"
+block|,
+literal|"async out"
+block|,
+literal|"cbcp in"
+block|,
+literal|"cbcp out"
+block|,
+literal|"chap in"
+block|,
+literal|"chap out"
+block|,
+literal|"pap in"
+block|,
+literal|"pap out"
+block|,
+literal|"ccp in"
+block|,
+literal|"ccp out"
+block|,
+literal|"ipcp in"
+block|,
+literal|"ipcp out"
+block|,
+literal|"lcp in"
+block|,
+literal|"lcp out"
+block|,
+literal|"unknown"
 block|}
 decl_stmt|;
 name|prompt_Printf
@@ -1025,7 +1089,7 @@ for|for
 control|(
 name|i
 operator|=
-literal|1
+literal|0
 init|;
 name|i
 operator|<
@@ -1046,8 +1110,6 @@ argument_list|,
 name|mbuftype
 index|[
 name|i
-operator|-
-literal|1
 index|]
 argument_list|,
 name|MemMap
@@ -1067,6 +1129,8 @@ argument_list|,
 name|mbuftype
 index|[
 name|i
+operator|+
+literal|1
 index|]
 argument_list|,
 name|MemMap
@@ -1105,8 +1169,6 @@ argument_list|,
 name|mbuftype
 index|[
 name|i
-operator|-
-literal|1
 index|]
 argument_list|,
 name|MemMap
@@ -1140,121 +1202,6 @@ expr_stmt|;
 return|return
 literal|0
 return|;
-block|}
-end_function
-
-begin_function
-name|void
-name|mbuf_Log
-parameter_list|()
-block|{
-name|log_Printf
-argument_list|(
-name|LogDEBUG
-argument_list|,
-literal|"mbuf_Log: mem alloced: %d\n"
-argument_list|,
-name|totalalloced
-argument_list|)
-expr_stmt|;
-name|log_Printf
-argument_list|(
-name|LogDEBUG
-argument_list|,
-literal|"mbuf_Log:  1: %d  2: %d   3: %d   4: %d\n"
-argument_list|,
-name|MemMap
-index|[
-literal|1
-index|]
-operator|.
-name|octets
-argument_list|,
-name|MemMap
-index|[
-literal|2
-index|]
-operator|.
-name|octets
-argument_list|,
-name|MemMap
-index|[
-literal|3
-index|]
-operator|.
-name|octets
-argument_list|,
-name|MemMap
-index|[
-literal|4
-index|]
-operator|.
-name|octets
-argument_list|)
-expr_stmt|;
-name|log_Printf
-argument_list|(
-name|LogDEBUG
-argument_list|,
-literal|"mbuf_Log:  5: %d  6: %d   7: %d   8: %d\n"
-argument_list|,
-name|MemMap
-index|[
-literal|5
-index|]
-operator|.
-name|octets
-argument_list|,
-name|MemMap
-index|[
-literal|6
-index|]
-operator|.
-name|octets
-argument_list|,
-name|MemMap
-index|[
-literal|7
-index|]
-operator|.
-name|octets
-argument_list|,
-name|MemMap
-index|[
-literal|8
-index|]
-operator|.
-name|octets
-argument_list|)
-expr_stmt|;
-name|log_Printf
-argument_list|(
-name|LogDEBUG
-argument_list|,
-literal|"mbuf_Log:  9: %d 10: %d  11: %d\n"
-argument_list|,
-name|MemMap
-index|[
-literal|9
-index|]
-operator|.
-name|octets
-argument_list|,
-name|MemMap
-index|[
-literal|10
-index|]
-operator|.
-name|octets
-argument_list|,
-name|MemMap
-index|[
-literal|11
-index|]
-operator|.
-name|octets
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -1579,6 +1526,91 @@ block|}
 return|return
 name|bp
 return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|mbuf_SetType
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|bp
+parameter_list|,
+name|int
+name|type
+parameter_list|)
+block|{
+for|for
+control|(
+init|;
+name|bp
+condition|;
+name|bp
+operator|=
+name|bp
+operator|->
+name|next
+control|)
+if|if
+condition|(
+name|type
+operator|!=
+name|bp
+operator|->
+name|type
+condition|)
+block|{
+name|MemMap
+index|[
+name|bp
+operator|->
+name|type
+index|]
+operator|.
+name|fragments
+operator|--
+expr_stmt|;
+name|MemMap
+index|[
+name|bp
+operator|->
+name|type
+index|]
+operator|.
+name|octets
+operator|-=
+name|bp
+operator|->
+name|size
+expr_stmt|;
+name|bp
+operator|->
+name|type
+operator|=
+name|type
+expr_stmt|;
+name|MemMap
+index|[
+name|type
+index|]
+operator|.
+name|fragments
+operator|++
+expr_stmt|;
+name|MemMap
+index|[
+name|type
+index|]
+operator|.
+name|octets
+operator|+=
+name|bp
+operator|->
+name|size
+expr_stmt|;
+block|}
 block|}
 end_function
 

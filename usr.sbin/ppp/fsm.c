@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Finite State Machine for LCP/IPCP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: fsm.c,v 1.43 1999/05/09 20:02:18 brian Exp $  *  *  TODO:  */
+comment|/*  *		PPP Finite State Machine for LCP/IPCP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: fsm.c,v 1.44 1999/05/14 09:36:04 brian Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -1086,6 +1086,9 @@ name|ptr
 parameter_list|,
 name|int
 name|count
+parameter_list|,
+name|int
+name|mtype
 parameter_list|)
 block|{
 name|int
@@ -1235,7 +1238,7 @@ name|mbuf_Alloc
 argument_list|(
 name|plen
 argument_list|,
-name|MB_FSM
+name|mtype
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -2182,6 +2185,8 @@ argument_list|,
 name|NULL
 argument_list|,
 literal|0
+argument_list|,
+name|MB_UNKNOWN
 argument_list|)
 expr_stmt|;
 call|(
@@ -2975,6 +2980,8 @@ operator|-
 name|dec
 operator|.
 name|rej
+argument_list|,
+name|MB_UNKNOWN
 argument_list|)
 expr_stmt|;
 if|if
@@ -3008,6 +3015,8 @@ operator|-
 name|dec
 operator|.
 name|nak
+argument_list|,
+name|MB_UNKNOWN
 argument_list|)
 expr_stmt|;
 if|if
@@ -3035,6 +3044,8 @@ operator|-
 name|dec
 operator|.
 name|ack
+argument_list|,
+name|MB_UNKNOWN
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -4884,6 +4895,13 @@ decl_stmt|;
 name|u_int32_t
 name|magic
 decl_stmt|;
+name|mbuf_SetType
+argument_list|(
+name|bp
+argument_list|,
+name|MB_ECHOIN
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|lcp
@@ -4973,6 +4991,8 @@ name|mbuf_Length
 argument_list|(
 name|bp
 argument_list|)
+argument_list|,
+name|MB_ECHOOUT
 argument_list|)
 expr_stmt|;
 block|}
@@ -5171,6 +5191,8 @@ argument_list|,
 name|NULL
 argument_list|,
 literal|0
+argument_list|,
+name|MB_CCPOUT
 argument_list|)
 expr_stmt|;
 name|mbuf_Free
@@ -5366,6 +5388,8 @@ argument_list|,
 name|bp
 operator|->
 name|cnt
+argument_list|,
+name|MB_UNKNOWN
 argument_list|)
 expr_stmt|;
 name|mbuf_Free
@@ -5470,16 +5494,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|log_IsKept
-argument_list|(
-name|LogDEBUG
-argument_list|)
-condition|)
-name|mbuf_Log
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
 name|codep
 operator|->
 name|inc_reqid
@@ -5530,16 +5544,6 @@ name|lh
 argument_list|,
 name|bp
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|log_IsKept
-argument_list|(
-name|LogDEBUG
-argument_list|)
-condition|)
-name|mbuf_Log
-argument_list|()
 expr_stmt|;
 block|}
 end_function

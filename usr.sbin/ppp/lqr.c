@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	      PPP Line Quality Monitoring (LQM) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lqr.c,v 1.34 1999/05/09 20:02:23 brian Exp $  *  *	o LQR based on RFC1333  *  * TODO:  *	o LQM policy  *	o Allow user to configure LQM method and interval.  */
+comment|/*  *	      PPP Line Quality Monitoring (LQM) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: lqr.c,v 1.35 1999/05/14 09:36:06 brian Exp $  *  *	o LQR based on RFC1333  *  * TODO:  *	o LQM policy  *	o Allow user to configure LQM method and interval.  */
 end_comment
 
 begin_include
@@ -289,6 +289,8 @@ name|echo
 argument_list|,
 sizeof|sizeof
 name|echo
+argument_list|,
+name|MB_ECHOOUT
 argument_list|)
 expr_stmt|;
 block|}
@@ -673,6 +675,25 @@ name|mbuf
 modifier|*
 name|bp
 decl_stmt|;
+name|int
+name|extra
+decl_stmt|;
+name|extra
+operator|=
+name|proto_WrapperOctets
+argument_list|(
+name|lcp
+argument_list|,
+name|PROTO_LQR
+argument_list|)
+operator|+
+name|acf_WrapperOctets
+argument_list|(
+name|lcp
+argument_list|,
+name|PROTO_LQR
+argument_list|)
+expr_stmt|;
 name|bp
 operator|=
 name|mbuf_Alloc
@@ -682,9 +703,23 @@ argument_list|(
 expr|struct
 name|lqrdata
 argument_list|)
+operator|+
+name|extra
 argument_list|,
-name|MB_LQR
+name|MB_LQROUT
 argument_list|)
+expr_stmt|;
+name|bp
+operator|->
+name|cnt
+operator|-=
+name|extra
+expr_stmt|;
+name|bp
+operator|->
+name|offset
+operator|+=
+name|extra
 expr_stmt|;
 name|link_PushPacket
 argument_list|(
@@ -2290,7 +2325,7 @@ operator|==
 name|PROTO_LQR
 condition|)
 block|{
-comment|/* Overwrite the entire packet */
+comment|/* Overwrite the entire packet (created in SendLqrData()) */
 name|struct
 name|lqrdata
 name|lqr
@@ -2547,6 +2582,54 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|struct
+name|mbuf
+modifier|*
+name|lqr_LayerPull
+parameter_list|(
+name|struct
+name|bundle
+modifier|*
+name|b
+parameter_list|,
+name|struct
+name|link
+modifier|*
+name|l
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+name|bp
+parameter_list|,
+name|u_short
+modifier|*
+name|proto
+parameter_list|)
+block|{
+comment|/*    * We mark the packet as ours but don't do anything 'till it's dispatched    * to lqr_Input()    */
+if|if
+condition|(
+operator|*
+name|proto
+operator|==
+name|PROTO_LQR
+condition|)
+name|mbuf_SetType
+argument_list|(
+name|bp
+argument_list|,
+name|MB_LQRIN
+argument_list|)
+expr_stmt|;
+return|return
+name|bp
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Statistics for pulled packets are recorded either in hdlc_PullPacket()  * or sync_PullPacket()  */
 end_comment
@@ -2563,7 +2646,7 @@ literal|"lqr"
 block|,
 name|lqr_LayerPush
 block|,
-name|NULL
+name|lqr_LayerPull
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	     PPP High Level Link Control (HDLC) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: hdlc.c,v 1.41 1999/04/03 11:54:00 brian Exp $  *  *	TODO:  */
+comment|/*  *	     PPP High Level Link Control (HDLC) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: hdlc.c,v 1.42 1999/05/08 11:06:36 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_include
@@ -1084,6 +1084,13 @@ decl_stmt|;
 name|u_short
 name|fcs
 decl_stmt|;
+name|mbuf_SetType
+argument_list|(
+name|bp
+argument_list|,
+name|MB_HDLCOUT
+argument_list|)
+expr_stmt|;
 name|fcs
 operator|=
 name|HdlcFcsBuf
@@ -2343,6 +2350,13 @@ literal|2
 argument_list|)
 expr_stmt|;
 comment|/* discard the FCS */
+name|mbuf_SetType
+argument_list|(
+name|bp
+argument_list|,
+name|MB_HDLCIN
+argument_list|)
+expr_stmt|;
 return|return
 name|bp
 return|;
@@ -2350,7 +2364,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Detect a HDLC frame  */
+comment|/* Detect a HDLC frame */
 end_comment
 
 begin_struct
