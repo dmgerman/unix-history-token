@@ -889,8 +889,6 @@ operator|(
 name|u_long
 operator|,
 name|u_long
-operator|,
-name|u_long
 operator|)
 argument_list|)
 decl_stmt|;
@@ -902,8 +900,6 @@ name|mrt_stats
 name|__P
 argument_list|(
 operator|(
-name|u_long
-operator|,
 name|u_long
 operator|)
 argument_list|)
