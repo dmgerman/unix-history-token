@@ -50,7 +50,7 @@ file|<arpa/nameser.h>
 end_include
 
 begin_comment
-comment|/*  * Expand compressed domain name 'comp_dn' to full domain name.  * Expanded names are converted to upper case.  * 'msg' is a pointer to the begining of the message,  * 'exp_dn' is a pointer to a buffer of size 'length' for the result.  * Return size of compressed name or -1 if there was an error.  */
+comment|/*  * Expand compressed domain name 'comp_dn' to full domain name.  * Expanded names are converted to lower case.  * 'msg' is a pointer to the begining of the message,  * 'exp_dn' is a pointer to a buffer of size 'length' for the result.  * Return size of compressed name or -1 if there was an error.  */
 end_comment
 
 begin_macro
@@ -197,7 +197,7 @@ literal|0
 condition|)
 if|if
 condition|(
-name|islower
+name|isupper
 argument_list|(
 name|c
 operator|=
@@ -210,7 +210,7 @@ operator|*
 name|dn
 operator|++
 operator|=
-name|toupper
+name|tolower
 argument_list|(
 name|c
 argument_list|)
@@ -1086,15 +1086,21 @@ operator|*
 operator|)
 name|msgp
 decl_stmt|;
-return|return
-operator|(
-operator|(
+specifier|register
+name|u_short
+name|u
+decl_stmt|;
+name|u
+operator|=
 operator|*
 name|p
 operator|++
 operator|<<
 literal|8
-operator|)
+expr_stmt|;
+return|return
+operator|(
+name|u
 operator||
 operator|*
 name|p
