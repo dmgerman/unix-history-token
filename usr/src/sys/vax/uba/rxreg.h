@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)rxreg.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)rxreg.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -351,7 +351,7 @@ begin_define
 define|#
 directive|define
 name|RXIOC_FORMAT
-value|_IOW(d, 1, int)
+value|_IOW('d', 1, int)
 end_define
 
 begin_comment
@@ -362,7 +362,7 @@ begin_define
 define|#
 directive|define
 name|RXIOC_WDDS
-value|_IOW(d, 2, int)
+value|_IOW('d', 2, int)
 end_define
 
 begin_comment
@@ -377,26 +377,30 @@ begin_define
 define|#
 directive|define
 name|RXIOC_RDDSMK
-value|_IOR(d, 3, int)
+value|_IOR('d', 3, int)
 end_define
 
 begin_comment
-comment|/* did last read sector contain */
+comment|/* did last read sector */
 end_comment
 
 begin_comment
-comment|/* `deleted data'?*/
+comment|/* contain `deleted data'?*/
 end_comment
 
 begin_define
 define|#
 directive|define
 name|RXIOC_GDENS
-value|_IOR(d, 4, int)
+value|_IOR('d', 4, int)
 end_define
 
 begin_comment
-comment|/* return density of current disk */
+comment|/* return density of current */
+end_comment
+
+begin_comment
+comment|/* disk */
 end_comment
 
 begin_ifdef
