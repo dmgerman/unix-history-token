@@ -590,24 +590,12 @@ name|void
 name|tcp_slowtimo
 parameter_list|()
 block|{
-name|int
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
+comment|/* 	 * XXXRW: Note that there is a minor race issue associated with rapid 	 * modification of the two components of tcp_maxidle.  This could be 	 * corrected by introducing sysctl handlers for those two fields, 	 * sliding this update of tcp_maxidle under the tcbinfo lock, and 	 * acquiring that lock in the handlers. 	 */
 name|tcp_maxidle
 operator|=
 name|tcp_keepcnt
 operator|*
 name|tcp_keepintvl
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
 expr_stmt|;
 name|INP_INFO_WLOCK
 argument_list|(
@@ -633,7 +621,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Cancel all timers for TCP tp.  */
+comment|/*  * Cancel all timers for TCP tp.  *  * XXXRW: This appears to be unused.  */
 end_comment
 
 begin_function
@@ -792,19 +780,11 @@ name|tp
 init|=
 name|xtp
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|struct
 name|inpcb
 modifier|*
 name|inp
 decl_stmt|;
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
 name|INP_INFO_RLOCK
 argument_list|(
 operator|&
@@ -819,19 +799,15 @@ name|t_inpcb
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|inp
+operator|==
+name|NULL
 condition|)
 block|{
 name|INP_INFO_RUNLOCK
 argument_list|(
 operator|&
 name|tcbinfo
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return;
@@ -870,11 +846,6 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 name|callout_deactivate
@@ -908,11 +879,6 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -934,9 +900,6 @@ name|tp
 init|=
 name|xtp
 decl_stmt|;
-name|int
-name|s
-decl_stmt|;
 name|struct
 name|inpcb
 modifier|*
@@ -956,11 +919,6 @@ name|t_state
 expr_stmt|;
 endif|#
 directive|endif
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
@@ -975,19 +933,15 @@ name|t_inpcb
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|inp
+operator|==
+name|NULL
 condition|)
 block|{
 name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
 name|tcbinfo
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1031,11 +985,6 @@ name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
 name|tcbinfo
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1145,11 +1094,6 @@ name|INP_INFO_WUNLOCK
 argument_list|(
 operator|&
 name|tcbinfo
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}
