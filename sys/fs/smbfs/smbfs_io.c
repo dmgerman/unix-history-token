@@ -966,6 +966,18 @@ name|error
 decl_stmt|,
 name|lks
 decl_stmt|;
+comment|/* 	 * Protect against method which is not supported for now 	 */
+if|if
+condition|(
+name|uiop
+operator|->
+name|uio_segflg
+operator|==
+name|UIO_NOCOPY
+condition|)
+return|return
+name|EOPNOTSUPP
+return|;
 if|if
 condition|(
 name|vp
