@@ -11,6 +11,12 @@ begin_comment
 comment|/* $FreeBSD$ */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<osreldate.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -970,6 +976,41 @@ directive|define
 name|HAVE_GETOPT
 value|1
 end_define
+
+begin_comment
+comment|/* Define if you have the `getprogname' function. */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|430002
+operator|&&
+name|__FreeBSD_version
+operator|<
+literal|500000
+operator|)
+operator|||
+expr|\
+name|__FreeBSD_version
+operator|>=
+literal|500019
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_GETPROGNAME
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define if you have the `getpwnam_r' function. */
@@ -1963,6 +2004,41 @@ directive|define
 name|HAVE_SETPROCTITLE
 value|1
 end_define
+
+begin_comment
+comment|/* Define if you have the `setprogname' function. */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|430002
+operator|&&
+name|__FreeBSD_version
+operator|<
+literal|500000
+operator|)
+operator|||
+expr|\
+name|__FreeBSD_version
+operator|>=
+literal|500019
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_SETPROGNAME
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define if you have the `setregid' function. */
