@@ -364,7 +364,8 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|(MP_SHORT_EXTEND(x) - MP_SHORT_EXTEND(y))
+define|\
+value|(MP_SHORT_EXTEND(((x)& MP_SHORT_SEQ_MASK) - ((y)& MP_SHORT_SEQ_MASK)))
 end_define
 
 begin_define
@@ -376,7 +377,8 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|(MP_LONG_EXTEND(x) - MP_LONG_EXTEND(y))
+define|\
+value|(MP_LONG_EXTEND(((x)& MP_LONG_SEQ_MASK) - ((y)& MP_LONG_SEQ_MASK)))
 end_define
 
 begin_define
