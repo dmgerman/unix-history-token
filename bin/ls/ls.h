@@ -46,6 +46,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|f_humanval
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* show human-readable file sizes */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|f_lomac
 decl_stmt|;
 end_decl_stmt

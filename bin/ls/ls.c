@@ -370,6 +370,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|f_humanval
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* show human-readable file sizes */
+end_comment
+
+begin_decl_stmt
+name|int
 name|f_inode
 decl_stmt|;
 end_decl_stmt
@@ -861,7 +871,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"1ABCFGHLPRTWZabcdfgiklnoqrstu"
+literal|"1ABCFGHLPRTWZabcdfghiklnoqrstu"
 argument_list|)
 operator|)
 operator|!=
@@ -1067,6 +1077,14 @@ case|case
 literal|'g'
 case|:
 comment|/* Compatibility with 4.3BSD. */
+break|break;
+case|case
+literal|'h'
+case|:
+name|f_humanval
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 case|case
 literal|'i'
