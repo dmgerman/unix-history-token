@@ -152,6 +152,12 @@ name|char
 modifier|*
 name|version
 decl_stmt|;
+name|u_char
+name|func_id
+decl_stmt|;
+name|int
+name|deftype
+decl_stmt|;
 name|struct
 name|ether
 modifier|*
@@ -769,6 +775,20 @@ define|#
 directive|define
 name|AUTO_INDEX
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_VERS
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|DT_FUNC
+value|1
 end_define
 
 end_unit
