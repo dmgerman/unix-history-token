@@ -1141,6 +1141,10 @@ operator|==
 name|ENOMEM
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"ENOMEM %p on %p(%s)\n"
