@@ -123,7 +123,6 @@ modifier|*
 name|line
 decl_stmt|;
 block|{
-specifier|register
 name|int
 name|fd
 decl_stmt|;
