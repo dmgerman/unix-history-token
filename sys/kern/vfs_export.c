@@ -12948,23 +12948,7 @@ block|{
 name|mode_t
 name|mask
 decl_stmt|;
-comment|/* 	 * At this point, uid == 0 can do anything. 	 * XXX: should use suser() ? */
-operator|*
-name|XXX
-operator|:
-name|Should
-name|only
-name|check
-name|root
-operator|-
-name|ness
-name|after
-name|other
-name|checks
-name|fail
-operator|.
-modifier|*
-expr|/
+comment|/* 	 * At this point, uid == 0 can do anything. 	 * XXX: should use suser() ? 	 * XXX: Should only check root-ness after other checks fail. 	 */
 if|if
 condition|(
 name|cred
