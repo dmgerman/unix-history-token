@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	macdefs.h	4.5	88/04/24	*/
+comment|/*	macdefs.h	4.6	88/05/31	*/
 end_comment
 
 begin_ifndef
@@ -455,16 +455,6 @@ define|#
 directive|define
 name|aoend
 parameter_list|()
-end_define
-
-begin_define
-define|#
-directive|define
-name|deflab
-parameter_list|(
-name|m
-parameter_list|)
-value|if (!nerrors) printf("L%d:\n", m); else
 end_define
 
 begin_define

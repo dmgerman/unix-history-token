@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)order.c	1.19 (Berkeley) %G%"
+literal|"@(#)order.c	1.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3003,12 +3003,6 @@ return|;
 block|}
 end_block
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|deflab
-end_ifndef
-
 begin_macro
 name|deflab
 argument_list|(
@@ -3018,6 +3012,11 @@ end_macro
 
 begin_block
 block|{
+if|if
+condition|(
+name|nerrors
+condition|)
+return|return;
 name|printf
 argument_list|(
 literal|"L%d:\n"
@@ -3027,11 +3026,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 name|genargs
