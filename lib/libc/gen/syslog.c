@@ -18,13 +18,18 @@ name|lint
 argument_list|)
 end_if
 
+begin_comment
+comment|/* static char sccsid[] = "From: @(#)syslog.c	8.4 (Berkeley) 3/18/94"; */
+end_comment
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)syslog.c	8.4 (Berkeley) 3/18/94"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
