@@ -6331,7 +6331,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|((a)->so_cred->cr_uid == (b))
+value|((a)->so_cred->cr_uid != (b))
 endif|#
 directive|endif
 if|if
@@ -6345,6 +6345,7 @@ condition|)
 block|{
 name|match
 operator|=
+operator|!
 name|socheckuid
 argument_list|(
 name|pcb
