@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)cmd2.c	2.9 %G%"
+literal|"@(#)cmd2.c	2.10 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -431,9 +431,10 @@ name|msgvec
 decl_stmt|,
 name|lc
 decl_stmt|,
-name|cc
-decl_stmt|,
 name|t
+decl_stmt|;
+name|long
+name|cc
 decl_stmt|;
 name|FILE
 modifier|*
@@ -634,6 +635,8 @@ return|;
 block|}
 name|cc
 operator|=
+literal|0L
+expr_stmt|;
 name|lc
 operator|=
 literal|0
@@ -717,10 +720,9 @@ name|t
 expr_stmt|;
 name|cc
 operator|+=
-name|msize
-argument_list|(
 name|mp
-argument_list|)
+operator|->
+name|m_size
 expr_stmt|;
 if|if
 condition|(
@@ -757,7 +759,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s %d/%d\n"
+literal|"%s %d/%ld\n"
 argument_list|,
 name|disp
 argument_list|,

@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)cmd3.c	2.8 %G%"
+literal|"@(#)cmd3.c	2.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1647,14 +1647,13 @@ index|]
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%d: %d\n"
+literal|"%d: %ld\n"
 argument_list|,
 name|mesg
 argument_list|,
-name|msize
-argument_list|(
 name|mp
-argument_list|)
+operator|->
+name|m_size
 argument_list|)
 expr_stmt|;
 block|}
