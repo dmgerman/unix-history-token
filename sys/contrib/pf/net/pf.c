@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$OpenBSD: pf.c,v 1.389.2.2 2004/03/14 00:13:42 brad Exp $ */
+comment|/*	$OpenBSD: pf.c,v 1.389.2.3 2004/04/10 09:38:19 brad Exp $ */
 end_comment
 
 begin_comment
@@ -28961,6 +28961,11 @@ decl_stmt|;
 name|u_int8_t
 name|dws
 decl_stmt|;
+name|int
+name|copyback
+init|=
+literal|0
+decl_stmt|;
 comment|/* 			 * Only the first 8 bytes of the TCP header can be 			 * expected. Don't access any TCP header fields after 			 * th_seq, an ackskew test is not possible. 			 */
 if|if
 condition|(
@@ -29187,6 +29192,7 @@ name|src
 operator|->
 name|seqdiff
 condition|)
+block|{
 name|pf_change_a
 argument_list|(
 operator|&
@@ -29194,10 +29200,7 @@ name|th
 operator|.
 name|th_seq
 argument_list|,
-operator|&
-name|th
-operator|.
-name|th_sum
+name|icmpsum
 argument_list|,
 name|htonl
 argument_list|(
@@ -29207,6 +29210,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|copyback
+operator|=
+literal|1
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -29345,7 +29353,7 @@ name|th
 operator|.
 name|th_sport
 argument_list|,
-name|saddr
+name|daddr
 argument_list|,
 operator|&
 operator|(
@@ -29440,6 +29448,16 @@ name|af
 argument_list|)
 expr_stmt|;
 block|}
+name|copyback
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|copyback
+condition|)
+block|{
 switch|switch
 condition|(
 name|pd2
@@ -29544,30 +29562,6 @@ endif|#
 directive|endif
 comment|/* INET6 */
 block|}
-name|m_copyback
-argument_list|(
-name|m
-argument_list|,
-name|off2
-argument_list|,
-literal|8
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|th
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|src
-operator|->
-name|seqdiff
-condition|)
-block|{
 name|m_copyback
 argument_list|(
 name|m
