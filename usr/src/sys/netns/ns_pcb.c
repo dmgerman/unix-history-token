@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1984, 1985, 1986, 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ns_pcb.c	7.9 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1984, 1985, 1986, 1987 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ns_pcb.c	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -586,13 +586,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ro
-operator|->
-name|ro_rt
-condition|)
-block|{
-if|if
-condition|(
 name|nsp
 operator|->
 name|nsp_socket
@@ -638,7 +631,11 @@ condition|)
 block|{
 if|if
 condition|(
-operator|(
+name|ro
+operator|->
+name|ro_rt
+operator|&&
+operator|!
 operator|(
 name|ro
 operator|->
@@ -646,35 +643,7 @@ name|ro_rt
 operator|->
 name|rt_flags
 operator|&
-operator|(
-name|RTF_GATEWAY
-operator||
 name|RTF_HOST
-operator|)
-operator|)
-operator|==
-name|RTF_GATEWAY
-operator|)
-operator|||
-operator|(
-operator|(
-name|ifp
-operator|=
-name|ro
-operator|->
-name|ro_rt
-operator|->
-name|rt_ifp
-operator|)
-operator|&&
-operator|!
-operator|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_POINTOPOINT
-operator|)
 operator|)
 condition|)
 block|{
@@ -691,6 +660,12 @@ else|else
 block|{
 name|flush
 label|:
+if|if
+condition|(
+name|ro
+operator|->
+name|ro_rt
+condition|)
 name|RTFREE
 argument_list|(
 name|ro
@@ -709,10 +684,17 @@ operator|*
 operator|)
 literal|0
 expr_stmt|;
+name|nsp
+operator|->
+name|nsp_laddr
+operator|.
+name|x_net
+operator|=
+name|ns_zeronet
+expr_stmt|;
 block|}
 block|}
 comment|/* else cached route is ok; do nothing */
-block|}
 name|nsp
 operator|->
 name|nsp_lastdst
