@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)du.c	5.17 (Berkeley) %G%"
+literal|"@(#)du.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -237,7 +237,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"asx"
+literal|"Hahsx"
 argument_list|)
 operator|)
 operator|!=
@@ -249,11 +249,32 @@ name|ch
 condition|)
 block|{
 case|case
+literal|'H'
+case|:
+name|ftsoptions
+operator||=
+name|FTS_COMFOLLOW
+expr_stmt|;
+break|break;
+case|case
 literal|'a'
 case|:
 name|aflag
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'h'
+case|:
+name|ftsoptions
+operator|&=
+operator|~
+name|FTS_PHYSICAL
+expr_stmt|;
+name|ftsoptions
+operator||=
+name|FTS_LOGICAL
 expr_stmt|;
 break|break;
 case|case
@@ -499,33 +520,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-name|FTS_SL
-case|:
-if|if
-condition|(
-name|p
-operator|->
-name|fts_level
-operator|==
-name|FTS_ROOTLEVEL
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fts_set
-argument_list|(
-name|fts
-argument_list|,
-name|p
-argument_list|,
-name|FTS_FOLLOW
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-comment|/* FALLTHROUGH */
 default|default:
 if|if
 condition|(
@@ -812,7 +806,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: du [-a | -s] [-x] [file ...]\n"
+literal|"usage: du [-a | -s] [-Hhx] [file ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
