@@ -172,7 +172,7 @@ name|int
 name|sc_unit
 decl_stmt|;
 comment|/* P: (read-only) */
-name|uint16_t
+name|int16_t
 name|sc_ref
 decl_stmt|;
 comment|/* P: g_gate_list_mtx */
