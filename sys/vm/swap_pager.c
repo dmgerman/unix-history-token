@@ -4911,11 +4911,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
 name|m
 operator|=
 name|vm_page_grab
@@ -4940,11 +4935,6 @@ operator|==
 name|VM_PAGE_BITS_ALL
 condition|)
 block|{
-name|VM_OBJECT_LOCK
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
 name|vm_object_pip_subtract
 argument_list|(
 name|object
@@ -5007,11 +4997,6 @@ literal|"swap_pager_force_pagein: read from swap failed"
 argument_list|)
 expr_stmt|;
 comment|/*XXX*/
-name|VM_OBJECT_LOCK
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
 name|vm_object_pip_subtract
 argument_list|(
 name|object
