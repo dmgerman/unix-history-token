@@ -4345,6 +4345,8 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
 name|FILEDESC_LOCK
 argument_list|(
 name|fdp
