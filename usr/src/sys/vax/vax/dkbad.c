@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dkbad.c	6.1	83/07/29	*/
+comment|/*	dkbad.c	6.2	84/08/28	*/
 end_comment
 
 begin_ifndef
@@ -12,19 +12,19 @@ end_ifndef
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/buf.h"
+file|"buf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/dkbad.h"
+file|"dkbad.h"
 end_include
 
 begin_comment

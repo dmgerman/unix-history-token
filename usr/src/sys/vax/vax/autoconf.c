@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	autoconf.c	6.6	84/02/16	*/
+comment|/*	autoconf.c	6.7	84/08/28	*/
 end_comment
 
 begin_comment
@@ -22,85 +22,85 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../machine/pte.h"
+file|"pte.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/systm.h"
+file|"systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/map.h"
+file|"map.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/buf.h"
+file|"buf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/dk.h"
+file|"dk.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/vm.h"
+file|"vm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/conf.h"
+file|"conf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/dmap.h"
+file|"dmap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vax/cpu.h"
+file|"cpu.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vax/mem.h"
+file|"mem.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vax/mtpr.h"
+file|"mtpr.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vax/nexus.h"
+file|"nexus.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vax/scb.h"
+file|"scb.h"
 end_include
 
 begin_include

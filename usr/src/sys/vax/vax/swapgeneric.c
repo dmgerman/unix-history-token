@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	swapgeneric.c	6.1	83/08/05	*/
+comment|/*	swapgeneric.c	6.2	84/08/28	*/
 end_comment
 
 begin_include
@@ -12,55 +12,55 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../machine/pte.h"
+file|"pte.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/conf.h"
+file|"conf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/buf.h"
+file|"buf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/vm.h"
+file|"vm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/systm.h"
+file|"systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/reboot.h"
+file|"reboot.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vax/cons.h"
+file|"cons.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vax/mtpr.h"
+file|"mtpr.h"
 end_include
 
 begin_include

@@ -1,48 +1,48 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trap.c	6.3	84/07/08	*/
+comment|/*	trap.c	6.4	84/08/28	*/
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"../machine/psl.h"
+file|"psl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../machine/reg.h"
+file|"reg.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../machine/pte.h"
+file|"pte.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/systm.h"
+file|"systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/dir.h"
+file|"dir.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/user.h"
+file|"user.h"
 end_include
 
 begin_include
@@ -54,31 +54,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/proc.h"
+file|"proc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/seg.h"
+file|"seg.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vax/trap.h"
+file|"trap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/acct.h"
+file|"acct.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/kernel.h"
+file|"kernel.h"
 end_include
 
 begin_ifdef
@@ -101,7 +101,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"../vax/mtpr.h"
+file|"mtpr.h"
 end_include
 
 begin_define

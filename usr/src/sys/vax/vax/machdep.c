@@ -1,180 +1,180 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	6.7	84/08/03	*/
+comment|/*	machdep.c	6.8	84/08/28	*/
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"../machine/reg.h"
+file|"reg.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../machine/pte.h"
+file|"pte.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../machine/psl.h"
+file|"psl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/systm.h"
+file|"systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/dir.h"
+file|"dir.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/user.h"
+file|"user.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/kernel.h"
+file|"kernel.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/map.h"
+file|"map.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/vm.h"
+file|"vm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/proc.h"
+file|"proc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/buf.h"
+file|"buf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/reboot.h"
+file|"reboot.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/conf.h"
+file|"conf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/inode.h"
+file|"inode.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/file.h"
+file|"file.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/text.h"
+file|"text.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/clist.h"
+file|"clist.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/callout.h"
+file|"callout.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/cmap.h"
+file|"cmap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/mbuf.h"
+file|"mbuf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/msgbuf.h"
+file|"msgbuf.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/quota.h"
+file|"quota.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vax/frame.h"
+file|"frame.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vax/cons.h"
+file|"cons.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vax/cpu.h"
+file|"cpu.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vax/mem.h"
+file|"mem.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vax/mtpr.h"
+file|"mtpr.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../vax/rpb.h"
+file|"rpb.h"
 end_include
 
 begin_include
