@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rexecd.c	4.4 82/11/15"
+literal|"@(#)rexecd.c	4.5 82/12/25"
 decl_stmt|;
 end_decl_stmt
 
@@ -200,15 +200,9 @@ name|sin
 operator|.
 name|sin_port
 operator|=
-name|htons
-argument_list|(
-operator|(
-name|u_short
-operator|)
 name|sp
 operator|->
 name|s_port
-argument_list|)
 expr_stmt|;
 ifndef|#
 directive|ifndef
