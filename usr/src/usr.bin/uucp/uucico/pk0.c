@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pk0.c	5.7 (Berkeley) %G%"
+literal|"@(#)pk0.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2296,11 +2296,6 @@ operator|&=
 operator|~
 name|RXMIT
 expr_stmt|;
-name|pk
-operator|->
-name|p_nout
-operator|++
-expr_stmt|;
 goto|goto
 name|out
 goto|;
@@ -2313,12 +2308,6 @@ operator|->
 name|p_xcount
 condition|)
 block|{
-name|pk
-operator|->
-name|p_timer
-operator|=
-literal|2
-expr_stmt|;
 name|pk
 operator|->
 name|p_state
@@ -2392,12 +2381,6 @@ name|i
 operator|=
 literal|0
 expr_stmt|;
-name|pk
-operator|->
-name|p_timer
-operator|=
-literal|2
-expr_stmt|;
 while|while
 condition|(
 name|pk
@@ -2437,12 +2420,6 @@ expr_stmt|;
 block|}
 name|pk
 operator|->
-name|p_timer
-operator|=
-literal|0
-expr_stmt|;
-name|pk
-operator|->
 name|p_state
 operator||=
 name|DOWN
@@ -2474,12 +2451,6 @@ operator|->
 name|p_msg
 operator|=
 name|M_CLOSE
-expr_stmt|;
-name|pk
-operator|->
-name|p_timer
-operator|=
-literal|2
 expr_stmt|;
 name|pkoutput
 argument_list|(
@@ -2671,11 +2642,13 @@ operator|->
 name|p_rwindow
 argument_list|)
 expr_stmt|;
-name|logent
+name|assert
 argument_list|(
 name|buf
 argument_list|,
-literal|"pkclose rcheck != p_rwindow"
+name|Rmtname
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
