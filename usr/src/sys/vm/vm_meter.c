@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vm_meter.c	7.21 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vm_meter.c	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -292,57 +292,6 @@ operator|)
 operator|>>
 name|FSHIFT
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|COMPAT_43
-argument_list|)
-operator|&&
-operator|(
-name|defined
-argument_list|(
-name|vax
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|tahoe
-argument_list|)
-operator|)
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|3
-condition|;
-name|i
-operator|++
-control|)
-name|avenrun
-index|[
-name|i
-index|]
-operator|=
-operator|(
-name|double
-operator|)
-name|avg
-operator|->
-name|ldavg
-index|[
-name|i
-index|]
-operator|/
-name|FSCALE
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* COMPAT_43 */
 block|}
 end_function
 
