@@ -102,13 +102,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vmmeter.h>
+file|<sys/exec.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/exec.h>
+file|<sys/user.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/vmmeter.h>
 end_include
 
 begin_include
@@ -179,6 +185,20 @@ end_define
 
 begin_comment
 comment|/* bytes to kbytes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|B2P
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)>> PAGE_SHIFT)
+end_define
+
+begin_comment
+comment|/* bytes to pages */
 end_comment
 
 begin_define
@@ -615,18 +635,14 @@ decl_stmt|;
 comment|/* XXX - conservative */
 name|int
 name|class
-decl_stmt|;
-name|int
+decl_stmt|,
 name|i
+decl_stmt|,
+name|fqmhz
+decl_stmt|,
+name|fqkhz
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|extern char *cpu_model;
-comment|/* Yuck */
-endif|#
-directive|endif
-comment|/* We default the flags to include all non-conflicting flags,            and the Intel versions of conflicting flags.  Note the space            before each name; that is significant, and should be             preserved. */
+comment|/*          * We default the flags to include all non-conflicting flags,          * and the Intel versions of conflicting flags. 	 */
 specifier|static
 name|char
 modifier|*
@@ -900,6 +916,30 @@ operator|>=
 literal|5
 condition|)
 block|{
+name|fqmhz
+operator|=
+operator|(
+name|tsc_freq
+operator|+
+literal|4999
+operator|)
+operator|/
+literal|1000000
+expr_stmt|;
+name|fqkhz
+operator|=
+operator|(
+operator|(
+name|tsc_freq
+operator|+
+literal|4999
+operator|)
+operator|/
+literal|10000
+operator|)
+operator|%
+literal|100
+expr_stmt|;
 name|ps
 operator|+=
 name|sprintf
@@ -909,45 +949,13 @@ argument_list|,
 literal|"cpu MHz\t\t: %d.%02d\n"
 literal|"bogomips\t: %d.%02d\n"
 argument_list|,
-operator|(
-name|tsc_freq
-operator|+
-literal|4999
-operator|)
-operator|/
-literal|1000000
+name|fqmhz
 argument_list|,
-operator|(
-operator|(
-name|tsc_freq
-operator|+
-literal|4999
-operator|)
-operator|/
-literal|10000
-operator|)
-operator|%
-literal|100
+name|fqkhz
 argument_list|,
-operator|(
-name|tsc_freq
-operator|+
-literal|4999
-operator|)
-operator|/
-literal|1000000
+name|fqmhz
 argument_list|,
-operator|(
-operator|(
-name|tsc_freq
-operator|+
-literal|4999
-operator|)
-operator|/
-literal|10000
-operator|)
-operator|%
-literal|100
+name|fqkhz
 argument_list|)
 expr_stmt|;
 block|}
@@ -1473,6 +1481,10 @@ modifier|*
 name|uio
 decl_stmt|;
 block|{
+name|struct
+name|eproc
+name|ep
+decl_stmt|;
 name|char
 modifier|*
 name|ps
@@ -1485,6 +1497,14 @@ decl_stmt|;
 name|int
 name|xlen
 decl_stmt|;
+name|fill_eproc
+argument_list|(
+name|p
+argument_list|,
+operator|&
+name|ep
+argument_list|)
+expr_stmt|;
 name|ps
 operator|=
 name|psbuf
@@ -1743,20 +1763,31 @@ literal|"vsize"
 argument_list|,
 literal|"%u"
 argument_list|,
-literal|0
+name|ep
+operator|.
+name|e_vm
+operator|.
+name|vm_map
+operator|.
+name|size
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 name|PS_ADD
 argument_list|(
 literal|"rss"
 argument_list|,
 literal|"%u"
 argument_list|,
-literal|0
+name|P2K
+argument_list|(
+name|ep
+operator|.
+name|e_vm
+operator|.
+name|vm_rssize
+argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 name|PS_ADD
 argument_list|(
 literal|"rlim"
@@ -1773,10 +1804,16 @@ literal|"startcode"
 argument_list|,
 literal|"%u"
 argument_list|,
-literal|0
+operator|(
+name|unsigned
+operator|)
+name|ep
+operator|.
+name|e_vm
+operator|.
+name|vm_taddr
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 name|PS_ADD
 argument_list|(
 literal|"endcode"
@@ -1799,7 +1836,7 @@ expr_stmt|;
 comment|/* XXX */
 name|PS_ADD
 argument_list|(
-literal|"kstkesp"
+literal|"esp"
 argument_list|,
 literal|"%u"
 argument_list|,
@@ -1809,7 +1846,7 @@ expr_stmt|;
 comment|/* XXX */
 name|PS_ADD
 argument_list|(
-literal|"kstkeip"
+literal|"eip"
 argument_list|,
 literal|"%u"
 argument_list|,
@@ -1862,6 +1899,54 @@ argument_list|(
 literal|"wchan"
 argument_list|,
 literal|"%u"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* XXX */
+name|PS_ADD
+argument_list|(
+literal|"nswap"
+argument_list|,
+literal|"%lu"
+argument_list|,
+operator|(
+name|long
+name|unsigned
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* XXX */
+name|PS_ADD
+argument_list|(
+literal|"cnswap"
+argument_list|,
+literal|"%lu"
+argument_list|,
+operator|(
+name|long
+name|unsigned
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* XXX */
+name|PS_ADD
+argument_list|(
+literal|"exitsignal"
+argument_list|,
+literal|"%d"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* XXX */
+name|PS_ADD
+argument_list|(
+literal|"processor"
+argument_list|,
+literal|"%d"
 argument_list|,
 literal|0
 argument_list|)
@@ -1995,6 +2080,10 @@ modifier|*
 name|uio
 decl_stmt|;
 block|{
+name|struct
+name|eproc
+name|ep
+decl_stmt|;
 name|char
 modifier|*
 name|ps
@@ -2012,6 +2101,9 @@ name|int
 name|i
 decl_stmt|,
 name|xlen
+decl_stmt|;
+name|segsz_t
+name|lsize
 decl_stmt|;
 name|ps
 operator|=
@@ -2064,6 +2156,14 @@ operator|&
 name|sched_lock
 argument_list|,
 name|MTX_SPIN
+argument_list|)
+expr_stmt|;
+name|fill_eproc
+argument_list|(
+name|p
+argument_list|,
+operator|&
+name|ep
 argument_list|)
 expr_stmt|;
 define|#
@@ -2233,7 +2333,7 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Memory 	 */
+comment|/* 	 * Memory 	 * 	 * While our approximation of VmLib may not be accurate (I 	 * don't know of a simple way to verify it, and I'm not sure 	 * it has much meaning anyway), I believe it's good enough. 	 * 	 * The same code that could (I think) accurately compute VmLib 	 * could also compute VmLck, but I don't really care enough to 	 * implement it. Submissions are welcome. 	 */
 name|PS_ADD
 argument_list|(
 name|ps
@@ -2242,10 +2342,10 @@ literal|"VmSize:\t%8u kB\n"
 argument_list|,
 name|B2K
 argument_list|(
-name|p
-operator|->
-name|p_vmspace
-operator|->
+name|ep
+operator|.
+name|e_vm
+operator|.
 name|vm_map
 operator|.
 name|size
@@ -2265,7 +2365,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
-comment|/* XXX vm_rssize seems to always be zero, how can this be? */
 name|PS_ADD
 argument_list|(
 name|ps
@@ -2274,10 +2373,10 @@ literal|"VmRss:\t%8u kB\n"
 argument_list|,
 name|P2K
 argument_list|(
-name|p
-operator|->
-name|p_vmspace
-operator|->
+name|ep
+operator|.
+name|e_vm
+operator|.
 name|vm_rssize
 argument_list|)
 argument_list|)
@@ -2290,10 +2389,10 @@ literal|"VmData:\t%8u kB\n"
 argument_list|,
 name|P2K
 argument_list|(
-name|p
-operator|->
-name|p_vmspace
-operator|->
+name|ep
+operator|.
+name|e_vm
+operator|.
 name|vm_dsize
 argument_list|)
 argument_list|)
@@ -2306,10 +2405,10 @@ literal|"VmStk:\t%8u kB\n"
 argument_list|,
 name|P2K
 argument_list|(
-name|p
-operator|->
-name|p_vmspace
-operator|->
+name|ep
+operator|.
+name|e_vm
+operator|.
 name|vm_ssize
 argument_list|)
 argument_list|)
@@ -2322,13 +2421,46 @@ literal|"VmExe:\t%8u kB\n"
 argument_list|,
 name|P2K
 argument_list|(
-name|p
-operator|->
-name|p_vmspace
-operator|->
+name|ep
+operator|.
+name|e_vm
+operator|.
 name|vm_tsize
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|lsize
+operator|=
+name|B2P
+argument_list|(
+name|ep
+operator|.
+name|e_vm
+operator|.
+name|vm_map
+operator|.
+name|size
+argument_list|)
+operator|-
+name|ep
+operator|.
+name|e_vm
+operator|.
+name|vm_dsize
+operator|-
+name|ep
+operator|.
+name|e_vm
+operator|.
+name|vm_ssize
+operator|-
+name|ep
+operator|.
+name|e_vm
+operator|.
+name|vm_tsize
+operator|-
+literal|1
 expr_stmt|;
 name|PS_ADD
 argument_list|(
@@ -2338,11 +2470,10 @@ literal|"VmLib:\t%8u kB\n"
 argument_list|,
 name|P2K
 argument_list|(
-literal|0
+name|lsize
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 comment|/* 	 * Signal masks 	 * 	 * We support up to 128 signals, while Linux supports 32, 	 * but we only define 32 (the same 32 as Linux, to boot), so 	 * just show the lower 32 bits of each mask. XXX hack. 	 * 	 * NB: on certain platforms (Sparc at least) Linux actually 	 * supports 64 signals, but this code is a long way from 	 * running on anything but i386, so ignore that for now. 	 */
 name|PS_ADD
 argument_list|(
@@ -2360,6 +2491,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+comment|/* 	 * I can't seem to find out where the signal mask is in 	 * relation to struct proc, so SigBlk is left unimplemented. 	 */
 name|PS_ADD
 argument_list|(
 name|ps
