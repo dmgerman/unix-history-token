@@ -2238,6 +2238,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|P_SINGLE_EXIT
+value|0x00400
+end_define
+
+begin_comment
+comment|/* Threads suspending should exit, not wait */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|P_TRACED
+value|0x00800
+end_define
+
+begin_comment
+comment|/* Debugged process being traced. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|P_WAITED
 value|0x01000
 end_define
@@ -2293,21 +2315,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|P_PROTECTED
-value|0x100000
-end_define
-
-begin_comment
-comment|/* Do not kill on memory overcommit. */
-end_comment
-
-begin_comment
-comment|/* flags that control how threads may be suspended for some reason */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|P_STOPPED_SIG
 value|0x20000
 end_define
@@ -2345,45 +2352,13 @@ end_comment
 begin_define
 define|#
 directive|define
-name|P_SINGLE_EXIT
-value|0x00400
+name|P_PROTECTED
+value|0x100000
 end_define
 
 begin_comment
-comment|/* Threads suspending should exit, */
+comment|/* Do not kill on memory overcommit. */
 end_comment
-
-begin_comment
-comment|/* not wait */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|P_TRACED
-value|0x00800
-end_define
-
-begin_comment
-comment|/* Debugged process being traced. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|P_STOPPED
-value|(P_STOPPED_SIG|P_STOPPED_SINGLE|P_STOPPED_TRACE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|P_SHOULDSTOP
-parameter_list|(
-name|p
-parameter_list|)
-value|((p)->p_flag& P_STOPPED)
-end_define
 
 begin_comment
 comment|/* Should be moved to machine-dependent areas. */
@@ -2432,6 +2407,23 @@ end_define
 begin_comment
 comment|/* Process is in execve(). */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|P_STOPPED
+value|(P_STOPPED_SIG|P_STOPPED_SINGLE|P_STOPPED_TRACE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|P_SHOULDSTOP
+parameter_list|(
+name|p
+parameter_list|)
+value|((p)->p_flag& P_STOPPED)
+end_define
 
 begin_comment
 comment|/* These flags are kept in p_sflag and are protected with sched_lock. */
