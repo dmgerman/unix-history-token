@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)trap.c	7.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)trap.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -519,12 +519,12 @@ expr_stmt|;
 comment|/*NOTREACHED*/
 case|case
 name|T_SEGNPFLT
-operator|+
+operator||
 name|T_USER
 case|:
 case|case
 name|T_PROTFLT
-operator|+
+operator||
 name|T_USER
 case|:
 comment|/* protection fault */
@@ -543,25 +543,25 @@ expr_stmt|;
 break|break;
 case|case
 name|T_PRIVINFLT
-operator|+
+operator||
 name|T_USER
 case|:
 comment|/* privileged instruction fault */
 case|case
 name|T_RESADFLT
-operator|+
+operator||
 name|T_USER
 case|:
 comment|/* reserved addressing fault */
 case|case
 name|T_RESOPFLT
-operator|+
+operator||
 name|T_USER
 case|:
 comment|/* reserved operand fault */
 case|case
 name|T_FPOPFLT
-operator|+
+operator||
 name|T_USER
 case|:
 comment|/* coprocessor operand fault */
@@ -579,7 +579,7 @@ expr_stmt|;
 break|break;
 case|case
 name|T_ASTFLT
-operator|+
+operator||
 name|T_USER
 case|:
 comment|/* Allow process switch */
@@ -637,7 +637,7 @@ name|out
 goto|;
 case|case
 name|T_DNA
-operator|+
+operator||
 name|T_USER
 case|:
 ifdef|#
@@ -663,7 +663,7 @@ expr_stmt|;
 break|break;
 case|case
 name|T_BOUND
-operator|+
+operator||
 name|T_USER
 case|:
 name|ucode
@@ -677,7 +677,7 @@ expr_stmt|;
 break|break;
 case|case
 name|T_OFLOW
-operator|+
+operator||
 name|T_USER
 case|:
 name|ucode
@@ -691,7 +691,7 @@ expr_stmt|;
 break|break;
 case|case
 name|T_DIVIDE
-operator|+
+operator||
 name|T_USER
 case|:
 name|ucode
@@ -705,7 +705,7 @@ expr_stmt|;
 break|break;
 case|case
 name|T_ARITHTRAP
-operator|+
+operator||
 name|T_USER
 case|:
 name|ucode
@@ -733,7 +733,7 @@ goto|;
 comment|/* fall into */
 case|case
 name|T_PAGEFLT
-operator|+
+operator||
 name|T_USER
 case|:
 comment|/* page fault */
@@ -1166,13 +1166,13 @@ comment|/* Q: how do we turn it on again? */
 return|return;
 case|case
 name|T_BPTFLT
-operator|+
+operator||
 name|T_USER
 case|:
 comment|/* bpt instruction fault */
 case|case
 name|T_TRCTRAP
-operator|+
+operator||
 name|T_USER
 case|:
 comment|/* trace trap */
@@ -1201,7 +1201,7 @@ name|T_NMI
 case|:
 case|case
 name|T_NMI
-operator|+
+operator||
 name|T_USER
 case|:
 comment|/* machine/parity/power fail/"kitchen sink" faults */
@@ -1930,7 +1930,7 @@ condition|(
 name|want_resched
 condition|)
 block|{
-comment|/* 		 * Since we are u.u_procp, clock will normally just change 		 * our priority without moving us from one queue to another 		 * (since the running process is not on a queue.) 		 * If that happened after we setrq ourselves but before we 		 * swtch()'ed, we might not be on the queue indicated by 		 * our priority. 		 */
+comment|/* 		 * Since we are curproc, clock will normally just change 		 * our priority without moving us from one queue to another 		 * (since the running process is not on a queue.) 		 * If that happened after we setrq ourselves but before we 		 * swtch()'ed, we might not be on the queue indicated by 		 * our priority. 		 */
 operator|(
 name|void
 operator|)
