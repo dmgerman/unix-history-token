@@ -18,6 +18,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/ansi.h>
 end_include
 
@@ -206,12 +212,6 @@ directive|define
 name|MB_CUR_MAX
 value|__mb_cur_max
 end_define
-
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
 
 begin_decl_stmt
 name|__BEGIN_DECLS
