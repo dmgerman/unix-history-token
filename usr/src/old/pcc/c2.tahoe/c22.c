@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)c22.c	1.1 (Berkeley) %G%"
+literal|"@(#)c22.c	1.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4249,6 +4249,13 @@ name|p
 argument_list|,
 name|conloc
 argument_list|)
+operator|&&
+name|conval
+index|[
+literal|0
+index|]
+operator|==
+name|type
 condition|)
 return|return
 operator|(
