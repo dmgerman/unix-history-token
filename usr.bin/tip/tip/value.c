@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)value.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)value.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,6 +64,51 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+name|int
+name|vstring
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|vlex
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|vassign
+name|__P
+argument_list|(
+operator|(
+name|value_t
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|int
 name|col
@@ -63,12 +121,10 @@ begin_comment
 comment|/*  * Variable manipulation  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|vinit
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|value_t
@@ -116,6 +172,7 @@ name|ENVIRON
 condition|)
 if|if
 condition|(
+operator|(
 name|cp
 operator|=
 name|getenv
@@ -124,6 +181,7 @@ name|p
 operator|->
 name|v_name
 argument_list|)
+operator|)
 condition|)
 name|p
 operator|->
@@ -226,6 +284,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|tp
 operator|=
 name|rindex
@@ -234,6 +293,7 @@ name|file
 argument_list|,
 literal|'\n'
 argument_list|)
+operator|)
 condition|)
 operator|*
 name|tp
@@ -268,7 +328,7 @@ name|PUBLIC
 operator|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function_decl
 specifier|static
@@ -282,28 +342,23 @@ begin_comment
 comment|/*VARARGS1*/
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|vassign
-argument_list|(
+parameter_list|(
 name|p
-argument_list|,
+parameter_list|,
 name|v
-argument_list|)
+parameter_list|)
 specifier|register
 name|value_t
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|char
 modifier|*
 name|v
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -524,7 +579,7 @@ operator||=
 name|CHANGED
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function_decl
 specifier|static
@@ -534,19 +589,17 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_expr_stmt
+begin_function
+name|void
 name|vlex
-argument_list|(
+parameter_list|(
 name|s
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|s
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|value_t
@@ -609,6 +662,7 @@ do|do
 block|{
 if|if
 condition|(
+operator|(
 name|cp
 operator|=
 name|vinterp
@@ -617,6 +671,7 @@ name|s
 argument_list|,
 literal|' '
 argument_list|)
+operator|)
 condition|)
 name|cp
 operator|++
@@ -655,7 +710,7 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
@@ -687,6 +742,7 @@ parameter_list|()
 function_decl|;
 if|if
 condition|(
+operator|(
 name|cp
 operator|=
 name|index
@@ -695,6 +751,7 @@ name|s
 argument_list|,
 literal|'='
 argument_list|)
+operator|)
 condition|)
 block|{
 operator|*
@@ -704,12 +761,14 @@ literal|'\0'
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|p
 operator|=
 name|vlookup
 argument_list|(
 name|s
 argument_list|)
+operator|)
 condition|)
 block|{
 name|cp
@@ -767,6 +826,7 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
 name|cp
 operator|=
 name|index
@@ -775,6 +835,7 @@ name|s
 argument_list|,
 literal|'?'
 argument_list|)
+operator|)
 condition|)
 block|{
 operator|*
@@ -1519,29 +1580,24 @@ begin_comment
 comment|/*  * assign variable s with value v (for NUMBER or STRING or CHAR types)  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|vstring
-argument_list|(
+parameter_list|(
 name|s
-argument_list|,
+parameter_list|,
 name|v
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|s
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|char
 modifier|*
 name|v
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|value_t
@@ -1623,7 +1679,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)remote.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)remote.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,6 +71,12 @@ begin_include
 include|#
 directive|include
 file|<sys/syslimits.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -237,6 +257,20 @@ parameter_list|)
 value|(cgetcap(bp, f, ':') != NULL)
 end_define
 
+begin_decl_stmt
+specifier|static
+name|void
+name|getremcap
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* 	Expand the start tilde sequence at the start of the 	specified path. Optionally, free space allocated to 	path before reinitializing it. */
 end_comment
@@ -402,23 +436,27 @@ return|return
 name|rc
 return|;
 block|}
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 block|}
 end_function
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|void
 name|getremcap
-argument_list|(
+parameter_list|(
 name|host
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|host
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|char
@@ -509,6 +547,7 @@ if|if
 condition|(
 name|DV
 operator|||
+operator|(
 name|host
 index|[
 literal|0
@@ -528,6 +567,7 @@ name|W_OK
 argument_list|)
 operator|==
 literal|0
+operator|)
 condition|)
 block|{
 name|CU
@@ -570,11 +610,9 @@ case|case
 operator|-
 literal|1
 case|:
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"tip: unknown host %s\n"
+literal|"unknown host %s"
 argument_list|,
 name|host
 argument_list|)
@@ -584,11 +622,9 @@ case|case
 operator|-
 literal|2
 case|:
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"tip: can't open host description file\n"
+literal|"can't open host description file"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -596,11 +632,9 @@ case|case
 operator|-
 literal|3
 case|:
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"tip: possible reference loop in host description file\n"
+literal|"possible reference loop in host description file"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1255,7 +1289,7 @@ operator|=
 literal|10
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 name|char
@@ -1308,20 +1342,13 @@ operator|)
 operator|==
 name|NOSTR
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"tip: no host specified\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|3
+argument_list|,
+literal|"no host specified"
 argument_list|)
 expr_stmt|;
-block|}
 name|getremcap
 argument_list|(
 name|host

@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)hunt.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)hunt.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,6 +51,12 @@ begin_include
 include|#
 directive|include
 file|"tip.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_function_decl
@@ -91,21 +110,16 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|int
 name|hunt
-argument_list|(
-argument|name
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|name
+parameter_list|)
 name|char
 modifier|*
 name|name
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -126,12 +140,14 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|cp
 operator|=
 name|getremote
 argument_list|(
 name|name
 argument_list|)
+operator|)
 condition|)
 block|{
 name|deadfl
@@ -203,8 +219,10 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
+literal|"%s"
+argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
@@ -336,7 +354,7 @@ name|cp
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 
