@@ -1,11 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)chpass.h	5.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)chpass.h	5.3 (Berkeley) %G%  */
 end_comment
 
-begin_struct
+begin_typedef
+typedef|typedef
 struct|struct
-name|entry
+name|_entry
 block|{
 name|char
 modifier|*
@@ -30,8 +31,56 @@ modifier|*
 name|save
 decl_stmt|;
 block|}
-struct|;
-end_struct
+name|ENTRY
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Field numbers. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E_BPHONE
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|E_HPHONE
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|E_LOCATE
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|E_NAME
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|E_SHELL
+value|12
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|ENTRY
+name|list
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
