@@ -61,19 +61,11 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|void
-name|_reclaim_telldir
-name|__P
-argument_list|(
-operator|(
-name|DIR
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|"telldir.h"
+end_include
 
 begin_comment
 comment|/*  * close a directory.  */

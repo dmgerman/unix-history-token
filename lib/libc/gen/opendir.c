@@ -85,6 +85,12 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"telldir.h"
+end_include
+
 begin_comment
 comment|/*  * Open a directory.  */
 end_comment
@@ -278,6 +284,12 @@ sizeof|sizeof
 argument_list|(
 name|DIR
 argument_list|)
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|_telldir
+argument_list|)
 argument_list|)
 operator|)
 operator|==
@@ -286,6 +298,39 @@ condition|)
 goto|goto
 name|fail
 goto|;
+name|dirp
+operator|->
+name|dd_td
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|dirp
+operator|+
+sizeof|sizeof
+argument_list|(
+name|DIR
+argument_list|)
+expr_stmt|;
+name|LIST_INIT
+argument_list|(
+operator|&
+name|dirp
+operator|->
+name|dd_td
+operator|->
+name|td_locq
+argument_list|)
+expr_stmt|;
+name|dirp
+operator|->
+name|dd_td
+operator|->
+name|td_loccnt
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Use the system page size if that is a multiple of DIRBLKSIZ. 	 * Hopefully this can be a big win someday by allowing page 	 * trades to user space to be done by getdirentries(). 	 */
 name|incr
 operator|=
@@ -887,20 +932,6 @@ operator|->
 name|dd_flags
 operator|=
 name|flags
-expr_stmt|;
-name|dirp
-operator|->
-name|dd_loccnt
-operator|=
-literal|0
-expr_stmt|;
-name|LIST_INIT
-argument_list|(
-operator|&
-name|dirp
-operator|->
-name|dd_locq
-argument_list|)
 expr_stmt|;
 comment|/* 	 * Set up seek point for rewinddir. 	 */
 name|dirp

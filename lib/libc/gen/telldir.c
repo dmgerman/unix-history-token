@@ -46,6 +46,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dirent.h>
 end_include
 
@@ -61,6 +67,12 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"telldir.h"
+end_include
+
 begin_comment
 comment|/*  * The option SINGLEUSE may be defined to say that a telldir  * cookie may be used only once before it is freed. This option  * is used to avoid having memory usage grow without bound.  */
 end_comment
@@ -70,37 +82,6 @@ define|#
 directive|define
 name|SINGLEUSE
 end_define
-
-begin_comment
-comment|/*  * One of these structures is malloced to describe the current directory  * position each time telldir is called. It records the current magic  * cookie returned by getdirentries and the offset within the buffer  * associated with that return value.  */
-end_comment
-
-begin_struct
-struct|struct
-name|_ddloc
-block|{
-name|LIST_ENTRY
-argument_list|(
-argument|_ddloc
-argument_list|)
-name|loc_lqe
-expr_stmt|;
-comment|/* entry in list */
-name|long
-name|loc_index
-decl_stmt|;
-comment|/* key associated with structure */
-name|long
-name|loc_seek
-decl_stmt|;
-comment|/* magic cookie returned by getdirentries */
-name|long
-name|loc_loc
-decl_stmt|;
-comment|/* offset of entry in buffer */
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/*  * return a pointer into a directory  */
@@ -118,7 +99,7 @@ name|dirp
 decl_stmt|;
 block|{
 name|struct
-name|_ddloc
+name|ddloc
 modifier|*
 name|lp
 decl_stmt|;
@@ -129,7 +110,7 @@ name|lp
 operator|=
 operator|(
 expr|struct
-name|_ddloc
+name|ddloc
 operator|*
 operator|)
 name|malloc
@@ -137,7 +118,7 @@ argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|_ddloc
+name|ddloc
 argument_list|)
 argument_list|)
 operator|)
@@ -156,7 +137,9 @@ name|loc_index
 operator|=
 name|dirp
 operator|->
-name|dd_loccnt
+name|dd_td
+operator|->
+name|td_loccnt
 operator|++
 expr_stmt|;
 name|lp
@@ -180,7 +163,9 @@ argument_list|(
 operator|&
 name|dirp
 operator|->
-name|dd_locq
+name|dd_td
+operator|->
+name|td_locq
 argument_list|,
 name|lp
 argument_list|,
@@ -218,7 +203,7 @@ name|loc
 decl_stmt|;
 block|{
 name|struct
-name|_ddloc
+name|ddloc
 modifier|*
 name|lp
 decl_stmt|;
@@ -231,7 +216,7 @@ name|LIST_FOREACH
 argument_list|(
 argument|lp
 argument_list|,
-argument|&dirp->dd_locq
+argument|&dirp->dd_td->td_locq
 argument_list|,
 argument|loc_lqe
 argument_list|)
@@ -374,12 +359,12 @@ name|dirp
 decl_stmt|;
 block|{
 name|struct
-name|_ddloc
+name|ddloc
 modifier|*
 name|lp
 decl_stmt|;
 name|struct
-name|_ddloc
+name|ddloc
 modifier|*
 name|templp
 decl_stmt|;
@@ -390,7 +375,9 @@ argument_list|(
 operator|&
 name|dirp
 operator|->
-name|dd_locq
+name|dd_td
+operator|->
+name|td_locq
 argument_list|)
 expr_stmt|;
 while|while
@@ -424,7 +411,9 @@ argument_list|(
 operator|&
 name|dirp
 operator|->
-name|dd_locq
+name|dd_td
+operator|->
+name|td_locq
 argument_list|)
 expr_stmt|;
 block|}
