@@ -491,6 +491,15 @@ argument_list|)
 block|,
 name|PCMCIA_CARD
 argument_list|(
+name|ASUS
+argument_list|,
+name|WL100
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|PCMCIA_CARD
+argument_list|(
 name|BAY
 argument_list|,
 name|EMOBILITY_11B
