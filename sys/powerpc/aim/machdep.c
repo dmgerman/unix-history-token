@@ -3363,7 +3363,48 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/* Insert code to halt (until next interrupt) for the idle loop */
+comment|/* TODO: Insert code to halt (until next interrupt) */
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+if|if
+condition|(
+operator|(
+name|mfmsr
+argument_list|()
+operator|&
+name|PSL_EE
+operator|)
+operator|!=
+name|PSL_EE
+condition|)
+block|{
+name|struct
+name|thread
+modifier|*
+name|td
+init|=
+name|curthread
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"td crit %x\n"
+argument_list|,
+name|td
+operator|->
+name|td_md
+operator|.
+name|md_savecrit
+argument_list|)
+expr_stmt|;
+name|panic
+argument_list|(
+literal|"ints disabled in idleproc!"
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 block|}
 end_function
 
