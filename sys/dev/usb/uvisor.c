@@ -795,6 +795,16 @@ block|}
 block|,
 block|{
 block|{
+name|USB_VENDOR_PALM
+block|,
+name|USB_PRODUCT_PALM_ZIRE31
+block|}
+block|,
+name|PALM4
+block|}
+block|,
+block|{
+block|{
 name|USB_VENDOR_SONY
 block|,
 name|USB_PRODUCT_SONY_CLIE_40
