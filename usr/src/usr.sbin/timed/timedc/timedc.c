@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)timedc.c	2.7 (Berkeley) %G%"
+literal|"@(#)timedc.c	2.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -189,7 +189,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Could not get priviledged resources\n"
+literal|"Could not get privileged resources\n"
 argument_list|)
 expr_stmt|;
 name|exit
