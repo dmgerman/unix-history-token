@@ -886,6 +886,37 @@ literal|1
 argument_list|)
 expr_stmt|;
 break|break;
+comment|/* XXX unknown chipset, but working */
+case|case
+literal|0x00171166
+case|:
+comment|/* FALLTHROUGH */
+case|case
+literal|0x01011166
+case|:
+name|s
+operator|=
+literal|"ServerWorks host to PCI bridge(unknown chipset)"
+expr_stmt|;
+operator|*
+name|busnum
+operator|=
+name|nexus_pcib_read_config
+argument_list|(
+literal|0
+argument_list|,
+name|bus
+argument_list|,
+name|slot
+argument_list|,
+name|func
+argument_list|,
+literal|0x44
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+break|break;
 comment|/* Integrated Micro Solutions -- vendor 0x10e0 */
 case|case
 literal|0x884910e0
