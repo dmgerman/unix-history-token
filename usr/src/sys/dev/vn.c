@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: fd.c 1.3 89/12/03$  *  *	@(#)vn.c	7.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: fd.c 1.3 89/12/03$  *  *	@(#)vn.c	7.12 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -24,85 +24,85 @@ end_if
 begin_include
 include|#
 directive|include
-file|"sys/param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/namei.h"
+file|<sys/namei.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/proc.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/errno.h"
+file|<sys/errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/dkstat.h"
+file|<sys/dkstat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/buf.h"
+file|<sys/buf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/malloc.h"
+file|<sys/malloc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/ioctl.h"
+file|<sys/ioctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/mount.h"
+file|<sys/mount.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/vnode.h"
+file|<sys/vnode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/specdev.h"
+file|<sys/file.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/file.h"
+file|<sys/uio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/uio.h"
+file|<miscfs/specfs/specdev.h>
 end_include
 
 begin_include
@@ -362,8 +362,6 @@ end_expr_stmt
 
 begin_block
 block|{
-name|USES_VOP_BMAP
-expr_stmt|;
 name|int
 name|unit
 init|=
@@ -611,7 +609,7 @@ name|bsize
 expr_stmt|;
 name|sz
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|bsize
 operator|-
@@ -853,8 +851,6 @@ end_macro
 
 begin_block
 block|{
-name|USES_VOP_STRATEGY
-expr_stmt|;
 specifier|register
 name|struct
 name|vn_softc
@@ -1403,10 +1399,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_GETATTR
-expr_stmt|;
-name|USES_VOP_UNLOCK
-expr_stmt|;
 name|int
 name|unit
 init|=
@@ -1834,8 +1826,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_READ
-expr_stmt|;
 name|struct
 name|uio
 name|auio
@@ -1870,7 +1860,7 @@ name|aiov
 operator|.
 name|iov_len
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|DEV_BSIZE
 argument_list|,
@@ -2093,8 +2083,6 @@ end_expr_stmt
 
 begin_block
 block|{
-name|USES_VOP_FSYNC
-expr_stmt|;
 specifier|register
 name|struct
 name|vnode
