@@ -441,16 +441,6 @@ name|device_t
 name|child
 parameter_list|)
 block|{
-name|struct
-name|ata_channel
-modifier|*
-name|ch
-init|=
-name|device_get_softc
-argument_list|(
-name|child
-argument_list|)
-decl_stmt|;
 name|int
 name|retval
 init|=
