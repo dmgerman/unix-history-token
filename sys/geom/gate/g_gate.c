@@ -1106,14 +1106,6 @@ name|g_gate_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|mtx_assert
-argument_list|(
-operator|&
-name|g_gate_list_mtx
-argument_list|,
-name|MA_OWNED
-argument_list|)
-expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|sc
