@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   Copyright (c) 1998 Martin Husemann. All rights reserved.  *  *   Redistribution and use in source and binary forms, with or without  *   modification, are permitted provided that the following conditions  *   are met:  *  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *      documentation and/or other materials provided with the distribution.  *   3. Neither the name of the author nor the names of any co-contributors  *      may be used to endorse or promote products derived from this software  *      without specific prior written permission.  *   4. Altered versions must be plainly marked as such, and must not be  *      misrepresented as being the original software and/or documentation.  *     *   THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  *   ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  *   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  *   ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  *   FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  *   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  *   OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  *   HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  *   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  *   OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  *   SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b daemon - network monitor client  *	-----------------------------------  *  *	$Id: main.c,v 1.10 1999/02/14 09:44:57 hm Exp $  *  *      last edit-date: [Tue Oct 27 11:53:12 1998]  *  *	-mh	created  *	-hm	checking in  *	-hm	porting to HPUX  *	-mh	all events the fullscreen mode displays now as monitor event  *  *---------------------------------------------------------------------------*/
+comment|/*  *   Copyright (c) 1998 Martin Husemann. All rights reserved.  *  *   Redistribution and use in source and binary forms, with or without  *   modification, are permitted provided that the following conditions  *   are met:  *  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *      documentation and/or other materials provided with the distribution.  *   3. Neither the name of the author nor the names of any co-contributors  *      may be used to endorse or promote products derived from this software  *      without specific prior written permission.  *   4. Altered versions must be plainly marked as such, and must not be  *      misrepresented as being the original software and/or documentation.  *     *   THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  *   ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  *   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  *   ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  *   FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  *   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  *   OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  *   HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  *   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  *   OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  *   SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b daemon - network monitor client  *	-----------------------------------  *  *	$Id: main.c,v 1.2 1999/03/07 16:12:43 hm Exp $  *  *      last edit-date: [Tue Oct 27 11:53:12 1998]  *  *	-mh	created  *	-hm	checking in  *	-hm	porting to HPUX  *	-mh	all events the fullscreen mode displays now as monitor event  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -405,7 +405,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|major
+name|isdn_major
 init|=
 literal|0
 decl_stmt|;
@@ -414,7 +414,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
-name|minor
+name|isdn_minor
 init|=
 literal|0
 decl_stmt|;
@@ -1783,7 +1783,7 @@ case|case
 literal|0
 case|:
 comment|/* initial data */
-name|major
+name|isdn_major
 operator|=
 name|I4B_GET_2B
 argument_list|(
@@ -1792,7 +1792,7 @@ argument_list|,
 name|I4B_MON_IDATA_VERSMAJOR
 argument_list|)
 expr_stmt|;
-name|minor
+name|isdn_minor
 operator|=
 name|I4B_GET_2B
 argument_list|(
@@ -1823,9 +1823,9 @@ name|printf
 argument_list|(
 literal|"remote protocol version is %02d.%02d, %d controller(s) found, our rights = %x\n"
 argument_list|,
-name|major
+name|isdn_major
 argument_list|,
-name|minor
+name|isdn_minor
 argument_list|,
 name|nctrl
 argument_list|,
