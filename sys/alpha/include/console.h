@@ -783,6 +783,13 @@ name|MOUSE_BUTTON_EVENT
 value|0x09
 end_define
 
+begin_define
+define|#
+directive|define
+name|MOUSE_MOUSECHAR
+value|0x0a
+end_define
+
 begin_struct
 struct|struct
 name|mouse_info
@@ -803,6 +810,9 @@ decl_stmt|;
 name|struct
 name|mouse_event
 name|event
+decl_stmt|;
+name|int
+name|mouse_char
 decl_stmt|;
 block|}
 name|u

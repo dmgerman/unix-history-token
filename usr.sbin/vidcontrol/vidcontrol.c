@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -172,13 +178,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n%s\n%s\n"
+literal|"%s\n%s\n%s\n%s\n"
 argument_list|,
 literal|"usage: vidcontrol [-r fg bg] [-b color] [-c appearance] [-d] [-l scrmap]"
 argument_list|,
-literal|"                  [-i adapter | mode] [-L] [-m on|off] [-f size file]"
+literal|"                  [-i adapter | mode] [-L] [-M char] [-m on|off]"
 argument_list|,
-literal|"                  [-s number] [-t N|off] [-x] [mode] [fgcol [bgcol]] [show]"
+literal|"                  [-f size file] [-s number] [-t N|off] [-x] [mode]"
+argument_list|,
+literal|"                  [fgcol [bgcol]] [show]"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1968,6 +1976,87 @@ end_function
 
 begin_function
 name|void
+name|set_mouse_char
+parameter_list|(
+name|char
+modifier|*
+name|arg
+parameter_list|)
+block|{
+name|struct
+name|mouse_info
+name|mouse
+decl_stmt|;
+name|long
+name|l
+decl_stmt|;
+name|l
+operator|=
+name|strtol
+argument_list|(
+name|arg
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|l
+operator|<
+literal|0
+operator|)
+operator|||
+operator|(
+name|l
+operator|>
+name|UCHAR_MAX
+operator|)
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"argument to -M must be 0 through %d"
+argument_list|,
+name|UCHAR_MAX
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|mouse
+operator|.
+name|operation
+operator|=
+name|MOUSE_MOUSECHAR
+expr_stmt|;
+name|mouse
+operator|.
+name|u
+operator|.
+name|mouse_char
+operator|=
+operator|(
+name|int
+operator|)
+name|l
+expr_stmt|;
+name|ioctl
+argument_list|(
+literal|0
+argument_list|,
+name|CONS_MOUSECTL
+argument_list|,
+operator|&
+name|mouse
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
 name|set_mouse
 parameter_list|(
 name|char
@@ -2724,7 +2813,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"b:c:df:i:l:Lm:r:s:t:x"
+literal|"b:c:df:i:l:LM:m:r:s:t:x"
 argument_list|)
 operator|)
 operator|!=
@@ -2805,6 +2894,15 @@ literal|'L'
 case|:
 name|load_default_scrnmap
 argument_list|()
+expr_stmt|;
+break|break;
+case|case
+literal|'M'
+case|:
+name|set_mouse_char
+argument_list|(
+name|optarg
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
