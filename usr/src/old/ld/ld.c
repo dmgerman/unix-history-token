@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ld.c 4.6 %G%"
+literal|"@(#)ld.c 4.7 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1945,6 +1945,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|rflag
+operator|&&
 name|size
 operator|>
 name|stbuf
