@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_pty.c	4.19	82/03/13	*/
+comment|/*	tty_pty.c	4.20	82/03/15	*/
 end_comment
 
 begin_comment
@@ -85,8 +85,12 @@ begin_define
 define|#
 directive|define
 name|NPTY
-value|16
+value|32
 end_define
+
+begin_comment
+comment|/* crude XXX */
+end_comment
 
 begin_define
 define|#
