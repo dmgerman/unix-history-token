@@ -2254,7 +2254,7 @@ comment|/* ---------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/* Sysctl to control ac97 speed (some boards appear to end up using   * XTAL_IN rather than BIT_CLK for link timing).   */
+comment|/* Sysctl to control ac97 speed (some boards appear to end up using  * XTAL_IN rather than BIT_CLK for link timing).  */
 end_comment
 
 begin_function
@@ -2320,7 +2320,7 @@ comment|/* -------------------------------------------------------------------- 
 end_comment
 
 begin_comment
-comment|/* Calibrate card to determine the clock source.  The source maybe a   * function of the ac97 codec initialization code (to be investigated).  */
+comment|/* Calibrate card to determine the clock source.  The source maybe a  * function of the ac97 codec initialization code (to be investigated).  */
 end_comment
 
 begin_function
@@ -3018,7 +3018,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"Intel 82801AA (ICH)"
+literal|"Intel ICH (82801AA)"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3031,7 +3031,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"Intel 82801AB (ICH)"
+literal|"Intel ICH (82801AB)"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3044,7 +3044,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"Intel 82801BA (ICH2)"
+literal|"Intel ICH2 (82801BA)"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3057,7 +3057,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"Intel 82801CA (ICH3)"
+literal|"Intel ICH3 (82801CA)"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3070,7 +3070,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"Intel 82801DB (ICH4)"
+literal|"Intel ICH4 (82801DB)"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3096,7 +3096,7 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"Nvidia nForce AC97 controller"
+literal|"Nvidia nForce"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3109,7 +3109,20 @@ name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
-literal|"Nvidia nForce2 AC97 controller"
+literal|"Nvidia nForce2"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+case|case
+literal|0x74451022
+case|:
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"AMD-768"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3235,7 +3248,7 @@ operator|=
 literal|2
 expr_stmt|;
 block|}
-comment|/* 	 * By default, ich4 has NAMBAR and NABMBAR i/o spaces as 	 * read-only.  Need to enable "legacy support", by poking into 	 * pci config space.  The driver should use MMBAR and MBBAR, 	 * but doing so will mess things up here.  ich4 has enough new 	 * features it warrants it's own driver.  	 */
+comment|/* 	 * By default, ich4 has NAMBAR and NABMBAR i/o spaces as 	 * read-only.  Need to enable "legacy support", by poking into 	 * pci config space.  The driver should use MMBAR and MBBAR, 	 * but doing so will mess things up here.  ich4 has enough new 	 * features it warrants it's own driver. 	 */
 if|if
 condition|(
 name|pci_get_devid
