@@ -2901,6 +2901,16 @@ operator|&
 name|allproc_lock
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC
+name|mac_destroy_proc
+argument_list|(
+name|newproc
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|uma_zfree
 argument_list|(
 name|proc_zone
