@@ -160,8 +160,22 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Compute an entry in the NFS hash table structure  */
+comment|/*  * Compute an entry in the NFS hash table structure  *  * Hash based on: http://www.isthe.com/chongo/tech/comp/fnv/  * by Glenn Fowler, Phong Vo and Landon Curt Noll  * aka the "Fowler / Noll / Vo Hash" (FNV)  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|FNV_32_PRIME
+value|((u_int32_t) 0x01000193UL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FNV1_32_INIT
+value|((u_int32_t) 33554467UL)
+end_define
 
 begin_function
 name|u_long
@@ -171,7 +185,6 @@ name|fhp
 parameter_list|,
 name|fhsize
 parameter_list|)
-specifier|register
 name|nfsfh_t
 modifier|*
 name|fhp
@@ -180,16 +193,13 @@ name|int
 name|fhsize
 decl_stmt|;
 block|{
-specifier|register
 name|u_char
 modifier|*
 name|fhpp
 decl_stmt|;
-specifier|register
-name|u_long
-name|fhsum
+name|u_int32_t
+name|hval
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -203,9 +213,9 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-name|fhsum
+name|hval
 operator|=
-literal|0
+name|FNV1_32_INIT
 expr_stmt|;
 for|for
 control|(
@@ -220,15 +230,24 @@ condition|;
 name|i
 operator|++
 control|)
-name|fhsum
-operator|+=
+block|{
+name|hval
+operator|*=
+name|FNV_32_PRIME
+expr_stmt|;
+name|hval
+operator|^=
+operator|(
+name|u_int32_t
+operator|)
 operator|*
 name|fhpp
 operator|++
 expr_stmt|;
+block|}
 return|return
 operator|(
-name|fhsum
+name|hval
 operator|)
 return|;
 block|}
