@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: file.c,v 1.12 1995/07/30 01:44:44 ache Exp $"
+literal|"$Id: file.c,v 1.13 1995/07/30 09:33:26 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -842,12 +842,11 @@ argument_list|,
 name|pword
 argument_list|)
 expr_stmt|;
-comment|/* XXX - Currently undocumented - XXX */
 if|if
 condition|(
 name|getenv
 argument_list|(
-literal|"FTP_PASSIVE"
+literal|"FTP_PASSIVE_MODE"
 argument_list|)
 condition|)
 name|FtpPassive
