@@ -192,7 +192,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: parse.c,v 2.0.1.1 1997/01/09 15:14:44 darrenr Exp $"
+literal|"$Id: parse.c,v 2.0.1.2 1997/02/17 13:59:44 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -869,12 +869,61 @@ operator|*
 name|cpp
 argument_list|)
 condition|)
+block|{
 name|fil
 operator|.
 name|fr_flags
 operator||=
 name|FR_INQUE
 expr_stmt|;
+if|if
+condition|(
+name|fil
+operator|.
+name|fr_flags
+operator|&
+name|FR_RETICMP
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Can only use return-icmp with 'in'\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|fil
+operator|.
+name|fr_flags
+operator|&
+name|FR_RETRST
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Can only use return-rst with 'in'\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+block|}
 elseif|else
 if|if
 condition|(

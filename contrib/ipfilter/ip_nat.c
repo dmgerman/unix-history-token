@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ip_nat.c,v 2.0.1.10 1997/02/08 06:38:49 darrenr Exp $"
+literal|"$Id: ip_nat.c,v 2.0.1.11 1997/02/16 06:26:47 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -775,12 +775,19 @@ init|=
 literal|0
 decl_stmt|,
 name|ret
+decl_stmt|,
+name|s
 decl_stmt|;
 comment|/* 	 * For add/delete, look to see if the NAT entry is already present 	 */
 name|MUTEX_ENTER
 argument_list|(
 operator|&
 name|ipf_nat
+argument_list|)
+expr_stmt|;
+name|SPLNET
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 if|if
@@ -1370,6 +1377,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+name|SPLX
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 name|MUTEX_EXIT
 argument_list|(
 operator|&
@@ -4480,10 +4492,18 @@ name|void
 name|ip_natunload
 parameter_list|()
 block|{
+name|int
+name|s
+decl_stmt|;
 name|MUTEX_ENTER
 argument_list|(
 operator|&
 name|ipf_nat
+argument_list|)
+expr_stmt|;
+name|SPLNET
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 operator|(
@@ -4498,6 +4518,10 @@ operator|)
 name|flush_nattable
 argument_list|()
 expr_stmt|;
+name|SPLX
+argument_list|(
+argument|s
+argument_list|)
 name|MUTEX_EXIT
 argument_list|(
 operator|&
@@ -4526,10 +4550,18 @@ modifier|*
 modifier|*
 name|natp
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 name|MUTEX_ENTER
 argument_list|(
 operator|&
 name|ipf_nat
+argument_list|)
+expr_stmt|;
+name|SPLNET
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 for|for
@@ -4546,12 +4578,6 @@ operator|*
 name|natp
 operator|)
 condition|;
-name|natp
-operator|=
-operator|&
-name|nat
-operator|->
-name|nat_next
 control|)
 block|{
 if|if
@@ -4561,7 +4587,16 @@ name|nat
 operator|->
 name|nat_age
 condition|)
+block|{
+name|natp
+operator|=
+operator|&
+name|nat
+operator|->
+name|nat_next
+expr_stmt|;
 continue|continue;
+block|}
 operator|*
 name|natp
 operator|=
@@ -4580,6 +4615,11 @@ name|ns_expire
 operator|++
 expr_stmt|;
 block|}
+name|SPLX
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 name|MUTEX_EXIT
 argument_list|(
 operator|&
