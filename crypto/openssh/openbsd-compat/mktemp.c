@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* OPENBSD ORIGINAL: lib/libc/stdio/mktemp.c */
+end_comment
+
+begin_comment
 comment|/* THIS FILE HAS BEEN MODIFIED FROM THE ORIGINAL OPENBSD SOURCE */
 end_comment
 

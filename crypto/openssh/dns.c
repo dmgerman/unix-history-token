@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: dns.c,v 1.6 2003/06/11 10:18:47 jakob Exp $	*/
+comment|/*	$OpenBSD: dns.c,v 1.9 2003/11/21 11:57:03 djm Exp $	*/
 end_comment
 
 begin_comment
@@ -12,12 +12,6 @@ include|#
 directive|include
 file|"includes.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DNS
-end_ifdef
 
 begin_include
 include|#
@@ -108,7 +102,7 @@ end_decl_stmt
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: dns.c,v 1.6 2003/06/11 10:18:47 jakob Exp $"
+literal|"$OpenBSD: dns.c,v 1.9 2003/11/21 11:57:03 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -264,6 +258,7 @@ name|u_int
 modifier|*
 name|digest_len
 parameter_list|,
+specifier|const
 name|Key
 modifier|*
 name|key
@@ -496,7 +491,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Verify the given hostname, address and host key using DNS.  * Returns 0 if key verifies or -1 if key does NOT verify  */
+comment|/*  * Verify the given hostname, address and host key using DNS.  * Returns 0 if lookup succeeds, -1 otherwise  */
 end_comment
 
 begin_function
@@ -513,9 +508,14 @@ name|sockaddr
 modifier|*
 name|address
 parameter_list|,
+specifier|const
 name|Key
 modifier|*
 name|hostkey
+parameter_list|,
+name|int
+modifier|*
+name|flags
 parameter_list|)
 block|{
 name|int
@@ -530,11 +530,6 @@ modifier|*
 name|fingerprints
 init|=
 name|NULL
-decl_stmt|;
-name|int
-name|failures
-init|=
-literal|0
 decl_stmt|;
 name|u_int8_t
 name|hostkey_algorithm
@@ -562,6 +557,11 @@ decl_stmt|;
 name|u_int
 name|dnskey_digest_len
 decl_stmt|;
+operator|*
+name|flags
+operator|=
+literal|0
+expr_stmt|;
 name|debug3
 argument_list|(
 literal|"verify_hostkey_dns"
@@ -610,16 +610,12 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-name|DNS_VERIFY_ERROR
+operator|-
+literal|1
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|DNSSEC
-comment|/* Only accept validated answers */
 if|if
 condition|(
-operator|!
 name|fingerprints
 operator|->
 name|rri_flags
@@ -627,31 +623,33 @@ operator|&
 name|RRSET_VALIDATED
 condition|)
 block|{
-name|error
-argument_list|(
-literal|"Ignored unvalidated fingerprint from DNS."
-argument_list|)
+operator|*
+name|flags
+operator||=
+name|DNS_VERIFY_SECURE
 expr_stmt|;
-name|freerrset
-argument_list|(
-name|fingerprints
-argument_list|)
-expr_stmt|;
-return|return
-name|DNS_VERIFY_ERROR
-return|;
-block|}
-endif|#
-directive|endif
 name|debug
 argument_list|(
-literal|"found %d fingerprints in DNS"
+literal|"found %d secure fingerprints in DNS"
 argument_list|,
 name|fingerprints
 operator|->
 name|rri_nrdatas
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|debug
+argument_list|(
+literal|"found %d insecure fingerprints in DNS"
+argument_list|,
+name|fingerprints
+operator|->
+name|rri_nrdatas
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Initialize host key parameters */
 if|if
 condition|(
@@ -685,9 +683,21 @@ name|fingerprints
 argument_list|)
 expr_stmt|;
 return|return
-name|DNS_VERIFY_ERROR
+operator|-
+literal|1
 return|;
 block|}
+if|if
+condition|(
+name|fingerprints
+operator|->
+name|rri_nrdatas
+condition|)
+operator|*
+name|flags
+operator||=
+name|DNS_VERIFY_FOUND
+expr_stmt|;
 for|for
 control|(
 name|counter
@@ -779,31 +789,10 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* Matching algoritm and digest. */
-name|freerrset
-argument_list|(
-name|fingerprints
-argument_list|)
-expr_stmt|;
-name|debug
-argument_list|(
-literal|"matching host key fingerprint found in DNS"
-argument_list|)
-expr_stmt|;
-return|return
-name|DNS_VERIFY_OK
-return|;
-block|}
-else|else
-block|{
-comment|/* Correct algorithm but bad digest */
-name|debug
-argument_list|(
-literal|"verify_hostkey_dns: failed"
-argument_list|)
-expr_stmt|;
-name|failures
-operator|++
+operator|*
+name|flags
+operator||=
+name|DNS_VERIFY_MATCH
 expr_stmt|;
 block|}
 block|}
@@ -815,60 +804,37 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|failures
+operator|*
+name|flags
+operator|&
+name|DNS_VERIFY_FOUND
 condition|)
-block|{
-name|error
-argument_list|(
-literal|"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-argument_list|)
-expr_stmt|;
-name|error
-argument_list|(
-literal|"@    WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!     @"
-argument_list|)
-expr_stmt|;
-name|error
-argument_list|(
-literal|"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-argument_list|)
-expr_stmt|;
-name|error
-argument_list|(
-literal|"IT IS POSSIBLE THAT SOMEONE IS DOING SOMETHING NASTY!"
-argument_list|)
-expr_stmt|;
-name|error
-argument_list|(
-literal|"Someone could be eavesdropping on you right now (man-in-the-middle attack)!"
-argument_list|)
-expr_stmt|;
-name|error
-argument_list|(
-literal|"It is also possible that the %s host key has just been changed."
-argument_list|,
-name|key_type
-argument_list|(
-name|hostkey
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|error
-argument_list|(
-literal|"Please contact your system administrator."
-argument_list|)
-expr_stmt|;
-return|return
-name|DNS_VERIFY_FAILED
-return|;
-block|}
+if|if
+condition|(
+operator|*
+name|flags
+operator|&
+name|DNS_VERIFY_MATCH
+condition|)
 name|debug
 argument_list|(
-literal|"fingerprints found in DNS, but none of them matched"
+literal|"matching host key fingerprint found in DNS"
+argument_list|)
+expr_stmt|;
+else|else
+name|debug
+argument_list|(
+literal|"mismatching host key fingerprint found in DNS"
+argument_list|)
+expr_stmt|;
+else|else
+name|debug
+argument_list|(
+literal|"no host key fingerprint found in DNS"
 argument_list|)
 expr_stmt|;
 return|return
-name|DNS_VERIFY_ERROR
+literal|0
 return|;
 block|}
 end_function
@@ -886,6 +852,7 @@ name|char
 modifier|*
 name|hostname
 parameter_list|,
+specifier|const
 name|Key
 modifier|*
 name|key
@@ -1030,15 +997,6 @@ name|success
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* DNS */
-end_comment
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: bufaux.h,v 1.18 2002/04/20 09:14:58 markus Exp $	*/
+comment|/*	$OpenBSD: bufaux.h,v 1.19 2003/11/10 16:23:41 jakob Exp $	*/
 end_comment
 
 begin_comment
@@ -38,6 +38,7 @@ parameter_list|(
 name|Buffer
 modifier|*
 parameter_list|,
+specifier|const
 name|BIGNUM
 modifier|*
 parameter_list|)
@@ -51,6 +52,7 @@ parameter_list|(
 name|Buffer
 modifier|*
 parameter_list|,
+specifier|const
 name|BIGNUM
 modifier|*
 parameter_list|)

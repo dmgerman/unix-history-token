@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: packet.c,v 1.110 2003/09/19 09:02:02 markus Exp $"
+literal|"$OpenBSD: packet.c,v 1.112 2003/09/23 20:17:11 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -594,24 +594,6 @@ name|outgoing
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Kludge: arrange the close function to be called from fatal(). */
-name|fatal_add_cleanup
-argument_list|(
-operator|(
-name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|(
-name|void
-operator|*
-argument_list|)
-operator|)
-name|packet_close
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -3815,8 +3797,10 @@ name|get_remote_ipaddr
 argument_list|()
 argument_list|)
 expr_stmt|;
-name|fatal_cleanup
-argument_list|()
+name|cleanup_exit
+argument_list|(
+literal|255
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -5080,8 +5064,10 @@ argument_list|(
 name|msg
 argument_list|)
 expr_stmt|;
-name|fatal_cleanup
-argument_list|()
+name|cleanup_exit
+argument_list|(
+literal|255
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -5166,8 +5152,10 @@ argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;
-name|fatal_cleanup
-argument_list|()
+name|cleanup_exit
+argument_list|(
+literal|255
+argument_list|)
 expr_stmt|;
 name|xfree
 argument_list|(
@@ -5673,8 +5661,10 @@ comment|/* Close the connection. */
 name|packet_close
 argument_list|()
 expr_stmt|;
-name|fatal_cleanup
-argument_list|()
+name|cleanup_exit
+argument_list|(
+literal|255
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -5939,7 +5929,15 @@ return|;
 block|}
 end_function
 
-begin_if
+begin_function
+specifier|static
+name|void
+name|packet_set_tos
+parameter_list|(
+name|int
+name|interactive
+parameter_list|)
+block|{
 if|#
 directive|if
 name|defined
@@ -5952,17 +5950,6 @@ name|defined
 argument_list|(
 name|IP_TOS_IS_BROKEN
 argument_list|)
-end_if
-
-begin_function
-specifier|static
-name|void
-name|packet_set_tos
-parameter_list|(
-name|int
-name|interactive
-parameter_list|)
-block|{
 name|int
 name|tos
 init|=
@@ -6016,13 +6003,10 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_endif
 endif|#
 directive|endif
-end_endif
+block|}
+end_function
 
 begin_comment
 comment|/* Informs that the current session is interactive.  Sets IP flags for that. */
@@ -6073,25 +6057,11 @@ argument_list|(
 name|connection_in
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|IP_TOS
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|IP_TOS_IS_BROKEN
-argument_list|)
 name|packet_set_tos
 argument_list|(
 name|interactive
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 

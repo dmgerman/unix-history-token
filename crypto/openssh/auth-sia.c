@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"uidswap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sia.h>
 end_include
 
@@ -418,27 +424,14 @@ operator|&
 name|ent
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|setreuid
+name|setuid
 argument_list|(
-name|geteuid
-argument_list|()
-argument_list|,
-name|geteuid
-argument_list|()
-argument_list|)
-operator|<
 literal|0
-condition|)
-name|fatal
-argument_list|(
-literal|"setreuid: %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
 argument_list|)
+expr_stmt|;
+name|permanently_set_uid
+argument_list|(
+name|pw
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: openbsd-compat.h,v 1.24 2003/08/29 16:59:52 mouring Exp $ */
+comment|/* $Id: openbsd-compat.h,v 1.25 2004/01/21 06:07:23 djm Exp $ */
 end_comment
 
 begin_comment
@@ -752,6 +752,45 @@ end_endif
 
 begin_comment
 comment|/* !HAVE_ARC4RANDOM */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_OPENPTY
+end_ifndef
+
+begin_function_decl
+name|int
+name|openpty
+parameter_list|(
+name|int
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|struct
+name|termios
+modifier|*
+parameter_list|,
+name|struct
+name|winsize
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_OPENPTY */
 end_comment
 
 begin_comment

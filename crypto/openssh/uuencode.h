@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: uuencode.h,v 1.9 2002/02/25 16:33:27 markus Exp $	*/
+comment|/*	$OpenBSD: uuencode.h,v 1.10 2003/11/10 16:23:41 jakob Exp $	*/
 end_comment
 
 begin_comment
@@ -23,6 +23,7 @@ begin_function_decl
 name|int
 name|uuencode
 parameter_list|(
+specifier|const
 name|u_char
 modifier|*
 parameter_list|,

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ssh-keygen.c,v 1.108 2003/08/14 16:08:58 markus Exp $"
+literal|"$OpenBSD: ssh-keygen.c,v 1.113 2003/12/22 09:16:58 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -112,22 +112,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DNS
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|"dns.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Number of bits in the RSA/DSA key.  This value can be changed on the command line. */
@@ -887,7 +876,7 @@ modifier|*
 name|value
 parameter_list|)
 block|{
-name|int
+name|u_int
 name|bits
 init|=
 name|buffer_get_int
@@ -895,7 +884,7 @@ argument_list|(
 name|b
 argument_list|)
 decl_stmt|;
-name|int
+name|u_int
 name|bytes
 init|=
 operator|(
@@ -3368,12 +3357,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DNS
-end_ifdef
-
 begin_comment
 comment|/*  * Print the SSHFP RR.  */
 end_comment
@@ -3510,15 +3493,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* DNS */
-end_comment
 
 begin_comment
 comment|/*  * Change the comment of a private key file.  */
@@ -4181,9 +4155,6 @@ argument_list|,
 literal|"  -P phrase   Provide old passphrase.\n"
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DNS
 name|fprintf
 argument_list|(
 name|stderr
@@ -4191,9 +4162,6 @@ argument_list|,
 literal|"  -r hostname Print DNS resource record.\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* DNS */
 ifdef|#
 directive|ifdef
 name|SMARTCARD
@@ -4336,6 +4304,11 @@ name|do_screen_candidates
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|log_level
+init|=
+name|SYSLOG_LEVEL_INFO
+decl_stmt|;
 name|BIGNUM
 modifier|*
 name|start
@@ -4451,7 +4424,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"degiqpclBRxXyb:f:t:U:D:P:N:C:r:g:T:G:M:S:a:W:"
+literal|"degiqpclBRvxXyb:f:t:U:D:P:N:C:r:g:T:G:M:S:a:W:"
 argument_list|)
 operator|)
 operator|!=
@@ -4663,6 +4636,36 @@ name|optarg
 expr_stmt|;
 break|break;
 case|case
+literal|'v'
+case|:
+if|if
+condition|(
+name|log_level
+operator|==
+name|SYSLOG_LEVEL_INFO
+condition|)
+name|log_level
+operator|=
+name|SYSLOG_LEVEL_DEBUG1
+expr_stmt|;
+else|else
+block|{
+if|if
+condition|(
+name|log_level
+operator|>=
+name|SYSLOG_LEVEL_DEBUG1
+operator|&&
+name|log_level
+operator|<
+name|SYSLOG_LEVEL_DEBUG3
+condition|)
+name|log_level
+operator|++
+expr_stmt|;
+block|}
+break|break;
+case|case
 literal|'r'
 case|:
 name|resource_record_hostname
@@ -4827,6 +4830,21 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
+comment|/* reinit */
+name|log_init
+argument_list|(
+name|av
+index|[
+literal|0
+index|]
+argument_list|,
+name|log_level
+argument_list|,
+name|SYSLOG_FACILITY_USER
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|optind
@@ -4922,9 +4940,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DNS
 name|do_print_resource_record
 argument_list|(
 name|pw
@@ -4932,17 +4947,6 @@ argument_list|,
 name|resource_record_hostname
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-comment|/* DNS */
-name|fatal
-argument_list|(
-literal|"no DNS support."
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* DNS */
 block|}
 if|if
 condition|(

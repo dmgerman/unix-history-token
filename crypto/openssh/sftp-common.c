@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: sftp-common.c,v 1.9 2003/05/24 09:30:40 djm Exp $"
+literal|"$OpenBSD: sftp-common.c,v 1.10 2003/11/10 16:23:41 jakob Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -119,6 +119,7 @@ begin_function
 name|void
 name|stat_to_attrib
 parameter_list|(
+specifier|const
 name|struct
 name|stat
 modifier|*
@@ -223,6 +224,7 @@ begin_function
 name|void
 name|attrib_to_stat
 parameter_list|(
+specifier|const
 name|Attrib
 modifier|*
 name|a
@@ -555,6 +557,7 @@ name|Buffer
 modifier|*
 name|b
 parameter_list|,
+specifier|const
 name|Attrib
 modifier|*
 name|a
@@ -773,10 +776,12 @@ name|char
 modifier|*
 name|ls_file
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
 parameter_list|,
+specifier|const
 name|struct
 name|stat
 modifier|*

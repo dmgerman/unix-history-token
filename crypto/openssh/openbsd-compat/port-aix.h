@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: port-aix.h,v 1.14.2.1 2003/09/19 10:46:22 dtucker Exp $ */
+comment|/* $Id: port-aix.h,v 1.19 2004/02/10 04:27:35 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -145,11 +145,51 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * According to the setauthdb man page, AIX password registries must be 15  * chars or less plus terminating NUL.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SETAUTHDB
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|REGISTRY_SIZE
+value|16
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function_decl
+name|void
+name|aix_usrinfo
+parameter_list|(
+name|struct
+name|passwd
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|WITH_AIXAUTHENTICATE
 end_ifdef
+
+begin_define
+define|#
+directive|define
+name|CUSTOM_SYS_AUTH_PASSWD
+value|1
+end_define
 
 begin_define
 define|#
@@ -173,6 +213,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 name|void
 name|aix_setauthdb
@@ -184,18 +229,11 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 name|void
-name|aix_usrinfo
+name|aix_restoreauthdb
 parameter_list|(
-name|struct
-name|passwd
-modifier|*
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

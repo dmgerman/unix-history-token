@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: buffer.c,v 1.19 2003/09/18 07:54:48 markus Exp $"
+literal|"$OpenBSD: buffer.c,v 1.21 2003/11/21 11:57:03 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -638,7 +638,7 @@ modifier|*
 name|buffer
 parameter_list|)
 block|{
-name|int
+name|u_int
 name|i
 decl_stmt|;
 name|u_char

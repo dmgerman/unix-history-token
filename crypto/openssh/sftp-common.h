@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: sftp-common.h,v 1.4 2002/09/11 22:41:50 djm Exp $	*/
+comment|/*	$OpenBSD: sftp-common.h,v 1.5 2003/11/10 16:23:41 jakob Exp $	*/
 end_comment
 
 begin_comment
@@ -62,6 +62,7 @@ begin_function_decl
 name|void
 name|stat_to_attrib
 parameter_list|(
+specifier|const
 name|struct
 name|stat
 modifier|*
@@ -76,6 +77,7 @@ begin_function_decl
 name|void
 name|attrib_to_stat
 parameter_list|(
+specifier|const
 name|Attrib
 modifier|*
 parameter_list|,
@@ -104,6 +106,7 @@ parameter_list|(
 name|Buffer
 modifier|*
 parameter_list|,
+specifier|const
 name|Attrib
 modifier|*
 parameter_list|)
@@ -115,9 +118,11 @@ name|char
 modifier|*
 name|ls_file
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|struct
 name|stat
 modifier|*

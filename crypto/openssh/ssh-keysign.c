@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ssh-keysign.c,v 1.13 2003/07/03 08:09:06 djm Exp $"
+literal|"$OpenBSD: ssh-keysign.c,v 1.15 2004/01/19 21:25:15 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -535,6 +535,12 @@ literal|0
 condition|)
 name|fail
 operator|++
+expr_stmt|;
+name|buffer_free
+argument_list|(
+operator|&
+name|b
+argument_list|)
 expr_stmt|;
 name|debug3
 argument_list|(
@@ -1151,6 +1157,8 @@ argument_list|,
 name|slen
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|ssh_msg_send
 argument_list|(
 name|STDOUT_FILENO
@@ -1159,6 +1167,14 @@ name|version
 argument_list|,
 operator|&
 name|b
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|fatal
+argument_list|(
+literal|"ssh_msg_send failed"
 argument_list|)
 expr_stmt|;
 return|return

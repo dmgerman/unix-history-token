@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: gss-serv.c,v 1.3 2003/08/31 13:31:57 markus Exp $	*/
+comment|/*	$OpenBSD: gss-serv.c,v 1.5 2003/11/17 11:06:07 markus Exp $	*/
 end_comment
 
 begin_comment
@@ -936,7 +936,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* As user - called through fatal cleanup hook */
+comment|/* As user - called on fatal/exit */
 end_comment
 
 begin_function
@@ -944,8 +944,6 @@ name|void
 name|ssh_gssapi_cleanup_creds
 parameter_list|(
 name|void
-modifier|*
-name|ignored
 parameter_list|)
 block|{
 if|if
@@ -1019,19 +1017,6 @@ call|)
 argument_list|(
 operator|&
 name|gssapi_client
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|options
-operator|.
-name|gss_cleanup_creds
-condition|)
-name|fatal_add_cleanup
-argument_list|(
-name|ssh_gssapi_cleanup_creds
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -1206,6 +1191,57 @@ expr_stmt|;
 return|return
 operator|(
 literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Priviledged */
+end_comment
+
+begin_function
+name|OM_uint32
+name|ssh_gssapi_checkmic
+parameter_list|(
+name|Gssctxt
+modifier|*
+name|ctx
+parameter_list|,
+name|gss_buffer_t
+name|gssbuf
+parameter_list|,
+name|gss_buffer_t
+name|gssmic
+parameter_list|)
+block|{
+name|ctx
+operator|->
+name|major
+operator|=
+name|gss_verify_mic
+argument_list|(
+operator|&
+name|ctx
+operator|->
+name|minor
+argument_list|,
+name|ctx
+operator|->
+name|context
+argument_list|,
+name|gssbuf
+argument_list|,
+name|gssmic
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ctx
+operator|->
+name|major
 operator|)
 return|;
 block|}

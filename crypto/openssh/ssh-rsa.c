@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ssh-rsa.c,v 1.30 2003/06/18 11:28:11 markus Exp $"
+literal|"$OpenBSD: ssh-rsa.c,v 1.31 2003/11/10 16:23:41 jakob Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -102,6 +102,7 @@ begin_function
 name|int
 name|ssh_rsa_sign
 parameter_list|(
+specifier|const
 name|Key
 modifier|*
 name|key
@@ -115,6 +116,7 @@ name|u_int
 modifier|*
 name|lenp
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 name|data
@@ -509,10 +511,12 @@ begin_function
 name|int
 name|ssh_rsa_verify
 parameter_list|(
+specifier|const
 name|Key
 modifier|*
 name|key
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 name|signature
@@ -520,6 +524,7 @@ parameter_list|,
 name|u_int
 name|signaturelen
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 name|data

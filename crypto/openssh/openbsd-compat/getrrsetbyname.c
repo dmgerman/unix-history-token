@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* OPENBSD ORIGINAL: lib/libc/net/getrrsetbyname.c */
+end_comment
+
+begin_comment
 comment|/* $OpenBSD: getrrsetbyname.c,v 1.7 2003/03/07 07:34:14 itojun Exp $ */
 end_comment
 
@@ -17,30 +21,17 @@ directive|include
 file|"includes.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|DNS
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|HAVE_GETRRSETBYNAME
-argument_list|)
-end_if
+end_ifndef
 
 begin_include
 include|#
 directive|include
 file|"getrrsetbyname.h"
 end_include
-
-begin_comment
-comment|/* #include "thread_private.h" */
-end_comment
 
 begin_define
 define|#
@@ -456,14 +447,6 @@ modifier|*
 name|res
 parameter_list|)
 block|{
-name|struct
-name|__res_state
-modifier|*
-name|_resp
-init|=
-operator|&
-name|_res
-decl_stmt|;
 name|int
 name|result
 decl_stmt|;
@@ -562,8 +545,8 @@ comment|/* initialize resolver */
 if|if
 condition|(
 operator|(
-name|_resp
-operator|->
+name|_res
+operator|.
 name|options
 operator|&
 name|RES_INIT
@@ -589,8 +572,8 @@ block|}
 ifdef|#
 directive|ifdef
 name|DEBUG
-name|_resp
-operator|->
+name|_res
+operator|.
 name|options
 operator||=
 name|RES_DEBUG
@@ -604,14 +587,14 @@ name|RES_USE_DNSSEC
 comment|/* turn on DNSSEC if EDNS0 is configured */
 if|if
 condition|(
-name|_resp
-operator|->
+name|_res
+operator|.
 name|options
 operator|&
 name|RES_USE_EDNS0
 condition|)
-name|_resp
-operator|->
+name|_res
+operator|.
 name|options
 operator||=
 name|RES_USE_DNSSEC
@@ -2469,7 +2452,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* defined(DNS)&& !defined(HAVE_GETRRSETBYNAME) */
+comment|/* !defined(HAVE_GETRRSETBYNAME) */
 end_comment
 
 end_unit

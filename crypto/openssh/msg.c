@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: msg.c,v 1.6 2003/06/28 16:23:06 deraadt Exp $"
+literal|"$OpenBSD: msg.c,v 1.7 2003/11/17 09:45:39 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -48,7 +48,7 @@ file|"msg.h"
 end_include
 
 begin_function
-name|void
+name|int
 name|ssh_msg_send
 parameter_list|(
 name|int
@@ -127,11 +127,19 @@ argument_list|(
 name|buf
 argument_list|)
 condition|)
-name|fatal
+block|{
+name|error
 argument_list|(
 literal|"ssh_msg_send: write"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|atomicio
@@ -150,11 +158,24 @@ argument_list|)
 operator|!=
 name|mlen
 condition|)
-name|fatal
+block|{
+name|error
 argument_list|(
 literal|"ssh_msg_send: write"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -216,14 +237,10 @@ block|{
 if|if
 condition|(
 name|res
-operator|==
+operator|!=
 literal|0
 condition|)
-return|return
-operator|-
-literal|1
-return|;
-name|fatal
+name|error
 argument_list|(
 literal|"ssh_msg_recv: read: header %ld"
 argument_list|,
@@ -233,6 +250,12 @@ operator|)
 name|res
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 block|}
 name|msg_len
 operator|=
@@ -249,13 +272,21 @@ literal|256
 operator|*
 literal|1024
 condition|)
-name|fatal
+block|{
+name|error
 argument_list|(
 literal|"ssh_msg_recv: read: bad msg_len %u"
 argument_list|,
 name|msg_len
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 name|buffer_clear
 argument_list|(
 name|m
@@ -290,7 +321,8 @@ name|res
 operator|!=
 name|msg_len
 condition|)
-name|fatal
+block|{
+name|error
 argument_list|(
 literal|"ssh_msg_recv: read: %ld != msg_len"
 argument_list|,
@@ -301,7 +333,16 @@ name|res
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function

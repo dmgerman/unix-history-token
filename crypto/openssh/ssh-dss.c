@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: ssh-dss.c,v 1.18 2003/02/12 09:33:04 markus Exp $"
+literal|"$OpenBSD: ssh-dss.c,v 1.19 2003/11/10 16:23:41 jakob Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -83,6 +83,7 @@ begin_function
 name|int
 name|ssh_dss_sign
 parameter_list|(
+specifier|const
 name|Key
 modifier|*
 name|key
@@ -96,6 +97,7 @@ name|u_int
 modifier|*
 name|lenp
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 name|data
@@ -470,10 +472,12 @@ begin_function
 name|int
 name|ssh_dss_verify
 parameter_list|(
+specifier|const
 name|Key
 modifier|*
 name|key
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 name|signature
@@ -481,6 +485,7 @@ parameter_list|,
 name|u_int
 name|signaturelen
 parameter_list|,
+specifier|const
 name|u_char
 modifier|*
 name|data
@@ -565,7 +570,19 @@ condition|)
 block|{
 name|sigblob
 operator|=
+name|xmalloc
+argument_list|(
+name|signaturelen
+argument_list|)
+expr_stmt|;
+name|memcpy
+argument_list|(
+name|sigblob
+argument_list|,
 name|signature
+argument_list|,
+name|signaturelen
+argument_list|)
 expr_stmt|;
 name|len
 operator|=
@@ -788,16 +805,7 @@ operator|->
 name|s
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|datafellows
-operator|&
-name|SSH_BUG_SIGBLOB
-operator|)
-condition|)
-block|{
+comment|/* clean up */
 name|memset
 argument_list|(
 name|sigblob
@@ -812,7 +820,6 @@ argument_list|(
 name|sigblob
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* sha1 the data */
 name|EVP_DigestInit
 argument_list|(

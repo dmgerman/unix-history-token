@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$OpenBSD: ssh-gss.h,v 1.4 2003/11/17 11:06:07 markus Exp $	*/
+end_comment
+
+begin_comment
 comment|/*  * Copyright (c) 2001-2003 Simon Wilkinson. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR `AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
@@ -27,11 +31,37 @@ directive|include
 file|"buffer.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_GSSAPI_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<gssapi.h>
 end_include
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|HAVE_GSSAPI_GSSAPI_H
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|<gssapi/gssapi.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -45,11 +75,37 @@ directive|ifndef
 name|HEIMDAL
 end_ifndef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_GSSAPI_GENERIC_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<gssapi_generic.h>
 end_include
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|HAVE_GSSAPI_GSSAPI_GENERIC_H
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|<gssapi/gssapi_generic.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* MIT Kerberos doesn't seem to define GSS_NT_HOSTBASED_SERVICE */
@@ -132,6 +188,13 @@ define|#
 directive|define
 name|SSH2_MSG_USERAUTH_GSSAPI_ERRTOK
 value|65
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH2_MSG_USERAUTH_GSSAPI_MIC
+value|66
 end_define
 
 begin_define
@@ -530,6 +593,20 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|ssh_gssapi_sign
+parameter_list|(
+name|Gssctxt
+modifier|*
+parameter_list|,
+name|gss_buffer_t
+parameter_list|,
+name|gss_buffer_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|OM_uint32
 name|ssh_gssapi_server_ctx
 parameter_list|(
 name|Gssctxt
@@ -539,6 +616,28 @@ name|ctx
 parameter_list|,
 name|gss_OID
 name|oid
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ssh_gssapi_buildmic
+parameter_list|(
+name|Buffer
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -554,6 +653,20 @@ parameter_list|(
 name|char
 modifier|*
 name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|OM_uint32
+name|ssh_gssapi_checkmic
+parameter_list|(
+name|Gssctxt
+modifier|*
+parameter_list|,
+name|gss_buffer_t
+parameter_list|,
+name|gss_buffer_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -580,8 +693,6 @@ name|void
 name|ssh_gssapi_cleanup_creds
 parameter_list|(
 name|void
-modifier|*
-name|ignored
 parameter_list|)
 function_decl|;
 end_function_decl

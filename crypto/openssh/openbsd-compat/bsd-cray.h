@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: bsd-cray.h,v 1.10 2003/08/29 16:59:52 mouring Exp $ */
+comment|/* $Id: bsd-cray.h,v 1.11 2004/01/30 03:34:22 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -138,12 +138,6 @@ ifndef|#
 directive|ifndef
 name|_CRAYT3E
 end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<sys/ttold.h>
-end_include
 
 begin_define
 define|#

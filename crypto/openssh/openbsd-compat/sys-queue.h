@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* OPENBSD ORIGINAL: sys/sys/queue.h */
+end_comment
+
+begin_comment
 comment|/*	$OpenBSD: queue.h,v 1.23 2003/06/02 23:28:21 millert Exp $	*/
 end_comment
 

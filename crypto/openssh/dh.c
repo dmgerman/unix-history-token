@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: dh.c,v 1.24 2003/04/08 20:21:28 itojun Exp $"
+literal|"$OpenBSD: dh.c,v 1.26 2003/12/16 15:51:54 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1001,6 +1001,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|need
+operator|>
+name|INT_MAX
+operator|/
+literal|2
+operator|||
 literal|2
 operator|*
 name|need
@@ -1395,19 +1401,7 @@ block|{
 if|if
 condition|(
 name|bits
-operator|<
-literal|64
-condition|)
-return|return
-operator|(
-literal|512
-operator|)
-return|;
-comment|/* O(2**63) */
-if|if
-condition|(
-name|bits
-operator|<
+operator|<=
 literal|128
 condition|)
 return|return
@@ -1419,7 +1413,7 @@ comment|/* O(2**86) */
 if|if
 condition|(
 name|bits
-operator|<
+operator|<=
 literal|192
 condition|)
 return|return

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: kexgexc.c,v 1.1 2003/02/16 17:09:57 markus Exp $"
+literal|"$OpenBSD: kexgexc.c,v 1.2 2003/12/08 11:00:47 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -155,11 +155,6 @@ operator|&
 name|SSH_OLD_DHGEX
 condition|)
 block|{
-name|debug
-argument_list|(
-literal|"SSH2_MSG_KEX_DH_GEX_REQUEST_OLD sent"
-argument_list|)
-expr_stmt|;
 comment|/* Old GEX request */
 name|packet_start
 argument_list|(
@@ -179,14 +174,16 @@ name|max
 operator|=
 name|DH_GRP_MAX
 expr_stmt|;
+name|debug
+argument_list|(
+literal|"SSH2_MSG_KEX_DH_GEX_REQUEST_OLD(%u) sent"
+argument_list|,
+name|nbits
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
-name|debug
-argument_list|(
-literal|"SSH2_MSG_KEX_DH_GEX_REQUEST sent"
-argument_list|)
-expr_stmt|;
 comment|/* New GEX request */
 name|min
 operator|=
@@ -213,6 +210,17 @@ argument_list|)
 expr_stmt|;
 name|packet_put_int
 argument_list|(
+name|max
+argument_list|)
+expr_stmt|;
+name|debug
+argument_list|(
+literal|"SSH2_MSG_KEX_DH_GEX_REQUEST(%u<%u<%u) sent"
+argument_list|,
+name|min
+argument_list|,
+name|nbits
+argument_list|,
 name|max
 argument_list|)
 expr_stmt|;

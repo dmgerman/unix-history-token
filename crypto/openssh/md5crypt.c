@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this   * notice you can do whatever you want with this stuff. If we meet some   * day, and you think this stuff is worth it, you can buy me a beer in   * return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this  * notice you can do whatever you want with this stuff. If we meet some  * day, and you think this stuff is worth it, you can buy me a beer in  * return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  */
 end_comment
 
 begin_include
@@ -33,7 +33,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: md5crypt.c,v 1.7 2003/05/30 06:58:23 dtucker Exp $"
+literal|"$Id: md5crypt.c,v 1.9 2003/11/21 12:56:47 djm Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

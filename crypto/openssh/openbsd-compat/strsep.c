@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* OPENBSD ORIGINAL: lib/libc/string/strsep.c */
+end_comment
+
+begin_comment
 comment|/*	$OpenBSD: strsep.c,v 1.5 2003/06/11 21:08:16 deraadt Exp $	*/
 end_comment
 

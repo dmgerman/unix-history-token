@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$OpenBSD: misc.c,v 1.22 2003/09/18 08:49:45 markus Exp $"
+literal|"$OpenBSD: misc.c,v 1.23 2003/10/28 09:08:06 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -343,7 +343,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|error
+name|debug
 argument_list|(
 literal|"getsockopt TCP_NODELAY: %.100s"
 argument_list|,
