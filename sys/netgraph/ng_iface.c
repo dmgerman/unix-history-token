@@ -3049,7 +3049,7 @@ name|ifp
 operator|->
 name|if_flags
 operator||=
-name|IFF_UP
+name|IFF_RUNNING
 expr_stmt|;
 break|break;
 case|case
@@ -3060,7 +3060,7 @@ operator|->
 name|if_flags
 operator|&=
 operator|~
-name|IFF_UP
+name|IFF_RUNNING
 expr_stmt|;
 break|break;
 default|default:
