@@ -1,6 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_VDISABLE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_POSIX_VDISABLE
+value|((unsigned char)'\377')
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ioctl.h	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ioctl.h	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -280,6 +298,26 @@ end_define
 begin_define
 define|#
 directive|define
+name|IOCBASECMD
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& ~IOCPARM_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IOCGROUP
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 8)& 0xff)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IOCPARM_MAX
 value|NBPG
 end_define
@@ -335,20 +373,33 @@ name|IOC_DIRMASK
 value|(IOC_IN|IOC_OUT|IOC_VOID)
 end_define
 
-begin_comment
-comment|/* the 0x20000000 is so we can distinguish new ioctl's from old */
-end_comment
+begin_define
+define|#
+directive|define
+name|_IOC
+parameter_list|(
+name|inout
+parameter_list|,
+name|group
+parameter_list|,
+name|num
+parameter_list|,
+name|len
+parameter_list|)
+define|\
+value|(inout | ((len& IOCPARM_MASK)<< 16) | ((group)<< 8) | (num))
+end_define
 
 begin_define
 define|#
 directive|define
 name|_IO
 parameter_list|(
-name|x
+name|g
 parameter_list|,
-name|y
+name|n
 parameter_list|)
-value|(IOC_VOID|(x<<8)|y)
+value|_IOC(IOC_VOID,	0, (g), (n))
 end_define
 
 begin_define
@@ -356,13 +407,13 @@ define|#
 directive|define
 name|_IOR
 parameter_list|(
-name|x
+name|g
 parameter_list|,
-name|y
+name|n
 parameter_list|,
 name|t
 parameter_list|)
-value|(IOC_OUT|((sizeof(t)&IOCPARM_MASK)<<16)|(x<<8)|y)
+value|_IOC(IOC_OUT,	(g), (n), sizeof(t))
 end_define
 
 begin_define
@@ -370,13 +421,13 @@ define|#
 directive|define
 name|_IOW
 parameter_list|(
-name|x
+name|g
 parameter_list|,
-name|y
+name|n
 parameter_list|,
 name|t
 parameter_list|)
-value|(IOC_IN|((sizeof(t)&IOCPARM_MASK)<<16)|(x<<8)|y)
+value|_IOC(IOC_IN,	(g), (n), sizeof(t))
 end_define
 
 begin_comment
@@ -388,13 +439,13 @@ define|#
 directive|define
 name|_IOWR
 parameter_list|(
-name|x
+name|g
 parameter_list|,
-name|y
+name|n
 parameter_list|,
 name|t
 parameter_list|)
-value|(IOC_INOUT|((sizeof(t)&IOCPARM_MASK)<<16)|(x<<8)|y)
+value|_IOC(IOC_INOUT,	(g), (n), sizeof(t))
 end_define
 
 begin_define
@@ -423,7 +474,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TIOCGETD
+name|TIOCGETDCOMPAT
 value|_IOR('t', 0, int)
 end_define
 
@@ -434,7 +485,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TIOCSETD
+name|TIOCSETDCOMPAT
 value|_IOW('t', 1, int)
 end_define
 
@@ -1149,10 +1200,6 @@ begin_comment
 comment|/* no output flush on signal */
 end_comment
 
-begin_comment
-comment|/* POSIX line discipline */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -1257,6 +1304,28 @@ directive|define
 name|TCSETAF
 value|TIOCSETAF
 end_define
+
+begin_define
+define|#
+directive|define
+name|TIOCGETD
+value|_IOR('t', 26, int)
+end_define
+
+begin_comment
+comment|/* get line discipline */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCSETD
+value|_IOW('t', 27, int)
+end_define
+
+begin_comment
+comment|/* set line discipline */
+end_comment
 
 begin_comment
 comment|/* locals, from 127 down */
@@ -1821,7 +1890,18 @@ value|0
 end_define
 
 begin_comment
-comment|/* termios ldisc */
+comment|/* termios */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NTTYDISC
+value|0
+end_define
+
+begin_comment
+comment|/* COMPAT_43 */
 end_comment
 
 begin_define
@@ -1833,17 +1913,6 @@ end_define
 
 begin_comment
 comment|/* line discip for berk net */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NTTYDISC
-value|2
-end_define
-
-begin_comment
-comment|/* also termios ldisc */
 end_comment
 
 begin_define
@@ -2034,7 +2103,7 @@ begin_define
 define|#
 directive|define
 name|SIOCADDRT
-value|_IOW('r', 10, struct rtentry)
+value|_IOW('r', 10, struct ortentry)
 end_define
 
 begin_comment
@@ -2045,7 +2114,7 @@ begin_define
 define|#
 directive|define
 name|SIOCDELRT
-value|_IOW('r', 11, struct rtentry)
+value|_IOW('r', 11, struct ortentry)
 end_define
 
 begin_comment
@@ -2066,8 +2135,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SIOCGIFADDR
+name|OSIOCGIFADDR
 value|_IOWR('i',13, struct ifreq)
+end_define
+
+begin_comment
+comment|/* get ifnet address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCGIFADDR
+value|_IOWR('i',33, struct ifreq)
 end_define
 
 begin_comment
@@ -2088,8 +2168,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SIOCGIFDSTADDR
+name|OSIOCGIFDSTADDR
 value|_IOWR('i',15, struct ifreq)
+end_define
+
+begin_comment
+comment|/* get p-p address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCGIFDSTADDR
+value|_IOWR('i',34, struct ifreq)
 end_define
 
 begin_comment
@@ -2121,8 +2212,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SIOCGIFBRDADDR
+name|OSIOCGIFBRDADDR
 value|_IOWR('i',18, struct ifreq)
+end_define
+
+begin_comment
+comment|/* get broadcast addr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCGIFBRDADDR
+value|_IOWR('i',35, struct ifreq)
 end_define
 
 begin_comment
@@ -2143,7 +2245,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SIOCGIFCONF
+name|OSIOCGIFCONF
 value|_IOWR('i',20, struct ifconf)
 end_define
 
@@ -2154,8 +2256,30 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SIOCGIFNETMASK
+name|SIOCGIFCONF
+value|_IOWR('i',36, struct ifconf)
+end_define
+
+begin_comment
+comment|/* get ifnet list */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OSIOCGIFNETMASK
 value|_IOWR('i',21, struct ifreq)
+end_define
+
+begin_comment
+comment|/* get net addr mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCGIFNETMASK
+value|_IOWR('i',37, struct ifreq)
 end_define
 
 begin_comment
@@ -2198,6 +2322,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SIOCDIFADDR
+value|_IOW('i',38, struct ifreq)
+end_define
+
+begin_comment
+comment|/* delete IF addr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCAIFADDR
+value|_IOW('i',39, struct ifaliasreq)
+end_define
+
+begin_comment
+comment|/* add/chg IF alias */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SIOCSARP
 value|_IOW('i', 30, struct arpreq)
 end_define
@@ -2209,8 +2355,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SIOCGARP
+name|OSIOCGARP
 value|_IOWR('i',31, struct arpreq)
+end_define
+
+begin_comment
+comment|/* get arp entry */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCGARP
+value|_IOWR('i',38, struct arpreq)
 end_define
 
 begin_comment
