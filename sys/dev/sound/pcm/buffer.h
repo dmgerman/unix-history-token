@@ -6,11 +6,11 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ISA_DMA
+name|SND_DMA
 parameter_list|(
 name|b
 parameter_list|)
-value|(sndbuf_getflags((b))& SNDBUF_F_ISADMA)
+value|(sndbuf_getflags((b))& SNDBUF_F_DMA)
 end_define
 
 begin_define
@@ -25,7 +25,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|SNDBUF_F_ISADMA
+name|SNDBUF_F_DMA
 value|0x00000001
 end_define
 
@@ -42,6 +42,103 @@ directive|define
 name|SNDBUF_F_RUNNING
 value|0x00000004
 end_define
+
+begin_define
+define|#
+directive|define
+name|SNDBUF_NAMELEN
+value|48
+end_define
+
+begin_struct
+struct|struct
+name|snd_dbuf
+block|{
+name|device_t
+name|dev
+decl_stmt|;
+name|u_int8_t
+modifier|*
+name|buf
+decl_stmt|,
+modifier|*
+name|tmpbuf
+decl_stmt|;
+name|unsigned
+name|int
+name|bufsize
+decl_stmt|,
+name|maxsize
+decl_stmt|;
+specifier|volatile
+name|int
+name|dl
+decl_stmt|;
+comment|/* transfer size */
+specifier|volatile
+name|int
+name|rp
+decl_stmt|;
+comment|/* pointers to the ready area */
+specifier|volatile
+name|int
+name|rl
+decl_stmt|;
+comment|/* length of ready area */
+specifier|volatile
+name|int
+name|hp
+decl_stmt|;
+specifier|volatile
+name|u_int32_t
+name|total
+decl_stmt|,
+name|prev_total
+decl_stmt|;
+name|int
+name|dmachan
+decl_stmt|,
+name|dir
+decl_stmt|;
+comment|/* dma channel */
+name|u_int32_t
+name|fmt
+decl_stmt|,
+name|spd
+decl_stmt|,
+name|bps
+decl_stmt|;
+name|unsigned
+name|int
+name|blksz
+decl_stmt|,
+name|blkcnt
+decl_stmt|;
+name|int
+name|xrun
+decl_stmt|;
+name|u_int32_t
+name|flags
+decl_stmt|;
+name|bus_dmamap_t
+name|dmamap
+decl_stmt|;
+name|bus_dma_tag_t
+name|dmatag
+decl_stmt|;
+name|struct
+name|selinfo
+name|sel
+decl_stmt|;
+name|char
+name|name
+index|[
+name|SNDBUF_NAMELEN
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_function_decl
 name|struct
@@ -748,7 +845,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|sndbuf_isadmasetup
+name|sndbuf_dmasetup
 parameter_list|(
 name|struct
 name|snd_dbuf
@@ -765,7 +862,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|sndbuf_isadmasetdir
+name|sndbuf_dmasetdir
 parameter_list|(
 name|struct
 name|snd_dbuf
@@ -780,7 +877,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|sndbuf_isadma
+name|sndbuf_dma
 parameter_list|(
 name|struct
 name|snd_dbuf
@@ -795,7 +892,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|sndbuf_isadmaptr
+name|sndbuf_dmaptr
 parameter_list|(
 name|struct
 name|snd_dbuf
@@ -807,7 +904,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|sndbuf_isadmabounce
+name|sndbuf_dmabounce
 parameter_list|(
 name|struct
 name|snd_dbuf

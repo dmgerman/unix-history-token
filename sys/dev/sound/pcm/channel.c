@@ -3582,12 +3582,12 @@ condition|(
 operator|!
 name|r
 operator|&&
-name|ISA_DMA
+name|SND_DMA
 argument_list|(
 name|b
 argument_list|)
 condition|)
-name|sndbuf_isadmasetdir
+name|sndbuf_dmasetdir
 argument_list|(
 name|b
 argument_list|,
@@ -4864,7 +4864,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ISA_DMA
+name|SND_DMA
 argument_list|(
 name|b
 argument_list|)
@@ -4879,7 +4879,7 @@ operator|==
 name|PCMTRIG_EMLDMARD
 operator|)
 condition|)
-name|sndbuf_isadmabounce
+name|sndbuf_dmabounce
 argument_list|(
 name|b
 argument_list|)

@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<isa/isavar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"mixer_if.h"
 end_include
 
@@ -6023,7 +6029,7 @@ condition|)
 return|return
 name|NULL
 return|;
-name|sndbuf_isadmasetup
+name|sndbuf_dmasetup
 argument_list|(
 name|ch
 operator|->
@@ -6260,7 +6266,7 @@ condition|)
 return|return
 literal|0
 return|;
-name|sndbuf_isadma
+name|sndbuf_dma
 argument_list|(
 name|ch
 operator|->
@@ -6313,7 +6319,7 @@ init|=
 name|data
 decl_stmt|;
 return|return
-name|sndbuf_isadmaptr
+name|sndbuf_dmaptr
 argument_list|(
 name|ch
 operator|->

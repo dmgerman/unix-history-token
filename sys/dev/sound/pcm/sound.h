@@ -211,12 +211,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<isa/isavar.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/kobj.h>
 end_include
 
@@ -390,42 +384,6 @@ directive|define
 name|SND_STATUSLEN
 value|64
 end_define
-
-begin_comment
-comment|/* descriptor of audio device */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|ISADMA_WRITE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|ISADMA_WRITE
-value|B_WRITE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISADMA_READ
-value|B_READ
-end_define
-
-begin_define
-define|#
-directive|define
-name|ISADMA_RAW
-value|B_RAW
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

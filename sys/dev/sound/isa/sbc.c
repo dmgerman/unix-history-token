@@ -21,6 +21,12 @@ directive|include
 file|<dev/sound/isa/sb.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<isa/isavar.h>
+end_include
+
 begin_expr_stmt
 name|SND_DECLARE_FILE
 argument_list|(

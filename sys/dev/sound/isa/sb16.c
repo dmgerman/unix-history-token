@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<isa/isavar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"mixer_if.h"
 end_include
 
@@ -2440,7 +2446,7 @@ name|bd_flags
 operator|&
 name|BD_F_DMARUN
 condition|)
-name|sndbuf_isadma
+name|sndbuf_dma
 argument_list|(
 name|sb
 operator|->
@@ -2459,7 +2465,7 @@ name|bd_flags
 operator|&
 name|BD_F_DMARUN2
 condition|)
-name|sndbuf_isadma
+name|sndbuf_dma
 argument_list|(
 name|sb
 operator|->
@@ -2507,7 +2513,7 @@ literal|1
 else|:
 literal|0
 expr_stmt|;
-name|sndbuf_isadmasetup
+name|sndbuf_dmasetup
 argument_list|(
 name|sb
 operator|->
@@ -2536,7 +2542,7 @@ literal|1
 else|:
 literal|0
 expr_stmt|;
-name|sndbuf_isadmasetup
+name|sndbuf_dmasetup
 argument_list|(
 name|sb
 operator|->
@@ -2601,7 +2607,7 @@ literal|0
 else|:
 literal|1
 expr_stmt|;
-name|sndbuf_isadmasetup
+name|sndbuf_dmasetup
 argument_list|(
 name|sb
 operator|->
@@ -2632,7 +2638,7 @@ literal|2
 else|:
 literal|1
 expr_stmt|;
-name|sndbuf_isadmasetup
+name|sndbuf_dmasetup
 argument_list|(
 name|sb
 operator|->
@@ -2675,7 +2681,7 @@ operator|.
 name|run
 condition|)
 block|{
-name|sndbuf_isadmasetup
+name|sndbuf_dmasetup
 argument_list|(
 name|sb
 operator|->
@@ -2722,7 +2728,7 @@ literal|2
 else|:
 literal|1
 expr_stmt|;
-name|sndbuf_isadmasetup
+name|sndbuf_dmasetup
 argument_list|(
 name|sb
 operator|->
@@ -2780,7 +2786,7 @@ operator|.
 name|run
 condition|)
 block|{
-name|sndbuf_isadmasetup
+name|sndbuf_dmasetup
 argument_list|(
 name|sb
 operator|->
@@ -2827,7 +2833,7 @@ literal|1
 else|:
 literal|2
 expr_stmt|;
-name|sndbuf_isadmasetup
+name|sndbuf_dmasetup
 argument_list|(
 name|sb
 operator|->
@@ -2877,7 +2883,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-name|sndbuf_isadmasetdir
+name|sndbuf_dmasetdir
 argument_list|(
 name|sb
 operator|->
@@ -2888,7 +2894,7 @@ argument_list|,
 name|PCMDIR_PLAY
 argument_list|)
 expr_stmt|;
-name|sndbuf_isadmasetdir
+name|sndbuf_dmasetdir
 argument_list|(
 name|sb
 operator|->
@@ -3043,7 +3049,7 @@ argument_list|,
 name|l
 argument_list|)
 expr_stmt|;
-name|sndbuf_isadma
+name|sndbuf_dma
 argument_list|(
 name|ch
 operator|->
@@ -3202,7 +3208,7 @@ argument_list|,
 name|l
 argument_list|)
 expr_stmt|;
-name|sndbuf_isadma
+name|sndbuf_dma
 argument_list|(
 name|ch
 operator|->
@@ -3577,7 +3583,7 @@ init|=
 name|data
 decl_stmt|;
 return|return
-name|sndbuf_isadmaptr
+name|sndbuf_dmaptr
 argument_list|(
 name|ch
 operator|->
