@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdi.h,v 1.51 2001/04/13 11:19:58 augustss Exp $	*/
+comment|/*	$NetBSD: usbdi.h,v 1.50 2001/04/12 01:18:24 thorpej Exp $	*/
 end_comment
 
 begin_comment
@@ -218,6 +218,21 @@ end_define
 
 begin_comment
 comment|/* force last short packet on write */
+end_comment
+
+begin_comment
+comment|/* XXX Temporary hack XXX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USBD_NO_TSLEEP
+value|0x80
+end_define
+
+begin_comment
+comment|/* XXX use busy wait */
 end_comment
 
 begin_define
