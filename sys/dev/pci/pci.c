@@ -657,22 +657,19 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|driver_t
+begin_expr_stmt
+name|DEFINE_CLASS_0
+argument_list|(
+name|pci
+argument_list|,
 name|pci_driver
-init|=
-block|{
-literal|"pci"
-block|,
+argument_list|,
 name|pci_methods
-block|,
+argument_list|,
 literal|0
-block|,
-comment|/* no softc */
-block|}
-decl_stmt|;
-end_decl_stmt
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|devclass_t
