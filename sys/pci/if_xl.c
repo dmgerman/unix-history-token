@@ -5933,6 +5933,8 @@ name|int
 name|unit
 decl_stmt|,
 name|error
+init|=
+literal|0
 decl_stmt|,
 name|rid
 decl_stmt|;
@@ -7881,7 +7883,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
