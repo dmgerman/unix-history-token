@@ -88,7 +88,7 @@ name|ata_channel
 modifier|*
 parameter_list|)
 function_decl|;
-name|int
+name|void
 function_decl|(
 modifier|*
 name|dmainit
@@ -1469,7 +1469,7 @@ comment|/* global prototypes */
 end_comment
 
 begin_function_decl
-name|int
+name|void
 name|ata_dmainit
 parameter_list|(
 name|struct

@@ -178,7 +178,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|ata_pci_dmainit
 parameter_list|(
 name|struct
@@ -2235,7 +2235,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|ata_pci_dmainit
 parameter_list|(
 name|struct
@@ -2244,23 +2244,18 @@ modifier|*
 name|ch
 parameter_list|)
 block|{
-name|int
-name|error
-decl_stmt|;
-if|if
-condition|(
-operator|(
-name|error
-operator|=
 name|ata_dmainit
 argument_list|(
 name|ch
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|ch
+operator|->
+name|dma
 condition|)
-return|return
-name|error
-return|;
+block|{
 name|ch
 operator|->
 name|dma
@@ -2277,9 +2272,7 @@ name|stop
 operator|=
 name|ata_pci_dmastop
 expr_stmt|;
-return|return
-literal|0
-return|;
+block|}
 block|}
 end_function
 

@@ -1402,7 +1402,7 @@ directive|define
 name|ATA_DMA_READ
 value|0x02
 comment|/* transaction is a read */
-name|int
+name|void
 function_decl|(
 modifier|*
 name|alloc
