@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	7.82 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_syscalls.c	7.83 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -4919,7 +4919,7 @@ name|sbase
 expr_stmt|;
 name|error
 operator|=
-name|qseek
+name|__lseek
 argument_list|(
 name|p
 argument_list|,
@@ -4957,7 +4957,7 @@ comment|/*  * Seek system call.  */
 end_comment
 
 begin_macro
-name|qseek
+name|__lseek
 argument_list|(
 argument|p
 argument_list|,
@@ -5471,7 +5471,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_macro
-name|stat
+name|ostat
 argument_list|(
 argument|p
 argument_list|,
@@ -5647,7 +5647,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_macro
-name|lstat
+name|olstat
 argument_list|(
 argument|p
 argument_list|,
@@ -6007,7 +6007,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_macro
-name|qstat
+name|stat
 argument_list|(
 argument|p
 argument_list|,
@@ -6170,7 +6170,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_macro
-name|lqstat
+name|lstat
 argument_list|(
 argument|p
 argument_list|,
@@ -8084,7 +8084,7 @@ name|length
 expr_stmt|;
 return|return
 operator|(
-name|qtruncate
+name|__truncate
 argument_list|(
 name|p
 argument_list|,
@@ -8181,7 +8181,7 @@ name|length
 expr_stmt|;
 return|return
 operator|(
-name|fqtruncate
+name|__ftruncate
 argument_list|(
 name|p
 argument_list|,
@@ -8213,7 +8213,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_macro
-name|qtruncate
+name|__truncate
 argument_list|(
 argument|p
 argument_list|,
@@ -8435,7 +8435,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_macro
-name|fqtruncate
+name|__ftruncate
 argument_list|(
 argument|p
 argument_list|,
