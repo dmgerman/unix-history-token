@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pow.c	4.3 (Berkeley) %G%"
+literal|"@(#)pow.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,6 +48,27 @@ end_include
 begin_extern
 extern|extern errno;
 end_extern
+
+begin_decl_stmt
+specifier|static
+name|long
+name|NaN_
+index|[]
+init|=
+block|{
+literal|0x8000
+block|,
+literal|0x0
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|NaN
+value|(*(double *) NaN_)
+end_define
 
 begin_comment
 comment|/* double static */
@@ -508,8 +529,13 @@ name|errno
 operator|=
 name|EDOM
 expr_stmt|;
-endif|#
-directive|endif
+return|return
+operator|(
+name|NaN
+operator|)
+return|;
+else|#
+directive|else
 return|return
 operator|(
 name|zero
@@ -517,6 +543,8 @@ operator|/
 name|zero
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 block|}
 end_function
