@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)replace.c	5.7 (Berkeley) %G%"
+literal|"@(#)replace.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -200,6 +200,10 @@ modifier|*
 name|rname
 parameter_list|()
 function_decl|;
+name|err
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * If doesn't exist, simply append to the archive.  There's 	 * a race here, but it's pretty short, and not worth fixing. 	 */
 name|exists
 operator|=
@@ -268,10 +272,6 @@ operator|)
 expr_stmt|;
 for|for
 control|(
-name|err
-operator|=
-literal|0
-operator|,
 name|curfd
 operator|=
 name|tfd1
