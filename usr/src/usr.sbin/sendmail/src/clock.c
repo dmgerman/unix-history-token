@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)clock.c	8.11 (Berkeley) %G%"
+literal|"@(#)clock.c	8.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -847,7 +847,12 @@ name|intvl
 operator|==
 literal|0
 condition|)
-return|return;
+return|return
+operator|(
+name|SLEEP_T
+operator|)
+literal|0
+return|;
 name|SleepDone
 operator|=
 name|FALSE
@@ -875,6 +880,12 @@ condition|)
 name|pause
 argument_list|()
 expr_stmt|;
+return|return
+operator|(
+name|SLEEP_T
+operator|)
+literal|0
+return|;
 block|}
 end_function
 
