@@ -177,7 +177,7 @@ name|X509_V_ERR_CERT_HAS_EXPIRED
 case|:
 return|return
 operator|(
-literal|"Certificate has expired"
+literal|"certificate has expired"
 operator|)
 return|;
 case|case

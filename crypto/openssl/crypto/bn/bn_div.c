@@ -105,6 +105,11 @@ name|defined
 argument_list|(
 name|__i386
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
 end_if
 
 begin_comment
@@ -390,6 +395,10 @@ operator|%
 name|BN_BITS2
 operator|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
 name|BN_lshift
 argument_list|(
 name|sdiv
@@ -398,7 +407,11 @@ name|divisor
 argument_list|,
 name|norm_shift
 argument_list|)
-expr_stmt|;
+operator|)
+condition|)
+goto|goto
+name|err
+goto|;
 name|sdiv
 operator|->
 name|neg
@@ -409,6 +422,10 @@ name|norm_shift
 operator|+=
 name|BN_BITS2
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
 name|BN_lshift
 argument_list|(
 name|snum
@@ -417,7 +434,11 @@ name|num
 argument_list|,
 name|norm_shift
 argument_list|)
-expr_stmt|;
+operator|)
+condition|)
+goto|goto
+name|err
+goto|;
 name|snum
 operator|->
 name|neg
@@ -1134,6 +1155,9 @@ name|wnum
 operator|.
 name|top
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|BN_sub
 argument_list|(
 operator|&
@@ -1144,7 +1168,10 @@ name|wnum
 argument_list|,
 name|tmp
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|err
+goto|;
 name|snum
 operator|->
 name|top
@@ -1175,6 +1202,9 @@ name|wnum
 operator|.
 name|top
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|BN_add
 argument_list|(
 operator|&
@@ -1185,7 +1215,10 @@ name|wnum
 argument_list|,
 name|sdiv
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|err
+goto|;
 name|snum
 operator|->
 name|top

@@ -2119,6 +2119,14 @@ operator|&&
 operator|(
 name|ctx
 operator|->
+name|encode
+operator|!=
+name|B64_NONE
+operator|)
+operator|&&
+operator|(
+name|ctx
+operator|->
 name|base64
 operator|.
 name|num
@@ -2299,6 +2307,12 @@ block|}
 elseif|else
 if|if
 condition|(
+name|ctx
+operator|->
+name|encode
+operator|!=
+name|B64_NONE
+operator|&&
 name|ctx
 operator|->
 name|base64

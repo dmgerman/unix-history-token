@@ -188,7 +188,7 @@ literal|0
 block|,
 name|trust_1oidany
 block|,
-literal|"SSL Client"
+literal|"SSL Server"
 block|,
 name|NID_server_auth
 block|,
@@ -972,6 +972,20 @@ condition|(
 name|x
 operator|->
 name|aux
+operator|&&
+operator|(
+name|x
+operator|->
+name|aux
+operator|->
+name|trust
+operator|||
+name|x
+operator|->
+name|aux
+operator|->
+name|reject
+operator|)
 condition|)
 return|return
 name|obj_trust

@@ -8,7 +8,7 @@ comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights 
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2000 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2001 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_ifdef
@@ -186,18 +186,37 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* This should be set to 1 only when ssleay_rand_add() is called inside    an already locked state, so it doesn't try to lock and thereby cause    a hang.  And it should always be reset back to 0 before unlocking. */
-end_comment
-
 begin_decl_stmt
 specifier|static
+name|unsigned
 name|int
-name|add_do_not_lock
+name|crypto_lock_rand
 init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* may be set only when a thread                                            * holds CRYPTO_LOCK_RAND                                            * (to prevent double locking) */
+end_comment
+
+begin_comment
+comment|/* access to lockin_thread is synchronized by CRYPTO_LOCK_RAND2 */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|unsigned
+name|long
+name|locking_thread
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* valid iff crypto_lock_rand is set */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -457,11 +476,45 @@ decl_stmt|;
 name|MD_CTX
 name|m
 decl_stmt|;
+name|int
+name|do_not_lock
+decl_stmt|;
 comment|/* 	 * (Based on the rand(3) manpage) 	 * 	 * The input is chopped up into units of 20 bytes (or less for 	 * the last block).  Each of these blocks is run through the hash 	 * function as follows:  The data passed to the hash function 	 * is the current 'md', the same number of bytes from the 'state' 	 * (the location determined by in incremented looping index) as 	 * the current 'block', the new key data 'block', and 'count' 	 * (which is incremented after each use). 	 * The result of this is kept in 'md' and also xored into the 	 * 'state' at the same locations that were used as input into the          * hash function. 	 */
+comment|/* check if we already have the lock */
+if|if
+condition|(
+name|crypto_lock_rand
+condition|)
+block|{
+name|CRYPTO_r_lock
+argument_list|(
+name|CRYPTO_LOCK_RAND2
+argument_list|)
+expr_stmt|;
+name|do_not_lock
+operator|=
+operator|(
+name|locking_thread
+operator|==
+name|CRYPTO_thread_id
+argument_list|()
+operator|)
+expr_stmt|;
+name|CRYPTO_r_unlock
+argument_list|(
+name|CRYPTO_LOCK_RAND2
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|do_not_lock
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|!
-name|add_do_not_lock
+name|do_not_lock
 condition|)
 name|CRYPTO_w_lock
 argument_list|(
@@ -567,7 +620,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|add_do_not_lock
+name|do_not_lock
 condition|)
 name|CRYPTO_w_unlock
 argument_list|(
@@ -811,7 +864,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|add_do_not_lock
+name|do_not_lock
 condition|)
 name|CRYPTO_w_lock
 argument_list|(
@@ -859,7 +912,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|add_do_not_lock
+name|do_not_lock
 condition|)
 name|CRYPTO_w_unlock
 argument_list|(
@@ -1071,29 +1124,46 @@ operator|/
 literal|2
 operator|)
 expr_stmt|;
-comment|/* 	 * (Based on the rand(3) manpage:) 	 * 	 * For each group of 10 bytes (or less), we do the following: 	 * 	 * Input into the hash function the top 10 bytes from the 	 * local 'md' (which is initialized from the global 'md' 	 * before any bytes are generated), the bytes that are 	 * to be overwritten by the random bytes, and bytes from the 	 * 'state' (incrementing looping index).  From this digest output 	 * (which is kept in 'md'), the top (up to) 10 bytes are 	 * returned to the caller and the bottom (up to) 10 bytes are xored 	 * into the 'state'. 	 * Finally, after we have finished 'num' random bytes for the 	 * caller, 'count' (which is incremented) and the local and global 'md' 	 * are fed into the hash function and the results are kept in the 	 * global 'md'. 	 */
-if|if
-condition|(
-operator|!
-name|initialized
-condition|)
-name|RAND_poll
-argument_list|()
-expr_stmt|;
+comment|/* 	 * (Based on the rand(3) manpage:) 	 * 	 * For each group of 10 bytes (or less), we do the following: 	 * 	 * Input into the hash function the local 'md' (which is initialized from 	 * the global 'md' before any bytes are generated), the bytes that are to 	 * be overwritten by the random bytes, and bytes from the 'state' 	 * (incrementing looping index). From this digest output (which is kept 	 * in 'md'), the top (up to) 10 bytes are returned to the caller and the 	 * bottom 10 bytes are xored into the 'state'. 	 *  	 * Finally, after we have finished 'num' random bytes for the 	 * caller, 'count' (which is incremented) and the local and global 'md' 	 * are fed into the hash function and the results are kept in the 	 * global 'md'. 	 */
 name|CRYPTO_w_lock
 argument_list|(
 name|CRYPTO_LOCK_RAND
 argument_list|)
 expr_stmt|;
-name|add_do_not_lock
+comment|/* prevent ssleay_rand_bytes() from trying to obtain the lock again */
+name|CRYPTO_w_lock
+argument_list|(
+name|CRYPTO_LOCK_RAND2
+argument_list|)
+expr_stmt|;
+name|locking_thread
+operator|=
+name|CRYPTO_thread_id
+argument_list|()
+expr_stmt|;
+name|CRYPTO_w_unlock
+argument_list|(
+name|CRYPTO_LOCK_RAND2
+argument_list|)
+expr_stmt|;
+name|crypto_lock_rand
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Since we call ssleay_rand_add while in 				   this locked state. */
+if|if
+condition|(
+operator|!
+name|initialized
+condition|)
+block|{
+name|RAND_poll
+argument_list|()
+expr_stmt|;
 name|initialized
 operator|=
 literal|1
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -1138,7 +1208,7 @@ condition|(
 name|do_stir_pool
 condition|)
 block|{
-comment|/* Our output function chains only half of 'md', so we better 		 * make sure that the required entropy gets 'evenly distributed' 		 * through 'state', our randomness pool.  The input function 		 * (ssleay_rand_add) chains all of 'md', which makes it more 		 * suitable for this purpose. 		 */
+comment|/* In the output function only half of 'md' remains secret, 		 * so we better make sure that the required entropy gets 		 * 'evenly distributed' through 'state', our randomness pool. 		 * The input function (ssleay_rand_add) chains all of 'md', 		 * which makes it more suitable for this purpose. 		 */
 name|int
 name|n
 init|=
@@ -1251,11 +1321,11 @@ index|]
 operator|+=
 literal|1
 expr_stmt|;
-name|add_do_not_lock
+comment|/* before unlocking, we must clear 'crypto_lock_rand' */
+name|crypto_lock_rand
 operator|=
 literal|0
 expr_stmt|;
-comment|/* If this would ever be forgotten, we can 				   expect any evil god to eat our souls. */
 name|CRYPTO_w_unlock
 argument_list|(
 name|CRYPTO_LOCK_RAND
@@ -1659,6 +1729,10 @@ block|{
 name|int
 name|ret
 decl_stmt|;
+name|unsigned
+name|long
+name|err
+decl_stmt|;
 name|ret
 operator|=
 name|RAND_bytes
@@ -1675,12 +1749,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|long
 name|err
-init|=
+operator|=
 name|ERR_peek_error
 argument_list|()
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|ERR_GET_LIB
@@ -1723,34 +1796,109 @@ block|{
 name|int
 name|ret
 decl_stmt|;
+name|int
+name|do_not_lock
+decl_stmt|;
+comment|/* check if we already have the lock 	 * (could happen if a RAND_poll() implementation calls RAND_status()) */
+if|if
+condition|(
+name|crypto_lock_rand
+condition|)
+block|{
+name|CRYPTO_r_lock
+argument_list|(
+name|CRYPTO_LOCK_RAND2
+argument_list|)
+expr_stmt|;
+name|do_not_lock
+operator|=
+operator|(
+name|locking_thread
+operator|==
+name|CRYPTO_thread_id
+argument_list|()
+operator|)
+expr_stmt|;
+name|CRYPTO_r_unlock
+argument_list|(
+name|CRYPTO_LOCK_RAND2
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|do_not_lock
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|!
-name|initialized
+name|do_not_lock
 condition|)
-name|RAND_poll
-argument_list|()
-expr_stmt|;
+block|{
 name|CRYPTO_w_lock
 argument_list|(
 name|CRYPTO_LOCK_RAND
 argument_list|)
 expr_stmt|;
+comment|/* prevent ssleay_rand_bytes() from trying to obtain the lock again */
+name|CRYPTO_w_lock
+argument_list|(
+name|CRYPTO_LOCK_RAND2
+argument_list|)
+expr_stmt|;
+name|locking_thread
+operator|=
+name|CRYPTO_thread_id
+argument_list|()
+expr_stmt|;
+name|CRYPTO_w_unlock
+argument_list|(
+name|CRYPTO_LOCK_RAND2
+argument_list|)
+expr_stmt|;
+name|crypto_lock_rand
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|initialized
+condition|)
+block|{
+name|RAND_poll
+argument_list|()
+expr_stmt|;
 name|initialized
 operator|=
 literal|1
 expr_stmt|;
+block|}
 name|ret
 operator|=
 name|entropy
 operator|>=
 name|ENTROPY_NEEDED
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|do_not_lock
+condition|)
+block|{
+comment|/* before unlocking, we must clear 'crypto_lock_rand' */
+name|crypto_lock_rand
+operator|=
+literal|0
+expr_stmt|;
 name|CRYPTO_w_unlock
 argument_list|(
 name|CRYPTO_LOCK_RAND
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|ret
 return|;

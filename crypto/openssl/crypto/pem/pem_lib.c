@@ -1302,6 +1302,14 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|p8inf
+condition|)
+goto|goto
+name|p8err
+goto|;
 name|ret
 operator|=
 operator|(
@@ -2002,7 +2010,9 @@ name|RAND_pseudo_bytes
 argument_list|(
 name|iv
 argument_list|,
-literal|8
+name|enc
+operator|->
+name|iv_len
 argument_list|)
 operator|<
 literal|0
@@ -2072,7 +2082,9 @@ name|buf
 argument_list|,
 name|objstr
 argument_list|,
-literal|8
+name|enc
+operator|->
+name|iv_len
 argument_list|,
 operator|(
 name|char
@@ -2953,7 +2965,9 @@ literal|0
 index|]
 operator|)
 argument_list|,
-literal|8
+name|enc
+operator|->
+name|iv_len
 argument_list|)
 condition|)
 return|return

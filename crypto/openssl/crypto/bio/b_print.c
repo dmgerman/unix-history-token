@@ -8,6 +8,38 @@ comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights 
 end_comment
 
 begin_comment
+comment|/* disable assert() unless BIO_DEBUG has been defined */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BIO_DEBUG
+end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NDEBUG
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NDEBUG
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*   * Stolen from tjh's ssl/ssl_trc.c stuff.  */
 end_comment
 
@@ -63,6 +95,16 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<openssl/bn.h>
+end_include
+
+begin_comment
+comment|/* To get BN_LLONG properly defined */
+end_comment
 
 begin_include
 include|#
@@ -147,12 +189,44 @@ directive|if
 name|HAVE_LONG_LONG
 end_if
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|LLONG
+value|_int64
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|LLONG
 value|long long
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
@@ -489,7 +563,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|MAX
+name|OSSL_MAX
 parameter_list|(
 name|p
 parameter_list|,
@@ -2123,7 +2197,7 @@ name|spadlen
 operator|=
 name|min
 operator|-
-name|MAX
+name|OSSL_MAX
 argument_list|(
 name|max
 argument_list|,
@@ -2167,7 +2241,7 @@ condition|)
 block|{
 name|zpadlen
 operator|=
-name|MAX
+name|OSSL_MAX
 argument_list|(
 name|zpadlen
 argument_list|,
@@ -2386,7 +2460,7 @@ end_function
 begin_function
 specifier|static
 name|long
-name|round
+name|roundv
 parameter_list|(
 name|LDOUBLE
 name|value
@@ -2580,7 +2654,7 @@ expr_stmt|;
 comment|/* we "cheat" by converting the fractional part to integer by        multiplying by a factor of 10 */
 name|fracpart
 operator|=
-name|round
+name|roundv
 argument_list|(
 operator|(
 name|pow10
@@ -2711,13 +2785,9 @@ expr_stmt|;
 block|}
 do|while
 condition|(
-name|fracpart
-operator|&&
-operator|(
 name|fplace
 operator|<
-literal|20
-operator|)
+name|max
 condition|)
 do|;
 if|if
@@ -3082,14 +3152,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|assert
-argument_list|(
-operator|*
-name|sbuffer
-operator|!=
-name|NULL
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -3118,6 +3180,15 @@ name|currlen
 operator|>
 literal|0
 condition|)
+block|{
+name|assert
+argument_list|(
+operator|*
+name|sbuffer
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 name|memcpy
 argument_list|(
 operator|*
@@ -3130,6 +3201,7 @@ operator|*
 name|currlen
 argument_list|)
 expr_stmt|;
+block|}
 operator|*
 name|sbuffer
 operator|=
@@ -3306,15 +3378,15 @@ decl_stmt|;
 name|size_t
 name|retlen
 decl_stmt|;
-name|MS_STATIC
 name|char
 name|hugebuf
 index|[
 literal|1024
 operator|*
-literal|10
+literal|2
 index|]
 decl_stmt|;
+comment|/* Was previously 10k, which is unreasonable 				   in small-stack environments, like threads 				   or DOS programs. */
 name|char
 modifier|*
 name|hugebufp
