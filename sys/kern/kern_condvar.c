@@ -941,11 +941,6 @@ operator|=
 name|ERESTART
 expr_stmt|;
 block|}
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|p
@@ -957,6 +952,11 @@ condition|)
 name|rval
 operator|=
 name|EINTR
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -1606,11 +1606,6 @@ operator|=
 name|ERESTART
 expr_stmt|;
 block|}
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|p
@@ -1622,6 +1617,11 @@ condition|)
 name|rval
 operator|=
 name|EINTR
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
