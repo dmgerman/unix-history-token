@@ -739,7 +739,7 @@ index|]
 operator|.
 name|dp_typ
 operator|==
-literal|0xee
+name|DOSPTYP_PMBR
 condition|)
 name|l
 index|[

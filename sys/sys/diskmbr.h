@@ -89,6 +89,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DOSPTYP_PMBR
+value|0xee
+end_define
+
+begin_comment
+comment|/* GPT Protective MBR */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DOSPTYP_EXT
 value|5
 end_define
