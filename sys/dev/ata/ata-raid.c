@@ -4212,6 +4212,8 @@ operator|->
 name|org
 operator|->
 name|b_flags
+operator||
+name|B_CALL
 expr_stmt|;
 name|buf
 operator|->
