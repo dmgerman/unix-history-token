@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	res_mkquery.c	4.4	85/03/28	*/
+comment|/*	res_mkquery.c	4.5	85/04/01	*/
+end_comment
+
+begin_comment
+comment|/*  * Copyright (c) 1985 Regents of the University of California  *	All Rights Reserved  */
 end_comment
 
 begin_include

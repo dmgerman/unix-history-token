@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	gethostnamadr.c	4.10	85/03/28	*/
+comment|/*	gethostnamadr.c	4.11	85/04/01	*/
+end_comment
+
+begin_comment
+comment|/*  * Copyright (c) 1985 Regents of the University of California  *	All Rights Reserved  */
 end_comment
 
 begin_include
