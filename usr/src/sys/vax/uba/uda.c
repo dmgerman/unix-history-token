@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uda.c	4.7	82/08/13	*/
+comment|/*	uda.c	4.8	82/08/22	*/
 end_comment
 
 begin_include
@@ -654,6 +654,8 @@ argument_list|)
 expr_stmt|;
 name|udwrite
 argument_list|(
+literal|0
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
@@ -4305,12 +4307,22 @@ begin_macro
 name|udwrite
 argument_list|(
 argument|dev
+argument_list|,
+argument|uio
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|dev_t
 name|dev
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|uio
+modifier|*
+name|uio
 decl_stmt|;
 end_decl_stmt
 
@@ -4356,7 +4368,7 @@ name|B_WRITE
 argument_list|,
 name|minphys
 argument_list|,
-literal|0
+name|uio
 argument_list|)
 expr_stmt|;
 block|}

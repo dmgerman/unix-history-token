@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ut.c	4.16	82/08/13	*/
+comment|/*	ut.c	4.17	82/08/22	*/
 end_comment
 
 begin_include
@@ -3353,6 +3353,8 @@ begin_macro
 name|utwrite
 argument_list|(
 argument|dev
+argument_list|,
+argument|uio
 argument_list|)
 end_macro
 
@@ -3362,13 +3364,25 @@ name|dev
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|uio
+modifier|*
+name|uio
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
+name|u
+operator|.
+name|u_error
+operator|=
 name|utphys
 argument_list|(
 name|dev
 argument_list|,
-literal|0
+name|uio
 argument_list|)
 expr_stmt|;
 if|if
@@ -3397,7 +3411,7 @@ name|B_WRITE
 argument_list|,
 name|minphys
 argument_list|,
-literal|0
+name|uio
 argument_list|)
 expr_stmt|;
 block|}
@@ -3476,15 +3490,11 @@ name|ui_alive
 operator|==
 literal|0
 condition|)
-block|{
-name|u
-operator|.
-name|u_error
-operator|=
+return|return
+operator|(
 name|ENXIO
-expr_stmt|;
-return|return;
-block|}
+operator|)
+return|;
 name|sc
 operator|=
 operator|&
@@ -3493,10 +3503,6 @@ index|[
 name|tjunit
 index|]
 expr_stmt|;
-if|if
-condition|(
-name|uio
-condition|)
 name|sc
 operator|->
 name|sc_blkno
@@ -3506,20 +3512,6 @@ argument_list|(
 name|uio
 operator|->
 name|uio_offset
-operator|>>
-literal|9
-argument_list|)
-expr_stmt|;
-else|else
-name|sc
-operator|->
-name|sc_blkno
-operator|=
-name|bdbtofsb
-argument_list|(
-name|u
-operator|.
-name|u_offset
 operator|>>
 literal|9
 argument_list|)
@@ -3534,6 +3526,11 @@ name|sc_blkno
 operator|+
 literal|1
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
