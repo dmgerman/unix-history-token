@@ -26,6 +26,12 @@ name|TMPPAT
 value|"/tmp/makeXXXXXXXXXX"
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|USE_KQUEUE
+end_ifndef
+
 begin_comment
 comment|/*  * The SEL_ constants determine the maximum amount of time spent in select  * before coming out to see if a child has finished. SEL_SEC is the number of  * seconds and SEL_USEC is the number of micro-seconds  */
 end_comment
@@ -43,6 +49,15 @@ directive|define
 name|SEL_USEC
 value|100000
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !USE_KQUEUE */
+end_comment
 
 begin_escape
 end_escape
