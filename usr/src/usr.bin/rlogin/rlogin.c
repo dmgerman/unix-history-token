@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*  *	$Source: /a/staff/kfall/mit/rlogin/RCS/rlogin.c,v $  *	$Header: /a/staff/kfall/mit/rlogin/RCS/rlogin.c,v 5.2 89/07/26 12:11:21 kfall Exp Locker: kfall $  */
+end_comment
+
+begin_comment
 comment|/*  * Copyright (c) 1983 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
@@ -155,7 +159,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<kerberos/krb.h>
+file|<krb.h>
 end_include
 
 begin_decl_stmt
@@ -168,10 +172,19 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|krb_realm
+name|dst_realm_buf
 index|[
 name|REALM_SZ
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|dest_realm
+init|=
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -194,6 +207,15 @@ init|=
 literal|1
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|krb_realmofhost
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -947,9 +969,13 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|dest_realm
+operator|=
+name|dst_realm_buf
+expr_stmt|;
 name|strncpy
 argument_list|(
-name|krb_realm
+name|dest_realm
 argument_list|,
 operator|*
 name|argv
@@ -988,12 +1014,16 @@ condition|)
 goto|goto
 name|usage
 goto|;
+name|uid
+operator|=
+name|getuid
+argument_list|()
+expr_stmt|;
 name|pwd
 operator|=
 name|getpwuid
 argument_list|(
-name|getuid
-argument_list|()
+name|uid
 argument_list|)
 expr_stmt|;
 if|if
@@ -1208,38 +1238,20 @@ name|KSUCCESS
 expr_stmt|;
 if|if
 condition|(
-name|krb_realm
-index|[
-literal|0
-index|]
+name|dest_realm
 operator|==
-literal|'\0'
+name|NULL
 condition|)
-block|{
-name|rem
+name|dest_realm
 operator|=
-name|krb_get_lrealm
+name|krb_realmofhost
 argument_list|(
-name|krb_realm
-argument_list|,
-literal|1
+name|host
 argument_list|)
 expr_stmt|;
-block|}
-if|if
-condition|(
-name|rem
-operator|==
-name|KSUCCESS
-condition|)
-block|{
-name|setreuid
-argument_list|(
+name|errno
+operator|=
 literal|0
-argument_list|,
-name|getuid
-argument_list|()
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1269,7 +1281,7 @@ name|term
 argument_list|,
 literal|0
 argument_list|,
-name|krb_realm
+name|dest_realm
 argument_list|,
 operator|&
 name|cred
@@ -1303,48 +1315,15 @@ name|term
 argument_list|,
 literal|0
 argument_list|,
-name|krb_realm
-argument_list|)
-expr_stmt|;
-block|}
-name|setuid
-argument_list|(
-name|geteuid
-argument_list|()
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"rlogin: Kerberos error getting local realm %s\n"
-argument_list|,
-name|krb_err_txt
-index|[
-name|rem
-index|]
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
+name|dest_realm
 argument_list|)
 expr_stmt|;
 block|}
 if|if
 condition|(
-operator|(
 name|rem
 operator|<
 literal|0
-operator|)
-operator|&&
-name|errno
-operator|==
-name|ECONNREFUSED
 condition|)
 block|{
 name|use_kerberos
@@ -1380,9 +1359,26 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|errno
+operator|==
+name|ECONNREFUSED
+condition|)
 name|old_warning
 argument_list|(
 literal|"remote host doesn't support Kerberos"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|errno
+operator|==
+name|ENOENT
+condition|)
+name|old_warning
+argument_list|(
+literal|"Can't provide Kerberos auth data"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1401,7 +1397,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"The -x flag requires Kerberos authencation\n"
+literal|"The -x flag requires Kerberos authentication\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1511,11 +1507,6 @@ name|perror
 argument_list|(
 literal|"rlogin: setsockopt (SO_DEBUG)"
 argument_list|)
-expr_stmt|;
-name|uid
-operator|=
-name|getuid
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
