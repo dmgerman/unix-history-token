@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1989, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)if_sl.c	8.6 (Berkeley) 2/1/94  * $Id: if_sl.c,v 1.5 1994/09/09 12:58:10 davidg Exp $  */
+comment|/*  * Copyright (c) 1987, 1989, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)if_sl.c	8.6 (Berkeley) 2/1/94  * $Id: if_sl.c,v 1.6 1994/09/12 11:49:49 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -195,7 +195,7 @@ directive|include
 file|<net/bpf.h>
 endif|#
 directive|endif
-comment|/*  * SLMAX is a hard limit on input packet size.  To simplify the code  * and improve performance, we require that packets fit in an mbuf  * cluster, and if we get a compressed packet, there's enough extra  * room to expand the header into a max length tcp/ip header (128  * bytes).  So, SLMAX can be at most  *	MCLBYTES - 128  *  * SLMTU is a hard limit on output packet size.  To insure good  * interactive response, SLMTU wants to be the smallest size that  * amortizes the header cost.  (Remember that even with  * type-of-service queuing, we have to wait for any in-progress  * packet to finish.  I.e., we wait, on the average, 1/2 * mtu /  * cps, where cps is the line speed in characters per second.  * E.g., 533ms wait for a 1024 byte MTU on a 9600 baud line.  The  * average compressed header size is 6-8 bytes so any MTU> 90  * bytes will give us 90% of the line bandwidth.  A 100ms wait is  * tolerable (500ms is not), so want an MTU around 296.  (Since TCP  * will send 256 byte segments (to allow for 40 byte headers), the  * typical packet size on the wire will be around 260 bytes).  In  * 4.3tahoe+ systems, we can set an MTU in a route so we do that&  * leave the interface MTU relatively high (so we don't IP fragment  * when acting as a gateway to someone using a stupid MTU).  *  * Similar considerations apply to SLIP_HIWAT:  It's the amount of  * data that will be queued 'downstream' of us (i.e., in clists  * waiting to be picked up by the tty output interrupt).  If we  * queue a lot of data downstream, it's immune to our t.o.s. queuing.  * E.g., if SLIP_HIWAT is 1024, the interactive traffic in mixed  * telnet/ftp will see a 1 sec wait, independent of the mtu (the  * wait is dependent on the ftp window size but that's typically  * 1k - 4k).  So, we want SLIP_HIWAT just big enough to amortize  * the cost (in idle time on the wire) of the tty driver running  * off the end of its clists& having to call back slstart for a  * new packet.  For a tty interface with any buffering at all, this  * cost will be zero.  Even with a totally brain dead interface (like  * the one on a typical workstation), the cost will be<= 1 character  * time.  So, setting SLIP_HIWAT to ~100 guarantees that we'll lose  * at most 1% while maintaining good interactive response.  */
+comment|/*  * SLRMAX is a hard limit on input packet size.  To simplify the code  * and improve performance, we require that packets fit in an mbuf  * cluster, and if we get a compressed packet, there's enough extra  * room to expand the header into a max length tcp/ip header (128  * bytes).  So, SLRMAX can be at most  *	MCLBYTES - 128  *  * SLMTU is the default transmit MTU. The transmit MTU should be kept  * small enough so that interactive use doesn't suffer, but large  * enough to provide good performance. 552 is a good choice for SLMTU  * because it is high enough to not fragment TCP packets being routed  * through this host. Packet fragmentation is bad with SLIP because  * fragment headers aren't compressed. The previous assumptions about  * the best MTU value don't really hold when using modern modems with  * BTLZ data compression because the modem buffers play a much larger  * role in interactive performance than the MTU. The MTU can be changed  * at any time to suit the specific environment with ifconfig(8), and  * its maximum value is defined as SLTMAX. SLTMAX must not be so large  * that it would overflow the stack if BPF is configured.  *  * SLIP_HIWAT is the amount of data that will be queued 'downstream'  * of us (i.e., in clists waiting to be picked up by the tty output  * interrupt).  If we queue a lot of data downstream, it's immune to  * our t.o.s. queuing.  * E.g., if SLIP_HIWAT is 1024, the interactive traffic in mixed  * telnet/ftp will see a 1 sec wait, independent of the mtu (the  * wait is dependent on the ftp window size but that's typically  * 1k - 4k).  So, we want SLIP_HIWAT just big enough to amortize  * the cost (in idle time on the wire) of the tty driver running  * off the end of its clists& having to call back slstart for a  * new packet.  For a tty interface with any buffering at all, this  * cost will be zero.  Even with a totally brain dead interface (like  * the one on a typical workstation), the cost will be<= 1 character  * time.  So, setting SLIP_HIWAT to ~100 guarantees that we'll lose  * at most 1% while maintaining good interactive response.  */
 if|#
 directive|if
 name|NBPFILTER
@@ -215,21 +215,27 @@ endif|#
 directive|endif
 define|#
 directive|define
-name|SLMAX
+name|SLRMAX
 value|(MCLBYTES - BUFOFFSET)
 define|#
 directive|define
 name|SLBUFSIZE
-value|(SLMAX + BUFOFFSET)
+value|(SLRMAX + BUFOFFSET)
 ifndef|#
 directive|ifndef
 name|SLMTU
 define|#
 directive|define
 name|SLMTU
-value|296
+value|552
+comment|/* default MTU */
 endif|#
 directive|endif
+define|#
+directive|define
+name|SLTMAX
+value|1500
+comment|/* maximum MTU */
 define|#
 directive|define
 name|SLIP_HIWAT
@@ -239,6 +245,11 @@ directive|define
 name|CLISTRESERVE
 value|1024
 comment|/* Can't let clists get too low */
+comment|/* add this many cblocks to the pool */
+define|#
+directive|define
+name|CLISTEXTRA
+value|((SLRMAX+SLTMAX) / CBSIZE)
 comment|/*  * SLIP ABORT ESCAPE MECHANISM:  *	(inspired by HAYES modem escape arrangement)  *	1sec escape 1sec escape 1sec escape { 1sec escape 1sec escape }  *	within window time signals a "soft" exit from slip mode by remote end  *	if the IFF_DEBUG flag is on.  */
 define|#
 directive|define
@@ -604,7 +615,7 @@ name|sc
 operator|->
 name|sc_ep
 operator|-
-name|SLMAX
+name|SLRMAX
 expr_stmt|;
 name|sc
 operator|->
@@ -786,6 +797,11 @@ operator||
 name|FWRITE
 argument_list|)
 expr_stmt|;
+name|cblock_alloc_cblocks
+argument_list|(
+name|CLISTEXTRA
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -911,6 +927,11 @@ operator|->
 name|sc_buf
 operator|=
 literal|0
+expr_stmt|;
+name|cblock_free_cblocks
+argument_list|(
+name|CLISTEXTRA
+argument_list|)
 expr_stmt|;
 block|}
 name|splx
@@ -1394,7 +1415,7 @@ literal|0
 name|u_char
 name|bpfbuf
 index|[
-name|SLMTU
+name|SLTMAX
 operator|+
 name|SLIP_HDRLEN
 index|]
@@ -1708,14 +1729,14 @@ name|if_lastchange
 operator|=
 name|time
 expr_stmt|;
-comment|/* 		 * If system is getting low on clists, just flush our 		 * output queue (if the stuff was important, it'll get 		 * retransmitted). 		 */
+comment|/* 		 * If system is getting low on clists, just flush our 		 * output queue (if the stuff was important, it'll get 		 * retransmitted). Note that SLTMAX is used instead of 		 * the current if_mtu setting because connections that 		 * have already been established still use the original 		 * (possibly larger) mss. 		 */
 if|if
 condition|(
 name|cfreecount
 operator|<
 name|CLISTRESERVE
 operator|+
-name|SLMTU
+name|SLTMAX
 condition|)
 block|{
 name|m_freem
@@ -2933,7 +2954,7 @@ name|sc
 operator|->
 name|sc_ep
 operator|-
-name|SLMAX
+name|SLRMAX
 expr_stmt|;
 name|sc
 operator|->
@@ -2989,18 +3010,27 @@ name|struct
 name|ifreq
 modifier|*
 name|ifr
+init|=
+operator|(
+expr|struct
+name|ifreq
+operator|*
+operator|)
+name|data
 decl_stmt|;
 specifier|register
 name|int
 name|s
-init|=
-name|splimp
-argument_list|()
 decl_stmt|,
 name|error
 init|=
 literal|0
 decl_stmt|;
+name|s
+operator|=
+name|splimp
+argument_list|()
+expr_stmt|;
 switch|switch
 condition|(
 name|cmd
@@ -3055,15 +3085,6 @@ case|:
 case|case
 name|SIOCDELMULTI
 case|:
-name|ifr
-operator|=
-operator|(
-expr|struct
-name|ifreq
-operator|*
-operator|)
-name|data
-expr_stmt|;
 if|if
 condition|(
 name|ifr
@@ -3102,6 +3123,36 @@ operator|=
 name|EAFNOSUPPORT
 expr_stmt|;
 break|break;
+block|}
+break|break;
+case|case
+name|SIOCSIFMTU
+case|:
+comment|/* 		 * Set the interface MTU. 		 */
+if|if
+condition|(
+name|ifr
+operator|->
+name|ifr_mtu
+operator|>
+name|SLTMAX
+condition|)
+block|{
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+block|}
+else|else
+block|{
+name|ifp
+operator|->
+name|if_mtu
+operator|=
+name|ifr
+operator|->
+name|ifr_mtu
+expr_stmt|;
 block|}
 break|break;
 default|default:
