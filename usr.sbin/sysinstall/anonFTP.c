@@ -1391,7 +1391,9 @@ argument_list|)
 expr_stmt|;
 name|vsystem
 argument_list|(
-literal|"cp /etc/pwd.db %s/etc&& chmod 444 %s/etc/pwd.db"
+literal|"awk -F: '{if ($3< 10 || $1 == "
+name|ftp
+literal|") print $0}' /etc/passwd> %s/etc/passwd&& chmod 444 %s/etc/passwd"
 argument_list|,
 name|tconf
 operator|.
@@ -1404,20 +1406,7 @@ argument_list|)
 expr_stmt|;
 name|vsystem
 argument_list|(
-literal|"cp /etc/passwd %s/etc&& chmod 444 %s/etc/passwd"
-argument_list|,
-name|tconf
-operator|.
-name|homedir
-argument_list|,
-name|tconf
-operator|.
-name|homedir
-argument_list|)
-expr_stmt|;
-name|vsystem
-argument_list|(
-literal|"cp /etc/group %s/etc&& chmod 444 %s/etc/group"
+literal|"awk -F: '{if ($3< 100) print $0}' /etc/group> %s/etc/group&& chmod 444 %s/etc/group"
 argument_list|,
 name|tconf
 operator|.

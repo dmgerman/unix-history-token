@@ -1773,15 +1773,6 @@ condition|)
 return|return
 name|result
 return|;
-name|variable_set2
-argument_list|(
-name|VAR_HTTP_PATH
-argument_list|,
-literal|""
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|cp
 operator|=
 name|variable_get_value
@@ -1871,6 +1862,22 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|isDebug
+argument_list|()
+condition|)
+block|{
+name|msgDebug
+argument_list|(
+literal|"VAR_FTP_PATH : %s"
+argument_list|,
+name|variable_get
+argument_list|(
+name|VAR_FTP_PATH
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|msgDebug
 argument_list|(
 literal|"VAR_HTTP_HOST, _PORT: %s:%s"
@@ -1886,21 +1893,7 @@ name|VAR_HTTP_PORT
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|msgDebug
-argument_list|(
-literal|"VAR_FTP_HOST, _PORT: %s:%s"
-argument_list|,
-name|variable_get
-argument_list|(
-name|VAR_FTP_HOST
-argument_list|)
-argument_list|,
-name|variable_get
-argument_list|(
-name|VAR_FTP_PORT
-argument_list|)
-argument_list|)
-expr_stmt|;
+block|}
 comment|/* mediaDevice has been set by mediaSetFTP(), overwrite partly: */
 name|mediaDevice
 operator|->

@@ -50,7 +50,7 @@ modifier|*
 name|dev
 parameter_list|)
 block|{
-comment|/*   * Some proxies think that files with the extension ".ai" are postscript  * files and use "ascii mode" instead of "binary mode" for ftp.  * The FTP server then translates all LF to CRLF.  * I don't know how to handle this elegantly...  * Squid uses ascii mode, ftpget uses binary mode and both tell us:  * "Content-Type: application/postscript"  *  * Probably the safest way would be to get the file, look at its checksum  * and, if it doesn't match, replace all CRLF by LF and check again.  *  * You can force Squid to use binary mode by appending ";type=i" to the URL,  * which is what I do here.  *  */
+comment|/*   * Some proxies fetch files with certain extensions in "ascii mode" instead  * of "binary mode" for FTP. The FTP server then translates all LF to CRLF.  *  * You can force Squid to use binary mode by appending ";type=i" to the URL,  * which is what I do here. For other proxies, the LF->CRLF substitution  * is reverted in distExtract().  */
 specifier|extern
 name|int
 name|h_errno
@@ -75,7 +75,7 @@ index|]
 decl_stmt|,
 name|req
 index|[
-literal|1000
+name|BUFSIZ
 index|]
 decl_stmt|;
 name|struct
@@ -233,7 +233,7 @@ argument_list|)
 argument_list|,
 name|variable_get
 argument_list|(
-name|VAR_FTP_PORT
+name|VAR_HTTP_PORT
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -341,7 +341,7 @@ name|VAR_HTTP_FTP_MODE
 argument_list|,
 literal|";type=i"
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -353,7 +353,7 @@ name|VAR_HTTP_FTP_MODE
 argument_list|,
 literal|""
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -472,7 +472,7 @@ index|]
 decl_stmt|,
 name|req
 index|[
-literal|1000
+name|BUFSIZ
 index|]
 decl_stmt|;
 name|struct
@@ -621,19 +621,12 @@ name|sprintf
 argument_list|(
 name|req
 argument_list|,
-literal|"GET ftp://%s:%s%s%s/%s%s HTTP/1.0\r\n\r\n"
+literal|"GET %s/%s/%s%s HTTP/1.0\r\n\r\n"
 argument_list|,
 name|variable_get
 argument_list|(
-name|VAR_FTP_HOST
+name|VAR_FTP_PATH
 argument_list|)
-argument_list|,
-name|variable_get
-argument_list|(
-name|VAR_FTP_PORT
-argument_list|)
-argument_list|,
-literal|"/pub/FreeBSD/"
 argument_list|,
 name|variable_get
 argument_list|(
@@ -648,6 +641,12 @@ name|VAR_HTTP_FTP_MODE
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|isDebug
+argument_list|()
+condition|)
+block|{
 name|msgDebug
 argument_list|(
 literal|"sending http request: %s"
@@ -655,6 +654,7 @@ argument_list|,
 name|req
 argument_list|)
 expr_stmt|;
+block|}
 name|write
 argument_list|(
 name|s
@@ -751,6 +751,22 @@ expr_stmt|;
 comment|/* chop the CRLF off */
 if|if
 condition|(
+name|probe
+operator|&&
+operator|(
+name|rv
+operator|!=
+literal|200
+operator|)
+condition|)
+block|{
+return|return
+name|NULL
+return|;
+block|}
+elseif|else
+if|if
+condition|(
 name|rv
 operator|>=
 literal|500
@@ -758,9 +774,11 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Server error %s, you could try an other server"
+literal|"Server error %s when sending %s, you could try an other server"
 argument_list|,
 name|buf
+argument_list|,
+name|req
 argument_list|)
 expr_stmt|;
 return|return
@@ -834,7 +852,7 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Error %s when trying to fetch %s"
+literal|"Error %s when sending %s, you could try an other server"
 argument_list|,
 name|buf
 argument_list|,
