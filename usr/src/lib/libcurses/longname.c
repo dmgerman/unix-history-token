@@ -28,15 +28,8 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|reg
-value|register
-end_define
-
 begin_comment
-comment|/*  *	This routine fills in "def" with the long name of the terminal.  *  */
+comment|/*  * longname --  *	Fill in "def" with the long name of the terminal.  */
 end_comment
 
 begin_function
@@ -48,7 +41,7 @@ name|bp
 parameter_list|,
 name|def
 parameter_list|)
-name|reg
+specifier|register
 name|char
 modifier|*
 name|bp
@@ -60,7 +53,7 @@ end_function
 
 begin_block
 block|{
-name|reg
+specifier|register
 name|char
 modifier|*
 name|cp
@@ -91,15 +84,15 @@ operator|==
 literal|'|'
 condition|)
 block|{
-name|bp
-operator|++
-expr_stmt|;
+for|for
+control|(
 name|cp
 operator|=
 name|def
-expr_stmt|;
-while|while
-condition|(
+operator|,
+operator|++
+name|bp
+init|;
 operator|*
 name|bp
 operator|&&
@@ -112,7 +105,8 @@ operator|*
 name|bp
 operator|!=
 literal|'|'
-condition|)
+condition|;
+control|)
 operator|*
 name|cp
 operator|++
@@ -124,11 +118,13 @@ expr_stmt|;
 operator|*
 name|cp
 operator|=
-literal|0
+literal|'\0'
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|def
+operator|)
 return|;
 block|}
 end_block
