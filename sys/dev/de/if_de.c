@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_de.c,v 1.82 1999/02/28 17:08:51 explorer Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_de.c,v 1.102 1999/03/17 16:44:52 luigi Exp $ */
+comment|/*	$Id: if_de.c,v 1.103 1999/04/24 20:13:59 peter Exp $ */
 end_comment
 
 begin_comment
@@ -29237,6 +29237,9 @@ parameter_list|(
 name|sc
 parameter_list|)
 value|do { \ 	(sc)->tulip_pci_busno = parent; \ 	(sc)->tulip_pci_devno = pa->pa_device; \     } while (0)
+endif|#
+directive|endif
+comment|/* __NetBSD__ */
 if|#
 directive|if
 name|defined
@@ -29250,9 +29253,6 @@ name|TULIP_MEDIA_UNKNOWN
 decl_stmt|;
 endif|#
 directive|endif
-endif|#
-directive|endif
-comment|/* __NetBSD__ */
 name|int
 name|retval
 decl_stmt|,
@@ -29860,11 +29860,6 @@ directive|if
 name|defined
 argument_list|(
 name|__alpha__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|__NetBSD__
 argument_list|)
 comment|/*      * The Alpha SRM console encodes a console set media in the driver      * part of the CFDA register.  Note that the Multia presents a      * problem in that its BNC mode is really EXTSIA.  So in that case      * force a probe.      */
 switch|switch
@@ -31103,11 +31098,6 @@ name|defined
 argument_list|(
 name|__alpha__
 argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
 name|sc
 operator|->
 name|tulip_media
@@ -31126,11 +31116,6 @@ directive|if
 name|defined
 argument_list|(
 name|__alpha__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|__NetBSD__
 argument_list|)
 if|if
 condition|(
