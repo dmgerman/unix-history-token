@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: stage2.c,v 1.16.2.1 1994/11/21 03:12:16 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: stage2.c,v 1.20 1994/12/27 23:26:56 jkh Exp $  *  */
 end_comment
 
 begin_include
@@ -466,21 +466,29 @@ block|}
 name|Mkdir
 argument_list|(
 literal|"/mnt/etc"
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|Mkdir
 argument_list|(
 literal|"/mnt/dev"
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|Mkdir
 argument_list|(
 literal|"/mnt/mnt"
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|Mkdir
 argument_list|(
 literal|"/mnt/stand"
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|TellEm
@@ -745,6 +753,11 @@ argument_list|(
 literal|"Writing filesystems"
 argument_list|)
 expr_stmt|;
+name|chdir
+argument_list|(
+literal|"/mnt"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|j
@@ -792,6 +805,7 @@ index|]
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 name|fprintf
 argument_list|(
 name|f1
@@ -823,7 +837,26 @@ index|]
 index|]
 argument_list|)
 expr_stmt|;
+name|Mkdir
+argument_list|(
+name|Fmount
+index|[
+name|Fsize
+index|[
+name|j
+index|]
+index|]
+argument_list|,
+name|FALSE
+argument_list|)
+expr_stmt|;
 block|}
+block|}
+name|chdir
+argument_list|(
+literal|"/"
+argument_list|)
+expr_stmt|;
 name|TellEm
 argument_list|(
 literal|"Writing procfs"

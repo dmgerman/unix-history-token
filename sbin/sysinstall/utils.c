@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: utils.c,v 1.30.2.1 1994/11/21 03:12:24 phk Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dkuug.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: utils.c,v 1.34 1994/12/27 23:26:59 jkh Exp $  *  */
 end_comment
 
 begin_include
@@ -790,6 +790,8 @@ block|{
 name|Mkdir
 argument_list|(
 name|mountpoint
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 block|}
@@ -868,6 +870,9 @@ parameter_list|(
 name|char
 modifier|*
 name|ipath
+parameter_list|,
+name|int
+name|die
 parameter_list|)
 block|{
 name|struct
@@ -985,6 +990,8 @@ condition|(
 name|errno
 operator|!=
 name|ENOENT
+operator|&&
+name|die
 condition|)
 name|Fatal
 argument_list|(
@@ -1019,6 +1026,8 @@ name|S_IRWXO
 argument_list|)
 operator|<
 literal|0
+operator|&&
+name|die
 condition|)
 name|Fatal
 argument_list|(

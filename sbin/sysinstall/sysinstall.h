@@ -621,6 +621,9 @@ operator|(
 name|char
 operator|*
 name|path
+operator|,
+name|int
+name|die
 operator|)
 argument_list|)
 decl_stmt|;
