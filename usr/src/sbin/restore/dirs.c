@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dirs.c	3.6	(Berkeley)	83/03/27"
+literal|"@(#)dirs.c	3.7	(Berkeley)	83/03/27"
 decl_stmt|;
 end_decl_stmt
 
@@ -602,7 +602,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|void
+name|long
 function_decl|(
 modifier|*
 name|todo
@@ -655,9 +655,12 @@ condition|)
 block|{
 comment|/* 		 * Pname is name of a simple file or an unchanged directory. 		 */
 call|(
-modifier|*
-name|todo
+name|void
 call|)
+argument_list|(
+operator|*
+name|todo
+argument_list|)
 argument_list|(
 name|pname
 argument_list|,
@@ -669,6 +672,8 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * Pname is a dumped directory name. 	 */
+if|if
+condition|(
 call|(
 modifier|*
 name|todo
@@ -680,7 +685,10 @@ name|ino
 argument_list|,
 name|NODE
 argument_list|)
-expr_stmt|;
+operator|==
+name|FAIL
+condition|)
+return|return;
 comment|/* 	 * begin search through the directory 	 * skipping over "." and ".." 	 */
 name|strncpy
 argument_list|(
@@ -2395,56 +2403,6 @@ expr_stmt|;
 return|return
 operator|(
 name|GOOD
-operator|)
-return|;
-block|}
-end_block
-
-begin_comment
-comment|/*  * Determine the type of an inode  */
-end_comment
-
-begin_macro
-name|inodetype
-argument_list|(
-argument|ino
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|ino_t
-name|ino
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-name|struct
-name|inotab
-modifier|*
-name|itp
-decl_stmt|;
-name|itp
-operator|=
-name|inotablookup
-argument_list|(
-name|ino
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|itp
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|LEAF
-operator|)
-return|;
-return|return
-operator|(
-name|NODE
 operator|)
 return|;
 block|}

@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1983 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/*	@(#)restore.h	3.4	(Berkeley)	83/03/23	*/
+comment|/*	@(#)restore.h	3.5	(Berkeley)	83/03/27	*/
 end_comment
 
 begin_include
@@ -560,7 +560,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
+name|long
 name|listfile
 parameter_list|()
 function_decl|;
@@ -568,7 +568,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
+name|long
 name|addfile
 parameter_list|()
 function_decl|;
@@ -576,7 +576,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
+name|long
 name|nodeupdates
 parameter_list|()
 function_decl|;
@@ -584,7 +584,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
+name|long
 name|verifyfile
 parameter_list|()
 function_decl|;

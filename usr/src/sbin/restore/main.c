@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	3.7	(Berkeley)	83/03/08"
+literal|"@(#)main.c	3.8	(Berkeley)	83/03/27"
 decl_stmt|;
 end_decl_stmt
 
@@ -595,10 +595,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-if|if
-condition|(
-name|hflag
-condition|)
 name|treescan
 argument_list|(
 name|name
@@ -606,19 +602,6 @@ argument_list|,
 name|ino
 argument_list|,
 name|listfile
-argument_list|)
-expr_stmt|;
-else|else
-name|listfile
-argument_list|(
-name|name
-argument_list|,
-name|ino
-argument_list|,
-name|inodetype
-argument_list|(
-name|ino
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -705,10 +688,6 @@ argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|hflag
-condition|)
 name|treescan
 argument_list|(
 name|name
@@ -716,19 +695,6 @@ argument_list|,
 name|ino
 argument_list|,
 name|addfile
-argument_list|)
-expr_stmt|;
-else|else
-name|addfile
-argument_list|(
-name|name
-argument_list|,
-name|ino
-argument_list|,
-name|inodetype
-argument_list|(
-name|ino
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
