@@ -82,6 +82,13 @@ name|tty
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|OTHER_WRITE
+value|002
+end_define
+
 begin_function
 name|main
 parameter_list|(
@@ -172,7 +179,7 @@ name|sbuf
 operator|.
 name|st_mode
 operator|&
-literal|020
+name|OTHER_WRITE
 condition|)
 block|{
 name|fputs
@@ -201,10 +208,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-define|#
-directive|define
-name|OTHER_WRITE
-value|020
 switch|switch
 condition|(
 operator|*
@@ -252,7 +255,7 @@ expr_stmt|;
 default|default:
 name|fputs
 argument_list|(
-literal|"usage: mesg [y] [n]\n"
+literal|"usage: mesg [y|n]\n"
 argument_list|,
 name|stderr
 argument_list|)
