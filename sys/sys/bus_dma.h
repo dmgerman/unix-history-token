@@ -698,7 +698,7 @@ parameter_list|,
 name|op
 parameter_list|)
 define|\
-value|if ((dmamap) != NULL)				\ 		_bus_dmamap_sync(dmat, dmamap, op)
+value|do {							\ 		if ((dmamap) != NULL)				\ 			_bus_dmamap_sync(dmat, dmamap, op);	\ 	} while (0)
 end_define
 
 begin_comment
@@ -728,7 +728,7 @@ parameter_list|,
 name|dmamap
 parameter_list|)
 define|\
-value|if ((dmamap) != NULL)				\ 		_bus_dmamap_unload(dmat, dmamap)
+value|do {							\ 		if ((dmamap) != NULL)				\ 			_bus_dmamap_unload(dmat, dmamap);	\ 	} while (0)
 end_define
 
 begin_endif
