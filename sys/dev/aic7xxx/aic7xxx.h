@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Interface to the generic driver for the aic7xxx based adaptec  * SCSI controllers.  This is used to implement product specific  * probe and attach routines.  *  * Copyright (c) 1994, 1995, 1996, 1997, 1998, 1999 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * the GNU Public License ("GPL").  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Interface to the generic driver for the aic7xxx based adaptec  * SCSI controllers.  This is used to implement product specific  * probe and attach routines.  *  * Copyright (c) 1994, 1995, 1996, 1997, 1998, 1999, 2000 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * the GNU Public License ("GPL").  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -197,13 +197,21 @@ name|AHC_AIC7890
 init|=
 literal|0x0008
 block|,
-name|AHC_AIC7895
+name|AHC_AIC7892
 init|=
 literal|0x0009
 block|,
-name|AHC_AIC7896
+name|AHC_AIC7895
 init|=
 literal|0x000a
+block|,
+name|AHC_AIC7896
+init|=
+literal|0x000b
+block|,
+name|AHC_AIC7899
+init|=
+literal|0x000c
 block|,
 name|AHC_VL
 init|=
@@ -227,6 +235,15 @@ block|}
 name|ahc_chip
 typedef|;
 end_typedef
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|ahc_chip_names
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_typedef
 typedef|typedef
@@ -291,33 +308,41 @@ init|=
 literal|0x0400
 block|,
 comment|/* Has HS_MAILBOX register */
+name|AHC_DT
+init|=
+literal|0x0800
+block|,
+comment|/* Double Transition transfers */
+name|AHC_NEW_TERMCTL
+init|=
+literal|0x1000
+block|,
+name|AHC_MULTI_FUNC
+init|=
+literal|0x2000
+block|,
+comment|/* Multi-Function Twin Channel Device */
 name|AHC_AIC7770_FE
 init|=
 name|AHC_FENONE
 block|,
 name|AHC_AIC7850_FE
 init|=
-name|AHC_FENONE
-operator||
 name|AHC_SPIOCAP
 block|,
 name|AHC_AIC7855_FE
 init|=
-name|AHC_FENONE
-operator||
-name|AHC_SPIOCAP
+name|AHC_AIC7850_FE
 block|,
 name|AHC_AIC7859_FE
 init|=
-name|AHC_ULTRA
+name|AHC_AIC7850_FE
 operator||
-name|AHC_SPIOCAP
+name|AHC_ULTRA
 block|,
 name|AHC_AIC7860_FE
 init|=
-name|AHC_ULTRA
-operator||
-name|AHC_SPIOCAP
+name|AHC_AIC7859_FE
 block|,
 name|AHC_AIC7870_FE
 init|=
@@ -342,40 +367,42 @@ operator||
 name|AHC_MULTI_TID
 operator||
 name|AHC_HS_MAILBOX
+operator||
+name|AHC_NEW_TERMCTL
+block|,
+name|AHC_AIC7892_FE
+init|=
+name|AHC_AIC7890_FE
+operator||
+name|AHC_DT
 block|,
 name|AHC_AIC7895_FE
 init|=
+name|AHC_AIC7880_FE
+operator||
 name|AHC_MORE_SRAM
 operator||
 name|AHC_CMD_CHAN
 operator||
-name|AHC_ULTRA
+name|AHC_MULTI_FUNC
 block|,
 name|AHC_AIC7895C_FE
 init|=
-name|AHC_MORE_SRAM
-operator||
-name|AHC_CMD_CHAN
-operator||
-name|AHC_ULTRA
+name|AHC_AIC7895_FE
 operator||
 name|AHC_MULTI_TID
 block|,
 name|AHC_AIC7896_FE
 init|=
-name|AHC_MORE_SRAM
+name|AHC_AIC7890_FE
 operator||
-name|AHC_CMD_CHAN
+name|AHC_MULTI_FUNC
+block|,
+name|AHC_AIC7899_FE
+init|=
+name|AHC_AIC7892_FE
 operator||
-name|AHC_ULTRA2
-operator||
-name|AHC_QUEUE_REGS
-operator||
-name|AHC_SG_PRELOAD
-operator||
-name|AHC_MULTI_TID
-operator||
-name|AHC_HS_MAILBOX
+name|AHC_MULTI_FUNC
 block|}
 name|ahc_feature
 typedef|;
@@ -460,6 +487,11 @@ init|=
 literal|0x10000
 block|,
 comment|/* Blocked waiting for ATIOs */
+name|AHC_INT50_SPEEDFLEX
+init|=
+literal|0x20000
+block|,
+comment|/* 					   * Internal 50pin connector 					   * sits behind an aic3860 					   */
 block|}
 name|ahc_flag
 typedef|;
@@ -830,6 +862,9 @@ decl_stmt|;
 name|u_int8_t
 name|offset
 decl_stmt|;
+name|u_int8_t
+name|ppr_flags
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -898,7 +933,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Define the format of the aic7XX0 SEEPROM registers (16 bits).  */
+comment|/*  * Define the format of the aic7XXX SEEPROM registers (16 bits).  */
 end_comment
 
 begin_struct
@@ -938,7 +973,11 @@ directive|define
 name|CFSYNCHISULTRA
 value|0x0040
 comment|/* CFSYNCH is an ultra offset (2940AU)*/
-comment|/*		UNUSED		0x0080	*/
+define|#
+directive|define
+name|CFSYNCSINGLE
+value|0x0080
+comment|/* Single-Transition signalling */
 define|#
 directive|define
 name|CFSTART
@@ -959,7 +998,16 @@ directive|define
 name|CFMULTILUN
 value|0x0800
 comment|/* Probe multiple luns in BIOS scan */
-comment|/*		UNUSED		0xf000	*/
+define|#
+directive|define
+name|CFWBCACHEENB
+value|0x4000
+comment|/* Enable W-Behind Cache on disks */
+define|#
+directive|define
+name|CFWBCACHENOP
+value|0xc000
+comment|/* Don't touch W-Behind Cache */
 comment|/*  * BIOS Control Bits  */
 name|u_int16_t
 name|bios_control
@@ -974,7 +1022,7 @@ define|#
 directive|define
 name|CFSUPREMB
 value|0x0002
-comment|/* support removeable drives for boot only */
+comment|/* support removeable boot drives */
 define|#
 directive|define
 name|CFBIOSEN
@@ -991,7 +1039,7 @@ directive|define
 name|CF284XEXTEND
 value|0x0020
 comment|/* extended translation (284x cards) */
-comment|/*		UNUSED		0x0060	*/
+comment|/*		UNUSED		0x0040	*/
 define|#
 directive|define
 name|CFEXTEND
@@ -1063,7 +1111,7 @@ directive|define
 name|CFLVDSTERM
 value|0x0800
 comment|/* aic7890 LVD Termination */
-comment|/*		UNUSED		0xf080	*/
+comment|/*		UNUSED		0xf280	*/
 comment|/*  * Bus Release, Host Adapter ID  */
 name|u_int16_t
 name|brtime_id
@@ -1111,7 +1159,7 @@ struct|struct
 name|ahc_syncrate
 block|{
 name|int
-name|sxfr_ultra2
+name|sxfr_u2
 decl_stmt|;
 name|int
 name|sxfr
@@ -1121,6 +1169,10 @@ define|#
 directive|define
 name|ULTRA_SXFR
 value|0x100
+define|#
+directive|define
+name|ST_SXFR
+value|0x010
 name|u_int8_t
 name|period
 decl_stmt|;

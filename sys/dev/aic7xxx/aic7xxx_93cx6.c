@@ -540,7 +540,7 @@ directive|ifdef
 name|AHC_DUMP_EEPROM
 name|printf
 argument_list|(
-literal|"\nSerial EEPROM:"
+literal|"\nSerial EEPROM:\n\t"
 argument_list|)
 expr_stmt|;
 for|for
@@ -581,7 +581,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\n              "
+literal|"\n\t"
 argument_list|)
 expr_stmt|;
 block|}
