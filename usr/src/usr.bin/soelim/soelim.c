@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)soelim.c	4.2 (Berkeley) %G%"
+literal|"@(#)soelim.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,6 +55,9 @@ operator|==
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|process
 argument_list|(
 name|STDIN_NAME
@@ -68,6 +71,9 @@ expr_stmt|;
 block|}
 do|do
 block|{
+operator|(
+name|void
+operator|)
 name|process
 argument_list|(
 name|argv
@@ -98,21 +104,16 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|int
 name|process
-argument_list|(
-argument|file
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|file
+parameter_list|)
 name|char
 modifier|*
 name|file
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -132,6 +133,9 @@ decl_stmt|;
 name|FILE
 modifier|*
 name|soee
+decl_stmt|;
+name|int
+name|isfile
 decl_stmt|;
 if|if
 condition|(
@@ -172,7 +176,12 @@ argument_list|(
 name|file
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 block|}
 block|}
 for|for
@@ -273,6 +282,10 @@ name|cp
 operator|=
 name|fname
 expr_stmt|;
+name|isfile
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -313,6 +326,9 @@ argument_list|(
 name|soee
 argument_list|)
 expr_stmt|;
+name|isfile
+operator|++
+expr_stmt|;
 continue|continue;
 block|}
 block|}
@@ -340,8 +356,23 @@ operator|++
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
 name|process
 argument_list|(
+name|fname
+argument_list|)
+operator|<
+literal|0
+condition|)
+if|if
+condition|(
+name|isfile
+condition|)
+name|printf
+argument_list|(
+literal|".so %s\n"
+argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
@@ -374,8 +405,13 @@ name|soee
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
-end_block
+end_function
 
 end_unit
 
