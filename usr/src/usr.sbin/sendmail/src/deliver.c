@@ -33,7 +33,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.133
+literal|3.134
 operator|%
 name|G
 operator|%
@@ -4018,9 +4018,7 @@ argument_list|)
 expr_stmt|;
 comment|/* be sure we are immune from the terminal */
 name|disconnect
-argument_list|(
-name|TRUE
-argument_list|)
+argument_list|()
 expr_stmt|;
 break|break;
 block|}

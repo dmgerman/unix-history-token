@@ -51,7 +51,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.141
+literal|3.142
 operator|%
 name|G
 operator|%
@@ -1894,9 +1894,7 @@ argument_list|()
 expr_stmt|;
 comment|/* disconnect from our controlling tty */
 name|disconnect
-argument_list|(
-name|FALSE
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 ifdef|#
@@ -5284,21 +5282,13 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  DISCONNECT -- remove our connection with any foreground process ** **	Parameters: **		all -- if set, disconnect InChannel and OutChannel also. ** **	Returns: **		none ** **	Side Effects: **		Trys to insure that we are immune to vagaries of **		the controlling tty. */
+comment|/* **  DISCONNECT -- remove our connection with any foreground process ** **	Parameters: **		none. ** **	Returns: **		none ** **	Side Effects: **		Trys to insure that we are immune to vagaries of **		the controlling tty. */
 end_comment
 
 begin_macro
 name|disconnect
-argument_list|(
-argument|all
-argument_list|)
+argument_list|()
 end_macro
-
-begin_decl_stmt
-name|bool
-name|all
-decl_stmt|;
-end_decl_stmt
 
 begin_block
 block|{
@@ -5319,9 +5309,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"disconnect(%d): In %d Out %d Xs %d\n"
-argument_list|,
-name|all
+literal|"disconnect: In %d Out %d\n"
 argument_list|,
 name|fileno
 argument_list|(
@@ -5331,11 +5319,6 @@ argument_list|,
 name|fileno
 argument_list|(
 name|OutChannel
-argument_list|)
-argument_list|,
-name|fileno
-argument_list|(
-name|Xscript
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5397,26 +5380,24 @@ expr_stmt|;
 comment|/* all input from /dev/null */
 if|if
 condition|(
-name|all
-condition|)
-operator|(
-name|void
-operator|)
-name|freopen
-argument_list|(
-literal|"/dev/null"
-argument_list|,
-literal|"r"
-argument_list|,
-name|InChannel
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|InChannel
 operator|!=
 name|stdin
 condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fclose
+argument_list|(
+name|InChannel
+argument_list|)
+expr_stmt|;
+name|InChannel
+operator|=
+name|stdin
+expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -5430,15 +5411,6 @@ name|stdin
 argument_list|)
 expr_stmt|;
 comment|/* output to the transcript */
-if|if
-condition|(
-name|all
-operator|||
-name|OutChannel
-operator|!=
-name|stdout
-condition|)
-block|{
 if|if
 condition|(
 name|OutChannel
@@ -5456,9 +5428,24 @@ argument_list|)
 expr_stmt|;
 name|OutChannel
 operator|=
-name|Xscript
+name|stdout
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|Xscript
+operator|==
+name|NULL
+condition|)
+name|Xscript
+operator|=
+name|fopen
+argument_list|(
+literal|"/dev/null"
+argument_list|,
+literal|"w"
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -5504,7 +5491,6 @@ operator|>
 literal|0
 condition|)
 continue|continue;
-block|}
 ifdef|#
 directive|ifdef
 name|TIOCNOTTY
