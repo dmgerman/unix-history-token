@@ -8,7 +8,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)main.c 1.3 %G%"
+literal|"@(#)main.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
