@@ -87,6 +87,27 @@ end_struct_decl
 
 begin_function_decl
 name|__BEGIN_DECLS
+name|void
+name|clean_environment
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+specifier|const
+modifier|*
+name|_white
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+specifier|const
+modifier|*
+name|_more_white
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|extattr_namespace_to_string
 parameter_list|(
