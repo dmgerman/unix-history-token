@@ -764,7 +764,7 @@ literal|"usage: ppp [-auto | -foreground | -background | -direct |"
 literal|" -dedicated | -ddial | -interactive]"
 ifndef|#
 directive|ifndef
-name|NOALIAS
+name|NONAT
 literal|" [-nat]"
 endif|#
 directive|endif
