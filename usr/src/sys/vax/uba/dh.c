@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dh.c	4.40	81/11/18	*/
+comment|/*	dh.c	4.41	82/01/14	*/
 end_comment
 
 begin_include
@@ -1320,7 +1320,7 @@ name|tp
 operator|->
 name|t_state
 operator|&
-name|XCLUDE
+name|TS_XCLUDE
 operator|&&
 name|u
 operator|.
@@ -1367,7 +1367,7 @@ name|tp
 operator|->
 name|t_state
 operator||=
-name|WOPEN
+name|TS_WOPEN
 expr_stmt|;
 comment|/* 	 * While setting up state for this uba and this dh, 	 * block uba resets which can clear the state. 	 */
 name|s
@@ -1487,7 +1487,7 @@ name|tp
 operator|->
 name|t_state
 operator|&
-name|ISOPEN
+name|TS_ISOPEN
 operator|)
 operator|==
 literal|0
@@ -1664,14 +1664,14 @@ name|tp
 operator|->
 name|t_state
 operator|&
-name|HUPCLS
+name|TS_HUPCLS
 operator|||
 operator|(
 name|tp
 operator|->
 name|t_state
 operator|&
-name|ISOPEN
+name|TS_ISOPEN
 operator|)
 operator|==
 literal|0
@@ -1920,7 +1920,7 @@ name|tp
 operator|->
 name|t_state
 operator|&
-name|ISOPEN
+name|TS_ISOPEN
 operator|)
 operator|==
 literal|0
@@ -2377,7 +2377,7 @@ name|tp
 operator|->
 name|t_state
 operator||=
-name|HUPCLS
+name|TS_HUPCLS
 expr_stmt|;
 name|dmctl
 argument_list|(
@@ -2685,7 +2685,7 @@ operator|->
 name|t_state
 operator|&=
 operator|~
-name|BUSY
+name|TS_BUSY
 expr_stmt|;
 if|if
 condition|(
@@ -2693,14 +2693,14 @@ name|tp
 operator|->
 name|t_state
 operator|&
-name|FLUSH
+name|TS_FLUSH
 condition|)
 name|tp
 operator|->
 name|t_state
 operator|&=
 operator|~
-name|FLUSH
+name|TS_FLUSH
 expr_stmt|;
 else|else
 block|{
@@ -2866,11 +2866,11 @@ operator|->
 name|t_state
 operator|&
 operator|(
-name|TIMEOUT
+name|TS_TIMEOUT
 operator||
-name|BUSY
+name|TS_BUSY
 operator||
-name|TTSTOP
+name|TS_TTSTOP
 operator|)
 condition|)
 goto|goto
@@ -2879,14 +2879,6 @@ goto|;
 comment|/* 	 * If there are sleepers, and output has drained below low 	 * water mark, wake up the sleepers. 	 */
 if|if
 condition|(
-operator|(
-name|tp
-operator|->
-name|t_state
-operator|&
-name|ASLEEP
-operator|)
-operator|&&
 name|tp
 operator|->
 name|t_outq
@@ -2899,12 +2891,21 @@ name|tp
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|tp
+operator|->
+name|t_state
+operator|&
+name|TS_ASLEEP
+condition|)
+block|{
 name|tp
 operator|->
 name|t_state
 operator|&=
 operator|~
-name|ASLEEP
+name|TS_ASLEEP
 expr_stmt|;
 name|wakeup
 argument_list|(
@@ -2917,6 +2918,41 @@ operator|->
 name|t_outq
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|tp
+operator|->
+name|t_wsel
+condition|)
+block|{
+name|selwakeup
+argument_list|(
+name|tp
+operator|->
+name|t_wsel
+argument_list|,
+name|tp
+operator|->
+name|t_state
+operator|&
+name|TS_WCOLL
+argument_list|)
+expr_stmt|;
+name|tp
+operator|->
+name|t_wsel
+operator|=
+literal|0
+expr_stmt|;
+name|tp
+operator|->
+name|t_state
+operator|&=
+operator|~
+name|TS_WCOLL
+expr_stmt|;
+block|}
 block|}
 comment|/* 	 * Now restart transmission unless the output queue is 	 * empty. 	 */
 if|if
@@ -3012,7 +3048,7 @@ name|tp
 operator|->
 name|t_state
 operator||=
-name|TIMEOUT
+name|TS_TIMEOUT
 expr_stmt|;
 goto|goto
 name|out
@@ -3103,7 +3139,7 @@ name|tp
 operator|->
 name|t_state
 operator||=
-name|BUSY
+name|TS_BUSY
 expr_stmt|;
 block|}
 name|out
@@ -3176,7 +3212,7 @@ name|tp
 operator|->
 name|t_state
 operator|&
-name|BUSY
+name|TS_BUSY
 condition|)
 block|{
 comment|/* 		 * Device is transmitting; stop output 		 * by selecting the line and setting the byte 		 * count to -1.  We will clean up later 		 * by examining the address where the dh stopped. 		 */
@@ -3210,7 +3246,7 @@ name|tp
 operator|->
 name|t_state
 operator|&
-name|TTSTOP
+name|TS_TTSTOP
 operator|)
 operator|==
 literal|0
@@ -3219,7 +3255,7 @@ name|tp
 operator|->
 name|t_state
 operator||=
-name|FLUSH
+name|TS_FLUSH
 expr_stmt|;
 name|addr
 operator|->
@@ -3455,9 +3491,9 @@ operator|->
 name|t_state
 operator|&
 operator|(
-name|ISOPEN
+name|TS_ISOPEN
 operator||
-name|WOPEN
+name|TS_WOPEN
 operator|)
 condition|)
 block|{
@@ -3480,7 +3516,7 @@ operator|->
 name|t_state
 operator|&=
 operator|~
-name|BUSY
+name|TS_BUSY
 expr_stmt|;
 name|dhstart
 argument_list|(
@@ -3649,7 +3685,7 @@ name|tp
 operator|->
 name|t_state
 operator||=
-name|CARR_ON
+name|TS_CARR_ON
 expr_stmt|;
 return|return;
 block|}
@@ -3709,7 +3745,7 @@ name|tp
 operator|->
 name|t_state
 operator||=
-name|CARR_ON
+name|TS_CARR_ON
 expr_stmt|;
 name|addr
 operator|->
@@ -3726,7 +3762,7 @@ name|tp
 operator|->
 name|t_state
 operator|&
-name|CARR_ON
+name|TS_CARR_ON
 operator|)
 operator|==
 literal|0
@@ -4046,7 +4082,7 @@ name|tp
 operator|->
 name|t_state
 operator|&
-name|WOPEN
+name|TS_WOPEN
 operator|)
 operator|==
 literal|0
@@ -4074,7 +4110,7 @@ operator|->
 name|t_state
 operator|&=
 operator|~
-name|TTSTOP
+name|TS_TTSTOP
 expr_stmt|;
 name|ttstart
 argument_list|(
@@ -4090,7 +4126,7 @@ name|tp
 operator|->
 name|t_state
 operator|&
-name|TTSTOP
+name|TS_TTSTOP
 operator|)
 operator|==
 literal|0
@@ -4100,7 +4136,7 @@ name|tp
 operator|->
 name|t_state
 operator||=
-name|TTSTOP
+name|TS_TTSTOP
 expr_stmt|;
 name|dhstop
 argument_list|(
@@ -4132,7 +4168,7 @@ name|tp
 operator|->
 name|t_state
 operator|&
-name|WOPEN
+name|TS_WOPEN
 operator|)
 operator|==
 literal|0
@@ -4187,7 +4223,7 @@ operator|->
 name|t_state
 operator|&=
 operator|~
-name|CARR_ON
+name|TS_CARR_ON
 expr_stmt|;
 block|}
 else|else
@@ -4195,7 +4231,7 @@ name|tp
 operator|->
 name|t_state
 operator||=
-name|CARR_ON
+name|TS_CARR_ON
 expr_stmt|;
 block|}
 name|addr
