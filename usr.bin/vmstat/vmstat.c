@@ -2931,6 +2931,54 @@ name|void
 operator|)
 name|printf
 argument_list|(
+literal|"%9u kernel threads created\n"
+argument_list|,
+name|sum
+operator|.
+name|v_kthreads
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%9u  fork() calls\n"
+argument_list|,
+name|sum
+operator|.
+name|v_forks
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%9u vfork() calls\n"
+argument_list|,
+name|sum
+operator|.
+name|v_vforks
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%9u rfork() calls\n"
+argument_list|,
+name|sum
+operator|.
+name|v_rforks
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
 literal|"%9u swap pager pageins\n"
 argument_list|,
 name|sum
@@ -3128,6 +3176,54 @@ argument_list|,
 name|sum
 operator|.
 name|v_vm_faults
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%9u pages affected by kernel thread creation\n"
+argument_list|,
+name|sum
+operator|.
+name|v_kthreadpages
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%9u pages affected by  fork()\n"
+argument_list|,
+name|sum
+operator|.
+name|v_forkpages
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%9u pages affected by vfork()\n"
+argument_list|,
+name|sum
+operator|.
+name|v_vforkpages
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%9u pages affected by rfork()\n"
+argument_list|,
+name|sum
+operator|.
+name|v_rforkpages
 argument_list|)
 expr_stmt|;
 operator|(
