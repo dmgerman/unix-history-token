@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmdtab.c	1.2 (Lucasfilm) %G%"
+literal|"@(#)cmdtab.c	1.3 (Lucasfilm) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -155,23 +155,26 @@ end_function_decl
 
 begin_decl_stmt
 name|int
-name|showvmstat
+name|showkre
 argument_list|()
 decl_stmt|,
-name|fetchvmstat
+name|fetchkre
 argument_list|()
 decl_stmt|,
-name|labelvmstat
+name|labelkre
 argument_list|()
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|initvmstat
+name|initkre
 argument_list|()
 decl_stmt|,
-name|closevmstat
+name|closekre
+argument_list|()
+decl_stmt|,
+name|cmdkre
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -179,7 +182,7 @@ end_decl_stmt
 begin_function_decl
 name|WINDOW
 modifier|*
-name|openvmstat
+name|openkre
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -205,6 +208,10 @@ block|,
 name|openpigs
 block|,
 name|closepigs
+block|,
+literal|0
+block|,
+name|CF_LOADAV
 block|}
 block|,
 block|{
@@ -221,6 +228,10 @@ block|,
 name|openswap
 block|,
 name|closeswap
+block|,
+literal|0
+block|,
+name|CF_LOADAV
 block|}
 block|,
 block|{
@@ -237,6 +248,10 @@ block|,
 name|openmbufs
 block|,
 name|closembufs
+block|,
+literal|0
+block|,
+name|CF_LOADAV
 block|}
 block|,
 block|{
@@ -255,22 +270,28 @@ block|,
 name|closeiostat
 block|,
 name|cmdiostat
+block|,
+name|CF_LOADAV
 block|}
 block|,
 block|{
 literal|"vmstat"
 block|,
-name|showvmstat
+name|showkre
 block|,
-name|fetchvmstat
+name|fetchkre
 block|,
-name|labelvmstat
+name|labelkre
 block|,
-name|initvmstat
+name|initkre
 block|,
-name|openvmstat
+name|openkre
 block|,
-name|closevmstat
+name|closekre
+block|,
+name|cmdkre
+block|,
+literal|0
 block|}
 block|,
 block|{

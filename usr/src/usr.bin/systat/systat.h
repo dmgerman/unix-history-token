@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*      systat.h     1.4     84/08/09     */
+comment|/*      systat.h     1.5     85/04/28     */
 end_comment
 
 begin_include
@@ -181,10 +181,32 @@ comment|/* display command interpreter */
 name|char
 name|c_flags
 decl_stmt|;
-comment|/* been initialized (right now) */
+comment|/* see below */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|CF_INIT
+value|0x1
+end_define
+
+begin_comment
+comment|/* been initialized */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CF_LOADAV
+value|0x2
+end_define
+
+begin_comment
+comment|/* display w/ load average */
+end_comment
 
 begin_decl_stmt
 name|struct
@@ -252,6 +274,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|double
+name|avenrun
+index|[
+literal|3
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
 name|kmemf
@@ -285,6 +316,12 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|hz
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|phz
 decl_stmt|;
 end_decl_stmt
 
