@@ -58,7 +58,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: disklabel.c,v 1.23 1998/10/23 18:57:39 bde Exp $"
+literal|"$Id: disklabel.c,v 1.24 1998/12/17 16:50:10 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -790,6 +790,8 @@ name|int
 name|ch
 decl_stmt|,
 name|f
+init|=
+literal|0
 decl_stmt|,
 name|flag
 decl_stmt|,
@@ -1197,6 +1199,10 @@ condition|(
 name|op
 condition|)
 block|{
+case|case
+name|UNSPEC
+case|:
+break|break;
 case|case
 name|EDIT
 case|:
