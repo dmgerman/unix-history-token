@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.h,v 1.11.4.4 1996/06/02 00:15:19 gpalmer Exp $  */
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.h,v 1.20 1996/06/09 23:46:21 alex Exp $  */
 end_comment
 
 begin_comment
@@ -123,6 +123,21 @@ decl_stmt|,
 name|fw_tcpnf
 decl_stmt|;
 comment|/* TCP flags set/unset */
+define|#
+directive|define
+name|IP_FW_ICMPTYPES_DIM
+value|(256 / (sizeof(unsigned) * 8))
+name|unsigned
+name|fw_icmptypes
+index|[
+name|IP_FW_ICMPTYPES_DIM
+index|]
+decl_stmt|;
+comment|/* ICMP types bitmap */
+name|long
+name|timestamp
+decl_stmt|;
+comment|/* timestamp (tv_sec) of last match */
 block|}
 struct|;
 end_struct
@@ -154,7 +169,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_ALL
-value|0x000
+value|0x0000
 end_define
 
 begin_comment
@@ -165,7 +180,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_TCP
-value|0x001
+value|0x0001
 end_define
 
 begin_comment
@@ -176,7 +191,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_UDP
-value|0x002
+value|0x0002
 end_define
 
 begin_comment
@@ -187,7 +202,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_ICMP
-value|0x003
+value|0x0003
 end_define
 
 begin_comment
@@ -198,7 +213,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_KIND
-value|0x003
+value|0x0003
 end_define
 
 begin_comment
@@ -209,7 +224,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_IN
-value|0x004
+value|0x0004
 end_define
 
 begin_comment
@@ -220,18 +235,18 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_OUT
-value|0x008
+value|0x0008
 end_define
 
 begin_comment
-comment|/* Outboun 			      */
+comment|/* Outbound			      */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IP_FW_F_ACCEPT
-value|0x010
+value|0x0010
 end_define
 
 begin_comment
@@ -242,7 +257,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_COUNT
-value|0x020
+value|0x0020
 end_define
 
 begin_comment
@@ -253,7 +268,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_PRN
-value|0x040
+value|0x0040
 end_define
 
 begin_comment
@@ -264,7 +279,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_ICMPRPL
-value|0x080
+value|0x0080
 end_define
 
 begin_comment
@@ -275,7 +290,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_SRNG
-value|0x100
+value|0x0100
 end_define
 
 begin_comment
@@ -286,7 +301,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_DRNG
-value|0x200
+value|0x0200
 end_define
 
 begin_comment
@@ -297,7 +312,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_IFNAME
-value|0x400
+value|0x0400
 end_define
 
 begin_comment
@@ -308,7 +323,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_FRAG
-value|0x800
+value|0x0800
 end_define
 
 begin_comment
@@ -318,8 +333,30 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IP_FW_F_ICMPBIT
+value|0x1000
+end_define
+
+begin_comment
+comment|/* ICMP type bitmap is valid          */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_F_IFUWILD
+value|0x2000
+end_define
+
+begin_comment
+comment|/* Match all interface units          */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IP_FW_F_MASK
-value|0xFFF
+value|0x3FFF
 end_define
 
 begin_comment
@@ -402,6 +439,13 @@ define|#
 directive|define
 name|IP_FW_TCPF_URG
 value|TH_URG
+end_define
+
+begin_define
+define|#
+directive|define
+name|IP_FW_TCPF_ESTAB
+value|0x40
 end_define
 
 begin_comment
