@@ -2106,10 +2106,9 @@ block|}
 comment|/* skip initial spaces */
 while|while
 condition|(
-operator|*
-name|line
-operator|!=
-literal|'\0'
+name|len
+operator|>
+literal|0
 operator|&&
 name|isspace
 argument_list|(
