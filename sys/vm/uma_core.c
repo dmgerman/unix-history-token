@@ -349,6 +349,30 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * Rather than #ifdef SMP all over, just give us a bogus definition for  * this on UP.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SMP
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|int
+name|mp_maxid
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * This is the handle used to schedule events that need to happen  * outside of the allocation fast path.  */
 end_comment
 
