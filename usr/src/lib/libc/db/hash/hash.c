@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash.c	5.10 (Berkeley) %G%"
+literal|"@(#)hash.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2578,6 +2578,8 @@ parameter_list|,
 name|key
 parameter_list|,
 name|data
+parameter_list|,
+name|flag
 parameter_list|)
 name|DB
 modifier|*
@@ -2592,8 +2594,23 @@ name|data
 decl_stmt|;
 end_function
 
+begin_decl_stmt
+name|u_long
+name|flag
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|lint
+name|flag
+operator|=
+name|flag
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -2683,7 +2700,7 @@ decl_stmt|;
 end_function
 
 begin_decl_stmt
-name|int
+name|u_long
 name|flag
 decl_stmt|;
 end_decl_stmt
@@ -2788,7 +2805,7 @@ name|dbp
 parameter_list|,
 name|key
 parameter_list|,
-name|flags
+name|flag
 parameter_list|)
 name|DB
 modifier|*
@@ -2798,11 +2815,20 @@ name|DBT
 modifier|*
 name|key
 decl_stmt|;
-name|int
-name|flags
+name|u_long
+name|flag
 decl_stmt|;
 comment|/* Ignored */
 block|{
+ifdef|#
+directive|ifdef
+name|lint
+name|flag
+operator|=
+name|flag
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -3580,7 +3606,7 @@ decl_stmt|;
 end_function
 
 begin_decl_stmt
-name|int
+name|u_long
 name|flag
 decl_stmt|;
 end_decl_stmt
