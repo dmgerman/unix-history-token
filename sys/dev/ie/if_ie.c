@@ -21,14 +21,6 @@ directive|include
 file|"ie.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|NIE
-operator|>
-literal|0
-end_if
-
 begin_include
 include|#
 directive|include
@@ -10642,15 +10634,6 @@ end_endif
 
 begin_comment
 comment|/* DEBUG */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NIE> 0 */
 end_comment
 
 end_unit
