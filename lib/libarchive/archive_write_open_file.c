@@ -342,7 +342,7 @@ index|[
 literal|0
 index|]
 operator|!=
-literal|0
+literal|'\0'
 condition|)
 block|{
 name|mine
