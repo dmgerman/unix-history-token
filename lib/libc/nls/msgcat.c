@@ -1220,7 +1220,7 @@ define|#
 directive|define
 name|CORRUPT
 parameter_list|()
-value|{                                            \ 	(void)fprintf(stderr, "%s: corrupt file.", _errowner); \ 	free(cat);                                             \ 	NLRETERR(EFTYPE);                                      \ }
+value|{                                            \ 	(void)fclose(cat->fp);                                 \ 	(void)fprintf(stderr, "%s: corrupt file.", _errowner); \ 	free(cat);                                             \ 	NLRETERR(EFTYPE);                                      \ }
 end_define
 
 begin_define
@@ -1228,7 +1228,7 @@ define|#
 directive|define
 name|NOSPACE
 parameter_list|()
-value|{                                              \ 	saverr = errno;                                          \ 	(void)fprintf(stderr, "%s: no more memory.", _errowner); \ 	free(cat);                                               \ 	errno = saverr;                                          \ 	return (NLERR);                                          \ }
+value|{                                              \ 	saverr = errno;                                          \ 	(void)fclose(cat->fp);                                   \ 	(void)fprintf(stderr, "%s: no more memory.", _errowner); \ 	free(cat);                                               \ 	errno = saverr;                                          \ 	return (NLERR);                                          \ }
 end_define
 
 begin_function
@@ -1479,6 +1479,16 @@ operator|!=
 name|MCMajorVer
 condition|)
 block|{
+operator|(
+name|void
+operator|)
+name|fclose
+argument_list|(
+name|cat
+operator|->
+name|fp
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|cat
@@ -1519,6 +1529,16 @@ operator|<=
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
+name|fclose
+argument_list|(
+name|cat
+operator|->
+name|fp
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|cat
@@ -1699,7 +1719,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|if (cat->loadType == MCLoadAll) { 			int     res;  			if ((res = loadSet(cat, set))<= 0) { 				__nls_free_resources(cat, i); 				if (res< 0) 					NOSPACE(); 				CORRUPT(); 			} 		} else
+block|if (cat->loadType == MCLoadAll) { 			int     res;  			if ((res = loadSet(cat, set))<= 0) { 				saverr = errno; 				__nls_free_resources(cat, i); 				errno = saverr; 				if (res< 0) 					NOSPACE(); 				CORRUPT(); 			} 		} else
 endif|#
 directive|endif
 name|set
