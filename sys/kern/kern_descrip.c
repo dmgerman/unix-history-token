@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_dontuse.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -4836,9 +4830,6 @@ modifier|*
 name|fp
 parameter_list|)
 block|{
-if|#
-directive|if
-name|PROCFS
 if|if
 condition|(
 name|fp
@@ -4869,8 +4860,6 @@ operator|(
 literal|1
 operator|)
 return|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
