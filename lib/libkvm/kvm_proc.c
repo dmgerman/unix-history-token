@@ -1279,6 +1279,9 @@ name|kp
 operator|->
 name|ki_tdev
 operator|=
+operator|(
+name|uintptr_t
+operator|)
 name|tty
 operator|.
 name|t_dev
