@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vp.c	4.13	82/05/19	*/
+comment|/*	vp.c	4.14	82/05/19	*/
 end_comment
 
 begin_include
@@ -474,9 +474,11 @@ literal|0
 expr_stmt|;
 if|#
 directive|if
-name|OVPR
+name|ERNIE
 operator|||
 name|CAD
+operator|||
+name|UCBVAX
 comment|/* UNTIL REWIRED, GET INTERRUPT AT 200 BUT WANT 174 */
 if|if
 condition|(
