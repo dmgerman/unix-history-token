@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  *      3940, 2940, aic7880, aic7870, aic7860 and aic7850 SCSI controllers  *  * Copyright (c) 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: aic7870.c,v 1.36 1996/05/30 07:20:17 gibbs Exp $  */
+comment|/*  * Product specific probe and attach routines for:  *      3940, 2940, aic7880, aic7870, aic7860 and aic7850 SCSI controllers  *  * Copyright (c) 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: aic7870.c,v 1.37 1996/06/08 06:55:55 gibbs Exp $  */
 end_comment
 
 begin_if
@@ -247,6 +247,13 @@ define|#
 directive|define
 name|PCI_DEVICE_ID_ADAPTEC_2940U
 value|0x81789004ul
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCI_DEVICE_ID_ADAPTEC_2940AU
+value|0x61789004ul
 end_define
 
 begin_define
@@ -798,6 +805,15 @@ operator|)
 return|;
 break|break;
 case|case
+name|PCI_DEVICE_ID_ADAPTEC_2940AU
+case|:
+return|return
+operator|(
+literal|"Adaptec 2940A Ultra SCSI host adapter"
+operator|)
+return|;
+break|break;
+case|case
 name|PCI_DEVICE_ID_ADAPTEC_AIC7880
 case|:
 return|return
@@ -970,6 +986,9 @@ name|PCI_DEVICE_ID_ADAPTEC_2944U
 case|:
 case|case
 name|PCI_DEVICE_ID_ADAPTEC_2940U
+case|:
+case|case
+name|PCI_DEVICE_ID_ADAPTEC_2940AU
 case|:
 case|case
 name|PCI_DEVICE_ID_ADAPTEC_3940
@@ -1357,6 +1376,14 @@ case|:
 name|ahc_t
 operator|=
 name|AHC_294
+expr_stmt|;
+break|break;
+case|case
+name|PCI_DEVICE_ID_ADAPTEC_2940AU
+case|:
+name|ahc_t
+operator|=
+name|AHC_294AU
 expr_stmt|;
 break|break;
 case|case
@@ -1752,6 +1779,9 @@ argument_list|,
 name|ih
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__OpenBSD__
 name|ahc
 operator|->
 name|sc_ih
@@ -1769,19 +1799,37 @@ argument_list|,
 name|ahc_intr
 argument_list|,
 name|ahc
-ifdef|#
-directive|ifdef
-name|__OpenBSD__
 argument_list|,
 name|ahc
 operator|->
 name|sc_dev
 operator|.
 name|dv_xname
-endif|#
-directive|endif
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|ahc
+operator|->
+name|sc_ih
+operator|=
+name|pci_intr_establish
+argument_list|(
+name|pa
+operator|->
+name|pa_pc
+argument_list|,
+name|ih
+argument_list|,
+name|IPL_BIO
+argument_list|,
+name|ahc_intr
+argument_list|,
+name|ahc
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|ahc
@@ -1913,6 +1961,9 @@ expr_stmt|;
 break|break;
 block|}
 case|case
+name|AHC_294AU
+case|:
+case|case
 name|AHC_AIC7860
 case|:
 block|{
@@ -1920,12 +1971,10 @@ name|id_string
 operator|=
 literal|"aic7860 "
 expr_stmt|;
-comment|/* 			 * Use defaults, if the chip wasn't initialized by 			 * a BIOS. 			 */
+name|load_seeprom
+argument_list|(
 name|ahc
-operator|->
-name|flags
-operator||=
-name|AHC_USEDEFAULTS
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
