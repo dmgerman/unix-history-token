@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: cpu.h 1.16 91/03/25$  *  *	@(#)cpu.h	7.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: cpu.h 1.16 91/03/25$  *  *	@(#)cpu.h	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -61,17 +61,13 @@ value|(p)->p_md.md_regs[SP] = ap
 end_define
 
 begin_comment
-comment|/*  * Arguments to hardclock and gatherstats encapsulate the previous  * machine state in an opaque clockframe.  One the hp300, we use  * what the hardware pushes on an interrupt (but we pad the sr to a  * longword boundary).  */
+comment|/*  * Arguments to hardclock and gatherstats encapsulate the previous  * machine state in an opaque clockframe.  One the hp300, we use  * what the hardware pushes on an interrupt (frame format 0).  */
 end_comment
 
 begin_struct
 struct|struct
 name|clockframe
 block|{
-name|u_short
-name|pad
-decl_stmt|;
-comment|/* pad to get stack aligned */
 name|u_short
 name|sr
 decl_stmt|;
@@ -380,6 +376,17 @@ end_define
 
 begin_comment
 comment|/* 25Mhz 68040 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HP_433
+value|8
+end_define
+
+begin_comment
+comment|/* 33Mhz 68040 */
 end_comment
 
 begin_comment
