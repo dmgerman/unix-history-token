@@ -161,16 +161,6 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|__sparc_sigtramp_setup
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
 name|__sparc_utrap_setup
 parameter_list|(
 name|void
