@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ttymsg.c	5.3 (Berkeley) %G%"
+literal|"@(#)ttymsg.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -71,7 +71,7 @@ file|<paths.h>
 end_include
 
 begin_comment
-comment|/*  * display the contents of a uio structure on a terminal.  Used by  * wall(1) and syslogd(8).  Forks and finishes in child if write  * would block, waiting at most five minutes.  * Returns pointer to error string on error;  * string is not newline-terminated.  */
+comment|/*  * display the contents of a uio structure on a terminal.  Used by  * wall(1) and syslogd(8).  Forks and finishes in child if write  * would block, waiting at most five minutes.  * Returns pointer to error string on unexpected error;  * string is not newline-terminated.  Various "normal" errors  * are ignored (exclusive-use, lack of permission, etc.).  */
 end_comment
 
 begin_function
@@ -365,12 +365,16 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 				 * we get ENODEV on a slip line if we're 				 * running as root 				 */
+comment|/* 				 * we get ENODEV on a slip line if we're 				 * running as root, and EIO if the line 				 * just went away 				 */
 if|if
 condition|(
 name|errno
 operator|==
 name|ENODEV
+operator|||
+name|errno
+operator|==
+name|EIO
 condition|)
 break|break;
 operator|(
