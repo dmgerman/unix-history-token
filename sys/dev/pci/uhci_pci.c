@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	FreeBSD $Id: uhci_pci.c,v 1.6 1999/01/06 12:31:28 n_hibma Exp $ */
+comment|/*	FreeBSD $Id: uhci_pci.c,v 1.7 1999/01/06 19:55:49 n_hibma Exp $ */
 end_comment
 
 begin_comment
@@ -597,7 +597,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"usb%d: Unable to map irq\n"
+literal|"usb%d: could not map irq\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -763,7 +763,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s%d: unable to add USB device to root bus\n"
+literal|"%s%d: could not add USB device to root bus\n"
 argument_list|,
 name|device_get_name
 argument_list|(

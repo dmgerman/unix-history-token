@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	FreeBSD $Id: ohci_pci.c,v 1.7 1999/01/06 12:31:28 n_hibma Exp $ */
+comment|/*	FreeBSD $Id: ohci_pci.c,v 1.8 1999/01/06 19:55:49 n_hibma Exp $ */
 end_comment
 
 begin_comment
@@ -540,7 +540,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"usb%d: couldn't map memory\n"
+literal|"usb%d: could not map memory\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -579,71 +579,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"usb%d: Unable to map irq\n"
+literal|"usb%d: could not map irq\n"
 argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
 return|return;
-block|}
-ifndef|#
-directive|ifndef
-name|USBVERBOSE
-if|if
-condition|(
-name|bootverbose
-condition|)
-endif|#
-directive|endif
-block|{
-comment|/* XXX is this correct? Does the correct version show up? */
-name|rev
-operator|=
-operator|*
-operator|(
-operator|(
-name|unsigned
-name|int
-operator|*
-operator|)
-operator|(
-name|sc
-operator|->
-name|sc_iobase
-operator|+
-name|OHCI_REVISION
-operator|)
-operator|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"usb%d: OHCI version %d%d, interrupting at %d\n"
-argument_list|,
-name|unit
-argument_list|,
-name|OHCI_REV_HI
-argument_list|(
-name|rev
-argument_list|)
-argument_list|,
-name|OHCI_REV_LO
-argument_list|(
-name|rev
-argument_list|)
-argument_list|,
-operator|(
-name|int
-operator|)
-name|pci_conf_read
-argument_list|(
-name|config_id
-argument_list|,
-name|PCI_INTERRUPT_REG
-argument_list|)
-operator|&
-literal|0xff
-argument_list|)
-expr_stmt|;
 block|}
 comment|/* Figure out vendor for root hub descriptor. */
 name|id
@@ -738,7 +679,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s%d: unable to add USB device to root bus\n"
+literal|"%s%d: could not add USB device to root bus\n"
 argument_list|,
 name|device_get_name
 argument_list|(
