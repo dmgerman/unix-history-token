@@ -2518,5 +2518,30 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Check if an sbuf has been finished.  */
+end_comment
+
+begin_function
+name|int
+name|sbuf_done
+parameter_list|(
+name|struct
+name|sbuf
+modifier|*
+name|s
+parameter_list|)
+block|{
+return|return
+operator|(
+name|SBUF_ISFINISHED
+argument_list|(
+name|s
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
 end_unit
 
