@@ -435,10 +435,10 @@ name|rule
 operator|->
 name|mbr_mode
 operator||
-name|VALLPERM
+name|MBI_ALLPERM
 operator|)
 operator|!=
-name|VALLPERM
+name|MBI_ALLPERM
 condition|)
 return|return
 operator|(
@@ -1229,17 +1229,17 @@ if|if
 condition|(
 name|acc_mode
 operator|&
-name|VAPPEND
+name|MBI_APPEND
 condition|)
 block|{
 name|acc_mode
 operator|&=
 operator|~
-name|VAPPEND
+name|MBI_APPEND
 expr_stmt|;
 name|acc_mode
 operator||=
-name|VWRITE
+name|MBI_WRITE
 expr_stmt|;
 block|}
 name|error
@@ -1360,7 +1360,7 @@ name|vap
 operator|.
 name|va_gid
 argument_list|,
-name|VWRITE
+name|MBI_WRITE
 argument_list|)
 operator|)
 return|;
@@ -1527,7 +1527,7 @@ name|vap
 operator|.
 name|va_gid
 argument_list|,
-name|VEXEC
+name|MBI_EXEC
 argument_list|)
 operator|)
 return|;
@@ -1609,7 +1609,7 @@ name|vap
 operator|.
 name|va_gid
 argument_list|,
-name|VEXEC
+name|MBI_EXEC
 argument_list|)
 operator|)
 return|;
@@ -1701,7 +1701,7 @@ name|dvap
 operator|.
 name|va_gid
 argument_list|,
-name|VWRITE
+name|MBI_WRITE
 argument_list|)
 operator|)
 return|;
@@ -1798,7 +1798,7 @@ name|vap
 operator|.
 name|va_gid
 argument_list|,
-name|VWRITE
+name|MBI_WRITE
 argument_list|)
 expr_stmt|;
 if|if
@@ -1847,7 +1847,7 @@ name|vap
 operator|.
 name|va_gid
 argument_list|,
-name|VWRITE
+name|MBI_WRITE
 argument_list|)
 operator|)
 return|;
@@ -1932,7 +1932,7 @@ name|vap
 operator|.
 name|va_gid
 argument_list|,
-name|VADMIN
+name|MBI_ADMIN
 argument_list|)
 operator|)
 return|;
@@ -2022,7 +2022,7 @@ name|vap
 operator|.
 name|va_gid
 argument_list|,
-name|VWRITE
+name|MBI_WRITE
 argument_list|)
 operator|)
 return|;
@@ -2114,9 +2114,9 @@ name|vap
 operator|.
 name|va_gid
 argument_list|,
-name|VREAD
+name|MBI_READ
 operator||
-name|VEXEC
+name|MBI_EXEC
 argument_list|)
 operator|)
 return|;
@@ -2201,7 +2201,7 @@ name|vap
 operator|.
 name|va_gid
 argument_list|,
-name|VSTAT
+name|MBI_STAT
 argument_list|)
 operator|)
 return|;
@@ -2296,7 +2296,7 @@ name|vap
 operator|.
 name|va_gid
 argument_list|,
-name|VREAD
+name|MBI_READ
 argument_list|)
 operator|)
 return|;
@@ -2393,7 +2393,7 @@ name|vap
 operator|.
 name|va_gid
 argument_list|,
-name|VWRITE
+name|MBI_WRITE
 argument_list|)
 expr_stmt|;
 if|if
@@ -2442,7 +2442,7 @@ name|vap
 operator|.
 name|va_gid
 argument_list|,
-name|VWRITE
+name|MBI_WRITE
 argument_list|)
 expr_stmt|;
 if|if
@@ -2540,7 +2540,7 @@ name|vap
 operator|.
 name|va_gid
 argument_list|,
-name|VREAD
+name|MBI_READ
 argument_list|)
 operator|)
 return|;
@@ -2627,7 +2627,7 @@ name|vap
 operator|.
 name|va_gid
 argument_list|,
-name|VEXEC
+name|MBI_EXEC
 argument_list|)
 operator|)
 return|;
@@ -2794,7 +2794,7 @@ name|vap
 operator|.
 name|va_gid
 argument_list|,
-name|VREAD
+name|MBI_READ
 argument_list|)
 operator|)
 return|;
@@ -2876,7 +2876,7 @@ name|vap
 operator|.
 name|va_gid
 argument_list|,
-name|VREAD
+name|MBI_READ
 argument_list|)
 operator|)
 return|;
@@ -2973,7 +2973,7 @@ name|vap
 operator|.
 name|va_gid
 argument_list|,
-name|VWRITE
+name|MBI_WRITE
 argument_list|)
 expr_stmt|;
 if|if
@@ -3022,7 +3022,7 @@ name|vap
 operator|.
 name|va_gid
 argument_list|,
-name|VWRITE
+name|MBI_WRITE
 argument_list|)
 expr_stmt|;
 return|return
@@ -3126,7 +3126,7 @@ name|vap
 operator|.
 name|va_gid
 argument_list|,
-name|VWRITE
+name|MBI_WRITE
 argument_list|)
 expr_stmt|;
 if|if
@@ -3182,7 +3182,7 @@ name|vap
 operator|.
 name|va_gid
 argument_list|,
-name|VWRITE
+name|MBI_WRITE
 argument_list|)
 expr_stmt|;
 block|}
@@ -3269,7 +3269,7 @@ name|vap
 operator|.
 name|va_gid
 argument_list|,
-name|VADMIN
+name|MBI_ADMIN
 argument_list|)
 operator|)
 return|;
@@ -3359,7 +3359,7 @@ name|vap
 operator|.
 name|va_gid
 argument_list|,
-name|VADMIN
+name|MBI_ADMIN
 argument_list|)
 operator|)
 return|;
@@ -3454,7 +3454,7 @@ name|vap
 operator|.
 name|va_gid
 argument_list|,
-name|VWRITE
+name|MBI_WRITE
 argument_list|)
 operator|)
 return|;
@@ -3539,7 +3539,7 @@ name|vap
 operator|.
 name|va_gid
 argument_list|,
-name|VADMIN
+name|MBI_ADMIN
 argument_list|)
 operator|)
 return|;
@@ -3624,7 +3624,7 @@ name|vap
 operator|.
 name|va_gid
 argument_list|,
-name|VADMIN
+name|MBI_ADMIN
 argument_list|)
 operator|)
 return|;
@@ -3712,7 +3712,7 @@ name|vap
 operator|.
 name|va_gid
 argument_list|,
-name|VADMIN
+name|MBI_ADMIN
 argument_list|)
 operator|)
 return|;
@@ -3802,7 +3802,7 @@ name|vap
 operator|.
 name|va_gid
 argument_list|,
-name|VADMIN
+name|MBI_ADMIN
 argument_list|)
 operator|)
 return|;
@@ -3889,7 +3889,7 @@ name|vap
 operator|.
 name|va_gid
 argument_list|,
-name|VSTAT
+name|MBI_STAT
 argument_list|)
 operator|)
 return|;
