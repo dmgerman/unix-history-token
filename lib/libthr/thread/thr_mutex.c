@@ -321,6 +321,16 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|__pthread_mutex_unlock
+argument_list|,
+name|pthread_mutex_unlock
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* No difference between libc and application usage of these: */
 end_comment
@@ -341,16 +351,6 @@ argument_list|(
 name|_pthread_mutex_destroy
 argument_list|,
 name|pthread_mutex_destroy
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|__weak_reference
-argument_list|(
-name|_pthread_mutex_unlock
-argument_list|,
-name|pthread_mutex_unlock
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1839,6 +1839,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Libc internal.  */
+end_comment
+
 begin_function
 name|int
 name|_pthread_mutex_lock
@@ -1860,6 +1864,9 @@ operator|==
 name|NULL
 condition|)
 name|_thread_init
+argument_list|()
+expr_stmt|;
+name|_thread_sigblock
 argument_list|()
 expr_stmt|;
 if|if
@@ -1907,6 +1914,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|!=
+literal|0
+condition|)
+name|_thread_sigunblock
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|ret
@@ -1917,7 +1933,7 @@ end_function
 
 begin_function
 name|int
-name|_pthread_mutex_unlock
+name|__pthread_mutex_unlock
 parameter_list|(
 name|pthread_mutex_t
 modifier|*
@@ -1933,6 +1949,49 @@ argument_list|,
 comment|/* add reference */
 literal|0
 argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Libc internal  */
+end_comment
+
+begin_function
+name|int
+name|_pthread_mutex_unlock
+parameter_list|(
+name|pthread_mutex_t
+modifier|*
+name|mutex
+parameter_list|)
+block|{
+name|int
+name|error
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|error
+operator|=
+name|mutex_unlock_common
+argument_list|(
+name|mutex
+argument_list|,
+comment|/* add reference */
+literal|0
+argument_list|)
+operator|)
+operator|==
+literal|0
+condition|)
+name|_thread_sigunblock
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+name|error
 operator|)
 return|;
 block|}
