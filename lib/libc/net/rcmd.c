@@ -1256,6 +1256,10 @@ decl_stmt|;
 name|gid_t
 name|sgid
 decl_stmt|;
+name|int
+name|int_sgid
+decl_stmt|;
+comment|/* this is a kludge and should be removed 			   when we transition to FreeBSD 2.0.  If you 			   find this code in a 2.0 source tree, please 			   contact the core team. */
 name|sp
 operator|=
 operator|(
@@ -1406,6 +1410,10 @@ argument_list|(
 name|sgid
 argument_list|)
 expr_stmt|;
+name|int_sgid
+operator|=
+name|sgid
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1414,7 +1422,7 @@ argument_list|(
 literal|1
 argument_list|,
 operator|&
-name|sgid
+name|int_sgid
 argument_list|)
 expr_stmt|;
 block|}
