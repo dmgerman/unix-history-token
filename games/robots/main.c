@@ -113,19 +113,6 @@ name|void
 name|quit
 parameter_list|()
 function_decl|;
-comment|/* revoke */
-name|setegid
-argument_list|(
-name|getgid
-argument_list|()
-argument_list|)
-expr_stmt|;
-name|setgid
-argument_list|(
-name|getgid
-argument_list|()
-argument_list|)
-expr_stmt|;
 name|show_only
 operator|=
 name|FALSE
