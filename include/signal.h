@@ -30,13 +30,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/signal.h>
+file|<machine/ansi.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/ansi.h>
+file|<sys/signal.h>
 end_include
 
 begin_if
