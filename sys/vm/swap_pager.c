@@ -3052,6 +3052,9 @@ condition|)
 break|break;
 block|}
 comment|/* 	 * free pages outside our collection range.   Note: we never free 	 * mreq, it must remain busy throughout. 	 */
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 block|{
 name|int
 name|k
@@ -3099,6 +3102,9 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+name|vm_page_unlock_queues
+argument_list|()
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
