@@ -2377,7 +2377,7 @@ comment|/*FALLTHROUGH*/
 case|case
 name|CB_TI125X
 case|:
-comment|/* 		 * Disable zoom video.  Some machines initialize this 		 * improperly and exerpience has shown that this helps 		 * on some machines. 		 */
+comment|/* 		 * Disable zoom video.  Some machines initialize this 		 * improperly and exerpience has shown that this helps 		 * prevent strange behavior. 		 */
 name|pci_write_config
 argument_list|(
 name|sc
@@ -2395,7 +2395,7 @@ break|break;
 case|case
 name|CB_O2MICRO
 case|:
-comment|/* 		 * Issue #1: INT# generated at the same time as 		 * selected ISA IRQ.  When IREQ# or STSCHG# is active, 		 * in addition to the ISA IRQ being generated, INT# 		 * will also be generated at the same time. 		 * 		 * Some of our older controllers have an issue in 		 * which the slot's PCI INT# will be asserted whenever 		 * IREQ# or STSCGH# is asserted even if ExCA registers 		 * 03h or 05h have an ISA IRQ selected. 		 * 		 * The fix for this issue, which will work for any 		 * controller (old or new), is to set ExCA registers 		 * 3Ah (slot 0)& 7Ah (slot 1) bits 7:4 = 1010b. 		 * These bits are undocumented.  By setting this 		 * register (of each slot) to '1010xxxxb' a routing of 		 * IREQ# to INTC# and STSCHG# to INTC# is selected. 		 * Since INTC# isn't connected there will be no 		 * unexpected PCI INT when IREQ# or STSCHG# is active. 		 * However, INTA# (slot 0) or INTB# (slot 1) will 		 * still be correctly generated if NO ISA IRQ is 		 * selected (ExCA regs 03h or 05h are cleared). 		 */
+comment|/* 		 * Issue #1: INT# generated at the same time as 		 * selected ISA IRQ.  When IREQ# or STSCHG# is active, 		 * in addition to the ISA IRQ being generated, INT# 		 * will also be generated at the same time. 		 * 		 * Some of the older controllers have an issue in 		 * which the slot's PCI INT# will be asserted whenever 		 * IREQ# or STSCGH# is asserted even if ExCA registers 		 * 03h or 05h have an ISA IRQ selected. 		 * 		 * The fix for this issue, which will work for any 		 * controller (old or new), is to set ExCA registers 		 * 3Ah (slot 0)& 7Ah (slot 1) bits 7:4 = 1010b. 		 * These bits are undocumented.  By setting this 		 * register (of each slot) to '1010xxxxb' a routing of 		 * IREQ# to INTC# and STSCHG# to INTC# is selected. 		 * Since INTC# isn't connected there will be no 		 * unexpected PCI INT when IREQ# or STSCHG# is active. 		 * However, INTA# (slot 0) or INTB# (slot 1) will 		 * still be correctly generated if NO ISA IRQ is 		 * selected (ExCA regs 03h or 05h are cleared). 		 */
 name|reg
 operator|=
 name|exca_getb
