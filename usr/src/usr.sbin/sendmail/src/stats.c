@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)stats.c	5.7 (Berkeley) %G%"
+literal|"@(#)stats.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,53 +31,11 @@ directive|include
 file|"sendmail.h"
 end_include
 
-begin_comment
-comment|/* **  Statistics structure. */
-end_comment
-
-begin_struct
-struct|struct
-name|statistics
-block|{
-name|time_t
-name|stat_itime
-decl_stmt|;
-comment|/* file initialization time */
-name|short
-name|stat_size
-decl_stmt|;
-comment|/* size of this structure */
-name|long
-name|stat_nf
-index|[
-name|MAXMAILERS
-index|]
-decl_stmt|;
-comment|/* # msgs from each mailer */
-name|long
-name|stat_bf
-index|[
-name|MAXMAILERS
-index|]
-decl_stmt|;
-comment|/* kbytes from each mailer */
-name|long
-name|stat_nt
-index|[
-name|MAXMAILERS
-index|]
-decl_stmt|;
-comment|/* # msgs to each mailer */
-name|long
-name|stat_bt
-index|[
-name|MAXMAILERS
-index|]
-decl_stmt|;
-comment|/* kbytes to each mailer */
-block|}
-struct|;
-end_struct
+begin_include
+include|#
+directive|include
+file|"mailstats.h"
+end_include
 
 begin_decl_stmt
 name|struct
