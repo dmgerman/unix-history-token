@@ -1,32 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: spans_print.c,v 1.1 1998/09/15 08:23:03 phk Exp $  *  */
+comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: spans_print.c,v 1.2 1998/09/17 09:35:00 phk Exp $  *  */
 end_comment
 
 begin_comment
 comment|/*  * SPANS Signalling Manager  * ---------------------------  *  * SPANS Print Routines.  *  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|RCSid
-init|=
-literal|"@(#) $Id: spans_print.c,v 1.1 1998/09/15 08:23:03 phk Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -46,6 +25,25 @@ directive|include
 file|<netatm/spans/spans_var.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_expr_stmt
+name|__RCSID
+argument_list|(
+literal|"@(#) $Id: spans_print.c,v 1.2 1998/09/17 09:35:00 phk Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * If LONGPRINT is defined, every field of the SPANS message will be  * printed.  If not, a shorter summary (useful for debugging without  * swamping the console) is printed.  */
 end_comment
@@ -57,6 +55,60 @@ end_comment
 begin_comment
 comment|/*  * Local functions  */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|void
+name|spans_msgtype_str
+name|__P
+argument_list|(
+operator|(
+name|spans_msgtype
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|spans_print_msgbody
+name|__P
+argument_list|(
+operator|(
+name|spans_msgbody
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|spans_result_str
+name|__P
+argument_list|(
+operator|(
+name|spans_result
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LONGPRINT
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -92,40 +144,6 @@ name|__P
 argument_list|(
 operator|(
 name|spans_aal
-operator|*
-operator|,
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|spans_result_str
-name|__P
-argument_list|(
-operator|(
-name|spans_result
-operator|*
-operator|,
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|spans_msgtype_str
-name|__P
-argument_list|(
-operator|(
-name|spans_msgtype
 operator|*
 operator|,
 name|char
@@ -729,20 +747,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|void
-name|spans_print_msgbody
-name|__P
-argument_list|(
-operator|(
-name|spans_msgbody
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Local variables  */
 end_comment
@@ -798,7 +802,6 @@ literal|0
 index|]
 condition|)
 block|{
-operator|*
 name|spans_indent
 operator|--
 expr_stmt|;
@@ -819,7 +822,6 @@ operator|!=
 name|INIT_INDENT
 condition|)
 block|{
-operator|*
 name|spans_indent
 operator|++
 expr_stmt|;
@@ -919,6 +921,11 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -1309,6 +1316,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LONGPRINT
+end_ifdef
+
 begin_function
 specifier|static
 name|void
@@ -1484,12 +1497,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LONGPRINT
-end_ifdef
 
 begin_function
 specifier|static
@@ -5278,10 +5285,15 @@ modifier|*
 name|objp
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|LONGPRINT
 name|spans_indent
 operator|=
 name|INIT_INDENT
 expr_stmt|;
+endif|#
+directive|endif
 name|spans_print_msgbody
 argument_list|(
 operator|&
