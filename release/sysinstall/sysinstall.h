@@ -4301,26 +4301,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* lndir.c */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|lndir
-parameter_list|(
-name|char
-modifier|*
-name|from
-parameter_list|,
-name|char
-modifier|*
-name|to
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* makedevs.c (auto-generated) */
 end_comment
 
