@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	          System configuration routines  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: systems.c,v 1.36 1998/05/21 21:48:33 brian Exp $  *  *  TODO:  */
+comment|/*  *	          System configuration routines  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: systems.c,v 1.37 1998/06/15 19:05:47 brian Exp $  *  *  TODO:  */
 end_comment
 
 begin_include
@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"defs.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"command.h"
 end_include
 
@@ -61,12 +67,6 @@ begin_include
 include|#
 directive|include
 file|"id.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"defs.h"
 end_include
 
 begin_include
@@ -1243,8 +1243,10 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[
+name|MAXARGS
+index|]
 decl_stmt|;
 name|int
 name|allowcmd
@@ -1591,16 +1593,14 @@ argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
+name|argc
+operator|=
 name|command_Interpret
 argument_list|(
 name|cp
 argument_list|,
 name|len
 argument_list|,
-operator|&
-name|argc
-argument_list|,
-operator|&
 name|argv
 argument_list|)
 expr_stmt|;
@@ -1613,8 +1613,10 @@ operator|&&
 operator|!
 name|strcasecmp
 argument_list|(
-operator|*
 name|argv
+index|[
+literal|0
+index|]
 argument_list|,
 literal|"allow"
 argument_list|)

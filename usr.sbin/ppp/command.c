@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.142 1998/06/15 19:05:12 brian Exp $  *  */
+comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.143 1998/06/15 19:05:40 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -137,6 +137,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"defs.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"command.h"
 end_include
 
@@ -150,12 +156,6 @@ begin_include
 include|#
 directive|include
 file|"log.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"defs.h"
 end_include
 
 begin_include
@@ -630,7 +630,7 @@ name|char
 name|VersionDate
 index|[]
 init|=
-literal|"$Date: 1998/06/15 19:05:12 $"
+literal|"$Date: 1998/06/15 19:05:40 $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4543,7 +4543,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|command_Interpret
 parameter_list|(
 name|char
@@ -4553,25 +4553,14 @@ parameter_list|,
 name|int
 name|nb
 parameter_list|,
-name|int
-modifier|*
-name|argc
-parameter_list|,
 name|char
-modifier|*
-modifier|*
 modifier|*
 name|argv
-parameter_list|)
-block|{
-specifier|static
-name|char
-modifier|*
-name|vector
 index|[
 name|MAXARGS
 index|]
-decl_stmt|;
+parameter_list|)
+block|{
 name|char
 modifier|*
 name|cp
@@ -4603,33 +4592,20 @@ name|cp
 operator|=
 literal|'\0'
 expr_stmt|;
-operator|*
-name|argc
-operator|=
+return|return
 name|MakeArgs
 argument_list|(
 name|buff
 argument_list|,
-name|vector
-argument_list|,
-name|VECSIZE
-argument_list|(
-name|vector
-argument_list|)
-argument_list|)
-expr_stmt|;
-operator|*
 name|argv
-operator|=
-name|vector
-expr_stmt|;
+argument_list|,
+name|MAXARGS
+argument_list|)
+return|;
 block|}
-else|else
-operator|*
-name|argc
-operator|=
+return|return
 literal|0
-expr_stmt|;
+return|;
 block|}
 end_function
 
@@ -5032,19 +5008,19 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[
+name|MAXARGS
+index|]
 decl_stmt|;
+name|argc
+operator|=
 name|command_Interpret
 argument_list|(
 name|buff
 argument_list|,
 name|nb
 argument_list|,
-operator|&
-name|argc
-argument_list|,
-operator|&
 name|argv
 argument_list|)
 expr_stmt|;
