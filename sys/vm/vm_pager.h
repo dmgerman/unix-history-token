@@ -618,7 +618,12 @@ block|{
 name|boolean_t
 name|ret
 decl_stmt|;
-name|GIANT_REQUIRED
+name|VM_OBJECT_LOCK_ASSERT
+argument_list|(
+name|object
+argument_list|,
+name|MA_OWNED
+argument_list|)
 expr_stmt|;
 name|ret
 operator|=

@@ -744,7 +744,12 @@ name|pagesperblock
 decl_stmt|,
 name|blocksperpage
 decl_stmt|;
-name|GIANT_REQUIRED
+name|VM_OBJECT_LOCK_ASSERT
+argument_list|(
+name|object
+argument_list|,
+name|MA_OWNED
+argument_list|)
 expr_stmt|;
 comment|/* 	 * If no vp or vp is doomed or marked transparent to VM, we do not 	 * have the page. 	 */
 if|if
@@ -864,6 +869,11 @@ operator|*
 name|blocksperpage
 expr_stmt|;
 block|}
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 name|err
 operator|=
 name|VOP_BMAP
@@ -886,6 +896,11 @@ argument_list|,
 name|after
 argument_list|,
 name|before
+argument_list|)
+expr_stmt|;
+name|VM_OBJECT_LOCK
+argument_list|(
+name|object
 argument_list|)
 expr_stmt|;
 if|if
