@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -36,11 +37,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)calendar.c	8.3 (Berkeley) 3/25/94"
+literal|"@(#)calendar.c  8.3 (Berkeley) 3/25/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -99,6 +101,12 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<locale.h>
 end_include
 
 begin_include
@@ -195,33 +203,47 @@ name|header
 index|[]
 init|=
 block|{
+block|{
 literal|"From: "
 block|,
 literal|6
+block|}
 block|,
+block|{
 name|NULL
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|" (Reminder Service)\nTo: "
 block|,
 literal|24
+block|}
 block|,
+block|{
 name|NULL
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"\nSubject: "
 block|,
 literal|10
+block|}
 block|,
+block|{
 name|NULL
 block|,
 literal|0
+block|}
 block|,
+block|{
 literal|"'s Calendar\nPrecedence: bulk\n\n"
 block|,
 literal|30
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -246,6 +268,8 @@ name|fp
 decl_stmt|;
 name|int
 name|ch
+decl_stmt|,
+name|l
 decl_stmt|;
 name|int
 name|month
@@ -335,6 +359,44 @@ operator|!=
 name|EOF
 condition|)
 empty_stmt|;
+for|for
+control|(
+name|l
+operator|=
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+init|;
+name|l
+operator|>
+literal|0
+operator|&&
+name|isspace
+argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
+name|buf
+index|[
+name|l
+operator|-
+literal|1
+index|]
+argument_list|)
+condition|;
+name|l
+operator|--
+control|)
+empty_stmt|;
+name|buf
+index|[
+name|l
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 if|if
 condition|(
 name|buf
@@ -345,6 +407,37 @@ operator|==
 literal|'\0'
 condition|)
 continue|continue;
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|buf
+argument_list|,
+literal|"LANG="
+argument_list|,
+literal|5
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|setlocale
+argument_list|(
+name|LC_ALL
+argument_list|,
+name|buf
+operator|+
+literal|5
+argument_list|)
+expr_stmt|;
+name|setnnames
+argument_list|()
+expr_stmt|;
+continue|continue;
+block|}
 if|if
 condition|(
 name|buf
@@ -505,6 +598,10 @@ init|;
 operator|!
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -512,6 +609,10 @@ operator|&&
 operator|!
 name|isalpha
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -560,6 +661,10 @@ if|if
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -584,6 +689,10 @@ init|;
 operator|!
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -591,6 +700,10 @@ operator|&&
 operator|!
 name|isalpha
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -623,6 +736,10 @@ name|p
 init|;
 name|isalpha
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 operator|++
 name|p
@@ -648,6 +765,10 @@ control|(
 init|;
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 operator|++
 name|p
@@ -777,6 +898,32 @@ name|flags
 operator||=
 name|F_EASTER
 expr_stmt|;
+comment|/* Paskha */
+elseif|else
+if|if
+condition|(
+operator|(
+name|val
+operator|=
+name|getpaskha
+argument_list|(
+name|start
+argument_list|,
+name|tp
+operator|->
+name|tm_year
+operator|+
+literal|1900
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+operator|*
+name|flags
+operator||=
+name|F_EASTER
+expr_stmt|;
 comment|/* undefined rest */
 else|else
 block|{
@@ -801,6 +948,10 @@ init|;
 operator|!
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -808,6 +959,10 @@ operator|&&
 operator|!
 name|isalpha
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|p
 argument_list|)

@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1995 Wolfram Schneider. Public domain.  *  * $Id: ostern.c,v 1.2 1996/02/01 13:05:12 wosch Exp $ */
+comment|/*   * Copyright (c) 1995 Wolfram Schneider. Public domain.  *  * $Id: ostern.c,v 1.1 1996/02/02 06:02:40 wosch Exp $ */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_comment

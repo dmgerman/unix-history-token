@@ -154,6 +154,21 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|getpaskha
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|easter
 name|__P
 argument_list|(
@@ -236,6 +251,18 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|void
+name|setnnames
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -243,7 +270,7 @@ name|isleap
 parameter_list|(
 name|y
 parameter_list|)
-value|(((y) % 4) == 0&& ((y) % 100) != 0 || ((y) % 400) == 0)
+value|((((y) % 4) == 0&& ((y) % 100) != 0) || ((y) % 400) == 0)
 end_define
 
 begin_comment
