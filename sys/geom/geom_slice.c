@@ -2543,6 +2543,14 @@ name|spoiled
 operator|=
 name|g_slice_spoiled
 expr_stmt|;
+if|if
+condition|(
+name|gp
+operator|->
+name|dumpconf
+operator|==
+name|NULL
+condition|)
 name|gp
 operator|->
 name|dumpconf
