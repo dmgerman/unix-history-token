@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: telnetd.c,v 1.11 1997/03/28 15:48:18 imp Exp $  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)telnetd.c	8.2 (Berkeley) 12/15/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)telnetd.c	8.2 (Berkeley) 12/15/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -94,6 +108,18 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
+end_include
 
 begin_if
 if|#
@@ -543,14 +569,52 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
-name|progname
+name|altlogin
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|doit
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|terminaltypeok
+name|__P
+argument_list|(
+operator|(
 name|char
-modifier|*
-name|altlogin
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|startslave
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -676,6 +740,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -702,15 +767,6 @@ decl_stmt|;
 specifier|register
 name|int
 name|ch
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
 decl_stmt|;
 if|#
 directive|if
@@ -746,11 +802,6 @@ operator|=
 name|nbackp
 operator|=
 name|netobuf
-expr_stmt|;
-name|progname
-operator|=
-operator|*
-name|argv
 expr_stmt|;
 comment|/* 	 * This initialization causes linemode to default to a configuration 	 * that works on all telnet clients, including the FreeBSD client. 	 * This is not quite the same as the telnet client issuing a "mode 	 * character" command, but has most of the same benefits, and is 	 * preferable since some clients (like usofts) don't have the 	 * mode character command anyway and linemode breaks things. 	 * The most notable symptom of fix is that csh "set filec" operations 	 * like<ESC> (filename completion) and ^D (choices) keys now work 	 * in telnet sessions and can be used more than once on the same line. 	 * CR/LF handling is also corrected in some termio modes.  This  	 * change resolves problem reports bin/771 and bin/1037. 	 */
 name|linemode
@@ -916,11 +967,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"telnetd: unknown authorization level for -a\n"
+literal|"unknown authorization level for -a"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1288,13 +1337,11 @@ operator|)
 operator|<
 literal|0
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
+literal|"%s%s%s"
 argument_list|,
-literal|"%s%s%s\n"
-argument_list|,
-literal|"telnetd: Bad TOS argument '"
+literal|"bad TOS argument '"
 argument_list|,
 name|optarg
 argument_list|,
@@ -1303,15 +1350,9 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s%s\n"
-argument_list|,
-literal|"TOS option unavailable; "
-argument_list|,
-literal|"-S flag not supported\n"
+literal|"TOS option unavailable; -S flag not supported"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1353,11 +1394,9 @@ endif|#
 directive|endif
 comment|/* AUTHENTICATION */
 default|default:
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"telnetd: %c: unknown option\n"
+literal|"%c: unknown option"
 argument_list|,
 name|ch
 argument_list|)
@@ -1428,6 +1467,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|sp
 operator|=
 name|getservbyname
@@ -1437,6 +1477,7 @@ name|argv
 argument_list|,
 literal|"tcp"
 argument_list|)
+operator|)
 condition|)
 block|{
 name|sin
@@ -1472,11 +1513,9 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"telnetd: %s: bad port #\n"
+literal|"%s: bad port #"
 argument_list|,
 operator|*
 name|argv
@@ -1520,20 +1559,13 @@ name|sp
 operator|==
 literal|0
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"telnetd: tcp/telnet: unknown service\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"tcp/telnet: unknown service"
 argument_list|)
 expr_stmt|;
-block|}
 name|sin
 operator|.
 name|sin_port
@@ -1560,19 +1592,13 @@ name|s
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
-argument_list|(
-literal|"telnetd: socket"
-argument_list|)
-expr_stmt|;
-empty_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"socket"
 argument_list|)
 expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)
@@ -1617,18 +1643,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"bind"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|listen
@@ -1640,18 +1661,13 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"listen"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|foo
 operator|=
 sizeof|sizeof
@@ -1681,18 +1697,13 @@ name|ns
 operator|<
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"accept"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)
@@ -1826,18 +1837,13 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
 literal|"getsysv"
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 		 *	Get socket security label and set device values 		 *	   {security label to be set on ttyp device} 		 */
 ifdef|#
 directive|ifdef
@@ -1892,14 +1898,11 @@ literal|0
 operator|)
 condition|)
 block|{
-name|perror
-argument_list|(
-literal|"getsockopt"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"getsockopt"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2107,16 +2110,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: "
-argument_list|,
-name|progname
-argument_list|)
-expr_stmt|;
-name|perror
+name|warn
 argument_list|(
 literal|"getpeername"
 argument_list|)
@@ -2279,6 +2273,11 @@ name|from
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -2295,7 +2294,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: telnetd"
+literal|"usage: telnetd"
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -3361,33 +3360,23 @@ begin_comment
 comment|/*  * Get a pty, scan input lines.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|doit
-argument_list|(
-argument|who
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|who
+parameter_list|)
 name|struct
 name|sockaddr_in
 modifier|*
 name|who
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 modifier|*
 name|host
-decl_stmt|,
-modifier|*
-name|inet_ntoa
-argument_list|()
-decl_stmt|;
-name|int
-name|t
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|hostent
@@ -3822,7 +3811,7 @@ expr_stmt|;
 comment|/* begin server process */
 comment|/*NOTREACHED*/
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* end of doit */
@@ -4375,7 +4364,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|perror
+name|warn
 argument_list|(
 literal|"signal"
 argument_list|)
@@ -4398,7 +4387,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|perror
+name|warn
 argument_list|(
 literal|"ioctl:TCSIGME"
 argument_list|)
