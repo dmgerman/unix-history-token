@@ -1532,9 +1532,8 @@ name|VM_PROT_READ
 argument_list|,
 literal|0
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
+name|OBJT_VNODE
+argument_list|,
 name|vp
 argument_list|,
 literal|0
@@ -1858,9 +1857,8 @@ name|VM_PROT_READ
 argument_list|,
 literal|0
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
+name|OBJT_VNODE
+argument_list|,
 name|vp
 argument_list|,
 name|trunc_page
@@ -1991,9 +1989,8 @@ name|MAP_PRIVATE
 operator||
 name|MAP_FIXED
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
+name|OBJT_VNODE
+argument_list|,
 name|vp
 argument_list|,
 name|file_offset

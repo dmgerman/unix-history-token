@@ -37,32 +37,6 @@ directive|include
 file|<sys/_mutex.h>
 end_include
 
-begin_enum
-enum|enum
-name|obj_type
-block|{
-name|OBJT_DEFAULT
-block|,
-name|OBJT_SWAP
-block|,
-name|OBJT_VNODE
-block|,
-name|OBJT_DEVICE
-block|,
-name|OBJT_PHYS
-block|,
-name|OBJT_DEAD
-block|}
-enum|;
-end_enum
-
-begin_typedef
-typedef|typedef
-name|u_char
-name|objtype_t
-typedef|;
-end_typedef
-
 begin_comment
 comment|/*  *	Types defined:  *  *	vm_object_t		Virtual memory object.  *  * List of locks  *	(c)	const until freed  *  */
 end_comment

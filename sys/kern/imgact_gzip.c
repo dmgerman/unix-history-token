@@ -1050,7 +1050,9 @@ name|MAP_ANON
 operator||
 name|MAP_FIXED
 argument_list|,
-literal|0
+name|OBJT_DEFAULT
+argument_list|,
+name|NULL
 argument_list|,
 literal|0
 argument_list|)
@@ -1427,9 +1429,9 @@ comment|/* max protection */
 literal|0
 argument_list|,
 comment|/* flags */
-operator|(
-name|caddr_t
-operator|)
+name|OBJT_VNODE
+argument_list|,
+comment|/* handle type */
 name|igz
 operator|->
 name|ip

@@ -777,9 +777,8 @@ name|MAP_FIXED
 operator||
 name|MAP_COPY
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
+name|OBJT_VNODE
+argument_list|,
 name|imgp
 operator|->
 name|vp
@@ -839,9 +838,8 @@ name|MAP_FIXED
 operator||
 name|MAP_COPY
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
+name|OBJT_VNODE
+argument_list|,
 name|imgp
 operator|->
 name|vp

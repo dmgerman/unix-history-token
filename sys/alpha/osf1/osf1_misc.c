@@ -6431,6 +6431,8 @@ name|MAP_FIXED
 operator||
 name|MAP_ANON
 argument_list|,
+name|OBJT_DEFAULT
+argument_list|,
 name|NULL
 argument_list|,
 literal|0

@@ -490,6 +490,8 @@ name|vm_prot_t
 parameter_list|,
 name|int
 parameter_list|,
+name|objtype_t
+parameter_list|,
 name|void
 modifier|*
 parameter_list|,

@@ -327,7 +327,7 @@ name|DPRINTF
 argument_list|(
 operator|(
 literal|"%s(%d):  vm_mmap(&vmspace->vm_map,&0x%08lx, 0x%x, 0x%x, "
-literal|"VM_PROT_ALL, MAP_PRIVATE | MAP_FIXED, vp, 0x%x)\n"
+literal|"VM_PROT_ALL, MAP_PRIVATE | MAP_FIXED, OBJT_VNODE, vp, 0x%x)\n"
 operator|,
 name|__FILE__
 operator|,
@@ -368,9 +368,8 @@ name|MAP_PRIVATE
 operator||
 name|MAP_FIXED
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
+name|OBJT_VNODE
+argument_list|,
 name|vp
 argument_list|,
 name|map_offset
@@ -517,9 +516,8 @@ name|VM_PROT_READ
 argument_list|,
 literal|0
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
+name|OBJT_VNODE
+argument_list|,
 name|vp
 argument_list|,
 name|trunc_page
@@ -917,9 +915,8 @@ name|VM_PROT_READ
 argument_list|,
 literal|0
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
+name|OBJT_VNODE
+argument_list|,
 name|vp
 argument_list|,
 literal|0
@@ -1828,9 +1825,8 @@ name|VM_PROT_READ
 argument_list|,
 literal|0
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
+name|OBJT_VNODE
+argument_list|,
 name|imgp
 operator|->
 name|vp
