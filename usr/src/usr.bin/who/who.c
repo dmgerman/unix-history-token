@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)who.c	5.6 (Berkeley) %G%"
+literal|"@(#)who.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -78,6 +78,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_define
@@ -176,7 +182,7 @@ name|fi
 decl_stmt|;
 name|s
 operator|=
-literal|"/etc/utmp"
+name|_PATH_UTMP
 expr_stmt|;
 if|if
 condition|(
