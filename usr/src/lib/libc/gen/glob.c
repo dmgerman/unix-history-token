@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)glob.c	5.15 (Berkeley) %G%"
+literal|"@(#)glob.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1008,6 +1008,21 @@ name|gl_flags
 operator||=
 name|GLOB_MAGCHAR
 expr_stmt|;
+comment|/* collapse adjacent stars to one,  			 * to avoid exponential behavior 			 */
+if|if
+condition|(
+name|bufnext
+operator|==
+name|patbuf
+operator|||
+name|bufnext
+index|[
+operator|-
+literal|1
+index|]
+operator|!=
+name|M_ALL
+condition|)
 operator|*
 name|bufnext
 operator|++
@@ -2151,17 +2166,7 @@ operator|(
 literal|1
 operator|)
 return|;
-for|for
-control|(
-init|;
-operator|*
-name|name
-operator|!=
-name|EOS
-condition|;
-operator|++
-name|name
-control|)
+do|do
 if|if
 condition|(
 name|match
@@ -2178,6 +2183,15 @@ operator|(
 literal|1
 operator|)
 return|;
+do|while
+condition|(
+operator|*
+name|name
+operator|++
+operator|!=
+name|EOS
+condition|)
+do|;
 return|return
 operator|(
 literal|0
