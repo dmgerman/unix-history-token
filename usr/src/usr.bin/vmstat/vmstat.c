@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vmstat.c	5.29 (Berkeley) %G%"
+literal|"@(#)vmstat.c	5.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -121,6 +121,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vmmeter.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_statistics.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<time.h>
 end_include
 
@@ -178,68 +196,15 @@ directive|include
 file|<paths.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SPPWAIT
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|NEWVM
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NEWVM
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/vmmeter.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_statistics.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<sys/vm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/text.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/* XXX till old has been updated or purged */
+end_comment
 
 begin_decl_stmt
 name|struct
@@ -268,15 +233,11 @@ define|#
 directive|define
 name|X_SUM
 value|2
-define|#
-directive|define
-name|SUM
-value|"_cnt"
-comment|/* XXX for now that's where it is */
 block|{
-name|SUM
+literal|"_cnt"
 block|}
 block|,
+comment|/* XXX for now that's where it is */
 define|#
 directive|define
 name|X_BOOTTIME
@@ -373,9 +334,6 @@ block|{
 literal|"_bucket"
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|NEWVM
 define|#
 directive|define
 name|X_VMSTAT
@@ -384,12 +342,9 @@ block|{
 literal|"_vm_stat"
 block|}
 block|,
-define|#
-directive|define
-name|X_END
-value|15
-else|#
-directive|else
+ifdef|#
+directive|ifdef
+name|notdef
 define|#
 directive|define
 name|X_DEFICIT
@@ -434,6 +389,12 @@ define|#
 directive|define
 name|X_END
 value|19
+else|#
+directive|else
+define|#
+directive|define
+name|X_END
+value|15
 endif|#
 directive|endif
 ifdef|#
@@ -527,12 +488,6 @@ name|last
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NEWVM
-end_ifdef
-
 begin_decl_stmt
 name|struct
 name|vm_statistics
@@ -541,11 +496,6 @@ decl_stmt|,
 name|ostat
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|struct
@@ -634,13 +584,6 @@ name|VMSTAT
 value|0x20
 end_define
 
-begin_define
-define|#
-directive|define
-name|ZEROOUT
-value|0x40
-end_define
-
 begin_include
 include|#
 directive|include
@@ -680,17 +623,14 @@ argument_list|()
 decl_stmt|,
 name|usage
 argument_list|()
-decl_stmt|,
-name|zero
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NEWVM
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
 
 begin_decl_stmt
 name|void
@@ -773,7 +713,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"c:fiM:mN:stw:z"
+literal|"c:fiM:mN:stw:"
 argument_list|)
 operator|)
 operator|!=
@@ -798,7 +738,7 @@ expr_stmt|;
 break|break;
 ifndef|#
 directive|ifndef
-name|NEWVM
+name|notdef
 case|case
 literal|'f'
 case|:
@@ -851,7 +791,7 @@ expr_stmt|;
 break|break;
 ifndef|#
 directive|ifndef
-name|NEWVM
+name|notdef
 case|case
 literal|'t'
 case|:
@@ -874,14 +814,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|'z'
-case|:
-name|todo
-operator||=
-name|ZEROOUT
-expr_stmt|;
-break|break;
-case|case
 literal|'?'
 case|:
 default|default:
@@ -898,34 +830,6 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
-if|if
-condition|(
-name|todo
-operator|&
-name|ZEROOUT
-condition|)
-block|{
-if|if
-condition|(
-name|todo
-operator|&
-operator|~
-name|ZEROOUT
-operator|||
-name|kmem
-condition|)
-name|usage
-argument_list|()
-expr_stmt|;
-name|zero
-argument_list|()
-expr_stmt|;
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|todo
@@ -1204,9 +1108,9 @@ name|interval
 operator|=
 literal|1
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|NEWVM
+ifdef|#
+directive|ifdef
+name|notdef
 if|if
 condition|(
 name|todo
@@ -1236,9 +1140,9 @@ condition|)
 name|dosum
 argument_list|()
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|NEWVM
+ifdef|#
+directive|ifdef
+name|notdef
 if|if
 condition|(
 name|todo
@@ -1787,6 +1691,8 @@ name|total
 decl_stmt|;
 name|time_t
 name|uptime
+decl_stmt|,
+name|halfuptime
 decl_stmt|;
 name|void
 name|needhdr
@@ -1794,7 +1700,7 @@ parameter_list|()
 function_decl|;
 ifndef|#
 directive|ifndef
-name|NEWVM
+name|notdef
 name|int
 name|deficit
 decl_stmt|;
@@ -1804,6 +1710,12 @@ name|uptime
 operator|=
 name|getuptime
 argument_list|()
+expr_stmt|;
+name|halfuptime
+operator|=
+name|uptime
+operator|/
+literal|2
 expr_stmt|;
 operator|(
 name|void
@@ -1945,9 +1857,6 @@ name|total
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NEWVM
 name|kread
 argument_list|(
 name|X_VMSTAT
@@ -1961,8 +1870,9 @@ name|vm_stat
 argument_list|)
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+ifdef|#
+directive|ifdef
+name|notdef
 name|kread
 argument_list|(
 name|X_DEFICIT
@@ -2009,6 +1919,14 @@ parameter_list|(
 name|a
 parameter_list|)
 value|((a)*NBPG>> 10)
+define|#
+directive|define
+name|rate
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x) + halfuptime) / uptime)
+comment|/* round */
 operator|(
 name|void
 operator|)
@@ -2041,7 +1959,8 @@ name|printf
 argument_list|(
 literal|"%4lu "
 argument_list|,
-operator|(
+name|rate
+argument_list|(
 name|vm_stat
 operator|.
 name|faults
@@ -2049,9 +1968,7 @@ operator|-
 name|ostat
 operator|.
 name|faults
-operator|)
-operator|/
-name|uptime
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2061,7 +1978,8 @@ name|printf
 argument_list|(
 literal|"%3lu "
 argument_list|,
-operator|(
+name|rate
+argument_list|(
 name|vm_stat
 operator|.
 name|reactivations
@@ -2069,9 +1987,7 @@ operator|-
 name|ostat
 operator|.
 name|reactivations
-operator|)
-operator|/
-name|uptime
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2081,7 +1997,8 @@ name|printf
 argument_list|(
 literal|"%3lu "
 argument_list|,
-operator|(
+name|rate
+argument_list|(
 name|vm_stat
 operator|.
 name|pageins
@@ -2089,9 +2006,7 @@ operator|-
 name|ostat
 operator|.
 name|pageins
-operator|)
-operator|/
-name|uptime
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2101,7 +2016,8 @@ name|printf
 argument_list|(
 literal|"%3lu %3lu "
 argument_list|,
-operator|(
+name|rate
+argument_list|(
 name|vm_stat
 operator|.
 name|pageouts
@@ -2109,9 +2025,7 @@ operator|-
 name|ostat
 operator|.
 name|pageouts
-operator|)
-operator|/
-name|uptime
+argument_list|)
 argument_list|,
 literal|0
 argument_list|)
@@ -2125,7 +2039,8 @@ name|printf
 argument_list|(
 literal|"%3lu %2lu "
 argument_list|,
-operator|(
+name|rate
+argument_list|(
 name|sum
 operator|.
 name|v_pgrec
@@ -2155,11 +2070,10 @@ operator|.
 name|v_xifrec
 operator|)
 operator|)
-operator|)
-operator|/
-name|uptime
+argument_list|)
 argument_list|,
-operator|(
+name|rate
+argument_list|(
 name|sum
 operator|.
 name|v_xsfrec
@@ -2175,9 +2089,7 @@ operator|-
 name|osum
 operator|.
 name|v_xifrec
-operator|)
-operator|/
-name|uptime
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2187,6 +2099,8 @@ name|printf
 argument_list|(
 literal|"%3lu "
 argument_list|,
+name|rate
+argument_list|(
 name|pgtok
 argument_list|(
 name|sum
@@ -2197,8 +2111,7 @@ name|osum
 operator|.
 name|v_pgpgin
 argument_list|)
-operator|/
-name|uptime
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2208,6 +2121,8 @@ name|printf
 argument_list|(
 literal|"%3lu %3lu "
 argument_list|,
+name|rate
+argument_list|(
 name|pgtok
 argument_list|(
 name|sum
@@ -2218,9 +2133,10 @@ name|osum
 operator|.
 name|v_pgpgout
 argument_list|)
-operator|/
-name|uptime
+argument_list|)
 argument_list|,
+name|rate
+argument_list|(
 name|pgtok
 argument_list|(
 name|sum
@@ -2231,8 +2147,7 @@ name|osum
 operator|.
 name|v_dfree
 argument_list|)
-operator|/
-name|uptime
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2257,7 +2172,8 @@ name|printf
 argument_list|(
 literal|"%3lu "
 argument_list|,
-operator|(
+name|rate
+argument_list|(
 name|sum
 operator|.
 name|v_scan
@@ -2265,9 +2181,7 @@ operator|-
 name|osum
 operator|.
 name|v_scan
-operator|)
-operator|/
-name|uptime
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|dkstats
@@ -2280,7 +2194,8 @@ name|printf
 argument_list|(
 literal|"%4lu %4lu %3lu "
 argument_list|,
-operator|(
+name|rate
+argument_list|(
 name|sum
 operator|.
 name|v_intr
@@ -2288,11 +2203,10 @@ operator|-
 name|osum
 operator|.
 name|v_intr
-operator|)
-operator|/
-name|uptime
+argument_list|)
 argument_list|,
-operator|(
+name|rate
+argument_list|(
 name|sum
 operator|.
 name|v_syscall
@@ -2300,11 +2214,10 @@ operator|-
 name|osum
 operator|.
 name|v_syscall
-operator|)
-operator|/
-name|uptime
+argument_list|)
 argument_list|,
-operator|(
+name|rate
+argument_list|(
 name|sum
 operator|.
 name|v_swtch
@@ -2312,9 +2225,7 @@ operator|-
 name|osum
 operator|.
 name|v_swtch
-operator|)
-operator|/
-name|uptime
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|cpustats
@@ -2336,10 +2247,6 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
-name|uptime
-operator|=
-literal|1
-expr_stmt|;
 if|if
 condition|(
 name|reps
@@ -2359,6 +2266,21 @@ expr_stmt|;
 name|ostat
 operator|=
 name|vm_stat
+expr_stmt|;
+name|uptime
+operator|=
+name|interval
+expr_stmt|;
+comment|/* 		 * We round upward to avoid losing low-frequency events 		 * (i.e.,>= 1 per interval but< 1 per second). 		 */
+name|halfuptime
+operator|=
+operator|(
+name|uptime
+operator|+
+literal|1
+operator|)
+operator|/
+literal|2
 expr_stmt|;
 operator|(
 name|void
@@ -2540,11 +2462,11 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NEWVM
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
 
 begin_function
 name|void
@@ -3741,11 +3663,11 @@ directive|endif
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NEWVM
-end_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
 
 begin_function
 name|void
@@ -4728,223 +4650,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-name|void
-name|zero
-parameter_list|()
-block|{
-specifier|static
-name|struct
-name|nlist
-name|znl
-index|[]
-init|=
-block|{
-undef|#
-directive|undef
-name|X_SUM
-define|#
-directive|define
-name|X_SUM
-value|0
-block|{
-name|SUM
-block|}
-block|,
-block|{
-literal|""
-block|}
-block|, 	}
-decl_stmt|;
-name|int
-name|fd
-decl_stmt|;
-name|char
-modifier|*
-name|kmem
-decl_stmt|;
-if|if
-condition|(
-name|geteuid
-argument_list|()
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"vmstat: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|EPERM
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* 	 * Zeroing the statistics is fundamentally different 	 * (and really belongs in a separate program). 	 */
-if|if
-condition|(
-name|nlist
-argument_list|(
-name|vmunix
-argument_list|,
-name|znl
-argument_list|)
-operator|||
-name|nl
-index|[
-literal|0
-index|]
-operator|.
-name|n_type
-operator|==
-literal|0
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"vmstat: %s: symbol %s not found\n"
-argument_list|,
-name|vmunix
-argument_list|,
-name|nl
-index|[
-literal|0
-index|]
-operator|.
-name|n_name
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-name|kmem
-operator|=
-name|_PATH_KMEM
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|fd
-operator|=
-name|open
-argument_list|(
-name|kmem
-argument_list|,
-name|O_RDWR
-argument_list|)
-operator|)
-operator|<
-literal|0
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"vmstat: %s: %s\n"
-argument_list|,
-name|kmem
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|lseek
-argument_list|(
-name|fd
-argument_list|,
-operator|(
-name|long
-operator|)
-name|nl
-index|[
-literal|0
-index|]
-operator|.
-name|n_value
-argument_list|,
-name|L_SET
-argument_list|)
-operator|==
-operator|-
-literal|1
-operator|||
-name|write
-argument_list|(
-name|fd
-argument_list|,
-operator|&
-name|sum
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|sum
-argument_list|)
-argument_list|)
-operator|!=
-sizeof|sizeof
-argument_list|(
-name|sum
-argument_list|)
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"vmstat: %s: %s\n"
-argument_list|,
-name|kmem
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_function
-
 begin_comment
 comment|/*  * kread reads something from the kernel, given its nlist index.  */
 end_comment
@@ -5115,12 +4820,12 @@ argument_list|,
 ifndef|#
 directive|ifndef
 name|NEWVM
-literal|"usage: vmstat [-fimst] [-c count] [-M core] \ [-N system] [-w wait] [disks]\n       vmstat -z\n"
+literal|"usage: vmstat [-fimst] [-c count] [-M core] \ [-N system] [-w wait] [disks]\n"
 argument_list|)
 expr_stmt|;
 else|#
 directive|else
-literal|"usage: vmstat [-ims] [-c count] [-M core] \ [-N system] [-w wait] [disks]\n       vmstat -z\n"
+literal|"usage: vmstat [-ims] [-c count] [-M core] \ [-N system] [-w wait] [disks]\n"
 block|)
 function|;
 end_function
