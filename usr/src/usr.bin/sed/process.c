@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)process.c	5.8 (Berkeley) %G%"
+literal|"@(#)process.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1443,9 +1443,6 @@ name|n
 decl_stmt|;
 name|char
 modifier|*
-name|endp
-decl_stmt|,
-modifier|*
 name|s
 decl_stmt|;
 name|s
@@ -1571,18 +1568,6 @@ literal|0
 index|]
 operator|.
 name|rm_so
-expr_stmt|;
-comment|/* Locate end of replaced string + 1. */
-name|endp
-operator|=
-name|s
-operator|+
-name|match
-index|[
-literal|0
-index|]
-operator|.
-name|rm_eo
 expr_stmt|;
 comment|/* Copy leading retained string. */
 name|cspace
