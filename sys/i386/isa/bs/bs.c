@@ -5581,7 +5581,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-specifier|inline
+name|BS_INLINE
 name|void
 name|bs_ack_wait
 name|__P
@@ -5605,7 +5605,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-specifier|inline
+name|BS_INLINE
 name|void
 name|bs_ack_wait
 parameter_list|(

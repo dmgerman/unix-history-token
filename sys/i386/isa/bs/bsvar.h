@@ -15,12 +15,35 @@ begin_comment
 comment|/*  * Copyright (c) 1994, 1995, 1996 Naofumi HONDA.  All rights reserved.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|BS_INLINE
+value|__inline
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|BS_INLINE
 value|inline
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/**************************************************  *	CONTROL FLAGS  (cf_flags)  *************************************************/
