@@ -7031,6 +7031,10 @@ case|case
 literal|0x3100143e
 case|:
 comment|/* opti931 */
+case|case
+literal|0x1093143e
+case|:
+comment|/* OPT9310 */
 name|mss
 operator|->
 name|bd_flags
@@ -7077,6 +7081,12 @@ case|case
 literal|0x0100561e
 case|:
 comment|/* guspnp */
+name|mss
+operator|->
+name|bd_flags
+operator||=
+name|BD_F_MSS_OFFSET
+expr_stmt|;
 name|mss
 operator|->
 name|io_rid
