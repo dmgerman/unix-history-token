@@ -1522,6 +1522,33 @@ comment|/* hack for ng_ppp_intcmp() */
 end_comment
 
 begin_comment
+comment|/*  * XXXRW: An ugly synchronization hack to protect an ugly hack.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|mtx
+name|ng_ppp_latencies_mtx
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|MTX_SYSINIT
+argument_list|(
+name|ng_ppp_latencies
+argument_list|,
+operator|&
+name|ng_ppp_latencies_mtx
+argument_list|,
+literal|"ng_ppp_latencies"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* Address and control field header */
 end_comment
 
@@ -7787,6 +7814,12 @@ name|bandwidth
 expr_stmt|;
 block|}
 comment|/* Sort active links by latency */
+name|mtx_lock
+argument_list|(
+operator|&
+name|ng_ppp_latencies_mtx
+argument_list|)
+expr_stmt|;
 name|compareLatencies
 operator|=
 name|latency
@@ -7811,6 +7844,12 @@ expr_stmt|;
 name|compareLatencies
 operator|=
 name|NULL
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|ng_ppp_latencies_mtx
+argument_list|)
 expr_stmt|;
 comment|/* Find the interval we need (add links in sortByLatency[] order) */
 for|for
@@ -8400,6 +8439,14 @@ operator|)
 name|v2
 operator|)
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|ng_ppp_latencies_mtx
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 return|return
 name|compareLatencies
 index|[
