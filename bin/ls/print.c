@@ -587,7 +587,6 @@ comment|/*  * print name in current style  */
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|printname
 parameter_list|(
