@@ -31,7 +31,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)fio.c	2.9 %G%"
+literal|"@(#)fio.c	2.10 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1889,6 +1889,8 @@ argument_list|(
 name|mp
 argument_list|,
 name|obuf
+argument_list|,
+literal|0
 argument_list|)
 operator|<
 literal|0
