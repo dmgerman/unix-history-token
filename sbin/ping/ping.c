@@ -300,6 +300,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MAXALARM
+value|(60 * 60)
+end_define
+
+begin_comment
+comment|/* max seconds for alarm timeout */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|NROUTES
 value|9
 end_define
@@ -1119,10 +1130,9 @@ name|NULL
 decl_stmt|;
 endif|#
 directive|endif
-name|int
+name|unsigned
+name|long
 name|alarmtimeout
-init|=
-literal|0
 decl_stmt|;
 comment|/* 	 * Do the stuff that we need root priv's for *first*, and 	 * then drop our setuid bit.  Save error reporting for 	 * after arg parsing. 	 */
 name|s
@@ -1151,6 +1161,8 @@ operator|=
 name|getuid
 argument_list|()
 expr_stmt|;
+name|alarmtimeout
+operator|=
 name|preload
 operator|=
 literal|0
@@ -1644,9 +1656,6 @@ literal|'t'
 case|:
 name|alarmtimeout
 operator|=
-operator|(
-name|int
-operator|)
 name|strtoul
 argument_list|(
 name|optarg
@@ -1659,9 +1668,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|alarmtimeout
 operator|<
 literal|1
+operator|)
+operator|||
+operator|(
+name|alarmtimeout
+operator|==
+name|ULONG_MAX
+operator|)
 condition|)
 name|errx
 argument_list|(
@@ -1672,8 +1689,28 @@ argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|alarmtimeout
+operator|>
+name|MAXALARM
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"invalid timeout: `%s'> %d"
+argument_list|,
+name|optarg
+argument_list|,
+name|MAXALARM
+argument_list|)
+expr_stmt|;
 name|alarm
 argument_list|(
+operator|(
+name|int
+operator|)
 name|alarmtimeout
 argument_list|)
 expr_stmt|;
@@ -2996,6 +3033,13 @@ literal|"sigaction"
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|alarmtimeout
+operator|>
+literal|0
+condition|)
+block|{
 name|si_sa
 operator|.
 name|sa_handler
@@ -3024,6 +3068,7 @@ argument_list|,
 literal|"sigaction SIGALRM"
 argument_list|)
 expr_stmt|;
+block|}
 name|bzero
 argument_list|(
 operator|&
