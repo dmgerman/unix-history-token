@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rexecd.c	4.6 83/01/07"
+literal|"@(#)rexecd.c	4.7 83/01/22"
 decl_stmt|;
 end_decl_stmt
 
@@ -131,6 +131,13 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|reapchild
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * remote execute server:  *	username\0  *	password\0  *	command\0  *	data  */
 end_comment
@@ -151,10 +158,6 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-name|union
-name|wait
-name|status
-decl_stmt|;
 name|int
 name|f
 decl_stmt|;
@@ -379,6 +382,13 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|sigset
+argument_list|(
+name|SIGCHLD
+argument_list|,
+name|reapchild
+argument_list|)
+expr_stmt|;
 name|listen
 argument_list|(
 name|f
@@ -424,6 +434,13 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|EINTR
+condition|)
+continue|continue;
 name|perror
 argument_list|(
 literal|"rexecd: accept"
@@ -459,10 +476,26 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_macro
+name|reapchild
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|union
+name|wait
+name|status
+decl_stmt|;
 while|while
 condition|(
 name|wait3
 argument_list|(
+operator|&
 name|status
 argument_list|,
 name|WNOHANG
@@ -472,10 +505,9 @@ argument_list|)
 operator|>
 literal|0
 condition|)
-continue|continue;
+empty_stmt|;
 block|}
-block|}
-end_function
+end_block
 
 begin_decl_stmt
 name|char
