@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: shm.h,v 1.7 1996/01/30 23:01:19 mpp Exp $ */
+comment|/* $Id: shm.h,v 1.8 1996/02/23 18:49:20 peter Exp $ */
 end_comment
 
 begin_comment
@@ -59,7 +59,7 @@ begin_define
 define|#
 directive|define
 name|SHMLBA
-value|CLBYTES
+value|PAGE_SIZE
 end_define
 
 begin_comment

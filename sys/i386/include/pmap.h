@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Derived from hp300 version by Mike Hibler, this version by William  * Jolitz uses a recursive map [a pde points to the page directory] to  * map the page tables using the pagetables themselves. This is done to  * reduce the impact on kernel virtual memory for lots of sparse address  * space, and to reduce the cost of memory to each process.  *  *	from: hp300: @(#)pmap.h	7.2 (Berkeley) 12/16/90  *	from: @(#)pmap.h	7.4 (Berkeley) 5/12/91  * 	$Id: pmap.h,v 1.35 1996/04/03 05:23:44 dyson Exp $  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Derived from hp300 version by Mike Hibler, this version by William  * Jolitz uses a recursive map [a pde points to the page directory] to  * map the page tables using the pagetables themselves. This is done to  * reduce the impact on kernel virtual memory for lots of sparse address  * space, and to reduce the cost of memory to each process.  *  *	from: hp300: @(#)pmap.h	7.2 (Berkeley) 12/16/90  *	from: @(#)pmap.h	7.4 (Berkeley) 5/12/91  * 	$Id: pmap.h,v 1.36 1996/04/30 12:02:11 phk Exp $  */
 end_comment
 
 begin_ifndef
@@ -15,35 +15,199 @@ directive|define
 name|_MACHINE_PMAP_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<machine/pte.h>
-end_include
+begin_define
+define|#
+directive|define
+name|PG_V
+value|0x00000001
+end_define
 
-begin_typedef
-typedef|typedef
-name|unsigned
-name|int
-modifier|*
-name|pd_entry_t
-typedef|;
-end_typedef
+begin_define
+define|#
+directive|define
+name|PG_RW
+value|0x00000002
+end_define
 
-begin_typedef
-typedef|typedef
-name|unsigned
-name|int
-modifier|*
-name|pt_entry_t
-typedef|;
-end_typedef
+begin_define
+define|#
+directive|define
+name|PG_u
+value|0x00000004
+end_define
 
-begin_struct_decl
-struct_decl|struct
-name|vm_map
-struct_decl|;
-end_struct_decl
+begin_define
+define|#
+directive|define
+name|PG_PROT
+value|0x00000006
+end_define
+
+begin_comment
+comment|/* all protection bits . */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_NC_PWT
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* page cache write through */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_NC_PCD
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* page cache disable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_N
+value|0x00000018
+end_define
+
+begin_comment
+comment|/* Non-cacheable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_U
+value|0x00000020
+end_define
+
+begin_comment
+comment|/* page was accessed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_M
+value|0x00000040
+end_define
+
+begin_comment
+comment|/* page was modified */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_PS
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* page is big size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_G
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* page is global */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_W
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* "Wired" pseudoflag */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PG_FRAME
+value|0xfffff000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_KR
+value|0x00000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PG_KW
+value|0x00000002
+end_define
+
+begin_comment
+comment|/*  * Page Protection Exception bits  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PGEX_P
+value|0x01
+end_define
+
+begin_comment
+comment|/* Protection violation vs. not present */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PGEX_W
+value|0x02
+end_define
+
+begin_comment
+comment|/* during a Write cycle */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PGEX_U
+value|0x04
+end_define
+
+begin_comment
+comment|/* access from User mode (UPL) */
+end_comment
+
+begin_comment
+comment|/*  * Pte related macros  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VADDR
+parameter_list|(
+name|pdi
+parameter_list|,
+name|pti
+parameter_list|)
+value|((vm_offset_t)(((pdi)<<PDRSHIFT)|((pti)<<PAGE_SHIFT)))
+end_define
 
 begin_comment
 comment|/*  * NKPDE controls the virtual space of the kernel, what ever is left, minus  * the alternate page table area is given to the user (NUPDE)  */
@@ -132,7 +296,7 @@ begin_define
 define|#
 directive|define
 name|APTDPTDI
-value|(NPTEPG-1)
+value|(NPDEPG-1)
 end_define
 
 begin_comment
@@ -182,6 +346,36 @@ end_define
 begin_comment
 comment|/* pte entry for kernel stack */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|int
+modifier|*
+name|pd_entry_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|int
+modifier|*
+name|pt_entry_t
+typedef|;
+end_typedef
+
+begin_struct_decl
+struct_decl|struct
+name|vm_map
+struct_decl|;
+end_struct_decl
 
 begin_define
 define|#
@@ -278,41 +472,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|kvtopte
-parameter_list|(
-name|va
-parameter_list|)
-value|vtopte(va)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ptetov
-parameter_list|(
-name|pt
-parameter_list|)
-value|(i386_ptob(pt - PTmap))
-end_define
-
-begin_define
-define|#
-directive|define
 name|vtophys
 parameter_list|(
 name|va
 parameter_list|)
-value|(((int) (*vtopte(va))&PG_FRAME) | ((int)(va)& PGOFSET))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ispt
-parameter_list|(
-name|va
-parameter_list|)
-value|((va)>= UPT_MIN_ADDRESS&& (va)<= KPT_MAX_ADDRESS)
+value|(((int) (*vtopte(va))&PG_FRAME) | ((int)(va)& PAGE_MASK))
 end_define
 
 begin_define
@@ -328,21 +492,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|ptetoav
-parameter_list|(
-name|pt
-parameter_list|)
-value|(i386_ptob(pt - APTmap))
-end_define
-
-begin_define
-define|#
-directive|define
 name|avtophys
 parameter_list|(
 name|va
 parameter_list|)
-value|(((int) (*avtopte(va))&PG_FRAME) | ((int)(va)& PGOFSET))
+value|(((int) (*avtopte(va))&PG_FRAME) | ((int)(va)& PAGE_MASK))
 end_define
 
 begin_ifdef
@@ -403,30 +557,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * macros to generate page directory/table indices  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|pdei
-parameter_list|(
-name|va
-parameter_list|)
-value|(((va)&PD_MASK)>>PD_SHIFT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ptei
-parameter_list|(
-name|va
-parameter_list|)
-value|(((va)&PT_MASK)>>PG_SHIFT)
-end_define
 
 begin_comment
 comment|/*  * Pmap stuff  */
@@ -752,6 +882,15 @@ end_endif
 
 begin_comment
 comment|/* KERNEL */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !LOCORE */
 end_comment
 
 begin_endif
