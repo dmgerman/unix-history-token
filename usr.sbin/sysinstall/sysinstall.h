@@ -436,6 +436,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|VAR_HTTP_PROXY
+value|"httpProxy"
+end_define
+
+begin_define
+define|#
+directive|define
 name|VAR_HTTP_PORT
 value|"httpPort"
 end_define
