@@ -7291,6 +7291,11 @@ name|ifc_len
 operator|=
 name|valid_len
 expr_stmt|;
+name|sbuf_finish
+argument_list|(
+name|sb
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|copyout
