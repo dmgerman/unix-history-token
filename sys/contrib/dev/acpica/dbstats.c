@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbstats - Generation and display of ACPI table statistics  *              $Revision: 66 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbstats - Generation and display of ACPI table statistics  *              $Revision: 68 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -248,7 +248,7 @@ name|ObjDesc
 operator|->
 name|Device
 operator|.
-name|SysHandler
+name|SystemNotify
 argument_list|)
 expr_stmt|;
 name|AcpiDbEnumerateObject
@@ -257,7 +257,7 @@ name|ObjDesc
 operator|->
 name|Device
 operator|.
-name|DrvHandler
+name|DeviceNotify
 argument_list|)
 expr_stmt|;
 name|AcpiDbEnumerateObject
@@ -266,7 +266,7 @@ name|ObjDesc
 operator|->
 name|Device
 operator|.
-name|AddrHandler
+name|AddressSpace
 argument_list|)
 expr_stmt|;
 break|break;
@@ -304,7 +304,7 @@ name|ObjDesc
 operator|->
 name|Region
 operator|.
-name|AddrHandler
+name|AddressSpace
 argument_list|)
 expr_stmt|;
 break|break;
@@ -317,7 +317,7 @@ name|ObjDesc
 operator|->
 name|PowerResource
 operator|.
-name|SysHandler
+name|SystemNotify
 argument_list|)
 expr_stmt|;
 name|AcpiDbEnumerateObject
@@ -326,7 +326,7 @@ name|ObjDesc
 operator|->
 name|PowerResource
 operator|.
-name|DrvHandler
+name|DeviceNotify
 argument_list|)
 expr_stmt|;
 break|break;
@@ -339,7 +339,7 @@ name|ObjDesc
 operator|->
 name|Processor
 operator|.
-name|SysHandler
+name|SystemNotify
 argument_list|)
 expr_stmt|;
 name|AcpiDbEnumerateObject
@@ -348,7 +348,7 @@ name|ObjDesc
 operator|->
 name|Processor
 operator|.
-name|DrvHandler
+name|DeviceNotify
 argument_list|)
 expr_stmt|;
 name|AcpiDbEnumerateObject
@@ -357,7 +357,7 @@ name|ObjDesc
 operator|->
 name|Processor
 operator|.
-name|AddrHandler
+name|AddressSpace
 argument_list|)
 expr_stmt|;
 break|break;
@@ -370,7 +370,7 @@ name|ObjDesc
 operator|->
 name|ThermalZone
 operator|.
-name|SysHandler
+name|SystemNotify
 argument_list|)
 expr_stmt|;
 name|AcpiDbEnumerateObject
@@ -379,7 +379,7 @@ name|ObjDesc
 operator|->
 name|ThermalZone
 operator|.
-name|DrvHandler
+name|DeviceNotify
 argument_list|)
 expr_stmt|;
 name|AcpiDbEnumerateObject
@@ -388,7 +388,7 @@ name|ObjDesc
 operator|->
 name|ThermalZone
 operator|.
-name|AddrHandler
+name|AddressSpace
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1061,7 +1061,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NUM_MTX
+name|NUM_MUTEX
 condition|;
 name|i
 operator|++
@@ -1076,7 +1076,7 @@ argument_list|(
 name|i
 argument_list|)
 argument_list|,
-name|AcpiGbl_AcpiMutexInfo
+name|AcpiGbl_MutexInfo
 index|[
 name|i
 index|]
@@ -1276,7 +1276,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"NotifyHandler    %3d\n"
+literal|"Notify           %3d\n"
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1286,7 +1286,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"AddrHandler      %3d\n"
+literal|"AddressSpace     %3d\n"
 argument_list|,
 sizeof|sizeof
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 253 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 261 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -24,36 +24,52 @@ comment|/*! [Begin] no source code translation (keep the typedefs) */
 end_comment
 
 begin_comment
-comment|/*  * Data type ranges  */
+comment|/*  * Data type ranges  * Note: These macros are designed to be compiler independent as well as  * working around problems that some 32-bit compilers have with 64-bit  * constants.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|ACPI_UINT8_MAX
-value|(UINT8)  0xFF
+value|(UINT8) (~((UINT8)  0))
 end_define
+
+begin_comment
+comment|/* 0xFF               */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|ACPI_UINT16_MAX
-value|(UINT16) 0xFFFF
+value|(UINT16)(~((UINT16) 0))
 end_define
+
+begin_comment
+comment|/* 0xFFFF             */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|ACPI_UINT32_MAX
-value|(UINT32) 0xFFFFFFFF
+value|(UINT32)(~((UINT32) 0))
 end_define
+
+begin_comment
+comment|/* 0xFFFFFFFF         */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|ACPI_UINT64_MAX
-value|(UINT64) 0xFFFFFFFFFFFFFFFF
+value|(UINT64)(~((UINT64) 0))
 end_define
+
+begin_comment
+comment|/* 0xFFFFFFFFFFFFFFFF */
+end_comment
 
 begin_define
 define|#
@@ -420,7 +436,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|_HW_ALIGNMENT_SUPPORT
+name|ACPI_MISALIGNED_TRANSFERS
 end_define
 
 begin_define
@@ -582,7 +598,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|_HW_ALIGNMENT_SUPPORT
+name|ACPI_MISALIGNED_TRANSFERS
 end_define
 
 begin_define
@@ -944,20 +960,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_MAX_BCD_VALUE
-value|99999999
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_MAX_BCD_DIGITS
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
 name|ACPI_MAX_DECIMAL_DIGITS
 value|10
 end_define
@@ -1000,20 +1002,6 @@ define|#
 directive|define
 name|ACPI_INTEGER_BIT_SIZE
 value|64
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_MAX_BCD_VALUE
-value|9999999999999999
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_MAX_BCD_DIGITS
-value|16
 end_define
 
 begin_define
@@ -1432,7 +1420,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|NUM_ACPI_TABLES
+name|NUM_ACPI_TABLE_TYPES
 value|(ACPI_TABLE_MAX+1)
 end_define
 
@@ -1946,7 +1934,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*  * AcpiEvent Types: Fixed& General Purpose  */
+comment|/*  * Acpi Event Types: Fixed& General Purpose  */
 end_comment
 
 begin_typedef
@@ -1955,20 +1943,6 @@ name|UINT32
 name|ACPI_EVENT_TYPE
 typedef|;
 end_typedef
-
-begin_define
-define|#
-directive|define
-name|ACPI_EVENT_FIXED
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_EVENT_GPE
-value|1
-end_define
 
 begin_comment
 comment|/*  * Fixed events  */
@@ -2059,21 +2033,35 @@ value|2
 end_define
 
 begin_comment
-comment|/*  * GPEs  */
+comment|/*  * Flags for GPE and Lock interfaces  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|ACPI_EVENT_WAKE_ENABLE
-value|0x1
+value|0x2
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_EVENT_WAKE_DISABLE
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_NOT_ISR
 value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_ISR
+value|0x0
 end_define
 
 begin_comment
@@ -2682,12 +2670,48 @@ decl_stmt|;
 name|ACPI_TABLE_INFO
 name|TableInfo
 index|[
-name|NUM_ACPI_TABLES
+name|NUM_ACPI_TABLE_TYPES
 index|]
 decl_stmt|;
 block|}
 name|ACPI_SYSTEM_INFO
 typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * Types specific to the OS service interfaces  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|UINT32
+function_decl|(
+name|ACPI_SYSTEM_XFACE
+modifier|*
+name|OSD_HANDLER
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|Context
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+name|ACPI_SYSTEM_XFACE
+modifier|*
+name|OSD_EXECUTION_CALLBACK
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|Context
+parameter_list|)
+function_decl|;
 end_typedef
 
 begin_comment
@@ -2918,35 +2942,104 @@ value|0x01
 end_define
 
 begin_comment
-comment|/* Structure and flags for AcpiGetDeviceInfo */
+comment|/* Common string version of device HIDs and UIDs */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_device_id
+block|{
+name|char
+name|Value
+index|[
+name|ACPI_DEVICE_ID_LENGTH
+index|]
+decl_stmt|;
+block|}
+name|ACPI_DEVICE_ID
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Common string version of device CIDs */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_compatible_id
+block|{
+name|char
+name|Value
+index|[
+name|ACPI_MAX_CID_LENGTH
+index|]
+decl_stmt|;
+block|}
+name|ACPI_COMPATIBLE_ID
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_compatible_id_list
+block|{
+name|UINT32
+name|Count
+decl_stmt|;
+name|UINT32
+name|Size
+decl_stmt|;
+name|ACPI_COMPATIBLE_ID
+name|Id
+index|[
+literal|1
+index|]
+decl_stmt|;
+block|}
+name|ACPI_COMPATIBLE_ID_LIST
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Structure and flags for AcpiGetObjectInfo */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ACPI_VALID_HID
-value|0x1
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_VALID_UID
-value|0x2
+name|ACPI_VALID_STA
+value|0x0001
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_VALID_ADR
-value|0x4
+value|0x0002
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_VALID_STA
-value|0x8
+name|ACPI_VALID_HID
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_VALID_UID
+value|0x0008
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_VALID_CID
+value|0x0010
 end_define
 
 begin_define
@@ -2975,6 +3068,10 @@ name|ACPI_OBJ_INFO_HEADER
 typedef|;
 end_typedef
 
+begin_comment
+comment|/* Structure returned from Get Object Info */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -2985,29 +3082,27 @@ expr_stmt|;
 name|UINT32
 name|Valid
 decl_stmt|;
-comment|/*  Are the next bits legit? */
-name|char
-name|HardwareId
-index|[
-literal|9
-index|]
-decl_stmt|;
-comment|/*  _HID value if any */
-name|char
-name|UniqueId
-index|[
-literal|9
-index|]
-decl_stmt|;
-comment|/*  _UID value if any */
-name|ACPI_INTEGER
-name|Address
-decl_stmt|;
-comment|/*  _ADR value if any */
+comment|/* Indicates which fields are valid */
 name|UINT32
 name|CurrentStatus
 decl_stmt|;
-comment|/*  _STA value */
+comment|/* _STA value */
+name|ACPI_INTEGER
+name|Address
+decl_stmt|;
+comment|/* _ADR value if any */
+name|ACPI_DEVICE_ID
+name|HardwareId
+decl_stmt|;
+comment|/* _HID value if any */
+name|ACPI_DEVICE_ID
+name|UniqueId
+decl_stmt|;
+comment|/* _UID value if any */
+name|ACPI_COMPATIBLE_ID_LIST
+name|CompatibilityId
+decl_stmt|;
+comment|/* List of _CIDs if any */
 block|}
 name|ACPI_DEVICE_INFO
 typedef|;
@@ -4087,7 +4182,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_HW_ALIGNMENT_SUPPORT
+name|ACPI_MISALIGNED_TRANSFERS
 end_ifdef
 
 begin_define

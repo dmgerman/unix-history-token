@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evevent - Fixed Event handling and dispatch  *              $Revision: 108 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evevent - Fixed Event handling and dispatch  *              $Revision: 111 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -74,7 +74,7 @@ name|AE_NO_ACPI_TABLES
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Initialize the Fixed and General Purpose AcpiEvents prior.  This is      * done prior to enabling SCIs to prevent interrupts from occurring      * before handers are installed.      */
+comment|/*      * Initialize the Fixed and General Purpose Events. This is      * done prior to enabling SCIs to prevent interrupts from      * occurring before handers are installed.      */
 name|Status
 operator|=
 name|AcpiEvFixedEventInitialize
@@ -405,7 +405,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_INTERRUPTS
 operator|,
-literal|"Fixed AcpiEvent Block: Enable %08X Status %08X\n"
+literal|"Fixed Event Block: Enable %08X Status %08X\n"
 operator|,
 name|FixedEnable
 operator|,
@@ -541,7 +541,7 @@ expr_stmt|;
 name|ACPI_REPORT_ERROR
 argument_list|(
 operator|(
-literal|"EvGpeDispatch: No installed handler for fixed event [%08X]\n"
+literal|"No installed handler for fixed event [%08X]\n"
 operator|,
 name|Event
 operator|)

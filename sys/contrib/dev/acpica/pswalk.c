@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: pswalk - Parser routines to walk parsed op tree(s)  *              $Revision: 68 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: pswalk - Parser routines to walk parsed op tree(s)  *              $Revision: 69 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -492,7 +492,7 @@ name|WalkState
 operator|=
 name|AcpiDsCreateWalkState
 argument_list|(
-name|TABLE_ID_DSDT
+literal|0
 argument_list|,
 name|NULL
 argument_list|,

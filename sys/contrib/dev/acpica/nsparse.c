@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsparse - namespace interface to AML parser  *              $Revision: 3 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsparse - namespace interface to AML parser  *              $Revision: 4 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -106,7 +106,9 @@ name|WalkState
 operator|=
 name|AcpiDsCreateWalkState
 argument_list|(
-name|TABLE_ID_DSDT
+name|TableDesc
+operator|->
+name|TableId
 argument_list|,
 name|NULL
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: hwtimer.c - ACPI Power Management Timer Interface  *              $Revision: 24 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: hwtimer.c - ACPI Power Management Timer Interface  *              $Revision: 25 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -133,8 +133,6 @@ operator|&
 name|AcpiGbl_FADT
 operator|->
 name|XPmTmrBlk
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS

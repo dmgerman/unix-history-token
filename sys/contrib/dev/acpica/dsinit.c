@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dsinit - Object initialization namespace walk  *              $Revision: 6 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dsinit - Object initialization namespace walk  *              $Revision: 7 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -458,13 +458,17 @@ argument_list|(
 operator|(
 name|ACPI_DB_INIT
 operator|,
-literal|"\nTable [%4.4s] - %hd Objects with %hd Devices %hd Methods %hd Regions\n"
+literal|"\nTable [%4.4s](id %4.4X) - %hd Objects with %hd Devices %hd Methods %hd Regions\n"
 operator|,
 name|TableDesc
 operator|->
 name|Pointer
 operator|->
 name|Signature
+operator|,
+name|TableDesc
+operator|->
+name|TableId
 operator|,
 name|Info
 operator|.

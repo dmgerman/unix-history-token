@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rsaddr - Address resource descriptors (16/32/64)  *              $Revision: 29 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rsaddr - Address resource descriptors (16/32/64)  *              $Revision: 32 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -113,7 +113,7 @@ name|Buffer
 operator|+=
 literal|1
 expr_stmt|;
-name|ACPI_MOVE_UNALIGNED16_TO_16
+name|ACPI_MOVE_16_TO_16
 argument_list|(
 operator|&
 name|Temp16
@@ -387,7 +387,7 @@ name|Buffer
 operator|+=
 literal|1
 expr_stmt|;
-name|ACPI_MOVE_UNALIGNED16_TO_16
+name|ACPI_MOVE_16_TO_32
 argument_list|(
 operator|&
 name|OutputStruct
@@ -406,7 +406,7 @@ name|Buffer
 operator|+=
 literal|2
 expr_stmt|;
-name|ACPI_MOVE_UNALIGNED16_TO_16
+name|ACPI_MOVE_16_TO_32
 argument_list|(
 operator|&
 name|OutputStruct
@@ -425,7 +425,7 @@ name|Buffer
 operator|+=
 literal|2
 expr_stmt|;
-name|ACPI_MOVE_UNALIGNED16_TO_16
+name|ACPI_MOVE_16_TO_32
 argument_list|(
 operator|&
 name|OutputStruct
@@ -444,7 +444,7 @@ name|Buffer
 operator|+=
 literal|2
 expr_stmt|;
-name|ACPI_MOVE_UNALIGNED16_TO_16
+name|ACPI_MOVE_16_TO_32
 argument_list|(
 operator|&
 name|OutputStruct
@@ -463,7 +463,7 @@ name|Buffer
 operator|+=
 literal|2
 expr_stmt|;
-name|ACPI_MOVE_UNALIGNED16_TO_16
+name|ACPI_MOVE_16_TO_32
 argument_list|(
 operator|&
 name|OutputStruct
@@ -990,7 +990,7 @@ operator|+=
 literal|1
 expr_stmt|;
 comment|/*      * Set the address space granularity      */
-name|ACPI_MOVE_UNALIGNED16_TO_16
+name|ACPI_MOVE_32_TO_16
 argument_list|(
 name|Buffer
 argument_list|,
@@ -1009,7 +1009,7 @@ operator|+=
 literal|2
 expr_stmt|;
 comment|/*      * Set the address range minimum      */
-name|ACPI_MOVE_UNALIGNED16_TO_16
+name|ACPI_MOVE_32_TO_16
 argument_list|(
 name|Buffer
 argument_list|,
@@ -1028,7 +1028,7 @@ operator|+=
 literal|2
 expr_stmt|;
 comment|/*      * Set the address range maximum      */
-name|ACPI_MOVE_UNALIGNED16_TO_16
+name|ACPI_MOVE_32_TO_16
 argument_list|(
 name|Buffer
 argument_list|,
@@ -1047,7 +1047,7 @@ operator|+=
 literal|2
 expr_stmt|;
 comment|/*      * Set the address translation offset      */
-name|ACPI_MOVE_UNALIGNED16_TO_16
+name|ACPI_MOVE_32_TO_16
 argument_list|(
 name|Buffer
 argument_list|,
@@ -1066,7 +1066,7 @@ operator|+=
 literal|2
 expr_stmt|;
 comment|/*      * Set the address length      */
-name|ACPI_MOVE_UNALIGNED16_TO_16
+name|ACPI_MOVE_32_TO_16
 argument_list|(
 name|Buffer
 argument_list|,
@@ -1151,7 +1151,10 @@ expr_stmt|;
 comment|/*          * Buffer needs to be set to the length of the sting + one for the          *  terminating null          */
 name|Buffer
 operator|+=
-operator|(
+call|(
+name|ACPI_SIZE
+call|)
+argument_list|(
 name|ACPI_STRLEN
 argument_list|(
 name|LinkedList
@@ -1166,7 +1169,7 @@ name|StringPtr
 argument_list|)
 operator|+
 literal|1
-operator|)
+argument_list|)
 expr_stmt|;
 block|}
 comment|/*      * Return the number of bytes consumed in this operation      */
@@ -1190,7 +1193,7 @@ name|ActualBytes
 operator|-=
 literal|3
 expr_stmt|;
-name|ACPI_MOVE_UNALIGNED16_TO_16
+name|ACPI_MOVE_SIZE_TO_16
 argument_list|(
 name|LengthField
 argument_list|,
@@ -1284,7 +1287,7 @@ name|Buffer
 operator|+=
 literal|1
 expr_stmt|;
-name|ACPI_MOVE_UNALIGNED16_TO_16
+name|ACPI_MOVE_16_TO_16
 argument_list|(
 operator|&
 name|Temp16
@@ -1558,7 +1561,7 @@ name|Buffer
 operator|+=
 literal|1
 expr_stmt|;
-name|ACPI_MOVE_UNALIGNED32_TO_32
+name|ACPI_MOVE_32_TO_32
 argument_list|(
 operator|&
 name|OutputStruct
@@ -1577,7 +1580,7 @@ name|Buffer
 operator|+=
 literal|4
 expr_stmt|;
-name|ACPI_MOVE_UNALIGNED32_TO_32
+name|ACPI_MOVE_32_TO_32
 argument_list|(
 operator|&
 name|OutputStruct
@@ -1596,7 +1599,7 @@ name|Buffer
 operator|+=
 literal|4
 expr_stmt|;
-name|ACPI_MOVE_UNALIGNED32_TO_32
+name|ACPI_MOVE_32_TO_32
 argument_list|(
 operator|&
 name|OutputStruct
@@ -1615,7 +1618,7 @@ name|Buffer
 operator|+=
 literal|4
 expr_stmt|;
-name|ACPI_MOVE_UNALIGNED32_TO_32
+name|ACPI_MOVE_32_TO_32
 argument_list|(
 operator|&
 name|OutputStruct
@@ -1634,7 +1637,7 @@ name|Buffer
 operator|+=
 literal|4
 expr_stmt|;
-name|ACPI_MOVE_UNALIGNED32_TO_32
+name|ACPI_MOVE_32_TO_32
 argument_list|(
 operator|&
 name|OutputStruct
@@ -2163,7 +2166,7 @@ operator|+=
 literal|1
 expr_stmt|;
 comment|/*      * Set the address space granularity      */
-name|ACPI_MOVE_UNALIGNED32_TO_32
+name|ACPI_MOVE_32_TO_32
 argument_list|(
 name|Buffer
 argument_list|,
@@ -2182,7 +2185,7 @@ operator|+=
 literal|4
 expr_stmt|;
 comment|/*      * Set the address range minimum      */
-name|ACPI_MOVE_UNALIGNED32_TO_32
+name|ACPI_MOVE_32_TO_32
 argument_list|(
 name|Buffer
 argument_list|,
@@ -2201,7 +2204,7 @@ operator|+=
 literal|4
 expr_stmt|;
 comment|/*      * Set the address range maximum      */
-name|ACPI_MOVE_UNALIGNED32_TO_32
+name|ACPI_MOVE_32_TO_32
 argument_list|(
 name|Buffer
 argument_list|,
@@ -2220,7 +2223,7 @@ operator|+=
 literal|4
 expr_stmt|;
 comment|/*      * Set the address translation offset      */
-name|ACPI_MOVE_UNALIGNED32_TO_32
+name|ACPI_MOVE_32_TO_32
 argument_list|(
 name|Buffer
 argument_list|,
@@ -2239,7 +2242,7 @@ operator|+=
 literal|4
 expr_stmt|;
 comment|/*      * Set the address length      */
-name|ACPI_MOVE_UNALIGNED32_TO_32
+name|ACPI_MOVE_32_TO_32
 argument_list|(
 name|Buffer
 argument_list|,
@@ -2324,7 +2327,10 @@ expr_stmt|;
 comment|/*          * Buffer needs to be set to the length of the sting + one for the          *  terminating null          */
 name|Buffer
 operator|+=
-operator|(
+call|(
+name|ACPI_SIZE
+call|)
+argument_list|(
 name|ACPI_STRLEN
 argument_list|(
 name|LinkedList
@@ -2339,7 +2345,7 @@ name|StringPtr
 argument_list|)
 operator|+
 literal|1
-operator|)
+argument_list|)
 expr_stmt|;
 block|}
 comment|/*      * Return the number of bytes consumed in this operation      */
@@ -2454,7 +2460,7 @@ name|Buffer
 operator|+=
 literal|1
 expr_stmt|;
-name|ACPI_MOVE_UNALIGNED16_TO_16
+name|ACPI_MOVE_16_TO_16
 argument_list|(
 operator|&
 name|Temp16
@@ -2728,7 +2734,7 @@ name|Buffer
 operator|+=
 literal|1
 expr_stmt|;
-name|ACPI_MOVE_UNALIGNED64_TO_64
+name|ACPI_MOVE_64_TO_64
 argument_list|(
 operator|&
 name|OutputStruct
@@ -2747,7 +2753,7 @@ name|Buffer
 operator|+=
 literal|8
 expr_stmt|;
-name|ACPI_MOVE_UNALIGNED64_TO_64
+name|ACPI_MOVE_64_TO_64
 argument_list|(
 operator|&
 name|OutputStruct
@@ -2766,7 +2772,7 @@ name|Buffer
 operator|+=
 literal|8
 expr_stmt|;
-name|ACPI_MOVE_UNALIGNED64_TO_64
+name|ACPI_MOVE_64_TO_64
 argument_list|(
 operator|&
 name|OutputStruct
@@ -2785,7 +2791,7 @@ name|Buffer
 operator|+=
 literal|8
 expr_stmt|;
-name|ACPI_MOVE_UNALIGNED64_TO_64
+name|ACPI_MOVE_64_TO_64
 argument_list|(
 operator|&
 name|OutputStruct
@@ -2804,7 +2810,7 @@ name|Buffer
 operator|+=
 literal|8
 expr_stmt|;
-name|ACPI_MOVE_UNALIGNED64_TO_64
+name|ACPI_MOVE_64_TO_64
 argument_list|(
 operator|&
 name|OutputStruct
@@ -3333,7 +3339,7 @@ operator|+=
 literal|1
 expr_stmt|;
 comment|/*      * Set the address space granularity      */
-name|ACPI_MOVE_UNALIGNED64_TO_64
+name|ACPI_MOVE_64_TO_64
 argument_list|(
 name|Buffer
 argument_list|,
@@ -3352,7 +3358,7 @@ operator|+=
 literal|8
 expr_stmt|;
 comment|/*      * Set the address range minimum      */
-name|ACPI_MOVE_UNALIGNED64_TO_64
+name|ACPI_MOVE_64_TO_64
 argument_list|(
 name|Buffer
 argument_list|,
@@ -3371,7 +3377,7 @@ operator|+=
 literal|8
 expr_stmt|;
 comment|/*      * Set the address range maximum      */
-name|ACPI_MOVE_UNALIGNED64_TO_64
+name|ACPI_MOVE_64_TO_64
 argument_list|(
 name|Buffer
 argument_list|,
@@ -3390,7 +3396,7 @@ operator|+=
 literal|8
 expr_stmt|;
 comment|/*      * Set the address translation offset      */
-name|ACPI_MOVE_UNALIGNED64_TO_64
+name|ACPI_MOVE_64_TO_64
 argument_list|(
 name|Buffer
 argument_list|,
@@ -3409,7 +3415,7 @@ operator|+=
 literal|8
 expr_stmt|;
 comment|/*      * Set the address length      */
-name|ACPI_MOVE_UNALIGNED64_TO_64
+name|ACPI_MOVE_64_TO_64
 argument_list|(
 name|Buffer
 argument_list|,
@@ -3494,7 +3500,10 @@ expr_stmt|;
 comment|/*          * Buffer needs to be set to the length of the sting + one for the          *  terminating null          */
 name|Buffer
 operator|+=
-operator|(
+call|(
+name|ACPI_SIZE
+call|)
+argument_list|(
 name|ACPI_STRLEN
 argument_list|(
 name|LinkedList
@@ -3509,7 +3518,7 @@ name|StringPtr
 argument_list|)
 operator|+
 literal|1
-operator|)
+argument_list|)
 expr_stmt|;
 block|}
 comment|/*      * Return the number of bytes consumed in this operation      */

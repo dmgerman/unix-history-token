@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acglobal.h - Declarations for global variables  *       $Revision: 137 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acglobal.h - Declarations for global variables  *       $Revision: 143 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -172,6 +172,27 @@ name|AcpiGbl_IntegerByteWidth
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|ACPI_EXTERN
+name|UINT8
+name|AcpiGbl_IntegerNybbleWidth
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ACPI_EXTERN
+name|ACPI_GENERIC_ADDRESS
+name|AcpiGbl_XPm1aEnable
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ACPI_EXTERN
+name|ACPI_GENERIC_ADDRESS
+name|AcpiGbl_XPm1bEnable
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Since there may be multiple SSDTs and PSDTS, a single pointer is not  * sufficient; Therefore, there isn't one!  */
 end_comment
@@ -182,10 +203,10 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|ACPI_TABLE_DESC
-name|AcpiGbl_AcpiTables
+name|ACPI_TABLE_LIST
+name|AcpiGbl_TableLists
 index|[
-name|NUM_ACPI_TABLES
+name|NUM_ACPI_TABLE_TYPES
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -193,9 +214,9 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|ACPI_TABLE_SUPPORT
-name|AcpiGbl_AcpiTableData
+name|AcpiGbl_TableData
 index|[
-name|NUM_ACPI_TABLES
+name|NUM_ACPI_TABLE_TYPES
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -207,9 +228,9 @@ end_comment
 begin_decl_stmt
 name|ACPI_EXTERN
 name|ACPI_MUTEX_INFO
-name|AcpiGbl_AcpiMutexInfo
+name|AcpiGbl_MutexInfo
 index|[
-name|NUM_MTX
+name|NUM_MUTEX
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -231,14 +252,14 @@ end_decl_stmt
 begin_decl_stmt
 name|ACPI_EXTERN
 name|ACPI_OBJECT_NOTIFY_HANDLER
-name|AcpiGbl_DrvNotify
+name|AcpiGbl_DeviceNotify
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|ACPI_EXTERN
 name|ACPI_OBJECT_NOTIFY_HANDLER
-name|AcpiGbl_SysNotify
+name|AcpiGbl_SystemNotify
 decl_stmt|;
 end_decl_stmt
 
@@ -657,9 +678,27 @@ end_decl_stmt
 
 begin_decl_stmt
 name|ACPI_EXTERN
+name|ACPI_GPE_XRUPT_INFO
+modifier|*
+name|AcpiGbl_GpeXruptListHead
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ACPI_EXTERN
 name|ACPI_GPE_BLOCK_INFO
 modifier|*
-name|AcpiGbl_GpeBlockListHead
+name|AcpiGbl_GpeFadtBlocks
+index|[
+name|ACPI_MAX_GPE_BLOCKS
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ACPI_EXTERN
+name|ACPI_HANDLE
+name|AcpiGbl_GpeLock
 decl_stmt|;
 end_decl_stmt
 

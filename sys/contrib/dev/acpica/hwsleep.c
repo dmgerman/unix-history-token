@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: hwsleep.c - ACPI Hardware Sleep/Wake Interface  *              $Revision: 52 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: hwsleep.c - ACPI Hardware Sleep/Wake Interface  *              $Revision: 56 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -415,7 +415,7 @@ name|ACPI_BITREG_WAKE_STATUS
 argument_list|,
 literal|1
 argument_list|,
-name|ACPI_MTX_LOCK
+name|ACPI_MTX_DO_NOT_LOCK
 argument_list|)
 expr_stmt|;
 if|if
@@ -435,7 +435,9 @@ block|}
 name|Status
 operator|=
 name|AcpiHwClearAcpiStatus
-argument_list|()
+argument_list|(
+name|ACPI_MTX_DO_NOT_LOCK
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -460,7 +462,7 @@ name|ACPI_BITREG_ARB_DISABLE
 argument_list|,
 literal|1
 argument_list|,
-name|ACPI_MTX_LOCK
+name|ACPI_MTX_DO_NOT_LOCK
 argument_list|)
 expr_stmt|;
 if|if
@@ -770,31 +772,6 @@ operator|!
 name|InValue
 condition|)
 do|;
-name|Status
-operator|=
-name|AcpiSetRegister
-argument_list|(
-name|ACPI_BITREG_ARB_DISABLE
-argument_list|,
-literal|0
-argument_list|,
-name|ACPI_MTX_DO_NOT_LOCK
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_OK
@@ -835,7 +812,9 @@ name|ACPI_MTX_DO_NOT_LOCK
 argument_list|)
 expr_stmt|;
 name|AcpiHwClearAcpiStatus
-argument_list|()
+argument_list|(
+name|ACPI_MTX_DO_NOT_LOCK
+argument_list|)
 expr_stmt|;
 name|AcpiHwDisableNonWakeupGpes
 argument_list|()
@@ -852,7 +831,7 @@ operator|->
 name|SmiCmd
 argument_list|,
 operator|(
-name|ACPI_INTEGER
+name|UINT32
 operator|)
 name|AcpiGbl_FADT
 operator|->

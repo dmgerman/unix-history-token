@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exutils - interpreter/scanner utilities  *              $Revision: 108 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exutils - interpreter/scanner utilities  *              $Revision: 109 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -393,10 +393,23 @@ literal|"ExDigitsNeeded"
 argument_list|)
 expr_stmt|;
 comment|/*      * ACPI_INTEGER is unsigned, so we don't worry about a '-'      */
+if|if
+condition|(
+operator|(
 name|CurrentValue
 operator|=
 name|Value
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|return_VALUE
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
+block|}
 name|NumDigits
 operator|=
 literal|0
