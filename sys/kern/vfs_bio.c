@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.46.4.3 1995/07/23 19:02:26 davidg Exp $  */
+comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.46.4.4 1995/07/23 19:38:35 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -4203,6 +4203,22 @@ name|i
 decl_stmt|;
 if|if
 condition|(
+operator|!
+operator|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_BUSY
+operator|)
+condition|)
+name|panic
+argument_list|(
+literal|"allocbuf: buffer not busy"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|bp
 operator|->
@@ -4616,14 +4632,14 @@ name|b_lblkno
 operator|*
 name|bsize
 expr_stmt|;
+name|doretry
+label|:
 name|curbpnpages
 operator|=
 name|bp
 operator|->
 name|b_npages
 expr_stmt|;
-name|doretry
-label|:
 name|bp
 operator|->
 name|b_flags
@@ -4832,12 +4848,6 @@ expr_stmt|;
 block|}
 name|VM_WAIT
 expr_stmt|;
-name|curbpnpages
-operator|=
-name|bp
-operator|->
-name|b_npages
-expr_stmt|;
 goto|goto
 name|doretry
 goto|;
@@ -4933,12 +4943,6 @@ name|splx
 argument_list|(
 name|s
 argument_list|)
-expr_stmt|;
-name|curbpnpages
-operator|=
-name|bp
-operator|->
-name|b_npages
 expr_stmt|;
 goto|goto
 name|doretry
@@ -5323,6 +5327,22 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+operator|!
+operator|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_BUSY
+operator|)
+condition|)
+name|panic
+argument_list|(
+literal|"biodone: buffer not busy"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|bp
 operator|->
 name|b_flags
@@ -5492,7 +5512,11 @@ operator|!
 name|obj
 condition|)
 block|{
-return|return;
+name|panic
+argument_list|(
+literal|"biodone: no object"
+argument_list|)
+expr_stmt|;
 block|}
 if|#
 directive|if
@@ -5841,6 +5865,14 @@ operator|&
 name|PG_WANTED
 operator|)
 condition|)
+block|{
+name|m
+operator|->
+name|flags
+operator|&=
+operator|~
+name|PG_WANTED
+expr_stmt|;
 name|wakeup
 argument_list|(
 operator|(
@@ -5849,6 +5881,7 @@ operator|)
 name|m
 argument_list|)
 expr_stmt|;
+block|}
 operator|--
 name|obj
 operator|->
@@ -6100,6 +6133,8 @@ name|foff
 decl_stmt|;
 name|foff
 operator|=
+name|trunc_page
+argument_list|(
 name|vp
 operator|->
 name|v_mount
@@ -6111,6 +6146,7 @@ operator|*
 name|bp
 operator|->
 name|b_lblkno
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -6152,6 +6188,10 @@ argument_list|(
 name|obj
 argument_list|,
 name|foff
+operator|+
+name|i
+operator|*
+name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 if|if
@@ -6222,6 +6262,14 @@ operator|&
 name|PG_WANTED
 operator|)
 condition|)
+block|{
+name|m
+operator|->
+name|flags
+operator|&=
+operator|~
+name|PG_WANTED
+expr_stmt|;
 name|wakeup
 argument_list|(
 operator|(
@@ -6230,6 +6278,7 @@ operator|)
 name|m
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
