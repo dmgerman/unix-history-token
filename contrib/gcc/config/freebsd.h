@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: freebsd.h,v 1.10 1999/04/27 19:29:41 obrien Exp $ */
+comment|/* $Id: freebsd.h,v 1.11 1999/04/28 18:48:06 obrien Exp $ */
 end_comment
 
 begin_comment
@@ -133,7 +133,7 @@ name|NO_DOLLAR_IN_LABEL
 end_undef
 
 begin_comment
-comment|/* Wait until EGCS 1.2 to use more efficient ``thunks'' to implement    C++ vtables. */
+comment|/* Use more efficient ``thunks'' to implement C++ vtables.  XXX note that     this setting is claimed to have a few bugs by the EGCS maintainers.  They    believe the bugs will be worked out in EGCS 1.2. */
 end_comment
 
 begin_undef
@@ -146,7 +146,7 @@ begin_define
 define|#
 directive|define
 name|DEFAULT_VTABLE_THUNKS
-value|0
+value|1
 end_define
 
 begin_comment
