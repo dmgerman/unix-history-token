@@ -2582,7 +2582,7 @@ condition|)
 block|{
 name|vprint
 argument_list|(
-literal|"\nVOP_STRATEGY on VCHR\n"
+literal|"VOP_STRATEGY on VCHR"
 argument_list|,
 name|ap
 operator|->
@@ -3059,13 +3059,7 @@ decl_stmt|;
 block|{
 name|printf
 argument_list|(
-literal|"tag %s, dev %s\n"
-argument_list|,
-name|ap
-operator|->
-name|a_vp
-operator|->
-name|v_tag
+literal|"\tdev %s\n"
 argument_list|,
 name|devtoname
 argument_list|(

@@ -7031,7 +7031,7 @@ argument_list|)
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"ino %lu, on dev %s (%d, %d)"
+literal|"\tino %lu, on dev %s (%d, %d)"
 argument_list|,
 operator|(
 name|u_long

@@ -3892,7 +3892,7 @@ argument_list|)
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"nwfs node: name = '%s', fid = %d, pfid = %d\n"
+literal|"\tnwfs node: name = '%s', fid = %d, pfid = %d\n"
 argument_list|,
 name|np
 operator|->

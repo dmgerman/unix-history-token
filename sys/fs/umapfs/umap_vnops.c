@@ -1720,11 +1720,7 @@ name|a_vp
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"\ttag %s, vp=%p, lowervp=%p\n"
-argument_list|,
-name|vp
-operator|->
-name|v_tag
+literal|"\tvp=%p, lowervp=%p\n"
 argument_list|,
 name|vp
 argument_list|,

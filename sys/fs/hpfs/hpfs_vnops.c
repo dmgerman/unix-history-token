@@ -3097,7 +3097,7 @@ argument_list|)
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"ino 0x%x\n"
+literal|"\tino 0x%x\n"
 argument_list|,
 name|hp
 operator|->

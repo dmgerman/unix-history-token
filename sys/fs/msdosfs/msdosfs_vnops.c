@@ -7857,7 +7857,7 @@ argument_list|)
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"startcluster %lu, dircluster %lu, diroffset %lu, "
+literal|"\tstartcluster %lu, dircluster %lu, diroffset %lu, "
 argument_list|,
 name|dep
 operator|->

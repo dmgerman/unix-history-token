@@ -4176,7 +4176,7 @@ return|;
 block|}
 name|printf
 argument_list|(
-literal|"name = %s, parent = %p, opencount = %d\n"
+literal|"\tname = %s, parent = %p, opencount = %d\n"
 argument_list|,
 name|np
 operator|->
