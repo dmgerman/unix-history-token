@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pl_5.c	2.2 83/12/09"
+literal|"@(#)pl_5.c	2.3 83/12/17"
 decl_stmt|;
 end_decl_stmt
 
@@ -653,7 +653,7 @@ argument_list|)
 expr_stmt|;
 name|Write
 argument_list|(
-name|W_LAST
+name|W_MOVE
 argument_list|,
 name|ms
 argument_list|,
@@ -1342,11 +1342,10 @@ argument_list|,
 name|turn
 argument_list|,
 name|to
-operator|-
-name|SHIP
-argument_list|(
-literal|0
-argument_list|)
+operator|->
+name|file
+operator|->
+name|index
 argument_list|,
 name|men
 argument_list|)
