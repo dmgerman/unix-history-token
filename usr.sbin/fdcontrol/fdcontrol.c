@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: fdcontrol.c,v 1.2.6.2 1997/09/18 06:29:16 charnier Exp $"
+literal|"$Id: fdcontrol.c,v 1.2.6.3 1998/03/09 13:50:53 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,6 +45,12 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.3.2.2 1997/09/15 06:26:16 charnier Exp $"
+literal|"$Id: main.c,v 1.3.2.3 1998/03/09 13:50:35 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -116,6 +116,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"bootparam_prot.h"
 end_include
 
@@ -142,9 +154,6 @@ name|route_addr
 init|=
 operator|-
 literal|1
-decl_stmt|,
-name|inet_addr
-argument_list|()
 decl_stmt|;
 end_decl_stmt
 

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ac.c,v 1.4.2.3 1998/03/09 13:50:19 jkh Exp $"
+literal|"$Id: ac.c,v 1.4.2.4 1998/06/04 21:44:32 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2410,7 +2410,7 @@ expr_stmt|;
 comment|/* shouldn't be needed */
 break|break;
 default|default:
-comment|/* 			 * if they came in on tty[p-y]*, then it is only 			 * a login session if the ut_host field is non-empty 			 */
+comment|/* 			 * if they came in on tty[p-sP-S]*, then it is only 			 * a login session if the ut_host field is non-empty 			 */
 if|if
 condition|(
 operator|*
@@ -2436,7 +2436,7 @@ literal|0
 operator|||
 name|strchr
 argument_list|(
-literal|"pqrstuvwxy"
+literal|"pqrsPQRS"
 argument_list|,
 name|usr
 operator|.

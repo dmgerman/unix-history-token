@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: bootparamd.c,v 1.3.2.2 1997/10/19 10:44:28 joerg Exp $"
+literal|"$Id: bootparamd.c,v 1.3.2.3 1998/03/09 13:50:32 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -211,6 +211,8 @@ operator|*
 operator|,
 name|char
 operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -838,6 +840,11 @@ operator|->
 name|file_id
 argument_list|,
 name|buffer
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buffer
+argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -1188,6 +1195,8 @@ parameter_list|,
 name|fileid
 parameter_list|,
 name|buffer
+parameter_list|,
+name|blen
 parameter_list|)
 name|char
 modifier|*
@@ -1201,6 +1210,12 @@ decl|*
 name|buffer
 decl_stmt|;
 end_function
+
+begin_decl_stmt
+name|int
+name|blen
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1430,9 +1445,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|sprintf
+name|snprintf
 argument_list|(
 name|buffer
+argument_list|,
+name|blen
 argument_list|,
 literal|"%s"
 argument_list|,

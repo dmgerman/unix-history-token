@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: sys-bsd.c,v 1.14 1998/06/20 18:02:16 peter Exp $"
+literal|"$Id: sys-bsd.c,v 1.7.2.1 1998/06/23 21:41:49 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -280,10 +280,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* __FreeBSD__ */
-end_comment
 
 begin_endif
 endif|#
