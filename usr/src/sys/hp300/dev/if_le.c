@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_le.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_le.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -999,22 +999,6 @@ directive|if
 name|NBPFILTER
 operator|>
 literal|0
-block|{
-specifier|static
-name|struct
-name|bpf_devp
-name|dev
-init|=
-block|{
-name|DLT_EN10MB
-block|,
-expr|sizeof
-operator|(
-expr|struct
-name|ether_header
-operator|)
-block|}
-decl_stmt|;
 name|bpfattach
 argument_list|(
 operator|&
@@ -1024,11 +1008,15 @@ name|sc_bpf
 argument_list|,
 name|ifp
 argument_list|,
-operator|&
-name|dev
+name|DLT_EN10MB
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ether_header
+argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 name|if_attach
