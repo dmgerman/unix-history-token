@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.14 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	8.15 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.14 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	8.15 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -619,6 +619,22 @@ operator|*
 name|rcode
 operator|=
 name|EX_TEMPFAIL
+expr_stmt|;
+break|break;
+default|default:
+name|syserr
+argument_list|(
+literal|"getmxrr: res_search (%s) failed with impossible h_errno (%d)\n"
+argument_list|,
+name|host
+argument_list|,
+name|h_errno
+argument_list|)
+expr_stmt|;
+operator|*
+name|rcode
+operator|=
+name|EX_OSERR
 expr_stmt|;
 break|break;
 block|}
