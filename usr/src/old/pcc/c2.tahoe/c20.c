@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)c20.c	1.3 (Berkeley/CCI) %G%"
+literal|"@(#)c20.c	1.4 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2940,7 +2940,7 @@ init|=
 block|{
 literal|""
 block|,
-literal|0
+name|NIL
 block|,
 literal|0
 block|}
@@ -3795,7 +3795,7 @@ name|p1
 operator|->
 name|op
 operator|!=
-literal|0
+name|NIL
 operator|&&
 name|p1
 operator|->
