@@ -2781,18 +2781,6 @@ index|[
 name|i
 index|]
 expr_stmt|;
-comment|/* set the flags */
-name|mapinfo
-operator|->
-name|bp
-index|[
-name|i
-index|]
-operator|->
-name|b_flags
-operator|=
-name|B_PHYS
-expr_stmt|;
 comment|/* set the direction */
 name|mapinfo
 operator|->
@@ -2863,18 +2851,6 @@ name|j
 index|]
 argument_list|)
 expr_stmt|;
-name|mapinfo
-operator|->
-name|bp
-index|[
-name|j
-index|]
-operator|->
-name|b_flags
-operator|&=
-operator|~
-name|B_PHYS
-expr_stmt|;
 name|relpbuf
 argument_list|(
 name|mapinfo
@@ -2888,18 +2864,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-name|mapinfo
-operator|->
-name|bp
-index|[
-name|i
-index|]
-operator|->
-name|b_flags
-operator|&=
-operator|~
-name|B_PHYS
-expr_stmt|;
 name|relpbuf
 argument_list|(
 name|mapinfo
@@ -3169,19 +3133,6 @@ index|[
 name|i
 index|]
 argument_list|)
-expr_stmt|;
-comment|/* clear the flags we set above */
-name|mapinfo
-operator|->
-name|bp
-index|[
-name|i
-index|]
-operator|->
-name|b_flags
-operator|&=
-operator|~
-name|B_PHYS
 expr_stmt|;
 comment|/* release the buffer */
 name|relpbuf
