@@ -1851,7 +1851,7 @@ name|cp
 operator|=
 name|cjinf
 operator|->
-name|cji_acctuser
+name|cji_mailto
 init|;
 operator|*
 name|cp
