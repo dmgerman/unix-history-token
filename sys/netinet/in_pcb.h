@@ -364,6 +364,16 @@ define|#
 directive|define
 name|INP_IPV6
 value|0x2
+define|#
+directive|define
+name|INP_IPV6PROTO
+value|0x4
+comment|/* opened under IPv6 protocol */
+define|#
+directive|define
+name|INP_TIMEWAIT
+value|0x8
+comment|/* .. probably doesn't go here */
 name|u_char
 name|inp_ip_ttl
 decl_stmt|;

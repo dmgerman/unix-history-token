@@ -805,7 +805,7 @@ name|IPSEC
 comment|/* get a security policy for this packet */
 if|if
 condition|(
-name|so
+name|inp
 operator|==
 name|NULL
 condition|)
@@ -826,13 +826,13 @@ expr_stmt|;
 else|else
 name|sp
 operator|=
-name|ipsec6_getpolicybysock
+name|ipsec6_getpolicybypcb
 argument_list|(
 name|m
 argument_list|,
 name|IPSEC_DIR_OUTBOUND
 argument_list|,
-name|so
+name|inp
 argument_list|,
 operator|&
 name|error

@@ -1951,7 +1951,7 @@ name|IPSEC
 comment|/* get SP for this packet */
 if|if
 condition|(
-name|so
+name|inp
 operator|==
 name|NULL
 condition|)
@@ -1972,13 +1972,13 @@ expr_stmt|;
 else|else
 name|sp
 operator|=
-name|ipsec4_getpolicybysock
+name|ipsec4_getpolicybypcb
 argument_list|(
 name|m
 argument_list|,
 name|IPSEC_DIR_OUTBOUND
 argument_list|,
-name|so
+name|inp
 argument_list|,
 operator|&
 name|error

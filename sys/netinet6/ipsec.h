@@ -956,6 +956,38 @@ parameter_list|)
 value|do { if (ipsec_debug) log x; } while (0)
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|inpcb
+struct_decl|;
+end_struct_decl
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|secpolicy
+modifier|*
+name|ipsec4_getpolicybypcb
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|,
+name|u_int
+operator|,
+expr|struct
+name|inpcb
+operator|*
+operator|,
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -1005,12 +1037,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_struct_decl
-struct_decl|struct
-name|inpcb
-struct_decl|;
-end_struct_decl
 
 begin_decl_stmt
 specifier|extern

@@ -852,13 +852,11 @@ name|IPSEC
 comment|/* 				 * Check AH/ESP integrity. 				 */
 if|if
 condition|(
-name|ipsec6_in_reject_so
+name|ipsec6_in_reject
 argument_list|(
 name|m
 argument_list|,
 name|last
-operator|->
-name|inp_socket
 argument_list|)
 condition|)
 name|ipsec6stat
@@ -1063,13 +1061,11 @@ name|IPSEC
 comment|/* 		 * Check AH/ESP integrity. 		 */
 if|if
 condition|(
-name|ipsec6_in_reject_so
+name|ipsec6_in_reject
 argument_list|(
 name|m
 argument_list|,
 name|last
-operator|->
-name|inp_socket
 argument_list|)
 condition|)
 block|{
@@ -1341,13 +1337,11 @@ name|IPSEC
 comment|/* 	 * Check AH/ESP integrity. 	 */
 if|if
 condition|(
-name|ipsec6_in_reject_so
+name|ipsec6_in_reject
 argument_list|(
 name|m
 argument_list|,
 name|in6p
-operator|->
-name|in6p_socket
 argument_list|)
 condition|)
 block|{

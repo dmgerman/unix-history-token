@@ -736,6 +736,58 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|tcptw
+block|{
+name|struct
+name|inpcb
+modifier|*
+name|tw_inpcb
+decl_stmt|;
+comment|/* XXX back pointer to internet pcb */
+name|tcp_seq
+name|snd_nxt
+decl_stmt|;
+name|tcp_seq
+name|rcv_nxt
+decl_stmt|;
+name|tcp_cc
+name|cc_recv
+decl_stmt|;
+name|tcp_cc
+name|cc_send
+decl_stmt|;
+name|u_short
+name|last_win
+decl_stmt|;
+comment|/* cached window value */
+name|u_short
+name|tw_so_options
+decl_stmt|;
+comment|/* copy of so_options */
+name|struct
+name|ucred
+modifier|*
+name|tw_cred
+decl_stmt|;
+comment|/* user credentials */
+name|u_long
+name|t_recent
+decl_stmt|;
+name|u_long
+name|t_starttime
+decl_stmt|;
+name|struct
+name|callout
+modifier|*
+name|tt_2msl
+decl_stmt|;
+comment|/* 2*msl TIME_WAIT timer */
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * The TAO cache entry which is stored in the protocol family specific  * portion of the route metrics.  */
 end_comment
@@ -803,6 +855,16 @@ parameter_list|(
 name|ip
 parameter_list|)
 value|((struct tcpcb *)(ip)->inp_ppcb)
+end_define
+
+begin_define
+define|#
+directive|define
+name|intotw
+parameter_list|(
+name|ip
+parameter_list|)
+value|((struct tcptw *)(ip)->inp_ppcb)
 end_define
 
 begin_define
@@ -1547,6 +1609,28 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|tcp_twstart
+parameter_list|(
+name|struct
+name|tcpcb
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|tcp_twclose
+parameter_list|(
+name|struct
+name|tcptw
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|tcp_ctlinput
 parameter_list|(
 name|int
@@ -1759,6 +1843,19 @@ parameter_list|,
 name|tcp_seq
 parameter_list|,
 name|tcp_seq
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|tcp_twrespond
+parameter_list|(
+name|struct
+name|tcptw
+modifier|*
 parameter_list|,
 name|int
 parameter_list|)

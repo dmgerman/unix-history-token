@@ -386,6 +386,21 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|tcp_timer_2msl_tw
+parameter_list|(
+name|void
+modifier|*
+name|xtw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* XXX temporary */
+end_comment
+
+begin_function_decl
+name|void
 name|tcp_timer_keep
 parameter_list|(
 name|void
