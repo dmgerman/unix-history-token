@@ -261,6 +261,31 @@ value|fprintf ((FILE), "%s%s%d:\n", (TARGET_UNDERSCORES) ? "" : ".",	\ 	   (PREF
 end_define
 
 begin_comment
+comment|/* This is how to hack on the symbol code of certain relcalcitrant    symbols to modify their output in output_pic_addr_const ().  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_HACK_SYMBOLREF_CODE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ASM_HACK_SYMBOLREF_CODE
+parameter_list|(
+name|NAME
+parameter_list|,
+name|CODE
+parameter_list|)
+define|\
+value|do {									\
+comment|/* Part of hack to avoid writing lots of rtl in			\      FUNCTION_PROFILER_EPILOGUE ().  */
+value|\   char *_name = (NAME);							\   if (*_name == '.'&& strcmp(_name + 1, "mexitcount") == 0)		\     (CODE) = 'X';							\ } while (0)
+end_define
+
+begin_comment
 comment|/* This is how to output a reference to a user-level label named NAME.  */
 end_comment
 
@@ -280,7 +305,9 @@ parameter_list|,
 name|NAME
 parameter_list|)
 define|\
-value|fprintf ((FILE), "%s%s", (TARGET_UNDERSCORES) ? "_" : "", (NAME))
+value|do {									\   char *_name = (NAME);							\
+comment|/* Hack to avoid writing lots of rtl in				\      FUNCTION_PROFILER_EPILOGUE ().  */
+value|\   if (*_name == '.'&& strcmp(_name + 1, "mexitcount") == 0)		\     {									\       if (TARGET_AOUT)							\ 	_name++;							\       if (flag_pic)							\ 	fprintf ((FILE), "*%s@GOT(%%ebx)", _name);			\       else								\ 	fprintf ((FILE), "%s", _name);					\     }									\   else									\     fprintf (FILE, "%s%s", TARGET_UNDERSCORES ? "_" : "", _name);	\ } while (0)
 end_define
 
 begin_comment
@@ -775,11 +802,7 @@ name|NO_PROFILE_DATA
 end_define
 
 begin_comment
-comment|/* Output assembler code to FILE to increment profiler label # LABELNO    for profiling a function entry.  */
-end_comment
-
-begin_comment
-comment|/* Redefine this to not pass an unused label in %edx.  */
+comment|/* Output assembler code to FILE to begin profiling of the current function.    LABELNO is an optional label.  */
 end_comment
 
 begin_undef
@@ -798,8 +821,12 @@ parameter_list|,
 name|LABELNO
 parameter_list|)
 define|\
-value|{									\   if (flag_pic)								\     {									\       fprintf ((FILE), "\tcall *%s@GOT(%%ebx)\n",			\       TARGET_AOUT ? "mcount" : ".mcount");				\     }									\   else									\     {									\       fprintf ((FILE), "\tcall %s\n", TARGET_AOUT ? "mcount" : ".mcount"); \     }									\ }
+value|do {									\   char *_name = TARGET_AOUT ? "mcount" : ".mcount";			\   if (flag_pic)								\     fprintf ((FILE), "\tcall *%s@GOT(%%ebx)\n", _name);			\   else									\     fprintf ((FILE), "\tcall %s\n", _name);				\ } while (0)
 end_define
+
+begin_comment
+comment|/* Output assembler code to FILE to end profiling of the current function.  */
+end_comment
 
 begin_undef
 undef|#
@@ -813,9 +840,15 @@ directive|define
 name|FUNCTION_PROFILER_EPILOGUE
 parameter_list|(
 name|FILE
+parameter_list|,
+name|DO_RTL
 parameter_list|)
 define|\
-value|{									\   if (TARGET_PROFILER_EPILOGUE)						\     {									\       if (flag_pic)							\ 	fprintf ((FILE), "\tcall *%s@GOT(%%ebx)\n",			\ 	  TARGET_AOUT ? "mexitcount" : ".mexitcount");			\       else								\ 	fprintf ((FILE), "\tcall %s\n",					\ 	  TARGET_AOUT ? "mexitcount" : ".mexitcount");			\     }									\ }
+value|do {									\   if (TARGET_PROFILER_EPILOGUE)						\     {									\       if (DO_RTL)							\ 	{								\
+comment|/* ".mexitcount" is specially handled in			\ 	     ASM_HACK_SYMBOLREF () so that we don't need to handle	\ 	     flag_pic or TARGET_AOUT here.  */
+value|\ 	  rtx xop;							\ 	  xop = gen_rtx_MEM (FUNCTION_MODE,				\ 			     gen_rtx_SYMBOL_REF (Pmode, ".mexitcount")); \ 	  emit_call_insn (gen_rtx (CALL, VOIDmode, xop, const0_rtx));	\ 	}								\       else								\ 	{								\
+comment|/* XXX this !DO_RTL case is broken but not actually used.  */
+value|\ 	  char *_name = TARGET_AOUT ? "mcount" : ".mcount";		\ 	  if (flag_pic)							\ 	    fprintf (FILE, "\tcall *%s@GOT(%%ebx)\n", _name);		\ 	  else								\ 	    fprintf (FILE, "\tcall %s\n", _name);			\ 	}								\     }									\ } while (0)
 end_define
 
 begin_undef
