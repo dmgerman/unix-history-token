@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)CATCHERR.c 1.1 %G%"
+literal|"@(#)CATCHERR.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,7 +55,7 @@ if|if
 condition|(
 name|todo
 operator|.
-name|cbn
+name|fbn
 operator|==
 literal|1
 condition|)
@@ -64,11 +64,11 @@ index|[
 name|err
 index|]
 operator|.
-name|entryaddr
+name|fentryaddr
 operator|=
 name|todo
 operator|.
-name|entryaddr
+name|fentryaddr
 expr_stmt|;
 else|else
 name|fputs
