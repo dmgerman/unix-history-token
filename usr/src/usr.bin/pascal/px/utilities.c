@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c 1.5 %G%"
+literal|"@(#)utilities.c 1.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,12 +29,6 @@ begin_include
 include|#
 directive|include
 file|"vars.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"h02opcs.h"
 end_include
 
 begin_macro
