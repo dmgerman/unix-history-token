@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysent.h>
 end_include
 
@@ -3026,11 +3032,36 @@ name|nselcoll
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Select collisions since boot */
+end_comment
+
 begin_decl_stmt
 name|int
 name|selwait
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|nselcoll
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|nselcoll
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Select system call.  */
