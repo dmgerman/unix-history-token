@@ -579,7 +579,8 @@ comment|/*maxsize*/
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 comment|/*nsegments*/
-name|BUS_SPACE_UNRESTRICTED
+operator|~
+literal|0
 argument_list|,
 comment|/*maxsegsz*/
 name|ADV_PCI_MAX_DMA_COUNT
