@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)local2.c	1.9 (Berkeley) %G%"
+literal|"@(#)local2.c	1.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3092,14 +3092,14 @@ argument_list|(
 literal|'\t'
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"$0,"
-argument_list|)
-expr_stmt|;
 name|adrput
 argument_list|(
 name|l
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|",$0"
 argument_list|)
 expr_stmt|;
 block|}
