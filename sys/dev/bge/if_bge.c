@@ -440,6 +440,14 @@ block|,
 block|{
 name|BCOM_VENDORID
 block|,
+name|BCOM_DEVICEID_BCM5788
+block|,
+literal|"Broadcom BCM5788 Gigabit Ethernet"
+block|}
+block|,
+block|{
+name|BCOM_VENDORID
+block|,
 name|BCOM_DEVICEID_BCM5901
 block|,
 literal|"Broadcom BCM5901 Fast Ethernet"
