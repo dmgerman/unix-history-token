@@ -2343,7 +2343,7 @@ argument_list|,
 name|kq
 argument_list|)
 expr_stmt|;
-name|FILEDESC_LOCK
+name|FILEDESC_LOCK_FAST
 argument_list|(
 name|fdp
 argument_list|)
@@ -2360,7 +2360,7 @@ argument_list|,
 name|kq_list
 argument_list|)
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_UNLOCK_FAST
 argument_list|(
 name|fdp
 argument_list|)
@@ -3544,6 +3544,11 @@ name|haskqglobal
 argument_list|)
 expr_stmt|;
 block|}
+name|FILEDESC_UNLOCK
+argument_list|(
+name|fdp
+argument_list|)
+expr_stmt|;
 name|KQ_LOCK
 argument_list|(
 name|kq
@@ -3580,11 +3585,6 @@ name|kn_filter
 condition|)
 break|break;
 block|}
-name|FILEDESC_UNLOCK
-argument_list|(
-name|fdp
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -6638,7 +6638,7 @@ argument_list|(
 name|kq
 argument_list|)
 expr_stmt|;
-name|FILEDESC_LOCK
+name|FILEDESC_LOCK_FAST
 argument_list|(
 name|fdp
 argument_list|)
@@ -6657,7 +6657,7 @@ argument_list|,
 name|kq_list
 argument_list|)
 expr_stmt|;
-name|FILEDESC_UNLOCK
+name|FILEDESC_UNLOCK_FAST
 argument_list|(
 name|fdp
 argument_list|)
