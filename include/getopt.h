@@ -30,7 +30,7 @@ file|<sys/cdefs.h>
 end_include
 
 begin_comment
-comment|/*  * GNU-like getopt_long() with 4.4BSD optreset extension.  * getopt() is declared here too for GNU programs.  */
+comment|/*  * GNU-like getopt_long()/getopt_long_only() with 4.4BSD optreset extension.  * getopt() is declared here too for GNU programs.  */
 end_comment
 
 begin_define
@@ -85,6 +85,32 @@ begin_function_decl
 name|__BEGIN_DECLS
 name|int
 name|getopt_long
+parameter_list|(
+name|int
+parameter_list|,
+name|char
+modifier|*
+specifier|const
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|option
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|getopt_long_only
 parameter_list|(
 name|int
 parameter_list|,
