@@ -3673,7 +3673,7 @@ name|dc_chain_data
 name|dc_cdata
 decl_stmt|;
 name|struct
-name|callout_handle
+name|callout
 name|dc_stat_ch
 decl_stmt|;
 ifdef|#
