@@ -243,6 +243,9 @@ value|0x00000001
 name|char
 name|neutral_byte
 decl_stmt|;
+name|int
+name|dma_chan
+decl_stmt|;
 block|}
 struct|;
 end_struct
