@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	subr_prof.c	6.3	84/08/12	*/
+comment|/*	subr_prof.c	6.4	84/08/29	*/
 end_comment
 
 begin_comment
@@ -16,19 +16,19 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"../h/gprof.h"
+file|"gprof.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"param.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/systm.h"
+file|"systm.h"
 end_include
 
 begin_comment
