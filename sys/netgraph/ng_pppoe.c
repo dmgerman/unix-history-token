@@ -711,6 +711,10 @@ name|priv_p
 typedef|;
 end_typedef
 
+begin_comment
+comment|/*  * XXXRW: Leave this unsynchronized, since only a single field is modified,  * and it's done so infrequently.  Likewise, pppoe_mode.  */
+end_comment
+
 begin_decl_stmt
 name|struct
 name|ether_header
