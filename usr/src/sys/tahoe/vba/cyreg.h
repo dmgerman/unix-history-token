@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cyreg.h	7.4	87/04/01	*/
+comment|/*	cyreg.h	7.5	87/04/09	*/
 end_comment
 
 begin_comment
@@ -15,11 +15,11 @@ begin_define
 define|#
 directive|define
 name|CYMAXIO
-value|(32*NBPG)
+value|(64*1024)
 end_define
 
 begin_comment
-comment|/* max i/o size */
+comment|/* max i/o size + 1 */
 end_comment
 
 begin_decl_stmt
@@ -226,23 +226,23 @@ begin_struct
 struct|struct
 name|cytpb
 block|{
-name|long
+name|u_long
 name|tpcmd
 decl_stmt|;
 comment|/* command, see below */
-name|short
+name|u_short
 name|tpcontrol
 decl_stmt|;
 comment|/* control word */
-name|short
+name|u_short
 name|tpcount
 decl_stmt|;
 comment|/* return count */
-name|short
+name|u_short
 name|tpsize
 decl_stmt|;
 comment|/* buffer size */
-name|short
+name|u_short
 name|tprec
 decl_stmt|;
 comment|/* records/overrun */
@@ -253,7 +253,7 @@ literal|4
 index|]
 decl_stmt|;
 comment|/* pointer to source/dest */
-name|short
+name|u_short
 name|tpstatus
 decl_stmt|;
 comment|/* status */
