@@ -777,6 +777,31 @@ define|\
 value|CTR(m, format, p1, p2, p3, p4, p5)
 end_define
 
+begin_define
+define|#
+directive|define
+name|CTR6
+parameter_list|(
+name|m
+parameter_list|,
+name|format
+parameter_list|,
+name|p1
+parameter_list|,
+name|p2
+parameter_list|,
+name|p3
+parameter_list|,
+name|p4
+parameter_list|,
+name|p5
+parameter_list|,
+name|p6
+parameter_list|)
+define|\
+value|CTR(m, format, p1, p2, p3, p4, p5, p6)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -806,6 +831,30 @@ parameter_list|,
 name|p5
 parameter_list|)
 value|do {			\ 	if (KTR_COMPILE& (m))						\ 		ktr_tracepoint((m), format, (u_long)p1, (u_long)p2,	\ 		    (u_long)p3, (u_long)p4, (u_long)p5);		\ 	} while(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CTR6
+parameter_list|(
+name|m
+parameter_list|,
+name|format
+parameter_list|,
+name|p1
+parameter_list|,
+name|p2
+parameter_list|,
+name|p3
+parameter_list|,
+name|p4
+parameter_list|,
+name|p5
+parameter_list|,
+name|p6
+parameter_list|)
+value|do {			\ 	if (KTR_COMPILE& (m))						\ 		ktr_tracepoint((m), format, (u_long)p1, (u_long)p2,	\ 		    (u_long)p3, (u_long)p4, (u_long)p5, (u_long)p6);	\ 	} while(0)
 end_define
 
 begin_define
@@ -1012,6 +1061,29 @@ parameter_list|,
 name|p4
 parameter_list|,
 name|p5
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CTR6
+parameter_list|(
+name|m
+parameter_list|,
+name|d
+parameter_list|,
+name|p1
+parameter_list|,
+name|p2
+parameter_list|,
+name|p3
+parameter_list|,
+name|p4
+parameter_list|,
+name|p5
+parameter_list|,
+name|p6
 parameter_list|)
 end_define
 
