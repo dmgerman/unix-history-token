@@ -1,5 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$OpenBSD: mdef.h,v 1.21 2001/09/27 11:40:33 espie Exp $	*/
+end_comment
+
+begin_comment
+comment|/*	$NetBSD: mdef.h,v 1.7 1996/01/13 23:25:27 pk Exp $	*/
+end_comment
+
+begin_comment
 comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ozan Yigit at York University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)mdef.h	8.1 (Berkeley) 6/6/93  */
 end_comment
 
@@ -237,9 +245,116 @@ end_define
 begin_define
 define|#
 directive|define
-name|STATIC
-value|128
+name|SELFTYPE
+value|34
 end_define
+
+begin_define
+define|#
+directive|define
+name|INDIRTYPE
+value|35
+end_define
+
+begin_define
+define|#
+directive|define
+name|BUILTINTYPE
+value|36
+end_define
+
+begin_define
+define|#
+directive|define
+name|PATSTYPE
+value|37
+end_define
+
+begin_define
+define|#
+directive|define
+name|FILENAMETYPE
+value|38
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINETYPE
+value|39
+end_define
+
+begin_define
+define|#
+directive|define
+name|REGEXPTYPE
+value|40
+end_define
+
+begin_define
+define|#
+directive|define
+name|ESYSCMDTYPE
+value|41
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRACEONTYPE
+value|42
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRACEOFFTYPE
+value|43
+end_define
+
+begin_define
+define|#
+directive|define
+name|TYPEMASK
+value|63
+end_define
+
+begin_comment
+comment|/* Keep bits really corresponding to a type. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RECDEF
+value|256
+end_define
+
+begin_comment
+comment|/* Pure recursive def, don't expand it */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NOARGS
+value|512
+end_define
+
+begin_comment
+comment|/* builtin needs no args */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NEEDARGS
+value|1024
+end_define
+
+begin_comment
+comment|/* mark builtin that need args with this */
+end_comment
 
 begin_comment
 comment|/*  * m4 special characters  */
@@ -330,7 +445,7 @@ begin_define
 define|#
 directive|define
 name|EOS
-value|(char) 0
+value|'\0'
 end_define
 
 begin_define
@@ -341,7 +456,7 @@ value|10
 end_define
 
 begin_comment
-comment|/* maximum include files   */
+comment|/* maximum include files   	    */
 end_comment
 
 begin_define
@@ -352,18 +467,7 @@ value|10
 end_define
 
 begin_comment
-comment|/* maximum # of diversions */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXSTR
-value|512
-end_define
-
-begin_comment
-comment|/* maximum size of string  */
+comment|/* maximum # of diversions 	    */
 end_comment
 
 begin_define
@@ -374,18 +478,18 @@ value|4096
 end_define
 
 begin_comment
-comment|/* size of pushback buffer */
+comment|/* starting size of pushback buffer */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|STACKMAX
-value|1024
+name|INITSTACKMAX
+value|4096
 end_define
 
 begin_comment
-comment|/* size of call stack      */
+comment|/* starting size of call stack      */
 end_comment
 
 begin_define
@@ -396,18 +500,18 @@ value|4096
 end_define
 
 begin_comment
-comment|/* size of string space    */
+comment|/* starting size of string space    */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MAXTOK
-value|MAXSTR
+value|512
 end_define
 
 begin_comment
-comment|/* maximum chars in a tokn */
+comment|/* maximum chars in a tokn 	    */
 end_comment
 
 begin_define
@@ -418,7 +522,18 @@ value|199
 end_define
 
 begin_comment
-comment|/* maximum size of hashtab */
+comment|/* maximum size of hashtab 	    */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXCCHARS
+value|5
+end_define
+
+begin_comment
+comment|/* max size of comment/quote delim  */
 end_comment
 
 begin_define
@@ -484,10 +599,16 @@ modifier|*
 name|defn
 decl_stmt|;
 comment|/* definition..               */
+name|unsigned
 name|int
 name|type
 decl_stmt|;
 comment|/* type of the entry..        */
+name|unsigned
+name|int
+name|hv
+decl_stmt|;
+comment|/* hash function value..      */
 name|ndptr
 name|nxtptr
 decl_stmt|;
@@ -539,6 +660,43 @@ name|stae
 typedef|;
 end_typedef
 
+begin_struct
+struct|struct
+name|input_file
+block|{
+name|FILE
+modifier|*
+name|file
+decl_stmt|;
+name|char
+modifier|*
+name|name
+decl_stmt|;
+name|unsigned
+name|long
+name|lineno
+decl_stmt|;
+name|int
+name|c
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|CURRENT_NAME
+value|(infile[ilevel].name)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CURRENT_LINE
+value|(infile[ilevel].lineno)
+end_define
+
 begin_comment
 comment|/*  * macros for readibility and/or speed  *  *      gpbc()  - get a possibly pushed-back character  *      pushf() - push a call frame entry onto stack  *      pushs() - push a string pointer onto stack  */
 end_comment
@@ -548,7 +706,7 @@ define|#
 directive|define
 name|gpbc
 parameter_list|()
-value|(bp> bufbase) ? *--bp : getc(infile[ilevel])
+value|(bp> bufbase) ? *--bp : obtain_char(infile+ilevel)
 end_define
 
 begin_define
@@ -558,7 +716,8 @@ name|pushf
 parameter_list|(
 name|x
 parameter_list|)
-value|if (sp< STACKMAX) mstack[++sp].sfra = (x)
+define|\
+value|do {				\ 		if (++sp == STACKMAX) 	\ 			enlarge_stack();\ 		mstack[sp].sfra = (x);	\ 		sstack[sp] = 0; \ 	} while (0)
 end_define
 
 begin_define
@@ -568,7 +727,19 @@ name|pushs
 parameter_list|(
 name|x
 parameter_list|)
-value|if (sp< STACKMAX) mstack[++sp].sstr = (x)
+define|\
+value|do {				\ 		if (++sp == STACKMAX) 	\ 			enlarge_stack();\ 		mstack[sp].sstr = (x);	\ 		sstack[sp] = 1; \ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|pushs1
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|do {				\ 		if (++sp == STACKMAX) 	\ 			enlarge_stack();\ 		mstack[sp].sstr = (x);	\ 		sstack[sp] = 0; \ 	} while (0)
 end_define
 
 begin_comment
