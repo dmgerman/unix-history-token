@@ -371,13 +371,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|TYPE_WD
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
 name|TYPE_DA
 value|2
 end_define
@@ -387,13 +380,6 @@ define|#
 directive|define
 name|TYPE_MAXHARD
 value|TYPE_DA
-end_define
-
-begin_define
-define|#
-directive|define
-name|TYPE_WFD
-value|3
 end_define
 
 begin_define
