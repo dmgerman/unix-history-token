@@ -623,6 +623,16 @@ parameter_list|)
 value|mtx_unlock(&(mp)->mnt_mtx)
 end_define
 
+begin_define
+define|#
+directive|define
+name|MNT_MTX
+parameter_list|(
+name|mp
+parameter_list|)
+value|(&(mp)->mnt_mtx)
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -1097,6 +1107,17 @@ end_define
 
 begin_comment
 comment|/* write operations are suspended */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MNTK_MPSAFE
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* Filesystem is MPSAFE. */
 end_comment
 
 begin_comment
@@ -2558,6 +2579,54 @@ name|REQ
 parameter_list|)
 define|\
 value|(*(MP)->mnt_op->vfs_sysctl)(MP, OP, REQ)
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|mpsafe_vfs
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|VFS_NEEDSGIANT
+parameter_list|(
+name|MP
+parameter_list|)
+define|\
+value|(!mpsafe_vfs || ((MP) != NULL&& ((MP)->mnt_kern_flag& MNTK_MPSAFE) == 0))
+end_define
+
+begin_define
+define|#
+directive|define
+name|VFS_LOCK_GIANT
+parameter_list|(
+name|MP
+parameter_list|)
+value|__extension__				\ ({									\ 	int _locked;							\ 	if (VFS_NEEDSGIANT((MP))) {					\ 		mtx_lock(&Giant);					\ 		_locked = 1;						\ 	} else								\ 		_locked = 0;						\ 	_locked;							\ })
+end_define
+
+begin_define
+define|#
+directive|define
+name|VFS_UNLOCK_GIANT
+parameter_list|(
+name|locked
+parameter_list|)
+value|if ((locked)) mtx_unlock(&Giant);
+end_define
+
+begin_define
+define|#
+directive|define
+name|VFS_ASSERT_GIANT
+parameter_list|(
+name|MP
+parameter_list|)
+value|do 					\ {									\ 	if (VFS_NEEDSGIANT((MP)))					\ 		mtx_assert(&Giant, MA_OWNED);				\ } while (0)
 end_define
 
 begin_include
