@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ns.c	5.3 (Berkeley) %G%"
+literal|"@(#)ns.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -179,13 +179,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|protosw
-name|proto
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|int
 name|kmem
@@ -212,6 +205,15 @@ name|int
 name|nflag
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|plural
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|char
@@ -305,6 +307,10 @@ name|read
 argument_list|(
 name|kmem
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|cb
 argument_list|,
@@ -361,10 +367,6 @@ operator|=
 name|next
 control|)
 block|{
-name|char
-modifier|*
-name|cp
-decl_stmt|;
 name|off_t
 name|ppcb
 decl_stmt|;
@@ -390,6 +392,10 @@ name|read
 argument_list|(
 name|kmem
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|nspcb
 argument_list|,
@@ -448,6 +454,10 @@ name|read
 argument_list|(
 name|kmem
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|sockb
 argument_list|,
@@ -489,6 +499,10 @@ name|read
 argument_list|(
 name|kmem
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|sppcb
 argument_list|,
@@ -638,12 +652,6 @@ index|[]
 decl_stmt|;
 if|if
 condition|(
-name|sppcb
-operator|.
-name|s_state
-operator|<
-literal|0
-operator|||
 name|sppcb
 operator|.
 name|s_state
@@ -939,6 +947,13 @@ name|idpstat
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s:\n"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
 name|ANY
 argument_list|(
 name|idpstat
@@ -1043,6 +1058,10 @@ end_expr_stmt
 
 begin_comment
 comment|/*  * Dump NS Error statistics structure.  */
+end_comment
+
+begin_comment
+comment|/*ARGSUSED*/
 end_comment
 
 begin_macro

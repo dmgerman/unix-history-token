@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mbuf.c	5.1 (Berkeley) %G%"
+literal|"@(#)mbuf.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -288,6 +288,10 @@ name|read
 argument_list|(
 name|kmem
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|mbstat
 argument_list|,

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)route.c	5.6 (Berkeley) 86/04/23"
+literal|"@(#)route.c	5.7 (Berkeley) 86/08/11"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,6 +23,18 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<strings.h>
+end_include
 
 begin_include
 include|#
@@ -100,8 +112,21 @@ decl_stmt|,
 modifier|*
 name|ns_print
 argument_list|()
+decl_stmt|,
+modifier|*
+name|plural
+argument_list|()
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|malloc
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Definitions for showing gateway flags.  */
@@ -286,6 +311,10 @@ name|read
 argument_list|(
 name|kmem
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|hashsize
 argument_list|,
@@ -328,6 +357,10 @@ name|read
 argument_list|(
 name|kmem
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|routehash
 argument_list|,
 name|hashsize
@@ -405,15 +438,13 @@ name|sockaddr_in
 modifier|*
 name|sin
 decl_stmt|;
-name|struct
-name|sockaddr_ns
-modifier|*
-name|sns
-decl_stmt|;
 name|klseek
 argument_list|(
 name|kmem
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|m
 argument_list|,
 literal|0
@@ -423,6 +454,10 @@ name|read
 argument_list|(
 name|kmem
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|mb
 argument_list|,
@@ -541,7 +576,7 @@ name|sin
 operator|->
 name|sin_addr
 argument_list|,
-literal|0
+literal|0L
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -813,6 +848,9 @@ name|klseek
 argument_list|(
 name|kmem
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|rt
 operator|->
 name|rt_ifp
@@ -824,6 +862,10 @@ name|read
 argument_list|(
 name|kmem
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|ifnet
 argument_list|,
@@ -838,7 +880,7 @@ argument_list|(
 name|kmem
 argument_list|,
 operator|(
-name|int
+name|off_t
 operator|)
 name|ifnet
 operator|.
@@ -893,6 +935,10 @@ name|read
 argument_list|(
 name|kmem
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|routehash
 argument_list|,
 name|hashsize
@@ -915,6 +961,10 @@ goto|;
 block|}
 name|free
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|routehash
 argument_list|)
 expr_stmt|;
@@ -1036,6 +1086,10 @@ name|hp
 operator|=
 name|gethostbyaddr
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|in
 argument_list|,
@@ -1785,10 +1839,6 @@ specifier|register
 name|u_char
 modifier|*
 name|q
-decl_stmt|;
-name|u_char
-modifier|*
-name|q_lim
 decl_stmt|;
 name|work
 operator|=

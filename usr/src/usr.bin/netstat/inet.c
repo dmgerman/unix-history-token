@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inet.c	5.4 (Berkeley) %G%"
+literal|"@(#)inet.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,6 +24,18 @@ endif|#
 directive|endif
 endif|not lint
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<strings.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
 
 begin_include
 include|#
@@ -191,13 +203,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|protosw
-name|proto
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|int
 name|kmem
@@ -225,14 +230,14 @@ name|nflag
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|first
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|plural
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|char
@@ -286,6 +291,12 @@ decl_stmt|;
 name|int
 name|istcp
 decl_stmt|;
+specifier|static
+name|int
+name|first
+init|=
+literal|1
+decl_stmt|;
 if|if
 condition|(
 name|off
@@ -317,6 +328,10 @@ name|read
 argument_list|(
 name|kmem
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|cb
 argument_list|,
@@ -368,10 +383,6 @@ operator|)
 name|off
 condition|)
 block|{
-name|char
-modifier|*
-name|cp
-decl_stmt|;
 name|next
 operator|=
 name|inpcb
@@ -394,6 +405,10 @@ name|read
 argument_list|(
 name|kmem
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|inpcb
 argument_list|,
@@ -429,8 +444,6 @@ argument_list|(
 name|inpcb
 operator|.
 name|inp_laddr
-operator|.
-name|s_addr
 argument_list|)
 operator|==
 name|INADDR_ANY
@@ -460,6 +473,10 @@ name|read
 argument_list|(
 name|kmem
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|sockb
 argument_list|,
@@ -492,6 +509,10 @@ name|read
 argument_list|(
 name|kmem
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|tcpcb
 argument_list|,
@@ -1577,7 +1598,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|int
+name|u_short
 name|port
 decl_stmt|;
 end_decl_stmt
@@ -1658,6 +1679,9 @@ name|sp
 operator|=
 name|getservbyport
 argument_list|(
+operator|(
+name|int
+operator|)
 name|port
 argument_list|,
 name|proto
@@ -1902,6 +1926,10 @@ name|hp
 operator|=
 name|gethostbyaddr
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|in
 argument_list|,

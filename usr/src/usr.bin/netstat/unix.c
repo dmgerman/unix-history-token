@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)unix.c	5.3 (Berkeley) %G%"
+literal|"@(#)unix.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -94,6 +94,15 @@ name|int
 name|kmem
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|calloc
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_macro
 name|unixpr
@@ -178,6 +187,10 @@ name|read
 argument_list|(
 name|kmem
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|nfile
 argument_list|,
@@ -215,6 +228,10 @@ name|read
 argument_list|(
 name|kmem
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|filep
 argument_list|,
@@ -292,6 +309,10 @@ name|read
 argument_list|(
 name|kmem
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|file
 argument_list|,
 name|nfile
@@ -358,6 +379,9 @@ name|klseek
 argument_list|(
 name|kmem
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|fp
 operator|->
 name|f_data
@@ -371,6 +395,10 @@ name|read
 argument_list|(
 name|kmem
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|so
 argument_list|,
 sizeof|sizeof
@@ -510,6 +538,9 @@ name|klseek
 argument_list|(
 name|kmem
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|so
 operator|->
 name|so_pcb
@@ -523,6 +554,10 @@ name|read
 argument_list|(
 name|kmem
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|unp
 argument_list|,
 sizeof|sizeof
@@ -555,6 +590,9 @@ name|klseek
 argument_list|(
 name|kmem
 argument_list|,
+operator|(
+name|off_t
+operator|)
 name|unp
 operator|->
 name|unp_addr
@@ -568,6 +606,10 @@ name|read
 argument_list|(
 name|kmem
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|m
 argument_list|,
 sizeof|sizeof
