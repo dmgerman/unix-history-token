@@ -82,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<libgen.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<paths.h>
 end_include
 
@@ -597,7 +603,7 @@ expr_stmt|;
 block|}
 name|posname
 operator|=
-name|rname
+name|basename
 argument_list|(
 name|posarg
 argument_list|)

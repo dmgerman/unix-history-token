@@ -20,6 +20,17 @@ literal|"@(#)archive.c	8.3 (Berkeley) 4/2/94"
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$FreeBSD$"
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -69,6 +80,12 @@ begin_include
 include|#
 directive|include
 file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<libgen.h>
 end_include
 
 begin_include
@@ -881,7 +898,7 @@ condition|)
 block|{
 name|name
 operator|=
-name|rname
+name|basename
 argument_list|(
 name|cfp
 operator|->
