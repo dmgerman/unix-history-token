@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rsaencpwd.c	8.1 (Berkeley) %G%"
+literal|"@(#)rsaencpwd.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1071,7 +1071,7 @@ break|break;
 case|case
 name|IAC
 case|:
-comment|/* 		 * If we are doing mutual authentication, get set up to send 		 * the challange, and verify it when the response comes back. 		 */
+comment|/* 		 * If we are doing mutual authentication, get set up to send 		 * the challenge, and verify it when the response comes back. 		 */
 if|if
 condition|(
 operator|(

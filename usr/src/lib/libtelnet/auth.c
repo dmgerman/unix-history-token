@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)auth.c	8.1 (Berkeley) %G%"
+literal|"@(#)auth.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -764,6 +764,26 @@ name|way
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|auth_debug_mode
+condition|)
+name|printf
+argument_list|(
+literal|">>>%s: Init failed: auth type %d %d\r\n"
+argument_list|,
+name|Name
+argument_list|,
+name|ap
+operator|->
+name|type
+argument_list|,
+name|ap
+operator|->
+name|way
+argument_list|)
+expr_stmt|;
 operator|++
 name|ap
 expr_stmt|;
@@ -849,6 +869,7 @@ name|x
 decl_stmt|;
 if|if
 condition|(
+operator|!
 name|strcasecmp
 argument_list|(
 name|type
@@ -929,7 +950,8 @@ name|auth_enable
 parameter_list|(
 name|type
 parameter_list|)
-name|int
+name|char
+modifier|*
 name|type
 decl_stmt|;
 block|{
@@ -952,7 +974,8 @@ name|auth_disable
 parameter_list|(
 name|type
 parameter_list|)
-name|int
+name|char
+modifier|*
 name|type
 decl_stmt|;
 block|{
@@ -986,6 +1009,8 @@ name|on
 decl_stmt|;
 block|{
 name|int
+name|i
+decl_stmt|,
 name|mask
 init|=
 operator|-
@@ -1040,6 +1065,10 @@ literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|mask
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|ap
@@ -1053,6 +1082,31 @@ condition|;
 name|ap
 operator|++
 control|)
+block|{
+if|if
+condition|(
+operator|(
+name|mask
+operator|&
+operator|(
+name|i
+operator|=
+name|typemask
+argument_list|(
+name|ap
+operator|->
+name|type
+argument_list|)
+operator|)
+operator|)
+operator|!=
+literal|0
+condition|)
+continue|continue;
+name|mask
+operator||=
+name|i
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"\t%s\n"
@@ -1065,6 +1119,7 @@ name|type
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|0
@@ -1096,16 +1151,6 @@ literal|0
 operator|)
 return|;
 block|}
-name|mask
-operator|=
-name|getauthmask
-argument_list|(
-name|type
-argument_list|,
-operator|&
-name|mask
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|on
@@ -1181,6 +1226,11 @@ name|Authenticator
 modifier|*
 name|ap
 decl_stmt|;
+name|int
+name|i
+decl_stmt|,
+name|mask
+decl_stmt|;
 if|if
 condition|(
 name|i_wont_support
@@ -1199,6 +1249,10 @@ argument_list|(
 literal|"Authentication enabled\n"
 argument_list|)
 expr_stmt|;
+name|mask
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|ap
@@ -1212,6 +1266,31 @@ condition|;
 name|ap
 operator|++
 control|)
+block|{
+if|if
+condition|(
+operator|(
+name|mask
+operator|&
+operator|(
+name|i
+operator|=
+name|typemask
+argument_list|(
+name|ap
+operator|->
+name|type
+argument_list|)
+operator|)
+operator|)
+operator|!=
+literal|0
+condition|)
+continue|continue;
+name|mask
+operator||=
+name|i
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"%s: %s\n"
@@ -1239,6 +1318,7 @@ else|:
 literal|"enabled"
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|1

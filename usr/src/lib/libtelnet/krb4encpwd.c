@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)krb4encpwd.c	8.1 (Berkeley) %G%"
+literal|"@(#)krb4encpwd.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1116,7 +1116,7 @@ case|case
 name|KRB4_ENCPWD_ACK
 case|:
 comment|/* 		 *  Receive ack, if mutual then send random challenge 		 */
-comment|/* 		 * If we are doing mutual authentication, get set up to send 		 * the challange, and verify it when the response comes back. 		 */
+comment|/* 		 * If we are doing mutual authentication, get set up to send 		 * the challenge, and verify it when the response comes back. 		 */
 if|if
 condition|(
 operator|(

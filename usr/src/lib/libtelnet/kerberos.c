@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kerberos.c	8.1 (Berkeley) %G%"
+literal|"@(#)kerberos.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1095,7 +1095,7 @@ argument_list|,
 name|sched
 argument_list|)
 expr_stmt|;
-name|des_set_random_generator_seed
+name|des_init_random_number_generator
 argument_list|(
 name|cred
 operator|.
@@ -1104,18 +1104,29 @@ argument_list|)
 expr_stmt|;
 name|des_new_random_key
 argument_list|(
-name|challenge
+name|session_key
 argument_list|)
 expr_stmt|;
 name|des_ecb_encrypt
 argument_list|(
-name|challenge
+name|session_key
 argument_list|,
 name|session_key
 argument_list|,
 name|sched
 argument_list|,
-literal|1
+literal|0
+argument_list|)
+expr_stmt|;
+name|des_ecb_encrypt
+argument_list|(
+name|session_key
+argument_list|,
+name|challenge
+argument_list|,
+name|sched
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Increment the challenge by 1, and encrypt it for 		 * later comparison. 		 */
@@ -1630,6 +1641,12 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+comment|/* 		 * Initialize the random number generator since it's 		 * used later on by the encryption routine. 		 */
+name|des_init_random_number_generator
+argument_list|(
+name|session_key
+argument_list|)
+expr_stmt|;
 name|des_key_sched
 argument_list|(
 name|session_key
@@ -1718,7 +1735,7 @@ operator|>=
 literal|0
 condition|;
 name|r
-operator|++
+operator|--
 control|)
 block|{
 specifier|register
