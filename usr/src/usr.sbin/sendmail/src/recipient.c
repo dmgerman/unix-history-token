@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)recipient.c	5.1 (Berkeley) %G%"
+literal|"@(#)recipient.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,24 +42,6 @@ include|#
 directive|include
 file|<sys/stat.h>
 end_include
-
-begin_expr_stmt
-name|SCCSID
-argument_list|(
-argument|@
-operator|(
-operator|#
-operator|)
-name|recipient
-operator|.
-name|c
-literal|5.1
-operator|%
-name|G
-operator|%
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/* **  SENDTOLIST -- Designate a send list. ** **	The parameter is a comma-separated list of people to send to. **	This routine arranges to send to all of them. ** **	The `ctladdr' is the address that expanded to be this one, **	e.g., in an alias expansion.  This is used for a number of **	purposed, most notably inheritance of uid/gid for protection **	purposes.  It is also used to detect self-reference in group **	expansions and the like. ** **	Parameters: **		list -- the send list. **		ctladdr -- the address template for the person to **			send to -- effective uid/gid are important. **			This is typically the alias that caused this **			expansion. **		sendq -- a pointer to the head of a queue to put **			these people into. **		qflags -- special flags to set in the q_flags field. ** **	Returns: **		pointer to chain of addresses. ** **	Side Effects: **		none. */
