@@ -15,6 +15,12 @@ directive|define
 name|_FNMATCH_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -62,17 +68,7 @@ end_comment
 begin_if
 if|#
 directive|if
-operator|!
-name|defined
-argument_list|(
-name|_ANSI_SOURCE
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|_POSIX_SOURCE
-argument_list|)
+name|__BSD_VISIBLE
 end_if
 
 begin_define
@@ -115,12 +111,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
 
 begin_function_decl
 name|__BEGIN_DECLS
