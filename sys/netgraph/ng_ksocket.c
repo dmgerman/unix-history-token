@@ -996,6 +996,8 @@ name|off
 argument_list|,
 operator|&
 name|toklen
+argument_list|,
+name|NULL
 argument_list|)
 operator|)
 operator|==
@@ -1495,13 +1497,6 @@ argument_list|,
 name|pathlen
 argument_list|)
 expr_stmt|;
-name|pathbuf
-index|[
-name|pathlen
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1510,6 +1505,8 @@ operator|=
 name|ng_encode_string
 argument_list|(
 name|pathbuf
+argument_list|,
+name|pathlen
 argument_list|)
 operator|)
 operator|==

@@ -34,7 +34,7 @@ begin_define
 define|#
 directive|define
 name|NGM_PPPOE_COOKIE
-value|939032004
+value|939032003
 end_define
 
 begin_comment
@@ -213,10 +213,14 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* hook to monitor on */
+name|u_int16_t
+name|data_len
+decl_stmt|;
+comment|/* Length of the service name */
 name|char
 name|data
 index|[
-literal|1
+literal|0
 index|]
 decl_stmt|;
 comment|/* init data goes here */
@@ -232,7 +236,7 @@ begin_define
 define|#
 directive|define
 name|NG_PPPOE_INIT_DATA_TYPE_INFO
-value|{		\ 	{						\ 	  { "hook",&ng_parse_hookbuf_type	},	\ 	  { "data",&ng_parse_string_type	},	\ 	  { NULL }					\ 	}						\ }
+value|{		\ 	{						\ 	  { "hook",&ng_parse_hookbuf_type	},	\ 	  { "data",&ng_parse_sizedstring_type },	\ 	  { NULL }					\ 	}						\ }
 end_define
 
 begin_comment

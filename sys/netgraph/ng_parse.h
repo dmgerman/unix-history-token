@@ -435,6 +435,19 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * EXPLICITLY SIZED STRING TYPE  *  * These are strings that have a two byte length field preceding them.  * Parsed strings are NOT NUL-terminated.  *  *   Default value:		Empty string  *   Additional info:		None  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|ng_parse_type
+name|ng_parse_sizedstring_type
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * COMMONLY USED BOUNDED LENGTH STRING TYPES  */
 end_comment
 
@@ -823,7 +836,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Like above, but specifically for getting a string token and returning  * the string value.  The string token must be enclosed in double quotes  * and the normal C backslash escapes are recognized.  The caller must  * eventually free() the returned result.  Returns NULL if token is  * not a string token, or parse or other error.  */
+comment|/*  * Like above, but specifically for getting a string token and returning  * the string value.  The string token must be enclosed in double quotes  * and the normal C backslash escapes are recognized.  The caller must  * eventually free() the returned result.  Returns NULL if token is  * not a string token, or parse or other error. Otherwise, *lenp contains  * the number of characters parsed, and *slenp (if not NULL) contains  * the actual number of characters in the parsed string.  */
 end_comment
 
 begin_function_decl
@@ -844,12 +857,16 @@ parameter_list|,
 name|int
 modifier|*
 name|lenp
+parameter_list|,
+name|int
+modifier|*
+name|slenp
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Convert a raw string into a doubly-quoted string including any  * necessary backslash escapes.  Caller must free the result.  * Returns NULL if ENOMEM.  */
+comment|/*  * Convert a raw string into a doubly-quoted string including any  * necessary backslash escapes.  Caller must free the result.  * Returns NULL if ENOMEM. Normally "slen" should equal strlen(s)  * unless you want to encode NUL bytes.  */
 end_comment
 
 begin_function_decl
@@ -862,6 +879,9 @@ specifier|const
 name|char
 modifier|*
 name|s
+parameter_list|,
+name|int
+name|slen
 parameter_list|)
 function_decl|;
 end_function_decl
