@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)talkd.c	5.8 (Berkeley) %G%"
+literal|"@(#)talkd.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -227,7 +227,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: getuid: not super-user"
+literal|"%s: getuid: not super-user\n"
 argument_list|,
 name|argv
 index|[
