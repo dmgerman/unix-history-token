@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dd.c	5.14 (Berkeley) %G%"
+literal|"@(#)dd.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1683,7 +1683,7 @@ argument_list|)
 expr_stmt|;
 name|outp
 operator|+=
-name|rw
+name|nw
 expr_stmt|;
 name|st
 operator|.
