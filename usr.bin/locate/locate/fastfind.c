@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995 Wolfram Schneider<wosch@FreeBSD.org>. Berlin.  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * James A. Woods.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: fastfind.c,v 1.1 1996/08/31 23:14:52 wosch Exp $  */
+comment|/*  * Copyright (c) 1995 Wolfram Schneider<wosch@FreeBSD.org>. Berlin.  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * James A. Woods.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: fastfind.c,v 1.2 1996/10/09 00:33:32 wosch Exp $  */
 end_comment
 
 begin_ifndef
@@ -43,6 +43,8 @@ decl_stmt|,
 name|size
 decl_stmt|,
 name|big
+decl_stmt|,
+name|zwerg
 decl_stmt|;
 specifier|register
 name|u_char
@@ -58,6 +60,8 @@ name|c
 decl_stmt|;
 name|int
 name|count
+decl_stmt|,
+name|umlaut
 decl_stmt|;
 name|u_char
 name|bigram1
@@ -130,6 +134,10 @@ name|chars
 operator|=
 name|big
 operator|=
+name|zwerg
+operator|=
+name|umlaut
+operator|=
 literal|0
 expr_stmt|;
 name|size
@@ -182,6 +190,9 @@ argument_list|(
 name|int
 argument_list|)
 expr_stmt|;
+name|zwerg
+operator|++
+expr_stmt|;
 block|}
 else|else
 name|count
@@ -218,11 +229,35 @@ name|c
 operator|<
 name|PARITY
 condition|)
+block|{
+if|if
+condition|(
+name|c
+operator|==
+name|UMLAUT
+condition|)
+block|{
+name|c
+operator|=
+name|getc
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+name|size
+operator|++
+expr_stmt|;
+name|umlaut
+operator|++
+expr_stmt|;
+block|}
 name|p
 operator|++
 expr_stmt|;
+block|}
 else|else
 block|{
+comment|/* bigram char */
 name|big
 operator|++
 expr_stmt|;
@@ -273,6 +308,12 @@ operator|(
 name|size
 operator|+
 name|big
+operator|-
+operator|(
+literal|2
+operator|*
+name|NBG
+operator|)
 operator|)
 argument_list|)
 operator|/
@@ -315,7 +356,15 @@ call|)
 argument_list|(
 literal|100
 operator|*
+operator|(
 name|size
+operator|-
+operator|(
+literal|2
+operator|*
+name|NBG
+operator|)
+operator|)
 argument_list|)
 operator|/
 name|chars
@@ -336,7 +385,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"Chars: %d\n"
+literal|"Characters: %d, "
 argument_list|,
 name|chars
 argument_list|)
@@ -346,7 +395,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"Database size: %d, "
+literal|"Database size: %d\n"
 argument_list|,
 name|size
 argument_list|)
@@ -356,9 +405,29 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"Bigram chars: %d\n"
+literal|"Bigram characters: %d, "
 argument_list|,
 name|big
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"Integers: %d, "
+argument_list|,
+name|zwerg
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"8-Bit characters: %d\n"
+argument_list|,
+name|umlaut
 argument_list|)
 expr_stmt|;
 block|}
@@ -387,6 +456,7 @@ directive|else
 name|fastfind_mmap
 endif|#
 directive|endif
+comment|/* FF_ICASE */
 parameter_list|(
 name|pathpart
 parameter_list|,
@@ -423,7 +493,6 @@ name|FF_ICASE
 function|fastfind_icase
 else|#
 directive|else
-comment|/* !FF_ICASE */
 function|fastfind
 endif|#
 directive|endif
@@ -512,6 +581,8 @@ name|u_char
 name|table
 index|[
 name|UCHAR_MAX
+operator|+
+literal|1
 index|]
 decl_stmt|;
 name|tolower_word
@@ -521,6 +592,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* FF_ICASE*/
 comment|/* init bigram table */
 ifdef|#
 directive|ifdef
@@ -658,6 +730,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* FF_MMAP */
 comment|/* find optimal (last) char for searching */
 for|for
 control|(
@@ -746,6 +819,7 @@ literal|1
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* FF_ICASE */
 comment|/* main loop */
 name|found
 operator|=
@@ -760,8 +834,6 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|FF_MMAP
-for|for
-control|(
 name|c
 operator|=
 operator|(
@@ -770,9 +842,14 @@ operator|)
 operator|*
 name|paddr
 operator|++
-init|;
+expr_stmt|;
 name|len
 operator|--
+expr_stmt|;
+for|for
+control|(
+init|;
+name|len
 operator|>
 literal|0
 condition|;
@@ -780,14 +857,15 @@ control|)
 block|{
 else|#
 directive|else
-for|for
-control|(
 name|c
 operator|=
 name|getc
 argument_list|(
 name|fp
 argument_list|)
+expr_stmt|;
+for|for
+control|(
 init|;
 name|c
 operator|!=
@@ -797,6 +875,7 @@ control|)
 block|{
 endif|#
 directive|endif
+comment|/* FF_MMAP */
 comment|/* go forward or backward */
 if|if
 condition|(
@@ -839,6 +918,7 @@ name|OFFSET
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* FF_MMAP */
 block|}
 else|else
 block|{
@@ -863,13 +943,15 @@ name|p
 operator|-
 literal|1
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|FF_MMAP
 for|for
 control|(
 init|;
-operator|(
+condition|;
+control|)
+block|{
+ifdef|#
+directive|ifdef
+name|FF_MMAP
 name|c
 operator|=
 operator|(
@@ -878,32 +960,23 @@ operator|)
 operator|*
 name|paddr
 operator|++
-operator|)
-operator|>
-name|SWITCH
-condition|;
+expr_stmt|;
 name|len
 operator|--
-control|)
+expr_stmt|;
 else|#
 directive|else
-for|for
-control|(
-init|;
-operator|(
 name|c
 operator|=
 name|getc
 argument_list|(
 name|fp
 argument_list|)
-operator|)
-operator|>
-name|SWITCH
-condition|;
-control|)
+expr_stmt|;
 endif|#
 directive|endif
+comment|/* FF_MMAP */
+comment|/* 			 * == UMLAUT: 8 bit char followed 			 *<= SWITCH: offset 			 *>= PARITY: bigram 			 * rest:      single ascii char 			 * 			 * offset< SWITCH< UMLAUT< ascii< PARITY< bigram 			 */
 if|if
 condition|(
 name|c
@@ -911,6 +984,52 @@ operator|<
 name|PARITY
 condition|)
 block|{
+if|if
+condition|(
+name|c
+operator|<=
+name|UMLAUT
+condition|)
+block|{
+if|if
+condition|(
+name|c
+operator|==
+name|UMLAUT
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|FF_MMAP
+name|c
+operator|=
+operator|(
+name|u_char
+operator|)
+operator|*
+name|paddr
+operator|++
+expr_stmt|;
+name|len
+operator|--
+expr_stmt|;
+else|#
+directive|else
+name|c
+operator|=
+name|getc
+argument_list|(
+name|fp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* FF_MMAP */
+block|}
+else|else
+break|break;
+comment|/* SWITCH */
+block|}
 ifdef|#
 directive|ifdef
 name|FF_ICASE
@@ -931,6 +1050,7 @@ name|cc
 condition|)
 endif|#
 directive|endif
+comment|/* FF_ICASE */
 name|foundchar
 operator|=
 name|p
@@ -991,6 +1111,7 @@ index|]
 condition|)
 endif|#
 directive|endif
+comment|/* FF_ICASE */
 name|foundchar
 operator|=
 name|p
@@ -1015,6 +1136,7 @@ index|[
 name|c
 index|]
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -1101,6 +1223,7 @@ operator|==
 name|cc
 endif|#
 directive|endif
+comment|/* FF_ICASE */
 condition|)
 block|{
 comment|/* fast first char check */
@@ -1150,6 +1273,7 @@ operator|*
 name|p
 endif|#
 directive|endif
+comment|/* FF_ICASE */
 condition|)
 break|break;
 if|if
