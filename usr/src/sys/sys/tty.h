@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tty.h	7.9 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tty.h	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -398,15 +398,8 @@ begin_comment
 comment|/* output stopped by ctl-s */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|TS_HUPCLS
-value|0x000200
-end_define
-
 begin_comment
-comment|/* hang up upon last close */
+comment|/* was	TS_HUPCLS	0x000200 	 * hang up upon last close */
 end_comment
 
 begin_define
