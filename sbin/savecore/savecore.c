@@ -2094,7 +2094,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: savecore [-Cv|-cfkv] [directory [device...]]\n"
+literal|"usage: savecore [-Cv|-cfkvz] [directory [device...]]\n"
 argument_list|)
 expr_stmt|;
 name|exit
