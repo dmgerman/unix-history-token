@@ -7415,12 +7415,15 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* if (bootverbose) */
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|device_printf
 argument_list|(
 name|child
 argument_list|,
-literal|"BAD BAR: skipping checks\n"
+literal|"ZERO BAR: resource checks suppressed.\n"
 argument_list|)
 expr_stmt|;
 block|}
