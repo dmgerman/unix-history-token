@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.67 (Berkeley) %G%"
+literal|"@(#)main.c	8.68 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3977,7 +3977,7 @@ condition|)
 continue|continue;
 name|printf
 argument_list|(
-literal|"mailer %d (%s): P=%s S=%d/%d R=%d/%d M=%ld F="
+literal|"mailer %d (%s): P=%s S=%d/%d R=%d/%d M=%ld U=%d:%d F="
 argument_list|,
 name|i
 argument_list|,
@@ -4008,6 +4008,14 @@ argument_list|,
 name|m
 operator|->
 name|m_maxsize
+argument_list|,
+name|m
+operator|->
+name|m_uid
+argument_list|,
+name|m
+operator|->
+name|m_gid
 argument_list|)
 expr_stmt|;
 for|for
