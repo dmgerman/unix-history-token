@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)init.c	5.1 (Berkeley) 85/06/07"
+literal|"@(#)init.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,7 +25,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * init.c  *  * Initializations for f77 compiler, pass 1.  *  * University of Utah CS Dept modification history:  *  * $Header: init.c,v 2.1 84/07/19 12:03:26 donn Exp $  * $Log:	init.c,v $  * Revision 2.1  84/07/19  12:03:26  donn  * Changed comment headers for UofU.  *   * Revision 1.3  84/02/28  21:07:53  donn  * Added Berkeley changes for call argument temporaries fix.  *   * Fixed incorrect check of 'cdatafile' when 'cchkfile' is opened. -- Donn  */
+comment|/*  * init.c  *  * Initializations for f77 compiler, pass 1.  *  * University of Utah CS Dept modification history:  *  * $Header: init.c,v 5.2 85/08/10 04:30:57 donn Exp $  * $Log:	init.c,v $  * Revision 5.2  85/08/10  04:30:57  donn  * Jerry Berkman's changes to ifdef 66 code and handle -r8/double flag.  *   * Revision 5.1  85/08/10  03:47:33  donn  * 4.3 alpha  *   * Revision 2.1  84/07/19  12:03:26  donn  * Changed comment headers for UofU.  *   * Revision 1.3  84/02/28  21:07:53  donn  * Added Berkeley changes for call argument temporaries fix.  *   * Fixed incorrect check of 'cdatafile' when 'cchkfile' is opened. -- Donn  */
 end_comment
 
 begin_include
@@ -151,6 +151,12 @@ name|NO
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ONLY66
+end_ifdef
+
 begin_decl_stmt
 name|flag
 name|no66flag
@@ -162,6 +168,19 @@ end_decl_stmt
 begin_decl_stmt
 name|flag
 name|noextflag
+init|=
+name|NO
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+name|flag
+name|dblflag
 init|=
 name|NO
 decl_stmt|;
@@ -1818,6 +1837,10 @@ else|else
 block|{
 name|setimpl
 argument_list|(
+name|dblflag
+condition|?
+name|TYDREAL
+else|:
 name|TYREAL
 argument_list|,
 operator|(
