@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gethostnamadr.c	5.2 (Berkeley) %G%"
+literal|"@(#)gethostnamadr.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|<ndbm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
 end_include
 
 begin_define
@@ -417,6 +423,57 @@ decl_stmt|;
 name|datum
 name|key
 decl_stmt|;
+name|char
+name|lowname
+index|[
+literal|128
+index|]
+decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|lp
+init|=
+name|lowname
+decl_stmt|;
+while|while
+condition|(
+operator|*
+name|nam
+condition|)
+if|if
+condition|(
+name|isupper
+argument_list|(
+operator|*
+name|nam
+argument_list|)
+condition|)
+operator|*
+name|lp
+operator|++
+operator|=
+name|tolower
+argument_list|(
+operator|*
+name|nam
+operator|++
+argument_list|)
+expr_stmt|;
+else|else
+operator|*
+name|lp
+operator|++
+operator|=
+operator|*
+name|nam
+operator|++
+expr_stmt|;
+operator|*
+name|lp
+operator|=
+literal|'\0'
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -470,7 +527,7 @@ name|hp
 operator|->
 name|h_name
 argument_list|,
-name|nam
+name|lowname
 argument_list|)
 operator|==
 literal|0
@@ -503,7 +560,7 @@ argument_list|(
 operator|*
 name|cp
 argument_list|,
-name|nam
+name|lowname
 argument_list|)
 operator|==
 literal|0
@@ -532,7 +589,7 @@ name|key
 operator|.
 name|dptr
 operator|=
-name|nam
+name|lowname
 expr_stmt|;
 name|key
 operator|.
@@ -540,7 +597,7 @@ name|dsize
 operator|=
 name|strlen
 argument_list|(
-name|nam
+name|lowname
 argument_list|)
 expr_stmt|;
 name|hp
