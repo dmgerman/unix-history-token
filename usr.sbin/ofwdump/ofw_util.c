@@ -136,7 +136,7 @@ begin_define
 define|#
 directive|define
 name|PROPBUFLEN
-value|1024
+value|8192
 end_define
 
 begin_define
