@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	7.58 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	7.59 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -142,7 +142,6 @@ file|<ufs/ffs/ffs_extern.h>
 end_include
 
 begin_decl_stmt
-specifier|static
 name|int
 name|ffs_sbupdate
 name|__P
@@ -502,7 +501,6 @@ comment|/*  * VFS Operations.  *  * mount system call  */
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|ffs_mount
 parameter_list|(
@@ -2324,7 +2322,7 @@ name|MOUNT_UFS
 expr_stmt|;
 name|sbp
 operator|->
-name|f_fsize
+name|f_bsize
 operator|=
 name|fs
 operator|->
@@ -2332,7 +2330,7 @@ name|fs_fsize
 expr_stmt|;
 name|sbp
 operator|->
-name|f_bsize
+name|f_iosize
 operator|=
 name|fs
 operator|->
@@ -3064,7 +3062,6 @@ operator|)
 return|;
 block|}
 comment|/*  * Write a superblock and associated information back to disk.  */
-specifier|static
 name|int
 name|ffs_sbupdate
 parameter_list|(
