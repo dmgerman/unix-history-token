@@ -352,7 +352,13 @@ name|td
 argument_list|)
 argument_list|,
 operator|(
-literal|"sleeping thread owns a mutex"
+literal|"sleeping thread (pid %d) owns a mutex"
+operator|,
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_pid
 operator|)
 argument_list|)
 expr_stmt|;
