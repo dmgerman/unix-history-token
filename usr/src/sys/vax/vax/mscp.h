@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mscp.h	4.1	81/11/04	*/
+comment|/*	mscp.h	4.2	82/05/26	*/
 end_comment
 
 begin_comment
@@ -1559,35 +1559,22 @@ comment|/* unit hardware version */
 name|short
 name|mslg_group
 decl_stmt|;
-comment|/* group */
+comment|/* group; retry + level */
 name|long
 name|mslg_volser
 decl_stmt|;
 comment|/* volume serial number */
 name|long
-name|mslg_cylinder
+name|mslg_hdr
 decl_stmt|;
-comment|/* cylinder */
-name|short
-name|mslg_track
+comment|/* header */
+name|char
+name|mslg_sdistat
+index|[
+literal|12
+index|]
 decl_stmt|;
-comment|/* track */
-name|short
-name|mslg_sector
-decl_stmt|;
-comment|/* sector */
-name|long
-name|mslg_lbn
-decl_stmt|;
-comment|/* logical block number */
-name|u_char
-name|mslg_level
-decl_stmt|;
-comment|/* level */
-name|u_char
-name|mslg_retry
-decl_stmt|;
-comment|/* retry */
+comment|/* SDI status information */
 block|}
 struct|;
 end_struct
