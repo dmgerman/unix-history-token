@@ -40,7 +40,7 @@ name|isdigit
 end_undef
 
 begin_comment
-comment|/*  * Sccs Id = "@(#)def.h	2.2 %G%";  */
+comment|/*  * Sccs Id = "@(#)def.h	2.3 %G%";  */
 end_comment
 
 begin_comment
@@ -500,7 +500,7 @@ value|0200
 end_define
 
 begin_comment
-comment|/* Illegal from send mode bit */
+comment|/* Legal from send mode bit */
 end_comment
 
 begin_define
