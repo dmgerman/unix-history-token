@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)pstext.c	1.1 %G%	*/
+comment|/*	@(#)pstext.c	1.2 %G%	*/
 end_comment
 
 begin_ifndef
@@ -714,13 +714,27 @@ operator|>=
 name|length
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|donepage
+condition|)
+name|printf
+argument_list|(
+literal|"%%%%Page: %d %d\nStartPage\n"
+argument_list|,
 name|npages
-operator|++
+argument_list|,
+name|npages
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
 literal|"EndPage\n"
 argument_list|)
+expr_stmt|;
+name|npages
+operator|++
 expr_stmt|;
 name|donepage
 operator|=
