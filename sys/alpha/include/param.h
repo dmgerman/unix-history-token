@@ -190,6 +190,13 @@ directive|include
 file|<machine/cpu.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|MAXSMPCPU
+value|8
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -200,7 +207,7 @@ begin_define
 define|#
 directive|define
 name|MAXCPU
-value|32
+value|MAXSMPCPU
 end_define
 
 begin_else
