@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.78 1999/01/28 11:24:36 kato Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)com.c	7.5 (Berkeley) 5/16/91  *	$Id: sio.c,v 1.79 1999/01/30 12:17:37 phk Exp $  */
 end_comment
 
 begin_include
@@ -2607,87 +2607,127 @@ index|[]
 init|=
 block|{
 comment|/* internal RS232C interface */
+block|{
 literal|0
 block|,
 literal|0
+block|, }
 block|,
+block|{
 literal|50
 block|,
 literal|50
+block|, }
 block|,
+block|{
 literal|75
 block|,
 literal|75
+block|, }
 block|,
+block|{
 literal|150
 block|,
 literal|150
+block|, }
 block|,
+block|{
 literal|200
 block|,
 literal|200
+block|, }
 block|,
+block|{
 literal|300
 block|,
 literal|300
+block|, }
 block|,
+block|{
 literal|600
 block|,
 literal|600
+block|, }
 block|,
+block|{
 literal|1200
 block|,
 literal|1200
+block|, }
 block|,
+block|{
 literal|2400
 block|,
 literal|2400
+block|, }
 block|,
+block|{
 literal|4800
 block|,
 literal|4800
+block|, }
 block|,
+block|{
 literal|9600
 block|,
 literal|9600
+block|, }
 block|,
+block|{
 literal|19200
 block|,
 literal|19200
+block|, }
 block|,
+block|{
 literal|38400
 block|,
 literal|38400
+block|, }
 block|,
+block|{
 literal|51200
 block|,
 literal|51200
+block|, }
 block|,
+block|{
 literal|76800
 block|,
 literal|76800
+block|, }
 block|,
+block|{
 literal|20800
 block|,
 literal|20800
+block|, }
 block|,
+block|{
 literal|31200
 block|,
 literal|31200
+block|, }
 block|,
+block|{
 literal|41600
 block|,
 literal|41600
+block|, }
 block|,
+block|{
 literal|62400
 block|,
 literal|62400
+block|, }
 block|,
+block|{
 operator|-
 literal|1
 block|,
 operator|-
 literal|1
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2700,6 +2740,7 @@ name|pc98fast_speedtab
 index|[]
 init|=
 block|{
+block|{
 literal|9600
 block|,
 literal|0x80
@@ -2708,7 +2749,9 @@ name|COMBRD
 argument_list|(
 literal|9600
 argument_list|)
+block|, }
 block|,
+block|{
 literal|19200
 block|,
 literal|0x80
@@ -2717,7 +2760,9 @@ name|COMBRD
 argument_list|(
 literal|19200
 argument_list|)
+block|, }
 block|,
+block|{
 literal|38400
 block|,
 literal|0x80
@@ -2726,7 +2771,9 @@ name|COMBRD
 argument_list|(
 literal|38400
 argument_list|)
+block|, }
 block|,
+block|{
 literal|57600
 block|,
 literal|0x80
@@ -2735,7 +2782,9 @@ name|COMBRD
 argument_list|(
 literal|57600
 argument_list|)
+block|, }
 block|,
+block|{
 literal|115200
 block|,
 literal|0x80
@@ -2744,12 +2793,15 @@ name|COMBRD
 argument_list|(
 literal|115200
 argument_list|)
+block|, }
 block|,
+block|{
 operator|-
 literal|1
 block|,
 operator|-
 literal|1
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2762,43 +2814,61 @@ name|comspeedtab_pio9032b
 index|[]
 init|=
 block|{
+block|{
 literal|300
 block|,
 literal|6
+block|, }
 block|,
+block|{
 literal|600
 block|,
 literal|5
+block|, }
 block|,
+block|{
 literal|1200
 block|,
 literal|4
+block|, }
 block|,
+block|{
 literal|2400
 block|,
 literal|3
+block|, }
 block|,
+block|{
 literal|4800
 block|,
 literal|2
+block|, }
 block|,
+block|{
 literal|9600
 block|,
 literal|1
+block|, }
 block|,
+block|{
 literal|19200
 block|,
 literal|0
+block|, }
 block|,
+block|{
 literal|38400
 block|,
 literal|7
+block|, }
 block|,
+block|{
 operator|-
 literal|1
 block|,
 operator|-
 literal|1
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2811,59 +2881,85 @@ name|comspeedtab_b98_01
 index|[]
 init|=
 block|{
+block|{
 literal|75
 block|,
 literal|11
+block|, }
 block|,
+block|{
 literal|150
 block|,
 literal|10
+block|, }
 block|,
+block|{
 literal|300
 block|,
 literal|9
+block|, }
 block|,
+block|{
 literal|600
 block|,
 literal|8
+block|, }
 block|,
+block|{
 literal|1200
 block|,
 literal|7
+block|, }
 block|,
+block|{
 literal|2400
 block|,
 literal|6
+block|, }
 block|,
+block|{
 literal|4800
 block|,
 literal|5
+block|, }
 block|,
+block|{
 literal|9600
 block|,
 literal|4
+block|, }
 block|,
+block|{
 literal|19200
 block|,
 literal|3
+block|, }
 block|,
+block|{
 literal|38400
 block|,
 literal|2
+block|, }
 block|,
+block|{
 literal|76800
 block|,
 literal|1
+block|, }
 block|,
+block|{
 literal|153600
 block|,
 literal|0
+block|, }
 block|,
+block|{
 operator|-
 literal|1
 block|,
 operator|-
 literal|1
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2876,63 +2972,91 @@ name|comspeedtab_mc16550
 index|[]
 init|=
 block|{
+block|{
 literal|300
 block|,
 literal|1536
+block|, }
 block|,
+block|{
 literal|600
 block|,
 literal|768
+block|, }
 block|,
+block|{
 literal|1200
 block|,
 literal|384
+block|, }
 block|,
+block|{
 literal|2400
 block|,
 literal|192
+block|, }
 block|,
+block|{
 literal|4800
 block|,
 literal|96
+block|, }
 block|,
+block|{
 literal|9600
 block|,
 literal|48
+block|, }
 block|,
+block|{
 literal|19200
 block|,
 literal|24
+block|, }
 block|,
+block|{
 literal|38400
 block|,
 literal|12
+block|, }
 block|,
+block|{
 literal|57600
 block|,
 literal|8
+block|, }
 block|,
+block|{
 literal|115200
 block|,
 literal|4
+block|, }
 block|,
+block|{
 literal|153600
 block|,
 literal|3
+block|, }
 block|,
+block|{
 literal|230400
 block|,
 literal|2
+block|, }
 block|,
+block|{
 literal|460800
 block|,
 literal|1
+block|, }
 block|,
+block|{
 operator|-
 literal|1
 block|,
 operator|-
 literal|1
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2945,83 +3069,121 @@ name|comspeedtab_rsb384
 index|[]
 init|=
 block|{
+block|{
 literal|300
 block|,
 literal|3840
+block|, }
 block|,
+block|{
 literal|600
 block|,
 literal|1920
+block|, }
 block|,
+block|{
 literal|1200
 block|,
 literal|960
+block|, }
 block|,
+block|{
 literal|2400
 block|,
 literal|480
+block|, }
 block|,
+block|{
 literal|4800
 block|,
 literal|240
+block|, }
 block|,
+block|{
 literal|9600
 block|,
 literal|120
+block|, }
 block|,
+block|{
 literal|19200
 block|,
 literal|60
+block|, }
 block|,
+block|{
 literal|38400
 block|,
 literal|30
+block|, }
 block|,
+block|{
 literal|57600
 block|,
 literal|20
+block|, }
 block|,
+block|{
 literal|115200
 block|,
 literal|10
+block|, }
 block|,
+block|{
 literal|128000
 block|,
 literal|9
+block|, }
 block|,
+block|{
 literal|144000
 block|,
 literal|8
+block|, }
 block|,
+block|{
 literal|192000
 block|,
 literal|6
+block|, }
 block|,
+block|{
 literal|230400
 block|,
 literal|5
+block|, }
 block|,
+block|{
 literal|288000
 block|,
 literal|4
+block|, }
 block|,
+block|{
 literal|384000
 block|,
 literal|3
+block|, }
 block|,
+block|{
 literal|576000
 block|,
 literal|2
+block|, }
 block|,
+block|{
 literal|1152000
 block|,
 literal|1
+block|, }
 block|,
+block|{
 operator|-
 literal|1
 block|,
 operator|-
 literal|1
+block|}
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -11574,6 +11736,7 @@ name|PC98
 elseif|else
 if|if
 condition|(
+operator|(
 name|IS_8251
 argument_list|(
 name|com
@@ -11600,6 +11763,7 @@ operator|(
 name|STS8251_TxRDY
 operator||
 name|STS8251_TxEMP
+operator|)
 operator|)
 operator|||
 operator|(
@@ -21085,6 +21249,7 @@ else|else
 block|{
 if|if
 condition|(
+operator|(
 name|com
 operator|->
 name|modem_car_chg_timer
@@ -21098,6 +21263,9 @@ condition|?
 name|DCD_ON_RECOGNITION
 else|:
 name|DCD_OFF_TOLERANCE
+operator|)
+operator|!=
+literal|0
 condition|)
 name|msr
 operator|^=
