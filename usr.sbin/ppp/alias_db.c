@@ -2322,6 +2322,7 @@ name|link
 operator|==
 name|NULL_PTR
 condition|)
+block|{
 name|link
 operator|=
 name|AddLink
@@ -2359,6 +2360,7 @@ name|passthrough
 operator|=
 literal|1
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 return|return
