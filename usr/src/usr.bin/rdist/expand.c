@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)expand.c	4.10 (Berkeley) 84/02/09"
+literal|"@(#)expand.c	4.11 (Berkeley) 84/12/06"
 decl_stmt|;
 end_decl_stmt
 
@@ -941,9 +941,17 @@ expr_stmt|;
 if|if
 condition|(
 name|eargc
-operator|!=
+operator|==
 name|oeargc
 condition|)
+name|Cat
+argument_list|(
+name|s
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+comment|/* "nonomatch" is set */
 name|sort
 argument_list|()
 expr_stmt|;
