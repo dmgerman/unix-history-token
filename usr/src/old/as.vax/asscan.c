@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asscan.c 4.3 %G%"
+literal|"@(#)asscan.c 4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4159,6 +4159,25 @@ block|{
 name|yylval
 operator|=
 operator|-
+literal|1
+expr_stmt|;
+name|val
+operator|=
+name|BFINT
+expr_stmt|;
+goto|goto
+name|ret
+goto|;
+block|}
+if|if
+condition|(
+name|val
+operator|==
+literal|'f'
+condition|)
+block|{
+name|yylval
+operator|=
 literal|1
 expr_stmt|;
 name|val
