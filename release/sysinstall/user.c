@@ -1991,6 +1991,9 @@ operator|>
 literal|0
 condition|)
 block|{
+name|setusershell
+argument_list|()
+expr_stmt|;
 while|while
 condition|(
 operator|(
