@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: send_to_kdc.c,v 4.20 90/01/02 13:40:37 jtkohl Exp $  *	$Id: send_to_kdc.c,v 1.7 1995/09/07 21:38:31 markm Exp $  */
+comment|/*  * Copyright 1987, 1988 by the Massachusetts Institute of Technology.  * For copying and distribution information, please see the file  *<Copyright.MIT>.  *  *	from: send_to_kdc.c,v 4.20 90/01/02 13:40:37 jtkohl Exp $  *	$Id: send_to_kdc.c,v 1.8 1995/09/14 20:58:35 gibbs Exp $  */
 end_comment
 
 begin_if
@@ -2007,7 +2007,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: received packet from wrong host! (%ls)\n"
+literal|"%s: received packet from wrong host! (%s)\n"
 argument_list|,
 literal|"send_to_kdc(send_rcv)"
 argument_list|,
