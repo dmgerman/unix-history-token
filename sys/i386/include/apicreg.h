@@ -409,57 +409,6 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/* default level for TPR */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LOPRIO_LEVEL
-value|0x00000010
-end_define
-
-begin_comment
-comment|/* TPR of CPU accepting INTs */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|GRAB_LOPRIO
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|ALLHWI_LEVEL
-value|0x00000000
-end_define
-
-begin_comment
-comment|/* TPR of CPU grabbing INTs */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/** GRAB_LOPRIO */
-end_comment
-
-begin_comment
-comment|/*  * XXX This code assummes that the reserved field of the  *      local APIC TPR can be written with all 0s.  *     This saves quite a few memory accesses.  *     If the silicon ever changes then things will break!  *     It affects mplock.s, swtch.s, and possibly other files.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CHEAP_TPR
-end_define
-
-begin_comment
 comment|/******************************************************************************  * LOCAL APIC defines  */
 end_comment
 
