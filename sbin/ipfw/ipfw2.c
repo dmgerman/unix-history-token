@@ -716,6 +716,10 @@ name|TOK_OR
 block|,
 name|TOK_NOT
 block|,
+name|TOK_STARTBRACE
+block|,
+name|TOK_ENDBRACE
+block|,
 name|TOK_ACCEPT
 block|,
 name|TOK_COUNT
@@ -1325,6 +1329,34 @@ literal|"|"
 block|,
 comment|/* escape */
 name|TOK_OR
+block|}
+block|,
+comment|/* pseudo option */
+block|{
+literal|"{"
+block|,
+name|TOK_STARTBRACE
+block|}
+block|,
+comment|/* pseudo option */
+block|{
+literal|"("
+block|,
+name|TOK_STARTBRACE
+block|}
+block|,
+comment|/* pseudo option */
+block|{
+literal|"}"
+block|,
+name|TOK_ENDBRACE
+block|}
+block|,
+comment|/* pseudo option */
+block|{
+literal|")"
+block|,
+name|TOK_ENDBRACE
 block|}
 block|,
 comment|/* pseudo option */
@@ -4481,6 +4513,24 @@ argument_list|,
 name|HAVE_PROTO
 operator||
 name|HAVE_SRCIP
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|cmd
+operator|->
+name|len
+operator|&
+name|F_OR
+operator|)
+operator|&&
+operator|!
+name|or_block
+condition|)
+name|printf
+argument_list|(
+literal|" {"
 argument_list|)
 expr_stmt|;
 name|print_newports
@@ -8485,6 +8535,10 @@ operator|--
 expr_stmt|;
 if|if
 condition|(
+name|ac
+operator|>
+literal|0
+operator|&&
 operator|!
 name|strncmp
 argument_list|(
@@ -12424,7 +12478,7 @@ parameter_list|(
 name|target
 parameter_list|)
 define|\
-value|if (ac&& (*av[0] == '(' || *av[0] == '{')) {		\ 		if (open_par)					\ 			errx(EX_USAGE, "nested \"(\" not allowed\n"); \ 		open_par = 1;					\ 		if ( (av[0])[1] == '\0') {			\ 			ac--; av++;				\ 		} else						\ 			(*av)++;				\ 	}							\ 	target:							\   #define	CLOSE_PAR						\ 	if (open_par) {						\ 		if (ac&& (					\ 		    !strncmp(*av, ")", strlen(*av)) ||		\ 		    !strncmp(*av, "}", strlen(*av)) )) {	\ 			open_par = 0;				\ 			ac--; av++;				\ 		} else						\ 			errx(EX_USAGE, "missing \")\"\n");	\ 	}
+value|if (ac&& (*av[0] == '(' || *av[0] == '{')) {		\ 		if (open_par)					\ 			errx(EX_USAGE, "nested \"(\" not allowed\n"); \ 		prev = NULL;					\ 		open_par = 1;					\ 		if ( (av[0])[1] == '\0') {			\ 			ac--; av++;				\ 		} else						\ 			(*av)++;				\ 	}							\ 	target:							\   #define	CLOSE_PAR						\ 	if (open_par) {						\ 		if (ac&& (					\ 		    !strncmp(*av, ")", strlen(*av)) ||		\ 		    !strncmp(*av, "}", strlen(*av)) )) {	\ 			prev = NULL;				\ 			open_par = 0;				\ 			ac--; av++;				\ 		} else						\ 			errx(EX_USAGE, "missing \")\"\n");	\ 	}
 define|#
 directive|define
 name|NOT_BLOCK
@@ -12779,6 +12833,11 @@ argument_list|(
 name|source_ip
 argument_list|)
 expr_stmt|;
+name|OR_START
+argument_list|(
+name|source_port
+argument_list|)
+expr_stmt|;
 comment|/* 	 * source ports, optional 	 */
 name|NOT_BLOCK
 expr_stmt|;
@@ -12786,7 +12845,36 @@ comment|/* optional "not" */
 if|if
 condition|(
 name|ac
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|strncmp
+argument_list|(
+operator|*
+name|av
+argument_list|,
+literal|"any"
+argument_list|,
+name|strlen
+argument_list|(
+operator|*
+name|av
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|ac
+operator|--
+expr_stmt|;
+name|av
+operator|++
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 name|fill_newports
 argument_list|(
 operator|(
@@ -12823,6 +12911,12 @@ name|cmd
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+name|OR_BLOCK
+argument_list|(
+name|source_port
+argument_list|)
+expr_stmt|;
 name|read_to
 label|:
 comment|/* 	 * "to", mandatory (unless we have a MAC address 	 */
@@ -12985,6 +13079,11 @@ argument_list|(
 name|dest_ip
 argument_list|)
 expr_stmt|;
+name|OR_START
+argument_list|(
+name|dest_port
+argument_list|)
+expr_stmt|;
 comment|/* 	 * dest. ports, optional 	 */
 name|NOT_BLOCK
 expr_stmt|;
@@ -12992,7 +13091,36 @@ comment|/* optional "not" */
 if|if
 condition|(
 name|ac
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|strncmp
+argument_list|(
+operator|*
+name|av
+argument_list|,
+literal|"any"
+argument_list|,
+name|strlen
+argument_list|(
+operator|*
+name|av
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|ac
+operator|--
+expr_stmt|;
+name|av
+operator|++
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 name|fill_newports
 argument_list|(
 operator|(
@@ -13029,6 +13157,12 @@ name|cmd
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+name|OR_BLOCK
+argument_list|(
+name|dest_port
+argument_list|)
+expr_stmt|;
 name|read_options
 label|:
 name|prev
@@ -13043,21 +13177,25 @@ block|{
 name|char
 modifier|*
 name|s
-init|=
-operator|*
-name|av
 decl_stmt|;
 name|ipfw_insn_u32
 modifier|*
 name|cmd32
-init|=
+decl_stmt|;
+comment|/* alias for cmd */
+name|s
+operator|=
+operator|*
+name|av
+expr_stmt|;
+name|cmd32
+operator|=
 operator|(
 name|ipfw_insn_u32
 operator|*
 operator|)
 name|cmd
-decl_stmt|;
-comment|/* alias */
+expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -13142,6 +13280,10 @@ name|TOK_OR
 case|:
 if|if
 condition|(
+name|open_par
+operator|==
+literal|0
+operator|||
 name|prev
 operator|==
 name|NULL
@@ -13158,6 +13300,45 @@ operator|->
 name|len
 operator||=
 name|F_OR
+expr_stmt|;
+break|break;
+case|case
+name|TOK_STARTBRACE
+case|:
+if|if
+condition|(
+name|open_par
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"+nested \"(\" not allowed\n"
+argument_list|)
+expr_stmt|;
+name|open_par
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+name|TOK_ENDBRACE
+case|:
+if|if
+condition|(
+operator|!
+name|open_par
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"+missing \")\"\n"
+argument_list|)
+expr_stmt|;
+name|open_par
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -13978,6 +14159,18 @@ name|TOK_KEEPSTATE
 case|:
 if|if
 condition|(
+name|open_par
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"keep-state cannot be part "
+literal|"of an or block"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|have_state
 condition|)
 name|errx
@@ -14007,9 +14200,16 @@ break|break;
 case|case
 name|TOK_LIMIT
 case|:
-name|NEED1
+if|if
+condition|(
+name|open_par
+condition|)
+name|errx
 argument_list|(
-literal|"limit needs mask and # of connections"
+name|EX_USAGE
+argument_list|,
+literal|"limit cannot be part "
+literal|"of an or block"
 argument_list|)
 expr_stmt|;
 if|if
@@ -14022,6 +14222,11 @@ name|EX_USAGE
 argument_list|,
 literal|"only one of keep-state "
 literal|"and limit is allowed"
+argument_list|)
+expr_stmt|;
+name|NEED1
+argument_list|(
+literal|"limit needs mask and # of connections"
 argument_list|)
 expr_stmt|;
 name|have_state
