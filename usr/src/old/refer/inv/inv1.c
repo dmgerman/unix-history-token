@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)inv1.c	4.1 (Berkeley) %G%"
+literal|"@(#)inv1.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -675,10 +675,6 @@ else|:
 literal|"w"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|keepkey
-condition|)
 name|fd
 operator|=
 name|keepkey
