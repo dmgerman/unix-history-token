@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1998 Robert Nordier  * All rights reserved.  *  * Re
 end_comment
 
 begin_comment
-comment|/*  *	$Id: boot2.c,v 1.20 1999/01/29 03:36:42 rnordier Exp $  */
+comment|/*  *	$Id: boot2.c,v 1.21 1999/03/31 08:28:42 joerg Exp $  */
 end_comment
 
 begin_include
@@ -1067,7 +1067,7 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|" \n>> FreeBSD/i386 BOOT\n"
+literal|" \n"
 literal|"Default: %u:%s(%u,%c)%s\n"
 literal|"boot: "
 argument_list|,
