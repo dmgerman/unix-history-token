@@ -1213,7 +1213,7 @@ block|}
 operator|(
 name|void
 operator|)
-name|strcpy
+name|strncpy
 argument_list|(
 name|term
 argument_list|,
@@ -1229,6 +1229,11 @@ condition|?
 name|p
 else|:
 literal|"network"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|term
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
