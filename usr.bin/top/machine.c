@@ -3707,7 +3707,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|do { \ 	int64_t diff = (b)->ki_runtime - (a)->ki_runtime; \ 	if (diff != 0) \ 		return (diff> 0 ? 1 : -1); \ } while (0)
+value|do { \ 	int64_t diff = (int64_t)(b)->ki_runtime - (int64_t)(a)->ki_runtime; \ 	if (diff != 0) \ 		return (diff> 0 ? 1 : -1); \ } while (0)
 end_define
 
 begin_define
@@ -3731,7 +3731,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|do { \ 	int diff = (b)->ki_pri.pri_level - (a)->ki_pri.pri_level; \ 	if (diff != 0) \ 		return (diff> 0 ? 1 : -1); \ } while (0)
+value|do { \ 	int diff = (int)(b)->ki_pri.pri_level - (int)(a)->ki_pri.pri_level; \ 	if (diff != 0) \ 		return (diff> 0 ? 1 : -1); \ } while (0)
 end_define
 
 begin_define
@@ -3743,7 +3743,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|do { \ 	long diff = (b)->ki_rssize - (a)->ki_rssize; \ 	if (diff != 0) \ 		return (diff> 0 ? 1 : -1); \ } while (0)
+value|do { \ 	long diff = (long)(b)->ki_rssize - (long)(a)->ki_rssize; \ 	if (diff != 0) \ 		return (diff> 0 ? 1 : -1); \ } while (0)
 end_define
 
 begin_define
@@ -3755,7 +3755,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|do { \ 	long diff = PROCSIZE((b)) - PROCSIZE((a)); \ 	if (diff != 0) \ 		return (diff> 0 ? 1 : -1); \ } while (0)
+value|do { \ 	long diff = (long)PROCSIZE((b)) - (long)PROCSIZE((a)); \ 	if (diff != 0) \ 		return (diff> 0 ? 1 : -1); \ } while (0)
 end_define
 
 begin_comment
