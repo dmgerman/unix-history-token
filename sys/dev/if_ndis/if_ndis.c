@@ -736,6 +736,24 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|DRIVER_MODULE
+argument_list|(
+name|ndis
+argument_list|,
+name|cardbus
+argument_list|,
+name|ndis_driver
+argument_list|,
+name|ndis_devclass
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Program the 64-bit multicast hash filter.  */
 end_comment
@@ -1312,14 +1330,10 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ndis%d: couldn't register interrupt\n"
+literal|"ndis%d: couldn't set up irq\n"
 argument_list|,
 name|unit
 argument_list|)
-expr_stmt|;
-name|error
-operator|=
-name|ENXIO
 expr_stmt|;
 goto|goto
 name|fail
@@ -2541,27 +2555,6 @@ name|nmb_status_func
 operator|=
 name|ndis_linksts
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"ndis%d: couldn't set up irq\n"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-name|ether_ifdetach
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
-goto|goto
-name|fail
-goto|;
-block|}
 name|fail
 label|:
 if|if
@@ -4724,6 +4717,23 @@ name|ic
 operator|->
 name|ic_des_esslen
 expr_stmt|;
+if|if
+condition|(
+name|ssid
+operator|.
+name|ns_ssidlen
+operator|==
+literal|0
+condition|)
+block|{
+name|ssid
+operator|.
+name|ns_ssidlen
+operator|=
+literal|1
+expr_stmt|;
+block|}
+else|else
 name|bcopy
 argument_list|(
 name|ic

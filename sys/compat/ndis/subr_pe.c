@@ -132,7 +132,7 @@ if|if
 condition|(
 name|imgbase
 operator|==
-name|NULL
+literal|0
 operator|||
 name|hdr
 operator|==
@@ -216,7 +216,7 @@ if|if
 condition|(
 name|imgbase
 operator|==
-name|NULL
+literal|0
 condition|)
 return|return
 operator|(
@@ -314,7 +314,7 @@ if|if
 condition|(
 name|imgbase
 operator|==
-name|NULL
+literal|0
 operator|||
 name|hdr
 operator|==
@@ -424,7 +424,7 @@ if|if
 condition|(
 name|imgbase
 operator|==
-name|NULL
+literal|0
 operator|||
 name|hdr
 operator|==
@@ -536,7 +536,7 @@ if|if
 condition|(
 name|imgbase
 operator|==
-name|NULL
+literal|0
 operator|||
 name|hdr
 operator|==
@@ -1043,7 +1043,7 @@ if|if
 condition|(
 name|imgbase
 operator|==
-name|NULL
+literal|0
 operator|||
 name|hdr
 operator|==
@@ -1550,7 +1550,7 @@ if|if
 condition|(
 name|imgbase
 operator|==
-name|NULL
+literal|0
 operator|||
 name|module
 operator|==
@@ -1816,7 +1816,7 @@ if|if
 condition|(
 name|imgbase
 operator|==
-name|NULL
+literal|0
 operator|||
 name|module
 operator|==
