@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ntp_leap.c,v 3.1 1993/07/06 01:11:18 jbj Exp  * ntp_leap - maintain leap bits and take action when a leap occurs  */
+comment|/*  * ntp_leap - maintain leap bits and take action when a leap occurs  */
 end_comment
 
 begin_include
@@ -56,7 +56,7 @@ comment|/*  * Timer.  The timer code imports this so it can call us prior to  * 
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|leap_timer
 decl_stmt|;
 end_decl_stmt
@@ -131,7 +131,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|U_LONG
+name|u_long
 name|current_time
 decl_stmt|;
 end_decl_stmt
@@ -141,7 +141,7 @@ comment|/*  * Some statistics counters  */
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|leap_processcalls
 decl_stmt|;
 end_decl_stmt
@@ -151,17 +151,17 @@ comment|/* calls to leap_process */
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|leap_notclose
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* leap found to be a LONG time from now */
+comment|/* leap found to be a long time from now */
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|leap_monthofleap
 decl_stmt|;
 end_decl_stmt
@@ -171,7 +171,7 @@ comment|/* in the month of a leap */
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|leap_dayofleap
 decl_stmt|;
 end_decl_stmt
@@ -181,7 +181,7 @@ comment|/* This is the day of the leap */
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|leap_hoursfromleap
 decl_stmt|;
 end_decl_stmt
@@ -191,7 +191,7 @@ comment|/* only 2 hours from leap */
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|leap_happened
 decl_stmt|;
 end_decl_stmt
@@ -218,7 +218,7 @@ name|setnexttimeout
 name|P
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 argument_list|)
 decl_stmt|;
@@ -282,10 +282,10 @@ name|void
 name|leap_process
 parameter_list|()
 block|{
-name|U_LONG
+name|u_long
 name|leapnext
 decl_stmt|;
-name|U_LONG
+name|u_long
 name|leaplast
 decl_stmt|;
 name|l_fp
@@ -309,6 +309,9 @@ argument_list|)
 expr_stmt|;
 name|calleapwhen
 argument_list|(
+operator|(
+name|u_long
+operator|)
 name|ts
 operator|.
 name|l_ui
@@ -320,7 +323,7 @@ operator|&
 name|leapnext
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Figure out what to do based on how LONG to the next leap. 	 */
+comment|/* 	 * Figure out what to do based on how long to the next leap. 	 */
 if|if
 condition|(
 name|leapnext
@@ -523,7 +526,7 @@ condition|)
 name|setnexttimeout
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 name|DAYBEFORE
 argument_list|)
@@ -619,7 +622,7 @@ name|setnexttimeout
 parameter_list|(
 name|secs
 parameter_list|)
-name|U_LONG
+name|u_long
 name|secs
 decl_stmt|;
 block|{
@@ -673,10 +676,10 @@ name|int
 name|warning
 decl_stmt|;
 block|{
-name|U_LONG
+name|u_long
 name|leapnext
 decl_stmt|;
-name|U_LONG
+name|u_long
 name|leaplast
 decl_stmt|;
 name|l_fp
@@ -693,6 +696,9 @@ argument_list|)
 expr_stmt|;
 name|calleapwhen
 argument_list|(
+operator|(
+name|u_long
+operator|)
 name|ts
 operator|.
 name|l_ui

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/REPOSITORY/v3/parse/util/parsetest.c,v 3.13 1994/02/20 13:04:46 kardel Exp  *  * parsetest.c,v 3.13 1994/02/20 13:04:46 kardel Exp  *  * Copyright (c) 1989,1990,1991,1992,1993,1994  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * parsetest.c,v  * Revision 3.13  1994/02/20  13:04:46  kardel  * parse add/delete second support  *  * Revision 3.12  1994/02/02  17:45:51  kardel  * rcs ids fixed  *  */
+comment|/*  * /src/NTP/REPOSITORY/v3/parse/util/parsetest.c,v 3.14 1994/05/12 12:49:27 kardel Exp  *  * parsetest.c,v 3.14 1994/05/12 12:49:27 kardel Exp  *  * Copyright (c) 1989,1990,1991,1992,1993,1994  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * $Log: parsetest.c,v $  * Revision 3.14  1994/05/12  12:49:27  kardel  * printf fmt/arg cleanup  *  * Revision 3.14  1994/05/11  09:25:43  kardel  * 3.3r + printf fmt/arg fixes  *  * Revision 3.13  1994/02/20  13:04:46  kardel  * parse add/delete second support  *  * Revision 3.12  1994/02/02  17:45:51  kardel  * rcs ids fixed  *  */
 end_comment
 
 begin_ifndef
@@ -137,9 +137,15 @@ literal|"UTC DISPLAY"
 block|}
 block|,
 block|{
-name|PARSEB_LEAP
+name|PARSEB_LEAPADD
 block|,
-literal|"LEAP WARNING"
+literal|"LEAP ADDITION WARNING"
+block|}
+block|,
+block|{
+name|PARSEB_LEAPDEL
+block|,
+literal|"LEAP DELETION WARNING"
 block|}
 block|,
 block|{
@@ -673,7 +679,7 @@ name|strioc
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"parsetest.c,v 3.13 1994/02/20 13:04:46 kardel Exp\n"
+literal|"parsetest.c,v 3.11 1994/01/23 19:00:01 kardel Exp\n"
 argument_list|)
 expr_stmt|;
 while|while
@@ -777,8 +783,12 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"parse status: %04x\n"
+literal|"parse status: %04lx\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|dct
 operator|.
 name|parsestatus
@@ -861,8 +871,12 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"parse status: %04x\n"
+literal|"parse status: %04lx\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|dct
 operator|.
 name|parsestatus
@@ -996,10 +1010,14 @@ literal|'\0'
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s (+%06dus) %s PPS: %s (+%06dus), "
+literal|"%s (+%06ldus) %s PPS: %s (+%06ldus), "
 argument_list|,
 name|tmp1
 argument_list|,
+operator|(
+name|long
+name|int
+operator|)
 name|parsetime
 operator|.
 name|parse_stime
@@ -1012,6 +1030,10 @@ name|tmp
 argument_list|,
 name|tmp2
 argument_list|,
+operator|(
+name|long
+name|int
+operator|)
 name|parsetime
 operator|.
 name|parse_ptime
@@ -1032,22 +1054,36 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"state: 0x%x (%s) error: %dus, dispersion: %dus, Status: 0x%x (%s)\n"
+literal|"state: 0x%lx (%s) error: %ldus, dispersion: %ldus, Status: 0x%lx (%s)\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|parsetime
 operator|.
 name|parse_state
 argument_list|,
 name|tmp
 argument_list|,
+operator|(
+name|long
+operator|)
 name|parsetime
 operator|.
 name|parse_usecerror
 argument_list|,
+operator|(
+name|long
+operator|)
 name|parsetime
 operator|.
 name|parse_usecdisp
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|parsetime
 operator|.
 name|parse_status

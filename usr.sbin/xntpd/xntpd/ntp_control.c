@@ -18,13 +18,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<sys/types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<signal.h>
 end_include
 
 begin_include
@@ -37,6 +37,12 @@ begin_include
 include|#
 directive|include
 file|"ntpd.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ntp_io.h"
 end_include
 
 begin_include
@@ -223,38 +229,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|UNUSED
-end_ifdef
-
-begin_decl_stmt
-specifier|static
-name|void
-name|ctl_putulfp
-name|P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|l_fp
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* UNUSED */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|void
@@ -297,7 +271,7 @@ operator|(
 name|char
 operator|*
 operator|,
-name|U_LONG
+name|u_long
 operator|)
 argument_list|)
 decl_stmt|;
@@ -313,7 +287,7 @@ operator|(
 name|char
 operator|*
 operator|,
-name|U_LONG
+name|u_long
 operator|)
 argument_list|)
 decl_stmt|;
@@ -329,7 +303,7 @@ operator|(
 name|char
 operator|*
 operator|,
-name|LONG
+name|long
 operator|)
 argument_list|)
 decl_stmt|;
@@ -362,7 +336,7 @@ operator|(
 name|char
 operator|*
 operator|,
-name|U_LONG
+name|u_long
 operator|)
 argument_list|)
 decl_stmt|;
@@ -491,8 +465,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|unsigned
-name|long
+name|u_long
 name|count_var
 name|P
 argument_list|(
@@ -868,7 +841,7 @@ name|CS_COMPLIANCE
 block|,
 name|RO
 block|,
-literal|"compliance"
+literal|"error"
 block|}
 block|,
 comment|/* 12 */
@@ -1545,7 +1518,7 @@ name|CC_FUDGEVAL1
 block|,
 name|RO
 block|,
-literal|"fudgeval1"
+literal|"stratum"
 block|}
 block|,
 comment|/* 9 */
@@ -1554,7 +1527,7 @@ name|CC_FUDGEVAL2
 block|,
 name|RO
 block|,
-literal|"fudgeval2"
+literal|"refid"
 block|}
 block|,
 comment|/* 10 */
@@ -1810,51 +1783,72 @@ init|=
 block|{
 name|CTL_SST_TS_NTP
 block|,
-comment|/* REFCLK_NONE */
-name|CTL_SST_TS_UNSPEC
+comment|/* REFCLK_NONE (0) */
+name|CTL_SST_TS_LOCAL
 block|,
-comment|/* REFCLK_LOCALCLOCK */
+comment|/* REFCLK_LOCALCLOCK (1) */
 name|CTL_SST_TS_UHF
 block|,
-comment|/* REFCLK_GPS_TRAK */
+comment|/* REFCLK_GPS_TRAK (2) */
 name|CTL_SST_TS_HF
 block|,
-comment|/* REFCLK_WWV_PST */
+comment|/* REFCLK_WWV_PST (3) */
 name|CTL_SST_TS_LF
 block|,
-comment|/* REFCLK_WWVB_SPECTRACOM */
+comment|/* REFCLK_WWVB_SPECTRACOM (4) */
 name|CTL_SST_TS_UHF
 block|,
-comment|/* REFCLK_GOES_TRUETIME */
+comment|/* REFCLK_GOES_TRUETIME (5) */
 name|CTL_SST_TS_UHF
 block|,
-comment|/* REFCLK_GOES_TRAK */
+comment|/* REFCLK_GOES_TRAK (6) */
 name|CTL_SST_TS_HF
 block|,
-comment|/* REFCLK_CHU */
+comment|/* REFCLK_CHU (7) */
 name|CTL_SST_TS_LF
 block|,
 comment|/* REFCLOCK_PARSE - default value - driver supplies actual value in peer->sstclktype */
 name|CTL_SST_TS_LF
 block|,
-comment|/* REFCLK_WWVB_SPECTRACOM_HP */
+comment|/* REFCLK_GPS_MX4200 (9) */
 name|CTL_SST_TS_UHF
 block|,
-comment|/* REFCLK_GPS_AS2201 */
+comment|/* REFCLK_GPS_AS2201 (10) */
 name|CTL_SST_TS_LF
 block|,
-comment|/* REFCLK_OMEGA_TRUETIME */
-name|CTL_SST_TS_UNSPEC
+comment|/* REFCLK_OMEGA_TRUETIME (11) */
+name|CTL_SST_TS_UHF
 block|,
-comment|/* Future expansion */
-name|CTL_SST_TS_UNSPEC
+comment|/* REFCLK_IRIG_TPRO (12) */
+name|CTL_SST_TS_ATOM
 block|,
-comment|/* Future expansion */
-name|CTL_SST_TS_UNSPEC
+comment|/* REFCLK_ATOM_LEITCH (13) */
+name|CTL_SST_TS_LF
 block|,
-comment|/* Future expansion */
-name|CTL_SST_TS_UNSPEC
-comment|/* Future expansion */
+comment|/* REFCLK_MSF_EES (14) */
+name|CTL_SST_TS_UHF
+block|,
+comment|/* REFCLK_GPSTM_TRUETIME (15) */
+name|CTL_SST_TS_UHF
+block|,
+comment|/* REFCLK_IRIG_BANCOMM (16) */
+name|CTL_SST_TS_UHF
+block|,
+comment|/* REFCLK_GPS_DATU (17) */
+name|CTL_SST_TS_TELEPHONE
+block|,
+comment|/* REFCLK_NIST_ACT (18) */
+name|CTL_SST_TS_HF
+block|,
+comment|/* REFCLK_WWV_HEATH (19) */
+name|CTL_SST_TS_UHF
+block|,
+comment|/* REFCLK_GPS_NMEA (20) */
+name|CTL_SST_TS_UHF
+block|,
+comment|/* REFCLK_GPS_MOTO (21) */
+name|CTL_SST_TS_ATOM
+comment|/* REFCLK_ATOM_PPS (22) */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1864,7 +1858,7 @@ comment|/*  * Keyid used for authenticating write requests.  */
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|ctl_auth_keyid
 decl_stmt|;
 end_decl_stmt
@@ -1892,7 +1886,7 @@ comment|/*  * Statistic counters to keep track of requests and responses.  */
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|ctltimereset
 decl_stmt|;
 end_decl_stmt
@@ -1902,7 +1896,7 @@ comment|/* time stats reset */
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|numctlreq
 decl_stmt|;
 end_decl_stmt
@@ -1912,7 +1906,7 @@ comment|/* number of requests we've received */
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|numctlbadpkts
 decl_stmt|;
 end_decl_stmt
@@ -1922,7 +1916,7 @@ comment|/* number of bad control packets */
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|numctlresponses
 decl_stmt|;
 end_decl_stmt
@@ -1932,7 +1926,7 @@ comment|/* number of resp packets sent with data */
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|numctlfrags
 decl_stmt|;
 end_decl_stmt
@@ -1942,7 +1936,7 @@ comment|/* number of fragments sent */
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|numctlerrors
 decl_stmt|;
 end_decl_stmt
@@ -1952,7 +1946,7 @@ comment|/* number of error responses sent */
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|numctltooshort
 decl_stmt|;
 end_decl_stmt
@@ -1962,7 +1956,7 @@ comment|/* number of too short input packets */
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|numctlinputresp
 decl_stmt|;
 end_decl_stmt
@@ -1972,7 +1966,7 @@ comment|/* number of responses on input */
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|numctlinputfrag
 decl_stmt|;
 end_decl_stmt
@@ -1982,7 +1976,7 @@ comment|/* number of fragments on input */
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|numctlinputerr
 decl_stmt|;
 end_decl_stmt
@@ -1992,7 +1986,7 @@ comment|/* number of input pkts with err bit set */
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|numctlbadoffset
 decl_stmt|;
 end_decl_stmt
@@ -2002,7 +1996,7 @@ comment|/* number of input pkts with nonzero offset */
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|numctlbadversion
 decl_stmt|;
 end_decl_stmt
@@ -2012,7 +2006,7 @@ comment|/* number of input pkts with unknown version */
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|numctldatatooshort
 decl_stmt|;
 end_decl_stmt
@@ -2022,7 +2016,7 @@ comment|/* data too short for count */
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|numctlbadop
 decl_stmt|;
 end_decl_stmt
@@ -2032,7 +2026,7 @@ comment|/* bad op code found in packet */
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|numasyncmsgs
 decl_stmt|;
 end_decl_stmt
@@ -2071,7 +2065,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|U_LONG
+name|u_long
 name|current_time
 decl_stmt|;
 end_decl_stmt
@@ -2138,7 +2132,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|U_LONG
+name|u_long
 name|sys_refid
 decl_stmt|;
 end_decl_stmt
@@ -2193,8 +2187,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
-name|time_constant
+name|u_fp
+name|sys_maxd
 decl_stmt|;
 end_decl_stmt
 
@@ -2327,7 +2321,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|U_LONG
+name|u_long
 name|res_keyid
 decl_stmt|;
 end_decl_stmt
@@ -2518,7 +2512,7 @@ name|maclen
 decl_stmt|;
 operator|*
 operator|(
-name|U_LONG
+name|u_long
 operator|*
 operator|)
 operator|(
@@ -2559,6 +2553,9 @@ name|rmt_addr
 argument_list|,
 name|lcl_inter
 argument_list|,
+operator|-
+literal|2
+argument_list|,
 operator|(
 expr|struct
 name|pkt
@@ -2580,6 +2577,9 @@ argument_list|(
 name|rmt_addr
 argument_list|,
 name|lcl_inter
+argument_list|,
+operator|-
+literal|3
 argument_list|,
 operator|(
 expr|struct
@@ -3034,7 +3034,7 @@ operator|&
 operator|(
 sizeof|sizeof
 argument_list|(
-name|U_LONG
+name|u_long
 argument_list|)
 operator|-
 literal|1
@@ -3072,7 +3072,7 @@ name|ntohl
 argument_list|(
 operator|*
 operator|(
-name|U_LONG
+name|u_long
 operator|*
 operator|)
 operator|(
@@ -3097,7 +3097,7 @@ literal|3
 condition|)
 name|printf
 argument_list|(
-literal|"recv_len %d, properlen %d, wants auth with keyid %d, MAC length=%d\n"
+literal|"recv_len %d, properlen %d, wants auth with keyid %ld, MAC length=%d\n"
 argument_list|,
 name|rbufp
 operator|->
@@ -3562,6 +3562,7 @@ name|sys_peer
 operator|!=
 literal|0
 condition|)
+block|{
 if|if
 condition|(
 name|sys_peer
@@ -3570,12 +3571,22 @@ name|sstclktype
 operator|!=
 name|CTL_SST_TS_UNSPEC
 condition|)
+block|{
 name|clock
 operator|=
 name|sys_peer
 operator|->
 name|sstclktype
 expr_stmt|;
+if|if
+condition|(
+name|pps_control
+condition|)
+name|clock
+operator||=
+name|CTL_SST_TS_PPS
+expr_stmt|;
+block|}
 else|else
 block|{
 if|if
@@ -3606,6 +3617,7 @@ name|clock
 operator||=
 name|CTL_SST_TS_PPS
 expr_stmt|;
+block|}
 block|}
 return|return
 operator|(
@@ -3824,6 +3836,9 @@ index|]
 operator|.
 name|tr_localaddr
 argument_list|,
+operator|-
+literal|4
+argument_list|,
 operator|(
 expr|struct
 name|pkt
@@ -3889,7 +3904,7 @@ expr_stmt|;
 block|}
 operator|*
 operator|(
-name|U_LONG
+name|u_long
 operator|*
 operator|)
 name|datapt
@@ -3921,6 +3936,9 @@ name|rmt_addr
 argument_list|,
 name|lcl_inter
 argument_list|,
+operator|-
+literal|5
+argument_list|,
 operator|(
 expr|struct
 name|pkt
@@ -3942,6 +3960,9 @@ argument_list|(
 name|rmt_addr
 argument_list|,
 name|lcl_inter
+argument_list|,
+operator|-
+literal|6
 argument_list|,
 operator|(
 expr|struct
@@ -4392,124 +4413,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|UNUSED
-end_ifdef
-
-begin_comment
-comment|/*  * ctl_putlfp - write a tagged, unsigned l_fp into the response  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|ctl_putulfp
-parameter_list|(
-name|tag
-parameter_list|,
-name|ts
-parameter_list|)
-name|char
-modifier|*
-name|tag
-decl_stmt|;
-name|l_fp
-modifier|*
-name|ts
-decl_stmt|;
-block|{
-specifier|register
-name|char
-modifier|*
-name|cp
-decl_stmt|,
-modifier|*
-name|cq
-decl_stmt|;
-name|char
-name|buffer
-index|[
-literal|200
-index|]
-decl_stmt|;
-name|cp
-operator|=
-name|buffer
-expr_stmt|;
-name|cq
-operator|=
-name|tag
-expr_stmt|;
-while|while
-condition|(
-operator|*
-name|cq
-operator|!=
-literal|'\0'
-condition|)
-operator|*
-name|cp
-operator|++
-operator|=
-operator|*
-name|cq
-operator|++
-expr_stmt|;
-operator|*
-name|cp
-operator|++
-operator|=
-literal|'='
-expr_stmt|;
-name|cq
-operator|=
-name|ulfptoms
-argument_list|(
-name|ts
-argument_list|,
-literal|3
-argument_list|)
-expr_stmt|;
-while|while
-condition|(
-operator|*
-name|cq
-operator|!=
-literal|'\0'
-condition|)
-operator|*
-name|cp
-operator|++
-operator|=
-operator|*
-name|cq
-operator|++
-expr_stmt|;
-name|ctl_putdata
-argument_list|(
-name|buffer
-argument_list|,
-name|cp
-operator|-
-name|buffer
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* UNUSED */
-end_comment
-
 begin_comment
 comment|/*  * ctl_putfp - write a tagged s_fp number into the response  */
 end_comment
@@ -4731,7 +4634,7 @@ name|char
 modifier|*
 name|tag
 decl_stmt|;
-name|U_LONG
+name|u_long
 name|uval
 decl_stmt|;
 block|{
@@ -4785,7 +4688,7 @@ name|sprintf
 argument_list|(
 name|cp
 argument_list|,
-literal|"%u"
+literal|"%lu"
 argument_list|,
 name|uval
 argument_list|)
@@ -4831,7 +4734,7 @@ name|char
 modifier|*
 name|tag
 decl_stmt|;
-name|U_LONG
+name|u_long
 name|uval
 decl_stmt|;
 block|{
@@ -4931,7 +4834,7 @@ name|char
 modifier|*
 name|tag
 decl_stmt|;
-name|LONG
+name|long
 name|ival
 decl_stmt|;
 block|{
@@ -4985,7 +4888,7 @@ name|sprintf
 argument_list|(
 name|cp
 argument_list|,
-literal|"%d"
+literal|"%ld"
 argument_list|,
 name|ival
 argument_list|)
@@ -5142,7 +5045,7 @@ name|char
 modifier|*
 name|tag
 decl_stmt|;
-name|U_LONG
+name|u_long
 name|addr
 decl_stmt|;
 block|{
@@ -5576,9 +5479,6 @@ index|]
 operator|.
 name|text
 argument_list|,
-operator|(
-name|U_LONG
-operator|)
 name|sys_leap
 argument_list|)
 expr_stmt|;
@@ -5595,9 +5495,6 @@ index|]
 operator|.
 name|text
 argument_list|,
-operator|(
-name|U_LONG
-operator|)
 name|sys_stratum
 argument_list|)
 expr_stmt|;
@@ -5614,9 +5511,6 @@ index|]
 operator|.
 name|text
 argument_list|,
-operator|(
-name|LONG
-operator|)
 name|sys_precision
 argument_list|)
 expr_stmt|;
@@ -5659,9 +5553,22 @@ case|:
 if|if
 condition|(
 name|sys_stratum
-operator|<=
+operator|>
 literal|1
 condition|)
+name|ctl_putadr
+argument_list|(
+name|sys_var
+index|[
+name|CS_REFID
+index|]
+operator|.
+name|text
+argument_list|,
+name|sys_refid
+argument_list|)
+expr_stmt|;
+else|else
 name|ctl_putid
 argument_list|(
 name|sys_var
@@ -5676,19 +5583,6 @@ name|char
 operator|*
 operator|)
 operator|&
-name|sys_refid
-argument_list|)
-expr_stmt|;
-else|else
-name|ctl_putadr
-argument_list|(
-name|sys_var
-index|[
-name|CS_REFID
-index|]
-operator|.
-name|text
-argument_list|,
 name|sys_refid
 argument_list|)
 expr_stmt|;
@@ -5722,9 +5616,6 @@ index|]
 operator|.
 name|text
 argument_list|,
-operator|(
-name|U_LONG
-operator|)
 name|sys_poll
 argument_list|)
 expr_stmt|;
@@ -5747,9 +5638,6 @@ index|]
 operator|.
 name|text
 argument_list|,
-operator|(
-name|U_LONG
-operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -5763,9 +5651,6 @@ index|]
 operator|.
 name|text
 argument_list|,
-operator|(
-name|U_LONG
-operator|)
 name|sys_peer
 operator|->
 name|associd
@@ -5808,7 +5693,7 @@ break|break;
 case|case
 name|CS_COMPLIANCE
 case|:
-name|ctl_putuint
+name|ctl_putufp
 argument_list|(
 name|sys_var
 index|[
@@ -5817,10 +5702,7 @@ index|]
 operator|.
 name|text
 argument_list|,
-operator|(
-name|U_LONG
-operator|)
-name|time_constant
+name|sys_maxd
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5859,9 +5741,6 @@ index|]
 operator|.
 name|text
 argument_list|,
-operator|(
-name|U_LONG
-operator|)
 name|leap_indicator
 argument_list|)
 expr_stmt|;
@@ -5878,9 +5757,6 @@ index|]
 operator|.
 name|text
 argument_list|,
-operator|(
-name|U_LONG
-operator|)
 name|leap_warning
 argument_list|)
 expr_stmt|;
@@ -6001,9 +5877,6 @@ index|]
 operator|.
 name|text
 argument_list|,
-operator|(
-name|U_LONG
-operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -6374,10 +6247,7 @@ index|]
 operator|.
 name|text
 argument_list|,
-call|(
-name|U_LONG
-call|)
-argument_list|(
+operator|(
 operator|(
 name|peer
 operator|->
@@ -6387,7 +6257,7 @@ name|FLAG_CONFIG
 operator|)
 operator|!=
 literal|0
-argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -6403,10 +6273,7 @@ index|]
 operator|.
 name|text
 argument_list|,
-call|(
-name|U_LONG
-call|)
-argument_list|(
+operator|(
 operator|(
 name|peer
 operator|->
@@ -6416,7 +6283,7 @@ name|FLAG_AUTHENABLE
 operator|)
 operator|!=
 literal|0
-argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -6432,10 +6299,7 @@ index|]
 operator|.
 name|text
 argument_list|,
-call|(
-name|U_LONG
-call|)
-argument_list|(
+operator|(
 operator|(
 name|peer
 operator|->
@@ -6445,7 +6309,7 @@ name|FLAG_AUTHENTIC
 operator|)
 operator|!=
 literal|0
-argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -6483,9 +6347,6 @@ index|]
 operator|.
 name|text
 argument_list|,
-operator|(
-name|U_LONG
-operator|)
 name|ntohs
 argument_list|(
 name|peer
@@ -6511,6 +6372,30 @@ name|text
 argument_list|,
 name|peer
 operator|->
+name|processed
+condition|?
+name|peer
+operator|->
+name|cast_flags
+operator|&
+name|MDF_BCAST
+condition|?
+name|peer
+operator|->
+name|dstadr
+operator|->
+name|bcast
+operator|.
+name|sin_addr
+operator|.
+name|s_addr
+else|:
+name|peer
+operator|->
+name|cast_flags
+condition|?
+name|peer
+operator|->
 name|dstadr
 operator|->
 name|sin
@@ -6518,6 +6403,30 @@ operator|.
 name|sin_addr
 operator|.
 name|s_addr
+condition|?
+name|peer
+operator|->
+name|dstadr
+operator|->
+name|sin
+operator|.
+name|sin_addr
+operator|.
+name|s_addr
+else|:
+name|peer
+operator|->
+name|dstadr
+operator|->
+name|bcast
+operator|.
+name|sin_addr
+operator|.
+name|s_addr
+else|:
+literal|8
+else|:
+literal|12
 argument_list|)
 expr_stmt|;
 break|break;
@@ -6533,9 +6442,6 @@ index|]
 operator|.
 name|text
 argument_list|,
-operator|(
-name|U_LONG
-operator|)
 name|ntohs
 argument_list|(
 name|peer
@@ -6561,9 +6467,6 @@ index|]
 operator|.
 name|text
 argument_list|,
-operator|(
-name|U_LONG
-operator|)
 name|peer
 operator|->
 name|leap
@@ -6582,9 +6485,6 @@ index|]
 operator|.
 name|text
 argument_list|,
-operator|(
-name|U_LONG
-operator|)
 name|peer
 operator|->
 name|hmode
@@ -6603,9 +6503,6 @@ index|]
 operator|.
 name|text
 argument_list|,
-operator|(
-name|U_LONG
-operator|)
 name|peer
 operator|->
 name|stratum
@@ -6624,9 +6521,6 @@ index|]
 operator|.
 name|text
 argument_list|,
-operator|(
-name|U_LONG
-operator|)
 name|peer
 operator|->
 name|ppoll
@@ -6645,9 +6539,6 @@ index|]
 operator|.
 name|text
 argument_list|,
-operator|(
-name|U_LONG
-operator|)
 name|peer
 operator|->
 name|hpoll
@@ -6666,9 +6557,6 @@ index|]
 operator|.
 name|text
 argument_list|,
-operator|(
-name|LONG
-operator|)
 name|peer
 operator|->
 name|precision
@@ -6722,6 +6610,33 @@ name|stratum
 operator|>
 literal|1
 condition|)
+if|if
+condition|(
+name|peer
+operator|->
+name|flags
+operator|&
+name|FLAG_REFCLOCK
+condition|)
+name|ctl_putadr
+argument_list|(
+name|peer_var
+index|[
+name|CP_REFID
+index|]
+operator|.
+name|text
+argument_list|,
+name|peer
+operator|->
+name|srcadr
+operator|.
+name|sin_addr
+operator|.
+name|s_addr
+argument_list|)
+expr_stmt|;
+else|else
 name|ctl_putadr
 argument_list|(
 name|peer_var
@@ -6845,9 +6760,6 @@ index|]
 operator|.
 name|text
 argument_list|,
-operator|(
-name|U_LONG
-operator|)
 name|peer
 operator|->
 name|reach
@@ -6866,9 +6778,6 @@ index|]
 operator|.
 name|text
 argument_list|,
-operator|(
-name|U_LONG
-operator|)
 name|peer
 operator|->
 name|flash
@@ -6887,9 +6796,6 @@ index|]
 operator|.
 name|text
 argument_list|,
-operator|(
-name|U_LONG
-operator|)
 name|peer
 operator|->
 name|valid
@@ -7082,9 +6988,6 @@ index|]
 operator|.
 name|text
 argument_list|,
-operator|(
-name|U_LONG
-operator|)
 name|peer
 operator|->
 name|pmode
@@ -7402,9 +7305,6 @@ index|]
 operator|.
 name|text
 argument_list|,
-operator|(
-name|U_LONG
-operator|)
 name|clock
 operator|->
 name|type
@@ -7449,9 +7349,6 @@ index|]
 operator|.
 name|text
 argument_list|,
-operator|(
-name|U_LONG
-operator|)
 name|clock
 operator|->
 name|polls
@@ -7619,7 +7516,15 @@ operator|&
 name|CLK_HAVEVAL2
 operator|)
 condition|)
-name|ctl_putint
+if|if
+condition|(
+name|clock
+operator|->
+name|fudgeval1
+operator|>
+literal|1
+condition|)
+name|ctl_putadr
 argument_list|(
 name|clock_var
 index|[
@@ -7628,6 +7533,26 @@ index|]
 operator|.
 name|text
 argument_list|,
+name|clock
+operator|->
+name|fudgeval2
+argument_list|)
+expr_stmt|;
+else|else
+name|ctl_putid
+argument_list|(
+name|clock_var
+index|[
+name|CC_FUDGEVAL2
+index|]
+operator|.
+name|text
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
 name|clock
 operator|->
 name|fudgeval2
@@ -7666,9 +7591,6 @@ index|]
 operator|.
 name|text
 argument_list|,
-operator|(
-name|U_LONG
-operator|)
 name|clock
 operator|->
 name|flags
@@ -9537,10 +9459,10 @@ name|char
 modifier|*
 name|valuep
 decl_stmt|;
-name|LONG
+name|long
 name|val
 decl_stmt|;
-name|u_char
+name|int
 name|leapind
 decl_stmt|,
 name|leapwarn
@@ -9574,17 +9496,11 @@ expr_stmt|;
 comment|/* 	 * Set flags to not-in-sync so we can tell when we get something. 	 */
 name|leapind
 operator|=
-operator|(
-name|u_char
-operator|)
 operator|~
 literal|0
 expr_stmt|;
 name|leapwarn
 operator|=
-operator|(
-name|u_char
-operator|)
 operator|~
 literal|0
 expr_stmt|;
@@ -9844,9 +9760,6 @@ name|CS_LEAPIND
 case|:
 name|leapind
 operator|=
-operator|(
-name|u_char
-operator|)
 name|val
 expr_stmt|;
 break|break;
@@ -9855,9 +9768,6 @@ name|CS_LEAPWARNING
 case|:
 name|leapwarn
 operator|=
-operator|(
-name|u_char
-operator|)
 name|val
 expr_stmt|;
 break|break;
@@ -9877,17 +9787,11 @@ if|if
 condition|(
 name|leapind
 operator|!=
-operator|(
-name|u_char
-operator|)
 operator|~
 literal|0
 operator|||
 name|leapwarn
 operator|!=
-operator|(
-name|u_char
-operator|)
 operator|~
 literal|0
 condition|)
@@ -11465,6 +11369,7 @@ name|u_char
 operator|)
 name|err
 condition|)
+block|{
 name|syslog
 argument_list|(
 name|LOG_INFO
@@ -11477,6 +11382,25 @@ name|ctlsysstatus
 argument_list|()
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|debug
+condition|)
+name|printf
+argument_list|(
+literal|"report_event: system event %x status %x\n"
+argument_list|,
+name|err
+argument_list|,
+name|ctlsysstatus
+argument_list|()
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|ctl_sys_last_event
 operator|=
 operator|(
@@ -11484,6 +11408,7 @@ name|u_char
 operator|)
 name|err
 expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
@@ -11542,6 +11467,35 @@ name|peer
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|debug
+condition|)
+name|printf
+argument_list|(
+literal|"peer %s event %x status %x\n"
+argument_list|,
+name|ntoa
+argument_list|(
+operator|&
+name|peer
+operator|->
+name|srcadr
+argument_list|)
+argument_list|,
+name|err
+argument_list|,
+name|ctlpeerstatus
+argument_list|(
+name|peer
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{
@@ -11554,6 +11508,18 @@ argument_list|,
 name|err
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|printf
+argument_list|(
+literal|"report_event: err %x, no peer\n"
+argument_list|,
+name|err
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return;
 block|}
 comment|/* 	 * If no trappers, return. 	 */
@@ -11697,9 +11663,6 @@ name|ctl_puthex
 argument_list|(
 literal|"refclockstatus"
 argument_list|,
-operator|(
-name|U_LONG
-operator|)
 name|ctlclkstatus
 argument_list|(
 operator|&
@@ -11887,9 +11850,6 @@ name|ctl_puthex
 argument_list|(
 literal|"refclockstatus"
 argument_list|,
-operator|(
-name|U_LONG
-operator|)
 name|ctlclkstatus
 argument_list|(
 operator|&
@@ -12065,8 +12025,7 @@ end_function
 
 begin_function
 specifier|static
-name|unsigned
-name|long
+name|u_long
 name|count_var
 parameter_list|(
 name|k
@@ -12078,8 +12037,7 @@ name|k
 decl_stmt|;
 block|{
 specifier|register
-name|unsigned
-name|long
+name|u_long
 name|c
 decl_stmt|;
 name|c
@@ -12126,8 +12084,7 @@ modifier|*
 modifier|*
 name|kv
 decl_stmt|;
-name|unsigned
-name|long
+name|u_long
 name|size
 decl_stmt|;
 name|int
@@ -12135,8 +12092,7 @@ name|def
 decl_stmt|;
 block|{
 specifier|register
-name|unsigned
-name|long
+name|u_long
 name|c
 decl_stmt|;
 specifier|register
@@ -12345,8 +12301,7 @@ name|char
 modifier|*
 name|data
 decl_stmt|;
-name|unsigned
-name|long
+name|u_long
 name|size
 decl_stmt|;
 name|int
@@ -12574,8 +12529,7 @@ name|char
 modifier|*
 name|data
 decl_stmt|;
-name|unsigned
-name|long
+name|u_long
 name|size
 decl_stmt|;
 name|int

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* authusekey.c,v 3.1 1993/07/06 01:07:58 jbj Exp  * authusekey - decode a key from ascii and use it  */
+comment|/*  * authusekey - decode a key from ascii and use it  */
 end_comment
 
 begin_include
@@ -104,7 +104,7 @@ name|keytype
 parameter_list|,
 name|str
 parameter_list|)
-name|U_LONG
+name|u_long
 name|keyno
 decl_stmt|;
 name|int

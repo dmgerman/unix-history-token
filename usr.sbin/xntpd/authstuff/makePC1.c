@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* makePC1.c,v 3.1 1993/07/06 01:04:59 jbj Exp  * makePC1 - build custom permutted choice 1 tables  */
+comment|/*  * makePC1 - build custom permutted choice 1 tables  */
 end_comment
 
 begin_include
@@ -56,10 +56,10 @@ operator|(
 name|u_char
 operator|*
 operator|,
-name|U_LONG
+name|u_long
 operator|*
 operator|,
-name|U_LONG
+name|u_long
 operator|*
 operator|)
 argument_list|)
@@ -356,11 +356,11 @@ name|u_char
 modifier|*
 name|bits
 decl_stmt|;
-name|U_LONG
+name|u_long
 modifier|*
 name|cp
 decl_stmt|;
-name|U_LONG
+name|u_long
 modifier|*
 name|dp
 decl_stmt|;
@@ -370,7 +370,7 @@ name|int
 name|i
 decl_stmt|;
 specifier|register
-name|U_LONG
+name|u_long
 name|mask
 decl_stmt|;
 name|u_char
@@ -610,7 +610,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|U_LONG
+name|u_long
 name|PC_CL
 index|[
 literal|8
@@ -620,7 +620,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|U_LONG
+name|u_long
 name|PC_DL
 index|[
 literal|16
@@ -630,7 +630,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|U_LONG
+name|u_long
 name|PC_CR
 index|[
 literal|16
@@ -640,7 +640,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|U_LONG
+name|u_long
 name|PC_DR
 index|[
 literal|8
@@ -664,10 +664,10 @@ decl_stmt|;
 name|int
 name|comb
 decl_stmt|;
-name|U_LONG
+name|u_long
 name|c
 decl_stmt|;
-name|U_LONG
+name|u_long
 name|d
 decl_stmt|;
 name|u_char
@@ -692,7 +692,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"static U_LONG PC1_CL[8] = {"
+literal|"static u_long PC1_CL[8] = {"
 argument_list|)
 expr_stmt|;
 for|for
@@ -931,7 +931,7 @@ block|}
 block|}
 name|printf
 argument_list|(
-literal|"static U_LONG PC1_DL[16] = {"
+literal|"static u_long PC1_DL[16] = {"
 argument_list|)
 expr_stmt|;
 for|for
@@ -1200,7 +1200,7 @@ block|}
 block|}
 name|printf
 argument_list|(
-literal|"static U_LONG PC1_CR[16] = {"
+literal|"static u_long PC1_CR[16] = {"
 argument_list|)
 expr_stmt|;
 for|for
@@ -1469,7 +1469,7 @@ block|}
 block|}
 name|printf
 argument_list|(
-literal|"static U_LONG PC1_DR[8] = {"
+literal|"static u_long PC1_DR[8] = {"
 argument_list|)
 expr_stmt|;
 for|for

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* fptoms.c,v 3.1 1993/07/06 01:08:17 jbj Exp  * fptoms - return an asciized s_fp number in milliseconds  */
+comment|/*  * fptoms - return an asciized s_fp number in milliseconds  */
 end_comment
 
 begin_include

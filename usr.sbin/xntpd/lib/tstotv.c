@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tstotv.c,v 3.1 1993/07/06 01:08:49 jbj Exp  * tstotv - tables for converting from NTP time stamps to struct timeval  */
+comment|/*  * tstotv - tables for converting from NTP time stamps to struct timeval  */
 end_comment
 
 begin_include
@@ -14,7 +14,7 @@ comment|/*  * Tables to convert from a time stamp fraction to usecs.  Note that 
 end_comment
 
 begin_decl_stmt
-name|LONG
+name|long
 name|tstoushi
 index|[
 literal|256
@@ -537,7 +537,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|LONG
+name|long
 name|tstousmid
 index|[
 literal|256
@@ -1060,7 +1060,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|LONG
+name|long
 name|tstouslo
 index|[
 literal|128

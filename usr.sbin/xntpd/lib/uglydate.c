@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* uglydate.c,v 3.1 1993/07/06 01:08:53 jbj Exp  * uglydate - convert a time stamp to something barely readable  *	      The string returned is 37 characters long.  */
+comment|/*  * uglydate - convert a time stamp to something barely readable  *	      The string returned is 37 characters long.  */
 end_comment
 
 begin_include
@@ -75,10 +75,10 @@ name|tm
 modifier|*
 name|tm
 decl_stmt|;
-name|U_LONG
+name|time_t
 name|sec
 decl_stmt|;
-name|U_LONG
+name|long
 name|msec
 decl_stmt|;
 name|int
@@ -120,10 +120,6 @@ name|tm
 operator|=
 name|gmtime
 argument_list|(
-operator|(
-name|LONG
-operator|*
-operator|)
 operator|&
 name|sec
 argument_list|)
@@ -193,7 +189,7 @@ name|sprintf
 argument_list|(
 name|bp
 argument_list|,
-literal|"%17s %02d:%03d:%02d:%02d:%02d.%03d"
+literal|"%17s %02d:%03d:%02d:%02d:%02d.%03ld"
 argument_list|,
 name|timep
 argument_list|,

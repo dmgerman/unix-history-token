@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ntpdc.c,v 3.1 1993/07/06 01:11:59 jbj Exp  * xntpdc - control and monitor your xntpd daemon  */
+comment|/*  * xntpdc - control and monitor your xntpd daemon  */
 end_comment
 
 begin_include
@@ -106,7 +106,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|U_LONG
+name|u_long
 name|info_auth_keyid
 decl_stmt|;
 end_decl_stmt
@@ -355,7 +355,7 @@ operator|(
 name|char
 operator|*
 operator|,
-name|U_LONG
+name|u_long
 operator|*
 operator|,
 name|char
@@ -512,24 +512,6 @@ begin_decl_stmt
 specifier|static
 name|void
 name|host
-name|P
-argument_list|(
-operator|(
-expr|struct
-name|parse
-operator|*
-operator|,
-name|FILE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|ntp_poll
 name|P
 argument_list|(
 operator|(
@@ -712,7 +694,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|U_LONG
+name|u_long
 name|getkeyid
 name|P
 argument_list|(
@@ -744,7 +726,7 @@ block|,
 block|{
 name|OPT
 operator||
-name|STR
+name|NTP_STR
 block|,
 name|NO
 block|,
@@ -774,7 +756,7 @@ block|,
 block|{
 name|OPT
 operator||
-name|STR
+name|NTP_STR
 block|,
 name|NO
 block|,
@@ -864,7 +846,7 @@ block|,
 block|{
 name|OPT
 operator||
-name|STR
+name|NTP_STR
 block|,
 name|NO
 block|,
@@ -887,44 +869,14 @@ literal|"specify the host whose NTP server we talk to"
 block|}
 block|,
 block|{
-literal|"poll"
-block|,
-name|ntp_poll
-block|,
-block|{
-name|OPT
-operator||
-name|UINT
-block|,
-name|OPT
-operator||
-name|STR
-block|,
-name|NO
-block|,
-name|NO
-block|}
-block|,
-block|{
-literal|"n"
-block|,
-literal|"verbose"
-block|,
-literal|""
-block|,
-literal|""
-block|}
-block|,
-literal|"poll an NTP server in client mode `n' times"
-block|}
-block|,
-block|{
 literal|"passwd"
 block|,
 name|passwd
 block|,
 block|{
-name|NO
+name|OPT
+operator||
+name|NTP_STR
 block|,
 name|NO
 block|,
@@ -954,7 +906,7 @@ block|,
 block|{
 name|OPT
 operator||
-name|STR
+name|NTP_STR
 block|,
 name|NO
 block|,
@@ -984,7 +936,7 @@ block|,
 block|{
 name|OPT
 operator||
-name|STR
+name|NTP_STR
 block|,
 name|NO
 block|,
@@ -1070,7 +1022,7 @@ block|,
 name|keytype
 block|,
 block|{
-name|STR
+name|NTP_STR
 block|,
 name|NO
 block|,
@@ -1207,7 +1159,7 @@ value|256
 end_define
 
 begin_comment
-comment|/* host name is 256 characters LONG */
+comment|/* host name is 256 characters long */
 end_comment
 
 begin_define
@@ -2021,7 +1973,7 @@ modifier|*
 name|hname
 decl_stmt|;
 block|{
-name|U_LONG
+name|u_long
 name|netnum
 decl_stmt|;
 name|char
@@ -2507,7 +2459,7 @@ decl_stmt|;
 name|int
 name|n
 decl_stmt|;
-comment|/* 	 * This is pretty tricky.  We may get between 1 and many packets 	 * back in response to the request.  We peel the data out of 	 * each packet and collect it in one LONG block.  When the last 	 * packet in the sequence is received we'll know how many we 	 * should have had.  Note we use one LONG time out, should reconsider. 	 */
+comment|/* 	 * This is pretty tricky.  We may get between 1 and many packets 	 * back in response to the request.  We peel the data out of 	 * each packet and collect it in one long block.  When the last 	 * packet in the sequence is received we'll know how many we 	 * should have had.  Note we use one long time out, should reconsider. 	 */
 operator|*
 name|ritems
 operator|=
@@ -3707,6 +3659,8 @@ parameter_list|,
 name|rsize
 parameter_list|,
 name|rdata
+parameter_list|,
+name|quiet_mask
 parameter_list|)
 name|int
 name|implcode
@@ -3739,6 +3693,9 @@ name|char
 modifier|*
 modifier|*
 name|rdata
+decl_stmt|;
+name|int
+name|quiet_mask
 decl_stmt|;
 block|{
 name|int
@@ -3926,11 +3883,28 @@ argument_list|,
 name|rdata
 argument_list|)
 expr_stmt|;
+comment|/* log error message if not told to be quiet */
 if|if
 condition|(
+operator|(
 name|res
 operator|>
 literal|0
+operator|)
+operator|&&
+operator|(
+operator|(
+operator|(
+literal|1
+operator|<<
+name|res
+operator|)
+operator|&
+name|quiet_mask
+operator|)
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
 switch|switch
@@ -3965,6 +3939,7 @@ argument_list|,
 literal|"***Server doesn't implement this request\n"
 argument_list|)
 expr_stmt|;
+break|break;
 case|case
 name|INFO_ERR_FMT
 case|:
@@ -5049,7 +5024,7 @@ name|OPT
 condition|)
 block|{
 case|case
-name|STR
+name|NTP_STR
 case|:
 name|argp
 operator|->
@@ -5257,7 +5232,7 @@ name|char
 modifier|*
 name|host
 decl_stmt|;
-name|U_LONG
+name|u_long
 modifier|*
 name|num
 decl_stmt|;
@@ -5295,9 +5270,12 @@ name|sprintf
 argument_list|(
 name|fullhost
 argument_list|,
-literal|"%d.%d.%d.%d"
+literal|"%u.%u.%u.%u"
 argument_list|,
-operator|(
+call|(
+name|u_int
+call|)
+argument_list|(
 operator|(
 name|htonl
 argument_list|(
@@ -5309,9 +5287,12 @@ literal|24
 operator|)
 operator|&
 literal|0xff
-operator|)
+argument_list|)
 argument_list|,
-operator|(
+call|(
+name|u_int
+call|)
+argument_list|(
 operator|(
 name|htonl
 argument_list|(
@@ -5323,9 +5304,12 @@ literal|16
 operator|)
 operator|&
 literal|0xff
-operator|)
+argument_list|)
 argument_list|,
-operator|(
+call|(
+name|u_int
+call|)
+argument_list|(
 operator|(
 name|htonl
 argument_list|(
@@ -5337,9 +5321,12 @@ literal|8
 operator|)
 operator|&
 literal|0xff
-operator|)
+argument_list|)
 argument_list|,
-operator|(
+call|(
+name|u_int
+call|)
+argument_list|(
 name|htonl
 argument_list|(
 operator|*
@@ -5347,7 +5334,7 @@ name|num
 argument_list|)
 operator|&
 literal|0xff
-operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -5384,7 +5371,7 @@ name|h_addr
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|U_LONG
+name|u_long
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5443,7 +5430,7 @@ name|nntohost
 parameter_list|(
 name|netnum
 parameter_list|)
-name|U_LONG
+name|u_long
 name|netnum
 decl_stmt|;
 block|{
@@ -6275,7 +6262,7 @@ block|{
 name|int
 name|isneg
 decl_stmt|;
-name|U_LONG
+name|u_long
 name|val
 decl_stmt|;
 if|if
@@ -6308,7 +6295,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"delay %d ms\n"
+literal|"delay %lu ms\n"
 argument_list|,
 name|val
 argument_list|)
@@ -6337,7 +6324,7 @@ expr_stmt|;
 name|val
 operator|=
 call|(
-name|U_LONG
+name|u_long
 call|)
 argument_list|(
 operator|-
@@ -6361,7 +6348,7 @@ expr_stmt|;
 name|val
 operator|=
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 name|pcmd
 operator|->
@@ -6522,37 +6509,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*  * poll - do one (or more) polls of the host via NTP  */
-comment|/*ARGSUSED*/
-specifier|static
-name|void
-name|ntp_poll
-parameter_list|(
-name|pcmd
-parameter_list|,
-name|fp
-parameter_list|)
-name|struct
-name|parse
-modifier|*
-name|pcmd
-decl_stmt|;
-name|FILE
-modifier|*
-name|fp
-decl_stmt|;
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
-literal|"poll not implemented yet\n"
-argument_list|)
-expr_stmt|;
-block|}
 comment|/*  * keyid - get a keyid to use for authenticating requests  */
 specifier|static
 name|void
@@ -6605,7 +6561,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"keyid is %u\n"
+literal|"keyid is %lu\n"
 argument_list|,
 name|info_auth_keyid
 argument_list|)
@@ -6776,6 +6732,31 @@ expr_stmt|;
 return|return;
 block|}
 block|}
+if|if
+condition|(
+operator|!
+name|interactive
+condition|)
+block|{
+name|authusekey
+argument_list|(
+name|info_auth_keyid
+argument_list|,
+name|info_auth_keytype
+argument_list|,
+name|pcmd
+operator|->
+name|argval
+index|[
+literal|0
+index|]
+operator|.
+name|string
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|pass
 operator|=
 name|getpass
@@ -6810,6 +6791,7 @@ argument_list|,
 name|pass
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/*  * hostnames - set the showhostnames flag  */
 specifier|static
@@ -7241,7 +7223,7 @@ expr_stmt|;
 block|}
 comment|/*  * getkeyid - prompt the user for a keyid to use  */
 specifier|static
-name|U_LONG
+name|u_long
 name|getkeyid
 parameter_list|(
 name|prompt
@@ -7377,7 +7359,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 name|atoi
 argument_list|(

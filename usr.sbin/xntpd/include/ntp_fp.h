@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ntp_fp.h,v 3.1 1993/07/06 01:06:54 jbj Exp  * ntp_fp.h - definitions for NTP fixed point arithmetic  */
+comment|/*  * ntp_fp.h - definitions for NTP fixed point arithmetic  */
 end_comment
 
 begin_include
@@ -28,7 +28,7 @@ file|"ntp_types.h"
 end_include
 
 begin_comment
-comment|/*  * NTP uses two fixed point formats.  The first (l_fp) is the "long" format  * and is 64 bits LONG with the decimal between bits 31 and 32.  This  * is used for time stamps in the NTP packet header (in network byte  * order) and for internal computations of offsets (in local host byte  * order).  We use the same structure for both signed and unsigned values,  * which is a big hack but saves rewriting all the operators twice.  Just  * to confuse this, we also sometimes just carry the fractional part in  * calculations, in both signed and unsigned forms.  Anyway, an l_fp looks  * like:  *  *    0			  1		      2			  3  *    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1  *   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  *   |			       Integral Part			     |  *   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  *   |			       Fractional Part			     |  *   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  *  */
+comment|/*  * NTP uses two fixed point formats.  The first (l_fp) is the "long" format  * and is 64 bits long with the decimal between bits 31 and 32.  This  * is used for time stamps in the NTP packet header (in network byte  * order) and for internal computations of offsets (in local host byte  * order).  We use the same structure for both signed and unsigned values,  * which is a big hack but saves rewriting all the operators twice.  Just  * to confuse this, we also sometimes just carry the fractional part in  * calculations, in both signed and unsigned forms.  Anyway, an l_fp looks  * like:  *  *    0			  1		      2			  3  *    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1  *   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  *   |			       Integral Part			     |  *   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  *   |			       Fractional Part			     |  *   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  *  */
 end_comment
 
 begin_typedef
@@ -280,7 +280,7 @@ name|LFPTOFP
 parameter_list|(
 name|v
 parameter_list|)
-value|MFPTOFP((v)->l_ui, (v)->l_uf)
+value|MFPTOFP((v)->l_i, (v)->l_f)
 end_define
 
 begin_define
@@ -308,7 +308,7 @@ value|(UFPTOLFP((x), (v)), (x)< 0 ? (v)->l_ui -= 0x10000 : 0)
 end_define
 
 begin_comment
-comment|/*  * Primitive operations on LONG fixed point values.  If these are  * reminiscent of assembler op codes it's only because some may  * be replaced by inline assembler for particular machines someday.  * These are the (kind of inefficient) run-anywhere versions.  */
+comment|/*  * Primitive operations on long fixed point values.  If these are  * reminiscent of assembler op codes it's only because some may  * be replaced by inline assembler for particular machines someday.  * These are the (kind of inefficient) run-anywhere versions.  */
 end_comment
 
 begin_define
@@ -584,7 +584,7 @@ value|((a_i) == (b_i)&& (a_f) == (b_f))
 end_define
 
 begin_comment
-comment|/*  * Operations on the LONG fp format  */
+comment|/*  * Operations on the long fp format  */
 end_comment
 
 begin_define
@@ -710,6 +710,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|L_ISZERO
+parameter_list|(
+name|v
+parameter_list|)
+value|((v)->l_ui == 0&& (v)->l_uf == 0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|L_ISHIS
 parameter_list|(
 name|a
@@ -771,9 +781,9 @@ name|dolfptoa
 name|P
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|,
-name|U_LONG
+name|u_long
 operator|,
 name|int
 operator|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* caltontp.c,v 3.1 1993/07/06 01:08:04 jbj Exp  * caltontp - convert a julian date to an NTP time  */
+comment|/*  * caltontp - convert a julian date to an NTP time  */
 end_comment
 
 begin_include
@@ -211,7 +211,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|U_LONG
+name|u_long
 name|caltontp
 parameter_list|(
 name|jt
@@ -233,7 +233,7 @@ name|int
 name|resyear
 decl_stmt|;
 specifier|register
-name|U_LONG
+name|u_long
 name|nt
 decl_stmt|;
 specifier|register
@@ -505,7 +505,7 @@ operator|=
 name|TIMESDPERC
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 name|cyear
 argument_list|)
@@ -524,7 +524,7 @@ expr_stmt|;
 name|nt
 operator|+=
 call|(
-name|U_LONG
+name|u_long
 call|)
 argument_list|(
 name|yearday
@@ -540,7 +540,7 @@ name|nt
 argument_list|)
 operator|+
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 name|jt
 operator|->
@@ -554,7 +554,7 @@ name|nt
 argument_list|)
 operator|+
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 name|jt
 operator|->
@@ -568,7 +568,7 @@ name|nt
 argument_list|)
 operator|+
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 name|jt
 operator|->

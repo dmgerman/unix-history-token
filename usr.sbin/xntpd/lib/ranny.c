@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ranny.c,v 3.1 1993/07/06 01:08:43 jbj Exp  * Random number generator is:  *  *	Copyright 1988 by Rayan S. Zachariassen, all rights reserved.  *	This will be free software, but only when it is finished.  *  * Used in xntp by permission of the author.  If copyright is  * annoying to you, read no further.  Instead, look up the reference,  * write me an equivalent to this and send it back to me.  */
+comment|/*  * Random number generator is:  *  *	Copyright 1988 by Rayan S. Zachariassen, all rights reserved.  *	This will be free software, but only when it is finished.  *  * Used in xntp by permission of the author.  If copyright is  * annoying to you, read no further.  Instead, look up the reference,  * write me an equivalent to this and send it back to me.  */
 end_comment
 
 begin_comment
@@ -34,7 +34,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|U_LONG
+name|time_t
 name|ran_y
 index|[
 literal|55
@@ -44,7 +44,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|U_LONG
+name|time_t
 name|init_ran_y
 index|[
 literal|55
@@ -179,11 +179,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * ranp2 - return a random integer in the range 0 .. (1<<m)-1  */
+comment|/*  * ranp2 - return a random integer in the range 0 .. (1<< m) - 1  */
 end_comment
 
 begin_function
-name|U_LONG
+name|u_long
 name|ranp2
 parameter_list|(
 name|m
@@ -192,7 +192,7 @@ name|int
 name|m
 decl_stmt|;
 block|{
-name|U_LONG
+name|time_t
 name|r
 decl_stmt|;
 name|ran_y
@@ -236,7 +236,10 @@ operator|=
 literal|54
 expr_stmt|;
 return|return
-operator|(
+call|(
+name|u_long
+call|)
+argument_list|(
 name|r
 operator|&
 operator|(
@@ -248,93 +251,10 @@ operator|)
 operator|-
 literal|1
 operator|)
-operator|)
+argument_list|)
 return|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notdef
-end_ifdef
-
-begin_comment
-comment|/*  * ranny - return a random integer in the range 0 .. m-1  */
-end_comment
-
-begin_function
-name|U_LONG
-name|ranny
-parameter_list|(
-name|m
-parameter_list|)
-name|u_int
-name|m
-decl_stmt|;
-block|{
-name|unsigned
-name|LONG
-name|r
-decl_stmt|;
-name|ran_y
-index|[
-name|ran_k
-index|]
-operator|+=
-name|ran_y
-index|[
-name|ran_j
-index|]
-expr_stmt|;
-comment|/* overflow does a mod */
-name|r
-operator|=
-name|ran_y
-index|[
-name|ran_k
-index|]
-expr_stmt|;
-if|if
-condition|(
-name|ran_k
-operator|--
-operator|==
-literal|0
-condition|)
-name|ran_k
-operator|=
-literal|54
-expr_stmt|;
-if|if
-condition|(
-name|ran_j
-operator|--
-operator|==
-literal|0
-condition|)
-name|ran_j
-operator|=
-literal|54
-expr_stmt|;
-return|return
-operator|(
-name|r
-operator|%
-name|m
-operator|)
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* notdef */
-end_comment
 
 begin_comment
 comment|/*  * init_random - do initialization of random number routine  */
@@ -364,10 +284,6 @@ expr_stmt|;
 comment|/* 	 * Randomize the seed array some more.  The time of day 	 * should be initialized by now. 	 */
 name|now
 operator|=
-call|(
-name|time_t
-call|)
-argument_list|(
 name|time
 argument_list|(
 operator|(
@@ -375,7 +291,6 @@ name|time_t
 operator|*
 operator|)
 literal|0
-argument_list|)
 argument_list|)
 operator||
 literal|01

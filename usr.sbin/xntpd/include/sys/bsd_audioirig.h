@@ -36,50 +36,25 @@ end_comment
 begin_if
 if|#
 directive|if
-operator|(
 name|defined
 argument_list|(
-name|sun
+name|__STDC__
 argument_list|)
 operator|||
+operator|!
+operator|(
 name|defined
 argument_list|(
 name|ibm032
 argument_list|)
-operator|)
 operator|&&
 operator|!
 name|defined
 argument_list|(
-name|__GNUC__
+name|__GNUC
 argument_list|)
+operator|)
 end_if
-
-begin_define
-define|#
-directive|define
-name|AUDIO_IRIG_OPEN
-value|_IO(A, 50)
-end_define
-
-begin_define
-define|#
-directive|define
-name|AUDIO_IRIG_CLOSE
-value|_IO(A, 51)
-end_define
-
-begin_define
-define|#
-directive|define
-name|AUDIO_IRIG_SETFORMAT
-value|_IOWR(A, 52, int)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
 
 begin_define
 define|#
@@ -100,6 +75,32 @@ define|#
 directive|define
 name|AUDIO_IRIG_SETFORMAT
 value|_IOWR('A', 52, int)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|AUDIO_IRIG_OPEN
+value|_IO(A, 50)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUDIO_IRIG_CLOSE
+value|_IO(A, 51)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUDIO_IRIG_SETFORMAT
+value|_IOWR(A, 52, int)
 end_define
 
 begin_endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* prettydate.c,v 3.1 1993/07/06 01:08:42 jbj Exp  * prettydate - convert a time stamp to something readable  */
+comment|/*  * prettydate - convert a time stamp to something readable  */
 end_comment
 
 begin_include
@@ -71,10 +71,10 @@ name|tm
 modifier|*
 name|tm
 decl_stmt|;
-name|U_LONG
+name|time_t
 name|sec
 decl_stmt|;
-name|U_LONG
+name|u_long
 name|msec
 decl_stmt|;
 specifier|static
@@ -152,15 +152,11 @@ name|l_uf
 operator|/
 literal|4294967
 expr_stmt|;
-comment|/* fract / (2**32/1000) */
+comment|/* fract / (2 ** 32 / 1000) */
 name|tm
 operator|=
 name|localtime
 argument_list|(
-operator|(
-name|LONG
-operator|*
-operator|)
 operator|&
 name|sec
 argument_list|)
@@ -172,12 +168,18 @@ name|sprintf
 argument_list|(
 name|bp
 argument_list|,
-literal|"%08x.%08x  %s, %s %2d %4d %2d:%02d:%02d.%03d"
+literal|"%08lx.%08lx  %s, %s %2d %4d %2d:%02d:%02d.%03lu"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ts
 operator|->
 name|l_ui
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ts
 operator|->
 name|l_uf

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ntp_timer.c,v 3.1 1993/07/06 01:11:29 jbj Exp  * ntp_event.c - event timer support routines  */
+comment|/*  * ntp_event.c - event timer support routines  */
 end_comment
 
 begin_include
@@ -71,14 +71,14 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|U_LONG
+name|u_long
 name|adjust_timer
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|U_LONG
+name|u_long
 name|hourly_timer
 decl_stmt|;
 end_decl_stmt
@@ -89,7 +89,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|U_LONG
+name|u_long
 name|leap_timer
 decl_stmt|;
 end_decl_stmt
@@ -99,7 +99,7 @@ comment|/*  * Statistics counter for the interested.  */
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|alarm_overflow
 decl_stmt|;
 end_decl_stmt
@@ -116,7 +116,7 @@ comment|/*  * Current_time holds the number of seconds since we started, in  * i
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|current_time
 decl_stmt|;
 end_decl_stmt
@@ -136,19 +136,19 @@ comment|/*  * Stats.  Number of overflows and number of calls to transmit().  */
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|timer_timereset
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|timer_overflows
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|timer_xmtcalls
 decl_stmt|;
 end_decl_stmt

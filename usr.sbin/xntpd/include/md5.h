@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* md5.h,v 3.1 1993/07/06 01:06:44 jbj Exp  ***********************************************************************  ** md5.h -- header file for implementation of MD5                    **  ** RSA Data Security, Inc. MD5 Message-Digest Algorithm              **  ** Created: 2/17/90 RLR                                              **  ** Revised: 12/27/90 SRD,AJ,BSK,JT Reference C version               **  ** Revised (for MD5): RLR 4/27/91                                    **  ***********************************************************************  */
+comment|/*  ***********************************************************************  ** md5.h -- header file for implementation of MD5                    **  ** RSA Data Security, Inc. MD5 Message-Digest Algorithm              **  ** Created: 2/17/90 RLR                                              **  ** Revised: 12/27/90 SRD,AJ,BSK,JT Reference C version               **  ** Revised (for MD5): RLR 4/27/91                                    **  ***********************************************************************  */
 end_comment
 
 begin_comment

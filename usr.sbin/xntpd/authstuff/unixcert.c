@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* unixcert.c,v 3.1 1993/07/06 01:05:14 jbj Exp  * This file, and the certdata file, shamelessly stolen  * from Phil Karn's DES implementation.  *  * This version uses the standard Unix setkey() and encrypt()  * routines to do the encryption.  */
+comment|/*  * This file, and the certdata file, shamelessly stolen  * from Phil Karn's DES implementation.  *  * This version uses the standard Unix setkey() and encrypt()  * routines to do the encryption.  */
 end_comment
 
 begin_include

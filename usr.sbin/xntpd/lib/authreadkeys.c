@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* authreadkeys.c,v 3.1 1993/07/06 01:07:57 jbj Exp  * authreadkeys.c - routines to support the reading of the key file  */
+comment|/*  * authreadkeys.c - routines to support the reading of the key file  */
 end_comment
 
 begin_include
@@ -241,7 +241,7 @@ name|char
 modifier|*
 name|token
 decl_stmt|;
-name|U_LONG
+name|u_long
 name|keyno
 decl_stmt|;
 name|int
@@ -357,9 +357,6 @@ continue|continue;
 comment|/* 		 * First is key number.  See if it is okay. 		 */
 name|keyno
 operator|=
-operator|(
-name|U_LONG
-operator|)
 name|atoi
 argument_list|(
 name|token
@@ -403,7 +400,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"no key type for key number %d, entry ignored"
+literal|"no key type for key number %ld, entry ignored"
 argument_list|,
 name|keyno
 argument_list|)
@@ -475,7 +472,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"invalid key type for key number %d, entry ignored"
+literal|"invalid key type for key number %ld, entry ignored"
 argument_list|,
 name|keyno
 argument_list|)
@@ -502,7 +499,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"no key for number %d entry, entry ignored"
+literal|"no key for number %ld entry, entry ignored"
 argument_list|,
 name|keyno
 argument_list|)
@@ -543,7 +540,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"format/parity error for DES key %d, not used"
+literal|"format/parity error for DES key %ld, not used"
 argument_list|,
 name|keyno
 argument_list|)
@@ -573,7 +570,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"format/parity error for MD5 key %d, not used"
+literal|"format/parity error for MD5 key %ld, not used"
 argument_list|,
 name|keyno
 argument_list|)

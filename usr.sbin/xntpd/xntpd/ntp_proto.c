@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ntp_proto.c,v 3.1 1993/07/06 01:11:23 jbj Exp  * ntp_proto.c - NTP version 3 protocol machinery  */
+comment|/*  * ntp_proto.c - NTP version 3 protocol machinery  */
 end_comment
 
 begin_include
@@ -40,7 +40,7 @@ file|"ntp_unixtime.h"
 end_include
 
 begin_comment
-comment|/*  * System variables are declared here.  See Section 3.2 of  * the specification.  */
+comment|/*  * System variables are declared here.  See Section 3.2 of the  * specification.  */
 end_comment
 
 begin_decl_stmt
@@ -94,7 +94,7 @@ comment|/* dispersion of system clock */
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|sys_refid
 decl_stmt|;
 end_decl_stmt
@@ -162,32 +162,32 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* log2 of desired system poll interval */
+comment|/* log2 of system poll interval */
 end_comment
 
 begin_decl_stmt
 specifier|extern
-name|LONG
+name|long
 name|sys_clock
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* second part of current time - now in systime.c */
+comment|/* second part of current time */
 end_comment
 
 begin_decl_stmt
-name|LONG
+name|long
 name|sys_lastselect
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* sys_clock at last synch-dist update */
+comment|/* sys_clock at last synch update */
 end_comment
 
 begin_comment
-comment|/*  * Non-specified system state variables.  */
+comment|/*  * Nonspecified system state variables.  */
 end_comment
 
 begin_decl_stmt
@@ -201,13 +201,13 @@ comment|/* we set our time to broadcasts */
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|s_fp
 name|sys_bdelay
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* default delay to use for broadcasting */
+comment|/* broadcast client default delay */
 end_comment
 
 begin_decl_stmt
@@ -221,13 +221,33 @@ comment|/* authenticate time used for syncing */
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_char
+name|consensus_leap
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* mitigated leap bits */
+end_comment
+
+begin_decl_stmt
+name|u_long
 name|sys_authdelay
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* ts fraction, time it takes for encrypt() */
+comment|/* encryption time (l_fp fraction) */
+end_comment
+
+begin_decl_stmt
+name|u_char
+name|leap_consensus
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* consensus of survivor leap bits */
 end_comment
 
 begin_comment
@@ -235,7 +255,7 @@ comment|/*  * Statistics counters  */
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|sys_stattime
 decl_stmt|;
 end_decl_stmt
@@ -245,17 +265,17 @@ comment|/* time when we started recording */
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|sys_badstratum
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* packets with invalid incoming stratum */
+comment|/* packets with invalid stratum */
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|sys_oldversionpkt
 decl_stmt|;
 end_decl_stmt
@@ -265,7 +285,7 @@ comment|/* old version packets received */
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|sys_newversionpkt
 decl_stmt|;
 end_decl_stmt
@@ -275,7 +295,7 @@ comment|/* new version packets received */
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|sys_unknownversion
 decl_stmt|;
 end_decl_stmt
@@ -285,7 +305,7 @@ comment|/* don't know version packets */
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|sys_badlength
 decl_stmt|;
 end_decl_stmt
@@ -295,7 +315,7 @@ comment|/* packets with bad length */
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|sys_processed
 decl_stmt|;
 end_decl_stmt
@@ -305,17 +325,17 @@ comment|/* packets processed */
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|sys_badauth
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* packets dropped because of authorization */
+comment|/* packets dropped because of auth */
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|sys_limitrejected
 decl_stmt|;
 end_decl_stmt
@@ -330,7 +350,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|U_LONG
+name|u_long
 name|current_time
 decl_stmt|;
 end_decl_stmt
@@ -364,19 +384,30 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|pps_control
+name|pll_enable
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|U_LONG
+name|int
 name|pps_update
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * The peer hash table.  Imported from ntp_peer.c  */
+comment|/*  * Imported from ntp_util.c  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|stats_control
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * The peer hash table. Imported from ntp_peer.c  */
 end_comment
 
 begin_decl_stmt
@@ -422,7 +453,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * transmit - Transmit Procedure.  See Section 3.4.1 of the specification.  */
+comment|/*  * transmit - Transmit Procedure. See Section 3.4.1 of the  *	specification.  */
 end_comment
 
 begin_function
@@ -443,40 +474,103 @@ name|pkt
 name|xpkt
 decl_stmt|;
 comment|/* packet to send */
-name|U_LONG
+name|u_long
 name|peer_timer
 decl_stmt|;
+name|u_fp
+name|precision
+decl_stmt|;
+name|int
+name|bool
+decl_stmt|;
+comment|/* 	 * We need to be very careful about honking uncivilized time. If 	 * not operating in broadcast mode, honk in all except broadcast 	 * client mode. If operating in broadcast mode and synchronized 	 * to a real source, honk except when the peer is the local- 	 * clock driver and the prefer flag is not set. In other words, 	 * in broadcast mode we never honk unless known to be 	 * synchronized to real time. 	 */
+name|bool
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
-operator|(
 name|peer
 operator|->
 name|hmode
 operator|!=
 name|MODE_BROADCAST
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|peer
 operator|->
 name|hmode
 operator|!=
 name|MODE_BCLIENT
-operator|)
-operator|||
-operator|(
-name|peer
-operator|->
-name|hmode
-operator|==
-name|MODE_BROADCAST
+condition|)
+name|bool
+operator|=
+literal|1
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|sys_peer
+operator|!=
+literal|0
 operator|&&
 name|sys_leap
 operator|!=
 name|LEAP_NOTINSYNC
-operator|)
 condition|)
 block|{
-name|U_LONG
+if|if
+condition|(
+operator|!
+operator|(
+name|sys_peer
+operator|->
+name|refclktype
+operator|==
+name|REFCLK_LOCALCLOCK
+operator|&&
+operator|!
+operator|(
+name|sys_peer
+operator|->
+name|flags
+operator|&
+name|FLAG_PREFER
+operator|)
+operator|)
+condition|)
+name|bool
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|bool
+condition|)
+block|{
+name|u_long
 name|xkeyid
+decl_stmt|;
+name|int
+name|find_rtt
+init|=
+operator|(
+name|peer
+operator|->
+name|cast_flags
+operator|&
+name|MDF_MCAST
+operator|)
+operator|&&
+name|peer
+operator|->
+name|hmode
+operator|!=
+name|MODE_BROADCAST
 decl_stmt|;
 comment|/* 		 * Figure out which keyid to include in the packet 		 */
 if|if
@@ -573,6 +667,26 @@ argument_list|(
 name|sys_rootdelay
 argument_list|)
 expr_stmt|;
+name|precision
+operator|=
+name|FP_SECOND
+operator|>>
+operator|-
+operator|(
+name|int
+operator|)
+name|sys_precision
+expr_stmt|;
+if|if
+condition|(
+name|precision
+operator|==
+literal|0
+condition|)
+name|precision
+operator|=
+literal|1
+expr_stmt|;
 name|xpkt
 operator|.
 name|rootdispersion
@@ -581,17 +695,7 @@ name|HTONS_FP
 argument_list|(
 name|sys_rootdispersion
 operator|+
-operator|(
-name|FP_SECOND
-operator|>>
-operator|(
-operator|-
-operator|(
-name|int
-operator|)
-name|sys_precision
-operator|)
-operator|)
+name|precision
 operator|+
 name|LFPTOFP
 argument_list|(
@@ -643,7 +747,7 @@ operator|.
 name|rec
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Decide whether to authenticate or not.  If so, call encrypt() 		 * to fill in the rest of the frame.  If not, just add in the 		 * xmt timestamp and send it quick. 		 */
+comment|/* 		 * Decide whether to authenticate or not. If so, call 		 * encrypt() to fill in the rest of the frame. If not, 		 * just add in the xmt timestamp and send it quick. 		 */
 if|if
 condition|(
 name|peer
@@ -729,15 +833,37 @@ expr_stmt|;
 name|sendpkt
 argument_list|(
 operator|&
-operator|(
 name|peer
 operator|->
 name|srcadr
-operator|)
 argument_list|,
+name|find_rtt
+condition|?
+name|any_interface
+else|:
 name|peer
 operator|->
 name|dstadr
+argument_list|,
+operator|(
+operator|(
+name|peer
+operator|->
+name|cast_flags
+operator|&
+name|MDF_MCAST
+operator|)
+operator|&&
+operator|!
+name|find_rtt
+operator|)
+condition|?
+name|peer
+operator|->
+name|ttl
+else|:
+operator|-
+literal|7
 argument_list|,
 operator|&
 name|xpkt
@@ -781,7 +907,24 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * Get xmt timestamp, then send it without mac field 			 */
+comment|/* 			 * Get xmt timestamp, then send it without mac 			 * field 			 */
+name|int
+name|find_rtt
+init|=
+operator|(
+name|peer
+operator|->
+name|cast_flags
+operator|&
+name|MDF_MCAST
+operator|)
+operator|&&
+name|peer
+operator|->
+name|dstadr
+operator|!=
+name|any_interface
+decl_stmt|;
 name|get_systime
 argument_list|(
 operator|&
@@ -814,9 +957,33 @@ operator|->
 name|srcadr
 operator|)
 argument_list|,
+name|find_rtt
+condition|?
+name|any_interface
+else|:
 name|peer
 operator|->
 name|dstadr
+argument_list|,
+operator|(
+operator|(
+name|peer
+operator|->
+name|cast_flags
+operator|&
+name|MDF_MCAST
+operator|)
+operator|&&
+operator|!
+name|find_rtt
+operator|)
+condition|?
+name|peer
+operator|->
+name|ttl
+else|:
+operator|-
+literal|8
 argument_list|,
 operator|&
 name|xpkt
@@ -869,13 +1036,33 @@ block|{
 name|u_char
 name|opeer_reach
 decl_stmt|;
-comment|/* 		 * Determine reachability and diddle things if we 		 * haven't heard from the host for a while. 		 */
+comment|/* 		 * Determine reachability and diddle things if we 		 * haven't heard from the host for a while. If we are 		 * about to become unreachable and are a 		 * broadcast/multicast client, the server has refused to 		 * boogie in client/server mode, so we switch to 		 * MODE_BCLIENT anyway and wait for subsequent 		 * broadcasts. 		 */
 name|opeer_reach
 operator|=
 name|peer
 operator|->
 name|reach
 expr_stmt|;
+if|if
+condition|(
+name|opeer_reach
+operator|&
+literal|0x80
+operator|&&
+name|peer
+operator|->
+name|flags
+operator|&
+name|FLAG_MCAST2
+condition|)
+block|{
+name|peer
+operator|->
+name|hmode
+operator|=
+name|MODE_BCLIENT
+expr_stmt|;
+block|}
 name|peer
 operator|->
 name|reach
@@ -904,7 +1091,7 @@ argument_list|,
 name|peer
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Clear this guy out.  No need to redo clock 			 * selection since by now this guy won't be a player 			 */
+comment|/* 			 * Clear this guy out.  No need to redo clock 			 * selection since by now this guy won't be a 			 * player 			 */
 if|if
 condition|(
 name|peer
@@ -934,22 +1121,32 @@ name|current_time
 expr_stmt|;
 block|}
 block|}
-else|else
-block|{
-name|unpeer
-argument_list|(
-name|peer
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-comment|/* 			 * While we have a chance, if our system peer 			 * is zero or his stratum is greater than the 			 * last known stratum of this guy, make sure 			 * hpoll is clamped to the minimum before 			 * resetting the timer. 			 * If the peer has been unreachable for a while 			 * and we have a system peer who is at least his 			 * equal, we may want to ramp his polling interval 			 * up to avoid the useless traffic. 			 */
+comment|/* 			 * While we have a chance, if our system peer is 			 * zero or his stratum is greater than the last 			 * known stratum of this guy, make sure hpoll is 			 * clamped to the minimum before resetting the 			 * timer. If the peer has been unreachable for a 			 * while and we have a system peer who is at 			 * least his equal, we may want to ramp his 			 * polling interval up to avoid the useless 			 * traffic. 			 */
 if|if
 condition|(
 name|sys_peer
 operator|==
 literal|0
-operator|||
+condition|)
+block|{
+name|peer
+operator|->
+name|hpoll
+operator|=
+name|peer
+operator|->
+name|minpoll
+expr_stmt|;
+name|peer
+operator|->
+name|unreach
+operator|=
+literal|0
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 name|sys_peer
 operator|->
 name|stratum
@@ -1071,15 +1268,11 @@ operator|->
 name|hpoll
 operator|--
 expr_stmt|;
+name|L_CLR
+argument_list|(
+operator|&
 name|off
-operator|.
-name|l_ui
-operator|=
-name|off
-operator|.
-name|l_uf
-operator|=
-literal|0
+argument_list|)
 expr_stmt|;
 name|clock_filter
 argument_list|(
@@ -1148,7 +1341,16 @@ expr_stmt|;
 block|}
 block|}
 block|}
-comment|/* 	 * Finally, adjust the hpoll variable for special conditions. 	 */
+comment|/* 	 * Finally, adjust the hpoll variable for special conditions. If 	 * we are a broadcast/multicast client, we use the server poll 	 * interval if listening for broadcasts and one-eighth this 	 * interval if in client/server mode. The following clamp 	 * prevents madness. If this is the system poll, sys_poll 	 * controls hpoll. 	 */
+if|if
+condition|(
+name|peer
+operator|->
+name|flags
+operator|&
+name|FLAG_MCAST2
+condition|)
+block|{
 if|if
 condition|(
 name|peer
@@ -1165,6 +1367,18 @@ name|peer
 operator|->
 name|ppoll
 expr_stmt|;
+else|else
+name|peer
+operator|->
+name|hpoll
+operator|=
+name|peer
+operator|->
+name|ppoll
+operator|-
+literal|3
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -1173,27 +1387,32 @@ operator|->
 name|flags
 operator|&
 name|FLAG_SYSPEER
-operator|&&
-name|peer
-operator|->
-name|hpoll
-operator|>
-name|sys_poll
 condition|)
 name|peer
 operator|->
 name|hpoll
 operator|=
-name|max
-argument_list|(
+name|sys_poll
+expr_stmt|;
+if|if
+condition|(
+name|peer
+operator|->
+name|hpoll
+operator|<
 name|peer
 operator|->
 name|minpoll
-argument_list|,
-name|sys_poll
-argument_list|)
+condition|)
+name|peer
+operator|->
+name|hpoll
+operator|=
+name|peer
+operator|->
+name|minpoll
 expr_stmt|;
-comment|/* 	 * Arrange for our next timeout.  hpoll will be less than 	 * maxpoll for sure. 	 */
+comment|/* 	 * Arrange for our next timeout. hpoll will be less than maxpoll 	 * for sure. 	 */
 if|if
 condition|(
 name|peer
@@ -1308,7 +1527,7 @@ decl_stmt|;
 name|int
 name|is_authentic
 decl_stmt|;
-name|U_LONG
+name|u_long
 name|hiskeyid
 decl_stmt|;
 name|struct
@@ -1413,7 +1632,7 @@ operator|++
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Catch private mode packets.  Dump it if queries not allowed. 	 */
+comment|/* 	 * Catch private mode packets. Dump it if queries not allowed. 	 */
 if|if
 condition|(
 name|PKT_MODE
@@ -1487,7 +1706,7 @@ operator|&
 name|RES_DONTSERVE
 condition|)
 return|return;
-comment|/* 	 * See if we only accept limited number of clients 	 * from the net this guy is from. 	 * Note: the flag is determined dynamically within restrictions() 	 */
+comment|/* 	 * See if we only accept limited number of clients from the net 	 * this guy is from. Note: the flag is determined dynamically 	 * within restrictions() 	 */
 if|if
 condition|(
 specifier|restrict
@@ -1496,7 +1715,7 @@ name|RES_LIMITED
 condition|)
 block|{
 specifier|extern
-name|U_LONG
+name|u_long
 name|client_limit
 decl_stmt|;
 name|sys_limitrejected
@@ -1543,7 +1762,7 @@ operator|++
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Find the peer.  This will return a null if this guy 	 * isn't in the database. 	 */
+comment|/* 	 * Find the peer.  This will return a null if this guy isn't in 	 * the database. 	 */
 name|peer
 operator|=
 name|findpeer
@@ -1556,9 +1775,13 @@ argument_list|,
 name|rbufp
 operator|->
 name|dstadr
+argument_list|,
+name|rbufp
+operator|->
+name|fd
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Check the length for validity, drop the packet if it is 	 * not as expected. 	 * 	 * If this is a client mode poll, go no further.  Send back 	 * his time and drop it. 	 * 	 * The scheme we use for authentication is this.  If we are 	 * running in non-authenticated mode, we accept both frames 	 * which are authenticated and frames which aren't, but don't 	 * authenticate.  We do record whether the frame had a mac field 	 * or not so we know what to do on output. 	 * 	 * If we are running in authenticated mode, we only trust frames 	 * which have authentication attached, which are validated and 	 * which are using one of our trusted keys.  We respond to all 	 * other pollers without saving any state.  If a host we are 	 * passively peering with changes his key from a trusted one to 	 * an untrusted one, we immediately unpeer with him, reselect 	 * the clock and treat him as an unmemorable client (this is 	 * a small denial-of-service hole I'll have to think about). 	 * If a similar event occurs with a configured peer we drop the 	 * frame and hope he'll revert to our key again.  If we get a 	 * frame which can't be authenticated with the given key, we 	 * drop it.  Either we disagree on the keys or someone is trying 	 * some funny stuff. 	 */
+comment|/* 	 * Check the length for validity, drop the packet if it is 	 * not as expected. If this is a client mode poll, go no 	 * further. Send back his time and drop it. 	 * 	 * The scheme we use for authentication is this.  If we are 	 * running in non-authenticated mode, we accept both frames 	 * which are authenticated and frames which aren't, but don't 	 * authenticate. We do record whether the frame had a mac field 	 * or not so we know what to do on output. 	 * 	 * If we are running in authenticated mode, we only trust frames 	 * which have authentication attached, which are validated and 	 * which are using one of our trusted keys. We respond to all 	 * other pollers without saving any state. If a host we are 	 * passively peering with changes his key from a trusted one to 	 * an untrusted one, we immediately unpeer with him, reselect 	 * the clock and treat him as an unmemorable client (this is 	 * a small denial-of-service hole I'll have to think about). 	 * If a similar event occurs with a configured peer we drop the 	 * frame and hope he'll revert to our key again. If we get a 	 * frame which can't be authenticated with the given key, we 	 * drop it. Either we disagree on the keys or someone is trying 	 * some funny stuff. 	 */
 comment|/* 	 * here we assume that any packet with an authenticator is at 	 * least LEN_PKT_MAC bytes long, which means at least 96 bits 	 */
 if|if
 condition|(
@@ -1593,11 +1816,11 @@ if|if
 condition|(
 name|debug
 operator|>
-literal|3
+literal|2
 condition|)
 name|printf
 argument_list|(
-literal|"receive: pkt is %d octets, mac %d octets long, keyid %d\n"
+literal|"receive: pkt is %d octets, mac %d octets long, keyid %ld\n"
 argument_list|,
 name|rbufp
 operator|->
@@ -1643,15 +1866,17 @@ literal|2
 condition|)
 name|printf
 argument_list|(
-literal|"receive: bad length %d (not> %d or == %d)\n"
+literal|"receive: bad length %d %ld\n"
 argument_list|,
 name|rbufp
 operator|->
 name|recv_length
 argument_list|,
-name|LEN_PKT_MAC
-argument_list|,
-name|LEN_PKT_NOMAC
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|pkt
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1778,7 +2003,7 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-comment|/* 	 * If he included a mac field, decrypt it to see if it is authentic. 	 */
+comment|/* 	 * If he included a mac field, decrypt it to see if it is 	 * authentic. 	 */
 name|is_authentic
 operator|=
 literal|0
@@ -1796,6 +2021,36 @@ name|hiskeyid
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|authistrusted
+argument_list|(
+name|hiskeyid
+argument_list|)
+condition|)
+block|{
+name|sys_badauth
+operator|++
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|debug
+operator|>
+literal|3
+condition|)
+name|printf
+argument_list|(
+literal|"receive: untrusted keyid\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+return|return;
+block|}
 if|if
 condition|(
 name|authdecrypt
@@ -1857,7 +2112,7 @@ directive|endif
 block|}
 block|}
 block|}
-comment|/* 	 * If this is someone we don't remember from a previous association, 	 * dispatch him now.  Either we send something back quick, we 	 * ignore him, or we allocate some memory for him and let 	 * him continue. 	 */
+comment|/* 	 * If this is someone we don't remember from a previous 	 * association, dispatch him now.  Either we send something back 	 * quick, we ignore him, or we allocate some memory for him and 	 * let him continue. 	 */
 if|if
 condition|(
 name|peer
@@ -1906,13 +2161,6 @@ break|break;
 case|case
 name|MODE_PASSIVE
 case|:
-ifdef|#
-directive|ifdef
-name|MCAST
-comment|/* process the packet to determine the rt-delay */
-endif|#
-directive|endif
-comment|/* MCAST */
 case|case
 name|MODE_SERVER
 case|:
@@ -1939,10 +2187,21 @@ case|case
 name|MODE_BROADCAST
 case|:
 comment|/* 			 * Sort of a repeat of the above... 			 */
-comment|/* 			if ((restrict& RES_NOPEER) || !sys_bclient) 				return; */
+if|if
+condition|(
+operator|(
+specifier|restrict
+operator|&
+name|RES_NOPEER
+operator|)
+operator|||
+operator|!
+name|sys_bclient
+condition|)
+return|return;
 name|mymode
 operator|=
-name|MODE_BCLIENT
+name|MODE_MCLIENT
 expr_stmt|;
 break|break;
 block|}
@@ -1971,7 +2230,7 @@ argument_list|)
 argument_list|,
 name|NTP_MINDPOLL
 argument_list|,
-name|NTP_MAXPOLL
+name|NTP_MAXDPOLL
 argument_list|,
 literal|0
 argument_list|,
@@ -2031,6 +2290,22 @@ condition|(
 name|has_mac
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|peer
+operator|->
+name|reach
+operator|&&
+name|peer
+operator|->
+name|keyid
+operator|!=
+name|hiskeyid
+operator|)
+condition|)
+block|{
 name|peer
 operator|->
 name|keyid
@@ -2043,6 +2318,7 @@ name|flags
 operator||=
 name|FLAG_AUTHENABLE
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -2076,7 +2352,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * If this guy is authenable, and has been authenticated 		 * in the past, but just failed the authentic test, report 		 * the event. 		 */
+comment|/* 		 * If this guy is authenable, and has been authenticated 		 * in the past, but just failed the authentic test, 		 * report the event. 		 */
 if|if
 condition|(
 name|peer
@@ -2148,49 +2424,25 @@ operator|&
 name|FLAG_AUTHENABLE
 operator|)
 condition|)
-name|trustable
-operator|=
-literal|0
-expr_stmt|;
+block|{
 if|if
 condition|(
 name|has_mac
-condition|)
-block|{
-if|if
-condition|(
-name|authistrusted
-argument_list|(
-name|hiskeyid
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 name|is_authentic
 condition|)
-block|{
 name|trustable
 operator|=
 literal|1
 expr_stmt|;
-block|}
 else|else
-block|{
 name|trustable
 operator|=
 literal|0
 expr_stmt|;
-name|peer
-operator|->
-name|badauth
-operator|++
-expr_stmt|;
 block|}
 block|}
-block|}
-block|}
-comment|/* 	 * Dispose of the packet based on our respective modes.  We 	 * don't drive this with a table, though we probably could. 	 */
+comment|/* 	 * Dispose of the packet based on our respective modes. We 	 * don't drive this with a table, though we probably could. 	 */
 switch|switch
 condition|(
 name|peer
@@ -2204,7 +2456,7 @@ case|:
 case|case
 name|MODE_CLIENT
 case|:
-comment|/* 		 * Active mode associations are configured.  If the data 		 * isn't trustable, ignore it and hope this guy brightens 		 * up.  Else accept any data we get and process it. 		 */
+comment|/* 		 * Active mode associations are configured. If the data 		 * isn't trustable, ignore it and hope this guy 		 * brightens up. Else accept any data we get and process 		 * it. 		 */
 switch|switch
 condition|(
 name|hismode
@@ -2218,6 +2470,9 @@ name|MODE_PASSIVE
 case|:
 case|case
 name|MODE_SERVER
+case|:
+case|case
+name|MODE_BROADCAST
 case|:
 name|process_packet
 argument_list|(
@@ -2259,17 +2514,12 @@ name|is_authentic
 argument_list|)
 expr_stmt|;
 return|return;
-case|case
-name|MODE_BROADCAST
-case|:
-comment|/* 			 * No good for us, we want real time. 			 */
-break|break;
 block|}
 break|break;
 case|case
 name|MODE_PASSIVE
 case|:
-comment|/* 		 * Passive mode associations are (in the current 		 * implementation) always dynamic.  If we get an 		 * invalid header, break the connection.  I hate 		 * doing this since it seems like a waste.  Oh, well. 		 */
+comment|/* 		 * Passive mode associations are (in the current 		 * implementation) always dynamic. If we get an invalid 		 * header, break the connection. I hate doing this since 		 * it seems like a waste. Oh, well. 		 */
 switch|switch
 condition|(
 name|hismode
@@ -2352,7 +2602,7 @@ break|break;
 case|case
 name|MODE_BCLIENT
 case|:
-comment|/* 		 * Broadcast client pseudo-mode.  We accept both server 		 * and broadcast data.  Passive mode data is an error. 		 */
+comment|/* 		 * Broadcast client pseudo-mode. We accept both server 		 * and broadcast data. Passive mode data is an error. 		 */
 switch|switch
 condition|(
 name|hismode
@@ -2361,7 +2611,7 @@ block|{
 case|case
 name|MODE_ACTIVE
 case|:
-comment|/* 			 * This guy wants to give us real time when we've 			 * been existing on lousy broadcasts!  Create a 			 * passive mode association and do it that way, 			 * but keep the old one in case the packet turns 			 * out to be bad. 			 */
+comment|/* 			 * This guy wants to give us real time when 			 * we've been existing on lousy broadcasts! 			 * Create a passive mode association and do it 			 * that way, but keep the old one in case the 			 * packet turns out to be bad. 			 */
 name|peer2
 operator|=
 name|newpeer
@@ -2414,7 +2664,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 				 * Strange situation.  We've been receiving 				 * broadcasts from him which we liked, but 				 * we don't like his active mode stuff. 				 * Keep his old peer structure and send 				 * him some time quickly, we'll figure it 				 * out later. 				 */
+comment|/* 				 * Strange situation.  We've been 				 * receiving broadcasts from him which 				 * we liked, but we don't like his 				 * active mode stuff. Keep his old peer 				 * structure and send him some time 				 * quickly, we'll figure it out later. 				 */
 name|unpeer
 argument_list|(
 name|peer2
@@ -2470,12 +2720,70 @@ expr_stmt|;
 comment|/* 			 * We don't test for invalid headers. 			 * Let him time out. 			 */
 break|break;
 block|}
+break|break;
+case|case
+name|MODE_MCLIENT
+case|:
+comment|/* 		 * This mode is temporary and does not appear outside 		 * this routine. It lasts only from the time the 		 * broadcast/multicast is recognized until the 		 * association is instantiated. Note that we start up in 		 * client/server mode to initially synchronize the 	 	 * clock. 		 */
+switch|switch
+condition|(
+name|hismode
+condition|)
+block|{
+case|case
+name|MODE_BROADCAST
+case|:
+name|peer
+operator|->
+name|flags
+operator||=
+name|FLAG_MCAST1
+operator||
+name|FLAG_MCAST2
+expr_stmt|;
+name|peer
+operator|->
+name|hmode
+operator|=
+name|MODE_CLIENT
+expr_stmt|;
+name|process_packet
+argument_list|(
+name|peer
+argument_list|,
+name|pkt
+argument_list|,
+operator|&
+name|rbufp
+operator|->
+name|recv_time
+argument_list|,
+name|has_mac
+argument_list|,
+name|trustable
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|MODE_SERVER
+case|:
+case|case
+name|MODE_PASSIVE
+case|:
+case|case
+name|MODE_ACTIVE
+case|:
+case|case
+name|MODE_CLIENT
+case|:
+break|break;
+block|}
 block|}
 block|}
 end_function
 
 begin_comment
-comment|/*  * process_packet - Packet Procedure, a la Section 3.4.3 of the specification.  *	  	    Or almost, at least.  If we're in here we have a reasonable  *		    expectation that we will be having a long term relationship  *		    with this host.  */
+comment|/*  * process_packet - Packet Procedure, a la Section 3.4.3 of the  *	specification. Or almost, at least. If we're in here we have a  *	reasonable expectation that we will be having a long term  *	relationship with this host.  */
 end_comment
 
 begin_function
@@ -2516,19 +2824,10 @@ name|trustable
 decl_stmt|;
 comment|/* used as "valid header" */
 block|{
-name|U_LONG
-name|t23_ui
-init|=
-literal|0
+name|l_fp
+name|t10
 decl_stmt|,
-name|t23_uf
-init|=
-literal|0
-decl_stmt|;
-name|U_LONG
-name|t10_ui
-decl_stmt|,
-name|t10_uf
+name|t23
 decl_stmt|;
 name|s_fp
 name|di
@@ -2555,6 +2854,12 @@ name|u_char
 name|ostratum
 decl_stmt|,
 name|oreach
+decl_stmt|;
+name|U_LONG
+name|temp
+decl_stmt|;
+name|u_fp
+name|precision
 decl_stmt|;
 name|sys_processed
 operator|++
@@ -2738,33 +3043,17 @@ comment|/* bogus packet */
 block|}
 if|if
 condition|(
-operator|(
+name|L_ISZERO
+argument_list|(
+operator|&
 name|p_rec
-operator|.
-name|l_ui
-operator|==
-literal|0
-operator|&&
-name|p_rec
-operator|.
-name|l_uf
-operator|==
-literal|0
-operator|)
+argument_list|)
 operator|||
-operator|(
+name|L_ISZERO
+argument_list|(
+operator|&
 name|p_org
-operator|.
-name|l_ui
-operator|==
-literal|0
-operator|&&
-name|p_org
-operator|.
-name|l_uf
-operator|==
-literal|0
-operator|)
+argument_list|)
 condition|)
 name|peer
 operator|->
@@ -2778,17 +3067,11 @@ else|else
 block|{
 if|if
 condition|(
+name|L_ISZERO
+argument_list|(
+operator|&
 name|p_org
-operator|.
-name|l_ui
-operator|==
-literal|0
-operator|&&
-name|p_org
-operator|.
-name|l_uf
-operator|==
-literal|0
+argument_list|)
 condition|)
 name|peer
 operator|->
@@ -2813,7 +3096,7 @@ name|pkt
 operator|->
 name|ppoll
 expr_stmt|;
-comment|/* 	 * Call poll_update().  This will either start us, if the 	 * association is new, or drop the polling interval if the 	 * association is existing and ppoll has been reduced. 	 */
+comment|/* 	 * Call poll_update(). This will either start us, if the 	 * association is new, or drop the polling interval if the 	 * association is existing and ppoll has been reduced. 	 */
 name|poll_update
 argument_list|(
 name|peer
@@ -2840,6 +3123,17 @@ operator||=
 name|TEST5
 expr_stmt|;
 comment|/* authentication failed */
+name|temp
+operator|=
+name|ntohl
+argument_list|(
+name|pkt
+operator|->
+name|reftime
+operator|.
+name|l_ui
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|PKT_LEAP
@@ -2856,39 +3150,16 @@ name|p_xmt
 operator|.
 name|l_ui
 operator|<
-name|ntohl
-argument_list|(
-name|pkt
-operator|->
-name|reftime
-operator|.
-name|l_ui
-argument_list|)
+name|temp
 operator|||
 name|p_xmt
 operator|.
 name|l_ui
 operator|>=
-operator|(
-name|ntohl
-argument_list|(
-name|pkt
-operator|->
-name|reftime
-operator|.
-name|l_ui
-argument_list|)
+name|temp
 operator|+
 name|NTP_MAXAGE
-operator|)
 condition|)
-block|{
-name|peer
-operator|->
-name|seltooold
-operator|++
-expr_stmt|;
-comment|/* test 6 */
 name|peer
 operator|->
 name|flash
@@ -2896,7 +3167,6 @@ operator||=
 name|TEST6
 expr_stmt|;
 comment|/* peer clock unsynchronized */
-block|}
 if|if
 condition|(
 operator|!
@@ -2954,12 +3224,6 @@ name|p_disp
 operator|>=
 name|NTP_MAXDISPERSE
 condition|)
-block|{
-name|peer
-operator|->
-name|disttoolarge
-operator|++
-expr_stmt|;
 name|peer
 operator|->
 name|flash
@@ -2967,7 +3231,6 @@ operator||=
 name|TEST8
 expr_stmt|;
 comment|/* delay/dispersion too big */
-block|}
 comment|/* 	 * If the packet header is invalid (tests 5 through 8), exit 	 */
 if|if
 condition|(
@@ -3166,222 +3429,201 @@ name|reach
 operator||=
 literal|1
 expr_stmt|;
-comment|/* 	 * If running in a normal polled association, calculate the round 	 * trip delay (di) and the clock offset (ci).  We use the equations 	 * (reordered from those in the spec): 	 * 	 * d = (t2 - t3) - (t1 - t0) 	 * c = ((t2 - t3) + (t1 - t0)) / 2 	 * 	 * If running as a broadcast client, these change.  di becomes 	 * equal to two times our broadcast delay, while the offset 	 * becomes equal to: 	 * 	 * c = (t1 - t0) + estbdelay 	 */
-name|t10_ui
+comment|/* 	 * If running in a client/server association, calculate the 	 * clock offset c, roundtrip delay d and dispersion e. We use 	 * the equations (reordered from those in the spec). Note that, 	 * in a broadcast association, org has been set to the time of 	 * last reception. Note the computation of dispersion includes 	 * the system precision plus that due to the frequency error 	 * since the originate time. 	 * 	 * c = ((t2 - t3) + (t1 - t0)) / 2 	 * d = (t2 - t3) - (t1 - t0) 	 * e = (org - rec) (seconds only) 	 */
+name|t10
 operator|=
 name|p_xmt
-operator|.
-name|l_ui
 expr_stmt|;
-comment|/* pkt->xmt == t1 */
-name|t10_uf
-operator|=
-name|p_xmt
-operator|.
-name|l_uf
-expr_stmt|;
-name|M_SUB
+comment|/* compute t1 - t0 */
+name|L_SUB
 argument_list|(
-name|t10_ui
+operator|&
+name|t10
 argument_list|,
-name|t10_uf
-argument_list|,
+operator|&
 name|peer
 operator|->
 name|rec
-operator|.
-name|l_ui
-argument_list|,
-name|peer
-operator|->
-name|rec
-operator|.
-name|l_uf
 argument_list|)
 expr_stmt|;
-comment|/*peer->rec==t0*/
-if|if
-condition|(
-name|PKT_MODE
-argument_list|(
-name|pkt
-operator|->
-name|li_vn_mode
-argument_list|)
-operator|!=
-name|MODE_BROADCAST
-condition|)
-block|{
-name|t23_ui
+name|t23
 operator|=
 name|p_rec
-operator|.
-name|l_ui
 expr_stmt|;
-comment|/* pkt->rec == t2 */
-name|t23_uf
-operator|=
-name|p_rec
-operator|.
-name|l_uf
-expr_stmt|;
-name|M_SUB
+comment|/* compute t2 - t3 */
+name|L_SUB
 argument_list|(
-name|t23_ui
+operator|&
+name|t23
 argument_list|,
-name|t23_uf
-argument_list|,
+operator|&
 name|p_org
-operator|.
-name|l_ui
-argument_list|,
-name|p_org
-operator|.
-name|l_uf
 argument_list|)
 expr_stmt|;
-comment|/*pkt->org==t3*/
-block|}
-comment|/* now have (t2 - t3) and (t0 - t1).  Calculate (ci), (di) and (ei) */
 name|ci
-operator|.
-name|l_ui
 operator|=
-name|t10_ui
+name|t10
 expr_stmt|;
-name|ci
-operator|.
-name|l_uf
+name|precision
 operator|=
-name|t10_uf
-expr_stmt|;
-name|ei
-operator|=
-operator|(
 name|FP_SECOND
 operator|>>
-operator|(
 operator|-
 operator|(
 name|int
 operator|)
 name|sys_precision
-operator|)
-operator|)
 expr_stmt|;
-comment|/* 	 * If broadcast mode, time of last reception has been fiddled 	 * to p_org, rather than originate timestamp. We use this to 	 * augment dispersion and previously calcuated estbdelay as 	 * the delay. We know NTP_SKEWFACTOR == 16, which accounts for 	 * the simplified ei calculation. 	 */
 if|if
 condition|(
-name|PKT_MODE
-argument_list|(
-name|pkt
+name|precision
+operator|==
+literal|0
+condition|)
+name|precision
+operator|=
+literal|1
+expr_stmt|;
+name|ei
+operator|=
+name|precision
+operator|+
+name|peer
 operator|->
-name|li_vn_mode
-argument_list|)
+name|rec
+operator|.
+name|l_ui
+operator|-
+name|p_org
+operator|.
+name|l_ui
+expr_stmt|;
+comment|/* 	 * If running in a broacast association, the clock offset is (t1 	 * - t0) corrected by the one-way delay, but we can't measure 	 * that directly; therefore, we start up in client/server mode, 	 * calculate the clock offset, using the engineered refinement 	 * algorithms, while also receiving broadcasts. When a broadcast 	 * is received in client/server mode, we calculate a correction 	 * factor to use after switching back to broadcast mode. We know 	 * NTP_SKEWFACTOR == 16, which accounts for the simplified ei 	 * calculation. 	 * 	 * If FLAG_MCAST2 is set, we are a broadcast/multicast client. 	 * If FLAG_MCAST1 is set, we haven't calculated the propagation 	 * delay. If hmode is MODE_CLIENT, we haven't set the local 	 * clock in client/server mode. Initially, we come up 	 * MODE_CLIENT. When the clock is first updated and FLAG_MCAST2 	 * is set, we switch from MODE_CLIENT to MODE_BCLIENT. 	 */
+if|if
+condition|(
+name|peer
+operator|->
+name|pmode
 operator|==
 name|MODE_BROADCAST
 condition|)
 block|{
-name|M_ADDUF
+if|if
+condition|(
+name|peer
+operator|->
+name|flags
+operator|&
+name|FLAG_MCAST1
+condition|)
+block|{
+if|if
+condition|(
+name|peer
+operator|->
+name|hmode
+operator|==
+name|MODE_BCLIENT
+condition|)
+name|peer
+operator|->
+name|flags
+operator|&=
+operator|~
+name|FLAG_MCAST1
+expr_stmt|;
+name|L_SUB
 argument_list|(
+operator|&
 name|ci
-operator|.
-name|l_ui
 argument_list|,
+operator|&
+name|peer
+operator|->
+name|offset
+argument_list|)
+expr_stmt|;
+name|L_NEG
+argument_list|(
+operator|&
 name|ci
-operator|.
-name|l_uf
-argument_list|,
+argument_list|)
+expr_stmt|;
 name|peer
 operator|->
 name|estbdelay
-operator|>>
+operator|=
+name|LFPTOFP
+argument_list|(
+operator|&
+name|ci
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
 literal|1
+operator|)
+return|;
+block|}
+name|FPTOLFP
+argument_list|(
+name|peer
+operator|->
+name|estbdelay
+argument_list|,
+operator|&
+name|t10
+argument_list|)
+expr_stmt|;
+name|L_ADD
+argument_list|(
+operator|&
+name|ci
+argument_list|,
+operator|&
+name|t10
 argument_list|)
 expr_stmt|;
 name|di
 operator|=
-name|MFPTOFP
-argument_list|(
-literal|0
-argument_list|,
 name|peer
 operator|->
-name|estbdelay
-argument_list|)
-expr_stmt|;
-name|ei
-operator|+=
-name|peer
-operator|->
-name|rec
-operator|.
-name|l_ui
-operator|-
-name|p_org
-operator|.
-name|l_ui
+name|delay
 expr_stmt|;
 block|}
 else|else
 block|{
-name|M_ADD
+name|L_ADD
 argument_list|(
+operator|&
 name|ci
-operator|.
-name|l_ui
 argument_list|,
-name|ci
-operator|.
-name|l_uf
-argument_list|,
-name|t23_ui
-argument_list|,
-name|t23_uf
+operator|&
+name|t23
 argument_list|)
 expr_stmt|;
-name|M_RSHIFT
+name|L_RSHIFT
 argument_list|(
+operator|&
 name|ci
-operator|.
-name|l_i
-argument_list|,
-name|ci
-operator|.
-name|l_uf
 argument_list|)
 expr_stmt|;
-name|M_SUB
+name|L_SUB
 argument_list|(
-name|t23_ui
+operator|&
+name|t23
 argument_list|,
-name|t23_uf
-argument_list|,
-name|t10_ui
-argument_list|,
-name|t10_uf
+operator|&
+name|t10
 argument_list|)
 expr_stmt|;
 name|di
 operator|=
-name|MFPTOFP
+name|LFPTOFP
 argument_list|(
-name|t23_ui
-argument_list|,
-name|t23_uf
+operator|&
+name|t23
 argument_list|)
-expr_stmt|;
-name|ei
-operator|+=
-name|peer
-operator|->
-name|rec
-operator|.
-name|l_ui
-operator|-
-name|p_org
-operator|.
-name|l_ui
 expr_stmt|;
 block|}
 ifdef|#
@@ -3402,21 +3644,21 @@ argument_list|(
 operator|&
 name|ci
 argument_list|,
-literal|9
+literal|6
 argument_list|)
 argument_list|,
 name|fptoa
 argument_list|(
 name|di
 argument_list|,
-literal|4
+literal|5
 argument_list|)
 argument_list|,
 name|fptoa
 argument_list|(
 name|ei
 argument_list|,
-literal|4
+literal|5
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3439,13 +3681,7 @@ name|ei
 operator|>=
 name|NTP_MAXDISPERSE
 condition|)
-block|{
 comment|/* test 4 */
-name|peer
-operator|->
-name|bogusdelay
-operator|++
-expr_stmt|;
 name|peer
 operator|->
 name|flash
@@ -3453,8 +3689,7 @@ operator||=
 name|TEST4
 expr_stmt|;
 comment|/* delay/dispersion too big */
-block|}
-comment|/* 	 * If the packet data is invalid (tests 1 through 4), exit 	 */
+comment|/* 	 * If the packet data is invalid (tests 1 through 4), exit. 	 */
 if|if
 condition|(
 name|peer
@@ -3508,7 +3743,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 	 * This one is valid.  Mark it so, give it to clock_filter(), 	 */
+comment|/* 	 * This one is valid.  Mark it so, give it to clock_filter(). 	 */
 name|clock_filter
 argument_list|(
 name|peer
@@ -3524,14 +3759,13 @@ operator|)
 name|ei
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If this guy was previously unreachable, report him 	 * reachable. 	 * Note we do this here so that the peer values we return are 	 * the updated ones. 	 */
+comment|/* 	 * If this guy was previously unreachable, report him reachable. 	 * Note we do this here so that the peer values we return are 	 * the updated ones. 	 */
 if|if
 condition|(
 name|oreach
 operator|==
 literal|0
 condition|)
-block|{
 name|report_event
 argument_list|(
 name|EVNT_REACH
@@ -3539,31 +3773,27 @@ argument_list|,
 name|peer
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|debug
-condition|)
-name|printf
-argument_list|(
-literal|"proto: peer reach %d\n"
-argument_list|,
-name|peer
-operator|->
-name|minpoll
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* DEBUG */
-block|}
-comment|/* 	 * Now update the clock. 	 */
+comment|/* 	 * Now update the clock. If we have found a system peer and this 	 * is a broadcast/multicast client, switch to listen mode. 	 */
 name|clock_update
 argument_list|(
 name|peer
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sys_peer
+operator|&&
+name|peer
+operator|->
+name|flags
+operator|&
+name|FLAG_MCAST2
+condition|)
+name|peer
+operator|->
+name|hmode
+operator|=
+name|MODE_BCLIENT
 expr_stmt|;
 return|return
 operator|(
@@ -3650,11 +3880,10 @@ operator|->
 name|dispersion
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Call the clock selection algorithm to see 	 * if this update causes the peer to change. 	 */
+comment|/* 	 * Call the clock selection algorithm to see if this update 	 * causes the peer to change. If this is not the system peer, 	 * quit now. 	 */
 name|clock_select
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Quit if this peer isn't the system peer.  Other peers 	 * used in the combined offset are not allowed to set 	 * system variables or update the clock. 	 */
 if|if
 condition|(
 name|peer
@@ -3662,17 +3891,7 @@ operator|!=
 name|sys_peer
 condition|)
 return|return;
-comment|/* 	 * Quit if the sys_peer is too far away. 	 */
-if|if
-condition|(
-name|peer
-operator|->
-name|synch
-operator|>=
-name|NTP_MAXDISTANCE
-condition|)
-return|return;
-comment|/* 	 * Update the system state 	 */
+comment|/* 	 * Update the system state. This updates the system stratum, 	 * leap bits, root delay, root dispersion, reference ID and 	 * reference time. We also update select dispersion and max 	 * frequency error. 	 */
 name|oleap
 operator|=
 name|sys_leap
@@ -3681,25 +3900,6 @@ name|ostratum
 operator|=
 name|sys_stratum
 expr_stmt|;
-comment|/* 	 * get leap value (usually the peer leap unless overridden by local configuration) 	 */
-name|sys_leap
-operator|=
-name|leap_actual
-argument_list|(
-name|peer
-operator|->
-name|leap
-operator|&
-name|leap_mask
-argument_list|)
-expr_stmt|;
-comment|/* 	 * N.B. peer->stratum was guaranteed to be less than 	 * NTP_MAXSTRATUM by the receive procedure. 	 * We assume peer->update == sys_clock because 	 * clock_filter was called right before this function. 	 * If the pps signal is in control, the system variables are 	 * set in the ntp_loopfilter.c module. 	 */
-if|if
-condition|(
-operator|!
-name|pps_control
-condition|)
-block|{
 name|sys_stratum
 operator|=
 name|peer
@@ -3707,6 +3907,35 @@ operator|->
 name|stratum
 operator|+
 literal|1
+expr_stmt|;
+if|if
+condition|(
+name|sys_stratum
+operator|==
+literal|1
+condition|)
+name|sys_refid
+operator|=
+name|peer
+operator|->
+name|refid
+expr_stmt|;
+else|else
+name|sys_refid
+operator|=
+name|peer
+operator|->
+name|srcadr
+operator|.
+name|sin_addr
+operator|.
+name|s_addr
+expr_stmt|;
+name|sys_reftime
+operator|=
+name|peer
+operator|->
+name|rec
 expr_stmt|;
 name|d
 operator|=
@@ -3733,16 +3962,6 @@ name|rootdelay
 operator|+
 name|d
 expr_stmt|;
-name|sys_maxd
-operator|=
-name|peer
-operator|->
-name|dispersion
-operator|+
-name|peer
-operator|->
-name|selectdisp
-expr_stmt|;
 name|d
 operator|=
 name|peer
@@ -3762,7 +3981,13 @@ name|d
 expr_stmt|;
 name|d
 operator|+=
-name|sys_maxd
+name|peer
+operator|->
+name|dispersion
+operator|+
+name|peer
+operator|->
+name|selectdisp
 expr_stmt|;
 if|if
 condition|(
@@ -3789,116 +4014,7 @@ name|rootdispersion
 operator|+
 name|d
 expr_stmt|;
-block|}
-comment|/* 	 * Hack for reference clocks.  Sigh.  This is the 	 * only real silly part, though, so the analogy isn't 	 * bad. 	 */
-if|if
-condition|(
-name|peer
-operator|->
-name|flags
-operator|&
-name|FLAG_REFCLOCK
-operator|&&
-name|peer
-operator|->
-name|stratum
-operator|==
-name|STRATUM_REFCLOCK
-condition|)
-name|sys_refid
-operator|=
-name|peer
-operator|->
-name|refid
-expr_stmt|;
-else|else
-block|{
-if|if
-condition|(
-name|pps_control
-condition|)
-name|memmove
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|sys_refid
-argument_list|,
-name|PPSREFID
-argument_list|,
-literal|4
-argument_list|)
-expr_stmt|;
-else|else
-name|sys_refid
-operator|=
-name|peer
-operator|->
-name|srcadr
-operator|.
-name|sin_addr
-operator|.
-name|s_addr
-expr_stmt|;
-block|}
-comment|/* 	 * Report changes.  Note that we never sync to 	 * an unsynchronized host. 	 */
-if|if
-condition|(
-name|oleap
-operator|==
-name|LEAP_NOTINSYNC
-condition|)
-name|report_event
-argument_list|(
-name|EVNT_SYNCCHG
-argument_list|,
-operator|(
-expr|struct
-name|peer
-operator|*
-operator|)
-literal|0
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|ostratum
-operator|!=
-name|sys_stratum
-condition|)
-name|report_event
-argument_list|(
-name|EVNT_PEERSTCHG
-argument_list|,
-operator|(
-expr|struct
-name|peer
-operator|*
-operator|)
-literal|0
-argument_list|)
-expr_stmt|;
-name|sys_reftime
-operator|=
-name|peer
-operator|->
-name|rec
-expr_stmt|;
-name|sys_refskew
-operator|.
-name|l_i
-operator|=
-literal|0
-expr_stmt|;
-name|sys_refskew
-operator|.
-name|l_f
-operator|=
-name|NTP_SKEWINC
-expr_stmt|;
+comment|/* 	 * Reset/adjust the system clock. Watch for timewarps here. 	 */
 switch|switch
 condition|(
 name|local_clock
@@ -3914,7 +4030,7 @@ case|case
 operator|-
 literal|1
 case|:
-comment|/* 		 * Clock is too screwed up.  Just exit for now. 		 */
+comment|/* 		 * Clock is too screwed up. Just exit for now. 		 */
 name|report_event
 argument_list|(
 name|EVNT_SYSFAULT
@@ -3937,6 +4053,18 @@ case|case
 literal|0
 case|:
 comment|/* 		 * Clock was slewed.  Continue on normally. 		 */
+name|sys_leap
+operator|=
+name|leap_consensus
+operator|&
+name|leap_mask
+expr_stmt|;
+name|L_CLR
+argument_list|(
+operator|&
+name|sys_refskew
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 literal|1
@@ -3979,59 +4107,57 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-if|if
-condition|(
-name|sys_stratum
-operator|>
-literal|1
-condition|)
-name|sys_refid
+name|sys_maxd
 operator|=
 name|peer
 operator|->
-name|srcadr
-operator|.
-name|sin_addr
-operator|.
-name|s_addr
+name|dispersion
+operator|+
+name|peer
+operator|->
+name|selectdisp
 expr_stmt|;
-else|else
-block|{
 if|if
 condition|(
-name|peer
-operator|->
-name|flags
-operator|&
-name|FLAG_REFCLOCK
+name|oleap
+operator|!=
+name|sys_leap
 condition|)
-name|sys_refid
-operator|=
-name|peer
-operator|->
-name|refid
-expr_stmt|;
-else|else
-name|memmove
+name|report_event
 argument_list|(
+name|EVNT_SYNCCHG
+argument_list|,
 operator|(
-name|char
+expr|struct
+name|peer
 operator|*
 operator|)
-operator|&
-name|sys_refid
-argument_list|,
-name|PPSREFID
-argument_list|,
-literal|4
+literal|0
 argument_list|)
 expr_stmt|;
-block|}
+if|if
+condition|(
+name|ostratum
+operator|!=
+name|sys_stratum
+condition|)
+name|report_event
+argument_list|(
+name|EVNT_PEERSTCHG
+argument_list|,
+operator|(
+expr|struct
+name|peer
+operator|*
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * poll_update - update peer poll interval.  See Section 3.4.8 of the spec.  */
+comment|/*  * poll_update - update peer poll interval. See Section 3.4.8 of the  *     spec.  */
 end_comment
 
 begin_function
@@ -4064,7 +4190,7 @@ modifier|*
 name|evp
 decl_stmt|;
 specifier|register
-name|U_LONG
+name|u_long
 name|new_timer
 decl_stmt|;
 name|u_char
@@ -4381,14 +4507,13 @@ operator|->
 name|next
 control|)
 block|{
-comment|/* 			 * We used to drop all unconfigured pollers here. 			 * The problem with doing this is that if your best 			 * time source is unconfigured (there are reasons 			 * for doing this) and you drop him, he may not 			 * get around to polling you for a long time.  Hang 			 * on to everyone, dropping their polling intervals 			 * to the minimum. 			 */
 name|peer_clear
 argument_list|(
 name|peer
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Clear sys_peer.  We'll sync to one later. 	 */
+comment|/* 	 * Clear sys_peer. We'll sync to one later. 	 */
 name|sys_peer
 operator|=
 literal|0
@@ -4576,25 +4701,28 @@ block|{
 specifier|register
 name|int
 name|i
+decl_stmt|,
+name|j
+decl_stmt|,
+name|k
+decl_stmt|,
+name|n
 decl_stmt|;
 specifier|register
 name|u_char
 modifier|*
 name|ord
 decl_stmt|;
-specifier|register
-name|s_fp
-name|sample_distance
-decl_stmt|,
-name|sample_soffset
-decl_stmt|,
-name|skew
-decl_stmt|;
 name|s_fp
 name|distance
 index|[
 name|NTP_SHIFT
 index|]
+decl_stmt|;
+name|long
+name|skew
+decl_stmt|,
+name|skewmax
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -4639,7 +4767,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Update sample errors and calculate distances. 	 * We know NTP_SKEWFACTOR == 16 	 */
+comment|/* 	 * Update sample errors and calculate distances. Also initialize 	 * sort index vector. We know NTP_SKEWFACTOR == 16 	 */
 name|skew
 operator|=
 name|sys_clock
@@ -4654,94 +4782,17 @@ name|update
 operator|=
 name|sys_clock
 expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|NTP_SHIFT
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|distance
-index|[
-name|i
-index|]
-operator|=
-name|peer
-operator|->
-name|filter_error
-index|[
-name|i
-index|]
-expr_stmt|;
-if|if
-condition|(
-name|peer
-operator|->
-name|filter_error
-index|[
-name|i
-index|]
-operator|<
-name|NTP_MAXDISPERSE
-condition|)
-block|{
-name|peer
-operator|->
-name|filter_error
-index|[
-name|i
-index|]
-operator|+=
-name|skew
-expr_stmt|;
-name|distance
-index|[
-name|i
-index|]
-operator|+=
-operator|(
-name|peer
-operator|->
-name|filter_delay
-index|[
-name|i
-index|]
-operator|>>
-literal|1
-operator|)
-expr_stmt|;
-block|}
-block|}
-comment|/* 	 * We keep a sort by distance of the current contents of the 	 * shift registers.  We update this by (1) removing the 	 * register we are going to be replacing from the sort, and 	 * (2) reinserting it based on the new distance value. 	 */
 name|ord
 operator|=
 name|peer
 operator|->
 name|filter_order
 expr_stmt|;
-name|sample_distance
+name|j
 operator|=
-name|sample_error
-operator|+
-operator|(
-name|sample_delay
-operator|>>
-literal|1
-operator|)
-expr_stmt|;
-name|sample_soffset
-operator|=
-name|LFPTOFP
-argument_list|(
-name|sample_offset
-argument_list|)
+name|peer
+operator|->
+name|filter_nextpt
 expr_stmt|;
 for|for
 control|(
@@ -4752,158 +4803,86 @@ init|;
 name|i
 operator|<
 name|NTP_SHIFT
-operator|-
-literal|1
 condition|;
 name|i
 operator|++
 control|)
-comment|/* find old value */
-if|if
-condition|(
-name|ord
-index|[
-name|i
-index|]
-operator|==
+block|{
 name|peer
 operator|->
-name|filter_nextpt
-condition|)
-break|break;
-for|for
-control|(
-init|;
-name|i
-operator|<
-name|NTP_SHIFT
-operator|-
-literal|1
-condition|;
-name|i
-operator|++
-control|)
-comment|/* i is current, move everything up */
-name|ord
+name|filter_error
 index|[
-name|i
+name|j
 index|]
-operator|=
-name|ord
-index|[
-name|i
-operator|+
-literal|1
-index|]
+operator|+=
+operator|(
+name|u_fp
+operator|)
+name|skew
 expr_stmt|;
-comment|/* Here, last slot in ord[] is empty */
 if|if
 condition|(
-name|sample_error
-operator|>=
+name|peer
+operator|->
+name|filter_error
+index|[
+name|j
+index|]
+operator|>
 name|NTP_MAXDISPERSE
 condition|)
-comment|/* 		 * Last slot for this guy. 		 */
-name|i
-operator|=
-name|NTP_SHIFT
-operator|-
-literal|1
-expr_stmt|;
-else|else
-block|{
-specifier|register
-name|int
+name|peer
+operator|->
+name|filter_error
+index|[
 name|j
-decl_stmt|;
-specifier|register
-name|u_fp
-modifier|*
-name|errorp
-decl_stmt|;
-name|errorp
+index|]
+operator|=
+name|NTP_MAXDISPERSE
+expr_stmt|;
+name|distance
+index|[
+name|i
+index|]
 operator|=
 name|peer
 operator|->
 name|filter_error
-expr_stmt|;
-comment|/* 		 * Find where he goes in, then shift everyone else down 		 */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|NTP_SHIFT
-operator|-
-literal|1
-condition|;
-name|i
-operator|++
-control|)
-if|if
-condition|(
-name|errorp
-index|[
-name|ord
-index|[
-name|i
-index|]
-index|]
-operator|>=
-name|NTP_MAXDISPERSE
-operator|||
-name|sample_distance
-operator|<=
-name|distance
-index|[
-name|ord
-index|[
-name|i
-index|]
-index|]
-condition|)
-break|break;
-for|for
-control|(
-name|j
-operator|=
-name|NTP_SHIFT
-operator|-
-literal|1
-init|;
-name|j
-operator|>
-name|i
-condition|;
-name|j
-operator|--
-control|)
-name|ord
 index|[
 name|j
 index|]
-operator|=
-name|ord
-index|[
-name|j
-operator|-
-literal|1
-index|]
-expr_stmt|;
-block|}
-name|ord
-index|[
-name|i
-index|]
-operator|=
+operator|+
+operator|(
 name|peer
 operator|->
-name|filter_nextpt
+name|filter_delay
+index|[
+name|j
+index|]
+operator|>>
+literal|1
+operator|)
 expr_stmt|;
-comment|/* 	 * Got everything in order.  Insert sample in current register 	 * and increment nextpt. 	 */
+name|ord
+index|[
+name|i
+index|]
+operator|=
+name|j
+expr_stmt|;
+if|if
+condition|(
+operator|--
+name|j
+operator|<
+literal|0
+condition|)
+name|j
+operator|+=
+name|NTP_SHIFT
+expr_stmt|;
+block|}
+comment|/* 	 * Insert the new sample at the beginning of the register. 	 */
 name|peer
 operator|->
 name|filter_delay
@@ -4936,7 +4915,10 @@ operator|->
 name|filter_nextpt
 index|]
 operator|=
-name|sample_soffset
+name|LFPTOFP
+argument_list|(
+name|sample_offset
+argument_list|)
 expr_stmt|;
 name|peer
 operator|->
@@ -4951,13 +4933,133 @@ name|sample_error
 expr_stmt|;
 name|distance
 index|[
-name|peer
-operator|->
-name|filter_nextpt
+literal|0
 index|]
 operator|=
-name|sample_distance
+name|sample_error
+operator|+
+operator|(
+name|sample_delay
+operator|>>
+literal|1
+operator|)
 expr_stmt|;
+comment|/* 	 * Sort the samples in the register by distance. The winning 	 * sample will be in ord[0]. Sort the samples only if the 	 * samples are not too old and the delay is meaningful. 	 */
+name|skewmax
+operator|=
+literal|0
+expr_stmt|;
+for|for
+control|(
+name|n
+operator|=
+literal|0
+init|;
+name|n
+operator|<
+name|NTP_SHIFT
+operator|&&
+name|sample_delay
+condition|;
+name|n
+operator|++
+control|)
+block|{
+for|for
+control|(
+name|j
+operator|=
+literal|0
+init|;
+name|j
+operator|<
+name|n
+operator|&&
+name|skewmax
+operator|<
+name|CLOCK_MAXSEC
+condition|;
+name|j
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|distance
+index|[
+name|j
+index|]
+operator|>
+name|distance
+index|[
+name|n
+index|]
+condition|)
+block|{
+name|s_fp
+name|ftmp
+decl_stmt|;
+name|ftmp
+operator|=
+name|distance
+index|[
+name|n
+index|]
+expr_stmt|;
+name|k
+operator|=
+name|ord
+index|[
+name|n
+index|]
+expr_stmt|;
+name|distance
+index|[
+name|n
+index|]
+operator|=
+name|distance
+index|[
+name|j
+index|]
+expr_stmt|;
+name|ord
+index|[
+name|n
+index|]
+operator|=
+name|ord
+index|[
+name|j
+index|]
+expr_stmt|;
+name|distance
+index|[
+name|j
+index|]
+operator|=
+name|ftmp
+expr_stmt|;
+name|ord
+index|[
+name|j
+index|]
+operator|=
+name|k
+expr_stmt|;
+block|}
+block|}
+name|skewmax
+operator|+=
+operator|(
+literal|1
+operator|<<
+name|peer
+operator|->
+name|hpoll
+operator|)
+expr_stmt|;
+block|}
 name|peer
 operator|->
 name|filter_nextpt
@@ -4977,7 +5079,7 @@ name|filter_nextpt
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 	 * Now compute the dispersion, and assign values to delay and 	 * offset.  If there are no samples in the register, delay and 	 * offset are not touched and dispersion is set to the maximum. 	 */
+comment|/* 	 * We compute the dispersion as per the spec. Note that, to make 	 * things simple, both the l_fp and s_fp offsets are retained 	 * and that the s_fp could be nonsense if the l_fp is greater 	 * than about 32000 s. However, the sanity checks in 	 * ntp_loopfilter() require the l_fp offset to be less than 1000 	 * s anyway, so not to worry. 	 */
 if|if
 condition|(
 name|peer
@@ -5002,9 +5104,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-specifier|register
 name|s_fp
 name|d
+decl_stmt|;
+name|u_fp
+name|y
 decl_stmt|;
 name|peer
 operator|->
@@ -5060,18 +5164,24 @@ literal|0
 index|]
 index|]
 expr_stmt|;
+name|y
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|i
 operator|=
+name|NTP_SHIFT
+operator|-
 literal|1
 init|;
 name|i
-operator|<
-name|NTP_SHIFT
+operator|>
+literal|0
 condition|;
 name|i
-operator|++
+operator|--
 control|)
 block|{
 if|if
@@ -5139,21 +5249,27 @@ name|NTP_MAXDISPERSE
 expr_stmt|;
 block|}
 comment|/* 			 * XXX This *knows* NTP_FILTER is 1/2 			 */
+name|y
+operator|=
+operator|(
+operator|(
+name|u_fp
+operator|)
+name|d
+operator|+
+name|y
+operator|)
+operator|>>
+literal|1
+expr_stmt|;
+block|}
 name|peer
 operator|->
 name|dispersion
 operator|+=
-call|(
-name|u_fp
-call|)
-argument_list|(
-name|d
-argument_list|)
-operator|>>
-name|i
+name|y
 expr_stmt|;
-block|}
-comment|/* 		 * Calculate synchronization distance backdated to 		 * sys_lastselect (clock_select will fix it). 		 * We know NTP_SKEWFACTOR == 16 		 */
+comment|/* 		 * Calculate synchronization distance backdated to 		 * sys_lastselect (clock_select will fix it). We know 		 * NTP_SKEWFACTOR == 16. 		 */
 name|d
 operator|=
 name|peer
@@ -5202,7 +5318,6 @@ name|sys_lastselect
 operator|)
 expr_stmt|;
 block|}
-comment|/* 	 * We're done 	 */
 block|}
 end_function
 
@@ -5253,16 +5368,16 @@ name|found
 decl_stmt|,
 name|k
 decl_stmt|;
-comment|/* XXX correct? */
 name|s_fp
 name|low
 init|=
-literal|0x7ffffff
+literal|0x7fffffff
 decl_stmt|;
 name|s_fp
 name|high
 init|=
-literal|0x00000000
+operator|-
+literal|0x7ffffff
 decl_stmt|;
 name|u_fp
 name|synch
@@ -5279,6 +5394,41 @@ name|struct
 name|peer
 modifier|*
 name|osys_peer
+decl_stmt|;
+name|struct
+name|peer
+modifier|*
+name|typeacts
+init|=
+literal|0
+decl_stmt|;
+name|struct
+name|peer
+modifier|*
+name|typelocal
+init|=
+literal|0
+decl_stmt|;
+name|struct
+name|peer
+modifier|*
+name|typepps
+init|=
+literal|0
+decl_stmt|;
+name|struct
+name|peer
+modifier|*
+name|typeprefer
+init|=
+literal|0
+decl_stmt|;
+name|struct
+name|peer
+modifier|*
+name|typesystem
+init|=
+literal|0
 decl_stmt|;
 specifier|static
 name|int
@@ -5334,6 +5484,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * Initizialize. If a prefer peer does not survive this thing, 	 * the pps_update switch will remain zero. 	 */
+name|pps_update
+operator|=
+literal|0
+expr_stmt|;
 name|nlist
 operator|=
 literal|0
@@ -5539,7 +5694,7 @@ operator|&=
 operator|~
 name|FLAG_SYSPEER
 expr_stmt|;
-comment|/* 			 * Update synch distance (NTP_SKEWFACTOR == 16) 			 */
+comment|/* 			 * Update synch distance (NTP_SKEWFACTOR == 16). 			 * Note synch distance check instead of spec 			 * dispersion check. Naughty. 			 */
 name|peer
 operator|->
 name|synch
@@ -5606,7 +5761,7 @@ name|peer
 operator|->
 name|dispersion
 operator|>=
-name|NTP_MAXDISPERSE
+name|NTP_MAXDISTANCE
 condition|)
 block|{
 name|peer
@@ -5640,7 +5795,62 @@ expr_stmt|;
 continue|continue;
 comment|/* very broken host */
 block|}
-comment|/* 			 * This one seems sane. 			 */
+comment|/* 			 * Don't allow the local-clock or acts drivers 			 * in the kitchen at this point, unless the 			 * prefer peer. Do that later, but only if 			 * nobody else is around. 			 */
+if|if
+condition|(
+name|peer
+operator|->
+name|refclktype
+operator|==
+name|REFCLK_LOCALCLOCK
+condition|)
+block|{
+name|typelocal
+operator|=
+name|peer
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|peer
+operator|->
+name|flags
+operator|&
+name|FLAG_PREFER
+operator|)
+condition|)
+continue|continue;
+comment|/* no local clock */
+block|}
+if|if
+condition|(
+name|peer
+operator|->
+name|refclktype
+operator|==
+name|REFCLK_NIST_ACTS
+condition|)
+block|{
+name|typeacts
+operator|=
+name|peer
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|peer
+operator|->
+name|flags
+operator|&
+name|FLAG_PREFER
+operator|)
+condition|)
+continue|continue;
+comment|/* no acts */
+block|}
+comment|/* 			 * If we get this far, we assume the peer is 			 * acceptable. 			 */
 name|peer
 operator|->
 name|was_sane
@@ -5655,7 +5865,7 @@ index|]
 operator|=
 name|peer
 expr_stmt|;
-comment|/* 			 * Insert each interval endpoint on the sorted list. 			 */
+comment|/* 			 * Insert each interval endpoint on the sorted 			 * list. 			 */
 name|e
 operator|=
 name|peer
@@ -6113,6 +6323,7 @@ operator|.
 name|val
 expr_stmt|;
 block|}
+comment|/* 	 * If no survivors remain at this point, check if the acts or 	 * local clock drivers have been found. If so, nominate one of 	 * them as the only survivor. Otherwise, give up and declare us 	 * unsynchronized. 	 */
 if|if
 condition|(
 operator|(
@@ -6126,13 +6337,57 @@ condition|)
 block|{
 if|if
 condition|(
-name|debug
+name|typeacts
+operator|!=
+literal|0
 condition|)
-name|printf
-argument_list|(
-literal|"clock_select: no intersection\n"
-argument_list|)
+block|{
+name|typeacts
+operator|->
+name|was_sane
+operator|=
+literal|1
 expr_stmt|;
+name|peer_list
+index|[
+literal|0
+index|]
+operator|=
+name|typeacts
+expr_stmt|;
+name|nlist
+operator|=
+literal|1
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|typelocal
+operator|!=
+literal|0
+condition|)
+block|{
+name|typelocal
+operator|->
+name|was_sane
+operator|=
+literal|1
+expr_stmt|;
+name|peer_list
+index|[
+literal|0
+index|]
+operator|=
+name|typelocal
+expr_stmt|;
+name|nlist
+operator|=
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
 if|if
 condition|(
 name|sys_peer
@@ -6160,6 +6415,7 @@ operator|=
 name|STRATUM_UNSPEC
 expr_stmt|;
 return|return;
+block|}
 block|}
 ifdef|#
 directive|ifdef
@@ -6191,7 +6447,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Clustering algorithm. Process intersection list to discard 	 * outlyers. First, construct candidate list in cluster order. 	 * Cluster order is determined by the sum of peer 	 * synchronization distance plus scaled stratum. 	 */
+comment|/* 	 * Clustering algorithm. Process intersection list to discard 	 * outlyers. Construct candidate list in cluster order 	 * determined by the sum of peer synchronization distance plus 	 * scaled stratum. We must find at least one peer. 	 */
 name|j
 operator|=
 literal|0
@@ -6219,6 +6475,11 @@ index|]
 expr_stmt|;
 if|if
 condition|(
+name|nlist
+operator|>
+literal|1
+operator|&&
+operator|(
 name|peer
 operator|->
 name|soffset
@@ -6230,6 +6491,7 @@ operator|<
 name|peer
 operator|->
 name|soffset
+operator|)
 condition|)
 continue|continue;
 name|peer
@@ -6246,7 +6508,7 @@ name|synch
 operator|+
 operator|(
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 name|peer
 operator|->
@@ -6402,7 +6664,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * Now, prune outlyers by root dispersion. 	 */
+comment|/* 	 * Now, prune outlyers by root dispersion. Continue as long as 	 * there are more than NTP_MINCLOCK survivors and the minimum 	 * select dispersion is greater than the maximum peer 	 * dispersion. Stop if we are about to discard a preferred peer. 	 */
 for|for
 control|(
 name|i
@@ -6512,7 +6774,7 @@ operator|-
 literal|1
 init|;
 name|j
-operator|>=
+operator|>
 literal|0
 condition|;
 name|j
@@ -6737,10 +6999,10 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* 	 * What remains is a list of less than NTP_MINCLOCK peers. 	 * First record their order, then choose a peer.  If the 	 * head of the list has a lower stratum than sys_peer 	 * choose him right off.  If not, see if sys_peer is in 	 * the list.  If so, keep him.  If not, take the top of 	 * the list anyway. Also, clamp the polling intervals. 	 */
-name|osys_peer
+comment|/* 	 * What remains is a list of not greater than NTP_MINCLOCK 	 * peers. We want only a peer at the lowest stratum to become 	 * the system peer, although all survivors are eligible for the 	 * combining algorithm. First record their order, diddle the 	 * flags and clamp the poll intervals. Then, consider the peers 	 * at the lowest stratum. Of these, OR the leap bits on the 	 * assumption that, if some of them honk nonzero bits, they must 	 * know what they are doing. Also, check for prefer and pps 	 * peers. If a prefer peer is found within CLOCK_MAX, update the 	 * pps switch. Of the other peers not at the lowest stratum, 	 * check if the system peer is among them and, if found, zap 	 * him. We note that the head of the list is at the lowest 	 * stratum and that unsynchronized peers cannot survive this 	 * far. 	 */
+name|leap_consensus
 operator|=
-name|sys_peer
+literal|0
 expr_stmt|;
 for|for
 control|(
@@ -6758,24 +7020,6 @@ name|i
 operator|--
 control|)
 block|{
-if|if
-condition|(
-name|peer_list
-index|[
-name|i
-index|]
-operator|->
-name|flags
-operator|&
-name|FLAG_PREFER
-condition|)
-name|sys_peer
-operator|=
-name|peer_list
-index|[
-name|i
-index|]
-expr_stmt|;
 name|peer_list
 index|[
 name|i
@@ -6813,17 +7057,15 @@ argument_list|,
 name|POLL_RANDOMCHANGE
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
-name|sys_peer
-operator|==
-literal|0
-operator|||
-name|sys_peer
+name|peer_list
+index|[
+name|i
+index|]
 operator|->
 name|stratum
-operator|>
+operator|==
 name|peer_list
 index|[
 literal|0
@@ -6832,29 +7074,91 @@ operator|->
 name|stratum
 condition|)
 block|{
-name|sys_peer
+name|leap_consensus
+operator||=
+name|peer_list
+index|[
+name|i
+index|]
+operator|->
+name|leap
+expr_stmt|;
+if|if
+condition|(
+name|peer_list
+index|[
+name|i
+index|]
+operator|->
+name|refclktype
+operator|==
+name|REFCLK_ATOM_PPS
+condition|)
+name|typepps
 operator|=
 name|peer_list
 index|[
-literal|0
+name|i
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|peer_list
+index|[
+name|i
+index|]
+operator|==
+name|sys_peer
+condition|)
+name|typesystem
+operator|=
+name|peer_list
+index|[
+name|i
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|peer_list
+index|[
+name|i
+index|]
+operator|->
+name|flags
+operator|&
+name|FLAG_PREFER
+condition|)
+block|{
+name|typeprefer
+operator|=
+name|peer_list
+index|[
+name|i
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|typeprefer
+operator|->
+name|soffset
+operator|>=
+operator|-
+name|CLOCK_MAX_FP
+operator|&&
+name|typeprefer
+operator|->
+name|soffset
+operator|<
+name|CLOCK_MAX_FP
+condition|)
+name|pps_update
+operator|=
+literal|1
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
-for|for
-control|(
-name|i
-operator|=
-literal|1
-init|;
-name|i
-operator|<
-name|nlist
-condition|;
-name|i
-operator|++
-control|)
 if|if
 condition|(
 name|peer_list
@@ -6864,12 +7168,125 @@ index|]
 operator|==
 name|sys_peer
 condition|)
-break|break;
+name|sys_peer
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
+comment|/* 	 * Mitigation rules of the game. There are several types of 	 * peers that make a difference here: (1) prefer local peers 	 * (type REFCLK_LOCALCLOCK with FLAG_PREFER) or prefer acts 	 * peers (type REFCLK_NIST_ATOM with FLAG_PREFER), (2) pps peers 	 * (type REFCLK_ATOM_PPS), (3) remaining prefer peers (flag 	 * FLAG_PREFER), (4) the existing system peer, if any, (5) the 	 * head of the survivor list. Note that only one peer can be 	 * declared prefer. The order of preference is in the order 	 * stated. Note that all of these must be at the lowest stratum, 	 * i.e., the stratum of the head of the survivor list. 	 */
+name|osys_peer
+operator|=
+name|sys_peer
+expr_stmt|;
 if|if
 condition|(
-name|i
-operator|>=
-name|nlist
+name|typeprefer
+operator|&&
+operator|(
+name|typeprefer
+operator|==
+name|typelocal
+operator|||
+name|typeprefer
+operator|==
+name|typeacts
+operator|||
+operator|!
+name|typepps
+operator|)
+condition|)
+block|{
+name|sys_peer
+operator|=
+name|typeprefer
+expr_stmt|;
+name|sys_peer
+operator|->
+name|selectdisp
+operator|=
+literal|0
+expr_stmt|;
+name|sys_offset
+operator|=
+name|sys_peer
+operator|->
+name|offset
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|debug
+condition|)
+name|printf
+argument_list|(
+literal|"select: prefer offset %s\n"
+argument_list|,
+name|lfptoa
+argument_list|(
+operator|&
+name|sys_offset
+argument_list|,
+literal|6
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+elseif|else
+if|if
+condition|(
+name|typepps
+condition|)
+block|{
+name|sys_peer
+operator|=
+name|typepps
+expr_stmt|;
+name|sys_peer
+operator|->
+name|selectdisp
+operator|=
+literal|0
+expr_stmt|;
+name|sys_offset
+operator|=
+name|sys_peer
+operator|->
+name|offset
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|debug
+condition|)
+name|printf
+argument_list|(
+literal|"select: pps offset %s\n"
+argument_list|,
+name|lfptoa
+argument_list|(
+operator|&
+name|sys_offset
+argument_list|,
+literal|6
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+else|else
+block|{
+if|if
+condition|(
+operator|!
+name|typesystem
 condition|)
 name|sys_peer
 operator|=
@@ -6878,14 +7295,50 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+name|clock_combine
+argument_list|(
+name|peer_list
+argument_list|,
+name|nlist
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|debug
+condition|)
+name|printf
+argument_list|(
+literal|"select: combine offset %s\n"
+argument_list|,
+name|lfptoa
+argument_list|(
+operator|&
+name|sys_offset
+argument_list|,
+literal|6
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
-comment|/* 	 * If we got a new system peer from all of this, report the event. 	 */
+comment|/* 	 * If we got a new system peer from all of this, report the 	 * event and clamp the system poll interval. 	 */
 if|if
 condition|(
 name|osys_peer
 operator|!=
 name|sys_peer
 condition|)
+block|{
+name|sys_poll
+operator|=
+name|sys_peer
+operator|->
+name|minpoll
+expr_stmt|;
 name|report_event
 argument_list|(
 name|EVNT_PEERSTCHG
@@ -6898,14 +7351,7 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Combine the offsets of the survivors to form a weighted 	 * offset. 	 */
-name|clock_combine
-argument_list|(
-name|peer_list
-argument_list|,
-name|nlist
-argument_list|)
-expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -6962,7 +7408,7 @@ decl_stmt|;
 name|l_fp
 name|diff
 decl_stmt|;
-comment|/* 	 * Sort peers by cluster distance as in the outlyer algorithm. If 	 * the preferred peer is found, use its offset only. 	 */
+comment|/* 	 * Sort the offsets by synch distance. 	 */
 name|k
 operator|=
 literal|0
@@ -6995,51 +7441,6 @@ operator|->
 name|stratum
 condition|)
 continue|continue;
-if|if
-condition|(
-name|peers
-index|[
-name|i
-index|]
-operator|->
-name|flags
-operator|&
-name|FLAG_PREFER
-condition|)
-block|{
-name|sys_offset
-operator|=
-name|peers
-index|[
-name|i
-index|]
-operator|->
-name|offset
-expr_stmt|;
-name|pps_update
-operator|=
-name|current_time
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
-argument_list|(
-literal|"combine: prefer offset %s\n"
-argument_list|,
-name|lfptoa
-argument_list|(
-operator|&
-name|sys_offset
-argument_list|,
-literal|6
-argument_list|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-return|return;
-block|}
 name|d
 operator|=
 name|peers
@@ -7371,30 +7772,6 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|debug
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"combine: offset %s\n"
-argument_list|,
-name|lfptoa
-argument_list|(
-operator|&
-name|sys_offset
-argument_list|,
-literal|6
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -7449,6 +7826,9 @@ literal|0
 decl_stmt|;
 name|l_fp
 name|xmt_ts
+decl_stmt|;
+name|u_fp
+name|precision
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -7585,6 +7965,26 @@ argument_list|(
 name|sys_rootdelay
 argument_list|)
 expr_stmt|;
+name|precision
+operator|=
+name|FP_SECOND
+operator|>>
+operator|-
+operator|(
+name|int
+operator|)
+name|sys_precision
+expr_stmt|;
+if|if
+condition|(
+name|precision
+operator|==
+literal|0
+condition|)
+name|precision
+operator|=
+literal|1
+expr_stmt|;
 name|xpkt
 operator|.
 name|rootdispersion
@@ -7593,17 +7993,7 @@ name|HTONS_FP
 argument_list|(
 name|sys_rootdispersion
 operator|+
-operator|(
-name|FP_SECOND
-operator|>>
-operator|(
-operator|-
-operator|(
-name|int
-operator|)
-name|sys_precision
-operator|)
-operator|)
+name|precision
 operator|+
 name|LFPTOFP
 argument_list|(
@@ -7734,6 +8124,9 @@ name|rbufp
 operator|->
 name|dstadr
 argument_list|,
+operator|-
+literal|9
+argument_list|,
 operator|&
 name|xpkt
 argument_list|,
@@ -7774,6 +8167,9 @@ name|rbufp
 operator|->
 name|dstadr
 argument_list|,
+operator|-
+literal|10
+argument_list|,
 operator|&
 name|xpkt
 argument_list|,
@@ -7785,7 +8181,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Find the precision of the system clock by watching how the current time  * changes as we read it repeatedly.  *  * struct timeval is only good to 1us, which may cause problems as machines  * get faster, but until then the logic goes:  *  * If a machine has precision (i.e. accurate timing info)> 1us, then it will  * probably use the "unused" low order bits as a counter (to force time to be  * a strictly increaing variable), incrementing it each time any process  * requests the time [[ or maybe time will stand still ? ]].  *  * SO: the logic goes:  *  *	IF	the difference from the last time is "small" (< MINSTEP)  *	THEN	this machine is "counting" with the low order bits  *	ELIF	this is not the first time round the loop  *	THEN	this machine *WAS* counting, and has now stepped  *	ELSE	this machine has precision< time to read clock  *  * SO: if it exits on the first loop, assume "full accuracy" (1us)  *     otherwise, take the log2(observered difference, rounded UP)  *  * MINLOOPS> 1 ensures that even if there is a STEP between the initial call  * and the first loop, it doesn't stop too early.  * Making it even greater allows MINSTEP to be reduced, assuming that the  * chance of MINSTEP-1 other processes getting in and calling gettimeofday  * between this processes's calls.  * Reducing MINSTEP may be necessary as this sets an upper bound for the time  * to actually call gettimeofday.  */
+comment|/*  * Find the precision of this particular machine  */
 end_comment
 
 begin_define
@@ -7796,18 +8192,18 @@ value|1000000
 end_define
 
 begin_comment
-comment|/* us's as returned by gettime */
+comment|/* us in a s */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|HUSECS
-value|(1024*1024)
+value|(1<< 20)
 end_define
 
 begin_comment
-comment|/* Hex us's -- used when shifting etc */
+comment|/* approx DUSECS for shifting etc */
 end_comment
 
 begin_define
@@ -7818,37 +8214,33 @@ value|5
 end_define
 
 begin_comment
-comment|/* some systems increment uS on each call */
-end_comment
-
-begin_comment
-comment|/* Don't use "1" as some *other* process may read too*/
-end_comment
-
-begin_comment
-comment|/*We assume no system actually *ANSWERS* in this time*/
+comment|/* minimum clock increment (ys) */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MAXLOOPS
-value|DUSECS
+name|MAXSTEP
+value|20000
 end_define
 
 begin_comment
-comment|/* if no STEP in a complete second, then FAST machine*/
+comment|/* maximum clock increment (us) */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MINLOOPS
-value|2
+value|5
 end_define
 
 begin_comment
-comment|/* ensure at least this many loops */
+comment|/* minimum number of step samples */
+end_comment
+
+begin_comment
+comment|/*  * This routine calculates the differences between successive calls to  * gettimeofday(). If a difference is less than zero, the us field  * has rolled over to the next second, so we add a second in us. If  * the difference is greater than zero and less than MINSTEP, the  * clock has been advanced by a small amount to avoid standing still.  * If the clock has advanced by a greater amount, then a timer interrupt  * has occurred and this amount represents the precision of the clock.  * In order to guard against spurious values, which could occur if we  * happen to hit a fat interrupt, we do this for MINLOOPS times and  * keep the minimum value obtained.  */
 end_comment
 
 begin_function
@@ -7876,12 +8268,17 @@ decl_stmt|;
 name|long
 name|val
 decl_stmt|;
-name|int
-name|minsteps
-init|=
-literal|2
+name|long
+name|usec
 decl_stmt|;
-comment|/* need at least this many steps */
+name|usec
+operator|=
+literal|0
+expr_stmt|;
+name|val
+operator|=
+name|MAXSTEP
+expr_stmt|;
 name|GETTIMEOFDAY
 argument_list|(
 operator|&
@@ -7901,19 +8298,19 @@ for|for
 control|(
 name|i
 operator|=
-operator|-
-operator|--
-name|minsteps
+literal|0
 init|;
 name|i
 operator|<
-name|MAXLOOPS
+name|MINLOOPS
+operator|&&
+name|usec
+operator|<
+name|HUSECS
 condition|;
-name|i
-operator|++
 control|)
 block|{
-name|gettimeofday
+name|GETTIMEOFDAY
 argument_list|(
 operator|&
 name|tp
@@ -7930,6 +8327,12 @@ name|tv_usec
 operator|-
 name|last
 expr_stmt|;
+name|last
+operator|=
+name|tp
+operator|.
+name|tv_usec
+expr_stmt|;
 if|if
 condition|(
 name|diff
@@ -7940,114 +8343,77 @@ name|diff
 operator|+=
 name|DUSECS
 expr_stmt|;
+name|usec
+operator|+=
+name|diff
+expr_stmt|;
 if|if
 condition|(
 name|diff
 operator|>
 name|MINSTEP
 condition|)
+block|{
+name|i
+operator|++
+expr_stmt|;
 if|if
 condition|(
-name|minsteps
-operator|--
-operator|<=
-literal|0
+name|diff
+operator|<
+name|val
 condition|)
-break|break;
-name|last
+name|val
 operator|=
-name|tp
-operator|.
-name|tv_usec
+name|diff
 expr_stmt|;
+block|}
 block|}
 name|syslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"precision calculation given %dus after %d loop%s"
+literal|"precision = %d usec"
 argument_list|,
-name|diff
-argument_list|,
-name|i
-argument_list|,
-operator|(
-name|i
-operator|==
-literal|1
-operator|)
-condition|?
-literal|""
-else|:
-literal|"s"
+name|val
 argument_list|)
 expr_stmt|;
-name|diff
-operator|=
-operator|(
-name|diff
-operator|*
-literal|3
-operator|)
-operator|/
-literal|2
-expr_stmt|;
-comment|/* round it up 1.5 is approx sqrt(2) */
 if|if
 condition|(
-name|i
+name|usec
 operator|>=
-name|MAXLOOPS
+name|HUSECS
 condition|)
+name|val
+operator|=
+name|MINSTEP
+expr_stmt|;
+comment|/* val<= MINSTEP; fast machine */
 name|diff
 operator|=
-literal|1
+name|HUSECS
 expr_stmt|;
-comment|/* No STEP, so FAST machine */
-if|if
-condition|(
-name|i
-operator|==
-literal|0
-condition|)
-name|diff
-operator|=
-literal|1
-expr_stmt|;
-comment|/* time to read clock>= precision */
 for|for
 control|(
 name|i
 operator|=
 literal|0
-operator|,
-name|val
-operator|=
-name|HUSECS
 init|;
-name|val
+name|diff
 operator|>
-literal|0
+name|val
 condition|;
 name|i
 operator|--
-operator|,
-name|val
+control|)
+name|diff
 operator|>>=
 literal|1
-control|)
-if|if
-condition|(
-name|diff
-operator|>=
-name|val
-condition|)
+expr_stmt|;
 return|return
+operator|(
 name|i
-return|;
-return|return
-name|DEFAULT_SYS_PRECISION
-comment|/* Something's BUST, so lie ! */
+operator|)
 return|;
 block|}
 end_function
@@ -8064,7 +8430,7 @@ block|{
 name|l_fp
 name|dummy
 decl_stmt|;
-comment|/* 	 * Fill in the sys_* stuff.  Default is don't listen 	 * to broadcasting, don't authenticate. 	 */
+comment|/* 	 * Fill in the sys_* stuff.  Default is don't listen to 	 * broadcasting, don't authenticate. 	 */
 name|sys_leap
 operator|=
 name|LEAP_NOTINSYNC
@@ -8093,15 +8459,11 @@ name|sys_refid
 operator|=
 literal|0
 expr_stmt|;
+name|L_CLR
+argument_list|(
+operator|&
 name|sys_reftime
-operator|.
-name|l_ui
-operator|=
-name|sys_reftime
-operator|.
-name|l_uf
-operator|=
-literal|0
+argument_list|)
 expr_stmt|;
 name|sys_refskew
 operator|.
@@ -8145,6 +8507,10 @@ name|sys_authenticate
 operator|=
 literal|0
 expr_stmt|;
+name|sys_authdelay
+operator|=
+name|DEFAUTHDELAY
+expr_stmt|;
 name|sys_stattime
 operator|=
 literal|0
@@ -8177,14 +8543,14 @@ name|sys_badauth
 operator|=
 literal|0
 expr_stmt|;
-name|syslog
-argument_list|(
-name|LOG_NOTICE
-argument_list|,
-literal|"default precision is initialized to 2**%d"
-argument_list|,
-name|sys_precision
-argument_list|)
+comment|/* 	 * Default these to enable 	 */
+name|pll_enable
+operator|=
+literal|1
+expr_stmt|;
+name|stats_control
+operator|=
+literal|1
 expr_stmt|;
 block|}
 end_function
@@ -8204,7 +8570,7 @@ parameter_list|)
 name|int
 name|item
 decl_stmt|;
-name|U_LONG
+name|u_long
 name|value
 decl_stmt|;
 block|{
@@ -8214,6 +8580,50 @@ condition|(
 name|item
 condition|)
 block|{
+case|case
+name|PROTO_PLL
+case|:
+comment|/* 		 * Turn on/off pll clock correction 		 */
+name|pll_enable
+operator|=
+operator|(
+name|int
+operator|)
+name|value
+expr_stmt|;
+break|break;
+case|case
+name|PROTO_MONITOR
+case|:
+comment|/* 		 * Turn on/off monitoring 		 */
+if|if
+condition|(
+name|value
+condition|)
+name|mon_start
+argument_list|(
+name|MON_ON
+argument_list|)
+expr_stmt|;
+else|else
+name|mon_stop
+argument_list|(
+name|MON_ON
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|PROTO_FILEGEN
+case|:
+comment|/* 		 * Turn on/off statistics 		 */
+name|stats_control
+operator|=
+operator|(
+name|int
+operator|)
+name|value
+expr_stmt|;
+break|break;
 case|case
 name|PROTO_BROADCLIENT
 case|:
@@ -8240,48 +8650,30 @@ break|break;
 case|case
 name|PROTO_MULTICAST_ADD
 case|:
-comment|/* 		 * Add multicast group address 		 */
-if|if
-condition|(
-operator|!
-name|sys_bclient
-condition|)
-block|{
+comment|/* 		  * Add muliticast group address 		  */
 name|sys_bclient
 operator|=
 literal|1
 expr_stmt|;
-name|io_setbclient
-argument_list|()
-expr_stmt|;
-block|}
-ifdef|#
-directive|ifdef
-name|MCAST
 name|io_multicast_add
 argument_list|(
 name|value
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* MCAST */
 break|break;
 case|case
 name|PROTO_MULTICAST_DEL
 case|:
 comment|/* 		 * Delete multicast group address 		 */
-ifdef|#
-directive|ifdef
-name|MCAST
+name|sys_bclient
+operator|=
+literal|1
+expr_stmt|;
 name|io_multicast_del
 argument_list|(
 name|value
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* MCAST */
 break|break;
 case|case
 name|PROTO_PRECISION
@@ -8298,18 +8690,29 @@ break|break;
 case|case
 name|PROTO_BROADDELAY
 case|:
-comment|/* 		 * Set default broadcast delay 		 */
+comment|/* 		 * Set default broadcast delay (s_fp) 		 */
+if|if
+condition|(
+name|sys_bdelay
+operator|<
+literal|0
+condition|)
 name|sys_bdelay
 operator|=
+operator|-
 operator|(
-operator|(
+operator|-
 name|value
+operator|>>
+literal|16
 operator|)
-operator|+
-literal|0x00000800
-operator|)
-operator|&
-literal|0xfffff000
+expr_stmt|;
+else|else
+name|sys_bdelay
+operator|=
+name|value
+operator|>>
+literal|16
 expr_stmt|;
 break|break;
 case|case
@@ -8327,18 +8730,10 @@ break|break;
 case|case
 name|PROTO_AUTHDELAY
 case|:
-comment|/* 		 * Provide an authentication delay value.  Round it to 		 * the microsecond.  This is crude. 		 */
+comment|/* 		 * Set authentication delay (l_fp fraction) 		 */
 name|sys_authdelay
 operator|=
-operator|(
-operator|(
 name|value
-operator|)
-operator|+
-literal|0x00000800
-operator|)
-operator|&
-literal|0xfffff000
 expr_stmt|;
 break|break;
 default|default:

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* decodenetnum.c,v 3.1 1993/07/06 01:08:11 jbj Exp  * decodenetnum - return a net number (this is crude, but careful)  */
+comment|/*  * decodenetnum - return a net number (this is crude, but careful)  */
 end_comment
 
 begin_include
@@ -46,7 +46,7 @@ name|char
 modifier|*
 name|num
 decl_stmt|;
-name|U_LONG
+name|u_long
 modifier|*
 name|netnum
 decl_stmt|;

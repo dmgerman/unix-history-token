@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* utvtoa.c,v 3.1 1993/07/06 01:08:55 jbj Exp  * utvtoa - return an asciized representation of an unsigned struct timeval  */
+comment|/*  * utvtoa - return an asciized representation of an unsigned struct timeval  */
 end_comment
 
 begin_include
@@ -60,14 +60,14 @@ argument_list|,
 literal|"%lu.%06lu"
 argument_list|,
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 name|tv
 operator|->
 name|tv_sec
 argument_list|,
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 name|tv
 operator|->

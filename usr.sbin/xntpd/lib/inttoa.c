@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* inttoa.c,v 3.1 1993/07/06 01:08:25 jbj Exp  * inttoa - return an asciized signed integer  */
+comment|/*  * inttoa - return an asciized signed integer  */
 end_comment
 
 begin_include
@@ -28,7 +28,7 @@ name|inttoa
 parameter_list|(
 name|ival
 parameter_list|)
-name|LONG
+name|long
 name|ival
 decl_stmt|;
 block|{
@@ -51,6 +51,9 @@ name|buf
 argument_list|,
 literal|"%ld"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ival
 argument_list|)
 expr_stmt|;

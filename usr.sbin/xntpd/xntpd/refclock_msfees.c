@@ -145,7 +145,7 @@ comment|/* 	fudgefactor	= fudgetime1; 	os_delay	= fudgetime2; 	   offset_fudge	=
 end_comment
 
 begin_comment
-comment|/* This should support the use of an EES M201 receiver with RS232  * output (modified to transmit time once per second).  *  * For the format of the message sent by the clock, see the EESM_  * definitions below.  *  * It appears to run free for an integral number of minutes, until the error  * reaches 4mS, at which point it steps at second = 01.  * It appears that sometimes it steps 4mS (say at 7 min interval),  * then the next minute it decides that it was an error, so steps back.  * On the next minute it steps forward again :-(  * This is typically 16.5uS/S then 3975uS at the 4min re-sync,  * or 9.5uS/S then 3990.5uS at a 7min re-sync,  * at which point it may loose the "00" second time stamp.  * I assume that the most accurate time is just AFTER the re-sync.  * Hence remember the last cycle interval,   *  * Can run in any one of:  *  *	PPSCD	PPS signal sets CD which interupts, and grabs the current TOD  *	(sun)		*in the interupt code*, so as to avoid problems with  *			the STREAMS scheduling.  *  * It appears that it goes 16.5 uS slow each second, then every 4 mins it  * generates no "00" second tick, and gains 3975 uS. Ho Hum ! (93/2/7)  */
+comment|/* This should support the use of an EES M201 receiver with RS232  * output (modified to transmit time once per second).  *  * For the format of the message sent by the clock, see the EESM_  * definitions below.  *  * It appears to run free for an integral number of minutes, until the error  * reaches 4mS, at which point it steps at second = 01.  * It appears that sometimes it steps 4mS (say at 7 min interval),  * then the next minute it decides that it was an error, so steps back.  * On the next minute it steps forward again :-(  * This is typically 16.5uS/S then 3975uS at the 4min re-sync,  * or 9.5uS/S then 3990.5uS at a 7min re-sync,  * at which point it may loose the "00" second time stamp.  * I assume that the most accurate time is just AFTER the re-sync.  * Hence remember the last cycle interval,  *  * Can run in any one of:  *  *	PPSCD	PPS signal sets CD which interupts, and grabs the current TOD  *	(sun)		*in the interupt code*, so as to avoid problems with  *			the STREAMS scheduling.  *  * It appears that it goes 16.5 uS slow each second, then every 4 mins it  * generates no "00" second tick, and gains 3975 uS. Ho Hum ! (93/2/7)  */
 end_comment
 
 begin_comment
@@ -1317,6 +1317,13 @@ name|current_time
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|s_char
+name|sys_precision
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1415,181 +1422,6 @@ directive|define
 name|MAXLOOPS
 value|(USECS/9)
 end_define
-
-begin_function
-specifier|static
-name|int
-name|ees_get_precision
-parameter_list|()
-block|{
-name|struct
-name|timeval
-name|tp
-decl_stmt|;
-name|struct
-name|timezone
-name|tzp
-decl_stmt|;
-name|long
-name|last
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
-name|long
-name|diff
-decl_stmt|;
-name|long
-name|val
-decl_stmt|;
-name|gettimeofday
-argument_list|(
-operator|&
-name|tp
-argument_list|,
-operator|&
-name|tzp
-argument_list|)
-expr_stmt|;
-name|last
-operator|=
-name|tp
-operator|.
-name|tv_usec
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-literal|100000
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|gettimeofday
-argument_list|(
-operator|&
-name|tp
-argument_list|,
-operator|&
-name|tzp
-argument_list|)
-expr_stmt|;
-name|diff
-operator|=
-name|tp
-operator|.
-name|tv_usec
-operator|-
-name|last
-expr_stmt|;
-if|if
-condition|(
-name|diff
-operator|<
-literal|0
-condition|)
-name|diff
-operator|+=
-name|USECS
-expr_stmt|;
-if|if
-condition|(
-name|diff
-operator|>
-name|MINSTEP
-condition|)
-break|break;
-name|last
-operator|=
-name|tp
-operator|.
-name|tv_usec
-expr_stmt|;
-block|}
-name|syslog
-argument_list|(
-name|LOG_INFO
-argument_list|,
-literal|"I: ees: precision calculation given %duS after %d loop%s"
-argument_list|,
-name|diff
-argument_list|,
-name|i
-argument_list|,
-operator|(
-name|i
-operator|==
-literal|1
-operator|)
-condition|?
-literal|""
-else|:
-literal|"s"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|i
-operator|==
-literal|0
-condition|)
-return|return
-operator|-
-literal|20
-comment|/* assume 1uS */
-return|;
-if|if
-condition|(
-name|i
-operator|>=
-name|MAXLOOPS
-condition|)
-return|return
-name|EESPRECISION
-comment|/* Lies ! */
-return|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-operator|,
-name|val
-operator|=
-name|USECS
-init|;
-name|val
-operator|>
-literal|0
-condition|;
-name|i
-operator|--
-operator|,
-name|val
-operator|/=
-literal|2
-control|)
-if|if
-condition|(
-name|diff
-operator|>
-name|val
-condition|)
-return|return
-name|i
-return|;
-return|return
-name|EESPRECISION
-comment|/* Lies ! */
-return|;
-block|}
-end_function
 
 begin_function
 specifier|static
@@ -1934,7 +1766,7 @@ name|unit
 parameter_list|,
 name|peer
 parameter_list|)
-name|u_int
+name|int
 name|unit
 decl_stmt|;
 name|struct
@@ -1993,6 +1825,17 @@ modifier|*
 name|emalloc
 parameter_list|()
 function_decl|;
+name|struct
+name|refclockproc
+modifier|*
+name|pp
+decl_stmt|;
+name|pp
+operator|=
+name|peer
+operator|->
+name|procptr
+expr_stmt|;
 if|if
 condition|(
 name|unit
@@ -2614,8 +2457,7 @@ name|peer
 operator|->
 name|precision
 operator|=
-name|ees_get_precision
-argument_list|()
+name|sys_precision
 expr_stmt|;
 name|peer
 operator|->
@@ -2650,14 +2492,14 @@ operator|<=
 literal|1
 condition|)
 block|{
-name|memmove
+name|memcpy
 argument_list|(
 operator|(
 name|char
 operator|*
 operator|)
 operator|&
-name|peer
+name|pp
 operator|->
 name|refid
 argument_list|,
@@ -2682,7 +2524,7 @@ name|char
 operator|*
 operator|)
 operator|&
-name|peer
+name|pp
 operator|->
 name|refid
 operator|)
@@ -2713,6 +2555,31 @@ name|unit
 index|]
 operator|=
 literal|1
+expr_stmt|;
+name|pp
+operator|->
+name|unitptr
+operator|=
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|eesunits
+index|[
+name|unit
+index|]
+expr_stmt|;
+name|pp
+operator|->
+name|clockdesc
+operator|=
+name|EESDESCRIPTION
+expr_stmt|;
+name|pp
+operator|->
+name|nstages
+operator|=
+name|MAXSTAGE
 expr_stmt|;
 name|syslog
 argument_list|(
@@ -2765,9 +2632,16 @@ name|void
 name|msfees_shutdown
 parameter_list|(
 name|unit
+parameter_list|,
+name|peer
 parameter_list|)
 name|int
 name|unit
+decl_stmt|;
+name|struct
+name|peer
+modifier|*
+name|peer
 decl_stmt|;
 block|{
 specifier|register
@@ -4079,6 +3953,10 @@ name|last_step
 expr_stmt|;
 name|memset
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|ppsclockev
 argument_list|,
@@ -4118,7 +3996,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"[%x] CIOGETEV u%d %d (%x %d) gave %d (%d): %08x %08x %d\n"
+literal|"[%x] CIOGETEV u%d %d (%lx %d) gave %d (%d): %08lx %08lx %ld\n"
 argument_list|,
 name|DB_PRINT_EV
 argument_list|,
@@ -4248,7 +4126,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"PPS step: %d too far off %d (%d)\n"
+literal|"PPS step: %d too far off %ld (%d)\n"
 argument_list|,
 name|ppsclockev
 operator|.
@@ -4322,7 +4200,7 @@ name|DB_PRINT_CDT
 condition|)
 name|printf
 argument_list|(
-literal|"[%x] Have %x.%08x and %x.%08x -> %x.%08x @ %s"
+literal|"[%x] Have %lx.%08lx and %lx.%08lx -> %lx.%08lx @ %s"
 argument_list|,
 name|DB_PRINT_CDT
 argument_list|,
@@ -4590,7 +4468,7 @@ name|DB_PRINT_CDTC
 condition|)
 name|printf
 argument_list|(
-literal|"[%x] %08x %08x %d u%d (%d %d)\n"
+literal|"[%x] %08lx %08lx %d u%d (%d %d)\n"
 argument_list|,
 name|DB_PRINT_CDTC
 argument_list|,
@@ -4690,12 +4568,7 @@ condition|)
 block|{
 if|if
 condition|(
-literal|0
-operator|<=
-name|ees
-operator|->
-name|second
-operator|&&
+comment|/*0<= ees->second&& */
 name|ees
 operator|->
 name|second
@@ -5641,7 +5514,7 @@ name|this_uisec
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"MSF%d: d=%3d.%04d@%d :%d:%d:$%d:%d:%d\n"
+literal|"MSF%d: d=%3ld.%04ld@%d :%d:%d:$%d:%d:%d\n"
 argument_list|,
 name|ees
 operator|->
@@ -5832,7 +5705,7 @@ operator|--
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"MSF%d: D=%3d.%04d@%02d :%d%s\n"
+literal|"MSF%d: D=%3ld.%04ld@%02d :%d%s\n"
 argument_list|,
 name|ees
 operator|->
@@ -6031,7 +5904,7 @@ name|DB_PRINT_DELTAS
 condition|)
 name|printf
 argument_list|(
-literal|"MSF%d: %3d/%03d -> d=%11d (%d|%d)\n"
+literal|"MSF%d: %3ld/%03d -> d=%11ld (%ld|%ld)\n"
 argument_list|,
 name|ees
 operator|->
@@ -6500,7 +6373,10 @@ name|nsamples
 decl_stmt|;
 name|int
 name|samplelog
+init|=
+literal|0
 decl_stmt|;
+comment|/* keep "gcc -Wall" happy ! */
 name|int
 name|samplereduce
 init|=
@@ -6685,7 +6561,7 @@ operator|>
 name|samplereduce
 condition|)
 block|{
-comment|/* Trim off the sample which is further away 		 * from the median.  We work this out by doubling 		 * the median, subtracting off the end samples, and 		 * looking at the sign of the answer, using the 	         * identity (c-b)-(b-a) == 2*b-a-c 		 */
+comment|/* Trim off the sample which is further away 		 * from the median.  We work this out by doubling 		 * the median, subtracting off the end samples, and 		 * looking at the sign of the answer, using the 		 * identity (c-b)-(b-a) == 2*b-a-c 		 */
 name|tmp
 operator|=
 name|coffs
@@ -7727,7 +7603,7 @@ name|in
 parameter_list|,
 name|out
 parameter_list|)
-name|u_int
+name|int
 name|unit
 decl_stmt|;
 name|struct
@@ -7898,6 +7774,15 @@ name|ees
 operator|->
 name|peer
 decl_stmt|;
+name|struct
+name|refclockproc
+modifier|*
+name|pp
+init|=
+name|peer
+operator|->
+name|procptr
+decl_stmt|;
 name|peer
 operator|->
 name|stratum
@@ -7924,7 +7809,7 @@ name|char
 operator|*
 operator|)
 operator|&
-name|peer
+name|pp
 operator|->
 name|refid
 argument_list|,
@@ -7949,7 +7834,7 @@ name|char
 operator|*
 operator|)
 operator|&
-name|peer
+name|pp
 operator|->
 name|refid
 operator|)
@@ -7985,7 +7870,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Debug: %x -> %x\n"
+literal|"Debug: %x -> %lx\n"
 argument_list|,
 name|debug
 argument_list|,
@@ -8126,6 +8011,24 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|struct
+name|peer
+modifier|*
+name|peer
+init|=
+name|ees
+operator|->
+name|peer
+decl_stmt|;
+name|struct
+name|refclockproc
+modifier|*
+name|pp
+init|=
+name|peer
+operator|->
+name|procptr
+decl_stmt|;
 name|out
 operator|->
 name|type
@@ -8154,7 +8057,9 @@ name|out
 operator|->
 name|clockdesc
 operator|=
-name|EESDESCRIPTION
+name|pp
+operator|->
+name|clockdesc
 expr_stmt|;
 name|out
 operator|->
@@ -8186,11 +8091,30 @@ index|[
 name|unit
 index|]
 expr_stmt|;
+comment|/*out->fudgeval2= debug*/
+empty_stmt|;
+name|memmove
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
 name|out
 operator|->
 name|fudgeval2
-operator|=
-name|debug
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|pp
+operator|->
+name|refid
+argument_list|,
+literal|4
+argument_list|)
 expr_stmt|;
 name|out
 operator|->

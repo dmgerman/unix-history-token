@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tvtots.c,v 3.1 1993/07/06 01:08:51 jbj Exp  * tvtots - tables for converting from Unix struct timeval's to  *	    NTP time stamp format.  */
+comment|/*  * tvtots - tables for converting from Unix struct timeval's to  *	    NTP time stamp format.  */
 end_comment
 
 begin_include
@@ -20,7 +20,7 @@ comment|/*  * Tables to calculate time stamp fractions from usecs.  The entries 
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|ustotslo
 index|[
 literal|256
@@ -543,7 +543,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|ustotsmid
 index|[
 literal|256
@@ -1066,7 +1066,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|ustotshi
 index|[
 literal|16

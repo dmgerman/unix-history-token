@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* authmd5encrypt.c,v 3.1 1993/07/06 01:07:54 jbj Exp  *  md5crypt - MD5 based authentication routines  */
+comment|/*  *  md5crypt - MD5 based authentication routines  */
 end_comment
 
 begin_include
@@ -29,7 +29,7 @@ end_include
 
 begin_decl_stmt
 specifier|extern
-name|U_LONG
+name|u_long
 name|cache_keyid
 decl_stmt|;
 end_decl_stmt
@@ -71,13 +71,6 @@ begin_decl_stmt
 specifier|extern
 name|U_LONG
 name|authkeyuncached
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|U_LONG
-name|authdecryptok
 decl_stmt|;
 end_decl_stmt
 
@@ -130,7 +123,7 @@ name|pkt
 parameter_list|,
 name|length
 parameter_list|)
-name|U_LONG
+name|u_long
 name|keyno
 decl_stmt|;
 name|U_LONG

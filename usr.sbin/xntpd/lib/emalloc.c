@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* emalloc.c,v 3.1 1993/07/06 01:08:15 jbj Exp  * emalloc - return new memory obtained from the system.  Belch if none.  */
+comment|/*  * emalloc - return new memory obtained from the system.  Belch if none.  */
 end_comment
 
 begin_include
@@ -34,8 +34,7 @@ name|emalloc
 parameter_list|(
 name|size
 parameter_list|)
-name|unsigned
-name|int
+name|u_int
 name|size
 decl_stmt|;
 block|{

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* keyparity.c,v 3.1 1993/07/06 01:04:57 jbj Exp  * keyparity - add parity bits to key and/or change an ascii key to binary  */
+comment|/*  * keyparity - add parity bits to key and/or change an ascii key to binary  */
 end_comment
 
 begin_include
@@ -137,7 +137,7 @@ name|parity
 name|P
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|*
 operator|)
 argument_list|)
@@ -156,7 +156,7 @@ operator|,
 name|char
 operator|*
 operator|,
-name|U_LONG
+name|u_long
 operator|*
 operator|)
 argument_list|)
@@ -170,7 +170,7 @@ name|output
 name|P
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|*
 operator|,
 name|int
@@ -211,7 +211,7 @@ decl_stmt|;
 name|int
 name|keytype
 decl_stmt|;
-name|U_LONG
+name|u_long
 name|key
 index|[
 literal|2
@@ -550,12 +550,12 @@ name|parity
 parameter_list|(
 name|key
 parameter_list|)
-name|U_LONG
+name|u_long
 modifier|*
 name|key
 decl_stmt|;
 block|{
-name|U_LONG
+name|u_long
 name|mask
 decl_stmt|;
 name|int
@@ -745,7 +745,7 @@ name|char
 modifier|*
 name|str
 decl_stmt|;
-name|U_LONG
+name|u_long
 modifier|*
 name|key
 decl_stmt|;
@@ -910,7 +910,7 @@ literal|3
 index|]
 operator||=
 call|(
-name|U_LONG
+name|u_long
 call|)
 argument_list|(
 name|xdigit
@@ -1108,7 +1108,7 @@ name|key
 parameter_list|,
 name|ntpformat
 parameter_list|)
-name|U_LONG
+name|u_long
 modifier|*
 name|key
 decl_stmt|;

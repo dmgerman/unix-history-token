@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* atolfp.c,v 3.1 1993/07/06 01:07:40 jbj Exp  * atolfp - convert an ascii string to an l_fp number  */
+comment|/*  * atolfp - convert an ascii string to an l_fp number  */
 end_comment
 
 begin_include
@@ -33,7 +33,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|U_LONG
+name|u_long
 name|ten_to_the_n
 index|[
 literal|10
@@ -88,11 +88,11 @@ modifier|*
 name|cp
 decl_stmt|;
 specifier|register
-name|U_LONG
+name|u_long
 name|dec_i
 decl_stmt|;
 specifier|register
-name|U_LONG
+name|u_long
 name|dec_f
 decl_stmt|;
 name|char
@@ -353,15 +353,15 @@ literal|0
 condition|)
 block|{
 specifier|register
-name|U_LONG
+name|u_long
 name|tmp
 decl_stmt|;
 specifier|register
-name|U_LONG
+name|u_long
 name|bit
 decl_stmt|;
 specifier|register
-name|U_LONG
+name|u_long
 name|ten_fact
 decl_stmt|;
 name|ten_fact

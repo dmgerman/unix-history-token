@@ -21,7 +21,7 @@ operator|)
 end_if
 
 begin_comment
-comment|/*  * /src/NTP/REPOSITORY/v3/parse/parse.c,v 3.23 1994/03/25 13:09:02 kardel Exp  *    * parse.c,v 3.23 1994/03/25 13:09:02 kardel Exp  *  * Parser module for reference clock  *  * PARSEKERNEL define switches between two personalities of the module  * if PARSEKERNEL is defined this module can be used with dcf77sync.c as  * a PARSEKERNEL kernel module. In this case the time stamps will be  * a struct timeval.  * when PARSEKERNEL is not defined NTP time stamps will be used.  *  * Copyright (c) 1992,1993,1994  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
+comment|/*  * /src/NTP/REPOSITORY/v3/parse/parse.c,v 3.27 1994/06/01 08:18:33 kardel Exp  *    * parse.c,v 3.27 1994/06/01 08:18:33 kardel Exp  *  * Parser module for reference clock  *  * PARSEKERNEL define switches between two personalities of the module  * if PARSEKERNEL is defined this module can be used with dcf77sync.c as  * a PARSEKERNEL kernel module. In this case the time stamps will be  * a struct timeval.  * when PARSEKERNEL is not defined NTP time stamps will be used.  *  * Copyright (c) 1992,1993,1994  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
 end_comment
 
 begin_if
@@ -251,8 +251,7 @@ end_decl_stmt
 
 begin_function_decl
 specifier|static
-name|unsigned
-name|LONG
+name|u_long
 name|timepacket
 parameter_list|()
 function_decl|;
@@ -468,17 +467,17 @@ block|}
 else|#
 directive|else
 specifier|extern
-name|LONG
+name|long
 name|tstouslo
 index|[]
 decl_stmt|;
 specifier|extern
-name|LONG
+name|long
 name|tstousmid
 index|[]
 decl_stmt|;
 specifier|extern
-name|LONG
+name|long
 name|tstoushi
 index|[]
 decl_stmt|;
@@ -563,7 +562,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * setup_bitmaps  */
+comment|/*  * setup_bitmaps  * WARNING: NOT TO BE CALLED CONCURRENTLY WITH  *          parse_ioread, parse_ioend, parse_ioinit  */
 end_comment
 
 begin_function
@@ -611,9 +610,12 @@ name|fmt
 decl_stmt|;
 specifier|register
 name|unsigned
+name|short
 name|index
 decl_stmt|,
 name|mask
+decl_stmt|,
+name|plen
 decl_stmt|;
 if|if
 condition|(
@@ -691,6 +693,10 @@ name|parse_syncsym
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|plen
+operator|=
+literal|0
+expr_stmt|;
 name|parseio
 operator|->
 name|parse_syncflags
@@ -754,7 +760,27 @@ operator|&
 name|CVT_FIXEDONLY
 operator|)
 condition|)
+block|{
+if|if
+condition|(
+name|parseio
+operator|->
+name|parse_dsize
+operator|<
+name|fmt
+operator|->
+name|length
+condition|)
+name|parseio
+operator|->
+name|parse_dsize
+operator|=
+name|fmt
+operator|->
+name|length
+expr_stmt|;
 continue|continue;
+block|}
 if|if
 condition|(
 name|fmt
@@ -769,8 +795,8 @@ operator|=
 name|fmt
 operator|->
 name|startsym
-operator|/
-literal|8
+operator|>>
+literal|3
 expr_stmt|;
 name|mask
 operator|=
@@ -780,8 +806,8 @@ operator|(
 name|fmt
 operator|->
 name|startsym
-operator|%
-literal|8
+operator|&
+literal|0x7
 operator|)
 expr_stmt|;
 if|if
@@ -854,8 +880,8 @@ operator|=
 name|fmt
 operator|->
 name|endsym
-operator|/
-literal|8
+operator|>>
+literal|3
 expr_stmt|;
 name|mask
 operator|=
@@ -865,8 +891,8 @@ operator|(
 name|fmt
 operator|->
 name|endsym
-operator|%
-literal|8
+operator|&
+literal|0x7
 operator|)
 expr_stmt|;
 if|if
@@ -941,8 +967,8 @@ index|[
 name|fmt
 operator|->
 name|syncsym
-operator|/
-literal|8
+operator|>>
+literal|3
 index|]
 operator||=
 operator|(
@@ -952,8 +978,8 @@ operator|(
 name|fmt
 operator|->
 name|syncsym
-operator|%
-literal|8
+operator|&
+literal|0x7
 operator|)
 operator|)
 expr_stmt|;
@@ -985,11 +1011,23 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
+operator|(
 name|fmt
 operator|->
 name|flags
 operator|&
+operator|(
 name|SYNC_TIMEOUT
+operator||
+name|CVT_FIXEDONLY
+operator|)
+operator|)
+operator|==
+operator|(
+name|SYNC_TIMEOUT
+operator||
+name|CVT_FIXEDONLY
+operator|)
 operator|)
 operator|&&
 operator|(
@@ -1056,6 +1094,41 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|parseio
+operator|->
+name|parse_pdata
+condition|)
+block|{
+name|FREE
+argument_list|(
+name|parseio
+operator|->
+name|parse_pdata
+argument_list|,
+name|parseio
+operator|->
+name|parse_plen
+argument_list|)
+expr_stmt|;
+name|parseio
+operator|->
+name|parse_plen
+operator|=
+literal|0
+expr_stmt|;
+name|parseio
+operator|->
+name|parse_pdata
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+literal|0
+expr_stmt|;
+block|}
+if|if
+condition|(
 operator|!
 name|f
 operator|&&
@@ -1097,6 +1170,111 @@ return|return
 literal|0
 return|;
 block|}
+if|if
+condition|(
+operator|(
+name|high
+operator|-
+name|low
+operator|==
+literal|1
+operator|)
+operator|&&
+operator|(
+name|clockformats
+index|[
+name|low
+index|]
+operator|->
+name|flags
+operator|&
+name|CVT_FIXEDONLY
+operator|)
+operator|&&
+operator|(
+name|clockformats
+index|[
+name|low
+index|]
+operator|->
+name|plen
+operator|)
+condition|)
+block|{
+name|parseio
+operator|->
+name|parse_plen
+operator|=
+name|clockformats
+index|[
+name|low
+index|]
+operator|->
+name|plen
+expr_stmt|;
+name|parseio
+operator|->
+name|parse_pdata
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|MALLOC
+argument_list|(
+name|parseio
+operator|->
+name|parse_plen
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|parseio
+operator|->
+name|parse_pdata
+condition|)
+block|{
+comment|/* 	   * no memory 	   */
+ifdef|#
+directive|ifdef
+name|PARSEKERNEL
+name|printf
+argument_list|(
+literal|"parse: setup_bitmaps: failed: no memory for private data\n"
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"parse: setup_bitmaps: failed: no memory for private data\n"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+return|return
+literal|0
+return|;
+block|}
+name|bzero
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|parseio
+operator|->
+name|parse_pdata
+argument_list|,
+name|parseio
+operator|->
+name|parse_plen
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 literal|1
 return|;
@@ -1127,6 +1305,22 @@ operator|(
 literal|"parse_iostart\n"
 operator|)
 argument_list|)
+expr_stmt|;
+name|parseio
+operator|->
+name|parse_plen
+operator|=
+literal|0
+expr_stmt|;
+name|parseio
+operator|->
+name|parse_pdata
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -1267,6 +1461,23 @@ if|if
 condition|(
 name|parseio
 operator|->
+name|parse_pdata
+condition|)
+name|FREE
+argument_list|(
+name|parseio
+operator|->
+name|parse_pdata
+argument_list|,
+name|parseio
+operator|->
+name|parse_plen
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|parseio
+operator|->
 name|parse_data
 condition|)
 name|FREE
@@ -1336,6 +1547,45 @@ name|index
 decl_stmt|,
 name|mask
 decl_stmt|;
+comment|/*    * within STREAMS CSx (x< 8) chars still have the upper bits set    * so we normalize the characters by masking unecessary bits off.    */
+switch|switch
+condition|(
+name|parseio
+operator|->
+name|parse_ioflags
+operator|&
+name|PARSE_IO_CSIZE
+condition|)
+block|{
+case|case
+name|PARSE_IO_CS5
+case|:
+name|ch
+operator|&=
+literal|0x1F
+expr_stmt|;
+break|break;
+case|case
+name|PARSE_IO_CS6
+case|:
+name|ch
+operator|&=
+literal|0x3F
+expr_stmt|;
+break|break;
+case|case
+name|PARSE_IO_CS7
+case|:
+name|ch
+operator|&=
+literal|0x7F
+expr_stmt|;
+break|break;
+case|case
+name|PARSE_IO_CS8
+case|:
+break|break;
+block|}
 name|parseprintf
 argument_list|(
 name|DD_PARSE
@@ -1390,6 +1640,54 @@ return|return
 name|CVT_NONE
 return|;
 block|}
+if|if
+condition|(
+name|clockformats
+index|[
+name|parseio
+operator|->
+name|parse_lformat
+index|]
+operator|->
+name|input
+condition|)
+block|{
+if|if
+condition|(
+name|clockformats
+index|[
+name|parseio
+operator|->
+name|parse_lformat
+index|]
+operator|->
+name|input
+argument_list|(
+name|parseio
+argument_list|,
+name|ch
+argument_list|,
+name|ctime
+argument_list|)
+condition|)
+name|updated
+operator|=
+name|timepacket
+argument_list|(
+name|parseio
+argument_list|)
+expr_stmt|;
+comment|/* got a datagram - process */
+name|low
+operator|=
+name|high
+operator|=
+literal|0
+expr_stmt|;
+comment|/* all done - just post processing */
+block|}
+else|else
+block|{
 name|low
 operator|=
 name|parseio
@@ -1402,6 +1700,8 @@ name|low
 operator|+
 literal|1
 expr_stmt|;
+comment|/* scan just one format */
+block|}
 block|}
 else|else
 block|{
@@ -1413,51 +1713,20 @@ name|high
 operator|=
 name|nformats
 expr_stmt|;
+comment|/* scan all non fixed formats */
 block|}
-comment|/*    * within STREAMS CSx (x< 8) chars still have the upper bits set    * so we normalize the characters by masking unecessary bits off.    */
-switch|switch
+if|if
 condition|(
-name|parseio
-operator|->
-name|parse_ioflags
-operator|&
-name|PARSE_IO_CSIZE
+name|low
+operator|!=
+name|high
 condition|)
 block|{
-case|case
-name|PARSE_IO_CS5
-case|:
-name|ch
-operator|&=
-literal|0x1F
-expr_stmt|;
-break|break;
-case|case
-name|PARSE_IO_CS6
-case|:
-name|ch
-operator|&=
-literal|0x3F
-expr_stmt|;
-break|break;
-case|case
-name|PARSE_IO_CS7
-case|:
-name|ch
-operator|&=
-literal|0x7F
-expr_stmt|;
-break|break;
-case|case
-name|PARSE_IO_CS8
-case|:
-break|break;
-block|}
 name|index
 operator|=
 name|ch
-operator|/
-literal|8
+operator|>>
+literal|3
 expr_stmt|;
 name|mask
 operator|=
@@ -1465,8 +1734,8 @@ literal|1
 operator|<<
 operator|(
 name|ch
-operator|%
-literal|8
+operator|&
+literal|0x7
 operator|)
 expr_stmt|;
 if|if
@@ -1501,7 +1770,7 @@ name|unsigned
 name|short
 name|i
 decl_stmt|;
-comment|/*        * got a sync event - call sync routine        */
+comment|/* 	   * got a sync event - call sync routine 	   */
 for|for
 control|(
 name|i
@@ -1631,7 +1900,7 @@ name|unsigned
 name|short
 name|i
 decl_stmt|;
-comment|/*        * packet start - re-fill buffer        */
+comment|/* 	   * packet start - re-fill buffer 	   */
 if|if
 condition|(
 name|parseio
@@ -1639,7 +1908,7 @@ operator|->
 name|parse_index
 condition|)
 block|{
-comment|/* 	   * filled buffer - thus not end character found 	   * do processing now 	   */
+comment|/* 	       * filled buffer - thus not end character found 	       * do processing now 	       */
 name|parseio
 operator|->
 name|parse_data
@@ -1703,7 +1972,7 @@ operator|*
 name|ctime
 expr_stmt|;
 block|}
-comment|/*        * could be a sync event - call sync routine if needed        */
+comment|/* 	   * could be a sync event - call sync routine if needed 	   */
 if|if
 condition|(
 name|parseio
@@ -1840,7 +2109,7 @@ operator|->
 name|parse_dsize
 condition|)
 block|{
-comment|/* 	   * collect into buffer 	   */
+comment|/* 	       * collect into buffer 	       */
 name|parseprintf
 argument_list|(
 name|DD_PARSE
@@ -1893,7 +2162,7 @@ name|parse_dsize
 operator|)
 condition|)
 block|{
-comment|/* 	   * packet end - process buffer 	   */
+comment|/* 	       * packet end - process buffer 	       */
 if|if
 condition|(
 name|parseio
@@ -2039,6 +2308,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+block|}
 if|if
 condition|(
 operator|(
@@ -2125,6 +2395,7 @@ operator|)
 operator|!=
 name|CVT_NONE
 condition|)
+block|{
 name|parseprintf
 argument_list|(
 name|DD_PARSE
@@ -2136,6 +2407,7 @@ name|updated
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 name|parseio
@@ -2343,6 +2615,15 @@ name|parseio
 decl_stmt|;
 block|{
 comment|/*    * we need to clean up certain flags for the next round    */
+name|parseprintf
+argument_list|(
+name|DD_PARSE
+argument_list|,
+operator|(
+literal|"parse_iodone: DONE\n"
+operator|)
+argument_list|)
+expr_stmt|;
 name|parseio
 operator|->
 name|parse_dtime
@@ -2387,8 +2668,7 @@ modifier|*
 name|clock
 decl_stmt|;
 specifier|register
-name|unsigned
-name|LONG
+name|u_long
 modifier|*
 name|cvtrtc
 decl_stmt|;
@@ -2844,7 +3124,7 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
-name|LONG
+name|long
 modifier|*
 name|zp
 decl_stmt|;
@@ -3096,8 +3376,7 @@ block|}
 end_function
 
 begin_function
-name|unsigned
-name|LONG
+name|u_long
 name|updatetimeinfo
 parameter_list|(
 name|parseio
@@ -3118,25 +3397,23 @@ name|time_t
 name|t
 decl_stmt|;
 specifier|register
-name|unsigned
-name|LONG
+name|u_long
 name|usec
 decl_stmt|;
 specifier|register
-name|unsigned
-name|LONG
+name|u_long
 name|flags
 decl_stmt|;
 block|{
 specifier|register
-name|LONG
+name|long
 name|usecoff
 decl_stmt|;
 specifier|register
-name|LONG
+name|long
 name|mean
 decl_stmt|;
-name|LONG
+name|long
 name|delta
 index|[
 name|PARSE_DELTA
@@ -3178,17 +3455,17 @@ expr_stmt|;
 else|#
 directive|else
 specifier|extern
-name|LONG
+name|long
 name|tstouslo
 index|[]
 decl_stmt|;
 specifier|extern
-name|LONG
+name|long
 name|tstousmid
 index|[]
 decl_stmt|;
 specifier|extern
-name|LONG
+name|long
 name|tstoushi
 index|[]
 decl_stmt|;
@@ -3346,7 +3623,7 @@ index|]
 condition|)
 block|{
 specifier|register
-name|LONG
+name|long
 name|tmp
 decl_stmt|;
 name|tmp
@@ -3396,7 +3673,7 @@ literal|8
 condition|)
 block|{
 specifier|register
-name|LONG
+name|long
 name|top
 init|=
 name|delta
@@ -3407,7 +3684,7 @@ literal|1
 index|]
 decl_stmt|;
 specifier|register
-name|LONG
+name|long
 name|mid
 init|=
 name|delta
@@ -3422,7 +3699,7 @@ literal|1
 index|]
 decl_stmt|;
 specifier|register
-name|LONG
+name|long
 name|low
 init|=
 name|delta
@@ -3562,18 +3839,33 @@ argument_list|,
 operator|(
 literal|"parse: updatetimeinfo: T=%x+%d usec, useccoff=%d, usecerror=%d, usecdisp=%d\n"
 operator|,
+operator|(
+name|int
+operator|)
 name|t
 operator|,
+operator|(
+name|int
+operator|)
 name|usec
 operator|,
+operator|(
+name|int
+operator|)
 name|usecoff
 operator|,
+operator|(
+name|int
+operator|)
 name|parseio
 operator|->
 name|parse_dtime
 operator|.
 name|parse_usecerror
 operator|,
+operator|(
+name|int
+operator|)
 name|parseio
 operator|->
 name|parse_dtime
@@ -3676,8 +3968,7 @@ modifier|*
 name|format
 decl_stmt|;
 specifier|register
-name|unsigned
-name|LONG
+name|u_long
 name|why
 decl_stmt|;
 block|{
@@ -3702,8 +3993,7 @@ comment|/*ARGSUSED*/
 end_comment
 
 begin_function
-name|unsigned
-name|LONG
+name|u_long
 name|pps_simple
 parameter_list|(
 name|parseio
@@ -3758,8 +4048,7 @@ end_comment
 
 begin_function
 specifier|static
-name|unsigned
-name|LONG
+name|u_long
 name|timepacket
 parameter_list|(
 name|parseio
@@ -3784,21 +4073,28 @@ name|time_t
 name|t
 decl_stmt|;
 specifier|register
-name|unsigned
-name|LONG
+name|u_long
 name|cvtsum
 init|=
 literal|0
 decl_stmt|;
 comment|/* accumulated CVT_FAIL errors */
-name|unsigned
-name|LONG
+name|u_long
 name|cvtrtc
 decl_stmt|;
 comment|/* current conversion result */
 name|clocktime_t
 name|clock
 decl_stmt|;
+name|bzero
+argument_list|(
+operator|&
+name|clock
+argument_list|,
+sizeof|sizeof
+name|clock
+argument_list|)
+expr_stmt|;
 name|format
 operator|=
 name|parseio
@@ -3818,12 +4114,6 @@ operator|&
 name|PARSE_FIXED_FMT
 condition|)
 block|{
-name|clock
-operator|.
-name|utctime
-operator|=
-literal|0
-expr_stmt|;
 switch|switch
 condition|(
 operator|(
@@ -3860,6 +4150,10 @@ name|data
 argument_list|,
 operator|&
 name|clock
+argument_list|,
+name|parseio
+operator|->
+name|parse_pdata
 argument_list|)
 else|:
 name|CVT_NONE
@@ -3940,6 +4234,14 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+case|case
+name|CVT_SKIP
+case|:
+name|k
+operator|=
+literal|2
+expr_stmt|;
+break|break;
 default|default:
 comment|/* shouldn't happen */
 ifdef|#
@@ -3993,12 +4295,6 @@ comment|/* very careful ... */
 block|{
 do|do
 block|{
-name|clock
-operator|.
-name|utctime
-operator|=
-literal|0
-expr_stmt|;
 switch|switch
 condition|(
 operator|(
@@ -4049,6 +4345,10 @@ name|data
 argument_list|,
 operator|&
 name|clock
+argument_list|,
+name|parseio
+operator|->
+name|parse_pdata
 argument_list|)
 else|:
 name|CVT_NONE
@@ -4227,6 +4527,15 @@ operator||
 name|cvtsum
 return|;
 block|}
+if|if
+condition|(
+name|k
+operator|==
+literal|2
+condition|)
+return|return
+name|CVT_OK
+return|;
 if|if
 condition|(
 operator|(
@@ -4882,7 +5191,7 @@ comment|/* defined(REFCLOCK)&& defined(PARSE) */
 end_comment
 
 begin_comment
-comment|/*  * History:  *  * parse.c,v  * Revision 3.23  1994/03/25  13:09:02  kardel  * considering FIXEDONLY entries only in FIXEDONLY mode  *  * Revision 3.22  1994/02/25  12:34:49  kardel  * allow for converter generated utc times  *  * Revision 3.21  1994/02/02  17:45:30  kardel  * rcs ids fixed  *  * Revision 3.19  1994/01/25  19:05:20  kardel  * 94/01/23 reconcilation  *  * Revision 3.18  1994/01/23  17:21:59  kardel  * 1994 reconcilation  *  * Revision 3.17  1993/11/11  11:20:29  kardel  * declaration fixes  *  * Revision 3.16  1993/11/06  22:26:07  duwe  * Linux cleanup after config change  *  * Revision 3.15  1993/11/04  11:14:18  kardel  * ansi/K&R traps  *  * Revision 3.14  1993/11/04  10:03:28  kardel  * disarmed ansiism  *  * Revision 3.13  1993/11/01  20:14:13  kardel  * useless comparision removed  *  * Revision 3.12  1993/11/01  20:00:22  kardel  * parse Solaris support (initial version)  *  * Revision 3.11  1993/10/30  09:41:25  kardel  * minor optimizations  *  * Revision 3.10  1993/10/22  14:27:51  kardel  * Oct. 22nd 1993 reconcilation  *  * Revision 3.9  1993/10/05  23:15:09  kardel  * more STREAM protection  *  * Revision 3.8  1993/09/27  21:08:00  kardel  * utcoffset now in seconds  *  * Revision 3.7  1993/09/26  23:40:16  kardel  * new parse driver logic  *  * Revision 3.6  1993/09/07  10:12:46  kardel  * September 7th reconcilation - 3.2 (alpha)  *  * Revision 3.5  1993/09/01  21:44:48  kardel  * conditional cleanup  *  * Revision 3.4  1993/08/27  00:29:39  kardel  * compilation cleanup  *  * Revision 3.3  1993/08/24  22:27:13  kardel  * cleaned up AUTOCONF DCF77 mess 8-) - wasn't too bad  *  * Revision 3.2  1993/07/09  11:37:11  kardel  * Initial restructured version + GPS support  *  * Revision 3.1  1993/07/06  10:00:08  kardel  * DCF77 driver goes generic...  *  */
+comment|/*  * History:  *  * parse.c,v  * Revision 3.27  1994/06/01  08:18:33  kardel  * more debug info  *  * Revision 3.26  1994/05/30  10:20:07  kardel  * LONG cleanup  *  * Revision 3.25  1994/05/12  12:49:12  kardel  * printf fmt/arg cleanup  *  * Revision 3.24  1994/03/27  15:01:36  kardel  * reorder include file to cope with PTX  *  * Revision 3.23  1994/03/25  13:09:02  kardel  * considering FIXEDONLY entries only in FIXEDONLY mode  *  * Revision 3.22  1994/02/25  12:34:49  kardel  * allow for converter generated utc times  *  * Revision 3.21  1994/02/02  17:45:30  kardel  * rcs ids fixed  *  * Revision 3.19  1994/01/25  19:05:20  kardel  * 94/01/23 reconcilation  *  * Revision 3.18  1994/01/23  17:21:59  kardel  * 1994 reconcilation  *  * Revision 3.17  1993/11/11  11:20:29  kardel  * declaration fixes  *  * Revision 3.16  1993/11/06  22:26:07  duwe  * Linux cleanup after config change  *  * Revision 3.15  1993/11/04  11:14:18  kardel  * ansi/K&R traps  *  * Revision 3.14  1993/11/04  10:03:28  kardel  * disarmed ansiism  *  * Revision 3.13  1993/11/01  20:14:13  kardel  * useless comparision removed  *  * Revision 3.12  1993/11/01  20:00:22  kardel  * parse Solaris support (initial version)  *  * Revision 3.11  1993/10/30  09:41:25  kardel  * minor optimizations  *  * Revision 3.10  1993/10/22  14:27:51  kardel  * Oct. 22nd 1993 reconcilation  *  * Revision 3.9  1993/10/05  23:15:09  kardel  * more STREAM protection  *  * Revision 3.8  1993/09/27  21:08:00  kardel  * utcoffset now in seconds  *  * Revision 3.7  1993/09/26  23:40:16  kardel  * new parse driver logic  *  * Revision 3.6  1993/09/07  10:12:46  kardel  * September 7th reconcilation - 3.2 (alpha)  *  * Revision 3.5  1993/09/01  21:44:48  kardel  * conditional cleanup  *  * Revision 3.4  1993/08/27  00:29:39  kardel  * compilation cleanup  *  * Revision 3.3  1993/08/24  22:27:13  kardel  * cleaned up AUTOCONF DCF77 mess 8-) - wasn't too bad  *  * Revision 3.2  1993/07/09  11:37:11  kardel  * Initial restructured version + GPS support  *  * Revision 3.1  1993/07/06  10:00:08  kardel  * DCF77 driver goes generic...  *  */
 end_comment
 
 end_unit

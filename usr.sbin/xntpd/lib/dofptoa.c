@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* dofptoa.c,v 3.1 1993/07/06 01:08:12 jbj Exp  * dofptoa - do the grunge work to convert an fp number to ascii  */
+comment|/*  * dofptoa - do the grunge work to convert an fp number to ascii  */
 end_comment
 
 begin_include
@@ -68,7 +68,7 @@ modifier|*
 name|cpend
 decl_stmt|;
 specifier|register
-name|U_LONG
+name|u_long
 name|val
 decl_stmt|;
 specifier|register

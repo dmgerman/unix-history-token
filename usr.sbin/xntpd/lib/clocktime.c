@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* clocktime.c,v 3.1 1993/07/06 01:08:07 jbj Exp  * clocktime - compute the NTP date from a day of year, hour, minute  *	       and second.  */
+comment|/*  * clocktime - compute the NTP date from a day of year, hour, minute  *	       and second.  */
 end_comment
 
 begin_include
@@ -116,10 +116,10 @@ decl_stmt|;
 name|int
 name|tzoff
 decl_stmt|;
-name|U_LONG
+name|u_long
 name|rec_ui
 decl_stmt|;
-name|U_LONG
+name|u_long
 modifier|*
 name|yearstart
 decl_stmt|;
@@ -129,22 +129,22 @@ name|ts_ui
 decl_stmt|;
 block|{
 specifier|register
-name|LONG
+name|long
 name|tmp
 decl_stmt|;
 specifier|register
-name|U_LONG
+name|u_long
 name|date
 decl_stmt|;
 specifier|register
-name|U_LONG
+name|u_long
 name|yst
 decl_stmt|;
 comment|/* 	 * Compute the offset into the year in seconds.  Note that 	 * this could come out to be a negative number. 	 */
 name|tmp
 operator|=
 call|(
-name|LONG
+name|long
 call|)
 argument_list|(
 name|MULBY24
@@ -169,7 +169,7 @@ name|tmp
 argument_list|)
 operator|+
 operator|(
-name|LONG
+name|long
 operator|)
 name|minute
 expr_stmt|;
@@ -181,7 +181,7 @@ name|tmp
 argument_list|)
 operator|+
 operator|(
-name|LONG
+name|long
 operator|)
 name|second
 expr_stmt|;
@@ -215,13 +215,13 @@ comment|/* 	 * Now the fun begins.  We demand that the received clock time 	 * b
 name|date
 operator|=
 call|(
-name|U_LONG
+name|u_long
 call|)
 argument_list|(
 name|tmp
 operator|+
 operator|(
-name|LONG
+name|long
 operator|)
 name|yst
 argument_list|)
@@ -273,11 +273,11 @@ block|{
 name|date
 operator|=
 call|(
-name|U_LONG
+name|u_long
 call|)
 argument_list|(
 operator|(
-name|LONG
+name|long
 operator|)
 name|yst
 operator|+
@@ -350,13 +350,13 @@ block|{
 name|date
 operator|=
 call|(
-name|U_LONG
+name|u_long
 call|)
 argument_list|(
 name|tmp
 operator|+
 operator|(
-name|LONG
+name|long
 operator|)
 name|yst
 argument_list|)
@@ -417,11 +417,11 @@ block|{
 name|date
 operator|=
 call|(
-name|U_LONG
+name|u_long
 call|)
 argument_list|(
 operator|(
-name|LONG
+name|long
 operator|)
 name|yst
 operator|+

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ntpq.c,v 3.1 1993/07/06 01:09:29 jbj Exp  * ntpq - query an NTP server using mode 6 commands  */
+comment|/*  * ntpq - query an NTP server using mode 6 commands  */
 end_comment
 
 begin_include
@@ -115,7 +115,7 @@ comment|/*  * Keyid used for authenticated requests.  Obtained on the fly.  */
 end_comment
 
 begin_decl_stmt
-name|U_LONG
+name|u_long
 name|info_auth_keyid
 init|=
 operator|-
@@ -438,7 +438,7 @@ comment|/* 3 */
 block|{
 name|CS_ROOTDELAY
 block|,
-name|FU
+name|FS
 block|,
 literal|"rootdelay"
 block|}
@@ -510,9 +510,9 @@ comment|/* 11 */
 block|{
 name|CS_COMPLIANCE
 block|,
-name|UI
+name|FU
 block|,
-literal|"compliance"
+literal|"error"
 block|}
 block|,
 comment|/* 12 */
@@ -925,7 +925,7 @@ literal|"disp"
 block|}
 block|,
 comment|/* 35 */
-comment|/* 	 * These are duplicate entires so that we can 	 * process deviant version of the xntp protocal. 	 */
+comment|/* 	 * These are duplicate entries so that we can 	 * process deviant version of the xntp protocal. 	 */
 block|{
 name|CP_SRCADR
 block|,
@@ -1068,18 +1068,18 @@ comment|/* 8 */
 block|{
 name|CC_FUDGEVAL1
 block|,
-name|IN
+name|UI
 block|,
-literal|"fudgeval1"
+literal|"stratum"
 block|}
 block|,
 comment|/* 9 */
 block|{
 name|CC_FUDGEVAL2
 block|,
-name|IN
+name|RF
 block|,
-literal|"fudgeval2"
+literal|"refid"
 block|}
 block|,
 comment|/* 10 */
@@ -1759,38 +1759,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|UNUSED
-end_ifdef
-
-begin_decl_stmt
-specifier|static
-name|int
-name|decodereach
-name|P
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|,
-name|U_LONG
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* UNUSED */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -2248,7 +2216,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|U_LONG
+name|u_long
 name|getkeyid
 name|P
 argument_list|(
@@ -3112,7 +3080,7 @@ value|256
 end_define
 
 begin_comment
-comment|/* host name is 256 characters LONG */
+comment|/* host name is 256 characters long */
 end_comment
 
 begin_define
@@ -3327,7 +3295,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Holds data returned from queries.  Declare buffer LONG to be sure of  * alignment.  */
+comment|/*  * Holds data returned from queries.  Declare buffer long to be sure of  * alignment.  */
 end_comment
 
 begin_define
@@ -3353,14 +3321,14 @@ comment|/* maximum amount of data */
 end_comment
 
 begin_decl_stmt
-name|LONG
+name|long
 name|pktdata
 index|[
 name|DATASIZE
 operator|/
 sizeof|sizeof
 argument_list|(
-name|LONG
+name|long
 argument_list|)
 index|]
 decl_stmt|;
@@ -3901,7 +3869,7 @@ modifier|*
 name|hname
 decl_stmt|;
 block|{
-name|U_LONG
+name|u_long
 name|netnum
 decl_stmt|;
 name|char
@@ -4406,7 +4374,7 @@ decl_stmt|;
 name|int
 name|n
 decl_stmt|;
-comment|/* 	 * This is pretty tricky.  We may get between 1 and MAXFRAG packets 	 * back in response to the request.  We peel the data out of 	 * each packet and collect it in one LONG block.  When the last 	 * packet in the sequence is received we'll know how much data we 	 * should have had.  Note we use one LONG time out, should reconsider. 	 */
+comment|/* 	 * This is pretty tricky.  We may get between 1 and MAXFRAG packets 	 * back in response to the request.  We peel the data out of 	 * each packet and collect it in one long block.  When the last 	 * packet in the sequence is received we'll know how much data we 	 * should have had.  Note we use one long time out, should reconsider. 	 */
 operator|*
 name|rsize
 operator|=
@@ -5081,10 +5049,10 @@ block|{
 name|int
 name|shouldbesize
 decl_stmt|;
-name|U_LONG
+name|u_long
 name|key
 decl_stmt|;
-name|U_LONG
+name|u_long
 modifier|*
 name|lpkt
 decl_stmt|;
@@ -5152,7 +5120,7 @@ expr_stmt|;
 name|lpkt
 operator|=
 operator|(
-name|U_LONG
+name|u_long
 operator|*
 operator|)
 operator|&
@@ -5162,6 +5130,9 @@ name|printf
 argument_list|(
 literal|"%08lx %08lx %08lx %08lx %08lx %08lx\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|lpkt
@@ -5174,13 +5145,16 @@ operator|)
 operator|/
 sizeof|sizeof
 argument_list|(
-name|U_LONG
+name|u_long
 argument_list|)
 operator|-
 literal|3
 index|]
 argument_list|)
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|lpkt
@@ -5193,13 +5167,16 @@ operator|)
 operator|/
 sizeof|sizeof
 argument_list|(
-name|U_LONG
+name|u_long
 argument_list|)
 operator|-
 literal|2
 index|]
 argument_list|)
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|lpkt
@@ -5212,13 +5189,16 @@ operator|)
 operator|/
 sizeof|sizeof
 argument_list|(
-name|U_LONG
+name|u_long
 argument_list|)
 operator|-
 literal|1
 index|]
 argument_list|)
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|lpkt
@@ -5231,11 +5211,14 @@ operator|)
 operator|/
 sizeof|sizeof
 argument_list|(
-name|U_LONG
+name|u_long
 argument_list|)
 index|]
 argument_list|)
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|lpkt
@@ -5248,13 +5231,16 @@ operator|)
 operator|/
 sizeof|sizeof
 argument_list|(
-name|U_LONG
+name|u_long
 argument_list|)
 operator|+
 literal|1
 index|]
 argument_list|)
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ntohl
 argument_list|(
 name|lpkt
@@ -5267,7 +5253,7 @@ operator|)
 operator|/
 sizeof|sizeof
 argument_list|(
-name|U_LONG
+name|u_long
 argument_list|)
 operator|+
 literal|2
@@ -5289,7 +5275,7 @@ operator|)
 operator|/
 sizeof|sizeof
 argument_list|(
-name|U_LONG
+name|u_long
 argument_list|)
 index|]
 argument_list|)
@@ -6000,7 +5986,7 @@ operator|&
 operator|(
 sizeof|sizeof
 argument_list|(
-name|U_LONG
+name|u_long
 argument_list|)
 operator|-
 literal|1
@@ -6167,7 +6153,7 @@ decl_stmt|;
 comment|/* 			 * Stick the keyid in the packet where 			 * cp currently points.  Cp should be aligned 			 * properly.  Then do the encryptions. 			 */
 operator|*
 operator|(
-name|U_LONG
+name|u_long
 operator|*
 operator|)
 operator|(
@@ -7863,7 +7849,7 @@ name|char
 modifier|*
 name|host
 decl_stmt|;
-name|U_LONG
+name|u_long
 modifier|*
 name|num
 decl_stmt|;
@@ -7901,9 +7887,12 @@ name|sprintf
 argument_list|(
 name|fullhost
 argument_list|,
-literal|"%d.%d.%d.%d"
+literal|"%lu.%lu.%lu.%lu"
 argument_list|,
-operator|(
+call|(
+name|u_long
+call|)
+argument_list|(
 operator|(
 name|htonl
 argument_list|(
@@ -7915,9 +7904,12 @@ literal|24
 operator|)
 operator|&
 literal|0xff
-operator|)
+argument_list|)
 argument_list|,
-operator|(
+call|(
+name|u_long
+call|)
+argument_list|(
 operator|(
 name|htonl
 argument_list|(
@@ -7929,9 +7921,12 @@ literal|16
 operator|)
 operator|&
 literal|0xff
-operator|)
+argument_list|)
 argument_list|,
-operator|(
+call|(
+name|u_long
+call|)
+argument_list|(
 operator|(
 name|htonl
 argument_list|(
@@ -7943,9 +7938,12 @@ literal|8
 operator|)
 operator|&
 literal|0xff
-operator|)
+argument_list|)
 argument_list|,
-operator|(
+call|(
+name|u_long
+call|)
+argument_list|(
 name|htonl
 argument_list|(
 operator|*
@@ -7953,7 +7951,7 @@ name|num
 argument_list|)
 operator|&
 literal|0xff
-operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -7990,7 +7988,7 @@ name|h_addr
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|U_LONG
+name|u_long
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -8049,7 +8047,7 @@ name|nntohost
 parameter_list|(
 name|netnum
 parameter_list|)
-name|U_LONG
+name|u_long
 name|netnum
 decl_stmt|;
 block|{
@@ -8197,15 +8195,10 @@ literal|'-'
 condition|)
 block|{
 comment|/* 			 * Catch special case 			 */
+name|L_CLR
+argument_list|(
 name|lfp
-operator|->
-name|l_ui
-operator|=
-name|lfp
-operator|->
-name|l_uf
-operator|=
-literal|0
+argument_list|)
 expr_stmt|;
 return|return
 literal|1
@@ -8432,15 +8425,10 @@ operator|==
 literal|0
 condition|)
 block|{
+name|L_CLR
+argument_list|(
 name|lfp
-operator|->
-name|l_ui
-operator|=
-name|lfp
-operator|->
-name|l_uf
-operator|=
-literal|0
+argument_list|)
 expr_stmt|;
 return|return
 literal|1
@@ -8903,133 +8891,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|UNUSED
-end_ifdef
-
-begin_comment
-comment|/*  * decodereach - decode a (possibly octal or hex, damn fuzzballs) reachability  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|decodereach
-parameter_list|(
-name|str
-parameter_list|,
-name|uval
-parameter_list|)
-name|char
-modifier|*
-name|str
-decl_stmt|;
-name|U_LONG
-modifier|*
-name|uval
-decl_stmt|;
-block|{
-name|U_LONG
-name|u
-decl_stmt|;
-if|if
-condition|(
-operator|*
-name|str
-operator|==
-literal|'0'
-condition|)
-block|{
-comment|/* 		 * Could be octal or hex 		 */
-if|if
-condition|(
-operator|*
-operator|(
-name|str
-operator|+
-literal|1
-operator|)
-operator|==
-literal|'x'
-operator|||
-operator|*
-operator|(
-name|str
-operator|+
-literal|1
-operator|)
-operator|==
-literal|'X'
-condition|)
-return|return
-name|hextoint
-argument_list|(
-name|str
-operator|+
-literal|2
-argument_list|,
-name|uval
-argument_list|)
-return|;
-return|return
-name|octtoint
-argument_list|(
-name|str
-argument_list|,
-name|uval
-argument_list|)
-return|;
-block|}
-if|if
-condition|(
-operator|!
-name|atouint
-argument_list|(
-name|str
-argument_list|,
-operator|&
-name|u
-argument_list|)
-condition|)
-return|return
-literal|0
-return|;
-if|if
-condition|(
-name|u
-operator|>
-literal|255
-condition|)
-return|return
-name|octtoint
-argument_list|(
-name|str
-argument_list|,
-name|uval
-argument_list|)
-return|;
-operator|*
-name|uval
-operator|=
-name|u
-expr_stmt|;
-return|return
-literal|1
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* UNUSED */
-end_comment
-
 begin_comment
 comment|/*  * decodeint - decode an integer  */
 end_comment
@@ -9046,7 +8907,7 @@ name|char
 modifier|*
 name|str
 decl_stmt|;
-name|LONG
+name|long
 modifier|*
 name|val
 decl_stmt|;
@@ -9087,9 +8948,10 @@ operator|+
 literal|2
 argument_list|,
 operator|(
-name|U_LONG
+name|u_long
 operator|*
 operator|)
+operator|&
 name|val
 argument_list|)
 return|;
@@ -9099,9 +8961,10 @@ argument_list|(
 name|str
 argument_list|,
 operator|(
-name|U_LONG
+name|u_long
 operator|*
 operator|)
+operator|&
 name|val
 argument_list|)
 return|;
@@ -9133,7 +8996,7 @@ name|char
 modifier|*
 name|str
 decl_stmt|;
-name|U_LONG
+name|u_long
 modifier|*
 name|val
 decl_stmt|;
@@ -10212,7 +10075,7 @@ block|{
 name|int
 name|isneg
 decl_stmt|;
-name|U_LONG
+name|u_long
 name|val
 decl_stmt|;
 if|if
@@ -10245,7 +10108,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"delay %d ms\n"
+literal|"delay %lu ms\n"
 argument_list|,
 name|val
 argument_list|)
@@ -10274,7 +10137,7 @@ expr_stmt|;
 name|val
 operator|=
 call|(
-name|U_LONG
+name|u_long
 call|)
 argument_list|(
 operator|-
@@ -10298,7 +10161,7 @@ expr_stmt|;
 name|val
 operator|=
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 name|pcmd
 operator|->
@@ -10547,7 +10410,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"keyid is %u\n"
+literal|"keyid is %lu\n"
 argument_list|,
 name|info_auth_keyid
 argument_list|)
@@ -11473,7 +11336,7 @@ expr_stmt|;
 block|}
 comment|/*  * getkeyid - prompt the user for a keyid to use  */
 specifier|static
-name|U_LONG
+name|u_long
 name|getkeyid
 parameter_list|(
 name|prompt
@@ -11623,7 +11486,7 @@ literal|0
 return|;
 return|return
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 name|atoi
 argument_list|(
@@ -12193,9 +12056,31 @@ name|CTL_SYS_SOURCE
 argument_list|(
 name|st
 argument_list|)
+operator|&
+operator|~
+name|CTL_SST_TS_PPS
 argument_list|,
 name|sync_codes
 argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|CTL_SYS_SOURCE
+argument_list|(
+name|st
+argument_list|)
+operator|&
+name|CTL_SST_TS_PPS
+condition|)
+operator|(
+name|void
+operator|)
+name|strcat
+argument_list|(
+name|cb
+argument_list|,
+literal|"/PPS"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -13563,7 +13448,7 @@ name|tstflags
 parameter_list|(
 name|val
 parameter_list|)
-name|U_LONG
+name|u_long
 name|val
 decl_stmt|;
 block|{
@@ -13620,7 +13505,7 @@ name|sprintf
 argument_list|(
 name|cb
 argument_list|,
-literal|"0x%x"
+literal|"0x%lx"
 argument_list|,
 name|val
 argument_list|)
@@ -13807,10 +13692,13 @@ decl_stmt|;
 name|l_fp
 name|lfp
 decl_stmt|;
-name|LONG
+name|long
 name|ival
 decl_stmt|;
-name|U_LONG
+name|u_long
+name|hval
+decl_stmt|;
+name|u_long
 name|uval
 decl_stmt|;
 name|l_fp
@@ -14150,7 +14038,7 @@ argument_list|(
 name|value
 argument_list|,
 operator|&
-name|uval
+name|hval
 argument_list|)
 condition|)
 name|output_raw
@@ -14172,7 +14060,7 @@ name|name
 argument_list|,
 name|nntohost
 argument_list|(
-name|uval
+name|hval
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -14185,7 +14073,7 @@ name|name
 argument_list|,
 name|numtoa
 argument_list|(
-name|uval
+name|hval
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -14208,7 +14096,7 @@ argument_list|(
 name|value
 argument_list|,
 operator|&
-name|uval
+name|hval
 argument_list|)
 condition|)
 name|output
@@ -14219,7 +14107,7 @@ name|name
 argument_list|,
 name|nntohost
 argument_list|(
-name|uval
+name|hval
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -14370,7 +14258,7 @@ name|sprintf
 argument_list|(
 name|b
 argument_list|,
-literal|"%03o"
+literal|"%03lo"
 argument_list|,
 name|uval
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* refnumtoa.c,v 3.1 1993/07/06 01:08:44 jbj Exp  * refnumtoa - return asciized refclock addresses stored in local array space  */
+comment|/*  * refnumtoa - return asciized refclock addresses stored in local array space  */
 end_comment
 
 begin_include
@@ -34,12 +34,12 @@ name|refnumtoa
 parameter_list|(
 name|num
 parameter_list|)
-name|U_LONG
+name|u_long
 name|num
 decl_stmt|;
 block|{
 specifier|register
-name|U_LONG
+name|u_long
 name|netnum
 decl_stmt|;
 specifier|register
@@ -89,7 +89,6 @@ name|rclock
 operator|!=
 name|NULL
 condition|)
-block|{
 operator|(
 name|void
 operator|)
@@ -97,32 +96,16 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%s(%d)"
+literal|"%s(%lu)"
 argument_list|,
-name|clockname
-argument_list|(
-call|(
-name|int
-call|)
-argument_list|(
-operator|(
-name|netnum
-operator|>>
-literal|8
-operator|)
-operator|&
-literal|0xff
-argument_list|)
-argument_list|)
+name|rclock
 argument_list|,
 name|netnum
 operator|&
 literal|0xff
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 operator|(
 name|void
 operator|)
@@ -130,7 +113,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"REFCLK(%d,%d)"
+literal|"REFCLK(%lu,%lu)"
 argument_list|,
 operator|(
 name|netnum
@@ -145,7 +128,6 @@ operator|&
 literal|0xff
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 name|buf
 return|;

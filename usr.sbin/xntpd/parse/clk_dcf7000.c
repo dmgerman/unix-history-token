@@ -26,7 +26,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * /src/NTP/REPOSITORY/v3/parse/clk_dcf7000.c,v 3.11 1994/02/02 17:45:14 kardel Exp  *    * clk_dcf7000.c,v 3.11 1994/02/02 17:45:14 kardel Exp  *  * ELV DCF7000 module  *  * Copyright (c) 1992,1993,1994  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
+comment|/*  * /src/NTP/REPOSITORY/v3/parse/clk_dcf7000.c,v 3.12 1994/05/30 10:19:57 kardel Exp  *    * clk_dcf7000.c,v 3.12 1994/05/30 10:19:57 kardel Exp  *  * ELV DCF7000 module  *  * Copyright (c) 1992,1993,1994  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
 end_comment
 
 begin_include
@@ -138,8 +138,7 @@ end_decl_stmt
 
 begin_function_decl
 specifier|static
-name|unsigned
-name|LONG
+name|u_long
 name|cvt_dcf7000
 parameter_list|()
 function_decl|;
@@ -150,12 +149,6 @@ name|clockformat_t
 name|clock_dcf7000
 init|=
 block|{
-name|cvt_dcf7000
-block|,
-comment|/* ELV DCF77 conversion */
-name|syn_simple
-block|,
-comment|/* easy time stamps */
 operator|(
 name|unsigned
 name|LONG
@@ -166,10 +159,25 @@ argument_list|()
 operator|)
 literal|0
 block|,
+comment|/* no input handling */
+name|cvt_dcf7000
+block|,
+comment|/* ELV DCF77 conversion */
+name|syn_simple
+block|,
+comment|/* easy time stamps */
+operator|(
+name|u_long
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
+literal|0
+block|,
 comment|/* no direct PPS monitoring */
 operator|(
-name|unsigned
-name|LONG
+name|u_long
 argument_list|(
 operator|*
 argument_list|)
@@ -197,6 +205,9 @@ operator||
 name|SYNC_END
 block|,
 comment|/* END packet delimiter / synchronisation */
+literal|0
+block|,
+comment|/* no private data (complete pakets) */
 block|{
 literal|0
 block|,
@@ -218,8 +229,7 @@ end_comment
 
 begin_function
 specifier|static
-name|unsigned
-name|LONG
+name|u_long
 name|cvt_dcf7000
 parameter_list|(
 name|buffer
@@ -478,7 +488,7 @@ operator|.
 name|offset
 index|]
 decl_stmt|;
-name|LONG
+name|long
 name|flags
 decl_stmt|;
 name|clock
@@ -593,7 +603,7 @@ comment|/* defined(PARSE)&& defined(CLOCK_DCF7000) */
 end_comment
 
 begin_comment
-comment|/*  * History:  *  * clk_dcf7000.c,v  * Revision 3.11  1994/02/02  17:45:14  kardel  * rcs ids fixed  *  * Revision 3.6  1993/10/09  15:01:27  kardel  * file structure unified  *  * Revision 3.5  1993/10/03  19:10:41  kardel  * restructured I/O handling  *  * Revision 3.4  1993/09/27  21:08:02  kardel  * utcoffset now in seconds  *  * Revision 3.3  1993/09/26  23:40:20  kardel  * new parse driver logic  *  * Revision 3.2  1993/07/09  11:37:15  kardel  * Initial restructured version + GPS support  *  * Revision 3.1  1993/07/06  10:00:14  kardel  * DCF77 driver goes generic...  *  */
+comment|/*  * History:  *  * clk_dcf7000.c,v  * Revision 3.12  1994/05/30  10:19:57  kardel  * LONG cleanup  *  * Revision 3.11  1994/02/02  17:45:14  kardel  * rcs ids fixed  *  * Revision 3.6  1993/10/09  15:01:27  kardel  * file structure unified  *  * Revision 3.5  1993/10/03  19:10:41  kardel  * restructured I/O handling  *  * Revision 3.4  1993/09/27  21:08:02  kardel  * utcoffset now in seconds  *  * Revision 3.3  1993/09/26  23:40:20  kardel  * new parse driver logic  *  * Revision 3.2  1993/07/09  11:37:15  kardel  * Initial restructured version + GPS support  *  * Revision 3.1  1993/07/06  10:00:14  kardel  * DCF77 driver goes generic...  *  */
 end_comment
 
 end_unit

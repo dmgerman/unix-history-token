@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ntp_request.h,v 3.1 1993/07/06 01:06:57 jbj Exp  * ntp_request.h - definitions for the xntpd remote query facility  */
+comment|/*  * ntp_request.h - definitions for the xntpd remote query facility  */
 end_comment
 
 begin_include
@@ -419,13 +419,6 @@ define|#
 directive|define
 name|INFO_TS_MAXSKEW_UI
 value|10
-end_define
-
-begin_define
-define|#
-directive|define
-name|INFO_TS_MAXSKEW_UF
-value|0
 end_define
 
 begin_comment
@@ -887,8 +880,19 @@ begin_comment
 comment|/* set clock precision */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|REQ_MON_GETLIST_1
+value|42
+end_define
+
 begin_comment
-comment|/*  * Flags in the information returns  */
+comment|/* return data collected by monitor v1*/
+end_comment
+
+begin_comment
+comment|/*  * Flags in the peer information returns  */
 end_comment
 
 begin_define
@@ -908,7 +912,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|INFO_FLAG_MINPOLL
+name|INFO_FLAG_UNUSED
 value|0x4
 end_define
 
@@ -922,31 +926,9 @@ end_define
 begin_define
 define|#
 directive|define
-name|INFO_FLAG_MCLIENT
-value|0x8
-end_define
-
-begin_comment
-comment|/* danger */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INFO_FLAG_BCLIENT
-value|0x10
-end_define
-
-begin_define
-define|#
-directive|define
 name|INFO_FLAG_PREFER
 value|0x10
 end_define
-
-begin_comment
-comment|/* danger */
-end_comment
 
 begin_define
 define|#
@@ -966,6 +948,70 @@ begin_define
 define|#
 directive|define
 name|INFO_FLAG_SHORTLIST
+value|0x80
+end_define
+
+begin_comment
+comment|/*  * Flags in the system information returns  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INFO_FLAG_BCLIENT
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|INFO_FLAG_AUTHENTICATE
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|INFO_FLAG_PLL
+value|0x4
+end_define
+
+begin_define
+define|#
+directive|define
+name|INFO_FLAG_PPS
+value|0x8
+end_define
+
+begin_comment
+comment|/* unused */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INFO_FLAG_PLL_SYNC
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|INFO_FLAG_PPS_SYNC
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|INFO_FLAG_MONITOR
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|INFO_FLAG_FILEGEN
 value|0x80
 end_define
 
@@ -1243,10 +1289,10 @@ decl_stmt|;
 name|LONG
 name|unused7
 decl_stmt|;
-name|U_LONG
+name|s_fp
 name|estbdelay
 decl_stmt|;
-comment|/* broadcast delay */
+comment|/* broadcast offset */
 block|}
 struct|;
 end_struct
@@ -1296,65 +1342,65 @@ name|sent
 decl_stmt|;
 comment|/* number sent */
 name|U_LONG
-name|received
+name|unused1
 decl_stmt|;
-comment|/* number received */
+comment|/* (unused) */
 name|U_LONG
 name|processed
 decl_stmt|;
 comment|/* number processed */
 name|U_LONG
-name|badlength
+name|unused2
 decl_stmt|;
-comment|/* rejected due to bad length */
+comment|/* (unused) */
 name|U_LONG
 name|badauth
 decl_stmt|;
-comment|/* rejected due to bad auth */
+comment|/* bad authentication */
 name|U_LONG
 name|bogusorg
 decl_stmt|;
-comment|/* funny org time stamps */
+comment|/* bogus origin */
 name|U_LONG
 name|oldpkt
 decl_stmt|;
-comment|/* duplicate packets */
+comment|/* duplicate */
 name|U_LONG
-name|baddelay
+name|unused3
 decl_stmt|;
-comment|/* dropped due to bad delays */
+comment|/* (unused) */
 name|U_LONG
-name|seldelay
+name|unused4
 decl_stmt|;
-comment|/* not selected due to delay */
+comment|/* (unused) */
 name|U_LONG
 name|seldisp
 decl_stmt|;
-comment|/* not selected due to dispersion */
+comment|/* bad dispersion */
 name|U_LONG
 name|selbroken
 decl_stmt|;
-comment|/* not selected because of brokenness */
+comment|/* bad reference time */
 name|U_LONG
-name|selold
+name|unused5
 decl_stmt|;
-comment|/* not selected because too old */
+comment|/* (unused) */
 name|u_char
 name|candidate
 decl_stmt|;
-comment|/* order after falseticker candidate select */
+comment|/* select order */
 name|u_char
-name|falseticker
+name|unused6
 decl_stmt|;
-comment|/* order after resort for falseticker */
+comment|/* (unused) */
 name|u_char
-name|select
+name|unused7
 decl_stmt|;
-comment|/* order after select */
+comment|/* (unused) */
 name|u_char
-name|select_total
+name|unused8
 decl_stmt|;
-comment|/* number who made it to selection */
+comment|/* (unused) */
 block|}
 struct|;
 end_struct
@@ -1447,18 +1493,22 @@ name|u_char
 name|unused3
 decl_stmt|;
 comment|/* unused */
-name|l_fp
+name|s_fp
 name|bdelay
 decl_stmt|;
-comment|/* default broadcast delay */
+comment|/* default broadcast offset */
+name|s_fp
+name|frequency
+decl_stmt|;
+comment|/* frequency residual (scaled ppm)  */
 name|l_fp
 name|authdelay
 decl_stmt|;
 comment|/* default authentication delay */
 name|u_fp
-name|maxskew
+name|stability
 decl_stmt|;
-comment|/* (obsolete) */
+comment|/* clock stability (scaled ppm) */
 block|}
 struct|;
 end_struct
@@ -1753,15 +1803,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|CONF_FLAG_MINPOLL
-value|0x2
-end_define
-
-begin_define
-define|#
-directive|define
 name|CONF_FLAG_PREFER
-value|0x4
+value|0x2
 end_define
 
 begin_comment
@@ -1816,8 +1859,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|SYS_FLAG_MCLIENT
+name|SYS_FLAG_PLL
 value|0x4
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYS_FLAG_PPS
+value|0x8
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYS_FLAG_MONITOR
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYS_FLAG_FILEGEN
+value|0x20
 end_define
 
 begin_comment
@@ -1876,6 +1940,58 @@ name|u_short
 name|mflags
 decl_stmt|;
 comment|/* match flags */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Structure used for returning monitor data  */
+end_comment
+
+begin_struct
+struct|struct
+name|info_monitor_1
+block|{
+name|U_LONG
+name|lasttime
+decl_stmt|;
+comment|/* last packet from this host */
+name|U_LONG
+name|firsttime
+decl_stmt|;
+comment|/* first time we received a packet */
+name|U_LONG
+name|lastdrop
+decl_stmt|;
+comment|/* last time we rejected a packet due to client limitation policy */
+name|U_LONG
+name|count
+decl_stmt|;
+comment|/* count of packets received */
+name|U_LONG
+name|addr
+decl_stmt|;
+comment|/* host address */
+name|U_LONG
+name|daddr
+decl_stmt|;
+comment|/* destination host address */
+name|U_LONG
+name|flags
+decl_stmt|;
+comment|/* flags about destination */
+name|u_short
+name|port
+decl_stmt|;
+comment|/* port number of last reception */
+name|u_char
+name|mode
+decl_stmt|;
+comment|/* mode of last packet */
+name|u_char
+name|version
+decl_stmt|;
+comment|/* version number of last packet */
 block|}
 struct|;
 end_struct
@@ -2073,9 +2189,9 @@ name|decryptions
 decl_stmt|;
 comment|/* number of decryptions */
 name|U_LONG
-name|decryptok
+name|unused
 decl_stmt|;
-comment|/* number of successful decryptions */
+comment|/* (unused) */
 name|U_LONG
 name|keyuncached
 decl_stmt|;

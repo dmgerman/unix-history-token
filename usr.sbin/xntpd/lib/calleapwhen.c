@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* calleapwhen.c,v 3.1 1993/07/06 01:08:02 jbj Exp  * calleapwhen - determine the number of seconds to the next possible  *		 leap occurance and the last one.  */
+comment|/*  * calleapwhen - determine the number of seconds to the next possible  *		 leap occurance and the last one.  */
 end_comment
 
 begin_include
@@ -32,7 +32,7 @@ comment|/*  * calleaptab - leaps occur at the end of December and June  */
 end_comment
 
 begin_decl_stmt
-name|LONG
+name|long
 name|calleaptab
 index|[
 literal|10
@@ -270,20 +270,20 @@ name|leaplast
 parameter_list|,
 name|leapnext
 parameter_list|)
-name|U_LONG
+name|u_long
 name|ntpdate
 decl_stmt|;
-name|U_LONG
+name|u_long
 modifier|*
 name|leaplast
 decl_stmt|;
-name|U_LONG
+name|u_long
 modifier|*
 name|leapnext
 decl_stmt|;
 block|{
 specifier|register
-name|U_LONG
+name|u_long
 name|dateincycle
 decl_stmt|;
 specifier|register
@@ -339,7 +339,7 @@ condition|(
 name|dateincycle
 operator|<
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 name|calleaptab
 index|[
@@ -352,11 +352,11 @@ operator|*
 name|leaplast
 operator|=
 call|(
-name|U_LONG
+name|u_long
 call|)
 argument_list|(
 operator|(
-name|LONG
+name|long
 operator|)
 name|dateincycle
 operator|-
@@ -372,7 +372,7 @@ operator|*
 name|leapnext
 operator|=
 call|(
-name|U_LONG
+name|u_long
 call|)
 argument_list|(
 name|calleaptab
@@ -381,7 +381,7 @@ name|i
 index|]
 operator|-
 operator|(
-name|LONG
+name|long
 operator|)
 name|dateincycle
 argument_list|)

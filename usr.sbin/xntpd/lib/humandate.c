@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* humandate.c,v 3.1 1993/07/06 01:08:24 jbj Exp  * humandate - convert an NTP (or the current) time to something readable  */
+comment|/*  * humandate - convert an NTP (or the current) time to something readable  */
 end_comment
 
 begin_include
@@ -117,7 +117,7 @@ name|humandate
 parameter_list|(
 name|ntptime
 parameter_list|)
-name|U_LONG
+name|u_long
 name|ntptime
 decl_stmt|;
 block|{
@@ -130,7 +130,7 @@ name|tm
 modifier|*
 name|tm
 decl_stmt|;
-name|U_LONG
+name|time_t
 name|sec
 decl_stmt|;
 name|LIB_GETBUF
@@ -148,10 +148,6 @@ name|tm
 operator|=
 name|localtime
 argument_list|(
-operator|(
-name|LONG
-operator|*
-operator|)
 operator|&
 name|sec
 argument_list|)

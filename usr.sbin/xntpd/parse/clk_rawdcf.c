@@ -26,7 +26,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * /src/NTP/REPOSITORY/v3/parse/clk_rawdcf.c,v 3.13 1994/03/10 19:00:43 kardel Exp  *    * clk_rawdcf.c,v 3.13 1994/03/10 19:00:43 kardel Exp  *  * Raw DCF77 pulse clock support  *  * Copyright (c) 1992,1993,1994  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
+comment|/*  * /src/NTP/REPOSITORY/v3/parse/clk_rawdcf.c,v 3.16 1994/05/31 20:02:40 kardel Exp  *    * clk_rawdcf.c,v 3.16 1994/05/31 20:02:40 kardel Exp  *  * Raw DCF77 pulse clock support  *  * Copyright (c) 1992,1993,1994  * Frank Kardel Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
 end_comment
 
 begin_include
@@ -111,8 +111,7 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|unsigned
-name|LONG
+name|u_long
 name|cvt_rawdcf
 parameter_list|()
 function_decl|;
@@ -120,8 +119,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|unsigned
-name|LONG
+name|u_long
 name|pps_rawdcf
 parameter_list|()
 function_decl|;
@@ -129,8 +127,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|unsigned
-name|LONG
+name|u_long
 name|snt_rawdcf
 parameter_list|()
 function_decl|;
@@ -141,6 +138,17 @@ name|clockformat_t
 name|clock_rawdcf
 init|=
 block|{
+operator|(
+name|unsigned
+name|LONG
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
+literal|0
+block|,
+comment|/* no input handling */
 name|cvt_rawdcf
 block|,
 comment|/* raw dcf input conversion */
@@ -184,6 +192,9 @@ operator||
 name|CVT_FIXEDONLY
 block|,
 comment|/* catch all transitions, buffer restart on timeout, fixed configuration only */
+literal|0
+block|,
+comment|/* no private data (currently in input buffer) */
 block|{
 literal|1
 block|,
@@ -543,8 +554,7 @@ end_define
 
 begin_function
 specifier|static
-name|unsigned
-name|LONG
+name|u_long
 name|ext_bf
 parameter_list|(
 name|buf
@@ -569,8 +579,7 @@ name|zero
 decl_stmt|;
 block|{
 specifier|register
-name|unsigned
-name|LONG
+name|u_long
 name|sum
 init|=
 literal|0
@@ -727,8 +736,7 @@ end_function
 
 begin_function
 specifier|static
-name|unsigned
-name|LONG
+name|u_long
 name|convert_rawdcf
 parameter_list|(
 name|buffer
@@ -1311,28 +1319,46 @@ argument_list|(
 name|DD_RAWDCF
 argument_list|,
 operator|(
-literal|"parse: convert_rawdcf: TIME CODE OK: %d:%d, %d.%d.%d, flags 0x%x\n"
+literal|"parse: convert_rawdcf: TIME CODE OK: %d:%d, %d.%d.%d, flags 0x%lx\n"
 operator|,
+operator|(
+name|int
+operator|)
 name|clock
 operator|->
 name|hour
 operator|,
+operator|(
+name|int
+operator|)
 name|clock
 operator|->
 name|minute
 operator|,
+operator|(
+name|int
+operator|)
 name|clock
 operator|->
 name|day
 operator|,
+operator|(
+name|int
+operator|)
 name|clock
 operator|->
 name|month
 operator|,
+operator|(
+name|int
+operator|)
 name|clock
 operator|->
 name|year
 operator|,
+operator|(
+name|u_long
+operator|)
 name|clock
 operator|->
 name|flags
@@ -1384,8 +1410,7 @@ end_comment
 
 begin_function
 specifier|static
-name|unsigned
-name|LONG
+name|u_long
 name|cvt_rawdcf
 parameter_list|(
 name|buffer
@@ -2012,8 +2037,7 @@ end_comment
 
 begin_function
 specifier|static
-name|unsigned
-name|LONG
+name|u_long
 name|pps_rawdcf
 parameter_list|(
 name|parseio
@@ -2039,7 +2063,6 @@ decl_stmt|;
 block|{
 if|if
 condition|(
-operator|!
 name|status
 condition|)
 block|{
@@ -2075,8 +2098,7 @@ end_comment
 
 begin_function
 specifier|static
-name|unsigned
-name|LONG
+name|u_long
 name|snt_rawdcf
 parameter_list|(
 name|parseio
@@ -2097,8 +2119,7 @@ block|{
 name|clocktime_t
 name|clock
 decl_stmt|;
-name|unsigned
-name|LONG
+name|u_long
 name|cvtrtc
 decl_stmt|;
 name|time_t
@@ -2305,7 +2326,7 @@ comment|/* defined(PARSE)&& defined(CLOCK_RAWDCF) */
 end_comment
 
 begin_comment
-comment|/*  * History:  *  * clk_rawdcf.c,v  * Revision 3.13  1994/03/10  19:00:43  kardel  * clear utctime field to avoid confusion on synthesize time stamps  *  * Revision 3.12  1994/02/20  13:04:39  kardel  * parse add/delete second support  *  * Revision 3.11  1994/02/02  17:45:23  kardel  * rcs ids fixed  *  * Revision 3.9  1994/01/25  19:05:12  kardel  * 94/01/23 reconcilation  *  * Revision 3.8  1994/01/22  11:24:11  kardel  * fixed PPS handling  *  * Revision 3.7  1993/10/30  09:44:41  kardel  * conditional compilation flag cleanup  *  * Revision 3.6  1993/10/03  19:10:45  kardel  * restructured I/O handling  *  * Revision 3.5  1993/09/27  21:08:07  kardel  * utcoffset now in seconds  *  * Revision 3.4  1993/09/26  23:40:25  kardel  * new parse driver logic  *  * Revision 3.3  1993/09/01  21:44:54  kardel  * conditional cleanup  *  * Revision 3.2  1993/07/09  11:37:18  kardel  * Initial restructured version + GPS support  *  * Revision 3.1  1993/07/06  10:00:19  kardel  * DCF77 driver goes generic...  *  */
+comment|/*  * History:  *  * clk_rawdcf.c,v $   * Revision 3.16  1994/05/31  20:02:40  kardel  * sync on ONE transition  *  * Revision 3.15  1994/05/30  10:20:01  kardel  * LONG cleanup  *  * Revision 3.14  1994/05/12  12:49:09  kardel  * printf fmt/arg cleanup  *  * Revision 3.13  1994/03/10  19:00:43  kardel  * clear utctime field to avoid confusion on synthesize time stamps  *  * Revision 3.12  1994/02/20  13:04:39  kardel  * parse add/delete second support  *  * Revision 3.11  1994/02/02  17:45:23  kardel  * rcs ids fixed  *  * Revision 3.9  1994/01/25  19:05:12  kardel  * 94/01/23 reconcilation  *  * Revision 3.8  1994/01/22  11:24:11  kardel  * fixed PPS handling  *  * Revision 3.7  1993/10/30  09:44:41  kardel  * conditional compilation flag cleanup  *  * Revision 3.6  1993/10/03  19:10:45  kardel  * restructured I/O handling  *  * Revision 3.5  1993/09/27  21:08:07  kardel  * utcoffset now in seconds  *  * Revision 3.4  1993/09/26  23:40:25  kardel  * new parse driver logic  *  * Revision 3.3  1993/09/01  21:44:54  kardel  * conditional cleanup  *  * Revision 3.2  1993/07/09  11:37:18  kardel  * Initial restructured version + GPS support  *  * Revision 3.1  1993/07/06  10:00:19  kardel  * DCF77 driver goes generic...  *  */
 end_comment
 
 end_unit

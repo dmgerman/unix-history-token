@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ntp_calendar.h,v 3.1 1993/07/06 01:06:48 jbj Exp  * ntp_calendar.h - definitions for the calendar time-of-day routine  */
+comment|/*  * ntp_calendar.h - definitions for the calendar time-of-day routine  */
 end_comment
 
 begin_include
@@ -328,7 +328,7 @@ begin_define
 define|#
 directive|define
 name|STARTCYCLE22
-value|(U_LONG)(0xa586b500)
+value|(u_long)(0xa586b500)
 end_define
 
 begin_comment
@@ -339,7 +339,7 @@ begin_define
 define|#
 directive|define
 name|MAR1988
-value|(U_LONG)(STARTCYCLE22 + (U_LONG)MAR1900)
+value|(u_long)(STARTCYCLE22 + (u_long)MAR1900)
 end_define
 
 begin_comment
@@ -367,7 +367,7 @@ name|caljulian
 name|P
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|,
 expr|struct
 name|calendar
@@ -379,7 +379,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|U_LONG
+name|u_long
 name|caltontp
 name|P
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* atoint.c,v 3.1 1993/07/06 01:07:39 jbj Exp  * atoint - convert an ascii string to a signed long, with error checking  */
+comment|/*  * atoint - convert an ascii string to a signed long, with error checking  */
 end_comment
 
 begin_include
@@ -34,13 +34,13 @@ name|char
 modifier|*
 name|str
 decl_stmt|;
-name|LONG
+name|long
 modifier|*
 name|ival
 decl_stmt|;
 block|{
 specifier|register
-name|U_LONG
+name|long
 name|u
 decl_stmt|;
 specifier|register
@@ -179,20 +179,12 @@ operator|*
 name|ival
 operator|=
 operator|-
-operator|(
-operator|(
-name|LONG
-operator|)
 name|u
-operator|)
 expr_stmt|;
 else|else
 operator|*
 name|ival
 operator|=
-operator|(
-name|LONG
-operator|)
 name|u
 expr_stmt|;
 return|return

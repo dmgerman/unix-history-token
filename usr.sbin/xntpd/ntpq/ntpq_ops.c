@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ntpq_ops.c,v 3.1 1993/07/06 01:09:32 jbj Exp  * ntpdc_ops.c - subroutines which are called to perform operations by xntpdc  */
+comment|/*  * ntpdc_ops.c - subroutines which are called to perform operations by xntpdc  */
 end_comment
 
 begin_include
@@ -86,7 +86,7 @@ name|checkassocid
 name|P
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 argument_list|)
 decl_stmt|;
@@ -459,9 +459,9 @@ name|findassidrange
 name|P
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|,
-name|U_LONG
+name|u_long
 operator|,
 name|int
 operator|*
@@ -1702,7 +1702,7 @@ value|256
 end_define
 
 begin_comment
-comment|/* host name is 256 characters LONG */
+comment|/* host name is 256 characters long */
 end_comment
 
 begin_comment
@@ -1917,7 +1917,7 @@ name|checkassocid
 parameter_list|(
 name|value
 parameter_list|)
-name|U_LONG
+name|u_long
 name|value
 decl_stmt|;
 block|{
@@ -4211,10 +4211,10 @@ name|from
 parameter_list|,
 name|to
 parameter_list|)
-name|U_LONG
+name|u_long
 name|assid1
 decl_stmt|;
-name|U_LONG
+name|u_long
 name|assid2
 decl_stmt|;
 name|int
@@ -4255,6 +4255,9 @@ name|stderr
 argument_list|,
 literal|"***Invalid association ID %lu specified\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|assid1
 argument_list|)
 expr_stmt|;
@@ -4282,6 +4285,9 @@ name|stderr
 argument_list|,
 literal|"***Invalid association ID %lu specified\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|assid2
 argument_list|)
 expr_stmt|;
@@ -4390,8 +4396,14 @@ operator|-
 literal|1
 operator|)
 condition|?
+operator|(
+name|u_long
+operator|)
 name|assid1
 else|:
+operator|(
+name|u_long
+operator|)
 name|assid2
 argument_list|)
 expr_stmt|;
@@ -4955,7 +4967,7 @@ decl_stmt|;
 name|int
 name|event
 decl_stmt|;
-name|U_LONG
+name|u_long
 name|event_count
 decl_stmt|;
 name|char
@@ -5525,7 +5537,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * lassociations - get, record and print a LONG list of associations  */
+comment|/*  * lassociations - get, record and print a long list of associations  */
 end_comment
 
 begin_comment
@@ -5606,7 +5618,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * lpassociations - print the LONG association list  */
+comment|/*  * lpassociations - print the long association list  */
 end_comment
 
 begin_comment
@@ -5947,7 +5959,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * when - print how LONG its been since his last packet arrived  */
+comment|/*  * when - print how long its been since his last packet arrived  */
 end_comment
 
 begin_function
@@ -5975,7 +5987,7 @@ modifier|*
 name|reftime
 decl_stmt|;
 block|{
-name|LONG
+name|long
 name|diff
 decl_stmt|;
 name|l_fp
@@ -6021,7 +6033,7 @@ return|;
 name|diff
 operator|=
 call|(
-name|LONG
+name|long
 call|)
 argument_list|(
 name|ts
@@ -6060,8 +6072,12 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%d"
+literal|"%ld"
 argument_list|,
+operator|(
+name|long
+name|int
+operator|)
 name|diff
 argument_list|)
 expr_stmt|;
@@ -6093,8 +6109,12 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%dm"
+literal|"%ldm"
 argument_list|,
+operator|(
+name|long
+name|int
+operator|)
 name|diff
 argument_list|)
 expr_stmt|;
@@ -6126,8 +6146,12 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%dh"
+literal|"%ldh"
 argument_list|,
+operator|(
+name|long
+name|int
+operator|)
 name|diff
 argument_list|)
 expr_stmt|;
@@ -6152,8 +6176,12 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%dd"
+literal|"%ldd"
 argument_list|,
+operator|(
+name|long
+name|int
+operator|)
 name|diff
 argument_list|)
 expr_stmt|;
@@ -6523,13 +6551,13 @@ decl_stmt|;
 name|int
 name|c
 decl_stmt|;
-name|U_LONG
+name|u_long
 name|srcadr
 decl_stmt|;
-name|U_LONG
+name|u_long
 name|dstadr
 decl_stmt|;
-name|U_LONG
+name|u_long
 name|srcport
 decl_stmt|;
 name|char
@@ -6538,16 +6566,16 @@ name|dstadr_refid
 init|=
 literal|"0.0.0.0"
 decl_stmt|;
-name|U_LONG
+name|u_long
 name|stratum
 decl_stmt|;
-name|LONG
+name|long
 name|ppoll
 decl_stmt|;
-name|LONG
+name|long
 name|hpoll
 decl_stmt|;
-name|U_LONG
+name|u_long
 name|reach
 decl_stmt|;
 name|l_fp
@@ -6574,8 +6602,13 @@ index|[
 name|MAXHAVE
 index|]
 decl_stmt|;
-name|U_LONG
+name|u_long
 name|poll
+decl_stmt|;
+name|char
+name|type
+init|=
+literal|'?'
 decl_stmt|;
 name|char
 name|refid_string
@@ -6629,6 +6662,9 @@ name|value
 argument_list|)
 condition|)
 block|{
+name|u_long
+name|dummy
+decl_stmt|;
 name|i
 operator|=
 name|findvar
@@ -6675,6 +6711,77 @@ break|break;
 case|case
 name|CP_DSTADR
 case|:
+if|if
+condition|(
+name|decodenetnum
+argument_list|(
+name|value
+argument_list|,
+operator|&
+name|dummy
+argument_list|)
+condition|)
+block|{
+name|dummy
+operator|=
+name|ntohl
+argument_list|(
+name|dummy
+argument_list|)
+expr_stmt|;
+name|type
+operator|=
+operator|(
+operator|(
+name|dummy
+operator|&
+literal|0xf0000000
+operator|)
+operator|==
+literal|0xe0000000
+operator|)
+condition|?
+literal|'m'
+else|:
+operator|(
+operator|(
+name|dummy
+operator|&
+literal|0x000000ff
+operator|)
+operator|==
+literal|0x000000ff
+operator|)
+condition|?
+literal|'b'
+else|:
+operator|(
+operator|(
+name|dummy
+operator|&
+literal|0xffffffff
+operator|)
+operator|==
+literal|0x7f000001
+operator|)
+condition|?
+literal|'l'
+else|:
+operator|(
+operator|(
+name|dummy
+operator|&
+literal|0xffffffe0
+operator|)
+operator|==
+literal|0x00000000
+operator|)
+condition|?
+literal|'-'
+else|:
+literal|'u'
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|pvl
@@ -7080,15 +7187,11 @@ operator|&
 name|reftime
 argument_list|)
 condition|)
+name|L_CLR
+argument_list|(
+operator|&
 name|reftime
-operator|.
-name|l_ui
-operator|=
-name|reftime
-operator|.
-name|l_uf
-operator|=
-literal|0
+argument_list|)
 expr_stmt|;
 break|break;
 default|default:
@@ -7233,7 +7336,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"%c%-15.15s %-15.15s %2d %4.4s %4d  %3o  %7.7s %7.7s %7.7s\n"
+literal|"%c%-15.15s %-15.15s %2ld %c %4.4s %4ld  %3lo  %7.7s %8.7s %7.7s\n"
 argument_list|,
 name|c
 argument_list|,
@@ -7245,6 +7348,8 @@ argument_list|,
 name|dstadr_refid
 argument_list|,
 name|stratum
+argument_list|,
+name|type
 argument_list|,
 name|when
 argument_list|(
@@ -7277,14 +7382,14 @@ argument_list|)
 argument_list|,
 name|fixup
 argument_list|(
-literal|7
+literal|8
 argument_list|,
 name|lfptoms
 argument_list|(
 operator|&
 name|estoffset
 argument_list|,
-literal|2
+literal|3
 argument_list|)
 argument_list|)
 argument_list|,
@@ -7576,7 +7681,7 @@ index|[
 name|LENHOSTNAME
 index|]
 decl_stmt|;
-name|U_LONG
+name|u_long
 name|netnum
 decl_stmt|;
 if|if
@@ -7666,7 +7771,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"     remote           refid      st when poll reach   delay  offset    disp\n"
+literal|"     remote           refid      st t when poll reach   delay   offset    disp\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -7705,7 +7810,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"===========================================================================\n"
+literal|"==============================================================================\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -7890,7 +7995,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"     remote           local      st when poll reach  delay  offset   disp\n"
+literal|"     remote           local      st t when poll reach  delay  offset   disp\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -7900,7 +8005,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"=========================================================================\n"
+literal|"===========================================================================\n"
 argument_list|)
 expr_stmt|;
 for|for

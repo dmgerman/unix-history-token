@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ntp_filegen.h,v 3.7 1994/01/25 19:04:16 kardel Exp  *  * definitions for NTP file generations support  *  *  * Copyright (c) 1992  * Rainer Pruy Friedrich-Alexander Unuiversitaet Erlangen-Nuernberg  *  * This code may be modified and used freely  * provided the credits remain intact.  */
+comment|/*  * ntp_filegen.h,v 3.8 1994/05/30 09:48:53 kardel Exp  *  * definitions for NTP file generations support  *  *  * Copyright (c) 1992  * Rainer Pruy Friedrich-Alexander Unuiversitaet Erlangen-Nuernberg  *  * This code may be modified and used freely  * provided the credits remain intact.  */
 end_comment
 
 begin_include
@@ -141,7 +141,7 @@ name|basename
 decl_stmt|;
 comment|/* for constructing filename of generation file */
 comment|/* WARNING: must be malloced !!! will be fed to free()*/
-name|U_LONG
+name|u_long
 name|id
 decl_stmt|;
 comment|/* id of current generation */
@@ -168,7 +168,7 @@ operator|(
 name|FILEGEN
 operator|*
 operator|,
-name|U_LONG
+name|u_long
 operator|)
 argument_list|)
 decl_stmt|;

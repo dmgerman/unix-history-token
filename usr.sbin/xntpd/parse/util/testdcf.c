@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/REPOSITORY/v3/parse/util/testdcf.c,v 3.11 1994/02/02 17:45:55 kardel Exp  *    * testdcf.c,v 3.11 1994/02/02 17:45:55 kardel Exp  *  * simple DCF77 100/200ms pulse test program (via 50Baud serial line)  *  * Copyright (c) 1993,1994  * Frank Kardel, Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * This program may not be sold or used for profit without prior  * written consent of the author.  */
+comment|/*  * /src/NTP/REPOSITORY/v3/parse/util/testdcf.c,v 3.13 1994/05/12 12:49:31 kardel Exp  *    * testdcf.c,v 3.13 1994/05/12 12:49:31 kardel Exp  *  * simple DCF77 100/200ms pulse test program (via 50Baud serial line)  *  * Copyright (c) 1993,1994  * Frank Kardel, Friedrich-Alexander Universitaet Erlangen-Nuernberg  *                                      * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * This program may not be sold or used for profit without prior  * written consent of the author.  */
 end_comment
 
 begin_include
@@ -1475,12 +1475,14 @@ operator||
 name|CREAD
 operator||
 name|CLOCAL
+operator||
+name|PARENB
 expr_stmt|;
 name|term
 operator|.
 name|c_iflag
 operator|=
-literal|0
+name|IGNPAR
 expr_stmt|;
 name|term
 operator|.
@@ -1771,6 +1773,7 @@ name|tv_sec
 operator|>
 literal|1
 operator|||
+operator|(
 name|t
 operator|.
 name|tv_sec
@@ -1782,6 +1785,7 @@ operator|.
 name|tv_usec
 operator|>
 literal|500000
+operator|)
 condition|)
 block|{
 name|printf
@@ -2038,24 +2042,42 @@ operator|.
 name|wday
 index|]
 argument_list|,
+operator|(
+name|int
+operator|)
 name|clock
 operator|.
 name|hour
 argument_list|,
+operator|(
+name|int
+operator|)
 name|clock
 operator|.
 name|minute
 argument_list|,
+operator|(
+name|int
+operator|)
 name|i
 argument_list|,
+operator|(
+name|int
+operator|)
 name|clock
 operator|.
 name|day
 argument_list|,
+operator|(
+name|int
+operator|)
 name|clock
 operator|.
 name|month
 argument_list|,
+operator|(
+name|int
+operator|)
 name|clock
 operator|.
 name|year

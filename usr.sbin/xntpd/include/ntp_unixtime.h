@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ntp_unixtime.h,v 3.1 1993/07/06 01:07:02 jbj Exp  * ntp_unixtime.h - contains constants and macros for converting between  *		    NTP time stamps (l_fp) and Unix times (struct timeval)  */
+comment|/*  * ntp_unixtime.h - contains constants and macros for converting between  *		    NTP time stamps (l_fp) and Unix times (struct timeval)  */
 end_comment
 
 begin_include
@@ -138,7 +138,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|U_LONG
+name|u_long
 name|ustotslo
 index|[]
 decl_stmt|;
@@ -146,7 +146,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|U_LONG
+name|u_long
 name|ustotsmid
 index|[]
 decl_stmt|;
@@ -154,7 +154,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|U_LONG
+name|u_long
 name|ustotshi
 index|[]
 decl_stmt|;
@@ -187,7 +187,7 @@ parameter_list|,
 name|ts
 parameter_list|)
 define|\
-value|do { \ 		(ts)->l_ui = (unsigned LONG)(tv)->tv_sec; \ 		TVUTOTSF((tv)->tv_usec, (ts)->l_uf); \ 	} while(0)
+value|do { \ 		(ts)->l_ui = (u_long)(tv)->tv_sec; \ 		TVUTOTSF((tv)->tv_usec, (ts)->l_uf); \ 	} while(0)
 end_define
 
 begin_define
@@ -200,7 +200,7 @@ parameter_list|,
 name|ts
 parameter_list|)
 define|\
-value|do { \ 		int isneg = 0; \ 		LONG usec; \ 		(ts)->l_ui = (tv)->tv_sec; \ 		usec = (tv)->tv_usec; \ 		if (((tv)->tv_sec< 0) || ((tv)->tv_usec< 0)) { \ 			usec = -usec; \ 			(ts)->l_ui = -(ts)->l_ui; \ 			isneg = 1; \ 		} \ 		TVUTOTSF(usec, (ts)->l_uf); \ 		if (isneg) { \ 			L_NEG((ts)); \ 		} \ 	} while(0)
+value|do { \ 		int isneg = 0; \ 		long usec; \ 		(ts)->l_ui = (tv)->tv_sec; \ 		usec = (tv)->tv_usec; \ 		if (((tv)->tv_sec< 0) || ((tv)->tv_usec< 0)) { \ 			usec = -usec; \ 			(ts)->l_ui = -(ts)->l_ui; \ 			isneg = 1; \ 		} \ 		TVUTOTSF(usec, (ts)->l_uf); \ 		if (isneg) { \ 			L_NEG((ts)); \ 		} \ 	} while(0)
 end_define
 
 begin_comment
@@ -227,7 +227,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|LONG
+name|long
 name|tstouslo
 index|[]
 decl_stmt|;
@@ -235,7 +235,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|LONG
+name|long
 name|tstousmid
 index|[]
 decl_stmt|;
@@ -243,7 +243,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|LONG
+name|long
 name|tstoushi
 index|[]
 decl_stmt|;
@@ -285,7 +285,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|U_LONG
+name|u_long
 name|msutotsflo
 index|[]
 decl_stmt|;
@@ -293,7 +293,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|U_LONG
+name|u_long
 name|msutotsfhi
 index|[]
 decl_stmt|;

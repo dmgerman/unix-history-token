@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tpro.h,v 3.1 1993/07/06 01:07:07 jbj Exp  * Structure for the KSI/Odetics TPRO-S data returned in reponse to a  * read() call. Note that these are driver-specific and not dependent on  * 32/64-bit architecture.  */
+comment|/*  * Structure for the KSI/Odetics TPRO-S data returned in reponse to a  * read() call. Note that these are driver-specific and not dependent on  * 32/64-bit architecture.  */
 end_comment
 
 begin_struct

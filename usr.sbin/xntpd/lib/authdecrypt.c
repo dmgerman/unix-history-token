@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* authdecrypt.c,v 3.1 1993/07/06 01:07:44 jbj Exp  * authdecrypt - routine to decrypt a packet to see if this guy knows our key.  */
+comment|/*  * authdecrypt - routine to decrypt a packet to see if this guy knows our key.  */
 end_comment
 
 begin_include
@@ -47,7 +47,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|U_LONG
+name|u_long
 name|cache_keyid
 decl_stmt|;
 end_decl_stmt
@@ -98,13 +98,6 @@ name|authkeyuncached
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|U_LONG
-name|authdecryptok
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|int
 name|DESauthdecrypt
@@ -115,7 +108,7 @@ name|pkt
 parameter_list|,
 name|length
 parameter_list|)
-name|U_LONG
+name|u_long
 name|keyno
 decl_stmt|;
 specifier|const
@@ -331,14 +324,9 @@ operator|==
 literal|0
 operator|)
 condition|)
-block|{
-name|authdecryptok
-operator|++
-expr_stmt|;
 return|return
 literal|1
 return|;
-block|}
 return|return
 literal|0
 return|;

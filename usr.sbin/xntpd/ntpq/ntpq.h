@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ntpq.h,v 3.1 1993/07/06 01:09:30 jbj Exp  * ntpq.h - definitions of interest to ntpq  */
+comment|/*  * ntpq.h - definitions of interest to ntpq  */
 end_comment
 
 begin_include
@@ -122,13 +122,13 @@ name|char
 modifier|*
 name|string
 decl_stmt|;
-name|LONG
+name|long
 name|ival
 decl_stmt|;
-name|U_LONG
+name|u_long
 name|uval
 decl_stmt|;
-name|U_LONG
+name|u_long
 name|netnum
 decl_stmt|;
 block|}
@@ -315,7 +315,7 @@ operator|(
 name|char
 operator|*
 operator|,
-name|U_LONG
+name|u_long
 operator|*
 operator|,
 name|char
@@ -378,7 +378,7 @@ name|nntohost
 name|P
 argument_list|(
 operator|(
-name|U_LONG
+name|u_long
 operator|)
 argument_list|)
 decl_stmt|;
@@ -411,7 +411,7 @@ operator|(
 name|char
 operator|*
 operator|,
-name|U_LONG
+name|u_long
 operator|*
 operator|)
 argument_list|)
@@ -494,7 +494,7 @@ operator|(
 name|char
 operator|*
 operator|,
-name|LONG
+name|long
 operator|*
 operator|)
 argument_list|)
