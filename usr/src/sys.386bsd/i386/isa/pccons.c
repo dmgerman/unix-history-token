@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)pccons.c	5.11 (Berkeley) 5/21/91  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00010  * --------------------         -----   ----------------------  *  * 21 Aug 92    Frank Maclachlan        Fixed back-scroll system crash  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)pccons.c	5.11 (Berkeley) 5/21/91  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         2       00031  * --------------------         -----   ----------------------  *  * 15 Aug 92	Pace Willisson		Patches for X server  * 21 Aug 92    Frank Maclachlan        Fixed back-scroll system crash  */
 end_comment
 
 begin_decl_stmt
@@ -124,6 +124,31 @@ include|#
 directive|include
 file|"machine/pc/display.h"
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|XSERVER
+end_ifdef
+
+begin_comment
+comment|/* 15 Aug 92*/
+end_comment
+
+begin_decl_stmt
+name|int
+name|pc_xmode
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* XSERVER */
+end_comment
 
 begin_decl_stmt
 name|struct
@@ -1208,6 +1233,36 @@ operator|!
 name|openf
 condition|)
 return|return;
+ifdef|#
+directive|ifdef
+name|XSERVER
+comment|/* 15 Aug 92*/
+comment|/* send at least one character, because cntl-space is a null */
+operator|(
+operator|*
+name|linesw
+index|[
+name|pccons
+operator|.
+name|t_line
+index|]
+operator|.
+name|l_rint
+operator|)
+operator|(
+operator|*
+name|cp
+operator|++
+operator|&
+literal|0xff
+operator|,
+operator|&
+name|pccons
+operator|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* XSERVER */
 while|while
 condition|(
 operator|*
@@ -1237,6 +1292,39 @@ operator|)
 expr_stmt|;
 block|}
 end_block
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|XSERVER
+end_ifdef
+
+begin_comment
+comment|/* 15 Aug 92*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CONSOLE_X_MODE_ON
+value|_IO('t',121)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CONSOLE_X_MODE_OFF
+value|_IO('t',122)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* XSERVER */
+end_comment
 
 begin_macro
 name|pcioctl
@@ -1277,6 +1365,46 @@ decl_stmt|;
 specifier|register
 name|error
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|XSERVER
+comment|/* 15 Aug 92*/
+if|if
+condition|(
+name|cmd
+operator|==
+name|CONSOLE_X_MODE_ON
+condition|)
+block|{
+name|pc_xmode_on
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|cmd
+operator|==
+name|CONSOLE_X_MODE_OFF
+condition|)
+block|{
+name|pc_xmode_off
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+endif|#
+directive|endif
+comment|/* XSERVER */
 name|error
 operator|=
 operator|(
@@ -1852,6 +1980,22 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|XSERVER
+comment|/* 15 Aug 92*/
+if|if
+condition|(
+name|pc_xmode
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+endif|#
+directive|endif
+comment|/* XSERVER */
 name|s
 operator|=
 name|spltty
@@ -1910,6 +2054,22 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|XSERVER
+comment|/* 15 Aug 92*/
+if|if
+condition|(
+name|pc_xmode
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+endif|#
+directive|endif
+comment|/* XSERVER */
 name|cp
 operator|=
 name|sgetc
@@ -2059,6 +2219,19 @@ name|crtat
 operator|-
 name|Crtat
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|XSERVER
+comment|/* 15 Aug 92*/
+if|if
+condition|(
+operator|!
+name|pc_xmode
+condition|)
+block|{
+endif|#
+directive|endif
+comment|/* XSERVER */
 name|outb
 argument_list|(
 name|addr_6845
@@ -2148,6 +2321,14 @@ operator|/
 literal|10
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|XSERVER
+comment|/* 15 Aug 92*/
+block|}
+endif|#
+directive|endif
+comment|/* XSERVER */
 block|}
 end_block
 
@@ -2277,6 +2458,18 @@ name|bg_at
 decl_stmt|,
 name|at
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|XSERVER
+comment|/* 15 Aug 92*/
+if|if
+condition|(
+name|pc_xmode
+condition|)
+return|return;
+endif|#
+directive|endif
+comment|/* XSERVER */
 if|if
 condition|(
 name|crtat
@@ -6346,6 +6539,53 @@ decl_stmt|;
 comment|/* 	 *   First see if there is something in the keyboard port 	 */
 name|loop
 label|:
+ifdef|#
+directive|ifdef
+name|XSERVER
+comment|/* 15 Aug 92*/
+if|if
+condition|(
+name|inb
+argument_list|(
+name|KBSTATP
+argument_list|)
+operator|&
+name|KBS_DIB
+condition|)
+block|{
+name|dt
+operator|=
+name|inb
+argument_list|(
+name|KBDATAP
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pc_xmode
+condition|)
+block|{
+name|capchar
+index|[
+literal|0
+index|]
+operator|=
+name|dt
+expr_stmt|;
+return|return
+operator|(
+operator|&
+name|capchar
+index|[
+literal|0
+index|]
+operator|)
+return|;
+block|}
+block|}
+else|#
+directive|else
+comment|/* !XSERVER*/
 if|if
 condition|(
 name|inb
@@ -6362,6 +6602,9 @@ argument_list|(
 name|KBDATAP
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* !XSERVER*/
 else|else
 block|{
 if|if
@@ -6387,6 +6630,16 @@ name|extended
 operator|=
 literal|1
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|XSERVER
+comment|/* 15 Aug 92*/
+goto|goto
+name|loop
+goto|;
+else|#
+directive|else
+comment|/* !XSERVER*/
 if|if
 condition|(
 name|noblock
@@ -6398,6 +6651,9 @@ else|else
 goto|goto
 name|loop
 goto|;
+endif|#
+directive|endif
+comment|/* !XSERVER*/
 block|}
 comment|/* 	 *   Check for cntl-alt-del 	 */
 if|if
@@ -6573,9 +6829,134 @@ break|break;
 case|case
 name|ASCII
 case|:
+ifdef|#
+directive|ifdef
+name|XSERVER
+comment|/* 15 Aug 92*/
+comment|/*  * 18 Sep 92	Terry Lambert	I find that this behaviour is questionable --  *				I believe that this should be conditional on  *				the value of pc_xmode rather than always  *				done.  In particular, "case NONE" seems to  *				not cause a scancode return.  This may  *				invalidate alt-"=" and alt-"-" as well as the  *				F11 and F12 keys, and some keys on lap-tops,  *				Especially Toshibal T1100 and Epson Equity 1  *				and Equity 1+ when not in pc_xmode.  */
+comment|/* control has highest priority */
+if|if
+condition|(
+name|ctrl_down
+condition|)
+name|capchar
+index|[
+literal|0
+index|]
+operator|=
+name|scan_codes
+index|[
+name|dt
+index|]
+operator|.
+name|ctrl
+index|[
+literal|0
+index|]
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|shift_down
+condition|)
+name|capchar
+index|[
+literal|0
+index|]
+operator|=
+name|scan_codes
+index|[
+name|dt
+index|]
+operator|.
+name|shift
+index|[
+literal|0
+index|]
+expr_stmt|;
+else|else
+name|capchar
+index|[
+literal|0
+index|]
+operator|=
+name|scan_codes
+index|[
+name|dt
+index|]
+operator|.
+name|unshift
+index|[
+literal|0
+index|]
+expr_stmt|;
+if|if
+condition|(
+name|caps
+operator|&&
+operator|(
+name|capchar
+index|[
+literal|0
+index|]
+operator|>=
+literal|'a'
+operator|&&
+name|capchar
+index|[
+literal|0
+index|]
+operator|<=
+literal|'z'
+operator|)
+condition|)
+block|{
+name|capchar
+index|[
+literal|0
+index|]
+operator|=
+name|capchar
+index|[
+literal|0
+index|]
+operator|-
+operator|(
+literal|'a'
+operator|-
+literal|'A'
+operator|)
+expr_stmt|;
+block|}
+name|capchar
+index|[
+literal|0
+index|]
+operator||=
+name|alt_down
+expr_stmt|;
+name|extended
+operator|=
+literal|0
+expr_stmt|;
+return|return
+operator|(
+operator|&
+name|capchar
+index|[
+literal|0
+index|]
+operator|)
+return|;
+else|#
+directive|else
+comment|/* !XSERVER*/
 case|case
 name|NONE
 case|:
+endif|#
+directive|endif
+comment|/* !XSERVER*/
 case|case
 name|FUNC
 case|:
@@ -6616,6 +6997,10 @@ index|]
 operator|.
 name|unshift
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|XSERVER
+comment|/* 15 Aug 92*/
 comment|/* XXX */
 if|if
 condition|(
@@ -6664,6 +7049,9 @@ operator|=
 name|capchar
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* !XSERVER*/
 name|extended
 operator|=
 literal|0
@@ -6715,12 +7103,33 @@ operator|(
 name|more_chars
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|XSERVER
+comment|/* 15 Aug 92*/
+case|case
+name|NONE
+case|:
+break|break;
+endif|#
+directive|endif
+comment|/* XSERVER*/
 block|}
 block|}
 name|extended
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|XSERVER
+comment|/* 15 Aug 92*/
+goto|goto
+name|loop
+goto|;
+else|#
+directive|else
+comment|/* !XSERVER*/
 if|if
 condition|(
 name|noblock
@@ -6732,6 +7141,9 @@ else|else
 goto|goto
 name|loop
 goto|;
+endif|#
+directive|endif
+comment|/* !XSERVER*/
 block|}
 end_function
 
@@ -7281,6 +7693,131 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|XSERVER
+end_ifdef
+
+begin_comment
+comment|/* 15 Aug 92*/
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"machine/psl.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"machine/frame.h"
+end_include
+
+begin_macro
+name|pc_xmode_on
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|struct
+name|syscframe
+modifier|*
+name|fp
+decl_stmt|;
+if|if
+condition|(
+name|pc_xmode
+condition|)
+return|return;
+name|pc_xmode
+operator|=
+literal|1
+expr_stmt|;
+name|fp
+operator|=
+operator|(
+expr|struct
+name|syscframe
+operator|*
+operator|)
+name|curproc
+operator|->
+name|p_regs
+expr_stmt|;
+name|fp
+operator|->
+name|sf_eflags
+operator||=
+name|PSL_IOPL
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|pc_xmode_off
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|struct
+name|syscframe
+modifier|*
+name|fp
+decl_stmt|;
+if|if
+condition|(
+name|pc_xmode
+operator|==
+literal|0
+condition|)
+return|return;
+name|pc_xmode
+operator|=
+literal|0
+expr_stmt|;
+name|cursor
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|fp
+operator|=
+operator|(
+expr|struct
+name|syscframe
+operator|*
+operator|)
+name|curproc
+operator|->
+name|p_regs
+expr_stmt|;
+name|fp
+operator|->
+name|sf_eflags
+operator|&=
+operator|~
+name|PSL_IOPL
+expr_stmt|;
+block|}
+end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* XSERVER*/
+end_comment
+
+begin_comment
+comment|/*  * EOF -- File has not been truncated  */
+end_comment
 
 end_unit
 
