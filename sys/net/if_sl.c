@@ -1534,10 +1534,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|MALLOC
-argument_list|(
 name|tmpnc
-argument_list|,
+operator|=
+name|malloc
+argument_list|(
 sizeof|sizeof
 expr|*
 name|tmpnc
@@ -1599,7 +1599,7 @@ operator|=
 operator|*
 name|tmpnc
 expr_stmt|;
-name|FREE
+name|free
 argument_list|(
 name|tmpnc
 argument_list|,
