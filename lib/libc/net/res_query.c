@@ -43,7 +43,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_query.c,v 1.13 1997/03/24 06:11:44 imp Exp $"
+literal|"$Id: res_query.c,v 1.14 1997/06/27 08:22:03 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -947,11 +947,24 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-comment|/* if we have not already tried the name "as is", do that now. 	 * note that we do this regardless of how many dots were in the 	 * name or whether it ends with a dot. 	 */
+comment|/* if we have not already tried the name "as is", do that now. 	 * note that we do this regardless of how many dots were in the 	 * name or whether it ends with a dot unless NOTLDQUERY is set. 	 */
 if|if
 condition|(
 operator|!
 name|tried_as_is
+operator|&&
+operator|(
+name|dots
+operator|||
+operator|!
+operator|(
+name|_res
+operator|.
+name|options
+operator|&
+name|RES_NOTLDQUERY
+operator|)
+operator|)
 condition|)
 block|{
 name|ret

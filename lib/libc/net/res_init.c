@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_init.c,v 1.12 1997/02/22 15:00:32 peter Exp $"
+literal|"$Id: res_init.c,v 1.13 1997/06/27 08:22:03 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1905,6 +1905,32 @@ operator|.
 name|options
 operator||=
 name|RES_USE_INET6
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|strncmp
+argument_list|(
+name|cp
+argument_list|,
+literal|"no_tld_query"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+literal|"no_tld_query"
+argument_list|)
+operator|-
+literal|1
+argument_list|)
+condition|)
+block|{
+name|_res
+operator|.
+name|options
+operator||=
+name|RES_NOTLDQUERY
 expr_stmt|;
 block|}
 else|else
