@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)symtab.c	5.6 (Berkeley) %G%"
+literal|"@(#)symtab.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,13 +35,67 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"restore.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/ufs/dinode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"restore.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_comment
@@ -69,6 +123,54 @@ begin_decl_stmt
 specifier|static
 name|long
 name|entrytblsize
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|addino
+name|__P
+argument_list|(
+operator|(
+name|ino_t
+operator|,
+expr|struct
+name|entry
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|entry
+modifier|*
+name|lookupparent
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|removeentry
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|entry
+operator|*
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -106,7 +208,7 @@ name|maxino
 condition|)
 return|return
 operator|(
-name|NIL
+name|NULL
 operator|)
 return|;
 for|for
@@ -122,7 +224,7 @@ index|]
 init|;
 name|ep
 operator|!=
-name|NIL
+name|NULL
 condition|;
 name|ep
 operator|=
@@ -145,7 +247,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|NIL
+name|NULL
 operator|)
 return|;
 block|}
@@ -155,30 +257,23 @@ begin_comment
 comment|/*  * Add an entry into the entry table  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|addino
-argument_list|(
-argument|inum
-argument_list|,
-argument|np
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|inum
+parameter_list|,
+name|np
+parameter_list|)
 name|ino_t
 name|inum
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|entry
 modifier|*
 name|np
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|entry
@@ -245,7 +340,7 @@ name|e_next
 init|;
 name|np
 operator|!=
-name|NIL
+name|NULL
 condition|;
 name|np
 operator|=
@@ -269,26 +364,21 @@ literal|"duplicate inum"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Delete an entry from the entry table  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|deleteino
-argument_list|(
-argument|inum
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|inum
+parameter_list|)
 name|ino_t
 name|inum
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -338,7 +428,7 @@ name|prev
 init|;
 name|next
 operator|!=
-name|NIL
+name|NULL
 condition|;
 name|next
 operator|=
@@ -387,7 +477,7 @@ name|inum
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Look up an entry by name  */
@@ -441,7 +531,7 @@ argument_list|)
 init|;
 name|ep
 operator|!=
-name|NIL
+name|NULL
 condition|;
 name|ep
 operator|=
@@ -485,7 +575,7 @@ control|(
 init|;
 name|ep
 operator|!=
-name|NIL
+name|NULL
 condition|;
 name|ep
 operator|=
@@ -511,7 +601,7 @@ if|if
 condition|(
 name|ep
 operator|==
-name|NIL
+name|NULL
 condition|)
 break|break;
 if|if
@@ -530,7 +620,7 @@ return|;
 block|}
 return|return
 operator|(
-name|NIL
+name|NULL
 operator|)
 return|;
 block|}
@@ -541,6 +631,7 @@ comment|/*  * Look up the parent of a pathname  */
 end_comment
 
 begin_function
+specifier|static
 name|struct
 name|entry
 modifier|*
@@ -579,7 +670,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|NIL
+name|NULL
 operator|)
 return|;
 operator|*
@@ -603,11 +694,11 @@ if|if
 condition|(
 name|ep
 operator|==
-name|NIL
+name|NULL
 condition|)
 return|return
 operator|(
-name|NIL
+name|NULL
 operator|)
 return|;
 if|if
@@ -764,7 +855,7 @@ name|entry
 modifier|*
 name|freelist
 init|=
-name|NIL
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -808,7 +899,7 @@ if|if
 condition|(
 name|freelist
 operator|!=
-name|NIL
+name|NULL
 condition|)
 block|{
 name|np
@@ -864,7 +955,7 @@ if|if
 condition|(
 name|np
 operator|==
-name|NIL
+name|NULL
 condition|)
 name|panic
 argument_list|(
@@ -892,7 +983,7 @@ if|if
 condition|(
 name|ep
 operator|==
-name|NIL
+name|NULL
 condition|)
 block|{
 if|if
@@ -906,7 +997,7 @@ argument_list|(
 name|ROOTINO
 argument_list|)
 operator|!=
-name|NIL
+name|NULL
 condition|)
 name|panic
 argument_list|(
@@ -1017,7 +1108,7 @@ if|if
 condition|(
 name|ep
 operator|==
-name|NIL
+name|NULL
 condition|)
 name|panic
 argument_list|(
@@ -1060,7 +1151,7 @@ argument_list|(
 name|inum
 argument_list|)
 operator|!=
-name|NIL
+name|NULL
 condition|)
 name|panic
 argument_list|(
@@ -1087,20 +1178,18 @@ begin_comment
 comment|/*  * delete an entry from the symbol table  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|freeentry
-argument_list|(
+parameter_list|(
 name|ep
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|entry
-operator|*
+modifier|*
 name|ep
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -1141,7 +1230,7 @@ name|ep
 operator|->
 name|e_links
 operator|!=
-name|NIL
+name|NULL
 condition|)
 name|badentry
 argument_list|(
@@ -1156,7 +1245,7 @@ name|ep
 operator|->
 name|e_entries
 operator|!=
-name|NIL
+name|NULL
 condition|)
 name|badentry
 argument_list|(
@@ -1188,7 +1277,7 @@ if|if
 condition|(
 name|np
 operator|==
-name|NIL
+name|NULL
 condition|)
 name|badentry
 argument_list|(
@@ -1221,7 +1310,7 @@ name|ep
 operator|->
 name|e_links
 operator|!=
-name|NIL
+name|NULL
 condition|)
 name|addino
 argument_list|(
@@ -1240,7 +1329,7 @@ control|(
 init|;
 name|np
 operator|!=
-name|NIL
+name|NULL
 condition|;
 name|np
 operator|=
@@ -1273,7 +1362,7 @@ if|if
 condition|(
 name|np
 operator|==
-name|NIL
+name|NULL
 condition|)
 name|badentry
 argument_list|(
@@ -1307,35 +1396,30 @@ operator|=
 name|ep
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Relocate an entry in the tree structure  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|moveentry
-argument_list|(
+parameter_list|(
 name|ep
-argument_list|,
+parameter_list|,
 name|newname
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|entry
-operator|*
+modifier|*
 name|ep
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|char
 modifier|*
 name|newname
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|entry
@@ -1357,7 +1441,7 @@ if|if
 condition|(
 name|np
 operator|==
-name|NIL
+name|NULL
 condition|)
 name|badentry
 argument_list|(
@@ -1468,26 +1552,25 @@ operator|~
 name|TMPNAME
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Remove an entry in the tree structure  */
 end_comment
 
-begin_expr_stmt
+begin_function
+specifier|static
+name|void
 name|removeentry
-argument_list|(
+parameter_list|(
 name|ep
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|entry
-operator|*
+modifier|*
 name|ep
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -1531,7 +1614,7 @@ name|e_entries
 init|;
 name|np
 operator|!=
-name|NIL
+name|NULL
 condition|;
 name|np
 operator|=
@@ -1564,7 +1647,7 @@ if|if
 condition|(
 name|np
 operator|==
-name|NIL
+name|NULL
 condition|)
 name|badentry
 argument_list|(
@@ -1575,7 +1658,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Table of unused string entries, sorted by length.  *   * Entries are allocated in STRTBLINCR sized pieces so that names  * of similar lengths can use the same entry. The value of STRTBLINCR  * is chosen so that every entry has at least enough space to hold  * a "struct strtbl" header. Thus every entry can be linked onto an  * apprpriate free list.  *  * NB. The macro "allocsize" below assumes that "struct strhdr"  *     has a size that is a power of two.  */
@@ -1762,21 +1845,16 @@ begin_comment
 comment|/*  * Free space for a name. The resulting entry is linked onto the  * appropriate free list.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|freename
-argument_list|(
-argument|name
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|name
+parameter_list|)
 name|char
 modifier|*
 name|name
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|strhdr
@@ -1823,7 +1901,7 @@ operator|=
 name|np
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Useful quantities placed at the end of a dumped symbol table.  */
@@ -1862,29 +1940,21 @@ begin_comment
 comment|/*  * dump a snapshot of the symbol table  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|dumpsymtable
-argument_list|(
-argument|filename
-argument_list|,
-argument|checkpt
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|filename
+parameter_list|,
+name|checkpt
+parameter_list|)
 name|char
 modifier|*
 name|filename
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|long
 name|checkpt
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1951,9 +2021,16 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|perror
+name|fprintf
 argument_list|(
-literal|"fopen"
+name|stderr
+argument_list|,
+literal|"fopen: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|panic
@@ -1995,7 +2072,7 @@ argument_list|)
 init|;
 name|ep
 operator|!=
-name|NIL
+name|NULL
 condition|;
 name|ep
 operator|=
@@ -2075,7 +2152,7 @@ argument_list|)
 init|;
 name|ep
 operator|!=
-name|NIL
+name|NULL
 condition|;
 name|ep
 operator|=
@@ -2148,7 +2225,7 @@ name|ep
 operator|->
 name|e_links
 operator|!=
-name|NIL
+name|NULL
 condition|)
 name|tep
 operator|->
@@ -2171,7 +2248,7 @@ name|ep
 operator|->
 name|e_sibling
 operator|!=
-name|NIL
+name|NULL
 condition|)
 name|tep
 operator|->
@@ -2194,7 +2271,7 @@ name|ep
 operator|->
 name|e_entries
 operator|!=
-name|NIL
+name|NULL
 condition|)
 name|tep
 operator|->
@@ -2217,7 +2294,7 @@ name|ep
 operator|->
 name|e_next
 operator|!=
-name|NIL
+name|NULL
 condition|)
 name|tep
 operator|->
@@ -2280,11 +2357,11 @@ index|[
 name|i
 index|]
 operator|==
-name|NIL
+name|NULL
 condition|)
 name|tentry
 operator|=
-name|NIL
+name|NULL
 expr_stmt|;
 else|else
 name|tentry
@@ -2399,9 +2476,16 @@ name|fd
 argument_list|)
 condition|)
 block|{
-name|perror
+name|fprintf
 argument_list|(
-literal|"fwrite"
+name|stderr
+argument_list|,
+literal|"fwrite: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|panic
@@ -2421,27 +2505,22 @@ name|fd
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Initialize a symbol table from a file  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|initsymtable
-argument_list|(
-argument|filename
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|filename
+parameter_list|)
 name|char
 modifier|*
 name|filename
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 modifier|*
@@ -2532,7 +2611,7 @@ name|entry
 operator|*
 operator|*
 operator|)
-name|NIL
+name|NULL
 condition|)
 name|panic
 argument_list|(
@@ -2567,6 +2646,8 @@ name|open
 argument_list|(
 name|filename
 argument_list|,
+name|O_RDONLY
+argument_list|,
 literal|0
 argument_list|)
 operator|)
@@ -2574,9 +2655,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|fprintf
 argument_list|(
-literal|"open"
+name|stderr
+argument_list|,
+literal|"open: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|panic
@@ -2600,9 +2688,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|fprintf
 argument_list|(
-literal|"stat"
+name|stderr
+argument_list|,
+literal|"stat: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|panic
@@ -2688,9 +2783,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|fprintf
 argument_list|(
-literal|"read"
+name|stderr
+argument_list|,
+literal|"read: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|panic
@@ -2889,7 +2991,7 @@ index|[
 name|i
 index|]
 operator|==
-name|NIL
+name|NULL
 condition|)
 continue|continue;
 name|entry
@@ -2962,7 +3064,7 @@ name|ep
 operator|->
 name|e_sibling
 operator|!=
-name|NIL
+name|NULL
 condition|)
 name|ep
 operator|->
@@ -2985,7 +3087,7 @@ name|ep
 operator|->
 name|e_links
 operator|!=
-name|NIL
+name|NULL
 condition|)
 name|ep
 operator|->
@@ -3008,7 +3110,7 @@ name|ep
 operator|->
 name|e_entries
 operator|!=
-name|NIL
+name|NULL
 condition|)
 name|ep
 operator|->
@@ -3031,7 +3133,7 @@ name|ep
 operator|->
 name|e_next
 operator|!=
-name|NIL
+name|NULL
 condition|)
 name|ep
 operator|->
@@ -3050,7 +3152,7 @@ index|]
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)restore.c	5.10 (Berkeley) %G%"
+literal|"@(#)restore.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,8 +31,58 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/ufs/dinode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"restore.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|keyval
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * This implements the 't' option.  * List entries on the tape.  */
@@ -248,7 +298,7 @@ if|if
 condition|(
 name|ep
 operator|!=
-name|NIL
+name|NULL
 condition|)
 block|{
 if|if
@@ -389,7 +439,7 @@ if|if
 condition|(
 name|ep
 operator|!=
-name|NIL
+name|NULL
 condition|)
 name|ep
 operator|->
@@ -423,12 +473,10 @@ begin_comment
 comment|/*  *	Remove unneeded leaves from the old tree.  *	Remove directories from the lookup chains.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|removeoldleaves
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -474,7 +522,7 @@ if|if
 condition|(
 name|ep
 operator|==
-name|NIL
+name|NULL
 condition|)
 continue|continue;
 if|if
@@ -492,7 +540,7 @@ control|(
 init|;
 name|ep
 operator|!=
-name|NIL
+name|NULL
 condition|;
 name|ep
 operator|=
@@ -561,7 +609,7 @@ block|}
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  *	For each directory entry on the incremental tape, determine which  *	category it falls into as follows:  *	KEEP - entries that are to be left alone.  *	NEW - new entries to be added.  *	EXTRACT - files that must be updated with new contents.  *	LINK - new links to be added.  *	Renames are done at the same time.  */
@@ -636,12 +684,6 @@ directive|define
 name|MODECHG
 value|0x8
 comment|/* mode of inode changed */
-specifier|extern
-name|char
-modifier|*
-name|keyval
-parameter_list|()
-function_decl|;
 comment|/* 	 * This routine is called once for each element in the  	 * directory hierarchy, with a full path name. 	 * The "type" value is incorrectly specified as LEAF for 	 * directories that are not on the dump tape. 	 * 	 * Check to see if the file is on the tape. 	 */
 if|if
 condition|(
@@ -668,7 +710,7 @@ if|if
 condition|(
 name|np
 operator|!=
-name|NIL
+name|NULL
 condition|)
 block|{
 name|key
@@ -718,7 +760,7 @@ if|if
 condition|(
 name|ip
 operator|!=
-name|NIL
+name|NULL
 condition|)
 block|{
 name|key
@@ -735,7 +777,7 @@ name|e_links
 init|;
 name|ep
 operator|!=
-name|NIL
+name|NULL
 condition|;
 name|ep
 operator|=
@@ -825,7 +867,7 @@ expr_stmt|;
 block|}
 name|np
 operator|=
-name|NIL
+name|NULL
 expr_stmt|;
 name|key
 operator|&=
@@ -1458,7 +1500,7 @@ expr_stmt|;
 break|break;
 comment|/* 	 * If we find a directory entry for a file that is not on 	 * the tape, then we must have found a file that was created 	 * while the dump was in progress. Since we have no contents 	 * for it, we discard the name knowing that it will be on the 	 * next incremental tape. 	 */
 case|case
-name|NIL
+name|NULL
 case|:
 name|fprintf
 argument_list|(
@@ -1542,6 +1584,7 @@ comment|/*  * Calculate the active flags in a key.  */
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|keyval
@@ -1656,12 +1699,10 @@ begin_comment
 comment|/*  * Find unreferenced link names.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|findunreflinks
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -1708,7 +1749,7 @@ if|if
 condition|(
 name|ep
 operator|==
-name|NIL
+name|NULL
 operator|||
 name|ep
 operator|->
@@ -1736,7 +1777,7 @@ name|e_entries
 init|;
 name|np
 operator|!=
-name|NIL
+name|NULL
 condition|;
 name|np
 operator|=
@@ -1788,7 +1829,7 @@ name|removelist
 init|;
 name|ep
 operator|!=
-name|NIL
+name|NULL
 condition|;
 name|ep
 operator|=
@@ -1807,7 +1848,7 @@ name|e_entries
 init|;
 name|np
 operator|!=
-name|NIL
+name|NULL
 condition|;
 name|np
 operator|=
@@ -1866,18 +1907,16 @@ block|}
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Remove old nodes (directories).  * Note that this routine runs in O(N*D) where:  *	N is the number of directory entries to be removed.  *	D is the maximum depth of the tree.  * If N == D this can be quite slow. If the list were  * topologically sorted, the deletion could be done in  * time O(N).  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|removeoldnodes
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -1918,7 +1957,7 @@ name|removelist
 init|;
 name|ep
 operator|!=
-name|NIL
+name|NULL
 condition|;
 name|ep
 operator|=
@@ -1932,7 +1971,7 @@ name|ep
 operator|->
 name|e_entries
 operator|!=
-name|NIL
+name|NULL
 condition|)
 block|{
 name|prev
@@ -1979,7 +2018,7 @@ name|removelist
 init|;
 name|ep
 operator|!=
-name|NIL
+name|NULL
 condition|;
 name|ep
 operator|=
@@ -1995,27 +2034,22 @@ literal|"cannot remove, non-empty"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * This is the routine used to extract files for the 'r' command.  * Extract new leaves.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|createleaves
-argument_list|(
-argument|symtabfile
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|symtabfile
+parameter_list|)
 name|char
 modifier|*
 name|symtabfile
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2109,7 +2143,7 @@ if|if
 condition|(
 name|ep
 operator|==
-name|NIL
+name|NULL
 condition|)
 name|panic
 argument_list|(
@@ -2192,7 +2226,7 @@ if|if
 condition|(
 name|ep
 operator|==
-name|NIL
+name|NULL
 condition|)
 name|panic
 argument_list|(
@@ -2298,18 +2332,16 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * This is the routine used to extract files for the 'x' and 'i' commands.  * Efficiently extract a subset of the files on a tape.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|createfiles
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|ino_t
@@ -2506,7 +2538,7 @@ if|if
 condition|(
 name|ep
 operator|==
-name|NIL
+name|NULL
 condition|)
 name|panic
 argument_list|(
@@ -2565,7 +2597,7 @@ if|if
 condition|(
 name|ep
 operator|==
-name|NIL
+name|NULL
 condition|)
 name|panic
 argument_list|(
@@ -2602,18 +2634,16 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Add links.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|createlinks
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -2666,7 +2696,7 @@ if|if
 condition|(
 name|ep
 operator|==
-name|NIL
+name|NULL
 condition|)
 continue|continue;
 for|for
@@ -2679,7 +2709,7 @@ name|e_links
 init|;
 name|np
 operator|!=
-name|NIL
+name|NULL
 condition|;
 name|np
 operator|=
@@ -2767,18 +2797,16 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Check the symbol table.  * We do this to insure that all the requested work was done, and  * that no temporary names remain.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|checkrestore
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|struct
@@ -2822,7 +2850,7 @@ argument_list|)
 init|;
 name|ep
 operator|!=
-name|NIL
+name|NULL
 condition|;
 name|ep
 operator|=
@@ -2875,7 +2903,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Compare with the directory structure on the tape  * A paranoid check that things are as they should be.  */
@@ -2926,7 +2954,7 @@ if|if
 condition|(
 name|ep
 operator|==
-name|NIL
+name|NULL
 condition|)
 block|{
 name|fprintf
@@ -2966,7 +2994,7 @@ control|(
 init|;
 name|np
 operator|!=
-name|NIL
+name|NULL
 condition|;
 name|np
 operator|=
@@ -2985,7 +3013,7 @@ if|if
 condition|(
 name|np
 operator|==
-name|NIL
+name|NULL
 condition|)
 name|panic
 argument_list|(

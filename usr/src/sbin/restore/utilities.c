@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	5.8 (Berkeley) %G%"
+literal|"@(#)utilities.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,28 +31,77 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/ufs/dinode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"restore.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
 end_include
 
 begin_comment
 comment|/*  * Insure that all the components of a pathname exist.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|pathcheck
-argument_list|(
-argument|name
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|name
+parameter_list|)
 name|char
 modifier|*
 name|name
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -123,7 +172,7 @@ if|if
 condition|(
 name|ep
 operator|==
-name|NIL
+name|NULL
 condition|)
 block|{
 name|ep
@@ -161,26 +210,24 @@ literal|'/'
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Change a name to a unique temporary name.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|mktempname
-argument_list|(
+parameter_list|(
 name|ep
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|entry
-operator|*
+modifier|*
 name|ep
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|char
 name|oldname
@@ -263,7 +310,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Generate a temporary name for an entry.  */
@@ -312,7 +359,7 @@ argument_list|)
 init|;
 name|np
 operator|!=
-name|NIL
+name|NULL
 operator|&&
 name|np
 operator|!=
@@ -331,7 +378,7 @@ if|if
 condition|(
 name|np
 operator|==
-name|NIL
+name|NULL
 condition|)
 name|badentry
 argument_list|(
@@ -370,24 +417,22 @@ begin_comment
 comment|/*  * Rename a file or directory.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|renameit
-argument_list|(
-argument|from
-argument_list|,
-argument|to
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|from
+parameter_list|,
+name|to
+parameter_list|)
 name|char
 modifier|*
 name|from
 decl_stmt|,
-modifier|*
+decl|*
 name|to
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -410,24 +455,16 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Warning: cannot rename %s to %s"
+literal|"warning: cannot rename %s to %s: %s\n"
 argument_list|,
 name|from
 argument_list|,
 name|to
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fflush
+argument_list|,
+name|strerror
 argument_list|(
-name|stderr
+name|errno
 argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
-literal|""
 argument_list|)
 expr_stmt|;
 return|return;
@@ -450,22 +487,17 @@ begin_comment
 comment|/*  * Create a new node (directory).  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|newnode
-argument_list|(
-argument|np
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|np
+parameter_list|)
 name|struct
 name|entry
 modifier|*
 name|np
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 modifier|*
@@ -518,20 +550,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Warning: "
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fflush
-argument_list|(
-name|stderr
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
+literal|"warning: %s: %s\n"
+argument_list|,
 name|cp
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -546,26 +572,24 @@ name|cp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Remove an old node (directory).  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|removenode
-argument_list|(
+parameter_list|(
 name|ep
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|entry
-operator|*
+modifier|*
 name|ep
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|char
 modifier|*
@@ -592,7 +616,7 @@ name|ep
 operator|->
 name|e_entries
 operator|!=
-name|NIL
+name|NULL
 condition|)
 name|badentry
 argument_list|(
@@ -638,20 +662,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Warning: "
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fflush
-argument_list|(
-name|stderr
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
+literal|"warning: %s: %s\n"
+argument_list|,
 name|cp
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -666,26 +684,24 @@ name|cp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Remove a leaf.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|removeleaf
-argument_list|(
+parameter_list|(
 name|ep
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|entry
-operator|*
+modifier|*
 name|ep
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 name|char
 modifier|*
@@ -743,20 +759,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Warning: "
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fflush
-argument_list|(
-name|stderr
-argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
+literal|"warning: %s: %s\n"
+argument_list|,
 name|cp
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -771,32 +781,30 @@ name|cp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Create a link.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|linkit
-argument_list|(
-argument|existing
-argument_list|,
-argument|new
-argument_list|,
-argument|type
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|existing
+parameter_list|,
+name|new
+parameter_list|,
+name|type
+parameter_list|)
 name|char
 modifier|*
 name|existing
 decl_stmt|,
-modifier|*
+decl|*
 name|new
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_decl_stmt
 name|int
@@ -832,24 +840,16 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Warning: cannot create symbolic link %s->%s: "
+literal|"warning: cannot create symbolic link %s->%s: %s\n"
 argument_list|,
 name|new
 argument_list|,
 name|existing
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fflush
+argument_list|,
+name|strerror
 argument_list|(
-name|stderr
+name|errno
 argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
-literal|""
 argument_list|)
 expr_stmt|;
 return|return
@@ -886,24 +886,16 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Warning: cannot create hard link %s->%s: "
+literal|"warning: cannot create hard link %s->%s: %s\n"
 argument_list|,
 name|new
 argument_list|,
 name|existing
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fflush
+argument_list|,
+name|strerror
 argument_list|(
-name|stderr
+name|errno
 argument_list|)
-expr_stmt|;
-name|perror
-argument_list|(
-literal|""
 argument_list|)
 expr_stmt|;
 return|return
@@ -997,7 +989,7 @@ if|if
 condition|(
 name|ep
 operator|==
-name|NIL
+name|NULL
 operator|||
 name|ep
 operator|->
@@ -1074,7 +1066,7 @@ if|if
 condition|(
 name|ep
 operator|==
-name|NIL
+name|NULL
 operator|||
 name|ep
 operator|->
@@ -1113,29 +1105,24 @@ begin_comment
 comment|/*  * report on a badly formed entry  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|badentry
-argument_list|(
+parameter_list|(
 name|ep
-argument_list|,
+parameter_list|,
 name|msg
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|entry
-operator|*
+modifier|*
 name|ep
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|char
 modifier|*
 name|msg
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|fprintf
 argument_list|(
@@ -1178,7 +1165,7 @@ name|ep
 operator|->
 name|e_sibling
 operator|!=
-name|NIL
+name|NULL
 condition|)
 name|fprintf
 argument_list|(
@@ -1200,7 +1187,7 @@ name|ep
 operator|->
 name|e_entries
 operator|!=
-name|NIL
+name|NULL
 condition|)
 name|fprintf
 argument_list|(
@@ -1222,7 +1209,7 @@ name|ep
 operator|->
 name|e_links
 operator|!=
-name|NIL
+name|NULL
 condition|)
 name|fprintf
 argument_list|(
@@ -1244,7 +1231,7 @@ name|ep
 operator|->
 name|e_next
 operator|!=
-name|NIL
+name|NULL
 condition|)
 name|fprintf
 argument_list|(
@@ -1299,7 +1286,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Construct a string indicating the active flag bits of an entry.  */
@@ -1524,21 +1511,16 @@ begin_comment
 comment|/*  * Elicit a reply.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|reply
-argument_list|(
-argument|question
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|question
+parameter_list|)
 name|char
 modifier|*
 name|question
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|char
 name|c
@@ -1623,53 +1605,99 @@ name|FAIL
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * handle unexpected inconsistencies  */
 end_comment
 
-begin_comment
-comment|/* VARARGS1 */
-end_comment
+begin_if
+if|#
+directive|if
+name|__STDC__
+end_if
 
-begin_macro
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<varargs.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+name|void
+if|#
+directive|if
+name|__STDC__
 name|panic
-argument_list|(
-argument|msg
-argument_list|,
-argument|d1
-argument_list|,
-argument|d2
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+specifier|const
 name|char
 modifier|*
-name|msg
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+else|#
+directive|else
+function|panic
+parameter_list|(
+name|fmt
+parameter_list|,
+name|va_alist
+parameter_list|)
+name|char
+modifier|*
+name|fmt
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|long
-name|d1
-decl_stmt|,
-name|d2
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+function|va_dcl
+endif|#
+directive|endif
 block|{
-name|fprintf
+name|va_list
+name|ap
+decl_stmt|;
+if|#
+directive|if
+name|__STDC__
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|fmt
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|va_start
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|vfprintf
 argument_list|(
 name|stderr
 argument_list|,
-name|msg
+name|fmt
 argument_list|,
-name|d1
-argument_list|,
-name|d2
+name|ap
 argument_list|)
 expr_stmt|;
 if|if
@@ -1706,7 +1734,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 
