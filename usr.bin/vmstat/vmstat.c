@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vmstat.c,v 1.27 1998/09/20 00:11:17 ken Exp $"
+literal|"$Id: vmstat.c,v 1.29 1998/10/28 06:41:24 jdp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1159,6 +1159,23 @@ name|struct
 name|winsize
 name|winsize
 decl_stmt|;
+comment|/* 		 * Make sure that the userland devstat version matches the 		 * kernel devstat version.  If not, exit and print a 		 * message informing the user of his mistake. 		 */
+if|if
+condition|(
+name|checkversion
+argument_list|()
+operator|<
+literal|0
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
+name|devstat_errbuf
+argument_list|)
+expr_stmt|;
 name|argv
 operator|=
 name|getdrivedata
@@ -1887,23 +1904,6 @@ sizeof|sizeof
 argument_list|(
 name|hz
 argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Make sure that the userland devstat version matches the kernel 	 * devstat version.  If not, exit and print a message informing  	 * the user of his mistake. 	 */
-if|if
-condition|(
-name|checkversion
-argument_list|()
-operator|<
-literal|0
-condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"%s"
-argument_list|,
-name|devstat_errbuf
 argument_list|)
 expr_stmt|;
 for|for
