@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_interface.c,v 1.31 1997/07/06 23:25:46 fsmp Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1991,1990 Carnegie Mellon University  * All Rights Reserved.  *  * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  *	$Id: db_interface.c,v 1.9 1997/07/13 00:48:28 smp Exp smp $  */
 end_comment
 
 begin_comment
@@ -377,7 +377,7 @@ name|defined
 argument_list|(
 name|TEST_CPUSTOP
 argument_list|)
-comment|/* we stop all CPUs except ourselves (obviously) */
+comment|/* XXX FIXME: we stop all CPUs except ourselves (obviously) */
 name|stop_cpus
 argument_list|(
 name|other_cpus
@@ -385,7 +385,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* SMP&& TEST_CPUSTOP */
+comment|/** SMP&& TEST_CPUSTOP */
 operator|(
 name|void
 operator|)
@@ -435,13 +435,27 @@ name|defined
 argument_list|(
 name|TEST_CPUSTOP
 argument_list|)
-comment|/* restart all the CPUs we previously stopped */
-if|#
-directive|if
-literal|0
-block|if (stopped_cpus != other_cpus) { 		db_printf("whoa, other_cpus: 0x%08x, stopped_cpus: 0x%08x\n", 		       other_cpus, stopped_cpus); 		cngetc(); 	}
-endif|#
-directive|endif
+comment|/* XXX FIXME: restart all the CPUs we previously stopped */
+if|if
+condition|(
+name|stopped_cpus
+operator|!=
+name|other_cpus
+condition|)
+block|{
+name|db_printf
+argument_list|(
+literal|"whoa, other_cpus: 0x%08x, stopped_cpus: 0x%08x\n"
+argument_list|,
+name|other_cpus
+argument_list|,
+name|stopped_cpus
+argument_list|)
+expr_stmt|;
+name|cngetc
+argument_list|()
+expr_stmt|;
+block|}
 name|restart_cpus
 argument_list|(
 name|stopped_cpus
@@ -449,7 +463,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* SMP&& TEST_CPUSTOP */
+comment|/** SMP&& TEST_CPUSTOP */
 name|cnpollc
 argument_list|(
 name|FALSE
