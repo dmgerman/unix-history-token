@@ -4,7 +4,7 @@ comment|/*	$NetBSD: if_de.c,v 1.72 1998/07/05 06:49:14 jonathan Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_de.c,v 1.84 1998/07/08 01:24:37 peter Exp $ */
+comment|/*	$Id: if_de.c,v 1.85 1998/07/15 02:32:27 bde Exp $ */
 end_comment
 
 begin_comment
@@ -420,6 +420,57 @@ directive|define
 name|DEVAR_INCLUDE
 value|"pci/if_devar.h"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* In case somebody is trying to run this on an older 2.2 or 3.0 */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__FreeBSD_version
+end_ifndef
+
+begin_comment
+comment|/* defined in sys/param.h on current code */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD__
+operator|>=
+literal|3
+end_if
+
+begin_define
+define|#
+directive|define
+name|__FreeBSD_version
+value|300000
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|__FreeBSD_version
+value|200000
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -16168,9 +16219,9 @@ argument_list|(
 name|__FreeBSD__
 argument_list|)
 operator|&&
-name|__FreeBSD__
+name|__FreeBSD_version
 operator|>=
-literal|3
+literal|300000
 name|struct
 name|ifmultiaddr
 modifier|*
@@ -16255,9 +16306,9 @@ argument_list|(
 name|__FreeBSD__
 argument_list|)
 operator|&&
-name|__FreeBSD__
+name|__FreeBSD_version
 operator|>=
-literal|3
+literal|300000
 name|multicnt
 operator|=
 literal|0
@@ -16382,9 +16433,9 @@ argument_list|(
 name|__FreeBSD__
 argument_list|)
 operator|&&
-name|__FreeBSD__
+name|__FreeBSD_version
 operator|>=
-literal|3
+literal|300000
 for|for
 control|(
 name|ifma
@@ -16729,9 +16780,9 @@ argument_list|(
 name|__FreeBSD__
 argument_list|)
 operator|&&
-name|__FreeBSD__
+name|__FreeBSD_version
 operator|>=
-literal|3
+literal|300000
 for|for
 control|(
 name|ifma
@@ -24536,9 +24587,9 @@ argument_list|(
 name|__FreeBSD__
 argument_list|)
 operator|&&
-name|__FreeBSD__
+name|__FreeBSD_version
 operator|>=
-literal|3
+literal|300000
 name|tulip_addr_filter
 argument_list|(
 name|sc
@@ -28527,9 +28578,9 @@ parameter_list|)
 value|pci_conf_read(config_id, (r))
 if|#
 directive|if
-name|__FreeBSD__
+name|__FreeBSD_version
 operator|>=
-literal|3
+literal|300000
 define|#
 directive|define
 name|PCI_GETBUSDEVINFO
