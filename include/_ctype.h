@@ -251,34 +251,37 @@ begin_comment
 comment|/* See comments in<sys/_types.h> about __ct_rune_t. */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|__BEGIN_DECLS
 name|unsigned
 name|long
 name|___runetype
-parameter_list|(
+argument_list|(
 name|__ct_rune_t
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__pure
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|__ct_rune_t
 name|___tolower
-parameter_list|(
+argument_list|(
 name|__ct_rune_t
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__pure
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|__ct_rune_t
 name|___toupper
-parameter_list|(
+argument_list|(
 name|__ct_rune_t
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__pure
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|__END_DECLS
