@@ -3,7 +3,7 @@ begin_define
 define|#
 directive|define
 name|RELEASE_NAME
-value|"2.2-BETA"
+value|"__RELEASE"
 end_define
 
 end_unit
