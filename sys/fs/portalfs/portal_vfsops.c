@@ -729,11 +729,6 @@ name|flags
 init|=
 literal|0
 decl_stmt|;
-name|struct
-name|socket
-modifier|*
-name|so
-decl_stmt|;
 if|if
 condition|(
 name|mntflags
