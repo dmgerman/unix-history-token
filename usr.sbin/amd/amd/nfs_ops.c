@@ -113,6 +113,12 @@ directive|include
 file|"mount.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"mountres.h"
+end_include
+
 begin_comment
 comment|/*  * Network file system  */
 end_comment
@@ -134,49 +140,6 @@ end_define
 begin_comment
 comment|/*  * The NFS layer maintains a cache of file handles.  * This is *fundamental* to the implementation and  * also allows quick remounting when a filesystem  * is accessed soon after timing out.  *  * The NFS server layer knows to flush this cache  * when a server goes down so avoiding stale handles.  *  * Each cache entry keeps a hard reference to  * the corresponding server.  This ensures that  * the server keepalive information is maintained.  *  * The copy of the sockaddr_in here is taken so  * that the port can be twiddled to talk to mountd  * instead of portmap or the NFS server as used  * elsewhere.  * The port# is flushed if a server goes down.  * The IP address is never flushed - we assume  * that the address of a mounted machine never  * changes.  If it does, then you have other  * problems...  */
 end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|mountres
-block|{
-name|int
-name|mr_version
-decl_stmt|;
-comment|/* 1 or 3 */
-union|union
-block|{
-name|struct
-name|fhstatus
-name|mru_fhstatus
-decl_stmt|;
-comment|/* mount v1 result */
-name|struct
-name|mountres3
-name|mru_mountres3
-decl_stmt|;
-comment|/* mount v3 result */
-block|}
-name|mr_un
-union|;
-block|}
-name|mountres
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|mr_fhstatus
-value|mr_un.mru_fhstatus
-end_define
-
-begin_define
-define|#
-directive|define
-name|mr_mountres3
-value|mr_un.mru_mountres3
-end_define
 
 begin_typedef
 typedef|typedef
@@ -885,36 +848,21 @@ operator|.
 name|mr_version
 operator|==
 name|MOUNTVERS3
-operator|&&
-name|fp
-operator|->
-name|fh_mountres
-operator|.
-name|mr_mountres3
-operator|.
-name|mountres3_u
-operator|.
-name|mountinfo
-operator|.
-name|fhandle
-operator|.
-name|fhandle3_val
 condition|)
-name|free
+name|xdr_free
 argument_list|(
+name|xdr_mountres3
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
 name|fp
 operator|->
 name|fh_mountres
 operator|.
 name|mr_mountres3
-operator|.
-name|mountres3_u
-operator|.
-name|mountinfo
-operator|.
-name|fhandle
-operator|.
-name|fhandle3_val
 argument_list|)
 expr_stmt|;
 name|free
