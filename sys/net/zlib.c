@@ -33,17 +33,10 @@ argument_list|(
 name|__FreeBSD__
 argument_list|)
 operator|&&
-operator|(
-name|defined
-argument_list|(
-name|KERNEL
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|_KERNEL
 argument_list|)
-operator|)
 end_if
 
 begin_define
@@ -93,7 +86,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 end_ifdef
 
 begin_include
@@ -118,19 +111,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|KERNEL
-argument_list|)
-operator|||
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|_KERNEL
-argument_list|)
-end_if
+end_ifdef
 
 begin_comment
 comment|/* Assume this is a *BSD or SVR4 kernel */
@@ -330,7 +315,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _KERNEL || KERNEL */
+comment|/* _KERNEL */
 end_comment
 
 begin_ifndef

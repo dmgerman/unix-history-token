@@ -19,7 +19,7 @@ end_define
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|KERNEL
+name|_KERNEL
 end_ifndef
 
 begin_include
@@ -32,10 +32,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* !KERNEL */
-end_comment
 
 begin_comment
 comment|/*  * We use a linked list rather than a bitmap because we need to be able to  * represent potentially huge objects (like all of a processor's physical  * address space).  That is also why the indices are defined to have type  * `unsigned long' -- that being the largest integral type in Standard C.  */
@@ -252,7 +248,7 @@ end_expr_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 end_ifdef
 
 begin_function_decl
@@ -492,7 +488,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* KERNEL */
+comment|/* _KERNEL */
 end_comment
 
 begin_endif

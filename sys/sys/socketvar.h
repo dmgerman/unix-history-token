@@ -680,7 +680,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 end_ifdef
 
 begin_comment
@@ -2217,7 +2217,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* KERNEL */
+comment|/* _KERNEL */
 end_comment
 
 begin_endif

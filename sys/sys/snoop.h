@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * Snoop stuff.  */
+comment|/*  * Copyright (c) 1995 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  * Snoop stuff.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -18,7 +18,7 @@ end_define
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|KERNEL
+name|_KERNEL
 end_ifndef
 
 begin_include
@@ -41,7 +41,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 end_ifdef
 
 begin_define
@@ -198,7 +198,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* KERNEL */
+comment|/* _KERNEL */
 end_comment
 
 begin_comment

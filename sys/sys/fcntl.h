@@ -22,7 +22,7 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|KERNEL
+name|_KERNEL
 end_ifndef
 
 begin_include
@@ -89,7 +89,7 @@ comment|/* mask for above modes */
 end_comment
 
 begin_comment
-comment|/*  * Kernel encoding of open mode; separate read and write bits that are  * independently testable: 1 greater than the above.  *  * XXX  * FREAD and FWRITE are excluded from the #ifdef KERNEL so that TIOCFLUSH,  * which was documented to use FREAD/FWRITE, continues to work.  */
+comment|/*  * Kernel encoding of open mode; separate read and write bits that are  * independently testable: 1 greater than the above.  *  * XXX  * FREAD and FWRITE are excluded from the #ifdef _KERNEL so that TIOCFLUSH,  * which was documented to use FREAD/FWRITE, continues to work.  */
 end_comment
 
 begin_ifndef
@@ -241,7 +241,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 end_ifdef
 
 begin_define
@@ -300,7 +300,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 end_ifdef
 
 begin_comment
@@ -619,7 +619,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 end_ifdef
 
 begin_define
@@ -754,7 +754,7 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|KERNEL
+name|_KERNEL
 end_ifndef
 
 begin_include

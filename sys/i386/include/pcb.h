@@ -161,7 +161,7 @@ end_struct
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 end_ifdef
 
 begin_ifndef

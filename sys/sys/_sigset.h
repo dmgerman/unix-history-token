@@ -542,7 +542,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|KERNEL
+name|_KERNEL
 argument_list|)
 end_if
 

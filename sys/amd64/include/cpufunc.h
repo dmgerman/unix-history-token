@@ -641,7 +641,7 @@ argument_list|)
 operator|&&
 name|defined
 argument_list|(
-name|KERNEL
+name|_KERNEL
 argument_list|)
 end_if
 
@@ -736,7 +736,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !(SMP&& KERNEL) */
+comment|/* !(SMP&& _KERNEL) */
 end_comment
 
 begin_function
@@ -797,7 +797,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* SMP&& KERNEL */
+comment|/* SMP&& _KERNEL */
 end_comment
 
 begin_function

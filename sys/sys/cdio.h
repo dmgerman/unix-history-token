@@ -26,7 +26,7 @@ end_define
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|KERNEL
+name|_KERNEL
 end_ifndef
 
 begin_include

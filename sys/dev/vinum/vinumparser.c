@@ -20,7 +20,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 end_ifdef
 
 begin_include
@@ -331,7 +331,7 @@ argument_list|)
 block|,
 ifndef|#
 directive|ifndef
-name|KERNEL
+name|_KERNEL
 comment|/* for vinum(8) only */
 ifdef|#
 directive|ifdef
@@ -543,7 +543,7 @@ end_decl_stmt
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|KERNEL
+name|_KERNEL
 end_ifndef
 
 begin_decl_stmt

@@ -59,23 +59,11 @@ block|}
 struct|;
 end_struct
 
-begin_if
-if|#
-directive|if
-operator|(
-name|defined
-argument_list|(
-name|KERNEL
-argument_list|)
-operator|)
-operator|||
-operator|(
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|_KERNEL
-argument_list|)
-operator|)
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|extern
@@ -109,10 +97,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* KERNEL */
-end_comment
 
 begin_comment
 comment|/*  * Names for PIM sysctl objects  */

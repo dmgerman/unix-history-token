@@ -86,7 +86,7 @@ end_define
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|KERNEL
+name|_KERNEL
 end_ifndef
 
 begin_include
@@ -177,7 +177,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|KERNEL
+name|_KERNEL
 argument_list|)
 operator|&&
 operator|(

@@ -119,7 +119,7 @@ end_struct
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|KERNEL
+name|_KERNEL
 end_ifndef
 
 begin_comment
@@ -277,7 +277,7 @@ begin_expr_stmt
 name|__END_DECLS
 else|#
 directive|else
-comment|/* !KERNEL */
+comment|/* !_KERNEL */
 specifier|extern
 expr|struct
 name|ncp_nlstables
@@ -381,7 +381,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !KERNEL */
+comment|/* !_KERNEL */
 end_comment
 
 begin_endif

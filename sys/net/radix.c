@@ -22,7 +22,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 end_ifdef
 
 begin_include
@@ -5464,7 +5464,7 @@ name|cplim
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 name|struct
 name|domain
 modifier|*

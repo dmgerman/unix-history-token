@@ -12,7 +12,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 end_ifdef
 
 begin_include
@@ -88,7 +88,7 @@ end_include
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|KERNEL
+name|_KERNEL
 end_ifndef
 
 begin_include
@@ -169,7 +169,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !KERNEL */
+comment|/* !_KERNEL */
 end_comment
 
 begin_decl_stmt
@@ -2603,7 +2603,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 end_ifdef
 
 begin_decl_stmt
@@ -8182,7 +8182,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 end_ifdef
 
 begin_function
@@ -8911,7 +8911,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !KERNEL */
+comment|/* !_KERNEL */
 end_comment
 
 begin_function
@@ -10425,13 +10425,13 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* KERNEL/!KERNEL */
+comment|/* _KERNEL/!_KERNEL */
 end_comment
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 end_ifdef
 
 begin_decl_stmt
@@ -10558,7 +10558,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 if|if
 condition|(
 name|bootverbose
@@ -11030,7 +11030,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 name|scsi_sense_print
 argument_list|(
 name|csio

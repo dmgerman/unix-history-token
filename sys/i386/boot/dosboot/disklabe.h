@@ -304,7 +304,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|KERNEL
+name|_KERNEL
 argument_list|)
 operator|||
 name|defined
@@ -361,7 +361,7 @@ name|d_boot1
 value|d_un.un_b.un_d_boot1
 endif|#
 directive|endif
-comment|/* ! KERNEL or STANDALONE */
+comment|/* ! _KERNEL or STANDALONE */
 comment|/* disk geometry: */
 name|u_long
 name|d_secsize
@@ -1560,7 +1560,7 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|KERNEL
+name|_KERNEL
 argument_list|)
 operator|&&
 operator|!

@@ -50,7 +50,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*#ifdef KERNEL*/
+comment|/*#ifdef _KERNEL*/
 end_comment
 
 begin_comment
@@ -656,7 +656,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 end_ifdef
 
 begin_comment
@@ -1355,7 +1355,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* KERNEL */
+comment|/* _KERNEL */
 end_comment
 
 begin_comment
@@ -1720,7 +1720,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 end_ifdef
 
 begin_decl_stmt

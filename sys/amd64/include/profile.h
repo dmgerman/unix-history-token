@@ -18,7 +18,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 end_ifdef
 
 begin_comment
@@ -199,7 +199,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !KERNEL */
+comment|/* !_KERNEL */
 end_comment
 
 begin_define
@@ -242,7 +242,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* KERNEL */
+comment|/* _KERNEL */
 end_comment
 
 begin_comment
@@ -259,7 +259,7 @@ end_typedef
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 end_ifdef
 
 begin_decl_stmt
@@ -382,7 +382,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !KERNEL */
+comment|/* !_KERNEL */
 end_comment
 
 begin_include
@@ -443,7 +443,7 @@ begin_decl_stmt
 name|__END_DECLS
 endif|#
 directive|endif
-comment|/* KERNEL */
+comment|/* _KERNEL */
 ifdef|#
 directive|ifdef
 name|GUPROF

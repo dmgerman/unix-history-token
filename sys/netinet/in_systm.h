@@ -59,7 +59,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 end_ifdef
 
 begin_decl_stmt

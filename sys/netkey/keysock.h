@@ -19,14 +19,11 @@ directive|define
 name|_NETKEY_KEYSOCK_H_
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|KERNEL
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
 
 begin_struct
 struct|struct
@@ -147,7 +144,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* defined(KERNEL) */
+comment|/* _KERNEL */
 end_comment
 
 begin_endif

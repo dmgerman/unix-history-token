@@ -122,7 +122,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 end_ifdef
 
 begin_include
@@ -145,7 +145,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 end_ifdef
 
 begin_define
@@ -791,7 +791,7 @@ block|{
 default|default:
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 return|return
 literal|0
 return|;
@@ -857,7 +857,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 name|int
 name|merr
 decl_stmt|;
@@ -987,7 +987,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 name|int
 name|merr
 decl_stmt|;
@@ -1060,7 +1060,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 specifier|register
 name|struct
 name|mbuf
@@ -1189,7 +1189,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 name|int
 name|merr
 decl_stmt|;
@@ -1329,7 +1329,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 name|int
 name|merr
 decl_stmt|;
@@ -1423,7 +1423,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 specifier|register
 name|struct
 name|mbuf
@@ -1507,7 +1507,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 specifier|register
 name|struct
 name|mbuf
@@ -2131,7 +2131,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 end_ifdef
 
 begin_comment

@@ -20,7 +20,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|KERNEL
+name|_KERNEL
 argument_list|)
 operator|||
 name|defined
@@ -149,7 +149,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* KERNEL || KZIP */
+comment|/* _KERNEL || KZIP */
 end_comment
 
 begin_endif

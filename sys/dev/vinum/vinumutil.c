@@ -22,7 +22,7 @@ end_include
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|KERNEL
+name|_KERNEL
 end_ifndef
 
 begin_include
@@ -793,7 +793,7 @@ block|}
 block|}
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 name|throw_rude_remark
 argument_list|(
 name|EINVAL
@@ -827,7 +827,7 @@ directive|endif
 block|}
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 name|throw_rude_remark
 argument_list|(
 name|EINVAL

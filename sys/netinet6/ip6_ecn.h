@@ -7,19 +7,11 @@ begin_comment
 comment|/*  * ECN consideration on tunnel ingress/egress operation.  * http://www.aciri.org/floyd/papers/draft-ipsec-ecn-00.txt  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|KERNEL
-argument_list|)
-operator|||
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|_KERNEL
-argument_list|)
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|extern

@@ -24,7 +24,7 @@ end_include
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|KERNEL
+name|_KERNEL
 end_ifndef
 
 begin_if
@@ -64,7 +64,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !KERNEL */
+comment|/* !_KERNEL */
 end_comment
 
 begin_include
@@ -1115,7 +1115,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 end_ifdef
 
 begin_ifdef
@@ -2543,7 +2543,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* !KERNEL */
+comment|/* !_KERNEL */
 end_comment
 
 begin_include
@@ -2868,7 +2868,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* KERNEL */
+comment|/* _KERNEL */
 end_comment
 
 begin_endif

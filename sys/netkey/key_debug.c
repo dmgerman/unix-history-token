@@ -13,34 +13,6 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|KERNEL
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|KERNEL
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -73,7 +45,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 end_ifdef
 
 begin_include
@@ -135,15 +107,11 @@ directive|include
 file|<netinet6/ipsec.h>
 end_include
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|KERNEL
-argument_list|)
-end_if
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
 
 begin_include
 include|#
@@ -168,23 +136,19 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* defined(KERNEL) */
-end_comment
-
 begin_if
 if|#
 directive|if
 operator|!
 name|defined
 argument_list|(
-name|KERNEL
+name|_KERNEL
 argument_list|)
 operator|||
 operator|(
 name|defined
 argument_list|(
-name|KERNEL
+name|_KERNEL
 argument_list|)
 operator|&&
 name|defined
@@ -302,7 +266,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 end_ifdef
 
 begin_decl_stmt
@@ -328,7 +292,7 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|KERNEL
+name|_KERNEL
 end_ifndef
 
 begin_define
@@ -976,7 +940,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 name|ipsec_hexdump
 argument_list|(
 call|(
@@ -1846,7 +1810,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 end_ifdef
 
 begin_comment
@@ -2837,7 +2801,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* KERNEL */
+comment|/* _KERNEL */
 end_comment
 
 begin_function
@@ -2956,7 +2920,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !defined(KERNEL) || (defined(KERNEL)&& defined(IPSEC_DEBUG)) */
+comment|/* !defined(_KERNEL) || (defined(_KERNEL)&& defined(IPSEC_DEBUG)) */
 end_comment
 
 begin_function

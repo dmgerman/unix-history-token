@@ -935,17 +935,10 @@ argument_list|(
 name|__FreeBSD__
 argument_list|)
 operator|&&
-operator|(
-name|defined
-argument_list|(
-name|KERNEL
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|_KERNEL
 argument_list|)
-operator|)
 define|#
 directive|define
 name|inflate

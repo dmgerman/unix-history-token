@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Defines for Cronyx-Sigma adapter driver.  *  * Copyright (C) 1994 Cronyx Ltd.  * Author: Serge Vakulenko,<vak@zebub.msk.su>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organizations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * Version 1.9, Wed Oct  4 18:58:15 MSK 1995  */
+comment|/*  * Defines for Cronyx-Sigma adapter driver.  *  * Copyright (C) 1994 Cronyx Ltd.  * Author: Serge Vakulenko,<vak@zebub.msk.su>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organizations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * Version 1.9, Wed Oct  4 18:58:15 MSK 1995  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
@@ -2064,7 +2064,7 @@ decl_stmt|;
 comment|/* RTS signal value */
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 name|struct
 name|tty
 modifier|*
@@ -2324,7 +2324,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|KERNEL
+name|_KERNEL
 end_ifdef
 
 begin_function_decl
