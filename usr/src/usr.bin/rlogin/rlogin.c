@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogin.c	4.7 82/12/25"
+literal|"@(#)rlogin.c	4.8 83/01/18"
 decl_stmt|;
 end_decl_stmt
 
@@ -130,14 +130,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|rcmdoptions
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|eight
 decl_stmt|;
 end_decl_stmt
@@ -248,6 +240,10 @@ name|sp
 decl_stmt|;
 name|int
 name|uid
+decl_stmt|,
+name|options
+init|=
+literal|0
 decl_stmt|;
 name|host
 operator|=
@@ -321,7 +317,7 @@ operator|,
 name|argc
 operator|--
 expr_stmt|;
-name|rcmdoptions
+name|options
 operator||=
 name|SO_DEBUG
 expr_stmt|;
@@ -601,6 +597,32 @@ condition|)
 name|exit
 argument_list|(
 literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|options
+operator|&
+name|SO_DEBUG
+operator|&&
+name|setsockopt
+argument_list|(
+name|rem
+argument_list|,
+name|SOL_SOCKET
+argument_list|,
+name|SO_DEBUG
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|perror
+argument_list|(
+literal|"rlogin: setsockopt (SO_DEBUG)"
 argument_list|)
 expr_stmt|;
 name|uid
@@ -937,7 +959,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * writer: write to remote: 0 -> line.  * ~.	terminate  * ~^Z	suspend rlogin process.  */
+comment|/*  * writer: write to remote: 0 -> line.  * ~.	terminate  * ~^Z	suspend rlogin process.  * ~^Y  suspend rlogin process, but leave reader alone.  */
 end_comment
 
 begin_macro
