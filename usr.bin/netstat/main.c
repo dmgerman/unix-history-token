@@ -43,7 +43,7 @@ name|char
 name|main_c_rcsid
 index|[]
 init|=
-literal|"$Id: main.c,v 1.3 1994/05/04 14:03:20 davidg Exp $"
+literal|"$Id: main.c,v 1.4 1994/05/17 21:10:16 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1077,7 +1077,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Aadf:hI:iM:mN:np:Rrstuw:"
+literal|"Aadf:ghI:iM:mN:np:rstuw:"
 argument_list|)
 operator|)
 operator|!=
@@ -1347,7 +1347,7 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-literal|'R'
+literal|'g'
 case|:
 name|Rflag
 operator|=
