@@ -1213,6 +1213,14 @@ expr_stmt|;
 comment|/* Who we're blocked on */
 name|p
 operator|->
+name|p_mtxname
+operator|=
+name|m
+operator|->
+name|mtx_description
+expr_stmt|;
+name|p
+operator|->
 name|p_stat
 operator|=
 name|SMTX
@@ -1694,6 +1702,12 @@ expr_stmt|;
 name|p1
 operator|->
 name|p_blocked
+operator|=
+name|NULL
+expr_stmt|;
+name|p1
+operator|->
+name|p_mtxname
 operator|=
 name|NULL
 expr_stmt|;
