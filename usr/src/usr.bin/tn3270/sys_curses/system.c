@@ -380,7 +380,7 @@ if|if
 condition|(
 name|api_exch_outcommand
 argument_list|(
-name|EXCH_REJECTED
+name|EXCH_CMD_REJECTED
 argument_list|)
 operator|==
 operator|-
@@ -524,7 +524,7 @@ if|if
 condition|(
 name|api_exch_outcommand
 argument_list|(
-name|EXCH_SEND_AUTH
+name|EXCH_CMD_SEND_AUTH
 argument_list|)
 operator|==
 operator|-
@@ -668,7 +668,7 @@ if|if
 condition|(
 name|api_exch_incommand
 argument_list|(
-name|EXCH_AUTH
+name|EXCH_CMD_AUTH
 argument_list|)
 operator|==
 operator|-
@@ -857,7 +857,7 @@ if|if
 condition|(
 name|api_exch_outcommand
 argument_list|(
-name|EXCH_ASSOCIATED
+name|EXCH_CMD_ASSOCIATED
 argument_list|)
 operator|==
 operator|-
@@ -955,7 +955,7 @@ if|if
 condition|(
 name|api_exch_outcommand
 argument_list|(
-name|EXCH_HEREIS
+name|EXCH_CMD_HEREIS
 argument_list|)
 operator|==
 operator|-
@@ -1104,7 +1104,7 @@ if|if
 condition|(
 name|api_exch_outcommand
 argument_list|(
-name|EXCH_GIMME
+name|EXCH_CMD_GIMME
 argument_list|)
 operator|==
 operator|-
@@ -1178,7 +1178,7 @@ if|if
 condition|(
 name|api_exch_incommand
 argument_list|(
-name|EXCH_HEREIS
+name|EXCH_CMD_HEREIS
 argument_list|)
 operator|==
 operator|-
@@ -1743,6 +1743,9 @@ name|int
 name|shell_continue
 parameter_list|()
 block|{
+name|int
+name|i
+decl_stmt|;
 switch|switch
 condition|(
 name|state
@@ -1782,7 +1785,7 @@ name|api_exch_init
 argument_list|(
 name|sock
 argument_list|,
-literal|"client"
+literal|"server"
 argument_list|)
 operator|==
 operator|-
@@ -1805,7 +1808,7 @@ if|if
 condition|(
 name|api_exch_incommand
 argument_list|(
-name|EXCH_ASSOCIATE
+name|EXCH_CMD_ASSOCIATE
 argument_list|)
 operator|==
 operator|-
@@ -1857,22 +1860,17 @@ break|break;
 case|case
 name|CONNECTED
 case|:
-if|if
+switch|switch
 condition|(
-name|api_exch_incommand
-argument_list|(
-name|EXCH_REQUEST
-argument_list|)
-operator|==
-operator|-
-literal|1
+name|i
+operator|=
+name|api_exch_nextcommand
+argument_list|()
 condition|)
 block|{
-name|kill_connection
-argument_list|()
-expr_stmt|;
-block|}
-elseif|else
+case|case
+name|EXCH_CMD_REQUEST
+case|:
 if|if
 condition|(
 name|api_exch_intype
@@ -1957,7 +1955,7 @@ if|if
 condition|(
 name|api_exch_outcommand
 argument_list|(
-name|EXCH_REPLY
+name|EXCH_CMD_REPLY
 argument_list|)
 operator|==
 operator|-
@@ -2021,6 +2019,35 @@ argument_list|()
 expr_stmt|;
 block|}
 comment|/* Done, and it all worked! */
+block|}
+break|break;
+case|case
+name|EXCH_CMD_DISASSOCIATE
+case|:
+name|kill_connection
+argument_list|()
+expr_stmt|;
+break|break;
+default|default:
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Looking for a REQUEST or DISASSOCIATE command\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\treceived 0x%02x.\n"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+name|kill_connection
+argument_list|()
+expr_stmt|;
 block|}
 block|}
 return|return
