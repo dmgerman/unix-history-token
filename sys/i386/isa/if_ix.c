@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993, 1994, 1995  *	Rodney W. Grimes, Milwaukie, Oregon  97222.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Rodney W. Grimes.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY RODNEY W. GRIMES ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL RODNEY W. GRIMES BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_ix.c,v 1.4 1995/03/02 07:40:26 rgrimes Exp $  */
+comment|/*  * Copyright (c) 1993, 1994, 1995  *	Rodney W. Grimes, Milwaukie, Oregon  97222.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Rodney W. Grimes.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY RODNEY W. GRIMES ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL RODNEY W. GRIMES BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_ix.c,v 1.5 1995/03/02 08:17:14 rgrimes Exp $  */
 end_comment
 
 begin_include
@@ -857,6 +857,128 @@ literal|"ix"
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|kern_devconf
+name|kdc_ix_template
+init|=
+block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
+comment|/* filled in by dev_attach */
+literal|"ix"
+block|,
+literal|0
+block|,
+block|{
+name|MDDT_ISA
+block|,
+literal|0
+block|,
+literal|"net"
+block|}
+block|,
+name|isa_generic_externalize
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|ISA_EXTERNALLEN
+block|,
+operator|&
+name|kdc_isa0
+block|,
+comment|/* parent */
+literal|0
+block|,
+comment|/* parentdata */
+name|DC_UNCONFIGURED
+block|,
+comment|/* state */
+literal|""
+block|,
+comment|/* description */
+name|DC_CLS_NETIF
+comment|/* class */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|ix_registerdev
+parameter_list|(
+name|struct
+name|isa_device
+modifier|*
+name|id
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|descr
+parameter_list|)
+block|{
+name|struct
+name|kern_devconf
+modifier|*
+name|kdc
+init|=
+operator|&
+name|ix_softc
+index|[
+name|id
+operator|->
+name|id_unit
+index|]
+operator|.
+name|kdc
+decl_stmt|;
+name|char
+modifier|*
+name|longdescr
+decl_stmt|;
+operator|*
+name|kdc
+operator|=
+name|kdc_ix_template
+expr_stmt|;
+name|kdc
+operator|->
+name|kdc_unit
+operator|=
+name|id
+operator|->
+name|id_unit
+expr_stmt|;
+name|kdc
+operator|->
+name|kdc_parentdata
+operator|=
+name|id
+expr_stmt|;
+name|kdc
+operator|->
+name|kdc_description
+operator|=
+name|descr
+expr_stmt|;
+name|dev_attach
+argument_list|(
+name|kdc
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Enable the interrupt signal on the board so that it may interrupt  * the host.  */
@@ -2360,6 +2482,19 @@ name|status
 operator|=
 name|IX_IO_PORTS
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|DEV_LKM
+name|ix_registerdev
+argument_list|(
+name|dvp
+argument_list|,
+literal|"Ethernet adapter: Intel EtherExpress16"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* not DEV_LKM */
 name|ixprobe_exit
 label|:
 name|DEBUGBEGIN
@@ -2554,6 +2689,14 @@ name|if_attach
 argument_list|(
 name|ifp
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|kdc
+operator|.
+name|kdc_state
+operator|=
+name|DC_IDLE
 expr_stmt|;
 comment|/* Search down the ifa address list looking for the AF_LINK type entry */
 name|ifa
@@ -2794,9 +2937,17 @@ literal|"ixinit:"
 argument|);
 argument_list|)
 name|DEBUGEND
+name|sc
+operator|->
+name|kdc
+operator|.
+name|kdc_state
+init|=
+name|DC_BUSY
+decl_stmt|;
 comment|/* Put bart into loopback until we are done intializing to 	 * make sure that packets don't hit the wire */
 name|bart_config
-init|=
+operator|=
 name|inb
 argument_list|(
 name|sc
@@ -2805,7 +2956,7 @@ name|iobase
 operator|+
 name|config
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|bart_config
 operator||=
 name|BART_LOOPBACK
@@ -6659,6 +6810,14 @@ argument_list|,
 name|I586_RESET
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|kdc
+operator|.
+name|kdc_state
+operator|=
+name|DC_IDLE
+expr_stmt|;
 name|DEBUGBEGIN
 argument_list|(
 argument|DEBUGSTOP
@@ -6750,6 +6909,16 @@ name|int
 name|status
 init|=
 literal|0
+decl_stmt|;
+name|ix_softc_t
+modifier|*
+name|sc
+init|=
+operator|&
+name|ix_softc
+index|[
+name|unit
+index|]
 decl_stmt|;
 name|DEBUGBEGIN
 argument_list|(
