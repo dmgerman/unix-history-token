@@ -1356,10 +1356,12 @@ condition|(
 name|td
 operator|->
 name|td_ucred
+operator|!=
+name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"trap:thread got a cred while userspace"
+literal|"trap(): thread got a ucred while in userspace"
 argument_list|)
 expr_stmt|;
 name|td
@@ -1378,7 +1380,6 @@ name|NULL
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DIAGNOSTIC */
 if|if
 condition|(
 name|td
