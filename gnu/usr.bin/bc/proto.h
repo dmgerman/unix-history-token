@@ -1361,7 +1361,7 @@ name|_PROTOTYPE
 argument_list|(
 argument|int getopt
 argument_list|,
-argument|(int, char *[], CONST char *)
+argument|(int, char * CONST [], CONST char *)
 argument_list|)
 end_macro
 
