@@ -640,6 +640,9 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * Give any raw listeners a crack at the packet 	 */
+name|IPX_LIST_LOCK
+argument_list|()
+expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|ipxp
@@ -680,6 +683,9 @@ name|ipxp
 argument_list|)
 expr_stmt|;
 block|}
+name|IPX_LIST_UNLOCK
+argument_list|()
+expr_stmt|;
 name|ipx
 operator|=
 name|mtod
@@ -1069,6 +1075,9 @@ block|}
 name|ours
 label|:
 comment|/* 	 * Locate pcb for datagram. 	 */
+name|IPX_LIST_LOCK
+argument_list|()
+expr_stmt|;
 name|ipxp
 operator|=
 name|ipx_pcblookup
@@ -1129,6 +1138,9 @@ argument_list|,
 name|ipxp
 argument_list|)
 expr_stmt|;
+name|IPX_LIST_UNLOCK
+argument_list|()
+expr_stmt|;
 return|return;
 block|}
 name|ipx_input
@@ -1144,6 +1156,9 @@ name|m_freem
 argument_list|(
 name|m
 argument_list|)
+expr_stmt|;
+name|IPX_LIST_UNLOCK
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -1950,6 +1965,9 @@ modifier|*
 name|ia
 decl_stmt|;
 comment|/* 	 * Give any raw listeners a crack at the packet 	 */
+name|IPX_LIST_LOCK
+argument_list|()
+expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|ipxp
@@ -2152,6 +2170,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|IPX_LIST_UNLOCK
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
