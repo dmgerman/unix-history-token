@@ -1153,7 +1153,7 @@ block|{
 block|{
 literal|2
 block|,
-literal|27
+literal|28
 block|,
 literal|06
 block|,
@@ -1168,16 +1168,15 @@ block|,
 operator|-
 literal|1
 block|,
-operator|-
-literal|1
+literal|01
 block|,
-literal|"000000"
+literal|"Unset"
 block|}
 block|,
 block|{
 literal|4
 block|,
-literal|27
+literal|28
 block|,
 literal|06
 block|,
@@ -1192,16 +1191,15 @@ block|,
 operator|-
 literal|1
 block|,
-operator|-
-literal|1
+literal|02
 block|,
-literal|"000000"
+literal|"Unset"
 block|}
 block|,
 block|{
 literal|6
 block|,
-literal|27
+literal|28
 block|,
 literal|06
 block|,
@@ -1216,10 +1214,9 @@ block|,
 operator|-
 literal|1
 block|,
-operator|-
-literal|1
+literal|00
 block|,
-literal|"000000"
+literal|"Unset"
 block|}
 block|,
 block|{
@@ -1227,12 +1224,9 @@ literal|0
 block|,
 literal|07
 block|,
-literal|06
+literal|24
 block|,
-literal|10
-block|,
-operator|-
-literal|1
+literal|24
 block|,
 operator|-
 literal|1
@@ -1246,7 +1240,10 @@ block|,
 operator|-
 literal|1
 block|,
-literal|"Disk geomtetry parameters"
+operator|-
+literal|1
+block|,
+literal|"BIOS geometry parameters"
 block|}
 block|,
 block|{
@@ -1254,9 +1251,9 @@ literal|2
 block|,
 literal|02
 block|,
-literal|06
+literal|20
 block|,
-literal|10
+literal|20
 block|,
 operator|-
 literal|1
@@ -1281,9 +1278,9 @@ literal|4
 block|,
 literal|02
 block|,
-literal|06
+literal|25
 block|,
-literal|10
+literal|25
 block|,
 operator|-
 literal|1
@@ -1308,9 +1305,9 @@ literal|6
 block|,
 literal|02
 block|,
-literal|06
+literal|18
 block|,
-literal|10
+literal|18
 block|,
 operator|-
 literal|1
@@ -1636,6 +1633,25 @@ operator|.
 name|mbr
 decl_stmt|;
 comment|/* Confirm disk parameters */
+ifdef|#
+directive|ifdef
+name|0
+name|dialog_msgbox
+argument_list|(
+literal|"BIOS disk geometry values"
+argument_list|,
+literal|"In order to setup the boot area of the disk it is necessary to know the BIOS values for the disk geometry i.e. the number of cylinders, heads and sectors. These values may be different form the real geometry of the disk, depending on whether or not your system uses geometry translation. At this stage it is the entries from the BIOS that are needed. If you do not know these they can be found by rebooting the machine and entering th BIOS setup routine. See you BIOS manual for details"
+argument_list|,
+argument|-
+literal|1
+argument_list|,
+argument|-
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+endif|#
+directive|endif
 if|if
 condition|(
 name|get_geom_values
@@ -2644,6 +2660,11 @@ operator|)
 return|;
 block|}
 block|}
+name|delwin
+argument_list|(
+name|window
+argument_list|)
+expr_stmt|;
 name|dialog_clear
 argument_list|()
 expr_stmt|;
