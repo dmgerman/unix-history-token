@@ -188,6 +188,42 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|SMP
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|PCPU
+parameter_list|(
+name|member
+parameter_list|)
+value|%fs:GD_ ## member
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|PCPU
+parameter_list|(
+name|member
+parameter_list|)
+value|CNAME(globaldata) + GD_ ## member
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|GPROF
 end_ifdef
 
