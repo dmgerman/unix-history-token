@@ -794,7 +794,7 @@ name|driver_t
 name|uplcom_driver
 init|=
 block|{
-literal|"usio"
+literal|"uplcom"
 block|,
 name|uplcom_methods
 block|,

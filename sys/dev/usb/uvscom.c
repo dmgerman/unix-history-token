@@ -1093,7 +1093,7 @@ name|driver_t
 name|uvscom_driver
 init|=
 block|{
-literal|"usio"
+literal|"uvscom"
 block|,
 name|uvscom_methods
 block|,

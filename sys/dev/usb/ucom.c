@@ -361,7 +361,7 @@ comment|/* strategy */
 name|nostrategy
 block|,
 comment|/* name */
-literal|"usio"
+literal|"ucom"
 block|,
 comment|/* maj */
 name|UCOM_CDEV_MAJOR
@@ -705,7 +705,7 @@ expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"ucom_attach: make_dev: usio%d\n"
+literal|"ucom_attach: make_dev: ucom%d\n"
 operator|,
 name|unit
 operator|)
@@ -730,7 +730,7 @@ name|GID_DIALER
 argument_list|,
 literal|0660
 argument_list|,
-literal|"usio%d"
+literal|"ucom%d"
 argument_list|,
 name|unit
 argument_list|)
