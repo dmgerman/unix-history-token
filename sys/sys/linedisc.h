@@ -1171,16 +1171,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|revoke_and_destroy_dev
-parameter_list|(
-name|dev_t
-name|_dev
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|struct
 name|cdevsw
 modifier|*
