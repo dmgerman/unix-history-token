@@ -133,7 +133,7 @@ name|NULL
 block|,
 name|promcngetc
 block|,
-name|NULL
+name|promcncheckc
 block|,
 name|promcnputc
 block|,
@@ -847,23 +847,17 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * promcnlookc:  *  * See if prom has a real char and pass it back.  */
+comment|/*  * promcncheckc  *  * If a char is ready, return it, otherwise return -1.  */
 end_comment
 
 begin_function
 name|int
-name|promcnlookc
+name|promcncheckc
 parameter_list|(
 name|dev
-parameter_list|,
-name|cp
 parameter_list|)
 name|dev_t
 name|dev
-decl_stmt|;
-name|char
-modifier|*
-name|cp
 decl_stmt|;
 block|{
 name|prom_return_t
@@ -909,23 +903,21 @@ name|status
 operator|==
 literal|1
 condition|)
-block|{
-operator|*
-name|cp
-operator|=
+return|return
+operator|(
 name|ret
 operator|.
 name|u
 operator|.
 name|retval
-expr_stmt|;
-return|return
-literal|1
+operator|)
 return|;
-block|}
 else|else
 return|return
-literal|0
+operator|(
+operator|-
+literal|1
+operator|)
 return|;
 block|}
 end_function

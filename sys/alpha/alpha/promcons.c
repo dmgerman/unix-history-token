@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: promcons.c,v 1.2 1998/07/05 11:59:44 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -1116,20 +1116,24 @@ name|tp
 init|=
 name|v
 decl_stmt|;
-name|u_char
+name|int
 name|c
 decl_stmt|;
 while|while
 condition|(
-name|promcnlookc
+operator|(
+name|c
+operator|=
+name|promcncheckc
 argument_list|(
 name|tp
 operator|->
 name|t_dev
-argument_list|,
-operator|&
-name|c
 argument_list|)
+operator|)
+operator|!=
+operator|-
+literal|1
 condition|)
 block|{
 if|if

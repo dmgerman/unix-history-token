@@ -376,14 +376,11 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|promcnlookc
+name|promcncheckc
 name|__P
 argument_list|(
 operator|(
 name|dev_t
-operator|,
-name|char
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;
