@@ -103,64 +103,16 @@ name|u_max
 decl_stmt|;
 block|}
 name|users
-index|[]
 init|=
 block|{
-block|{
 literal|8
 block|,
 literal|2
 block|,
 literal|512
-block|}
-block|,
-comment|/* MACHINE_I386 */
-block|{
-literal|8
-block|,
-literal|2
-block|,
-literal|512
-block|}
-block|,
-comment|/* MACHINE_PC98 */
-block|{
-literal|8
-block|,
-literal|2
-block|,
-literal|512
-block|}
-block|,
-comment|/* MACHINE_ALPHA */
-block|{
-literal|8
-block|,
-literal|2
-block|,
-literal|512
-block|}
-block|,
-comment|/* MACHINE_IA64 */
-block|{
-literal|8
-block|,
-literal|2
-block|,
-literal|512
-block|}
-block|,
-comment|/* MACHINE_POWERPC */
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|NUSERS
-value|(sizeof (users) / sizeof (users[0]))
-end_define
 
 begin_function_decl
 specifier|static
@@ -235,11 +187,6 @@ name|opt
 modifier|*
 name|op
 decl_stmt|;
-name|struct
-name|users
-modifier|*
-name|up
-decl_stmt|;
 comment|/* Fake the cpu types as options. */
 for|for
 control|(
@@ -309,44 +256,6 @@ operator|=
 name|op
 expr_stmt|;
 block|}
-comment|/* Initialize `maxusers'. */
-if|if
-condition|(
-operator|(
-name|unsigned
-operator|)
-name|machine
-operator|>
-name|NUSERS
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"maxusers config info isn't present, using i386\n"
-argument_list|)
-expr_stmt|;
-name|up
-operator|=
-operator|&
-name|users
-index|[
-name|MACHINE_I386
-operator|-
-literal|1
-index|]
-expr_stmt|;
-block|}
-else|else
-name|up
-operator|=
-operator|&
-name|users
-index|[
-name|machine
-operator|-
-literal|1
-index|]
-expr_stmt|;
 if|if
 condition|(
 name|maxusers
@@ -358,15 +267,15 @@ name|printf
 argument_list|(
 literal|"maxusers not specified; %d assumed\n"
 argument_list|,
-name|up
-operator|->
+name|users
+operator|.
 name|u_default
 argument_list|)
 expr_stmt|;
 name|maxusers
 operator|=
-name|up
-operator|->
+name|users
+operator|.
 name|u_default
 expr_stmt|;
 block|}
@@ -375,8 +284,8 @@ if|if
 condition|(
 name|maxusers
 operator|<
-name|up
-operator|->
+name|users
+operator|.
 name|u_min
 condition|)
 block|{
@@ -384,15 +293,15 @@ name|printf
 argument_list|(
 literal|"minimum of %d maxusers assumed\n"
 argument_list|,
-name|up
-operator|->
+name|users
+operator|.
 name|u_min
 argument_list|)
 expr_stmt|;
 name|maxusers
 operator|=
-name|up
-operator|->
+name|users
+operator|.
 name|u_min
 expr_stmt|;
 block|}
@@ -401,16 +310,16 @@ if|if
 condition|(
 name|maxusers
 operator|>
-name|up
-operator|->
+name|users
+operator|.
 name|u_max
 condition|)
 name|printf
 argument_list|(
 literal|"warning: maxusers> %d (%d)\n"
 argument_list|,
-name|up
-operator|->
+name|users
+operator|.
 name|u_max
 argument_list|,
 name|maxusers
