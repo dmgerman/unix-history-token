@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)exec.c 4.1 %G%"
+literal|"@(#)exec.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -919,6 +919,9 @@ begin_block
 block|{
 name|didcch
 operator|++
+expr_stmt|;
+name|rechist
+argument_list|()
 expr_stmt|;
 name|signal
 argument_list|(
