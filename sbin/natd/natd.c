@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * natd - Network Address Translation Daemon for FreeBSD.  *  * This software is provided free of charge, with no   * warranty of any kind, either expressed or implied.  * Use at your own risk.  *   * You may copy, modify and distribute this software (natd.c) freely.  *  * Ari Suutari<suutari@iki.fi>  *  *	$Id: natd.c,v 1.11 1999/03/11 09:24:52 brian Exp $  */
+comment|/*  * natd - Network Address Translation Daemon for FreeBSD.  *  * This software is provided free of charge, with no   * warranty of any kind, either expressed or implied.  * Use at your own risk.  *   * You may copy, modify and distribute this software (natd.c) freely.  *  * Ari Suutari<suutari@iki.fi>  *  *	$Id: natd.c,v 1.12 1999/03/24 20:30:20 brian Exp $  */
 end_comment
 
 begin_define
@@ -271,7 +271,9 @@ begin_function_decl
 specifier|static
 name|void
 name|DaemonMode
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -290,7 +292,9 @@ begin_function_decl
 specifier|static
 name|void
 name|Usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -331,6 +335,7 @@ parameter_list|,
 name|int
 name|priority
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|label
@@ -354,7 +359,9 @@ begin_function_decl
 specifier|static
 name|void
 name|InitiateShutdown
-parameter_list|()
+parameter_list|(
+name|int
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -362,7 +369,9 @@ begin_function_decl
 specifier|static
 name|void
 name|Shutdown
-parameter_list|()
+parameter_list|(
+name|int
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -370,7 +379,9 @@ begin_function_decl
 specifier|static
 name|void
 name|RefreshAddr
-parameter_list|()
+parameter_list|(
+name|int
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -379,10 +390,12 @@ specifier|static
 name|void
 name|ParseOption
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|option
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|parms
@@ -398,6 +411,7 @@ specifier|static
 name|void
 name|ReadConfigFile
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fileName
@@ -410,6 +424,7 @@ specifier|static
 name|void
 name|SetupPortRedirect
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|parms
@@ -422,6 +437,7 @@ specifier|static
 name|void
 name|SetupAddressRedirect
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|parms
@@ -434,6 +450,7 @@ specifier|static
 name|void
 name|SetupPptpAlias
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|parms
@@ -446,6 +463,7 @@ specifier|static
 name|void
 name|StrToAddr
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str
@@ -463,10 +481,12 @@ specifier|static
 name|u_short
 name|StrToPort
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|proto
@@ -479,10 +499,12 @@ specifier|static
 name|int
 name|StrToPortRange
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|proto
@@ -499,6 +521,7 @@ specifier|static
 name|int
 name|StrToProto
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str
@@ -511,6 +534,7 @@ specifier|static
 name|int
 name|StrToAddrAndPortRange
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str
@@ -2443,6 +2467,7 @@ parameter_list|,
 name|int
 name|priority
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|label
@@ -2723,7 +2748,7 @@ name|SetAliasAddressFromIfName
 parameter_list|(
 name|char
 modifier|*
-name|ifName
+name|ifn
 parameter_list|)
 block|{
 name|struct
@@ -2897,7 +2922,7 @@ name|ifPtr
 operator|->
 name|ifr_name
 argument_list|,
-name|ifName
+name|ifn
 argument_list|)
 condition|)
 block|{
@@ -2994,7 +3019,7 @@ name|msg
 argument_list|,
 literal|"Unknown interface name %s.\n"
 argument_list|,
-name|ifName
+name|ifn
 argument_list|)
 expr_stmt|;
 name|Quit
@@ -3010,7 +3035,7 @@ name|req
 operator|.
 name|ifr_name
 argument_list|,
-name|ifName
+name|ifn
 argument_list|)
 expr_stmt|;
 if|if
@@ -3107,6 +3132,7 @@ begin_function
 name|void
 name|Quit
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|msg
@@ -3129,6 +3155,7 @@ begin_function
 name|void
 name|Warn
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|msg
@@ -3160,7 +3187,10 @@ begin_function
 specifier|static
 name|void
 name|RefreshAddr
-parameter_list|()
+parameter_list|(
+name|int
+name|sig
+parameter_list|)
 block|{
 name|signal
 argument_list|(
@@ -3184,7 +3214,10 @@ begin_function
 specifier|static
 name|void
 name|InitiateShutdown
-parameter_list|()
+parameter_list|(
+name|int
+name|sig
+parameter_list|)
 block|{
 comment|/*  * Start timer to allow kernel gracefully  * shutdown existing connections when system  * is shut down.  */
 name|signal
@@ -3206,7 +3239,10 @@ begin_function
 specifier|static
 name|void
 name|Shutdown
-parameter_list|()
+parameter_list|(
+name|int
+name|sig
+parameter_list|)
 block|{
 name|running
 operator|=
@@ -3294,18 +3330,22 @@ name|enum
 name|Param
 name|parm
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|parmDescription
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|description
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|shortName
@@ -3672,10 +3712,12 @@ specifier|static
 name|void
 name|ParseOption
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|option
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|parms
@@ -3704,6 +3746,7 @@ decl_stmt|;
 name|u_short
 name|uNumValue
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|strValue
@@ -3937,7 +3980,7 @@ expr_stmt|;
 else|else
 name|end
 operator|=
-name|parms
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -4255,6 +4298,7 @@ begin_function
 name|void
 name|ReadConfigFile
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fileName
@@ -4581,6 +4625,7 @@ begin_function
 name|void
 name|SetupPptpAlias
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|parms
@@ -4649,6 +4694,7 @@ begin_function
 name|void
 name|SetupPortRedirect
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|parms
@@ -5149,6 +5195,7 @@ begin_function
 name|void
 name|SetupAddressRedirect
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|parms
@@ -5253,6 +5300,7 @@ begin_function
 name|void
 name|StrToAddr
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str
@@ -5321,10 +5369,12 @@ begin_function
 name|u_short
 name|StrToPort
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|proto
@@ -5403,10 +5453,12 @@ begin_function
 name|int
 name|StrToPortRange
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|proto
@@ -5619,6 +5671,7 @@ begin_function
 name|int
 name|StrToProto
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str
@@ -5666,6 +5719,7 @@ begin_function
 name|int
 name|StrToAddrAndPortRange
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str
