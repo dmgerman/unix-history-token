@@ -282,6 +282,9 @@ argument_list|)
 condition|)
 block|{
 comment|/* 			 * We can't make the tty non_blocking, because 			 * curses's output routines would screw up 			 */
+name|int
+name|i
+decl_stmt|;
 name|ioctl
 argument_list|(
 literal|0
@@ -319,6 +322,35 @@ name|nb
 argument_list|)
 expr_stmt|;
 comment|/* might lose data here because sockt is non-blocking */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|nb
+condition|;
+operator|++
+name|i
+control|)
+if|if
+condition|(
+name|buf
+index|[
+name|i
+index|]
+operator|==
+literal|'\r'
+condition|)
+name|buf
+index|[
+name|i
+index|]
+operator|=
+literal|'\n'
+expr_stmt|;
 name|write
 argument_list|(
 name|sockt
