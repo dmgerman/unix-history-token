@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_defs.h,v 8.121.2.1 2002/11/14 13:28:12 marka Exp $  */
+comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_defs.h,v 8.124.6.1 2003/06/02 09:56:34 marka Exp $  */
 end_comment
 
 begin_comment
@@ -1964,9 +1964,16 @@ decl_stmt|;
 comment|/* don't try edns */
 name|unsigned
 name|int
+name|lame
+range|:
+literal|1
+decl_stmt|;
+comment|/* this server was lame, try it last */
+name|unsigned
+name|int
 name|nretry
 range|:
-literal|30
+literal|29
 decl_stmt|;
 comment|/* # of times addr retried */
 name|u_int32_t
@@ -3331,6 +3338,9 @@ decl_stmt|;
 name|u_int16_t
 name|preferred_glue
 decl_stmt|;
+name|u_int16_t
+name|edns_udp_size
+decl_stmt|;
 name|enum
 name|notify
 name|notify
@@ -3618,6 +3628,8 @@ block|,
 name|ns_log_resp_checks
 block|,
 name|ns_log_control
+block|,
+name|ns_log_update_security
 block|,
 name|ns_log_max_category
 block|}

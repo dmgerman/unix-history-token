@@ -29,7 +29,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: nis_gr.c,v 1.21 2001/05/29 05:49:12 marka Exp $"
+literal|"$Id: nis_gr.c,v 1.22 2002/07/08 06:26:11 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1351,8 +1351,7 @@ literal|'\0'
 expr_stmt|;
 name|errno
 operator|=
-operator|-
-literal|1
+literal|0
 expr_stmt|;
 name|t
 operator|=

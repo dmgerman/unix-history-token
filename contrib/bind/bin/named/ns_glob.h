@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_glob.h,v 8.58 2002/06/05 04:53:50 marka Exp $  */
+comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_glob.h,v 8.59 2002/07/19 22:44:08 marka Exp $  */
 end_comment
 
 begin_comment
@@ -1194,6 +1194,12 @@ block|{
 name|ns_log_control
 block|,
 literal|"control"
+block|}
+block|,
+block|{
+name|ns_log_update_security
+block|,
+literal|"update-security"
 block|}
 block|,
 block|{

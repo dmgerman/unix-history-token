@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_samedomain.c,v 8.9.6.2 2002/11/14 22:36:46 marka Exp $"
+literal|"$Id: ns_samedomain.c,v 8.10.8.1 2003/06/02 05:05:05 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -365,6 +365,7 @@ index|]
 operator|==
 literal|'\\'
 condition|)
+block|{
 if|if
 condition|(
 name|escaped
@@ -378,6 +379,7 @@ name|escaped
 operator|=
 literal|1
 expr_stmt|;
+block|}
 else|else
 break|break;
 if|if
@@ -493,6 +495,7 @@ operator|>
 name|dstsize
 condition|)
 block|{
+comment|/* Note: sizeof == 2 */
 name|errno
 operator|=
 name|EMSGSIZE
@@ -514,8 +517,8 @@ expr_stmt|;
 while|while
 condition|(
 name|n
-operator|>
-literal|0
+operator|>=
+literal|1
 operator|&&
 name|dst
 index|[
@@ -530,8 +533,8 @@ comment|/* Ends in "." */
 if|if
 condition|(
 name|n
-operator|>
-literal|1
+operator|>=
+literal|2
 operator|&&
 name|dst
 index|[
@@ -546,7 +549,7 @@ comment|/* Ends in "\." */
 operator|(
 name|n
 operator|<
-literal|2
+literal|3
 operator|||
 name|dst
 index|[

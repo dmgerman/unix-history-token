@@ -8,7 +8,7 @@ comment|/*  * Portions Copyright (c) 1996-1999 by Internet Software Consortium. 
 end_comment
 
 begin_comment
-comment|/*  *	@(#)resolv.h	8.1 (Berkeley) 6/2/93  *	$Id: resolv.h,v 8.48 2002/05/31 06:05:29 marka Exp $  */
+comment|/*  *	@(#)resolv.h	8.1 (Berkeley) 6/2/93  *	$Id: resolv.h,v 8.50.6.2 2003/06/02 06:01:16 marka Exp $  */
 end_comment
 
 begin_ifndef
@@ -101,7 +101,7 @@ begin_define
 define|#
 directive|define
 name|__RES
-value|19991006
+value|20030124
 end_define
 
 begin_comment
@@ -151,7 +151,7 @@ name|__END_DECLS
 end_macro
 
 begin_comment
-comment|/*  * Resolver configuration file.  * Normally not present, but may contain the address of the  * inital name server(s) to query and the domain search list.  */
+comment|/*  * Resolver configuration file.  * Normally not present, but may contain the address of the  * initial name server(s) to query and the domain search list.  */
 end_comment
 
 begin_ifndef
@@ -204,28 +204,22 @@ name|sockaddr
 operator|*
 specifier|const
 operator|*
-name|ns
 operator|,
 specifier|const
 name|u_char
 operator|*
 operator|*
-name|query
 operator|,
 name|int
 operator|*
-name|querylen
 operator|,
 name|u_char
 operator|*
-name|ans
 operator|,
 name|int
-name|anssiz
 operator|,
 name|int
 operator|*
-name|resplen
 operator|)
 argument_list|)
 expr_stmt|;
@@ -244,26 +238,20 @@ specifier|const
 expr|struct
 name|sockaddr
 operator|*
-name|ns
 operator|,
 specifier|const
 name|u_char
 operator|*
-name|query
 operator|,
 name|int
-name|querylen
 operator|,
 name|u_char
 operator|*
-name|ans
 operator|,
 name|int
-name|anssiz
 operator|,
 name|int
 operator|*
-name|resplen
 operator|)
 argument_list|)
 expr_stmt|;
@@ -431,7 +419,7 @@ block|{
 name|int
 name|retrans
 decl_stmt|;
-comment|/* retransmition time interval */
+comment|/* retransmission time interval */
 name|int
 name|retry
 decl_stmt|;
@@ -708,6 +696,49 @@ begin_comment
 comment|/* EDNS0 caused errors */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|RES_F__UNUSED
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* (unused) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RES_F_LASTMASK
+value|0x000000F0
+end_define
+
+begin_comment
+comment|/* ordinal server of last res_nsend */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RES_F_LASTSHIFT
+value|4
+end_define
+
+begin_comment
+comment|/* bit position of LASTMASK "flag" */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RES_GETLAST
+parameter_list|(
+name|res
+parameter_list|)
+value|(((res)._flags& RES_F_LASTMASK)>> RES_F_LASTSHIFT)
+end_define
+
 begin_comment
 comment|/* res_findzonecut2() options */
 end_comment
@@ -950,28 +981,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RES_NO_NIBBLE
-value|0x00040000
-end_define
-
-begin_comment
-comment|/* disable IPv6 nibble mode reverse */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RES_NO_BITSTRING
-value|0x00080000
-end_define
-
-begin_comment
-comment|/* disable IPv6 bitstring mode reverse */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|RES_NOTLDQUERY
 value|0x00100000
 end_define
@@ -1004,17 +1013,6 @@ end_define
 
 begin_comment
 comment|/* use DNAME */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RES_USE_A6
-value|0x20000000
-end_define
-
-begin_comment
-comment|/* use A6 */
 end_comment
 
 begin_define
@@ -1791,6 +1789,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|p_sockun
+value|__p_sockun
+end_define
+
+begin_define
+define|#
+directive|define
 name|putlong
 value|__putlong
 end_define
@@ -2005,6 +2010,90 @@ name|res_getservers
 value|__res_getservers
 end_define
 
+begin_define
+define|#
+directive|define
+name|res_buildprotolist
+value|__res_buildprotolist
+end_define
+
+begin_define
+define|#
+directive|define
+name|res_destroyprotolist
+value|__res_destroyprotolist
+end_define
+
+begin_define
+define|#
+directive|define
+name|res_destroyservicelist
+value|__res_destroyservicelist
+end_define
+
+begin_define
+define|#
+directive|define
+name|res_get_nibblesuffix
+value|__res_get_nibblesuffix
+end_define
+
+begin_define
+define|#
+directive|define
+name|res_get_nibblesuffix2
+value|__res_get_nibblesuffix2
+end_define
+
+begin_define
+define|#
+directive|define
+name|res_ourserver_p
+value|__res_ourserver_p
+end_define
+
+begin_define
+define|#
+directive|define
+name|res_protocolname
+value|__res_protocolname
+end_define
+
+begin_define
+define|#
+directive|define
+name|res_protocolnumber
+value|__res_protocolnumber
+end_define
+
+begin_define
+define|#
+directive|define
+name|res_send_setqhook
+value|__res_send_setqhook
+end_define
+
+begin_define
+define|#
+directive|define
+name|res_send_setrhook
+value|__res_send_setrhook
+end_define
+
+begin_define
+define|#
+directive|define
+name|res_servicename
+value|__res_servicename
+end_define
+
+begin_define
+define|#
+directive|define
+name|res_servicenumber
+value|__res_servicenumber
+end_define
+
 begin_decl_stmt
 name|__BEGIN_DECLS
 name|int
@@ -2177,11 +2266,9 @@ operator|(
 specifier|const
 name|char
 operator|*
-name|ascii
 operator|,
 name|u_char
 operator|*
-name|binary
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2198,11 +2285,9 @@ operator|(
 specifier|const
 name|u_char
 operator|*
-name|binary
 operator|,
 name|char
 operator|*
-name|ascii
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2271,7 +2356,6 @@ operator|(
 specifier|const
 name|u_char
 operator|*
-name|src
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2286,7 +2370,6 @@ operator|(
 specifier|const
 name|u_char
 operator|*
-name|src
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2355,6 +2438,26 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|const
+name|char
+modifier|*
+name|p_sockun
+name|__P
+argument_list|(
+operator|(
+expr|union
+name|res_sockaddr_union
+operator|,
+name|char
+operator|*
+operator|,
+name|size_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
 name|u_char
 modifier|*
 name|p_cdnname
@@ -2412,12 +2515,10 @@ operator|(
 specifier|const
 name|u_char
 operator|*
-name|cp
 operator|,
 specifier|const
 name|u_char
 operator|*
-name|msg
 operator|,
 name|int
 operator|,
@@ -2462,7 +2563,6 @@ name|__P
 argument_list|(
 operator|(
 name|u_long
-name|option
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2622,10 +2722,8 @@ name|__P
 argument_list|(
 operator|(
 name|int
-name|section
 operator|,
 name|int
-name|opcode
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2994,7 +3092,6 @@ name|__P
 argument_list|(
 operator|(
 name|res_send_qhook
-name|hook
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3007,7 +3104,6 @@ name|__P
 argument_list|(
 operator|(
 name|res_send_rhook
-name|hook
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3048,12 +3144,10 @@ name|__P
 argument_list|(
 operator|(
 name|u_int16_t
-name|port
 operator|,
 specifier|const
 name|char
 operator|*
-name|proto
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3068,7 +3162,6 @@ name|__P
 argument_list|(
 operator|(
 name|int
-name|num
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3127,20 +3220,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
-name|char
-modifier|*
-name|res_get_bitstringsuffix
-name|__P
-argument_list|(
-operator|(
-name|res_state
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|void
 name|res_ndestroy
 name|__P
@@ -3161,11 +3240,9 @@ operator|(
 specifier|const
 name|char
 operator|*
-name|buf
 operator|,
 name|int
 operator|*
-name|success
 operator|)
 argument_list|)
 decl_stmt|;
@@ -3180,11 +3257,9 @@ operator|(
 specifier|const
 name|char
 operator|*
-name|buf
 operator|,
 name|int
 operator|*
-name|success
 operator|)
 argument_list|)
 decl_stmt|;

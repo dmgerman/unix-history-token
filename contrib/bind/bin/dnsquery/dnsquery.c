@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dnsquery.c,v 8.19 2002/04/12 03:03:48 marka Exp $"
+literal|"$Id: dnsquery.c,v 8.19.10.1 2003/06/02 09:15:45 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -421,8 +421,6 @@ decl_stmt|;
 specifier|extern
 name|int
 name|optind
-decl_stmt|,
-name|opterr
 decl_stmt|;
 specifier|extern
 name|char

@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_comp.c,v 8.15 1999/10/13 16:39:39 vixie Exp $"
+literal|"$Id: res_comp.c,v 8.16 2002/08/07 03:47:34 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -124,7 +124,7 @@ file|"port_after.h"
 end_include
 
 begin_comment
-comment|/*  * Expand compressed domain name 'comp_dn' to full domain name.  * 'msg' is a pointer to the begining of the message,  * 'eomorig' points to the first location after the message,  * 'exp_dn' is a pointer to a buffer of size 'length' for the result.  * Return size of compressed name or -1 if there was an error.  */
+comment|/*  * Expand compressed domain name 'src' to full domain name.  * 'msg' is a pointer to the begining of the message,  * 'eom' points to the first location after the message,  * 'dst' is a pointer to a buffer of size 'dstsiz' for the result.  * Return size of compressed name or -1 if there was an error.  */
 end_comment
 
 begin_function

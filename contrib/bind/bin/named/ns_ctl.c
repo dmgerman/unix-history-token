@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_ctl.c,v 8.47 2002/06/24 07:11:07 marka Exp $"
+literal|"$Id: ns_ctl.c,v 8.48 2002/07/29 02:06:56 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -6496,7 +6496,7 @@ operator|&&
 operator|*
 name|cp
 operator|!=
-name|NULL
+literal|'\0'
 condition|)
 if|if
 condition|(

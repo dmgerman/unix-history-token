@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1983, 1989  *    The Regents of the University of Calif
 end_comment
 
 begin_comment
-comment|/*  *      from nameser.h	8.1 (Berkeley) 6/2/93  *	$Id: nameser_compat.h,v 8.14 2002/05/18 01:39:11 marka Exp $  */
+comment|/*  *      from nameser.h	8.1 (Berkeley) 6/2/93  *	$Id: nameser_compat.h,v 8.15 2002/07/17 07:01:02 marka Exp $  */
 end_comment
 
 begin_ifndef
@@ -667,6 +667,13 @@ define|#
 directive|define
 name|INT16SZ
 value|NS_INT16SZ
+end_define
+
+begin_define
+define|#
+directive|define
+name|INT8SZ
+value|NS_INT8SZ
 end_define
 
 begin_define

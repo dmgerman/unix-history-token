@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_mkquery.c,v 8.14 2001/09/24 13:50:27 marka Exp $"
+literal|"$Id: res_mkquery.c,v 8.15.8.1 2003/06/02 05:59:57 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -200,6 +200,9 @@ specifier|register
 name|u_char
 modifier|*
 name|cp
+decl_stmt|,
+modifier|*
+name|ep
 decl_stmt|;
 specifier|register
 name|int
@@ -342,9 +345,11 @@ name|buf
 operator|+
 name|HFIXEDSZ
 expr_stmt|;
+name|ep
+operator|=
+name|buf
+operator|+
 name|buflen
-operator|-=
-name|HFIXEDSZ
 expr_stmt|;
 name|dpp
 operator|=
@@ -390,13 +395,11 @@ name|NS_NOTIFY_OP
 case|:
 if|if
 condition|(
-operator|(
-name|buflen
-operator|-=
-name|QFIXEDSZ
-operator|)
+name|ep
+operator|-
+name|cp
 operator|<
-literal|0
+name|QFIXEDSZ
 condition|)
 return|return
 operator|(
@@ -415,7 +418,11 @@ name|dname
 argument_list|,
 name|cp
 argument_list|,
-name|buflen
+name|ep
+operator|-
+name|cp
+operator|-
+name|QFIXEDSZ
 argument_list|,
 name|dnptrs
 argument_list|,
@@ -435,11 +442,7 @@ name|cp
 operator|+=
 name|n
 expr_stmt|;
-name|buflen
-operator|-=
-name|n
-expr_stmt|;
-name|__putshort
+name|ns_put16
 argument_list|(
 name|type
 argument_list|,
@@ -450,7 +453,7 @@ name|cp
 operator|+=
 name|INT16SZ
 expr_stmt|;
-name|__putshort
+name|ns_put16
 argument_list|(
 name|class
 argument_list|,
@@ -482,10 +485,22 @@ name|NULL
 condition|)
 break|break;
 comment|/* 		 * Make an additional record for completion domain. 		 */
-name|buflen
-operator|-=
+if|if
+condition|(
+operator|(
+name|ep
+operator|-
+name|cp
+operator|)
+operator|<
 name|RRFIXEDSZ
-expr_stmt|;
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 name|n
 operator|=
 name|dn_comp
@@ -499,7 +514,11 @@ name|data
 argument_list|,
 name|cp
 argument_list|,
-name|buflen
+name|ep
+operator|-
+name|cp
+operator|-
+name|RRFIXEDSZ
 argument_list|,
 name|dnptrs
 argument_list|,
@@ -522,11 +541,7 @@ name|cp
 operator|+=
 name|n
 expr_stmt|;
-name|buflen
-operator|-=
-name|n
-expr_stmt|;
-name|__putshort
+name|ns_put16
 argument_list|(
 name|T_NULL
 argument_list|,
@@ -537,7 +552,7 @@ name|cp
 operator|+=
 name|INT16SZ
 expr_stmt|;
-name|__putshort
+name|ns_put16
 argument_list|(
 name|class
 argument_list|,
@@ -548,7 +563,7 @@ name|cp
 operator|+=
 name|INT16SZ
 expr_stmt|;
-name|__putlong
+name|ns_put32
 argument_list|(
 literal|0
 argument_list|,
@@ -559,7 +574,7 @@ name|cp
 operator|+=
 name|INT32SZ
 expr_stmt|;
-name|__putshort
+name|ns_put16
 argument_list|(
 literal|0
 argument_list|,
@@ -586,7 +601,9 @@ case|:
 comment|/* 		 * Initialize answer section 		 */
 if|if
 condition|(
-name|buflen
+name|ep
+operator|-
+name|cp
 operator|<
 literal|1
 operator|+
@@ -607,7 +624,7 @@ operator|=
 literal|'\0'
 expr_stmt|;
 comment|/* no domain name */
-name|__putshort
+name|ns_put16
 argument_list|(
 name|type
 argument_list|,
@@ -618,7 +635,7 @@ name|cp
 operator|+=
 name|INT16SZ
 expr_stmt|;
-name|__putshort
+name|ns_put16
 argument_list|(
 name|class
 argument_list|,
@@ -629,7 +646,7 @@ name|cp
 operator|+=
 name|INT16SZ
 expr_stmt|;
-name|__putlong
+name|ns_put32
 argument_list|(
 literal|0
 argument_list|,
@@ -640,7 +657,7 @@ name|cp
 operator|+=
 name|INT32SZ
 expr_stmt|;
-name|__putshort
+name|ns_put16
 argument_list|(
 name|datalen
 argument_list|,
@@ -730,35 +747,26 @@ begin_function
 name|int
 name|res_nopt
 parameter_list|(
-name|statp
-parameter_list|,
-name|n0
-parameter_list|,
-name|buf
-parameter_list|,
-name|buflen
-parameter_list|,
-name|anslen
-parameter_list|)
 name|res_state
 name|statp
-decl_stmt|;
+parameter_list|,
 name|int
 name|n0
-decl_stmt|;
+parameter_list|,
+comment|/* current offset in buffer */
 name|u_char
 modifier|*
 name|buf
-decl_stmt|;
+parameter_list|,
 comment|/* buffer to put query */
 name|int
 name|buflen
-decl_stmt|;
+parameter_list|,
 comment|/* size of buffer */
 name|int
 name|anslen
-decl_stmt|;
-comment|/* answer buffer length */
+parameter_list|)
+comment|/* UDP answer buffer size */
 block|{
 specifier|register
 name|HEADER
@@ -769,6 +777,9 @@ specifier|register
 name|u_char
 modifier|*
 name|cp
+decl_stmt|,
+modifier|*
+name|ep
 decl_stmt|;
 name|u_int16_t
 name|flags
@@ -811,21 +822,29 @@ name|buf
 operator|+
 name|n0
 expr_stmt|;
+name|ep
+operator|=
+name|buf
+operator|+
 name|buflen
-operator|-=
-name|n0
 expr_stmt|;
 if|if
 condition|(
-name|buflen
+operator|(
+name|ep
+operator|-
+name|cp
+operator|)
 operator|<
 literal|1
 operator|+
 name|RRFIXEDSZ
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 operator|*
 name|cp
@@ -834,10 +853,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* "." */
-name|buflen
-operator|--
-expr_stmt|;
-name|__putshort
+name|ns_put16
 argument_list|(
 name|T_OPT
 argument_list|,
@@ -849,7 +865,7 @@ name|cp
 operator|+=
 name|INT16SZ
 expr_stmt|;
-name|__putshort
+name|ns_put16
 argument_list|(
 name|anslen
 operator|&
@@ -909,7 +925,7 @@ operator||=
 name|NS_OPT_DNSSEC_OK
 expr_stmt|;
 block|}
-name|__putshort
+name|ns_put16
 argument_list|(
 name|flags
 argument_list|,
@@ -920,7 +936,7 @@ name|cp
 operator|+=
 name|INT16SZ
 expr_stmt|;
-name|__putshort
+name|ns_put16
 argument_list|(
 literal|0
 argument_list|,
@@ -948,14 +964,12 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-name|buflen
-operator|-=
-name|RRFIXEDSZ
-expr_stmt|;
 return|return
+operator|(
 name|cp
 operator|-
 name|buf
+operator|)
 return|;
 block|}
 end_function
