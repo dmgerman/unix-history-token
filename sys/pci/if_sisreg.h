@@ -1589,7 +1589,7 @@ name|SIS_LASTDESC
 parameter_list|(
 name|x
 parameter_list|)
-value|(!((x)->sis_ctl& SIS_CMDSTS_MORE)))
+value|(!((x)->sis_ctl& SIS_CMDSTS_MORE))
 end_define
 
 begin_define
