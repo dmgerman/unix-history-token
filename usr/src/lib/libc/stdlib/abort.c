@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)abort.c	5.8 (Berkeley) %G%"
+literal|"@(#)abort.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,12 +55,10 @@ directive|include
 file|<stddef.h>
 end_include
 
-begin_macro
+begin_function
+name|void
 name|abort
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|sigset_t
 name|mask
@@ -153,7 +151,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
