@@ -8,7 +8,7 @@ name|char
 name|id_tset
 index|[]
 init|=
-literal|"@(#)tset.c	1.4 %G%"
+literal|"@(#)tset.c	1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6745,7 +6745,7 @@ specifier|static
 name|char
 name|typebuf
 index|[
-literal|50
+name|BUFSIZ
 index|]
 decl_stmt|;
 specifier|register
