@@ -308,6 +308,7 @@ name|USEENDGUARD
 operator|*
 operator|(
 operator|(
+name|signed
 name|char
 operator|*
 operator|)
@@ -452,6 +453,7 @@ condition|(
 operator|*
 operator|(
 operator|(
+name|signed
 name|char
 operator|*
 operator|)
@@ -486,6 +488,7 @@ condition|(
 operator|*
 operator|(
 operator|(
+name|signed
 name|char
 operator|*
 operator|)
@@ -521,6 +524,7 @@ expr_stmt|;
 operator|*
 operator|(
 operator|(
+name|signed
 name|char
 operator|*
 operator|)
