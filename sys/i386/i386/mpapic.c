@@ -721,7 +721,7 @@ name|irq
 condition|)
 name|printf
 argument_list|(
-literal|"IOAPIC #%d intpint %d -> irq %d\n"
+literal|"IOAPIC #%d intpin %d -> irq %d\n"
 argument_list|,
 name|apic
 argument_list|,
