@@ -1439,6 +1439,12 @@ name|th_tid
 operator|=
 name|id
 expr_stmt|;
+name|th
+operator|->
+name|th_thread
+operator|=
+name|pt
+expr_stmt|;
 return|return
 operator|(
 name|TD_OK
@@ -1668,6 +1674,12 @@ argument_list|,
 name|lwp
 argument_list|)
 expr_stmt|;
+name|th
+operator|->
+name|th_thread
+operator|=
+name|pt
+expr_stmt|;
 return|return
 operator|(
 name|TD_OK
@@ -1890,6 +1902,12 @@ name|pt
 argument_list|,
 name|PT_USER
 argument_list|)
+expr_stmt|;
+name|th
+operator|.
+name|th_thread
+operator|=
+name|pt
 expr_stmt|;
 comment|/* should we unmap lwp here ? */
 if|if

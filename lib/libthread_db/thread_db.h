@@ -491,6 +491,9 @@ decl_stmt|;
 name|thread_t
 name|ti_tid
 decl_stmt|;
+name|psaddr_t
+name|ti_thread
+decl_stmt|;
 name|td_thr_state_e
 name|ti_state
 decl_stmt|;
