@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd3.c	1.6 83/07/28"
+literal|"@(#)cmd3.c	1.7 83/07/28"
 decl_stmt|;
 end_decl_stmt
 
@@ -321,6 +321,11 @@ end_decl_stmt
 
 begin_block
 block|{
+name|char
+modifier|*
+name|malloc
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|w
