@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)types.h	7.20 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)types.h	7.21 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -300,7 +300,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|short
+name|u_long
 name|dev_t
 typedef|;
 end_typedef
@@ -322,13 +322,13 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|long
+name|quad_t
 name|off_t
 typedef|;
 end_typedef
 
 begin_comment
-comment|/* file offset (should be a quad) */
+comment|/* file offset */
 end_comment
 
 begin_typedef
@@ -366,7 +366,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|u_short
+name|u_long
 name|uid_t
 typedef|;
 end_typedef
@@ -377,7 +377,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|u_short
+name|u_long
 name|gid_t
 typedef|;
 end_typedef
@@ -747,7 +747,7 @@ name|FD_ZERO
 parameter_list|(
 name|p
 parameter_list|)
-value|bzero((char *)(p), sizeof(*(p)))
+value|bzero(p, sizeof(*(p)))
 end_define
 
 begin_if
