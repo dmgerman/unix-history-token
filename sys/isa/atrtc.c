@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)clock.c	7.2 (Berkeley) 5/12/91  *	$Id: clock.c,v 1.108 1998/01/28 10:41:33 phk Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)clock.c	7.2 (Berkeley) 5/12/91  *	$Id: clock.c,v 1.109 1998/02/09 06:08:26 eivind Exp $  */
 end_comment
 
 begin_comment
@@ -663,6 +663,10 @@ operator|>=
 name|hardclock_max_count
 condition|)
 block|{
+name|timer0_prescaler_count
+operator|-=
+name|hardclock_max_count
+expr_stmt|;
 name|hardclock
 argument_list|(
 operator|&
@@ -671,10 +675,6 @@ argument_list|)
 expr_stmt|;
 name|setdelayed
 argument_list|()
-expr_stmt|;
-name|timer0_prescaler_count
-operator|-=
-name|hardclock_max_count
 expr_stmt|;
 block|}
 break|break;
@@ -759,6 +759,37 @@ operator|>=
 name|hardclock_max_count
 condition|)
 block|{
+name|timer0_prescaler_count
+operator|-=
+name|hardclock_max_count
+expr_stmt|;
+comment|/* 			 * See microtime.s for this magic. 			 */
+name|time
+operator|.
+name|tv_usec
+operator|+=
+operator|(
+literal|27465
+operator|*
+name|timer0_prescaler_count
+operator|)
+operator|>>
+literal|15
+expr_stmt|;
+if|if
+condition|(
+name|time
+operator|.
+name|tv_usec
+operator|>=
+literal|1000000
+condition|)
+name|time
+operator|.
+name|tv_usec
+operator|-=
+literal|1000000
+expr_stmt|;
 name|hardclock
 argument_list|(
 operator|&
@@ -812,37 +843,6 @@ argument_list|)
 expr_stmt|;
 name|enable_intr
 argument_list|()
-expr_stmt|;
-comment|/* 			 * See microtime.s for this magic. 			 */
-name|time
-operator|.
-name|tv_usec
-operator|+=
-operator|(
-literal|27465
-operator|*
-operator|(
-name|timer0_prescaler_count
-operator|-
-name|hardclock_max_count
-operator|)
-operator|)
-operator|>>
-literal|15
-expr_stmt|;
-if|if
-condition|(
-name|time
-operator|.
-name|tv_usec
-operator|>=
-literal|1000000
-condition|)
-name|time
-operator|.
-name|tv_usec
-operator|-=
-literal|1000000
 expr_stmt|;
 name|timer0_prescaler_count
 operator|=
@@ -1769,11 +1769,21 @@ name|u_char
 name|val
 parameter_list|)
 block|{
+name|inb
+argument_list|(
+literal|0x84
+argument_list|)
+expr_stmt|;
 name|outb
 argument_list|(
 name|IO_RTC
 argument_list|,
 name|reg
+argument_list|)
+expr_stmt|;
+name|inb
+argument_list|(
+literal|0x84
 argument_list|)
 expr_stmt|;
 name|outb
@@ -1785,6 +1795,12 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
+name|inb
+argument_list|(
+literal|0x84
+argument_list|)
+expr_stmt|;
+comment|/* XXX work around wrong order in rtcin() */
 block|}
 end_function
 
@@ -2161,6 +2177,9 @@ block|{
 name|u_long
 name|ef
 decl_stmt|;
+name|int
+name|new_timer0_max_count
+decl_stmt|;
 name|ef
 operator|=
 name|read_eflags
@@ -2173,7 +2192,7 @@ name|timer_freq
 operator|=
 name|freq
 expr_stmt|;
-name|timer0_max_count
+name|new_timer0_max_count
 operator|=
 name|hardclock_max_count
 operator|=
@@ -2181,6 +2200,17 @@ name|TIMER_DIV
 argument_list|(
 name|intr_freq
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|new_timer0_max_count
+operator|!=
+name|timer0_max_count
+condition|)
+block|{
+name|timer0_max_count
+operator|=
+name|new_timer0_max_count
 expr_stmt|;
 name|timer0_overflow_threshold
 operator|=
@@ -2217,6 +2247,7 @@ operator|>>
 literal|8
 argument_list|)
 expr_stmt|;
+block|}
 name|CLOCK_UNLOCK
 argument_list|()
 expr_stmt|;
