@@ -42,7 +42,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)send.c	2.3 %G%"
+literal|"@(#)send.c	2.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -313,40 +313,6 @@ block|}
 name|infld
 operator|++
 expr_stmt|;
-comment|/* 			 * We are looking at a header line. 			 * See if it is the status: field, 			 * and if it is, print the real status: field 			 */
-if|if
-condition|(
-name|icisname
-argument_list|(
-name|line
-argument_list|,
-literal|"status"
-argument_list|,
-literal|6
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|dostat
-condition|)
-block|{
-name|statusput
-argument_list|(
-name|mailp
-argument_list|,
-name|obuf
-argument_list|,
-name|doign
-argument_list|)
-expr_stmt|;
-name|dostat
-operator|=
-literal|0
-expr_stmt|;
-block|}
-continue|continue;
-block|}
 comment|/* 			 * Pick up the header field. 			 * If it is an ignored field and 			 * we care about such things, skip it. 			 */
 name|cp
 operator|=
@@ -396,6 +362,38 @@ name|field
 argument_list|)
 condition|)
 continue|continue;
+comment|/* 			 * If the field is "status," go compute and print the 			 * real Status: field 			 */
+if|if
+condition|(
+name|icequal
+argument_list|(
+name|field
+argument_list|,
+literal|"status"
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|dostat
+condition|)
+block|{
+name|statusput
+argument_list|(
+name|mailp
+argument_list|,
+name|obuf
+argument_list|,
+name|doign
+argument_list|)
+expr_stmt|;
+name|dostat
+operator|=
+literal|0
+expr_stmt|;
+block|}
+continue|continue;
+block|}
 block|}
 name|writeit
 label|:
