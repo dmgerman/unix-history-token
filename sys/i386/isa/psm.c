@@ -145,28 +145,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PSM_ENABLE
-value|0xa8
-end_define
-
-begin_comment
-comment|/* enable auxiliary port */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PSM_DISABLE
-value|0xa7
-end_define
-
-begin_comment
-comment|/* disable auxiliary port */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PSM_INT_ENABLE
 value|0x47
 end_define
@@ -186,8 +164,30 @@ begin_comment
 comment|/* disable controller interrupts */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PSM_DISABLE
+value|0xa7
+end_define
+
 begin_comment
-comment|/* m+use commands */
+comment|/* disable auxiliary port */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PSM_ENABLE
+value|0xa8
+end_define
+
+begin_comment
+comment|/* enable auxiliary port */
+end_comment
+
+begin_comment
+comment|/* mouse commands */
 end_comment
 
 begin_define
@@ -608,7 +608,7 @@ argument_list|()
 expr_stmt|;
 name|outb
 argument_list|(
-name|inport
+name|ioport
 operator|+
 name|PSM_CNTRL
 argument_list|,
@@ -620,7 +620,7 @@ argument_list|()
 expr_stmt|;
 name|outb
 argument_list|(
-name|inport
+name|ioport
 operator|+
 name|PSM_DATA
 argument_list|,
