@@ -149,6 +149,32 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Functions for dedicated thread taskqueues  */
+end_comment
+
+begin_function_decl
+name|void
+name|taskqueue_thread_loop
+parameter_list|(
+name|void
+modifier|*
+name|arg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|taskqueue_thread_enqueue
+parameter_list|(
+name|void
+modifier|*
+name|context
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Initialise a task structure.  */
 end_comment
 
@@ -202,6 +228,17 @@ name|init
 parameter_list|)
 define|\ 									\
 value|struct taskqueue *taskqueue_##name;					\ 									\ static void								\ taskqueue_define_##name(void *arg)					\ {									\ 	taskqueue_##name =						\ 	    taskqueue_create(#name, M_NOWAIT, (enqueue), (context));	\ 	init;								\ }									\ 									\ SYSINIT(taskqueue_##name, SI_SUB_CONFIGURE, SI_ORDER_SECOND,		\ 	taskqueue_define_##name, NULL)					\ 									\ struct __hack
+end_define
+
+begin_define
+define|#
+directive|define
+name|TASKQUEUE_DEFINE_THREAD
+parameter_list|(
+name|name
+parameter_list|)
+define|\
+value|static struct proc *taskqueue_##name##_proc;				\ TASKQUEUE_DEFINE(name, taskqueue_thread_enqueue,&taskqueue_##name,	\ 	kthread_create(taskqueue_thread_loop,&taskqueue_##name,	\&taskqueue_##name##_proc, 0, 0, #name " taskq"))
 end_define
 
 begin_comment
