@@ -13,7 +13,6 @@ begin_define
 define|#
 directive|define
 name|_SYS_UCONTEXT_H_
-value|1
 end_define
 
 begin_include
@@ -27,19 +26,20 @@ typedef|typedef
 struct|struct
 name|__ucontext
 block|{
-name|struct
-name|__ucontext
-modifier|*
-name|uc_link
+comment|/* 	 * Keep the order of the first three fields. Also, 	 * keep them the first to fields in the structure. 	 * This way we can have a union with struct 	 * sigcontext and ucontext_t. This allows us to 	 * support them both at the same time. 	 * note: the union is not defined, though. 	 */
+name|sigset_t
+name|uc_sigmask
 decl_stmt|;
 name|stack_t
 name|uc_stack
 decl_stmt|;
-name|sigset_t
-name|uc_sigmask
-decl_stmt|;
 name|mcontext_t
 name|uc_mcontext
+decl_stmt|;
+name|struct
+name|__ucontext_t
+modifier|*
+name|uc_link
 decl_stmt|;
 name|int
 name|__spare__
@@ -58,7 +58,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _SYS_UCONTEXT_H_ */
+comment|/* !_SYS_UCONTEXT_H_ */
 end_comment
 
 end_unit

@@ -13,7 +13,6 @@ begin_define
 define|#
 directive|define
 name|_MACHINE_UCONTEXT_H_
-value|1
 end_define
 
 begin_include
@@ -25,16 +24,20 @@ end_include
 begin_typedef
 typedef|typedef
 struct|struct
+name|__mcontext
 block|{
+comment|/* 	 * The first 3 fields must match the definition of 	 * sigcontext. So that we can support sigcontext 	 * and ucontext_t at the same time. 	 */
+name|int
+name|mc_onstack
+decl_stmt|;
+comment|/* XXX - sigcontext compat. */
 name|int
 name|mc_gs
 decl_stmt|;
-comment|/* %gs */
 name|struct
 name|trapframe
 name|mc_tf
 decl_stmt|;
-comment|/* trapframe */
 name|int
 name|mc_fpregs
 index|[
@@ -59,7 +62,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _MACHINE_UCONTEXT_H_ */
+comment|/* !_MACHINE_UCONTEXT_H_ */
 end_comment
 
 end_unit

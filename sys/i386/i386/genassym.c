@@ -189,6 +189,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/sigframe.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/globaldata.h>
 end_include
 
@@ -196,12 +202,6 @@ begin_include
 include|#
 directive|include
 file|<machine/vm86.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/sigframe.h>
 end_include
 
 begin_define

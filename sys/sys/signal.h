@@ -27,24 +27,8 @@ directive|include
 file|<sys/_posix.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/signal.h>
-end_include
-
 begin_comment
-comment|/* sig_atomic_t; trap codes; sigcontext */
-end_comment
-
-begin_comment
-comment|/*  * sigset_t macros  */
+comment|/*  * sigset_t macros.  */
 end_comment
 
 begin_define
@@ -92,7 +76,7 @@ value|(1<< (_SIG_IDX(sig)& 31))
 end_define
 
 begin_comment
-comment|/*  * system defined signals  */
+comment|/*  * System defined signals.  */
 end_comment
 
 begin_define
@@ -555,6 +539,12 @@ name|SIG_ERR
 value|((__sighandler_t *)-1)
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
+
 begin_union
 union|union
 name|sigval
@@ -574,6 +564,7 @@ end_union
 begin_typedef
 typedef|typedef
 struct|struct
+name|__siginfo
 block|{
 name|int
 name|si_signo
@@ -588,11 +579,12 @@ name|int
 name|si_code
 decl_stmt|;
 comment|/* signal code */
-name|pid_t
+name|int
 name|si_pid
 decl_stmt|;
 comment|/* sending process */
-name|uid_t
+name|unsigned
+name|int
 name|si_uid
 decl_stmt|;
 comment|/* sender's ruid */
@@ -626,9 +618,15 @@ name|siginfo_t
 typedef|;
 end_typedef
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_typedef
 typedef|typedef
 struct|struct
+name|__sigset
 block|{
 name|unsigned
 name|int
@@ -642,6 +640,20 @@ name|sigset_t
 typedef|;
 end_typedef
 
+begin_comment
+comment|/*  * XXX - there are some nasty dependencies.  * Now that sigset_t has been defined we can  * include the MD structures.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<machine/signal.h>
+end_include
+
+begin_comment
+comment|/* sig_atomic_t; trap codes; sigcontext */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -651,6 +663,12 @@ argument_list|(
 name|_ANSI_SOURCE
 argument_list|)
 end_if
+
+begin_struct_decl
+struct_decl|struct
+name|__siginfo
+struct_decl|;
+end_struct_decl
 
 begin_comment
 comment|/*  * Signal vector "template" used in sigaction call.  */
@@ -682,7 +700,8 @@ argument_list|(
 operator|(
 name|int
 operator|,
-name|siginfo_t
+expr|struct
+name|__siginfo
 operator|*
 operator|,
 name|void
@@ -841,6 +860,10 @@ value|32
 end_define
 
 begin_comment
+comment|/* number of old signals (counting 0) */
+end_comment
+
+begin_comment
 comment|/* POSIX 1003.1b required values. */
 end_comment
 
@@ -943,7 +966,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * sigaltstack  */
+comment|/*  * Structure used in sigaltstack call.  */
 end_comment
 
 begin_typedef
@@ -956,8 +979,7 @@ modifier|*
 name|ss_sp
 decl_stmt|;
 comment|/* signal stack base */
-name|unsigned
-name|int
+name|size_t
 name|ss_size
 decl_stmt|;
 comment|/* signal stack length */
@@ -1015,7 +1037,7 @@ comment|/* recommended stack size */
 end_comment
 
 begin_comment
-comment|/*  * Suck in definition of ucontext_t  */
+comment|/* Have enough typedefs for this now.  XXX */
 end_comment
 
 begin_include
@@ -1194,6 +1216,12 @@ begin_comment
 comment|/* set specified signal set */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
+
 begin_struct
 struct|struct
 name|sigevent
@@ -1236,6 +1264,11 @@ end_define
 begin_comment
 comment|/* Generate a queued signal */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
