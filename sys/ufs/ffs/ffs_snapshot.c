@@ -2081,7 +2081,9 @@ operator|=
 name|fs
 operator|->
 name|fs_cssize
-operator|%
+operator|-
+name|loc
+operator|*
 name|fs
 operator|->
 name|fs_bsize
