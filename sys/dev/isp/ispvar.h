@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: ispvar.h,v 1.8.2.3 1999/07/03 01:47:14 mjacob Exp $ */
-end_comment
-
-begin_comment
-comment|/* release_6_5_99 */
+comment|/* $Id: ispvar.h,v 1.8.2.4 1999/07/05 20:43:14 mjacob Exp $ */
 end_comment
 
 begin_comment
@@ -250,7 +246,7 @@ name|u_int16_t
 name|dv_codeorg
 decl_stmt|;
 comment|/* code ORG for f/w */
-name|u_int16_t
+name|u_int32_t
 name|dv_fwrev
 decl_stmt|;
 comment|/* f/w revision */
@@ -302,6 +298,74 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|ISP_MAX_TARGETS
+parameter_list|(
+name|isp
+parameter_list|)
+value|(IS_FC(isp)? MAX_FC_TARG : MAX_TARGETS)
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISP2100_SCCLUN
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_ISP_FC_LUN
+parameter_list|(
+name|isp
+parameter_list|)
+value|65536
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|_ISP_FC_LUN
+parameter_list|(
+name|isp
+parameter_list|)
+value|16
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|_ISP_SCSI_LUN
+parameter_list|(
+name|isp
+parameter_list|)
+define|\
+value|((ISP_FW_REVX(isp->isp_fwrev)>= ISP_FW_REV(7, 55, 0))? 32 : 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISP_MAX_LUNS
+parameter_list|(
+name|isp
+parameter_list|)
+define|\
+value|(IS_FC(isp)? _ISP_FC_LUN(isp) : _ISP_SCSI_LUN(isp))
+end_define
 
 begin_comment
 comment|/* queue length must be a power of two */
@@ -1211,6 +1275,26 @@ directive|endif
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|SDPARAM
+parameter_list|(
+name|isp
+parameter_list|)
+value|((sdparam *) (isp)->isp_param)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FCPARAM
+parameter_list|(
+name|isp
+parameter_list|)
+value|((fcparam *) (isp)->isp_param)
+end_define
 
 begin_comment
 comment|/*  * ISP States  */
