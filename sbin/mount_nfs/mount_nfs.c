@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,9 +35,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_comment
-comment|/* static char sccsid[] = "@(#)mount_nfs.c	8.11 (Berkeley) 5/4/95"; */
-end_comment
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)mount_nfs.c	8.11 (Berkeley) 5/4/95";
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -45,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mount_nfs.c,v 1.27 1998/02/01 21:53:19 bde Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,18 +77,6 @@ begin_include
 include|#
 directive|include
 file|<sys/mount.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socketvar.h>
 end_include
 
 begin_include
@@ -203,19 +200,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netdb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
 end_include
 
 begin_include
@@ -969,7 +954,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Used to set mount flags with getmntopts.  Call with dir=TRUE to  * initialise altflags from the current mount flags.  Call with  * dir=FALSE to update mount flags with the new value of altflags after  * the call to getmntopts.  */
+comment|/*  * Used to set mount flags with getmntopts.  Call with dir=TRUE to  * initialize altflags from the current mount flags.  Call with  * dir=FALSE to update mount flags with the new value of altflags after  * the call to getmntopts.  */
 end_comment
 
 begin_function
@@ -2364,10 +2349,12 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|i
 operator|=
 name|fork
 argument_list|()
+operator|)
 condition|)
 block|{
 if|if
@@ -2491,7 +2478,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|NFSKERB
-comment|/* 			 * Set up as ncd_authuid for the kerberos call. 			 * Must set ruid to ncd_authuid and reset the 			 * ticket name iff ncd_authuid is not the same 			 * as last time, so that the right ticket file 			 * is found. 			 * Get the Kerberos credential structure so that 			 * we have the seesion key and get a ticket for 			 * this uid. 			 * For more info see the IETF Draft "Authentication 			 * in ONC RPC". 			 */
+comment|/* 			 * Set up as ncd_authuid for the kerberos call. 			 * Must set ruid to ncd_authuid and reset the 			 * ticket name iff ncd_authuid is not the same 			 * as last time, so that the right ticket file 			 * is found. 			 * Get the Kerberos credential structure so that 			 * we have the session key and get a ticket for 			 * this uid. 			 * For more info see the IETF Draft "Authentication 			 * in ONC RPC". 			 */
 if|if
 condition|(
 name|ncd
@@ -2623,7 +2610,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Fill in the AKN_FULLNAME authenticator and verfier. 			 * Along with the Kerberos ticket, we need to build 			 * the timestamp verifier and encrypt it in CBC mode. 			 */
+comment|/* 			 * Fill in the AKN_FULLNAME authenticator and verifier. 			 * Along with the Kerberos ticket, we need to build 			 * the timestamp verifier and encrypt it in CBC mode. 			 */
 if|if
 condition|(
 name|kret
@@ -3845,7 +3832,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Can't contact NFS server"
+literal|"can't contact NFS server"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4119,10 +4106,12 @@ name|BGRND
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|i
 operator|=
 name|fork
 argument_list|()
+operator|)
 condition|)
 block|{
 if|if
@@ -4633,7 +4622,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\ usage: mount_nfs [-23KPTUbcdilqs] [-D deadthresh] [-I readdirsize]\n\        [-L leaseterm] [-R retrycnt] [-a maxreadahead] [-g maxgroups]\n\        [-m realm] [-o options] [-r readsize] [-t timeout] [-w writesize]\n\        [-x retrans] rhost:path node\n"
+literal|"%s\n%s\n%s\n%s\n"
+argument_list|,
+literal|"usage: mount_nfs [-23KNPTUbcdilqs] [-D deadthresh] [-I readdirsize]"
+argument_list|,
+literal|"                 [-L leaseterm] [-R retrycnt] [-a maxreadahead]"
+argument_list|,
+literal|"                 [-g maxgroups] [-m realm] [-o options] [-r readsize]"
+argument_list|,
+literal|"                 [-t timeout] [-w writesize] [-x retrans] rhost:path node"
 argument_list|)
 expr_stmt|;
 name|exit
