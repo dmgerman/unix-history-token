@@ -477,7 +477,7 @@ init|=
 block|{
 name|MS_CALL
 argument_list|(
-name|NULL
+literal|0
 argument_list|)
 block|,
 comment|/* execute prolog */
@@ -490,7 +490,7 @@ comment|/* set size of transfer */
 comment|/* loop: */
 name|MS_CALL
 argument_list|(
-name|NULL
+literal|0
 argument_list|)
 block|,
 comment|/* execute body */
@@ -503,7 +503,7 @@ argument_list|)
 block|,
 name|MS_CALL
 argument_list|(
-name|NULL
+literal|0
 argument_list|)
 block|,
 comment|/* execute epilog */
