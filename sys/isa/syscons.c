@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992-1997 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: syscons.c,v 1.212 1997/04/30 01:19:21 ache Exp $  */
+comment|/*-  * Copyright (c) 1992-1997 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: syscons.c,v 1.213 1997/04/30 15:31:22 ache Exp $  */
 end_comment
 
 begin_include
@@ -269,19 +269,8 @@ value|1
 end_define
 
 begin_comment
-comment|/* this may break on older VGA's but is useful on real 32 bit systems */
-end_comment
-
-begin_comment
 comment|/* XXX use sc_bcopy where video memory is concerned */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|bcopyw
-value|bcopy
-end_define
 
 begin_define
 define|#
@@ -2737,7 +2726,7 @@ name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 comment|/* copy temporary buffer to final buffer */
-name|bcopyw
+name|bcopy
 argument_list|(
 name|sc_buffer
 argument_list|,
@@ -9948,7 +9937,7 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|bcopyw
+name|bcopy
 argument_list|(
 name|scp
 operator|->
@@ -11060,7 +11049,7 @@ operator|+
 name|n
 operator|)
 expr_stmt|;
-name|bcopyw
+name|bcopy
 argument_list|(
 name|src
 argument_list|,
@@ -11212,7 +11201,7 @@ operator|+
 name|n
 operator|)
 expr_stmt|;
-name|bcopyw
+name|bcopy
 argument_list|(
 name|src
 argument_list|,
@@ -11362,7 +11351,7 @@ operator|+
 name|n
 operator|)
 expr_stmt|;
-name|bcopyw
+name|bcopy
 argument_list|(
 name|src
 argument_list|,
@@ -11504,7 +11493,7 @@ operator|+
 name|n
 operator|)
 expr_stmt|;
-name|bcopyw
+name|bcopy
 argument_list|(
 name|src
 argument_list|,
@@ -11606,7 +11595,7 @@ name|scp
 operator|->
 name|ysize
 expr_stmt|;
-name|bcopyw
+name|bcopy
 argument_list|(
 name|scp
 operator|->
@@ -11723,7 +11712,7 @@ name|scp
 operator|->
 name|ysize
 expr_stmt|;
-name|bcopyw
+name|bcopy
 argument_list|(
 name|scp
 operator|->
@@ -14277,7 +14266,7 @@ operator|->
 name|history
 condition|)
 block|{
-name|bcopyw
+name|bcopy
 argument_list|(
 name|scp
 operator|->
@@ -14332,7 +14321,7 @@ operator|->
 name|history
 expr_stmt|;
 block|}
-name|bcopyw
+name|bcopy
 argument_list|(
 name|scp
 operator|->
@@ -15646,7 +15635,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|bcopyw
+name|bcopy
 argument_list|(
 name|scp
 operator|->
@@ -16367,7 +16356,7 @@ name|i
 operator|++
 control|)
 block|{
-name|bcopyw
+name|bcopy
 argument_list|(
 name|cur_console
 operator|->
@@ -17260,7 +17249,7 @@ name|i
 operator|++
 control|)
 block|{
-name|bcopyw
+name|bcopy
 argument_list|(
 name|ptr
 argument_list|,
@@ -18085,7 +18074,7 @@ block|{
 case|case
 name|M_VGA_M80x60
 case|:
-name|bcopyw
+name|bcopy
 argument_list|(
 name|video_mode_ptr
 operator|+
@@ -18107,7 +18096,7 @@ goto|;
 case|case
 name|M_VGA_C80x60
 case|:
-name|bcopyw
+name|bcopy
 argument_list|(
 name|video_mode_ptr
 operator|+
@@ -18145,7 +18134,7 @@ goto|;
 case|case
 name|M_VGA_M80x30
 case|:
-name|bcopyw
+name|bcopy
 argument_list|(
 name|video_mode_ptr
 operator|+
@@ -18167,7 +18156,7 @@ goto|;
 case|case
 name|M_VGA_C80x30
 case|:
-name|bcopyw
+name|bcopy
 argument_list|(
 name|video_mode_ptr
 operator|+
@@ -18253,7 +18242,7 @@ goto|;
 case|case
 name|M_ENH_B80x43
 case|:
-name|bcopyw
+name|bcopy
 argument_list|(
 name|video_mode_ptr
 operator|+
@@ -18275,7 +18264,7 @@ goto|;
 case|case
 name|M_ENH_C80x43
 case|:
-name|bcopyw
+name|bcopy
 argument_list|(
 name|video_mode_ptr
 operator|+
@@ -18306,7 +18295,7 @@ goto|;
 case|case
 name|M_VGA_M80x50
 case|:
-name|bcopyw
+name|bcopy
 argument_list|(
 name|video_mode_ptr
 operator|+
@@ -18328,7 +18317,7 @@ goto|;
 case|case
 name|M_VGA_C80x50
 case|:
-name|bcopyw
+name|bcopy
 argument_list|(
 name|video_mode_ptr
 operator|+
@@ -20555,7 +20544,7 @@ operator|)
 operator|==
 literal|0xd0
 condition|)
-name|bcopyw
+name|bcopy
 argument_list|(
 operator|&
 name|scp
@@ -20585,7 +20574,7 @@ operator|)
 operator|==
 literal|0xd1
 condition|)
-name|bcopyw
+name|bcopy
 argument_list|(
 operator|&
 name|scp
@@ -20615,7 +20604,7 @@ operator|)
 operator|==
 literal|0xd2
 condition|)
-name|bcopyw
+name|bcopy
 argument_list|(
 operator|&
 name|scp
@@ -20645,7 +20634,7 @@ operator|)
 operator|==
 literal|0xd3
 condition|)
-name|bcopyw
+name|bcopy
 argument_list|(
 operator|&
 name|scp
@@ -20663,7 +20652,7 @@ name|font_size
 argument_list|)
 expr_stmt|;
 else|else
-name|bcopyw
+name|bcopy
 argument_list|(
 name|font_buffer
 operator|+
@@ -20690,7 +20679,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|bcopyw
+name|bcopy
 argument_list|(
 name|font_buffer
 operator|+
@@ -21531,7 +21520,7 @@ operator|%
 name|font_size
 expr_stmt|;
 comment|/* prepare mousepointer char's bitmaps */
-name|bcopyw
+name|bcopy
 argument_list|(
 name|font_buffer
 operator|+
@@ -21561,7 +21550,7 @@ argument_list|,
 name|font_size
 argument_list|)
 expr_stmt|;
-name|bcopyw
+name|bcopy
 argument_list|(
 name|font_buffer
 operator|+
@@ -21593,7 +21582,7 @@ argument_list|,
 name|font_size
 argument_list|)
 expr_stmt|;
-name|bcopyw
+name|bcopy
 argument_list|(
 name|font_buffer
 operator|+
@@ -21627,7 +21616,7 @@ argument_list|,
 name|font_size
 argument_list|)
 expr_stmt|;
-name|bcopyw
+name|bcopy
 argument_list|(
 name|font_buffer
 operator|+
