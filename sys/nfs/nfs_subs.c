@@ -9022,6 +9022,11 @@ operator|*
 name|vpp
 argument_list|)
 expr_stmt|;
+operator|*
+name|vpp
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 operator|(
 name|NFSERR_AUTHERR
@@ -9053,6 +9058,11 @@ operator|*
 name|vpp
 argument_list|)
 expr_stmt|;
+operator|*
+name|vpp
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 operator|(
 name|NFSERR_AUTHERR
@@ -9073,6 +9083,11 @@ argument_list|(
 operator|*
 name|vpp
 argument_list|)
+expr_stmt|;
+operator|*
+name|vpp
+operator|=
+name|NULL
 expr_stmt|;
 return|return
 operator|(
