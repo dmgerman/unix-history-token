@@ -141,13 +141,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<gem/if_gemreg.h>
+file|<dev/gem/if_gemreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<gem/if_gemvar.h>
+file|<dev/gem/if_gemvar.h>
 end_include
 
 begin_define
