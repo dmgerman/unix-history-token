@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ctime.c	8.1 (Berkeley) %G%"
+literal|"@(#)ctime.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6351,6 +6351,37 @@ operator|+
 name|TM_YEAR_BASE
 argument_list|)
 index|]
+expr_stmt|;
+block|}
+while|while
+condition|(
+name|yourtm
+operator|.
+name|tm_mday
+operator|>
+name|DAYSPERLYEAR
+condition|)
+block|{
+name|yourtm
+operator|.
+name|tm_mday
+operator|-=
+name|year_lengths
+index|[
+name|isleap
+argument_list|(
+name|yourtm
+operator|.
+name|tm_year
+operator|+
+name|TM_YEAR_BASE
+argument_list|)
+index|]
+expr_stmt|;
+operator|++
+name|yourtm
+operator|.
+name|tm_year
 expr_stmt|;
 block|}
 for|for
