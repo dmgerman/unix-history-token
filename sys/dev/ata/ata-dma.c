@@ -6917,7 +6917,11 @@ parameter_list|,
 name|int
 name|device
 parameter_list|)
-block|{ }
+block|{
+return|return
+literal|0
+return|;
+block|}
 end_function
 
 begin_function
