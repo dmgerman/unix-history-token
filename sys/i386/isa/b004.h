@@ -260,6 +260,17 @@ name|int
 name|boardtype
 decl_stmt|;
 comment|/* what kind of board is installed */
+name|void
+modifier|*
+name|devfs_token
+index|[
+literal|8
+index|]
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* tokens for 4 types for 8 ports */
 block|}
 struct|;
 end_struct

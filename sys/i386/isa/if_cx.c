@@ -151,6 +151,14 @@ directive|ifdef
 name|DEVFS
 end_ifdef
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|cdevsw
+name|cx_cdevsw
+decl_stmt|;
+end_decl_stmt
+
 begin_include
 include|#
 directive|include
@@ -164,21 +172,6 @@ end_endif
 
 begin_comment
 comment|/*DEVFS*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CDEV_MAJOR
-value|42
-end_define
-
-begin_comment
-comment|/*XXX*/
-end_comment
-
-begin_comment
-comment|/* replace with variable ASAP*/
 end_comment
 
 begin_include
@@ -2193,10 +2186,10 @@ ifdef|#
 directive|ifdef
 name|DEVFS
 block|{
-name|int
+name|void
+modifier|*
 name|x
 decl_stmt|;
-comment|/* default for a simple device with no probe routine (usually delete this) */
 name|x
 operator|=
 name|devfs_add_devsw
@@ -2206,10 +2199,8 @@ literal|"/"
 argument_list|,
 literal|"cx"
 argument_list|,
-name|major
-argument_list|(
-name|CDEV_MAJOR
-argument_list|)
+operator|&
+name|cx_cdevsw
 argument_list|,
 literal|0
 argument_list|,

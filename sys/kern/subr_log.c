@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)subr_log.c	8.1 (Berkeley) 6/10/93  * $Id: subr_log.c,v 1.12 1995/11/29 14:40:35 julian Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)subr_log.c	8.1 (Berkeley) 6/10/93  * $Id: subr_log.c,v 1.13 1995/12/02 18:58:52 bde Exp $  */
 end_comment
 
 begin_comment
@@ -61,18 +61,6 @@ directive|include
 file|<sys/signalvar.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|JREMOD
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/conf.h>
-end_include
-
 begin_include
 include|#
 directive|include
@@ -103,22 +91,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CDEV_MAJOR
-value|7
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*JREMOD*/
-end_comment
-
-begin_define
-define|#
-directive|define
 name|LOG_RDPRI
 value|(PZERO + 1)
 end_define
@@ -136,6 +108,88 @@ directive|define
 name|LOG_RDWAIT
 value|0x08
 end_define
+
+begin_decl_stmt
+specifier|static
+name|d_open_t
+name|logopen
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_close_t
+name|logclose
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_read_t
+name|logread
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_ioctl_t
+name|logioctl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_select_t
+name|logselect
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|CDEV_MAJOR
+value|7
+end_define
+
+begin_decl_stmt
+name|struct
+name|cdevsw
+name|log_cdevsw
+init|=
+block|{
+name|logopen
+block|,
+name|logclose
+block|,
+name|logread
+block|,
+name|nowrite
+block|,
+comment|/*7*/
+name|logioctl
+block|,
+name|nostop
+block|,
+name|nullreset
+block|,
+name|nodevtotty
+block|,
+comment|/* klog */
+name|logselect
+block|,
+name|nommap
+block|,
+name|NULL
+block|,
+literal|"log"
+block|,
+name|NULL
+block|,
+operator|-
+literal|1
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_struct
 struct|struct
@@ -174,6 +228,7 @@ comment|/*ARGSUSED*/
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|logopen
 parameter_list|(
@@ -234,6 +289,7 @@ comment|/*ARGSUSED*/
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|logclose
 parameter_list|(
@@ -282,6 +338,7 @@ comment|/*ARGSUSED*/
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|logread
 parameter_list|(
@@ -526,6 +583,7 @@ comment|/*ARGSUSED*/
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|logselect
 parameter_list|(
@@ -714,6 +772,7 @@ comment|/*ARGSUSED*/
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|logioctl
 parameter_list|(
@@ -876,45 +935,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|JREMOD
-end_ifdef
-
-begin_decl_stmt
-name|struct
-name|cdevsw
-name|log_cdevsw
-init|=
-block|{
-name|logopen
-block|,
-name|logclose
-block|,
-name|logread
-block|,
-name|nowrite
-block|,
-comment|/*7*/
-name|logioctl
-block|,
-name|nostop
-block|,
-name|nullreset
-block|,
-name|nodevtotty
-block|,
-comment|/* klog */
-name|logselect
-block|,
-name|nommap
-block|,
-name|NULL
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 specifier|static
 name|log_devsw_installed
@@ -922,6 +942,14 @@ operator|=
 literal|0
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+modifier|*
+name|log_devfs_token
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -969,24 +997,16 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEVFS
-block|{
-name|int
-name|x
-decl_stmt|;
-comment|/* default for a simple device with no probe routine (usually delete this) */
-name|x
+name|log_devfs_token
 operator|=
 name|devfs_add_devsw
 argument_list|(
-comment|/*	path	name	devsw		minor	type   uid gid perm*/
 literal|"/"
 argument_list|,
 literal|"log"
 argument_list|,
-name|major
-argument_list|(
-name|dev
-argument_list|)
+operator|&
+name|log_cdevsw
 argument_list|,
 literal|0
 argument_list|,
@@ -999,7 +1019,6 @@ argument_list|,
 literal|0600
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 block|}
@@ -1020,15 +1039,6 @@ argument_list|,
 argument|NULL
 argument_list|)
 end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* JREMOD */
-end_comment
 
 end_unit
 

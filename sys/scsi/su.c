@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* su: SCSI Universal. This is a universal SCSI device that  * has a fixed minor number format.  This allows you to refer  * to your devices by BUS, ID, LUN instead of st0, st1, ...  *  * This code looks up the underlying device for a given SCSI  * target and uses that driver.  *  *Begin copyright  *  * Copyright (C) 1993, 1994, 1995, HD Associates, Inc.  * PO Box 276  * Pepperell, MA 01463  * 508 433 5266  * dufault@hda.com  *  * This code is contributed to the University of California at Berkeley:  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *End copyright  *  *      $Id: su.c,v 1.7 1995/11/29 10:49:06 julian Exp $  *  * Tabstops 4  */
+comment|/* su: SCSI Universal. This is a universal SCSI device that  * has a fixed minor number format.  This allows you to refer  * to your devices by BUS, ID, LUN instead of st0, st1, ...  *  * This code looks up the underlying device for a given SCSI  * target and uses that driver.  *  *Begin copyright  *  * Copyright (C) 1993, 1994, 1995, HD Associates, Inc.  * PO Box 276  * Pepperell, MA 01463  * 508 433 5266  * dufault@hda.com  *  * This code is contributed to the University of California at Berkeley:  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *End copyright  *  *      $Id: su.c,v 1.8 1995/11/29 14:41:06 julian Exp $  *  * Tabstops 4  * XXX devfs entries for this device should be handled by generic scsiconfig  * Add a bdevsw interface.. ?  */
 end_comment
 
 begin_include
@@ -13,12 +13,6 @@ begin_include
 include|#
 directive|include
 file|<sys/conf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<scsi/scsiconf.h>
 end_include
 
 begin_include
@@ -51,12 +45,6 @@ directive|include
 file|<sys/systm.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|JREMOD
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -84,6 +72,12 @@ begin_comment
 comment|/*DEVFS*/
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<scsi/scsiconf.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -91,14 +85,95 @@ name|CDEV_MAJOR
 value|18
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_decl_stmt
+name|d_open_t
+name|suopen
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
-comment|/*JREMOD*/
+comment|/* these three used by ssc */
 end_comment
+
+begin_decl_stmt
+name|d_close_t
+name|suclose
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_ioctl_t
+name|suioctl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_read_t
+name|suread
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_write_t
+name|suwrite
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_select_t
+name|suselect
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_strategy_t
+name|sustrategy
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|cdevsw
+name|su_cdevsw
+init|=
+block|{
+name|suopen
+block|,
+name|suclose
+block|,
+name|suread
+block|,
+name|suwrite
+block|,
+comment|/*18*/
+name|suioctl
+block|,
+name|nostop
+block|,
+name|nullreset
+block|,
+name|nodevtotty
+block|,
+comment|/* scsi */
+name|suselect
+block|,
+name|nxmmap
+block|,
+name|sustrategy
+block|,
+literal|"su"
+block|,
+name|NULL
+block|,
+operator|-
+literal|1
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Build an old style device number (unit encoded in the minor number)  * from a base old one (no flag bits) and a full new one  * (BUS, LUN, TARG in the minor number, and flag bits).  *  * OLDDEV has the major number and device unit only.  It was constructed  * at attach time and is stored in the scsi_link structure.  *  * NEWDEV can have whatever in it, but only the old control flags and the  * super bit are present.  IT CAN'T HAVE ANY UNIT INFORMATION or you'll  * wind up with the wrong unit.  */
@@ -140,6 +215,13 @@ block|,
 name|nxpsize
 block|,
 literal|0
+block|,
+literal|"NON"
+block|,
+name|NULL
+block|,
+operator|-
+literal|1
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -172,6 +254,13 @@ block|,
 name|nxmmap
 block|,
 name|nxstrategy
+block|,
+literal|"NON"
+block|,
+name|NULL
+block|,
+operator|-
+literal|1
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -666,6 +755,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sustrategy
 parameter_list|(
@@ -806,6 +896,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|sudump
 parameter_list|(
@@ -854,6 +945,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|supsize
 parameter_list|(
@@ -902,6 +994,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|suread
 parameter_list|(
@@ -962,6 +1055,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|suwrite
 parameter_list|(
@@ -1022,6 +1116,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|suselect
 parameter_list|(
@@ -1081,49 +1176,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|JREMOD
-end_ifdef
-
-begin_decl_stmt
-name|struct
-name|cdevsw
-name|su_cdevsw
-init|=
-block|{
-name|suopen
-block|,
-name|suclose
-block|,
-name|suread
-block|,
-name|suwrite
-block|,
-comment|/*18*/
-name|suioctl
-block|,
-name|nostop
-block|,
-name|nullreset
-block|,
-name|nodevtotty
-block|,
-comment|/* scsi */
-name|suselect
-block|,
-name|nxmmap
-block|,
-name|sustrategy
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* 'generic' */
-end_comment
-
 begin_expr_stmt
 specifier|static
 name|su_devsw_installed
@@ -1175,42 +1227,6 @@ name|su_devsw_installed
 operator|=
 literal|1
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEVFS
-block|{
-name|int
-name|x
-decl_stmt|;
-comment|/* default for a simple device with no probe routine (usually delete this) */
-name|x
-operator|=
-name|devfs_add_devsw
-argument_list|(
-comment|/*	path	name	devsw		minor	type   uid gid perm*/
-literal|"/"
-argument_list|,
-literal|"su"
-argument_list|,
-name|major
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-literal|0
-argument_list|,
-name|DV_CHR
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0600
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 block|}
 block|}
 end_function
@@ -1229,15 +1245,6 @@ argument_list|,
 argument|NULL
 argument_list|)
 end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* JREMOD */
-end_comment
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* "superscsi" pseudo device.  * "superscsi" supports general SCSI utilities that can iterate  * over all SCSI targets, including those without device entry  * points.  *  * "superscsi" supports the SCIOCADDR ioctl to change the BUS, ID, LUN  * of the target so that you can get to all devices.  The only thing  * you can do to "superscsi" is open it, set the target, perform ioctl  * calls, and close it.  *  * Keep "superscsi" protected: you can drive a truck through the  * security hole if you don't.  *  *Begin copyright  *  * Copyright (C) 1993, 1994, 1995, HD Associates, Inc.  * PO Box 276  * Pepperell, MA 01463  * 508 433 5266  * dufault@hda.com  *  * This code is contributed to the University of California at Berkeley:  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *End copyright  * $Id: ssc.c,v 1.6 1995/11/29 14:41:03 julian Exp $  */
+comment|/* "superscsi" pseudo device.  * "superscsi" supports general SCSI utilities that can iterate  * over all SCSI targets, including those without device entry  * points.  *  * "superscsi" supports the SCIOCADDR ioctl to change the BUS, ID, LUN  * of the target so that you can get to all devices.  The only thing  * you can do to "superscsi" is open it, set the target, perform ioctl  * calls, and close it.  *  * Keep "superscsi" protected: you can drive a truck through the  * security hole if you don't.  *  *Begin copyright  *  * Copyright (C) 1993, 1994, 1995, HD Associates, Inc.  * PO Box 276  * Pepperell, MA 01463  * 508 433 5266  * dufault@hda.com  *  * This code is contributed to the University of California at Berkeley:  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *End copyright  * $Id: ssc.c,v 1.7 1995/12/05 19:36:33 bde Exp $  */
 end_comment
 
 begin_include
@@ -12,19 +12,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/conf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<scsi/scsiconf.h>
+file|<sys/scsiio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/scsiio.h>
+file|<sys/kernel.h>
 end_include
 
 begin_include
@@ -42,12 +48,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/buf.h>
 end_include
 
@@ -55,18 +55,6 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|JREMOD
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/kernel.h>
 end_include
 
 begin_ifdef
@@ -90,6 +78,54 @@ begin_comment
 comment|/*DEVFS*/
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<scsi/scsiconf.h>
+end_include
+
+begin_decl_stmt
+specifier|static
+name|d_open_t
+name|sscopen
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_close_t
+name|sscclose
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_ioctl_t
+name|sscioctl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|d_open_t
+name|suopen
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|d_close_t
+name|suclose
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|d_ioctl_t
+name|suioctl
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -97,14 +133,44 @@ name|CDEV_MAJOR
 value|49
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*JREMOD*/
-end_comment
+begin_decl_stmt
+name|struct
+name|cdevsw
+name|ssc_cdevsw
+init|=
+block|{
+name|sscopen
+block|,
+name|sscclose
+block|,
+name|noread
+block|,
+name|nowrite
+block|,
+comment|/*49*/
+name|sscioctl
+block|,
+name|nostop
+block|,
+name|nullreset
+block|,
+name|nodevtotty
+block|,
+name|noselect
+block|,
+name|nxmmap
+block|,
+name|nostrategy
+block|,
+literal|"ssc"
+block|,
+name|NULL
+block|,
+operator|-
+literal|1
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -116,6 +182,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|int
 name|sscopen
 parameter_list|(
@@ -159,6 +226,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|sscclose
 parameter_list|(
@@ -202,6 +270,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|sscioctl
 parameter_list|(
@@ -344,45 +413,6 @@ begin_comment
 comment|/*  * I've elected not to support any other entries.  There really is no  * good reason other than I'm not sure how you would use them.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|JREMOD
-end_ifdef
-
-begin_decl_stmt
-name|struct
-name|cdevsw
-name|ssc_cdevsw
-init|=
-block|{
-name|sscopen
-block|,
-name|sscclose
-block|,
-name|noread
-block|,
-name|nowrite
-block|,
-comment|/*49*/
-name|sscioctl
-block|,
-name|nostop
-block|,
-name|nullreset
-block|,
-name|nodevtotty
-block|,
-comment|/* scsi super */
-name|noselect
-block|,
-name|nommap
-block|,
-name|nostrategy
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 specifier|static
 name|ssc_devsw_installed
@@ -390,6 +420,14 @@ operator|=
 literal|0
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+modifier|*
+name|ssc_devfs_token
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -403,9 +441,6 @@ parameter_list|)
 block|{
 name|dev_t
 name|dev
-decl_stmt|;
-name|dev_t
-name|dev_chr
 decl_stmt|;
 if|if
 condition|(
@@ -433,39 +468,6 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|dev_chr
-operator|=
-name|dev
-expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|BDEV_MAJOR
-argument_list|)
-name|dev
-operator|=
-name|makedev
-argument_list|(
-name|BDEV_MAJOR
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|bdevsw_add
-argument_list|(
-operator|&
-name|dev
-argument_list|,
-operator|&
-name|ssc_bdevsw
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/*BDEV_MAJOR*/
 name|ssc_devsw_installed
 operator|=
 literal|1
@@ -473,24 +475,16 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEVFS
-block|{
-name|int
-name|x
-decl_stmt|;
-comment|/* default for a simple device with no probe routine (usually delete this) */
-name|x
+name|ssc_devfs_token
 operator|=
 name|devfs_add_devsw
 argument_list|(
-comment|/*	path	name	devsw		minor	type   uid gid perm*/
-literal|"/"
+literal|"/scsi"
 argument_list|,
 literal|"ssc"
 argument_list|,
-name|major
-argument_list|(
-name|dev_chr
-argument_list|)
+operator|&
+name|ssc_cdevsw
 argument_list|,
 literal|0
 argument_list|,
@@ -503,7 +497,6 @@ argument_list|,
 literal|0600
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 block|}
@@ -524,15 +517,6 @@ argument_list|,
 argument|NULL
 argument_list|)
 end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* JREMOD */
-end_comment
 
 end_unit
 

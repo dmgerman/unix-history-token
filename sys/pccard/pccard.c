@@ -78,6 +78,33 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/conf.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEVFS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/devfsext.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*DEVFS*/
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<i386/isa/isa.h>
 end_include
 
@@ -104,55 +131,6 @@ include|#
 directive|include
 file|<pccard/slot.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|JREMOD
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/conf.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEVFS
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/devfsext.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*DEVFS*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CDEV_MAJOR
-value|50
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*JREMOD*/
-end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -392,6 +370,95 @@ end_decl_stmt
 begin_comment
 comment|/* Kernel virtual address */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|d_open_t
+name|crdopen
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_close_t
+name|crdclose
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_read_t
+name|crdread
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_write_t
+name|crdwrite
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_ioctl_t
+name|crdioctl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_select_t
+name|crdselect
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|CDEV_MAJOR
+value|50
+end_define
+
+begin_decl_stmt
+name|struct
+name|cdevsw
+name|crd_cdevsw
+init|=
+block|{
+name|crdopen
+block|,
+name|crdclose
+block|,
+name|crdread
+block|,
+name|crdwrite
+block|,
+comment|/*50*/
+name|crdioctl
+block|,
+name|nostop
+block|,
+name|nullreset
+block|,
+name|nodevtotty
+block|,
+comment|/* pcmcia */
+name|crdselect
+block|,
+name|nommap
+block|,
+name|NULL
+block|,
+literal|"crd"
+block|,
+name|NULL
+block|,
+operator|-
+literal|1
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  *	pccard_configure - called by autoconf code.  *	Probes for various PC-CARD controllers, and  *	initialises data structures to point to the  *	various slots.  *  *	Each controller indicates the number of slots  *	that it sees, and these are mapped to a master  *	slot number accessed via the character device entries.  */
@@ -2510,6 +2577,7 @@ comment|/* 	 *	Device driver interface. 	 */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|crdopen
 parameter_list|(
@@ -2595,6 +2663,7 @@ comment|/*  *	Close doesn't de-allocate any resources, since  *	slots may be ass
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|crdclose
 parameter_list|(
@@ -2626,6 +2695,7 @@ comment|/*  *	read interface. Map memory at lseek offset,  *	then transfer to us
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|crdread
 parameter_list|(
@@ -2915,6 +2985,7 @@ comment|/*  *	crdwrite - Write data to card memory.  *	Handles wrap around so th
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|crdwrite
 parameter_list|(
@@ -3212,6 +3283,7 @@ comment|/*  *	ioctl calls - allows setting/getting of memory and I/O  *	descript
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|crdioctl
 parameter_list|(
@@ -4012,6 +4084,7 @@ comment|/*  *	select - Selects on exceptions will return true  *	when a change i
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|crdselect
 parameter_list|(
@@ -4220,45 +4293,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|JREMOD
-end_ifdef
-
-begin_decl_stmt
-name|struct
-name|cdevsw
-name|crd_cdevsw
-init|=
-block|{
-name|crdopen
-block|,
-name|crdclose
-block|,
-name|crdread
-block|,
-name|crdwrite
-block|,
-comment|/*50*/
-name|crdioctl
-block|,
-name|nostop
-block|,
-name|nullreset
-block|,
-name|nodevtotty
-block|,
-comment|/* pcmcia */
-name|crdselect
-block|,
-name|nommap
-block|,
-name|NULL
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 specifier|static
 name|crd_devsw_installed
@@ -4313,24 +4347,22 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEVFS
+comment|/* expand on this when ever you know what the f*ck pccard devices look like and when you know where to store the devfs_token I had a quick look but thios driver is not one for a quick look */
 block|{
-name|int
-name|x
+name|void
+modifier|*
+name|devfs_token
 decl_stmt|;
-comment|/* default for a simple device with no probe routine (usually delete this) */
-name|x
+name|devfs_token
 operator|=
 name|devfs_add_devsw
 argument_list|(
-comment|/*	path	name	devsw		minor	type   uid gid perm*/
 literal|"/"
 argument_list|,
 literal|"crd"
 argument_list|,
-name|major
-argument_list|(
-name|dev
-argument_list|)
+operator|&
+name|crd_cdevsw
 argument_list|,
 literal|0
 argument_list|,
@@ -4364,15 +4396,6 @@ argument_list|,
 argument|NULL
 argument_list|)
 end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* JREMOD */
-end_comment
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tty_tty.c	8.2 (Berkeley) 9/23/93  * $Id: tty_tty.c,v 1.6 1995/11/29 10:48:30 julian Exp $  */
+comment|/*-  * Copyright (c) 1982, 1986, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tty_tty.c	8.2 (Berkeley) 9/23/93  * $Id: tty_tty.c,v 1.7 1995/11/29 14:40:38 julian Exp $  */
 end_comment
 
 begin_comment
@@ -55,12 +55,6 @@ directive|include
 file|<sys/file.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|JREMOD
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -88,6 +82,41 @@ begin_comment
 comment|/*DEVFS*/
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|d_open_t
+name|cttyopen
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_read_t
+name|cttyread
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_write_t
+name|cttywrite
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_ioctl_t
+name|cttyioctl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_select_t
+name|cttyselect
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -95,14 +124,45 @@ name|CDEV_MAJOR
 value|1
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*JREMOD*/
-end_comment
+begin_decl_stmt
+name|struct
+name|cdevsw
+name|ctty_cdevsw
+init|=
+block|{
+name|cttyopen
+block|,
+name|nullclose
+block|,
+name|cttyread
+block|,
+name|cttywrite
+block|,
+comment|/*1*/
+name|cttyioctl
+block|,
+name|nullstop
+block|,
+name|nullreset
+block|,
+name|nodevtotty
+block|,
+comment|/* tty */
+name|cttyselect
+block|,
+name|nommap
+block|,
+name|NULL
+block|,
+literal|"ctty"
+block|,
+name|NULL
+block|,
+operator|-
+literal|1
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -119,6 +179,7 @@ comment|/*ARGSUSED*/
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|cttyopen
 parameter_list|(
@@ -249,6 +310,7 @@ comment|/*ARGSUSED*/
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|cttyread
 parameter_list|(
@@ -333,6 +395,7 @@ comment|/*ARGSUSED*/
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|cttywrite
 parameter_list|(
@@ -417,6 +480,7 @@ comment|/*ARGSUSED*/
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|cttyioctl
 parameter_list|(
@@ -542,6 +606,7 @@ comment|/*ARGSUSED*/
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|cttyselect
 parameter_list|(
@@ -606,45 +671,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|JREMOD
-end_ifdef
-
-begin_decl_stmt
-name|struct
-name|cdevsw
-name|ctty_cdevsw
-init|=
-block|{
-name|cttyopen
-block|,
-name|nullclose
-block|,
-name|cttyread
-block|,
-name|cttywrite
-block|,
-comment|/*1*/
-name|cttyioctl
-block|,
-name|nullstop
-block|,
-name|nullreset
-block|,
-name|nodevtotty
-block|,
-comment|/* tty */
-name|cttyselect
-block|,
-name|nommap
-block|,
-name|NULL
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 specifier|static
 name|ctty_devsw_installed
@@ -652,6 +678,14 @@ operator|=
 literal|0
 expr_stmt|;
 end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+modifier|*
+name|ctty_devfs_token
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -699,24 +733,16 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEVFS
-block|{
-name|int
-name|x
-decl_stmt|;
-comment|/* default for a simple device with no probe routine (usually delete this) */
-name|x
+name|ctty_devfs_token
 operator|=
 name|devfs_add_devsw
 argument_list|(
-comment|/*	path	name	devsw		minor	type   uid gid perm*/
 literal|"/"
 argument_list|,
 literal|"tty"
 argument_list|,
-name|major
-argument_list|(
-name|dev
-argument_list|)
+operator|&
+name|ctty_cdevsw
 argument_list|,
 literal|0
 argument_list|,
@@ -729,7 +755,6 @@ argument_list|,
 literal|0600
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 block|}
@@ -750,15 +775,6 @@ argument_list|,
 argument|NULL
 argument_list|)
 end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* JREMOD */
-end_comment
 
 end_unit
 

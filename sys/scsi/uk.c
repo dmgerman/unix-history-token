@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Driver for a device we can't identify.  * by Julian Elischer (julian@tfs.com)  *  *      $Id: uk.c,v 1.10 1995/11/29 10:49:07 julian Exp $  *  * If you find that you are adding any code to this file look closely  * at putting it in "scsi_driver.c" instead.  */
+comment|/*  * Driver for a device we can't identify.  * by Julian Elischer (julian@tfs.com)  *  *      $Id: uk.c,v 1.11 1995/11/29 14:41:07 julian Exp $  *  * If you find that you are adding any code to this file look closely  * at putting it in "scsi_driver.c" instead.  */
 end_comment
 
 begin_include
@@ -14,24 +14,6 @@ include|#
 directive|include
 file|<sys/systm.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<scsi/scsi_all.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<scsi/scsiconf.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|JREMOD
-end_ifdef
 
 begin_include
 include|#
@@ -66,6 +48,39 @@ begin_comment
 comment|/*DEVFS*/
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<scsi/scsi_all.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<scsi/scsiconf.h>
+end_include
+
+begin_decl_stmt
+specifier|static
+name|d_open_t
+name|ukopen
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_close_t
+name|ukclose
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_ioctl_t
+name|ukioctl
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -73,14 +88,45 @@ name|CDEV_MAJOR
 value|31
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*JREMOD*/
-end_comment
+begin_decl_stmt
+name|struct
+name|cdevsw
+name|uk_cdevsw
+init|=
+block|{
+name|ukopen
+block|,
+name|ukclose
+block|,
+name|noread
+block|,
+name|nowrite
+block|,
+comment|/*31*/
+name|ukioctl
+block|,
+name|nostop
+block|,
+name|nullreset
+block|,
+name|nodevtotty
+block|,
+comment|/* unknown */
+name|seltrue
+block|,
+name|nommap
+block|,
+name|NULL
+block|,
+literal|"uk"
+block|,
+name|NULL
+block|,
+operator|-
+literal|1
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|SCSI_DEVICE_ENTRIES
@@ -141,49 +187,6 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|JREMOD
-end_ifdef
-
-begin_decl_stmt
-name|struct
-name|cdevsw
-name|uk_cdevsw
-init|=
-block|{
-name|ukopen
-block|,
-name|ukclose
-block|,
-name|noread
-block|,
-name|nowrite
-block|,
-comment|/*31*/
-name|ukioctl
-block|,
-name|nostop
-block|,
-name|nullreset
-block|,
-name|nodevtotty
-block|,
-comment|/* unknown */
-name|seltrue
-block|,
-name|nommap
-block|,
-name|NULL
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* scsi */
-end_comment
-
 begin_expr_stmt
 specifier|static
 name|uk_devsw_installed
@@ -235,42 +238,6 @@ name|uk_devsw_installed
 operator|=
 literal|1
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEVFS
-block|{
-name|int
-name|x
-decl_stmt|;
-comment|/* default for a simple device with no probe routine (usually delete this) */
-name|x
-operator|=
-name|devfs_add_devsw
-argument_list|(
-comment|/*	path	name	devsw		minor	type   uid gid perm*/
-literal|"/"
-argument_list|,
-literal|"uk"
-argument_list|,
-name|major
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-literal|0
-argument_list|,
-name|DV_CHR
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0600
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 block|}
 block|}
 end_function
@@ -289,15 +256,6 @@ argument_list|,
 argument|NULL
 argument_list|)
 end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* JREMOD */
-end_comment
 
 end_unit
 

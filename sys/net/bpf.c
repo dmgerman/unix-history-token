@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from the Stanford/CMU enet packet filter,  * (net/enet.c) distributed as part of 4.3BSD, and code contributed  * to Berkeley by Steven McCanne and Van Jacobson both of Lawrence  * Berkeley Laboratory.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      @(#)bpf.c	8.2 (Berkeley) 3/28/94  *  * $Id: bpf.c,v 1.17 1995/12/02 19:37:19 bde Exp $  */
+comment|/*  * Copyright (c) 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from the Stanford/CMU enet packet filter,  * (net/enet.c) distributed as part of 4.3BSD, and code contributed  * to Berkeley by Steven McCanne and Van Jacobson both of Lawrence  * Berkeley Laboratory.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      @(#)bpf.c	8.2 (Berkeley) 3/28/94  *  * $Id: bpf.c,v 1.18 1995/12/06 23:51:53 bde Exp $  */
 end_comment
 
 begin_include
@@ -206,12 +206,6 @@ directive|include
 file|<sys/kernel.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|JREMOD
-end_ifdef
-
 begin_include
 include|#
 directive|include
@@ -237,22 +231,6 @@ end_endif
 
 begin_comment
 comment|/*DEVFS*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CDEV_MAJOR
-value|23
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*JREMOD*/
 end_comment
 
 begin_comment
@@ -643,6 +621,95 @@ name|bpf_d
 operator|*
 operator|)
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_open_t
+name|bpfopen
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_close_t
+name|bpfclose
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_read_t
+name|bpfread
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_write_t
+name|bpfwrite
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_ioctl_t
+name|bpfioctl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_select_t
+name|bpfselect
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|CDEV_MAJOR
+value|23
+end_define
+
+begin_decl_stmt
+name|struct
+name|cdevsw
+name|bpf_cdevsw
+init|=
+block|{
+name|bpfopen
+block|,
+name|bpfclose
+block|,
+name|bpfread
+block|,
+name|bpfwrite
+block|,
+comment|/*23*/
+name|bpfioctl
+block|,
+name|nostop
+block|,
+name|nullreset
+block|,
+name|nodevtotty
+block|,
+comment|/* bpf */
+name|bpfselect
+block|,
+name|nommap
+block|,
+name|NULL
+block|,
+literal|"bpf"
+block|,
+name|NULL
+block|,
+operator|-
+literal|1
+block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -1255,6 +1322,7 @@ parameter_list|)
 value|((d)->bd_next = 0)
 comment|/*  * Open ethernet device.  Returns ENXIO for illegal minor device number,  * EBUSY if file is open by another process.  */
 comment|/* ARGSUSED */
+specifier|static
 name|int
 name|bpfopen
 parameter_list|(
@@ -1362,6 +1430,7 @@ return|;
 block|}
 comment|/*  * Close the descriptor by detaching it from its interface,  * deallocating its buffers, and marking it free.  */
 comment|/* ARGSUSED */
+specifier|static
 name|int
 name|bpfclose
 parameter_list|(
@@ -1621,6 +1690,7 @@ parameter_list|)
 define|\
 value|(d)->bd_hbuf = (d)->bd_sbuf; \ 	(d)->bd_hlen = (d)->bd_slen; \ 	(d)->bd_sbuf = (d)->bd_fbuf; \ 	(d)->bd_slen = 0; \ 	(d)->bd_fbuf = 0;
 comment|/*  *  bpfread - read next chunk of packets from buffers  */
+specifier|static
 name|int
 name|bpfread
 parameter_list|(
@@ -2017,6 +2087,7 @@ block|}
 endif|#
 directive|endif
 block|}
+specifier|static
 name|int
 name|bpfwrite
 parameter_list|(
@@ -2287,6 +2358,7 @@ expr_stmt|;
 block|}
 comment|/*  *  FIONREAD		Check for read packet available.  *  SIOCGIFADDR		Get interface address - convenient hook to driver.  *  BIOCGBLEN		Get buffer len [for read()].  *  BIOCSETF		Set ethernet read filter.  *  BIOCFLUSH		Flush read packet buffer.  *  BIOCPROMISC		Put interface into promiscuous mode.  *  BIOCGDLT		Get link layer type.  *  BIOCGETIF		Get interface name.  *  BIOCSETIF		Set interface.  *  BIOCSRTIMEOUT	Set read timeout.  *  BIOCGRTIMEOUT	Get read timeout.  *  BIOCGSTATS		Get packet stats.  *  BIOCIMMEDIATE	Set immediate mode.  *  BIOCVERSION		Get filter language version.  */
 comment|/* ARGSUSED */
+specifier|static
 name|int
 name|bpfioctl
 parameter_list|(
@@ -3639,6 +3711,7 @@ name|bpf_select
 value|bpfselect
 else|#
 directive|else
+specifier|static
 name|int
 name|bpfselect
 parameter_list|(
@@ -4866,38 +4939,13 @@ name|if_unit
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|JREMOD
-name|struct
-name|cdevsw
-name|bpf_cdevsw
-init|=
-block|{
-name|bpfopen
-block|,
-name|bpfclose
-block|,
-name|bpfread
-block|,
-name|bpfwrite
-block|,
-comment|/*23*/
-name|bpfioctl
-block|,
-name|nostop
-block|,
-name|nullreset
-block|,
-name|nodevtotty
-block|,
-comment|/* bpf */
-name|bpfselect
-block|,
-name|nommap
-block|,
-name|NULL
-block|}
+specifier|static
+name|void
+modifier|*
+name|bpf_devfs_token
+index|[
+name|NBPFILTER
+index|]
 decl_stmt|;
 specifier|static
 name|bpf_devsw_installed
@@ -4915,6 +4963,15 @@ parameter_list|)
 block|{
 name|dev_t
 name|dev
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+name|char
+name|name
+index|[
+literal|32
+index|]
 decl_stmt|;
 if|if
 condition|(
@@ -4949,26 +5006,44 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEVFS
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|NBPFILTER
+condition|;
+name|i
+operator|++
+control|)
 block|{
-name|int
-name|x
-decl_stmt|;
-comment|/* default for a simple device with no probe routine (usually delete this) */
-name|x
+name|sprintf
+argument_list|(
+name|name
+argument_list|,
+literal|"bpf%d"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+name|bpf_devfs_token
+index|[
+name|i
+index|]
 operator|=
 name|devfs_add_devsw
 argument_list|(
-comment|/*	path	name	devsw		minor	type   uid gid perm*/
 literal|"/"
 argument_list|,
-literal|"bpf"
+name|name
 argument_list|,
-name|major
-argument_list|(
-name|dev
-argument_list|)
+operator|&
+name|bpf_cdevsw
 argument_list|,
-literal|0
+name|i
 argument_list|,
 name|DV_CHR
 argument_list|,
@@ -4997,15 +5072,6 @@ argument_list|,
 argument|NULL
 argument_list|)
 end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* JREMOD */
-end_comment
 
 begin_endif
 endif|#

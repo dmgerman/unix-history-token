@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.18 1995/11/29 14:39:17 julian Exp $  */
+comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.19 1995/12/07 12:45:21 davidg Exp $  */
 end_comment
 
 begin_include
@@ -32,14 +32,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|"conf.h"
+file|<conf.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|JREMOD
-end_ifdef
 
 begin_include
 include|#
@@ -72,15 +66,6 @@ end_endif
 
 begin_comment
 comment|/*DEVFS*/
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*JREMOD*/
 end_comment
 
 begin_include
@@ -407,6 +392,10 @@ name|struct
 name|apmhook
 name|sc_resume
 decl_stmt|;
+name|void
+modifier|*
+name|sc_devfs_token
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -579,11 +568,26 @@ name|apm_timeout
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|JREMOD
-end_ifdef
+begin_decl_stmt
+specifier|static
+name|d_open_t
+name|apmopen
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_close_t
+name|apmclose
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_ioctl_t
+name|apmioctl
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -592,14 +596,46 @@ name|CDEV_MAJOR
 value|39
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* JREMOD */
-end_comment
+begin_decl_stmt
+specifier|static
+name|struct
+name|cdevsw
+name|apm_cdevsw
+init|=
+block|{
+name|apmopen
+block|,
+name|apmclose
+block|,
+name|noread
+block|,
+name|nowrite
+block|,
+comment|/*39*/
+name|apmioctl
+block|,
+name|nostop
+block|,
+name|nullreset
+block|,
+name|nodevtotty
+block|,
+comment|/* APM */
+name|seltrue
+block|,
+name|nommap
+block|,
+name|NULL
+block|,
+literal|"apm"
+block|,
+name|NULL
+block|,
+operator|-
+literal|1
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -2833,6 +2869,7 @@ name|__FreeBSD__
 end_ifdef
 
 begin_function_decl
+specifier|static
 name|int
 name|apmprobe
 parameter_list|(
@@ -2844,6 +2881,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|apmattach
 parameter_list|(
@@ -2976,34 +3014,39 @@ begin_comment
 comment|/*  * probe APM (dummy):  *  * APM probing routine is placed on locore.s and apm_init.S because  * this process forces the CPU to turn to real mode or V86 mode.  * Current version uses real mode, but on future version, we want  * to use V86 mode in APM initialization.  */
 end_comment
 
-begin_function
-name|int
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|int
 name|apmprobe
-parameter_list|(
-name|struct
+argument_list|(
+expr|struct
 name|isa_device
-modifier|*
+operator|*
 name|dvp
-parameter_list|)
+argument_list|)
 endif|#
 directive|endif
 comment|/* __FreeBSD__ */
 ifdef|#
 directive|ifdef
 name|MACH_KERNEL
-function|apmprobe
-parameter_list|(
+name|int
+name|apmprobe
+argument_list|(
 name|vm_offset_t
 name|port
-parameter_list|,
-name|struct
+argument_list|,
+expr|struct
 name|bus_ctlr
-modifier|*
+operator|*
 name|devc
-parameter_list|)
+argument_list|)
 endif|#
 directive|endif
 comment|/* MACH_KERNEL */
@@ -3078,7 +3121,7 @@ operator|-
 literal|1
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/* Process APM event */
@@ -3263,6 +3306,7 @@ name|__FreeBSD__
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|int
 name|apmattach
 argument_list|(
@@ -3298,6 +3342,12 @@ init|=
 name|dvp
 operator|->
 name|id_unit
+decl_stmt|;
+name|char
+name|name
+index|[
+literal|32
+index|]
 decl_stmt|;
 define|#
 directive|define
@@ -3914,6 +3964,44 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
+ifdef|#
+directive|ifdef
+name|DEVFS
+name|sprintf
+argument_list|(
+name|name
+argument_list|,
+literal|"apm%d"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_devfs_token
+operator|=
+name|devfs_add_devsw
+argument_list|(
+literal|"/"
+argument_list|,
+name|name
+argument_list|,
+operator|&
+name|apm_cdevsw
+argument_list|,
+name|unit
+argument_list|,
+name|DV_CHR
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0600
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 literal|0
 return|;
@@ -3930,6 +4018,7 @@ name|__FreeBSD__
 end_ifdef
 
 begin_function
+specifier|static
 name|int
 name|apmopen
 parameter_list|(
@@ -3997,6 +4086,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|apmclose
 parameter_list|(
@@ -4022,6 +4112,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|apmioctl
 parameter_list|(
@@ -4203,45 +4294,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|JREMOD
-end_ifdef
-
-begin_decl_stmt
-name|struct
-name|cdevsw
-name|apm_cdevsw
-init|=
-block|{
-name|apmopen
-block|,
-name|apmclose
-block|,
-name|noread
-block|,
-name|nowrite
-block|,
-comment|/*39*/
-name|apmioctl
-block|,
-name|nostop
-block|,
-name|nullreset
-block|,
-name|nodevtotty
-block|,
-comment|/* APM */
-name|seltrue
-block|,
-name|nommap
-block|,
-name|NULL
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 specifier|static
 name|apm_devsw_installed
@@ -4293,42 +4345,6 @@ name|apm_devsw_installed
 operator|=
 literal|1
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEVFS
-block|{
-name|int
-name|x
-decl_stmt|;
-comment|/* default for a simple device with no probe routine (usually delete this) */
-name|x
-operator|=
-name|devfs_add_devsw
-argument_list|(
-comment|/*	path	name	devsw		minor	type   uid gid perm*/
-literal|"/"
-argument_list|,
-literal|"apm"
-argument_list|,
-name|major
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-literal|0
-argument_list|,
-name|DV_CHR
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0600
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 block|}
 block|}
 end_function
@@ -4347,15 +4363,6 @@ argument_list|,
 argument|NULL
 argument_list|)
 end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* JREMOD */
-end_comment
 
 begin_endif
 endif|#

@@ -8,7 +8,7 @@ comment|/* Written by Julian Elischer (julian@dialix.oz.au)*/
 end_comment
 
 begin_comment
-comment|/*  * $Id: devfsext.h,v 1.2 1995/09/08 04:46:04 julian Exp $  */
+comment|/*  * $Id: devfsext.h,v 1.3 1995/11/29 10:49:13 julian Exp $  */
 end_comment
 
 begin_ifndef
@@ -37,8 +37,9 @@ name|char
 modifier|*
 name|name
 parameter_list|,
-name|int
-name|major
+name|void
+modifier|*
+name|devsw
 parameter_list|,
 name|int
 name|minor

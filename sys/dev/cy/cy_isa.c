@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * cyclades cyclom-y serial driver  *	Andrew Herbert<andrew@werple.apana.org.au>, 17 August 1993  *  * Copyright (c) 1993 Andrew Herbert.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name Andrew Herbert may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: cy.c,v 1.22 1995/11/29 14:39:37 julian Exp $  */
+comment|/*-  * cyclades cyclom-y serial driver  *	Andrew Herbert<andrew@werple.apana.org.au>, 17 August 1993  *  * Copyright (c) 1993 Andrew Herbert.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name Andrew Herbert may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN  * NO EVENT SHALL I BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: cy.c,v 1.23 1995/12/06 23:42:34 bde Exp $  */
 end_comment
 
 begin_include
@@ -1086,6 +1086,16 @@ index|[
 literal|256
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEVFS
+name|void
+modifier|*
+name|devfs_token
+decl_stmt|;
+comment|/* one for now */
+endif|#
+directive|endif
 name|struct
 name|kern_devconf
 name|kdc
@@ -1431,6 +1441,102 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+name|d_open_t
+name|cyopen
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_close_t
+name|cyclose
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_read_t
+name|cyread
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_write_t
+name|cywrite
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_ioctl_t
+name|cyioctl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_stop_t
+name|cystop
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_ttycv_t
+name|cydevtotty
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|CDEV_MAJOR
+value|48
+end_define
+
+begin_decl_stmt
+name|struct
+name|cdevsw
+name|cy_cdevsw
+init|=
+block|{
+name|cyopen
+block|,
+name|cyclose
+block|,
+name|cyread
+block|,
+name|cywrite
+block|,
+comment|/*48*/
+name|cyioctl
+block|,
+name|cystop
+block|,
+name|nxreset
+block|,
+name|cydevtotty
+block|,
+comment|/*cyclades*/
+name|ttselect
+block|,
+name|nxmmap
+block|,
+name|NULL
+block|,
+literal|"cy"
+block|,
+name|NULL
+block|,
+operator|-
+literal|1
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|isa_driver
 name|siodriver
@@ -1661,12 +1767,6 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|JREMOD
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|DEVFS
 end_ifdef
 
@@ -1683,22 +1783,6 @@ end_endif
 
 begin_comment
 comment|/*DEVFS*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CDEV_MAJOR
-value|48
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*JREMOD*/
 end_comment
 
 begin_decl_stmt
@@ -2103,6 +2187,12 @@ name|ncyu
 decl_stmt|;
 name|int
 name|unit
+decl_stmt|;
+name|char
+name|name
+index|[
+literal|32
+index|]
 decl_stmt|;
 name|unit
 operator|=
@@ -2556,6 +2646,46 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEVFS
+comment|/* XXX */
+comment|/* Fix this when you work out what the f*ck it looks like */
+name|sprintf
+argument_list|(
+name|name
+argument_list|,
+literal|"cy%d"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+name|com
+operator|->
+name|devfs_token
+operator|=
+name|devfs_add_devsw
+argument_list|(
+literal|"/"
+argument_list|,
+name|name
+argument_list|,
+operator|&
+name|cy_cdevsw
+argument_list|,
+name|unit
+argument_list|,
+name|DV_CHR
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0600
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 name|kdc_sio
@@ -2589,6 +2719,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|sioopen
 parameter_list|(
@@ -3271,6 +3402,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|sioclose
 parameter_list|(
@@ -3722,6 +3854,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|sioread
 parameter_list|(
@@ -3807,6 +3940,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|siowrite
 parameter_list|(
@@ -5594,6 +5728,7 @@ block|{ }
 end_function
 
 begin_function
+specifier|static
 name|int
 name|sioioctl
 parameter_list|(
@@ -9311,6 +9446,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|siostop
 parameter_list|(
@@ -11162,45 +11298,6 @@ begin_comment
 comment|/* CyDebug */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|JREMOD
-end_ifdef
-
-begin_decl_stmt
-name|struct
-name|cdevsw
-name|cy_cdevsw
-init|=
-block|{
-name|cyopen
-block|,
-name|cyclose
-block|,
-name|cyread
-block|,
-name|cywrite
-block|,
-comment|/*48*/
-name|cyioctl
-block|,
-name|cystop
-block|,
-name|nxreset
-block|,
-name|cydevtotty
-block|,
-comment|/*cyclades*/
-name|ttselect
-block|,
-name|nxmmap
-block|,
-name|NULL
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 specifier|static
 name|cy_devsw_installed
@@ -11252,42 +11349,6 @@ name|cy_devsw_installed
 operator|=
 literal|1
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEVFS
-block|{
-name|int
-name|x
-decl_stmt|;
-comment|/* default for a simple device with no probe routine (usually delete this) */
-name|x
-operator|=
-name|devfs_add_devsw
-argument_list|(
-comment|/*	path	name	devsw		minor	type   uid gid perm*/
-literal|"/"
-argument_list|,
-literal|"cy"
-argument_list|,
-name|major
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-literal|0
-argument_list|,
-name|DV_CHR
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0600
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 block|}
 block|}
 end_function
@@ -11306,15 +11367,6 @@ argument_list|,
 argument|NULL
 argument_list|)
 end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* JREMOD */
-end_comment
 
 begin_endif
 endif|#

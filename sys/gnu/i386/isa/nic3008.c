@@ -5,12 +5,12 @@ name|char
 name|nic38_id
 index|[]
 init|=
-literal|"@(#)$Id: nic3008.c,v 1.10 1995/11/29 10:47:04 julian Exp $"
+literal|"@(#)$Id: nic3008.c,v 1.11 1995/11/29 14:39:07 julian Exp $"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*******************************************************************************  *  II - Version 0.1 $Revision: 1.10 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  * $Log: nic3008.c,v $  * Revision 1.10  1995/11/29  10:47:04  julian  * OK, that's it..  * That's EVERY SINGLE driver that has an entry in conf.c..  * my next trick will be to define cdevsw[] and bdevsw[]  * as empty arrays and remove all those DAMNED defines as well..  *  * Revision 1.9  1995/11/21  14:56:01  bde  * Completed function declarations, added prototypes and removed redundant  * declarations.  *  * Revision 1.8  1995/11/18  04:19:44  bde  * Fixed the type of nic_listen().  A trailing arg was missing.  *  * Fixed calls to s_intr().  There was sometimes an extra trailing arg.  *  * Revision 1.7  1995/09/08  11:06:46  bde  * Fix benign type mismatches in devsw functions.  82 out of 299 devsw  * functions were wrong.  *  * Revision 1.6  1995/05/30  07:57:57  rgrimes  * Remove trailing whitespace.  *  * Revision 1.5  1995/05/11  19:25:55  rgrimes  * Fix -Wformat warnings from LINT kernel.  *  * Revision 1.4  1995/03/28  07:54:31  bde  * Add and move declarations to fix all of the warnings from `gcc -Wimplicit'  * (except in netccitt, netiso and netns) that I didn't notice when I fixed  * "all" such warnings before.  *  * Revision 1.3  1995/03/19  14:28:35  davidg  * Removed redundant newlines that were in some panic strings.  *  * Revision 1.2  1995/02/15  11:59:40  jkh  * Fix a few more nits.  Should compile better now! :_)  *  * Revision 1.1  1995/02/14  15:00:10  jkh  * An ISDN driver that supports the EDSS1 and the 1TR6 ISDN interfaces.  * EDSS1 is the "Euro-ISDN", 1TR6 is the soon obsolete german ISDN Interface.  * Obtained from: Dietmar Friede<dfriede@drnhh.neuhaus.de> and  * 	Juergen Krause<jkr@saarlink.de>  *  * This is only one part - the rest to follow in a couple of hours.  * This part is a benign import, since it doesn't affect anything else.  *  *  ******************************************************************************/
+comment|/*******************************************************************************  *  II - Version 0.1 $Revision: 1.11 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  * $Log: nic3008.c,v $  * Revision 1.11  1995/11/29  14:39:07  julian  * If you're going to mechanically replicate something in 50 files  * it's best to not have a (compiles cleanly) typo in it! (sigh)  *  * Revision 1.10  1995/11/29  10:47:04  julian  * OK, that's it..  * That's EVERY SINGLE driver that has an entry in conf.c..  * my next trick will be to define cdevsw[] and bdevsw[]  * as empty arrays and remove all those DAMNED defines as well..  *  * Revision 1.9  1995/11/21  14:56:01  bde  * Completed function declarations, added prototypes and removed redundant  * declarations.  *  * Revision 1.8  1995/11/18  04:19:44  bde  * Fixed the type of nic_listen().  A trailing arg was missing.  *  * Fixed calls to s_intr().  There was sometimes an extra trailing arg.  *  * Revision 1.7  1995/09/08  11:06:46  bde  * Fix benign type mismatches in devsw functions.  82 out of 299 devsw  * functions were wrong.  *  * Revision 1.6  1995/05/30  07:57:57  rgrimes  * Remove trailing whitespace.  *  * Revision 1.5  1995/05/11  19:25:55  rgrimes  * Fix -Wformat warnings from LINT kernel.  *  * Revision 1.4  1995/03/28  07:54:31  bde  * Add and move declarations to fix all of the warnings from `gcc -Wimplicit'  * (except in netccitt, netiso and netns) that I didn't notice when I fixed  * "all" such warnings before.  *  * Revision 1.3  1995/03/19  14:28:35  davidg  * Removed redundant newlines that were in some panic strings.  *  * Revision 1.2  1995/02/15  11:59:40  jkh  * Fix a few more nits.  Should compile better now! :_)  *  * Revision 1.1  1995/02/14  15:00:10  jkh  * An ISDN driver that supports the EDSS1 and the 1TR6 ISDN interfaces.  * EDSS1 is the "Euro-ISDN", 1TR6 is the soon obsolete german ISDN Interface.  * Obtained from: Dietmar Friede<dfriede@drnhh.neuhaus.de> and  * 	Juergen Krause<jkr@saarlink.de>  *  * This is only one part - the rest to follow in a couple of hours.  * This part is a benign import, since it doesn't affect anything else.  *  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -34,25 +34,25 @@ end_if
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ioctl.h"
+file|<sys/ioctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"kernel.h"
+file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
@@ -66,36 +66,6 @@ include|#
 directive|include
 file|<sys/proc.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|"i386/isa/isa_device.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"gnu/i386/isa/nic3008.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"gnu/i386/isa/niccyreg.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"gnu/isdn/isdn_ioctl.h"
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|JREMOD
-end_ifdef
 
 begin_ifdef
 ifdef|#
@@ -118,21 +88,29 @@ begin_comment
 comment|/*DEVFS*/
 end_comment
 
-begin_define
-define|#
-directive|define
-name|CDEV_MAJOR
-value|54
-end_define
+begin_include
+include|#
+directive|include
+file|<i386/isa/isa_device.h>
+end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|<gnu/i386/isa/nic3008.h>
+end_include
 
-begin_comment
-comment|/*JREMOD*/
-end_comment
+begin_include
+include|#
+directive|include
+file|<gnu/i386/isa/niccyreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<gnu/isdn/isdn_ioctl.h>
+end_include
 
 begin_define
 define|#
@@ -526,6 +504,74 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|d_open_t
+name|nicopen
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_close_t
+name|nicclose
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_ioctl_t
+name|nicioctl
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|CDEV_MAJOR
+value|54
+end_define
+
+begin_decl_stmt
+name|struct
+name|cdevsw
+name|nic_cdevsw
+init|=
+block|{
+name|nicopen
+block|,
+name|nicclose
+block|,
+name|noread
+block|,
+name|nowrite
+block|,
+comment|/*54*/
+name|nicioctl
+block|,
+name|nostop
+block|,
+name|nullreset
+block|,
+name|nodevtotty
+block|,
+comment|/* nic */
+name|seltrue
+block|,
+name|nommap
+block|,
+name|NULL
+block|,
+literal|"nic"
+block|,
+name|NULL
+block|,
+operator|-
+literal|1
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_typedef
 typedef|typedef
 enum|enum
@@ -631,6 +677,15 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEVFS
+name|void
+modifier|*
+name|devfs_token
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 name|nic_sc
 index|[
@@ -1220,6 +1275,12 @@ decl_stmt|,
 modifier|*
 name|ctrl1
 decl_stmt|;
+name|char
+name|name
+index|[
+literal|32
+index|]
+decl_stmt|;
 name|sc
 operator|=
 operator|&
@@ -1484,6 +1545,48 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEVFS
+name|sprintf
+argument_list|(
+name|name
+argument_list|,
+literal|"nic%d"
+argument_list|,
+name|is
+operator|->
+name|id_unit
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|devfs_token
+operator|=
+name|devfs_add_devsw
+argument_list|(
+literal|"/isdn"
+argument_list|,
+name|name
+argument_list|,
+operator|&
+name|nic_cdevsw
+argument_list|,
+name|is
+operator|->
+name|id_unit
+argument_list|,
+name|DV_CHR
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0600
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|1
@@ -3618,6 +3721,7 @@ comment|/*  * nicopen() New open on device.  *  * We forbid all but first open  
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|nicopen
 parameter_list|(
@@ -3743,6 +3847,7 @@ comment|/*  * nicclose() Close device  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|nicclose
 parameter_list|(
@@ -3790,6 +3895,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|nicioctl
 parameter_list|(
@@ -7035,45 +7141,6 @@ block|}
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|JREMOD
-end_ifdef
-
-begin_decl_stmt
-name|struct
-name|cdevsw
-name|nic_cdevsw
-init|=
-block|{
-name|nicopen
-block|,
-name|nicclose
-block|,
-name|noread
-block|,
-name|nowrite
-block|,
-comment|/*54*/
-name|nicioctl
-block|,
-name|nostop
-block|,
-name|nullreset
-block|,
-name|nodevtotty
-block|,
-comment|/* nic */
-name|seltrue
-block|,
-name|nommap
-block|,
-name|NULL
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 specifier|static
 name|nic_devsw_installed
@@ -7125,42 +7192,6 @@ name|nic_devsw_installed
 operator|=
 literal|1
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEVFS
-block|{
-name|int
-name|x
-decl_stmt|;
-comment|/* default for a simple device with no probe routine (usually delete this) */
-name|x
-operator|=
-name|devfs_add_devsw
-argument_list|(
-comment|/*	path	name	devsw		minor	type   uid gid perm*/
-literal|"/"
-argument_list|,
-literal|"nic"
-argument_list|,
-name|major
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-literal|0
-argument_list|,
-name|DV_CHR
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0600
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 block|}
 block|}
 end_function
@@ -7179,15 +7210,6 @@ argument_list|,
 argument|NULL
 argument_list|)
 end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* JREMOD */
-end_comment
 
 begin_endif
 endif|#

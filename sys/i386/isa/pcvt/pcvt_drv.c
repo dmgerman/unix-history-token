@@ -295,7 +295,14 @@ block|,
 name|pcmmap
 block|,
 name|nostrategy
-block|, }
+block|,
+literal|"vt"
+block|,
+name|NULL
+block|,
+operator|-
+literal|1
+block|}
 decl_stmt|;
 end_decl_stmt
 

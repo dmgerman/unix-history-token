@@ -99,18 +99,6 @@ directive|include
 file|<sys/malloc.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/snoop.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|JREMOD
-end_ifdef
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -132,6 +120,54 @@ begin_comment
 comment|/*DEVFS*/
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/snoop.h>
+end_include
+
+begin_decl_stmt
+specifier|static
+name|d_open_t
+name|snpopen
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_close_t
+name|snpclose
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_read_t
+name|snpread
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_write_t
+name|snpwrite
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_ioctl_t
+name|snpioctl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_select_t
+name|snpselect
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -139,14 +175,45 @@ name|CDEV_MAJOR
 value|53
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*JREMOD*/
-end_comment
+begin_decl_stmt
+name|struct
+name|cdevsw
+name|snp_cdevsw
+init|=
+block|{
+name|snpopen
+block|,
+name|snpclose
+block|,
+name|snpread
+block|,
+name|snpwrite
+block|,
+comment|/*53*/
+name|snpioctl
+block|,
+name|nostop
+block|,
+name|nullreset
+block|,
+name|nodevtotty
+block|,
+comment|/* snoop */
+name|snpselect
+block|,
+name|nommap
+block|,
+name|NULL
+block|,
+literal|"snp"
+block|,
+name|NULL
+block|,
+operator|-
+literal|1
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_ifndef
 ifndef|#
@@ -258,6 +325,7 @@ comment|/* This is even too  much,the maximal 				 * interactive mode write is 3
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|snpwrite
 parameter_list|(
@@ -479,6 +547,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|snpread
 parameter_list|(
@@ -1407,6 +1476,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|snpopen
 parameter_list|(
@@ -1705,6 +1775,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|snpclose
 parameter_list|(
@@ -1842,6 +1913,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|snpioctl
 parameter_list|(
@@ -2257,6 +2329,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|snpselect
 parameter_list|(
@@ -2345,42 +2418,14 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|JREMOD
-end_ifdef
-
 begin_decl_stmt
-name|struct
-name|cdevsw
-name|snp_cdevsw
-init|=
-block|{
-name|snpopen
-block|,
-name|snpclose
-block|,
-name|snpread
-block|,
-name|snpwrite
-block|,
-comment|/*53*/
-name|snpioctl
-block|,
-name|nostop
-block|,
-name|nullreset
-block|,
-name|nodevtotty
-block|,
-comment|/* snoop */
-name|snpselect
-block|,
-name|nommap
-block|,
-name|NULL
-block|}
+specifier|static
+name|void
+modifier|*
+name|snp_devfs_token
+index|[
+name|NSNP
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -2404,6 +2449,15 @@ parameter_list|)
 block|{
 name|dev_t
 name|dev
+decl_stmt|;
+name|char
+name|name
+index|[
+literal|32
+index|]
+decl_stmt|;
+name|int
+name|i
 decl_stmt|;
 if|if
 condition|(
@@ -2438,26 +2492,44 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEVFS
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|NSNP
+condition|;
+name|i
+operator|++
+control|)
 block|{
-name|int
-name|x
-decl_stmt|;
-comment|/* default for a simple device with no probe routine (usually delete this) */
-name|x
+name|sprintf
+argument_list|(
+name|name
+argument_list|,
+literal|"snp%d"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
+name|snp_devfs_token
+index|[
+name|i
+index|]
 operator|=
 name|devfs_add_devsw
 argument_list|(
-comment|/*	path	name	devsw		minor	type   uid gid perm*/
 literal|"/"
 argument_list|,
-literal|"snp"
+name|name
 argument_list|,
-name|major
-argument_list|(
-name|dev
-argument_list|)
+operator|&
+name|snp_cdevsw
 argument_list|,
-literal|0
+name|i
 argument_list|,
 name|DV_CHR
 argument_list|,
@@ -2489,15 +2561,6 @@ argument_list|,
 argument|NULL
 argument_list|)
 end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* JREMOD */
-end_comment
 
 begin_endif
 endif|#

@@ -5,12 +5,12 @@ name|char
 name|_ispyid
 index|[]
 init|=
-literal|"@(#)$Id: iispy.c,v 1.6 1995/11/29 14:39:10 julian Exp $"
+literal|"@(#)$Id: iispy.c,v 1.7 1995/12/06 23:43:37 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*******************************************************************************  *  II - Version 0.1 $Revision: 1.6 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  * $Log: iispy.c,v $  * Revision 1.6  1995/11/29  14:39:10  julian  * If you're going to mechanically replicate something in 50 files  * it's best to not have a (compiles cleanly) typo in it! (sigh)  *  * Revision 1.5  1995/11/29  10:47:07  julian  * OK, that's it..  * That's EVERY SINGLE driver that has an entry in conf.c..  * my next trick will be to define cdevsw[] and bdevsw[]  * as empty arrays and remove all those DAMNED defines as well..  *  * Revision 1.4  1995/09/08  11:06:56  bde  * Fix benign type mismatches in devsw functions.  82 out of 299 devsw  * functions were wrong.  *  * Revision 1.3  1995/03/28  07:54:40  bde  * Add and move declarations to fix all of the warnings from `gcc -Wimplicit'  * (except in netccitt, netiso and netns) that I didn't notice when I fixed  * "all" such warnings before.  *  * Revision 1.2  1995/02/15  06:28:27  jkh  * Fix up include paths, nuke some warnings.  *  * Revision 1.1  1995/02/14  15:00:29  jkh  * An ISDN driver that supports the EDSS1 and the 1TR6 ISDN interfaces.  * EDSS1 is the "Euro-ISDN", 1TR6 is the soon obsolete german ISDN Interface.  * Obtained from: Dietmar Friede<dfriede@drnhh.neuhaus.de> and  * 	Juergen Krause<jkr@saarlink.de>  *  * This is only one part - the rest to follow in a couple of hours.  * This part is a benign import, since it doesn't affect anything else.  *  *  ******************************************************************************/
+comment|/*******************************************************************************  *  II - Version 0.1 $Revision: 1.7 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  * $Log: iispy.c,v $  * Revision 1.7  1995/12/06  23:43:37  bde  * Removed unnecessary #includes of<sys/user.h>.  Some of these were just  * to get the definitions of TRUE and FALSE which happen to be defined in  * a deeply nested include.  *  * Added nearby #includes of<sys/conf.h> where appropriate.  *  * Revision 1.6  1995/11/29  14:39:10  julian  * If you're going to mechanically replicate something in 50 files  * it's best to not have a (compiles cleanly) typo in it! (sigh)  *  * Revision 1.5  1995/11/29  10:47:07  julian  * OK, that's it..  * That's EVERY SINGLE driver that has an entry in conf.c..  * my next trick will be to define cdevsw[] and bdevsw[]  * as empty arrays and remove all those DAMNED defines as well..  *  * Revision 1.4  1995/09/08  11:06:56  bde  * Fix benign type mismatches in devsw functions.  82 out of 299 devsw  * functions were wrong.  *  * Revision 1.3  1995/03/28  07:54:40  bde  * Add and move declarations to fix all of the warnings from `gcc -Wimplicit'  * (except in netccitt, netiso and netns) that I didn't notice when I fixed  * "all" such warnings before.  *  * Revision 1.2  1995/02/15  06:28:27  jkh  * Fix up include paths, nuke some warnings.  *  * Revision 1.1  1995/02/14  15:00:29  jkh  * An ISDN driver that supports the EDSS1 and the 1TR6 ISDN interfaces.  * EDSS1 is the "Euro-ISDN", 1TR6 is the soon obsolete german ISDN Interface.  * Obtained from: Dietmar Friede<dfriede@drnhh.neuhaus.de> and  * 	Juergen Krause<jkr@saarlink.de>  *  * This is only one part - the rest to follow in a couple of hours.  * This part is a benign import, since it doesn't affect anything else.  *  *  ******************************************************************************/
 end_comment
 
 begin_include
@@ -30,49 +30,43 @@ end_if
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"buf.h"
+file|<sys/buf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"conf.h"
+file|<sys/ioctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"ioctl.h"
+file|<sys/tty.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"tty.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"uio.h"
+file|<sys/uio.h>
 end_include
 
 begin_include
@@ -80,22 +74,6 @@ include|#
 directive|include
 file|<sys/kernel.h>
 end_include
-
-begin_comment
-comment|/*#include "malloc.h"*/
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"gnu/isdn/isdn_ioctl.h"
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|JREMOD
-end_ifdef
 
 begin_include
 include|#
@@ -124,21 +102,15 @@ begin_comment
 comment|/*DEVFS*/
 end_comment
 
-begin_define
-define|#
-directive|define
-name|CDEV_MAJOR
-value|59
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/*JREMOD*/
+comment|/*#include "malloc.h"*/
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<gnu/isdn/isdn_ioctl.h>
+end_include
 
 begin_decl_stmt
 name|int
@@ -257,6 +229,15 @@ struct|;
 name|int
 name|state
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEVFS
+name|void
+modifier|*
+name|devfs_token
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 name|ispy_data
 index|[
@@ -264,6 +245,81 @@ name|NISPY
 index|]
 struct|;
 end_struct
+
+begin_decl_stmt
+specifier|static
+name|d_open_t
+name|ispyopen
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_close_t
+name|ispyclose
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_read_t
+name|ispyread
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_ioctl_t
+name|ispyioctl
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|CDEV_MAJOR
+value|59
+end_define
+
+begin_decl_stmt
+name|struct
+name|cdevsw
+name|ispy_cdevsw
+init|=
+block|{
+name|ispyopen
+block|,
+name|ispyclose
+block|,
+name|ispyread
+block|,
+name|nowrite
+block|,
+comment|/*59*/
+name|ispyioctl
+block|,
+name|nostop
+block|,
+name|nullreset
+block|,
+name|nodevtotty
+block|,
+comment|/* ispy */
+name|seltrue
+block|,
+name|nommap
+block|,
+name|NULL
+block|,
+literal|"ispy"
+block|,
+name|NULL
+block|,
+operator|-
+literal|1
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|int
@@ -273,6 +329,12 @@ name|int
 name|ap
 parameter_list|)
 block|{
+name|char
+name|name
+index|[
+literal|32
+index|]
+decl_stmt|;
 name|struct
 name|ispy_data
 modifier|*
@@ -308,6 +370,44 @@ name|ispy_applnr
 operator|=
 name|ap
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEVFS
+name|sprintf
+argument_list|(
+name|name
+argument_list|,
+literal|"ispy%d"
+argument_list|,
+name|next_if
+argument_list|)
+expr_stmt|;
+name|ispy
+operator|->
+name|devfs_token
+operator|=
+name|devfs_add_devsw
+argument_list|(
+literal|"/isdn"
+argument_list|,
+name|name
+argument_list|,
+operator|&
+name|ispy_cdevsw
+argument_list|,
+name|next_if
+argument_list|,
+name|DV_CHR
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0600
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|next_if
@@ -451,6 +551,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|ispyopen
 parameter_list|(
@@ -530,6 +631,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|ispyclose
 parameter_list|(
@@ -596,6 +698,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|ispyioctl
 parameter_list|(
@@ -646,6 +749,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|ispyread
 parameter_list|(
@@ -849,45 +953,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|JREMOD
-end_ifdef
-
-begin_decl_stmt
-name|struct
-name|cdevsw
-name|ispy_cdevsw
-init|=
-block|{
-name|ispyopen
-block|,
-name|ispyclose
-block|,
-name|ispyread
-block|,
-name|nowrite
-block|,
-comment|/*59*/
-name|ispyioctl
-block|,
-name|nostop
-block|,
-name|nullreset
-block|,
-name|nodevtotty
-block|,
-comment|/* ispy */
-name|seltrue
-block|,
-name|nommap
-block|,
-name|NULL
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 specifier|static
 name|ispy_devsw_installed
@@ -939,42 +1004,6 @@ name|ispy_devsw_installed
 operator|=
 literal|1
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEVFS
-block|{
-name|int
-name|x
-decl_stmt|;
-comment|/* default for a simple device with no probe routine (usually delete this) */
-name|x
-operator|=
-name|devfs_add_devsw
-argument_list|(
-comment|/*	path	name	devsw		minor	type   uid gid perm*/
-literal|"/"
-argument_list|,
-literal|"ispy"
-argument_list|,
-name|major
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-literal|0
-argument_list|,
-name|DV_CHR
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0600
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 block|}
 block|}
 end_function
@@ -993,15 +1022,6 @@ argument_list|,
 argument|NULL
 argument_list|)
 end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* JREMOD */
-end_comment
 
 begin_endif
 endif|#
