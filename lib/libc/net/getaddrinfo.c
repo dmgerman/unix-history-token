@@ -1380,6 +1380,52 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Make getaddrinfo() thread-safe in libc for use with kernel threads. */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"libc_private.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"spinlock.h"
+end_include
+
+begin_comment
+comment|/*  * XXX: Our res_*() is not thread-safe.  So, we share lock between  * getaddrinfo() and getipnodeby*().  Still, we cannot use  * getaddrinfo() and getipnodeby*() in conjunction with other  * functions which call res_*().  */
+end_comment
+
+begin_decl_stmt
+name|spinlock_t
+name|__getaddrinfo_thread_lock
+init|=
+name|_SPINLOCK_INITIALIZER
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|THREAD_LOCK
+parameter_list|()
+define|\
+value|if (__isthreaded) _SPINLOCK(&__getaddrinfo_thread_lock);
+end_define
+
+begin_define
+define|#
+directive|define
+name|THREAD_UNLOCK
+parameter_list|()
+define|\
+value|if (__isthreaded) _SPINUNLOCK(&__getaddrinfo_thread_lock);
+end_define
+
+begin_comment
 comment|/* XXX macros that make external reference is BAD. */
 end_comment
 
@@ -3128,6 +3174,9 @@ name|res
 operator|=
 name|NULL
 expr_stmt|;
+name|THREAD_LOCK
+argument_list|()
+expr_stmt|;
 comment|/* 	 * if the servname does not match socktype/protocol, ignore it. 	 */
 if|if
 condition|(
@@ -3140,9 +3189,14 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|THREAD_UNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 literal|0
 return|;
+block|}
 if|if
 condition|(
 operator|!
@@ -3227,6 +3281,9 @@ argument_list|)
 expr_stmt|;
 comment|/* canonname should be filled already */
 block|}
+name|THREAD_UNLOCK
+argument_list|()
+expr_stmt|;
 operator|*
 name|res
 operator|=
@@ -3238,6 +3295,9 @@ return|;
 block|}
 name|free
 label|:
+name|THREAD_UNLOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|result
