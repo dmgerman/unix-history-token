@@ -861,12 +861,12 @@ name|unsigned
 name|int
 name|i
 decl_stmt|,
-name|index
+name|idx
 decl_stmt|,
 name|partLen
 decl_stmt|;
 comment|/* Update number of bytes mod 16 */
-name|index
+name|idx
 operator|=
 name|context
 operator|->
@@ -877,7 +877,7 @@ operator|->
 name|count
 operator|=
 operator|(
-name|index
+name|idx
 operator|+
 name|inputLen
 operator|)
@@ -888,7 +888,7 @@ name|partLen
 operator|=
 literal|16
 operator|-
-name|index
+name|idx
 expr_stmt|;
 comment|/* Transform as many times as possible.     */
 if|if
@@ -908,7 +908,7 @@ name|context
 operator|->
 name|buffer
 index|[
-name|index
+name|idx
 index|]
 argument_list|,
 operator|(
@@ -967,7 +967,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|index
+name|idx
 operator|=
 literal|0
 expr_stmt|;
@@ -988,7 +988,7 @@ name|context
 operator|->
 name|buffer
 index|[
-name|index
+name|idx
 index|]
 argument_list|,
 operator|(
@@ -1026,12 +1026,12 @@ comment|/* context */
 block|{
 name|unsigned
 name|int
-name|index
+name|idx
 decl_stmt|,
 name|padLen
 decl_stmt|;
 comment|/* Pad out to multiple of 16.    */
-name|index
+name|idx
 operator|=
 name|context
 operator|->
@@ -1041,7 +1041,7 @@ name|padLen
 operator|=
 literal|16
 operator|-
-name|index
+name|idx
 expr_stmt|;
 name|MD2Update
 argument_list|(
