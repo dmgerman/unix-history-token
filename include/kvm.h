@@ -327,7 +327,8 @@ expr|struct
 name|proc
 operator|*
 operator|,
-name|u_long
+name|unsigned
+name|long
 operator|,
 name|char
 operator|*
