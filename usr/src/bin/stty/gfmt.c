@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gfmt.c	5.4 (Berkeley) %G%"
+literal|"@(#)gfmt.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,6 +32,12 @@ begin_include
 include|#
 directive|include
 file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -224,7 +230,7 @@ operator|!
 operator|(
 name|s
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|s
 argument_list|,
@@ -272,7 +278,7 @@ operator|!
 operator|(
 name|ep
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|p
 argument_list|,
@@ -755,16 +761,20 @@ if|if
 condition|(
 name|s
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"illegal gfmt1 option -- %s"
 argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
 else|else
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"illegal gfmt1 option"
 argument_list|)
 expr_stmt|;
