@@ -3085,7 +3085,7 @@ argument_list|(
 name|node
 argument_list|)
 decl_stmt|;
-comment|/* 	 * Shut down everything except the timer. There's no way to 	 * avoid another possible timeout event (it may have already 	 * been dequeued), so we can't free the node yet. 	 */
+comment|/* 	 * Shut down everything including the timer.  Even if the 	 * callout has already been dequeued and is about to be 	 * run, ng_bridge_timeout() won't be fired as the node 	 * is already marked NGF_INVALID, so we're safe to free 	 * the node now. 	 */
 name|KASSERT
 argument_list|(
 name|priv
@@ -3115,6 +3115,28 @@ name|numHosts
 operator|)
 argument_list|)
 expr_stmt|;
+name|ng_uncallout
+argument_list|(
+operator|&
+name|priv
+operator|->
+name|timer
+argument_list|,
+name|node
+argument_list|)
+expr_stmt|;
+name|NG_NODE_SET_PRIVATE
+argument_list|(
+name|node
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|NG_NODE_UNREF
+argument_list|(
+name|node
+argument_list|)
+expr_stmt|;
 name|FREE
 argument_list|(
 name|priv
@@ -3124,7 +3146,13 @@ argument_list|,
 name|M_NETGRAPH_BRIDGE
 argument_list|)
 expr_stmt|;
-comment|/* NGF_INVALID flag is now set so node will be freed at next timeout */
+name|FREE
+argument_list|(
+name|priv
+argument_list|,
+name|M_NETGRAPH_BRIDGE
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -3977,7 +4005,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Handle our once-per-second timeout event. We do two things:  * we decrement link->loopCount for those links being muted due to  * a detected loopback condition, and we remove any hosts from  * the hashtable whom we haven't heard from in a long while.  *  * If the node has the NGF_INVALID flag set, our job is to kill it.  */
+comment|/*  * Handle our once-per-second timeout event. We do two things:  * we decrement link->loopCount for those links being muted due to  * a detected loopback condition, and we remove any hosts from  * the hashtable whom we haven't heard from in a long while.  */
 end_comment
 
 begin_function
@@ -4019,36 +4047,6 @@ decl_stmt|;
 name|int
 name|linkNum
 decl_stmt|;
-comment|/* If node was shut down, this is the final lingering timeout */
-if|if
-condition|(
-name|NG_NODE_NOT_VALID
-argument_list|(
-name|node
-argument_list|)
-condition|)
-block|{
-name|FREE
-argument_list|(
-name|priv
-argument_list|,
-name|M_NETGRAPH_BRIDGE
-argument_list|)
-expr_stmt|;
-name|NG_NODE_SET_PRIVATE
-argument_list|(
-name|node
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-name|NG_NODE_UNREF
-argument_list|(
-name|node
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 comment|/* Update host time counters and remove stale entries */
 for|for
 control|(
