@@ -8,7 +8,7 @@ comment|/*  * dpt_scsi.c: SCSI dependant code for the DPT driver  *  * credits:	
 end_comment
 
 begin_empty
-empty|#ident "$Id: dpt_scsi.c,v 1.15 1998/09/20 07:19:53 gibbs Exp $"
+empty|#ident "$Id: dpt_scsi.c,v 1.16 1998/09/22 04:55:07 gibbs Exp $"
 end_empty
 
 begin_define
@@ -3976,8 +3976,6 @@ name|state
 operator||=
 name|CAM_RELEASE_SIMQ
 expr_stmt|;
-name|CAM_RELEASE_SIMQ
-expr_stmt|;
 block|}
 name|splx
 argument_list|(
@@ -4046,7 +4044,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"btaction - Physical "
+literal|"dpt_action - Physical "
 literal|"segment pointers "
 literal|"unsupported"
 argument_list|)
@@ -4065,7 +4063,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"btaction - Virtual "
+literal|"dpt_action - Virtual "
 literal|"segment addresses "
 literal|"unsupported"
 argument_list|)
