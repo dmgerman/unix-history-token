@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: dumpfs.c,v 1.10 1998/06/15 07:00:01 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -557,6 +557,25 @@ name|afs
 operator|.
 name|fs_time
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"id\t[ %x %x ]\n"
+argument_list|,
+name|afs
+operator|.
+name|fs_id
+index|[
+literal|0
+index|]
+argument_list|,
+name|afs
+operator|.
+name|fs_id
+index|[
+literal|1
+index|]
 argument_list|)
 expr_stmt|;
 name|printf
