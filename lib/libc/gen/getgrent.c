@@ -1214,7 +1214,7 @@ end_ifdef
 
 begin_function
 specifier|static
-name|void
+name|int
 name|_gr_breakout_yp
 parameter_list|(
 name|struct
@@ -1239,6 +1239,10 @@ modifier|*
 modifier|*
 name|m
 decl_stmt|;
+comment|/* 	 * XXX If 's' ends up being a NULL pointer, punt on this group. 	 * It means the NIS group entry is badly formatted and should 	 * be skipped. 	 */
+if|if
+condition|(
+operator|(
 name|s
 operator|=
 name|strsep
@@ -1248,7 +1252,13 @@ name|result
 argument_list|,
 literal|":"
 argument_list|)
-expr_stmt|;
+operator|)
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
 comment|/* name */
 name|gr
 operator|->
@@ -1256,6 +1266,9 @@ name|gr_name
 operator|=
 name|s
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|s
 operator|=
 name|strsep
@@ -1265,7 +1278,13 @@ name|result
 argument_list|,
 literal|":"
 argument_list|)
-expr_stmt|;
+operator|)
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
 comment|/* password */
 name|gr
 operator|->
@@ -1273,6 +1292,9 @@ name|gr_passwd
 operator|=
 name|s
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|s
 operator|=
 name|strsep
@@ -1282,7 +1304,13 @@ name|result
 argument_list|,
 literal|":"
 argument_list|)
-expr_stmt|;
+operator|)
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
 comment|/* gid */
 name|gr
 operator|->
@@ -1293,10 +1321,19 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|s
 operator|=
 name|result
-expr_stmt|;
+operator|)
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
 name|cp
 operator|=
 literal|0
@@ -1419,6 +1456,9 @@ name|m
 operator|=
 name|NULL
 expr_stmt|;
+return|return
+literal|1
+return|;
 block|}
 end_function
 
@@ -1549,15 +1589,15 @@ name|result
 operator|=
 name|resultbuf
 expr_stmt|;
+return|return
+operator|(
 name|_gr_breakout_yp
 argument_list|(
 name|gr
 argument_list|,
 name|resultbuf
 argument_list|)
-expr_stmt|;
-return|return
-literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -1773,17 +1813,17 @@ name|result
 operator|=
 literal|'\0'
 expr_stmt|;
+return|return
+operator|(
 name|_gr_breakout_yp
 argument_list|(
 name|gr
 argument_list|,
 name|resultbuf
 argument_list|)
-expr_stmt|;
-block|}
-return|return
-literal|1
+operator|)
 return|;
+block|}
 block|}
 end_function
 
