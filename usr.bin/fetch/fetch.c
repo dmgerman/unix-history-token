@@ -791,11 +791,8 @@ argument_list|,
 sizeof|sizeof
 name|str
 argument_list|,
-literal|"%4ju %cB"
+literal|"%4zu %cB"
 argument_list|,
-operator|(
-name|uintmax_t
-operator|)
 name|bytes
 argument_list|,
 operator|*
