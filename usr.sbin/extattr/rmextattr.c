@@ -344,6 +344,8 @@ decl_stmt|,
 name|arg_counter
 decl_stmt|,
 name|attrnamespace
+decl_stmt|,
+name|minargc
 decl_stmt|;
 name|int
 name|flag_force
@@ -424,6 +426,10 @@ name|options
 operator|=
 literal|"fhqsx"
 expr_stmt|;
+name|minargc
+operator|=
+literal|3
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -444,6 +450,10 @@ expr_stmt|;
 name|options
 operator|=
 literal|"fhq"
+expr_stmt|;
+name|minargc
+operator|=
+literal|4
 expr_stmt|;
 block|}
 elseif|else
@@ -466,6 +476,10 @@ name|options
 operator|=
 literal|"fhq"
 expr_stmt|;
+name|minargc
+operator|=
+literal|3
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -486,6 +500,10 @@ expr_stmt|;
 name|options
 operator|=
 literal|"fhq"
+expr_stmt|;
+name|minargc
+operator|=
+literal|2
 expr_stmt|;
 block|}
 else|else
@@ -579,7 +597,7 @@ if|if
 condition|(
 name|argc
 operator|<
-literal|2
+name|minargc
 condition|)
 name|usage
 argument_list|()
