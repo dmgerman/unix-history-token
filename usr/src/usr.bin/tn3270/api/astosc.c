@@ -23,12 +23,6 @@ directive|include
 file|"astosc.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"state.h"
-end_include
-
 begin_decl_stmt
 name|struct
 name|astosc
@@ -191,7 +185,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * This routine takes a string and returns an integer.  It may return  * STATE_NULL if there is no other integer which corresponds to the  * string.  STATE_NULL implies an error.  */
+comment|/*  * This routine takes a string and returns an integer.  It may return  * -1 if there is no other integer which corresponds to the  * string.  -1 implies an error.  */
 end_comment
 
 begin_function
@@ -255,7 +249,8 @@ return|;
 block|}
 block|}
 return|return
-name|STATE_NULL
+operator|-
+literal|1
 return|;
 block|}
 end_function
