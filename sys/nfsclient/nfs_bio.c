@@ -5299,23 +5299,6 @@ name|bp
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Historically, paging was done with physio, but no more. 	 */
-name|KASSERT
-argument_list|(
-operator|!
-operator|(
-name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_PHYS
-operator|)
-argument_list|,
-operator|(
-literal|"B_PHYS in nfs_doio"
-operator|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|bp

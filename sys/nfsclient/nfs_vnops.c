@@ -14504,19 +14504,6 @@ name|bp
 operator|->
 name|b_flags
 operator|&
-name|B_PHYS
-condition|)
-name|panic
-argument_list|(
-literal|"nfs physio"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|bp
-operator|->
-name|b_flags
-operator|&
 name|B_ASYNC
 condition|)
 name|td
@@ -16250,6 +16237,17 @@ expr_stmt|;
 name|BUF_KERNPROC
 argument_list|(
 name|bp
+argument_list|)
+expr_stmt|;
+name|bp
+operator|->
+name|b_offset
+operator|=
+name|dbtob
+argument_list|(
+name|bp
+operator|->
+name|b_blkno
 argument_list|)
 expr_stmt|;
 name|VOP_STRATEGY
