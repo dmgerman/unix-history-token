@@ -1481,7 +1481,7 @@ name|md_debug
 condition|)
 name|printf
 argument_list|(
-literal|"mdopen(%p %x %x %p)\n"
+literal|"mdopen(%s %x %x %p)\n"
 argument_list|,
 name|devtoname
 argument_list|(
