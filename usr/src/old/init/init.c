@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)init.c	5.8 (Berkeley) %G%"
+literal|"@(#)init.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2320,6 +2320,15 @@ control|)
 block|{
 if|if
 condition|(
+name|u
+operator|->
+name|ut_name
+index|[
+literal|0
+index|]
+operator|==
+literal|0
+operator|||
 name|SCMPN
 argument_list|(
 name|u
@@ -2330,15 +2339,6 @@ name|p
 operator|->
 name|line
 argument_list|)
-operator|||
-name|u
-operator|->
-name|ut_name
-index|[
-literal|0
-index|]
-operator|==
-literal|0
 condition|)
 continue|continue;
 name|lseek
