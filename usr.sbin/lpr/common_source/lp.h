@@ -606,7 +606,7 @@ comment|/* address family */
 end_comment
 
 begin_comment
-comment|/*  * Structure used for building a sorted list of control files.  */
+comment|/*  * Structure used for building a sorted list of control files.  * The job_processed value can be used by callers of getq(), to keep  * track of whatever processing they are doing.  */
 end_comment
 
 begin_struct
@@ -617,6 +617,14 @@ name|time_t
 name|job_time
 decl_stmt|;
 comment|/* last-mod time of cf-file */
+name|int
+name|job_matched
+decl_stmt|;
+comment|/* used by match_jobspec() */
+name|int
+name|job_processed
+decl_stmt|;
+comment|/* set to zero by getq() */
 name|char
 name|job_cfname
 index|[
