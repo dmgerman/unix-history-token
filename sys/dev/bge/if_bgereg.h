@@ -10813,7 +10813,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|CSR_WRITE_4(sc, reg, (CSR_READ_4(sc, reg) | x))
+value|CSR_WRITE_4(sc, reg, (CSR_READ_4(sc, reg) | (x)))
 end_define
 
 begin_define
@@ -10828,7 +10828,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|CSR_WRITE_4(sc, reg, (CSR_READ_4(sc, reg)& ~x))
+value|CSR_WRITE_4(sc, reg, (CSR_READ_4(sc, reg)& ~(x)))
 end_define
 
 begin_define
@@ -10845,7 +10845,7 @@ parameter_list|,
 name|s
 parameter_list|)
 define|\
-value|pci_write_config(dev, reg, (pci_read_config(dev, reg, s) | x), s)
+value|pci_write_config(dev, reg, (pci_read_config(dev, reg, s) | (x)), s)
 end_define
 
 begin_define
@@ -10862,7 +10862,7 @@ parameter_list|,
 name|s
 parameter_list|)
 define|\
-value|pci_write_config(dev, reg, (pci_read_config(dev, reg, s)& ~x), s)
+value|pci_write_config(dev, reg, (pci_read_config(dev, reg, s)& ~(x)), s)
 end_define
 
 begin_comment

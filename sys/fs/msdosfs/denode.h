@@ -116,7 +116,7 @@ parameter_list|,
 name|fsrcn
 parameter_list|)
 define|\
-value|(dep)->de_fc[slot].fc_frcn = frcn; \ 	(dep)->de_fc[slot].fc_fsrcn = fsrcn;
+value|(dep)->de_fc[(slot)].fc_frcn = (frcn); \ 	(dep)->de_fc[(slot)].fc_fsrcn = (fsrcn);
 end_define
 
 begin_comment

@@ -822,7 +822,7 @@ name|reg
 parameter_list|,
 name|x
 parameter_list|)
-value|CSR_WRITE_4(sc, reg, CSR_READ_4(sc, reg) | x)
+value|CSR_WRITE_4(sc, reg, CSR_READ_4(sc, reg) | (x))
 end_define
 
 begin_define
@@ -836,7 +836,7 @@ name|reg
 parameter_list|,
 name|x
 parameter_list|)
-value|CSR_WRITE_4(sc, reg, CSR_READ_4(sc, reg)& ~x)
+value|CSR_WRITE_4(sc, reg, CSR_READ_4(sc, reg)& ~(x))
 end_define
 
 begin_decl_stmt

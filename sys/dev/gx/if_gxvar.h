@@ -161,7 +161,7 @@ name|reg
 parameter_list|,
 name|val
 parameter_list|)
-value|do { \ 	bus_space_write_4(gx->gx_btag, gx->gx_bhandle, reg, val& 0xffffffff); \ 	bus_space_write_4(gx->gx_btag, gx->gx_bhandle, reg + 4, val>> 32); \ } while (0)
+value|do { \ 	bus_space_write_4((gx)->gx_btag, (gx)->gx_bhandle, \ 	    reg, (val)& 0xffffffff); \ 	bus_space_write_4((gx)->gx_btag, (gx)->gx_bhandle, \ 	    (reg) + 4, (val)>> 32); \ } while (0)
 end_define
 
 begin_define
@@ -176,7 +176,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_4(gx->gx_btag, gx->gx_bhandle, reg, val)
+value|bus_space_write_4((gx)->gx_btag, (gx)->gx_bhandle, reg, val)
 end_define
 
 begin_define
@@ -191,7 +191,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_2(gx->gx_btag, gx->gx_bhandle, reg, val)
+value|bus_space_write_2((gx)->gx_btag, (gx)->gx_bhandle, reg, val)
 end_define
 
 begin_define
@@ -206,7 +206,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_1(gx->gx_btag, gx->gx_bhandle, reg, val)
+value|bus_space_write_1((gx)->gx_btag, (gx)->gx_bhandle, reg, val)
 end_define
 
 begin_define
@@ -219,7 +219,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_4(gx->gx_btag, gx->gx_bhandle, reg)
+value|bus_space_read_4((gx)->gx_btag, (gx)->gx_bhandle, reg)
 end_define
 
 begin_define
@@ -232,7 +232,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_2(gx->gx_btag, gx->gx_bhandle, reg)
+value|bus_space_read_2((gx)->gx_btag, (gx)->gx_bhandle, reg)
 end_define
 
 begin_define
@@ -245,7 +245,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|bus_space_read_1(gx->gx_btag, gx->gx_bhandle, reg)
+value|bus_space_read_1((gx)->gx_btag, (gx)->gx_bhandle, reg)
 end_define
 
 begin_define

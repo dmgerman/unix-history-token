@@ -294,7 +294,7 @@ parameter_list|,
 name|l
 parameter_list|)
 define|\
-value|(l == 0 ? 0 : bcmp((caddr_t)(a), (caddr_t)(b), (u_long)l))
+value|((l) == 0 ? 0 : bcmp((caddr_t)(a), (caddr_t)(b), (u_long)(l)))
 end_define
 
 begin_function_decl

@@ -901,7 +901,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|CSR_WRITE_4(sc, reg, CSR_READ_4(sc, reg) | x)
+value|CSR_WRITE_4(sc, reg, CSR_READ_4(sc, reg) | (x))
 end_define
 
 begin_define
@@ -916,7 +916,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|CSR_WRITE_4(sc, reg, CSR_READ_4(sc, reg)& ~x)
+value|CSR_WRITE_4(sc, reg, CSR_READ_4(sc, reg)& ~(x))
 end_define
 
 begin_define
@@ -931,7 +931,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|CSR_WRITE_2(sc, reg, CSR_READ_2(sc, reg) | x)
+value|CSR_WRITE_2(sc, reg, CSR_READ_2(sc, reg) | (x))
 end_define
 
 begin_define
@@ -946,7 +946,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|CSR_WRITE_2(sc, reg, CSR_READ_2(sc, reg)& ~x)
+value|CSR_WRITE_2(sc, reg, CSR_READ_2(sc, reg)& ~(x))
 end_define
 
 begin_define
@@ -961,7 +961,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|CSR_WRITE_1(sc, reg, CSR_READ_1(sc, reg) | x)
+value|CSR_WRITE_1(sc, reg, CSR_READ_1(sc, reg) | (x))
 end_define
 
 begin_define
@@ -976,7 +976,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|CSR_WRITE_1(sc, reg, CSR_READ_1(sc, reg)& ~x)
+value|CSR_WRITE_1(sc, reg, CSR_READ_1(sc, reg)& ~(x))
 end_define
 
 begin_define

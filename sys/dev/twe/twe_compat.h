@@ -329,7 +329,7 @@ name|sc
 parameter_list|,
 name|val
 parameter_list|)
-value|bus_space_write_4(sc->twe_btag, sc->twe_bhandle, 0x0, (u_int32_t)val)
+value|bus_space_write_4((sc)->twe_btag, (sc)->twe_bhandle, 0x0, (u_int32_t)val)
 end_define
 
 begin_define
@@ -339,7 +339,7 @@ name|TWE_STATUS
 parameter_list|(
 name|sc
 parameter_list|)
-value|(u_int32_t)bus_space_read_4(sc->twe_btag, sc->twe_bhandle, 0x4)
+value|(u_int32_t)bus_space_read_4((sc)->twe_btag, (sc)->twe_bhandle, 0x4)
 end_define
 
 begin_define
@@ -351,7 +351,7 @@ name|sc
 parameter_list|,
 name|val
 parameter_list|)
-value|bus_space_write_4(sc->twe_btag, sc->twe_bhandle, 0x8, (u_int32_t)val)
+value|bus_space_write_4((sc)->twe_btag, (sc)->twe_bhandle, 0x8, (u_int32_t)val)
 end_define
 
 begin_define
@@ -361,7 +361,7 @@ name|TWE_RESPONSE_QUEUE
 parameter_list|(
 name|sc
 parameter_list|)
-value|(TWE_Response_Queue)bus_space_read_4(sc->twe_btag, sc->twe_bhandle, 0xc)
+value|(TWE_Response_Queue)bus_space_read_4((sc)->twe_btag, (sc)->twe_bhandle, 0xc)
 end_define
 
 begin_comment

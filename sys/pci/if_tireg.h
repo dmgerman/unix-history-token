@@ -3403,7 +3403,7 @@ parameter_list|,
 name|z
 parameter_list|)
 define|\
-value|cmd.ti_cmd = x;			\ 	cmd.ti_code = y;		\ 	cmd.ti_idx = z;			\ 	ti_cmd(sc,&cmd);
+value|cmd.ti_cmd = (x);		\ 	cmd.ti_code = (y);		\ 	cmd.ti_idx = (z);		\ 	ti_cmd(sc,&cmd);
 end_define
 
 begin_define
@@ -3422,7 +3422,7 @@ parameter_list|,
 name|w
 parameter_list|)
 define|\
-value|cmd.ti_cmd = x;			\ 	cmd.ti_code = y;		\ 	cmd.ti_idx = z;			\ 	ti_cmd_ext(sc,&cmd, v, w);
+value|cmd.ti_cmd = (x);		\ 	cmd.ti_code = (y);		\ 	cmd.ti_idx = (z);		\ 	ti_cmd_ext(sc,&cmd, (v), (w));
 end_define
 
 begin_comment

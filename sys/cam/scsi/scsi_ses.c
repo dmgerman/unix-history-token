@@ -7757,7 +7757,7 @@ parameter_list|,
 name|l
 parameter_list|)
 define|\
-value|if (r>= x) { \ 		SES_LOG(ssc, safte_2little, x, __LINE__);\ 		SES_FREE(k, l); \ 		return (EIO); \ 	}
+value|if ((r)>= (x)) { \ 		SES_LOG(ssc, safte_2little, x, __LINE__);\ 		SES_FREE((k), (l)); \ 		return (EIO); \ 	}
 end_define
 
 begin_function

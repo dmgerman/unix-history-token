@@ -2572,7 +2572,7 @@ name|snderr
 parameter_list|(
 name|errno
 parameter_list|)
-value|{ error = errno; splx(s); goto release; }
+value|{ error = (errno); splx(s); goto release; }
 name|restart
 label|:
 name|error

@@ -9333,7 +9333,7 @@ name|c
 parameter_list|,
 name|tree
 parameter_list|)
-value|send_bits(s, tree[c].Code, tree[c].Len)
+value|send_bits(s, tree[(c)].Code, tree[(c)].Len)
 end_define
 
 begin_comment
@@ -9595,7 +9595,7 @@ parameter_list|,
 name|length
 parameter_list|)
 define|\
-value|{ int len = length;\   if (s->bi_valid> (int)Buf_size - len) {\     int val = value;\     s->bi_buf |= (val<< s->bi_valid);\     put_short(s, s->bi_buf);\     s->bi_buf = (ush)val>> (Buf_size - s->bi_valid);\     s->bi_valid += len - Buf_size;\   } else {\     s->bi_buf |= (value)<< s->bi_valid;\     s->bi_valid += len;\   }\ }
+value|{ int len = (length);\   if ((s)->bi_valid> (int)Buf_size - len) {\     int val = (value);\     (s)->bi_buf |= (val<< (s)->bi_valid);\     put_short((s), (s)->bi_buf);\     (s)->bi_buf = (ush)val>> (Buf_size - (s)->bi_valid);\     (s)->bi_valid += len - Buf_size;\   } else {\     (s)->bi_buf |= (value)<< (s)->bi_valid;\     (s)->bi_valid += len;\   }\ }
 end_define
 
 begin_endif
@@ -25282,7 +25282,7 @@ name|buf
 parameter_list|,
 name|i
 parameter_list|)
-value|{s1 += buf[i]; s2 += s1;}
+value|{s1 += buf[(i)]; s2 += s1;}
 define|#
 directive|define
 name|DO2
@@ -25291,7 +25291,7 @@ name|buf
 parameter_list|,
 name|i
 parameter_list|)
-value|DO1(buf,i); DO1(buf,i+1);
+value|DO1(buf,i); DO1(buf,(i)+1);
 define|#
 directive|define
 name|DO4
@@ -25300,7 +25300,7 @@ name|buf
 parameter_list|,
 name|i
 parameter_list|)
-value|DO2(buf,i); DO2(buf,i+2);
+value|DO2(buf,i); DO2(buf,(i)+2);
 define|#
 directive|define
 name|DO8
@@ -25309,7 +25309,7 @@ name|buf
 parameter_list|,
 name|i
 parameter_list|)
-value|DO4(buf,i); DO4(buf,i+4);
+value|DO4(buf,i); DO4(buf,(i)+4);
 define|#
 directive|define
 name|DO16

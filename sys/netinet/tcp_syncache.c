@@ -812,7 +812,7 @@ name|sc
 parameter_list|,
 name|slot
 parameter_list|)
-value|do {					\ 	sc->sc_rxtslot = slot;						\ 	sc->sc_rxttime = ticks + TCPTV_RTOBASE * tcp_backoff[slot];	\ 	TAILQ_INSERT_TAIL(&tcp_syncache.timerq[slot], sc, sc_timerq);	\ 	if (!callout_active(&tcp_syncache.tt_timerq[slot]))		\ 		callout_reset(&tcp_syncache.tt_timerq[slot],		\ 		    TCPTV_RTOBASE * tcp_backoff[slot],			\ 		    syncache_timer, (void *)((intptr_t)slot));		\ } while (0)
+value|do {				\ 	sc->sc_rxtslot = (slot);					\ 	sc->sc_rxttime = ticks + TCPTV_RTOBASE * tcp_backoff[(slot)];	\ 	TAILQ_INSERT_TAIL(&tcp_syncache.timerq[(slot)], sc, sc_timerq);	\ 	if (!callout_active(&tcp_syncache.tt_timerq[(slot)]))		\ 		callout_reset(&tcp_syncache.tt_timerq[(slot)],		\ 		    TCPTV_RTOBASE * tcp_backoff[(slot)],		\ 		    syncache_timer, (void *)((intptr_t)(slot)));	\ } while (0)
 end_define
 
 begin_function

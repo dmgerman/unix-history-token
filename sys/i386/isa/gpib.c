@@ -93,7 +93,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|((a< b) ? a : b)
+value|(((a)< (b)) ? (a) : (b))
 end_define
 
 begin_define

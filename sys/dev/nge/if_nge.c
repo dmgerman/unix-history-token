@@ -1019,7 +1019,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|CSR_WRITE_4(sc, NGE_MEAR, CSR_READ_4(sc, NGE_MEAR) | x)
+value|CSR_WRITE_4(sc, NGE_MEAR, CSR_READ_4(sc, NGE_MEAR) | (x))
 end_define
 
 begin_define
@@ -1030,7 +1030,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|CSR_WRITE_4(sc, NGE_MEAR, CSR_READ_4(sc, NGE_MEAR)& ~x)
+value|CSR_WRITE_4(sc, NGE_MEAR, CSR_READ_4(sc, NGE_MEAR)& ~(x))
 end_define
 
 begin_function

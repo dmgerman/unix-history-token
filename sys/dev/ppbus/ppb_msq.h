@@ -521,7 +521,7 @@ name|assert
 parameter_list|,
 name|clear
 parameter_list|)
-value|{ MS_OP_RSET, {{ reg }, { assert }, { clear }}}
+value|{ MS_OP_RSET, {{ (reg) }, { (assert) }, { (clear) }}}
 end_define
 
 begin_define
@@ -533,7 +533,7 @@ name|reg
 parameter_list|,
 name|byte
 parameter_list|)
-value|{ MS_OP_RASSERT, { { reg }, { byte }}}
+value|{ MS_OP_RASSERT, { { (reg) }, { (byte) }}}
 end_define
 
 begin_define
@@ -545,7 +545,7 @@ name|reg
 parameter_list|,
 name|clear
 parameter_list|)
-value|{ MS_OP_RSET, {{ reg }, { MS_ASSERT_NONE }, { clear }}}
+value|{ MS_OP_RSET, {{ (reg) }, { MS_ASSERT_NONE }, { (clear) }}}
 end_define
 
 begin_define
@@ -559,7 +559,7 @@ name|mask
 parameter_list|,
 name|ptr
 parameter_list|)
-value|{ MS_OP_RFETCH, {{ reg }, { mask }, { ptr }}}
+value|{ MS_OP_RFETCH, {{ (reg) }, { (mask) }, { (ptr) }}}
 end_define
 
 begin_comment
@@ -577,7 +577,7 @@ name|len
 parameter_list|,
 name|array
 parameter_list|)
-value|{ MS_OP_TRIG, {{ reg }, { len }, { array }}}
+value|{ MS_OP_TRIG, {{ (reg) }, { (len) }, { (array) }}}
 end_define
 
 begin_comment
@@ -593,7 +593,7 @@ name|n
 parameter_list|,
 name|reg
 parameter_list|)
-value|{ MS_OP_RASSERT_P, {{ n }, { reg }}}
+value|{ MS_OP_RASSERT_P, {{ (n) }, { (reg) }}}
 end_define
 
 begin_define
@@ -607,7 +607,7 @@ name|reg
 parameter_list|,
 name|mask
 parameter_list|)
-value|{ MS_OP_RFETCH_P, {{ n }, { reg }, { mask }}}
+value|{ MS_OP_RFETCH_P, {{ (n) }, { (reg) }, { (mask) }}}
 end_define
 
 begin_comment
@@ -621,7 +621,7 @@ name|MS_PTR
 parameter_list|(
 name|ptr
 parameter_list|)
-value|{ MS_OP_PTR, {{ ptr }}}
+value|{ MS_OP_PTR, {{ (ptr) }}}
 end_define
 
 begin_define
@@ -661,7 +661,7 @@ name|MS_SET
 parameter_list|(
 name|accum
 parameter_list|)
-value|{ MS_OP_SET, {{ accum }}}
+value|{ MS_OP_SET, {{ (accum) }}}
 end_define
 
 begin_define
@@ -673,7 +673,7 @@ name|mask
 parameter_list|,
 name|offset
 parameter_list|)
-value|{ MS_OP_BRSET, {{ mask }, { offset }}}
+value|{ MS_OP_BRSET, {{ (mask) }, { (offset) }}}
 end_define
 
 begin_define
@@ -683,7 +683,7 @@ name|MS_DBRA
 parameter_list|(
 name|offset
 parameter_list|)
-value|{ MS_OP_DBRA, {{ offset }}}
+value|{ MS_OP_DBRA, {{ (offset) }}}
 end_define
 
 begin_define
@@ -695,7 +695,7 @@ name|mask
 parameter_list|,
 name|offset
 parameter_list|)
-value|{ MS_OP_BRCLEAR, {{ mask }, { offset }}}
+value|{ MS_OP_BRCLEAR, {{ (mask) }, { (offset) }}}
 end_define
 
 begin_define
@@ -710,7 +710,7 @@ parameter_list|,
 name|offset
 parameter_list|)
 define|\
-value|{ MS_OP_BRSTAT, {{ mask_set }, { mask_clr }, { offset }}}
+value|{ MS_OP_BRSTAT, {{ mask_set }, { mask_clr }, { (offset) }}}
 end_define
 
 begin_comment
@@ -727,7 +727,7 @@ parameter_list|,
 name|parameter
 parameter_list|)
 define|\
-value|{ MS_OP_C_CALL, {{ function }, { parameter }}}
+value|{ MS_OP_C_CALL, {{ (function) }, { (parameter) }}}
 end_define
 
 begin_define
@@ -737,7 +737,7 @@ name|MS_CALL
 parameter_list|(
 name|microseq
 parameter_list|)
-value|{ MS_OP_CALL, {{ microseq }}}
+value|{ MS_OP_CALL, {{ (microseq) }}}
 end_define
 
 begin_comment
@@ -753,7 +753,7 @@ name|ptr
 parameter_list|,
 name|len
 parameter_list|)
-value|{ MS_OP_PUT, {{ ptr }, { len }}}
+value|{ MS_OP_PUT, {{ (ptr) }, { (len) }}}
 end_define
 
 begin_define
@@ -765,7 +765,7 @@ name|ptr
 parameter_list|,
 name|len
 parameter_list|)
-value|{ MS_OP_GET, {{ ptr }, { len }}}
+value|{ MS_OP_GET, {{ (ptr) }, { (len) }}}
 end_define
 
 begin_comment
@@ -779,7 +779,7 @@ name|MS_DELAY
 parameter_list|(
 name|udelay
 parameter_list|)
-value|{ MS_OP_DELAY, {{ udelay }}}
+value|{ MS_OP_DELAY, {{ (udelay) }}}
 end_define
 
 begin_comment
@@ -793,7 +793,7 @@ name|MS_ADELAY
 parameter_list|(
 name|mdelay
 parameter_list|)
-value|{ MS_OP_ADELAY, {{ mdelay }}}
+value|{ MS_OP_ADELAY, {{ (mdelay) }}}
 end_define
 
 begin_comment
@@ -807,7 +807,7 @@ name|MS_SUBRET
 parameter_list|(
 name|code
 parameter_list|)
-value|{ MS_OP_SUBRET,	{{ code }}}
+value|{ MS_OP_SUBRET,	{{ (code) }}}
 end_define
 
 begin_define
@@ -817,7 +817,7 @@ name|MS_RET
 parameter_list|(
 name|code
 parameter_list|)
-value|{ MS_OP_RET, {{ code }}}
+value|{ MS_OP_RET, {{ (code) }}}
 end_define
 
 begin_comment

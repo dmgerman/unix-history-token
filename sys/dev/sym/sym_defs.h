@@ -2460,7 +2460,7 @@ parameter_list|,
 name|n
 parameter_list|)
 define|\
-value|(0xe1000000 | how | (SCR_REG_OFS2(REG(reg))) | (n))
+value|(0xe1000000 | (how) | (SCR_REG_OFS2(REG(reg))) | (n))
 end_define
 
 begin_define
@@ -2475,7 +2475,7 @@ parameter_list|,
 name|n
 parameter_list|)
 define|\
-value|(0xe0000000 | how | (SCR_REG_OFS2(REG(reg))) | (n))
+value|(0xe0000000 | (how) | (SCR_REG_OFS2(REG(reg))) | (n))
 end_define
 
 begin_define
