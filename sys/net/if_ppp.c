@@ -7172,6 +7172,10 @@ operator|->
 name|if_iqdrops
 operator|++
 expr_stmt|;
+name|m
+operator|=
+name|NULL
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
