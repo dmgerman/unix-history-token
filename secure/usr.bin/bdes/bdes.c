@@ -2265,7 +2265,7 @@ literal|8
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * at EOF or last block -- in either ase, the last byte contains 	 * the character representation of the number of bytes in it 	 */
+comment|/* 	 * at EOF or last block -- in either case, the last byte contains 	 * the character representation of the number of bytes in it 	 */
 name|bn
 operator|++
 expr_stmt|;
