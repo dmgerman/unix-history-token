@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	6.22 (Berkeley) %G% (with USERDB)"
+literal|"@(#)udb.c	6.23 (Berkeley) %G% (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	6.22 (Berkeley) %G% (without USERDB)"
+literal|"@(#)udb.c	6.23 (Berkeley) %G% (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -570,6 +570,22 @@ name|size
 operator|=
 name|keylen
 expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|28
+argument_list|,
+literal|80
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"udbexpand: trying %s\n"
+argument_list|,
+name|keybuf
+argument_list|)
+expr_stmt|;
 name|i
 operator|=
 call|(
@@ -625,6 +641,36 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|28
+argument_list|,
+literal|80
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"udbexpand: match %.*s: %.*s\n"
+argument_list|,
+name|key
+operator|.
+name|size
+argument_list|,
+name|key
+operator|.
+name|data
+argument_list|,
+name|info
+operator|.
+name|size
+argument_list|,
+name|info
+operator|.
+name|data
+argument_list|)
+expr_stmt|;
 name|naddrs
 operator|=
 literal|0
@@ -831,6 +877,13 @@ name|R_NEXT
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* if nothing ever matched, try next database */
+if|if
+condition|(
+operator|!
+name|breakout
+condition|)
+continue|continue;
 if|if
 condition|(
 name|naddrs
