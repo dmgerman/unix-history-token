@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *   * $Id:$  *   */
+comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *   * $Id: command.c,v 1.2 1995/02/26 12:17:22 amurai Exp $  *   */
 end_comment
 
 begin_include
@@ -326,6 +326,14 @@ name|argv
 argument_list|)
 operator|==
 literal|0
+operator|&&
+operator|(
+name|cmd
+operator|->
+name|lauth
+operator|&
+name|VarLocalAuth
+operator|)
 condition|)
 block|{
 name|printf
@@ -372,6 +380,21 @@ name|cmd
 operator|++
 control|)
 block|{
+if|if
+condition|(
+name|cmd
+operator|->
+name|name
+operator|&&
+operator|(
+name|cmd
+operator|->
+name|lauth
+operator|&
+name|VarLocalAuth
+operator|)
+condition|)
+block|{
 name|c
 operator|=
 operator|(
@@ -384,13 +407,6 @@ literal|'\n'
 else|:
 literal|'\t'
 expr_stmt|;
-if|if
-condition|(
-name|cmd
-operator|->
-name|name
-condition|)
-block|{
 name|printf
 argument_list|(
 literal|"  %-8s: %-20s%c"
@@ -822,8 +838,6 @@ block|,
 name|LocalAuthCommand
 block|,
 name|LOCAL_NO_AUTH
-operator||
-name|LOCAL_NO_AUTH
 block|,
 literal|"Password for manupilation"
 block|,
@@ -908,6 +922,8 @@ block|,
 name|QuitCommand
 block|,
 name|LOCAL_AUTH
+operator||
+name|LOCAL_NO_AUTH
 block|,
 literal|"Quit PPP program"
 block|,
@@ -2282,6 +2298,12 @@ condition|(
 name|argc
 operator|>
 literal|0
+operator|&&
+operator|(
+name|VarLocalAuth
+operator|&
+name|LOCAL_AUTH
+operator|)
 condition|)
 block|{
 name|Cleanup

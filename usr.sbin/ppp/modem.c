@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id:$  *   *  TODO:  */
+comment|/*  *		PPP Modem handling module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: modem.c,v 1.2 1995/02/26 12:17:45 amurai Exp $  *   *  TODO:  */
 end_comment
 
 begin_include
@@ -31,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|<sys/tty.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -134,8 +140,10 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|char
-modifier|*
 name|uucplock
+index|[
+literal|10
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -555,7 +563,7 @@ endif|#
 directive|endif
 ifndef|#
 directive|ifndef
-name|POSIX_SOURCE
+name|_POSIX_SOURCE
 ifdef|#
 directive|ifdef
 name|B7200
@@ -1586,8 +1594,10 @@ operator|==
 literal|0
 condition|)
 block|{
+name|strcpy
+argument_list|(
 name|uucplock
-operator|=
+argument_list|,
 name|rindex
 argument_list|(
 name|VarDevice
@@ -1596,6 +1606,7 @@ literal|'/'
 argument_list|)
 operator|+
 literal|1
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3098,11 +3109,19 @@ name|nw
 operator|<
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|!=
+name|EAGAIN
+condition|)
 name|perror
 argument_list|(
 literal|"modem write"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_function
