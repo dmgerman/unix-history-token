@@ -1975,9 +1975,6 @@ argument_list|()
 expr_stmt|;
 break|break;
 block|}
-name|enable_sse
-argument_list|()
-expr_stmt|;
 block|}
 break|break;
 endif|#
@@ -1985,6 +1982,9 @@ directive|endif
 default|default:
 break|break;
 block|}
+name|enable_sse
+argument_list|()
+expr_stmt|;
 if|#
 directive|if
 name|defined
