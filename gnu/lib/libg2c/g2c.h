@@ -33,7 +33,6 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|long
 name|int
 comment|/* long int */
 name|integer
@@ -110,7 +109,6 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|long
 name|int
 comment|/* long int */
 name|logical
@@ -276,7 +274,6 @@ end_else
 
 begin_typedef
 typedef|typedef
-name|long
 name|int
 comment|/* long int */
 name|flag
@@ -285,7 +282,6 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|long
 name|int
 comment|/* long int */
 name|ftnlen
@@ -294,7 +290,6 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|long
 name|int
 comment|/* long int */
 name|ftnint
