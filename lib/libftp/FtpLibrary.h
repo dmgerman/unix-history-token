@@ -59,9 +59,6 @@ directive|include
 file|<netdb.h>
 include|#
 directive|include
-file|<varargs.h>
-include|#
-directive|include
 file|<arpa/telnet.h>
 include|#
 directive|include
