@@ -773,7 +773,9 @@ name|mbuf
 modifier|*
 name|ip_srcroute
 parameter_list|(
-name|void
+name|struct
+name|mbuf
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -3160,7 +3160,9 @@ operator|(
 name|opts
 operator|=
 name|ip_srcroute
-argument_list|()
+argument_list|(
+name|m
+argument_list|)
 operator|)
 operator|==
 literal|0

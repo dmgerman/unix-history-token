@@ -2830,6 +2830,17 @@ begin_comment
 comment|/* PF translate localhost */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PACKET_TAG_IPOPTIONS
+value|27
+end_define
+
+begin_comment
+comment|/* Saved IP options */
+end_comment
+
 begin_comment
 comment|/* Packet tag routines. */
 end_comment

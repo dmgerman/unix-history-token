@@ -2814,7 +2814,9 @@ operator|->
 name|inp_options
 operator|=
 name|ip_srcroute
-argument_list|()
+argument_list|(
+name|m
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3627,7 +3629,9 @@ directive|endif
 name|ipopts
 operator|=
 name|ip_srcroute
-argument_list|()
+argument_list|(
+name|m
+argument_list|)
 expr_stmt|;
 comment|/* 	 * See if we already have an entry for this connection. 	 * If we do, resend the SYN,ACK, and reset the retransmit timer. 	 * 	 * XXX 	 * should the syncache be re-initialized with the contents 	 * of the new SYN here (which may have different options?) 	 */
 name|sc
