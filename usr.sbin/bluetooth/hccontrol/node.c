@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * node.c  *  * Copyright (c) 2001-2002 Maksim Yevmenkin<m_evmenkin@yahoo.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: node.c,v 1.8 2002/11/12 22:33:17 max Exp $  * $FreeBSD$  */
+comment|/*  * node.c  *  * Copyright (c) 2001-2002 Maksim Yevmenkin<m_evmenkin@yahoo.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: node.c,v 1.4 2003/03/23 21:28:17 max Exp $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -141,11 +141,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"Node: %s\nState: %#x\n"
-argument_list|,
-name|r
-operator|.
-name|hci_node
+literal|"State: %#x\n"
 argument_list|,
 name|r
 operator|.
@@ -185,23 +181,6 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
-name|struct
-name|ng_btsocket_hci_raw_node_init
-name|r
-decl_stmt|;
-name|memset
-argument_list|(
-operator|&
-name|r
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|r
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ioctl
@@ -209,14 +188,6 @@ argument_list|(
 name|s
 argument_list|,
 name|SIOC_HCI_RAW_NODE_INIT
-argument_list|,
-operator|&
-name|r
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|r
-argument_list|)
 argument_list|)
 operator|<
 literal|0
@@ -304,11 +275,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"Node: %s\nDebug level: %d\n"
-argument_list|,
-name|r
-operator|.
-name|hci_node
+literal|"Debug level: %d\n"
 argument_list|,
 name|r
 operator|.
@@ -495,17 +462,6 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"Node: %s\n"
-argument_list|,
-name|r
-operator|.
-name|hci_node
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stdout
-argument_list|,
 literal|"Number of free command buffers: %d\n"
 argument_list|,
 name|r
@@ -671,17 +627,6 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"Node: %s\n"
-argument_list|,
-name|r
-operator|.
-name|hci_node
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stdout
-argument_list|,
 literal|"BD_ADDR: %02x:%02x:%02x:%02x:%02x:%02x\n"
 argument_list|,
 name|r
@@ -826,11 +771,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"Node: %s\nFeatures: "
-argument_list|,
-name|r
-operator|.
-name|hci_node
+literal|"Features: "
 argument_list|)
 expr_stmt|;
 for|for
@@ -974,17 +915,6 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"Node: %s\n"
-argument_list|,
-name|r
-operator|.
-name|hci_node
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stdout
-argument_list|,
 literal|"Commands sent: %d\n"
 argument_list|,
 name|r
@@ -1118,23 +1048,6 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
-name|struct
-name|ng_btsocket_hci_raw_node_reset_stat
-name|r
-decl_stmt|;
-name|memset
-argument_list|(
-operator|&
-name|r
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|r
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ioctl
@@ -1142,14 +1055,6 @@ argument_list|(
 name|s
 argument_list|,
 name|SIOC_HCI_RAW_NODE_RESET_STAT
-argument_list|,
-operator|&
-name|r
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|r
-argument_list|)
 argument_list|)
 operator|<
 literal|0
@@ -1192,23 +1097,6 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
-name|struct
-name|ng_btsocket_hci_raw_node_flush_neighbor_cache
-name|r
-decl_stmt|;
-name|memset
-argument_list|(
-operator|&
-name|r
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|r
-argument_list|)
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ioctl
@@ -1216,14 +1104,6 @@ argument_list|(
 name|s
 argument_list|,
 name|SIOC_HCI_RAW_NODE_FLUSH_NEIGHBOR_CACHE
-argument_list|,
-operator|&
-name|r
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|r
-argument_list|)
 argument_list|)
 operator|<
 literal|0
@@ -1357,17 +1237,6 @@ goto|goto
 name|out
 goto|;
 block|}
-name|fprintf
-argument_list|(
-name|stdout
-argument_list|,
-literal|"Neighbor cache for the node: %s\n"
-argument_list|,
-name|r
-operator|.
-name|hci_node
-argument_list|)
-expr_stmt|;
 name|fprintf
 argument_list|(
 name|stdout
@@ -1759,17 +1628,6 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"Connections list for the node: %s\n"
-argument_list|,
-name|r
-operator|.
-name|hci_node
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stdout
-argument_list|,
 literal|"Remote BD_ADDR    "
 expr|\
 literal|"Handle "
@@ -2031,12 +1889,12 @@ comment|/* hci_read_connection_list */
 end_comment
 
 begin_comment
-comment|/* Send Read_Link_Policy_Settings_Mask command to the node */
+comment|/* Send Read_Node_Link_Policy_Settings_Mask command to the node */
 end_comment
 
 begin_function
 name|int
-name|hci_read_link_policy_settings_mask
+name|hci_read_node_link_policy_settings_mask
 parameter_list|(
 name|int
 name|s
@@ -2095,11 +1953,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"Node: %s\nLink Policy Settings mask: %#04x\n"
-argument_list|,
-name|r
-operator|.
-name|hci_node
+literal|"Link Policy Settings mask: %#04x\n"
 argument_list|,
 name|r
 operator|.
@@ -2115,16 +1969,16 @@ block|}
 end_function
 
 begin_comment
-comment|/* hci_read_link_policy_settings_mask */
+comment|/* hci_read_node_link_policy_settings_mask */
 end_comment
 
 begin_comment
-comment|/* Send Write_Link_Policy_Settings_Mask command to the node */
+comment|/* Send Write_Node_Link_Policy_Settings_Mask command to the node */
 end_comment
 
 begin_function
 name|int
-name|hci_write_link_policy_settings_mask
+name|hci_write_node_link_policy_settings_mask
 parameter_list|(
 name|int
 name|s
@@ -2239,16 +2093,16 @@ block|}
 end_function
 
 begin_comment
-comment|/* hci_write_link_policy_settings_mask */
+comment|/* hci_write_node_link_policy_settings_mask */
 end_comment
 
 begin_comment
-comment|/* Send Read_Packet_Mask command to the node */
+comment|/* Send Read_Node_Packet_Mask command to the node */
 end_comment
 
 begin_function
 name|int
-name|hci_read_packet_mask
+name|hci_read_node_packet_mask
 parameter_list|(
 name|int
 name|s
@@ -2307,11 +2161,7 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"Node: %s\nPacket mask: %#04x\n"
-argument_list|,
-name|r
-operator|.
-name|hci_node
+literal|"Packet mask: %#04x\n"
 argument_list|,
 name|r
 operator|.
@@ -2327,16 +2177,16 @@ block|}
 end_function
 
 begin_comment
-comment|/* hci_read_packet_mask */
+comment|/* hci_read_node_packet_mask */
 end_comment
 
 begin_comment
-comment|/* Send Write_Packet_Mask command to the node */
+comment|/* Send Write_Node_Packet_Mask command to the node */
 end_comment
 
 begin_function
 name|int
-name|hci_write_packet_mask
+name|hci_write_node_packet_mask
 parameter_list|(
 name|int
 name|s
@@ -2451,7 +2301,215 @@ block|}
 end_function
 
 begin_comment
-comment|/* hci_write_packet_mask */
+comment|/* hci_write_node_packet_mask */
+end_comment
+
+begin_comment
+comment|/* Send Read_Node_Role_Switch command to the node */
+end_comment
+
+begin_function
+name|int
+name|hci_read_node_role_switch
+parameter_list|(
+name|int
+name|s
+parameter_list|,
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|argv
+parameter_list|)
+block|{
+name|struct
+name|ng_btsocket_hci_raw_node_role_switch
+name|r
+decl_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|r
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|r
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|s
+argument_list|,
+name|SIOC_HCI_RAW_NODE_GET_ROLE_SWITCH
+argument_list|,
+operator|&
+name|r
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|r
+argument_list|)
+argument_list|)
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+name|ERROR
+operator|)
+return|;
+name|fprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"Role switch: %d\n"
+argument_list|,
+name|r
+operator|.
+name|role_switch
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|OK
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* hci_read_node_role_switch */
+end_comment
+
+begin_comment
+comment|/* Send Write_Node_Role_Switch command to the node */
+end_comment
+
+begin_function
+name|int
+name|hci_write_node_role_switch
+parameter_list|(
+name|int
+name|s
+parameter_list|,
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|argv
+parameter_list|)
+block|{
+name|struct
+name|ng_btsocket_hci_raw_node_role_switch
+name|r
+decl_stmt|;
+name|int
+name|m
+decl_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|r
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|r
+argument_list|)
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|argc
+condition|)
+block|{
+case|case
+literal|1
+case|:
+if|if
+condition|(
+name|sscanf
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|"%d"
+argument_list|,
+operator|&
+name|m
+argument_list|)
+operator|!=
+literal|1
+condition|)
+return|return
+operator|(
+name|USAGE
+operator|)
+return|;
+name|r
+operator|.
+name|role_switch
+operator|=
+name|m
+condition|?
+literal|1
+else|:
+literal|0
+expr_stmt|;
+break|break;
+default|default:
+return|return
+operator|(
+name|USAGE
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|s
+argument_list|,
+name|SIOC_HCI_RAW_NODE_SET_ROLE_SWITCH
+argument_list|,
+operator|&
+name|r
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|r
+argument_list|)
+argument_list|)
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+name|ERROR
+operator|)
+return|;
+return|return
+operator|(
+name|OK
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* hci_write_node_role_switch */
 end_comment
 
 begin_decl_stmt
@@ -2464,7 +2522,7 @@ block|{
 block|{
 literal|"read_node_state"
 block|,
-literal|"Get HCI node state"
+literal|"Get the HCI node state"
 block|,
 operator|&
 name|hci_read_node_state
@@ -2473,7 +2531,7 @@ block|,
 block|{
 literal|"initialize"
 block|,
-literal|"Initialize HCI node"
+literal|"Initialize the HCI node"
 block|,
 operator|&
 name|hci_node_initialize
@@ -2482,7 +2540,7 @@ block|,
 block|{
 literal|"read_debug_level"
 block|,
-literal|"Read HCI node debug level"
+literal|"Read the HCI node debug level"
 block|,
 operator|&
 name|hci_read_debug_level
@@ -2491,7 +2549,7 @@ block|,
 block|{
 literal|"write_debug_level<level>"
 block|,
-literal|"Write HCI node debug level"
+literal|"Write the HCI node debug level"
 block|,
 operator|&
 name|hci_write_debug_level
@@ -2500,7 +2558,9 @@ block|,
 block|{
 literal|"read_node_buffer_size"
 block|,
-literal|"Read HCI node buffer information"
+literal|"Read the HCI node buffer information. This will return current state of the\n"
+expr|\
+literal|"HCI buffer for the HCI node"
 block|,
 operator|&
 name|hci_read_node_buffer_size
@@ -2509,7 +2569,7 @@ block|,
 block|{
 literal|"read_node_bd_addr"
 block|,
-literal|"Read HCI node BD_ADDR"
+literal|"Read the HCI node BD_ADDR. Returns device BD_ADDR as cached by the HCI node"
 block|,
 operator|&
 name|hci_read_node_bd_addr
@@ -2518,7 +2578,9 @@ block|,
 block|{
 literal|"read_node_features"
 block|,
-literal|"Read HCI node features"
+literal|"Read the HCI node features. This will return list of supported features as\n"
+expr|\
+literal|"cached by the HCI node"
 block|,
 operator|&
 name|hci_read_node_features
@@ -2527,7 +2589,7 @@ block|,
 block|{
 literal|"read_node_stat"
 block|,
-literal|"Read HCI node statistic information"
+literal|"Read packets and bytes counters for the HCI node"
 block|,
 operator|&
 name|hci_read_node_stat
@@ -2536,7 +2598,7 @@ block|,
 block|{
 literal|"reset_node_stat"
 block|,
-literal|"Reset HCI node statistic information"
+literal|"Reset packets and bytes counters for the HCI node"
 block|,
 operator|&
 name|hci_reset_node_stat
@@ -2545,7 +2607,7 @@ block|,
 block|{
 literal|"flush_neighbor_cache"
 block|,
-literal|"Flush HCI node neighbor cache"
+literal|"Flush content of the HCI node neighbor cache"
 block|,
 operator|&
 name|hci_flush_neighbor_cache
@@ -2554,7 +2616,7 @@ block|,
 block|{
 literal|"read_neighbor_cache"
 block|,
-literal|"Read HCI node neighbor cache"
+literal|"Read content of the HCI node neighbor cache"
 block|,
 operator|&
 name|hci_read_neighbor_cache
@@ -2563,7 +2625,7 @@ block|,
 block|{
 literal|"read_connection_list"
 block|,
-literal|"Read connection list"
+literal|"Read the baseband connection descriptors list for the HCI node"
 block|,
 operator|&
 name|hci_read_connection_list
@@ -2572,37 +2634,121 @@ block|,
 block|{
 literal|"read_node_link_policy_settings_mask"
 block|,
-literal|"Read Link Policy Settinngs mask for the node"
+literal|"Read the value of the Link Policy Settinngs mask for the HCI node"
 block|,
 operator|&
-name|hci_read_link_policy_settings_mask
+name|hci_read_node_link_policy_settings_mask
 block|}
 block|,
 block|{
 literal|"write_node_link_policy_settings_mask<policy_mask>"
 block|,
-literal|"Write Link Policy Settinngs mask for the node. Policy mask - xxxx"
+literal|"Write the value of the Link Policy Settings mask for the HCI node. By default\n"
+expr|\
+literal|"all supported Link Policy modes (as reported by the local device features) are\n"
+expr|\
+literal|"enabled. The particular Link Policy mode is enabled if local device supports\n"
+expr|\
+literal|"it and correspinding bit in the mask was set\n\n"
+expr|\
+literal|"\t<policy_mask> - xxxx; Link Policy mask\n"
+expr|\
+literal|"\t\t0x0000 - Disable All LM Modes\n"
+expr|\
+literal|"\t\t0x0001 - Enable Master Slave Switch\n"
+expr|\
+literal|"\t\t0x0002 - Enable Hold Mode\n"
+expr|\
+literal|"\t\t0x0004 - Enable Sniff Mode\n"
+expr|\
+literal|"\t\t0x0008 - Enable Park Mode\n"
 block|,
 operator|&
-name|hci_write_link_policy_settings_mask
+name|hci_write_node_link_policy_settings_mask
 block|}
 block|,
 block|{
 literal|"read_node_packet_mask"
 block|,
-literal|"Read Packet mask for the node"
+literal|"Read the value of the Packet mask for the HCI node"
 block|,
 operator|&
-name|hci_read_packet_mask
+name|hci_read_node_packet_mask
 block|}
 block|,
 block|{
 literal|"write_node_packet_mask<packet_mask>"
 block|,
-literal|"Write Packet mask for the node. Packet mask - xxxx"
+literal|"Write the value of the Packet mask for the HCI node. By default all supported\n"
+expr|\
+literal|"packet types (as reported by the local device features) are enabled. The\n"
+expr|\
+literal|"particular packet type is enabled if local device supports it and corresponding\n"
+expr|\
+literal|"bit in the mask was set\n\n"
+expr|\
+literal|"\t<packet_mask> - xxxx; packet type mask\n"
+expr|\
+literal|""
+expr|\
+literal|"\t\tACL packets\n"
+expr|\
+literal|"\t\t-----------\n"
+expr|\
+literal|"\t\t0x0008 DM1\n"
+expr|\
+literal|"\t\t0x0010 DH1\n"
+expr|\
+literal|"\t\t0x0400 DM3\n"
+expr|\
+literal|"\t\t0x0800 DH3\n"
+expr|\
+literal|"\t\t0x4000 DM5\n"
+expr|\
+literal|"\t\t0x8000 DH5\n"
+expr|\
+literal|"\n"
+expr|\
+literal|"\t\tSCO packets\n"
+expr|\
+literal|"\t\t-----------\n"
+expr|\
+literal|"\t\t0x0020 HV1\n"
+expr|\
+literal|"\t\t0x0040 HV2\n"
+expr|\
+literal|"\t\t0x0080 HV3\n"
 block|,
 operator|&
-name|hci_write_packet_mask
+name|hci_write_node_packet_mask
+block|}
+block|,
+block|{
+literal|"read_node_role_switch"
+block|,
+literal|"Read the value of the Role Switch parameter for the HCI node"
+block|,
+operator|&
+name|hci_read_node_role_switch
+block|}
+block|,
+block|{
+literal|"write_node_role_switch {0|1}"
+block|,
+literal|"Write the value of the Role Switch parameter for the HCI node. By default,\n"
+expr|\
+literal|"if Role Switch is supported, local device will try to perform Role Switch\n"
+expr|\
+literal|"and become Master on incoming connection. Some devices do not support Role\n"
+expr|\
+literal|"Switch and thus incomming connections from such devices will fail. Setting\n"
+expr|\
+literal|"this parameter to zero will prevent Role Switch and thus accepting device\n"
+expr|\
+literal|"will remain Slave"
+block|,
+operator|&
+name|hci_write_node_role_switch
 block|}
 block|,
 block|{
