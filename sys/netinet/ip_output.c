@@ -585,7 +585,7 @@ decl_stmt|;
 endif|#
 directive|endif
 name|struct
-name|ip_fw_chain
+name|ip_fw
 modifier|*
 name|rule
 init|=
@@ -637,7 +637,7 @@ name|rule
 operator|=
 operator|(
 expr|struct
-name|ip_fw_chain
+name|ip_fw
 operator|*
 operator|)
 operator|(

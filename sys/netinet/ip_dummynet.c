@@ -767,13 +767,13 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * ip_fw_chain is used when deleting a pipe, because ipfw rules can  * hold references to the pipe.  */
+comment|/*  * ip_fw_chain_head is used when deleting a pipe, because ipfw rules can  * hold references to the pipe.  */
 end_comment
 
 begin_extern
 extern|extern LIST_HEAD (ip_fw_head
 operator|,
-extern|ip_fw_chain
+extern|ip_fw
 end_extern
 
 begin_expr_stmt
@@ -4545,7 +4545,7 @@ name|locate_flowset
 argument_list|(
 argument|int pipe_nr
 argument_list|,
-argument|struct ip_fw_chain *rule
+argument|struct ip_fw *rule
 argument_list|)
 block|{     struct
 name|dn_flow_set
@@ -4557,8 +4557,6 @@ block|;
 if|if
 condition|(
 operator|(
-name|rule
-operator|->
 name|rule
 operator|->
 name|fw_flg
@@ -4644,8 +4642,6 @@ name|NULL
 condition|)
 name|rule
 operator|->
-name|rule
-operator|->
 name|pipe_ptr
 operator|=
 name|fs
@@ -4684,7 +4680,7 @@ argument|struct route *ro
 argument_list|,
 argument|struct sockaddr_in *dst
 argument_list|,
-argument|struct ip_fw_chain *rule
+argument|struct ip_fw *rule
 argument_list|,
 argument|int flags
 argument_list|)
@@ -4740,8 +4736,6 @@ condition|(
 operator|(
 name|fs
 operator|=
-name|rule
-operator|->
 name|rule
 operator|->
 name|pipe_ptr
@@ -4991,7 +4985,7 @@ name|MT_DUMMYNET
 expr_stmt|;
 operator|(
 expr|struct
-name|ip_fw_chain
+name|ip_fw
 operator|*
 operator|)
 name|pkt
@@ -5156,8 +5150,6 @@ comment|/*      * If we reach this point the flow was previously idle, so we nee
 if|if
 condition|(
 operator|(
-name|rule
-operator|->
 name|rule
 operator|->
 name|fw_flg
@@ -5789,9 +5781,9 @@ modifier|*
 name|p
 decl_stmt|;
 name|struct
-name|ip_fw_chain
+name|ip_fw
 modifier|*
-name|chain
+name|rule
 decl_stmt|;
 name|struct
 name|dn_flow_set
@@ -5812,14 +5804,12 @@ expr_stmt|;
 comment|/* remove all references to pipes ...*/
 name|LIST_FOREACH
 argument_list|(
-argument|chain
+argument|rule
 argument_list|,
 argument|&ip_fw_chain_head
 argument_list|,
 argument|next
 argument_list|)
-name|chain
-operator|->
 name|rule
 operator|->
 name|pipe_ptr
@@ -5930,7 +5920,7 @@ end_function
 begin_decl_stmt
 specifier|extern
 name|struct
-name|ip_fw_chain
+name|ip_fw
 modifier|*
 name|ip_fw_default_rule
 decl_stmt|;
@@ -7757,9 +7747,9 @@ name|int
 name|s
 decl_stmt|;
 name|struct
-name|ip_fw_chain
+name|ip_fw
 modifier|*
-name|chain
+name|rule
 decl_stmt|;
 if|if
 condition|(
@@ -7904,7 +7894,7 @@ expr_stmt|;
 comment|/* remove references to this pipe from the ip_fw rules. */
 name|LIST_FOREACH
 argument_list|(
-argument|chain
+argument|rule
 argument_list|,
 argument|&ip_fw_chain_head
 argument_list|,
@@ -7912,8 +7902,6 @@ argument|next
 argument_list|)
 if|if
 condition|(
-name|chain
-operator|->
 name|rule
 operator|->
 name|pipe_ptr
@@ -7925,8 +7913,6 @@ operator|->
 name|fs
 operator|)
 condition|)
-name|chain
-operator|->
 name|rule
 operator|->
 name|pipe_ptr
@@ -8129,7 +8115,7 @@ expr_stmt|;
 comment|/* remove references to this flow_set from the ip_fw rules. */
 name|LIST_FOREACH
 argument_list|(
-argument|chain
+argument|rule
 argument_list|,
 argument|&ip_fw_chain_head
 argument_list|,
@@ -8137,16 +8123,12 @@ argument|next
 argument_list|)
 if|if
 condition|(
-name|chain
-operator|->
 name|rule
 operator|->
 name|pipe_ptr
 operator|==
 name|b
 condition|)
-name|chain
-operator|->
 name|rule
 operator|->
 name|pipe_ptr

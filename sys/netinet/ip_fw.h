@@ -67,39 +67,150 @@ begin_struct
 struct|struct
 name|ip_fw
 block|{
+name|LIST_ENTRY
+argument_list|(
+argument|ip_fw
+argument_list|)
+name|next
+expr_stmt|;
+comment|/* bidirectional list of rules	*/
+name|u_int
+name|fw_flg
+decl_stmt|;
+comment|/* Operational Flags word	*/
 name|u_int64_t
 name|fw_pcnt
 decl_stmt|,
 name|fw_bcnt
 decl_stmt|;
-comment|/* Packet and byte counters */
+comment|/* Packet and byte counters	*/
 name|struct
 name|in_addr
 name|fw_src
 decl_stmt|,
 name|fw_dst
 decl_stmt|;
-comment|/* Source and destination IP addr */
+comment|/* Source and dest. IP addr	*/
 name|struct
 name|in_addr
 name|fw_smsk
 decl_stmt|,
 name|fw_dmsk
 decl_stmt|;
-comment|/* Mask for src and dest IP addr */
+comment|/* Mask for above addresses	*/
 name|u_short
 name|fw_number
 decl_stmt|;
-comment|/* Rule number */
-name|u_int
-name|fw_flg
+comment|/* Rule number			*/
+name|u_char
+name|fw_prot
 decl_stmt|;
-comment|/* Operational Flags word */
+comment|/* IP protocol			*/
+if|#
+directive|if
+literal|1
+name|u_char
+name|fw_nports
+decl_stmt|;
+comment|/* # of src/dst port in array   */
+define|#
+directive|define
+name|IP_FW_GETNSRCP
+parameter_list|(
+name|rule
+parameter_list|)
+value|((rule)->fw_nports& 0x0f)
+define|#
+directive|define
+name|IP_FW_SETNSRCP
+parameter_list|(
+name|rule
+parameter_list|,
+name|n
+parameter_list|)
+value|do {				\ 					    (rule)->fw_nports&= ~0x0f;	\ 					    (rule)->fw_nports |= (n);	\ 					} while (0)
+define|#
+directive|define
+name|IP_FW_GETNDSTP
+parameter_list|(
+name|rule
+parameter_list|)
+value|((rule)->fw_nports>> 4)
+define|#
+directive|define
+name|IP_FW_SETNDSTP
+parameter_list|(
+name|rule
+parameter_list|,
+name|n
+parameter_list|)
+value|do {				\ 					    (rule)->fw_nports&= ~0xf0;	\ 					    (rule)->fw_nports |= (n)<< 4;\ 					} while (0)
+define|#
+directive|define
+name|IP_FW_HAVEPORTS
+parameter_list|(
+name|rule
+parameter_list|)
+value|((rule)->fw_nports != 0)
+else|#
+directive|else
+name|u_char
+name|__pad
+index|[
+literal|1
+index|]
+decl_stmt|;
+name|u_int
+name|_nsrcp
+decl_stmt|,
+name|_ndstp
+decl_stmt|;
+define|#
+directive|define
+name|IP_FW_GETNSRCP
+parameter_list|(
+name|rule
+parameter_list|)
+value|(rule)->_nsrcp
+define|#
+directive|define
+name|IP_FW_SETNSRCP
+parameter_list|(
+name|rule
+parameter_list|,
+name|n
+parameter_list|)
+value|(rule)->_nsrcp = n
+define|#
+directive|define
+name|IP_FW_GETNDSTP
+parameter_list|(
+name|rule
+parameter_list|)
+value|(rule)->_ndstp
+define|#
+directive|define
+name|IP_FW_SETNDSTP
+parameter_list|(
+name|rule
+parameter_list|,
+name|n
+parameter_list|)
+value|(rule)->_ndstp = n
+define|#
+directive|define
+name|IP_FW_HAVEPORTS
+parameter_list|(
+name|rule
+parameter_list|)
+value|((rule)->_ndstp + (rule)->_nsrcp != 0)
+endif|#
+directive|endif
 define|#
 directive|define
 name|IP_FW_MAX_PORTS
 value|10
-comment|/* A reasonable maximum */
+comment|/* A reasonable maximum		*/
 union|union
 block|{
 name|u_short
@@ -108,7 +219,7 @@ index|[
 name|IP_FW_MAX_PORTS
 index|]
 decl_stmt|;
-comment|/* Array of port numbers to match */
+comment|/* port numbers to match	*/
 define|#
 directive|define
 name|IP_FW_ICMPTYPES_MAX
@@ -130,19 +241,19 @@ union|;
 name|u_int
 name|fw_ipflg
 decl_stmt|;
-comment|/* IP flags word */
-name|u_char
-name|fw_ipopt
-decl_stmt|,
-name|fw_ipnopt
-decl_stmt|;
-comment|/* IP options set/unset */
+comment|/* IP flags word		*/
 name|u_short
 name|fw_iplen
 decl_stmt|,
 name|fw_ipid
 decl_stmt|;
-comment|/* IP length, identification */
+comment|/* IP length, identification	*/
+name|u_char
+name|fw_ipopt
+decl_stmt|,
+name|fw_ipnopt
+decl_stmt|;
+comment|/* IP options set/unset		*/
 name|u_char
 name|fw_iptos
 decl_stmt|,
@@ -171,16 +282,16 @@ decl_stmt|,
 name|fw_tcpnf
 decl_stmt|;
 comment|/* TCP flags set/unset */
+name|u_short
+name|fw_tcpwin
+decl_stmt|;
+comment|/* TCP window size */
 name|u_int32_t
 name|fw_tcpseq
 decl_stmt|,
 name|fw_tcpack
 decl_stmt|;
 comment|/* TCP sequence and acknowledgement */
-name|u_short
-name|fw_tcpwin
-decl_stmt|;
-comment|/* TCP window size */
 name|long
 name|timestamp
 decl_stmt|;
@@ -217,14 +328,6 @@ decl_stmt|;
 block|}
 name|fw_un
 union|;
-name|u_char
-name|fw_prot
-decl_stmt|;
-comment|/* IP protocol */
-comment|/* 	 * N'of src ports and # of dst ports in ports array (dst ports 	 * follow src ports; max of 10 ports in all; count of 0 means 	 * match all ports) 	 */
-name|u_char
-name|fw_nports
-decl_stmt|;
 name|void
 modifier|*
 name|pipe_ptr
@@ -251,24 +354,6 @@ name|u_int64_t
 name|fw_loghighest
 decl_stmt|;
 comment|/* highest number packet to log */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * extended ipfw structure... some fields in the original struct  * can be used to pass parameters up/down, namely pointers  *     void *pipe_ptr  *     void *next_rule_ptr   * some others can be used to pass parameters down, namely counters etc.  *     u_int64_t fw_pcnt,fw_bcnt;  *     long timestamp;  */
-end_comment
-
-begin_struct
-struct|struct
-name|ip_fw_ext
-block|{
-comment|/* extended structure */
-name|struct
-name|ip_fw
-name|rule
-decl_stmt|;
-comment|/* must be at offset 0 */
 name|long
 name|dont_match_prob
 decl_stmt|;
@@ -281,62 +366,45 @@ define|#
 directive|define
 name|DYN_KEEP_STATE
 value|0
-comment|/* type for keep-state rules */
+comment|/* type for keep-state rules	*/
+define|#
+directive|define
+name|DYN_LIMIT
+value|1
+comment|/* type for limit connection rules */
+define|#
+directive|define
+name|DYN_LIMIT_PARENT
+value|2
+comment|/* parent entry for limit connection rules */
+comment|/* following two fields are used to limit number of connections      * basing on either src,srcport,dst,dstport.      */
 name|u_char
-name|_pad1
+name|limit_mask
 decl_stmt|;
-comment|/* for future use */
+comment|/* mask type for limit rule, can have many */
+define|#
+directive|define
+name|DYN_SRC_ADDR
+value|0x1
+define|#
+directive|define
+name|DYN_SRC_PORT
+value|0x2
+define|#
+directive|define
+name|DYN_DST_ADDR
+value|0x4
+define|#
+directive|define
+name|DYN_DST_PORT
+value|0x8
 name|u_short
-name|_pad2
+name|conn_limit
 decl_stmt|;
-comment|/* for future use */
+comment|/* # of connections for limit rule */
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|IP_FW_GETNSRCP
-parameter_list|(
-name|rule
-parameter_list|)
-value|((rule)->fw_nports& 0x0f)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IP_FW_SETNSRCP
-parameter_list|(
-name|rule
-parameter_list|,
-name|n
-parameter_list|)
-value|do {				\ 					  (rule)->fw_nports&= ~0x0f;	\ 					  (rule)->fw_nports |= (n);	\ 					} while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IP_FW_GETNDSTP
-parameter_list|(
-name|rule
-parameter_list|)
-value|((rule)->fw_nports>> 4)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IP_FW_SETNDSTP
-parameter_list|(
-name|rule
-parameter_list|,
-name|n
-parameter_list|)
-value|do {				\ 					  (rule)->fw_nports&= ~0xf0;	\ 					  (rule)->fw_nports |= (n)<< 4;\ 					} while (0)
-end_define
 
 begin_define
 define|#
@@ -374,27 +442,8 @@ value|fw_un.fu_fwd_ip
 end_define
 
 begin_comment
-comment|/**  *  *   chain_ptr -------------+  *                          V  *     [ next.le_next ]---->[ next.le_next ]---- [ next.le_next ]--->  *     [ next.le_prev ]<----[ next.le_prev ]<----[ next.le_prev ]<---  *  +--[ rule         ]  +--[ rule         ]  +--[ rule         ]  *  |                    |                    |  *  +->[<ip_fw>      ]  +->[<ip_fw>      ]  +->[<ip_fw>      ]  *  */
+comment|/**  *  *   rule_ptr  -------------+  *                          V  *     [ next.le_next ]---->[ next.le_next ]---- [ next.le_next ]--->  *     [ next.le_prev ]<----[ next.le_prev ]<----[ next.le_prev ]<---  *     [<ip_fw> body ]     [<ip_fw> body ]     [<ip_fw> body ]  *  */
 end_comment
-
-begin_struct
-struct|struct
-name|ip_fw_chain
-block|{
-name|LIST_ENTRY
-argument_list|(
-argument|ip_fw_chain
-argument_list|)
-name|next
-expr_stmt|;
-name|struct
-name|ip_fw
-modifier|*
-name|rule
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/*  * Flow mask/flow id for each queue.  */
@@ -444,11 +493,17 @@ name|id
 decl_stmt|;
 comment|/* (masked) flow id		*/
 name|struct
-name|ip_fw_chain
+name|ip_fw
 modifier|*
-name|chain
+name|rule
 decl_stmt|;
-comment|/* pointer to chain		*/
+comment|/* pointer to rule		*/
+name|struct
+name|ipfw_dyn_rule
+modifier|*
+name|parent
+decl_stmt|;
+comment|/* pointer to parent rule 	*/
 name|u_int32_t
 name|expire
 decl_stmt|;
@@ -1248,43 +1303,49 @@ begin_typedef
 typedef|typedef
 name|int
 name|ip_fw_chk_t
-name|__P
-typedef|((struct
+parameter_list|(
+name|struct
 name|ip
 modifier|*
 modifier|*
-typedef|,
+parameter_list|,
 name|int
-typedef|, struct
+parameter_list|,
+name|struct
 name|ifnet
 modifier|*
-typedef|,
+parameter_list|,
 name|u_int16_t
 modifier|*
-typedef|, 	     struct
+parameter_list|,
+name|struct
 name|mbuf
 modifier|*
 modifier|*
-typedef|, struct
-name|ip_fw_chain
+parameter_list|,
+name|struct
+name|ip_fw
 modifier|*
 modifier|*
-typedef|, struct
+parameter_list|,
+name|struct
 name|sockaddr_in
 modifier|*
 modifier|*
-typedef|));
+parameter_list|)
+function_decl|;
 end_typedef
 
 begin_typedef
 typedef|typedef
 name|int
 name|ip_fw_ctl_t
-name|__P
-typedef|((struct
+parameter_list|(
+name|struct
 name|sockopt
 modifier|*
-typedef|));
+parameter_list|)
+function_decl|;
 end_typedef
 
 begin_decl_stmt

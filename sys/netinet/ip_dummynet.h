@@ -648,11 +648,12 @@ begin_typedef
 typedef|typedef
 name|int
 name|ip_dn_ctl_t
-name|__P
-typedef|((struct
+parameter_list|(
+name|struct
 name|sockopt
 modifier|*
-typedef|)) ;
+parameter_list|)
+function_decl|;
 end_typedef
 
 begin_decl_stmt
@@ -709,7 +710,7 @@ modifier|*
 name|dst
 parameter_list|,
 name|struct
-name|ip_fw_chain
+name|ip_fw
 modifier|*
 name|rule
 parameter_list|,
