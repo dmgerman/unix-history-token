@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.15 (Berkeley) %G%"
+literal|"@(#)main.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2205,6 +2205,12 @@ name|c
 operator|=
 name|cc
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|NP
+condition|)
+block|{
 name|c
 operator||=
 name|partab
@@ -2224,6 +2230,7 @@ name|c
 operator|^=
 literal|0200
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)init.c	5.5 (Berkeley) %G%"
+literal|"@(#)init.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -527,6 +527,13 @@ literal|0
 block|}
 block|,
 comment|/* set decctlq */
+block|{
+literal|"np"
+block|,
+literal|0
+block|}
+block|,
+comment|/* no parity at all (8bit chars) */
 block|{
 literal|0
 block|}
