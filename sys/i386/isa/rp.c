@@ -5924,7 +5924,7 @@ argument_list|)
 operator|=
 name|rp
 expr_stmt|;
-comment|/*			devfs_add_devswf(&rp_cdevsw, 				port, DV_CHR, UID_ROOT, GID_WHEEL, 0600, 				"ttyR%n", port); 			devfs_add_devswf(&rp_cdevsw, 				port | CONTROL_INIT_STATE, DV_CHR, UID_ROOT, 				GID_WHEEL, 0600, "ttyRi%n", port); */
+comment|/*			devfs_add_devswf(&rp_cdevsw, 				port, DV_CHR, UID_ROOT, GID_WHEEL, 0600, 				"ttyR%r", port); 			devfs_add_devswf(&rp_cdevsw, 				port | CONTROL_INIT_STATE, DV_CHR, UID_ROOT, 				GID_WHEEL, 0600, "ttyRi%r", port); */
 block|}
 block|}
 block|}

@@ -1170,7 +1170,7 @@ literal|0
 argument_list|,
 literal|0600
 argument_list|,
-literal|"ttyv%n"
+literal|"ttyv%r"
 argument_list|,
 name|vt
 argument_list|)

@@ -808,7 +808,7 @@ name|GID_SND
 argument_list|,
 name|PERM_SND
 argument_list|,
-literal|"dsp%n"
+literal|"dsp%r"
 argument_list|,
 name|dev
 operator|->
@@ -851,7 +851,7 @@ name|GID_SND
 argument_list|,
 name|PERM_SND
 argument_list|,
-literal|"dspW%n"
+literal|"dspW%r"
 argument_list|,
 name|dev
 operator|->
@@ -894,7 +894,7 @@ name|GID_SND
 argument_list|,
 name|PERM_SND
 argument_list|,
-literal|"audio%n"
+literal|"audio%r"
 argument_list|,
 name|dev
 operator|->
@@ -937,7 +937,7 @@ name|GID_SND
 argument_list|,
 name|PERM_SND
 argument_list|,
-literal|"mixer%n"
+literal|"mixer%r"
 argument_list|,
 name|dev
 operator|->
@@ -980,7 +980,7 @@ name|GID_SND
 argument_list|,
 name|PERM_SND
 argument_list|,
-literal|"sndstat%n"
+literal|"sndstat%r"
 argument_list|,
 name|dev
 operator|->
@@ -1002,7 +1002,7 @@ if|#
 directive|if
 literal|0
 comment|/* these two are still unsupported... */
-block|cookie = devfs_add_devswf(&snd_cdevsw, (dev->id_unit<< 4) | SND_DEV_MIDIN, 	DV_CHR, UID_SND, GID_SND, PERM_SND, "midi%n", dev->id_unit);     if (cookie) devfs_link(cookie, "midi");      cookie = devfs_add_devswf(&snd_cdevsw, (dev->id_unit<< 4) | SND_DEV_SYNTH, 	DV_CHR, UID_SND, GID_SND, PERM_SND, "sequencer%n", dev->id_unit);     if (cookie) devfs_link(cookie, "sequencer");
+block|cookie = devfs_add_devswf(&snd_cdevsw, (dev->id_unit<< 4) | SND_DEV_MIDIN, 	DV_CHR, UID_SND, GID_SND, PERM_SND, "midi%r", dev->id_unit);     if (cookie) devfs_link(cookie, "midi");      cookie = devfs_add_devswf(&snd_cdevsw, (dev->id_unit<< 4) | SND_DEV_SYNTH, 	DV_CHR, UID_SND, GID_SND, PERM_SND, "sequencer%r", dev->id_unit);     if (cookie) devfs_link(cookie, "sequencer");
 endif|#
 directive|endif
 endif|#

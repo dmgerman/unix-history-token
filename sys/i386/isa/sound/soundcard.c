@@ -2209,7 +2209,7 @@ name|GID_SND
 argument_list|,
 name|PERM_SND
 argument_list|,
-literal|"sequencer%n"
+literal|"sequencer%r"
 argument_list|,
 name|dev
 operator|->
@@ -2278,7 +2278,7 @@ name|GID_SND
 argument_list|,
 name|PERM_SND
 argument_list|,
-literal|"midi%n"
+literal|"midi%r"
 argument_list|,
 name|dev
 operator|->
@@ -2324,7 +2324,7 @@ name|GID_SND
 argument_list|,
 name|PERM_SND
 argument_list|,
-literal|"dsp%n"
+literal|"dsp%r"
 argument_list|,
 name|dev
 operator|->
@@ -2367,7 +2367,7 @@ name|GID_SND
 argument_list|,
 name|PERM_SND
 argument_list|,
-literal|"dspW%n"
+literal|"dspW%r"
 argument_list|,
 name|dev
 operator|->
@@ -2410,7 +2410,7 @@ name|GID_SND
 argument_list|,
 name|PERM_SND
 argument_list|,
-literal|"audio%n"
+literal|"audio%r"
 argument_list|,
 name|dev
 operator|->
@@ -2453,7 +2453,7 @@ name|GID_SND
 argument_list|,
 name|PERM_SND
 argument_list|,
-literal|"mixer%n"
+literal|"mixer%r"
 argument_list|,
 name|dev
 operator|->
@@ -2496,7 +2496,7 @@ name|GID_SND
 argument_list|,
 name|PERM_SND
 argument_list|,
-literal|"sndstat%n"
+literal|"sndstat%r"
 argument_list|,
 name|dev
 operator|->
