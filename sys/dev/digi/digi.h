@@ -322,6 +322,25 @@ decl_stmt|;
 name|u_char
 name|send_ring
 decl_stmt|;
+name|unsigned
+name|laltpin
+range|:
+literal|1
+decl_stmt|;
+comment|/* Alternate pin settings locked */
+name|unsigned
+name|ialtpin
+range|:
+literal|1
+decl_stmt|;
+comment|/* Initial alternate pin settings */
+name|int
+name|cd
+decl_stmt|;
+comment|/* Depends on the altpin setting */
+name|int
+name|dsr
+decl_stmt|;
 block|}
 struct|;
 end_struct
