@@ -49,7 +49,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"acdDe:fghiIkl:LmopqrRst:v"
+literal|"acdDe:fgGhiIkl:LmopqrRst:vx"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,10 +62,10 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Boolean
-name|AllInstalled
+name|match_t
+name|MatchType
 init|=
-name|FALSE
+name|MATCH_GLOB
 decl_stmt|;
 end_decl_stmt
 
@@ -159,9 +159,9 @@ operator|==
 literal|1
 condition|)
 block|{
-name|AllInstalled
+name|MatchType
 operator|=
-name|TRUE
+name|MATCH_ALL
 expr_stmt|;
 name|Flags
 operator|=
@@ -196,9 +196,9 @@ block|{
 case|case
 literal|'a'
 case|:
-name|AllInstalled
+name|MatchType
 operator|=
-name|TRUE
+name|MATCH_ALL
 expr_stmt|;
 break|break;
 case|case
@@ -282,6 +282,14 @@ case|:
 name|Flags
 operator||=
 name|SHOW_CKSUM
+expr_stmt|;
+break|break;
+case|case
+literal|'G'
+case|:
+name|MatchType
+operator|=
+name|MATCH_EXACT
 expr_stmt|;
 break|break;
 case|case
@@ -376,6 +384,14 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'x'
+case|:
+name|MatchType
+operator|=
+name|MATCH_REGEX
+expr_stmt|;
+break|break;
+case|case
 literal|'e'
 case|:
 name|CheckPkg
@@ -425,6 +441,13 @@ operator|*
 name|argv
 condition|)
 block|{
+comment|/* Don't try to apply heuristics if arguments are regexs */
+if|if
+condition|(
+name|MatchType
+operator|!=
+name|MATCH_REGEX
+condition|)
 while|while
 condition|(
 operator|(
@@ -451,7 +474,7 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* 	     * If character after the '/' is alphanumeric, then we've found the 	     * package name.  Otherwise we've come across a trailing '/' and 	     * need to continue our quest. 	     */
+comment|/* 		 * If character after the '/' is alphanumeric or shell 		 * metachar, then we've found the package name.  Otherwise 		 * we've come across a trailing '/' and need to continue our 		 * quest. 		 */
 if|if
 condition|(
 name|isalpha
@@ -459,6 +482,24 @@ argument_list|(
 operator|*
 name|pkgs_split
 argument_list|)
+operator|||
+operator|(
+operator|(
+name|MatchType
+operator|==
+name|MATCH_GLOB
+operator|)
+operator|&&
+expr|\
+name|strpbrk
+argument_list|(
+name|pkgs_split
+argument_list|,
+literal|"*?[]"
+argument_list|)
+operator|!=
+name|NULL
+operator|)
 condition|)
 block|{
 operator|*
@@ -485,8 +526,9 @@ name|pkgs
 operator|==
 name|start
 operator|&&
-operator|!
-name|AllInstalled
+name|MatchType
+operator|!=
+name|MATCH_ALL
 operator|&&
 operator|!
 name|CheckPkg
