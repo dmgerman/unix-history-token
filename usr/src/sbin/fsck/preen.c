@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)preen.c	5.5 (Berkeley) %G%"
+literal|"@(#)preen.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -369,6 +369,8 @@ operator|->
 name|fs_file
 argument_list|,
 name|auxdata
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 return|return
@@ -1543,6 +1545,8 @@ argument_list|,
 name|pt
 operator|->
 name|auxdata
+argument_list|,
+literal|1
 argument_list|)
 argument_list|)
 expr_stmt|;

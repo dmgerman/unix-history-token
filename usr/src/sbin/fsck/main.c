@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.26 (Berkeley) %G%"
+literal|"@(#)main.c	5.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -403,6 +403,8 @@ operator|)
 literal|0
 argument_list|,
 literal|0L
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|exit
@@ -611,6 +613,8 @@ argument_list|,
 argument|mntpt
 argument_list|,
 argument|auxdata
+argument_list|,
+argument|child
 argument_list|)
 end_macro
 
@@ -647,6 +651,12 @@ name|zlncnt
 modifier|*
 name|zlnp
 decl_stmt|;
+if|if
+condition|(
+name|preen
+operator|&&
+name|child
+condition|)
 operator|(
 name|void
 operator|)
