@@ -20205,6 +20205,9 @@ goto|goto
 name|checkDBX
 goto|;
 case|case
+literal|0x8
+case|:
+case|case
 literal|0xb
 case|:
 name|bktr
