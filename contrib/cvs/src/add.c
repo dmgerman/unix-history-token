@@ -578,7 +578,6 @@ name|j
 control|)
 block|{
 comment|/* FIXME: Does this erroneously call Create_Admin in error 	       conditions which are only detected once the server gets its 	       hands on things?  */
-comment|/* FIXME-also: if filenames are case-insensitive on the 	       client, and the directory in the repository already 	       exists and is named "foo", and the command is "cvs add 	       FOO", this call to Create_Admin puts the wrong thing in 	       CVS/Repository and so a subsequent "cvs update" will 	       give an error.  The fix will be to have the server report 	       back what it actually did (e.g. use tagged text for the 	       "Directory %s added" message), and then Create_Admin, 	       which should also fix the error handling concerns.  */
 if|if
 condition|(
 name|isdir
@@ -2618,9 +2617,7 @@ name|options
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|err
-operator|)
 return|;
 block|}
 end_function
@@ -2723,9 +2720,7 @@ name|dir
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 if|if
@@ -2752,9 +2747,7 @@ name|CVSADM
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 comment|/* before we do anything else, see if we have any per-directory tags */
@@ -3420,9 +3413,7 @@ name|rcsdir
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 end_function
@@ -3495,9 +3486,7 @@ condition|(
 name|noexec
 condition|)
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 comment|/*      * The requested log is read directly from the user and stored in the      * file user,t.  If the "message" argument is set, use it as the      * initial creation log (which typically describes the file).      */
 name|fname
@@ -3644,9 +3633,7 @@ name|line
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 end_function

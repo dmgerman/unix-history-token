@@ -2266,7 +2266,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/* Under Windows NT, filenames are case-insensitive, and both / and \        are path component separators.  */
+comment|/* Under Windows, filenames are case-insensitive, and both / and \        are path component separators.  */
 end_comment
 
 begin_define
@@ -2322,7 +2322,7 @@ comment|/* ! WOE32 */
 end_comment
 
 begin_comment
-comment|/* As far as I know, both Cygwin and Macintosh OS X can make it here,    * but since the OS X fold just folds a-z into A-Z or visa-versa, I'm just    * using it for Cygwin too.  The var name below could probably use a    * rename.    *    * Under Mac OS X& Cygwin, filenames are case-insensitive.    */
+comment|/* As far as I know, just Macintosh OS X can make it here,    * but since the OS X fold just folds a-z into A-Z or visa-versa, I'm just    * allowing it to be used for any case insensitive system which we aren't    * yet making other specific folds or exceptions for (basically, anything    * case insensitive other than Windows, where \ and C:\ style absolute paths    * also need to be accounted for).    *    * Under Mac OS X, filenames are case-insensitive.    */
 end_comment
 
 begin_define

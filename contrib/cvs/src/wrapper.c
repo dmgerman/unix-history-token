@@ -739,6 +739,91 @@ comment|/* SERVER_SUPPORT || CLIENT_SUPPORT */
 end_comment
 
 begin_comment
+comment|/*  * Remove fmt str specifier other than %% or %s. And allow  * only max_s %s specifiers  */
+end_comment
+
+begin_macro
+name|wrap_clean_fmt_str
+argument_list|(
+argument|char *fmt
+argument_list|,
+argument|int max_s
+argument_list|)
+end_macro
+
+begin_block
+block|{
+while|while
+condition|(
+operator|*
+name|fmt
+condition|)
+block|{
+if|if
+condition|(
+name|fmt
+index|[
+literal|0
+index|]
+operator|==
+literal|'%'
+operator|&&
+name|fmt
+index|[
+literal|1
+index|]
+condition|)
+block|{
+if|if
+condition|(
+name|fmt
+index|[
+literal|1
+index|]
+operator|==
+literal|'%'
+condition|)
+name|fmt
+operator|++
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|fmt
+index|[
+literal|1
+index|]
+operator|==
+literal|'s'
+operator|&&
+name|max_s
+operator|>
+literal|0
+condition|)
+block|{
+name|max_s
+operator|--
+expr_stmt|;
+name|fmt
+operator|++
+expr_stmt|;
+block|}
+else|else
+operator|*
+name|fmt
+operator|=
+literal|' '
+expr_stmt|;
+block|}
+name|fmt
+operator|++
+expr_stmt|;
+block|}
+return|return;
+block|}
+end_block
+
+begin_comment
 comment|/*  * Open a file and read lines, feeding each line to a line parser. Arrange  * for keeping a temporary list of wrappers at the end, if the "temp"  * argument is set.  */
 end_comment
 
@@ -2098,7 +2183,15 @@ name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* FIXME: sprintf will blow up if the format string contains items other        than %s, or contains too many %s's.  We should instead be parsing        e->tocvsFilter ourselves and giving a real error.  */
+name|wrap_clean_fmt_str
+argument_list|(
+name|e
+operator|->
+name|tocvsFilter
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
 name|sprintf
 argument_list|(
 name|args
@@ -2238,7 +2331,15 @@ name|fileName
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* FIXME: sprintf will blow up if the format string contains items other        than %s, or contains too many %s's.  We should instead be parsing        e->fromcvsFilter ourselves and giving a real error.  */
+name|wrap_clean_fmt_str
+argument_list|(
+name|e
+operator|->
+name|fromcvsFilter
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|sprintf
 argument_list|(
 name|args
