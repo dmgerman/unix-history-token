@@ -855,31 +855,6 @@ end_struct
 
 begin_struct
 struct|struct
-name|sf_buf
-block|{
-name|SLIST_ENTRY
-argument_list|(
-argument|sf_buf
-argument_list|)
-name|free_list
-expr_stmt|;
-comment|/* list of free buffer slots */
-name|struct
-name|vm_page
-modifier|*
-name|m
-decl_stmt|;
-comment|/* currently mapped page */
-name|vm_offset_t
-name|kva
-decl_stmt|;
-comment|/* va of mapping */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
 name|accept_filter
 block|{
 name|char
@@ -1375,35 +1350,6 @@ name|struct
 name|sockbuf
 modifier|*
 name|sb
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|sf_buf
-modifier|*
-name|sf_buf_alloc
-parameter_list|(
-name|struct
-name|vm_page
-modifier|*
-name|m
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|sf_buf_free
-parameter_list|(
-name|void
-modifier|*
-name|addr
-parameter_list|,
-name|void
-modifier|*
-name|args
 parameter_list|)
 function_decl|;
 end_function_decl

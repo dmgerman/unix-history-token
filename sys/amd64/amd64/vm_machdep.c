@@ -110,7 +110,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/socketvar.h>
+file|<sys/sf_buf.h>
 end_include
 
 begin_include
@@ -1342,17 +1342,6 @@ operator|->
 name|m
 operator|=
 name|m
-expr_stmt|;
-name|sf
-operator|->
-name|kva
-operator|=
-name|PHYS_TO_DMAP
-argument_list|(
-name|m
-operator|->
-name|phys_addr
-argument_list|)
 expr_stmt|;
 block|}
 name|mtx_unlock

@@ -145,7 +145,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/socketvar.h>
+file|<sys/sf_buf.h>
 end_include
 
 begin_include

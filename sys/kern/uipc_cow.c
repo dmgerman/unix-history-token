@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sf_buf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/socketvar.h>
 end_include
 
@@ -231,9 +237,10 @@ name|args
 expr_stmt|;
 name|pp
 operator|=
+name|sf_buf_page
+argument_list|(
 name|sf
-operator|->
-name|m
+argument_list|)
 expr_stmt|;
 name|s
 operator|=
@@ -429,9 +436,10 @@ operator|=
 operator|(
 name|caddr_t
 operator|)
+name|sf_buf_kva
+argument_list|(
 name|sf
-operator|->
-name|kva
+argument_list|)
 expr_stmt|;
 name|m0
 operator|->
@@ -443,9 +451,10 @@ name|MEXTADD
 argument_list|(
 name|m0
 argument_list|,
+name|sf_buf_kva
+argument_list|(
 name|sf
-operator|->
-name|kva
+argument_list|)
 argument_list|,
 name|PAGE_SIZE
 argument_list|,
