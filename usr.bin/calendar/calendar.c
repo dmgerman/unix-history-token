@@ -208,7 +208,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"?-af:t:A:B:"
+literal|"-af:t:A:B:"
 argument_list|)
 operator|)
 operator|!=
