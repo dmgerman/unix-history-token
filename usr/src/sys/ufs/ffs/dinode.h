@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dinode.h	4.21	82/12/17	*/
+comment|/*	dinode.h	4.22	83/02/10	*/
 end_comment
 
 begin_comment
@@ -149,7 +149,7 @@ decl_stmt|;
 name|time_t
 name|ic_ctime
 decl_stmt|;
-comment|/* 32: time created */
+comment|/* 32: last time inode changed */
 name|long
 name|ic_ctspare
 decl_stmt|;
