@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	acct.h	6.1	83/07/29	*/
+comment|/*	acct.h	6.2	84/12/12	*/
 end_comment
 
 begin_comment
-comment|/*  * Accounting structures;  * these use a comp_t type which is a 3 bits base 8  * exponent, 13 bit fraction ``floating point'' number.  */
+comment|/*  * Accounting structures;  * these use a comp_t type which is a 3 bits base 8  * exponent, 13 bit fraction ``floating point'' number.  * Units are 1/AHZ seconds.  */
 end_comment
 
 begin_typedef
@@ -123,6 +123,17 @@ end_define
 begin_comment
 comment|/* killed by a signal */
 end_comment
+
+begin_comment
+comment|/*  * 1/AHZ is the granularity of the data encoded in the various  * comp_t fields.  This is not necessarily equal to hz.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AHZ
+value|64
+end_define
 
 begin_ifdef
 ifdef|#
