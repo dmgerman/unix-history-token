@@ -3619,6 +3619,27 @@ operator|&=
 operator|~
 name|DMA_ACTIVE
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|isa_dmadone
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|audio_devs
+index|[
+name|dev
+index|]
+operator|->
+name|dmachan
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|dmap
@@ -3849,6 +3870,27 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* SVR42 */
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|isa_dmadone
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|audio_devs
+index|[
+name|dev
+index|]
+operator|->
+name|dmachan
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|dmap
@@ -4131,13 +4173,13 @@ name|name
 argument_list|)
 condition|)
 block|{
-name|printk
-argument_list|(
-literal|"Unable to grab DMA%d for the audio driver\n"
-argument_list|,
-name|chan
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+comment|/* Enough already!  This error is reported twice elsewhere */
+block|printk ("Unable to grab DMA%d for the audio driver\n", chan);
+endif|#
+directive|endif
 return|return
 name|RET_ERROR
 argument_list|(
@@ -4214,34 +4256,7 @@ parameter_list|(
 name|int
 name|dev
 parameter_list|)
-block|{
-name|int
-name|chan
-init|=
-name|audio_devs
-index|[
-name|dev
-index|]
-operator|->
-name|dmachan
-decl_stmt|;
-if|#
-directive|if
-literal|0
-block|disable_dma (chan);
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-name|isa_dmadone_nobounce
-argument_list|(
-name|chan
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-block|}
+block|{ }
 end_function
 
 begin_ifdef

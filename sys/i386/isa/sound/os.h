@@ -805,7 +805,7 @@ name|chn
 parameter_list|,
 name|deviceID
 parameter_list|)
-value|({0; } )
+value|(isa_dma_acquire(chn))
 end_define
 
 begin_define
@@ -815,7 +815,7 @@ name|RELEASE_DMA_CHN
 parameter_list|(
 name|chn
 parameter_list|)
-value|({ 0; })
+value|(isa_dma_release(chn))
 end_define
 
 begin_define
