@@ -1074,7 +1074,7 @@ literal|0
 operator|&&
 operator|*
 operator|(
-name|u_int
+name|off_t
 operator|*
 operator|)
 name|data
