@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	types.h	4.7	82/10/20	*/
+comment|/*	types.h	4.8	82/10/31	*/
 end_comment
 
 begin_comment
@@ -83,13 +83,11 @@ name|u_long
 typedef|;
 end_typedef
 
-begin_comment
-comment|/* SHOULD USE long RATHER THAN int HERE BUT IT WOULD GIVE LINT ON THE KERNEL */
-end_comment
-
-begin_comment
-comment|/* GASTRIC DISTRESS AND DON'T HAVE TIME TO FIX THAT JUST NOW */
-end_comment
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|vax
+end_ifdef
 
 begin_typedef
 typedef|typedef
@@ -107,6 +105,87 @@ typedef|*
 name|physadr
 typedef|;
 end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|label_t
+block|{
+name|int
+name|val
+index|[
+literal|14
+index|]
+decl_stmt|;
+block|}
+name|label_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|sun
+end_ifdef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_physadr
+block|{
+name|short
+name|r
+index|[
+literal|1
+index|]
+decl_stmt|;
+block|}
+typedef|*
+name|physadr
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|label_t
+block|{
+name|int
+name|val
+index|[
+literal|13
+index|]
+decl_stmt|;
+block|}
+name|label_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|quad
+block|{
+name|long
+name|val
+index|[
+literal|2
+index|]
+decl_stmt|;
+block|}
+name|quad
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
@@ -148,22 +227,6 @@ begin_typedef
 typedef|typedef
 name|int
 name|time_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|label_t
-block|{
-name|int
-name|val
-index|[
-literal|14
-index|]
-decl_stmt|;
-block|}
-name|label_t
 typedef|;
 end_typedef
 
