@@ -1160,9 +1160,10 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|ieee80211_unref_node
+name|ieee80211_free_node
 argument_list|(
-operator|&
+name|ic
+argument_list|,
 name|ni
 argument_list|)
 expr_stmt|;
