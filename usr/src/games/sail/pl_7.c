@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pl_7.c	5.9 (Berkeley) %G%"
+literal|"@(#)pl_7.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -190,27 +190,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SIGTSTP
-block|{
-name|void
-name|susp
-parameter_list|()
-function_decl|;
-operator|(
-name|void
-operator|)
-name|signal
-argument_list|(
-name|SIGTSTP
-argument_list|,
-name|susp
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 name|noecho
 argument_list|()
 expr_stmt|;
