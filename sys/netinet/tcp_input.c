@@ -10570,6 +10570,9 @@ name|min_protoh
 expr_stmt|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|INET6
 if|if
 condition|(
 name|isipv6
@@ -10596,8 +10599,9 @@ name|tcp_v6mssdflt
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
+elseif|else
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!
@@ -10617,7 +10621,6 @@ argument_list|,
 name|tcp_mssdflt
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|mss
 operator|=
