@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_proc.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_proc.c	7.3 (Berkeley) 10/18/88  */
 end_comment
 
 begin_include
@@ -548,6 +548,11 @@ name|proc
 modifier|*
 name|cp
 decl_stmt|;
+name|struct
+name|pgrp
+modifier|*
+name|opgrp
+decl_stmt|;
 specifier|register
 name|n
 expr_stmt|;
@@ -560,9 +565,7 @@ condition|)
 comment|/* firewalls */
 name|panic
 argument_list|(
-literal|"pgmv: setsid into non-empty pgrp %d\n"
-argument_list|,
-name|pgid
+literal|"pgmv: setsid into non-empty pgrp"
 argument_list|)
 expr_stmt|;
 if|if
@@ -574,13 +577,14 @@ argument_list|)
 condition|)
 name|panic
 argument_list|(
-literal|"pgmv: session leader attempted setpgrp\n"
+literal|"pgmv: session leader attempted setpgrp"
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|pgrp
+operator|==
+name|NULL
 condition|)
 block|{
 comment|/* 		 * new process group 		 */
@@ -594,7 +598,7 @@ name|pgid
 condition|)
 name|panic
 argument_list|(
-literal|"pgmv: new pgrp and pid != pgid\n"
+literal|"pgmv: new pgrp and pid != pgid"
 argument_list|)
 expr_stmt|;
 name|MALLOC
@@ -682,7 +686,7 @@ name|u
 operator|.
 name|u_ttyp
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|u
 operator|.
@@ -832,7 +836,7 @@ goto|;
 block|}
 name|panic
 argument_list|(
-literal|"pgmv: can't find p on old pgrp\n"
+literal|"pgmv: can't find p on old pgrp"
 argument_list|)
 expr_stmt|;
 name|done
@@ -851,6 +855,12 @@ operator|->
 name|pg_mem
 operator|=
 name|p
+expr_stmt|;
+name|opgrp
+operator|=
+name|p
+operator|->
+name|p_pgrp
 expr_stmt|;
 name|p
 operator|->
@@ -907,17 +917,13 @@ comment|/* 	 * old pgrp empty? 	 */
 if|if
 condition|(
 operator|!
-name|p
-operator|->
-name|p_pgrp
+name|opgrp
 operator|->
 name|pg_mem
 condition|)
 name|pgdelete
 argument_list|(
-name|p
-operator|->
-name|p_pgrp
+name|opgrp
 argument_list|)
 expr_stmt|;
 block|}
@@ -999,7 +1005,7 @@ goto|;
 block|}
 name|panic
 argument_list|(
-literal|"pgrm: can't find p in pgrp\n"
+literal|"pgrm: can't find p in pgrp"
 argument_list|)
 expr_stmt|;
 name|done
@@ -1103,7 +1109,7 @@ goto|;
 block|}
 name|panic
 argument_list|(
-literal|"pgdelete: can't find pgrp on hash chain\n"
+literal|"pgdelete: can't find pgrp on hash chain"
 argument_list|)
 expr_stmt|;
 name|done
