@@ -1837,7 +1837,7 @@ name|n_flag
 operator|&
 name|NOPEN
 operator|)
-operator|!=
+operator|==
 literal|0
 operator|||
 operator|!
