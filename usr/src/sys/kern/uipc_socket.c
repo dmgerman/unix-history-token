@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket.c	4.66	82/12/14	*/
+comment|/*	uipc_socket.c	4.67	83/01/04	*/
 end_comment
 
 begin_include
@@ -312,12 +312,7 @@ operator|*
 operator|)
 literal|0
 argument_list|,
-operator|(
-expr|struct
-name|socketopt
-operator|*
-operator|)
-literal|0
+name|opt
 argument_list|)
 expr_stmt|;
 if|if
@@ -566,17 +561,20 @@ name|backlog
 operator|=
 literal|0
 expr_stmt|;
+define|#
+directive|define
+name|SOMAXCONN
+value|5
 name|so
 operator|->
 name|so_qlimit
 operator|=
+name|MIN
+argument_list|(
 name|backlog
-operator|<
-literal|5
-condition|?
-name|backlog
-else|:
-literal|5
+argument_list|,
+name|SOMAXCONN
+argument_list|)
 expr_stmt|;
 name|so
 operator|->
@@ -2139,6 +2137,17 @@ argument_list|,
 name|MT_DATA
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENOBUFS
+operator|)
+return|;
 name|error
 operator|=
 call|(
@@ -2175,19 +2184,17 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|bad
+goto|;
+do|do
+block|{
 name|len
 operator|=
 name|uio
 operator|->
 name|uio_resid
 expr_stmt|;
-do|do
-block|{
 if|if
 condition|(
 name|len
@@ -2244,6 +2251,8 @@ operator|&&
 name|m
 condition|)
 do|;
+name|bad
+label|:
 if|if
 condition|(
 name|m
@@ -2273,16 +2282,6 @@ name|s
 operator|=
 name|splnet
 argument_list|()
-expr_stmt|;
-name|SBCHECK
-argument_list|(
-operator|&
-name|so
-operator|->
-name|so_rcv
-argument_list|,
-literal|"soreceive restart"
-argument_list|)
 expr_stmt|;
 define|#
 directive|define
@@ -2439,16 +2438,6 @@ argument_list|(
 literal|"receive"
 argument_list|)
 expr_stmt|;
-name|SBCHECK
-argument_list|(
-operator|&
-name|so
-operator|->
-name|so_snd
-argument_list|,
-literal|"soreceive havecc"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|so
@@ -2501,6 +2490,7 @@ name|flags
 operator|&
 name|SOF_PREVIEW
 condition|)
+block|{
 operator|*
 name|aname
 operator|=
@@ -2515,6 +2505,19 @@ operator|->
 name|m_len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|aname
+operator|==
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"receive 2"
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 operator|*
 name|aname
@@ -2566,7 +2569,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"receive 2"
+literal|"receive 3"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2586,16 +2589,6 @@ operator|.
 name|sb_mb
 operator|=
 name|m
-expr_stmt|;
-name|SBCHECK
-argument_list|(
-operator|&
-name|so
-operator|->
-name|so_snd
-argument_list|,
-literal|"soreceive afteraddr"
-argument_list|)
 expr_stmt|;
 block|}
 name|eor
@@ -2860,16 +2853,6 @@ literal|0
 condition|)
 break|break;
 block|}
-name|SBCHECK
-argument_list|(
-operator|&
-name|so
-operator|->
-name|so_snd
-argument_list|,
-literal|"soreceive rcvloop"
-argument_list|)
-expr_stmt|;
 block|}
 do|while
 condition|(
@@ -2918,7 +2901,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"receive 3"
+literal|"receive 4"
 argument_list|)
 expr_stmt|;
 name|sbfree
@@ -2960,16 +2943,6 @@ expr_stmt|;
 name|m
 operator|=
 name|n
-expr_stmt|;
-name|SBCHECK
-argument_list|(
-operator|&
-name|so
-operator|->
-name|so_snd
-argument_list|,
-literal|"soreceive atomicloop"
-argument_list|)
 expr_stmt|;
 block|}
 do|while
@@ -3486,7 +3459,6 @@ operator|.
 name|u_error
 operator|)
 return|;
-comment|/* XXX */
 return|return
 operator|(
 name|rtrequest
@@ -3509,6 +3481,7 @@ operator|(
 name|ENOTTY
 operator|)
 return|;
+comment|/* XXX */
 block|}
 return|return
 operator|(

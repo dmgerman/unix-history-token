@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_usrreq.c	1.5	82/12/14	*/
+comment|/*	uipc_usrreq.c	1.6	83/01/04	*/
 end_comment
 
 begin_include
@@ -323,10 +323,10 @@ argument_list|(
 literal|"uipc 1"
 argument_list|)
 expr_stmt|;
+comment|/*NOTREACHED*/
 case|case
 name|SOCK_STREAM
 case|:
-block|{
 define|#
 directive|define
 name|rcv
@@ -404,7 +404,6 @@ name|snd
 undef|#
 directive|undef
 name|rcv
-block|}
 break|break;
 default|default:
 name|panic
@@ -759,9 +758,11 @@ if|if
 condition|(
 name|error
 condition|)
-goto|goto
-name|bad
-goto|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 name|m
 operator|=
 name|m_getclr
@@ -775,17 +776,13 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
-block|{
-name|error
-operator|=
+return|return
+operator|(
 name|ENOBUFS
-expr_stmt|;
-goto|goto
-name|bad
-goto|;
-block|}
+operator|)
+return|;
 name|unp
 operator|=
 name|mtod
@@ -815,13 +812,6 @@ expr_stmt|;
 return|return
 operator|(
 literal|0
-operator|)
-return|;
-name|bad
-label|:
-return|return
-operator|(
-name|error
 operator|)
 return|;
 block|}
@@ -1043,7 +1033,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|EEXIST
+name|EADDRINUSE
 operator|)
 return|;
 block|}
@@ -1255,9 +1245,10 @@ literal|0
 expr_stmt|;
 return|return
 operator|(
-name|ENOENT
+name|error
 operator|)
 return|;
+comment|/* XXX */
 block|}
 if|if
 condition|(

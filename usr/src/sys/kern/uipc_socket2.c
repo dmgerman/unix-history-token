@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_socket2.c	4.32	82/12/14	*/
+comment|/*	uipc_socket2.c	4.33	83/01/04	*/
 end_comment
 
 begin_include
@@ -429,7 +429,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 goto|goto
 name|bad
@@ -528,10 +528,25 @@ name|so
 argument_list|,
 name|PRU_ATTACH
 argument_list|,
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|)
 literal|0
 argument_list|,
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|)
 literal|0
 argument_list|,
+operator|(
+expr|struct
+name|sockopt
+operator|*
+operator|)
 literal|0
 argument_list|)
 condition|)
@@ -1313,6 +1328,7 @@ name|sb_hiwat
 operator|=
 name|cc
 expr_stmt|;
+comment|/* the 2 implies names can be no more than 1 mbuf each */
 name|sb
 operator|->
 name|sb_mbmax
@@ -1408,100 +1424,6 @@ name|mbuf
 modifier|*
 name|n
 decl_stmt|;
-name|SBCHECK
-argument_list|(
-name|sb
-argument_list|,
-literal|"sbappend begin"
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
-block|{
-name|struct
-name|mbuf
-modifier|*
-name|p
-decl_stmt|;
-name|printf
-argument_list|(
-literal|"sba: "
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|p
-operator|=
-name|sb
-operator|->
-name|sb_mb
-init|;
-name|p
-condition|;
-name|p
-operator|=
-name|p
-operator|->
-name|m_next
-control|)
-name|printf
-argument_list|(
-literal|"%x:(%x,%d) "
-argument_list|,
-name|p
-argument_list|,
-name|p
-operator|->
-name|m_off
-argument_list|,
-name|p
-operator|->
-name|m_len
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"+= "
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|p
-operator|=
-name|m
-init|;
-name|p
-condition|;
-name|p
-operator|=
-name|p
-operator|->
-name|m_next
-control|)
-name|printf
-argument_list|(
-literal|"%x:(%x,%d) "
-argument_list|,
-name|p
-argument_list|,
-name|p
-operator|->
-name|m_off
-argument_list|,
-name|p
-operator|->
-name|m_len
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 name|n
 operator|=
 name|sb
@@ -1703,100 +1625,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|notdef
-block|{
-name|struct
-name|mbuf
-modifier|*
-name|p
-decl_stmt|;
-name|printf
-argument_list|(
-literal|"res: "
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|p
-operator|=
-name|sb
-operator|->
-name|sb_mb
-init|;
-name|p
-condition|;
-name|p
-operator|=
-name|p
-operator|->
-name|m_next
-control|)
-name|printf
-argument_list|(
-literal|"%x:(%x,%d) "
-argument_list|,
-name|p
-argument_list|,
-name|p
-operator|->
-name|m_off
-argument_list|,
-name|p
-operator|->
-name|m_len
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"+= "
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|p
-operator|=
-name|m
-init|;
-name|p
-condition|;
-name|p
-operator|=
-name|p
-operator|->
-name|m_next
-control|)
-name|printf
-argument_list|(
-literal|"%x:(%x,%d) "
-argument_list|,
-name|p
-argument_list|,
-name|p
-operator|->
-name|m_off
-argument_list|,
-name|p
-operator|->
-name|m_len
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-name|SBCHECK
-argument_list|(
-name|sb
-argument_list|,
-literal|"sbappend end"
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 
@@ -1862,13 +1690,6 @@ expr|struct
 name|sockaddr
 argument_list|)
 decl_stmt|;
-name|SBCHECK
-argument_list|(
-name|sb
-argument_list|,
-literal|"sbappendaddr begin"
-argument_list|)
-expr_stmt|;
 name|m
 operator|=
 name|m0
@@ -2011,13 +1832,6 @@ argument_list|,
 name|m0
 argument_list|)
 expr_stmt|;
-name|SBCHECK
-argument_list|(
-name|sb
-argument_list|,
-literal|"sbappendaddr end"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -2025,6 +1839,12 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
 
 begin_macro
 name|SBCHECK
@@ -2138,6 +1958,11 @@ expr_stmt|;
 block|}
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Free all mbufs on a sockbuf mbuf chain.  * Check that resource allocations return to 0.  */
