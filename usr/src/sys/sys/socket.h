@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	socket.h	6.3	84/09/01	*/
+comment|/*	socket.h	6.4	84/09/04	*/
 end_comment
 
 begin_comment
@@ -159,57 +159,39 @@ comment|/* linger on close if data present */
 end_comment
 
 begin_comment
-comment|/*  * Pseudo flags for disabling options.  */
+comment|/*  * Structure used for manipulating linger option.  */
+end_comment
+
+begin_struct
+struct|struct
+name|linger
+block|{
+name|int
+name|l_onoff
+decl_stmt|;
+comment|/* option on/off */
+name|int
+name|l_linger
+decl_stmt|;
+comment|/* linger time */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Level number for (get/set)sockopt() to apply to socket itself.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SO_DONTDEBUG
-value|(~SO_DEBUG)
+name|SOL_SOCKET
+value|0xffff
 end_define
 
-begin_define
-define|#
-directive|define
-name|SO_DONTREUSEADDR
-value|(~SO_REUSEADDR)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SO_DONTKEEPALIVE
-value|(~SO_KEEPALIVE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SO_ROUTE
-value|(~SO_DONTROUTE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SO_DONTBROADCAST
-value|(~SO_BROADCAST)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SO_DONTUSELOOPBACK
-value|(~SO_USELOOPBACK)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SO_DONTLINGER
-value|(~SO_LINGER)
-end_define
+begin_comment
+comment|/* options for socket level */
+end_comment
 
 begin_comment
 comment|/*  * Address families.  */
@@ -491,21 +473,6 @@ directive|define
 name|PF_MAX
 value|12
 end_define
-
-begin_comment
-comment|/*  * Level number for (get/set)sockopt() to apply to socket itself.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SOL_SOCKET
-value|0xffff
-end_define
-
-begin_comment
-comment|/* options for socket level */
-end_comment
 
 begin_comment
 comment|/*  * Maximum queue length specifiable by listen.  */
