@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"@(#)$Id: io.c,v 1.3 1993/12/14 16:19:56 alm Exp $"
+literal|"@(#)io.c,v 1.1 1994/02/01 00:34:41 alm Exp"
 decl_stmt|;
 end_decl_stmt
 
