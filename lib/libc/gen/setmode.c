@@ -93,6 +93,12 @@ directive|include
 file|<stdlib.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -257,6 +263,7 @@ name|bbox
 parameter_list|,
 name|omode
 parameter_list|)
+specifier|const
 name|void
 modifier|*
 name|bbox
@@ -265,6 +272,7 @@ name|mode_t
 name|omode
 decl_stmt|;
 block|{
+specifier|const
 name|BITCMD
 modifier|*
 name|set
@@ -279,6 +287,7 @@ decl_stmt|;
 name|set
 operator|=
 operator|(
+specifier|const
 name|BITCMD
 operator|*
 operator|)
@@ -611,6 +620,7 @@ name|setmode
 parameter_list|(
 name|p
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|p
@@ -1478,6 +1488,9 @@ name|set
 operator|->
 name|bits
 operator|=
+operator|(
+name|mode_t
+operator|)
 operator|~
 literal|0
 expr_stmt|;
