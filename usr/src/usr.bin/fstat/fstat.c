@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fstat.c	5.40 (Berkeley) %G%"
+literal|"@(#)fstat.c	5.41 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -142,22 +142,10 @@ directive|define
 name|KERNEL
 end_define
 
-begin_define
-define|#
-directive|define
-name|NFS
-end_define
-
 begin_include
 include|#
 directive|include
 file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mount.h>
 end_include
 
 begin_include
@@ -170,6 +158,24 @@ begin_include
 include|#
 directive|include
 file|<ufs/ufs/inode.h>
+end_include
+
+begin_undef
+undef|#
+directive|undef
+name|KERNEL
+end_undef
+
+begin_define
+define|#
+directive|define
+name|NFS
+end_define
+
+begin_include
+include|#
+directive|include
+file|<sys/mount.h>
 end_include
 
 begin_include
@@ -199,7 +205,7 @@ end_include
 begin_undef
 undef|#
 directive|undef
-name|KERNEL
+name|NFS
 end_undef
 
 begin_include
