@@ -777,6 +777,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_SII3112_1
+value|0x02401095
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_CMD646
 value|0x06461095
 end_define
