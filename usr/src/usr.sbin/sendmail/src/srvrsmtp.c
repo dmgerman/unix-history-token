@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.59 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.60 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.59 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.60 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3157,6 +3157,38 @@ argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
+if|if
+condition|(
+operator|!
+name|xtextok
+argument_list|(
+name|vp
+argument_list|)
+condition|)
+block|{
+name|usrerr
+argument_list|(
+literal|"501 Syntax error in ENVID parameter value"
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
+if|if
+condition|(
+name|e
+operator|->
+name|e_envid
+operator|!=
+name|NULL
+condition|)
+block|{
+name|usrerr
+argument_list|(
+literal|"501 Duplicate ENVID parameter"
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
 name|e
 operator|->
 name|e_envid
@@ -3190,6 +3222,25 @@ block|{
 name|usrerr
 argument_list|(
 literal|"501 RET requires a value"
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|EF_RET_PARAM
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+condition|)
+block|{
+name|usrerr
+argument_list|(
+literal|"501 Duplicate RET parameter"
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
@@ -3484,6 +3535,38 @@ block|{
 name|usrerr
 argument_list|(
 literal|"501 ORCPT requires a value"
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
+if|if
+condition|(
+operator|!
+name|xtextok
+argument_list|(
+name|vp
+argument_list|)
+condition|)
+block|{
+name|usrerr
+argument_list|(
+literal|"501 Syntax error in ORCPT parameter value"
+argument_list|)
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
+if|if
+condition|(
+name|a
+operator|->
+name|q_orcpt
+operator|!=
+name|NULL
+condition|)
+block|{
+name|usrerr
+argument_list|(
+literal|"501 Duplicate ORCPT parameter"
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
