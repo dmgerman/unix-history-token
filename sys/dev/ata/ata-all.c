@@ -2784,7 +2784,6 @@ name|ATA_WAIT_INTR
 argument_list|)
 condition|)
 block|{
-comment|/* XXX */
 name|ata_prtdev
 argument_list|(
 name|atadev

@@ -45,12 +45,12 @@ block|{
 name|struct
 name|resource
 modifier|*
-name|r_bmio
+name|r_io1
 decl_stmt|;
 name|struct
 name|resource
 modifier|*
-name|r_mem
+name|r_io2
 decl_stmt|;
 name|struct
 name|resource
