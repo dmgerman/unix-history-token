@@ -302,12 +302,12 @@ begin_decl_stmt
 name|int
 name|modem_control
 init|=
-literal|0
+name|HUPCL
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* non-zero iff we watch carrier. */
+comment|/* !CLOCAL+HUPCL iff we	watch carrier. */
 end_comment
 
 begin_decl_stmt
@@ -575,9 +575,10 @@ case|case
 literal|'l'
 case|:
 name|modem_control
-operator||=
+operator|=
 name|CLOCAL
 expr_stmt|;
+comment|/* clear HUPCL too */
 break|break;
 case|case
 literal|'n'
@@ -1805,11 +1806,16 @@ argument_list|,
 name|redial_cmd
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|system
 argument_list|(
 name|redial_cmd
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|again
+goto|;
 comment|/* Now check again for carrier (dial command is done): */
 if|if
 condition|(
