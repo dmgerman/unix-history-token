@@ -332,6 +332,42 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|DEC_KN300
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|dec_kn300_init
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|dec_kn300_init
+value|platform_not_configured
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|AVALON_A12
 end_ifdef
 
@@ -630,9 +666,11 @@ literal|"ST_ALPHABOOK1"
 argument_list|)
 block|,
 comment|/* 21: ST_ALPHABOOK1 */
-name|cpu_notsupp
+name|cpu_init
 argument_list|(
-literal|"ST_DEC_4100"
+name|dec_kn300_init
+argument_list|,
+literal|"DEC_KN300"
 argument_list|)
 block|,
 comment|/* 22: ST_DEC_4100 */
