@@ -213,6 +213,21 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
+name|spec_kqfilter
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_kqfilter_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|spec_open
 name|__P
 argument_list|(
@@ -234,21 +249,6 @@ argument_list|(
 operator|(
 expr|struct
 name|vop_poll_args
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|spec_kqfilter
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|vop_kqfilter_args
 operator|*
 operator|)
 argument_list|)
@@ -454,6 +454,17 @@ block|}
 block|,
 block|{
 operator|&
+name|vop_kqfilter_desc
+block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
+name|spec_kqfilter
+block|}
+block|,
+block|{
+operator|&
 name|vop_lease_desc
 block|,
 operator|(
@@ -527,17 +538,6 @@ name|vop_t
 operator|*
 operator|)
 name|spec_poll
-block|}
-block|,
-block|{
-operator|&
-name|vop_kqfilter_desc
-block|,
-operator|(
-name|vop_t
-operator|*
-operator|)
-name|spec_kqfilter
 block|}
 block|,
 block|{
@@ -832,9 +832,11 @@ operator|==
 name|VBLK
 condition|)
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
-comment|/* 	 * Don't allow open if fs is mounted -nodev. 	 */
+comment|/* Don't allow open if fs is mounted -nodev. */
 if|if
 condition|(
 name|vp
@@ -865,30 +867,29 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|dsw
 operator|==
 name|NULL
-operator|)
 operator|||
-operator|(
 name|dsw
 operator|->
 name|d_open
 operator|==
 name|NULL
-operator|)
 condition|)
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
-comment|/* Make this field valid before any I/O in ->d_open */
+comment|/* Make this field valid before any I/O in d_open. */
 if|if
 condition|(
-operator|!
 name|dev
 operator|->
 name|si_iosize_max
+operator|==
+literal|0
 condition|)
 name|dev
 operator|->
@@ -896,7 +897,7 @@ name|si_iosize_max
 operator|=
 name|DFLTPHYS
 expr_stmt|;
-comment|/* 	 * XXX: Disks get special billing here, but it is mostly wrong. 	 * XXX: diskpartitions can overlap and the real checks should 	 * XXX: take this into account, and consequently they need to 	 * XXX: live in the diskslicing code.  Some checks do. 	 */
+comment|/* 	 * XXX: Disks get special billing here, but it is mostly wrong. 	 * XXX: Disk partitions can overlap and the real checks should 	 * XXX: take this into account, and consequently they need to 	 * XXX: live in the disk slice code.  Some checks do. 	 */
 if|if
 condition|(
 name|vn_isdisk
@@ -921,7 +922,7 @@ name|FWRITE
 operator|)
 condition|)
 block|{
-comment|/* 		 * Never allow opens for write if the device is mounted R/W 		 */
+comment|/* 		 * Never allow opens for write if the disk is mounted R/W. 		 */
 if|if
 condition|(
 name|vp
@@ -950,15 +951,7 @@ operator|(
 name|EBUSY
 operator|)
 return|;
-comment|/* 		 * When running in secure mode, do not allow opens 		 * for writing if the device is mounted 		 */
-if|if
-condition|(
-name|vfs_mountedon
-argument_list|(
-name|vp
-argument_list|)
-condition|)
-block|{
+comment|/* 		 * When running in secure mode, do not allow opens 		 * for writing if the disk is mounted. 		 */
 name|error
 operator|=
 name|securelevel_ge
@@ -975,14 +968,18 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|&&
+name|vfs_mountedon
+argument_list|(
+name|vp
+argument_list|)
 condition|)
 return|return
 operator|(
 name|error
 operator|)
 return|;
-block|}
-comment|/* 		 * When running in very secure mode, do not allow 		 * opens for writing of any devices. 		 */
+comment|/* 		 * When running in very secure mode, do not allow 		 * opens for writing of any disks. 		 */
 name|error
 operator|=
 name|securelevel_ge
@@ -1006,7 +1003,7 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* XXX: Special casing of ttys for deadfs.  Probably redundant */
+comment|/* XXX: Special casing of ttys for deadfs.  Probably redundant. */
 if|if
 condition|(
 name|dsw
@@ -1358,7 +1355,7 @@ operator|!=
 literal|0
 operator|)
 condition|)
-name|getnanotime
+name|vfs_timestamp
 argument_list|(
 operator|&
 name|dev
@@ -1509,7 +1506,7 @@ literal|0
 operator|)
 condition|)
 block|{
-name|getnanotime
+name|vfs_timestamp
 argument_list|(
 operator|&
 name|dev
@@ -1789,7 +1786,7 @@ operator|)
 return|;
 name|loop1
 label|:
-comment|/* 	 * MARK/SCAN initialization to avoid infinite loops 	 */
+comment|/* 	 * MARK/SCAN initialization to avoid infinite loops. 	 */
 name|s
 operator|=
 name|splbio
@@ -1838,6 +1835,8 @@ name|v_dirtyblkhd
 argument_list|)
 init|;
 name|bp
+operator|!=
+name|NULL
 condition|;
 name|bp
 operator|=
@@ -2105,13 +2104,11 @@ name|a_vp
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|bp
 operator|->
 name|b_iocmd
 operator|==
 name|BIO_WRITE
-operator|)
 condition|)
 block|{
 if|if
@@ -2769,7 +2766,7 @@ operator|&
 name|VXLOCK
 condition|)
 block|{
-comment|/* Forced close */
+comment|/* Forced close. */
 block|}
 elseif|else
 if|if
@@ -2784,7 +2781,7 @@ operator|&
 name|D_TRACKCLOSE
 condition|)
 block|{
-comment|/* Keep device updated on status */
+comment|/* Keep device updated on status. */
 block|}
 elseif|else
 if|if
@@ -3013,7 +3010,7 @@ argument_list|)
 operator|/
 name|PAGE_SIZE
 expr_stmt|;
-comment|/* 	 * Calculate the offset of the transfer and do sanity check. 	 * FreeBSD currently only supports an 8 TB range due to b_blkno 	 * being in DEV_BSIZE ( usually 512 ) byte chunks on call to 	 * VOP_STRATEGY.  XXX 	 */
+comment|/* 	 * Calculate the offset of the transfer and do a sanity check. 	 * FreeBSD currently only supports an 8 TB range due to b_blkno 	 * being in DEV_BSIZE ( usually 512 ) byte chunks on call to 	 * VOP_STRATEGY.  XXX 	 */
 name|offset
 operator|=
 name|IDX_TO_OFF
