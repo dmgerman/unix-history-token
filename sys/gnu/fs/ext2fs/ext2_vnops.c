@@ -315,6 +315,17 @@ block|}
 block|,
 block|{
 operator|&
+name|vop_lookup_desc
+block|,
+operator|(
+name|vop_t
+operator|*
+operator|)
+name|vfs_cache_lookup
+block|}
+block|,
+block|{
+operator|&
 name|vop_read_desc
 block|,
 operator|(
