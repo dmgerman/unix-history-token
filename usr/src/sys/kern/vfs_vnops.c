@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_vnops.c	4.1	%G%	*/
+comment|/*	vfs_vnops.c	4.2	%G%	*/
 end_comment
 
 begin_include
@@ -173,11 +173,6 @@ name|cfunc
 function_decl|)
 parameter_list|()
 function_decl|;
-name|struct
-name|chan
-modifier|*
-name|cp
-decl_stmt|;
 if|if
 condition|(
 name|fp
@@ -212,14 +207,6 @@ operator|=
 name|fp
 operator|->
 name|f_flag
-expr_stmt|;
-name|cp
-operator|=
-name|fp
-operator|->
-name|f_un
-operator|.
-name|f_chan
 expr_stmt|;
 name|dev
 operator|=
@@ -413,7 +400,7 @@ name|dev
 argument_list|,
 name|flag
 argument_list|,
-name|cp
+name|fp
 argument_list|)
 expr_stmt|;
 block|}
