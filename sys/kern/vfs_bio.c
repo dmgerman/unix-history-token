@@ -7193,6 +7193,17 @@ name|b_flags
 operator||=
 name|B_DEFERRED
 expr_stmt|;
+name|bp
+operator|=
+name|TAILQ_FIRST
+argument_list|(
+operator|&
+name|bufqueues
+index|[
+name|QUEUE_DIRTY
+index|]
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
 name|vfs_bio_awrite
