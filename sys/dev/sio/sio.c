@@ -274,18 +274,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|MINOR_MAGIC_MASK
-value|(CALLOUT_MASK | CONTROL_MASK)
+name|MINOR_TO_UNIT
+parameter_list|(
+name|mynor
+parameter_list|)
+value|((((mynor)& ~0xffffU)>> (8 + 3)) \ 				 | ((mynor)& 0x1f))
 end_define
 
 begin_define
 define|#
 directive|define
-name|MINOR_TO_UNIT
+name|UNIT_TO_MINOR
 parameter_list|(
-name|mynor
+name|unit
 parameter_list|)
-value|((mynor)& ~MINOR_MAGIC_MASK)
+value|((((unit)& ~0x1fU)<< (8 + 3)) \ 				 | ((unit)& 0x1f))
 end_define
 
 begin_ifdef
@@ -3682,6 +3685,9 @@ name|Port_t
 name|iobase
 decl_stmt|;
 name|int
+name|minorbase
+decl_stmt|;
+name|int
 name|unit
 decl_stmt|;
 name|u_int
@@ -4810,6 +4816,13 @@ name|sio_slow_ih
 argument_list|)
 expr_stmt|;
 block|}
+name|minorbase
+operator|=
+name|UNIT_TO_MINOR
+argument_list|(
+name|unit
+argument_list|)
+expr_stmt|;
 name|com
 operator|->
 name|devs
@@ -4822,7 +4835,7 @@ argument_list|(
 operator|&
 name|sio_cdevsw
 argument_list|,
-name|unit
+name|minorbase
 argument_list|,
 name|UID_ROOT
 argument_list|,
@@ -4847,7 +4860,7 @@ argument_list|(
 operator|&
 name|sio_cdevsw
 argument_list|,
-name|unit
+name|minorbase
 operator||
 name|CONTROL_INIT_STATE
 argument_list|,
@@ -4874,7 +4887,7 @@ argument_list|(
 operator|&
 name|sio_cdevsw
 argument_list|,
-name|unit
+name|minorbase
 operator||
 name|CONTROL_LOCK_STATE
 argument_list|,
@@ -4901,7 +4914,7 @@ argument_list|(
 operator|&
 name|sio_cdevsw
 argument_list|,
-name|unit
+name|minorbase
 operator||
 name|CALLOUT_MASK
 argument_list|,
@@ -4928,7 +4941,7 @@ argument_list|(
 operator|&
 name|sio_cdevsw
 argument_list|,
-name|unit
+name|minorbase
 operator||
 name|CALLOUT_MASK
 operator||
@@ -4957,7 +4970,7 @@ argument_list|(
 operator|&
 name|sio_cdevsw
 argument_list|,
-name|unit
+name|minorbase
 operator||
 name|CALLOUT_MASK
 operator||
