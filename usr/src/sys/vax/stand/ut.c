@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ut.c	4.1	81/12/01	*/
+comment|/*	ut.c	4.2	81/12/15	*/
 end_comment
 
 begin_comment
@@ -554,6 +554,15 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|func
+operator|==
+name|READ
+condition|?
+name|io
+operator|->
+name|io_cc
+operator|-
+operator|(
 operator|(
 operator|-
 name|addr
@@ -562,6 +571,14 @@ name|utfc
 operator|)
 operator|&
 literal|0xffff
+operator|)
+else|:
+operator|-
+name|addr
+operator|->
+name|utwc
+operator|<<
+literal|1
 operator|)
 return|;
 block|}
