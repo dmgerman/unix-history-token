@@ -4,6 +4,10 @@ comment|/* Utility to help print --version output in a consistent format.    Cop
 end_comment
 
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/* Written by Jim Meyering. */
 end_comment
 
@@ -131,8 +135,8 @@ name|tmp_authors
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|__va_copy
-name|__va_copy
+name|va_copy
+name|va_copy
 argument_list|(
 name|tmp_authors
 argument_list|,
