@@ -6429,6 +6429,15 @@ name|errout
 goto|;
 block|}
 block|}
+else|else
+name|re
+operator|->
+name|re_dst
+operator|=
+name|re
+operator|->
+name|re_src
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -10121,6 +10130,7 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 if|if
 condition|(
 name|op
@@ -10156,6 +10166,7 @@ name|result
 operator|=
 literal|2
 expr_stmt|;
+block|}
 block|}
 return|return
 operator|(
