@@ -168,7 +168,7 @@ modifier|*
 name|output_ifp
 decl_stmt|;
 name|struct
-name|callout_handle
+name|callout
 name|intr_ch
 decl_stmt|;
 name|u_int64_t
@@ -679,7 +679,7 @@ operator|=
 literal|2048
 expr_stmt|;
 comment|/* XXX not checked */
-name|callout_handle_init
+name|ng_callout_init
 argument_list|(
 operator|&
 name|sc
@@ -687,7 +687,6 @@ operator|->
 name|intr_ch
 argument_list|)
 expr_stmt|;
-comment|/* XXX fix.. will 						cause problems. */
 return|return
 operator|(
 literal|0
@@ -1289,12 +1288,13 @@ operator|.
 name|startTime
 argument_list|)
 expr_stmt|;
+name|ng_timeout
+argument_list|(
+operator|&
 name|sc
 operator|->
 name|intr_ch
-operator|=
-name|ng_timeout
-argument_list|(
+argument_list|,
 name|node
 argument_list|,
 name|NULL
@@ -1428,12 +1428,13 @@ operator|.
 name|startTime
 argument_list|)
 expr_stmt|;
+name|ng_timeout
+argument_list|(
+operator|&
 name|sc
 operator|->
 name|intr_ch
-operator|=
-name|ng_timeout
-argument_list|(
+argument_list|,
 name|node
 argument_list|,
 name|NULL
@@ -2331,6 +2332,7 @@ condition|)
 block|{
 name|ng_untimeout
 argument_list|(
+operator|&
 name|sc
 operator|->
 name|intr_ch
@@ -2452,14 +2454,6 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|callout_handle_init
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|intr_ch
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -2557,12 +2551,13 @@ name|sc
 argument_list|)
 expr_stmt|;
 else|else
+name|ng_timeout
+argument_list|(
+operator|&
 name|sc
 operator|->
 name|intr_ch
-operator|=
-name|ng_timeout
-argument_list|(
+argument_list|,
 name|node
 argument_list|,
 name|NULL
