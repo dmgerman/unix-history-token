@@ -288,6 +288,18 @@ name|dom_binding
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|ypmaplist
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|ypall_callback
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 name|__BEGIN_DECLS
 name|int
