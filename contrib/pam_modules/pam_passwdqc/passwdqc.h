@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000,2001 by Solar Designer. See LICENSE.  */
+comment|/*  * Copyright (c) 2000-2002 by Solar Designer. See LICENSE.  */
 end_comment
 
 begin_ifndef
@@ -65,6 +65,7 @@ end_decl_stmt
 
 begin_function_decl
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|_passwdqc_check
@@ -73,10 +74,12 @@ name|passwdqc_params_t
 modifier|*
 name|params
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|newpass
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|oldpass

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000,2001 by Solar Designer. See LICENSE.  */
+comment|/*  * Copyright (c) 2000-2002 by Solar Designer. See LICENSE.  */
 end_comment
 
 begin_define
@@ -151,20 +151,20 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|PAM_AUTHTOK_RECOVER_ERR
+name|PAM_AUTHTOK_RECOVERY_ERR
 argument_list|)
 operator|&&
 name|defined
 argument_list|(
-name|PAM_AUTHTOK_RECOVERY_ERR
+name|PAM_AUTHTOK_RECOVER_ERR
 argument_list|)
 end_if
 
 begin_define
 define|#
 directive|define
-name|PAM_AUTHTOK_RECOVER_ERR
-value|PAM_AUTHTOK_RECOVERY_ERR
+name|PAM_AUTHTOK_RECOVERY_ERR
+value|PAM_AUTHTOK_RECOVER_ERR
 end_define
 
 begin_endif
@@ -185,17 +185,23 @@ name|defined
 argument_list|(
 name|LINUX_PAM
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_OPENPAM
+argument_list|)
 end_if
-
-begin_define
-define|#
-directive|define
-name|linux_const
-end_define
 
 begin_comment
 comment|/* Sun's PAM doesn't use const here */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|lo_const
+end_define
 
 begin_else
 else|#
@@ -205,7 +211,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|linux_const
+name|lo_const
 value|const
 end_define
 
@@ -216,7 +222,7 @@ end_endif
 
 begin_typedef
 typedef|typedef
-name|linux_const
+name|lo_const
 name|void
 modifier|*
 name|pam_item_t
@@ -533,6 +539,7 @@ parameter_list|,
 name|int
 name|style
 parameter_list|,
+name|lo_const
 name|char
 modifier|*
 name|text
@@ -614,7 +621,7 @@ argument_list|(
 literal|1
 argument_list|,
 operator|(
-name|linux_const
+name|lo_const
 expr|struct
 name|pam_message
 operator|*
@@ -725,10 +732,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|needed
-operator|>
-literal|0
-operator|&&
+operator|(
+name|unsigned
+name|int
+operator|)
 name|needed
 operator|<
 sizeof|sizeof
@@ -795,6 +802,7 @@ name|pam_handle_t
 modifier|*
 name|pamh
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|newpass
@@ -802,6 +810,9 @@ parameter_list|)
 block|{
 if|if
 condition|(
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|newpass
@@ -883,6 +894,10 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+name|char
+modifier|*
+name|e
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -953,23 +968,24 @@ literal|8
 expr_stmt|;
 block|}
 else|else
+block|{
 name|v
 operator|=
 name|strtoul
 argument_list|(
 name|p
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 operator|&
-name|p
+name|e
 argument_list|,
 literal|10
 argument_list|)
 expr_stmt|;
+name|p
+operator|=
+name|e
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|i
@@ -994,6 +1010,9 @@ if|if
 condition|(
 name|i
 operator|&&
+operator|(
+name|int
+operator|)
 name|v
 operator|>
 name|params
@@ -1051,13 +1070,8 @@ name|argv
 operator|+
 literal|4
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 operator|&
-name|p
+name|e
 argument_list|,
 literal|10
 argument_list|)
@@ -1065,7 +1079,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|*
-name|p
+name|e
 operator|||
 name|v
 operator|<
@@ -1109,13 +1123,8 @@ name|argv
 operator|+
 literal|11
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 operator|&
-name|p
+name|e
 argument_list|,
 literal|10
 argument_list|)
@@ -1123,7 +1132,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|*
-name|p
+name|e
 operator|||
 name|v
 operator|>
@@ -1163,13 +1172,8 @@ name|argv
 operator|+
 literal|6
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 operator|&
-name|p
+name|e
 argument_list|,
 literal|10
 argument_list|)
@@ -1177,7 +1181,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|*
-name|p
+name|e
 operator|||
 name|v
 operator|>
@@ -1278,13 +1282,8 @@ name|argv
 operator|+
 literal|7
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 operator|&
-name|p
+name|e
 argument_list|,
 literal|10
 argument_list|)
@@ -1294,13 +1293,13 @@ condition|(
 operator|!
 name|strcmp
 argument_list|(
-name|p
+name|e
 argument_list|,
 literal|",only"
 argument_list|)
 condition|)
 block|{
-name|p
+name|e
 operator|+=
 literal|5
 expr_stmt|;
@@ -1319,7 +1318,7 @@ block|}
 if|if
 condition|(
 operator|*
-name|p
+name|e
 operator|||
 name|v
 operator|>
@@ -1464,13 +1463,8 @@ name|argv
 operator|+
 literal|6
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 operator|&
-name|p
+name|e
 argument_list|,
 literal|10
 argument_list|)
@@ -1478,7 +1472,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|*
-name|p
+name|e
 operator|||
 name|v
 operator|>
@@ -1746,6 +1740,7 @@ decl_stmt|,
 modifier|*
 name|randompass
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|reason
@@ -1905,7 +1900,7 @@ block|}
 else|else
 name|status
 operator|=
-name|PAM_AUTHTOK_RECOVER_ERR
+name|PAM_AUTHTOK_RECOVERY_ERR
 expr_stmt|;
 block|}
 if|if
@@ -2273,7 +2268,7 @@ name|enforce
 operator|)
 condition|)
 return|return
-name|PAM_AUTHTOK_RECOVER_ERR
+name|PAM_AUTHTOK_RECOVERY_ERR
 return|;
 name|reason
 operator|=
@@ -2313,7 +2308,7 @@ name|enforce
 condition|)
 name|status
 operator|=
-name|PAM_AUTHTOK_RECOVER_ERR
+name|PAM_AUTHTOK_RECOVERY_ERR
 expr_stmt|;
 block|}
 return|return
@@ -2697,7 +2692,7 @@ name|MESSAGE_RANDOMFAILED
 argument_list|)
 expr_stmt|;
 return|return
-name|PAM_AUTHTOK_RECOVER_ERR
+name|PAM_AUTHTOK_RECOVERY_ERR
 return|;
 block|}
 name|status
@@ -2732,7 +2727,7 @@ operator|)
 condition|)
 name|status
 operator|=
-name|PAM_AUTHTOK_RECOVER_ERR
+name|PAM_AUTHTOK_RECOVERY_ERR
 expr_stmt|;
 if|if
 condition|(
@@ -2786,7 +2781,7 @@ name|randompass
 argument_list|)
 expr_stmt|;
 return|return
-name|PAM_AUTHTOK_RECOVER_ERR
+name|PAM_AUTHTOK_RECOVERY_ERR
 return|;
 block|}
 if|if
@@ -2806,7 +2801,7 @@ condition|)
 block|{
 name|status
 operator|=
-name|PAM_AUTHTOK_RECOVER_ERR
+name|PAM_AUTHTOK_RECOVERY_ERR
 expr_stmt|;
 name|retry_wanted
 operator|=
@@ -2891,7 +2886,7 @@ condition|)
 block|{
 name|status
 operator|=
-name|PAM_AUTHTOK_RECOVER_ERR
+name|PAM_AUTHTOK_RECOVERY_ERR
 expr_stmt|;
 name|retry_wanted
 operator|=
@@ -2967,7 +2962,7 @@ condition|)
 block|{
 name|status
 operator|=
-name|PAM_AUTHTOK_RECOVER_ERR
+name|PAM_AUTHTOK_RECOVERY_ERR
 expr_stmt|;
 name|retry_wanted
 operator|=
@@ -2986,7 +2981,7 @@ block|}
 else|else
 name|status
 operator|=
-name|PAM_AUTHTOK_RECOVER_ERR
+name|PAM_AUTHTOK_RECOVERY_ERR
 expr_stmt|;
 block|}
 if|if
@@ -3065,8 +3060,25 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|PAM_STATIC
+name|PAM_MODULE_ENTRY
 end_ifdef
+
+begin_expr_stmt
+name|PAM_MODULE_ENTRY
+argument_list|(
+literal|"pam_passwdqc"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|PAM_STATIC
+argument_list|)
+end_elif
 
 begin_decl_stmt
 name|struct
