@@ -1664,9 +1664,6 @@ decl_stmt|,
 modifier|*
 name|newfs
 decl_stmt|;
-name|dev_t
-name|dev
-decl_stmt|;
 name|ufs2_daddr_t
 name|sblockloc
 decl_stmt|;
@@ -1755,12 +1752,6 @@ name|panic
 argument_list|(
 literal|"ffs_reload: dirty1"
 argument_list|)
-expr_stmt|;
-name|dev
-operator|=
-name|devvp
-operator|->
-name|v_rdev
 expr_stmt|;
 comment|/* 	 * Only VMIO the backing device if the backing device is a real 	 * block device. 	 */
 if|if

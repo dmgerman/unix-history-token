@@ -9168,8 +9168,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|,
-name|error
-decl_stmt|,
 name|cg
 decl_stmt|,
 name|blk
@@ -9438,9 +9436,6 @@ return|return;
 block|}
 if|if
 condition|(
-operator|(
-name|error
-operator|=
 name|bread
 argument_list|(
 name|devvp
@@ -9459,7 +9454,6 @@ argument_list|,
 operator|&
 name|bp
 argument_list|)
-operator|)
 condition|)
 block|{
 name|brelse
@@ -10839,8 +10833,6 @@ name|ufs2_daddr_t
 name|cgbno
 decl_stmt|;
 name|int
-name|error
-decl_stmt|,
 name|ret
 decl_stmt|,
 name|cg
@@ -10923,9 +10915,6 @@ operator|)
 return|;
 if|if
 condition|(
-operator|(
-name|error
-operator|=
 name|bread
 argument_list|(
 name|devvp
@@ -10944,7 +10933,6 @@ argument_list|,
 operator|&
 name|bp
 argument_list|)
-operator|)
 condition|)
 block|{
 name|brelse
