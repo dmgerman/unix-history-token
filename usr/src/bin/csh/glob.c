@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)glob.c	5.23 (Berkeley) %G%"
+literal|"@(#)glob.c	5.24 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2052,6 +2052,9 @@ modifier|*
 modifier|*
 name|vo
 decl_stmt|;
+name|int
+name|gflg
+decl_stmt|;
 name|noglob
 operator|=
 name|adrof
@@ -2084,9 +2087,13 @@ argument_list|(
 name|v
 argument_list|)
 expr_stmt|;
+name|gflg
+operator|=
+name|gflag
+expr_stmt|;
 if|if
 condition|(
-name|gflag
+name|gflg
 operator|==
 name|G_NONE
 condition|)
@@ -2103,7 +2110,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|gflag
+name|gflg
 operator|&
 name|G_CSH
 condition|)
@@ -2121,7 +2128,7 @@ condition|(
 name|noglob
 operator|||
 operator|(
-name|gflag
+name|gflg
 operator|&
 name|G_GLOB
 operator|)
@@ -2211,7 +2218,7 @@ condition|(
 name|noglob
 operator|||
 operator|(
-name|gflag
+name|gflg
 operator|&
 name|G_GLOB
 operator|)
@@ -2243,7 +2250,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|gflag
+name|gflg
 operator|&
 name|G_CSH
 condition|)
@@ -2373,6 +2380,11 @@ modifier|*
 modifier|*
 name|vo
 decl_stmt|;
+name|int
+name|gflg
+init|=
+name|gflag
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -2416,7 +2428,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|gflag
+name|gflg
 operator|&
 name|G_CSH
 condition|)
@@ -2446,7 +2458,7 @@ operator|!
 name|noglob
 operator|&&
 operator|(
-name|gflag
+name|gflg
 operator|&
 name|G_GLOB
 operator|)
@@ -2461,7 +2473,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|gflag
+name|gflg
 operator|&
 name|G_CSH
 condition|)
