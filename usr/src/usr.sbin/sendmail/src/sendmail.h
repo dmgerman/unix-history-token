@@ -2393,6 +2393,14 @@ directive|include
 file|<sysexits.h>
 end_include
 
+begin_comment
+comment|/* **  Some in-line functions */
+end_comment
+
+begin_comment
+comment|/* set exit status */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2404,17 +2412,36 @@ value|{ if (ExitStat == EX_OK) ExitStat = s; }
 end_define
 
 begin_comment
-comment|/* useful functions */
+comment|/* line terminator appropriate for a given mailer */
 end_comment
 
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
+begin_define
+define|#
+directive|define
+name|crlf
+parameter_list|(
+name|m
+parameter_list|)
+value|(bitset(M_CRLF, (m)->m_flags) ? "\r\n" : "\n")
+end_define
+
+begin_comment
+comment|/* make a copy of a string */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|newstr
-parameter_list|()
-function_decl|;
-end_function_decl
+parameter_list|(
+name|s
+parameter_list|)
+value|strcpy(xalloc(strlen(s) + 1), s)
+end_define
+
+begin_comment
+comment|/* **  Declarations of useful functions */
+end_comment
 
 begin_function_decl
 specifier|extern
@@ -2482,15 +2509,6 @@ begin_function_decl
 specifier|extern
 name|time_t
 name|curtime
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|crlf
 parameter_list|()
 function_decl|;
 end_function_decl
