@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_acc.c	4.31	82/11/15	*/
+comment|/*	if_acc.c	4.32	82/12/17	*/
 end_comment
 
 begin_include
@@ -24,6 +24,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"../machine/pte.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../h/param.h"
 end_include
 
@@ -37,12 +43,6 @@ begin_include
 include|#
 directive|include
 file|"../h/mbuf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/pte.h"
 end_include
 
 begin_include

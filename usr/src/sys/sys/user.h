@@ -1,47 +1,47 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	user.h	4.23	82/12/09	*/
+comment|/*	user.h	4.24	82/12/17	*/
 end_comment
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|vax
+name|KERNEL
 end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<vax/pcb.h>
+file|"../machine/pcb.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|sun
-end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<sun/pcb.h>
+file|"../h/dmap.h"
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<machine/pcb.h>
+end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/dmap.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#

@@ -16,13 +16,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"../h/param.h"
+file|"../machine/pte.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/pte.h"
+file|"../h/param.h"
 end_include
 
 begin_include

@@ -1,7 +1,25 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.71	82/11/13	*/
+comment|/*	machdep.c	4.72	82/12/17	*/
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"../machine/reg.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../machine/pte.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../machine/psl.h"
+end_include
 
 begin_include
 include|#
@@ -42,18 +60,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/reg.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/pte.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../h/vm.h"
 end_include
 
@@ -61,12 +67,6 @@ begin_include
 include|#
 directive|include
 file|"../h/proc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/psl.h"
 end_include
 
 begin_include

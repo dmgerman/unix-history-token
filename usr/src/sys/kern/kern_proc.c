@@ -1,7 +1,25 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	4.52	82/12/16	*/
+comment|/*	kern_proc.c	4.53	82/12/17	*/
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"../machine/reg.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../machine/pte.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../machine/psl.h"
+end_include
 
 begin_include
 include|#
@@ -54,12 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/reg.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../h/inode.h"
 end_include
 
@@ -84,12 +96,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/pte.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../h/vm.h"
 end_include
 
@@ -97,12 +103,6 @@ begin_include
 include|#
 directive|include
 file|"../h/text.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/psl.h"
 end_include
 
 begin_include
@@ -660,6 +660,18 @@ name|bad
 goto|;
 block|}
 comment|/* 	 * Read in first few bytes of file for segment sizes, ux_mag: 	 *	407 = plain executable 	 *	410 = RO text 	 *	413 = demand paged RO text 	 * Also an ASCII line beginning with #! is 	 * the file name of a ``shell'' and arguments may be prepended 	 * to the argument list if given here. 	 * 	 * SHELL NAMES ARE LIMITED IN LENGTH. 	 * 	 * ONLY ONE ARGUMENT MAY BE PASSED TO THE SHELL FROM 	 * THE ASCII LINE. 	 */
+name|u
+operator|.
+name|u_exdata
+operator|.
+name|ux_shell
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* for zero length files */
 name|u
 operator|.
 name|u_error
@@ -2864,9 +2876,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|SUNMMAP
 name|u
 operator|.
 name|u_pofile
@@ -2877,8 +2886,6 @@ operator|&=
 operator|~
 name|UF_MAPPED
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 comment|/* 	 * Remember file name for accounting. 	 */
 name|u
@@ -3771,7 +3778,7 @@ end_block
 begin_include
 include|#
 directive|include
-file|<vtimes.h>
+file|"../h/vtimes.h"
 end_include
 
 begin_macro

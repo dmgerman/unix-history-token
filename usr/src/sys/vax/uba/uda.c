@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uda.c	4.15	82/11/13	*/
+comment|/*	uda.c	4.16	82/12/17	*/
 end_comment
 
 begin_include
@@ -20,6 +20,12 @@ end_if
 begin_comment
 comment|/*  * UDA50/RAxx disk device driver  *  * Restrictions:  *	Unit numbers must be less than 8.  *  * TO DO:  *	write dump code  *	test on 750  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"../machine/pte.h"
+end_include
 
 begin_include
 include|#
@@ -55,12 +61,6 @@ begin_include
 include|#
 directive|include
 file|"../h/user.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/pte.h"
 end_include
 
 begin_include

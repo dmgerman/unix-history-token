@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_descrip.c	5.19	82/12/09	*/
+comment|/*	kern_descrip.c	5.20	82/12/17	*/
 end_comment
 
 begin_include
@@ -456,9 +456,6 @@ name|j
 index|]
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SUNMMAP
 if|if
 condition|(
 name|u
@@ -479,8 +476,6 @@ operator|->
 name|j
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|closef
 argument_list|(
 name|u

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dz.c	4.47	82/12/05	*/
+comment|/*	dz.c	4.48	82/12/17	*/
 end_comment
 
 begin_include
@@ -25,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|"bk.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../machine/pte.h"
 end_include
 
 begin_include
@@ -73,12 +79,6 @@ begin_include
 include|#
 directive|include
 file|"../h/map.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/pte.h"
 end_include
 
 begin_include

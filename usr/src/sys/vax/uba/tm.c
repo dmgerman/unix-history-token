@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tm.c	4.59	82/11/26	*/
+comment|/*	tm.c	4.60	82/12/17	*/
 end_comment
 
 begin_include
@@ -26,6 +26,12 @@ end_if
 begin_comment
 comment|/*  * TM11/TE10 tape driver  *  * TODO:  *	test driver with more than one slave  *	test driver with more than one controller  *	test reset code  *	what happens if you offline tape during rewind?  *	test using file system on tape  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"../machine/pte.h"
+end_include
 
 begin_include
 include|#
@@ -73,12 +79,6 @@ begin_include
 include|#
 directive|include
 file|"../h/map.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/pte.h"
 end_include
 
 begin_include

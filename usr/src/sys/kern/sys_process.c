@@ -1,7 +1,25 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sys_process.c	5.7	82/10/31	*/
+comment|/*	sys_process.c	5.8	82/12/17	*/
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"../machine/reg.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../machine/psl.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../machine/pte.h"
+end_include
 
 begin_include
 include|#
@@ -42,12 +60,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/reg.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../h/text.h"
 end_include
 
@@ -55,18 +67,6 @@ begin_include
 include|#
 directive|include
 file|"../h/seg.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/pte.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/psl.h"
 end_include
 
 begin_include
@@ -1018,6 +1018,26 @@ operator|&=
 operator|~
 name|PSL_USERCLR
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|sun
+if|if
+condition|(
+name|ipc
+operator|.
+name|ip_data
+operator|&
+name|PSL_T
+condition|)
+name|traceon
+argument_list|()
+expr_stmt|;
+else|else
+name|traceoff
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 goto|goto
 name|ok
 goto|;
@@ -1099,6 +1119,14 @@ name|i
 operator|==
 literal|9
 condition|)
+ifdef|#
+directive|ifdef
+name|sun
+name|traceon
+argument_list|()
+expr_stmt|;
+else|#
+directive|else
 name|u
 operator|.
 name|u_ar0
@@ -1108,6 +1136,8 @@ index|]
 operator||=
 name|PSL_T
 expr_stmt|;
+endif|#
+directive|endif
 name|wakeup
 argument_list|(
 operator|(

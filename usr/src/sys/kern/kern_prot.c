@@ -1,11 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_prot.c	5.12	82/11/22	*/
+comment|/*	kern_prot.c	5.13	82/12/17	*/
 end_comment
 
 begin_comment
 comment|/*  * System calls related to processes and protection  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"../machine/reg.h"
+end_include
 
 begin_include
 include|#
@@ -29,12 +35,6 @@ begin_include
 include|#
 directive|include
 file|"../h/user.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/reg.h"
 end_include
 
 begin_include

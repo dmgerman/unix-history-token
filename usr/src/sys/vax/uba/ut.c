@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ut.c	4.24	82/12/05	*/
+comment|/*	ut.c	4.25	82/12/17	*/
 end_comment
 
 begin_include
@@ -20,6 +20,12 @@ end_if
 begin_comment
 comment|/*  * System Industries Model 9700 Tape Drive  *   emulates a TU45 on the UNIBUS  *  * TODO:  *	check out attention processing  *	try reset code and dump code  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"../machine/pte.h"
+end_include
 
 begin_include
 include|#
@@ -67,12 +73,6 @@ begin_include
 include|#
 directive|include
 file|"../h/map.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/pte.h"
 end_include
 
 begin_include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	buf.h	4.18	82/11/13	*/
+comment|/*	buf.h	4.19	82/12/17	*/
 end_comment
 
 begin_comment
@@ -156,6 +156,14 @@ modifier|*
 name|b_proc
 decl_stmt|;
 comment|/* proc doing physical or swap I/O */
+name|int
+function_decl|(
+modifier|*
+name|b_iodone
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* function called by iodone */
 block|}
 struct|;
 end_struct
@@ -675,6 +683,17 @@ begin_comment
 comment|/* bad block revectoring in progress */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|B_CALL
+value|0x200000
+end_define
+
+begin_comment
+comment|/* call b_iodone from iodone */
+end_comment
+
 begin_comment
 comment|/*  * Insq/Remq for the buffer hash lists.  */
 end_comment
@@ -780,6 +799,58 @@ name|bp
 parameter_list|)
 value|{ \ 	blkclr(bp->b_un.b_addr, bp->b_bcount); \ 	bp->b_resid = 0; \ }
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|sun
+end_ifdef
+
+begin_comment
+comment|/*  * Declarations for buffer space rmaps  */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|map
+modifier|*
+name|buffermap
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|BUFMAPSIZE
+value|256
+end_define
+
+begin_comment
+comment|/*  * "Average" size of a buffer  * nbuf*AVGBSIZE is total amount of buffer data  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AVGBSIZE
+value|2048
+end_define
+
+begin_comment
+comment|/*  * Unit of buffer space allocation  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUFALLOCSIZE
+value|1024
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

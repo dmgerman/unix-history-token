@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ht.c	4.34	82/10/20	*/
+comment|/*	ht.c	4.35	82/12/17	*/
 end_comment
 
 begin_include
@@ -20,6 +20,12 @@ end_if
 begin_comment
 comment|/*  * TM03/TU?? tape driver  *  * TODO:  *	cleanup messages on errors  *	test ioctl's  *	see how many rewind interrups we get if we kick when not at BOT  *	fixup rle error on block tape code  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"../machine/pte.h"
+end_include
 
 begin_include
 include|#
@@ -67,12 +73,6 @@ begin_include
 include|#
 directive|include
 file|"../h/map.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/pte.h"
 end_include
 
 begin_include

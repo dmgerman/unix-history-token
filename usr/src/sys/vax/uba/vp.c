@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vp.c	4.21	82/10/17	*/
+comment|/*	vp.c	4.22	82/12/17	*/
 end_comment
 
 begin_include
@@ -20,6 +20,12 @@ end_if
 begin_comment
 comment|/*  * Versatec matrix printer/plotter  * dma interface driver  *  * SETUP NOTES:  *	Set up both print and plot interrupts to go through the same vector  *	Give the address of the plcsr register in the config specification  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"../machine/pte.h"
+end_include
 
 begin_include
 include|#
@@ -55,12 +61,6 @@ begin_include
 include|#
 directive|include
 file|"../h/map.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/pte.h"
 end_include
 
 begin_include

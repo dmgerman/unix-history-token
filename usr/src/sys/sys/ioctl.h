@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ioctl.h	4.25	82/12/13	*/
+comment|/*	ioctl.h	4.26	82/12/17	*/
 end_comment
 
 begin_comment
@@ -1736,50 +1736,6 @@ end_define
 
 begin_comment
 comment|/* delete route */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KIOCTRANS
-value|_IOW(k,0, int)
-end_define
-
-begin_comment
-comment|/* set keyboard translation */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MIOCGPOS
-value|_IOR(m,0, XXX)
-end_define
-
-begin_comment
-comment|/* get mouse info */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MIOCGBUFS
-value|_IOR(m,1, int)
-end_define
-
-begin_comment
-comment|/* get mouse buffer size */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MIOCWBUFS
-value|_IOW(m,1, int)
-end_define
-
-begin_comment
-comment|/* set mouse buffer size */
 end_comment
 
 begin_endif

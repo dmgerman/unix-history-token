@@ -1,11 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mem.c	4.11	82/12/05	*/
+comment|/*	mem.c	4.12	82/12/17	*/
 end_comment
 
 begin_comment
 comment|/*  * Memory special file  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"../machine/pte.h"
+end_include
 
 begin_include
 include|#
@@ -41,12 +47,6 @@ begin_include
 include|#
 directive|include
 file|"../h/systm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/pte.h"
 end_include
 
 begin_include

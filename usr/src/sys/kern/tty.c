@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.c	4.36	82/12/13	*/
+comment|/*	tty.c	4.37	82/12/17	*/
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"../machine/reg.h"
+end_include
 
 begin_include
 include|#
@@ -55,12 +61,6 @@ begin_include
 include|#
 directive|include
 file|"../h/file.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/reg.h"
 end_include
 
 begin_include

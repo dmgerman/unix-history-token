@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.h	4.25	82/10/31	*/
+comment|/*	param.h	4.26	82/12/17	*/
 end_comment
 
 begin_comment
@@ -10,30 +10,24 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|vax
+name|KERNEL
 end_ifdef
 
 begin_include
 include|#
 directive|include
-file|"../vax/param.h"
+file|"../machine/param.h"
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|sun
-end_ifdef
+begin_else
+else|#
+directive|else
+end_else
 
 begin_include
 include|#
 directive|include
-file|"../sun/param.h"
+file|<machine/param.h>
 end_include
 
 begin_endif
@@ -663,20 +657,6 @@ parameter_list|,
 name|y
 parameter_list|)
 value|((((x)+((y)-1))/(y))*(y))
-end_define
-
-begin_comment
-comment|/*  * Provide about n microseconds of delay.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DELAY
-parameter_list|(
-name|n
-parameter_list|)
-value|{ register int N = (n); while (--N> 0); }
 end_define
 
 end_unit

@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vfs_vnops.c	4.30	82/11/13	*/
+comment|/*	vfs_vnops.c	4.31	82/12/17	*/
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"../machine/reg.h"
+end_include
 
 begin_include
 include|#
@@ -49,12 +55,6 @@ begin_include
 include|#
 directive|include
 file|"../h/inode.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/reg.h"
 end_include
 
 begin_include

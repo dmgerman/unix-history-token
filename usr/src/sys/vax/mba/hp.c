@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hp.c	4.58	82/11/13	*/
+comment|/*	hp.c	4.59	82/12/17	*/
 end_comment
 
 begin_ifdef
@@ -58,6 +58,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"../machine/pte.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../h/param.h"
 end_include
 
@@ -101,12 +107,6 @@ begin_include
 include|#
 directive|include
 file|"../h/map.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/pte.h"
 end_include
 
 begin_include

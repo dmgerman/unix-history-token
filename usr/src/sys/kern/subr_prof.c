@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	subr_prof.c	4.2	82/11/13	*/
+comment|/*	subr_prof.c	4.3	82/12/17	*/
 end_comment
 
 begin_ifdef
@@ -66,6 +66,12 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|vax
+end_ifdef
+
 begin_decl_stmt
 name|char
 modifier|*
@@ -78,6 +84,35 @@ operator|)
 literal|0x80000000
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|sun
+end_ifdef
+
+begin_decl_stmt
+name|char
+modifier|*
+name|s_lowpc
+init|=
+operator|(
+name|char
+operator|*
+operator|)
+literal|0x4000
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -409,6 +444,12 @@ directive|endif
 block|}
 end_block
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|vax
+end_ifdef
+
 begin_comment
 comment|/*  * This routine is massaged so that it may be jsb'ed to  */
 end_comment
@@ -729,6 +770,11 @@ name|out
 goto|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

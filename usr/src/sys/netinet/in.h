@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	in.h	4.18	82/11/03	*/
+comment|/*	in.h	4.19	82/12/17	*/
 end_comment
 
 begin_comment
@@ -353,9 +353,6 @@ directive|define
 name|s_addr
 value|S_un.S_addr
 comment|/* can be used for most tcp& ip code */
-ifdef|#
-directive|ifdef
-name|vax
 define|#
 directive|define
 name|s_host
@@ -381,8 +378,6 @@ directive|define
 name|s_lh
 value|S_un.S_un_b.s_b3
 comment|/* logical host */
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct

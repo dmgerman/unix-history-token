@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ffs_subr.c	4.3	82/11/13	*/
+comment|/*	ffs_subr.c	4.4	82/12/17	*/
 end_comment
 
 begin_ifdef
@@ -140,12 +140,6 @@ directive|include
 file|<sys/quota.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/kernel.h>
-end_include
-
 begin_endif
 endif|#
 directive|endif
@@ -238,6 +232,12 @@ operator|->
 name|m_bufp
 operator|==
 name|NULL
+operator|||
+name|mp
+operator|->
+name|m_dev
+operator|==
+name|NODEV
 condition|)
 continue|continue;
 name|fs

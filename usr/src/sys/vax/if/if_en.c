@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_en.c	4.74	82/12/14	*/
+comment|/*	if_en.c	4.75	82/12/17	*/
 end_comment
 
 begin_include
@@ -12,6 +12,12 @@ end_include
 begin_comment
 comment|/*  * Xerox prototype (3 Mb) Ethernet interface driver.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"../machine/pte.h"
+end_include
 
 begin_include
 include|#
@@ -29,12 +35,6 @@ begin_include
 include|#
 directive|include
 file|"../h/mbuf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/pte.h"
 end_include
 
 begin_include

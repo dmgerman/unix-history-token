@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_physio.c	4.36	82/11/02	*/
+comment|/*	kern_physio.c	4.37	82/12/17	*/
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"../machine/pte.h"
+end_include
 
 begin_include
 include|#
@@ -49,12 +55,6 @@ begin_include
 include|#
 directive|include
 file|"../h/seg.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/pte.h"
 end_include
 
 begin_include
@@ -1148,8 +1148,13 @@ name|uio_offset
 operator|+=
 name|c
 expr_stmt|;
+comment|/* temp kludge for tape drives */
 if|if
 condition|(
+name|bp
+operator|->
+name|b_resid
+operator|||
 name|bp
 operator|->
 name|b_flags
@@ -1178,8 +1183,13 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+comment|/* temp kludge for tape drives */
 if|if
 condition|(
+name|bp
+operator|->
+name|b_resid
+operator|||
 name|error
 condition|)
 return|return

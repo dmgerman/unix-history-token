@@ -1,11 +1,31 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_vv.c	4.10	82/12/14	*/
+comment|/*	if_vv.c	4.11	82/12/17	*/
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"vv.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|NVV
+operator|>
+literal|0
+end_if
 
 begin_comment
 comment|/*  * Proteon 10 Meg Ring Driver.  * This device is called "vv" because its "real name",  * V2LNI won't work if shortened to the obvious "v2".  * Hence the subterfuge.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"../machine/pte.h"
+end_include
 
 begin_include
 include|#
@@ -23,12 +43,6 @@ begin_include
 include|#
 directive|include
 file|"../h/mbuf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/pte.h"
 end_include
 
 begin_include
@@ -3557,6 +3571,11 @@ expr_stmt|;
 block|}
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

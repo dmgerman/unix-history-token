@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lfs_alloc.c	2.19	82/11/13	*/
+comment|/*	lfs_alloc.c	2.20	82/12/17	*/
 end_comment
 
 begin_include
@@ -2705,6 +2705,11 @@ name|cs_nffree
 operator|+=
 name|i
 expr_stmt|;
+name|fs
+operator|->
+name|fs_fmod
+operator|++
+expr_stmt|;
 name|cgp
 operator|->
 name|cg_frsum
@@ -2800,6 +2805,11 @@ operator|.
 name|cs_nffree
 operator|-=
 name|frags
+expr_stmt|;
+name|fs
+operator|->
+name|fs_fmod
+operator|++
 expr_stmt|;
 name|cgp
 operator|->
@@ -4874,32 +4884,12 @@ name|loc
 operator|==
 literal|0
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"start = %d, len = %d, fs = %s\n"
-argument_list|,
-name|start
-argument_list|,
-name|len
-argument_list|,
-name|fs
-operator|->
-name|fs_fsmnt
-argument_list|)
-expr_stmt|;
-name|panic
-argument_list|(
-literal|"alloccg: map corrupted"
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
-block|}
 block|}
 name|bno
 operator|=

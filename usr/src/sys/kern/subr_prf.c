@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	subr_prf.c	4.24	82/10/31	*/
+comment|/*	subr_prf.c	4.25	82/12/17	*/
 end_comment
 
 begin_include
@@ -61,6 +61,12 @@ begin_include
 include|#
 directive|include
 file|"../h/user.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/proc.h"
 end_include
 
 begin_include
@@ -704,11 +710,15 @@ name|bootopt
 operator||=
 name|RB_NOSYNC
 expr_stmt|;
+else|else
+block|{
+name|panicstr
+operator|=
+name|s
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|sun
-else|else
-block|{
 asm|asm("movl a6, a5");
 name|traceback
 argument_list|(
@@ -717,13 +727,20 @@ argument_list|,
 name|a5
 argument_list|)
 expr_stmt|;
-block|}
+name|resume
+argument_list|(
+name|pcbb
+argument_list|(
+name|u
+operator|.
+name|u_procp
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* for adb traceback */
 endif|#
 directive|endif
-name|panicstr
-operator|=
-name|s
-expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"panic: %s\n"

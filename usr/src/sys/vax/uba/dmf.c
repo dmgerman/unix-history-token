@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dmf.c	4.15	82/12/05	*/
+comment|/*	dmf.c	4.16	82/12/17	*/
 end_comment
 
 begin_include
@@ -20,6 +20,12 @@ end_if
 begin_comment
 comment|/*  * DMF32 driver  *  * TODO:  *	test with modem  *	load as much as possible into silo  *	get correct numbers for receive silo parameter timeout  *	use auto XON/XOFF  *	test reset code  *	test with more than one unit  *	optimize for efficient DMA and dynamically  *	  decide between silo and DMA mode  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"../machine/pte.h"
+end_include
 
 begin_include
 include|#
@@ -67,12 +73,6 @@ begin_include
 include|#
 directive|include
 file|"../h/map.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/pte.h"
 end_include
 
 begin_include

@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_mbuf.c	1.41	82/12/14	*/
+comment|/*	uipc_mbuf.c	1.42	82/12/17	*/
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"../machine/pte.h"
+end_include
 
 begin_include
 include|#
@@ -25,12 +31,6 @@ begin_include
 include|#
 directive|include
 file|"../h/proc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/pte.h"
 end_include
 
 begin_include
@@ -74,7 +74,9 @@ if|if
 condition|(
 name|m_clalloc
 argument_list|(
-literal|4
+literal|4096
+operator|/
+name|CLBYTES
 argument_list|,
 name|MPG_MBUFS
 argument_list|)
@@ -88,7 +90,11 @@ if|if
 condition|(
 name|m_clalloc
 argument_list|(
-literal|32
+literal|8
+operator|*
+literal|4096
+operator|/
+name|CLBYTES
 argument_list|,
 name|MPG_CLUSTERS
 argument_list|)
@@ -211,11 +217,38 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+name|s
+operator|=
+name|splimp
+argument_list|()
+expr_stmt|;
+name|rmfree
+argument_list|(
+name|mbmap
+argument_list|,
+operator|(
+name|long
+operator|)
+name|npg
+argument_list|,
+operator|(
+name|long
+operator|)
+name|mbx
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 name|vmaccess
 argument_list|(
 operator|&

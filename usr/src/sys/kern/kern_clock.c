@@ -1,7 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	4.47	82/12/16	*/
+comment|/*	kern_clock.c	4.48	82/12/17	*/
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"../machine/reg.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../machine/psl.h"
+end_include
 
 begin_include
 include|#
@@ -54,12 +66,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/psl.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../h/vm.h"
 end_include
 
@@ -68,23 +74,6 @@ include|#
 directive|include
 file|"../h/text.h"
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|vax
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"../vax/mtpr.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -108,6 +97,27 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|vax
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"../vax/mtpr.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_empty
+empty|#
+end_empty
 
 begin_comment
 comment|/*  * Clock handling routines.  *  * This code is written for a machine with only one interval timer,  * and does timing and resource utilization estimation statistically  * based on the state of the machine hz times a second.  A machine  * with proper clocks (running separately in user state, system state,  * interrupt state and idle state) as well as a time-of-day clock  * would allow a non-approximate implementation.  */
@@ -222,6 +232,28 @@ name|s
 decl_stmt|,
 name|cpstate
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|sun
+if|if
+condition|(
+name|USERMODE
+argument_list|(
+name|ps
+argument_list|)
+condition|)
+comment|/* aston needs ar0 */
+name|u
+operator|.
+name|u_ar0
+operator|=
+operator|&
+name|regs
+operator|.
+name|r_r0
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Update real-time timeout queue. 	 * At front of queue are some number of events which are ``due''. 	 * The time to these is<= 0 and if negative represents the 	 * number of ticks which have passed since it was supposed to happen. 	 * The rest of the q elements (times> 0) are events yet to happen, 	 * where the time for each is given as a delta from the previous. 	 * Decrementing just the first of these serves to decrement the time 	 * to all events. 	 */
 for|for
 control|(
@@ -814,25 +846,17 @@ ifdef|#
 directive|ifdef
 name|sun
 name|softclock
-argument_list|(
-argument|sirret
-argument_list|,
-argument|regs
-argument_list|)
-name|caddr_t
-name|sirreg
-decl_stmt|;
-name|struct
-name|regs
-name|regs
-decl_stmt|;
+argument_list|()
 block|{
 name|int
 name|ps
 init|=
-name|regs
+name|u
 operator|.
-name|r_sr
+name|u_ar0
+index|[
+name|PS
+index|]
 decl_stmt|;
 name|caddr_t
 name|pc
@@ -840,9 +864,12 @@ init|=
 operator|(
 name|caddr_t
 operator|)
-name|regs
+name|u
 operator|.
-name|r_pc
+name|u_ar0
+index|[
+name|PC
+index|]
 decl_stmt|;
 endif|#
 directive|endif

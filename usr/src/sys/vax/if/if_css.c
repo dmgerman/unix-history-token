@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*      if_css.c     4.5     82/10/24     */
+comment|/*      if_css.c     4.6     82/12/17     */
 end_comment
 
 begin_include
@@ -12,6 +12,12 @@ end_include
 begin_comment
 comment|/*  * DEC/CSS IMP11-A ARPAnet IMP interface driver.  * Since "imp11a" is such a mouthful, it is called  * "css" after the LH/DH being called "acc".  *  * Configuration notes:  *  * As delivered from DEC/CSS, it  * is addressed and vectored as two DR11-B's.  This makes  * Autoconfig almost IMPOSSIBLE.  To make it work, the  * interrupt vectors must be restrapped to make the vectors  * consecutive.  The 020 hole between the CSR addresses is  * tolerated, althought that could be cleaned-up also.  *  * Additionally, the TRANSMIT side of the IMP11-A has the  * lower address of the two subunits, so the vector ordering  * in the CONFIG file is reversed from most other devices.  * It should be:  *  * device css0 ....  cssxint cssrint  *  * If you get it wrong, it will still autoconfig, but will just  * sit there with RECIEVE IDLE indicated on the front panel.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"../machine/pte.h"
+end_include
 
 begin_include
 include|#
@@ -29,12 +35,6 @@ begin_include
 include|#
 directive|include
 file|"../h/mbuf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/pte.h"
 end_include
 
 begin_include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rk.c	4.50	82/11/26	*/
+comment|/*	rk.c	4.51	82/12/17	*/
 end_comment
 
 begin_include
@@ -78,6 +78,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"../machine/pte.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../h/param.h"
 end_include
 
@@ -109,12 +115,6 @@ begin_include
 include|#
 directive|include
 file|"../h/user.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/pte.h"
 end_include
 
 begin_include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	inode.h	4.20	82/11/13	*/
+comment|/*	inode.h	4.21	82/12/17	*/
 end_comment
 
 begin_comment
@@ -236,12 +236,45 @@ name|i_gid
 value|i_ic.ic_gid
 end_define
 
+begin_comment
+comment|/* ugh! -- must be fixed */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|vax
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|i_size
 value|i_ic.ic_size.val[0]
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|sun
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|i_size
+value|i_ic.ic_size.val[1]
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -362,12 +395,41 @@ name|di_gid
 value|di_ic.ic_gid
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|vax
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|di_size
 value|di_ic.ic_size.val[0]
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|sun
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|di_size
+value|di_ic.ic_size.val[1]
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
