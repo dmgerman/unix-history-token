@@ -518,7 +518,7 @@ block|,
 literal|128
 block|,
 literal|128
-block|,  }
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -1041,7 +1041,7 @@ block|,
 literal|159
 block|,
 literal|159
-block|,  }
+block|, }
 decl_stmt|;
 end_decl_stmt
 

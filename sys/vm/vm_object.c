@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_object.c	8.5 (Berkeley) 3/22/94  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_object.c,v 1.45 1995/05/02 05:57:10 davidg Exp $  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_object.c	8.5 (Berkeley) 3/22/94  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_object.c,v 1.46 1995/05/21 21:39:30 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -2793,7 +2793,7 @@ name|TRUE
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * If the object has a pager, the pager wants to see all of the 	 * changes.  We need a copy-object for the changed pages. 	 *  	 * If there is a copy-object, and it is empty, no changes have been made 	 * to the object since the copy-object was made.  We can use the same 	 * copy- object. 	 */
+comment|/* 	 * If the object has a pager, the pager wants to see all of the 	 * changes.  We need a copy-object for the changed pages. 	 * 	 * If there is a copy-object, and it is empty, no changes have been made 	 * to the object since the copy-object was made.  We can use the same 	 * copy- object. 	 */
 name|Retry1
 label|:
 name|old_copy
@@ -2907,7 +2907,7 @@ argument_list|(
 name|src_object
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If the object has a pager, the pager wants to see all of the 	 * changes.  We must make a copy-object and put the changed pages 	 * there. 	 *  	 * The copy-object is always made large enough to completely shadow the 	 * original object, since it may have several users who want to shadow 	 * the original object at different points. 	 */
+comment|/* 	 * If the object has a pager, the pager wants to see all of the 	 * changes.  We must make a copy-object and put the changed pages 	 * there. 	 * 	 * The copy-object is always made large enough to completely shadow the 	 * original object, since it may have several users who want to shadow 	 * the original object at different points. 	 */
 name|new_copy
 operator|=
 name|vm_object_allocate
@@ -4008,7 +4008,7 @@ condition|(
 name|TRUE
 condition|)
 block|{
-comment|/* 		 * Verify that the conditions are right for collapse: 		 *  		 * The object exists and no pages in it are currently being paged 		 * out. 		 */
+comment|/* 		 * Verify that the conditions are right for collapse: 		 * 		 * The object exists and no pages in it are currently being paged 		 * out. 		 */
 if|if
 condition|(
 name|object
@@ -4165,7 +4165,7 @@ name|flags
 operator||=
 name|OBJ_DEAD
 expr_stmt|;
-comment|/* 			 * We can collapse the backing object. 			 *  			 * Move all in-memory pages from backing_object to the 			 * parent.  Pages that have been paged out will be 			 * overwritten by any of the parent's pages that 			 * shadow them. 			 */
+comment|/* 			 * We can collapse the backing object. 			 * 			 * Move all in-memory pages from backing_object to the 			 * parent.  Pages that have been paged out will be 			 * overwritten by any of the parent's pages that 			 * shadow them. 			 */
 while|while
 condition|(
 operator|(
@@ -4191,7 +4191,7 @@ operator|-
 name|backing_offset
 operator|)
 expr_stmt|;
-comment|/* 				 * If the parent has a page here, or if this 				 * page falls outside the parent, dispose of 				 * it. 				 *  				 * Otherwise, move it as planned. 				 */
+comment|/* 				 * If the parent has a page here, or if this 				 * page falls outside the parent, dispose of 				 * it. 				 * 				 * Otherwise, move it as planned. 				 */
 if|if
 condition|(
 name|p
@@ -4501,7 +4501,7 @@ name|backing_object
 operator|->
 name|shadow_offset
 expr_stmt|;
-comment|/* 			 * Discard backing_object. 			 *  			 * Since the backing object has no pages, no pager left, 			 * and no object references within it, all that is 			 * necessary is to dispose of it. 			 */
+comment|/* 			 * Discard backing_object. 			 * 			 * Since the backing object has no pages, no pager left, 			 * and no object references within it, all that is 			 * necessary is to dispose of it. 			 */
 name|vm_object_unlock
 argument_list|(
 name|backing_object
@@ -4548,7 +4548,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * If all of the pages in the backing object are 			 * shadowed by the parent object, the parent object no 			 * longer has to shadow the backing object; it can 			 * shadow the next one in the chain. 			 *  			 * The backing object must not be paged out - we'd have 			 * to check all of the paged-out pages, as well. 			 */
+comment|/* 			 * If all of the pages in the backing object are 			 * shadowed by the parent object, the parent object no 			 * longer has to shadow the backing object; it can 			 * shadow the next one in the chain. 			 * 			 * The backing object must not be paged out - we'd have 			 * to check all of the paged-out pages, as well. 			 */
 if|if
 condition|(
 name|backing_object
@@ -4597,7 +4597,7 @@ operator|-
 name|backing_offset
 operator|)
 expr_stmt|;
-comment|/* 				 * If the parent has a page here, or if this 				 * page falls outside the parent, keep going. 				 *  				 * Otherwise, the backing_object must be left in 				 * the chain. 				 */
+comment|/* 				 * If the parent has a page here, or if this 				 * page falls outside the parent, keep going. 				 * 				 * Otherwise, the backing_object must be left in 				 * the chain. 				 */
 if|if
 condition|(
 name|p

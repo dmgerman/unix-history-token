@@ -901,7 +901,7 @@ block|}
 end_function
 
 begin_comment
-comment|/****************************************************************************  *  * int bquread() - read bytes from the link interface.  *  * At first, the driver checks if the link-interface is ready to send a byte  * to the PC. If not, this check is repeated up to B004_MAXTRY times.  * If the link-interface is not ready after this loop, the driver sleeps for  * an NO=1 ticks and then checks the link-interface again.  * If the interface is still not ready, repeats as above incrementing NO.  * Once almost one byte is read N0 is set to 1.  * If B004_TIMEOUT != 0 and the link-interface is not ready for more than  * B004_TIMEOUT ticks read aborts returnig with the number of bytes read   * or with an error if no byte was read.  *  * By default, B004_TIMEOUT is = 0 (read is blocking)  *  *****************************************************************************/
+comment|/****************************************************************************  *  * int bquread() - read bytes from the link interface.  *  * At first, the driver checks if the link-interface is ready to send a byte  * to the PC. If not, this check is repeated up to B004_MAXTRY times.  * If the link-interface is not ready after this loop, the driver sleeps for  * an NO=1 ticks and then checks the link-interface again.  * If the interface is still not ready, repeats as above incrementing NO.  * Once almost one byte is read N0 is set to 1.  * If B004_TIMEOUT != 0 and the link-interface is not ready for more than  * B004_TIMEOUT ticks read aborts returnig with the number of bytes read  * or with an error if no byte was read.  *  * By default, B004_TIMEOUT is = 0 (read is blocking)  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -1060,7 +1060,7 @@ asm|"movl %4, %%ecx\n\t"
 comment|/* lim */
 asm|"subl %%edi, %%ecx\n\t"  	    "push %%es\n\t" 	    "movw %%ss, %%ax\n\t"
 comment|/** prepare ES, DF for transfer */
-asm|"movw %%ax, %%es\n\t" 	    "cld\n\t"			 	    "movb $1, %%ah\n\t"  	    "1:\tinb %%dx, %%al\n\t" 	    "testb %%ah, %%al\n\t" 	    "jz 2f\n\t" 	    "xchgl %%edx, %%ebx\n\t" 	    "insb\n\t" 	    "xchgl %%edx, %%ebx\n" 	    "2:\tloop 1b\n\t"  	    "pop %%es\n\t" 	    "movl %%edi, %0\n\t"
+asm|"movw %%ax, %%es\n\t" 	    "cld\n\t" 	    "movb $1, %%ah\n\t"  	    "1:\tinb %%dx, %%al\n\t" 	    "testb %%ah, %%al\n\t" 	    "jz 2f\n\t" 	    "xchgl %%edx, %%ebx\n\t" 	    "insb\n\t" 	    "xchgl %%edx, %%ebx\n" 	    "2:\tloop 1b\n\t"  	    "pop %%es\n\t" 	    "movl %%edi, %0\n\t"
 comment|/* store p */
 asm|:
 comment|/* out */
@@ -1425,7 +1425,7 @@ asm|"movl %4, %%ecx\n\t"
 comment|/* lim */
 asm|"subl %%esi, %%ecx\n\t"  	    "push %%ds\n\t" 	    "movw %%ss, %%ax\n\t"
 comment|/** prepare DS, DF for transfer */
-asm|"movw %%ax, %%ds\n\t" 	    "cld\n\t"			 	    "movb $1, %%ah\n\t" 	    "movw $100, %%di\n\t"  	    "1:\tinb %%dx, %%al\n\t" 	    "testb %%ah, %%al\n\t" 	    "jz 2f\n\t" 	    "xchgl %%edx, %%ebx\n\t" 	    "outsb\n\t" 	    "xchgl %%edx, %%ebx\n\t" 	    "loop 1b\n\t" 	    "jmp 3f\n"  	"2:\tdec %%di\n\t" 	"jnc 1b\n\t"  	    "3:\tpop %%ds\n" 	    "movl %%esi, %0\n\t"
+asm|"movw %%ax, %%ds\n\t" 	    "cld\n\t" 	    "movb $1, %%ah\n\t" 	    "movw $100, %%di\n\t"  	    "1:\tinb %%dx, %%al\n\t" 	    "testb %%ah, %%al\n\t" 	    "jz 2f\n\t" 	    "xchgl %%edx, %%ebx\n\t" 	    "outsb\n\t" 	    "xchgl %%edx, %%ebx\n\t" 	    "loop 1b\n\t" 	    "jmp 3f\n"  	"2:\tdec %%di\n\t" 	"jnc 1b\n\t"  	    "3:\tpop %%ds\n" 	    "movl %%esi, %0\n\t"
 comment|/* store p */
 asm|:
 comment|/* out */

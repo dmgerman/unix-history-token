@@ -203,7 +203,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*    XXX   THIS SHOULD BE FIXED!   I haven't got the KERNBASE-version to work, but on my system the kernel   is at virtual address 0xFxxxxxxx, responding to physical address   0x0xxxxxxx. #define PHYSTOKV(x)	((x) + KERNBASE) */
+comment|/*   XXX   THIS SHOULD BE FIXED!   I haven't got the KERNBASE-version to work, but on my system the kernel   is at virtual address 0xFxxxxxxx, responding to physical address   0x0xxxxxxx. #define PHYSTOKV(x)	((x) + KERNBASE) */
 end_comment
 
 begin_define

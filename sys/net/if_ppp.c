@@ -4,7 +4,7 @@ comment|/*  * if_ppp.c - Point-to-Point Protocol (PPP) Asynchronous driver.  *  
 end_comment
 
 begin_comment
-comment|/* $Id: if_ppp.c,v 1.11 1995/03/20 19:20:42 wollman Exp $ */
+comment|/* $Id: if_ppp.c,v 1.12 1995/03/29 20:34:17 ache Exp $ */
 end_comment
 
 begin_comment

@@ -291,7 +291,7 @@ comment|/* All possible flag bits mask        */
 end_comment
 
 begin_comment
-comment|/*      * New IP firewall options for [gs]etsockopt at the RAW IP level.  */
+comment|/*  * New IP firewall options for [gs]etsockopt at the RAW IP level.  */
 end_comment
 
 begin_define

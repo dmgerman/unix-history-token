@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: putdriver.c,v 2.2 88/09/19 12:55:27 nhall Exp $ */
+comment|/* $Header: /home/ncvs/src/sys/netiso/xebec/putdriver.c,v 1.1.1.1 1994/05/24 10:07:46 rgrimes Exp $ */
 end_comment
 
 begin_comment
-comment|/* $Source: /var/home/tadl/src/argo/xebec/RCS/putdriver.c,v $ */
+comment|/* $Source: /home/ncvs/src/sys/netiso/xebec/putdriver.c,v $ */
 end_comment
 
 begin_comment

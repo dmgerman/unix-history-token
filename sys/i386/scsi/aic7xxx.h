@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Interface to the generic driver for the aic7xxx based adaptec   * SCSI controllers.  This is used to implement product specific   * probe and attach routines.  *  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7xxx.h,v 1.7 1995/04/27 17:47:17 gibbs Exp $  */
+comment|/*  * Interface to the generic driver for the aic7xxx based adaptec  * SCSI controllers.  This is used to implement product specific  * probe and attach routines.  *  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7xxx.h,v 1.8 1995/05/17 07:06:02 davidg Exp $  */
 end_comment
 
 begin_ifndef
@@ -162,7 +162,7 @@ comment|/* PCI Based Controller */
 end_comment
 
 begin_comment
-comment|/*  * The driver keeps up to MAX_SCB scb structures per card in memory.  Only the  * first 26 bytes of the structure are valid for the hardware, the rest used  * for driver level bookeeping.  The "__attribute ((packed))" tags ensure that  * gcc does not attempt to pad the long ints in the structure to word  * boundaries since the first 26 bytes of this structure must have the correct  * offsets for the hardware to find them.  The driver is further optimized  * so that we only have to download the first 19 bytes since as long  * as we always use S/G, the last fields should be zero anyway.    */
+comment|/*  * The driver keeps up to MAX_SCB scb structures per card in memory.  Only the  * first 26 bytes of the structure are valid for the hardware, the rest used  * for driver level bookeeping.  The "__attribute ((packed))" tags ensure that  * gcc does not attempt to pad the long ints in the structure to word  * boundaries since the first 26 bytes of this structure must have the correct  * offsets for the hardware to find them.  The driver is further optimized  * so that we only have to download the first 19 bytes since as long  * as we always use S/G, the last fields should be zero anyway.  */
 end_comment
 
 begin_struct
@@ -279,7 +279,7 @@ define|#
 directive|define
 name|SCB_BZERO_SIZE
 value|19
-comment|/*  					 * amount we need to clear between 					 * commands 					 */
+comment|/* 					 * amount we need to clear between 					 * commands 					 */
 comment|/*23*/
 name|physaddr
 name|data
@@ -301,7 +301,7 @@ define|#
 directive|define
 name|SCB_UP_SIZE
 value|26
-comment|/*  					 * amount we need to upload to perform 					 * a request sense. 					 */
+comment|/* 					 * amount we need to upload to perform 					 * a request sense. 					 */
 comment|/*30*/
 name|physaddr
 name|host_scb
@@ -316,7 +316,7 @@ comment|/*31*/
 name|u_char
 name|next_waiting
 decl_stmt|;
-comment|/* Used to thread SCBs awaiting  					 * selection 					 */
+comment|/* Used to thread SCBs awaiting 					 * selection 					 */
 define|#
 directive|define
 name|SCB_LIST_NULL

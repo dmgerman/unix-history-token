@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	From: @(#)tcp_input.c	8.5 (Berkeley) 4/10/94  *	$Id: tcp_input.c,v 1.23 1995/05/09 12:32:06 olah Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	From: @(#)tcp_input.c	8.5 (Berkeley) 4/10/94  *	$Id: tcp_input.c,v 1.24 1995/05/11 01:41:06 davidg Exp $  */
 end_comment
 
 begin_ifndef
@@ -1263,7 +1263,7 @@ expr|struct
 name|tcpiphdr
 argument_list|)
 expr_stmt|;
-comment|/*  		 * Do quick retrieval of timestamp options ("options 		 * prediction?").  If timestamp is the only option and it's 		 * formatted as recommended in RFC 1323 appendix A, we 		 * quickly get the values now and not bother calling 		 * tcp_dooptions(), etc. 		 */
+comment|/* 		 * Do quick retrieval of timestamp options ("options 		 * prediction?").  If timestamp is the only option and it's 		 * formatted as recommended in RFC 1323 appendix A, we 		 * quickly get the values now and not bother calling 		 * tcp_dooptions(), etc. 		 */
 if|if
 condition|(
 operator|(
@@ -1783,7 +1783,7 @@ operator|&
 name|to
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Header prediction: check for the two common cases 	 * of a uni-directional data xfer.  If the packet has 	 * no control flags, is in-sequence, the window didn't 	 * change and we're not retransmitting, it's a 	 * candidate.  If the length is zero and the ack moved 	 * forward, we're the sender side of the xfer.  Just 	 * free the data acked& wake any higher level process 	 * that was blocked waiting for space.  If the length 	 * is non-zero and the ack didn't move, we're the 	 * receiver side.  If we're getting packets in-order 	 * (the reassembly queue is empty), add the data to 	 * the socket buffer and note that we need a delayed ack. 	 * Make sure that the hidden state-flags are also off. 	 * Since we check for TCPS_ESTABLISHED above, it can only 	 * be TH_NEEDSYN. 	 */
+comment|/* 	 * Header prediction: check for the two common cases 	 * of a uni-directional data xfer.  If the packet has 	 * no control flags, is in-sequence, the window didn't 	 * change and we're not retransmitting, it's a 	 * candidate.  If the length is zero and the ack moved 	 * forward, we're the sender side of the xfer.  Just 	 * free the data acked& wake any higher level process 	 * that was blocked waiting for space.  If the length 	 * is non-zero and the ack didn't move, we're the 	 * receiver side.  If we're getting packets in-order 	 * (the reassembly queue is empty), add the data to 	 * the socket buffer and note that we need a delayed ack. 	 * Make sure that the hidden state-flags are also off. 	 * Since we check for TCPS_ESTABLISHED above, it can only 	 * be TH_NEEDSYN. 	 */
 if|if
 condition|(
 name|tp
@@ -1913,7 +1913,7 @@ operator|->
 name|snd_max
 condition|)
 block|{
-comment|/*  		 * If last ACK falls within this segment's sequence numbers, 		 * record the timestamp. 		 * NOTE that the test is modified according to the latest 		 * proposal of the tcplw@cray.com list (Braden 1993/04/26). 		 */
+comment|/* 		 * If last ACK falls within this segment's sequence numbers, 		 * record the timestamp. 		 * NOTE that the test is modified according to the latest 		 * proposal of the tcplw@cray.com list (Braden 1993/04/26). 		 */
 if|if
 condition|(
 operator|(
@@ -2727,7 +2727,7 @@ name|to
 operator|.
 name|to_cc
 expr_stmt|;
-comment|/* 		 * Perform TAO test on incoming CC (SEG.CC) option, if any. 		 * - compare SEG.CC against cached CC from the same host,  		 *	if any. 		 * - if SEG.CC> chached value, SYN must be new and is accepted 		 *	immediately: save new CC in the cache, mark the socket 		 *	connected, enter ESTABLISHED state, turn on flag to 		 *	send a SYN in the next segment. 		 *	A virtual advertised window is set in rcv_adv to 		 *	initialize SWS prevention.  Then enter normal segment 		 *	processing: drop SYN, process data and FIN. 		 * - otherwise do a normal 3-way handshake. 		 */
+comment|/* 		 * Perform TAO test on incoming CC (SEG.CC) option, if any. 		 * - compare SEG.CC against cached CC from the same host, 		 *	if any. 		 * - if SEG.CC> chached value, SYN must be new and is accepted 		 *	immediately: save new CC in the cache, mark the socket 		 *	connected, enter ESTABLISHED state, turn on flag to 		 *	send a SYN in the next segment. 		 *	A virtual advertised window is set in rcv_adv to 		 *	initialize SWS prevention.  Then enter normal segment 		 *	processing: drop SYN, process data and FIN. 		 * - otherwise do a normal 3-way handshake. 		 */
 if|if
 condition|(
 operator|(
@@ -3259,7 +3259,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 *  Received initial SYN in SYN-SENT[*] state => simul- 		 *  taneous open.  If segment contains CC option and there is 		 *  a cached CC, apply TAO test; if it succeeds, connection is  		 *  half-synchronized.  Otherwise, do 3-way handshake: 		 *        SYN-SENT -> SYN-RECEIVED 		 *        SYN-SENT* -> SYN-RECEIVED* 		 *  If there was no CC option, clear cached CC value. 		 */
+comment|/* 		 *  Received initial SYN in SYN-SENT[*] state => simul- 		 *  taneous open.  If segment contains CC option and there is 		 *  a cached CC, apply TAO test; if it succeeds, connection is 		 *  half-synchronized.  Otherwise, do 3-way handshake: 		 *        SYN-SENT -> SYN-RECEIVED 		 *        SYN-SENT* -> SYN-RECEIVED* 		 *  If there was no CC option, clear cached CC value. 		 */
 name|tp
 operator|->
 name|t_flags
@@ -3304,7 +3304,7 @@ name|tao_cc
 argument_list|)
 condition|)
 block|{
-comment|/* 					 * update cache and make transition:  					 *        SYN-SENT -> ESTABLISHED* 					 *        SYN-SENT* -> FIN-WAIT-1* 					 */
+comment|/* 					 * update cache and make transition: 					 *        SYN-SENT -> ESTABLISHED* 					 *        SYN-SENT* -> FIN-WAIT-1* 					 */
 name|taop
 operator|->
 name|tao_cc
@@ -3468,7 +3468,7 @@ goto|;
 goto|goto
 name|step6
 goto|;
-comment|/* 	 * If the state is LAST_ACK or CLOSING or TIME_WAIT: 	 *	if segment contains a SYN and CC [not CC.NEW] option: 	 *              if state == TIME_WAIT and connection duration> MSL, 	 *                  drop packet and send RST; 	 * 	 *		if SEG.CC> CCrecv then is new SYN, and can implicitly 	 *		    ack the FIN (and data) in retransmission queue. 	 *                  Complete close and delete TCPCB.  Then reprocess 	 *                  segment, hoping to find new TCPCB in LISTEN state; 	 * 	 *		else must be old SYN; drop it. 	 *      else do normal processing.  	 */
+comment|/* 	 * If the state is LAST_ACK or CLOSING or TIME_WAIT: 	 *	if segment contains a SYN and CC [not CC.NEW] option: 	 *              if state == TIME_WAIT and connection duration> MSL, 	 *                  drop packet and send RST; 	 * 	 *		if SEG.CC> CCrecv then is new SYN, and can implicitly 	 *		    ack the FIN (and data) in retransmission queue. 	 *                  Complete close and delete TCPCB.  Then reprocess 	 *                  segment, hoping to find new TCPCB in LISTEN state; 	 * 	 *		else must be old SYN; drop it. 	 *      else do normal processing. 	 */
 case|case
 name|TCPS_LAST_ACK
 case|:
@@ -3551,7 +3551,7 @@ block|}
 break|break;
 comment|/* continue normal processing */
 block|}
-comment|/* 	 * States other than LISTEN or SYN_SENT. 	 * First check timestamp, if present. 	 * Then check the connection count, if present. 	 * Then check that at least some bytes of segment are within  	 * receive window.  If segment begins before rcv_nxt, 	 * drop leading data (and SYN); if nothing left, just ack. 	 * 	 * RFC 1323 PAWS: If we have a timestamp reply on this segment 	 * and it's less than ts_recent, drop it. 	 */
+comment|/* 	 * States other than LISTEN or SYN_SENT. 	 * First check timestamp, if present. 	 * Then check the connection count, if present. 	 * Then check that at least some bytes of segment are within 	 * receive window.  If segment begins before rcv_nxt, 	 * drop leading data (and SYN); if nothing left, just ack. 	 * 	 * RFC 1323 PAWS: If we have a timestamp reply on this segment 	 * and it's less than ts_recent, drop it. 	 */
 if|if
 condition|(
 operator|(
@@ -4366,7 +4366,7 @@ name|tp
 operator|->
 name|cc_recv
 expr_stmt|;
-comment|/* 		 * Make transitions:   		 *      SYN-RECEIVED  -> ESTABLISHED 		 *      SYN-RECEIVED* -> FIN-WAIT-1 		 */
+comment|/* 		 * Make transitions: 		 *      SYN-RECEIVED  -> ESTABLISHED 		 *      SYN-RECEIVED* -> FIN-WAIT-1 		 */
 if|if
 condition|(
 name|tp
@@ -4397,7 +4397,7 @@ name|t_state
 operator|=
 name|TCPS_ESTABLISHED
 expr_stmt|;
-comment|/*  		 * If segment contains data or ACK, will call tcp_reass() 		 * later; if not, do so now to pass queued data to user. 		 */
+comment|/* 		 * If segment contains data or ACK, will call tcp_reass() 		 * later; if not, do so now to pass queued data to user. 		 */
 if|if
 condition|(
 name|ti
@@ -4503,7 +4503,7 @@ operator|.
 name|tcps_rcvdupack
 operator|++
 expr_stmt|;
-comment|/* 				 * If we have outstanding data (other than 				 * a window probe), this is a completely 				 * duplicate ack (ie, window info didn't 				 * change), the ack is the biggest we've 				 * seen and we've seen exactly our rexmt 				 * threshhold of them, assume a packet 				 * has been dropped and retransmit it. 				 * Kludge snd_nxt& the congestion 				 * window so we send only this one 				 * packet. 				 * 				 * We know we're losing at the current 				 * window size so do congestion avoidance 				 * (set ssthresh to half the current window 				 * and pull our congestion window back to 				 * the new ssthresh). 				 * 				 * Dup acks mean that packets have left the 				 * network (they're now cached at the receiver)  				 * so bump cwnd by the amount in the receiver 				 * to keep a constant cwnd packets in the 				 * network. 				 */
+comment|/* 				 * If we have outstanding data (other than 				 * a window probe), this is a completely 				 * duplicate ack (ie, window info didn't 				 * change), the ack is the biggest we've 				 * seen and we've seen exactly our rexmt 				 * threshhold of them, assume a packet 				 * has been dropped and retransmit it. 				 * Kludge snd_nxt& the congestion 				 * window so we send only this one 				 * packet. 				 * 				 * We know we're losing at the current 				 * window size so do congestion avoidance 				 * (set ssthresh to half the current window 				 * and pull our congestion window back to 				 * the new ssthresh). 				 * 				 * Dup acks mean that packets have left the 				 * network (they're now cached at the receiver) 				 * so bump cwnd by the amount in the receiver 				 * to keep a constant cwnd packets in the 				 * network. 				 */
 if|if
 condition|(
 name|tp
@@ -4757,7 +4757,7 @@ goto|goto
 name|dropafterack
 goto|;
 block|}
-comment|/* 		 *  If we reach this point, ACK is not a duplicate,  		 *     i.e., it ACKs something we sent. 		 */
+comment|/* 		 *  If we reach this point, ACK is not a duplicate, 		 *     i.e., it ACKs something we sent. 		 */
 if|if
 condition|(
 name|tp
@@ -4767,7 +4767,7 @@ operator|&
 name|TF_NEEDSYN
 condition|)
 block|{
-comment|/*  			 *   T/TCP: Connection was half-synchronized, and our 			 *   SYN has been ACK'd (so connection is now fully 			 *   synchronized).  Go to non-starred state and 			 *   increment snd_una for ACK of SYN. 			 */
+comment|/* 			 *   T/TCP: Connection was half-synchronized, and our 			 *   SYN has been ACK'd (so connection is now fully 			 *   synchronized).  Go to non-starred state and 			 *   increment snd_una for ACK of SYN. 			 */
 name|tp
 operator|->
 name|t_flags
@@ -5425,7 +5425,7 @@ name|dodata
 goto|;
 comment|/* XXX */
 block|}
-comment|/* 		 * If this segment advances the known urgent pointer, 		 * then mark the data stream.  This should not happen 		 * in CLOSE_WAIT, CLOSING, LAST_ACK or TIME_WAIT STATES since 		 * a FIN has been received from the remote side.  		 * In these states we ignore the URG. 		 * 		 * According to RFC961 (Assigned Protocols), 		 * the urgent pointer points to the last octet 		 * of urgent data.  We continue, however, 		 * to consider it to indicate the first octet 		 * of data past the urgent section as the original  		 * spec states (in one of two places). 		 */
+comment|/* 		 * If this segment advances the known urgent pointer, 		 * then mark the data stream.  This should not happen 		 * in CLOSE_WAIT, CLOSING, LAST_ACK or TIME_WAIT STATES since 		 * a FIN has been received from the remote side. 		 * In these states we ignore the URG. 		 * 		 * According to RFC961 (Assigned Protocols), 		 * the urgent pointer points to the last octet 		 * of urgent data.  We continue, however, 		 * to consider it to indicate the first octet 		 * of data past the urgent section as the original 		 * spec states (in one of two places). 		 */
 if|if
 condition|(
 name|SEQ_GT
@@ -5670,7 +5670,7 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
-comment|/* 			 *  If connection is half-synchronized 			 *  (ie SEND_SYN flag on) then delay ACK, 			 *  so it may be piggybacked when SYN is sent. 			 *  Otherwise, since we received a FIN then no 			 *  more input can be expected, send ACK now.  			 */
+comment|/* 			 *  If connection is half-synchronized 			 *  (ie SEND_SYN flag on) then delay ACK, 			 *  so it may be piggybacked when SYN is sent. 			 *  Otherwise, since we received a FIN then no 			 *  more input can be expected, send ACK now. 			 */
 if|if
 condition|(
 name|tp
@@ -5730,7 +5730,7 @@ operator|=
 name|TCPS_CLOSING
 expr_stmt|;
 break|break;
-comment|/* 		 * In FIN_WAIT_2 state enter the TIME_WAIT state, 		 * starting the time-wait timer, turning off the other  		 * standard timers. 		 */
+comment|/* 		 * In FIN_WAIT_2 state enter the TIME_WAIT state, 		 * starting the time-wait timer, turning off the other 		 * standard timers. 		 */
 case|case
 name|TCPS_FIN_WAIT_2
 case|:
@@ -6433,7 +6433,7 @@ operator|->
 name|to_tsecr
 argument_list|)
 expr_stmt|;
-comment|/*  			 * A timestamp received in a SYN makes 			 * it ok to send timestamp requests and replies. 			 */
+comment|/* 			 * A timestamp received in a SYN makes 			 * it ok to send timestamp requests and replies. 			 */
 if|if
 condition|(
 name|ti
@@ -6515,7 +6515,7 @@ operator|->
 name|to_cc
 argument_list|)
 expr_stmt|;
-comment|/*  			 * A CC or CC.new option received in a SYN makes 			 * it ok to send CC in subsequent segments. 			 */
+comment|/* 			 * A CC or CC.new option received in a SYN makes 			 * it ok to send CC in subsequent segments. 			 */
 if|if
 condition|(
 name|ti
@@ -6593,7 +6593,7 @@ operator|->
 name|to_cc
 argument_list|)
 expr_stmt|;
-comment|/*  			 * A CC or CC.new option received in a SYN makes 			 * it ok to send CC in subsequent segments. 			 */
+comment|/* 			 * A CC or CC.new option received in a SYN makes 			 * it ok to send CC in subsequent segments. 			 */
 name|tp
 operator|->
 name|t_flags
@@ -6950,7 +6950,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*  		 * No rtt measurement yet - use the unsmoothed rtt. 		 * Set the variance to half the rtt (so our first 		 * retransmit happens at 3*rtt). 		 */
+comment|/* 		 * No rtt measurement yet - use the unsmoothed rtt. 		 * Set the variance to half the rtt (so our first 		 * retransmit happens at 3*rtt). 		 */
 name|tp
 operator|->
 name|t_srtt

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994, 1995 Matt Thomas (matt@lkg.dec.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: if_de.c,v 1.26 1995/05/22 13:32:24 davidg Exp $  *  */
+comment|/*-  * Copyright (c) 1994, 1995 Matt Thomas (matt@lkg.dec.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: if_de.c,v 1.27 1995/05/26 02:02:44 davidg Exp $  *  */
 end_comment
 
 begin_comment
@@ -655,7 +655,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * The DC21040 has a stupid restriction in that the receive  * buffers must be longword aligned.  But since Ethernet  * headers are not a multiple of longwords in size this forces  * the data to non-longword aligned.  Since IP requires the  * data to be longword aligned, we need to copy it after it has  * been DMA'ed in our memory.  *  * Since we have to copy it anyways, we might as well as allocate  * dedicated receive space for the input.  This allows to use a  * small receive buffer size and more ring entries to be able to  * better keep with a flood of tiny Ethernet packets.  *  * The receive space MUST ALWAYS be a multiple of the page size.  * And the number of receive descriptors multiplied by the size  * of the receive buffers must equal the recevive space.  This  * is so that we can manipulate the page tables so that even if a  * packet wraps around the end of the receive space, we can   * treat it as virtually contiguous.  *  * The above used to be true (the stupid restriction is still true)  * but we gone to directly DMA'ing into MBUFs because with 100Mb  * cards the copying is just too much of a hit.  */
+comment|/*  * The DC21040 has a stupid restriction in that the receive  * buffers must be longword aligned.  But since Ethernet  * headers are not a multiple of longwords in size this forces  * the data to non-longword aligned.  Since IP requires the  * data to be longword aligned, we need to copy it after it has  * been DMA'ed in our memory.  *  * Since we have to copy it anyways, we might as well as allocate  * dedicated receive space for the input.  This allows to use a  * small receive buffer size and more ring entries to be able to  * better keep with a flood of tiny Ethernet packets.  *  * The receive space MUST ALWAYS be a multiple of the page size.  * And the number of receive descriptors multiplied by the size  * of the receive buffers must equal the recevive space.  This  * is so that we can manipulate the page tables so that even if a  * packet wraps around the end of the receive space, we can  * treat it as virtually contiguous.  *  * The above used to be true (the stupid restriction is still true)  * but we gone to directly DMA'ing into MBUFs because with 100Mb  * cards the copying is just too much of a hit.  */
 end_comment
 
 begin_if
@@ -2283,7 +2283,7 @@ argument_list|(
 literal|10
 argument_list|)
 expr_stmt|;
-comment|/* Wait 10 microsends (actually 50 PCI cycles but at  		   33MHz that comes to two microseconds but wait a 		   bit longer anyways) */
+comment|/* Wait 10 microsends (actually 50 PCI cycles but at 		   33MHz that comes to two microseconds but wait a 		   bit longer anyways) */
 call|(
 modifier|*
 name|sc
@@ -2459,7 +2459,7 @@ name|d_status
 operator|=
 literal|0
 expr_stmt|;
-comment|/*      * We need to collect all the mbufs were on the       * receive ring before we reinit it either to put      * them back on or to know if we have to allocate      * more.      */
+comment|/*      * We need to collect all the mbufs were on the      * receive ring before we reinit it either to put      * them back on or to know if we have to allocate      * more.      */
 name|ri
 operator|=
 operator|&
@@ -7988,7 +7988,7 @@ argument_list|(
 literal|10
 argument_list|)
 expr_stmt|;
-comment|/* Wait 10 microsends (actually 50 PCI cycles but at  			   33MHz that comes to two microseconds but wait a 			   bit longer anyways) */
+comment|/* Wait 10 microsends (actually 50 PCI cycles but at 			   33MHz that comes to two microseconds but wait a 			   bit longer anyways) */
 block|}
 operator|(
 name|void
@@ -8160,7 +8160,7 @@ argument_list|(
 literal|10
 argument_list|)
 expr_stmt|;
-comment|/* Wait 10 microsends (actually 50 PCI cycles but at  			   33MHz that comes to two microseconds but wait a 			   bit longer anyways) */
+comment|/* Wait 10 microsends (actually 50 PCI cycles but at 			   33MHz that comes to two microseconds but wait a 			   bit longer anyways) */
 block|}
 end_function
 
@@ -8592,7 +8592,7 @@ end_comment
 
 begin_comment
 unit|static void tulip_pci_shutdown(     void *arg) {     tulip_softc_t * const sc = (tulip_softc_t *) arg;     TULIP_WRITE_CSR(sc, csr_busmode, TULIP_BUSMODE_SWRESET);     DELAY(10);
-comment|/* Wait 10 microsends (actually 50 PCI cycles but at  			   33MHz that comes to two microseconds but wait a 			   bit longer anyways) */
+comment|/* Wait 10 microsends (actually 50 PCI cycles but at 			   33MHz that comes to two microseconds but wait a 			   bit longer anyways) */
 end_comment
 
 begin_endif

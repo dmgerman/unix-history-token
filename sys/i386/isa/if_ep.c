@@ -4,11 +4,11 @@ comment|/*  * Copyright (c) 1994 Herb Peyerl<hpeyerl@novatel.ca>  * All rights r
 end_comment
 
 begin_comment
-comment|/*  *	Modified from the FreeBSD 1.1.5.1 version by:  *		 	Andres Vega Garcia   *			INRIA - Sophia Antipolis, France  *			avega@sophia.inria.fr  */
+comment|/*  *	Modified from the FreeBSD 1.1.5.1 version by:  *		 	Andres Vega Garcia  *			INRIA - Sophia Antipolis, France  *			avega@sophia.inria.fr  */
 end_comment
 
 begin_comment
-comment|/*  *  $Id: if_ep.c,v 1.26 1995/04/12 20:47:49 wollman Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
+comment|/*  *  $Id: if_ep.c,v 1.27 1995/05/27 04:40:57 davidg Exp $  *  *  Promiscuous mode added and interrupt logic slightly changed  *  to reduce the number of adapter failures. Transceiver select  *  logic changed to use value from EEPROM. Autoconfiguration  *  features added.  *  Done by:  *          Serge Babkin  *          Chelindbank (Chelyabinsk, Russia)  *          babkin@hq.icb.chel.su  */
 end_comment
 
 begin_include
@@ -2147,7 +2147,7 @@ name|rx_avg_pkt
 operator|=
 literal|128
 expr_stmt|;
-comment|/*      * NOTE: In all this I multiply everything by 64.       * W_s = the speed the CPU is able to write to the TX FIFO.       * T_s = the speed the board sends the info to the Ether.      * W_s/T_s = 16   (represents 16/64) =>    W_s = 25 % of T_s.       * This will give us for a packet of 1500 bytes      * tx_start_thresh=1125 and for a pkt of 64 bytes tx_start_threshold=48.      * We prefer to start thinking the CPU is much slower than the Ethernet      * transmission.      */
+comment|/*      * NOTE: In all this I multiply everything by 64.      * W_s = the speed the CPU is able to write to the TX FIFO.      * T_s = the speed the board sends the info to the Ether.      * W_s/T_s = 16   (represents 16/64) =>    W_s = 25 % of T_s.      * This will give us for a packet of 1500 bytes      * tx_start_thresh=1125 and for a pkt of 64 bytes tx_start_threshold=48.      * We prefer to start thinking the CPU is much slower than the Ethernet      * transmission.      */
 name|sc
 operator|->
 name|tx_rate

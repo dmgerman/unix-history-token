@@ -12,11 +12,11 @@ name|_MACHINE_SOUNDCARD_H_
 end_define
 
 begin_comment
-comment|/*  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: soundcard.h,v 1.11 1995/02/13 22:48:54 jkh Exp $  */
+comment|/*  * Copyright by Hannu Savolainen 1993  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: soundcard.h,v 1.12 1995/03/08 18:43:49 ugen Exp $  */
 end_comment
 
 begin_comment
-comment|/*    * If you make modifications to this file, please contact me before   * distributing the modified version. There is already enough    * divercity in the world.   *   * Regards,   * Hannu Savolainen   * hannu@voxware.pp.fi   */
+comment|/*   * If you make modifications to this file, please contact me before   * distributing the modified version. There is already enough   * divercity in the world.   *   * Regards,   * Hannu Savolainen   * hannu@voxware.pp.fi   */
 end_comment
 
 begin_define
@@ -459,7 +459,7 @@ decl_stmt|,
 name|loop_end
 decl_stmt|;
 comment|/* Byte offsets from the beginning */
-comment|/*   * The base_freq and base_note fields are used when computing the  * playback speed for a note. The base_note defines the tone frequency  * which is heard if the sample is played using the base_freq as the  * playback speed.  *  * The low_note and high_note fields define the minimum and maximum note  * frequencies for which this sample is valid. It is possible to define  * more than one samples for a instrument number at the same time. The  * low_note and high_note fields are used to select the most suitable one.  *  * The fields base_note, high_note and low_note should contain  * the note frequency multiplied by 1000. For example value for the  * middle A is 440*1000.  */
+comment|/*  * The base_freq and base_note fields are used when computing the  * playback speed for a note. The base_note defines the tone frequency  * which is heard if the sample is played using the base_freq as the  * playback speed.  *  * The low_note and high_note fields define the minimum and maximum note  * frequencies for which this sample is valid. It is possible to define  * more than one samples for a instrument number at the same time. The  * low_note and high_note fields are used to select the most suitable one.  *  * The fields base_note, high_note and low_note should contain  * the note frequency multiplied by 1000. For example value for the  * middle A is 440*1000.  */
 name|unsigned
 name|int
 name|base_freq
@@ -501,7 +501,7 @@ literal|6
 index|]
 decl_stmt|;
 comment|/* 255 == 100% */
-comment|/*  	 * The tremolo, vibrato and scale info are not supported yet. 	 * Enable by setting the mode bits WAVE_TREMOLO, WAVE_VIBRATO or 	 * WAVE_SCALE 	 */
+comment|/* 	 * The tremolo, vibrato and scale info are not supported yet. 	 * Enable by setting the mode bits WAVE_TREMOLO, WAVE_VIBRATO or 	 * WAVE_SCALE 	 */
 name|unsigned
 name|char
 name|tremolo_sweep
@@ -642,7 +642,7 @@ value|_IOWR('P', 1, struct patmgr_info)
 end_define
 
 begin_comment
-comment|/*  * The patmgr_info is a fixed size structure which is used for two  * different purposes. The intended use is for communication between  * the application using /dev/sequencer and the patch manager daemon  * associated with a synthesizer device (ioctl(SNDCTL_PMGR_ACCESS)).  *  * This structure is also used with ioctl(SNDCTL_PGMR_IFACE) which allows  * a patch manager daemon to read and write device parameters. This  * ioctl available through /dev/sequencer also. Avoid using it since it's  * extremely hardware dependent. In addition access trough /dev/sequencer   * may confuse the patch manager daemon.  */
+comment|/*  * The patmgr_info is a fixed size structure which is used for two  * different purposes. The intended use is for communication between  * the application using /dev/sequencer and the patch manager daemon  * associated with a synthesizer device (ioctl(SNDCTL_PMGR_ACCESS)).  *  * This structure is also used with ioctl(SNDCTL_PGMR_IFACE) which allows  * a patch manager daemon to read and write device parameters. This  * ioctl available through /dev/sequencer also. Avoid using it since it's  * extremely hardware dependent. In addition access trough /dev/sequencer  * may confuse the patch manager daemon.  */
 end_comment
 
 begin_struct
@@ -681,7 +681,7 @@ decl_stmt|;
 name|int
 name|command
 decl_stmt|;
-comment|/*   * Commands 0x000 to 0xfff reserved for patch manager programs   */
+comment|/*  * Commands 0x000 to 0xfff reserved for patch manager programs  */
 define|#
 directive|define
 name|PM_GET_DEVTYPE
@@ -742,7 +742,7 @@ define|#
 directive|define
 name|_PM_LOAD_PATCH
 value|0x100
-comment|/*   * Commands above 0xffff reserved for device specific use  */
+comment|/*  * Commands above 0xffff reserved for device specific use  */
 name|long
 name|parm1
 decl_stmt|;
@@ -835,7 +835,7 @@ comment|/* A patch has been loaded by appl */
 end_comment
 
 begin_comment
-comment|/*  * /dev/sequencer input events.  *  * The data written to the /dev/sequencer is a stream of events. Events  * are records of 4 or 8 bytes. The first byte defines the size.   * Any number of events can be written with a write call. There  * is a set of macros for sending these events. Use these macros if you  * want to maximize portability of your program.  *  * Events SEQ_WAIT, SEQ_MIDIPUTC and SEQ_ECHO. Are also input events.  * (All input events are currently 4 bytes long. Be prepared to support  * 8 byte events also. If you receive any event having first byte>= 128,  * it's a 8 byte event.  *  * The events are documented at the end of this file.  *  * Normal events (4 bytes)  * There is also a 8 byte version of most of the 4 byte events. The  * 8 byte one is recommended.  */
+comment|/*  * /dev/sequencer input events.  *  * The data written to the /dev/sequencer is a stream of events. Events  * are records of 4 or 8 bytes. The first byte defines the size.  * Any number of events can be written with a write call. There  * is a set of macros for sending these events. Use these macros if you  * want to maximize portability of your program.  *  * Events SEQ_WAIT, SEQ_MIDIPUTC and SEQ_ECHO. Are also input events.  * (All input events are currently 4 bytes long. Be prepared to support  * 8 byte events also. If you receive any event having first byte>= 128,  * it's a 8 byte event.  *  * The events are documented at the end of this file.  *  * Normal events (4 bytes)  * There is also a 8 byte version of most of the 4 byte events. The  * 8 byte one is recommended.  */
 end_comment
 
 begin_define
@@ -1391,7 +1391,7 @@ comment|/* Long events */
 end_comment
 
 begin_comment
-comment|/*  *	SEQ_FULLSIZE events are used for loading patches/samples to the  *	synthesizer devices. These events are passed directly to the driver  *	of the associated synthesizer device. There is no limit to the size  *	of the extended events. These events are not queued but executed  *	immediately when the write() is called (execution can take several  *	seconds of time).   *  *	When a SEQ_FULLSIZE message is written to the device, it must  *	be written using exactly one write() call. Other events cannot  *	be mixed to the same write.  *	  *	For FM synths (YM3812/OPL3) use struct sbi_instrument and write it to the   *	/dev/sequencer. Don't write other data together with the instrument structure  *	Set the key field of the structure to FM_PATCH. The device field is used to  *	route the patch to the corresponding device.  *  *	For Gravis UltraSound use struct patch_info. Initialize the key field  *      to GUS_PATCH.  */
+comment|/*  *	SEQ_FULLSIZE events are used for loading patches/samples to the  *	synthesizer devices. These events are passed directly to the driver  *	of the associated synthesizer device. There is no limit to the size  *	of the extended events. These events are not queued but executed  *	immediately when the write() is called (execution can take several  *	seconds of time).  *  *	When a SEQ_FULLSIZE message is written to the device, it must  *	be written using exactly one write() call. Other events cannot  *	be mixed to the same write.  *  *	For FM synths (YM3812/OPL3) use struct sbi_instrument and write it to the  *	/dev/sequencer. Don't write other data together with the instrument structure  *	Set the key field of the structure to FM_PATCH. The device field is used to  *	route the patch to the corresponding device.  *  *	For Gravis UltraSound use struct patch_info. Initialize the key field  *      to GUS_PATCH.  */
 end_comment
 
 begin_define
@@ -2021,7 +2021,7 @@ comment|/*********************************************  * IOCTL commands for /de
 end_comment
 
 begin_comment
-comment|/*   * Mixer devices  *  * There can be up to 20 different analog mixer channels. The  * SOUND_MIXER_NRDEVICES gives the currently supported maximum.   * The SOUND_MIXER_READ_DEVMASK returns a bitmask which tells  * the devices supported by the particular mixer.  */
+comment|/*  * Mixer devices  *  * There can be up to 20 different analog mixer channels. The  * SOUND_MIXER_NRDEVICES gives the currently supported maximum.  * The SOUND_MIXER_READ_DEVMASK returns a bitmask which tells  * the devices supported by the particular mixer.  */
 end_comment
 
 begin_define
@@ -2648,7 +2648,7 @@ comment|/*  * Level 2 event types for /dev/sequencer  */
 end_comment
 
 begin_comment
-comment|/*  * The 4 most significant bits of byte 0 specify the class of  * the event:   *  *	0x8X = system level events,  *	0x9X = device/port specific events, event[1] = device/port,  *		The last 4 bits give the subtype:  *			0x02	= Channel event (event[3] = chn).  *			0x01	= note event (event[4] = note).  *			(0x01 is not used alone but always with bit 0x02).  *	       event[2] = MIDI message code (0x80=note off etc.)  *  */
+comment|/*  * The 4 most significant bits of byte 0 specify the class of  * the event:  *  *	0x8X = system level events,  *	0x9X = device/port specific events, event[1] = device/port,  *		The last 4 bits give the subtype:  *			0x02	= Channel event (event[3] = chn).  *			0x01	= note event (event[4] = note).  *			(0x01 is not used alone but always with bit 0x02).  *	       event[2] = MIDI message code (0x80=note off etc.)  *  */
 end_comment
 
 begin_define
@@ -2969,7 +2969,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/*  * This variation of the sequencer macros is used just to format one event  * using fixed buffer.  *   * The program using the macro library must define the following macros before  * using this library.  *  * #define _seqbuf 		 name of the buffer (unsigned char[])   * #define _SEQ_ADVBUF(len)	 If the applic needs to know the exact  *				 size of the event, this macro can be used.  *				 Otherwise this must be defined as empty.  * #define _seqbufptr		 Define the name of index variable or 0 if  *				 not required.   */
+comment|/*  * This variation of the sequencer macros is used just to format one event  * using fixed buffer.  *  * The program using the macro library must define the following macros before  * using this library.  *  * #define _seqbuf 		 name of the buffer (unsigned char[])  * #define _SEQ_ADVBUF(len)	 If the applic needs to know the exact  *				 size of the event, this macro can be used.  *				 Otherwise this must be defined as empty.  * #define _seqbufptr		 Define the name of index variable or 0 if  *				 not required.  */
 end_comment
 
 begin_define
@@ -3391,7 +3391,7 @@ value|_TIMER_EVENT(TMR_TIMESIG, sig)
 end_define
 
 begin_comment
-comment|/*  * Events for the level 1 interface only   */
+comment|/*  * Events for the level 1 interface only  */
 end_comment
 
 begin_define

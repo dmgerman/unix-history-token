@@ -60,11 +60,11 @@ file|<i386/isa/timerreg.h>
 end_include
 
 begin_comment
-comment|/* The game port can manage 4 buttons and 4 variable resistors (usually 2   * joysticks, each with 2 buttons and 2 pots.) via the port at address 0x201.  * Getting the state of the buttons is done by reading the game port:  * buttons 1-4 correspond to bits 4-7 and resistors 1-4 (X1, Y1, X2, Y2)  * to bits 0-3.  * if button 1 (resp 2, 3, 4) is pressed, the bit 4 (resp 5, 6, 7) is set to 0  * to get the value of a resistor, write the value 0xff at port and  * wait until the corresponding bit returns to 0.  */
+comment|/* The game port can manage 4 buttons and 4 variable resistors (usually 2  * joysticks, each with 2 buttons and 2 pots.) via the port at address 0x201.  * Getting the state of the buttons is done by reading the game port:  * buttons 1-4 correspond to bits 4-7 and resistors 1-4 (X1, Y1, X2, Y2)  * to bits 0-3.  * if button 1 (resp 2, 3, 4) is pressed, the bit 4 (resp 5, 6, 7) is set to 0  * to get the value of a resistor, write the value 0xff at port and  * wait until the corresponding bit returns to 0.  */
 end_comment
 
 begin_comment
-comment|/* the formulae below only work if u is  ``not too large''. See also   * the discussion in microtime.s */
+comment|/* the formulae below only work if u is  ``not too large''. See also  * the discussion in microtime.s */
 end_comment
 
 begin_define

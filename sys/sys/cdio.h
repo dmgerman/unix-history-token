@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * 16 Feb 93	Julian Elischer	(julian@dialix.oz.au)  *  *	$Id: cdio.h,v 1.6 1994/02/05 09:14:24 swallace Exp $  */
+comment|/*  * 16 Feb 93	Julian Elischer	(julian@dialix.oz.au)  *  *	$Id: cdio.h,v 1.7 1995/04/09 15:50:48 jkh Exp $  */
 end_comment
 
 begin_comment

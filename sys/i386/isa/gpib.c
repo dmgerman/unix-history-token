@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * GPIB driver for FreeBSD.  * Version 0.1 (No interrupts, no DMA)  * Supports National Instruments AT-GPIB and AT-GPIB/TNT boards.   * (AT-GPIB not tested, but it should work)  *   * Written by Fred Cawthorne (fcawth@delphi.umd.edu)   * Some sections were based partly on the lpt driver.  *  (some remnants may remain)  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * The author grants any other persons or organizations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  *  */
+comment|/*  * GPIB driver for FreeBSD.  * Version 0.1 (No interrupts, no DMA)  * Supports National Instruments AT-GPIB and AT-GPIB/TNT boards.  * (AT-GPIB not tested, but it should work)  *  * Written by Fred Cawthorne (fcawth@delphi.umd.edu)  * Some sections were based partly on the lpt driver.  *  (some remnants may remain)  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * The author grants any other persons or organizations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  *  */
 end_comment
 
 begin_comment
@@ -591,7 +591,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * gpattach()  *  Attach device and print the type of card to the screen.	  */
+comment|/*  * gpattach()  *  Attach device and print the type of card to the screen.  */
 end_comment
 
 begin_function
@@ -1106,7 +1106,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * gpclose()  *	Close gpib device.    */
+comment|/*  * gpclose()  *	Close gpib device.  */
 end_comment
 
 begin_function
@@ -1872,7 +1872,7 @@ name|uio
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*NOTE we always leave one byte in case this is the last write   so close can send EOI with the last byte There may be 2 bytes    since we are doing 16 bit transfers.(note the -1 in the count below)*/
+comment|/*NOTE we always leave one byte in case this is the last write   so close can send EOI with the last byte There may be 2 bytes   since we are doing 16 bit transfers.(note the -1 in the count below)*/
 comment|/*If count<=2 we'll either pick it up on the next write or on close*/
 if|if
 condition|(
@@ -2699,11 +2699,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*GPIB ROUTINES:   These will also make little sense unless you have a data sheet.   Note that the routines with an "m" in the beginning are for    accessing multiple devices in one call*/
+comment|/*GPIB ROUTINES:   These will also make little sense unless you have a data sheet.   Note that the routines with an "m" in the beginning are for   accessing multiple devices in one call*/
 end_comment
 
 begin_comment
-comment|/*This is one thing I could not figure out how to do correctly.   I tried to use the auxilary  command to enable remote, but it    never worked.  Here, I bypass everything and write to the BSR   to enable the remote line.  NOTE that these lines are effectively   "OR'ed" with the actual lines, so writing a 1 to the bit in the BSR   forces the GPIB line true, no matter what the fancy circuitry of the   NAT4882 wants to do with it*/
+comment|/*This is one thing I could not figure out how to do correctly.   I tried to use the auxilary  command to enable remote, but it   never worked.  Here, I bypass everything and write to the BSR   to enable the remote line.  NOTE that these lines are effectively   "OR'ed" with the actual lines, so writing a 1 to the bit in the BSR   forces the GPIB line true, no matter what the fancy circuitry of the   NAT4882 wants to do with it*/
 end_comment
 
 begin_function
@@ -2939,7 +2939,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*This does not release the REM line on the gpib port, because if it did,    all the remote devices would go to local mode.  This only sends the    gotolocal message to one device.  Currently, REM is always held true    after enableremote is called, and is reset only on a close of the   gpib device */
+comment|/*This does not release the REM line on the gpib port, because if it did,   all the remote devices would go to local mode.  This only sends the   gotolocal message to one device.  Currently, REM is always held true   after enableremote is called, and is reset only on a close of the   gpib device */
 end_comment
 
 begin_function
@@ -5302,7 +5302,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*Send data through the TURBO488 FIFOS to a device that is already  addressed to listen.  This is used by the write call when someone is   writing to a printer or plotter, etc... */
+comment|/*Send data through the TURBO488 FIFOS to a device that is already  addressed to listen.  This is used by the write call when someone is  writing to a printer or plotter, etc... */
 end_comment
 
 begin_comment
@@ -5484,7 +5484,7 @@ name|EWOULDBLOCK
 operator|)
 condition|)
 do|;
-comment|/*The write routine and close routine must check if there is 1    byte left and handle it accordingly*/
+comment|/*The write routine and close routine must check if there is 1   byte left and handle it accordingly*/
 comment|/*Return the number of bytes written to the device*/
 return|return
 operator|(

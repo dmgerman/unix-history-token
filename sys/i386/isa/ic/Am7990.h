@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Am7990, Local Area Network Controller for Ethernet (LANCE)  *   * Copyright (c) 1994, Paul Richards. This software may be used,  * modified, copied, distributed, and sold, in both source and binary  * form provided that the above copyright and these terms are retained.  * Under no circumstances is the author responsible for the proper  * functioning of this software, nor does the author assume any  * responsibility for damages incurred with its use.  *  */
+comment|/*  * Am7990, Local Area Network Controller for Ethernet (LANCE)  *  * Copyright (c) 1994, Paul Richards. This software may be used,  * modified, copied, distributed, and sold, in both source and binary  * form provided that the above copyright and these terms are retained.  * Under no circumstances is the author responsible for the proper  * functioning of this software, nor does the author assume any  * responsibility for damages incurred with its use.  *  */
 end_comment
 
 begin_comment
@@ -170,7 +170,7 @@ value|0x0001
 end_define
 
 begin_comment
-comment|/*   * CSR3  *  * Bits 3-15 are reserved.  *  */
+comment|/*  * CSR3  *  * Bits 3-15 are reserved.  *  */
 end_comment
 
 begin_define
@@ -421,7 +421,7 @@ comment|/* Disable the receiver */
 end_comment
 
 begin_comment
-comment|/*   * Message Descriptor Structure  *  * Each transmit or receive descriptor ring entry (RDRE's and TDRE's)  * is composed of 4, 16-bit, message descriptors. They contain the following  * information.  *  * 1. The address of the actual message data buffer in user (host) memory.  * 2. The length of that message buffer.  * 3. The status information for that particular buffer. The eight most  *    significant bits of md1 are collectively termed the STATUS of the  *    descriptor.  *   * Descriptor md0 contains LADR 0-15, the low order 16 bits of the 24-bit  * address of the actual data buffer.  Bits 0-7 of descriptor md1 contain   * HADR, the high order 8-bits of the 24-bit data buffer address. Bits 8-15  * of md1 contain the status flags of the buffer. Descriptor md2 contains the  * buffer byte count in bits 0-11 as a two's complement number and must have   * 1's written to bits 12-15. For the receive entry md3 has the Message Byte  * Count in bits 0-11, this is the length of the received message and is valid   * only when ERR is cleared and ENP is set. For the transmit entry it contains  * more status information.  *  */
+comment|/*  * Message Descriptor Structure  *  * Each transmit or receive descriptor ring entry (RDRE's and TDRE's)  * is composed of 4, 16-bit, message descriptors. They contain the following  * information.  *  * 1. The address of the actual message data buffer in user (host) memory.  * 2. The length of that message buffer.  * 3. The status information for that particular buffer. The eight most  *    significant bits of md1 are collectively termed the STATUS of the  *    descriptor.  *  * Descriptor md0 contains LADR 0-15, the low order 16 bits of the 24-bit  * address of the actual data buffer.  Bits 0-7 of descriptor md1 contain  * HADR, the high order 8-bits of the 24-bit data buffer address. Bits 8-15  * of md1 contain the status flags of the buffer. Descriptor md2 contains the  * buffer byte count in bits 0-11 as a two's complement number and must have  * 1's written to bits 12-15. For the receive entry md3 has the Message Byte  * Count in bits 0-11, this is the length of the received message and is valid  * only when ERR is cleared and ENP is set. For the transmit entry it contains  * more status information.  *  */
 end_comment
 
 begin_struct
@@ -626,7 +626,7 @@ comment|/* Packet transmit deferred -- channel busy */
 end_comment
 
 begin_comment
-comment|/*   * Transmit status flags for md2   *  * Same as for receive descriptor.  *  * BCNT   0x0FFF         Size of data buffer as 2's complement number.  *  */
+comment|/*  * Transmit status flags for md2  *  * Same as for receive descriptor.  *  * BCNT   0x0FFF         Size of data buffer as 2's complement number.  *  */
 end_comment
 
 begin_comment

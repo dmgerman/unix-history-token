@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author   * responsible for the proper functioning of this software, nor does   * the author assume any responsibility for damages incurred with its   * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.10 1994/12/16 07:31:47 phk Exp $  */
+comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.11 1995/02/17 02:22:21 phk Exp $  */
 end_comment
 
 begin_include
@@ -896,7 +896,7 @@ block|{
 name|u_long
 name|cf
 decl_stmt|;
-asm|__asm ("pushl	%%ebp 		pushl	%%edx 		pushl	%%esi 		xorl	%3,%3 		movl	%3,%%esi 		lcall	_apm_addr 		jnc	1f 		incl	%3 	1:	 		popl	%%esi 		popl	%%edx 		popl	%%ebp"
+asm|__asm ("pushl	%%ebp 		pushl	%%edx 		pushl	%%esi 		xorl	%3,%3 		movl	%3,%%esi 		lcall	_apm_addr 		jnc	1f 		incl	%3 	1: 		popl	%%esi 		popl	%%edx 		popl	%%ebp"
 block|:
 literal|"=a"
 operator|(
@@ -2418,7 +2418,7 @@ block|{
 asm|__asm ("movw $0x5305, %ax; lcall _apm_addr");
 block|}
 block|}
-comment|/* 	 * Some APM implementation halts CPU in BIOS, whenever  	 * "CPU-idle" function are invoked, but swtch() of 	 * FreeBSD halts CPU, therefore, CPU is halted twice 	 * in the sched loop. It makes the interrupt latency 	 * terribly long and be able to cause a serious problem 	 * in interrupt processing. We prevent it by removing 	 * "hlt" operation from swtch() and managed it under 	 * APM driver. 	 */
+comment|/* 	 * Some APM implementation halts CPU in BIOS, whenever 	 * "CPU-idle" function are invoked, but swtch() of 	 * FreeBSD halts CPU, therefore, CPU is halted twice 	 * in the sched loop. It makes the interrupt latency 	 * terribly long and be able to cause a serious problem 	 * in interrupt processing. We prevent it by removing 	 * "hlt" operation from swtch() and managed it under 	 * APM driver. 	 */
 comment|/* 	 * UKAI Note: on NetBSD, idle() called from cpu_switch() 	 * doesn't halt CPU, so halt_cpu may not need on NetBSD/i386 	 * or only "sti" operation would be needed. 	 */
 if|if
 condition|(
@@ -3140,7 +3140,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Attach APM:  *  * Initialize APM driver (APM BIOS itself has been initialized in locore.s)  *  * Now, unless I'm mad, (not quite ruled out yet), the APM-1.1 spec is bogus:  *   * Appendix C says under the header "APM 1.0/APM 1.1 Modal BIOS Behavior"  * that "When an APM Driver connects with an APM 1.1 BIOS, the APM 1.1 BIOS  * will default to an APM 1.0 connection.  After an APM Driver calls the APM  * Driver Version function, specifying that it supports APM 1.1, and [sic!]  * APM BIOS will change its behavior to an APM 1.1 connection.  If the APM  * BIOS is an APM 1.0 BIOS, the APM Driver Version function call will fail,  * and the connection will remain an APM 1.0 connection."  *  * OK so I can establish a 1.0 connection, and then tell that I'm a 1.1  * and maybe then the BIOS will tell that it too is a 1.1.  * Fine.  * Now how will I ever get the segment-limits for instance ?  There is no   * way I can see that I can get a 1.1 response back from an "APM Protected   * Mode 32-bit Interface Connect" function ???  *   * Who made this,  Intel and Microsoft ?  -- How did you guess !  *  * /phk  */
+comment|/*  * Attach APM:  *  * Initialize APM driver (APM BIOS itself has been initialized in locore.s)  *  * Now, unless I'm mad, (not quite ruled out yet), the APM-1.1 spec is bogus:  *  * Appendix C says under the header "APM 1.0/APM 1.1 Modal BIOS Behavior"  * that "When an APM Driver connects with an APM 1.1 BIOS, the APM 1.1 BIOS  * will default to an APM 1.0 connection.  After an APM Driver calls the APM  * Driver Version function, specifying that it supports APM 1.1, and [sic!]  * APM BIOS will change its behavior to an APM 1.1 connection.  If the APM  * BIOS is an APM 1.0 BIOS, the APM Driver Version function call will fail,  * and the connection will remain an APM 1.0 connection."  *  * OK so I can establish a 1.0 connection, and then tell that I'm a 1.1  * and maybe then the BIOS will tell that it too is a 1.1.  * Fine.  * Now how will I ever get the segment-limits for instance ?  There is no  * way I can see that I can get a 1.1 response back from an "APM Protected  * Mode 32-bit Interface Connect" function ???  *  * Who made this,  Intel and Microsoft ?  -- How did you guess !  *  * /phk  */
 end_comment
 
 begin_ifdef

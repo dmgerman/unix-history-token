@@ -680,7 +680,7 @@ comment|/* count of outstanding upcalls */
 end_comment
 
 begin_comment
-comment|/*  * Define the token bucket filter structures  * tbftable -> each vif has one of these for storing info   * qtable   -> each interface has an associated queue of pkts   */
+comment|/*  * Define the token bucket filter structures  * tbftable -> each vif has one of these for storing info  * qtable   -> each interface has an associated queue of pkts  */
 end_comment
 
 begin_decl_stmt
@@ -3657,7 +3657,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/*       * Find the entry for which the upcall was made and update      */
+comment|/*      * Find the entry for which the upcall was made and update      */
 name|s
 operator|=
 name|splnet
@@ -3974,7 +3974,7 @@ name|mb_ntry
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  	     * If more than one entry was created for a single upcall 	     * delete that entry 	     */
+comment|/* 	     * If more than one entry was created for a single upcall 	     * delete that entry 	     */
 if|if
 condition|(
 name|nstl
@@ -5517,7 +5517,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/*  	     * Send message to routing daemon to install  	     * a route into the kernel table 	     */
+comment|/* 	     * Send message to routing daemon to install 	     * a route into the kernel table 	     */
 name|k_igmpsrc
 operator|.
 name|sin_addr
@@ -5817,7 +5817,7 @@ operator|==
 name|mb_rt
 condition|)
 break|break;
-comment|/*       * drop all the packets      * free the mbuf with the pkt, if, timing info      */
+comment|/*      * drop all the packets      * free the mbuf with the pkt, if, timing info      */
 while|while
 condition|(
 name|mb_rt
@@ -5863,7 +5863,7 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*       * Delete the entry from the cache      */
+comment|/*      * Delete the entry from the cache      */
 if|if
 condition|(
 name|prev_m0
@@ -6068,7 +6068,7 @@ parameter_list|,
 name|m
 parameter_list|)
 value|{                             \ 		(vifp)->v_pkt_out++;                     \                 if ((vifp)->v_flags& VIFF_SRCRT)        \                     srcrt_send((ip), (vifp), (m));       \                 else if ((vifp)->v_flags& VIFF_TUNNEL)  \                     encap_send((ip), (vifp), (m));       \                 else                                     \                     phyint_send((ip), (vifp), (m));      \                 }
-comment|/* If no options or the imo_multicast_vif option is 0, don't do this part   */
+comment|/* If no options or the imo_multicast_vif option is 0, don't do this part  */
 if|if
 condition|(
 operator|(
@@ -6173,7 +6173,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* check if a vif number is legal/ok. This is used by ip_output, to export  * numvifs there,   */
+comment|/* check if a vif number is legal/ok. This is used by ip_output, to export  * numvifs there,  */
 end_comment
 
 begin_function
@@ -7572,7 +7572,7 @@ argument_list|(
 name|vifp
 argument_list|)
 expr_stmt|;
-comment|/* if there are enough tokens,       * and the queue is empty,      * send this packet out      */
+comment|/* if there are enough tokens,      * and the queue is empty,      * send this packet out      */
 if|if
 condition|(
 name|vifp
@@ -7743,7 +7743,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * adds a packet to the queue at the interface  */
+comment|/*  * adds a packet to the queue at the interface  */
 end_comment
 
 begin_function
@@ -7886,7 +7886,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * processes the queue at the interface  */
+comment|/*  * processes the queue at the interface  */
 end_comment
 
 begin_function
@@ -8061,7 +8061,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * removes the jth packet from the queue at the interface  */
+comment|/*  * removes the jth packet from the queue at the interface  */
 end_comment
 
 begin_function
@@ -9045,7 +9045,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * End of token bucket filter modifications   */
+comment|/*  * End of token bucket filter modifications  */
 end_comment
 
 begin_ifdef

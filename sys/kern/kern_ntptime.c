@@ -54,7 +54,7 @@ file|<sys/sysctl.h>
 end_include
 
 begin_comment
-comment|/*  * The following variables are used by the hardclock() routine in the  * kern_clock.c module and are described in that module.   */
+comment|/*  * The following variables are used by the hardclock() routine in the  * kern_clock.c module and are described in that module.  */
 end_comment
 
 begin_decl_stmt

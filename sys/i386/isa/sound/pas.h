@@ -915,7 +915,7 @@ comment|/* R W	Mixer		Filter translation				*/
 end_comment
 
 begin_comment
-unit|unsigned int freq:24; 		unsigned int value:8; 	} F_F_FILTER_translate[] =  	{ { 73500, 0x01 },
+unit|unsigned int freq:24; 		unsigned int value:8; 	} F_F_FILTER_translate[] = 	{ { 73500, 0x01 },
 comment|/* 73500Hz - divide by  16 */
 end_comment
 

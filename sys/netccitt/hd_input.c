@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)hd_input.c	8.1 (Berkeley) 6/10/93  * $Id: hd_input.c,v 1.3 1995/02/15 06:29:43 jkh Exp $  */
+comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Laboratory for Computation Vision and the Computer Science Department  * of the University of British Columbia.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)hd_input.c	8.1 (Berkeley) 6/10/93  * $Id: hd_input.c,v 1.4 1995/05/11 19:26:39 rgrimes Exp $  */
 end_comment
 
 begin_include
@@ -1294,7 +1294,7 @@ name|queued
 init|=
 name|FALSE
 decl_stmt|;
-comment|/*  	 *  Validate the iframe's N(R) value. It's N(R) value must be in 	 *   sync with our V(S) value and our "last received nr". 	 */
+comment|/* 	 *  Validate the iframe's N(R) value. It's N(R) value must be in 	 *   sync with our V(S) value and our "last received nr". 	 */
 if|if
 condition|(
 name|valid_nr
@@ -1324,7 +1324,7 @@ name|queued
 operator|)
 return|;
 block|}
-comment|/*  	 *  This section tests the IFRAME for proper sequence. That is, it's 	 *  sequence number N(S) MUST be equal to V(S). 	 */
+comment|/* 	 *  This section tests the IFRAME for proper sequence. That is, it's 	 *  sequence number N(S) MUST be equal to V(S). 	 */
 if|if
 condition|(
 name|ns
@@ -1391,7 +1391,7 @@ operator|&=
 operator|~
 name|REJ_CONDITION
 expr_stmt|;
-comment|/*  	 *  This section finally tests the IFRAME's sequence number against 	 *  the window size (K)  and the sequence number of the  last frame 	 *  we have acknowledged.  If the IFRAME is completely correct then  	 *  it is queued for the packet level. 	 */
+comment|/* 	 *  This section finally tests the IFRAME's sequence number against 	 *  the window size (K)  and the sequence number of the  last frame 	 *  we have acknowledged.  If the IFRAME is completely correct then 	 *  it is queued for the packet level. 	 */
 if|if
 condition|(
 name|ns
@@ -1444,7 +1444,7 @@ argument_list|)
 expr_stmt|;
 block|}
 elseif|else
-comment|/*     			 *  Hopefully we can piggyback the RR, if not we will generate 			 *  a RR when T3 timer expires. 			 */
+comment|/* 			 *  Hopefully we can piggyback the RR, if not we will generate 			 *  a RR when T3 timer expires. 			 */
 if|if
 condition|(
 name|hdp
@@ -1572,7 +1572,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*  		 *  Here if the remote station has transmitted more iframes then 		 *  the number which have been acknowledged plus K.  		 */
+comment|/* 		 *  Here if the remote station has transmitted more iframes then 		 *  the number which have been acknowledged plus K. 		 */
 name|hdp
 operator|->
 name|hd_invalid_ns
@@ -1597,7 +1597,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   *  This routine is used to determine if a value (the middle parameter)  *  is between two other values. The low value is  the first  parameter  *  the high value is the last parameter. The routine checks the middle  *  value to see if it is within the range of the first and last values.  *  The reason we need this routine is the values are modulo some  base  *  hence a simple test for greater or less than is not sufficient.  */
+comment|/*  *  This routine is used to determine if a value (the middle parameter)  *  is between two other values. The low value is  the first  parameter  *  the high value is the last parameter. The routine checks the middle  *  value to see if it is within the range of the first and last values.  *  The reason we need this routine is the values are modulo some  base  *  hence a simple test for greater or less than is not sufficient.  */
 end_comment
 
 begin_function
@@ -1668,7 +1668,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   *  This routine handles all the frame reject conditions which can  *  arise as a result  of secondary  processing.  The frame reject  *  condition Y (frame length error) are handled elsewhere.  */
+comment|/*  *  This routine handles all the frame reject conditions which can  *  arise as a result  of secondary  processing.  The frame reject  *  condition Y (frame length error) are handled elsewhere.  */
 end_comment
 
 begin_function
@@ -1851,7 +1851,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   *  This procedure is invoked when ever we receive a supervisor  *  frame such as RR, RNR and REJ. All processing for these  *  frames is done here.  */
+comment|/*  *  This procedure is invoked when ever we receive a supervisor  *  frame such as RR, RNR and REJ. All processing for these  *  frames is done here.  */
 end_comment
 
 begin_function
@@ -2113,7 +2113,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   *  This routine tests the validity of the N(R) which we have received.  *  If it is ok,  then all the  iframes which it acknowledges  (if any)  *  will be freed.  */
+comment|/*  *  This routine tests the validity of the N(R) which we have received.  *  If it is ok,  then all the  iframes which it acknowledges  (if any)  *  will be freed.  */
 end_comment
 
 begin_function
@@ -2154,7 +2154,7 @@ operator|(
 name|TRUE
 operator|)
 return|;
-comment|/*  	 *  This section validates the frame's  N(R) value.  It's N(R) value 	 *  must be  in syncronization  with  our V(S)  value and  our "last 	 *  received nr" variable. If it is correct then we are able to send 	 *  more IFRAME's, else frame reject condition is entered. 	 */
+comment|/* 	 *  This section validates the frame's  N(R) value.  It's N(R) value 	 *  must be  in syncronization  with  our V(S)  value and  our "last 	 *  received nr" variable. If it is correct then we are able to send 	 *  more IFRAME's, else frame reject condition is entered. 	 */
 if|if
 condition|(
 name|range_check
@@ -2218,7 +2218,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/*  	 *  If we get to here, we do have a valid frame  but it might be out 	 *  of sequence.  However, we should  still accept the receive state 	 *  number N(R) since it has already passed our previous test and it 	 *  does acknowledge frames which we are sending. 	 */
+comment|/* 	 *  If we get to here, we do have a valid frame  but it might be out 	 *  of sequence.  However, we should  still accept the receive state 	 *  number N(R) since it has already passed our previous test and it 	 *  does acknowledge frames which we are sending. 	 */
 name|KILL_TIMER
 argument_list|(
 name|hdp
@@ -2257,7 +2257,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   *  This routine determines how many iframes need to be retransmitted.  *  It then resets the Send State Variable V(S) to accomplish this.  */
+comment|/*  *  This routine determines how many iframes need to be retransmitted.  *  It then resets the Send State Variable V(S) to accomplish this.  */
 end_comment
 
 begin_function
@@ -2292,7 +2292,7 @@ operator|->
 name|hd_ifp
 argument_list|)
 expr_stmt|;
-comment|/*  	 *  Determine how many frames should be re-transmitted. In the case  	 *  of a normal REJ this  should be 1 to K.  In the case of a timer 	 *  recovery REJ (ie. a REJ with the Final Bit on) this could be 0.  	 */
+comment|/* 	 *  Determine how many frames should be re-transmitted. In the case 	 *  of a normal REJ this  should be 1 to K.  In the case of a timer 	 *  recovery REJ (ie. a REJ with the Final Bit on) this could be 0. 	 */
 name|anchor
 operator|=
 name|hdp
@@ -2380,7 +2380,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   *  This routine frees iframes from the retransmit queue. It is called  *  when a previously written iframe is acknowledged.  */
+comment|/*  *  This routine frees iframes from the retransmit queue. It is called  *  when a previously written iframe is acknowledged.  */
 end_comment
 
 begin_function
@@ -2415,7 +2415,7 @@ name|i
 decl_stmt|,
 name|k
 decl_stmt|;
-comment|/*  	 *  We  need to do the  following  because  of a  funny quirk  in  the  	 *  protocol.  This case  occures  when  in Timer  recovery  condition  	 *  we get  a  N(R)  which  acknowledges all  the outstanding  iframes 	 *  but with  the Final Bit off. In this case we need to save the last 	 *  iframe for possible retransmission even though it has already been  	 *  acknowledged! 	 */
+comment|/* 	 *  We  need to do the  following  because  of a  funny quirk  in  the 	 *  protocol.  This case  occures  when  in Timer  recovery  condition 	 *  we get  a  N(R)  which  acknowledges all  the outstanding  iframes 	 *  but with  the Final Bit off. In this case we need to save the last 	 *  iframe for possible retransmission even though it has already been 	 *  acknowledged! 	 */
 if|if
 condition|(
 operator|(

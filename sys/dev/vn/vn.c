@@ -2228,7 +2228,7 @@ argument_list|,
 argument|VN_LABELS
 argument_list|)
 block|{
-comment|/* 			 * Reopen so that `ds' knows which devices are open. 			 * If this is the first VNIOCSET, then we've  			 * guaranteed that the device is the cdev and that  			 * no other slices or labels are open.  Otherwise, 			 * we rely on VNIOCCLR not being abused. 			 */
+comment|/* 			 * Reopen so that `ds' knows which devices are open. 			 * If this is the first VNIOCSET, then we've 			 * guaranteed that the device is the cdev and that 			 * no other slices or labels are open.  Otherwise, 			 * we rely on VNIOCCLR not being abused. 			 */
 name|error
 operator|=
 name|vnopen

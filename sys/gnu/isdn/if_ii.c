@@ -5,16 +5,16 @@ name|char
 name|_if_iiid
 index|[]
 init|=
-literal|"@(#)$Id: if_ii.c,v 1.1 1995/02/14 15:00:27 jkh Exp $"
+literal|"@(#)$Id: if_ii.c,v 1.2 1995/02/15 06:28:26 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*******************************************************************************  *  II - Version 0.1 $Revision: 1.1 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  * $Log: if_ii.c,v $  * Revision 1.1  1995/02/14  15:00:27  jkh  * An ISDN driver that supports the EDSS1 and the 1TR6 ISDN interfaces.  * EDSS1 is the "Euro-ISDN", 1TR6 is the soon obsolete german ISDN Interface.  * Obtained from: Dietmar Friede<dfriede@drnhh.neuhaus.de> and  * 	Juergen Krause<jkr@saarlink.de>  *  * This is only one part - the rest to follow in a couple of hours.  * This part is a benign import, since it doesn't affect anything else.  *  *  ******************************************************************************/
+comment|/*******************************************************************************  *  II - Version 0.1 $Revision: 1.2 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  * $Log: if_ii.c,v $  * Revision 1.2  1995/02/15  06:28:26  jkh  * Fix up include paths, nuke some warnings.  *  * Revision 1.1  1995/02/14  15:00:27  jkh  * An ISDN driver that supports the EDSS1 and the 1TR6 ISDN interfaces.  * EDSS1 is the "Euro-ISDN", 1TR6 is the soon obsolete german ISDN Interface.  * Obtained from: Dietmar Friede<dfriede@drnhh.neuhaus.de> and  * 	Juergen Krause<jkr@saarlink.de>  *  * This is only one part - the rest to follow in a couple of hours.  * This part is a benign import, since it doesn't affect anything else.  *  *  ******************************************************************************/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1994 Dietmar Friede (dietmar@friede.de) All rights reserved.  * FSF/FSAG GNU Copyright applies  *   * A high level ip isdn driver.  *   * Uses loop driver as template. Small - and simple - is beautiful.  */
+comment|/*  * Copyright (c) 1994 Dietmar Friede (dietmar@friede.de) All rights reserved.  * FSF/FSAG GNU Copyright applies  *  * A high level ip isdn driver.  *  * Uses loop driver as template. Small - and simple - is beautiful.  */
 end_comment
 
 begin_include

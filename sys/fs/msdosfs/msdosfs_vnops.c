@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.14 1995/04/11 18:32:17 ache Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.15 1995/05/09 16:30:45 bde Exp $ */
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*-  * Copyright (C) 1994 Wolfgang Solfrank.  * Copyright (C) 1994 TooLs
 end_comment
 
 begin_comment
-comment|/*  * Written by Paul Popelka (paulp@uts.amdahl.com)  *   * You can do anything you want with this software, just don't say you wrote  * it, and don't remove this notice.  *   * This software is provided "as is".  *   * The author supplies this software to be publicly redistributed on the  * understanding that the author is not responsible for the correct  * functioning of this software in any circumstances and is not liable for  * any damages caused by this software.  *   * October 1992  */
+comment|/*  * Written by Paul Popelka (paulp@uts.amdahl.com)  *  * You can do anything you want with this software, just don't say you wrote  * it, and don't remove this notice.  *  * This software is provided "as is".  *  * The author supplies this software to be publicly redistributed on the  * understanding that the author is not responsible for the correct  * functioning of this software in any circumstances and is not liable for  * any damages caused by this software.  *  * October 1992  */
 end_comment
 
 begin_include
@@ -162,7 +162,7 @@ file|<msdosfs/fat.h>
 end_include
 
 begin_comment
-comment|/*  * Some general notes:  *   * In the ufs filesystem the inodes, superblocks, and indirect blocks are  * read/written using the vnode for the filesystem. Blocks that represent  * the contents of a file are read/written using the vnode for the file  * (including directories when they are read/written as files). This  * presents problems for the dos filesystem because data that should be in  * an inode (if dos had them) resides in the directory itself.  Since we  * must update directory entries without the benefit of having the vnode  * for the directory we must use the vnode for the filesystem.  This means  * that when a directory is actually read/written (via read, write, or  * readdir, or seek) we must use the vnode for the filesystem instead of  * the vnode for the directory as would happen in ufs. This is to insure we  * retreive the correct block from the buffer cache since the hash value is  * based upon the vnode address and the desired block number.  */
+comment|/*  * Some general notes:  *  * In the ufs filesystem the inodes, superblocks, and indirect blocks are  * read/written using the vnode for the filesystem. Blocks that represent  * the contents of a file are read/written using the vnode for the file  * (including directories when they are read/written as files). This  * presents problems for the dos filesystem because data that should be in  * an inode (if dos had them) resides in the directory itself.  Since we  * must update directory entries without the benefit of having the vnode  * for the directory we must use the vnode for the filesystem.  This means  * that when a directory is actually read/written (via read, write, or  * readdir, or seek) we must use the vnode for the filesystem instead of  * the vnode for the directory as would happen in ufs. This is to insure we  * retreive the correct block from the buffer cache since the hash value is  * based upon the vnode address and the desired block number.  */
 end_comment
 
 begin_comment
@@ -3355,7 +3355,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Flush the blocks of a file to disk.  *   * This function is worthless for vnodes that represent directories. Maybe we  * could just do a sync if they try an fsync on a directory file.  */
+comment|/*  * Flush the blocks of a file to disk.  *  * This function is worthless for vnodes that represent directories. Maybe we  * could just do a sync if they try an fsync on a directory file.  */
 end_comment
 
 begin_function
@@ -3756,7 +3756,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Renames on files require moving the denode to a new hash queue since the  * denode's location is used to compute which hash queue to put the file  * in. Unless it is a rename in place.  For example "mv a b".  *   * What follows is the basic algorithm:  *   * if (file move) {  *	if (dest file exists) {  *		remove dest file  *	}  *	if (dest and src in same directory) {  *		rewrite name in existing directory slot  *	} else {  *		write new entry in dest directory  *		update offset and dirclust in denode  *		move denode to new hash chain  *		clear old directory entry  *	}  * } else {  *	directory move  *	if (dest directory exists) {  *		if (dest is not empty) {  *			return ENOTEMPTY  *		}  *		remove dest directory  *	}  *	if (dest and src in same directory) {  *		rewrite name in existing entry  *	} else {  *		be sure dest is not a child of src directory  *		write entry in dest directory  *		update "." and ".." in moved directory  *		update offset and dirclust in denode  *		move denode to new hash chain  *		clear old directory entry for moved directory  *	}  * }  *   * On entry:  *	source's parent directory is unlocked  *	source file or directory is unlocked  *	destination's parent directory is locked  *	destination file or directory is locked if it exists  *   * On exit:  *	all denodes should be released  *  * Notes:  * I'm not sure how the memory containing the pathnames pointed at by the  * componentname structures is freed, there may be some memory bleeding  * for each rename done.  */
+comment|/*  * Renames on files require moving the denode to a new hash queue since the  * denode's location is used to compute which hash queue to put the file  * in. Unless it is a rename in place.  For example "mv a b".  *  * What follows is the basic algorithm:  *  * if (file move) {  *	if (dest file exists) {  *		remove dest file  *	}  *	if (dest and src in same directory) {  *		rewrite name in existing directory slot  *	} else {  *		write new entry in dest directory  *		update offset and dirclust in denode  *		move denode to new hash chain  *		clear old directory entry  *	}  * } else {  *	directory move  *	if (dest directory exists) {  *		if (dest is not empty) {  *			return ENOTEMPTY  *		}  *		remove dest directory  *	}  *	if (dest and src in same directory) {  *		rewrite name in existing entry  *	} else {  *		be sure dest is not a child of src directory  *		write entry in dest directory  *		update "." and ".." in moved directory  *		update offset and dirclust in denode  *		move denode to new hash chain  *		clear old directory entry for moved directory  *	}  * }  *  * On entry:  *	source's parent directory is unlocked  *	source file or directory is unlocked  *	destination's parent directory is locked  *	destination file or directory is locked if it exists  *  * On exit:  *	all denodes should be released  *  * Notes:  * I'm not sure how the memory containing the pathnames pointed at by the  * componentname structures is freed, there may be some memory bleeding  * for each rename done.  */
 end_comment
 
 begin_function

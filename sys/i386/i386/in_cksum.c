@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from tahoe:	in_cksum.c	1.2	86/01/05  *	from:		@(#)in_cksum.c	1.3 (Berkeley) 1/19/91  *	$Id: in_cksum.c,v 1.5 1994/03/07 11:47:30 davidg Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from tahoe:	in_cksum.c	1.2	86/01/05  *	from:		@(#)in_cksum.c	1.3 (Berkeley) 1/19/91  *	$Id: in_cksum.c,v 1.6 1994/08/13 03:49:39 wollman Exp $  */
 end_comment
 
 begin_include
@@ -22,7 +22,7 @@ file|<sys/mbuf.h>
 end_include
 
 begin_comment
-comment|/*  * Checksum routine for Internet Protocol family headers.  *  * This routine is very heavily used in the network  * code and should be modified for each CPU to be as fast as possible.  *   * This implementation is 386 version.  */
+comment|/*  * Checksum routine for Internet Protocol family headers.  *  * This routine is very heavily used in the network  * code and should be modified for each CPU to be as fast as possible.  *  * This implementation is 386 version.  */
 end_comment
 
 begin_undef
@@ -186,7 +186,7 @@ literal|1
 condition|)
 block|{
 comment|/* 			 * The first byte of this mbuf is the continuation 			 * of a word spanning between this mbuf and the 			 * last mbuf. 			 */
-comment|/* su.c[0] is already saved when scanning previous  			 * mbuf.  sum was REDUCEd when we found mlen == -1 			 */
+comment|/* su.c[0] is already saved when scanning previous 			 * mbuf.  sum was REDUCEd when we found mlen == -1 			 */
 name|su
 operator|.
 name|c
@@ -444,7 +444,7 @@ block|{
 name|u_char
 name|junk
 decl_stmt|;
-comment|/* 			 * Add with carry 16 words and fold in the last 			 * carry by adding a 0 with carry. 			 * 			 * The early ADD(16) and the LOAD(32) are to load 			 * the next 2 cache lines in advance on 486's.  The 			 * 486 has a penalty of 2 clock cycles for loading 			 * a cache line, plus whatever time the external 			 * memory takes to load the first word(s) addressed. 			 * These penalties are unavoidable.  Subsequent 			 * accesses to a cache line being loaded (and to 			 * other external memory?) are delayed until the  			 * whole load finishes.  These penalties are mostly 			 * avoided by not accessing external memory for 			 * 8 cycles after the ADD(16) and 12 cycles after 			 * the LOAD(32).  The loop terminates when mlen 			 * is initially 33 (not 32) to guaranteed that 			 * the LOAD(32) is within bounds. 			 */
+comment|/* 			 * Add with carry 16 words and fold in the last 			 * carry by adding a 0 with carry. 			 * 			 * The early ADD(16) and the LOAD(32) are to load 			 * the next 2 cache lines in advance on 486's.  The 			 * 486 has a penalty of 2 clock cycles for loading 			 * a cache line, plus whatever time the external 			 * memory takes to load the first word(s) addressed. 			 * These penalties are unavoidable.  Subsequent 			 * accesses to a cache line being loaded (and to 			 * other external memory?) are delayed until the 			 * whole load finishes.  These penalties are mostly 			 * avoided by not accessing external memory for 			 * 8 cycles after the ADD(16) and 12 cycles after 			 * the LOAD(32).  The loop terminates when mlen 			 * is initially 33 (not 32) to guaranteed that 			 * the LOAD(32) is within bounds. 			 */
 name|ADD
 argument_list|(
 literal|16

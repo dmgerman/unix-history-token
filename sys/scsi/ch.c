@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Written by grefen@?????  * Based on scsi drivers by Julian Elischer (julian@tfs.com)  *  *      $Id: ch.c,v 1.19 1995/05/03 18:09:08 dufault Exp $  */
+comment|/*  * Written by grefen@?????  * Based on scsi drivers by Julian Elischer (julian@tfs.com)  *  *      $Id: ch.c,v 1.20 1995/05/11 19:26:46 rgrimes Exp $  */
 end_comment
 
 begin_include
@@ -2057,7 +2057,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Get the scsi driver to send a full inquiry to the  * device and use the results to fill out the global   * parameter structure.  */
+comment|/*  * Get the scsi driver to send a full inquiry to the  * device and use the results to fill out the global  * parameter structure.  */
 end_comment
 
 begin_function
@@ -2145,7 +2145,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* 	 * First do a mode sense  	 */
+comment|/* 	 * First do a mode sense 	 */
 comment|/* sc_link->flags&= ~SDEV_MEDIA_LOADED; */
 comment|/*XXX */
 name|bzero

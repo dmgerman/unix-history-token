@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tp_input.c	8.1 (Berkeley) 6/10/93  * $Id$  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tp_input.c	8.1 (Berkeley) 6/10/93  * $Id: tp_input.c,v 1.2 1994/08/02 07:51:11 davidg Exp $  */
 end_comment
 
 begin_comment
-comment|/*********************************************************** 		Copyright IBM Corporation 1987                        All Rights Reserved  Permission to use, copy, modify, and distribute this software and its  documentation for any purpose and without fee is hereby granted,  provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in  supporting documentation, and that the name of IBM not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.    IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  ******************************************************************/
+comment|/*********************************************************** 		Copyright IBM Corporation 1987                        All Rights Reserved  Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of IBM not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.  IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  ******************************************************************/
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  *  * $Header: /home/ncvs/src/sys/netiso/tp_input.c,v 1.1.1.1 1994/05/24 10:06:54 rgrimes Exp $  * $Source: /home/ncvs/src/sys/netiso/tp_input.c,v $  *  * tp_input() gets an mbuf chain from ip.  Actually, not directly  * from ip, because ip calls a net-level routine that strips off  * the net header and then calls tp_input(), passing the proper type  * of addresses for the address family in use (how it figures out  * which AF is not yet determined.)  *  * Decomposing the tpdu is some of the most laughable code.  The variable-length  * parameters and the problem of non-aligned memory references  * necessitates such abominations as the macros WHILE_OPTIONS (q.v. below)  * to loop through the header and decompose it.  *  * The routine tp_newsocket() is called when a CR comes in for a listening  * socket.  tp_input calls sonewconn() and tp_newsocket() to set up the  * "child" socket.  Most tpcb values are copied from the parent tpcb into  * the child.  *   * Also in here is tp_headersize() (grot) which tells the expected size  * of a tp header, to be used by other layers.  It's in here because it  * uses the static structure tpdu_info.  */
+comment|/*  * ARGO TP  *  * $Header: /home/ncvs/src/sys/netiso/tp_input.c,v 1.2 1994/08/02 07:51:11 davidg Exp $  * $Source: /home/ncvs/src/sys/netiso/tp_input.c,v $  *  * tp_input() gets an mbuf chain from ip.  Actually, not directly  * from ip, because ip calls a net-level routine that strips off  * the net header and then calls tp_input(), passing the proper type  * of addresses for the address family in use (how it figures out  * which AF is not yet determined.)  *  * Decomposing the tpdu is some of the most laughable code.  The variable-length  * parameters and the problem of non-aligned memory references  * necessitates such abominations as the macros WHILE_OPTIONS (q.v. below)  * to loop through the header and decompose it.  *  * The routine tp_newsocket() is called when a CR comes in for a listening  * socket.  tp_input calls sonewconn() and tp_newsocket() to set up the  * "child" socket.  Most tpcb values are copied from the parent tpcb into  * the child.  *  * Also in here is tp_headersize() (grot) which tells the expected size  * of a tp header, to be used by other layers.  It's in here because it  * uses the static structure tpdu_info.  */
 end_comment
 
 begin_include
@@ -277,7 +277,7 @@ operator|&
 literal|0x3
 condition|)
 block|{
-comment|/* If we are not 4-byte aligned, we have to be 		 * above the beginning of the mbuf, and it is ok just 		 * to slide it back.  		 */
+comment|/* If we are not 4-byte aligned, we have to be 		 * above the beginning of the mbuf, and it is ok just 		 * to slide it back. 		 */
 name|caddr_t
 name|ocp
 init|=
@@ -344,7 +344,7 @@ name|u_char
 operator|*
 argument_list|)
 expr_stmt|;
-comment|/* 	 * now pull up the whole tp header  	 */
+comment|/* 	 * now pull up the whole tp header 	 */
 if|if
 condition|(
 name|m
@@ -606,7 +606,7 @@ value|if (Phrase) {error = (Erval); errlen = (int)(Loc); IncStat(Stat);\ 	goto W
 end_define
 
 begin_comment
-comment|/*   * WHENEVER YOU USE THE FOLLOWING MACRO,  * BE SURE THE TPDUTYPE IS A LEGIT VALUE FIRST!   */
+comment|/*  * WHENEVER YOU USE THE FOLLOWING MACRO,  * BE SURE THE TPDUTYPE IS A LEGIT VALUE FIRST!  */
 end_comment
 
 begin_define
@@ -697,7 +697,7 @@ name|tp_pcb
 modifier|*
 name|newtpcb
 decl_stmt|;
-comment|/*  	 * sonewconn() gets a new socket structure, 	 * a new lower layer pcb and a new tpcb, 	 * but the pcbs are unnamed (not bound) 	 */
+comment|/* 	 * sonewconn() gets a new socket structure, 	 * a new lower layer pcb and a new tpcb, 	 * but the pcbs are unnamed (not bound) 	 */
 name|IFTRACE
 argument_list|(
 argument|D_NEWSOCK
@@ -860,7 +860,7 @@ argument_list|)
 expr_stmt|;
 block|}
 name|ENDDEBUG
-comment|/*  	 * before we clobber the old tpcb ptr, get these items from the parent pcb  	 */
+comment|/* 	 * before we clobber the old tpcb ptr, get these items from the parent pcb 	 */
 name|newtpcb
 init|=
 name|sototpcb
@@ -931,7 +931,7 @@ operator|->
 name|tp_ucddata
 condition|)
 block|{
-comment|/*  		 * These data are the connect- , confirm- or disconnect- data. 		 */
+comment|/* 		 * These data are the connect- , confirm- or disconnect- data. 		 */
 name|struct
 name|mbuf
 modifier|*
@@ -1173,7 +1173,7 @@ comment|/* !CONS */
 end_comment
 
 begin_comment
-comment|/*   * NAME: 	tp_input()  *  * CALLED FROM:  *  net layer input routine  *  * FUNCTION and ARGUMENTS:  *  Process an incoming TPDU (m), finding the associated tpcb if there  *  is one. Create the appropriate type of event and call the driver.  *  (faddr) and (laddr) are the foreign and local addresses.  *   * 	When tp_input() is called we KNOW that the ENTIRE TP HEADER  * 	has been m_pullup-ed.  *  * RETURN VALUE: Nada  *    * SIDE EFFECTS:  *	When using COSNS it may affect the state of the net-level pcb  *  * NOTE:  *  The initial value of acktime is 2 so that we will never  *  have a 0 value for tp_peer_acktime.  It gets used in the  *  computation of the retransmission timer value, and so it  *  mustn't be zero.  *  2 seems like a reasonable minimum.  */
+comment|/*  * NAME: 	tp_input()  *  * CALLED FROM:  *  net layer input routine  *  * FUNCTION and ARGUMENTS:  *  Process an incoming TPDU (m), finding the associated tpcb if there  *  is one. Create the appropriate type of event and call the driver.  *  (faddr) and (laddr) are the foreign and local addresses.  *  * 	When tp_input() is called we KNOW that the ENTIRE TP HEADER  * 	has been m_pullup-ed.  *  * RETURN VALUE: Nada  *  * SIDE EFFECTS:  *	When using COSNS it may affect the state of the net-level pcb  *  * NOTE:  *  The initial value of acktime is 2 so that we will never  *  have a 0 value for tp_peer_acktime.  It gets used in the  *  computation of the retransmission timer value, and so it  *  mustn't be zero.  *  2 seems like a reasonable minimum.  */
 end_comment
 
 begin_decl_stmt
@@ -1426,7 +1426,7 @@ name|cons_channel
 argument_list|)
 expr_stmt|;
 name|ENDDEBUG
-comment|/*  	 * get the actual tpdu length - necessary for monitoring 	 * and for checksumming 	 *  	 * Also, maybe measure the mbuf chain lengths and sizes. 	 */
+comment|/* 	 * get the actual tpdu length - necessary for monitoring 	 * and for checksumming 	 * 	 * Also, maybe measure the mbuf chain lengths and sizes. 	 */
 block|{
 specifier|register
 name|struct
@@ -2553,7 +2553,7 @@ argument|+
 literal|2
 argument|+ (caddr_t)&hdr->_tpduf - (caddr_t)hdr)
 argument_list|)
-comment|/* _tpduf is the fixed part; add 2 to get the dref bits of  				 * the fixed part (can't take the address of a bit field)  				 */
+comment|/* _tpduf is the fixed part; add 2 to get the dref bits of 				 * the fixed part (can't take the address of a bit field) 				 */
 name|IFDEBUG
 argument_list|(
 argument|D_TPINPUT
@@ -2656,7 +2656,7 @@ argument_list|)
 expr_stmt|;
 name|ENDTRACE
 block|}
-comment|/*  		 * WE HAVE A TPCB  		 * already know that the classes in the CR match at least 		 * one class implemented, but we don't know yet if they 		 * include any classes permitted by this server. 		 */
+comment|/* 		 * WE HAVE A TPCB 		 * already know that the classes in the CR match at least 		 * one class implemented, but we don't know yet if they 		 * include any classes permitted by this server. 		 */
 name|IFDEBUG
 argument_list|(
 argument|D_TPINPUT
@@ -3035,7 +3035,7 @@ name|parent_tpcb
 init|=
 name|tpcb
 decl_stmt|;
-comment|/*  			 * Create a socket, tpcb, ll pcb, etc.  			 * for this newborn connection, and fill in all the values.  			 */
+comment|/* 			 * Create a socket, tpcb, ll pcb, etc. 			 * for this newborn connection, and fill in all the values. 			 */
 name|IFDEBUG
 argument_list|(
 argument|D_CONN
@@ -3139,7 +3139,7 @@ argument_list|,
 name|parent_tpcb
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Stash the addresses in the net level pcb  			 * kind of like a pcbconnect() but don't need 			 * or want all those checks. 			 */
+comment|/* 			 * Stash the addresses in the net level pcb 			 * kind of like a pcbconnect() but don't need 			 * or want all those checks. 			 */
 call|(
 name|tpcb
 operator|->
@@ -3265,7 +3265,7 @@ name|perf_meas
 condition|)
 block|{
 comment|/* assignment */
-comment|/* ok, let's create an mbuf for stashing the 				 * statistics if one doesn't already exist  				 */
+comment|/* ok, let's create an mbuf for stashing the 				 * statistics if one doesn't already exist 				 */
 operator|(
 name|void
 operator|)
@@ -3284,7 +3284,7 @@ name|tp_fref
 operator|=
 name|sref
 expr_stmt|;
-comment|/* We've already checked for consistency with the options  			 * set in tpp,  but we couldn't set them earlier because  			 * we didn't want to change options in the LISTENING tpcb. 			 * Now we set the options in the new socket's tpcb. 			 */
+comment|/* We've already checked for consistency with the options 			 * set in tpp,  but we couldn't set them earlier because 			 * we didn't want to change options in the LISTENING tpcb. 			 * Now we set the options in the new socket's tpcb. 			 */
 operator|(
 name|void
 operator|)
@@ -3338,7 +3338,7 @@ name|tp_peer_acktime
 operator|=
 name|acktime
 expr_stmt|;
-comment|/*  			 * The following kludge is used to test retransmissions and  			 * timeout during connection establishment. 			 */
+comment|/* 			 * The following kludge is used to test retransmissions and 			 * timeout during connection establishment. 			 */
 name|IFDEBUG
 argument_list|(
 argument|D_ZDREF
@@ -3418,7 +3418,7 @@ operator|==
 name|ER_TPDU_type
 condition|)
 block|{
-comment|/*  		 * ER TPDUs have to be recognized separately 		 * because they don't necessarily have a tpcb 		 * with them and we don't want err out looking for such 		 * a beast. 		 * We could put a bunch of little kludges in the  		 * next section of code so it would avoid references to tpcb 		 * if dutype == ER_TPDU_type but we don't want code for ERs to 		 * mess up code for data transfer. 		 */
+comment|/* 		 * ER TPDUs have to be recognized separately 		 * because they don't necessarily have a tpcb 		 * with them and we don't want err out looking for such 		 * a beast. 		 * We could put a bunch of little kludges in the 		 * next section of code so it would avoid references to tpcb 		 * if dutype == ER_TPDU_type but we don't want code for ERs to 		 * mess up code for data transfer. 		 */
 name|IncStat
 argument_list|(
 name|ts_ER_rcvd
@@ -3450,7 +3450,7 @@ name|CHECK
 argument_list|(
 argument|((int)dref<=
 literal|0
-argument||| dref>= tp_refinfo.tpr_size ||  			(tpcb = tp_ref[dref].tpr_pcb ) == (struct tp_pcb *)
+argument||| dref>= tp_refinfo.tpr_size || 			(tpcb = tp_ref[dref].tpr_pcb ) == (struct tp_pcb *)
 literal|0
 argument||| 			tpcb->tp_refstate == REF_FREE || 			tpcb->tp_refstate == REF_FROZEN)
 argument_list|,
@@ -3466,7 +3466,7 @@ block|}
 else|else
 block|{
 comment|/* tpdu type is CC, XPD, XAK, GR, AK, DR, DC, or DT */
-comment|/* In the next 4 checks, 		 * _tpduf is the fixed part; add 2 to get the dref bits of  		 * the fixed part (can't take the address of a bit field)  		 */
+comment|/* In the next 4 checks, 		 * _tpduf is the fixed part; add 2 to get the dref bits of 		 * the fixed part (can't take the address of a bit field) 		 */
 ifdef|#
 directive|ifdef
 name|TPCONS
@@ -3706,7 +3706,7 @@ name|tpcb
 argument_list|)
 decl_stmt|;
 name|ENDDEBUG
-comment|/*  		 * At this point the state of the dref could be 		 * FROZEN: tpr_pcb == NULL,  has ( reference only) timers 		 *		   for example, DC may arrive after the close() has detached 		 *         the tpcb (e.g., if user turned off SO_LISTEN option) 		 * OPENING : a tpcb exists but no timers yet 		 * OPEN  : tpcb exists& timers are outstanding 		 */
+comment|/* 		 * At this point the state of the dref could be 		 * FROZEN: tpr_pcb == NULL,  has ( reference only) timers 		 *		   for example, DC may arrive after the close() has detached 		 *         the tpcb (e.g., if user turned off SO_LISTEN option) 		 * OPENING : a tpcb exists but no timers yet 		 * OPEN  : tpcb exists& timers are outstanding 		 */
 if|if
 condition|(
 operator|!
@@ -4164,7 +4164,7 @@ break|break;
 end_break
 
 begin_comment
-comment|/*  this is different from the above because in the context 			 *  of concat/ sep tpdu_len might not be the same as hdr len  			 */
+comment|/*  this is different from the above because in the context 			 *  of concat/ sep tpdu_len might not be the same as hdr len 			 */
 end_comment
 
 begin_expr_stmt
@@ -4834,7 +4834,7 @@ name|tpdu_CCclass
 argument_list|)
 expr_stmt|;
 name|ENDTRACE
-comment|/* if called or calling suffices appeared on the CC,  			 * they'd better jive with what's in the pcb 			 */
+comment|/* if called or calling suffices appeared on the CC, 			 * they'd better jive with what's in the pcb 			 */
 if|if
 condition|(
 name|fsufxlen
@@ -5785,7 +5785,7 @@ end_switch
 
 begin_comment
 unit|}
-comment|/* peel off the tp header;  	 * remember that the du_li doesn't count itself. 	 * This may leave us w/ an empty mbuf at the front of a chain. 	 * We can't just throw away the empty mbuf because hdr still points 	 * into the mbuf's data area and we're still using hdr (the tpdu header) 	 */
+comment|/* peel off the tp header; 	 * remember that the du_li doesn't count itself. 	 * This may leave us w/ an empty mbuf at the front of a chain. 	 * We can't just throw away the empty mbuf because hdr still points 	 * into the mbuf's data area and we're still using hdr (the tpdu header) 	 */
 end_comment
 
 begin_expr_stmt
@@ -6428,7 +6428,7 @@ block|}
 end_switch
 
 begin_comment
-comment|/* Concatenated sequences are terminated by any tpdu that  	 * carries data: CR, CC, DT, XPD, DR. 	 * All other tpdu types may be concatenated: AK, XAK, DC, ER. 	 */
+comment|/* Concatenated sequences are terminated by any tpdu that 	 * carries data: CR, CC, DT, XPD, DR. 	 * All other tpdu types may be concatenated: AK, XAK, DC, ER. 	 */
 end_comment
 
 begin_label
@@ -6451,7 +6451,7 @@ operator|!=
 name|MNULL
 argument_list|)
 expr_stmt|;
-comment|/*  		 * we already peeled off the prev. tp header so  		 * we can just pull up some more and repeat 		 */
+comment|/* 		 * we already peeled off the prev. tp header so 		 * we can just pull up some more and repeat 		 */
 if|if
 condition|(
 name|m
@@ -6839,7 +6839,7 @@ end_return
 
 begin_comment
 unit|}
-comment|/*  * NAME: tp_headersize()  *  * CALLED FROM:  *  tp_emit() and tp_sbsend()  *  TP needs to know the header size so it can figure out how  *  much data to put in each tpdu.  *  * FUNCTION, ARGUMENTS, and RETURN VALUE:  *  For a given connection, represented by (tpcb), and   *  tpdu type (dutype), return the size of a tp header.  *  * RETURNS:	  the expected size of the heade in bytesr  *  * SIDE EFFECTS:	  *  * NOTES:	 It would be nice if it got the network header size as well.  */
+comment|/*  * NAME: tp_headersize()  *  * CALLED FROM:  *  tp_emit() and tp_sbsend()  *  TP needs to know the header size so it can figure out how  *  much data to put in each tpdu.  *  * FUNCTION, ARGUMENTS, and RETURN VALUE:  *  For a given connection, represented by (tpcb), and  *  tpdu type (dutype), return the size of a tp header.  *  * RETURNS:	  the expected size of the heade in bytesr  *  * SIDE EFFECTS:  *  * NOTES:	 It would be nice if it got the network header size as well.  */
 end_comment
 
 begin_macro

@@ -3127,7 +3127,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* 	 * Determine the card type. 	 * There may be a way to identify various models.  FIXME.  	 */
+comment|/* 	 * Determine the card type. 	 * There may be a way to identify various models.  FIXME. 	 */
 name|sc
 operator|->
 name|type
@@ -5845,7 +5845,7 @@ init|;
 condition|;
 control|)
 block|{
-comment|/* 		 * See if there is room to put another packet in the buffer. 		 * We *could* do better job by peeking the send queue to 		 * know the length of the next packet.  Current version just 		 * tests against the worst case (i.e., longest packet).  FIXME. 		 *  		 * When adding the packet-peek feature, don't forget adding a 		 * test on txb_count against QUEUEING_MAX. 		 * There is a little chance the packet count exceeds 		 * the limit.  Assume transmission buffer is 8KB (2x8KB 		 * configuration) and an application sends a bunch of small 		 * (i.e., minimum packet sized) packets rapidly.  An 8KB 		 * buffer can hold 130 blocks of 62 bytes long... 		 */
+comment|/* 		 * See if there is room to put another packet in the buffer. 		 * We *could* do better job by peeking the send queue to 		 * know the length of the next packet.  Current version just 		 * tests against the worst case (i.e., longest packet).  FIXME. 		 * 		 * When adding the packet-peek feature, don't forget adding a 		 * test on txb_count against QUEUEING_MAX. 		 * There is a little chance the packet count exceeds 		 * the limit.  Assume transmission buffer is 8KB (2x8KB 		 * configuration) and an application sends a bunch of small 		 * (i.e., minimum packet sized) packets rapidly.  An 8KB 		 * buffer can hold 130 blocks of 62 bytes long... 		 */
 if|if
 condition|(
 name|sc
@@ -6274,7 +6274,7 @@ name|txb_sched
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 		 * The transmitter is no more active. 		 * Reset output active flag and watchdog timer.  		 */
+comment|/* 		 * The transmitter is no more active. 		 * Reset output active flag and watchdog timer. 		 */
 name|sc
 operator|->
 name|sc_if
@@ -7881,7 +7881,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Write an mbuf chain to the transmission buffer memory using 16 bit PIO.  * Returns number of bytes actually written, including length word.  *  * If an mbuf chain is too long for an Ethernet frame, it is not sent.  * Packets shorter than Ethernet minimum are legal, and we pad them  * before sending out.  An exception is "partial" packets which are   * shorter than mandatory Ethernet header.  *  * I wrote a code for an experimental "delayed padding" technique.  * When employed, it postpones the padding process for short packets.  * If xmit() occured at the moment, the padding process is omitted, and  * garbages are sent as pad data.  If next packet is stored in the  * transmission buffer before xmit(), write_mbuf() pads the previous  * packet before transmitting new packet.  This *may* gain the  * system performance (slightly).  */
+comment|/*  * Write an mbuf chain to the transmission buffer memory using 16 bit PIO.  * Returns number of bytes actually written, including length word.  *  * If an mbuf chain is too long for an Ethernet frame, it is not sent.  * Packets shorter than Ethernet minimum are legal, and we pad them  * before sending out.  An exception is "partial" packets which are  * shorter than mandatory Ethernet header.  *  * I wrote a code for an experimental "delayed padding" technique.  * When employed, it postpones the padding process for short packets.  * If xmit() occured at the moment, the padding process is omitted, and  * garbages are sent as pad data.  If next packet is stored in the  * transmission buffer before xmit(), write_mbuf() pads the previous  * packet before transmitting new packet.  This *may* gain the  * system performance (slightly).  */
 end_comment
 
 begin_function
@@ -8171,7 +8171,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* 	 * Transfer the data from mbuf chain to the transmission buffer.  	 * MB86960 seems to require that data be transferred as words, and 	 * only words.  So that we require some extra code to patch 	 * over odd-length mbufs. 	 */
+comment|/* 	 * Transfer the data from mbuf chain to the transmission buffer. 	 * MB86960 seems to require that data be transferred as words, and 	 * only words.  So that we require some extra code to patch 	 * over odd-length mbufs. 	 */
 name|savebyte
 operator|=
 name|NO_PENDING_BYTE

@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: llscan.c,v 2.2 88/09/19 12:55:06 nhall Exp $ */
+comment|/* $Header: /home/ncvs/src/sys/netiso/xebec/llscan.c,v 1.1.1.1 1994/05/24 10:07:50 rgrimes Exp $ */
 end_comment
 
 begin_comment
-comment|/* $Source: /var/home/tadl/src/argo/xebec/RCS/llscan.c,v $ */
+comment|/* $Source: /home/ncvs/src/sys/netiso/xebec/llscan.c,v $ */
 end_comment
 
 begin_comment
-comment|/*  * ************************* NOTICE *******************************  * This code is in the public domain.  It cannot be copyrighted.  * This scanner was originally written by Keith Thompson for the   * University of Wisconsin Crystal project.  * It was subsequently modified significantly by Nancy Hall at the   * University of Wisconsin for the ARGO project.  * ****************************************************************  */
+comment|/*  * ************************* NOTICE *******************************  * This code is in the public domain.  It cannot be copyrighted.  * This scanner was originally written by Keith Thompson for the  * University of Wisconsin Crystal project.  * It was subsequently modified significantly by Nancy Hall at the  * University of Wisconsin for the ARGO project.  * ****************************************************************  */
 end_comment
 
 begin_include
@@ -779,7 +779,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/* c is the string delimiter  	 * allow the delimiter to be escaped  	 * the messy part: translate $ID to 	 *   e->ev_union.ID 	 * where ID is an event with a non-zero obj_struc 	 * need we check for the field??? 	 */
+comment|/* c is the string delimiter 	 * allow the delimiter to be escaped 	 * the messy part: translate $ID to 	 *   e->ev_union.ID 	 * where ID is an event with a non-zero obj_struc 	 * need we check for the field??? 	 */
 end_comment
 
 begin_decl_stmt
@@ -906,7 +906,7 @@ argument_list|)
 expr_stmt|;
 name|ENDDEBUG
 comment|/* assume it's an event */
-comment|/* addbuf is a macro so this isn't as bad as 			 * it looks  			 * add "e->ev_union." 			 */
+comment|/* addbuf is a macro so this isn't as bad as 			 * it looks 			 * add "e->ev_union." 			 */
 if|if
 condition|(
 operator|(
@@ -1172,7 +1172,7 @@ operator|)
 condition|)
 block|{
 comment|/* may need to handle case where \ is last char in file... */
-comment|/* don't treat is as escape; not open or close so 				 * don't have to worry about nesting either  				 */
+comment|/* don't treat is as escape; not open or close so 				 * don't have to worry about nesting either 				 */
 name|addbuf
 argument_list|(
 literal|'\\'

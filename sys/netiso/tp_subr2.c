@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tp_subr2.c	8.1 (Berkeley) 6/10/93  * $Id: tp_subr2.c,v 1.2 1994/08/02 07:51:26 davidg Exp $  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tp_subr2.c	8.1 (Berkeley) 6/10/93  * $Id: tp_subr2.c,v 1.3 1995/04/26 21:32:41 pst Exp $  */
 end_comment
 
 begin_comment
-comment|/*********************************************************** 		Copyright IBM Corporation 1987                        All Rights Reserved  Permission to use, copy, modify, and distribute this software and its  documentation for any purpose and without fee is hereby granted,  provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in  supporting documentation, and that the name of IBM not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.    IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  ******************************************************************/
+comment|/*********************************************************** 		Copyright IBM Corporation 1987                        All Rights Reserved  Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of IBM not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.  IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  ******************************************************************/
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  *  * $Header: /home/ncvs/src/sys/netiso/tp_subr2.c,v 1.2 1994/08/02 07:51:26 davidg Exp $  * $Source: /home/ncvs/src/sys/netiso/tp_subr2.c,v $  *  * Some auxiliary routines:  * 	tp_protocol_error: required by xebec- called when a combo of state,  *	    event, predicate isn't covered for by the transition file.  *	tp_indicate: gives indications(signals) to the user process  *	tp_getoptions: initializes variables that are affected by the options  *	    chosen.  */
+comment|/*  * ARGO TP  *  * $Header: /home/ncvs/src/sys/netiso/tp_subr2.c,v 1.3 1995/04/26 21:32:41 pst Exp $  * $Source: /home/ncvs/src/sys/netiso/tp_subr2.c,v $  *  * Some auxiliary routines:  * 	tp_protocol_error: required by xebec- called when a combo of state,  *	    event, predicate isn't covered for by the transition file.  *	tp_indicate: gives indications(signals) to the user process  *	tp_getoptions: initializes variables that are affected by the options  *	    chosen.  */
 end_comment
 
 begin_comment
@@ -242,7 +242,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * NAME: 	tp_local_credit()  *  * CALLED FROM:  *  tp_emit(), tp_usrreq()  *  * FUNCTION and ARGUMENTS:  *	Computes the local credit and stashes it in tpcb->tp_lcredit.  *  It's a macro in the production system rather than a procdure.  *  * RETURNS:  *  * SIDE EFFECTS:  *  * NOTES:  *  This doesn't actually get called in a production system -   *  the macro gets expanded instead in place of calls to this proc.  *  But for debugging, we call this and that allows us to add  *  debugging messages easily here.  */
+comment|/*  * NAME: 	tp_local_credit()  *  * CALLED FROM:  *  tp_emit(), tp_usrreq()  *  * FUNCTION and ARGUMENTS:  *	Computes the local credit and stashes it in tpcb->tp_lcredit.  *  It's a macro in the production system rather than a procdure.  *  * RETURNS:  *  * SIDE EFFECTS:  *  * NOTES:  *  This doesn't actually get called in a production system -  *  the macro gets expanded instead in place of calls to this proc.  *  But for debugging, we call this and that allows us to add  *  debugging messages easily here.  */
 end_comment
 
 begin_function
@@ -320,7 +320,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * NAME:  tp_protocol_error()  *  * CALLED FROM:  *  tp_driver(), when it doesn't know what to do with  * 	a combo of event, state, predicate  *  * FUNCTION and ARGUMENTS:  *  print error mesg   *  * RETURN VALUE:  *  EIO - always  *  * SIDE EFFECTS:  *  * NOTES:  */
+comment|/*  * NAME:  tp_protocol_error()  *  * CALLED FROM:  *  tp_driver(), when it doesn't know what to do with  * 	a combo of event, state, predicate  *  * FUNCTION and ARGUMENTS:  *  print error mesg  *  * RETURN VALUE:  *  EIO - always  *  * SIDE EFFECTS:  *  * NOTES:  */
 end_comment
 
 begin_function
@@ -404,7 +404,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * NAME: tp_indicate()  *  * CALLED FROM:  * 	tp.trans when XPD arrive, when a connection is being disconnected by  *  the arrival of a DR or ER, and when a connection times out.  *  * FUNCTION and ARGUMENTS:  *  (ind) is the type of indication : T_DISCONNECT, T_XPD  *  (error) is an E* value that will be put in the socket structure  *  to be passed along to the user later.  * 	Gives a SIGURG to the user process or group indicated by the socket  * 	attached to the tpcb.  *  * RETURNS:  Rien  *   * SIDE EFFECTS:  *  * NOTES:  */
+comment|/*  * NAME: tp_indicate()  *  * CALLED FROM:  * 	tp.trans when XPD arrive, when a connection is being disconnected by  *  the arrival of a DR or ER, and when a connection times out.  *  * FUNCTION and ARGUMENTS:  *  (ind) is the type of indication : T_DISCONNECT, T_XPD  *  (error) is an E* value that will be put in the socket structure  *  to be passed along to the user later.  * 	Gives a SIGURG to the user process or group indicated by the socket  * 	attached to the tpcb.  *  * RETURNS:  Rien  *  * SIDE EFFECTS:  *  * NOTES:  */
 end_comment
 
 begin_function
@@ -717,7 +717,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * NAME : tp_getoptions()  *  * CALLED FROM:  * 	tp.trans whenever we go into OPEN state   *  * FUNCTION and ARGUMENTS:  *  sets the proper flags and values in the tpcb, to control  *  the appropriate actions for the given class, options,  *  sequence space, etc, etc.  *   * RETURNS: Nada  *   * SIDE EFFECTS:  *  * NOTES:  */
+comment|/*  * NAME : tp_getoptions()  *  * CALLED FROM:  * 	tp.trans whenever we go into OPEN state  *  * FUNCTION and ARGUMENTS:  *  sets the proper flags and values in the tpcb, to control  *  the appropriate actions for the given class, options,  *  sequence space, etc, etc.  *  * RETURNS: Nada  *  * SIDE EFFECTS:  *  * NOTES:  */
 end_comment
 
 begin_function
@@ -794,7 +794,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * NAME:  tp_recycle_tsuffix()  *  * CALLED FROM:  *  Called when a ref is frozen.  *  * FUNCTION and ARGUMENTS:  *  allows the suffix to be reused.   *  * RETURNS: zilch  *  * SIDE EFFECTS:  *  * NOTES:  */
+comment|/*  * NAME:  tp_recycle_tsuffix()  *  * CALLED FROM:  *  Called when a ref is frozen.  *  * FUNCTION and ARGUMENTS:  *  allows the suffix to be reused.  *  * RETURNS: zilch  *  * SIDE EFFECTS:  *  * NOTES:  */
 end_comment
 
 begin_function
@@ -870,7 +870,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * NAME: tp_quench()  *  * CALLED FROM:  *  tp{af}_quench() when ICMP source quench or similar thing arrives.  *  * FUNCTION and ARGUMENTS:  *  Drop the congestion window back to 1.  *  Congestion window scheme:  *  Initial value is 1.  ("slow start" as Nagle, et. al. call it)  *  For each good ack that arrives, the congestion window is increased  *  by 1 (up to max size of logical infinity, which is to say,   *	it doesn't wrap around).  *  Source quench causes it to drop back to 1.  *  tp_send() uses the smaller of (regular window, congestion window).   *  One retransmission strategy option is to have any retransmission   *	cause reset the congestion window back  to 1.  *  *	(cmd) is either PRC_QUENCH: source quench, or  *		PRC_QUENCH2: dest. quench (dec bit)  *  * RETURNS:  *   * SIDE EFFECTS:  *   * NOTES:  */
+comment|/*  * NAME: tp_quench()  *  * CALLED FROM:  *  tp{af}_quench() when ICMP source quench or similar thing arrives.  *  * FUNCTION and ARGUMENTS:  *  Drop the congestion window back to 1.  *  Congestion window scheme:  *  Initial value is 1.  ("slow start" as Nagle, et. al. call it)  *  For each good ack that arrives, the congestion window is increased  *  by 1 (up to max size of logical infinity, which is to say,  *	it doesn't wrap around).  *  Source quench causes it to drop back to 1.  *  tp_send() uses the smaller of (regular window, congestion window).  *  One retransmission strategy option is to have any retransmission  *	cause reset the congestion window back  to 1.  *  *	(cmd) is either PRC_QUENCH: source quench, or  *		PRC_QUENCH2: dest. quench (dec bit)  *  * RETURNS:  *  * SIDE EFFECTS:  *  * NOTES:  */
 end_comment
 
 begin_function
@@ -981,7 +981,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * NAME:	tp_netcmd()  *  * CALLED FROM:			  *  * FUNCTION and ARGUMENTS:			  *  * RETURNS:			  *  * SIDE EFFECTS:	  *  * NOTES:			  */
+comment|/*  * NAME:	tp_netcmd()  *  * CALLED FROM:  *  * FUNCTION and ARGUMENTS:  *  * RETURNS:  *  * SIDE EFFECTS:  *  * NOTES:  */
 end_comment
 
 begin_macro
@@ -1817,7 +1817,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * CALLED FROM:  *  tp_usrreq on PRU_CONNECT and tp_input on receipt of CR  *	  * FUNCTION and ARGUMENTS:  * 	-- An mbuf containing the peer's network address.  *  -- Our control block, which will be modified  *  -- In the case of cons, a control block for that layer.  *  *	  * RETURNS:  *	errno value	 :   *	EAFNOSUPPORT if can't find an nl_protosw for x.25 (really could panic)  *	ECONNREFUSED if trying to run TP0 with non-type 37 address  *  possibly other E* returned from cons_netcmd()  *  * SIDE EFFECTS:  *   Determines recommended tpdusize, buffering and intial delays  *	 based on information cached on the route.  */
+comment|/*  * CALLED FROM:  *  tp_usrreq on PRU_CONNECT and tp_input on receipt of CR  *  * FUNCTION and ARGUMENTS:  * 	-- An mbuf containing the peer's network address.  *  -- Our control block, which will be modified  *  -- In the case of cons, a control block for that layer.  *  *  * RETURNS:  *	errno value	 :  *	EAFNOSUPPORT if can't find an nl_protosw for x.25 (really could panic)  *	ECONNREFUSED if trying to run TP0 with non-type 37 address  *  possibly other E* returned from cons_netcmd()  *  * SIDE EFFECTS:  *   Determines recommended tpdusize, buffering and intial delays  *	 based on information cached on the route.  */
 end_comment
 
 begin_function
@@ -2738,7 +2738,7 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|TP_PERF_MEAS
-comment|/*  * CALLED FROM:  *  tp_ctloutput() when the user sets TPOPT_PERF_MEAS on  *  and tp_newsocket() when a new connection is made from   *  a listening socket with tp_perf_on == true.  * FUNCTION and ARGUMENTS:  *  (tpcb) is the usual; this procedure gets a clear cluster mbuf for  *  a tp_pmeas structure, and makes tpcb->tp_p_meas point to it.  * RETURN VALUE:  *  ENOBUFS if it cannot get a cluster mbuf.  */
+comment|/*  * CALLED FROM:  *  tp_ctloutput() when the user sets TPOPT_PERF_MEAS on  *  and tp_newsocket() when a new connection is made from  *  a listening socket with tp_perf_on == true.  * FUNCTION and ARGUMENTS:  *  (tpcb) is the usual; this procedure gets a clear cluster mbuf for  *  a tp_pmeas structure, and makes tpcb->tp_p_meas point to it.  * RETURN VALUE:  *  ENOBUFS if it cannot get a cluster mbuf.  */
 name|int
 name|tp_setup_perf
 argument_list|(

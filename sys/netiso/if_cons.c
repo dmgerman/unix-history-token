@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)if_cons.c	8.1 (Berkeley) 6/10/93  * $Id: if_cons.c,v 1.2 1994/08/02 07:50:20 davidg Exp $  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)if_cons.c	8.1 (Berkeley) 6/10/93  * $Id: if_cons.c,v 1.3 1994/12/13 22:33:04 wollman Exp $  */
 end_comment
 
 begin_comment
-comment|/*********************************************************** 		Copyright IBM Corporation 1987                        All Rights Reserved  Permission to use, copy, modify, and distribute this software and its  documentation for any purpose and without fee is hereby granted,  provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in  supporting documentation, and that the name of IBM not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.    IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  ******************************************************************/
+comment|/*********************************************************** 		Copyright IBM Corporation 1987                        All Rights Reserved  Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of IBM not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.  IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  ******************************************************************/
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*  * $Header: /home/ncvs/src/sys/netiso/if_cons.c,v 1.2 1994/08/02 07:50:20 davidg Exp $  * $Source: /home/ncvs/src/sys/netiso/if_cons.c,v $  *  * cons.c - Connection Oriented Network Service:  * including support for a) user transport-level service,   *	b) COSNS below CLNP, and c) CONS below TP.  */
+comment|/*  * $Header: /home/ncvs/src/sys/netiso/if_cons.c,v 1.3 1994/12/13 22:33:04 wollman Exp $  * $Source: /home/ncvs/src/sys/netiso/if_cons.c,v $  *  * cons.c - Connection Oriented Network Service:  * including support for a) user transport-level service,  *	b) COSNS below CLNP, and c) CONS below TP.  */
 end_comment
 
 begin_ifdef
@@ -305,7 +305,7 @@ value|-1
 end_define
 
 begin_comment
-comment|/*********************************************************************	  * cons.c - CONS interface to the x.25 layer  *  * TODO: figure out what resources we might run out of besides mbufs.  *  If we run out of any of them (including mbufs) close and recycle  *  lru x% of the connections, for some parameter x.  *  * There are 2 interfaces from above:  * 1) from TP0:   *    cons CO network service  *    TP associates a transport connection with a network connection.  * 	  cons_output( isop, m, len, isdgm==0 )   *        co_flags == 0  * 2) from TP4:  *	  It's a datagram service, like clnp is. - even though it calls  *			cons_output( isop, m, len, isdgm==1 )   *	  it eventually goes through  *			cosns_output(ifp, m, dst).  *    TP4 permits multiplexing (reuse, possibly simultaneously) of the   *	  network connections.  *    This means that many sockets (many tpcbs) may be associated with  *    this pklcd, hence cannot have a back ptr from pklcd to a tpcb.  *        co_flags& CONSF_DGM   *    co_socket is null since there may be many sockets that use this pklcd.  * NOTE: 	streams would really be nice. sigh. NOTE: 	PVCs could be handled by config-ing a cons with an address and with the 	IFF_POINTTOPOINT flag on.  This code would then have to skip the 	connection setup stuff for pt-to-pt links.      *********************************************************************/
+comment|/*********************************************************************  * cons.c - CONS interface to the x.25 layer  *  * TODO: figure out what resources we might run out of besides mbufs.  *  If we run out of any of them (including mbufs) close and recycle  *  lru x% of the connections, for some parameter x.  *  * There are 2 interfaces from above:  * 1) from TP0:  *    cons CO network service  *    TP associates a transport connection with a network connection.  * 	  cons_output( isop, m, len, isdgm==0 )  *        co_flags == 0  * 2) from TP4:  *	  It's a datagram service, like clnp is. - even though it calls  *			cons_output( isop, m, len, isdgm==1 )  *	  it eventually goes through  *			cosns_output(ifp, m, dst).  *    TP4 permits multiplexing (reuse, possibly simultaneously) of the  *	  network connections.  *    This means that many sockets (many tpcbs) may be associated with  *    this pklcd, hence cannot have a back ptr from pklcd to a tpcb.  *        co_flags& CONSF_DGM  *    co_socket is null since there may be many sockets that use this pklcd.  * NOTE: 	streams would really be nice. sigh. NOTE: 	PVCs could be handled by config-ing a cons with an address and with the 	IFF_POINTTOPOINT flag on.  This code would then have to skip the 	connection setup stuff for pt-to-pt links.    *********************************************************************/
 end_comment
 
 begin_define
@@ -1311,7 +1311,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * NAME:	cons_connect()  * CALLED FROM:  *	tpcons_pcbconnect() when opening a new connection.    * FUNCTION anD ARGUMENTS:  *  Figures out which device to use, finding a route if one doesn't  *  already exist.  * RETURN VALUE:  *  returns E*  */
+comment|/*  * NAME:	cons_connect()  * CALLED FROM:  *	tpcons_pcbconnect() when opening a new connection.  * FUNCTION anD ARGUMENTS:  *  Figures out which device to use, finding a route if one doesn't  *  already exist.  * RETURN VALUE:  *  returns E*  */
 end_comment
 
 begin_expr_stmt
@@ -1489,7 +1489,7 @@ comment|/*  **************************** DEVICE cons ***************************
 end_comment
 
 begin_comment
-comment|/*   * NAME:	cons_ctlinput()  * CALLED FROM:  *  lower layer when ECN_CLEAR occurs : this routine is here  *  for consistency - cons subnet service calls its higher layer  *  through the protosw entry.  * FUNCTION& ARGUMENTS:  *  cmd is a PRC_* command, list found in ../sys/protosw.h  *  copcb is the obvious.  *  This serves the higher-layer cons service.  * NOTE: this takes 3rd arg. because cons uses it to inform itself  *  of things (timeouts, etc) but has a pcb instead of an address.  */
+comment|/*  * NAME:	cons_ctlinput()  * CALLED FROM:  *  lower layer when ECN_CLEAR occurs : this routine is here  *  for consistency - cons subnet service calls its higher layer  *  through the protosw entry.  * FUNCTION& ARGUMENTS:  *  cmd is a PRC_* command, list found in ../sys/protosw.h  *  copcb is the obvious.  *  This serves the higher-layer cons service.  * NOTE: this takes 3rd arg. because cons uses it to inform itself  *  of things (timeouts, etc) but has a pcb instead of an address.  */
 end_comment
 
 begin_macro
@@ -1685,7 +1685,7 @@ comment|/* RPOA out of order */
 case|case
 literal|0x15
 case|:
-comment|/* take out bit 8  				 * so we don't have to have so many perror entries  				 */
+comment|/* take out bit 8 				 * so we don't have to have so many perror entries 				 */
 name|error
 operator|=
 operator|(
@@ -1776,7 +1776,7 @@ comment|/* KERNEL */
 end_comment
 
 begin_comment
-comment|/*  * NAME:	make_partial_x25_packet()  *  * FUNCTION and ARGUMENTS:  *	Makes part of an X.25 call packet, for use by x25.  *  (src) and (dst) are the NSAP-addresses of source and destination.  *	(buf) is a ptr to a buffer into which to write this partial header.  *  *	 0			Facility length (in octets)  *	 1			Facility field, which is a set of:  *	  m			facil code  *	  m+1		facil param len (for>2-byte facilities) in octets  *	  m+2..p	facil param field  *  q			user data (protocol identification octet)  *   *  * RETURNS:   *  0 if OK  *  E* if failed.  *  * SIDE EFFECTS:  * Stores facilites mbuf in X.25 control block, where the connect  * routine knows where to look for it.  */
+comment|/*  * NAME:	make_partial_x25_packet()  *  * FUNCTION and ARGUMENTS:  *	Makes part of an X.25 call packet, for use by x25.  *  (src) and (dst) are the NSAP-addresses of source and destination.  *	(buf) is a ptr to a buffer into which to write this partial header.  *  *	 0			Facility length (in octets)  *	 1			Facility field, which is a set of:  *	  m			facil code  *	  m+1		facil param len (for>2-byte facilities) in octets  *	  m+2..p	facil param field  *  q			user data (protocol identification octet)  *  *  * RETURNS:  *  0 if OK  *  E* if failed.  *  * SIDE EFFECTS:  * Stores facilites mbuf in X.25 control block, where the connect  * routine knows where to look for it.  */
 end_comment
 
 begin_ifdef
@@ -2418,7 +2418,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * NAME:	NSAPtoDTE()  * CALLED FROM:  *  make_partial_x25_packet()  * FUNCTION and ARGUMENTS:   *  get a DTE address from an NSAP-address (struct sockaddr_iso)  *  (dst_octet) is the octet into which to begin stashing the DTE addr  *  (dst_nibble) takes 0 or 1.  1 means begin filling in the DTE addr  * 		in the high-order nibble of dst_octet.  0 means low-order nibble.  *  (addr) is the NSAP-address  *  (flag) is true if the transport suffix is to become the  *		last two digits of the DTE address  *  A DTE address is a series of ASCII digits  *  *	A DTE address may have leading zeros. The are significant.  *		1 digit per nibble, may be an odd number of nibbles.  *  *  An NSAP-address has the DTE address in the IDI. Leading zeros are  *		significant. Trailing hex f indicates the end of the DTE address.  *  	The IDI is a series of BCD digits, one per nibble.  *  * RETURNS  *  # significant digits in the DTE address, -1 if error.  */
+comment|/*  * NAME:	NSAPtoDTE()  * CALLED FROM:  *  make_partial_x25_packet()  * FUNCTION and ARGUMENTS:  *  get a DTE address from an NSAP-address (struct sockaddr_iso)  *  (dst_octet) is the octet into which to begin stashing the DTE addr  *  (dst_nibble) takes 0 or 1.  1 means begin filling in the DTE addr  * 		in the high-order nibble of dst_octet.  0 means low-order nibble.  *  (addr) is the NSAP-address  *  (flag) is true if the transport suffix is to become the  *		last two digits of the DTE address  *  A DTE address is a series of ASCII digits  *  *	A DTE address may have leading zeros. The are significant.  *		1 digit per nibble, may be an odd number of nibbles.  *  *  An NSAP-address has the DTE address in the IDI. Leading zeros are  *		significant. Trailing hex f indicates the end of the DTE address.  *  	The IDI is a series of BCD digits, one per nibble.  *  * RETURNS  *  # significant digits in the DTE address, -1 if error.  */
 end_comment
 
 begin_function
@@ -2938,7 +2938,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * NAME:	DTEtoNSAP()  * CALLED FROM:  *  parse_facil()  * FUNCTION and ARGUMENTS:  *  Creates a type 37 NSAP in the sockaddr_iso (addr)  * 	from a DTE address found in a sockaddr_x25.  *    * RETURNS:  *  0 if ok; E* otherwise.  */
+comment|/*  * NAME:	DTEtoNSAP()  * CALLED FROM:  *  parse_facil()  * FUNCTION and ARGUMENTS:  *  Creates a type 37 NSAP in the sockaddr_iso (addr)  * 	from a DTE address found in a sockaddr_x25.  *  * RETURNS:  *  0 if ok; E* otherwise.  */
 end_comment
 
 begin_function
@@ -3190,7 +3190,7 @@ name|buf_len
 argument_list|)
 expr_stmt|;
 name|ENDDEBUG
-comment|/* find the beginnings of the facility fields in buf  	 * by skipping over the called& calling DTE addresses 	 * i<- # nibbles in called + # nibbles in calling 	 * i += 1 so that an odd nibble gets rounded up to even   	 * before dividing by 2, then divide by two to get # octets 	 */
+comment|/* find the beginnings of the facility fields in buf 	 * by skipping over the called& calling DTE addresses 	 * i<- # nibbles in called + # nibbles in calling 	 * i += 1 so that an odd nibble gets rounded up to even 	 * before dividing by 2, then divide by two to get # octets 	 */
 name|i
 init|=
 call|(
@@ -3359,7 +3359,7 @@ comment|/* expedited data negot */
 case|case
 literal|0x01
 case|:
-comment|/* Fast select or reverse charging  						(example of intelligent protocol design) */
+comment|/* Fast select or reverse charging 						(example of intelligent protocol design) */
 case|case
 literal|0x04
 case|:

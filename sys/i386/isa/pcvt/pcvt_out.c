@@ -288,7 +288,7 @@ operator|)
 expr_stmt|;
 block|}
 else|else
-comment|/* use normal ibm charset for  							control display */
+comment|/* use normal ibm charset for 							control display */
 block|{
 operator|*
 name|video
@@ -4116,7 +4116,7 @@ block|{
 case|case
 name|VGA_ADAPTOR
 case|:
-comment|/* 				 * for a VGA, do not assume any 				 * constant - instead, read the actual 				 * values. This avoid problems with 				 * LCD displays that apparently happen 				 * to use font matrices up to 19 				 * scan lines and 475 scan lines  				 * total in order to make use of the 				 * whole screen area 				 */
+comment|/* 				 * for a VGA, do not assume any 				 * constant - instead, read the actual 				 * values. This avoid problems with 				 * LCD displays that apparently happen 				 * to use font matrices up to 19 				 * scan lines and 475 scan lines 				 * total in order to make use of the 				 * whole screen area 				 */
 name|outb
 argument_list|(
 name|addr_6845

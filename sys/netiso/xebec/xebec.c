@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: xebec.c,v 2.2 88/09/19 12:55:37 nhall Exp $ */
+comment|/* $Header: /home/ncvs/src/sys/netiso/xebec/xebec.c,v 1.1.1.1 1994/05/24 10:07:43 rgrimes Exp $ */
 end_comment
 
 begin_comment
-comment|/* $Source: /var/home/tadl/src/argo/xebec/RCS/xebec.c,v $ */
+comment|/* $Source: /home/ncvs/src/sys/netiso/xebec/xebec.c,v $ */
 end_comment
 
 begin_include
@@ -955,7 +955,7 @@ operator|.
 name|object
 condition|)
 block|{
-comment|/* WHEN COULD THIS BE FALSE??  					 * isn't it supposed to be setstruct.object??? 					 * (it used to be $ACTION.address) 					 */
+comment|/* WHEN COULD THIS BE FALSE?? 					 * isn't it supposed to be setstruct.object??? 					 * (it used to be $ACTION.address) 					 */
 name|llattr
 operator|->
 name|llabase

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_fat.c,v 1.5 1995/02/10 18:39:45 bde Exp $ */
+comment|/*	$Id: msdosfs_fat.c,v 1.6 1995/04/11 16:43:20 bde Exp $ */
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*-  * Copyright (C) 1994 Wolfgang Solfrank.  * Copyright (C) 1994 TooLs
 end_comment
 
 begin_comment
-comment|/*  * Written by Paul Popelka (paulp@uts.amdahl.com)  *   * You can do anything you want with this software, just don't say you wrote  * it, and don't remove this notice.  *   * This software is provided "as is".  *   * The author supplies this software to be publicly redistributed on the  * understanding that the author is not responsible for the correct  * functioning of this software in any circumstances and is not liable for  * any damages caused by this software.  *   * October 1992  */
+comment|/*  * Written by Paul Popelka (paulp@uts.amdahl.com)  *  * You can do anything you want with this software, just don't say you wrote  * it, and don't remove this notice.  *  * This software is provided "as is".  *  * The author supplies this software to be publicly redistributed on the  * understanding that the author is not responsible for the correct  * functioning of this software in any circumstances and is not liable for  * any damages caused by this software.  *  * October 1992  */
 end_comment
 
 begin_comment
@@ -1149,7 +1149,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Updating entries in 12 bit fats is a pain in the butt.  *   * The following picture shows where nibbles go when moving from a 12 bit  * cluster number into the appropriate bytes in the FAT.  *   *	byte m        byte m+1      byte m+2  *	+----+----+   +----+----+   +----+----+  *	|  0    1 |   |  2    3 |   |  4    5 |   FAT bytes  *	+----+----+   +----+----+   +----+----+  *   *	+----+----+----+   +----+----+----+  *	|  3    0    1 |   |  4    5    2 |  *	+----+----+----+   +----+----+----+  *	cluster n  	   cluster n+1  *   * Where n is even. m = n + (n>> 2)  *   */
+comment|/*  * Updating entries in 12 bit fats is a pain in the butt.  *  * The following picture shows where nibbles go when moving from a 12 bit  * cluster number into the appropriate bytes in the FAT.  *  *	byte m        byte m+1      byte m+2  *	+----+----+   +----+----+   +----+----+  *	|  0    1 |   |  2    3 |   |  4    5 |   FAT bytes  *	+----+----+   +----+----+   +----+----+  *  *	+----+----+----+   +----+----+----+  *	|  3    0    1 |   |  4    5    2 |  *	+----+----+----+   +----+----+----+  *	cluster n  	   cluster n+1  *  * Where n is even. m = n + (n>> 2)  *  */
 end_comment
 
 begin_function
@@ -1320,7 +1320,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get or Set or 'Get and Set' the cluster'th entry in the fat.  *  * function	- whether to get or set a fat entry  * pmp		- address of the msdosfsmount structure for the filesystem  *		  whose fat is to be manipulated.  * cn		- which cluster is of interest  * oldcontents	- address of a word that is to receive the contents of the  *		  cluster'th entry if this is a get function  * newcontents	- the new value to be written into the cluster'th element of  *		  the fat if this is a set function.  *   * This function can also be used to free a cluster by setting the fat entry  * for a cluster to 0.  *   * All copies of the fat are updated if this is a set function. NOTE: If  * fatentry() marks a cluster as free it does not update the inusemap in  * the msdosfsmount structure. This is left to the caller.  */
+comment|/*  * Get or Set or 'Get and Set' the cluster'th entry in the fat.  *  * function	- whether to get or set a fat entry  * pmp		- address of the msdosfsmount structure for the filesystem  *		  whose fat is to be manipulated.  * cn		- which cluster is of interest  * oldcontents	- address of a word that is to receive the contents of the  *		  cluster'th entry if this is a get function  * newcontents	- the new value to be written into the cluster'th element of  *		  the fat if this is a set function.  *  * This function can also be used to free a cluster by setting the fat entry  * for a cluster to 0.  *  * All copies of the fat are updated if this is a set function. NOTE: If  * fatentry() marks a cluster as free it does not update the inusemap in  * the msdosfsmount structure. This is left to the caller.  */
 end_comment
 
 begin_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)(now julian@DIALix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * $Id: st.c,v 1.34 1995/04/29 21:30:29 joerg Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)(now julian@DIALix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * $Id: st.c,v 1.35 1995/05/03 18:09:19 dufault Exp $  */
 end_comment
 
 begin_comment
@@ -2673,7 +2673,7 @@ name|NOEJECT
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * If we are not mounted, then we should start a new  	 * mount session. 	 */
+comment|/* 	 * If we are not mounted, then we should start a new 	 * mount session. 	 */
 if|if
 condition|(
 operator|!
@@ -4140,7 +4140,7 @@ operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
-comment|/*       	 * Use a bounce buffer if necessary 	 */
+comment|/* 	 * Use a bounce buffer if necessary 	 */
 ifdef|#
 directive|ifdef
 name|BOUNCE_BUFFERS
@@ -5566,7 +5566,7 @@ name|errcode
 operator|)
 return|;
 block|}
-comment|/* 	 * As the drive liked it, if we are setting a new default, 	 * set it into the structures as such. 	 *  	 * The means for deciding this are not finalised yet 	 */
+comment|/* 	 * As the drive liked it, if we are setting a new default, 	 * set it into the structures as such. 	 * 	 * The means for deciding this are not finalised yet 	 */
 if|if
 condition|(
 name|IS_CTLMODE
@@ -6050,7 +6050,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get the scsi driver to send a full inquiry to the  * device and use the results to fill out the global   * parameter structure.  *  * called from:  * attach  * open  * ioctl (to reset original blksize)  */
+comment|/*  * Get the scsi driver to send a full inquiry to the  * device and use the results to fill out the global  * parameter structure.  *  * called from:  * attach  * open  * ioctl (to reset original blksize)  */
 end_comment
 
 begin_function
@@ -6194,7 +6194,7 @@ else|:
 literal|0
 operator|)
 expr_stmt|;
-comment|/* 	 * Set up a mode sense  	 */
+comment|/* 	 * Set up a mode sense 	 */
 name|bzero
 argument_list|(
 operator|&
@@ -6227,7 +6227,7 @@ name|length
 operator|=
 name|dat_len
 expr_stmt|;
-comment|/* 	 * do the command,  	 * use the results to set blksiz, numblks and density 	 * or if we need it as a template for the mode select 	 * store it away. 	 */
+comment|/* 	 * do the command, 	 * use the results to set blksiz, numblks and density 	 * or if we need it as a template for the mode select 	 * store it away. 	 */
 if|if
 condition|(
 operator|(

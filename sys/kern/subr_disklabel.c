@@ -31,7 +31,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ufs_disksubr.c	8.5 (Berkeley) 1/21/94  * $Id: ufs_disksubr.c,v 1.13 1995/03/18 06:38:04 davidg Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ufs_disksubr.c	8.5 (Berkeley) 1/21/94  * $Id: ufs_disksubr.c,v 1.14 1995/03/18 07:06:51 davidg Exp $  */
 end_comment
 
 begin_include
@@ -1813,7 +1813,7 @@ name|label
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Unlike the read, we will trust the parameters given to us 	 * about the disk, in the new disklabel but will simply 	 * force OURPART to start at block 0 as a default in case there is NO 	 * MSP. 	 * readMSPtolabel() will reset it to start at the start of the BSD 	 * part if it exists  	 * At this time this is an error contition but I've left support for it 	 */
+comment|/* 	 * Unlike the read, we will trust the parameters given to us 	 * about the disk, in the new disklabel but will simply 	 * force OURPART to start at block 0 as a default in case there is NO 	 * MSP. 	 * readMSPtolabel() will reset it to start at the start of the BSD 	 * part if it exists 	 * At this time this is an error contition but I've left support for it 	 */
 name|lp
 operator|->
 name|d_npartitions
@@ -1873,7 +1873,7 @@ operator|&
 name|cyl
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we want to be able to install without an Machine Specific  	 * Partitioning , then 	 * the failure of readMSPtolabel() should be made non fatal. 	 */
+comment|/* 	 * If we want to be able to install without an Machine Specific 	 * Partitioning , then 	 * the failure of readMSPtolabel() should be made non fatal. 	 */
 if|if
 condition|(
 name|msg
@@ -1920,7 +1920,7 @@ literal|"writedisklabel: MSP with no BSD part\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * get all the other bits back from the good new disklabel 	 * (the user wouldn't try confuse us would he?) 	 * With the exception of the OURPART which now points to the  	 * BSD partition. 	 */
+comment|/* 	 * get all the other bits back from the good new disklabel 	 * (the user wouldn't try confuse us would he?) 	 * With the exception of the OURPART which now points to the 	 * BSD partition. 	 */
 name|BSDstart
 operator|=
 name|lp

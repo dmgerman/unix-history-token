@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Copyright (c) 1994, 1995 Justin T. Gibbs.    * All rights reserved.  *  * Product specific probe and attach routines can be found in:  * i386/isa/aic7770.c	27/284X and aic7770 motherboard controllers  * /pci/aic7870.c	294x and aic7870 motherboard controllers  *  * Portions of this driver are based on the FreeBSD 1742 Driver:   *  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  *  *      $Id: aic7xxx.c,v 1.26 1995/05/11 19:26:26 rgrimes Exp $  */
+comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Product specific probe and attach routines can be found in:  * i386/isa/aic7770.c	27/284X and aic7770 motherboard controllers  * /pci/aic7870.c	294x and aic7870 motherboard controllers  *  * Portions of this driver are based on the FreeBSD 1742 Driver:  *  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  *  *      $Id: aic7xxx.c,v 1.27 1995/05/17 07:06:00 davidg Exp $  */
 end_comment
 
 begin_comment
-comment|/*  * TODO:  * 	Add target reset capabilities  *	Implement Target Mode  *  *	This driver is very stable, and seems to offer performance  *	comprable to the 1742 FreeBSD driver.  I have not experienced  *	any timeouts since the timeout code was written, so in that   *	sense, it is untested.  */
+comment|/*  * TODO:  * 	Add target reset capabilities  *	Implement Target Mode  *  *	This driver is very stable, and seems to offer performance  *	comprable to the 1742 FreeBSD driver.  I have not experienced  *	any timeouts since the timeout code was written, so in that  *	sense, it is untested.  */
 end_comment
 
 begin_include
@@ -387,7 +387,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * All of these should be in a separate header file shared by the sequencer  * code and the kernel level driver.  The only catch is that we would need to   * add an additional 0xc00 offset when using them in the kernel driver.  The   * aic7770 assembler must be modified to allow include files as well.  All   * page numbers refer to the Adaptec AIC-7770 Data Book availible from   * Adaptec's Technical Documents Department 1-800-934-2766  */
+comment|/*  * All of these should be in a separate header file shared by the sequencer  * code and the kernel level driver.  The only catch is that we would need to  * add an additional 0xc00 offset when using them in the kernel driver.  The  * aic7770 assembler must be modified to allow include files as well.  All  * page numbers refer to the Adaptec AIC-7770 Data Book availible from  * Adaptec's Technical Documents Department 1-800-934-2766  */
 end_comment
 
 begin_comment
@@ -395,7 +395,7 @@ comment|/* -------------------- AIC-7770 offset definitions --------------------
 end_comment
 
 begin_comment
-comment|/*   * SCSI Sequence Control (p. 3-11).    * Each bit, when set starts a specific SCSI sequence on the bus  */
+comment|/*  * SCSI Sequence Control (p. 3-11).  * Each bit, when set starts a specific SCSI sequence on the bus  */
 end_comment
 
 begin_define
@@ -593,7 +593,7 @@ value|0x01
 end_define
 
 begin_comment
-comment|/*  * SCSI Control Signal Read Register (p. 3-15).   * Reads the actual state of the SCSI bus pins  */
+comment|/*  * SCSI Control Signal Read Register (p. 3-15).  * Reads the actual state of the SCSI bus pins  */
 end_comment
 
 begin_define
@@ -660,7 +660,7 @@ value|0x01
 end_define
 
 begin_comment
-comment|/*  * SCSI Contol Signal Write Register (p. 3-16).   * Writing to this register modifies the control signals on the bus.  Only   * those signals that are allowed in the current mode (Initiator/Target) are  * asserted.  */
+comment|/*  * SCSI Contol Signal Write Register (p. 3-16).  * Writing to this register modifies the control signals on the bus.  Only  * those signals that are allowed in the current mode (Initiator/Target) are  * asserted.  */
 end_comment
 
 begin_define
@@ -1156,7 +1156,7 @@ value|0xc61ul
 end_define
 
 begin_comment
-comment|/*  * Sequencer Address Registers (p. 3-35)   * Only the first bit of SEQADDR1 holds addressing information  */
+comment|/*  * Sequencer Address Registers (p. 3-35)  * Only the first bit of SEQADDR1 holds addressing information  */
 end_comment
 
 begin_define
@@ -1236,7 +1236,7 @@ value|0x01
 end_define
 
 begin_comment
-comment|/*  * Host Control (p. 3-47) R/W  * Overal host control of the device.    */
+comment|/*  * Host Control (p. 3-47) R/W  * Overal host control of the device.  */
 end_comment
 
 begin_define
@@ -1442,7 +1442,7 @@ value|(BRKADRINT | SEQINT | SCSIINT | CMDCMPLT)
 end_define
 
 begin_comment
-comment|/*  * Hard Error (p. 3-53)  * Reporting of catastrophic errors.  You usually cannot recover from   * these without a full board reset.  */
+comment|/*  * Hard Error (p. 3-53)  * Reporting of catastrophic errors.  You usually cannot recover from  * these without a full board reset.  */
 end_comment
 
 begin_define
@@ -1524,7 +1524,7 @@ value|0x01
 end_define
 
 begin_comment
-comment|/*  * SCB Auto Increment (p. 3-59)  * Byte offset into the SCB Array and an optional bit to allow auto   * incrementing of the address during download and upload operations  */
+comment|/*  * SCB Auto Increment (p. 3-59)  * Byte offset into the SCB Array and an optional bit to allow auto  * incrementing of the address during download and upload operations  */
 end_comment
 
 begin_define
@@ -1682,7 +1682,7 @@ comment|/* outgoing message body */
 end_comment
 
 begin_comment
-comment|/*  * These are offsets into the card's scratch ram.  Some of the values are  * specified in the AHA2742 technical reference manual and are initialized   * by the BIOS at boot time.  */
+comment|/*  * These are offsets into the card's scratch ram.  Some of the values are  * specified in the AHA2742 technical reference manual and are initialized  * by the BIOS at boot time.  */
 end_comment
 
 begin_define
@@ -1882,7 +1882,7 @@ value|0x02
 end_define
 
 begin_comment
-comment|/*  * Since the sequencer can disable pausing in a critical section, we  * must loop until it actually stops.   * XXX Should add a timeout in here??  */
+comment|/*  * Since the sequencer can disable pausing in a critical section, we  * must loop until it actually stops.  * XXX Should add a timeout in here??  */
 end_comment
 
 begin_define
@@ -2873,7 +2873,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*                * Catch an interrupt from the adaptor  */
+comment|/*  * Catch an interrupt from the adaptor  */
 end_comment
 
 begin_function
@@ -3210,7 +3210,7 @@ operator|&
 literal|0x88
 condition|)
 block|{
-comment|/* Second channel stores its info  					 * in byte two of HA_ACTIVE 					 */
+comment|/* Second channel stores its info 					 * in byte two of HA_ACTIVE 					 */
 name|active_port
 operator|++
 expr_stmt|;
@@ -3285,7 +3285,7 @@ name|maxoffset
 decl_stmt|,
 name|mask
 decl_stmt|;
-comment|/*  				 * Help the sequencer to translate the  				 * negotiated transfer rate.  Transfer is  				 * 1/4 the period in ns as is returned by  				 * the sync negotiation message.  So, we must  				 * multiply by four 				 */
+comment|/* 				 * Help the sequencer to translate the 				 * negotiated transfer rate.  Transfer is 				 * 1/4 the period in ns as is returned by 				 * the sync negotiation message.  So, we must 				 * multiply by four 				 */
 name|transfer
 operator|=
 name|inb
@@ -3425,7 +3425,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 					 * The requested rate was so low 					 * that asyncronous transfers are 					 * faster (not to mention the  					 * controller won't support them), 					 * so we issue a message reject to 					 * ensure we go to asyncronous 					 * transfers. 					 */
+comment|/* 					 * The requested rate was so low 					 * that asyncronous transfers are 					 * faster (not to mention the 					 * controller won't support them), 					 * so we issue a message reject to 					 * ensure we go to asyncronous 					 * transfers. 					 */
 name|outb
 argument_list|(
 name|HA_RETURN_1
@@ -3487,7 +3487,7 @@ name|SEND_SDTR
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  				 * Negate the flags 				 */
+comment|/* 				 * Negate the flags 				 */
 name|ahc
 operator|->
 name|needsdtr
@@ -3575,7 +3575,7 @@ name|scsi_id
 operator|)
 condition|)
 block|{
-comment|/*  					 * Don't send a WDTR back to the  					 * target, since we asked first. 					 */
+comment|/* 					 * Don't send a WDTR back to the 					 * target, since we asked first. 					 */
 name|outb
 argument_list|(
 name|HA_RETURN_1
@@ -3728,7 +3728,7 @@ case|case
 name|MSG_REJECT
 case|:
 block|{
-comment|/*  				 * What we care about here is if we had an 				 * outstanding SDTR or WDTR message for this 				 * target.  If we did, this is a signal that 				 * the target is refusing negotiation. 				 */
+comment|/* 				 * What we care about here is if we had an 				 * outstanding SDTR or WDTR message for this 				 * target.  If we did, this is a signal that 				 * the target is refusing negotiation. 				 */
 name|u_char
 name|targ_scratch
 decl_stmt|;
@@ -3933,7 +3933,7 @@ index|[
 name|scb_index
 index|]
 expr_stmt|;
-comment|/* 			   * Set the default return value to 0 (don't  			   * send sense).  The sense code with change 			   * this if needed and this reduces code  			   * duplication. 			   */
+comment|/* 			   * Set the default return value to 0 (don't 			   * send sense).  The sense code with change 			   * this if needed and this reduces code 			   * duplication. 			   */
 name|outb
 argument_list|(
 name|HA_RETURN_1
@@ -4663,7 +4663,7 @@ index|[
 name|scb_index
 index|]
 expr_stmt|;
-comment|/* 			 * We didn't recieve a valid tag back from  			 * the target on a reconnect. 			 */
+comment|/* 			 * We didn't recieve a valid tag back from 			 * the target on a reconnect. 			 */
 name|printf
 argument_list|(
 literal|"ahc%d: invalid tag recieved on channel %c "
@@ -4811,7 +4811,7 @@ break|break;
 block|}
 name|clear
 label|:
-comment|/*             		 * Clear the upper byte that holds SEQINT status 		 * codes and clear the SEQINT bit. 		 */
+comment|/* 		 * Clear the upper byte that holds SEQINT status 		 * codes and clear the SEQINT bit. 		 */
 name|outb
 argument_list|(
 name|CLRINT
@@ -4821,7 +4821,7 @@ argument_list|,
 name|CLRSEQINT
 argument_list|)
 expr_stmt|;
-comment|/*             		 *  The sequencer is paused immediately on 		 *  a SEQINT, so we should restart it when 		 *  we leave this section.  		 */
+comment|/* 		 *  The sequencer is paused immediately on 		 *  a SEQINT, so we should restart it when 		 *  we leave this section. 		 */
 name|UNPAUSE_SEQUENCER
 argument_list|(
 name|ahc
@@ -4965,7 +4965,7 @@ name|error
 operator|=
 name|XS_TIMEOUT
 expr_stmt|;
-comment|/*  			 * Clear any pending messages for the timed out 			 * target, and mark the target as free 			 */
+comment|/* 			 * Clear any pending messages for the timed out 			 * target, and mark the target as free 			 */
 name|flags
 operator|=
 name|inb
@@ -5897,7 +5897,7 @@ operator|<<
 literal|6
 argument_list|)
 expr_stmt|;
-comment|/*  		 * XXX Hard coded SCSI ID until we can read it from the 		 * SEEPROM or NVRAM. 		 */
+comment|/* 		 * XXX Hard coded SCSI ID until we can read it from the 		 * SEEPROM or NVRAM. 		 */
 name|outb
 argument_list|(
 name|HA_SCSICONF
@@ -6115,7 +6115,7 @@ argument_list|,
 name|sblkctl
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Number of SCBs that will be used. Rev E aic7770s and 	 * aic7870s have 16.  The rest have 4. 	 */
+comment|/* 	 * Number of SCBs that will be used. Rev E aic7770s and 	 * aic7870s have 16.  The rest have 4. 	 */
 if|if
 condition|(
 operator|!
@@ -6128,7 +6128,7 @@ name|AHC_AIC7870
 operator|)
 condition|)
 block|{
-comment|/*  		 * See if we have a Rev E or higher 		 * aic7770. Anything below a Rev E will  		 * have a R/O autoflush disable configuration  		 * bit. 		 */
+comment|/* 		 * See if we have a Rev E or higher 		 * aic7770. Anything below a Rev E will 		 * have a R/O autoflush disable configuration 		 * bit. 		 */
 name|u_char
 name|sblkctl_orig
 decl_stmt|;
@@ -6263,7 +6263,7 @@ name|AHC_AIC7870
 operator|)
 condition|)
 block|{
-comment|/*  	 * The 294x cards are PCI, so we get their interrupt from the PCI 	 * BIOS.  	 */
+comment|/* 	 * The 294x cards are PCI, so we get their interrupt from the PCI 	 * BIOS. 	 */
 name|intdef
 operator|=
 name|inb
@@ -6363,7 +6363,7 @@ operator|&
 name|AHC_TWIN
 condition|)
 block|{
-comment|/*  		 * The device is gated to channel B after a chip reset, 		 * so set those values first 		 */
+comment|/* 		 * The device is gated to channel B after a chip reset, 		 * so set those values first 		 */
 name|outb
 argument_list|(
 name|SCSIID
@@ -6481,7 +6481,7 @@ operator||
 name|ENSCSIPERR
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Look at the information that board initialization or 	 * the board bios has left us.  In the lower four bits of each 	 * target's scratch space any value other than 0 indicates 	 * that we should initiate syncronous transfers.  If it's zero,  	 * the user or the BIOS has decided to disable syncronous  	 * negotiation to that target so we don't activate the needsdr 	 * flag. 	 */
+comment|/* 	 * Look at the information that board initialization or 	 * the board bios has left us.  In the lower four bits of each 	 * target's scratch space any value other than 0 indicates 	 * that we should initiate syncronous transfers.  If it's zero, 	 * the user or the BIOS has decided to disable syncronous 	 * negotiation to that target so we don't activate the needsdr 	 * flag. 	 */
 name|ahc
 operator|->
 name|needsdtr_orig
@@ -6593,7 +6593,7 @@ name|target_settings
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  	 * If we are not a WIDE device, forget WDTR.  This 	 * makes the driver work on some cards that don't 	 * leave these fields cleared when the BIOS is not 	 * installed. 	 */
+comment|/* 	 * If we are not a WIDE device, forget WDTR.  This 	 * makes the driver work on some cards that don't 	 * leave these fields cleared when the BIOS is not 	 * installed. 	 */
 if|if
 condition|(
 operator|!
@@ -6645,7 +6645,7 @@ name|tagenable
 operator|=
 literal|0
 expr_stmt|;
-comment|/*  	 * Clear the control byte for every SCB so that the sequencer 	 * doesn't get confused and think that one of them is valid 	 */
+comment|/* 	 * Clear the control byte for every SCB so that the sequencer 	 * doesn't get confused and think that one of them is valid 	 */
 for|for
 control|(
 name|i
@@ -6852,7 +6852,7 @@ modifier|*
 name|bp
 decl_stmt|;
 block|{
-comment|/*   * Even though the card can transfer up to 16megs per command  * we are limited by the number of segments in the dma segment  * list that we can hold.  The worst case is that all pages are  * discontinuous physically, hense the "page per segment" limit  * enforced here.  */
+comment|/*  * Even though the card can transfer up to 16megs per command  * we are limited by the number of segments in the dma segment  * list that we can hold.  The worst case is that all pages are  * discontinuous physically, hense the "page per segment" limit  * enforced here.  */
 if|if
 condition|(
 name|bp
@@ -6889,7 +6889,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * start a scsi operation given the command and  * the data address, target, and lun all of which   * are stored in the scsi_xfer struct  */
+comment|/*  * start a scsi operation given the command and  * the data address, target, and lun all of which  * are stored in the scsi_xfer struct  */
 end_comment
 
 begin_function
@@ -7000,7 +7000,7 @@ literal|"ahc_scsi_cmd\n"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*           * get an scb to use. If the transfer          * is from a buf (possibly from interrupt time)          * then we can't allow it to sleep          */
+comment|/*          * get an scb to use. If the transfer          * is from a buf (possibly from interrupt time)          * then we can't allow it to sleep          */
 name|flags
 operator|=
 name|xs
@@ -7394,7 +7394,7 @@ name|nextphys
 operator|)
 condition|)
 block|{
-comment|/* 					 * This page is contiguous (physically)  					 * with the the last, just extend the  					 * length 					 */
+comment|/* 					 * This page is contiguous (physically) 					 * with the the last, just extend the 					 * length 					 */
 comment|/* how far to the end of the page */
 name|nextphys
 operator|=
@@ -7556,7 +7556,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 		 * No data xfer, use non S/G values  	 	 */
+comment|/* 		 * No data xfer, use non S/G values 	 	 */
 name|scb
 operator|->
 name|SG_segment_count
@@ -7570,7 +7570,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/*                                         * Usually return SUCCESSFULLY QUEUED          */
+comment|/*          * Usually return SUCCESSFULLY QUEUED          */
 ifdef|#
 directive|ifdef
 name|AHC_DEBUG
@@ -7657,7 +7657,7 @@ name|SUCCESSFULLY_QUEUED
 operator|)
 return|;
 block|}
-comment|/*                                        * If we can't use interrupts, poll on completion          */
+comment|/*          * If we can't use interrupts, poll on completion          */
 name|ahc_send_scb
 argument_list|(
 name|ahc
@@ -7764,7 +7764,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*        * Return some information to the caller about  * the adapter and it's capabilities.    */
+comment|/*  * Return some information to the caller about  * the adapter and it's capabilities.  */
 end_comment
 
 begin_function
@@ -8349,7 +8349,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*                * Function to poll for command completion when in poll mode  */
+comment|/*  * Function to poll for command completion when in poll mode  */
 end_comment
 
 begin_function
@@ -8719,7 +8719,7 @@ operator|&
 name|ACTIVE_MSG
 condition|)
 block|{
-comment|/*  		 * If there's a message in progress,  		 * reset the bus and have all devices renegotiate. 		 */
+comment|/* 		 * If there's a message in progress, 		 * reset the bus and have all devices renegotiate. 		 */
 if|if
 condition|(
 name|scb
@@ -8864,7 +8864,7 @@ goto|goto
 name|done
 goto|;
 block|}
-comment|/*  	 * Otherwise, set up an abort message and have the sequencer 	 * clean up 	 */
+comment|/* 	 * Otherwise, set up an abort message and have the sequencer 	 * clean up 	 */
 name|outb
 argument_list|(
 name|HA_FLAGS

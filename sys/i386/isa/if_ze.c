@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * TODO:  * [1] integrate into current if_ed.c  * [2] parse tuples to find out where to map the shared memory buffer,  *     and what to write into the configuration register  * [3] move pcic-specific code into a separate module.  *   * Device driver for IBM PCMCIA Credit Card Adapter for Ethernet,  * if_ze.c  *  * Based on the Device driver for National Semiconductor DS8390 ethernet  * adapters by David Greenman.  Modifications for PCMCIA by Keith Moore.  * Adapted for FreeBSD 1.1.5 by Jordan Hubbard.  *  * Currently supports only the IBM Credit Card Adapter for Ethernet, but  * could probably work with other PCMCIA cards also, if it were modified  * to get the locations of the PCMCIA configuration option register (COR)  * by parsing the configuration tuples, rather than by hard-coding in  * the value expected by IBM's card.  *  * Sources for data on the PCMCIA/IBM CCAE specific portions of the driver:  *  * [1] _Local Area Network Credit Card Adapters Technical Reference_,  *     IBM Corp., SC30-3585-00, part # 33G9243.  * [2] "pre-alpha" PCMCIA support code for Linux by Barry Jaspan.  * [3] Intel 82536SL PC Card Interface Controller Data Sheet, Intel  *     Order Number 290423-002  * [4] National Semiconductor DP83902A ST-NIC (tm) Serial Network  *     Interface Controller for Twisted Pair data sheet.  *  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  */
+comment|/*-  * TODO:  * [1] integrate into current if_ed.c  * [2] parse tuples to find out where to map the shared memory buffer,  *     and what to write into the configuration register  * [3] move pcic-specific code into a separate module.  *  * Device driver for IBM PCMCIA Credit Card Adapter for Ethernet,  * if_ze.c  *  * Based on the Device driver for National Semiconductor DS8390 ethernet  * adapters by David Greenman.  Modifications for PCMCIA by Keith Moore.  * Adapted for FreeBSD 1.1.5 by Jordan Hubbard.  *  * Currently supports only the IBM Credit Card Adapter for Ethernet, but  * could probably work with other PCMCIA cards also, if it were modified  * to get the locations of the PCMCIA configuration option register (COR)  * by parsing the configuration tuples, rather than by hard-coding in  * the value expected by IBM's card.  *  * Sources for data on the PCMCIA/IBM CCAE specific portions of the driver:  *  * [1] _Local Area Network Credit Card Adapters Technical Reference_,  *     IBM Corp., SC30-3585-00, part # 33G9243.  * [2] "pre-alpha" PCMCIA support code for Linux by Barry Jaspan.  * [3] Intel 82536SL PC Card Interface Controller Data Sheet, Intel  *     Order Number 290423-002  * [4] National Semiconductor DP83902A ST-NIC (tm) Serial Network  *     Interface Controller for Twisted Pair data sheet.  *  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  */
 end_comment
 
 begin_comment
-comment|/*  * I doubled delay loops in this file because it is not enough for some  * laptop machines' PCIC (especially, on my Chaplet ILFA 350 ^^;).   *                        HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  */
+comment|/*  * I doubled delay loops in this file because it is not enough for some  * laptop machines' PCIC (especially, on my Chaplet ILFA 350 ^^;).  *                        HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp>  */
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*  * Very small patch for IBM Ethernet PCMCIA Card II and IBM ThinkPad2
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ze.c,v 1.15 1995/05/03 22:58:07 phk Exp $  */
+comment|/*  * $Id: if_ze.c,v 1.16 1995/05/24 20:33:42 davidg Exp $  */
 end_comment
 
 begin_include
@@ -789,7 +789,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Probe each slot looking for an IBM Credit Card Adapter for Ethernet  * For each card that we find, map its card information structure  * into system memory at 'scratch' and see whether it's one of ours.  * Return the slot number if we find a card, or -1 otherwise.   *  * Side effects:  * + On success, leaves CIS mapped into memory at 'scratch';  *   caller must free it.  * + On success, leaves ethernet address in enet_addr.  * + Leaves product/vendor id of last card probed in 'card_info'  */
+comment|/*  * Probe each slot looking for an IBM Credit Card Adapter for Ethernet  * For each card that we find, map its card information structure  * into system memory at 'scratch' and see whether it's one of ours.  * Return the slot number if we find a card, or -1 otherwise.  *  * Side effects:  * + On success, leaves CIS mapped into memory at 'scratch';  *   caller must free it.  * + On success, leaves ethernet address in enet_addr.  * + Leaves product/vendor id of last card probed in 'card_info'  */
 end_comment
 
 begin_decl_stmt
@@ -932,7 +932,7 @@ argument_list|(
 name|slot
 argument_list|)
 expr_stmt|;
-comment|/* 	 * map the card's attribute memory and examine its  	 * card information structure tuples for something 	 * we recognize. 	 */
+comment|/* 	 * map the card's attribute memory and examine its 	 * card information structure tuples for something 	 * we recognize. 	 */
 name|pcic_map_memory
 argument_list|(
 name|slot
@@ -1741,7 +1741,7 @@ operator|+
 name|ZE_MISC
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Some Intel-compatible PCICs of Cirrus Logic fails in  	 * initializing them.  This is a quick hack to fix this  	 * problem. 	 *        HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp> 	 */
+comment|/* 	 * Some Intel-compatible PCICs of Cirrus Logic fails in 	 * initializing them.  This is a quick hack to fix this 	 * problem. 	 *        HOSOKAWA, Tatsumi<hosokawa@mt.cs.keio.ac.jp> 	 */
 if|if
 condition|(
 operator|!
@@ -2713,7 +2713,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Initialize device.   */
+comment|/*  * Initialize device.  */
 end_comment
 
 begin_function
@@ -4218,7 +4218,7 @@ name|ZE_P0_TBCR0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * Receive Completion. Go and get the packet.  		 *	XXX - Doing this on an error is dubious because there 		 *	   shouldn't be any data to get (we've configured the 		 *	   interface to not accept packets with errors). 		 */
+comment|/* 		 * Receive Completion. Go and get the packet. 		 *	XXX - Doing this on an error is dubious because there 		 *	   shouldn't be any data to get (we've configured the 		 *	   interface to not accept packets with errors). 		 */
 if|if
 condition|(
 name|isr
@@ -4525,7 +4525,7 @@ operator|)
 expr_stmt|;
 else|else
 block|{
-comment|/*  				 *  				 */
+comment|/* 				 * 				 */
 name|bcopy
 argument_list|(
 operator|(
@@ -5016,7 +5016,7 @@ directive|if
 name|NBPFILTER
 operator|>
 literal|0
-comment|/* 	 * Check if there's a BPF listener on this interface. 	 * If so, hand off the raw packet to bpf.  	 */
+comment|/* 	 * Check if there's a BPF listener on this interface. 	 * If so, hand off the raw packet to bpf. 	 */
 if|if
 condition|(
 name|sc

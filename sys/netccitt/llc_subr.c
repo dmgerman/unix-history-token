@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (C) Dirk Husemann, Computer Science Department IV,   * 		 University of Erlangen-Nuremberg, Germany, 1990, 1991, 1992  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *   * This code is derived from software contributed to Berkeley by  * Dirk Husemann and the Computer Science Department (IV) of  * the University of Erlangen-Nuremberg, Germany.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)llc_subr.c	8.1 (Berkeley) 6/10/93  * $Id: llc_subr.c,v 1.3 1994/12/13 22:32:14 wollman Exp $  */
+comment|/*  * Copyright (C) Dirk Husemann, Computer Science Department IV,  * 		 University of Erlangen-Nuremberg, Germany, 1990, 1991, 1992  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Dirk Husemann and the Computer Science Department (IV) of  * the University of Erlangen-Nuremberg, Germany.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)llc_subr.c	8.1 (Berkeley) 6/10/93  * $Id: llc_subr.c,v 1.4 1995/05/11 19:26:40 rgrimes Exp $  */
 end_comment
 
 begin_include
@@ -213,7 +213,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * We keep the link control blocks on a doubly linked list -   * primarily for checking in llc_time()   */
+comment|/*  * We keep the link control blocks on a doubly linked list -  * primarily for checking in llc_time()  */
 end_comment
 
 begin_decl_stmt
@@ -811,7 +811,7 @@ argument_list|)
 decl_stmt|;
 name|USES_AF_LINK_RTS
 expr_stmt|;
-comment|/*  	 * We rely/assume that only STREAM protocols will make use of  	 * connection oriented LLC2. If this will one day not be the  	 * case this will obviously fail.  	 */
+comment|/* 	 * We rely/assume that only STREAM protocols will make use of 	 * connection oriented LLC2. If this will one day not be the 	 * case this will obviously fail. 	 */
 name|pp
 operator|=
 name|pffindtype
@@ -849,7 +849,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* 	 * We need a way to jot down the LLC2 configuration for 	 * a certain LSAP address. To do this we enter  	 * a "route" for the SAP. 	 */
+comment|/* 	 * We need a way to jot down the LLC2 configuration for 	 * a certain LSAP address. To do this we enter 	 * a "route" for the SAP. 	 */
 name|ifdl_addr
 operator|=
 name|sdl_getaddrif
@@ -975,7 +975,7 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-comment|/* 	  		 * For the time being we support LLC CLASS II here 	  		 * only 	  		 */
+comment|/* 		 * For the time being we support LLC CLASS II here 		 * only 		 */
 name|sapinfo
 operator|->
 name|si_class
@@ -1047,7 +1047,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get sapinfo for SAP address and interface   */
+comment|/*  * Get sapinfo for SAP address and interface  */
 end_comment
 
 begin_function
@@ -1171,7 +1171,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * llc_seq2slot() --- We only allocate enough memory to hold the window. This  * introduces the necessity to keep track of two ``pointers''  *  *        o llcl_freeslot     the next free slot to be used  *                            this one advances modulo llcl_window  *        o llcl_projvs       the V(S) associated with the next frame  *                            to be set via llcl_freeslot  *                            this one advances modulo LLC_MAX_SEQUENCE  *  * A new frame is inserted at llcl_output_buffers[llcl_freeslot], after  * which both llcl_freeslot and llcl_projvs are incremented.  *  * The slot sl(sn) for any given sequence number sn is given by  *  *        sl(sn) = (llcl_freeslot + llcl_window - 1 - (llcl_projvs +  *                  LLC_MAX_SEQUENCE- sn) % LLC_MAX_SEQUENCE) %   *                  llcl_window   *  * i.e. we first calculate the number of frames we need to ``go back''  * from the current one (really the next one, but that doesn't matter as  * llcl_projvs is likewise of by plus one) and subtract that from the  * pointer to the most recently taken frame (llcl_freeslot - 1).  */
+comment|/*  * llc_seq2slot() --- We only allocate enough memory to hold the window. This  * introduces the necessity to keep track of two ``pointers''  *  *        o llcl_freeslot     the next free slot to be used  *                            this one advances modulo llcl_window  *        o llcl_projvs       the V(S) associated with the next frame  *                            to be set via llcl_freeslot  *                            this one advances modulo LLC_MAX_SEQUENCE  *  * A new frame is inserted at llcl_output_buffers[llcl_freeslot], after  * which both llcl_freeslot and llcl_projvs are incremented.  *  * The slot sl(sn) for any given sequence number sn is given by  *  *        sl(sn) = (llcl_freeslot + llcl_window - 1 - (llcl_projvs +  *                  LLC_MAX_SEQUENCE- sn) % LLC_MAX_SEQUENCE) %  *                  llcl_window  *  * i.e. we first calculate the number of frames we need to ``go back''  * from the current one (really the next one, but that doesn't matter as  * llcl_projvs is likewise of by plus one) and subtract that from the  * pointer to the most recently taken frame (llcl_freeslot - 1).  */
 end_comment
 
 begin_function
@@ -1227,7 +1227,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * LLC2 link state handler  *  * There is in most cases one function per LLC2 state. The LLC2 standard  * ISO 8802-2 allows in some cases for ambiguities, i.e. we have the choice  * to do one thing or the other. Right now I have just chosen one but have also   * indicated the spot by "multiple possibilities". One could make the behavior   * in those cases configurable, allowing the superuser to enter a profile word  * (32/64 bits, whatever is needed) that would suit her needs [I quite like   * that idea, perhaps I'll get around to it].  *  * [Preceeding each state handler function is the description as taken from  * ISO 8802-2, section 7.9.2.1]  */
+comment|/*  * LLC2 link state handler  *  * There is in most cases one function per LLC2 state. The LLC2 standard  * ISO 8802-2 allows in some cases for ambiguities, i.e. we have the choice  * to do one thing or the other. Right now I have just chosen one but have also  * indicated the spot by "multiple possibilities". One could make the behavior  * in those cases configurable, allowing the superuser to enter a profile word  * (32/64 bits, whatever is needed) that would suit her needs [I quite like  * that idea, perhaps I'll get around to it].  *  * [Preceeding each state handler function is the description as taken from  * ISO 8802-2, section 7.9.2.1]  */
 end_comment
 
 begin_comment
@@ -1321,7 +1321,7 @@ name|LLCFT_SABME
 operator|+
 name|LLC_CMD
 case|:
-comment|/*  		 * ISO 8802-2, table 7-1, ADM state says to set 		 * the P flag, yet this will cause an SABME [P] to be 		 * answered with an UA only, not an UA [F], all 		 * other `disconnected' states set the F flag, so ... 		 */
+comment|/* 		 * ISO 8802-2, table 7-1, ADM state says to set 		 * the P flag, yet this will cause an SABME [P] to be 		 * answered with an UA only, not an UA [F], all 		 * other `disconnected' states set the F flag, so ... 		 */
 name|LLC_SETFLAG
 argument_list|(
 name|linkp
@@ -1548,7 +1548,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * RESET_WAIT --- The local connection component is waiting for the local user  *                 to indicate a RESET_REQUEST or a DISCONNECT_REQUEST.    */
+comment|/*  * RESET_WAIT --- The local connection component is waiting for the local user  *                 to indicate a RESET_REQUEST or a DISCONNECT_REQUEST.  */
 end_comment
 
 begin_function
@@ -2808,7 +2808,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ERROR --- The local connection component has detected an error in a received  *           PDU and has sent a FRMR response PDU. It is waiting for a reply from   *           the remote connection component.  */
+comment|/*  * ERROR --- The local connection component has detected an error in a received  *           PDU and has sent a FRMR response PDU. It is waiting for a reply from  *           the remote connection component.  */
 end_comment
 
 begin_function
@@ -7556,7 +7556,7 @@ operator|->
 name|llcl_retry
 operator|++
 expr_stmt|;
-comment|/*  			 * I cannot locate the description of RESET_V(S) 			 * in ISO 8802-2, table 7-1, state REJECT, last event, 			 * and  assume they meant to set V(S) to 0 ... 			 */
+comment|/* 			 * I cannot locate the description of RESET_V(S) 			 * in ISO 8802-2, table 7-1, state REJECT, last event, 			 * and  assume they meant to set V(S) to 0 ... 			 */
 name|linkp
 operator|->
 name|llcl_vs
@@ -10443,7 +10443,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/*          * Only LLC_DATA_INDICATION is for the time being 	 * passed up to the network layer entity. 	 * The remaining action codes are for the time  	 * being visible internally only.          * However, this can/may be changed if necessary. 	 */
+comment|/*          * Only LLC_DATA_INDICATION is for the time being 	 * passed up to the network layer entity. 	 * The remaining action codes are for the time 	 * being visible internally only.          * However, this can/may be changed if necessary. 	 */
 return|return
 name|action
 return|;

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)iso_snpac.c	8.1 (Berkeley) 6/10/93  * $Id: iso_snpac.c,v 1.2 1994/08/02 07:50:44 davidg Exp $  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)iso_snpac.c	8.1 (Berkeley) 6/10/93  * $Id: iso_snpac.c,v 1.3 1994/12/13 22:33:05 wollman Exp $  */
 end_comment
 
 begin_comment
-comment|/*********************************************************** 		Copyright IBM Corporation 1987                        All Rights Reserved  Permission to use, copy, modify, and distribute this software and its  documentation for any purpose and without fee is hereby granted,  provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in  supporting documentation, and that the name of IBM not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.    IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  ******************************************************************/
+comment|/*********************************************************** 		Copyright IBM Corporation 1987                        All Rights Reserved  Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of IBM not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.  IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  ******************************************************************/
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/* $Header: /home/ncvs/src/sys/netiso/iso_snpac.c,v 1.2 1994/08/02 07:50:44 davidg Exp $ */
+comment|/* $Header: /home/ncvs/src/sys/netiso/iso_snpac.c,v 1.3 1994/12/13 22:33:05 wollman Exp $ */
 end_comment
 
 begin_comment
@@ -1106,7 +1106,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * FUNCTION:		iso_snparesolve  *  * PURPOSE:			Resolve an iso address into snpa address  *  * RETURNS:			0 if addr is resolved  *					errno if addr is unknown  *  * SIDE EFFECTS:	  *  * NOTES:			Now that we have folded the snpa cache into the routing  *					table, we know there is no snpa address known for this  *					destination.  If we know of a default IS, then the address  *					of the IS is returned.  If no IS is known, then return the  *					multi-cast address for "all ES" for this interface.  *  *					NB: the last case described above constitutes the  *					query configuration function 9542, sec 6.5  *					A mechanism is needed to prevent this function from  *					being invoked if the system is an IS.  */
+comment|/*  * FUNCTION:		iso_snparesolve  *  * PURPOSE:			Resolve an iso address into snpa address  *  * RETURNS:			0 if addr is resolved  *					errno if addr is unknown  *  * SIDE EFFECTS:  *  * NOTES:			Now that we have folded the snpa cache into the routing  *					table, we know there is no snpa address known for this  *					destination.  If we know of a default IS, then the address  *					of the IS is returned.  If no IS is known, then return the  *					multi-cast address for "all ES" for this interface.  *  *					NB: the last case described above constitutes the  *					query configuration function 9542, sec 6.5  *					A mechanism is needed to prevent this function from  *					being invoked if the system is an IS.  */
 end_comment
 
 begin_macro
@@ -1181,7 +1181,7 @@ decl_stmt|;
 name|int
 name|addrlen
 decl_stmt|;
-comment|/* 	 *	This hack allows us to send esis packets that have the destination snpa 	 *	addresss embedded in the destination nsap address  	 */
+comment|/* 	 *	This hack allows us to send esis packets that have the destination snpa 	 *	addresss embedded in the destination nsap address 	 */
 if|if
 condition|(
 name|dest
@@ -1225,7 +1225,7 @@ name|siso_data
 operator|+
 literal|1
 expr_stmt|;
-comment|/*  	 * If we are an IS, we can't do much with the packet; 	 *	Check if we know about an IS. 	 */
+comment|/* 	 * If we are an IS, we can't do much with the packet; 	 *	Check if we know about an IS. 	 */
 block|}
 elseif|else
 if|if
@@ -1301,7 +1301,7 @@ operator|&
 name|IFF_BROADCAST
 condition|)
 block|{
-comment|/*  		 *	no IS, no match. Return "all es" multicast address for this 		 *	interface, as per Query Configuration Function (9542 sec 6.5) 		 * 		 *	Note: there is a potential problem here. If the destination 		 *	is on the subnet and it does not respond with a ESH, but 		 *	does send back a TP CC, a connection could be established 		 *	where we always transmit the CLNP packet to "all es" 		 */
+comment|/* 		 *	no IS, no match. Return "all es" multicast address for this 		 *	interface, as per Query Configuration Function (9542 sec 6.5) 		 * 		 *	Note: there is a potential problem here. If the destination 		 *	is on the subnet and it does not respond with a ESH, but 		 *	does send back a TP CC, a connection could be established 		 *	where we always transmit the CLNP packet to "all es" 		 */
 name|addrlen
 operator|=
 name|ifp
@@ -1343,7 +1343,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * FUNCTION:		snpac_free  *  * PURPOSE:			free an entry in the iso address map table  *  * RETURNS:			nothing  *  * SIDE EFFECTS:	  *  * NOTES:			If there is a route entry associated with cache  *					entry, then delete that as well  */
+comment|/*  * FUNCTION:		snpac_free  *  * PURPOSE:			free an entry in the iso address map table  *  * RETURNS:			nothing  *  * SIDE EFFECTS:  *  * NOTES:			If there is a route entry associated with cache  *					entry, then delete that as well  */
 end_comment
 
 begin_expr_stmt
@@ -1462,7 +1462,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * FUNCTION:		snpac_add  *  * PURPOSE:			Add an entry to the snpa cache  *  * RETURNS:			  *  * SIDE EFFECTS:	  *  * NOTES:			If entry already exists, then update holding time.  */
+comment|/*  * FUNCTION:		snpac_add  *  * PURPOSE:			Add an entry to the snpa cache  *  * RETURNS:  *  * SIDE EFFECTS:  *  * NOTES:			If entry already exists, then update holding time.  */
 end_comment
 
 begin_macro
@@ -2208,7 +2208,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * FUNCTION:		snpac_ioctl  *  * PURPOSE:			Set/Get the system type and esis parameters  *  * RETURNS:			0 on success, or unix error code  *  * SIDE EFFECTS:	  *  * NOTES:			  */
+comment|/*  * FUNCTION:		snpac_ioctl  *  * PURPOSE:			Set/Get the system type and esis parameters  *  * RETURNS:			0 on success, or unix error code  *  * SIDE EFFECTS:  *  * NOTES:  */
 end_comment
 
 begin_macro
@@ -2477,7 +2477,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * FUNCTION:		snpac_logdefis  *  * PURPOSE:			Mark the IS passed as the default IS  *  * RETURNS:			nothing  *  * SIDE EFFECTS:	  *  * NOTES:			  */
+comment|/*  * FUNCTION:		snpac_logdefis  *  * PURPOSE:			Mark the IS passed as the default IS  *  * RETURNS:			nothing  *  * SIDE EFFECTS:  *  * NOTES:  */
 end_comment
 
 begin_expr_stmt
@@ -2656,7 +2656,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * FUNCTION:		snpac_age  *  * PURPOSE:			Time out snpac entries  *  * RETURNS:			  *  * SIDE EFFECTS:	  *  * NOTES:			When encountering an entry for the first time, snpac_age  *					may delete up to SNPAC_AGE too many seconds. Ie.  *					if the entry is added a moment before snpac_age is  *					called, the entry will immediately have SNPAC_AGE  *					seconds taken off the holding time, even though  *					it has only been held a brief moment.  *  *					The proper way to do this is set an expiry timeval  *					equal to current time + holding time. Then snpac_age  *					would time out entries where expiry date is older  *					than the current time.  */
+comment|/*  * FUNCTION:		snpac_age  *  * PURPOSE:			Time out snpac entries  *  * RETURNS:  *  * SIDE EFFECTS:  *  * NOTES:			When encountering an entry for the first time, snpac_age  *					may delete up to SNPAC_AGE too many seconds. Ie.  *					if the entry is added a moment before snpac_age is  *					called, the entry will immediately have SNPAC_AGE  *					seconds taken off the holding time, even though  *					it has only been held a brief moment.  *  *					The proper way to do this is set an expiry timeval  *					equal to current time + holding time. Then snpac_age  *					would time out entries where expiry date is older  *					than the current time.  */
 end_comment
 
 begin_function
@@ -2761,7 +2761,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * FUNCTION:		snpac_ownmulti  *  * PURPOSE:			Determine if the snpa address is a multicast address  *					of the same type as the system.  *  * RETURNS:			true or false  *  * SIDE EFFECTS:	  *  * NOTES:			Used by interface drivers when not in eavesdrop mode   *					as interm kludge until  *					real multicast addresses can be configured  */
+comment|/*  * FUNCTION:		snpac_ownmulti  *  * PURPOSE:			Determine if the snpa address is a multicast address  *					of the same type as the system.  *  * RETURNS:			true or false  *  * SIDE EFFECTS:  *  * NOTES:			Used by interface drivers when not in eavesdrop mode  *					as interm kludge until  *					real multicast addresses can be configured  */
 end_comment
 
 begin_macro
@@ -2840,7 +2840,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * FUNCTION:		snpac_flushifp  *  * PURPOSE:			Flush entries associated with specific ifp  *  * RETURNS:			nothing  *  * SIDE EFFECTS:	  *  * NOTES:			  */
+comment|/*  * FUNCTION:		snpac_flushifp  *  * PURPOSE:			Flush entries associated with specific ifp  *  * RETURNS:			nothing  *  * SIDE EFFECTS:  *  * NOTES:  */
 end_comment
 
 begin_macro
@@ -2914,7 +2914,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * FUNCTION:		snpac_rtrequest  *  * PURPOSE:			Make a routing request  *  * RETURNS:			nothing  *  * SIDE EFFECTS:	  *  * NOTES:			In the future, this should make a request of a user  *					level routing daemon.  */
+comment|/*  * FUNCTION:		snpac_rtrequest  *  * PURPOSE:			Make a routing request  *  * RETURNS:			nothing  *  * SIDE EFFECTS:  *  * NOTES:			In the future, this should make a request of a user  *					level routing daemon.  */
 end_comment
 
 begin_macro
@@ -3133,7 +3133,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * FUNCTION:		snpac_addrt  *  * PURPOSE:			Associate a routing entry with an snpac entry  *  * RETURNS:			nothing  *  * SIDE EFFECTS:	  *  * NOTES:			If a cache entry exists for gateway, then  *					make a routing entry (host, gateway) and associate  *					with gateway.  *  *					If a route already exists and is different, first delete  *					it.  *  *					This could be made more efficient by checking   *					the existing route before adding a new one.  */
+comment|/*  * FUNCTION:		snpac_addrt  *  * PURPOSE:			Associate a routing entry with an snpac entry  *  * RETURNS:			nothing  *  * SIDE EFFECTS:  *  * NOTES:			If a cache entry exists for gateway, then  *					make a routing entry (host, gateway) and associate  *					with gateway.  *  *					If a route already exists and is different, first delete  *					it.  *  *					This could be made more efficient by checking  *					the existing route before adding a new one.  */
 end_comment
 
 begin_macro

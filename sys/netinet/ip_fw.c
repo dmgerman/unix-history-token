@@ -542,7 +542,7 @@ name|notcpsyn
 init|=
 literal|1
 decl_stmt|;
-comment|/* 		 * If the chain is empty 		 * allow any packet-this is equal  		 * to disabling firewall. 		 */
+comment|/* 		 * If the chain is empty 		 * allow any packet-this is equal 		 * to disabling firewall. 		 */
 if|if
 condition|(
 operator|!
@@ -553,7 +553,7 @@ operator|(
 literal|1
 operator|)
 return|;
-comment|/*  		 * This way we handle fragmented packets. 		 * we ignore all fragments but the first one 		 * so the whole packet can't be reassembled. 		 * This way we relay on the full info which 		 * stored only in first packet. 		 */
+comment|/* 		 * This way we handle fragmented packets. 		 * we ignore all fragments but the first one 		 * so the whole packet can't be reassembled. 		 * This way we relay on the full info which 		 * stored only in first packet. 		 */
 if|if
 condition|(
 name|ip
@@ -974,7 +974,7 @@ name|via_match
 goto|;
 block|}
 block|}
-comment|/*  	    * If we got here,no "via"'s matched,so 	    * we should continue to the next firewall entry. 	    */
+comment|/* 	    * If we got here,no "via"'s matched,so 	    * we should continue to the next firewall entry. 	    */
 continue|continue;
 name|via_match
 label|:
@@ -1000,7 +1000,7 @@ goto|;
 block|}
 else|else
 block|{
-comment|/* 	 * This is actually buggy as if you set SYN flag  	 * on UDp or ICMP firewall it will never work,but  	 * actually it is a concern of software which sets 	 * firewall entries. 	 */
+comment|/* 	 * This is actually buggy as if you set SYN flag 	 * on UDp or ICMP firewall it will never work,but 	 * actually it is a concern of software which sets 	 * firewall entries. 	 */
 if|if
 condition|(
 name|f
@@ -1325,7 +1325,7 @@ argument_list|,
 name|MT_SOOPTS
 argument_list|)
 expr_stmt|;
-comment|/* 			 * We never retry,we don't want to  			 * waste time-it is not so critical  			 * if ICMP unsent. 			 */
+comment|/* 			 * We never retry,we don't want to 			 * waste time-it is not so critical 			 * if ICMP unsent. 			 */
 if|if
 condition|(
 operator|!
@@ -1788,7 +1788,7 @@ block|}
 continue|continue;
 name|addr_match
 label|:
-comment|/* 		 * We use here same code for "via" matching 		 * as in firewall.This is wrong and does not do  		 * much use,because in most cases instead of interface 		 * passed NULL pointer.Need to be completely 		 * rewritten. 		 */
+comment|/* 		 * We use here same code for "via" matching 		 * as in firewall.This is wrong and does not do 		 * much use,because in most cases instead of interface 		 * passed NULL pointer.Need to be completely 		 * rewritten. 		 */
 if|if
 condition|(
 operator|!
@@ -1935,7 +1935,7 @@ name|via_match
 goto|;
 block|}
 block|}
-comment|/*  	    * If we got here,no "via"'s matched,so 	    * we should continue to the next firewall entry. 	    */
+comment|/* 	    * If we got here,no "via"'s matched,so 	    * we should continue to the next firewall entry. 	    */
 continue|continue;
 name|via_match
 label|:
@@ -1961,7 +1961,7 @@ name|fw_pcnt
 operator|++
 expr_stmt|;
 comment|/* Rise packet count */
-comment|/* 						     * Rise byte count, 						     * if need to convert from 						     * host to network byte  						     * order,do it. 						     */
+comment|/* 						     * Rise byte count, 						     * if need to convert from 						     * host to network byte 						     * order,do it. 						     */
 if|if
 condition|(
 name|nh_conv
@@ -2118,7 +2118,7 @@ name|fw_pcnt
 operator|++
 expr_stmt|;
 comment|/* Rise packet count */
-comment|/* 					       * Rise byte count, 					       * if need to convert from 					       * host to network byte  					       * order,do it. 					       */
+comment|/* 					       * Rise byte count, 					       * if need to convert from 					       * host to network byte 					       * order,do it. 					       */
 if|if
 condition|(
 name|nh_conv

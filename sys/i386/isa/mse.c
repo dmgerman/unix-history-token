@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1992 by the University of Guelph  *  * Permission to use, copy and modify this  * software and its documentation for any purpose and without  * fee is hereby granted, provided that the above copyright  * notice appear in all copies and that both that copyright  * notice and this permission notice appear in supporting  * documentation.  * University of Guelph makes no representations about the suitability of  * this software for any purpose.  It is provided "as is"  * without express or implied warranty.  *  * $Id: mse.c,v 1.10 1995/03/28 07:55:44 bde Exp $  */
+comment|/*  * Copyright 1992 by the University of Guelph  *  * Permission to use, copy and modify this  * software and its documentation for any purpose and without  * fee is hereby granted, provided that the above copyright  * notice appear in all copies and that both that copyright  * notice and this permission notice appear in supporting  * documentation.  * University of Guelph makes no representations about the suitability of  * this software for any purpose.  It is provided "as is"  * without express or implied warranty.  *  * $Id: mse.c,v 1.11 1995/04/12 20:47:59 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -1193,7 +1193,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * mseread: return mouse info using the MSC serial protocol, but without  * using bytes 4 and 5.  * (Yes this is cheesy, but it makes the X386 server happy, so...)  */
+comment|/*  * mseread: return mouse info using the MSC serial protocol, but without  * using bytes 4 and 5.  * (Yes this is cheesy, but it makes the X386 server happy, so...)  */
 end_comment
 
 begin_function

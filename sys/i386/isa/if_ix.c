@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993, 1994, 1995  *	Rodney W. Grimes, Milwaukie, Oregon  97222.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Rodney W. Grimes.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY RODNEY W. GRIMES ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL RODNEY W. GRIMES BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_ix.c,v 1.5 1995/03/02 08:17:14 rgrimes Exp $  */
+comment|/*  * Copyright (c) 1993, 1994, 1995  *	Rodney W. Grimes, Milwaukie, Oregon  97222.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer as  *    the first lines of this file unmodified.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Rodney W. Grimes.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY RODNEY W. GRIMES ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL RODNEY W. GRIMES BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: if_ix.c,v 1.6 1995/05/10 15:19:25 rgrimes Exp $  */
 end_comment
 
 begin_include
@@ -2615,7 +2615,7 @@ name|IFF_NOTRAILERS
 operator||
 name|IFF_BROADCAST
 expr_stmt|;
-comment|/* 	 * This is commented out to save memory and cpu time  	 * ifp->if_timer = 0; 	 * ifp->if_metric = 0; 	 * ifp->if_addrlist = 0; 	 * ifp->if_snd.ifq_head = 0; 	 * ifp->if_snd.ifq_tail = 0; 	 * ifp->if_snd.ifq_len = 0; 	 * ifp->if_snd.ifq_maxlen = 0; 	 * ifp->if_snd.ifq_drops = 0; 	 * end of commented out block 	 */
+comment|/* 	 * This is commented out to save memory and cpu time 	 * ifp->if_timer = 0; 	 * ifp->if_metric = 0; 	 * ifp->if_addrlist = 0; 	 * ifp->if_snd.ifq_head = 0; 	 * ifp->if_snd.ifq_tail = 0; 	 * ifp->if_snd.ifq_len = 0; 	 * ifp->if_snd.ifq_maxlen = 0; 	 * ifp->if_snd.ifq_drops = 0; 	 * end of commented out block 	 */
 name|ifp
 operator|->
 name|if_init
@@ -2658,7 +2658,7 @@ name|if_watchdog
 operator|=
 name|ixwatchdog
 expr_stmt|;
-comment|/* 	 * This is commented out to save memory and cpu time  	 * ifp->if_ipackets = 0; 	 * ifp->if_ierrors = 0; 	 * ifp->if_opackets = 0; 	 * ifp->if_oerrors = 0; 	 * ifp->if_collisions = 0; 	 * ifp->if_next = 0; 	 * end of commented out block 	 */
+comment|/* 	 * This is commented out to save memory and cpu time 	 * ifp->if_ipackets = 0; 	 * ifp->if_ierrors = 0; 	 * ifp->if_opackets = 0; 	 * ifp->if_oerrors = 0; 	 * ifp->if_collisions = 0; 	 * ifp->if_next = 0; 	 * end of commented out block 	 */
 name|ifp
 operator|->
 name|if_type
@@ -2677,7 +2677,7 @@ name|if_hdrlen
 operator|=
 name|ETHER_HEADER_LENGTH
 expr_stmt|;
-comment|/* 	 * This is commented out to save memory and cpu time  	 * ifp->if_index = 0; 	 * ifp->if_lastchange.tv_sec = 0; 	 * ifp->if_lastchange.tv_usec = 0; 	 * ifp->if_ibytes = 0; 	 * ifp->if_obytes = 0; 	 * ifp->if_imcasts = 0; 	 * ifp->if_omcasts = 0; 	 * ifp->if_iqdrops = 0; 	 * ifp->if_noproto = 0; 	 * ifp->if_baudrate = 0;          * ifp->if_pcount = 0; 	 * end of commented out block 	 */
+comment|/* 	 * This is commented out to save memory and cpu time 	 * ifp->if_index = 0; 	 * ifp->if_lastchange.tv_sec = 0; 	 * ifp->if_lastchange.tv_usec = 0; 	 * ifp->if_ibytes = 0; 	 * ifp->if_obytes = 0; 	 * ifp->if_imcasts = 0; 	 * ifp->if_omcasts = 0; 	 * ifp->if_iqdrops = 0; 	 * ifp->if_noproto = 0; 	 * ifp->if_baudrate = 0;          * ifp->if_pcount = 0; 	 * end of commented out block 	 */
 ifdef|#
 directive|ifdef
 name|IXCOUNTERS
@@ -6598,7 +6598,7 @@ operator|>
 name|ETHER_MAX_LENGTH
 condition|)
 block|{
-comment|/* XXX  			 * This should never ever happen, if it does 			 * we probable screwed up all sorts of board data 			 * in the above bcopy's and should probably shut 			 * down, but for now just issue a warning that  			 * something is real wrong 			 */
+comment|/* XXX  			 * This should never ever happen, if it does 			 * we probable screwed up all sorts of board data 			 * in the above bcopy's and should probably shut 			 * down, but for now just issue a warning that 			 * something is real wrong 			 */
 name|printf
 argument_list|(
 literal|"ix%d: ixstart: Packet length=%d> MTU=%d\n"

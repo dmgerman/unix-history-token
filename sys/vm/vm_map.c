@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_map.c	8.3 (Berkeley) 1/12/94  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_map.c,v 1.20 1995/03/25 17:36:57 davidg Exp $  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_map.c	8.3 (Berkeley) 1/12/94  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_map.c,v 1.21 1995/04/16 12:56:17 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -2018,7 +2018,7 @@ operator|->
 name|start
 condition|)
 block|{
-comment|/* 		 * Go from hint to end of list. 		 *  		 * But first, make a quick check to see if we are already looking 		 * at the entry we want (which is usually the case). Note also 		 * that we don't need to save the hint here... it is the same 		 * hint (unless we are at the header, in which case the hint 		 * didn't buy us anything anyway). 		 */
+comment|/* 		 * Go from hint to end of list. 		 * 		 * But first, make a quick check to see if we are already looking 		 * at the entry we want (which is usually the case). Note also 		 * that we don't need to save the hint here... it is the same 		 * hint (unless we are at the header, in which case the hint 		 * didn't buy us anything anyway). 		 */
 name|last
 operator|=
 operator|&
@@ -2601,7 +2601,7 @@ directive|endif
 block|}
 else|else
 block|{
-comment|/* 		 * Try to merge with our neighbors. 		 *  		 * Conditions for merge are: 		 *  		 * 1.  entries are adjacent. 2.  both entries point to objects 		 * with null pagers. 		 *  		 * If a merge is possible, we replace the two entries with a 		 * single entry, then merge the two objects into a single 		 * object. 		 *  		 * Now, all that is left to do is write the code! 		 */
+comment|/* 		 * Try to merge with our neighbors. 		 * 		 * Conditions for merge are: 		 * 		 * 1.  entries are adjacent. 2.  both entries point to objects 		 * with null pagers. 		 * 		 * If a merge is possible, we replace the two entries with a 		 * single entry, then merge the two objects into a single 		 * object. 		 * 		 * Now, all that is left to do is write the code! 		 */
 block|}
 block|}
 end_function
@@ -3964,7 +3964,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * Wiring.  We must do this in two passes: 		 *  		 * 1.  Holding the write lock, we create any shadow or zero-fill 		 * objects that need to be created. Then we clip each map 		 * entry to the region to be wired and increment its wiring 		 * count.  We create objects before clipping the map entries 		 * to avoid object proliferation. 		 *  		 * 2.  We downgrade to a read lock, and call vm_fault_wire to 		 * fault in the pages for any newly wired area (wired_count is 		 * 1). 		 *  		 * Downgrading to a read lock for vm_fault_wire avoids a possible 		 * deadlock with another thread that may have faulted on one 		 * of the pages to be wired (it would mark the page busy, 		 * blocking us, then in turn block on the map lock that we 		 * hold).  Because of problems in the recursive lock package, 		 * we cannot upgrade to a write lock in vm_map_lookup.  Thus, 		 * any actions that require the write lock must be done 		 * beforehand.  Because we keep the read lock on the map, the 		 * copy-on-write status of the entries we modify here cannot 		 * change. 		 */
+comment|/* 		 * Wiring.  We must do this in two passes: 		 * 		 * 1.  Holding the write lock, we create any shadow or zero-fill 		 * objects that need to be created. Then we clip each map 		 * entry to the region to be wired and increment its wiring 		 * count.  We create objects before clipping the map entries 		 * to avoid object proliferation. 		 * 		 * 2.  We downgrade to a read lock, and call vm_fault_wire to 		 * fault in the pages for any newly wired area (wired_count is 		 * 1). 		 * 		 * Downgrading to a read lock for vm_fault_wire avoids a possible 		 * deadlock with another thread that may have faulted on one 		 * of the pages to be wired (it would mark the page busy, 		 * blocking us, then in turn block on the map lock that we 		 * hold).  Because of problems in the recursive lock package, 		 * we cannot upgrade to a write lock in vm_map_lookup.  Thus, 		 * any actions that require the write lock must be done 		 * beforehand.  Because we keep the read lock on the map, the 		 * copy-on-write status of the entries we modify here cannot 		 * change. 		 */
 comment|/* 		 * Pass 1. 		 */
 while|while
 condition|(
@@ -3995,7 +3995,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 				 * Perform actions of vm_map_lookup that need 				 * the write lock on the map: create a shadow 				 * object for a copy-on-write region, or an 				 * object for a zero-fill region. 				 *  				 * We don't have to do this for entries that 				 * point to sharing maps, because we won't 				 * hold the lock on the sharing map. 				 */
+comment|/* 				 * Perform actions of vm_map_lookup that need 				 * the write lock on the map: create a shadow 				 * object for a copy-on-write region, or an 				 * object for a zero-fill region. 				 * 				 * We don't have to do this for entries that 				 * point to sharing maps, because we won't 				 * hold the lock on the sharing map. 				 */
 if|if
 condition|(
 operator|!
@@ -4211,7 +4211,7 @@ name|next
 expr_stmt|;
 block|}
 comment|/* 		 * Pass 2. 		 */
-comment|/* 		 * HACK HACK HACK HACK 		 *  		 * If we are wiring in the kernel map or a submap of it, unlock 		 * the map to avoid deadlocks.  We trust that the kernel 		 * threads are well-behaved, and therefore will not do 		 * anything destructive to this region of the map while we 		 * have it unlocked.  We cannot trust user threads to do the 		 * same. 		 *  		 * HACK HACK HACK HACK 		 */
+comment|/* 		 * HACK HACK HACK HACK 		 * 		 * If we are wiring in the kernel map or a submap of it, unlock 		 * the map to avoid deadlocks.  We trust that the kernel 		 * threads are well-behaved, and therefore will not do 		 * anything destructive to this region of the map while we 		 * have it unlocked.  We cannot trust user threads to do the 		 * same. 		 * 		 * HACK HACK HACK HACK 		 */
 if|if
 condition|(
 name|vm_map_pmap
@@ -4272,7 +4272,7 @@ operator|<
 name|end
 condition|)
 block|{
-comment|/* 			 * If vm_fault_wire fails for any page we need to undo 			 * what has been done.  We decrement the wiring count 			 * for those pages which have not yet been wired (now) 			 * and unwire those that have (later). 			 *  			 * XXX this violates the locking protocol on the map, 			 * needs to be fixed. 			 */
+comment|/* 			 * If vm_fault_wire fails for any page we need to undo 			 * what has been done.  We decrement the wiring count 			 * for those pages which have not yet been wired (now) 			 * and unwire those that have (later). 			 * 			 * XXX this violates the locking protocol on the map, 			 * needs to be fixed. 			 */
 if|if
 condition|(
 name|rv
@@ -6142,7 +6142,7 @@ name|Return
 goto|;
 block|}
 block|}
-comment|/* 	 * Find the start entries and clip. 	 *  	 * Note that checking protection asserts that the lookup cannot fail. 	 *  	 * Also note that we wait to do the second lookup until we have done the 	 * first clip, as the clip may affect which entry we get! 	 */
+comment|/* 	 * Find the start entries and clip. 	 * 	 * Note that checking protection asserts that the lookup cannot fail. 	 * 	 * Also note that we wait to do the second lookup until we have done the 	 * first clip, as the clip may affect which entry we get! 	 */
 operator|(
 name|void
 operator|)
@@ -6309,7 +6309,7 @@ argument_list|,
 name|dst_clip
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Both entries now match in size and relative endpoints. 		 *  		 * If both entries refer to a VM object, we can deal with them 		 * now. 		 */
+comment|/* 		 * Both entries now match in size and relative endpoints. 		 * 		 * If both entries refer to a VM object, we can deal with them 		 * now. 		 */
 if|if
 condition|(
 operator|!
@@ -7539,7 +7539,7 @@ operator|->
 name|needs_copy
 condition|)
 block|{
-comment|/* 		 * If we want to write the page, we may as well handle that 		 * now since we've got the sharing map locked. 		 *  		 * If we don't need to write the page, we just demote the 		 * permissions allowed. 		 */
+comment|/* 		 * If we want to write the page, we may as well handle that 		 * now since we've got the sharing map locked. 		 * 		 * If we don't need to write the page, we just demote the 		 * permissions allowed. 		 */
 if|if
 condition|(
 name|fault_type

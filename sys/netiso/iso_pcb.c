@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)iso_pcb.c	8.1 (Berkeley) 6/10/93  * $Id$  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)iso_pcb.c	8.1 (Berkeley) 6/10/93  * $Id: iso_pcb.c,v 1.2 1994/08/02 07:50:37 davidg Exp $  */
 end_comment
 
 begin_comment
-comment|/*********************************************************** 		Copyright IBM Corporation 1987                        All Rights Reserved  Permission to use, copy, modify, and distribute this software and its  documentation for any purpose and without fee is hereby granted,  provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in  supporting documentation, and that the name of IBM not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.    IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  ******************************************************************/
+comment|/*********************************************************** 		Copyright IBM Corporation 1987                        All Rights Reserved  Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of IBM not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.  IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  ******************************************************************/
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*  * $Header: /home/ncvs/src/sys/netiso/iso_pcb.c,v 1.1.1.1 1994/05/24 10:07:10 rgrimes Exp $  * $Source: /home/ncvs/src/sys/netiso/iso_pcb.c,v $  *  * Iso address family net-layer(s) pcb stuff. NEH 1/29/87  */
+comment|/*  * $Header: /home/ncvs/src/sys/netiso/iso_pcb.c,v 1.2 1994/08/02 07:50:37 davidg Exp $  * $Source: /home/ncvs/src/sys/netiso/iso_pcb.c,v $  *  * Iso address family net-layer(s) pcb stuff. NEH 1/29/87  */
 end_comment
 
 begin_ifdef
@@ -159,7 +159,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * FUNCTION:		iso_pcballoc  *  * PURPOSE:			creates an isopcb structure in an mbuf,  *					with socket (so), and   *					puts it in the queue with head (head)  *  * RETURNS:			0 if OK, ENOBUFS if can't alloc the necessary mbuf  */
+comment|/*  * FUNCTION:		iso_pcballoc  *  * PURPOSE:			creates an isopcb structure in an mbuf,  *					with socket (so), and  *					puts it in the queue with head (head)  *  * RETURNS:			0 if OK, ENOBUFS if can't alloc the necessary mbuf  */
 end_comment
 
 begin_function
@@ -280,7 +280,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * FUNCTION:		iso_pcbbind  *  * PURPOSE:			binds the address given in *(nam) to the socket  *					specified by the isopcb in *(isop)  *					If the given address is zero, it makes sure the  *					address isn't already in use and if it's got a network  *					portion, we look for an interface with that network  *					address.  If the address given is zero, we allocate  *					a port and stuff it in the (nam) structure.  *  * RETURNS:			errno E* or 0 if ok.  *  * SIDE EFFECTS:	increments head->isop_lport if it allocates a port #  *  * NOTES:			  */
+comment|/*  * FUNCTION:		iso_pcbbind  *  * PURPOSE:			binds the address given in *(nam) to the socket  *					specified by the isopcb in *(isop)  *					If the given address is zero, it makes sure the  *					address isn't already in use and if it's got a network  *					portion, we look for an interface with that network  *					address.  If the address given is zero, we allocate  *					a port and stuff it in the (nam) structure.  *  * RETURNS:			errno E* or 0 if ok.  *  * SIDE EFFECTS:	increments head->isop_lport if it allocates a port #  *  * NOTES:  */
 end_comment
 
 begin_define
@@ -901,7 +901,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * FUNCTION:		iso_pcbconnect  *  * PURPOSE:			Make the isopcb (isop) look like it's connected.  *					In other words, give it the peer address given in   *					the mbuf * (nam).   Make sure such a combination  *					of local, peer addresses doesn't already exist  *					for this protocol.  Internet mentality prevails here,  *					wherein a src,dst pair uniquely identifies a connection.  * 					Both net address and port must be specified in argument   *					(nam).  * 					If we don't have a local address for this socket yet,   *					we pick one by calling iso_pcbbind().  *  * RETURNS:			errno E* or 0 if ok.  *  * SIDE EFFECTS:	Looks up a route, which may cause one to be left  *					in the isopcb.  *  * NOTES:			  */
+comment|/*  * FUNCTION:		iso_pcbconnect  *  * PURPOSE:			Make the isopcb (isop) look like it's connected.  *					In other words, give it the peer address given in  *					the mbuf * (nam).   Make sure such a combination  *					of local, peer addresses doesn't already exist  *					for this protocol.  Internet mentality prevails here,  *					wherein a src,dst pair uniquely identifies a connection.  * 					Both net address and port must be specified in argument  *					(nam).  * 					If we don't have a local address for this socket yet,  *					we pick one by calling iso_pcbbind().  *  * RETURNS:			errno E* or 0 if ok.  *  * SIDE EFFECTS:	Looks up a route, which may cause one to be left  *					in the isopcb.  *  * NOTES:  */
 end_comment
 
 begin_function
@@ -1132,7 +1132,7 @@ literal|"iso_pcbconnect localzero 1\n"
 argument_list|)
 expr_stmt|;
 name|ENDDEBUG
-comment|/*  		 * If route is known or can be allocated now, 		 * our src addr is taken from the i/f, else punt. 		 */
+comment|/* 		 * If route is known or can be allocated now, 		 * our src addr is taken from the i/f, else punt. 		 */
 name|flags
 init|=
 name|isop
@@ -1609,7 +1609,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * FUNCTION:		iso_pcbdisconnect()  *  * PURPOSE:			washes away the peer address info so the socket  *					appears to be disconnected.  *					If there's no file descriptor associated with the socket  *					it detaches the pcb.  *  * RETURNS:			Nada.  *  * SIDE EFFECTS:	May detach the pcb.  *  * NOTES:			  */
+comment|/*  * FUNCTION:		iso_pcbdisconnect()  *  * PURPOSE:			washes away the peer address info so the socket  *					appears to be disconnected.  *					If there's no file descriptor associated with the socket  *					it detaches the pcb.  *  * RETURNS:			Nada.  *  * SIDE EFFECTS:	May detach the pcb.  *  * NOTES:  */
 end_comment
 
 begin_function
@@ -1745,7 +1745,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * FUNCTION:		iso_pcbdetach  *  * PURPOSE:			detach the pcb at *(isop) from it's socket and free  *					the mbufs associated with the pcb..  *					Dequeues (isop) from its head.  *  * RETURNS:			Nada.  *  * SIDE EFFECTS:	  *  * NOTES:			  */
+comment|/*  * FUNCTION:		iso_pcbdetach  *  * PURPOSE:			detach the pcb at *(isop) from it's socket and free  *					the mbufs associated with the pcb..  *					Dequeues (isop) from its head.  *  * RETURNS:			Nada.  *  * SIDE EFFECTS:  *  * NOTES:  */
 end_comment
 
 begin_function
@@ -2085,7 +2085,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * FUNCTION:		iso_pcbnotify  *  * PURPOSE:			notify all connections in this protocol's queue (head)  *					that have peer address (dst) of the problem (errno)  *					by calling (notify) on the connections' isopcbs.  *  * RETURNS:			Rien.  *  * SIDE EFFECTS:	  *  * NOTES:			(notify) is called at splimp!  */
+comment|/*  * FUNCTION:		iso_pcbnotify  *  * PURPOSE:			notify all connections in this protocol's queue (head)  *					that have peer address (dst) of the problem (errno)  *					by calling (notify) on the connections' isopcbs.  *  * RETURNS:			Rien.  *  * SIDE EFFECTS:  *  * NOTES:			(notify) is called at splimp!  */
 end_comment
 
 begin_decl_stmt
@@ -2278,7 +2278,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * FUNCTION:		iso_pcblookup  *  * PURPOSE:			looks for a given combination of (faddr), (fport),  *					(lport), (laddr) in the queue named by (head).  *					Argument (flags) is ignored.  *  * RETURNS:			ptr to the isopcb if it finds a connection matching  *					these arguments, o.w. returns zero.  *  * SIDE EFFECTS:	  *  * NOTES:			  */
+comment|/*  * FUNCTION:		iso_pcblookup  *  * PURPOSE:			looks for a given combination of (faddr), (fport),  *					(lport), (laddr) in the queue named by (head).  *					Argument (flags) is ignored.  *  * RETURNS:			ptr to the isopcb if it finds a connection matching  *					these arguments, o.w. returns zero.  *  * SIDE EFFECTS:  *  * NOTES:  */
 end_comment
 
 begin_function

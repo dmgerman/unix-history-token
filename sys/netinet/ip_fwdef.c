@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.An
 end_comment
 
 begin_comment
-comment|/*  * Dumb definitions which needed when   * firewall/accounting module is not loaded.  */
+comment|/*  * Dumb definitions which needed when  * firewall/accounting module is not loaded.  */
 end_comment
 
 begin_include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_msg.c,v 1.2 1994/09/17 13:24:16 davidg Exp $ */
+comment|/*	$Id: sysv_msg.c,v 1.3 1994/10/02 17:35:26 phk Exp $ */
 end_comment
 
 begin_comment

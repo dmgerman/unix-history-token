@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	DMA buffer calls  *  * $Id: sound_calls.h,v 1.11 1995/03/28 07:56:13 bde Exp $  */
+comment|/*  *	DMA buffer calls  *  * $Id: sound_calls.h,v 1.12 1995/05/07 06:38:48 pst Exp $  */
 end_comment
 
 begin_ifndef

@@ -12,7 +12,7 @@ name|_OS_H_
 end_define
 
 begin_comment
-comment|/*  * OS specific settings for FreeBSD  *  * Copyright by UWM - comments to soft-eng@cs.uwm.edu  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * This chould be used as an example when porting the driver to a new  * operating systems.  *  * What you should do is to rewrite the soundcard.c and os.h (this file).  * You should create a new subdirectory and put these two files there.  * In addition you have to do a makefile.<OS>.  *  * If you have to make changes to other than these two files, please contact me  * before making the changes. It's possible that I have already made the  * change.   *  * os.h,v 1.13 1994/10/01 02:16:53 swallace Exp  */
+comment|/*  * OS specific settings for FreeBSD  *  * Copyright by UWM - comments to soft-eng@cs.uwm.edu  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * This chould be used as an example when porting the driver to a new  * operating systems.  *  * What you should do is to rewrite the soundcard.c and os.h (this file).  * You should create a new subdirectory and put these two files there.  * In addition you have to do a makefile.<OS>.  *  * If you have to make changes to other than these two files, please contact me  * before making the changes. It's possible that I have already made the  * change.  *  * os.h,v 1.13 1994/10/01 02:16:53 swallace Exp  */
 end_comment
 
 begin_comment
@@ -114,7 +114,7 @@ name|CONFIGURE_SOUNDCARD
 end_ifdef
 
 begin_comment
-comment|/*   * select() is currently implemented in Linux specific way. Don't enable.  * I don't remember what the SHORT_BANNERS means so forget it.  */
+comment|/*  * select() is currently implemented in Linux specific way. Don't enable.  * I don't remember what the SHORT_BANNERS means so forget it.  */
 end_comment
 
 begin_undef
@@ -140,7 +140,7 @@ file|<machine/soundcard.h>
 end_include
 
 begin_comment
-comment|/*  * Here is the first portability problem. Every OS has it's own way to  * pass a pointer to the buffer in read() and write() calls. In Linux it's  * just a char*. In BSD it's struct uio. This parameter is passed to  * all functions called from read() or write(). Since nothing can be   * assumed about this structure, the driver uses set of macros for  * accessing the user buffer.   *  * The driver reads/writes bytes in the user buffer sequentially which  * means that calls like uiomove() can be used.  *  * snd_rw_buf is the type which is passed to the device file specific  * read() and write() calls.  *   * The following macros are used to move date to and from the  * user buffer. These macros should be used only when the   * target or source parameter has snd_rw_buf type.  * The offs parameter is a offset relative to the beginning of  * the user buffer. In Linux the offset is required but for example  * BSD passes the offset info in the uio structure. It could be usefull  * if these macros verify that the offs parameter and the value in  * the snd_rw_buf structure are equal.  */
+comment|/*  * Here is the first portability problem. Every OS has it's own way to  * pass a pointer to the buffer in read() and write() calls. In Linux it's  * just a char*. In BSD it's struct uio. This parameter is passed to  * all functions called from read() or write(). Since nothing can be  * assumed about this structure, the driver uses set of macros for  * accessing the user buffer.  *  * The driver reads/writes bytes in the user buffer sequentially which  * means that calls like uiomove() can be used.  *  * snd_rw_buf is the type which is passed to the device file specific  * read() and write() calls.  *  * The following macros are used to move date to and from the  * user buffer. These macros should be used only when the  * target or source parameter has snd_rw_buf type.  * The offs parameter is a offset relative to the beginning of  * the user buffer. In Linux the offset is required but for example  * BSD passes the offset info in the uio structure. It could be usefull  * if these macros verify that the offs parameter and the value in  * the snd_rw_buf structure are equal.  */
 end_comment
 
 begin_typedef
@@ -194,7 +194,7 @@ value|do { if (uiomove(source, count, (struct uio *)target)) { \ 		printf ("sb: 
 end_define
 
 begin_comment
-comment|/*   * The following macros are like COPY_*_USER but work just with one byte (8bit),  * short (16 bit) or long (32 bit) at a time.  * The same restrictions apply than for COPY_*_USER  */
+comment|/*  * The following macros are like COPY_*_USER but work just with one byte (8bit),  * short (16 bit) or long (32 bit) at a time.  * The same restrictions apply than for COPY_*_USER  */
 end_comment
 
 begin_define
@@ -449,7 +449,7 @@ value|(f.aborting | curproc->p_siglist)
 end_define
 
 begin_comment
-comment|/*  * The following macro calls sleep. It should be implemented such that  * the process is resumed if it receives a signal. The following is propably  * not the way how it should be done on 386bsd.  * The on_what parameter is a wait_queue defined with DEFINE_WAIT_QUEUE(),  * and the second is a workarea parameter. The third is a timeout   * in ticks. Zero means no timeout.  */
+comment|/*  * The following macro calls sleep. It should be implemented such that  * the process is resumed if it receives a signal. The following is propably  * not the way how it should be done on 386bsd.  * The on_what parameter is a wait_queue defined with DEFINE_WAIT_QUEUE(),  * and the second is a workarea parameter. The third is a timeout  * in ticks. Zero means no timeout.  */
 end_comment
 
 begin_define
@@ -506,7 +506,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*   * GET_TIME() returns current value of the counter incremented at timer  * ticks.  This can overflow, so the timeout might be real big...  *   */
+comment|/*  * GET_TIME() returns current value of the counter incremented at timer  * ticks.  This can overflow, so the timeout might be real big...  *  */
 end_comment
 
 begin_function_decl
@@ -572,7 +572,7 @@ value|inb
 end_define
 
 begin_comment
-comment|/*    * The outb(0, 0x80) is just for slowdown. It's bit unsafe since  * this address could be used for something usefull.  */
+comment|/*  * The outb(0, 0x80) is just for slowdown. It's bit unsafe since  * this address could be used for something usefull.  */
 end_comment
 
 begin_define
@@ -620,7 +620,7 @@ value|-(err)
 end_define
 
 begin_comment
-comment|/*     KERNEL_MALLOC() allocates requested number of memory  and     KERNEL_FREE is used to free it.     These macros are never called from interrupt, in addition the    nbytes will never be more than 4096 bytes. Generally the driver    will allocate memory in blocks of 4k. If the kernel has just a    page level memory allocation, 4K can be safely used as the size    (the nbytes parameter can be ignored). */
+comment|/*    KERNEL_MALLOC() allocates requested number of memory  and    KERNEL_FREE is used to free it.    These macros are never called from interrupt, in addition the    nbytes will never be more than 4096 bytes. Generally the driver    will allocate memory in blocks of 4k. If the kernel has just a    page level memory allocation, 4K can be safely used as the size    (the nbytes parameter can be ignored). */
 end_comment
 
 begin_define

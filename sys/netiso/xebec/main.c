@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: main.c,v 2.4 88/09/19 12:55:13 nhall Exp $ */
+comment|/* $Header: /home/ncvs/src/sys/netiso/xebec/main.c,v 1.1.1.1 1994/05/24 10:07:49 rgrimes Exp $ */
 end_comment
 
 begin_comment
-comment|/* $Source: /var/home/tadl/src/argo/xebec/RCS/main.c,v $ */
+comment|/* $Source: /home/ncvs/src/sys/netiso/xebec/main.c,v $ */
 end_comment
 
 begin_comment

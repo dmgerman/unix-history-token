@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (C) Computer Science Department IV,   * 		 University of Erlangen-Nuremberg, Germany, 1992  * Copyright (c) 1991, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by the  * Laboratory for Computation Vision and the Computer Science Department  * of the the University of British Columbia and the Computer Science  * Department (IV) of the University of Erlangen-Nuremberg, Germany.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)pk_subr.c	8.1 (Berkeley) 6/10/93  * $Id: pk_subr.c,v 1.2 1994/08/02 07:47:41 davidg Exp $  */
+comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (C) Computer Science Department IV,  * 		 University of Erlangen-Nuremberg, Germany, 1992  * Copyright (c) 1991, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by the  * Laboratory for Computation Vision and the Computer Science Department  * of the the University of British Columbia and the Computer Science  * Department (IV) of the University of Erlangen-Nuremberg, Germany.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)pk_subr.c	8.1 (Berkeley) 6/10/93  * $Id: pk_subr.c,v 1.3 1994/12/13 22:32:17 wollman Exp $  */
 end_comment
 
 begin_include
@@ -204,7 +204,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*   *  Attach X.25 protocol to socket, allocate logical channel descripter  *  and buffer space, and enter LISTEN state if we are to accept  *  IN-COMMING CALL packets.    *  */
+comment|/*  *  Attach X.25 protocol to socket, allocate logical channel descripter  *  and buffer space, and enter LISTEN state if we are to accept  *  IN-COMMING CALL packets.  *  */
 end_comment
 
 begin_function
@@ -377,7 +377,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   *  Disconnect X.25 protocol from socket.  */
+comment|/*  *  Disconnect X.25 protocol from socket.  */
 end_comment
 
 begin_expr_stmt
@@ -553,7 +553,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*   *  Close an X.25 Logical Channel. Discard all space held by the  *  connection and internal descriptors. Wake up any sleepers.  */
+comment|/*  *  Close an X.25 Logical Channel. Discard all space held by the  *  connection and internal descriptors. Wake up any sleepers.  */
 end_comment
 
 begin_macro
@@ -583,7 +583,7 @@ name|lcp
 operator|->
 name|lcd_so
 decl_stmt|;
-comment|/* 	 * If the X.25 connection is torn down due to link 	 * level failure (e.g. LLC2 FRMR) and at the same the user 	 * level is still filling up the socket send buffer that 	 * send buffer is locked. An attempt to sbflush () that send 	 * buffer will lead us into - no, not temptation but - panic! 	 * So - we'll just check wether the send buffer is locked 	 * and if that's the case we'll mark the lcp as zombie and  	 * have the pk_timer () do the cleaning ... 	 */
+comment|/* 	 * If the X.25 connection is torn down due to link 	 * level failure (e.g. LLC2 FRMR) and at the same the user 	 * level is still filling up the socket send buffer that 	 * send buffer is locked. An attempt to sbflush () that send 	 * buffer will lead us into - no, not temptation but - panic! 	 * So - we'll just check wether the send buffer is locked 	 * and if that's the case we'll mark the lcp as zombie and 	 * have the pk_timer () do the cleaning ... 	 */
 if|if
 condition|(
 name|so
@@ -631,7 +631,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*   *  Create a template to be used to send X.25 packets on a logical  *  channel. It allocates an mbuf and fills in a skeletal packet  *  depending on its type. This packet is passed to pk_output where  *  the remainer of the packet is filled in. */
+comment|/*  *  Create a template to be used to send X.25 packets on a logical  *  channel. It allocates an mbuf and fills in a skeletal packet  *  depending on its type. This packet is passed to pk_output where  *  the remainer of the packet is filled in. */
 end_comment
 
 begin_function
@@ -763,7 +763,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   *  This routine restarts all the virtual circuits. Actually,  *  the virtual circuits are not "restarted" as such. Instead,  *  any active switched circuit is simply returned to READY  *  state.  */
+comment|/*  *  This routine restarts all the virtual circuits. Actually,  *  the virtual circuits are not "restarted" as such. Instead,  *  any active switched circuit is simply returned to READY  *  state.  */
 end_comment
 
 begin_expr_stmt
@@ -1007,7 +1007,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*   *  This procedure frees up the Logical Channel Descripter.  */
+comment|/*  *  This procedure frees up the Logical Channel Descripter.  */
 end_comment
 
 begin_expr_stmt
@@ -1207,7 +1207,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   *  Bind a address and protocol value to a socket.  The important  *  part is the protocol value - the first four characters of the   *  Call User Data field.  */
+comment|/*  *  Bind a address and protocol value to a socket.  The important  *  part is the protocol value - the first four characters of the  *  Call User Data field.  */
 end_comment
 
 begin_define
@@ -2406,7 +2406,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-comment|/* 	 * We pretended to be a DTE for allocating lcns, if 	 * it turns out that we are in reality performing as a 	 * DCE we need to reshuffle the lcps. 	 *			        	  	                *             /+---------------+--------     -	       	 *            / | a  (maxlcn-1) |              \       	 *           /  +---------------+              	\      	 *     +--- *   | b  (maxlcn-2) |         	 \     	 *     |     \  +---------------+         	  \    	 *   r |      \ | c  (maxlcn-3) |         	   \   	 *   e |       \+---------------+         	    |  	 *   s |        |	 .                	    |   	 *   h |        |        .                	    | m 	 *   u |        |	 .      	  	    | a 	 *   f |        |	 .      	  	    | x 	 *   f |        |	 .                	    | l 	 *   l |       /+---------------+         	    | c 	 *   e |      / | c' (   3    ) |         	    | n 	 *     |     /  +---------------+         	    |  	 *     +--> *   | b' (   2    ) |         	   / 	 *           \  +---------------+         	  /  	 *            \ | a' (   1    ) |         	 /       	 *             \+---------------+               /             *              | 0             |              /     	 *              +---------------+--------     -      	 *	     	 */
+comment|/* 	 * We pretended to be a DTE for allocating lcns, if 	 * it turns out that we are in reality performing as a 	 * DCE we need to reshuffle the lcps. 	 *          *             /+---------------+--------     - 	 *            / | a  (maxlcn-1) |              \ 	 *           /  +---------------+              	\ 	 *     +--- *   | b  (maxlcn-2) |         	 \ 	 *     |     \  +---------------+         	  \ 	 *   r |      \ | c  (maxlcn-3) |         	   \ 	 *   e |       \+---------------+         	    | 	 *   s |        |	 .                	    | 	 *   h |        |        .                	    | m 	 *   u |        |	 .      	  	    | a 	 *   f |        |	 .      	  	    | x 	 *   f |        |	 .                	    | l 	 *   l |       /+---------------+         	    | c 	 *   e |      / | c' (   3    ) |         	    | n 	 *     |     /  +---------------+         	    | 	 *     +--> *   | b' (   2    ) |         	   / 	 *           \  +---------------+         	  / 	 *            \ | a' (   1    ) |         	 /     	 *             \+---------------+               /          *              | 0             |              / 	 *              +---------------+--------     - 	 * 	 */
 if|if
 condition|(
 name|pkp
@@ -2579,7 +2579,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*   *  Build the rest of the CALL REQUEST packet. Fill in calling  *  address, facilities fields and the user data field.  */
+comment|/*  *  Build the rest of the CALL REQUEST packet. Fill in calling  *  address, facilities fields and the user data field.  */
 end_comment
 
 begin_macro
@@ -3308,7 +3308,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*   *  This routine gets the  first available logical channel number.  The  *  search is   *  		- from the highest number to lowest number if playing DTE, and  *		- from lowest to highest number if playing DCE.  */
+comment|/*  *  This routine gets the  first available logical channel number.  The  *  search is  *  		- from the highest number to lowest number if playing DTE, and  *		- from lowest to highest number if playing DCE.  */
 end_comment
 
 begin_expr_stmt
@@ -3433,7 +3433,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*   *  This procedure sends a CLEAR request packet. The lc state is  *  set to "SENT_CLEAR".   */
+comment|/*  *  This procedure sends a CLEAR request packet. The lc state is  *  set to "SENT_CLEAR".  */
 end_comment
 
 begin_expr_stmt
@@ -3599,7 +3599,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * This procedure generates RNR's or RR's to inhibit or enable  * inward data flow, if the current state changes (blocked ==> open or  * vice versa), or if forced to generate one.  One forces RNR's to ack data.    */
+comment|/*  * This procedure generates RNR's or RR's to inhibit or enable  * inward data flow, if the current state changes (blocked ==> open or  * vice versa), or if forced to generate one.  One forces RNR's to ack data.  */
 end_comment
 
 begin_expr_stmt
@@ -3686,7 +3686,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*   *  This procedure sends a RESET request packet. It re-intializes  *  virtual circuit.  */
+comment|/*  *  This procedure sends a RESET request packet. It re-intializes  *  virtual circuit.  */
 end_comment
 
 begin_expr_stmt
@@ -3966,7 +3966,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*   *  This procedure handles all local protocol procedure errors.  */
+comment|/*  *  This procedure handles all local protocol procedure errors.  */
 end_comment
 
 begin_expr_stmt
@@ -4068,7 +4068,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*   *  This procedure is called during the DATA TRANSFER state to check   *  and  process  the P(R) values  received  in the DATA,  RR OR RNR  *  packets.  */
+comment|/*  *  This procedure is called during the DATA TRANSFER state to check  *  and  process  the P(R) values  received  in the DATA,  RR OR RNR  *  packets.  */
 end_comment
 
 begin_macro
@@ -4259,7 +4259,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*   *  This procedure decodes the X.25 level 3 packet returning a   *  code to be used in switchs or arrays.  */
+comment|/*  *  This procedure decodes the X.25 level 3 packet returning a  *  code to be used in switchs or arrays.  */
 end_comment
 
 begin_expr_stmt
@@ -4302,7 +4302,7 @@ return|;
 ifdef|#
 directive|ifdef
 name|ancient_history
-comment|/*  	 *  Make sure that the logical channel group number is 0. 	 *  This restriction may be removed at some later date. 	 */
+comment|/* 	 *  Make sure that the logical channel group number is 0. 	 *  This restriction may be removed at some later date. 	 */
 if|if
 condition|(
 name|xp
@@ -4318,7 +4318,7 @@ operator|)
 return|;
 endif|#
 directive|endif
-comment|/*  	 *  Test for data packet first. 	 */
+comment|/* 	 *  Test for data packet first. 	 */
 if|if
 condition|(
 operator|!
@@ -4335,7 +4335,7 @@ operator|(
 name|DATA
 operator|)
 return|;
-comment|/*  	 *  Test if flow control packet (RR or RNR). 	 */
+comment|/* 	 *  Test if flow control packet (RR or RNR). 	 */
 if|if
 condition|(
 operator|!
@@ -4381,7 +4381,7 @@ name|REJECT
 operator|)
 return|;
 block|}
-comment|/*  	 *  Determine the rest of the packet types. 	 */
+comment|/* 	 *  Determine the rest of the packet types. 	 */
 switch|switch
 condition|(
 name|xp
@@ -4492,7 +4492,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*   *  A restart packet has been received. Print out the reason  *  for the restart.  */
+comment|/*  *  A restart packet has been received. Print out the reason  *  for the restart.  */
 end_comment
 
 begin_macro
@@ -4635,7 +4635,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*   *  A reset packet has arrived. Return the cause to the user.  */
+comment|/*  *  A reset packet has arrived. Return the cause to the user.  */
 end_comment
 
 begin_macro
@@ -4817,7 +4817,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*   *  A clear packet has arrived. Return the cause to the user.  */
+comment|/*  *  A clear packet has arrived. Return the cause to the user.  */
 end_comment
 
 begin_macro

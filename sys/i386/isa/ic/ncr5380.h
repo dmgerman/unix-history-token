@@ -142,7 +142,7 @@ value|"\20\1dbus\2atn\3sel\4bsy\5ack\6arblost\7arb\10rst"
 end_define
 
 begin_comment
-comment|/*   * The mask to use when doing read_modify_write on ICR.  */
+comment|/*  * The mask to use when doing read_modify_write on ICR.  */
 end_comment
 
 begin_define

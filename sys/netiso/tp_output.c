@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tp_output.c	8.1 (Berkeley) 6/10/93  * $Id: tp_output.c,v 1.2 1994/08/02 07:51:17 davidg Exp $  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tp_output.c	8.1 (Berkeley) 6/10/93  * $Id: tp_output.c,v 1.3 1995/04/26 21:32:37 pst Exp $  */
 end_comment
 
 begin_comment
-comment|/*********************************************************** 		Copyright IBM Corporation 1987                        All Rights Reserved  Permission to use, copy, modify, and distribute this software and its  documentation for any purpose and without fee is hereby granted,  provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in  supporting documentation, and that the name of IBM not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.    IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  ******************************************************************/
+comment|/*********************************************************** 		Copyright IBM Corporation 1987                        All Rights Reserved  Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of IBM not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.  IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  ******************************************************************/
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  *  * $Header: /home/ncvs/src/sys/netiso/tp_output.c,v 1.2 1994/08/02 07:51:17 davidg Exp $  * $Source: /home/ncvs/src/sys/netiso/tp_output.c,v $  *  * In here is tp_ctloutput(), the guy called by [sg]etsockopt(),  */
+comment|/*  * ARGO TP  *  * $Header: /home/ncvs/src/sys/netiso/tp_output.c,v 1.3 1995/04/26 21:32:37 pst Exp $  * $Source: /home/ncvs/src/sys/netiso/tp_output.c,v $  *  * In here is tp_ctloutput(), the guy called by [sg]etsockopt(),  */
 end_comment
 
 begin_include
@@ -144,7 +144,7 @@ value|16
 end_define
 
 begin_comment
-comment|/*  * NAME: 	tp_consistency()  *  * CALLED FROM:  * 	tp_ctloutput(), tp_input()  *  * FUNCTION and ARGUMENTS:  * 	Checks the consistency of options and tpdusize with class,  *	using the parameters passed in via (param).  *	(cmd) may be TP_STRICT or TP_FORCE or both.  *  Force means it will set all the values in (tpcb) to those in  *  the input arguements iff no errors were encountered.  *  Strict means that no inconsistency will be tolerated.  If it's  *  not used, checksum and tpdusize inconsistencies will be tolerated.  *  The reason for this is that in some cases, when we're negotiating down   *	from class  4, these options should be changed but should not   *  cause negotiation to fail.  *  * RETURNS  *  E* or EOK  *  E* if the various parms aren't ok for a given class  *  EOK if they are ok for a given class  */
+comment|/*  * NAME: 	tp_consistency()  *  * CALLED FROM:  * 	tp_ctloutput(), tp_input()  *  * FUNCTION and ARGUMENTS:  * 	Checks the consistency of options and tpdusize with class,  *	using the parameters passed in via (param).  *	(cmd) may be TP_STRICT or TP_FORCE or both.  *  Force means it will set all the values in (tpcb) to those in  *  the input arguements iff no errors were encountered.  *  Strict means that no inconsistency will be tolerated.  If it's  *  not used, checksum and tpdusize inconsistencies will be tolerated.  *  The reason for this is that in some cases, when we're negotiating down  *	from class  4, these options should be changed but should not  *  cause negotiation to fail.  *  * RETURNS  *  E* or EOK  *  E* if the various parms aren't ok for a given class  *  EOK if they are ok for a given class  */
 end_comment
 
 begin_function
@@ -258,7 +258,7 @@ operator|~
 name|TP_FORCE
 expr_stmt|;
 block|}
-comment|/* can switch net services within a domain, but 	 * cannot switch domains  	 */
+comment|/* can switch net services within a domain, but 	 * cannot switch domains 	 */
 switch|switch
 condition|(
 name|param
@@ -1196,7 +1196,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * NAME: 	tp_ctloutput()  *  * CALLED FROM:  * 	[sg]etsockopt(), via so[sg]etopt().   *  * FUNCTION and ARGUMENTS:  * 	Implements the socket options at transport level.  * 	(cmd) is either PRCO_SETOPT or PRCO_GETOPT (see ../sys/protosw.h).  * 	(so) is the socket.  * 	(level) is SOL_TRANSPORT (see ../sys/socket.h)  * 	(optname) is the particular command or option to be set.  * 	(**mp) is an mbuf structure.    *  * RETURN VALUE:  * 	ENOTSOCK if the socket hasn't got an associated tpcb  *  EINVAL if   * 		trying to set window too big  * 		trying to set illegal max tpdu size   * 		trying to set illegal credit fraction  * 		trying to use unknown or unimplemented class of TP  *		structure passed to set timer values is wrong size  *  	illegal combination of command/GET-SET option,   *			e.g., GET w/ TPOPT_CDDATA_CLEAR:   *  EOPNOTSUPP if the level isn't transport, or command is neither GET nor SET  *   or if the transport-specific command is not implemented  *  EISCONN if trying a command that isn't allowed after a connection  *   is established  *  ENOTCONN if trying a command that is allowed only if a connection is  *   established  *  EMSGSIZE if trying to give too much data on connect/disconnect  *  * SIDE EFFECTS:  *  * NOTES:  */
+comment|/*  * NAME: 	tp_ctloutput()  *  * CALLED FROM:  * 	[sg]etsockopt(), via so[sg]etopt().  *  * FUNCTION and ARGUMENTS:  * 	Implements the socket options at transport level.  * 	(cmd) is either PRCO_SETOPT or PRCO_GETOPT (see ../sys/protosw.h).  * 	(so) is the socket.  * 	(level) is SOL_TRANSPORT (see ../sys/socket.h)  * 	(optname) is the particular command or option to be set.  * 	(**mp) is an mbuf structure.  *  * RETURN VALUE:  * 	ENOTSOCK if the socket hasn't got an associated tpcb  *  EINVAL if  * 		trying to set window too big  * 		trying to set illegal max tpdu size  * 		trying to set illegal credit fraction  * 		trying to use unknown or unimplemented class of TP  *		structure passed to set timer values is wrong size  *  	illegal combination of command/GET-SET option,  *			e.g., GET w/ TPOPT_CDDATA_CLEAR:  *  EOPNOTSUPP if the level isn't transport, or command is neither GET nor SET  *   or if the transport-specific command is not implemented  *  EISCONN if trying a command that isn't allowed after a connection  *   is established  *  ENOTCONN if trying a command that is allowed only if a connection is  *   established  *  EMSGSIZE if trying to give too much data on connect/disconnect  *  * SIDE EFFECTS:  *  * NOTES:  */
 end_comment
 
 begin_function
@@ -1648,7 +1648,7 @@ goto|goto
 name|done
 goto|;
 block|}
-comment|/* The only options allowed after disconnection are GET DISC DATA, 	 * and TPOPT_PSTATISTICS 	 * and they're not allowed if the ref timer has gone off, because 	 * the tpcb is gone  	 */
+comment|/* The only options allowed after disconnection are GET DISC DATA, 	 * and TPOPT_PSTATISTICS 	 * and they're not allowed if the ref timer has gone off, because 	 * the tpcb is gone 	 */
 if|if
 condition|(
 operator|(
@@ -1732,7 +1732,7 @@ argument_list|,
 name|caddr_t
 argument_list|)
 expr_stmt|;
-comment|/* it's aligned, don't worry, 								  * but lint complains about it  								  */
+comment|/* it's aligned, don't worry, 								  * but lint complains about it 								  */
 name|val_len
 operator|=
 operator|(
@@ -2374,7 +2374,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/*  				 * tp_consistency doesn't copy the whole set of params  				 */
+comment|/* 				 * tp_consistency doesn't copy the whole set of params 				 */
 name|tpcb
 operator|->
 name|_tp_param
@@ -2915,7 +2915,7 @@ literal|"tp_ctloutput *mp"
 argument_list|)
 expr_stmt|;
 name|ENDDEBUG
-comment|/*  	 * sigh: getsockopt looks only at m_len : all output data must  	 * reside in the first mbuf  	 */
+comment|/* 	 * sigh: getsockopt looks only at m_len : all output data must 	 * reside in the first mbuf 	 */
 if|if
 condition|(
 operator|*

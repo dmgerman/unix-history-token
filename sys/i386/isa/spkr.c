@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * spkr.c -- device driver for console speaker  *  * v1.4 by Eric S. Raymond (esr@snark.thyrsus.com) Aug 1993  * modified for FreeBSD by Andrew A. Chernov<ache@astral.msk.su>  *  *    $Id: spkr.c,v 1.12 1995/03/16 18:12:05 bde Exp $  */
+comment|/*  * spkr.c -- device driver for console speaker  *  * v1.4 by Eric S. Raymond (esr@snark.thyrsus.com) Aug 1993  * modified for FreeBSD by Andrew A. Chernov<ache@astral.msk.su>  *  *    $Id: spkr.c,v 1.13 1995/05/05 06:15:11 davidg Exp $  */
 end_comment
 
 begin_include
@@ -88,7 +88,7 @@ comment|/**************** MACHINE DEPENDENT PART STARTS HERE *******************
 end_comment
 
 begin_comment
-comment|/*  * PIT and PPI port addresses and control values  *  * Most of the magic is hidden in the TIMER_PREP value, which selects PIT  * channel 2, frequency LSB first, square-wave mode and binary encoding.  * The encoding is as follows:  *  * +----------+----------+---------------+-----+  * |  1    0  |  1    1  |  0    1    1  |  0  |  * | SC1  SC0 | RW1  RW0 | M2   M1   M0  | BCD |  * +----------+----------+---------------+-----+  *   Counter     Write        Mode 3      Binary  *  Channel 2  LSB first,  (Square Wave) Encoding   *             MSB second  */
+comment|/*  * PIT and PPI port addresses and control values  *  * Most of the magic is hidden in the TIMER_PREP value, which selects PIT  * channel 2, frequency LSB first, square-wave mode and binary encoding.  * The encoding is as follows:  *  * +----------+----------+---------------+-----+  * |  1    0  |  1    1  |  0    1    1  |  0  |  * | SC1  SC0 | RW1  RW0 | M2   M1   M0  | BCD |  * +----------+----------+---------------+-----+  *   Counter     Write        Mode 3      Binary  *  Channel 2  LSB first,  (Square Wave) Encoding  *             MSB second  */
 end_comment
 
 begin_define
@@ -114,7 +114,7 @@ comment|/* set timer mode for sound generation */
 end_comment
 
 begin_comment
-comment|/*  * Magic numbers for timer control.   */
+comment|/*  * Magic numbers for timer control.  */
 end_comment
 
 begin_define

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)iso.c	8.2 (Berkeley) 11/15/93  * $Id: iso.c,v 1.2 1994/08/02 07:50:26 davidg Exp $  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)iso.c	8.2 (Berkeley) 11/15/93  * $Id: iso.c,v 1.3 1995/04/26 18:10:58 pst Exp $  */
 end_comment
 
 begin_comment
-comment|/*********************************************************** 		Copyright IBM Corporation 1987                        All Rights Reserved  Permission to use, copy, modify, and distribute this software and its  documentation for any purpose and without fee is hereby granted,  provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in  supporting documentation, and that the name of IBM not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.    IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  ******************************************************************/
+comment|/*********************************************************** 		Copyright IBM Corporation 1987                        All Rights Reserved  Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of IBM not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.  IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  ******************************************************************/
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*  * $Header: /home/ncvs/src/sys/netiso/iso.c,v 1.2 1994/08/02 07:50:26 davidg Exp $   * $Source: /home/ncvs/src/sys/netiso/iso.c,v $   *  * iso.c: miscellaneous routines to support the iso address family  */
+comment|/*  * $Header: /home/ncvs/src/sys/netiso/iso.c,v 1.3 1995/04/26 18:10:58 pst Exp $  * $Source: /home/ncvs/src/sys/netiso/iso.c,v $  *  * iso.c: miscellaneous routines to support the iso address family  */
 end_comment
 
 begin_include
@@ -167,7 +167,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * FUNCTION:		iso_addrmatch1  *  * PURPOSE:			decide if the two iso_addrs passed are equal  *  * RETURNS:			true if the addrs match, false if they do not  *  * SIDE EFFECTS:	  *  * NOTES:			  */
+comment|/*  * FUNCTION:		iso_addrmatch1  *  * PURPOSE:			decide if the two iso_addrs passed are equal  *  * RETURNS:			true if the addrs match, false if they do not  *  * SIDE EFFECTS:  *  * NOTES:  */
 end_comment
 
 begin_expr_stmt
@@ -422,7 +422,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * FUNCTION:		iso_addrmatch  *  * PURPOSE:			decide if the two sockadrr_isos passed are equal  *  * RETURNS:			true if the addrs match, false if they do not  *  * SIDE EFFECTS:	  *  * NOTES:			  */
+comment|/*  * FUNCTION:		iso_addrmatch  *  * PURPOSE:			decide if the two sockadrr_isos passed are equal  *  * RETURNS:			true if the addrs match, false if they do not  *  * SIDE EFFECTS:  *  * NOTES:  */
 end_comment
 
 begin_macro
@@ -477,7 +477,7 @@ name|notdef
 end_ifdef
 
 begin_comment
-comment|/*  * FUNCTION:		iso_netmatch  *  * PURPOSE:			similar to iso_addrmatch but takes sockaddr_iso  *					as argument.  *  * RETURNS:			true if same net, false if not  *  * SIDE EFFECTS:	  *  * NOTES:			  */
+comment|/*  * FUNCTION:		iso_netmatch  *  * PURPOSE:			similar to iso_addrmatch but takes sockaddr_iso  *					as argument.  *  * RETURNS:			true if same net, false if not  *  * SIDE EFFECTS:  *  * NOTES:  */
 end_comment
 
 begin_macro
@@ -624,7 +624,7 @@ comment|/* notdef */
 end_comment
 
 begin_comment
-comment|/*  * FUNCTION:		iso_hashchar  *  * PURPOSE:			Hash all character in the buffer specified into  *					a long. Return the long.  *  * RETURNS:			The hash value.  *  * SIDE EFFECTS:	  *  * NOTES:			The hash is achieved by exclusive ORing 4 byte  *					quantities.   */
+comment|/*  * FUNCTION:		iso_hashchar  *  * PURPOSE:			Hash all character in the buffer specified into  *					a long. Return the long.  *  * RETURNS:			The hash value.  *  * SIDE EFFECTS:  *  * NOTES:			The hash is achieved by exclusive ORing 4 byte  *					quantities.  */
 end_comment
 
 begin_function
@@ -824,7 +824,7 @@ name|notdef
 end_ifdef
 
 begin_comment
-comment|/*  * FUNCTION:		iso_hash  *  * PURPOSE:			Fill in fields of afhash structure based upon addr passed.  *  * RETURNS:			none  *  * SIDE EFFECTS:	  *  * NOTES:			  */
+comment|/*  * FUNCTION:		iso_hash  *  * PURPOSE:			Fill in fields of afhash structure based upon addr passed.  *  * RETURNS:			none  *  * SIDE EFFECTS:  *  * NOTES:  */
 end_comment
 
 begin_macro
@@ -979,7 +979,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * FUNCTION:		iso_netof  *  * PURPOSE:			Extract the network portion of the iso address.  *					The network portion of the iso address varies depending  *					on the type of address. The network portion of the  *					address will include the IDP. The network portion is:  *			  *						TYPE			DESC  *					t37					The AFI and x.121 (IDI)  *					osinet				The AFI, orgid, snetid  *					rfc986				The AFI, vers and network part of  *										internet address.  *  * RETURNS:			number of bytes placed into buf.  *  * SIDE EFFECTS:	  *  * NOTES:			Buf is assumed to be big enough  */
+comment|/*  * FUNCTION:		iso_netof  *  * PURPOSE:			Extract the network portion of the iso address.  *					The network portion of the iso address varies depending  *					on the type of address. The network portion of the  *					address will include the IDP. The network portion is:  *  *						TYPE			DESC  *					t37					The AFI and x.121 (IDI)  *					osinet				The AFI, orgid, snetid  *					rfc986				The AFI, vers and network part of  *										internet address.  *  * RETURNS:			number of bytes placed into buf.  *  * SIDE EFFECTS:  *  * NOTES:			Buf is assumed to be big enough  */
 end_comment
 
 begin_macro
@@ -1068,7 +1068,7 @@ name|idi
 operator|==
 name|IDI_OSINET
 condition|)
-comment|/*  *	Network portion of OSINET address can only be the IDI. Clearly,  *	with one x25 interface, one could get to several orgids, and  *	several snetids. 				len += (ADDROSINET_IDI_LEN + OVLOSINET_ORGID_LEN +  						OVLOSINET_SNETID_LEN);  */
+comment|/*  *	Network portion of OSINET address can only be the IDI. Clearly,  *	with one x25 interface, one could get to several orgids, and  *	several snetids. 				len += (ADDROSINET_IDI_LEN + OVLOSINET_ORGID_LEN + 						OVLOSINET_SNETID_LEN);  */
 name|len
 operator|+=
 name|ADDROSINET_IDI_LEN
@@ -3103,7 +3103,7 @@ comment|/* notdef */
 end_comment
 
 begin_comment
-comment|/*  * FUNCTION:		iso_ck_addr  *  * PURPOSE:			return true if the iso_addr passed is   *					within the legal size limit for an iso address.  *  * RETURNS:			true or false  *  * SIDE EFFECTS:	  *  */
+comment|/*  * FUNCTION:		iso_ck_addr  *  * PURPOSE:			return true if the iso_addr passed is  *					within the legal size limit for an iso address.  *  * RETURNS:			true or false  *  * SIDE EFFECTS:  *  */
 end_comment
 
 begin_macro
@@ -3146,7 +3146,7 @@ name|notdef
 end_ifdef
 
 begin_comment
-comment|/*  * FUNCTION:		iso_eqtype  *  * PURPOSE:			Determine if two iso addresses are of the same type.  *  This is flaky.  Really we should consider all type 47 addrs to be the  *  same - but there do exist different structures for 47 addrs.  *  Gosip adds a 3rd.  *  * RETURNS:			true if the addresses are the same type  *  * SIDE EFFECTS:	  *  * NOTES:			By type, I mean rfc986, t37, or osinet  *  *					This will first compare afis. If they match, then  *					if the addr is not t37, the idis must be compared.  */
+comment|/*  * FUNCTION:		iso_eqtype  *  * PURPOSE:			Determine if two iso addresses are of the same type.  *  This is flaky.  Really we should consider all type 47 addrs to be the  *  same - but there do exist different structures for 47 addrs.  *  Gosip adds a 3rd.  *  * RETURNS:			true if the addresses are the same type  *  * SIDE EFFECTS:  *  * NOTES:			By type, I mean rfc986, t37, or osinet  *  *					This will first compare afis. If they match, then  *					if the addr is not t37, the idis must be compared.  */
 end_comment
 
 begin_macro
@@ -3247,7 +3247,7 @@ comment|/* notdef */
 end_comment
 
 begin_comment
-comment|/*  * FUNCTION:		iso_localifa()  *  * PURPOSE:			Find an interface addresss having a given destination  *					or at least matching the net.  *  * RETURNS:			ptr to an interface address   *  * SIDE EFFECTS:	  *  * NOTES:			  */
+comment|/*  * FUNCTION:		iso_localifa()  *  * PURPOSE:			Find an interface addresss having a given destination  *					or at least matching the net.  *  * RETURNS:			ptr to an interface address  *  * SIDE EFFECTS:  *  * NOTES:  */
 end_comment
 
 begin_function
@@ -3518,7 +3518,7 @@ comment|/* TPCONS */
 end_comment
 
 begin_comment
-comment|/*  * FUNCTION:		iso_nlctloutput  *  * PURPOSE:			Set options at the network level  *  * RETURNS:			E*  *  * SIDE EFFECTS:	  *  * NOTES:			This could embody some of the functions of  *					rclnp_ctloutput and cons_ctloutput.  */
+comment|/*  * FUNCTION:		iso_nlctloutput  *  * PURPOSE:			Set options at the network level  *  * RETURNS:			E*  *  * SIDE EFFECTS:  *  * NOTES:			This could embody some of the functions of  *					rclnp_ctloutput and cons_ctloutput.  */
 end_comment
 
 begin_macro
@@ -3788,7 +3788,7 @@ name|ARGO_DEBUG
 end_ifdef
 
 begin_comment
-comment|/*  * FUNCTION:		dump_isoaddr  *  * PURPOSE:			debugging  *  * RETURNS:			nada   *  */
+comment|/*  * FUNCTION:		dump_isoaddr  *  * PURPOSE:			debugging  *  * RETURNS:			nada  *  */
 end_comment
 
 begin_macro

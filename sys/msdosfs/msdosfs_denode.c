@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_denode.c,v 1.10 1995/03/19 12:11:13 davidg Exp $ */
+comment|/*	$Id: msdosfs_denode.c,v 1.11 1995/04/11 17:13:17 bde Exp $ */
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*-  * Copyright (C) 1994 Wolfgang Solfrank.  * Copyright (C) 1994 TooLs
 end_comment
 
 begin_comment
-comment|/*  * Written by Paul Popelka (paulp@uts.amdahl.com)  *   * You can do anything you want with this software, just don't say you wrote  * it, and don't remove this notice.  *   * This software is provided "as is".  *   * The author supplies this software to be publicly redistributed on the  * understanding that the author is not responsible for the correct  * functioning of this software in any circumstances and is not liable for  * any damages caused by this software.  *   * October 1992  */
+comment|/*  * Written by Paul Popelka (paulp@uts.amdahl.com)  *  * You can do anything you want with this software, just don't say you wrote  * it, and don't remove this notice.  *  * This software is provided "as is".  *  * The author supplies this software to be publicly redistributed on the  * understanding that the author is not responsible for the correct  * functioning of this software in any circumstances and is not liable for  * any damages caused by this software.  *  * October 1992  */
 end_comment
 
 begin_include
@@ -459,7 +459,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * If deget() succeeds it returns with the gotten denode locked().   *  * pmp	     - address of msdosfsmount structure of the filesystem containing  *	       the denode of interest.  The pm_dev field and the address of  *	       the msdosfsmount structure are used.   * dirclust  - which cluster bp contains, if dirclust is 0 (root directory)  *	       diroffset is relative to the beginning of the root directory,  *	       otherwise it is cluster relative.   * diroffset - offset past begin of cluster of denode we want   * direntptr - address of the direntry structure of interest. If direntptr is  *	       NULL, the block is read if necessary.   * depp	     - returns the address of the gotten denode.  */
+comment|/*  * If deget() succeeds it returns with the gotten denode locked().  *  * pmp	     - address of msdosfsmount structure of the filesystem containing  *	       the denode of interest.  The pm_dev field and the address of  *	       the msdosfsmount structure are used.  * dirclust  - which cluster bp contains, if dirclust is 0 (root directory)  *	       diroffset is relative to the beginning of the root directory,  *	       otherwise it is cluster relative.  * diroffset - offset past begin of cluster of denode we want  * direntptr - address of the direntry structure of interest. If direntptr is  *	       NULL, the block is read if necessary.  * depp	     - returns the address of the gotten denode.  */
 end_comment
 
 begin_function
@@ -596,7 +596,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* 	 * See if the denode is in the denode cache. Use the location of 	 * the directory entry to compute the hash value. For subdir use 	 * address of "." entry. for root dir use cluster MSDOSFSROOT, 	 * offset MSDOSFSROOT_OFS 	 *  	 * NOTE: The check for de_refcnt> 0 below insures the denode being 	 * examined does not represent an unlinked but still open file. 	 * These files are not to be accessible even when the directory 	 * entry that represented the file happens to be reused while the 	 * deleted file is still open. 	 */
+comment|/* 	 * See if the denode is in the denode cache. Use the location of 	 * the directory entry to compute the hash value. For subdir use 	 * address of "." entry. for root dir use cluster MSDOSFSROOT, 	 * offset MSDOSFSROOT_OFS 	 * 	 * NOTE: The check for de_refcnt> 0 below insures the denode being 	 * examined does not represent an unlinked but still open file. 	 * These files are not to be accessible even when the directory 	 * entry that represented the file happens to be reused while the 	 * deleted file is still open. 	 */
 name|ldep
 operator|=
 name|msdosfs_hashget

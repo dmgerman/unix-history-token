@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: procs.c,v 2.3 88/09/19 12:55:22 nhall Exp $ */
+comment|/* $Header: /home/ncvs/src/sys/netiso/xebec/procs.c,v 1.1.1.1 1994/05/24 10:07:46 rgrimes Exp $ */
 end_comment
 
 begin_comment
-comment|/* $Source: /var/home/tadl/src/argo/xebec/RCS/procs.c,v $ */
+comment|/* $Source: /home/ncvs/src/sys/netiso/xebec/procs.c,v $ */
 end_comment
 
 begin_comment
@@ -2022,7 +2022,7 @@ operator|+
 name|s
 index|]
 decl_stmt|;
-comment|/* this kludge is to avoid a lint msg. concerning 			 * loss of bits  			 */
+comment|/* this kludge is to avoid a lint msg. concerning 			 * loss of bits 			 */
 if|if
 condition|(
 name|xyz

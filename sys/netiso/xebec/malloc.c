@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: malloc.c,v 2.2 88/09/19 12:55:18 nhall Exp $ */
+comment|/* $Header: /home/ncvs/src/sys/netiso/xebec/malloc.c,v 1.1.1.1 1994/05/24 10:07:48 rgrimes Exp $ */
 end_comment
 
 begin_comment
-comment|/* $Source: /var/home/tadl/src/argo/xebec/RCS/malloc.c,v $ */
+comment|/* $Source: /home/ncvs/src/sys/netiso/xebec/malloc.c,v $ */
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*  * This code is such a kludge that I don't want to put my name on it.
 end_comment
 
 begin_comment
-comment|/*   * a simple malloc  * it might be brain-damaged but for the purposes of xebec  * it's a whole lot faster than the c library malloc   */
+comment|/*  * a simple malloc  * it might be brain-damaged but for the purposes of xebec  * it's a whole lot faster than the c library malloc  */
 end_comment
 
 begin_include

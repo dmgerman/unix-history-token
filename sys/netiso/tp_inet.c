@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tp_inet.c	8.1 (Berkeley) 6/10/93  * $Id: tp_inet.c,v 1.3 1994/11/15 14:26:16 bde Exp $  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tp_inet.c	8.1 (Berkeley) 6/10/93  * $Id: tp_inet.c,v 1.4 1995/04/26 21:32:36 pst Exp $  */
 end_comment
 
 begin_comment
-comment|/*********************************************************** 		Copyright IBM Corporation 1987                        All Rights Reserved  Permission to use, copy, modify, and distribute this software and its  documentation for any purpose and without fee is hereby granted,  provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in  supporting documentation, and that the name of IBM not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.    IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  ******************************************************************/
+comment|/*********************************************************** 		Copyright IBM Corporation 1987                        All Rights Reserved  Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of IBM not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.  IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  ******************************************************************/
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  * $Header: /home/ncvs/src/sys/netiso/tp_inet.c,v 1.3 1994/11/15 14:26:16 bde Exp $   * $Source: /home/ncvs/src/sys/netiso/tp_inet.c,v $  *  * Here is where you find the inet-dependent code.  We've tried  * keep all net-level and (primarily) address-family-dependent stuff  * out of the tp source, and everthing here is reached indirectly  * through a switch table (struct nl_protosw *) tpcb->tp_nlproto   * (see tp_pcb.c).   * The routines here are:  * 	in_getsufx: gets transport suffix out of an inpcb structure.  * 	in_putsufx: put transport suffix into an inpcb structure.  *	in_putnetaddr: put a whole net addr into an inpcb.  *	in_getnetaddr: get a whole net addr from an inpcb.  *	in_cmpnetaddr: compare a whole net addr from an isopcb.  *	in_recycle_suffix: clear suffix for reuse in inpcb  *	tpip_mtu: figure out what size tpdu to use  *	tpip_input: take a pkt from ip, strip off its ip header, give to tp  *	tpip_output_dg: package a pkt for ip given 2 addresses& some data  *	tpip_output: package a pkt for ip given an inpcb& some data  */
+comment|/*  * ARGO TP  * $Header: /home/ncvs/src/sys/netiso/tp_inet.c,v 1.4 1995/04/26 21:32:36 pst Exp $  * $Source: /home/ncvs/src/sys/netiso/tp_inet.c,v $  *  * Here is where you find the inet-dependent code.  We've tried  * keep all net-level and (primarily) address-family-dependent stuff  * out of the tp source, and everthing here is reached indirectly  * through a switch table (struct nl_protosw *) tpcb->tp_nlproto  * (see tp_pcb.c).  * The routines here are:  * 	in_getsufx: gets transport suffix out of an inpcb structure.  * 	in_putsufx: put transport suffix into an inpcb structure.  *	in_putnetaddr: put a whole net addr into an inpcb.  *	in_getnetaddr: get a whole net addr from an inpcb.  *	in_cmpnetaddr: compare a whole net addr from an isopcb.  *	in_recycle_suffix: clear suffix for reuse in inpcb  *	tpip_mtu: figure out what size tpdu to use  *	tpip_input: take a pkt from ip, strip off its ip header, give to tp  *	tpip_output_dg: package a pkt for ip given 2 addresses& some data  *	tpip_output: package a pkt for ip given an inpcb& some data  */
 end_comment
 
 begin_ifdef
@@ -147,7 +147,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * NAME:			in_getsufx()   * CALLED FROM: 	pr_usrreq() on PRU_BIND,   *					PRU_CONNECT, PRU_ACCEPT, and PRU_PEERADDR  *  * FUNCTION, ARGUMENTS, and RETURN VALUE:  * 	Get a transport suffix from an inpcb structure (inp).  * 	The argument (which) takes the value TP_LOCAL or TP_FOREIGN.  *  * RETURNS:		internet port / transport suffix  *  			(CAST TO AN INT)  *  * SIDE EFFECTS:	  *  * NOTES:			  */
+comment|/*  * NAME:			in_getsufx()   * CALLED FROM: 	pr_usrreq() on PRU_BIND,  *					PRU_CONNECT, PRU_ACCEPT, and PRU_PEERADDR  *  * FUNCTION, ARGUMENTS, and RETURN VALUE:  * 	Get a transport suffix from an inpcb structure (inp).  * 	The argument (which) takes the value TP_LOCAL or TP_FOREIGN.  *  * RETURNS:		internet port / transport suffix  *  			(CAST TO AN INT)  *  * SIDE EFFECTS:  *  * NOTES:  */
 end_comment
 
 begin_macro
@@ -239,7 +239,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * NAME:		in_putsufx()  *  * CALLED FROM: tp_newsocket(); i.e., when a connection   *		is being established by an incoming CR_TPDU.  *  * FUNCTION, ARGUMENTS:  * 	Put a transport suffix (found in name) into an inpcb structure (inp).  * 	The argument (which) takes the value TP_LOCAL or TP_FOREIGN.  *  * RETURNS:		Nada  *  * SIDE EFFECTS:	  *  * NOTES:			  */
+comment|/*  * NAME:		in_putsufx()  *  * CALLED FROM: tp_newsocket(); i.e., when a connection  *		is being established by an incoming CR_TPDU.  *  * FUNCTION, ARGUMENTS:  * 	Put a transport suffix (found in name) into an inpcb structure (inp).  * 	The argument (which) takes the value TP_LOCAL or TP_FOREIGN.  *  * RETURNS:		Nada  *  * SIDE EFFECTS:  *  * NOTES:  */
 end_comment
 
 begin_comment
@@ -302,7 +302,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * NAME:	in_recycle_tsuffix()	  *  * CALLED FROM:	tp.trans whenever we go into REFWAIT state.  *  * FUNCTION and ARGUMENT:  *	 Called when a ref is frozen, to allow the suffix to be reused.   * 	(inp) is the net level pcb.    *  * RETURNS:			Nada  *  * SIDE EFFECTS:	  *  * NOTES:	This really shouldn't have to be done in a NET level pcb   *	but... for the internet world that just the way it is done in BSD...  * 	The alternative is to have the port unusable until the reference  * 	timer goes off.  */
+comment|/*  * NAME:	in_recycle_tsuffix()  *  * CALLED FROM:	tp.trans whenever we go into REFWAIT state.  *  * FUNCTION and ARGUMENT:  *	 Called when a ref is frozen, to allow the suffix to be reused.  * 	(inp) is the net level pcb.  *  * RETURNS:			Nada  *  * SIDE EFFECTS:  *  * NOTES:	This really shouldn't have to be done in a NET level pcb  *	but... for the internet world that just the way it is done in BSD...  * 	The alternative is to have the port unusable until the reference  * 	timer goes off.  */
 end_comment
 
 begin_function
@@ -331,7 +331,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * NAME:	in_putnetaddr()  *  * CALLED FROM:  * 	tp_newsocket(); i.e., when a connection is being established by an  * 	incoming CR_TPDU.  *  * FUNCTION and ARGUMENTS:  * 	Copy a whole net addr from a struct sockaddr (name).  * 	into an inpcb (inp).  * 	The argument (which) takes values TP_LOCAL or TP_FOREIGN  *  * RETURNS:		Nada  *  * SIDE EFFECTS:	  *  * NOTES:			  */
+comment|/*  * NAME:	in_putnetaddr()  *  * CALLED FROM:  * 	tp_newsocket(); i.e., when a connection is being established by an  * 	incoming CR_TPDU.  *  * FUNCTION and ARGUMENTS:  * 	Copy a whole net addr from a struct sockaddr (name).  * 	into an inpcb (inp).  * 	The argument (which) takes values TP_LOCAL or TP_FOREIGN  *  * RETURNS:		Nada  *  * SIDE EFFECTS:  *  * NOTES:  */
 end_comment
 
 begin_function
@@ -440,7 +440,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * NAME:	in_putnetaddr()  *  * CALLED FROM:  * 	tp_input() when a connection is being established by an  * 	incoming CR_TPDU, and considered for interception.  *  * FUNCTION and ARGUMENTS:  * 	Compare a whole net addr from a struct sockaddr (name),  * 	with that implicitly stored in an inpcb (inp).  * 	The argument (which) takes values TP_LOCAL or TP_FOREIGN  *  * RETURNS:		Nada  *  * SIDE EFFECTS:	  *  * NOTES:			  */
+comment|/*  * NAME:	in_putnetaddr()  *  * CALLED FROM:  * 	tp_input() when a connection is being established by an  * 	incoming CR_TPDU, and considered for interception.  *  * FUNCTION and ARGUMENTS:  * 	Compare a whole net addr from a struct sockaddr (name),  * 	with that implicitly stored in an inpcb (inp).  * 	The argument (which) takes values TP_LOCAL or TP_FOREIGN  *  * RETURNS:		Nada  *  * SIDE EFFECTS:  *  * NOTES:  */
 end_comment
 
 begin_expr_stmt
@@ -553,7 +553,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * NAME:	in_getnetaddr()  *  * CALLED FROM:  *  pr_usrreq() PRU_SOCKADDR, PRU_ACCEPT, PRU_PEERADDR  * FUNCTION and ARGUMENTS:  * 	Copy a whole net addr from an inpcb (inp) into  * 	an mbuf (name);  * 	The argument (which) takes values TP_LOCAL or TP_FOREIGN.  *  * RETURNS:		Nada  *  * SIDE EFFECTS:	  *  * NOTES:			  */
+comment|/*  * NAME:	in_getnetaddr()  *  * CALLED FROM:  *  pr_usrreq() PRU_SOCKADDR, PRU_ACCEPT, PRU_PEERADDR  * FUNCTION and ARGUMENTS:  * 	Copy a whole net addr from an inpcb (inp) into  * 	an mbuf (name);  * 	The argument (which) takes values TP_LOCAL or TP_FOREIGN.  *  * RETURNS:		Nada  *  * SIDE EFFECTS:  *  * NOTES:  */
 end_comment
 
 begin_function
@@ -682,7 +682,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * NAME: 	tpip_mtu()  *  * CALLED FROM:  *  tp_route_to() on incoming CR, CC, and pr_usrreq() for PRU_CONNECT  *  * FUNCTION, ARGUMENTS, and RETURN VALUE:  *  * Perform subnetwork dependent part of determining MTU information.  * It appears that setting a double pointer to the rtentry associated with  * the destination, and returning the header size for the network protocol  * suffices.  *   * SIDE EFFECTS:  * Sets tp_routep pointer in pcb.  *  * NOTES:  */
+comment|/*  * NAME: 	tpip_mtu()  *  * CALLED FROM:  *  tp_route_to() on incoming CR, CC, and pr_usrreq() for PRU_CONNECT  *  * FUNCTION, ARGUMENTS, and RETURN VALUE:  *  * Perform subnetwork dependent part of determining MTU information.  * It appears that setting a double pointer to the rtentry associated with  * the destination, and returning the header size for the network protocol  * suffices.  *  * SIDE EFFECTS:  * Sets tp_routep pointer in pcb.  *  * NOTES:  */
 end_comment
 
 begin_expr_stmt
@@ -763,7 +763,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * NAME:	tpip_output()  *  * CALLED FROM:  tp_emit()  *  * FUNCTION and ARGUMENTS:  *  Take a packet(m0) from tp and package it so that ip will accept it.  *  This means prepending space for the ip header and filling in a few  *  of the fields.  *  inp is the inpcb structure; datalen is the length of the data in the  *  mbuf string m0.  * RETURNS:			  *  whatever (E*) is returned form the net layer output routine.  *  * SIDE EFFECTS:	  *  * NOTES:			  */
+comment|/*  * NAME:	tpip_output()  *  * CALLED FROM:  tp_emit()  *  * FUNCTION and ARGUMENTS:  *  Take a packet(m0) from tp and package it so that ip will accept it.  *  This means prepending space for the ip header and filling in a few  *  of the fields.  *  inp is the inpcb structure; datalen is the length of the data in the  *  mbuf string m0.  * RETURNS:  *  whatever (E*) is returned form the net layer output routine.  *  * SIDE EFFECTS:  *  * NOTES:  */
 end_comment
 
 begin_function
@@ -824,7 +824,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * NAME:	tpip_output_dg()  *  * CALLED FROM:  tp_error_emit()  *  * FUNCTION and ARGUMENTS:  *  This is a copy of tpip_output that takes the addresses  *  instead of a pcb.  It's used by the tp_error_emit, when we  *  don't have an in_pcb with which to call the normal output rtn.  *  * RETURNS:	 ENOBUFS or  whatever (E*) is   *	returned form the net layer output routine.  *  * SIDE EFFECTS:	  *  * NOTES:			  */
+comment|/*  * NAME:	tpip_output_dg()  *  * CALLED FROM:  tp_error_emit()  *  * FUNCTION and ARGUMENTS:  *  This is a copy of tpip_output that takes the addresses  *  instead of a pcb.  It's used by the tp_error_emit, when we  *  don't have an in_pcb with which to call the normal output rtn.  *  * RETURNS:	 ENOBUFS or  whatever (E*) is  *	returned form the net layer output routine.  *  * SIDE EFFECTS:  *  * NOTES:  */
 end_comment
 
 begin_comment
@@ -1104,7 +1104,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * NAME:  tpip_input()  *  * CALLED FROM:  * 	ip's input routine, indirectly through the protosw.  *  * FUNCTION and ARGUMENTS:  * Take a packet (m) from ip, strip off the ip header and give it to tp  *  * RETURNS:  No return value.    *   * SIDE EFFECTS:  *  * NOTES:  */
+comment|/*  * NAME:  tpip_input()  *  * CALLED FROM:  * 	ip's input routine, indirectly through the protosw.  *  * FUNCTION and ARGUMENTS:  * Take a packet (m) from ip, strip off the ip header and give it to tp  *  * RETURNS:  No return value.  *  * SIDE EFFECTS:  *  * NOTES:  */
 end_comment
 
 begin_function
@@ -1235,7 +1235,7 @@ name|discard
 goto|;
 block|}
 block|}
-comment|/*  	 * cannot use tp_inputprep() here 'cause you don't  	 * have quite the same situation 	 */
+comment|/* 	 * cannot use tp_inputprep() here 'cause you don't 	 * have quite the same situation 	 */
 name|IFDEBUG
 argument_list|(
 argument|D_TPINPUT
@@ -1248,7 +1248,7 @@ literal|"after tpip_input both pullups"
 argument_list|)
 expr_stmt|;
 name|ENDDEBUG
-comment|/*  	 * m_pullup may have returned a different mbuf 	 */
+comment|/* 	 * m_pullup may have returned a different mbuf 	 */
 name|ip
 init|=
 name|mtod
@@ -1444,7 +1444,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * NAME:	tpin_quench()  *  * CALLED FROM: tpip_ctlinput()  *  * FUNCTION and ARGUMENTS:  find the tpcb pointer and pass it to tp_quench  *  * RETURNS:	Nada  *  * SIDE EFFECTS:	  *  * NOTES:			  */
+comment|/*  * NAME:	tpin_quench()  *  * CALLED FROM: tpip_ctlinput()  *  * FUNCTION and ARGUMENTS:  find the tpcb pointer and pass it to tp_quench  *  * RETURNS:	Nada  *  * SIDE EFFECTS:  *  * NOTES:  */
 end_comment
 
 begin_function
@@ -1479,7 +1479,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * NAME:	tpip_ctlinput()  *  * CALLED FROM:  *  The network layer through the protosw table.  *  * FUNCTION and ARGUMENTS:  *	When clnp gets an ICMP msg this gets called.  *	It either returns an error status to the user or  *	causes all connections on this address to be aborted  *	by calling the appropriate xx_notify() routine.  *	(cmd) is the type of ICMP error.     * 	(sa) the address of the sender  *  * RETURNS:	 Nothing  *  * SIDE EFFECTS:	  *  * NOTES:			  */
+comment|/*  * NAME:	tpip_ctlinput()  *  * CALLED FROM:  *  The network layer through the protosw table.  *  * FUNCTION and ARGUMENTS:  *	When clnp gets an ICMP msg this gets called.  *	It either returns an error status to the user or  *	causes all connections on this address to be aborted  *	by calling the appropriate xx_notify() routine.  *	(cmd) is the type of ICMP error.  * 	(sa) the address of the sender  *  * RETURNS:	 Nothing  *  * SIDE EFFECTS:  *  * NOTES:  */
 end_comment
 
 begin_function
@@ -1682,7 +1682,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * NAME:	tpin_abort()  *  * CALLED FROM:  *	xxx_notify() from tp_ctlinput() when  *  net level gets some ICMP-equiv. type event.  *  * FUNCTION and ARGUMENTS:  *  Cause the connection to be aborted with some sort of error  *  reason indicating that the network layer caused the abort.  *  Fakes an ER TPDU so we can go through the driver.  *  * RETURNS:	 Nothing  *  * SIDE EFFECTS:	  *  * NOTES:			  */
+comment|/*  * NAME:	tpin_abort()  *  * CALLED FROM:  *	xxx_notify() from tp_ctlinput() when  *  net level gets some ICMP-equiv. type event.  *  * FUNCTION and ARGUMENTS:  *  Cause the connection to be aborted with some sort of error  *  reason indicating that the network layer caused the abort.  *  Fakes an ER TPDU so we can go through the driver.  *  * RETURNS:	 Nothing  *  * SIDE EFFECTS:  *  * NOTES:  */
 end_comment
 
 begin_function

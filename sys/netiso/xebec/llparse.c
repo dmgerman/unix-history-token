@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: llparse.c,v 2.2 88/09/19 12:54:59 nhall Exp $ */
+comment|/* $Header: /home/ncvs/src/sys/netiso/xebec/llparse.c,v 1.1.1.1 1994/05/24 10:07:51 rgrimes Exp $ */
 end_comment
 
 begin_comment
-comment|/* $Source: /var/home/tadl/src/argo/xebec/RCS/llparse.c,v $ */
+comment|/* $Source: /home/ncvs/src/sys/netiso/xebec/llparse.c,v $ */
 end_comment
 
 begin_comment
-comment|/*  * ************************* NOTICE *******************************  * This code is in the public domain.  It cannot be copyrighted.  * This ll parser was originally written by Keith Thompson for the   * University of Wisconsin Crystal project.  * It was based on an FMQ lr parser written by Jon Mauney at the  * University of Wisconsin.  * It was subsequently modified very slightly by Nancy Hall at the   * University of Wisconsin for the Crystal project.  * ****************************************************************  */
+comment|/*  * ************************* NOTICE *******************************  * This code is in the public domain.  It cannot be copyrighted.  * This ll parser was originally written by Keith Thompson for the  * University of Wisconsin Crystal project.  * It was based on an FMQ lr parser written by Jon Mauney at the  * University of Wisconsin.  * It was subsequently modified very slightly by Nancy Hall at the  * University of Wisconsin for the Crystal project.  * ****************************************************************  */
 end_comment
 
 begin_include

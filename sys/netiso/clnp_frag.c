@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)clnp_frag.c	8.1 (Berkeley) 6/10/93  * $Id$  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)clnp_frag.c	8.1 (Berkeley) 6/10/93  * $Id: clnp_frag.c,v 1.2 1994/08/02 07:49:37 davidg Exp $  */
 end_comment
 
 begin_comment
-comment|/*********************************************************** 		Copyright IBM Corporation 1987                        All Rights Reserved  Permission to use, copy, modify, and distribute this software and its  documentation for any purpose and without fee is hereby granted,  provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in  supporting documentation, and that the name of IBM not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.    IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  ******************************************************************/
+comment|/*********************************************************** 		Copyright IBM Corporation 1987                        All Rights Reserved  Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of IBM not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.  IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  ******************************************************************/
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/* $Header: /home/ncvs/src/sys/netiso/clnp_frag.c,v 1.1.1.1 1994/05/24 10:07:25 rgrimes Exp $ */
+comment|/* $Header: /home/ncvs/src/sys/netiso/clnp_frag.c,v 1.2 1994/08/02 07:49:37 davidg Exp $ */
 end_comment
 
 begin_comment
@@ -133,7 +133,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * FUNCTION:		clnp_fragment  *  * PURPOSE:			Fragment a datagram, and send the itty bitty pieces  *					out over an interface.  *  * RETURNS:			success - 0  *					failure - unix error code  *  * SIDE EFFECTS:	  *  * NOTES:			If there is an error sending the packet, clnp_discard  *					is called to discard the packet and send an ER. If  *					clnp_fragment was called from clnp_output, then  *					we generated the packet, and should not send an   *					ER -- clnp_emit_er will check for this. Otherwise,  *					the packet was fragmented during forwarding. In this  *					case, we ought to send an ER back.  */
+comment|/*  * FUNCTION:		clnp_fragment  *  * PURPOSE:			Fragment a datagram, and send the itty bitty pieces  *					out over an interface.  *  * RETURNS:			success - 0  *					failure - unix error code  *  * SIDE EFFECTS:  *  * NOTES:			If there is an error sending the packet, clnp_discard  *					is called to discard the packet and send an ER. If  *					clnp_fragment was called from clnp_output, then  *					we generated the packet, and should not send an  *					ER -- clnp_emit_er will check for this. Otherwise,  *					the packet was fragmented during forwarding. In this  *					case, we ought to send an ER back.  */
 end_comment
 
 begin_macro
@@ -531,7 +531,7 @@ literal|1
 expr_stmt|;
 else|else
 block|{
-comment|/* 				 *  If this fragment will cause the last one to  				 *	be less than 8 bytes, shorten this fragment a bit. 				 *  The obscure test on frag_size above ensures that 				 *  frag_size will be positive. 				 */
+comment|/* 				 *  If this fragment will cause the last one to 				 *	be less than 8 bytes, shorten this fragment a bit. 				 *  The obscure test on frag_size above ensures that 				 *  frag_size will be positive. 				 */
 name|last_frag
 operator|=
 literal|0
@@ -584,7 +584,7 @@ condition|(
 name|last_frag
 condition|)
 block|{
-comment|/*  				 *	this is the last fragment; we don't need to get any other 				 *	mbufs. 				 */
+comment|/* 				 *	this is the last fragment; we don't need to get any other 				 *	mbufs. 				 */
 name|frag_hdr
 operator|=
 name|hdr
@@ -900,7 +900,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* TROLL */
-comment|/* 			 *	Tough situation: if the error occured on the last  			 *	fragment, we can not send an ER, as the if_output 			 *	routine consumed the packet. If the error occured 			 *	on any intermediate packets, we can send an ER 			 *	because we still have the original header in (m). 			 */
+comment|/* 			 *	Tough situation: if the error occured on the last 			 *	fragment, we can not send an ER, as the if_output 			 *	routine consumed the packet. If the error occured 			 *	on any intermediate packets, we can send an ER 			 *	because we still have the original header in (m). 			 */
 if|if
 condition|(
 name|error
@@ -913,7 +913,7 @@ operator|!=
 name|hdr
 condition|)
 block|{
-comment|/*  					 *	The error was not on the last fragment. We must 					 *	free hdr and m before returning 					 */
+comment|/* 					 *	The error was not on the last fragment. We must 					 *	free hdr and m before returning 					 */
 name|clnp_discard
 argument_list|(
 name|hdr
@@ -1051,7 +1051,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * FUNCTION:		clnp_reass  *  * PURPOSE:			Attempt to reassemble a clnp packet given the current  *					fragment. If reassembly succeeds (all the fragments  *					are present), then return a pointer to an mbuf chain  *					containing the reassembled packet. This packet will  *					appear in the mbufs as if it had just arrived in  *					one piece.   *  *					If reassembly fails, then save this fragment and  *					return 0.  *  * RETURNS:			Ptr to assembled packet, or 0  *  * SIDE EFFECTS:	  *  * NOTES:			  *		clnp_slowtimo can not affect this code because clnpintr, and thus  *		this code, is called at a higher priority than clnp_slowtimo.  */
+comment|/*  * FUNCTION:		clnp_reass  *  * PURPOSE:			Attempt to reassemble a clnp packet given the current  *					fragment. If reassembly succeeds (all the fragments  *					are present), then return a pointer to an mbuf chain  *					containing the reassembled packet. This packet will  *					appear in the mbufs as if it had just arrived in  *					one piece.  *  *					If reassembly fails, then save this fragment and  *					return 0.  *  * RETURNS:			Ptr to assembled packet, or 0  *  * SIDE EFFECTS:  *  * NOTES:  *		clnp_slowtimo can not affect this code because clnpintr, and thus  *		this code, is called at a higher priority than clnp_slowtimo.  */
 end_comment
 
 begin_function
@@ -1266,7 +1266,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * FUNCTION:		clnp_newpkt  *  * PURPOSE:			Create the necessary structures to handle a new  *					fragmented clnp packet.  *  * RETURNS:			non-zero if it succeeds, zero if fails.  *  * SIDE EFFECTS:	  *  * NOTES:			Failure is only due to insufficient resources.  */
+comment|/*  * FUNCTION:		clnp_newpkt  *  * PURPOSE:			Create the necessary structures to handle a new  *					fragmented clnp packet.  *  * RETURNS:			non-zero if it succeeds, zero if fails.  *  * SIDE EFFECTS:  *  * NOTES:			Failure is only due to insufficient resources.  */
 end_comment
 
 begin_macro
@@ -1360,7 +1360,7 @@ name|clnp_fixed
 operator|*
 argument_list|)
 expr_stmt|;
-comment|/*  	 *	Allocate new clnp fragl structure to act as header of all fragments 	 *	for this datagram. 	 */
+comment|/* 	 *	Allocate new clnp fragl structure to act as header of all fragments 	 *	for this datagram. 	 */
 name|MGET
 argument_list|(
 name|m0
@@ -1394,7 +1394,7 @@ name|clnp_fragl
 operator|*
 argument_list|)
 expr_stmt|;
-comment|/*  	 *	Duplicate the header of this fragment, and save in cfh. 	 *	Free m0 and return if m_copy does not succeed. 	 */
+comment|/* 	 *	Duplicate the header of this fragment, and save in cfh. 	 *	Free m0 and return if m_copy does not succeed. 	 */
 if|if
 condition|(
 operator|(
@@ -1550,7 +1550,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * FUNCTION:		clnp_insert_frag  *  * PURPOSE:			Insert fragment into list headed by 'cf'.  *  * RETURNS:			nothing  *  * SIDE EFFECTS:	  *  * NOTES:			This is the 'guts' of the reassembly algorithm.  *					Each fragment in this list contains a clnp_frag  *					structure followed by the data of the fragment.  *					The clnp_frag structure actually lies on top of  *					part of the old clnp header.  */
+comment|/*  * FUNCTION:		clnp_insert_frag  *  * PURPOSE:			Insert fragment into list headed by 'cf'.  *  * RETURNS:			nothing  *  * SIDE EFFECTS:  *  * NOTES:			This is the 'guts' of the reassembly algorithm.  *					Each fragment in this list contains a clnp_frag  *					structure followed by the data of the fragment.  *					The clnp_frag structure actually lies on top of  *					part of the old clnp header.  */
 end_comment
 
 begin_macro
@@ -2038,7 +2038,7 @@ block|}
 block|}
 block|}
 block|}
-comment|/* 	 *	Insert the new fragment beween cf_prev and cf_sub 	 * 	 *	Note: the clnp hdr is still in the mbuf.  	 *	If the data of the mbuf is not word aligned, shave off enough 	 *	so that it is. Then, cast the clnp_frag structure on top 	 *	of the clnp header.  	 *	The clnp_hdr will not be used again (as we already have 	 *	saved a copy of it). 	 * 	 *	Save in cfr_bytes the number of bytes to shave off to get to 	 *	the data of the packet. This is used when we coalesce fragments; 	 *	the clnp_frag structure must be removed before joining mbufs. 	 */
+comment|/* 	 *	Insert the new fragment beween cf_prev and cf_sub 	 * 	 *	Note: the clnp hdr is still in the mbuf. 	 *	If the data of the mbuf is not word aligned, shave off enough 	 *	so that it is. Then, cast the clnp_frag structure on top 	 *	of the clnp header. 	 *	The clnp_hdr will not be used again (as we already have 	 *	saved a copy of it). 	 * 	 *	Save in cfr_bytes the number of bytes to shave off to get to 	 *	the data of the packet. This is used when we coalesce fragments; 	 *	the clnp_frag structure must be removed before joining mbufs. 	 */
 block|{
 name|int
 name|pad
@@ -2787,7 +2787,7 @@ file|<sys/time.h>
 end_include
 
 begin_comment
-comment|/*  * FUNCTION:		troll_random  *  * PURPOSE:			generate a pseudo-random number between 0 and 1  *  * RETURNS:			the random number  *  * SIDE EFFECTS:	  *  * NOTES:			This is based on the clock.  */
+comment|/*  * FUNCTION:		troll_random  *  * PURPOSE:			generate a pseudo-random number between 0 and 1  *  * RETURNS:			the random number  *  * SIDE EFFECTS:  *  * NOTES:			This is based on the clock.  */
 end_comment
 
 begin_function
@@ -2826,7 +2826,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * FUNCTION:		troll_output  *  * PURPOSE:			Do something sneaky with the datagram passed. Possible  *					operations are:  *						Duplicate the packet  *						Drop the packet  *						Trim some number of bytes from the packet  *						Munge some byte in the packet  *  * RETURNS:			0, or unix error code  *  * SIDE EFFECTS:	  *  * NOTES:			The operation of this procedure is regulated by the  *					troll control structure (Troll).  */
+comment|/*  * FUNCTION:		troll_output  *  * PURPOSE:			Do something sneaky with the datagram passed. Possible  *					operations are:  *						Duplicate the packet  *						Drop the packet  *						Trim some number of bytes from the packet  *						Munge some byte in the packet  *  * RETURNS:			0, or unix error code  *  * SIDE EFFECTS:  *  * NOTES:			The operation of this procedure is regulated by the  *					troll control structure (Troll).  */
 end_comment
 
 begin_macro

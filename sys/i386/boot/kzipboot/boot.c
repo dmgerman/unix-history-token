@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * FreeBSD kernel unpacker.  * 1993 by Serge Vakulenko  * modified for FreeBSD 2.1 by Gary Jennejohn - 12FEB95  */
+comment|/*  * FreeBSD kernel unpacker.  * 1993 by Serge Vakulenko  * modified for FreeBSD 2.1 by Gary Jennejohn - 12FEB95  */
 end_comment
 
 begin_include

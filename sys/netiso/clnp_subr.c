@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)clnp_subr.c	8.1 (Berkeley) 6/10/93  * $Id$  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)clnp_subr.c	8.1 (Berkeley) 6/10/93  * $Id: clnp_subr.c,v 1.2 1994/08/02 07:49:50 davidg Exp $  */
 end_comment
 
 begin_comment
-comment|/*********************************************************** 		Copyright IBM Corporation 1987                        All Rights Reserved  Permission to use, copy, modify, and distribute this software and its  documentation for any purpose and without fee is hereby granted,  provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in  supporting documentation, and that the name of IBM not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.    IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  ******************************************************************/
+comment|/*********************************************************** 		Copyright IBM Corporation 1987                        All Rights Reserved  Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of IBM not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.  IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  ******************************************************************/
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/* $Header: /home/ncvs/src/sys/netiso/clnp_subr.c,v 1.1.1.1 1994/05/24 10:07:20 rgrimes Exp $ */
+comment|/* $Header: /home/ncvs/src/sys/netiso/clnp_subr.c,v 1.2 1994/08/02 07:49:50 davidg Exp $ */
 end_comment
 
 begin_comment
@@ -134,7 +134,7 @@ file|<netiso/argo_debug.h>
 end_include
 
 begin_comment
-comment|/*  * FUNCTION:		clnp_data_ck  *  * PURPOSE:			Check that the amount of data in the mbuf chain is  *					at least as much as the clnp header would have us  *					expect. Trim mbufs if longer than expected, drop  *					packet if shorter than expected.  *  * RETURNS:			success - ptr to mbuf chain  *					failure - 0  *  * SIDE EFFECTS:	  *  * NOTES:			  */
+comment|/*  * FUNCTION:		clnp_data_ck  *  * PURPOSE:			Check that the amount of data in the mbuf chain is  *					at least as much as the clnp header would have us  *					expect. Trim mbufs if longer than expected, drop  *					packet if shorter than expected.  *  * RETURNS:			success - ptr to mbuf chain  *					failure - 0  *  * SIDE EFFECTS:  *  * NOTES:  */
 end_comment
 
 begin_function
@@ -275,7 +275,7 @@ name|notdef
 end_ifdef
 
 begin_comment
-comment|/*  * FUNCTION:		clnp_extract_addr  *  * PURPOSE:			Extract the source and destination address from the  *					supplied buffer. Place them in the supplied address buffers.  *					If insufficient data is supplied, then fail.  *  * RETURNS:			success - Address of first byte in the packet past   *						the address part.  *					failure - 0  *  * SIDE EFFECTS:	  *  * NOTES:			  */
+comment|/*  * FUNCTION:		clnp_extract_addr  *  * PURPOSE:			Extract the source and destination address from the  *					supplied buffer. Place them in the supplied address buffers.  *					If insufficient data is supplied, then fail.  *  * RETURNS:			success - Address of first byte in the packet past  *						the address part.  *					failure - 0  *  * SIDE EFFECTS:  *  * NOTES:  */
 end_comment
 
 begin_function
@@ -317,7 +317,7 @@ name|int
 name|len
 decl_stmt|;
 comment|/* argument to bcopy */
-comment|/*  	 *	check that we have enough data. Plus1 is for length octet 	 */
+comment|/* 	 *	check that we have enough data. Plus1 is for length octet 	 */
 if|if
 condition|(
 operator|(
@@ -376,7 +376,7 @@ name|bufp
 operator|+=
 name|len
 expr_stmt|;
-comment|/*  	 *	check that we have enough data. Plus1 is for length octet 	 */
+comment|/* 	 *	check that we have enough data. Plus1 is for length octet 	 */
 if|if
 condition|(
 operator|(
@@ -467,7 +467,7 @@ comment|/* notdef */
 end_comment
 
 begin_comment
-comment|/*  * FUNCTION:		clnp_ours  *  * PURPOSE:			Decide whether the supplied packet is destined for  *					us, or that it should be forwarded on.  *  * RETURNS:			packet is for us - 1  *					packet is not for us - 0  *  * SIDE EFFECTS:	  *  * NOTES:			  */
+comment|/*  * FUNCTION:		clnp_ours  *  * PURPOSE:			Decide whether the supplied packet is destined for  *					us, or that it should be forwarded on.  *  * RETURNS:			packet is for us - 1  *					packet is not for us - 0  *  * SIDE EFFECTS:  *  * NOTES:  */
 end_comment
 
 begin_expr_stmt
@@ -599,7 +599,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * FUNCTION:		clnp_forward  *  * PURPOSE:			Forward the datagram passed  *					clnpintr guarantees that the header will be  *					contigious (a cluster mbuf will be used if necessary).  *  *					If oidx is NULL, no options are present.  *  * RETURNS:			nothing  *  * SIDE EFFECTS:	  *  * NOTES:			  */
+comment|/*  * FUNCTION:		clnp_forward  *  * PURPOSE:			Forward the datagram passed  *					clnpintr guarantees that the header will be  *					contigious (a cluster mbuf will be used if necessary).  *  *					If oidx is NULL, no options are present.  *  * RETURNS:			nothing  *  * SIDE EFFECTS:  *  * NOTES:  */
 end_comment
 
 begin_macro
@@ -1000,7 +1000,7 @@ parameter_list|(
 name|cns_forward
 parameter_list|)
 function_decl|;
-comment|/* 	 *	If we are an intermediate system and 	 *	we are routing outbound on the same ifp that the packet 	 *	arrived upon, and we know the next hop snpa,  	 *	then generate a redirect request 	 */
+comment|/* 	 *	If we are an intermediate system and 	 *	we are routing outbound on the same ifp that the packet 	 *	arrived upon, and we know the next hop snpa, 	 *	then generate a redirect request 	 */
 if|if
 condition|(
 operator|(
@@ -1306,7 +1306,7 @@ name|notdef
 end_ifdef
 
 begin_comment
-comment|/*  * FUNCTION:		clnp_insert_addr  *  * PURPOSE:			Insert the address part into a clnp datagram.  *  * RETURNS:			Address of first byte after address part in datagram.  *  * SIDE EFFECTS:	  *  * NOTES:			Assume that there is enough space for the address part.  */
+comment|/*  * FUNCTION:		clnp_insert_addr  *  * PURPOSE:			Insert the address part into a clnp datagram.  *  * RETURNS:			Address of first byte after address part in datagram.  *  * SIDE EFFECTS:  *  * NOTES:			Assume that there is enough space for the address part.  */
 end_comment
 
 begin_function
@@ -1416,7 +1416,7 @@ comment|/* notdef */
 end_comment
 
 begin_comment
-comment|/*  * FUNCTION:		clnp_route  *  * PURPOSE:			Route a clnp datagram to the first hop toward its   *					destination. In many cases, the first hop will be  *					the destination. The address of a route  *					is specified. If a routing entry is present in  *					that route, and it is still up to the same destination,  *					then no further action is necessary. Otherwise, a  *					new routing entry will be allocated.  *  * RETURNS:			route found - 0  *					unix error code  *  * SIDE EFFECTS:	  *  * NOTES:			It is up to the caller to free the routing entry  *					allocated in route.  */
+comment|/*  * FUNCTION:		clnp_route  *  * PURPOSE:			Route a clnp datagram to the first hop toward its  *					destination. In many cases, the first hop will be  *					the destination. The address of a route  *					is specified. If a routing entry is present in  *					that route, and it is still up to the same destination,  *					then no further action is necessary. Otherwise, a  *					new routing entry will be allocated.  *  * RETURNS:			route found - 0  *					unix error code  *  * SIDE EFFECTS:  *  * NOTES:			It is up to the caller to free the routing entry  *					allocated in route.  */
 end_comment
 
 begin_macro
@@ -1936,7 +1936,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * FUNCTION:		clnp_srcroute  *  * PURPOSE:			Source route the datagram. If complete source  *					routing is specified but not possible, then  *					return an error. If src routing is terminated, then  *					try routing on destination.  *					Usage of first_hop,  *					ifp, and error return is identical to clnp_route.  *  * RETURNS:			0 or unix error code  *  * SIDE EFFECTS:	  *  * NOTES:			Remember that option index pointers are really  *					offsets from the beginning of the mbuf.  */
+comment|/*  * FUNCTION:		clnp_srcroute  *  * PURPOSE:			Source route the datagram. If complete source  *					routing is specified but not possible, then  *					return an error. If src routing is terminated, then  *					try routing on destination.  *					Usage of first_hop,  *					ifp, and error return is identical to clnp_route.  *  * RETURNS:			0 or unix error code  *  * SIDE EFFECTS:  *  * NOTES:			Remember that option index pointers are really  *					offsets from the beginning of the mbuf.  */
 end_comment
 
 begin_macro
@@ -2043,7 +2043,7 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* return code */
-comment|/* 	 *	Check if we have run out of routes  	 *	If so, then try to route on destination. 	 */
+comment|/* 	 *	Check if we have run out of routes 	 *	If so, then try to route on destination. 	 */
 if|if CLNPSRCRT_TERM
 condition|(
 name|oidx
@@ -2194,7 +2194,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * FUNCTION:		clnp_echoreply  *  * PURPOSE:			generate an echo reply packet and transmit  *  * RETURNS:			result of clnp_output  *  * SIDE EFFECTS:	  */
+comment|/*  * FUNCTION:		clnp_echoreply  *  * PURPOSE:			generate an echo reply packet and transmit  *  * RETURNS:			result of clnp_output  *  * SIDE EFFECTS:  */
 end_comment
 
 begin_macro
@@ -2445,7 +2445,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * FUNCTION:		clnp_ypocb - backwards bcopy  *  * PURPOSE:			bcopy starting at end of src rather than beginning.  *  * RETURNS:			none  *  * SIDE EFFECTS:	  *  * NOTES:			No attempt has been made to make this efficient  */
+comment|/*  * FUNCTION:		clnp_ypocb - backwards bcopy  *  * PURPOSE:			bcopy starting at end of src rather than beginning.  *  * RETURNS:			none  *  * SIDE EFFECTS:  *  * NOTES:			No attempt has been made to make this efficient  */
 end_comment
 
 begin_macro

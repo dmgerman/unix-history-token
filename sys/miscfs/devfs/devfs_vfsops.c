@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /sys/miscfs/devfs/RCS/devfs_vfsops.c,v 1.4 1995/01/07 04:20:25 root Exp root $  *  *  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_vfsops.c,v 1.2 1995/04/20 07:34:53 julian Exp $  *  *  */
 end_comment
 
 begin_include

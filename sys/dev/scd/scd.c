@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1995 Mikael Hybsch  * All rights reserved.  *  * Po
 end_comment
 
 begin_comment
-comment|/* $Id: scd.c,v 1.3 1995/04/12 20:48:02 wollman Exp $ */
+comment|/* $Id: scd.c,v 1.4 1995/05/09 12:25:58 rgrimes Exp $ */
 end_comment
 
 begin_comment

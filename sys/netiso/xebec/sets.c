@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: sets.c,v 2.3 88/09/19 12:55:30 nhall Exp $ */
+comment|/* $Header: /home/ncvs/src/sys/netiso/xebec/sets.c,v 1.1.1.1 1994/05/24 10:07:45 rgrimes Exp $ */
 end_comment
 
 begin_comment
-comment|/* $Source: /var/home/tadl/src/argo/xebec/RCS/sets.c,v $ */
+comment|/* $Source: /home/ncvs/src/sys/netiso/xebec/sets.c,v $ */
 end_comment
 
 begin_comment
@@ -72,7 +72,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*   * define a set w/ type and name  * return a set number   */
+comment|/*  * define a set w/ type and name  * return a set number  */
 end_comment
 
 begin_undef

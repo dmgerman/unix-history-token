@@ -100,7 +100,7 @@ decl_stmt|;
 name|int
 name|junk
 decl_stmt|;
-block|{    }
+block|{ }
 end_function
 
 end_unit

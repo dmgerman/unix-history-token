@@ -35,7 +35,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@DIALIX.oz.au)  *  * $Header: /home/ncvs/src/sys/miscfs/devfs/devfsdefs.h,v 1.2 1995/04/20 07:34:55 julian Exp $  */
+comment|/*  * Written by Julian Elischer (julian@DIALIX.oz.au)  *  * $Header: /home/ncvs/src/sys/miscfs/devfs/devfsdefs.h,v 1.3 1995/05/03 23:06:31 julian Exp $  */
 end_comment
 
 begin_comment

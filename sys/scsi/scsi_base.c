@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file   * is totally correct for any given task and users of this file must   * accept responsibility for any damage that occurs from the application of this  * file.  *   * Written by Julian Elischer (julian@dialix.oz.au)  *      $Id: scsi_base.c,v 1.27 1995/04/14 15:10:31 dufault Exp $  */
+comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file  * is totally correct for any given task and users of this file must  * accept responsibility for any damage that occurs from the application of this  * file.  *  * Written by Julian Elischer (julian@dialix.oz.au)  *      $Id: scsi_base.c,v 1.28 1995/04/23 22:07:50 gibbs Exp $  */
 end_comment
 
 begin_define
@@ -128,7 +128,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Get a scsi transfer structure for the caller. Charge the structure  * to the device that is referenced by the sc_link structure. If the   * sc_link structure has no 'credits' then the device already has the  * maximum number or outstanding operations under way. In this stage,  * wait on the structure so that when one is freed, we are awoken again  * If the SCSI_NOSLEEP flag is set, then do not wait, but rather, return  * a NULL pointer, signifying that no slots were available  * Note in the link structure, that we are waiting on it.  */
+comment|/*  * Get a scsi transfer structure for the caller. Charge the structure  * to the device that is referenced by the sc_link structure. If the  * sc_link structure has no 'credits' then the device already has the  * maximum number or outstanding operations under way. In this stage,  * wait on the structure so that when one is freed, we are awoken again  * If the SCSI_NOSLEEP flag is set, then do not wait, but rather, return  * a NULL pointer, signifying that no slots were available  * Note in the link structure, that we are waiting on it.  */
 end_comment
 
 begin_function
@@ -1495,7 +1495,7 @@ comment|/*XXX */
 return|return;
 comment|/* it did it all, finish up */
 block|}
-comment|/* XXX: This isn't used anywhere. Do you have plans for it, 		 * Julian? (dufault@hda.com). 		 * This allows a private 'done' handler to  		 * resubmit the command if it wants to retry, 		 * In this case the xs must NOT be freed. (julian) 		 */
+comment|/* XXX: This isn't used anywhere. Do you have plans for it, 		 * Julian? (dufault@hda.com). 		 * This allows a private 'done' handler to 		 * resubmit the command if it wants to retry, 		 * In this case the xs must NOT be freed. (julian) 		 */
 if|if
 condition|(
 name|retval
@@ -2086,7 +2086,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* SCSIDEBUG */
-comment|/* 	 * Do the transfer. If we are polling we will return: 	 * COMPLETE,  Was poll, and scsi_done has been called 	 * TRY_AGAIN_LATER, Adapter short resources, try again 	 *  	 * if under full steam (interrupts) it will return: 	 * SUCCESSFULLY_QUEUED, will do a wakeup when complete 	 * TRY_AGAIN_LATER, (as for polling) 	 * After the wakeup, we must still check if it succeeded 	 *  	 * If we have a bp however, all the error proccessing 	 * and the buffer code both expect us to return straight 	 * to them, so as soon as the command is queued, return 	 */
+comment|/* 	 * Do the transfer. If we are polling we will return: 	 * COMPLETE,  Was poll, and scsi_done has been called 	 * TRY_AGAIN_LATER, Adapter short resources, try again 	 * 	 * if under full steam (interrupts) it will return: 	 * SUCCESSFULLY_QUEUED, will do a wakeup when complete 	 * TRY_AGAIN_LATER, (as for polling) 	 * After the wakeup, we must still check if it succeeded 	 * 	 * If we have a bp however, all the error proccessing 	 * and the buffer code both expect us to return straight 	 * to them, so as soon as the command is queued, return 	 */
 name|retval
 operator|=
 operator|(
@@ -2720,7 +2720,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * handle checking for errors..  * called at interrupt time from scsi_done() and   * at user time from scsi_scsi_cmd(), depending on whether  * there was a bp  (basically, if there is a bp, there may be no  * associated process at the time. (it could be an async operation))  * lower level routines shouldn't know about xs->bp.. we are the lowest.  */
+comment|/*  * handle checking for errors..  * called at interrupt time from scsi_done() and  * at user time from scsi_scsi_cmd(), depending on whether  * there was a bp  (basically, if there is a bp, there may be no  * associated process at the time. (it could be an async operation))  * lower level routines shouldn't know about xs->bp.. we are the lowest.  */
 end_comment
 
 begin_function
@@ -4180,7 +4180,7 @@ comment|/*  * Utility routines often used in SCSI stuff  */
 end_comment
 
 begin_comment
-comment|/*  * convert a physical address to 3 bytes,   * MSB at the lowest address,  * LSB at the highest.  */
+comment|/*  * convert a physical address to 3 bytes,  * MSB at the lowest address,  * LSB at the highest.  */
 end_comment
 
 begin_function

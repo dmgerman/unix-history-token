@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *      $Id: cd.c,v 1.39 1995/04/23 22:07:48 gibbs Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *      $Id: cd.c,v 1.40 1995/05/03 18:09:06 dufault Exp $  */
 end_comment
 
 begin_define
@@ -1287,7 +1287,7 @@ literal|"'start' attempted "
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Load the physical device parameters  	 */
+comment|/* 	 * Load the physical device parameters 	 */
 if|if
 condition|(
 name|cd_get_parms
@@ -2017,7 +2017,7 @@ name|bad
 goto|;
 comment|/* no I/O.. media changed or something */
 block|}
-comment|/* 	 * We have a buf, now we should make a command  	 * 	 * First, translate the block to absolute and put it in terms of the 	 * logical blocksize of the device.  Really a bit silly until we have 	 * real partitions, but. 	 */
+comment|/* 	 * We have a buf, now we should make a command 	 * 	 * First, translate the block to absolute and put it in terms of the 	 * logical blocksize of the device.  Really a bit silly until we have 	 * real partitions, but. 	 */
 name|blkno
 operator|=
 name|bp
@@ -2483,7 +2483,7 @@ argument_list|)
 index|]
 expr_stmt|;
 break|break;
-comment|/* 		 * a bit silly, but someone might want to test something on a  		 * section of cdrom. 		 */
+comment|/* 		 * a bit silly, but someone might want to test something on a 		 * section of cdrom. 		 */
 case|case
 name|DIOCWDINFO
 case|:
@@ -4358,7 +4358,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Load the label information on the named device  * Actually fabricate a disklabel  *   * EVENTUALLY take information about different  * data tracks from the TOC and put it in the disklabel  */
+comment|/*  * Load the label information on the named device  * Actually fabricate a disklabel  *  * EVENTUALLY take information about different  * data tracks from the TOC and put it in the disklabel  */
 end_comment
 
 begin_function
@@ -6242,7 +6242,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * give a number of sectors so that sec * trks * cyls 	 * is<= disk_size  	 */
+comment|/* 	 * give a number of sectors so that sec * trks * cyls 	 * is<= disk_size 	 */
 if|if
 condition|(
 name|cd_size

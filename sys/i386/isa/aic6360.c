@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 Charles Hannum.  * Copyright (c) 1994 Jarle Greipsland  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jarle Greipsland  * 4. The name of the author may not be used to endorse or promote products   *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1994 Charles Hannum.  * Copyright (c) 1994 Jarle Greipsland  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jarle Greipsland  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
-comment|/*  * $Id: aic6360.c,v 1.7 1995/03/28 07:55:24 bde Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
+comment|/*  * $Id: aic6360.c,v 1.8 1995/04/12 20:47:35 wollman Exp $  *  * Acknowledgements: Many of the algorithms used in this driver are  * inspired by the work of Julian Elischer (julian@tfs.com) and  * Charles Hannum (mycroft@duality.gnu.ai.mit.edu).  Thanks a million!  *  * Converted from NetBSD to FreeBSD by Jim Babb  */
 end_comment
 
 begin_comment
-comment|/* TODO list:  * 1) Get the DMA stuff working.  * 2) Get the iov/uio stuff working. Is this a good thing ???  * 3) Get the synch stuff working.   * 4) Rewrite it to use malloc for the acb structs instead of static alloc.?  */
+comment|/* TODO list:  * 1) Get the DMA stuff working.  * 2) Get the iov/uio stuff working. Is this a good thing ???  * 3) Get the synch stuff working.  * 4) Rewrite it to use malloc for the acb structs instead of static alloc.?  */
 end_comment
 
 begin_comment
@@ -38,7 +38,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Use doubleword transfers to/from SCSI chip.  Note: This requires   * motherboard support.  Basicly, some motherboard chipsets are able to  * split a 32 bit I/O operation into two 16 bit I/O operations,  * transparently to the processor.  This speeds up some things, notably long  * data transfers.  */
+comment|/* Use doubleword transfers to/from SCSI chip.  Note: This requires  * motherboard support.  Basicly, some motherboard chipsets are able to  * split a 32 bit I/O operation into two 16 bit I/O operations,  * transparently to the processor.  This speeds up some things, notably long  * data transfers.  */
 end_comment
 
 begin_define
@@ -159,7 +159,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Include debug functions?  At the end of this file there are a bunch of   * functions that will print out various information regarding queued SCSI   * commands, driver state and chip contents.  You can call them from the   * kernel debugger.  If you set AIC_DEBUG to 0 they are not included (the  * kernel uses less memory) but you lose the debugging facilities.  */
+comment|/* Include debug functions?  At the end of this file there are a bunch of  * functions that will print out various information regarding queued SCSI  * commands, driver state and chip contents.  You can call them from the  * kernel debugger.  If you set AIC_DEBUG to 0 they are not included (the  * kernel uses less memory) but you lose the debugging facilities.  */
 end_comment
 
 begin_define
@@ -1444,7 +1444,7 @@ value|0x01
 end_define
 
 begin_comment
-comment|/* Important! The 3 most significant bits of this register, in initiator mode,  * represents the "expected" SCSI bus phase and can be used to trigger phase  * mismatch and phase change interrupts.  But more important:  If there is a  * phase mismatch the chip will not transfer any data!  This is actually a nice  * feature as it gives us a bit more control over what is happening when we are  * bursting data (in) through the FIFOs and the phase suddenly changes from   * DATA IN to STATUS or MESSAGE IN.  The transfer will stop and wait for the   * proper phase to be set in this register instead of dumping the bits into the  * FIFOs.  */
+comment|/* Important! The 3 most significant bits of this register, in initiator mode,  * represents the "expected" SCSI bus phase and can be used to trigger phase  * mismatch and phase change interrupts.  But more important:  If there is a  * phase mismatch the chip will not transfer any data!  This is actually a nice  * feature as it gives us a bit more control over what is happening when we are  * bursting data (in) through the FIFOs and the phase suddenly changes from  * DATA IN to STATUS or MESSAGE IN.  The transfer will stop and wait for the  * proper phase to be set in this register instead of dumping the bits into the  * FIFOs.  */
 end_comment
 
 begin_comment
@@ -2881,7 +2881,7 @@ comment|/* Only one per target for now */
 end_comment
 
 begin_comment
-comment|/*   * ACB. Holds additional information for each SCSI command Comments: We  * need a separate scsi command block because we may need to overwrite it  * with a request sense command.  Basicly, we refrain from fiddling with  * the scsi_xfer struct (except do the expected updating of return values).  * We'll generally update: xs->{flags,resid,error,sense,status} and  * occasionally xs->retries.  */
+comment|/*  * ACB. Holds additional information for each SCSI command Comments: We  * need a separate scsi command block because we may need to overwrite it  * with a request sense command.  Basicly, we refrain from fiddling with  * the scsi_xfer struct (except do the expected updating of return values).  * We'll generally update: xs->{flags,resid,error,sense,status} and  * occasionally xs->retries.  */
 end_comment
 
 begin_struct
@@ -2948,7 +2948,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*   * Some info about each (possible) target on the SCSI bus.  This should   * probably have been a "per target+lunit" structure, but we'll leave it at   * this for now.  Is there a way to reliably hook it up to sc->fordriver??  */
+comment|/*  * Some info about each (possible) target on the SCSI bus.  This should  * probably have been a "per target+lunit" structure, but we'll leave it at  * this for now.  Is there a way to reliably hook it up to sc->fordriver??  */
 end_comment
 
 begin_struct
@@ -4226,7 +4226,7 @@ name|id_unit
 index|]
 argument_list|)
 block|; }
-comment|/*   * INITIALIZATION ROUTINES (probe, attach ++)  */
+comment|/*  * INITIALIZATION ROUTINES (probe, attach ++)  */
 comment|/*  * aicprobe: probe for AIC6360 SCSI-controller  * returns non-zero value if a controller is found.  */
 name|int
 ifdef|#
@@ -4656,7 +4656,7 @@ end_endif
 
 begin_comment
 unit|}
-comment|/* Do the real search-for-device.    * Prerequisite: aic->iobase should be set to the proper value  */
+comment|/* Do the real search-for-device.  * Prerequisite: aic->iobase should be set to the proper value  */
 end_comment
 
 begin_macro
@@ -4733,7 +4733,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Thanks to mark@aggregate.com for the new method for detecting  	 * whether the chip is present or not.  Bonus: may also work for  	 * the AIC-6260!  	 */
+comment|/* Thanks to mark@aggregate.com for the new method for detecting 	 * whether the chip is present or not.  Bonus: may also work for 	 * the AIC-6260!  	 */
 name|AIC_TRACE
 argument_list|(
 operator|(
@@ -4746,7 +4746,7 @@ name|iobase
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*   	 * Linux also init's the stack to 1-16 and then clears it,      	 *  6260's don't appear to have an ID reg - mpg   	 */
+comment|/*  	 * Linux also init's the stack to 1-16 and then clears it,      	 *  6260's don't appear to have an ID reg - mpg  	 */
 comment|/* Push the sequence 0,1,..,15 on the stack */
 define|#
 directive|define
@@ -6519,7 +6519,7 @@ comment|/* LOW LEVEL SCSI UTILITIES */
 end_comment
 
 begin_comment
-comment|/* Determine the SCSI bus phase, return either a real SCSI bus phase or some  * pseudo phase we use to detect certain exceptions.  This one is a bit tricky.  * The bits we peek at:  * CDI, MSGI and DI is the 3 SCSI signals determining the bus phase.  * These should be qualified by REQI high and ACKI low.  * Also peek at SSTAT0[SELDO|SELDI] to detect a passing BUSFREE condition.  * No longer detect SCSI RESET or PERR here.  They are tested for separately  * in the interrupt handler.  * Note: If an exception occur at some critical time during the phase   * determination we'll most likely return something wildly erronous....  */
+comment|/* Determine the SCSI bus phase, return either a real SCSI bus phase or some  * pseudo phase we use to detect certain exceptions.  This one is a bit tricky.  * The bits we peek at:  * CDI, MSGI and DI is the 3 SCSI signals determining the bus phase.  * These should be qualified by REQI high and ACKI low.  * Also peek at SSTAT0[SELDO|SELDI] to detect a passing BUSFREE condition.  * No longer detect SCSI RESET or PERR here.  They are tested for separately  * in the interrupt handler.  * Note: If an exception occur at some critical time during the phase  * determination we'll most likely return something wildly erronous....  */
 end_comment
 
 begin_function
@@ -6815,7 +6815,7 @@ name|state
 operator|=
 name|AIC_SELECTING
 expr_stmt|;
-comment|/*  			 * Start selection process. Always enable 			 * reselections.  Note: we don't have a nexus yet, so 			 * cannot set aic->state = AIC_HASNEXUS. 			 */
+comment|/* 			 * Start selection process. Always enable 			 * reselections.  Note: we don't have a nexus yet, so 			 * cannot set aic->state = AIC_HASNEXUS. 			 */
 name|simode0
 operator|=
 name|ENSELDI
@@ -7017,7 +7017,7 @@ literal|"aic_done "
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Now, if we've come here with no error code, i.e. we've kept the  	 * initial XS_NOERROR, and the status code signals that we should 	 * check sense, we'll need to set up a request sense cmd block and  	 * push the command back into the ready queue *before* any other  	 * commands for this target/lunit, else we lose the sense info. 	 * We don't support chk sense conditions for the request sense cmd. 	 */
+comment|/* 	 * Now, if we've come here with no error code, i.e. we've kept the 	 * initial XS_NOERROR, and the status code signals that we should 	 * check sense, we'll need to set up a request sense cmd block and 	 * push the command back into the ready queue *before* any other 	 * commands for this target/lunit, else we lose the sense info. 	 * We don't support chk sense conditions for the request sense cmd. 	 */
 if|if
 condition|(
 name|xs
@@ -7755,7 +7755,7 @@ argument_list|,
 name|PH_MSGI
 argument_list|)
 expr_stmt|;
-comment|/* Prepare for a new message.  A message should (according to the SCSI 	 * standard) be transmitted in one single message_in phase.   	 * If we have been in some other phase, then this is a new message. 	 */
+comment|/* Prepare for a new message.  A message should (according to the SCSI 	 * standard) be transmitted in one single message_in phase. 	 * If we have been in some other phase, then this is a new message. 	 */
 if|if
 condition|(
 name|aic
@@ -7779,7 +7779,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/*  	 * Read a whole message but the last byte.  If we shall reject the  	 * message, we shall have to do it, by asserting ATNO, during the 	 * message transfer phase itself. 	 */
+comment|/* 	 * Read a whole message but the last byte.  If we shall reject the 	 * message, we shall have to do it, by asserting ATNO, during the 	 * message transfer phase itself. 	 */
 for|for
 control|(
 init|;
@@ -7841,7 +7841,7 @@ argument_list|(
 name|SCSIDAT
 argument_list|)
 expr_stmt|;
-comment|/*  			 * This testing is suboptimal, but most messages will 			 * be of the one byte variety, so it should not effect 			 * performance significantly. 			 */
+comment|/* 			 * This testing is suboptimal, but most messages will 			 * be of the one byte variety, so it should not effect 			 * performance significantly. 			 */
 if|if
 condition|(
 name|IS1BYTEMSG
@@ -7974,7 +7974,7 @@ operator|->
 name|imlen
 operator|++
 expr_stmt|;
-comment|/* 		 * We expect the bytes in a multibyte message to arrive  		 * relatively close in time, a few microseconds apart. 		 * Therefore we will spinwait for some small amount of time 		 * waiting for the next byte. 		 */
+comment|/* 		 * We expect the bytes in a multibyte message to arrive 		 * relatively close in time, a few microseconds apart. 		 * Therefore we will spinwait for some small amount of time 		 * waiting for the next byte. 		 */
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
@@ -8039,7 +8039,7 @@ operator|)
 condition|)
 return|return;
 block|}
-comment|/* Now we should have a complete message (1 byte, 2 byte and moderately 	 * long extended messages).  We only handle extended messages which  	 * total length is shorter than AIC_MAX_MSG_LEN.  Longer messages will 	 * be amputated.  (Return XS_BOBBITT ?) 	 */
+comment|/* Now we should have a complete message (1 byte, 2 byte and moderately 	 * long extended messages).  We only handle extended messages which 	 * total length is shorter than AIC_MAX_MSG_LEN.  Longer messages will 	 * be amputated.  (Return XS_BOBBITT ?) 	 */
 if|if
 condition|(
 name|aic
@@ -8604,7 +8604,7 @@ literal|"searching "
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Search wait queue for disconnected cmd 			 * The list should be short, so I haven't bothered with 			 * any more sophisticated structures than a simple 			 * singly linked list.  			 */
+comment|/* Search wait queue for disconnected cmd 			 * The list should be short, so I haven't bothered with 			 * any more sophisticated structures than a simple 			 * singly linked list. 			 */
 name|lunit
 operator|=
 name|aic
@@ -8844,7 +8844,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* The message out (and in) stuff is a bit complicated:  * If the target requests another message (sequence) without   * having changed phase in between it really asks for a   * retransmit, probably due to parity error(s).  * The following messages can be sent:  * IDENTIFY	   @ These 3 stems from scsi command activity   * BUS_DEV_RESET   @  * IDENTIFY + SDTR @  * MESSAGE_REJECT if MSGI doesn't make sense  * MESSAGE_PARITY_ERROR if MSGI spots a parity error  * NOOP if asked for a message and there's nothing to send  */
+comment|/* The message out (and in) stuff is a bit complicated:  * If the target requests another message (sequence) without  * having changed phase in between it really asks for a  * retransmit, probably due to parity error(s).  * The following messages can be sent:  * IDENTIFY	   @ These 3 stems from scsi command activity  * BUS_DEV_RESET   @  * IDENTIFY + SDTR @  * MESSAGE_REJECT if MSGI doesn't make sense  * MESSAGE_PARITY_ERROR if MSGI spots a parity error  * NOOP if asked for a message and there's nothing to send  */
 end_comment
 
 begin_function
@@ -8897,7 +8897,7 @@ name|dmastat
 decl_stmt|,
 name|scsisig
 decl_stmt|;
-comment|/* First determine what to send. If we haven't seen a  	 * phasechange this is a retransmission request. 	 */
+comment|/* First determine what to send. If we haven't seen a 	 * phasechange this is a retransmission request. 	 */
 name|outb
 argument_list|(
 name|SCSISIGO
@@ -9197,7 +9197,7 @@ name|omlen
 index|]
 condition|)
 block|{
-comment|/* Have sent the message at least once, this is a retransmit.   		 */
+comment|/* Have sent the message at least once, this is a retransmit. 		 */
 name|AIC_MISC
 argument_list|(
 operator|(
@@ -9376,7 +9376,7 @@ name|aic
 operator|->
 name|omess
 expr_stmt|;
-comment|/* We get here in two ways:  	 * a) phase != MSGO.  Target is probably going to reject our message 	 * b) aic->omp ==&aic->omess[aic->omlen], i.e. the message has been 	 *    transmitted correctly and accepted by the target. 	 */
+comment|/* We get here in two ways: 	 * a) phase != MSGO.  Target is probably going to reject our message 	 * b) aic->omp ==&aic->omess[aic->omlen], i.e. the message has been 	 *    transmitted correctly and accepted by the target. 	 */
 if|if
 condition|(
 name|aic
@@ -9565,7 +9565,7 @@ operator||
 name|ENPHASECHG
 argument_list|)
 expr_stmt|;
-comment|/* I have tried to make the main loop as tight as possible.  This 	 * means that some of the code following the loop is a bit more  	 * complex than otherwise. 	 */
+comment|/* I have tried to make the main loop as tight as possible.  This 	 * means that some of the code following the loop is a bit more 	 * complex than otherwise. 	 */
 while|while
 condition|(
 name|aic
@@ -9948,7 +9948,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* aic_datain: perform data transfers using the FIFO datapath in the aic6360  * Precondition: The SCSI bus should be in the DIN phase, with REQ asserted  * and ACK deasserted (i.e. at least one byte is ready).  * For now, uses a pretty dumb algorithm, hangs around until all data has been  * transferred.  This, is OK for fast targets, but not so smart for slow   * targets which don't disconnect or for huge transfers.  */
+comment|/* aic_datain: perform data transfers using the FIFO datapath in the aic6360  * Precondition: The SCSI bus should be in the DIN phase, with REQ asserted  * and ACK deasserted (i.e. at least one byte is ready).  * For now, uses a pretty dumb algorithm, hangs around until all data has been  * transferred.  This, is OK for fast targets, but not so smart for slow  * targets which don't disconnect or for huge transfers.  */
 end_comment
 
 begin_function
@@ -10346,7 +10346,7 @@ name|aic
 operator|->
 name|dleft
 expr_stmt|;
-comment|/* Some SCSI-devices are rude enough to transfer more data than what 	 * was requested, e.g. 2048 bytes from a CD-ROM instead of the  	 * requested 512.  Test for progress, i.e. real transfers.  If no real 	 * transfers have been performed (acb->dleft is probably already zero) 	 * and the FIFO is not empty, waste some bytes.... 	 */
+comment|/* Some SCSI-devices are rude enough to transfer more data than what 	 * was requested, e.g. 2048 bytes from a CD-ROM instead of the 	 * requested 512.  Test for progress, i.e. real transfers.  If no real 	 * transfers have been performed (acb->dleft is probably already zero) 	 * and the FIFO is not empty, waste some bytes.... 	 */
 if|if
 condition|(
 operator|!
@@ -10575,7 +10575,7 @@ argument_list|(
 name|aic
 argument_list|)
 expr_stmt|;
-comment|/* Clear INTEN.  This is important if we're running with edge  	 * triggered interrupts as we don't guarantee that all interrupts will 	 * be served during one single invocation of this routine, i.e. we may 	 * need another edge. 	 */
+comment|/* Clear INTEN.  This is important if we're running with edge 	 * triggered interrupts as we don't guarantee that all interrupts will 	 * be served during one single invocation of this routine, i.e. we may 	 * need another edge. 	 */
 name|outb
 argument_list|(
 name|DMACNTRL0
@@ -10687,7 +10687,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*  	 * If we're not already busy doing something test for the following 	 * conditions: 	 * 1) We have been reselected by something 	 * 2) We have selected something successfully 	 * 3) Our selection process has timed out 	 * 4) This is really a bus free interrupt just to get a new command  	 *    going? 	 * 5) Spurious interrupt? 	 */
+comment|/* 	 * If we're not already busy doing something test for the following 	 * conditions: 	 * 1) We have been reselected by something 	 * 2) We have selected something successfully 	 * 3) Our selection process has timed out 	 * 4) This is really a bus free interrupt just to get a new command 	 *    going? 	 * 5) Spurious interrupt? 	 */
 name|sstat0
 operator|=
 name|inb
@@ -10734,7 +10734,7 @@ literal|"reselect "
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* If we're trying to select a target ourselves,  			 * push our command back into the rdy list. 			 */
+comment|/* If we're trying to select a target ourselves, 			 * push our command back into the rdy list. 			 */
 if|if
 condition|(
 name|aic
@@ -11226,7 +11226,7 @@ operator|&
 name|SELTO
 condition|)
 block|{
-comment|/* Selection timed out. What to do: 			 * Disable selections out and fail the command with  			 * code XS_TIMEOUT. 			 */
+comment|/* Selection timed out. What to do: 			 * Disable selections out and fail the command with 			 * code XS_TIMEOUT. 			 */
 name|acb
 operator|=
 name|aic
@@ -11369,7 +11369,7 @@ literal|1
 return|;
 block|}
 block|}
-comment|/* Driver is now in state AIC_HASNEXUS, i.e. we have a current command 	 * working the SCSI bus.   	 */
+comment|/* Driver is now in state AIC_HASNEXUS, i.e. we have a current command 	 * working the SCSI bus. 	 */
 name|acb
 operator|=
 name|aic

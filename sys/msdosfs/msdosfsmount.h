@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfsmount.h,v 1.1 1994/09/19 15:41:48 dfr Exp $ */
+comment|/*	$Id: msdosfsmount.h,v 1.2 1994/09/27 20:42:59 phk Exp $ */
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*-  * Copyright (C) 1994 Wolfgang Solfrank.  * Copyright (C) 1994 TooLs
 end_comment
 
 begin_comment
-comment|/*  * Written by Paul Popelka (paulp@uts.amdahl.com)  *   * You can do anything you want with this software, just don't say you wrote  * it, and don't remove this notice.  *   * This software is provided "as is".  *   * The author supplies this software to be publicly redistributed on the  * understanding that the author is not responsible for the correct  * functioning of this software in any circumstances and is not liable for  * any damages caused by this software.  *   * October 1992  */
+comment|/*  * Written by Paul Popelka (paulp@uts.amdahl.com)  *  * You can do anything you want with this software, just don't say you wrote  * it, and don't remove this notice.  *  * This software is provided "as is".  *  * The author supplies this software to be publicly redistributed on the  * understanding that the author is not responsible for the correct  * functioning of this software in any circumstances and is not liable for  * any damages caused by this software.  *  * October 1992  */
 end_comment
 
 begin_comment
@@ -162,7 +162,7 @@ value|(8 * sizeof(u_int))
 end_define
 
 begin_comment
-comment|/*  * How to compute pm_cnshift and pm_crbomask.  *   * pm_crbomask = (pm_SectPerClust * pm_BytesPerSect) - 1   * if (bytesperclust == * 0)   * 	return EBADBLKSZ;   * bit = 1;   * for (i = 0; i< 32; i++) {   *	if (bit& bytesperclust) {   *		if (bit ^ bytesperclust)   *			return EBADBLKSZ;   *		pm_cnshift = * i;   *		break;   *	}   *	bit<<= 1;   * }  */
+comment|/*  * How to compute pm_cnshift and pm_crbomask.  *  * pm_crbomask = (pm_SectPerClust * pm_BytesPerSect) - 1  * if (bytesperclust == * 0)  * 	return EBADBLKSZ;  * bit = 1;  * for (i = 0; i< 32; i++) {  *	if (bit& bytesperclust) {  *		if (bit ^ bytesperclust)  *			return EBADBLKSZ;  *		pm_cnshift = * i;  *		break;  *	}  *	bit<<= 1;  * }  */
 end_comment
 
 begin_comment

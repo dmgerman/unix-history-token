@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *      $Id: sd.c,v 1.63 1995/05/03 18:09:17 dufault Exp $  */
+comment|/*  * Written by Julian Elischer (julian@dialix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@dialix.oz.au) Sept 1992  *  *      $Id: sd.c,v 1.64 1995/05/08 16:53:33 bde Exp $  */
 end_comment
 
 begin_define
@@ -1070,7 +1070,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * "unit attention" errors should occur here if the  	 * drive has been restarted or the pack changed. 	 * just ingnore the result, it's a decoy instruction 	 * The error code will act on the error though 	 * and invalidate any media information we had. 	 */
+comment|/* 	 * "unit attention" errors should occur here if the 	 * drive has been restarted or the pack changed. 	 * just ingnore the result, it's a decoy instruction 	 * The error code will act on the error though 	 * and invalidate any media information we had. 	 */
 name|scsi_test_unit_ready
 argument_list|(
 name|sc_link
@@ -1191,7 +1191,7 @@ literal|"device ok\n"
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Load the physical device parameters  	 */
+comment|/* 	 * Load the physical device parameters 	 */
 name|sd_get_parms
 argument_list|(
 name|unit
@@ -1684,7 +1684,7 @@ name|sd
 operator|->
 name|buf_queue
 expr_stmt|;
-comment|/*       	 * Use a bounce buffer if necessary 	 */
+comment|/* 	 * Use a bounce buffer if necessary 	 */
 ifdef|#
 directive|ifdef
 name|BOUNCE_BUFFERS
@@ -1856,7 +1856,7 @@ operator|->
 name|opennings
 condition|)
 block|{
-comment|/* 		 * there is excess capacity, but a special waits  		 * It'll need the adapter as soon as we clear out of the 		 * way and let it run (user level wait). 		 */
+comment|/* 		 * there is excess capacity, but a special waits 		 * It'll need the adapter as soon as we clear out of the 		 * way and let it run (user level wait). 		 */
 if|if
 condition|(
 name|sc_link
@@ -2730,7 +2730,7 @@ value|(((unsigned)(a##_1)<< 8) + (unsigned)a##_0 )
 end_define
 
 begin_comment
-comment|/*  * Get the scsi driver to send a full inquiry to the  * device and use the results to fill out the disk   * parameter structure.  */
+comment|/*  * Get the scsi driver to send a full inquiry to the  * device and use the results to fill out the disk  * parameter structure.  */
 end_comment
 
 begin_function
@@ -3017,7 +3017,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * KLUDGE!!(for zone recorded disks) 		 * give a number of sectors so that sec * trks * cyls 		 * is<= disk_size  		 * can lead to wasted space! THINK ABOUT THIS ! 		 */
+comment|/* 		 * KLUDGE!!(for zone recorded disks) 		 * give a number of sectors so that sec * trks * cyls 		 * is<= disk_size 		 * can lead to wasted space! THINK ABOUT THIS ! 		 */
 name|disk_parms
 operator|->
 name|heads
@@ -3223,7 +3223,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * sense handler: Called to determine what to do when the  * device returns a CHECK CONDITION.  *  * This will issue a retry when the device returns a  * non-media hardware failure.  The CDC-WREN IV does this  * when you access it during thermal calibrarion, so the drive  * is pretty useless without this.    *  * In general, you probably almost always would like to issue a retry  * for your disk I/O.  It can't hurt too much (the caller only retries  * so many times) and it may save your butt.  */
+comment|/*  * sense handler: Called to determine what to do when the  * device returns a CHECK CONDITION.  *  * This will issue a retry when the device returns a  * non-media hardware failure.  The CDC-WREN IV does this  * when you access it during thermal calibrarion, so the drive  * is pretty useless without this.  *  * In general, you probably almost always would like to issue a retry  * for your disk I/O.  It can't hurt too much (the caller only retries  * so many times) and it may save your butt.  */
 end_comment
 
 begin_function
@@ -3778,7 +3778,7 @@ operator|&
 literal|0xff
 operator|)
 expr_stmt|;
-comment|/* 		 * Fill out the scsi_xfer structure 		 *    Note: we cannot sleep as we may be an interrupt 		 * don't use scsi_scsi_cmd() as it may want  		 * to wait for an xs. 		 */
+comment|/* 		 * Fill out the scsi_xfer structure 		 *    Note: we cannot sleep as we may be an interrupt 		 * don't use scsi_scsi_cmd() as it may want 		 * to wait for an xs. 		 */
 name|bzero
 argument_list|(
 name|xs

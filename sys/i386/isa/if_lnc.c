@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1995  *	Paul Richards.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Paul Richards.  * 4. The name Paul Richards may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY PAUL RICHARDS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL PAUL RICHARDS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*-  * Copyright (c) 1995  *	Paul Richards.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Paul Richards.  * 4. The name Paul Richards may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY PAUL RICHARDS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL PAUL RICHARDS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_comment
-comment|/* #define DIAGNOSTIC #define DEBUG  *   * TODO ----  *  * This driver will need bounce buffer support when dma'ing to mbufs above the  * 16Mb mark.  *   * Check all the XXX comments -- some of them are just things I've left  * unfinished rather than "difficult" problems that were hacked around.  *   * Check log settings.  *   * Check how all the arpcom flags get set and used.  *   * Re-inline and re-static all routines after debugging.  *   * Remember to assign iobase in SHMEM probe routines.  *   * Replace all occurences of LANCE-controller-card etc in prints by the name  * strings of the appropriate type -- nifty window dressing  *   * Add DEPCA support -- mostly done.   *   */
+comment|/* #define DIAGNOSTIC #define DEBUG  *  * TODO ----  *  * This driver will need bounce buffer support when dma'ing to mbufs above the  * 16Mb mark.  *  * Check all the XXX comments -- some of them are just things I've left  * unfinished rather than "difficult" problems that were hacked around.  *  * Check log settings.  *  * Check how all the arpcom flags get set and used.  *  * Re-inline and re-static all routines after debugging.  *  * Remember to assign iobase in SHMEM probe routines.  *  * Replace all occurences of LANCE-controller-card etc in prints by the name  * strings of the appropriate type -- nifty window dressing  *  * Add DEPCA support -- mostly done.  *  */
 end_comment
 
 begin_include
@@ -1723,7 +1723,7 @@ decl_stmt|;
 name|int
 name|pkt_len
 decl_stmt|;
-comment|/* 	 * The LANCE will issue a RINT interrupt when the ownership of the 	 * last buffer of a receive packet has been relinquished by the LANCE. 	 * Therefore, it can be assumed that a complete packet can be found 	 * before hitting buffers that are still owned by the LANCE, if not 	 * then there is a bug in the driver that is causing the descriptors 	 * to get out of sync.  	 */
+comment|/* 	 * The LANCE will issue a RINT interrupt when the ownership of the 	 * last buffer of a receive packet has been relinquished by the LANCE. 	 * Therefore, it can be assumed that a complete packet can be found 	 * before hitting buffers that are still owned by the LANCE, if not 	 * then there is a bug in the driver that is causing the descriptors 	 * to get out of sync. 	 */
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
@@ -1838,7 +1838,7 @@ name|sc
 operator|->
 name|recv_next
 expr_stmt|;
-comment|/* 		 * Find the end of the packet. Even if not data chaining, 		 * jabber packets can overrun into a second descriptor. 	 	 * If there is no error, then the ENP flag is set in the last 		 * descriptor of the packet. If there is an error then the ERR 		 * flag will be set in the descriptor where the error occured.  		 * Therefore, to find the last buffer of a packet we search for  		 * either ERR or ENP. 		 */
+comment|/* 		 * Find the end of the packet. Even if not data chaining, 		 * jabber packets can overrun into a second descriptor. 	 	 * If there is no error, then the ENP flag is set in the last 		 * descriptor of the packet. If there is an error then the ERR 		 * flag will be set in the descriptor where the error occured. 		 * Therefore, to find the last buffer of a packet we search for 		 * either ERR or ENP. 		 */
 if|if
 condition|(
 operator|!
@@ -2223,7 +2223,7 @@ condition|(
 name|head
 condition|)
 block|{
-comment|/* 				 * First mbuf in packet holds the  				 * ethernet and packet headers 				 */
+comment|/* 				 * First mbuf in packet holds the 				 * ethernet and packet headers 				 */
 name|head
 operator|->
 name|m_pkthdr
@@ -2485,7 +2485,7 @@ return|return;
 block|}
 endif|#
 directive|endif
-comment|/* 	 * The LANCE will write the status information for the packet it just 	 * tried to transmit in one of two places. If the packet was 	 * transmitted successfully then the status will be written into the 	 * last descriptor of the packet. If the transmit failed then the 	 * status will be written into the descriptor that was being accessed 	 * when the error occured and all subsequent descriptors in that 	 * packet will have been relinquished by the LANCE. 	 *  	 * At this point we know that sc->trans_next points to the start 	 * of a packet that the LANCE has just finished trying to transmit. 	 * We now search for a buffer with either ENP or ERR set. 	 */
+comment|/* 	 * The LANCE will write the status information for the packet it just 	 * tried to transmit in one of two places. If the packet was 	 * transmitted successfully then the status will be written into the 	 * last descriptor of the packet. If the transmit failed then the 	 * status will be written into the descriptor that was being accessed 	 * when the error occured and all subsequent descriptors in that 	 * packet will have been relinquished by the LANCE. 	 * 	 * At this point we know that sc->trans_next points to the start 	 * of a packet that the LANCE has just finished trying to transmit. 	 * We now search for a buffer with either ENP or ERR set. 	 */
 name|lookahead
 operator|=
 literal|0
@@ -2543,7 +2543,7 @@ return|return;
 block|}
 endif|#
 directive|endif
-comment|/* 		 * Find end of packet.  		 */
+comment|/* 		 * Find end of packet. 		 */
 if|if
 condition|(
 operator|!
@@ -2832,7 +2832,7 @@ operator|~
 name|TBUFF
 expr_stmt|;
 block|}
-comment|/* 			 * TBUFF is only valid if neither LCOL nor RTRY are set. 			 * We need to check UFLO after LCOL and RTRY so that we 			 * know whether or not TBUFF is valid. If either are 			 * set then TBUFF will have been cleared above. A 			 * UFLO error will turn off the transmitter so we 			 * have to reset. 			 *  			 */
+comment|/* 			 * TBUFF is only valid if neither LCOL nor RTRY are set. 			 * We need to check UFLO after LCOL and RTRY so that we 			 * know whether or not TBUFF is valid. If either are 			 * set then TBUFF will have been cleared above. A 			 * UFLO error will turn off the transmitter so we 			 * have to reset. 			 * 			 */
 if|if
 condition|(
 name|next
@@ -2973,7 +2973,7 @@ operator|+=
 literal|2
 expr_stmt|;
 block|}
-comment|/* 			 * ONE is invalid if LCOL is set. If LCOL was set then 			 * ERR would have also been set and we would have 			 * returned from lnc_tint above. Therefore we can 			 * assume if we arrive here that ONE is valid. 			 *  			 */
+comment|/* 			 * ONE is invalid if LCOL is set. If LCOL was set then 			 * ERR would have also been set and we would have 			 * returned from lnc_tint above. Therefore we can 			 * assume if we arrive here that ONE is valid. 			 * 			 */
 if|if
 condition|(
 name|next
@@ -3208,7 +3208,7 @@ name|OWN
 operator|)
 condition|)
 do|;
-comment|/* 	 * Clear TINT since we've dealt with all  	 * the completed transmissions. 	 */
+comment|/* 	 * Clear TINT since we've dealt with all 	 * the completed transmissions. 	 */
 name|outw
 argument_list|(
 name|sc
@@ -3515,7 +3515,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* 	 * There isn't any way to determine if a NIC is a BICC. Basically, if 	 * the lance probe succeeds using the i/o addresses of the BICC then 	 * we assume it's a BICC. 	 *  	 */
+comment|/* 	 * There isn't any way to determine if a NIC is a BICC. Basically, if 	 * the lance probe succeeds using the i/o addresses of the BICC then 	 * we assume it's a BICC. 	 * 	 */
 name|sc
 operator|->
 name|rap
@@ -4182,7 +4182,7 @@ decl_stmt|;
 name|int
 name|lnc_mem_size
 decl_stmt|;
-comment|/* 	 * Allocate memory for use by the controller. 	 *  	 * XXX -- the Am7990 and Am79C960 only have 24 address lines and so can 	 * only access the lower 16Mb of physical memory. For the moment we 	 * assume that malloc will allocate memory within the lower 16Mb 	 * range. This is not a very valid assumption but there's nothing 	 * that can be done about it yet. For shared memory NICs this isn't 	 * relevant. 	 *  	 */
+comment|/* 	 * Allocate memory for use by the controller. 	 * 	 * XXX -- the Am7990 and Am79C960 only have 24 address lines and so can 	 * only access the lower 16Mb of physical memory. For the moment we 	 * assume that malloc will allocate memory within the lower 16Mb 	 * range. This is not a very valid assumption but there's nothing 	 * that can be done about it yet. For shared memory NICs this isn't 	 * relevant. 	 * 	 */
 name|lnc_mem_size
 operator|=
 operator|(
@@ -4719,7 +4719,7 @@ name|IFF_NOTRAILERS
 operator||
 name|IFF_SIMPLEX
 expr_stmt|;
-comment|/* 	 * This sets up the memory area for the controller. Memory is set up for 	 * the initialisation block (12 words of contiguous memory starting 	 * on a word boundary),the transmit and receive ring structures (each 	 * entry is 4 words long and must start on a quadword boundary) and 	 * the data buffers. 	 *  	 * The alignment tests are particularly paranoid. 	 */
+comment|/* 	 * This sets up the memory area for the controller. Memory is set up for 	 * the initialisation block (12 words of contiguous memory starting 	 * on a word boundary),the transmit and receive ring structures (each 	 * entry is 4 words long and must start on a quadword boundary) and 	 * the data buffers. 	 * 	 * The alignment tests are particularly paranoid. 	 */
 name|sc
 operator|->
 name|recv_next
@@ -5564,7 +5564,7 @@ operator|&
 literal|0xff
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Depending on which controller this is, CSR3 has different meanings. 	 * For the Am7990 it controls DMA operations, for the Am79C960 it 	 * controls interrupt masks and transmitter algorithms. In either 	 * case, none of the flags are set. 	 *  	 */
+comment|/* 	 * Depending on which controller this is, CSR3 has different meanings. 	 * For the Am7990 it controls DMA operations, for the Am79C960 it 	 * controls interrupt masks and transmitter algorithms. In either 	 * case, none of the flags are set. 	 * 	 */
 name|write_csr
 argument_list|(
 name|unit
@@ -5685,7 +5685,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The interrupt flag (INTR) will be set and provided that the interrupt enable  * flag (INEA) is also set, the interrupt pin will be driven low when any of  * the following occur:  *   * 1) Completion of the initialisation routine (IDON). 2) The reception of a  * packet (RINT). 3) The transmission of a packet (TINT). 4) A transmitter  * timeout error (BABL). 5) A missed packet (MISS). 6) A memory error (MERR).  *   * The interrupt flag is cleared when all of the above conditions are cleared.  *   * If the driver is reset from this routine then it first checks to see if any  * interrupts have ocurred since the reset and handles them before returning.  * This is because the NIC may signify a pending interrupt in CSR0 using the  * INTR flag even if a hardware interrupt is currently inhibited (at least I  * think it does from reading the data sheets). We may as well deal with  * these pending interrupts now rather than get the overhead of another  * hardware interrupt immediately upon returning from the interrupt handler.  *   */
+comment|/*  * The interrupt flag (INTR) will be set and provided that the interrupt enable  * flag (INEA) is also set, the interrupt pin will be driven low when any of  * the following occur:  *  * 1) Completion of the initialisation routine (IDON). 2) The reception of a  * packet (RINT). 3) The transmission of a packet (TINT). 4) A transmitter  * timeout error (BABL). 5) A missed packet (MISS). 6) A memory error (MERR).  *  * The interrupt flag is cleared when all of the above conditions are cleared.  *  * If the driver is reset from this routine then it first checks to see if any  * interrupts have ocurred since the reset and handles them before returning.  * This is because the NIC may signify a pending interrupt in CSR0 using the  * INTR flag even if a hardware interrupt is currently inhibited (at least I  * think it does from reading the data sheets). We may as well deal with  * these pending interrupts now rather than get the overhead of another  * hardware interrupt immediately upon returning from the interrupt handler.  *  */
 end_comment
 
 begin_function
@@ -6213,7 +6213,7 @@ control|)
 name|no_entries_needed
 operator|++
 expr_stmt|;
-comment|/* 			 * We try and avoid bcopy as much as possible  			 * but there are two cases when we use it. 			 * 			 * 1) If there are not enough free entries in the ring 			 * to hold each mbuf in the chain then compact the 			 * chain into a single cluster. 			 * 			 * 2) The Am7990 and Am79C90 must not have less than 			 * 100 bytes in the first descriptor of a chained 			 * packet so it's necessary to shuffle the mbuf 			 * contents to ensure this. 			 */
+comment|/* 			 * We try and avoid bcopy as much as possible 			 * but there are two cases when we use it. 			 * 			 * 1) If there are not enough free entries in the ring 			 * to hold each mbuf in the chain then compact the 			 * chain into a single cluster. 			 * 			 * 2) The Am7990 and Am79C90 must not have less than 			 * 100 bytes in the first descriptor of a chained 			 * packet so it's necessary to shuffle the mbuf 			 * contents to ensure this. 			 */
 if|if
 condition|(
 name|no_entries_needed
@@ -6323,7 +6323,7 @@ operator|<
 name|len
 condition|)
 block|{
-comment|/* 						 * Move data to start of data  						 * area. We assume the first  						 * mbuf has a packet header  						 * and is not a cluster. 						 */
+comment|/* 						 * Move data to start of data 						 * area. We assume the first 						 * mbuf has a packet header 						 * and is not a cluster. 						 */
 name|bcopy
 argument_list|(
 operator|(
@@ -6807,7 +6807,7 @@ name|ntdre
 argument_list|)
 condition|)
 do|;
-comment|/* 	 * Transmit ring is full so set IFF_OACTIVE  	 * since we can't buffer any more packets. 	 */
+comment|/* 	 * Transmit ring is full so set IFF_OACTIVE 	 * since we can't buffer any more packets. 	 */
 name|sc
 operator|->
 name|arpcom

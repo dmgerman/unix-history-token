@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  * 	27/284X and aic7770 motherboard SCSI controllers  *  * Copyright (c) 1995 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7770.c,v 1.12 1995/03/31 13:36:57 gibbs Exp $  */
+comment|/*  * Product specific probe and attach routines for:  * 	27/284X and aic7770 motherboard SCSI controllers  *  * Copyright (c) 1995 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: aic7770.c,v 1.13 1995/04/12 20:47:36 wollman Exp $  */
 end_comment
 
 begin_include
@@ -88,7 +88,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*   * Standard EISA Host ID regs  (Offset from slot base)  */
+comment|/*  * Standard EISA Host ID regs  (Offset from slot base)  */
 end_comment
 
 begin_define
@@ -441,7 +441,7 @@ name|i
 operator|++
 control|)
 block|{
-comment|/*  			* An outb is required to prime these registers on 			* VL cards 			*/
+comment|/* 			* An outb is required to prime these registers on 			* VL cards 			*/
 name|outb
 argument_list|(
 name|port
@@ -624,7 +624,7 @@ name|type
 argument_list|)
 condition|)
 block|{
-comment|/* 					         * If it's there, put in it's  						 * interrupt vectors 					         */
+comment|/* 					         * If it's there, put in it's 						 * interrupt vectors 					         */
 name|dev
 operator|->
 name|id_irq

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ffs_alloc.c	8.8 (Berkeley) 2/21/94  * $Id: ffs_alloc.c,v 1.12 1995/03/26 23:29:09 davidg Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ffs_alloc.c	8.8 (Berkeley) 2/21/94  * $Id: ffs_alloc.c,v 1.13 1995/05/11 19:26:48 rgrimes Exp $  */
 end_comment
 
 begin_include
@@ -313,7 +313,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Allocate a block in the file system.  *   * The size of the requested block is given, which must be some  * multiple of fs_fsize and<= fs_bsize.  * A preference may be optionally specified. If a preference is given  * the following hierarchy is used to allocate a block:  *   1) allocate the requested block.  *   2) allocate a rotationally optimal block in the same cylinder.  *   3) allocate a block in the same cylinder group.  *   4) quadradically rehash into other cylinder groups, until an  *      available block is located.  * If no block preference is given the following heirarchy is used  * to allocate a block:  *   1) allocate a block in the cylinder group that contains the  *      inode for the file.  *   2) quadradically rehash into other cylinder groups, until an  *      available block is located.  */
+comment|/*  * Allocate a block in the file system.  *  * The size of the requested block is given, which must be some  * multiple of fs_fsize and<= fs_bsize.  * A preference may be optionally specified. If a preference is given  * the following hierarchy is used to allocate a block:  *   1) allocate the requested block.  *   2) allocate a rotationally optimal block in the same cylinder.  *   3) allocate a block in the same cylinder group.  *   4) quadradically rehash into other cylinder groups, until an  *      available block is located.  * If no block preference is given the following heirarchy is used  * to allocate a block:  *   1) allocate a block in the cylinder group that contains the  *      inode for the file.  *   2) quadradically rehash into other cylinder groups, until an  *      available block is located.  */
 end_comment
 
 begin_function
@@ -1176,7 +1176,7 @@ block|{
 case|case
 name|FS_OPTSPACE
 case|:
-comment|/* 		 * Allocate an exact sized fragment. Although this makes  		 * best use of space, we will waste time relocating it if  		 * the file continues to grow. If the fragmentation is 		 * less than half of the minimum free reserve, we choose 		 * to begin optimizing for time. 		 */
+comment|/* 		 * Allocate an exact sized fragment. Although this makes 		 * best use of space, we will waste time relocating it if 		 * the file continues to grow. If the fragmentation is 		 * less than half of the minimum free reserve, we choose 		 * to begin optimizing for time. 		 */
 name|request
 operator|=
 name|nsize
@@ -2171,7 +2171,7 @@ operator|=
 name|blkno
 expr_stmt|;
 block|}
-comment|/* 	 * Next we must write out the modified inode and indirect blocks. 	 * For strict correctness, the writes should be synchronous since 	 * the old block values may have been written to disk. In practise 	 * they are almost never written, but if we are concerned about  	 * strict correctness, the `doasyncfree' flag should be set to zero. 	 * 	 * The test on `doasyncfree' should be changed to test a flag 	 * that shows whether the associated buffers and inodes have 	 * been written. The flag should be set when the cluster is 	 * started and cleared whenever the buffer or inode is flushed. 	 * We can then check below to see if it is set, and do the 	 * synchronous write only when it has been cleared. 	 */
+comment|/* 	 * Next we must write out the modified inode and indirect blocks. 	 * For strict correctness, the writes should be synchronous since 	 * the old block values may have been written to disk. In practise 	 * they are almost never written, but if we are concerned about 	 * strict correctness, the `doasyncfree' flag should be set to zero. 	 * 	 * The test on `doasyncfree' should be changed to test a flag 	 * that shows whether the associated buffers and inodes have 	 * been written. The flag should be set when the cluster is 	 * started and cleared whenever the buffer or inode is flushed. 	 * We can then check below to see if it is set, and do the 	 * synchronous write only when it has been cleared. 	 */
 if|if
 condition|(
 name|sbap
@@ -2360,7 +2360,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocate an inode in the file system.  *   * If allocating a directory, use ffs_dirpref to select the inode.  * If allocating in a directory, the following hierarchy is followed:  *   1) allocate the preferred inode.  *   2) allocate an inode in the same cylinder group.  *   3) quadradically rehash into other cylinder groups, until an  *      available inode is located.  * If no inode preference is given the following heirarchy is used  * to allocate an inode:  *   1) allocate an inode in cylinder group 0.  *   2) quadradically rehash into other cylinder groups, until an  *      available inode is located.  */
+comment|/*  * Allocate an inode in the file system.  *  * If allocating a directory, use ffs_dirpref to select the inode.  * If allocating in a directory, the following hierarchy is followed:  *   1) allocate the preferred inode.  *   2) allocate an inode in the same cylinder group.  *   3) quadradically rehash into other cylinder groups, until an  *      available inode is located.  * If no inode preference is given the following heirarchy is used  * to allocate an inode:  *   1) allocate an inode in cylinder group 0.  *   2) quadradically rehash into other cylinder groups, until an  *      available inode is located.  */
 end_comment
 
 begin_function
@@ -2835,7 +2835,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Select the desired position for the next block in a file.  The file is  * logically divided into sections. The first section is composed of the  * direct blocks. Each additional section contains fs_maxbpg blocks.  *   * If no blocks have been allocated in the first section, the policy is to  * request a block in the same cylinder group as the inode that describes  * the file. If no blocks have been allocated in any other section, the  * policy is to place the section in a cylinder group with a greater than  * average number of free blocks.  An appropriate cylinder group is found  * by using a rotor that sweeps the cylinder groups. When a new group of  * blocks is needed, the sweep begins in the cylinder group following the  * cylinder group from which the previous allocation was made. The sweep  * continues until a cylinder group with greater than the average number  * of free blocks is found. If the allocation is for the first block in an  * indirect block, the information on the previous allocation is unavailable;  * here a best guess is made based upon the logical block number being  * allocated.  *   * If a section is already partially allocated, the policy is to  * contiguously allocate fs_maxcontig blocks.  The end of one of these  * contiguous blocks and the beginning of the next is physically separated  * so that the disk head will be in transit between them for at least  * fs_rotdelay milliseconds.  This is to allow time for the processor to  * schedule another I/O transfer.  */
+comment|/*  * Select the desired position for the next block in a file.  The file is  * logically divided into sections. The first section is composed of the  * direct blocks. Each additional section contains fs_maxbpg blocks.  *  * If no blocks have been allocated in the first section, the policy is to  * request a block in the same cylinder group as the inode that describes  * the file. If no blocks have been allocated in any other section, the  * policy is to place the section in a cylinder group with a greater than  * average number of free blocks.  An appropriate cylinder group is found  * by using a rotor that sweeps the cylinder groups. When a new group of  * blocks is needed, the sweep begins in the cylinder group following the  * cylinder group from which the previous allocation was made. The sweep  * continues until a cylinder group with greater than the average number  * of free blocks is found. If the allocation is for the first block in an  * indirect block, the information on the previous allocation is unavailable;  * here a best guess is made based upon the logical block number being  * allocated.  *  * If a section is already partially allocated, the policy is to  * contiguously allocate fs_maxcontig blocks.  The end of one of these  * contiguous blocks and the beginning of the next is physically separated  * so that the disk head will be in transit between them for at least  * fs_rotdelay milliseconds.  This is to allow time for the processor to  * schedule another I/O transfer.  */
 end_comment
 
 begin_function
@@ -3463,7 +3463,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Determine whether a fragment can be extended.  *  * Check to see if the necessary fragments are available, and   * if they are, allocate them.  */
+comment|/*  * Determine whether a fragment can be extended.  *  * Check to see if the necessary fragments are available, and  * if they are, allocate them.  */
 end_comment
 
 begin_function
@@ -4161,7 +4161,7 @@ operator|->
 name|fs_frag
 condition|)
 block|{
-comment|/* 		 * no fragments were available, so a block will be  		 * allocated, and hacked up 		 */
+comment|/* 		 * no fragments were available, so a block will be 		 * allocated, and hacked up 		 */
 if|if
 condition|(
 name|cgp
@@ -4568,7 +4568,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * Block layout information is not available. 		 * Leaving bpref unchanged means we take the 		 * next available free block following the one  		 * we just allocated. Hopefully this will at 		 * least hit a track cache on drives of unknown 		 * geometry (e.g. SCSI). 		 */
+comment|/* 		 * Block layout information is not available. 		 * Leaving bpref unchanged means we take the 		 * next available free block following the one 		 * we just allocated. Hopefully this will at 		 * least hit a track cache on drives of unknown 		 * geometry (e.g. SCSI). 		 */
 goto|goto
 name|norot
 goto|;
@@ -4598,7 +4598,7 @@ condition|)
 goto|goto
 name|norot
 goto|;
-comment|/* 	 * check the summary information to see if a block is  	 * available in the requested cylinder starting at the 	 * requested rotational position and proceeding around. 	 */
+comment|/* 	 * check the summary information to see if a block is 	 * available in the requested cylinder starting at the 	 * requested rotational position and proceeding around. 	 */
 name|cylbp
 operator|=
 name|cg_blks
@@ -5958,7 +5958,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Free a block or fragment.  *  * The specified block or fragment is placed back in the  * free map. If a fragment is deallocated, a possible   * block reassembly is checked.  */
+comment|/*  * Free a block or fragment.  *  * The specified block or fragment is placed back in the  * free map. If a fragment is deallocated, a possible  * block reassembly is checked.  */
 end_comment
 
 begin_function
@@ -7833,7 +7833,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Fserr prints the name of a file system with an error diagnostic.  *   * The form of the error message is:  *	fs: error message  */
+comment|/*  * Fserr prints the name of a file system with an error diagnostic.  *  * The form of the error message is:  *	fs: error message  */
 end_comment
 
 begin_function

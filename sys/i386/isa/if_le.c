@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994 Matt Thomas (thomas@lkg.dec.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: if_le.c,v 1.15 1995/04/17 05:52:17 bde Exp $  */
+comment|/*-  * Copyright (c) 1994 Matt Thomas (thomas@lkg.dec.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: if_le.c,v 1.16 1995/05/09 12:25:55 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -764,7 +764,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  *  * Start of Common Code   *  */
+comment|/*  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  *  * Start of Common Code  *  */
 end_comment
 
 begin_function_decl
@@ -3682,7 +3682,7 @@ operator|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*      * The following two line convert the N bit index into a longword index      * and a longword mask.        */
+comment|/*      * The following two line convert the N bit index into a longword index      * and a longword mask.      */
 name|crc
 operator|&=
 name|sc
@@ -3759,7 +3759,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  *  * Start of DEC EtherWORKS III (LEMAC) dependent code   *  */
+comment|/*  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  *  * Start of DEC EtherWORKS III (LEMAC) dependent code  *  */
 end_comment
 
 begin_define
@@ -4392,7 +4392,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*   * Do a hard reset of the board;  */
+comment|/*  * Do a hard reset of the board;  */
 end_comment
 
 begin_function
@@ -7356,7 +7356,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  * Here's as good a place to describe our paritioning of the   * LANCE shared RAM space.  (NOTE: this driver does not yet support  * the concept of a LANCE being able to DMA).  *  * First is the 24 (00:23) bytes for LANCE Initialization Block  * Next are the recieve descriptors.  The number is calculated from  * how many LN_BUFSIZE buffers we can allocate (this number must  * be a power of 2).  Next are the transmit descriptors.  The amount  * of transmit descriptors is derived from the size of the RAM  * divided by 1K.  Now come the receive buffers (one for each receive  * descriptor).  Finally is the transmit heap.  (no fixed buffers are  * allocated so as to make the most use of the limited space).  */
+comment|/*  * Here's as good a place to describe our paritioning of the  * LANCE shared RAM space.  (NOTE: this driver does not yet support  * the concept of a LANCE being able to DMA).  *  * First is the 24 (00:23) bytes for LANCE Initialization Block  * Next are the recieve descriptors.  The number is calculated from  * how many LN_BUFSIZE buffers we can allocate (this number must  * be a power of 2).  Next are the transmit descriptors.  The amount  * of transmit descriptors is derived from the size of the RAM  * divided by 1K.  Now come the receive buffers (one for each receive  * descriptor).  Finally is the transmit heap.  (no fixed buffers are  * allocated so as to make the most use of the limited space).  */
 end_comment
 
 begin_function
@@ -9356,7 +9356,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 	     * If the packet is bad, increment the 	     * counters.   	     */
+comment|/* 	     * If the packet is bad, increment the 	     * counters. 	     */
 name|sc
 operator|->
 name|le_if

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tp_usrreq.c	8.1 (Berkeley) 6/10/93  * $Id: tp_usrreq.c,v 1.2 1994/08/02 07:51:33 davidg Exp $  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tp_usrreq.c	8.1 (Berkeley) 6/10/93  * $Id: tp_usrreq.c,v 1.3 1995/04/26 21:32:42 pst Exp $  */
 end_comment
 
 begin_comment
-comment|/*********************************************************** 				Copyright IBM Corporation 1987                        All Rights Reserved  Permission to use, copy, modify, and distribute this software and its  documentation for any purpose and without fee is hereby granted,  provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in  supporting documentation, and that the name of IBM not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.    IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  ******************************************************************/
+comment|/*********************************************************** 				Copyright IBM Corporation 1987                        All Rights Reserved  Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of IBM not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.  IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  ******************************************************************/
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  *  * $Header: /home/ncvs/src/sys/netiso/tp_usrreq.c,v 1.2 1994/08/02 07:51:33 davidg Exp $  * $Source: /home/ncvs/src/sys/netiso/tp_usrreq.c,v $  *  * tp_usrreq(), the fellow that gets called from most of the socket code.  * Pretty straighforward.  * THe only really awful stuff here is the OOB processing, which is done  * wholly here.  * tp_rcvoob() and tp_sendoob() are contained here and called by tp_usrreq().  */
+comment|/*  * ARGO TP  *  * $Header: /home/ncvs/src/sys/netiso/tp_usrreq.c,v 1.3 1995/04/26 21:32:42 pst Exp $  * $Source: /home/ncvs/src/sys/netiso/tp_usrreq.c,v $  *  * tp_usrreq(), the fellow that gets called from most of the socket code.  * Pretty straighforward.  * THe only really awful stuff here is the OOB processing, which is done  * wholly here.  * tp_rcvoob() and tp_sendoob() are contained here and called by tp_usrreq().  */
 end_comment
 
 begin_include
@@ -563,7 +563,7 @@ return|return
 name|ENOTCONN
 return|;
 block|}
-comment|/* Take the first mbuf off the chain. 	 * Each XPD TPDU gives you a complete TSDU so the chains don't get  	 * coalesced, but one TSDU may span several mbufs. 	 * Nevertheless, since n should have a most 16 bytes, it 	 * will fit into m.  (size was checked in tp_input() ) 	 */
+comment|/* Take the first mbuf off the chain. 	 * Each XPD TPDU gives you a complete TSDU so the chains don't get 	 * coalesced, but one TSDU may span several mbufs. 	 * Nevertheless, since n should have a most 16 bytes, it 	 * will fit into m.  (size was checked in tp_input() ) 	 */
 comment|/* 	 * Code for excision of OOB data should be added to 	 * uipc_socket2.c (like sbappend). 	 */
 name|sblock
 argument_list|(
@@ -907,7 +907,7 @@ end_comment
 
 begin_block
 block|{
-comment|/* 	 * Each mbuf chain represents a sequence # in the XPD seq space. 	 * The first one in the queue has sequence # tp_Xuna. 	 * When we add to the XPD queue, we stuff a zero-length 	 * mbuf (mark) into the DATA queue, with its sequence number in m_next 	 * to be assigned to this XPD tpdu, so data xfer can stop 	 * when it reaches the zero-length mbuf if this XPD TPDU hasn't 	 * yet been acknowledged.   	 */
+comment|/* 	 * Each mbuf chain represents a sequence # in the XPD seq space. 	 * The first one in the queue has sequence # tp_Xuna. 	 * When we add to the XPD queue, we stuff a zero-length 	 * mbuf (mark) into the DATA queue, with its sequence number in m_next 	 * to be assigned to this XPD tpdu, so data xfer can stop 	 * when it reaches the zero-length mbuf if this XPD TPDU hasn't 	 * yet been acknowledged. 	 */
 specifier|register
 name|struct
 name|sockbuf
@@ -960,7 +960,7 @@ name|m_len
 argument_list|)
 expr_stmt|;
 name|ENDDEBUG
-comment|/* DO NOT LOCK the Xsnd buffer!!!! You can have at MOST one  	 * socket buf locked at any time!!! (otherwise you might 	 * sleep() in sblock() w/ a signal pending and cause the 	 * system call to be aborted w/ a locked socketbuf, which 	 * is a problem.  So the so_snd buffer lock 	 * (done in sosend()) serves as the lock for Xpd. 	 */
+comment|/* DO NOT LOCK the Xsnd buffer!!!! You can have at MOST one 	 * socket buf locked at any time!!! (otherwise you might 	 * sleep() in sblock() w/ a signal pending and cause the 	 * system call to be aborted w/ a locked socketbuf, which 	 * is a problem.  So the so_snd buffer lock 	 * (done in sosend()) serves as the lock for Xpd. 	 */
 if|if
 condition|(
 name|sb
@@ -1240,7 +1240,7 @@ end_return
 
 begin_comment
 unit|}
-comment|/*  * CALLED FROM:  *  the socket routines  * FUNCTION and ARGUMENTS:  * 	Handles all "user requests" except the [gs]ockopts() requests.  * 	The argument (req) is the request type (PRU*),   * 	(m) is an mbuf chain, generally used for send and  * 	receive type requests only.  * 	(nam) is used for addresses usually, in particular for the bind request.  *   */
+comment|/*  * CALLED FROM:  *  the socket routines  * FUNCTION and ARGUMENTS:  * 	Handles all "user requests" except the [gs]ockopts() requests.  * 	The argument (req) is the request type (PRU*),  * 	(m) is an mbuf chain, generally used for send and  * 	receive type requests only.  * 	(nam) is used for addresses usually, in particular for the bind request.  *  */
 end_comment
 
 begin_comment
@@ -1492,7 +1492,7 @@ case|case
 name|PRU_ABORT
 case|:
 comment|/* called from close() */
-comment|/* called for each incoming connect queued on the  		 *	parent (accepting) socket  		 */
+comment|/* called for each incoming connect queued on the 		 *	parent (accepting) socket 		 */
 if|if
 condition|(
 name|tpcb
@@ -2702,7 +2702,7 @@ end_comment
 
 begin_block
 block|{
-comment|/* 			 * Could have eotsdu and no data.(presently MUST have 			 * an mbuf though, even if its length == 0)  			 */
+comment|/* 			 * Could have eotsdu and no data.(presently MUST have 			 * an mbuf though, even if its length == 0) 			 */
 name|int
 name|totlen
 init|=

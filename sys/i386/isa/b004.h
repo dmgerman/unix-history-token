@@ -33,7 +33,7 @@ value|0x0001
 end_define
 
 begin_comment
-comment|/* Is a B004-Board with at least one  					   Transputer present ? */
+comment|/* Is a B004-Board with at least one 					   Transputer present ? */
 end_comment
 
 begin_define

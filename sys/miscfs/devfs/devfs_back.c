@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /sys/miscfs/devfs/RCS/devfs_back.c,v 1.3 1995/01/07 04:20:25 root Exp root $  */
+comment|/*  *  Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_back.c,v 1.2 1995/04/20 07:34:51 julian Exp $  */
 end_comment
 
 begin_include
@@ -106,7 +106,7 @@ comment|/* note tha we HAVE set up the backing tree */
 end_comment
 
 begin_comment
-comment|/*  * Set up the root directory node in the backing plane  * This is happenning before the vfs system has been   * set up yet, so be careful about what we reference..  * Notice that the ops are by indirection.. as they haven't  * been set up yet!  */
+comment|/*  * Set up the root directory node in the backing plane  * This is happenning before the vfs system has been  * set up yet, so be careful about what we reference..  * Notice that the ops are by indirection.. as they haven't  * been set up yet!  */
 end_comment
 
 begin_function
@@ -121,7 +121,7 @@ decl_stmt|;
 name|dn_p
 name|dnp
 decl_stmt|;
-comment|/*  	 * This may be called several times.. only do it if it needs 	 * to be done. 	 */
+comment|/* 	 * This may be called several times.. only do it if it needs 	 * to be done. 	 */
 if|if
 condition|(
 operator|!
@@ -207,7 +207,7 @@ name|devnode_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Link the two together  		 */
+comment|/* 		 * Link the two together 		 */
 name|devbp
 operator|->
 name|dnp
@@ -291,7 +291,7 @@ name|myname
 operator|=
 name|devbp
 expr_stmt|;
-comment|/*  		 * set up a pointer to directory type ops 		 */
+comment|/* 		 * set up a pointer to directory type ops 		 */
 name|dnp
 operator|->
 name|ops
@@ -893,7 +893,7 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* implicit from our own name-node */
-comment|/* 	 * note the node type we are adding  	 * and set the creation times to NOW 	 * put in it's name 	 * include the implicit link in the count of links to the devnode.. 	 * this stops it from being accidentally freed later. 	 */
+comment|/* 	 * note the node type we are adding 	 * and set the creation times to NOW 	 * put in it's name 	 * include the implicit link in the count of links to the devnode.. 	 * this stops it from being accidentally freed later. 	 */
 name|strcpy
 argument_list|(
 name|devbp
@@ -1172,7 +1172,7 @@ break|break;
 case|case
 name|DEV_DDEV
 case|:
-comment|/*  		 * store the address of (the address of) the ops 		 * and the magic cookie to use with them 		 */
+comment|/* 		 * store the address of (the address of) the ops 		 * and the magic cookie to use with them 		 */
 name|dnp
 operator|->
 name|by

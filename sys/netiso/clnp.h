@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)clnp.h	8.2 (Berkeley) 4/16/94  * $Id: clnp.h,v 1.2 1994/08/02 07:49:34 davidg Exp $  */
+comment|/*-  * Copyright (c) 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)clnp.h	8.2 (Berkeley) 4/16/94  * $Id: clnp.h,v 1.3 1994/08/21 06:14:13 paul Exp $  */
 end_comment
 
 begin_ifndef
@@ -16,7 +16,7 @@ name|_NETISO_CLNP_H_
 end_define
 
 begin_comment
-comment|/*********************************************************** 		Copyright IBM Corporation 1987                        All Rights Reserved  Permission to use, copy, modify, and distribute this software and its  documentation for any purpose and without fee is hereby granted,  provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in  supporting documentation, and that the name of IBM not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.    IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  ******************************************************************/
+comment|/*********************************************************** 		Copyright IBM Corporation 1987                        All Rights Reserved  Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of IBM not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.  IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  ******************************************************************/
 end_comment
 
 begin_comment
@@ -24,7 +24,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/* $Header: /home/ncvs/src/sys/netiso/clnp.h,v 1.2 1994/08/02 07:49:34 davidg Exp $ */
+comment|/* $Header: /home/ncvs/src/sys/netiso/clnp.h,v 1.3 1994/08/21 06:14:13 paul Exp $ */
 end_comment
 
 begin_comment
@@ -228,11 +228,11 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  *	Clnp fragment reassembly structures:  *  *	All packets undergoing reassembly are linked together in   *	clnp_fragl structures. Each clnp_fragl structure contains a  *	pointer to the original clnp packet header, as well as a   *	list of packet fragments. Each packet fragment  *	is headed by a clnp_frag structure. This structure contains the  *	offset of the first and last byte of the fragment, as well as  *	a pointer to the data (an mbuf chain) of the fragment.  */
+comment|/*  *	Clnp fragment reassembly structures:  *  *	All packets undergoing reassembly are linked together in  *	clnp_fragl structures. Each clnp_fragl structure contains a  *	pointer to the original clnp packet header, as well as a  *	list of packet fragments. Each packet fragment  *	is headed by a clnp_frag structure. This structure contains the  *	offset of the first and last byte of the fragment, as well as  *	a pointer to the data (an mbuf chain) of the fragment.  */
 end_comment
 
 begin_comment
-comment|/*  *	NOTE:  *		The clnp_frag structure is stored in an mbuf immedately preceeding  *	the fragment data. Since there are words in this struct,  *	it must be word aligned.   *  *	NOTE:  *		All the fragment code assumes that the entire clnp header is   *	contained in the first mbuf.  */
+comment|/*  *	NOTE:  *		The clnp_frag structure is stored in an mbuf immedately preceeding  *	the fragment data. Since there are words in this struct,  *	it must be word aligned.  *  *	NOTE:  *		All the fragment code assumes that the entire clnp header is  *	contained in the first mbuf.  */
 end_comment
 
 begin_struct
@@ -517,7 +517,7 @@ value|((caddr_t)(CLNP_OFFTOOPT(options, oidx->cni_srcrt_s) + CLNPSRCRT_OFF(oidx,
 end_define
 
 begin_comment
-comment|/*   *	return true if the src route has run out of routes  *	this is true if the offset of next route is greater than the end of the rt   */
+comment|/*  *	return true if the src route has run out of routes  *	this is true if the offset of next route is greater than the end of the rt  */
 end_comment
 
 begin_define
@@ -733,7 +733,7 @@ comment|/* complete source routing */
 end_comment
 
 begin_comment
-comment|/*  *	Clnp flags used in a control block flags field.   *	NOTE: these must be out of the range of bits defined in ../net/raw_cb.h  */
+comment|/*  *	Clnp flags used in a control block flags field.  *	NOTE: these must be out of the range of bits defined in ../net/raw_cb.h  */
 end_comment
 
 begin_define
@@ -825,7 +825,7 @@ value|(CLNP_SEND_RAW|CLNP_NO_SEG|CLNP_NO_ER|CLNP_NO_CKSUM\ 	|CLNP_ECHO|CLNP_NOCA
 end_define
 
 begin_comment
-comment|/*   *	Constants used by clnp  */
+comment|/*  *	Constants used by clnp  */
 end_comment
 
 begin_define

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: main.h,v 2.1 88/09/19 12:56:24 nhall Exp $ */
+comment|/* $Header: /home/ncvs/src/sys/netiso/xebec/main.h,v 1.1.1.1 1994/05/24 10:07:49 rgrimes Exp $ */
 end_comment
 
 begin_comment
-comment|/* $Source: /var/home/tadl/src/argo/xebec/RCS/main.h,v $ */
+comment|/* $Source: /home/ncvs/src/sys/netiso/xebec/main.h,v $ */
 end_comment
 
 begin_define
@@ -29,7 +29,7 @@ value|2350
 end_define
 
 begin_comment
-comment|/* approx limit on token size for C compiler  	 * which matters for the purpose of debugging (astring.c...) 	 */
+comment|/* approx limit on token size for C compiler 	 * which matters for the purpose of debugging (astring.c...) 	 */
 end_comment
 
 begin_define

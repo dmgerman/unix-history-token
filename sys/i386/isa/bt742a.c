@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *      $Id: bt742a.c,v 1.34 1995/04/23 21:58:35 gibbs Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *      $Id: bt742a.c,v 1.35 1995/05/11 19:26:16 rgrimes Exp $  */
 end_comment
 
 begin_comment
-comment|/*  * Bulogic/Bustek 32 bit Addressing Mode SCSI driver.  *  * NOTE: 1. Some bt5xx card can NOT handle 32 bit addressing mode.   *       2. OLD bt445s Revision A,B,C,D(nowired) + any firmware version  *          has broken busmaster for handling 32 bit addressing on H/W bus  *	    side.  *  *       3. Extended probing still needs confirmation from our user base, due  *	    to several H/W and firmware dependencies. If you have a problem  *	    with extended probing, please contact 'amurai@spec.co.jp'  *  *						amurai@spec.co.jp 94/6/16  */
+comment|/*  * Bulogic/Bustek 32 bit Addressing Mode SCSI driver.  *  * NOTE: 1. Some bt5xx card can NOT handle 32 bit addressing mode.  *       2. OLD bt445s Revision A,B,C,D(nowired) + any firmware version  *          has broken busmaster for handling 32 bit addressing on H/W bus  *	    side.  *  *       3. Extended probing still needs confirmation from our user base, due  *	    to several H/W and firmware dependencies. If you have a problem  *	    with extended probing, please contact 'amurai@spec.co.jp'  *  *						amurai@spec.co.jp 94/6/16  */
 end_comment
 
 begin_comment
@@ -3256,7 +3256,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * First acknowlege the interrupt, Then if it's 	 * not telling about a completed operation 	 * just return.  	 */
+comment|/* 	 * First acknowlege the interrupt, Then if it's 	 * not telling about a completed operation 	 * just return. 	 */
 name|stat
 operator|=
 name|inb
@@ -3856,7 +3856,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get a free ccb   *  * If there are none, see if we can allocate a new one.  If so, put it in  * the hash table too otherwise either return an error or sleep.  */
+comment|/*  * Get a free ccb  *  * If there are none, see if we can allocate a new one.  If so, put it in  * the hash table too otherwise either return an error or sleep.  */
 end_comment
 
 begin_function
@@ -4175,7 +4175,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get a MBO and then Send it    */
+comment|/*  * Get a MBO and then Send it  */
 end_comment
 
 begin_function
@@ -4280,7 +4280,7 @@ operator|+
 literal|1
 operator|)
 expr_stmt|;
-comment|/*  	 * Check the outmail box is free or not. 	 * Note: Under the normal operation, it shuld NOT happen to wait. 	 */
+comment|/* 	 * Check the outmail box is free or not. 	 * Note: Under the normal operation, it shuld NOT happen to wait. 	 */
 while|while
 condition|(
 name|wmbo
@@ -4757,7 +4757,7 @@ name|struct
 name|bt_board_info
 name|binfo
 decl_stmt|;
-comment|/* 	 * reset board, If it doesn't respond, assume  	 * that it's not there.. good for the probe 	 */
+comment|/* 	 * reset board, If it doesn't respond, assume 	 * that it's not there.. good for the probe 	 */
 name|outb
 argument_list|(
 name|BT_CTRL_STAT_PORT
@@ -5363,7 +5363,7 @@ name|conf
 operator|.
 name|scsi_dev
 expr_stmt|;
-comment|/* 	 * Initialize mail box  	 */
+comment|/* 	 * Initialize mail box 	 */
 operator|*
 operator|(
 operator|(
@@ -5932,7 +5932,7 @@ argument_list|,
 name|BT_CCB_MAX
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Displayi SCSI negotiation value by each target.          *   						amurai@spec.co.jp           */
+comment|/* 	 * Displayi SCSI negotiation value by each target.          *   						amurai@spec.co.jp          */
 for|for
 control|(
 name|i
@@ -6062,7 +6062,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*           * Enable round-robin scheme - appeared at firmware rev. 3.31 	 *   Below rev 3.XX firmware has a problem for issuing           *    BT_ROUND_ROBIN command  amurai@spec.co.jp 	 */
+comment|/*          * Enable round-robin scheme - appeared at firmware rev. 3.31 	 *   Below rev 3.XX firmware has a problem for issuing          *    BT_ROUND_ROBIN command  amurai@spec.co.jp 	 */
 if|if
 condition|(
 name|bID
@@ -6751,7 +6751,7 @@ operator|==
 name|nextphys
 operator|)
 condition|)
-comment|/* 					 * This page is contiguous (physically) with  					 * the the last, just extend the length  					 */
+comment|/* 					 * This page is contiguous (physically) with 					 * the the last, just extend the length 					 */
 block|{
 comment|/* how far to the end of the page */
 name|nextphys

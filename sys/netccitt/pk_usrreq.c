@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (C) Computer Science Department IV,   * 		 University of Erlangen-Nuremberg, Germany, 1992  * Copyright (c) 1991, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by the  * Laboratory for Computation Vision and the Computer Science Department  * of the the University of British Columbia and the Computer Science  * Department (IV) of the University of Erlangen-Nuremberg, Germany.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)pk_usrreq.c	8.1 (Berkeley) 6/10/93  * $Id$  */
+comment|/*  * Copyright (c) University of British Columbia, 1984  * Copyright (C) Computer Science Department IV,  * 		 University of Erlangen-Nuremberg, Germany, 1992  * Copyright (c) 1991, 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by the  * Laboratory for Computation Vision and the Computer Science Department  * of the the University of British Columbia and the Computer Science  * Department (IV) of the University of Erlangen-Nuremberg, Germany.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)pk_usrreq.c	8.1 (Berkeley) 6/10/93  * $Id: pk_usrreq.c,v 1.2 1994/08/02 07:47:46 davidg Exp $  */
 end_comment
 
 begin_include
@@ -108,7 +108,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  *   *  X.25 Packet level protocol interface to socket abstraction.  *  *  Process an X.25 user request on a logical channel.  If this is a send  *  request then m is the mbuf chain of the send data. If this is a timer  *  expiration (called from the software clock routine) them timertype is  *  the particular timer.  *  */
+comment|/*  *  *  X.25 Packet level protocol interface to socket abstraction.  *  *  Process an X.25 user request on a logical channel.  If this is a send  *  request then m is the mbuf chain of the send data. If this is a timer  *  expiration (called from the software clock routine) them timertype is  *  the particular timer.  *  */
 end_comment
 
 begin_macro
@@ -256,7 +256,7 @@ condition|(
 name|req
 condition|)
 block|{
-comment|/*  	 *  X.25 attaches to socket via PRU_ATTACH and allocates a logical 	 *  channel descriptor.  If the socket is to  receive connections, 	 *  then the LISTEN state is entered. 	 */
+comment|/* 	 *  X.25 attaches to socket via PRU_ATTACH and allocates a logical 	 *  channel descriptor.  If the socket is to  receive connections, 	 *  then the LISTEN state is entered. 	 */
 case|case
 name|PRU_ATTACH
 case|:
@@ -290,7 +290,7 @@ operator|=
 name|ENOBUFS
 expr_stmt|;
 break|break;
-comment|/*  	 *  Detach a logical channel from the socket. If the state of the 	 *  channel is embryonic, simply discard it. Otherwise we have to  	 *  initiate a PRU_DISCONNECT which will finish later. 	 */
+comment|/* 	 *  Detach a logical channel from the socket. If the state of the 	 *  channel is embryonic, simply discard it. Otherwise we have to 	 *  initiate a PRU_DISCONNECT which will finish later. 	 */
 case|case
 name|PRU_DETACH
 case|:
@@ -300,7 +300,7 @@ name|lcp
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/*  	 *  Give the socket an address. 	 */
+comment|/* 	 *  Give the socket an address. 	 */
 case|case
 name|PRU_BIND
 case|:
@@ -331,7 +331,7 @@ name|nam
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/*  	 *  Prepare to accept connections. 	 */
+comment|/* 	 *  Prepare to accept connections. 	 */
 case|case
 name|PRU_LISTEN
 case|:
@@ -343,7 +343,7 @@ name|lcp
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/*  	 *  Initiate a CALL REQUEST to peer entity. Enter state SENT_CALL 	 *  and mark the socket as connecting. Set timer waiting for  	 *  CALL ACCEPT or CLEAR. 	 */
+comment|/* 	 *  Initiate a CALL REQUEST to peer entity. Enter state SENT_CALL 	 *  and mark the socket as connecting. Set timer waiting for 	 *  CALL ACCEPT or CLEAR. 	 */
 case|case
 name|PRU_CONNECT
 case|:
@@ -393,7 +393,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/*  	 *  Initiate a disconnect to peer entity via a CLEAR REQUEST packet. 	 *  The socket will be disconnected when we receive a confirmation 	 *  or a clear collision. 	 */
+comment|/* 	 *  Initiate a disconnect to peer entity via a CLEAR REQUEST packet. 	 *  The socket will be disconnected when we receive a confirmation 	 *  or a clear collision. 	 */
 case|case
 name|PRU_DISCONNECT
 case|:
@@ -403,7 +403,7 @@ name|lcp
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/*  	 *  Accept an INCOMING CALL. Most of the work has already been done 	 *  by pk_input. Just return the callers address to the user. 	 */
+comment|/* 	 *  Accept an INCOMING CALL. Most of the work has already been done 	 *  by pk_input. Just return the callers address to the user. 	 */
 case|case
 name|PRU_ACCEPT
 case|:
@@ -463,7 +463,7 @@ name|nam
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/*  	 *  After a receive, we should send a RR. 	 */
+comment|/* 	 *  After a receive, we should send a RR. 	 */
 case|case
 name|PRU_RCVD
 case|:
@@ -478,7 +478,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/*  	 *  Send INTERRUPT packet. 	 */
+comment|/* 	 *  Send INTERRUPT packet. 	 */
 case|case
 name|PRU_SENDOOB
 case|:
@@ -552,7 +552,7 @@ name|MT_OOBDATA
 argument_list|)
 expr_stmt|;
 comment|/* FALLTHROUGH */
-comment|/*  	 *  Do send by placing data on the socket output queue. 	 */
+comment|/* 	 *  Do send by placing data on the socket output queue. 	 */
 case|case
 name|PRU_SEND
 case|:
@@ -635,7 +635,7 @@ name|m
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/*  	 *  Abort a virtual circuit. For example all completed calls 	 *  waiting acceptance. 	 */
+comment|/* 	 *  Abort a virtual circuit. For example all completed calls 	 *  waiting acceptance. 	 */
 case|case
 name|PRU_ABORT
 case|:
@@ -832,7 +832,7 @@ name|nam
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/*  	 *  Receive INTERRUPT packet. 	 */
+comment|/* 	 *  Receive INTERRUPT packet. 	 */
 case|case
 name|PRU_RCVOOB
 case|:
@@ -991,7 +991,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*   * If you want to use UBC X.25 level 3 in conjunction with some  * other X.25 level 2 driver, have the ifp -> if_ioctl routine  * assign pk_start to ia -> ia_start when called with SIOCSIFCONF_X25.  */
+comment|/*  * If you want to use UBC X.25 level 3 in conjunction with some  * other X.25 level 2 driver, have the ifp -> if_ioctl routine  * assign pk_start to ia -> ia_start when called with SIOCSIFCONF_X25.  */
 end_comment
 
 begin_comment

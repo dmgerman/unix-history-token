@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)clnp_options.c	8.1 (Berkeley) 6/10/93  * $Id$  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)clnp_options.c	8.1 (Berkeley) 6/10/93  * $Id: clnp_options.c,v 1.2 1994/08/02 07:49:40 davidg Exp $  */
 end_comment
 
 begin_comment
-comment|/*********************************************************** 		Copyright IBM Corporation 1987                        All Rights Reserved  Permission to use, copy, modify, and distribute this software and its  documentation for any purpose and without fee is hereby granted,  provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in  supporting documentation, and that the name of IBM not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.    IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  ******************************************************************/
+comment|/*********************************************************** 		Copyright IBM Corporation 1987                        All Rights Reserved  Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of IBM not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.  IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  ******************************************************************/
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/* $Header: /home/ncvs/src/sys/netiso/clnp_options.c,v 1.1.1.1 1994/05/24 10:07:23 rgrimes Exp $ */
+comment|/* $Header: /home/ncvs/src/sys/netiso/clnp_options.c,v 1.2 1994/08/02 07:49:40 davidg Exp $ */
 end_comment
 
 begin_comment
@@ -104,7 +104,7 @@ file|<netiso/argo_debug.h>
 end_include
 
 begin_comment
-comment|/*  * FUNCTION:		clnp_update_srcrt  *  * PURPOSE:			Process src rt option accompanying a clnp datagram.  *						- bump src route ptr if src routing and  *							we appear current in src route list.  *  * RETURNS:			none  *  * SIDE EFFECTS:	  *  * NOTES:			If source routing has been terminated, do nothing.  */
+comment|/*  * FUNCTION:		clnp_update_srcrt  *  * PURPOSE:			Process src rt option accompanying a clnp datagram.  *						- bump src route ptr if src routing and  *							we appear current in src route list.  *  * RETURNS:			none  *  * SIDE EFFECTS:  *  * NOTES:			If source routing has been terminated, do nothing.  */
 end_comment
 
 begin_macro
@@ -260,7 +260,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * FUNCTION:		clnp_dooptions  *  * PURPOSE:			Process options accompanying a clnp datagram.  *					Processing includes  *						- log our address if recording route  *  * RETURNS:			none  *  * SIDE EFFECTS:	  *  * NOTES:			  */
+comment|/*  * FUNCTION:		clnp_dooptions  *  * PURPOSE:			Process options accompanying a clnp datagram.  *					Processing includes  *						- log our address if recording route  *  * RETURNS:			none  *  * SIDE EFFECTS:  *  * NOTES:  */
 end_comment
 
 begin_macro
@@ -440,7 +440,7 @@ name|isoa_len
 operator|+
 literal|1
 decl_stmt|;
-comment|/*  			 *	if there is insufficient room to store the next address, 			 *	then terminate recording. Plus 1 on isoa_len is for the 			 *	length byte itself 			 */
+comment|/* 			 *	if there is insufficient room to store the next address, 			 *	then terminate recording. Plus 1 on isoa_len is for the 			 *	length byte itself 			 */
 if|if
 condition|(
 name|oidx
@@ -531,7 +531,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * FUNCTION:		clnp_set_opts  *  * PURPOSE:			Check the data mbuf passed for option sanity. If it is  *					ok, then set the options ptr to address the data mbuf.  *					If an options mbuf exists, free it. This implies that  *					any old options will be lost. If data is NULL, simply  *					free any old options.  *  * RETURNS:			unix error code  *  * SIDE EFFECTS:	  *  * NOTES:			  */
+comment|/*  * FUNCTION:		clnp_set_opts  *  * PURPOSE:			Check the data mbuf passed for option sanity. If it is  *					ok, then set the options ptr to address the data mbuf.  *					If an options mbuf exists, free it. This implies that  *					any old options will be lost. If data is NULL, simply  *					free any old options.  *  * RETURNS:			unix error code  *  * SIDE EFFECTS:  *  * NOTES:  */
 end_comment
 
 begin_macro
@@ -691,7 +691,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * FUNCTION:		clnp_opt_sanity  *  * PURPOSE:			Check the options (beginning at opts for len bytes) for  *					sanity. In addition, fill in the option index structure   *					in with information about each option discovered.  *  * RETURNS:			success (options check out) - 0  *					failure - an ER pdu error code describing failure  *  * SIDE EFFECTS:	  *  * NOTES:			Each pointer field of the option index is filled in with  *					the offset from the beginning of the mbuf data, not the  *					actual address.  */
+comment|/*  * FUNCTION:		clnp_opt_sanity  *  * PURPOSE:			Check the options (beginning at opts for len bytes) for  *					sanity. In addition, fill in the option index structure  *					in with information about each option discovered.  *  * RETURNS:			success (options check out) - 0  *					failure - an ER pdu error code describing failure  *  * SIDE EFFECTS:  *  * NOTES:			Each pointer field of the option index is filled in with  *					the offset from the beginning of the mbuf data, not the  *					actual address.  */
 end_comment
 
 begin_macro
@@ -1131,7 +1131,7 @@ operator|(
 name|GEN_DUPOPT
 operator|)
 return|;
-comment|/*  				 *	source route: There must be 2 bytes following the length 				 *	field: type and offset. The type must be either 				 *	partial route or complete route. The offset field must 				 *	be within the option. A single exception is made, however. 				 *	The offset may be 1 greater than the length. This case  				 *	occurs when the last source route record is consumed.  				 *	In this case, we ignore the source route option. 				 *	RAH? You should be able to set offset to 'ff' like in record 				 *	route! 				 *	Following this is a series of address fields.  				 *	Each address field is composed of a (length, address) pair. 				 *	Insure that the offset and each address length is reasonable 				 */
+comment|/* 				 *	source route: There must be 2 bytes following the length 				 *	field: type and offset. The type must be either 				 *	partial route or complete route. The offset field must 				 *	be within the option. A single exception is made, however. 				 *	The offset may be 1 greater than the length. This case 				 *	occurs when the last source route record is consumed. 				 *	In this case, we ignore the source route option. 				 *	RAH? You should be able to set offset to 'ff' like in record 				 *	route! 				 *	Following this is a series of address fields. 				 *	Each address field is composed of a (length, address) pair. 				 *	Insure that the offset and each address length is reasonable 				 */
 name|route_end
 operator|=
 name|opts
@@ -1212,7 +1212,7 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/*set opts to first addr in rt */
-comment|/*  				 *	Offset must be reasonable: 				 *	less than end of options, or equal to end of options 				 */
+comment|/* 				 *	Offset must be reasonable: 				 *	less than end of options, or equal to end of options 				 */
 if|if
 condition|(
 name|opts

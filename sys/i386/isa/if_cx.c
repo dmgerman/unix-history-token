@@ -4212,7 +4212,7 @@ directive|if
 name|NBPFILTER
 operator|>
 literal|0
-comment|/* 	 * Check if there's a BPF listener on this interface. 	 * If so, hand off the raw packet to bpf.  	 */
+comment|/* 	 * Check if there's a BPF listener on this interface. 	 * If so, hand off the raw packet to bpf. 	 */
 if|if
 condition|(
 name|c

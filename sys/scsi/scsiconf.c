@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  * New configuration setup: dufault@hda.com  *  *      $Id: scsiconf.c,v 1.28 1995/04/23 07:47:10 bde Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  * New configuration setup: dufault@hda.com  *  *      $Id: scsiconf.c,v 1.29 1995/05/03 18:09:13 dufault Exp $  */
 end_comment
 
 begin_include
@@ -4546,7 +4546,7 @@ expr_stmt|;
 name|sc_print_finish
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Try make as good a match as possible with 	 * available sub drivers        	 */
+comment|/* 	 * Try make as good a match as possible with 	 * available sub drivers 	 */
 name|bestmatch
 operator|=
 operator|(
@@ -4695,7 +4695,7 @@ name|NEW_SCSICONF
 end_ifdef
 
 begin_comment
-comment|/*  * Compare name with pattern, return 0 on match.  * Short pattern matches trailing blanks in name,   * wildcard '*' in pattern matches rest of name  */
+comment|/*  * Compare name with pattern, return 0 on match.  * Short pattern matches trailing blanks in name,  * wildcard '*' in pattern matches rest of name  */
 end_comment
 
 begin_function
@@ -4779,7 +4779,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Try make as good a match as possible with  * available sub drivers         */
+comment|/*  * Try make as good a match as possible with  * available sub drivers  */
 end_comment
 
 begin_function

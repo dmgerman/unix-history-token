@@ -5,16 +5,16 @@ name|char
 name|_isdnid
 index|[]
 init|=
-literal|"@(#)$Id: isdn.c,v 1.2 1995/02/15 06:28:29 jkh Exp $"
+literal|"@(#)$Id: isdn.c,v 1.3 1995/03/28 07:54:44 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*******************************************************************************  *  II - Version 0.1 $Revision: 1.2 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  * $Log: isdn.c,v $  * Revision 1.2  1995/02/15  06:28:29  jkh  * Fix up include paths, nuke some warnings.  *  * Revision 1.1  1995/02/14  15:00:33  jkh  * An ISDN driver that supports the EDSS1 and the 1TR6 ISDN interfaces.  * EDSS1 is the "Euro-ISDN", 1TR6 is the soon obsolete german ISDN Interface.  * Obtained from: Dietmar Friede<dfriede@drnhh.neuhaus.de> and  * 	Juergen Krause<jkr@saarlink.de>  *  * This is only one part - the rest to follow in a couple of hours.  * This part is a benign import, since it doesn't affect anything else.  *  *  ******************************************************************************/
+comment|/*******************************************************************************  *  II - Version 0.1 $Revision: 1.3 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  * $Log: isdn.c,v $  * Revision 1.3  1995/03/28  07:54:44  bde  * Add and move declarations to fix all of the warnings from `gcc -Wimplicit'  * (except in netccitt, netiso and netns) that I didn't notice when I fixed  * "all" such warnings before.  *  * Revision 1.2  1995/02/15  06:28:29  jkh  * Fix up include paths, nuke some warnings.  *  * Revision 1.1  1995/02/14  15:00:33  jkh  * An ISDN driver that supports the EDSS1 and the 1TR6 ISDN interfaces.  * EDSS1 is the "Euro-ISDN", 1TR6 is the soon obsolete german ISDN Interface.  * Obtained from: Dietmar Friede<dfriede@drnhh.neuhaus.de> and  * 	Juergen Krause<jkr@saarlink.de>  *  * This is only one part - the rest to follow in a couple of hours.  * This part is a benign import, since it doesn't affect anything else.  *  *  ******************************************************************************/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1994 Dietmar Friede (dietmar@friede.de) All rights reserved.  * FSF/FSAG GNU Copyright applies  *   * An intermediate level for ISDN Drivers.  *   */
+comment|/*  * Copyright (c) 1994 Dietmar Friede (dietmar@friede.de) All rights reserved.  * FSF/FSAG GNU Copyright applies  *  * An intermediate level for ISDN Drivers.  *  */
 end_comment
 
 begin_include
@@ -933,7 +933,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * isdnopen() New open on device.  *   * I forbid all but one open per application. The only programs opening the  *  isdn device are the ISDN-daemon  */
+comment|/*  * isdnopen() New open on device.  *  * I forbid all but one open per application. The only programs opening the  *  isdn device are the ISDN-daemon  */
 end_comment
 
 begin_function

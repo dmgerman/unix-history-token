@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tp_pcb.c	8.1 (Berkeley) 6/10/93  * $Id: tp_pcb.c,v 1.3 1994/11/15 14:23:06 bde Exp $  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)tp_pcb.c	8.1 (Berkeley) 6/10/93  * $Id: tp_pcb.c,v 1.4 1995/04/26 21:32:38 pst Exp $  */
 end_comment
 
 begin_comment
-comment|/*********************************************************** 				Copyright IBM Corporation 1987                        All Rights Reserved  Permission to use, copy, modify, and distribute this software and its  documentation for any purpose and without fee is hereby granted,  provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in  supporting documentation, and that the name of IBM not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.    IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  ******************************************************************/
+comment|/*********************************************************** 				Copyright IBM Corporation 1987                        All Rights Reserved  Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of IBM not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission.  IBM DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL IBM BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  ******************************************************************/
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*   * ARGO TP  *  * $Header: /home/ncvs/src/sys/netiso/tp_pcb.c,v 1.3 1994/11/15 14:23:06 bde Exp $  * $Source: /home/ncvs/src/sys/netiso/tp_pcb.c,v $  *  *  * This is the initialization and cleanup stuff -   * for the tp machine in general as well as  for the individual pcbs.  * tp_init() is called at system startup.  tp_attach() and tp_getref() are  * called when a socket is created.  tp_detach() and tp_freeref()  * are called during the closing stage and/or when the reference timer   * goes off.   * tp_soisdisconnecting() and tp_soisdisconnected() are tp-specific   * versions of soisconnect*  * and are called (obviously) during the closing phase.  *  */
+comment|/*  * ARGO TP  *  * $Header: /home/ncvs/src/sys/netiso/tp_pcb.c,v 1.4 1995/04/26 21:32:38 pst Exp $  * $Source: /home/ncvs/src/sys/netiso/tp_pcb.c,v $  *  *  * This is the initialization and cleanup stuff -  * for the tp machine in general as well as  for the individual pcbs.  * tp_init() is called at system startup.  tp_attach() and tp_getref() are  * called when a socket is created.  tp_detach() and tp_freeref()  * are called during the closing stage and/or when the reference timer  * goes off.  * tp_soisdisconnecting() and tp_soisdisconnected() are tp-specific  * versions of soisconnect*  * and are called (obviously) during the closing phase.  *  */
 end_comment
 
 begin_include
@@ -142,7 +142,7 @@ file|<netiso/tp_clnp.h>
 end_include
 
 begin_comment
-comment|/* ticks are in units of:   * 500 nano-fortnights ;-) or  * 500 ms or   * 1/2 second   */
+comment|/* ticks are in units of:  * 500 nano-fortnights ;-) or  * 500 ms or  * 1/2 second  */
 end_comment
 
 begin_decl_stmt
@@ -387,7 +387,7 @@ literal|0
 block|,
 comment|/* n/a */
 comment|/* short p_inact_ticks;	*/
-comment|/* Use tp4 defaults just in case the user changes ONLY 		 * the class  		 */
+comment|/* Use tp4 defaults just in case the user changes ONLY 		 * the class 		 */
 operator|(
 name|short
 operator|)
@@ -621,7 +621,7 @@ comment|/* XXX these are now declared as returning void in<netinet/in_pcb.h>. */
 end_comment
 
 begin_endif
-unit|int 	in_pcbdisconnect();  int 	in_pcbdetach();
+unit|int 	in_pcbdisconnect(); int 	in_pcbdetach();
 endif|#
 directive|endif
 end_endif
@@ -1107,7 +1107,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * NAME:  tp_init()  *  * CALLED FROM:  *  autoconf through the protosw structure  *  * FUNCTION:  *  initialize tp machine  *  * RETURNS:  Nada  *  * SIDE EFFECTS:  *   * NOTES:  */
+comment|/*  * NAME:  tp_init()  *  * CALLED FROM:  *  autoconf through the protosw structure  *  * FUNCTION:  *  initialize tp machine  *  * RETURNS:  Nada  *  * SIDE EFFECTS:  *  * NOTES:  */
 end_comment
 
 begin_function
@@ -1311,7 +1311,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * NAME: tp_soisdisconnected()  *  * CALLED FROM:  *	tp.trans	  *  * FUNCTION and ARGUMENTS:  *  Set state of the socket (so) to reflect that fact that we're disconnectED  *  Set the state of the reference structure to closed, and  *  recycle the suffix.  *  Start a reference timer.  *  * RETURNS:	Nada  *  * SIDE EFFECTS:  *  * NOTES:  *  This differs from the regular soisdisconnected() in that the latter  *  also sets the SS_CANTRECVMORE and SS_CANTSENDMORE flags.  *  We don't want to set those flags because those flags will cause  *  a SIGPIPE to be delivered in sosend() and we don't like that.  *  If anyone else is sleeping on this socket, wake 'em up.  */
+comment|/*  * NAME: tp_soisdisconnected()  *  * CALLED FROM:  *	tp.trans  *  * FUNCTION and ARGUMENTS:  *  Set state of the socket (so) to reflect that fact that we're disconnectED  *  Set the state of the reference structure to closed, and  *  recycle the suffix.  *  Start a reference timer.  *  * RETURNS:	Nada  *  * SIDE EFFECTS:  *  * NOTES:  *  This differs from the regular soisdisconnected() in that the latter  *  also sets the SS_CANTRECVMORE and SS_CANTSENDMORE flags.  *  We don't want to set those flags because those flags will cause  *  a SIGPIPE to be delivered in sosend() and we don't like that.  *  If anyone else is sleeping on this socket, wake 'em up.  */
 end_comment
 
 begin_function
@@ -1471,7 +1471,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * NAME:	tp_freeref()  *  * CALLED FROM:  *  tp.trans when the reference timer goes off, and  *  from tp_attach() and tp_detach() when a tpcb is partially set up but not  *  set up enough to have a ref timer set for it, and it's discarded  *  due to some sort of error or an early close()  *  * FUNCTION and ARGUMENTS:  *  Frees the reference represented by (r) for re-use.  *  * RETURNS: Nothing  *   * SIDE EFFECTS:  *  * NOTES:	better be called at clock priority !!!!!  */
+comment|/*  * NAME:	tp_freeref()  *  * CALLED FROM:  *  tp.trans when the reference timer goes off, and  *  from tp_attach() and tp_detach() when a tpcb is partially set up but not  *  set up enough to have a ref timer set for it, and it's discarded  *  due to some sort of error or an early close()  *  * FUNCTION and ARGUMENTS:  *  Frees the reference represented by (r) for re-use.  *  * RETURNS: Nothing  *  * SIDE EFFECTS:  *  * NOTES:	better be called at clock priority !!!!!  */
 end_comment
 
 begin_function
@@ -1637,7 +1637,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * NAME:  tp_getref()  *  * CALLED FROM:  *  tp_attach()  *  * FUNCTION and ARGUMENTS:  *  obtains the next free reference and allocates the appropriate  *  ref structure, links that structure to (tpcb)   *  * RETURN VALUE:  *	a reference number  *  or TP_ENOREF  *  * SIDE EFFECTS:  *  * NOTES:  */
+comment|/*  * NAME:  tp_getref()  *  * CALLED FROM:  *  tp_attach()  *  * FUNCTION and ARGUMENTS:  *  obtains the next free reference and allocates the appropriate  *  ref structure, links that structure to (tpcb)  *  * RETURN VALUE:  *	a reference number  *  or TP_ENOREF  *  * SIDE EFFECTS:  *  * NOTES:  */
 end_comment
 
 begin_function
@@ -2392,7 +2392,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Spec says default is 128 octets, 			* that is, if the tpdusize argument never appears, use 128. 			* As the initiator, we will always "propose" the 2048 			* size, that is, we will put this argument in the CR  			* always, but accept what the other side sends on the CC. 			* If the initiator sends us something larger on a CR, 			* we'll respond w/ this. 			* Our maximum is 4096.  See tp_chksum.c comments. 			*/
+comment|/* Spec says default is 128 octets, 			* that is, if the tpdusize argument never appears, use 128. 			* As the initiator, we will always "propose" the 2048 			* size, that is, we will put this argument in the CR 			* always, but accept what the other side sends on the CC. 			* If the initiator sends us something larger on a CR, 			* we'll respond w/ this. 			* Our maximum is 4096.  See tp_chksum.c comments. 			*/
 end_comment
 
 begin_expr_stmt
@@ -2647,7 +2647,7 @@ end_return
 
 begin_comment
 unit|}
-comment|/*  * NAME:  tp_detach()  *  * CALLED FROM:  *	tp.trans, on behalf of a user close request  *  and when the reference timer goes off  * (if the disconnect  was initiated by the protocol entity   * rather than by the user)  *  * FUNCTION and ARGUMENTS:  *  remove the tpcb structure from the list of active or  *  partially active connections, recycle all the mbufs  *  associated with the pcb, ref structure, sockbufs, etc.  *  Only free the ref structure if you know that a ref timer  *  wasn't set for this tpcb.  *  * RETURNS:  Nada  *  * SIDE EFFECTS:  *  * NOTES:  *  tp_soisdisconnected() was already when this is called  */
+comment|/*  * NAME:  tp_detach()  *  * CALLED FROM:  *	tp.trans, on behalf of a user close request  *  and when the reference timer goes off  * (if the disconnect  was initiated by the protocol entity  * rather than by the user)  *  * FUNCTION and ARGUMENTS:  *  remove the tpcb structure from the list of active or  *  partially active connections, recycle all the mbufs  *  associated with the pcb, ref structure, sockbufs, etc.  *  Only free the ref structure if you know that a ref timer  *  wasn't set for this tpcb.  *  * RETURNS:  Nada  *  * SIDE EFFECTS:  *  * NOTES:  *  tp_soisdisconnected() was already when this is called  */
 end_comment
 
 begin_expr_stmt
@@ -3101,7 +3101,7 @@ name|TP_PERF_MEAS
 end_ifdef
 
 begin_comment
-comment|/*  	 * Get rid of the cluster mbuf allocated for performance measurements, if 	 * there is one.  Note that tpcb->tp_perf_on says nothing about whether or  	 * not a cluster mbuf was allocated, so you have to check for a pointer  	 * to one (that is, we need the TP_PERF_MEASs around the following section  	 * of code, not the IFPERFs) 	 */
+comment|/* 	 * Get rid of the cluster mbuf allocated for performance measurements, if 	 * there is one.  Note that tpcb->tp_perf_on says nothing about whether or 	 * not a cluster mbuf was allocated, so you have to check for a pointer 	 * to one (that is, we need the TP_PERF_MEASs around the following section 	 * of code, not the IFPERFs) 	 */
 end_comment
 
 begin_if

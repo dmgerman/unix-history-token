@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_front.c,v 1.2 1995/04/20 07:34:52 julian Exp $  *  */
+comment|/*  * Written by Julian Elischer (julian@DIALix.oz.au)  *  *	$Header: /home/ncvs/src/sys/miscfs/devfs/devfs_front.c,v 1.3 1995/04/20 07:42:41 julian Exp $  *  */
 end_comment
 
 begin_include
@@ -820,7 +820,7 @@ operator|=
 name|dvm
 expr_stmt|;
 block|}
-comment|/* 	 * not accounted for in the link counts.. 	 * only used to get from the front name entries 	 * to the total length of the names  	 * which is stored in the parent's devnode 	 */
+comment|/* 	 * not accounted for in the link counts.. 	 * only used to get from the front name entries 	 * to the total length of the names 	 * which is stored in the parent's devnode 	 */
 name|newfp
 operator|->
 name|parent
@@ -953,7 +953,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * duplicate the backing tree into a tree of nodes hung off the  * mount point given as the argument. Do this by   * calling dev_mk_front() which recurses all the way  * up the tree..  */
+comment|/*  * duplicate the backing tree into a tree of nodes hung off the  * mount point given as the argument. Do this by  * calling dev_mk_front() which recurses all the way  * up the tree..  */
 end_comment
 
 begin_function
@@ -1161,7 +1161,7 @@ name|dirlist
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  		 * drop the reference counts on our and our parent's 		 * nodes for "." and ".." (root has ".." -> "." ) 		 */
+comment|/* 		 * drop the reference counts on our and our parent's 		 * nodes for "." and ".." (root has ".." -> "." ) 		 */
 name|devfs_dn_free
 argument_list|(
 name|devfp
@@ -1252,7 +1252,7 @@ name|name
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * If the node has a backing pointer we need to free ourselves 	 * from that..  	 * Remember that we may not HAVE a backing node. 	 */
+comment|/* 	 * If the node has a backing pointer we need to free ourselves 	 * from that.. 	 * Remember that we may not HAVE a backing node. 	 */
 if|if
 condition|(
 name|back

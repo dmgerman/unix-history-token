@@ -34,11 +34,11 @@ value|(64*1024)
 end_define
 
 begin_comment
-comment|/* This one also,64K enough  						 * If we grow more,something 						 * really bad in this world.. 						 */
+comment|/* This one also,64K enough 						 * If we grow more,something 						 * really bad in this world.. 						 */
 end_comment
 
 begin_comment
-comment|/*  * This is the main snoop per-device   * structure...  */
+comment|/*  * This is the main snoop per-device  * structure...  */
 end_comment
 
 begin_struct

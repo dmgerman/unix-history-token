@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * misc.c  *   * This is a collection of several routines from gzip-1.0.3   * adapted for Linux.  *  * Ported to 386bsd by Serge Vakulenko  */
+comment|/*  * misc.c  *  * This is a collection of several routines from gzip-1.0.3  * adapted for Linux.  *  * Ported to 386bsd by Serge Vakulenko  */
 end_comment
 
 begin_include
@@ -391,7 +391,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Code to compute the CRC-32 table. Borrowed from   * gzip-1.0.3/makecrc.c.  * Not copyrighted 1990 Mark Adler  */
+comment|/*  * Code to compute the CRC-32 table. Borrowed from  * gzip-1.0.3/makecrc.c.  * Not copyrighted 1990 Mark Adler  */
 end_comment
 
 begin_function

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Keyboard definitions  *	from: unknown origin, 386BSD 0.1  *	$Id: kbd.h,v 1.2 1993/10/16 13:46:04 rgrimes Exp $  */
+comment|/*  * Keyboard definitions  *	from: unknown origin, 386BSD 0.1  *	$Id: kbd.h,v 1.3 1993/11/07 17:44:33 wollman Exp $  */
 end_comment
 
 begin_ifndef
@@ -17,7 +17,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Reference:	IBM AT Technical Reference Manual,   * pp. 1-38 to 1-43, 4-3 to 4-22   */
+comment|/* Reference:	IBM AT Technical Reference Manual,  * pp. 1-38 to 1-43, 4-3 to 4-22  */
 end_comment
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: sysv_sem.c,v 1.3 1994/10/02 17:35:27 phk Exp $ */
+comment|/*	$Id: sysv_sem.c,v 1.4 1994/10/06 21:06:32 davidg Exp $ */
 end_comment
 
 begin_comment
@@ -3279,7 +3279,7 @@ name|eval
 operator|)
 return|;
 block|}
-comment|/*  	 * Loop trying to satisfy the vector of requests. 	 * If we reach a point where we must wait, any requests already 	 * performed are rolled back and we go to sleep until some other 	 * process wakes us up.  At this point, we start all over again. 	 * 	 * This ensures that from the perspective of other tasks, a set 	 * of requests is atomic (never partially satisfied). 	 */
+comment|/* 	 * Loop trying to satisfy the vector of requests. 	 * If we reach a point where we must wait, any requests already 	 * performed are rolled back and we go to sleep until some other 	 * process wakes us up.  At this point, we start all over again. 	 * 	 * This ensures that from the perspective of other tasks, a set 	 * of requests is atomic (never partially satisfied). 	 */
 name|do_undos
 operator|=
 literal|0

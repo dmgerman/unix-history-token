@@ -129,7 +129,7 @@ comment|/* board command register 1, write only */
 end_comment
 
 begin_comment
-comment|/*  * Chip register address, B is chip base port, R is chip register number.   */
+comment|/*  * Chip register address, B is chip base port, R is chip register number.  */
 end_comment
 
 begin_define
