@@ -201,6 +201,13 @@ name|HELPME_FILE
 value|"/DISKSPACE.FAQ"
 end_define
 
+begin_define
+define|#
+directive|define
+name|RELNOTES_FILE
+value|"/RELNOTES.FreeBSD"
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef

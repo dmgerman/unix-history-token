@@ -56,11 +56,15 @@ init|=
 block|{
 literal|"1. README"
 block|,
-literal|"View `READ ME FIRST' File."
+literal|"Read the `READ ME FIRST' File ."
+block|,
+literal|"2. Release Notes"
+block|,
+literal|"Read the 2.0 release notes (recommended)."
 block|,
 literal|"2. COPYRIGHT"
 block|,
-literal|"View FreeBSD Copyright Information."
+literal|"Read FreeBSD Copyright Information."
 block|,
 literal|"3. Proceed"
 block|,
@@ -129,7 +133,7 @@ block|{
 case|case
 literal|1
 case|:
-comment|/* View readme */
+comment|/* View the README */
 name|ShowFile
 argument_list|(
 name|README_FILE
@@ -144,6 +148,21 @@ break|break;
 case|case
 literal|2
 case|:
+comment|/* View the release notes */
+name|ShowFile
+argument_list|(
+name|RELNOTES_FILE
+argument_list|,
+literal|"Release Notes"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|evil_goto
+goto|;
+break|break;
+case|case
+literal|3
+case|:
 comment|/* View copyrights */
 name|ShowFile
 argument_list|(
@@ -157,12 +176,12 @@ name|evil_goto
 goto|;
 break|break;
 case|case
-literal|3
+literal|4
 case|:
 comment|/* Proceed (do nothing special, really) */
 break|break;
 case|case
-literal|4
+literal|5
 case|:
 name|dialog_msgbox
 argument_list|(
@@ -182,7 +201,7 @@ name|evil_goto
 goto|;
 break|break;
 case|case
-literal|5
+literal|6
 case|:
 comment|/* Be neat.. */
 name|dialog_clear
