@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_syscalls.c	8.9 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_syscalls.c	8.10 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2201,11 +2201,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|lockstatus
+argument_list|(
+operator|&
 name|ip
 operator|->
-name|i_flag
-operator|&
-name|IN_LOCKED
+name|i_lock
+argument_list|)
 condition|)
 name|clean_inlocked
 operator|++
@@ -2406,13 +2408,6 @@ name|bp
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Inode was just read from user space or disk, make sure it's locked */
-name|ip
-operator|->
-name|i_flag
-operator||=
-name|IN_LOCKED
-expr_stmt|;
 comment|/* 	 * Initialize the vnode from the inode, check for aliases.  In all 	 * cases re-init ip, the underlying vnode/inode may have changed. 	 */
 if|if
 condition|(
