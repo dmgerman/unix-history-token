@@ -2341,6 +2341,15 @@ return|;
 break|break;
 block|}
 block|}
+comment|/* 	 * Fix for PR #10971: don't let the child ypserv share 	 * DB handles with the parent process. 	 */
+ifdef|#
+directive|ifdef
+name|DB_CACHE
+name|yp_flush_all
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|yp_select_map
