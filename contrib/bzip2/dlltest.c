@@ -54,7 +54,7 @@ begin_define
 define|#
 directive|define
 name|BZ2_LIBNAME
-value|"libbz2-1.0.0.DLL"
+value|"libbz2-1.0.2.DLL"
 end_define
 
 begin_include
@@ -612,7 +612,7 @@ block|}
 if|if
 condition|(
 operator|(
-name|BZ2fp_r
+name|fn_r
 operator|==
 name|NULL
 operator|&&
@@ -634,7 +634,7 @@ name|NULL
 operator|)
 operator|||
 operator|(
-name|BZ2fp_r
+name|fn_r
 operator|!=
 name|NULL
 operator|&&
