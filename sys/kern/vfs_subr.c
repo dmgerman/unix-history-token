@@ -70,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/event.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/fcntl.h>
 end_include
 
@@ -11996,6 +12002,19 @@ expr_stmt|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|VN_KNOTE
+parameter_list|(
+name|vp
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|KNOTE((struct klist *)&vp->v_pollinfo.vpi_selinfo.si_note, (b))
+end_define
+
 begin_comment
 comment|/*  * Wake up anyone polling on vp because it is being revoked.  * This depends on dead_poll() returning POLLHUP for correct  * behavior.  */
 end_comment
@@ -12020,6 +12039,13 @@ operator|->
 name|v_pollinfo
 operator|.
 name|vpi_lock
+argument_list|)
+expr_stmt|;
+name|VN_KNOTE
+argument_list|(
+name|vp
+argument_list|,
+name|NOTE_REVOKE
 argument_list|)
 expr_stmt|;
 if|if

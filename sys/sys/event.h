@@ -302,6 +302,17 @@ begin_comment
 comment|/* vnode was renamed */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NOTE_REVOKE
+value|0x0040
+end_define
+
+begin_comment
+comment|/* vnode access was revoked */
+end_comment
+
 begin_comment
 comment|/*  * data/hint flags for EVFILT_PROC, shared with userspace  */
 end_comment
