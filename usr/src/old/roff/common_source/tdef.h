@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)tdef.h	4.3 %G%  */
+comment|/*  *	@(#)tdef.h	4.4 %G%  */
 end_comment
 
 begin_define
@@ -1109,6 +1109,25 @@ end_define
 begin_comment
 comment|/*alloc block words*/
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VMUNIX
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|BIG
+value|1024
+end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|VMUNIX
+end_endif
 
 begin_ifdef
 ifdef|#
