@@ -3714,6 +3714,10 @@ condition|(
 name|mnttcp_ok
 condition|)
 block|{
+name|netid_mnt
+operator|=
+name|netid
+expr_stmt|;
 name|nconf_mnt
 operator|=
 name|nconf
@@ -3742,7 +3746,7 @@ name|nconf_mnt
 operator|=
 name|getnetconfigent
 argument_list|(
-name|netid
+name|netid_mnt
 argument_list|)
 operator|)
 operator|==
@@ -3758,7 +3762,7 @@ name|errbuf
 argument_list|,
 literal|"%s: %s"
 argument_list|,
-name|netid
+name|netid_mnt
 argument_list|,
 name|nc_sperror
 argument_list|()
@@ -4149,7 +4153,7 @@ name|errbuf
 argument_list|,
 literal|"[%s] %s:%s: %s"
 argument_list|,
-name|netid
+name|netid_mnt
 argument_list|,
 name|hostp
 argument_list|,
@@ -4286,7 +4290,7 @@ name|errbuf
 argument_list|,
 literal|"[%s] %s:%s: %s"
 argument_list|,
-name|netid
+name|netid_mnt
 argument_list|,
 name|hostp
 argument_list|,
@@ -4340,7 +4344,7 @@ name|errbuf
 argument_list|,
 literal|"[%s] %s:%s: %s"
 argument_list|,
-name|netid
+name|netid_mnt
 argument_list|,
 name|hostp
 argument_list|,
