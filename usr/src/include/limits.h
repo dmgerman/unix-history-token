@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)limits.h	5.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)limits.h	5.7 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -73,6 +73,62 @@ name|_POSIX_PIPE_BUF
 value|512
 end_define
 
+begin_define
+define|#
+directive|define
+name|_POSIX2_BC_BASE_MAX
+value|99
+end_define
+
+begin_define
+define|#
+directive|define
+name|_POSIX2_BC_DIM_MAX
+value|2048
+end_define
+
+begin_define
+define|#
+directive|define
+name|_POSIX2_BC_SCALE_MAX
+value|99
+end_define
+
+begin_define
+define|#
+directive|define
+name|_POSIX2_BC_STRING_MAX
+value|1000
+end_define
+
+begin_define
+define|#
+directive|define
+name|_POSIX2_EQUIV_CLASS_MAX
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|_POSIX2_EXPR_NEST_MAX
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|_POSIX2_LINE_MAX
+value|2048
+end_define
+
+begin_define
+define|#
+directive|define
+name|_POSIX2_RE_DUP_MAX
+value|255
+end_define
+
 begin_include
 include|#
 directive|include
@@ -84,13 +140,6 @@ include|#
 directive|include
 file|<sys/syslimits.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|_BSD_LINE_MAX
-value|2048
-end_define
 
 end_unit
 
