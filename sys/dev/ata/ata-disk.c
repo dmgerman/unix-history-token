@@ -659,7 +659,7 @@ name|flags
 operator||=
 name|AD_F_CHS_USED
 expr_stmt|;
-comment|/* use the 28bit LBA size if valid */
+comment|/* use the 28bit LBA size if valid or bigger than the CHS mapping */
 if|if
 condition|(
 name|atadev
@@ -669,7 +669,7 @@ operator|->
 name|cylinders
 operator|==
 literal|16383
-operator|&&
+operator|||
 name|adp
 operator|->
 name|total_secs
