@@ -1923,15 +1923,6 @@ operator|.
 name|v_swtch
 operator|++
 expr_stmt|;
-comment|/* 	 * Allow the scheduler to adjust the priority of the 	 * parent when a kseg is exiting. 	 */
-if|if
-condition|(
-name|p
-operator|->
-name|p_pid
-operator|!=
-literal|1
-condition|)
 name|sched_exit
 argument_list|(
 name|p
