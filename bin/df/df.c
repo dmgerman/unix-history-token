@@ -497,7 +497,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"int:"
+literal|"iknt:"
 argument_list|)
 operator|)
 operator|!=
@@ -514,6 +514,15 @@ case|:
 name|iflag
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'k'
+case|:
+name|putenv
+argument_list|(
+literal|"BLOCKSIZE=1024"
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -2166,14 +2175,11 @@ name|void
 name|usage
 parameter_list|()
 block|{
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: df [-in] [file | file_system ...]\n"
+literal|"usage: df [-ikn] [-t fstype] [file | file_system ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
