@@ -51,6 +51,27 @@ define|\
 value|.globl name; .align 2; name: .word regs; callf $4,mcount
 end_define
 
+begin_define
+define|#
+directive|define
+name|XENTRY
+parameter_list|(
+name|name
+parameter_list|,
+name|regs
+parameter_list|)
+define|\
+value|.globl _
+comment|/**/
+value|name; .globl X
+comment|/**/
+value|name; .align 2; \ 	_
+comment|/**/
+value|name: X
+comment|/**/
+value|name: .word regs; callf $4,mcount
+end_define
+
 begin_else
 else|#
 directive|else
@@ -84,6 +105,27 @@ name|regs
 parameter_list|)
 define|\
 value|.globl name; .align 2; name: .word regs
+end_define
+
+begin_define
+define|#
+directive|define
+name|XENTRY
+parameter_list|(
+name|name
+parameter_list|,
+name|regs
+parameter_list|)
+define|\
+value|.globl _
+comment|/**/
+value|name; .globl X
+comment|/**/
+value|name; .align 2; \ 	_
+comment|/**/
+value|name: X
+comment|/**/
+value|name: .word regs;
 end_define
 
 begin_endif
