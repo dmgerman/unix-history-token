@@ -10472,6 +10472,7 @@ name|pStack
 argument_list|)
 decl_stmt|;
 comment|/*      ** Since we don't have an output primitive for a counted string     ** (oops), make sure the string is null terminated. If not, copy     ** and terminate it.     */
+comment|/* XXX Uses free space on top of dictionary. Is it guaranteed      * XXX to always fit? (abial)      */
 if|if
 condition|(
 name|cp
@@ -17429,6 +17430,49 @@ argument_list|,
 name|FW_DEFAULT
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__i386__
+name|dictAppendWord
+argument_list|(
+name|dp
+argument_list|,
+literal|"pc!"
+argument_list|,
+name|pc_store
+argument_list|,
+name|FW_DEFAULT
+argument_list|)
+expr_stmt|;
+name|dictAppendWord
+argument_list|(
+name|dp
+argument_list|,
+literal|"pc@"
+argument_list|,
+name|pc_fetch
+argument_list|,
+name|FW_DEFAULT
+argument_list|)
+expr_stmt|;
+name|ficlSetEnv
+argument_list|(
+literal|"arch-i386"
+argument_list|,
+name|FICL_TRUE
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|ficlSetEnv
+argument_list|(
+literal|"arch-i386"
+argument_list|,
+name|FICL_FALSE
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/*     ** Set CORE environment query values     */
 name|ficlSetEnv
 argument_list|(
