@@ -3710,19 +3710,12 @@ operator|!=
 literal|0
 condition|)
 break|break;
-name|printf
-argument_list|(
-literal|"uap->abstime: %d.%ld\n"
-argument_list|,
-name|abstime
-operator|.
-name|tv_sec
-argument_list|,
-name|abstime
-operator|.
-name|tv_nsec
-argument_list|)
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|printf("uap->abstime: %d.%ld\n", abstime.tv_sec, abstime.tv_nsec);
+endif|#
+directive|endif
 if|if
 condition|(
 name|abstime
