@@ -119,7 +119,13 @@ block|,
 block|{
 name|PS_FDW_WAIT
 block|,
-literal|"Waitingfor write"
+literal|"Waiting for write"
+block|}
+block|,
+block|{
+name|PS_FILE_WAIT
+block|,
+literal|"Waiting for FILE lock"
 block|}
 block|,
 block|{
@@ -309,9 +315,23 @@ name|sprintf
 argument_list|(
 name|s
 argument_list|,
-literal|"--------------------\nThread %p prio %3d state %s [%s:%d]\n"
+literal|"--------------------\nThread %p (%s) prio %3d state %s [%s:%d]\n"
 argument_list|,
 name|pthread
+argument_list|,
+operator|(
+name|pthread
+operator|->
+name|name
+operator|==
+name|NULL
+operator|)
+condition|?
+literal|""
+else|:
+name|pthread
+operator|->
+name|name
 argument_list|,
 name|pthread
 operator|->
@@ -514,7 +534,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* 				 * Trap other states that are not explicitly 				 * coded to dump information:  				 */
+comment|/* 			 * Trap other states that are not explicitly 			 * coded to dump information:  			 */
 default|default:
 comment|/* Nothing to do here. */
 break|break;
@@ -758,6 +778,48 @@ name|fd
 argument_list|)
 expr_stmt|;
 block|}
+return|return;
+block|}
+end_function
+
+begin_comment
+comment|/* Set the thread name for debug: */
+end_comment
+
+begin_function
+name|void
+name|pthread_set_name_np
+parameter_list|(
+name|pthread_t
+name|thread
+parameter_list|,
+name|char
+modifier|*
+name|name
+parameter_list|)
+block|{
+comment|/* Check if the caller has specified a valid thread: */
+if|if
+condition|(
+name|thread
+operator|!=
+name|NULL
+operator|&&
+name|thread
+operator|->
+name|magic
+operator|==
+name|PTHREAD_MAGIC
+condition|)
+name|thread
+operator|->
+name|name
+operator|=
+name|strdup
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 end_function

@@ -67,6 +67,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -538,6 +544,8 @@ name|PS_FDR_WAIT
 block|,
 name|PS_FDW_WAIT
 block|,
+name|PS_FILE_WAIT
+block|,
 name|PS_SELECT_WAIT
 block|,
 name|PS_SLEEP_WAIT
@@ -727,6 +735,10 @@ value|((u_int32_t) 0xd09ba115)
 name|u_int32_t
 name|magic
 decl_stmt|;
+name|char
+modifier|*
+name|name
+decl_stmt|;
 comment|/* 	 * Pointer to the next thread in the thread linked list. 	 */
 name|struct
 name|pthread
@@ -862,7 +874,7 @@ name|struct
 name|pthread_queue
 name|join_queue
 decl_stmt|;
-comment|/* 	 * The current thread can belong to only one queue at a time. 	 * 	 * Pointer to queue (if any) on which the current thread is waiting. 	 */
+comment|/* 	 * The current thread can belong to only one queue at a time. 	 * 	 * Pointer to queue (if any) on which the current thread is waiting. 	 * 	 * XXX The queuing should be changed to use the TAILQ entry below. 	 * XXX For the time being, it's hybrid. 	 */
 name|struct
 name|pthread_queue
 modifier|*
@@ -874,6 +886,13 @@ name|pthread
 modifier|*
 name|qnxt
 decl_stmt|;
+comment|/* Queue entry for this thread: */
+name|TAILQ_ENTRY
+argument_list|(
+argument|pthread
+argument_list|)
+name|qe
+expr_stmt|;
 comment|/* Wait data. */
 name|union
 name|pthread_wait_data
@@ -2350,35 +2369,6 @@ ifdef|#
 directive|ifdef
 name|_STDIO_H_
 end_ifdef
-
-begin_function_decl
-name|void
-name|_thread_flockfile
-parameter_list|(
-name|FILE
-modifier|*
-name|fp
-parameter_list|,
-name|char
-modifier|*
-name|fname
-parameter_list|,
-name|int
-name|lineno
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|_thread_funlockfile
-parameter_list|(
-name|FILE
-modifier|*
-name|fp
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|FILE

@@ -63,6 +63,12 @@ directive|include
 file|"pthread_private.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"libc_private.h"
+end_include
+
 begin_function
 name|int
 name|_thread_create
@@ -1109,6 +1115,11 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
+comment|/* 	 * Locking functions in libc are required when there are 	 * threads other than the initial thread. 	 */
+name|__isthreaded
+operator|=
+literal|1
+expr_stmt|;
 comment|/* 	 * Call the low level thread creation function which allows a parent 	 * thread to be specified:  	 */
 name|ret
 operator|=
