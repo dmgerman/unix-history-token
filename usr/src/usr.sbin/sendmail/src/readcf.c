@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	5.50 (Berkeley) %G%"
+literal|"@(#)readcf.c	5.51 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1386,7 +1386,21 @@ name|FileName
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* set up host map */
+if|if
+condition|(
+name|stab
+argument_list|(
+literal|"host"
+argument_list|,
+name|ST_MAP
+argument_list|,
+name|ST_FIND
+argument_list|)
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* user didn't initialize: set up host map */
 name|strcpy
 argument_list|(
 name|buf
@@ -1412,6 +1426,7 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_block
 
