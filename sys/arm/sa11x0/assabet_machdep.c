@@ -1258,63 +1258,6 @@ argument_list|,
 name|KSTACK_PAGES
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VERBOSE_INIT_ARM
-name|printf
-argument_list|(
-literal|"IRQ stack: p0x%08lx v0x%08lx\n"
-argument_list|,
-name|irqstack
-operator|.
-name|pv_pa
-argument_list|,
-name|irqstack
-operator|.
-name|pv_va
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"ABT stack: p0x%08lx v0x%08lx\n"
-argument_list|,
-name|abtstack
-operator|.
-name|pv_pa
-argument_list|,
-name|abtstack
-operator|.
-name|pv_va
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"UND stack: p0x%08lx v0x%08lx\n"
-argument_list|,
-name|undstack
-operator|.
-name|pv_pa
-argument_list|,
-name|undstack
-operator|.
-name|pv_va
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"SVC stack: p0x%08lx v0x%08lx\n"
-argument_list|,
-name|kernelstack
-operator|.
-name|pv_pa
-argument_list|,
-name|kernelstack
-operator|.
-name|pv_va
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Allocate memory for the l1 and l2 page tables. The scheme to avoid 	 * wasting memory by allocating the l1pt on the first 16k memory was 	 * taken from NetBSD rpc_machdep.c. NKPT should be greater than 12 for 	 * this to work (which is supposed to be the case). 	 */
 comment|/* Allocate pages for process 0 kernel stack and uarea */
 name|valloc_pages
@@ -1331,13 +1274,6 @@ name|kernel_l1pt
 operator|.
 name|pv_pa
 expr_stmt|;
-comment|/* XXX bla **/
-if|#
-directive|if
-literal|0
-block|bcopy((void*)0xd0300000,&mfs_root, MD_ROOT_SIZE*1024);
-endif|#
-directive|endif
 comment|/* Map the L2 pages tables in the L1 page table */
 name|pmap_link_l2pt
 argument_list|(
@@ -1856,20 +1792,7 @@ name|bootverbose
 operator|=
 literal|1
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|set_cpufuncs();
-endif|#
-directive|endif
 comment|/* Set stack for exception handlers */
-if|#
-directive|if
-literal|0
-block|printf("arm_init: physical_pages = %08x\n", physical_pages); 	printf("arm_init: kernel_l1pt: pa = %08x, va = %08x\n", 	    kernel_l1pt.pv_pa, kernel_l1pt.pv_va); 	printf("arm_init: proc0_uarea: pa = %08x, va = %08x\n", 	    proc0_uarea.pv_pa, proc0_uarea.pv_va); 	printf("arm_init: proc0_kstack: pa = %08x, va = %08x\n", 	    proc0_kstack.pv_pa, proc0_kstack.pv_va);
-endif|#
-directive|endif
-comment|/*	printf("arm_init: physfree = %08x\n", physical_freestart); 	printf("arm_init: first = %08x\n", first); 	printf("arm_init: end = %08x\n", (uint32_t)&end); 	 	printf("arm_init: params = %08x\n", params); 	printf("arm_init: params: page_size = %08x\n", params->u1.s.page_size); 	printf("arm_init: params: nrpages = %08x\n", params->u1.s.nr_pages); 	printf("arm_init: params: ramdisk_size = %08x\n", params->u1.s.ramdisk_size); 	printf("arm_init: params: flags = %08x\n", params->u1.s.flags); 	printf("arm_init: params: rootdev = %08x\n", params->u1.s.rootdev); 	printf("arm_init: params: video_num_cols = %08x\n", params->u1.s.video_num_cols); 	printf("arm_init: params: video_num_rows = %08x\n", params->u1.s.video_num_rows); 	printf("arm_init: params: video_x = %08x\n", params->u1.s.video_x); 	printf("arm_init: params: video_y = %08x\n", params->u1.s.video_y); 	printf("arm_init: params: memc_control_reg = %08x\n", params->u1.s.memc_control_reg); 	printf("arm_init: params: sounddefault = %02x\n", params->u1.s.sounddefault); 	printf("arm_init: params: adfsdrives = %02x\n", params->u1.s.adfsdrives); 	printf("arm_init: params: bytes_per_char_h = %02x\n", params->u1.s.bytes_per_char_h); 	printf("arm_init: params: bytes_per_char_v = %02x\n", params->u1.s.bytes_per_char_v); 	for(i = 0; i< 4; i++) { 		printf("arm_init: params: pages_in_bank[%d] = %08x\n", i, params->u1.s.pages_in_bank[i]); 	} 	printf("arm_init: params: pages_in_vram = %08x\n", params->u1.s.pages_in_vram); 	printf("arm_init: params: initrd_start = %08x\n", params->u1.s.initrd_start); 	printf("arm_init: params: initrd_size = %08x\n", params->u1.s.initrd_size); 	printf("arm_init: params: rd_start = %08x\n", params->u1.s.rd_start); 	printf("arm_init: params: system_options = %08x\n", params->u1.s.system_options); 	printf("arm_init: params: system_serial_num = %08x\n", params->u1.s.system_serial_num); 	for(i = 0; i< 8; i++) { 		printf("arm_init: params: paths[%d] = %s\n", i, (params->u2.paths[i][0]) ? params->u2.paths[i] : "(null)"); 	} 	printf("arm_init: params: magic = %08x\n", params->u2.s.magic); 	printf("arm_init: params: commandline = %s\n", (params->commandline[0]) ? params->commandline : "(null)"); 	printf("arm_init: params: bootsetting = %s\n", (params->bootsetting[0]) ? params->bootsetting : "(null)");*/
 name|proc_linkup
 argument_list|(
 operator|&
@@ -1943,12 +1866,6 @@ operator|&
 name|proc0_tf
 expr_stmt|;
 comment|/* Enable MMU, I-cache, D-cache, write buffer. */
-if|#
-directive|if
-literal|0
-block|printf("it was %p\n", (void *)cpufunc_control(0,0)); 	printf("ca c fait\n"); 	printf("before\n"); 	printf("mmu enabled\n"); 	printf("now we have %p\n", (void*)cpufunc_control(0,0));
-endif|#
-directive|endif
 name|cpufunc_control
 argument_list|(
 literal|0x337f
@@ -1984,30 +1901,6 @@ expr_stmt|;
 name|mutex_init
 argument_list|()
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|phys_avail[0] = 0x00000000; 	phys_avail[1] = physmem; 	phys_avail[2] = 0;
-endif|#
-directive|endif
-if|#
-directive|if
-literal|0
-block|phys_avail[1] = physical_start; 	phys_avail[2] = physical_freestart; 	phys_avail[3] = physmem;
-endif|#
-directive|endif
-if|#
-directive|if
-literal|0
-block|phys_avail[3] = 0;
-endif|#
-directive|endif
-if|#
-directive|if
-literal|0
-block|phys_avail[1] = 0x01000000 - 1;
-endif|#
-directive|endif
 name|phys_avail
 index|[
 literal|0
@@ -2043,12 +1936,6 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|phys_avail[4] = 0x00000000; 	phys_avail[5] = 0x00000000;
-endif|#
-directive|endif
 comment|/* Do basic tuning, hz etc */
 name|init_param1
 argument_list|()
@@ -2056,11 +1943,6 @@ expr_stmt|;
 name|init_param2
 argument_list|(
 name|physmem
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"arm_init: done!\n"
 argument_list|)
 expr_stmt|;
 name|avail_end
