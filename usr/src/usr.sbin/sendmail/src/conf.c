@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.148 (Berkeley) %G%"
+literal|"@(#)conf.c	8.149 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5158,6 +5158,42 @@ directive|define
 name|SPT_TYPE
 value|SPT_REUSEARGV
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NKPDE
+end_ifndef
+
+begin_comment
+comment|/* FreeBSD 2.0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NKPDE
+value|63
+end_define
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|int
+modifier|*
+name|pt_entry_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
