@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_balloc.c	8.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_balloc.c	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -84,7 +84,7 @@ name|ffs_balloc
 argument_list|(
 name|ip
 argument_list|,
-name|bn
+name|lbn
 argument_list|,
 name|size
 argument_list|,
@@ -105,7 +105,7 @@ end_expr_stmt
 begin_decl_stmt
 specifier|register
 name|daddr_t
-name|bn
+name|lbn
 decl_stmt|;
 end_decl_stmt
 
@@ -180,8 +180,6 @@ decl_stmt|;
 name|daddr_t
 name|newb
 decl_stmt|,
-name|lbn
-decl_stmt|,
 modifier|*
 name|bap
 decl_stmt|,
@@ -205,7 +203,7 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
-name|bn
+name|lbn
 operator|<
 literal|0
 condition|)
@@ -219,10 +217,6 @@ operator|=
 name|ip
 operator|->
 name|i_fs
-expr_stmt|;
-name|lbn
-operator|=
-name|bn
 expr_stmt|;
 comment|/* 	 * If the next write will extend the file into a new block, 	 * and the file is currently composed of a fragment 	 * this fragment has to be extended to be a full block. 	 */
 name|nb
@@ -244,7 +238,7 @@ name|NDADDR
 operator|&&
 name|nb
 operator|<
-name|bn
+name|lbn
 condition|)
 block|{
 name|osize
@@ -395,7 +389,7 @@ block|}
 comment|/* 	 * The first NDADDR blocks are direct blocks 	 */
 if|if
 condition|(
-name|bn
+name|lbn
 operator|<
 name|NDADDR
 condition|)
@@ -406,7 +400,7 @@ name|ip
 operator|->
 name|i_db
 index|[
-name|bn
+name|lbn
 index|]
 expr_stmt|;
 if|if
@@ -420,7 +414,7 @@ operator|->
 name|i_size
 operator|>=
 operator|(
-name|bn
+name|lbn
 operator|+
 literal|1
 operator|)
@@ -436,7 +430,7 @@ name|bread
 argument_list|(
 name|vp
 argument_list|,
-name|bn
+name|lbn
 argument_list|,
 name|fs
 operator|->
@@ -521,7 +515,7 @@ name|bread
 argument_list|(
 name|vp
 argument_list|,
-name|bn
+name|lbn
 argument_list|,
 name|osize
 argument_list|,
@@ -556,18 +550,18 @@ name|ffs_realloccg
 argument_list|(
 name|ip
 argument_list|,
-name|bn
+name|lbn
 argument_list|,
 name|ffs_blkpref
 argument_list|(
 name|ip
 argument_list|,
-name|bn
+name|lbn
 argument_list|,
 operator|(
 name|int
 operator|)
-name|bn
+name|lbn
 argument_list|,
 operator|&
 name|ip
@@ -608,7 +602,7 @@ operator|->
 name|i_size
 operator|<
 operator|(
-name|bn
+name|lbn
 operator|+
 literal|1
 operator|)
@@ -639,18 +633,18 @@ name|ffs_alloc
 argument_list|(
 name|ip
 argument_list|,
-name|bn
+name|lbn
 argument_list|,
 name|ffs_blkpref
 argument_list|(
 name|ip
 argument_list|,
-name|bn
+name|lbn
 argument_list|,
 operator|(
 name|int
 operator|)
-name|bn
+name|lbn
 argument_list|,
 operator|&
 name|ip
@@ -684,7 +678,7 @@ name|getblk
 argument_list|(
 name|vp
 argument_list|,
-name|bn
+name|lbn
 argument_list|,
 name|nsize
 argument_list|,
@@ -720,7 +714,7 @@ name|ip
 operator|->
 name|i_db
 index|[
-name|bn
+name|lbn
 index|]
 operator|=
 name|dbtofsb
@@ -764,7 +758,7 @@ name|ufs_getlbns
 argument_list|(
 name|vp
 argument_list|,
-name|bn
+name|lbn
 argument_list|,
 name|indirs
 argument_list|,
