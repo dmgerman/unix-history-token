@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	8.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	8.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -202,6 +202,8 @@ block|,
 name|lfs_vptofh
 block|,
 name|lfs_init
+block|,
+name|lfs_sysctl
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -1437,7 +1439,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|MOUNT_LFS
+name|lfs_mount_type
 expr_stmt|;
 end_expr_stmt
 
@@ -2039,12 +2041,6 @@ argument_list|)
 expr_stmt|;
 name|sbp
 operator|->
-name|f_type
-operator|=
-name|MOUNT_LFS
-expr_stmt|;
-name|sbp
-operator|->
 name|f_bsize
 operator|=
 name|fs
@@ -2159,6 +2155,16 @@ operator|->
 name|mnt_stat
 condition|)
 block|{
+name|sbp
+operator|->
+name|f_type
+operator|=
+name|mp
+operator|->
+name|mnt_vfc
+operator|->
+name|vfc_typenum
+expr_stmt|;
 name|bcopy
 argument_list|(
 operator|(
@@ -2795,6 +2801,36 @@ expr_stmt|;
 return|return
 operator|(
 literal|0
+operator|)
+return|;
+block|}
+comment|/*  * Initialize the filesystem, most work done by ufs_init.  */
+name|int
+name|lfs_mount_type
+decl_stmt|;
+name|int
+name|lfs_init
+parameter_list|(
+name|vfsp
+parameter_list|)
+name|struct
+name|vfsconf
+modifier|*
+name|vfsp
+decl_stmt|;
+block|{
+name|lfs_mount_type
+operator|=
+name|vfsp
+operator|->
+name|vfc_typenum
+expr_stmt|;
+return|return
+operator|(
+name|ufs_init
+argument_list|(
+name|vfsp
+argument_list|)
 operator|)
 return|;
 block|}
