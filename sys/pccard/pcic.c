@@ -363,6 +363,13 @@ block|}
 block|,
 comment|/* SCM0469 */
 block|{
+name|PCIC_PNP_SCM_SWAPBOX2
+block|,
+name|NULL
+block|}
+block|,
+comment|/* SCM SwapBox Classic X2P */
+block|{
 literal|0
 block|}
 block|}
