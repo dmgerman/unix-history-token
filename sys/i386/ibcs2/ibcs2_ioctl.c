@@ -3792,6 +3792,9 @@ name|uap
 argument_list|)
 return|;
 case|case
+name|IBCS2_FIONREAD
+case|:
+case|case
 name|IBCS2_I_NREAD
 case|:
 comment|/* STREAMS */
