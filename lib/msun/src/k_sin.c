@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)k_sin.c 5.1 93/09/24 */
+comment|/* @(#)k_sin.c 1.3 95/01/18 */
 end_comment
 
 begin_comment
-comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice  * is preserved.  * ====================================================  */
+comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunSoft, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice   * is preserved.  * ====================================================  */
 end_comment
 
 begin_ifndef
@@ -29,7 +29,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __kernel_sin( x, y, iy)  * kernel sin function on [-pi/4, pi/4], pi/4 ~ 0.7854  * Input x is assumed to be bounded by ~pi/4 in magnitude.  * Input y is the tail of x.  * Input iy indicates whether y is 0. (if iy=0, y assume to be 0).  *  * Algorithm  *	1. Since sin(-x) = -sin(x), we need only to consider positive x.  *	2. if x< 2^-27 (hx<0x3e400000 0), return x with inexact if x!=0.  *	3. sin(x) is approximated by a polynomial of degree 13 on  *	   [0,pi/4]  *		  	         3            13  *	   	sin(x) ~ x + S1*x + ... + S6*x  *	   where  *  * 	|sin(x)         2     4     6     8     10     12  |     -58  * 	|----- - (1+S1*x +S2*x +S3*x +S4*x +S5*x  +S6*x   )|<= 2  * 	|  x 					           |  *  *	4. sin(x+y) = sin(x) + sin'(x')*y  *		    ~ sin(x) + (1-x*x/2)*y  *	   For better accuracy, let  *		     3      2      2      2      2  *		r = x *(S2+x *(S3+x *(S4+x *(S5+x *S6))))  *	   then                   3    2  *		sin(x) = x + (S1*x + (x *(r-y/2)+y))  */
+comment|/* __kernel_sin( x, y, iy)  * kernel sin function on [-pi/4, pi/4], pi/4 ~ 0.7854  * Input x is assumed to be bounded by ~pi/4 in magnitude.  * Input y is the tail of x.  * Input iy indicates whether y is 0. (if iy=0, y assume to be 0).   *  * Algorithm  *	1. Since sin(-x) = -sin(x), we need only to consider positive x.   *	2. if x< 2^-27 (hx<0x3e400000 0), return x with inexact if x!=0.  *	3. sin(x) is approximated by a polynomial of degree 13 on  *	   [0,pi/4]  *		  	         3            13  *	   	sin(x) ~ x + S1*x + ... + S6*x  *	   where  *	  * 	|sin(x)         2     4     6     8     10     12  |     -58  * 	|----- - (1+S1*x +S2*x +S3*x +S4*x +S5*x  +S6*x   )|<= 2  * 	|  x 					           |   *   *	4. sin(x+y) = sin(x) + sin'(x')*y  *		    ~ sin(x) + (1-x*x/2)*y  *	   For better accuracy, let   *		     3      2      2      2      2  *		r = x *(S2+x *(S3+x *(S4+x *(S5+x *S6))))  *	   then                   3    2  *		sin(x) = x + (S1*x + (x *(r-y/2)+y))  */
 end_comment
 
 begin_include

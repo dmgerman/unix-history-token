@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)e_atanh.c 5.1 93/09/24 */
+comment|/* @(#)e_atanh.c 1.3 95/01/18 */
 end_comment
 
 begin_comment
-comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice  * is preserved.  * ====================================================  */
+comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunSoft, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice   * is preserved.  * ====================================================  *  */
 end_comment
 
 begin_ifndef
@@ -29,7 +29,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __ieee754_atanh(x)  * Method :  *    1.Reduced x to positive by atanh(-x) = -atanh(x)  *    2.For x>=0.5  *                  1              2x                          x  *	atanh(x) = --- * log(1 + -------) = 0.5 * log1p(2 * --------)  *                  2             1 - x                      1 - x  *  * 	For x<0.5  *	atanh(x) = 0.5*log1p(2x+2x*x/(1-x))  *  * Special cases:  *	atanh(x) is NaN if |x|> 1 with signal;  *	atanh(NaN) is that NaN with no signal;  *	atanh(+-1) is +-INF with signal.  *  */
+comment|/* __ieee754_atanh(x)  * Method :  *    1.Reduced x to positive by atanh(-x) = -atanh(x)  *    2.For x>=0.5  *                  1              2x                          x  *	atanh(x) = --- * log(1 + -------) = 0.5 * log1p(2 * --------)  *                  2             1 - x                      1 - x  *	  * 	For x<0.5  *	atanh(x) = 0.5*log1p(2x+2x*x/(1-x))  *  * Special cases:  *	atanh(x) is NaN if |x|> 1 with signal;  *	atanh(NaN) is that NaN with no signal;  *	atanh(+-1) is +-INF with signal.  *  */
 end_comment
 
 begin_include

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)e_asin.c 5.1 93/09/24 */
+comment|/* @(#)e_asin.c 1.3 95/01/18 */
 end_comment
 
 begin_comment
-comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice  * is preserved.  * ====================================================  */
+comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunSoft, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice   * is preserved.  * ====================================================  */
 end_comment
 
 begin_ifndef
@@ -29,7 +29,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __ieee754_asin(x)  * Method :  *	Since  asin(x) = x + x^3/6 + x^5*3/40 + x^7*15/336 + ...  *	we approximate asin(x) on [0,0.5] by  *		asin(x) = x + x*x^2*R(x^2)  *	where  *		R(x^2) is a rational approximation of (asin(x)-x)/x^3  *	and its remez error is bounded by  *		|(asin(x)-x)/x^3 - R(x^2)|< 2^(-58.75)  *  *	For x in [0.5,1]  *		asin(x) = pi/2-2*asin(sqrt((1-x)/2))  *	Let y = (1-x), z = y/2, s := sqrt(z), and pio2_hi+pio2_lo=pi/2;  *	then for x>0.98  *		asin(x) = pi/2 - 2*(s+s*z*R(z))  *			= pio2_hi - (2*(s+s*z*R(z)) - pio2_lo)  *	For x<=0.98, let pio4_hi = pio2_hi/2, then  *		f = hi part of s;  *		c = sqrt(z) - f = (z-f*f)/(s+f) 	...f+c=sqrt(z)  *	and  *		asin(x) = pi/2 - 2*(s+s*z*R(z))  *			= pio4_hi+(pio4-2s)-(2s*z*R(z)-pio2_lo)  *			= pio4_hi+(pio4-2f)-(2s*z*R(z)-(pio2_lo+2c))  *  * Special cases:  *	if x is NaN, return x itself;  *	if |x|>1, return NaN with invalid signal.  *  */
+comment|/* __ieee754_asin(x)  * Method :                    *	Since  asin(x) = x + x^3/6 + x^5*3/40 + x^7*15/336 + ...  *	we approximate asin(x) on [0,0.5] by  *		asin(x) = x + x*x^2*R(x^2)  *	where  *		R(x^2) is a rational approximation of (asin(x)-x)/x^3   *	and its remez error is bounded by  *		|(asin(x)-x)/x^3 - R(x^2)|< 2^(-58.75)  *  *	For x in [0.5,1]  *		asin(x) = pi/2-2*asin(sqrt((1-x)/2))  *	Let y = (1-x), z = y/2, s := sqrt(z), and pio2_hi+pio2_lo=pi/2;  *	then for x>0.98  *		asin(x) = pi/2 - 2*(s+s*z*R(z))  *			= pio2_hi - (2*(s+s*z*R(z)) - pio2_lo)  *	For x<=0.98, let pio4_hi = pio2_hi/2, then  *		f = hi part of s;  *		c = sqrt(z) - f = (z-f*f)/(s+f) 	...f+c=sqrt(z)  *	and  *		asin(x) = pi/2 - 2*(s+s*z*R(z))  *			= pio4_hi+(pio4-2s)-(2s*z*R(z)-pio2_lo)  *			= pio4_hi+(pio4-2f)-(2s*z*R(z)-(pio2_lo+2c))  *  * Special cases:  *	if x is NaN, return x itself;  *	if |x|>1, return NaN with invalid signal.  *  */
 end_comment
 
 begin_include
@@ -425,7 +425,7 @@ operator|)
 expr_stmt|;
 name|s
 operator|=
-name|__ieee754_sqrt
+name|sqrt
 argument_list|(
 name|t
 argument_list|)

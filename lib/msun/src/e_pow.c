@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)e_pow.c 5.1 93/09/24 */
+comment|/* @(#)e_pow.c 1.5 04/04/22 SMI */
 end_comment
 
 begin_comment
-comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice  * is preserved.  * ====================================================  */
+comment|/*  * ====================================================  * Copyright (C) 2004 by Sun Microsystems, Inc. All rights reserved.  *  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice   * is preserved.  * ====================================================  */
 end_comment
 
 begin_ifndef
@@ -29,7 +29,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __ieee754_pow(x,y) return x**y  *  *		      n  * Method:  Let x =  2   * (1+f)  *	1. Compute and return log2(x) in two pieces:  *		log2(x) = w1 + w2,  *	   where w1 has 53-24 = 29 bit trailing zeros.  *	2. Perform y*log2(x) = n+y' by simulating muti-precision  *	   arithmetic, where |y'|<=0.5.  *	3. Return x**y = 2**n*exp(y'*log2)  *  * Special cases:  *	1.  (anything) ** 0  is 1  *	2.  (anything) ** 1  is itself  *	3.  (anything) ** NAN is NAN  *	4.  NAN ** (anything except 0) is NAN  *	5.  +-(|x|> 1) **  +INF is +INF  *	6.  +-(|x|> 1) **  -INF is +0  *	7.  +-(|x|< 1) **  +INF is +0  *	8.  +-(|x|< 1) **  -INF is +INF  *	9.  +-1         ** +-INF is NAN  *	10. +0 ** (+anything except 0, NAN)               is +0  *	11. -0 ** (+anything except 0, NAN, odd integer)  is +0  *	12. +0 ** (-anything except 0, NAN)               is +INF  *	13. -0 ** (-anything except 0, NAN, odd integer)  is +INF  *	14. -0 ** (odd integer) = -( +0 ** (odd integer) )  *	15. +INF ** (+anything except 0,NAN) is +INF  *	16. +INF ** (-anything except 0,NAN) is +0  *	17. -INF ** (anything)  = -0 ** (-anything)  *	18. (-anything) ** (integer) is (-1)**(integer)*(+anything**integer)  *	19. (-anything except 0 and inf) ** (non-integer) is NAN  *  * Accuracy:  *	pow(x,y) returns x**y nearly rounded. In particular  *			pow(integer,integer)  *	always returns the correct integer provided it is  *	representable.  *  * Constants :  * The hexadecimal values are the intended ones for the following  * constants. The decimal values may be used, provided that the  * compiler will convert from decimal to binary accurately enough  * to produce the hexadecimal values shown.  */
+comment|/* __ieee754_pow(x,y) return x**y  *  *		      n  * Method:  Let x =  2   * (1+f)  *	1. Compute and return log2(x) in two pieces:  *		log2(x) = w1 + w2,  *	   where w1 has 53-24 = 29 bit trailing zeros.  *	2. Perform y*log2(x) = n+y' by simulating muti-precision   *	   arithmetic, where |y'|<=0.5.  *	3. Return x**y = 2**n*exp(y'*log2)  *  * Special cases:  *	1.  (anything) ** 0  is 1  *	2.  (anything) ** 1  is itself  *	3.  (anything) ** NAN is NAN  *	4.  NAN ** (anything except 0) is NAN  *	5.  +-(|x|> 1) **  +INF is +INF  *	6.  +-(|x|> 1) **  -INF is +0  *	7.  +-(|x|< 1) **  +INF is +0  *	8.  +-(|x|< 1) **  -INF is +INF  *	9.  +-1         ** +-INF is NAN  *	10. +0 ** (+anything except 0, NAN)               is +0  *	11. -0 ** (+anything except 0, NAN, odd integer)  is +0  *	12. +0 ** (-anything except 0, NAN)               is +INF  *	13. -0 ** (-anything except 0, NAN, odd integer)  is +INF  *	14. -0 ** (odd integer) = -( +0 ** (odd integer) )  *	15. +INF ** (+anything except 0,NAN) is +INF  *	16. +INF ** (-anything except 0,NAN) is +0  *	17. -INF ** (anything)  = -0 ** (-anything)  *	18. (-anything) ** (integer) is (-1)**(integer)*(+anything**integer)  *	19. (-anything except 0 and inf) ** (non-integer) is NAN  *  * Accuracy:  *	pow(x,y) returns x**y nearly rounded. In particular  *			pow(integer,integer)  *	always returns the correct integer provided it is   *	representable.  *  * Constants :  * The hexadecimal values are the intended ones for the following   * constants. The decimal values may be used, provided that the   * compiler will convert from decimal to binary accurately enough   * to produce the hexadecimal values shown.  */
 end_comment
 
 begin_include
@@ -251,8 +251,6 @@ decl_stmt|,
 name|r
 decl_stmt|,
 name|s
-decl_stmt|,
-name|sn
 decl_stmt|,
 name|t
 decl_stmt|,
@@ -626,7 +624,7 @@ literal|0
 condition|)
 comment|/* x>= +0 */
 return|return
-name|__ieee754_sqrt
+name|sqrt
 argument_list|(
 name|x
 argument_list|)
@@ -776,7 +774,7 @@ operator|-
 name|x
 operator|)
 return|;
-name|sn
+name|s
 operator|=
 name|one
 expr_stmt|;
@@ -795,7 +793,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|sn
+name|s
 operator|=
 operator|-
 name|one
@@ -875,13 +873,13 @@ operator|<
 literal|0
 operator|)
 condition|?
-name|sn
+name|s
 operator|*
 name|huge
 operator|*
 name|huge
 else|:
-name|sn
+name|s
 operator|*
 name|tiny
 operator|*
@@ -900,24 +898,24 @@ operator|>
 literal|0
 operator|)
 condition|?
-name|sn
+name|s
 operator|*
 name|huge
 operator|*
 name|huge
 else|:
-name|sn
+name|s
 operator|*
 name|tiny
 operator|*
 name|tiny
 return|;
-comment|/* now |1-x| is tiny<= 2**-20, suffice to compute 	   log(x) by x-x^2/2+x^3/3-x^4/4 */
+comment|/* now |1-x| is tiny<= 2**-20, suffice to compute  	   log(x) by x-x^2/2+x^3/3-x^4/4 */
 name|t
 operator|=
 name|ax
 operator|-
-literal|1
+name|one
 expr_stmt|;
 comment|/* t has 20 trailing zeros */
 name|w
@@ -986,6 +984,8 @@ block|}
 else|else
 block|{
 name|double
+name|ss
+decl_stmt|,
 name|s2
 decl_stmt|,
 name|s_h
@@ -1095,7 +1095,7 @@ argument_list|,
 name|ix
 argument_list|)
 expr_stmt|;
-comment|/* compute s = s_h+s_l = (x-1)/(x+1) or (x-1.5)/(x+1.5) */
+comment|/* compute ss = s_h+s_l = (x-1)/(x+1) or (x-1.5)/(x+1.5) */
 name|u
 operator|=
 name|ax
@@ -1119,7 +1119,7 @@ name|k
 index|]
 operator|)
 expr_stmt|;
-name|s
+name|ss
 operator|=
 name|u
 operator|*
@@ -1127,7 +1127,7 @@ name|v
 expr_stmt|;
 name|s_h
 operator|=
-name|s
+name|ss
 expr_stmt|;
 name|SET_LOW_WORD
 argument_list|(
@@ -1198,9 +1198,9 @@ expr_stmt|;
 comment|/* compute log(ax) */
 name|s2
 operator|=
-name|s
+name|ss
 operator|*
-name|s
+name|ss
 expr_stmt|;
 name|r
 operator|=
@@ -1247,7 +1247,7 @@ operator|*
 operator|(
 name|s_h
 operator|+
-name|s
+name|ss
 operator|)
 expr_stmt|;
 name|s2
@@ -1285,7 +1285,7 @@ operator|-
 name|s2
 operator|)
 expr_stmt|;
-comment|/* u+v = s*(1+...) */
+comment|/* u+v = ss*(1+...) */
 name|u
 operator|=
 name|s_h
@@ -1300,9 +1300,9 @@ name|t_h
 operator|+
 name|t_l
 operator|*
-name|s
+name|ss
 expr_stmt|;
-comment|/* 2/(3log2)*(s+...) */
+comment|/* 2/(3log2)*(ss+...) */
 name|p_h
 operator|=
 name|u
@@ -1348,7 +1348,7 @@ index|[
 name|k
 index|]
 expr_stmt|;
-comment|/* log2(ax) = (s+..)*2/(3*log2) = n + dp_h + z_h + z_l */
+comment|/* log2(ax) = (ss+..)*2/(3*log2) = n + dp_h + z_h + z_l */
 name|t
 operator|=
 operator|(
@@ -1475,7 +1475,7 @@ literal|0
 condition|)
 comment|/* if z> 1024 */
 return|return
-name|sn
+name|s
 operator|*
 name|huge
 operator|*
@@ -1495,7 +1495,7 @@ operator|-
 name|p_h
 condition|)
 return|return
-name|sn
+name|s
 operator|*
 name|huge
 operator|*
@@ -1533,7 +1533,7 @@ literal|0
 condition|)
 comment|/* z< -1075 */
 return|return
-name|sn
+name|s
 operator|*
 name|tiny
 operator|*
@@ -1551,7 +1551,7 @@ operator|-
 name|p_h
 condition|)
 return|return
-name|sn
+name|s
 operator|*
 name|tiny
 operator|*
@@ -1837,7 +1837,7 @@ name|j
 argument_list|)
 expr_stmt|;
 return|return
-name|sn
+name|s
 operator|*
 name|z
 return|;

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)e_rem_pio2.c 5.1 93/09/24 */
+comment|/* @(#)e_rem_pio2.c 1.4 95/01/18 */
 end_comment
 
 begin_comment
-comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice  * is preserved.  * ====================================================  */
+comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunSoft, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice   * is preserved.  * ====================================================  *  */
 end_comment
 
 begin_ifndef
@@ -29,7 +29,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __ieee754_rem_pio2(x,y)  *  * return the remainder of x rem pi/2 in y[0]+y[1]  * use __kernel_rem_pio2()  */
+comment|/* __ieee754_rem_pio2(x,y)  *   * return the remainder of x rem pi/2 in y[0]+y[1]   * use __kernel_rem_pio2()  */
 end_comment
 
 begin_include
@@ -45,7 +45,7 @@ file|"math_private.h"
 end_include
 
 begin_comment
-comment|/*  * Table of constants for 2/pi, 396 Hex digits (476 decimal) of 2/pi  */
+comment|/*  * Table of constants for 2/pi, 396 Hex digits (476 decimal) of 2/pi   */
 end_comment
 
 begin_decl_stmt
@@ -187,7 +187,7 @@ block|,
 literal|0x60E27B
 block|,
 literal|0xC08C6B
-block|, }
+block|,  }
 decl_stmt|;
 end_decl_stmt
 
@@ -892,7 +892,7 @@ return|return
 name|n
 return|;
 block|}
-comment|/*      * all other (large) arguments      */
+comment|/*       * all other (large) arguments      */
 if|if
 condition|(
 name|ix

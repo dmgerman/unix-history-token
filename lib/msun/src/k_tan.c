@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)k_tan.c 5.1 93/09/24 */
+comment|/* @(#)k_tan.c 1.5 04/04/22 SMI */
 end_comment
 
 begin_comment
 comment|/*  * ====================================================  * Copyright 2004 Sun Microsystems, Inc.  All Rights Reserved.  *  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice  * is preserved.  * ====================================================  */
+end_comment
+
+begin_comment
+comment|/* INDENT OFF */
 end_comment
 
 begin_ifndef
@@ -29,7 +33,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __kernel_tan( x, y, k )  * kernel tan function on [-pi/4, pi/4], pi/4 ~ 0.7854  * Input x is assumed to be bounded by ~pi/4 in magnitude.  * Input y is the tail of x.  * Input k indicates whether tan (if k=1) or  * -1/tan (if k= -1) is returned.  *  * Algorithm  *	1. Since tan(-x) = -tan(x), we need only to consider positive x.  *	2. if x< 2^-28 (hx<0x3e300000 0), return x with inexact if x!=0.  *	3. tan(x) is approximated by an odd polynomial of degree 27 on  *	   [0,0.67434]  *		  	         3             27  *	   	tan(x) ~ x + T1*x + ... + T13*x  *	   where  *  * 	        |tan(x)         2     4            26   |     -59.2  * 	        |----- - (1+T1*x +T2*x +.... +T13*x    )|<= 2  * 	        |  x 					|  *  *	   Note: tan(x+y) = tan(x) + tan'(x)*y  *		          ~ tan(x) + (1+x*x)*y  *	   Therefore, for better accuracy in computing tan(x+y), let  *		     3      2      2       2       2  *		r = x *(T2+x *(T3+x *(...+x *(T12+x *T13))))  *	   then  *		 		    3    2  *		tan(x+y) = x + (T1*x + (x *(r+y)+y))  *  *      4. For x in [0.67434,pi/4],  let y = pi/4 - x, then  *		tan(x) = tan(pi/4-y) = (1-tan(y))/(1+tan(y))  *		       = 1 - 2*(tan(y) - (tan(y)^2)/(1+tan(y)))  */
+comment|/* __kernel_tan( x, y, k )  * kernel tan function on [-pi/4, pi/4], pi/4 ~ 0.7854  * Input x is assumed to be bounded by ~pi/4 in magnitude.  * Input y is the tail of x.  * Input k indicates whether tan (if k = 1) or -1/tan (if k = -1) is returned.  *  * Algorithm  *	1. Since tan(-x) = -tan(x), we need only to consider positive x.  *	2. if x< 2^-28 (hx<0x3e300000 0), return x with inexact if x!=0.  *	3. tan(x) is approximated by a odd polynomial of degree 27 on  *	   [0,0.67434]  *		  	         3             27  *	   	tan(x) ~ x + T1*x + ... + T13*x  *	   where  *  * 	        |tan(x)         2     4            26   |     -59.2  * 	        |----- - (1+T1*x +T2*x +.... +T13*x    )|<= 2  * 	        |  x 					|  *  *	   Note: tan(x+y) = tan(x) + tan'(x)*y  *		          ~ tan(x) + (1+x*x)*y  *	   Therefore, for better accuracy in computing tan(x+y), let  *		     3      2      2       2       2  *		r = x *(T2+x *(T3+x *(...+x *(T12+x *T13))))  *	   then  *		 		    3    2  *		tan(x+y) = x + (T1*x + (x *(r+y)+y))  *  *      4. For x in [0.67434,pi/4],  let y = pi/4 - x, then  *		tan(x) = tan(pi/4-y) = (1-tan(y))/(1+tan(y))  *		       = 1 - 2*(tan(y) - (tan(y)^2)/(1+tan(y)))  */
 end_comment
 
 begin_include
@@ -48,68 +52,96 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|double
-name|one
-init|=
-literal|1.00000000000000000000e+00
-decl_stmt|,
-comment|/* 0x3FF00000, 0x00000000 */
-name|pio4
-init|=
-literal|7.85398163397448278999e-01
-decl_stmt|,
-comment|/* 0x3FE921FB, 0x54442D18 */
-name|pio4lo
-init|=
-literal|3.06161699786838301793e-17
-decl_stmt|,
-comment|/* 0x3C81A626, 0x33145C07 */
-name|T
+name|xxx
 index|[]
 init|=
 block|{
 literal|3.33333333333334091986e-01
 block|,
-comment|/* 0x3FD55555, 0x55555563 */
+comment|/* 3FD55555, 55555563 */
 literal|1.33333333333201242699e-01
 block|,
-comment|/* 0x3FC11111, 0x1110FE7A */
+comment|/* 3FC11111, 1110FE7A */
 literal|5.39682539762260521377e-02
 block|,
-comment|/* 0x3FABA1BA, 0x1BB341FE */
+comment|/* 3FABA1BA, 1BB341FE */
 literal|2.18694882948595424599e-02
 block|,
-comment|/* 0x3F9664F4, 0x8406D637 */
+comment|/* 3F9664F4, 8406D637 */
 literal|8.86323982359930005737e-03
 block|,
-comment|/* 0x3F8226E3, 0xE96E8493 */
+comment|/* 3F8226E3, E96E8493 */
 literal|3.59207910759131235356e-03
 block|,
-comment|/* 0x3F6D6D22, 0xC9560328 */
+comment|/* 3F6D6D22, C9560328 */
 literal|1.45620945432529025516e-03
 block|,
-comment|/* 0x3F57DBC8, 0xFEE08315 */
+comment|/* 3F57DBC8, FEE08315 */
 literal|5.88041240820264096874e-04
 block|,
-comment|/* 0x3F4344D8, 0xF2F26501 */
+comment|/* 3F4344D8, F2F26501 */
 literal|2.46463134818469906812e-04
 block|,
-comment|/* 0x3F3026F7, 0x1A8D1068 */
+comment|/* 3F3026F7, 1A8D1068 */
 literal|7.81794442939557092300e-05
 block|,
-comment|/* 0x3F147E88, 0xA03792A6 */
+comment|/* 3F147E88, A03792A6 */
 literal|7.14072491382608190305e-05
 block|,
-comment|/* 0x3F12B80F, 0x32F0A7E9 */
+comment|/* 3F12B80F, 32F0A7E9 */
 operator|-
 literal|1.85586374855275456654e-05
 block|,
-comment|/* 0xBEF375CB, 0xDB605373 */
+comment|/* BEF375CB, DB605373 */
 literal|2.59073051863633712884e-05
 block|,
-comment|/* 0x3EFB2A70, 0x74BF7AD4 */
+comment|/* 3EFB2A70, 74BF7AD4 */
+comment|/* one */
+literal|1.00000000000000000000e+00
+block|,
+comment|/* 3FF00000, 00000000 */
+comment|/* pio4 */
+literal|7.85398163397448278999e-01
+block|,
+comment|/* 3FE921FB, 54442D18 */
+comment|/* pio4lo */
+literal|3.06161699786838301793e-17
+comment|/* 3C81A626, 33145C07 */
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|one
+value|xxx[13]
+end_define
+
+begin_define
+define|#
+directive|define
+name|pio4
+value|xxx[14]
+end_define
+
+begin_define
+define|#
+directive|define
+name|pio4lo
+value|xxx[15]
+end_define
+
+begin_define
+define|#
+directive|define
+name|T
+value|xxx
+end_define
+
+begin_comment
+comment|/* INDENT ON */
+end_comment
 
 begin_function
 name|double
@@ -302,7 +334,7 @@ operator|>=
 literal|0x3FE59428
 condition|)
 block|{
-comment|/* |x|>=0.6744 */
+comment|/* |x|>= 0.6744 */
 if|if
 condition|(
 name|hx
@@ -356,7 +388,7 @@ name|z
 operator|*
 name|z
 expr_stmt|;
-comment|/* Break x^5*(T[1]+x^2*T[2]+...) into      *	  x^5(T[1]+x^4*T[3]+...+x^20*T[11]) +      *	  x^5(x^2*(T[2]+x^4*T[4]+...+x^22*[T12]))      */
+comment|/* 	 * Break x^5*(T[1]+x^2*T[2]+...) into 	 * x^5(T[1]+x^4*T[3]+...+x^20*T[11]) + 	 * x^5(x^2*(T[2]+x^4*T[4]+...+x^22*[T12])) 	 */
 name|r
 operator|=
 name|T
@@ -568,8 +600,8 @@ name|w
 return|;
 else|else
 block|{
-comment|/* if allow error up to 2 ulp, 			   simply return -1.0/(x+r) here */
-comment|/*  compute -1.0/(x+r) accurately */
+comment|/* 		 * if allow error up to 2 ulp, simply return 		 * -1.0 / (x+r) here 		 */
+comment|/* compute -1.0 / (x+r) accurately */
 name|double
 name|a
 decl_stmt|,

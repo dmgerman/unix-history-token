@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)e_acos.c 5.1 93/09/24 */
+comment|/* @(#)e_acos.c 1.3 95/01/18 */
 end_comment
 
 begin_comment
-comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice  * is preserved.  * ====================================================  */
+comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunSoft, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice   * is preserved.  * ====================================================  */
 end_comment
 
 begin_ifndef
@@ -29,7 +29,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __ieee754_acos(x)  * Method :  *	acos(x)  = pi/2 - asin(x)  *	acos(-x) = pi/2 + asin(x)  * For |x|<=0.5  *	acos(x) = pi/2 - (x + x*x^2*R(x^2))	(see asin.c)  * For x>0.5  * 	acos(x) = pi/2 - (pi/2 - 2asin(sqrt((1-x)/2)))  *		= 2asin(sqrt((1-x)/2))  *		= 2s + 2s*z*R(z) 	...z=(1-x)/2, s=sqrt(z)  *		= 2f + (2c + 2s*z*R(z))  *     where f=hi part of s, and c = (z-f*f)/(s+f) is the correction term  *     for f so that f+c ~ sqrt(z).  * For x<-0.5  *	acos(x) = pi - 2asin(sqrt((1-|x|)/2))  *		= pi - 0.5*(s+s*z*R(z)), where z=(1-|x|)/2,s=sqrt(z)  *  * Special cases:  *	if x is NaN, return x itself;  *	if |x|>1, return NaN with invalid signal.  *  * Function needed: __ieee754_sqrt  */
+comment|/* __ieee754_acos(x)  * Method :                    *	acos(x)  = pi/2 - asin(x)  *	acos(-x) = pi/2 + asin(x)  * For |x|<=0.5  *	acos(x) = pi/2 - (x + x*x^2*R(x^2))	(see asin.c)  * For x>0.5  * 	acos(x) = pi/2 - (pi/2 - 2asin(sqrt((1-x)/2)))  *		= 2asin(sqrt((1-x)/2))    *		= 2s + 2s*z*R(z) 	...z=(1-x)/2, s=sqrt(z)  *		= 2f + (2c + 2s*z*R(z))  *     where f=hi part of s, and c = (z-f*f)/(s+f) is the correction term  *     for f so that f+c ~ sqrt(z).  * For x<-0.5  *	acos(x) = pi - 2asin(sqrt((1-|x|)/2))  *		= pi - 0.5*(s+s*z*R(z)), where z=(1-|x|)/2,s=sqrt(z)  *  * Special cases:  *	if x is NaN, return x itself;  *	if |x|>1, return NaN with invalid signal.  *  * Function needed: sqrt  */
 end_comment
 
 begin_include
@@ -432,7 +432,7 @@ operator|)
 expr_stmt|;
 name|s
 operator|=
-name|__ieee754_sqrt
+name|sqrt
 argument_list|(
 name|z
 argument_list|)
@@ -478,7 +478,7 @@ literal|0.5
 expr_stmt|;
 name|s
 operator|=
-name|__ieee754_sqrt
+name|sqrt
 argument_list|(
 name|z
 argument_list|)

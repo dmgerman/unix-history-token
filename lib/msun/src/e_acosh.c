@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)e_acosh.c 5.1 93/09/24 */
+comment|/* @(#)e_acosh.c 1.3 95/01/18 */
 end_comment
 
 begin_comment
-comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice  * is preserved.  * ====================================================  */
+comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunSoft, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice   * is preserved.  * ====================================================  *  */
 end_comment
 
 begin_ifndef
@@ -29,7 +29,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __ieee754_acosh(x)  * Method :  *	Based on  *		acosh(x) = log [ x + sqrt(x*x-1) ]  *	we have  *		acosh(x) := log(x)+ln2,	if x is large; else  *		acosh(x) := log(2x-1/(sqrt(x*x-1)+x)) if x>2; else  *		acosh(x) := log1p(t+sqrt(2.0*t+t*t)); where t=x-1.  *  * Special cases:  *	acosh(x) is NaN with signal if x<1.  *	acosh(NaN) is NaN without signal.  */
+comment|/* __ieee754_acosh(x)  * Method :  *	Based on   *		acosh(x) = log [ x + sqrt(x*x-1) ]  *	we have  *		acosh(x) := log(x)+ln2,	if x is large; else  *		acosh(x) := log(2x-1/(sqrt(x*x-1)+x)) if x>2; else  *		acosh(x) := log1p(t+sqrt(2.0*t+t*t)); where t=x-1.  *  * Special cases:  *	acosh(x) is NaN with signal if x<1.  *	acosh(NaN) is NaN without signal.  */
 end_comment
 
 begin_include
@@ -192,7 +192,7 @@ operator|/
 operator|(
 name|x
 operator|+
-name|__ieee754_sqrt
+name|sqrt
 argument_list|(
 name|t
 operator|-
@@ -216,7 +216,7 @@ name|log1p
 argument_list|(
 name|t
 operator|+
-name|__ieee754_sqrt
+name|sqrt
 argument_list|(
 literal|2.0
 operator|*

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#)er_gamma.c 5.1 93/09/24 */
+comment|/* @(#)e_gamma_r.c 1.3 95/01/18 */
 end_comment
 
 begin_comment
-comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice  * is preserved.  * ====================================================  */
+comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunSoft, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice   * is preserved.  * ====================================================  *  */
 end_comment
 
 begin_ifndef
@@ -29,7 +29,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __ieee754_gamma_r(x, signgamp)  * Reentrant version of the logarithm of the Gamma function  * with user provide pointer for the sign of Gamma(x).  *  * Method: See __ieee754_lgamma_r  */
+comment|/* __ieee754_gamma_r(x, signgamp)  * Reentrant version of the logarithm of the Gamma function   * with user provide pointer for the sign of Gamma(x).   *  * Method: See __ieee754_lgamma_r  */
 end_comment
 
 begin_include
