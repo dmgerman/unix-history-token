@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vfprintf.c	5.17 (Berkeley) %G%"
+literal|"@(#)vfprintf.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -262,12 +262,17 @@ name|digs
 operator|=
 literal|"0123456789abcdef"
 expr_stmt|;
-for|for
-control|(
+if|if
+condition|(
+operator|!
+name|buf
+condition|)
 name|buf
 operator|=
 name|sbuf
-operator|,
+expr_stmt|;
+for|for
+control|(
 name|cnt
 operator|=
 literal|0
