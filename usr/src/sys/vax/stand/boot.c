@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	boot.c	4.2	%G% */
+comment|/*	boot.c	4.2	81/03/15	*/
 end_comment
 
 begin_include
@@ -89,11 +89,11 @@ block|,
 literal|'p'
 block|,
 comment|/* 2 = up */
-literal|'r'
+literal|'h'
 block|,
 literal|'k'
 block|,
-comment|/* 3 = rk */
+comment|/* 3 = hk */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -203,21 +203,12 @@ index|]
 expr_stmt|;
 block|}
 else|else
-block|{
-name|printf
-argument_list|(
-literal|"DID YOU MEAN ``BOOT ANY?'' (Bad devtype (r10=%x))\n"
-argument_list|,
-name|devtype
-argument_list|)
-expr_stmt|;
 name|howto
 operator|=
 name|RB_SINGLE
 operator||
 name|RB_ASKNAME
 expr_stmt|;
-block|}
 block|}
 endif|#
 directive|endif
