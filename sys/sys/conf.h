@@ -114,11 +114,6 @@ directive|define
 name|SI_CLONELIST
 value|0x0200
 comment|/* on a clone list */
-define|#
-directive|define
-name|SI_ISDISK
-value|0x0400
-comment|/* device is a disk */
 name|struct
 name|timespec
 name|si_atime
