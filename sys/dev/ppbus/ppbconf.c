@@ -609,16 +609,10 @@ modifier|*
 name|token
 parameter_list|)
 block|{
-name|char
-modifier|*
-name|p
-decl_stmt|;
 name|int
 name|tlen
 decl_stmt|,
 name|i
-decl_stmt|,
-name|j
 decl_stmt|;
 define|#
 directive|define
