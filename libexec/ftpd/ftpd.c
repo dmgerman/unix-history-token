@@ -231,6 +231,23 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SKEY
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<skey.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -654,21 +671,18 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|char
-modifier|*
-name|skey_challenge
-parameter_list|()
-function_decl|;
-end_function_decl
+name|addr_string
+index|[
+literal|20
+index|]
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
-name|char
-modifier|*
-name|skey_crypt
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_comment
+comment|/* XXX */
+end_comment
 
 begin_endif
 endif|#
@@ -1051,6 +1065,10 @@ name|FILE
 modifier|*
 name|fd
 decl_stmt|;
+name|tzset
+argument_list|()
+expr_stmt|;
+comment|/* in case no timezone database in ~ftp */
 comment|/* 	 * LOG_NDELAY sets up the logging connection immediately, 	 * necessary for anonymous ftp's that chroot and can't do it later. 	 */
 name|openlog
 argument_list|(
@@ -1109,6 +1127,23 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|SKEY
+name|strcpy
+argument_list|(
+name|addr_string
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|his_addr
+operator|.
+name|sin_addr
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|addrlen
 operator|=
 sizeof|sizeof
@@ -2199,7 +2234,7 @@ name|reply
 argument_list|(
 literal|331
 argument_list|,
-literal|"Guest login ok, type your name as password."
+literal|"Guest login ok, send your email address as password."
 argument_list|)
 expr_stmt|;
 block|}
@@ -2366,6 +2401,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|remotehost
+argument_list|,
+name|addr_string
 argument_list|)
 expr_stmt|;
 name|reply
