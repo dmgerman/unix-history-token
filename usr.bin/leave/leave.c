@@ -165,6 +165,8 @@ name|c
 decl_stmt|,
 modifier|*
 name|cp
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|tm
@@ -267,6 +269,16 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|argc
+operator|>
+literal|2
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
 else|else
 name|cp
 operator|=
