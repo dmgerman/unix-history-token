@@ -178,7 +178,7 @@ name|DIR
 modifier|*
 name|reading
 init|=
-name|opendir
+name|CVS_OPENDIR
 argument_list|(
 name|dir
 operator|->
@@ -237,7 +237,7 @@ operator|,
 operator|(
 name|next
 operator|=
-name|readdir
+name|CVS_READDIR
 argument_list|(
 name|reading
 argument_list|)
@@ -361,7 +361,7 @@ name|e
 init|=
 name|errno
 decl_stmt|;
-name|closedir
+name|CVS_CLOSEDIR
 argument_list|(
 name|reading
 argument_list|)
@@ -378,7 +378,7 @@ block|}
 if|#
 directive|if
 name|CLOSEDIR_VOID
-name|closedir
+name|CVS_CLOSEDIR
 argument_list|(
 name|reading
 argument_list|)
@@ -387,7 +387,7 @@ else|#
 directive|else
 if|if
 condition|(
-name|closedir
+name|CVS_CLOSEDIR
 argument_list|(
 name|reading
 argument_list|)

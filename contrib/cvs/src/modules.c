@@ -144,7 +144,7 @@ name|retval
 decl_stmt|;
 if|if
 condition|(
-name|CVSroot_original
+name|current_parsed_root
 operator|==
 name|NULL
 condition|)
@@ -174,7 +174,9 @@ name|xmalloc
 argument_list|(
 name|strlen
 argument_list|(
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|)
 operator|+
 sizeof|sizeof
@@ -187,7 +189,7 @@ argument_list|(
 name|CVSROOTADM_MODULES
 argument_list|)
 operator|+
-literal|20
+literal|3
 argument_list|)
 expr_stmt|;
 operator|(
@@ -199,7 +201,9 @@ name|mfile
 argument_list|,
 literal|"%s/%s/%s"
 argument_list|,
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|,
 name|CVSROOTADM
 argument_list|,
@@ -283,6 +287,8 @@ name|local_specified
 parameter_list|,
 name|run_module_prog
 parameter_list|,
+name|build_dirs
+parameter_list|,
 name|extra_arg
 parameter_list|)
 name|DBM
@@ -316,6 +322,9 @@ name|local_specified
 decl_stmt|;
 name|int
 name|run_module_prog
+decl_stmt|;
+name|int
+name|build_dirs
 decl_stmt|;
 name|char
 modifier|*
@@ -752,7 +761,9 @@ name|xmalloc
 argument_list|(
 name|strlen
 argument_list|(
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|)
 operator|+
 name|strlen
@@ -760,7 +771,12 @@ argument_list|(
 name|mname
 argument_list|)
 operator|+
-literal|10
+sizeof|sizeof
+argument_list|(
+name|RCSEXT
+argument_list|)
+operator|+
+literal|2
 argument_list|)
 expr_stmt|;
 operator|(
@@ -772,7 +788,9 @@ name|file
 argument_list|,
 literal|"%s/%s"
 argument_list|,
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|,
 name|mname
 argument_list|)
@@ -783,7 +801,9 @@ name|xmalloc
 argument_list|(
 name|strlen
 argument_list|(
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|)
 operator|+
 name|strlen
@@ -801,7 +821,7 @@ argument_list|(
 name|RCSEXT
 argument_list|)
 operator|+
-literal|15
+literal|3
 argument_list|)
 expr_stmt|;
 if|if
@@ -834,7 +854,9 @@ name|attic_file
 argument_list|,
 literal|"%s/%s/%s/%s%s"
 argument_list|,
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|,
 name|mname
 argument_list|,
@@ -863,7 +885,9 @@ name|attic_file
 argument_list|,
 literal|"%s/%s/%s%s"
 argument_list|,
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|,
 name|CVSATTIC
 argument_list|,
@@ -1546,7 +1570,7 @@ argument_list|(
 name|value
 argument_list|)
 operator|+
-literal|10
+literal|5
 argument_list|)
 expr_stmt|;
 name|strcpy
@@ -1946,6 +1970,8 @@ name|local_specified
 argument_list|,
 name|run_module_prog
 argument_list|,
+name|build_dirs
+argument_list|,
 name|extra_arg
 argument_list|)
 expr_stmt|;
@@ -2022,11 +2048,10 @@ name|char
 modifier|*
 name|dir
 decl_stmt|;
-comment|/* XXX - XXX - MAJOR HACK - DO NOT SHIP - this needs to 	   be !pipeout, but we don't know that here yet */
 if|if
 condition|(
 operator|!
-name|run_module_prog
+name|build_dirs
 condition|)
 goto|goto
 name|do_special
@@ -2445,6 +2470,8 @@ argument_list|,
 name|local_specified
 argument_list|,
 name|run_module_prog
+argument_list|,
+name|build_dirs
 argument_list|,
 name|extra_arg
 argument_list|)

@@ -245,7 +245,9 @@ name|Create_Root
 argument_list|(
 name|dir
 argument_list|,
-name|CVSroot_original
+name|current_parsed_root
+operator|->
+name|original
 argument_list|)
 expr_stmt|;
 if|if
@@ -349,7 +351,9 @@ name|strcmp
 argument_list|(
 name|reposcopy
 argument_list|,
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|)
 operator|==
 literal|0
@@ -385,12 +389,6 @@ ifdef|#
 directive|ifdef
 name|RELATIVE_REPOS
 comment|/*      * If the Repository file is to hold a relative path, try to strip off      * the leading CVSroot argument.      */
-if|if
-condition|(
-name|CVSroot_directory
-operator|!=
-name|NULL
-condition|)
 block|{
 name|char
 modifier|*
@@ -400,10 +398,12 @@ name|xmalloc
 argument_list|(
 name|strlen
 argument_list|(
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|)
 operator|+
-literal|10
+literal|2
 argument_list|)
 decl_stmt|;
 operator|(
@@ -415,7 +415,9 @@ name|path
 argument_list|,
 literal|"%s/"
 argument_list|,
-name|CVSroot_directory
+name|current_parsed_root
+operator|->
+name|directory
 argument_list|)
 expr_stmt|;
 if|if

@@ -326,7 +326,9 @@ argument_list|)
 operator|+
 name|strlen
 argument_list|(
-name|CVSroot_original
+name|current_parsed_root
+operator|->
+name|original
 argument_list|)
 operator|+
 literal|20
@@ -340,7 +342,9 @@ literal|"%s -n -q -d %s update"
 argument_list|,
 name|program_path
 argument_list|,
-name|CVSroot_original
+name|current_parsed_root
+operator|->
+name|original
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -349,7 +353,9 @@ name|CLIENT_SUPPORT
 comment|/* Start the server; we'll close it after looping. */
 if|if
 condition|(
-name|client_active
+name|current_parsed_root
+operator|->
+name|isremote
 condition|)
 block|{
 name|start_server
@@ -736,7 +742,9 @@ name|CLIENT_SUPPORT
 operator|&&
 operator|!
 operator|(
-name|client_active
+name|current_parsed_root
+operator|->
+name|isremote
 operator|&&
 operator|(
 operator|!
@@ -798,7 +806,9 @@ directive|ifdef
 name|CLIENT_SUPPORT
 if|if
 condition|(
-name|client_active
+name|current_parsed_root
+operator|->
+name|isremote
 condition|)
 block|{
 name|send_to_server
@@ -900,7 +910,9 @@ directive|ifdef
 name|CLIENT_SUPPORT
 if|if
 condition|(
-name|client_active
+name|current_parsed_root
+operator|->
+name|isremote
 condition|)
 name|err
 operator|+=
@@ -935,7 +947,9 @@ directive|ifdef
 name|CLIENT_SUPPORT
 if|if
 condition|(
-name|client_active
+name|current_parsed_root
+operator|->
+name|isremote
 condition|)
 block|{
 comment|/* Unfortunately, client.c doesn't offer a way to close 	   the connection without waiting for responses.  The extra 	   network turnaround here is quite unnecessary other than 	   that....  */

@@ -258,7 +258,9 @@ directive|ifdef
 name|CLIENT_SUPPORT
 if|if
 condition|(
-name|client_active
+name|current_parsed_root
+operator|->
+name|isremote
 condition|)
 block|{
 comment|/* Call expand_wild so that the local removal of files will            work.  It's ok to do it always because we have to send the            file names expanded anyway.  */
@@ -440,6 +442,9 @@ expr_stmt|;
 if|if
 condition|(
 name|removed_files
+operator|&&
+operator|!
+name|really_quiet
 condition|)
 name|error
 argument_list|(

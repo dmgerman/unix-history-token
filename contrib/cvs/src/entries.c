@@ -1644,6 +1644,23 @@ operator|.
 name|st_mtime
 argument_list|)
 decl_stmt|;
+comment|/* Fix non-standard format.  */
+if|if
+condition|(
+name|c
+index|[
+literal|8
+index|]
+operator|==
+literal|'0'
+condition|)
+name|c
+index|[
+literal|8
+index|]
+operator|=
+literal|' '
+expr_stmt|;
 if|if
 condition|(
 operator|!
