@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_mbuf.c	1.33	82/05/18	*/
+comment|/*	uipc_mbuf.c	1.34	82/05/19	*/
 end_comment
 
 begin_include
@@ -225,9 +225,7 @@ index|[
 name|mbx
 index|]
 argument_list|,
-name|ncl
-operator|*
-name|CLSIZE
+name|npg
 argument_list|,
 name|proc
 argument_list|,
