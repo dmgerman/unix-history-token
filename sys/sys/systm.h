@@ -1379,20 +1379,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|suibyte
-parameter_list|(
-name|void
-modifier|*
-name|base
-parameter_list|,
-name|int
-name|byte
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int32_t
 name|fuword32
 parameter_list|(
