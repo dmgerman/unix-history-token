@@ -224,6 +224,11 @@ operator|=
 name|cset
 expr_stmt|;
 block|}
+else|else
+name|ret
+operator|=
+literal|""
+expr_stmt|;
 block|}
 elseif|else
 if|if
