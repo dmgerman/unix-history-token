@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)nameser.h	5.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)nameser.h	5.14 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -751,6 +751,11 @@ directive|if
 name|defined
 argument_list|(
 name|vax
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ns32000
 argument_list|)
 operator|||
 name|defined
