@@ -435,6 +435,19 @@ name|d_dump_t
 parameter_list|(
 name|dev_t
 name|dev
+parameter_list|,
+name|void
+modifier|*
+name|virtual
+parameter_list|,
+name|vm_offset_t
+name|physical
+parameter_list|,
+name|off_t
+name|offset
+parameter_list|,
+name|size_t
+name|length
 parameter_list|)
 function_decl|;
 end_typedef
@@ -1657,6 +1670,95 @@ name|dev_clone_fn
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* Stuff relating to kernel-dump */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|int
+name|dumper_t
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|,
+comment|/* Private to the driver. */
+name|void
+modifier|*
+name|virtual
+parameter_list|,
+comment|/* Virtual (mapped) address. */
+name|vm_offset_t
+name|physical
+parameter_list|,
+comment|/* Physical address of virtual. */
+name|off_t
+name|offset
+parameter_list|,
+comment|/* Byte-offset to write at. */
+name|size_t
+name|length
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
+comment|/* Number of bytes to dump. */
+end_comment
+
+begin_struct
+struct|struct
+name|dumperinfo
+block|{
+name|dumper_t
+modifier|*
+name|dumper
+decl_stmt|;
+comment|/* Dumping function. */
+name|void
+modifier|*
+name|priv
+decl_stmt|;
+comment|/* Private parts. */
+name|u_int
+name|blocksize
+decl_stmt|;
+comment|/* Size of block in bytes. */
+name|off_t
+name|mediaoffset
+decl_stmt|;
+comment|/* Initial offset in bytes. */
+name|off_t
+name|mediasize
+decl_stmt|;
+comment|/* Space available in bytes. */
+block|}
+struct|;
+end_struct
+
+begin_function_decl
+name|int
+name|set_dumper
+parameter_list|(
+name|struct
+name|dumperinfo
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|dumpsys
+parameter_list|(
+name|struct
+name|dumperinfo
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 specifier|extern

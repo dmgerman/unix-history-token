@@ -163,28 +163,6 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|dev_t
-name|dumpdev
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* dump device */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|long
-name|dumplo
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* offset into dumpdev */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|dev_t
 name|rootdev
 decl_stmt|;
 end_decl_stmt
