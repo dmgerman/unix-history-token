@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)error.c	5.3 (Berkeley) 6/1/90";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)error.c	5.3 (Berkeley) 6/1/90"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,13 +67,9 @@ end_decl_stmt
 
 begin_block
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: f - %s\n"
-argument_list|,
-name|myname
+literal|"f - %s"
 argument_list|,
 name|msg
 argument_list|)
@@ -80,13 +89,9 @@ end_macro
 
 begin_block
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: f - out of space\n"
-argument_list|,
-name|myname
+literal|"f - out of space"
 argument_list|)
 expr_stmt|;
 name|done
@@ -113,13 +118,9 @@ end_decl_stmt
 
 begin_block
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: f - cannot open \"%s\"\n"
-argument_list|,
-name|myname
+literal|"f - cannot open \"%s\""
 argument_list|,
 name|filename
 argument_list|)
@@ -139,13 +140,9 @@ end_macro
 
 begin_block
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: e - line %d of \"%s\", unexpected end-of-file\n"
-argument_list|,
-name|myname
+literal|"e - line %d of \"%s\", unexpected end-of-file"
 argument_list|,
 name|lineno
 argument_list|,
@@ -336,13 +333,9 @@ end_decl_stmt
 
 begin_block
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: e - line %d of \"%s\", syntax error\n"
-argument_list|,
-name|myname
+literal|"e - line %d of \"%s\", syntax error"
 argument_list|,
 name|st_lineno
 argument_list|,
@@ -397,13 +390,9 @@ end_decl_stmt
 
 begin_block
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: e - line %d of \"%s\", unmatched /*\n"
-argument_list|,
-name|myname
+literal|"e - line %d of \"%s\", unmatched /*"
 argument_list|,
 name|c_lineno
 argument_list|,
@@ -458,13 +447,9 @@ end_decl_stmt
 
 begin_block
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: e - line %d of \"%s\", unterminated string\n"
-argument_list|,
-name|myname
+literal|"e - line %d of \"%s\", unterminated string"
 argument_list|,
 name|s_lineno
 argument_list|,
@@ -519,13 +504,9 @@ end_decl_stmt
 
 begin_block
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: e - line %d of \"%s\", unmatched %%{\n"
-argument_list|,
-name|myname
+literal|"e - line %d of \"%s\", unmatched %%{"
 argument_list|,
 name|t_lineno
 argument_list|,
@@ -580,13 +561,9 @@ end_decl_stmt
 
 begin_block
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: e - line %d of \"%s\", unterminated %%union \ declaration\n"
-argument_list|,
-name|myname
+literal|"e - line %d of \"%s\", unterminated %%union declaration"
 argument_list|,
 name|u_lineno
 argument_list|,
@@ -624,13 +601,9 @@ end_decl_stmt
 
 begin_block
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: e - line %d of \"%s\", too many %%union \ declarations\n"
-argument_list|,
-name|myname
+literal|"e - line %d of \"%s\", too many %%union declarations"
 argument_list|,
 name|lineno
 argument_list|,
@@ -685,13 +658,9 @@ end_decl_stmt
 
 begin_block
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: e - line %d of \"%s\", illegal tag\n"
-argument_list|,
-name|myname
+literal|"e - line %d of \"%s\", illegal tag"
 argument_list|,
 name|t_lineno
 argument_list|,
@@ -729,13 +698,9 @@ end_decl_stmt
 
 begin_block
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: e - line %d of \"%s\", illegal character\n"
-argument_list|,
-name|myname
+literal|"e - line %d of \"%s\", illegal character"
 argument_list|,
 name|lineno
 argument_list|,
@@ -773,13 +738,9 @@ end_decl_stmt
 
 begin_block
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: e - line %d of \"%s\", illegal use of reserved symbol \ %s\n"
-argument_list|,
-name|myname
+literal|"e - line %d of \"%s\", illegal use of reserved symbol %s"
 argument_list|,
 name|lineno
 argument_list|,
@@ -812,13 +773,9 @@ end_decl_stmt
 
 begin_block
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: e - line %d of \"%s\", the start symbol %s cannot be \ declared to be a token\n"
-argument_list|,
-name|myname
+literal|"e - line %d of \"%s\", the start symbol %s cannot be \ declared to be a token"
 argument_list|,
 name|lineno
 argument_list|,
@@ -851,13 +808,9 @@ end_decl_stmt
 
 begin_block
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: w - line %d of \"%s\", the type of %s has been \ redeclared\n"
-argument_list|,
-name|myname
+literal|"w - line %d of \"%s\", the type of %s has been redeclared"
 argument_list|,
 name|lineno
 argument_list|,
@@ -885,13 +838,9 @@ end_decl_stmt
 
 begin_block
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: w - line %d of \"%s\", the precedence of %s has been \ redeclared\n"
-argument_list|,
-name|myname
+literal|"w - line %d of \"%s\", the precedence of %s has been redeclared"
 argument_list|,
 name|lineno
 argument_list|,
@@ -919,13 +868,9 @@ end_decl_stmt
 
 begin_block
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: w - line %d of \"%s\", the value of %s has been \ redeclared\n"
-argument_list|,
-name|myname
+literal|"w - line %d of \"%s\", the value of %s has been redeclared"
 argument_list|,
 name|lineno
 argument_list|,
@@ -953,13 +898,9 @@ end_decl_stmt
 
 begin_block
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: e - line %d of \"%s\", the start symbol %s is a \ token\n"
-argument_list|,
-name|myname
+literal|"e - line %d of \"%s\", the start symbol %s is a token"
 argument_list|,
 name|lineno
 argument_list|,
@@ -983,13 +924,9 @@ end_macro
 
 begin_block
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: w - line %d of \"%s\", the start symbol has been \ redeclared\n"
-argument_list|,
-name|myname
+literal|"w - line %d of \"%s\", the start symbol has been redeclared"
 argument_list|,
 name|lineno
 argument_list|,
@@ -1006,13 +943,9 @@ end_macro
 
 begin_block
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: e - line %d of \"%s\", no grammar has been \ specified\n"
-argument_list|,
-name|myname
+literal|"e - line %d of \"%s\", no grammar has been specified"
 argument_list|,
 name|lineno
 argument_list|,
@@ -1042,13 +975,9 @@ end_decl_stmt
 
 begin_block
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: e - line %d of \"%s\", a token appears on the lhs \ of a production\n"
-argument_list|,
-name|myname
+literal|"e - line %d of \"%s\", a token appears on the lhs of a production"
 argument_list|,
 name|s_lineno
 argument_list|,
@@ -1070,13 +999,9 @@ end_macro
 
 begin_block
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: w - line %d of  \"%s\", conflicting %%prec \ specifiers\n"
-argument_list|,
-name|myname
+literal|"w - line %d of  \"%s\", conflicting %%prec specifiers"
 argument_list|,
 name|lineno
 argument_list|,
@@ -1119,13 +1044,9 @@ end_decl_stmt
 
 begin_block
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: e - line %d of \"%s\", unterminated action\n"
-argument_list|,
-name|myname
+literal|"e - line %d of \"%s\", unterminated action"
 argument_list|,
 name|a_lineno
 argument_list|,
@@ -1170,13 +1091,9 @@ end_decl_stmt
 
 begin_block
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: w - line %d of \"%s\", $%d references beyond the \ end of the current rule\n"
-argument_list|,
-name|myname
+literal|"w - line %d of \"%s\", $%d references beyond the \ end of the current rule"
 argument_list|,
 name|a_lineno
 argument_list|,
@@ -1221,13 +1138,9 @@ end_decl_stmt
 
 begin_block
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: e - line %d of \"%s\", illegal $-name\n"
-argument_list|,
-name|myname
+literal|"e - line %d of \"%s\", illegal $-name"
 argument_list|,
 name|a_lineno
 argument_list|,
@@ -1256,13 +1169,9 @@ end_macro
 
 begin_block
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: e - line %d of \"%s\", $$ is untyped\n"
-argument_list|,
-name|myname
+literal|"e - line %d of \"%s\", $$ is untyped"
 argument_list|,
 name|lineno
 argument_list|,
@@ -1301,13 +1210,9 @@ end_decl_stmt
 
 begin_block
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: e - line %d of \"%s\", $%d (%s) is untyped\n"
-argument_list|,
-name|myname
+literal|"e - line %d of \"%s\", $%d (%s) is untyped"
 argument_list|,
 name|lineno
 argument_list|,
@@ -1341,13 +1246,9 @@ end_decl_stmt
 
 begin_block
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: e - line %d of \"%s\", $%d is untyped\n"
-argument_list|,
-name|myname
+literal|"e - line %d of \"%s\", $%d is untyped"
 argument_list|,
 name|lineno
 argument_list|,
@@ -1371,13 +1272,9 @@ end_macro
 
 begin_block
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: w - line %d of \"%s\", the default action assigns an \ undefined value to $$\n"
-argument_list|,
-name|myname
+literal|"w - line %d of \"%s\", the default action assigns an \ undefined value to $$"
 argument_list|,
 name|lineno
 argument_list|,
@@ -1403,13 +1300,9 @@ end_decl_stmt
 
 begin_block
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: e - the start symbol %s is undefined\n"
-argument_list|,
-name|myname
+literal|"e - the start symbol %s is undefined"
 argument_list|,
 name|s
 argument_list|)
@@ -1438,13 +1331,9 @@ end_decl_stmt
 
 begin_block
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: w - the symbol %s is undefined\n"
-argument_list|,
-name|myname
+literal|"w - the symbol %s is undefined"
 argument_list|,
 name|s
 argument_list|)

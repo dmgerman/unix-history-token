@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)mkpar.c	5.3 (Berkeley) 1/20/91";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)mkpar.c	5.3 (Berkeley) 1/20/91"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -991,23 +1004,15 @@ name|nunused
 operator|==
 literal|1
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: 1 rule never reduced\n"
-argument_list|,
-name|myname
+literal|"1 rule never reduced"
 argument_list|)
 expr_stmt|;
 else|else
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: %d rules never reduced\n"
-argument_list|,
-name|myname
+literal|"%d rules never reduced"
 argument_list|,
 name|nunused
 argument_list|)
@@ -1330,25 +1335,14 @@ end_macro
 
 begin_block
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: "
-argument_list|,
-name|myname
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|SRtotal
 operator|==
 literal|1
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
 literal|"1 shift/reduce conflict"
 argument_list|)
 expr_stmt|;
@@ -1359,26 +1353,11 @@ name|SRtotal
 operator|>
 literal|1
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%d shift/reduce conflicts"
 argument_list|,
 name|SRtotal
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|SRtotal
-operator|&&
-name|RRtotal
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|", "
 argument_list|)
 expr_stmt|;
 if|if
@@ -1387,10 +1366,8 @@ name|RRtotal
 operator|==
 literal|1
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
 literal|"1 reduce/reduce conflict"
 argument_list|)
 expr_stmt|;
@@ -1401,20 +1378,11 @@ name|RRtotal
 operator|>
 literal|1
 condition|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%d reduce/reduce conflicts"
 argument_list|,
 name|RRtotal
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|".\n"
 argument_list|)
 expr_stmt|;
 block|}

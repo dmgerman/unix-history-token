@@ -33,13 +33,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)main.c	5.5 (Berkeley) 5/24/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)main.c	5.5 (Berkeley) 5/24/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -107,15 +120,6 @@ modifier|*
 name|file_prefix
 init|=
 literal|"y"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|myname
-init|=
-literal|"yacc"
 decl_stmt|;
 end_decl_stmt
 
@@ -603,20 +607,17 @@ directive|endif
 block|}
 end_block
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|usage
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-dlrtv] [-b file_prefix] [-p symbol_prefix] filename\n"
-argument_list|,
-name|myname
+literal|"usage: yacc [-dlrtv] [-b file_prefix] [-p symbol_prefix] filename\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -625,7 +626,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 name|getargs
@@ -661,19 +662,6 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
-if|if
-condition|(
-name|argc
-operator|>
-literal|0
-condition|)
-name|myname
-operator|=
-name|argv
-index|[
-literal|0
-index|]
-expr_stmt|;
 for|for
 control|(
 name|i
