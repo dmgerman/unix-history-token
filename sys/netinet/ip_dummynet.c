@@ -805,7 +805,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"-- warning, refcnt now %ld, decreasing\n"
+literal|"dummynet: warning, refcnt now %ld, decreasing\n"
 argument_list|,
 name|rt
 operator|->
@@ -915,7 +915,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"heap_init, Bogus call, have %d want %d\n"
+literal|"dummynet: heap_init, Bogus call, have %d want %d\n"
 argument_list|,
 name|h
 operator|->
@@ -965,7 +965,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|" heap_init, resize %d failed\n"
+literal|"dummynet: heap_init, resize %d failed\n"
 argument_list|,
 name|new_size
 argument_list|)
@@ -1295,7 +1295,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"warning, extract from empty heap 0x%p\n"
+literal|"dummynet: warning, extract from empty heap 0x%p\n"
 argument_list|,
 name|h
 argument_list|)
@@ -1325,7 +1325,7 @@ literal|0
 condition|)
 name|panic
 argument_list|(
-literal|"*** heap_extract from middle not supported on this heap!!!\n"
+literal|"dummynet: heap_extract from middle not supported on this heap!!!\n"
 argument_list|)
 expr_stmt|;
 name|father
@@ -1375,7 +1375,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"heap_extract"
+literal|"dummynet: heap_extract"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1779,7 +1779,7 @@ block|{
 comment|/* somebody unloaded the bridge module. Drop pkt */
 name|printf
 argument_list|(
-literal|"-- dropping bridged packet trapped in pipe--\n"
+literal|"dummynet: dropping bridged packet trapped in pipe\n"
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -2120,7 +2120,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ready_event- pipe is gone\n"
+literal|"dummynet: ready_event- pipe is gone\n"
 argument_list|)
 expr_stmt|;
 return|return ;
@@ -2394,7 +2394,7 @@ block|{
 name|DEB
 argument_list|(
 argument|printf(
-literal|"pipe %d ready from %s --\n"
+literal|"dummynet: pipe %d ready from %s --\n"
 argument|, 		p->pipe_nr, p->if_name);
 argument_list|)
 block|}
@@ -3094,7 +3094,7 @@ argument_list|(
 argument|if (h->p[
 literal|0
 argument|].key> curr_time) 		printf(
-literal|"-- dummynet: warning, heap %d is %d ticks late\n"
+literal|"dummynet: warning, heap %d is %d ticks late\n"
 argument|, 		    i, (int)(curr_time - h->p[
 literal|0
 argument|].key));
@@ -3158,7 +3158,7 @@ literal|'\0'
 condition|)
 name|printf
 argument_list|(
-literal|"*** bad ready_event_wfq for pipe %s\n"
+literal|"dummynet: bad ready_event_wfq for pipe %s\n"
 argument_list|,
 name|pipe
 operator|->
@@ -3399,7 +3399,7 @@ expr_stmt|;
 name|DEB
 argument_list|(
 argument|printf(
-literal|"++ tx rdy from %s (now found)\n"
+literal|"dummynet: ++ tx rdy from %s (now found)\n"
 argument|, buf);
 argument_list|)
 break|break ;
@@ -3415,7 +3415,7 @@ block|{
 name|DEB
 argument_list|(
 argument|printf(
-literal|"++ tx rdy from %s%d - qlen %d\n"
+literal|"dummynet: ++ tx rdy from %s%d - qlen %d\n"
 argument|, ifp->if_name, 		ifp->if_unit, ifp->if_snd.ifq_len);
 argument_list|)
 name|p
@@ -3713,7 +3713,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"sorry, cannot allocate queue for new flow\n"
+literal|"dummynet: sorry, cannot allocate queue for new flow\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4267,7 +4267,7 @@ decl_stmt|;
 name|DEB
 argument_list|(
 argument|printf(
-literal|"\n%d q: %2u "
+literal|"\ndymmynet: %d q: %2u "
 argument|, (int) curr_time, q_size);
 argument_list|)
 comment|/* average queue size estimation */
@@ -4377,7 +4377,7 @@ block|}
 name|DEB
 argument_list|(
 argument|printf(
-literal|"avg: %u "
+literal|"dummynet: avg: %u "
 argument|, SCALE_VAL(q->avg));
 argument_list|)
 comment|/* should i drop ? */
@@ -5047,7 +5047,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"No pipe %d for queue %d, drop pkt\n"
+literal|"dummynet: no pipe %d for queue %d, drop pkt\n"
 argument_list|,
 name|fs
 operator|->
@@ -5620,7 +5620,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"++ ouch! not eligible but empty scheduler!\n"
+literal|"dummynet: ++ ouch! not eligible but empty scheduler!\n"
 argument_list|)
 expr_stmt|;
 name|heap_insert
@@ -5680,13 +5680,13 @@ literal|1
 condition|)
 name|printf
 argument_list|(
-literal|"*** OUCH! pipe should have been idle!\n"
+literal|"dummynet: OUCH! pipe should have been idle!\n"
 argument_list|)
 expr_stmt|;
 name|DEB
 argument_list|(
 argument|printf(
-literal|"Waking up pipe %d at %d\n"
+literal|"dummynet: waking up pipe %d at %d\n"
 argument|, 			pipe->pipe_nr, (int)(q->F>> MY_M));
 argument_list|)
 name|pipe
@@ -6569,7 +6569,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\nnet.inet.ip.dummynet.red_lookup_depth must be> 0"
+literal|"\ndummynet: net.inet.ip.dummynet.red_lookup_depth must be> 0\n"
 argument_list|)
 expr_stmt|;
 name|free
@@ -6624,7 +6624,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"sorry, cannot allocate red lookup table\n"
+literal|"dummynet: sorry, cannot allocate red lookup table\n"
 argument_list|)
 expr_stmt|;
 name|free
@@ -6865,7 +6865,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"sorry, cannot allocate queue\n"
+literal|"dummynet: sorry, cannot allocate queue\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -7186,7 +7186,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ip_dummynet.c: no memory for new pipe\n"
+literal|"dummynet: no memory for new pipe\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -7481,7 +7481,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ip_dummynet.c: no memory for new flow_set\n"
+literal|"dummynet: no memory for new flow_set\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -8169,7 +8169,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"++ ref to pipe %d from fs %d\n"
+literal|"dummynet: ++ ref to pipe %d from fs %d\n"
 argument_list|,
 name|p
 operator|->
@@ -8524,7 +8524,7 @@ name|i
 condition|)
 name|printf
 argument_list|(
-literal|"++ at %d: wrong slot (have %d, "
+literal|"dummynet: ++ at %d: wrong slot (have %d, "
 literal|"should be %d)\n"
 argument_list|,
 name|copied
@@ -8546,7 +8546,7 @@ name|set
 condition|)
 name|printf
 argument_list|(
-literal|"++ at %d: wrong fs ptr (have %p, should be %p)\n"
+literal|"dummynet: ++ at %d: wrong fs ptr (have %p, should be %p)\n"
 argument_list|,
 name|i
 argument_list|,
@@ -8607,7 +8607,7 @@ name|rq_elements
 condition|)
 name|printf
 argument_list|(
-literal|"++ wrong count, have %d should be %d\n"
+literal|"dummynet: ++ wrong count, have %d should be %d\n"
 argument_list|,
 name|copied
 argument_list|,
@@ -9098,7 +9098,7 @@ block|{
 default|default :
 name|printf
 argument_list|(
-literal|"ip_dn_ctl -- unknown option %d"
+literal|"dummynet: -- unknown option %d"
 argument_list|,
 name|sopt
 operator|->
