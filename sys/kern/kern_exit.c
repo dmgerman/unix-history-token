@@ -194,6 +194,12 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* XXX added to stop gcc from issuing warning */
 block|}
 end_function
 
