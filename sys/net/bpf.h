@@ -604,6 +604,17 @@ comment|/*  * Values between 106 and 107 are used in capture file headers as  * 
 end_comment
 
 begin_comment
+comment|/*  * Frame Relay; BSD/OS has a DLT_FR with a value of 11, but that collides  * with other values.  * DLT_FR and DLT_FRELAY packets start with the Q.922 Frame Relay header  * (DLCI, etc.).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_FRELAY
+value|107
+end_define
+
+begin_comment
 comment|/*  * OpenBSD DLT_LOOP, for loopback devices; it's like DLT_NULL, except  * that the AF_ type in the link-layer header is in network byte order.  *  * OpenBSD defines it as 12, but that collides with DLT_RAW, so we  * define it as 108 here.  If OpenBSD picks up this file, it should  * define DLT_LOOP as 12 in its version, as per the comment above -  * and should not use 108 as a DLT_ value.  */
 end_comment
 
@@ -617,6 +628,17 @@ end_define
 begin_comment
 comment|/*  * Values between 109 and 112 are used in capture file headers as  * link-layer types corresponding to DLT_ types that might differ  * between platforms; don't use those values for new DLT_ new types.  */
 end_comment
+
+begin_comment
+comment|/*  * Encapsulated packets for IPsec; DLT_ENC is 13 in OpenBSD, but that's  * DLT_SLIP_BSDOS in NetBSD, so we don't use 13 for it in OSes other  * than OpenBSD.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_ENC
+value|109
+end_define
 
 begin_comment
 comment|/*  * This is for Linux cooked sockets.  */
@@ -673,13 +695,6 @@ name|DLT_PFLOG
 value|117
 end_define
 
-begin_define
-define|#
-directive|define
-name|DLT_PFSYNC
-value|121
-end_define
-
 begin_comment
 comment|/*  * Registered for Cisco-internal use.  */
 end_comment
@@ -711,6 +726,105 @@ define|#
 directive|define
 name|DLT_AIRONET_HEADER
 value|120
+end_define
+
+begin_comment
+comment|/*  * Reserved for use by OpenBSD's pfsync device.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_PFSYNC
+value|121
+end_define
+
+begin_comment
+comment|/*  * Reserved for RFC 2625 IP-over-Fibre Channel.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_IP_OVER_FC
+value|122
+end_define
+
+begin_comment
+comment|/*  * Reserved for Full Frontal ATM on Solaris.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_SUNATM
+value|123
+end_define
+
+begin_comment
+comment|/*  * BSD header for 802.11 plus a number of bits of link-layer information  * including radio information.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DLT_IEEE802_11_RADIO
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|DLT_IEEE802_11_RADIO
+value|127
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Reserved for Linux ARCNET.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_ARCNET_LINUX
+value|129
+end_define
+
+begin_comment
+comment|/*  * Reserved for Apple IP-over-IEEE-1394.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_APPLE_IP_OVER_IEEE1394
+value|138
+end_define
+
+begin_comment
+comment|/*  * Reserved for Linux IrDA.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_LINUX_IRDA
+value|144
+end_define
+
+begin_comment
+comment|/*  * Reserved for AbsoluteValue Systems 802.11 capture.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_IEEE802_11_RADIO_AVS
+value|163
 end_define
 
 begin_comment
