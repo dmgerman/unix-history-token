@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)uipc_mbuf.c	7.14 (Berkeley) %G%  */
+comment|/*  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)uipc_mbuf.c	7.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -938,6 +938,12 @@ begin_comment
 comment|/*  * Make a copy of an mbuf chain starting "off0" bytes from the beginning,  * continuing for "len" bytes.  If len is M_COPYALL, copy to end of mbuf.  * The wait parameter is a choice of M_WAIT/M_DONTWAIT from caller.  */
 end_comment
 
+begin_decl_stmt
+name|int
+name|MCFail
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|struct
 name|mbuf
@@ -1285,6 +1291,15 @@ operator|->
 name|m_next
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|top
+operator|==
+literal|0
+condition|)
+name|MCFail
+operator|++
+expr_stmt|;
 return|return
 operator|(
 name|top
@@ -1296,6 +1311,9 @@ name|m_freem
 argument_list|(
 name|top
 argument_list|)
+expr_stmt|;
+name|MCFail
+operator|++
 expr_stmt|;
 return|return
 operator|(
@@ -1917,6 +1935,12 @@ begin_comment
 comment|/*  * Rearange an mbuf chain so that len bytes are contiguous  * and in the data area of an mbuf (so that mtod and dtom  * will work for a structure of size len).  Returns the resulting  * mbuf chain on success, frees it and returns null on failure.  * If there is room, it will add up to max_protohdr-len extra bytes to the  * contiguous region in an attempt to avoid being called next time.  */
 end_comment
 
+begin_decl_stmt
+name|int
+name|MPFail
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|struct
 name|mbuf
@@ -2220,6 +2244,9 @@ name|m_freem
 argument_list|(
 name|n
 argument_list|)
+expr_stmt|;
+name|MPFail
+operator|++
 expr_stmt|;
 return|return
 operator|(
