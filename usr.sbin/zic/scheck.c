@@ -17,7 +17,7 @@ name|char
 name|elsieid
 index|[]
 init|=
-literal|"@(#)scheck.c	8.13"
+literal|"@(#)scheck.c	8.15"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,7 +52,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: scheck.c,v 1.3 1999/01/21 17:12:49 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -75,36 +75,6 @@ directive|include
 file|"private.h"
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|imalloc
-name|P
-argument_list|(
-operator|(
-name|int
-name|n
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|ifree
-name|P
-argument_list|(
-operator|(
-name|char
-operator|*
-name|p
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|char
 modifier|*
@@ -120,6 +90,7 @@ modifier|*
 specifier|const
 name|string
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 specifier|const

@@ -16,6 +16,10 @@ comment|/* ** This file is in the public domain, so clarified as of ** 1996-06-0
 end_comment
 
 begin_comment
+comment|/*  * FreeBSD modifications: separate libc's privates from zic's.  * This makes it easier when we need to update one but not the other.  * I have removed all of the ifdef spaghetti which is not relevant to  * zic from this file.  *  *	$Id: private.h,v 1.2 1999/01/21 17:12:49 wollman Exp $  */
+end_comment
+
+begin_comment
 comment|/* ** This header is for use ONLY with the time conversion code. ** There is no guarantee that it will remain unchanged, ** or that it will remain at all. ** Do NOT copy it to any system include directory. ** Thank you! */
 end_comment
 
@@ -70,28 +74,6 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|HAVE_ADJTIME
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|HAVE_ADJTIME
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined HAVE_ADJTIME */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|HAVE_GETTEXT
 end_ifndef
 
@@ -114,28 +96,6 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|HAVE_SETTIMEOFDAY
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|HAVE_SETTIMEOFDAY
-value|3
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined HAVE_SETTIMEOFDAY */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|HAVE_STRERROR
 end_ifndef
 
@@ -143,7 +103,7 @@ begin_define
 define|#
 directive|define
 name|HAVE_STRERROR
-value|0
+value|1
 end_define
 
 begin_endif
@@ -197,50 +157,6 @@ end_endif
 
 begin_comment
 comment|/* !defined HAVE_UNISTD_H */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HAVE_UTMPX_H
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|HAVE_UTMPX_H
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined HAVE_UTMPX_H */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LOCALE_HOME
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|LOCALE_HOME
-value|"/usr/lib/locale"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined LOCALE_HOME */
 end_comment
 
 begin_comment
@@ -425,66 +341,6 @@ parameter_list|)
 value|((unsigned)(c) - '0'<= 9)
 end_define
 
-begin_comment
-comment|/* ** Workarounds for compilers/systems. */
-end_comment
-
-begin_comment
-comment|/* ** SunOS 4.1.1 cc lacks const. */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|const
-end_ifndef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__STDC__
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|const
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined __STDC__ */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined const */
-end_comment
-
-begin_comment
-comment|/* ** SunOS 4.1.1 cc lacks prototypes. */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|P
-end_ifndef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__STDC__
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -494,272 +350,6 @@ name|x
 parameter_list|)
 value|x
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* defined __STDC__ */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__STDC__
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|P
-parameter_list|(
-name|x
-parameter_list|)
-value|()
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined __STDC__ */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined P */
-end_comment
-
-begin_comment
-comment|/* ** SunOS 4.1.1 headers lack EXIT_SUCCESS. */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|EXIT_SUCCESS
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|EXIT_SUCCESS
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined EXIT_SUCCESS */
-end_comment
-
-begin_comment
-comment|/* ** SunOS 4.1.1 headers lack EXIT_FAILURE. */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|EXIT_FAILURE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|EXIT_FAILURE
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined EXIT_FAILURE */
-end_comment
-
-begin_comment
-comment|/* ** SunOS 4.1.1 headers lack FILENAME_MAX. */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|FILENAME_MAX
-end_ifndef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MAXPATHLEN
-end_ifndef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|unix
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"sys/param.h"
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* defined unix */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined MAXPATHLEN */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MAXPATHLEN
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|FILENAME_MAX
-value|MAXPATHLEN
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* defined MAXPATHLEN */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MAXPATHLEN
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|FILENAME_MAX
-value|1024
-end_define
-
-begin_comment
-comment|/* Pure guesswork */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined MAXPATHLEN */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined FILENAME_MAX */
-end_comment
-
-begin_comment
-comment|/* ** SunOS 4.1.1 libraries lack remove. */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|remove
-end_ifndef
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|unlink
-name|P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-name|filename
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|remove
-value|unlink
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined remove */
-end_comment
-
-begin_comment
-comment|/* ** Some ancient errno.h implementations don't declare errno. ** But some newer errno.h implementations define it as a macro. ** Fix the former without affecting the latter. */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|errno
-end_ifndef
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined errno */
-end_comment
 
 begin_comment
 comment|/* ** Private function declarations. */
