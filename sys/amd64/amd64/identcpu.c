@@ -506,7 +506,7 @@ switch|switch
 condition|(
 name|cpu_id
 operator|&
-literal|0xFF0
+literal|0xF00
 condition|)
 block|{
 case|case
@@ -516,7 +516,7 @@ name|strcat
 argument_list|(
 name|cpu_model
 argument_list|,
-literal|"Hammer"
+literal|"AMD64 Processor"
 argument_list|)
 expr_stmt|;
 break|break;
