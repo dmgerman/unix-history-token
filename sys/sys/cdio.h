@@ -710,8 +710,8 @@ end_comment
 begin_struct
 struct|struct
 name|ioc_pitch
-comment|/*<1>For drives that support it, this*/
 block|{
+comment|/*<1>For drives that support it, this*/
 comment|/*<1>call instructs the drive to play the*/
 name|short
 name|speed
