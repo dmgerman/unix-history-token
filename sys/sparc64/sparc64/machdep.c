@@ -2546,6 +2546,35 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Exit the kernel and execute a firmware call that will not return, as  * specified by the arguments.  */
+end_comment
+
+begin_function
+name|void
+name|cpu_shutdown
+parameter_list|(
+name|void
+modifier|*
+name|args
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|SMP
+name|cpu_mp_shutdown
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+name|openfirmware_exit
+argument_list|(
+name|args
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Duplicate OF_exit() with a different firmware call function that restores  * the trap table, otherwise a RED state exception is triggered in at least  * some firmware versions.  */
 end_comment
 
@@ -2582,7 +2611,7 @@ block|,
 literal|0
 block|}
 struct|;
-name|openfirmware_exit
+name|cpu_shutdown
 argument_list|(
 operator|&
 name|args
@@ -2640,7 +2669,7 @@ operator|)
 operator|!=
 literal|0
 condition|)
-name|openfirmware_exit
+name|cpu_shutdown
 argument_list|(
 operator|&
 name|args

@@ -37,6 +37,16 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|cpu_shutdown
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|openfirmware_exit
 parameter_list|(
 name|void
