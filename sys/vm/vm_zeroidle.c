@@ -3,6 +3,12 @@ begin_comment
 comment|/*-  * Copyright (c) 1994 John Dyson  * Copyright (c) 2001 Matt Dillon  *  * All rights reserved.  Terms for use and redistribution  * are covered by the BSD Copyright as found in /usr/src/COPYRIGHT.  *  *	from: @(#)vm_machdep.c	7.3 (Berkeley) 5/13/91  *	Utah $Hdr: vm_machdep.c 1.16.1.1 89/06/23$  * $FreeBSD$  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__alpha__
+end_ifndef
+
 begin_include
 include|#
 directive|include
@@ -37,6 +43,11 @@ include|#
 directive|include
 file|"opt_isa.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -140,6 +151,12 @@ directive|include
 file|<machine/pcb.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__alpha__
+end_ifndef
+
 begin_include
 include|#
 directive|include
@@ -151,6 +168,11 @@ include|#
 directive|include
 file|<machine/vm86.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -200,6 +222,12 @@ directive|include
 file|<sys/user.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__alpha__
+end_ifndef
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -222,6 +250,11 @@ include|#
 directive|include
 file|<i386/isa/isa.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
