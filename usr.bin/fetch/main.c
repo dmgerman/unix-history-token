@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1996  *      Jean-Marc Zucconi  *  * Redistribution
 end_comment
 
 begin_comment
-comment|/* $Id: main.c,v 1.1.1.1.2.3 1996/06/25 22:19:08 jkh Exp $ */
+comment|/* $Id: main.c,v 1.1.1.1.2.4 1996/07/05 00:25:31 jmz Exp $ */
 end_comment
 
 begin_include
@@ -846,14 +846,15 @@ name|ssize_t
 name|size
 decl_stmt|,
 name|size0
-decl_stmt|,
-name|seekloc
 decl_stmt|;
 name|char
 name|ftp_pw
 index|[
 literal|200
 index|]
+decl_stmt|;
+name|int
+name|seekloc
 decl_stmt|;
 name|time_t
 name|t
@@ -946,6 +947,10 @@ argument_list|,
 name|ftp_pw
 argument_list|,
 literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
