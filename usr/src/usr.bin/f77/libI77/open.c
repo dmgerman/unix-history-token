@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_open[] = "@(#)open.c	1.7";  *  * open.c  -  f77 file open routines  */
+comment|/* char id_open[] = "@(#)open.c	1.8";  *  * open.c  -  f77 file open routines  */
 end_comment
 
 begin_include
@@ -64,36 +64,6 @@ end_define
 
 begin_comment
 comment|/* for use in f_clos() */
-end_comment
-
-begin_decl_stmt
-name|short
-name|opnbof_
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* open at beginning of file */
-end_comment
-
-begin_decl_stmt
-name|short
-name|ccntrl_
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* recognize carriage control */
-end_comment
-
-begin_decl_stmt
-name|short
-name|blzero_
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* blanks count as zero */
 end_comment
 
 begin_decl_stmt
@@ -495,7 +465,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|opnbof_
+name|opnbof
 condition|)
 block|{
 if|if
@@ -559,7 +529,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|opnbof_
+name|opnbof
 condition|)
 name|fseek
 argument_list|(
@@ -822,7 +792,7 @@ name|b
 operator|->
 name|ublnk
 operator|=
-name|blzero_
+name|blzero
 expr_stmt|;
 if|if
 condition|(
@@ -939,7 +909,7 @@ name|b
 operator|->
 name|uprnt
 operator|=
-name|ccntrl_
+name|ccntrl
 expr_stmt|;
 block|}
 if|if
