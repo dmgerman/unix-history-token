@@ -8,7 +8,7 @@ comment|/* Written by Julian Elischer (julian@dialix.oz.au)*/
 end_comment
 
 begin_comment
-comment|/*  * $Id: devfsext.h,v 1.11 1996/04/02 19:07:38 scrappy Exp $  */
+comment|/*  * $Id: devfsext.h,v 1.12 1996/04/03 00:01:40 gpalmer Exp $  */
 end_comment
 
 begin_ifndef
@@ -23,41 +23,6 @@ directive|define
 name|_SYS_DEVFSECT_H_
 value|1
 end_define
-
-begin_function_decl
-name|void
-modifier|*
-name|devfs_add_devsw
-parameter_list|(
-name|char
-modifier|*
-name|path
-parameter_list|,
-name|char
-modifier|*
-name|name
-parameter_list|,
-name|void
-modifier|*
-name|devsw
-parameter_list|,
-name|int
-name|minor
-parameter_list|,
-name|int
-name|chrblk
-parameter_list|,
-name|uid_t
-name|uid
-parameter_list|,
-name|gid_t
-name|gid
-parameter_list|,
-name|int
-name|perms
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|void
