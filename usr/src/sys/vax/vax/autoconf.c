@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982,1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)autoconf.c	6.22 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982,1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)autoconf.c	6.23 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -708,7 +708,7 @@ index|[
 name|ioanum
 index|]
 expr_stmt|;
-name|nxaccess
+name|ioaccess
 argument_list|(
 name|iob
 operator|->
@@ -902,7 +902,7 @@ name|nexus
 index|[
 name|nsbi
 operator|*
-literal|16
+name|NNEX8600
 index|]
 expr_stmt|;
 for|for
@@ -924,8 +924,7 @@ name|nxv
 operator|++
 control|)
 block|{
-comment|/* 			 * the 16 below shouldn't be there, but the constant 			 * is used at other points (vax/locore.s) 			 */
-name|nxaccess
+name|ioaccess
 argument_list|(
 operator|(
 name|caddr_t
@@ -2614,6 +2613,7 @@ name|uh_physuba
 operator|=
 name|pubp
 expr_stmt|;
+comment|/* 	 * On the 8600, can't use UNIvec; 	 * the vectors for the second SBI overlap it. 	 */
 if|if
 condition|(
 name|cpu
@@ -2728,7 +2728,7 @@ name|uh_lastiv
 operator|=
 literal|0x200
 expr_stmt|;
-name|ubaaccess
+name|ioaccess
 argument_list|(
 name|pumem
 argument_list|,
@@ -3923,7 +3923,7 @@ name|scbp
 operator|+
 name|nsbi
 operator|*
-name|IOAMAPSIZ
+literal|512
 operator|)
 expr_stmt|;
 name|scbp
@@ -3965,11 +3965,11 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Make an IO register area accessible at physical address physa  * by mapping kernel ptes starting at pte.  *  * WE LEAVE ALL NEXI MAPPED; THIS IS PERHAPS UNWISE  * SINCE MISSING NEXI DONT RESPOND.  BUT THEN AGAIN  * PRESENT NEXI DONT RESPOND TO ALL OF THEIR ADDRESS SPACE.  */
+comment|/*  * Make an IO register area accessible at physical address physa  * by mapping kernel ptes starting at pte.  */
 end_comment
 
 begin_macro
-name|nxaccess
+name|ioaccess
 argument_list|(
 argument|physa
 argument_list|,
@@ -4018,92 +4018,6 @@ init|=
 name|btop
 argument_list|(
 name|physa
-argument_list|)
-decl_stmt|;
-do|do
-operator|*
-operator|(
-name|int
-operator|*
-operator|)
-name|pte
-operator|++
-operator|=
-name|PG_V
-operator||
-name|PG_KW
-operator||
-name|v
-operator|++
-expr_stmt|;
-do|while
-condition|(
-operator|--
-name|i
-operator|>
-literal|0
-condition|)
-do|;
-name|mtpr
-argument_list|(
-name|TBIA
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_macro
-name|ubaaccess
-argument_list|(
-argument|pumem
-argument_list|,
-argument|pte
-argument_list|,
-argument|size
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|caddr_t
-name|pumem
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|register
-name|struct
-name|pte
-modifier|*
-name|pte
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|size
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-specifier|register
-name|int
-name|i
-init|=
-name|btop
-argument_list|(
-name|size
-argument_list|)
-decl_stmt|;
-specifier|register
-name|unsigned
-name|v
-init|=
-name|btop
-argument_list|(
-name|pumem
 argument_list|)
 decl_stmt|;
 do|do

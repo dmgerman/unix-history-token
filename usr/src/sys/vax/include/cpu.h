@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)cpu.h	6.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)cpu.h	6.7 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -258,6 +258,10 @@ begin_struct
 struct|struct
 name|iobus
 block|{
+name|int
+name|io_type
+decl_stmt|;
+comment|/* io adaptor types */
 name|caddr_t
 name|io_addr
 decl_stmt|;
@@ -266,10 +270,6 @@ name|int
 name|io_size
 decl_stmt|;
 comment|/* size of an IO space */
-name|short
-name|io_type
-decl_stmt|;
-comment|/* io adaptor types if no cfg reg */
 name|caddr_t
 name|io_details
 decl_stmt|;

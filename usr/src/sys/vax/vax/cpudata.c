@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)cpudata.c	6.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)cpudata.c	6.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -411,14 +411,14 @@ index|[]
 init|=
 block|{
 block|{
+name|IO_ABUS
+block|,
 name|IOA8600
 argument_list|(
 literal|0
 argument_list|)
 block|,
 name|IOAMAPSIZ
-block|,
-name|IO_ABUS
 block|,
 operator|(
 name|caddr_t
@@ -431,14 +431,14 @@ index|]
 block|}
 block|,
 block|{
+name|IO_ABUS
+block|,
 name|IOA8600
 argument_list|(
 literal|1
 argument_list|)
 block|,
 name|IOAMAPSIZ
-block|,
-name|IO_ABUS
 block|,
 operator|(
 name|caddr_t
@@ -492,11 +492,11 @@ name|io780
 index|[]
 init|=
 block|{
-literal|0
-block|,
-literal|0
-block|,
 name|IO_SBI780
+block|,
+literal|0
+block|,
+literal|0
 block|,
 operator|(
 name|caddr_t
@@ -546,11 +546,11 @@ name|io750
 index|[]
 init|=
 block|{
-literal|0
-block|,
-literal|0
-block|,
 name|IO_CMI750
+block|,
+literal|0
+block|,
+literal|0
 block|,
 operator|(
 name|caddr_t
@@ -600,11 +600,11 @@ name|io730
 index|[]
 init|=
 block|{
-literal|0
-block|,
-literal|0
-block|,
 name|IO_XXX730
+block|,
+literal|0
+block|,
+literal|0
 block|,
 operator|(
 name|caddr_t
