@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogind.c	5.43 (Berkeley) %G%"
+literal|"@(#)rlogind.c	5.44 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2053,6 +2053,12 @@ decl_stmt|,
 modifier|*
 name|omask
 decl_stmt|;
+name|FD_ZERO
+argument_list|(
+operator|&
+name|ebits
+argument_list|)
+expr_stmt|;
 name|FD_ZERO
 argument_list|(
 operator|&
