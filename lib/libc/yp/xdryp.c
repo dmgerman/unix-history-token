@@ -238,8 +238,13 @@ operator|&
 name|out
 argument_list|)
 expr_stmt|;
+operator|*
+name|objp
+operator|=
+name|YP_NOMORE
+expr_stmt|;
 return|return
-name|FALSE
+name|TRUE
 return|;
 block|}
 name|status
@@ -467,6 +472,11 @@ operator|)
 operator|&
 name|out
 argument_list|)
+expr_stmt|;
+operator|*
+name|objp
+operator|=
+name|YP_NOMORE
 expr_stmt|;
 return|return
 name|TRUE
