@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.4 (Berkeley) %G%"
+literal|"@(#)main.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -937,15 +937,20 @@ comment|/*  * Like fgets, but go through the list of files chaining them togethe
 end_comment
 
 begin_function
-name|char
-modifier|*
+name|int
 name|mf_fgets
 parameter_list|(
-name|lenp
+name|sp
+parameter_list|,
+name|spflag
 parameter_list|)
-name|size_t
+name|SPACE
 modifier|*
-name|lenp
+name|sp
+decl_stmt|;
+name|enum
+name|e_spflag
+name|spflag
 decl_stmt|;
 block|{
 specifier|static
@@ -954,6 +959,9 @@ modifier|*
 name|f
 decl_stmt|;
 comment|/* Current open file */
+name|size_t
+name|len
+decl_stmt|;
 name|char
 name|c
 decl_stmt|,
@@ -986,7 +994,7 @@ literal|1
 expr_stmt|;
 return|return
 operator|(
-name|NULL
+literal|0
 operator|)
 return|;
 block|}
@@ -1092,24 +1100,27 @@ condition|(
 name|lastline
 condition|)
 block|{
-operator|*
-name|lenp
+name|sp
+operator|->
+name|len
 operator|=
 literal|0
 expr_stmt|;
 return|return
 operator|(
-name|NULL
+literal|0
 operator|)
 return|;
 block|}
+comment|/* 	 * Use fgetline so that we can handle essentially infinite input 	 * data.  Can't use the pointer into the stdio buffer as the process 	 * space because the ungetc() can cause it to move. 	 */
 name|p
 operator|=
 name|fgetline
 argument_list|(
 name|f
 argument_list|,
-name|lenp
+operator|&
+name|len
 argument_list|)
 expr_stmt|;
 if|if
@@ -1135,6 +1146,17 @@ name|errno
 else|:
 name|EIO
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|cspace
+argument_list|(
+name|sp
+argument_list|,
+name|p
+argument_list|,
+name|len
+argument_list|,
+name|spflag
 argument_list|)
 expr_stmt|;
 name|linenum
@@ -1182,7 +1204,7 @@ literal|1
 expr_stmt|;
 return|return
 operator|(
-name|p
+literal|1
 operator|)
 return|;
 block|}
@@ -1255,7 +1277,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|p
+literal|1
 operator|)
 return|;
 block|}
