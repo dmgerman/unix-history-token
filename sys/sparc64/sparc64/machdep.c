@@ -3005,6 +3005,10 @@ name|td
 operator|->
 name|td_pcb
 expr_stmt|;
+comment|/* Make sure the windows are spilled first. */
+name|flushw
+argument_list|()
+expr_stmt|;
 name|wstate
 operator|=
 name|tf
