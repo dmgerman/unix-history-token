@@ -138,15 +138,6 @@ decl_stmt|;
 name|u_long
 name|secpercyl
 decl_stmt|;
-name|u_short
-modifier|*
-name|sp1
-decl_stmt|,
-modifier|*
-name|sp2
-decl_stmt|,
-name|cksum
-decl_stmt|;
 name|char
 name|device
 index|[
@@ -576,7 +567,6 @@ name|sunlabel_enc
 argument_list|(
 name|buf
 argument_list|,
-operator|&
 name|sl
 argument_list|)
 expr_stmt|;
