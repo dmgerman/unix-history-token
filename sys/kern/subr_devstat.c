@@ -771,11 +771,13 @@ begin_comment
 comment|/*  * This is the sysctl handler for the devstat package.  The data pushed out  * on the kern.devstat.all sysctl variable consists of the current devstat  * generation number, and then an array of devstat structures, one for each  * device in the system.  *  * I'm really not too fond of this method of doing things, but there really  * aren't that many alternatives.  We must have some method of making sure  * that the generation number the user gets corresponds with the data the  * user gets.  If the user makes a separate sysctl call to get the  * generation, and then a sysctl call to get the device statistics, the  * device list could have changed in that brief period of time.  By  * supplying the generation number along with the statistics output, we can  * guarantee that the generation number and the statistics match up.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|int
 name|sysctl_devstat
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
+parameter_list|)
 block|{
 name|int
 name|error
@@ -893,7 +895,7 @@ name|error
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*  * Sysctl entries for devstat.  The first one is a node that all the rest  * hang off of.   */

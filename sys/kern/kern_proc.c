@@ -2585,11 +2585,13 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|int
 name|sysctl_kern_proc
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
+parameter_list|)
 block|{
 name|int
 modifier|*
@@ -3005,17 +3007,19 @@ literal|0
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/*  * This sysctl allows a process to retrieve the argument list or process  * title for another process without groping around in the address space  * of the other process.  It also allow a process to set its own "process   * title to a string of its own choice.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|int
 name|sysctl_kern_proc_args
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
+parameter_list|)
 block|{
 name|int
 modifier|*
@@ -3285,7 +3289,7 @@ name|error
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_expr_stmt
 name|SYSCTL_NODE

@@ -146,13 +146,15 @@ name|lhlock
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|ncp_sysctl_connstat
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -2779,11 +2781,13 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|int
 name|ncp_sysctl_connstat
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
+parameter_list|)
 block|{
 name|int
 name|error
@@ -2928,7 +2932,7 @@ name|error
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 end_unit
 

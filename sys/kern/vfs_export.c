@@ -8721,22 +8721,26 @@ begin_comment
 comment|/*  * Top level filesystem related information gathering.  */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|int
 name|sysctl_ovfs_conf
 name|__P
-parameter_list|(
+argument_list|(
+operator|(
 name|SYSCTL_HANDLER_ARGS
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|int
 name|vfs_sysctl
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
+parameter_list|)
 block|{
 name|int
 modifier|*
@@ -9005,7 +9009,7 @@ name|EOPNOTSUPP
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_expr_stmt
 name|SYSCTL_NODE
@@ -9036,11 +9040,13 @@ name|COMPAT_PRELITE2
 argument_list|)
 end_if
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|int
 name|sysctl_ovfs_conf
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
+parameter_list|)
 block|{
 name|int
 name|error
@@ -9138,7 +9144,7 @@ return|return
 literal|0
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_endif
 endif|#
@@ -9171,7 +9177,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_comment
-unit|static int sysctl_vnode SYSCTL_HANDLER_ARGS { 	struct proc *p = curproc;
+unit|static int sysctl_vnode (SYSCTL_HANDLER_ARGS) { 	struct proc *p = curproc;
 comment|/* XXX */
 end_comment
 

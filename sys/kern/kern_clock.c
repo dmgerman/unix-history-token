@@ -1329,11 +1329,13 @@ begin_comment
 comment|/*  * Return information about system clocks.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|int
 name|sysctl_kern_clockrate
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
+parameter_list|)
 block|{
 name|struct
 name|clockinfo
@@ -1391,7 +1393,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_expr_stmt
 name|SYSCTL_PROC

@@ -233,11 +233,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|int
 name|sysctl_machdep_uc_devlist
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
+parameter_list|)
 block|{
 name|struct
 name|uc_device
@@ -388,7 +390,7 @@ operator|)
 return|;
 block|}
 block|}
-end_decl_stmt
+end_function
 
 begin_expr_stmt
 name|SYSCTL_PROC
@@ -10960,7 +10962,9 @@ literal|0
 specifier|static
 name|int
 name|sysctl_machdep_uc_pnplist
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
+parameter_list|)
 block|{
 name|int
 name|error

@@ -689,11 +689,13 @@ begin_comment
 comment|/*  * User has changed the state of the console muting.  * This may require us to open or close the device in question.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|int
 name|sysctl_kern_consmute
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
+parameter_list|)
 block|{
 name|int
 name|error
@@ -840,7 +842,7 @@ name|error
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_expr_stmt
 name|SYSCTL_PROC

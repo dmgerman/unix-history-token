@@ -3526,11 +3526,13 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|int
 name|unp_pcblist
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
+parameter_list|)
 block|{
 name|int
 name|error
@@ -3971,7 +3973,7 @@ return|return
 name|error
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_expr_stmt
 name|SYSCTL_PROC

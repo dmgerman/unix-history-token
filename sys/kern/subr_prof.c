@@ -1246,11 +1246,13 @@ unit|}
 comment|/*  * Return kernel profiling information.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 unit|static
 name|int
 name|sysctl_kern_prof
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
+parameter_list|)
 block|{
 name|int
 modifier|*
@@ -1556,7 +1558,7 @@ return|;
 block|}
 comment|/* NOTREACHED */
 block|}
-end_decl_stmt
+end_function
 
 begin_expr_stmt
 name|SYSCTL_NODE

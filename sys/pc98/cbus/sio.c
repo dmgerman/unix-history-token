@@ -4833,11 +4833,13 @@ begin_comment
 comment|/*  * handle sysctl read/write requests for console speed  *   * In addition to setting comdefaultrate for I/O through /dev/console,  * also set the initial and lock values for the /dev/ttyXX device  * if there is one associated with the console.  Finally, if the /dev/tty  * device has already been open, change the speed on the open running port  * itself.  */
 end_comment
 
-begin_decl_stmt
+begin_function
 specifier|static
 name|int
 name|sysctl_machdep_comdefaultrate
+parameter_list|(
 name|SYSCTL_HANDLER_ARGS
+parameter_list|)
 block|{
 name|int
 name|error
@@ -5036,7 +5038,7 @@ return|return
 name|error
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_expr_stmt
 name|SYSCTL_PROC
