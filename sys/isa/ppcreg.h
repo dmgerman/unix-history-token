@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ppcreg.h,v 1.5 1998/10/31 11:37:09 nsouch Exp $  *  */
+comment|/*-  * Copyright (c) 1997 Nicolas Souchu  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ppcreg.h,v 1.6 1999/01/10 12:04:53 nsouch Exp $  *  */
 end_comment
 
 begin_ifndef
@@ -468,7 +468,7 @@ name|r_dtr
 parameter_list|(
 name|ppc
 parameter_list|)
-value|((char)inb((ppc)->ppc_base + PPC_SPP_DTR))
+value|(inb((ppc)->ppc_base + PPC_SPP_DTR))
 end_define
 
 begin_define
@@ -478,7 +478,7 @@ name|r_str
 parameter_list|(
 name|ppc
 parameter_list|)
-value|((char)inb((ppc)->ppc_base + PPC_SPP_STR))
+value|(inb((ppc)->ppc_base + PPC_SPP_STR))
 end_define
 
 begin_define
@@ -488,7 +488,7 @@ name|r_ctr
 parameter_list|(
 name|ppc
 parameter_list|)
-value|((char)inb((ppc)->ppc_base + PPC_SPP_CTR))
+value|(inb((ppc)->ppc_base + PPC_SPP_CTR))
 end_define
 
 begin_define
@@ -498,7 +498,7 @@ name|r_epp
 parameter_list|(
 name|ppc
 parameter_list|)
-value|((char)inb((ppc)->ppc_base + PPC_EPP_DATA))
+value|(inb((ppc)->ppc_base + PPC_EPP_DATA))
 end_define
 
 begin_define
@@ -508,7 +508,7 @@ name|r_cnfgA
 parameter_list|(
 name|ppc
 parameter_list|)
-value|((char)inb((ppc)->ppc_base + PPC_ECP_CNFGA))
+value|(inb((ppc)->ppc_base + PPC_ECP_CNFGA))
 end_define
 
 begin_define
@@ -518,7 +518,7 @@ name|r_cnfgB
 parameter_list|(
 name|ppc
 parameter_list|)
-value|((char)inb((ppc)->ppc_base + PPC_ECP_CNFGB))
+value|(inb((ppc)->ppc_base + PPC_ECP_CNFGB))
 end_define
 
 begin_define
@@ -528,7 +528,7 @@ name|r_ecr
 parameter_list|(
 name|ppc
 parameter_list|)
-value|((char)inb((ppc)->ppc_base + PPC_ECP_ECR))
+value|(inb((ppc)->ppc_base + PPC_ECP_ECR))
 end_define
 
 begin_define
@@ -538,7 +538,7 @@ name|r_fifo
 parameter_list|(
 name|ppc
 parameter_list|)
-value|((char)inb((ppc)->ppc_base + PPC_ECP_D_FIFO))
+value|(inb((ppc)->ppc_base + PPC_ECP_D_FIFO))
 end_define
 
 begin_define
