@@ -2632,6 +2632,14 @@ name|v_fifoinfo
 operator|->
 name|fi_writesock
 expr_stmt|;
+name|filetmp
+operator|.
+name|f_cred
+operator|=
+name|ap
+operator|->
+name|a_cred
+expr_stmt|;
 if|if
 condition|(
 name|filetmp
@@ -2649,7 +2657,9 @@ name|events
 argument_list|,
 name|ap
 operator|->
-name|a_cred
+name|a_td
+operator|->
+name|td_ucred
 argument_list|,
 name|ap
 operator|->
