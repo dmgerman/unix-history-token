@@ -2426,7 +2426,7 @@ name|cx_is_free_res
 argument_list|(
 name|dev
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 name|SYS_RES_IOPORT
 argument_list|,
@@ -2634,7 +2634,7 @@ index|[
 name|k
 index|]
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 name|SYS_RES_IOPORT
 argument_list|,
@@ -2811,7 +2811,7 @@ index|[
 name|k
 index|]
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 name|SYS_RES_IOPORT
 argument_list|,
@@ -3001,7 +3001,7 @@ name|cx_is_free_res
 argument_list|(
 name|dev
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 name|SYS_RES_IOPORT
 argument_list|,
@@ -3809,7 +3809,7 @@ name|cx_is_free_res
 argument_list|(
 name|dev
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 name|SYS_RES_DRQ
 argument_list|,
@@ -3989,7 +3989,7 @@ name|cx_is_free_res
 argument_list|(
 name|dev
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 name|SYS_RES_IRQ
 argument_list|,
