@@ -2939,7 +2939,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|DEV_CARP
-comment|/* 		 * XXX: Okay, we need to call carp_forus() and - if it is for us 		 * jump over code that does the normal check 		 * "ac_enaddr == ether_dhost". The check sequence is a bit 		 * different from OpenBSD, so we jump over as few code as possible, 		 * to catch _all_ sanity checks. This needs evaluation, to see if 		 * the carp ether_dhost values break any of these checks! 		 */
+comment|/* 		 * XXX: Okay, we need to call carp_forus() and - if it is for 		 * us jump over code that does the normal check 		 * "ac_enaddr == ether_dhost". The check sequence is a bit 		 * different from OpenBSD, so we jump over as few code as 		 * possible, to catch _all_ sanity checks. This needs 		 * evaluation, to see if the carp ether_dhost values break any 		 * of these checks! 		 */
 if|if
 condition|(
 name|ifp
