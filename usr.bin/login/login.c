@@ -2467,7 +2467,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strlcpy
+name|strncpy
 argument_list|(
 name|utmp
 operator|.
@@ -2490,7 +2490,7 @@ condition|)
 operator|(
 name|void
 operator|)
-name|strlcpy
+name|strncpy
 argument_list|(
 name|utmp
 operator|.
@@ -2509,7 +2509,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strlcpy
+name|strncpy
 argument_list|(
 name|utmp
 operator|.
@@ -4810,7 +4810,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strlcpy
+name|strncpy
 argument_list|(
 name|ll
 operator|.
@@ -4833,7 +4833,7 @@ condition|)
 operator|(
 name|void
 operator|)
-name|strlcpy
+name|strncpy
 argument_list|(
 name|ll
 operator|.
@@ -5082,7 +5082,7 @@ return|;
 block|}
 return|return
 operator|(
-literal|"UNKNOWN"
+name|UNKNOWN
 operator|)
 return|;
 block|}
