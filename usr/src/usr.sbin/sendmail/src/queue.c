@@ -51,7 +51,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)queue.c	5.4 (Berkeley) %G%	(no queueing)"
+literal|"@(#)queue.c	5.5 (Berkeley) %G%	(no queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,7 +79,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)queue.c	5.4 (Berkeley) %G%"
+literal|"@(#)queue.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -106,6 +106,10 @@ name|long
 name|w_pri
 decl_stmt|;
 comment|/* priority of message, see below */
+name|long
+name|w_ctime
+decl_stmt|;
+comment|/* creation time of message */
 name|struct
 name|work
 modifier|*
@@ -1071,7 +1075,7 @@ unit|}
 end_escape
 
 begin_comment
-comment|/* **  RUNQUEUE -- run the jobs in the queue. ** **	Gets the stuff out of the queue in some presumably logical **	order and processes them. ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		runs things in the mail queue. */
+comment|/* **  RUNQUEUE -- run the jobs in the queue. ** **	Gets the stuff out of the queue in some presumably logical **	order and processes them. ** **	Parameters: **		forkflag -- TRUE if the queue scanning should be done in **			a child process.  We double-fork so it is not our **			child and we don't have to clean up after it. ** **	Returns: **		none. ** **	Side Effects: **		runs things in the mail queue. */
 end_comment
 
 begin_expr_stmt
@@ -1150,6 +1154,11 @@ name|EX_OK
 argument_list|)
 expr_stmt|;
 block|}
+name|setproctitle
+argument_list|(
+literal|"running queue"
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|LOG
@@ -1244,7 +1253,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  ORDERQ -- order the work queue. ** **	Parameters: **		none. ** **	Returns: **		The number of request in the queue (not necessarily **		the number of requests in WorkQ however). ** **	Side Effects: **		Sets WorkQ to the queue of available work, in order. */
+comment|/* **  ORDERQ -- order the work queue. ** **	Parameters: **		doall -- if set, include everything in the queue (even **			the jobs that cannot be run because the load **			average is too high).  Otherwise, exclude those **			jobs. ** **	Returns: **		The number of request in the queue (not necessarily **		the number of requests in WorkQ however). ** **	Side Effects: **		Sets WorkQ to the queue of available work, in order. */
 end_comment
 
 begin_define
@@ -1324,8 +1333,16 @@ end_endif
 
 begin_macro
 name|orderq
-argument_list|()
+argument_list|(
+argument|doall
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|bool
+name|doall
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1645,36 +1662,51 @@ operator|!=
 name|NULL
 condition|)
 block|{
-if|if
+switch|switch
 condition|(
 name|lbuf
 index|[
 literal|0
 index|]
-operator|==
-literal|'P'
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|sscanf
-argument_list|(
-operator|&
-name|lbuf
-index|[
-literal|1
-index|]
-argument_list|,
-literal|"%ld"
-argument_list|,
-operator|&
+case|case
+literal|'P'
+case|:
 name|wlist
 index|[
 name|wn
 index|]
 operator|.
 name|w_pri
+operator|=
+name|atol
+argument_list|(
+operator|&
+name|lbuf
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'T'
+case|:
+name|wlist
+index|[
+name|wn
+index|]
+operator|.
+name|w_ctime
+operator|=
+name|atol
+argument_list|(
+operator|&
+name|lbuf
+index|[
+literal|1
+index|]
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1805,6 +1837,17 @@ name|w_pri
 expr_stmt|;
 name|w
 operator|->
+name|w_ctime
+operator|=
+name|wlist
+index|[
+name|i
+index|]
+operator|.
+name|w_ctime
+expr_stmt|;
+name|w
+operator|->
 name|w_next
 operator|=
 name|NULL
@@ -1919,15 +1962,33 @@ end_decl_stmt
 
 begin_block
 block|{
-if|if
-condition|(
+name|long
+name|pa
+init|=
 name|a
 operator|->
 name|w_pri
-operator|==
+operator|+
+name|a
+operator|->
+name|w_ctime
+decl_stmt|;
+name|long
+name|pb
+init|=
 name|b
 operator|->
 name|w_pri
+operator|+
+name|b
+operator|->
+name|w_ctime
+decl_stmt|;
+if|if
+condition|(
+name|pa
+operator|==
+name|pb
 condition|)
 return|return
 operator|(
@@ -1937,13 +1998,9 @@ return|;
 elseif|else
 if|if
 condition|(
-name|a
-operator|->
-name|w_pri
+name|pa
 operator|>
-name|b
-operator|->
-name|w_pri
+name|pb
 condition|)
 return|return
 operator|(
@@ -1985,6 +2042,11 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+specifier|extern
+name|bool
+name|shouldqueue
+parameter_list|()
+function_decl|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -2013,7 +2075,38 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|DEBUG
+comment|/* 	**  Ignore jobs that are too expensive for the moment. 	*/
+if|if
+condition|(
+name|shouldqueue
+argument_list|(
+name|w
+operator|->
+name|w_pri
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|Verbose
+condition|)
+name|printf
+argument_list|(
+literal|"\nSkipping %s\n"
+argument_list|,
+name|w
+operator|->
+name|w_name
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* 	**  Fork for work. 	*/
+if|if
+condition|(
+name|ForkQueueRuns
+condition|)
+block|{
 name|i
 operator|=
 name|fork
@@ -2032,6 +2125,14 @@ literal|"dowork: cannot fork"
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
+block|}
+else|else
+block|{
+name|i
+operator|=
+literal|0
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -2159,11 +2260,17 @@ expr_stmt|;
 endif|#
 directive|endif
 endif|LOG
+if|if
+condition|(
+name|ForkQueueRuns
+condition|)
 name|exit
 argument_list|(
 name|EX_OK
 argument_list|)
 expr_stmt|;
+else|else
+return|return;
 block|}
 comment|/* do basic system initialization */
 name|initsys
@@ -2209,11 +2316,23 @@ name|SM_DELIVER
 argument_list|)
 expr_stmt|;
 comment|/* finish up and exit */
+if|if
+condition|(
+name|ForkQueueRuns
+condition|)
 name|finis
 argument_list|()
 expr_stmt|;
+else|else
+name|dropenvelope
+argument_list|(
+name|CurEnv
+argument_list|)
+expr_stmt|;
 block|}
-comment|/* 	**  Parent -- pick up results. 	*/
+else|else
+block|{
+comment|/* 		**  Parent -- pick up results. 		*/
 name|errno
 operator|=
 literal|0
@@ -2226,6 +2345,7 @@ argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_block
 
@@ -2509,23 +2629,17 @@ case|case
 literal|'T'
 case|:
 comment|/* init time */
-operator|(
-name|void
-operator|)
-name|sscanf
+name|e
+operator|->
+name|e_ctime
+operator|=
+name|atol
 argument_list|(
 operator|&
 name|buf
 index|[
 literal|1
 index|]
-argument_list|,
-literal|"%ld"
-argument_list|,
-operator|&
-name|e
-operator|->
-name|e_ctime
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2533,23 +2647,17 @@ case|case
 literal|'P'
 case|:
 comment|/* message priority */
-operator|(
-name|void
-operator|)
-name|sscanf
+name|e
+operator|->
+name|e_msgpriority
+operator|=
+name|atol
 argument_list|(
 operator|&
 name|buf
 index|[
 literal|1
 index|]
-argument_list|,
-literal|"%ld"
-argument_list|,
-operator|&
-name|e
-operator|->
-name|e_msgpriority
 argument_list|)
 expr_stmt|;
 comment|/* make sure that big things get sent eventually */
@@ -2560,14 +2668,21 @@ operator|-=
 name|WKTIMEFACT
 expr_stmt|;
 break|break;
+case|case
+literal|'\0'
+case|:
+comment|/* blank line; ignore */
+break|break;
 default|default:
 name|syserr
 argument_list|(
-literal|"readqf(%s): bad line \"%s\""
+literal|"readqf(%s:%d): bad line \"%s\""
 argument_list|,
 name|e
 operator|->
 name|e_id
+argument_list|,
+name|LineNumber
 argument_list|,
 name|buf
 argument_list|)
@@ -2575,10 +2690,38 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+name|fclose
+argument_list|(
+name|qfp
+argument_list|)
+expr_stmt|;
 name|FileName
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* 	**  If we haven't read any lines, this queue file is empty. 	**  Arrange to remove it without referencing any null pointers. 	*/
+if|if
+condition|(
+name|LineNumber
+operator|==
+literal|0
+condition|)
+block|{
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+name|e
+operator|->
+name|e_flags
+operator||=
+name|EF_CLRQUEUE
+operator||
+name|EF_FATALERRS
+operator||
+name|EF_RESPONSE
+expr_stmt|;
+block|}
 block|}
 end_block
 
@@ -2618,7 +2761,9 @@ comment|/* 	**  Read and order the queue. 	*/
 name|nrequests
 operator|=
 name|orderq
-argument_list|()
+argument_list|(
+name|TRUE
+argument_list|)
 expr_stmt|;
 comment|/* 	**  Print the work list that we have read. 	*/
 comment|/* first see if there is anything */
@@ -2714,6 +2859,11 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
+specifier|extern
+name|bool
+name|shouldqueue
+parameter_list|()
+function_decl|;
 name|f
 operator|=
 name|fopen
@@ -2783,6 +2933,21 @@ condition|)
 name|printf
 argument_list|(
 literal|"*"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|shouldqueue
+argument_list|(
+name|w
+operator|->
+name|w_pri
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"X"
 argument_list|)
 expr_stmt|;
 else|else
@@ -2885,7 +3050,7 @@ literal|'\0'
 condition|)
 name|printf
 argument_list|(
-literal|"\n\t\t\t\t  (%.43s)"
+literal|"\n\t\t (%.62s)"
 argument_list|,
 name|message
 argument_list|)
@@ -2911,21 +3076,15 @@ case|case
 literal|'T'
 case|:
 comment|/* creation time */
-operator|(
-name|void
-operator|)
-name|sscanf
+name|submittime
+operator|=
+name|atol
 argument_list|(
 operator|&
 name|buf
 index|[
 literal|1
 index|]
-argument_list|,
-literal|"%ld"
-argument_list|,
-operator|&
-name|submittime
 argument_list|)
 expr_stmt|;
 break|break;

@@ -39,7 +39,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.7 (Berkeley) %G%	(no SMTP)"
+literal|"@(#)srvrsmtp.c	5.5.1.1 (Berkeley) %G%	(no SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,7 +67,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	5.7 (Berkeley) %G%"
+literal|"@(#)srvrsmtp.c	5.5.1.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -435,19 +435,6 @@ begin_comment
 comment|/* one xaction only this run */
 end_comment
 
-begin_decl_stmt
-name|char
-modifier|*
-name|RealHostName
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* verified hostname, set in daemon.c */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -571,6 +558,10 @@ literal|"220"
 argument_list|,
 name|inp
 argument_list|)
+expr_stmt|;
+name|SmtpPhase
+operator|=
+literal|"startup"
 expr_stmt|;
 for|for
 control|(
@@ -775,6 +766,10 @@ case|case
 name|CMDHELO
 case|:
 comment|/* hello -- introduce yourself */
+name|SmtpPhase
+operator|=
+literal|"HELO"
+expr_stmt|;
 if|if
 condition|(
 name|sameword
@@ -874,6 +869,10 @@ case|case
 name|CMDMAIL
 case|:
 comment|/* mail -- designate sender */
+name|SmtpPhase
+operator|=
+literal|"MAIL"
+expr_stmt|;
 comment|/* force a sending host even if no HELO given */
 if|if
 condition|(
@@ -998,6 +997,10 @@ case|case
 name|CMDRCPT
 case|:
 comment|/* rcpt -- designate recipient */
+name|SmtpPhase
+operator|=
+literal|"RCPT"
+expr_stmt|;
 if|if
 condition|(
 name|setjmp
@@ -1131,6 +1134,10 @@ case|case
 name|CMDDATA
 case|:
 comment|/* data -- text of mail */
+name|SmtpPhase
+operator|=
+literal|"DATA"
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1149,7 +1156,9 @@ block|}
 elseif|else
 if|if
 condition|(
-name|rcps
+name|CurEnv
+operator|->
+name|e_nrcpts
 operator|<=
 literal|0
 condition|)
@@ -1164,6 +1173,10 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* collect the text of the message */
+name|SmtpPhase
+operator|=
+literal|"collect"
+expr_stmt|;
 name|collect
 argument_list|(
 name|TRUE
@@ -1177,9 +1190,15 @@ literal|0
 condition|)
 break|break;
 comment|/* 			**  Arrange to send to everyone. 			**	If sending to multiple people, mail back 			**		errors rather than reporting directly. 			**	In any case, don't mail back errors for 			**		anything that has happened up to 			**		now (the other end will do this). 			**	Truncate our transcript -- the mail has gotten 			**		to us successfully, and if we have 			**		to mail this back, it will be easier 			**		on the reader. 			**	Then send to everyone. 			**	Finally give a reply code.  If an error has 			**		already been given, don't mail a 			**		message back. 			**	We goose error returns by clearing error bit. 			*/
+name|SmtpPhase
+operator|=
+literal|"delivery"
+expr_stmt|;
 if|if
 condition|(
-name|rcps
+name|CurEnv
+operator|->
+name|e_nrcpts
 operator|!=
 literal|1
 condition|)
@@ -1277,6 +1296,35 @@ name|InChild
 condition|)
 name|finis
 argument_list|()
+expr_stmt|;
+comment|/* clean up a bit */
+name|hasmail
+operator|=
+literal|0
+expr_stmt|;
+name|rcps
+operator|=
+literal|0
+expr_stmt|;
+name|dropenvelope
+argument_list|(
+name|CurEnv
+argument_list|)
+expr_stmt|;
+name|CurEnv
+operator|=
+name|newenvelope
+argument_list|(
+name|CurEnv
+argument_list|)
+expr_stmt|;
+name|CurEnv
+operator|->
+name|e_flags
+operator|=
+name|BlankEnvelope
+operator|.
+name|e_flags
 expr_stmt|;
 break|break;
 case|case

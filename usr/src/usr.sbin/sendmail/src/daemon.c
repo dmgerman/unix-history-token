@@ -39,7 +39,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)daemon.c	5.8 (Berkeley) %G%	(w/o daemon mode)"
+literal|"@(#)daemon.c	5.4.1.1 (Berkeley) %G%	(w/o daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,18 +53,6 @@ begin_else
 else|#
 directive|else
 end_else
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
-end_include
 
 begin_include
 include|#
@@ -108,7 +96,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)daemon.c	5.8 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	5.4.1.1 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 

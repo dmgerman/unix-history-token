@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)headers.c	5.4.1.1 (Berkeley) %G%"
+literal|"@(#)headers.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -403,6 +403,14 @@ condition|)
 block|{
 if|if
 condition|(
+name|CurEnv
+operator|->
+name|e_from
+operator|.
+name|q_paddr
+operator|!=
+name|NULL
+operator|&&
 name|strcmp
 argument_list|(
 name|fvalue
@@ -1448,6 +1456,12 @@ operator|->
 name|e_class
 operator|*
 name|WKPRIFACT
+operator|+
+name|e
+operator|->
+name|e_nrcpts
+operator|*
+name|WKRECIPFACT
 expr_stmt|;
 comment|/* return receipt to */
 name|p

@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)readcf.c	5.3 (Berkeley) %G%"
+literal|"@(#)readcf.c	5.3.1.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,7 +32,7 @@ file|"sendmail.h"
 end_include
 
 begin_comment
-comment|/* **  READCF -- read control file. ** **	This routine reads the control file and builds the internal **	form. ** **	The file is formatted as a sequence of lines, each taken **	atomically.  The first character of each line describes how **	the line is to be interpreted.  The lines are: **		Dxval		Define macro x to have value val. **		Cxword		Put word into class x. **		Fxfile [fmt]	Read file for lines to put into **				class x.  Use scanf string 'fmt' **				or "%s" if not present.  Fmt should **				only produce one string-valued result. **		Hname: value	Define header with field-name 'name' **				and value as specified; this will be **				macro expanded immediately before **				use. **		Sn		Use rewriting set n. **		Rlhs rhs	Rewrite addresses that match lhs to **				be rhs. **		Mn p f s r a	Define mailer.  n - internal name, **				p - pathname, f - flags, s - rewriting **				ruleset for sender, s - rewriting ruleset **				for recipients, a - argument vector. **		Oxvalue		Set option x to value. **		Pname=value	Set precedence name to value. ** **	Parameters: **		cfname -- control file name. ** **	Returns: **		none. ** **	Side Effects: **		Builds several internal tables. */
+comment|/* **  READCF -- read control file. ** **	This routine reads the control file and builds the internal **	form. ** **	The file is formatted as a sequence of lines, each taken **	atomically.  The first character of each line describes how **	the line is to be interpreted.  The lines are: **		Dxval		Define macro x to have value val. **		Cxword		Put word into class x. **		Fxfile [fmt]	Read file for lines to put into **				class x.  Use scanf string 'fmt' **				or "%s" if not present.  Fmt should **				only produce one string-valued result. **		Hname: value	Define header with field-name 'name' **				and value as specified; this will be **				macro expanded immediately before **				use. **		Sn		Use rewriting set n. **		Rlhs rhs	Rewrite addresses that match lhs to **				be rhs. **		Mn arg=val...	Define mailer.  n is the internal name. **				Args specify mailer parameters. **		Oxvalue		Set option x to value. **		Pname=value	Set precedence name to value. ** **	Parameters: **		cfname -- control file name. ** **	Returns: **		none. ** **	Side Effects: **		Builds several internal tables. */
 end_comment
 
 begin_macro
@@ -2438,6 +2438,18 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'C'
+case|:
+comment|/* checkpoint after N connections */
+name|CheckPointLimit
+operator|=
+name|atoi
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'d'
 case|:
 comment|/* delivery mode */
@@ -2726,6 +2738,30 @@ name|e_flags
 operator|&=
 operator|~
 name|EF_OLDSTYLE
+expr_stmt|;
+break|break;
+case|case
+literal|'P'
+case|:
+comment|/* postmaster copy address for returned mail */
+name|PostMasterCopy
+operator|=
+name|newstr
+argument_list|(
+name|val
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'q'
+case|:
+comment|/* slope of queue only function */
+name|QueueFactor
+operator|=
+name|atoi
+argument_list|(
+name|val
+argument_list|)
 expr_stmt|;
 break|break;
 case|case

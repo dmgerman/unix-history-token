@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  Sendmail **  Copyright (c) 1983  Eric P. Allman **  Berkeley, California ** **  Copyright (c) 1983 Regents of the University of California. **  All rights reserved.  The Berkeley software License Agreement **  specifies the terms and conditions for redistribution. ** **	@(#)sendmail.h	5.2 (Berkeley) %G% */
+comment|/* **  Sendmail **  Copyright (c) 1983  Eric P. Allman **  Berkeley, California ** **  Copyright (c) 1983 Regents of the University of California. **  All rights reserved.  The Berkeley software License Agreement **  specifies the terms and conditions for redistribution. ** **	@(#)sendmail.h	5.1.1.1 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	5.2		%G%"
+literal|"@(#)sendmail.h	5.1.1.1		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -112,6 +112,42 @@ begin_endif
 endif|#
 directive|endif
 endif|LOG
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DAEMON
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VMUNIX
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+endif|VMUNIX
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+endif|DAEMON
 end_endif
 
 begin_define
@@ -974,6 +1010,10 @@ name|long
 name|e_msgsize
 decl_stmt|;
 comment|/* size of the message in bytes */
+name|int
+name|e_nrcpts
+decl_stmt|;
+comment|/* number of recipients */
 name|short
 name|e_class
 decl_stmt|;
@@ -1183,7 +1223,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  Message priorities. **	Priorities> 0 should be preemptive. ** **	CurEnv->e_msgpriority is the number of bytes in the message adjusted **	by the message priority and the amount of time the message **	has been sitting around.  Each priority point is worth **	WKPRIFACT bytes of message, and each time we reprocess a **	message the size gets reduced by WKTIMEFACT. ** **	WKTIMEFACT is negative since jobs that fail once have a high **	probability of failing again.  Making it negative tends to force **	them to the back rather than the front of the queue, where they **	only clog things.  Thanks go to Jay Lepreau at Utah for pointing **	out the error in my thinking. ** **	The "class" is this number, unadjusted by the age or size of **	this message.  Classes with negative representations will have **	error messages thrown away if they are not local. */
+comment|/* **  Message priorities. **	Priorities> 0 should be preemptive. ** **	CurEnv->e_msgpriority is the number of bytes in the message adjusted **	by the message priority and the amount of time the message **	has been sitting around.  Each priority point is worth **	WKPRIFACT bytes of message, and each time we reprocess a **	message the size gets reduced by WKTIMEFACT.  Recipients are **	worth WKRECIPFACT. ** **	WKTIMEFACT is negative since jobs that fail once have a high **	probability of failing again.  Making it negative tends to force **	them to the back rather than the front of the queue, where they **	only clog things.  Thanks go to Jay Lepreau at Utah for pointing **	out the error in my thinking. ** **	The "class" is this number, unadjusted by the age or size of **	this message.  Classes with negative representations will have **	error messages thrown away if they are not local. */
 end_comment
 
 begin_struct
@@ -1245,6 +1285,17 @@ end_define
 
 begin_comment
 comment|/* bytes each reprocessing is worth */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WKRECIPFACT
+value|1000
+end_define
+
+begin_comment
+comment|/* bytes each recipient is worth */
 end_comment
 
 begin_escape
@@ -1507,6 +1558,94 @@ begin_escape
 end_escape
 
 begin_comment
+comment|/* **  Information about hosts that we have looked up recently. ** **	This stuff is 4.2/3bsd specific. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DAEMON
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VMUNIX
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|HOSTINFO
+value|struct hostinfo
+end_define
+
+begin_macro
+name|HOSTINFO
+end_macro
+
+begin_block
+block|{
+name|char
+modifier|*
+name|ho_name
+decl_stmt|;
+comment|/* name of this host */
+name|struct
+name|in_addr
+name|ho_inaddr
+decl_stmt|;
+comment|/* internet address */
+name|short
+name|ho_flags
+decl_stmt|;
+comment|/* flag bits, see below */
+name|short
+name|ho_errno
+decl_stmt|;
+comment|/* error number on last connection */
+name|short
+name|ho_exitstat
+decl_stmt|;
+comment|/* exit status from last connection */
+block|}
+end_block
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/* flag bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HOF_VALID
+value|00001
+end_define
+
+begin_comment
+comment|/* this entry is valid */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+endif|VMUNIX
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+endif|DAEMON
+end_endif
+
+begin_escape
+end_escape
+
+begin_comment
 comment|/* **  Symbol table definitions */
 end_comment
 
@@ -1550,6 +1689,16 @@ modifier|*
 name|sv_alias
 decl_stmt|;
 comment|/* alias */
+ifdef|#
+directive|ifdef
+name|HOSTINFO
+name|HOSTINFO
+name|sv_host
+decl_stmt|;
+comment|/* host information */
+endif|#
+directive|endif
+endif|HOSTINFO
 block|}
 name|s_value
 union|;
@@ -1627,6 +1776,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ST_HOST
+value|5
+end_define
+
+begin_comment
+comment|/* host information */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|s_class
 value|s_value.sv_class
 end_define
@@ -1650,6 +1810,13 @@ define|#
 directive|define
 name|s_alias
 value|s_value.sv_alias
+end_define
+
+begin_define
+define|#
+directive|define
+name|s_host
+value|s_value.sv_host
 end_define
 
 begin_function_decl
@@ -2176,6 +2343,17 @@ end_comment
 begin_decl_stmt
 name|EXTERN
 name|bool
+name|ForkQueueRuns
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* fork for each job when running the queue */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|bool
 name|AutoRebuild
 decl_stmt|;
 end_decl_stmt
@@ -2375,6 +2553,39 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
+name|int
+name|QueueLA
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* load average starting forced queueing */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|RefuseLA
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* load average refusing connections are */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|QueueFactor
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* slope of queue function */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
 name|time_t
 name|QueueIntvl
 decl_stmt|;
@@ -2460,17 +2671,24 @@ begin_decl_stmt
 name|EXTERN
 name|char
 modifier|*
-name|TrustedUsers
-index|[
-name|MAXTRUST
-operator|+
-literal|1
-index|]
+name|SmtpPhase
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* list of trusted users */
+comment|/* current phase in SMTP processing */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
+name|RealHostName
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* name of host we are talking to */
 end_comment
 
 begin_decl_stmt
@@ -2533,13 +2751,64 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|ADDRESS
+name|NullAddress
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* a null (template) address [main.c] */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
 name|char
 name|SpaceSub
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* substitution for<lwsp> [conf.c] */
+comment|/* substitution for<lwsp> */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|CheckPointLimit
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* deliveries before checkpointing */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
+name|PostMasterCopy
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* address to get errs cc's */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
+name|TrustedUsers
+index|[
+name|MAXTRUST
+operator|+
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* list of trusted users */
 end_comment
 
 begin_escape
@@ -2628,6 +2897,18 @@ parameter_list|(
 name|s
 parameter_list|)
 value|strcpy(xalloc(strlen(s) + 1), s)
+end_define
+
+begin_define
+define|#
+directive|define
+name|STRUCTCOPY
+parameter_list|(
+name|s
+parameter_list|,
+name|d
+parameter_list|)
+value|d = s
 end_define
 
 begin_comment

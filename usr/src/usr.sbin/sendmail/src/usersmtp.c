@@ -45,7 +45,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)usersmtp.c	5.4 (Berkeley) %G%	(no SMTP)"
+literal|"@(#)usersmtp.c	5.3.1.1 (Berkeley) %G%	(no SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,7 +73,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)usersmtp.c	5.4 (Berkeley) %G%"
+literal|"@(#)usersmtp.c	5.3.1.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -365,6 +365,13 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|SmtpPhase
+operator|=
+literal|"user open"
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SmtpPid
 operator|=
 name|openmailer
@@ -569,6 +576,13 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|SmtpPhase
+operator|=
+literal|"greeting wait"
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|r
 operator|=
 name|reply
@@ -618,6 +632,13 @@ name|m
 argument_list|,
 name|HostName
 argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SmtpPhase
+operator|=
+literal|"HELO wait"
 expr_stmt|;
 end_expr_stmt
 
@@ -824,6 +845,13 @@ argument_list|)
 expr_stmt|;
 block|}
 end_if
+
+begin_expr_stmt
+name|SmtpPhase
+operator|=
+literal|"MAIL wait"
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|r
@@ -1038,6 +1066,10 @@ name|TRUE
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|SmtpPhase
+operator|=
+literal|"RCPT wait"
+expr_stmt|;
 name|r
 operator|=
 name|reply
@@ -1169,6 +1201,10 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+name|SmtpPhase
+operator|=
+literal|"DATA wait"
+expr_stmt|;
 name|r
 operator|=
 name|reply
@@ -1283,6 +1319,10 @@ literal|">>> ."
 argument_list|)
 expr_stmt|;
 comment|/* check for the results of the transaction */
+name|SmtpPhase
+operator|=
+literal|"result wait"
+expr_stmt|;
 name|r
 operator|=
 name|reply

@@ -21,7 +21,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	5.3 (Berkeley) %G%	(with DBM)"
+literal|"@(#)alias.c	5.3.1.1 (Berkeley) %G%	(with DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,7 +37,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	5.3 (Berkeley) %G%	(without DBM)"
+literal|"@(#)alias.c	5.3.1.1 (Berkeley) %G%	(without DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -188,11 +188,6 @@ modifier|*
 name|aliaslookup
 parameter_list|()
 function_decl|;
-if|if
-condition|(
-name|NoAlias
-condition|)
-return|return;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -238,6 +233,15 @@ operator|->
 name|q_paddr
 expr_stmt|;
 comment|/* 	**  Look up this name 	*/
+if|if
+condition|(
+name|NoAlias
+condition|)
+name|p
+operator|=
+name|NULL
+expr_stmt|;
+else|else
 name|p
 operator|=
 name|aliaslookup
@@ -666,12 +670,37 @@ argument_list|,
 literal|"rebuilding alias database"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>=
+literal|7
+condition|)
+name|syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"rebuilding alias database"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|LOG
 block|}
 else|else
 block|{
 ifdef|#
 directive|ifdef
 name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>=
+literal|7
+condition|)
 name|syslog
 argument_list|(
 name|LOG_INFO
@@ -1468,10 +1497,7 @@ operator|*
 name|p2
 operator|!=
 literal|'\0'
-condition|)
-operator|(
-name|void
-operator|)
+operator|&&
 name|parseaddr
 argument_list|(
 name|p2
@@ -1484,7 +1510,16 @@ literal|1
 argument_list|,
 literal|','
 argument_list|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|usrerr
+argument_list|(
+literal|"%s... bad address"
+argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|c
@@ -1785,6 +1820,31 @@ argument_list|,
 name|bytes
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LOG
+if|if
+condition|(
+name|LogLevel
+operator|>=
+literal|8
+condition|)
+name|syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"%d aliases, longest %d bytes, %d bytes total"
+argument_list|,
+name|naliases
+argument_list|,
+name|longest
+argument_list|,
+name|bytes
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|LOG
 block|}
 end_block
 

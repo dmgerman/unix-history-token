@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  Sendmail **  Copyright (c) 1983  Eric P. Allman **  Berkeley, California ** **  Copyright (c) 1983 Regents of the University of California. **  All rights reserved.  The Berkeley software License Agreement **  specifies the terms and conditions for redistribution. ** **	@(#)conf.h	5.2 (Berkeley) %G% */
+comment|/* **  Sendmail **  Copyright (c) 1983  Eric P. Allman **  Berkeley, California ** **  Copyright (c) 1983 Regents of the University of California. **  All rights reserved.  The Berkeley software License Agreement **  specifies the terms and conditions for redistribution. ** **	@(#)conf.h	5.1.1.1 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -59,7 +59,7 @@ begin_define
 define|#
 directive|define
 name|MAXHOP
-value|30
+value|17
 end_define
 
 begin_comment
@@ -199,7 +199,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* include the daemon (requires IPC) */
+comment|/* include the daemon (requires IPC& SMTP) */
 end_comment
 
 begin_define
@@ -211,6 +211,17 @@ end_define
 
 begin_comment
 comment|/* use flock file locking */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SETPROCTITLE
+value|1
+end_define
+
+begin_comment
+comment|/* munge argv to display current status */
 end_comment
 
 end_unit

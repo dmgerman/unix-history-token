@@ -36,7 +36,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	5.5 (Berkeley) %G%"
+literal|"@(#)main.c	5.4.1.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,6 +79,8 @@ end_ifdef
 begin_decl_stmt
 name|char
 name|edata
+decl_stmt|,
+name|end
 decl_stmt|;
 end_decl_stmt
 
@@ -132,6 +134,64 @@ end_decl_stmt
 begin_comment
 comment|/* the envelope around the basic letter */
 end_comment
+
+begin_decl_stmt
+name|ADDRESS
+name|NullAddress
+init|=
+comment|/* a null address */
+block|{
+literal|""
+block|,
+literal|""
+block|,
+literal|""
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* **  Pointers for setproctitle. **	This allows "ps" listings to give more useful information. **	These must be kept out of BSS for frozen configuration files **		to work. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SETPROCTITLE
+end_ifdef
+
+begin_decl_stmt
+name|char
+modifier|*
+modifier|*
+name|Argv
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* pointer to argument vector */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|LastArgv
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* end of argv */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+endif|SETPROCTITLE
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -380,6 +440,51 @@ name|canrename
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SETPROCTITLE
+end_ifdef
+
+begin_comment
+comment|/* 	**  Save start and extent of argv for setproctitle. 	*/
+end_comment
+
+begin_expr_stmt
+name|Argv
+operator|=
+name|argv
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|LastArgv
+operator|=
+name|argv
+index|[
+name|argc
+operator|-
+literal|1
+index|]
+operator|+
+name|strlen
+argument_list|(
+name|argv
+index|[
+name|argc
+operator|-
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|SETPROCTITLE
+end_endif
+
 begin_comment
 comment|/* 	**  Be sure we have enough file descriptors. 	*/
 end_comment
@@ -447,10 +552,34 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|STRUCTCOPY
+argument_list|(
+name|NullAddress
+argument_list|,
+name|BlankEnvelope
+operator|.
+name|e_from
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|CurEnv
 operator|=
 operator|&
 name|BlankEnvelope
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|STRUCTCOPY
+argument_list|(
+name|NullAddress
+argument_list|,
+name|MainEnvelope
+operator|.
+name|e_from
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
@@ -1216,7 +1345,10 @@ break|break;
 block|}
 name|from
 operator|=
+name|newstr
+argument_list|(
 name|p
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -1264,7 +1396,10 @@ break|break;
 block|}
 name|FullName
 operator|=
+name|newstr
+argument_list|(
 name|p
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -2430,7 +2565,19 @@ condition|)
 block|{
 name|usrerr
 argument_list|(
-literal|"Usage: /usr/lib/sendmail [flags] addr..."
+literal|"Recipient names must be specified"
+argument_list|)
+expr_stmt|;
+comment|/* collect body for UUCP return */
+if|if
+condition|(
+name|OpMode
+operator|!=
+name|MD_VERIFY
+condition|)
+name|collect
+argument_list|(
+name|FALSE
 argument_list|)
 expr_stmt|;
 name|finis
@@ -3019,6 +3166,16 @@ name|frzbrk
 decl_stmt|;
 comment|/* the current break */
 name|char
+modifier|*
+name|frzedata
+decl_stmt|;
+comment|/* address of edata */
+name|char
+modifier|*
+name|frzend
+decl_stmt|;
+comment|/* address of end */
+name|char
 name|frzver
 index|[
 literal|252
@@ -3058,6 +3215,8 @@ decl_stmt|;
 specifier|extern
 name|char
 name|edata
+decl_stmt|,
+name|end
 decl_stmt|;
 specifier|extern
 name|char
@@ -3125,6 +3284,24 @@ name|sbrk
 argument_list|(
 literal|0
 argument_list|)
+expr_stmt|;
+name|fhdr
+operator|.
+name|frzinfo
+operator|.
+name|frzedata
+operator|=
+operator|&
+name|edata
+expr_stmt|;
+name|fhdr
+operator|.
+name|frzinfo
+operator|.
+name|frzend
+operator|=
+operator|&
+name|end
 expr_stmt|;
 operator|(
 name|void
@@ -3322,6 +3499,24 @@ argument_list|)
 operator|<
 sizeof|sizeof
 name|fhdr
+operator|||
+name|fhdr
+operator|.
+name|frzinfo
+operator|.
+name|frzedata
+operator|!=
+operator|&
+name|edata
+operator|||
+name|fhdr
+operator|.
+name|frzinfo
+operator|.
+name|frzend
+operator|!=
+operator|&
+name|end
 operator|||
 name|strcmp
 argument_list|(

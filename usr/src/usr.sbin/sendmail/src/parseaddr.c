@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)parseaddr.c	5.1 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	5.1.1.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -281,19 +281,39 @@ name|addr
 expr_stmt|;
 if|if
 condition|(
-name|copyf
-operator|>=
-literal|0
+name|a
+operator|->
+name|q_user
+operator|==
+name|NULL
 condition|)
-block|{
+name|a
+operator|->
+name|q_user
+operator|=
+literal|""
+expr_stmt|;
 if|if
 condition|(
 name|a
 operator|->
 name|q_host
-operator|!=
+operator|==
 name|NULL
 condition|)
+name|a
+operator|->
+name|q_host
+operator|=
+literal|""
+expr_stmt|;
+if|if
+condition|(
+name|copyf
+operator|>=
+literal|0
+condition|)
+block|{
 name|a
 operator|->
 name|q_host
@@ -304,13 +324,6 @@ name|a
 operator|->
 name|q_host
 argument_list|)
-expr_stmt|;
-else|else
-name|a
-operator|->
-name|q_host
-operator|=
-literal|""
 expr_stmt|;
 if|if
 condition|(
@@ -942,6 +955,13 @@ condition|(
 name|bslashmode
 condition|)
 block|{
+comment|/* kludge \! for naive users */
+if|if
+condition|(
+name|c
+operator|!=
+literal|'!'
+condition|)
 name|c
 operator||=
 literal|0200
@@ -3188,7 +3208,7 @@ condition|)
 block|{
 name|syserr
 argument_list|(
-literal|"buildaddr: unknown net %s"
+literal|"buildaddr: unknown mailer %s"
 argument_list|,
 operator|*
 name|tv

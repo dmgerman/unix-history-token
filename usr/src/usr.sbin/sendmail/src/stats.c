@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)stats.c	5.5 (Berkeley) %G%"
+literal|"@(#)stats.c	5.4.1.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -86,17 +86,26 @@ name|Stat
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-specifier|extern
-name|long
-name|kbytes
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_define
+define|#
+directive|define
+name|ONE_K
+value|1000
+end_define
 
 begin_comment
-comment|/* for _bf, _bt */
+comment|/* one thousand (twenty-four?) */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|KBYTES
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x) + (ONE_K - 1)) / ONE_K)
+end_define
 
 begin_escape
 end_escape
@@ -209,7 +218,7 @@ operator|->
 name|m_mno
 index|]
 operator|+=
-name|kbytes
+name|KBYTES
 argument_list|(
 name|CurEnv
 operator|->
@@ -473,37 +482,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/* **  KBYTES -- given a number, returns the number of Kbytes. ** **	Used in statistics gathering of message sizes to try to avoid **	wraparound (at least for a while.....) ** **	Parameters: **		bytes -- actual number of bytes. ** **	Returns: **		number of kbytes. ** **	Side Effects: **		none. ** **	Notes: **		This function is actually a ceiling function to **			the nearest K. **		Honestly folks, floating point might be better. **			Or perhaps a "statistical" log method. */
-end_comment
-
-begin_function
-name|long
-name|kbytes
-parameter_list|(
-name|bytes
-parameter_list|)
-name|long
-name|bytes
-decl_stmt|;
-block|{
-return|return
-operator|(
-operator|(
-name|bytes
-operator|+
-literal|999
-operator|)
-operator|/
-literal|1000
-operator|)
-return|;
-block|}
-end_function
 
 end_unit
 

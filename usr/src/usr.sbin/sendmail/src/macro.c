@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)macro.c	5.2 (Berkeley) %G%"
+literal|"@(#)macro.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -128,7 +128,7 @@ name|tTd
 argument_list|(
 literal|35
 argument_list|,
-literal|4
+literal|24
 argument_list|)
 condition|)
 block|{
@@ -363,7 +363,7 @@ name|tTd
 argument_list|(
 literal|35
 argument_list|,
-literal|4
+literal|24
 argument_list|)
 condition|)
 block|{
@@ -497,7 +497,7 @@ name|tTd
 argument_list|(
 literal|35
 argument_list|,
-literal|3
+literal|9
 argument_list|)
 condition|)
 block|{
