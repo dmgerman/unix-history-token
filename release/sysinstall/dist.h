@@ -126,7 +126,7 @@ define|#
 directive|define
 name|_DIST_DEVELOPER
 define|\
-value|(DIST_BIN | DIST_MANPAGES | DIST_DICT | DIST_PROFLIBS | DIST_SRC)
+value|(DIST_BIN | DIST_MANPAGES | DIST_DICT | DIST_PROFLIBS | DIST_INFO | DIST_SRC)
 end_define
 
 begin_define
