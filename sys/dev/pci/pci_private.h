@@ -297,6 +297,9 @@ name|s
 parameter_list|,
 name|int
 name|f
+parameter_list|,
+name|size_t
+name|size
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1448,6 +1448,9 @@ name|s
 parameter_list|,
 name|int
 name|f
+parameter_list|,
+name|size_t
+name|size
 parameter_list|)
 block|{
 define|#
@@ -1509,11 +1512,7 @@ name|devlist_entry
 operator|=
 name|malloc
 argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|pci_devinfo
-argument_list|)
+name|size
 argument_list|,
 name|M_DEVBUF
 argument_list|,
@@ -3863,6 +3862,12 @@ argument_list|,
 name|s
 argument_list|,
 name|f
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|pci_devinfo
+argument_list|)
 argument_list|)
 decl_stmt|;
 if|if
