@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: print.c,v 1.6 1997/12/02 12:33:17 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -176,9 +176,14 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|tbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tbuf
+argument_list|)
 argument_list|,
 literal|"type %d"
 argument_list|,
@@ -279,9 +284,14 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|tbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|tbuf
+argument_list|)
 argument_list|,
 literal|"type %d"
 argument_list|,
@@ -317,9 +327,14 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|abuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|abuf
+argument_list|)
 argument_list|,
 literal|"answer %d"
 argument_list|,
