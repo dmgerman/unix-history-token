@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpc.c	5.11 (Berkeley) %G%"
+literal|"@(#)lpc.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,26 +52,22 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_comment
-comment|/*  * lpc -- line printer control program  */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<dirent.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
 end_include
 
 begin_include
@@ -89,8 +85,54 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lp.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lpc.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
+
+begin_comment
+comment|/*  * lpc -- line printer control program  */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -129,35 +171,78 @@ name|top
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|void
-name|intr
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|cmd
-modifier|*
-name|getcmd
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|jmp_buf
 name|toplevel
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|void
+name|cmdscanner
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|cmd
+modifier|*
+name|getcmd
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|intr
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|makeargv
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
 name|argv
@@ -339,9 +424,15 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|intr
-parameter_list|()
+parameter_list|(
+name|signo
+parameter_list|)
+name|int
+name|signo
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -367,20 +458,16 @@ begin_comment
 comment|/*  * Command parser.  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|cmdscanner
-argument_list|(
-argument|top
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|top
+parameter_list|)
 name|int
 name|top
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -437,7 +524,11 @@ operator|==
 literal|0
 condition|)
 name|quit
-argument_list|()
+argument_list|(
+literal|0
+argument_list|,
+name|NULL
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -541,16 +632,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|cmd
-name|cmdtab
-index|[]
-decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_function
 name|struct
@@ -721,12 +803,11 @@ begin_comment
 comment|/*  * Slice a string up into argc/argv.  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|void
 name|makeargv
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|char
@@ -824,7 +905,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_define
 define|#
@@ -837,30 +918,22 @@ begin_comment
 comment|/*  * Help command.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|help
-argument_list|(
-argument|argc
-argument_list|,
-argument|argv
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|argc
+parameter_list|,
+name|argv
+parameter_list|)
 name|int
 name|argc
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|argv
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -1167,7 +1240,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 end_unit
 

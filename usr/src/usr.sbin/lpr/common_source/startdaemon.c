@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)startdaemon.c	5.8 (Berkeley) %G%"
+literal|"@(#)startdaemon.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,14 +28,10 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_comment
-comment|/*  * Tell the printer daemon that there are new files in the spool directory.  */
-end_comment
-
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -53,13 +49,37 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dirent.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lp.local.h"
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lp.h"
 end_include
 
 begin_include
@@ -68,21 +88,34 @@ directive|include
 file|"pathnames.h"
 end_include
 
-begin_macro
-name|startdaemon
-argument_list|(
-argument|printer
-argument_list|)
-end_macro
-
 begin_decl_stmt
+specifier|static
+name|void
+name|perr
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Tell the printer daemon that there are new files in the spool directory.  */
+end_comment
+
+begin_function
+name|int
+name|startdaemon
+parameter_list|(
+name|printer
+parameter_list|)
 name|char
 modifier|*
 name|printer
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|sockaddr_un
@@ -100,11 +133,6 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
-specifier|static
-name|void
-name|perr
-parameter_list|()
-function_decl|;
 name|s
 operator|=
 name|socket
@@ -340,7 +368,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
@@ -355,19 +383,10 @@ name|msg
 decl_stmt|;
 block|{
 specifier|extern
-name|int
-name|errno
-decl_stmt|;
-specifier|extern
 name|char
 modifier|*
 name|name
 decl_stmt|;
-name|char
-modifier|*
-name|strerror
-parameter_list|()
-function_decl|;
 operator|(
 name|void
 operator|)

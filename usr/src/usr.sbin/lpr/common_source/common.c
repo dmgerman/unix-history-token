@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)common.c	5.7 (Berkeley) %G%"
+literal|"@(#)common.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,15 +28,81 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_comment
-comment|/*  * Routines and data common to all the line printer functions.  */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dirent.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
 
 begin_include
 include|#
 directive|include
 file|"lp.h"
 end_include
+
+begin_comment
+comment|/*  * Routines and data common to all the line printer functions.  */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -507,18 +573,18 @@ begin_comment
 comment|/* printer name */
 end_comment
 
+begin_comment
+comment|/* host machine name */
+end_comment
+
 begin_decl_stmt
 name|char
 name|host
 index|[
-literal|32
+name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* host machine name */
-end_comment
 
 begin_decl_stmt
 name|char
@@ -543,25 +609,39 @@ begin_comment
 comment|/* are we sending to a remote? */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|int
+name|compar
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|void
+operator|*
+operator|,
+specifier|const
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Create a connection to the remote printer server.  * Most of this code comes from rcmd.c.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|getport
-argument_list|(
-argument|rhost
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|rhost
+parameter_list|)
 name|char
 modifier|*
 name|rhost
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|hostent
@@ -808,27 +888,22 @@ name|s
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Getline reads a line from the control file cfp, removes tabs, converts  *  new-line to null and leaves it in line.  * Returns 0 at EOF or the number of characters read.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|getline
-argument_list|(
-argument|cfp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|cfp
+parameter_list|)
 name|FILE
 modifier|*
 name|cfp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -925,21 +1000,19 @@ name|linel
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Scan the current directory and make a list of daemon files sorted by  * creation time.  * Return the number of entries and a pointer to the list.  */
 end_comment
 
-begin_macro
+begin_decl_stmt
+name|int
 name|getq
 argument_list|(
-argument|namelist
+name|namelist
 argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
+decl|struct
 name|queue
 modifier|*
 argument_list|(
@@ -954,7 +1027,7 @@ begin_block
 block|{
 specifier|register
 name|struct
-name|direct
+name|dirent
 modifier|*
 name|d
 decl_stmt|;
@@ -983,11 +1056,6 @@ decl_stmt|;
 name|int
 name|arraysz
 decl_stmt|;
-specifier|static
-name|int
-name|compar
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 operator|(
@@ -1288,26 +1356,24 @@ begin_comment
 comment|/*  * Compare modification times.  */
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
+name|int
 name|compar
-argument_list|(
+parameter_list|(
 name|p1
-argument_list|,
+parameter_list|,
 name|p2
-argument_list|)
-specifier|register
-expr|struct
-name|queue
-operator|*
-operator|*
+parameter_list|)
+specifier|const
+name|void
+modifier|*
 name|p1
-operator|,
-operator|*
-operator|*
+decl_stmt|,
+decl|*
 name|p2
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_function
 
 begin_block
 block|{
@@ -1315,6 +1381,12 @@ if|if
 condition|(
 operator|(
 operator|*
+operator|(
+expr|struct
+name|queue
+operator|*
+operator|*
+operator|)
 name|p1
 operator|)
 operator|->
@@ -1322,6 +1394,12 @@ name|q_time
 operator|<
 operator|(
 operator|*
+operator|(
+expr|struct
+name|queue
+operator|*
+operator|*
+operator|)
 name|p2
 operator|)
 operator|->
@@ -1337,6 +1415,12 @@ if|if
 condition|(
 operator|(
 operator|*
+operator|(
+expr|struct
+name|queue
+operator|*
+operator|*
+operator|)
 name|p1
 operator|)
 operator|->
@@ -1344,6 +1428,12 @@ name|q_time
 operator|>
 operator|(
 operator|*
+operator|(
+expr|struct
+name|queue
+operator|*
+operator|*
+operator|)
 name|p2
 operator|)
 operator|->
@@ -1452,9 +1542,14 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|errbuf
+argument_list|)
 argument_list|,
 literal|"unable to get official name for local machine %s"
 argument_list|,
@@ -1501,9 +1596,14 @@ block|{
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|errbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|errbuf
+argument_list|)
 argument_list|,
 literal|"unable to get official name for remote machine %s"
 argument_list|,
@@ -1543,38 +1643,95 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*VARARGS1*/
-end_comment
+begin_if
+if|#
+directive|if
+name|__STDC__
+end_if
 
-begin_macro
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<varargs.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+name|void
+if|#
+directive|if
+name|__STDC__
 name|fatal
-argument_list|(
-argument|msg
-argument_list|,
-argument|a1
-argument_list|,
-argument|a2
-argument_list|,
-argument|a3
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|msg
+parameter_list|,
+modifier|...
+parameter_list|)
+else|#
+directive|else
+function|fatal
+parameter_list|(
+name|msg
+parameter_list|,
+name|va_alist
+parameter_list|)
 name|char
 modifier|*
 name|msg
 decl_stmt|;
-end_decl_stmt
-
-begin_block
+function|va_dcl
+endif|#
+directive|endif
 block|{
+name|va_list
+name|ap
+decl_stmt|;
+if|#
+directive|if
+name|__STDC__
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|msg
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|va_start
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|from
 operator|!=
 name|host
 condition|)
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"%s: "
@@ -1582,6 +1739,9 @@ argument_list|,
 name|host
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"%s: "
@@ -1593,6 +1753,9 @@ if|if
 condition|(
 name|printer
 condition|)
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"%s: "
@@ -1600,17 +1763,24 @@ argument_list|,
 name|printer
 argument_list|)
 expr_stmt|;
-name|printf
+operator|(
+name|void
+operator|)
+name|vprintf
 argument_list|(
 name|msg
 argument_list|,
-name|a1
-argument_list|,
-name|a2
-argument_list|,
-name|a3
+name|ap
 argument_list|)
 expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
 name|putchar
 argument_list|(
 literal|'\n'
@@ -1622,7 +1792,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rmjob.c	5.7 (Berkeley) %G%"
+literal|"@(#)rmjob.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,9 +28,59 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_comment
-comment|/*  * rmjob - remove the specified jobs from the queue.  */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dirent.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
 
 begin_include
 include|#
@@ -41,8 +91,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lp.local.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"pathnames.h"
 end_include
+
+begin_comment
+comment|/*  * rmjob - remove the specified jobs from the queue.  */
+end_comment
 
 begin_comment
 comment|/*  * Stuff for handling lprm specifications  */
@@ -151,19 +211,10 @@ begin_comment
 comment|/* active control file name */
 end_comment
 
-begin_function_decl
-name|int
-name|iscf
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_macro
+begin_function
+name|void
 name|rmjob
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|int
@@ -177,7 +228,7 @@ init|=
 literal|0
 decl_stmt|;
 name|struct
-name|direct
+name|dirent
 modifier|*
 modifier|*
 name|files
@@ -519,27 +570,22 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Process a lock file: collect the pid of the active  *  daemon and the file name of the active spool entry.  * Return boolean indicating existence of a lock file.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|lockchk
-argument_list|(
-argument|s
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|s
+parameter_list|)
 name|char
 modifier|*
 name|s
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|FILE
@@ -717,27 +763,22 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Process a control file.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|process
-argument_list|(
-argument|file
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|file
+parameter_list|)
 name|char
 modifier|*
 name|file
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|FILE
 modifier|*
@@ -863,27 +904,22 @@ name|file
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Do the dirty work in checking  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|chk
-argument_list|(
-argument|file
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|file
+parameter_list|)
 name|char
 modifier|*
 name|file
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -1174,30 +1210,28 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * If root is removing a file on the local machine, allow it.  * If root is removing a file from a remote machine, only allow  * files sent from the remote machine to be removed.  * Normal users can only remove the file from where it was sent.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|isowner
-argument_list|(
-argument|owner
-argument_list|,
-argument|file
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|owner
+parameter_list|,
+name|file
+parameter_list|)
 name|char
 modifier|*
 name|owner
 decl_stmt|,
-modifier|*
+decl|*
 name|file
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -1289,12 +1323,10 @@ begin_comment
 comment|/*  * Check to see if we are sending files to a remote machine. If we are,  * then try removing files on the remote machine.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|rmremote
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|char
@@ -1326,9 +1358,17 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
-name|sprintf
+operator|(
+name|void
+operator|)
+name|snprintf
 argument_list|(
 name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 argument_list|,
 literal|"\5%s %s"
 argument_list|,
@@ -1533,28 +1573,23 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Return 1 if the filename begins with 'cf'  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|iscf
-argument_list|(
-argument|d
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|d
+parameter_list|)
 name|struct
-name|direct
+name|dirent
 modifier|*
 name|d
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 operator|(
@@ -1578,7 +1613,7 @@ literal|'f'
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

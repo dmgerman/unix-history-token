@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printcap.c	5.7 (Berkeley) %G%"
+literal|"@(#)printcap.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,13 +31,49 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dirent.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lp.h"
 end_include
 
 begin_include
@@ -198,55 +234,71 @@ begin_comment
 comment|/* detect infinite loops in termcap, init 0 */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|tskip
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
+specifier|static
 name|char
 modifier|*
-name|tgetstr
-parameter_list|()
-function_decl|;
-end_function_decl
+name|tskip
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+name|bp
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|tdecode
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
+name|__P
+argument_list|(
+operator|(
 name|char
-modifier|*
-name|getenv
-parameter_list|()
-function_decl|;
-end_function_decl
+operator|*
+operator|,
+name|char
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Similar to tgetent except it returns the next enrty instead of  * doing a lookup.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|getprent
-argument_list|(
+parameter_list|(
 name|bp
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|bp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|int
@@ -416,14 +468,12 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|endprent
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -437,30 +487,28 @@ name|pfp
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Get an entry for terminal name in buffer bp,  * from the termcap file.  Parse is very rudimentary;  * we just notice escaped newlines.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|tgetent
-argument_list|(
-argument|bp
-argument_list|,
-argument|name
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|bp
+parameter_list|,
+name|name
+parameter_list|)
 name|char
 modifier|*
 name|bp
 decl_stmt|,
-modifier|*
+decl|*
 name|name
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -488,10 +536,6 @@ name|ibuf
 index|[
 name|BUFSIZ
 index|]
-decl_stmt|;
-name|char
-modifier|*
-name|cp2
 decl_stmt|;
 name|int
 name|tf
@@ -792,12 +836,10 @@ begin_comment
 comment|/*  * tnchktc: check the last entry, see if it's tc=xxx. If so,  * recursively find xxx and append that entry (minus the names)  * to take the place of the tc=xxx entry. This allows termcap  * entries to say "like an HP2621 but doesn't turn on the labels".  * Note that this works because of the left to right scan.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|tnchktc
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|char
@@ -1040,27 +1082,22 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Tnamatch deals with name matching.  The first field of the termcap  * entry is a sequence of names separated by |'s, so we compare  * against each such name.  The normal : terminator after the last  * name (before the first field) stops us.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|tnamatch
-argument_list|(
-argument|np
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|np
+parameter_list|)
 name|char
 modifier|*
 name|np
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -1183,7 +1220,7 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Skip to the next field.  Notice that this is very dumb, not  * knowing about \: escapes or any such.  If necessary, :'s can be put  * into the termcap file in octal.  */
@@ -1238,21 +1275,16 @@ begin_comment
 comment|/*  * Return the (numeric) option id.  * Numeric options look like  *	li#80  * i.e. the option string is separated from the numeric value by  * a # character.  If the option is not found we return -1.  * Note that we handle octal numbers beginning with 0.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|tgetnum
-argument_list|(
-argument|id
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|id
+parameter_list|)
 name|char
 modifier|*
 name|id
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -1389,27 +1421,22 @@ operator|)
 return|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Handle a flag option.  * Flag options are given "naked", i.e. followed by a : or the end  * of the buffer.  Return 1 if we find the option, or 0 if it is  * not given.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|tgetflag
-argument_list|(
-argument|id
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|id
+parameter_list|)
 name|char
 modifier|*
 name|id
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -1500,7 +1527,7 @@ return|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Get a string valued option.  * These are given as  *	cl=^Z  * Much decoding is done on the strings, and the strings are  * placed in area, which is a ref parameter which is updated.  * No checking on area overflow.  */

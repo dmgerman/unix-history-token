@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)displayq.c	5.13 (Berkeley) %G%"
+literal|"@(#)displayq.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,9 +28,65 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_comment
-comment|/*  * Routines to display the state of the queue.  */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dirent.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
 
 begin_include
 include|#
@@ -41,8 +97,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lp.local.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"pathnames.h"
 end_include
+
+begin_comment
+comment|/*  * Routines to display the state of the queue.  */
+end_comment
 
 begin_define
 define|#
@@ -236,20 +302,15 @@ begin_comment
 comment|/*  * Display the current state of the queue. Format = 1 if long format.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|displayq
-argument_list|(
-argument|format
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|format
+parameter_list|)
 name|int
 name|format
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -283,9 +344,6 @@ decl_stmt|;
 name|FILE
 modifier|*
 name|fp
-decl_stmt|;
-name|char
-name|c
 decl_stmt|;
 name|lflag
 operator|=
@@ -1139,18 +1197,16 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Print a warning message if there is no daemon present.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|warn
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -1176,18 +1232,16 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Print the header for the short listing format  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|header
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|printf
 argument_list|(
@@ -1214,34 +1268,22 @@ name|head1
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|inform
-argument_list|(
-argument|cf
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|cf
+parameter_list|)
 name|char
 modifier|*
 name|cf
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
 name|j
-decl_stmt|,
-name|k
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|cp
 decl_stmt|;
 name|FILE
 modifier|*
@@ -1529,26 +1571,24 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|inlist
-argument_list|(
-argument|name
-argument_list|,
-argument|file
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|name
+parameter_list|,
+name|file
+parameter_list|)
 name|char
 modifier|*
 name|name
 decl_stmt|,
-modifier|*
+decl|*
 name|file
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -1696,24 +1736,31 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_function
+name|void
 name|show
-argument_list|(
+parameter_list|(
 name|nfile
-argument_list|,
+parameter_list|,
 name|file
-argument_list|,
+parameter_list|,
 name|copies
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|nfile
-operator|,
-operator|*
+decl_stmt|,
+decl|*
 name|file
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_function
+
+begin_decl_stmt
+name|int
+name|copies
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1762,18 +1809,16 @@ begin_comment
 comment|/*  * Fill the line with blanks to the specified column  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|void
 name|blankfill
-argument_list|(
+parameter_list|(
 name|n
-argument_list|)
+parameter_list|)
 specifier|register
 name|int
 name|n
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 while|while
 condition|(
@@ -1788,30 +1833,34 @@ literal|' '
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Give the abbreviated dump of the file names  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|dump
-argument_list|(
-argument|nfile
-argument_list|,
-argument|file
-argument_list|,
-argument|copies
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|nfile
+parameter_list|,
+name|file
+parameter_list|,
+name|copies
+parameter_list|)
 name|char
 modifier|*
 name|nfile
 decl_stmt|,
-modifier|*
+decl|*
 name|file
+decl_stmt|;
+end_function
+
+begin_decl_stmt
+name|int
+name|copies
 decl_stmt|;
 end_decl_stmt
 
@@ -1941,24 +1990,28 @@ begin_comment
 comment|/*  * Print the long info about the file  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|ldump
-argument_list|(
-argument|nfile
-argument_list|,
-argument|file
-argument_list|,
-argument|copies
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|nfile
+parameter_list|,
+name|file
+parameter_list|,
+name|copies
+parameter_list|)
 name|char
 modifier|*
 name|nfile
 decl_stmt|,
-modifier|*
+decl|*
 name|file
+decl_stmt|;
+end_function
+
+begin_decl_stmt
+name|int
+name|copies
 decl_stmt|;
 end_decl_stmt
 
@@ -2012,7 +2065,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|" %ld bytes"
+literal|" %qd bytes"
 argument_list|,
 name|lbuf
 operator|.
@@ -2037,17 +2090,18 @@ begin_comment
 comment|/*  * Print the job's rank in the queue,  *   update col for screen management  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|prank
-argument_list|(
-argument|n
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|n
+parameter_list|)
+name|int
+name|n
+decl_stmt|;
 block|{
 name|char
-name|line
+name|rline
 index|[
 literal|100
 index|]
@@ -2113,9 +2167,14 @@ condition|)
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
-name|line
+name|rline
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|rline
+argument_list|)
 argument_list|,
 literal|"%dth"
 argument_list|,
@@ -2126,9 +2185,14 @@ else|else
 operator|(
 name|void
 operator|)
-name|sprintf
+name|snprintf
 argument_list|(
-name|line
+name|rline
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|rline
+argument_list|)
 argument_list|,
 literal|"%d%s"
 argument_list|,
@@ -2146,18 +2210,18 @@ name|col
 operator|+=
 name|strlen
 argument_list|(
-name|line
+name|rline
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
 literal|"%s"
 argument_list|,
-name|line
+name|rline
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmdtab.c	5.4 (Berkeley) %G%"
+literal|"@(#)cmdtab.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,9 +28,11 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_comment
-comment|/*  * lpc -- command tables  */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
 begin_include
 include|#
@@ -38,52 +40,15 @@ directive|include
 file|"lpc.h"
 end_include
 
-begin_decl_stmt
-name|int
-name|abort
-argument_list|()
-decl_stmt|,
-name|clean
-argument_list|()
-decl_stmt|,
-name|enable
-argument_list|()
-decl_stmt|,
-name|disable
-argument_list|()
-decl_stmt|,
-name|down
-argument_list|()
-decl_stmt|,
-name|help
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|"extern.h"
+end_include
 
-begin_decl_stmt
-name|int
-name|quit
-argument_list|()
-decl_stmt|,
-name|restart
-argument_list|()
-decl_stmt|,
-name|start
-argument_list|()
-decl_stmt|,
-name|status
-argument_list|()
-decl_stmt|,
-name|stop
-argument_list|()
-decl_stmt|,
-name|topq
-argument_list|()
-decl_stmt|,
-name|up
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/*  * lpc -- command tables  */
+end_comment
 
 begin_decl_stmt
 name|char
@@ -214,7 +179,7 @@ literal|"abort"
 block|,
 name|aborthelp
 block|,
-name|abort
+name|doabort
 block|,
 literal|1
 block|}

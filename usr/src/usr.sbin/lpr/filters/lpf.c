@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpf.c	5.4 (Berkeley) %G%"
+literal|"@(#)lpf.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,13 +59,25 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<signal.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_define
@@ -200,6 +212,7 @@ comment|/* accounting information file */
 end_comment
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc

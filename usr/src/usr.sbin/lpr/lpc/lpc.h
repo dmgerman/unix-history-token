@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lpc.h	5.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lpc.h	5.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -21,14 +21,22 @@ modifier|*
 name|c_help
 decl_stmt|;
 comment|/* help message */
-name|int
-function_decl|(
-modifier|*
-name|c_handler
-function_decl|)
-parameter_list|()
-function_decl|;
 comment|/* routine to do the work */
+name|void
+argument_list|(
+argument|*c_handler
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+index|[]
+operator|)
+argument_list|)
+expr_stmt|;
 name|int
 name|c_priv
 decl_stmt|;
