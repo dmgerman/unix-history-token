@@ -1052,25 +1052,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* XXX work around the absence of an eaccess(2) syscall */
-operator|(
-name|void
-operator|)
-name|setgid
-argument_list|(
-name|getegid
-argument_list|()
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|setuid
-argument_list|(
-name|geteuid
-argument_list|()
-argument_list|)
-expr_stmt|;
 name|t_wp
 operator|=
 operator|&
@@ -1798,7 +1779,8 @@ case|case
 name|FILRD
 case|:
 return|return
-name|access
+operator|(
+name|eaccess
 argument_list|(
 name|nm
 argument_list|,
@@ -1806,12 +1788,14 @@ name|R_OK
 argument_list|)
 operator|==
 literal|0
+operator|)
 return|;
 case|case
 name|FILWR
 case|:
 return|return
-name|access
+operator|(
+name|eaccess
 argument_list|(
 name|nm
 argument_list|,
@@ -1819,14 +1803,15 @@ name|W_OK
 argument_list|)
 operator|==
 literal|0
+operator|)
 return|;
 case|case
 name|FILEX
 case|:
-comment|/* XXX work around access(2) false positives for superuser */
+comment|/* XXX work around eaccess(2) false positives for superuser */
 if|if
 condition|(
-name|access
+name|eaccess
 argument_list|(
 name|nm
 argument_list|,
@@ -1847,7 +1832,7 @@ operator|.
 name|st_mode
 argument_list|)
 operator|||
-name|getuid
+name|geteuid
 argument_list|()
 operator|!=
 literal|0
@@ -1876,7 +1861,8 @@ case|case
 name|FILEXIST
 case|:
 return|return
-name|access
+operator|(
+name|eaccess
 argument_list|(
 name|nm
 argument_list|,
@@ -1884,6 +1870,7 @@ name|F_OK
 argument_list|)
 operator|==
 literal|0
+operator|)
 return|;
 case|case
 name|FILREG
