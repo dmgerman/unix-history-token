@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_socket.c	7.40 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_socket.c	7.41 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3710,6 +3710,19 @@ operator|=
 name|NFS_MAXCWND
 expr_stmt|;
 block|}
+name|rep
+operator|->
+name|r_flags
+operator|&=
+operator|~
+name|R_SENT
+expr_stmt|;
+name|nmp
+operator|->
+name|nm_sent
+operator|-=
+name|NFS_CWNDSCALE
+expr_stmt|;
 comment|/* 				 * Update rtt using a gain of 0.125 on the mean 				 * and a gain of 0.25 on the deviation. 				 */
 if|if
 condition|(
@@ -4691,12 +4704,22 @@ name|r_flags
 operator|&
 name|R_SENT
 condition|)
+block|{
+name|rep
+operator|->
+name|r_flags
+operator|&=
+operator|~
+name|R_SENT
+expr_stmt|;
+comment|/* paranoia */
 name|nmp
 operator|->
 name|nm_sent
 operator|-=
 name|NFS_CWNDSCALE
 expr_stmt|;
+block|}
 comment|/* 	 * If there was a successful reply and a tprintf msg. 	 * tprintf a response. 	 */
 if|if
 condition|(
