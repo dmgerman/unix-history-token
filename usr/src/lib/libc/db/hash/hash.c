@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash.c	5.20 (Berkeley) %G%"
+literal|"@(#)hash.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2192,9 +2192,17 @@ block|{
 name|HASHHDR
 modifier|*
 name|whdrp
-decl_stmt|,
+decl_stmt|;
+if|#
+directive|if
+name|BYTE_ORDER
+operator|==
+name|LITTLE_ENDIAN
+name|HASHHDR
 name|whdr
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|fp
 decl_stmt|,
