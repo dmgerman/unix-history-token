@@ -1816,7 +1816,7 @@ block|}
 name|numneghits
 operator|++
 expr_stmt|;
-comment|/* 	 * We found a "negative" match, ENOENT notifies client of this match. 	 * The nc_vpid field records whether this is a whiteout. 	 */
+comment|/* 	 * We found a "negative" match, so we shift it to the end of 	 * the "negative" cache entries queue to satisfy LRU.  Also, 	 * check to see if the entry is a whiteout; indicate this to 	 * the componentname, if so. 	 */
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -2082,7 +2082,7 @@ operator|->
 name|v_id
 expr_stmt|;
 block|}
-comment|/* 	 * Fill in cache info, if vp is NULL this is a "negative" cache entry. 	 * For negative entries, we have to record whether it is a whiteout. 	 * the whiteout flag is stored in the nc_vpid field which is 	 * otherwise unused. 	 */
+comment|/* 	 * Set the rest of the namecache entry elements, calculate it's 	 * hash key and insert it into the appropriate chain within 	 * the cache entries table. 	 */
 name|ncp
 operator|->
 name|nc_vp
@@ -2198,6 +2198,7 @@ argument_list|,
 name|nc_src
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If the entry is "negative", we place it into the 	 * "negative" cache queue, otherwise, we place it into the 	 * destination vnode's cache entries queue. 	 */
 if|if
 condition|(
 name|vp
