@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)rdisc.c	8.1 (Berkeley) x/y/95"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,10 +28,6 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
-
-begin_empty
-empty|#ident "$Revision: 1.1 $"
-end_empty
 
 begin_include
 include|#
@@ -3252,7 +3249,10 @@ argument_list|)
 argument_list|,
 name|ifp
 argument_list|,
+name|htonl
+argument_list|(
 name|INADDR_ALLROUTERS_GROUP
+argument_list|)
 argument_list|,
 operator|(
 operator|(
