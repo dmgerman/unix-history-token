@@ -53,7 +53,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: ktrace.c,v 1.3.4.1 1996/06/21 01:12:18 jraynard Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -211,6 +211,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|tracefile
+decl_stmt|;
+name|mode_t
+name|omask
 decl_stmt|;
 name|clear
 operator|=
@@ -485,6 +488,15 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|omask
+operator|=
+name|umask
+argument_list|(
+name|S_IRWXG
+operator||
+name|S_IRWXO
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -517,6 +529,14 @@ argument_list|(
 literal|1
 argument_list|,
 name|tracefile
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|umask
+argument_list|(
+name|omask
 argument_list|)
 expr_stmt|;
 operator|(
