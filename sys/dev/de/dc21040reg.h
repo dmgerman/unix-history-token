@@ -2273,27 +2273,6 @@ begin_comment
 comment|/* No loopback --- point-to-point */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|TULIP_OUI_SMC_0
-value|0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|TULIP_OUI_SMC_1
-value|0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|TULIP_OUI_SMC_2
-value|0xC0
-end_define
-
 begin_comment
 comment|/*  * There are the definitions used for the DEC DE500  * 10/100 family of boards  */
 end_comment
@@ -2390,27 +2369,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TULIP_OUI_COGENT_0
-value|0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|TULIP_OUI_COGENT_1
-value|0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|TULIP_OUI_COGENT_2
-value|0x92
-end_define
-
-begin_define
-define|#
-directive|define
 name|TULIP_COGENT_EM100TX_ID
 value|0x12
 end_define
@@ -2425,27 +2383,6 @@ end_define
 begin_comment
 comment|/*  * These are the defintitions used for the Znyx ZX342  * 10/100 board  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|TULIP_OUI_ZNYX_0
-value|0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|TULIP_OUI_ZNYX_1
-value|0xC0
-end_define
-
-begin_define
-define|#
-directive|define
-name|TULIP_OUI_ZNYX_2
-value|0x95
-end_define
 
 begin_define
 define|#
@@ -2758,61 +2695,8 @@ value|0x00000009
 end_define
 
 begin_comment
-comment|/*  * Compex's OUI.  We need to twiddle a bit on their 21041 card.  */
+comment|/*  * Asante's stuff...  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|TULIP_OUI_COMPEX_0
-value|0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|TULIP_OUI_COMPEX_1
-value|0x80
-end_define
-
-begin_define
-define|#
-directive|define
-name|TULIP_OUI_COMPEX_2
-value|0x48
-end_define
-
-begin_define
-define|#
-directive|define
-name|TULIP_21041_COMPEX_XREGDATA
-value|1
-end_define
-
-begin_comment
-comment|/*  * Asante's OUI and stuff...  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TULIP_OUI_ASANTE_0
-value|0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|TULIP_OUI_ASANTE_1
-value|0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|TULIP_OUI_ASANTE_2
-value|0x94
-end_define
 
 begin_define
 define|#
@@ -2839,27 +2723,6 @@ end_comment
 begin_comment
 comment|/*  * ACCTON EN1207 specialties  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|TULIP_OUI_EN1207_0
-value|0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|TULIP_OUI_EN1207_1
-value|0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|TULIP_OUI_EN1207_2
-value|0xE8
-end_define
 
 begin_define
 define|#
