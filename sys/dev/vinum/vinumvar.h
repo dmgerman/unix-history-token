@@ -689,17 +689,6 @@ name|buf
 modifier|*
 name|lastbuf
 decl_stmt|;
-name|struct
-name|rqinfo
-modifier|*
-modifier|*
-name|rqipp
-decl_stmt|;
-name|struct
-name|rqinfo
-modifier|*
-name|rqinfop
-decl_stmt|;
 endif|#
 directive|endif
 block|}
@@ -1017,6 +1006,22 @@ block|}
 modifier|*
 name|freelist
 struct|;
+ifdef|#
+directive|ifdef
+name|VINUMDEBUG
+name|char
+name|lockfilename
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* name of file from which we were locked */
+name|int
+name|lockline
+decl_stmt|;
+comment|/* and the line number */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -1606,11 +1611,11 @@ init|=
 literal|256
 block|,
 comment|/* go into remote gdb */
-name|DEBUG_EXITFREE
+name|DEBUG_WARNINGS
 init|=
 literal|512
 block|,
-comment|/* log "freeing malloc" on exit  */
+comment|/* log various relatively harmless warnings  */
 block|}
 enum|;
 end_enum
