@@ -156,7 +156,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 		 * An error occurred while calling the server.  	 	 * Print error message and die. 		 */
+comment|/* 		 * An error occurred while calling the server. 	 	 * Print error message and die. 		 */
 name|clnt_perror
 argument_list|(
 name|cl
@@ -179,7 +179,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * Server was unable to print our message.  		 * Print error message and die. 		 */
+comment|/* 		 * Server was unable to print our message. 		 * Print error message and die. 		 */
 name|fprintf
 argument_list|(
 name|stderr

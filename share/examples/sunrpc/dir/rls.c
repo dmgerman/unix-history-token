@@ -166,7 +166,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 		 * An error occurred while calling the server.  	 	 * Print error message and die. 		 */
+comment|/* 		 * An error occurred while calling the server. 	 	 * Print error message and die. 		 */
 name|clnt_perror
 argument_list|(
 name|cl

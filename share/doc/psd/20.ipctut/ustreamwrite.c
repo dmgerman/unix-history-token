@@ -13,7 +13,7 @@ name|league
 operator|.
 expr|.
 operator|.
-literal|"  /*  * This program connects to the socket named in the command line and sends a  * one line message to that socket. The form of the command line is  * ustreamwrite pathname   */ main(argc, argv) 	int argc; 	char *argv[]; { 	int sock; 	struct sockaddr_un server; 	char buf[1024];  	/* Create socket */ 	sock = socket(AF_UNIX, SOCK_STREAM, 0); 	if (sock< 0) { 		perror("
+literal|"  /*  * This program connects to the socket named in the command line and sends a  * one line message to that socket. The form of the command line is  * ustreamwrite pathname  */ main(argc, argv) 	int argc; 	char *argv[]; { 	int sock; 	struct sockaddr_un server; 	char buf[1024];  	/* Create socket */ 	sock = socket(AF_UNIX, SOCK_STREAM, 0); 	if (sock< 0) { 		perror("
 name|opening
 name|stream
 name|socket

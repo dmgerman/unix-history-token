@@ -16,7 +16,7 @@ name|art
 operator|.
 expr|.
 operator|.
-literal|"  /*  * This program creates a pipe, then forks.  The child communicates to the  * parent over the pipe. Notice that a pipe is a one-way communications  * device.  I can write to the output socket (sockets[1], the second socket  * of the array returned by pipe()) and read from the input socket  * (sockets[0]), but not vice versa.   */  main() { 	int sockets[2], child;  	/* Create a pipe */ 	if (pipe(sockets)< 0) { 		perror("
+literal|"  /*  * This program creates a pipe, then forks.  The child communicates to the  * parent over the pipe. Notice that a pipe is a one-way communications  * device.  I can write to the output socket (sockets[1], the second socket  * of the array returned by pipe()) and read from the input socket  * (sockets[0]), but not vice versa.  */  main() { 	int sockets[2], child;  	/* Create a pipe */ 	if (pipe(sockets)< 0) { 		perror("
 name|opening
 name|stream
 name|socket

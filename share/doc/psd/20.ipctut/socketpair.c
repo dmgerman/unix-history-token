@@ -21,7 +21,7 @@ name|decree
 operator|.
 expr|.
 operator|.
-literal|"  /*  * This program creates a pair of connected sockets then forks and  * communicates over them.  This is very similar to communication with pipes,  * however, socketpairs are two-way communications objects. Therefore I can  * send messages in both directions.   */  main() { 	int sockets[2], child; 	char buf[1024];  	if (socketpair(AF_UNIX, SOCK_STREAM, 0, sockets)< 0) { 		perror("
+literal|"  /*  * This program creates a pair of connected sockets then forks and  * communicates over them.  This is very similar to communication with pipes,  * however, socketpairs are two-way communications objects. Therefore I can  * send messages in both directions.  */  main() { 	int sockets[2], child; 	char buf[1024];  	if (socketpair(AF_UNIX, SOCK_STREAM, 0, sockets)< 0) { 		perror("
 name|opening
 name|stream
 name|socket

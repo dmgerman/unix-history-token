@@ -16,7 +16,7 @@ name|full
 operator|.
 expr|.
 operator|.
-literal|"  /*  * Here I send a datagram to a receiver whose name I get from the command  * line arguments.  The form of the command line is udgramsend pathname   */  main(argc, argv) 	int argc; 	char *argv[]; { 	int sock; 	struct sockaddr_un name;  	/* Create socket on which to send. */ 	sock = socket(AF_UNIX, SOCK_DGRAM, 0); 	if (sock< 0) { 		perror("
+literal|"  /*  * Here I send a datagram to a receiver whose name I get from the command  * line arguments.  The form of the command line is udgramsend pathname  */  main(argc, argv) 	int argc; 	char *argv[]; { 	int sock; 	struct sockaddr_un name;  	/* Create socket on which to send. */ 	sock = socket(AF_UNIX, SOCK_DGRAM, 0); 	if (sock< 0) { 		perror("
 name|opening
 name|datagram
 name|socket

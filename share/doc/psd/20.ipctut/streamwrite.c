@@ -13,7 +13,7 @@ name|league
 operator|.
 expr|.
 operator|.
-literal|"  /*  * This program creates a socket and initiates a connection with the socket  * given in the command line.  One message is sent over the connection and  * then the socket is closed, ending the connection. The form of the command  * line is streamwrite hostname portnumber   */  main(argc, argv) 	int argc; 	char *argv[]; { 	int sock; 	struct sockaddr_in server; 	struct hostent *hp, *gethostbyname(); 	char buf[1024];  	/* Create socket */ 	sock = socket(AF_INET, SOCK_STREAM, 0); 	if (sock< 0) { 		perror("
+literal|"  /*  * This program creates a socket and initiates a connection with the socket  * given in the command line.  One message is sent over the connection and  * then the socket is closed, ending the connection. The form of the command  * line is streamwrite hostname portnumber  */  main(argc, argv) 	int argc; 	char *argv[]; { 	int sock; 	struct sockaddr_in server; 	struct hostent *hp, *gethostbyname(); 	char buf[1024];  	/* Create socket */ 	sock = socket(AF_INET, SOCK_STREAM, 0); 	if (sock< 0) { 		perror("
 name|opening
 name|stream
 name|socket

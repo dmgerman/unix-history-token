@@ -16,11 +16,11 @@ name|full
 operator|.
 expr|.
 operator|.
-literal|"  /*  * Here I send a datagram to a receiver whose name I get from the command  * line arguments.  The form of the command line is dgramsend hostname  * portnumber   */  main(argc, argv) 	int argc; 	char *argv[]; { 	int sock; 	struct sockaddr_in name; 	struct hostent *hp, *gethostbyname();  	/* Create socket on which to send. */ 	sock = socket(AF_INET, SOCK_DGRAM, 0); 	if (sock< 0) { 		perror("
+literal|"  /*  * Here I send a datagram to a receiver whose name I get from the command  * line arguments.  The form of the command line is dgramsend hostname  * portnumber  */  main(argc, argv) 	int argc; 	char *argv[]; { 	int sock; 	struct sockaddr_in name; 	struct hostent *hp, *gethostbyname();  	/* Create socket on which to send. */ 	sock = socket(AF_INET, SOCK_DGRAM, 0); 	if (sock< 0) { 		perror("
 name|opening
 name|datagram
 name|socket
-literal|"); 		exit(1); 	} 	/* 	 * Construct name, with no wildcards, of the socket to send to. 	 * Getnostbyname() returns a structure including the network address 	 * of the specified host.  The port number is taken from the command 	 * line.  	 */ 	hp = gethostbyname(argv[1]); 	if (hp == 0) { 		fprintf(stderr, "
+literal|"); 		exit(1); 	} 	/* 	 * Construct name, with no wildcards, of the socket to send to. 	 * Getnostbyname() returns a structure including the network address 	 * of the specified host.  The port number is taken from the command 	 * line. 	 */ 	hp = gethostbyname(argv[1]); 	if (hp == 0) { 		fprintf(stderr, "
 operator|%
 name|s
 operator|:
