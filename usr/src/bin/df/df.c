@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)df.c	5.29 (Berkeley) %G%"
+literal|"@(#)df.c	5.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1002,7 +1002,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" %*ld%8ld%8ld"
+literal|" %*ld %7ld %7ld"
 argument_list|,
 name|headerlen
 argument_list|,
@@ -1040,7 +1040,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%6.0f%%"
+literal|" %5.0f%%"
 argument_list|,
 name|availblks
 operator|==
@@ -1085,7 +1085,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%8ld%8ld%6.0f%% "
+literal|" %7ld %7ld %5.0f%% "
 argument_list|,
 name|used
 argument_list|,
