@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)swapgeneric.c	5.5 (Berkeley) 5/9/91  *	$Id: swapgeneric.c,v 1.4 1994/08/13 03:49:45 wollman Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)swapgeneric.c	5.5 (Berkeley) 5/9/91  *	$Id: swapgeneric.c,v 1.5 1994/12/31 17:11:59 jkh Exp $  */
 end_comment
 
 begin_include
@@ -84,7 +84,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pcd.h"
+file|"matcd.h"
 end_include
 
 begin_comment
@@ -211,7 +211,7 @@ name|makedev
 argument_list|(
 literal|0
 argument_list|,
-literal|0
+literal|0x00000000
 argument_list|)
 block|,	}
 block|,
@@ -229,7 +229,7 @@ name|makedev
 argument_list|(
 literal|2
 argument_list|,
-literal|0
+literal|0x00000000
 argument_list|)
 block|,	}
 block|,
@@ -247,7 +247,7 @@ name|makedev
 argument_list|(
 literal|4
 argument_list|,
-literal|0
+literal|0x00000000
 argument_list|)
 block|,	}
 block|,
@@ -265,7 +265,7 @@ name|makedev
 argument_list|(
 literal|6
 argument_list|,
-literal|0
+literal|0x00000000
 argument_list|)
 block|,	}
 block|,
@@ -283,7 +283,7 @@ name|makedev
 argument_list|(
 literal|7
 argument_list|,
-literal|0
+literal|0x00000000
 argument_list|)
 block|,	}
 block|,
@@ -301,7 +301,7 @@ name|makedev
 argument_list|(
 literal|16
 argument_list|,
-literal|0
+literal|0x00000000
 argument_list|)
 block|,	}
 block|,
@@ -309,17 +309,17 @@ endif|#
 directive|endif
 if|#
 directive|if
-name|NPCD
+name|NMATCD
 operator|>
 literal|0
 block|{
-literal|"pcd"
+literal|"matcd"
 block|,
 name|makedev
 argument_list|(
 literal|17
 argument_list|,
-literal|0
+literal|0x00000000
 argument_list|)
 block|,	}
 block|,
