@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  * Modifications/enhancements:  * 	Copyright (c) 1995 John S. Dyson.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vfs_cluster.c	8.7 (Berkeley) 2/13/94  * $Id: vfs_cluster.c,v 1.19 1995/09/03 20:32:52 dyson Exp $  */
+comment|/*-  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  * Modifications/enhancements:  * 	Copyright (c) 1995 John S. Dyson.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vfs_cluster.c	8.7 (Berkeley) 2/13/94  * $Id: vfs_cluster.c,v 1.20 1995/09/04 00:20:15 dyson Exp $  */
 end_comment
 
 begin_include
@@ -1158,8 +1158,6 @@ operator|(
 name|lbn
 operator|+
 name|run
-operator|+
-literal|1
 operator|)
 operator|>
 name|filesize
@@ -1521,6 +1519,13 @@ operator|->
 name|b_npages
 condition|)
 block|{
+comment|/* 				 * force buffer to be re-constituted later 				 */
+name|tbp
+operator|->
+name|b_flags
+operator||=
+name|B_RELBUF
+expr_stmt|;
 name|brelse
 argument_list|(
 name|tbp
@@ -1629,9 +1634,13 @@ name|paging_in_progress
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|m
 operator|->
 name|valid
+operator|&
+name|VM_PAGE_BITS_ALL
+operator|)
 operator|==
 name|VM_PAGE_BITS_ALL
 condition|)
@@ -1654,17 +1663,12 @@ operator|||
 operator|(
 name|bp
 operator|->
-name|b_pages
-index|[
-name|bp
-operator|->
-name|b_npages
-operator|-
-literal|1
-index|]
-operator|!=
-name|m
+name|b_bufsize
+operator|&
+name|PAGE_MASK
 operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|bp
@@ -1683,6 +1687,24 @@ operator|->
 name|b_npages
 operator|++
 expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|tbp
+operator|->
+name|b_npages
+operator|>
+literal|1
+condition|)
+block|{
+name|panic
+argument_list|(
+literal|"cluster_rbuild: page unaligned filesystems not supported"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 name|bp
