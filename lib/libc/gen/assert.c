@@ -6,6 +6,12 @@ end_comment
 begin_if
 if|#
 directive|if
+literal|0
+end_if
+
+begin_if
+if|#
+directive|if
 name|defined
 argument_list|(
 name|LIBC_SCCS
@@ -18,17 +24,8 @@ name|lint
 argument_list|)
 end_if
 
-begin_decl_stmt
-specifier|static
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)assert.c	8.1 (Berkeley) 6/4/93"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
+unit|static char sccsid[] = "@(#)assert.c	8.1 (Berkeley) 6/4/93";
 endif|#
 directive|endif
 end_endif
@@ -36,6 +33,25 @@ end_endif
 begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -59,6 +75,8 @@ begin_function
 name|void
 name|__assert
 parameter_list|(
+name|function
+parameter_list|,
 name|file
 parameter_list|,
 name|line
@@ -68,10 +86,13 @@ parameter_list|)
 specifier|const
 name|char
 modifier|*
-name|file
+name|failedexpr
 decl_stmt|,
 decl|*
-name|failedexpr
+name|file
+decl_stmt|,
+modifier|*
+name|function
 decl_stmt|;
 end_function
 
@@ -90,9 +111,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"assertion \"%s\" failed: file \"%s\", line %d\n"
+literal|"assertion (%s) failed: function %s(), file %s:%d\n"
 argument_list|,
 name|failedexpr
+argument_list|,
+name|function
 argument_list|,
 name|file
 argument_list|,
