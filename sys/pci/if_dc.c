@@ -9084,7 +9084,7 @@ argument_list|)
 operator|&
 literal|0x000000FF
 expr_stmt|;
-comment|/* Get the eeprom width, but PNIC and XIRCOM have no eeprom */
+comment|/* Get the eeprom width, but PNIC and XIRCOM have diff eeprom */
 if|if
 condition|(
 name|sc
