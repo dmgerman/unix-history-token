@@ -248,6 +248,76 @@ begin_comment
 comment|/* Exclusive lock. */
 end_comment
 
+begin_comment
+comment|/* Flags passed to witness_assert. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LA_UNLOCKED
+value|0x00000000
+end_define
+
+begin_comment
+comment|/* Lock is unlocked. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LA_LOCKED
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* Lock is at least share locked. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LA_SLOCKED
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* Lock is exactly share locked. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LA_XLOCKED
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* Lock is exclusively locked. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LA_RECURSED
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* Lock is recursed. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LA_NOTRECURSED
+value|0x00000010
+end_define
+
+begin_comment
+comment|/* Lock is not recursed. */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -608,6 +678,25 @@ parameter_list|,
 name|struct
 name|lock_object
 modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|witness_assert
+parameter_list|(
+name|struct
+name|lock_object
+modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 specifier|const
 name|char
