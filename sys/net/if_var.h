@@ -1083,6 +1083,26 @@ end_define
 begin_define
 define|#
 directive|define
+name|IFF_LOCKGIANT
+parameter_list|(
+name|ifp
+parameter_list|)
+value|do {						\ 	if ((ifp)->if_flags& IFF_NEEDSGIANT)				\ 		mtx_lock(&Giant);					\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFF_UNLOCKGIANT
+parameter_list|(
+name|ifp
+parameter_list|)
+value|do {					\ 	if ((ifp)->if_flags& IFF_NEEDSGIANT)				\ 		mtx_unlock(&Giant);					\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IF_HANDOFF
 parameter_list|(
 name|ifq
