@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.68 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.69 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -278,10 +278,23 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* 	**  Do sender deletion. 	** 	**	If the sender has the QQUEUEUP flag set, skip this. 	**	This can happen if the name server is hosed when you 	**	are trying to send mail.  The result is that the sender 	**	is instantiated in the queue as a recipient. 	*/
 if|if
 condition|(
 operator|!
 name|MeToo
+operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|QQUEUEUP
+argument_list|,
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_flags
+argument_list|)
 condition|)
 block|{
 specifier|extern
