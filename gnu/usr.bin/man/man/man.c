@@ -1973,21 +1973,33 @@ operator|!=
 literal|'.'
 condition|)
 block|{
+if|if
+condition|(
+name|debug
+condition|)
+block|{
 name|errno
 operator|=
 name|EINVAL
 expr_stmt|;
 name|perror
 argument_list|(
-literal|"bad ctype locale env"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
+literal|"ctype locale env"
 argument_list|)
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|short_locale
+argument_list|)
+expr_stmt|;
+name|locale
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+else|else
+block|{
 name|tmp
 index|[
 literal|1
@@ -2057,6 +2069,7 @@ operator|->
 name|nroff
 expr_stmt|;
 break|break;
+block|}
 block|}
 block|}
 block|}
