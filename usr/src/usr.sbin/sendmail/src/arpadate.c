@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)arpadate.c	8.2 (Berkeley) %G%"
+literal|"@(#)arpadate.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -78,7 +78,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TZ_USE_TM_NAME
+name|TZ_TM_NAME
 value|1
 end_define
 
@@ -89,7 +89,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TZ_USE_TM_ZONE
+name|TZ_TM_ZONE
 value|2
 end_define
 
@@ -100,7 +100,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TZ_USE_TZNAME
+name|TZ_TZNAME
 value|3
 end_define
 
@@ -111,7 +111,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TZ_USE_TIMEZONE
+name|TZ_TIMEZONE
 value|4
 end_define
 
@@ -558,7 +558,7 @@ if|#
 directive|if
 name|TZ_TYPE
 operator|==
-name|TZ_USE_TM_NAME
+name|TZ_TM_NAME
 name|tz
 operator|=
 name|lt
@@ -571,7 +571,7 @@ if|#
 directive|if
 name|TZ_TYPE
 operator|==
-name|TZ_USE_TM_ZONE
+name|TZ_TM_ZONE
 name|tz
 operator|=
 name|lt
@@ -584,7 +584,7 @@ if|#
 directive|if
 name|TZ_TYPE
 operator|==
-name|TZ_USE_TZNAME
+name|TZ_TZNAME
 block|{
 specifier|extern
 name|char
@@ -608,7 +608,7 @@ if|#
 directive|if
 name|TZ_TYPE
 operator|==
-name|TZ_USE_TIMEZONE
+name|TZ_TIMEZONE
 block|{
 specifier|extern
 name|char
