@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: create_chunk.c,v 1.24 1996/04/29 05:03:01 jkh Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: create_chunk.c,v 1.24.2.1 1996/12/14 11:56:42 joerg Exp $  *  */
 end_comment
 
 begin_include
@@ -1574,6 +1574,13 @@ literal|70
 expr_stmt|;
 else|else
 block|{
+name|msgDebug
+argument_list|(
+literal|"MakeDev: Unknown major/minor for devtype %s\n"
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
