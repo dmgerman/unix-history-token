@@ -971,7 +971,8 @@ argument_list|(
 name|x
 argument_list|)
 argument_list|)
-expr|;
+operator|)
+return|;
 block|}
 end_function
 
