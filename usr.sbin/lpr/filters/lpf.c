@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,20 +35,15 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"From: @(#)lpf.c	8.1 (Berkeley) 6/6/93"
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* static char sccsid[] = "From: @(#)lpf.c	8.1 (Berkeley) 6/6/93"; */
+end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|id
+name|rcsid
 index|[]
 init|=
 literal|"$FreeBSD$"
@@ -601,12 +597,14 @@ name|col
 operator|>=
 name|width
 operator|||
+operator|(
 operator|!
 name|literal
 operator|&&
 name|ch
 operator|<
 literal|' '
+operator|)
 condition|)
 block|{
 name|col
