@@ -2101,16 +2101,17 @@ name|p
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Grow the stack if necessary 		 */
-comment|/* grow_stack returns false only if va falls into 		 * a growable stack region and the stack growth 		 * fails.  It returns true if va was not within 		 * a growable stack region, or if the stack  		 * growth succeeded. 		 */
+comment|/* vm_map_growstack returns failure only if va falls into 		 * a growable stack region and the stack growth 		 * fails.  It succeeds if va was not within 		 * a growable stack region, or if the stack  		 * growth succeeded. 		 */
 if|if
 condition|(
-operator|!
-name|grow_stack
+name|vm_map_growstack
 argument_list|(
 name|p
 argument_list|,
 name|va
 argument_list|)
+operator|!=
+name|KERN_SUCCESS
 condition|)
 name|rv
 operator|=
