@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)find.c	4.33 (Berkeley) %G%"
+literal|"@(#)find.c	4.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,13 +55,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/errno.h>
 end_include
 
 begin_include
@@ -79,19 +85,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"find.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"find.h"
+file|<stdlib.h>
 end_include
 
 begin_decl_stmt
@@ -115,44 +121,68 @@ begin_comment
 comment|/* time find was run */
 end_comment
 
+begin_comment
+comment|/* options for the ftsopen(3) call */
+end_comment
+
 begin_decl_stmt
 name|int
 name|ftsoptions
+init|=
+name|FTS_NOSTAT
+operator||
+name|FTS_PHYSICAL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|isdeprecated
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* options passed to ftsopen() */
+comment|/* using deprecated syntax */
 end_comment
 
 begin_decl_stmt
 name|int
-name|deprecated
+name|isdepth
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* old or new syntax */
+comment|/* do directories on post-order visit */
 end_comment
 
 begin_decl_stmt
 name|int
-name|depth
+name|isoutput
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* set by -depth option */
+comment|/* user specified output operator */
 end_comment
 
 begin_decl_stmt
 name|int
-name|output_specified
+name|isrelative
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* one of -print, -ok or -exec was specified */
+comment|/* can do -exec/ok on relative path */
+end_comment
+
+begin_decl_stmt
+name|int
+name|isstopdnx
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* don't read unsearchable directories */
 end_comment
 
 begin_function
@@ -193,6 +223,13 @@ name|time_t
 name|time
 parameter_list|()
 function_decl|;
+name|void
+name|newsyntax
+argument_list|()
+decl_stmt|,
+name|oldsyntax
+argument_list|()
+decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -215,12 +252,6 @@ expr_stmt|;
 name|paths
 operator|=
 name|argv
-expr_stmt|;
-name|ftsoptions
-operator|=
-name|FTS_NOSTAT
-operator||
-name|FTS_PHYSICAL
 expr_stmt|;
 comment|/* 	 * if arguments start with an option, treat it like new syntax; 	 * otherwise, if has a "-option" anywhere (which isn't an argument 	 * to another command) treat it as old syntax. 	 */
 if|if
@@ -299,7 +330,7 @@ operator|==
 literal|'-'
 condition|)
 block|{
-name|deprecated
+name|isdeprecated
 operator|=
 literal|1
 expr_stmt|;
@@ -315,7 +346,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|deprecated
+name|isdeprecated
 condition|)
 name|newsyntax
 argument_list|(
@@ -448,7 +479,7 @@ comment|/* 	 * if the user didn't specify one of -print, -ok or -exec, then -pri
 if|if
 condition|(
 operator|!
-name|output_specified
+name|isoutput
 condition|)
 block|{
 name|new
@@ -553,27 +584,48 @@ end_comment
 
 begin_block
 block|{
+specifier|register
 name|FTSENT
 modifier|*
 name|entry
 decl_stmt|;
-comment|/* current fts entry */
 name|PLAN
 modifier|*
 name|p
 decl_stmt|;
+comment|/* 	 * If need stat info, might as well quit when the directory isn't 	 * searchable. 	 */
+if|if
+condition|(
+operator|!
+operator|(
+name|ftsoptions
+operator|&
+name|FTS_NOSTAT
+operator|)
+condition|)
+name|isstopdnx
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 operator|!
 operator|(
 name|tree
 operator|=
-name|ftsopen
+name|fts_open
 argument_list|(
 name|paths
 argument_list|,
 name|ftsoptions
 argument_list|,
+operator|(
+name|int
+argument_list|(
+operator|*
+argument_list|)
+argument_list|()
+operator|)
 name|NULL
 argument_list|)
 operator|)
@@ -604,7 +656,7 @@ while|while
 condition|(
 name|entry
 operator|=
-name|ftsread
+name|fts_read
 argument_list|(
 name|tree
 argument_list|)
@@ -638,6 +690,120 @@ continue|continue;
 case|case
 name|FTS_DNX
 case|:
+block|{
+comment|/* 			 * If can't search the directory, but able to read it, 			 * and don't need stat information or to exec/ok the 			 * file, use the fts_children list. 			 */
+specifier|register
+name|char
+modifier|*
+name|t
+decl_stmt|;
+if|if
+condition|(
+name|isstopdnx
+condition|)
+goto|goto
+name|srcherr
+goto|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+name|entry
+operator|=
+name|fts_children
+argument_list|(
+name|tree
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|errno
+condition|)
+goto|goto
+name|srcherr
+goto|;
+for|for
+control|(
+name|t
+operator|=
+name|entry
+operator|->
+name|fts_path
+init|;
+operator|*
+name|t
+condition|;
+operator|++
+name|t
+control|)
+empty_stmt|;
+operator|*
+name|t
+operator|=
+literal|'/'
+expr_stmt|;
+for|for
+control|(
+init|;
+name|entry
+condition|;
+name|entry
+operator|=
+name|entry
+operator|->
+name|fts_link
+control|)
+block|{
+operator|(
+name|void
+operator|)
+name|bcopy
+argument_list|(
+name|entry
+operator|->
+name|fts_name
+argument_list|,
+name|t
+operator|+
+literal|1
+argument_list|,
+name|entry
+operator|->
+name|fts_namelen
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|p
+operator|=
+name|plan
+init|;
+name|p
+operator|&&
+call|(
+name|p
+operator|->
+name|eval
+call|)
+argument_list|(
+name|p
+argument_list|,
+name|entry
+argument_list|)
+condition|;
+name|p
+operator|=
+name|p
+operator|->
+name|next
+control|)
+empty_stmt|;
+block|}
+continue|continue;
+name|srcherr
+label|:
 operator|(
 name|void
 operator|)
@@ -653,6 +819,7 @@ name|fts_path
 argument_list|)
 expr_stmt|;
 continue|continue;
+block|}
 case|case
 name|FTS_ERR
 case|:
@@ -681,7 +848,7 @@ name|FTS_D
 case|:
 if|if
 condition|(
-name|depth
+name|isdepth
 condition|)
 continue|continue;
 break|break;
@@ -709,7 +876,7 @@ case|:
 if|if
 condition|(
 operator|!
-name|depth
+name|isdepth
 condition|)
 continue|continue;
 break|break;
@@ -775,7 +942,7 @@ block|}
 operator|(
 name|void
 operator|)
-name|ftsclose
+name|fts_close
 argument_list|(
 name|tree
 argument_list|)
