@@ -622,6 +622,10 @@ define|#
 directive|define
 name|CAM_QUIRK_HILUNS
 value|0x04
+define|#
+directive|define
+name|CAM_QUIRK_NOHILUNS
+value|0x08
 name|u_int
 name|mintags
 decl_stmt|;
@@ -637,6 +641,21 @@ define|#
 directive|define
 name|CAM_SCSI2_MAXLUN
 value|8
+end_define
+
+begin_comment
+comment|/*  * If we're not quirked to search<= the first 8 luns  * and we are either quirked to search above lun 8,  * or we're> SCSI-2, we can look for luns above lun 8.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CAN_SRCH_HI
+parameter_list|(
+name|dv
+parameter_list|)
+define|\
+value|(((dv->quirk->quirks& CAM_QUIRK_NOHILUNS) == 0) 	\&& ((dv->quirk->quirks& CAM_QUIRK_HILUNS)		\   || SID_ANSI_REV(&dv->inq_data)> SCSI_REV_2))
 end_define
 
 begin_typedef
@@ -22246,13 +22265,10 @@ condition|)
 block|{
 name|phl
 operator|=
+name|CAN_SRCH_HI
+argument_list|(
 name|device
-operator|->
-name|quirk
-operator|->
-name|quirks
-operator|&
-name|CAM_QUIRK_HILUNS
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -22352,15 +22368,10 @@ operator|-
 literal|1
 operator|)
 operator|||
-operator|(
+name|CAN_SRCH_HI
+argument_list|(
 name|device
-operator|->
-name|quirk
-operator|->
-name|quirks
-operator|&
-name|CAM_QUIRK_HILUNS
-operator|)
+argument_list|)
 condition|)
 name|lun_id
 operator|++
