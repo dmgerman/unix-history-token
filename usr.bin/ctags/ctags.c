@@ -361,6 +361,10 @@ name|uflag
 operator|=
 name|NO
 expr_stmt|;
+name|tflag
+operator|=
+name|YES
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -372,7 +376,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"BFadf:tuwvx"
+literal|"BFTadf:tuwvx"
 argument_list|)
 operator|)
 operator|!=
@@ -401,6 +405,14 @@ literal|'/'
 expr_stmt|;
 break|break;
 case|case
+literal|'T'
+case|:
+name|tflag
+operator|=
+name|NO
+expr_stmt|;
+break|break;
+case|case
 literal|'a'
 case|:
 name|aflag
@@ -426,7 +438,8 @@ case|case
 literal|'t'
 case|:
 name|tflag
-operator|++
+operator|=
+name|YES
 expr_stmt|;
 break|break;
 case|case
@@ -755,7 +768,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: ctags [-BFadtuwvx] [-f tagsfile] file ...\n"
+literal|"usage: ctags [-BFTaduwvx] [-f tagsfile] file ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
