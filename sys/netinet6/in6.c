@@ -3144,13 +3144,14 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* XXX: noisy message */
-name|log
+name|nd6log
 argument_list|(
+operator|(
 name|LOG_INFO
-argument_list|,
-literal|"in6_update_ifa: a destination can be "
-literal|"specified for a p2p or a loopback IF only\n"
+operator|,
+literal|"in6_update_ifa: a destination can "
+literal|"be specified for a p2p or a loopback IF only\n"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3166,13 +3167,14 @@ operator|!=
 literal|128
 condition|)
 block|{
-comment|/* 			 * The following message seems noisy, but we dare to 			 * add it for diagnosis. 			 */
-name|log
+name|nd6log
 argument_list|(
+operator|(
 name|LOG_INFO
-argument_list|,
-literal|"in6_update_ifa: prefixlen must be 128 "
-literal|"when dstaddr is specified\n"
+operator|,
+literal|"in6_update_ifa: prefixlen should "
+literal|"be 128 when dstaddr is specified\n"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3221,12 +3223,13 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * the following log might be noisy, but this is a typical 		 * configuration mistake or a tool's bug. 		 */
-name|log
+name|nd6log
 argument_list|(
+operator|(
 name|LOG_INFO
-argument_list|,
+operator|,
 literal|"in6_update_ifa: valid lifetime is 0 for %s\n"
-argument_list|,
+operator|,
 name|ip6_sprintf
 argument_list|(
 operator|&
@@ -3236,6 +3239,7 @@ name|ifra_addr
 operator|.
 name|sin6_addr
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3527,13 +3531,14 @@ operator|!=
 name|plen
 condition|)
 block|{
-name|log
+name|nd6log
 argument_list|(
+operator|(
 name|LOG_INFO
-argument_list|,
+operator|,
 literal|"in6_update_ifa: the prefix length of an"
 literal|" existing (%s) address should not be changed\n"
-argument_list|,
+operator|,
 name|ip6_sprintf
 argument_list|(
 operator|&
@@ -3543,6 +3548,7 @@ name|ia_addr
 operator|.
 name|sin6_addr
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|error
@@ -3627,13 +3633,14 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|log
+name|nd6log
 argument_list|(
+operator|(
 name|LOG_ERR
-argument_list|,
+operator|,
 literal|"in6_update_ifa: failed to remove "
 literal|"a route to the old destination: %s\n"
-argument_list|,
+operator|,
 name|ip6_sprintf
 argument_list|(
 operator|&
@@ -3643,6 +3650,7 @@ name|ia_addr
 operator|.
 name|sin6_addr
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* proceed anyway... */
@@ -3830,25 +3838,27 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|log
+name|nd6log
 argument_list|(
+operator|(
 name|LOG_WARNING
-argument_list|,
+operator|,
 literal|"in6_update_ifa: addmulti failed for "
 literal|"%s on %s (errno=%d)\n"
-argument_list|,
+operator|,
 name|ip6_sprintf
 argument_list|(
 operator|&
 name|llsol
 argument_list|)
-argument_list|,
+operator|,
 name|if_name
 argument_list|(
 name|ifp
 argument_list|)
-argument_list|,
+operator|,
 name|error
+operator|)
 argument_list|)
 expr_stmt|;
 name|in6_purgeaddr
@@ -4036,13 +4046,14 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|log
+name|nd6log
 argument_list|(
+operator|(
 name|LOG_WARNING
-argument_list|,
+operator|,
 literal|"in6_update_ifa: addmulti failed for "
 literal|"%s on %s (errno=%d)\n"
-argument_list|,
+operator|,
 name|ip6_sprintf
 argument_list|(
 operator|&
@@ -4050,13 +4061,14 @@ name|mltaddr
 operator|.
 name|sin6_addr
 argument_list|)
-argument_list|,
+operator|,
 name|if_name
 argument_list|(
 name|ifp
 argument_list|)
-argument_list|,
+operator|,
 name|error
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4130,14 +4142,15 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|log
+name|nd6log
 argument_list|(
+operator|(
 name|LOG_WARNING
-argument_list|,
+operator|,
 literal|"in6_update_ifa: "
 literal|"addmulti failed for "
 literal|"%s on %s (errno=%d)\n"
-argument_list|,
+operator|,
 name|ip6_sprintf
 argument_list|(
 operator|&
@@ -4145,13 +4158,14 @@ name|mltaddr
 operator|.
 name|sin6_addr
 argument_list|)
-argument_list|,
+operator|,
 name|if_name
 argument_list|(
 name|ifp
 argument_list|)
-argument_list|,
+operator|,
 name|error
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4283,14 +4297,15 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|log
+name|nd6log
 argument_list|(
+operator|(
 name|LOG_WARNING
-argument_list|,
+operator|,
 literal|"in6_update_ifa: "
 literal|"addmulti failed for %s on %s "
 literal|"(errno=%d)\n"
-argument_list|,
+operator|,
 name|ip6_sprintf
 argument_list|(
 operator|&
@@ -4298,13 +4313,14 @@ name|mltaddr
 operator|.
 name|sin6_addr
 argument_list|)
-argument_list|,
+operator|,
 name|if_name
 argument_list|(
 name|ifp
 argument_list|)
-argument_list|,
+operator|,
 name|error
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4938,14 +4954,16 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|log
+name|nd6log
 argument_list|(
+operator|(
 name|LOG_NOTICE
-argument_list|,
+operator|,
 literal|"in6_unlink_ifa: autoconf'ed address "
 literal|"%p has no prefix\n"
-argument_list|,
+operator|,
 name|oia
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
