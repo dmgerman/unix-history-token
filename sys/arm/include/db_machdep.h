@@ -97,7 +97,7 @@ begin_define
 define|#
 directive|define
 name|BKPT_SKIP
-value|do {							\ 	kdb_frame->tf_pc -= BKPT_SIZE; \ } while (0)
+value|do {							\ 	kdb_frame->tf_pc += BKPT_SIZE; \ } while (0)
 end_define
 
 begin_define
@@ -152,6 +152,14 @@ parameter_list|)
 value|(0)
 end_define
 
+begin_comment
+comment|/* ldmxx reg, {..., pc} 					    01800000  stack mode 					    000f0000  register 					    0000ffff  register list */
+end_comment
+
+begin_comment
+comment|/* mov pc, reg 					    0000000f  register */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -159,8 +167,12 @@ name|inst_return
 parameter_list|(
 name|ins
 parameter_list|)
-value|(0)
+value|(((ins)& 0x0e108000) == 0x08108000 || \ 				 ((ins)& 0x0ff0fff0) == 0x01a0f000)
 end_define
+
+begin_comment
+comment|/* bl ... 					    00ffffff  offset>>2 */
+end_comment
 
 begin_define
 define|#
@@ -169,8 +181,16 @@ name|inst_call
 parameter_list|(
 name|ins
 parameter_list|)
-value|(0)
+value|(((ins)& 0x0f000000) == 0x0b000000)
 end_define
+
+begin_comment
+comment|/* b ... 					    00ffffff  offset>>2 */
+end_comment
+
+begin_comment
+comment|/* ldr pc, [pc, reg, lsl #2] 					    0000000f  register */
+end_comment
 
 begin_define
 define|#

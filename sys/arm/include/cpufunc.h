@@ -55,7 +55,9 @@ name|breakpoint
 parameter_list|(
 name|void
 parameter_list|)
-block|{ }
+block|{
+asm|__asm(".word      0xe7ffffff");
+block|}
 end_function
 
 begin_struct
