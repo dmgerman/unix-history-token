@@ -6040,7 +6040,7 @@ operator|)
 return|;
 name|bad
 label|:
-comment|/* 	 * Things are going to be so screwed we should just kill the process.  	 * how do we do that? 	 */
+comment|/* 	 * Things are going to be so screwed we should just kill the process. 	 * how do we do that? 	 */
 name|PROC_LOCK
 argument_list|(
 name|td
