@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash.c	5.6 (Berkeley) %G%"
+literal|"@(#)hash.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -634,6 +634,19 @@ operator|)
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|ENOENT
+condition|)
+block|{
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Just in case someone looks at errno */
+block|}
 name|new_table
 operator|=
 literal|1
@@ -940,6 +953,12 @@ name|BSHIFT
 operator|+
 name|BYTE_SHIFT
 operator|)
+expr_stmt|;
+name|hashp
+operator|->
+name|nmaps
+operator|=
+name|bpages
 expr_stmt|;
 name|hashp
 operator|->
@@ -1891,6 +1910,11 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|u_long
+modifier|*
+modifier|*
+name|mapp
+decl_stmt|;
 name|save_errno
 operator|=
 literal|0
@@ -2087,6 +2111,62 @@ block|{
 name|save_errno
 operator|=
 name|errno
+expr_stmt|;
+block|}
+comment|/* Free Initial Bigmaps */
+if|if
+condition|(
+name|hashp
+operator|->
+name|nmaps
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|free
+argument_list|(
+name|hashp
+operator|->
+name|mapp
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* Free extra bitmaps */
+for|for
+control|(
+name|mapp
+operator|=
+operator|&
+name|hashp
+operator|->
+name|mapp
+index|[
+name|hashp
+operator|->
+name|nmaps
+index|]
+init|;
+name|hashp
+operator|->
+name|exmaps
+operator|--
+condition|;
+name|mapp
+operator|++
+control|)
+block|{
+operator|(
+name|void
+operator|)
+name|free
+argument_list|(
+operator|*
+name|mapp
+argument_list|)
 expr_stmt|;
 block|}
 if|if
