@@ -1608,6 +1608,22 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Clear EOF indication after first such return. 	 */
+if|if
+condition|(
+name|uio
+operator|->
+name|uio_resid
+operator|==
+name|startresid
+condition|)
+name|rso
+operator|->
+name|so_state
+operator|&=
+operator|~
+name|SS_CANTRCVMORE
+expr_stmt|;
 name|vn_lock
 argument_list|(
 name|ap
