@@ -4588,7 +4588,7 @@ name|stderr
 argument_list|,
 literal|"%s\n"
 argument_list|,
-literal|"usage: bdes [-abdp] [-F bit] [-f bit] [-k key] [-m bit] [-o bit] [-v vector]"
+literal|"usage: bdes [-abdp] [-F N] [-f N] [-k key] [-m N] [-o N] [-v vector]"
 argument_list|)
 expr_stmt|;
 name|exit
