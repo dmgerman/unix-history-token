@@ -845,6 +845,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCIP_SIMPLECOMM_UART_16550A
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCIS_SIMPLECOMM_PAR
 value|0x01
 end_define
