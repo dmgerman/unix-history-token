@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: correct.c,v 1.2 1997/10/22 06:19:48 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -261,35 +261,14 @@ block|}
 operator|(
 name|void
 operator|)
-name|strncpy
+name|strcpy
 argument_list|(
 name|to
 operator|.
 name|tsp_name
 argument_list|,
 name|hostname
-argument_list|,
-sizeof|sizeof
-name|to
-operator|.
-name|tsp_name
-operator|-
-literal|1
 argument_list|)
-expr_stmt|;
-name|to
-operator|.
-name|tsp_name
-index|[
-sizeof|sizeof
-name|to
-operator|.
-name|tsp_name
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 name|answer
 operator|=
