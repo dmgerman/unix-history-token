@@ -729,6 +729,15 @@ name|j
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"ACPI timer:"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -746,6 +755,17 @@ name|j
 operator|+=
 name|acpi_timer_test
 argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|" -> %d\n"
+argument_list|,
+name|j
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1271,27 +1291,17 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-block|{
 name|printf
 argument_list|(
-literal|"ACPI timer looks %s min = %d, max = %d, width = %d\n"
+literal|" %d/%d"
 argument_list|,
 name|n
-condition|?
-literal|"GOOD"
-else|:
-literal|"BAD "
-argument_list|,
-name|min
-argument_list|,
-name|max
 argument_list|,
 name|max
 operator|-
 name|min
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|n
