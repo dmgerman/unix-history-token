@@ -2948,7 +2948,7 @@ expr_stmt|;
 if|if
 condition|(
 name|pri
-operator|>
+operator|>=
 literal|0
 condition|)
 name|bundle_Open
