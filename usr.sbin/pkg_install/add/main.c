@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: main.c,v 1.4 1993/09/14 19:53:01 jkh Exp $"
+literal|"$Id: main.c,v 1.5 1994/12/06 00:51:33 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -128,6 +128,15 @@ begin_decl_stmt
 name|char
 modifier|*
 name|PlayPen
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|Home
 init|=
 name|NULL
 decl_stmt|;

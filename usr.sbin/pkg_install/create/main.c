@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: main.c,v 1.7 1994/05/19 18:27:40 alm Exp $"
+literal|"$Id: main.c,v 1.8 1994/12/06 00:51:36 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,7 +43,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"YNhvf:p:c:d:i:k:r:t:X:D:m:"
+literal|"YNhvf:p:P:c:d:i:k:r:t:X:D:m:"
 decl_stmt|;
 end_decl_stmt
 
@@ -141,6 +141,15 @@ begin_decl_stmt
 name|char
 modifier|*
 name|Mtree
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|Pkgdeps
 init|=
 name|NULL
 decl_stmt|;
@@ -332,6 +341,14 @@ case|case
 literal|'m'
 case|:
 name|Mtree
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'P'
+case|:
+name|Pkgdeps
 operator|=
 name|optarg
 expr_stmt|;
@@ -573,6 +590,13 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"-m file    mtree spec for directories\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"-P pkgs    set package dependency list to pkgs\n"
 argument_list|)
 expr_stmt|;
 name|fprintf

@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.13 1994/11/17 10:54:11 jkh Exp $"
+literal|"$Id: perform.c,v 1.14 1994/12/06 00:51:37 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -222,6 +222,40 @@ name|suffix
 operator|=
 literal|"tgz"
 expr_stmt|;
+comment|/* Stick the dependencies, if any, at the top */
+while|while
+condition|(
+name|Pkgdeps
+condition|)
+block|{
+name|cp
+operator|=
+name|strsep
+argument_list|(
+operator|&
+name|Pkgdeps
+argument_list|,
+literal|" \t\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|cp
+condition|)
+block|{
+name|add_plist
+argument_list|(
+operator|&
+name|plist
+argument_list|,
+name|PLIST_PKGDEP
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 comment|/* Slurp in the packing list */
 name|read_plist
 argument_list|(
