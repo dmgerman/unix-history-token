@@ -1813,9 +1813,11 @@ name|x_port
 operator|=
 literal|0
 expr_stmt|;
-name|rtalloc
+name|rtalloc_ign
 argument_list|(
 name|ro
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
