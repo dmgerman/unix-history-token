@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd4.c	1.3 83/07/22"
+literal|"@(#)cmd4.c	1.4 83/07/28"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,7 +53,7 @@ function_decl|;
 end_function_decl
 
 begin_macro
-name|doquery
+name|doshow
 argument_list|()
 end_macro
 
@@ -170,6 +170,14 @@ argument_list|()
 expr_stmt|;
 continue|continue;
 default|default:
+if|if
+condition|(
+name|terse
+condition|)
+name|Ding
+argument_list|()
+expr_stmt|;
+else|else
 name|wwputs
 argument_list|(
 literal|"\rType return to continue, escape to select."
@@ -197,6 +205,12 @@ condition|(
 operator|!
 name|done_it
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|terse
+condition|)
 name|wwputs
 argument_list|(
 literal|"No windows.  "
@@ -204,10 +218,69 @@ argument_list|,
 name|cmdwin
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 block|{
 name|wwsetcurwin
 argument_list|(
+name|cmdwin
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|terse
+condition|)
+name|wwputs
+argument_list|(
+literal|"\r\n"
+argument_list|,
+name|cmdwin
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_block
+
+begin_macro
+name|docolon
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|char
+name|buf
+index|[
+literal|512
+index|]
+decl_stmt|;
+if|if
+condition|(
+name|terse
+condition|)
+name|Wunhide
+argument_list|(
+name|cmdwin
+operator|->
+name|ww_win
+argument_list|)
+expr_stmt|;
+name|wwputc
+argument_list|(
+literal|':'
+argument_list|,
+name|cmdwin
+argument_list|)
+expr_stmt|;
+name|bgets
+argument_list|(
+name|buf
+argument_list|,
+name|wwncol
+operator|-
+literal|3
+argument_list|,
 name|cmdwin
 argument_list|)
 expr_stmt|;
@@ -218,7 +291,22 @@ argument_list|,
 name|cmdwin
 argument_list|)
 expr_stmt|;
-block|}
+if|if
+condition|(
+name|terse
+condition|)
+name|Whide
+argument_list|(
+name|cmdwin
+operator|->
+name|ww_win
+argument_list|)
+expr_stmt|;
+name|dolongcmd
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 

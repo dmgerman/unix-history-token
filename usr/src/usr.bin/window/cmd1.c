@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd1.c	1.5 83/07/28"
+literal|"@(#)cmd1.c	1.6 83/07/28"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,6 +66,14 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|terse
+condition|)
+name|Ding
+argument_list|()
+expr_stmt|;
+else|else
 name|wwputs
 argument_list|(
 literal|"Too many windows.  "
@@ -75,6 +83,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+operator|!
+name|terse
+condition|)
 name|wwputs
 argument_list|(
 literal|"Upper left corner: "
@@ -137,6 +150,11 @@ name|WBoxActive
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|terse
+condition|)
 name|wwputs
 argument_list|(
 literal|"\r\nCancelled.  "
@@ -156,6 +174,11 @@ continue|continue;
 block|}
 break|break;
 block|}
+if|if
+condition|(
+operator|!
+name|terse
+condition|)
 name|wwputs
 argument_list|(
 literal|"\r\nLower right corner: "
@@ -248,6 +271,11 @@ name|WBoxActive
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|terse
+condition|)
 name|wwputs
 argument_list|(
 literal|"\r\nCancelled.  "
@@ -271,6 +299,11 @@ name|WBoxActive
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|terse
+condition|)
 name|wwputs
 argument_list|(
 literal|"\r\n"
@@ -320,6 +353,14 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+if|if
+condition|(
+name|terse
+condition|)
+name|Ding
+argument_list|()
+expr_stmt|;
+else|else
 name|wwputs
 argument_list|(
 literal|"Can't open window.  "
@@ -352,10 +393,6 @@ name|ww
 modifier|*
 name|w
 decl_stmt|;
-define|#
-directive|define
-name|NWINDOW
-value|9
 for|for
 control|(
 name|id
@@ -703,6 +740,11 @@ return|return
 literal|1
 return|;
 default|default:
+if|if
+condition|(
+operator|!
+name|terse
+condition|)
 name|wwputs
 argument_list|(
 literal|"\r\nType [hjklHJKL] to move, return to enter position, escape to cancel."
@@ -836,8 +878,6 @@ literal|1
 case|:
 name|doclose
 argument_list|(
-name|CLOSE_ONE
-argument_list|,
 name|w
 argument_list|)
 expr_stmt|;

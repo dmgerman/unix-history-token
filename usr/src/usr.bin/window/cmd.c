@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd.c	1.7 83/07/28"
+literal|"@(#)cmd.c	1.8 83/07/28"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,8 +52,6 @@ name|ww
 modifier|*
 name|w
 decl_stmt|;
-name|top
-label|:
 if|if
 condition|(
 operator|!
@@ -81,6 +79,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|top
+label|:
 while|while
 condition|(
 operator|(
@@ -93,6 +93,11 @@ operator|>=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|terse
+condition|)
 name|wwputs
 argument_list|(
 literal|"\r\n"
@@ -116,12 +121,6 @@ goto|goto
 name|foo
 goto|;
 break|break;
-case|case
-literal|'r'
-case|:
-case|case
-literal|'R'
-case|:
 case|case
 literal|'h'
 case|:
@@ -173,13 +172,18 @@ operator|==
 literal|0
 operator|)
 block|{
+if|if
+condition|(
+operator|!
+name|terse
+condition|)
 name|wwputs
 argument_list|(
 literal|"No window.  "
 argument_list|,
 name|cmdwin
 argument_list|)
-block|;
+expr_stmt|;
 continue|continue;
 block|}
 block|}
@@ -301,6 +305,14 @@ break|break;
 case|case
 literal|'Z'
 case|:
+if|if
+condition|(
+name|terse
+condition|)
+name|Ding
+argument_list|()
+expr_stmt|;
+else|else
 name|wwputs
 argument_list|(
 literal|"Command Z is now C.  "
@@ -324,39 +336,13 @@ argument_list|()
 expr_stmt|;
 break|break;
 case|case
-literal|'e'
-case|:
-name|doescape
-argument_list|()
-expr_stmt|;
-break|break;
-case|case
 literal|'L'
 case|:
-name|dolabel
+name|dolist
 argument_list|()
 expr_stmt|;
 break|break;
-case|case
-literal|'r'
-case|:
-name|selwin
-operator|->
-name|ww_refresh
-operator|=
-literal|0
-expr_stmt|;
-break|break;
-case|case
-literal|'R'
-case|:
-name|selwin
-operator|->
-name|ww_refresh
-operator|=
-literal|1
-expr_stmt|;
-break|break;
+comment|/* 		case 'e': 			doescape(); 			break; 		case 'L': 			dolabel(); 			break; 		case 'r': 			selwin->ww_refresh = 0; 			break; 		case 'R': 			selwin->ww_refresh = 1; 			break; 		*/
 case|case
 literal|'s'
 case|:
@@ -529,7 +515,7 @@ argument_list|()
 expr_stmt|;
 break|break;
 case|case
-literal|'.'
+literal|'q'
 case|:
 name|doquit
 argument_list|()
@@ -541,6 +527,25 @@ condition|)
 goto|goto
 name|out
 goto|;
+break|break;
+case|case
+literal|'.'
+case|:
+if|if
+condition|(
+name|terse
+condition|)
+name|Ding
+argument_list|()
+expr_stmt|;
+else|else
+name|wwputs
+argument_list|(
+literal|"Use q to quit.  "
+argument_list|,
+name|cmdwin
+argument_list|)
+expr_stmt|;
 break|break;
 default|default:
 if|if
@@ -569,6 +574,11 @@ block|}
 name|Ding
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|terse
+condition|)
 name|wwprintf
 argument_list|(
 name|cmdwin
@@ -579,6 +589,27 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+end_block
+
+begin_if
+if|if
+condition|(
+name|terse
+condition|)
+name|wwsetcursor
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+if|if
+condition|(
+operator|!
+name|terse
+condition|)
 name|wwputs
 argument_list|(
 literal|"Command: "
@@ -603,6 +634,10 @@ name|ww_win
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
+end_if
+
+begin_while
 while|while
 condition|(
 name|bpeekc
@@ -613,11 +648,20 @@ condition|)
 name|bread
 argument_list|()
 expr_stmt|;
+end_while
+
+begin_goto
 goto|goto
 name|top
 goto|;
+end_goto
+
+begin_label
 name|out
 label|:
+end_label
+
+begin_if
 if|if
 condition|(
 operator|!
@@ -628,6 +672,9 @@ argument_list|(
 name|selwin
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_if
 if|if
 condition|(
 name|selwin
@@ -643,6 +690,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_if
 if|if
 condition|(
 operator|!
@@ -655,11 +705,10 @@ operator|->
 name|ww_win
 argument_list|)
 expr_stmt|;
-block|}
-end_block
+end_if
 
 begin_function
-name|struct
+unit|}  struct
 name|ww
 modifier|*
 name|getwin
@@ -676,6 +725,11 @@ name|w
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|terse
+condition|)
 name|wwputs
 argument_list|(
 literal|"Which window? "
@@ -740,6 +794,11 @@ condition|)
 name|Ding
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|terse
+condition|)
 name|wwputs
 argument_list|(
 literal|"\r\n"

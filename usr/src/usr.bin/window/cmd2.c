@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd2.c	1.7 83/07/28"
+literal|"@(#)cmd2.c	1.8 83/07/28"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,7 +72,7 @@ name|w
 operator|=
 name|openwin
 argument_list|(
-name|wwncol
+name|wwnrow
 operator|-
 literal|1
 argument_list|,
@@ -83,6 +83,14 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|terse
+condition|)
+name|Ding
+argument_list|()
+expr_stmt|;
+else|else
 name|wwputs
 argument_list|(
 literal|"Can't open help window.  "
@@ -96,35 +104,40 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"The escape character is ^P, which gets you into command mode.\r\n"
+literal|"The escape character is %s, which gets you into command mode.\r\n\n"
+argument_list|,
+name|unctrl
+argument_list|(
+name|escapec
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"The commands are:\r\n"
+literal|"Short commands:\r\n\n"
 argument_list|)
 expr_stmt|;
 name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"[1-9]   Select window [1-9] and exit command mode.\r\n"
+literal|"{1-9}   Select window {1-9} and return to conversation mode.\r\n"
 argument_list|)
 expr_stmt|;
 name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"%%[1-9]  Select window [1-9].\r\n"
+literal|"%%{1-9}  Select window {1-9}.\r\n"
 argument_list|)
 expr_stmt|;
 name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"c[1-9]  Close window [1-9].\r\n"
+literal|"c{1-9}  Close window {1-9}.\r\n"
 argument_list|)
 expr_stmt|;
 name|wwprintf
@@ -145,14 +158,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"R       Force refresh after every newline (current window only).\r\n"
-argument_list|)
-expr_stmt|;
-name|wwprintf
-argument_list|(
-name|w
-argument_list|,
-literal|"r       Don't refresh every line.\r\n"
+literal|"L       List all windows with their labels.\r\n"
 argument_list|)
 expr_stmt|;
 name|wwprintf
@@ -166,14 +172,14 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"^U      Scroll up.\r\n"
+literal|"[^U^D]  Scroll [up, down] half a window.\r\n"
 argument_list|)
 expr_stmt|;
 name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"^D      Scroll down.\r\n"
+literal|"[^B^F]  Scroll [up, down] a full window.\r\n"
 argument_list|)
 expr_stmt|;
 name|wwprintf
@@ -183,7 +189,6 @@ argument_list|,
 literal|"[hjkl]  Move cursor [left, down, up, right].\r\n"
 argument_list|)
 expr_stmt|;
-comment|/* 	wwprintf(w, "s       Print IO statistics.\r\n"); 	wwprintf(w, "t       Print resource usage of this program.\r\n"); 	wwprintf(w, "T       Print resource usage of children.\r\n"); 	*/
 name|wwprintf
 argument_list|(
 name|w
@@ -210,6 +215,74 @@ argument_list|(
 name|w
 argument_list|,
 literal|".       Quit.\r\n"
+argument_list|)
+expr_stmt|;
+name|waitnl
+argument_list|(
+name|w
+argument_list|)
+expr_stmt|;
+name|wwprintf
+argument_list|(
+name|w
+argument_list|,
+literal|"Long commands:\r\n\n"
+argument_list|)
+expr_stmt|;
+name|wwprintf
+argument_list|(
+name|w
+argument_list|,
+literal|":terse [off]            Turn on (or off) terse mode.\r\n"
+argument_list|)
+expr_stmt|;
+name|wwprintf
+argument_list|(
+name|w
+argument_list|,
+literal|":refresh {1-9} [off]    Turn on (or off) refresh after every newline\r\n"
+argument_list|)
+expr_stmt|;
+name|wwprintf
+argument_list|(
+name|w
+argument_list|,
+literal|"                        for window {1-9}.\r\n"
+argument_list|)
+expr_stmt|;
+name|wwprintf
+argument_list|(
+name|w
+argument_list|,
+literal|":label {1-9} string     Label window {1-9}.\r\n"
+argument_list|)
+expr_stmt|;
+name|wwprintf
+argument_list|(
+name|w
+argument_list|,
+literal|":escape c               Set escape character to c.\r\n"
+argument_list|)
+expr_stmt|;
+name|wwprintf
+argument_list|(
+name|w
+argument_list|,
+literal|":%{1-9}                 Select window {1-9}.\r\n"
+argument_list|)
+expr_stmt|;
+name|wwprintf
+argument_list|(
+name|w
+argument_list|,
+literal|":window r c nr nc       Open a window at row r column c\r\n"
+argument_list|)
+expr_stmt|;
+name|wwprintf
+argument_list|(
+name|w
+argument_list|,
+literal|"                        with nr rows and nc colomns\r\n"
 argument_list|)
 expr_stmt|;
 name|waitnl
@@ -264,6 +337,14 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|terse
+condition|)
+name|Ding
+argument_list|()
+expr_stmt|;
+else|else
 name|wwputs
 argument_list|(
 literal|"Can't open time window.  "
@@ -650,6 +731,14 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|terse
+condition|)
+name|Ding
+argument_list|()
+expr_stmt|;
+else|else
 name|wwputs
 argument_list|(
 literal|"Can't open statistics window.  "
@@ -699,12 +788,151 @@ block|}
 end_block
 
 begin_macro
+name|dolist
+argument_list|()
+end_macro
+
+begin_block
+block|{
+specifier|register
+name|struct
+name|ww
+modifier|*
+name|w
+decl_stmt|,
+modifier|*
+name|w1
+decl_stmt|;
+name|int
+name|id
+decl_stmt|;
+name|char
+name|doneit
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|w
+operator|=
+name|openwin
+argument_list|(
+literal|14
+argument_list|,
+literal|"Active Windows"
+argument_list|)
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|terse
+condition|)
+name|Ding
+argument_list|()
+expr_stmt|;
+else|else
+name|wwputs
+argument_list|(
+literal|"Can't open listing window.  "
+argument_list|,
+name|cmdwin
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+for|for
+control|(
+name|id
+operator|=
+literal|1
+init|;
+name|id
+operator|<=
+name|NWINDOW
+condition|;
+name|id
+operator|++
+control|)
+block|{
+if|if
+condition|(
+operator|(
+name|w1
+operator|=
+name|wwfind
+argument_list|(
+name|id
+argument_list|)
+operator|)
+operator|==
+literal|0
+condition|)
+continue|continue;
+name|doneit
+operator|=
+literal|1
+expr_stmt|;
+name|wwprintf
+argument_list|(
+name|w
+argument_list|,
+literal|"%d   %s\r\n"
+argument_list|,
+name|id
+argument_list|,
+name|w1
+operator|->
+name|ww_label
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|doneit
+condition|)
+name|wwprintf
+argument_list|(
+name|w
+argument_list|,
+literal|"No windows.\r\n"
+argument_list|)
+expr_stmt|;
+name|waitnl
+argument_list|(
+name|w
+argument_list|)
+expr_stmt|;
+name|closewin
+argument_list|(
+name|w
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
 name|doquit
 argument_list|()
 end_macro
 
 begin_block
 block|{
+if|if
+condition|(
+name|terse
+condition|)
+name|Wunhide
+argument_list|(
+name|cmdwin
+operator|->
+name|ww_win
+argument_list|)
+expr_stmt|;
 name|wwputs
 argument_list|(
 literal|"Really quit [yn]? "
@@ -766,6 +994,17 @@ argument_list|,
 name|cmdwin
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|terse
+condition|)
+name|Whide
+argument_list|(
+name|cmdwin
+operator|->
+name|ww_win
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
@@ -790,6 +1029,9 @@ name|ww
 modifier|*
 name|w
 decl_stmt|;
+name|int
+name|startcol
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -805,7 +1047,7 @@ name|nrow
 argument_list|,
 name|wwncol
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -821,10 +1063,11 @@ argument_list|(
 name|w
 argument_list|)
 expr_stmt|;
-name|wwlabel
-argument_list|(
-name|w
-argument_list|,
+if|if
+condition|(
+operator|(
+name|startcol
+operator|=
 operator|(
 name|wwncol
 operator|-
@@ -835,8 +1078,19 @@ argument_list|)
 operator|)
 operator|/
 literal|2
-operator|+
+operator|)
+operator|<=
+literal|0
+condition|)
+name|startcol
+operator|=
 literal|1
+expr_stmt|;
+name|wwlabel
+argument_list|(
+name|w
+argument_list|,
+name|startcol
 argument_list|,
 name|label
 argument_list|,
@@ -908,6 +1162,14 @@ condition|)
 name|bread
 argument_list|()
 expr_stmt|;
+name|wwputs
+argument_list|(
+literal|"\033E"
+argument_list|,
+name|w
+argument_list|)
+expr_stmt|;
+comment|/* clear and home cursor */
 block|}
 end_block
 
