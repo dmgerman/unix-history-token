@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cal.c	5.1 (Berkeley) %G%"
+literal|"@(#)cal.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2119,67 +2119,67 @@ init|=
 block|{
 literal|""
 block|,
-literal|" 1 "
+literal|" 1"
 block|,
-literal|" 2 "
+literal|" 2"
 block|,
-literal|" 3 "
+literal|" 3"
 block|,
-literal|" 4 "
+literal|" 4"
 block|,
-literal|" 5 "
+literal|" 5"
 block|,
-literal|" 6 "
+literal|" 6"
 block|,
-literal|" 7 "
+literal|" 7"
 block|,
-literal|" 8 "
+literal|" 8"
 block|,
-literal|" 9 "
+literal|" 9"
 block|,
-literal|"10 "
+literal|"10"
 block|,
-literal|"11 "
+literal|"11"
 block|,
-literal|"12 "
+literal|"12"
 block|,
-literal|"13 "
+literal|"13"
 block|,
-literal|"14 "
+literal|"14"
 block|,
-literal|"15 "
+literal|"15"
 block|,
-literal|"16 "
+literal|"16"
 block|,
-literal|"17 "
+literal|"17"
 block|,
-literal|"18 "
+literal|"18"
 block|,
-literal|"19 "
+literal|"19"
 block|,
-literal|"20 "
+literal|"20"
 block|,
-literal|"21 "
+literal|"21"
 block|,
-literal|"22 "
+literal|"22"
 block|,
-literal|"23 "
+literal|"23"
 block|,
-literal|"24 "
+literal|"24"
 block|,
-literal|"25 "
+literal|"25"
 block|,
-literal|"26 "
+literal|"26"
 block|,
-literal|"27 "
+literal|"27"
 block|,
-literal|"28 "
+literal|"28"
 block|,
-literal|"29 "
+literal|"29"
 block|,
-literal|"30 "
+literal|"30"
 block|,
-literal|"31 "
+literal|"31"
 block|, 	}
 decl_stmt|;
 if|if
@@ -2206,47 +2206,9 @@ return|return;
 block|}
 if|if
 condition|(
-operator|!
 name|julian
 condition|)
 block|{
-operator|*
-name|p
-operator|++
-operator|=
-name|aday
-index|[
-name|day
-index|]
-index|[
-literal|0
-index|]
-expr_stmt|;
-operator|*
-name|p
-operator|++
-operator|=
-name|aday
-index|[
-name|day
-index|]
-index|[
-literal|1
-index|]
-expr_stmt|;
-operator|*
-name|p
-operator|=
-name|aday
-index|[
-name|day
-index|]
-index|[
-literal|2
-index|]
-expr_stmt|;
-return|return;
-block|}
 if|if
 condition|(
 name|val
@@ -2323,6 +2285,34 @@ literal|10
 operator|+
 literal|'0'
 expr_stmt|;
+block|}
+else|else
+block|{
+operator|*
+name|p
+operator|++
+operator|=
+name|aday
+index|[
+name|day
+index|]
+index|[
+literal|0
+index|]
+expr_stmt|;
+operator|*
+name|p
+operator|++
+operator|=
+name|aday
+index|[
+name|day
+index|]
+index|[
+literal|1
+index|]
+expr_stmt|;
+block|}
 operator|*
 name|p
 operator|=
