@@ -84,12 +84,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|vfs_start_t
-name|coda_start
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|vfs_unmount_t
 name|coda_unmount
 decl_stmt|;

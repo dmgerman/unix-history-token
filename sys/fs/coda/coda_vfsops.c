@@ -1074,7 +1074,7 @@ operator|->
 name|mi_vfsp
 condition|)
 block|{
-comment|/* 	 * Cache the root across calls. We only need to pass the request 	 * on to Venus if the root vnode is the dummy we installed in 	 * coda_omount() with all c_fid members zeroed. 	 * 	 * XXX In addition, if we are called between coda_omount() and 	 * coda_start(), we assume that the request is from vfs_omount() 	 * (before the call to checkdirs()) and return the dummy root 	 * node to avoid a deadlock. This bug is fixed in the Coda CVS 	 * repository but not in any released versions as of 6 Mar 2003. 	 */
+comment|/* 	 * Cache the root across calls. We only need to pass the request 	 * on to Venus if the root vnode is the dummy we installed in 	 * coda_omount() with all c_fid members zeroed. 	 * 	 * XXX In addition, we assume that the first call to coda_root() 	 * is from vfs_omount() 	 * (before the call to checkdirs()) and return the dummy root 	 * node to avoid a deadlock. This bug is fixed in the Coda CVS 	 * repository but not in any released versions as of 6 Mar 2003. 	 */
 if|if
 condition|(
 name|memcmp
@@ -1114,6 +1114,12 @@ operator|=
 name|mi
 operator|->
 name|mi_rootvp
+expr_stmt|;
+name|mi
+operator|->
+name|mi_started
+operator|=
+literal|1
 expr_stmt|;
 comment|/* On Mach, this is vref.  On NetBSD, VOP_LOCK */
 if|#
@@ -1359,48 +1365,6 @@ label|:
 return|return
 operator|(
 name|error
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|int
-name|coda_start
-parameter_list|(
-name|mp
-parameter_list|,
-name|flags
-parameter_list|,
-name|td
-parameter_list|)
-name|struct
-name|mount
-modifier|*
-name|mp
-decl_stmt|;
-name|int
-name|flags
-decl_stmt|;
-name|struct
-name|thread
-modifier|*
-name|td
-decl_stmt|;
-block|{
-comment|/* XXX See coda_root(). */
-name|vftomi
-argument_list|(
-name|mp
-argument_list|)
-operator|->
-name|mi_started
-operator|=
-literal|1
-expr_stmt|;
-return|return
-operator|(
-literal|0
 operator|)
 return|;
 block|}
@@ -2076,11 +2040,6 @@ operator|.
 name|vfs_root
 operator|=
 name|coda_root
-block|,
-operator|.
-name|vfs_start
-operator|=
-name|coda_start
 block|,
 operator|.
 name|vfs_statfs
