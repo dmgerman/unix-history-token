@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	4.9 83/05/30"
+literal|"@(#)main.c	4.10 84/03/12"
 decl_stmt|;
 end_decl_stmt
 
@@ -530,13 +530,8 @@ operator|++
 control|)
 switch|switch
 condition|(
-name|argv
-index|[
-literal|0
-index|]
-index|[
-literal|1
-index|]
+operator|*
+name|cp
 condition|)
 block|{
 case|case
