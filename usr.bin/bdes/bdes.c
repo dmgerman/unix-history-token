@@ -56,36 +56,6 @@ begin_comment
 comment|/*  * BDES -- DES encryption package for Berkeley Software Distribution 4.4  * options:  *	-a	key is in ASCII  *	-b	use ECB (electronic code book) mode  *	-d	invert (decrypt) input  *	-f b	use b-bit CFB (cipher feedback) mode  *	-F b	use b-bit CFB (cipher feedback) alternative mode  *	-k key	use key as the cryptographic key  *	-m b	generate a MAC of length b  *	-o b	use b-bit OFB (output feedback) mode  *	-p	don't reset the parity bit  *	-v v	use v as the initialization vector (ignored for ECB)  * note: the last character of the last block is the integer indicating  * how many characters of that block are to be output  *  * Author: Matt Bishop  *	   Department of Mathematics and Computer Science  *	   Dartmouth College  *	   Hanover, NH  03755  * Email:  Matt.Bishop@dartmouth.edu  *	   ...!decvax!dartvax!Matt.Bishop  *  * See Technical Report PCS-TR91-158, Department of Mathematics and Computer  * Science, Dartmouth College, for a detailed description of the implemen-  * tation and differences between it and Sun's.  The DES is described in  * FIPS PUB 46, and the modes in FIPS PUB 81 (see either the manual page  * or the technical report for a complete reference).  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|DES
-end_ifndef
-
-begin_function
-name|main
-parameter_list|()
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Crypt not available\n"
-argument_list|)
-expr_stmt|;
-name|_exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_include
 include|#
 directive|include
@@ -121,6 +91,36 @@ include|#
 directive|include
 file|<string.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DES
+end_ifndef
+
+begin_function
+name|main
+parameter_list|()
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Crypt not available\n"
+argument_list|)
+expr_stmt|;
+name|_exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_comment
 comment|/*  * BSD and System V systems offer special library calls that do  * block moves and fills, so if possible we take advantage of them  */
