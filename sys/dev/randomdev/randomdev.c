@@ -139,6 +139,13 @@ name|RANDOM_MINOR
 value|3
 end_define
 
+begin_define
+define|#
+directive|define
+name|URANDOM_MINOR
+value|4
+end_define
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -208,6 +215,13 @@ begin_decl_stmt
 specifier|static
 name|dev_t
 name|randomdev
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|dev_t
+name|urandomdev
 decl_stmt|;
 end_decl_stmt
 
@@ -538,7 +552,25 @@ name|GID_WHEEL
 argument_list|,
 literal|0666
 argument_list|,
-literal|"zero"
+literal|"random"
+argument_list|)
+expr_stmt|;
+name|urandomdev
+operator|=
+name|make_dev
+argument_list|(
+operator|&
+name|random_cdevsw
+argument_list|,
+name|URANDOM_MINOR
+argument_list|,
+name|UID_ROOT
+argument_list|,
+name|GID_WHEEL
+argument_list|,
+literal|0666
+argument_list|,
+literal|"urandom"
 argument_list|)
 expr_stmt|;
 name|randominit
@@ -553,6 +585,11 @@ case|:
 name|destroy_dev
 argument_list|(
 name|randomdev
+argument_list|)
+expr_stmt|;
+name|destroy_dev
+argument_list|(
+name|urandomdev
 argument_list|)
 expr_stmt|;
 return|return
