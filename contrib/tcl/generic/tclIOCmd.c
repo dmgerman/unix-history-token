@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclIOCmd.c --  *  *	Contains the definitions of most of the Tcl commands relating to IO.  *  * Copyright (c) 1995-1996 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclIOCmd.c 1.117 97/06/23 18:57:17  */
+comment|/*   * tclIOCmd.c --  *  *	Contains the definitions of most of the Tcl commands relating to IO.  *  * Copyright (c) 1995-1996 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclIOCmd.c 1.119 97/07/25 20:49:23  */
 end_comment
 
 begin_include
@@ -2264,7 +2264,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  *----------------------------------------------------------------------  *  * Tcl_CloseCmd --  *  *	This procedure is invoked to process the Tcl "close" command.  *	See the user documentation for details on what it does.  *  * Results:  *	A standard Tcl result.  *  * Side effects:  *	May discard queued input; may flush queued output.  *  *----------------------------------------------------------------------  */
+comment|/*  *----------------------------------------------------------------------  *  * Tcl_CloseObjCmd --  *  *	This procedure is invoked to process the Tcl "close" command.  *	See the user documentation for details on what it does.  *  * Results:  *	A standard Tcl result.  *  * Side effects:  *	May discard queued input; may flush queued output.  *  *----------------------------------------------------------------------  */
 end_comment
 
 begin_comment
@@ -2273,15 +2273,15 @@ end_comment
 
 begin_function
 name|int
-name|Tcl_CloseCmd
+name|Tcl_CloseObjCmd
 parameter_list|(
 name|clientData
 parameter_list|,
 name|interp
 parameter_list|,
-name|argc
+name|objc
 parameter_list|,
-name|argv
+name|objv
 parameter_list|)
 name|ClientData
 name|clientData
@@ -2293,15 +2293,16 @@ name|interp
 decl_stmt|;
 comment|/* Current interpreter. */
 name|int
-name|argc
+name|objc
 decl_stmt|;
 comment|/* Number of arguments. */
-name|char
+name|Tcl_Obj
 modifier|*
-modifier|*
-name|argv
+name|CONST
+name|objv
+index|[]
 decl_stmt|;
-comment|/* Argument strings. */
+comment|/* Argument objects. */
 block|{
 name|Tcl_Channel
 name|chan
@@ -2311,47 +2312,51 @@ name|int
 name|len
 decl_stmt|;
 comment|/* Length of error output. */
+name|char
+modifier|*
+name|arg
+decl_stmt|;
 if|if
 condition|(
-name|argc
+name|objc
 operator|!=
 literal|2
 condition|)
 block|{
-name|Tcl_AppendResult
+name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|"wrong # args: should be \""
+literal|1
 argument_list|,
-name|argv
-index|[
-literal|0
-index|]
+name|objv
 argument_list|,
-literal|" channelId\""
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+literal|"channelId"
 argument_list|)
 expr_stmt|;
 return|return
 name|TCL_ERROR
 return|;
 block|}
+name|arg
+operator|=
+name|Tcl_GetStringFromObj
+argument_list|(
+name|objv
+index|[
+literal|1
+index|]
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|chan
 operator|=
 name|Tcl_GetChannel
 argument_list|(
 name|interp
 argument_list|,
-name|argv
-index|[
-literal|1
-index|]
+name|arg
 argument_list|,
 name|NULL
 argument_list|)
@@ -2735,7 +2740,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  *----------------------------------------------------------------------  *  * Tcl_EofCmd --  *  *	This procedure is invoked to process the Tcl "eof" command.  *	See the user documentation for details on what it does.  *  * Results:  *	A standard Tcl result.  *  * Side effects:  *	Sets interp->result to "0" or "1" depending on whether the  *	specified channel has an EOF condition.  *  *----------------------------------------------------------------------  */
+comment|/*  *----------------------------------------------------------------------  *  * Tcl_EofObjCmd --  *  *	This procedure is invoked to process the Tcl "eof" command.  *	See the user documentation for details on what it does.  *  * Results:  *	A standard Tcl result.  *  * Side effects:  *	Sets interp->result to "0" or "1" depending on whether the  *	specified channel has an EOF condition.  *  *----------------------------------------------------------------------  */
 end_comment
 
 begin_comment
@@ -2744,15 +2749,15 @@ end_comment
 
 begin_function
 name|int
-name|Tcl_EofCmd
+name|Tcl_EofObjCmd
 parameter_list|(
 name|unused
 parameter_list|,
 name|interp
 parameter_list|,
-name|argc
+name|objc
 parameter_list|,
-name|argv
+name|objv
 parameter_list|)
 name|ClientData
 name|unused
@@ -2764,15 +2769,16 @@ name|interp
 decl_stmt|;
 comment|/* Current interpreter. */
 name|int
-name|argc
+name|objc
 decl_stmt|;
 comment|/* Number of arguments. */
-name|char
+name|Tcl_Obj
 modifier|*
-modifier|*
-name|argv
+name|CONST
+name|objv
+index|[]
 decl_stmt|;
-comment|/* Argument strings. */
+comment|/* Argument objects. */
 block|{
 name|Tcl_Channel
 name|chan
@@ -2788,47 +2794,51 @@ index|[
 literal|40
 index|]
 decl_stmt|;
+name|char
+modifier|*
+name|arg
+decl_stmt|;
 if|if
 condition|(
-name|argc
+name|objc
 operator|!=
 literal|2
 condition|)
 block|{
-name|Tcl_AppendResult
+name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|"wrong # args: should be \""
+literal|1
 argument_list|,
-name|argv
-index|[
-literal|0
-index|]
+name|objv
 argument_list|,
-literal|" channelId\""
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+literal|"channelId"
 argument_list|)
 expr_stmt|;
 return|return
 name|TCL_ERROR
 return|;
 block|}
+name|arg
+operator|=
+name|Tcl_GetStringFromObj
+argument_list|(
+name|objv
+index|[
+literal|1
+index|]
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|chan
 operator|=
 name|Tcl_GetChannel
 argument_list|(
 name|interp
 argument_list|,
-name|argv
-index|[
-literal|1
-index|]
+name|arg
 argument_list|,
 operator|&
 name|mode
@@ -3432,7 +3442,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  *----------------------------------------------------------------------  *  * Tcl_FblockedCmd --  *  *	This procedure is invoked to process the Tcl "fblocked" command.  *	See the user documentation for details on what it does.  *  * Results:  *	A standard Tcl result.  *  * Side effects:  *	Sets interp->result to "0" or "1" depending on whether the  *	a preceding input operation on the channel would have blocked.  *  *----------------------------------------------------------------------  */
+comment|/*  *----------------------------------------------------------------------  *  * Tcl_FblockedObjCmd --  *  *	This procedure is invoked to process the Tcl "fblocked" command.  *	See the user documentation for details on what it does.  *  * Results:  *	A standard Tcl result.  *  * Side effects:  *	Sets interp->result to "0" or "1" depending on whether the  *	a preceding input operation on the channel would have blocked.  *  *----------------------------------------------------------------------  */
 end_comment
 
 begin_comment
@@ -3441,15 +3451,15 @@ end_comment
 
 begin_function
 name|int
-name|Tcl_FblockedCmd
+name|Tcl_FblockedObjCmd
 parameter_list|(
 name|unused
 parameter_list|,
 name|interp
 parameter_list|,
-name|argc
+name|objc
 parameter_list|,
-name|argv
+name|objv
 parameter_list|)
 name|ClientData
 name|unused
@@ -3461,15 +3471,16 @@ name|interp
 decl_stmt|;
 comment|/* Current interpreter. */
 name|int
-name|argc
+name|objc
 decl_stmt|;
 comment|/* Number of arguments. */
-name|char
+name|Tcl_Obj
 modifier|*
-modifier|*
-name|argv
+name|CONST
+name|objv
+index|[]
 decl_stmt|;
-comment|/* Argument strings. */
+comment|/* Argument objects. */
 block|{
 name|Tcl_Channel
 name|chan
@@ -3485,47 +3496,51 @@ index|[
 literal|40
 index|]
 decl_stmt|;
+name|char
+modifier|*
+name|arg
+decl_stmt|;
 if|if
 condition|(
-name|argc
+name|objc
 operator|!=
 literal|2
 condition|)
 block|{
-name|Tcl_AppendResult
+name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|"wrong # args: should be \""
+literal|1
 argument_list|,
-name|argv
-index|[
-literal|0
-index|]
+name|objv
 argument_list|,
-literal|" channelId\""
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
+literal|"channelId"
 argument_list|)
 expr_stmt|;
 return|return
 name|TCL_ERROR
 return|;
 block|}
+name|arg
+operator|=
+name|Tcl_GetStringFromObj
+argument_list|(
+name|objv
+index|[
+literal|1
+index|]
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|chan
 operator|=
 name|Tcl_GetChannel
 argument_list|(
 name|interp
 argument_list|,
-name|argv
-index|[
-literal|1
-index|]
+name|arg
 argument_list|,
 operator|&
 name|mode
@@ -3556,16 +3571,24 @@ operator|==
 literal|0
 condition|)
 block|{
-name|Tcl_AppendResult
+name|Tcl_AppendStringsToObj
+argument_list|(
+name|Tcl_GetObjResult
 argument_list|(
 name|interp
+argument_list|)
 argument_list|,
 literal|"channel \""
 argument_list|,
-name|argv
+name|Tcl_GetStringFromObj
+argument_list|(
+name|objv
 index|[
 literal|1
 index|]
+argument_list|,
+name|NULL
+argument_list|)
 argument_list|,
 literal|"\" wasn't opened for reading"
 argument_list|,

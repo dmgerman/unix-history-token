@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * tclCompile.h --  *  * Copyright (c) 1996-1997 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclCompile.h 1.33 97/05/02 13:12:43  */
+comment|/*  * tclCompile.h --  *  * Copyright (c) 1996-1997 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclCompile.h 1.37 97/08/07 19:11:50  */
 end_comment
 
 begin_ifndef
@@ -75,7 +75,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * The number of bytecode compilations.  */
+comment|/*  * The number of bytecode compilations and various other compilation-related  * statistics. The tclByteCodeCount and tclSourceCount arrays are used to  * hold the count of ByteCodes and sources whose sizes fall into various  * binary decades; e.g., tclByteCodeCount[5] is a count of the ByteCodes  * with size larger than 2**4 and less than or equal to 2**5.  */
 end_comment
 
 begin_ifdef
@@ -88,6 +88,89 @@ begin_decl_stmt
 specifier|extern
 name|long
 name|tclNumCompilations
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|double
+name|tclTotalSourceBytes
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|double
+name|tclTotalCodeBytes
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|double
+name|tclTotalInstBytes
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|double
+name|tclTotalObjBytes
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|double
+name|tclTotalExceptBytes
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|double
+name|tclTotalAuxBytes
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|double
+name|tclTotalCmdMapBytes
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|double
+name|tclCurrentSourceBytes
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|double
+name|tclCurrentCodeBytes
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|tclSourceCount
+index|[
+literal|32
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|tclByteCodeCount
+index|[
+literal|32
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -161,7 +244,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Structure used to map between instruction pc and source locations. It  * defines for each compiled Tcl command the starting and ending offsets for  * its source and code.  */
+comment|/*  * Structure used to map between instruction pc and source locations. It  * defines for each compiled Tcl command its code's starting offset and   * its source's starting offset and length. Note that the code offset  * increases monotonically: that is, the table is sorted in code offset  * order. The source offset is not monotonic.  */
 end_comment
 
 begin_typedef
@@ -170,6 +253,14 @@ struct|struct
 name|CmdLocation
 block|{
 name|int
+name|codeOffset
+decl_stmt|;
+comment|/* Offset of first byte of command code. */
+name|int
+name|numCodeBytes
+decl_stmt|;
+comment|/* Number of bytes for command's code. */
+name|int
 name|srcOffset
 decl_stmt|;
 comment|/* Offset of first char of the command. */
@@ -177,14 +268,6 @@ name|int
 name|numSrcChars
 decl_stmt|;
 comment|/* Number of command source chars. */
-name|int
-name|codeOffset
-decl_stmt|;
-comment|/* Offset of first byte of command code. */
-name|int
-name|numCodeBytes
-decl_stmt|;
-comment|/* Number of code bytes for command code. */
 block|}
 name|CmdLocation
 typedef|;
@@ -350,6 +433,10 @@ name|exprIsJustVarRef
 decl_stmt|;
 comment|/* Set 1 if the expression last compiled by 				 * TclCompileExpr consisted of just a 				 * variable reference as in the expression 				 * of "if $b then...". Otherwise 0. Used 				 * to implement expr's 2 level substitution 				 * semantics properly. */
 name|int
+name|exprIsComparison
+decl_stmt|;
+comment|/* Set 1 if the top-level operator in the 				 * expression last compiled is a comparison. 				 * Otherwise 0. If 1, since the operands 				 * might be strings, the expr is compiled 				 * out-of-line to implement expr's 2 level 				 * substitution semantics properly. */
+name|int
 name|termOffset
 decl_stmt|;
 comment|/* Offset of character just after the last 				 * one compiled. Set by compilation 				 * procedures before returning. */
@@ -514,6 +601,10 @@ modifier|*
 name|procPtr
 decl_stmt|;
 comment|/* If the ByteCode was compiled from a 				 * procedure body, this is a pointer to its 				 * Proc structure; otherwise NULL. This 				 * pointer is also not owned by the ByteCode 				 * and must not be freed by it. Used for 				 * debugging. */
+name|size_t
+name|totalSize
+decl_stmt|;
+comment|/* Total number of bytes required for this 				 * ByteCode structure including the storage 				 * for Tcl objects in its object array. */
 name|int
 name|numCommands
 decl_stmt|;
@@ -539,6 +630,10 @@ name|numAuxDataItems
 decl_stmt|;
 comment|/* Number of AuxData items. */
 name|int
+name|numCmdLocBytes
+decl_stmt|;
+comment|/* Number of bytes needed for encoded 				 * command location information. */
+name|int
 name|maxExcRangeDepth
 decl_stmt|;
 comment|/* Maximum nesting level of ExceptionRanges; 				 * -1 if no ranges were compiled. */
@@ -563,16 +658,35 @@ modifier|*
 name|excRangeArrayPtr
 decl_stmt|;
 comment|/* Points to the start of the ExceptionRange 				 * array. This is just after the last 				 * object in the object array. */
-name|CmdLocation
-modifier|*
-name|cmdMapPtr
-decl_stmt|;
-comment|/* Points to pc<-> source map: an array of 				 * numCommands CmdLocation structures. This 				 * is just after the last entry in the 				 * ExceptionRange array. */
 name|AuxData
 modifier|*
 name|auxDataArrayPtr
 decl_stmt|;
-comment|/* Points to the start of the auxiliary data 				 * array. This is just after the last entry 				 * in the CmdLocation array. */
+comment|/* Points to the start of the auxiliary data 				 * array. This is just after the last entry 				 * in the ExceptionRange array. */
+name|unsigned
+name|char
+modifier|*
+name|codeDeltaStart
+decl_stmt|;
+comment|/* Points to the first of a sequence of 				 * bytes that encode the change in the 				 * starting offset of each command's code. 				 * If -127<=delta<=127, it is encoded as 1 				 * byte, otherwise 0xFF (128) appears and 				 * the delta is encoded by the next 4 bytes. 				 * Code deltas are always positive. This 				 * sequence is just after the last entry in 				 * the AuxData array. */
+name|unsigned
+name|char
+modifier|*
+name|codeLengthStart
+decl_stmt|;
+comment|/* Points to the first of a sequence of 				 * bytes that encode the length of each 				 * command's code. The encoding is the same 				 * as for code deltas. Code lengths are 				 * always positive. This sequence is just 				 * after the last entry in the code delta 				 * sequence. */
+name|unsigned
+name|char
+modifier|*
+name|srcDeltaStart
+decl_stmt|;
+comment|/* Points to the first of a sequence of 				 * bytes that encode the change in the 				 * starting offset of each command's source. 				 * The encoding is the same as for code 				 * deltas. Source deltas can be negative. 				 * This sequence is just after the last byte 				 * in the code length sequence. */
+name|unsigned
+name|char
+modifier|*
+name|srcLengthStart
+decl_stmt|;
+comment|/* Points to the first of a sequence of 				 * bytes that encode the length of each 				 * command's source. The encoding is the 				 * same as for code deltas. Source lengths 				 * are always positive. This sequence is 				 * just after the last byte in the source 				 * delta sequence. */
 block|}
 name|ByteCode
 typedef|;
@@ -2060,26 +2174,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|EXTERN
-name|int
-name|TclGetSrcInfoForPc
-name|_ANSI_ARGS_
-argument_list|(
-operator|(
-name|unsigned
-name|char
-operator|*
-name|pc
-operator|,
-name|ByteCode
-operator|*
-name|codePtr
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|EXTERN
 name|void
 name|TclInitByteCodeObj
 name|_ANSI_ARGS_
@@ -2134,6 +2228,35 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TCL_COMPILE_STATS
+end_ifdef
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|TclLog2
+name|_ANSI_ARGS_
+argument_list|(
+operator|(
+name|int
+name|value
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*TCL_COMPILE_STATS*/
+end_comment
 
 begin_decl_stmt
 name|EXTERN
@@ -2349,7 +2472,7 @@ value|TclEmitInstInt4((op), (i), (envPtr))
 end_define
 
 begin_comment
-comment|/*  * Macro to push a Tcl object onto the Tcl evaluation stack. It emits the  * object's one or four byte array index into the CompileEnv's code  * array. These support, respectively, a maximum of 256 (2^8) and 2^32  * objects in a CompileEnv. The ANSI C "prototype" for this macro is:  *  * EXTERN void	TclEmitPush _ANSI_ARGS_((int objIndex, CompileEnv *envPtr));  */
+comment|/*  * Macro to push a Tcl object onto the Tcl evaluation stack. It emits the  * object's one or four byte array index into the CompileEnv's code  * array. These support, respectively, a maximum of 256 (2**8) and 2**32  * objects in a CompileEnv. The ANSI C "prototype" for this macro is:  *  * EXTERN void	TclEmitPush _ANSI_ARGS_((int objIndex, CompileEnv *envPtr));  */
 end_comment
 
 begin_define
@@ -2366,33 +2489,33 @@ value|if ((objIndex)<= 255) { \ 	TclEmitInstUInt1(INST_PUSH1, (objIndex), (envPt
 end_define
 
 begin_comment
-comment|/*  * Macros to update a (signed or unsigned) integer starting at a bytecode  * pc. The two variants depend on the number of bytes. The ANSI C  * "prototypes" for these macros are:  *  * EXTERN void	TclUpdateInt1AtPc _ANSI_ARGS_((int i, unsigned char *pc));  * EXTERN void	TclUpdateInt4AtPc _ANSI_ARGS_((int i, unsigned char *pc));  */
+comment|/*  * Macros to update a (signed or unsigned) integer starting at a pointer.  * The two variants depend on the number of bytes. The ANSI C "prototypes"  * for these macros are:  *  * EXTERN void	TclStoreInt1AtPtr _ANSI_ARGS_((int i, unsigned char *p));  * EXTERN void	TclStoreInt4AtPtr _ANSI_ARGS_((int i, unsigned char *p));  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TclUpdateInt1AtPc
+name|TclStoreInt1AtPtr
 parameter_list|(
 name|i
 parameter_list|,
-name|pc
+name|p
 parameter_list|)
 define|\
-value|*(pc)   = (unsigned char) ((unsigned int) (i))
+value|*(p)   = (unsigned char) ((unsigned int) (i))
 end_define
 
 begin_define
 define|#
 directive|define
-name|TclUpdateInt4AtPc
+name|TclStoreInt4AtPtr
 parameter_list|(
 name|i
 parameter_list|,
-name|pc
+name|p
 parameter_list|)
 define|\
-value|*(pc)   = (unsigned char) ((unsigned int) (i)>> 24); \     *(pc+1) = (unsigned char) ((unsigned int) (i)>> 16); \     *(pc+2) = (unsigned char) ((unsigned int) (i)>>  8); \     *(pc+3) = (unsigned char) ((unsigned int) (i)      )
+value|*(p)   = (unsigned char) ((unsigned int) (i)>> 24); \     *(p+1) = (unsigned char) ((unsigned int) (i)>> 16); \     *(p+2) = (unsigned char) ((unsigned int) (i)>>  8); \     *(p+3) = (unsigned char) ((unsigned int) (i)      )
 end_define
 
 begin_comment
@@ -2411,7 +2534,7 @@ parameter_list|,
 name|pc
 parameter_list|)
 define|\
-value|*(pc) = (unsigned char) (op); \     TclUpdateInt1AtPc((i), ((pc)+1))
+value|*(pc) = (unsigned char) (op); \     TclStoreInt1AtPtr((i), ((pc)+1))
 end_define
 
 begin_define
@@ -2426,15 +2549,15 @@ parameter_list|,
 name|pc
 parameter_list|)
 define|\
-value|*(pc) = (unsigned char) (op); \     TclUpdateInt4AtPc((i), ((pc)+1))
+value|*(pc) = (unsigned char) (op); \     TclStoreInt4AtPtr((i), ((pc)+1))
 end_define
 
 begin_comment
-comment|/*  * Macros to get a signed integer (GET_INT{1,2}) or an unsigned int  * (GET_UINT{1,2}) from a code pc pointer. There are two variants for each  * return type that depend on the number of bytes fetched from the code  * sequence. The ANSI C "prototypes" for these macros are:  *  * EXTERN int	        TclGetInt1AtPc  _ANSI_ARGS_((unsigned char *pc));  * EXTERN int	        TclGetInt4AtPc  _ANSI_ARGS_((unsigned char *pc));  * EXTERN unsigned int	TclGetUInt1AtPc _ANSI_ARGS_((unsigned char *pc));  * EXTERN unsigned int	TclGetUInt4AtPc _ANSI_ARGS_((unsigned char *pc));  */
+comment|/*  * Macros to get a signed integer (GET_INT{1,2}) or an unsigned int  * (GET_UINT{1,2}) from a pointer. There are two variants for each  * return type that depend on the number of bytes fetched.  * The ANSI C "prototypes" for these macros are:  *  * EXTERN int	        TclGetInt1AtPtr  _ANSI_ARGS_((unsigned char *p));  * EXTERN int	        TclGetInt4AtPtr  _ANSI_ARGS_((unsigned char *p));  * EXTERN unsigned int	TclGetUInt1AtPtr _ANSI_ARGS_((unsigned char *p));  * EXTERN unsigned int	TclGetUInt4AtPtr _ANSI_ARGS_((unsigned char *p));  */
 end_comment
 
 begin_comment
-comment|/*  * The TclGetInt1AtPc macro is tricky because we want to do sign  * extension on the 1-byte value. Unfortunately the "char" type isn't  * signed on all platforms so sign-extension doesn't always happen  * automatically.  Sometimes we can explicitly declare the pointer to be  * signed, but other times we have to explicitly sign-extend the value  * in software.  */
+comment|/*  * The TclGetInt1AtPtr macro is tricky because we want to do sign  * extension on the 1-byte value. Unfortunately the "char" type isn't  * signed on all platforms so sign-extension doesn't always happen  * automatically. Sometimes we can explicitly declare the pointer to be  * signed, but other times we have to explicitly sign-extend the value  * in software.  */
 end_comment
 
 begin_ifndef
@@ -2446,11 +2569,11 @@ end_ifndef
 begin_define
 define|#
 directive|define
-name|TclGetInt1AtPc
+name|TclGetInt1AtPtr
 parameter_list|(
-name|pc
+name|p
 parameter_list|)
-value|((int) *((char *) pc))
+value|((int) *((char *) p))
 end_define
 
 begin_else
@@ -2467,11 +2590,11 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|TclGetInt1AtPc
+name|TclGetInt1AtPtr
 parameter_list|(
-name|pc
+name|p
 parameter_list|)
-value|((int) *((signed char *) pc))
+value|((int) *((signed char *) p))
 end_define
 
 begin_else
@@ -2482,11 +2605,11 @@ end_else
 begin_define
 define|#
 directive|define
-name|TclGetInt1AtPc
+name|TclGetInt1AtPtr
 parameter_list|(
-name|pc
+name|p
 parameter_list|)
-value|(((int) *((char *) pc)) \ 		| ((*(pc)& 0200) ? (-256) : 0))
+value|(((int) *((char *) p)) \ 		| ((*(p)& 0200) ? (-256) : 0))
 end_define
 
 begin_endif
@@ -2502,31 +2625,31 @@ end_endif
 begin_define
 define|#
 directive|define
-name|TclGetInt4AtPc
+name|TclGetInt4AtPtr
 parameter_list|(
-name|pc
+name|p
 parameter_list|)
-value|(((int) TclGetInt1AtPc(pc)<< 24) | \ 		                  (*((pc)+1)<< 16) | \ 				  (*((pc)+2)<<  8) | \ 				  (*((pc)+3)))
+value|(((int) TclGetInt1AtPtr(p)<< 24) | \ 		                  	    (*((p)+1)<< 16) | \ 				  	    (*((p)+2)<<  8) | \ 				  	    (*((p)+3)))
 end_define
 
 begin_define
 define|#
 directive|define
-name|TclGetUInt1AtPc
+name|TclGetUInt1AtPtr
 parameter_list|(
-name|pc
+name|p
 parameter_list|)
-value|((unsigned int) *(pc))
+value|((unsigned int) *(p))
 end_define
 
 begin_define
 define|#
 directive|define
-name|TclGetUInt4AtPc
+name|TclGetUInt4AtPtr
 parameter_list|(
-name|pc
+name|p
 parameter_list|)
-value|((unsigned int) (*(pc)<< 24) | \ 		                            (*((pc)+1)<< 16) | \ 				            (*((pc)+2)<<  8) | \ 				            (*((pc)+3)))
+value|((unsigned int) (*(p)<< 24) | \ 		                            (*((p)+1)<< 16) | \ 				            (*((p)+2)<<  8) | \ 				            (*((p)+3)))
 end_define
 
 begin_comment

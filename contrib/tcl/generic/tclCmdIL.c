@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclCmdIL.c --  *  *	This file contains the top-level command routines for most of  *	the Tcl built-in commands whose names begin with the letters  *	I through L.  It contains only commands in the generic core  *	(i.e. those that don't depend much upon UNIX facilities).  *  * Copyright (c) 1987-1993 The Regents of the University of California.  * Copyright (c) 1993-1997 Lucent Technologies.  * Copyright (c) 1994-1997 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclCmdIL.c 1.163 97/06/13 18:16:52  */
+comment|/*   * tclCmdIL.c --  *  *	This file contains the top-level command routines for most of  *	the Tcl built-in commands whose names begin with the letters  *	I through L.  It contains only commands in the generic core  *	(i.e. those that don't depend much upon UNIX facilities).  *  * Copyright (c) 1987-1993 The Regents of the University of California.  * Copyright (c) 1993-1997 Lucent Technologies.  * Copyright (c) 1994-1997 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclCmdIL.c 1.168 97/07/29 12:52:40  */
 end_comment
 
 begin_include
@@ -74,7 +74,7 @@ name|Tcl_DString
 name|compareCmd
 decl_stmt|;
 comment|/* The Tcl comparison command when sortMode 				 * is SORTMODE_COMMAND.  Pre-initialized to 				 * hold base of command.*/
-name|long
+name|int
 name|index
 decl_stmt|;
 comment|/* If the -index option was specified, this 				 * holds the index of the list element 				 * to extract for comparison.  If -index 				 * wasn't specified, this is -1. */
@@ -1954,11 +1954,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"args procname"
+literal|"procname"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2165,11 +2165,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"body procname"
+literal|"procname"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2309,11 +2309,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"cmdcount"
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -2569,11 +2569,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"commands ?pattern?"
+literal|"?pattern?"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2885,11 +2885,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"complete command"
+literal|"command"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3034,11 +3034,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"default procname arg varname"
+literal|"procname arg varname"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3400,11 +3400,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"exists varName"
+literal|"varName"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3620,11 +3620,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"globals ?pattern?"
+literal|"?pattern?"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3805,11 +3805,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"hostname"
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -4110,11 +4110,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"level ?number?"
+literal|"?number?"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4179,11 +4179,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"library"
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -4311,11 +4311,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"loaded ?interp?"
+literal|"?interp?"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4496,11 +4496,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"locals ?pattern?"
+literal|"?pattern?"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4792,11 +4792,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"nameofexecutable"
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -4886,11 +4886,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"patchlevel"
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -5062,11 +5062,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"procs ?pattern?"
+literal|"?pattern?"
 argument_list|)
 expr_stmt|;
 return|return
@@ -5256,11 +5256,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"script"
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -5350,11 +5350,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"sharedlibextension"
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -5441,11 +5441,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"tclversion"
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -5744,11 +5744,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"vars ?pattern?"
+literal|"?pattern?"
 argument_list|)
 expr_stmt|;
 return|return
@@ -5840,6 +5840,14 @@ name|TclIsVarUndefined
 argument_list|(
 name|varPtr
 argument_list|)
+operator|||
+operator|(
+name|varPtr
+operator|->
+name|flags
+operator|&
+name|VAR_NAMESPACE_VAR
+operator|)
 condition|)
 block|{
 name|varName
@@ -5977,6 +5985,14 @@ name|TclIsVarUndefined
 argument_list|(
 name|varPtr
 argument_list|)
+operator|||
+operator|(
+name|varPtr
+operator|->
+name|flags
+operator|&
+name|VAR_NAMESPACE_VAR
+operator|)
 condition|)
 block|{
 name|varName
@@ -8612,7 +8628,7 @@ return|;
 block|}
 if|if
 condition|(
-name|Tcl_GetLongFromObj
+name|TclGetIntForIndex
 argument_list|(
 name|interp
 argument_list|,
@@ -8623,6 +8639,9 @@ operator|+
 literal|1
 index|]
 argument_list|,
+operator|-
+literal|2
+argument_list|,
 operator|&
 name|sortInfo
 operator|.
@@ -8632,43 +8651,9 @@ operator|!=
 name|TCL_OK
 condition|)
 block|{
-if|if
-condition|(
-name|strcmp
-argument_list|(
-literal|"end"
-argument_list|,
-name|Tcl_GetStringFromObj
-argument_list|(
-name|objv
-index|[
-name|i
-operator|+
-literal|1
-index|]
-argument_list|,
-operator|&
-name|dummy
-argument_list|)
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-name|sortInfo
-operator|.
-name|index
-operator|=
-operator|-
-literal|2
-expr_stmt|;
-block|}
-else|else
-block|{
 return|return
 name|TCL_ERROR
 return|;
-block|}
 block|}
 name|cmdPtr
 operator|=
@@ -9556,7 +9541,7 @@ name|sprintf
 argument_list|(
 name|buffer
 argument_list|,
-literal|"%ld"
+literal|"%d"
 argument_list|,
 name|infoPtr
 operator|->

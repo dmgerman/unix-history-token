@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * tclUnixPort.h --  *  *	This header file handles porting issues that occur because  *	of differences between systems.  It reads in UNIX-related  *	header files and sets up UNIX-related macros for Tcl's UNIX  *	core.  It should be the only file that contains #ifdefs to  *	handle different flavors of UNIX.  This file sets up the  *	union of all UNIX-related things needed by any of the Tcl  *	core files.  This file depends on configuration #defines such  *	as NO_DIRENT_H that are set up by the "configure" script.  *  *	Much of the material in this file was originally contributed  *	by Karl Lehenbauer, Mark Diekhans and Peter da Silva.  *  * Copyright (c) 1991-1994 The Regents of the University of California.  * Copyright (c) 1994-1995 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclUnixPort.h 1.47 97/05/22 10:57:36  */
+comment|/*  * tclUnixPort.h --  *  *	This header file handles porting issues that occur because  *	of differences between systems.  It reads in UNIX-related  *	header files and sets up UNIX-related macros for Tcl's UNIX  *	core.  It should be the only file that contains #ifdefs to  *	handle different flavors of UNIX.  This file sets up the  *	union of all UNIX-related things needed by any of the Tcl  *	core files.  This file depends on configuration #defines such  *	as NO_DIRENT_H that are set up by the "configure" script.  *  *	Much of the material in this file was originally contributed  *	by Karl Lehenbauer, Mark Diekhans and Peter da Silva.  *  * Copyright (c) 1991-1994 The Regents of the University of California.  * Copyright (c) 1994-1995 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclUnixPort.h 1.49 97/07/30 14:11:59  */
 end_comment
 
 begin_ifndef
@@ -1753,21 +1753,6 @@ define|#
 directive|define
 name|MASK_SIZE
 value|howmany(FD_SETSIZE, NFDBITS)
-end_define
-
-begin_comment
-comment|/*  * The following function is declared in tclInt.h but doesn't do anything  * on Unix systems.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TclSetSystemEnv
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
 end_define
 
 begin_comment

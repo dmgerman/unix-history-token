@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclListObj.c --  *  *	This file contains procedures that implement the Tcl list object  *	type.  *  * Copyright (c) 1995-1997 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclListObj.c 1.44 97/06/13 18:25:32  */
+comment|/*   * tclListObj.c --  *  *	This file contains procedures that implement the Tcl list object  *	type.  *  * Copyright (c) 1995-1997 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclListObj.c 1.47 97/08/12 19:02:02  */
 end_comment
 
 begin_include
@@ -1160,6 +1160,8 @@ name|elemPtrs
 decl_stmt|;
 name|int
 name|numElems
+decl_stmt|,
+name|numRequired
 decl_stmt|;
 if|if
 condition|(
@@ -1231,25 +1233,22 @@ name|listRepPtr
 operator|->
 name|elemCount
 expr_stmt|;
+name|numRequired
+operator|=
+name|numElems
+operator|+
+literal|1
+expr_stmt|;
 comment|/*      * If there is no room in the current array of element pointers,      * allocate a new, larger array and copy the pointers to it.      */
 if|if
 condition|(
-name|numElems
-operator|>=
+name|numRequired
+operator|>
 name|listRepPtr
 operator|->
 name|maxElemCount
 condition|)
 block|{
-name|int
-name|numRequired
-init|=
-operator|(
-name|numElems
-operator|+
-literal|1
-operator|)
-decl_stmt|;
 name|int
 name|newMax
 init|=
@@ -1809,7 +1808,7 @@ expr_stmt|;
 if|if
 condition|(
 name|numRequired
-operator|<
+operator|<=
 name|listRepPtr
 operator|->
 name|maxElemCount
@@ -2896,10 +2895,18 @@ condition|(
 name|hasBrace
 condition|)
 block|{
-name|strncpy
+name|memcpy
 argument_list|(
+operator|(
+name|VOID
+operator|*
+operator|)
 name|s
 argument_list|,
+operator|(
+name|VOID
+operator|*
+operator|)
 name|elemStart
 argument_list|,
 operator|(

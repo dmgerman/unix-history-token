@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclUnixSock.c --  *  *	This file contains Unix-specific socket related code.  *  * Copyright (c) 1995 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclUnixSock.c 1.6 96/08/08 08:48:51  */
+comment|/*   * tclUnixSock.c --  *  *	This file contains Unix-specific socket related code.  *  * Copyright (c) 1995 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclUnixSock.c 1.7 97/07/24 17:54:02  */
 end_comment
 
 begin_include
@@ -16,20 +16,39 @@ file|"tclPort.h"
 end_include
 
 begin_comment
-comment|/*  * The following variable holds the network name of this host.  */
+comment|/*  * There is no portable macro for the maximum length  * of host names returned by gethostbyname().  We should only  * trust SYS_NMLN if it is at least 255 + 1 bytes to comply with DNS  * host name limits.  *  * Note:  SYS_NMLN is a restriction on "uname" not on gethostbyname!  *  * For example HP-UX 10.20 has SYS_NMLN == 9,  while gethostbyname()  * can return a fully qualified name from DNS of up to 255 bytes.  *  * Fix suggested by Viktor Dukhovni (viktor@esm.com)  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|SYS_NMLN
-end_ifndef
+argument_list|)
+operator|&&
+name|SYS_NMLEN
+operator|>=
+literal|256
+end_if
 
 begin_define
 define|#
 directive|define
-name|SYS_NMLN
-value|100
+name|TCL_HOSTNAME_LEN
+value|SYS_NMLEN
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|TCL_HOSTNAME_LEN
+value|256
 end_define
 
 begin_endif
@@ -37,12 +56,16 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * The following variable holds the network name of this host.  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|char
 name|hostname
 index|[
-name|SYS_NMLN
+name|TCL_HOSTNAME_LEN
 operator|+
 literal|1
 index|]

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclInterp.c --  *  *	This file implements the "interp" command which allows creation  *	and manipulation of Tcl interpreters from within Tcl scripts.  *  * Copyright (c) 1995-1997 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclInterp.c 1.115 97/06/19 18:06:39  */
+comment|/*   * tclInterp.c --  *  *	This file implements the "interp" command which allows creation  *	and manipulation of Tcl interpreters from within Tcl scripts.  *  * Copyright (c) 1995-1997 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclInterp.c 1.125 97/08/05 15:22:51  */
 end_comment
 
 begin_include
@@ -23,20 +23,6 @@ end_include
 
 begin_escape
 end_escape
-
-begin_comment
-comment|/*  * Tcl script to make an interpreter safe.  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|char
-name|makeSafeScript
-index|[]
-init|=
-literal|"if {[info exists env(DISPLAY)]} {\n\     set ___x___ $env(DISPLAY)\n\ }\n\ unset env\n\ if {[info exists ___x___]} {\n\     set env(DISPLAY) $___x___\n\     unset ___x___\n\ }"
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * Counter for how many aliases were created (global)  */
@@ -162,7 +148,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * struct Master:  *  * This record is used for three purposes: First, slaveTable (a hashtable)  * maps from names of commands to slave interpreters. This hashtable is  * used to store information about slave interpreters of this interpreter,  * to map over all slaves, etc. The second purpose is to store information  * about all aliases in slaves (or siblings) which direct to target commands  * in this interpreter (using the targetTable hashtable). The third field in  * the record, isSafe, denotes whether the interpreter is safe or not. Safe  * interpreters have restricted functionality, can only create safe slave  * interpreters and can only load safe extensions.  */
+comment|/*  * struct Master:  *  * This record is used for two purposes: First, slaveTable (a hashtable)  * maps from names of commands to slave interpreters. This hashtable is  * used to store information about slave interpreters of this interpreter,  * to map over all slaves, etc. The second purpose is to store information  * about all aliases in slaves (or siblings) which direct to target commands  * in this interpreter (using the targetTable hashtable).  *   * NB: the flags field in the interp structure, used with SAFE_INTERP  * mask denotes whether the interpreter is safe or not. Safe  * interpreters have restricted functionality, can only create safe slave  * interpreters and can only load safe extensions.  */
 end_comment
 
 begin_typedef
@@ -173,10 +159,6 @@ name|Tcl_HashTable
 name|slaveTable
 decl_stmt|;
 comment|/* Hash table for slave interpreters.                                  * Maps from command names to Slave records. */
-name|int
-name|isSafe
-decl_stmt|;
-comment|/* Am I a "safe" interpreter? */
 name|Tcl_HashTable
 name|targetTable
 decl_stmt|;
@@ -846,6 +828,34 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
+name|InterpTransferHelper
+name|_ANSI_ARGS_
+argument_list|(
+operator|(
+name|Tcl_Interp
+operator|*
+name|interp
+operator|,
+name|Master
+operator|*
+name|masterPtr
+operator|,
+name|int
+name|objc
+operator|,
+name|Tcl_Obj
+operator|*
+name|CONST
+name|objv
+index|[]
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|MarkTrusted
 name|_ANSI_ARGS_
 argument_list|(
@@ -1441,48 +1451,22 @@ name|interp
 decl_stmt|;
 comment|/* Interpreter to be marked unsafe. */
 block|{
-name|Master
+name|Interp
 modifier|*
-name|masterPtr
-decl_stmt|;
-comment|/* Master record for interpreter to                                  * be marked unsafe. */
-name|masterPtr
-operator|=
+name|iPtr
+init|=
 operator|(
-name|Master
+name|Interp
 operator|*
 operator|)
-name|Tcl_GetAssocData
-argument_list|(
 name|interp
-argument_list|,
-literal|"tclMasterRecord"
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|masterPtr
-operator|==
-operator|(
-name|Master
-operator|*
-operator|)
-name|NULL
-condition|)
-block|{
-name|panic
-argument_list|(
-literal|"MarkTrusted: could not find master record"
-argument_list|)
-expr_stmt|;
-block|}
-name|masterPtr
+decl_stmt|;
+name|iPtr
 operator|->
-name|isSafe
-operator|=
-literal|0
+name|flags
+operator|&=
+operator|~
+name|SAFE_INTERP
 expr_stmt|;
 return|return
 name|TCL_OK
@@ -1509,101 +1493,93 @@ name|interp
 decl_stmt|;
 comment|/* Interpreter to be made safe. */
 block|{
-name|Master
-modifier|*
-name|masterPtr
-decl_stmt|;
-comment|/* Master record of interp                                                  * to be made safe. */
 name|Tcl_Channel
 name|chan
 decl_stmt|;
 comment|/* Channel to remove from                                                  * safe interpreter. */
-name|Tcl_Obj
+name|Interp
 modifier|*
-name|objPtr
+name|iPtr
+init|=
+operator|(
+name|Interp
+operator|*
+operator|)
+name|interp
 decl_stmt|;
 name|TclHideUnsafeCommands
 argument_list|(
 name|interp
 argument_list|)
 expr_stmt|;
-name|masterPtr
-operator|=
-operator|(
-name|Master
-operator|*
-operator|)
-name|Tcl_GetAssocData
-argument_list|(
-name|interp
-argument_list|,
-literal|"tclMasterRecord"
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|masterPtr
-operator|==
-operator|(
-name|Master
-operator|*
-operator|)
-name|NULL
-condition|)
-block|{
-name|panic
-argument_list|(
-literal|"MakeSafe: could not find master record"
-argument_list|)
-expr_stmt|;
-block|}
-name|masterPtr
+name|iPtr
 operator|->
-name|isSafe
-operator|=
-literal|1
+name|flags
+operator||=
+name|SAFE_INTERP
 expr_stmt|;
-name|objPtr
-operator|=
-name|Tcl_NewStringObj
-argument_list|(
-name|makeSafeScript
-argument_list|,
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-name|Tcl_IncrRefCount
-argument_list|(
-name|objPtr
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|Tcl_EvalObj
+comment|/*      *  Unsetting variables : (which should not have been set       *  in the first place, but...)      */
+comment|/*      * No env array in a safe slave.      */
+name|Tcl_UnsetVar
 argument_list|(
 name|interp
 argument_list|,
-name|objPtr
-argument_list|)
-operator|==
-name|TCL_ERROR
-condition|)
-block|{
-name|Tcl_DecrRefCount
-argument_list|(
-name|objPtr
+literal|"env"
+argument_list|,
+name|TCL_GLOBAL_ONLY
 argument_list|)
 expr_stmt|;
-return|return
-name|TCL_ERROR
-return|;
-block|}
-name|Tcl_DecrRefCount
+comment|/*       * Remove unsafe parts of tcl_platform      */
+name|Tcl_UnsetVar2
 argument_list|(
-name|objPtr
+name|interp
+argument_list|,
+literal|"tcl_platform"
+argument_list|,
+literal|"os"
+argument_list|,
+name|TCL_GLOBAL_ONLY
+argument_list|)
+expr_stmt|;
+name|Tcl_UnsetVar2
+argument_list|(
+name|interp
+argument_list|,
+literal|"tcl_platform"
+argument_list|,
+literal|"osVersion"
+argument_list|,
+name|TCL_GLOBAL_ONLY
+argument_list|)
+expr_stmt|;
+name|Tcl_UnsetVar2
+argument_list|(
+name|interp
+argument_list|,
+literal|"tcl_platform"
+argument_list|,
+literal|"machine"
+argument_list|,
+name|TCL_GLOBAL_ONLY
+argument_list|)
+expr_stmt|;
+comment|/*      * Unset path informations variables      * (the only one remaining is [info nameofexecutable])      */
+name|Tcl_UnsetVar
+argument_list|(
+name|interp
+argument_list|,
+literal|"tcl_library"
+argument_list|,
+name|TCL_GLOBAL_ONLY
+argument_list|)
+expr_stmt|;
+name|Tcl_UnsetVar
+argument_list|(
+name|interp
+argument_list|,
+literal|"tcl_pkgPath"
+argument_list|,
+name|TCL_GLOBAL_ONLY
 argument_list|)
 expr_stmt|;
 comment|/*      * Remove the standard channels from the interpreter; safe interpreters      * do not ordinarily have access to stdin, stdout and stderr.      *      * NOTE: These channels are not added to the interpreter by the      * Tcl_CreateInterp call, but may be added later, by another I/O      * operation. We want to ensure that the interpreter does not have      * these channels even if it is being made safe after being used for      * some time..      */
@@ -2228,9 +2204,10 @@ condition|)
 block|{
 name|safe
 operator|=
-name|masterPtr
-operator|->
-name|isSafe
+name|Tcl_IsSafe
+argument_list|(
+name|masterInterp
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -2323,15 +2300,13 @@ operator|(
 name|Slave
 operator|*
 operator|)
-name|ckalloc
+name|Tcl_GetAssocData
 argument_list|(
-operator|(
-name|unsigned
-operator|)
-sizeof|sizeof
-argument_list|(
-name|Slave
-argument_list|)
+name|slaveInterp
+argument_list|,
+literal|"tclSlaveRecord"
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|slavePtr
@@ -2650,9 +2625,10 @@ name|NULL
 expr_stmt|;
 name|safe
 operator|=
-name|masterPtr
-operator|->
-name|isSafe
+name|Tcl_IsSafe
+argument_list|(
+name|interp
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2673,11 +2649,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"create ?-safe? ?--? ?path?"
+literal|"?-safe? ?--? ?path?"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2845,6 +2821,15 @@ operator|)
 name|NULL
 condition|)
 block|{
+comment|/*          * Create an anonymous interpreter -- we choose its name and          * the name of the command. We check that the command name that          * we use for the interpreter does not collide with an existing          * command in the master interpreter.          */
+while|while
+condition|(
+literal|1
+condition|)
+block|{
+name|Tcl_CmdInfo
+name|cmdInfo
+decl_stmt|;
 name|sprintf
 argument_list|(
 name|localSlaveName
@@ -2857,6 +2842,25 @@ expr_stmt|;
 name|interpCounter
 operator|++
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|Tcl_GetCommandInfo
+argument_list|(
+name|interp
+argument_list|,
+name|localSlaveName
+argument_list|,
+operator|&
+name|cmdInfo
+argument_list|)
+operator|)
+condition|)
+block|{
+break|break;
+block|}
+block|}
 name|slavePath
 operator|=
 name|localSlaveName
@@ -3494,7 +3498,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/*      * Fix it up if there is no slave record. This can happen if someone      * uses "" as the source for an alias.      */
+comment|/*      * Slave record should be always present because it is created when      * the interpreter is created.      */
 if|if
 condition|(
 name|slavePtr
@@ -3506,85 +3510,9 @@ operator|)
 name|NULL
 condition|)
 block|{
-name|slavePtr
-operator|=
-operator|(
-name|Slave
-operator|*
-operator|)
-name|ckalloc
+name|panic
 argument_list|(
-operator|(
-name|unsigned
-operator|)
-sizeof|sizeof
-argument_list|(
-name|Slave
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|slavePtr
-operator|->
-name|masterInterp
-operator|=
-operator|(
-name|Tcl_Interp
-operator|*
-operator|)
-name|NULL
-expr_stmt|;
-name|slavePtr
-operator|->
-name|slaveEntry
-operator|=
-operator|(
-name|Tcl_HashEntry
-operator|*
-operator|)
-name|NULL
-expr_stmt|;
-name|slavePtr
-operator|->
-name|slaveInterp
-operator|=
-name|slaveInterp
-expr_stmt|;
-name|slavePtr
-operator|->
-name|interpCmd
-operator|=
-operator|(
-name|Tcl_Command
-operator|)
-name|NULL
-expr_stmt|;
-name|Tcl_InitHashTable
-argument_list|(
-operator|&
-operator|(
-name|slavePtr
-operator|->
-name|aliasTable
-operator|)
-argument_list|,
-name|TCL_STRING_KEYS
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|Tcl_SetAssocData
-argument_list|(
-name|slaveInterp
-argument_list|,
-literal|"tclSlaveRecord"
-argument_list|,
-name|SlaveRecordDeleteProc
-argument_list|,
-operator|(
-name|ClientData
-operator|)
-name|slavePtr
+literal|"AliasCreationHelper: could not find slave record"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4246,11 +4174,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|" aliases ?path?"
+literal|"?path?"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4526,11 +4454,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"alias slavePath slaveCmd masterPath masterCmd ?args ..?"
+literal|"slavePath slaveCmd masterPath masterCmd ?args ..?"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4686,11 +4614,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"alias slavePath slaveCmd masterPath masterCmd ?args ..?"
+literal|"slavePath slaveCmd masterPath masterCmd ?args ..?"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4869,11 +4797,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"exists ?path?"
+literal|"?path?"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4918,11 +4846,9 @@ condition|)
 block|{
 name|objPtr
 operator|=
-name|Tcl_NewStringObj
+name|Tcl_NewIntObj
 argument_list|(
-literal|"0"
-argument_list|,
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -4930,10 +4856,8 @@ else|else
 block|{
 name|objPtr
 operator|=
-name|Tcl_NewStringObj
+name|Tcl_NewIntObj
 argument_list|(
-literal|"1"
-argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
@@ -4943,10 +4867,8 @@ else|else
 block|{
 name|objPtr
 operator|=
-name|Tcl_NewStringObj
+name|Tcl_NewIntObj
 argument_list|(
-literal|"1"
-argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
@@ -5046,11 +4968,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|" eval path arg ?arg ...?"
+literal|"path arg ?arg ...?"
 argument_list|)
 expr_stmt|;
 return|return
@@ -5406,11 +5328,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"expose path hiddenCmdName ?cmdName?"
+literal|"path hiddenCmdName ?cmdName?"
 argument_list|)
 expr_stmt|;
 return|return
@@ -5664,11 +5586,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|" hide path cmdName ?hiddenCmdName?"
+literal|"path cmdName ?hiddenCmdName?"
 argument_list|)
 expr_stmt|;
 return|return
@@ -5932,11 +5854,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"hidden ?path?"
+literal|"?path?"
 argument_list|)
 expr_stmt|;
 return|return
@@ -6212,11 +6134,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"invokehidden path ?-global? cmd ?arg ..?"
+literal|"path ?-global? cmd ?arg ..?"
 argument_list|)
 expr_stmt|;
 return|return
@@ -6287,11 +6209,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"invokehidden path ?-global? cmd ?arg ..?"
+literal|"path ?-global? cmd ?arg ..?"
 argument_list|)
 expr_stmt|;
 return|return
@@ -6652,11 +6574,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"marktrusted path"
+literal|"path"
 argument_list|)
 expr_stmt|;
 return|return
@@ -6849,11 +6771,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"issafe ?path?"
+literal|"?path?"
 argument_list|)
 expr_stmt|;
 return|return
@@ -6934,23 +6856,14 @@ return|return
 name|TCL_ERROR
 return|;
 block|}
-block|}
-if|if
-condition|(
-name|masterPtr
-operator|->
-name|isSafe
-operator|==
-literal|0
-condition|)
-block|{
 name|objPtr
 operator|=
-name|Tcl_NewStringObj
+name|Tcl_NewIntObj
 argument_list|(
-literal|"0"
-argument_list|,
-literal|1
+name|Tcl_IsSafe
+argument_list|(
+name|slaveInterp
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -6958,11 +6871,12 @@ else|else
 block|{
 name|objPtr
 operator|=
-name|Tcl_NewStringObj
+name|Tcl_NewIntObj
 argument_list|(
-literal|"1"
-argument_list|,
-literal|1
+name|Tcl_IsSafe
+argument_list|(
+name|interp
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -7057,11 +6971,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"slaves ?path?"
+literal|"?path?"
 argument_list|)
 expr_stmt|;
 return|return
@@ -7291,11 +7205,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"share srcPath channelId destPath"
+literal|"srcPath channelId destPath"
 argument_list|)
 expr_stmt|;
 return|return
@@ -7560,11 +7474,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"target path alias"
+literal|"path alias"
 argument_list|)
 expr_stmt|;
 return|return
@@ -7671,11 +7585,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"transfer srcPath channelId destPath"
+literal|"srcPath channelId destPath"
 argument_list|)
 expr_stmt|;
 return|return
@@ -7997,6 +7911,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+comment|/*      * The slave record should always be present because it is created      * by Tcl_CreateInterp.      */
 if|if
 condition|(
 name|slavePtr
@@ -8008,86 +7923,9 @@ operator|)
 name|NULL
 condition|)
 block|{
-comment|/*          * It's possible that the interpreter still does not have a slave          * record. If so, create such a record now. This is only possible          * for interpreters that were created with Tcl_CreateInterp, not          * those created with Tcl_CreateSlave, so this interpreter does          * not have a master.          */
-name|slavePtr
-operator|=
-operator|(
-name|Slave
-operator|*
-operator|)
-name|ckalloc
+name|panic
 argument_list|(
-operator|(
-name|unsigned
-operator|)
-sizeof|sizeof
-argument_list|(
-name|Slave
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|slavePtr
-operator|->
-name|masterInterp
-operator|=
-operator|(
-name|Tcl_Interp
-operator|*
-operator|)
-name|NULL
-expr_stmt|;
-name|slavePtr
-operator|->
-name|slaveEntry
-operator|=
-operator|(
-name|Tcl_HashEntry
-operator|*
-operator|)
-name|NULL
-expr_stmt|;
-name|slavePtr
-operator|->
-name|slaveInterp
-operator|=
-name|slaveInterp
-expr_stmt|;
-name|slavePtr
-operator|->
-name|interpCmd
-operator|=
-operator|(
-name|Tcl_Command
-operator|)
-name|NULL
-expr_stmt|;
-name|Tcl_InitHashTable
-argument_list|(
-operator|&
-operator|(
-name|slavePtr
-operator|->
-name|aliasTable
-operator|)
-argument_list|,
-name|TCL_STRING_KEYS
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|Tcl_SetAssocData
-argument_list|(
-name|slaveInterp
-argument_list|,
-literal|"tclSlaveRecord"
-argument_list|,
-name|SlaveRecordDeleteProc
-argument_list|,
-operator|(
-name|ClientData
-operator|)
-name|slavePtr
+literal|"DescribeAlias: could not find slave record"
 argument_list|)
 expr_stmt|;
 block|}
@@ -9504,11 +9342,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"alias aliasName ?targetName? ?args..?"
+literal|"aliasName ?targetName? ?args..?"
 argument_list|)
 expr_stmt|;
 return|return
@@ -9860,11 +9698,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"eval arg ?arg ...?"
+literal|"arg ?arg ...?"
 argument_list|)
 expr_stmt|;
 return|return
@@ -10155,11 +9993,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"expose hiddenCmdName ?cmdName?"
+literal|"hiddenCmdName ?cmdName?"
 argument_list|)
 expr_stmt|;
 return|return
@@ -10339,11 +10177,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"hide cmdName ?hiddenCmdName?"
+literal|"cmdName ?hiddenCmdName?"
 argument_list|)
 expr_stmt|;
 return|return
@@ -10531,11 +10369,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"hidden"
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -10695,14 +10533,9 @@ index|[]
 decl_stmt|;
 comment|/* Vector of arguments. */
 block|{
-name|Master
-modifier|*
-name|masterPtr
-decl_stmt|;
-comment|/* Master record for slave interp. */
 name|Tcl_Obj
 modifier|*
-name|namePtr
+name|resultPtr
 decl_stmt|;
 comment|/* Local object pointer. */
 if|if
@@ -10716,85 +10549,32 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"issafe"
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
 name|TCL_ERROR
 return|;
 block|}
-name|masterPtr
+name|resultPtr
 operator|=
-operator|(
-name|Master
-operator|*
-operator|)
-name|Tcl_GetAssocData
+name|Tcl_NewIntObj
+argument_list|(
+name|Tcl_IsSafe
 argument_list|(
 name|slaveInterp
-argument_list|,
-literal|"tclMasterRecord"
-argument_list|,
-name|NULL
+argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|masterPtr
-operator|==
-operator|(
-name|Master
-operator|*
-operator|)
-name|NULL
-condition|)
-block|{
-name|panic
-argument_list|(
-literal|"SlaveObjectCmd: could not find master record"
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|masterPtr
-operator|->
-name|isSafe
-operator|==
-literal|1
-condition|)
-block|{
-name|namePtr
-operator|=
-name|Tcl_NewStringObj
-argument_list|(
-literal|"1"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|namePtr
-operator|=
-name|Tcl_NewStringObj
-argument_list|(
-literal|"0"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|Tcl_SetObjResult
 argument_list|(
 name|interp
 argument_list|,
-name|namePtr
+name|resultPtr
 argument_list|)
 expr_stmt|;
 return|return
@@ -10893,11 +10673,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"invokehidden ?-global? cmd ?arg ..?"
+literal|"?-global? cmd ?arg ..?"
 argument_list|)
 expr_stmt|;
 return|return
@@ -10968,11 +10748,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"invokehidden path ?-global? cmd ?arg ..?"
+literal|"path ?-global? cmd ?arg ..?"
 argument_list|)
 expr_stmt|;
 return|return
@@ -11299,11 +11079,11 @@ name|Tcl_WrongNumArgs
 argument_list|(
 name|interp
 argument_list|,
-literal|1
+literal|2
 argument_list|,
 name|objv
 argument_list|,
-literal|"marktrusted"
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -13513,6 +13293,11 @@ modifier|*
 name|masterPtr
 decl_stmt|;
 comment|/* Its Master record. */
+name|Slave
+modifier|*
+name|slavePtr
+decl_stmt|;
+comment|/* And its slave record. */
 name|masterPtr
 operator|=
 operator|(
@@ -13529,12 +13314,6 @@ argument_list|(
 name|Master
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|masterPtr
-operator|->
-name|isSafe
-operator|=
-literal|0
 expr_stmt|;
 name|Tcl_InitHashTable
 argument_list|(
@@ -13577,6 +13356,87 @@ operator|)
 name|masterPtr
 argument_list|)
 expr_stmt|;
+name|slavePtr
+operator|=
+operator|(
+name|Slave
+operator|*
+operator|)
+name|ckalloc
+argument_list|(
+operator|(
+name|unsigned
+operator|)
+sizeof|sizeof
+argument_list|(
+name|Slave
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|slavePtr
+operator|->
+name|masterInterp
+operator|=
+operator|(
+name|Tcl_Interp
+operator|*
+operator|)
+name|NULL
+expr_stmt|;
+name|slavePtr
+operator|->
+name|slaveEntry
+operator|=
+operator|(
+name|Tcl_HashEntry
+operator|*
+operator|)
+name|NULL
+expr_stmt|;
+name|slavePtr
+operator|->
+name|slaveInterp
+operator|=
+name|interp
+expr_stmt|;
+name|slavePtr
+operator|->
+name|interpCmd
+operator|=
+operator|(
+name|Tcl_Command
+operator|)
+name|NULL
+expr_stmt|;
+name|Tcl_InitHashTable
+argument_list|(
+operator|&
+operator|(
+name|slavePtr
+operator|->
+name|aliasTable
+operator|)
+argument_list|,
+name|TCL_STRING_KEYS
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|Tcl_SetAssocData
+argument_list|(
+name|interp
+argument_list|,
+literal|"tclSlaveRecord"
+argument_list|,
+name|SlaveRecordDeleteProc
+argument_list|,
+operator|(
+name|ClientData
+operator|)
+name|slavePtr
+argument_list|)
+expr_stmt|;
 return|return
 name|TCL_OK
 return|;
@@ -13602,11 +13462,10 @@ name|interp
 decl_stmt|;
 comment|/* Is this interpreter "safe" ? */
 block|{
-name|Master
+name|Interp
 modifier|*
-name|masterPtr
+name|iPtr
 decl_stmt|;
-comment|/* Its master record. */
 if|if
 condition|(
 name|interp
@@ -13622,42 +13481,28 @@ return|return
 literal|0
 return|;
 block|}
-name|masterPtr
+name|iPtr
 operator|=
 operator|(
-name|Master
+name|Interp
 operator|*
 operator|)
-name|Tcl_GetAssocData
-argument_list|(
 name|interp
-argument_list|,
-literal|"tclMasterRecord"
-argument_list|,
-name|NULL
-argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|masterPtr
-operator|==
-operator|(
-name|Master
-operator|*
-operator|)
-name|NULL
-condition|)
-block|{
-name|panic
-argument_list|(
-literal|"Tcl_IsSafe: could not find master record"
-argument_list|)
-expr_stmt|;
-block|}
 return|return
-name|masterPtr
+operator|(
+operator|(
+name|iPtr
 operator|->
-name|isSafe
+name|flags
+operator|)
+operator|&
+name|SAFE_INTERP
+operator|)
+condition|?
+literal|1
+else|:
+literal|0
 return|;
 block|}
 end_function

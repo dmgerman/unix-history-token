@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclLoad.c --  *  *	This file provides the generic portion (those that are the same  *	on all platforms) of Tcl's dynamic loading facilities.  *  * Copyright (c) 1995 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclLoad.c 1.16 97/05/14 13:23:37  */
+comment|/*   * tclLoad.c --  *  *	This file provides the generic portion (those that are the same  *	on all platforms) of Tcl's dynamic loading facilities.  *  * Copyright (c) 1995 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclLoad.c 1.17 97/07/24 20:05:04  */
 end_comment
 
 begin_include
@@ -1405,6 +1405,7 @@ operator|)
 condition|)
 block|{
 comment|/* 	 * An error occurred, so transfer error information from the 	 * destination interpreter back to our interpreter.  Must clear 	 * interp's result before calling Tcl_AddErrorInfo, since 	 * Tcl_AddErrorInfo will store the interp's result in errorInfo 	 * before appending target's $errorInfo;  we've already got 	 * everything we need in target's $errorInfo. 	 */
+comment|/*          * It is (abusively) assumed that errorInfo and errorCode vars exists.          * we changed SetVar2 to accept NULL values to avoid crashes. --dl 	 */
 name|Tcl_ResetResult
 argument_list|(
 name|interp

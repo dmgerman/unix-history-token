@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * tclEvent.c --  *  *	This file implements some general event related interfaces including  *	background errors, exit handlers, and the "vwait" and "update"  *	command procedures.   *  * Copyright (c) 1990-1994 The Regents of the University of California.  * Copyright (c) 1994-1997 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclEvent.c 1.152 97/05/21 07:06:19  */
+comment|/*   * tclEvent.c --  *  *	This file implements some general event related interfaces including  *	background errors, exit handlers, and the "vwait" and "update"  *	command procedures.   *  * Copyright (c) 1990-1994 The Regents of the University of California.  * Copyright (c) 1994-1997 Sun Microsystems, Inc.  *  * See the file "license.terms" for information on usage and redistribution  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.  *  * SCCS: @(#) tclEvent.c 1.153 97/08/11 20:22:31  */
 end_comment
 
 begin_include
@@ -1534,6 +1534,7 @@ name|ExitHandler
 modifier|*
 name|exitPtr
 decl_stmt|;
+comment|/*      * Invoke exit handler first.      */
 name|tclInExit
 operator|=
 literal|1
@@ -1582,8 +1583,11 @@ name|exitPtr
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Uninitialize everything associated with the compile and execute      * environment. This *must* be done at the latest possible time.      */
+comment|/*      * Now finalize the Tcl execution environment.  Note that this must be done      * after the exit handlers, because there are order dependencies.      */
 name|TclFinalizeCompExecEnv
+argument_list|()
+expr_stmt|;
+name|TclFinalizeEnvironment
 argument_list|()
 expr_stmt|;
 name|firstExitPtr
