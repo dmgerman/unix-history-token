@@ -15,7 +15,7 @@ operator|)
 name|permiss
 operator|.
 name|c
-literal|1.1
+literal|1.2
 argument_list|)
 expr_stmt|;
 end_expr_stmt
