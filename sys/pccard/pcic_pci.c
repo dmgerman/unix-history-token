@@ -282,19 +282,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_typedef
-typedef|typedef
-name|void
-function_decl|(
-modifier|*
-name|init_t
-function_decl|)
-parameter_list|(
-name|device_t
-parameter_list|)
-function_decl|;
-end_typedef
-
 begin_function_decl
 specifier|static
 name|void
