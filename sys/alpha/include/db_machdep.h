@@ -26,6 +26,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_simos.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -40,6 +46,12 @@ include|#
 directive|include
 file|<machine/frame.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|DB_NO_AOUT
+end_define
 
 begin_typedef
 typedef|typedef
@@ -98,6 +110,28 @@ parameter_list|)
 value|((db_addr_t)(regs)->tf_regs[FRAME_PC])
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SIMOS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|BKPT_INST
+value|0x000000aa
+end_define
+
+begin_comment
+comment|/* gentrap instruction */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -108,6 +142,11 @@ end_define
 begin_comment
 comment|/* breakpoint instruction */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -130,24 +169,13 @@ parameter_list|)
 value|(BKPT_INST)
 end_define
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
 begin_define
 define|#
 directive|define
 name|FIXUP_PC_AFTER_BREAK
 define|\
-value|(ddb_regs.tf_regs[FRAME_PC] -= BKPT_SIZE)
+value|(ddb_regs.tf_regs[FRAME_PC] -= BKPT_SIZE);
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -160,6 +188,29 @@ begin_comment
 comment|/* no hardware support */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SIMOS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|IS_BREAKPOINT_TRAP
+parameter_list|(
+name|type
+parameter_list|,
+name|code
+parameter_list|)
+value|((type) == ALPHA_KENTRY_IF&& \ 					 (code) == ALPHA_IF_CODE_GENTRAP)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -171,6 +222,11 @@ name|code
 parameter_list|)
 value|((type) == ALPHA_KENTRY_IF&& \ 					 (code) == ALPHA_IF_CODE_BPT)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -473,12 +529,6 @@ end_define
 begin_comment
 comment|/*  * We use Elf64 symbols in DDB.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|DB_ELF_SYMBOLS
-end_define
 
 begin_define
 define|#
