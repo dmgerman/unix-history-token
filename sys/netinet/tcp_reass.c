@@ -8402,15 +8402,6 @@ goto|goto
 name|drop
 goto|;
 comment|/* IPv6 anycast check is done at tcp6_input() */
-if|if
-condition|(
-name|tp
-condition|)
-name|INP_UNLOCK
-argument_list|(
-name|inp
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Perform bandwidth limiting. 	 */
 if|if
 condition|(
@@ -8467,6 +8458,15 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|tp
+condition|)
+name|INP_UNLOCK
+argument_list|(
+name|inp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|thflags
