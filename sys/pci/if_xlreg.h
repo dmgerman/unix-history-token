@@ -3084,16 +3084,6 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/*  * XXX: The driver still tries to sleep with locks held, so disable  *      locking for the time being.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
 begin_define
 define|#
 directive|define
@@ -3123,46 +3113,6 @@ name|_sc
 parameter_list|)
 value|mtx_assert(&(_sc)->xl_mtx, MA_OWNED)
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|XL_LOCK
-parameter_list|(
-name|x
-parameter_list|)
-value|do { } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|XL_UNLOCK
-parameter_list|(
-name|x
-parameter_list|)
-value|do { } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|XL_LOCK_ASSERT
-parameter_list|(
-name|x
-parameter_list|)
-value|do { } while (0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
