@@ -131,6 +131,13 @@ name|DITEM_RESTORE
 value|(1<< 19)
 end_define
 
+begin_define
+define|#
+directive|define
+name|DITEM_CONTINUE
+value|(1<< 20)
+end_define
+
 begin_comment
 comment|/* negative offsets for buttons in item lists, if specified */
 end_comment
