@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_get.c	5.1 (Berkeley) %G%"
+literal|"@(#)rec_get.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -88,7 +88,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../btree/btree.h"
+file|"recno.h"
 end_include
 
 begin_comment
@@ -112,22 +112,18 @@ name|DB
 modifier|*
 name|dbp
 decl_stmt|;
+specifier|const
 name|DBT
 modifier|*
 name|key
-decl_stmt|,
-decl|*
+decl_stmt|;
+name|DBT
+modifier|*
 name|data
 decl_stmt|;
-end_function
-
-begin_decl_stmt
 name|u_int
 name|flags
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|BTREE
 modifier|*
@@ -224,8 +220,7 @@ name|t
 argument_list|,
 name|nrec
 argument_list|,
-operator|&
-name|exact
+name|SEARCH
 argument_list|)
 operator|)
 operator|==
@@ -291,7 +286,7 @@ name|status
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * __REC_FPIPE -- Get fixed length records from a pipe.  *  * Parameters:  *	t:	tree  *	cnt:	records to read  *  * Returns:  *	RET_ERROR, RET_SUCCESS  */
@@ -1025,13 +1020,13 @@ decl_stmt|;
 name|DBT
 name|data
 decl_stmt|;
-name|recno_t
-name|nrec
-decl_stmt|;
 name|caddr_t
 name|sp
 decl_stmt|,
 name|ep
+decl_stmt|;
+name|recno_t
+name|nrec
 decl_stmt|;
 name|int
 name|bval
