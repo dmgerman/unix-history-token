@@ -903,7 +903,7 @@ literal|'\0'
 expr_stmt|;
 name|optind
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 while|while
 condition|(

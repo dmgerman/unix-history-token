@@ -17429,6 +17429,11 @@ operator|!=
 name|NULL
 condition|)
 do|;
+name|free
+argument_list|(
+name|branchversion
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|fclose
