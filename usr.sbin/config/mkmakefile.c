@@ -335,20 +335,20 @@ index|[]
 init|=
 block|{
 block|{
-literal|24
-block|,
 literal|8
 block|,
-literal|1024
+literal|2
+block|,
+literal|512
 block|}
 block|,
 comment|/* MACHINE_VAX */
 block|{
-literal|4
+literal|8
 block|,
 literal|2
 block|,
-literal|128
+literal|512
 block|}
 block|,
 comment|/* MACHINE_TAHOE */
@@ -357,7 +357,7 @@ literal|8
 block|,
 literal|2
 block|,
-literal|64
+literal|512
 block|}
 block|,
 comment|/* MACHINE_HP300 */
@@ -366,7 +366,7 @@ literal|8
 block|,
 literal|2
 block|,
-literal|64
+literal|512
 block|}
 block|,
 comment|/* MACHINE_I386 */
@@ -375,7 +375,7 @@ literal|8
 block|,
 literal|2
 block|,
-literal|64
+literal|512
 block|}
 block|,
 comment|/* MACHINE_MIPS */
@@ -384,7 +384,7 @@ literal|8
 block|,
 literal|2
 block|,
-literal|64
+literal|512
 block|}
 block|,
 comment|/* MACHINE_PMAX */
@@ -393,7 +393,7 @@ literal|8
 block|,
 literal|2
 block|,
-literal|64
+literal|512
 block|}
 block|,
 comment|/* MACHINE_LUNA68K */
@@ -402,7 +402,7 @@ literal|8
 block|,
 literal|2
 block|,
-literal|64
+literal|512
 block|}
 block|,
 comment|/* MACHINE_NEWS3400 */
