@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	1.12	87/02/26	*/
+comment|/*	machdep.c	1.13	87/03/26	*/
 end_comment
 
 begin_include
@@ -247,6 +247,31 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|"yc.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|NCY
+operator|>
+literal|0
+end_if
+
+begin_include
+include|#
+directive|include
+file|"../tahoevba/cyreg.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Machine-dependent startup code  */
 end_comment
@@ -424,6 +449,25 @@ name|lim
 parameter_list|)
 define|\
 value|(name) = (type *)v; v = (caddr_t)((lim) = ((name)+(num)))
+if|#
+directive|if
+name|NCY
+operator|>
+literal|0
+comment|/* 	 * Allocate raw buffers for tapemaster controllers 	 * first, as they need buffers in the first megabyte. 	 */
+name|valloc
+argument_list|(
+name|cybuf
+argument_list|,
+name|char
+argument_list|,
+name|NCY
+operator|*
+name|CYMAXIO
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|valloclim
 argument_list|(
 name|inode
@@ -2134,42 +2178,6 @@ name|int
 name|devtype
 decl_stmt|;
 comment|/* r10 == major of root dev */
-ifdef|#
-directive|ifdef
-name|lint
-name|howto
-operator|=
-literal|0
-expr_stmt|;
-name|devtype
-operator|=
-literal|0
-expr_stmt|;
-name|dummy
-operator|=
-literal|0
-expr_stmt|;
-name|dummy
-operator|=
-name|dummy
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"howto %d, devtype %d\n"
-argument_list|,
-name|arghowto
-argument_list|,
-name|devtype
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-operator|(
-name|void
-operator|)
-name|spl1
-argument_list|()
-expr_stmt|;
 name|howto
 operator|=
 name|arghowto
@@ -2196,11 +2204,25 @@ operator|.
 name|b_forw
 condition|)
 block|{
+specifier|register
+name|struct
+name|buf
+modifier|*
+name|bp
+decl_stmt|;
+name|int
+name|iter
+decl_stmt|,
+name|nbusy
+decl_stmt|;
 name|waittime
 operator|=
 literal|0
 expr_stmt|;
-name|update
+operator|(
+name|void
+operator|)
+name|splnet
 argument_list|()
 expr_stmt|;
 name|printf
@@ -2214,23 +2236,8 @@ argument_list|(
 name|NODEV
 argument_list|)
 expr_stmt|;
-block|{
-specifier|register
-name|struct
-name|buf
-modifier|*
-name|bp
-decl_stmt|;
-name|int
-name|iter
-decl_stmt|,
-name|nbusy
-decl_stmt|,
-name|oldnbusy
-decl_stmt|;
-name|oldnbusy
-operator|=
-literal|0
+name|update
+argument_list|()
 expr_stmt|;
 for|for
 control|(
@@ -2240,17 +2247,12 @@ literal|0
 init|;
 name|iter
 operator|<
-literal|1000
+literal|20
 condition|;
 name|iter
 operator|++
 control|)
 block|{
-name|DELAY
-argument_list|(
-literal|1000
-argument_list|)
-expr_stmt|;
 name|nbusy
 operator|=
 literal|0
@@ -2297,13 +2299,6 @@ operator|==
 literal|0
 condition|)
 break|break;
-if|if
-condition|(
-name|nbusy
-operator|!=
-name|oldnbusy
-condition|)
-block|{
 name|printf
 argument_list|(
 literal|"%d "
@@ -2311,26 +2306,24 @@ argument_list|,
 name|nbusy
 argument_list|)
 expr_stmt|;
-name|oldnbusy
-operator|=
-name|nbusy
+name|DELAY
+argument_list|(
+literal|40000
+operator|*
+name|iter
+argument_list|)
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
-name|iter
-operator|>=
-literal|1000
-operator|&&
 name|nbusy
 condition|)
 name|printf
 argument_list|(
-literal|"- i/o timeout, giving up..."
+literal|"giving up\n"
 argument_list|)
 expr_stmt|;
-block|}
+else|else
 name|printf
 argument_list|(
 literal|"done\n"
@@ -2405,7 +2398,7 @@ block|{
 name|doadump
 argument_list|()
 expr_stmt|;
-comment|/* TXDB_BOOT's itsself */
+comment|/* CPBOOT's itsself */
 comment|/*NOTREACHED*/
 block|}
 name|tocons
@@ -2414,6 +2407,28 @@ name|CPBOOT
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|lint
+name|dummy
+operator|=
+literal|0
+expr_stmt|;
+name|dummy
+operator|=
+name|dummy
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"howto %d, devtype %d\n"
+argument_list|,
+name|arghowto
+argument_list|,
+name|devtype
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 init|;
