@@ -79,6 +79,12 @@ begin_comment
 comment|/* for backward compatibility */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ACPI_DISASSEMBLER
+end_define
+
 begin_endif
 endif|#
 directive|endif
