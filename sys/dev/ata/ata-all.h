@@ -1168,6 +1168,10 @@ define|#
 directive|define
 name|ATA_D_MEDIA_CHANGED
 value|0x0004
+define|#
+directive|define
+name|ATA_D_ENC_PRESENT
+value|0x0008
 name|int
 name|mode
 decl_stmt|;
@@ -1386,7 +1390,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* disk bay/drawer related */
+comment|/* disk bay/enclosure related */
 end_comment
 
 begin_define
@@ -1414,6 +1418,13 @@ begin_define
 define|#
 directive|define
 name|ATA_LED_ORANGE
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATA_LED_MASK
 value|0x03
 end_define
 
@@ -1537,13 +1548,24 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|ata_drawerleds
+name|ata_enclosure_leds
 parameter_list|(
 name|struct
 name|ata_device
 modifier|*
 parameter_list|,
 name|u_int8_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ata_enclosure_print
+parameter_list|(
+name|struct
+name|ata_device
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

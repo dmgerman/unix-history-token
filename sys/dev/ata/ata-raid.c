@@ -1204,6 +1204,26 @@ index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"         "
+argument_list|)
+expr_stmt|;
+name|ata_enclosure_print
+argument_list|(
+name|AD_SOFTC
+argument_list|(
+name|rdp
+operator|->
+name|disks
+index|[
+name|disk
+index|]
+argument_list|)
+operator|->
+name|device
+argument_list|)
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -2165,7 +2185,7 @@ operator|&=
 operator|~
 name|AD_F_RAID_SUBDISK
 expr_stmt|;
-name|ata_drawerleds
+name|ata_enclosure_leds
 argument_list|(
 name|rdp
 operator|->
@@ -4865,7 +4885,7 @@ name|flags
 operator|&
 name|AR_DF_ONLINE
 condition|)
-name|ata_drawerleds
+name|ata_enclosure_leds
 argument_list|(
 name|rdp
 operator|->
@@ -4880,7 +4900,7 @@ name|ATA_LED_GREEN
 argument_list|)
 expr_stmt|;
 else|else
-name|ata_drawerleds
+name|ata_enclosure_leds
 argument_list|(
 name|rdp
 operator|->
@@ -5082,7 +5102,7 @@ endif|#
 directive|endif
 continue|continue;
 block|}
-name|ata_drawerleds
+name|ata_enclosure_leds
 argument_list|(
 name|rdp
 operator|->
