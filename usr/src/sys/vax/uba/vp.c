@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vp.c	6.4	84/08/29	*/
+comment|/*	vp.c	6.5	85/04/10	*/
 end_comment
 
 begin_include
@@ -1488,7 +1488,11 @@ name|sc
 operator|->
 name|sc_state
 expr_stmt|;
-break|break;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 case|case
 name|VSETSTATE
 case|:
