@@ -1938,6 +1938,7 @@ name|lock
 operator|->
 name|lo_flags
 operator|&=
+operator|~
 name|LO_INITIALIZED
 expr_stmt|;
 name|mtx_unlock
