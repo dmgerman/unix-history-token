@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)order.c	1.3 (Berkeley) %G%"
+literal|"@(#)order.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -640,9 +640,34 @@ name|in
 operator|.
 name|type
 operator|==
+name|FLOAT
+operator|||
+name|p
+operator|->
+name|in
+operator|.
+name|type
+operator|==
 name|DOUBLE
+operator|||
+name|ISPTR
+argument_list|(
+name|p
+operator|->
+name|in
+operator|.
+name|type
+argument_list|)
+operator|||
+name|ISARY
+argument_list|(
+name|p
+operator|->
+name|in
+operator|.
+name|type
+argument_list|)
 operator|)
-condition|)
 name|p
 operator|->
 name|in
@@ -650,7 +675,7 @@ operator|.
 name|su
 operator|=
 literal|0
-expr_stmt|;
+empty_stmt|;
 return|return;
 block|}
 elseif|else
@@ -1112,38 +1137,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return;
-case|case
-name|SCONV
-case|:
-name|p
-operator|->
-name|in
-operator|.
-name|su
-operator|=
-name|max
-argument_list|(
-name|sul
-argument_list|,
-name|szty
-argument_list|(
-name|p
-operator|->
-name|in
-operator|.
-name|right
-operator|->
-name|in
-operator|.
-name|type
-argument_list|)
-operator|+
-name|sur
-argument_list|)
-operator|+
-literal|2
-expr_stmt|;
-return|return;
 block|}
 comment|/* binary op, computed by left, then right, then do op */
 name|p
@@ -1362,10 +1355,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_comment
-comment|/* VARARGS1 */
-end_comment
-
 begin_expr_stmt
 name|offstar
 argument_list|(
@@ -1496,10 +1485,9 @@ operator|.
 name|left
 argument_list|)
 operator|!=
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
+name|SZINT
+operator|/
+name|SZCHAR
 operator|)
 condition|)
 block|{
@@ -1566,10 +1554,9 @@ operator|.
 name|left
 argument_list|)
 operator|!=
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
+name|SZINT
+operator|/
+name|SZCHAR
 operator|)
 condition|)
 block|{
@@ -1642,10 +1629,9 @@ operator|.
 name|left
 argument_list|)
 operator|!=
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
+name|SZINT
+operator|/
+name|SZCHAR
 condition|)
 block|{
 name|order
@@ -1687,10 +1673,9 @@ operator|.
 name|right
 argument_list|)
 operator|!=
-sizeof|sizeof
-argument_list|(
-name|int
-argument_list|)
+name|SZINT
+operator|/
+name|SZCHAR
 condition|)
 block|{
 name|order
@@ -1805,10 +1790,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_comment
-comment|/* VARARGS1 */
-end_comment
-
 begin_expr_stmt
 name|setincr
 argument_list|(
@@ -1846,6 +1827,10 @@ block|{
 name|offstar
 argument_list|(
 name|p
+operator|->
+name|in
+operator|.
+name|left
 argument_list|)
 expr_stmt|;
 return|return
@@ -1861,10 +1846,6 @@ operator|)
 return|;
 block|}
 end_block
-
-begin_comment
-comment|/* VARARGS1 */
-end_comment
 
 begin_expr_stmt
 name|setbin
@@ -2243,10 +2224,6 @@ return|;
 block|}
 end_block
 
-begin_comment
-comment|/* VARARGS1 */
-end_comment
-
 begin_expr_stmt
 name|setasg
 argument_list|(
@@ -2484,10 +2461,6 @@ return|;
 block|}
 end_block
 
-begin_comment
-comment|/* VARARGS1 */
-end_comment
-
 begin_expr_stmt
 name|setasop
 argument_list|(
@@ -2718,6 +2691,7 @@ argument_list|(
 literal|"illegal setasop"
 argument_list|)
 expr_stmt|;
+comment|/*NOTREACHED*/
 block|}
 end_block
 
