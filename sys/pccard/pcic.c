@@ -2878,6 +2878,8 @@ block|{
 name|unsigned
 name|char
 name|c
+decl_stmt|,
+name|c2
 decl_stmt|;
 name|unsigned
 name|char
@@ -3217,20 +3219,7 @@ operator|&
 name|PCIC_RICOH_POWER
 condition|)
 block|{
-switch|switch
-condition|(
-name|sp
-operator|->
-name|controller
-condition|)
-block|{
-case|case
-name|PCIC_RF5C396
-case|:
-case|case
-name|PCIC_RF5C296
-case|:
-comment|/* 				 * The ISA bridge have the 5V/3.3V in register 				 * 1, bit 7. 				 */
+comment|/* 			 * The ISA bridge have the 5V/3.3V in register 			 * 1, bit 7.  However, 3.3V cards can only be 			 * detected if GPI_EN is disabled. 			 */
 name|c
 operator|=
 name|sp
@@ -3242,12 +3231,29 @@ argument_list|,
 name|PCIC_STATUS
 argument_list|)
 expr_stmt|;
+name|c2
+operator|=
+name|sp
+operator|->
+name|getb
+argument_list|(
+name|sp
+argument_list|,
+name|PCIC_CDGC
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
 name|c
 operator|&
 name|PCIC_RICOH_5VCARD
+operator|)
+operator|&&
+operator|(
+name|c2
+operator|&
+name|PCIC_GPI_EN
 operator|)
 operator|==
 literal|0
@@ -3269,10 +3275,8 @@ name|vcc
 operator|=
 literal|50
 expr_stmt|;
-break|break;
 block|}
-block|}
-comment|/* Other bridges here */
+comment|/* Other power schemes here */
 if|if
 condition|(
 name|bootverbose
