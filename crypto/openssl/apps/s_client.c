@@ -4255,6 +4255,12 @@ argument_list|(
 name|peer
 argument_list|)
 expr_stmt|;
+comment|/* flush, or debugging output gets mixed with http response */
+name|BIO_flush
+argument_list|(
+name|bio
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

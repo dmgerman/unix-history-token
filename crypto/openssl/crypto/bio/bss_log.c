@@ -99,6 +99,12 @@ name|defined
 argument_list|(
 name|MSDOS
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|VXWORKS
+argument_list|)
 end_elif
 
 begin_comment

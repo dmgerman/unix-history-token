@@ -148,6 +148,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -255,6 +257,8 @@ argument_list|,
 name|PEM_STRING_EVP_PKEY
 argument_list|,
 name|fp
+argument_list|,
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,

@@ -1523,7 +1523,9 @@ name|buf
 argument_list|,
 name|objstr
 argument_list|,
-literal|8
+name|enc
+operator|->
+name|iv_len
 argument_list|,
 operator|(
 name|char
@@ -1611,7 +1613,7 @@ name|x509
 operator|!=
 name|NULL
 operator|)
-operator|||
+operator|&&
 operator|(
 name|PEM_write_bio_X509
 argument_list|(

@@ -339,6 +339,12 @@ name|defined
 argument_list|(
 name|__CYGWIN32__
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_DARWIN
+argument_list|)
 name|struct
 name|tm
 name|data

@@ -126,6 +126,46 @@ define|#
 directive|define
 name|X509_CERT_FILE_EVP
 value|"SSL_CERT_FILE"
+comment|/* size of string represenations */
+define|#
+directive|define
+name|DECIMAL_SIZE
+parameter_list|(
+name|type
+parameter_list|)
+value|((sizeof(type)*8+2)/3+1)
+define|#
+directive|define
+name|HEX_SIZE
+parameter_list|(
+name|type
+parameter_list|)
+value|((sizeof(type)*2)
+comment|/* die if we have to */
+name|void
+name|OpenSSLDie
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|assertion
+parameter_list|)
+function_decl|;
+define|#
+directive|define
+name|die
+parameter_list|(
+name|e
+parameter_list|)
+value|((e) ? (void)0 : OpenSSLDie(__FILE__, __LINE__, #e))
 ifdef|#
 directive|ifdef
 name|__cplusplus

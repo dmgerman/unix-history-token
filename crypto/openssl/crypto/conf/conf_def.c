@@ -65,6 +65,12 @@ directive|include
 file|<openssl/err.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"cryptlib.h"
+end_include
+
 begin_function_decl
 specifier|static
 name|char
@@ -653,12 +659,6 @@ define|#
 directive|define
 name|BUFSIZE
 value|512
-name|char
-name|btmp
-index|[
-literal|16
-index|]
-decl_stmt|;
 name|int
 name|bufnum
 init|=
@@ -693,6 +693,17 @@ name|long
 name|eline
 init|=
 literal|0
+decl_stmt|;
+name|char
+name|btmp
+index|[
+name|DECIMAL_SIZE
+argument_list|(
+name|eline
+argument_list|)
+operator|+
+literal|1
+index|]
 decl_stmt|;
 name|CONF_VALUE
 modifier|*

@@ -644,14 +644,21 @@ begin_define
 define|#
 directive|define
 name|SSL_STRONG_MASK
-value|0x0000007cL
+value|0x000000fcL
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSL_STRONG_NONE
+value|0x00000004L
 end_define
 
 begin_define
 define|#
 directive|define
 name|SSL_EXP40
-value|0x00000004L
+value|0x00000008L
 end_define
 
 begin_define
@@ -665,7 +672,7 @@ begin_define
 define|#
 directive|define
 name|SSL_EXP56
-value|0x00000008L
+value|0x00000010L
 end_define
 
 begin_define
@@ -679,25 +686,25 @@ begin_define
 define|#
 directive|define
 name|SSL_LOW
-value|0x00000010L
-end_define
-
-begin_define
-define|#
-directive|define
-name|SSL_MEDIUM
 value|0x00000020L
 end_define
 
 begin_define
 define|#
 directive|define
-name|SSL_HIGH
+name|SSL_MEDIUM
 value|0x00000040L
 end_define
 
+begin_define
+define|#
+directive|define
+name|SSL_HIGH
+value|0x00000080L
+end_define
+
 begin_comment
-comment|/* we have used 0000007f - 25 bits left to go */
+comment|/* we have used 000000ff - 24 bits left to go */
 end_comment
 
 begin_comment

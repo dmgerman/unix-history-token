@@ -51,7 +51,7 @@ init|=
 block|{
 name|NID_md4
 block|,
-literal|0
+name|NID_md4WithRSAEncryption
 block|,
 name|MD4_DIGEST_LENGTH
 block|,

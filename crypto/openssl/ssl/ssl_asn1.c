@@ -43,6 +43,12 @@ directive|include
 file|"ssl_locl.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"cryptlib.h"
+end_include
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -1479,6 +1485,18 @@ operator|=
 name|os
 operator|.
 name|length
+expr_stmt|;
+name|die
+argument_list|(
+name|os
+operator|.
+name|length
+operator|<=
+sizeof|sizeof
+name|ret
+operator|->
+name|session_id
+argument_list|)
 expr_stmt|;
 name|memcpy
 argument_list|(

@@ -2371,6 +2371,15 @@ argument_list|,
 literal|256
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|*
+name|s
+condition|)
+return|return
+literal|1
+return|;
 name|s
 operator|++
 expr_stmt|;
