@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 The Regents of the University of California.  * Copyright (c) 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_vfsops.c	8.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1994 The Regents of the University of California.  * Copyright (c) 1994 Jan-Simon Pendry.  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_vfsops.c	8.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -920,6 +920,9 @@ name|int
 name|error
 decl_stmt|;
 name|int
+name|freeing
+decl_stmt|;
+name|int
 name|flags
 init|=
 literal|0
@@ -1018,6 +1021,79 @@ operator|(
 name|error
 operator|)
 return|;
+comment|/* 	 * Keep flushing vnodes from the mount list. 	 * This is needed because of the un_pvp held 	 * reference to the parent vnode. 	 * If more vnodes have been freed on a given pass, 	 * the try again.  The loop will iterate at most 	 * (d) times, where (d) is the maximum tree depth 	 * in the filesystem. 	 */
+for|for
+control|(
+name|freeing
+operator|=
+literal|0
+init|;
+name|vflush
+argument_list|(
+name|mp
+argument_list|,
+name|um_rootvp
+argument_list|,
+name|flags
+argument_list|)
+operator|!=
+literal|0
+condition|;
+control|)
+block|{
+name|struct
+name|vnode
+modifier|*
+name|vp
+decl_stmt|;
+name|int
+name|n
+decl_stmt|;
+comment|/* count #vnodes held on mount list */
+for|for
+control|(
+name|n
+operator|=
+literal|0
+operator|,
+name|vp
+operator|=
+name|mp
+operator|->
+name|mnt_vnodelist
+operator|.
+name|lh_first
+init|;
+name|vp
+operator|!=
+name|NULLVP
+condition|;
+name|vp
+operator|=
+name|vp
+operator|->
+name|v_mntvnodes
+operator|.
+name|le_next
+control|)
+name|n
+operator|++
+expr_stmt|;
+comment|/* if this is unchanged then stop */
+if|if
+condition|(
+name|n
+operator|==
+name|freeing
+condition|)
+break|break;
+comment|/* otherwise try once more time */
+name|freeing
+operator|=
+name|n
+expr_stmt|;
+block|}
+comment|/* At this point the root vnode should have a single reference */
 if|if
 condition|(
 name|um_rootvp
@@ -1038,37 +1114,12 @@ name|EBUSY
 operator|)
 return|;
 block|}
-if|if
-condition|(
-name|error
-operator|=
-name|vflush
-argument_list|(
-name|mp
-argument_list|,
-name|um_rootvp
-argument_list|,
-name|flags
-argument_list|)
-condition|)
-block|{
-name|vput
-argument_list|(
-name|um_rootvp
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
-block|}
 ifdef|#
 directive|ifdef
 name|UNION_DIAGNOSTIC
 name|vprint
 argument_list|(
-literal|"alias root of lower"
+literal|"union root"
 argument_list|,
 name|um_rootvp
 argument_list|)
