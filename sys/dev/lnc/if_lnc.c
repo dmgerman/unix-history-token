@@ -3957,6 +3957,9 @@ operator|(
 name|char
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|sc
 operator|->
 name|nic

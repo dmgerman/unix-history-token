@@ -685,7 +685,7 @@ comment|/* Type of ic, Am7990, Am79C960 etc. */
 name|int
 name|mem_mode
 decl_stmt|;
-name|long
+name|int
 name|iobase
 decl_stmt|;
 name|int
