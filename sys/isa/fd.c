@@ -7470,6 +7470,8 @@ decl_stmt|,
 name|cyl
 decl_stmt|,
 name|st3
+decl_stmt|,
+name|idf
 decl_stmt|;
 name|unsigned
 name|blknum
@@ -7677,6 +7679,19 @@ operator|->
 name|b_iocmd
 operator|==
 name|BIO_READ
+expr_stmt|;
+if|if
+condition|(
+name|read
+condition|)
+name|idf
+operator|=
+name|ISADMA_READ
+expr_stmt|;
+else|else
+name|idf
+operator|=
+name|ISADMA_WRITE
 expr_stmt|;
 name|format
 operator|=
@@ -8330,9 +8345,7 @@ operator|)
 condition|)
 name|isa_dmastart
 argument_list|(
-name|bp
-operator|->
-name|b_flags
+name|idf
 argument_list|,
 name|bp
 operator|->
@@ -8443,9 +8456,7 @@ operator|)
 condition|)
 name|isa_dmadone
 argument_list|(
-name|bp
-operator|->
-name|b_flags
+name|idf
 argument_list|,
 name|bp
 operator|->
@@ -8673,9 +8684,7 @@ operator|)
 condition|)
 name|isa_dmadone
 argument_list|(
-name|bp
-operator|->
-name|b_flags
+name|idf
 argument_list|,
 name|bp
 operator|->
@@ -8841,9 +8850,7 @@ operator|)
 condition|)
 name|isa_dmadone
 argument_list|(
-name|bp
-operator|->
-name|b_flags
+name|idf
 argument_list|,
 name|bp
 operator|->
@@ -9036,9 +9043,7 @@ operator|)
 condition|)
 name|isa_dmadone
 argument_list|(
-name|bp
-operator|->
-name|b_flags
+name|idf
 argument_list|,
 name|bp
 operator|->
@@ -9108,9 +9113,7 @@ operator|)
 condition|)
 name|isa_dmadone
 argument_list|(
-name|bp
-operator|->
-name|b_flags
+name|idf
 argument_list|,
 name|bp
 operator|->
@@ -10336,6 +10339,12 @@ operator|=
 name|B_PHYS
 operator||
 name|B_FORMAT
+expr_stmt|;
+name|bp
+operator|->
+name|b_iocmd
+operator|=
+name|BIO_WRITE
 expr_stmt|;
 comment|/* 	 * calculate a fake blkno, so fdstrategy() would initiate a 	 * seek to the requested cylinder 	 */
 name|bp
