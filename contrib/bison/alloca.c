@@ -532,7 +532,7 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Reclaim garbage, defined as all alloca'd storage that      was allocated from deeper in the stack than currently. */
+comment|/* Reclaim garbage, defined as all alloca'd storage that      was allocated from deeper in the stack than currently.  */
 block|{
 specifier|register
 name|header
@@ -1110,7 +1110,7 @@ name|CRAY2
 end_ifdef
 
 begin_comment
-comment|/* Determine a "stack measure" for an arbitrary ADDRESS.    I doubt that "lint" will like this much. */
+comment|/* Determine a "stack measure" for an arbitrary ADDRESS.    I doubt that "lint" will like this much.  */
 end_comment
 
 begin_function

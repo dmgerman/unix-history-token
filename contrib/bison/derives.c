@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Match rules with nonterminals for bison,    Copyright (C) 1984, 1989 Free Software Foundation, Inc.  This file is part of Bison, the GNU Compiler Compiler.  Bison is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  Bison is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with Bison; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Match rules with nonterminals for bison,    Copyright (C) 1984, 1989 Free Software Foundation, Inc.  This file is part of Bison, the GNU Compiler Compiler.  Bison is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  Bison is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with Bison; see the file COPYING.  If not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -22,7 +22,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"new.h"
+file|"alloc.h"
 end_include
 
 begin_include
@@ -38,6 +38,30 @@ file|"gram.h"
 end_include
 
 begin_decl_stmt
+name|void
+name|set_derives
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|free_derives
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|short
 modifier|*
 modifier|*
@@ -48,7 +72,9 @@ end_decl_stmt
 begin_function
 name|void
 name|set_derives
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -266,7 +292,9 @@ end_function
 begin_function
 name|void
 name|free_derives
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|FREE
 argument_list|(
@@ -292,12 +320,12 @@ directive|ifdef
 name|DEBUG
 end_ifdef
 
-begin_macro
+begin_function
+name|void
 name|print_derives
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -316,7 +344,10 @@ name|tags
 decl_stmt|;
 name|printf
 argument_list|(
+name|_
+argument_list|(
 literal|"\n\n\nDERIVES\n\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -335,7 +366,10 @@ control|)
 block|{
 name|printf
 argument_list|(
+name|_
+argument_list|(
 literal|"%s derives"
+argument_list|)
 argument_list|,
 name|tags
 index|[
@@ -382,7 +416,7 @@ literal|'\n'
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#

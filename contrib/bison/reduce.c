@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Grammar reduction for Bison.    Copyright (C) 1988, 1989 Free Software Foundation, Inc.  This file is part of Bison, the GNU Compiler Compiler.  Bison is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  Bison is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with Bison; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Grammar reduction for Bison.    Copyright (C) 1988, 1989 Free Software Foundation, Inc.  This file is part of Bison, the GNU Compiler Compiler.  Bison is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  Bison is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with Bison; see the file COPYING.  If not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"new.h"
+file|"alloc.h"
 end_include
 
 begin_decl_stmt
@@ -81,6 +81,13 @@ end_decl_stmt
 begin_comment
 comment|/* XXXXXXX */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|fixed_outfiles
+decl_stmt|;
+end_decl_stmt
 
 begin_ifndef
 ifndef|#
@@ -160,60 +167,153 @@ name|nuseless_nonterminals
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
+name|bool
+name|bits_equal
+name|PARAMS
+argument_list|(
+operator|(
+name|BSet
+operator|,
+name|BSet
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nbits
+name|PARAMS
+argument_list|(
+operator|(
+name|unsigned
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|bits_size
+name|PARAMS
+argument_list|(
+operator|(
+name|BSet
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|reduce_grammar
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|void
 name|useless_nonterminals
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
 name|inaccessable_symbols
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
 name|reduce_grammar_tables
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
 name|print_results
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
 name|print_notices
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|dump_grammar
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|fatals
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_escape
 end_escape
@@ -222,21 +322,15 @@ begin_function
 name|bool
 name|bits_equal
 parameter_list|(
-name|L
-parameter_list|,
-name|R
-parameter_list|,
-name|n
-parameter_list|)
 name|BSet
 name|L
-decl_stmt|;
+parameter_list|,
 name|BSet
 name|R
-decl_stmt|;
+parameter_list|,
 name|int
 name|n
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -281,11 +375,9 @@ begin_function
 name|int
 name|nbits
 parameter_list|(
-name|i
-parameter_list|)
 name|unsigned
 name|i
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|count
@@ -304,8 +396,18 @@ operator|^=
 operator|(
 name|i
 operator|&
+operator|(
+call|(
+name|unsigned
+call|)
+argument_list|(
 operator|-
+operator|(
+name|int
+operator|)
 name|i
+argument_list|)
+operator|)
 operator|)
 expr_stmt|;
 operator|++
@@ -322,16 +424,12 @@ begin_function
 name|int
 name|bits_size
 parameter_list|(
-name|S
-parameter_list|,
-name|n
-parameter_list|)
 name|BSet
 name|S
-decl_stmt|;
+parameter_list|,
 name|int
 name|n
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|i
@@ -377,7 +475,9 @@ end_escape
 begin_function
 name|void
 name|reduce_grammar
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|bool
 name|reduced
@@ -485,7 +585,10 @@ argument_list|)
 condition|)
 name|fatals
 argument_list|(
+name|_
+argument_list|(
 literal|"Start symbol %s does not derive any sentence"
+argument_list|)
 argument_list|,
 name|tags
 index|[
@@ -513,7 +616,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"reduced %s defines %d terminal%s, %d nonterminal%s\ , and %d production%s.\n"
+argument_list|)
 argument_list|,
 name|infile
 argument_list|,
@@ -579,7 +685,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  * Another way to do this would be with a set for each production and then do  * subset tests against N, but even for the C grammar the whole reducing  * process takes only 2 seconds on my 8Mhz AT.  */
+comment|/*  * Another way to do this would be with a set for each production and then do  * subset tests against N0, but even for the C grammar the whole reducing  * process takes only 2 seconds on my 8Mhz AT.  */
 end_comment
 
 begin_function
@@ -587,16 +693,12 @@ specifier|static
 name|bool
 name|useful_production
 parameter_list|(
-name|i
-parameter_list|,
-name|N
-parameter_list|)
 name|int
 name|i
-decl_stmt|;
+parameter_list|,
 name|BSet
-name|N
-decl_stmt|;
+name|N0
+parameter_list|)
 block|{
 name|rule
 name|r
@@ -641,7 +743,7 @@ condition|(
 operator|!
 name|BITISSET
 argument_list|(
-name|N
+name|N0
 argument_list|,
 name|n
 operator|-
@@ -665,7 +767,9 @@ begin_function
 specifier|static
 name|void
 name|useless_nonterminals
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|BSet
 name|Np
@@ -690,7 +794,7 @@ argument_list|,
 name|unsigned
 argument_list|)
 expr_stmt|;
-comment|/*    * The set being computed is a set of nonterminals which can derive    * the empty string or strings consisting of all terminals. At each    * iteration a nonterminal is added to the set if there is a    * production with that nonterminal as its LHS for which all the    * nonterminals in its RHS are already in the set.  Iterate until the    * set being computed remains unchanged.  Any nonterminals not in the    * set at that point are useless in that they will never be used in    * deriving a sentence of the language.    *     * This iteration doesn't use any special traversal over the    * productions.  A set is kept of all productions for which all the    * nonterminals in the RHS are in useful.  Only productions not in    * this set are scanned on each iteration.  At the end, this set is    * saved to be used when finding useful productions: only productions    * in this set will appear in the final grammar.    */
+comment|/*    * The set being computed is a set of nonterminals which can derive    * the empty string or strings consisting of all terminals. At each    * iteration a nonterminal is added to the set if there is a    * production with that nonterminal as its LHS for which all the    * nonterminals in its RHS are already in the set.  Iterate until the    * set being computed remains unchanged.  Any nonterminals not in the    * set at that point are useless in that they will never be used in    * deriving a sentence of the language.    *    * This iteration doesn't use any special traversal over the    * productions.  A set is kept of all productions for which all the    * nonterminals in the RHS are in useful.  Only productions not in    * this set are scanned on each iteration.  At the end, this set is    * saved to be used when finding useful productions: only productions    * in this set will appear in the final grammar.    */
 name|n
 operator|=
 literal|0
@@ -832,7 +936,9 @@ begin_function
 specifier|static
 name|void
 name|inaccessable_symbols
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|BSet
 name|Vp
@@ -852,7 +958,7 @@ decl_stmt|;
 name|rule
 name|r
 decl_stmt|;
-comment|/*    * Find out which productions are reachable and which symbols are    * used.  Starting with an empty set of productions and a set of    * symbols which only has the start symbol in it, iterate over all    * productions until the set of productions remains unchanged for an    * iteration.  For each production which has a LHS in the set of    * reachable symbols, add the production to the set of reachable    * productions, and add all of the nonterminals in the RHS of the    * production to the set of reachable symbols.    *     * Consider only the (partially) reduced grammar which has only    * nonterminals in N and productions in P.    *     * The result is the set P of productions in the reduced grammar, and    * the set V of symbols in the reduced grammar.    *     * Although this algorithm also computes the set of terminals which are    * reachable, no terminal will be deleted from the grammar. Some    * terminals might not be in the grammar but might be generated by    * semantic routines, and so the user might want them available with    * specified numbers.  (Is this true?)  However, the nonreachable    * terminals are printed (if running in verbose mode) so that the user    * can know.    */
+comment|/*    * Find out which productions are reachable and which symbols are    * used.  Starting with an empty set of productions and a set of    * symbols which only has the start symbol in it, iterate over all    * productions until the set of productions remains unchanged for an    * iteration.  For each production which has a LHS in the set of    * reachable symbols, add the production to the set of reachable    * productions, and add all of the nonterminals in the RHS of the    * production to the set of reachable symbols.    *    * Consider only the (partially) reduced grammar which has only    * nonterminals in N and productions in P.    *    * The result is the set P of productions in the reduced grammar, and    * the set V of symbols in the reduced grammar.    *    * Although this algorithm also computes the set of terminals which are    * reachable, no terminal will be deleted from the grammar. Some    * terminals might not be in the grammar but might be generated by    * semantic routines, and so the user might want them available with    * specified numbers.  (Is this true?)  However, the nonreachable    * terminals are printed (if running in verbose mode) so that the user    * can know.    */
 name|Vp
 operator|=
 name|NEW2
@@ -1214,7 +1320,9 @@ begin_function
 specifier|static
 name|void
 name|reduce_grammar_tables
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/* This is turned off because we would need to change the numbers    in the case statements in the actions file.  */
 if|#
@@ -1561,7 +1669,9 @@ begin_function
 specifier|static
 name|void
 name|print_results
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1584,7 +1694,10 @@ name|fprintf
 argument_list|(
 name|foutput
 argument_list|,
+name|_
+argument_list|(
 literal|"Useless nonterminals:\n\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -1670,7 +1783,10 @@ name|fprintf
 argument_list|(
 name|foutput
 argument_list|,
+name|_
+argument_list|(
 literal|"\n\nTerminals which are not used:\n\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|b
@@ -1703,7 +1819,10 @@ name|fprintf
 argument_list|(
 name|foutput
 argument_list|,
+name|_
+argument_list|(
 literal|"\n\nUseless rules:\n\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -1829,7 +1948,9 @@ end_escape
 begin_function
 name|void
 name|dump_grammar
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -1858,14 +1979,20 @@ name|fprintf
 argument_list|(
 name|foutput
 argument_list|,
+name|_
+argument_list|(
 literal|"Variables\n---------\n\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|foutput
 argument_list|,
+name|_
+argument_list|(
 literal|"Value  Sprec    Sassoc    Tag\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -1916,7 +2043,10 @@ name|fprintf
 argument_list|(
 name|foutput
 argument_list|,
+name|_
+argument_list|(
 literal|"Rules\n-----\n\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -2018,7 +2148,10 @@ name|fprintf
 argument_list|(
 name|foutput
 argument_list|,
+name|_
+argument_list|(
 literal|"Rules interpreted\n-----------------\n\n"
+argument_list|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -2108,12 +2241,10 @@ begin_function
 specifier|static
 name|void
 name|print_notices
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
-specifier|extern
-name|int
-name|fixed_outfiles
-decl_stmt|;
 if|if
 condition|(
 name|fixed_outfiles
@@ -2124,7 +2255,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"%d rules never reduced\n"
+argument_list|)
 argument_list|,
 name|nuseless_productions
 argument_list|)
@@ -2133,7 +2267,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"%s contains "
+argument_list|)
 argument_list|,
 name|infile
 argument_list|)
@@ -2149,7 +2286,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"%d useless nonterminal%s"
+argument_list|)
 argument_list|,
 name|nuseless_nonterminals
 argument_list|,
@@ -2179,7 +2319,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|" and "
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2193,7 +2336,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"%d useless rule%s"
+argument_list|)
 argument_list|,
 name|nuseless_productions
 argument_list|,

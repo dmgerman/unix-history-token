@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Find and resolve or report look-ahead conflicts for bison,    Copyright (C) 1984, 1989, 1992 Free Software Foundation, Inc.  This file is part of Bison, the GNU Compiler Compiler.  Bison is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  Bison is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with Bison; see the file COPYING.  If not, write to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* Find and resolve or report look-ahead conflicts for bison,    Copyright (C) 1984, 1989, 1992 Free Software Foundation, Inc.  This file is part of Bison, the GNU Compiler Compiler.  Bison is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  Bison is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with Bison; see the file COPYING.  If not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_include
@@ -24,7 +24,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"new.h"
+file|"alloc.h"
 end_include
 
 begin_include
@@ -117,54 +117,167 @@ name|verboseflag
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
+specifier|extern
+name|int
+name|fixed_outfiles
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|initialize_conflicts
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|set_conflicts
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|resolve_sr_conflict
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|flush_shift
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|log_resolution
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
+name|void
+name|conflict_log
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|verbose_conflict_log
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|total_conflicts
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|count_sr_conflicts
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|count_rr_conflicts
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|print_reductions
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|finalize_conflicts
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -240,7 +353,9 @@ end_decl_stmt
 begin_function
 name|void
 name|initialize_conflicts
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -313,11 +428,9 @@ begin_function
 name|void
 name|set_conflicts
 parameter_list|(
-name|state
-parameter_list|)
 name|int
 name|state
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -634,16 +747,12 @@ begin_function
 name|void
 name|resolve_sr_conflict
 parameter_list|(
+name|int
 name|state
 parameter_list|,
+name|int
 name|lookaheadnum
 parameter_list|)
-name|int
-name|state
-decl_stmt|;
-name|int
-name|lookaheadnum
-decl_stmt|;
 block|{
 specifier|register
 name|int
@@ -780,7 +889,10 @@ name|lookaheadnum
 argument_list|,
 name|i
 argument_list|,
+name|_
+argument_list|(
 literal|"reduce"
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|*
@@ -821,7 +933,10 @@ name|lookaheadnum
 argument_list|,
 name|i
 argument_list|,
+name|_
+argument_list|(
 literal|"shift"
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|*
@@ -858,7 +973,10 @@ name|lookaheadnum
 argument_list|,
 name|i
 argument_list|,
+name|_
+argument_list|(
 literal|"shift"
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -877,7 +995,10 @@ name|lookaheadnum
 argument_list|,
 name|i
 argument_list|,
+name|_
+argument_list|(
 literal|"reduce"
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -896,7 +1017,10 @@ name|lookaheadnum
 argument_list|,
 name|i
 argument_list|,
+name|_
+argument_list|(
 literal|"an error"
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1074,16 +1198,12 @@ begin_function
 name|void
 name|flush_shift
 parameter_list|(
+name|int
 name|state
 parameter_list|,
+name|int
 name|token
 parameter_list|)
-name|int
-name|state
-decl_stmt|;
-name|int
-name|token
-decl_stmt|;
 block|{
 specifier|register
 name|shifts
@@ -1170,31 +1290,28 @@ begin_function
 name|void
 name|log_resolution
 parameter_list|(
-name|state
-parameter_list|,
-name|LAno
-parameter_list|,
-name|token
-parameter_list|,
-name|resolution
-parameter_list|)
 name|int
 name|state
-decl_stmt|,
+parameter_list|,
+name|int
 name|LAno
-decl_stmt|,
+parameter_list|,
+name|int
 name|token
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|resolution
-decl_stmt|;
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
 name|foutput
 argument_list|,
+name|_
+argument_list|(
 literal|"Conflict in state %d between rule %d and token %s resolved as %s.\n"
+argument_list|)
 argument_list|,
 name|state
 argument_list|,
@@ -1217,7 +1334,9 @@ end_function
 begin_function
 name|void
 name|conflict_log
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -1282,7 +1401,9 @@ end_function
 begin_function
 name|void
 name|verbose_conflict_log
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -1340,7 +1461,10 @@ name|fprintf
 argument_list|(
 name|foutput
 argument_list|,
+name|_
+argument_list|(
 literal|"State %d contains"
+argument_list|)
 argument_list|,
 name|i
 argument_list|)
@@ -1355,7 +1479,10 @@ name|fprintf
 argument_list|(
 name|foutput
 argument_list|,
+name|_
+argument_list|(
 literal|" 1 shift/reduce conflict"
+argument_list|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1369,7 +1496,10 @@ name|fprintf
 argument_list|(
 name|foutput
 argument_list|,
+name|_
+argument_list|(
 literal|" %d shift/reduce conflicts"
+argument_list|)
 argument_list|,
 name|src_count
 argument_list|)
@@ -1388,7 +1518,10 @@ name|fprintf
 argument_list|(
 name|foutput
 argument_list|,
+name|_
+argument_list|(
 literal|" and"
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1401,7 +1534,10 @@ name|fprintf
 argument_list|(
 name|foutput
 argument_list|,
+name|_
+argument_list|(
 literal|" 1 reduce/reduce conflict"
+argument_list|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1415,7 +1551,10 @@ name|fprintf
 argument_list|(
 name|foutput
 argument_list|,
+name|_
+argument_list|(
 literal|" %d reduce/reduce conflicts"
+argument_list|)
 argument_list|,
 name|rrc_count
 argument_list|)
@@ -1445,12 +1584,10 @@ end_function
 begin_function
 name|void
 name|total_conflicts
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
-specifier|extern
-name|int
-name|fixed_outfiles
-decl_stmt|;
 if|if
 condition|(
 name|src_total
@@ -1472,7 +1609,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"conflicts: "
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1485,7 +1625,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|" %d shift/reduce"
+argument_list|)
 argument_list|,
 name|src_total
 argument_list|)
@@ -1517,7 +1660,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|" %d reduce/reduce"
+argument_list|)
 argument_list|,
 name|rrc_total
 argument_list|)
@@ -1536,7 +1682,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|"%s contains"
+argument_list|)
 argument_list|,
 name|infile
 argument_list|)
@@ -1551,7 +1700,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|" 1 shift/reduce conflict"
+argument_list|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1565,7 +1717,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|" %d shift/reduce conflicts"
+argument_list|)
 argument_list|,
 name|src_total
 argument_list|)
@@ -1584,7 +1739,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|" and"
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1597,7 +1755,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|" 1 reduce/reduce conflict"
+argument_list|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1611,7 +1772,10 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+name|_
+argument_list|(
 literal|" %d reduce/reduce conflicts"
+argument_list|)
 argument_list|,
 name|rrc_total
 argument_list|)
@@ -1638,11 +1802,9 @@ begin_function
 name|void
 name|count_sr_conflicts
 parameter_list|(
-name|state
-parameter_list|)
 name|int
 name|state
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -1925,11 +2087,9 @@ begin_function
 name|void
 name|count_rr_conflicts
 parameter_list|(
-name|state
-parameter_list|)
 name|int
 name|state
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -2093,11 +2253,9 @@ begin_function
 name|void
 name|print_reductions
 parameter_list|(
-name|state
-parameter_list|)
 name|int
 name|state
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -2158,6 +2316,8 @@ decl_stmt|;
 specifier|register
 name|int
 name|default_rule
+init|=
+literal|0
 decl_stmt|;
 specifier|register
 name|int
@@ -2454,7 +2614,10 @@ name|fprintf
 argument_list|(
 name|foutput
 argument_list|,
+name|_
+argument_list|(
 literal|"    %-4s\t[reduce using rule %d (%s)]\n"
+argument_list|)
 argument_list|,
 name|tags
 index|[
@@ -2496,7 +2659,10 @@ name|fprintf
 argument_list|(
 name|foutput
 argument_list|,
+name|_
+argument_list|(
 literal|"    $default\treduce using rule %d (%s)\n\n"
+argument_list|)
 argument_list|,
 name|default_rule
 argument_list|,
@@ -2882,7 +3048,10 @@ name|fprintf
 argument_list|(
 name|foutput
 argument_list|,
+name|_
+argument_list|(
 literal|"    %-4s\treduce using rule %d (%s)\n"
+argument_list|)
 argument_list|,
 name|tags
 index|[
@@ -2928,7 +3097,10 @@ name|fprintf
 argument_list|(
 name|foutput
 argument_list|,
+name|_
+argument_list|(
 literal|"    %-4s\treduce using rule %d (%s)\n"
+argument_list|)
 argument_list|,
 name|tags
 index|[
@@ -2962,7 +3134,10 @@ name|fprintf
 argument_list|(
 name|foutput
 argument_list|,
+name|_
+argument_list|(
 literal|"    %-4s\t[reduce using rule %d (%s)]\n"
+argument_list|)
 argument_list|,
 name|tags
 index|[
@@ -3022,7 +3197,10 @@ name|fprintf
 argument_list|(
 name|foutput
 argument_list|,
+name|_
+argument_list|(
 literal|"    $default\treduce using rule %d (%s)\n"
+argument_list|)
 argument_list|,
 name|default_rule
 argument_list|,
@@ -3050,7 +3228,9 @@ end_function
 begin_function
 name|void
 name|finalize_conflicts
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|FREE
 argument_list|(
