@@ -457,6 +457,12 @@ block|,
 name|USB_PRODUCT_MUSTEK_1200UB
 block|}
 block|,
+block|{
+name|USB_VENDOR_MUSTEK
+block|,
+name|USB_PRODUCT_MUSTEK_1200CUPLUS
+block|}
+block|,
 comment|/* National */
 block|{
 name|USB_VENDOR_NATIONAL
