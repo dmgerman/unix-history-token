@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_lookup.c	7.46 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_lookup.c	7.47 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -120,6 +120,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_lookup_args
+comment|/* { 		struct vnode * a_dvp; 		struct vnode ** a_vpp; 		struct componentname * a_cnp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -2998,7 +2999,13 @@ name|i_endoff
 argument_list|,
 name|IO_SYNC
 argument_list|,
-name|NOCRED
+name|cnp
+operator|->
+name|cn_cred
+argument_list|,
+name|cnp
+operator|->
+name|cn_proc
 argument_list|)
 expr_stmt|;
 return|return
