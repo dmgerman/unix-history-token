@@ -3569,7 +3569,6 @@ name|b_iodone
 operator|=
 name|complete_rqe
 expr_stmt|;
-comment|/* by calling us here */
 comment|/*      * You'd think that we wouldn't need to even      * build the request buffer for a dead subdisk,      * but in some cases we need information like      * the user buffer address.  Err on the side of      * generosity and supply what we can.  That      * obviously doesn't include drive information      * when the drive is dead.      */
 if|if
 condition|(
