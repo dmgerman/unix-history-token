@@ -65,12 +65,6 @@ directive|include
 file|"bitmap.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"pwupd.h"
-end_include
-
 begin_function_decl
 specifier|static
 name|int
@@ -257,7 +251,7 @@ argument_list|)
 operator|!=
 name|NULL
 decl_stmt|;
-name|setgrent
+name|SETGRENT
 argument_list|()
 expr_stmt|;
 while|while
@@ -265,7 +259,7 @@ condition|(
 operator|(
 name|grp
 operator|=
-name|getgrent
+name|GETGRENT
 argument_list|()
 operator|)
 operator|!=
@@ -278,7 +272,7 @@ argument_list|,
 name|pretty
 argument_list|)
 expr_stmt|;
-name|endgrent
+name|ENDGRENT
 argument_list|()
 expr_stmt|;
 return|return
@@ -348,14 +342,14 @@ operator|!=
 name|NULL
 operator|)
 condition|?
-name|getgrnam
+name|GETGRNAM
 argument_list|(
 name|a_name
 operator|->
 name|val
 argument_list|)
 else|:
-name|getgrgid
+name|GETGRGID
 argument_list|(
 operator|(
 name|gid_t
@@ -396,7 +390,7 @@ condition|)
 comment|/* Try harder */
 name|grp
 operator|=
-name|getgrgid
+name|GETGRGID
 argument_list|(
 name|atoi
 argument_list|(
@@ -1184,7 +1178,7 @@ condition|(
 operator|(
 name|pwd
 operator|=
-name|getpwnam
+name|GETPWNAM
 argument_list|(
 name|p
 argument_list|)
@@ -1387,7 +1381,7 @@ condition|(
 operator|(
 name|grp
 operator|=
-name|getgrnam
+name|GETGRNAM
 argument_list|(
 name|a_name
 operator|->
@@ -1508,7 +1502,7 @@ condition|(
 operator|(
 name|grp
 operator|=
-name|getgrgid
+name|GETGRGID
 argument_list|(
 name|gid
 argument_list|)
@@ -1588,7 +1582,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Now, let's fill the bitmap from the password file 		 */
-name|setgrent
+name|SETGRENT
 argument_list|()
 expr_stmt|;
 while|while
@@ -1596,7 +1590,7 @@ condition|(
 operator|(
 name|grp
 operator|=
-name|getgrent
+name|GETGRENT
 argument_list|()
 operator|)
 operator|!=
@@ -1640,7 +1634,7 @@ operator|->
 name|min_gid
 argument_list|)
 expr_stmt|;
-name|endgrent
+name|ENDGRENT
 argument_list|()
 expr_stmt|;
 comment|/* 		 * Then apply the policy, with fallback to reuse if necessary 		 */

@@ -53,12 +53,6 @@ directive|include
 file|"pw.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"pwupd.h"
-end_include
-
 begin_define
 define|#
 directive|define
@@ -250,7 +244,10 @@ literal|0
 block|,
 comment|/* Days until account expires */
 literal|0
+block|,
 comment|/* Days until password expires */
+literal|0
+comment|/* size of default_group array */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1361,7 +1358,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator|||
-name|getgrnam
+name|GETGRNAM
 argument_list|(
 name|q
 argument_list|)

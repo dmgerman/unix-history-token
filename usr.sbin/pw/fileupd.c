@@ -697,7 +697,7 @@ argument_list|,
 name|infp
 argument_list|)
 expr_stmt|;
-comment|/*                                                                  * If there was a problem with copying                                                                  * we will just rename 'file.new'                                                                   * to 'file'. 								 * This is a gross hack, but we may have 								 * corrupted the original file 								 * Unfortunately, it will lose the inode                                                                  * and hence the lock.                                                                  *                                                                  * The implications of this is that this invocation of pw                                                                   * won't have the file locked and concurrent copies                                                                  * of pw, vipw etc could clobber what this one is doing.                                                                  *                                                                  * It should probably just return an error instead                                                                  * of going on like nothing is wrong. 								 */
+comment|/*                                                                  * If there was a problem with copying                                                                  * we will just rename 'file.new'                                                                   * to 'file'. 								 * This is a gross hack, but we may have 								 * corrupted the original file 								 * Unfortunately, it will lose the inode                                                                  * and hence the lock. 								 */
 if|if
 condition|(
 name|fflush
@@ -712,17 +712,20 @@ argument_list|(
 name|infp
 argument_list|)
 condition|)
+block|{
 name|rc
 operator|=
+name|errno
+expr_stmt|;
+comment|/* Preserve errno for return */
 name|rename
 argument_list|(
 name|file
 argument_list|,
 name|filename
 argument_list|)
-operator|==
-literal|0
 expr_stmt|;
+block|}
 else|else
 name|ftruncate
 argument_list|(

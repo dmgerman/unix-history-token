@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<pwd.h>
 end_include
 
@@ -79,6 +85,12 @@ begin_include
 include|#
 directive|include
 file|"psdate.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pwupd.h"
 end_include
 
 begin_enum

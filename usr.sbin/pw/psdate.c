@@ -858,7 +858,7 @@ name|str
 argument_list|)
 condition|)
 block|{
-name|val
+name|dt
 operator|=
 name|strtol
 argument_list|(
@@ -869,14 +869,6 @@ name|p
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-name|dt
-operator|=
-name|val
-condition|?
-name|val
-else|:
-name|dt
 expr_stmt|;
 block|}
 elseif|else
