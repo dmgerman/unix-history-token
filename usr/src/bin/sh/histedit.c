@@ -618,6 +618,17 @@ argument_list|(
 literal|"history not active"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|==
+literal|1
+condition|)
+name|error
+argument_list|(
+literal|"missing history argument"
+argument_list|)
+expr_stmt|;
 name|optreset
 operator|=
 literal|1
