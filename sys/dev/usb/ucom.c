@@ -4,7 +4,7 @@ comment|/*	$NetBSD: ucom.c,v 1.4 1998/12/30 17:46:20 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id$ */
+comment|/*	FreeBSD $Id: ucom.c,v 1.5 1999/01/07 23:31:31 n_hibma Exp $ */
 end_comment
 
 begin_comment
@@ -358,7 +358,7 @@ name|id
 operator|->
 name|bInterfaceSubClass
 operator|!=
-name|USUBCLASS_MODEM
+name|USUBCLASS_ABSTRACT_CONTROL_MODEL
 condition|)
 return|return
 operator|(
