@@ -1090,7 +1090,7 @@ extern|extern
 literal|"C"
 name|char
 modifier|*
-name|dtoa
+name|__dtoa
 parameter_list|(
 name|double
 name|d
@@ -1113,6 +1113,11 @@ name|char
 modifier|*
 modifier|*
 name|rve
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|resultp
 parameter_list|)
 function_decl|;
 endif|#

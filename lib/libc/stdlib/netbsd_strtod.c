@@ -1309,6 +1309,11 @@ name|char
 modifier|*
 modifier|*
 name|rve
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|resultp
 parameter_list|)
 function_decl|;
 endif|#
