@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: psdate.c,v 1.4 1997/10/10 06:23:32 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -858,7 +858,7 @@ name|str
 argument_list|)
 condition|)
 block|{
-name|val
+name|dt
 operator|=
 name|strtol
 argument_list|(
@@ -869,14 +869,6 @@ name|p
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
-name|dt
-operator|=
-name|val
-condition|?
-name|val
-else|:
-name|dt
 expr_stmt|;
 block|}
 elseif|else
