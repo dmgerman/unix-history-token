@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)defs.h	5.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)defs.h	5.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -10,13 +10,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -97,18 +103,6 @@ define|\
 value|(bcmp((caddr_t)(a1), (caddr_t)(a2), sizeof (struct sockaddr)) == 0)
 end_define
 
-begin_define
-define|#
-directive|define
-name|min
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|((a)>(b)?(b):(a))
-end_define
-
 begin_decl_stmt
 name|struct
 name|sockaddr_in
@@ -187,13 +181,57 @@ comment|/* # of remote and local interfaces */
 end_comment
 
 begin_decl_stmt
-name|int
+name|struct
 name|timeval
+name|now
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* local idea of time */
+comment|/* current idea of time */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|timeval
+name|lastbcast
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* last time all/changes broadcast */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|timeval
+name|lastfullupdate
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* last time full table broadcast */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|timeval
+name|nextbcast
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* time to wait before changes broadcast */
+end_comment
+
+begin_decl_stmt
+name|int
+name|needupdate
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* true if we need update at nextbcast */
 end_comment
 
 begin_decl_stmt

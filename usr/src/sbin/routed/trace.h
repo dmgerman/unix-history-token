@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)trace.h	5.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983, 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)trace.h	5.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -15,7 +15,8 @@ begin_struct
 struct|struct
 name|iftrace
 block|{
-name|time_t
+name|struct
+name|timeval
 name|ift_stamp
 decl_stmt|;
 comment|/* time stamp */
@@ -91,6 +92,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|tracecontents
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* watch packet contents as they go by */
+end_comment
+
+begin_decl_stmt
+name|int
 name|traceactions
 decl_stmt|;
 end_decl_stmt
@@ -118,17 +129,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* output trace file */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|curtime
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* current timestamp string */
 end_comment
 
 begin_define
@@ -166,7 +166,7 @@ name|src
 parameter_list|,
 name|size
 parameter_list|)
-value|{ \ 	  if (tracehistory) { \ 		ifp = if_iflookup(src); \ 		if (ifp) \ 			trace(&ifp->int_input, src, packet, size, \ 				ntohl(ifp->int_metric)); \ 	  } \ 	  if (tracepackets) { \ 		time_t t; \ 		t = time(0); \ 		dumppacket(stdout, "from", src, packet, size,&t); \ 	  } \ 	}
+value|{ \ 	  if (tracehistory) { \ 		ifp = if_iflookup(src); \ 		if (ifp) \ 			trace(&ifp->int_input, src, packet, size, \ 				ntohl(ifp->int_metric)); \ 	  } \ 	  if (tracepackets) \ 		dumppacket(ftrace, "from", src, packet, size,&now); \ 	}
 end_define
 
 begin_define
@@ -180,7 +180,7 @@ name|dst
 parameter_list|,
 name|size
 parameter_list|)
-value|{ \ 	  if (tracehistory&& ifp) \ 		trace(&ifp->int_output, dst, packet, size, ifp->int_metric); \ 	  if (tracepackets) { \ 		time_t t; \ 		t = time(0); \ 		dumppacket(stdout, "to", dst, packet, size,&t); \ 	  } \ 	}
+value|{ \ 	  if (tracehistory&& ifp) \ 		trace(&ifp->int_output, dst, packet, size, ifp->int_metric); \ 	  if (tracepackets) \ 		dumppacket(ftrace, "to", dst, packet, size,&now); \ 	}
 end_define
 
 end_unit

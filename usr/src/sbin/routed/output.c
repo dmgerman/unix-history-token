@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)output.c	5.11 (Berkeley) %G%"
+literal|"@(#)output.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,18 +42,40 @@ begin_comment
 comment|/*  * Apply the function "f" to all non-passive  * interfaces.  If the interface supports the  * use of broadcasting use it, otherwise address  * the output to the known router.  */
 end_comment
 
-begin_function_decl
+begin_macro
 name|toall
+argument_list|(
+argument|f
+argument_list|,
+argument|rtstate
+argument_list|,
+argument|skipif
+argument_list|)
+end_macro
+
+begin_function_decl
+name|int
 function_decl|(
+modifier|*
 name|f
 function_decl|)
-name|int
-argument_list|(
-argument|*f
-argument_list|)
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|int
+name|rtstate
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|interface
+modifier|*
+name|skipif
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -101,6 +123,10 @@ operator|->
 name|int_flags
 operator|&
 name|IFF_PASSIVE
+operator|||
+name|ifp
+operator|==
+name|skipif
 condition|)
 continue|continue;
 name|dst
@@ -154,6 +180,8 @@ argument_list|,
 name|flags
 argument_list|,
 name|ifp
+argument_list|,
+name|rtstate
 argument_list|)
 expr_stmt|;
 block|}
@@ -176,6 +204,8 @@ argument_list|,
 argument|flags
 argument_list|,
 argument|ifp
+argument_list|,
+argument|rtstate
 argument_list|)
 end_macro
 
@@ -198,6 +228,12 @@ name|struct
 name|interface
 modifier|*
 name|ifp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|rtstate
 decl_stmt|;
 end_decl_stmt
 
@@ -256,6 +292,8 @@ argument_list|,
 argument|flags
 argument_list|,
 argument|ifp
+argument_list|,
+argument|rtstate
 argument_list|)
 end_macro
 
@@ -279,6 +317,12 @@ name|struct
 name|interface
 modifier|*
 name|ifp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|rtstate
 decl_stmt|;
 end_decl_stmt
 
@@ -457,6 +501,22 @@ operator|&
 name|RTS_EXTERNAL
 condition|)
 continue|continue;
+comment|/* 		 * For dynamic updates, limit update to routes 		 * with the specified state. 		 */
+if|if
+condition|(
+name|rtstate
+operator|&&
+operator|(
+name|rt
+operator|->
+name|rt_state
+operator|&
+name|rtstate
+operator|)
+operator|==
+literal|0
+condition|)
+continue|continue;
 comment|/* 		 * Limit the spread of subnet information 		 * to those who are interested. 		 */
 if|if
 condition|(
@@ -523,6 +583,15 @@ name|netinfo
 argument_list|)
 condition|)
 block|{
+name|TRACE_OUTPUT
+argument_list|(
+name|ifp
+argument_list|,
+name|dst
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
 call|(
 modifier|*
 name|output
@@ -537,18 +606,11 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
-name|TRACE_OUTPUT
-argument_list|(
-name|ifp
-argument_list|,
-name|dst
-argument_list|,
-name|size
-argument_list|)
-expr_stmt|;
 comment|/* 			 * If only sending to ourselves, 			 * one packet is enough to monitor interface. 			 */
 if|if
 condition|(
+name|ifp
+operator|&&
 operator|(
 name|ifp
 operator|->
@@ -584,6 +646,25 @@ name|rt
 operator|->
 name|rt_dst
 expr_stmt|;
+if|#
+directive|if
+name|BSD
+operator|<
+literal|198810
+if|if
+condition|(
+sizeof|sizeof
+argument_list|(
+name|n
+operator|->
+name|rip_dst
+operator|.
+name|sa_family
+argument_list|)
+operator|>
+literal|1
+condition|)
+comment|/* XXX */
 name|n
 operator|->
 name|rip_dst
@@ -599,6 +680,8 @@ operator|.
 name|sa_family
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|n
 operator|->
 name|rip_metric
@@ -639,9 +722,15 @@ name|msg
 operator|->
 name|rip_nets
 operator|||
+operator|(
 name|npackets
 operator|==
 literal|0
+operator|&&
+name|rtstate
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
 name|size
@@ -654,6 +743,15 @@ name|n
 operator|-
 name|packet
 expr_stmt|;
+name|TRACE_OUTPUT
+argument_list|(
+name|ifp
+argument_list|,
+name|dst
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
 call|(
 modifier|*
 name|output
@@ -662,15 +760,6 @@ argument_list|(
 name|s
 argument_list|,
 name|flags
-argument_list|,
-name|dst
-argument_list|,
-name|size
-argument_list|)
-expr_stmt|;
-name|TRACE_OUTPUT
-argument_list|(
-name|ifp
 argument_list|,
 name|dst
 argument_list|,
