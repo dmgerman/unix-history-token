@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mathimpl.h	5.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mathimpl.h	5.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -272,6 +272,46 @@ name|log__L
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_struct
+struct|struct
+name|Double
+block|{
+name|double
+name|a
+decl_stmt|,
+name|b
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+name|double
+name|exp__D
+name|__P
+argument_list|(
+operator|(
+name|double
+operator|,
+name|double
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|Double
+name|log__D
+name|__P
+argument_list|(
+operator|(
+name|double
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 
