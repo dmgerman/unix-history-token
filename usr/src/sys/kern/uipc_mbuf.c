@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_mbuf.c	1.26	82/01/19	*/
+comment|/*	uipc_mbuf.c	1.27	82/01/24	*/
 end_comment
 
 begin_include
@@ -1009,6 +1009,26 @@ operator|>
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|m
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|len
+operator|!=
+name|M_COPYALL
+condition|)
+name|panic
+argument_list|(
+literal|"m_copy"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 name|MGET
 argument_list|(
 name|n
@@ -1030,17 +1050,6 @@ condition|)
 goto|goto
 name|nospace
 goto|;
-if|if
-condition|(
-name|m
-operator|==
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"m_copy"
-argument_list|)
-expr_stmt|;
 name|n
 operator|->
 name|m_len
@@ -1139,6 +1148,12 @@ name|m_len
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|len
+operator|!=
+name|M_COPYALL
+condition|)
 name|len
 operator|-=
 name|n
