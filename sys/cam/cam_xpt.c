@@ -10615,6 +10615,7 @@ break|break;
 block|}
 if|if
 condition|(
+operator|*
 name|pdrv
 operator|==
 name|NULL
