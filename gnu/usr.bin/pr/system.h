@@ -530,6 +530,12 @@ directive|include
 file|<strings.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__386BSD__
+end_ifndef
+
 begin_function_decl
 name|char
 modifier|*
@@ -537,6 +543,11 @@ name|memchr
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
