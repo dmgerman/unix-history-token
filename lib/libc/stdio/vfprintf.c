@@ -1072,6 +1072,10 @@ name|int
 operator|,
 name|int
 operator|*
+operator|,
+name|char
+operator|*
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1339,6 +1343,11 @@ literal|7
 index|]
 decl_stmt|;
 comment|/* buffer for exponent string */
+name|char
+modifier|*
+name|dtoaresult
+decl_stmt|;
+comment|/* buffer allocated by dtoa */
 endif|#
 directive|endif
 name|u_long
@@ -1569,6 +1578,15 @@ name|val
 parameter_list|)
 define|\
 value|n2 = 0; \         cp = fmt; \         while (is_digit(*cp)) { \                 n2 = 10 * n2 + to_digit(*cp); \                 cp++; \         } \         if (*cp == '$') { \             	int hold = nextarg; \                 if (argtable == NULL) { \                         argtable = statargtable; \                         __find_arguments (fmt0, orgap,&argtable); \                 } \                 nextarg = n2; \                 val = GETARG (int); \                 nextarg = hold; \                 fmt = ++cp; \         } else { \ 		val = GETARG (int); \         }
+ifdef|#
+directive|ifdef
+name|FLOATING_POINT
+name|dtoaresult
+operator|=
+name|NULL
+expr_stmt|;
+endif|#
+directive|endif
 name|FLOCKFILE
 argument_list|(
 name|fp
@@ -2359,6 +2377,23 @@ name|flags
 operator||=
 name|FPT
 expr_stmt|;
+if|if
+condition|(
+name|dtoaresult
+operator|!=
+name|NULL
+condition|)
+block|{
+name|free
+argument_list|(
+name|dtoaresult
+argument_list|)
+expr_stmt|;
+name|dtoaresult
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 name|cp
 operator|=
 name|cvt
@@ -2379,6 +2414,9 @@ name|ch
 argument_list|,
 operator|&
 name|ndig
+argument_list|,
+operator|&
+name|dtoaresult
 argument_list|)
 expr_stmt|;
 if|if
@@ -3502,6 +3540,22 @@ argument_list|()
 expr_stmt|;
 name|error
 label|:
+ifdef|#
+directive|ifdef
+name|FLOATING_POINT
+if|if
+condition|(
+name|dtoaresult
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|dtoaresult
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|__sferror
@@ -5020,6 +5074,10 @@ operator|,
 name|char
 operator|*
 operator|*
+operator|,
+name|char
+operator|*
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5044,6 +5102,8 @@ parameter_list|,
 name|ch
 parameter_list|,
 name|length
+parameter_list|,
+name|dtoaresultp
 parameter_list|)
 name|double
 name|value
@@ -5067,6 +5127,14 @@ begin_decl_stmt
 name|char
 modifier|*
 name|sign
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+modifier|*
+name|dtoaresultp
 decl_stmt|;
 end_decl_stmt
 
@@ -5161,6 +5229,8 @@ name|dsgn
 argument_list|,
 operator|&
 name|rve
+argument_list|,
+name|dtoaresultp
 argument_list|)
 expr_stmt|;
 if|if
