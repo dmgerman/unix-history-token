@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cp.c	4.6 82/12/21"
+literal|"@(#)cp.c	4.7 83/06/20"
 decl_stmt|;
 end_decl_stmt
 
@@ -347,14 +347,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"cp: "
-argument_list|)
-expr_stmt|;
-name|perror
+name|Perror
 argument_list|(
 name|from
 argument_list|)
@@ -378,16 +371,17 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"cp: "
-argument_list|)
-expr_stmt|;
-name|perror
+name|Perror
 argument_list|(
 name|from
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|fold
 argument_list|)
 expr_stmt|;
 return|return
@@ -468,6 +462,14 @@ argument_list|,
 name|last
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|fold
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -546,14 +548,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"cp: "
-argument_list|)
-expr_stmt|;
-name|perror
+name|Perror
 argument_list|(
 name|to
 argument_list|)
@@ -644,6 +639,14 @@ argument_list|,
 literal|"cp: Cannot copy file to itself.\n"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|fold
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -697,11 +700,21 @@ name|i
 operator|!=
 literal|'y'
 condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|fold
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
 operator|)
 return|;
+block|}
 block|}
 block|}
 name|fnew
@@ -725,14 +738,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"cp: "
-argument_list|)
-expr_stmt|;
-name|perror
+name|Perror
 argument_list|(
 name|to
 argument_list|)
@@ -782,14 +788,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"cp: "
-argument_list|)
-expr_stmt|;
-name|perror
+name|Perror
 argument_list|(
 name|from
 argument_list|)
@@ -830,14 +829,7 @@ operator|!=
 name|n
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"cp: "
-argument_list|)
-expr_stmt|;
-name|perror
+name|Perror
 argument_list|(
 name|to
 argument_list|)
@@ -942,7 +934,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|perror
+name|Perror
 argument_list|(
 name|from
 argument_list|)
@@ -1081,6 +1073,37 @@ name|to
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_block
+
+begin_macro
+name|Perror
+argument_list|(
+argument|s
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|s
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"cp: "
+argument_list|)
+expr_stmt|;
+name|perror
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
