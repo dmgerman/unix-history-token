@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998, 1999 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: lockfile.c,v 8.3 1999/08/31 15:38:27 ca Exp $"
+literal|"@(#)$Id: lockfile.c,v 8.3.16.11 2000/11/16 02:54:28 geir Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -38,7 +38,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  LOCKFILE -- lock a file using flock or (shudder) fcntl locking ** **	Parameters: **		fd -- the file descriptor of the file. **		filename -- the file name (for error messages). [unused] **		ext -- the filename extension. [unused] **		type -- type of the lock.  Bits can be: **			LOCK_EX -- exclusive lock. **			LOCK_NB -- non-blocking. ** **	Returns: **		TRUE if the lock was acquired. **		FALSE otherwise. */
+comment|/* **  LOCKFILE -- lock a file using flock or (shudder) fcntl locking ** **	Parameters: **		fd -- the file descriptor of the file. **		filename -- the file name (for error messages). [unused] **		ext -- the filename extension. [unused] **		type -- type of the lock.  Bits can be: **			LOCK_EX -- exclusive lock. **			LOCK_NB -- non-blocking. **			LOCK_UN -- unlock. ** **	Returns: **		TRUE if the lock was acquired. **		FALSE otherwise. */
 end_comment
 
 begin_function

@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: control.c,v 8.44.14.8 2000/09/17 17:04:26 gshapiro Exp $"
+literal|"@(#)$Id: control.c,v 8.44.14.13 2000/12/28 21:25:52 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -256,19 +256,45 @@ name|geteuid
 argument_list|()
 operator|==
 literal|0
-operator|&&
+condition|)
+block|{
+name|uid_t
+name|u
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|RunAsUid
+operator|!=
+literal|0
+condition|)
+name|u
+operator|=
+name|RunAsUid
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|TrustedUid
 operator|!=
 literal|0
 condition|)
-block|{
+name|u
+operator|=
+name|TrustedUid
+expr_stmt|;
 if|if
 condition|(
+name|u
+operator|!=
+literal|0
+operator|&&
 name|chown
 argument_list|(
 name|ControlSocketName
 argument_list|,
-name|TrustedUid
+name|u
 argument_list|,
 operator|-
 literal|1
@@ -287,9 +313,14 @@ name|LOG_ALERT
 argument_list|,
 name|NOQID
 argument_list|,
-literal|"ownership change on %s failed: %s"
+literal|"ownership change on %s to uid %d failed: %s"
 argument_list|,
 name|ControlSocketName
+argument_list|,
+operator|(
+name|int
+operator|)
+name|u
 argument_list|,
 name|errstring
 argument_list|(
@@ -299,9 +330,14 @@ argument_list|)
 expr_stmt|;
 name|message
 argument_list|(
-literal|"050 ownership change on %s failed: %s"
+literal|"050 ownership change on %s to uid %d failed: %s"
 argument_list|,
 name|ControlSocketName
+argument_list|,
+operator|(
+name|int
+operator|)
+name|u
 argument_list|,
 name|errstring
 argument_list|(

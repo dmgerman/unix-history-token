@@ -40,7 +40,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: main.c,v 8.485.4.27 2000/09/26 01:30:38 gshapiro Exp $"
+literal|"@(#)$Id: main.c,v 8.485.4.38 2000/12/19 02:50:33 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2711,6 +2711,23 @@ block|}
 endif|#
 directive|endif
 comment|/* NETINET || NETINET6 */
+if|#
+directive|if
+name|_FFR_FREEHOSTENT
+operator|&&
+name|NETINET6
+name|freehostent
+argument_list|(
+name|hp
+argument_list|)
+expr_stmt|;
+name|hp
+operator|=
+name|NULL
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* _FFR_FREEHOSTENT&& NETINET6 */
 block|}
 comment|/* current time */
 name|define
@@ -6426,6 +6443,40 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
+if|#
+directive|if
+name|_FFR_TESTMODE_DROP_PRIVS
+name|dp
+operator|=
+name|drop_privileges
+argument_list|(
+name|TRUE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dp
+operator|!=
+name|EX_OK
+condition|)
+block|{
+name|CurEnv
+operator|->
+name|e_id
+operator|=
+name|NULL
+expr_stmt|;
+name|finis
+argument_list|(
+name|TRUE
+argument_list|,
+name|dp
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* _FFR_TESTMODE_DROP_PRIVS */
 if|if
 condition|(
 name|isatty
@@ -6666,6 +6717,54 @@ block|}
 endif|#
 directive|endif
 comment|/* QUEUE */
+if|#
+directive|if
+name|SASL
+if|if
+condition|(
+name|OpMode
+operator|==
+name|MD_SMTP
+operator|||
+name|OpMode
+operator|==
+name|MD_DAEMON
+condition|)
+block|{
+comment|/* give a syserr or just disable AUTH ? */
+if|if
+condition|(
+operator|(
+name|i
+operator|=
+name|sasl_server_init
+argument_list|(
+name|srvcallbacks
+argument_list|,
+literal|"Sendmail"
+argument_list|)
+operator|)
+operator|!=
+name|SASL_OK
+condition|)
+name|syserr
+argument_list|(
+literal|"!sasl_server_init failed! [%s]"
+argument_list|,
+name|sasl_errstring
+argument_list|(
+name|i
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* SASL */
 comment|/* 	**  If a daemon, wait for a request. 	**	getrequests will always return in a child. 	**	If we should also be processing the queue, start 	**		doing it in background. 	**	We check for any errors that might have happened 	**		during startup. 	*/
 if|if
 condition|(
@@ -7289,42 +7388,6 @@ operator|&
 name|BlankEnvelope
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|SASL
-comment|/* give a syserr or just disable AUTH ? */
-if|if
-condition|(
-operator|(
-name|i
-operator|=
-name|sasl_server_init
-argument_list|(
-name|srvcallbacks
-argument_list|,
-literal|"Sendmail"
-argument_list|)
-operator|)
-operator|!=
-name|SASL_OK
-condition|)
-name|syserr
-argument_list|(
-literal|"!sasl_server_init failed! [%s]"
-argument_list|,
-name|sasl_errstring
-argument_list|(
-name|i
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* SASL */
 if|if
 condition|(
 name|OpMode
@@ -8726,6 +8789,8 @@ block|}
 block|,
 block|{
 literal|'\0'
+block|,
+literal|'\0'
 block|}
 block|}
 decl_stmt|;
@@ -8777,7 +8842,9 @@ name|char
 modifier|*
 name|MacroName
 index|[
-literal|256
+name|MAXMACROID
+operator|+
+literal|1
 index|]
 decl_stmt|;
 for|for
@@ -9623,9 +9690,14 @@ index|]
 operator|==
 literal|'\0'
 condition|)
-operator|(
-name|void
-operator|)
+block|{
+name|struct
+name|hostent
+modifier|*
+name|hp
+decl_stmt|;
+name|hp
+operator|=
 name|myhostname
 argument_list|(
 name|hostbuf
@@ -9634,6 +9706,32 @@ sizeof|sizeof
 name|hostbuf
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|_FFR_FREEHOSTENT
+operator|&&
+name|NETINET6
+if|if
+condition|(
+name|hp
+operator|!=
+name|NULL
+condition|)
+block|{
+name|freehostent
+argument_list|(
+name|hp
+argument_list|)
+expr_stmt|;
+name|hp
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* _FFR_FREEHOSTENT&& NETINET6 */
+block|}
 operator|(
 name|void
 operator|)
@@ -11200,7 +11298,7 @@ if|if
 condition|(
 name|mid
 operator|==
-literal|'\0'
+literal|0
 condition|)
 return|return;
 name|translate_dollars
@@ -11253,7 +11351,7 @@ if|if
 condition|(
 name|mid
 operator|==
-literal|'\0'
+literal|0
 condition|)
 return|return;
 name|translate_dollars
@@ -11702,7 +11800,7 @@ if|if
 condition|(
 name|mid
 operator|!=
-literal|'\0'
+literal|0
 condition|)
 name|stabapply
 argument_list|(
@@ -11730,7 +11828,7 @@ if|if
 condition|(
 name|mid
 operator|==
-literal|'\0'
+literal|0
 condition|)
 return|return;
 name|p
@@ -13116,9 +13214,10 @@ if|if
 condition|(
 name|bitnset
 argument_list|(
+name|bitidx
+argument_list|(
 name|id
-operator|&
-literal|0xff
+argument_list|)
 argument_list|,
 name|s
 operator|->

@@ -27,7 +27,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: queue.c,v 8.343.4.17 2000/09/15 03:34:51 gshapiro Exp $ (with queueing)"
+literal|"@(#)$Id: queue.c,v 8.343.4.38 2000/12/08 14:33:02 ca Exp $ (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -46,7 +46,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: queue.c,v 8.343.4.17 2000/09/15 03:34:51 gshapiro Exp $ (without queueing)"
+literal|"@(#)$Id: queue.c,v 8.343.4.38 2000/12/08 14:33:02 ca Exp $ (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -400,6 +400,13 @@ define|#
 directive|define
 name|TEMPQF_LETTER
 value|'T'
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOSEQF_LETTER
+value|'Q'
 end_define
 
 begin_function
@@ -2076,6 +2083,35 @@ argument_list|,
 name|tfp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|q
+operator|->
+name|q_alias
+operator|!=
+name|NULL
+operator|&&
+name|bitset
+argument_list|(
+name|QALIAS
+argument_list|,
+name|q
+operator|->
+name|q_alias
+operator|->
+name|q_flags
+argument_list|)
+condition|)
+operator|(
+name|void
+operator|)
+name|putc
+argument_list|(
+literal|'A'
+argument_list|,
+name|tfp
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2389,11 +2425,12 @@ literal|"${%s}"
 argument_list|,
 name|macname
 argument_list|(
+name|bitidx
+argument_list|(
 name|h
 operator|->
 name|h_macro
-operator|&
-literal|0377
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3270,6 +3307,10 @@ name|curnum
 init|=
 literal|0
 decl_stmt|;
+name|DoQueueRun
+operator|=
+name|FALSE
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -3398,15 +3439,13 @@ literal|0
 decl_stmt|;
 name|time_t
 name|current_la_time
+decl_stmt|,
+name|now
 decl_stmt|;
 specifier|extern
 name|ENVELOPE
 name|BlankEnvelope
 decl_stmt|;
-name|DoQueueRun
-operator|=
-name|FALSE
-expr_stmt|;
 comment|/* 	**  If no work will ever be selected, don't even bother reading 	**  the queue. 	*/
 name|CurrentLA
 operator|=
@@ -3907,12 +3946,16 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* 		**  Ignore jobs that are too expensive for the moment. 		** 		**	Get new load average every 30 seconds. 		*/
+name|now
+operator|=
+name|curtime
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|current_la_time
 operator|<
-name|curtime
-argument_list|()
+name|now
 operator|-
 literal|30
 condition|)
@@ -3926,8 +3969,7 @@ argument_list|)
 expr_stmt|;
 name|current_la_time
 operator|=
-name|curtime
-argument_list|()
+name|now
 expr_stmt|;
 block|}
 if|if
@@ -4305,6 +4347,13 @@ define|#
 directive|define
 name|NEED_S
 value|010
+end_define
+
+begin_define
+define|#
+directive|define
+name|NEED_H
+value|020
 end_define
 
 begin_decl_stmt
@@ -5146,6 +5195,19 @@ name|NEED_T
 expr_stmt|;
 if|if
 condition|(
+name|QueueSortOrder
+operator|==
+name|QSO_BYHOST
+condition|)
+block|{
+comment|/* need w_host set for host sort order */
+name|i
+operator||=
+name|NEED_H
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|QueueLimitSender
 operator|!=
 name|NULL
@@ -5346,6 +5408,11 @@ name|w
 operator|->
 name|w_host
 argument_list|)
+expr_stmt|;
+name|i
+operator|&=
+operator|~
+name|NEED_H
 expr_stmt|;
 block|}
 if|if
@@ -7837,6 +7904,9 @@ decl_stmt|;
 name|int
 name|mid
 decl_stmt|;
+name|time_t
+name|now
+decl_stmt|;
 specifier|auto
 name|char
 modifier|*
@@ -8059,6 +8129,22 @@ case|:
 name|qflags
 operator||=
 name|QPRIMARY
+expr_stmt|;
+break|break;
+case|case
+literal|'A'
+case|:
+if|if
+condition|(
+name|ctladdr
+operator|!=
+name|NULL
+condition|)
+name|ctladdr
+operator|->
+name|q_flags
+operator||=
+name|QALIAS
 expr_stmt|;
 break|break;
 block|}
@@ -8376,6 +8462,11 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* if this has been tried recently, let it be */
+name|now
+operator|=
+name|curtime
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|e
@@ -8388,11 +8479,9 @@ name|e
 operator|->
 name|e_dtime
 operator|<=
-name|curtime
-argument_list|()
+name|now
 operator|&&
-name|curtime
-argument_list|()
+name|now
 operator|<
 name|e
 operator|->
@@ -8412,8 +8501,7 @@ name|howlong
 operator|=
 name|pintvl
 argument_list|(
-name|curtime
-argument_list|()
+name|now
 operator|-
 name|e
 operator|->
@@ -8816,6 +8904,13 @@ operator|&
 name|ep
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mid
+operator|==
+literal|0
+condition|)
+break|break;
 name|p
 operator|=
 name|newstr
@@ -9275,7 +9370,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  PRINT_SINGLE_QUEUE -- print out a representation of a single mail queue ** **	Parameters: **		queuedir -- queue directory ** **	Returns: **		none. ** **	Side Effects: **		Prints a listing of the mail queue on the standard output. */
+comment|/* **  PRINT_SINGLE_QUEUE -- print out a representation of a single mail queue ** **	Parameters: **		queuedir -- queue directory ** **	Returns: **		number of entries ** **	Side Effects: **		Prints a listing of the mail queue on the standard output. */
 end_comment
 
 begin_function
@@ -10482,13 +10577,13 @@ literal|"/df"
 expr_stmt|;
 break|break;
 case|case
-literal|'T'
+name|TEMPQF_LETTER
 case|:
 case|case
 literal|'t'
 case|:
 case|case
-literal|'Q'
+name|LOSEQF_LETTER
 case|:
 case|case
 literal|'q'
@@ -11489,13 +11584,6 @@ end_escape
 begin_comment
 comment|/* **  LOSEQFILE -- save the qf as Qf and try to let someone know ** **	Parameters: **		e -- the envelope (e->e_id will be used). **		why -- reported to whomever can hear. ** **	Returns: **		none. */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|LOSEQF_LETTER
-value|'Q'
-end_define
 
 begin_function
 name|void
@@ -12506,7 +12594,7 @@ name|dprintf
 argument_list|(
 literal|"multiqueue_cache: \"%s\": Can not wildcard relative path.\n"
 argument_list|,
-name|QueueDir
+name|qpath
 argument_list|)
 expr_stmt|;
 name|ExitStat

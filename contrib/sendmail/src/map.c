@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: map.c,v 8.414.4.24 2000/09/27 04:11:29 gshapiro Exp $"
+literal|"@(#)$Id: map.c,v 8.414.4.34 2000/12/18 18:00:43 ca Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -12959,6 +12959,10 @@ operator|->
 name|ldap_port
 argument_list|)
 expr_stmt|;
+name|save_errno
+operator|=
+name|errno
+expr_stmt|;
 else|#
 directive|else
 comment|/* USE_LDAP_INIT */
@@ -15733,6 +15737,16 @@ condition|(
 name|vp
 operator|==
 name|NULL
+operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|MF_MATCHONLY
+argument_list|,
+name|map
+operator|->
+name|map_mflags
+argument_list|)
 condition|)
 return|return
 name|NULL
@@ -15750,7 +15764,12 @@ name|map_mflags
 argument_list|)
 condition|)
 block|{
-comment|/* vp != NULL due to test above */
+if|if
+condition|(
+name|vp
+operator|!=
+name|NULL
+condition|)
 name|free
 argument_list|(
 name|vp
@@ -15768,7 +15787,6 @@ operator|==
 name|EX_OK
 condition|)
 block|{
-comment|/* vp != NULL due to test above */
 if|if
 condition|(
 name|LogLevel
@@ -15787,6 +15805,12 @@ literal|"ldap %.100s => %s"
 argument_list|,
 name|name
 argument_list|,
+name|vp
+operator|==
+name|NULL
+condition|?
+literal|"<NULL>"
+else|:
 name|vp
 argument_list|)
 expr_stmt|;
@@ -15818,6 +15842,8 @@ name|NULL
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+comment|/* vp != NULL according to test above */
 name|result
 operator|=
 name|map_rewrite
@@ -15834,6 +15860,13 @@ argument_list|,
 name|av
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|vp
+operator|!=
+name|NULL
+condition|)
 name|free
 argument_list|(
 name|vp
@@ -18338,7 +18371,7 @@ expr_stmt|;
 if|if
 condition|(
 name|i
-operator|==
+operator|>=
 name|LDAPMAP_MAX_ATTR
 condition|)
 block|{
@@ -28519,6 +28552,7 @@ struct|struct
 name|regex_map
 block|{
 name|regex_t
+modifier|*
 name|regex_pattern_buf
 decl_stmt|;
 comment|/* xalloc it */
@@ -28817,6 +28851,22 @@ expr|*
 name|map_p
 argument_list|)
 expr_stmt|;
+name|map_p
+operator|->
+name|regex_pattern_buf
+operator|=
+operator|(
+name|regex_t
+operator|*
+operator|)
+name|xnalloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|regex_t
+argument_list|)
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -29029,12 +29079,9 @@ name|regerr
 operator|=
 name|regcomp
 argument_list|(
-operator|&
-operator|(
 name|map_p
 operator|->
 name|regex_pattern_buf
-operator|)
 argument_list|,
 name|p
 argument_list|,
@@ -29059,12 +29106,9 @@ name|regerror
 argument_list|(
 name|regerr
 argument_list|,
-operator|&
-operator|(
 name|map_p
 operator|->
 name|regex_pattern_buf
-operator|)
 argument_list|,
 name|errbuf
 argument_list|,
@@ -29076,6 +29120,13 @@ argument_list|(
 literal|"pattern-compile-error: %s\n"
 argument_list|,
 name|errbuf
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|map_p
+operator|->
+name|regex_pattern_buf
 argument_list|)
 expr_stmt|;
 name|free
@@ -29174,7 +29225,7 @@ operator|=
 name|map_p
 operator|->
 name|regex_pattern_buf
-operator|.
+operator|->
 name|re_nsub
 operator|+
 literal|1
@@ -29207,6 +29258,13 @@ argument_list|(
 literal|"too many substrings, %d max\n"
 argument_list|,
 name|MAX_MATCH
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|map_p
+operator|->
+name|regex_pattern_buf
 argument_list|)
 expr_stmt|;
 name|free
@@ -29550,12 +29608,9 @@ name|reg_res
 operator|=
 name|regexec
 argument_list|(
-operator|&
-operator|(
 name|map_p
 operator|->
 name|regex_pattern_buf
-operator|)
 argument_list|,
 name|name
 argument_list|,
@@ -29731,7 +29786,7 @@ operator|)
 name|map_p
 operator|->
 name|regex_pattern_buf
-operator|.
+operator|->
 name|re_nsub
 operator|+
 literal|1
@@ -29817,6 +29872,11 @@ name|FALSE
 expr_stmt|;
 if|if
 condition|(
+operator|*
+name|ip
+operator|>=
+name|MAX_MATCH
+operator|||
 name|pmatch
 index|[
 operator|*
@@ -30284,6 +30344,8 @@ decl_stmt|;
 block|{
 name|int
 name|buflen
+decl_stmt|,
+name|r
 decl_stmt|;
 name|char
 modifier|*
@@ -30413,12 +30475,17 @@ argument_list|(
 literal|"nsd_map_t_find failed\n"
 argument_list|)
 expr_stmt|;
+operator|*
+name|statp
+operator|=
+name|EX_UNAVAILABLE
+expr_stmt|;
 return|return
 name|NULL
 return|;
 block|}
-if|if
-condition|(
+name|r
+operator|=
 name|ns_lookup
 argument_list|(
 name|ns_map
@@ -30437,12 +30504,68 @@ name|buf
 argument_list|,
 name|MAXLINE
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|r
 operator|==
-name|NULL
+name|NS_UNAVAIL
+operator|||
+name|r
+operator|==
+name|NS_TRYAGAIN
 condition|)
+block|{
+operator|*
+name|statp
+operator|=
+name|EX_TEMPFAIL
+expr_stmt|;
 return|return
 name|NULL
 return|;
+block|}
+if|if
+condition|(
+name|r
+operator|==
+name|NS_BADREQ
+operator|||
+name|r
+operator|==
+name|NS_NOPERM
+condition|)
+block|{
+operator|*
+name|statp
+operator|=
+name|EX_CONFIG
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+if|if
+condition|(
+name|r
+operator|!=
+name|NS_SUCCESS
+condition|)
+block|{
+operator|*
+name|statp
+operator|=
+name|EX_NOTFOUND
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+operator|*
+name|statp
+operator|=
+name|EX_OK
+expr_stmt|;
 comment|/* Null out trailing \n */
 if|if
 condition|(

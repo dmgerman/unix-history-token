@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: parseaddr.c,v 8.234.4.5 2000/09/25 07:53:29 gshapiro Exp $"
+literal|"@(#)$Id: parseaddr.c,v 8.234.4.9 2000/10/09 03:14:48 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -9090,6 +9090,8 @@ block|}
 block|,
 block|{
 name|NULL
+block|,
+literal|0
 block|}
 block|}
 decl_stmt|;
@@ -11299,7 +11301,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  RSCHECK -- check string(s) for validity using rewriting sets ** **	Parameters: **		rwset -- the rewriting set to use. **		p1 -- the first string to check. **		p2 -- the second string to check -- may be null. **		e -- the current envelope. **		rmcomm -- remove comments? **		cnt -- count rejections (statistics)? **		logl -- logging level ** **	Returns: **		EX_OK -- if the rwset doesn't resolve to $#error **		else -- the failure status (message printed) */
+comment|/* **  RSCHECK -- check string(s) for validity using rewriting sets ** **	Parameters: **		rwset -- the rewriting set to use. **		p1 -- the first string to check. **		p2 -- the second string to check -- may be null. **		e -- the current envelope. **		rmcomm -- remove comments? **		cnt -- count rejections (statistics)? **		logl -- logging level **		host -- NULL or relay host. ** **	Returns: **		EX_OK -- if the rwset doesn't resolve to $#error **		else -- the failure status (message printed) */
 end_comment
 
 begin_function
@@ -11319,6 +11321,8 @@ parameter_list|,
 name|cnt
 parameter_list|,
 name|logl
+parameter_list|,
+name|host
 parameter_list|)
 name|char
 modifier|*
@@ -11343,6 +11347,10 @@ name|cnt
 decl_stmt|;
 name|int
 name|logl
+decl_stmt|;
+name|char
+modifier|*
+name|host
 decl_stmt|;
 block|{
 name|char
@@ -11891,7 +11899,15 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|(
+name|host
+operator|!=
+name|NULL
+condition|)
+name|relay
+operator|=
+name|host
+expr_stmt|;
+else|else
 name|relay
 operator|=
 name|macvalue
@@ -11900,7 +11916,10 @@ literal|'_'
 argument_list|,
 name|e
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|relay
 operator|!=
 name|NULL
 condition|)

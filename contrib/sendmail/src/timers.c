@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  * Contributed by Exactis.com, Inc.  *  */
+comment|/*  * Copyright (c) 1999-2000 Sendmail, Inc. and its suppliers.  *	All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  * Contributed by Exactis.com, Inc.  *  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: timers.c,v 8.13 1999/11/23 07:22:28 gshapiro Exp $"
+literal|"@(#)$Id: timers.c,v 8.13.16.1 2000/10/09 01:06:45 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -816,6 +816,7 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 if|if
 condition|(
 name|TimerStack
@@ -826,6 +827,7 @@ operator|==
 name|ptimer
 condition|)
 break|break;
+block|}
 if|if
 condition|(
 name|i

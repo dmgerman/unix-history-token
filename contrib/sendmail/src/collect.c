@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: collect.c,v 8.136.4.6 2000/09/21 21:52:16 ca Exp $"
+literal|"@(#)$Id: collect.c,v 8.136.4.8 2000/10/09 00:50:04 gshapiro Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1719,6 +1719,8 @@ argument_list|,
 name|TRUE
 argument_list|,
 literal|4
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|bp
@@ -3411,6 +3413,19 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+name|strlen
+argument_list|(
+name|p
+argument_list|)
+operator|<
+literal|17
+condition|)
+block|{
+comment|/* no room for the date */
+return|return;
+block|}
+if|if
+condition|(
 operator|!
 operator|(
 name|isascii
@@ -3500,6 +3515,7 @@ condition|;
 name|dt
 operator|++
 control|)
+block|{
 if|if
 condition|(
 name|strncmp
@@ -3519,6 +3535,7 @@ operator|==
 literal|0
 condition|)
 break|break;
+block|}
 if|if
 condition|(
 operator|*
