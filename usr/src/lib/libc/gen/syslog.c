@@ -8,10 +8,10 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-name|SccsId
+name|sccsid
 index|[]
 init|=
-literal|"@(#)syslog.c	4.3 (Berkeley) %G%"
+literal|"@(#)syslog.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -21,7 +21,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * SYSLOG -- print message on log file  *  * This routine looks a lot like printf, except that it  * outputs to the log file instead of the standard output.  * Also:  *	adds a timestamp,  *	prints the module name in front of the message,  *	has some other formatting types (or will sometime),  *	adds a newline on the end of the message.  *  * The output of this routine is intended to be read by /etc/syslogd.  */
+comment|/*  * SYSLOG -- print message on log file  *  * This routine looks a lot like printf, except that it  * outputs to the log file instead of the standard output.  * Also:  *	adds a timestamp,  *	prints the module name in front of the message,  *	has some other formatting types (or will sometime),  *	adds a newline on the end of the message.  *  * The output of this routine is intended to be read by /etc/syslogd.  *  * Author: Eric Allman  * Modified to use UNIX domain IPC by Ralph Campbell  */
 end_comment
 
 begin_include
@@ -245,10 +245,18 @@ name|now
 decl_stmt|;
 name|int
 name|pid
+decl_stmt|,
+name|olderrno
+init|=
+name|errno
 decl_stmt|;
 comment|/* see if we should just throw out this message */
 if|if
 condition|(
+name|pri
+operator|<
+name|LOG_ALERT
+operator|||
 name|pri
 operator|>
 name|LogMask
@@ -273,13 +281,6 @@ name|o
 operator|=
 name|outline
 expr_stmt|;
-if|if
-condition|(
-name|pri
-operator|>
-literal|0
-condition|)
-block|{
 name|sprintf
 argument_list|(
 name|o
@@ -296,7 +297,6 @@ argument_list|(
 name|o
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|LogTag
@@ -328,7 +328,7 @@ name|sprintf
 argument_list|(
 name|o
 argument_list|,
-literal|" (%d)"
+literal|"[%d]"
 argument_list|,
 name|getpid
 argument_list|()
@@ -352,7 +352,7 @@ name|sprintf
 argument_list|(
 name|o
 argument_list|,
-literal|" %.15s -- "
+literal|": %.15s-- "
 argument_list|,
 name|ctime
 argument_list|(
@@ -450,7 +450,7 @@ condition|(
 operator|(
 name|unsigned
 operator|)
-name|errno
+name|olderrno
 operator|>
 name|sys_nerr
 condition|)
@@ -460,7 +460,7 @@ name|b
 argument_list|,
 literal|"error %d"
 argument_list|,
-name|errno
+name|olderrno
 argument_list|)
 expr_stmt|;
 else|else
@@ -470,7 +470,7 @@ name|b
 argument_list|,
 name|sys_errlist
 index|[
-name|errno
+name|olderrno
 index|]
 argument_list|)
 expr_stmt|;
@@ -607,6 +607,9 @@ expr_stmt|;
 block|}
 while|while
 condition|(
+operator|(
+name|c
+operator|=
 name|wait
 argument_list|(
 operator|(
@@ -615,6 +618,11 @@ operator|*
 operator|)
 literal|0
 argument_list|)
+operator|)
+operator|>
+literal|0
+operator|&&
+name|c
 operator|!=
 name|pid
 condition|)
@@ -656,7 +664,15 @@ begin_block
 block|{
 name|LogTag
 operator|=
+operator|(
 name|ident
+operator|!=
+name|NULL
+operator|)
+condition|?
+name|ident
+else|:
+literal|"syslog"
 expr_stmt|;
 name|LogStat
 operator|=
@@ -779,6 +795,16 @@ name|opri
 operator|=
 name|LogMask
 expr_stmt|;
+if|if
+condition|(
+name|pri
+operator|>
+literal|0
+operator|&&
+name|pri
+operator|<=
+name|LOG_DEBUG
+condition|)
 name|LogMask
 operator|=
 name|pri
