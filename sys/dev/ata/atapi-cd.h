@@ -1217,10 +1217,21 @@ modifier|*
 name|changer_info
 decl_stmt|;
 comment|/* changer info */
+name|struct
+name|acd_softc
+modifier|*
+modifier|*
+name|driver
+decl_stmt|;
+comment|/* softc's of changer slots */
 name|int32_t
 name|slot
 decl_stmt|;
-comment|/* this lun's slot number */
+comment|/* this instance slot number */
+name|time_t
+name|timestamp
+decl_stmt|;
+comment|/* this instance timestamp */
 name|u_int32_t
 name|block_size
 decl_stmt|;
