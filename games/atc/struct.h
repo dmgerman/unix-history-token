@@ -226,6 +226,13 @@ name|SCORE
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|SCORE_SCANF_FMT
+value|"%9s %255s %255s %d %d %d"
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct

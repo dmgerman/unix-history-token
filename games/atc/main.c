@@ -159,6 +159,19 @@ decl_stmt|,
 name|update
 argument_list|()
 decl_stmt|;
+comment|/* Open the score file then revoke setgid privileges */
+name|open_score_file
+argument_list|()
+expr_stmt|;
+name|setregid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|,
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
 name|start_time
 operator|=
 name|time
