@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) UNIX System Laboratories, Inc.  All or some portions
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)conf.c	5.8 (Berkeley) 5/12/91  *	$Id: conf.c,v 1.56 1995/01/31 06:34:53 amurai Exp $  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)conf.c	5.8 (Berkeley) 5/12/91  *	$Id: conf.c,v 1.57 1995/02/05 11:29:38 jkh Exp $  */
 end_comment
 
 begin_include
@@ -4307,6 +4307,117 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|"spigot.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|NSPIGOT
+operator|>
+literal|0
+end_if
+
+begin_decl_stmt
+name|d_open_t
+name|spigot_open
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_close_t
+name|spigot_close
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_ioctl_t
+name|spigot_ioctl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_rdwr_t
+name|spigot_read
+decl_stmt|,
+name|spigot_write
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_select_t
+name|spigot_select
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_mmap_t
+name|spigot_mmap
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|spigot_open
+value|(d_open_t *)enxio
+end_define
+
+begin_define
+define|#
+directive|define
+name|spigot_close
+value|(d_close_t *)enxio
+end_define
+
+begin_define
+define|#
+directive|define
+name|spigot_ioctl
+value|(d_ioctl_t *)enxio
+end_define
+
+begin_define
+define|#
+directive|define
+name|spigot_read
+value|(d_rdwr_t *)enxio
+end_define
+
+begin_define
+define|#
+directive|define
+name|spigot_write
+value|(d_rdwr_t *)enxio
+end_define
+
+begin_define
+define|#
+directive|define
+name|spigot_select
+value|seltrue
+end_define
+
+begin_define
+define|#
+directive|define
+name|spigot_mmap
+value|nommap
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* open, close, read, write, ioctl, stop, reset, ttys, select, mmap, strat */
 end_comment
@@ -4605,16 +4716,16 @@ name|wtstrategy
 block|}
 block|,
 block|{
-name|noopen
+name|spigot_open
 block|,
-name|noclose
+name|spigot_close
 block|,
-name|noread
+name|spigot_read
 block|,
-name|nowrite
+name|spigot_write
 block|,
 comment|/*11*/
-name|noioc
+name|spigot_ioctl
 block|,
 name|nostop
 block|,
@@ -4622,11 +4733,12 @@ name|nullreset
 block|,
 name|NULL
 block|,
-name|seltrue
+comment|/* Spigot */
+name|spigot_select
 block|,
-name|nommap
+name|spigot_mmap
 block|,
-name|nostrat
+name|NULL
 block|}
 block|,
 block|{
