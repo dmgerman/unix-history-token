@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ut.c	4.6	83/02/20	*/
+comment|/*	ut.c	4.7	83/03/06	*/
 end_comment
 
 begin_comment
@@ -95,9 +95,9 @@ end_expr_stmt
 
 begin_block
 block|{
-specifier|register
+name|int
 name|skip
-expr_stmt|;
+decl_stmt|;
 name|utstrategy
 argument_list|(
 name|io
@@ -115,22 +115,16 @@ while|while
 condition|(
 name|skip
 operator|--
-condition|)
-block|{
-name|io
-operator|->
-name|i_cc
-operator|=
+operator|>
 literal|0
-expr_stmt|;
+condition|)
 name|utstrategy
 argument_list|(
 name|io
 argument_list|,
-name|UT_SFORW
+name|UT_SFORWF
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_block
 
