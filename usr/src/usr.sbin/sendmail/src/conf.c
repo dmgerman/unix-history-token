@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.59 (Berkeley) %G%"
+literal|"@(#)conf.c	8.60 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5205,6 +5205,15 @@ name|shell
 argument_list|)
 operator|==
 literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|p
+argument_list|,
+literal|"*"
+argument_list|)
+operator|==
+literal|0
 condition|)
 break|break;
 name|endusershell
@@ -5363,6 +5372,15 @@ condition|(
 name|strcmp
 argument_list|(
 name|shell
+argument_list|,
+name|q
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+literal|"*"
 argument_list|,
 name|q
 argument_list|)
