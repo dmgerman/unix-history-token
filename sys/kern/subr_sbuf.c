@@ -51,6 +51,82 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * Predicates  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SBUF_ISDYNAMIC
+parameter_list|(
+name|s
+parameter_list|)
+value|((s)->s_flags& SBUF_DYNAMIC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SBUF_ISFINISHED
+parameter_list|(
+name|s
+parameter_list|)
+value|((s)->s_flags& SBUF_FINISHED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SBUF_HASOVERFLOWED
+parameter_list|(
+name|s
+parameter_list|)
+value|((s)->s_flags& SBUF_OVERFLOWED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SBUF_HASROOM
+parameter_list|(
+name|s
+parameter_list|)
+value|((s)->s_len< (s)->s_size - 1)
+end_define
+
+begin_comment
+comment|/*  * Set / clear flags  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SBUF_SETFLAG
+parameter_list|(
+name|s
+parameter_list|,
+name|f
+parameter_list|)
+value|do { (s)->s_flags |= (f); } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SBUF_CLEARFLAG
+parameter_list|(
+name|s
+parameter_list|,
+name|f
+parameter_list|)
+value|do { (s)->s_flags&= ~(f); } while (0)
+end_define
+
+begin_comment
+comment|/*  * Debugging support  */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -212,13 +288,26 @@ name|char
 modifier|*
 name|buf
 parameter_list|,
-name|size_t
+name|int
 name|length
 parameter_list|,
 name|int
 name|flags
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|length
+operator|>=
+literal|0
+argument_list|,
+operator|(
+literal|"attempt to create an sbuf of negative length (%d)"
+operator|,
+name|length
+operator|)
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|flags
@@ -320,6 +409,48 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Clear an sbuf and reset its position  */
+end_comment
+
+begin_function
+name|void
+name|sbuf_clear
+parameter_list|(
+name|struct
+name|sbuf
+modifier|*
+name|s
+parameter_list|)
+block|{
+name|assert_sbuf_integrity
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+name|SBUF_CLEARFLAG
+argument_list|(
+name|s
+argument_list|,
+name|SBUF_FINISHED
+argument_list|)
+expr_stmt|;
+name|SBUF_CLEARFLAG
+argument_list|(
+name|s
+argument_list|,
+name|SBUF_OVERFLOWED
+argument_list|)
+expr_stmt|;
+name|s
+operator|->
+name|s_len
+operator|=
+literal|0
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Set the sbuf's position to an arbitrary value  */
 end_comment
 
@@ -332,7 +463,7 @@ name|sbuf
 modifier|*
 name|s
 parameter_list|,
-name|size_t
+name|int
 name|pos
 parameter_list|)
 block|{
@@ -537,11 +668,10 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|sbuf_clear
+argument_list|(
 name|s
-operator|->
-name|s_len
-operator|=
-literal|0
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -658,7 +788,7 @@ block|{
 name|va_list
 name|ap
 decl_stmt|;
-name|size_t
+name|int
 name|len
 decl_stmt|;
 name|assert_sbuf_integrity
@@ -855,11 +985,34 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Finish off an sbuf.  */
+comment|/*  * Check if an sbuf overflowed  */
 end_comment
 
 begin_function
 name|int
+name|sbuf_overflowed
+parameter_list|(
+name|struct
+name|sbuf
+modifier|*
+name|s
+parameter_list|)
+block|{
+return|return
+name|SBUF_HASOVERFLOWED
+argument_list|(
+name|s
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Finish off an sbuf.  */
+end_comment
+
+begin_function
+name|void
 name|sbuf_finish
 parameter_list|(
 name|struct
@@ -880,19 +1033,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|SBUF_HASOVERFLOWED
-argument_list|(
-name|s
-argument_list|)
-condition|)
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
 name|s
 operator|->
 name|s_buf
@@ -905,6 +1045,13 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+name|SBUF_CLEARFLAG
+argument_list|(
+name|s
+argument_list|,
+name|SBUF_OVERFLOWED
+argument_list|)
+expr_stmt|;
 name|SBUF_SETFLAG
 argument_list|(
 name|s
@@ -912,11 +1059,6 @@ argument_list|,
 name|SBUF_FINISHED
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
@@ -947,18 +1089,6 @@ argument_list|,
 name|SBUF_FINISHED
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|SBUF_HASOVERFLOWED
-argument_list|(
-name|s
-argument_list|)
-condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
 return|return
 name|s
 operator|->
@@ -972,7 +1102,7 @@ comment|/*  * Return the length of the sbuf data.  */
 end_comment
 
 begin_function
-name|size_t
+name|int
 name|sbuf_len
 parameter_list|(
 name|struct
@@ -1002,7 +1132,8 @@ argument_list|)
 condition|)
 return|return
 operator|(
-literal|0
+operator|-
+literal|1
 operator|)
 return|;
 return|return
