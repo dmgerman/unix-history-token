@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	nexus.h	4.6	81/03/09	*/
+comment|/*	nexus.h	4.7	81/03/13	*/
 end_comment
 
 begin_comment
-comment|/*  * Information about nexus's.  */
+comment|/*  * Information about nexus's.  *  * Each machine has an address of backplane slots (nexi).  * Each nexus is some type of adapter, whose code is the low  * byte of the first word of the adapter address space.  * At boot time the system looks through the array of available  * slots and finds the interconnects for the machine.  */
 end_comment
 
 begin_if
@@ -42,14 +42,14 @@ begin_define
 define|#
 directive|define
 name|NNEX750
-value|4
+value|16
 end_define
 
 begin_define
 define|#
 directive|define
 name|NEX750
-value|((struct nexus *)0xf28000)
+value|((struct nexus *)0xf20000)
 end_define
 
 begin_endif
@@ -64,39 +64,12 @@ name|NEXSIZE
 value|0x2000
 end_define
 
-begin_if
-if|#
-directive|if
-name|VAX780
-end_if
-
 begin_define
 define|#
 directive|define
-name|NNEXUS
+name|MAXNNEXUS
 value|16
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|NNEXUS
-value|6
-end_define
-
-begin_comment
-comment|/* 4 mba slots + mem + uba */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -148,7 +121,7 @@ name|struct
 name|nexus
 name|nexus
 index|[
-name|NNEXUS
+name|MAXNNEXUS
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -260,13 +233,6 @@ define|\
 value|"\20\40PARFLT\37WSQFLT\36URDFLT\35ISQFLT\34MXTFLT\33XMTFLT"
 end_define
 
-begin_decl_stmt
-name|char
-name|nexflt_bits
-index|[]
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
@@ -350,6 +316,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|NEX_ANY
+value|0
+end_define
+
+begin_comment
+comment|/* pseudo for handling 11/750 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|NEX_MEM4
 value|0x08
 end_define
@@ -421,7 +398,7 @@ value|0x29
 end_define
 
 begin_comment
-comment|/* 4 flavours  for 4 addr spaces */
+comment|/* 4 flavours for 4 addr spaces */
 end_comment
 
 begin_define
