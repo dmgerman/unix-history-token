@@ -4311,7 +4311,7 @@ name|headblock
 operator|.
 name|vtype
 argument_list|)
-operator|&&
+condition|?
 name|nelt
 operator|->
 name|constblock
@@ -4321,7 +4321,7 @@ operator|.
 name|ci
 operator|<=
 literal|0
-operator|||
+else|:
 name|nelt
 operator|->
 name|constblock
@@ -4333,7 +4333,7 @@ index|[
 literal|0
 index|]
 operator|<=
-literal|0
+literal|0.
 condition|)
 name|dclerr
 argument_list|(
