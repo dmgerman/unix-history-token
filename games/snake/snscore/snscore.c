@@ -188,19 +188,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* revoke privs */
-name|setegid
-argument_list|(
-name|getgid
-argument_list|()
-argument_list|)
-expr_stmt|;
-name|setgid
-argument_list|(
-name|getgid
-argument_list|()
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"Snake players scores to date\n"
