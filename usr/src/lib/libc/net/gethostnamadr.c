@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	gethostnamadr.c	4.9	85/03/25	*/
+comment|/*	gethostnamadr.c	4.10	85/03/28	*/
 end_comment
 
 begin_include
@@ -148,7 +148,7 @@ name|buflen
 decl_stmt|;
 name|n
 operator|=
-name|sendquery
+name|res_send
 argument_list|(
 name|msg
 argument_list|,
@@ -179,7 +179,7 @@ name|RES_DEBUG
 condition|)
 name|printf
 argument_list|(
-literal|"sendquery failed\n"
+literal|"res_send failed\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -659,7 +659,7 @@ name|n
 decl_stmt|;
 name|n
 operator|=
-name|mkquery
+name|res_mkquery
 argument_list|(
 name|QUERY
 argument_list|,
@@ -700,7 +700,7 @@ name|RES_DEBUG
 condition|)
 name|printf
 argument_list|(
-literal|"mkquery failed\n"
+literal|"res_mkquery failed\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -762,7 +762,7 @@ operator|)
 return|;
 name|n
 operator|=
-name|mkquery
+name|res_mkquery
 argument_list|(
 name|IQUERY
 argument_list|,
@@ -803,7 +803,7 @@ name|RES_DEBUG
 condition|)
 name|printf
 argument_list|(
-literal|"mkquery failed\n"
+literal|"res_mkquery failed\n"
 argument_list|)
 expr_stmt|;
 return|return

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	res_mkquery.c	4.3	85/03/27	*/
+comment|/*	res_mkquery.c	4.4	85/03/28	*/
 end_comment
 
 begin_include
@@ -38,7 +38,7 @@ comment|/*  * Form all types of queries.  * Returns the size of the result or -1
 end_comment
 
 begin_macro
-name|mkquery
+name|res_mkquery
 argument_list|(
 argument|op
 argument_list|,
@@ -200,7 +200,7 @@ name|RES_DEBUG
 condition|)
 name|printf
 argument_list|(
-literal|"mkquery(%d, %s, %d, %d)\n"
+literal|"res_mkquery(%d, %s, %d, %d)\n"
 argument_list|,
 name|op
 argument_list|,

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_send.c	4.2 (Berkeley) %G%"
+literal|"@(#)res_send.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -80,7 +80,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_macro
-name|sendquery
+name|res_send
 argument_list|(
 argument|buf
 argument_list|,
@@ -180,7 +180,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"sendquery()\n"
+literal|"res_send()\n"
 argument_list|)
 expr_stmt|;
 name|p_query
@@ -200,20 +200,9 @@ operator|&
 name|RES_INIT
 operator|)
 condition|)
-block|{
-if|if
-condition|(
-operator|!
 name|res_init
 argument_list|()
-condition|)
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-block|}
+expr_stmt|;
 name|s
 operator|=
 operator|-
