@@ -690,13 +690,6 @@ begin_comment
 comment|/* router renumbering prefix 					 * walk list every 5 sec.    */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|ip6_mapped_addr_on
-value|(!ip6_v6only)
-end_define
-
 begin_decl_stmt
 specifier|extern
 name|int

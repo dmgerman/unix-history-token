@@ -1013,7 +1013,8 @@ name|INP_IPV6
 expr_stmt|;
 if|if
 condition|(
-name|ip6_mapped_addr_on
+operator|!
+name|ip6_v6only
 operator|&&
 operator|(
 name|inp
@@ -1300,7 +1301,8 @@ name|INP_IPV4
 expr_stmt|;
 if|if
 condition|(
-name|ip6_mapped_addr_on
+operator|!
+name|ip6_v6only
 operator|&&
 operator|(
 name|inp
@@ -1639,8 +1641,7 @@ name|sin
 decl_stmt|;
 if|if
 condition|(
-operator|!
-name|ip6_mapped_addr_on
+name|ip6_v6only
 operator|||
 operator|(
 name|inp
