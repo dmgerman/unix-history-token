@@ -37,7 +37,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nfsd.c	8.7 (Berkeley) %G%"
+literal|"@(#)nfsd.c	8.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3010,7 +3010,7 @@ operator|*
 name|cp
 operator|++
 operator|=
-literal|' '
+literal|'\0'
 expr_stmt|;
 block|}
 end_function
