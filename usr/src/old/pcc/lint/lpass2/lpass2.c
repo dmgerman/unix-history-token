@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpass2.c	1.4	(Berkeley)	%G%"
+literal|"@(#)lpass2.c	1.5	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,13 +24,19 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"manifest"
+file|"macdefs.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lmanifest"
+file|"manifest.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lmanifest.h"
 end_include
 
 begin_define

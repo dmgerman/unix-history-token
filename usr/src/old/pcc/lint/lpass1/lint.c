@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lint.c	1.5	(Berkeley)	%G%"
+literal|"@(#)lint.c	1.6	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -24,13 +24,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"mfile1"
+file|"pass1.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"lmanifest"
+file|"lmanifest.h"
 end_include
 
 begin_include
@@ -840,7 +840,7 @@ argument|;
 comment|/* count the rhs */
 argument|while( p->in.op == CM ){ 		++c; 		p = p->in.left; 		} 	return( c ); 	}  lpta( p ) NODE *p; { 	static ATYPE t;  	if( p->in.op == CM ){ 		lpta( p->in.left ); 		p = p->in.right; 		}  	t.aty = p->in.type; 	t.extra = (p->in.op==ICON); 	t.extra1 =
 literal|0
-argument|;  	if( !astype(&t, p->in.csiz ) ) { 		switch( t.aty ){  			case CHAR: 			case SHORT: 				t.aty = INT; 			case LONG: 			case ULONG: 			case INT: 			case UNSIGNED: 				break;  			case UCHAR: 			case USHORT: 				t.aty = UNSIGNED; 				break;  			case FLOAT: 				t.aty = DOUBLE; 				t.extra =
+argument|;  	if( !astype(&t, p->fn.csiz ) ) { 		switch( t.aty ){  			case CHAR: 			case SHORT: 				t.aty = INT; 			case LONG: 			case ULONG: 			case INT: 			case UNSIGNED: 				break;  			case UCHAR: 			case USHORT: 				t.aty = UNSIGNED; 				break;  			case FLOAT: 				t.aty = DOUBLE; 				t.extra =
 literal|0
 argument|; 				break;  			default: 				t.extra =
 literal|0
