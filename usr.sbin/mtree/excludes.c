@@ -365,6 +365,7 @@ argument_list|)
 block|{
 if|if
 condition|(
+operator|(
 name|e
 operator|->
 name|pathname
@@ -377,6 +378,7 @@ name|glob
 argument_list|,
 name|path
 argument_list|)
+operator|)
 operator|||
 name|MATCH
 argument_list|(

@@ -174,6 +174,7 @@ end_decl_stmt
 
 begin_function_decl
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|ftype
@@ -211,6 +212,7 @@ parameter_list|)
 name|char
 modifier|*
 name|name
+name|__unused
 decl_stmt|;
 specifier|register
 name|NODE
@@ -240,7 +242,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|cp
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|tab
 init|=
@@ -1577,6 +1581,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|inotype
@@ -1663,6 +1668,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|ftype

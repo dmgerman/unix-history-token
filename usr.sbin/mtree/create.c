@@ -379,7 +379,7 @@ modifier|*
 name|p
 decl_stmt|;
 name|time_t
-name|clock
+name|cl
 decl_stmt|;
 name|char
 modifier|*
@@ -393,6 +393,12 @@ index|[
 name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
+name|char
+name|dot
+index|[]
+init|=
+literal|"."
+decl_stmt|;
 name|int
 name|indent
 init|=
@@ -404,7 +410,7 @@ operator|)
 name|time
 argument_list|(
 operator|&
-name|clock
+name|cl
 argument_list|)
 expr_stmt|;
 operator|(
@@ -437,7 +443,7 @@ argument_list|,
 name|ctime
 argument_list|(
 operator|&
-name|clock
+name|cl
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -446,7 +452,7 @@ index|[
 literal|0
 index|]
 operator|=
-literal|"."
+name|dot
 expr_stmt|;
 name|argv
 index|[
@@ -1211,6 +1217,9 @@ name|offset
 argument_list|,
 literal|"time=%ld.%ld"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|p
 operator|->
 name|fts_statp

@@ -101,6 +101,7 @@ typedef|typedef
 struct|struct
 name|_key
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
@@ -287,6 +288,21 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|int
+name|keycompare
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|u_int
 name|parsekey
@@ -309,18 +325,6 @@ modifier|*
 name|k
 decl_stmt|,
 name|tmp
-decl_stmt|;
-name|int
-name|keycompare
-argument_list|(
-specifier|const
-name|void
-operator|*
-argument_list|,
-specifier|const
-name|void
-operator|*
-argument_list|)
 decl_stmt|;
 name|tmp
 operator|.
@@ -429,6 +433,7 @@ name|strcmp
 argument_list|(
 operator|(
 operator|(
+specifier|const
 name|KEY
 operator|*
 operator|)
@@ -439,6 +444,7 @@ name|name
 argument_list|,
 operator|(
 operator|(
+specifier|const
 name|KEY
 operator|*
 operator|)
