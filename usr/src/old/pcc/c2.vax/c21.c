@@ -6738,10 +6738,6 @@ operator|==
 name|t
 operator|||
 literal|0
-operator|==
-name|n
-operator|||
-literal|0
 operator|<=
 name|ispow2
 argument_list|(
@@ -7259,6 +7255,12 @@ operator|&&
 name|r
 operator|<
 name|NUSE
+operator|&&
+name|siz
+operator|-
+name|f
+operator|<=
+literal|32
 condition|)
 block|{
 comment|/* a good ASH */
