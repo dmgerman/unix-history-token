@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/intr_machdep.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/rman.h>
 end_include
 
@@ -110,29 +116,6 @@ include|#
 directive|include
 file|<machine/resource.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|APIC_IO
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<machine/smp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/mpapic.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -178,18 +161,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/icu.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/intr_machdep.h>
-end_include
 
 begin_include
 include|#
@@ -705,7 +676,7 @@ argument_list|)
 expr_stmt|;
 comment|/* suppress attach message for neatness */
 comment|/*  	 * XXX working notes: 	 * 	 * - IRQ resource creation should be moved to the PIC/APIC driver. 	 * - DRQ resource creation should be moved to the DMAC driver. 	 * - The above should be sorted to probe earlier than any child busses. 	 * 	 * - Leave I/O and memory creation here, as child probes may need them. 	 *   (especially eg. ACPI) 	 */
-comment|/* 	 * IRQ's are on the mainboard on old systems, but on the ISA part 	 * of PCI->ISA bridges.  There would be multiple sets of IRQs on 	 * multi-ISA-bus systems.  PCI interrupts are routed to the ISA 	 * component, so in a way, PCI can be a partial child of an ISA bus(!). 	 * APIC interrupts are global though. 	 * 	 * XXX We depend on the AT PIC driver correctly claiming IRQ 2 	 *     to prevent its reuse elsewhere in the !APIC_IO case. 	 */
+comment|/* 	 * IRQ's are on the mainboard on old systems, but on the ISA part 	 * of PCI->ISA bridges.  There would be multiple sets of IRQs on 	 * multi-ISA-bus systems.  PCI interrupts are routed to the ISA 	 * component, so in a way, PCI can be a partial child of an ISA bus(!). 	 * APIC interrupts are global though. 	 */
 name|irq_rman
 operator|.
 name|rm_start
@@ -724,27 +695,14 @@ name|rm_descr
 operator|=
 literal|"Interrupt request lines"
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|APIC_IO
 name|irq_rman
 operator|.
 name|rm_end
 operator|=
-name|APIC_INTMAPSIZE
+name|NUM_IO_INTS
 operator|-
 literal|1
 expr_stmt|;
-else|#
-directive|else
-name|irq_rman
-operator|.
-name|rm_end
-operator|=
-literal|15
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|rman_init
@@ -2039,7 +1997,7 @@ operator|)
 return|;
 name|error
 operator|=
-name|inthand_add
+name|intr_add_handler
 argument_list|(
 name|device_get_nameunit
 argument_list|(
@@ -2090,7 +2048,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|inthand_remove
+name|intr_remove_handler
 argument_list|(
 name|ih
 argument_list|)
