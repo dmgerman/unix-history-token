@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)genassym.c	1.3 (Berkeley) %G%"
+literal|"@(#)genassym.c	1.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -102,6 +102,12 @@ begin_include
 include|#
 directive|include
 file|"msgbuf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../tahoevba/vbaparam.h"
 end_include
 
 begin_function
@@ -446,30 +452,23 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tIOSIZE %d\n"
+literal|"#define\tVBIOSIZE %d\n"
 argument_list|,
-name|IOSIZE
+name|VBIOSIZE
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tMAXBPTE %d\n"
+literal|"#define\tVBMEMSIZE %d\n"
 argument_list|,
-name|MAXBPTE
+name|VBMEMSIZE
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"#define\tTBUFSIZ %d\n"
+literal|"#define\tVBPTSIZE %d\n"
 argument_list|,
-name|TBUFSIZ
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#define\tACEBPTE %d\n"
-argument_list|,
-name|ACEBPTE
+name|VBPTSIZE
 argument_list|)
 expr_stmt|;
 name|printf

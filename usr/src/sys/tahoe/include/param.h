@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.h	1.1	86/01/05	*/
+comment|/*	param.h	1.2	86/01/20	*/
 end_comment
 
 begin_comment
@@ -85,17 +85,6 @@ end_define
 
 begin_comment
 comment|/* pages of u-area (2 stack pages) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IOBASE
-value|((caddr_t)0xfff00000)
-end_define
-
-begin_comment
-comment|/* base of Versabus address space */
 end_comment
 
 begin_define

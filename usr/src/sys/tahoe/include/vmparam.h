@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vmparam.h	1.3	86/01/12	*/
+comment|/*	vmparam.h	1.4	86/01/20	*/
 end_comment
 
 begin_comment
-comment|/*  * Machine dependent constants for TAHOE  */
+comment|/*  * Machine dependent constants for tahoe.  */
 end_comment
 
 begin_comment
@@ -499,50 +499,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*   * The following constant is used to initialize the map of the  * system page table i/o entries.  * It's value should be the highest i/o address used by all the   * controllers handled in the system as specified in ubminit   * structure in ioconf.c.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXIOADDR
-value|0xffffee45
-end_define
-
-begin_comment
-comment|/* number of entries in the system page pable for i/o space */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IOSIZE
-value|(((MAXIOADDR - (int)IOBASE+ NBPG-1)>> PGSHIFT)+1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TBUFSIZ
-value|32
-end_define
-
-begin_comment
-comment|/* maximum tape buffer size */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACEBPTE
-value|32
-end_define
-
-begin_comment
-comment|/* ACC Ethernet (ACE) I/O window */
-end_comment
 
 end_unit
 
