@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: cmds.c,v 1.13 1998/01/09 13:45:11 msmith Exp $	*/
+comment|/*	$Id: cmds.c,v 1.14 1998/02/14 15:38:29 steve Exp $	*/
 end_comment
 
 begin_comment
@@ -38,7 +38,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$Id: cmds.c,v 1.13 1998/01/09 13:45:11 msmith Exp $"
+literal|"$Id: cmds.c,v 1.14 1998/02/14 15:38:29 steve Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4316,7 +4316,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Toggle preserving modification times on retreived files.  */
+comment|/*  * Toggle preserving modification times on retrieved files.  */
 end_comment
 
 begin_comment
