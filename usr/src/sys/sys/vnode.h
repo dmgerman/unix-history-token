@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	7.37 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	7.38 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -91,10 +91,14 @@ name|u_long
 name|v_flag
 decl_stmt|;
 comment|/* vnode flags (see below) */
-name|long
+name|short
 name|v_usecount
 decl_stmt|;
 comment|/* reference count of users */
+name|short
+name|v_writecount
+decl_stmt|;
+comment|/* reference count of writers */
 name|long
 name|v_holdcnt
 decl_stmt|;
@@ -1941,6 +1945,34 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|vn_close
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vnode
+operator|*
+name|vp
+operator|,
+name|int
+name|flags
+operator|,
+expr|struct
+name|ucred
+operator|*
+name|cred
+operator|,
+expr|struct
+name|proc
+operator|*
+name|p
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|vn_rdwr
 name|__P
 argument_list|(
@@ -2077,26 +2109,6 @@ name|fp
 operator|,
 name|int
 name|which
-operator|,
-expr|struct
-name|proc
-operator|*
-name|p
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|vn_close
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|file
-operator|*
-name|fp
 operator|,
 expr|struct
 name|proc
