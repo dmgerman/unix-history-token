@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_var.h	6.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tcp_var.h	6.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -70,9 +70,9 @@ value|0x02
 comment|/* ack, but try to delay it */
 define|#
 directive|define
-name|TF_DONTKEEP
+name|TF_NODELAY
 value|0x04
-comment|/* don't use keep-alives */
+comment|/* don't delay packets to coalesce */
 define|#
 directive|define
 name|TF_NOOPT
@@ -121,7 +121,7 @@ name|snd_wnd
 decl_stmt|;
 comment|/* send window */
 comment|/* receive sequence variables */
-name|short
+name|u_short
 name|rcv_wnd
 decl_stmt|;
 comment|/* receive window */
