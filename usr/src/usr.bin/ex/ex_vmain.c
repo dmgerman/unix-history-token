@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_vmain.c	7.4	%G%"
+literal|"@(#)ex_vmain.c	7.5	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1270,7 +1270,7 @@ operator|-
 name|vcline
 operator|+
 literal|2
-operator|+
+operator|-
 operator|(
 name|cnt
 operator|-
