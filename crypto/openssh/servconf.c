@@ -524,7 +524,7 @@ name|options
 operator|->
 name|login_grace_time
 operator|=
-literal|60
+literal|120
 expr_stmt|;
 if|if
 condition|(
