@@ -123,12 +123,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<struct.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<unistd.h>
 end_include
 
@@ -706,12 +700,7 @@ name|ab
 operator|.
 name|ac_comm
 index|[
-name|fldsiz
-argument_list|(
-name|acct
-argument_list|,
-name|ac_comm
-argument_list|)
+name|AC_COMM_LEN
 index|]
 operator|&&
 operator|*
@@ -756,19 +745,9 @@ name|printf
 argument_list|(
 literal|"%-*.*s %-7s %-*s %-*s "
 argument_list|,
-name|fldsiz
-argument_list|(
-name|acct
+name|AC_COMM_LEN
 argument_list|,
-name|ac_comm
-argument_list|)
-argument_list|,
-name|fldsiz
-argument_list|(
-name|acct
-argument_list|,
-name|ac_comm
-argument_list|)
+name|AC_COMM_LEN
 argument_list|,
 name|ab
 operator|.
@@ -1226,12 +1205,7 @@ argument_list|,
 operator|*
 name|argv
 argument_list|,
-name|fldsiz
-argument_list|(
-name|acct
-argument_list|,
-name|ac_comm
-argument_list|)
+name|AC_COMM_LEN
 argument_list|)
 condition|)
 return|return
