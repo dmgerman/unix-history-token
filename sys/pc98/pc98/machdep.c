@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"npx.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_atalk.h"
 end_include
 
@@ -61,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|"opt_msgbuf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_npx.h"
 end_include
 
 begin_include
@@ -5221,11 +5221,9 @@ operator||
 name|CR0_TS
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NNPX
-operator|>
-literal|0
+ifdef|#
+directive|ifdef
+name|DEV_NPX
 comment|/* Initialize the npx (if any) for the current process. */
 name|npxinit
 argument_list|(
@@ -6605,11 +6603,9 @@ decl_stmt|;
 name|int
 name|speculative_mprobe
 decl_stmt|;
-if|#
-directive|if
-name|NNPX
-operator|>
-literal|0
+ifdef|#
+directive|ifdef
+name|DEV_NPX
 name|int
 name|msize
 decl_stmt|;
@@ -6716,11 +6712,9 @@ name|FALSE
 expr_stmt|;
 endif|#
 directive|endif
-if|#
-directive|if
-name|NNPX
-operator|>
-literal|0
+ifdef|#
+directive|ifdef
+name|DEV_NPX
 if|if
 condition|(
 name|resource_int_value

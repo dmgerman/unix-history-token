@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"npx.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_atalk.h"
 end_include
 
@@ -61,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|"opt_msgbuf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_npx.h"
 end_include
 
 begin_include
@@ -5143,11 +5143,9 @@ operator||
 name|CR0_TS
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|NNPX
-operator|>
-literal|0
+ifdef|#
+directive|ifdef
+name|DEV_NPX
 comment|/* Initialize the npx (if any) for the current process. */
 name|npxinit
 argument_list|(

@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"npx.h"
+file|"opt_npx.h"
 end_include
 
 begin_include
@@ -485,11 +485,9 @@ endif|#
 directive|endif
 return|return;
 block|}
-if|#
-directive|if
-name|NNPX
-operator|>
-literal|0
+ifdef|#
+directive|ifdef
+name|DEV_NPX
 comment|/* Ensure that p1's pcb is up to date. */
 if|if
 condition|(
@@ -836,11 +834,9 @@ name|p_addr
 operator|->
 name|u_pcb
 decl_stmt|;
-if|#
-directive|if
-name|NNPX
-operator|>
-literal|0
+ifdef|#
+directive|ifdef
+name|DEV_NPX
 name|npxexit
 argument_list|(
 name|p
@@ -848,7 +844,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* NNPX */
 if|if
 condition|(
 name|pcb

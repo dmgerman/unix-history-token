@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_clock.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_cpu.h"
 end_include
 
@@ -28,7 +34,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_clock.h"
+file|"opt_npx.h"
 end_include
 
 begin_include
@@ -290,12 +296,6 @@ begin_include
 include|#
 directive|include
 file|"isa.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"npx.h"
 end_include
 
 begin_include
@@ -1535,11 +1535,9 @@ break|break;
 case|case
 name|T_DNA
 case|:
-if|#
-directive|if
-name|NNPX
-operator|>
-literal|0
+ifdef|#
+directive|ifdef
+name|DEV_NPX
 comment|/* transparent fault (due to context switch "late") */
 if|if
 condition|(
@@ -1659,11 +1657,9 @@ goto|;
 case|case
 name|T_DNA
 case|:
-if|#
-directive|if
-name|NNPX
-operator|>
-literal|0
+ifdef|#
+directive|ifdef
+name|DEV_NPX
 comment|/* 			 * The kernel is apparently using npx for copying. 			 * XXX this should be fatal unless the kernel has 			 * registered such use. 			 */
 if|if
 condition|(
