@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	Copyright (c) 1982 Regents of the University of California  *	@(#)asscanl.h 4.3 %G%  */
+comment|/*  *	Copyright (c) 1982 Regents of the University of California  *	@(#)asscanl.h 4.4 %G%  */
 end_comment
 
 begin_comment
@@ -435,46 +435,6 @@ end_decl_stmt
 
 begin_comment
 comment|/*the last token in the current token buffer*/
-end_comment
-
-begin_comment
-comment|/*  *	Variables to manage the string buffering  *	declared in asscan.h.  */
-end_comment
-
-begin_decl_stmt
-name|int
-name|strno
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*the current string being filled*/
-end_comment
-
-begin_decl_stmt
-name|struct
-name|strdesc
-name|strbuf
-index|[
-literal|3
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*the string buffers; the first for nulls*/
-end_comment
-
-begin_decl_stmt
-name|struct
-name|strdesc
-modifier|*
-name|strptr
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*current string buffer being filled*/
 end_comment
 
 begin_define

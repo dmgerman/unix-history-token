@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	Copyright (c) 1982 Regents of the University of California  *	@(#)assyms.h 4.3 %G%  */
+comment|/*  *	Copyright (c) 1982 Regents of the University of California  *	@(#)assyms.h 4.4 %G%  */
 end_comment
 
 begin_comment
@@ -170,12 +170,6 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FLEXNAMES
-end_ifdef
-
 begin_comment
 comment|/*  *	Names are allocated in a string pool.  String pools are linked  *	together and are allocated dynamically by Calloc.  */
 end_comment
@@ -217,11 +211,6 @@ modifier|*
 name|strplhead
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|extern

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asparse.c 4.11 %G%"
+literal|"@(#)asparse.c 4.12 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -339,8 +339,7 @@ name|symtab
 modifier|*
 name|stpt
 decl_stmt|;
-name|struct
-name|strdesc
+name|char
 modifier|*
 name|stringp
 decl_stmt|;
@@ -717,15 +716,9 @@ argument|break;     case PARSEEOF: 	tokptr -= sizeof(bytetoktype); 	*tokptr++ = 
 literal|1
 argument|] = VOID; 	tokptr[
 literal|2
-argument|] = PARSEEOF; 	break;     case IFILE: 	shift; 	stringp = (struct strdesc *)yylval; 	shiftover(STRING); 	dotsname =&UDotsname[
+argument|] = PARSEEOF; 	break;     case IFILE: 	shift; 	stringp = (char *)yylval; 	shiftover(STRING); 	dotsname =&UDotsname[
 literal|0
-argument|]; 	movestr(dotsname, stringp->str, 		stringp->str_lg>=
-literal|32
-argument|?
-literal|32
-argument|:stringp->str_lg); 	dotsname[stringp->str_lg] =
-literal|'\0'
-argument|; 	break;     case ILINENO: 	shift;
+argument|]; 	movestr(dotsname, stringp, min(STRLEN(stringp), sizeof(dotsname))); 	break;     case ILINENO: 	shift;
 comment|/*over the ILINENO*/
 argument|expr(locxp, val); 	lineno = locxp->e_xvalue; 	break;     case ISET:
 comment|/* .set<name> ,<expr> */
@@ -872,17 +865,9 @@ argument|);
 ifdef|#
 directive|ifdef
 name|UNIX
-argument|while (space_value>
-literal|96
-argument|){ 		outs(strbuf[
-literal|2
-argument|].str,
-literal|96
-argument|); 		space_value -=
-literal|96
-argument|; 	} 	outs(strbuf[
-literal|2
-argument|].str, space_value);
+argument|{ 		static char spacebuf[
+literal|128
+argument|]; 		while (space_value> sizeof(spacebuf)){ 			outs(spacebuf, sizeof(spacebuf)); 			space_value -= sizeof(spacebuf); 		} 		outs(spacebuf, space_value); 	}
 endif|#
 directive|endif
 endif|UNIX
@@ -893,19 +878,13 @@ argument|dotp->e_xvalue += space_value;
 comment|/*bump pc*/
 argument|if (passno==
 literal|2
-argument|){ 	  if(*(strbuf[
-literal|2
-argument|].str)==
-literal|0
-argument|) { 		puchar(vms_obj_ptr,
+argument|){ 	  puchar(vms_obj_ptr,
 literal|81
 argument|);
 comment|/* AUGR  */
 argument|pulong(vms_obj_ptr,space_value);
 comment|/* incr  */
-argument|} else yyerror(
-literal|"VMS, encountered non-0 .space"
-argument|); 	  if ((vms_obj_ptr-sobuf)>
+argument|if ((vms_obj_ptr-sobuf)>
 literal|400
 argument|) { 		write(objfil,sobuf,vms_obj_ptr-sobuf); 		vms_obj_ptr=sobuf+
 literal|1
@@ -956,13 +935,19 @@ argument|case IASCIZ:
 comment|/* .asciz [<stringlist> ] */
 argument|auxval = val; 	shift;
 comment|/* 	 *	Code to consume a string list 	 * 	 *	stringlist: empty | STRING | stringlist STRING 	 */
-argument|while (val ==  STRING){ 		flushfield(NBPW/
+argument|while (val == STRING){ 		flushfield(NBPW/
 literal|4
-argument|); 		if (bitoff) 		  dotp->e_xvalue++; 		stringp = (struct strdesc *)yylval;
+argument|); 		if (bitoff) 			dotp->e_xvalue++; 		stringp = (char *)yylval;
+comment|/* 		 *	utilize the string scanner cheat, 		 *	where it appended a null byte on the string, 		 *	but didn't charge it to STRLEN 		 */
+argument|STRLEN(stringp) += (auxval == IASCIZ) ?
+literal|1
+argument|:
+literal|0
+argument|;
 ifdef|#
 directive|ifdef
 name|UNIX
-argument|outs(stringp->str, stringp->str_lg);
+argument|outs(stringp, STRLEN(stringp));
 endif|#
 directive|endif
 endif|UNIX
@@ -989,34 +974,7 @@ argument|shift;
 comment|/*over the STRING*/
 argument|if (val == CM)
 comment|/*could be a split string*/
-argument|shift; 	}  	if (auxval == IASCIZ){ 		flushfield(NBPW/
-literal|4
-argument|);
-ifdef|#
-directive|ifdef
-name|UNIX
-argument|outb(
-literal|0
-argument|);
-endif|#
-directive|endif
-endif|UNIX
-ifdef|#
-directive|ifdef
-name|VMS
-argument|if (passno ==
-literal|2
-argument|) { 			puchar(vms_obj_ptr,-
-literal|1
-argument|); 			puchar(vms_obj_ptr,
-literal|0
-argument|); 		} 		dotp->e_xvalue +=
-literal|1
-argument|;
-endif|#
-directive|endif
-endif|VMS
-argument|} 	break; 	    case IORG:
+argument|shift; 	} 	break; 	    case IORG:
 comment|/* .org<expr> */
 argument|shift; 	expr(locxp, val);  	if ((locxp->e_xtype& XTYPE) == XABS)
 comment|/* tekmdp */
@@ -1091,38 +1049,35 @@ argument|; goto shortstab;     case ISTABSTR: 	stabname =
 literal|".stabs"
 argument|;    shortstab: 	auxval = val; 	if (passno ==
 literal|2
-argument|) goto errorfix; 	stpt = (struct symtab *)yylval; 	stabstart = tokptr; 	(bytetoktype *)stabstart -= sizeof(struct symtab *); 	(bytetoktype *)stabstart -= sizeof(bytetoktype); 	shift; 	if (auxval == ISTABSTR){ 		stringp = (struct strdesc *)yylval; 		shiftover(STRING);
+argument|) goto errorfix; 	stpt = (struct symtab *)yylval; 	stabstart = tokptr; 	(bytetoktype *)stabstart -= sizeof(struct symtab *); 	(bytetoktype *)stabstart -= sizeof(bytetoktype); 	shift; 	if (auxval == ISTABSTR){ 		stringp = (char *)yylval; 		shiftover(STRING);
 ifndef|#
 directive|ifndef
 name|FLEXNAMES
-argument|auxval = stringp->str_lg> NCPS ? NCPS : stringp->str_lg;
+argument|movestr(stpt->s_name, stringp, min(STRLEN(stringp), NCPS));
 else|#
 directive|else
-argument|stringp->str[stringp->str_lg] =
-literal|0
+argument|stpt->s_name = stringp;
+comment|/* 		 *	We want the trailing null included in this string. 		 *	We utilize the cheat the string scanner used, 		 *	and merely increment the string length 		 */
+argument|STRLEN(stringp) +=
+literal|1
 argument|;
 endif|#
 directive|endif
-argument|shiftover(CM); 	} else { 		stringp =&(strbuf[
-literal|2
-argument|]);
+argument|shiftover(CM); 	} else {
 ifndef|#
 directive|ifndef
 name|FLEXNAMES
-argument|auxval = NCPS;
-endif|#
-directive|endif
-argument|}
-ifndef|#
-directive|ifndef
-name|FLEXNAMES
-argument|movestr(stpt->s_name, stringp->str, auxval);
+argument|static char nullstr[NCPS]; 		movestr(stpt->s_name, nullstr, NCPS);
 else|#
 directive|else
-argument|stpt->s_name = savestr(stringp->str);
+argument|static char nullstr[
+literal|1
+argument|]; 		stpt->s_name = savestr(nullstr,
+literal|1
+argument|);
 endif|#
 directive|endif
-argument|goto tailstab; 	break;     case ICOMM:
+argument|} 	goto tailstab; 	break;     case ICOMM:
 comment|/* .comm<name> ,<expr> */
 argument|case ILCOMM:
 comment|/* .lcomm<name> ,<expr> */

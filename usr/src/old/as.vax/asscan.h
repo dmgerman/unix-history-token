@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	Copyright (c) 1982 Regents of the University of California  *	@(#)asscan.h 4.7 %G%  */
+comment|/*  *	Copyright (c) 1982 Regents of the University of California  *	@(#)asscan.h 4.8 %G%  */
 end_comment
 
 begin_comment
@@ -98,7 +98,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|short
+name|u_short
 name|lgtype
 typedef|;
 end_typedef
@@ -145,6 +145,18 @@ parameter_list|,
 name|val
 parameter_list|)
 value|*(short *)ptr=val,	ptr += sizeof(short)
+end_define
+
+begin_define
+define|#
+directive|define
+name|plgtype
+parameter_list|(
+name|ptr
+parameter_list|,
+name|val
+parameter_list|)
+value|*(lgtype *)ptr=val,	ptr += sizeof(lgtype)
 end_define
 
 begin_define
@@ -258,18 +270,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|pstrlg
-parameter_list|(
-name|ptr
-parameter_list|,
-name|val
-parameter_list|)
-value|*(lgtype *)ptr  = val,	ptr += sizeof(short)
-end_define
-
-begin_define
-define|#
-directive|define
 name|pskiplg
 parameter_list|(
 name|ptr
@@ -313,6 +313,18 @@ parameter_list|,
 name|ptr
 parameter_list|)
 value|val = *(short *)ptr , ptr += sizeof (short)
+end_define
+
+begin_define
+define|#
+directive|define
+name|glgtype
+parameter_list|(
+name|val
+parameter_list|,
+name|ptr
+parameter_list|)
+value|val = *(lgtype *)ptr , ptr += sizeof (lgtype)
 end_define
 
 begin_define
@@ -426,18 +438,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|gstrlg
-parameter_list|(
-name|val
-parameter_list|,
-name|ptr
-parameter_list|)
-value|val = *(lgtype *)ptr, ptr += sizeof (short)
-end_define
-
-begin_define
-define|#
-directive|define
 name|gskiplg
 parameter_list|(
 name|val
@@ -470,68 +470,18 @@ comment|/*current upper bound in the current buffer*/
 end_comment
 
 begin_comment
-comment|/*  *	Strings are known for their characters and for their length.  *	We cannot use a normal zero termination byte, because strings  *	can contain anything.  *  *	We have two "strings", so that an input string that is too long can be  *	split across two string buffers, and not confuse the yacc grammar.  *	(This is probably superflous)  *  *	We have a third string of nulls so that the .skip can be   *	handled in the same way as strings.  */
+comment|/*  *	Strings are stored in the string pool; see strsave(str, length)  *	Strings are known by their length and values.  *	A string pointer points to the beginning of the value bytes;  *	the preceding two bytes are the length.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MAXSTRLG
-value|4000
-end_define
-
-begin_struct
-struct|struct
-name|strdesc
-block|{
-name|unsigned
-name|short
-name|str_lg
-decl_stmt|;
-name|char
+name|STRLEN
+parameter_list|(
 name|str
-index|[
-name|MAXSTRLG
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|strdesc
-name|strbuf
-index|[
-literal|3
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|strdesc
-modifier|*
-name|strptr
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*points to the current string*/
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|strno
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*the current string being filled*/
-end_comment
+parameter_list|)
+value|(((lgtype *)str)[-1])
+end_define
 
 begin_function_decl
 name|char
