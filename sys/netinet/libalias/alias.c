@@ -80,6 +80,20 @@ name|IPPROTO_GRE
 value|47
 end_define
 
+begin_define
+define|#
+directive|define
+name|IPPROTO_ESP
+value|50
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_AH
+value|51
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -4581,6 +4595,12 @@ break|break;
 case|case
 name|IPPROTO_GRE
 case|:
+case|case
+name|IPPROTO_ESP
+case|:
+case|case
+name|IPPROTO_AH
+case|:
 name|iresult
 operator|=
 name|PptpAliasIn
@@ -4981,6 +5001,12 @@ expr_stmt|;
 break|break;
 case|case
 name|IPPROTO_GRE
+case|:
+case|case
+name|IPPROTO_ESP
+case|:
+case|case
+name|IPPROTO_AH
 case|:
 name|iresult
 operator|=
