@@ -2273,8 +2273,7 @@ argument_list|,
 operator|*
 name|rid
 argument_list|,
-operator|~
-literal|0UL
+literal|0xffffffff
 argument_list|,
 literal|4
 argument_list|)
