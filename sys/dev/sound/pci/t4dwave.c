@@ -18,19 +18,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/pcm/sound.h>
+file|<dev/sound/pcm/sound.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/pcm/ac97.h>
+file|<dev/sound/pcm/ac97.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/pcm/pci/t4dwave.h>
+file|<dev/sound/pci/t4dwave.h>
 end_include
 
 begin_include

@@ -335,25 +335,25 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<dev/pcm/datatypes.h>
+file|<dev/sound/pcm/datatypes.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/pcm/channel.h>
+file|<dev/sound/pcm/channel.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/pcm/mixer.h>
+file|<dev/sound/pcm/mixer.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<dev/pcm/dsp.h>
+file|<dev/sound/pcm/dsp.h>
 end_include
 
 begin_define

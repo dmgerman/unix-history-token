@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<dev/pcm/sound.h>
+file|<dev/sound/pcm/sound.h>
 end_include
 
 begin_if
@@ -24,7 +24,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|<dev/pcm/isa/ad1816.h>
+file|<dev/sound/isa/ad1816.h>
 end_include
 
 begin_struct_decl

@@ -12,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/pcm/sound.h>
+file|<dev/sound/pcm/sound.h>
 end_include
 
 begin_ifdef
