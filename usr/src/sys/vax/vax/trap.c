@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trap.c	4.28	83/06/02	*/
+comment|/*	trap.c	4.29	83/06/26	*/
 end_comment
 
 begin_include
@@ -973,7 +973,7 @@ else|:
 operator|&
 name|sysent
 index|[
-name|code
+name|i
 index|]
 expr_stmt|;
 block|}
