@@ -287,7 +287,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|bindresvport2
+name|bindresvport_sa
 name|__P
 argument_list|(
 operator|(
@@ -296,9 +296,6 @@ operator|,
 expr|struct
 name|sockaddr
 operator|*
-operator|,
-name|int
-name|addrlen
 operator|)
 argument_list|)
 decl_stmt|;

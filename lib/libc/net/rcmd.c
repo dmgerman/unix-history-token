@@ -1768,7 +1768,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|bindresvport2
+name|bindresvport_sa
 argument_list|(
 name|s
 argument_list|,
