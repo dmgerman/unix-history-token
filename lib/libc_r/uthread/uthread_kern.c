@@ -1498,7 +1498,7 @@ name|uc_sigmask
 operator|=
 name|_process_sigmask
 expr_stmt|;
-name|_thread_sys_sigreturn
+name|sigreturn
 argument_list|(
 operator|&
 name|_thread_run

@@ -4714,16 +4714,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|_thread_sys_sigreturn
-parameter_list|(
-name|ucontext_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|_thread_sys_sigsetmask
 parameter_list|(
 name|int
