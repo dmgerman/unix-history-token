@@ -28,6 +28,32 @@ begin_comment
 comment|/* not lint */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$FreeBSD$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
 begin_comment
 comment|/*  * Low level character input from the input file.  * We use these special purpose routines which optimize moving  * both forward and backward from the current read pointer.  */
 end_comment
@@ -509,21 +535,6 @@ expr_stmt|;
 end_if
 
 begin_expr_stmt
-name|p
-operator|=
-operator|&
-name|bp
-operator|->
-name|data
-index|[
-name|bp
-operator|->
-name|datasize
-index|]
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|bp
 operator|->
 name|datasize
@@ -531,10 +542,6 @@ operator|+=
 name|n
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/* 	 * Set an EOI marker in the buffered data itself.  Then ensure the 	 * data is "clean": there are no extra EOI chars in the data and 	 * that the "meta" bit (the 0200 bit) is reset in each char; 	 * also translate \r\n sequences to \n if -u flag not set. 	 */
-end_comment
 
 begin_if
 if|if
@@ -563,6 +570,10 @@ expr_stmt|;
 block|}
 end_if
 
+begin_comment
+comment|/* 	 * Turn EOI (nul) characters into 0200 since EOI has special meaning.		 */
+end_comment
+
 begin_for
 for|for
 control|(
@@ -585,7 +596,6 @@ literal|0
 condition|;
 control|)
 block|{
-operator|*
 operator|--
 name|p
 expr_stmt|;

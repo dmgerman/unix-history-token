@@ -573,7 +573,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 		 * We have used the spare entry. 		 * Scan the list to find the one with the smallest 		 * gap, take it out and make it the spare. 		 * We should never remove the last one, so stop when 		 * we get to p->next ==&anchor.  This also avoids 		 * looking at the gap of the last one, which is 		 * not computed by calcgap. 		 */
+comment|/* 		 * We have used the spare entry. 		 * Scan the list to find the one with the smallest 		 * gap, take it out and make it the spare. 		 * We should never remove the last one, so stop when 		 * we get to p->next ==&anchor.  This also avoids 		 * looking at the gap of the last one, which is 		 * not computed by calcgap. 		 * 		 * XXX Should also ensure that we can determine the line 		 *     number in the case where we are reading from a pipe 		 *     and we no longer have the first block(s) of data from 		 *     the pipe buffered in ch.c.  Further, keeping linenum 		 *     entries for lines in this case that have been thrown- 		 *     out of the buffer is fairly pointless. 		 */
 name|mingap
 operator|=
 name|anchor
