@@ -4088,6 +4088,9 @@ operator|&
 name|flowtmp
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
 if|if
 condition|(
 name|inc
@@ -4116,6 +4119,8 @@ operator|&
 name|IPV6_FLOWLABEL_MASK
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 else|else
 block|{
@@ -4126,6 +4131,9 @@ operator|=
 name|arc4random
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
 if|if
 condition|(
 name|inc
@@ -4177,6 +4185,8 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+endif|#
+directive|endif
 block|}
 comment|/* Initial receive window: clip sbspace to [0 .. TCP_MAXWIN] */
 name|win
