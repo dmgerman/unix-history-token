@@ -1666,7 +1666,7 @@ name|s
 decl_stmt|;
 name|s
 operator|=
-name|splnet
+name|splimp
 argument_list|()
 expr_stmt|;
 if|if
