@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inode.c	5.2 (Berkeley) %G%"
+literal|"@(#)inode.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -531,19 +531,6 @@ operator|.
 name|fs_bsize
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ib
-operator|.
-name|b_errs
-operator|!=
-name|NULL
-condition|)
-return|return
-operator|(
-name|SKIP
-operator|)
-return|;
 name|ilevel
 operator|--
 expr_stmt|;
@@ -1323,6 +1310,8 @@ expr_stmt|;
 return|return
 operator|(
 name|STOP
+operator||
+name|FOUND
 operator|)
 return|;
 block|}
@@ -1406,6 +1395,8 @@ expr_stmt|;
 return|return
 operator|(
 name|STOP
+operator||
+name|FOUND
 operator|)
 return|;
 block|}

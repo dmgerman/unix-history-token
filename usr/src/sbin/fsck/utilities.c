@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	5.2 (Berkeley) %G%"
+literal|"@(#)utilities.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1592,7 +1592,6 @@ index|]
 expr_stmt|;
 operator|*
 name|cp
-operator|--
 operator|=
 literal|'\0'
 expr_stmt|;
@@ -1652,7 +1651,7 @@ operator|&
 name|idesc
 argument_list|)
 operator|&
-name|STOP
+name|FOUND
 operator|)
 operator|==
 literal|0
@@ -1702,7 +1701,7 @@ operator|&
 name|idesc
 argument_list|)
 operator|&
-name|STOP
+name|FOUND
 operator|)
 operator|==
 literal|0

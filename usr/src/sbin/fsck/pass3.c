@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pass3.c	5.1 (Berkeley) %G%"
+literal|"@(#)pass3.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -201,9 +201,9 @@ name|id_number
 operator|=
 name|orphan
 expr_stmt|;
+if|if
+condition|(
 operator|(
-name|void
-operator|)
 name|ckinode
 argument_list|(
 name|dp
@@ -211,12 +211,9 @@ argument_list|,
 operator|&
 name|idesc
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|idesc
-operator|.
-name|id_parent
+operator|&
+name|FOUND
+operator|)
 operator|==
 literal|0
 condition|)
