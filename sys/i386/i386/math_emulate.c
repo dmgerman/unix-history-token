@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * linux/kernel/math/math_emulate.c  *  * (C) 1991 Linus Torvalds  *  * [expediant "port" of linux 8087 emulator to 386BSD, with apologies -wfj]  *  *	from: 386BSD 0.1  *	$Id: math_emulate.c,v 1.23 1997/05/09 09:46:50 peter Exp $  */
+comment|/*  * linux/kernel/math/math_emulate.c  *  * (C) 1991 Linus Torvalds  *  * [expediant "port" of linux 8087 emulator to 386BSD, with apologies -wfj]  *  *	from: 386BSD 0.1  *	$Id: math_emulate.c,v 1.24 1997/07/20 08:37:20 bde Exp $  */
 end_comment
 
 begin_comment
@@ -8113,7 +8113,7 @@ end_function
 
 begin_function
 name|int
-name|fpu
+name|fpu_mod
 parameter_list|(
 name|struct
 name|lkm_table
@@ -8127,8 +8127,10 @@ name|int
 name|ver
 parameter_list|)
 block|{
-name|DISPATCH
+name|MOD_DISPATCH
 argument_list|(
+name|fpu
+argument_list|,
 name|lkmtp
 argument_list|,
 name|cmd
