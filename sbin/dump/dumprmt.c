@@ -690,6 +690,8 @@ name|_PATH_RMT
 expr_stmt|;
 name|msg
 argument_list|(
+literal|"%s"
+argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;

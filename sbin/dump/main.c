@@ -154,12 +154,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<inttypes.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<limits.h>
 end_include
 
@@ -167,6 +161,12 @@ begin_include
 include|#
 directive|include
 file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
 end_include
 
 begin_include
@@ -2789,8 +2789,11 @@ expr_stmt|;
 else|else
 name|msg
 argument_list|(
-literal|"finished in %d seconds, throughput %jd KBytes/sec\n"
+literal|"finished in %jd seconds, throughput %jd KBytes/sec\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|tend_writing
 operator|-
 name|tstart_writing
