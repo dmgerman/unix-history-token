@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)isa.c	7.2 (Berkeley) 5/13/91  *	$Id: intr_machdep.c,v 1.11 1998/05/31 10:53:52 bde Exp $  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)isa.c	7.2 (Berkeley) 5/13/91  *	$Id: intr_machdep.c,v 1.12 1998/06/18 15:32:06 bde Exp $  */
 end_comment
 
 begin_include
@@ -236,6 +236,7 @@ begin_define
 define|#
 directive|define
 name|AUTO_EOI_1
+value|1
 end_define
 
 begin_endif
@@ -627,7 +628,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|ointhand2_t
+name|inthand2_t
 name|isa_strayintr
 decl_stmt|;
 end_decl_stmt
@@ -1162,12 +1163,29 @@ specifier|static
 name|void
 name|isa_strayintr
 parameter_list|(
-name|d
+name|vcookiep
 parameter_list|)
-name|int
-name|d
+name|void
+modifier|*
+name|vcookiep
 decl_stmt|;
 block|{
+name|int
+name|intr
+init|=
+operator|(
+name|void
+operator|*
+operator|*
+operator|)
+name|vcookiep
+operator|-
+operator|&
+name|intr_unit
+index|[
+literal|0
+index|]
+decl_stmt|;
 comment|/* DON'T BOTHER FOR NOW! */
 comment|/* for some reason, we get bursts of intr #7, even if not enabled! */
 comment|/* 	 * Well the reason you got bursts of intr #7 is because someone 	 * raised an interrupt line and dropped it before the 8259 could 	 * prioritize it.  This is documented in the intel data book.  This 	 * means you have BAD hardware!  I have changed this so that only 	 * the first 5 get logged, then it quits logging them, and puts 	 * out a special message. rgrimes 3/25/1993 	 */
@@ -1178,7 +1196,7 @@ name|intrcnt
 index|[
 name|NR_DEVICES
 operator|+
-name|d
+name|intr
 index|]
 operator|<=
 literal|5
@@ -1189,7 +1207,7 @@ name|LOG_ERR
 argument_list|,
 literal|"stray irq %d\n"
 argument_list|,
-name|d
+name|intr
 argument_list|)
 expr_stmt|;
 if|if
@@ -1198,7 +1216,7 @@ name|intrcnt
 index|[
 name|NR_DEVICES
 operator|+
-name|d
+name|intr
 index|]
 operator|==
 literal|5
@@ -1209,7 +1227,7 @@ name|LOG_CRIT
 argument_list|,
 literal|"too many stray irq %d's; not logging any more\n"
 argument_list|,
-name|d
+name|intr
 argument_list|)
 expr_stmt|;
 block|}
@@ -2170,7 +2188,11 @@ index|[
 name|intr
 index|]
 operator|=
+operator|&
+name|intr_unit
+index|[
 name|intr
+index|]
 expr_stmt|;
 ifdef|#
 directive|ifdef
