@@ -476,8 +476,6 @@ expr_stmt|;
 name|d_mask
 index|[
 name|REC_D
-operator|=
-literal|'\n'
 index|]
 operator|=
 name|REC_D_F
@@ -796,6 +794,9 @@ operator|==
 operator|(
 name|REC_D
 operator|=
+operator|(
+name|u_char
+operator|)
 operator|*
 name|optarg
 operator|)
