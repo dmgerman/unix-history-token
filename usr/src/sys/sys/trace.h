@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trace.h	4.5	81/03/09	*/
+comment|/*	trace.h	4.6	81/03/11	*/
 end_comment
 
 begin_comment
@@ -10,19 +10,30 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TR_BREAD
+name|TR_BREADHIT
 value|0
 end_define
 
 begin_comment
-comment|/* buffer read */
+comment|/* buffer read found in cache */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TR_BREADMISS
+value|1
+end_define
+
+begin_comment
+comment|/* buffer read not in cache */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|TR_BWRITE
-value|1
+value|2
 end_define
 
 begin_comment
@@ -32,34 +43,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TR_MISS
-value|2
-end_define
-
-begin_comment
-comment|/* cache miss */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TR_HIT
+name|TR_BREADHITRA
 value|3
 end_define
 
 begin_comment
-comment|/* cache hit */
+comment|/* buffer read-ahead found in cache */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|TR_RA
+name|TR_BREADMISSRA
 value|4
 end_define
 
 begin_comment
-comment|/* read ahead */
+comment|/* buffer read-ahead not in cache */
 end_comment
 
 begin_define
