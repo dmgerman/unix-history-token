@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ul.c	5.2 (Berkeley) %G%"
+literal|"@(#)ul.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -944,16 +944,6 @@ operator||
 name|mode
 expr_stmt|;
 else|else
-block|{
-name|obuf
-index|[
-name|col
-index|]
-operator|.
-name|c_char
-operator|=
-name|c
-expr_stmt|;
 name|obuf
 index|[
 name|col
@@ -963,7 +953,6 @@ name|c_mode
 operator|=
 name|mode
 expr_stmt|;
-block|}
 name|col
 operator|++
 expr_stmt|;
