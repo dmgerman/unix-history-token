@@ -5897,6 +5897,8 @@ name|tcnp
 operator|->
 name|cn_cred
 argument_list|,
+name|NOCRED
+argument_list|,
 operator|(
 name|int
 operator|*
@@ -6008,6 +6010,8 @@ argument_list|,
 name|tcnp
 operator|->
 name|cn_cred
+argument_list|,
+name|NOCRED
 argument_list|,
 operator|(
 name|int
@@ -6602,6 +6606,8 @@ name|cnp
 operator|->
 name|cn_cred
 argument_list|,
+name|NOCRED
+argument_list|,
 operator|(
 name|int
 operator|*
@@ -7168,6 +7174,8 @@ operator|->
 name|a_cnp
 operator|->
 name|cn_cred
+argument_list|,
+name|NOCRED
 argument_list|,
 operator|(
 name|int

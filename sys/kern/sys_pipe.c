@@ -233,7 +233,7 @@ parameter_list|,
 name|struct
 name|ucred
 modifier|*
-name|cred
+name|active_cred
 parameter_list|,
 name|int
 name|flags
@@ -264,7 +264,7 @@ parameter_list|,
 name|struct
 name|ucred
 modifier|*
-name|cred
+name|active_cred
 parameter_list|,
 name|int
 name|flags
@@ -1945,7 +1945,7 @@ name|fp
 parameter_list|,
 name|uio
 parameter_list|,
-name|cred
+name|active_cred
 parameter_list|,
 name|flags
 parameter_list|,
@@ -1964,7 +1964,7 @@ decl_stmt|;
 name|struct
 name|ucred
 modifier|*
-name|cred
+name|active_cred
 decl_stmt|;
 name|struct
 name|thread
@@ -2033,9 +2033,7 @@ name|error
 operator|=
 name|mac_check_pipe_op
 argument_list|(
-name|td
-operator|->
-name|td_ucred
+name|active_cred
 argument_list|,
 name|rpipe
 argument_list|,
@@ -3752,7 +3750,7 @@ name|fp
 parameter_list|,
 name|uio
 parameter_list|,
-name|cred
+name|active_cred
 parameter_list|,
 name|flags
 parameter_list|,
@@ -3771,7 +3769,7 @@ decl_stmt|;
 name|struct
 name|ucred
 modifier|*
-name|cred
+name|active_cred
 decl_stmt|;
 name|struct
 name|thread
@@ -3856,9 +3854,7 @@ name|error
 operator|=
 name|mac_check_pipe_op
 argument_list|(
-name|td
-operator|->
-name|td_ucred
+name|active_cred
 argument_list|,
 name|wpipe
 argument_list|,

@@ -796,9 +796,9 @@ argument_list|,
 operator|&
 name|auio
 argument_list|,
-name|fp
+name|td
 operator|->
-name|f_cred
+name|td_ucred
 argument_list|,
 name|flags
 argument_list|,
@@ -1279,9 +1279,9 @@ argument_list|,
 operator|&
 name|auio
 argument_list|,
-name|fp
+name|td
 operator|->
-name|f_cred
+name|td_ucred
 argument_list|,
 literal|0
 argument_list|,
@@ -1921,9 +1921,9 @@ argument_list|,
 operator|&
 name|auio
 argument_list|,
-name|fp
+name|td
 operator|->
-name|f_cred
+name|td_ucred
 argument_list|,
 name|flags
 argument_list|,
@@ -2472,9 +2472,9 @@ argument_list|,
 operator|&
 name|auio
 argument_list|,
-name|fp
+name|td
 operator|->
-name|f_cred
+name|td_ucred
 argument_list|,
 literal|0
 argument_list|,

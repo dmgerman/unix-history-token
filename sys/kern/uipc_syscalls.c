@@ -8651,6 +8651,7 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+comment|/* 			 * XXXMAC: Because we don't have fp->f_cred here, 			 * we pass in NOCRED.  This is probably wrong, but 			 * is consistent with our original implementation. 			 */
 name|error
 operator|=
 name|vn_rdwr
@@ -8687,6 +8688,8 @@ argument_list|,
 name|td
 operator|->
 name|td_ucred
+argument_list|,
+name|NOCRED
 argument_list|,
 operator|&
 name|resid

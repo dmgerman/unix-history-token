@@ -6929,6 +6929,8 @@ name|IO_NODELOCKED
 argument_list|,
 name|cred
 argument_list|,
+name|NOCRED
+argument_list|,
 operator|&
 name|reclen
 argument_list|,

@@ -1014,6 +1014,8 @@ name|td
 operator|->
 name|td_ucred
 argument_list|,
+name|NOCRED
+argument_list|,
 operator|&
 name|resid
 argument_list|,
@@ -1139,6 +1141,8 @@ argument_list|,
 name|td
 operator|->
 name|td_ucred
+argument_list|,
+name|NOCRED
 argument_list|,
 operator|&
 name|resid

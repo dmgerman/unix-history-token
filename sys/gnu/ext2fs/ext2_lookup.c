@@ -4044,6 +4044,8 @@ name|IO_NOMACCHECK
 argument_list|,
 name|cred
 argument_list|,
+name|NOCRED
+argument_list|,
 operator|&
 name|count
 argument_list|,
@@ -4315,6 +4317,8 @@ operator||
 name|IO_NOMACCHECK
 argument_list|,
 name|cred
+argument_list|,
+name|NOCRED
 argument_list|,
 operator|(
 name|int

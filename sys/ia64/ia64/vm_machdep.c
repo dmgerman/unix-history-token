@@ -1024,6 +1024,8 @@ name|IO_UNIT
 argument_list|,
 name|cred
 argument_list|,
+name|NOCRED
+argument_list|,
 operator|(
 name|int
 operator|*
@@ -1070,6 +1072,8 @@ argument_list|,
 name|IO_UNIT
 argument_list|,
 name|cred
+argument_list|,
+name|NOCRED
 argument_list|,
 operator|(
 name|int

@@ -8753,6 +8753,8 @@ name|a_cnp
 operator|->
 name|cn_cred
 argument_list|,
+name|NOCRED
+argument_list|,
 operator|(
 name|int
 operator|*

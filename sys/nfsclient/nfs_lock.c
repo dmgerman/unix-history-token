@@ -725,6 +725,8 @@ name|thread0
 operator|.
 name|td_ucred
 argument_list|,
+name|NOCRED
+argument_list|,
 name|NULL
 argument_list|,
 name|td

@@ -4665,6 +4665,8 @@ name|IO_DIRECT
 argument_list|,
 name|cred
 argument_list|,
+name|NOCRED
+argument_list|,
 operator|(
 name|int
 operator|*
@@ -5411,6 +5413,8 @@ operator||
 name|IO_DIRECT
 argument_list|,
 name|cred
+argument_list|,
+name|NOCRED
 argument_list|,
 name|NULL
 argument_list|,
