@@ -2028,7 +2028,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Only add it if it's not there already */
-operator|+
 if|if
 condition|(
 name|strcmp
