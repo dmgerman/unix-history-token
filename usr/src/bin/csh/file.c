@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)file.c 1.4 (Berkeley from Hp Labs) %G%"
+literal|"@(#)file.c 1.5 (Berkeley from Hp Labs) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1522,7 +1522,7 @@ name|FREE_ITEMS
 parameter_list|(
 name|items
 parameter_list|)
-value|{ \ 	int omask;\  	omask = sigblock(sigmask(SIGINT));\ 	free_items(items);\ 	items = NULL;\ 	sigsetmask(omask);\ }
+value|{ \ 	int omask;\ \ 	omask = sigblock(sigmask(SIGINT));\ 	free_items(items);\ 	items = NULL;\ 	sigsetmask(omask);\ }
 end_define
 
 begin_comment
@@ -1602,7 +1602,7 @@ name|MAXNAMLEN
 operator|+
 literal|1
 index|]
-decl_stmt|,
+decl_stmt|;
 name|char
 modifier|*
 name|entry
