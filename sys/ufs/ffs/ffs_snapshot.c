@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sched.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/stat.h>
 end_include
 
@@ -1744,13 +1750,14 @@ name|td_ksegrp
 operator|->
 name|kg_nice
 expr_stmt|;
+name|sched_nice
+argument_list|(
 name|td
 operator|->
 name|td_ksegrp
-operator|->
-name|kg_nice
-operator|=
+argument_list|,
 literal|0
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Suspend operation on filesystem. 	 */
@@ -3869,13 +3876,14 @@ name|saved_nice
 operator|>
 literal|0
 condition|)
+name|sched_nice
+argument_list|(
 name|td
 operator|->
 name|td_ksegrp
-operator|->
-name|kg_nice
-operator|=
+argument_list|,
 name|saved_nice
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
