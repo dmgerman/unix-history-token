@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	5.34 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	5.35 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	5.34 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	5.35 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1476,6 +1476,9 @@ name|ptr
 index|[
 literal|256
 index|]
+decl_stmt|,
+modifier|*
+name|cp
 decl_stmt|;
 name|struct
 name|hostent
@@ -1501,7 +1504,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-operator|*
+if|if
+condition|(
+operator|(
+name|cp
+operator|=
 name|index
 argument_list|(
 name|strcpy
@@ -1513,6 +1520,13 @@ argument_list|)
 argument_list|,
 literal|']'
 argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+return|return;
+operator|*
+name|cp
 operator|=
 literal|'\0'
 expr_stmt|;
