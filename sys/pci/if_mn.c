@@ -1910,11 +1910,9 @@ argument_list|,
 name|resp
 argument_list|)
 expr_stmt|;
-name|FREE
+name|NG_FREE_MSG
 argument_list|(
 name|msg
-argument_list|,
-name|M_NETGRAPH
 argument_list|)
 expr_stmt|;
 return|return
