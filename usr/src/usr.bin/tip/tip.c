@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tip.c	4.8	81/08/26	*/
+comment|/*	tip.c	4.9	81/11/20	*/
 end_comment
 
 begin_comment
