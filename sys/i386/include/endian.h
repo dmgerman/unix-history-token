@@ -157,7 +157,7 @@ name|__uint32_t
 name|__x
 parameter_list|)
 block|{
-asm|__asm ("rorl $16, %1" : "=r" (__x) : "0" (__x));
+asm|__asm ("rorl $16, %0" : "+r" (__x));
 return|return
 name|__x
 return|;
@@ -203,19 +203,14 @@ name|defined
 argument_list|(
 name|I386_CPU
 argument_list|)
-asm|__asm ("bswap %0" : "=r" (__x) : "0" (__x));
+asm|__asm ("bswap %0" : "+r" (__x));
 else|#
 directive|else
-asm|__asm ("xchgb %h1, %b1\n\t"
-literal|"rorl $16, %1\n\t"
-literal|"xchgb %h1, %b1"
+asm|__asm ("xchgb %h0, %b0\n\t"
+literal|"rorl $16, %0\n\t"
+literal|"xchgb %h0, %b0"
 operator|:
-literal|"=q"
-operator|(
-name|__x
-operator|)
-operator|:
-literal|"0"
+literal|"+q"
 operator|(
 name|__x
 operator|)
@@ -244,7 +239,7 @@ name|__uint16_t
 name|__x
 parameter_list|)
 block|{
-asm|__asm ("xchgb %h1, %b1" : "=q" (__x) : "0" (__x));
+asm|__asm ("xchgb %h0, %b0" : "+q" (__x));
 return|return
 name|__x
 return|;

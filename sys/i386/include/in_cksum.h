@@ -73,18 +73,18 @@ name|ADD
 parameter_list|(
 name|n
 parameter_list|)
-value|__asm("addl " #n "(%2), %0" : "=r" (sum) : "0" (sum), "r" (ip))
+value|__asm("addl " #n "(%1), %0" : "+r" (sum) : "r" (ip))
 define|#
 directive|define
 name|ADDC
 parameter_list|(
 name|n
 parameter_list|)
-value|__asm("adcl " #n "(%2), %0" : "=r" (sum) : "0" (sum), "r" (ip))
+value|__asm("adcl " #n "(%1), %0" : "+r" (sum) : "r" (ip))
 define|#
 directive|define
 name|MOP
-value|__asm("adcl         $0, %0" : "=r" (sum) : "0" (sum))
+value|__asm("adcl         $0, %0" : "+r" (sum))
 name|ADD
 argument_list|(
 literal|0
@@ -214,8 +214,8 @@ name|u_short
 name|b
 parameter_list|)
 block|{
-asm|__asm("addw %2, %0" : "=r" (sum) : "0" (sum), "r" (b));
-asm|__asm("adcw $0, %0" : "=r" (sum) : "0" (sum));
+asm|__asm("addw %1, %0" : "+r" (sum) : "r" (b));
+asm|__asm("adcw $0, %0" : "+r" (sum));
 return|return
 operator|(
 name|sum
@@ -240,9 +240,9 @@ name|u_int
 name|c
 parameter_list|)
 block|{
-asm|__asm("addl %2, %0" : "=r" (sum) : "0" (sum), "r" (b));
-asm|__asm("adcl %2, %0" : "=r" (sum) : "0" (sum), "r" (c));
-asm|__asm("adcl $0, %0" : "=r" (sum) : "0" (sum));
+asm|__asm("addl %1, %0" : "+r" (sum) : "r" (b));
+asm|__asm("adcl %1, %0" : "+r" (sum) : "r" (c));
+asm|__asm("adcl $0, %0" : "+r" (sum));
 name|sum
 operator|=
 operator|(
