@@ -1595,9 +1595,6 @@ begin_function_decl
 name|int
 name|acpi_PkgInt
 parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
 name|ACPI_OBJECT
 modifier|*
 name|res
@@ -1616,9 +1613,6 @@ begin_function_decl
 name|int
 name|acpi_PkgInt32
 parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
 name|ACPI_OBJECT
 modifier|*
 name|res
@@ -1637,9 +1631,6 @@ begin_function_decl
 name|int
 name|acpi_PkgStr
 parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
 name|ACPI_OBJECT
 modifier|*
 name|res
