@@ -82,6 +82,24 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|files_name
+block|{
+name|char
+modifier|*
+name|f_name
+decl_stmt|;
+name|STAILQ_ENTRY
+argument_list|(
+argument|files_name
+argument_list|)
+name|f_next
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * Types.  */
 end_comment
@@ -561,6 +579,18 @@ end_extern
 begin_expr_stmt
 unit|)
 name|ftab
+expr_stmt|;
+end_expr_stmt
+
+begin_extern
+extern|extern STAILQ_HEAD(files_name_head
+operator|,
+extern|files_name
+end_extern
+
+begin_expr_stmt
+unit|)
+name|fntab
 expr_stmt|;
 end_expr_stmt
 
