@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	3.15	%G%	*/
+comment|/*	machdep.c	3.16	%G%	*/
 end_comment
 
 begin_extern
@@ -92,7 +92,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"VM/UNIX (Berkeley Version 3.15) %H% \n"
+literal|"VM/UNIX (Berkeley Version 3.16) %H% \n"
 decl_stmt|;
 end_decl_stmt
 
