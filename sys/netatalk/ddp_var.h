@@ -131,16 +131,6 @@ specifier|extern
 name|struct
 name|ddpcb
 modifier|*
-name|ddp_ports
-index|[ ]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|ddpcb
-modifier|*
 name|ddpcb
 decl_stmt|;
 end_decl_stmt
