@@ -1050,17 +1050,6 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"Hello %s %s %d\n"
-argument_list|,
-name|__FILE__
-argument_list|,
-name|__FUNCTION__
-argument_list|,
-name|__LINE__
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 end_function
