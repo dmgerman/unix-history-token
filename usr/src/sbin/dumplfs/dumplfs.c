@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dumplfs.c	5.7 (Berkeley) %G%"
+literal|"@(#)dumplfs.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,7 +73,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/file.h>
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -91,7 +91,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<time.h>
+file|<fcntl.h>
 end_include
 
 begin_include
@@ -1818,6 +1818,8 @@ operator|&
 name|dip
 operator|->
 name|di_atime
+operator|.
+name|ts_sec
 argument_list|)
 argument_list|,
 literal|"mtime "
@@ -1828,6 +1830,8 @@ operator|&
 name|dip
 operator|->
 name|di_mtime
+operator|.
+name|ts_sec
 argument_list|)
 argument_list|,
 literal|"ctime "
@@ -1838,6 +1842,8 @@ operator|&
 name|dip
 operator|->
 name|di_ctime
+operator|.
+name|ts_sec
 argument_list|)
 argument_list|)
 expr_stmt|;
