@@ -701,6 +701,8 @@ operator|->
 name|sc_leaving
 condition|)
 return|return;
+do|do
+block|{
 name|ipend
 operator|=
 name|UART_IPEND
@@ -708,6 +710,13 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ipend
+operator|==
+literal|0
+condition|)
+break|break;
 if|if
 condition|(
 name|ipend
@@ -763,6 +772,12 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+block|}
+do|while
+condition|(
+literal|1
+condition|)
+do|;
 if|if
 condition|(
 name|sc
