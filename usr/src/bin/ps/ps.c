@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ps.c	5.9 (Berkeley) %G%"
+literal|"@(#)ps.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3369,7 +3369,7 @@ expr_stmt|;
 name|addr
 operator|&=
 operator|~
-literal|0x80000000
+name|KERNBASE
 expr_stmt|;
 operator|(
 name|void
@@ -9022,7 +9022,7 @@ operator|=
 name|loc
 operator|&
 operator|~
-literal|0xc0000000
+name|KERNBASE
 expr_stmt|;
 name|p
 operator|=
@@ -9036,7 +9036,7 @@ condition|(
 operator|(
 name|loc
 operator|&
-literal|0xc0000000
+name|KERNBASE
 operator|)
 operator|==
 literal|0

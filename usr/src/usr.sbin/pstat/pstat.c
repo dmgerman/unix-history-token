@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pstat.c	5.9 (Berkeley) %G%"
+literal|"@(#)pstat.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,58 +49,6 @@ end_endif
 begin_comment
 comment|/*  * Print system stuff  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|mask
-parameter_list|(
-name|x
-parameter_list|)
-value|(x&0377)
-end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|vax
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|clear
-parameter_list|(
-name|x
-parameter_list|)
-value|((int)x&0x7fffffff)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|tahoe
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|clear
-parameter_list|(
-name|x
-parameter_list|)
-value|((int)x&~0xc0000000)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -203,6 +151,26 @@ include|#
 directive|include
 file|<stdio.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|mask
+parameter_list|(
+name|x
+parameter_list|)
+value|(x&0377)
+end_define
+
+begin_define
+define|#
+directive|define
+name|clear
+parameter_list|(
+name|x
+parameter_list|)
+value|((int)x&~ KERNBASE)
+end_define
 
 begin_decl_stmt
 name|char
@@ -6753,6 +6721,13 @@ operator|(
 name|addr
 operator|)
 return|;
+name|addr
+operator|=
+name|clear
+argument_list|(
+name|addr
+argument_list|)
+expr_stmt|;
 name|o
 operator|=
 name|addr
