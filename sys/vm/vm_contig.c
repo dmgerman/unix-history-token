@@ -1398,8 +1398,6 @@ modifier|*
 name|type
 parameter_list|)
 block|{
-name|GIANT_REQUIRED
-expr_stmt|;
 name|kmem_free
 argument_list|(
 name|kernel_map
