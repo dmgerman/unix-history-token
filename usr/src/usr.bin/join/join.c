@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)join.c	4.1 (Berkeley) %G%"
+literal|"@(#)join.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -587,7 +587,7 @@ literal|3
 condition|)
 name|error
 argument_list|(
-literal|"usage: join [-j1 x -j2 y] [-o list] file1 file2"
+literal|"usage: join [-an] [-estring] [-j1 x -j2 y] [-o list] [-tc] file1 file2"
 argument_list|)
 expr_stmt|;
 name|j1
