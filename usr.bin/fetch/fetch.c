@@ -1074,10 +1074,6 @@ argument_list|,
 name|URL
 operator|->
 name|port
-argument_list|,
-name|URL
-operator|->
-name|doc
 argument_list|)
 expr_stmt|;
 name|fprintf
