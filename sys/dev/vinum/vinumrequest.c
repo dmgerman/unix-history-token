@@ -2707,6 +2707,11 @@ operator|->
 name|organization
 argument_list|)
 expr_stmt|;
+name|status
+operator|=
+name|REQUEST_DOWN
+expr_stmt|;
+comment|/* can't access it */
 block|}
 return|return
 name|status
