@@ -447,6 +447,9 @@ name|fd
 argument_list|)
 expr_stmt|;
 comment|/* what can we do if it fails? */
+ifndef|#
+directive|ifndef
+name|POSIX
 while|while
 condition|(
 name|wait
@@ -461,6 +464,23 @@ argument_list|)
 operator|!=
 name|child
 condition|)
+else|#
+directive|else
+while|while
+condition|(
+name|wait
+argument_list|(
+operator|(
+name|int
+operator|*
+operator|)
+name|NULL
+argument_list|)
+operator|!=
+name|child
+condition|)
+endif|#
+directive|endif
 block|{
 comment|/* do nothing if wrong pid */
 block|}

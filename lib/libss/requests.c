@@ -1,12 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Various minor routines...  *  * Copyright 1987, 1988, 1989 by MIT  *  * For copyright information, see mit-sipb-copyright.h.  */
+comment|/*  * Various minor routines...  *  * Copyright 1987, 1988, 1989 by MIT  *  * For copyright information, see copyright.h.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"mit-sipb-copyright.h"
+file|"copyright.h"
 end_include
 
 begin_include
