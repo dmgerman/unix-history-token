@@ -2247,6 +2247,7 @@ case|:
 comment|/* Sil 0680 set ATA reference clock speed */
 if|if
 condition|(
+operator|(
 name|pci_read_config
 argument_list|(
 name|dev
@@ -2255,6 +2256,9 @@ literal|0x8a
 argument_list|,
 literal|1
 argument_list|)
+operator|&
+literal|0x30
+operator|)
 operator|!=
 literal|0x10
 condition|)
