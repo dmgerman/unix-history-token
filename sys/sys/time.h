@@ -204,7 +204,7 @@ block|{
 name|time_t
 name|sec
 decl_stmt|;
-name|u_int64_t
+name|uint64_t
 name|frac
 decl_stmt|;
 block|}
@@ -222,11 +222,11 @@ name|bintime
 modifier|*
 name|bt
 parameter_list|,
-name|u_int64_t
+name|uint64_t
 name|x
 parameter_list|)
 block|{
-name|u_int64_t
+name|uint64_t
 name|u
 decl_stmt|;
 name|u
@@ -274,7 +274,7 @@ modifier|*
 name|bt2
 parameter_list|)
 block|{
-name|u_int64_t
+name|uint64_t
 name|u
 decl_stmt|;
 name|u
@@ -332,7 +332,7 @@ modifier|*
 name|bt2
 parameter_list|)
 block|{
-name|u_int64_t
+name|uint64_t
 name|u
 decl_stmt|;
 name|u
@@ -373,6 +373,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*-  * Background information:  *  * When converting between timestamps on parallel timescales of differing  * resolutions it is historical and scientific practice to round down rather  * than doing 4/5 rounding.  *  *   The date changes at midnight, not at noon.  *  *   Even at 15:59:59.999999999 it's not four'o'clock.  *  *   time_second ticks after N.999999999 not after N.4999999999  *  */
+end_comment
+
 begin_function
 specifier|static
 name|__inline
@@ -403,10 +407,13 @@ operator|->
 name|tv_nsec
 operator|=
 operator|(
-literal|1000000000ULL
+operator|(
+name|uint64_t
+operator|)
+literal|1000000000
 operator|*
 call|(
-name|u_int32_t
+name|uint32_t
 call|)
 argument_list|(
 name|bt
@@ -447,6 +454,7 @@ name|ts
 operator|->
 name|tv_sec
 expr_stmt|;
+comment|/* 18446744073 = int(2^64 / 1000000000) */
 name|bt
 operator|->
 name|frac
@@ -455,9 +463,11 @@ name|ts
 operator|->
 name|tv_nsec
 operator|*
-literal|18446744073ULL
+operator|(
+name|uint64_t
+operator|)
+literal|18446744073LL
 expr_stmt|;
-comment|/* int(2^64 / 1000000000) */
 block|}
 end_function
 
@@ -491,10 +501,13 @@ operator|->
 name|tv_usec
 operator|=
 operator|(
-literal|1000000ULL
+operator|(
+name|uint64_t
+operator|)
+literal|1000000
 operator|*
 call|(
-name|u_int32_t
+name|uint32_t
 call|)
 argument_list|(
 name|bt
@@ -535,6 +548,7 @@ name|tv
 operator|->
 name|tv_sec
 expr_stmt|;
+comment|/* 18446744073709 = int(2^64 / 1000000) */
 name|bt
 operator|->
 name|frac
@@ -543,9 +557,11 @@ name|tv
 operator|->
 name|tv_usec
 operator|*
-literal|18446744073709ULL
+operator|(
+name|uint64_t
+operator|)
+literal|18446744073709LL
 expr_stmt|;
-comment|/* int(2^64 / 1000000) */
 block|}
 end_function
 
