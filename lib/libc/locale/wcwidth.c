@@ -68,7 +68,8 @@ if|if
 condition|(
 name|wc
 operator|==
-literal|0
+literal|L'
+expr|\0'
 condition|)
 return|return
 operator|(
