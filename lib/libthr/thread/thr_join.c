@@ -234,7 +234,6 @@ expr_stmt|;
 goto|goto
 name|out
 goto|;
-comment|/* Check if the thread is not dead: */
 block|}
 comment|/* 	 * Unlock the garbage collector mutex, now that the garbage collector 	 * can't be run: 	 */
 if|if
@@ -252,6 +251,7 @@ argument_list|(
 literal|"Cannot lock gc mutex"
 argument_list|)
 expr_stmt|;
+comment|/* Check if the thread is not dead: */
 if|if
 condition|(
 name|pthread
