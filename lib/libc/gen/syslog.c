@@ -1101,7 +1101,7 @@ operator|&&
 operator|(
 name|fd
 operator|=
-name|_libc_open
+name|_open
 argument_list|(
 name|_PATH_CONSOLE
 argument_list|,
@@ -1188,7 +1188,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 name|fd
 argument_list|)
@@ -1212,7 +1212,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|_libc_close
+name|_close
 argument_list|(
 name|LogFile
 argument_list|)
@@ -1272,7 +1272,7 @@ return|return;
 operator|(
 name|void
 operator|)
-name|_libc_fcntl
+name|_fcntl
 argument_list|(
 name|LogFile
 argument_list|,
@@ -1405,7 +1405,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 name|LogFile
 argument_list|)
@@ -1500,7 +1500,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 name|LogFile
 argument_list|)

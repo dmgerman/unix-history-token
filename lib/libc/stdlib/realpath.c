@@ -138,7 +138,7 @@ condition|(
 operator|(
 name|fd
 operator|=
-name|_libc_open
+name|_open
 argument_list|(
 literal|"."
 argument_list|,
@@ -513,7 +513,7 @@ comment|/* It's okay if the close fails, what's an fd more or less? */
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 name|fd
 argument_list|)
@@ -542,7 +542,7 @@ label|:
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 name|fd
 argument_list|)

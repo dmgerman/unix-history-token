@@ -53,7 +53,7 @@ end_include
 
 begin_function
 name|ssize_t
-name|_libc_readv
+name|_readv
 parameter_list|(
 name|int
 name|fd
@@ -256,7 +256,7 @@ end_function
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
-name|_libc_readv
+name|_readv
 argument_list|,
 name|readv
 argument_list|)

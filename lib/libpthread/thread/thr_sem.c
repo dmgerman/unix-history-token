@@ -439,6 +439,9 @@ block|{
 name|int
 name|retval
 decl_stmt|;
+name|_thread_enter_cancellation_point
+argument_list|()
+expr_stmt|;
 name|_SEM_CHECK_VALIDITY
 argument_list|(
 name|sem
@@ -528,6 +531,9 @@ literal|0
 expr_stmt|;
 name|RETURN
 label|:
+name|_thread_leave_cancellation_point
+argument_list|()
+expr_stmt|;
 return|return
 name|retval
 return|;

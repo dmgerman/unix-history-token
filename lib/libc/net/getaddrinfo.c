@@ -2580,7 +2580,7 @@ condition|)
 return|return
 literal|0
 return|;
-name|_libc_close
+name|_close
 argument_list|(
 name|s
 argument_list|)

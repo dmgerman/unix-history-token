@@ -1256,7 +1256,7 @@ name|loadType
 operator|!=
 name|MCLoadAll
 condition|)
-name|_libc_close
+name|_close
 argument_list|(
 name|cat
 operator|->
@@ -1433,7 +1433,7 @@ name|cat
 operator|->
 name|fd
 operator|=
-name|_libc_open
+name|_open
 argument_list|(
 name|catpath
 argument_list|,
@@ -1458,7 +1458,7 @@ block|}
 operator|(
 name|void
 operator|)
-name|_libc_fcntl
+name|_fcntl
 argument_list|(
 name|cat
 operator|->
@@ -1471,7 +1471,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|_libc_read
+name|_read
 argument_list|(
 name|cat
 operator|->
@@ -1741,7 +1741,7 @@ name|i
 expr_stmt|;
 if|if
 condition|(
-name|_libc_read
+name|_read
 argument_list|(
 name|cat
 operator|->
@@ -1965,7 +1965,7 @@ operator|==
 name|MCLoadAll
 condition|)
 block|{
-name|_libc_close
+name|_close
 argument_list|(
 name|cat
 operator|->
@@ -2069,7 +2069,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|_libc_read
+name|_read
 argument_list|(
 name|cat
 operator|->
@@ -2216,7 +2216,7 @@ name|i
 expr_stmt|;
 if|if
 condition|(
-name|_libc_read
+name|_read
 argument_list|(
 name|cat
 operator|->

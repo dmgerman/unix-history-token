@@ -159,7 +159,7 @@ name|F_WRLCK
 expr_stmt|;
 if|if
 condition|(
-name|_libc_fcntl
+name|_fcntl
 argument_list|(
 name|filedes
 argument_list|,
@@ -224,7 +224,7 @@ comment|/* NOTREACHED */
 block|}
 return|return
 operator|(
-name|_libc_fcntl
+name|_fcntl
 argument_list|(
 name|filedes
 argument_list|,

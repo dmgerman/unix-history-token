@@ -35,7 +35,7 @@ end_include
 
 begin_function
 name|pid_t
-name|_libc_wait4
+name|_wait4
 parameter_list|(
 name|pid_t
 name|pid
@@ -56,9 +56,6 @@ block|{
 name|pid_t
 name|ret
 decl_stmt|;
-name|_thread_enter_cancellation_point
-argument_list|()
-expr_stmt|;
 name|_thread_kern_sig_defer
 argument_list|()
 expr_stmt|;
@@ -133,9 +130,6 @@ block|}
 name|_thread_kern_sig_undefer
 argument_list|()
 expr_stmt|;
-name|_thread_leave_cancellation_point
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|ret
@@ -147,7 +141,7 @@ end_function
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
-name|_libc_wait4
+name|_wait4
 argument_list|,
 name|wait4
 argument_list|)

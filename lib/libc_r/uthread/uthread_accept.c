@@ -53,7 +53,7 @@ end_include
 
 begin_function
 name|int
-name|_libc_accept
+name|_accept
 parameter_list|(
 name|int
 name|fd
@@ -302,7 +302,7 @@ end_function
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
-name|_libc_accept
+name|_accept
 argument_list|,
 name|accept
 argument_list|)

@@ -426,7 +426,7 @@ condition|)
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 name|sock
 argument_list|)
@@ -552,7 +552,7 @@ condition|)
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 name|sock
 argument_list|)
@@ -1092,7 +1092,7 @@ literal|20
 argument_list|)
 condition|)
 block|{
-name|_libc_close
+name|_close
 argument_list|(
 name|sock
 argument_list|)
@@ -1123,7 +1123,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|_libc_close
+name|_close
 argument_list|(
 name|sock
 argument_list|)
@@ -1222,7 +1222,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 name|xprt
 operator|->
@@ -1645,7 +1645,7 @@ condition|(
 operator|(
 name|len
 operator|=
-name|_libc_read
+name|_read
 argument_list|(
 name|sock
 argument_list|,
@@ -1771,7 +1771,7 @@ condition|(
 operator|(
 name|i
 operator|=
-name|_libc_write
+name|_write
 argument_list|(
 name|xprt
 operator|->

@@ -199,7 +199,7 @@ condition|(
 operator|(
 name|fd
 operator|=
-name|_libc_open
+name|_open
 argument_list|(
 name|name
 argument_list|,
@@ -257,7 +257,7 @@ goto|;
 block|}
 if|if
 condition|(
-name|_libc_fcntl
+name|_fcntl
 argument_list|(
 name|fd
 argument_list|,
@@ -500,7 +500,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 name|fd
 argument_list|)
@@ -510,7 +510,7 @@ condition|(
 operator|(
 name|fd
 operator|=
-name|_libc_open
+name|_open
 argument_list|(
 name|name
 argument_list|,
@@ -917,7 +917,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 name|fd
 argument_list|)

@@ -128,16 +128,6 @@ name|__weak_reference
 argument_list|(
 name|__waitpid
 argument_list|,
-name|_libc_waitpid
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|__weak_reference
-argument_list|(
-name|_libc_waitpid
-argument_list|,
 name|waitpid
 argument_list|)
 expr_stmt|;

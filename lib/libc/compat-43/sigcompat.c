@@ -400,7 +400,7 @@ name|mask
 expr_stmt|;
 return|return
 operator|(
-name|_libc_sigsuspend
+name|_sigsuspend
 argument_list|(
 operator|&
 name|set

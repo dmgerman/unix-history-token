@@ -543,7 +543,7 @@ condition|)
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 operator|*
 name|sockp
@@ -711,7 +711,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 operator|*
 name|sockp
@@ -2110,7 +2110,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 name|ct
 operator|->

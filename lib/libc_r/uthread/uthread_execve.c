@@ -41,7 +41,7 @@ end_include
 
 begin_function
 name|int
-name|_libc_execve
+name|_execve
 parameter_list|(
 specifier|const
 name|char
@@ -360,7 +360,7 @@ end_function
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
-name|_libc_execve
+name|_execve
 argument_list|,
 name|execve
 argument_list|)

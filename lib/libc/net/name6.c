@@ -1276,7 +1276,7 @@ return|return
 name|NULL
 return|;
 comment|/* 		 * TODO: 		 * Note that implementation dependent test for address 		 * configuration should be done everytime called 		 * (or apropriate interval), 		 * because addresses will be dynamically assigned or deleted. 		 */
-name|_libc_close
+name|_close
 argument_list|(
 name|s
 argument_list|)
@@ -6535,7 +6535,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|_libc_close
+name|_close
 argument_list|(
 name|s
 argument_list|)
@@ -6584,7 +6584,7 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|_libc_close
+name|_close
 argument_list|(
 name|s
 argument_list|)
@@ -6634,7 +6634,7 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|_libc_close
+name|_close
 argument_list|(
 name|s
 argument_list|)
@@ -6701,7 +6701,7 @@ name|ICMP6_FQDN_REPLY
 condition|)
 break|break;
 block|}
-name|_libc_close
+name|_close
 argument_list|(
 name|s
 argument_list|)

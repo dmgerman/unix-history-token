@@ -99,16 +99,6 @@ name|__weak_reference
 argument_list|(
 name|__wait
 argument_list|,
-name|_libc_wait
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|__weak_reference
-argument_list|(
-name|_libc_wait
-argument_list|,
 name|wait
 argument_list|)
 expr_stmt|;

@@ -65,7 +65,7 @@ end_include
 
 begin_function
 name|ssize_t
-name|_libc_writev
+name|_writev
 parameter_list|(
 name|int
 name|fd
@@ -565,7 +565,7 @@ end_function
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
-name|_libc_writev
+name|_writev
 argument_list|,
 name|writev
 argument_list|)

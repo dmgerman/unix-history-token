@@ -179,7 +179,7 @@ name|ERR
 parameter_list|(
 name|s
 parameter_list|)
-value|_libc_write(2, s, sizeof(s))
+value|_write(2, s, sizeof(s))
 end_define
 
 begin_decl_stmt
@@ -806,7 +806,7 @@ argument_list|)
 expr_stmt|;
 name|fd
 operator|=
-name|_libc_open
+name|_open
 argument_list|(
 name|outname
 argument_list|,
@@ -845,7 +845,7 @@ directive|ifdef
 name|DEBUG
 name|log
 operator|=
-name|_libc_open
+name|_open
 argument_list|(
 literal|"gmon.log"
 argument_list|,
@@ -889,7 +889,7 @@ operator|->
 name|kcountsize
 argument_list|)
 expr_stmt|;
-name|_libc_write
+name|_write
 argument_list|(
 name|log
 argument_list|,
@@ -953,7 +953,7 @@ name|clockinfo
 operator|.
 name|profhz
 expr_stmt|;
-name|_libc_write
+name|_write
 argument_list|(
 name|fd
 argument_list|,
@@ -968,7 +968,7 @@ expr|*
 name|hdr
 argument_list|)
 expr_stmt|;
-name|_libc_write
+name|_write
 argument_list|(
 name|fd
 argument_list|,
@@ -1102,7 +1102,7 @@ operator|.
 name|count
 argument_list|)
 expr_stmt|;
-name|_libc_write
+name|_write
 argument_list|(
 name|log
 argument_list|,
@@ -1145,7 +1145,7 @@ index|]
 operator|.
 name|count
 expr_stmt|;
-name|_libc_write
+name|_write
 argument_list|(
 name|fd
 argument_list|,
@@ -1158,7 +1158,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|_libc_close
+name|_close
 argument_list|(
 name|fd
 argument_list|)

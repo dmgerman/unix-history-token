@@ -151,7 +151,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|_libc_close
+name|_close
 argument_list|(
 name|fd
 argument_list|)

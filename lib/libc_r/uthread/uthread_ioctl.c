@@ -45,7 +45,7 @@ end_include
 
 begin_function
 name|int
-name|_libc_ioctl
+name|_ioctl
 parameter_list|(
 name|int
 name|fd
@@ -193,7 +193,7 @@ end_function
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
-name|_libc_ioctl
+name|_ioctl
 argument_list|,
 name|ioctl
 argument_list|)

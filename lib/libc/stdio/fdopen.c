@@ -147,7 +147,7 @@ condition|(
 operator|(
 name|fdflags
 operator|=
-name|_libc_fcntl
+name|_fcntl
 argument_list|(
 name|fd
 argument_list|,

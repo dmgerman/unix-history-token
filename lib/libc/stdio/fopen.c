@@ -149,7 +149,7 @@ condition|(
 operator|(
 name|f
 operator|=
-name|_libc_open
+name|_open
 argument_list|(
 name|file
 argument_list|,

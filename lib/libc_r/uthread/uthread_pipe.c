@@ -35,7 +35,7 @@ end_include
 
 begin_function
 name|int
-name|_libc_pipe
+name|_pipe
 parameter_list|(
 name|int
 name|fds
@@ -118,7 +118,7 @@ end_function
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
-name|_libc_pipe
+name|_pipe
 argument_list|,
 name|pipe
 argument_list|)

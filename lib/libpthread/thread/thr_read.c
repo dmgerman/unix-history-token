@@ -53,7 +53,7 @@ end_include
 
 begin_function
 name|ssize_t
-name|_libc_read
+name|_read
 parameter_list|(
 name|int
 name|fd
@@ -72,9 +72,6 @@ decl_stmt|;
 name|int
 name|type
 decl_stmt|;
-name|_thread_enter_cancellation_point
-argument_list|()
-expr_stmt|;
 comment|/* POSIX says to do just this: */
 if|if
 condition|(
@@ -83,9 +80,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|_thread_leave_cancellation_point
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -146,9 +140,6 @@ name|fd
 argument_list|,
 name|FD_READ
 argument_list|)
-expr_stmt|;
-name|_thread_leave_cancellation_point
-argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -266,9 +257,6 @@ name|FD_READ
 argument_list|)
 expr_stmt|;
 block|}
-name|_thread_leave_cancellation_point
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|ret
@@ -277,15 +265,46 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
-name|__weak_reference
-argument_list|(
-name|_libc_read
-argument_list|,
+begin_function
+name|ssize_t
 name|read
+parameter_list|(
+name|int
+name|fd
+parameter_list|,
+name|void
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+name|nbytes
+parameter_list|)
+block|{
+name|ssize_t
+name|ret
+decl_stmt|;
+name|_thread_enter_cancellation_point
+argument_list|()
+expr_stmt|;
+name|ret
+operator|=
+name|_read
+argument_list|(
+name|fd
+argument_list|,
+name|buf
+argument_list|,
+name|nbytes
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+name|_thread_leave_cancellation_point
+argument_list|()
+expr_stmt|;
+return|return
+name|ret
+return|;
+block|}
+end_function
 
 begin_endif
 endif|#

@@ -113,7 +113,7 @@ name|ret
 decl_stmt|;
 name|ret
 operator|=
-name|_libc_read
+name|_read
 argument_list|(
 name|fp
 operator|->
@@ -222,7 +222,7 @@ expr_stmt|;
 comment|/* in case FAPPEND mode is set */
 return|return
 operator|(
-name|_libc_write
+name|_write
 argument_list|(
 name|fp
 operator|->
@@ -338,7 +338,7 @@ decl_stmt|;
 block|{
 return|return
 operator|(
-name|_libc_close
+name|_close
 argument_list|(
 operator|(
 operator|(

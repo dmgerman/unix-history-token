@@ -59,7 +59,7 @@ end_include
 
 begin_function
 name|int
-name|_libc_fstat
+name|_fstat
 parameter_list|(
 name|int
 name|fd
@@ -122,7 +122,7 @@ end_function
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
-name|_libc_fstat
+name|_fstat
 argument_list|,
 name|fstat
 argument_list|)

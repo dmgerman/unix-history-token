@@ -299,7 +299,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_libc_write
+name|_write
 argument_list|(
 name|fileno
 argument_list|(

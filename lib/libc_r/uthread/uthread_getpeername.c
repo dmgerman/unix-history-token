@@ -35,7 +35,7 @@ end_include
 
 begin_function
 name|int
-name|_libc_getpeername
+name|_getpeername
 parameter_list|(
 name|int
 name|fd
@@ -99,7 +99,7 @@ end_function
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
-name|_libc_getpeername
+name|_getpeername
 argument_list|,
 name|getpeername
 argument_list|)

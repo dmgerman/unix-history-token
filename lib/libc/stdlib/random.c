@@ -807,7 +807,7 @@ literal|0
 expr_stmt|;
 name|fd
 operator|=
-name|_libc_open
+name|_open
 argument_list|(
 literal|"/dev/urandom"
 argument_list|,
@@ -825,7 +825,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|_libc_read
+name|_read
 argument_list|(
 name|fd
 argument_list|,
@@ -847,7 +847,7 @@ name|done
 operator|=
 literal|1
 expr_stmt|;
-name|_libc_close
+name|_close
 argument_list|(
 name|fd
 argument_list|)

@@ -35,7 +35,7 @@ end_include
 
 begin_function
 name|int
-name|_libc_dup2
+name|_dup2
 parameter_list|(
 name|int
 name|fd
@@ -220,7 +220,7 @@ end_function
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
-name|_libc_dup2
+name|_dup2
 argument_list|,
 name|dup2
 argument_list|)

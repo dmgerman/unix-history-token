@@ -2894,7 +2894,7 @@ operator|(
 operator|(
 name|rsize
 operator|=
-name|_libc_read
+name|_read
 argument_list|(
 name|fd
 argument_list|,
@@ -3312,7 +3312,7 @@ operator|(
 operator|(
 name|wsize
 operator|=
-name|_libc_write
+name|_write
 argument_list|(
 name|fd
 argument_list|,
@@ -3946,7 +3946,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|_libc_write
+name|_write
 argument_list|(
 name|STDERR_FILENO
 argument_list|,
@@ -4032,7 +4032,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|_libc_write
+name|_write
 argument_list|(
 name|STDERR_FILENO
 argument_list|,
@@ -4117,7 +4117,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|_libc_write
+name|_write
 argument_list|(
 name|STDERR_FILENO
 argument_list|,
@@ -4696,7 +4696,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_libc_fcntl
+name|_fcntl
 argument_list|(
 name|hashp
 operator|->

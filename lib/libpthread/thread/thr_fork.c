@@ -53,7 +53,7 @@ end_include
 
 begin_function
 name|pid_t
-name|_libc_fork
+name|_fork
 parameter_list|(
 name|void
 parameter_list|)
@@ -694,7 +694,7 @@ end_function
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
-name|_libc_fork
+name|_fork
 argument_list|,
 name|fork
 argument_list|)

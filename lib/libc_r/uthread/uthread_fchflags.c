@@ -35,7 +35,7 @@ end_include
 
 begin_function
 name|int
-name|_libc_fchflags
+name|_fchflags
 parameter_list|(
 name|int
 name|fd
@@ -93,7 +93,7 @@ end_function
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
-name|_libc_fchflags
+name|_fchflags
 argument_list|,
 name|fchflags
 argument_list|)

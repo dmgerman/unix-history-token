@@ -685,7 +685,7 @@ name|t
 operator|->
 name|bt_fd
 operator|=
-name|_libc_open
+name|_open
 argument_list|(
 name|fname
 argument_list|,
@@ -743,7 +743,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|_libc_fcntl
+name|_fcntl
 argument_list|(
 name|t
 operator|->
@@ -787,7 +787,7 @@ condition|(
 operator|(
 name|nr
 operator|=
-name|_libc_read
+name|_read
 argument_list|(
 name|t
 operator|->
@@ -1389,7 +1389,7 @@ condition|)
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 name|t
 operator|->

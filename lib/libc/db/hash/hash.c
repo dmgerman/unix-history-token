@@ -695,7 +695,7 @@ name|hashp
 operator|->
 name|fp
 operator|=
-name|_libc_open
+name|_open
 argument_list|(
 name|file
 argument_list|,
@@ -749,7 +749,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_libc_fcntl
+name|_fcntl
 argument_list|(
 name|hashp
 operator|->
@@ -822,7 +822,7 @@ name|__default_hash
 expr_stmt|;
 name|hdrsize
 operator|=
-name|_libc_read
+name|_read
 argument_list|(
 name|hashp
 operator|->
@@ -1328,7 +1328,7 @@ condition|)
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 name|hashp
 operator|->
@@ -2287,7 +2287,7 @@ condition|)
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 name|hashp
 operator|->
@@ -2567,7 +2567,7 @@ operator|(
 operator|(
 name|wsize
 operator|=
-name|_libc_write
+name|_write
 argument_list|(
 name|fp
 argument_list|,

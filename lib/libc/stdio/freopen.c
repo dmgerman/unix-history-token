@@ -292,7 +292,7 @@ block|}
 comment|/* Get a new descriptor to refer to the new file. */
 name|f
 operator|=
-name|_libc_open
+name|_open
 argument_list|(
 name|file
 argument_list|,
@@ -343,7 +343,7 @@ literal|0
 expr_stmt|;
 name|f
 operator|=
-name|_libc_open
+name|_open
 argument_list|(
 name|file
 argument_list|,
@@ -537,7 +537,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 name|f
 argument_list|)

@@ -665,7 +665,7 @@ literal|1
 operator|)
 return|;
 block|}
-name|_libc_fcntl
+name|_fcntl
 argument_list|(
 name|s
 argument_list|,
@@ -695,7 +695,7 @@ break|break;
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 name|s
 argument_list|)
@@ -835,12 +835,34 @@ operator|<=
 literal|16
 condition|)
 block|{
+name|struct
+name|timespec
+name|time_to_sleep
+decl_stmt|,
+name|time_remaining
+decl_stmt|;
+name|time_to_sleep
+operator|.
+name|tv_sec
+operator|=
+name|timo
+expr_stmt|;
+name|time_to_sleep
+operator|.
+name|tv_nsec
+operator|=
+literal|0
+expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_libc_sleep
+name|_nanosleep
 argument_list|(
-name|timo
+operator|&
+name|time_to_sleep
+argument_list|,
+operator|&
+name|time_remaining
 argument_list|)
 expr_stmt|;
 name|timo
@@ -902,7 +924,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|_libc_write
+name|_write
 argument_list|(
 name|s
 argument_list|,
@@ -984,7 +1006,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|_libc_write
+name|_write
 argument_list|(
 name|s
 argument_list|,
@@ -1024,7 +1046,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 name|s2
 argument_list|)
@@ -1061,7 +1083,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 name|s2
 argument_list|)
@@ -1161,7 +1183,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 name|s2
 argument_list|)
@@ -1258,7 +1280,7 @@ operator|==
 literal|20
 condition|)
 block|{
-name|_libc_close
+name|_close
 argument_list|(
 name|s3
 argument_list|)
@@ -1270,7 +1292,7 @@ block|}
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 name|s2
 argument_list|)
@@ -1341,7 +1363,7 @@ block|}
 operator|(
 name|void
 operator|)
-name|_libc_write
+name|_write
 argument_list|(
 name|s
 argument_list|,
@@ -1358,7 +1380,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_libc_write
+name|_write
 argument_list|(
 name|s
 argument_list|,
@@ -1375,7 +1397,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_libc_write
+name|_write
 argument_list|(
 name|s
 argument_list|,
@@ -1391,7 +1413,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|_libc_read
+name|_read
 argument_list|(
 name|s
 argument_list|,
@@ -1435,7 +1457,7 @@ condition|)
 block|{
 while|while
 condition|(
-name|_libc_read
+name|_read
 argument_list|(
 name|s
 argument_list|,
@@ -1451,7 +1473,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|_libc_write
+name|_write
 argument_list|(
 name|STDERR_FILENO
 argument_list|,
@@ -1497,7 +1519,7 @@ condition|)
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 operator|*
 name|fd2p
@@ -1508,7 +1530,7 @@ label|:
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 name|s
 argument_list|)
@@ -1758,7 +1780,7 @@ if|#
 directive|if
 literal|0
 comment|/* compat_exact_traditional_rresvport_semantics */
-block|sin.sin_port = htons((u_short)*alport); 	if (bind(s, (struct sockaddr *)&sin, sizeof(sin))>= 0) 		return (s); 	if (errno != EADDRINUSE) { 		(void)_libc_close(s); 		return (-1); 	}
+block|sin.sin_port = htons((u_short)*alport); 	if (bind(s, (struct sockaddr *)&sin, sizeof(sin))>= 0) 		return (s); 	if (errno != EADDRINUSE) { 		(void)_close(s); 		return (-1); 	}
 endif|#
 directive|endif
 operator|*
@@ -1788,7 +1810,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 name|s
 argument_list|)

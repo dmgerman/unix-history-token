@@ -35,7 +35,7 @@ end_include
 
 begin_function
 name|int
-name|_libc_sigpending
+name|_sigpending
 parameter_list|(
 name|sigset_t
 modifier|*
@@ -83,7 +83,7 @@ end_function
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
-name|_libc_sigpending
+name|_sigpending
 argument_list|,
 name|sigpending
 argument_list|)

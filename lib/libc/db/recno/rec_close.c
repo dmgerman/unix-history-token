@@ -231,7 +231,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|_libc_close
+name|_close
 argument_list|(
 name|t
 operator|->
@@ -502,7 +502,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|_libc_write
+name|_write
 argument_list|(
 name|t
 operator|->

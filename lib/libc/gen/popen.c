@@ -261,7 +261,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 name|pdes
 index|[
@@ -272,7 +272,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 name|pdes
 index|[
@@ -334,7 +334,7 @@ comment|/* Error. */
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 name|pdes
 index|[
@@ -345,7 +345,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 name|pdes
 index|[
@@ -380,7 +380,7 @@ comment|/* 			 * The dup2() to STDIN_FILENO is repeated to avoid 			 * writing t
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 name|pdes
 index|[
@@ -414,7 +414,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 name|pdes
 index|[
@@ -493,7 +493,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 name|pdes
 index|[
@@ -505,7 +505,7 @@ block|}
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 name|pdes
 index|[
@@ -532,7 +532,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 name|fileno
 argument_list|(
@@ -583,7 +583,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 name|pdes
 index|[
@@ -609,7 +609,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 name|pdes
 index|[
@@ -738,7 +738,7 @@ do|do
 block|{
 name|pid
 operator|=
-name|_libc_waitpid
+name|_wait4
 argument_list|(
 name|cur
 operator|->
@@ -747,6 +747,13 @@ argument_list|,
 operator|&
 name|pstat
 argument_list|,
+literal|0
+argument_list|,
+operator|(
+expr|struct
+name|rusage
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;

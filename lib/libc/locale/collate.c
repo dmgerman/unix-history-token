@@ -816,7 +816,7 @@ name|s
 operator|=
 name|__progname
 expr_stmt|;
-name|_libc_write
+name|_write
 argument_list|(
 name|STDERR_FILENO
 argument_list|,
@@ -828,7 +828,7 @@ name|s
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|_libc_write
+name|_write
 argument_list|(
 name|STDERR_FILENO
 argument_list|,
@@ -841,7 +841,7 @@ name|s
 operator|=
 name|f
 expr_stmt|;
-name|_libc_write
+name|_write
 argument_list|(
 name|STDERR_FILENO
 argument_list|,
@@ -853,7 +853,7 @@ name|s
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|_libc_write
+name|_write
 argument_list|(
 name|STDERR_FILENO
 argument_list|,
@@ -869,7 +869,7 @@ argument_list|(
 name|serrno
 argument_list|)
 expr_stmt|;
-name|_libc_write
+name|_write
 argument_list|(
 name|STDERR_FILENO
 argument_list|,
@@ -881,7 +881,7 @@ name|s
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|_libc_write
+name|_write
 argument_list|(
 name|STDERR_FILENO
 argument_list|,

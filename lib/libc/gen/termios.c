@@ -722,16 +722,6 @@ name|__weak_reference
 argument_list|(
 name|__tcdrain
 argument_list|,
-name|_libc_tcdrain
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|__weak_reference
-argument_list|(
-name|_libc_tcdrain
-argument_list|,
 name|tcdrain
 argument_list|)
 expr_stmt|;
@@ -915,7 +905,7 @@ name|c
 operator|!=
 name|_POSIX_VDISABLE
 operator|&&
-name|_libc_write
+name|_write
 argument_list|(
 name|fd
 argument_list|,

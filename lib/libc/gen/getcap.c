@@ -1041,7 +1041,7 @@ else|else
 block|{
 name|fd
 operator|=
-name|_libc_open
+name|_open
 argument_list|(
 operator|*
 name|db_p
@@ -1122,7 +1122,7 @@ name|n
 decl_stmt|;
 name|n
 operator|=
-name|_libc_read
+name|_read
 argument_list|(
 name|fd
 argument_list|,
@@ -1148,7 +1148,7 @@ condition|)
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 name|fd
 argument_list|)
@@ -1295,7 +1295,7 @@ condition|)
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 name|fd
 argument_list|)
@@ -1588,7 +1588,7 @@ condition|)
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 name|fd
 argument_list|)
@@ -1791,7 +1791,7 @@ condition|)
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 name|fd
 argument_list|)
@@ -1886,7 +1886,7 @@ condition|)
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 name|fd
 argument_list|)

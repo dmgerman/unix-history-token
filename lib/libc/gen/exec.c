@@ -1064,7 +1064,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|_libc_write
+name|_write
 argument_list|(
 name|STDERR_FILENO
 argument_list|,
@@ -1076,7 +1076,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_libc_write
+name|_write
 argument_list|(
 name|STDERR_FILENO
 argument_list|,
@@ -1088,7 +1088,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_libc_write
+name|_write
 argument_list|(
 name|STDERR_FILENO
 argument_list|,

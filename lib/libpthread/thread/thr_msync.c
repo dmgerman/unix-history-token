@@ -35,33 +35,22 @@ end_include
 
 begin_function
 name|int
-name|_libc_msync
+name|_msync
 parameter_list|(
-name|addr
-parameter_list|,
-name|len
-parameter_list|,
-name|flags
-parameter_list|)
 name|void
 modifier|*
 name|addr
-decl_stmt|;
+parameter_list|,
 name|size_t
 name|len
-decl_stmt|;
+parameter_list|,
 name|int
 name|flags
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|ret
 decl_stmt|;
-comment|/* 	 * XXX This is quite pointless unless we know how to get the 	 * file descriptor associated with the memory, and lock it for 	 * write. The only real use of this wrapper is to guarantee 	 * a cancellation point, as per the standard. sigh. 	 */
-comment|/* This is a cancellation point: */
-name|_thread_enter_cancellation_point
-argument_list|()
-expr_stmt|;
 name|ret
 operator|=
 name|_thread_sys_msync
@@ -73,10 +62,6 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
-comment|/* No longer in a cancellation point: */
-name|_thread_leave_cancellation_point
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|ret
@@ -85,15 +70,47 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
-name|__weak_reference
-argument_list|(
-name|_libc_msync
-argument_list|,
+begin_function
+name|int
 name|msync
+parameter_list|(
+name|void
+modifier|*
+name|addr
+parameter_list|,
+name|size_t
+name|len
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+block|{
+name|int
+name|ret
+decl_stmt|;
+comment|/* 	 * XXX This is quite pointless unless we know how to get the 	 * file descriptor associated with the memory, and lock it for 	 * write. The only real use of this wrapper is to guarantee 	 * a cancellation point, as per the standard. sigh. 	 */
+name|_thread_enter_cancellation_point
+argument_list|()
+expr_stmt|;
+name|ret
+operator|=
+name|_msync
+argument_list|(
+name|addr
+argument_list|,
+name|len
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+name|_thread_leave_cancellation_point
+argument_list|()
+expr_stmt|;
+return|return
+name|ret
+return|;
+block|}
+end_function
 
 begin_endif
 endif|#

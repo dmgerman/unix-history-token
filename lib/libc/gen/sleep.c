@@ -126,7 +126,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|_libc_nanosleep
+name|_nanosleep
 argument_list|(
 operator|&
 name|time_to_sleep
@@ -178,16 +178,6 @@ begin_expr_stmt
 name|__weak_reference
 argument_list|(
 name|__sleep
-argument_list|,
-name|_libc_sleep
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|__weak_reference
-argument_list|(
-name|_libc_sleep
 argument_list|,
 name|sleep
 argument_list|)

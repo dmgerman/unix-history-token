@@ -824,7 +824,7 @@ name|sp
 operator|->
 name|fts_rfd
 operator|=
-name|_libc_open
+name|_open
 argument_list|(
 literal|"."
 argument_list|,
@@ -1152,7 +1152,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 name|sp
 operator|->
@@ -1370,7 +1370,7 @@ name|p
 operator|->
 name|fts_symfd
 operator|=
-name|_libc_open
+name|_open
 argument_list|(
 literal|"."
 argument_list|,
@@ -1454,7 +1454,7 @@ condition|)
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 name|p
 operator|->
@@ -1769,7 +1769,7 @@ name|p
 operator|->
 name|fts_symfd
 operator|=
-name|_libc_open
+name|_open
 argument_list|(
 literal|"."
 argument_list|,
@@ -1972,7 +1972,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 name|p
 operator|->
@@ -1997,7 +1997,7 @@ block|}
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 name|p
 operator|->
@@ -2318,7 +2318,7 @@ condition|(
 operator|(
 name|fd
 operator|=
-name|_libc_open
+name|_open
 argument_list|(
 literal|"."
 argument_list|,
@@ -2361,7 +2361,7 @@ return|;
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 name|fd
 argument_list|)
@@ -4621,7 +4621,7 @@ operator|&&
 operator|(
 name|newfd
 operator|=
-name|_libc_open
+name|_open
 argument_list|(
 name|p
 operator|->
@@ -4716,7 +4716,7 @@ condition|)
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 name|newfd
 argument_list|)

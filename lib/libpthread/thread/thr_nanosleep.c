@@ -35,7 +35,7 @@ end_include
 
 begin_function
 name|int
-name|_libc_nanosleep
+name|_nanosleep
 parameter_list|(
 specifier|const
 name|struct
@@ -70,9 +70,6 @@ name|struct
 name|timeval
 name|tv
 decl_stmt|;
-name|_thread_enter_cancellation_point
-argument_list|()
-expr_stmt|;
 comment|/* Check if the time to sleep is legal: */
 if|if
 condition|(
@@ -374,9 +371,6 @@ literal|1
 expr_stmt|;
 block|}
 block|}
-name|_thread_leave_cancellation_point
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|ret
@@ -385,15 +379,45 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
-name|__weak_reference
-argument_list|(
-name|_libc_nanosleep
-argument_list|,
+begin_function
+name|int
 name|nanosleep
+parameter_list|(
+specifier|const
+name|struct
+name|timespec
+modifier|*
+name|time_to_sleep
+parameter_list|,
+name|struct
+name|timespec
+modifier|*
+name|time_remaining
+parameter_list|)
+block|{
+name|int
+name|ret
+decl_stmt|;
+name|_thread_enter_cancellation_point
+argument_list|()
+expr_stmt|;
+name|ret
+operator|=
+name|_nanosleep
+argument_list|(
+name|time_to_sleep
+argument_list|,
+name|time_remaining
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+name|_thread_leave_cancellation_point
+argument_list|()
+expr_stmt|;
+return|return
+name|ret
+return|;
+block|}
+end_function
 
 begin_endif
 endif|#

@@ -53,7 +53,7 @@ end_include
 
 begin_function
 name|int
-name|_libc_close
+name|_close
 parameter_list|(
 name|int
 name|fd
@@ -74,9 +74,6 @@ name|fd_table_entry
 modifier|*
 name|entry
 decl_stmt|;
-name|_thread_enter_cancellation_point
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -236,9 +233,6 @@ name|fd
 argument_list|)
 expr_stmt|;
 block|}
-name|_thread_leave_cancellation_point
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|ret
@@ -247,15 +241,35 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
-name|__weak_reference
-argument_list|(
-name|_libc_close
-argument_list|,
+begin_function
+name|int
 name|close
+parameter_list|(
+name|int
+name|fd
+parameter_list|)
+block|{
+name|int
+name|ret
+decl_stmt|;
+name|_thread_enter_cancellation_point
+argument_list|()
+expr_stmt|;
+name|ret
+operator|=
+name|_close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+name|_thread_leave_cancellation_point
+argument_list|()
+expr_stmt|;
+return|return
+name|ret
+return|;
+block|}
+end_function
 
 begin_endif
 endif|#

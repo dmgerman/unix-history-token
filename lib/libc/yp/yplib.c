@@ -1559,7 +1559,7 @@ argument_list|,
 name|sock
 argument_list|)
 expr_stmt|;
-name|_libc_close
+name|_close
 argument_list|(
 name|save
 argument_list|)
@@ -1659,7 +1659,7 @@ condition|(
 operator|(
 name|fd
 operator|=
-name|_libc_open
+name|_open
 argument_list|(
 name|path
 argument_list|,
@@ -1673,7 +1673,7 @@ condition|)
 block|{
 comment|/* no binding file, YP is dead. */
 comment|/* Try to bring it back to life. */
-name|_libc_close
+name|_close
 argument_list|(
 name|fd
 argument_list|)
@@ -1791,7 +1791,7 @@ operator|.
 name|iov_len
 condition|)
 block|{
-name|_libc_close
+name|_close
 argument_list|(
 name|fd
 argument_list|)
@@ -1892,7 +1892,7 @@ name|dom_server_addr
 operator|.
 name|sin_port
 expr_stmt|;
-name|_libc_close
+name|_close
 argument_list|(
 name|fd
 argument_list|)
@@ -1905,7 +1905,7 @@ else|else
 block|{
 comment|/* no lock on binding file, YP is dead. */
 comment|/* Try to bring it back to life. */
-name|_libc_close
+name|_close
 argument_list|(
 name|fd
 argument_list|)
@@ -2218,6 +2218,12 @@ operator|!=
 name|YPBIND_SUCC_VAL
 condition|)
 block|{
+name|struct
+name|timespec
+name|time_to_sleep
+decl_stmt|,
+name|time_remaining
+decl_stmt|;
 name|clnt_destroy
 argument_list|(
 name|client
@@ -2230,11 +2236,27 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-name|_libc_sleep
-argument_list|(
+name|time_to_sleep
+operator|.
+name|tv_sec
+operator|=
 name|_yplib_timeout
 operator|/
 literal|2
+expr_stmt|;
+name|time_to_sleep
+operator|.
+name|tv_nsec
+operator|=
+literal|0
+expr_stmt|;
+name|_nanosleep
+argument_list|(
+operator|&
+name|time_to_sleep
+argument_list|,
+operator|&
+name|time_remaining
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2442,7 +2464,7 @@ goto|;
 block|}
 if|if
 condition|(
-name|_libc_fcntl
+name|_fcntl
 argument_list|(
 name|ysd
 operator|->
@@ -2704,7 +2726,7 @@ argument_list|,
 name|sock
 argument_list|)
 expr_stmt|;
-name|_libc_close
+name|_close
 argument_list|(
 name|save
 argument_list|)

@@ -47,7 +47,7 @@ end_include
 
 begin_function
 name|int
-name|_libc_socket
+name|_socket
 parameter_list|(
 name|int
 name|af
@@ -117,7 +117,7 @@ end_function
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
-name|_libc_socket
+name|_socket
 argument_list|,
 name|socket
 argument_list|)

@@ -66,7 +66,7 @@ parameter_list|)
 define|\
 value|LEAF(name,0);
 comment|/* XXX # of args? */
-value|\ 	WEAK_ALIAS(__CONCAT(_libc_,name), name);		\ 	CALLSYS_ERROR(name)
+value|\ 	WEAK_ALIAS(__CONCAT(_,name), name);			\ 	CALLSYS_ERROR(name)
 end_define
 
 begin_define
@@ -116,7 +116,7 @@ parameter_list|)
 define|\
 value|LEAF(label,0);
 comment|/* XXX # of args? */
-value|\ 	WEAK_ALIAS(__CONCAT(_libc_,name), name);		\ 	CALLSYS_ERROR(name);					\ 	RET;							\ END(label);
+value|\ 	WEAK_ALIAS(__CONCAT(_,name), name);			\ 	CALLSYS_ERROR(name);					\ 	RET;							\ END(label);
 end_define
 
 begin_define
@@ -193,7 +193,7 @@ parameter_list|)
 define|\
 value|PLEAF(name,0);
 comment|/* XXX # of args? */
-value|\ 	CALLSYS_ERROR(name)
+value|\ 	WEAK_ALIAS(__CONCAT(_thread_sys_,name), name);		\ 	CALLSYS_ERROR(name)
 end_define
 
 begin_define
@@ -221,7 +221,7 @@ parameter_list|)
 define|\
 value|PLEAF(label,0);
 comment|/* XXX # of args? */
-value|\ 	CALLSYS_ERROR(name);					\ 	RET;							\ PEND(label)
+value|\ 	WEAK_ALIAS(__CONCAT(_thread_sys_,name), name);		\ 	CALLSYS_ERROR(name);					\ 	RET;							\ PEND(label)
 end_define
 
 begin_else

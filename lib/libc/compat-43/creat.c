@@ -78,7 +78,7 @@ directive|endif
 block|{
 return|return
 operator|(
-name|_libc_open
+name|_open
 argument_list|(
 name|path
 argument_list|,
@@ -99,16 +99,6 @@ begin_expr_stmt
 name|__weak_reference
 argument_list|(
 name|__creat
-argument_list|,
-name|_libc_creat
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|__weak_reference
-argument_list|(
-name|_libc_creat
 argument_list|,
 name|creat
 argument_list|)

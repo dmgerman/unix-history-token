@@ -134,7 +134,7 @@ operator|&&
 operator|(
 name|fd
 operator|=
-name|_libc_open
+name|_open
 argument_list|(
 name|_PATH_DEVNULL
 argument_list|,
@@ -187,7 +187,7 @@ condition|)
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 name|fd
 argument_list|)

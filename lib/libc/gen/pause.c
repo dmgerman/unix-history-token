@@ -75,16 +75,6 @@ name|__weak_reference
 argument_list|(
 name|__pause
 argument_list|,
-name|_libc_pause
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|__weak_reference
-argument_list|(
-name|_libc_pause
-argument_list|,
 name|pause
 argument_list|)
 expr_stmt|;

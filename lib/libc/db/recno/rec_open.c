@@ -170,7 +170,7 @@ operator|&&
 operator|(
 name|rfd
 operator|=
-name|_libc_open
+name|_open
 argument_list|(
 name|fname
 argument_list|,
@@ -860,7 +860,7 @@ condition|)
 operator|(
 name|void
 operator|)
-name|_libc_close
+name|_close
 argument_list|(
 name|rfd
 argument_list|)

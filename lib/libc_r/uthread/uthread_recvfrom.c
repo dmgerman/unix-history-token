@@ -47,7 +47,7 @@ end_include
 
 begin_function
 name|ssize_t
-name|_libc_recvfrom
+name|_recvfrom
 parameter_list|(
 name|int
 name|fd
@@ -227,7 +227,7 @@ end_function
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
-name|_libc_recvfrom
+name|_recvfrom
 argument_list|,
 name|recvfrom
 argument_list|)

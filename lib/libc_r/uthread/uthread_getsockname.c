@@ -35,7 +35,7 @@ end_include
 
 begin_function
 name|int
-name|_libc_getsockname
+name|_getsockname
 parameter_list|(
 name|int
 name|s
@@ -99,7 +99,7 @@ end_function
 begin_expr_stmt
 name|__weak_reference
 argument_list|(
-name|_libc_getsockname
+name|_getsockname
 argument_list|,
 name|getsockname
 argument_list|)

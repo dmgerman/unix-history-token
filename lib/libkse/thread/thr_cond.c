@@ -475,6 +475,9 @@ name|interrupted
 init|=
 literal|0
 decl_stmt|;
+name|_thread_enter_cancellation_point
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|cond
@@ -885,6 +888,9 @@ name|_thread_leave_cancellation_point
 argument_list|()
 expr_stmt|;
 block|}
+name|_thread_leave_cancellation_point
+argument_list|()
+expr_stmt|;
 comment|/* Return the completion status: */
 return|return
 operator|(
@@ -923,6 +929,9 @@ name|interrupted
 init|=
 literal|0
 decl_stmt|;
+name|_thread_enter_cancellation_point
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|cond
@@ -961,6 +970,9 @@ block|{
 name|errno
 operator|=
 name|EINVAL
+expr_stmt|;
+name|_thread_leave_cancellation_point
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -1411,6 +1423,9 @@ name|_thread_leave_cancellation_point
 argument_list|()
 expr_stmt|;
 block|}
+name|_thread_leave_cancellation_point
+argument_list|()
+expr_stmt|;
 comment|/* Return the completion status: */
 return|return
 operator|(

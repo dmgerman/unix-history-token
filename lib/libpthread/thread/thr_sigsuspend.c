@@ -35,7 +35,7 @@ end_include
 
 begin_function
 name|int
-name|_libc_sigsuspend
+name|_sigsuspend
 parameter_list|(
 specifier|const
 name|sigset_t
@@ -115,15 +115,37 @@ return|;
 block|}
 end_function
 
-begin_expr_stmt
-name|__weak_reference
-argument_list|(
-name|_libc_sigsuspend
-argument_list|,
+begin_function
+name|int
 name|sigsuspend
+parameter_list|(
+specifier|const
+name|sigset_t
+modifier|*
+name|set
+parameter_list|)
+block|{
+name|int
+name|ret
+decl_stmt|;
+name|_thread_enter_cancellation_point
+argument_list|()
+expr_stmt|;
+name|ret
+operator|=
+name|_sigsuspend
+argument_list|(
+name|set
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+name|_thread_leave_cancellation_point
+argument_list|()
+expr_stmt|;
+return|return
+name|ret
+return|;
+block|}
+end_function
 
 begin_endif
 endif|#

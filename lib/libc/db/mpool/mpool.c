@@ -825,7 +825,7 @@ condition|(
 operator|(
 name|nr
 operator|=
-name|_libc_read
+name|_read
 argument_list|(
 name|mp
 operator|->
@@ -1219,7 +1219,7 @@ return|;
 comment|/* Sync the file descriptor. */
 return|return
 operator|(
-name|_libc_fsync
+name|_fsync
 argument_list|(
 name|mp
 operator|->
@@ -1622,7 +1622,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|_libc_write
+name|_write
 argument_list|(
 name|mp
 operator|->
