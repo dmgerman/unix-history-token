@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)atrun.c	5.4 (Berkeley) %G%"
+literal|"@(#)atrun.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -78,12 +78,6 @@ begin_include
 include|#
 directive|include
 file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
 end_include
 
 begin_ifdef
@@ -1202,7 +1196,7 @@ end_decl_stmt
 
 begin_block
 block|{
-name|char
+name|int
 name|ch
 decl_stmt|;
 comment|/* scratch variable */
@@ -1396,6 +1390,9 @@ if|if
 condition|(
 name|ch
 operator|==
+operator|(
+name|int
+operator|)
 literal|'\n'
 condition|)
 name|fputc
