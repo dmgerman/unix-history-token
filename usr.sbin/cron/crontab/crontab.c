@@ -527,7 +527,7 @@ break|break;
 block|}
 name|exit
 argument_list|(
-literal|0
+name|exitstatus
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
