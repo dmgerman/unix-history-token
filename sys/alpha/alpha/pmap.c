@@ -7316,6 +7316,11 @@ operator|==
 name|NULL
 condition|)
 return|return;
+name|VM_OBJECT_LOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 name|psize
 operator|=
 name|alpha_btop
@@ -7356,7 +7361,9 @@ operator|)
 operator|)
 condition|)
 block|{
-return|return;
+goto|goto
+name|unlock_return
+goto|;
 block|}
 if|if
 condition|(
@@ -7377,7 +7384,9 @@ name|size
 operator|<
 name|pindex
 condition|)
-return|return;
+goto|goto
+name|unlock_return
+goto|;
 name|psize
 operator|=
 name|object
@@ -7560,6 +7569,11 @@ expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 name|mpte
 operator|=
 name|pmap_enter_quick
@@ -7576,6 +7590,11 @@ argument_list|,
 name|p
 argument_list|,
 name|mpte
+argument_list|)
+expr_stmt|;
+name|VM_OBJECT_LOCK
+argument_list|(
+name|object
 argument_list|)
 expr_stmt|;
 name|vm_page_lock_queues
@@ -7717,6 +7736,11 @@ expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 name|mpte
 operator|=
 name|pmap_enter_quick
@@ -7735,6 +7759,11 @@ argument_list|,
 name|mpte
 argument_list|)
 expr_stmt|;
+name|VM_OBJECT_LOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -7749,7 +7778,13 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-return|return;
+name|unlock_return
+label|:
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
