@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  */
+comment|/*  * Copyright (c) 1992, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1992, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1992, 1993, 1994\n\ 	The Regents of the University of California.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount_nfs.c	8.1 (Berkeley) %G%"
+literal|"@(#)mount_nfs.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -198,6 +198,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -242,6 +248,40 @@ include|#
 directive|include
 file|<unistd.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|"mntopts.h"
+end_include
+
+begin_comment
+comment|/*  * XXX  * This is without question incorrect -- not sure what the right  * values are.  */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|mntopt
+name|mopts
+index|[]
+init|=
+block|{
+name|MOPT_STDOPTS
+block|,
+name|MOPT_ASYNC
+block|,
+name|MOPT_FORCE
+block|,
+name|MOPT_SYNCHRONOUS
+block|,
+name|MOPT_UPDATE
+block|,
+block|{
+name|NULL
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -386,22 +426,6 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-name|void
-name|err
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-operator|...
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|getnfsargs
 name|__P
@@ -465,22 +489,6 @@ name|__P
 argument_list|(
 operator|(
 name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|warn
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-operator|...
 operator|)
 argument_list|)
 decl_stmt|;
@@ -555,7 +563,7 @@ name|nfsd_cargs
 name|ncd
 decl_stmt|;
 name|int
-name|flags
+name|mntflags
 decl_stmt|,
 name|i
 decl_stmt|,
@@ -572,6 +580,11 @@ name|p
 decl_stmt|,
 modifier|*
 name|spec
+decl_stmt|;
+name|int
+name|error
+init|=
+literal|0
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -605,16 +618,7 @@ name|retrycnt
 operator|=
 name|DEF_RETRY
 expr_stmt|;
-if|if
-condition|(
-name|argc
-operator|<=
-literal|1
-condition|)
-name|usage
-argument_list|()
-expr_stmt|;
-name|flags
+name|mntflags
 operator|=
 literal|0
 expr_stmt|;
@@ -638,7 +642,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:bcdD:F:g:iKklL:Mm:PpqR:r:sTt:w:x:"
+literal|"a:bcdD:g:iKklL:Mm:o:PpqR:r:sTt:w:x:"
 argument_list|)
 operator|)
 operator|!=
@@ -673,8 +677,10 @@ name|num
 operator|<
 literal|0
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"illegal -a value -- %s"
 argument_list|,
 name|optarg
@@ -735,8 +741,10 @@ name|num
 operator|<=
 literal|0
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"illegal -D value -- %s"
 argument_list|,
 name|optarg
@@ -766,44 +774,6 @@ name|NFSMNT_DUMBTIMR
 expr_stmt|;
 break|break;
 case|case
-literal|'F'
-case|:
-name|num
-operator|=
-name|strtol
-argument_list|(
-name|optarg
-argument_list|,
-operator|&
-name|p
-argument_list|,
-literal|10
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|p
-condition|)
-name|err
-argument_list|(
-literal|"illegal -F value -- %s"
-argument_list|,
-name|optarg
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|num
-operator|!=
-literal|0
-condition|)
-name|flags
-operator|=
-name|num
-expr_stmt|;
-break|break;
-case|case
 literal|'g'
 case|:
 name|num
@@ -827,8 +797,10 @@ name|num
 operator|<=
 literal|0
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"illegal -g value -- %s"
 argument_list|,
 name|optarg
@@ -911,8 +883,10 @@ name|num
 operator|<
 literal|2
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"illegal -L value -- %s"
 argument_list|,
 name|optarg
@@ -984,6 +958,20 @@ break|break;
 endif|#
 directive|endif
 case|case
+literal|'o'
+case|:
+name|getmntopts
+argument_list|(
+name|optarg
+argument_list|,
+name|mopts
+argument_list|,
+operator|&
+name|mntflags
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'P'
 case|:
 name|nfsargsp
@@ -1042,8 +1030,10 @@ name|num
 operator|<=
 literal|0
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"illegal -R value -- %s"
 argument_list|,
 name|optarg
@@ -1078,8 +1068,10 @@ name|num
 operator|<=
 literal|0
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"illegal -r value -- %s"
 argument_list|,
 name|optarg
@@ -1142,8 +1134,10 @@ name|num
 operator|<=
 literal|0
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"illegal -t value -- %s"
 argument_list|,
 name|optarg
@@ -1186,8 +1180,10 @@ name|num
 operator|<=
 literal|0
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"illegal -w value -- %s"
 argument_list|,
 name|optarg
@@ -1230,8 +1226,10 @@ name|num
 operator|<=
 literal|0
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"illegal -x value -- %s"
 argument_list|,
 name|optarg
@@ -1254,36 +1252,36 @@ default|default:
 name|usage
 argument_list|()
 expr_stmt|;
+break|break;
 block|}
-empty_stmt|;
+name|argc
+operator|-=
+name|optind
+expr_stmt|;
+name|argv
+operator|+=
+name|optind
+expr_stmt|;
 if|if
 condition|(
-operator|(
 name|argc
-operator|-
-name|optind
-operator|)
 operator|!=
 literal|2
 condition|)
-name|usage
-argument_list|()
+name|error
+operator|=
+literal|1
 expr_stmt|;
 name|spec
 operator|=
+operator|*
 name|argv
-index|[
-name|optind
-index|]
+operator|++
 expr_stmt|;
 name|name
 operator|=
+operator|*
 name|argv
-index|[
-name|optind
-operator|+
-literal|1
-index|]
 expr_stmt|;
 if|if
 condition|(
@@ -1308,21 +1306,18 @@ name|MOUNT_NFS
 argument_list|,
 name|name
 argument_list|,
-name|flags
+name|mntflags
 argument_list|,
 name|nfsargsp
 argument_list|)
 condition|)
 name|err
 argument_list|(
-literal|"mount: %s: %s"
+literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|name
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1366,12 +1361,9 @@ literal|1
 condition|)
 name|err
 argument_list|(
-literal|"nqnfs 1: %s"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"nqnfs 1"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1720,7 +1712,7 @@ condition|(
 operator|(
 name|delimp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|spec
 argument_list|,
@@ -1744,7 +1736,7 @@ condition|(
 operator|(
 name|delimp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|spec
 argument_list|,
@@ -1768,7 +1760,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|warn
+name|warnx
 argument_list|(
 literal|"no<host>:<dirpath> or<dirpath>@<host> spec"
 argument_list|)
@@ -1816,7 +1808,7 @@ condition|(
 operator|(
 name|delimp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|hostp
 argument_list|,
@@ -1827,7 +1819,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|warn
+name|warnx
 argument_list|(
 literal|"no iso+inet address"
 argument_list|)
@@ -1857,7 +1849,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|warn
+name|warnx
 argument_list|(
 literal|"bad ISO address"
 argument_list|)
@@ -1990,9 +1982,9 @@ operator|-
 literal|1
 condition|)
 block|{
-name|warn
+name|warnx
 argument_list|(
-literal|"bad net address %s\n"
+literal|"bad net address %s"
 argument_list|,
 name|hostp
 argument_list|)
@@ -2046,7 +2038,7 @@ operator|)
 literal|0
 condition|)
 block|{
-name|warn
+name|warnx
 argument_list|(
 literal|"can't reverse resolve net address"
 argument_list|)
@@ -2073,7 +2065,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|warn
+name|warnx
 argument_list|(
 literal|"can't get net id for host"
 argument_list|)
@@ -2120,7 +2112,7 @@ if|if
 condition|(
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|inst
 argument_list|,
@@ -2339,8 +2331,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
-name|warn
+name|warnx
 argument_list|(
 literal|"%s"
 argument_list|,
@@ -2352,7 +2343,6 @@ literal|"bad MNT RPC"
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 else|else
 block|{
@@ -2412,12 +2402,9 @@ literal|1
 condition|)
 name|err
 argument_list|(
-literal|"nqnfs 2: %s"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"nqnfs 2"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2496,16 +2483,9 @@ argument_list|)
 expr_stmt|;
 name|warn
 argument_list|(
-literal|"can't access %s: %s\n"
+literal|"can't access %s"
 argument_list|,
 name|spec
-argument_list|,
-name|strerror
-argument_list|(
-name|nfhret
-operator|.
-name|stat
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2729,7 +2709,7 @@ literal|"usage: mount_nfs %s\n%s\n%s\n%s\n"
 argument_list|,
 literal|"[-bcdiKklMPqsT] [-a maxreadahead] [-D deadthresh]"
 argument_list|,
-literal|"\t[-g maxgroups] [-L leaseterm] [-m realm] [-R retrycnt]"
+literal|"\t[-g maxgroups] [-L leaseterm] [-m realm] [-o options] [-R retrycnt]"
 argument_list|,
 literal|"\t[-r readsize] [-t timeout] [-w writesize] [-x retrans]"
 argument_list|,
@@ -2739,224 +2719,6 @@ expr_stmt|;
 name|exit
 argument_list|(
 literal|1
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
-begin_include
-include|#
-directive|include
-file|<stdarg.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<varargs.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_function
-name|void
-if|#
-directive|if
-name|__STDC__
-name|err
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|fmt
-parameter_list|,
-modifier|...
-parameter_list|)
-else|#
-directive|else
-function|err
-parameter_list|(
-name|fmt
-parameter_list|,
-name|va_alist
-parameter_list|)
-name|char
-modifier|*
-name|fmt
-decl_stmt|;
-function|va_dcl
-endif|#
-directive|endif
-block|{
-name|va_list
-name|ap
-decl_stmt|;
-if|#
-directive|if
-name|__STDC__
-name|va_start
-argument_list|(
-name|ap
-argument_list|,
-name|fmt
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|va_start
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"mount_nfs: "
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|vfprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|fmt
-argument_list|,
-name|ap
-argument_list|)
-expr_stmt|;
-name|va_end
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
-block|}
-end_function
-
-begin_function
-name|void
-if|#
-directive|if
-name|__STDC__
-name|warn
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|fmt
-parameter_list|,
-modifier|...
-parameter_list|)
-else|#
-directive|else
-function|warn
-parameter_list|(
-name|fmt
-parameter_list|,
-name|va_alist
-parameter_list|)
-name|char
-modifier|*
-name|fmt
-decl_stmt|;
-function|va_dcl
-endif|#
-directive|endif
-block|{
-name|va_list
-name|ap
-decl_stmt|;
-if|#
-directive|if
-name|__STDC__
-name|va_start
-argument_list|(
-name|ap
-argument_list|,
-name|fmt
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|va_start
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"mount_nfs: "
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|vfprintf
-argument_list|(
-name|stderr
-argument_list|,
-name|fmt
-argument_list|,
-name|ap
-argument_list|)
-expr_stmt|;
-name|va_end
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
