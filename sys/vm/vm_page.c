@@ -2214,7 +2214,11 @@ operator|-
 literal|1
 operator|)
 init|;
+operator|(
 name|i
+operator|+
+name|j
+operator|)
 operator|>=
 literal|0
 condition|;
