@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)langpats.c	5.2 (Berkeley) %G%"
+literal|"@(#)langpats.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -347,6 +347,134 @@ block|,
 endif|#
 directive|endif
 endif|mc68000
+ifdef|#
+directive|ifdef
+name|tahoe
+block|{
+literal|2
+block|,
+literal|"_TRUNC\n"
+block|,
+literal|"	ldd	(sp)\n\ 	movab	8(sp),sp\n\ 	cvdl	r0\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"_ACTFILE\n"
+block|,
+literal|"	movl	(sp)+,r1\n\ 	movl	12(r1),r0\n"
+block|}
+block|,
+comment|/*  * Pascal set operations.  */
+block|{
+literal|4
+block|,
+literal|"_ADDT\n"
+block|,
+literal|"	movl	(sp)+,r0\n\ 	movl	(sp)+,r1\n\ 	movl	(sp)+,r2\n\ 	movl	(sp)+,r4\n\ 	movl	r0,r3\n\ 	clrl	r5\n\ 1:\n\ 	orl3	(r1),(r2),(r3)\n\ 	addl2	$4,r1\n\ 	addl2	$4,r2\n\ 	addl2	$4,r3\n\ 	aoblss	r4,r5,1b\n"
+block|}
+block|,
+block|{
+literal|4
+block|,
+literal|"_SUBT\n"
+block|,
+literal|"	movl	(sp)+,r0\n\ 	movl	(sp)+,r1\n\ 	movl	(sp)+,r2\n\ 	movl	(sp)+,r4\n\ 	movl	r0,r3\n\ 1:\n\ 	mcoml	(r2),r5\n\ 	andl3	r5,(r1),(r3)\n\ 	addl2	$4,r1\n\ 	addl2	$4,r2\n\ 	addl2	$4,r3\n\ 	decl	r4\n\ 	jgtr	1b\n"
+block|}
+block|,
+block|{
+literal|4
+block|,
+literal|"_MULT\n"
+block|,
+literal|"	movl	(sp)+,r0\n\ 	movl	(sp)+,r1\n\ 	movl	(sp)+,r2\n\ 	movl	(sp)+,r4\n\ 	movl	r0,r3\n\ 	clrl	r5\n\ 1:\n\ 	andl3	(r1),(r2),(r3)\n\ 	addl2	$4,r1\n\ 	addl2	$4,r2\n\ 	addl2	$4,r3\n\ 	aoblss	r4,r5,1b\n"
+block|}
+block|,
+comment|/*  * Pascal runtime checks  */
+block|{
+literal|1
+block|,
+literal|"_ASRT\n"
+block|,
+literal|"	movl	(sp)+,r0\n\ 	tstl	r0\n\ 	jneq	1f\n\ 	pushl	$0\n\ 	pushl	$_EASRT\n\ 	callf	$12,_ERROR\n\ 1:\n"
+block|}
+block|,
+block|{
+literal|2
+block|,
+literal|"_ASRTS\n"
+block|,
+literal|"	movl	(sp)+,r0\n\ 	movl	(sp)+,r1\n\ 	tstl	r0\n\ 	jneq	1f\n\ 	pushl	r1\n\ 	pushl	$_EASRTS\n\ 	callf	$12,_ERROR\n\ 1:\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"_CHR\n"
+block|,
+literal|"	movl	(sp)+,r0\n\ 	cmpl	r0,$127\n\ 	jlequ	1f\n\ 	pushl	r0\n\ 	pushl	$_ECHR\n\ 	callf	$12,_ERROR\n\ 1:\n"
+block|}
+block|,
+block|{
+literal|0
+block|,
+literal|"_LINO\n"
+block|,
+literal|"	incl	__stcnt\n\ 	cmpl	__stcnt,__stlim\n\ 	jlss	1f\n\ 	pushl	__stcnt\n\ 	pushl	$_ELINO\n\ 	callf	$12,_ERROR\n\ 1:\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"_NIL\n"
+block|,
+literal|"	movl	(sp)+,r0\n\ 	cmpl	r0,__maxptr\n\ 	jgtr	1f\n\ 	cmpl	r0,__minptr\n\ 	jgeq	2f\n\ 1:\n\ 	pushl	$0\n\ 	pushl	$_ENIL\n\ 	callf	$12,_ERROR\n\ 2:\n"
+block|}
+block|,
+block|{
+literal|3
+block|,
+literal|"_RANG4\n"
+block|,
+literal|"	movl	(sp)+,r0\n\ 	movl	(sp)+,r1\n\ 	movl	(sp)+,r2\n\ 	cmpl	r0,r1\n\ 	jlss	1f\n\ 	cmpl	r0,r2\n\ 	jleq	2f\n\ 1:\n\ 	pushl	r0\n\ 	pushl	$_ERANG\n\ 	callf	$12,_ERROR\n\ 2:\n"
+block|}
+block|,
+block|{
+literal|2
+block|,
+literal|"_RSNG4\n"
+block|,
+literal|"	movl	(sp)+,r0\n\ 	movl	(sp)+,r1\n\ 	cmpl	r0,r1\n\ 	jlequ	1f\n\ 	pushl	r0\n\ 	pushl	$_ERANG\n\ 	callf	$12,_ERROR\n\ 1:\n"
+block|}
+block|,
+block|{
+literal|1
+block|,
+literal|"_SEED\n"
+block|,
+literal|"	movl	(sp)+,r1\n\ 	movl	__seed,r0\n\ 	movl	r1,__seed\n"
+block|}
+block|,
+block|{
+literal|3
+block|,
+literal|"_SUBSC\n"
+block|,
+literal|"	movl	(sp)+,r0\n\ 	movl	(sp)+,r1\n\ 	movl	(sp)+,r2\n\ 	cmpl	r0,r1\n\ 	jlss	1f\n\ 	cmpl	r0,r2\n\ 	jleq	2f\n\ 1:\n\ 	pushl	r0\n\ 	pushl	$_ESUBSC\n\ 	callf	$12,_ERROR\n\ 2:\n"
+block|}
+block|,
+block|{
+literal|2
+block|,
+literal|"_SUBSCZ\n"
+block|,
+literal|"	movl	(sp)+,r0\n\ 	movl	(sp)+,r1\n\ 	cmpl	r0,r1\n\ 	jlequ	1f\n\ 	pushl	r0\n\ 	pushl	$_ESUBSC\n\ 	callf	$12,_ERROR\n\ 1:\n"
+block|}
+block|,
+endif|#
+directive|endif
+endif|tahoe
 block|{
 literal|0
 block|,
