@@ -4007,21 +4007,34 @@ block|}
 endif|#
 directive|endif
 block|}
-comment|/* 	 * make sure that we have swap space -- if we are low on memory and 	 * swap -- then kill the biggest process. 	 */
+comment|/* 	 * If we are out of swap and were not able to reach our paging 	 * target, kill the largest process. 	 */
 if|if
 condition|(
 operator|(
 name|vm_swap_size
 operator|<
 literal|64
-operator|||
-name|swap_pager_full
-operator|)
 operator|&&
 name|vm_page_count_min
 argument_list|()
+operator|)
+operator|||
+operator|(
+name|swap_pager_full
+operator|&&
+name|vm_paging_target
+argument_list|()
+operator|>
+literal|0
+operator|)
 condition|)
 block|{
+if|#
+directive|if
+literal|0
+block|if ((vm_swap_size< 64 || swap_pager_full)&& vm_page_count_min()) {
+endif|#
+directive|endif
 name|bigproc
 operator|=
 name|NULL
@@ -4119,6 +4132,13 @@ comment|/* 			 * get the process size 			 */
 name|size
 operator|=
 name|vmspace_resident_count
+argument_list|(
+name|p
+operator|->
+name|p_vmspace
+argument_list|)
+operator|+
+name|vmspace_swap_count
 argument_list|(
 name|p
 operator|->
