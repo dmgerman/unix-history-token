@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)bib.h	2.1	%G%  */
+comment|/*  *	@(#)bib.h	2.2	%G%  */
 end_comment
 
 begin_comment
@@ -41,6 +41,17 @@ end_define
 
 begin_comment
 comment|/* maximum size of reference string    */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXFIELD
+value|512
+end_define
+
+begin_comment
+comment|/* maximum size of any field in referece*/
 end_comment
 
 begin_comment
@@ -165,7 +176,7 @@ begin_define
 define|#
 directive|define
 name|MAXCOMM
-value|300
+value|1000
 end_define
 
 begin_function_decl
@@ -175,6 +186,35 @@ name|malloc
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* fix needed for systems where open [w]+ doesn't work */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|READWRITE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|READ
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|WRITE
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

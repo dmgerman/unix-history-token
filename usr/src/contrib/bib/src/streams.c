@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)streams.c	2.1	%G%"
+literal|"@(#)streams.c	2.2	%G%"
 decl_stmt|;
 end_decl_stmt
 
