@@ -4020,6 +4020,13 @@ name|DC_DEVICEID_EN1217
 value|0x1217
 end_define
 
+begin_define
+define|#
+directive|define
+name|DC_DEVICEID_EN2242
+value|0x1216
+end_define
+
 begin_comment
 comment|/*  * PCI low memory base and low I/O base register, and  * other PCI registers.  */
 end_comment
