@@ -600,10 +600,6 @@ name|int
 name|td_intrval
 decl_stmt|;
 comment|/* (*) Return value of TDF_INTERRUPT */
-name|u_int
-name|td_critnest
-decl_stmt|;
-comment|/* (k) Critical section nest level. */
 name|sigset_t
 name|td_oldsigmask
 decl_stmt|;
@@ -718,6 +714,10 @@ name|int
 name|td_altkstack_pages
 decl_stmt|;
 comment|/* (a) Size of the alternate kstack */
+name|u_int
+name|td_critnest
+decl_stmt|;
+comment|/* (k) Critical section nest level. */
 name|struct
 name|mdthread
 name|td_md

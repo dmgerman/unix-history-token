@@ -711,6 +711,12 @@ name|td_oncpu
 operator|=
 name|NOCPU
 expr_stmt|;
+name|td
+operator|->
+name|td_critnest
+operator|=
+literal|1
+expr_stmt|;
 block|}
 end_function
 
