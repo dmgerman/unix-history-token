@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -134,6 +140,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/cons.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/cpu.h>
 end_include
 
@@ -141,6 +153,12 @@ begin_include
 include|#
 directive|include
 file|<sys/eventhandler.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/exec.h>
 end_include
 
 begin_include
@@ -212,7 +230,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/proc.h>
+file|<sys/ptrace.h>
 end_include
 
 begin_include
@@ -272,19 +290,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_param.h>
+file|<vm/vm_extern.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<vm/vm_kern.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_object.h>
 end_include
 
 begin_include
@@ -302,25 +314,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm_object.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm_pager.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<vm/vm_extern.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/exec.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/cons.h>
+file|<vm/vm_param.h>
 end_include
 
 begin_ifdef
@@ -366,7 +372,19 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<isa/rtc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/netisr.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/bootinfo.h>
 end_include
 
 begin_include
@@ -385,30 +403,6 @@ begin_include
 include|#
 directive|include
 file|<machine/cputypes.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/reg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/clock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/specialreg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/bootinfo.h>
 end_include
 
 begin_include
@@ -445,6 +439,30 @@ begin_include
 include|#
 directive|include
 file|<machine/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/reg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/sigframe.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/specialreg.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/vm86.h>
 end_include
 
 begin_ifdef
@@ -503,30 +521,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<isa/rtc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/vm86.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ptrace.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/sigframe.h>
-end_include
 
 begin_comment
 comment|/* Sanity check for __curthread() */

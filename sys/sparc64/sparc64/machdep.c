@@ -36,6 +36,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -72,7 +84,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/eventhandler.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/exec.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/imgact.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/interrupt.h>
 end_include
 
 begin_include
@@ -108,12 +138,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/malloc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/msgbuf.h>
 end_include
 
@@ -132,31 +156,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/proc.h>
+file|<sys/ptrace.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/reboot.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/eventhandler.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/interrupt.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ptrace.h>
 end_include
 
 begin_include
@@ -198,18 +204,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/ucontext.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/exec.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/ofw/openfirm.h>
 end_include
 
@@ -222,19 +216,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_param.h>
+file|<vm/vm_extern.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<vm/vm_kern.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_object.h>
 end_include
 
 begin_include
@@ -252,13 +240,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm_object.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm_pager.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<vm/vm_extern.h>
+file|<vm/vm_param.h>
 end_include
 
 begin_include
@@ -342,12 +336,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/smp.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/pmap.h>
 end_include
 
@@ -367,6 +355,12 @@ begin_include
 include|#
 directive|include
 file|<machine/sigframe.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/smp.h>
 end_include
 
 begin_include
