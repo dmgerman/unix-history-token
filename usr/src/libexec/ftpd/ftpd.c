@@ -922,10 +922,6 @@ block|}
 block|}
 end_function
 
-begin_comment
-comment|/* reapchild() { 	union wait status;  	while (wait3(&status, WNOHANG, 0)> 0) 		; } */
-end_comment
-
 begin_macro
 name|lostconn
 argument_list|()
@@ -1082,7 +1078,7 @@ condition|)
 block|{
 name|reply
 argument_list|(
-literal|550
+literal|530
 argument_list|,
 literal|"User %s: can't change directory to %s."
 argument_list|,
@@ -1824,7 +1820,7 @@ condition|)
 block|{
 name|reply
 argument_list|(
-literal|550
+literal|553
 argument_list|,
 literal|"%s: %s."
 argument_list|,
@@ -1887,7 +1883,7 @@ condition|)
 block|{
 name|reply
 argument_list|(
-literal|550
+literal|552
 argument_list|,
 literal|"%s: %s."
 argument_list|,
@@ -2780,7 +2776,7 @@ return|;
 block|}
 name|reply
 argument_list|(
-literal|504
+literal|550
 argument_list|,
 literal|"Unimplemented TYPE %d in send_data"
 argument_list|,
@@ -2793,6 +2789,7 @@ literal|0
 expr_stmt|;
 return|return
 operator|(
+operator|-
 literal|1
 operator|)
 return|;
@@ -2936,7 +2933,7 @@ name|TYPE_E
 case|:
 name|reply
 argument_list|(
-literal|504
+literal|553
 argument_list|,
 literal|"TYPE E not implemented."
 argument_list|)
@@ -2947,6 +2944,7 @@ literal|0
 expr_stmt|;
 return|return
 operator|(
+operator|-
 literal|1
 operator|)
 return|;
@@ -3279,10 +3277,6 @@ block|}
 block|}
 end_block
 
-begin_comment
-comment|/*  NOT CALLED ANYWHERE replystr(s) 	char *s; { 	printf("%s\r\n", s); 	(void) fflush(stdout); 	if (debug) 		fprintf(stderr, "<--- %s\n", s); } */
-end_comment
-
 begin_macro
 name|ack
 argument_list|(
@@ -3301,7 +3295,7 @@ begin_block
 block|{
 name|reply
 argument_list|(
-literal|200
+literal|250
 argument_list|,
 literal|"%s command successful."
 argument_list|,
@@ -3643,9 +3637,11 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|ack
+name|reply
 argument_list|(
-literal|"MKDIR"
+literal|257
+argument_list|,
+literal|"MKD command successful."
 argument_list|)
 expr_stmt|;
 block|}
@@ -3695,7 +3691,7 @@ return|return;
 block|}
 name|ack
 argument_list|(
-literal|"RMDIR"
+literal|"RMD"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3728,7 +3724,7 @@ condition|)
 block|{
 name|reply
 argument_list|(
-literal|451
+literal|550
 argument_list|,
 literal|"%s."
 argument_list|,
@@ -3739,7 +3735,7 @@ return|return;
 block|}
 name|reply
 argument_list|(
-literal|251
+literal|257
 argument_list|,
 literal|"\"%s\" is current directory."
 argument_list|,
@@ -5470,6 +5466,10 @@ expr_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/*  * Note: The 530 reply codes could be 4xx codes, except nothing is  * given in the state tables except 421 which implies an exit.  (RFC959)  */
+end_comment
+
 begin_macro
 name|passive
 argument_list|()
@@ -5512,7 +5512,7 @@ condition|)
 block|{
 name|reply
 argument_list|(
-literal|451
+literal|530
 argument_list|,
 literal|"Can't open passive connection"
 argument_list|)
@@ -5579,7 +5579,7 @@ literal|1
 expr_stmt|;
 name|reply
 argument_list|(
-literal|451
+literal|530
 argument_list|,
 literal|"Can't open passive connection"
 argument_list|)
@@ -5635,7 +5635,7 @@ literal|1
 expr_stmt|;
 name|reply
 argument_list|(
-literal|451
+literal|530
 argument_list|,
 literal|"Can't open passive connection"
 argument_list|)
@@ -5669,7 +5669,7 @@ literal|1
 expr_stmt|;
 name|reply
 argument_list|(
-literal|451
+literal|530
 argument_list|,
 literal|"Can't open passive connection"
 argument_list|)
@@ -5907,7 +5907,7 @@ condition|)
 block|{
 name|reply
 argument_list|(
-literal|451
+literal|452
 argument_list|,
 literal|"Unique file name not cannot be created."
 argument_list|)
