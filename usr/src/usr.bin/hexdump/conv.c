@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conv.c	5.2 (Berkeley) %G%"
+literal|"@(#)conv.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -71,6 +71,10 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|extern
+name|int
+name|deprecated
+decl_stmt|;
 name|char
 name|buf
 index|[
@@ -100,6 +104,12 @@ comment|/* case '\a': */
 case|case
 literal|'\007'
 case|:
+if|if
+condition|(
+name|deprecated
+condition|)
+comment|/* od didn't know about \a */
+break|break;
 name|str
 operator|=
 literal|"\\a"
@@ -160,6 +170,11 @@ goto|;
 case|case
 literal|'\v'
 case|:
+if|if
+condition|(
+name|deprecated
+condition|)
+break|break;
 name|str
 operator|=
 literal|"\\v"
@@ -168,6 +183,8 @@ goto|goto
 name|strpr
 goto|;
 default|default:
+break|break;
+block|}
 if|if
 condition|(
 name|isprint
@@ -241,7 +258,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-block|}
 end_block
 
 begin_macro
@@ -269,6 +285,10 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|extern
+name|int
+name|deprecated
+decl_stmt|;
 specifier|static
 name|char
 modifier|*
@@ -322,7 +342,7 @@ literal|"nak"
 block|,
 literal|"syn"
 block|,
-literal|"etc"
+literal|"etb"
 block|,
 literal|"can"
 block|,
@@ -341,6 +361,7 @@ block|,
 literal|"us"
 block|, 	}
 decl_stmt|;
+comment|/* od used nl, not lf */
 if|if
 condition|(
 operator|*
@@ -356,6 +377,28 @@ name|cchar
 operator|=
 literal|'s'
 expr_stmt|;
+if|if
+condition|(
+name|deprecated
+operator|&&
+operator|*
+name|p
+operator|==
+literal|0x0a
+condition|)
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+name|pr
+operator|->
+name|fmt
+argument_list|,
+literal|"nl"
+argument_list|)
+expr_stmt|;
+else|else
 operator|(
 name|void
 operator|)
@@ -379,7 +422,7 @@ condition|(
 operator|*
 name|p
 operator|==
-literal|0xff
+literal|0x7f
 condition|)
 block|{
 operator|*
@@ -399,6 +442,38 @@ operator|->
 name|fmt
 argument_list|,
 literal|"del"
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|deprecated
+operator|&&
+operator|*
+name|p
+operator|==
+literal|0x20
+condition|)
+block|{
+comment|/* od replace space with sp */
+operator|*
+name|pr
+operator|->
+name|cchar
+operator|=
+literal|'s'
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+name|pr
+operator|->
+name|fmt
+argument_list|,
+literal|" sp"
 argument_list|)
 expr_stmt|;
 block|}
