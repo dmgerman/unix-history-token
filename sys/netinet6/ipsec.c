@@ -17120,34 +17120,6 @@ block|}
 end_function
 
 begin_function
-name|struct
-name|ipsec_history
-modifier|*
-name|ipsec_gethist
-parameter_list|(
-name|m
-parameter_list|,
-name|lenp
-parameter_list|)
-name|struct
-name|mbuf
-modifier|*
-name|m
-decl_stmt|;
-name|int
-modifier|*
-name|lenp
-decl_stmt|;
-block|{
-name|panic
-argument_list|(
-literal|"ipsec_gethist: obsolete API"
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
 name|void
 name|ipsec_clearhist
 parameter_list|(
