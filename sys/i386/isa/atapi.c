@@ -6166,10 +6166,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*  * XXX "ioconf.h" is not included by<sys/conf.h> for lkms, so we need this  * misplaced declaration.  */
-end_comment
-
 begin_function_decl
 specifier|extern
 name|void
