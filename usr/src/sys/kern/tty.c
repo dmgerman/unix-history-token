@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tty.c	8.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tty.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2236,7 +2236,7 @@ name|t_rocol
 operator|=
 name|tp
 operator|->
-name|t_col
+name|t_column
 expr_stmt|;
 if|if
 condition|(
@@ -2301,7 +2301,7 @@ name|i
 operator|=
 name|tp
 operator|->
-name|t_col
+name|t_column
 expr_stmt|;
 name|ttyecho
 argument_list|(
@@ -2336,7 +2336,7 @@ literal|2
 argument_list|,
 name|tp
 operator|->
-name|t_col
+name|t_column
 operator|-
 name|i
 argument_list|)
@@ -2571,7 +2571,7 @@ operator|-
 operator|(
 name|tp
 operator|->
-name|t_col
+name|t_column
 operator|&
 literal|7
 operator|)
@@ -2627,7 +2627,7 @@ expr_stmt|;
 block|}
 name|tp
 operator|->
-name|t_col
+name|t_column
 operator|+=
 name|c
 expr_stmt|;
@@ -2733,7 +2733,7 @@ name|col
 operator|=
 name|tp
 operator|->
-name|t_col
+name|t_column
 expr_stmt|;
 switch|switch
 condition|(
@@ -2796,7 +2796,7 @@ break|break;
 block|}
 name|tp
 operator|->
-name|t_col
+name|t_column
 operator|=
 name|col
 expr_stmt|;
@@ -7103,7 +7103,7 @@ name|i
 expr_stmt|;
 name|tp
 operator|->
-name|t_col
+name|t_column
 operator|+=
 name|ce
 expr_stmt|;
@@ -7502,7 +7502,7 @@ name|savecol
 operator|=
 name|tp
 operator|->
-name|t_col
+name|t_column
 expr_stmt|;
 name|tp
 operator|->
@@ -7512,7 +7512,7 @@ name|FLUSHO
 expr_stmt|;
 name|tp
 operator|->
-name|t_col
+name|t_column
 operator|=
 name|tp
 operator|->
@@ -7587,11 +7587,11 @@ name|savecol
 operator|-=
 name|tp
 operator|->
-name|t_col
+name|t_column
 expr_stmt|;
 name|tp
 operator|->
-name|t_col
+name|t_column
 operator|+=
 name|savecol
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_exit.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_exit.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1280,44 +1280,32 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * Wait: check child processes to see if any have exited,  * stopped under trace, or (optionally) stopped by a signal.  * Pass back status and deallocate exited child's proc structure.  */
-end_comment
-
-begin_expr_stmt
+begin_function
+name|int
 name|wait1
-argument_list|(
+parameter_list|(
 name|q
-argument_list|,
+parameter_list|,
 name|uap
-argument_list|,
+parameter_list|,
 name|retval
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|proc
-operator|*
+modifier|*
 name|q
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|struct
 name|wait_args
 modifier|*
 name|uap
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|retval
 index|[]
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -1977,7 +1965,7 @@ goto|goto
 name|loop
 goto|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * make process 'parent' the new parent of process 'child'.  */

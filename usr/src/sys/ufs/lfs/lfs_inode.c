@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_inode.c	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_inode.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -260,13 +260,13 @@ operator|->
 name|i_flag
 operator|&
 operator|(
-name|IUPD
+name|IUPDATE
 operator||
-name|IACC
+name|IACCESS
 operator||
-name|ICHG
+name|ICHANGE
 operator||
-name|IMOD
+name|IMODIFIED
 operator|)
 operator|)
 operator|==
@@ -283,7 +283,7 @@ name|ip
 operator|->
 name|i_flag
 operator|&
-name|IACC
+name|IACCESS
 condition|)
 name|ip
 operator|->
@@ -303,7 +303,7 @@ name|ip
 operator|->
 name|i_flag
 operator|&
-name|IUPD
+name|IUPDATE
 condition|)
 block|{
 name|ip
@@ -332,7 +332,7 @@ name|ip
 operator|->
 name|i_flag
 operator|&
-name|ICHG
+name|ICHANGE
 condition|)
 name|ip
 operator|->
@@ -350,11 +350,11 @@ name|i_flag
 operator|&=
 operator|~
 operator|(
-name|IUPD
+name|IUPDATE
 operator||
-name|IACC
+name|IACCESS
 operator||
-name|ICHG
+name|ICHANGE
 operator|)
 expr_stmt|;
 if|if
@@ -365,7 +365,7 @@ name|ip
 operator|->
 name|i_flag
 operator|&
-name|IMOD
+name|IMODIFIED
 operator|)
 condition|)
 operator|++
@@ -386,7 +386,7 @@ name|ip
 operator|->
 name|i_flag
 operator||=
-name|IMOD
+name|IMODIFIED
 expr_stmt|;
 comment|/* If sync, push back the vnode and any dirty blocks it may have. */
 return|return
@@ -635,9 +635,9 @@ name|ip
 operator|->
 name|i_flag
 operator||=
-name|ICHG
+name|IUPDATE
 operator||
-name|IUPD
+name|ICHANGE
 expr_stmt|;
 return|return
 operator|(
@@ -686,9 +686,9 @@ name|ip
 operator|->
 name|i_flag
 operator||=
-name|ICHG
+name|IUPDATE
 operator||
-name|IUPD
+name|ICHANGE
 expr_stmt|;
 return|return
 operator|(
@@ -842,16 +842,18 @@ argument_list|)
 expr_stmt|;
 name|bzero
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_addr
+name|b_data
 operator|+
 name|offset
 argument_list|,
 call|(
-name|unsigned
+name|u_int
 call|)
 argument_list|(
 name|size
@@ -1099,11 +1101,13 @@ argument_list|)
 expr_stmt|;
 name|daddrp
 operator|=
+operator|(
+name|daddr_t
+operator|*
+operator|)
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_daddr
+name|b_data
 operator|+
 name|inp
 operator|->
@@ -1169,11 +1173,13 @@ else|else
 block|{
 name|bzero
 argument_list|(
+operator|(
+name|daddr_t
+operator|*
+operator|)
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_daddr
+name|b_data
 operator|+
 name|inp
 operator|->
@@ -1384,9 +1390,9 @@ name|ip
 operator|->
 name|i_flag
 operator||=
-name|ICHG
+name|IUPDATE
 operator||
-name|IUPD
+name|ICHANGE
 expr_stmt|;
 comment|/* 	 * Traverse dirty block list counting number of dirty buffers 	 * that are being deleted out of the cache, so that the lfs_avail 	 * field can be updated. 	 */
 name|a_released

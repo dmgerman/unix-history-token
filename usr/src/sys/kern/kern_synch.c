@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_synch.c	8.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_synch.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -511,7 +511,7 @@ name|p
 operator|->
 name|p_usrpri
 expr_stmt|;
-name|setrq
+name|setrunqueue
 argument_list|(
 name|p
 argument_list|)
@@ -1295,7 +1295,7 @@ name|p_stat
 operator|==
 name|SSLEEP
 condition|)
-name|setrun
+name|setrunnable
 argument_list|(
 name|p
 argument_list|)
@@ -1859,7 +1859,7 @@ operator|==
 name|SSLEEP
 condition|)
 block|{
-comment|/* OPTIMIZED INLINE EXPANSION OF setrun(p) */
+comment|/* OPTIMIZED EXPANSION OF setrunnable(p); */
 if|if
 condition|(
 name|p
@@ -1893,7 +1893,7 @@ name|p_flag
 operator|&
 name|SLOAD
 condition|)
-name|setrq
+name|setrunqueue
 argument_list|(
 name|p
 argument_list|)
@@ -2250,7 +2250,7 @@ end_comment
 
 begin_function
 name|void
-name|setrun
+name|setrunnable
 parameter_list|(
 name|p
 parameter_list|)
@@ -2281,9 +2281,6 @@ case|case
 literal|0
 case|:
 case|case
-name|SWAIT
-case|:
-case|case
 name|SRUN
 case|:
 case|case
@@ -2292,7 +2289,7 @@ case|:
 default|default:
 name|panic
 argument_list|(
-literal|"setrun"
+literal|"setrunnable"
 argument_list|)
 expr_stmt|;
 case|case
@@ -2327,7 +2324,7 @@ name|p_flag
 operator|&
 name|SLOAD
 condition|)
-name|setrq
+name|setrunqueue
 argument_list|(
 name|p
 argument_list|)

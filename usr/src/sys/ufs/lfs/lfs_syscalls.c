@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_syscalls.c	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_syscalls.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -792,9 +792,7 @@ name|bi_bp
 argument_list|,
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_addr
+name|b_data
 argument_list|,
 name|bsize
 argument_list|)
@@ -2007,7 +2005,7 @@ name|ip
 operator|->
 name|i_flag
 operator|&
-name|IMOD
+name|IMODIFIED
 operator|)
 condition|)
 block|{
@@ -2022,14 +2020,14 @@ name|ip
 operator|->
 name|i_flag
 operator||=
-name|IMOD
+name|IMODIFIED
 expr_stmt|;
 block|}
 name|ip
 operator|->
 name|i_flag
 operator||=
-name|IMOD
+name|IMODIFIED
 expr_stmt|;
 return|return
 operator|(
@@ -2187,11 +2185,14 @@ name|um_lfs
 argument_list|,
 name|ino
 argument_list|,
+operator|(
+expr|struct
+name|dinode
+operator|*
+operator|)
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_dino
+name|b_data
 argument_list|)
 expr_stmt|;
 name|brelse
@@ -2254,7 +2255,7 @@ name|ip
 operator|->
 name|i_flag
 operator||=
-name|IMOD
+name|IMODIFIED
 expr_stmt|;
 operator|++
 name|ump

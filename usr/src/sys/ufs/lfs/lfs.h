@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -836,7 +836,7 @@ name|F
 parameter_list|,
 name|BP
 parameter_list|)
-value|{ \ 	VTOI((F)->lfs_ivnode)->i_flag |= IACC; \ 	if (bread((F)->lfs_ivnode, (daddr_t)0, (F)->lfs_bsize, NOCRED,&(BP))) \ 		panic("lfs: ifile read"); \ 	(CP) = (CLEANERINFO *)(BP)->b_un.b_addr; \ }
+value|{ \ 	VTOI((F)->lfs_ivnode)->i_flag |= IACCESS; \ 	if (bread((F)->lfs_ivnode, (daddr_t)0, (F)->lfs_bsize, NOCRED,&(BP))) \ 		panic("lfs: ifile read"); \ 	(CP) = (CLEANERINFO *)(BP)->b_data; \ }
 end_define
 
 begin_comment
@@ -856,7 +856,7 @@ name|IN
 parameter_list|,
 name|BP
 parameter_list|)
-value|{ \ 	int _e; \ 	VTOI((F)->lfs_ivnode)->i_flag |= IACC; \ 	if (_e = bread((F)->lfs_ivnode, \ 	    (IN) / (F)->lfs_ifpb + (F)->lfs_cleansz + (F)->lfs_segtabsz, \ 	    (F)->lfs_bsize, NOCRED,&(BP))) \ 		panic("lfs: ifile read %d", _e); \ 	(IP) = (IFILE *)(BP)->b_un.b_addr + (IN) % (F)->lfs_ifpb; \ }
+value|{ \ 	int _e; \ 	VTOI((F)->lfs_ivnode)->i_flag |= IACCESS; \ 	if (_e = bread((F)->lfs_ivnode, \ 	    (IN) / (F)->lfs_ifpb + (F)->lfs_cleansz + (F)->lfs_segtabsz, \ 	    (F)->lfs_bsize, NOCRED,&(BP))) \ 		panic("lfs: ifile read %d", _e); \ 	(IP) = (IFILE *)(BP)->b_data + (IN) % (F)->lfs_ifpb; \ }
 end_define
 
 begin_comment
@@ -876,7 +876,7 @@ name|IN
 parameter_list|,
 name|BP
 parameter_list|)
-value|{ \ 	int _e; \ 	VTOI((F)->lfs_ivnode)->i_flag |= IACC; \ 	if (_e = bread((F)->lfs_ivnode, \ 	    ((IN)>> (F)->lfs_sushift) + (F)->lfs_cleansz, \ 	    (F)->lfs_bsize, NOCRED,&(BP))) \ 		panic("lfs: ifile read: %d", _e); \ 	(SP) = (SEGUSE *)(BP)->b_un.b_addr + ((IN)& (F)->lfs_sepb - 1); \ }
+value|{ \ 	int _e; \ 	VTOI((F)->lfs_ivnode)->i_flag |= IACCESS; \ 	if (_e = bread((F)->lfs_ivnode, \ 	    ((IN)>> (F)->lfs_sushift) + (F)->lfs_cleansz, \ 	    (F)->lfs_bsize, NOCRED,&(BP))) \ 		panic("lfs: ifile read: %d", _e); \ 	(SP) = (SEGUSE *)(BP)->b_data + ((IN)& (F)->lfs_sepb - 1); \ }
 end_define
 
 begin_comment

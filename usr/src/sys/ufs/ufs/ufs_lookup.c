@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_lookup.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_lookup.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -877,11 +877,13 @@ name|direct
 operator|*
 operator|)
 operator|(
+operator|(
+name|char
+operator|*
+operator|)
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_addr
+name|b_data
 operator|+
 name|entryoffsetinblock
 operator|)
@@ -1364,9 +1366,9 @@ name|dp
 operator|->
 name|i_flag
 operator||=
-name|IUPD
+name|IUPDATE
 operator||
-name|ICHG
+name|ICHANGE
 expr_stmt|;
 comment|/* 		 * We return with the directory locked, so that 		 * the parameters we set up above will still be 		 * valid if we actually decide to do a direnter(). 		 * We return ni_vp == NULL to indicate that the entry 		 * does not currently exist; we leave a pointer to 		 * the (locked) directory inode in ndp->ni_dvp. 		 * The pathname buffer is saved so that the name 		 * can be obtained later. 		 * 		 * NB - if the directory is unlocked, then this 		 * information cannot be used. 		 */
 name|cnp
@@ -1485,9 +1487,9 @@ name|dp
 operator|->
 name|i_flag
 operator||=
-name|IUPD
+name|IUPDATE
 operator||
-name|ICHG
+name|ICHANGE
 expr_stmt|;
 block|}
 comment|/* 	 * Found component in pathname. 	 * If the final component of path name, save information 	 * in the cache as to where the entry was found. 	 */
@@ -2658,7 +2660,7 @@ name|dp
 operator|->
 name|i_flag
 operator||=
-name|ICHG
+name|ICHANGE
 expr_stmt|;
 block|}
 return|return
@@ -2969,9 +2971,9 @@ name|dp
 operator|->
 name|i_flag
 operator||=
-name|IUPD
+name|IUPDATE
 operator||
-name|ICHG
+name|ICHANGE
 expr_stmt|;
 if|if
 condition|(
@@ -3130,9 +3132,9 @@ name|dp
 operator|->
 name|i_flag
 operator||=
-name|IUPD
+name|IUPDATE
 operator||
-name|ICHG
+name|ICHANGE
 expr_stmt|;
 return|return
 operator|(
@@ -3198,9 +3200,9 @@ name|dp
 operator|->
 name|i_flag
 operator||=
-name|IUPD
+name|IUPDATE
 operator||
-name|ICHG
+name|ICHANGE
 expr_stmt|;
 return|return
 operator|(
@@ -3339,9 +3341,9 @@ name|dp
 operator|->
 name|i_flag
 operator||=
-name|IUPD
+name|IUPDATE
 operator||
-name|ICHG
+name|ICHANGE
 expr_stmt|;
 return|return
 operator|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_cluster.c	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_cluster.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1573,11 +1573,13 @@ name|bs_saveaddr
 expr_stmt|;
 name|cp
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_addr
+name|b_data
 operator|+
 name|b_save
 operator|->
@@ -1621,9 +1623,7 @@ operator|*
 name|tbp
 operator|)
 operator|->
-name|b_un
-operator|.
-name|b_addr
+name|b_data
 argument_list|,
 operator|(
 operator|*
@@ -2537,11 +2537,13 @@ name|cluster_callback
 expr_stmt|;
 name|cp
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_addr
+name|b_data
 operator|+
 name|bp
 operator|->
@@ -2720,9 +2722,7 @@ name|pagemove
 argument_list|(
 name|tbp
 operator|->
-name|b_un
-operator|.
-name|b_daddr
+name|b_data
 argument_list|,
 name|cp
 argument_list|,

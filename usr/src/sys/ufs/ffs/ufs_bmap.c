@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_bmap.c	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_bmap.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -687,11 +687,15 @@ block|}
 block|}
 name|daddr
 operator|=
+operator|(
+operator|(
+name|daddr_t
+operator|*
+operator|)
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_daddr
+name|b_data
+operator|)
 index|[
 name|xap
 operator|->
@@ -734,22 +738,30 @@ name|is_sequential
 argument_list|(
 name|ump
 argument_list|,
+operator|(
+operator|(
+name|daddr_t
+operator|*
+operator|)
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_daddr
+name|b_data
+operator|)
 index|[
 name|bn
 operator|-
 literal|1
 index|]
 argument_list|,
+operator|(
+operator|(
+name|daddr_t
+operator|*
+operator|)
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_daddr
+name|b_data
+operator|)
 index|[
 name|bn
 index|]

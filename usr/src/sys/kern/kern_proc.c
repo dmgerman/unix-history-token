@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_proc.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_proc.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -468,27 +468,29 @@ begin_comment
 comment|/*  * Locate a process by number  */
 end_comment
 
-begin_decl_stmt
+begin_function
 name|struct
 name|proc
 modifier|*
 name|pfind
-argument_list|(
+parameter_list|(
 name|pid
-argument_list|)
-decl|register
+parameter_list|)
+specifier|register
+name|pid_t
 name|pid
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
 name|proc
 modifier|*
 name|p
-init|=
+decl_stmt|;
+for|for
+control|(
+name|p
+operator|=
 name|pidhash
 index|[
 name|PIDHASH
@@ -496,11 +498,10 @@ argument_list|(
 name|pid
 argument_list|)
 index|]
-decl_stmt|;
-for|for
-control|(
 init|;
 name|p
+operator|!=
+name|NULL
 condition|;
 name|p
 operator|=
@@ -523,16 +524,11 @@ operator|)
 return|;
 return|return
 operator|(
-operator|(
-expr|struct
-name|proc
-operator|*
-operator|)
-literal|0
+name|NULL
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Locate a process group by number  */
@@ -556,7 +552,11 @@ name|struct
 name|pgrp
 modifier|*
 name|pgrp
-init|=
+decl_stmt|;
+for|for
+control|(
+name|pgrp
+operator|=
 name|pgrphash
 index|[
 name|PIDHASH
@@ -564,11 +564,10 @@ argument_list|(
 name|pgid
 argument_list|)
 index|]
-decl_stmt|;
-for|for
-control|(
 init|;
 name|pgrp
+operator|!=
+name|NULL
 condition|;
 name|pgrp
 operator|=
@@ -591,12 +590,7 @@ operator|)
 return|;
 return|return
 operator|(
-operator|(
-expr|struct
-name|pgrp
-operator|*
-operator|)
-literal|0
+name|NULL
 operator|)
 return|;
 block|}
@@ -670,6 +664,8 @@ name|DIAGNOSTIC
 if|if
 condition|(
 name|pgrp
+operator|!=
+name|NULL
 operator|&&
 name|mksess
 condition|)

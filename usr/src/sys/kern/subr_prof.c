@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)subr_prof.c	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)subr_prof.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -625,10 +625,10 @@ struct|struct
 name|profil_args
 block|{
 name|caddr_t
-name|buf
+name|samples
 decl_stmt|;
 name|u_int
-name|bufsize
+name|size
 decl_stmt|;
 name|u_int
 name|offset
@@ -736,27 +736,11 @@ name|p_stats
 operator|->
 name|p_prof
 expr_stmt|;
+comment|/* Block profile interrupts while changing state. */
 name|s
 operator|=
 name|splstatclock
 argument_list|()
-expr_stmt|;
-comment|/* block profile interrupts while changing state */
-name|upp
-operator|->
-name|pr_base
-operator|=
-name|uap
-operator|->
-name|buf
-expr_stmt|;
-name|upp
-operator|->
-name|pr_size
-operator|=
-name|uap
-operator|->
-name|bufsize
 expr_stmt|;
 name|upp
 operator|->
@@ -773,6 +757,22 @@ operator|=
 name|uap
 operator|->
 name|scale
+expr_stmt|;
+name|upp
+operator|->
+name|pr_base
+operator|=
+name|uap
+operator|->
+name|samples
+expr_stmt|;
+name|upp
+operator|->
+name|pr_size
+operator|=
+name|uap
+operator|->
+name|size
 expr_stmt|;
 name|startprofclock
 argument_list|(

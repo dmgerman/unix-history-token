@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1993 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_readwrite.c	8.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1993 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_readwrite.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -635,11 +635,13 @@ name|error
 operator|=
 name|uiomove
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_addr
+name|b_data
 operator|+
 name|blkoffset
 argument_list|,
@@ -704,7 +706,7 @@ name|ip
 operator|->
 name|i_flag
 operator||=
-name|IACC
+name|IACCESS
 expr_stmt|;
 return|return
 operator|(
@@ -1230,11 +1232,13 @@ name|error
 operator|=
 name|uiomove
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_addr
+name|b_data
 operator|+
 name|blkoffset
 argument_list|,
@@ -1332,9 +1336,9 @@ name|ip
 operator|->
 name|i_flag
 operator||=
-name|IUPD
+name|IUPDATE
 operator||
-name|ICHG
+name|ICHANGE
 expr_stmt|;
 block|}
 comment|/* 	 * If we successfully wrote any data, and we are not the superuser 	 * we clear the setuid and setgid bits as a precaution against 	 * tampering. 	 */

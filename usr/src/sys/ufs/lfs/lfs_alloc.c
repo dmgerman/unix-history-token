@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_alloc.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_alloc.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -334,9 +334,7 @@ operator|*
 operator|)
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_words
+name|b_data
 init|;
 name|i
 operator|<
@@ -689,7 +687,7 @@ name|ip
 operator|->
 name|i_flag
 operator|=
-name|IMOD
+name|IMODIFIED
 expr_stmt|;
 name|ip
 operator|->
@@ -895,7 +893,7 @@ name|ip
 operator|->
 name|i_flag
 operator|&
-name|IMOD
+name|IMODIFIED
 condition|)
 block|{
 operator|--
@@ -909,13 +907,13 @@ name|i_flag
 operator|&=
 operator|~
 operator|(
-name|IMOD
+name|IMODIFIED
 operator||
-name|IACC
+name|IACCESS
 operator||
-name|IUPD
+name|IUPDATE
 operator||
-name|ICHG
+name|ICHANGE
 operator|)
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1986, 1989, 1993 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Berkeley Software Design Inc.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_bio.c	8.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1986, 1989, 1993 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Berkeley Software Design Inc.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_bio.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -460,9 +460,7 @@ name|NOCRED
 expr_stmt|;
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_addr
+name|b_data
 operator|=
 name|buffers
 operator|+
@@ -2740,19 +2738,19 @@ argument_list|)
 expr_stmt|;
 name|pagemove
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|tp
 operator|->
-name|b_un
-operator|.
-name|b_addr
+name|b_data
 operator|+
 name|sizealloc
 argument_list|,
 name|ep
 operator|->
-name|b_un
-operator|.
-name|b_addr
+name|b_data
 argument_list|,
 operator|(
 name|int
@@ -2853,11 +2851,15 @@ expr_stmt|;
 name|pagemove
 argument_list|(
 operator|&
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
 name|bp
 operator|->
-name|b_un
-operator|.
-name|b_addr
+name|b_data
+operator|)
 index|[
 name|bp
 operator|->
@@ -2867,11 +2869,15 @@ name|take
 index|]
 argument_list|,
 operator|&
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
 name|tp
 operator|->
-name|b_un
-operator|.
-name|b_addr
+name|b_data
+operator|)
 index|[
 name|tp
 operator|->

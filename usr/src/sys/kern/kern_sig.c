@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sig.c	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sig.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -3690,7 +3690,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* 		 * If process is sleeping interruptibly, then 		 * simulate a wakeup so that when it is continued, 		 * it will be made runnable and can look at the signal. 		 * But don't setrun the process, leave it stopped. 		 */
+comment|/* 		 * If process is sleeping interruptibly, then simulate a 		 * wakeup so that when it is continued, it will be made 		 * runnable and can look at the signal.  But don't make 		 * the process runnable, leave it stopped. 		 */
 if|if
 condition|(
 name|p
@@ -3748,7 +3748,7 @@ name|PUSER
 expr_stmt|;
 name|run
 label|:
-name|setrun
+name|setrunnable
 argument_list|(
 name|p
 argument_list|)
