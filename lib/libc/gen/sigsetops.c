@@ -213,7 +213,6 @@ operator|(
 operator|*
 name|set
 operator|&
-operator|~
 name|sigmask
 argument_list|(
 name|signo
