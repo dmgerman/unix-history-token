@@ -1590,6 +1590,21 @@ name|NULL
 condition|)
 return|return;
 comment|/* no ithread for this vector */
+if|if
+condition|(
+name|i
+operator|->
+name|cntp
+condition|)
+name|atomic_add_long
+argument_list|(
+name|i
+operator|->
+name|cntp
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|ithd
 operator|=
 name|i
@@ -1619,21 +1634,6 @@ name|it_handlers
 argument_list|)
 condition|)
 return|return;
-if|if
-condition|(
-name|i
-operator|->
-name|cntp
-condition|)
-name|atomic_add_long
-argument_list|(
-name|i
-operator|->
-name|cntp
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Handle a fast interrupt if there is no actual thread for this 	 * interrupt by calling the handler directly without Giant.  Note 	 * that this means that any fast interrupt handler must be MP safe. 	 */
 name|ih
 operator|=
