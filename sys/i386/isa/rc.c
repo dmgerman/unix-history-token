@@ -1603,7 +1603,7 @@ argument_list|)
 expr_stmt|;
 name|rc_started
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 block|}
 return|return
