@@ -10521,6 +10521,8 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
+literal|"%s"
+argument_list|,
 name|err
 argument_list|)
 expr_stmt|;
@@ -10859,6 +10861,8 @@ expr_stmt|;
 name|log_Printf
 argument_list|(
 name|LogWARN
+argument_list|,
+literal|"%s"
 argument_list|,
 name|err
 argument_list|)
@@ -11244,6 +11248,8 @@ expr_stmt|;
 name|log_Printf
 argument_list|(
 name|LogWARN
+argument_list|,
+literal|"%s"
 argument_list|,
 name|err
 argument_list|)
@@ -12312,6 +12318,8 @@ condition|)
 name|log_Printf
 argument_list|(
 name|LogWARN
+argument_list|,
+literal|"%s"
 argument_list|,
 name|err
 argument_list|)
@@ -13715,6 +13723,8 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
+literal|"%s"
+argument_list|,
 name|err
 argument_list|)
 expr_stmt|;
@@ -13777,6 +13787,8 @@ expr_stmt|;
 name|log_Printf
 argument_list|(
 name|LogWARN
+argument_list|,
+literal|"%s"
 argument_list|,
 name|err
 argument_list|)
