@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)relocate.c	1.4 (Berkeley/CCI) %G%"
+literal|"@(#)relocate.c	1.5 (Berkeley/CCI) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -173,7 +173,9 @@ argument_list|()
 expr_stmt|;
 name|print
 argument_list|(
-literal|"[a-h] (block)   -  UNIX file system block (frag) number.\n"
+literal|"[a-h] (block)   -  UNIX file system block (%s-byte) number.\n"
+argument_list|,
+name|DEV_BSIZE
 argument_list|)
 expr_stmt|;
 name|print
