@@ -1955,6 +1955,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__i386__
+end_ifdef
+
 begin_comment
 comment|/*  * Callback to collect partition-related data.  */
 end_comment
@@ -2118,6 +2124,15 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __i386__ */
+end_comment
 
 begin_undef
 undef|#
