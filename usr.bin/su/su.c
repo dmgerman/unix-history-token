@@ -341,6 +341,25 @@ name|login_cap_t
 modifier|*
 name|lc
 decl_stmt|;
+union|union
+block|{
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|a
+decl_stmt|;
+name|char
+modifier|*
+specifier|const
+name|b
+index|[
+literal|1
+index|]
+decl_stmt|;
+block|}
+name|np
+union|;
 name|uid_t
 name|ruid
 decl_stmt|;
@@ -411,10 +430,6 @@ decl_stmt|,
 modifier|*
 modifier|*
 name|nargv
-decl_stmt|,
-modifier|*
-modifier|*
-name|np
 decl_stmt|;
 name|shell
 operator|=
@@ -625,6 +640,8 @@ name|i
 index|]
 expr_stmt|;
 name|np
+operator|.
+name|a
 operator|=
 operator|&
 name|nargv
@@ -1689,6 +1706,8 @@ name|fastlogin
 condition|)
 operator|*
 name|np
+operator|.
+name|a
 operator|--
 operator|=
 literal|"-f"
@@ -1699,6 +1718,8 @@ name|asme
 condition|)
 operator|*
 name|np
+operator|.
+name|a
 operator|--
 operator|=
 literal|"-m"
@@ -1707,6 +1728,8 @@ block|}
 comment|/* csh strips the first character... */
 operator|*
 name|np
+operator|.
+name|a
 operator|=
 name|asthem
 condition|?
@@ -1745,6 +1768,8 @@ argument_list|(
 name|shell
 argument_list|,
 name|np
+operator|.
+name|b
 argument_list|)
 expr_stmt|;
 name|err
