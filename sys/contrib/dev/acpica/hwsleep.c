@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: hwsleep.c - ACPI Hardware Sleep/Wake Interface  *              $Revision: 56 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: hwsleep.c - ACPI Hardware Sleep/Wake Interface  *              $Revision: 58 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -315,6 +315,46 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Set the system indicators to show the desired sleep state. */
+name|Status
+operator|=
+name|AcpiEvaluateObject
+argument_list|(
+name|NULL
+argument_list|,
+literal|"\\_SI._SST"
+argument_list|,
+operator|&
+name|ArgList
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+operator|&&
+name|Status
+operator|!=
+name|AE_NOT_FOUND
+condition|)
+block|{
+name|ACPI_REPORT_ERROR
+argument_list|(
+operator|(
+literal|"Method _SST failed, %s\n"
+operator|,
+name|AcpiFormatException
+argument_list|(
+name|Status
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_OK
@@ -351,9 +391,6 @@ name|SleepEnableRegInfo
 decl_stmt|;
 name|UINT32
 name|InValue
-decl_stmt|;
-name|UINT32
-name|Retry
 decl_stmt|;
 name|ACPI_STATUS
 name|Status
@@ -409,6 +446,13 @@ argument_list|(
 name|ACPI_BITREG_SLEEP_ENABLE
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|SleepState
+operator|!=
+name|ACPI_STATE_S5
+condition|)
+block|{
 comment|/* Clear wake status */
 name|Status
 operator|=
@@ -481,6 +525,7 @@ argument_list|(
 name|Status
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|Status
 operator|=
@@ -696,7 +741,6 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Wait a second, then try again. This is to get S4/5 to work on all machines.      */
 if|if
 condition|(
 name|SleepState
@@ -704,7 +748,7 @@ operator|>
 name|ACPI_STATE_S3
 condition|)
 block|{
-comment|/*          * We wait so long to allow chipsets that poll this reg very slowly to          * still read the right value. Ideally, this entire block would go          * away entirely.          */
+comment|/*          * We wanted to sleep> S3, but it didn't happen (by virtue of the fact that          * we are still executing!)          *          * Wait ten seconds, then try again. This is to get S4/S5 to work on all machines.          *          * We wait so long to allow chipsets that poll this reg very slowly to          * still read the right value. Ideally, this entire block would go          * away entirely.          */
 name|AcpiOsStall
 argument_list|(
 literal|10000000
@@ -739,10 +783,6 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Wait until we enter sleep state */
-name|Retry
-operator|=
-literal|1000
-expr_stmt|;
 do|do
 block|{
 name|Status
@@ -770,18 +810,6 @@ argument_list|(
 name|Status
 argument_list|)
 expr_stmt|;
-block|}
-comment|/*          * Some BIOSes don't set WAK_STS at all,          * give up waiting for wakeup if we time out.          */
-if|if
-condition|(
-name|Retry
-operator|--
-operator|==
-literal|0
-condition|)
-block|{
-break|break;
-comment|/* giving up */
 block|}
 comment|/* Spin until we wake */
 block|}
@@ -928,11 +956,91 @@ decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
+name|ACPI_BIT_REGISTER_INFO
+modifier|*
+name|SleepTypeRegInfo
+decl_stmt|;
+name|ACPI_BIT_REGISTER_INFO
+modifier|*
+name|SleepEnableRegInfo
+decl_stmt|;
+name|UINT32
+name|PM1xControl
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"AcpiLeaveSleepState"
 argument_list|)
 expr_stmt|;
+comment|/* Some machines require SLP_TYPE and SLP_EN to be cleared */
+name|SleepTypeRegInfo
+operator|=
+name|AcpiHwGetBitRegisterInfo
+argument_list|(
+name|ACPI_BITREG_SLEEP_TYPE_A
+argument_list|)
+expr_stmt|;
+name|SleepEnableRegInfo
+operator|=
+name|AcpiHwGetBitRegisterInfo
+argument_list|(
+name|ACPI_BITREG_SLEEP_ENABLE
+argument_list|)
+expr_stmt|;
+comment|/* Get current value of PM1A control */
+name|Status
+operator|=
+name|AcpiHwRegisterRead
+argument_list|(
+name|ACPI_MTX_DO_NOT_LOCK
+argument_list|,
+name|ACPI_REGISTER_PM1_CONTROL
+argument_list|,
+operator|&
+name|PM1xControl
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+comment|/* Clear SLP_TYP and SLP_EN */
+name|PM1xControl
+operator|&=
+operator|~
+operator|(
+name|SleepTypeRegInfo
+operator|->
+name|AccessBitMask
+operator||
+name|SleepEnableRegInfo
+operator|->
+name|AccessBitMask
+operator|)
+expr_stmt|;
+name|AcpiHwRegisterWrite
+argument_list|(
+name|ACPI_MTX_DO_NOT_LOCK
+argument_list|,
+name|ACPI_REGISTER_PM1A_CONTROL
+argument_list|,
+name|PM1xControl
+argument_list|)
+expr_stmt|;
+name|AcpiHwRegisterWrite
+argument_list|(
+name|ACPI_MTX_DO_NOT_LOCK
+argument_list|,
+name|ACPI_REGISTER_PM1B_CONTROL
+argument_list|,
+name|PM1xControl
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Ensure EnterSleepStatePrep -> EnterSleepState ordering */
 name|AcpiGbl_SleepTypeA
 operator|=
@@ -958,6 +1066,54 @@ name|Type
 operator|=
 name|ACPI_TYPE_INTEGER
 expr_stmt|;
+comment|/* Ignore any errors from these methods */
+name|Arg
+operator|.
+name|Integer
+operator|.
+name|Value
+operator|=
+literal|0
+expr_stmt|;
+name|Status
+operator|=
+name|AcpiEvaluateObject
+argument_list|(
+name|NULL
+argument_list|,
+literal|"\\_SI._SST"
+argument_list|,
+operator|&
+name|ArgList
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+operator|&&
+name|Status
+operator|!=
+name|AE_NOT_FOUND
+condition|)
+block|{
+name|ACPI_REPORT_ERROR
+argument_list|(
+operator|(
+literal|"Method _SST failed, %s\n"
+operator|,
+name|AcpiFormatException
+argument_list|(
+name|Status
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
 name|Arg
 operator|.
 name|Integer
@@ -966,7 +1122,6 @@ name|Value
 operator|=
 name|SleepState
 expr_stmt|;
-comment|/* Ignore any errors from these methods */
 name|Status
 operator|=
 name|AcpiEvaluateObject
@@ -1065,7 +1220,7 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Disable BM arbitration */
+comment|/* Enable BM arbitration */
 name|Status
 operator|=
 name|AcpiSetRegister
