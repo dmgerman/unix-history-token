@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnet.c	5.16 (Berkeley) %G%"
+literal|"@(#)telnet.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -981,6 +981,17 @@ name|nmatches
 decl_stmt|,
 name|longest
 decl_stmt|;
+if|if
+condition|(
+name|name
+operator|==
+literal|0
+condition|)
+block|{
+return|return
+literal|0
+return|;
+block|}
 name|longest
 operator|=
 literal|0
@@ -8644,9 +8655,17 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
+name|argc
+operator|<
+literal|2
+operator|)
+operator|||
+operator|(
 name|argc
 operator|>
 literal|3
+operator|)
 condition|)
 block|{
 name|printf
