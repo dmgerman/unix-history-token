@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)write.c	4.13 %G%"
+literal|"@(#)write.c	4.14 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,6 +64,12 @@ begin_include
 include|#
 directive|include
 file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_define
@@ -341,7 +347,7 @@ name|uf
 operator|=
 name|fopen
 argument_list|(
-literal|"/etc/utmp"
+name|_PATH_UTMP
 argument_list|,
 literal|"r"
 argument_list|)
@@ -350,9 +356,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|perror
+name|fprintf
 argument_list|(
-literal|"write: Can't open /etc/utmp"
+name|stderr
+argument_list|,
+literal|"write: can't read %s\n"
+argument_list|,
+name|_PATH_UTMP
 argument_list|)
 expr_stmt|;
 if|if
@@ -472,7 +482,7 @@ name|strcpy
 argument_list|(
 name|histty
 argument_list|,
-literal|"/dev/"
+name|_PATH_DEV
 argument_list|)
 expr_stmt|;
 name|strcat
@@ -702,7 +712,7 @@ name|strcpy
 argument_list|(
 name|ttybuf
 argument_list|,
-literal|"/dev/"
+name|_PATH_DEV
 argument_list|)
 expr_stmt|;
 name|strcat
@@ -1317,7 +1327,7 @@ argument_list|(
 literal|"SHELL"
 argument_list|)
 else|:
-literal|"/bin/sh"
+name|_PATH_BSHELL
 argument_list|,
 literal|"sh"
 argument_list|,
