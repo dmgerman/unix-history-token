@@ -64,6 +64,20 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_function_decl
+specifier|static
+name|void
+name|usage
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_function
 name|main
 parameter_list|(
@@ -122,7 +136,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"-"
+literal|"-i"
 argument_list|)
 operator|)
 operator|!=
@@ -138,6 +152,10 @@ condition|)
 block|{
 case|case
 literal|'-'
+case|:
+comment|/* obsolete */
+case|case
+literal|'i'
 case|:
 name|environ
 operator|=
@@ -155,20 +173,8 @@ case|case
 literal|'?'
 case|:
 default|default:
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: env [-] [name=value ...] [command]\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 block|}
 for|for
@@ -215,6 +221,10 @@ operator|*
 name|argv
 condition|)
 block|{
+comment|/* return 127 if the command to be run could not be found; 126 		   if the command was was found but could not be invoked */
+name|int
+name|status
+decl_stmt|;
 name|execvp
 argument_list|(
 operator|*
@@ -222,6 +232,18 @@ name|argv
 argument_list|,
 name|argv
 argument_list|)
+expr_stmt|;
+name|status
+operator|=
+operator|(
+name|errno
+operator|==
+name|ENOENT
+operator|)
+condition|?
+literal|127
+else|:
+literal|126
 expr_stmt|;
 operator|(
 name|void
@@ -243,7 +265,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
+name|status
 argument_list|)
 expr_stmt|;
 block|}
@@ -273,6 +295,30 @@ expr_stmt|;
 name|exit
 argument_list|(
 literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: env [-i] [name=value ...] [command]\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
