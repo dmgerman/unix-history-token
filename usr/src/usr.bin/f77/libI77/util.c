@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_util[] = "@(#)util.c	1.5";  *  * utility routines  */
+comment|/* char id_util[] = "@(#)util.c	1.6";  *  * utility routines  */
 end_comment
 
 begin_include
@@ -21,6 +21,15 @@ directive|include
 file|"fio.h"
 end_include
 
+begin_decl_stmt
+specifier|extern
+name|short
+name|ccntrl_
+decl_stmt|,
+name|blzero_
+decl_stmt|;
+end_decl_stmt
+
 begin_macro
 name|ini_std
 argument_list|(
@@ -29,8 +38,6 @@ argument_list|,
 argument|F
 argument_list|,
 argument|w
-argument_list|,
-argument|i66
 argument_list|)
 end_macro
 
@@ -110,19 +117,13 @@ name|p
 operator|->
 name|ublnk
 operator|=
+name|blzero_
+expr_stmt|;
 name|p
 operator|->
 name|uprnt
 operator|=
-operator|(
-name|i66
-operator|!=
-literal|0
-operator|)
-condition|?
-name|YES
-else|:
-name|NO
+name|ccntrl_
 expr_stmt|;
 name|p
 operator|->
