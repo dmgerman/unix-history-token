@@ -114,7 +114,7 @@ argument_list|)
 expr_stmt|;
 name|retval
 operator|=
-name|getc
+name|__sgetc
 argument_list|(
 name|stdin
 argument_list|)
