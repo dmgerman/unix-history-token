@@ -1861,6 +1861,20 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+name|schedclock
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|setrunnable
 name|__P
 argument_list|(
