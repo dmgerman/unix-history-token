@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wall.c	5.13 (Berkeley) %G%"
+literal|"@(#)wall.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -96,6 +96,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_include
@@ -426,10 +432,6 @@ name|struct
 name|passwd
 modifier|*
 name|pw
-decl_stmt|,
-modifier|*
-name|getpwuid
-argument_list|()
 decl_stmt|;
 name|struct
 name|stat
@@ -473,10 +475,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|getlogin
-argument_list|()
-decl_stmt|,
-modifier|*
-name|malloc
 argument_list|()
 decl_stmt|,
 modifier|*

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)what.c	5.4 (Berkeley) %G%"
+literal|"@(#)what.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -148,15 +148,17 @@ expr_stmt|;
 block|}
 end_function
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|search
 argument_list|()
+end_macro
+
+begin_block
 block|{
 specifier|register
 name|int
 name|c
-block|;
+decl_stmt|;
 while|while
 condition|(
 operator|(
@@ -261,8 +263,8 @@ literal|'\n'
 argument_list|)
 expr_stmt|;
 block|}
-end_expr_stmt
+block|}
+end_block
 
-unit|}
 end_unit
 

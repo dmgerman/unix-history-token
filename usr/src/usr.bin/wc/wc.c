@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wc.c	5.6 (Berkeley) %G%"
+literal|"@(#)wc.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -399,17 +399,19 @@ expr_stmt|;
 block|}
 end_function
 
-begin_expr_stmt
-specifier|static
+begin_macro
 name|cnt
 argument_list|(
 argument|file
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
-operator|*
+modifier|*
 name|file
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
