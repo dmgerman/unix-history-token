@@ -1092,6 +1092,15 @@ argument_list|)
 expr_stmt|;
 name|gdt
 operator|->
+name|sc_vendor
+operator|=
+name|pci_get_vendor
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|gdt
+operator|->
 name|sc_device
 operator|=
 name|pci_get_device
@@ -1389,9 +1398,9 @@ block|}
 name|protocol
 operator|=
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|)
-name|letoh32
+name|le32toh
 argument_list|(
 name|bus_space_read_4
 argument_list|(

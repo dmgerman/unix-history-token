@@ -4,7 +4,7 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*  *       Copyright (c) 2000-01 Intel Corporation  *       All Rights Reserved  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  *       Copyright (c) 2000-03 Intel Corporation  *       All Rights Reserved  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/*  * iir.c: SCSI dependant code for the Intel Integrated RAID Controlle
 end_comment
 
 begin_empty
-empty|#ident "$Id: iir.c 1.2 2001/06/21 20:28:32 achim Exp $"
+empty|#ident "$Id: iir.c 1.3 2003/03/21 16:28:32 achim Exp $"
 end_empty
 
 begin_define
@@ -1055,7 +1055,7 @@ comment|/*boundary*/
 literal|0
 argument_list|,
 comment|/*lowaddr*/
-name|BUS_SPACE_MAXADDR
+name|BUS_SPACE_MAXADDR_32BIT
 argument_list|,
 comment|/*highaddr*/
 name|BUS_SPACE_MAXADDR
@@ -1123,7 +1123,7 @@ comment|/*boundary*/
 literal|0
 argument_list|,
 comment|/*lowaddr*/
-name|BUS_SPACE_MAXADDR
+name|BUS_SPACE_MAXADDR_32BIT
 argument_list|,
 comment|/*highaddr*/
 name|BUS_SPACE_MAXADDR
@@ -1142,6 +1142,7 @@ expr|struct
 name|gdt_ccb
 argument_list|)
 argument_list|,
+comment|/* maxsize */
 comment|/*nsegments*/
 literal|1
 argument_list|,
@@ -2168,6 +2169,119 @@ operator|)
 return|;
 block|}
 block|}
+block|}
+comment|/* OEM */
+name|gdt_enc32
+argument_list|(
+name|gccb
+operator|->
+name|gc_scratch
+operator|+
+name|GDT_OEM_VERSION
+argument_list|,
+literal|0x01
+argument_list|)
+expr_stmt|;
+name|gdt_enc32
+argument_list|(
+name|gccb
+operator|->
+name|gc_scratch
+operator|+
+name|GDT_OEM_BUFSIZE
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|gdt_oem_record_t
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|gdt_internal_cmd
+argument_list|(
+name|gdt
+argument_list|,
+name|gccb
+argument_list|,
+name|GDT_CACHESERVICE
+argument_list|,
+name|GDT_IOCTL
+argument_list|,
+name|GDT_OEM_STR_RECORD
+argument_list|,
+name|GDT_INVALID_CHANNEL
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|gdt_oem_str_record_t
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|strncpy
+argument_list|(
+name|gdt
+operator|->
+name|oem_name
+argument_list|,
+operator|(
+operator|(
+name|gdt_oem_str_record_t
+operator|*
+operator|)
+name|gccb
+operator|->
+name|gc_scratch
+operator|)
+operator|->
+name|text
+operator|.
+name|scsi_host_drive_inquiry_vendor_id
+argument_list|,
+literal|7
+argument_list|)
+expr_stmt|;
+name|gdt
+operator|->
+name|oem_name
+index|[
+literal|7
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* Old method, based on PCI ID */
+if|if
+condition|(
+name|gdt
+operator|->
+name|sc_vendor
+operator|==
+name|INTEL_VENDOR_ID
+condition|)
+name|strcpy
+argument_list|(
+name|gdt
+operator|->
+name|oem_name
+argument_list|,
+literal|"Intel  "
+argument_list|)
+expr_stmt|;
+else|else
+name|strcpy
+argument_list|(
+name|gdt
+operator|->
+name|oem_name
+argument_list|,
+literal|"ICP    "
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Scan for cache devices */
 for|for
@@ -4129,7 +4243,7 @@ name|ccbh
 operator|->
 name|status
 operator|=
-name|CAM_SEL_TIMEOUT
+name|CAM_DEV_NOT_THERE
 expr_stmt|;
 operator|--
 name|gdt_stat
@@ -6792,7 +6906,9 @@ name|inq
 operator|->
 name|vendor
 argument_list|,
-literal|"IIR     "
+name|gdt
+operator|->
+name|oem_name
 argument_list|)
 expr_stmt|;
 name|sprintf
@@ -7505,11 +7621,16 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|int
-name|op
-decl_stmt|;
-if|if
-condition|(
+name|bus_dmamap_sync
+argument_list|(
+name|gdt
+operator|->
+name|sc_buffer_dmat
+argument_list|,
+name|gccb
+operator|->
+name|gc_dmamap
+argument_list|,
 operator|(
 name|ccb
 operator|->
@@ -7521,27 +7642,10 @@ name|CAM_DIR_MASK
 operator|)
 operator|==
 name|CAM_DIR_IN
-condition|)
-name|op
-operator|=
+condition|?
 name|BUS_DMASYNC_PREREAD
-expr_stmt|;
-else|else
-name|op
-operator|=
+else|:
 name|BUS_DMASYNC_PREWRITE
-expr_stmt|;
-name|bus_dmamap_sync
-argument_list|(
-name|gdt
-operator|->
-name|sc_buffer_dmat
-argument_list|,
-name|gccb
-operator|->
-name|gc_dmamap
-argument_list|,
-name|op
 argument_list|)
 expr_stmt|;
 block|}
@@ -9679,7 +9783,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|gdt_async_event
 parameter_list|(
@@ -10109,7 +10212,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|gdt_sync_event
 parameter_list|(
@@ -10134,9 +10236,6 @@ name|union
 name|ccb
 modifier|*
 name|ccb
-decl_stmt|;
-name|int
-name|op
 decl_stmt|;
 name|GDT_DPRINTF
 argument_list|(
@@ -10865,8 +10964,16 @@ literal|2
 operator|)
 return|;
 block|}
-if|if
-condition|(
+name|bus_dmamap_sync
+argument_list|(
+name|gdt
+operator|->
+name|sc_buffer_dmat
+argument_list|,
+name|gccb
+operator|->
+name|gc_dmamap
+argument_list|,
 operator|(
 name|ccb
 operator|->
@@ -10878,27 +10985,10 @@ name|CAM_DIR_MASK
 operator|)
 operator|==
 name|CAM_DIR_IN
-condition|)
-name|op
-operator|=
+condition|?
 name|BUS_DMASYNC_POSTREAD
-expr_stmt|;
-else|else
-name|op
-operator|=
+else|:
 name|BUS_DMASYNC_POSTWRITE
-expr_stmt|;
-name|bus_dmamap_sync
-argument_list|(
-name|gdt
-operator|->
-name|sc_buffer_dmat
-argument_list|,
-name|gccb
-operator|->
-name|gc_dmamap
-argument_list|,
-name|op
 argument_list|)
 expr_stmt|;
 name|ccb
@@ -11140,7 +11230,7 @@ name|ccb_h
 operator|.
 name|status
 operator|=
-name|CAM_SEL_TIMEOUT
+name|CAM_DEV_NOT_THERE
 expr_stmt|;
 block|}
 else|else

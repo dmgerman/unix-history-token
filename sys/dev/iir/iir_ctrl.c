@@ -60,13 +60,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/disk.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/stat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/ioccom.h>
+file|<sys/disklabel.h>
 end_include
 
 begin_include
@@ -213,6 +219,10 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* static int iir_devsw_installed = 0; */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -302,6 +312,8 @@ operator||
 name|S_IWUSR
 operator||
 name|S_IRGRP
+operator||
+name|S_IROTH
 argument_list|,
 literal|"iir%d"
 argument_list|,
@@ -337,6 +349,8 @@ operator||
 name|S_IWUSR
 operator||
 name|S_IRGRP
+operator||
+name|S_IROTH
 argument_list|,
 literal|"iir"
 argument_list|)
@@ -1483,6 +1497,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* static void iir_drvinit(void *unused) {     GDT_DPRINTF(GDT_D_DEBUG, ("iir_drvinit()\n"));                      if (!iir_devsw_installed) {         cdevsw_add(&iir_cdevsw);         iir_devsw_installed = 1;     } }  SYSINIT(iir_dev, SI_SUB_DRIVERS, SI_ORDER_MIDDLE + CDEV_MAJOR, iir_drvinit, NULL) */
+end_comment
 
 end_unit
 
