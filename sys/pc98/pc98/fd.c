@@ -15009,7 +15009,7 @@ argument_list|,
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Set up a bio request for fdstrategy().  bio_blkno is faked 	 * so that fdstrategy() will seek to the the requested 	 * cylinder, and use the desired head.  Since we are not 	 * interested in bioqdisksort() munging with our faked bio 	 * request, we mark it as being an ordered request. 	 */
+comment|/* 	 * Set up a bio request for fdstrategy().  bio_blkno is faked 	 * so that fdstrategy() will seek to the the requested 	 * cylinder, and use the desired head. 	 */
 name|bp
 operator|->
 name|bio_cmd
@@ -15161,7 +15161,7 @@ name|bp
 operator|->
 name|bio_flags
 operator|=
-name|BIO_ORDERED
+literal|0
 expr_stmt|;
 comment|/* 	 * Now run the command.  The wait loop is a version of bufwait() 	 * adapted for struct bio instead of struct buf and specialized 	 * for the current context. 	 */
 name|fdstrategy
