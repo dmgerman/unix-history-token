@@ -183,6 +183,11 @@ directive|define
 name|CB_TOPIC97
 value|8
 comment|/* Toshiba ToPIC97/100 */
+define|#
+directive|define
+name|CB_O2MICRO
+value|9
+comment|/* O2Micro chips */
 name|SLIST_HEAD
 argument_list|(
 argument_list|,

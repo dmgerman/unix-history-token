@@ -1894,6 +1894,31 @@ value|0xb2
 end_define
 
 begin_comment
+comment|/*  * o2 micro specific registers  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXCA_O2MICRO_CTRL_C
+value|0x3a
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXCA_O2CC_IREQ_INTC
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXCA_O2CC_STSCHG_INTC
+value|0x20
+end_define
+
+begin_comment
 comment|/* Plug and play */
 end_comment
 
