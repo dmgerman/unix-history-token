@@ -182,8 +182,10 @@ name|rid_ctl
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 	 * On standard ISA, we don't just use an 8 port range 	 * (e.g. 0x3f0-0x3f7) since that covers an IDE control 	 * register at 0x3f6.  So, on older hardware, we use 	 * 0x3f0-0x3f5 and 0x3f7.  However, some BIOSs omit the 	 * control port, while others start at 0x3f2.  Of the latter, 	 * sometimes we have two resources, other times we have one. 	 * We have to deal with the following cases: 	 * 	 * 1:	0x3f0-0x3f5			# very rare 	 * 2:	0x3f0				# hints -> 0x3f0-0x3f5,0x3f7 	 * 3:	0x3f0-0x3f5,0x3f7		# Most common 	 * 4:	0x3f2-0x3f5,0x3f7		# Second most common 	 * 5:	0x3f2-0x3f5			# implies 0x3f7 too. 	 * 6:	0x3f2-0x3f3,0x3f4-0x3f5,0x3f7	# becoming common 	 * 7:	0x3f2-0x3f3,0x3f4-0x3f5		# rare 	 * 	 * The following code is generic for any value of 0x3fx :-) 	 */
+comment|/* 	 * On standard ISA, we don't just use an 8 port range 	 * (e.g. 0x3f0-0x3f7) since that covers an IDE control 	 * register at 0x3f6.  So, on older hardware, we use 	 * 0x3f0-0x3f5 and 0x3f7.  However, some BIOSs omit the 	 * control port, while others start at 0x3f2.  Of the latter, 	 * sometimes we have two resources, other times we have one. 	 * We have to deal with the following cases: 	 * 	 * 1:	0x3f0-0x3f5			# very rare 	 * 2:	0x3f0				# hints -> 0x3f0-0x3f5,0x3f7 	 * 3:	0x3f0-0x3f5,0x3f7		# Most common 	 * 4:	0x3f2-0x3f5,0x3f7		# Second most common 	 * 5:	0x3f2-0x3f5			# implies 0x3f7 too. 	 * 6:	0x3f2-0x3f3,0x3f4-0x3f5,0x3f7	# becoming common 	 * 7:	0x3f2-0x3f3,0x3f4-0x3f5		# rare 	 * 8:	0x3f0-0x3f1,0x3f2-0x3f3,0x3f4-0x3f5,0x3f7 	 * 	 * The following code is generic for any value of 0x3fx :-) 	 */
 comment|/* 	 * First, allocated the main range of ports.  In the best of 	 * worlds, this is 4 or 6 ports.  In others, well, that's 	 * why this function is so complicated. 	 */
+name|again_ioport
+label|:
 name|fdc
 operator|->
 name|res_ioport
@@ -233,6 +235,56 @@ name|ENXIO
 operator|)
 return|;
 block|}
+if|if
+condition|(
+operator|(
+name|rman_get_start
+argument_list|(
+name|fdc
+operator|->
+name|res_ioport
+argument_list|)
+operator|&
+literal|0x7
+operator|)
+operator|==
+literal|0
+operator|&&
+name|rman_get_size
+argument_list|(
+name|fdc
+operator|->
+name|res_ioport
+argument_list|)
+operator|==
+literal|2
+condition|)
+block|{
+comment|/* Case 8 */
+name|bus_release_resource
+argument_list|(
+name|dev
+argument_list|,
+name|SYS_RES_IOPORT
+argument_list|,
+name|fdc
+operator|->
+name|rid_ioport
+argument_list|,
+name|fdc
+operator|->
+name|res_ioport
+argument_list|)
+expr_stmt|;
+name|fdc
+operator|->
+name|rid_ioport
+operator|++
+expr_stmt|;
+goto|goto
+name|again_ioport
+goto|;
+block|}
 name|fdc
 operator|->
 name|portt
@@ -255,7 +307,7 @@ operator|->
 name|res_ioport
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Handle cases 4-7 above 	 */
+comment|/* 	 * Handle cases 4-8 above 	 */
 name|fdc
 operator|->
 name|port_off
@@ -269,7 +321,7 @@ operator|&
 literal|0x7
 operator|)
 expr_stmt|;
-comment|/* 	 * Deal with case 6 and 7: FDSTS and FDSATA are in rid 1. 	 */
+comment|/* 	 * Deal with case 6, 7, and 8: FDSTS and FDSATA are in rid 1. 	 */
 if|if
 condition|(
 name|rman_get_size
@@ -286,6 +338,10 @@ name|fdc
 operator|->
 name|rid_sts
 operator|=
+name|fdc
+operator|->
+name|rid_ioport
+operator|+
 literal|1
 expr_stmt|;
 name|fdc
@@ -333,11 +389,6 @@ name|ENXIO
 operator|)
 return|;
 block|}
-name|fdc
-operator|->
-name|rid_ctl
-operator|++
-expr_stmt|;
 name|fdc
 operator|->
 name|sts_off
@@ -402,6 +453,16 @@ name|porth
 expr_stmt|;
 block|}
 comment|/* 	 * allocate the control port.  For cases 1, 2, 5 and 7, we 	 * fake it from the ioports resource.  XXX IS THIS THE RIGHT THING 	 * TO DO, OR SHOULD WE CREATE A NEW RID? (I think we need a new rid) 	 */
+name|fdc
+operator|->
+name|rid_ctl
+operator|=
+name|fdc
+operator|->
+name|rid_sts
+operator|+
+literal|1
+expr_stmt|;
 name|fdc
 operator|->
 name|res_ctl
