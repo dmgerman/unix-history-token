@@ -1650,6 +1650,23 @@ name|cmd
 name|cmdtab
 index|[]
 decl_stmt|;
+comment|/* 	 * ignore trailing chars after `#'  	 * 	 * lines with beginning `#' are comments 	 * spaces befor `#' are ignored in execute() 	 */
+if|if
+condition|(
+operator|*
+name|word
+operator|==
+literal|'#'
+condition|)
+operator|*
+operator|(
+name|word
+operator|+
+literal|1
+operator|)
+operator|=
+literal|'\0'
+expr_stmt|;
 for|for
 control|(
 name|cp
