@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)telnet.h	4.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)telnet.h	4.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -551,6 +551,94 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TELOPT_TUID
+value|26
+end_define
+
+begin_comment
+comment|/* TACACS user identification */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TELOPT_OUTMRK
+value|27
+end_define
+
+begin_comment
+comment|/* output marking */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TELOPT_TTYLOC
+value|28
+end_define
+
+begin_comment
+comment|/* terminal location number */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TELOPT_3270REGIME
+value|29
+end_define
+
+begin_comment
+comment|/* 3270 regime */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TELOPT_X3PAD
+value|30
+end_define
+
+begin_comment
+comment|/* X.3 PAD */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TELOPT_NAWS
+value|31
+end_define
+
+begin_comment
+comment|/* window size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TELOPT_TSPEED
+value|32
+end_define
+
+begin_comment
+comment|/* terminal speed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TELOPT_LFLOW
+value|33
+end_define
+
+begin_comment
+comment|/* remote flow control */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TELOPT_EXOPL
 value|255
 end_define
@@ -569,7 +657,7 @@ begin_define
 define|#
 directive|define
 name|NTELOPTS
-value|(1+TELOPT_EOR)
+value|(1+TELOPT_LFLOW)
 end_define
 
 begin_decl_stmt
@@ -632,6 +720,22 @@ block|,
 literal|"TERMINAL TYPE"
 block|,
 literal|"END OF RECORD"
+block|,
+literal|"TACACS UID"
+block|,
+literal|"OUTPUT MARKING"
+block|,
+literal|"TTYLOC"
+block|,
+literal|"3270 REGIME"
+block|,
+literal|"X.3 PAD"
+block|,
+literal|"NAWS"
+block|,
+literal|"TSPEED"
+block|,
+literal|"LFLOW"
 block|, }
 decl_stmt|;
 end_decl_stmt
