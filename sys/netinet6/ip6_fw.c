@@ -345,16 +345,14 @@ endif|#
 directive|endif
 end_endif
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|LIST_HEAD
 argument_list|(
 argument|ip6_fw_head
 argument_list|,
 argument|ip6_fw_chain
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|ip6_fw_chain
 expr_stmt|;
 end_expr_stmt
