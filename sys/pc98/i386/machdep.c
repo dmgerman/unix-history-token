@@ -6801,10 +6801,28 @@ name|Maxmem
 operator|>=
 literal|0x4000
 condition|)
+ifdef|#
+directive|ifdef
+name|PC98
+block|{
+name|Maxmem
+operator|=
+literal|0x4000
+expr_stmt|;
+comment|/* XXX */
 name|speculative_mprobe
 operator|=
 name|TRUE
 expr_stmt|;
+block|}
+else|#
+directive|else
+name|speculative_mprobe
+operator|=
+name|TRUE
+expr_stmt|;
+endif|#
+directive|endif
 else|else
 name|speculative_mprobe
 operator|=
@@ -6981,10 +6999,7 @@ argument_list|(
 literal|4096
 argument_list|)
 condition|)
-name|page_bad
-operator|=
-name|TRUE
-expr_stmt|;
+continue|continue;
 endif|#
 directive|endif
 comment|/* 		 * map page into kernel: valid, read/write, non-cacheable 		 */
