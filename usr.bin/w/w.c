@@ -2681,15 +2681,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s %.2f"
-argument_list|,
-name|i
-operator|>
-literal|0
-condition|?
-literal|","
-else|:
-literal|""
+literal|"  %.2f"
 argument_list|,
 name|avenrun
 index|[
