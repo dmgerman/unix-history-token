@@ -177,6 +177,12 @@ name|buf_ops_bio
 decl_stmt|;
 end_decl_stmt
 
+begin_struct_decl
+struct_decl|struct
+name|vm_object
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/*  * The buffer header describes an I/O operation in the kernel.  *  * NOTES:  *	b_bufsize, b_bcount.  b_bufsize is the allocation size of the  *	buffer, either DEV_BSIZE or PAGE_SIZE aligned.  b_bcount is the  *	originally requested buffer size and can serve as a bounds check  *	against EOF.  For most, but not all uses, b_bcount == b_bufsize.  *  *	b_dirtyoff, b_dirtyend.  Buffers support piecemeal, unaligned  *	ranges of dirty data that need to be written to backing store.  *	The range is typically clipped at b_bcount ( not b_bufsize ).  *  *	b_resid.  Number of bytes remaining in I/O.  After an I/O operation  *	completes, b_resid is usually 0 indicating 100% success.  */
 end_comment
@@ -344,6 +350,12 @@ modifier|*
 name|b_vp
 decl_stmt|;
 comment|/* Device vnode. */
+name|struct
+name|vm_object
+modifier|*
+name|b_object
+decl_stmt|;
+comment|/* Object for vp */
 name|int
 name|b_dirtyoff
 decl_stmt|;

@@ -5056,6 +5056,27 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|->
+name|b_object
+condition|)
+block|{
+name|vm_object_deallocate
+argument_list|(
+name|bp
+operator|->
+name|b_object
+argument_list|)
+expr_stmt|;
+name|bp
+operator|->
+name|b_object
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 block|}
 end_function
 
