@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)reboot.h	6.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)reboot.h	6.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -76,6 +76,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RB_DFLTROOT
+value|0x20
+end_define
+
+begin_comment
+comment|/* use compiled-in rootdev */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RB_PANIC
 value|0
 end_define
@@ -94,6 +105,66 @@ end_define
 begin_comment
 comment|/* reboot due to boot() */
 end_comment
+
+begin_comment
+comment|/*  * Constants for converting boot-style device number to type,  * adaptor (uba, mba, etc), unit number and partition number.  * Type (== major device number) is in the low byte  * for backward compatibility.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|B_ADAPTORSHIFT
+value|24
+end_define
+
+begin_define
+define|#
+directive|define
+name|B_ADAPTORMASK
+value|0xff
+end_define
+
+begin_define
+define|#
+directive|define
+name|B_UNITSHIFT
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|B_UNITMASK
+value|0xff
+end_define
+
+begin_define
+define|#
+directive|define
+name|B_PARTITIONSHIFT
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|B_PARTITIONMASK
+value|0xff
+end_define
+
+begin_define
+define|#
+directive|define
+name|B_TYPESHIFT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|B_TYPEMASK
+value|0xff
+end_define
 
 end_unit
 
