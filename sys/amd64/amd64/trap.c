@@ -248,12 +248,6 @@ directive|include
 file|<ddb/ddb.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/sysctl.h>
-end_include
-
 begin_function_decl
 specifier|extern
 name|void
