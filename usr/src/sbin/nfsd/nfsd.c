@@ -37,7 +37,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nfsd.c	8.4 (Berkeley) %G%"
+literal|"@(#)nfsd.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -365,6 +365,18 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+name|void
+name|nonfs
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|void
@@ -876,6 +888,16 @@ name|SIG_IGN
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGSYS
+argument_list|,
+name|nonfs
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2864,6 +2886,26 @@ expr_stmt|;
 name|exit
 argument_list|(
 literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|nonfs
+parameter_list|(
+name|signo
+parameter_list|)
+name|int
+name|signo
+decl_stmt|;
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"missing system call: NFS not available."
 argument_list|)
 expr_stmt|;
 block|}
