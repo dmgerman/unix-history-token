@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  *      3940, 2940, aic7895, aic7890, aic7880,  *	aic7870, aic7860 and aic7850 SCSI controllers  *  * Copyright (c) 1995, 1996, 1997, 1998 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Where this Software is combined with software released under the terms of   * the GNU Public License ("GPL") and the terms of the GPL would require the   * combined work to also be released under the terms of the GPL, the terms  * and conditions of this License will apply in addition to those of the  * GPL with the exception of any terms or conditions of this License that  * conflict with, or are expressly prohibited by, the GPL.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ahc_pci.c,v 1.5.2.3 1999/03/23 07:41:41 gibbs Exp $  */
+comment|/*  * Product specific probe and attach routines for:  *      3940, 2940, aic7895, aic7890, aic7880,  *	aic7870, aic7860 and aic7850 SCSI controllers  *  * Copyright (c) 1995, 1996, 1997, 1998 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * Where this Software is combined with software released under the terms of   * the GNU Public License ("GPL") and the terms of the GPL would require the   * combined work to also be released under the terms of the GPL, the terms  * and conditions of this License will apply in addition to those of the  * GPL with the exception of any terms or conditions of this License that  * conflict with, or are expressly prohibited by, the GPL.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: ahc_pci.c,v 1.5.2.4 1999/05/16 00:07:45 gibbs Exp $  */
 end_comment
 
 begin_include
@@ -202,6 +202,20 @@ end_function
 begin_define
 define|#
 directive|define
+name|ID_ALL_MASK
+value|0xFFFFFFFFFFFFFFFFull
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_DEV_VENDOR_MASK
+value|0xFFFFFFFF00000000ull
+end_define
+
+begin_define
+define|#
+directive|define
 name|ID_AIC7850
 value|0x5078900400000000ull
 end_define
@@ -398,13 +412,9 @@ end_define
 begin_define
 define|#
 directive|define
-name|ID_AIC7895C
+name|ID_AIC7895_RAID_PORT
 value|0x7893900478939004ull
 end_define
-
-begin_comment
-comment|/* RAID Port */
-end_comment
 
 begin_define
 define|#
@@ -647,6 +657,9 @@ block|{
 name|u_int64_t
 name|full_id
 decl_stmt|;
+name|u_int64_t
+name|id_mask
+decl_stmt|;
 name|char
 modifier|*
 name|name
@@ -666,56 +679,24 @@ name|ahc_pci_ident_table
 index|[]
 init|=
 block|{
-block|{
-name|ID_AIC7850
-block|,
-literal|"Adaptec aic7850 SCSI adapter"
-block|,
-name|ahc_aic7850_setup
-block|}
-block|,
+comment|/* aic7850 based controllers */
 block|{
 name|ID_AHA_2910_15_20_30C
+block|,
+name|ID_ALL_MASK
 block|,
 literal|"Adaptec 2910/15/20/30C SCSI adapter"
 block|,
 name|ahc_aic7850_setup
 block|}
 block|,
-block|{
-name|ID_AIC7855
-block|,
-literal|"Adaptec aic7855 SCSI adapter"
-block|,
-name|ahc_aic7850_setup
-block|}
-block|,
-block|{
-name|ID_AIC7860
-block|,
-literal|"Adaptec aic7860 SCSI adapter"
-block|,
-name|ahc_aic7860_setup
-block|}
-block|,
-block|{
-name|ID_AIC7860C
-block|,
-literal|"Adaptec aic7860 SCSI adapter"
-block|,
-name|ahc_aic7860_setup
-block|}
-block|,
+comment|/* aic7860 based controllers */
 block|{
 name|ID_AHA_2940AU_0
+operator|&
+name|ID_DEV_VENDOR_MASK
 block|,
-literal|"Adaptec 2940A Ultra SCSI adapter"
-block|,
-name|ahc_aic7860_setup
-block|}
-block|,
-block|{
-name|ID_AHA_2940AU_1
+name|ID_DEV_VENDOR_MASK
 block|,
 literal|"Adaptec 2940A Ultra SCSI adapter"
 block|,
@@ -725,21 +706,18 @@ block|,
 block|{
 name|ID_AHA_2930C_VAR
 block|,
+name|ID_ALL_MASK
+block|,
 literal|"Adaptec 2930C SCSI adapter (VAR)"
 block|,
 name|ahc_aic7860_setup
 block|}
 block|,
-block|{
-name|ID_AIC7870
-block|,
-literal|"Adaptec aic7870 SCSI adapter"
-block|,
-name|ahc_aic7870_setup
-block|}
-block|,
+comment|/* aic7870 based controllers */
 block|{
 name|ID_AHA_2940
+block|,
+name|ID_ALL_MASK
 block|,
 literal|"Adaptec 2940 SCSI adapter"
 block|,
@@ -749,6 +727,8 @@ block|,
 block|{
 name|ID_AHA_3940
 block|,
+name|ID_ALL_MASK
+block|,
 literal|"Adaptec 3940 SCSI adapter"
 block|,
 name|ahc_aha394X_setup
@@ -756,6 +736,8 @@ block|}
 block|,
 block|{
 name|ID_AHA_398X
+block|,
+name|ID_ALL_MASK
 block|,
 literal|"Adaptec 398X SCSI RAID adapter"
 block|,
@@ -765,6 +747,8 @@ block|,
 block|{
 name|ID_AHA_2944
 block|,
+name|ID_ALL_MASK
+block|,
 literal|"Adaptec 2944 SCSI adapter"
 block|,
 name|ahc_aic7870_setup
@@ -773,29 +757,18 @@ block|,
 block|{
 name|ID_AHA_3944
 block|,
+name|ID_ALL_MASK
+block|,
 literal|"Adaptec 3944 SCSI adapter"
 block|,
 name|ahc_aha394X_setup
 block|}
 block|,
-block|{
-name|ID_AIC7880
-block|,
-literal|"Adaptec aic7880 Ultra SCSI adapter"
-block|,
-name|ahc_aic7880_setup
-block|}
-block|,
-block|{
-name|ID_AIC7880_B
-block|,
-literal|"Adaptec aic7880 Ultra SCSI adapter"
-block|,
-name|ahc_aic7880_setup
-block|}
-block|,
+comment|/* aic7880 based controllers */
 block|{
 name|ID_AHA_2940AU_CN
+block|,
+name|ID_ALL_MASK
 block|,
 literal|"Adaptec 2940A/CN Ultra SCSI adapter"
 block|,
@@ -805,6 +778,8 @@ block|,
 block|{
 name|ID_AHA_2940U
 block|,
+name|ID_ALL_MASK
+block|,
 literal|"Adaptec 2940 Ultra SCSI adapter"
 block|,
 name|ahc_aic7880_setup
@@ -812,6 +787,8 @@ block|}
 block|,
 block|{
 name|ID_AHA_3940U
+block|,
+name|ID_ALL_MASK
 block|,
 literal|"Adaptec 3940 Ultra SCSI adapter"
 block|,
@@ -821,6 +798,8 @@ block|,
 block|{
 name|ID_AHA_2944U
 block|,
+name|ID_ALL_MASK
+block|,
 literal|"Adaptec 2944 Ultra SCSI adapter"
 block|,
 name|ahc_aic7880_setup
@@ -829,6 +808,8 @@ block|,
 block|{
 name|ID_AHA_3944U
 block|,
+name|ID_ALL_MASK
+block|,
 literal|"Adaptec 3944 Ultra SCSI adapter"
 block|,
 name|ahc_aha394XU_setup
@@ -836,6 +817,8 @@ block|}
 block|,
 block|{
 name|ID_AHA_398XU
+block|,
+name|ID_ALL_MASK
 block|,
 literal|"Adaptec 398X Ultra SCSI RAID adapter"
 block|,
@@ -846,6 +829,8 @@ block|{
 comment|/* XXX Don't know the slot numbers so can't identify channels */
 name|ID_AHA_4944U
 block|,
+name|ID_ALL_MASK
+block|,
 literal|"Adaptec 4944 Ultra SCSI adapter"
 block|,
 name|ahc_aic7880_setup
@@ -853,6 +838,8 @@ block|}
 block|,
 block|{
 name|ID_AHA_2940UB
+block|,
+name|ID_ALL_MASK
 block|,
 literal|"Adaptec 2940B Ultra SCSI adapter"
 block|,
@@ -862,6 +849,8 @@ block|,
 block|{
 name|ID_AHA_2930U
 block|,
+name|ID_ALL_MASK
+block|,
 literal|"Adaptec 2930 Ultra SCSI adapter"
 block|,
 name|ahc_aic7880_setup
@@ -869,6 +858,8 @@ block|}
 block|,
 block|{
 name|ID_AHA_2940U_PRO
+block|,
+name|ID_ALL_MASK
 block|,
 literal|"Adaptec 2940 Pro Ultra SCSI adapter"
 block|,
@@ -878,21 +869,18 @@ block|,
 block|{
 name|ID_AHA_2940U_CN
 block|,
+name|ID_ALL_MASK
+block|,
 literal|"Adaptec 2940/CN Ultra SCSI adapter"
 block|,
 name|ahc_aic7880_setup
 block|}
 block|,
-block|{
-name|ID_AIC7890
-block|,
-literal|"Adaptec aic7890/91 Ultra2 SCSI adapter"
-block|,
-name|ahc_aic7890_setup
-block|}
-block|,
+comment|/* aic7890 based controllers */
 block|{
 name|ID_AHA_2930U2
+block|,
+name|ID_ALL_MASK
 block|,
 literal|"Adaptec 2930 Ultra2 SCSI adapter"
 block|,
@@ -902,6 +890,8 @@ block|,
 block|{
 name|ID_AHA_2940U2B
 block|,
+name|ID_ALL_MASK
+block|,
 literal|"Adaptec 2940B Ultra2 SCSI adapter"
 block|,
 name|ahc_aic7890_setup
@@ -909,6 +899,8 @@ block|}
 block|,
 block|{
 name|ID_AHA_2940U2_OEM
+block|,
+name|ID_ALL_MASK
 block|,
 literal|"Adaptec 2940 Ultra2 SCSI adapter (OEM)"
 block|,
@@ -918,37 +910,28 @@ block|,
 block|{
 name|ID_AHA_2940U2
 block|,
+name|ID_ALL_MASK
+block|,
 literal|"Adaptec 2940 Ultra2 SCSI adapter"
 block|,
 name|ahc_aic7890_setup
 block|}
 block|,
 block|{
-name|ID_AHA_2940U2
+name|ID_AHA_2950U2B
+block|,
+name|ID_ALL_MASK
 block|,
 literal|"Adaptec 2950 Ultra2 SCSI adapter"
 block|,
 name|ahc_aic7890_setup
 block|}
 block|,
-block|{
-name|ID_AIC7895
-block|,
-literal|"Adaptec aic7895 Ultra SCSI adapter"
-block|,
-name|ahc_aic7895_setup
-block|}
-block|,
-block|{
-name|ID_AIC7895C
-block|,
-literal|"Adaptec aic7895 Ultra SCSI adapter"
-block|,
-name|ahc_aic7895_setup
-block|}
-block|,
+comment|/* aic7895 based controllers */
 block|{
 name|ID_AHA_2940U_DUAL
+block|,
+name|ID_ALL_MASK
 block|,
 literal|"Adaptec 2940/DUAL Ultra SCSI adapter"
 block|,
@@ -958,6 +941,8 @@ block|,
 block|{
 name|ID_AHA_3940AU
 block|,
+name|ID_ALL_MASK
+block|,
 literal|"Adaptec 3940A Ultra SCSI adapter"
 block|,
 name|ahc_aic7895_setup
@@ -966,21 +951,18 @@ block|,
 block|{
 name|ID_AHA_3944AU
 block|,
+name|ID_ALL_MASK
+block|,
 literal|"Adaptec 3944A Ultra SCSI adapter"
 block|,
 name|ahc_aic7895_setup
 block|}
 block|,
-block|{
-name|ID_AIC7896
-block|,
-literal|"Adaptec aic7896/97 Ultra2 SCSI adapter"
-block|,
-name|ahc_aic7896_setup
-block|}
-block|,
+comment|/* aic7896/97 based controllers */
 block|{
 name|ID_AHA_3950U2B_0
+block|,
+name|ID_ALL_MASK
 block|,
 literal|"Adaptec 3950B Ultra2 SCSI adapter"
 block|,
@@ -990,6 +972,8 @@ block|,
 block|{
 name|ID_AHA_3950U2B_1
 block|,
+name|ID_ALL_MASK
+block|,
 literal|"Adaptec 3950B Ultra2 SCSI adapter"
 block|,
 name|ahc_aic7896_setup
@@ -997,6 +981,8 @@ block|}
 block|,
 block|{
 name|ID_AHA_3950U2D_0
+block|,
+name|ID_ALL_MASK
 block|,
 literal|"Adaptec 3950D Ultra2 SCSI adapter"
 block|,
@@ -1006,13 +992,128 @@ block|,
 block|{
 name|ID_AHA_3950U2D_1
 block|,
+name|ID_ALL_MASK
+block|,
 literal|"Adaptec 3950D Ultra2 SCSI adapter"
+block|,
+name|ahc_aic7896_setup
+block|}
+block|,
+comment|/* Generic chip probes for devices we don't know 'exactly' */
+block|{
+name|ID_AIC7850
+operator|&
+name|ID_DEV_VENDOR_MASK
+block|,
+name|ID_DEV_VENDOR_MASK
+block|,
+literal|"Adaptec aic7850 SCSI adapter"
+block|,
+name|ahc_aic7850_setup
+block|}
+block|,
+block|{
+name|ID_AIC7855
+operator|&
+name|ID_DEV_VENDOR_MASK
+block|,
+name|ID_DEV_VENDOR_MASK
+block|,
+literal|"Adaptec aic7855 SCSI adapter"
+block|,
+name|ahc_aic7850_setup
+block|}
+block|,
+block|{
+name|ID_AIC7860
+operator|&
+name|ID_DEV_VENDOR_MASK
+block|,
+name|ID_DEV_VENDOR_MASK
+block|,
+literal|"Adaptec aic7860 SCSI adapter"
+block|,
+name|ahc_aic7860_setup
+block|}
+block|,
+block|{
+name|ID_AIC7870
+operator|&
+name|ID_DEV_VENDOR_MASK
+block|,
+name|ID_DEV_VENDOR_MASK
+block|,
+literal|"Adaptec aic7870 SCSI adapter"
+block|,
+name|ahc_aic7870_setup
+block|}
+block|,
+block|{
+name|ID_AIC7880
+operator|&
+name|ID_DEV_VENDOR_MASK
+block|,
+name|ID_DEV_VENDOR_MASK
+block|,
+literal|"Adaptec aic7880 Ultra SCSI adapter"
+block|,
+name|ahc_aic7880_setup
+block|}
+block|,
+block|{
+name|ID_AIC7890
+operator|&
+name|ID_DEV_VENDOR_MASK
+block|,
+name|ID_DEV_VENDOR_MASK
+block|,
+literal|"Adaptec aic7890/91 Ultra2 SCSI adapter"
+block|,
+name|ahc_aic7890_setup
+block|}
+block|,
+block|{
+name|ID_AIC7895
+operator|&
+name|ID_DEV_VENDOR_MASK
+block|,
+name|ID_DEV_VENDOR_MASK
+block|,
+literal|"Adaptec aic7895 Ultra SCSI adapter"
+block|,
+name|ahc_aic7895_setup
+block|}
+block|,
+block|{
+name|ID_AIC7895_RAID_PORT
+operator|&
+name|ID_DEV_VENDOR_MASK
+block|,
+name|ID_DEV_VENDOR_MASK
+block|,
+literal|"Adaptec aic7895 Ultra SCSI adapter (RAID PORT)"
+block|,
+name|ahc_aic7895_setup
+block|}
+block|,
+block|{
+name|ID_AIC7896
+operator|&
+name|ID_DEV_VENDOR_MASK
+block|,
+name|ID_DEV_VENDOR_MASK
+block|,
+literal|"Adaptec aic7896/97 Ultra2 SCSI adapter"
 block|,
 name|ahc_aic7896_setup
 block|}
 block|,
 block|{
 name|ID_AIC7810
+operator|&
+name|ID_DEV_VENDOR_MASK
+block|,
+name|ID_DEV_VENDOR_MASK
 block|,
 literal|"Adaptec aic7810 RAID memory controller"
 block|,
@@ -1021,6 +1122,10 @@ block|}
 block|,
 block|{
 name|ID_AIC7815
+operator|&
+name|ID_DEV_VENDOR_MASK
+block|,
+name|ID_DEV_VENDOR_MASK
 block|,
 literal|"Adaptec aic7815 RAID memory controller"
 block|,
@@ -1223,6 +1328,19 @@ directive|define
 name|LATTIME
 value|0x0000ff00ul
 end_define
+
+begin_function_decl
+specifier|static
+name|struct
+name|ahc_pci_identity
+modifier|*
+name|ahc_find_pci_device
+parameter_list|(
+name|pcici_t
+name|tag
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -1503,16 +1621,13 @@ end_expr_stmt
 
 begin_function
 specifier|static
-specifier|const
-name|char
+name|struct
+name|ahc_pci_identity
 modifier|*
-name|ahc_pci_probe
+name|ahc_find_pci_device
 parameter_list|(
 name|pcici_t
 name|tag
-parameter_list|,
-name|pcidi_t
-name|type
 parameter_list|)
 block|{
 name|u_int64_t
@@ -1627,9 +1742,60 @@ name|entry
 operator|->
 name|full_id
 operator|==
+operator|(
 name|full_id
+operator|&
+name|entry
+operator|->
+name|id_mask
+operator|)
 condition|)
+return|return
+operator|(
+name|entry
+operator|)
+return|;
+block|}
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|ahc_pci_probe
+parameter_list|(
+name|pcici_t
+name|tag
+parameter_list|,
+name|pcidi_t
+name|type
+parameter_list|)
 block|{
+name|struct
+name|ahc_pci_identity
+modifier|*
+name|entry
+decl_stmt|;
+name|entry
+operator|=
+name|ahc_find_pci_device
+argument_list|(
+name|tag
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|entry
+operator|!=
+name|NULL
+condition|)
 return|return
 operator|(
 name|entry
@@ -1637,8 +1803,6 @@ operator|->
 name|name
 operator|)
 return|;
-block|}
-block|}
 return|return
 operator|(
 name|NULL
@@ -1659,9 +1823,6 @@ name|int
 name|unit
 parameter_list|)
 block|{
-name|u_int64_t
-name|full_id
-decl_stmt|;
 name|pci_port_t
 name|io_port
 decl_stmt|;
@@ -1672,6 +1833,11 @@ name|struct
 name|ahc_softc
 modifier|*
 name|ahc
+decl_stmt|;
+name|struct
+name|ahc_pci_identity
+modifier|*
+name|entry
 decl_stmt|;
 name|vm_offset_t
 name|vaddr
@@ -1684,18 +1850,6 @@ name|paddr
 decl_stmt|;
 endif|#
 directive|endif
-name|u_int
-name|deviceid
-decl_stmt|;
-name|u_int
-name|vendorid
-decl_stmt|;
-name|u_int
-name|subdeviceid
-decl_stmt|;
-name|u_int
-name|subvendorid
-decl_stmt|;
 name|u_int
 name|command
 decl_stmt|;
@@ -1730,9 +1884,6 @@ decl_stmt|;
 name|u_int
 name|scsiseq
 decl_stmt|;
-name|u_int
-name|i
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -1758,106 +1909,20 @@ comment|/*bytes*/
 literal|1
 argument_list|)
 expr_stmt|;
-name|deviceid
-operator|=
-name|pci_cfgread
-argument_list|(
-name|config_id
-argument_list|,
-name|PCIR_DEVICE
-argument_list|,
-comment|/*bytes*/
-literal|2
-argument_list|)
-expr_stmt|;
-name|vendorid
-operator|=
-name|pci_cfgread
-argument_list|(
-name|config_id
-argument_list|,
-name|PCIR_VENDOR
-argument_list|,
-comment|/*bytes*/
-literal|2
-argument_list|)
-expr_stmt|;
-name|subdeviceid
-operator|=
-name|pci_cfgread
-argument_list|(
-name|config_id
-argument_list|,
-name|PCIR_SUBDEV_0
-argument_list|,
-comment|/*bytes*/
-literal|2
-argument_list|)
-expr_stmt|;
-name|subvendorid
-operator|=
-name|pci_cfgread
-argument_list|(
-name|config_id
-argument_list|,
-name|PCIR_SUBVEND_0
-argument_list|,
-comment|/*bytes*/
-literal|2
-argument_list|)
-expr_stmt|;
-name|full_id
-operator|=
-name|ahc_compose_id
-argument_list|(
-name|deviceid
-argument_list|,
-name|vendorid
-argument_list|,
-name|subdeviceid
-argument_list|,
-name|subvendorid
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|ahc_num_pci_devs
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|struct
-name|ahc_pci_identity
-modifier|*
-name|entry
-decl_stmt|;
 name|entry
 operator|=
-operator|&
-name|ahc_pci_ident_table
-index|[
-name|i
-index|]
+name|ahc_find_pci_device
+argument_list|(
+name|config_id
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|entry
-operator|->
-name|full_id
 operator|==
-name|full_id
+name|NULL
 condition|)
-block|{
-name|int
-name|error
-decl_stmt|;
+return|return;
 name|error
 operator|=
 name|entry
@@ -1886,9 +1951,6 @@ operator|!=
 literal|0
 condition|)
 return|return;
-break|break;
-block|}
-block|}
 name|vaddr
 operator|=
 name|NULL
