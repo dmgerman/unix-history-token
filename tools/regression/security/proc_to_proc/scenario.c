@@ -1969,6 +1969,7 @@ argument_list|)
 expr_stmt|;
 default|default:
 comment|/* parent */
+break|break;
 block|}
 comment|/* 		 * XXX 		 * This really isn't ideal -- give proc 1 a chance to set 		 * its credentials, or we may get spurious errors.  Really, 		 * some for of IPC should be used to allow the parent to 		 * wait for the first child to be ready before spawning 		 * the second child. 		 */
 name|sleep
@@ -2335,6 +2336,7 @@ argument_list|)
 expr_stmt|;
 default|default:
 comment|/* parent */
+break|break;
 block|}
 name|error
 operator|=
