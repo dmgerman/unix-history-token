@@ -119,7 +119,7 @@ comment|/*    -a: auto retry */
 end_comment
 
 begin_decl_stmt
-name|size_t
+name|off_t
 name|B_size
 decl_stmt|;
 end_decl_stmt
@@ -460,6 +460,7 @@ comment|/* transfer buffer */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|sig_handler
 parameter_list|(
@@ -536,6 +537,7 @@ struct|;
 end_struct
 
 begin_function
+specifier|static
 name|void
 name|stat_display
 parameter_list|(
@@ -616,6 +618,10 @@ name|stderr
 argument_list|,
 literal|": %lld bytes"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|xs
 operator|->
 name|rcvd
@@ -628,6 +634,10 @@ name|stderr
 argument_list|,
 literal|" (%lld bytes): %d%%"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|xs
 operator|->
 name|size
@@ -654,6 +664,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|stat_start
 parameter_list|(
@@ -662,6 +673,7 @@ name|xferstat
 modifier|*
 name|xs
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -750,6 +762,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|stat_update
 parameter_list|(
@@ -760,9 +773,6 @@ name|xs
 parameter_list|,
 name|off_t
 name|rcvd
-parameter_list|,
-name|int
-name|force
 parameter_list|)
 block|{
 name|xs
@@ -782,6 +792,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|stat_end
 parameter_list|(
@@ -871,6 +882,11 @@ name|stderr
 argument_list|,
 literal|"%lld bytes transferred in %.1f seconds "
 argument_list|,
+call|(
+name|long
+name|long
+call|)
+argument_list|(
 name|xs
 operator|->
 name|rcvd
@@ -878,6 +894,7 @@ operator|-
 name|xs
 operator|->
 name|offset
+argument_list|)
 argument_list|,
 name|delta
 argument_list|)
@@ -951,6 +968,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|query_auth
 parameter_list|(
@@ -1228,6 +1246,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|fetch
 parameter_list|(
@@ -1235,6 +1254,7 @@ name|char
 modifier|*
 name|URL
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|path
@@ -1604,6 +1624,10 @@ name|printf
 argument_list|(
 literal|"%lld\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|us
 operator|.
 name|size
@@ -1613,7 +1637,7 @@ goto|goto
 name|success
 goto|;
 block|}
-comment|/*      * If the -r flag was specified, we have to compare the local and      * remote files, so we should really do a fetchStat() first, but I      * know of at least one HTTP server that only sends the content      * size in response to GET requests, and leaves it out of replies      * to HEAD requests. Also, in the (frequent) case that the local      * and remote files match but the local file is truncated, we have      * sufficient information *before* the compare to issue a correct      * request. Therefore, we always issue a GET request as if we were      * sure the local file was a truncated copy of the remote file; we      * can drop the connection later if we change our minds.      */
+comment|/* 	 * If the -r flag was specified, we have to compare the local 	 * and remote files, so we should really do a fetchStat() 	 * first, but I know of at least one HTTP server that only 	 * sends the content size in response to GET requests, and 	 * leaves it out of replies to HEAD requests.  Also, in the 	 * (frequent) case that the local and remote files match but 	 * the local file is truncated, we have sufficient information 	 * before the compare to issue a correct request.  Therefore, 	 * we always issue a GET request as if we were sure the local 	 * file was a truncated copy of the remote file; we can drop 	 * the connection later if we change our minds. 	 */
 if|if
 condition|(
 operator|(
@@ -1743,8 +1767,16 @@ literal|"%s: size mismatch: expected %lld, actual %lld"
 argument_list|,
 name|path
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|S_size
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|us
 operator|.
 name|size
@@ -1843,6 +1875,10 @@ name|stderr
 argument_list|,
 literal|"local size / mtime: %lld / %ld\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|sb
 operator|.
 name|st_size
@@ -1870,6 +1906,10 @@ name|stderr
 argument_list|,
 literal|"remote size / mtime: %lld / %ld\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|us
 operator|.
 name|size
@@ -1939,7 +1979,8 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"%s: local modification time does not match remote"
+literal|"%s: local modification time "
+literal|"does not match remote"
 argument_list|,
 name|path
 argument_list|)
@@ -2029,10 +2070,18 @@ literal|"than remote file (%lld bytes)"
 argument_list|,
 name|path
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|sb
 operator|.
 name|st_size
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|us
 operator|.
 name|size
@@ -2042,8 +2091,8 @@ goto|goto
 name|failure
 goto|;
 block|}
-comment|/* we got through, open local file and seek to offset */
-comment|/* 	     * XXX there's a race condition here - the file we open is not 	     * necessarily the same as the one we stat()'ed earlier... 	     */
+comment|/* we got it, open local file and seek to offset */
+comment|/* 			 * XXX there's a race condition here - the 			 * file we open is not necessarily the same as 			 * the one we stat()'ed earlier... 			 */
 if|if
 condition|(
 operator|(
@@ -2142,7 +2191,7 @@ operator|!
 name|of
 condition|)
 block|{
-comment|/* 	 * We don't yet have an output file; either this is a vanilla 	 * run with no special flags, or the local and remote files 	 * didn't match. 	 */
+comment|/* 		 * We don't yet have an output file; either this is a 		 * vanilla run with no special flags, or the local and 		 * remote files didn't match. 		 */
 if|if
 condition|(
 operator|(
@@ -2334,8 +2383,6 @@ argument_list|,
 name|count
 operator|+=
 name|size
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 for|for
@@ -2647,8 +2694,16 @@ literal|"%s appears to be truncated: %lld/%lld bytes"
 argument_list|,
 name|path
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|count
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|us
 operator|.
 name|size
@@ -2658,7 +2713,7 @@ goto|goto
 name|failure_keep
 goto|;
 block|}
-comment|/*      * If the transfer timed out and we didn't know how much to      * expect, assume the worst (i.e. we didn't get all of it)      */
+comment|/* 	 * If the transfer timed out and we didn't know how much to 	 * expect, assume the worst (i.e. we didn't get all of it) 	 */
 if|if
 condition|(
 name|sigalrm
@@ -2783,6 +2838,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -2793,9 +2849,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: fetch [-146AFMPRUadlmnpqrsv] [-o outputfile] [-S bytes]\n"
-literal|"             [-B bytes] [-T seconds] [-w seconds]\n"
-literal|"             [-h host -f file [-c dir] | URL ...]\n"
+literal|"%s\n%s\n%s\n"
+argument_list|,
+literal|"Usage: fetch [-146AFMPRUadlmnpqrsv] [-o outputfile] [-S bytes]"
+argument_list|,
+literal|"             [-B bytes] [-T seconds] [-w seconds]"
+argument_list|,
+literal|"             [-h host -f file [-c dir] | URL ...]"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2811,7 +2871,7 @@ parameter_list|,
 name|TYPE
 parameter_list|)
 define|\
-value|int					\ NAME(char *s, TYPE *v)			\ {					\     *v = 0;				\     for (*v = 0; *s; s++)		\ 	if (isdigit(*s))		\ 	    *v = *v * 10 + *s - '0';	\ 	else				\ 	    return -1;			\     return 0;				\ }
+value|static int						\ NAME(const char *s, TYPE *v)				\ {							\         *v = 0;						\ 	for (*v = 0; *s; s++)				\ 		if (isdigit(*s))			\ 			*v = *v * 10 + *s - '0';	\ 		else					\ 			return -1;			\ 	return 0;					\ }
 end_define
 
 begin_macro
@@ -2820,15 +2880,6 @@ argument_list|(
 argument|parseint
 argument_list|,
 argument|u_int
-argument_list|)
-end_macro
-
-begin_macro
-name|PARSENUM
-argument_list|(
-argument|parsesize
-argument_list|,
-argument|size_t
 argument_list|)
 end_macro
 
@@ -2862,15 +2913,17 @@ name|struct
 name|sigaction
 name|sa
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|p
 decl_stmt|,
 modifier|*
-name|q
-decl_stmt|,
-modifier|*
 name|s
+decl_stmt|;
+name|char
+modifier|*
+name|q
 decl_stmt|;
 name|int
 name|c
@@ -2946,7 +2999,7 @@ literal|'B'
 case|:
 if|if
 condition|(
-name|parsesize
+name|parseoff
 argument_list|(
 name|optarg
 argument_list|,
@@ -3015,7 +3068,8 @@ literal|'H'
 case|:
 name|warnx
 argument_list|(
-literal|"The -H option is now implicit, use -U to disable\n"
+literal|"The -H option is now implicit, "
+literal|"use -U to disable"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3061,7 +3115,8 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"the -m and -r flags are mutually exclusive"
+literal|"the -m and -r flags "
+literal|"are mutually exclusive"
 argument_list|)
 expr_stmt|;
 name|m_flag
@@ -3115,7 +3170,8 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"the -m and -r flags are mutually exclusive"
+literal|"the -m and -r flags "
+literal|"are mutually exclusive"
 argument_list|)
 expr_stmt|;
 name|r_flag
@@ -3824,27 +3880,28 @@ block|{
 if|if
 condition|(
 name|w_secs
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 name|v_level
 condition|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Waiting %d seconds before retrying\n"
+literal|"Waiting %d seconds "
+literal|"before retrying\n"
 argument_list|,
 name|w_secs
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|w_secs
+condition|)
 name|sleep
 argument_list|(
 name|w_secs
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|a_flag
