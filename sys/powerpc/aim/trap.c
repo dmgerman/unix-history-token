@@ -1563,8 +1563,6 @@ name|P_SA
 condition|)
 name|thread_user_enter
 argument_list|(
-name|p
-argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
