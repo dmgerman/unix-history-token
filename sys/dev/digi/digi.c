@@ -490,6 +490,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|con_bios
 modifier|*
@@ -498,6 +499,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|devclass_t
 name|digi_devclass
 decl_stmt|;
