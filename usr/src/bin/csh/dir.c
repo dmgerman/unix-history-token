@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dir.c	5.14 (Berkeley) %G%"
+literal|"@(#)dir.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -521,7 +521,7 @@ name|cp
 operator|=
 name|dcanon
 argument_list|(
-name|str2short
+name|SAVE
 argument_list|(
 name|tcp
 argument_list|)
