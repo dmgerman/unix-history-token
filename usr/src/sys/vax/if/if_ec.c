@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_ec.c	4.20	82/06/23	*/
+comment|/*	if_ec.c	4.21	82/06/30	*/
 end_comment
 
 begin_include
@@ -376,7 +376,7 @@ operator|)
 operator|&
 name|umem
 index|[
-literal|0
+name|numuba
 index|]
 index|[
 literal|0600000
@@ -449,7 +449,7 @@ block|}
 comment|/* 	 * Tell the system that the board has memory here, so it won't 	 * attempt to allocate the addresses later. 	 */
 name|ubamem
 argument_list|(
-literal|0
+name|numuba
 argument_list|,
 literal|0600000
 argument_list|,
@@ -497,6 +497,7 @@ name|ec_xcr
 operator|=
 name|EC_XCLR
 expr_stmt|;
+comment|/* will this work if there's a collision? */
 if|if
 condition|(
 name|cvec
