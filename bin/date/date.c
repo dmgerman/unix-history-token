@@ -718,6 +718,16 @@ parameter_list|)
 value|((ar)[0] - '0') * 10 + ((ar)[1] - '0'); (ar) += 2;
 end_define
 
+begin_define
+define|#
+directive|define
+name|ATOI4
+parameter_list|(
+name|ar
+parameter_list|)
+value|((ar)[0] - '0') * 1000 + ((ar)[1] - '0') * 100 + \ 			    ((ar)[2] - '0') * 10 + ((ar)[3] - '0'); (ar) += 4;
+end_define
+
 begin_function
 name|void
 name|setthetime
@@ -964,6 +974,36 @@ operator|)
 condition|)
 block|{
 case|case
+literal|12
+case|:
+comment|/* cc */
+name|lt
+operator|->
+name|tm_year
+operator|=
+operator|-
+literal|1900
+operator|+
+name|ATOI4
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|lt
+operator|->
+name|tm_year
+operator|<
+literal|0
+condition|)
+name|badformat
+argument_list|()
+expr_stmt|;
+goto|goto
+name|year_done
+goto|;
+case|case
 literal|10
 case|:
 comment|/* yy */
@@ -991,6 +1031,8 @@ name|tm_year
 operator|+=
 literal|100
 expr_stmt|;
+name|year_done
+label|:
 comment|/* FALLTHROUGH */
 case|case
 literal|8
@@ -1254,7 +1296,8 @@ argument_list|,
 literal|"usage: date [-nu] [-d dst] [-r seconds] [-t west] "
 literal|"[-v[+|-]val[ymwdHMS]] ... "
 argument_list|,
-literal|"            [-f fmt date | [[[[yy]mm]dd]HH]MM[.ss]] [+format]"
+literal|"            "
+literal|"[-f fmt date | [[[[[cc]yy]mm]dd]HH]MM[.ss]] [+format]"
 argument_list|)
 expr_stmt|;
 name|exit
