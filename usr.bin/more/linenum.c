@@ -28,6 +28,32 @@ begin_comment
 comment|/* not lint */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$FreeBSD$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
+
 begin_comment
 comment|/*  * Code to handle displaying line numbers.  *  * Finding the line number of a given file position is rather tricky.  * We don't want to just start at the beginning of the file and  * count newlines, because that is slow for large files (and also  * wouldn't work if we couldn't get to the start of the file; e.g.  * if input is a long pipe).  *  * So we use the function add_lnum to cache line numbers.  * We try to be very clever and keep only the more interesting  * line numbers when we run out of space in our table.  A line  * number is more interesting than another when it is far from  * other line numbers.   For example, we'd rather keep lines  * 100,200,300 than 100,101,300.  200 is more interesting than  * 101 because 101 can be derived very cheaply from 100, while  * 200 is more expensive to derive from 100.  *  * The function currline() returns the line number of a given  * position in the file.  As a side effect, it calls add_lnum  * to cache the line number.  Therefore currline is occasionally  * called to make sure we cache line numbers often enough.  */
 end_comment
@@ -277,6 +303,9 @@ name|anchor
 operator|.
 name|gap
 operator|=
+operator|(
+name|off_t
+operator|)
 literal|0
 expr_stmt|;
 name|anchor
@@ -596,6 +625,8 @@ name|gap
 expr_stmt|;
 block|}
 block|}
+name|calcgap
+argument_list|(
 name|spare
 operator|->
 name|next
@@ -605,7 +636,10 @@ operator|=
 name|spare
 operator|->
 name|prev
+argument_list|)
 expr_stmt|;
+name|calcgap
+argument_list|(
 name|spare
 operator|->
 name|prev
@@ -615,6 +649,7 @@ operator|=
 name|spare
 operator|->
 name|next
+argument_list|)
 expr_stmt|;
 block|}
 block|}
