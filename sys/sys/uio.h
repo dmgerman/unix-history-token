@@ -61,9 +61,6 @@ comment|/* from user data space */
 name|UIO_SYSSPACE
 block|,
 comment|/* from system space */
-name|UIO_USERISPACE
-block|,
-comment|/* from user I space */
 name|UIO_NOCOPY
 comment|/* don't copy, already in object */
 block|}
