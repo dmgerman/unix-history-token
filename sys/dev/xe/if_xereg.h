@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998, 1999 Scott Mitchell  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_xereg.h,v 1.2 1999/01/24 22:15:30 root Exp $  */
+comment|/*-  * Copyright (c) 1998, 1999 Scott Mitchell  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: if_xereg.h,v 1.3 1999/02/22 14:00:53 root Exp $  */
 end_comment
 
 begin_comment
-comment|/*  * Register definitions for Xircom CreditCard Ethernet adapters.  See if_xe.c  * for details of supported hardware.  Adapted from Werner Koch's 'xirc2ps'  * driver for Linux.  */
+comment|/*  * Register definitions for Xircom CreditCard Ethernet adapters.  See if_xe.c  * for details of supported hardware.  Adapted from Werner Koch's 'xirc2ps'  * driver for Linux and the FreeBSD 'xl' driver (for the MII support).  */
 end_comment
 
 begin_include
@@ -793,7 +793,11 @@ comment|/*  * Pages 0x43, 0x46-0x4f and 0x51-0x5e apparently don't exist.  * The
 end_comment
 
 begin_comment
-comment|/*  * MII/PHY defines adapted from the xl driver.  These need cleaning up a  * little if we end up using them.  */
+comment|/*  * Definitions for the Micro Linear ML6692 100Base-TX PHY, which handles the  * 100Mbit functionality of CE3 type cards, including media autonegotiation.  * It appears to be mostly compatible with the National Semiconductor  * DP83840A, but with a much smaller register set.  Please refer to the data  * sheets for these devices for the definitive word on what all this stuff  * means :)  *  * Note that the ML6692 has no 10Mbit capability -- that is handled by another   * chip that we don't know anything about.  *  * Most of these definitions were adapted from the xl driver.  */
+end_comment
+
+begin_comment
+comment|/*  * Masks for the MII-related bits in GPR2.  For some reason read and write  * data are on separate bits.  */
 end_comment
 
 begin_define
@@ -824,6 +828,10 @@ name|XE_MII_RDD
 value|0x20
 end_define
 
+begin_comment
+comment|/*  * MII command (etc) bit strings.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -852,74 +860,251 @@ name|XE_MII_TURNAROUND
 value|0x02
 end_define
 
-begin_define
-define|#
-directive|define
-name|XE_MII_SET
-parameter_list|(
-name|x
-parameter_list|)
-value|XE_OUTB(XE_GPR2, (XE_INB(XE_GPR2) | 0x04) | (x))
-end_define
+begin_comment
+comment|/*  * PHY registers.  */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|XE_MII_CLR
-parameter_list|(
-name|x
-parameter_list|)
-value|XE_OUTB(XE_GPR2, (XE_INB(XE_GPR2) | 0x04)& ~(x))
-end_define
-
-begin_define
-define|#
-directive|define
-name|XL_PHY_GENCTL
+name|PHY_BMCR
 value|0x00
 end_define
 
+begin_comment
+comment|/* Basic Mode Control Register */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|XL_PHY_GENSTS
+name|PHY_BMSR
 value|0x01
 end_define
 
-begin_define
-define|#
-directive|define
-name|XL_PHY_VENID
-value|0x02
-end_define
+begin_comment
+comment|/* Basic Mode Status Register */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|XL_PHY_DEVID
-value|0x03
-end_define
-
-begin_define
-define|#
-directive|define
-name|XL_PHY_ANAR
+name|PHY_ANAR
 value|0x04
 end_define
 
-begin_define
-define|#
-directive|define
-name|XL_PHY_LPAR
-value|0x05
-end_define
+begin_comment
+comment|/* Auto-Negotiation Advertisment Register */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|XL_PHY_ANER
+name|PHY_LPAR
+value|0x05
+end_define
+
+begin_comment
+comment|/* Auto-Negotiation Link Partner Ability Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PHY_ANER
 value|0x06
 end_define
+
+begin_comment
+comment|/* Auto-Negotiation Expansion Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PHY_BMCR_RESET
+value|0x8000
+end_define
+
+begin_comment
+comment|/* Soft reset PHY.  Self-clearing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PHY_BMCR_LOOPBK
+value|0x4000
+end_define
+
+begin_comment
+comment|/* Enable loopback */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PHY_BMCR_SPEEDSEL
+value|0x2000
+end_define
+
+begin_comment
+comment|/* 1=100Mbps, 0=10Mbps */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PHY_BMCR_AUTONEGENBL
+value|0x1000
+end_define
+
+begin_comment
+comment|/* Auto-negotiation enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PHY_BMCR_ISOLATE
+value|0x0400
+end_define
+
+begin_comment
+comment|/* Isolate ML6692 from MII */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PHY_BMCR_AUTONEGRSTR
+value|0x0200
+end_define
+
+begin_comment
+comment|/* Restart auto-negotiation.  Self-clearing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PHY_BMCR_DUPLEX
+value|0x0100
+end_define
+
+begin_comment
+comment|/* Full duplex operation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PHY_BMCR_COLLTEST
+value|0x0080
+end_define
+
+begin_comment
+comment|/* Enable collision test */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PHY_BMSR_100BT4
+value|0x8000
+end_define
+
+begin_comment
+comment|/* 100Base-T4 capable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PHY_BMSR_100BTXFULL
+value|0x4000
+end_define
+
+begin_comment
+comment|/* 100Base-TX full duplex capable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PHY_BMSR_100BTXHALF
+value|0x2000
+end_define
+
+begin_comment
+comment|/* 100Base-TX half duplex capable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PHY_BMSR_10BTFULL
+value|0x1000
+end_define
+
+begin_comment
+comment|/* 10Base-T full duplex capable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PHY_BMSR_10BTHALF
+value|0x0800
+end_define
+
+begin_comment
+comment|/* 10Base-T half duplex capable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PHY_BMSR_AUTONEGCOMP
+value|0x0020
+end_define
+
+begin_comment
+comment|/* Auto-negotiation complete */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PHY_BMSR_CANAUTONEG
+value|0x0008
+end_define
+
+begin_comment
+comment|/* Auto-negotiation supported */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PHY_BMSR_LINKSTAT
+value|0x0004
+end_define
+
+begin_comment
+comment|/* Link is up */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PHY_BMSR_EXTENDED
+value|0x0001
+end_define
+
+begin_comment
+comment|/* Extended register capabilities */
+end_comment
 
 begin_define
 define|#
@@ -928,12 +1113,9 @@ name|PHY_ANAR_NEXTPAGE
 value|0x8000
 end_define
 
-begin_define
-define|#
-directive|define
-name|PHY_ANAR_RSVD0
-value|0x4000
-end_define
+begin_comment
+comment|/* Additional link code word pages */
+end_comment
 
 begin_define
 define|#
@@ -942,26 +1124,9 @@ name|PHY_ANAR_TLRFLT
 value|0x2000
 end_define
 
-begin_define
-define|#
-directive|define
-name|PHY_ANAR_RSVD1
-value|0x1000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PHY_ANAR_RSVD2
-value|0x0800
-end_define
-
-begin_define
-define|#
-directive|define
-name|PHY_ANAR_RSVD3
-value|0x0400
-end_define
+begin_comment
+comment|/* Remote wire fault detected */
+end_comment
 
 begin_define
 define|#
@@ -970,12 +1135,20 @@ name|PHY_ANAR_100BT4
 value|0x0200
 end_define
 
+begin_comment
+comment|/* 100Base-T4 capable */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|PHY_ANAR_100BTXFULL
 value|0x0100
 end_define
+
+begin_comment
+comment|/* 100Base-TX full duplex capable */
+end_comment
 
 begin_define
 define|#
@@ -984,12 +1157,20 @@ name|PHY_ANAR_100BTXHALF
 value|0x0080
 end_define
 
+begin_comment
+comment|/* 100Base-TX half duplex capable */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|PHY_ANAR_10BTFULL
 value|0x0040
 end_define
+
+begin_comment
+comment|/* 10Base-T full duplex capable */
+end_comment
 
 begin_define
 define|#
@@ -998,12 +1179,20 @@ name|PHY_ANAR_10BTHALF
 value|0x0020
 end_define
 
+begin_comment
+comment|/* 10Base-T half duplex capable */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|PHY_ANAR_PROTO4
 value|0x0010
 end_define
+
+begin_comment
+comment|/* Protocol selection (00001 = 802.3) */
+end_comment
 
 begin_define
 define|#
@@ -1033,299 +1222,187 @@ name|PHY_ANAR_PROTO0
 value|0x0001
 end_define
 
-begin_comment
-comment|/*  * PHY BMCR Basic Mode Control Register  */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|PHY_BMCR
-value|0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|PHY_BMCR_RESET
+name|PHY_LPAR_NEXTPAGE
 value|0x8000
 end_define
 
+begin_comment
+comment|/* Additional link code word pages */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PHY_BMCR_LOOPBK
+name|PHY_LPAR_LPACK
 value|0x4000
 end_define
 
+begin_comment
+comment|/* Link partner acknowledged receipt */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PHY_BMCR_SPEEDSEL
+name|PHY_LPAR_TLRFLT
 value|0x2000
 end_define
 
-begin_define
-define|#
-directive|define
-name|PHY_BMCR_AUTONEGENBL
-value|0x1000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PHY_BMCR_RSVD0
-value|0x0800
-end_define
-
 begin_comment
-comment|/* write as zero */
+comment|/* Remote wire fault detected */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PHY_BMCR_ISOLATE
-value|0x0400
-end_define
-
-begin_define
-define|#
-directive|define
-name|PHY_BMCR_AUTONEGRSTR
-value|0x0200
-end_define
-
-begin_define
-define|#
-directive|define
-name|PHY_BMCR_DUPLEX
-value|0x0100
-end_define
-
-begin_define
-define|#
-directive|define
-name|PHY_BMCR_COLLTEST
-value|0x0080
-end_define
-
-begin_define
-define|#
-directive|define
-name|PHY_BMCR_RSVD1
-value|0x0040
-end_define
-
-begin_comment
-comment|/* write as zero, don't care */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PHY_BMCR_RSVD2
-value|0x0020
-end_define
-
-begin_comment
-comment|/* write as zero, don't care */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PHY_BMCR_RSVD3
-value|0x0010
-end_define
-
-begin_comment
-comment|/* write as zero, don't care */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PHY_BMCR_RSVD4
-value|0x0008
-end_define
-
-begin_comment
-comment|/* write as zero, don't care */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PHY_BMCR_RSVD5
-value|0x0004
-end_define
-
-begin_comment
-comment|/* write as zero, don't care */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PHY_BMCR_RSVD6
-value|0x0002
-end_define
-
-begin_comment
-comment|/* write as zero, don't care */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PHY_BMCR_RSVD7
-value|0x0001
-end_define
-
-begin_comment
-comment|/* write as zero, don't care */
-end_comment
-
-begin_comment
-comment|/*   * PHY, BMSR Basic Mode Status Register   */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PHY_BMSR
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|PHY_BMSR_100BT4
-value|0x8000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PHY_BMSR_100BTXFULL
-value|0x4000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PHY_BMSR_100BTXHALF
-value|0x2000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PHY_BMSR_10BTFULL
-value|0x1000
-end_define
-
-begin_define
-define|#
-directive|define
-name|PHY_BMSR_10BTHALF
-value|0x0800
-end_define
-
-begin_define
-define|#
-directive|define
-name|PHY_BMSR_RSVD1
-value|0x0400
-end_define
-
-begin_comment
-comment|/* write as zero, don't care */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PHY_BMSR_RSVD2
+name|PHY_LPAR_100BT4
 value|0x0200
 end_define
 
 begin_comment
-comment|/* write as zero, don't care */
+comment|/* 100Base-T4 capable */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PHY_BMSR_RSVD3
+name|PHY_LPAR_100BTXFULL
 value|0x0100
 end_define
 
 begin_comment
-comment|/* write as zero, don't care */
+comment|/* 100Base-TX full duplex capable */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PHY_BMSR_RSVD4
+name|PHY_LPAR_100BTXHALF
 value|0x0080
 end_define
 
 begin_comment
-comment|/* write as zero, don't care */
+comment|/* 100Base-TX half duplex capable */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PHY_BMSR_MFPRESUP
+name|PHY_LPAR_10BTFULL
 value|0x0040
 end_define
 
+begin_comment
+comment|/* 10Base-T full duplex capable */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|PHY_BMSR_AUTONEGCOMP
+name|PHY_LPAR_10BTHALF
 value|0x0020
 end_define
 
-begin_define
-define|#
-directive|define
-name|PHY_BMSR_REMFAULT
-value|0x0010
-end_define
+begin_comment
+comment|/* 10Base-T half duplex capable */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|PHY_BMSR_CANAUTONEG
+name|PHY_LPAR_PROTO4
+value|0x0010
+end_define
+
+begin_comment
+comment|/* Protocol selection (00001 = 802.3) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PHY_LPAR_PROTO3
 value|0x0008
 end_define
 
 begin_define
 define|#
 directive|define
-name|PHY_BMSR_LINKSTAT
+name|PHY_LPAR_PROTO2
 value|0x0004
 end_define
 
 begin_define
 define|#
 directive|define
-name|PHY_BMSR_JABBER
+name|PHY_LPAR_PROTO1
 value|0x0002
 end_define
 
 begin_define
 define|#
 directive|define
-name|PHY_BMSR_EXTENDED
+name|PHY_LPAR_PROTO0
 value|0x0001
 end_define
+
+begin_define
+define|#
+directive|define
+name|PHY_ANER_MLFAULT
+value|0x0010
+end_define
+
+begin_comment
+comment|/* More than one link is up! */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PHY_ANER_LPNPABLE
+value|0x0008
+end_define
+
+begin_comment
+comment|/* Link partner supports next page */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PHY_ANER_NPABLE
+value|0x0004
+end_define
+
+begin_comment
+comment|/* Local port supports next page */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PHY_ANER_PAGERX
+value|0x0002
+end_define
+
+begin_comment
+comment|/* Page received */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PHY_ANER_LPAUTONEG
+value|0x0001
+end_define
+
+begin_comment
+comment|/* Link partner can auto-negotiate */
+end_comment
 
 begin_endif
 endif|#
