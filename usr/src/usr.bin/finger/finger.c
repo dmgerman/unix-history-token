@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)finger.c	8.4 (Berkeley) %G%"
+literal|"@(#)finger.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,31 +66,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
+file|<db.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<utmp.h>
+file|<err.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
 end_include
 
 begin_include
@@ -114,13 +114,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<db.h>
+file|<time.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<err.h>
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utmp.h>
 end_include
 
 begin_include

@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)quiz.c	8.2 (Berkeley) %G%"
+literal|"@(#)quiz.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,13 +62,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<ctype.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<time.h>
+file|<errno.h>
 end_include
 
 begin_include
@@ -92,7 +92,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
