@@ -26,12 +26,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/gpt.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<err.h>
 end_include
 
@@ -63,12 +57,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<uuid.h>
 end_include
 
 begin_include
@@ -359,6 +347,9 @@ name|fd
 name|__unused
 parameter_list|)
 block|{
+name|uuid_t
+name|type
+decl_stmt|;
 name|off_t
 name|start
 decl_stmt|;
@@ -605,6 +596,8 @@ control|)
 block|{
 name|start
 operator|=
+name|le16toh
+argument_list|(
 name|mbr
 operator|->
 name|mbr_part
@@ -613,11 +606,18 @@ name|i
 index|]
 operator|.
 name|part_start_hi
-operator|<<
-literal|16
+argument_list|)
 expr_stmt|;
 name|start
-operator|+=
+operator|=
+operator|(
+name|start
+operator|<<
+literal|16
+operator|)
+operator|+
+name|le16toh
+argument_list|(
 name|mbr
 operator|->
 name|mbr_part
@@ -626,6 +626,7 @@ name|i
 index|]
 operator|.
 name|part_start_lo
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -670,6 +671,17 @@ name|m
 operator|->
 name|map_data
 expr_stmt|;
+name|le_uuid_dec
+argument_list|(
+operator|&
+name|ent
+operator|->
+name|ent_type
+argument_list|,
+operator|&
+name|type
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"- %s"
@@ -677,9 +689,7 @@ argument_list|,
 name|friendly
 argument_list|(
 operator|&
-name|ent
-operator|->
-name|ent_type
+name|type
 argument_list|)
 argument_list|)
 expr_stmt|;

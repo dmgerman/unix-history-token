@@ -26,12 +26,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/gpt.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<err.h>
 end_include
 
@@ -78,6 +72,7 @@ file|"gpt.h"
 end_include
 
 begin_decl_stmt
+specifier|static
 name|int
 name|recoverable
 decl_stmt|;
