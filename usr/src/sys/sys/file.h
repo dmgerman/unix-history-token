@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	file.h	4.5	81/03/09	*/
+comment|/*	file.h	4.6	81/04/28	*/
 end_comment
 
 begin_comment
@@ -36,6 +36,22 @@ modifier|*
 name|f_chan
 decl_stmt|;
 comment|/* mpx channel pointer */
+name|struct
+name|port
+modifier|*
+name|f_port
+decl_stmt|;
+comment|/* port (used for pipes, too) */
+ifdef|#
+directive|ifdef
+name|CHAOS
+name|struct
+name|connection
+modifier|*
+name|f_conn
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 name|f_un
 union|;
@@ -137,6 +153,13 @@ define|#
 directive|define
 name|FMP
 value|030
+end_define
+
+begin_define
+define|#
+directive|define
+name|FPORT
+value|040
 end_define
 
 end_unit
