@@ -3,40 +3,22 @@ begin_comment
 comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|char
-name|id
-index|[]
-init|=
-literal|"@(#)$Id: headers.c,v 8.203.4.13 2001/05/03 17:24:06 gshapiro Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! lint */
-end_comment
-
-begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
 begin_include
 include|#
 directive|include
 file|<sendmail.h>
 end_include
+
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_macro
+name|SM_RCSID
+argument_list|(
+literal|"@(#)$Id: headers.c,v 8.266 2001/10/12 01:50:12 gshapiro Exp $"
+argument_list|)
+end_macro
 
 begin_decl_stmt
 specifier|static
@@ -155,9 +137,6 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* **  CHOMPHEADER -- process and save a header line. ** **	Called by collect, readcf, and readqf to deal with header lines. ** **	Parameters: **		line -- header as a text line. **		pflag -- flags for chompheader() (from sendmail.h) **		hdrp -- a pointer to the place to save the header. **		e -- the envelope including this header. ** **	Returns: **		flags for this header. ** **	Side Effects: **		The header is saved on the header list. **		Contents of 'line' are destroyed. */
 end_comment
@@ -179,7 +158,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|u_long
+name|unsigned
+name|long
 name|chompheader
 parameter_list|(
 name|line
@@ -208,7 +188,8 @@ modifier|*
 name|e
 decl_stmt|;
 block|{
-name|u_char
+name|unsigned
+name|char
 name|mid
 init|=
 literal|'\0'
@@ -239,7 +220,7 @@ decl_stmt|;
 name|bool
 name|cond
 init|=
-name|FALSE
+name|false
 decl_stmt|;
 name|bool
 name|dropfrom
@@ -259,7 +240,7 @@ decl_stmt|;
 name|bool
 name|nullheader
 init|=
-name|FALSE
+name|false
 decl_stmt|;
 name|BITMAP256
 name|mopts
@@ -274,7 +255,7 @@ literal|6
 argument_list|)
 condition|)
 block|{
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"chompheader: "
 argument_list|)
@@ -284,7 +265,7 @@ argument_list|(
 name|line
 argument_list|)
 expr_stmt|;
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -403,7 +384,8 @@ block|}
 name|mid
 operator|=
 operator|(
-name|u_char
+name|unsigned
+name|char
 operator|)
 operator|*
 name|p
@@ -459,13 +441,12 @@ block|}
 name|mid
 operator|=
 operator|(
-name|u_char
+name|unsigned
+name|char
 operator|)
 name|macid
 argument_list|(
 name|p
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -554,7 +535,7 @@ argument_list|)
 expr_stmt|;
 name|cond
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 name|p
 operator|++
@@ -689,7 +670,7 @@ literal|'\0'
 condition|)
 name|nullheader
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 comment|/* security scan: long field names are end-of-header */
 if|if
@@ -825,6 +806,39 @@ argument_list|,
 name|ST_ENTER
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|9
+operator|&&
+name|s
+operator|->
+name|s_header
+operator|.
+name|hi_ruleset
+operator|!=
+name|NULL
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+name|NOQID
+argument_list|,
+literal|"Warning: redefined ruleset for header=%s, old=%s, new=%s"
+argument_list|,
+name|fname
+argument_list|,
+name|s
+operator|->
+name|s_header
+operator|.
+name|hi_ruleset
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 name|s
 operator|->
 name|s_header
@@ -902,13 +916,13 @@ name|s
 operator|==
 name|NULL
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"no header flags match\n"
 argument_list|)
 expr_stmt|;
 else|else
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"header match, flags=%lx, ruleset=%s\n"
 argument_list|,
@@ -1073,7 +1087,7 @@ block|{
 name|bool
 name|stripcom
 init|=
-name|FALSE
+name|false
 decl_stmt|;
 name|char
 modifier|*
@@ -1161,6 +1175,8 @@ condition|)
 block|{
 name|int
 name|l
+decl_stmt|,
+name|k
 decl_stmt|;
 name|char
 name|qval
@@ -1168,28 +1184,11 @@ index|[
 name|MAXNAME
 index|]
 decl_stmt|;
-name|char
-name|hlen
-index|[
-literal|16
-index|]
-decl_stmt|;
-name|char
-modifier|*
-name|sp
-decl_stmt|,
-modifier|*
-name|dp
-decl_stmt|;
-name|dp
-operator|=
-name|qval
-expr_stmt|;
 name|l
 operator|=
 literal|0
 expr_stmt|;
-name|dp
+name|qval
 index|[
 name|l
 operator|++
@@ -1197,14 +1196,17 @@ index|]
 operator|=
 literal|'"'
 expr_stmt|;
+comment|/* - 3 to avoid problems with " at the end */
 for|for
 control|(
-name|sp
+name|k
 operator|=
-name|fvalue
+literal|0
 init|;
-operator|*
-name|sp
+name|fvalue
+index|[
+name|k
+index|]
 operator|!=
 literal|'\0'
 operator|&&
@@ -1214,16 +1216,19 @@ name|MAXNAME
 operator|-
 literal|3
 condition|;
-name|sp
+name|k
 operator|++
 control|)
 block|{
 switch|switch
 condition|(
-operator|*
-name|sp
+name|fvalue
+index|[
+name|k
+index|]
 condition|)
 block|{
+comment|/* XXX other control chars? */
 case|case
 literal|'\011'
 case|:
@@ -1244,7 +1249,7 @@ case|case
 literal|'\015'
 case|:
 comment|/* cr */
-name|dp
+name|qval
 index|[
 name|l
 operator|++
@@ -1256,7 +1261,7 @@ break|break;
 case|case
 literal|'"'
 case|:
-name|dp
+name|qval
 index|[
 name|l
 operator|++
@@ -1266,19 +1271,21 @@ literal|'\\'
 expr_stmt|;
 comment|/* FALLTHROUGH */
 default|default:
-name|dp
+name|qval
 index|[
 name|l
 operator|++
 index|]
 operator|=
-operator|*
-name|sp
+name|fvalue
+index|[
+name|k
+index|]
 expr_stmt|;
 break|break;
 block|}
 block|}
-name|dp
+name|qval
 index|[
 name|l
 operator|++
@@ -1286,53 +1293,25 @@ index|]
 operator|=
 literal|'"'
 expr_stmt|;
-name|dp
+name|qval
 index|[
 name|l
-operator|++
 index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|l
-operator|=
+name|k
+operator|+=
 name|strlen
 argument_list|(
 name|fvalue
-argument_list|)
-expr_stmt|;
-name|snprintf
-argument_list|(
-name|hlen
-argument_list|,
-sizeof|sizeof
-name|hlen
-argument_list|,
-literal|"%d"
-argument_list|,
-name|l
-argument_list|)
-expr_stmt|;
-name|define
-argument_list|(
-name|macid
-argument_list|(
-literal|"{hdrlen}"
-argument_list|,
-name|NULL
-argument_list|)
-argument_list|,
-name|newstr
-argument_list|(
-name|hlen
-argument_list|)
-argument_list|,
-name|e
+operator|+
+name|k
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|l
+name|k
 operator|>=
 name|MAXNAME
 condition|)
@@ -1357,7 +1336,7 @@ name|fname
 argument_list|,
 name|rs
 argument_list|,
-name|l
+name|k
 argument_list|,
 name|MAXNAME
 operator|-
@@ -1365,63 +1344,152 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|(
-name|sp
-operator|=
-name|macvalue
+name|macdefine
 argument_list|(
-name|macid
-argument_list|(
-literal|"{currHeader}"
-argument_list|,
-name|NULL
-argument_list|)
-argument_list|,
+operator|&
 name|e
-argument_list|)
-operator|)
-operator|!=
-name|NULL
-condition|)
-name|sm_free
-argument_list|(
-name|sp
-argument_list|)
-expr_stmt|;
-name|define
-argument_list|(
+operator|->
+name|e_macro
+argument_list|,
+name|A_TEMP
+argument_list|,
 name|macid
 argument_list|(
 literal|"{currHeader}"
-argument_list|,
-name|NULL
 argument_list|)
 argument_list|,
-name|newstr
-argument_list|(
 name|qval
 argument_list|)
-argument_list|,
-name|e
-argument_list|)
 expr_stmt|;
-name|define
+name|macdefine
 argument_list|(
+operator|&
+name|e
+operator|->
+name|e_macro
+argument_list|,
+name|A_TEMP
+argument_list|,
 name|macid
 argument_list|(
 literal|"{hdr_name}"
-argument_list|,
-name|NULL
 argument_list|)
 argument_list|,
-name|newstr
-argument_list|(
 name|fname
 argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sm_snprintf
+argument_list|(
+name|qval
 argument_list|,
+sizeof|sizeof
+name|qval
+argument_list|,
+literal|"%d"
+argument_list|,
+name|k
+argument_list|)
+expr_stmt|;
+name|macdefine
+argument_list|(
+operator|&
 name|e
+operator|->
+name|e_macro
+argument_list|,
+name|A_TEMP
+argument_list|,
+name|macid
+argument_list|(
+literal|"{hdrlen}"
+argument_list|)
+argument_list|,
+name|qval
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+name|_FFR_HDR_TYPE
+comment|/* 			**  XXX: h isn't set yet 			**  If we really want to be precise then we have 			**  to lookup the header (see below). 			**  It's probably not worth the effort. 			*/
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|H_FROM
+argument_list|,
+name|h
+operator|->
+name|h_flags
+argument_list|)
+condition|)
+name|macdefine
+argument_list|(
+operator|&
+name|e
+operator|->
+name|e_macro
+argument_list|,
+name|A_PERM
+argument_list|,
+name|macid
+argument_list|(
+literal|"{addr_type}"
+argument_list|)
+argument_list|,
+literal|"h s"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|H_RCPT
+argument_list|,
+name|h
+operator|->
+name|h_flags
+argument_list|)
+condition|)
+name|macdefine
+argument_list|(
+operator|&
+name|e
+operator|->
+name|e_macro
+argument_list|,
+name|A_PERM
+argument_list|,
+name|macid
+argument_list|(
+literal|"{addr_type}"
+argument_list|)
+argument_list|,
+literal|"h r"
+argument_list|)
+expr_stmt|;
+else|else
+endif|#
+directive|endif
+comment|/* _FFR_HDR_TYPE */
+name|macdefine
+argument_list|(
+operator|&
+name|e
+operator|->
+name|e_macro
+argument_list|,
+name|A_PERM
+argument_list|,
+name|macid
+argument_list|(
+literal|"{addr_type}"
+argument_list|)
+argument_list|,
+literal|"h"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1439,11 +1507,15 @@ name|e
 argument_list|,
 name|stripcom
 argument_list|,
-name|TRUE
+name|true
 argument_list|,
-literal|4
+literal|3
 argument_list|,
 name|NULL
+argument_list|,
+name|e
+operator|->
+name|e_id
 argument_list|)
 expr_stmt|;
 block|}
@@ -1451,7 +1523,7 @@ block|}
 comment|/* 	**  Drop explicit From: if same as what we would generate. 	**  This is to make MH (which doesn't always give a full name) 	**  insert the full name information in all circumstances. 	*/
 name|dropfrom
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 name|p
 operator|=
@@ -1496,7 +1568,7 @@ operator|->
 name|e_flags
 argument_list|)
 operator|&&
-name|strcasecmp
+name|sm_strcasecmp
 argument_list|(
 name|fname
 argument_list|,
@@ -1516,7 +1588,7 @@ literal|2
 argument_list|)
 condition|)
 block|{
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"comparing header from (%s) against default (%s or %s)\n"
 argument_list|,
@@ -1597,7 +1669,7 @@ operator|)
 condition|)
 name|dropfrom
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 block|}
 comment|/* delete default value for this header */
@@ -1626,7 +1698,7 @@ control|)
 block|{
 if|if
 condition|(
-name|strcasecmp
+name|sm_strcasecmp
 argument_list|(
 name|fname
 argument_list|,
@@ -1735,8 +1807,12 @@ operator|(
 name|HDR
 operator|*
 operator|)
-name|xalloc
+name|sm_rpool_malloc_x
 argument_list|(
+name|e
+operator|->
+name|e_rpool
+argument_list|,
 sizeof|sizeof
 expr|*
 name|h
@@ -1746,8 +1822,12 @@ name|h
 operator|->
 name|h_field
 operator|=
-name|newstr
+name|sm_rpool_strdup_x
 argument_list|(
+name|e
+operator|->
+name|e_rpool
+argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
@@ -1755,8 +1835,12 @@ name|h
 operator|->
 name|h_value
 operator|=
-name|newstr
+name|sm_rpool_strdup_x
 argument_list|(
+name|e
+operator|->
+name|e_rpool
+argument_list|,
 name|fvalue
 argument_list|)
 expr_stmt|;
@@ -1948,11 +2032,8 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* **  ADDHEADER -- add a header entry to the end of the queue. ** **	This bypasses the special checking of chompheader. ** **	Parameters: **		field -- the name of the header field. **		value -- the value of the field. **		flags -- flags to add to h_flags. **		hdrlist -- an indirect pointer to the header structure list. ** **	Returns: **		none. ** **	Side Effects: **		adds the field on the list of headers for this envelope. */
+comment|/* **  ADDHEADER -- add a header entry to the end of the queue. ** **	This bypasses the special checking of chompheader. ** **	Parameters: **		field -- the name of the header field. **		value -- the value of the field. **		flags -- flags to add to h_flags. **		e -- envelope. ** **	Returns: **		none. ** **	Side Effects: **		adds the field on the list of headers for this envelope. */
 end_comment
 
 begin_function
@@ -1965,7 +2046,7 @@ name|value
 parameter_list|,
 name|flags
 parameter_list|,
-name|hdrlist
+name|e
 parameter_list|)
 name|char
 modifier|*
@@ -1978,10 +2059,9 @@ decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
-name|HDR
+name|ENVELOPE
 modifier|*
-modifier|*
-name|hdrlist
+name|e
 decl_stmt|;
 block|{
 specifier|register
@@ -1997,6 +2077,16 @@ name|HDR
 modifier|*
 modifier|*
 name|hp
+decl_stmt|;
+name|HDR
+modifier|*
+modifier|*
+name|hdrlist
+init|=
+operator|&
+name|e
+operator|->
+name|e_header
 decl_stmt|;
 comment|/* find info struct */
 name|s
@@ -2036,7 +2126,7 @@ control|)
 block|{
 if|if
 condition|(
-name|strcasecmp
+name|sm_strcasecmp
 argument_list|(
 name|field
 argument_list|,
@@ -2056,8 +2146,12 @@ operator|(
 name|HDR
 operator|*
 operator|)
-name|xalloc
+name|sm_rpool_malloc_x
 argument_list|(
+name|e
+operator|->
+name|e_rpool
+argument_list|,
 sizeof|sizeof
 expr|*
 name|h
@@ -2073,8 +2167,12 @@ name|h
 operator|->
 name|h_value
 operator|=
-name|newstr
+name|sm_rpool_strdup_x
 argument_list|(
+name|e
+operator|->
+name|e_rpool
+argument_list|,
 name|value
 argument_list|)
 expr_stmt|;
@@ -2127,9 +2225,6 @@ name|h
 expr_stmt|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  HVALUE -- return value of a header. ** **	Only "real" fields (i.e., ones that have not been supplied **	as a default) are used. ** **	Parameters: **		field -- the field name. **		header -- the header list. ** **	Returns: **		pointer to the value part. **		NULL if not found. ** **	Side Effects: **		none. */
@@ -2187,7 +2282,7 @@ operator|->
 name|h_flags
 argument_list|)
 operator|&&
-name|strcasecmp
+name|sm_strcasecmp
 argument_list|(
 name|h
 operator|->
@@ -2210,11 +2305,8 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* **  ISHEADER -- predicate telling if argument is a header. ** **	A line is a header if it has a single word followed by **	optional white space followed by a colon. ** **	Header fields beginning with two dashes, although technically **	permitted by RFC822, are automatically rejected in order **	to make MIME work out.  Without this we could have a technically **	legal header such as ``--"foo:bar"'' that would also be a legal **	MIME separator. ** **	Parameters: **		h -- string to check for possible headerness. ** **	Returns: **		TRUE if h is a header. **		FALSE otherwise. ** **	Side Effects: **		none. */
+comment|/* **  ISHEADER -- predicate telling if argument is a header. ** **	A line is a header if it has a single word followed by **	optional white space followed by a colon. ** **	Header fields beginning with two dashes, although technically **	permitted by RFC822, are automatically rejected in order **	to make MIME work out.  Without this we could have a technically **	legal header such as ``--"foo:bar"'' that would also be a legal **	MIME separator. ** **	Parameters: **		h -- string to check for possible headerness. ** **	Returns: **		true if h is a header. **		false otherwise. ** **	Side Effects: **		none. */
 end_comment
 
 begin_function
@@ -2252,7 +2344,7 @@ operator|==
 literal|'-'
 condition|)
 return|return
-name|FALSE
+name|false
 return|;
 while|while
 condition|(
@@ -2281,7 +2373,7 @@ operator|==
 name|s
 condition|)
 return|return
-name|FALSE
+name|false
 return|;
 comment|/* following technically violates RFC822 */
 while|while
@@ -2312,11 +2404,8 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* **  EATHEADER -- run through the stored header and extract info. ** **	Parameters: **		e -- the envelope to process. **		full -- if set, do full processing (e.g., compute **			message priority).  This should not be set **			when reading a queue file because some info **			needed to compute the priority is wrong. ** **	Returns: **		none. ** **	Side Effects: **		Sets a bunch of global variables from information **			in the collected header. **		Aborts the message if the hop count is exceeded. */
+comment|/* **  EATHEADER -- run through the stored header and extract info. ** **	Parameters: **		e -- the envelope to process. **		full -- if set, do full processing (e.g., compute **			message priority).  This should not be set **			when reading a queue file because some info **			needed to compute the priority is wrong. **		log -- call logsender()? ** **	Returns: **		none. ** **	Side Effects: **		Sets a bunch of global variables from information **			in the collected header. */
 end_comment
 
 begin_function
@@ -2326,6 +2415,8 @@ parameter_list|(
 name|e
 parameter_list|,
 name|full
+parameter_list|,
+name|log
 parameter_list|)
 specifier|register
 name|ENVELOPE
@@ -2334,6 +2425,9 @@ name|e
 decl_stmt|;
 name|bool
 name|full
+decl_stmt|;
+name|bool
+name|log
 decl_stmt|;
 block|{
 specifier|register
@@ -2352,36 +2446,42 @@ init|=
 literal|0
 decl_stmt|;
 name|char
-modifier|*
-name|msgid
-decl_stmt|;
-name|char
 name|buf
 index|[
 name|MAXLINE
 index|]
 decl_stmt|;
 comment|/* 	**  Set up macros for possible expansion in headers. 	*/
-name|define
+name|macdefine
 argument_list|(
+operator|&
+name|e
+operator|->
+name|e_macro
+argument_list|,
+name|A_PERM
+argument_list|,
 literal|'f'
 argument_list|,
 name|e
 operator|->
 name|e_sender
-argument_list|,
-name|e
 argument_list|)
 expr_stmt|;
-name|define
+name|macdefine
 argument_list|(
+operator|&
+name|e
+operator|->
+name|e_macro
+argument_list|,
+name|A_PERM
+argument_list|,
 literal|'g'
 argument_list|,
 name|e
 operator|->
 name|e_sender
-argument_list|,
-name|e
 argument_list|)
 expr_stmt|;
 if|if
@@ -2399,25 +2499,35 @@ name|e_origrcpt
 operator|!=
 literal|'\0'
 condition|)
-name|define
+name|macdefine
 argument_list|(
+operator|&
+name|e
+operator|->
+name|e_macro
+argument_list|,
+name|A_PERM
+argument_list|,
 literal|'u'
 argument_list|,
 name|e
 operator|->
 name|e_origrcpt
-argument_list|,
-name|e
 argument_list|)
 expr_stmt|;
 else|else
-name|define
+name|macdefine
 argument_list|(
+operator|&
+name|e
+operator|->
+name|e_macro
+argument_list|,
+name|A_PERM
+argument_list|,
 literal|'u'
 argument_list|,
 name|NULL
-argument_list|,
-name|e
 argument_list|)
 expr_stmt|;
 comment|/* full name of from person */
@@ -2454,16 +2564,25 @@ operator|=
 name|addquotes
 argument_list|(
 name|p
+argument_list|,
+name|e
+operator|->
+name|e_rpool
 argument_list|)
 expr_stmt|;
 block|}
-name|define
+name|macdefine
 argument_list|(
+operator|&
+name|e
+operator|->
+name|e_macro
+argument_list|,
+name|A_PERM
+argument_list|,
 literal|'x'
 argument_list|,
 name|p
-argument_list|,
-name|e
 argument_list|)
 expr_stmt|;
 block|}
@@ -2476,12 +2595,14 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"----- collected header -----\n"
 argument_list|)
 expr_stmt|;
-name|msgid
+name|e
+operator|->
+name|e_msgid
 operator|=
 name|NULL
 expr_stmt|;
@@ -2513,7 +2634,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"%s: "
 argument_list|,
@@ -2540,7 +2661,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"<NULL>\n"
 argument_list|)
@@ -2580,7 +2701,7 @@ literal|1
 argument_list|)
 condition|)
 block|{
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"("
 argument_list|)
@@ -2592,7 +2713,7 @@ operator|->
 name|h_value
 argument_list|)
 expr_stmt|;
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|") "
 argument_list|)
@@ -2652,8 +2773,12 @@ name|h
 operator|->
 name|h_value
 operator|=
-name|newstr
+name|sm_rpool_strdup_x
 argument_list|(
+name|e
+operator|->
+name|e_rpool
+argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
@@ -2683,7 +2808,7 @@ operator|->
 name|h_value
 argument_list|)
 expr_stmt|;
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -2762,9 +2887,16 @@ name|void
 operator|)
 name|sendtolist
 argument_list|(
+name|denlstring
+argument_list|(
 name|h
 operator|->
 name|h_value
+argument_list|,
+name|true
+argument_list|,
+name|false
+argument_list|)
 argument_list|,
 name|NULLADDR
 argument_list|,
@@ -2811,7 +2943,7 @@ literal|7
 expr_stmt|;
 if|if
 condition|(
-name|strcasecmp
+name|sm_strcasecmp
 argument_list|(
 name|h
 operator|->
@@ -2823,7 +2955,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|msgid
+name|e
+operator|->
+name|e_msgid
 operator|=
 name|h
 operator|->
@@ -2834,16 +2968,22 @@ condition|(
 name|isascii
 argument_list|(
 operator|*
-name|msgid
+name|e
+operator|->
+name|e_msgid
 argument_list|)
 operator|&&
 name|isspace
 argument_list|(
 operator|*
-name|msgid
+name|e
+operator|->
+name|e_msgid
 argument_list|)
 condition|)
-name|msgid
+name|e
+operator|->
+name|e_msgid
 operator|++
 expr_stmt|;
 block|}
@@ -2857,7 +2997,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"----------------------------\n"
 argument_list|)
@@ -2879,12 +3019,45 @@ name|e
 operator|->
 name|e_hopcount
 condition|)
+block|{
 name|e
 operator|->
 name|e_hopcount
 operator|=
 name|hopcnt
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sm_snprintf
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+name|buf
+argument_list|,
+literal|"%d"
+argument_list|,
+name|e
+operator|->
+name|e_hopcount
+argument_list|)
+expr_stmt|;
+name|macdefine
+argument_list|(
+operator|&
+name|e
+operator|->
+name|e_macro
+argument_list|,
+name|A_TEMP
+argument_list|,
+literal|'c'
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* message priority */
 name|p
 operator|=
@@ -2989,7 +3162,7 @@ block|{
 comment|/* (this should be in the configuration file) */
 if|if
 condition|(
-name|strcasecmp
+name|sm_strcasecmp
 argument_list|(
 name|p
 argument_list|,
@@ -3007,7 +3180,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|strcasecmp
+name|sm_strcasecmp
 argument_list|(
 name|p
 argument_list|,
@@ -3025,7 +3198,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|strcasecmp
+name|sm_strcasecmp
 argument_list|(
 name|p
 argument_list|,
@@ -3076,13 +3249,18 @@ name|p
 operator|!=
 name|NULL
 condition|)
-name|define
+name|macdefine
 argument_list|(
+operator|&
+name|e
+operator|->
+name|e_macro
+argument_list|,
+name|A_PERM
+argument_list|,
 literal|'a'
 argument_list|,
 name|p
-argument_list|,
-name|e
 argument_list|)
 expr_stmt|;
 comment|/* check to see if this is a MIME message */
@@ -3095,7 +3273,7 @@ name|e_bodytype
 operator|!=
 name|NULL
 operator|&&
-name|strcasecmp
+name|sm_strcasecmp
 argument_list|(
 name|e
 operator|->
@@ -3285,7 +3463,7 @@ argument_list|,
 literal|2
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"eatheader: setsender(*%s == %s)\n"
 argument_list|,
@@ -3306,7 +3484,7 @@ name|NULL
 argument_list|,
 literal|'\0'
 argument_list|,
-name|TRUE
+name|true
 argument_list|)
 expr_stmt|;
 block|}
@@ -3314,6 +3492,8 @@ block|}
 comment|/* 	**  Log collection information. 	*/
 if|if
 condition|(
+name|log
+operator|&&
 name|bitset
 argument_list|(
 name|EF_LOGSENDER
@@ -3327,11 +3507,14 @@ name|LogLevel
 operator|>
 literal|4
 condition|)
+block|{
 name|logsender
 argument_list|(
 name|e
 argument_list|,
-name|msgid
+name|e
+operator|->
+name|e_msgid
 argument_list|)
 expr_stmt|;
 name|e
@@ -3342,10 +3525,8 @@ operator|~
 name|EF_LOGSENDER
 expr_stmt|;
 block|}
+block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  LOGSENDER -- log sender information ** **	Parameters: **		e -- the envelope to log **		msgid -- the message id ** **	Returns: **		none */
@@ -3411,6 +3592,7 @@ literal|1
 index|]
 decl_stmt|;
 comment|/* don't allow newlines in the message-id */
+comment|/* XXX do we still need this? sm_syslog() replaces control chars */
 if|if
 condition|(
 name|msgid
@@ -3550,7 +3732,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|snprintf
+name|sm_snprintf
 argument_list|(
 name|hbuf
 argument_list|,
@@ -3587,7 +3769,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|snprintf
+name|sm_snprintf
 argument_list|(
 name|p
 argument_list|,
@@ -3621,7 +3803,10 @@ name|sbp
 operator|=
 name|sbuf
 expr_stmt|;
-name|snprintf
+operator|(
+name|void
+operator|)
+name|sm_snprintf
 argument_list|(
 name|sbp
 argument_list|,
@@ -3677,7 +3862,10 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|snprintf
+operator|(
+name|void
+operator|)
+name|sm_snprintf
 argument_list|(
 name|sbp
 argument_list|,
@@ -3713,7 +3901,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|snprintf
+name|sm_snprintf
 argument_list|(
 name|sbp
 argument_list|,
@@ -3758,7 +3946,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|snprintf
+name|sm_snprintf
 argument_list|(
 name|sbp
 argument_list|,
@@ -3789,8 +3977,6 @@ argument_list|(
 name|macid
 argument_list|(
 literal|"{daemon_name}"
-argument_list|,
-name|NULL
 argument_list|)
 argument_list|,
 name|e
@@ -3806,7 +3992,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|snprintf
+name|sm_snprintf
 argument_list|(
 name|sbp
 argument_list|,
@@ -3830,108 +4016,6 @@ name|sbp
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|SASL
-name|p
-operator|=
-name|macvalue
-argument_list|(
-name|macid
-argument_list|(
-literal|"{auth_type}"
-argument_list|,
-name|NULL
-argument_list|)
-argument_list|,
-name|e
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|p
-operator|!=
-name|NULL
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|snprintf
-argument_list|(
-name|sbp
-argument_list|,
-name|SPACELEFT
-argument_list|(
-name|sbuf
-argument_list|,
-name|sbp
-argument_list|)
-argument_list|,
-literal|", mech=%.12s"
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
-name|sbp
-operator|+=
-name|strlen
-argument_list|(
-name|sbp
-argument_list|)
-expr_stmt|;
-block|}
-name|p
-operator|=
-name|macvalue
-argument_list|(
-name|macid
-argument_list|(
-literal|"{auth_author}"
-argument_list|,
-name|NULL
-argument_list|)
-argument_list|,
-name|e
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|p
-operator|!=
-name|NULL
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|snprintf
-argument_list|(
-name|sbp
-argument_list|,
-name|SPACELEFT
-argument_list|(
-name|sbuf
-argument_list|,
-name|sbp
-argument_list|)
-argument_list|,
-literal|", auth=%.30s"
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
-name|sbp
-operator|+=
-name|strlen
-argument_list|(
-name|sbp
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* SASL */
 name|sm_syslog
 argument_list|(
 name|LOG_INFO
@@ -4047,7 +4131,10 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|snprintf
+operator|(
+name|void
+operator|)
+name|sm_snprintf
 argument_list|(
 name|sbp
 argument_list|,
@@ -4089,7 +4176,10 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|snprintf
+operator|(
+name|void
+operator|)
+name|sm_snprintf
 argument_list|(
 name|sbp
 argument_list|,
@@ -4134,9 +4224,6 @@ comment|/* (SYSLOG_BUFSIZE)>= 256 */
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* **  PRIENCODE -- encode external priority names into internal values. ** **	Parameters: **		p -- priority in ascii. ** **	Returns: **		priority as a numeric level. ** **	Side Effects: **		none. */
 end_comment
@@ -4173,7 +4260,7 @@ control|)
 block|{
 if|if
 condition|(
-name|strcasecmp
+name|sm_strcasecmp
 argument_list|(
 name|p
 argument_list|,
@@ -4202,9 +4289,6 @@ literal|0
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  CRACKADDR -- parse an address and turn it into a macro ** **	This doesn't actually parse the address -- it just extracts **	it and replaces it with "$g".  The parse is totally ad hoc **	and isn't even guaranteed to leave something syntactically **	identical to what it started with.  However, it does leave **	something semantically identical. ** **	This algorithm has been cleaned up to handle a wider range **	of cases -- notably quoted and backslash escaped strings. **	This modification makes it substantially better at preserving **	the original syntax. ** **	Parameters: **		addr -- the address to be cracked. ** **	Returns: **		a pointer to the new version. ** **	Side Effects: **		none. ** **	Warning: **		The return value is saved in local storage and should **		be copied if it is to be reused. */
@@ -4261,22 +4345,22 @@ decl_stmt|;
 name|bool
 name|putgmac
 init|=
-name|FALSE
+name|false
 decl_stmt|;
 name|bool
 name|quoteit
 init|=
-name|FALSE
+name|false
 decl_stmt|;
 name|bool
 name|gotangle
 init|=
-name|FALSE
+name|false
 decl_stmt|;
 name|bool
 name|gotcolon
 init|=
-name|FALSE
+name|false
 decl_stmt|;
 specifier|register
 name|char
@@ -4313,7 +4397,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"crackaddr(%s)\n"
 argument_list|,
@@ -4387,7 +4471,7 @@ name|qmode
 operator|=
 name|realqmode
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 while|while
 condition|(
@@ -4444,7 +4528,7 @@ name|qmode
 condition|)
 name|quoteit
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 if|if
 condition|(
@@ -4709,7 +4793,7 @@ name|qmode
 condition|)
 name|quoteit
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 if|if
 condition|(
@@ -4744,7 +4828,7 @@ goto|;
 block|}
 name|gotcolon
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 name|bp
 operator|=
@@ -4925,7 +5009,7 @@ name|putgmac
 operator|=
 name|quoteit
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 name|bufhead
 operator|=
@@ -4989,7 +5073,7 @@ name|qmode
 condition|)
 name|quoteit
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 block|}
 comment|/* check for angle brackets */
@@ -5012,11 +5096,11 @@ name|gotangle
 condition|)
 name|quoteit
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 name|gotangle
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 comment|/* oops -- have to change our mind */
 name|anglelev
@@ -5184,7 +5268,7 @@ name|putgmac
 operator|=
 name|quoteit
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 continue|continue;
 block|}
@@ -5238,7 +5322,7 @@ operator|--
 expr_stmt|;
 name|quoteit
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 continue|continue;
 block|}
@@ -5304,7 +5388,7 @@ literal|'g'
 expr_stmt|;
 name|putgmac
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 block|}
 block|}
@@ -5361,7 +5445,7 @@ literal|1
 argument_list|)
 condition|)
 block|{
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"crackaddr=>`"
 argument_list|)
@@ -5371,7 +5455,7 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"'\n"
 argument_list|)
@@ -5383,42 +5467,8 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* **  PUTHEADER -- put the header part of a message from the in-core copy ** **	Parameters: **		mci -- the connection information. **		hdr -- the header to put. **		e -- envelope to use. **		flags -- MIME conversion flags. ** **	Returns: **		none. ** **	Side Effects: **		none. */
-end_comment
-
-begin_comment
-comment|/*  * Macro for fast max (not available in e.g. DG/UX, 386/ix).  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MAX
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MAX
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|(((a)>(b))?(a):(b))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! MAX */
 end_comment
 
 begin_function
@@ -5459,7 +5509,7 @@ decl_stmt|;
 name|char
 name|buf
 index|[
-name|MAX
+name|SM_MAX
 argument_list|(
 name|MAXLINE
 argument_list|,
@@ -5482,7 +5532,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"--- putheader, mailer = %s ---\n"
 argument_list|,
@@ -5538,6 +5588,10 @@ name|h
 operator|->
 name|h_value
 decl_stmt|;
+name|char
+modifier|*
+name|q
+decl_stmt|;
 if|if
 condition|(
 name|tTd
@@ -5548,7 +5602,7 @@ literal|11
 argument_list|)
 condition|)
 block|{
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"  %s: "
 argument_list|,
@@ -5589,8 +5643,6 @@ argument_list|,
 name|macid
 argument_list|(
 literal|"{checkMIMEFieldHeaders}"
-argument_list|,
-name|NULL
 argument_list|)
 argument_list|)
 condition|)
@@ -5644,7 +5696,7 @@ argument_list|,
 literal|11
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"  truncated MIME %s header due to field size  (length = %ld) (possible attack)\n"
 argument_list|,
@@ -5676,8 +5728,6 @@ argument_list|,
 name|macid
 argument_list|(
 literal|"{checkMIMETextHeaders}"
-argument_list|,
-name|NULL
 argument_list|)
 argument_list|)
 condition|)
@@ -5745,7 +5795,7 @@ argument_list|,
 literal|11
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"  truncated long MIME %s header (length = %ld) (possible attack)\n"
 argument_list|,
@@ -5777,8 +5827,6 @@ argument_list|,
 name|macid
 argument_list|(
 literal|"{checkMIMEHeaders}"
-argument_list|,
-name|NULL
 argument_list|)
 argument_list|)
 condition|)
@@ -5837,7 +5885,7 @@ argument_list|,
 literal|11
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"  truncated long MIME %s header (length = %ld) (possible attack)\n"
 argument_list|,
@@ -5897,7 +5945,7 @@ argument_list|,
 literal|11
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|" (skipped (content-transfer-encoding))\n"
 argument_list|)
@@ -5925,7 +5973,7 @@ argument_list|,
 literal|11
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -5975,6 +6023,9 @@ name|h_macro
 operator|==
 literal|'\0'
 operator|||
+operator|(
+name|q
+operator|=
 name|macvalue
 argument_list|(
 name|bitidx
@@ -5986,8 +6037,14 @@ argument_list|)
 argument_list|,
 name|e
 argument_list|)
+operator|)
 operator|==
 name|NULL
+operator|||
+operator|*
+name|q
+operator|==
+literal|'\0'
 operator|)
 condition|)
 block|{
@@ -6000,7 +6057,7 @@ argument_list|,
 literal|11
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|" (skipped)\n"
 argument_list|)
@@ -6039,7 +6096,7 @@ argument_list|,
 literal|11
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|" (skipped (resent))\n"
 argument_list|)
@@ -6081,7 +6138,7 @@ argument_list|,
 literal|11
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|" (skipped (receipt))\n"
 argument_list|)
@@ -6143,7 +6200,7 @@ argument_list|,
 literal|11
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|" (skipped -- null value)\n"
 argument_list|)
@@ -6185,7 +6242,7 @@ argument_list|,
 literal|11
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|" (skipped -- bcc)\n"
 argument_list|)
@@ -6197,18 +6254,20 @@ comment|/* no other recipient headers: truncate value */
 operator|(
 name|void
 operator|)
-name|snprintf
+name|sm_strlcpyn
 argument_list|(
 name|obuf
 argument_list|,
 sizeof|sizeof
 name|obuf
 argument_list|,
-literal|"%s:"
+literal|2
 argument_list|,
 name|h
 operator|->
 name|h_field
+argument_list|,
+literal|":"
 argument_list|)
 expr_stmt|;
 name|putline
@@ -6230,7 +6289,7 @@ argument_list|,
 literal|11
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -6275,7 +6334,7 @@ argument_list|)
 condition|)
 name|oldstyle
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 name|commaize
 argument_list|(
@@ -6395,7 +6454,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|snprintf
+operator|(
+name|void
+operator|)
+name|sm_snprintf
 argument_list|(
 name|obuf
 argument_list|,
@@ -6444,9 +6506,6 @@ directive|endif
 comment|/* MIME8TO7 */
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  PUT_VANILLA_HEADER -- output a fairly ordinary header ** **	Parameters: **		h -- the structure describing this header **		v -- the value of this header **		mci -- the connection info for output ** **	Returns: **		none. */
@@ -6519,7 +6578,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|snprintf
+name|sm_snprintf
 argument_list|(
 name|obuf
 argument_list|,
@@ -6594,7 +6653,10 @@ argument_list|)
 operator|-
 literal|1
 expr_stmt|;
-name|snprintf
+operator|(
+name|void
+operator|)
+name|sm_snprintf
 argument_list|(
 name|obp
 argument_list|,
@@ -6655,7 +6717,10 @@ operator|=
 literal|' '
 expr_stmt|;
 block|}
-name|snprintf
+operator|(
+name|void
+operator|)
+name|sm_snprintf
 argument_list|(
 name|obp
 argument_list|,
@@ -6668,19 +6733,19 @@ argument_list|)
 argument_list|,
 literal|"%.*s"
 argument_list|,
-operator|(
+call|(
 name|int
-operator|)
-sizeof|sizeof
+call|)
+argument_list|(
+name|SPACELEFT
+argument_list|(
 name|obuf
-operator|-
-operator|(
+argument_list|,
 name|obp
-operator|-
-name|obuf
-operator|)
+argument_list|)
 operator|-
 literal|1
+argument_list|)
 argument_list|,
 name|v
 argument_list|)
@@ -6702,11 +6767,8 @@ expr_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* **  COMMAIZE -- output a header field, making a comma-translated list. ** **	Parameters: **		h -- the header field to output. **		p -- the value to put in it. **		oldstyle -- TRUE if this is an old style header. **		mci -- the connection information. **		e -- the envelope containing the message. ** **	Returns: **		none. ** **	Side Effects: **		outputs "p" to file "fp". */
+comment|/* **  COMMAIZE -- output a header field, making a comma-translated list. ** **	Parameters: **		h -- the header field to output. **		p -- the value to put in it. **		oldstyle -- true if this is an old style header. **		mci -- the connection information. **		e -- the envelope containing the message. ** **	Returns: **		none. ** **	Side Effects: **		outputs "p" to file "fp". */
 end_comment
 
 begin_function
@@ -6761,7 +6823,7 @@ decl_stmt|;
 name|bool
 name|firstone
 init|=
-name|TRUE
+name|true
 decl_stmt|;
 name|int
 name|putflags
@@ -6786,7 +6848,7 @@ argument_list|,
 literal|2
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"commaize(%s: %s)\n"
 argument_list|,
@@ -6821,7 +6883,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|snprintf
+name|sm_snprintf
 argument_list|(
 name|obp
 argument_list|,
@@ -7028,16 +7090,8 @@ name|oldp
 expr_stmt|;
 break|break;
 block|}
+operator|++
 name|p
-operator|+=
-operator|*
-name|p
-operator|==
-literal|'@'
-condition|?
-literal|1
-else|:
-literal|2
 expr_stmt|;
 while|while
 condition|(
@@ -7176,6 +7230,10 @@ operator|=
 name|udbsender
 argument_list|(
 name|name
+argument_list|,
+name|e
+operator|->
+name|e_rpool
 argument_list|)
 expr_stmt|;
 if|if
@@ -7235,15 +7293,15 @@ name|denlstring
 argument_list|(
 name|name
 argument_list|,
-name|FALSE
+name|false
 argument_list|,
-name|TRUE
+name|true
 argument_list|)
 expr_stmt|;
 comment|/* 		**  record data progress so DNS timeouts 		**  don't cause DATA timeouts 		*/
 name|DataProgress
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 comment|/* output the name with nice formatting */
 name|opos
@@ -7272,9 +7330,14 @@ operator|!
 name|firstone
 condition|)
 block|{
-name|snprintf
+operator|(
+name|void
+operator|)
+name|sm_strlcpy
 argument_list|(
 name|obp
+argument_list|,
+literal|",\n"
 argument_list|,
 name|SPACELEFT
 argument_list|(
@@ -7282,8 +7345,6 @@ name|obuf
 argument_list|,
 name|obp
 argument_list|)
-argument_list|,
-literal|",\n"
 argument_list|)
 expr_stmt|;
 name|putxline
@@ -7307,7 +7368,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strlcpy
+name|sm_strlcpy
 argument_list|(
 name|obp
 argument_list|,
@@ -7343,9 +7404,14 @@ operator|!
 name|firstone
 condition|)
 block|{
-name|snprintf
+operator|(
+name|void
+operator|)
+name|sm_strlcpy
 argument_list|(
 name|obp
+argument_list|,
+literal|", "
 argument_list|,
 name|SPACELEFT
 argument_list|(
@@ -7353,8 +7419,6 @@ name|obuf
 argument_list|,
 name|obp
 argument_list|)
-argument_list|,
-literal|", "
 argument_list|)
 expr_stmt|;
 name|obp
@@ -7390,7 +7454,7 @@ name|c
 expr_stmt|;
 name|firstone
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 operator|*
 name|p
@@ -7420,11 +7484,8 @@ expr_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* **  COPYHEADER -- copy header list ** **	This routine is the equivalent of newstr for header lists ** **	Parameters: **		header -- list of header structures to copy. ** **	Returns: **		a copy of 'header'. ** **	Side Effects: **		none. */
+comment|/* **  COPYHEADER -- copy header list ** **	This routine is the equivalent of newstr for header lists ** **	Parameters: **		header -- list of header structures to copy. **		rpool -- resource pool, or NULL ** **	Returns: **		a copy of 'header'. ** **	Side Effects: **		none. */
 end_comment
 
 begin_function
@@ -7433,11 +7494,17 @@ modifier|*
 name|copyheader
 parameter_list|(
 name|header
+parameter_list|,
+name|rpool
 parameter_list|)
 specifier|register
 name|HDR
 modifier|*
 name|header
+decl_stmt|;
+name|SM_RPOOL_T
+modifier|*
+name|rpool
 decl_stmt|;
 block|{
 specifier|register
@@ -7471,8 +7538,10 @@ operator|(
 name|HDR
 operator|*
 operator|)
-name|xalloc
+name|sm_rpool_malloc_x
 argument_list|(
+name|rpool
+argument_list|,
 sizeof|sizeof
 expr|*
 name|newhdr
@@ -7516,9 +7585,6 @@ name|ret
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  FIX_MIME_HEADER -- possibly truncate/rebalance parameters in a MIME header ** **	Run through all of the parameters of a MIME header and **	possibly truncate and rebalance the parameter according **	to MaxMimeFieldLength. ** **	Parameters: **		string -- the full header ** **	Returns: **		length of last offending field, 0 if all ok. ** **	Side Effects: **		string modified in place */

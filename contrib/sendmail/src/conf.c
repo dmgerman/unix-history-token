@@ -1,35 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2001 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-name|char
-name|id
-index|[]
-init|=
-literal|"@(#)$Id: conf.c,v 8.646.2.2.2.87 2001/07/20 23:56:52 gshapiro Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* ! lint */
-end_comment
-
-begin_comment
-comment|/* $FreeBSD$ */
+comment|/*  * Copyright (c) 1998-2002 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -37,6 +8,17 @@ include|#
 directive|include
 file|<sendmail.h>
 end_include
+
+begin_macro
+name|SM_RCSID
+argument_list|(
+literal|"@(#)$Id: conf.c,v 8.939 2002/01/09 17:26:28 gshapiro Exp $"
+argument_list|)
+end_macro
+
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
 
 begin_include
 include|#
@@ -128,6 +110,19 @@ begin_decl_stmt
 specifier|static
 name|void
 name|setupmailers
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|setupqueues
 name|__P
 argument_list|(
 operator|(
@@ -242,6 +237,14 @@ block|{
 literal|"return-receipt-to"
 block|,
 name|H_RECEIPTTO
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|"disposition-notification-to"
+block|,
+name|H_FROM
 block|,
 name|NULL
 block|}
@@ -526,6 +529,12 @@ name|PRIV_NOVRFY
 block|}
 block|,
 block|{
+literal|"restrictexpand"
+block|,
+name|PRIV_RESTRICTEXPAND
+block|}
+block|,
+block|{
 literal|"restrictmailq"
 block|,
 name|PRIV_RESTRICTMAILQ
@@ -803,21 +812,18 @@ block|,
 name|DBS_INSUFFICIENTENTROPY
 block|}
 block|,
-if|#
-directive|if
-name|_FFR_UNSAFE_SASL
 block|{
-literal|"groupreadablesaslfile"
+literal|"groupreadablesasldbfile"
 block|,
-name|DBS_GROUPREADABLESASLFILE
+name|DBS_GROUPREADABLESASLDBFILE
 block|}
 block|,
-endif|#
-directive|endif
-comment|/* _FFR_UNSAFE_SASL */
-if|#
-directive|if
-name|_FFR_UNSAFE_WRITABLE_INCLUDE
+block|{
+literal|"groupwritablesasldbfile"
+block|,
+name|DBS_GROUPWRITABLESASLDBFILE
+block|}
+block|,
 block|{
 literal|"groupwritableforwardfile"
 block|,
@@ -842,9 +848,24 @@ block|,
 name|DBS_WORLDWRITABLEINCLUDEFILE
 block|}
 block|,
+block|{
+literal|"groupreadablekeyfile"
+block|,
+name|DBS_GROUPREADABLEKEYFILE
+block|}
+block|,
+if|#
+directive|if
+name|_FFR_GROUPREADABLEAUTHINFOFILE
+block|{
+literal|"groupreadableadefaultauthinfofile"
+block|,
+name|DBS_GROUPREADABLEAUTHINFOFILE
+block|}
+block|,
 endif|#
 directive|endif
-comment|/* _FFR_UNSAFE_WRITABLE_INCLUDE */
+comment|/* _FFR_GROUPREADABLEAUTHINFOFILE */
 block|{
 name|NULL
 block|,
@@ -870,11 +891,8 @@ begin_comment
 comment|/* max open files; reset in 4.2bsd */
 end_comment
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* **  SETDEFAULTS -- set default values ** **	Because of the way freezing is done, these must be initialized **	using direct code. ** **	Parameters: **		e -- the default envelope. ** **	Returns: **		none. ** **	Side Effects: **		Initializes a bunch of global variables to their **		default values. */
+comment|/* **  SETDEFAULTS -- set default values ** **	Some of these must be initialized using direct code since they **	depend on run-time values. So let's do all of them this way. ** **	Parameters: **		e -- the default envelope. ** **	Returns: **		none. ** **	Side Effects: **		Initializes a bunch of global variables to their **		default values. */
 end_comment
 
 begin_define
@@ -993,6 +1011,17 @@ operator|*
 literal|20
 expr_stmt|;
 comment|/* option q */
+if|#
+directive|if
+name|_FFR_QUARANTINE
+name|QueueMode
+operator|=
+name|QM_NORMAL
+expr_stmt|;
+comment|/* what queue items to act upon */
+endif|#
+directive|endif
+comment|/* _FFR_QUARANTINE */
 name|FileMode
 operator|=
 operator|(
@@ -1007,9 +1036,6 @@ else|:
 literal|0600
 expr_stmt|;
 comment|/* option F */
-if|#
-directive|if
-name|_FFR_QUEUE_FILE_MODE
 name|QueueFileMode
 operator|=
 operator|(
@@ -1024,9 +1050,6 @@ else|:
 literal|0600
 expr_stmt|;
 comment|/* option QueueFileMode */
-endif|#
-directive|endif
-comment|/* _FFR_QUEUE_FILE_MODE */
 if|if
 condition|(
 operator|(
@@ -1140,7 +1163,7 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"setdefaults: DefUser=%s, DefUid=%d, DefGid=%d\n"
 argument_list|,
@@ -1190,7 +1213,25 @@ expr_stmt|;
 comment|/* option e */
 name|e
 operator|->
-name|e_queuedir
+name|e_qgrp
+operator|=
+name|NOQGRP
+expr_stmt|;
+name|e
+operator|->
+name|e_qdir
+operator|=
+name|NOQDIR
+expr_stmt|;
+name|e
+operator|->
+name|e_xfqgrp
+operator|=
+name|NOQGRP
+expr_stmt|;
+name|e
+operator|->
+name|e_xfqdir
 operator|=
 name|NOQDIR
 expr_stmt|;
@@ -1203,7 +1244,7 @@ argument_list|()
 expr_stmt|;
 name|SevenBitInput
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 comment|/* option 7 */
 name|MaxMciCache
@@ -1222,11 +1263,22 @@ operator|=
 literal|9
 expr_stmt|;
 comment|/* option L */
+if|#
+directive|if
+name|MILTER
+name|MilterLogLevel
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* MILTER */
 name|inittimeouts
 argument_list|(
 name|NULL
 argument_list|,
-name|FALSE
+name|false
 argument_list|)
 expr_stmt|;
 comment|/* option r */
@@ -1237,17 +1289,17 @@ expr_stmt|;
 comment|/* option p */
 name|MeToo
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 comment|/* option m */
 name|SendMIMEErrors
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 comment|/* option f */
 name|SuperSafe
 operator|=
-name|TRUE
+name|SAFE_REALLY
 expr_stmt|;
 comment|/* option s */
 name|clrbitmap
@@ -1357,11 +1409,15 @@ literal|10
 expr_stmt|;
 name|ColonOkInAddr
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 name|DontLockReadFiles
 operator|=
-name|TRUE
+name|true
+expr_stmt|;
+name|DontProbeInterfaces
+operator|=
+name|DPI_PROBEALL
 expr_stmt|;
 name|DoubleBounceAddr
 operator|=
@@ -1375,6 +1431,10 @@ name|MaxForwardEntries
 operator|=
 literal|0
 expr_stmt|;
+name|FastSplit
+operator|=
+literal|1
+expr_stmt|;
 if|#
 directive|if
 name|SASL
@@ -1385,9 +1445,23 @@ argument_list|(
 name|AUTH_MECHANISMS
 argument_list|)
 expr_stmt|;
+name|MaxSLBits
+operator|=
+name|INT_MAX
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* SASL */
+if|#
+directive|if
+name|STARTTLS
+name|TLS_Srv_Opts
+operator|=
+name|TLS_I_SRV
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* STARTTLS */
 ifdef|#
 directive|ifdef
 name|HESIOD_INIT
@@ -1493,7 +1567,7 @@ name|NULL
 expr_stmt|;
 if|#
 directive|if
-name|_FFR_MILTER
+name|MILTER
 name|InputFilters
 index|[
 literal|0
@@ -1503,8 +1577,11 @@ name|NULL
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* _FFR_MILTER */
+comment|/* MILTER */
 name|setupmaps
+argument_list|()
+expr_stmt|;
+name|setupqueues
 argument_list|()
 expr_stmt|;
 name|setupmailers
@@ -1548,24 +1625,33 @@ argument_list|(
 name|DefUid
 argument_list|)
 expr_stmt|;
-name|snprintf
+operator|(
+name|void
+operator|)
+name|sm_strlcpy
 argument_list|(
 name|defuserbuf
 argument_list|,
-sizeof|sizeof
-name|defuserbuf
-argument_list|,
-literal|"%s"
-argument_list|,
+operator|(
 name|defpwent
 operator|==
 name|NULL
+operator|||
+name|defpwent
+operator|->
+name|pw_name
+operator|==
+name|NULL
+operator|)
 condition|?
 literal|"nobody"
 else|:
 name|defpwent
 operator|->
 name|pw_name
+argument_list|,
+sizeof|sizeof
+name|defuserbuf
 argument_list|)
 expr_stmt|;
 if|if
@@ -1577,7 +1663,7 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"setdefuser: DefUid=%d, DefUser=%s\n"
 argument_list|,
@@ -1592,8 +1678,48 @@ expr_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
+begin_comment
+comment|/* **  SETUPQUEUES -- initialize default queues ** **	The mqueue QUEUE structure gets filled in after readcf() but **	we need something to point to now for the mailer setup, **	which use "mqueue" as default queue. */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|setupqueues
+parameter_list|()
+block|{
+name|char
+name|buf
+index|[
+literal|100
+index|]
+decl_stmt|;
+name|MaxRunnersPerQueue
+operator|=
+literal|1
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sm_strlcpy
+argument_list|(
+name|buf
+argument_list|,
+literal|"mqueue, P=/var/spool/mqueue"
+argument_list|,
+sizeof|sizeof
+name|buf
+argument_list|)
+expr_stmt|;
+name|makequeue
+argument_list|(
+name|buf
+argument_list|,
+name|false
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/* **  SETUPMAILERS -- initialize default mailers */
@@ -1614,7 +1740,7 @@ decl_stmt|;
 operator|(
 name|void
 operator|)
-name|strlcpy
+name|sm_strlcpy
 argument_list|(
 name|buf
 argument_list|,
@@ -1632,7 +1758,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strlcpy
+name|sm_strlcpy
 argument_list|(
 name|buf
 argument_list|,
@@ -1650,7 +1776,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strlcpy
+name|sm_strlcpy
 argument_list|(
 name|buf
 argument_list|,
@@ -1670,9 +1796,6 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  SETUPMAPS -- set up map classes */
@@ -1714,8 +1837,8 @@ name|STAB
 modifier|*
 name|s
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NEWDB
 name|MAPDEF
 argument_list|(
@@ -1762,8 +1885,8 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* NEWDB */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NDBM
 name|MAPDEF
 argument_list|(
@@ -1789,8 +1912,8 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* NDBM */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NIS
 name|MAPDEF
 argument_list|(
@@ -1814,8 +1937,8 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* NIS */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NISPLUS
 name|MAPDEF
 argument_list|(
@@ -1839,8 +1962,8 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* NISPLUS */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|LDAPMAP
 name|MAPDEF
 argument_list|(
@@ -1849,28 +1972,10 @@ argument_list|,
 name|NULL
 argument_list|,
 name|MCF_ALIASOK
+operator||
+name|MCF_NOTPERSIST
 argument_list|,
 name|ldapmap_parseargs
-argument_list|,
-name|ldapmap_open
-argument_list|,
-name|ldapmap_close
-argument_list|,
-name|ldapmap_lookup
-argument_list|,
-name|null_map_store
-argument_list|)
-expr_stmt|;
-comment|/* Deprecated */
-name|MAPDEF
-argument_list|(
-literal|"ldapx"
-argument_list|,
-name|NULL
-argument_list|,
-name|MCF_ALIASOK
-argument_list|,
-name|ldapx_map_parseargs
 argument_list|,
 name|ldapmap_open
 argument_list|,
@@ -1884,8 +1989,8 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* LDAPMAP */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|PH_MAP
 name|MAPDEF
 argument_list|(
@@ -1893,7 +1998,7 @@ literal|"ph"
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|MCF_NOTPERSIST
 argument_list|,
 name|ph_map_parseargs
 argument_list|,
@@ -1935,8 +2040,8 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* MAP_NSD */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|HESIOD
 name|MAPDEF
 argument_list|(
@@ -1952,7 +2057,7 @@ name|map_parseargs
 argument_list|,
 name|hes_map_open
 argument_list|,
-name|null_map_close
+name|hes_map_close
 argument_list|,
 name|hes_map_lookup
 argument_list|,
@@ -1994,6 +2099,37 @@ block|MAPDEF("dns", NULL, 0, 		dns_map_init, null_map_open, null_map_close, 		dn
 endif|#
 directive|endif
 comment|/* 0 */
+if|#
+directive|if
+name|NAMED_BIND
+if|#
+directive|if
+name|DNSMAP
+name|MAPDEF
+argument_list|(
+literal|"dns"
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+name|dns_map_parseargs
+argument_list|,
+name|dns_map_open
+argument_list|,
+name|null_map_close
+argument_list|,
+name|dns_map_lookup
+argument_list|,
+name|null_map_store
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DNSMAP */
+endif|#
+directive|endif
+comment|/* NAMED_BIND */
 if|#
 directive|if
 name|NAMED_BIND
@@ -2142,8 +2278,8 @@ argument_list|,
 name|null_map_store
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|MAP_REGEX
 name|MAPDEF
 argument_list|(
@@ -2377,9 +2513,6 @@ directive|undef
 name|MAPDEF
 end_undef
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* **  INITHOSTMAPS -- initial host-dependent maps ** **	This should act as an interface to any local service switch **	provided by the host operating system. ** **	Parameters: **		none ** **	Returns: **		none ** **	Side Effects: **		Should define maps "host" and "users" as necessary **		for this OS.  If they are not defined, they will get **		a default value later.  It should check to make sure **		they are not defined first, since it's possible that **		the config file has provided an override. */
 end_comment
@@ -2419,32 +2552,32 @@ comment|/* 	**  Set up default hosts maps. 	*/
 if|#
 directive|if
 literal|0
-block|nmaps = switch_map_find("hosts", maptype, mapreturn); 	for (i = 0; i< nmaps; i++) 	{ 		if (strcmp(maptype[i], "files") == 0&& 		    stab("hosts.files", ST_MAP, ST_FIND) == NULL) 		{ 			(void) strlcpy(buf, "hosts.files text -k 0 -v 1 /etc/hosts", 				sizeof buf); 			(void) makemapentry(buf); 		}
+block|nmaps = switch_map_find("hosts", maptype, mapreturn); 	for (i = 0; i< nmaps; i++) 	{ 		if (strcmp(maptype[i], "files") == 0&& 		    stab("hosts.files", ST_MAP, ST_FIND) == NULL) 		{ 			(void) sm_strlcpy(buf, "hosts.files text -k 0 -v 1 /etc/hosts", 				sizeof buf); 			(void) makemapentry(buf); 		}
 if|#
 directive|if
 name|NAMED_BIND
-block|else if (strcmp(maptype[i], "dns") == 0&& 		    stab("hosts.dns", ST_MAP, ST_FIND) == NULL) 		{ 			(void) strlcpy(buf, "hosts.dns dns A", sizeof buf); 			(void) makemapentry(buf); 		}
+block|else if (strcmp(maptype[i], "dns") == 0&& 			 stab("hosts.dns", ST_MAP, ST_FIND) == NULL) 		{ 			(void) sm_strlcpy(buf, "hosts.dns dns A", sizeof buf); 			(void) makemapentry(buf); 		}
 endif|#
 directive|endif
 comment|/* NAMED_BIND */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NISPLUS
-block|else if (strcmp(maptype[i], "nisplus") == 0&& 		    stab("hosts.nisplus", ST_MAP, ST_FIND) == NULL) 		{ 			(void) strlcpy(buf, "hosts.nisplus nisplus -k name -v address hosts.org_dir", 				sizeof buf); 			(void) makemapentry(buf); 		}
+block|else if (strcmp(maptype[i], "nisplus") == 0&& 			 stab("hosts.nisplus", ST_MAP, ST_FIND) == NULL) 		{ 			(void) sm_strlcpy(buf, "hosts.nisplus nisplus -k name -v address hosts.org_dir", 				sizeof buf); 			(void) makemapentry(buf); 		}
 endif|#
 directive|endif
 comment|/* NISPLUS */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NIS
-block|else if (strcmp(maptype[i], "nis") == 0&& 		    stab("hosts.nis", ST_MAP, ST_FIND) == NULL) 		{ 			(void) strlcpy(buf, "hosts.nis nis -k 0 -v 1 hosts.byname", 				sizeof buf); 			(void) makemapentry(buf); 		}
+block|else if (strcmp(maptype[i], "nis") == 0&& 			 stab("hosts.nis", ST_MAP, ST_FIND) == NULL) 		{ 			(void) sm_strlcpy(buf, "hosts.nis nis -k 0 -v 1 hosts.byname", 				sizeof buf); 			(void) makemapentry(buf); 		}
 endif|#
 directive|endif
 comment|/* NIS */
 if|#
 directive|if
 name|NETINFO
-block|else if (strcmp(maptype[i], "netinfo") == 0)&& 		    stab("hosts.netinfo", ST_MAP, ST_FIND) == NULL) 		{ 			(void) strlcpy(buf, "hosts.netinfo netinfo -v name /machines", 				sizeof buf); 			(void) makemapentry(buf); 		}
+block|else if (strcmp(maptype[i], "netinfo") == 0&& 			 stab("hosts.netinfo", ST_MAP, ST_FIND) == NULL) 		{ 			(void) sm_strlcpy(buf, "hosts.netinfo netinfo -v name /machines", 				sizeof buf); 			(void) makemapentry(buf); 		}
 endif|#
 directive|endif
 comment|/* NETINFO */
@@ -2471,7 +2604,7 @@ comment|/* user didn't initialize: set up host map */
 operator|(
 name|void
 operator|)
-name|strlcpy
+name|sm_strlcpy
 argument_list|(
 name|buf
 argument_list|,
@@ -2493,7 +2626,7 @@ condition|)
 operator|(
 name|void
 operator|)
-name|strlcat
+name|sm_strlcat
 argument_list|(
 name|buf
 argument_list|,
@@ -2570,7 +2703,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|strlcpy
+name|sm_strlcpy
 argument_list|(
 name|buf
 argument_list|,
@@ -2589,8 +2722,8 @@ name|buf
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NISPLUS
 elseif|else
 if|if
@@ -2622,7 +2755,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|strlcpy
+name|sm_strlcpy
 argument_list|(
 name|buf
 argument_list|,
@@ -2644,8 +2777,8 @@ block|}
 endif|#
 directive|endif
 comment|/* NISPLUS */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NIS
 elseif|else
 if|if
@@ -2677,7 +2810,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|strlcpy
+name|sm_strlcpy
 argument_list|(
 name|buf
 argument_list|,
@@ -2732,7 +2865,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|strlcpy
+name|sm_strlcpy
 argument_list|(
 name|buf
 argument_list|,
@@ -2754,8 +2887,8 @@ block|}
 endif|#
 directive|endif
 comment|/* NETINFO */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|HESIOD
 elseif|else
 if|if
@@ -2787,7 +2920,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|strlcpy
+name|sm_strlcpy
 argument_list|(
 name|buf
 argument_list|,
@@ -2827,7 +2960,7 @@ block|{
 operator|(
 name|void
 operator|)
-name|strlcpy
+name|sm_strlcpy
 argument_list|(
 name|buf
 argument_list|,
@@ -2851,37 +2984,34 @@ directive|if
 literal|0
 comment|/* "user" map class is a better choice */
 comment|/* 	**  Set up default users maps. 	*/
-block|nmaps = switch_map_find("passwd", maptype, mapreturn); 	for (i = 0; i< nmaps; i++) 	{ 		if (strcmp(maptype[i], "files") == 0&& 		    stab("users.files", ST_MAP, ST_FIND) == NULL) 		{ 			(void) strlcpy(buf, "users.files text -m -z: -k0 -v6 /etc/passwd", 				sizeof buf); 			(void) makemapentry(buf); 		}
-ifdef|#
-directive|ifdef
+block|nmaps = switch_map_find("passwd", maptype, mapreturn); 	for (i = 0; i< nmaps; i++) 	{ 		if (strcmp(maptype[i], "files") == 0&& 		    stab("users.files", ST_MAP, ST_FIND) == NULL) 		{ 			(void) sm_strlcpy(buf, "users.files text -m -z: -k0 -v6 /etc/passwd", 				sizeof buf); 			(void) makemapentry(buf); 		}
+if|#
+directive|if
 name|NISPLUS
-block|else if (strcmp(maptype[i], "nisplus") == 0&& 		    stab("users.nisplus", ST_MAP, ST_FIND) == NULL) 		{ 			(void) strlcpy(buf, "users.nisplus nisplus -m -kname -vhome passwd.org_dir", 				sizeof buf); 			(void) makemapentry(buf); 		}
+block|else if (strcmp(maptype[i], "nisplus") == 0&& 		    stab("users.nisplus", ST_MAP, ST_FIND) == NULL) 		{ 			(void) sm_strlcpy(buf, "users.nisplus nisplus -m -kname -vhome passwd.org_dir", 				sizeof buf); 			(void) makemapentry(buf); 		}
 endif|#
 directive|endif
 comment|/* NISPLUS */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NIS
-block|else if (strcmp(maptype[i], "nis") == 0&& 		    stab("users.nis", ST_MAP, ST_FIND) == NULL) 		{ 			(void) strlcpy(buf, "users.nis nis -m passwd.byname", 				sizeof buf); 			(void) makemapentry(buf); 		}
+block|else if (strcmp(maptype[i], "nis") == 0&& 		    stab("users.nis", ST_MAP, ST_FIND) == NULL) 		{ 			(void) sm_strlcpy(buf, "users.nis nis -m passwd.byname", 				sizeof buf); 			(void) makemapentry(buf); 		}
 endif|#
 directive|endif
 comment|/* NIS */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|HESIOD
-block|else if (strcmp(maptype[i], "hesiod") == 0)&& 		    stab("users.hesiod", ST_MAP, ST_FIND) == NULL) 		{ 			(void) strlcpy(buf, "users.hesiod hesiod", sizeof buf); 			(void) makemapentry(buf); 		}
+block|else if (strcmp(maptype[i], "hesiod") == 0&& 			 stab("users.hesiod", ST_MAP, ST_FIND) == NULL) 		{ 			(void) sm_strlcpy(buf, "users.hesiod hesiod", sizeof buf); 			(void) makemapentry(buf); 		}
 endif|#
 directive|endif
 comment|/* HESIOD */
-block|} 	if (stab("users", ST_MAP, ST_FIND) == NULL) 	{ 		(void) strlcpy(buf, "users switch -m passwd", sizeof buf); 		(void) makemapentry(buf); 	}
+block|} 	if (stab("users", ST_MAP, ST_FIND) == NULL) 	{ 		(void) sm_strlcpy(buf, "users switch -m passwd", sizeof buf); 		(void) makemapentry(buf); 	}
 endif|#
 directive|endif
 comment|/* 0 */
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  SWITCH_MAP_FIND -- find the list of types associated with a map ** **	This is the system-dependent interface to the service switch. ** **	Parameters: **		service -- the name of the service of interest. **		maptype -- an out-array of strings containing the types **			of access to use for this service.  There can **			be at most MAXMAPSTACK types for a single service. **		mapreturn -- an out-array of return information bitmaps **			for the map. ** **	Returns: **		The number of map types filled in, or -1 for failure. ** **	Side effects: **		Preserves errno so nothing in the routine clobbers it. */
@@ -2921,6 +3051,42 @@ end_endif
 
 begin_comment
 comment|/* defined(SOLARIS) || (defined(sony_news)&& defined(__svr4)) */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|_FFR_HPUX_NSSWITCH
+end_if
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__hpux
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_USE_SUN_NSSWITCH_
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __hpux */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_HPUX_NSSWITCH */
 end_comment
 
 begin_ifdef
@@ -3472,6 +3638,11 @@ name|STAB
 modifier|*
 name|st
 decl_stmt|;
+specifier|static
+name|time_t
+name|servicecachetime
+decl_stmt|;
+comment|/* time service switch was cached */
 name|time_t
 name|now
 init|=
@@ -3503,7 +3674,7 @@ condition|(
 operator|(
 name|now
 operator|-
-name|ServiceCacheTime
+name|servicecachetime
 operator|)
 operator|>
 operator|(
@@ -3514,7 +3685,7 @@ condition|)
 block|{
 comment|/* (re)read service switch */
 specifier|register
-name|FILE
+name|SM_FILE_T
 modifier|*
 name|fp
 decl_stmt|;
@@ -3545,7 +3716,7 @@ if|if
 condition|(
 name|ConfigFileRead
 condition|)
-name|ServiceCacheTime
+name|servicecachetime
 operator|=
 name|now
 expr_stmt|;
@@ -3577,14 +3748,16 @@ index|]
 decl_stmt|;
 while|while
 condition|(
-name|fgets
+name|sm_io_fgets
 argument_list|(
+name|fp
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
 name|buf
-argument_list|,
-name|fp
 argument_list|)
 operator|!=
 name|NULL
@@ -3724,6 +3897,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+comment|/* XXX */
 name|p
 operator|=
 name|newstr
@@ -3814,9 +3988,11 @@ block|}
 operator|(
 name|void
 operator|)
-name|fclose
+name|sm_io_close
 argument_list|(
 name|fp
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|)
 expr_stmt|;
 block|}
@@ -3982,8 +4158,8 @@ comment|/* defined(AUTO_NETINFO_ALIASES)&& defined (NETINFO) */
 ifdef|#
 directive|ifdef
 name|AUTO_NIS_ALIASES
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NISPLUS
 name|maptype
 index|[
@@ -3996,8 +4172,8 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* NISPLUS */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NIS
 name|maptype
 index|[
@@ -4126,9 +4302,6 @@ comment|/* !defined(_USE_SUN_NSSWITCH_) */
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* **  USERNAME -- return the user id of the logged in user. ** **	Parameters: **		none. ** **	Returns: **		The login name of the logged in user. ** **	Side Effects: **		none. ** **	Notes: **		The return value is statically allocated. */
 end_comment
@@ -4200,12 +4373,9 @@ name|NULL
 condition|)
 name|myname
 operator|=
-name|newstr
-argument_list|(
 name|pw
 operator|->
 name|pw_name
-argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -4215,13 +4385,6 @@ name|uid
 init|=
 name|RealUid
 decl_stmt|;
-name|myname
-operator|=
-name|newstr
-argument_list|(
-name|myname
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -4263,12 +4426,9 @@ name|NULL
 condition|)
 name|myname
 operator|=
-name|newstr
-argument_list|(
 name|pw
 operator|->
 name|pw_name
-argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -4296,15 +4456,41 @@ operator|=
 literal|"postmaster"
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|strpbrk
+argument_list|(
+name|myname
+argument_list|,
+literal|",;:/|\"\\"
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+name|myname
+operator|=
+name|addquotes
+argument_list|(
+name|myname
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+else|else
+name|myname
+operator|=
+name|sm_pstrdup_x
+argument_list|(
+name|myname
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 name|myname
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  TTYPATH -- Get the path of the user's tty ** **	Returns the pathname of the user's tty.  Returns NULL if **	the user is not logged in or if s/he has write permission **	denied. ** **	Parameters: **		none ** **	Returns: **		pathname of the user's tty. **		NULL if not logged in or write permission denied. ** **	Side Effects: **		none. ** **	WARNING: **		Return value is in a local buffer. ** **	Called By: **		savemail */
@@ -4432,9 +4618,6 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* **  CHECKCOMPAT -- check for From and To person compatible. ** **	This routine can be supplied on a per-installation basis **	to determine whether a person is allowed to send a message. **	This allows restriction of certain types of internet **	forwarding or registration of users. ** **	If the hosts are found to be incompatible, an error **	message should be given using "usrerr" and an EX_ code **	should be returned.  You can also set to->q_status to **	a DSN-style status code. ** **	EF_NO_BODY_RETN can be set in e->e_flags to suppress the **	body during the return-to-sender function; this should be done **	on huge messages.  This bit may already be set by the ESMTP **	protocol. ** **	Parameters: **		to -- the person being sent to. ** **	Returns: **		an exit status ** **	Side Effects: **		none (unless you include the usrerr stuff) */
 end_comment
@@ -4467,7 +4650,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"checkcompat(to=%s, from=%s)\n"
 argument_list|,
@@ -4556,909 +4739,6 @@ name|EX_OK
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/* **  SETSIGNAL -- set a signal handler ** **	This is essentially old BSD "signal(3)". ** **	NOTE:	THIS CAN BE CALLED FROM A SIGNAL HANDLER.  DO NOT ADD **		ANYTHING TO THIS ROUTINE UNLESS YOU KNOW WHAT YOU ARE **		DOING. */
-end_comment
-
-begin_function
-name|sigfunc_t
-name|setsignal
-parameter_list|(
-name|sig
-parameter_list|,
-name|handler
-parameter_list|)
-name|int
-name|sig
-decl_stmt|;
-name|sigfunc_t
-name|handler
-decl_stmt|;
-block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SA_RESTART
-argument_list|)
-operator|||
-operator|(
-operator|!
-name|defined
-argument_list|(
-name|SYS5SIGNALS
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|BSD4_3
-argument_list|)
-operator|)
-name|struct
-name|sigaction
-name|n
-decl_stmt|,
-name|o
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* defined(SA_RESTART) || (!defined(SYS5SIGNALS)&& !defined(BSD4_3)) */
-comment|/* 	**  First, try for modern signal calls 	**  and restartable syscalls 	*/
-ifdef|#
-directive|ifdef
-name|SA_RESTART
-name|memset
-argument_list|(
-operator|&
-name|n
-argument_list|,
-literal|'\0'
-argument_list|,
-sizeof|sizeof
-name|n
-argument_list|)
-expr_stmt|;
-if|#
-directive|if
-name|USE_SA_SIGACTION
-name|n
-operator|.
-name|sa_sigaction
-operator|=
-operator|(
-name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|(
-name|int
-argument_list|,
-name|siginfo_t
-operator|*
-argument_list|,
-name|void
-operator|*
-argument_list|)
-operator|)
-name|handler
-expr_stmt|;
-name|n
-operator|.
-name|sa_flags
-operator|=
-name|SA_RESTART
-operator||
-name|SA_SIGINFO
-expr_stmt|;
-else|#
-directive|else
-comment|/* USE_SA_SIGACTION */
-name|n
-operator|.
-name|sa_handler
-operator|=
-name|handler
-expr_stmt|;
-name|n
-operator|.
-name|sa_flags
-operator|=
-name|SA_RESTART
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* USE_SA_SIGACTION */
-if|if
-condition|(
-name|sigaction
-argument_list|(
-name|sig
-argument_list|,
-operator|&
-name|n
-argument_list|,
-operator|&
-name|o
-argument_list|)
-operator|<
-literal|0
-condition|)
-return|return
-name|SIG_ERR
-return|;
-return|return
-name|o
-operator|.
-name|sa_handler
-return|;
-else|#
-directive|else
-comment|/* SA_RESTART */
-comment|/* 	**  Else check for SYS5SIGNALS or 	**  BSD4_3 signals 	*/
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SYS5SIGNALS
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|BSD4_3
-argument_list|)
-ifdef|#
-directive|ifdef
-name|BSD4_3
-return|return
-name|signal
-argument_list|(
-name|sig
-argument_list|,
-name|handler
-argument_list|)
-return|;
-else|#
-directive|else
-comment|/* BSD4_3 */
-return|return
-name|sigset
-argument_list|(
-name|sig
-argument_list|,
-name|handler
-argument_list|)
-return|;
-endif|#
-directive|endif
-comment|/* BSD4_3 */
-else|#
-directive|else
-comment|/* defined(SYS5SIGNALS) || defined(BSD4_3) */
-comment|/* 	**  Finally, if nothing else is available, 	**  go for a default 	*/
-name|memset
-argument_list|(
-operator|&
-name|n
-argument_list|,
-literal|'\0'
-argument_list|,
-sizeof|sizeof
-name|n
-argument_list|)
-expr_stmt|;
-name|n
-operator|.
-name|sa_handler
-operator|=
-name|handler
-expr_stmt|;
-if|if
-condition|(
-name|sigaction
-argument_list|(
-name|sig
-argument_list|,
-operator|&
-name|n
-argument_list|,
-operator|&
-name|o
-argument_list|)
-operator|<
-literal|0
-condition|)
-return|return
-name|SIG_ERR
-return|;
-return|return
-name|o
-operator|.
-name|sa_handler
-return|;
-endif|#
-directive|endif
-comment|/* defined(SYS5SIGNALS) || defined(BSD4_3) */
-endif|#
-directive|endif
-comment|/* SA_RESTART */
-block|}
-end_function
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/* **  ALLSIGNALS -- act on all signals ** **	Parameters: **		block -- whether to block or release all signals. ** **	Returns: **		none. */
-end_comment
-
-begin_function
-name|void
-name|allsignals
-parameter_list|(
-name|block
-parameter_list|)
-name|bool
-name|block
-decl_stmt|;
-block|{
-ifdef|#
-directive|ifdef
-name|BSD4_3
-ifndef|#
-directive|ifndef
-name|sigmask
-define|#
-directive|define
-name|sigmask
-parameter_list|(
-name|s
-parameter_list|)
-value|(1<< ((s) - 1))
-endif|#
-directive|endif
-comment|/* ! sigmask */
-if|if
-condition|(
-name|block
-condition|)
-block|{
-name|int
-name|mask
-init|=
-literal|0
-decl_stmt|;
-name|mask
-operator||=
-name|sigmask
-argument_list|(
-name|SIGALRM
-argument_list|)
-expr_stmt|;
-name|mask
-operator||=
-name|sigmask
-argument_list|(
-name|SIGCHLD
-argument_list|)
-expr_stmt|;
-name|mask
-operator||=
-name|sigmask
-argument_list|(
-name|SIGHUP
-argument_list|)
-expr_stmt|;
-name|mask
-operator||=
-name|sigmask
-argument_list|(
-name|SIGINT
-argument_list|)
-expr_stmt|;
-name|mask
-operator||=
-name|sigmask
-argument_list|(
-name|SIGTERM
-argument_list|)
-expr_stmt|;
-name|mask
-operator||=
-name|sigmask
-argument_list|(
-name|SIGUSR1
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sigblock
-argument_list|(
-name|mask
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|sigsetmask
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-comment|/* BSD4_3 */
-ifdef|#
-directive|ifdef
-name|ALTOS_SYSTEM_V
-if|if
-condition|(
-name|block
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|sigset
-argument_list|(
-name|SIGALRM
-argument_list|,
-name|SIG_HOLD
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sigset
-argument_list|(
-name|SIGCHLD
-argument_list|,
-name|SIG_HOLD
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sigset
-argument_list|(
-name|SIGHUP
-argument_list|,
-name|SIG_HOLD
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sigset
-argument_list|(
-name|SIGINT
-argument_list|,
-name|SIG_HOLD
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sigset
-argument_list|(
-name|SIGTERM
-argument_list|,
-name|SIG_HOLD
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sigset
-argument_list|(
-name|SIGUSR1
-argument_list|,
-name|SIG_HOLD
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-operator|(
-name|void
-operator|)
-name|sigset
-argument_list|(
-name|SIGALRM
-argument_list|,
-name|SIG_DFL
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sigset
-argument_list|(
-name|SIGCHLD
-argument_list|,
-name|SIG_DFL
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sigset
-argument_list|(
-name|SIGHUP
-argument_list|,
-name|SIG_DFL
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sigset
-argument_list|(
-name|SIGINT
-argument_list|,
-name|SIG_DFL
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sigset
-argument_list|(
-name|SIGTERM
-argument_list|,
-name|SIG_DFL
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sigset
-argument_list|(
-name|SIGUSR1
-argument_list|,
-name|SIG_DFL
-argument_list|)
-expr_stmt|;
-block|}
-else|#
-directive|else
-comment|/* ALTOS_SYSTEM_V */
-name|sigset_t
-name|sset
-decl_stmt|;
-operator|(
-name|void
-operator|)
-name|sigemptyset
-argument_list|(
-operator|&
-name|sset
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sigaddset
-argument_list|(
-operator|&
-name|sset
-argument_list|,
-name|SIGALRM
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sigaddset
-argument_list|(
-operator|&
-name|sset
-argument_list|,
-name|SIGCHLD
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sigaddset
-argument_list|(
-operator|&
-name|sset
-argument_list|,
-name|SIGHUP
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sigaddset
-argument_list|(
-operator|&
-name|sset
-argument_list|,
-name|SIGINT
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sigaddset
-argument_list|(
-operator|&
-name|sset
-argument_list|,
-name|SIGTERM
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sigaddset
-argument_list|(
-operator|&
-name|sset
-argument_list|,
-name|SIGUSR1
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sigprocmask
-argument_list|(
-name|block
-condition|?
-name|SIG_BLOCK
-else|:
-name|SIG_UNBLOCK
-argument_list|,
-operator|&
-name|sset
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* ALTOS_SYSTEM_V */
-endif|#
-directive|endif
-comment|/* BSD4_3 */
-block|}
-end_function
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/* **  BLOCKSIGNAL -- hold a signal to prevent delivery ** **	Parameters: **		sig -- the signal to block. ** **	Returns: **		1 signal was previously blocked **		0 signal was not previously blocked **		-1 on failure. */
-end_comment
-
-begin_function
-name|int
-name|blocksignal
-parameter_list|(
-name|sig
-parameter_list|)
-name|int
-name|sig
-decl_stmt|;
-block|{
-ifdef|#
-directive|ifdef
-name|BSD4_3
-ifndef|#
-directive|ifndef
-name|sigmask
-define|#
-directive|define
-name|sigmask
-parameter_list|(
-name|s
-parameter_list|)
-value|(1<< ((s) - 1))
-endif|#
-directive|endif
-comment|/* ! sigmask */
-return|return
-operator|(
-name|sigblock
-argument_list|(
-name|sigmask
-argument_list|(
-name|sig
-argument_list|)
-argument_list|)
-operator|&
-name|sigmask
-argument_list|(
-name|sig
-argument_list|)
-operator|)
-operator|!=
-literal|0
-return|;
-else|#
-directive|else
-comment|/* BSD4_3 */
-ifdef|#
-directive|ifdef
-name|ALTOS_SYSTEM_V
-name|sigfunc_t
-name|handler
-decl_stmt|;
-name|handler
-operator|=
-name|sigset
-argument_list|(
-name|sig
-argument_list|,
-name|SIG_HOLD
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|handler
-operator|==
-name|SIG_ERR
-condition|)
-return|return
-operator|-
-literal|1
-return|;
-else|else
-return|return
-name|handler
-operator|==
-name|SIG_HOLD
-return|;
-else|#
-directive|else
-comment|/* ALTOS_SYSTEM_V */
-name|sigset_t
-name|sset
-decl_stmt|,
-name|oset
-decl_stmt|;
-operator|(
-name|void
-operator|)
-name|sigemptyset
-argument_list|(
-operator|&
-name|sset
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sigaddset
-argument_list|(
-operator|&
-name|sset
-argument_list|,
-name|sig
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sigprocmask
-argument_list|(
-name|SIG_BLOCK
-argument_list|,
-operator|&
-name|sset
-argument_list|,
-operator|&
-name|oset
-argument_list|)
-operator|<
-literal|0
-condition|)
-return|return
-operator|-
-literal|1
-return|;
-else|else
-return|return
-name|sigismember
-argument_list|(
-operator|&
-name|oset
-argument_list|,
-name|sig
-argument_list|)
-return|;
-endif|#
-directive|endif
-comment|/* ALTOS_SYSTEM_V */
-endif|#
-directive|endif
-comment|/* BSD4_3 */
-block|}
-end_function
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/* **  RELEASESIGNAL -- release a held signal ** **	Parameters: **		sig -- the signal to release. ** **	Returns: **		1 signal was previously blocked **		0 signal was not previously blocked **		-1 on failure. */
-end_comment
-
-begin_function
-name|int
-name|releasesignal
-parameter_list|(
-name|sig
-parameter_list|)
-name|int
-name|sig
-decl_stmt|;
-block|{
-ifdef|#
-directive|ifdef
-name|BSD4_3
-return|return
-operator|(
-name|sigsetmask
-argument_list|(
-name|sigblock
-argument_list|(
-literal|0
-argument_list|)
-operator|&
-operator|~
-name|sigmask
-argument_list|(
-name|sig
-argument_list|)
-argument_list|)
-operator|&
-name|sigmask
-argument_list|(
-name|sig
-argument_list|)
-operator|)
-operator|!=
-literal|0
-return|;
-else|#
-directive|else
-comment|/* BSD4_3 */
-ifdef|#
-directive|ifdef
-name|ALTOS_SYSTEM_V
-name|sigfunc_t
-name|handler
-decl_stmt|;
-name|handler
-operator|=
-name|sigset
-argument_list|(
-name|sig
-argument_list|,
-name|SIG_HOLD
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sigrelse
-argument_list|(
-name|sig
-argument_list|)
-operator|<
-literal|0
-condition|)
-return|return
-operator|-
-literal|1
-return|;
-else|else
-return|return
-name|handler
-operator|==
-name|SIG_HOLD
-return|;
-else|#
-directive|else
-comment|/* ALTOS_SYSTEM_V */
-name|sigset_t
-name|sset
-decl_stmt|,
-name|oset
-decl_stmt|;
-operator|(
-name|void
-operator|)
-name|sigemptyset
-argument_list|(
-operator|&
-name|sset
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|sigaddset
-argument_list|(
-operator|&
-name|sset
-argument_list|,
-name|sig
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sigprocmask
-argument_list|(
-name|SIG_UNBLOCK
-argument_list|,
-operator|&
-name|sset
-argument_list|,
-operator|&
-name|oset
-argument_list|)
-operator|<
-literal|0
-condition|)
-return|return
-operator|-
-literal|1
-return|;
-else|else
-return|return
-name|sigismember
-argument_list|(
-operator|&
-name|oset
-argument_list|,
-name|sig
-argument_list|)
-return|;
-endif|#
-directive|endif
-comment|/* ALTOS_SYSTEM_V */
-endif|#
-directive|endif
-comment|/* BSD4_3 */
-block|}
-end_function
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/* **  HOLDSIGS -- arrange to hold all signals ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		Arranges that signals are held. */
-end_comment
-
-begin_function
-name|void
-name|holdsigs
-parameter_list|()
-block|{ }
-end_function
-
-begin_escape
-end_escape
-
-begin_comment
-comment|/* **  RLSESIGS -- arrange to release all signals ** **	This undoes the effect of holdsigs. ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		Arranges that signals are released. */
-end_comment
-
-begin_function
-name|void
-name|rlsesigs
-parameter_list|()
-block|{ }
-end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  INIT_MD -- do machine dependent initializations ** **	Systems that have global modes that should be set should do **	them here rather than in main. */
@@ -5624,9 +4904,6 @@ comment|/* VENDOR_DEFAULT */
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* **  INIT_VENDOR_MACROS -- vendor-dependent macro initializations ** **	Called once, on startup. ** **	Parameters: **		e -- the global envelope. ** **	Returns: **		none. ** **	Side Effects: **		vendor-dependent. */
 end_comment
@@ -5644,9 +4921,6 @@ name|e
 decl_stmt|;
 block|{ }
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  GETLA -- get the current load average ** **	This code stolen from la.c. ** **	Parameters: **		none. ** **	Returns: **		The current load average as an integer. ** **	Side Effects: **		none. */
@@ -6188,11 +5462,13 @@ value|0
 end_define
 
 begin_function
-specifier|static
 name|int
 name|getla
 parameter_list|()
 block|{
+name|int
+name|j
+decl_stmt|;
 specifier|static
 name|int
 name|kmem
@@ -6262,7 +5538,7 @@ name|_AUX_SOURCE
 operator|(
 name|void
 operator|)
-name|strlcpy
+name|sm_strlcpy
 argument_list|(
 name|Nl
 index|[
@@ -6352,13 +5628,13 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"getla: nlist(%s): %s\n"
 argument_list|,
 name|_PATH_UNIX
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|errno
 argument_list|)
@@ -6390,7 +5666,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"getla: nlist(%s, %s) ==> 0\n"
 argument_list|,
@@ -6446,11 +5722,11 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"getla: open(/dev/kmem): %s\n"
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|errno
 argument_list|)
@@ -6461,18 +5737,74 @@ operator|-
 literal|1
 return|;
 block|}
+if|if
+condition|(
 operator|(
-name|void
+name|j
+operator|=
+name|fcntl
+argument_list|(
+name|kmem
+argument_list|,
+name|F_GETFD
+argument_list|,
+literal|0
+argument_list|)
 operator|)
+operator|<
+literal|0
+operator|||
 name|fcntl
 argument_list|(
 name|kmem
 argument_list|,
 name|F_SETFD
 argument_list|,
+name|j
+operator||
 name|FD_CLOEXEC
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|3
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+name|sm_dprintf
+argument_list|(
+literal|"getla: fcntl(/dev/kmem, FD_CLOEXEC): %s\n"
+argument_list|,
+name|sm_errstring
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|kmem
+argument_list|)
+expr_stmt|;
+name|kmem
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 block|}
 if|if
 condition|(
@@ -6483,12 +5815,13 @@ argument_list|,
 literal|20
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"getla: symbol address = %#lx\n"
 argument_list|,
 operator|(
-name|u_long
+name|unsigned
+name|long
 operator|)
 name|Nl
 index|[
@@ -6552,11 +5885,11 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"getla: lseek or read: %s\n"
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|errno
 argument_list|)
@@ -6595,7 +5928,7 @@ directive|if
 name|LA_TYPE
 operator|==
 name|LA_SHORT
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"getla: avenrun = %d"
 argument_list|,
@@ -6614,7 +5947,7 @@ argument_list|,
 literal|15
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|", %d, %d"
 argument_list|,
@@ -6632,7 +5965,7 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* LA_TYPE == LA_SHORT */
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"getla: avenrun = %ld"
 argument_list|,
@@ -6651,7 +5984,7 @@ argument_list|,
 literal|15
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|", %ld, %ld"
 argument_list|,
@@ -6669,7 +6002,7 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* LA_TYPE == LA_SHORT */
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -6684,7 +6017,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"getla: %d\n"
 argument_list|,
@@ -6737,7 +6070,7 @@ literal|5
 argument_list|)
 condition|)
 block|{
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"getla: avenrun = %g"
 argument_list|,
@@ -6756,7 +6089,7 @@ argument_list|,
 literal|15
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|", %g, %g"
 argument_list|,
@@ -6771,7 +6104,7 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -6786,7 +6119,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"getla: %d\n"
 argument_list|,
@@ -6848,11 +6181,13 @@ file|<sys/ksym.h>
 end_include
 
 begin_function
-specifier|static
 name|int
 name|getla
 parameter_list|()
 block|{
+name|int
+name|j
+decl_stmt|;
 specifier|static
 name|int
 name|kmem
@@ -6908,11 +6243,11 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"getla: open(/dev/kmem): %s\n"
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|errno
 argument_list|)
@@ -6923,18 +6258,74 @@ operator|-
 literal|1
 return|;
 block|}
+if|if
+condition|(
 operator|(
-name|void
+name|j
+operator|=
+name|fcntl
+argument_list|(
+name|kmem
+argument_list|,
+name|F_GETFD
+argument_list|,
+literal|0
+argument_list|)
 operator|)
+operator|<
+literal|0
+operator|||
 name|fcntl
 argument_list|(
 name|kmem
 argument_list|,
 name|F_SETFD
 argument_list|,
+name|j
+operator||
 name|FD_CLOEXEC
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|3
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+name|sm_dprintf
+argument_list|(
+literal|"getla: fcntl(/dev/kmem, FD_CLOEXEC): %s\n"
+argument_list|,
+name|sm_errstring
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|kmem
+argument_list|)
+expr_stmt|;
+name|kmem
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 block|}
 name|mirk
 operator|.
@@ -6981,11 +6372,11 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"getla: ioctl(MIOC_READKSYM) failed: %s\n"
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|errno
 argument_list|)
@@ -7006,7 +6397,7 @@ literal|5
 argument_list|)
 condition|)
 block|{
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"getla: avenrun = %d"
 argument_list|,
@@ -7025,7 +6416,7 @@ argument_list|,
 literal|15
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|", %d, %d"
 argument_list|,
@@ -7040,7 +6431,7 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -7055,7 +6446,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"getla: %d\n"
 argument_list|,
@@ -7122,7 +6513,6 @@ file|<sys/dg_sys_info.h>
 end_include
 
 begin_function
-specifier|static
 name|int
 name|getla
 parameter_list|()
@@ -7154,7 +6544,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"getla: %d\n"
 argument_list|,
@@ -7269,7 +6659,6 @@ file|<sys/pstat.h>
 end_include
 
 begin_function
-specifier|static
 name|int
 name|getla
 parameter_list|()
@@ -7314,7 +6703,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"getla: %d\n"
 argument_list|,
@@ -7363,7 +6752,6 @@ name|LA_SUBR
 end_if
 
 begin_function
-specifier|static
 name|int
 name|getla
 parameter_list|()
@@ -7406,11 +6794,11 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"getla: getloadavg failed: %s"
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|errno
 argument_list|)
@@ -7430,7 +6818,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"getla: %d\n"
 argument_list|,
@@ -7530,7 +6918,6 @@ comment|/* defined(NX_CURRENT_COMPILER_RELEASE)&& NX_CURRENT_COMPILER_RELEASE> N
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|getla
 parameter_list|()
@@ -7579,11 +6966,11 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"getla: processor_set_default failed: %s"
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|errno
 argument_list|)
@@ -7631,11 +7018,11 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"getla: processor_set_info failed: %s"
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|errno
 argument_list|)
@@ -7655,7 +7042,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"getla: %d\n"
 argument_list|,
@@ -7717,58 +7104,101 @@ operator|==
 name|LA_PROCSTR
 end_if
 
-begin_comment
-comment|/* **  Read /proc/loadavg for the load average.  This is assumed to be **  in a format like "0.15 0.12 0.06". ** **	Initially intended for Linux.  This has been in the kernel **	since at least 0.99.15. */
-end_comment
+begin_if
+if|#
+directive|if
+name|SM_CONF_BROKEN_STRTOD
+end_if
 
-begin_ifndef
+begin_label
+name|ERROR
+label|:
+end_label
+
+begin_expr_stmt
+name|This
+name|OS
+name|has
+name|most
+name|likely
+name|a
+name|broken
+name|strtod
+argument_list|()
+name|implemenentation
+operator|.
+name|ERROR
+operator|:
+name|The
+name|function
+name|is
+name|required
+end_expr_stmt
+
+begin_for
+for|for getla
+control|(
+control|)
+operator|.
+name|ERROR
+operator|:
+name|Check
+name|the
+name|compilation
+name|options
+name|_LA_PROCSTR
+name|and
+name|ERROR
+operator|:
+name|_SM_CONF_BROKEN_STRTOD
+argument_list|(
+argument|without the leading _
+argument_list|)
+operator|.
+endif|#
+directive|endif
+comment|/* SM_CONF_BROKEN_STRTOD */
+comment|/* **  Read /proc/loadavg for the load average.  This is assumed to be **  in a format like "0.15 0.12 0.06". ** **	Initially intended for Linux.  This has been in the kernel **	since at least 0.99.15. */
 ifndef|#
 directive|ifndef
 name|_PATH_LOADAVG
-end_ifndef
-
-begin_define
 define|#
 directive|define
 name|_PATH_LOADAVG
 value|"/proc/loadavg"
-end_define
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* ! _PATH_LOADAVG */
-end_comment
-
-begin_function
-specifier|static
 name|int
 name|getla
-parameter_list|()
+argument_list|()
 block|{
 name|double
 name|avenrun
-decl_stmt|;
+block|;
 specifier|register
 name|int
 name|result
-decl_stmt|;
-name|FILE
-modifier|*
+block|;
+name|SM_FILE_T
+operator|*
 name|fp
-decl_stmt|;
+block|;
 name|fp
 operator|=
-name|fopen
+name|sm_io_open
 argument_list|(
+name|SmFtStdio
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
 name|_PATH_LOADAVG
 argument_list|,
-literal|"r"
+name|SM_IO_RDONLY
+argument_list|,
+name|NULL
 argument_list|)
-expr_stmt|;
+block|;
 if|if
 condition|(
 name|fp
@@ -7785,13 +7215,13 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
-literal|"getla: fopen(%s): %s\n"
+literal|"getla: sm_io_open(%s): %s\n"
 argument_list|,
 name|_PATH_LOADAVG
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|errno
 argument_list|)
@@ -7804,9 +7234,11 @@ return|;
 block|}
 name|result
 operator|=
-name|fscanf
+name|sm_io_fscanf
 argument_list|(
 name|fp
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|,
 literal|"%lf"
 argument_list|,
@@ -7814,14 +7246,22 @@ operator|&
 name|avenrun
 argument_list|)
 expr_stmt|;
+end_for
+
+begin_expr_stmt
 operator|(
 name|void
 operator|)
-name|fclose
+name|sm_io_close
 argument_list|(
 name|fp
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|result
@@ -7838,13 +7278,13 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
-literal|"getla: fscanf() = %d: %s\n"
+literal|"getla: sm_io_fscanf() = %d: %s\n"
 argument_list|,
 name|result
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|errno
 argument_list|)
@@ -7855,6 +7295,9 @@ operator|-
 literal|1
 return|;
 block|}
+end_if
+
+begin_if
 if|if
 condition|(
 name|tTd
@@ -7864,13 +7307,16 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"getla(): %.2f\n"
 argument_list|,
 name|avenrun
 argument_list|)
 expr_stmt|;
+end_if
+
+begin_return
 return|return
 operator|(
 call|(
@@ -7883,10 +7329,10 @@ literal|0.5
 argument_list|)
 operator|)
 return|;
-block|}
-end_function
+end_return
 
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif
@@ -7909,13 +7355,19 @@ directive|include
 file|<sys/sysmp.h>
 end_include
 
-begin_function
-name|int
+begin_macro
+unit|int
 name|getla
-parameter_list|(
-name|void
-parameter_list|)
+argument_list|(
+argument|void
+argument_list|)
+end_macro
+
+begin_block
 block|{
+name|int
+name|j
+decl_stmt|;
 specifier|static
 name|int
 name|kmem
@@ -7963,13 +7415,13 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"getla: open(%s): %s\n"
 argument_list|,
 name|_PATH_KMEM
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|errno
 argument_list|)
@@ -7980,18 +7432,74 @@ operator|-
 literal|1
 return|;
 block|}
+if|if
+condition|(
 operator|(
-name|void
+name|j
+operator|=
+name|fcntl
+argument_list|(
+name|kmem
+argument_list|,
+name|F_GETFD
+argument_list|,
+literal|0
+argument_list|)
 operator|)
+operator|<
+literal|0
+operator|||
 name|fcntl
 argument_list|(
 name|kmem
 argument_list|,
 name|F_SETFD
 argument_list|,
+name|j
+operator||
 name|FD_CLOEXEC
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|3
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+name|sm_dprintf
+argument_list|(
+literal|"getla: fcntl(/dev/kmem, FD_CLOEXEC): %s\n"
+argument_list|,
+name|sm_errstring
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|kmem
+argument_list|)
+expr_stmt|;
+name|kmem
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 block|}
 if|if
 condition|(
@@ -8047,11 +7555,11 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"getla: lseek or read: %s\n"
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|errno
 argument_list|)
@@ -8072,7 +7580,7 @@ literal|5
 argument_list|)
 condition|)
 block|{
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"getla: avenrun = %ld"
 argument_list|,
@@ -8095,7 +7603,7 @@ argument_list|,
 literal|15
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|", %ld, %ld"
 argument_list|,
@@ -8118,7 +7626,7 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -8133,7 +7641,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"getla: %d\n"
 argument_list|,
@@ -8174,7 +7682,7 @@ name|FSHIFT
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 begin_endif
 endif|#
@@ -8200,7 +7708,6 @@ file|<kstat.h>
 end_include
 
 begin_function
-specifier|static
 name|int
 name|getla
 parameter_list|()
@@ -8254,11 +7761,11 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"getla: kstat_open(): %s\n"
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|errno
 argument_list|)
@@ -8304,11 +7811,11 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"getla: kstat_lookup(): %s\n"
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|errno
 argument_list|)
@@ -8342,11 +7849,11 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"getla: kstat_read(): %s\n"
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|errno
 argument_list|)
@@ -8440,7 +7947,6 @@ comment|/* ! _PATH_AVENRUN */
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|getla
 parameter_list|()
@@ -8519,9 +8025,14 @@ name|LOG_ERR
 argument_list|,
 name|NOQID
 argument_list|,
-literal|"can't open %s: %m"
+literal|"can't open %s: %s"
 argument_list|,
 name|_PATH_AVENRUN
+argument_list|,
+name|sm_errstring
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -8552,7 +8063,7 @@ argument_list|,
 literal|5
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"getla: avenrun = %d\n"
 argument_list|,
@@ -8583,7 +8094,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"getla: %d\n"
 argument_list|,
@@ -8677,11 +8188,11 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"getla: table %s\n"
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|errno
 argument_list|)
@@ -8701,7 +8212,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"getla: scale = %d\n"
 argument_list|,
@@ -8771,7 +8282,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"getla: %d\n"
 argument_list|,
@@ -8802,7 +8313,6 @@ name|LA_PSET
 end_if
 
 begin_function
-specifier|static
 name|int
 name|getla
 parameter_list|()
@@ -8847,11 +8357,11 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"getla: pset_getloadavg failed: %s"
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|errno
 argument_list|)
@@ -8871,7 +8381,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"getla: %d\n"
 argument_list|,
@@ -8924,7 +8434,6 @@ name|LA_ZERO
 end_if
 
 begin_function
-specifier|static
 name|int
 name|getla
 parameter_list|()
@@ -8938,7 +8447,7 @@ argument_list|,
 literal|1
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"getla: ZERO\n"
 argument_list|)
@@ -8972,15 +8481,18 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
+begin_macro
+name|SM_UNUSED
+argument_list|(
+argument|static char  rcsid[]
+argument_list|)
+end_macro
+
+begin_expr_stmt
+operator|=
 literal|"@(#)$OrigId: getloadavg.c,v 1.16 1991/06/21 12:51:15 paul Exp $"
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -9086,39 +8598,14 @@ begin_comment
 comment|/* apollo */
 end_comment
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* **  SM_GETLA -- get the current load average and set macro ** **	Parameters: **		e -- the envelope for the load average macro. ** **	Returns: **		The current load average as an integer. ** **	Side Effects: **		Sets the load average macro ({load_avg}) if **		envelope e is not NULL. */
+comment|/* **  SM_GETLA -- get the current load average ** **	Parameters: **		none ** **	Returns: **		none ** **	Side Effects: **		Set CurrentLA to the current load average. **		Set {load_avg} in GlobalMacros to the current load average. */
 end_comment
 
 begin_function
-name|int
+name|void
 name|sm_getla
-parameter_list|(
-name|e
-parameter_list|)
-name|ENVELOPE
-modifier|*
-name|e
-decl_stmt|;
-block|{
-specifier|register
-name|int
-name|la
-decl_stmt|;
-name|la
-operator|=
-name|getla
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|e
-operator|!=
-name|NULL
-condition|)
+parameter_list|()
 block|{
 name|char
 name|labuf
@@ -9126,7 +8613,15 @@ index|[
 literal|8
 index|]
 decl_stmt|;
-name|snprintf
+name|CurrentLA
+operator|=
+name|getla
+argument_list|()
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sm_snprintf
 argument_list|(
 name|labuf
 argument_list|,
@@ -9135,38 +8630,29 @@ name|labuf
 argument_list|,
 literal|"%d"
 argument_list|,
-name|la
+name|CurrentLA
 argument_list|)
 expr_stmt|;
-name|define
+name|macdefine
 argument_list|(
+operator|&
+name|GlobalMacros
+argument_list|,
+name|A_TEMP
+argument_list|,
 name|macid
 argument_list|(
 literal|"{load_avg}"
-argument_list|,
-name|NULL
 argument_list|)
 argument_list|,
-name|newstr
-argument_list|(
 name|labuf
-argument_list|)
-argument_list|,
-name|e
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-name|la
-return|;
-block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* **  SHOULDQUEUE -- should this message be queued or sent? ** **	Compares the message cost to the load average to decide. ** **	Parameters: **		pri -- the priority of the message in question. **		ct -- the message creation time. ** **	Returns: **		TRUE -- if this message should be queued up for the **			time being. **		FALSE -- if the load is low enough to send this message. ** **	Side Effects: **		none. */
+comment|/* **  SHOULDQUEUE -- should this message be queued or sent? ** **	Compares the message cost to the load average to decide. ** **	Note: Do NOT change this API! It is documented in op.me **		and theoretically the user can change this function... ** **	Parameters: **		pri -- the priority of the message in question. **		ct -- the message creation time (unused, but see above). ** **	Returns: **		true -- if this message should be queued up for the **			time being. **		false -- if the load is low enough to send this message. ** **	Side Effects: **		none. */
 end_comment
 
 begin_comment
@@ -9200,7 +8686,7 @@ argument_list|,
 literal|30
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"shouldqueue: CurrentLA=%d, pri=%ld: "
 argument_list|,
@@ -9225,20 +8711,20 @@ argument_list|,
 literal|30
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
-literal|"FALSE (CurrentLA< QueueLA)\n"
+literal|"false (CurrentLA< QueueLA)\n"
 argument_list|)
 expr_stmt|;
 return|return
-name|FALSE
+name|false
 return|;
 block|}
 if|#
 directive|if
 literal|0
 comment|/* this code is reported to cause oscillation around RefuseLA */
-block|if (CurrentLA>= RefuseLA&& QueueLA< RefuseLA) 	{ 		if (tTd(3, 30)) 			dprintf("TRUE (CurrentLA>= RefuseLA)\n"); 		return TRUE; 	}
+block|if (CurrentLA>= RefuseLA&& QueueLA< RefuseLA) 	{ 		if (tTd(3, 30)) 			sm_dprintf("TRUE (CurrentLA>= RefuseLA)\n"); 		return true; 	}
 endif|#
 directive|endif
 comment|/* 0 */
@@ -9267,15 +8753,15 @@ argument_list|,
 literal|30
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"%s (by calculation)\n"
 argument_list|,
 name|rval
 condition|?
-literal|"TRUE"
+literal|"true"
 else|:
-literal|"FALSE"
+literal|"false"
 argument_list|)
 expr_stmt|;
 return|return
@@ -9284,11 +8770,8 @@ return|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* **  REFUSECONNECTIONS -- decide if connections should be refused ** **	Parameters: **		name -- daemon name (for error messages only) **		e -- the current envelope. **		d -- number of daemon ** **	Returns: **		TRUE if incoming SMTP connections should be refused **			(for now). **		FALSE if we should accept new work. ** **	Side Effects: **		Sets process title when it is rejecting connections. */
+comment|/* **  REFUSECONNECTIONS -- decide if connections should be refused ** **	Parameters: **		name -- daemon name (for error messages only) **		e -- the current envelope. **		d -- number of daemon **		active -- was this daemon actually active? ** **	Returns: **		true if incoming SMTP connections should be refused **			(for now). **		false if we should accept new work. ** **	Side Effects: **		Sets process title when it is rejecting connections. */
 end_comment
 
 begin_function
@@ -9300,6 +8783,8 @@ parameter_list|,
 name|e
 parameter_list|,
 name|d
+parameter_list|,
+name|active
 parameter_list|)
 name|char
 modifier|*
@@ -9312,9 +8797,26 @@ decl_stmt|;
 name|int
 name|d
 decl_stmt|;
+name|bool
+name|active
+decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
+specifier|static
+name|time_t
+name|lastconn
+index|[
+name|MAXDAEMONS
+index|]
+decl_stmt|;
+specifier|static
+name|int
+name|conncnt
+index|[
+name|MAXDAEMONS
+index|]
+decl_stmt|;
+if|#
+directive|if
 name|XLA
 if|if
 condition|(
@@ -9323,17 +8825,135 @@ name|xla_smtp_ok
 argument_list|()
 condition|)
 return|return
-name|TRUE
+name|true
 return|;
 endif|#
 directive|endif
 comment|/* XLA */
-name|CurrentLA
+if|if
+condition|(
+name|ConnRateThrottle
+operator|>
+literal|0
+condition|)
+block|{
+name|time_t
+name|now
+decl_stmt|;
+name|now
 operator|=
-name|sm_getla
+name|curtime
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|active
+condition|)
+block|{
+if|if
+condition|(
+name|now
+operator|!=
+name|lastconn
+index|[
+name|d
+index|]
+condition|)
+block|{
+name|lastconn
+index|[
+name|d
+index|]
+operator|=
+name|now
+expr_stmt|;
+name|conncnt
+index|[
+name|d
+index|]
+operator|=
+literal|1
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|conncnt
+index|[
+name|d
+index|]
+operator|++
+operator|>
+name|ConnRateThrottle
+condition|)
+block|{
+define|#
+directive|define
+name|D_MSG_CRT
+value|"deferring connections on daemon %s: %d per second"
+comment|/* sleep to flatten out connection load */
+name|sm_setproctitle
 argument_list|(
-name|NULL
+name|true
+argument_list|,
+name|e
+argument_list|,
+name|D_MSG_CRT
+argument_list|,
+name|name
+argument_list|,
+name|ConnRateThrottle
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|8
+condition|)
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|NOQID
+argument_list|,
+name|D_MSG_CRT
+argument_list|,
+name|name
+argument_list|,
+name|ConnRateThrottle
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|sleep
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|now
+operator|!=
+name|lastconn
+index|[
+name|d
+index|]
+condition|)
+name|conncnt
+index|[
+name|d
+index|]
+operator|=
+literal|0
+expr_stmt|;
+block|}
+name|sm_getla
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -9346,13 +8966,17 @@ operator|>=
 name|RefuseLA
 condition|)
 block|{
+define|#
+directive|define
+name|R_MSG_LA
+value|"rejecting connections on daemon %s: load average: %d"
 name|sm_setproctitle
 argument_list|(
-name|TRUE
+name|true
 argument_list|,
 name|e
 argument_list|,
-literal|"rejecting connections on daemon %s: load average: %d"
+name|R_MSG_LA
 argument_list|,
 name|name
 argument_list|,
@@ -9362,8 +8986,8 @@ expr_stmt|;
 if|if
 condition|(
 name|LogLevel
-operator|>=
-literal|9
+operator|>
+literal|8
 condition|)
 name|sm_syslog
 argument_list|(
@@ -9371,7 +8995,7 @@ name|LOG_INFO
 argument_list|,
 name|NOQID
 argument_list|,
-literal|"rejecting connections on daemon %s: load average: %d"
+name|R_MSG_LA
 argument_list|,
 name|name
 argument_list|,
@@ -9379,8 +9003,101 @@ name|CurrentLA
 argument_list|)
 expr_stmt|;
 return|return
-name|TRUE
+name|true
 return|;
+block|}
+if|if
+condition|(
+name|DelayLA
+operator|>
+literal|0
+operator|&&
+name|CurrentLA
+operator|>=
+name|DelayLA
+condition|)
+block|{
+name|time_t
+name|now
+decl_stmt|;
+specifier|static
+name|time_t
+name|log_delay
+init|=
+operator|(
+name|time_t
+operator|)
+literal|0
+decl_stmt|;
+define|#
+directive|define
+name|MIN_DELAY_LOG
+value|90
+comment|/* wait before logging this again */
+define|#
+directive|define
+name|D_MSG_LA
+value|"delaying connections on daemon %s: load average=%d>= %d"
+comment|/* sleep to flatten out connection load */
+name|sm_setproctitle
+argument_list|(
+name|true
+argument_list|,
+name|e
+argument_list|,
+name|D_MSG_LA
+argument_list|,
+name|name
+argument_list|,
+name|DelayLA
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|LogLevel
+operator|>
+literal|8
+operator|&&
+operator|(
+name|now
+operator|=
+name|curtime
+argument_list|()
+operator|)
+operator|>
+name|log_delay
+condition|)
+block|{
+name|sm_syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+name|NOQID
+argument_list|,
+name|D_MSG_LA
+argument_list|,
+name|name
+argument_list|,
+name|CurrentLA
+argument_list|,
+name|DelayLA
+argument_list|)
+expr_stmt|;
+name|log_delay
+operator|=
+name|now
+operator|+
+name|MIN_DELAY_LOG
+expr_stmt|;
+block|}
+operator|(
+name|void
+operator|)
+name|sleep
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -9403,13 +9120,17 @@ operator|>=
 name|MaxChildren
 condition|)
 block|{
+define|#
+directive|define
+name|R_MSG_CHILD
+value|"rejecting connections on daemon %s: %d children, max %d"
 name|sm_setproctitle
 argument_list|(
-name|TRUE
+name|true
 argument_list|,
 name|e
 argument_list|,
-literal|"rejecting connections on daemon %s: %d children, max %d"
+name|R_MSG_CHILD
 argument_list|,
 name|name
 argument_list|,
@@ -9421,8 +9142,8 @@ expr_stmt|;
 if|if
 condition|(
 name|LogLevel
-operator|>=
-literal|9
+operator|>
+literal|8
 condition|)
 name|sm_syslog
 argument_list|(
@@ -9430,7 +9151,7 @@ name|LOG_INFO
 argument_list|,
 name|NOQID
 argument_list|,
-literal|"rejecting connections on daemon %s: %d children, max %d"
+name|R_MSG_CHILD
 argument_list|,
 name|name
 argument_list|,
@@ -9440,18 +9161,15 @@ name|MaxChildren
 argument_list|)
 expr_stmt|;
 return|return
-name|TRUE
+name|true
 return|;
 block|}
 block|}
 return|return
-name|FALSE
+name|false
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  SETPROCTITLE -- set process title for ps ** **	Parameters: **		fmt -- a printf style format string. **		a, b, c -- possible parameters to fmt. ** **	Returns: **		none. ** **	Side Effects: **		Clobbers argv of our main procedure so ps(1) will **		display the title. */
@@ -9991,10 +9709,6 @@ block|{
 specifier|register
 name|int
 name|i
-decl_stmt|,
-name|envpsize
-init|=
-literal|0
 decl_stmt|;
 specifier|extern
 name|char
@@ -10019,18 +9733,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|envpsize
-operator|+=
-name|strlen
-argument_list|(
-name|envp
-index|[
-name|i
-index|]
-argument_list|)
-operator|+
-literal|1
-expr_stmt|;
+continue|continue;
 name|environ
 operator|=
 operator|(
@@ -10258,7 +9961,7 @@ index|[
 name|SPT_BUFSIZE
 index|]
 decl_stmt|;
-name|VA_LOCAL_DECL
+name|SM_VA_LOCAL_DECL
 if|#
 directive|if
 name|SPT_TYPE
@@ -10276,6 +9979,9 @@ directive|if
 name|SPT_TYPE
 operator|==
 name|SPT_SCO
+name|int
+name|j
+decl_stmt|;
 name|off_t
 name|seek_off
 decl_stmt|;
@@ -10308,7 +10014,7 @@ comment|/* print sendmail: heading for grep */
 operator|(
 name|void
 operator|)
-name|strlcpy
+name|sm_strlcpy
 argument_list|(
 name|p
 argument_list|,
@@ -10330,15 +10036,17 @@ name|p
 argument_list|)
 expr_stmt|;
 comment|/* print the argument string */
-name|VA_START
+name|SM_VA_START
 argument_list|(
+name|ap
+argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
 operator|(
 name|void
 operator|)
-name|vsnprintf
+name|sm_vsnprintf
 argument_list|(
 name|p
 argument_list|,
@@ -10354,15 +10062,28 @@ argument_list|,
 name|ap
 argument_list|)
 expr_stmt|;
-name|VA_END
+name|SM_VA_END
+argument_list|(
+name|ap
+argument_list|)
 expr_stmt|;
 name|i
 operator|=
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|i
+operator|<
+literal|0
+condition|)
+return|return;
 if|#
 directive|if
 name|SPT_TYPE
@@ -10440,8 +10161,7 @@ literal|0
 operator|||
 name|kmempid
 operator|!=
-name|getpid
-argument_list|()
+name|CurrentPid
 condition|)
 block|{
 if|if
@@ -10476,22 +10196,55 @@ operator|<
 literal|0
 condition|)
 return|return;
+if|if
+condition|(
 operator|(
-name|void
+name|j
+operator|=
+name|fcntl
+argument_list|(
+name|kmem
+argument_list|,
+name|F_GETFD
+argument_list|,
+literal|0
+argument_list|)
 operator|)
+operator|<
+literal|0
+operator|||
 name|fcntl
 argument_list|(
 name|kmem
 argument_list|,
 name|F_SETFD
 argument_list|,
+name|j
+operator||
 name|FD_CLOEXEC
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|kmem
+argument_list|)
 expr_stmt|;
+name|kmem
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+return|return;
+block|}
 name|kmempid
 operator|=
-name|getpid
-argument_list|()
+name|CurrentPid
 expr_stmt|;
 block|}
 name|buf
@@ -10599,7 +10352,7 @@ block|}
 operator|(
 name|void
 operator|)
-name|strlcpy
+name|sm_strlcpy
 argument_list|(
 name|Argv
 index|[
@@ -10683,9 +10436,6 @@ begin_comment
 comment|/* SPT_TYPE != SPT_BUILTIN */
 end_comment
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* **  SM_SETPROCTITLE -- set process task and set process title for ps ** **	Possibly set process status and call setproctitle() to **	change the ps display. ** **	Parameters: **		status -- whether or not to store as process status **		e -- the current envelope. **		fmt -- a printf style format string. **		a, b, c -- possible parameters to fmt. ** **	Returns: **		none. */
 end_comment
@@ -10751,17 +10501,19 @@ index|[
 name|SPT_BUFSIZE
 index|]
 decl_stmt|;
-name|VA_LOCAL_DECL
+name|SM_VA_LOCAL_DECL
 comment|/* print the argument string */
-name|VA_START
+name|SM_VA_START
 argument_list|(
+name|ap
+argument_list|,
 name|fmt
 argument_list|)
 decl_stmt|;
 operator|(
 name|void
 operator|)
-name|vsnprintf
+name|sm_vsnprintf
 argument_list|(
 name|buf
 argument_list|,
@@ -10773,7 +10525,10 @@ argument_list|,
 name|ap
 argument_list|)
 expr_stmt|;
-name|VA_END
+name|SM_VA_END
+argument_list|(
+name|ap
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -10781,8 +10536,7 @@ name|status
 condition|)
 name|proc_list_set
 argument_list|(
-name|getpid
-argument_list|()
+name|CurrentPid
 argument_list|,
 name|buf
 argument_list|)
@@ -10833,9 +10587,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* **  WAITFOR -- wait for a particular process id. ** **	Parameters: **		pid -- process id to wait for. ** **	Returns: **		status of pid. **		-1 if pid never shows up. ** **	Side Effects: **		none. */
 end_comment
@@ -10848,6 +10599,90 @@ name|pid
 parameter_list|)
 name|pid_t
 name|pid
+decl_stmt|;
+block|{
+name|int
+name|st
+decl_stmt|;
+name|pid_t
+name|i
+decl_stmt|;
+do|do
+block|{
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+name|i
+operator|=
+name|sm_wait
+argument_list|(
+operator|&
+name|st
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|>
+literal|0
+condition|)
+name|proc_list_drop
+argument_list|(
+name|i
+argument_list|,
+name|st
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+do|while
+condition|(
+operator|(
+name|i
+operator|>=
+literal|0
+operator|||
+name|errno
+operator|==
+name|EINTR
+operator|)
+operator|&&
+name|i
+operator|!=
+name|pid
+condition|)
+do|;
+if|if
+condition|(
+name|i
+operator|<
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+return|return
+name|st
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* **  SM_WAIT -- wait ** **	Parameters: **		status -- pointer to status (return value) ** **	Returns: **		pid */
+end_comment
+
+begin_function
+name|pid_t
+name|sm_wait
+parameter_list|(
+name|status
+parameter_list|)
+name|int
+modifier|*
+name|status
 decl_stmt|;
 block|{
 ifdef|#
@@ -10887,12 +10722,6 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* defined(ISC_UNIX) || defined(_SCO_unix_) */
-do|do
-block|{
-name|errno
-operator|=
-literal|0
-expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -10906,7 +10735,7 @@ name|_SCO_unix_
 argument_list|)
 name|savesig
 operator|=
-name|releasesignal
+name|sm_releasesignal
 argument_list|(
 name|SIGCHLD
 argument_list|)
@@ -10939,7 +10768,7 @@ name|savesig
 operator|>
 literal|0
 condition|)
-name|blocksignal
+name|sm_blocksignal
 argument_list|(
 name|SIGCHLD
 argument_list|)
@@ -10947,70 +10776,32 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* defined(ISC_UNIX) || defined(_SCO_unix_) */
-if|if
-condition|(
-name|i
-operator|>
-literal|0
-condition|)
-operator|(
-name|void
-operator|)
-name|proc_list_drop
-argument_list|(
-name|i
-argument_list|)
-expr_stmt|;
-block|}
-do|while
-condition|(
-operator|(
-name|i
-operator|>=
-literal|0
-operator|||
-name|errno
-operator|==
-name|EINTR
-operator|)
-operator|&&
-name|i
-operator|!=
-name|pid
-condition|)
-do|;
-if|if
-condition|(
-name|i
-operator|<
-literal|0
-condition|)
-return|return
-operator|-
-literal|1
-return|;
 ifdef|#
 directive|ifdef
 name|WAITUNION
-return|return
+operator|*
+name|status
+operator|=
 name|st
 operator|.
 name|w_status
-return|;
+expr_stmt|;
 else|#
 directive|else
 comment|/* WAITUNION */
-return|return
+operator|*
+name|status
+operator|=
 name|st
-return|;
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* WAITUNION */
+return|return
+name|i
+return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* **  REAPCHILD -- pick up the body of my child, lest it become a zombie ** **	Parameters: **		sig -- the signal that got us here (unused). ** **	Returns: **		none. ** **	Side Effects: **		Picks up extant zombies. **		Control socket exits may restart/shutdown daemon. ** **	NOTE:	THIS CAN BE CALLED FROM A SIGNAL HANDLER.  DO NOT ADD **		ANYTHING TO THIS ROUTINE UNLESS YOU KNOW WHAT YOU ARE **		DOING. */
@@ -11030,6 +10821,11 @@ name|int
 name|sig
 decl_stmt|;
 block|{
+name|int
+name|m
+init|=
+literal|0
+decl_stmt|;
 name|int
 name|save_errno
 init|=
@@ -11051,32 +10847,6 @@ decl_stmt|;
 name|int
 name|count
 decl_stmt|;
-else|#
-directive|else
-comment|/* HASWAITPID */
-ifdef|#
-directive|ifdef
-name|WNOHANG
-name|union
-name|wait
-name|status
-decl_stmt|;
-else|#
-directive|else
-comment|/* WNOHANG */
-specifier|auto
-name|int
-name|status
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* WNOHANG */
-endif|#
-directive|endif
-comment|/* HASWAITPID */
-if|#
-directive|if
-name|HASWAITPID
 name|count
 operator|=
 literal|0
@@ -11119,6 +10889,10 @@ comment|/* HASWAITPID */
 ifdef|#
 directive|ifdef
 name|WNOHANG
+name|union
+name|wait
+name|status
+decl_stmt|;
 while|while
 condition|(
 operator|(
@@ -11152,6 +10926,10 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* WNOHANG */
+specifier|auto
+name|int
+name|status
+decl_stmt|;
 comment|/* 	**  Catch one zombie -- we will be re-invoked (we hope) if there 	**  are more.  Unreliable signals probably break this, but this 	**  is the "old system" situation -- waitpid or wait3 are to be 	**  strongly preferred. 	*/
 if|if
 condition|(
@@ -11179,56 +10957,20 @@ endif|#
 directive|endif
 comment|/* HASWAITPID */
 comment|/* Drop PID and check if it was a control socket child */
-if|if
-condition|(
 name|proc_list_drop
 argument_list|(
 name|pid
-argument_list|)
-operator|==
-name|PROC_CONTROL
-operator|&&
-name|WIFEXITED
-argument_list|(
+argument_list|,
 name|st
+argument_list|,
+name|NULL
 argument_list|)
-condition|)
-block|{
-comment|/* if so, see if we need to restart or shutdown */
-if|if
-condition|(
-name|WEXITSTATUS
-argument_list|(
-name|st
-argument_list|)
-operator|==
-name|EX_RESTART
-condition|)
-block|{
-name|RestartRequest
-operator|=
-literal|"control socket"
 expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|WEXITSTATUS
-argument_list|(
-name|st
-argument_list|)
-operator|==
-name|EX_SHUTDOWN
-condition|)
-block|{
-comment|/* emulate a SIGTERM shutdown */
-name|ShutdownRequest
-operator|=
-literal|"control socket"
+name|CurRunners
+operator|-=
+name|m
 expr_stmt|;
-comment|/* NOTREACHED */
-block|}
-block|}
+comment|/* Update */
 block|}
 name|FIX_SYSV_SIGNAL
 argument_list|(
@@ -11245,470 +10987,6 @@ return|return
 name|SIGFUNC_RETURN
 return|;
 block|}
-comment|/* **  PUTENV -- emulation of putenv() in terms of setenv() ** **	Not needed on Posix-compliant systems. **	This doesn't have full Posix semantics, but it's good enough **		for sendmail. ** **	Parameter: **		env -- the environment to put. ** **	Returns: **		none. */
-if|#
-directive|if
-name|NEEDPUTENV
-if|#
-directive|if
-name|NEEDPUTENV
-operator|==
-literal|2
-comment|/* no setenv(3) call available */
-name|int
-name|putenv
-parameter_list|(
-name|str
-parameter_list|)
-name|char
-modifier|*
-name|str
-decl_stmt|;
-block|{
-name|char
-modifier|*
-modifier|*
-name|current
-decl_stmt|;
-name|int
-name|matchlen
-decl_stmt|,
-name|envlen
-init|=
-literal|0
-decl_stmt|;
-name|char
-modifier|*
-name|tmp
-decl_stmt|;
-name|char
-modifier|*
-modifier|*
-name|newenv
-decl_stmt|;
-specifier|static
-name|bool
-name|first
-init|=
-name|TRUE
-decl_stmt|;
-specifier|extern
-name|char
-modifier|*
-modifier|*
-name|environ
-decl_stmt|;
-comment|/* 	 * find out how much of str to match when searching 	 * for a string to replace. 	 */
-if|if
-condition|(
-operator|(
-name|tmp
-operator|=
-name|strchr
-argument_list|(
-name|str
-argument_list|,
-literal|'='
-argument_list|)
-operator|)
-operator|==
-name|NULL
-operator|||
-name|tmp
-operator|==
-name|str
-condition|)
-name|matchlen
-operator|=
-name|strlen
-argument_list|(
-name|str
-argument_list|)
-expr_stmt|;
-else|else
-name|matchlen
-operator|=
-call|(
-name|int
-call|)
-argument_list|(
-name|tmp
-operator|-
-name|str
-argument_list|)
-expr_stmt|;
-operator|++
-name|matchlen
-expr_stmt|;
-comment|/* 	 * Search for an existing string in the environment and find the 	 * length of environ.  If found, replace and exit. 	 */
-for|for
-control|(
-name|current
-operator|=
-name|environ
-init|;
-operator|*
-name|current
-condition|;
-name|current
-operator|++
-control|)
-block|{
-operator|++
-name|envlen
-expr_stmt|;
-if|if
-condition|(
-name|strncmp
-argument_list|(
-name|str
-argument_list|,
-operator|*
-name|current
-argument_list|,
-name|matchlen
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* found it, now insert the new version */
-operator|*
-name|current
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|str
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-block|}
-comment|/* 	 * There wasn't already a slot so add space for a new slot. 	 * If this is our first time through, use malloc(), else realloc(). 	 */
-if|if
-condition|(
-name|first
-condition|)
-block|{
-name|newenv
-operator|=
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
-name|xalloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|char
-operator|*
-argument_list|)
-operator|*
-operator|(
-name|envlen
-operator|+
-literal|2
-operator|)
-argument_list|)
-expr_stmt|;
-name|first
-operator|=
-name|FALSE
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|memcpy
-argument_list|(
-name|newenv
-argument_list|,
-name|environ
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|char
-operator|*
-argument_list|)
-operator|*
-name|envlen
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|newenv
-operator|=
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
-name|xrealloc
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|environ
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|char
-operator|*
-argument_list|)
-operator|*
-operator|(
-name|envlen
-operator|+
-literal|2
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* actually add in the new entry */
-name|environ
-operator|=
-name|newenv
-expr_stmt|;
-name|environ
-index|[
-name|envlen
-index|]
-operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|str
-expr_stmt|;
-name|environ
-index|[
-name|envlen
-operator|+
-literal|1
-index|]
-operator|=
-name|NULL
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-else|#
-directive|else
-comment|/* NEEDPUTENV == 2 */
-name|int
-name|putenv
-parameter_list|(
-name|env
-parameter_list|)
-name|char
-modifier|*
-name|env
-decl_stmt|;
-block|{
-name|char
-modifier|*
-name|p
-decl_stmt|;
-name|int
-name|l
-decl_stmt|;
-name|char
-name|nbuf
-index|[
-literal|100
-index|]
-decl_stmt|;
-name|p
-operator|=
-name|strchr
-argument_list|(
-name|env
-argument_list|,
-literal|'='
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|p
-operator|==
-name|NULL
-condition|)
-return|return
-literal|0
-return|;
-name|l
-operator|=
-name|p
-operator|-
-name|env
-expr_stmt|;
-if|if
-condition|(
-name|l
-operator|>
-sizeof|sizeof
-name|nbuf
-operator|-
-literal|1
-condition|)
-name|l
-operator|=
-sizeof|sizeof
-name|nbuf
-operator|-
-literal|1
-expr_stmt|;
-name|memmove
-argument_list|(
-name|nbuf
-argument_list|,
-name|env
-argument_list|,
-name|l
-argument_list|)
-expr_stmt|;
-name|nbuf
-index|[
-name|l
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-return|return
-name|setenv
-argument_list|(
-name|nbuf
-argument_list|,
-operator|++
-name|p
-argument_list|,
-literal|1
-argument_list|)
-return|;
-block|}
-endif|#
-directive|endif
-comment|/* NEEDPUTENV == 2 */
-endif|#
-directive|endif
-comment|/* NEEDPUTENV */
-comment|/* **  UNSETENV -- remove a variable from the environment ** **	Not needed on newer systems. ** **	Parameters: **		name -- the string name of the environment variable to be **			deleted from the current environment. ** **	Returns: **		none. ** **	Globals: **		environ -- a pointer to the current environment. ** **	Side Effects: **		Modifies environ. */
-if|#
-directive|if
-operator|!
-name|HASUNSETENV
-name|void
-name|unsetenv
-parameter_list|(
-name|name
-parameter_list|)
-name|char
-modifier|*
-name|name
-decl_stmt|;
-block|{
-specifier|extern
-name|char
-modifier|*
-modifier|*
-name|environ
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-modifier|*
-name|pp
-decl_stmt|;
-name|int
-name|len
-init|=
-name|strlen
-argument_list|(
-name|name
-argument_list|)
-decl_stmt|;
-for|for
-control|(
-name|pp
-operator|=
-name|environ
-init|;
-operator|*
-name|pp
-operator|!=
-name|NULL
-condition|;
-name|pp
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|strncmp
-argument_list|(
-name|name
-argument_list|,
-operator|*
-name|pp
-argument_list|,
-name|len
-argument_list|)
-operator|==
-literal|0
-operator|&&
-operator|(
-operator|(
-operator|*
-name|pp
-operator|)
-index|[
-name|len
-index|]
-operator|==
-literal|'='
-operator|||
-operator|(
-operator|*
-name|pp
-operator|)
-index|[
-name|len
-index|]
-operator|==
-literal|'\0'
-operator|)
-condition|)
-break|break;
-block|}
-for|for
-control|(
-init|;
-operator|*
-name|pp
-operator|!=
-name|NULL
-condition|;
-name|pp
-operator|++
-control|)
-operator|*
-name|pp
-operator|=
-name|pp
-index|[
-literal|1
-index|]
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* !HASUNSETENV */
 comment|/* **  GETDTABLESIZE -- return number of file descriptors ** **	Only on non-BSD systems ** **	Parameters: **		none ** **	Returns: **		size of file descriptor table ** **	Side Effects: **		none */
 ifdef|#
 directive|ifdef
@@ -11798,7 +11076,7 @@ modifier|*
 name|name
 decl_stmt|;
 block|{
-name|FILE
+name|SM_FILE_T
 modifier|*
 name|file
 decl_stmt|;
@@ -11821,11 +11099,17 @@ condition|(
 operator|(
 name|file
 operator|=
-name|fopen
+name|sm_io_open
 argument_list|(
+name|SmFtStdio
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
 literal|"/etc/whoami"
 argument_list|,
-literal|"r"
+name|SM_IO_RDONLY
+argument_list|,
+name|NULL
 argument_list|)
 operator|)
 operator|!=
@@ -11835,8 +11119,12 @@ block|{
 operator|(
 name|void
 operator|)
-name|fgets
+name|sm_io_fgets
 argument_list|(
+name|file
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
 name|name
 operator|->
 name|nodename
@@ -11844,16 +11132,16 @@ argument_list|,
 name|NODE_LENGTH
 operator|+
 literal|1
-argument_list|,
-name|file
 argument_list|)
 expr_stmt|;
 operator|(
 name|void
 operator|)
-name|fclose
+name|sm_io_close
 argument_list|(
 name|file
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|)
 expr_stmt|;
 name|n
@@ -11899,11 +11187,17 @@ condition|(
 operator|(
 name|file
 operator|=
-name|fopen
+name|sm_io_open
 argument_list|(
+name|SmFtStdio
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
 literal|"/usr/include/whoami.h"
 argument_list|,
-literal|"r"
+name|SM_IO_RDONLY
+argument_list|,
+name|NULL
 argument_list|)
 operator|)
 operator|!=
@@ -11918,13 +11212,15 @@ index|]
 decl_stmt|;
 while|while
 condition|(
-name|fgets
+name|sm_io_fgets
 argument_list|(
+name|file
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
 name|buf
 argument_list|,
 name|MAXLINE
-argument_list|,
-name|file
 argument_list|)
 operator|!=
 name|NULL
@@ -11932,7 +11228,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|sscanf
+name|sm_io_sscanf
 argument_list|(
 name|buf
 argument_list|,
@@ -11952,9 +11248,11 @@ block|}
 operator|(
 name|void
 operator|)
-name|fclose
+name|sm_io_close
 argument_list|(
 name|file
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|)
 expr_stmt|;
 if|if
@@ -11977,7 +11275,7 @@ directive|if
 literal|0
 comment|/* 	**  Popen is known to have security holes. 	*/
 comment|/* try uuname -l to return local name */
-block|if ((file = popen("uuname -l", "r")) != NULL) 	{ 		(void) fgets(name, NODE_LENGTH + 1, file); 		(void) pclose(file); 		n = strchr(name, '\n'); 		if (n != NULL) 			*n = '\0'; 		if (name->nodename[0] != '\0') 			return 0; 	}
+block|if ((file = popen("uuname -l", "r")) != NULL) 	{ 		(void) sm_io_fgets(file, SM_TIME_DEFAULT, name, 				   NODE_LENGTH + 1); 		(void) pclose(file); 		n = strchr(name, '\n'); 		if (n != NULL) 			*n = '\0'; 		if (name->nodename[0] != '\0') 			return 0; 	}
 endif|#
 directive|endif
 comment|/* 0 */
@@ -12122,8 +11420,7 @@ name|setpgid
 argument_list|(
 literal|0
 argument_list|,
-name|getpid
-argument_list|()
+name|CurrentPid
 argument_list|)
 return|;
 endif|#
@@ -12212,7 +11509,8 @@ comment|/* DGUX_5_4_2 */
 comment|/* **  GETOPT -- for old systems or systems with bogus implementations */
 if|#
 directive|if
-name|NEEDGETOPT
+operator|!
+name|SM_CONF_GETOPT
 comment|/*  * Copyright (c) 1985 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
 comment|/* **  this version hacked to add `atend' flag to allow state machine **  to reset if invoked by the program to scan args for a 2nd time */
 if|#
@@ -12237,7 +11535,7 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* defined(LIBC_SCCS)&& !defined(lint) */
-comment|/*  * get option letter from argument vector  */
+comment|/* **  get option letter from argument vector */
 ifdef|#
 directive|ifdef
 name|_CONVEX_SOURCE
@@ -12299,7 +11597,7 @@ name|tell
 parameter_list|(
 name|s
 parameter_list|)
-value|if (opterr) {fputs(*nargv,stderr);fputs(s,stderr); \ 			fputc(optopt,stderr);fputc('\n',stderr);return(BADCH);}
+value|if (opterr) \ 			{sm_io_fputs(smioerr, SM_TIME_DEFAULT, *nargv); \ 			(void) sm_io_fputs(smioerr, SM_TIME_DEFAULT, s); \ 			(void) sm_io_putc(smioerr, SM_TIME_DEFAULT, optopt); \ 			(void) sm_io_putc(smioerr, SM_TIME_DEFAULT, '\n'); \ 			return BADCH;}
 name|int
 name|getopt
 parameter_list|(
@@ -12545,309 +11843,14 @@ name|optind
 expr_stmt|;
 block|}
 return|return
-operator|(
 name|optopt
-operator|)
 return|;
 comment|/* dump back option letter */
 block|}
 endif|#
 directive|endif
-comment|/* NEEDGETOPT */
-comment|/* **  VFPRINTF, VSPRINTF -- for old 4.3 BSD systems missing a real version */
-if|#
-directive|if
-name|NEEDVPRINTF
-define|#
-directive|define
-name|MAXARG
-value|16
-name|vfprintf
-argument_list|(
-argument|fp
-argument_list|,
-argument|fmt
-argument_list|,
-argument|ap
-argument_list|)
-name|FILE
-modifier|*
-name|fp
-decl_stmt|;
-name|char
-modifier|*
-name|fmt
-decl_stmt|;
-name|char
-modifier|*
-modifier|*
-name|ap
-decl_stmt|;
-block|{
-name|char
-modifier|*
-name|bp
-index|[
-name|MAXARG
-index|]
-decl_stmt|;
-name|int
-name|i
-init|=
-literal|0
-decl_stmt|;
-while|while
-condition|(
-operator|*
-name|ap
-operator|&&
-name|i
-operator|<
-name|MAXARG
-condition|)
-name|bp
-index|[
-name|i
-operator|++
-index|]
-operator|=
-operator|*
-name|ap
-operator|++
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|fp
-argument_list|,
-name|fmt
-argument_list|,
-name|bp
-index|[
-literal|0
-index|]
-argument_list|,
-name|bp
-index|[
-literal|1
-index|]
-argument_list|,
-name|bp
-index|[
-literal|2
-index|]
-argument_list|,
-name|bp
-index|[
-literal|3
-index|]
-argument_list|,
-name|bp
-index|[
-literal|4
-index|]
-argument_list|,
-name|bp
-index|[
-literal|5
-index|]
-argument_list|,
-name|bp
-index|[
-literal|6
-index|]
-argument_list|,
-name|bp
-index|[
-literal|7
-index|]
-argument_list|,
-name|bp
-index|[
-literal|8
-index|]
-argument_list|,
-name|bp
-index|[
-literal|9
-index|]
-argument_list|,
-name|bp
-index|[
-literal|10
-index|]
-argument_list|,
-name|bp
-index|[
-literal|11
-index|]
-argument_list|,
-name|bp
-index|[
-literal|12
-index|]
-argument_list|,
-name|bp
-index|[
-literal|13
-index|]
-argument_list|,
-name|bp
-index|[
-literal|14
-index|]
-argument_list|,
-name|bp
-index|[
-literal|15
-index|]
-argument_list|)
-expr_stmt|;
-block|}
-name|vsprintf
-argument_list|(
-argument|s
-argument_list|,
-argument|fmt
-argument_list|,
-argument|ap
-argument_list|)
-name|char
-modifier|*
-name|s
-decl_stmt|;
-name|char
-modifier|*
-name|fmt
-decl_stmt|;
-name|char
-modifier|*
-modifier|*
-name|ap
-decl_stmt|;
-block|{
-name|char
-modifier|*
-name|bp
-index|[
-name|MAXARG
-index|]
-decl_stmt|;
-name|int
-name|i
-init|=
-literal|0
-decl_stmt|;
-while|while
-condition|(
-operator|*
-name|ap
-operator|&&
-name|i
-operator|<
-name|MAXARG
-condition|)
-name|bp
-index|[
-name|i
-operator|++
-index|]
-operator|=
-operator|*
-name|ap
-operator|++
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|s
-argument_list|,
-name|fmt
-argument_list|,
-name|bp
-index|[
-literal|0
-index|]
-argument_list|,
-name|bp
-index|[
-literal|1
-index|]
-argument_list|,
-name|bp
-index|[
-literal|2
-index|]
-argument_list|,
-name|bp
-index|[
-literal|3
-index|]
-argument_list|,
-name|bp
-index|[
-literal|4
-index|]
-argument_list|,
-name|bp
-index|[
-literal|5
-index|]
-argument_list|,
-name|bp
-index|[
-literal|6
-index|]
-argument_list|,
-name|bp
-index|[
-literal|7
-index|]
-argument_list|,
-name|bp
-index|[
-literal|8
-index|]
-argument_list|,
-name|bp
-index|[
-literal|9
-index|]
-argument_list|,
-name|bp
-index|[
-literal|10
-index|]
-argument_list|,
-name|bp
-index|[
-literal|11
-index|]
-argument_list|,
-name|bp
-index|[
-literal|12
-index|]
-argument_list|,
-name|bp
-index|[
-literal|13
-index|]
-argument_list|,
-name|bp
-index|[
-literal|14
-index|]
-argument_list|,
-name|bp
-index|[
-literal|15
-index|]
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* NEEDVPRINTF */
-comment|/* **  USERSHELLOK -- tell if a user's shell is ok for unrestricted use ** **	Parameters: **		user -- the name of the user we are checking. **		shell -- the user's shell from /etc/passwd ** **	Returns: **		TRUE -- if it is ok to use this for unrestricted access. **		FALSE -- if the shell is restricted. */
+comment|/* !SM_CONF_GETOPT */
+comment|/* **  USERSHELLOK -- tell if a user's shell is ok for unrestricted use ** **	Parameters: **		user -- the name of the user we are checking. **		shell -- the user's shell from /etc/passwd ** **	Returns: **		true -- if it is ok to use this for unrestricted access. **		false -- if the shell is restricted. */
 if|#
 directive|if
 operator|!
@@ -12903,6 +11906,14 @@ block|{
 literal|"/bin/sh"
 block|,
 comment|/* standard shell */
+ifdef|#
+directive|ifdef
+name|MPE
+literal|"/SYS/PUB/CI"
+block|,
+else|#
+directive|else
+comment|/* MPE */
 literal|"/usr/bin/sh"
 block|,
 literal|"/bin/csh"
@@ -12910,6 +11921,9 @@ block|,
 comment|/* C shell */
 literal|"/usr/bin/csh"
 block|,
+endif|#
+directive|endif
+comment|/* MPE */
 ifdef|#
 directive|ifdef
 name|__hpux
@@ -13093,7 +12107,7 @@ operator|<=
 literal|1
 condition|)
 return|return
-name|TRUE
+name|true
 return|;
 name|setusershell
 argument_list|()
@@ -13153,7 +12167,7 @@ endif|#
 directive|endif
 comment|/* USEGETCONFATTR */
 specifier|register
-name|FILE
+name|SM_FILE_T
 modifier|*
 name|shellf
 decl_stmt|;
@@ -13188,7 +12202,7 @@ operator|<=
 literal|1
 condition|)
 return|return
-name|TRUE
+name|true
 return|;
 if|#
 directive|if
@@ -13244,7 +12258,7 @@ operator|==
 literal|0
 condition|)
 return|return
-name|TRUE
+name|true
 return|;
 name|v
 operator|+=
@@ -13257,7 +12271,7 @@ literal|1
 expr_stmt|;
 block|}
 return|return
-name|FALSE
+name|false
 return|;
 block|}
 endif|#
@@ -13265,11 +12279,17 @@ directive|endif
 comment|/* USEGETCONFATTR */
 name|shellf
 operator|=
-name|fopen
+name|sm_io_open
 argument_list|(
+name|SmFtStdio
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
 name|_PATH_SHELLS
 argument_list|,
-literal|"r"
+name|SM_IO_RDONLY
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -13305,7 +12325,7 @@ literal|"usershellok: cannot open %s: %s"
 argument_list|,
 name|_PATH_SHELLS
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|errno
 argument_list|)
@@ -13339,23 +12359,25 @@ operator|==
 literal|0
 condition|)
 return|return
-name|TRUE
+name|true
 return|;
 block|}
 return|return
-name|FALSE
+name|false
 return|;
 block|}
 while|while
 condition|(
-name|fgets
+name|sm_io_fgets
 argument_list|(
+name|shellf
+argument_list|,
+name|SM_TIME_DEFAULT
+argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
 name|buf
-argument_list|,
-name|shellf
 argument_list|)
 operator|!=
 name|NULL
@@ -13469,26 +12491,30 @@ block|{
 operator|(
 name|void
 operator|)
-name|fclose
+name|sm_io_close
 argument_list|(
 name|shellf
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|)
 expr_stmt|;
 return|return
-name|TRUE
+name|true
 return|;
 block|}
 block|}
 operator|(
 name|void
 operator|)
-name|fclose
+name|sm_io_close
 argument_list|(
 name|shellf
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|)
 expr_stmt|;
 return|return
-name|FALSE
+name|false
 return|;
 endif|#
 directive|endif
@@ -13619,8 +12645,29 @@ block|{
 if|#
 directive|if
 name|SFS_TYPE
-operator|!=
+operator|==
 name|SFS_NONE
+if|if
+condition|(
+name|bsize
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|bsize
+operator|=
+literal|4096L
+expr_stmt|;
+comment|/* assume free space is plentiful */
+return|return
+operator|(
+name|long
+operator|)
+name|LONG_MAX
+return|;
+else|#
+directive|else
+comment|/* SFS_TYPE == SFS_NONE */
 if|#
 directive|if
 name|SFS_TYPE
@@ -13879,34 +12926,32 @@ operator|.
 name|SFS_BAVAIL
 return|;
 block|}
-endif|#
-directive|endif
-comment|/* SFS_TYPE != SFS_NONE */
 return|return
 operator|-
 literal|1
 return|;
+endif|#
+directive|endif
+comment|/* SFS_TYPE == SFS_NONE */
 block|}
-comment|/* **  ENOUGHDISKSPACE -- is there enough free space on the queue fs? ** **	Only implemented if you have statfs. ** **	Parameters: **		msize -- the size to check against.  If zero, we don't yet **		know how big the message will be, so just check for **		a "reasonable" amount. **		log -- log message? ** **	Returns: **		TRUE if there is enough space. **		FALSE otherwise. */
+comment|/* **  ENOUGHDISKSPACE -- is there enough free space on the queue file systems? ** **	Parameters: **		msize -- the size to check against.  If zero, we don't yet **		know how big the message will be, so just check for **		a "reasonable" amount. **		e -- envelope, or NULL -- controls logging ** **	Returns: **		true if in every queue group there is at least one **		queue directory whose file system contains enough free space. **		false otherwise. ** **	Side Effects: **		If there is not enough disk space and e != NULL **		then sm_syslog is called. */
 name|bool
 name|enoughdiskspace
 parameter_list|(
 name|msize
 parameter_list|,
-name|log
+name|e
 parameter_list|)
 name|long
 name|msize
 decl_stmt|;
-name|bool
-name|log
+name|ENVELOPE
+modifier|*
+name|e
 decl_stmt|;
 block|{
-name|long
-name|bfree
-decl_stmt|;
-name|long
-name|bsize
+name|int
+name|i
 decl_stmt|;
 if|if
 condition|(
@@ -13928,143 +12973,57 @@ argument_list|,
 literal|80
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"enoughdiskspace: no threshold\n"
 argument_list|)
 expr_stmt|;
 return|return
-name|TRUE
+name|true
 return|;
 block|}
-name|bfree
+name|filesys_update
+argument_list|()
+expr_stmt|;
+for|for
+control|(
+name|i
 operator|=
-name|freediskspace
-argument_list|(
-name|QueueDir
-argument_list|,
-operator|&
-name|bsize
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|bfree
-operator|>=
 literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|tTd
-argument_list|(
-literal|4
-argument_list|,
-literal|80
-argument_list|)
-condition|)
-name|dprintf
-argument_list|(
-literal|"enoughdiskspace: bavail=%ld, need=%ld\n"
-argument_list|,
-name|bfree
-argument_list|,
-name|msize
-argument_list|)
-expr_stmt|;
-comment|/* convert msize to block count */
-name|msize
-operator|=
-name|msize
-operator|/
-name|bsize
-operator|+
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|MinBlocksFree
-operator|>=
-literal|0
-condition|)
-name|msize
-operator|+=
-name|MinBlocksFree
-expr_stmt|;
-if|if
-condition|(
-name|bfree
+init|;
+name|i
 operator|<
-name|msize
-condition|)
+name|NumQueue
+condition|;
+operator|++
+name|i
+control|)
 block|{
 if|if
 condition|(
-name|log
-operator|&&
-name|LogLevel
-operator|>
+name|pickqdir
+argument_list|(
+name|Queue
+index|[
+name|i
+index|]
+argument_list|,
+name|msize
+argument_list|,
+name|e
+argument_list|)
+operator|<
 literal|0
 condition|)
-name|sm_syslog
-argument_list|(
-name|LOG_ALERT
-argument_list|,
-name|CurEnv
-operator|->
-name|e_id
-argument_list|,
-literal|"low on space (have %ld, %s needs %ld in %s)"
-argument_list|,
-name|bfree
-argument_list|,
-name|CurHostName
-operator|==
-name|NULL
-condition|?
-literal|"SMTP-DAEMON"
-else|:
-name|CurHostName
-argument_list|,
-name|msize
-argument_list|,
-name|QueueDir
-argument_list|)
-expr_stmt|;
 return|return
-name|FALSE
+name|false
 return|;
 block|}
-block|}
-elseif|else
-if|if
-condition|(
-name|tTd
-argument_list|(
-literal|4
-argument_list|,
-literal|80
-argument_list|)
-condition|)
-name|dprintf
-argument_list|(
-literal|"enoughdiskspace failure: min=%ld, need=%ld: %s\n"
-argument_list|,
-name|MinBlocksFree
-argument_list|,
-name|msize
-argument_list|,
-name|errstring
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
 return|return
-name|TRUE
+name|true
 return|;
 block|}
-comment|/* **  TRANSIENTERROR -- tell if an error code indicates a transient failure ** **	This looks at an errno value and tells if this is likely to **	go away if retried later. ** **	Parameters: **		err -- the errno code to classify. ** **	Returns: **		TRUE if this is probably transient. **		FALSE otherwise. */
+comment|/* **  TRANSIENTERROR -- tell if an error code indicates a transient failure ** **	This looks at an errno value and tells if this is likely to **	go away if retried later. ** **	Parameters: **		err -- the errno code to classify. ** **	Returns: **		true if this is probably transient. **		false otherwise. */
 name|bool
 name|transienterror
 parameter_list|(
@@ -14111,16 +13070,10 @@ case|case
 name|ENOSPC
 case|:
 comment|/* No space left on device */
-ifdef|#
-directive|ifdef
-name|ETIMEDOUT
 case|case
 name|ETIMEDOUT
 case|:
 comment|/* Connection timed out */
-endif|#
-directive|endif
-comment|/* ETIMEDOUT */
 ifdef|#
 directive|ifdef
 name|ESTALE
@@ -14373,15 +13326,15 @@ name|E_SM_OPENTIMEOUT
 case|:
 comment|/* PSEUDO: open timed out */
 return|return
-name|TRUE
+name|true
 return|;
 block|}
 comment|/* nope, must be permanent */
 return|return
-name|FALSE
+name|false
 return|;
 block|}
-comment|/* **  LOCKFILE -- lock a file using flock or (shudder) fcntl locking ** **	Parameters: **		fd -- the file descriptor of the file. **		filename -- the file name (for error messages). **		ext -- the filename extension. **		type -- type of the lock.  Bits can be: **			LOCK_EX -- exclusive lock. **			LOCK_NB -- non-blocking. **			LOCK_UN -- unlock. ** **	Returns: **		TRUE if the lock was acquired. **		FALSE otherwise. */
+comment|/* **  LOCKFILE -- lock a file using flock or (shudder) fcntl locking ** **	Parameters: **		fd -- the file descriptor of the file. **		filename -- the file name (for error messages). **		ext -- the filename extension. **		type -- type of the lock.  Bits can be: **			LOCK_EX -- exclusive lock. **			LOCK_NB -- non-blocking. **			LOCK_UN -- unlock. ** **	Returns: **		true if the lock was acquired. **		false otherwise. */
 name|bool
 name|lockfile
 parameter_list|(
@@ -14511,7 +13464,7 @@ argument_list|,
 literal|60
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"lockfile(%s%s, action=%d, type=%d): "
 argument_list|,
@@ -14565,13 +13518,13 @@ argument_list|,
 literal|60
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"SUCCESS\n"
 argument_list|)
 expr_stmt|;
 return|return
-name|TRUE
+name|true
 return|;
 block|}
 name|save_errno
@@ -14587,11 +13540,11 @@ argument_list|,
 literal|60
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"(%s) "
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|save_errno
 argument_list|)
@@ -14614,13 +13567,13 @@ argument_list|,
 literal|60
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"SUCCESS\n"
 argument_list|)
 expr_stmt|;
 return|return
-name|TRUE
+name|true
 return|;
 block|}
 if|if
@@ -14695,9 +13648,9 @@ name|dumpfd
 argument_list|(
 name|fd
 argument_list|,
-name|TRUE
+name|true
 argument_list|,
-name|TRUE
+name|true
 argument_list|)
 expr_stmt|;
 block|}
@@ -14723,7 +13676,7 @@ argument_list|,
 literal|60
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"lockfile(%s%s, type=%o): "
 argument_list|,
@@ -14770,13 +13723,13 @@ argument_list|,
 literal|60
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"SUCCESS\n"
 argument_list|)
 expr_stmt|;
 return|return
-name|TRUE
+name|true
 return|;
 block|}
 name|save_errno
@@ -14792,11 +13745,11 @@ argument_list|,
 literal|60
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"(%s) "
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|save_errno
 argument_list|)
@@ -14868,9 +13821,9 @@ name|dumpfd
 argument_list|(
 name|fd
 argument_list|,
-name|TRUE
+name|true
 argument_list|,
-name|TRUE
+name|true
 argument_list|)
 expr_stmt|;
 block|}
@@ -14886,7 +13839,7 @@ argument_list|,
 literal|60
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"FAIL\n"
 argument_list|)
@@ -14896,10 +13849,10 @@ operator|=
 name|save_errno
 expr_stmt|;
 return|return
-name|FALSE
+name|false
 return|;
 block|}
-comment|/* **  CHOWNSAFE -- tell if chown is "safe" (executable only by root) ** **	Unfortunately, given that we can't predict other systems on which **	a remote mounted (NFS) filesystem will be mounted, the answer is **	almost always that this is unsafe. ** **	Note also that many operating systems have non-compliant **	implementations of the _POSIX_CHOWN_RESTRICTED variable and the **	fpathconf() routine.  According to IEEE 1003.1-1990, if **	_POSIX_CHOWN_RESTRICTED is defined and not equal to -1, then **	no non-root process can give away the file.  However, vendors **	don't take NFS into account, so a comfortable value of **	_POSIX_CHOWN_RESTRICTED tells us nothing. ** **	Also, some systems (e.g., IRIX 6.2) return 1 from fpathconf() **	even on files where chown is not restricted.  Many systems get **	this wrong on NFS-based filesystems (that is, they say that chown **	is restricted [safe] on NFS filesystems where it may not be, since **	other systems can access the same filesystem and do file giveaway; **	only the NFS server knows for sure!)  Hence, it is important to **	get the value of SAFENFSPATHCONF correct -- it should be defined **	_only_ after testing (see test/t_pathconf.c) a system on an unsafe **	NFS-based filesystem to ensure that you can get meaningful results. **	If in doubt, assume unsafe! ** **	You may also need to tweak IS_SAFE_CHOWN -- it should be a **	condition indicating whether the return from pathconf indicates **	that chown is safe (typically either> 0 or>= 0 -- there isn't **	even any agreement about whether a zero return means that a file **	is or is not safe).  It defaults to "> 0". ** **	If the parent directory is safe (writable only by owner back **	to the root) then we can relax slightly and trust fpathconf **	in more circumstances.  This is really a crock -- if this is an **	NFS mounted filesystem then we really know nothing about the **	underlying implementation.  However, most systems pessimize and **	return an error (EINVAL or EOPNOTSUPP) on NFS filesystems, which **	we interpret as unsafe, as we should.  Thus, this heuristic gets **	us into a possible problem only on systems that have a broken **	pathconf implementation and which are also poorly configured **	(have :include: files in group- or world-writable directories). ** **	Parameters: **		fd -- the file descriptor to check. **		safedir -- set if the parent directory is safe. ** **	Returns: **		TRUE -- if the chown(2) operation is "safe" -- that is, **			only root can chown the file to an arbitrary user. **		FALSE -- if an arbitrary user can give away a file. */
+comment|/* **  CHOWNSAFE -- tell if chown is "safe" (executable only by root) ** **	Unfortunately, given that we can't predict other systems on which **	a remote mounted (NFS) filesystem will be mounted, the answer is **	almost always that this is unsafe. ** **	Note also that many operating systems have non-compliant **	implementations of the _POSIX_CHOWN_RESTRICTED variable and the **	fpathconf() routine.  According to IEEE 1003.1-1990, if **	_POSIX_CHOWN_RESTRICTED is defined and not equal to -1, then **	no non-root process can give away the file.  However, vendors **	don't take NFS into account, so a comfortable value of **	_POSIX_CHOWN_RESTRICTED tells us nothing. ** **	Also, some systems (e.g., IRIX 6.2) return 1 from fpathconf() **	even on files where chown is not restricted.  Many systems get **	this wrong on NFS-based filesystems (that is, they say that chown **	is restricted [safe] on NFS filesystems where it may not be, since **	other systems can access the same filesystem and do file giveaway; **	only the NFS server knows for sure!)  Hence, it is important to **	get the value of SAFENFSPATHCONF correct -- it should be defined **	_only_ after testing (see test/t_pathconf.c) a system on an unsafe **	NFS-based filesystem to ensure that you can get meaningful results. **	If in doubt, assume unsafe! ** **	You may also need to tweak IS_SAFE_CHOWN -- it should be a **	condition indicating whether the return from pathconf indicates **	that chown is safe (typically either> 0 or>= 0 -- there isn't **	even any agreement about whether a zero return means that a file **	is or is not safe).  It defaults to "> 0". ** **	If the parent directory is safe (writable only by owner back **	to the root) then we can relax slightly and trust fpathconf **	in more circumstances.  This is really a crock -- if this is an **	NFS mounted filesystem then we really know nothing about the **	underlying implementation.  However, most systems pessimize and **	return an error (EINVAL or EOPNOTSUPP) on NFS filesystems, which **	we interpret as unsafe, as we should.  Thus, this heuristic gets **	us into a possible problem only on systems that have a broken **	pathconf implementation and which are also poorly configured **	(have :include: files in group- or world-writable directories). ** **	Parameters: **		fd -- the file descriptor to check. **		safedir -- set if the parent directory is safe. ** **	Returns: **		true -- if the chown(2) operation is "safe" -- that is, **			only root can chown the file to an arbitrary user. **		false -- if an arbitrary user can give away a file. */
 ifndef|#
 directive|ifndef
 name|IS_SAFE_CHOWN
@@ -14965,7 +13918,7 @@ name|DontBlameSendmail
 argument_list|)
 condition|)
 return|return
-name|TRUE
+name|true
 return|;
 comment|/* 	**  Some systems (e.g., SunOS) seem to have the call and the 	**  #define _PC_CHOWN_RESTRICTED, but don't actually implement 	**  the call.  This heuristic checks for that. 	*/
 name|errno
@@ -15010,7 +13963,7 @@ directive|endif
 comment|/* SAFENFSPATHCONF */
 else|#
 directive|else
-comment|/* (!defined(_POSIX_CHOWN_RESTRICTED) || _POSIX_CHOWN_RESTRICTED != -1)&& \ */
+comment|/* (!defined(_POSIX_CHOWN_RESTRICTED) || _POSIX_CHOWN_RESTRICTED != -1)&& ... */
 return|return
 name|bitnset
 argument_list|(
@@ -15021,7 +13974,7 @@ argument_list|)
 return|;
 endif|#
 directive|endif
-comment|/* (!defined(_POSIX_CHOWN_RESTRICTED) || _POSIX_CHOWN_RESTRICTED != -1)&& \ */
+comment|/* (!defined(_POSIX_CHOWN_RESTRICTED) || _POSIX_CHOWN_RESTRICTED != -1)&& ... */
 block|}
 comment|/* **  RESETLIMITS -- reset system controlled resource limits ** **	This is to avoid denial-of-service attacks ** **	Parameters: **		none ** **	Returns: **		none */
 if|#
@@ -15159,62 +14112,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* **  GETCFNAME -- return the name of the .cf file. ** **	Some systems (e.g., NeXT) determine this dynamically. */
-name|char
-modifier|*
-name|getcfname
-parameter_list|()
-block|{
-if|if
-condition|(
-name|ConfFile
-operator|!=
-name|NULL
-condition|)
-return|return
-name|ConfFile
-return|;
-if|#
-directive|if
-name|NETINFO
-block|{
-name|char
-modifier|*
-name|cflocation
-decl_stmt|;
-name|cflocation
-operator|=
-name|ni_propval
-argument_list|(
-literal|"/locations"
-argument_list|,
-name|NULL
-argument_list|,
-literal|"sendmail"
-argument_list|,
-literal|"sendmail.cf"
-argument_list|,
-literal|'\0'
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|cflocation
-operator|!=
-name|NULL
-condition|)
-return|return
-name|cflocation
-return|;
-block|}
-endif|#
-directive|endif
-comment|/* NETINFO */
-return|return
-name|_PATH_SENDMAILCF
-return|;
-block|}
-comment|/* **  SETVENDOR -- process vendor code from V configuration line ** **	Parameters: **		vendor -- string representation of vendor. ** **	Returns: **		TRUE -- if ok. **		FALSE -- if vendor code could not be processed. ** **	Side Effects: **		It is reasonable to set mode flags here to tweak **		processing in other parts of the code if necessary. **		For example, if you are a vendor that uses $%y to **		indicate YP lookups, you could enable that here. */
+comment|/* **  SETVENDOR -- process vendor code from V configuration line ** **	Parameters: **		vendor -- string representation of vendor. ** **	Returns: **		true -- if ok. **		false -- if vendor code could not be processed. ** **	Side Effects: **		It is reasonable to set mode flags here to tweak **		processing in other parts of the code if necessary. **		For example, if you are a vendor that uses $%y to **		indicate YP lookups, you could enable that here. */
 name|bool
 name|setvendor
 parameter_list|(
@@ -15227,7 +14125,7 @@ decl_stmt|;
 block|{
 if|if
 condition|(
-name|strcasecmp
+name|sm_strcasecmp
 argument_list|(
 name|vendor
 argument_list|,
@@ -15242,7 +14140,7 @@ operator|=
 name|VENDOR_BERKELEY
 expr_stmt|;
 return|return
-name|TRUE
+name|true
 return|;
 block|}
 comment|/* add vendor extensions here */
@@ -15251,7 +14149,7 @@ directive|ifdef
 name|SUN_EXTENSIONS
 if|if
 condition|(
-name|strcasecmp
+name|sm_strcasecmp
 argument_list|(
 name|vendor
 argument_list|,
@@ -15266,7 +14164,7 @@ operator|=
 name|VENDOR_SUN
 expr_stmt|;
 return|return
-name|TRUE
+name|true
 return|;
 block|}
 endif|#
@@ -15285,7 +14183,7 @@ name|VENDOR_CODE
 argument_list|)
 if|if
 condition|(
-name|strcasecmp
+name|sm_strcasecmp
 argument_list|(
 name|vendor
 argument_list|,
@@ -15300,14 +14198,14 @@ operator|=
 name|VENDOR_CODE
 expr_stmt|;
 return|return
-name|TRUE
+name|true
 return|;
 block|}
 endif|#
 directive|endif
 comment|/* defined(VENDOR_NAME)&& defined(VENDOR_CODE) */
 return|return
-name|FALSE
+name|false
 return|;
 block|}
 comment|/* **  GETVENDOR -- return vendor name based on vendor code ** **	Parameters: **		vendorcode -- numeric representation of vendor. ** **	Returns: **		string containing vendor name. */
@@ -15560,7 +14458,9 @@ argument_list|)
 expr_stmt|;
 name|finis
 argument_list|(
-name|FALSE
+name|false
+argument_list|,
+name|true
 argument_list|,
 name|EX_USAGE
 argument_list|)
@@ -15639,9 +14539,6 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* TCPWRAPPERS */
-if|#
-directive|if
-name|DAEMON
 name|char
 modifier|*
 name|validate_connection
@@ -15672,6 +14569,15 @@ name|char
 modifier|*
 name|host
 decl_stmt|;
+name|char
+modifier|*
+name|addr
+decl_stmt|;
+specifier|extern
+name|int
+name|hosts_ctl
+parameter_list|()
+function_decl|;
 endif|#
 directive|endif
 comment|/* TCPWRAPPERS */
@@ -15684,7 +14590,7 @@ argument_list|,
 literal|3
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"validate_connection(%s, %s)\n"
 argument_list|,
@@ -15711,13 +14617,15 @@ argument_list|)
 argument_list|,
 name|e
 argument_list|,
-name|TRUE
+name|true
 argument_list|,
-name|TRUE
+name|true
 argument_list|,
-literal|4
+literal|3
 argument_list|,
 name|NULL
+argument_list|,
+name|NOQID
 argument_list|)
 operator|!=
 name|EX_OK
@@ -15746,7 +14654,7 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"  ... validate_connection: BAD (rscheck)\n"
 argument_list|)
@@ -15763,7 +14671,7 @@ condition|)
 operator|(
 name|void
 operator|)
-name|strlcpy
+name|sm_strlcpy
 argument_list|(
 name|reject
 argument_list|,
@@ -15777,7 +14685,7 @@ else|else
 operator|(
 name|void
 operator|)
-name|strlcpy
+name|sm_strlcpy
 argument_list|(
 name|reject
 argument_list|,
@@ -15824,6 +14732,41 @@ name|host
 operator|=
 name|hostname
 expr_stmt|;
+name|addr
+operator|=
+name|anynet_ntoa
+argument_list|(
+name|sap
+argument_list|)
+expr_stmt|;
+if|#
+directive|if
+name|NETINET6
+comment|/* TCP/Wrappers don't want the IPv6: protocol label */
+if|if
+condition|(
+name|addr
+operator|!=
+name|NULL
+operator|&&
+name|sm_strncasecmp
+argument_list|(
+name|addr
+argument_list|,
+literal|"IPv6:"
+argument_list|,
+literal|5
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|addr
+operator|+=
+literal|5
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* NETINET6 */
 if|if
 condition|(
 operator|!
@@ -15833,10 +14776,7 @@ literal|"sendmail"
 argument_list|,
 name|host
 argument_list|,
-name|anynet_ntoa
-argument_list|(
-name|sap
-argument_list|)
+name|addr
 argument_list|,
 name|STRING_UNKNOWN
 argument_list|)
@@ -15851,7 +14791,7 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"  ... validate_connection: BAD (tcpwrappers)\n"
 argument_list|)
@@ -15859,8 +14799,8 @@ expr_stmt|;
 if|if
 condition|(
 name|LogLevel
-operator|>=
-literal|4
+operator|>
+literal|3
 condition|)
 name|sm_syslog
 argument_list|(
@@ -15874,10 +14814,7 @@ literal|"tcpwrappers (%s, %s) rejection"
 argument_list|,
 name|host
 argument_list|,
-name|anynet_ntoa
-argument_list|(
-name|sap
-argument_list|)
+name|addr
 argument_list|)
 expr_stmt|;
 return|return
@@ -15896,7 +14833,7 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"  ... validate_connection: OK\n"
 argument_list|)
@@ -15905,9 +14842,6 @@ return|return
 name|NULL
 return|;
 block|}
-endif|#
-directive|endif
-comment|/* DAEMON */
 comment|/* **  STRTOL -- convert string to long integer ** **	For systems that don't have it in the C library. ** **	This is taken verbatim from the 4.4-Lite C library. */
 if|#
 directive|if
@@ -15934,7 +14868,7 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* defined(LIBC_SCCS)&& !defined(lint) */
-comment|/*  * Convert a string to a long integer.  *  * Ignores `locale' stuff.  Assumes that the upper and lower case  * alphabets and digits are each contiguous.  */
+comment|/* **  Convert a string to a long integer. ** **  Ignores `locale' stuff.  Assumes that the upper and lower case **  alphabets and digits are each contiguous. */
 name|long
 name|strtol
 parameter_list|(
@@ -15991,7 +14925,7 @@ name|any
 decl_stmt|,
 name|cutlim
 decl_stmt|;
-comment|/* 	 * Skip white space and pick up leading +/- sign if any. 	 * If base is 0, allow 0x for hex and 0 for octal, else 	 * assume decimal; if base is already 16, allow 0x. 	 */
+comment|/* 	**  Skip white space and pick up leading +/- sign if any. 	**  If base is 0, allow 0x for hex and 0 for octal, else 	**  assume decimal; if base is already 16, allow 0x. 	*/
 do|do
 block|{
 name|c
@@ -16101,7 +15035,7 @@ literal|8
 else|:
 literal|10
 expr_stmt|;
-comment|/* 	 * Compute the cutoff value between legal numbers and illegal 	 * numbers.  That is the largest legal value, divided by the 	 * base.  An input number that is greater than this value, if 	 * followed by a legal input character, is too big.  One that 	 * is equal to this value may be valid or not; the limit 	 * between valid and invalid numbers is then based on the last 	 * digit.  For instance, if the range for longs is 	 * [-2147483648..2147483647] and the input base is 10, 	 * cutoff will be set to 214748364 and cutlim to either 	 * 7 (neg==0) or 8 (neg==1), meaning that if we have accumulated 	 * a value> 214748364, or equal but the next digit is> 7 (or 8), 	 * the number is too big, and we will return a range error. 	 * 	 * Set any if any `digits' consumed; make it negative to indicate 	 * overflow. 	 */
+comment|/* 	**  Compute the cutoff value between legal numbers and illegal 	**  numbers.  That is the largest legal value, divided by the 	**  base.  An input number that is greater than this value, if 	**  followed by a legal input character, is too big.  One that 	**  is equal to this value may be valid or not; the limit 	**  between valid and invalid numbers is then based on the last 	**  digit.  For instance, if the range for longs is 	**  [-2147483648..2147483647] and the input base is 10, 	**  cutoff will be set to 214748364 and cutlim to either 	**  7 (neg==0) or 8 (neg==1), meaning that if we have accumulated 	**  a value> 214748364, or equal but the next digit is> 7 (or 8), 	**  the number is too big, and we will return a range error. 	** 	**  Set any if any `digits' consumed; make it negative to indicate 	**  overflow. 	*/
 name|cutoff
 operator|=
 name|neg
@@ -16467,7 +15401,7 @@ block|{
 name|bool
 name|resv6
 init|=
-name|TRUE
+name|true
 decl_stmt|;
 name|struct
 name|hostent
@@ -16512,17 +15446,8 @@ argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
-operator|*
-name|err
-operator|=
-name|h_errno
-expr_stmt|;
 if|if
 condition|(
-name|family
-operator|==
-name|AF_INET6
-operator|&&
 operator|!
 name|resv6
 condition|)
@@ -16532,6 +15457,11 @@ name|options
 operator|&=
 operator|~
 name|RES_USE_INET6
+expr_stmt|;
+operator|*
+name|err
+operator|=
+name|h_errno
 expr_stmt|;
 return|return
 name|h
@@ -16596,9 +15526,6 @@ return|return
 name|h
 return|;
 block|}
-if|#
-directive|if
-name|_FFR_FREEHOSTENT
 name|void
 name|freehostent
 parameter_list|(
@@ -16615,10 +15542,7 @@ return|return;
 block|}
 endif|#
 directive|endif
-comment|/* _FFR_FREEHOSTENT */
-endif|#
-directive|endif
-comment|/* NEEDSGETIPNODE&& NETINET6 */
+comment|/* NETINET6&& NEEDSGETIPNODE */
 name|struct
 name|hostent
 modifier|*
@@ -16717,7 +15641,7 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"_switch_gethostbyname_r(%s)... "
 argument_list|,
@@ -16767,7 +15691,7 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"__switch_gethostbyname(%s)... "
 argument_list|,
@@ -16838,7 +15762,7 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"sm_gethostbyname(%s, %d)... "
 argument_list|,
@@ -16913,7 +15837,7 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"failure\n"
 argument_list|)
@@ -16980,9 +15904,6 @@ argument_list|(
 name|name
 argument_list|)
 operator|>
-operator|(
-name|SIZE_T
-operator|)
 sizeof|sizeof
 name|hbuf
 operator|-
@@ -17000,7 +15921,7 @@ block|}
 operator|(
 name|void
 operator|)
-name|strlcpy
+name|sm_strlcpy
 argument_list|(
 name|hbuf
 argument_list|,
@@ -17040,7 +15961,7 @@ argument_list|,
 literal|10
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"sm_gethostbyname(%s, %d)... "
 argument_list|,
@@ -17114,14 +16035,14 @@ name|h
 operator|==
 name|NULL
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"failure\n"
 argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"%s\n"
 argument_list|,
@@ -17163,7 +16084,7 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* NETINET6 */
-name|int
+name|size_t
 name|i
 decl_stmt|;
 if|if
@@ -17192,7 +16113,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"\talias: %s\n"
 argument_list|,
@@ -17296,7 +16217,7 @@ name|addr
 operator|!=
 name|NULL
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"\taddr: %s\n"
 argument_list|,
@@ -17692,6 +16613,9 @@ name|syserr
 argument_list|(
 literal|"No protected passwd entry, uid = %d"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|uid
 argument_list|)
 expr_stmt|;
@@ -17703,6 +16627,9 @@ name|syserr
 argument_list|(
 literal|"Account has been disabled, uid = %d"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|uid
 argument_list|)
 expr_stmt|;
@@ -17714,6 +16641,9 @@ name|syserr
 argument_list|(
 literal|"Account has been retired, uid = %d"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|uid
 argument_list|)
 expr_stmt|;
@@ -17725,6 +16655,9 @@ name|syserr
 argument_list|(
 literal|"Could not set LUID, uid = %d"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|uid
 argument_list|)
 expr_stmt|;
@@ -17736,6 +16669,9 @@ name|syserr
 argument_list|(
 literal|"Could not set kernel privs, uid = %d"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|uid
 argument_list|)
 expr_stmt|;
@@ -17746,6 +16682,9 @@ literal|"Unknown return code (%d) from set_secure_info(%d)"
 argument_list|,
 name|rc
 argument_list|,
+operator|(
+name|int
+operator|)
 name|uid
 argument_list|)
 expr_stmt|;
@@ -17753,7 +16692,9 @@ break|break;
 block|}
 name|finis
 argument_list|(
-name|FALSE
+name|false
+argument_list|,
+name|true
 argument_list|,
 name|EX_NOPERM
 argument_list|)
@@ -17961,7 +16902,7 @@ operator|&&
 endif|#
 directive|endif
 comment|/* NETINET6 */
-name|TRUE
+name|true
 condition|)
 name|sm_syslog
 argument_list|(
@@ -17969,7 +16910,7 @@ name|LOG_WARNING
 argument_list|,
 name|NOQID
 argument_list|,
-literal|"gethostbyaddr(%.100s) failed: %d\n"
+literal|"gethostbyaddr(%.100s) failed: %d"
 argument_list|,
 name|anynet_ntoa
 argument_list|(
@@ -18039,7 +16980,7 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"\ta.k.a.: %s\n"
 argument_list|,
@@ -18050,7 +16991,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|snprintf
+name|sm_snprintf
 argument_list|(
 name|hnb
 argument_list|,
@@ -18098,7 +17039,7 @@ argument_list|,
 literal|43
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"\ta.k.a.: %s (already in $=w)\n"
 argument_list|,
@@ -18159,7 +17100,7 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"\ta.k.a.: %s\n"
 argument_list|,
@@ -18169,7 +17110,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|snprintf
+name|sm_snprintf
 argument_list|(
 name|hnb
 argument_list|,
@@ -18216,7 +17157,7 @@ argument_list|,
 literal|43
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"\ta.k.a.: %s (already in $=w)\n"
 argument_list|,
@@ -18228,8 +17169,6 @@ block|}
 block|}
 if|#
 directive|if
-name|_FFR_FREEHOSTENT
-operator|&&
 name|NETINET6
 name|freehostent
 argument_list|(
@@ -18238,7 +17177,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* _FFR_FREEHOSTENT&& NETINET6 */
+comment|/* NETINET6 */
 return|return
 literal|0
 return|;
@@ -18317,23 +17256,78 @@ name|defined
 argument_list|(
 name|SIOCGLIFCONF
 argument_list|)
+ifdef|#
+directive|ifdef
+name|__hpux
+comment|/*     **  Unfortunately, HP has changed all of the structures,     **  making life difficult for implementors.     */
+define|#
+directive|define
+name|lifconf
+value|if_laddrconf
+define|#
+directive|define
+name|lifc_len
+value|iflc_len
+define|#
+directive|define
+name|lifc_buf
+value|iflc_buf
+define|#
+directive|define
+name|lifreq
+value|if_laddrreq
+define|#
+directive|define
+name|lifr_addr
+value|iflr_addr
+define|#
+directive|define
+name|lifr_name
+value|iflr_name
+define|#
+directive|define
+name|lifr_flags
+value|iflr_flags
+define|#
+directive|define
+name|ss_family
+value|sa_family
+undef|#
+directive|undef
+name|SIOCGLIFNUM
+endif|#
+directive|endif
+comment|/* __hpux */
 name|int
 name|s
 decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|struct
-name|lifconf
-name|lifc
-decl_stmt|;
-name|struct
-name|lifnum
-name|lifn
+name|size_t
+name|len
 decl_stmt|;
 name|int
 name|numifs
 decl_stmt|;
+name|char
+modifier|*
+name|buf
+decl_stmt|;
+name|struct
+name|lifconf
+name|lifc
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SIOCGLIFNUM
+name|struct
+name|lifnum
+name|lifn
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* SIOCGLIFNUM */
 name|s
 operator|=
 name|socket
@@ -18356,6 +17350,28 @@ return|return;
 comment|/* get the list of known IP address from the kernel */
 ifdef|#
 directive|ifdef
+name|__hpux
+name|i
+operator|=
+name|ioctl
+argument_list|(
+name|s
+argument_list|,
+name|SIOCGIFNUM
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|numifs
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* __hpux */
+ifdef|#
+directive|ifdef
 name|SIOCGLIFNUM
 name|lifn
 operator|.
@@ -18369,8 +17385,8 @@ name|lifn_flags
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
+name|i
+operator|=
 name|ioctl
 argument_list|(
 name|s
@@ -18384,6 +17400,30 @@ operator|)
 operator|&
 name|lifn
 argument_list|)
+expr_stmt|;
+name|numifs
+operator|=
+name|lifn
+operator|.
+name|lifn_count
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* SIOCGLIFNUM */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__hpux
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|SIOCGLIFNUM
+argument_list|)
+if|if
+condition|(
+name|i
 operator|<
 literal|0
 condition|)
@@ -18398,11 +17438,11 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"SIOCGLIFNUM failed: %s\n"
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|errno
 argument_list|)
@@ -18414,14 +17454,7 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-else|else
-block|{
-name|numifs
-operator|=
-name|lifn
-operator|.
-name|lifn_count
-expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|tTd
@@ -18431,14 +17464,13 @@ argument_list|,
 literal|42
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"system has %d interfaces\n"
 argument_list|,
 name|numifs
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|numifs
@@ -18447,7 +17479,7 @@ literal|0
 condition|)
 endif|#
 directive|endif
-comment|/* SIOCGLIFNUM */
+comment|/* defined(__hpux) || defined(SIOCGLIFNUM) */
 name|numifs
 operator|=
 name|MAXINTERFACES
@@ -18469,6 +17501,8 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|len
+operator|=
 name|lifc
 operator|.
 name|lifc_len
@@ -18481,6 +17515,8 @@ expr|struct
 name|lifreq
 argument_list|)
 expr_stmt|;
+name|buf
+operator|=
 name|lifc
 operator|.
 name|lifc_buf
@@ -18492,6 +17528,9 @@ operator|.
 name|lifc_len
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__hpux
 name|lifc
 operator|.
 name|lifc_family
@@ -18504,6 +17543,9 @@ name|lifc_flags
 operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* __hpux */
 if|if
 condition|(
 name|ioctl
@@ -18532,11 +17574,11 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"SIOCGLIFCONF failed: %s\n"
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|errno
 argument_list|)
@@ -18552,9 +17594,7 @@ argument_list|)
 expr_stmt|;
 name|sm_free
 argument_list|(
-name|lifc
-operator|.
-name|lifc_buf
+name|buf
 argument_list|)
 expr_stmt|;
 return|return;
@@ -18569,13 +17609,14 @@ argument_list|,
 literal|40
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
-literal|"scanning for interface specific names, lifc_len=%d\n"
+literal|"scanning for interface specific names, lifc_len=%ld\n"
 argument_list|,
-name|lifc
-operator|.
-name|lifc_len
+operator|(
+name|long
+operator|)
+name|len
 argument_list|)
 expr_stmt|;
 for|for
@@ -18586,12 +17627,17 @@ literal|0
 init|;
 name|i
 operator|<
-name|lifc
-operator|.
-name|lifc_len
+name|len
+operator|&&
+name|i
+operator|>=
+literal|0
 condition|;
 control|)
 block|{
+name|int
+name|flags
+decl_stmt|;
 name|struct
 name|lifreq
 modifier|*
@@ -18603,9 +17649,7 @@ name|lifreq
 operator|*
 operator|)
 operator|&
-name|lifc
-operator|.
-name|lifc_buf
+name|buf
 index|[
 name|i
 index|]
@@ -18623,9 +17667,22 @@ name|ifr
 operator|->
 name|lifr_addr
 decl_stmt|;
+name|int
+name|af
+init|=
+name|ifr
+operator|->
+name|lifr_addr
+operator|.
+name|ss_family
+decl_stmt|;
 name|char
 modifier|*
 name|addr
+decl_stmt|;
+name|char
+modifier|*
+name|name
 decl_stmt|;
 name|struct
 name|in6_addr
@@ -18657,15 +17714,6 @@ index|[
 name|INET6_ADDRSTRLEN
 index|]
 decl_stmt|;
-name|int
-name|af
-init|=
-name|ifr
-operator|->
-name|lifr_addr
-operator|.
-name|ss_family
-decl_stmt|;
 comment|/* 		**  We must close and recreate the socket each time 		**  since we don't know what type of socket it is now 		**  (each status function may change it). 		*/
 operator|(
 name|void
@@ -18696,20 +17744,17 @@ condition|)
 block|{
 name|sm_free
 argument_list|(
-name|lifc
-operator|.
-name|lifc_buf
+name|buf
 argument_list|)
 expr_stmt|;
+comment|/* XXX */
 return|return;
 block|}
 comment|/* 		**  If we don't have a complete ifr structure, 		**  don't try to use it. 		*/
 if|if
 condition|(
 operator|(
-name|lifc
-operator|.
-name|lifc_len
+name|len
 operator|-
 name|i
 operator|)
@@ -18767,7 +17812,7 @@ argument_list|,
 literal|20
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"%s\n"
 argument_list|,
@@ -18808,7 +17853,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strlcpy
+name|sm_strlcpy
 argument_list|(
 name|ifrf
 operator|.
@@ -18854,11 +17899,11 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"SIOCGLIFFLAGS failed: %s\n"
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|errno
 argument_list|)
@@ -18866,7 +17911,18 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-elseif|else
+name|name
+operator|=
+name|ifr
+operator|->
+name|lifr_name
+expr_stmt|;
+name|flags
+operator|=
+name|ifrf
+operator|.
+name|lifr_flags
+expr_stmt|;
 if|if
 condition|(
 name|tTd
@@ -18876,7 +17932,7 @@ argument_list|,
 literal|41
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"\tflags: %lx\n"
 argument_list|,
@@ -18884,9 +17940,7 @@ operator|(
 name|unsigned
 name|long
 operator|)
-name|ifrf
-operator|.
-name|lifr_flags
+name|flags
 argument_list|)
 expr_stmt|;
 if|if
@@ -18896,9 +17950,7 @@ name|bitset
 argument_list|(
 name|IFF_UP
 argument_list|,
-name|ifrf
-operator|.
-name|lifr_flags
+name|flags
 argument_list|)
 condition|)
 continue|continue;
@@ -19057,9 +18109,7 @@ name|message
 argument_list|(
 literal|"WARNING: interface %s is UP with %s address"
 argument_list|,
-name|ifr
-operator|->
-name|lifr_name
+name|name
 argument_list|,
 name|addr
 operator|==
@@ -19095,7 +18145,7 @@ condition|)
 operator|(
 name|void
 operator|)
-name|snprintf
+name|sm_snprintf
 argument_list|(
 name|ip_addr
 argument_list|,
@@ -19146,9 +18196,7 @@ name|message
 argument_list|(
 literal|"WARNING: interface %s is UP with %s address"
 argument_list|,
-name|ifr
-operator|->
-name|lifr_name
+name|name
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -19162,7 +18210,7 @@ comment|/* save IP address in text from */
 operator|(
 name|void
 operator|)
-name|snprintf
+name|sm_snprintf
 argument_list|(
 name|ip_addr
 argument_list|,
@@ -19222,7 +18270,7 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"\ta.k.a.: %s\n"
 argument_list|,
@@ -19236,13 +18284,15 @@ name|SIOCGLIFFLAGS
 comment|/* skip "loopback" interface "lo" */
 if|if
 condition|(
+name|DontProbeInterfaces
+operator|==
+name|DPI_SKIPLOOPBACK
+operator|&&
 name|bitset
 argument_list|(
 name|IFF_LOOPBACK
 argument_list|,
-name|ifrf
-operator|.
-name|lifr_flags
+name|flags
 argument_list|)
 condition|)
 continue|continue;
@@ -19260,11 +18310,10 @@ expr_stmt|;
 block|}
 name|sm_free
 argument_list|(
-name|lifc
-operator|.
-name|lifc_buf
+name|buf
 argument_list|)
 expr_stmt|;
+comment|/* XXX */
 operator|(
 name|void
 operator|)
@@ -19356,11 +18405,11 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"SIOCGIFNUM failed: %s\n"
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|errno
 argument_list|)
@@ -19382,7 +18431,7 @@ argument_list|,
 literal|42
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"system has %d interfaces\n"
 argument_list|,
@@ -19470,11 +18519,11 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"SIOCGIFCONF failed: %s\n"
 argument_list|,
-name|errstring
+name|sm_errstring
 argument_list|(
 name|errno
 argument_list|)
@@ -19486,13 +18535,6 @@ operator|)
 name|close
 argument_list|(
 name|s
-argument_list|)
-expr_stmt|;
-name|sm_free
-argument_list|(
-name|ifc
-operator|.
-name|ifc_buf
 argument_list|)
 expr_stmt|;
 return|return;
@@ -19507,7 +18549,7 @@ argument_list|,
 literal|40
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"scanning for interface specific names, ifc_len=%d\n"
 argument_list|,
@@ -19527,6 +18569,10 @@ operator|<
 name|ifc
 operator|.
 name|ifc_len
+operator|&&
+name|i
+operator|>=
+literal|0
 condition|;
 control|)
 block|{
@@ -19674,7 +18720,7 @@ argument_list|,
 literal|20
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"%s\n"
 argument_list|,
@@ -19729,7 +18775,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strlcpy
+name|sm_strlcpy
 argument_list|(
 name|ifrf
 operator|.
@@ -19773,7 +18819,7 @@ argument_list|,
 literal|41
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"\tflags: %lx\n"
 argument_list|,
@@ -19872,7 +18918,7 @@ comment|/* save IP address in text from */
 operator|(
 name|void
 operator|)
-name|snprintf
+name|sm_snprintf
 argument_list|(
 name|ip_addr
 argument_list|,
@@ -20076,7 +19122,7 @@ condition|)
 operator|(
 name|void
 operator|)
-name|snprintf
+name|sm_snprintf
 argument_list|(
 name|ip_addr
 argument_list|,
@@ -20138,7 +19184,7 @@ argument_list|,
 literal|4
 argument_list|)
 condition|)
-name|dprintf
+name|sm_dprintf
 argument_list|(
 literal|"\ta.k.a.: %s\n"
 argument_list|,
@@ -20149,6 +19195,10 @@ block|}
 comment|/* skip "loopback" interface "lo" */
 if|if
 condition|(
+name|DontProbeInterfaces
+operator|==
+name|DPI_SKIPLOOPBACK
+operator|&&
 name|bitset
 argument_list|(
 name|IFF_LOOPBACK
@@ -20175,6 +19225,7 @@ operator|.
 name|ifc_buf
 argument_list|)
 expr_stmt|;
+comment|/* XXX */
 operator|(
 name|void
 operator|)
@@ -20193,7 +19244,7 @@ endif|#
 directive|endif
 comment|/* NETINET6&& defined(SIOCGLIFCONF) */
 block|}
-comment|/* **  ISLOOPBACK -- is socket address in the loopback net? ** **	Parameters: **		sa -- socket address. ** **	Returns: **		TRUE -- is socket address in the loopback net? **		FALSE -- otherwise ** */
+comment|/* **  ISLOOPBACK -- is socket address in the loopback net? ** **	Parameters: **		sa -- socket address. ** **	Returns: **		true -- is socket address in the loopback net? **		false -- otherwise ** */
 name|bool
 name|isloopback
 parameter_list|(
@@ -20219,7 +19270,7 @@ name|sin6_addr
 argument_list|)
 condition|)
 return|return
-name|TRUE
+name|true
 return|;
 else|#
 directive|else
@@ -20249,13 +19300,13 @@ operator|==
 name|IN_LOOPBACKNET
 condition|)
 return|return
-name|TRUE
+name|true
 return|;
 endif|#
 directive|endif
 comment|/* NETINET6 */
 return|return
-name|FALSE
+name|false
 return|;
 block|}
 comment|/* **  GET_NUM_PROCS_ONLINE -- return the number of processors currently online ** **	Parameters: **		none. ** **	Returns: **		The number of processors online. */
@@ -20336,7 +19387,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* defined(CTL_HW)&& defined(HW_NCPUS) */
+comment|/* defined(CTL_HW)&& defined(HW_NCPU) */
 else|#
 directive|else
 comment|/* USESYSCTL */
@@ -20444,8 +19495,7 @@ operator|=
 operator|(
 name|long
 operator|)
-name|getpid
-argument_list|()
+name|CurrentPid
 expr_stmt|;
 if|if
 condition|(
@@ -20591,24 +19641,17 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
-specifier|extern
-name|int
-name|SnprfOverflow
-decl_stmt|;
-specifier|extern
-name|int
-name|SyslogErrno
-decl_stmt|;
-specifier|extern
 name|char
 modifier|*
-name|DoprEnd
+name|newstring
 decl_stmt|;
-name|VA_LOCAL_DECL
+specifier|extern
+name|int
+name|SyslogPrefixLen
+decl_stmt|;
+name|SM_VA_LOCAL_DECL
 name|save_errno
 init|=
-name|SyslogErrno
-operator|=
 name|errno
 decl_stmt|;
 if|if
@@ -20617,10 +19660,21 @@ name|id
 operator|==
 name|NULL
 condition|)
+block|{
 name|id
 operator|=
 literal|"NOQUEUE"
 expr_stmt|;
+name|idlen
+operator|=
+name|strlen
+argument_list|(
+name|id
+argument_list|)
+operator|+
+name|SyslogPrefixLen
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -20633,16 +19687,25 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
 name|id
 operator|=
 literal|""
 expr_stmt|;
 name|idlen
 operator|=
+name|SyslogPrefixLen
+expr_stmt|;
+block|}
+else|else
+name|idlen
+operator|=
 name|strlen
 argument_list|(
 name|id
 argument_list|)
+operator|+
+name|SyslogPrefixLen
 expr_stmt|;
 if|if
 condition|(
@@ -20667,59 +19730,53 @@ init|;
 condition|;
 control|)
 block|{
-comment|/* do a virtual vsnprintf into buf */
-name|VA_START
+name|int
+name|n
+decl_stmt|;
+comment|/* print log message into buf */
+name|SM_VA_START
 argument_list|(
+name|ap
+argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
-name|buf
-index|[
-literal|0
-index|]
+name|n
 operator|=
-literal|0
-expr_stmt|;
-name|DoprEnd
-operator|=
-name|buf
-operator|+
-name|bufsize
-operator|-
-literal|1
-expr_stmt|;
-name|SnprfOverflow
-operator|=
-literal|0
-expr_stmt|;
-name|sm_dopr
+name|sm_vsnprintf
 argument_list|(
 name|buf
+argument_list|,
+name|bufsize
 argument_list|,
 name|fmt
 argument_list|,
 name|ap
 argument_list|)
 expr_stmt|;
-operator|*
-name|DoprEnd
-operator|=
-literal|'\0'
+name|SM_VA_END
+argument_list|(
+name|ap
+argument_list|)
 expr_stmt|;
-name|VA_END
+name|SM_ASSERT
+argument_list|(
+name|n
+operator|>
+literal|0
+argument_list|)
 expr_stmt|;
-comment|/* end of virtual vsnprintf */
 if|if
 condition|(
-name|SnprfOverflow
-operator|==
-literal|0
+name|n
+operator|<
+name|bufsize
 condition|)
 break|break;
 comment|/* String too small, redo with correct size */
 name|bufsize
-operator|+=
-name|SnprfOverflow
+operator|=
+name|n
 operator|+
 literal|1
 expr_stmt|;
@@ -20729,6 +19786,7 @@ name|buf
 operator|!=
 name|buf0
 condition|)
+block|{
 name|sm_free
 argument_list|(
 name|buf
@@ -20736,23 +19794,31 @@ argument_list|)
 expr_stmt|;
 name|buf
 operator|=
-name|xalloc
+name|NULL
+expr_stmt|;
+block|}
+name|buf
+operator|=
+name|sm_malloc_x
 argument_list|(
 name|bufsize
-operator|*
-sizeof|sizeof
-argument_list|(
-name|char
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* clean up buf after it has been expanded with args */
+name|newstring
+operator|=
+name|str2prt
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
 name|strlen
 argument_list|(
-name|buf
+name|newstring
 argument_list|)
 operator|+
 name|idlen
@@ -20779,7 +19845,7 @@ name|level
 argument_list|,
 literal|"%s"
 argument_list|,
-name|buf
+name|newstring
 argument_list|)
 expr_stmt|;
 else|else
@@ -20791,7 +19857,7 @@ literal|"%s: %s"
 argument_list|,
 name|id
 argument_list|,
-name|buf
+name|newstring
 argument_list|)
 expr_stmt|;
 else|#
@@ -20805,25 +19871,35 @@ name|id
 operator|==
 literal|'\0'
 condition|)
-name|fprintf
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
 argument_list|(
-name|stderr
+name|smioerr
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|,
 literal|"%s\n"
 argument_list|,
-name|buf
+name|newstring
 argument_list|)
 expr_stmt|;
 else|else
-name|fprintf
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
 argument_list|(
-name|stderr
+name|smioerr
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|,
 literal|"%s: %s\n"
 argument_list|,
 name|id
 argument_list|,
-name|buf
+name|newstring
 argument_list|)
 expr_stmt|;
 endif|#
@@ -20845,10 +19921,20 @@ name|save_errno
 expr_stmt|;
 return|return;
 block|}
+comment|/* **  additional length for splitting: " ..." + 3, where 3 is magic to **  have some data for the next entry. */
+define|#
+directive|define
+name|SL_SPLIT
+value|7
 name|begin
 operator|=
-name|buf
+name|newstring
 expr_stmt|;
+name|idlen
+operator|+=
+literal|5
+expr_stmt|;
+comment|/* strlen("[999]"), see below */
 while|while
 condition|(
 operator|*
@@ -20863,8 +19949,6 @@ name|begin
 argument_list|)
 operator|+
 name|idlen
-operator|+
-literal|5
 operator|)
 operator|>
 name|SYSLOG_BUFSIZE
@@ -20876,7 +19960,7 @@ decl_stmt|;
 if|if
 condition|(
 name|seq
-operator|==
+operator|>=
 literal|999
 condition|)
 block|{
@@ -20891,7 +19975,7 @@ name|SYSLOG_BUFSIZE
 operator|-
 name|idlen
 operator|-
-literal|12
+name|SL_SPLIT
 expr_stmt|;
 while|while
 condition|(
@@ -20939,7 +20023,7 @@ name|SYSLOG_BUFSIZE
 operator|-
 name|idlen
 operator|-
-literal|12
+name|SL_SPLIT
 expr_stmt|;
 name|save
 operator|=
@@ -20971,9 +20055,14 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* LOG */
-name|fprintf
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
 argument_list|(
-name|stderr
+name|smioerr
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|,
 literal|"%s[%d]: %s ...\n"
 argument_list|,
@@ -21001,7 +20090,7 @@ block|}
 if|if
 condition|(
 name|seq
-operator|==
+operator|>=
 literal|999
 condition|)
 if|#
@@ -21021,9 +20110,14 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* LOG */
-name|fprintf
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
 argument_list|(
-name|stderr
+name|smioerr
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|,
 literal|"%s[%d]: log terminated, too many parts\n"
 argument_list|,
@@ -21062,9 +20156,14 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* LOG */
-name|fprintf
+operator|(
+name|void
+operator|)
+name|sm_io_fprintf
 argument_list|(
-name|stderr
+name|smioerr
+argument_list|,
+name|SM_TIME_DEFAULT
 argument_list|,
 literal|"%s[%d]: %s\n"
 argument_list|,
@@ -21185,14 +20284,18 @@ index|[
 name|SYSLOG_BUFSIZE
 index|]
 decl_stmt|;
-name|VA_LOCAL_DECL
-expr_stmt|;
-name|VA_START
+name|SM_VA_LOCAL_DECL
+name|SM_VA_START
 argument_list|(
+name|ap
+argument_list|,
 name|msg
 argument_list|)
-expr_stmt|;
-name|vsnprintf
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|sm_vsnprintf
 argument_list|(
 name|buf
 argument_list|,
@@ -21204,7 +20307,10 @@ argument_list|,
 name|ap
 argument_list|)
 expr_stmt|;
-name|VA_END
+name|SM_VA_END
+argument_list|(
+name|ap
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -21252,7 +20358,7 @@ modifier|*
 name|hostname
 decl_stmt|;
 block|{
-name|int
+name|size_t
 name|len_host
 decl_stmt|,
 name|len_domain
@@ -21291,7 +20397,7 @@ operator|>
 name|len_domain
 operator|&&
 operator|(
-name|strcasecmp
+name|sm_strcasecmp
 argument_list|(
 name|hostname
 operator|+
@@ -21333,6 +20439,351 @@ block|}
 endif|#
 directive|endif
 comment|/* NEEDLOCAL_HOSTNAME_LENGTH */
+if|#
+directive|if
+name|NEEDLINK
+comment|/* **  LINK -- clone a file ** **	Some OS's lacks link() and hard links.  Since sendmail is using **	link() as an efficient way to clone files, this implementation **	will simply do a file copy. ** **	NOTE: This link() replacement is not a generic replacement as it **	does not handle all of the semantics of the real link(2). ** **	Parameters: **		source -- pathname of existing file. **		target -- pathname of link (clone) to be created. ** **	Returns: **		0 -- success. **		-1 -- failure, see errno for details. */
+name|int
+name|link
+parameter_list|(
+name|source
+parameter_list|,
+name|target
+parameter_list|)
+specifier|const
+name|char
+modifier|*
+name|source
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|target
+decl_stmt|;
+block|{
+name|int
+name|save_errno
+decl_stmt|;
+name|int
+name|sff
+decl_stmt|;
+name|int
+name|src
+init|=
+operator|-
+literal|1
+decl_stmt|,
+name|dst
+init|=
+operator|-
+literal|1
+decl_stmt|;
+name|ssize_t
+name|readlen
+decl_stmt|;
+name|ssize_t
+name|writelen
+decl_stmt|;
+name|char
+name|buf
+index|[
+name|BUFSIZ
+index|]
+decl_stmt|;
+name|struct
+name|stat
+name|st
+decl_stmt|;
+name|sff
+operator|=
+name|SFF_REGONLY
+operator||
+name|SFF_OPENASROOT
+expr_stmt|;
+if|if
+condition|(
+name|DontLockReadFiles
+condition|)
+name|sff
+operator||=
+name|SFF_NOLOCK
+expr_stmt|;
+comment|/* Open the original file */
+name|src
+operator|=
+name|safeopen
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|source
+argument_list|,
+name|O_RDONLY
+argument_list|,
+literal|0
+argument_list|,
+name|sff
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|src
+operator|<
+literal|0
+condition|)
+goto|goto
+name|fail
+goto|;
+comment|/* Obtain the size and the mode */
+if|if
+condition|(
+name|fstat
+argument_list|(
+name|src
+argument_list|,
+operator|&
+name|st
+argument_list|)
+operator|<
+literal|0
+condition|)
+goto|goto
+name|fail
+goto|;
+comment|/* Create the duplicate copy */
+name|sff
+operator|&=
+operator|~
+name|SFF_NOLOCK
+expr_stmt|;
+name|sff
+operator||=
+name|SFF_CREAT
+expr_stmt|;
+name|dst
+operator|=
+name|safeopen
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|target
+argument_list|,
+name|O_CREAT
+operator||
+name|O_EXCL
+operator||
+name|O_WRONLY
+argument_list|,
+name|st
+operator|.
+name|st_mode
+argument_list|,
+name|sff
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dst
+operator|<
+literal|0
+condition|)
+goto|goto
+name|fail
+goto|;
+comment|/* Copy all of the bytes one buffer at a time */
+while|while
+condition|(
+operator|(
+name|readlen
+operator|=
+name|read
+argument_list|(
+name|src
+argument_list|,
+operator|&
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+operator|)
+operator|>
+literal|0
+condition|)
+block|{
+name|ssize_t
+name|left
+init|=
+name|readlen
+decl_stmt|;
+name|char
+modifier|*
+name|p
+init|=
+name|buf
+decl_stmt|;
+while|while
+condition|(
+name|left
+operator|>
+literal|0
+operator|&&
+operator|(
+name|writelen
+operator|=
+name|write
+argument_list|(
+name|dst
+argument_list|,
+name|p
+argument_list|,
+operator|(
+name|size_t
+operator|)
+name|left
+argument_list|)
+operator|)
+operator|>=
+literal|0
+condition|)
+block|{
+name|left
+operator|-=
+name|writelen
+expr_stmt|;
+name|p
+operator|+=
+name|writelen
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|writeln
+operator|<
+literal|0
+condition|)
+break|break;
+block|}
+comment|/* Any trouble reading? */
+if|if
+condition|(
+name|readlen
+operator|<
+literal|0
+operator|||
+name|writelen
+operator|<
+literal|0
+condition|)
+goto|goto
+name|fail
+goto|;
+comment|/* Close the input file */
+if|if
+condition|(
+name|close
+argument_list|(
+name|src
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|src
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
+name|src
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* Close the output file */
+if|if
+condition|(
+name|close
+argument_list|(
+name|dst
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+comment|/* don't set dst = -1 here so we unlink the file */
+goto|goto
+name|fail
+goto|;
+block|}
+comment|/* Success */
+return|return
+literal|0
+return|;
+name|fail
+label|:
+name|save_errno
+operator|=
+name|errno
+expr_stmt|;
+if|if
+condition|(
+name|src
+operator|>=
+literal|0
+condition|)
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|src
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dst
+operator|>=
+literal|0
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|unlink
+argument_list|(
+name|target
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|close
+argument_list|(
+name|dst
+argument_list|)
+expr_stmt|;
+block|}
+name|errno
+operator|=
+name|save_errno
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+endif|#
+directive|endif
+comment|/* NEEDLINK */
 comment|/* **  Compile-Time options */
 name|char
 modifier|*
@@ -21342,14 +20793,28 @@ init|=
 block|{
 if|#
 directive|if
+name|NAMED_BIND
+if|#
+directive|if
+name|DNSMAP
+literal|"DNSMAP"
+block|,
+endif|#
+directive|endif
+comment|/* DNSMAP */
+endif|#
+directive|endif
+comment|/* NAMED_BIND */
+if|#
+directive|if
 name|EGD
 literal|"EGD"
 block|,
 endif|#
 directive|endif
 comment|/* EGD */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|HESIOD
 literal|"HESIOD"
 block|,
@@ -21364,30 +20829,14 @@ block|,
 endif|#
 directive|endif
 comment|/* HES_GETMAILHOST */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|LDAPMAP
 literal|"LDAPMAP"
 block|,
 endif|#
 directive|endif
 comment|/* LDAPMAP */
-ifdef|#
-directive|ifdef
-name|MAP_NSD
-literal|"MAP_NSD"
-block|,
-endif|#
-directive|endif
-comment|/* MAP_NSD */
-ifdef|#
-directive|ifdef
-name|MAP_REGEX
-literal|"MAP_REGEX"
-block|,
-endif|#
-directive|endif
-comment|/* MAP_REGEX */
 if|#
 directive|if
 name|LOG
@@ -21398,12 +20847,36 @@ directive|endif
 comment|/* LOG */
 if|#
 directive|if
+name|MAP_NSD
+literal|"MAP_NSD"
+block|,
+endif|#
+directive|endif
+comment|/* MAP_NSD */
+if|#
+directive|if
+name|MAP_REGEX
+literal|"MAP_REGEX"
+block|,
+endif|#
+directive|endif
+comment|/* MAP_REGEX */
+if|#
+directive|if
 name|MATCHGECOS
 literal|"MATCHGECOS"
 block|,
 endif|#
 directive|endif
 comment|/* MATCHGECOS */
+if|#
+directive|if
+name|MILTER
+literal|"MILTER"
+block|,
+endif|#
+directive|endif
+comment|/* MILTER */
 if|#
 directive|if
 name|MIME7TO8
@@ -21428,8 +20901,8 @@ block|,
 endif|#
 directive|endif
 comment|/* NAMED_BIND */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NDBM
 literal|"NDBM"
 block|,
@@ -21492,46 +20965,62 @@ block|,
 endif|#
 directive|endif
 comment|/* NETX25 */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NEWDB
 literal|"NEWDB"
 block|,
 endif|#
 directive|endif
 comment|/* NEWDB */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NIS
 literal|"NIS"
 block|,
 endif|#
 directive|endif
 comment|/* NIS */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|NISPLUS
 literal|"NISPLUS"
 block|,
 endif|#
 directive|endif
 comment|/* NISPLUS */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|NO_DH
+literal|"NO_DH"
+block|,
+endif|#
+directive|endif
+comment|/* NO_DH */
+if|#
+directive|if
 name|PH_MAP
 literal|"PH_MAP"
 block|,
 endif|#
 directive|endif
 comment|/* PH_MAP */
-if|#
-directive|if
-name|QUEUE
-literal|"QUEUE"
+ifdef|#
+directive|ifdef
+name|PICKY_HELO_CHECK
+literal|"PICKY_HELO_CHECK"
 block|,
 endif|#
 directive|endif
-comment|/* QUEUE */
+comment|/* PICKY_HELO_CHECK */
+if|#
+directive|if
+name|PIPELINING
+literal|"PIPELINING"
+block|,
+endif|#
+directive|endif
+comment|/* PIPELINING */
 if|#
 directive|if
 name|SASL
@@ -21550,22 +21039,6 @@ directive|endif
 comment|/* SCANF */
 if|#
 directive|if
-name|SFIO
-literal|"SFIO"
-block|,
-endif|#
-directive|endif
-comment|/* SFIO */
-if|#
-directive|if
-name|SMTP
-literal|"SMTP"
-block|,
-endif|#
-directive|endif
-comment|/* SMTP */
-if|#
-directive|if
 name|SMTPDEBUG
 literal|"SMTPDEBUG"
 block|,
@@ -21580,8 +21053,8 @@ block|,
 endif|#
 directive|endif
 comment|/* STARTTLS */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|SUID_ROOT_FILES_OK
 literal|"SUID_ROOT_FILES_OK"
 block|,
@@ -21598,6 +21071,22 @@ directive|endif
 comment|/* TCPWRAPPERS */
 if|#
 directive|if
+name|TLS_NO_RSA
+literal|"TLS_NO_RSA"
+block|,
+endif|#
+directive|endif
+comment|/* TLS_NO_RSA */
+if|#
+directive|if
+name|TLS_VRFY_PER_CTX
+literal|"TLS_VRFY_PER_CTX"
+block|,
+endif|#
+directive|endif
+comment|/* TLS_VRFY_PER_CTX */
+if|#
+directive|if
 name|USERDB
 literal|"USERDB"
 block|,
@@ -21612,8 +21101,8 @@ block|,
 endif|#
 directive|endif
 comment|/* XDEBUG */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|XLA
 literal|"XLA"
 block|,
@@ -21632,12 +21121,60 @@ init|=
 block|{
 if|#
 directive|if
+name|ADDRCONFIG_IS_BROKEN
+literal|"ADDRCONFIG_IS_BROKEN"
+block|,
+endif|#
+directive|endif
+comment|/* ADDRCONFIG_IS_BROKEN */
+ifdef|#
+directive|ifdef
+name|AUTO_NETINFO_HOSTS
+literal|"AUTO_NETINFO_HOSTS"
+block|,
+endif|#
+directive|endif
+comment|/* AUTO_NETINFO_HOSTS */
+ifdef|#
+directive|ifdef
+name|AUTO_NIS_ALIASES
+literal|"AUTO_NIS_ALIASES"
+block|,
+endif|#
+directive|endif
+comment|/* AUTO_NIS_ALIASES */
+if|#
+directive|if
+name|BROKEN_RES_SEARCH
+literal|"BROKEN_RES_SEARCH"
+block|,
+endif|#
+directive|endif
+comment|/* BROKEN_RES_SEARCH */
+ifdef|#
+directive|ifdef
+name|BSD4_4_SOCKADDR
+literal|"BSD4_4_SOCKADDR"
+block|,
+endif|#
+directive|endif
+comment|/* BSD4_4_SOCKADDR */
+if|#
+directive|if
 name|BOGUS_O_EXCL
 literal|"BOGUS_O_EXCL"
 block|,
 endif|#
 directive|endif
 comment|/* BOGUS_O_EXCL */
+if|#
+directive|if
+name|DEC_OSF_BROKEN_GETPWENT
+literal|"DEC_OSF_BROKEN_GETPWENT"
+block|,
+endif|#
+directive|endif
+comment|/* DEC_OSF_BROKEN_GETPWENT */
 if|#
 directive|if
 name|FAST_PID_RECYCLE
@@ -21704,6 +21241,14 @@ directive|endif
 comment|/* HASLSTAT */
 if|#
 directive|if
+name|HASNICE
+literal|"HASNICE"
+block|,
+endif|#
+directive|endif
+comment|/* HASNICE */
+if|#
+directive|if
 name|HASRANDOM
 literal|"HASRANDOM"
 block|,
@@ -21712,12 +21257,44 @@ directive|endif
 comment|/* HASRANDOM */
 if|#
 directive|if
+name|HASRRESVPORT
+literal|"HASRRESVPORT"
+block|,
+endif|#
+directive|endif
+comment|/* HASRRESVPORT */
+if|#
+directive|if
+name|HASSETEGID
+literal|"HASSETEGID"
+block|,
+endif|#
+directive|endif
+comment|/* HASSETEGID */
+if|#
+directive|if
 name|HASSETLOGIN
 literal|"HASSETLOGIN"
 block|,
 endif|#
 directive|endif
 comment|/* HASSETLOGIN */
+if|#
+directive|if
+name|HASSETREGID
+literal|"HASSETREGID"
+block|,
+endif|#
+directive|endif
+comment|/* HASSETREGID */
+if|#
+directive|if
+name|HASSETRESGID
+literal|"HASSETRESGID"
+block|,
+endif|#
+directive|endif
+comment|/* HASSETRESGID */
 if|#
 directive|if
 name|HASSETREUID
@@ -21758,14 +21335,6 @@ block|,
 endif|#
 directive|endif
 comment|/* HASSETVBUF */
-if|#
-directive|if
-name|HASSNPRINTF
-literal|"HASSNPRINTF"
-block|,
-endif|#
-directive|endif
-comment|/* HASSNPRINTF */
 if|#
 directive|if
 name|HAS_ST_GEN
@@ -21869,12 +21438,68 @@ directive|endif
 comment|/* NEEDFSYNC */
 if|#
 directive|if
+name|NEEDLINK
+literal|"NEEDLINK"
+block|,
+endif|#
+directive|endif
+comment|/* NEEDLINK */
+if|#
+directive|if
+name|NEEDLOCAL_HOSTNAME_LENGTH
+literal|"NEEDLOCAL_HOSTNAME_LENGTH"
+block|,
+endif|#
+directive|endif
+comment|/* NEEDLOCAL_HOSTNAME_LENGTH */
+if|#
+directive|if
+name|NEEDSGETIPNODE
+literal|"NEEDSGETIPNODE"
+block|,
+endif|#
+directive|endif
+comment|/* NEEDSGETIPNODE */
+if|#
+directive|if
+name|NEEDSTRSTR
+literal|"NEEDSTRSTR"
+block|,
+endif|#
+directive|endif
+comment|/* NEEDSTRSTR */
+if|#
+directive|if
+name|NEEDSTRTOL
+literal|"NEEDSTRTOL"
+block|,
+endif|#
+directive|endif
+comment|/* NEEDSTRTOL */
+ifdef|#
+directive|ifdef
+name|NO_GETSERVBYNAME
+literal|"NO_GETSERVBYNAME"
+block|,
+endif|#
+directive|endif
+comment|/* NO_GETSERVBYNAME */
+if|#
+directive|if
 name|NOFTRUNCATE
 literal|"NOFTRUNCATE"
 block|,
 endif|#
 directive|endif
 comment|/* NOFTRUNCATE */
+if|#
+directive|if
+name|REQUIRES_DIR_FSYNC
+literal|"REQUIRES_DIR_FSYNC"
+block|,
+endif|#
+directive|endif
+comment|/* REQUIRES_DIR_FSYNC */
 if|#
 directive|if
 name|RLIMIT_NEEDS_SYS_TIME_H
@@ -21957,6 +21582,22 @@ directive|endif
 comment|/* SYSTEM5 */
 if|#
 directive|if
+name|USE_DOUBLE_FORK
+literal|"USE_DOUBLE_FORK"
+block|,
+endif|#
+directive|endif
+comment|/* USE_DOUBLE_FORK */
+if|#
+directive|if
+name|USE_ENVIRON
+literal|"USE_ENVIRON"
+block|,
+endif|#
+directive|endif
+comment|/* USE_ENVIRON */
+if|#
+directive|if
 name|USE_SA_SIGACTION
 literal|"USE_SA_SIGACTION"
 block|,
@@ -21973,12 +21614,383 @@ directive|endif
 comment|/* USE_SIGLONGJMP */
 if|#
 directive|if
+name|USEGETCONFATTR
+literal|"USEGETCONFATTR"
+block|,
+endif|#
+directive|endif
+comment|/* USEGETCONFATTR */
+if|#
+directive|if
 name|USESETEUID
 literal|"USESETEUID"
 block|,
 endif|#
 directive|endif
 comment|/* USESETEUID */
+ifdef|#
+directive|ifdef
+name|USESYSCTL
+literal|"USESYSCTL"
+block|,
+endif|#
+directive|endif
+comment|/* USESYSCTL */
+if|#
+directive|if
+name|USING_NETSCAPE_LDAP
+literal|"USING_NETSCAPE_LDAP"
+block|,
+endif|#
+directive|endif
+comment|/* USING_NETSCAPE_LDAP */
+ifdef|#
+directive|ifdef
+name|WAITUNION
+literal|"WAITUNION"
+block|,
+endif|#
+directive|endif
+comment|/* WAITUNION */
+name|NULL
+block|}
+decl_stmt|;
+comment|/* **  FFR compile options. */
+name|char
+modifier|*
+name|FFRCompileOptions
+index|[]
+init|=
+block|{
+if|#
+directive|if
+name|_FFR_ADAPTIVE_EOL
+literal|"_FFR_ADAPTIVE_EOL"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_ADAPTIVE_EOL */
+if|#
+directive|if
+name|_FFR_ALLOW_SASLINFO
+literal|"_FFR_ALLOW_SASLINFO"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_ALLOW_SASLINFO */
+if|#
+directive|if
+name|_FFR_BESTMX_BETTER_TRUNCATION
+literal|"_FFR_BESTMX_BETTER_TRUNCATION"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_BESTMX_BETTER_TRUNCATION */
+if|#
+directive|if
+name|_FFR_CACHE_LPC
+comment|/* Christophe Wolfhugel of France Telecom Oleane */
+literal|"_FFR_CACHE_LPC"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_CACHE_LPC */
+if|#
+directive|if
+name|_FFR_CATCH_BROKEN_MTAS
+literal|"_FFR_CATCH_BROKEN_MTAS"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_CATCH_BROKEN_MTAS */
+if|#
+directive|if
+name|_FFR_CHECK_EOM
+literal|"_FFR_CHECK_EOM"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_CHECK_EOM */
+if|#
+directive|if
+name|_FFR_CONTROL_MSTAT
+literal|"_FFR_CONTROL_MSTAT"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_CONTROL_MSTAT */
+if|#
+directive|if
+name|_FFR_DAEMON_NETUNIX
+literal|"_FFR_DAEMON_NETUNIX"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_DAEMON_NETUNIX */
+if|#
+directive|if
+name|_FFR_DEPRECATE_MAILER_FLAG_I
+literal|"_FFR_DEPRECATE_MAILER_FLAG_I"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_DEPRECATE_MAILER_FLAG_I */
+if|#
+directive|if
+name|_FFR_DNSMAP_BASE
+literal|"_FFR_DNSMAP_BASE"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_DNSMAP_BASE */
+if|#
+directive|if
+name|_FFR_DNSMAP_MULTI
+literal|"_FFR_DNSMAP_MULTI"
+block|,
+if|#
+directive|if
+name|_FFR_DNSMAP_MULTILIMIT
+literal|"_FFR_DNSMAP_MULTILIMIT"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_DNSMAP_MULTILIMIT */
+endif|#
+directive|endif
+comment|/* _FFR_DNSMAP_MULTI */
+if|#
+directive|if
+name|_FFR_DONTLOCKFILESFORREAD_OPTION
+literal|"_FFR_DONTLOCKFILESFORREAD_OPTION"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_DONTLOCKFILESFORREAD_OPTION */
+if|#
+directive|if
+name|_FFR_DOTTED_USERNAMES
+literal|"_FFR_DOTTED_USERNAMES"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_DOTTED_USERNAMES */
+if|#
+directive|if
+name|_FFR_DROP_TRUSTUSER_WARNING
+literal|"_FFR_DROP_TRUSTUSER_WARNING"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_DROP_TRUSTUSER_WARNING */
+if|#
+directive|if
+name|_FFR_FIX_DASHT
+literal|"_FFR_FIX_DASHT"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_FIX_DASHT */
+if|#
+directive|if
+name|_FFR_FORWARD_SYSERR
+literal|"_FFR_FORWARD_SYSERR"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_FORWARD_SYSERR */
+if|#
+directive|if
+name|_FFR_GEN_ORCPT
+literal|"_FFR_GEN_ORCPT"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_GEN_ORCPT */
+if|#
+directive|if
+name|_FFR_GROUPREADABLEAUTHINFOFILE
+literal|"_FFR_GROUPREADABLEAUTHINFOFILE"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_GROUPREADABLEAUTHINFOFILE */
+if|#
+directive|if
+name|_FFR_HDR_TYPE
+literal|"_FFR_HDR_TYPE"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_HDR_TYPE */
+if|#
+directive|if
+name|_FFR_HPUX_NSSWITCH
+literal|"_FFR_HPUX_NSSWITCH"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_HPUX_NSSWITCH */
+if|#
+directive|if
+name|_FFR_IGNORE_EXT_ON_HELO
+literal|"_FFR_IGNORE_EXT_ON_HELO"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_IGNORE_EXT_ON_HELO */
+if|#
+directive|if
+name|_FFR_LDAP_RECURSION
+literal|"_FFR_LDAP_RECURSION"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_LDAP_RECURSION */
+if|#
+directive|if
+name|_FFR_MAX_FORWARD_ENTRIES
+comment|/* Randall S. Winchester of the University of Maryland */
+literal|"_FFR_MAX_FORWARD_ENTRIES"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_MAX_FORWARD_ENTRIES */
+if|#
+directive|if
+name|MILTER
+if|#
+directive|if
+name|_FFR_MILTER_PERDAEMON
+literal|"_FFR_MILTER_PERDAEMON"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_MILTER_PERDAEMON */
+endif|#
+directive|endif
+comment|/* MILTER */
+if|#
+directive|if
+name|_FFR_NODELAYDSN_ON_HOLD
+comment|/* Steven Pitzl */
+literal|"_FFR_NODELAYDSN_ON_HOLD"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_NODELAYDSN_ON_HOLD */
+if|#
+directive|if
+name|_FFR_NO_PIPE
+literal|"_FFR_NO_PIPE"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_NO_PIPE */
+if|#
+directive|if
+name|_FFR_QUARANTINE
+literal|"_FFR_QUARANTINE"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_QUARANTINE */
+if|#
+directive|if
+name|_FFR_QUEUEDELAY
+literal|"_FFR_QUEUEDELAY"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_QUEUEDELAY */
+if|#
+directive|if
+name|_FFR_QUEUE_MACRO
+literal|"_FFR_QUEUE_MACRO"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_QUEUE_MACRO */
+if|#
+directive|if
+name|_FFR_QUEUE_SCHED_DBG
+literal|"_FFR_QUEUE_SCHED_DBG"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_QUEUE_SCHED_DBG */
+if|#
+directive|if
+name|_FFR_REDIRECTEMPTY
+literal|"_FFR_REDIRECTEMPTY"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_REDIRECTEMPTY */
+if|#
+directive|if
+name|_FFR_RESET_MACRO_GLOBALS
+literal|"_FFR_RESET_MACRO_GLOBALS"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_RESET_MACRO_GLOBALS */
+if|#
+directive|if
+name|_FFR_RHS
+literal|"_FFR_RHS"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_RHS */
+if|#
+directive|if
+name|_FFR_SHM_STATUS
+literal|"_FFR_SHM_STATUS"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_SHM_STATUS */
+if|#
+directive|if
+name|_FFR_SMTP_SSL
+literal|"_FFR_SMTP_SSL"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_SMTP_SSL */
+if|#
+directive|if
+name|_FFR_SOFT_BOUNCE
+literal|"_FFR_SOFT_BOUNCE"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_SOFT_BOUNCE */
+if|#
+directive|if
+name|_FFR_TIMERS
+literal|"_FFR_TIMERS"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_TIMERS */
+if|#
+directive|if
+name|_FFR_TLS_1
+literal|"_FFR_TLS_1"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_TLS_1 */
+if|#
+directive|if
+name|_FFR_TRUSTED_QF
+literal|"_FFR_TRUSTED_QF"
+block|,
+endif|#
+directive|endif
+comment|/* _FFR_TRUSTED_QF */
 name|NULL
 block|}
 decl_stmt|;
