@@ -8199,7 +8199,9 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* 	 * We have to flush B_DELWRI data prior to renaming 	 * the file.  If we don't, the delayed-write buffers 	 * can be flushed out later after the file has gone stale 	 * under NFSV3.  NFSV2 does not have this problem because 	 * ( as far as I can tell ) it flushes dirty buffers more 	 * often. 	 */
+comment|/* 	 * We have to flush B_DELWRI data prior to renaming 	 * the file.  If we don't, the delayed-write buffers 	 * can be flushed out later after the file has gone stale 	 * under NFSV3.  NFSV2 does not have this problem because 	 * ( as far as I can tell ) it flushes dirty buffers more 	 * often. 	 *  	 * Skip the rename operation if the fsync fails, this can happen 	 * due to the server's volume being full, when we pushed out data 	 * that was written back to our cache earlier. Not checking for 	 * this condition can result in potential (silent) data loss. 	 */
+name|error
+operator|=
 name|VOP_FSYNC
 argument_list|(
 name|fvp
@@ -8228,8 +8230,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|error
+operator|&&
 name|tvp
 condition|)
+name|error
+operator|=
 name|VOP_FSYNC
 argument_list|(
 name|tvp
@@ -8245,6 +8252,13 @@ operator|->
 name|cn_thread
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+goto|goto
+name|out
+goto|;
 comment|/* 	 * If the tvp exists and is in use, sillyrename it before doing the 	 * rename of the new file over it. 	 * XXX Can't sillyrename a directory. 	 */
 if|if
 condition|(
