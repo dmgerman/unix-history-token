@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lpd.c	4.2	83/05/13	*/
+comment|/*	lpd.c	4.3	83/05/26	*/
 end_comment
 
 begin_comment
@@ -1475,6 +1475,21 @@ index|[
 literal|50
 index|]
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|from
+argument_list|,
+name|host
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|hostf
 operator|=
 name|fopen
