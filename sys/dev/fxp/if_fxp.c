@@ -1463,6 +1463,45 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|fxp_noflow
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_hw
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|fxp_noflow
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|fxp_noflow
+argument_list|,
+literal|0
+argument_list|,
+literal|"fxp flow control disabled"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.fxp_noflow"
+argument_list|,
+operator|&
+name|fxp_noflow
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Inline function to copy a 16-bit aligned 32-bit quantity.  */
 end_comment
@@ -7422,6 +7461,8 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+name|fxp_noflow
+operator|||
 name|sc
 operator|->
 name|revision
