@@ -23,6 +23,26 @@ directive|include
 file|<sys/ioctl.h>
 end_include
 
+begin_struct
+struct|struct
+name|joystick
+block|{
+name|int
+name|x
+decl_stmt|;
+name|int
+name|y
+decl_stmt|;
+name|int
+name|b1
+decl_stmt|;
+name|int
+name|b2
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
