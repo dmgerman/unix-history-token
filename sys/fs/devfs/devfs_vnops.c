@@ -3065,6 +3065,11 @@ operator|->
 name|si_inode
 argument_list|)
 expr_stmt|;
+name|dev_rel
+argument_list|(
+name|cdev
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|dde

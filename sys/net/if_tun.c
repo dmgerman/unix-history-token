@@ -768,6 +768,13 @@ name|dev
 operator|!=
 name|NULL
 condition|)
+block|{
+name|dev_ref
+argument_list|(
+operator|*
+name|dev
+argument_list|)
+expr_stmt|;
 operator|(
 operator|*
 name|dev
@@ -777,6 +784,7 @@ name|si_flags
 operator||=
 name|SI_CHEAPCLONE
 expr_stmt|;
+block|}
 block|}
 block|}
 end_function

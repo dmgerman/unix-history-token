@@ -2335,6 +2335,7 @@ name|sd
 operator|!=
 name|NULL
 condition|)
+block|{
 operator|*
 name|dev
 operator|=
@@ -2342,6 +2343,13 @@ name|sd
 operator|->
 name|mixer_dev
 expr_stmt|;
+name|dev_ref
+argument_list|(
+operator|*
+name|dev
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 end_function

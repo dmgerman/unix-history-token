@@ -5180,6 +5180,12 @@ argument_list|,
 name|u
 argument_list|)
 expr_stmt|;
+name|dev_ref
+argument_list|(
+operator|*
+name|dev
+argument_list|)
+expr_stmt|;
 operator|(
 operator|*
 name|dev

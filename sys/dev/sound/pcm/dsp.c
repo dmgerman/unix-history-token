@@ -5446,6 +5446,12 @@ name|dev
 operator|=
 name|pdev
 expr_stmt|;
+name|dev_ref
+argument_list|(
+operator|*
+name|dev
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 block|}
