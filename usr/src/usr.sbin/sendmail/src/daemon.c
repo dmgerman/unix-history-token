@@ -45,7 +45,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.44 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	6.45 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,7 +60,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.44 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	6.45 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -178,6 +178,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* socket for incoming */
+end_comment
+
+begin_decl_stmt
+name|int
+name|ListenQueueSize
+init|=
+literal|10
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* size of listen queue */
 end_comment
 
 begin_macro
