@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1991, 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  * from: hp300/hp300/conf.c	7.13 (Berkeley) 7/9/92  *  *	@(#)conf.c	7.6 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1991, 1992 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  * from: hp300/hp300/conf.c	7.13 (Berkeley) 7/9/92  *  *	@(#)conf.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -804,6 +804,30 @@ end_expr_stmt
 begin_expr_stmt
 name|cdev_decl
 argument_list|(
+name|kbd
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* open, close, read, ioctl, select, map -- XXX should be a map device */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|cdev_kbd_init
+parameter_list|(
+name|c
+parameter_list|,
+name|n
+parameter_list|)
+value|{ \ 	dev_init(c,n,open), dev_init(c,n,close), dev_init(c,n,read), \ 	(dev_type_write((*))) nullop, dev_init(c,n,ioctl), \ 	(dev_type_stop((*))) enodev, (dev_type_reset((*))) nullop, 0, \ 	dev_init(c,n,select), (dev_type_map((*))) nullop, 0 }
+end_define
+
+begin_expr_stmt
+name|cdev_decl
+argument_list|(
 name|cd
 argument_list|)
 expr_stmt|;
@@ -994,10 +1018,14 @@ name|bmc
 argument_list|)
 block|,
 comment|/* 13: console terminal emulator */
-name|cdev_notdef
-argument_list|()
+name|cdev_kbd_init
+argument_list|(
+literal|2
+argument_list|,
+name|kbd
+argument_list|)
 block|,
-comment|/* 14 */
+comment|/* 14: kyeboard */
 name|cdev_notdef
 argument_list|()
 block|,
