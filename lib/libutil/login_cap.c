@@ -488,47 +488,6 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|void
-name|freearraystr
-parameter_list|(
-name|char
-modifier|*
-modifier|*
-name|array
-parameter_list|)
-block|{
-comment|/*    * the array[0] should be free'd, and then array.    */
-if|if
-condition|(
-name|array
-condition|)
-block|{
-name|free
-argument_list|(
-name|array
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-name|array
-index|[
-literal|0
-index|]
-operator|=
-name|NULL
-expr_stmt|;
-name|free
-argument_list|(
-name|array
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_function
-
 begin_comment
 comment|/*  * login_close()  * Frees up all resources relating to a login class  *  */
 end_comment
@@ -579,7 +538,7 @@ argument_list|(
 name|internal_string
 argument_list|)
 expr_stmt|;
-name|freearraystr
+name|free
 argument_list|(
 name|internal_array
 argument_list|)
