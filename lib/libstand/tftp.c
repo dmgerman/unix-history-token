@@ -212,6 +212,8 @@ block|,
 name|tftp_seek
 block|,
 name|tftp_stat
+block|,
+name|null_readdir
 block|}
 decl_stmt|;
 end_decl_stmt
