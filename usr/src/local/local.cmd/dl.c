@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dl.c	4.1\t%G%"
+literal|"@(#)dl.c	4.2\t%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -123,14 +123,6 @@ name|int
 name|errcode
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-name|char
-modifier|*
-name|sprintf
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_decl_stmt
 name|char
@@ -1773,6 +1765,9 @@ name|d_name
 argument_list|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|name
@@ -3088,6 +3083,9 @@ operator|+
 literal|10
 index|]
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|buf
@@ -3134,6 +3132,9 @@ operator|+
 literal|20
 index|]
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|buf
