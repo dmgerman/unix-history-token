@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)objfmt.h 1.13 %G%"; */
+comment|/* static char sccsid[] = "@(#)objfmt.h 1.14 %G%"; */
 end_comment
 
 begin_comment
@@ -375,9 +375,37 @@ index|]
 decl_stmt|;
 comment|/* saved at first passing */
 block|}
-name|frtn
 struct|;
 end_struct
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PC
+end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OBJ
+end_ifndef
+
+begin_decl_stmt
+name|struct
+name|formalrtn
+name|frtn
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

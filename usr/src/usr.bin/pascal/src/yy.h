@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static	char sccsid[] = "@(#)yy.h 1.2 %G%"; */
+comment|/* static	char sccsid[] = "@(#)yy.h 1.3 %G%"; */
 end_comment
 
 begin_include
@@ -244,6 +244,36 @@ value|Y.Yyeseqid
 end_define
 
 begin_comment
+comment|/* Semantic Stack so that y.tab.c will lint */
+end_comment
+
+begin_union
+union|union
+name|semstack
+block|{
+name|int
+name|i_entry
+decl_stmt|;
+name|struct
+name|nl
+modifier|*
+name|nl_entry
+decl_stmt|;
+name|struct
+name|tnode
+modifier|*
+name|tr_entry
+decl_stmt|;
+name|char
+modifier|*
+name|cptr
+decl_stmt|;
+block|}
+name|yyval
+union|;
+end_union
+
+begin_comment
 comment|/*  * Yyval is the semantic value returned by a reduction.  * It is what "$$" is expanded to by yacc.  */
 end_comment
 
@@ -251,9 +281,6 @@ begin_decl_stmt
 name|int
 modifier|*
 name|Ps
-decl_stmt|,
-modifier|*
-name|yyval
 decl_stmt|;
 end_decl_stmt
 
@@ -436,11 +463,35 @@ name|dquote
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PC
+end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OBJ
+end_ifndef
+
 begin_decl_stmt
 name|char
 name|errout
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|OBJ
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+endif|PC
+end_endif
 
 begin_comment
 comment|/*  * Yyidwant and yyidhave are the namelist classes  * of identifiers associated with a identifier reduce  * error, set before the recovery is called.  * Since they may be set again during the forward move  * they must be saved by yyrecover, which uses them in printing  * error messages.  */
