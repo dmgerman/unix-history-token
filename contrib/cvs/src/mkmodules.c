@@ -722,6 +722,16 @@ literal|"# in the repository.\n"
 block|,
 literal|"#PreservePermissions=no\n"
 block|,
+literal|"\n"
+block|,
+literal|"# Set `TopLevelAdmin' to `yes' to create a CVS directory at the top\n"
+block|,
+literal|"# level of the new working directory when using the `cvs checkout'\n"
+block|,
+literal|"# command.\n"
+block|,
+literal|"#TopLevelAdmin=no\n"
+block|,
 name|NULL
 block|}
 decl_stmt|;
