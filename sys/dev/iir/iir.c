@@ -7505,7 +7505,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|bus_dmasync_op_t
+name|int
 name|op
 decl_stmt|;
 if|if
@@ -10135,7 +10135,7 @@ name|ccb
 modifier|*
 name|ccb
 decl_stmt|;
-name|bus_dmasync_op_t
+name|int
 name|op
 decl_stmt|;
 name|GDT_DPRINTF

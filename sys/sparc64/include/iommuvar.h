@@ -386,7 +386,7 @@ modifier|*
 parameter_list|,
 name|bus_dmamap_t
 parameter_list|,
-name|bus_dmasync_op_t
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

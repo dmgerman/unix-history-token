@@ -29365,10 +29365,7 @@ name|cp
 operator|->
 name|dmamap
 argument_list|,
-call|(
-name|bus_dmasync_op_t
-call|)
-argument_list|(
+operator|(
 name|cp
 operator|->
 name|dmamapped
@@ -29378,7 +29375,7 @@ condition|?
 name|BUS_DMASYNC_POSTREAD
 else|:
 name|BUS_DMASYNC_POSTWRITE
-argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -29591,10 +29588,7 @@ name|cp
 operator|->
 name|dmamap
 argument_list|,
-call|(
-name|bus_dmasync_op_t
-call|)
-argument_list|(
+operator|(
 name|cp
 operator|->
 name|dmamapped
@@ -29604,7 +29598,7 @@ condition|?
 name|BUS_DMASYNC_POSTREAD
 else|:
 name|BUS_DMASYNC_POSTWRITE
-argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -31423,10 +31417,7 @@ name|cp
 operator|->
 name|dmamap
 argument_list|,
-call|(
-name|bus_dmasync_op_t
-call|)
-argument_list|(
+operator|(
 name|cp
 operator|->
 name|dmamapped
@@ -31436,7 +31427,7 @@ condition|?
 name|BUS_DMASYNC_PREREAD
 else|:
 name|BUS_DMASYNC_PREWRITE
-argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}

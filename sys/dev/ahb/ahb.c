@@ -3674,7 +3674,7 @@ operator|!=
 name|CAM_DIR_NONE
 condition|)
 block|{
-name|bus_dmasync_op_t
+name|int
 name|op
 decl_stmt|;
 if|if
@@ -4204,7 +4204,7 @@ name|bus_dma_segment_t
 modifier|*
 name|end_seg
 decl_stmt|;
-name|bus_dmasync_op_t
+name|int
 name|op
 decl_stmt|;
 name|end_seg

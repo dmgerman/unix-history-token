@@ -940,7 +940,7 @@ operator|!=
 name|CAM_DIR_NONE
 condition|)
 block|{
-name|bus_dmasync_op_t
+name|int
 name|op
 decl_stmt|;
 if|if
@@ -5346,7 +5346,7 @@ name|void
 modifier|*
 name|sg
 decl_stmt|;
-name|bus_dmasync_op_t
+name|int
 name|op
 decl_stmt|;
 name|u_int
