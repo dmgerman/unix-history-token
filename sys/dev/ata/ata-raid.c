@@ -844,6 +844,12 @@ name|raid
 operator|->
 name|lun
 argument_list|,
+call|(
+name|unsigned
+name|long
+name|long
+call|)
+argument_list|(
 name|raid
 operator|->
 name|total_sectors
@@ -857,6 +863,7 @@ operator|)
 operator|/
 name|DEV_BSIZE
 operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 switch|switch
