@@ -759,6 +759,16 @@ name|CLS_NETWORK
 block|}
 block|,
 block|{
+literal|"ex"
+block|,
+literal|"Intel EtherExpress Pro/10 Ethernet adapter"
+block|,
+literal|0
+block|,
+name|CLS_NETWORK
+block|}
+block|,
+block|{
 literal|"fe"
 block|,
 literal|"Fujitsu MD86960A/MB869685A Ethernet adapters"
