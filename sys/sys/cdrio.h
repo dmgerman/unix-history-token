@@ -172,6 +172,9 @@ name|cdr_cue_entry
 modifier|*
 name|entries
 decl_stmt|;
+name|int
+name|test_write
+decl_stmt|;
 block|}
 struct|;
 end_struct
