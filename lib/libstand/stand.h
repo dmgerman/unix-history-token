@@ -1296,10 +1296,6 @@ name|O_WRONLY
 value|0x1
 end_define
 
-begin_comment
-comment|/* writing not (yet?) supported */
-end_comment
-
 begin_define
 define|#
 directive|define
