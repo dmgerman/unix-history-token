@@ -544,6 +544,10 @@ name|argc
 operator|!=
 literal|1
 operator|||
+operator|(
+name|username
+operator|&&
+operator|(
 operator|*
 name|username
 operator|==
@@ -553,6 +557,8 @@ operator|*
 name|username
 operator|==
 literal|'-'
+operator|)
+operator|)
 condition|)
 name|usage
 argument_list|()
