@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Compact Disc Control Utility by Serge V. Vakulenko<vak@cronyx.ru>.  * Based on the non-X based CD player by Jean-Marc Zucconi and  * Andrey A. Chernov.  *  * $Id$  */
+comment|/*  * Compact Disc Control Utility by Serge V. Vakulenko<vak@cronyx.ru>.  * Based on the non-X based CD player by Jean-Marc Zucconi and  * Andrey A. Chernov.  *  * $Id: cdcontrol.c,v 1.9 1996/02/03 15:07:32 ache Exp $  */
 end_comment
 
 begin_include
@@ -2612,7 +2612,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Media catalog is %sactive\n"
+literal|"Media catalog is %sactive"
 argument_list|,
 name|ss
 operator|.
@@ -2627,6 +2627,41 @@ condition|?
 literal|""
 else|:
 literal|"in"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ss
+operator|.
+name|data
+operator|->
+name|what
+operator|.
+name|media_catalog
+operator|.
+name|mc_number
+index|[
+literal|0
+index|]
+condition|)
+name|printf
+argument_list|(
+literal|", number \"%.15s\""
+argument_list|,
+name|ss
+operator|.
+name|data
+operator|->
+name|what
+operator|.
+name|media_catalog
+operator|.
+name|mc_number
+argument_list|)
+expr_stmt|;
+name|putchar
+argument_list|(
+literal|'\n'
 argument_list|)
 expr_stmt|;
 block|}
