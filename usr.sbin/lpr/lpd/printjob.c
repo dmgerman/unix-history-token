@@ -8070,7 +8070,9 @@ break|break;
 block|}
 block|}
 return|return
+operator|(
 name|forkpid
+operator|)
 return|;
 block|}
 comment|/* 	 * An error occurred.  If the error is in the child process, then 	 * this routine MUST always exit().  DORETURN only effects how 	 * errors should be handled in the parent process. 	 */
@@ -8126,8 +8128,10 @@ case|case
 name|DORETURN
 case|:
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 default|default:
 name|syslog
