@@ -987,25 +987,6 @@ name|sbuf
 operator|->
 name|content
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"sbuf %p content %p;"
-literal|" allocating %d bytes for %d bytes of content to hold"
-literal|" %d bytes\n"
-argument_list|,
-name|sbuf
-argument_list|,
-name|sbuf
-operator|->
-name|content
-argument_list|,
-name|size
-argument_list|,
-name|cntsize
-argument_list|,
-name|nchars
-argument_list|)
-expr_stmt|;
 name|new_content
 operator|=
 operator|(
