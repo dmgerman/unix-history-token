@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: ppp_defs.h,v 1.7 1995/08/10 06:49:35 paulus Exp $	*/
+comment|/*	from Id: ppp_defs.h,v 1.7 1995/08/10 06:49:35 paulus Exp */
+end_comment
+
+begin_comment
+comment|/*	$Id$	*/
 end_comment
 
 begin_comment
@@ -163,6 +167,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PPP_XNS
+value|0x25
+end_define
+
+begin_comment
+comment|/* Xerox NS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPP_IPX
+value|0x2b
+end_define
+
+begin_comment
+comment|/* IPX Datagram (RFC1552) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PPP_VJC_COMP
 value|0x2d
 end_define
@@ -202,6 +228,17 @@ end_define
 
 begin_comment
 comment|/* IP Control Protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPP_IPXCP
+value|0x802b
+end_define
+
+begin_comment
+comment|/* IPX Control Protocol (RFC1552) */
 end_comment
 
 begin_define
@@ -314,6 +351,12 @@ operator|!
 name|defined
 argument_list|(
 name|_BITYPES
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__FreeBSD__
 argument_list|)
 end_if
 

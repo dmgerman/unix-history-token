@@ -4,7 +4,11 @@ comment|/*  * ppp_tty.c - Point-to-Point Protocol (PPP) driver for asynchronous 
 end_comment
 
 begin_comment
-comment|/* $Id: ppp_tty.c,v 1.3 1995/08/16 01:36:40 paulus Exp $ */
+comment|/* $Id$ */
+end_comment
+
+begin_comment
+comment|/* from Id: ppp_tty.c,v 1.3 1995/08/16 01:36:40 paulus Exp */
 end_comment
 
 begin_comment
@@ -103,11 +107,54 @@ directive|include
 file|<sys/conf.h>
 end_include
 
+begin_undef
+undef|#
+directive|undef
+name|KERNEL
+end_undef
+
+begin_comment
+comment|/* so that vnode.h does not try to include vnode_if.h */
+end_comment
+
 begin_include
 include|#
 directive|include
 file|<sys/vnode.h>
 end_include
+
+begin_define
+define|#
+directive|define
+name|KERNEL
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|i386
+end_ifdef
+
+begin_comment
+comment|/* fiddle with the spl locking */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<machine/spl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<i386/isa/isa_device.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -148,7 +195,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/pppcompress.h>
+file|<net/slcompress.h>
 end_include
 
 begin_endif
@@ -181,10 +228,21 @@ name|__P
 argument_list|(
 operator|(
 name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|PSEUDO_SET
+argument_list|(
+name|pppasyncattach
+argument_list|,
+name|ppp_tty
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|int
@@ -398,6 +456,21 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
+name|pppasyncsetmtu
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ppp_softc
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
 name|ppp_timeout
 name|__P
 argument_list|(
@@ -515,7 +588,7 @@ comment|/*  * Procedures for using an async tty interface for PPP.  */
 end_comment
 
 begin_comment
-comment|/* This is a FreeBSD-2.0 kernel. */
+comment|/* This is a FreeBSD-2.X kernel. */
 end_comment
 
 begin_define
@@ -572,8 +645,63 @@ end_decl_stmt
 begin_function
 name|void
 name|pppasyncattach
-parameter_list|()
+parameter_list|(
+name|dummy
+parameter_list|)
+name|void
+modifier|*
+name|dummy
+decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|i386
+name|int
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|splhigh
+argument_list|()
+expr_stmt|;
+comment|/*      * Make sure that the soft net "engine" cannot run while spltty code is      * active.  The if_ppp.c code can walk down into b_to_q etc, and it is      * bad if the tty system was in the middle of another b_to_q...      */
+name|tty_imask
+operator||=
+name|SWI_NET_MASK
+expr_stmt|;
+comment|/* spltty() block spl[soft]net() */
+name|net_imask
+operator||=
+name|SWI_TTY_MASK
+expr_stmt|;
+comment|/* splimp() block splsofttty() */
+name|net_imask
+operator||=
+name|tty_imask
+expr_stmt|;
+comment|/* splimp() block spltty() */
+name|update_intr_masks
+argument_list|()
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"new masks: bio %x, tty %x, net %x\n"
+argument_list|,
+name|bio_imask
+argument_list|,
+name|tty_imask
+argument_list|,
+name|net_imask
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* register line discipline */
 name|linesw
 index|[
 name|PPPDISC
@@ -584,18 +712,8 @@ expr_stmt|;
 block|}
 end_function
 
-begin_expr_stmt
-name|TEXT_SET
-argument_list|(
-name|pseudo_set
-argument_list|,
-name|pppasyncattach
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
-comment|/*  * Line specific open routine for async tty devices.  * Attach the given tty to the first available ppp unit.  */
+comment|/*  * Line specific open routine for async tty devices.  * Attach the given tty to the first available ppp unit.  * Called from device open routine or ttioctl() at>= splsofttty()  */
 end_comment
 
 begin_comment
@@ -662,6 +780,12 @@ operator|(
 name|error
 operator|)
 return|;
+name|s
+operator|=
+name|spltty
+argument_list|()
+expr_stmt|;
+comment|/* also netisr's, including NETISR_PPP */
 if|if
 condition|(
 name|tp
@@ -698,11 +822,18 @@ operator|*
 operator|)
 name|tp
 condition|)
+block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 block|}
 if|if
 condition|(
@@ -719,9 +850,16 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 name|ENXIO
 return|;
+block|}
 if|if
 condition|(
 name|sc
@@ -739,11 +877,6 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* get previous owner to relinquish the unit */
-name|s
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
 name|sc
 operator|->
 name|sc_ilen
@@ -824,6 +957,12 @@ name|pppasyncrelinq
 expr_stmt|;
 name|sc
 operator|->
+name|sc_setmtu
+operator|=
+name|pppasyncsetmtu
+expr_stmt|;
+name|sc
+operator|->
 name|sc_outm
 operator|=
 name|NULL
@@ -840,6 +979,16 @@ operator|.
 name|if_flags
 operator||=
 name|IFF_RUNNING
+expr_stmt|;
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_baudrate
+operator|=
+name|tp
+operator|->
+name|t_ospeed
 expr_stmt|;
 name|tp
 operator|->
@@ -859,6 +1008,55 @@ operator||
 name|FWRITE
 argument_list|)
 expr_stmt|;
+comment|/*      * Pre-allocate cblocks to the "just right" amount.  The 1 byte t_canq      * allocation helps avoid the need for select and/or FIONREAD.      * We also pass 1 byte tokens through t_canq...      */
+name|clist_alloc_cblocks
+argument_list|(
+operator|&
+name|tp
+operator|->
+name|t_canq
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|clist_alloc_cblocks
+argument_list|(
+operator|&
+name|tp
+operator|->
+name|t_outq
+argument_list|,
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_mtu
+operator|+
+name|PPP_HIWAT
+argument_list|,
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_mtu
+operator|+
+name|PPP_HIWAT
+argument_list|)
+expr_stmt|;
+name|clist_alloc_cblocks
+argument_list|(
+operator|&
+name|tp
+operator|->
+name|t_rawq
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
@@ -873,7 +1071,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Line specific close routine.  * Detach the tty from the ppp unit.  * Mimics part of ttyclose().  */
+comment|/*  * Line specific close routine, called from device close routine  * and from ttioctl at>= splsofttty().  * Detach the tty from the ppp unit.  * Mimics part of ttyclose().  */
 end_comment
 
 begin_function
@@ -907,17 +1105,37 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
-name|ttywflush
-argument_list|(
-name|tp
-argument_list|)
-expr_stmt|;
 name|s
 operator|=
-name|splimp
+name|spltty
 argument_list|()
 expr_stmt|;
-comment|/* paranoid; splnet probably ok */
+comment|/* also netisr's, including NETISR_PPP */
+name|ttyflush
+argument_list|(
+name|tp
+argument_list|,
+name|FREAD
+operator||
+name|FWRITE
+argument_list|)
+expr_stmt|;
+name|clist_free_cblocks
+argument_list|(
+operator|&
+name|tp
+operator|->
+name|t_canq
+argument_list|)
+expr_stmt|;
+name|clist_free_cblocks
+argument_list|(
+operator|&
+name|tp
+operator|->
+name|t_outq
+argument_list|)
+expr_stmt|;
 name|tp
 operator|->
 name|t_line
@@ -1007,9 +1225,10 @@ name|s
 decl_stmt|;
 name|s
 operator|=
-name|splimp
+name|spltty
 argument_list|()
 expr_stmt|;
+comment|/* also netisr's, including NETISR_PPP */
 if|if
 condition|(
 name|sc
@@ -1089,7 +1308,87 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Line specific (tty) read routine.  */
+comment|/*  * This gets called from the upper layer to notify a mtu change  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|pppasyncsetmtu
+parameter_list|(
+name|sc
+parameter_list|)
+specifier|register
+name|struct
+name|ppp_softc
+modifier|*
+name|sc
+decl_stmt|;
+block|{
+specifier|register
+name|struct
+name|tty
+modifier|*
+name|tp
+init|=
+operator|(
+expr|struct
+name|tty
+operator|*
+operator|)
+name|sc
+operator|->
+name|sc_devp
+decl_stmt|;
+name|int
+name|s
+decl_stmt|;
+name|s
+operator|=
+name|spltty
+argument_list|()
+expr_stmt|;
+comment|/* also netisr's, including NETISR_PPP */
+if|if
+condition|(
+name|tp
+operator|!=
+name|NULL
+condition|)
+name|clist_alloc_cblocks
+argument_list|(
+operator|&
+name|tp
+operator|->
+name|t_outq
+argument_list|,
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_mtu
+operator|+
+name|PPP_HIWAT
+argument_list|,
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_mtu
+operator|+
+name|PPP_HIWAT
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Line specific (tty) read routine.  * called at no spl from the device driver in the response to user-level  * reads on the tty file descriptor (ie: pppd).  */
 end_comment
 
 begin_function
@@ -1161,9 +1460,10 @@ return|;
 comment|/*      * Loop waiting for input, checking that nothing disasterous      * happens in the meantime.      */
 name|s
 operator|=
-name|splimp
+name|spltty
 argument_list|()
 expr_stmt|;
+comment|/* also netisr's, including NETISR_PPP */
 for|for
 control|(
 init|;
@@ -1221,14 +1521,6 @@ name|TS_CONNECTED
 operator|)
 operator|==
 literal|0
-operator|&&
-operator|(
-name|tp
-operator|->
-name|t_state
-operator|&
-name|TS_ISOPEN
-operator|)
 condition|)
 block|{
 name|splx
@@ -1379,7 +1671,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Line specific (tty) write routine.  */
+comment|/*  * Line specific (tty) write routine.  * called at no spl from the device driver in the response to user-level  * writes on the tty file descriptor (ie: pppd).  */
 end_comment
 
 begin_function
@@ -1442,6 +1734,8 @@ name|int
 name|len
 decl_stmt|,
 name|error
+decl_stmt|,
+name|s
 decl_stmt|;
 if|if
 condition|(
@@ -1517,6 +1811,12 @@ operator|(
 name|EMSGSIZE
 operator|)
 return|;
+name|s
+operator|=
+name|spltty
+argument_list|()
+expr_stmt|;
+comment|/* also netisr's, including NETISR_PPP */
 for|for
 control|(
 name|mp
@@ -1560,6 +1860,11 @@ block|{
 name|m_freem
 argument_list|(
 name|m0
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -1637,6 +1942,11 @@ argument_list|(
 name|m0
 argument_list|)
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -1685,8 +1995,9 @@ name|m_len
 operator|-=
 name|PPP_HDRLEN
 expr_stmt|;
-return|return
-operator|(
+comment|/* call the upper layer to "transmit" it... */
+name|error
+operator|=
 name|pppoutput
 argument_list|(
 operator|&
@@ -1706,6 +2017,15 @@ operator|*
 operator|)
 literal|0
 argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
 operator|)
 return|;
 block|}
@@ -1926,6 +2246,7 @@ operator|=
 name|spltty
 argument_list|()
 expr_stmt|;
+comment|/* also netisr's, including NETISR_PPP */
 name|bcopy
 argument_list|(
 name|data
@@ -2656,9 +2977,10 @@ name|s
 decl_stmt|;
 name|s
 operator|=
-name|splimp
+name|spltty
 argument_list|()
 expr_stmt|;
+comment|/* raise from splnet to spltty */
 name|pppstart
 argument_list|(
 name|tp
@@ -2673,7 +2995,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This gets called when a received packet is placed on  * the inq.  */
+comment|/*  * This gets called when a received packet is placed on  * the inq.  The pppd daemon is to be woken up to do a read().  */
 end_comment
 
 begin_function
@@ -2694,7 +3016,16 @@ name|tty
 modifier|*
 name|tp
 decl_stmt|;
+name|int
+name|s
+decl_stmt|;
 comment|/* Put a placeholder byte in canq for ttselect()/ttnread(). */
+name|s
+operator|=
+name|spltty
+argument_list|()
+expr_stmt|;
+comment|/* raise from splnet to spltty */
 name|tp
 operator|=
 operator|(
@@ -2721,11 +3052,16 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Start output on async tty interface.  Get another datagram  * to send from the interface queue and start sending it.  */
+comment|/*  * Start output on async tty interface.  Get another datagram  * to send from the interface queue and start sending it.  *  * Called from tty system at splsofttty() or spltty().  * Called from the upper half at softnet, raised to spltty via asyncstart.  *  * Harmless to be called while the upper netisr code is preempted, but we  * do not want to be preempted by it again.  */
 end_comment
 
 begin_function
@@ -2819,6 +3155,12 @@ operator|)
 name|sc
 operator|->
 name|sc_devp
+operator|||
+name|tp
+operator|->
+name|t_line
+operator|!=
+name|PPPDISC
 condition|)
 block|{
 if|if
@@ -2843,6 +3185,12 @@ return|return
 literal|0
 return|;
 block|}
+name|s
+operator|=
+name|spltty
+argument_list|()
+expr_stmt|;
+comment|/* in case.. do not want netisrs to preempt us */
 name|idle
 operator|=
 literal|0
@@ -2949,6 +3297,14 @@ name|m
 operator|->
 name|m_len
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_lastchange
+operator|=
+name|time
 expr_stmt|;
 block|}
 for|for
@@ -3407,7 +3763,7 @@ name|m
 condition|)
 break|break;
 block|}
-comment|/*      * Send anything that may be in the output queue.      * We are being called in lieu of ttstart and must do what it would.      */
+comment|/*      * Call output process whether or not there is any output.      * We are being called in lieu of ttstart and must do what it would.      */
 if|if
 condition|(
 name|tp
@@ -3463,6 +3819,11 @@ operator||=
 name|SC_TIMEOUT
 expr_stmt|;
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -3516,9 +3877,10 @@ name|s
 decl_stmt|;
 name|s
 operator|=
-name|splimp
+name|spltty
 argument_list|()
 expr_stmt|;
+comment|/* also netisr's, including NETISR_PPP */
 name|sc
 operator|->
 name|sc_flags
@@ -3574,9 +3936,10 @@ name|s
 decl_stmt|;
 name|s
 operator|=
-name|splimp
+name|spltty
 argument_list|()
 expr_stmt|;
+comment|/* also netisr's, including NETISR_PPP */
 name|mp
 operator|=
 operator|&
@@ -3698,6 +4061,10 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Called when character is available from device driver.  * Only guaranteed to be at splsofttty() or spltty()  * This is safe to be called while the upper half's netisr is preempted.  */
+end_comment
+
 begin_function
 name|int
 name|pppinput
@@ -3768,6 +4135,7 @@ operator|=
 name|spltty
 argument_list|()
 expr_stmt|;
+comment|/* also netisr's, including NETISR_PPP */
 operator|++
 name|tk_nin
 expr_stmt|;
@@ -3778,9 +4146,45 @@ name|sc_bytesrcvd
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|tp
+operator|->
+name|t_state
+operator|&
+name|TS_CONNECTED
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|SC_DEBUG
+condition|)
+name|printf
+argument_list|(
+literal|"ppp%d: no carrier\n"
+argument_list|,
+name|sc
+operator|->
+name|sc_if
+operator|.
+name|if_unit
+argument_list|)
+expr_stmt|;
+goto|goto
+name|flush
+goto|;
+block|}
+if|if
+condition|(
 name|c
 operator|&
-name|TTY_FE
+name|TTY_ERRORMASK
 condition|)
 block|{
 comment|/* framing error or overrun on this char - abort packet */
@@ -3794,7 +4198,7 @@ name|SC_DEBUG
 condition|)
 name|printf
 argument_list|(
-literal|"ppp%d: bad char %x\n"
+literal|"ppp%d: line error %x\n"
 argument_list|,
 name|sc
 operator|->
@@ -3803,6 +4207,8 @@ operator|.
 name|if_unit
 argument_list|,
 name|c
+operator|&
+name|TTY_ERRORMASK
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3811,7 +4217,7 @@ goto|;
 block|}
 name|c
 operator|&=
-literal|0xff
+name|TTY_CHARMASK
 expr_stmt|;
 if|if
 condition|(

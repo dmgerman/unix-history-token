@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: if_pppvar.h,v 1.1 1994/12/15 22:28:09 paulus Exp $	*/
+comment|/*	from Id: if_pppvar.h,v 1.1 1994/12/15 22:28:09 paulus Exp	*/
+end_comment
+
+begin_comment
+comment|/*	$Id$	*/
 end_comment
 
 begin_comment
@@ -46,6 +50,7 @@ name|ifnet
 name|sc_if
 decl_stmt|;
 comment|/* network-visible interface */
+comment|/*hi*/
 name|u_int
 name|sc_flags
 decl_stmt|;
@@ -97,6 +102,20 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* relinquish ifunit */
+name|void
+argument_list|(
+argument|*sc_setmtu
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ppp_softc
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* set mtu */
 name|short
 name|sc_mru
 decl_stmt|;
@@ -105,16 +124,19 @@ name|pid_t
 name|sc_xfer
 decl_stmt|;
 comment|/* used in transferring unit */
+comment|/*hi*/
 name|struct
 name|ifqueue
 name|sc_rawq
 decl_stmt|;
 comment|/* received packets */
+comment|/*net*/
 name|struct
 name|ifqueue
 name|sc_inq
 decl_stmt|;
 comment|/* queue of input packets for daemon */
+comment|/*net*/
 name|struct
 name|ifqueue
 name|sc_fastq
@@ -143,7 +165,7 @@ ifdef|#
 directive|ifdef
 name|VJC
 name|struct
-name|vjcompress
+name|slcompress
 name|sc_comp
 decl_stmt|;
 comment|/* vjc control buffer */
@@ -322,6 +344,36 @@ expr|struct
 name|proc
 operator|*
 name|p
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|pppoutput
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ifnet
+operator|*
+name|ifp
+operator|,
+expr|struct
+name|mbuf
+operator|*
+name|m0
+operator|,
+expr|struct
+name|sockaddr
+operator|*
+name|dst
+operator|,
+expr|struct
+name|rtentry
+operator|*
+name|rtp
 operator|)
 argument_list|)
 decl_stmt|;

@@ -1,6 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * if_ppp.h - Point-to-Point Protocol definitions.  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: if_ppp.h,v 1.3 1995/05/30 08:08:09 rgrimes Exp $  */
+comment|/*	from Id: if_ppp.h,v 1.12 1995/04/24 02:40:23 paulus Exp	*/
+end_comment
+
+begin_comment
+comment|/*	$Id$ */
+end_comment
+
+begin_comment
+comment|/*  * if_ppp.h - Point-to-Point Protocol definitions.  *  * Copyright (c) 1989 Carnegie Mellon University.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by Carnegie Mellon University.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_ifndef
@@ -16,246 +24,20 @@ name|_IF_PPP_H_
 end_define
 
 begin_comment
-comment|/*  * Standard PPP header.  */
+comment|/* XXX this used to be self-contained. */
 end_comment
 
-begin_struct
-struct|struct
-name|ppp_header
-block|{
-name|u_char
-name|ph_address
-decl_stmt|;
-comment|/* Address Field */
-name|u_char
-name|ph_control
-decl_stmt|;
-comment|/* Control Field */
-name|u_short
-name|ph_protocol
-decl_stmt|;
-comment|/* Protocol Field */
-block|}
-struct|;
-end_struct
+begin_include
+include|#
+directive|include
+file|<net/ppp_defs.h>
+end_include
 
-begin_define
-define|#
-directive|define
-name|PPP_HDRLEN
-value|4
-end_define
-
-begin_comment
-comment|/* sizeof(struct ppp_header) must be 4 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PPP_FCSLEN
-value|2
-end_define
-
-begin_comment
-comment|/* octets for FCS */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PPP_ALLSTATIONS
-value|0xff
-end_define
-
-begin_comment
-comment|/* All-Stations broadcast address */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PPP_UI
-value|0x03
-end_define
-
-begin_comment
-comment|/* Unnumbered Information */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PPP_FLAG
-value|0x7e
-end_define
-
-begin_comment
-comment|/* Flag Sequence */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PPP_ESCAPE
-value|0x7d
-end_define
-
-begin_comment
-comment|/* Asynchronous Control Escape */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PPP_TRANS
-value|0x20
-end_define
-
-begin_comment
-comment|/* Asynchronous transparency modifier */
-end_comment
-
-begin_comment
-comment|/*  * Protocol field values.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PPP_IP
-value|0x21
-end_define
-
-begin_comment
-comment|/* Internet Protocol */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PPP_XNS
-value|0x25
-end_define
-
-begin_comment
-comment|/* Xerox NS */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PPP_IPX
-value|0x2b
-end_define
-
-begin_comment
-comment|/* IPX Datagram (RFC1552) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PPP_VJC_COMP
-value|0x2d
-end_define
-
-begin_comment
-comment|/* VJ compressed TCP */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PPP_VJC_UNCOMP
-value|0x2f
-end_define
-
-begin_comment
-comment|/* VJ uncompressed TCP */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PPP_COMP
-value|0xfd
-end_define
-
-begin_comment
-comment|/* compressed packet */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PPP_LCP
-value|0xc021
-end_define
-
-begin_comment
-comment|/* Link Control Protocol */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PPP_IPXCP
-value|0x802b
-end_define
-
-begin_comment
-comment|/* IPX Control Protocol (RFC1552) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PPP_CCP
-value|0x80fd
-end_define
-
-begin_comment
-comment|/* Compression Control Protocol */
-end_comment
-
-begin_comment
-comment|/*  * Important FCS values.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PPP_INITFCS
-value|0xffff
-end_define
-
-begin_comment
-comment|/* Initial FCS value */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PPP_GOODFCS
-value|0xf0b8
-end_define
-
-begin_comment
-comment|/* Good final FCS value */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PPP_FCS
-parameter_list|(
-name|fcs
-parameter_list|,
-name|c
-parameter_list|)
-value|(((fcs)>> 8) ^ fcstab[((fcs) ^ (c))& 0xff])
-end_define
+begin_include
+include|#
+directive|include
+file|<net/if.h>
+end_include
 
 begin_comment
 comment|/*  * Packet sizes  */
@@ -275,17 +57,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PPP_MRU
-value|1500
-end_define
-
-begin_comment
-comment|/* Default MRU (max receive unit) */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PPP_MAXMRU
 value|65000
 end_define
@@ -294,157 +65,19 @@ begin_comment
 comment|/* Largest MRU we allow */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PPP_MAXMTU
+value|16384
+end_define
+
 begin_comment
-comment|/* Extended asyncmap - allows any character to be escaped. */
+comment|/* Largest MTU we allow */
 end_comment
 
-begin_typedef
-typedef|typedef
-name|u_long
-name|ext_accm
-index|[
-literal|8
-index|]
-typedef|;
-end_typedef
-
 begin_comment
-comment|/*  * Structure describing each ppp unit.  */
-end_comment
-
-begin_struct
-struct|struct
-name|ppp_softc
-block|{
-name|struct
-name|ifnet
-name|sc_if
-decl_stmt|;
-comment|/* network-visible interface */
-name|u_int
-name|sc_flags
-decl_stmt|;
-comment|/* see below */
-name|void
-modifier|*
-name|sc_devp
-decl_stmt|;
-comment|/* pointer to device-dependent structure */
-name|int
-argument_list|(
-argument|*sc_start
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|ppp_softc
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* start routine */
-name|short
-name|sc_mru
-decl_stmt|;
-comment|/* max receive unit */
-name|pid_t
-name|sc_xfer
-decl_stmt|;
-comment|/* used in xferring unit to another dev */
-name|struct
-name|ifqueue
-name|sc_inq
-decl_stmt|;
-comment|/* TTY side input queue */
-name|struct
-name|ifqueue
-name|sc_fastq
-decl_stmt|;
-comment|/* IP interactive output packet queue */
-ifdef|#
-directive|ifdef
-name|VJC
-name|struct
-name|slcompress
-name|sc_comp
-decl_stmt|;
-comment|/* vjc control buffer */
-endif|#
-directive|endif
-name|u_int
-name|sc_bytessent
-decl_stmt|;
-comment|/* count of octets sent */
-name|u_int
-name|sc_bytesrcvd
-decl_stmt|;
-comment|/* count of octets received */
-name|caddr_t
-name|sc_bpf
-decl_stmt|;
-comment|/* hook for BPF */
-comment|/* Device-dependent part for async lines. */
-name|ext_accm
-name|sc_asyncmap
-decl_stmt|;
-comment|/* async control character map */
-name|u_long
-name|sc_rasyncmap
-decl_stmt|;
-comment|/* receive async control char map */
-name|struct
-name|mbuf
-modifier|*
-name|sc_outm
-decl_stmt|;
-comment|/* mbuf chain being output currently */
-name|struct
-name|mbuf
-modifier|*
-name|sc_m
-decl_stmt|;
-comment|/* pointer to input mbuf chain */
-name|struct
-name|mbuf
-modifier|*
-name|sc_mc
-decl_stmt|;
-comment|/* pointer to current input mbuf */
-name|char
-modifier|*
-name|sc_mp
-decl_stmt|;
-comment|/* pointer to next char in input mbuf */
-name|short
-name|sc_ilen
-decl_stmt|;
-comment|/* length of input-packet-so-far */
-name|u_short
-name|sc_fcs
-decl_stmt|;
-comment|/* FCS so far (input) */
-name|u_short
-name|sc_outfcs
-decl_stmt|;
-comment|/* FCS so far for output packet */
-name|u_char
-name|sc_rawin
-index|[
-literal|16
-index|]
-decl_stmt|;
-comment|/* chars as received */
-name|int
-name|sc_rawin_count
-decl_stmt|;
-comment|/* # in sc_rawin */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* flags */
+comment|/*  * Bit definitions for flags.  */
 end_comment
 
 begin_define
@@ -516,12 +149,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SC_ENABLE_IP
-value|0x00000100
+name|SC_CCP_OPEN
+value|0x00000040
 end_define
 
 begin_comment
-comment|/* IP packets may be exchanged */
+comment|/* Look at CCP packets */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SC_CCP_UP
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* May send/recv compressed packets */
 end_comment
 
 begin_define
@@ -582,43 +226,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SC_MASK
-value|0x0fffffff
-end_define
-
-begin_comment
-comment|/* bits that user can change */
-end_comment
-
-begin_comment
-comment|/* state bits */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SC_ESCAPED
-value|0x80000000
-end_define
-
-begin_comment
-comment|/* saw a PPP_ESCAPE */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SC_FLUSH
-value|0x40000000
-end_define
-
-begin_comment
-comment|/* flush input until next PPP_FLAG */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|SC_RCV_B7_0
 value|0x01000000
 end_define
@@ -635,7 +242,7 @@ value|0x02000000
 end_define
 
 begin_comment
-comment|/* have rcvd char with bit 7 = 0 */
+comment|/* have rcvd char with bit 7 = 1 */
 end_comment
 
 begin_define
@@ -660,8 +267,211 @@ begin_comment
 comment|/* have rcvd char with odd parity */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SC_MASK
+value|0x0fff00ff
+end_define
+
 begin_comment
-comment|/* this stuff doesn't belong here... */
+comment|/* bits that user can change */
+end_comment
+
+begin_comment
+comment|/*  * State bits in sc_flags, not changeable by user.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SC_TIMEOUT
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* timeout is currently pending */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SC_VJ_RESET
+value|0x00000800
+end_define
+
+begin_comment
+comment|/* need to reset VJ decomp */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SC_COMP_RUN
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* compressor has been inited */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SC_DECOMP_RUN
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* decompressor has been inited */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SC_DC_ERROR
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* non-fatal decomp error detected */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SC_DC_FERROR
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* fatal decomp error detected */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SC_TBUSY
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* xmitter doesn't need a packet yet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SC_PKTLOST
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* have lost or dropped a packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SC_FLUSH
+value|0x40000000
+end_define
+
+begin_comment
+comment|/* flush input until next PPP_FLAG */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SC_ESCAPED
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* saw a PPP_ESCAPE */
+end_comment
+
+begin_comment
+comment|/*  * Ioctl definitions.  */
+end_comment
+
+begin_struct
+struct|struct
+name|npioctl
+block|{
+name|int
+name|protocol
+decl_stmt|;
+comment|/* PPP procotol, e.g. PPP_IP */
+name|enum
+name|NPmode
+name|mode
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Structure describing a CCP configuration option, for PPPIOCSCOMPRESS */
+end_comment
+
+begin_struct
+struct|struct
+name|ppp_option_data
+block|{
+name|u_char
+modifier|*
+name|ptr
+decl_stmt|;
+name|u_int
+name|length
+decl_stmt|;
+name|int
+name|transmit
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ifpppstatsreq
+block|{
+name|char
+name|ifr_name
+index|[
+name|IFNAMSIZ
+index|]
+decl_stmt|;
+name|struct
+name|ppp_stats
+name|stats
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ifpppcstatsreq
+block|{
+name|char
+name|ifr_name
+index|[
+name|IFNAMSIZ
+index|]
+decl_stmt|;
+name|struct
+name|ppp_comp_stats
+name|stats
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Ioctl definitions.  */
 end_comment
 
 begin_define
@@ -807,6 +617,90 @@ begin_comment
 comment|/* transfer PPP unit */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PPPIOCSCOMPRESS
+value|_IOW('t', 77, struct ppp_option_data)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PPPIOCGNPMODE
+value|_IOWR('t', 76, struct npioctl)
+end_define
+
+begin_comment
+comment|/* get NP mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPPIOCSNPMODE
+value|_IOW('t', 75, struct npioctl)
+end_define
+
+begin_comment
+comment|/* set NP mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPPIOCGIDLE
+value|_IOR('t', 74, struct ppp_idle)
+end_define
+
+begin_comment
+comment|/* get idle time */
+end_comment
+
+begin_comment
+comment|/* PPPIOC[GS]MTU are alternatives to SIOC[GS]IFMTU, used under Ultrix */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPPIOCGMTU
+value|_IOR('t', 73, int)
+end_define
+
+begin_comment
+comment|/* get interface MTU */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPPIOCSMTU
+value|_IOW('t', 72, int)
+end_define
+
+begin_comment
+comment|/* set interface MTU */
+end_comment
+
+begin_comment
+comment|/*  * These two are interface ioctls so that pppstats can do them on  * a socket without having to open the serial device.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCGPPPSTATS
+value|_IOWR('i', 123, struct ifpppstatsreq)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIOCGPPPCSTATS
+value|_IOWR('i', 122, struct ifpppcstatsreq)
+end_define
+
 begin_if
 if|#
 directive|if
@@ -821,7 +715,7 @@ begin_define
 define|#
 directive|define
 name|ifr_mtu
-value|ifr_metric
+value|ifr_ifru.ifru_metric
 end_define
 
 begin_endif
