@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)date.c	5.3 (Berkeley) %G%"
+literal|"@(#)date.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -151,6 +151,8 @@ name|tz
 decl_stmt|;
 name|int
 name|ch
+decl_stmt|,
+name|rflag
 decl_stmt|;
 name|char
 modifier|*
@@ -168,6 +170,10 @@ operator|=
 name|tz
 operator|.
 name|tz_minuteswest
+operator|=
+literal|0
+expr_stmt|;
+name|rflag
 operator|=
 literal|0
 expr_stmt|;
@@ -226,6 +232,11 @@ break|break;
 case|case
 literal|'r'
 case|:
+comment|/* user specified seconds */
+name|rflag
+operator|=
+literal|1
+expr_stmt|;
 name|tval
 operator|=
 name|atol
@@ -331,7 +342,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|tval
+name|rflag
 operator|&&
 name|time
 argument_list|(
@@ -339,9 +350,6 @@ operator|&
 name|tval
 argument_list|)
 operator|==
-operator|(
-name|time_t
-operator|)
 operator|-
 literal|1
 condition|)
