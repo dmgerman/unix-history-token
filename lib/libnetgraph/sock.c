@@ -40,6 +40,17 @@ file|"internal.h"
 end_include
 
 begin_comment
+comment|/* The socket node type KLD */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_SOCKET_KLD
+value|"ng_socket.ko"
+end_define
+
+begin_comment
 comment|/*  * Create a socket type node and give it the supplied name.  * Return data and control sockets corresponding to the node.  * Returns -1 if error and sets errno.  */
 end_comment
 
@@ -100,7 +111,7 @@ name|name
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* Create control socket; this also creates the netgraph node */
+comment|/* Create control socket; this also creates the netgraph node. 	   If we get a EPROTONOSUPPORT then the socket node type is 	   not loaded, so load it and try again. */
 if|if
 condition|(
 operator|(
@@ -119,6 +130,65 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|EPROTONOSUPPORT
+condition|)
+block|{
+if|if
+condition|(
+name|kldload
+argument_list|(
+name|NG_SOCKET_KLD
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|errnosv
+operator|=
+name|errno
+expr_stmt|;
+if|if
+condition|(
+name|_gNgDebugLevel
+operator|>=
+literal|1
+condition|)
+name|NGLOG
+argument_list|(
+literal|"can't load %s"
+argument_list|,
+name|NG_SOCKET_KLD
+argument_list|)
+expr_stmt|;
+goto|goto
+name|errout
+goto|;
+block|}
+name|cs
+operator|=
+name|socket
+argument_list|(
+name|AF_NETGRAPH
+argument_list|,
+name|SOCK_DGRAM
+argument_list|,
+name|NG_CONTROL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cs
+operator|>=
+literal|0
+condition|)
+goto|goto
+name|gotNode
+goto|;
+block|}
 name|errnosv
 operator|=
 name|errno
@@ -138,6 +208,8 @@ goto|goto
 name|errout
 goto|;
 block|}
+name|gotNode
+label|:
 comment|/* Assign the node the desired name, if any */
 if|if
 condition|(
