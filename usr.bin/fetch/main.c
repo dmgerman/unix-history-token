@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1996  *      Jean-Marc Zucconi  *  * Redistribution
 end_comment
 
 begin_comment
-comment|/* $Id: main.c,v 1.22 1996/09/19 17:31:34 peter Exp $ */
+comment|/* $Id: main.c,v 1.23 1996/09/19 18:07:20 peter Exp $ */
 end_comment
 
 begin_include
@@ -726,6 +726,10 @@ case|:
 name|host
 operator|=
 name|optarg
+expr_stmt|;
+name|ftp
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
