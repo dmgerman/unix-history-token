@@ -387,6 +387,15 @@ block|{
 name|cninit_finish
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"Device configuration finished.\n"
+argument_list|)
+expr_stmt|;
 name|cold
 operator|=
 literal|0
