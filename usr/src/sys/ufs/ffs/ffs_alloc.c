@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ffs_alloc.c	6.9	85/01/10	*/
+comment|/*	ffs_alloc.c	6.10	85/01/10	*/
 end_comment
 
 begin_include
@@ -3819,6 +3819,40 @@ operator|==
 literal|0
 condition|)
 block|{
+name|len
+operator|=
+name|start
+operator|+
+literal|1
+expr_stmt|;
+name|start
+operator|=
+literal|0
+expr_stmt|;
+name|loc
+operator|=
+name|skpc
+argument_list|(
+literal|0xff
+argument_list|,
+name|len
+argument_list|,
+operator|&
+name|cgp
+operator|->
+name|cg_iused
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|loc
+operator|==
+literal|0
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"cg = %s, irotor = %d, fs = %s\n"
@@ -3840,6 +3874,7 @@ literal|"ialloccg: map corrupted"
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
+block|}
 block|}
 name|i
 operator|=
@@ -5166,7 +5201,7 @@ name|cgp
 operator|->
 name|cg_free
 index|[
-name|start
+literal|0
 index|]
 argument_list|,
 operator|(
@@ -5226,12 +5261,7 @@ argument_list|(
 literal|"alloccg: map corrupted"
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
+comment|/* NOTREACHED */
 block|}
 block|}
 name|bno
