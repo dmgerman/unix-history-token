@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mtree.c	5.1 (Berkeley) %G%"
+literal|"@(#)mtree.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -398,7 +398,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|stat
+name|lstat
 argument_list|(
 literal|"."
 argument_list|,
@@ -670,7 +670,7 @@ continue|continue;
 block|}
 if|if
 condition|(
-name|stat
+name|lstat
 argument_list|(
 name|dp
 operator|->
