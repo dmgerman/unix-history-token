@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.55.1.4 (Berkeley) %G%"
+literal|"@(#)main.c	8.55.1.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1379,9 +1379,9 @@ name|strncmp
 argument_list|(
 name|p
 argument_list|,
-literal|"FS="
+literal|"IFS="
 argument_list|,
-literal|3
+literal|4
 argument_list|)
 operator|==
 literal|0
