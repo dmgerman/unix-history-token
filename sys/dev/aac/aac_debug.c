@@ -551,33 +551,6 @@ operator|.
 name|q_max
 argument_list|)
 expr_stmt|;
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|aac_dev
-argument_list|,
-literal|"AACQ_COMPLETE  %d/%d\n"
-argument_list|,
-name|sc
-operator|->
-name|aac_qstat
-index|[
-name|AACQ_COMPLETE
-index|]
-operator|.
-name|q_length
-argument_list|,
-name|sc
-operator|->
-name|aac_qstat
-index|[
-name|AACQ_COMPLETE
-index|]
-operator|.
-name|q_max
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
