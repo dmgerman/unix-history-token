@@ -161,6 +161,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|__unaligned_fixup
+parameter_list|(
+name|struct
+name|utrapframe
+modifier|*
+name|uf
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|__sparc_utrap
 parameter_list|(

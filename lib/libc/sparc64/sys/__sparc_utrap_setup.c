@@ -104,13 +104,18 @@ block|,
 name|NULL
 block|}
 block|,
-if|#
-directive|if
-literal|0
-block|{ UT_MEM_ADDRESS_NOT_ALIGNED, __sparc_utrap_gen, NULL, NULL, NULL },
-endif|#
-directive|endif
+block|{
+name|UT_MEM_ADDRESS_NOT_ALIGNED
+block|,
+name|__sparc_utrap_gen
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
 block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

@@ -199,6 +199,13 @@ break|break;
 case|case
 name|UT_MEM_ADDRESS_NOT_ALIGNED
 case|:
+name|sig
+operator|=
+name|__unaligned_fixup
+argument_list|(
+name|uf
+argument_list|)
+expr_stmt|;
 break|break;
 default|default:
 break|break;
