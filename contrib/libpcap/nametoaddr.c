@@ -15,8 +15,9 @@ specifier|const
 name|char
 name|rcsid
 index|[]
+name|_U_
 init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/nametoaddr.c,v 1.60 2001/07/28 22:56:35 guy Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/libpcap/nametoaddr.c,v 1.68.2.3 2003/11/19 18:13:48 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,6 +42,27 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WIN32
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<pcap-stdinc.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* WIN32 */
+end_comment
 
 begin_include
 include|#
@@ -70,11 +92,69 @@ directive|include
 file|<sys/time.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<netinet/in.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* WIN32 */
+end_comment
+
+begin_comment
+comment|/*  * XXX - why was this included even on UNIX?  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__MINGW32__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"IP6_misc.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|WIN32
+end_ifndef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_ETHER_HOSTTON
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_NETINET_IF_ETHER_H
+end_ifdef
+
 begin_struct_decl
 struct_decl|struct
 name|mbuf
 struct_decl|;
 end_struct_decl
+
+begin_comment
+comment|/* Squelch compiler warnings on some platforms for */
+end_comment
 
 begin_struct_decl
 struct_decl|struct
@@ -82,23 +162,19 @@ name|rtentry
 struct_decl|;
 end_struct_decl
 
+begin_comment
+comment|/* declarations in<net/if.h> */
+end_comment
+
 begin_include
 include|#
 directive|include
 file|<net/if.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_NETINET_IF_ETHER_H
-end_ifdef
+begin_comment
+comment|/* for "struct ifnet" in "struct arpcom" on Solaris */
+end_comment
 
 begin_include
 include|#
@@ -111,28 +187,29 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* HAVE_NETINET_IF_ETHER_H */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_ETHER_HOSTTON */
+end_comment
+
 begin_include
 include|#
 directive|include
 file|<arpa/inet.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<netdb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
 end_include
 
 begin_endif
@@ -141,7 +218,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*INET6*/
+comment|/* WIN32 */
 end_comment
 
 begin_include
@@ -166,12 +243,6 @@ begin_include
 include|#
 directive|include
 file|<memory.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netdb.h>
 end_include
 
 begin_include
@@ -490,6 +561,9 @@ modifier|*
 name|name
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|WIN32
 name|struct
 name|netent
 modifier|*
@@ -517,6 +591,14 @@ else|else
 return|return
 literal|0
 return|;
+else|#
+directive|else
+comment|/* 	 * There's no "getnetbyname()" on Windows. 	 */
+return|return
+literal|0
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -547,21 +629,26 @@ name|servent
 modifier|*
 name|sp
 decl_stmt|;
-name|char
-modifier|*
-name|other
+name|int
+name|tcp_port
+init|=
+operator|-
+literal|1
 decl_stmt|;
+name|int
+name|udp_port
+init|=
+operator|-
+literal|1
+decl_stmt|;
+comment|/* 	 * We need to check /etc/services for ambiguous entries. 	 * If we find the ambiguous entry, and it has the 	 * same port number, change the proto to PROTO_UNDEF 	 * so both TCP and UDP will be checked. 	 */
 name|sp
 operator|=
 name|getservbyname
 argument_list|(
 name|name
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+literal|"tcp"
 argument_list|)
 expr_stmt|;
 if|if
@@ -570,47 +657,14 @@ name|sp
 operator|!=
 name|NULL
 condition|)
-block|{
-name|NTOHS
+name|tcp_port
+operator|=
+name|ntohs
 argument_list|(
 name|sp
 operator|->
 name|s_port
 argument_list|)
-expr_stmt|;
-operator|*
-name|port
-operator|=
-name|sp
-operator|->
-name|s_port
-expr_stmt|;
-operator|*
-name|proto
-operator|=
-name|pcap_nametoproto
-argument_list|(
-name|sp
-operator|->
-name|s_proto
-argument_list|)
-expr_stmt|;
-comment|/* 		 * We need to check /etc/services for ambiguous entries. 		 * If we find the ambiguous entry, and it has the 		 * same port number, change the proto to PROTO_UNDEF 		 * so both TCP and UDP will be checked. 		 */
-if|if
-condition|(
-operator|*
-name|proto
-operator|==
-name|IPPROTO_TCP
-condition|)
-name|other
-operator|=
-literal|"udp"
-expr_stmt|;
-else|else
-name|other
-operator|=
-literal|"tcp"
 expr_stmt|;
 name|sp
 operator|=
@@ -618,35 +672,63 @@ name|getservbyname
 argument_list|(
 name|name
 argument_list|,
-name|other
+literal|"udp"
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|sp
 operator|!=
-literal|0
+name|NULL
 condition|)
-block|{
-name|NTOHS
+name|udp_port
+operator|=
+name|ntohs
 argument_list|(
 name|sp
 operator|->
 name|s_port
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tcp_port
+operator|>=
+literal|0
+condition|)
+block|{
+operator|*
+name|port
+operator|=
+name|tcp_port
+expr_stmt|;
+operator|*
+name|proto
+operator|=
+name|IPPROTO_TCP
+expr_stmt|;
+if|if
+condition|(
+name|udp_port
+operator|>=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|udp_port
+operator|==
+name|tcp_port
+condition|)
+operator|*
+name|proto
+operator|=
+name|PROTO_UNDEF
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|notdef
-if|if
-condition|(
-operator|*
-name|port
-operator|!=
-name|sp
-operator|->
-name|s_port
-condition|)
+else|else
 comment|/* Can't handle ambiguous names that refer 				   to different port numbers. */
 name|warning
 argument_list|(
@@ -657,12 +739,28 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+block|}
+return|return
+literal|1
+return|;
+block|}
+if|if
+condition|(
+name|udp_port
+operator|>=
+literal|0
+condition|)
+block|{
+operator|*
+name|port
+operator|=
+name|udp_port
+expr_stmt|;
 operator|*
 name|proto
 operator|=
-name|PROTO_UNDEF
+name|IPPROTO_UDP
 expr_stmt|;
-block|}
 return|return
 literal|1
 return|;
@@ -1518,6 +1616,13 @@ operator|!
 name|defined
 argument_list|(
 name|__FreeBSD__
+argument_list|)
+operator|&&
+expr|\
+operator|!
+name|defined
+argument_list|(
+name|_UNICOSMP
 argument_list|)
 end_if
 
