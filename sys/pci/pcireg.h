@@ -112,6 +112,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCIM_CMD_MWRICEN
+value|0x0010
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCIM_CMD_PERRESPEN
 value|0x0040
 end_define
