@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)df.c	4.5 (Berkeley) %G%"
+literal|"@(#)df.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -632,6 +632,10 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|lflag
+condition|)
 name|sync
 argument_list|()
 expr_stmt|;
