@@ -3181,6 +3181,15 @@ operator|->
 name|ifp
 argument_list|)
 expr_stmt|;
+name|FREE
+argument_list|(
+name|priv
+operator|->
+name|ifp
+argument_list|,
+name|M_NETGRAPH
+argument_list|)
+expr_stmt|;
 name|priv
 operator|->
 name|ifp
