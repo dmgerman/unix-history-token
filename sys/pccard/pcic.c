@@ -314,14 +314,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|void
+name|timeout_t
 name|pcictimeout
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -382,7 +376,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|unsigned
-name|long
 name|pcic_imask
 decl_stmt|;
 end_decl_stmt
@@ -2872,7 +2865,11 @@ begin_function
 specifier|static
 name|void
 name|pcictimeout
-parameter_list|()
+parameter_list|(
+name|void
+modifier|*
+name|chan
+parameter_list|)
 block|{
 name|timeout
 argument_list|(
