@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.48 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	6.49 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.48 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	6.49 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1489,9 +1489,9 @@ name|e_bodytype
 operator|=
 literal|"8BITMIME"
 expr_stmt|;
-name|EightBit
+name|SevenBit
 operator|=
-name|TRUE
+name|FALSE
 expr_stmt|;
 block|}
 elseif|else
@@ -1513,9 +1513,9 @@ name|e_bodytype
 operator|=
 literal|"7BIT"
 expr_stmt|;
-name|EightBit
+name|SevenBit
 operator|=
-name|FALSE
+name|TRUE
 expr_stmt|;
 block|}
 else|else

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	6.32 (Berkeley) %G%"
+literal|"@(#)readcf.c	6.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3566,10 +3566,10 @@ name|opt
 condition|)
 block|{
 case|case
-literal|'8'
+literal|'7'
 case|:
-comment|/* allow eight-bit input */
-name|EightBit
+comment|/* force seven-bit input */
+name|SevenBit
 operator|=
 name|atobool
 argument_list|(

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.51 (Berkeley) %G%"
+literal|"@(#)conf.c	6.52 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -461,11 +461,11 @@ operator|=
 name|EM_PRINT
 expr_stmt|;
 comment|/* option e */
-name|EightBit
+name|SevenBit
 operator|=
 name|FALSE
 expr_stmt|;
-comment|/* option 8 */
+comment|/* option 7 */
 name|MaxMciCache
 operator|=
 literal|1

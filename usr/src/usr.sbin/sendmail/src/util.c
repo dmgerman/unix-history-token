@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	6.16 (Berkeley) %G%"
+literal|"@(#)util.c	6.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2142,8 +2142,7 @@ return|;
 block|}
 if|if
 condition|(
-operator|!
-name|EightBit
+name|SevenBit
 condition|)
 for|for
 control|(
