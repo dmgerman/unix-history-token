@@ -100,6 +100,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<pthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<resolv.h>
 end_include
 
@@ -1322,30 +1328,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Make getaddrinfo() thread-safe in libc for use with kernel threads. */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"libc_private.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"spinlock.h"
-end_include
-
-begin_comment
 comment|/*  * XXX: Our res_*() is not thread-safe.  So, we share lock between  * getaddrinfo() and getipnodeby*().  Still, we cannot use  * getaddrinfo() and getipnodeby*() in conjunction with other  * functions which call res_*().  */
 end_comment
 
 begin_decl_stmt
-name|spinlock_t
+name|pthread_mutex_t
 name|__getaddrinfo_thread_lock
 init|=
-name|_SPINLOCK_INITIALIZER
+name|PTHREAD_MUTEX_INITIALIZER
 decl_stmt|;
 end_decl_stmt
 
@@ -1355,7 +1345,7 @@ directive|define
 name|THREAD_LOCK
 parameter_list|()
 define|\
-value|if (__isthreaded) _SPINLOCK(&__getaddrinfo_thread_lock);
+value|if (__isthreaded) _pthread_mutex_lock(&__getaddrinfo_thread_lock);
 end_define
 
 begin_define
@@ -1364,7 +1354,7 @@ directive|define
 name|THREAD_UNLOCK
 parameter_list|()
 define|\
-value|if (__isthreaded) _SPINUNLOCK(&__getaddrinfo_thread_lock);
+value|if (__isthreaded) _pthread_mutex_unlock(&__getaddrinfo_thread_lock);
 end_define
 
 begin_comment
