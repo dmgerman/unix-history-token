@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_comp.c	6.15 (Berkeley) %G%"
+literal|"@(#)res_comp.c	6.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,6 +54,13 @@ include|#
 directive|include
 file|<arpa/nameser.h>
 end_include
+
+begin_expr_stmt
+specifier|static
+name|dn_find
+argument_list|()
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Expand compressed domain name 'comp_dn' to full domain name.  * 'msg' is a pointer to the begining of the message,  * 'eomorig' points to the first location after the message,  * 'exp_dn' is a pointer to a buffer of size 'length' for the result.  * Return size of compressed name or -1 if there was an error.  */
