@@ -9943,8 +9943,6 @@ name|fault_type
 init|=
 name|fault_typea
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 name|RetryLookup
 label|:
 empty_stmt|;
@@ -10209,6 +10207,12 @@ condition|)
 goto|goto
 name|RetryLookup
 goto|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|vm_object_shadow
 argument_list|(
 operator|&
@@ -10233,6 +10237,12 @@ name|entry
 operator|->
 name|start
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 name|entry
@@ -10380,8 +10390,6 @@ name|entry
 parameter_list|)
 block|{
 comment|/* 	 * Unlock the main-level map 	 */
-name|GIANT_REQUIRED
-expr_stmt|;
 name|vm_map_unlock_read
 argument_list|(
 name|map
