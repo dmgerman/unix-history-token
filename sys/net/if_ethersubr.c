@@ -1441,7 +1441,9 @@ name|struct
 name|mbuf
 modifier|*
 name|n
-init|=
+decl_stmt|;
+name|n
+operator|=
 name|m_copy
 argument_list|(
 name|m
@@ -1453,7 +1455,7 @@ name|int
 operator|)
 name|M_COPYALL
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|n
 operator|->
 name|m_pkthdr
