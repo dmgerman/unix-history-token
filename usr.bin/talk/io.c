@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: io.c,v 1.6 1998/01/14 07:21:10 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -326,20 +326,6 @@ block|}
 block|}
 block|}
 end_function
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|sys_nerr
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * p_error prints the system error message on the standard location  * on the screen and then exits. (i.e. a curses version of perror)  */
