@@ -21,7 +21,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	5.15 (Berkeley) %G% (with USERDB)"
+literal|"@(#)udb.c	5.16 (Berkeley) %G% (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	5.15 (Berkeley) %G% (without USERDB)"
+literal|"@(#)udb.c	5.16 (Berkeley) %G% (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -297,7 +297,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|STATIC
 name|struct
 name|udbent
 name|UdbEnts
@@ -310,7 +309,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|STATIC
 name|int
 name|UdbSock
 init|=
@@ -320,7 +318,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|STATIC
 name|bool
 name|UdbInitialized
 init|=
@@ -1546,7 +1543,6 @@ value|27
 end_define
 
 begin_function
-name|STATIC
 name|int
 name|_udbx_init
 parameter_list|()
