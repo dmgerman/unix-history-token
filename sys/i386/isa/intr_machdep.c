@@ -3328,6 +3328,15 @@ block|}
 name|free
 argument_list|(
 name|idesc
+operator|->
+name|ih_name
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|idesc
 argument_list|,
 name|M_DEVBUF
 argument_list|)
