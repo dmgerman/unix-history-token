@@ -739,7 +739,7 @@ block|{
 if|if
 condition|(
 name|domains
-operator|>
+operator|==
 name|MAX_DOMAINS
 condition|)
 block|{
@@ -760,7 +760,10 @@ name|ypbind_error
 operator|=
 name|YPBIND_ERR_RESC
 expr_stmt|;
-return|return;
+return|return
+operator|&
+name|res
+return|;
 block|}
 name|ypdb
 operator|=
@@ -803,7 +806,10 @@ name|ypbind_error
 operator|=
 name|YPBIND_ERR_RESC
 expr_stmt|;
-return|return;
+return|return
+operator|&
+name|res
+return|;
 block|}
 name|bzero
 argument_list|(
