@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.18 (Berkeley) %G%"
+literal|"@(#)main.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -399,7 +399,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"D:I:d:ef:ij:knqrstv"
+literal|"D:I:d:ef:ij:knqrst"
 argument_list|)
 operator|)
 operator|!=
@@ -2518,7 +2518,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: make [-eiknqrstv] [-D variable] [-d flags] [-f makefile ]\n\t\ [-I directory] [-j max_jobs] [variable=value]\n"
+literal|"usage: make [-eiknqrst] [-D variable] [-d flags] [-f makefile ]\n\t\ [-I directory] [-j max_jobs] [variable=value]\n"
 argument_list|)
 expr_stmt|;
 name|exit
