@@ -2494,35 +2494,20 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|dsw
 operator|->
 name|d_flags
 operator|&
 name|D_NOGIANT
-operator|)
-operator|&&
-operator|!
-operator|(
-name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_KEEPGIANT
-operator|)
 condition|)
 block|{
-name|DROP_GIANT
-argument_list|()
-expr_stmt|;
+comment|/* XXX: notyet DROP_GIANT(); */
 name|DEV_STRATEGY
 argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-name|PICKUP_GIANT
-argument_list|()
-expr_stmt|;
+comment|/* XXX: notyet PICKUP_GIANT(); */
 block|}
 else|else
 name|DEV_STRATEGY
