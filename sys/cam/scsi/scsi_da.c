@@ -1642,28 +1642,11 @@ name|int
 name|unit
 decl_stmt|;
 name|int
-name|part
-decl_stmt|;
-name|int
 name|error
 decl_stmt|;
 name|int
 name|s
 decl_stmt|;
-name|unit
-operator|=
-name|dkunit
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
-name|part
-operator|=
-name|dkpart
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
 name|s
 operator|=
 name|splsoftcam
@@ -1679,6 +1662,12 @@ operator|)
 name|dev
 operator|->
 name|si_drv1
+expr_stmt|;
+name|unit
+operator|=
+name|periph
+operator|->
+name|unit_number
 expr_stmt|;
 if|if
 condition|(
@@ -1718,7 +1707,7 @@ argument_list|,
 name|CAM_DEBUG_TRACE
 argument_list|,
 operator|(
-literal|"daopen: dev=%s (unit %d , partition %d)\n"
+literal|"daopen: dev=%s (unit %d)\n"
 operator|,
 name|devtoname
 argument_list|(
@@ -1726,8 +1715,6 @@ name|dev
 argument_list|)
 operator|,
 name|unit
-operator|,
-name|part
 operator|)
 argument_list|)
 expr_stmt|;
