@@ -11822,6 +11822,12 @@ goto|;
 block|}
 if|if
 condition|(
+operator|(
+name|guest
+operator|&&
+name|noguestmod
+operator|)
+operator|||
 name|unlink
 argument_list|(
 name|name
