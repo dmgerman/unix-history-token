@@ -531,6 +531,9 @@ name|E_NAME
 index|]
 operator|.
 name|restricted
+operator|||
+operator|!
+name|uid
 condition|)
 operator|(
 name|void
@@ -583,6 +586,9 @@ name|E_LOCATE
 index|]
 operator|.
 name|restricted
+operator|||
+operator|!
+name|uid
 condition|)
 operator|(
 name|void
@@ -635,6 +641,9 @@ name|E_BPHONE
 index|]
 operator|.
 name|restricted
+operator|||
+operator|!
+name|uid
 condition|)
 operator|(
 name|void
@@ -687,6 +696,9 @@ name|E_HPHONE
 index|]
 operator|.
 name|restricted
+operator|||
+operator|!
+name|uid
 condition|)
 operator|(
 name|void
