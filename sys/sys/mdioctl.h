@@ -34,6 +34,13 @@ begin_comment
 comment|/*  * Ioctl definitions for memory disk pseudo-device.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MDNPAD
+value|100
+end_define
+
 begin_struct
 struct|struct
 name|md_ioctl
@@ -69,9 +76,9 @@ name|md_base
 decl_stmt|;
 comment|/* base address */
 name|int
-name|pad
+name|md_pad
 index|[
-literal|100
+name|MDNPAD
 index|]
 decl_stmt|;
 comment|/* padding for future ideas */
@@ -131,6 +138,17 @@ define|#
 directive|define
 name|MDIOCQUERY
 value|_IOWR('m', 2, struct md_ioctl)
+end_define
+
+begin_comment
+comment|/* query status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MDIOCLIST
+value|_IOWR('m', 3, struct md_ioctl)
 end_define
 
 begin_comment
