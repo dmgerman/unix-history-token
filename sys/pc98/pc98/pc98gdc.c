@@ -99,6 +99,23 @@ directive|include
 file|<dev/fb/fbreg.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LINE30
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<pc98/pc98/pc98.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
