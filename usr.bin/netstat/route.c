@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: route.c,v 1.11 1996/01/15 02:18:35 peter Exp $"
+literal|"$Id: route.c,v 1.12 1996/02/16 15:42:14 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -970,6 +970,9 @@ name|printf
 argument_list|(
 literal|"%-8.8x "
 argument_list|,
+operator|(
+name|int
+operator|)
 name|rn
 argument_list|)
 expr_stmt|;
@@ -1058,11 +1061,13 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
 name|rn
 operator|=
 name|rnode
 operator|.
 name|rn_dupedkey
+operator|)
 condition|)
 goto|goto
 name|again
@@ -1081,6 +1086,9 @@ name|printf
 argument_list|(
 literal|"%-8.8x "
 argument_list|,
+operator|(
+name|int
+operator|)
 name|rn
 argument_list|)
 expr_stmt|;
@@ -1206,10 +1214,16 @@ literal|"%6.6s %8.8x : %8.8x"
 argument_list|,
 name|nbuf
 argument_list|,
+operator|(
+name|int
+operator|)
 name|rnode
 operator|.
 name|rn_l
 argument_list|,
+operator|(
+name|int
+operator|)
 name|rnode
 operator|.
 name|rn_r
@@ -1243,6 +1257,9 @@ name|printf
 argument_list|(
 literal|" mk = %8.8x {(%d),%s"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|rm
 argument_list|,
 operator|-
@@ -1341,11 +1358,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|rm
 operator|=
 name|rmask
 operator|.
 name|rm_mklist
+operator|)
 condition|)
 name|printf
 argument_list|(
@@ -2544,7 +2563,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%6d %8d "
+literal|"%6d %8ld "
 argument_list|,
 name|rt
 operator|->
@@ -2658,6 +2677,9 @@ literal|" %8.8s %6d%s"
 argument_list|,
 name|prettyname
 argument_list|,
+operator|(
+name|int
+operator|)
 name|expire_time
 argument_list|,
 name|rt
@@ -2823,7 +2845,7 @@ name|sprintf
 argument_list|(
 name|line
 argument_list|,
-literal|"%u.%u.%u.%u"
+literal|"%lu.%lu.%lu.%lu"
 argument_list|,
 name|C
 argument_list|(
@@ -3300,7 +3322,7 @@ name|sprintf
 argument_list|(
 name|line
 argument_list|,
-literal|"%u"
+literal|"%lu"
 argument_list|,
 name|C
 argument_list|(
@@ -3325,7 +3347,7 @@ name|sprintf
 argument_list|(
 name|line
 argument_list|,
-literal|"%u.%u"
+literal|"%lu.%lu"
 argument_list|,
 name|C
 argument_list|(
@@ -3357,7 +3379,7 @@ name|sprintf
 argument_list|(
 name|line
 argument_list|,
-literal|"%u.%u.%u"
+literal|"%lu.%lu.%lu"
 argument_list|,
 name|C
 argument_list|(
@@ -3386,7 +3408,7 @@ name|sprintf
 argument_list|(
 name|line
 argument_list|,
-literal|"%u.%u.%u.%u"
+literal|"%lu.%lu.%lu.%lu"
 argument_list|,
 name|C
 argument_list|(

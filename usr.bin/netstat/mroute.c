@@ -166,16 +166,8 @@ name|vifi_t
 name|vifi
 decl_stmt|;
 specifier|register
-name|struct
-name|in_addr
-modifier|*
-name|grp
-decl_stmt|;
-specifier|register
 name|int
 name|i
-decl_stmt|,
-name|n
 decl_stmt|;
 specifier|register
 name|int
@@ -187,6 +179,8 @@ name|saved_nflag
 decl_stmt|;
 name|vifi_t
 name|maxvif
+init|=
+literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -781,7 +775,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %10u multicast forwarding cache lookup%s\n"
+literal|" %10lu multicast forwarding cache lookup%s\n"
 argument_list|,
 name|mrtstat
 operator|.
@@ -797,7 +791,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %10u multicast forwarding cache miss%s\n"
+literal|" %10lu multicast forwarding cache miss%s\n"
 argument_list|,
 name|mrtstat
 operator|.
@@ -813,7 +807,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %10u upcall%s to mrouted\n"
+literal|" %10lu upcall%s to mrouted\n"
 argument_list|,
 name|mrtstat
 operator|.
@@ -829,7 +823,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %10u upcall queue overflow%s\n"
+literal|" %10lu upcall queue overflow%s\n"
 argument_list|,
 name|mrtstat
 operator|.
@@ -845,7 +839,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %10u upcall%s dropped due to full socket buffer\n"
+literal|" %10lu upcall%s dropped due to full socket buffer\n"
 argument_list|,
 name|mrtstat
 operator|.
@@ -861,7 +855,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %10u cache cleanup%s\n"
+literal|" %10lu cache cleanup%s\n"
 argument_list|,
 name|mrtstat
 operator|.
@@ -877,7 +871,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %10u datagram%s with no route for origin\n"
+literal|" %10lu datagram%s with no route for origin\n"
 argument_list|,
 name|mrtstat
 operator|.
@@ -893,7 +887,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %10u datagram%s arrived with bad tunneling\n"
+literal|" %10lu datagram%s arrived with bad tunneling\n"
 argument_list|,
 name|mrtstat
 operator|.
@@ -909,7 +903,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %10u datagram%s could not be tunneled\n"
+literal|" %10lu datagram%s could not be tunneled\n"
 argument_list|,
 name|mrtstat
 operator|.
@@ -925,7 +919,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %10u datagram%s arrived on wrong interface\n"
+literal|" %10lu datagram%s arrived on wrong interface\n"
 argument_list|,
 name|mrtstat
 operator|.
@@ -941,7 +935,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %10u datagram%s selectively dropped\n"
+literal|" %10lu datagram%s selectively dropped\n"
 argument_list|,
 name|mrtstat
 operator|.
@@ -957,7 +951,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %10u datagram%s dropped due to queue overflow\n"
+literal|" %10lu datagram%s dropped due to queue overflow\n"
 argument_list|,
 name|mrtstat
 operator|.
@@ -973,7 +967,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %10u datagram%s dropped for being too large\n"
+literal|" %10lu datagram%s dropped for being too large\n"
 argument_list|,
 name|mrtstat
 operator|.

@@ -453,7 +453,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"%u/%u mbuf clusters in use\n"
+literal|"%lu/%lu mbuf clusters in use\n"
 argument_list|,
 name|mbstat
 operator|.
@@ -509,7 +509,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%u requests for memory denied\n"
+literal|"%lu requests for memory denied\n"
 argument_list|,
 name|mbstat
 operator|.
@@ -518,7 +518,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%u requests for memory delayed\n"
+literal|"%lu requests for memory delayed\n"
 argument_list|,
 name|mbstat
 operator|.
@@ -527,7 +527,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%u calls to protocol drain routines\n"
+literal|"%lu calls to protocol drain routines\n"
 argument_list|,
 name|mbstat
 operator|.

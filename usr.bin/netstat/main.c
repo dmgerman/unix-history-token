@@ -447,7 +447,9 @@ block|{
 literal|"_ipx_errstat"
 block|}
 block|,
+block|{
 literal|""
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -995,14 +997,9 @@ index|[
 name|_POSIX2_LINE_MAX
 index|]
 decl_stmt|;
-name|char
-name|buf2
-index|[
-name|_POSIX2_LINE_MAX
-index|]
-decl_stmt|;
 if|if
 condition|(
+operator|(
 name|cp
 operator|=
 name|rindex
@@ -1014,6 +1011,7 @@ index|]
 argument_list|,
 literal|'/'
 argument_list|)
+operator|)
 condition|)
 name|prog
 operator|=
@@ -1792,10 +1790,12 @@ expr_stmt|;
 comment|/* ugh, this is O(MN) ... why do we do this? */
 while|while
 condition|(
+operator|(
 name|p
 operator|=
 name|getprotoent
 argument_list|()
+operator|)
 condition|)
 block|{
 for|for
@@ -2331,12 +2331,14 @@ decl_stmt|;
 comment|/* 	 * Try to find the name in the list of "well-known" names. If that 	 * fails, check if name is an alias for an Internet protocol. 	 */
 if|if
 condition|(
+operator|(
 name|tp
 operator|=
 name|knownname
 argument_list|(
 name|name
 argument_list|)
+operator|)
 condition|)
 return|return
 operator|(
@@ -2351,10 +2353,12 @@ expr_stmt|;
 comment|/* make protocol lookup cheaper */
 while|while
 condition|(
+operator|(
 name|p
 operator|=
 name|getprotoent
 argument_list|()
+operator|)
 condition|)
 block|{
 comment|/* assert: name not same as p->name */

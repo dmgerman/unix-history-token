@@ -540,14 +540,14 @@ name|Aflag
 condition|)
 name|printf
 argument_list|(
-literal|"%8x "
+literal|"%8lx "
 argument_list|,
 name|ppcb
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-5.5s %6d %6d "
+literal|"%-5.5s %6ld %6ld "
 argument_list|,
 name|name
 argument_list|,
@@ -665,7 +665,7 @@ parameter_list|,
 name|z
 parameter_list|)
 define|\
-value|((x) ? printf("\t%d %s%s%s -- %s\n",x,y,plural(x),z,"x") : 0)
+value|((x) ? printf("\t%ld %s%s%s -- %s\n",(long)x,y,plural(x),z,"x") : 0)
 end_define
 
 begin_comment

@@ -433,6 +433,8 @@ name|struct
 name|sockaddr_un
 modifier|*
 name|sa
+init|=
+name|NULL
 decl_stmt|;
 specifier|static
 name|int
@@ -572,8 +574,11 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"%8x %-6.6s %6d %6d %8x %8x %8x %8x"
+literal|"%8x %-6.6s %6ld %6ld %8x %8x %8x %8x"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|soaddr
 argument_list|,
 name|socktype
@@ -595,18 +600,30 @@ name|so_snd
 operator|.
 name|sb_cc
 argument_list|,
+operator|(
+name|int
+operator|)
 name|unp
 operator|->
 name|unp_vnode
 argument_list|,
+operator|(
+name|int
+operator|)
 name|unp
 operator|->
 name|unp_conn
 argument_list|,
+operator|(
+name|int
+operator|)
 name|unp
 operator|->
 name|unp_refs
 argument_list|,
+operator|(
+name|int
+operator|)
 name|unp
 operator|->
 name|unp_nextref

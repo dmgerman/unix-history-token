@@ -572,7 +572,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"%-5.5s %-5d "
+literal|"%-5.5s %-5lu "
 argument_list|,
 name|name
 argument_list|,
@@ -1114,7 +1114,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"%8d %5d "
+literal|"%8lu %5lu "
 argument_list|,
 name|ifnet
 operator|.
@@ -1131,7 +1131,7 @@ name|bflag
 condition|)
 name|printf
 argument_list|(
-literal|"%10d "
+literal|"%10lu "
 argument_list|,
 name|ifnet
 operator|.
@@ -1140,7 +1140,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%8d %5d "
+literal|"%8lu %5lu "
 argument_list|,
 name|ifnet
 operator|.
@@ -1157,7 +1157,7 @@ name|bflag
 condition|)
 name|printf
 argument_list|(
-literal|"%10d "
+literal|"%10lu "
 argument_list|,
 name|ifnet
 operator|.
@@ -1166,7 +1166,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%5d"
+literal|"%5lu"
 argument_list|,
 name|ifnet
 operator|.
@@ -1397,10 +1397,6 @@ name|off
 condition|;
 control|)
 block|{
-name|char
-modifier|*
-name|cp
-decl_stmt|;
 name|char
 name|name
 index|[
@@ -1744,7 +1740,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%10u %5u %10u %10u %5u %10u %5u"
+literal|"%10lu %5lu %10lu %10lu %5lu %10lu %5lu"
 argument_list|,
 name|ifnet
 operator|.
