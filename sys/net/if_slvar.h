@@ -102,6 +102,12 @@ name|slcompress
 name|sc_comp
 decl_stmt|;
 comment|/* tcp compression data */
+name|LIST_ENTRY
+argument_list|(
+argument|sl_softc
+argument_list|)
+name|sl_next
+expr_stmt|;
 block|}
 struct|;
 end_struct
@@ -141,17 +147,6 @@ end_define
 
 begin_comment
 comment|/* input keepalive */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SC_STATIC
-value|0x0008
-end_define
-
-begin_comment
-comment|/* it is static unit */
 end_comment
 
 begin_comment
