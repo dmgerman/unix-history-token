@@ -740,7 +740,7 @@ comment|/* since we're called more than once */
 define|#
 directive|define
 name|OPTFLAGS
-value|"BC:D:E:I:PSV:Xd:ef:ij:km:nqrstv"
+value|"ABC:D:E:I:PSV:Xd:ef:ij:km:nqrstv"
 name|rearg
 label|:
 while|while
@@ -767,6 +767,21 @@ condition|(
 name|c
 condition|)
 block|{
+case|case
+literal|'A'
+case|:
+name|arch_fatal
+operator|=
+name|FALSE
+expr_stmt|;
+name|MFLAGS_append
+argument_list|(
+literal|"-A"
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 literal|'C'
 case|:
@@ -2595,10 +2610,7 @@ name|compatMake
 operator|=
 name|TRUE
 expr_stmt|;
-comment|/* 	 * Initialize archive, target and suffix modules in preparation for 	 * parsing the makefile(s) 	 */
-name|Arch_Init
-argument_list|()
-expr_stmt|;
+comment|/* 	 * Initialize target and suffix modules in preparation for 	 * parsing the makefile(s) 	 */
 name|Targ_Init
 argument_list|()
 expr_stmt|;

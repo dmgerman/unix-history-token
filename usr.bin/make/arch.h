@@ -39,6 +39,17 @@ name|Path
 struct_decl|;
 end_struct_decl
 
+begin_comment
+comment|/* archive errors are fatal */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|Boolean
+name|arch_fatal
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|ReturnStatus
 name|Arch_ParseArchive
@@ -124,15 +135,6 @@ parameter_list|(
 name|struct
 name|GNode
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|Arch_Init
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl
