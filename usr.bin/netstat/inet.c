@@ -837,6 +837,13 @@ argument_list|,
 literal|"\t\t%d data packet%s (%d byte%s) retransmitted\n"
 argument_list|)
 expr_stmt|;
+name|p
+argument_list|(
+name|tcps_mturesent
+argument_list|,
+literal|"\t\t%d resend%s initiated by MTU discovery\n"
+argument_list|)
+expr_stmt|;
 name|p2
 argument_list|(
 name|tcps_sndacks
