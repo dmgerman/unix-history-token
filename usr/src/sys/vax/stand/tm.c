@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tm.c	4.4	81/04/03	*/
+comment|/*	tm.c	4.5	81/04/03	*/
 end_comment
 
 begin_comment
@@ -348,15 +348,6 @@ operator|=
 name|tmaddr
 operator|->
 name|tmer
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"tmer %b\n"
-argument_list|,
-name|word
-argument_list|,
-name|TMER_BITS
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
