@@ -84,11 +84,13 @@ condition|(
 operator|!
 name|fp
 operator|||
+operator|(
 name|fp
 operator|->
 name|_flags
 operator|==
 literal|0
+operator|)
 condition|)
 block|{
 comment|/* not open! */
