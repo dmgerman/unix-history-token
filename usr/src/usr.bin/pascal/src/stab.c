@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stab.c 2.1 %G%"
+literal|"@(#)stab.c 2.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1050,6 +1050,13 @@ name|int
 operator|)
 name|getlab
 argument_list|()
+expr_stmt|;
+name|putprintf
+argument_list|(
+literal|"	.stabs	\""
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 name|putprintf
 argument_list|(
