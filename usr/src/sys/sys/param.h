@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.h	4.27	83/01/17	*/
+comment|/*	param.h	4.28	83/02/10	*/
 end_comment
 
 begin_comment
@@ -120,7 +120,7 @@ begin_define
 define|#
 directive|define
 name|NGROUPS
-value|8
+value|16
 end_define
 
 begin_comment
