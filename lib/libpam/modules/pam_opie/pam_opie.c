@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright 2000 James Bloom  * All rights reserved.  * Based upon code Copyright 1998 Juniper Networks, Inc.   * Copyright (c) 2001 Networks Associates Technologies, Inc.  * All rights reserved.  *  * Portions of this software were developed for the FreeBSD Project by  * ThinkSec AS and NAI Labs, the Security Research Division of Network  * Associates, Inc.  under DARPA/SPAWAR contract N66001-01-C-8035  * ("CBOSS"), as part of the DARPA CHATS research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright 2000 James Bloom  * All rights reserved.  * Based upon code Copyright 1998 Juniper Networks, Inc.   * Copyright (c) 2001 Networks Associates Technologies, Inc.  * All rights reserved.  * Copyright (c) 2002 Networks Associates Technologies, Inc.  * All rights reserved.  *  * Portions of this software were developed for the FreeBSD Project by  * ThinkSec AS and NAI Labs, the Security Research Division of Network  * Associates, Inc.  under DARPA/SPAWAR contract N66001-01-C-8035  * ("CBOSS"), as part of the DARPA CHATS research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -95,6 +95,8 @@ block|{
 name|PAM_OPT_AUTH_AS_SELF
 init|=
 name|PAM_OPT_STD_MAX
+block|,
+name|PAM_OPT_NO_FAKE_PROMPTS
 block|}
 enum|;
 end_enum
@@ -111,6 +113,12 @@ block|{
 literal|"auth_as_self"
 block|,
 name|PAM_OPT_AUTH_AS_SELF
+block|}
+block|,
+block|{
+literal|"no_fake_prompts"
+block|,
+name|PAM_OPT_NO_FAKE_PROMPTS
 block|}
 block|,
 block|{
@@ -222,34 +230,6 @@ argument_list|(
 literal|"Options processed"
 argument_list|)
 argument_list|;
-comment|/* 	 * It doesn't make sense to use a password that has already been 	 * typed in, since we haven't presented the challenge to the user 	 * yet. 	 */
-argument_list|if
-operator|(
-name|pam_test_option
-argument_list|(
-operator|&
-name|options
-argument_list|,
-name|PAM_OPT_USE_FIRST_PASS
-argument_list|,
-name|NULL
-argument_list|)
-operator|||
-name|pam_test_option
-argument_list|(
-operator|&
-name|options
-argument_list|,
-name|PAM_OPT_TRY_FIRST_PASS
-argument_list|,
-name|NULL
-argument_list|)
-operator|)
-name|PAM_RETURN
-argument_list|(
-name|PAM_AUTH_ERR
-argument_list|)
-argument_list|;
 name|user
 operator|=
 name|NULL
@@ -349,7 +329,17 @@ argument_list|()
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
+begin_comment
+comment|/* 	 * If the no_fake_prompts option was given, and the user 	 * doesn't have an OPIE key, just fail rather than present the 	 * user with a bogus OPIE challenge. 	 */
+end_comment
+
+begin_comment
+comment|/* XXX generates a const warning because of incorrect prototype */
+end_comment
+
+begin_if
+if|if
+condition|(
 name|opiechallenge
 argument_list|(
 operator|&
@@ -362,6 +352,39 @@ operator|)
 name|user
 argument_list|,
 name|challenge
+argument_list|)
+operator|!=
+literal|0
+operator|&&
+name|pam_test_option
+argument_list|(
+operator|&
+name|options
+argument_list|,
+name|PAM_OPT_NO_FAKE_PROMPTS
+argument_list|,
+name|NULL
+argument_list|)
+condition|)
+name|PAM_RETURN
+argument_list|(
+name|PAM_AUTH_ERR
+argument_list|)
+expr_stmt|;
+end_if
+
+begin_comment
+comment|/* 	 * It doesn't make sense to use a password that has already been 	 * typed in, since we haven't presented the challenge to the user 	 * yet, so clear the stored password. 	 */
+end_comment
+
+begin_expr_stmt
+name|pam_set_item
+argument_list|(
+name|pamh
+argument_list|,
+name|PAM_AUTHTOK
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
