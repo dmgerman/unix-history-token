@@ -265,6 +265,12 @@ name|buffer
 operator|=
 name|b
 expr_stmt|;
+name|ch
+operator|->
+name|dir
+operator|=
+name|dir
+expr_stmt|;
 name|pa_dev
 operator|=
 name|device_get_parent
@@ -1363,6 +1369,25 @@ argument_list|,
 literal|"at addr ?"
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|NO_RECORDING
+if|if
+condition|(
+name|pcm_register
+argument_list|(
+name|dev
+argument_list|,
+name|ua
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+block|{
+else|#
+directive|else
 if|if
 condition|(
 name|pcm_register
@@ -1377,6 +1402,8 @@ literal|0
 argument_list|)
 condition|)
 block|{
+endif|#
+directive|endif
 return|return
 operator|(
 name|ENXIO
@@ -1448,9 +1475,6 @@ return|return
 name|ENXIO
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|ua_detach
@@ -1506,13 +1530,7 @@ return|return
 literal|0
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/************************************************************/
-end_comment
-
-begin_decl_stmt
 specifier|static
 name|device_method_t
 name|ua_pcm_methods
@@ -1548,9 +1566,6 @@ literal|0
 block|}
 block|}
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 name|driver_t
 name|ua_pcm_driver
@@ -1563,9 +1578,6 @@ block|,
 name|PCM_SOFTC_SIZE
 block|, }
 decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
 name|ua_pcm
@@ -1581,9 +1593,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
 name|ua_pcm
@@ -1597,9 +1606,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
 name|ua_pcm
@@ -1613,9 +1619,6 @@ argument_list|,
 name|SOUND_MAXVER
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|MODULE_VERSION
 argument_list|(
 name|ua_pcm
@@ -1623,7 +1626,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+end_function
 
 end_unit
 
