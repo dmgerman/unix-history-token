@@ -39,7 +39,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)daemon.c	5.21 (Berkeley) %G%	(w/o daemon mode)"
+literal|"@(#)daemon.c	5.22 (Berkeley) %G%	(w/o daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -96,7 +96,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)daemon.c	5.21 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	5.22 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1280,6 +1280,18 @@ name|EX_TEMPFAIL
 operator|)
 return|;
 default|default:
+name|message
+argument_list|(
+name|Arpa_Info
+argument_list|,
+literal|"%s"
+argument_list|,
+name|errstring
+argument_list|(
+name|sav_errno
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EX_UNAVAILABLE
