@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)qv.c	1.2 (Berkeley) %G%"
+literal|"@(#)qv.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,7 +32,7 @@ endif|lint
 end_endif
 
 begin_comment
-comment|/************************************************************************  *									*  *			Copyright (c) 1985 by				*  *		Digital Equipment Corporation, Maynard, MA		*  *			All rights reserved.				*  *									*  *   This software is furnished under a license and may be used and	*  *   copied  only  in accordance with the terms of such license and	*  *   with the  inclusion  of  the  above  copyright  notice.   This	*  *   software  or  any  other copies thereof may not be provided or	*  *   otherwise made available to any other person.  No title to and	*  *   ownership of the software is hereby transferred.			*  *									*  *   This software is  derived  from  software  received  from  the	*  *   University    of   California,   Berkeley,   and   from   Bell	*  *   Laboratories.  Use, duplication, or disclosure is  subject  to	*  *   restrictions  under  license  agreements  with  University  of	*  *   California and with AT&T.						*  *									*  *   The information in this software is subject to change  without	*  *   notice  and should not be construed as a commitment by Digital	*  *   Equipment Corporation.						*  *									*  *   Digital assumes no responsibility for the use  or  reliability	*  *   of its software on equipment which is not supplied by Digital.	*  *									*  ************************************************************************  *  * This driver provides glass tty functionality to the qvss. It is a strange  * device in that it supports three subchannels. The first being the asr,  * the second being a channel that intercepts the chars headed for the screen  * ( like a pseudo tty ) and the third being a source of mouse state changes.  *  * There may be one and only one qvss in the system.  This restriction is based  * on the inability to map more than one at a time.  This restriction will  * exist until the kernel has shared memory services. This driver therefore  * support a single unit. No attempt was made to have it service more.  *  * 02 Aug 85 -- rjl  *	Changed the names of the special setup routines so that the system  *	can have a qvss or a qdss system console.  *  * 03 Jul 85 -- rjl  *	Added a check for virtual mode in qvputc so that the driver  *	doesn't crash while in a dump which is done in physical mode.  *  * 10 Apr 85 -- jg  *	Well, our theory about keyboard handling was wrong; most of the   *	keyboard is in autorepeat, down mode.  These changes are to make  *	the qvss work the same as the Vs100, which is not necessarily  *	completely correct, as some chord usage may fail.  But since we  *	can't easily change the Vs100, we might as well propagate the  *	problem to another device.  There are also changes for screen and  *	mouse accellaration.  *  * 27 Mar 85 -- rjl  *	MicroVAX-II systems have interval timers that interrupt at ipl4.  *	Everything else is higher and thus causes us to miss clock ticks. The  *	problem isn't severe except in the case of a device like this one that  *	generates lots of interrupts. We aren't willing to make this change to  *	all device drivers but it seems acceptable in this case.  *  *  3 Dec 84 -- jg  *	To continue the tradition of building a better mouse trap,  this  * 	driver has been extended to form Vs100 style event queues.  If the  *	mouse device is open, the keyboard events are intercepted and put  *	into the shared memory queue.  Unfortunately, we are ending up with  *	one of the longest Unix device drivers.  Sigh....  *  * 20 Nov 84 -- rjl  *      As a further complication this driver is required to function as the  *      virtual system console. This code runs before and during auto-  *      configuration and therefore is require to have a second path for setup.  *      It is futher constrained to have a character output routine that  *      is not dependant on the interrupt system.  *  */
+comment|/************************************************************************  *									*  *			Copyright (c) 1985 by				*  *		Digital Equipment Corporation, Maynard, MA		*  *			All rights reserved.				*  *									*  *   This software is furnished under a license and may be used and	*  *   copied  only  in accordance with the terms of such license and	*  *   with the  inclusion  of  the  above  copyright  notice.   This	*  *   software  or  any  other copies thereof may not be provided or	*  *   otherwise made available to any other person.  No title to and	*  *   ownership of the software is hereby transferred.			*  *									*  *   This software is  derived  from  software  received  from  the	*  *   University    of   California,   Berkeley,   and   from   Bell	*  *   Laboratories.  Use, duplication, or disclosure is  subject  to	*  *   restrictions  under  license  agreements  with  University  of	*  *   California and with AT&T.						*  *									*  *   The information in this software is subject to change  without	*  *   notice  and should not be construed as a commitment by Digital	*  *   Equipment Corporation.						*  *									*  *   Digital assumes no responsibility for the use  or  reliability	*  *   of its software on equipment which is not supplied by Digital.	*  *									*  ************************************************************************  *  * This driver provides glass tty functionality to the qvss. It is a strange  * device in that it supports three subchannels. The first being the asr,  * the second being a channel that intercepts the chars headed for the screen  * ( like a pseudo tty ) and the third being a source of mouse state changes.  * NOTE: the second is conditional on #ifdef CONS_HACK in this version  * of the driver, as it's a total crock.  *  * There may be one and only one qvss in the system.  This restriction is based  * on the inability to map more than one at a time.  This restriction will  * exist until the kernel has shared memory services. This driver therefore  * support a single unit. No attempt was made to have it service more.  *  * 02 Aug 85 -- rjl  *	Changed the names of the special setup routines so that the system  *	can have a qvss or a qdss system console.  *  * 03 Jul 85 -- rjl  *	Added a check for virtual mode in qvputc so that the driver  *	doesn't crash while in a dump which is done in physical mode.  *  * 10 Apr 85 -- jg  *	Well, our theory about keyboard handling was wrong; most of the   *	keyboard is in autorepeat, down mode.  These changes are to make  *	the qvss work the same as the Vs100, which is not necessarily  *	completely correct, as some chord usage may fail.  But since we  *	can't easily change the Vs100, we might as well propagate the  *	problem to another device.  There are also changes for screen and  *	mouse accellaration.  *  * 27 Mar 85 -- rjl  *	MicroVAX-II systems have interval timers that interrupt at ipl4.  *	Everything else is higher and thus causes us to miss clock ticks. The  *	problem isn't severe except in the case of a device like this one that  *	generates lots of interrupts. We aren't willing to make this change to  *	all device drivers but it seems acceptable in this case.  *  *  3 Dec 84 -- jg  *	To continue the tradition of building a better mouse trap,  this  * 	driver has been extended to form Vs100 style event queues.  If the  *	mouse device is open, the keyboard events are intercepted and put  *	into the shared memory queue.  Unfortunately, we are ending up with  *	one of the longest Unix device drivers.  Sigh....  *  * 20 Nov 84 -- rjl  *      As a further complication this driver is required to function as the  *      virtual system console. This code runs before and during auto-  *      configuration and therefore is require to have a second path for setup.  *      It is futher constrained to have a character output routine that  *      is not dependant on the interrupt system.  *  */
 end_comment
 
 begin_include
@@ -169,6 +169,12 @@ directive|include
 file|"../vaxuba/ubavar.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|CONS_HACK
+end_define
+
 begin_decl_stmt
 name|struct
 name|uba_device
@@ -192,13 +198,12 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
+begin_define
+define|#
+directive|define
 name|nNQV
-init|=
-name|NQV
-decl_stmt|;
-end_decl_stmt
+value|NQV
+end_define
 
 begin_decl_stmt
 name|int
@@ -307,22 +312,85 @@ name|QVSSMAJOR
 value|40
 end_define
 
+begin_define
+define|#
+directive|define
+name|QVKEYBOARD
+value|0
+end_define
+
 begin_comment
-comment|/*  * v_console is the switch that is used to redirect the console cnputc to the  * virtual console vputc.  */
+comment|/* minor 0, keyboard/glass tty */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QVPCONS
+value|1
+end_define
+
+begin_comment
+comment|/* minor 1, console interceptor XXX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QVMOUSECHAN
+value|2
+end_define
+
+begin_comment
+comment|/* minor 2, mouse */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QVSPARE
+value|3
+end_define
+
+begin_comment
+comment|/* unused */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QVCHAN
+parameter_list|(
+name|unit
+parameter_list|)
+value|((unit)& 03)
+end_define
+
+begin_comment
+comment|/*  * v_putc is the switch that is used to redirect the console cnputc to the  * virtual console vputc.  consops is used to redirect the console  * device to the qvss console.  */
 end_comment
 
 begin_function_decl
 specifier|extern
 function_decl|(
 modifier|*
-name|v_console
+name|v_putc
 function_decl|)
 parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|cdevsw
+modifier|*
+name|consops
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/*  * qv_def_scrn is used to select the appropriate tables. 0=15 inch 1=19 inch,  * 2 = uVAXII (untested).  */
+comment|/*  * qv_def_scrn is used to select the appropriate tables. 0=15 inch 1=19 inch,  * 2 = uVAXII.  */
 end_comment
 
 begin_decl_stmt
@@ -718,13 +786,6 @@ block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|QVMOUSECHAN
-value|2
-end_define
 
 begin_comment
 comment|/*  * Screen parameters  */
@@ -1240,7 +1301,7 @@ block|{
 comment|/*          * If not the console then we have to setup the screen          */
 if|if
 condition|(
-name|v_console
+name|v_putc
 operator|!=
 name|qvputc
 operator|||
@@ -1379,6 +1440,32 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+if|if
+condition|(
+name|QVCHAN
+argument_list|(
+name|unit
+argument_list|)
+operator|==
+name|QVSPARE
+ifdef|#
+directive|ifdef
+name|CONS_HACK
+operator|||
+name|QVCHAN
+argument_list|(
+name|unit
+argument_list|)
+operator|==
+name|QVPCONS
+endif|#
+directive|endif
+condition|)
+return|return
+operator|(
+name|ENODEV
+operator|)
+return|;
 name|tp
 operator|=
 operator|&
@@ -1478,9 +1565,12 @@ name|B9600
 expr_stmt|;
 if|if
 condition|(
+name|QVCHAN
+argument_list|(
 name|unit
+argument_list|)
 operator|==
-literal|0
+name|QVKEYBOARD
 condition|)
 block|{
 comment|/* make sure keyboard is always back to default */
@@ -1517,11 +1607,10 @@ block|}
 comment|/* 	 * Process line discipline specific open if its not the 	 * mouse channel. For the mouse we init the ring ptr's. 	 */
 if|if
 condition|(
-operator|(
+name|QVCHAN
+argument_list|(
 name|unit
-operator|%
-literal|4
-operator|)
+argument_list|)
 operator|!=
 name|QVMOUSECHAN
 condition|)
@@ -1662,9 +1751,12 @@ name|t_addr
 expr_stmt|;
 if|if
 condition|(
+name|QVCHAN
+argument_list|(
 name|unit
+argument_list|)
 operator|==
-literal|0
+name|QVKEYBOARD
 condition|)
 name|qvaddr
 operator|->
@@ -1676,11 +1768,10 @@ expr_stmt|;
 comment|/* 	 * If unit is not the mouse channel call the line disc. 	 * otherwise clear the state flag, and put the keyboard into down/up. 	 */
 if|if
 condition|(
-operator|(
+name|QVCHAN
+argument_list|(
 name|unit
-operator|%
-literal|4
-operator|)
+argument_list|)
 operator|!=
 name|QVMOUSECHAN
 condition|)
@@ -1768,11 +1859,10 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-operator|(
+name|QVCHAN
+argument_list|(
 name|unit
-operator|%
-literal|4
-operator|)
+argument_list|)
 operator|!=
 name|QVMOUSECHAN
 condition|)
@@ -1856,11 +1946,10 @@ decl_stmt|;
 comment|/* 	 * If this is the mouse we simply fake the i/o, otherwise 	 * we let the line disp. handle it. 	 */
 if|if
 condition|(
-operator|(
+name|QVCHAN
+argument_list|(
 name|unit
-operator|%
-literal|4
-operator|)
+argument_list|)
 operator|==
 name|QVMOUSECHAN
 condition|)
@@ -1943,15 +2032,6 @@ name|spl5
 argument_list|()
 decl_stmt|;
 specifier|register
-name|int
-name|unit
-init|=
-name|minor
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
-specifier|register
 name|struct
 name|qv_info
 modifier|*
@@ -1961,11 +2041,13 @@ name|qv_scn
 decl_stmt|;
 if|if
 condition|(
-operator|(
-name|unit
-operator|%
-literal|4
-operator|)
+name|QVCHAN
+argument_list|(
+name|minor
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
 operator|==
 name|QVMOUSECHAN
 condition|)
@@ -3245,11 +3327,10 @@ operator|=
 operator|&
 name|qv_tty
 index|[
-operator|(
+name|QVCHAN
+argument_list|(
 name|unit
-operator|%
-literal|4
-operator|)
+argument_list|)
 operator|+
 name|QVMOUSECHAN
 index|]
@@ -4091,6 +4172,9 @@ operator|->
 name|t_dev
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CONS_HACK
 name|tp0
 operator|=
 operator|&
@@ -4102,12 +4186,17 @@ operator|&
 literal|0xfc
 operator|)
 operator|+
-literal|1
+name|QVPCONS
 index|]
 expr_stmt|;
+endif|#
+directive|endif
 name|unit
-operator|&=
-literal|03
+operator|=
+name|QVCHAN
+argument_list|(
+name|unit
+argument_list|)
 expr_stmt|;
 name|s
 operator|=
@@ -4154,14 +4243,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|unit
-operator|&
-literal|0x03
-operator|)
 operator|==
-literal|0
+name|QVKEYBOARD
 condition|)
+ifdef|#
+directive|ifdef
+name|CONS_HACK
 if|if
 condition|(
 name|tp0
@@ -4190,7 +4278,9 @@ operator|)
 expr_stmt|;
 block|}
 else|else
-name|qvputc
+endif|#
+directive|endif
+name|qvputchar
 argument_list|(
 name|c
 operator|&
@@ -4356,12 +4446,46 @@ expr_stmt|;
 block|}
 end_block
 
+begin_macro
+name|qvputc
+argument_list|(
+argument|c
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+name|c
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|qvputchar
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|c
+operator|==
+literal|'\n'
+condition|)
+name|qvputchar
+argument_list|(
+literal|'\r'
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
 begin_comment
 comment|/*  * Routine to display a character on the screen.  The model used is a   * glass tty.  It is assummed that the user will only use this emulation  * during system boot and that the screen will be eventually controlled  * by a window manager.  *  */
 end_comment
 
 begin_expr_stmt
-name|qvputc
+name|qvputchar
 argument_list|(
 name|c
 argument_list|)
@@ -4453,7 +4577,7 @@ condition|;
 name|i
 operator|--
 control|)
-name|qvputc
+name|qvputchar
 argument_list|(
 literal|' '
 argument_list|)
@@ -5295,12 +5419,45 @@ name|short
 modifier|*
 name|devptr
 decl_stmt|;
-comment|/* vitual device space          */
+comment|/* virtual device space         */
+extern|extern cnputc(
+block|)
+end_block
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/* standard serial console putc */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|QVSSCSR
 value|017200
+end_define
+
+begin_comment
+comment|/* 	 * If secondary console already configured, 	 * don't override the previous one. 	 */
+end_comment
+
+begin_if
+if|if
+condition|(
+name|v_putc
+operator|!=
+name|cnputc
+condition|)
+return|return;
+end_if
+
+begin_comment
 comment|/*          * find the percpu entry that matches this machine.          */
+end_comment
+
+begin_for
 for|for
 control|(
 name|pcpu
@@ -5319,18 +5476,23 @@ name|pcpu
 operator|++
 control|)
 empty_stmt|;
+end_for
+
+begin_if
 if|if
 condition|(
 name|pcpu
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
+end_if
+
+begin_comment
 comment|/*          * Found an entry for this cpu. Because this device is Microvax specific          * we assume that there is a single q-bus and don't have to worry about          * multiple adapters.          *          * Map the device registers.          */
+end_comment
+
+begin_expr_stmt
 name|qb
 operator|=
 operator|(
@@ -5344,6 +5506,9 @@ name|pc_io
 operator|->
 name|io_details
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|ioaccess
 argument_list|(
 name|qb
@@ -5364,7 +5529,13 @@ operator|*
 name|NBPG
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/*          * See if the qvss is there.          */
+end_comment
+
+begin_expr_stmt
 name|devptr
 operator|=
 operator|(
@@ -5390,6 +5561,9 @@ name|NBPG
 operator|)
 operator|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|qvaddr
 operator|=
 operator|(
@@ -5409,6 +5583,9 @@ name|QVSSCSR
 argument_list|)
 operator|)
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|badaddr
@@ -5421,12 +5598,14 @@ name|short
 argument_list|)
 argument_list|)
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
+end_if
+
+begin_comment
 comment|/*          * Okay the device is there lets set it up          */
+end_comment
+
+begin_expr_stmt
 name|qv_setup
 argument_list|(
 name|qvaddr
@@ -5436,50 +5615,46 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|v_console
+end_expr_stmt
+
+begin_expr_stmt
+name|v_putc
 operator|=
 name|qvputc
 expr_stmt|;
-name|cdevsw
-index|[
-literal|0
-index|]
+end_expr_stmt
+
+begin_expr_stmt
+name|consops
 operator|=
+operator|&
 name|cdevsw
 index|[
 name|QVSSMAJOR
 index|]
 expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
-end_block
+end_expr_stmt
 
 begin_comment
+unit|}
 comment|/*  * Do the board specific setup  */
 end_comment
 
-begin_macro
-name|qv_setup
-argument_list|(
-argument|qvaddr
-argument_list|,
-argument|unit
-argument_list|,
-argument|probed
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
-name|qvdevice
-modifier|*
+begin_expr_stmt
+unit|qv_setup
+operator|(
 name|qvaddr
-decl_stmt|;
-end_decl_stmt
+operator|,
+name|unit
+operator|,
+name|probed
+operator|)
+expr|struct
+name|qvdevice
+operator|*
+name|qvaddr
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|int
