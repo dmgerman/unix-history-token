@@ -391,7 +391,6 @@ name|rcread
 block|,
 name|rcwrite
 block|,
-comment|/*63*/
 name|rcioctl
 block|,
 name|rcstop
@@ -400,7 +399,6 @@ name|noreset
 block|,
 name|rcdevtotty
 block|,
-comment|/* rc */
 name|ttpoll
 block|,
 name|nommap
@@ -413,7 +411,13 @@ name|NULL
 block|,
 operator|-
 literal|1
-block|}
+block|,
+name|nodump
+block|,
+name|nopsize
+block|,
+name|D_TTY
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -4568,11 +4572,6 @@ operator||
 name|TIOCM_DTR
 argument_list|,
 name|DMSET
-argument_list|)
-expr_stmt|;
-name|ttsetwater
-argument_list|(
-name|tp
 argument_list|)
 expr_stmt|;
 if|if

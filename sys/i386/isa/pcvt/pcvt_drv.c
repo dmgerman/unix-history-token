@@ -305,7 +305,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|cdevsw
-name|pcdevsw
+name|pc_cdevsw
 init|=
 block|{
 name|pcopen
@@ -336,7 +336,13 @@ name|NULL
 block|,
 operator|-
 literal|1
-block|}
+block|,
+name|nodump
+block|,
+name|nopsize
+block|,
+name|D_TTY
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -1127,7 +1133,7 @@ operator|&
 name|dev
 argument_list|,
 operator|&
-name|pcdevsw
+name|pc_cdevsw
 argument_list|,
 name|NULL
 argument_list|)
@@ -1158,7 +1164,7 @@ operator|=
 name|devfs_add_devswf
 argument_list|(
 operator|&
-name|pcdevsw
+name|pc_cdevsw
 argument_list|,
 name|vt
 argument_list|,
@@ -1671,11 +1677,6 @@ operator|&
 name|tp
 operator|->
 name|t_termios
-argument_list|)
-expr_stmt|;
-name|ttsetwater
-argument_list|(
-name|tp
 argument_list|)
 expr_stmt|;
 operator|(

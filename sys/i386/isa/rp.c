@@ -3751,13 +3751,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|CDEV_MAJOR
-value|81
-end_define
-
 begin_decl_stmt
 specifier|static
 name|char
@@ -3817,6 +3810,13 @@ name|rpdevtotty
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|CDEV_MAJOR
+value|81
+end_define
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -3852,7 +3852,13 @@ name|NULL
 block|,
 operator|-
 literal|1
-block|}
+block|,
+name|nodump
+block|,
+name|nopsize
+block|,
+name|D_TTY
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -7210,11 +7216,6 @@ name|error
 operator|)
 return|;
 block|}
-name|ttsetwater
-argument_list|(
-name|tp
-argument_list|)
-expr_stmt|;
 name|rp_num_ports_open
 operator|++
 expr_stmt|;

@@ -496,7 +496,7 @@ value|42
 end_define
 
 begin_comment
-comment|/* Don't make this static.  if_cx.c  uses it. */
+comment|/* Don't make this static, since if_cx.c uses it. */
 end_comment
 
 begin_decl_stmt
@@ -513,7 +513,6 @@ name|cxread
 block|,
 name|cxwrite
 block|,
-comment|/*42*/
 name|cxioctl
 block|,
 name|cxstop
@@ -522,7 +521,6 @@ name|nullreset
 block|,
 name|cxdevtotty
 block|,
-comment|/* cronyx */
 name|ttpoll
 block|,
 name|nommap
@@ -535,7 +533,13 @@ name|NULL
 block|,
 operator|-
 literal|1
-block|}
+block|,
+name|nodump
+block|,
+name|nopsize
+block|,
+name|D_TTY
+block|, }
 decl_stmt|;
 end_decl_stmt
 
