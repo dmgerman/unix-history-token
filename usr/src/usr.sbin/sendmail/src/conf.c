@@ -27,7 +27,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)conf.c	1.10	%G%"
+literal|"@(#)conf.c	2.1	%G%"
 decl_stmt|;
 end_decl_stmt
 

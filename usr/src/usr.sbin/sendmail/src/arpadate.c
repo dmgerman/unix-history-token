@@ -11,7 +11,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)arpadate.c	1.4	%G%"
+literal|"@(#)arpadate.c	2.1	%G%"
 decl_stmt|;
 end_decl_stmt
 

@@ -35,7 +35,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)err.c	1.5	%G%"
+literal|"@(#)err.c	2.1	%G%"
 decl_stmt|;
 end_decl_stmt
 
