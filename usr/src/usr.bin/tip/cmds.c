@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmds.c	5.8 (Berkeley) %G%"
+literal|"@(#)cmds.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3303,7 +3303,7 @@ else|else
 name|cp
 operator|++
 expr_stmt|;
-name|user_uid
+name|shell_uid
 argument_list|()
 expr_stmt|;
 name|execl
