@@ -43,13 +43,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"reentrant.h"
+file|"namespace.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"namespace.h"
+file|"reentrant.h"
 end_include
 
 begin_include
