@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.53 1996/04/26 18:19:36 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.54 1996/04/27 07:04:12 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -285,6 +285,59 @@ end_function
 begin_function
 specifier|static
 name|int
+name|setX11Fonts
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+name|XF86Dists
+operator||=
+name|DIST_XF86_FONTS
+expr_stmt|;
+name|XF86FontDists
+operator|=
+name|DIST_XF86_FONTS_ALL
+expr_stmt|;
+return|return
+name|DITEM_SUCCESS
+operator||
+name|DITEM_REDRAW
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|clearX11Fonts
+parameter_list|(
+name|dialogMenuItem
+modifier|*
+name|self
+parameter_list|)
+block|{
+name|XF86Dists
+operator|&=
+operator|~
+name|DIST_XF86_FONTS
+expr_stmt|;
+name|XF86FontDists
+operator|=
+literal|0
+expr_stmt|;
+return|return
+name|DITEM_SUCCESS
+operator||
+name|DITEM_REDRAW
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
 name|checkDistDeveloper
 parameter_list|(
 name|dialogMenuItem
@@ -320,39 +373,27 @@ return|return
 operator|(
 name|Dists
 operator|==
+operator|(
 name|_DIST_DEVELOPER
 operator||
 name|DIST_XF86
+operator|)
 operator|&&
 name|SrcDists
 operator|==
 name|DIST_SRC_ALL
 operator|&&
+operator|(
 name|XF86Dists
+operator|&
+name|_DIST_XDEV
+operator|)
 operator|==
-name|DIST_XF86_BIN
-operator||
-name|DIST_XF86_LIB
-operator||
-name|DIST_XF86_PROG
-operator||
-name|DIST_XF86_MAN
-operator||
-name|DIST_XF86_SERVER
-operator||
-name|DIST_XF86_FONTS
+name|_DIST_XDEV
 operator|&&
-operator|(
 name|XF86ServerDists
-operator|&
-name|DIST_XF86_SERVER_SVGA
-operator|)
 operator|&&
-operator|(
 name|XF86FontDists
-operator|&
-name|DIST_XF86_FONTS_MISC
-operator|)
 operator|)
 return|;
 block|}
@@ -715,7 +756,7 @@ literal|"Exit this menu (and the installation)"
 block|,
 name|NULL
 block|,
-name|dmenuCancel
+name|dmenuExit
 block|}
 block|,
 block|{
@@ -878,7 +919,7 @@ literal|"Exit this menu (returning to previous)"
 block|,
 name|NULL
 block|,
-name|dmenuCancel
+name|dmenuExit
 block|}
 block|,
 block|{
@@ -2328,7 +2369,7 @@ name|DMENU_CHECKLIST_TYPE
 block|,
 literal|"Choose Distributions"
 block|,
-literal|"As a convenience, we provide several \"canned\" distribution sets.\n\ These select what we consider to be the most reasonable defaults for the\n\ type of system in question.  If you would prefer to pick and choose the\n\ list of distributions yourself, simply select \"Custom\".  You can also\n\ pick a canned distribution set and then fine-tune it with the Custom item.\n\ When you are finished, select Cancel or chose Exit."
+literal|"As a convenience, we provide several \"canned\" distribution sets.\n\ These select what we consider to be the most reasonable defaults for the\n\ type of system in question.  If you would prefer to pick and choose the\n\ list of distributions yourself, simply select \"Custom\".  You can also\n\ pick a canned distribution set and then fine-tune it with the Custom item.\n\n\ When you are finished chose the Exit item or Cancel to abort."
 block|,
 literal|"Press F1 for more information on these options."
 block|,
@@ -2396,11 +2437,21 @@ name|distSetMinimum
 block|}
 block|,
 block|{
-literal|"7 Custom"
+literal|"7 All"
+block|,
+literal|"All sources, binaries and XFree86 binaries [700MB]"
+block|,
+name|checkDistEverything
+block|,
+name|distSetEverything
+block|}
+block|,
+block|{
+literal|"8 Custom"
 block|,
 literal|"Specify your own distribution set [?]"
 block|,
-name|checkTrue
+name|NULL
 block|,
 name|dmenuSubmenu
 block|,
@@ -2409,21 +2460,11 @@ block|,
 operator|&
 name|MenuSubDistributions
 block|,
-literal|'-'
+literal|' '
 block|,
-literal|'-'
+literal|' '
 block|,
-literal|'-'
-block|}
-block|,
-block|{
-literal|"8 All"
-block|,
-literal|"All sources, binaries and XFree86 binaries [700MB]"
-block|,
-name|checkDistEverything
-block|,
-name|distSetEverything
+literal|' '
 block|}
 block|,
 block|{
@@ -2453,7 +2494,7 @@ literal|"Exit this menu (returning to previous)"
 block|,
 name|checkTrue
 block|,
-name|dmenuCancel
+name|dmenuExit
 block|,
 name|NULL
 block|,
@@ -2806,6 +2847,16 @@ block|,
 name|NULL
 block|,
 name|distSetEverything
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
 block|}
 block|,
 block|{
@@ -2835,7 +2886,7 @@ literal|"Exit this menu (returning to previous)"
 block|,
 name|checkTrue
 block|,
-name|dmenuCancel
+name|dmenuExit
 block|,
 name|NULL
 block|,
@@ -2973,7 +3024,7 @@ literal|"Exit this menu (returning to previous)"
 block|,
 name|checkTrue
 block|,
-name|dmenuCancel
+name|dmenuExit
 block|,
 name|NULL
 block|,
@@ -3385,9 +3436,19 @@ literal|"All"
 block|,
 literal|"Select all of the above [120MB]"
 block|,
-name|checkSrc
+name|NULL
 block|,
 name|setSrc
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
 block|}
 block|,
 block|{
@@ -3417,7 +3478,7 @@ literal|"Exit this menu (returning to previous)"
 block|,
 name|checkTrue
 block|,
-name|dmenuCancel
+name|dmenuExit
 block|,
 name|NULL
 block|,
@@ -3526,7 +3587,7 @@ literal|"Exit this menu (returning to previous)"
 block|,
 name|checkTrue
 block|,
-name|dmenuCancel
+name|dmenuExit
 block|,
 name|NULL
 block|,
@@ -3911,7 +3972,7 @@ literal|"Exit this menu (returning to previous)"
 block|,
 name|checkTrue
 block|,
-name|dmenuCancel
+name|dmenuExit
 block|,
 name|NULL
 block|,
@@ -4089,13 +4150,53 @@ name|DIST_XF86_FONTS_SERVER
 block|}
 block|,
 block|{
+literal|"All"
+block|,
+literal|"All fonts [10MB]"
+block|,
+name|NULL
+block|,
+name|setX11Fonts
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|}
+block|,
+block|{
+literal|"Clear"
+block|,
+literal|"Reset font selections [0MB]"
+block|,
+name|NULL
+block|,
+name|clearX11Fonts
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|}
+block|,
+block|{
 literal|"Exit"
 block|,
 literal|"Exit this menu (returning to previous)"
 block|,
 name|checkTrue
 block|,
-name|dmenuCancel
+name|dmenuExit
 block|,
 name|NULL
 block|,
@@ -4457,7 +4558,7 @@ literal|"Exit this menu (returning to previous)"
 block|,
 name|checkTrue
 block|,
-name|dmenuCancel
+name|dmenuExit
 block|,
 name|NULL
 block|,
@@ -4675,7 +4776,7 @@ literal|"Exit this menu (returning to previous)"
 block|,
 name|NULL
 block|,
-name|dmenuCancel
+name|dmenuExit
 block|}
 block|,
 block|{
@@ -4968,7 +5069,7 @@ literal|"Exit this menu (returning to previous)"
 block|,
 name|NULL
 block|,
-name|dmenuCancel
+name|dmenuExit
 block|}
 block|,
 block|{
@@ -5154,7 +5255,7 @@ literal|"Exit this menu (returning to previous)"
 block|,
 name|checkTrue
 block|,
-name|dmenuCancel
+name|dmenuExit
 block|,
 name|NULL
 block|,
@@ -5545,7 +5646,7 @@ literal|"Exit this menu (returning to previous)"
 block|,
 name|NULL
 block|,
-name|dmenuCancel
+name|dmenuExit
 block|}
 block|,
 block|{
