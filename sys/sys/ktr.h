@@ -1211,7 +1211,7 @@ name|p5
 parameter_list|,
 name|p6
 parameter_list|)
-value|CTR5(KTR_GEN, d, p1, p2, p3, p4, p5, p6)
+value|CTR6(KTR_GEN, d, p1, p2, p3, p4, p5, p6)
 end_define
 
 begin_comment
@@ -1339,7 +1339,7 @@ name|p5
 parameter_list|,
 name|p6
 parameter_list|)
-value|CTR5(KTR_INIT, d, p1, p2, p3, p4, p5, p6)
+value|CTR6(KTR_INIT, d, p1, p2, p3, p4, p5, p6)
 end_define
 
 begin_else
