@@ -1206,6 +1206,7 @@ block|{
 comment|/* 	 * if reinit succeeds, retries still permit and device didn't 	 * get removed by the reinit, reinject request 	 */
 if|if
 condition|(
+operator|!
 name|ata_reinit
 argument_list|(
 name|ch
