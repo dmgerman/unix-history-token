@@ -863,7 +863,7 @@ literal|" "
 argument_list|)
 expr_stmt|;
 comment|/* length in bytes */
-name|o
+name|len
 operator|=
 name|strtoimax
 argument_list|(
@@ -948,6 +948,11 @@ name|sector_size
 operator|=
 name|s
 expr_stmt|;
+name|len
+operator|/=
+name|s
+expr_stmt|;
+comment|/* media size in number of sectors. */
 if|if
 condition|(
 name|Add_Chunk
@@ -956,9 +961,7 @@ name|d
 argument_list|,
 literal|0
 argument_list|,
-name|o
-operator|/
-name|s
+name|len
 argument_list|,
 name|name
 argument_list|,
@@ -977,12 +980,6 @@ operator|(
 literal|"Failed to add 'whole' chunk"
 operator|)
 argument_list|)
-expr_stmt|;
-name|len
-operator|=
-name|o
-operator|/
-name|s
 expr_stmt|;
 for|for
 control|(
@@ -1095,6 +1092,41 @@ name|b
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Calculate the number of cylinders this disk must have. If we have 	 * an obvious insanity, we set the number of cyclinders to zero. 	 */
+name|o
+operator|=
+name|d
+operator|->
+name|bios_hd
+operator|*
+name|d
+operator|->
+name|bios_sect
+expr_stmt|;
+name|d
+operator|->
+name|bios_cyl
+operator|=
+operator|(
+name|o
+operator|!=
+literal|0
+operator|&&
+operator|(
+name|len
+operator|%
+name|o
+operator|)
+operator|==
+literal|0
+operator|)
+condition|?
+name|len
+operator|/
+name|o
+else|:
+literal|0
+expr_stmt|;
 name|p
 operator|=
 name|q
