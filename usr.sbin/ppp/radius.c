@@ -2801,15 +2801,16 @@ literal|'='
 condition|)
 block|{
 comment|/*                      * Only point at the String field if we don't think the                      * peer has misformatted the response.                      */
-operator|(
+name|data
+operator|=
 operator|(
 specifier|const
 name|char
 operator|*
 operator|)
 name|data
-operator|)
-operator|++
+operator|+
+literal|1
 expr_stmt|;
 name|len
 operator|--
@@ -2949,15 +2950,16 @@ literal|'='
 condition|)
 block|{
 comment|/*                      * Only point at the String field if we don't think the                      * peer has misformatted the response.                      */
-operator|(
+name|data
+operator|=
 operator|(
 specifier|const
 name|char
 operator|*
 operator|)
 name|data
-operator|)
-operator|++
+operator|+
+literal|1
 expr_stmt|;
 name|len
 operator|--
