@@ -13,7 +13,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)collect.c	2.5 %G%"
+literal|"@(#)collect.c	2.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1662,6 +1662,16 @@ name|junk
 argument_list|)
 operator|>=
 literal|0
+operator|&&
+operator|(
+name|junk
+operator|.
+name|st_mode
+operator|&
+name|S_IFMT
+operator|)
+operator|==
+name|S_IFREG
 condition|)
 block|{
 if|if
