@@ -37,8 +37,22 @@ end_include
 begin_include
 include|#
 directive|include
+file|<string.h>
+end_include
+
+begin_comment
+comment|/* System string definitions. */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|"string.h"
 end_include
+
+begin_comment
+comment|/* Local string definitions. */
+end_comment
 
 begin_include
 include|#
@@ -1199,7 +1213,7 @@ argument_list|(
 name|printvar
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|w
 argument_list|)
@@ -1676,7 +1690,7 @@ argument_list|(
 name|printalias
 argument_list|,
 operator|(
-name|int
+name|long
 operator|)
 name|w
 argument_list|)

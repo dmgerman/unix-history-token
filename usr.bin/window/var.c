@@ -619,6 +619,12 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+name|long
+name|a
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 if|if
