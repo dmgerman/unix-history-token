@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pstat.c	8.12 (Berkeley) %G%"
+literal|"@(#)pstat.c	8.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5078,6 +5078,9 @@ block|{
 name|char
 modifier|*
 name|header
+decl_stmt|,
+modifier|*
+name|p
 decl_stmt|;
 name|int
 name|hlen
@@ -5626,13 +5629,9 @@ condition|(
 operator|!
 name|totalflag
 condition|)
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|"/dev/%-6s %*d "
-argument_list|,
+block|{
+name|p
+operator|=
 name|devname
 argument_list|(
 name|sw
@@ -5644,6 +5643,21 @@ name|sw_dev
 argument_list|,
 name|S_IFBLK
 argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"/dev/%-6s %*d "
+argument_list|,
+name|p
+operator|==
+name|NULL
+condition|?
+literal|"??"
+else|:
+name|p
 argument_list|,
 name|hlen
 argument_list|,
@@ -5657,6 +5671,7 @@ operator|/
 name|div
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 		 * Don't report statistics for partitions which have not 		 * yet been activated via swapon(8). 		 */
 if|if
 condition|(
