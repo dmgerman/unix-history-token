@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dbtest.c	5.12 (Berkeley) %G%"
+literal|"@(#)dbtest.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1095,6 +1095,12 @@ name|lineno
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|type
+operator|!=
+name|DB_RECNO
+condition|)
 name|free
 argument_list|(
 name|key
