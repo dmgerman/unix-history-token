@@ -489,13 +489,11 @@ name|__inline
 name|u_int16_t
 name|dkcksum
 parameter_list|(
-name|lp
-parameter_list|)
 name|struct
 name|disklabel
 modifier|*
 name|lp
-decl_stmt|;
+parameter_list|)
 block|{
 name|u_int16_t
 modifier|*
