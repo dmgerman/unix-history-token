@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.1 (Berkeley) %G%"
+literal|"@(#)ls.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1135,6 +1135,8 @@ control|(
 name|fp
 operator|=
 name|dfplast
+operator|-
+literal|1
 init|;
 name|fp
 operator|>=
