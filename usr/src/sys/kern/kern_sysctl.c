@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1989, 1993 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Karels at Berkeley Software Design, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sysctl.c	7.30 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1989, 1993 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Karels at Berkeley Software Design, Inc.  *  * %sccs.include.redist.c%  *  *	@(#)kern_sysctl.c	7.31 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -157,7 +157,7 @@ name|void
 modifier|*
 name|old
 decl_stmt|;
-name|u_int
+name|size_t
 modifier|*
 name|oldlenp
 decl_stmt|;
@@ -165,7 +165,7 @@ name|void
 modifier|*
 name|new
 decl_stmt|;
-name|u_int
+name|size_t
 name|newlen
 decl_stmt|;
 block|}
@@ -723,7 +723,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int
+name|size_t
 modifier|*
 name|oldlenp
 decl_stmt|;
@@ -737,7 +737,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int
+name|size_t
 name|newlen
 decl_stmt|;
 end_decl_stmt
@@ -1172,7 +1172,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int
+name|size_t
 modifier|*
 name|oldlenp
 decl_stmt|;
@@ -1186,7 +1186,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int
+name|size_t
 name|newlen
 decl_stmt|;
 end_decl_stmt
@@ -1398,7 +1398,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int
+name|size_t
 modifier|*
 name|oldlenp
 decl_stmt|;
@@ -1412,7 +1412,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int
+name|size_t
 name|newlen
 decl_stmt|;
 end_decl_stmt
@@ -1545,7 +1545,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int
+name|size_t
 modifier|*
 name|oldlenp
 decl_stmt|;
@@ -1664,7 +1664,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int
+name|size_t
 modifier|*
 name|oldlenp
 decl_stmt|;
@@ -1678,7 +1678,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int
+name|size_t
 name|newlen
 decl_stmt|;
 end_decl_stmt
@@ -1824,7 +1824,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int
+name|size_t
 modifier|*
 name|oldlenp
 decl_stmt|;
@@ -1940,7 +1940,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int
+name|size_t
 modifier|*
 name|oldlenp
 decl_stmt|;
@@ -1950,11 +1950,7 @@ begin_decl_stmt
 name|void
 modifier|*
 name|newp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
+decl_stmt|,
 modifier|*
 name|sp
 decl_stmt|;
@@ -2045,7 +2041,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|size_t
 modifier|*
 name|sizep
 decl_stmt|;
@@ -2300,7 +2296,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|u_int
 name|namelen
 decl_stmt|;
 end_decl_stmt
@@ -2313,7 +2309,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|size_t
 modifier|*
 name|sizep
 decl_stmt|;
@@ -3216,6 +3212,7 @@ name|uap
 operator|->
 name|size
 operator|&&
+operator|(
 name|error
 operator|=
 name|copyin
@@ -3238,6 +3235,7 @@ argument_list|(
 name|size
 argument_list|)
 argument_list|)
+operator|)
 condition|)
 return|return
 operator|(
