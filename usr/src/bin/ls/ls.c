@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	8.2 (Berkeley) %G%"
+literal|"@(#)ls.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1159,19 +1159,20 @@ case|:
 case|case
 name|FTS_ERR
 case|:
-name|errno
-operator|=
-name|p
-operator|->
-name|fts_errno
-expr_stmt|;
-name|warn
+name|warnx
 argument_list|(
-literal|"%s"
+literal|"%s: %s"
 argument_list|,
 name|p
 operator|->
 name|fts_name
+argument_list|,
+name|strerror
+argument_list|(
+name|p
+operator|->
+name|fts_errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1463,19 +1464,20 @@ operator|==
 name|FTS_NS
 condition|)
 block|{
-name|errno
-operator|=
-name|cur
-operator|->
-name|fts_errno
-expr_stmt|;
-name|warn
+name|warnx
 argument_list|(
-literal|"%s"
+literal|"%s: %s"
 argument_list|,
 name|cur
 operator|->
 name|fts_name
+argument_list|,
+name|strerror
+argument_list|(
+name|cur
+operator|->
+name|fts_errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|cur

@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chown.c	8.6 (Berkeley) %G%"
+literal|"@(#)chown.c	8.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -640,19 +640,20 @@ case|case
 name|FTS_DNR
 case|:
 comment|/* Warn, chown, continue. */
-name|errno
-operator|=
-name|p
-operator|->
-name|fts_errno
-expr_stmt|;
-name|warn
+name|warnx
 argument_list|(
-literal|"%s"
+literal|"%s: %s"
 argument_list|,
 name|p
 operator|->
 name|fts_path
+argument_list|,
+name|strerror
+argument_list|(
+name|p
+operator|->
+name|fts_errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|rval
@@ -667,19 +668,20 @@ comment|/* Warn, continue. */
 case|case
 name|FTS_NS
 case|:
-name|errno
-operator|=
-name|p
-operator|->
-name|fts_errno
-expr_stmt|;
-name|warn
+name|warnx
 argument_list|(
-literal|"%s"
+literal|"%s: %s"
 argument_list|,
 name|p
 operator|->
 name|fts_path
+argument_list|,
+name|strerror
+argument_list|(
+name|p
+operator|->
+name|fts_errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|rval

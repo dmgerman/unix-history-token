@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)find.c	8.2 (Berkeley) %G%"
+literal|"@(#)find.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -374,19 +374,20 @@ argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
-name|errno
-operator|=
-name|entry
-operator|->
-name|fts_errno
-expr_stmt|;
-name|warn
+name|warnx
 argument_list|(
-literal|"%s"
+literal|"%s: %s"
 argument_list|,
 name|entry
 operator|->
 name|fts_path
+argument_list|,
+name|strerror
+argument_list|(
+name|entry
+operator|->
+name|fts_errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|rval

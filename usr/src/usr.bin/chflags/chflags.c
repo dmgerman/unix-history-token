@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chflags.c	8.4 (Berkeley) %G%"
+literal|"@(#)chflags.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -525,19 +525,20 @@ case|case
 name|FTS_DNR
 case|:
 comment|/* Warn, chflag, continue. */
-name|errno
-operator|=
-name|p
-operator|->
-name|fts_errno
-expr_stmt|;
-name|warn
+name|warnx
 argument_list|(
-literal|"%s"
+literal|"%s: %s"
 argument_list|,
 name|p
 operator|->
 name|fts_path
+argument_list|,
+name|strerror
+argument_list|(
+name|p
+operator|->
+name|fts_errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|rval
@@ -552,19 +553,20 @@ comment|/* Warn, continue. */
 case|case
 name|FTS_NS
 case|:
-name|errno
-operator|=
-name|p
-operator|->
-name|fts_errno
-expr_stmt|;
-name|warn
+name|warnx
 argument_list|(
-literal|"%s"
+literal|"%s: %s"
 argument_list|,
 name|p
 operator|->
 name|fts_path
+argument_list|,
+name|strerror
+argument_list|(
+name|p
+operator|->
+name|fts_errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|rval
