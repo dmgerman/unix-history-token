@@ -766,6 +766,14 @@ literal|0
 index|]
 operator|==
 literal|'+'
+name|pwd
+operator|.
+name|pw_name
+index|[
+literal|0
+index|]
+operator|==
+literal|'-'
 condition|)
 name|yp_enabled
 operator|=
@@ -1137,7 +1145,6 @@ expr_stmt|;
 comment|/* Store insecure special plus and special minus */
 if|if
 condition|(
-operator|(
 name|pwd
 operator|.
 name|pw_name
@@ -1155,14 +1162,6 @@ literal|0
 index|]
 operator|==
 literal|'-'
-operator|)
-operator|&&
-name|pwd
-operator|.
-name|pw_name
-index|[
-literal|1
-index|]
 condition|)
 block|{
 name|tbuf
@@ -1977,7 +1976,6 @@ expr_stmt|;
 comment|/* Store secure special plus and special minus */
 if|if
 condition|(
-operator|(
 name|pwd
 operator|.
 name|pw_name
@@ -1995,14 +1993,6 @@ literal|0
 index|]
 operator|==
 literal|'-'
-operator|)
-operator|&&
-name|pwd
-operator|.
-name|pw_name
-index|[
-literal|1
-index|]
 condition|)
 block|{
 name|tbuf
