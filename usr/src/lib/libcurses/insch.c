@@ -6,7 +6,7 @@ file|"curses.ext"
 end_include
 
 begin_comment
-comment|/*  *	This routine performs an insert-char on the line, leaving  * (_cury,_curx) unchanged.  *  * @(#)insch.c	1.1 (Berkeley) %G%  */
+comment|/*  *	This routine performs an insert-char on the line, leaving  * (_cury,_curx) unchanged.  *  * @(#)insch.c	1.2 (Berkeley) %G%  */
 end_comment
 
 begin_macro
@@ -212,27 +212,9 @@ operator|--
 expr_stmt|;
 block|}
 else|else
-block|{
-name|win
-operator|->
-name|_y
-index|[
-name|LINES
-operator|-
-literal|1
-index|]
-index|[
-name|COLS
-operator|-
-literal|1
-index|]
-operator|=
-literal|' '
-expr_stmt|;
 return|return
 name|ERR
 return|;
-block|}
 return|return
 name|OK
 return|;
