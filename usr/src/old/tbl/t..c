@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	t..c	4.1	83/02/12	*/
+comment|/*	t..c	4.2	83/10/13	*/
 end_comment
 
 begin_comment
@@ -30,7 +30,7 @@ begin_define
 define|#
 directive|define
 name|MAXHEAD
-value|30
+value|100
 end_define
 
 begin_define
