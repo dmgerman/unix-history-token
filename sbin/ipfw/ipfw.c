@@ -230,7 +230,7 @@ begin_define
 define|#
 directive|define
 name|S_SEP1
-value|"f"
+value|"fr"
 end_define
 
 begin_comment
@@ -241,7 +241,7 @@ begin_define
 define|#
 directive|define
 name|S_SEP2
-value|"t"
+value|"to"
 end_define
 
 begin_comment
@@ -252,7 +252,7 @@ begin_define
 define|#
 directive|define
 name|S_SEP3
-value|"v"
+value|"vi"
 end_define
 
 begin_comment
