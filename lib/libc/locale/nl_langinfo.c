@@ -441,7 +441,7 @@ break|break;
 case|case
 name|ERA
 case|:
-comment|/* XXX: ??? */
+comment|/* XXX: need to be implemented  */
 name|ret
 operator|=
 literal|""
@@ -450,7 +450,7 @@ break|break;
 case|case
 name|ERA_D_FMT
 case|:
-comment|/* XXX: ??? */
+comment|/* XXX: need to be implemented  */
 name|ret
 operator|=
 literal|""
@@ -459,7 +459,7 @@ break|break;
 case|case
 name|ERA_D_T_FMT
 case|:
-comment|/* XXX: ??? */
+comment|/* XXX: need to be implemented  */
 name|ret
 operator|=
 literal|""
@@ -468,7 +468,7 @@ break|break;
 case|case
 name|ERA_T_FMT
 case|:
-comment|/* XXX: ??? */
+comment|/* XXX: need to be implemented  */
 name|ret
 operator|=
 literal|""
@@ -477,7 +477,7 @@ break|break;
 case|case
 name|ALT_DIGITS
 case|:
-comment|/* XXX: ??? */
+comment|/* XXX: need to be implemented  */
 name|ret
 operator|=
 literal|""
@@ -486,7 +486,6 @@ break|break;
 case|case
 name|RADIXCHAR
 case|:
-comment|/* deprecated */
 name|ret
 operator|=
 operator|(
@@ -502,7 +501,6 @@ break|break;
 case|case
 name|THOUSEP
 case|:
-comment|/* deprecated */
 name|ret
 operator|=
 operator|(
@@ -545,10 +543,11 @@ operator|->
 name|noexpr
 expr_stmt|;
 break|break;
+comment|/* All items marked with LEGACY are available, but not recomended 	 * by SUSv2 to be used in portable applications since they're subject 	 * to remove in future specification editions 	 */
 case|case
 name|YESSTR
 case|:
-comment|/* deprecated */
+comment|/* LEGACY  */
 name|ret
 operator|=
 operator|(
@@ -564,7 +563,7 @@ break|break;
 case|case
 name|NOSTR
 case|:
-comment|/* deprecated */
+comment|/* LEGACY  */
 name|ret
 operator|=
 operator|(
@@ -580,7 +579,6 @@ break|break;
 case|case
 name|CRNCYSTR
 case|:
-comment|/* deprecated */
 name|ret
 operator|=
 literal|""
