@@ -128,7 +128,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pam_mod_misc.h"
+file|<security/pam_mod_misc.h>
 end_include
 
 begin_define

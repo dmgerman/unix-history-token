@@ -92,7 +92,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<security/_pam_macros.h>
+file|<security/pam_appl.h>
 end_include
 
 begin_include
@@ -104,7 +104,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pam_mod_misc.h"
+file|<security/pam_mod_misc.h>
 end_include
 
 begin_define
