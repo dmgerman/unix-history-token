@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: domainname.c,v 1.1 1994/09/18 21:23:37 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -94,6 +94,37 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_decl_stmt
+name|int
+name|getdomainname
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|setdomainname
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
@@ -111,13 +142,7 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-specifier|extern
 name|int
-name|optind
-decl_stmt|;
-name|int
-name|ch
-decl_stmt|,
 name|sflag
 decl_stmt|;
 name|char

@@ -53,7 +53,15 @@ begin_comment
 comment|/* not lint */
 end_comment
 
+begin_function_decl
+name|void
+name|sync
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_function
+name|void
 name|main
 parameter_list|()
 block|{

@@ -157,6 +157,12 @@ decl_stmt|;
 name|mode_t
 modifier|*
 name|set
+init|=
+operator|(
+name|mode_t
+operator|*
+operator|)
+name|NULL
 decl_stmt|;
 name|char
 modifier|*
@@ -165,6 +171,8 @@ decl_stmt|,
 modifier|*
 name|mode
 decl_stmt|;
+name|omode
+operator|=
 name|pflag
 operator|=
 literal|0
@@ -458,6 +466,13 @@ name|p
 operator|=
 name|path
 expr_stmt|;
+name|oumask
+operator|=
+operator|(
+name|mode_t
+operator|)
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|p
@@ -491,6 +506,7 @@ index|]
 operator|==
 literal|'\0'
 operator|||
+operator|(
 name|p
 index|[
 literal|0
@@ -504,6 +520,7 @@ literal|1
 index|]
 operator|==
 literal|'\0'
+operator|)
 condition|)
 break|break;
 if|if

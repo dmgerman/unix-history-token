@@ -489,13 +489,16 @@ literal|512
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|oper
 operator|=
 operator|*
 operator|++
 name|argv
+operator|)
 condition|)
 block|{
+comment|/* JEAG */
 if|if
 condition|(
 operator|(

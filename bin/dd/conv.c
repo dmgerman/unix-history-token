@@ -79,9 +79,11 @@ name|t
 decl_stmt|;
 if|if
 condition|(
+operator|(
 name|t
 operator|=
 name|ctab
+operator|)
 condition|)
 for|for
 control|(
@@ -222,6 +224,10 @@ decl_stmt|,
 modifier|*
 name|t
 decl_stmt|;
+name|ch
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Record truncation can cross block boundaries.  If currently in a 	 * truncation state, keep tossing characters until reach a newline. 	 * Start at the beginning of the buffer, as the input buffer is always 	 * left empty. 	 */
 if|if
 condition|(
@@ -338,9 +344,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|t
 operator|=
 name|ctab
+operator|)
 condition|)
 for|for
 control|(
@@ -689,9 +697,11 @@ decl_stmt|;
 comment|/* Translation and case conversion. */
 if|if
 condition|(
+operator|(
 name|t
 operator|=
 name|ctab
+operator|)
 condition|)
 for|for
 control|(
