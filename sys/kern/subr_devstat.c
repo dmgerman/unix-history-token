@@ -609,6 +609,29 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|void
+name|devstat_start_transaction_bio
+parameter_list|(
+name|struct
+name|devstat
+modifier|*
+name|ds
+parameter_list|,
+name|struct
+name|bio
+modifier|*
+name|bp
+parameter_list|)
+block|{
+name|devstat_start_transaction
+argument_list|(
+name|ds
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Record the ending of a transaction, and incrment the various counters.  */
 end_comment

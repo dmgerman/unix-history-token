@@ -460,6 +460,23 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|devstat_start_transaction_bio
+parameter_list|(
+name|struct
+name|devstat
+modifier|*
+name|ds
+parameter_list|,
+name|struct
+name|bio
+modifier|*
+name|bp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|devstat_end_transaction
 parameter_list|(
 name|struct
