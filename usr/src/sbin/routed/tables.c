@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tables.c	5.3 (Berkeley) %G%"
+literal|"@(#)tables.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1202,9 +1202,9 @@ name|RTS_INTERNAL
 operator||
 name|RTS_EXTERNAL
 operator|)
+operator|)
 operator|==
 literal|0
-operator|)
 operator|&&
 name|ioctl
 argument_list|(
