@@ -3401,11 +3401,14 @@ name|name
 operator|!=
 name|_PC_PIPE_BUF
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 name|EINVAL
-operator|)
-return|;
+expr_stmt|;
+block|}
+else|else
+block|{
 name|p
 operator|->
 name|p_retval
@@ -3419,6 +3422,7 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|DTYPE_FIFO
