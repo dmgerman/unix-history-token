@@ -27,6 +27,12 @@ directive|include
 file|<machine/cpufunc.h>
 end_include
 
+begin_struct_decl
+struct_decl|struct
+name|pmap
+struct_decl|;
+end_struct_decl
+
 begin_define
 define|#
 directive|define
@@ -34,11 +40,13 @@ name|PCPU_MD_FIELDS
 define|\
 value|int		pc_inside_intr;					\ 	u_int32_t	pc_next_asn;
 comment|/* next ASN to alloc */
-value|\ 	u_int32_t	pc_current_asngen
+value|\ 	u_int32_t	pc_current_asngen;
+comment|/* ASN rollover check */
+value|\ 	struct pmap	*pc_curpmap
 end_define
 
 begin_comment
-comment|/* ASN rollover check */
+comment|/* current pmap */
 end_comment
 
 begin_define
