@@ -1885,6 +1885,8 @@ name|s
 condition|)
 name|db_printf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
