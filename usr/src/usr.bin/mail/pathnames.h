@@ -4,7 +4,7 @@ comment|/*  * Declarations and constants specific to an installation.  *  * Vax/
 end_comment
 
 begin_comment
-comment|/*  * Sccs Id = "@(#)pathnames.h	2.1 %G%";  */
+comment|/*  * Sccs Id = "@(#)pathnames.h	2.2 %G%";  */
 end_comment
 
 begin_define
@@ -102,6 +102,17 @@ name|THELPFILE
 value|"/usr/lib/Mail.help.~"
 end_define
 
+begin_define
+define|#
+directive|define
+name|POSTAGE
+value|"/arch/kurt/postage"
+end_define
+
+begin_comment
+comment|/* Where to audit mail sending */
+end_comment
+
 begin_comment
 comment|/* Name of casual tilde help */
 end_comment
@@ -153,6 +164,28 @@ end_define
 begin_comment
 comment|/* System implements utime(2) */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VMUNIX
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|"sigretro.h"
+end_include
+
+begin_comment
+comment|/* Retrofit signal defs */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+endif|VMUNIX
+end_endif
 
 end_unit
 
