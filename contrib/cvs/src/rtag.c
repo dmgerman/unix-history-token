@@ -3242,6 +3242,35 @@ decl_stmt|;
 block|{
 if|if
 condition|(
+name|ignore_directory
+argument_list|(
+name|update_dir
+argument_list|)
+condition|)
+block|{
+comment|/* print the warm fuzzy message */
+if|if
+condition|(
+operator|!
+name|quiet
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|"Ignoring %s"
+argument_list|,
+name|update_dir
+argument_list|)
+expr_stmt|;
+return|return
+name|R_SKIP_ALL
+return|;
+block|}
+if|if
+condition|(
 operator|!
 name|quiet
 condition|)
