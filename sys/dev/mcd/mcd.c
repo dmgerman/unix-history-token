@@ -2407,7 +2407,6 @@ operator|(
 literal|0
 operator|)
 return|;
-break|break;
 case|case
 name|DIOCGSECTORSIZE
 case|:
@@ -2429,7 +2428,6 @@ operator|(
 literal|0
 operator|)
 return|;
-break|break;
 case|case
 name|CDIOCPLAYTRACKS
 case|:
@@ -2896,9 +2894,6 @@ name|sc
 parameter_list|)
 block|{
 name|int
-name|unit
-decl_stmt|;
-name|int
 name|i
 decl_stmt|,
 name|j
@@ -2910,15 +2905,6 @@ index|[
 literal|3
 index|]
 decl_stmt|;
-name|unit
-operator|=
-name|device_get_unit
-argument_list|(
-name|sc
-operator|->
-name|dev
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|data
