@@ -190,7 +190,7 @@ literal|0
 condition|)
 block|{
 comment|/* Quietly close the file: */
-name|__sys_close
+name|_thread_sys_close
 argument_list|(
 name|ret
 argument_list|)
