@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)edit.c	5.1 (Berkeley) %G%"
+literal|"@(#)edit.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -90,30 +90,17 @@ name|tempname
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|edit
-argument_list|(
-argument|tfd
-argument_list|,
-argument|pw
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|int
-name|tfd
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|(
+name|pw
+parameter_list|)
 name|struct
 name|passwd
 modifier|*
 name|pw
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|stat
@@ -121,28 +108,6 @@ name|begin
 decl_stmt|,
 name|end
 decl_stmt|;
-comment|/* 	 * Give the file to the real user; setuid permissions are discarded 	 * in pw_edit(). 	 */
-operator|(
-name|void
-operator|)
-name|fchown
-argument_list|(
-name|tfd
-argument_list|,
-name|getuid
-argument_list|()
-argument_list|,
-name|getgid
-argument_list|()
-argument_list|)
-expr_stmt|;
-name|display
-argument_list|(
-name|tfd
-argument_list|,
-name|pw
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 init|;
@@ -168,26 +133,11 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|pw_edit
 argument_list|(
 literal|1
 argument_list|)
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"chpass: edit failed\n"
-argument_list|)
 expr_stmt|;
-break|break;
-block|}
 if|if
 condition|(
 name|stat
@@ -255,7 +205,7 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * display --  *	print out the file for the user to edit; strange side-effect:  *	set conditional flag if the user gets to edit the shell.  */
@@ -641,6 +591,20 @@ condition|?
 name|p
 else|:
 literal|""
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fchown
+argument_list|(
+name|fd
+argument_list|,
+name|getuid
+argument_list|()
+argument_list|,
+name|getgid
+argument_list|()
 argument_list|)
 expr_stmt|;
 operator|(

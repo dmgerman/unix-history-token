@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pw_copy.c	5.1 (Berkeley) %G%"
+literal|"@(#)pw_copy.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,6 +63,8 @@ name|pw_copy
 argument_list|(
 argument|ffd
 argument_list|,
+argument|tfd
+argument_list|,
 argument|pw
 argument_list|)
 end_macro
@@ -70,6 +72,8 @@ end_macro
 begin_decl_stmt
 name|int
 name|ffd
+decl_stmt|,
+name|tfd
 decl_stmt|;
 end_decl_stmt
 
@@ -135,9 +139,9 @@ operator|!
 operator|(
 name|to
 operator|=
-name|fopen
+name|fdopen
 argument_list|(
-name|tempname
+name|tfd
 argument_list|,
 literal|"w"
 argument_list|)
