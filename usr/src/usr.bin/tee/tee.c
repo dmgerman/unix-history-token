@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tee.c	5.8 (Berkeley) %G%"
+literal|"@(#)tee.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,6 +74,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_typedef
@@ -285,7 +291,7 @@ expr_stmt|;
 block|}
 name|add
 argument_list|(
-literal|1
+name|STDOUT_FILENO
 argument_list|,
 literal|"stdout"
 argument_list|)
@@ -367,7 +373,7 @@ name|rval
 operator|=
 name|read
 argument_list|(
-literal|0
+name|STDIN_FILENO
 argument_list|,
 name|buf
 argument_list|,
