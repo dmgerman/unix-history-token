@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ip_input.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ip_input.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -4101,7 +4101,14 @@ name|ipforward_rt
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * If forwarding packet using same interface that it came in on, 	 * perhaps should send a redirect to sender to shortcut a hop. 	 * Only send redirect if source is sending directly to us, 	 * and if packet was not source routed (or has any options). 	 */
+comment|/* 	 * If forwarding packet using same interface that it came in on, 	 * perhaps should send a redirect to sender to shortcut a hop. 	 * Only send redirect if source is sending directly to us, 	 * and if packet was not source routed (or has any options). 	 * Also, don't send redirect if forwarding using a default route 	 * or a route modfied by a redirect. 	 */
+define|#
+directive|define
+name|satosin
+parameter_list|(
+name|sa
+parameter_list|)
+value|((struct sockaddr_in *)(sa))
 if|if
 condition|(
 name|ipforward_rt
@@ -4115,6 +4122,38 @@ operator|->
 name|rt_ifp
 operator|==
 name|ifp
+operator|&&
+operator|(
+name|ipforward_rt
+operator|.
+name|ro_rt
+operator|->
+name|rt_flags
+operator|&
+operator|(
+name|RTF_DYNAMIC
+operator||
+name|RTF_MODIFIED
+operator|)
+operator|)
+operator|==
+literal|0
+operator|&&
+name|satosin
+argument_list|(
+operator|&
+name|ipforward_rt
+operator|.
+name|ro_rt
+operator|->
+name|rt_dst
+argument_list|)
+operator|->
+name|sin_addr
+operator|.
+name|s_addr
+operator|!=
+literal|0
 operator|&&
 name|ipsendredirects
 operator|&&
