@@ -1393,6 +1393,10 @@ name|unsigned
 name|int
 name|flags
 decl_stmt|;
+name|unsigned
+name|int
+name|volume
+decl_stmt|;
 block|}
 name|Device
 typedef|;
@@ -1632,6 +1636,11 @@ modifier|*
 name|maintainer
 decl_stmt|;
 comment|/* maintainer			*/
+name|unsigned
+name|int
+name|volume
+decl_stmt|;
+comment|/* Volume of package            */
 block|}
 name|IndexEntry
 typedef|;
