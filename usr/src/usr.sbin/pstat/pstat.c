@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pstat.c	4.27 (Berkeley) %G%"
+literal|"@(#)pstat.c	4.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5060,9 +5060,12 @@ name|tused
 operator|+=
 name|ctod
 argument_list|(
+name|clrnd
+argument_list|(
 name|xp
 operator|->
 name|x_size
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -5077,11 +5080,14 @@ name|tused
 operator|+=
 name|ctod
 argument_list|(
+name|clrnd
+argument_list|(
 name|ctopt
 argument_list|(
 name|xp
 operator|->
 name|x_size
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
