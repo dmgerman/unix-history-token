@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)vfs_syscalls.c	6.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)vfs_syscalls.c	6.20 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -4343,6 +4343,48 @@ condition|)
 goto|goto
 name|bad
 goto|;
+comment|/* 		 * If the parent directory is "sticky", then the user must 		 * own the parent directory, or the destination of the rename, 		 * otherwise the destination may not be changed (except by 		 * root). This implements append-only directories. 		 */
+if|if
+condition|(
+operator|(
+name|dp
+operator|->
+name|i_mode
+operator|&
+name|ISVTX
+operator|)
+operator|&&
+name|u
+operator|.
+name|u_uid
+operator|!=
+literal|0
+operator|&&
+name|u
+operator|.
+name|u_uid
+operator|!=
+name|dp
+operator|->
+name|i_uid
+operator|&&
+name|xp
+operator|->
+name|i_uid
+operator|!=
+name|u
+operator|.
+name|u_uid
+condition|)
+block|{
+name|error
+operator|=
+name|EPERM
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
 comment|/* 		 * Target must be empty if a directory 		 * and have no links to it. 		 * Also, insure source and target are 		 * compatible (both directories, or both 		 * not directories). 		 */
 if|if
 condition|(
