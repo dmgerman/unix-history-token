@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)table.c	1.14 (Berkeley) %G%"
+literal|"@(#)table.c	1.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2370,7 +2370,9 @@ name|TANY
 block|,
 name|SAREG
 operator||
-name|AWD
+name|SNAME
+operator||
+name|SOREG
 block|,
 name|TDOUBLE
 block|,
@@ -3962,7 +3964,35 @@ name|INTAREG
 operator||
 name|FORCC
 block|,
-name|AWD
+name|SIREG
+block|,
+name|TDOUBLE
+block|,
+name|SZERO
+block|,
+name|TANY
+block|,
+name|NAREG
+block|,
+name|RESC1
+operator||
+name|RESCC
+block|,
+literal|"	ldd	AL\n	std	A1\n"
+block|,
+name|OPSIMP
+block|,
+name|INAREG
+operator||
+name|INTAREG
+operator||
+name|FORCC
+block|,
+name|SAREG
+operator||
+name|SNAME
+operator||
+name|SOREG
 block|,
 name|TDOUBLE
 block|,
@@ -3986,9 +4016,37 @@ name|INTAREG
 operator||
 name|FORCC
 block|,
+name|SIREG
+block|,
+name|TDOUBLE
+block|,
+name|SZERO
+block|,
+name|TANY
+block|,
+name|NAREG
+operator||
+name|NASR
+block|,
+name|RESC1
+operator||
+name|RESCC
+block|,
+literal|"	cvld	$0\n	std	A1\n"
+block|,
+name|MUL
+block|,
+name|INAREG
+operator||
+name|INTAREG
+operator||
+name|FORCC
+block|,
 name|SAREG
 operator||
-name|AWD
+name|SNAME
+operator||
+name|SOREG
 block|,
 name|TDOUBLE
 block|,
