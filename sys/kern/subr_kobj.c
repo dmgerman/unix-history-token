@@ -53,6 +53,12 @@ directive|include
 file|<sys/errno.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -112,12 +118,6 @@ directive|ifdef
 name|KOBJ_STATS
 end_ifdef
 
-begin_include
-include|#
-directive|include
-file|<sys/sysctl.h>
-end_include
-
 begin_decl_stmt
 name|u_int
 name|kobj_lookup_hits
@@ -130,43 +130,47 @@ name|kobj_lookup_misses
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
-argument|_kern
+name|_kern
 argument_list|,
-argument|OID_AUTO
+name|OID_AUTO
 argument_list|,
-argument|kobj_hits
+name|kobj_hits
 argument_list|,
-argument|CTLFLAG_RD
+name|CTLFLAG_RD
 argument_list|,
-argument|&kobj_lookup_hits
+operator|&
+name|kobj_lookup_hits
 argument_list|,
 literal|0
 argument_list|,
 literal|""
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
+begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
-argument|_kern
+name|_kern
 argument_list|,
-argument|OID_AUTO
+name|OID_AUTO
 argument_list|,
-argument|kobj_misses
+name|kobj_misses
 argument_list|,
-argument|CTLFLAG_RD
+name|CTLFLAG_RD
 argument_list|,
-argument|&kobj_lookup_misses
+operator|&
+name|kobj_lookup_misses
 argument_list|,
 literal|0
 argument_list|,
 literal|""
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -181,6 +185,27 @@ init|=
 literal|1
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_kern
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|kobj_methodcount
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|kobj_next_id
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 specifier|static
@@ -215,6 +240,20 @@ name|id
 operator|==
 literal|0
 condition|)
+block|{
+name|KASSERT
+argument_list|(
+operator|(
+name|kobj_next_id
+operator|<
+name|KOBJ_CACHE_SIZE
+operator|)
+argument_list|,
+operator|(
+literal|"kobj method table overflow"
+operator|)
+argument_list|)
+expr_stmt|;
 name|desc
 operator|->
 name|id
@@ -222,6 +261,7 @@ operator|=
 name|kobj_next_id
 operator|++
 expr_stmt|;
+block|}
 block|}
 end_function
 
