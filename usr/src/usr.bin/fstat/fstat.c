@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*-  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -14,7 +14,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1987 Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1988 The Regents of the University of California.\n\  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -34,11 +34,12 @@ name|lint
 end_ifndef
 
 begin_decl_stmt
+specifier|static
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fstat.c	5.24 (Berkeley) %G%"
+literal|"@(#)fstat.c	5.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -166,6 +167,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<ufs/quota.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ufs/inode.h>
 end_include
 
@@ -256,7 +263,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<strings.h>
+file|<string.h>
 end_include
 
 begin_include
@@ -303,8 +310,8 @@ name|devs
 modifier|*
 name|next
 decl_stmt|;
-name|dev_t
-name|dev
+name|long
+name|fsid
 decl_stmt|;
 name|ino_t
 name|ino
@@ -335,6 +342,9 @@ decl_stmt|;
 name|long
 name|fileid
 decl_stmt|;
+name|mode_t
+name|mode
+decl_stmt|;
 name|u_long
 name|size
 decl_stmt|;
@@ -344,6 +354,12 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notdef
+end_ifdef
 
 begin_decl_stmt
 name|struct
@@ -358,6 +374,11 @@ block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -483,8 +504,6 @@ name|optind
 decl_stmt|;
 name|int
 name|ch
-decl_stmt|,
-name|size
 decl_stmt|;
 name|char
 modifier|*
@@ -584,9 +603,6 @@ argument_list|)
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -747,6 +763,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|notdef
 if|if
 condition|(
 name|kvm_nlist
@@ -757,14 +776,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: no namelist: %s\n"
+literal|"fstat: no namelist: %s\n"
 argument_list|,
 name|kvm_geterr
 argument_list|()
@@ -776,6 +792,8 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|kvm_getprocs
@@ -811,7 +829,7 @@ name|nflg
 condition|)
 name|fputs
 argument_list|(
-literal|"USER     CMD        PID   FD FST  DEV    INUM TYPE SZ|DV"
+literal|"USER     CMD        PID   FD  DEV    INUM       MODE SZ|DV"
 argument_list|,
 name|stdout
 argument_list|)
@@ -819,7 +837,7 @@ expr_stmt|;
 else|else
 name|fputs
 argument_list|(
-literal|"USER     CMD        PID   FD FST MNT        INUM TYPE SZ|DV"
+literal|"USER     CMD        PID   FD MOUNT      INUM MODE         SZ|DV"
 argument_list|,
 name|stdout
 argument_list|)
@@ -930,11 +948,6 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|char
-modifier|*
-name|user_from_uid
-parameter_list|()
-function_decl|;
 name|struct
 name|file
 name|file
@@ -954,6 +967,12 @@ name|vnode
 modifier|*
 name|xvptr
 decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|user_from_uid
+parameter_list|()
+function_decl|;
 name|Uname
 operator|=
 name|user_from_uid
@@ -1260,28 +1279,27 @@ name|NULL
 decl_stmt|;
 name|char
 modifier|*
-name|fstype
+name|badtype
+init|=
+name|NULL
 decl_stmt|;
 name|char
 modifier|*
 name|getmnton
-argument_list|()
-decl_stmt|,
-modifier|*
-name|vtype
-argument_list|()
-decl_stmt|;
-name|int
-name|nodata
-init|=
-literal|0
-decl_stmt|;
+parameter_list|()
+function_decl|;
 specifier|extern
 name|char
 modifier|*
 name|devname
 parameter_list|()
 function_decl|;
+name|char
+name|mode
+index|[
+literal|15
+index|]
+decl_stmt|;
 if|if
 condition|(
 name|kvm_read
@@ -1321,6 +1339,38 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|vn
+operator|.
+name|v_type
+operator|==
+name|VNON
+operator|||
+name|vn
+operator|.
+name|v_tag
+operator|==
+name|VT_NON
+condition|)
+name|badtype
+operator|=
+literal|"none"
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|vn
+operator|.
+name|v_type
+operator|==
+name|VBAD
+condition|)
+name|badtype
+operator|=
+literal|"bad"
+expr_stmt|;
+else|else
 switch|switch
 condition|(
 name|vn
@@ -1329,24 +1379,8 @@ name|v_tag
 condition|)
 block|{
 case|case
-name|VT_NON
-case|:
-name|fstype
-operator|=
-literal|" non"
-expr_stmt|;
-name|nodata
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-case|case
 name|VT_UFS
 case|:
-name|fstype
-operator|=
-literal|" ufs"
-expr_stmt|;
 name|ufs_filestat
 argument_list|(
 operator|&
@@ -1360,10 +1394,6 @@ break|break;
 case|case
 name|VT_MFS
 case|:
-name|fstype
-operator|=
-literal|" mfs"
-expr_stmt|;
 name|ufs_filestat
 argument_list|(
 operator|&
@@ -1377,10 +1407,6 @@ break|break;
 case|case
 name|VT_NFS
 case|:
-name|fstype
-operator|=
-literal|" nfs"
-expr_stmt|;
 name|nfs_filestat
 argument_list|(
 operator|&
@@ -1402,20 +1428,16 @@ index|]
 decl_stmt|;
 name|sprintf
 argument_list|(
-name|fstype
+name|badtype
 operator|=
 name|unknown
 argument_list|,
-literal|" ?%d"
+literal|"?(%x)"
 argument_list|,
 name|vn
 operator|.
 name|v_tag
 argument_list|)
-expr_stmt|;
-name|nodata
-operator|=
-literal|1
 expr_stmt|;
 break|break;
 empty_stmt|;
@@ -1438,7 +1460,7 @@ name|d
 decl_stmt|;
 if|if
 condition|(
-name|nodata
+name|badtype
 condition|)
 return|return;
 for|for
@@ -1461,7 +1483,7 @@ if|if
 condition|(
 name|d
 operator|->
-name|dev
+name|fsid
 operator|==
 name|fst
 operator|.
@@ -1515,21 +1537,19 @@ argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
-name|fputs
-argument_list|(
-name|fstype
-argument_list|,
-name|stdout
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|nodata
+name|badtype
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
-literal|" -       -    -    -\n"
+literal|" -         -  %10s    -\n"
+argument_list|,
+name|badtype
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1538,6 +1558,9 @@ if|if
 condition|(
 name|nflg
 condition|)
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|" %2d,%-2d"
@@ -1558,6 +1581,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|" %-8s"
@@ -1570,20 +1596,46 @@ name|v_mount
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|nflg
+condition|)
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|mode
+argument_list|,
+literal|"%o"
+argument_list|,
+name|fst
+operator|.
+name|mode
+argument_list|)
+expr_stmt|;
+else|else
+name|strmode
+argument_list|(
+name|fst
+operator|.
+name|mode
+argument_list|,
+name|mode
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
-literal|" %6d %3s"
+literal|" %6d %10s"
 argument_list|,
 name|fst
 operator|.
 name|fileid
 argument_list|,
-name|vtype
-argument_list|(
-name|vn
-operator|.
-name|v_type
-argument_list|)
+name|mode
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -1736,12 +1788,11 @@ name|fsp
 operator|->
 name|fsid
 operator|=
-operator|(
-name|long
-operator|)
 name|ip
 operator|->
 name|i_dev
+operator|&
+literal|0xffff
 expr_stmt|;
 name|fsp
 operator|->
@@ -1753,6 +1804,17 @@ operator|)
 name|ip
 operator|->
 name|i_number
+expr_stmt|;
+name|fsp
+operator|->
+name|mode
+operator|=
+operator|(
+name|mode_t
+operator|)
+name|ip
+operator|->
+name|i_mode
 expr_stmt|;
 name|fsp
 operator|->
@@ -1803,6 +1865,7 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
 name|struct
 name|nfsnode
 modifier|*
@@ -1812,6 +1875,10 @@ name|VTONFS
 argument_list|(
 name|vp
 argument_list|)
+decl_stmt|;
+specifier|register
+name|mode_t
+name|mode
 decl_stmt|;
 name|fsp
 operator|->
@@ -1850,6 +1917,88 @@ operator|->
 name|n_vattr
 operator|.
 name|va_rdev
+expr_stmt|;
+name|mode
+operator|=
+operator|(
+name|mode_t
+operator|)
+name|np
+operator|->
+name|n_vattr
+operator|.
+name|va_mode
+expr_stmt|;
+switch|switch
+condition|(
+name|vp
+operator|->
+name|v_type
+condition|)
+block|{
+case|case
+name|VREG
+case|:
+name|mode
+operator||=
+name|S_IFREG
+expr_stmt|;
+break|break;
+case|case
+name|VDIR
+case|:
+name|mode
+operator||=
+name|S_IFDIR
+expr_stmt|;
+break|break;
+case|case
+name|VBLK
+case|:
+name|mode
+operator||=
+name|S_IFBLK
+expr_stmt|;
+break|break;
+case|case
+name|VCHR
+case|:
+name|mode
+operator||=
+name|S_IFCHR
+expr_stmt|;
+break|break;
+case|case
+name|VLNK
+case|:
+name|mode
+operator||=
+name|S_IFLNK
+expr_stmt|;
+break|break;
+case|case
+name|VSOCK
+case|:
+name|mode
+operator||=
+name|S_IFSOCK
+expr_stmt|;
+break|break;
+case|case
+name|VFIFO
+case|:
+name|mode
+operator||=
+name|S_IFIFO
+expr_stmt|;
+break|break;
+block|}
+empty_stmt|;
+name|fsp
+operator|->
+name|mode
+operator|=
+name|mode
 expr_stmt|;
 block|}
 end_block
@@ -2023,7 +2172,7 @@ argument_list|(
 operator|&
 name|mount
 operator|.
-name|m_stat
+name|mnt_stat
 operator|.
 name|f_mntonname
 index|[
@@ -2058,124 +2207,6 @@ operator|->
 name|mntonname
 operator|)
 return|;
-block|}
-end_function
-
-begin_function
-name|char
-modifier|*
-name|vtype
-parameter_list|(
-name|type
-parameter_list|)
-name|enum
-name|vtype
-name|type
-decl_stmt|;
-block|{
-switch|switch
-condition|(
-name|type
-condition|)
-block|{
-case|case
-name|VNON
-case|:
-return|return
-operator|(
-literal|"non"
-operator|)
-return|;
-case|case
-name|VREG
-case|:
-return|return
-operator|(
-literal|"reg"
-operator|)
-return|;
-case|case
-name|VDIR
-case|:
-return|return
-operator|(
-literal|"dir"
-operator|)
-return|;
-case|case
-name|VBLK
-case|:
-return|return
-operator|(
-literal|"blk"
-operator|)
-return|;
-case|case
-name|VCHR
-case|:
-return|return
-operator|(
-literal|"chr"
-operator|)
-return|;
-case|case
-name|VLNK
-case|:
-return|return
-operator|(
-literal|"lnk"
-operator|)
-return|;
-case|case
-name|VSOCK
-case|:
-return|return
-operator|(
-literal|"soc"
-operator|)
-return|;
-case|case
-name|VFIFO
-case|:
-return|return
-operator|(
-literal|"fif"
-operator|)
-return|;
-case|case
-name|VBAD
-case|:
-return|return
-operator|(
-literal|"bad"
-operator|)
-return|;
-default|default:
-block|{
-specifier|static
-name|char
-name|unknown
-index|[
-literal|10
-index|]
-decl_stmt|;
-name|sprintf
-argument_list|(
-name|unknown
-argument_list|,
-literal|"?%d"
-argument_list|,
-name|type
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|unknown
-operator|)
-return|;
-block|}
-block|}
-comment|/*NOTREACHED*/
 block|}
 end_function
 
@@ -2306,7 +2337,9 @@ argument_list|,
 name|sock
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|bad
+goto|;
 block|}
 comment|/* fill in protosw entry */
 if|if
@@ -2352,7 +2385,9 @@ operator|.
 name|so_proto
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|bad
+goto|;
 block|}
 comment|/* fill in domain */
 if|if
@@ -2398,7 +2433,9 @@ operator|.
 name|pr_domain
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|bad
+goto|;
 block|}
 comment|/* 	 * grab domain name 	 * kludge "internet" --> "inet" for brevity 	 */
 if|if
@@ -2409,9 +2446,6 @@ name|dom_family
 operator|==
 name|AF_INET
 condition|)
-operator|(
-name|void
-operator|)
 name|strcpy
 argument_list|(
 name|dname
@@ -2488,9 +2522,6 @@ name|so_type
 operator|>
 name|STYPEMAX
 condition|)
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"* %s ?%d"
@@ -2503,9 +2534,6 @@ name|so_type
 argument_list|)
 expr_stmt|;
 else|else
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"* %s %s"
@@ -2597,11 +2625,10 @@ operator|.
 name|so_pcb
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|bad
+goto|;
 block|}
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|" %x"
@@ -2623,9 +2650,6 @@ name|so
 operator|.
 name|so_pcb
 condition|)
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|" %x"
@@ -2650,9 +2674,6 @@ operator|.
 name|so_pcb
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|" %x"
@@ -2708,7 +2729,9 @@ operator|.
 name|so_pcb
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|bad
+goto|;
 block|}
 if|if
 condition|(
@@ -2775,9 +2798,6 @@ name|cp
 operator|=
 literal|'\0'
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|" %s %x"
@@ -2797,9 +2817,6 @@ block|}
 break|break;
 default|default:
 comment|/* print protocol number and socket address */
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|" %d %x"
@@ -2815,12 +2832,17 @@ name|sock
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"\n"
+argument_list|)
+expr_stmt|;
+return|return;
+name|bad
+label|:
+name|printf
+argument_list|(
+literal|"* error\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2927,9 +2949,6 @@ literal|"raw"
 expr_stmt|;
 break|break;
 default|default:
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|" %d"
@@ -2939,9 +2958,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|" %s"
@@ -2992,9 +3008,6 @@ name|statbuf
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -3036,9 +3049,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -3072,11 +3082,13 @@ name|st_ino
 expr_stmt|;
 name|cur
 operator|->
-name|dev
+name|fsid
 operator|=
 name|statbuf
 operator|.
 name|st_dev
+operator|&
+literal|0xffff
 expr_stmt|;
 name|cur
 operator|->
