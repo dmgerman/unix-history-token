@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*  * Copyright (c) 1987, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1987, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1987, 1993, 1994\n\ 	The Regents of the University of California.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ln.c	8.1 (Berkeley) %G%"
+literal|"@(#)ln.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -104,16 +104,45 @@ end_include
 begin_decl_stmt
 name|int
 name|dirflag
-decl_stmt|,
-comment|/* Undocumented force flag. */
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Undocumented directory flag. */
+end_comment
+
+begin_decl_stmt
+name|int
+name|fflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Unlink existing files. */
+end_comment
+
+begin_decl_stmt
+name|int
 name|sflag
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Symbolic, not hard, link. */
+end_comment
+
+begin_comment
 comment|/* System link call. */
+end_comment
+
+begin_macro
+name|int
 argument_list|(
-operator|*
-name|linkf
+argument|*linkf
 argument_list|)
+end_macro
+
+begin_expr_stmt
 name|__P
 argument_list|(
 operator|(
@@ -126,11 +155,10 @@ name|char
 operator|*
 operator|)
 argument_list|)
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
-specifier|static
 name|int
 name|linkit
 name|__P
@@ -149,7 +177,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|void
 name|usage
 name|__P
@@ -206,7 +233,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Fs"
+literal|"Ffs"
 argument_list|)
 operator|)
 operator|!=
@@ -214,9 +241,6 @@ name|EOF
 condition|)
 switch|switch
 condition|(
-operator|(
-name|char
-operator|)
 name|ch
 condition|)
 block|{
@@ -224,6 +248,15 @@ case|case
 literal|'F'
 case|:
 name|dirflag
+operator|=
+literal|1
+expr_stmt|;
+comment|/* XXX: deliberately undocumented. */
+break|break;
+case|case
+literal|'f'
+case|:
+name|fflag
 operator|=
 literal|1
 expr_stmt|;
@@ -390,7 +423,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|linkit
 parameter_list|(
@@ -421,14 +453,17 @@ name|struct
 name|stat
 name|sb
 decl_stmt|;
+name|int
+name|exists
+decl_stmt|;
 name|char
+modifier|*
+name|p
+decl_stmt|,
 name|path
 index|[
 name|MAXPATHLEN
 index|]
-decl_stmt|,
-modifier|*
-name|p
 decl_stmt|;
 if|if
 condition|(
@@ -436,7 +471,7 @@ operator|!
 name|sflag
 condition|)
 block|{
-comment|/* if target doesn't exist, quit now */
+comment|/* If target doesn't exist, quit now. */
 if|if
 condition|(
 name|stat
@@ -461,7 +496,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* only symbolic links to directories, unless -F option used */
+comment|/* Only symbolic links to directories, unless -F option used. */
 if|if
 condition|(
 operator|!
@@ -492,11 +527,14 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* if the source is a directory, append the target's name */
+comment|/* If the source is a directory, append the target's name. */
 if|if
 condition|(
 name|isdir
 operator|||
+operator|(
+name|exists
+operator|=
 operator|!
 name|stat
 argument_list|(
@@ -505,21 +543,18 @@ argument_list|,
 operator|&
 name|sb
 argument_list|)
+operator|)
 operator|&&
-operator|(
+name|S_ISDIR
+argument_list|(
 name|sb
 operator|.
 name|st_mode
-operator|&
-name|S_IFMT
-operator|)
-operator|==
-name|S_IFDIR
+argument_list|)
 condition|)
 block|{
 if|if
 condition|(
-operator|!
 operator|(
 name|p
 operator|=
@@ -530,6 +565,8 @@ argument_list|,
 literal|'/'
 argument_list|)
 operator|)
+operator|==
+name|NULL
 condition|)
 name|p
 operator|=
@@ -562,9 +599,42 @@ name|source
 operator|=
 name|path
 expr_stmt|;
+name|exists
+operator|=
+operator|!
+name|stat
+argument_list|(
+name|source
+argument_list|,
+operator|&
+name|sb
+argument_list|)
+expr_stmt|;
 block|}
+else|else
+name|exists
+operator|=
+operator|!
+name|stat
+argument_list|(
+name|source
+argument_list|,
+operator|&
+name|sb
+argument_list|)
+expr_stmt|;
+comment|/* 	 * If the file exists, and -f was specified, unlink it. 	 * Attempt the link. 	 */
 if|if
 condition|(
+name|fflag
+operator|&&
+name|exists
+operator|&&
+name|unlink
+argument_list|(
+name|source
+argument_list|)
+operator|||
 call|(
 modifier|*
 name|linkf
@@ -598,7 +668,6 @@ block|}
 end_block
 
 begin_function
-specifier|static
 name|void
 name|usage
 parameter_list|()
@@ -610,7 +679,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage:\tln [-s] file1 file2\n\tln [-s] file ... directory\n"
+literal|"usage:\tln [-fs] file1 file2\n\tln [-fs] file ... directory\n"
 argument_list|)
 expr_stmt|;
 name|exit
