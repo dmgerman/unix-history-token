@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.54 (Berkeley) %G%"
+literal|"@(#)ls.c	5.55 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -119,7 +119,6 @@ file|"extern.h"
 end_include
 
 begin_decl_stmt
-specifier|static
 name|void
 name|display
 name|__P
@@ -138,7 +137,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|int
 name|mastercmp
 name|__P
@@ -159,7 +157,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|void
 name|traverse
 name|__P
@@ -278,16 +275,6 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|f_ignorelink
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* indirect through symbolic link operands */
-end_comment
-
-begin_decl_stmt
-name|int
 name|f_inode
 decl_stmt|;
 end_decl_stmt
@@ -304,16 +291,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* print size in kilobytes */
-end_comment
-
-begin_decl_stmt
-name|int
-name|f_listalldot
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* list . and .. as well */
 end_comment
 
 begin_decl_stmt
@@ -344,16 +321,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* long listing format */
-end_comment
-
-begin_decl_stmt
-name|int
-name|f_needstat
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* need stat(2) information */
 end_comment
 
 begin_decl_stmt
@@ -477,7 +444,7 @@ comment|/* add type character for non-regular files */
 end_comment
 
 begin_function
-name|void
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -587,7 +554,7 @@ literal|1
 expr_stmt|;
 name|fts_options
 operator|=
-literal|0
+name|FTS_PHYSICAL
 expr_stmt|;
 while|while
 condition|(
@@ -691,9 +658,14 @@ break|break;
 case|case
 literal|'L'
 case|:
-name|f_ignorelink
-operator|=
-literal|1
+name|fts_options
+operator|&=
+operator|~
+name|FTS_PHYSICAL
+expr_stmt|;
+name|fts_options
+operator||=
+name|FTS_LOGICAL
 expr_stmt|;
 break|break;
 case|case
@@ -710,10 +682,6 @@ case|:
 name|fts_options
 operator||=
 name|FTS_SEEDOT
-expr_stmt|;
-name|f_listalldot
-operator|=
-literal|1
 expr_stmt|;
 comment|/* FALLTHROUGH */
 case|case
@@ -846,20 +814,19 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* If options require that the files be stat'ed. */
-name|f_needstat
-operator|=
-name|f_longform
-operator|||
-name|f_timesort
-operator|||
-name|f_size
-operator|||
-name|f_type
-expr_stmt|;
 if|if
 condition|(
 operator|!
-name|f_needstat
+name|f_longform
+operator|&&
+operator|!
+name|f_size
+operator|&&
+operator|!
+name|f_timesort
+operator|&&
+operator|!
+name|f_type
 condition|)
 name|fts_options
 operator||=
@@ -964,22 +931,6 @@ name|printfcn
 operator|=
 name|printcol
 expr_stmt|;
-comment|/* If -l or -F, and not ignoring the link, use lstat(). */
-name|fts_options
-operator||=
-operator|(
-name|f_longform
-operator|||
-name|f_type
-operator|)
-operator|&&
-operator|!
-name|f_ignorelink
-condition|?
-name|FTS_PHYSICAL
-else|:
-name|FTS_LOGICAL
-expr_stmt|;
 if|if
 condition|(
 name|argc
@@ -1030,23 +981,11 @@ expr_stmt|;
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|IS_DDOT
-parameter_list|(
-name|name
-parameter_list|)
-define|\
-value|((name)[0] == '.'&& ((name)[1] == '\0' || \ 	    ((name)[1] == '.'&& (name)[2] == '\0')))
-end_define
-
 begin_comment
 comment|/*  * Traverse() walks the logical directory structure specified by the argv list  * in the order specified by the mastercmp() comparison function.  During the  * traversal it passes linked lists of structures to display() which represent  * a superset (may be exact set) of the files to be displayed.  */
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|traverse
 parameter_list|(
@@ -1076,11 +1015,6 @@ specifier|register
 name|FTSENT
 modifier|*
 name|p
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|name
 decl_stmt|;
 specifier|register
 name|int
@@ -1195,38 +1129,17 @@ break|break;
 case|case
 name|FTS_D
 case|:
-name|name
-operator|=
-name|p
-operator|->
-name|fts_name
-expr_stmt|;
-name|is_ddot
-operator|=
-name|IS_DDOT
-argument_list|(
-name|name
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-operator|!
-name|is_ddot
-operator|||
-operator|(
-name|is_ddot
-operator|&&
 name|p
 operator|->
 name|fts_level
-operator|==
+operator|!=
 name|FTS_ROOTLEVEL
-operator|)
-condition|)
-block|{
-if|if
-condition|(
-name|name
+operator|&&
+name|p
+operator|->
+name|fts_name
 index|[
 literal|0
 index|]
@@ -1235,15 +1148,6 @@ literal|'.'
 operator|&&
 operator|!
 name|f_listdot
-operator|&&
-operator|!
-name|is_ddot
-operator|&&
-name|p
-operator|->
-name|fts_level
-operator|!=
-name|FTS_ROOTLEVEL
 condition|)
 break|break;
 name|display
@@ -1275,7 +1179,6 @@ argument_list|,
 name|FTS_SKIP
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 block|}
 operator|(
@@ -1294,7 +1197,6 @@ comment|/*  * Display() takes a linked list of FTSENT structures and based on th
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|display
 parameter_list|(
@@ -1408,17 +1310,9 @@ name|FTS_ERR
 operator|||
 name|cur
 operator|->
-name|fts_errno
-operator|==
-name|ENOENT
-operator|||
-name|cur
-operator|->
 name|fts_info
 operator|==
 name|FTS_NS
-operator|&&
-name|f_needstat
 condition|)
 block|{
 name|err
@@ -1562,17 +1456,9 @@ name|FTS_ERR
 operator|||
 name|cur
 operator|->
-name|fts_errno
-operator|==
-name|ENOENT
-operator|||
-name|cur
-operator|->
 name|fts_info
 operator|==
 name|FTS_NS
-operator|&&
-name|f_needstat
 condition|)
 block|{
 name|err
@@ -1601,7 +1487,7 @@ name|NO_PRINT
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 			 * If file is dot file and no -a or -A is set, 			 * do not display. 			 */
+comment|/* Don't display dot file if -a/-A not set. */
 if|if
 condition|(
 name|cur
@@ -1702,7 +1588,6 @@ comment|/*  * Ordering for mastercmp:  * If ordering the argv (fts_level = FTS_R
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|mastercmp
 parameter_list|(
@@ -1772,9 +1657,6 @@ operator|)
 return|;
 if|if
 condition|(
-name|f_needstat
-operator|&&
-operator|(
 name|a_info
 operator|==
 name|FTS_NS
@@ -1782,7 +1664,6 @@ operator|||
 name|b_info
 operator|==
 name|FTS_NS
-operator|)
 condition|)
 return|return
 operator|(
