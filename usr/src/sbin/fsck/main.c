@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	1.29 (Berkeley) %G%"
+literal|"@(#)main.c	1.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -8882,8 +8882,11 @@ operator|.
 name|fs_bsize
 argument_list|)
 expr_stmt|;
-name|getblk
+name|bread
 argument_list|(
+operator|&
+name|dfile
+argument_list|,
 operator|(
 name|char
 operator|*
@@ -8894,6 +8897,11 @@ name|fs_csp
 index|[
 name|i
 index|]
+argument_list|,
+name|fsbtodb
+argument_list|(
+operator|&
+name|sblock
 argument_list|,
 name|sblock
 operator|.
@@ -8906,6 +8914,7 @@ name|sblock
 operator|.
 name|fs_frag
 operator|)
+argument_list|)
 argument_list|,
 name|sblock
 operator|.
