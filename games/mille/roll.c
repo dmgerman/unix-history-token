@@ -62,12 +62,6 @@ name|reg
 name|int
 name|tot
 decl_stmt|;
-specifier|extern
-name|unsigned
-name|int
-name|random
-parameter_list|()
-function_decl|;
 name|tot
 operator|=
 literal|0
