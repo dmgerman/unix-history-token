@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)csh.c	5.27 (Berkeley) %G%"
+literal|"@(#)csh.c	5.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4752,7 +4752,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * When didfds is set, we do I/O from 0, 1, 2 otherwise from 15, 16, 17  * We alsocheck if the shell has already chenged the decriptor to point to  * 0, 1, 2 when didfds is set.  */
+comment|/*  * When didfds is set, we do I/O from 0, 1, 2 otherwise from 15, 16, 17  * We also check if the shell has already changed the decriptor to point to  * 0, 1, 2 when didfds is set.  */
 end_comment
 
 begin_define
