@@ -1005,11 +1005,9 @@ begin_function
 name|int
 name|mii_anar
 parameter_list|(
-name|media
-parameter_list|)
 name|int
 name|media
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|rv
@@ -1114,11 +1112,9 @@ begin_function
 name|int
 name|mii_media_from_bmcr
 parameter_list|(
-name|bmcr
-parameter_list|)
 name|int
 name|bmcr
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|rv
