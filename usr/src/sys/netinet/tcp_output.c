@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_output.c	7.27 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_output.c	7.28 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -748,7 +748,18 @@ condition|(
 name|flags
 operator|&
 name|TH_SYN
-operator|&&
+condition|)
+block|{
+name|tp
+operator|->
+name|snd_nxt
+operator|=
+name|tp
+operator|->
+name|iss
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|tp
 operator|->
@@ -884,6 +895,7 @@ name|optlen
 operator|+=
 literal|4
 expr_stmt|;
+block|}
 block|}
 block|}
 comment|/* 	 * Send a timestamp and echo-reply if this is a SYN and our side  	 * wants to use timestamps (TF_REQ_TSTMP is set) or both our side 	 * and our peer have sent timestamps in our SYN's.  	 */
