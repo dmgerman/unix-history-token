@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.35	81/06/10	*/
+comment|/*	conf.c	4.36	81/07/01	*/
 end_comment
 
 begin_include
@@ -1644,9 +1644,11 @@ end_include
 begin_if
 if|#
 directive|if
+operator|(
 name|NEN
 operator|>
 literal|0
+operator|)
 operator|&&
 operator|!
 name|defined
