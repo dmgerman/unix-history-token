@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * mkmakefile.c	1.12	81/10/12  *	Functions in this file build the makefile from the files list  *	and the information in the config table  */
+comment|/*  * mkmakefile.c	1.13	82/04/01  *	Functions in this file build the makefile from the files list  *	and the information in the config table  */
 end_comment
 
 begin_include
@@ -1615,7 +1615,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"%s: makefile locore.o ${OBJS} ioconf.o param.o swap%s.o\n"
+literal|"%s: touch makefile locore.o ${OBJS} ioconf.o param.o swap%s.o\n"
 argument_list|,
 name|fl
 operator|->
