@@ -453,6 +453,10 @@ operator|+=
 literal|131
 expr_stmt|;
 comment|/* A prime roughly G_BDE_MKEYLEN / 2 */
+name|w
+operator|>>=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|t
