@@ -1915,9 +1915,6 @@ operator|->
 name|type
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|notdef
 case|case
 name|SYS_RES_IOPORT
 case|:
@@ -1954,8 +1951,6 @@ operator|->
 name|count
 expr_stmt|;
 break|break;
-endif|#
-directive|endif
 case|case
 name|SYS_RES_MEMORY
 case|:
