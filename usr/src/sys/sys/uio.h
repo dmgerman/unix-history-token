@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uio.h	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)uio.h	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -85,6 +85,11 @@ decl_stmt|;
 name|enum
 name|uio_rw
 name|uio_rw
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|uio_procp
 decl_stmt|;
 block|}
 struct|;
