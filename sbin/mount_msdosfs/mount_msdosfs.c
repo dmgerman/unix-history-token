@@ -54,12 +54,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/module.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/iconv.h>
 end_include
 
@@ -67,6 +61,12 @@ begin_include
 include|#
 directive|include
 file|<sys/linker.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/module.h>
 end_include
 
 begin_include
@@ -1528,11 +1528,11 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: mount_msdosfs [-o options] [-u user] [-g group] [-m mask] [-M mask]"
+literal|"usage: mount_msdosfs [-9ls] [-D DOS_codepage] [-g gid] [-L locale]"
 argument_list|,
-literal|"                     [-s] [-l] [-9] [-L locale] [-D dos-codepage] [-W table]"
+literal|"                     [-M mask] [-m mask] [-o options] [-u uid]"
 argument_list|,
-literal|"                     bdev dir"
+literal|"		      [-W table] special node"
 argument_list|)
 expr_stmt|;
 else|#
@@ -1541,11 +1541,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n%s\n"
+literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: mount_msdosfs [-o options] [-u user] [-g group] [-m mask] [-M mask]"
+literal|"usage: mount_msdosfs [-9ls] [-D DOS_codepage] [-g gid] [-L locale]"
 argument_list|,
-literal|"                     [-s] [-l] [-9] [-L locale] [-D dos-codepage] bdev dir"
+literal|"                     [-M mask] [-m mask] [-o options] [-u uid]"
+argument_list|,
+literal|"		      special node"
 argument_list|)
 expr_stmt|;
 endif|#
