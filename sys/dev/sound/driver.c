@@ -318,9 +318,21 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/* MODULE_DEPEND(snd_driver, snd_via82c686, 1, 1, 1); */
-end_comment
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|snd_driver
+argument_list|,
+name|snd_via82c686
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 
