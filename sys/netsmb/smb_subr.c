@@ -892,6 +892,10 @@ case|case
 literal|66
 case|:
 comment|/* nt returns it when share not available */
+case|case
+literal|67
+case|:
+comment|/* observed from nt4sp6 when sharename wrong */
 return|return
 name|ENOENT
 return|;
