@@ -16,8 +16,17 @@ name|_SYS_SCHED_H_
 end_define
 
 begin_comment
-comment|/*  * General scheduling info.  */
+comment|/*  * General scheduling info.  *  * sched_load:  *	Total runnable non-ithread threads in the system.  *  * sched_runnable:  *	Runnable threads for this processor.  */
 end_comment
+
+begin_function_decl
+name|int
+name|sched_load
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int
