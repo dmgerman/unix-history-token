@@ -3082,12 +3082,8 @@ break|break;
 case|case
 name|FIOASYNC
 case|:
-comment|/*set/clear async i/o */
-name|printf
-argument_list|(
-literal|"FIOASYNC\n"
-argument_list|)
-expr_stmt|;
+comment|/* set/clear async i/o */
+comment|/* do nothing, this is called from kern_descrip.c for fcntl() */
 break|break;
 case|case
 name|SNDCTL_DSP_NONBLOCK
