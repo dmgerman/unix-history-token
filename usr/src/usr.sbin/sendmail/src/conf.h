@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.102 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.103 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -4231,6 +4231,40 @@ define|#
 directive|define
 name|GETSHORT
 value|_getshort
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* **  NCR 3000 Series (SysVr4) ** **	From From: Kevin Darcy<kevin@tech.mis.cfc.com>. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NCR3000
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|__svr4__
+end_define
+
+begin_undef
+undef|#
+directive|undef
+name|BSD
+end_undef
+
+begin_define
+define|#
+directive|define
+name|LA_AVENRUN
+value|"avenrun"
 end_define
 
 begin_endif
