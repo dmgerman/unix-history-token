@@ -38,48 +38,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|"yp_extern.h"
+file|<rpc/svc_dg.h>
 end_include
 
-begin_comment
-comment|/*  * XXX Must not diverge from what's in src/lib/libc/rpc/svc_udp.c  */
-end_comment
-
-begin_comment
-comment|/*  * kept in xprt->xp_p2  */
-end_comment
-
-begin_struct
-struct|struct
-name|svcudp_data
-block|{
-name|u_int
-name|su_iosz
-decl_stmt|;
-comment|/* byte size of send.recv buffer */
-name|u_long
-name|su_xid
-decl_stmt|;
-comment|/* transaction id */
-name|XDR
-name|su_xdrs
-decl_stmt|;
-comment|/* XDR handle */
-name|char
-name|su_verfbody
-index|[
-name|MAX_AUTH_BYTES
-index|]
-decl_stmt|;
-comment|/* verifier body */
-name|char
-modifier|*
-name|su_cache
-decl_stmt|;
-comment|/* cached data, NULL if no cache */
-block|}
-struct|;
-end_struct
+begin_include
+include|#
+directive|include
+file|"yp_extern.h"
+end_include
 
 begin_define
 define|#
@@ -88,7 +54,7 @@ name|su_data
 parameter_list|(
 name|xprt
 parameter_list|)
-value|((struct svcudp_data *)(xprt->xp_p2))
+value|((struct svc_dg_data *)(xprt->xp_p2))
 end_define
 
 begin_comment
@@ -108,7 +74,7 @@ name|xprt
 decl_stmt|;
 block|{
 name|struct
-name|svcudp_data
+name|svc_dg_data
 modifier|*
 name|su
 decl_stmt|;
@@ -159,7 +125,7 @@ name|xid
 decl_stmt|;
 block|{
 name|struct
-name|svcudp_data
+name|svc_dg_data
 modifier|*
 name|su
 decl_stmt|;
