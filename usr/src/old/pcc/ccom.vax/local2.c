@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)local2.c	1.17 (Berkeley) %G%"
+literal|"@(#)local2.c	1.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,6 +74,10 @@ name|n
 parameter_list|)
 value|((1L<<n)-1)
 end_define
+
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
 
 begin_macro
 name|where
@@ -829,7 +833,7 @@ block|{
 specifier|register
 name|m
 expr_stmt|;
-name|CONSZ
+name|int
 name|val
 decl_stmt|;
 switch|switch
@@ -3180,6 +3184,10 @@ empty_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_macro
 name|rewfld
 argument_list|(
@@ -3203,6 +3211,10 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
 
 begin_macro
 name|callreg
@@ -3874,10 +3886,6 @@ name|NODE
 modifier|*
 name|t
 decl_stmt|;
-specifier|register
-name|int
-name|i
-decl_stmt|;
 name|NODE
 modifier|*
 name|f
@@ -4014,6 +4022,11 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|FLEXNAMES
+block|{
+specifier|register
+name|int
+name|i
+decl_stmt|;
 for|for
 control|(
 name|i
@@ -4045,6 +4058,7 @@ index|[
 name|i
 index|]
 expr_stmt|;
+block|}
 else|#
 directive|else
 name|p
@@ -4746,17 +4760,19 @@ begin_comment
 comment|/*ARGSUSED*/
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|insput
 argument_list|(
-name|p
+argument|p
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|NODE
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -4772,19 +4788,21 @@ begin_comment
 comment|/*ARGSUSED*/
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|upput
 argument_list|(
-name|p
+argument|p
 argument_list|,
-name|off
+argument|off
 argument_list|)
-specifier|register
+end_macro
+
+begin_decl_stmt
 name|NODE
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -5501,6 +5519,10 @@ begin_comment
 comment|/* tbl */
 end_comment
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_expr_stmt
 name|gencall
 argument_list|(
@@ -5811,6 +5833,10 @@ begin_comment
 comment|/* tbl */
 end_comment
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_macro
 name|cbgen
 argument_list|(
@@ -5964,6 +5990,10 @@ return|;
 block|}
 end_block
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_macro
 name|lastchance
 argument_list|(
@@ -6013,11 +6043,6 @@ name|l
 decl_stmt|,
 modifier|*
 name|r
-decl_stmt|;
-name|int
-name|m
-decl_stmt|,
-name|ml
 decl_stmt|;
 switch|switch
 condition|(
@@ -6315,6 +6340,23 @@ operator|.
 name|op
 operator|==
 name|PCONV
+operator|||
+name|l
+operator|->
+name|in
+operator|.
+name|op
+operator|==
+name|CALL
+operator|||
+name|l
+operator|->
+name|in
+operator|.
+name|op
+operator|==
+name|UNARY
+name|CALL
 condition|)
 return|return;
 comment|/* Only trust it to get it right if the size is the same */
@@ -6452,6 +6494,10 @@ break|break;
 block|}
 block|}
 end_block
+
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
 
 begin_function
 name|NODE
