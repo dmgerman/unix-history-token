@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)newfs.c	6.24 (Berkeley) %G%"
+literal|"@(#)newfs.c	6.22.1.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2122,6 +2122,10 @@ name|lp
 operator|->
 name|d_trkseek
 expr_stmt|;
+comment|/* Reno fix: label may be 0 if faked up by kernel */
+ifdef|#
+directive|ifdef
+name|notdef
 ifdef|#
 directive|ifdef
 name|notdef
@@ -2138,6 +2142,8 @@ name|lp
 operator|->
 name|d_sbsize
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 name|oldpartition
