@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)in.h	6.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)in.h	6.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -9,6 +9,17 @@ end_comment
 
 begin_comment
 comment|/*  * Protocols  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_IP
+value|0
+end_define
+
+begin_comment
+comment|/* dummy for IP */
 end_comment
 
 begin_define
@@ -75,6 +86,17 @@ end_define
 
 begin_comment
 comment|/* user datagram protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPPROTO_IDP
+value|22
+end_define
+
+begin_comment
+comment|/* xns idp */
 end_comment
 
 begin_define
@@ -302,6 +324,21 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Options for use with [gs]etsockopt at the IP level.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_OPTIONS
+value|1
+end_define
+
+begin_comment
+comment|/* set/get IP per-packet options */
+end_comment
 
 begin_if
 if|#
