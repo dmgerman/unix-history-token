@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_il.c	4.3	82/05/25	*/
+comment|/*	if_il.c	4.4	82/05/27	*/
 end_comment
 
 begin_include
@@ -3137,6 +3137,19 @@ name|s_addr
 operator|=
 name|addr
 expr_stmt|;
+name|sin
+operator|->
+name|sin_addr
+operator|.
+name|s_lh
+operator|=
+name|ilifp
+operator|->
+name|if_host
+index|[
+literal|0
+index|]
+expr_stmt|;
 name|ifp
 operator|->
 name|if_net
@@ -3151,7 +3164,7 @@ name|ifp
 operator|->
 name|if_dstaddr
 operator|=
-name|ilifp
+name|ifp
 operator|->
 name|if_addr
 expr_stmt|;
