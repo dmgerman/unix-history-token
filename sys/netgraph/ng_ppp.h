@@ -30,7 +30,7 @@ begin_define
 define|#
 directive|define
 name|NGM_PPP_COOKIE
-value|940897792
+value|940897793
 end_define
 
 begin_comment
@@ -272,6 +272,10 @@ name|u_char
 name|enableProtoComp
 decl_stmt|;
 comment|/* enable protocol field compression */
+name|u_char
+name|enableACFComp
+decl_stmt|;
+comment|/* enable addr/ctrl field compression */
 name|u_int16_t
 name|mru
 decl_stmt|;
