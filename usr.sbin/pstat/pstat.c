@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pstat.c,v 1.35 1998/03/07 15:36:27 bde Exp $"
+literal|"$Id: pstat.c,v 1.36 1998/07/06 20:28:05 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2232,8 +2232,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%p %s %5s %4d %4d"
+literal|"%8lx %s %5s %4d %4d"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 operator|(
 name|void
 operator|*
@@ -2916,8 +2919,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" %p %p"
+literal|" %8lx %8lx"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 operator|(
 name|void
 operator|*
@@ -2926,6 +2932,9 @@ name|up
 operator|->
 name|un_uppervp
 argument_list|,
+operator|(
+name|u_long
+operator|)
 operator|(
 name|void
 operator|*
@@ -3723,7 +3732,7 @@ name|char
 name|hdr
 index|[]
 init|=
-literal|"  LINE RAW CAN OUT IHWT LWT OHWT LWT     COL STATE  SESS      PGID DISC\n"
+literal|"  LINE RAW CAN OUT IHIWT ILOWT OHWT LWT     COL STATE  SESS      PGID DISC\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -4849,7 +4858,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%3d %4d %3d %4d %3d %7d "
+literal|"%3d %5d %5d %4d %3d %7d "
 argument_list|,
 name|tp
 operator|->
@@ -4948,10 +4957,13 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%-6s %p"
+literal|"%-6s %8lx"
 argument_list|,
 name|state
 argument_list|,
+operator|(
+name|u_long
+operator|)
 operator|(
 name|void
 operator|*
@@ -5295,8 +5307,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%p "
+literal|"%8lx "
 argument_list|,
+operator|(
+name|u_long
+operator|)
 operator|(
 name|void
 operator|*
@@ -5449,8 +5464,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"  %8p"
+literal|"  %8lx"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 operator|(
 name|void
 operator|*
