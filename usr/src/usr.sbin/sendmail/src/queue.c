@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.30 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.31 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.30 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.31 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -4263,6 +4263,17 @@ expr_stmt|;
 comment|/* do basic system initialization */
 name|initsys
 argument_list|(
+name|e
+argument_list|)
+expr_stmt|;
+name|define
+argument_list|(
+literal|'i'
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
