@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mv.c	4.4 (Berkeley) 81/04/26"
+literal|"@(#)mv.c	4.5 (Berkeley) 82/02/11"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,12 +29,6 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/dir.h>
 end_include
 
 begin_include
@@ -1026,6 +1020,13 @@ literal|1
 operator|)
 return|;
 block|}
+name|p
+operator|=
+name|dname
+argument_list|(
+name|source
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|strlen
@@ -1035,7 +1036,10 @@ argument_list|)
 operator|>
 name|MAXN
 operator|-
-name|DIRSIZ
+name|strlen
+argument_list|(
+name|p
+argument_list|)
 operator|-
 literal|2
 condition|)
@@ -1075,10 +1079,7 @@ name|strcat
 argument_list|(
 name|buf
 argument_list|,
-name|dname
-argument_list|(
-name|source
-argument_list|)
+name|p
 argument_list|)
 expr_stmt|;
 if|if
