@@ -49,33 +49,11 @@ directive|include
 file|<net/if.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-name|__FreeBSD__
-operator|>=
-literal|3
-end_if
-
 begin_include
 include|#
 directive|include
 file|<net/if_var.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __FreeBSD__>= 3 */
-end_comment
 
 begin_include
 include|#

@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: if.h,v 1.6 2001/01/21 15:37:14 itojun Exp $	*/
+comment|/*	$KAME: if.h,v 1.10 2003/02/24 11:29:10 ono Exp $	*/
 end_comment
 
 begin_comment
