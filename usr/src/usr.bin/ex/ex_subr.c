@@ -9,7 +9,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_subr.c	6.1 %G%"
+literal|"@(#)ex_subr.c	6.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2870,10 +2870,10 @@ name|error
 argument_list|(
 literal|"Broken pipe"
 argument_list|)
+block|,
 ifndef|#
 directive|ifndef
-name|QUOTA
-block|,
+name|V6
 name|error
 argument_list|(
 literal|"Math argument"
@@ -2883,15 +2883,14 @@ name|error
 argument_list|(
 literal|"Result too large"
 argument_list|)
-else|#
-directive|else
 block|,
+endif|#
+directive|endif
 name|error
 argument_list|(
 literal|"Quota exceeded"
 argument_list|)
-endif|#
-directive|endif
+comment|/* Berkeley quota systems only */
 block|}
 block|;
 undef|#
@@ -3364,6 +3363,60 @@ name|dol
 condition|)
 name|markDOT
 argument_list|()
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * The following code is defensive programming against a bug in the  * pdp-11 overlay implementation.  Sometimes it goes nuts and asks  * for an overlay with some garbage number, which generates an emt  * trap.  This is a less than elegant solution, but it is somewhat  * better than core dumping and losing your work, leaving your tty  * in a weird state, etc.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|_ovno
+decl_stmt|;
+end_decl_stmt
+
+begin_macro
+name|onemt
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|int
+name|oovno
+decl_stmt|;
+name|signal
+argument_list|(
+name|SIGEMT
+argument_list|,
+name|onemt
+argument_list|)
+expr_stmt|;
+name|oovno
+operator|=
+name|_ovno
+expr_stmt|;
+comment|/* 2 and 3 are valid on 11/40 type vi, so */
+if|if
+condition|(
+name|_ovno
+operator|<
+literal|0
+operator|||
+name|_ovno
+operator|>
+literal|3
+condition|)
+name|_ovno
+operator|=
+literal|0
+expr_stmt|;
+name|error
+argument_list|(
+literal|"emt trap, _ovno is %d @ - try again"
+argument_list|)
 expr_stmt|;
 block|}
 end_block
