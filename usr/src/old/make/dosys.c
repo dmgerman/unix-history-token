@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dosys.c	4.4 (Berkeley) 82/06/17"
+literal|"@(#)dosys.c	4.5 (Berkeley) 82/10/19"
 decl_stmt|;
 end_decl_stmt
 
@@ -408,6 +408,13 @@ end_block
 begin_escape
 end_escape
 
+begin_define
+define|#
+directive|define
+name|MAXARGV
+value|400
+end_define
+
 begin_expr_stmt
 name|doexec
 argument_list|(
@@ -431,7 +438,7 @@ name|char
 modifier|*
 name|argv
 index|[
-literal|200
+name|MAXARGV
 index|]
 decl_stmt|;
 specifier|register
@@ -484,6 +491,21 @@ name|t
 condition|;
 control|)
 block|{
+if|if
+condition|(
+name|p
+operator|>=
+name|argv
+operator|+
+name|MAXARGV
+condition|)
+name|fatal1
+argument_list|(
+literal|"%s: Too many arguments."
+argument_list|,
+name|str
+argument_list|)
+expr_stmt|;
 operator|*
 name|p
 operator|++
