@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_input.c	1.41	81/12/19	*/
+comment|/*	tcp_input.c	1.42	81/12/20	*/
 end_comment
 
 begin_include
@@ -81,12 +81,6 @@ directive|include
 file|"../net/tcp.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|TCPSTATES
-end_define
-
 begin_include
 include|#
 directive|include
@@ -120,6 +114,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"../net/tcp_debug.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../errno.h"
 end_include
 
@@ -141,6 +141,22 @@ name|AF_INET
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|tcpiphdr
+name|tcp_saveti
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|struct
+name|tcpcb
+modifier|*
+name|tcp_newtcpcb
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * TCP input routine, follows pages 65-76 of the  * protocol specification dated September, 1981 very closely.  */
@@ -206,6 +222,9 @@ name|int
 name|todrop
 decl_stmt|,
 name|acked
+decl_stmt|;
+name|short
+name|ostate
 decl_stmt|;
 name|COUNT
 argument_list|(
@@ -581,6 +600,27 @@ name|inp
 operator|->
 name|inp_socket
 expr_stmt|;
+if|if
+condition|(
+name|so
+operator|->
+name|so_options
+operator|&
+name|SO_DEBUG
+condition|)
+block|{
+name|ostate
+operator|=
+name|tp
+operator|->
+name|t_state
+expr_stmt|;
+name|tcp_saveti
+operator|=
+operator|*
+name|ti
+expr_stmt|;
+block|}
 comment|/* 	 * Segment received on connection. 	 * Reset idle time and keep-alive timer. 	 */
 name|tp
 operator|->
@@ -831,7 +871,7 @@ name|tcp_drop
 argument_list|(
 name|tp
 argument_list|,
-name|ECONNRESET
+name|ECONNREFUSED
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1291,21 +1331,7 @@ operator|&
 name|SO_ACCEPTCONN
 condition|)
 block|{
-name|tp
-operator|->
-name|t_state
-operator|=
-name|TCPS_LISTEN
-expr_stmt|;
-name|tp
-operator|->
-name|t_timer
-index|[
-name|TCPT_KEEP
-index|]
-operator|=
-literal|0
-expr_stmt|;
+comment|/* a miniature tcp_close, but invisible to user */
 operator|(
 name|void
 operator|)
@@ -1319,16 +1345,35 @@ name|t_template
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|m_free
+argument_list|(
+name|dtom
+argument_list|(
 name|tp
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|inp
 operator|->
-name|t_template
+name|inp_ppcb
 operator|=
 literal|0
 expr_stmt|;
-name|in_pcbdisconnect
+name|tp
+operator|=
+name|tcp_newtcpcb
 argument_list|(
 name|inp
 argument_list|)
+expr_stmt|;
+name|tp
+operator|->
+name|t_state
+operator|=
+name|TCPS_LISTEN
 expr_stmt|;
 goto|goto
 name|drop
@@ -2166,6 +2211,28 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+if|if
+condition|(
+name|so
+operator|->
+name|so_options
+operator|&
+name|SO_DEBUG
+condition|)
+name|tcp_trace
+argument_list|(
+name|TA_INPUT
+argument_list|,
+name|ostate
+argument_list|,
+name|tp
+argument_list|,
+operator|&
+name|tcp_saveti
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Return any desired output. 	 */
 name|tcp_output
 argument_list|(
@@ -2280,6 +2347,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_block
 
