@@ -185,6 +185,19 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Map handles to units */
+end_comment
+
+begin_function_decl
+name|int
+name|efifs_get_unit
+parameter_list|(
+name|EFI_HANDLE
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Wrapper over EFI filesystems. */
 end_comment
 
