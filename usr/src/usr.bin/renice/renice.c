@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)renice.c	4.5 (Berkeley) 83/07/24"
+literal|"@(#)renice.c	4.6 (Berkeley) 83/07/24"
 decl_stmt|;
 end_decl_stmt
 
@@ -94,7 +94,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: renice priority who ...\n"
+literal|"usage: renice priority [ [ -p ] pids ] "
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"[ [ -g ] pgrps ] [ [ -u ] users ]\n"
 argument_list|)
 expr_stmt|;
 name|exit
