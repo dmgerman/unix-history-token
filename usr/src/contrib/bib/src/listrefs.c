@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)listrefs.c	1.2	%G%"
+literal|"@(#)listrefs.c	2.1	%G%"
 decl_stmt|;
 end_decl_stmt
 

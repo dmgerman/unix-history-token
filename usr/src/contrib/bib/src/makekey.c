@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)makekey.c	1.2	%G%"
+literal|"@(#)makekey.c	2.1	%G%"
 decl_stmt|;
 end_decl_stmt
 
