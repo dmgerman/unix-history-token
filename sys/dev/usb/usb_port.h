@@ -244,6 +244,13 @@ parameter_list|)
 value|untimeout((f), (d))
 end_define
 
+begin_typedef
+typedef|typedef
+name|int
+name|usb_malloc_type
+typedef|;
+end_typedef
+
 begin_define
 define|#
 directive|define
@@ -569,6 +576,13 @@ directive|define
 name|config_pending_decr
 parameter_list|()
 end_define
+
+begin_typedef
+typedef|typedef
+name|int
+name|usb_malloc_type
+typedef|;
+end_typedef
 
 begin_define
 define|#
@@ -1208,6 +1222,15 @@ directive|define
 name|PWR_SUSPEND
 value|1
 end_define
+
+begin_typedef
+typedef|typedef
+name|struct
+name|malloc_type
+modifier|*
+name|usb_malloc_type
+typedef|;
+end_typedef
 
 begin_define
 define|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdi_util.c,v 1.31 2000/06/01 14:29:02 augustss Exp $	*/
+comment|/*	$NetBSD: usbdi_util.c,v 1.32 2000/06/01 14:37:51 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -1950,50 +1950,25 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
+begin_function
 name|usbd_status
 name|usbd_alloc_report_desc
-argument_list|(
+parameter_list|(
 name|usbd_interface_handle
 name|ifc
-argument_list|,
+parameter_list|,
 name|void
-operator|*
-operator|*
+modifier|*
+modifier|*
 name|descp
-argument_list|,
+parameter_list|,
 name|int
-operator|*
+modifier|*
 name|sizep
-argument_list|,
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__OpenBSD__
-argument_list|)
-name|int
+parameter_list|,
+name|usb_malloc_type
 name|mem
-argument_list|;
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-expr|struct
-name|malloc_type
-operator|*
-name|mem
-argument_list|;
-endif|#
-directive|endif
-argument_list|)
+parameter_list|)
 block|{
 name|usb_interface_descriptor_t
 modifier|*
@@ -2154,7 +2129,7 @@ name|USBD_NORMAL_COMPLETION
 operator|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_function
 name|usbd_status

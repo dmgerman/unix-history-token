@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdi_util.h,v 1.17 1999/09/05 19:32:19 augustss Exp $	*/
+comment|/*	$NetBSD: usbdi_util.h,v 1.22 2000/06/01 14:37:52 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -312,20 +312,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__OpenBSD__
-argument_list|)
-end_if
-
 begin_function_decl
 name|usbd_status
 name|usbd_alloc_report_desc
@@ -342,49 +328,11 @@ name|int
 modifier|*
 name|sizep
 parameter_list|,
-name|int
+name|usb_malloc_type
 name|mem
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_elif
-
-begin_function_decl
-name|usbd_status
-name|usbd_alloc_report_desc
-parameter_list|(
-name|usbd_interface_handle
-name|ifc
-parameter_list|,
-name|void
-modifier|*
-modifier|*
-name|descp
-parameter_list|,
-name|int
-modifier|*
-name|sizep
-parameter_list|,
-name|struct
-name|malloc_type
-modifier|*
-name|mem
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|usbd_status
