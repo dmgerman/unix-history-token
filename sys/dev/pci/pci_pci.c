@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<pci/pcib_private.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"pcib_if.h"
 end_include
 
@@ -60,69 +66,6 @@ include|#
 directive|include
 file|"opt_pci.h"
 end_include
-
-begin_comment
-comment|/*  * Bridge-specific data.  */
-end_comment
-
-begin_struct
-struct|struct
-name|pcib_softc
-block|{
-name|device_t
-name|dev
-decl_stmt|;
-name|u_int16_t
-name|command
-decl_stmt|;
-comment|/* command register */
-name|u_int8_t
-name|secbus
-decl_stmt|;
-comment|/* secondary bus number */
-name|u_int8_t
-name|subbus
-decl_stmt|;
-comment|/* subordinate bus number */
-name|pci_addr_t
-name|pmembase
-decl_stmt|;
-comment|/* base address of prefetchable memory */
-name|pci_addr_t
-name|pmemlimit
-decl_stmt|;
-comment|/* topmost address of prefetchable memory */
-name|pci_addr_t
-name|membase
-decl_stmt|;
-comment|/* base address of memory window */
-name|pci_addr_t
-name|memlimit
-decl_stmt|;
-comment|/* topmost address of memory window */
-name|u_int32_t
-name|iobase
-decl_stmt|;
-comment|/* base address of port window */
-name|u_int32_t
-name|iolimit
-decl_stmt|;
-comment|/* topmost address of port window */
-name|u_int16_t
-name|secstat
-decl_stmt|;
-comment|/* secondary bus status register */
-name|u_int16_t
-name|bridgectl
-decl_stmt|;
-comment|/* bridge control register */
-name|u_int8_t
-name|seclat
-decl_stmt|;
-comment|/* secondary bus latency timer */
-block|}
-struct|;
-end_struct
 
 begin_function_decl
 specifier|static
@@ -142,148 +85,6 @@ name|pcib_attach
 parameter_list|(
 name|device_t
 name|dev
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|pcib_read_ivar
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-name|device_t
-name|child
-parameter_list|,
-name|int
-name|which
-parameter_list|,
-name|uintptr_t
-modifier|*
-name|result
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|pcib_write_ivar
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-name|device_t
-name|child
-parameter_list|,
-name|int
-name|which
-parameter_list|,
-name|uintptr_t
-name|value
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|struct
-name|resource
-modifier|*
-name|pcib_alloc_resource
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-name|device_t
-name|child
-parameter_list|,
-name|int
-name|type
-parameter_list|,
-name|int
-modifier|*
-name|rid
-parameter_list|,
-name|u_long
-name|start
-parameter_list|,
-name|u_long
-name|end
-parameter_list|,
-name|u_long
-name|count
-parameter_list|,
-name|u_int
-name|flags
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|pcib_maxslots
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|u_int32_t
-name|pcib_read_config
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-name|int
-name|b
-parameter_list|,
-name|int
-name|s
-parameter_list|,
-name|int
-name|f
-parameter_list|,
-name|int
-name|reg
-parameter_list|,
-name|int
-name|width
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|pcib_write_config
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|,
-name|int
-name|b
-parameter_list|,
-name|int
-name|s
-parameter_list|,
-name|int
-name|f
-parameter_list|,
-name|int
-name|reg
-parameter_list|,
-name|u_int32_t
-name|val
-parameter_list|,
-name|int
-name|width
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -470,7 +271,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|devclass_t
 name|pcib_devclass
 decl_stmt|;
@@ -551,9 +351,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
-name|int
-name|pcib_attach
+name|void
+name|pcib_attach_common
 parameter_list|(
 name|device_t
 name|dev
@@ -563,9 +362,6 @@ name|struct
 name|pcib_softc
 modifier|*
 name|sc
-decl_stmt|;
-name|device_t
-name|child
 decl_stmt|;
 name|u_int8_t
 name|iolow
@@ -1044,6 +840,38 @@ expr_stmt|;
 block|}
 comment|/*      * XXX If the secondary bus number is zero, we should assign a bus number      *     since the BIOS hasn't, then initialise the bridge.      */
 comment|/*      * XXX If the subordinate bus number is less than the secondary bus number,      *     we should pick a better value.  One sensible alternative would be to      *     pick 255; the only tradeoff here is that configuration transactions      *     would be more widely routed than absolutely necessary.      */
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|pcib_attach
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+name|struct
+name|pcib_softc
+modifier|*
+name|sc
+decl_stmt|;
+name|device_t
+name|child
+decl_stmt|;
+name|pcib_attach_common
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|sc
+operator|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -1090,7 +918,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|pcib_read_ivar
 parameter_list|(
@@ -1148,7 +975,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|pcib_write_ivar
 parameter_list|(
@@ -1280,7 +1106,6 @@ comment|/*  * We have to trap resource allocation requests and ensure that the b
 end_comment
 
 begin_function
-specifier|static
 name|struct
 name|resource
 modifier|*
@@ -1857,7 +1682,6 @@ comment|/*  * PCIB interface.  */
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|pcib_maxslots
 parameter_list|(
@@ -1878,7 +1702,6 @@ comment|/*  * Since we are a child of a PCI bus, its parent must support the pci
 end_comment
 
 begin_function
-specifier|static
 name|u_int32_t
 name|pcib_read_config
 parameter_list|(
@@ -1929,7 +1752,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|pcib_write_config
 parameter_list|(
