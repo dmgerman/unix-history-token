@@ -1826,7 +1826,7 @@ argument_list|(
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Try twice to allocate something. 	 * (we'll purge any empty structures after the first pass so 	 * two passes are always enough) 	 */
+comment|/* 	 * Try twice to allocate something. 	 * (we'll purge an empty structure after the first pass so 	 * two passes are always enough) 	 */
 for|for
 control|(
 name|attempt
@@ -1905,7 +1905,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* 		 * We didn't find a free one, if this is the first attempt 		 * then try to free some structures. 		 */
+comment|/* 		 * We didn't find a free one, if this is the first attempt 		 * then try to free a structure. 		 */
 if|if
 condition|(
 name|attempt
@@ -1913,7 +1913,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* All the structures are in use - try to free some */
+comment|/* All the structures are in use - try to free one */
 name|int
 name|did_something
 init|=
@@ -1959,6 +1959,7 @@ argument_list|,
 name|un_next
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
 block|}
 comment|/* If we didn't free anything then just give-up */
