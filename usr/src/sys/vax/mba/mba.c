@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mba.c	4.19	81/03/10	*/
+comment|/*	mba.c	4.20	81/05/09	*/
 end_comment
 
 begin_include
@@ -390,6 +390,10 @@ name|mba_regs
 modifier|*
 name|mbp
 decl_stmt|;
+specifier|register
+name|int
+name|com
+decl_stmt|;
 name|loop
 label|:
 comment|/* 	 * Look for an operation at the front of the queue. 	 */
@@ -523,6 +527,12 @@ name|mi_driver
 operator|->
 name|md_start
 condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|com
+operator|=
 call|(
 modifier|*
 name|mi
@@ -534,6 +544,47 @@ call|)
 argument_list|(
 name|mi
 argument_list|)
+operator|)
+operator|==
+literal|0
+condition|)
+name|com
+operator|=
+operator|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_READ
+operator|)
+condition|?
+name|MB_RCOM
+operator||
+name|MB_GO
+else|:
+name|MB_WCOM
+operator||
+name|MB_GO
+expr_stmt|;
+block|}
+else|else
+name|com
+operator|=
+operator|(
+name|bp
+operator|->
+name|b_flags
+operator|&
+name|B_READ
+operator|)
+condition|?
+name|MB_RCOM
+operator||
+name|MB_GO
+else|:
+name|MB_WCOM
+operator||
+name|MB_GO
 expr_stmt|;
 comment|/* 	 * Setup the massbus control and map registers and start 	 * the transfer. 	 */
 name|mbp
@@ -574,21 +625,7 @@ name|mi_drv
 operator|->
 name|mbd_cs1
 operator|=
-operator|(
-name|bp
-operator|->
-name|b_flags
-operator|&
-name|B_READ
-operator|)
-condition|?
-name|MB_RCOM
-operator||
-name|MB_GO
-else|:
-name|MB_WCOM
-operator||
-name|MB_GO
+name|com
 expr_stmt|;
 if|if
 condition|(
