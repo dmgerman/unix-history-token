@@ -88,21 +88,10 @@ modifier|*
 name|msg
 parameter_list|)
 block|{
-name|char
-name|s
-index|[
-literal|256
-index|]
-decl_stmt|;
-comment|/* Prepare an error message string: */
-name|snprintf
+comment|/* Write an error message to the standard error file descriptor: */
+name|_thread_printf
 argument_list|(
-name|s
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|s
-argument_list|)
+literal|2
 argument_list|,
 literal|"Fatal error '%s' at line %d in file %s (errno = %d)\n"
 argument_list|,
@@ -113,19 +102,6 @@ argument_list|,
 name|fname
 argument_list|,
 name|errno
-argument_list|)
-expr_stmt|;
-comment|/* Write the string to the standard error file descriptor: */
-name|__sys_write
-argument_list|(
-literal|2
-argument_list|,
-name|s
-argument_list|,
-name|strlen
-argument_list|(
-name|s
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|abort

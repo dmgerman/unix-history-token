@@ -2704,6 +2704,16 @@ return|;
 block|}
 end_function
 
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
+name|__pthread_mutex_lock
+argument_list|,
+name|_thr_mutex_lock
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|int
 name|_pthread_mutex_lock
@@ -2814,6 +2824,16 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|__strong_reference
+argument_list|(
+name|_pthread_mutex_unlock
+argument_list|,
+name|_thr_mutex_unlock
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int

@@ -1166,6 +1166,9 @@ name|k_curthread
 operator|=
 name|_thr_initial
 expr_stmt|;
+name|_thr_rtld_init
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
