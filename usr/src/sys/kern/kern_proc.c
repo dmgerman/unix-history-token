@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	3.25	%G%	*/
+comment|/*	kern_proc.c	3.26	%G%	*/
 end_comment
 
 begin_include
@@ -2495,6 +2495,19 @@ literal|"exit"
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|p
+operator|->
+name|p_pid
+operator|==
+literal|1
+condition|)
+name|panic
+argument_list|(
+literal|"init died"
+argument_list|)
+expr_stmt|;
 name|done
 label|:
 operator|(
