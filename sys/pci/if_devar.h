@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: if_devar.h,v 1.27 1998/05/25 22:13:28 mark Exp $	*/
+comment|/*	$NetBSD: if_devar.h,v 1.31 1998/09/29 22:40:52 matt Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$Id: if_devar.h,v 1.8 1998/06/13 17:20:03 peter Exp $ */
+comment|/*	$Id: if_devar.h,v 1.9 1998/09/16 08:27:07 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -709,14 +709,16 @@ end_comment
 begin_if
 if|#
 directive|if
+operator|!
 name|defined
 argument_list|(
-name|__alpha__
+name|__i386__
 argument_list|)
-operator|||
+operator|&&
+operator|!
 name|defined
 argument_list|(
-name|__arm32__
+name|__vax__
 argument_list|)
 end_if
 
@@ -2294,6 +2296,15 @@ name|dbg_last_rxintrs
 decl_stmt|;
 name|u_int32_t
 name|dbg_high_rxintrs_hz
+decl_stmt|;
+name|u_int32_t
+name|dbg_no_txmaps
+decl_stmt|;
+name|u_int32_t
+name|dbg_txput_finishes
+index|[
+literal|8
+index|]
 decl_stmt|;
 name|u_int32_t
 name|dbg_txprobes_ok
@@ -4332,7 +4343,7 @@ name|sc
 parameter_list|,
 name|va
 parameter_list|)
-value|alpha_XXX_dmamap((vm_offset_t)(va))
+value|alpha_XXX_dmamap((vaddr_t)(va))
 end_define
 
 begin_endif
