@@ -586,6 +586,8 @@ expr_stmt|;
 if|if
 condition|(
 name|so
+operator|!=
+name|NULL
 condition|)
 block|{
 ifdef|#
@@ -739,7 +741,7 @@ if|if
 condition|(
 name|prp
 operator|==
-literal|0
+name|NULL
 operator|||
 name|prp
 operator|->
@@ -747,7 +749,7 @@ name|pr_usrreqs
 operator|->
 name|pru_attach
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -1331,6 +1333,8 @@ condition|(
 name|so
 operator|->
 name|so_pcb
+operator|!=
+name|NULL
 operator|||
 operator|(
 name|so
@@ -1657,7 +1661,7 @@ name|so
 operator|->
 name|so_pcb
 operator|==
-literal|0
+name|NULL
 condition|)
 goto|goto
 name|discard
@@ -1775,6 +1779,8 @@ condition|(
 name|so
 operator|->
 name|so_pcb
+operator|!=
+name|NULL
 condition|)
 block|{
 name|int
@@ -2459,6 +2465,8 @@ comment|/* ZERO_COPY_SOCKETS */
 if|if
 condition|(
 name|uio
+operator|!=
+name|NULL
 condition|)
 name|resid
 operator|=
@@ -2536,6 +2544,8 @@ expr_stmt|;
 if|if
 condition|(
 name|td
+operator|!=
+name|NULL
 condition|)
 name|td
 operator|->
@@ -2551,6 +2561,8 @@ expr_stmt|;
 if|if
 condition|(
 name|control
+operator|!=
+name|NULL
 condition|)
 name|clen
 operator|=
@@ -2710,7 +2722,7 @@ if|if
 condition|(
 name|addr
 operator|==
-literal|0
+name|NULL
 condition|)
 name|snderr
 argument_list|(
@@ -3383,11 +3395,11 @@ literal|0
 expr_stmt|;
 name|control
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|top
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|mp
 operator|=
@@ -3432,6 +3444,8 @@ label|:
 if|if
 condition|(
 name|top
+operator|!=
+name|NULL
 condition|)
 name|m_freem
 argument_list|(
@@ -3441,6 +3455,8 @@ expr_stmt|;
 if|if
 condition|(
 name|control
+operator|!=
+name|NULL
 condition|)
 name|m_freem
 argument_list|(
@@ -3563,6 +3579,8 @@ expr_stmt|;
 if|if
 condition|(
 name|psa
+operator|!=
+name|NULL
 condition|)
 operator|*
 name|psa
@@ -3572,6 +3590,8 @@ expr_stmt|;
 if|if
 condition|(
 name|controlp
+operator|!=
+name|NULL
 condition|)
 operator|*
 name|controlp
@@ -3581,6 +3601,8 @@ expr_stmt|;
 if|if
 condition|(
 name|flagsp
+operator|!=
+name|NULL
 condition|)
 name|flags
 operator|=
@@ -3821,6 +3843,8 @@ label|:
 if|if
 condition|(
 name|m
+operator|!=
+name|NULL
 condition|)
 name|m_freem
 argument_list|(
@@ -3836,16 +3860,13 @@ block|}
 if|if
 condition|(
 name|mp
+operator|!=
+name|NULL
 condition|)
 operator|*
 name|mp
 operator|=
-operator|(
-expr|struct
-name|mbuf
-operator|*
-operator|)
-literal|0
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -3917,7 +3938,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 operator|||
 operator|(
 operator|(
@@ -3976,7 +3997,7 @@ name|m
 operator|->
 name|m_nextpkt
 operator|==
-literal|0
+name|NULL
 operator|&&
 operator|(
 name|pr
@@ -3994,7 +4015,7 @@ name|KASSERT
 argument_list|(
 name|m
 operator|!=
-literal|0
+name|NULL
 operator|||
 operator|!
 name|so
@@ -4026,6 +4047,8 @@ block|{
 if|if
 condition|(
 name|m
+operator|!=
+name|NULL
 condition|)
 goto|goto
 name|dontblock
@@ -4081,6 +4104,8 @@ for|for
 control|(
 init|;
 name|m
+operator|!=
+name|NULL
 condition|;
 name|m
 operator|=
@@ -4316,6 +4341,8 @@ expr_stmt|;
 if|if
 condition|(
 name|psa
+operator|!=
+name|NULL
 condition|)
 operator|*
 name|psa
@@ -4390,6 +4417,8 @@ block|}
 while|while
 condition|(
 name|m
+operator|!=
+name|NULL
 operator|&&
 name|m
 operator|->
@@ -4412,6 +4441,8 @@ block|{
 if|if
 condition|(
 name|controlp
+operator|!=
+name|NULL
 condition|)
 operator|*
 name|controlp
@@ -4490,6 +4521,8 @@ elseif|else
 if|if
 condition|(
 name|controlp
+operator|!=
+name|NULL
 condition|)
 operator|*
 name|controlp
@@ -4514,6 +4547,8 @@ block|}
 if|if
 condition|(
 name|controlp
+operator|!=
+name|NULL
 condition|)
 block|{
 name|orig_resid
@@ -4542,6 +4577,8 @@ block|}
 if|if
 condition|(
 name|m
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -4684,6 +4721,8 @@ expr_stmt|;
 while|while
 condition|(
 name|m
+operator|!=
+name|NULL
 operator|&&
 name|uio
 operator|->
@@ -4803,7 +4842,7 @@ if|if
 condition|(
 name|mp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|SBLASTRECORDCHK
@@ -5044,6 +5083,8 @@ expr_stmt|;
 if|if
 condition|(
 name|mp
+operator|!=
+name|NULL
 condition|)
 block|{
 operator|*
@@ -5073,12 +5114,7 @@ expr_stmt|;
 operator|*
 name|mp
 operator|=
-operator|(
-expr|struct
-name|mbuf
-operator|*
-operator|)
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 else|else
@@ -5106,6 +5142,8 @@ block|}
 if|if
 condition|(
 name|m
+operator|!=
+name|NULL
 condition|)
 block|{
 name|m
@@ -5183,6 +5221,8 @@ block|{
 if|if
 condition|(
 name|mp
+operator|!=
+name|NULL
 condition|)
 operator|*
 name|mp
@@ -5295,7 +5335,7 @@ name|MSG_WAITALL
 operator|&&
 name|m
 operator|==
-literal|0
+name|NULL
 operator|&&
 name|uio
 operator|->
@@ -5309,8 +5349,9 @@ argument_list|(
 name|so
 argument_list|)
 operator|&&
-operator|!
 name|nextrecord
+operator|==
+name|NULL
 condition|)
 block|{
 if|if
@@ -5338,6 +5379,8 @@ operator|&&
 name|so
 operator|->
 name|so_pcb
+operator|!=
+name|NULL
 condition|)
 call|(
 modifier|*
@@ -5414,6 +5457,8 @@ expr_stmt|;
 if|if
 condition|(
 name|m
+operator|!=
+name|NULL
 condition|)
 name|nextrecord
 operator|=
@@ -5426,6 +5471,8 @@ block|}
 if|if
 condition|(
 name|m
+operator|!=
+name|NULL
 operator|&&
 name|pr
 operator|->
@@ -5475,7 +5522,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 comment|/* 			 * First part is an inline SB_EMPTY_FIXUP().  Second 			 * part makes sure sb_lastrecord is up-to-date if 			 * there is still data in the socket buffer. 			 */
@@ -5625,6 +5672,8 @@ block|}
 if|if
 condition|(
 name|flagsp
+operator|!=
+name|NULL
 condition|)
 operator|*
 name|flagsp
@@ -5857,6 +5906,8 @@ operator|->
 name|pr_domain
 operator|->
 name|dom_dispose
+operator|!=
+name|NULL
 condition|)
 call|(
 modifier|*
@@ -6420,7 +6471,7 @@ name|sopt
 operator|->
 name|sopt_td
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -7099,12 +7150,16 @@ operator|&&
 name|so
 operator|->
 name|so_proto
+operator|!=
+name|NULL
 operator|&&
 name|so
 operator|->
 name|so_proto
 operator|->
 name|pr_ctloutput
+operator|!=
+name|NULL
 condition|)
 block|{
 call|(
@@ -7194,7 +7249,7 @@ name|sopt
 operator|->
 name|sopt_val
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 if|if
@@ -7203,7 +7258,7 @@ name|sopt
 operator|->
 name|sopt_td
 operator|!=
-literal|0
+name|NULL
 condition|)
 name|error
 operator|=
@@ -7945,7 +8000,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 name|ENOBUFS
@@ -8057,7 +8112,7 @@ if|if
 condition|(
 name|m
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|m_freem
@@ -8084,6 +8139,8 @@ argument_list|,
 name|sopt
 operator|->
 name|sopt_td
+operator|!=
+name|NULL
 condition|?
 name|M_TRYWAIT
 else|:
