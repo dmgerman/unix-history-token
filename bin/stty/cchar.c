@@ -149,6 +149,14 @@ name|CERASE
 block|}
 block|,
 block|{
+literal|"erase2"
+block|,
+name|VERASE2
+block|,
+name|CERASE2
+block|}
+block|,
+block|{
 literal|"intr"
 block|,
 name|VINTR
