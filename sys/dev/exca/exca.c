@@ -131,6 +131,12 @@ directive|include
 file|<dev/exca/excavar.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|EXCA_DEBUG
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -653,6 +659,8 @@ operator|)
 operator|&
 name|EXCA_SYSMEM_ADDRX_STOP_MSB_ADDR_MASK
 operator|)
+operator||
+name|EXCA_SYSMEM_ADDRX_STOP_MSB_WAIT2
 argument_list|)
 expr_stmt|;
 name|exca_putb
@@ -732,17 +740,6 @@ literal|0
 operator|)
 argument_list|)
 expr_stmt|;
-name|exca_setb
-argument_list|(
-name|sc
-argument_list|,
-name|EXCA_ADDRWIN_ENABLE
-argument_list|,
-name|map
-operator|->
-name|memenable
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|EXCA_DEBUG
@@ -773,6 +770,10 @@ name|sc
 argument_list|,
 name|EXCA_ADDRWIN_ENABLE
 argument_list|,
+name|map
+operator|->
+name|memenable
+operator||
 name|EXCA_ADDRWIN_ENABLE_MEMCS16
 argument_list|)
 expr_stmt|;
@@ -879,8 +880,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"exca_do_mem_map window %d: %02x%02x %02x%02x "
-literal|"%02x%02x %02x (%08x+%08x.%08x*%08x)\n"
+literal|"exca_do_mem_map win %d: %02x%02x %02x%02x "
+literal|"%02x%02x %02x (%08x+%06x.%06x*%06x)\n"
 argument_list|,
 name|win
 argument_list|,
@@ -3617,6 +3618,18 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static struct resource * exca_alloc_resource(struct exca_softc *sc, device_t child, int type, int *rid,     u_long start, u_long end, u_long count, uint flags) { 	struct resource *res = NULL; 	int tmp;  	switch (type) { 	case SYS_RES_MEMORY: 		if (start< cbb_start_mem) 			start = cbb_start_mem; 		if (end< start) 			end = start; 		flags = (flags& ~RF_ALIGNMENT_MASK) | 		    rman_make_alignment_flags(CBB_MEMALIGN); 		break; 	case SYS_RES_IOPORT: 		if (start< cbb_start_16_io) 			start = cbb_start_16_io; 		if (end< start) 			end = start; 		break; 	case SYS_RES_IRQ: 		tmp = rman_get_start(sc->irq_res); 		if (start> tmp || end< tmp || count != 1) { 			device_printf(child, "requested interrupt %ld-%ld," 			    "count = %ld not supported by cbb\n", 			    start, end, count); 			return (NULL); 		} 		flags |= RF_SHAREABLE; 		start = end = rman_get_start(sc->irq_res); 		break; 	} 	res = BUS_ALLOC_RESOURCE(up, child, type, rid, 	    start, end, count, flags& ~RF_ACTIVE); 	if (res == NULL) 		return (NULL); 	cbb_insert_res(sc, res, type, *rid); 	if (flags& RF_ACTIVE) { 		if (bus_activate_resource(child, type, *rid, res) != 0) { 			bus_release_resource(child, type, *rid, res); 			return (NULL); 		} 	}  	return (res); }  static int exca_release_resource(struct exca_softc *sc, device_t child, int type,     int rid, struct resource *res) { 	int error;  	if (rman_get_flags(res)& RF_ACTIVE) { 		error = bus_deactivate_resource(child, type, rid, res); 		if (error != 0) 			return (error); 	} 	cbb_remove_res(sc, res); 	return (BUS_RELEASE_RESOURCE(device_get_parent(brdev), child, 	    type, rid, res)); }
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
