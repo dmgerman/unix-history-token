@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sysacct.c	5.2 (Berkeley) %G%"
+literal|"@(#)sysacct.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,7 +27,15 @@ file|<sys/types.h>
 end_include
 
 begin_comment
+comment|/*LINTLIBRARY*/
+end_comment
+
+begin_comment
 comment|/*  *	output accounting info  */
+end_comment
+
+begin_comment
+comment|/*ARGSUSED*/
 end_comment
 
 begin_macro
