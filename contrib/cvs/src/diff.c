@@ -1978,7 +1978,6 @@ name|head
 argument_list|)
 operator|)
 expr_stmt|;
-comment|/*XXX*/
 if|if
 condition|(
 name|head
@@ -2036,7 +2035,6 @@ name|vn_rcs
 argument_list|)
 operator|)
 expr_stmt|;
-comment|/*XXX*/
 name|freevers_ts
 argument_list|(
 operator|&
