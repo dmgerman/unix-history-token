@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)diskpart.c	5.4 (Berkeley) %G%"
+literal|"@(#)diskpart.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -271,47 +271,51 @@ block|}
 block|,
 comment|/* a */
 block|{
-literal|0
+literal|8192
+block|,
+literal|1024
 block|}
 block|,
 comment|/* b */
-block|{
-literal|0
-block|}
-block|,
-comment|/* c */
 block|{
 literal|8192
 block|,
 literal|1024
 block|}
 block|,
-comment|/* d */
+comment|/* c */
 block|{
 literal|4096
 block|,
 literal|512
 block|}
 block|,
+comment|/* d */
+block|{
+literal|8192
+block|,
+literal|1024
+block|}
+block|,
 comment|/* e */
 block|{
-literal|4096
+literal|8192
 block|,
 literal|1024
 block|}
 block|,
 comment|/* f */
 block|{
-literal|4096
+literal|8192
 block|,
 literal|1024
 block|}
 block|,
 comment|/* g */
 block|{
-literal|4096
+literal|8192
 block|,
-literal|512
+literal|1024
 block|}
 comment|/* h */
 block|}
@@ -878,6 +882,24 @@ argument_list|)
 index|]
 operator|*
 name|spc
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|pflag
+condition|)
+name|defpart
+index|[
+name|def
+index|]
+index|[
+name|PART
+argument_list|(
+literal|'c'
+argument_list|)
+index|]
+operator|-=
+name|badsecttable
 expr_stmt|;
 comment|/* 	 * Calculate starting cylinder number for each partition. 	 * Note the 'h' partition is physically located before the 	 * 'g' or 'd' partition.  This is reflected in the layout 	 * arrays defined above. 	 */
 for|for
