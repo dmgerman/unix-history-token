@@ -15348,18 +15348,6 @@ end_define
 
 begin_decl_stmt
 name|int
-name|vfs_badlock_mutex
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Check for interlock across VOPs. */
-end_comment
-
-begin_decl_stmt
-name|int
 name|vfs_badlock_ddb
 init|=
 literal|1
@@ -15368,6 +15356,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* Drop into debugger on violation. */
+end_comment
+
+begin_decl_stmt
+name|int
+name|vfs_badlock_mutex
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Check for interlock across VOPs. */
 end_comment
 
 begin_decl_stmt
@@ -15428,7 +15428,7 @@ name|vfs_badlock_ddb
 condition|)
 name|Debugger
 argument_list|(
-literal|"Lock violation"
+literal|"lock violation"
 argument_list|)
 expr_stmt|;
 block|}
@@ -15538,13 +15538,14 @@ argument_list|(
 name|vp
 argument_list|)
 operator|&&
-operator|!
 name|VOP_ISLOCKED
 argument_list|(
 name|vp
 argument_list|,
 name|NULL
 argument_list|)
+operator|==
+literal|0
 condition|)
 name|vfs_badlock
 argument_list|(
@@ -15758,14 +15759,16 @@ name|struct
 name|vop_strategy_args
 modifier|*
 name|a
-init|=
-name|ap
 decl_stmt|;
 name|struct
 name|buf
 modifier|*
 name|bp
 decl_stmt|;
+name|a
+operator|=
+name|ap
+expr_stmt|;
 name|bp
 operator|=
 name|a
@@ -15802,7 +15805,7 @@ name|vfs_badlock_print
 condition|)
 name|printf
 argument_list|(
-literal|"VOP_STRATEGY: bp is not locked but should be.\n"
+literal|"VOP_STRATEGY: bp is not locked but should be\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -15811,7 +15814,7 @@ name|vfs_badlock_ddb
 condition|)
 name|Debugger
 argument_list|(
-literal|"Lock violation"
+literal|"lock violation"
 argument_list|)
 expr_stmt|;
 block|}
@@ -15831,14 +15834,16 @@ name|struct
 name|vop_lookup_args
 modifier|*
 name|a
-init|=
-name|ap
 decl_stmt|;
 name|struct
 name|vnode
 modifier|*
 name|dvp
 decl_stmt|;
+name|a
+operator|=
+name|ap
+expr_stmt|;
 name|dvp
 operator|=
 name|a
@@ -15878,8 +15883,6 @@ name|struct
 name|vop_lookup_args
 modifier|*
 name|a
-init|=
-name|ap
 decl_stmt|;
 name|struct
 name|componentname
@@ -15899,6 +15902,10 @@ decl_stmt|;
 name|int
 name|flags
 decl_stmt|;
+name|a
+operator|=
+name|ap
+expr_stmt|;
 name|dvp
 operator|=
 name|a
@@ -16065,11 +16072,9 @@ name|struct
 name|vop_lock_args
 modifier|*
 name|a
-decl_stmt|;
-name|a
-operator|=
+init|=
 name|ap
-expr_stmt|;
+decl_stmt|;
 name|ASSERT_VI_UNLOCKED
 argument_list|(
 name|a
