@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_put.c	8.2 (Berkeley) %G%"
+literal|"@(#)bt_put.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1111,9 +1111,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|EPG
-name|e
-decl_stmt|;
 name|PAGE
 modifier|*
 name|h
@@ -1160,13 +1157,17 @@ name|NULL
 operator|)
 return|;
 block|}
-name|e
+name|t
+operator|->
+name|bt_cur
 operator|.
 name|page
 operator|=
 name|h
 expr_stmt|;
-name|e
+name|t
+operator|->
+name|bt_cur
 operator|.
 name|index
 operator|=
@@ -1221,7 +1222,9 @@ condition|)
 block|{
 if|if
 condition|(
-name|e
+name|t
+operator|->
+name|bt_cur
 operator|.
 name|page
 operator|->
@@ -1234,7 +1237,9 @@ name|miss
 goto|;
 if|if
 condition|(
-name|e
+name|t
+operator|->
+name|bt_cur
 operator|.
 name|index
 operator|!=
@@ -1260,7 +1265,9 @@ argument_list|,
 name|key
 argument_list|,
 operator|&
-name|e
+name|t
+operator|->
+name|bt_cur
 argument_list|)
 operator|)
 operator|<
@@ -1278,11 +1285,15 @@ operator|=
 name|cmp
 condition|?
 operator|++
-name|e
+name|t
+operator|->
+name|bt_cur
 operator|.
 name|index
 else|:
-name|e
+name|t
+operator|->
+name|bt_cur
 operator|.
 name|index
 expr_stmt|;
@@ -1291,7 +1302,9 @@ else|else
 block|{
 if|if
 condition|(
-name|e
+name|t
+operator|->
+name|bt_cur
 operator|.
 name|page
 operator|->
@@ -1304,7 +1317,9 @@ name|miss
 goto|;
 if|if
 condition|(
-name|e
+name|t
+operator|->
+name|bt_cur
 operator|.
 name|index
 operator|!=
@@ -1325,7 +1340,9 @@ argument_list|,
 name|key
 argument_list|,
 operator|&
-name|e
+name|t
+operator|->
+name|bt_cur
 argument_list|)
 operator|)
 operator|>
@@ -1361,7 +1378,9 @@ directive|endif
 return|return
 operator|(
 operator|&
-name|e
+name|t
+operator|->
+name|bt_cur
 operator|)
 return|;
 name|miss
