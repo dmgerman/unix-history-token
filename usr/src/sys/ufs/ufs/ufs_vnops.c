@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.50 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vnops.c	7.51 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -5454,29 +5454,29 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* 		 * From name has disappeared. 		 */
 if|if
 condition|(
-name|fndp
-operator|->
-name|ni_dvp
-operator|!=
-name|NULL
+name|doingdirectory
 condition|)
-name|vput
+name|panic
 argument_list|(
-name|fndp
-operator|->
-name|ni_dvp
+literal|"rename: lost dir entry"
 argument_list|)
 expr_stmt|;
-name|xp
-operator|=
-name|NULL
+name|vrele
+argument_list|(
+name|ITOV
+argument_list|(
+name|ip
+argument_list|)
+argument_list|)
 expr_stmt|;
-name|dp
-operator|=
-name|NULL
-expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 comment|/* 	 * Ensure that the directory entry still exists and has not 	 * changed while the new name has been entered. If the source is 	 * a file then the entry may have been unlinked or renamed. In 	 * either case there is no further work to be done. If the source 	 * is a directory then it cannot have been rmdir'ed; its link 	 * count of three would cause a rmdir to fail with ENOTEMPTY. 	 * The IRENAME flag ensures that it cannot be moved by another 	 * rename. 	 */
 if|if
