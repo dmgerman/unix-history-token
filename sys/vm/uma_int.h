@@ -736,9 +736,11 @@ directive|define
 name|ZONE_LOCK_INIT
 parameter_list|(
 name|z
+parameter_list|,
+name|lc
 parameter_list|)
 define|\
-value|mtx_init(&(z)->uz_lock, (z)->uz_name, "UMA zone",	\ 	    MTX_DEF | MTX_DUPOK)
+value|do {							\ 		if ((lc))					\ 			mtx_init(&(z)->uz_lock, (z)->uz_name,	\ 			    (z)->uz_name, MTX_DEF | MTX_DUPOK);	\ 		else						\ 			mtx_init(&(z)->uz_lock, (z)->uz_name,	\ 			    "UMA zone", MTX_DEF | MTX_DUPOK);	\ 	} while (0)
 end_define
 
 begin_define
@@ -779,9 +781,11 @@ parameter_list|(
 name|z
 parameter_list|,
 name|cpu
+parameter_list|,
+name|lc
 parameter_list|)
 define|\
-value|mtx_init(&(z)->uz_cpu[(cpu)].uc_lock, (z)->uz_lname, "UMA cpu",	\ 	    MTX_DEF | MTX_DUPOK)
+value|do {							\ 		if ((lc))					\ 			mtx_init(&(z)->uz_cpu[(cpu)].uc_lock,	\ 			    (z)->uz_lname, (z)->uz_lname,	\ 			    MTX_DEF | MTX_DUPOK);		\ 		else						\ 			mtx_init(&(z)->uz_cpu[(cpu)].uc_lock,	\ 			    (z)->uz_lname, "UMA cpu",		\ 			    MTX_DEF | MTX_DUPOK);		\ 	} while (0)
 end_define
 
 begin_define

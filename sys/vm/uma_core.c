@@ -3266,6 +3266,9 @@ init|=
 name|mem
 decl_stmt|;
 name|int
+name|privlc
+decl_stmt|;
+name|int
 name|cplen
 decl_stmt|;
 name|int
@@ -3430,6 +3433,23 @@ name|zone_small_init
 argument_list|(
 name|zone
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|arg
+operator|->
+name|flags
+operator|&
+name|UMA_ZONE_MTXCLASS
+condition|)
+name|privlc
+operator|=
+literal|1
+expr_stmt|;
+else|else
+name|privlc
+operator|=
+literal|0
 expr_stmt|;
 comment|/* We do this so that the per cpu lock name is unique for each zone */
 name|memcpy
@@ -3723,6 +3743,8 @@ directive|endif
 name|ZONE_LOCK_INIT
 argument_list|(
 name|zone
+argument_list|,
+name|privlc
 argument_list|)
 expr_stmt|;
 name|mtx_lock
@@ -3802,6 +3824,8 @@ argument_list|(
 name|zone
 argument_list|,
 name|cpu
+argument_list|,
+name|privlc
 argument_list|)
 expr_stmt|;
 block|}

@@ -287,6 +287,17 @@ begin_comment
 comment|/* Do not free slabs of this type! */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|UMA_ZONE_MTXCLASS
+value|0x0040
+end_define
+
+begin_comment
+comment|/* Create a new lock class */
+end_comment
+
 begin_comment
 comment|/* Definitions for align */
 end_comment
