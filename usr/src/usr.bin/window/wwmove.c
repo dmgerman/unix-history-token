@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwmove.c	3.5 %G%"
+literal|"@(#)wwmove.c	3.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,22 +57,6 @@ expr_stmt|;
 specifier|register
 name|i
 expr_stmt|;
-if|if
-condition|(
-name|w
-operator|->
-name|ww_forw
-operator|!=
-literal|0
-operator|||
-name|w
-operator|->
-name|ww_back
-operator|!=
-literal|0
-condition|)
-return|return;
-comment|/* sanity */
 name|dr
 operator|=
 name|row

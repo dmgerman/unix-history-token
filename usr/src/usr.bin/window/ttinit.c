@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ttinit.c	3.12 %G%"
+literal|"@(#)ttinit.c	3.13 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -359,6 +359,9 @@ name|ioctl
 argument_list|(
 literal|0
 argument_list|,
+operator|(
+name|int
+operator|)
 name|TIOCGWINSZ
 argument_list|,
 operator|(

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwsize.c	3.1 %G%"
+literal|"@(#)wwsize.c	3.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -88,22 +88,6 @@ decl_stmt|;
 name|char
 name|m
 decl_stmt|;
-if|if
-condition|(
-name|w
-operator|->
-name|ww_forw
-operator|!=
-literal|0
-operator|||
-name|w
-operator|->
-name|ww_back
-operator|!=
-literal|0
-condition|)
-return|return;
-comment|/* sanity */
 comment|/* 	 * First allocate new buffers. 	 */
 name|win
 operator|=
@@ -1144,6 +1128,9 @@ name|w
 operator|->
 name|ww_pty
 argument_list|,
+operator|(
+name|int
+operator|)
 name|TIOCSWINSZ
 argument_list|,
 operator|(

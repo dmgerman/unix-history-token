@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)wwopen.c	3.19 %G%"
+literal|"@(#)wwopen.c	3.20 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -482,6 +482,9 @@ name|w
 operator|->
 name|ww_pty
 argument_list|,
+operator|(
+name|int
+operator|)
 name|TIOCSWINSZ
 argument_list|,
 operator|(
