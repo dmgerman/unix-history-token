@@ -1729,7 +1729,7 @@ name|void
 name|clear_dump
 parameter_list|()
 block|{
-name|int
+name|u_long
 name|newdumpmag
 decl_stmt|;
 name|newdumpmag
@@ -1785,7 +1785,7 @@ name|int
 name|dump_exists
 parameter_list|()
 block|{
-name|int
+name|u_long
 name|newdumpmag
 decl_stmt|;
 name|DumpRead
