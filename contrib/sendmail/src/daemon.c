@@ -33,7 +33,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.234 (Berkeley) 12/17/1998 (with daemon mode)"
+literal|"@(#)daemon.c	8.236 (Berkeley) 1/25/1999 (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,7 +48,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.234 (Berkeley) 12/17/1998 (without daemon mode)"
+literal|"@(#)daemon.c	8.236 (Berkeley) 1/25/1999 (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -527,7 +527,9 @@ name|LOG_WARNING
 argument_list|,
 name|NOQID
 argument_list|,
-literal|"daemon could not open control socket: %s"
+literal|"daemon could not open control socket %s: %s"
+argument_list|,
+name|ControlSocketName
 argument_list|,
 name|errstring
 argument_list|(
@@ -1751,7 +1753,8 @@ name|snprintf
 argument_list|(
 name|status
 argument_list|,
-name|MAXLINE
+sizeof|sizeof
+name|status
 argument_list|,
 literal|"SMTP server child for %s"
 argument_list|,

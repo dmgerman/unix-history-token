@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)clock.c	8.34 (Berkeley) 6/4/1998"
+literal|"@(#)clock.c	8.35 (Berkeley) 2/2/1999"
 decl_stmt|;
 end_decl_stmt
 
@@ -162,14 +162,10 @@ argument_list|(
 name|SIGALRM
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|time
-argument_list|(
-operator|&
 name|now
-argument_list|)
+operator|=
+name|curtime
+argument_list|()
 expr_stmt|;
 comment|/* search event queue for correct position */
 for|for
