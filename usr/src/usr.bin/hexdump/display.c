@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)display.c	5.11 (Berkeley) %G%"
+literal|"@(#)display.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -111,17 +111,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* end address */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|off_t
-name|savaddress
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* saved address/offset in stream */
 end_comment
 
 begin_define
@@ -632,8 +621,6 @@ operator|=
 name|tmpp
 expr_stmt|;
 name|address
-operator|=
-name|savaddress
 operator|+=
 name|blocksize
 expr_stmt|;
@@ -910,8 +897,6 @@ operator|=
 name|DUP
 expr_stmt|;
 name|address
-operator|=
-name|savaddress
 operator|+=
 name|blocksize
 expr_stmt|;
@@ -1131,13 +1116,13 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|extern
+specifier|register
 name|int
-name|errno
+name|cnt
 decl_stmt|;
 name|struct
 name|stat
-name|sbuf
+name|sb
 decl_stmt|;
 if|if
 condition|(
@@ -1154,7 +1139,7 @@ name|stdin
 argument_list|)
 argument_list|,
 operator|&
-name|sbuf
+name|sb
 argument_list|)
 condition|)
 block|{
@@ -1183,28 +1168,45 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|S_ISREG
+argument_list|(
+name|sb
+operator|.
+name|st_mode
+argument_list|)
+operator|&&
 name|skip
 operator|>=
-name|sbuf
+name|sb
 operator|.
 name|st_size
 condition|)
 block|{
-name|skip
-operator|-=
-name|sbuf
+name|address
+operator|+=
+name|sb
 operator|.
 name|st_size
 expr_stmt|;
-name|address
-operator|+=
-name|sbuf
+name|skip
+operator|-=
+name|sb
 operator|.
 name|st_size
 expr_stmt|;
 return|return;
 block|}
 block|}
+if|if
+condition|(
+name|S_ISREG
+argument_list|(
+name|sb
+operator|.
+name|st_mode
+argument_list|)
+condition|)
+block|{
 if|if
 condition|(
 name|fseek
@@ -1240,8 +1242,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|savaddress
-operator|=
 name|address
 operator|+=
 name|skip
@@ -1250,6 +1250,39 @@ name|skip
 operator|=
 literal|0
 expr_stmt|;
+block|}
+else|else
+block|{
+for|for
+control|(
+name|cnt
+operator|=
+literal|0
+init|;
+name|cnt
+operator|<
+name|skip
+condition|;
+operator|++
+name|cnt
+control|)
+if|if
+condition|(
+name|getchar
+argument_list|()
+operator|==
+name|EOF
+condition|)
+break|break;
+name|address
+operator|+=
+name|cnt
+expr_stmt|;
+name|skip
+operator|-=
+name|cnt
+expr_stmt|;
+block|}
 block|}
 end_block
 
