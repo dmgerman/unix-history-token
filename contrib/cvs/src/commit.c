@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *  * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *  * Commit Files  *  * "commit" commits the present version to the RCS repository, AFTER  * having done a test on conflicts.  *  * The call is: cvs commit [options] files...  *  */
+comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *  * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *  * Commit Files  *  * "commit" commits the present version to the RCS repository, AFTER  * having done a test on conflicts.  *  * The call is: cvs commit [options] files...  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -1697,6 +1697,14 @@ operator|(
 name|uid_t
 operator|)
 literal|0
+ifdef|#
+directive|ifdef
+name|CLIENT_SUPPORT
+operator|&&
+operator|!
+name|client_active
+endif|#
+directive|endif
 condition|)
 block|{
 name|struct
