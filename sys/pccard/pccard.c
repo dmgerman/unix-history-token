@@ -2490,6 +2490,14 @@ argument_list|(
 name|sp
 argument_list|)
 expr_stmt|;
+name|selwakeup
+argument_list|(
+operator|&
+name|sp
+operator|->
+name|selp
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2585,6 +2593,14 @@ argument_list|,
 name|sp
 operator|->
 name|slot
+argument_list|)
+expr_stmt|;
+name|selwakeup
+argument_list|(
+operator|&
+name|sp
+operator|->
+name|selp
 argument_list|)
 expr_stmt|;
 block|}
