@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: kbdcontrol.c,v 1.20 1999/01/11 03:20:24 yokota Exp $"
+literal|"$Id: kbdcontrol.c,v 1.21 1999/01/12 23:06:29 mjacob Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2159,47 +2159,22 @@ block|}
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__i386__
-end_ifdef
-
-begin_decl_stmt
+begin_function
 name|void
 name|print_key_definition_line
-argument_list|(
+parameter_list|(
 name|FILE
-operator|*
+modifier|*
 name|fp
-argument_list|,
+parameter_list|,
 name|int
 name|scancode
-argument_list|,
-expr|struct
+parameter_list|,
+name|struct
 name|keyent_t
-operator|*
+modifier|*
 name|key
-argument_list|)
-else|#
-directive|else
-name|void
-name|print_key_definition_line
-argument_list|(
-name|FILE
-operator|*
-name|fp
-argument_list|,
-name|int
-name|scancode
-argument_list|,
-expr|struct
-name|key_t
-operator|*
-name|key
-argument_list|)
-endif|#
-directive|endif
+parameter_list|)
 block|{
 name|int
 name|i
@@ -2337,7 +2312,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-end_decl_stmt
+end_function
 
 begin_function
 name|void
