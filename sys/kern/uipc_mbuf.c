@@ -1354,8 +1354,7 @@ name|ticks
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"m_clalloc failed, consider increase "
-literal|"NMBCLUSTERS value\n"
+literal|"All mbuf clusters exhausted, please see tuning(7).\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1670,7 +1669,7 @@ name|ticks
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"m_retry failed, consider increase mbuf value\n"
+literal|"All mbufs exhausted, please see tuning(7).\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1814,7 +1813,7 @@ name|ticks
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"m_retryhdr failed, consider increase mbuf value\n"
+literal|"All mbufs exhausted, please see tuning(7).\n"
 argument_list|)
 expr_stmt|;
 block|}
