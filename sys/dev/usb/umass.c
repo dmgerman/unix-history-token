@@ -10615,6 +10615,7 @@ argument_list|,
 operator|(
 literal|"rcmdlen = %d< %d, buffer too small"
 operator|,
+operator|*
 name|rcmdlen
 operator|,
 sizeof|sizeof
