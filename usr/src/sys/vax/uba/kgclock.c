@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kgclock.c	4.2	83/03/01	*/
+comment|/*	kgclock.c	4.3	83/03/03	*/
 end_comment
 
 begin_ifdef
@@ -12,6 +12,12 @@ end_ifdef
 begin_comment
 comment|/* kl-11 as profiling clock */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"../h/param.h"
+end_include
 
 begin_include
 include|#
@@ -34,13 +40,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/ubavar.h"
+file|"../vaxuba/ubavar.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../h/psl.h"
+file|"../machine/psl.h"
 end_include
 
 begin_decl_stmt
@@ -291,20 +297,30 @@ name|pc
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|ps
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 specifier|register
 name|int
 name|k
 decl_stmt|;
+specifier|extern
+name|time_t
+name|time
+decl_stmt|;
 specifier|static
-name|int
+name|time_t
 name|otime
 init|=
 literal|0
 decl_stmt|;
 specifier|static
-name|int
+name|time_t
 name|calibrate
 decl_stmt|;
 name|klbase
@@ -371,7 +387,11 @@ block|}
 return|return;
 block|}
 name|gatherstats
-argument_list|()
+argument_list|(
+name|pc
+argument_list|,
+name|ps
+argument_list|)
 expr_stmt|;
 comment|/* this routine lives in kern_clock.c */
 block|}
