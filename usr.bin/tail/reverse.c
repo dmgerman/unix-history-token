@@ -317,14 +317,8 @@ name|errno
 operator|=
 name|EFBIG
 expr_stmt|;
-name|err
-argument_list|(
-literal|0
-argument_list|,
-literal|"%s"
-argument_list|,
-name|fname
-argument_list|)
+name|ierr
+argument_list|()
 expr_stmt|;
 return|return;
 block|}
@@ -365,14 +359,8 @@ operator|-
 literal|1
 condition|)
 block|{
-name|err
-argument_list|(
-literal|0
-argument_list|,
-literal|"%s"
-argument_list|,
-name|fname
-argument_list|)
+name|ierr
+argument_list|()
 expr_stmt|;
 return|return;
 block|}
@@ -475,14 +463,8 @@ operator|->
 name|st_size
 argument_list|)
 condition|)
-name|err
-argument_list|(
-literal|0
-argument_list|,
-literal|"%s"
-argument_list|,
-name|fname
-argument_list|)
+name|ierr
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -780,14 +762,9 @@ condition|(
 name|enomem
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"tail: warning: %ld bytes discarded\n"
+literal|"warning: %ld bytes discarded\n"
 argument_list|,
 name|enomem
 argument_list|)
