@@ -15,14 +15,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static const char sccsid[] = "@(#)vs_refresh.c	10.44 (Berkeley) 10/13/96";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)vs_refresh.c	10.44 (Berkeley) 10/13/96"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -2096,6 +2108,10 @@ name|sp
 argument_list|,
 name|O_NUMBER
 argument_list|)
+operator|&&
+name|cnt
+operator|>=
+name|O_NUMBER_LENGTH
 condition|)
 name|cnt
 operator|-=
