@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hsearch.c	5.4 (Berkeley) %G%"
+literal|"@(#)hsearch.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -121,7 +121,7 @@ literal|8
 expr_stmt|;
 name|info
 operator|.
-name|ncached
+name|cachesize
 operator|=
 name|NULL
 expr_stmt|;
