@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhcireg.h,v 1.9 1999/11/20 00:57:09 augustss Exp $	*/
+comment|/*	$NetBSD: usb/uhcireg.h,v 1.12 2000/07/23 19:43:38 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -446,7 +446,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|UHCI_PTR_Q
+name|UHCI_PTR_TD
+value|0x00000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|UHCI_PTR_QH
 value|0x00000002
 end_define
 
@@ -458,7 +465,7 @@ value|0x00000004
 end_define
 
 begin_comment
-comment|/*  * The Queue Heads and Transfer Descriptors and accessed  * by both the CPU and the USB controller which runs  * concurrently.  This means that they have to be accessed  * with great care.  As long as the data structures are  * not linked into the controller's frame list they cannot  * be accessed by it and anything goes.  As soon as a  * TD is accessible by the controller it "owns" the td_status  * field; it will not be written by the CPU.  Similarly  * the controller "owns" the qh_elink field.  */
+comment|/*  * The Queue Heads and Transfer Descriptors are accessed  * by both the CPU and the USB controller which run  * concurrently.  This means that they have to be accessed  * with great care.  As long as the data structures are  * not linked into the controller's frame list they cannot  * be accessed by it and anything goes.  As soon as a  * TD is accessible by the controller it "owns" the td_status  * field; it will not be written by the CPU.  Similarly  * the controller "owns" the qh_elink field.  */
 end_comment
 
 begin_typedef

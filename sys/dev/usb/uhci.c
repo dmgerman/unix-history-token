@@ -1969,6 +1969,12 @@ operator|)
 return|;
 name|bsqh
 operator|->
+name|hlink
+operator|=
+name|NULL
+expr_stmt|;
+name|bsqh
+operator|->
 name|qh
 operator|.
 name|qh_hlink
@@ -1979,6 +1985,12 @@ name|UHCI_PTR_T
 argument_list|)
 expr_stmt|;
 comment|/* end of QH chain */
+name|bsqh
+operator|->
+name|elink
+operator|=
+name|NULL
+expr_stmt|;
 name|bsqh
 operator|->
 name|qh
@@ -2037,8 +2049,14 @@ name|bsqh
 operator|->
 name|physaddr
 operator||
-name|UHCI_PTR_Q
+name|UHCI_PTR_QH
 argument_list|)
+expr_stmt|;
+name|csqh
+operator|->
+name|elink
+operator|=
+name|NULL
 expr_stmt|;
 name|csqh
 operator|->
@@ -2125,7 +2143,7 @@ name|sqh
 operator|->
 name|physaddr
 operator||
-name|UHCI_PTR_Q
+name|UHCI_PTR_QH
 argument_list|)
 expr_stmt|;
 name|std
@@ -2180,7 +2198,7 @@ name|csqh
 operator|->
 name|physaddr
 operator||
-name|UHCI_PTR_Q
+name|UHCI_PTR_QH
 argument_list|)
 expr_stmt|;
 name|sqh
@@ -4351,7 +4369,7 @@ name|sqh
 operator|->
 name|physaddr
 operator||
-name|UHCI_PTR_Q
+name|UHCI_PTR_QH
 argument_list|)
 expr_stmt|;
 name|sc
@@ -4569,7 +4587,7 @@ name|sqh
 operator|->
 name|physaddr
 operator||
-name|UHCI_PTR_Q
+name|UHCI_PTR_QH
 argument_list|)
 expr_stmt|;
 name|sc
@@ -7371,24 +7389,6 @@ name|std
 operator|=
 name|lastp
 expr_stmt|;
-if|if
-condition|(
-name|lastlink
-operator|==
-name|UHCI_PTR_T
-condition|)
-name|p
-operator|->
-name|td
-operator|.
-name|td_link
-operator|=
-name|htole32
-argument_list|(
-name|lastlink
-argument_list|)
-expr_stmt|;
-else|else
 name|p
 operator|->
 name|td
@@ -7400,6 +7400,8 @@ argument_list|(
 name|lastlink
 operator||
 name|UHCI_PTR_VF
+operator||
+name|UHCI_PTR_TD
 argument_list|)
 expr_stmt|;
 name|lastp
@@ -7955,6 +7957,8 @@ argument_list|(
 name|data
 operator|->
 name|physaddr
+operator||
+name|UHCI_PTR_TD
 argument_list|)
 expr_stmt|;
 name|sqh
@@ -8931,6 +8935,8 @@ argument_list|(
 name|data
 operator|->
 name|physaddr
+operator||
+name|UHCI_PTR_TD
 argument_list|)
 expr_stmt|;
 block|}
@@ -9604,6 +9610,8 @@ operator|->
 name|physaddr
 operator||
 name|UHCI_PTR_VF
+operator||
+name|UHCI_PTR_TD
 argument_list|)
 expr_stmt|;
 block|}
@@ -9668,6 +9676,8 @@ operator|->
 name|physaddr
 operator||
 name|UHCI_PTR_VF
+operator||
+name|UHCI_PTR_TD
 argument_list|)
 expr_stmt|;
 name|setup
@@ -9918,6 +9928,8 @@ argument_list|(
 name|setup
 operator|->
 name|physaddr
+operator||
+name|UHCI_PTR_TD
 argument_list|)
 expr_stmt|;
 name|sqh
@@ -10007,7 +10019,7 @@ init|;
 operator|(
 name|link
 operator|&
-name|UHCI_PTR_Q
+name|UHCI_PTR_QH
 operator|)
 operator|==
 literal|0
@@ -11565,6 +11577,8 @@ argument_list|(
 name|std
 operator|->
 name|physaddr
+operator||
+name|UHCI_PTR_TD
 argument_list|)
 expr_stmt|;
 block|}
@@ -12047,6 +12061,8 @@ argument_list|(
 name|data
 operator|->
 name|physaddr
+operator||
+name|UHCI_PTR_TD
 argument_list|)
 expr_stmt|;
 block|}
@@ -12386,7 +12402,7 @@ name|sqh
 operator|->
 name|physaddr
 operator||
-name|UHCI_PTR_Q
+name|UHCI_PTR_QH
 argument_list|)
 expr_stmt|;
 name|vf
