@@ -8780,9 +8780,17 @@ block|}
 block|}
 block|, }
 block|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
 ifdef|#
 directive|ifdef
 name|PC98
