@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dumpfs.c	2.3 (Berkeley) %G%"
+literal|"@(#)dumpfs.c	2.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -249,7 +249,15 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"cgoffset\t%d\tcgmask\t0x%08x\n"
+literal|"sbsize\t%d\tcgsize\t%d\tcgoffset %d\tcgmask\t0x%08x\n"
+argument_list|,
+name|afs
+operator|.
+name|fs_sbsize
+argument_list|,
+name|afs
+operator|.
+name|fs_cgsize
 argument_list|,
 name|afs
 operator|.
@@ -262,7 +270,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ncg\t%d\tsize\t%d\tblocks\t%d\tcgsize\t%d\n"
+literal|"ncg\t%d\tsize\t%d\tblocks\t%d\n"
 argument_list|,
 name|afs
 operator|.
@@ -275,10 +283,6 @@ argument_list|,
 name|afs
 operator|.
 name|fs_dsize
-argument_list|,
-name|afs
-operator|.
-name|fs_cgsize
 argument_list|)
 expr_stmt|;
 name|printf
@@ -317,11 +321,24 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"frag\t%d\tminfree\t%d%%\tmaxbpg\t%d\n"
+literal|"frag\t%d\tshift\t%d\tfsbtodb\t%d\n"
 argument_list|,
 name|afs
 operator|.
 name|fs_frag
+argument_list|,
+name|afs
+operator|.
+name|fs_fragshift
+argument_list|,
+name|afs
+operator|.
+name|fs_fsbtodb
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"minfree\t%d%%\tmaxbpg\t%d\n"
 argument_list|,
 name|afs
 operator|.
@@ -351,7 +368,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"csaddr\t%d\tcssize\t%d\n"
+literal|"csaddr\t%d\tcssize\t%d\tshift\t%d\tmask\t0x%08x\n"
 argument_list|,
 name|afs
 operator|.
@@ -360,6 +377,14 @@ argument_list|,
 name|afs
 operator|.
 name|fs_cssize
+argument_list|,
+name|afs
+operator|.
+name|fs_csshift
+argument_list|,
+name|afs
+operator|.
+name|fs_csmask
 argument_list|)
 expr_stmt|;
 name|printf
@@ -406,6 +431,23 @@ argument_list|,
 name|afs
 operator|.
 name|fs_ipg
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"nindir\t%d\tinopb\t%d\tnspf\t%d\n"
+argument_list|,
+name|afs
+operator|.
+name|fs_nindir
+argument_list|,
+name|afs
+operator|.
+name|fs_inopb
+argument_list|,
+name|afs
+operator|.
+name|fs_nspf
 argument_list|)
 expr_stmt|;
 name|printf
