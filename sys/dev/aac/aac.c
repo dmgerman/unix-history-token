@@ -3035,25 +3035,23 @@ operator|==
 name|NULL
 condition|)
 break|break;
-comment|/* try to give the command to the controller */
+comment|/* 		 * Try to give the command to the controller.  Any error is 		 * catastrophic since it means that bus_dmamap_load() failed. 		 */
 if|if
 condition|(
 name|aac_map_command
 argument_list|(
 name|cm
 argument_list|)
-operator|==
-name|EBUSY
+operator|!=
+literal|0
 condition|)
-block|{
-comment|/* put it on the ready queue for later */
-name|aac_requeue_ready
+name|panic
 argument_list|(
+literal|"aac: error mapping command %p\n"
+argument_list|,
 name|cm
 argument_list|)
 expr_stmt|;
-break|break;
-block|}
 block|}
 block|}
 end_function
@@ -3105,11 +3103,13 @@ name|cm_flags
 operator|&
 name|AAC_CMD_MAPPED
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+name|panic
+argument_list|(
+literal|"aac: command %p already mapped"
+argument_list|,
+name|cm
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|cm
@@ -3306,13 +3306,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|sc
-operator|->
-name|aifflags
-operator|&=
-operator|~
-name|AAC_AIFFLAGS_ALLOCFIBS
-expr_stmt|;
 name|AAC_LOCK_RELEASE
 argument_list|(
 operator|&
@@ -3333,6 +3326,13 @@ name|sc
 operator|->
 name|aac_io_lock
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|aifflags
+operator|&=
+operator|~
+name|AAC_AIFFLAGS_ALLOCFIBS
 expr_stmt|;
 name|aac_startio
 argument_list|(
@@ -5893,11 +5893,18 @@ argument_list|)
 operator|==
 name|EBUSY
 condition|)
+block|{
+name|aac_unmap_command
+argument_list|(
+name|cm
+argument_list|)
+expr_stmt|;
 name|aac_requeue_ready
 argument_list|(
 name|cm
 argument_list|)
 expr_stmt|;
+block|}
 return|return;
 block|}
 end_function
