@@ -40,7 +40,7 @@ name|u_int64_t
 name|ret0
 asm|__asm("r8");
 asm|__asm __volatile("mov r15=%1\n\t"
-literal|"break 0x80001"
+literal|"break 0x80000"
 operator|:
 literal|"=r"
 operator|(
