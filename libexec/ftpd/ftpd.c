@@ -2967,9 +2967,6 @@ block|}
 ifdef|#
 directive|ifdef
 name|VIRTUAL_HOSTING
-if|if
-condition|(
-operator|(
 name|fd
 operator|=
 name|fopen
@@ -2980,16 +2977,9 @@ name|welcome
 argument_list|,
 literal|"r"
 argument_list|)
-operator|)
-operator|!=
-name|NULL
-condition|)
-block|{
+expr_stmt|;
 else|#
 directive|else
-if|if
-condition|(
-operator|(
 name|fd
 operator|=
 name|fopen
@@ -2998,13 +2988,16 @@ name|_PATH_FTPWELCOME
 argument_list|,
 literal|"r"
 argument_list|)
-operator|)
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|fd
 operator|!=
 name|NULL
 condition|)
 block|{
-endif|#
-directive|endif
 while|while
 condition|(
 name|fgets
@@ -3150,6 +3143,9 @@ argument_list|()
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|lostconn
@@ -3175,6 +3171,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|sigquit
@@ -3198,10 +3197,19 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|VIRTUAL_HOSTING
+end_ifdef
+
+begin_comment
 comment|/*  * read in virtual host tables (if they exist)  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|inithosts
@@ -4280,6 +4288,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|selecthost
@@ -4507,9 +4518,18 @@ operator|->
 name|anonuser
 expr_stmt|;
 block|}
+end_function
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Helper function for sgetpwnam().  */
+end_comment
+
+begin_function
 specifier|static
 name|char
 modifier|*
@@ -4574,7 +4594,13 @@ name|new
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Save the result of a getpwnam.  Used for USER command, since  * the data returned must not be clobbered by any other command  * (e.g., globbing).  */
+end_comment
+
+begin_function
 specifier|static
 name|struct
 name|passwd
@@ -4724,16 +4750,31 @@ name|save
 operator|)
 return|;
 block|}
+end_function
+
+begin_decl_stmt
 specifier|static
 name|int
 name|login_attempts
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* number of failed login attempts */
+end_comment
+
+begin_decl_stmt
 specifier|static
 name|int
 name|askpasswd
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* had user command, ask for passwd */
+end_comment
+
+begin_decl_stmt
 specifier|static
 name|char
 name|curname
@@ -4741,8 +4782,17 @@ index|[
 name|MAXLOGNAME
 index|]
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* current USER name */
+end_comment
+
+begin_comment
 comment|/*  * USER command.  * Sets global passwd pointer pw if named account exists and is acceptable;  * sets askpasswd if a PASS command is expected.  If logged in previously,  * need to reset state.  If name is "ftp" or "anonymous", the name is not in  * _PATH_FTPUSERS, and ftp account exists, set guest and pw, then just return.  * If account doesn't exist, ask for passwd anyway.  Otherwise, check user  * requesting login privileges.  Disallow anyone who does not have a standard  * shell as returned by getusershell().  Disallow anyone mentioned in the file  * _PATH_FTPUSERS to allow people such as root and uucp to be avoided.  */
+end_comment
+
+begin_function
 name|void
 name|user
 parameter_list|(
@@ -4800,6 +4850,29 @@ name|guest
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VIRTUAL_HOSTING
+name|pw
+operator|=
+name|sgetpwnam
+argument_list|(
+name|thishost
+operator|->
+name|anonuser
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|pw
+operator|=
+name|sgetpwnam
+argument_list|(
+literal|"ftp"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|strcmp
@@ -4854,45 +4927,14 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VIRTUAL_HOSTING
 elseif|else
 if|if
 condition|(
-operator|(
 name|pw
-operator|=
-name|sgetpwnam
-argument_list|(
-name|thishost
-operator|->
-name|anonuser
-argument_list|)
-operator|)
 operator|!=
 name|NULL
 condition|)
 block|{
-else|#
-directive|else
-elseif|else
-if|if
-condition|(
-operator|(
-name|pw
-operator|=
-name|sgetpwnam
-argument_list|(
-literal|"ftp"
-argument_list|)
-operator|)
-operator|!=
-name|NULL
-condition|)
-block|{
-endif|#
-directive|endif
 name|guest
 operator|=
 literal|1
@@ -5184,7 +5226,13 @@ name|login_attempts
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Check if a user is in the file "fname",  * return a pointer to a malloc'd string with the rest  * of the matching line in "residue" if not NULL.  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|checkuser
@@ -5575,7 +5623,13 @@ name|found
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Terminate login as previous user, if any, resetting state;  * used when USER command is given or login fails.  */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|end_login
@@ -5758,10 +5812,19 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+end_function
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|USE_PAM
+end_ifdef
+
+begin_comment
 comment|/*  * the following code is stolen from imap-uw PAM authentication module and  * login.c  */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|COPY_STRING
@@ -5769,6 +5832,9 @@ parameter_list|(
 name|s
 parameter_list|)
 value|(s ? strdup(s) : NULL)
+end_define
+
+begin_struct
 struct|struct
 name|cred_t
 block|{
@@ -5786,11 +5852,17 @@ decl_stmt|;
 comment|/* password */
 block|}
 struct|;
+end_struct
+
+begin_typedef
 typedef|typedef
 name|struct
 name|cred_t
 name|cred_t
 typedef|;
+end_typedef
+
+begin_function
 specifier|static
 name|int
 name|auth_conv
@@ -5982,7 +6054,13 @@ return|return
 name|PAM_SUCCESS
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Attempt to authenticate the user using PAM.  Returns 0 if the user is  * authenticated, or 1 if not authenticated.  If some sort of PAM system  * error occurs (e.g., the "/etc/pam.conf" file is missing) then this  * function returns -1.  This can be used as an indication that we should  * fall back to a different authentication mechanism.  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|auth_pam
@@ -6377,9 +6455,18 @@ return|return
 name|rval
 return|;
 block|}
+end_function
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* USE_PAM */
+end_comment
+
+begin_function
 name|void
 name|pass
 parameter_list|(
@@ -7006,9 +7093,6 @@ condition|)
 ifdef|#
 directive|ifdef
 name|VIRTUAL_HOSTING
-if|if
-condition|(
-operator|(
 name|statfd
 operator|=
 name|open
@@ -7021,15 +7105,9 @@ name|O_WRONLY
 operator||
 name|O_APPEND
 argument_list|)
-operator|)
-operator|<
-literal|0
-condition|)
+expr_stmt|;
 else|#
 directive|else
-if|if
-condition|(
-operator|(
 name|statfd
 operator|=
 name|open
@@ -7040,12 +7118,15 @@ name|O_WRONLY
 operator||
 name|O_APPEND
 argument_list|)
-operator|)
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|statfd
 operator|<
 literal|0
 condition|)
-endif|#
-directive|endif
 name|stats
 operator|=
 literal|0
@@ -7362,9 +7443,6 @@ comment|/* 	 * Display a login message, if it exists. 	 * N.B. reply(230,) must 
 ifdef|#
 directive|ifdef
 name|VIRTUAL_HOSTING
-if|if
-condition|(
-operator|(
 name|fd
 operator|=
 name|fopen
@@ -7375,16 +7453,9 @@ name|loginmsg
 argument_list|,
 literal|"r"
 argument_list|)
-operator|)
-operator|!=
-name|NULL
-condition|)
-block|{
+expr_stmt|;
 else|#
 directive|else
-if|if
-condition|(
-operator|(
 name|fd
 operator|=
 name|fopen
@@ -7393,13 +7464,16 @@ name|_PATH_FTPLOGINMESG
 argument_list|,
 literal|"r"
 argument_list|)
-operator|)
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|fd
 operator|!=
 name|NULL
 condition|)
 block|{
-endif|#
-directive|endif
 name|char
 modifier|*
 name|cp
@@ -7732,6 +7806,9 @@ name|end_login
 argument_list|()
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 name|retrieve
 parameter_list|(
@@ -8201,6 +8278,9 @@ name|fin
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 name|store
 parameter_list|(
@@ -8659,6 +8739,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|FILE
 modifier|*
@@ -9002,6 +9085,9 @@ name|NULL
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|FILE
 modifier|*
@@ -9634,7 +9720,13 @@ name|file
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Tranfer the contents of "instr" to "outstr" peer using the appropriate  * encapsulation of the data subject to Mode, Structure, and Type.  *  * NB: Form isn't handled.  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|send_data
@@ -10137,7 +10229,13 @@ literal|1
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Transfer data from peer to "outstr" using the appropriate encapulation of  * the data subject to Mode, Structure, and Type.  *  * N.B.: Form isn't handled.  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|receive_data
@@ -10532,6 +10630,9 @@ literal|1
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 name|void
 name|statfilecmd
 parameter_list|(
@@ -10738,6 +10839,9 @@ literal|"End of Status"
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 name|statcmd
 parameter_list|(
@@ -11475,6 +11579,9 @@ literal|"End of status"
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 name|fatalerror
 parameter_list|(
@@ -11506,6 +11613,9 @@ argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
+end_function
+
+begin_function
 name|void
 name|reply
 parameter_list|(
@@ -11608,6 +11718,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_function
 name|void
 name|lreply
 parameter_list|(
@@ -11710,6 +11823,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|ack
@@ -11729,6 +11845,9 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 name|nack
 parameter_list|(
@@ -11747,7 +11866,13 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/* ARGSUSED */
+end_comment
+
+begin_function
 name|void
 name|yyerror
 parameter_list|(
@@ -11788,6 +11913,9 @@ name|cbuf
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 name|delete
 parameter_list|(
@@ -11908,6 +12036,9 @@ literal|"DELE"
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 name|cwd
 parameter_list|(
@@ -11939,6 +12070,9 @@ literal|"CWD"
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 name|makedir
 parameter_list|(
@@ -12028,6 +12162,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_function
 name|void
 name|removedir
 parameter_list|(
@@ -12066,6 +12203,9 @@ literal|"RMD"
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|void
 name|pwd
 parameter_list|(
@@ -12141,6 +12281,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_function
 name|char
 modifier|*
 name|renamefrom
@@ -12213,6 +12356,9 @@ name|name
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 name|void
 name|renamecmd
 parameter_list|(
@@ -12291,6 +12437,9 @@ literal|"RNTO"
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|dolog
@@ -12458,7 +12607,13 @@ expr_stmt|;
 block|}
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*  * Record logout in wtmp file  * and exit with supplied status.  */
+end_comment
+
+begin_function
 name|void
 name|dologout
 parameter_list|(
@@ -12506,6 +12661,9 @@ name|status
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|sigurg
@@ -12519,6 +12677,9 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|myoob
@@ -12659,7 +12820,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_comment
 comment|/*  * Note: a response of 425 is not mentioned as a possible response to  *	the PASV command in RFC959. However, it has been blessed as  *	a legitimate response by Jon Postel in a telephone conversation  *	with Rick Adams on 25 Jan 89.  */
+end_comment
+
+begin_function
 name|void
 name|passive
 parameter_list|(
@@ -13120,7 +13287,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Long Passive defined in RFC 1639.  *     228 Entering Long Passive Mode  *         (af, hal, h1, h2, h3,..., pal, p1, p2...)  */
+end_comment
+
+begin_function
 name|void
 name|long_passive
 parameter_list|(
@@ -13907,7 +14080,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Generate unique name for file with basename "local"  * and open the file in order to avoid possible races.  * Try "local" first, then "local.1", "local.2" etc, up to "local.99".  * Return descriptor to the file, set "name" to its name.  *  * Generates failure reply on error.  */
+end_comment
+
+begin_function
 specifier|static
 name|int
 name|guniquefd
@@ -14199,7 +14378,13 @@ literal|1
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Format and send reply containing system error number.  */
+end_comment
+
+begin_function
 name|void
 name|perror_reply
 parameter_list|(
@@ -14226,6 +14411,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_decl_stmt
 specifier|static
 name|char
 modifier|*
@@ -14238,6 +14426,9 @@ block|,
 literal|0
 block|}
 decl_stmt|;
+end_decl_stmt
+
+begin_function
 name|void
 name|send_file_list
 parameter_list|(
@@ -14931,6 +15122,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_function
 name|void
 name|reapchild
 parameter_list|(
@@ -14953,10 +15147,19 @@ literal|0
 condition|)
 empty_stmt|;
 block|}
+end_function
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|OLD_SETPROCTITLE
+end_ifdef
+
+begin_comment
 comment|/*  * Clobber argv so ps will show what we're doing.  (Stolen from sendmail.)  * Warning, since this is usually started from inetd.conf, it often doesn't  * have much of an environment or arglist to overwrite.  */
+end_comment
+
+begin_function
 name|void
 name|setproctitle
 parameter_list|(
@@ -15102,9 +15305,18 @@ operator|=
 literal|' '
 expr_stmt|;
 block|}
+end_function
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* OLD_SETPROCTITLE */
+end_comment
+
+begin_function
 specifier|static
 name|void
 name|logxfer
@@ -15220,6 +15432,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_function
 specifier|static
 name|char
 modifier|*
@@ -15338,9 +15553,21 @@ name|s2
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/* setup server socket for specified address family */
+end_comment
+
+begin_comment
 comment|/* if af is PF_UNSPEC more than one socket may be returned */
+end_comment
+
+begin_comment
 comment|/* the returned list is dynamically allocated, so caller needs to free it */
+end_comment
+
+begin_function
 specifier|static
 name|int
 modifier|*
