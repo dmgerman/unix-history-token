@@ -3979,6 +3979,11 @@ argument_list|,
 name|done_ccb
 argument_list|)
 expr_stmt|;
+name|TARG_UNLOCK
+argument_list|(
+name|softc
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 comment|/* abort_all_pending() waits for pending queue to be empty */
