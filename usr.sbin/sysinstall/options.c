@@ -294,6 +294,34 @@ name|varCheck
 block|}
 block|,
 block|{
+literal|"NFS TCP"
+block|,
+literal|"Use TCP protocol for NFS"
+block|,
+name|OPT_IS_VAR
+block|,
+name|NULL
+block|,
+name|VAR_NFS_TCP
+block|,
+name|varCheck
+block|}
+block|,
+block|{
+literal|"NFS version 3"
+block|,
+literal|"Use NFS version 3"
+block|,
+name|OPT_IS_VAR
+block|,
+name|NULL
+block|,
+name|VAR_NFS_V3
+block|,
+name|varCheck
+block|}
+block|,
+block|{
 literal|"Debugging"
 block|,
 literal|"Emit extra debugging output on VTY2 (ALT-F2)"
