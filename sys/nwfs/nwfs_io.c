@@ -763,6 +763,14 @@ name|dp
 operator|.
 name|d_name
 expr_stmt|;
+name|cnp
+operator|->
+name|cn_namelen
+operator|=
+name|dp
+operator|.
+name|d_namlen
+expr_stmt|;
 name|ndp
 operator|->
 name|ni_vp
