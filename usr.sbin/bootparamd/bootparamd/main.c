@@ -215,9 +215,6 @@ name|SVCXPRT
 modifier|*
 name|transp
 decl_stmt|;
-name|int
-name|i
-decl_stmt|;
 name|struct
 name|hostent
 modifier|*
@@ -268,6 +265,10 @@ if|if
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|optarg
 argument_list|)
@@ -325,10 +326,7 @@ literal|1
 argument_list|,
 literal|"no such host %s"
 argument_list|,
-name|argv
-index|[
-name|i
-index|]
+name|optarg
 argument_list|)
 expr_stmt|;
 block|}
