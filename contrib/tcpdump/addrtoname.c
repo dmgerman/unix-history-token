@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/addrtoname.c,v 1.64 1999/11/21 09:36:44 fenner Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/addrtoname.c,v 1.69.2.1 2001/01/17 18:29:58 guy Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,12 +60,6 @@ directive|include
 file|<sys/time.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|__STDC__
-end_if
-
 begin_struct_decl
 struct_decl|struct
 name|mbuf
@@ -77,11 +71,6 @@ struct_decl|struct
 name|rtentry
 struct_decl|;
 end_struct_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -95,22 +84,16 @@ directive|include
 file|<netinet/in.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<net/ethernet.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|INET6
+name|HAVE_NETINET_IF_ETHER_H
 end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<netinet/ip6.h>
+file|<netinet/if_ether.h>
 end_include
 
 begin_endif
@@ -147,40 +130,6 @@ include|#
 directive|include
 file|<pcap-namedb.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_MALLOC_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<malloc.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_MEMORY_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<memory.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -2560,11 +2509,6 @@ name|sap
 parameter_list|)
 block|{
 specifier|register
-name|char
-modifier|*
-name|cp
-decl_stmt|;
-specifier|register
 name|struct
 name|hnamemem
 modifier|*
@@ -2639,56 +2583,21 @@ operator|=
 name|newhnamemem
 argument_list|()
 expr_stmt|;
-name|cp
-operator|=
+name|snprintf
+argument_list|(
 name|buf
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
-name|cp
 argument_list|,
-literal|"sap "
-argument_list|)
-expr_stmt|;
-name|cp
-operator|+=
-name|strlen
+sizeof|sizeof
 argument_list|(
-name|cp
+name|buf
 argument_list|)
-expr_stmt|;
-operator|*
-name|cp
-operator|++
-operator|=
-name|hex
-index|[
-name|sap
-operator|>>
-literal|4
-operator|&
-literal|0xf
-index|]
-expr_stmt|;
-operator|*
-name|cp
-operator|++
-operator|=
-name|hex
-index|[
+argument_list|,
+literal|"sap %02x"
+argument_list|,
 name|sap
 operator|&
-literal|0xf
-index|]
-expr_stmt|;
-operator|*
-name|cp
-operator|++
-operator|=
-literal|'\0'
+literal|0xff
+argument_list|)
 expr_stmt|;
 name|tp
 operator|->

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-pim.c,v 1.15.2.1 2000/01/25 18:29:05 itojun Exp $ (LBL)"
+literal|"@(#) $Header: /tcpdump/master/tcpdump/print-pim.c,v 1.23 2000/10/03 02:55:00 itojun Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,18 +64,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip.h>
 end_include
 
 begin_comment
@@ -151,6 +139,12 @@ begin_include
 include|#
 directive|include
 file|"extract.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ip.h"
 end_include
 
 begin_function_decl
@@ -2946,9 +2940,10 @@ name|bp
 expr_stmt|;
 switch|switch
 condition|(
+name|IP_V
+argument_list|(
 name|ip
-operator|->
-name|ip_v
+argument_list|)
 condition|)
 block|{
 case|case
@@ -2998,9 +2993,10 @@ name|printf
 argument_list|(
 literal|" IP ver %d"
 argument_list|,
+name|IP_V
+argument_list|(
 name|ip
-operator|->
-name|ip_v
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3876,8 +3872,6 @@ name|printf
 argument_list|(
 literal|" RPcnt=%d"
 argument_list|,
-name|frpcnt
-operator|=
 name|bp
 index|[
 literal|0
@@ -3912,6 +3906,8 @@ name|printf
 argument_list|(
 literal|" FRPcnt=%d"
 argument_list|,
+name|frpcnt
+operator|=
 name|bp
 index|[
 literal|1

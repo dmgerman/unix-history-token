@@ -713,6 +713,9 @@ name|EDST
 argument_list|(
 name|tp
 argument_list|)
+argument_list|,
+operator|&
+name|extracted_ethertype
 argument_list|)
 operator|==
 literal|0
