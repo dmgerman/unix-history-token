@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: write_disk.c,v 1.25 1999/01/08 00:32:19 jkh Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: write_disk.c,v 1.26 1999/01/29 11:39:24 jkh Exp $  *  */
 end_comment
 
 begin_include
@@ -1004,6 +1004,16 @@ index|[
 literal|4
 index|]
 decl_stmt|;
+name|int
+name|one
+init|=
+literal|1
+decl_stmt|;
+name|int
+name|zero
+init|=
+literal|0
+decl_stmt|;
 name|strcpy
 argument_list|(
 name|device
@@ -1052,6 +1062,16 @@ return|return
 literal|1
 return|;
 block|}
+name|ioctl
+argument_list|(
+name|fd
+argument_list|,
+name|DIOCWLABEL
+argument_list|,
+operator|&
+name|one
+argument_list|)
+expr_stmt|;
 name|memset
 argument_list|(
 name|s
@@ -1831,6 +1851,16 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|ioctl
+argument_list|(
+name|fd
+argument_list|,
+name|DIOCWLABEL
+argument_list|,
+operator|&
+name|zero
+argument_list|)
+expr_stmt|;
 name|close
 argument_list|(
 name|fd
