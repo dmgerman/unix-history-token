@@ -616,7 +616,7 @@ parameter_list|,
 name|b
 parameter_list|)
 define|\
-value|(KM_COPY((caddr_t)a, (caddr_t)b, sizeof(struct spans_addr)))
+value|(bcopy((caddr_t)a, (caddr_t)b, sizeof(struct spans_addr)))
 end_define
 
 begin_comment

@@ -2323,15 +2323,9 @@ argument_list|,
 name|si_next
 argument_list|)
 expr_stmt|;
-name|KM_FREE
+name|free
 argument_list|(
 name|usp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|unisig
-argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|)

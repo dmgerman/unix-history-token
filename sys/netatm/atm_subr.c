@@ -689,12 +689,7 @@ return|;
 block|}
 name|scp
 operator|=
-operator|(
-expr|struct
-name|sp_chunk
-operator|*
-operator|)
-name|KM_ALLOC
+name|malloc
 argument_list|(
 name|sip
 operator|->
@@ -703,6 +698,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -733,12 +730,6 @@ return|;
 block|}
 name|scp
 operator|->
-name|sc_next
-operator|=
-name|NULL
-expr_stmt|;
-name|scp
-operator|->
 name|sc_info
 operator|=
 name|sip
@@ -748,12 +739,6 @@ operator|->
 name|sc_magic
 operator|=
 name|SPOOL_MAGIC
-expr_stmt|;
-name|scp
-operator|->
-name|sc_used
-operator|=
-literal|0
 expr_stmt|;
 comment|/* 		 * Divy up chunk into free blocks 		 */
 name|slp
@@ -953,7 +938,7 @@ operator|=
 name|scp
 expr_stmt|;
 comment|/* 	 * Clear out block 	 */
-name|KM_ZERO
+name|bzero
 argument_list|(
 name|bp
 argument_list|,
@@ -1283,16 +1268,12 @@ name|scp
 operator|->
 name|sc_next
 expr_stmt|;
-name|KM_FREE
+name|free
 argument_list|(
 operator|(
 name|caddr_t
 operator|)
 name|scp
-argument_list|,
-name|sip
-operator|->
-name|si_chunksiz
 argument_list|,
 name|M_DEVBUF
 argument_list|)
@@ -1434,16 +1415,12 @@ name|scp
 operator|->
 name|sc_next
 expr_stmt|;
-name|KM_FREE
+name|free
 argument_list|(
 operator|(
 name|caddr_t
 operator|)
 name|scp
-argument_list|,
-name|sip
-operator|->
-name|si_chunksiz
 argument_list|,
 name|M_DEVBUF
 argument_list|)

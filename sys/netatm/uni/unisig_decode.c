@@ -4000,7 +4000,7 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* 	 * Clear the IE 	 */
-name|KM_COPY
+name|bcopy
 argument_list|(
 operator|&
 name|ie_aalp_absent
@@ -4440,7 +4440,7 @@ name|int
 name|rc
 decl_stmt|;
 comment|/* 	 * Clear the IE 	 */
-name|KM_COPY
+name|bcopy
 argument_list|(
 operator|&
 name|ie_clrt_absent
@@ -4509,7 +4509,7 @@ name|u_char
 name|c
 decl_stmt|;
 comment|/* 	 * Clear the IE 	 */
-name|KM_COPY
+name|bcopy
 argument_list|(
 operator|&
 name|ie_bbcp_absent
@@ -4701,7 +4701,7 @@ name|u_char
 name|c
 decl_stmt|;
 comment|/* 	 * Clear the IE 	 */
-name|KM_COPY
+name|bcopy
 argument_list|(
 operator|&
 name|ie_bhli_absent
@@ -5046,7 +5046,7 @@ name|u_int
 name|ipi
 decl_stmt|;
 comment|/* 	 * Clear the IE 	 */
-name|KM_COPY
+name|bcopy
 argument_list|(
 operator|&
 name|ie_blli_absent
@@ -5752,7 +5752,7 @@ name|u_char
 name|c
 decl_stmt|;
 comment|/* 	 * Clear the IE 	 */
-name|KM_COPY
+name|bcopy
 argument_list|(
 operator|&
 name|ie_clst_absent
@@ -5838,7 +5838,7 @@ name|u_char
 name|c
 decl_stmt|;
 comment|/* 	 * Clear the IE 	 */
-name|KM_COPY
+name|bcopy
 argument_list|(
 operator|&
 name|ie_cdad_absent
@@ -6039,7 +6039,7 @@ name|u_char
 name|c
 decl_stmt|;
 comment|/* 	 * Clear the IE 	 */
-name|KM_COPY
+name|bcopy
 argument_list|(
 operator|&
 name|ie_cdsa_absent
@@ -6223,7 +6223,7 @@ name|u_char
 name|c
 decl_stmt|;
 comment|/* 	 * Clear the IE 	 */
-name|KM_COPY
+name|bcopy
 argument_list|(
 operator|&
 name|ie_cgad_absent
@@ -6505,7 +6505,7 @@ name|u_char
 name|c
 decl_stmt|;
 comment|/* 	 * Clear the IE 	 */
-name|KM_COPY
+name|bcopy
 argument_list|(
 operator|&
 name|ie_cgsa_absent
@@ -6691,7 +6691,7 @@ name|u_char
 name|c
 decl_stmt|;
 comment|/* 	 * Clear the IE 	 */
-name|KM_COPY
+name|bcopy
 argument_list|(
 operator|&
 name|ie_caus_absent
@@ -6872,7 +6872,7 @@ decl_stmt|,
 name|rc
 decl_stmt|;
 comment|/* 	 * Clear the IE 	 */
-name|KM_COPY
+name|bcopy
 argument_list|(
 operator|&
 name|ie_cnid_absent
@@ -6998,7 +6998,7 @@ name|int
 name|rc
 decl_stmt|;
 comment|/* 	 * Clear the IE 	 */
-name|KM_COPY
+name|bcopy
 argument_list|(
 operator|&
 name|ie_qosp_absent
@@ -7090,7 +7090,7 @@ name|u_char
 name|c
 decl_stmt|;
 comment|/* 	 * Clear the IE 	 */
-name|KM_COPY
+name|bcopy
 argument_list|(
 operator|&
 name|ie_brpi_absent
@@ -7175,7 +7175,7 @@ name|u_char
 name|c
 decl_stmt|;
 comment|/* 	 * Clear the IE 	 */
-name|KM_COPY
+name|bcopy
 argument_list|(
 operator|&
 name|ie_rsti_absent
@@ -7260,7 +7260,7 @@ name|u_char
 name|c
 decl_stmt|;
 comment|/* 	 * Clear the IE 	 */
-name|KM_COPY
+name|bcopy
 argument_list|(
 operator|&
 name|ie_bsdc_absent
@@ -7364,7 +7364,7 @@ name|u_char
 name|c
 decl_stmt|;
 comment|/* 	 * Clear the IE 	 */
-name|KM_COPY
+name|bcopy
 argument_list|(
 operator|&
 name|ie_trnt_absent

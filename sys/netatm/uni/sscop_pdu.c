@@ -3679,7 +3679,7 @@ operator|)
 operator||
 name|PT_UD
 expr_stmt|;
-name|KM_ZERO
+name|bzero
 argument_list|(
 name|cp
 argument_list|,

@@ -2107,7 +2107,7 @@ operator|->
 name|x_handy
 argument_list|)
 expr_stmt|;
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|xdrs
 operator|->
@@ -2290,7 +2290,7 @@ operator|->
 name|x_handy
 argument_list|)
 expr_stmt|;
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|addr
 argument_list|,

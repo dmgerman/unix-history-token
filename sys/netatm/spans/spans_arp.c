@@ -1606,7 +1606,7 @@ operator|->
 name|ah_sha
 argument_list|)
 expr_stmt|;
-name|KM_COPY
+name|bcopy
 argument_list|(
 operator|&
 operator|(
@@ -1631,7 +1631,7 @@ name|in_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|KM_COPY
+name|bcopy
 argument_list|(
 operator|&
 name|sap
@@ -1815,7 +1815,7 @@ operator|+
 literal|1
 operator|)
 expr_stmt|;
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|ahp
 operator|->
@@ -1831,7 +1831,7 @@ name|in_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|ahp
 operator|->
@@ -1847,7 +1847,7 @@ name|in_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|KM_COPY
+name|bcopy
 argument_list|(
 operator|&
 operator|(
@@ -2395,7 +2395,7 @@ operator|->
 name|ah_sha
 argument_list|)
 expr_stmt|;
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|ahp
 operator|->
@@ -2412,7 +2412,7 @@ name|in_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|KM_COPY
+name|bcopy
 argument_list|(
 operator|&
 name|in_me

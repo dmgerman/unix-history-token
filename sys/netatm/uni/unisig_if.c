@@ -714,12 +714,7 @@ expr_stmt|;
 comment|/* 	 * Allocate UNISIG protocol instance control block 	 */
 name|usp
 operator|=
-operator|(
-expr|struct
-name|unisig
-operator|*
-operator|)
-name|KM_ALLOC
+name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -730,6 +725,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -747,17 +744,6 @@ goto|goto
 name|done
 goto|;
 block|}
-name|KM_ZERO
-argument_list|(
-name|usp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|unisig
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Set state in UNISIG protocol instance control block 	 */
 name|usp
 operator|->
@@ -939,15 +925,9 @@ argument_list|,
 name|si_next
 argument_list|)
 expr_stmt|;
-name|KM_FREE
+name|free
 argument_list|(
 name|usp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|unisig
-argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|)
@@ -2040,15 +2020,9 @@ argument_list|,
 name|si_next
 argument_list|)
 expr_stmt|;
-name|KM_FREE
+name|free
 argument_list|(
 name|usp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|unisig
-argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|)
@@ -2656,7 +2630,7 @@ name|uvp
 operator|->
 name|uv_tstamp
 expr_stmt|;
-name|KM_ZERO
+name|bzero
 argument_list|(
 name|rsp
 operator|.
@@ -2843,7 +2817,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|KM_CMP
+name|bcmp
 argument_list|(
 name|asp
 operator|->
@@ -2890,7 +2864,7 @@ argument_list|(
 name|Atm_addr_nsap
 argument_list|)
 expr_stmt|;
-name|KM_COPY
+name|bcopy
 argument_list|(
 operator|&
 name|pip
@@ -2919,7 +2893,7 @@ name|pif_macaddr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|KM_COPY
+name|bcopy
 argument_list|(
 operator|(
 name|caddr_t

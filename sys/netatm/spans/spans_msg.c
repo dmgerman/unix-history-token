@@ -467,7 +467,7 @@ argument_list|(
 name|spans_addr
 argument_list|)
 expr_stmt|;
-name|KM_COPY
+name|bcopy
 argument_list|(
 operator|&
 name|pip
@@ -2154,7 +2154,7 @@ name|sp_vccq
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Set up the ATM attributes block 	 */
-name|KM_ZERO
+name|bzero
 argument_list|(
 operator|&
 name|call_attrs
@@ -3195,7 +3195,7 @@ name|cause_value
 operator|=
 name|T_ATM_CAUSE_CALL_REJECTED
 expr_stmt|;
-name|KM_ZERO
+name|bzero
 argument_list|(
 name|svp
 operator|->
@@ -3508,7 +3508,7 @@ name|cause_value
 operator|=
 name|T_ATM_CAUSE_NORMAL_CALL_CLEARING
 expr_stmt|;
-name|KM_ZERO
+name|bzero
 argument_list|(
 name|cvp
 operator|->
@@ -3799,7 +3799,7 @@ name|cause_value
 operator|=
 name|T_ATM_CAUSE_NORMAL_CALL_CLEARING
 expr_stmt|;
-name|KM_ZERO
+name|bzero
 argument_list|(
 name|svp
 operator|->
@@ -3910,7 +3910,7 @@ name|cause_value
 operator|=
 name|T_ATM_CAUSE_UNSPECIFIED_NORMAL
 expr_stmt|;
-name|KM_ZERO
+name|bzero
 argument_list|(
 name|svp
 operator|->

@@ -396,7 +396,7 @@ name|cause_value
 operator|=
 name|cause
 expr_stmt|;
-name|KM_ZERO
+name|bzero
 argument_list|(
 name|aap
 operator|->
@@ -488,7 +488,7 @@ name|iep
 operator|->
 name|ie_caus_cause
 expr_stmt|;
-name|KM_ZERO
+name|bzero
 argument_list|(
 name|aap
 operator|->
@@ -510,7 +510,7 @@ name|diagnostics
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|iep
 operator|->
@@ -2397,7 +2397,7 @@ block|{
 case|case
 name|T_ATM_ISO_APP_ID
 case|:
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|msg
 operator|->
@@ -2433,7 +2433,7 @@ break|break;
 case|case
 name|T_ATM_USER_APP_ID
 case|:
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|msg
 operator|->
@@ -2469,7 +2469,7 @@ break|break;
 case|case
 name|T_ATM_VENDOR_APP_ID
 case|:
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|msg
 operator|->
@@ -2505,7 +2505,7 @@ name|OUI
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|KM_COPY
+name|bcopy
 argument_list|(
 operator|&
 name|msg
@@ -2868,7 +2868,7 @@ operator|==
 name|UNI_IE_BLLI_L3IPI_SNAP
 condition|)
 block|{
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|msg
 operator|->
@@ -2908,7 +2908,7 @@ name|OUI
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|msg
 operator|->
@@ -3349,7 +3349,7 @@ name|network_id
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|msg
 operator|->
@@ -3433,7 +3433,7 @@ name|msg_ie_caus
 operator|->
 name|ie_caus_cause
 expr_stmt|;
-name|KM_ZERO
+name|bzero
 argument_list|(
 name|ap
 operator|->
@@ -3458,7 +3458,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|NOTDEF
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|msg
 operator|->
@@ -3602,7 +3602,7 @@ name|done
 goto|;
 block|}
 block|}
-name|KM_COPY
+name|bcopy
 argument_list|(
 operator|&
 name|ie_aalp_absent
@@ -3922,7 +3922,7 @@ name|done
 goto|;
 block|}
 block|}
-name|KM_COPY
+name|bcopy
 argument_list|(
 operator|&
 name|ie_clrt_absent
@@ -4282,7 +4282,7 @@ name|done
 goto|;
 block|}
 block|}
-name|KM_COPY
+name|bcopy
 argument_list|(
 operator|&
 name|ie_bbcp_absent
@@ -4434,7 +4434,7 @@ name|done
 goto|;
 block|}
 block|}
-name|KM_COPY
+name|bcopy
 argument_list|(
 operator|&
 name|ie_bhli_absent
@@ -4490,7 +4490,7 @@ block|{
 case|case
 name|T_ATM_ISO_APP_ID
 case|:
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|ap
 operator|->
@@ -4526,7 +4526,7 @@ break|break;
 case|case
 name|T_ATM_USER_APP_ID
 case|:
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|ap
 operator|->
@@ -4562,7 +4562,7 @@ break|break;
 case|case
 name|T_ATM_VENDOR_APP_ID
 case|:
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|ap
 operator|->
@@ -4598,7 +4598,7 @@ name|OUI
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|ap
 operator|->
@@ -4717,7 +4717,7 @@ name|done
 goto|;
 block|}
 block|}
-name|KM_COPY
+name|bcopy
 argument_list|(
 operator|&
 name|ie_blli_absent
@@ -4966,7 +4966,7 @@ name|ie_blli_l3_ipi
 operator|=
 name|UNI_IE_BLLI_L3IPI_SNAP
 expr_stmt|;
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|ap
 operator|->
@@ -4998,7 +4998,7 @@ name|ie_blli_l3_oui
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|ap
 operator|->
@@ -5181,7 +5181,7 @@ name|done
 goto|;
 block|}
 block|}
-name|KM_COPY
+name|bcopy
 argument_list|(
 operator|&
 name|ie_cdad_absent
@@ -5280,7 +5280,7 @@ name|done
 goto|;
 block|}
 block|}
-name|KM_COPY
+name|bcopy
 argument_list|(
 operator|&
 name|ie_cdsa_absent
@@ -5380,7 +5380,7 @@ name|done
 goto|;
 block|}
 block|}
-name|KM_COPY
+name|bcopy
 argument_list|(
 operator|&
 name|ie_cgad_absent
@@ -5479,7 +5479,7 @@ name|done
 goto|;
 block|}
 block|}
-name|KM_COPY
+name|bcopy
 argument_list|(
 operator|&
 name|ie_cgsa_absent
@@ -5579,7 +5579,7 @@ name|done
 goto|;
 block|}
 block|}
-name|KM_COPY
+name|bcopy
 argument_list|(
 operator|&
 name|ie_qosp_absent
@@ -5773,7 +5773,7 @@ name|done
 goto|;
 block|}
 block|}
-name|KM_COPY
+name|bcopy
 argument_list|(
 operator|&
 name|ie_trnt_absent
@@ -5817,7 +5817,7 @@ name|ie_trnt_id_plan
 operator|=
 name|UNI_IE_TRNT_IDP_CIC
 expr_stmt|;
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|ap
 operator|->
@@ -5896,7 +5896,7 @@ name|done
 goto|;
 block|}
 block|}
-name|KM_COPY
+name|bcopy
 argument_list|(
 operator|&
 name|ie_caus_absent

@@ -664,7 +664,7 @@ union|,
 name|u2
 union|;
 comment|/* 	 * Clear the print buffer 	 */
-name|KM_ZERO
+name|bzero
 argument_list|(
 name|strbuff
 argument_list|,

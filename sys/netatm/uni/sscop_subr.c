@@ -240,7 +240,7 @@ operator|-
 literal|1
 operator|)
 condition|)
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|cp
 argument_list|,
@@ -295,7 +295,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|cp
 argument_list|,
@@ -354,7 +354,7 @@ argument_list|,
 name|caddr_t
 argument_list|)
 expr_stmt|;
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|cp
 argument_list|,

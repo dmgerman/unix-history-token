@@ -2580,7 +2580,7 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-name|KM_CMP
+name|bcmp
 argument_list|(
 name|llc
 operator|->
@@ -5622,7 +5622,7 @@ name|T_ATM_PRESENT
 condition|)
 if|if
 condition|(
-name|KM_CMP
+name|bcmp
 argument_list|(
 operator|&
 name|lap
@@ -5707,7 +5707,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|KM_CMP
+name|bcmp
 argument_list|(
 operator|&
 name|lap
@@ -5808,7 +5808,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|KM_CMP
+name|bcmp
 argument_list|(
 operator|&
 name|lap
@@ -5931,7 +5931,7 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-name|KM_CMP
+name|bcmp
 argument_list|(
 name|lap
 operator|->
@@ -6927,7 +6927,7 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-name|KM_CMP
+name|bcmp
 argument_list|(
 name|ap
 operator|->
@@ -8171,7 +8171,7 @@ name|void
 operator|*
 argument_list|)
 expr_stmt|;
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|llcp
 operator|->
@@ -8512,7 +8512,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|KM_CMP
+name|bcmp
 argument_list|(
 name|bp
 argument_list|,

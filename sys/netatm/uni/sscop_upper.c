@@ -1419,7 +1419,7 @@ name|PDU_ADDR_MASK
 condition|)
 block|{
 comment|/* 			 * Trailer not aligned in buffer, use local memory 			 */
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|cp
 argument_list|,
@@ -1496,7 +1496,7 @@ argument_list|,
 name|caddr_t
 argument_list|)
 expr_stmt|;
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|cp1
 argument_list|,
@@ -1534,7 +1534,7 @@ argument_list|,
 name|caddr_t
 argument_list|)
 expr_stmt|;
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|cp1
 argument_list|,

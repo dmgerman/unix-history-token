@@ -2584,7 +2584,7 @@ name|ie_caus_cause
 operator|=
 name|UNI_IE_CAUS_TIMER
 expr_stmt|;
-name|KM_COPY
+name|bcopy
 argument_list|(
 literal|"310"
 argument_list|,
@@ -3815,7 +3815,7 @@ operator|=
 name|time_second
 expr_stmt|;
 comment|/* 	 * Copy the connection attributes from the SETUP message 	 * to an attribute block 	 */
-name|KM_ZERO
+name|bzero
 argument_list|(
 operator|&
 name|attr

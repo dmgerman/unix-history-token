@@ -1180,7 +1180,7 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Setup owner service definition 	 */
-name|KM_ZERO
+name|bzero
 argument_list|(
 operator|(
 name|caddr_t

@@ -433,7 +433,7 @@ name|ARP_TL_LMASK
 operator|)
 expr_stmt|;
 comment|/* ah_sha */
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|sip
 operator|->
@@ -490,7 +490,7 @@ name|ARP_TL_LMASK
 operator|)
 expr_stmt|;
 comment|/* ah_sha */
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|sip
 operator|->
@@ -539,7 +539,7 @@ name|ARP_TL_LMASK
 operator|)
 expr_stmt|;
 comment|/* ah_ssa */
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|sip
 operator|->
@@ -616,7 +616,7 @@ name|in_addr
 argument_list|)
 expr_stmt|;
 comment|/* ah_spa */
-name|KM_COPY
+name|bcopy
 argument_list|(
 operator|(
 name|caddr_t
@@ -673,7 +673,7 @@ name|in_addr
 argument_list|)
 expr_stmt|;
 comment|/* ah_tpa */
-name|KM_COPY
+name|bcopy
 argument_list|(
 operator|(
 name|caddr_t
@@ -1034,7 +1034,7 @@ name|ARP_TL_LMASK
 operator|)
 expr_stmt|;
 comment|/* ah_sha */
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|amp
 operator|->
@@ -1074,7 +1074,7 @@ name|ARP_TL_LMASK
 operator|)
 expr_stmt|;
 comment|/* ah_sha */
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|amp
 operator|->
@@ -1123,7 +1123,7 @@ name|ARP_TL_LMASK
 operator|)
 expr_stmt|;
 comment|/* ah_ssa */
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|amp
 operator|->
@@ -1183,7 +1183,7 @@ name|in_addr
 argument_list|)
 expr_stmt|;
 comment|/* ah_spa */
-name|KM_COPY
+name|bcopy
 argument_list|(
 operator|(
 name|caddr_t
@@ -1239,7 +1239,7 @@ name|ARP_TL_LMASK
 operator|)
 expr_stmt|;
 comment|/* ah_tha */
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|tatm
 operator|->
@@ -1277,7 +1277,7 @@ name|ARP_TL_LMASK
 operator|)
 expr_stmt|;
 comment|/* ah_tha */
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|tatm
 operator|->
@@ -1320,7 +1320,7 @@ name|ARP_TL_LMASK
 operator|)
 expr_stmt|;
 comment|/* ah_tsa */
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|tsub
 operator|->
@@ -1369,7 +1369,7 @@ name|in_addr
 argument_list|)
 expr_stmt|;
 comment|/* ah_tpa */
-name|KM_COPY
+name|bcopy
 argument_list|(
 operator|(
 name|caddr_t
@@ -1891,7 +1891,7 @@ name|ARP_TL_LMASK
 operator|)
 expr_stmt|;
 comment|/* ah_sha */
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|sip
 operator|->
@@ -1948,7 +1948,7 @@ name|ARP_TL_LMASK
 operator|)
 expr_stmt|;
 comment|/* ah_sha */
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|sip
 operator|->
@@ -1997,7 +1997,7 @@ name|ARP_TL_LMASK
 operator|)
 expr_stmt|;
 comment|/* ah_ssa */
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|sip
 operator|->
@@ -2074,7 +2074,7 @@ name|in_addr
 argument_list|)
 expr_stmt|;
 comment|/* ah_spa */
-name|KM_COPY
+name|bcopy
 argument_list|(
 operator|(
 name|caddr_t
@@ -2137,7 +2137,7 @@ name|ARP_TL_LMASK
 operator|)
 expr_stmt|;
 comment|/* ah_tha */
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|tatm
 operator|->
@@ -2175,7 +2175,7 @@ name|ARP_TL_LMASK
 operator|)
 expr_stmt|;
 comment|/* ah_tha */
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|tatm
 operator|->
@@ -2218,7 +2218,7 @@ name|ARP_TL_LMASK
 operator|)
 expr_stmt|;
 comment|/* ah_tsa */
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|tsub
 operator|->
@@ -2631,7 +2631,7 @@ name|ARP_TL_LMASK
 operator|)
 expr_stmt|;
 comment|/* ah_sha */
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|sip
 operator|->
@@ -2688,7 +2688,7 @@ name|ARP_TL_LMASK
 operator|)
 expr_stmt|;
 comment|/* ah_sha */
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|sip
 operator|->
@@ -2737,7 +2737,7 @@ name|ARP_TL_LMASK
 operator|)
 expr_stmt|;
 comment|/* ah_ssa */
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|sip
 operator|->
@@ -2814,7 +2814,7 @@ name|in_addr
 argument_list|)
 expr_stmt|;
 comment|/* ah_spa */
-name|KM_COPY
+name|bcopy
 argument_list|(
 operator|(
 name|caddr_t
@@ -2877,7 +2877,7 @@ name|ARP_TL_LMASK
 operator|)
 expr_stmt|;
 comment|/* ah_tha */
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|tatm
 operator|->
@@ -2915,7 +2915,7 @@ name|ARP_TL_LMASK
 operator|)
 expr_stmt|;
 comment|/* ah_tha */
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|tatm
 operator|->
@@ -2958,7 +2958,7 @@ name|ARP_TL_LMASK
 operator|)
 expr_stmt|;
 comment|/* ah_tsa */
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|tsub
 operator|->
@@ -3007,7 +3007,7 @@ name|in_addr
 argument_list|)
 expr_stmt|;
 comment|/* ah_tpa */
-name|KM_COPY
+name|bcopy
 argument_list|(
 operator|(
 name|caddr_t

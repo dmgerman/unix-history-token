@@ -1182,7 +1182,7 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* 				 * Fill in info to be returned 				 */
-name|KM_ZERO
+name|bzero
 argument_list|(
 operator|(
 name|caddr_t

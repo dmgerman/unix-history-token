@@ -1258,7 +1258,7 @@ name|cause_value
 operator|=
 name|T_ATM_CAUSE_NO_USER_RESPONDING
 expr_stmt|;
-name|KM_ZERO
+name|bzero
 argument_list|(
 name|svp
 operator|->
@@ -1401,7 +1401,7 @@ name|cause_value
 operator|=
 name|T_ATM_CAUSE_NO_USER_RESPONDING
 expr_stmt|;
-name|KM_ZERO
+name|bzero
 argument_list|(
 name|svp
 operator|->

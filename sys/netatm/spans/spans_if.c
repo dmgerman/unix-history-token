@@ -457,12 +457,7 @@ block|}
 comment|/* 	 * Allocate protocol definition structure 	 */
 name|spans_mgr
 operator|=
-operator|(
-expr|struct
-name|sigmgr
-operator|*
-operator|)
-name|KM_ALLOC
+name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -473,6 +468,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -490,17 +487,6 @@ goto|goto
 name|done
 goto|;
 block|}
-name|KM_ZERO
-argument_list|(
-name|spans_mgr
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|sigmgr
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Initialize protocol invariant values 	 */
 name|spans_mgr
 operator|->
@@ -651,15 +637,9 @@ name|spans_mgr
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Free up protocol block 		 */
-name|KM_FREE
+name|free
 argument_list|(
 name|spans_mgr
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|sigmgr
-argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|)
@@ -801,12 +781,7 @@ block|}
 comment|/* 	 * Allocate SPANS protocol instance control block 	 */
 name|spp
 operator|=
-operator|(
-expr|struct
-name|spans
-operator|*
-operator|)
-name|KM_ALLOC
+name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -817,6 +792,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -834,17 +811,6 @@ goto|goto
 name|done
 goto|;
 block|}
-name|KM_ZERO
-argument_list|(
-name|spp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|spans
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Set variables in SPANS protocol instance control block 	 */
 name|spp
 operator|->
@@ -1046,15 +1012,9 @@ argument_list|,
 name|si_next
 argument_list|)
 expr_stmt|;
-name|KM_FREE
+name|free
 argument_list|(
 name|spp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|spans
-argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|)
@@ -1357,15 +1317,9 @@ argument_list|,
 name|si_next
 argument_list|)
 expr_stmt|;
-name|KM_FREE
+name|free
 argument_list|(
 name|spp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|spans
-argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|)
@@ -2406,15 +2360,9 @@ argument_list|,
 name|si_next
 argument_list|)
 expr_stmt|;
-name|KM_FREE
+name|free
 argument_list|(
 name|spp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|spans
-argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|)
@@ -2887,7 +2835,7 @@ name|svp
 operator|->
 name|sv_sstate
 expr_stmt|;
-name|KM_ZERO
+name|bzero
 argument_list|(
 name|rsp
 operator|.

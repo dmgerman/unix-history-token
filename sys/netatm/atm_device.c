@@ -1253,11 +1253,7 @@ condition|)
 block|{
 name|mbp
 operator|=
-operator|(
-name|Mem_blk
-operator|*
-operator|)
-name|KM_ALLOC
+name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -1267,6 +1263,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -1297,16 +1295,6 @@ name|NULL
 operator|)
 return|;
 block|}
-name|KM_ZERO
-argument_list|(
-name|mbp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|Mem_blk
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|mbp
 operator|->
 name|mb_next
@@ -1361,7 +1349,7 @@ name|mep
 operator|->
 name|me_kaddr
 operator|=
-name|KM_ALLOC
+name|malloc
 argument_list|(
 name|ksize
 argument_list|,
@@ -1377,7 +1365,7 @@ name|mep
 operator|->
 name|me_kaddr
 operator|=
-name|KM_ALLOC
+name|malloc
 argument_list|(
 name|ksize
 argument_list|,
@@ -1461,7 +1449,7 @@ operator|=
 name|flags
 expr_stmt|;
 comment|/* 	 * Clear memory for user 	 */
-name|KM_ZERO
+name|bzero
 argument_list|(
 name|mep
 operator|->
@@ -1644,15 +1632,11 @@ operator|&
 name|ATM_DEV_NONCACHE
 condition|)
 block|{
-name|KM_FREE
+name|free
 argument_list|(
 name|mep
 operator|->
 name|me_kaddr
-argument_list|,
-name|mep
-operator|->
-name|me_ksize
 argument_list|,
 name|M_DEVBUF
 argument_list|)
@@ -1660,15 +1644,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|KM_FREE
+name|free
 argument_list|(
 name|mep
 operator|->
 name|me_kaddr
-argument_list|,
-name|mep
-operator|->
-name|me_ksize
 argument_list|,
 name|M_DEVBUF
 argument_list|)
@@ -2022,7 +2002,7 @@ argument_list|,
 name|caddr_t
 argument_list|)
 expr_stmt|;
-name|KM_COPY
+name|bcopy
 argument_list|(
 name|src
 argument_list|,
@@ -2287,17 +2267,12 @@ operator|->
 name|mb_next
 expr_stmt|;
 comment|/* 		 * Hand this block back to the kernel 		 */
-name|KM_FREE
+name|free
 argument_list|(
 operator|(
 name|caddr_t
 operator|)
 name|mbp
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|Mem_blk
-argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|)

@@ -1036,7 +1036,7 @@ name|EADDRINUSE
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Just plunk the address into the pif 			 */
-name|KM_COPY
+name|bcopy
 argument_list|(
 operator|(
 name|caddr_t
