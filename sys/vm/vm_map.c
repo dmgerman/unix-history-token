@@ -1312,10 +1312,18 @@ end_function
 
 begin_function
 name|void
-name|vm_map_lock
+name|_vm_map_lock
 parameter_list|(
 name|vm_map_t
 name|map
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
 parameter_list|)
 block|{
 name|vm_map_printf
@@ -1358,10 +1366,18 @@ end_function
 
 begin_function
 name|void
-name|vm_map_unlock
+name|_vm_map_unlock
 parameter_list|(
 name|vm_map_t
 name|map
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
 parameter_list|)
 block|{
 name|vm_map_printf
@@ -1392,10 +1408,18 @@ end_function
 
 begin_function
 name|void
-name|vm_map_lock_read
+name|_vm_map_lock_read
 parameter_list|(
 name|vm_map_t
 name|map
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
 parameter_list|)
 block|{
 name|vm_map_printf
@@ -1426,10 +1450,18 @@ end_function
 
 begin_function
 name|void
-name|vm_map_unlock_read
+name|_vm_map_unlock_read
 parameter_list|(
 name|vm_map_t
 name|map
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
 parameter_list|)
 block|{
 name|vm_map_printf
@@ -1460,10 +1492,18 @@ end_function
 
 begin_function
 name|int
-name|vm_map_trylock
+name|_vm_map_trylock
 parameter_list|(
 name|vm_map_t
 name|map
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
 parameter_list|)
 block|{
 return|return
@@ -1494,7 +1534,7 @@ begin_function
 specifier|static
 name|__inline__
 name|int
-name|_vm_map_lock_upgrade
+name|__vm_map_lock_upgrade
 parameter_list|(
 name|vm_map_t
 name|map
@@ -1550,15 +1590,23 @@ end_function
 
 begin_function
 name|int
-name|vm_map_lock_upgrade
+name|_vm_map_lock_upgrade
 parameter_list|(
 name|vm_map_t
 name|map
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
 parameter_list|)
 block|{
 return|return
 operator|(
-name|_vm_map_lock_upgrade
+name|__vm_map_lock_upgrade
 argument_list|(
 name|map
 argument_list|,
@@ -1571,10 +1619,18 @@ end_function
 
 begin_function
 name|void
-name|vm_map_lock_downgrade
+name|_vm_map_lock_downgrade
 parameter_list|(
 name|vm_map_t
 name|map
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
 parameter_list|)
 block|{
 name|vm_map_printf
@@ -1603,10 +1659,18 @@ end_function
 
 begin_function
 name|void
-name|vm_map_set_recursive
+name|_vm_map_set_recursive
 parameter_list|(
 name|vm_map_t
 name|map
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
 parameter_list|)
 block|{
 name|mtx_lock
@@ -1644,10 +1708,18 @@ end_function
 
 begin_function
 name|void
-name|vm_map_clear_recursive
+name|_vm_map_clear_recursive
 parameter_list|(
 name|vm_map_t
 name|map
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
 parameter_list|)
 block|{
 name|mtx_lock
