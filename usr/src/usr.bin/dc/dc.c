@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dc.c	4.2	(Berkeley)	%G%"
+literal|"@(#)dc.c	4.3	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5230,13 +5230,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|dummy
-operator|=
-name|malloc
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 name|scalptr
 operator|=
 name|salloc
@@ -10245,13 +10238,6 @@ name|hptr
 operator|->
 name|last
 expr_stmt|;
-name|free
-argument_list|(
-name|hptr
-operator|->
-name|beg
-argument_list|)
-expr_stmt|;
 name|p
 operator|=
 name|realloc
@@ -10504,13 +10490,6 @@ name|size
 operator|/
 literal|2
 expr_stmt|;
-name|free
-argument_list|(
-name|hptr
-operator|->
-name|beg
-argument_list|)
-expr_stmt|;
 name|p
 operator|=
 name|realloc
@@ -10572,6 +10551,9 @@ name|hptr
 operator|->
 name|beg
 argument_list|,
+operator|(
+name|unsigned
+operator|)
 name|size
 argument_list|)
 operator|)
@@ -10984,36 +10966,6 @@ literal|"redef-bad"
 argument_list|)
 expr_stmt|;
 block|}
-name|free
-argument_list|(
-name|p
-operator|->
-name|beg
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|dummy
-argument_list|)
-expr_stmt|;
-name|dummy
-operator|=
-name|malloc
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|dummy
-operator|==
-name|NULL
-condition|)
-name|ospace
-argument_list|(
-literal|"dummy"
-argument_list|)
-expr_stmt|;
 name|newp
 operator|=
 name|realloc

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dc.h	1.2	83/03/30	*/
+comment|/*	dc.h	1.3	86/04/26	*/
 end_comment
 
 begin_define
@@ -945,13 +945,6 @@ name|realloc
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-name|char
-modifier|*
-name|dummy
-decl_stmt|;
-end_decl_stmt
 
 end_unit
 
