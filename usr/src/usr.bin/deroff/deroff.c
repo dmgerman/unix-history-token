@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deroff.c	4.5	(Berkeley)	84/12/18"
+literal|"@(#)deroff.c	4.6	(Berkeley)	87/09/28"
 decl_stmt|;
 end_decl_stmt
 
@@ -4205,6 +4205,37 @@ end_macro
 
 begin_block
 block|{
+for|for
+control|(
+name|C
+init|;
+name|c
+operator|==
+literal|' '
+operator|||
+name|c
+operator|==
+literal|'\t'
+condition|;
+name|C
+control|)
+empty_stmt|;
+if|if
+condition|(
+name|c
+operator|==
+literal|'<'
+condition|)
+block|{
+comment|/* ".PS< file" -- don't expect a .PE */
+name|SKIP
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 if|if
 condition|(
 operator|!
