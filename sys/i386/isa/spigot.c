@@ -44,9 +44,6 @@ directive|include
 file|<sys/conf.h>
 include|#
 directive|include
-file|<sys/ioctl.h>
-include|#
-directive|include
 file|<sys/proc.h>
 include|#
 directive|include

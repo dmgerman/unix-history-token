@@ -36,7 +36,7 @@ comment|/*	The proceeding strings may not be changed*/
 end_comment
 
 begin_comment
-comment|/* $Id: matcd.c,v 1.22 1997/02/22 09:38:11 peter Exp $ */
+comment|/* $Id: matcd.c,v 1.23 1997/03/23 03:35:32 bde Exp $ */
 end_comment
 
 begin_comment
@@ -89,12 +89,6 @@ begin_include
 include|#
 directive|include
 file|<sys/fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/ioctl.h>
 end_include
 
 begin_include
