@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)output.c	5.2 (Berkeley) %G%"
+literal|"@(#)output.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -167,10 +167,10 @@ expr_stmt|;
 name|free_reductions
 argument_list|()
 expr_stmt|;
-name|output_defines
+name|output_stored_text
 argument_list|()
 expr_stmt|;
-name|output_stored_text
+name|output_defines
 argument_list|()
 expr_stmt|;
 name|output_rule_data
@@ -3745,6 +3745,8 @@ argument_list|,
 name|line_format
 argument_list|,
 name|outline
+operator|+
+literal|1
 argument_list|,
 name|output_file_name
 argument_list|)
@@ -5027,6 +5029,8 @@ argument_list|,
 name|line_format
 argument_list|,
 name|outline
+operator|+
+literal|1
 argument_list|,
 name|output_file_name
 argument_list|)

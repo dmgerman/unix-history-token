@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)skeleton.c	5.2 (Berkeley) %G%"
+literal|"@(#)skeleton.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -163,11 +163,7 @@ literal|"    {"
 block|,
 literal|"        yyn = *yys;"
 block|,
-literal|"        if (yyn == '0')"
-block|,
-literal|"            yydebug = 0;"
-block|,
-literal|"        else if (yyn>= '1'&& yyn<= '9')"
+literal|"        if (yyn>= '0'&& yyn<= '9')"
 block|,
 literal|"            yydebug = yyn - '0';"
 block|,
