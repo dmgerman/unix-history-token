@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.29 2002/04/02 05:39:07 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.30 2002/04/02 05:46:10 imp Exp   */
 end_comment
 
 begin_comment
@@ -3067,6 +3067,27 @@ name|PCMCIA_STR_PROXIM_RANGELAN2_7401
 value|"Proxim RangeLAN2 7401"
 end_define
 
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_PROXIM_RANGELANDS_8430
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_PROXIM_RANGELANDS_8430
+value|0x8000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_PROXIM_RANGELANDS_8430
+value|"Proxim RangeLAN-DS 8430"
+end_define
+
 begin_comment
 comment|/* Psion */
 end_comment
@@ -3962,6 +3983,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PCMCIA_VENDOR_ADDTRON
+value|-1
+end_define
+
+begin_comment
+comment|/* Addtron */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|PCMCIA_VENDOR_AMD
 value|-1
 end_define
@@ -4231,6 +4263,27 @@ define|#
 directive|define
 name|PCMCIA_STR_ACCTON_EN2212
 value|"Accton EN2212"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_ADDTRON_AWP100
+value|{ "Addtron", "AWP-100 Wireless PCMCIA", "Version 01.02", NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_ADDTRON_AWP100
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_ADDTRON_AWP100
+value|""
 end_define
 
 begin_define
