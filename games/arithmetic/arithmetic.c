@@ -86,6 +86,12 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
 begin_decl_stmt
 name|char
 name|keylist
@@ -190,10 +196,6 @@ name|ch
 decl_stmt|,
 name|cnt
 decl_stmt|;
-name|time_t
-name|time
-parameter_list|()
-function_decl|;
 name|void
 name|intr
 parameter_list|()
