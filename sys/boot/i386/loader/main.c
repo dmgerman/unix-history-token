@@ -320,30 +320,25 @@ literal|512
 argument_list|)
 expr_stmt|;
 comment|/* 16k cache XXX tune this */
-comment|/*      * We only want the PXE disk to try to init itself in the below walk through      * devsw if we actually booted off of PXE.      */
+comment|/*      * Special handling for PXE and CD booting.      */
 if|if
 condition|(
-operator|(
 name|kargs
 operator|->
 name|bootinfo
 operator|==
 name|NULL
-operator|)
-operator|&&
-operator|(
-operator|(
+condition|)
+block|{
+comment|/* 	 * We only want the PXE disk to try to init itself in the below 	 * walk through devsw if we actually booted off of PXE. 	 */
+if|if
+condition|(
 name|kargs
 operator|->
 name|bootflags
 operator|&
 name|KARGS_FLAGS_PXE
-operator|)
-operator|!=
-literal|0
-operator|)
 condition|)
-block|{
 name|pxe_enable
 argument_list|(
 name|kargs
@@ -358,6 +353,20 @@ name|pxeinfo
 argument_list|)
 else|:
 name|NULL
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|kargs
+operator|->
+name|bootflags
+operator|&
+name|KARGS_FLAGS_CD
+condition|)
+name|bc_add
+argument_list|(
+name|initial_bootdev
 argument_list|)
 expr_stmt|;
 block|}
@@ -529,6 +538,9 @@ name|int
 name|major
 decl_stmt|,
 name|biosdev
+init|=
+operator|-
+literal|1
 decl_stmt|;
 comment|/* Assume we are booting from a BIOS disk by default */
 name|new_currdev
@@ -537,16 +549,6 @@ name|d_dev
 operator|=
 operator|&
 name|biosdisk
-expr_stmt|;
-name|new_currdev
-operator|.
-name|d_type
-operator|=
-name|new_currdev
-operator|.
-name|d_dev
-operator|->
-name|dv_type
 expr_stmt|;
 comment|/* new-style boot loaders such as pxeldr and cdldr */
 if|if
@@ -571,31 +573,26 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* we are booting from a CD with cdldr */
+comment|/* we are booting from a CD with cdboot */
 name|new_currdev
 operator|.
-name|d_kind
-operator|.
-name|biosdisk
-operator|.
-name|slice
+name|d_dev
 operator|=
-operator|-
-literal|1
+operator|&
+name|bioscd
 expr_stmt|;
 name|new_currdev
 operator|.
 name|d_kind
 operator|.
-name|biosdisk
+name|bioscd
 operator|.
-name|partition
+name|unit
 operator|=
-literal|0
-expr_stmt|;
-name|biosdev
-operator|=
+name|bc_bios2unit
+argument_list|(
 name|initial_bootdev
+argument_list|)
 expr_stmt|;
 block|}
 elseif|else
@@ -622,16 +619,6 @@ name|pxedisk
 expr_stmt|;
 name|new_currdev
 operator|.
-name|d_type
-operator|=
-name|new_currdev
-operator|.
-name|d_dev
-operator|->
-name|dv_type
-expr_stmt|;
-name|new_currdev
-operator|.
 name|d_kind
 operator|.
 name|netif
@@ -639,11 +626,6 @@ operator|.
 name|unit
 operator|=
 literal|0
-expr_stmt|;
-name|biosdev
-operator|=
-operator|-
-literal|1
 expr_stmt|;
 block|}
 else|else
@@ -799,6 +781,16 @@ argument_list|)
 expr_stmt|;
 comment|/* assume harddisk */
 block|}
+name|new_currdev
+operator|.
+name|d_type
+operator|=
+name|new_currdev
+operator|.
+name|d_dev
+operator|->
+name|dv_type
+expr_stmt|;
 comment|/*      * If we are booting off of a BIOS disk and we didn't succeed in determining      * which one we booted off of, just use disk0: as a reasonable default.      */
 if|if
 condition|(
@@ -807,11 +799,8 @@ name|new_currdev
 operator|.
 name|d_type
 operator|==
-name|devsw
-index|[
-literal|0
-index|]
-operator|->
+name|biosdisk
+operator|.
 name|dv_type
 operator|)
 operator|&&
