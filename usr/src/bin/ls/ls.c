@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.47 (Berkeley) %G%"
+literal|"@(#)ls.c	5.48 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1100,10 +1100,11 @@ operator|&
 name|sb
 argument_list|)
 operator|&&
+operator|(
 name|statfcn
 operator|==
-name|stat
-operator|&&
+name|lstat
+operator|||
 name|lstat
 argument_list|(
 operator|*
@@ -1112,6 +1113,7 @@ argument_list|,
 operator|&
 name|sb
 argument_list|)
+operator|)
 condition|)
 block|{
 operator|(
