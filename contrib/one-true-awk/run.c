@@ -502,6 +502,7 @@ modifier|*
 modifier|*
 name|pbptr
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|whatrtn
@@ -1483,9 +1484,12 @@ literal|"args[%d]: %s %f<%s>, t=%o\n"
 operator|,
 name|i
 operator|,
+name|NN
+argument_list|(
 name|y
 operator|->
 name|nval
+argument_list|)
 operator|,
 name|y
 operator|->
@@ -1498,9 +1502,12 @@ argument_list|)
 condition|?
 literal|"(array)"
 else|:
+name|NN
+argument_list|(
 name|y
 operator|->
 name|sval
+argument_list|)
 operator|,
 name|y
 operator|->
@@ -2958,9 +2965,12 @@ argument_list|(
 operator|(
 literal|"making %s into an array\n"
 operator|,
+name|NN
+argument_list|(
 name|x
 operator|->
 name|nval
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -3688,6 +3698,7 @@ parameter_list|(
 name|fa
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -4389,13 +4400,19 @@ argument_list|(
 operator|(
 literal|"freeing %s %s %o\n"
 operator|,
+name|NN
+argument_list|(
 name|a
 operator|->
 name|nval
+argument_list|)
 operator|,
+name|NN
+argument_list|(
 name|a
 operator|->
 name|sval
+argument_list|)
 operator|,
 name|a
 operator|->
@@ -5170,6 +5187,7 @@ name|int
 modifier|*
 name|pbufsize
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|s
@@ -5190,7 +5208,9 @@ name|p
 decl_stmt|,
 modifier|*
 name|t
-decl_stmt|,
+decl_stmt|;
+specifier|const
+name|char
 modifier|*
 name|os
 decl_stmt|;
@@ -5611,7 +5631,7 @@ literal|'G'
 case|:
 name|flag
 operator|=
-literal|1
+literal|'f'
 expr_stmt|;
 break|break;
 case|case
@@ -5622,7 +5642,7 @@ literal|'i'
 case|:
 name|flag
 operator|=
-literal|2
+literal|'d'
 expr_stmt|;
 if|if
 condition|(
@@ -5680,9 +5700,9 @@ operator|)
 operator|==
 literal|'l'
 condition|?
-literal|2
+literal|'d'
 else|:
-literal|3
+literal|'u'
 expr_stmt|;
 break|break;
 case|case
@@ -5690,7 +5710,7 @@ literal|'s'
 case|:
 name|flag
 operator|=
-literal|4
+literal|'s'
 expr_stmt|;
 break|break;
 case|case
@@ -5698,7 +5718,7 @@ literal|'c'
 case|:
 name|flag
 operator|=
-literal|5
+literal|'c'
 expr_stmt|;
 break|break;
 default|default:
@@ -5711,7 +5731,7 @@ argument_list|)
 expr_stmt|;
 name|flag
 operator|=
-literal|0
+literal|'?'
 expr_stmt|;
 break|break;
 block|}
@@ -5785,7 +5805,7 @@ name|flag
 condition|)
 block|{
 case|case
-literal|0
+literal|'?'
 case|:
 name|sprintf
 argument_list|(
@@ -5868,7 +5888,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|1
+literal|'f'
 case|:
 name|sprintf
 argument_list|(
@@ -5884,7 +5904,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|2
+literal|'d'
 case|:
 name|sprintf
 argument_list|(
@@ -5903,7 +5923,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|3
+literal|'u'
 case|:
 name|sprintf
 argument_list|(
@@ -5922,7 +5942,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|4
+literal|'s'
 case|:
 name|t
 operator|=
@@ -5995,7 +6015,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|5
+literal|'c'
 case|:
 if|if
 condition|(
@@ -6028,12 +6048,21 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 operator|*
 name|p
 operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
+comment|/* explicit null byte */
+operator|*
+name|p
+operator|=
+literal|'\0'
+expr_stmt|;
+comment|/* next output will start here */
+block|}
 block|}
 else|else
 name|sprintf
@@ -6052,6 +6081,14 @@ index|]
 argument_list|)
 expr_stmt|;
 break|break;
+default|default:
+name|FATAL
+argument_list|(
+literal|"can't happen: bad conversion %c in format()"
+argument_list|,
+name|flag
+argument_list|)
+expr_stmt|;
 block|}
 name|tempfree
 argument_list|(
@@ -7824,9 +7861,12 @@ literal|"split: s=|%s|, a=%s, sep=|%s|\n"
 operator|,
 name|s
 operator|,
+name|NN
+argument_list|(
 name|ap
 operator|->
 name|nval
+argument_list|)
 operator|,
 name|fs
 operator|)
@@ -9790,6 +9830,9 @@ name|p
 operator|=
 name|toupper
 argument_list|(
+operator|(
+name|uschar
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -9825,6 +9868,9 @@ name|p
 operator|=
 name|tolower
 argument_list|(
+operator|(
+name|uschar
+operator|)
 operator|*
 name|p
 argument_list|)
@@ -10071,7 +10117,7 @@ argument_list|)
 expr_stmt|;
 name|fputs
 argument_list|(
-name|getsval
+name|getpssval
 argument_list|(
 name|y
 argument_list|)
@@ -10258,6 +10304,7 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|fname
@@ -10347,11 +10394,13 @@ parameter_list|(
 name|int
 name|a
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|us
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|s
@@ -10688,6 +10737,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|filename

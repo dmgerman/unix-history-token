@@ -2473,10 +2473,12 @@ begin_function
 name|int
 name|refldbld
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|rec
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fs
@@ -3076,6 +3078,7 @@ begin_function
 name|void
 name|yyerror
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|s
@@ -3093,6 +3096,7 @@ begin_function
 name|void
 name|SYNTAX
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -3409,6 +3413,7 @@ begin_function
 name|void
 name|FATAL
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -3484,6 +3489,7 @@ begin_function
 name|void
 name|WARNING
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -4002,6 +4008,7 @@ parameter_list|(
 name|double
 name|x
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|s
@@ -4064,12 +4071,14 @@ begin_function
 name|int
 name|isclvar
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|s
 parameter_list|)
 comment|/* is s of form var=something ? */
 block|{
+specifier|const
 name|char
 modifier|*
 name|os
@@ -4169,6 +4178,7 @@ begin_function
 name|int
 name|is_number
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|s

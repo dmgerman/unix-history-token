@@ -114,6 +114,7 @@ specifier|extern
 name|void
 name|unputstr
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -159,6 +160,7 @@ name|fa
 modifier|*
 name|makedfa
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -173,6 +175,7 @@ name|fa
 modifier|*
 name|mkdfa
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -246,6 +249,7 @@ name|char
 modifier|*
 name|cclenter
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -257,6 +261,7 @@ specifier|extern
 name|void
 name|overflo
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -306,6 +311,7 @@ name|member
 parameter_list|(
 name|int
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -320,6 +326,7 @@ parameter_list|(
 name|fa
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -334,6 +341,7 @@ parameter_list|(
 name|fa
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -348,6 +356,7 @@ parameter_list|(
 name|fa
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -360,6 +369,7 @@ name|Node
 modifier|*
 name|reparse
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -818,6 +828,7 @@ specifier|extern
 name|int
 name|isarg
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -942,6 +953,7 @@ parameter_list|(
 name|Cell
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -954,9 +966,11 @@ name|Cell
 modifier|*
 name|setsymtab
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -976,6 +990,7 @@ specifier|extern
 name|int
 name|hash
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -1001,6 +1016,7 @@ name|Cell
 modifier|*
 name|lookup
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -1031,6 +1047,7 @@ parameter_list|(
 name|Cell
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -1046,6 +1063,7 @@ parameter_list|(
 name|Cell
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -1079,8 +1097,25 @@ begin_function_decl
 specifier|extern
 name|char
 modifier|*
+name|getpssval
+parameter_list|(
+name|Cell
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* for print */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
 name|tostring
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -1093,6 +1128,7 @@ name|char
 modifier|*
 name|qstring
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -1252,9 +1288,11 @@ specifier|extern
 name|int
 name|refldbld
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -1287,6 +1325,7 @@ specifier|extern
 name|void
 name|yyerror
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -1332,6 +1371,7 @@ specifier|extern
 name|void
 name|SYNTAX
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -1345,6 +1385,7 @@ specifier|extern
 name|void
 name|FATAL
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -1358,6 +1399,7 @@ specifier|extern
 name|void
 name|WARNING
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -1403,6 +1445,7 @@ name|errcheck
 parameter_list|(
 name|double
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -1414,6 +1457,7 @@ specifier|extern
 name|int
 name|isclvar
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -1425,6 +1469,7 @@ specifier|extern
 name|int
 name|is_number
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -1456,6 +1501,7 @@ modifier|*
 modifier|*
 name|pbp
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|what
@@ -1772,6 +1818,7 @@ parameter_list|,
 name|int
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -2085,6 +2132,7 @@ name|openfile
 parameter_list|(
 name|int
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -2093,6 +2141,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|filename

@@ -35,6 +35,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|NN
+parameter_list|(
+name|p
+parameter_list|)
+value|((p) ? (p) : "(null)")
+end_define
+
+begin_comment
+comment|/* guaranteed non-null for dprintf  */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DEBUG
 end_define
 

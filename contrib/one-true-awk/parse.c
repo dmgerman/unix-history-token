@@ -1292,6 +1292,7 @@ begin_function
 name|int
 name|isarg
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|s
