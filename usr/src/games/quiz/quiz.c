@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)quiz.c	5.2 (Berkeley) %G%"
+literal|"@(#)quiz.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -143,6 +143,8 @@ operator|*
 operator|,
 name|char
 operator|*
+operator|,
+name|size_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -525,6 +527,8 @@ operator|->
 name|q_text
 argument_list|,
 name|lp
+argument_list|,
+name|len
 argument_list|)
 expr_stmt|;
 else|else
@@ -562,6 +566,15 @@ operator|=
 name|qp
 operator|->
 name|q_next
+expr_stmt|;
+name|lp
+index|[
+name|len
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 if|if
 condition|(
@@ -977,6 +990,9 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+name|size_t
+name|len
+decl_stmt|;
 name|u_int
 name|guesses
 decl_stmt|,
@@ -989,6 +1005,9 @@ name|next
 decl_stmt|;
 name|char
 modifier|*
+name|answer
+decl_stmt|,
+modifier|*
 name|s
 decl_stmt|,
 modifier|*
@@ -998,10 +1017,6 @@ name|question
 index|[
 name|LINE_SZ
 index|]
-decl_stmt|;
-name|char
-modifier|*
-name|answer
 decl_stmt|;
 name|srandom
 argument_list|(
@@ -1308,7 +1323,8 @@ name|fgetline
 argument_list|(
 name|stdin
 argument_list|,
-name|NULL
+operator|&
+name|len
 argument_list|)
 operator|)
 operator|==
@@ -1330,6 +1346,15 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|answer
+index|[
+name|len
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 name|downcase
 argument_list|(
 name|answer
@@ -1476,6 +1501,8 @@ parameter_list|(
 name|s
 parameter_list|,
 name|tp
+parameter_list|,
+name|len
 parameter_list|)
 name|char
 modifier|*
@@ -1485,6 +1512,9 @@ specifier|register
 name|char
 modifier|*
 name|tp
+decl_stmt|;
+name|size_t
+name|len
 decl_stmt|;
 block|{
 specifier|register
@@ -1512,13 +1542,10 @@ name|malloc
 argument_list|(
 name|strlen
 argument_list|(
-name|sp
+name|s
 argument_list|)
 operator|+
-name|strlen
-argument_list|(
-name|tp
-argument_list|)
+name|len
 operator|+
 literal|1
 argument_list|)
