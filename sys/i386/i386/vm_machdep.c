@@ -2043,6 +2043,7 @@ operator|--
 expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
+operator|&
 name|vm_page_queues
 index|[
 name|m
@@ -2123,6 +2124,7 @@ operator|++
 expr_stmt|;
 name|TAILQ_INSERT_TAIL
 argument_list|(
+operator|&
 name|vm_page_queues
 index|[
 name|m

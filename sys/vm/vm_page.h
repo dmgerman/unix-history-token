@@ -598,13 +598,11 @@ directive|endif
 end_endif
 
 begin_struct
-specifier|extern
 struct|struct
 name|vpgqueues
 block|{
 name|struct
 name|pglist
-modifier|*
 name|pl
 decl_stmt|;
 name|int
@@ -615,12 +613,19 @@ name|int
 name|lcnt
 decl_stmt|;
 block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|vpgqueues
 name|vm_page_queues
 index|[
 name|PQ_COUNT
 index|]
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -785,75 +790,6 @@ end_ifdef
 begin_comment
 comment|/*  * Each pageable resident page falls into one of four lists:  *  *	free  *		Available for allocation now.  *  * The following are all LRU sorted:  *  *	cache  *		Almost available for allocation. Still in an  *		object, but clean and immediately freeable at  *		non-interrupt times.  *  *	inactive  *		Low activity, candidates for reclamation.  *		This is the list of pages that should be  *		paged out next.  *  *	active  *		Pages that are "active" i.e. they have been  *		recently referenced.  *  *	zero  *		Pages that are really free and have been pre-zeroed  *  */
 end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|KLD_MODULE
-argument_list|)
-end_if
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|pglist
-name|vm_page_queue_free
-index|[
-name|PQ_L2_SIZE
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* memory free queue */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|pglist
-name|vm_page_queue_active
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* active memory queue */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|pglist
-name|vm_page_queue_inactive
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* inactive memory queue */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|pglist
-name|vm_page_queue_cache
-index|[
-name|PQ_L2_SIZE
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* cache memory queue */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -2166,6 +2102,7 @@ name|m
 operator|=
 name|TAILQ_LAST
 argument_list|(
+operator|&
 name|vm_page_queues
 index|[
 name|basequeue
@@ -2185,6 +2122,7 @@ name|m
 operator|=
 name|TAILQ_FIRST
 argument_list|(
+operator|&
 name|vm_page_queues
 index|[
 name|basequeue
@@ -2222,6 +2160,7 @@ name|m
 operator|=
 name|TAILQ_LAST
 argument_list|(
+operator|&
 name|vm_page_queues
 index|[
 name|basequeue
@@ -2239,6 +2178,7 @@ name|m
 operator|=
 name|TAILQ_FIRST
 argument_list|(
+operator|&
 name|vm_page_queues
 index|[
 name|basequeue
