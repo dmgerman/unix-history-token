@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: su.c,v 1.14.2.5 1997/09/28 17:00:06 markm Exp $"
+literal|"$Id: su.c,v 1.24 1997/10/27 22:05:12 guido Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -217,7 +217,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<kerberosIV/krb.h>
+file|<krb.h>
 end_include
 
 begin_include
