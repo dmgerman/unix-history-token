@@ -2324,9 +2324,6 @@ name|int
 name|wrote
 decl_stmt|;
 name|int
-name|status
-decl_stmt|;
-name|int
 name|addrSize
 decl_stmt|;
 name|struct
