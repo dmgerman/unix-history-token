@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	6.26 (Berkeley) %G%"
+literal|"@(#)map.c	6.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1163,6 +1163,15 @@ condition|)
 block|{
 if|if
 condition|(
+name|bitset
+argument_list|(
+name|MF_ALIAS
+argument_list|,
+name|map
+operator|->
+name|map_mflags
+argument_list|)
+operator|&&
 name|bitset
 argument_list|(
 name|MCF_REBUILDABLE
