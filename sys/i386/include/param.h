@@ -361,22 +361,23 @@ end_endif
 begin_define
 define|#
 directive|define
+name|KSTACK_GUARD_PAGES
+value|1
+end_define
+
+begin_comment
+comment|/* pages of kstack guard; 0 disables */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|UAREA_PAGES
 value|1
 end_define
 
 begin_comment
 comment|/* holds struct user WITHOUT PCB (see def.) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KSTACK_GUARD
-end_define
-
-begin_comment
-comment|/* compile in the kstack guard page */
 end_comment
 
 begin_comment

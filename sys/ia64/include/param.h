@@ -422,6 +422,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|KSTACK_GUARD_PAGES
+value|0
+end_define
+
+begin_comment
+comment|/* pages of kstack guard; 0 disables */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|UAREA_PAGES
 value|1
 end_define

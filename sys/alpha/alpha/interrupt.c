@@ -371,9 +371,11 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|KSTACK_GUARD
+if|#
+directive|if
+name|KSTACK_GUARD_PAGES
+operator|==
+literal|0
 ifndef|#
 directive|ifndef
 name|SMP

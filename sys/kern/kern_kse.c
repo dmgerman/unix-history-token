@@ -146,6 +146,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm_extern.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm_object.h>
 end_include
 
@@ -827,7 +833,7 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-name|pmap_new_thread
+name|vm_thread_new
 argument_list|(
 name|td
 argument_list|,
@@ -894,7 +900,7 @@ operator|*
 operator|)
 name|mem
 expr_stmt|;
-name|pmap_dispose_thread
+name|vm_thread_dispose
 argument_list|(
 name|td
 argument_list|)

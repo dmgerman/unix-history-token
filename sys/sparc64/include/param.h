@@ -381,6 +381,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|KSTACK_GUARD_PAGES
+value|1
+end_define
+
+begin_comment
+comment|/* pages of kstack guard; 0 disables */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|UAREA_PAGES
 value|1
 end_define
@@ -393,23 +404,6 @@ begin_define
 define|#
 directive|define
 name|PCPU_PAGES
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|KSTACK_GUARD
-end_define
-
-begin_comment
-comment|/* compile in kstack guard page */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KSTACK_GUARD_PAGES
 value|1
 end_define
 

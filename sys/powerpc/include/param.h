@@ -299,6 +299,10 @@ name|KSTACK_GUARD_PAGES
 value|1
 end_define
 
+begin_comment
+comment|/* pages of kstack guard; 0 disables */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
