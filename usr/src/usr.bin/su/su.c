@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)su.c	5.8 (Berkeley) %G%"
+literal|"@(#)su.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -625,17 +625,19 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* if not asme or target has no password, use their shell */
+comment|/* if not asme or target's shell isn't standard, use it */
 if|if
 condition|(
 operator|!
 name|asme
 operator|||
 operator|!
-operator|*
+name|chshell
+argument_list|(
 name|pwd
 operator|->
-name|pw_passwd
+name|pw_shell
+argument_list|)
 condition|)
 if|if
 condition|(
@@ -1008,6 +1010,64 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_macro
+name|chshell
+argument_list|(
+argument|sh
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|sh
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+name|char
+modifier|*
+name|cp
+decl_stmt|,
+modifier|*
+name|getusershell
+argument_list|()
+decl_stmt|;
+while|while
+condition|(
+operator|(
+name|cp
+operator|=
+name|getusershell
+argument_list|()
+operator|)
+operator|!=
+name|NULL
+condition|)
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|cp
+argument_list|,
+name|sh
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_block
 
 end_unit
 
