@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)error.c	3.4 83/12/07"
+literal|"@(#)error.c	3.5 84/01/12"
 decl_stmt|;
 end_decl_stmt
 
@@ -227,39 +227,11 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-if|if
-condition|(
-name|w
-operator|->
-name|ww_cur
-operator|.
-name|r
-operator|>=
-name|w
-operator|->
-name|ww_w
-operator|.
-name|b
-operator|-
-literal|2
-condition|)
-block|{
-name|waitnl
+name|more
 argument_list|(
 name|w
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|wwputs
-argument_list|(
-literal|"\033E"
-argument_list|,
-name|w
-argument_list|)
-expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)
