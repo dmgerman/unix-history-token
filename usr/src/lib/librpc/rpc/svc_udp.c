@@ -808,11 +808,16 @@ if|if
 condition|(
 name|rlen
 operator|<
+call|(
+name|int
+call|)
+argument_list|(
 literal|4
 operator|*
 sizeof|sizeof
 argument_list|(
 name|u_long
+argument_list|)
 argument_list|)
 condition|)
 return|return
