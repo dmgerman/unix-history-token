@@ -9,7 +9,7 @@ name|char
 name|vers
 index|[]
 init|=
-literal|"@(#)ffs_alloc.c 1.15 %G%"
+literal|"@(#)ffs_alloc.c 1.16 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4163,18 +4163,14 @@ name|NBBY
 expr_stmt|;
 name|len
 operator|=
-name|roundup
+name|howmany
 argument_list|(
 name|fs
 operator|->
 name|fs_fpg
-operator|-
-literal|1
 argument_list|,
 name|NBBY
 argument_list|)
-operator|/
-name|NBBY
 operator|-
 name|start
 expr_stmt|;
@@ -4215,19 +4211,25 @@ operator|==
 literal|0
 condition|)
 block|{
-name|len
-operator|=
-name|start
-operator|-
-literal|1
-expr_stmt|;
-name|start
+name|loc
 operator|=
 name|fs
 operator|->
 name|fs_dblkno
 operator|/
 name|NBBY
+expr_stmt|;
+name|len
+operator|=
+name|start
+operator|-
+name|loc
+operator|+
+literal|1
+expr_stmt|;
+name|start
+operator|=
+name|loc
 expr_stmt|;
 name|loc
 operator|=
