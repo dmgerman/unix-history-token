@@ -425,7 +425,7 @@ comment|/*  * Socket operation routines.  * These routines are called by the rou
 end_comment
 
 begin_comment
-comment|/*  * Get a socket structure from our zone, and initialize it.  * We don't implement `waitok' yet (see comments in uipc_domain.c).  * Note that it would probably be better to allocate socket  * and PCB at the same time, but I'm not convinced that all  * the protocols can be easily modified to do this.  *  * soalloc() returns a socket with a ref count of 0.  */
+comment|/*  * Get a socket structure from our zone, and initialize it.  * Note that it would probably be better to allocate socket  * and PCB at the same time, but I'm not convinced that all  * the protocols can be easily modified to do this.  *  * soalloc() returns a socket with a ref count of 0.  */
 end_comment
 
 begin_function
@@ -445,13 +445,31 @@ name|socket
 modifier|*
 name|so
 decl_stmt|;
+name|int
+name|flag
+decl_stmt|;
+if|if
+condition|(
+name|waitok
+operator|==
+literal|1
+condition|)
+name|flag
+operator|=
+name|M_WAITOK
+expr_stmt|;
+else|else
+name|flag
+operator|=
+name|M_NOWAIT
+expr_stmt|;
 name|so
 operator|=
 name|uma_zalloc
 argument_list|(
 name|socket_zone
 argument_list|,
-name|waitok
+name|flag
 argument_list|)
 expr_stmt|;
 if|if
