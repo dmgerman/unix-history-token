@@ -23,7 +23,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)conf.c	1.6	%G%"
+literal|"@(#)conf.c	1.7	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,7 +72,7 @@ end_define
 begin_decl_stmt
 name|char
 modifier|*
-name|MyLocNam
+name|MyLocName
 init|=
 literal|"Ing70"
 decl_stmt|;
@@ -126,7 +126,7 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
-name|MyLocNam
+name|MyLocName
 init|=
 literal|"IngVax"
 decl_stmt|;
@@ -187,7 +187,7 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
-name|MyLocNam
+name|MyLocName
 init|=
 literal|"CSVAX"
 decl_stmt|;
@@ -241,7 +241,7 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
-name|MyLocNam
+name|MyLocName
 init|=
 literal|"Cory"
 decl_stmt|;
@@ -283,7 +283,7 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
-name|MyLocNam
+name|MyLocName
 init|=
 literal|"Image"
 decl_stmt|;
@@ -331,7 +331,7 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
-name|MyLocNam
+name|MyLocName
 init|=
 literal|"ESVAX"
 decl_stmt|;
@@ -373,7 +373,7 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 modifier|*
-name|MyLocNam
+name|MyLocName
 init|=
 literal|"EECS40"
 decl_stmt|;
