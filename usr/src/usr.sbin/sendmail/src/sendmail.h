@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.26	%G% */
+comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.27	%G% */
 end_comment
 
 begin_include
@@ -253,7 +253,7 @@ comment|/* this address is verified bad */
 end_comment
 
 begin_comment
-comment|/* **  Mailer definition structure. **	Every mailer known to the system is declared in this **	structure.  It defines the pathname of the mailer, some **	flags associated with it, and the argument vector to **	pass to it.  The flags are defined in conf.c ** **	The host map is a list of lists of strings.  Within each **	list, any host is mapped to the last host in the list. **	This allows multiple names, as well as doing clever **	mail grouping in point-to-point networks.  Note: this **	is only used internally, so the apparent host is still **	kept around. ** **	The argument vector is expanded before actual use.  Every- **	thing is passed through except for things starting with "$". **	"$x" defines some interpolation, as described in conf.c **	"$x" where x is unknown expands to "x", so use "$$" to get "$". */
+comment|/* **  Mailer definition structure. **	Every mailer known to the system is declared in this **	structure.  It defines the pathname of the mailer, some **	flags associated with it, and the argument vector to **	pass to it.  The flags are defined in conf.c ** **	The host map is a list of lists of strings.  Within each **	list, any host is mapped to the last host in the list. **	This allows multiple names, as well as doing clever **	mail grouping in point-to-point networks.  Note: this **	is only used internally, so the apparent host is still **	kept around. ** **	The argument vector is expanded before actual use.  All **	words except the first are passed through the macro **	processor. */
 end_comment
 
 begin_struct
