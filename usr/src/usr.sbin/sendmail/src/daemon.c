@@ -33,7 +33,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|4.2
+literal|4.3
 operator|%
 name|G
 operator|%
@@ -87,7 +87,7 @@ operator|)
 name|daemon
 operator|.
 name|c
-literal|4.2
+literal|4.3
 operator|%
 name|G
 operator|%
@@ -810,6 +810,11 @@ name|e_xfp
 argument_list|)
 expr_stmt|;
 comment|/* for debugging */
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+comment|/* for debugging */
 ifdef|#
 directive|ifdef
 name|NVMUNIX
@@ -945,7 +950,11 @@ operator|.
 name|sin_port
 argument_list|)
 expr_stmt|;
-comment|/* explicit fall-through */
+return|return
+operator|(
+name|EX_TEMPFAIL
+operator|)
+return|;
 default|default:
 return|return
 operator|(
