@@ -395,12 +395,8 @@ block|{
 if|if
 condition|(
 name|wpa
-operator|->
-name|bio
 operator|==
 name|wp
-operator|->
-name|bio
 condition|)
 return|return
 operator|(
