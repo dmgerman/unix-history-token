@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: recvjob.c,v 1.5.2.2 1997/09/25 06:32:40 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1299,6 +1299,17 @@ argument_list|()
 condition|)
 block|{
 comment|/* file sent had bad data in it */
+if|if
+condition|(
+name|strchr
+argument_list|(
+name|file
+argument_list|,
+literal|'/'
+argument_list|)
+operator|==
+name|NULL
+condition|)
 operator|(
 name|void
 operator|)
@@ -1571,6 +1582,15 @@ name|tfname
 index|[
 literal|0
 index|]
+operator|&&
+name|strchr
+argument_list|(
+name|tfname
+argument_list|,
+literal|'/'
+argument_list|)
+operator|==
+name|NULL
 condition|)
 operator|(
 name|void
@@ -1586,7 +1606,17 @@ name|dfname
 index|[
 literal|0
 index|]
+operator|&&
+name|strchr
+argument_list|(
+name|dfname
+argument_list|,
+literal|'/'
+argument_list|)
+operator|==
+name|NULL
 condition|)
+block|{
 do|do
 block|{
 do|do
@@ -1628,6 +1658,7 @@ operator|!=
 literal|'d'
 condition|)
 do|;
+block|}
 name|dfname
 index|[
 literal|0
