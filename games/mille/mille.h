@@ -766,8 +766,11 @@ end_endif
 begin_endif
 endif|#
 directive|endif
-endif|SYSV
 end_endif
+
+begin_comment
+comment|/* SYSV */
+end_comment
 
 begin_typedef
 typedef|typedef

@@ -81,8 +81,11 @@ end_define
 begin_endif
 endif|#
 directive|endif
-endif|attron
 end_endif
+
+begin_comment
+comment|/* attron */
+end_comment
 
 begin_comment
 comment|/*  * @(#)move.c	1.2 (Berkeley) 3/28/83  */

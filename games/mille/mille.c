@@ -99,8 +99,11 @@ end_include
 begin_endif
 endif|#
 directive|endif
-endif|attron
 end_endif
+
+begin_comment
+comment|/* attron */
+end_comment
 
 begin_comment
 comment|/*  * @(#)mille.c	1.3 (Berkeley) 5/10/83  */
