@@ -53,7 +53,7 @@ name|char
 name|Options
 index|[]
 init|=
-literal|"hvIRfnrp:SMt:"
+literal|"hvIRfnrp:SMt:C:"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,6 +61,15 @@ begin_decl_stmt
 name|char
 modifier|*
 name|Prefix
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|Chroot
 init|=
 name|NULL
 decl_stmt|;
@@ -562,6 +571,14 @@ case|:
 name|AddMode
 operator|=
 name|MASTER
+expr_stmt|;
+break|break;
+case|case
+literal|'C'
+case|:
+name|Chroot
+operator|=
+name|optarg
 expr_stmt|;
 break|break;
 case|case
@@ -1144,6 +1161,31 @@ name|usage
 argument_list|()
 expr_stmt|;
 block|}
+comment|/* Perform chroot if requested */
+if|if
+condition|(
+name|Chroot
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|chroot
+argument_list|(
+name|Chroot
+argument_list|)
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"chroot to %s failed"
+argument_list|,
+name|Chroot
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Make sure the sub-execs we invoke get found */
 name|setenv
 argument_list|(
@@ -1484,7 +1526,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: pkg_add [-vInrfRMS] [-t template] [-p prefix]"
+literal|"usage: pkg_add [-vInrfRMS] [-t template] [-p prefix] [-C chrootdir]"
 argument_list|,
 literal|"               pkg-name [pkg-name ...]"
 argument_list|)
