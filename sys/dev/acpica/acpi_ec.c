@@ -1372,6 +1372,8 @@ operator|->
 name|ec_gpebit
 argument_list|,
 name|ACPI_EVENT_GPE
+argument_list|,
+literal|0
 argument_list|)
 operator|!=
 name|AE_OK
@@ -2365,6 +2367,8 @@ operator|->
 name|ec_gpebit
 argument_list|,
 name|ACPI_EVENT_GPE
+argument_list|,
+literal|0
 argument_list|)
 operator|!=
 name|AE_OK

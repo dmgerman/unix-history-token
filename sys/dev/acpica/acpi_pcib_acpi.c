@@ -1473,18 +1473,15 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* should be 'present' and 'functioning' */
 if|if
 condition|(
-operator|(
-name|devinfo
-operator|.
-name|CurrentStatus
-operator|&
-literal|0x09
-operator|)
-operator|!=
-literal|0x09
+operator|!
+name|acpi_DeviceIsPresent
+argument_list|(
+name|sc
+operator|->
+name|ap_dev
+argument_list|)
 condition|)
 block|{
 name|device_printf
@@ -1493,15 +1490,11 @@ name|sc
 operator|->
 name|ap_dev
 argument_list|,
-literal|"PCI interrupt link device %s unavailable (CurrentStatus 0x%x)\n"
+literal|"PCI interrupt link device %s not present\n"
 argument_list|,
 name|prt
 operator|->
 name|Source
-argument_list|,
-name|devinfo
-operator|.
-name|CurrentStatus
 argument_list|)
 expr_stmt|;
 goto|goto

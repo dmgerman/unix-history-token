@@ -3661,6 +3661,8 @@ argument_list|(
 name|ACPI_EVENT_POWER_BUTTON
 argument_list|,
 name|ACPI_EVENT_FIXED
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|AcpiClearEvent
@@ -3719,6 +3721,8 @@ argument_list|(
 name|ACPI_EVENT_SLEEP_BUTTON
 argument_list|,
 name|ACPI_EVENT_FIXED
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|AcpiClearEvent
@@ -3824,24 +3828,35 @@ operator|(
 name|FALSE
 operator|)
 return|;
-comment|/* XXX 0xf is probably not appropriate */
+comment|/* if no _STA method, must be present */
 if|if
 condition|(
+operator|!
 operator|(
 name|devinfo
 operator|.
 name|Valid
 operator|&
-name|ACPI_VALID_HID
+name|ACPI_VALID_STA
 operator|)
-operator|&&
+condition|)
+return|return
+operator|(
+name|TRUE
+operator|)
+return|;
+comment|/* return true for 'present' and 'functioning' */
+if|if
+condition|(
 operator|(
 name|devinfo
 operator|.
 name|CurrentStatus
 operator|&
-literal|0xf
+literal|0x9
 operator|)
+operator|==
+literal|0x9
 condition|)
 return|return
 operator|(
