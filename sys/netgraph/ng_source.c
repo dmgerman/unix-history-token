@@ -280,7 +280,7 @@ end_decl_stmt
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|ng_source_request_output_ifp
 parameter_list|(
 name|sc_p
@@ -538,7 +538,7 @@ name|ng_type
 name|ng_source_typestruct
 init|=
 block|{
-name|NG_VERSION
+name|NG_ABI_VERSION
 block|,
 name|NG_SOURCE_NODE_TYPE
 block|,
@@ -1699,7 +1699,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|ng_source_request_output_ifp
 parameter_list|(
 name|sc_p
