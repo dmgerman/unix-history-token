@@ -1304,6 +1304,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|dev_named
+name|__P
+argument_list|(
+operator|(
+name|dev_t
+name|pdev
+operator|,
+specifier|const
+name|char
+operator|*
+name|name
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|dev_depends
 name|__P
