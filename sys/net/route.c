@@ -1297,7 +1297,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|RT_UNLOCK
+name|RT_LOCK
 argument_list|(
 name|rt
 argument_list|)
