@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty.c	4.10	81/07/08	*/
+comment|/*	tty.c	4.11	81/07/09	*/
 end_comment
 
 begin_comment
@@ -1936,7 +1936,11 @@ name|u_error
 operator|=
 name|EFAULT
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 name|flushtty
 argument_list|(
