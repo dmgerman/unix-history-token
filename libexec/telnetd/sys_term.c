@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: sys_term.c,v 1.18 1997/12/03 07:16:03 charnier Exp $"
+literal|"$Id: sys_term.c,v 1.19 1997/12/24 19:21:09 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -6349,10 +6349,6 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-name|long
-name|time
-parameter_list|()
-function_decl|;
 ifdef|#
 directive|ifdef
 name|NEWINIT
@@ -8116,7 +8112,7 @@ operator|&
 name|argv
 index|[
 operator|(
-name|int
+name|long
 operator|)
 name|argv
 index|[
@@ -8138,7 +8134,7 @@ operator|*
 operator|)
 operator|(
 call|(
-name|int
+name|long
 call|)
 argument_list|(
 operator|*
@@ -8160,7 +8156,7 @@ argument_list|(
 name|argv
 argument_list|,
 call|(
-name|int
+name|long
 call|)
 argument_list|(
 operator|*
@@ -8190,7 +8186,7 @@ operator|&
 name|argv
 index|[
 operator|(
-name|int
+name|long
 operator|)
 name|argv
 index|[
