@@ -4548,7 +4548,7 @@ name|ic_lintval
 expr_stmt|;
 break|break;
 case|case
-name|IEEE80211_IOCT_RTSTHRESHOLD
+name|IEEE80211_IOC_RTSTHRESHOLD
 case|:
 name|ireq
 operator|->
@@ -5155,7 +5155,7 @@ name|ENETRESET
 expr_stmt|;
 break|break;
 case|case
-name|IEEE80211_IOCT_RTSTHRESHOLD
+name|IEEE80211_IOC_RTSTHRESHOLD
 case|:
 if|if
 condition|(

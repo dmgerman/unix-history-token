@@ -229,7 +229,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|IEEE80211_IOCT_RTSTHRESHOLD
+name|IEEE80211_IOC_RTSTHRESHOLD
 value|12
 end_define
 
