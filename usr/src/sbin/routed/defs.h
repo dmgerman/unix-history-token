@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	defs.h	4.3	82/05/26	*/
+comment|/*	defs.h	4.4	82/05/31	*/
 end_comment
 
 begin_comment
@@ -255,7 +255,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RTS_SILENT
+name|RTS_HIDDEN
 value|0x8
 end_define
 

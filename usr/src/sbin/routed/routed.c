@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)routed.c	4.9 %G%"
+literal|"@(#)routed.c	4.10 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -774,7 +774,7 @@ name|rt
 operator|->
 name|rt_state
 operator||=
-name|RTS_SILENT
+name|RTS_HIDDEN
 expr_stmt|;
 block|}
 name|fclose
@@ -876,7 +876,7 @@ operator|->
 name|rt_forw
 control|)
 block|{
-comment|/* 			 * If the host is indicated to be 			 * "silent" (i.e. it's one we got 			 * from the initialization file), 			 * don't time out it's entry. 			 */
+comment|/* 			 * If the host is indicated to be 			 * "hidden" (i.e. it's one we got 			 * from the initialization file), 			 * don't time out it's entry. 			 */
 if|if
 condition|(
 operator|(
@@ -884,7 +884,7 @@ name|rt
 operator|->
 name|rt_state
 operator|&
-name|RTS_SILENT
+name|RTS_HIDDEN
 operator|)
 operator|==
 literal|0
@@ -1876,7 +1876,7 @@ name|rt
 operator|->
 name|rt_state
 operator|&
-name|RTS_SILENT
+name|RTS_HIDDEN
 operator|)
 operator|||
 name|rt
@@ -2052,7 +2052,7 @@ name|rt
 operator|->
 name|rt_state
 operator|&
-name|RTS_SILENT
+name|RTS_HIDDEN
 operator|)
 operator|||
 name|rt
@@ -3914,9 +3914,9 @@ literal|"CHANGE"
 block|}
 block|,
 block|{
-name|RTS_SILENT
+name|RTS_HIDDEN
 block|,
-literal|"SILENT"
+literal|"HIDDEN"
 block|}
 block|,
 block|{
