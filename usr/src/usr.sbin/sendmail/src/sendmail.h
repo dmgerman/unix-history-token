@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.81 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.82 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	8.81		%G%"
+literal|"@(#)sendmail.h	8.82		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1970,8 +1970,6 @@ operator|*
 operator|,
 name|ENVELOPE
 operator|*
-operator|,
-name|int
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1991,8 +1989,6 @@ operator|*
 operator|,
 name|char
 operator|*
-operator|,
-name|int
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4285,21 +4281,6 @@ end_define
 
 begin_comment
 comment|/* ok for root to own this file */
-end_comment
-
-begin_comment
-comment|/* **  Flags passed to putheader and putbody. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PF_DELETEMIMEHDRS
-value|0x0001
-end_define
-
-begin_comment
-comment|/* delete Content-Type: and C-T-E: */
 end_comment
 
 begin_comment
