@@ -352,6 +352,31 @@ else|#
 directive|else
 end_else
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_TMS320C4x
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_TMS320C3x
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<va-c4x.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_comment
 comment|/* Define __gnuc_va_list.  */
 end_comment
@@ -455,6 +480,26 @@ name|TYPE
 parameter_list|)
 define|\
 value|(((sizeof (TYPE) + sizeof (short) - 1) / sizeof (short)) * sizeof (short))
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_AIX
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|__va_rounded_size
+parameter_list|(
+name|TYPE
+parameter_list|)
+define|\
+value|(((sizeof (TYPE) + sizeof (long) - 1) / sizeof (long)) * sizeof (long))
 end_define
 
 begin_else
@@ -636,6 +681,15 @@ end_endif
 
 begin_comment
 comment|/* _STDARG_H */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not TMS320C3x or TMS320C4x */
 end_comment
 
 begin_endif
