@@ -1534,6 +1534,10 @@ name|resource
 modifier|*
 name|irqres
 decl_stmt|;
+name|struct
+name|intr_config_hook
+name|ips_ich
+decl_stmt|;
 name|int
 name|configured
 decl_stmt|;
