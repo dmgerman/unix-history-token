@@ -1052,6 +1052,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|af
+operator|==
+name|AF_INET
+operator|||
 name|lflag
 condition|)
 name|printf
