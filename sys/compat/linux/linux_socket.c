@@ -2167,8 +2167,14 @@ operator|&&
 name|retval_socket
 operator|>=
 literal|0
+ifndef|#
+directive|ifndef
+name|KLD_MODULE
+comment|/* 	     * XXX: Avoid undefined symbol error with an IPv4 only 	     * kernel. 	     */
 operator|&&
 name|ip6_v6only
+endif|#
+directive|endif
 condition|)
 block|{
 name|caddr_t
