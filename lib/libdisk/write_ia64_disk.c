@@ -666,6 +666,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|uint32_t
 name|crc32
 parameter_list|(
