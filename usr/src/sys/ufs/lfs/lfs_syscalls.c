@@ -137,12 +137,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_BMAP
-expr_stmt|;
-name|USES_VOP_BWRITE
-expr_stmt|;
-name|USES_VOP_VGET
-expr_stmt|;
 name|BLOCK_INFO
 modifier|*
 name|blkp
@@ -390,7 +384,7 @@ block|}
 comment|/* 		 * Get the vnode/inode.  If the inode modification time is 		 * earlier than the segment in which the block was found then 		 * they have to be valid, skip other checks. 		 */
 if|if
 condition|(
-name|LFS_VGET
+name|VFS_VGET
 argument_list|(
 name|mntp
 argument_list|,
@@ -640,7 +634,7 @@ comment|/* 		 * XXX 		 * This is grossly inefficient since the cleaner just hand
 if|if
 condition|(
 operator|!
-name|LFS_VGET
+name|VFS_VGET
 argument_list|(
 name|mntp
 argument_list|,
@@ -742,10 +736,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_BMAP
-expr_stmt|;
-name|USES_VOP_VGET
-expr_stmt|;
 name|BLOCK_INFO
 modifier|*
 name|blkp
@@ -899,7 +889,7 @@ control|)
 block|{
 if|if
 condition|(
-name|LFS_VGET
+name|VFS_VGET
 argument_list|(
 name|mntp
 argument_list|,
