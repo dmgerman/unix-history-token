@@ -385,16 +385,16 @@ name|b_ioflags
 value|b_io.bio_flags
 define|#
 directive|define
-name|b_offset
-value|b_io.bio_offset
-define|#
-directive|define
 name|b_pblkno
 value|b_io.bio_pblkno
 define|#
 directive|define
 name|b_resid
 value|b_io.bio_resid
+name|off_t
+name|b_offset
+decl_stmt|;
+comment|/* Offset into file. */
 name|LIST_ENTRY
 argument_list|(
 argument|buf

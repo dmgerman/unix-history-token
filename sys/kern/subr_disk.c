@@ -1057,6 +1057,34 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|KASSERT
+argument_list|(
+name|dp
+operator|->
+name|d_devsw
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"NULL devsw"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|dp
+operator|->
+name|d_devsw
+operator|->
+name|d_strategy
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"NULL d_strategy"
+operator|)
+argument_list|)
+expr_stmt|;
 name|dp
 operator|->
 name|d_devsw

@@ -625,7 +625,7 @@ parameter_list|,
 name|dummy
 parameter_list|)
 define|\
-value|do {					\ 	if ((!(bp)->b_iocmd) || ((bp)->b_iocmd& ((bp)->b_iocmd - 1)))	\ 		Debugger("d_iocmd botch");	\ 	(*devsw((bp)->b_dev)->d_strategy)(&(bp)->b_io);	\ 	} while (0)
+value|do {								\ 	if ((!(bp)->b_iocmd) || ((bp)->b_iocmd& ((bp)->b_iocmd - 1)))	\ 		Debugger("d_iocmd botch");				\ 	if ((bp)->b_flags& B_PHYS)					\ 		(bp)->b_io.bio_offset = (bp)->b_offset;			\ 	else								\ 		(bp)->b_io.bio_offset = dbtob((bp)->b_blkno);		\ 	(*devsw((bp)->b_dev)->d_strategy)(&(bp)->b_io);			\ 	} while (0)
 end_define
 
 begin_comment
