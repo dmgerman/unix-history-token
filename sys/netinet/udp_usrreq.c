@@ -1594,6 +1594,13 @@ condition|)
 goto|goto
 name|bad
 goto|;
+name|HTONS
+argument_list|(
+name|ip
+operator|->
+name|ip_id
+argument_list|)
+expr_stmt|;
 name|icmp_error
 argument_list|(
 name|m
