@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)standout.c	8.2 (Berkeley) %G%"
+literal|"@(#)standout.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,31 +39,31 @@ comment|/*  * wstandout  *	Enter standout mode.  */
 end_comment
 
 begin_function
-name|char
-modifier|*
+name|int
 name|wstandout
 parameter_list|(
 name|win
 parameter_list|)
-specifier|register
 name|WINDOW
 modifier|*
 name|win
 decl_stmt|;
 block|{
+comment|/* 	 * If standout/standend strings, or can underline, set the 	 * screen standout bit. 	 */
 if|if
 condition|(
-operator|!
 name|SO
+operator|!=
+name|NULL
 operator|&&
-operator|!
+name|SE
+operator|!=
+name|NULL
+operator|||
 name|UC
+operator|!=
+name|NULL
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 name|win
 operator|->
 name|flags
@@ -72,11 +72,7 @@ name|__WSTANDOUT
 expr_stmt|;
 return|return
 operator|(
-name|SO
-condition|?
-name|SO
-else|:
-name|UC
+literal|1
 operator|)
 return|;
 block|}
@@ -87,31 +83,16 @@ comment|/*  * wstandend --  *	Exit standout mode.  */
 end_comment
 
 begin_function
-name|char
-modifier|*
+name|int
 name|wstandend
 parameter_list|(
 name|win
 parameter_list|)
-specifier|register
 name|WINDOW
 modifier|*
 name|win
 decl_stmt|;
 block|{
-if|if
-condition|(
-operator|!
-name|SO
-operator|&&
-operator|!
-name|UC
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 name|win
 operator|->
 name|flags
@@ -121,11 +102,7 @@ name|__WSTANDOUT
 expr_stmt|;
 return|return
 operator|(
-name|SE
-condition|?
-name|SE
-else|:
-name|UC
+literal|1
 operator|)
 return|;
 block|}
