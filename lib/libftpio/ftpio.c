@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * Major Changelog:  *  * Jordan K. Hubbard  * 17 Jan 1996  *  * Turned inside out. Now returns xfers as new file ids, not as a special  * `state' of FTP_t  *  * $Id: ftpio.c,v 1.14 1996/09/19 17:28:26 peter Exp $  *  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * Major Changelog:  *  * Jordan K. Hubbard  * 17 Jan 1996  *  * Turned inside out. Now returns xfers as new file ids, not as a special  * `state' of FTP_t  *  * $Id: ftpio.c,v 1.15 1996/10/10 08:34:27 jkh Exp $  *  */
 end_comment
 
 begin_include
@@ -2796,8 +2796,17 @@ block|{
 name|int
 name|i
 decl_stmt|;
+specifier|static
+name|int
+name|recursive
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
+operator|!
+name|recursive
+operator|&&
 name|ftp
 operator|->
 name|con_state
@@ -2806,6 +2815,10 @@ name|isopen
 condition|)
 block|{
 comment|/* Debug("ftp_pkg: in ftp_close(), sending QUIT"); */
+name|recursive
+operator|=
+literal|1
+expr_stmt|;
 name|i
 operator|=
 name|cmd
@@ -2847,6 +2860,10 @@ name|FTP_QUIT_HAPPY
 argument_list|)
 condition|)
 block|{
+name|recursive
+operator|=
+literal|0
+expr_stmt|;
 name|ftp
 operator|->
 name|errno
@@ -2857,6 +2874,10 @@ return|return
 name|FAILURE
 return|;
 block|}
+name|recursive
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Debug("ftp_pkg: ftp_close() - proper shutdown"); */
 return|return
 name|SUCCESS
@@ -3340,6 +3361,18 @@ name|ftp_close
 argument_list|(
 name|ftp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|>
+literal|0
+condition|)
+name|ftp
+operator|->
+name|errno
+operator|=
+name|i
 expr_stmt|;
 return|return
 name|FAILURE
