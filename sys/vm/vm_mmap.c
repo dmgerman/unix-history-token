@@ -4962,6 +4962,8 @@ argument_list|,
 name|maxprot
 argument_list|,
 name|docow
+operator||
+name|MAP_STACK_GROWS_DOWN
 argument_list|)
 expr_stmt|;
 else|else

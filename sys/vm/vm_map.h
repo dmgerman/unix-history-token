@@ -1028,6 +1028,20 @@ begin_comment
 comment|/* from (user) madvise request */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MAP_STACK_GROWS_DOWN
+value|0x1000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAP_STACK_GROWS_UP
+value|0x2000
+end_define
+
 begin_comment
 comment|/*  * vm_fault option flags  */
 end_comment
