@@ -125,18 +125,6 @@ directive|include
 file|<dev/ppbus/ppbio.h>
 end_include
 
-begin_expr_stmt
-name|MALLOC_DEFINE
-argument_list|(
-name|M_LPT
-argument_list|,
-literal|"lpt"
-argument_list|,
-literal|"LPT buffers"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -2129,7 +2117,7 @@ name|malloc
 argument_list|(
 name|BUFSIZE
 argument_list|,
-name|M_LPT
+name|M_DEVBUF
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -2142,7 +2130,7 @@ name|malloc
 argument_list|(
 name|BUFSTATSIZE
 argument_list|,
-name|M_LPT
+name|M_DEVBUF
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -2419,7 +2407,7 @@ name|sc
 operator|->
 name|sc_inbuf
 argument_list|,
-name|M_LPT
+name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 name|free
@@ -2428,7 +2416,7 @@ name|sc
 operator|->
 name|sc_statbuf
 argument_list|,
-name|M_LPT
+name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 name|end_close
