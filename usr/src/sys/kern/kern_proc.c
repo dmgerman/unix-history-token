@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_proc.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)kern_proc.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -556,6 +556,9 @@ decl_stmt|;
 specifier|register
 name|n
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 if|if
 condition|(
 name|pgrp
@@ -580,6 +583,8 @@ argument_list|(
 literal|"pgmv: session leader attempted setpgrp"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|pgrp
@@ -588,6 +593,9 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * new process group 		 */
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 if|if
 condition|(
 name|p
@@ -601,6 +609,8 @@ argument_list|(
 literal|"pgmv: new pgrp and pid != pgid"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|MALLOC
 argument_list|(
 name|pgrp
@@ -663,12 +673,34 @@ name|s_count
 operator|=
 literal|1
 expr_stmt|;
+name|sess
+operator|->
+name|s_ttyvp
+operator|=
+name|NULL
+expr_stmt|;
+name|sess
+operator|->
+name|s_ttyp
+operator|=
+name|NULL
+expr_stmt|;
+name|p
+operator|->
+name|p_flag
+operator|&=
+operator|~
+name|SCTTY
+expr_stmt|;
 name|pgrp
 operator|->
 name|pg_session
 operator|=
 name|sess
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DIAGNOSTIC
 if|if
 condition|(
 name|p
@@ -682,18 +714,8 @@ argument_list|(
 literal|"pgmv: mksession and p != u.u_procp"
 argument_list|)
 expr_stmt|;
-name|u
-operator|.
-name|u_ttyp
-operator|=
-name|NULL
-expr_stmt|;
-name|u
-operator|.
-name|u_ttyd
-operator|=
-literal|0
-expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{
@@ -750,7 +772,7 @@ name|pgrp
 operator|->
 name|pg_mem
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 comment|/* 	 * adjust eligibility of affected pgrps to participate in job control 	 */
@@ -1066,6 +1088,36 @@ name|pg_id
 argument_list|)
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|pgrp
+operator|->
+name|pg_session
+operator|->
+name|s_ttyp
+operator|!=
+name|NULL
+operator|&&
+name|pgrp
+operator|->
+name|pg_session
+operator|->
+name|s_ttyp
+operator|->
+name|t_pgrp
+operator|==
+name|pgrp
+condition|)
+name|pgrp
+operator|->
+name|pg_session
+operator|->
+name|s_ttyp
+operator|->
+name|t_pgrp
+operator|=
+name|NULL
+expr_stmt|;
 for|for
 control|(
 init|;
