@@ -2144,6 +2144,11 @@ argument_list|,
 name|td_runq
 argument_list|)
 expr_stmt|;
+name|p
+operator|->
+name|p_suspcount
+operator|--
+expr_stmt|;
 name|setrunqueue
 argument_list|(
 name|td
@@ -2181,6 +2186,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 comment|/* case TDS RUNNABLE: XXXKSE maybe raise priority? */
+default|default:
+comment|/* needed to avoid an error */
+break|break;
 block|}
 block|}
 comment|/* 		 * Wake us up when everyone else has suspended. 		 * In the mean time we suspend as well. 		 */
@@ -2475,6 +2483,11 @@ name|p_singlethread
 argument_list|,
 name|td_runq
 argument_list|)
+expr_stmt|;
+name|p
+operator|->
+name|p_suspcount
+operator|--
 expr_stmt|;
 name|setrunqueue
 argument_list|(
