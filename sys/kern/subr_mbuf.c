@@ -6026,7 +6026,6 @@ argument_list|)
 index|]
 argument_list|)
 expr_stmt|;
-block|}
 ifdef|#
 directive|ifdef
 name|MAC
@@ -6066,6 +6065,7 @@ block|}
 block|}
 endif|#
 directive|endif
+block|}
 return|return
 operator|(
 name|mb
