@@ -7884,6 +7884,29 @@ name|active
 operator|->
 name|rebind
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|ENABLE_POLLING_MODE
+comment|/* 		 * If our state is S_RENEWING we definitly 		 * have to go through S_INIT first. This can 		 * happen only if ENABLE_POLLING_MODE is defined. 		 */
+if|if
+condition|(
+name|client
+operator|->
+name|state
+operator|==
+name|S_RENEWING
+condition|)
+block|{
+name|state_init
+argument_list|(
+name|client
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+endif|#
+directive|endif
 name|destination
 operator|.
 name|sin_addr
@@ -7892,6 +7915,7 @@ name|sockaddr_broadcast
 operator|.
 name|sin_addr
 expr_stmt|;
+block|}
 else|else
 name|memcpy
 argument_list|(
