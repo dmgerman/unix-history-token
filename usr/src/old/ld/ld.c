@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ld.c	5.14 (Berkeley) %G%"
+literal|"@(#)ld.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4939,6 +4939,23 @@ operator|.
 name|st_mode
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|hp300
+name|filhdr
+operator|.
+name|a_mid
+operator|=
+operator|(
+name|rflag
+condition|?
+name|MID_ZERO
+else|:
+name|MID_HP300
+operator|)
+expr_stmt|;
+endif|#
+directive|endif
 name|filhdr
 operator|.
 name|a_magic
