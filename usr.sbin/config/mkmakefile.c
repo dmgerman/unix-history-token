@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mkmakefile.c,v 1.34 1998/09/15 21:07:54 gibbs Exp $"
+literal|"$Id: mkmakefile.c,v 1.35 1999/04/07 09:27:56 grog Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4058,22 +4058,6 @@ name|f_type
 operator|==
 name|SYSTEMSPEC
 condition|)
-if|if
-condition|(
-name|debugging
-condition|)
-name|fprintf
-argument_list|(
-name|f
-argument_list|,
-literal|" %s.debug"
-argument_list|,
-name|fl
-operator|->
-name|f_needs
-argument_list|)
-expr_stmt|;
-else|else
 name|fprintf
 argument_list|(
 name|f
@@ -4252,6 +4236,30 @@ argument_list|,
 literal|"KERNEL=\t\t%s\n"
 literal|"FULLKERNEL=\t%s.debug\n"
 literal|"INSTALL=\tinstall.debug\n\n"
+literal|"%s: %s.debug\n"
+argument_list|,
+name|fl
+operator|->
+name|f_needs
+argument_list|,
+name|fl
+operator|->
+name|f_needs
+argument_list|,
+name|fl
+operator|->
+name|f_needs
+argument_list|,
+name|fl
+operator|->
+name|f_needs
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"\tobjcopy --strip-debug %s.debug %s\n\n"
 argument_list|,
 name|fl
 operator|->
