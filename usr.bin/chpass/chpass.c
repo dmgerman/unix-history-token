@@ -29,24 +29,20 @@ begin_comment
 comment|/* not lint */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_ifndef
 ifndef|#
 directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"From: @(#)chpass.c	8.4 (Berkeley) 4/2/94"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
+unit|static char sccsid[] = "@(#)chpass.c	8.4 (Berkeley) 4/2/94";
 endif|#
 directive|endif
 end_endif
@@ -54,6 +50,11 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1052,7 +1053,7 @@ argument_list|,
 ifdef|#
 directive|ifdef
 name|YP
-literal|"usage: chpass [-l] [-y] [-d domain [-h host]] [-a list] [-p encpass] [-s shell] [-e mmm dd yy] [user]\n"
+literal|"usage: chpass [-o] [-l] [-y] [-d domain] [-h host] [-a list] [-p encpass] [-s shell] [-e mmm dd yy] [user]\n"
 argument_list|)
 expr_stmt|;
 else|#
