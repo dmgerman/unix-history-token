@@ -1447,6 +1447,50 @@ end_typedef
 begin_define
 define|#
 directive|define
+name|PXENV_UDP_WRITE
+value|0x0033
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|PXENV_STATUS_t
+name|status
+decl_stmt|;
+name|IP4_t
+name|ip
+decl_stmt|;
+comment|/* dest ip addr */
+name|IP4_t
+name|gw
+decl_stmt|;
+comment|/* ip gateway */
+name|UDP_PORT_t
+name|src_port
+decl_stmt|;
+comment|/* source udp port */
+name|UDP_PORT_t
+name|dst_port
+decl_stmt|;
+comment|/* destination udp port */
+name|uint16_t
+name|buffer_size
+decl_stmt|;
+comment|/* Size of the packet buffer */
+name|SEGOFF16_t
+name|buffer
+decl_stmt|;
+comment|/* SEG:OFF to the packet buffer */
+block|}
+name|PACKED
+name|t_PXENV_UDP_WRITE
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
 name|PXENV_UNLOAD_STACK
 value|0x0070
 end_define
