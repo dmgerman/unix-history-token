@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * EISA bus probe and attach routines   *  * Copyright (c) 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND    * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: eisaconf.c,v 1.39 1999/04/19 06:57:33 peter Exp $  */
+comment|/*  * EISA bus probe and attach routines   *  * Copyright (c) 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND    * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: eisaconf.c,v 1.40 1999/04/19 07:58:34 peter Exp $  */
 end_comment
 
 begin_include
@@ -206,55 +206,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/*  * Local function declarations and static variables  */
-end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static void eisa_reg_print __P((struct eisa_device *e_dev, 				char *string, char *separator)); static int eisa_add_resvaddr __P((struct eisa_device *e_dev, 				  struct resvlist *head, u_long	base, 				  u_long size, int flags)); static int eisa_reg_resvaddr __P((struct eisa_device *e_dev,  				  struct resvlist *head, resvaddr_t *resvaddr, 				  int *reg_count));
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/*  * Keep some state about what we've printed so far  * to make probe output pretty.  */
-end_comment
-
-begin_comment
-unit|static struct { 	int	in_registration;
-comment|/* reg_start has been called */
-end_comment
-
-begin_comment
-unit|int	num_interrupts;	 	int	num_ioaddrs; 	int	num_maddrs; 	int	column;
-comment|/* How much we have output so far. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAX_COL
-value|80
-end_define
-
-begin_endif
-unit|} reg_state;
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Global variable, so UserConfig can change it. */
@@ -653,9 +604,11 @@ operator|!
 name|e_dev
 condition|)
 block|{
-name|printf
+name|device_printf
 argument_list|(
-literal|"eisa0: cannot malloc eisa_device"
+name|dev
+argument_list|,
+literal|"cannot malloc eisa_device"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1553,51 +1506,6 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* Interrupt and I/O space registration facitlities */
-end_comment
-
-begin_comment
-unit|void eisa_reg_start(e_dev) 	struct eisa_device *e_dev; {
-comment|/* 	 * Announce the device. 	 */
-end_comment
-
-begin_comment
-unit|char *string;  	reg_state.in_registration = 1; 	reg_state.num_interrupts = 0; 	reg_state.num_ioaddrs = 0; 	reg_state.num_maddrs = 0; 	reg_state.column = 0;  	string = malloc(strlen(e_dev->full_name) + sizeof("<>") +
-comment|/*NULL*/
-end_comment
-
-begin_comment
-unit|1, 			M_TEMP, M_NOWAIT); 	if(!string) { 		printf("eisa0: cannot malloc device description string\n"); 		return; 	} 	sprintf(string, "<%s>", e_dev->full_name); 	eisa_reg_print(e_dev, string,
-comment|/*separator=*/
-end_comment
-
-begin_comment
-unit|NULL); 	free(string, M_TEMP); }
-comment|/*  * Output registration information mindfull of screen wrap.  * Output an optional character separator before the string  * if the line does not wrap.  */
-end_comment
-
-begin_comment
-unit|static void eisa_reg_print(e_dev, string, separator) 	struct eisa_device *e_dev; 	char *string; 	char *separator; { 	int len = strlen(string);  	if(separator) 		len++;  	if(reg_state.column + len> MAX_COL) { 		printf("\n"); 		reg_state.column = 0; 	} 	else if(separator) { 		printf("%c", *separator); 		reg_state.column++; 	}  	if(reg_state.column == 0) 		reg_state.column += printf("%s%ld:%s", 					   e_dev->driver->name, 					   e_dev->unit, 					   string); 	else 		reg_state.column += printf("%s", string); }
-comment|/* Interrupt and I/O space registration facitlities */
-end_comment
-
-begin_endif
-unit|void eisa_reg_end(e_dev) 	struct eisa_device *e_dev; { 	if( reg_state.in_registration ) 	{ 		char string[25];  		snprintf(string, sizeof(string), " on %s0 slot %d", 			mainboard_drv.name, 			e_dev->ioconf.slot); 		eisa_reg_print(e_dev, string, NULL); 		printf("\n"); 		reg_state.in_registration = 0; 	} 	else 		printf("eisa_reg_end called outside of a " 		       "registration session\n"); }
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* 0 */
-end_comment
-
 begin_function
 name|int
 name|eisa_add_intr
@@ -1690,49 +1598,6 @@ literal|0
 return|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_if
-unit|int eisa_reg_intr(e_dev, irq, func, arg, maskptr, shared) 	struct eisa_device *e_dev; 	int   irq; 	void (*func)(void *); 	void  *arg; 	u_int *maskptr; 	int   shared; { 	char string[25]; 	char separator = ',';
-if|#
-directive|if
-name|NOT_YET
-end_if
-
-begin_comment
-comment|/*  	 * Punt on conflict detection for the moment. 	 * I want to develop a generic routine to do 	 * this for all device types. 	 */
-end_comment
-
-begin_endif
-unit|int checkthese = CC_IRQ; 	if (haveseen_dev(dev, checkthese))         	return 1;
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-unit|if (reg_state.in_registration) {
-comment|/* 		 * Find the first instance of this irq that has a 		 * NULL idesc. 		 */
-end_comment
-
-begin_comment
-unit|struct irq_node *cur_irq;  		cur_irq = TAILQ_FIRST(&e_dev->ioconf.irqs); 		while (cur_irq != NULL) { 			if (cur_irq->irq_no == irq&& cur_irq->idesc == NULL) {
-comment|/* XXX use cfg->devdata  */
-end_comment
-
-begin_endif
-unit|void *dev_instance = (void *)-1;  				cur_irq->idesc = intr_create(dev_instance, 							     irq, 							     func, 							     arg, 							     maskptr, 0); 				break; 			} 			cur_irq = TAILQ_NEXT(cur_irq, links); 		}   		if (cur_irq == NULL || cur_irq->idesc == NULL) 			return (-1); 	} else { 		return EPERM; 	}  	snprintf(string, sizeof(string), " irq %d", irq); 	eisa_reg_print(e_dev, string, reg_state.num_interrupts ?&separator : NULL); 	reg_state.num_interrupts++; 	return (0); }  int eisa_release_intr(e_dev, irq, func) 	struct eisa_device *e_dev; 	int   irq; 	void  (*func)(void *); { 	int	result; 	struct	irq_node *cur_irq;  	result = -1; 	cur_irq = TAILQ_FIRST(&e_dev->ioconf.irqs);        	while (cur_irq != NULL) { 		if (cur_irq->irq_no == irq) { 			struct	irq_node *next_irq;  			next_irq = TAILQ_NEXT(cur_irq, links); 			if (cur_irq->idesc != NULL) 				intr_destroy(cur_irq->idesc); 			TAILQ_REMOVE(&e_dev->ioconf.irqs, cur_irq, links); 			free(cur_irq, M_DEVBUF); 			cur_irq = next_irq; 			result = 0; 		} else { 			cur_irq = TAILQ_NEXT(cur_irq, links); 		} 	} 	if (result != 0) { 		printf("%s%ld: Attempted to release an interrupt (%d) " 		       "it doesn't own\n", e_dev->driver->name, 			e_dev->unit, irq); 	}  	return (result); }  int eisa_enable_intr(e_dev, irq) 	struct eisa_device *e_dev; 	int irq; { 	struct	irq_node *cur_irq; 	int	result;  	result = -1; 	cur_irq = TAILQ_FIRST(&e_dev->ioconf.irqs);        	while (cur_irq != NULL) { 		if (cur_irq->irq_no == irq&& cur_irq->idesc != NULL) { 			result = intr_connect(cur_irq->idesc); 		} 		cur_irq = TAILQ_NEXT(cur_irq, links); 	} 	return (result); }
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* 0 */
-end_comment
 
 begin_function
 specifier|static
@@ -2058,62 +1923,6 @@ argument_list|)
 return|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-unit|static int eisa_reg_resvaddr(e_dev, head, resvaddr, reg_count) 	struct eisa_device *e_dev; 	struct resvlist *head; 	resvaddr_t *resvaddr; 	int *reg_count; { 	if (reg_state.in_registration) { 		resvaddr_t *node;
-comment|/* 		 * Ensure that this resvaddr is actually in the devices' 		 * reservation list. 		 */
-end_comment
-
-begin_comment
-unit|for(node = head->lh_first; node; 		    node = node->links.le_next) { 			if (node == resvaddr) { 				char buf[35]; 				char separator = ','; 				char *string = buf;  				if (*reg_count == 0) {
-comment|/* First time */
-end_comment
-
-begin_ifdef
-unit|string += sprintf(string, " at"); 				}  				if (node->size == 1  				  || (node->flags& RESVADDR_BITMASK)) 					sprintf(string, " 0x%lx", node->addr); 				else 					sprintf(string, " 0x%lx-0x%lx", 						node->addr, 						node->addr + node->size - 1); 				eisa_reg_print(e_dev, buf, 						*reg_count ?&separator : NULL); 				(*reg_count)++; 				return (0); 			} 		} 		return (ENOENT); 	} 	return EPERM; }  int eisa_reg_mspace(e_dev, resvaddr) 	struct eisa_device *e_dev; 	resvaddr_t *resvaddr; {
-ifdef|#
-directive|ifdef
-name|NOT_YET
-end_ifdef
-
-begin_comment
-comment|/*  	 * Punt on conflict detection for the moment. 	 * I want to develop a generic routine to do 	 * this for all device types. 	 */
-end_comment
-
-begin_endif
-unit|int checkthese = CC_MADDR; 	if (haveseen_dev(dev, checkthese)) 		return -1;
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-unit|return (eisa_reg_resvaddr(e_dev,&(e_dev->ioconf.maddrs), resvaddr,&(reg_state.num_maddrs))); } 	 int eisa_reg_iospace(e_dev, resvaddr) 	struct eisa_device *e_dev; 	resvaddr_t *resvaddr; {
-ifdef|#
-directive|ifdef
-name|NOT_YET
-end_ifdef
-
-begin_comment
-comment|/*  	 * Punt on conflict detection for the moment. 	 * I want to develop a generic routine to do 	 * this for all device types. 	 */
-end_comment
-
-begin_endif
-unit|int checkthese = CC_IOADDR; 	if (haveseen_dev(dev, checkthese)) 		return -1;
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-unit|return (eisa_reg_resvaddr(e_dev,&(e_dev->ioconf.ioaddrs), resvaddr,&(reg_state.num_ioaddrs))); }
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
