@@ -20,15 +20,11 @@ begin_comment
 comment|/*  * ELF definitions for the AMD64 architecture.  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<sys/elf64.h>
-end_include
-
-begin_comment
-comment|/* Definitions common to all 64 bit architectures. */
-end_comment
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__ELF_WORD_SIZE
+end_ifndef
 
 begin_define
 define|#
@@ -39,6 +35,31 @@ end_define
 
 begin_comment
 comment|/* Used by<sys/elf_generic.h> */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/elf32.h>
+end_include
+
+begin_comment
+comment|/* Definitions common to all 32 bit architectures. */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/elf64.h>
+end_include
+
+begin_comment
+comment|/* Definitions common to all 64 bit architectures. */
 end_comment
 
 begin_include
@@ -67,6 +88,29 @@ end_define
 begin_comment
 comment|/*  * Auxiliary vector entries for passing information to the interpreter.  *  * The i386 supplement to the SVR4 ABI specification names this "auxv_t",  * but POSIX lays claim to all symbols ending with "_t".  */
 end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+comment|/* Auxiliary vector entry on initial stack */
+name|int
+name|a_type
+decl_stmt|;
+comment|/* Entry type. */
+union|union
+block|{
+name|int
+name|a_val
+decl_stmt|;
+comment|/* Integer value. */
+block|}
+name|a_un
+union|;
+block|}
+name|Elf32_Auxinfo
+typedef|;
+end_typedef
 
 begin_typedef
 typedef|typedef
@@ -519,12 +563,37 @@ begin_comment
 comment|/* Define "machine" characteristics */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__ELF_WORD_SIZE
+operator|==
+literal|32
+end_if
+
+begin_define
+define|#
+directive|define
+name|ELF_TARG_CLASS
+value|ELFCLASS32
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|ELF_TARG_CLASS
 value|ELFCLASS64
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

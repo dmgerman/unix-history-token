@@ -181,15 +181,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|_ucodesel
-decl_stmt|,
-name|_udatasel
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Finish a fork operation, with process p2 nearly set up.  * Copy and update the pcb, set up the stack so that the child  * ready to run and return to user mode.  */
 end_comment
@@ -502,7 +493,7 @@ operator|~
 name|PSL_I
 expr_stmt|;
 comment|/* ints disabled */
-comment|/*- 	 * pcb2->pcb_savefpu:	cloned above. 	 * pcb2->pcb_flags:	cloned above. 	 * pcb2->pcb_onfault:	cloned above (always NULL here?). 	 */
+comment|/*- 	 * pcb2->pcb_savefpu:	cloned above. 	 * pcb2->pcb_flags:	cloned above. 	 * pcb2->pcb_onfault:	cloned above (always NULL here?). 	 * pcb2->pcb_[fg]sbase:	cloned above 	 */
 comment|/* 	 * Now, cpu_switch() can schedule the new process. 	 * pcb_rsp is loaded pointing to the cpu_switch() stack frame 	 * containing the return address when exiting cpu_switch. 	 * This will normally be to fork_trampoline(), which will have 	 * %ebx loaded with the new proc's pointer.  fork_trampoline() 	 * will set up a stack to call fork_return(p, frame); to complete 	 * the return to user-mode. 	 */
 block|}
 end_function

@@ -1187,10 +1187,6 @@ asm|__asm __volatile("invlpg %0" : : "m" (*(char *)addr) : "memory");
 block|}
 end_function
 
-begin_comment
-comment|/* XXX these are replaced with rdmsr/wrmsr */
-end_comment
-
 begin_function
 specifier|static
 name|__inline
@@ -1230,6 +1226,34 @@ operator|(
 name|sel
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|load_ds
+parameter_list|(
+name|u_int
+name|sel
+parameter_list|)
+block|{
+asm|__asm __volatile("movl %0,%%ds" : : "rm" (sel));
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|load_es
+parameter_list|(
+name|u_int
+name|sel
+parameter_list|)
+block|{
+asm|__asm __volatile("movl %0,%%es" : : "rm" (sel));
 block|}
 end_function
 

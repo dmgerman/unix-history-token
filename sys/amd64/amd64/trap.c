@@ -274,8 +274,6 @@ name|trapframe
 modifier|*
 parameter_list|,
 name|int
-parameter_list|,
-name|vm_offset_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -582,9 +580,6 @@ name|type
 decl_stmt|,
 name|code
 decl_stmt|;
-name|vm_offset_t
-name|eva
-decl_stmt|;
 name|atomic_add_int
 argument_list|(
 operator|&
@@ -609,6 +604,9 @@ condition|(
 name|db_active
 condition|)
 block|{
+name|vm_offset_t
+name|eva
+decl_stmt|;
 name|eva
 operator|=
 operator|(
@@ -715,10 +713,6 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-name|eva
-operator|=
-literal|0
-expr_stmt|;
 name|code
 operator|=
 name|frame
@@ -733,12 +727,6 @@ name|T_PAGEFLT
 condition|)
 block|{
 comment|/* 		 * If we get a page fault while holding a spin lock, then 		 * it is most likely a fatal kernel page fault.  The kernel 		 * is already going to panic trying to get a sleep lock to 		 * do the VM lookup, so just consider it a fatal trap so the 		 * kernel can print out a useful trap message and even get 		 * to the debugger. 		 */
-name|eva
-operator|=
-name|frame
-operator|.
-name|tf_addr
-expr_stmt|;
 if|if
 condition|(
 name|PCPU_GET
@@ -753,7 +741,9 @@ argument_list|(
 operator|&
 name|frame
 argument_list|,
-name|eva
+name|frame
+operator|.
+name|tf_addr
 argument_list|)
 expr_stmt|;
 block|}
@@ -919,8 +909,6 @@ operator|&
 name|frame
 argument_list|,
 name|TRUE
-argument_list|,
-name|eva
 argument_list|)
 expr_stmt|;
 if|if
@@ -1136,8 +1124,6 @@ operator|&
 name|frame
 argument_list|,
 name|FALSE
-argument_list|,
-name|eva
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1375,7 +1361,7 @@ argument_list|(
 operator|&
 name|frame
 argument_list|,
-name|eva
+literal|0
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1455,7 +1441,9 @@ name|uprintf
 argument_list|(
 literal|", fault VA = 0x%lx"
 argument_list|,
-name|eva
+name|frame
+operator|.
+name|tf_addr
 argument_list|)
 expr_stmt|;
 name|uprintf
@@ -1512,8 +1500,6 @@ parameter_list|(
 name|frame
 parameter_list|,
 name|usermode
-parameter_list|,
-name|eva
 parameter_list|)
 name|struct
 name|trapframe
@@ -1522,9 +1508,6 @@ name|frame
 decl_stmt|;
 name|int
 name|usermode
-decl_stmt|;
-name|vm_offset_t
-name|eva
 decl_stmt|;
 block|{
 name|vm_offset_t
@@ -1565,6 +1548,13 @@ init|=
 name|td
 operator|->
 name|td_proc
+decl_stmt|;
+name|vm_offset_t
+name|eva
+init|=
+name|frame
+operator|->
+name|tf_addr
 decl_stmt|;
 name|va
 operator|=
