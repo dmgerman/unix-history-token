@@ -5567,6 +5567,15 @@ literal|"cd9660"
 argument_list|)
 condition|)
 block|{
+name|bzero
+argument_list|(
+operator|&
+name|targs
+argument_list|,
+sizeof|sizeof
+name|targs
+argument_list|)
+expr_stmt|;
 name|targs
 operator|.
 name|ua
