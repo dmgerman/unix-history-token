@@ -78,7 +78,7 @@ if|#
 directive|if
 name|__FreeBSD_version
 operator|>
-literal|50000
+literal|500000
 end_if
 
 begin_expr_stmt

@@ -641,7 +641,7 @@ if|#
 directive|if
 name|__FreeBSD_version
 operator|>
-literal|50000
+literal|500000
 if|if
 condition|(
 name|curproc

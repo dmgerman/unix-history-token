@@ -273,7 +273,7 @@ begin_define
 define|#
 directive|define
 name|INTR_TYPE_AV
-value|INTR_TYPE_MISC
+value|INTR_TYPE_TTY
 end_define
 
 begin_endif
