@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdb_print.c	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdb_print.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -875,6 +875,12 @@ case|:
 block|{
 specifier|register
 name|struct
+name|vnode
+modifier|*
+name|vp
+decl_stmt|;
+specifier|register
+name|struct
 name|inode
 modifier|*
 name|ip
@@ -886,18 +892,34 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|ip
+name|vp
 operator|=
-name|inode
+name|vnode
 init|;
-name|ip
+name|vp
 operator|<
-name|inodeNINODE
+name|vnodeNVNODE
 condition|;
-name|ip
+name|vp
 operator|++
 control|)
 block|{
+if|if
+condition|(
+name|vp
+operator|->
+name|v_tag
+operator|!=
+name|VT_UFS
+condition|)
+continue|continue;
+name|ip
+operator|=
+name|VTOI
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
