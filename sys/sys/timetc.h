@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $FreeBSD$  */
+comment|/*-  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@FreeBSD.ORG> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -15,8 +15,25 @@ directive|define
 name|_SYS_TIMETC_H_
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
+begin_error
+error|#
+directive|error
+literal|"no user-serviceable parts inside"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  * Struct timecounter is the interface between the hardware which implements  * a timecounter and the MI code which uses this to keep track of time.  *  * A timecounter is a binary counter which has two properties:  *    * it runs at a fixed, known frequency.  *    * it has sufficient bits to not roll over in faster than approx  *	2 msec or 2/hz, whichever is faster.  (The value of 2 here is  *	really 1 + delta, for some indeterminate value of delta).  *  */
+comment|/*-  * `struct timecounter' is the interface between the hardware which implements  * a timecounter and the MI code which uses this to keep track of time.  *  * A timecounter is a binary counter which has two properties:  *    * it runs at a fixed, known frequency.  *    * it has sufficient bits to not roll over in less than approximately  *      max(2 msec, 2/HZ seconds).  (The value 2 here is really 1 + delta,  *      for some indeterminate value of delta.)  */
 end_comment
 
 begin_struct_decl
@@ -62,11 +79,11 @@ name|timecounter_pps_t
 modifier|*
 name|tc_poll_pps
 decl_stmt|;
-comment|/* 		 * This function is optional, it will be called whenever the 		 * timecounter is rewound, and is intended to check for PPS 		 * events.  Most hardware do not need it. 		 */
+comment|/* 		 * This function is optional.  It will be called whenever the 		 * timecounter is rewound, and is intended to check for PPS 		 * events.  Normal hardware does not need it but timecounters 		 * which latch PPS in hardware (like sys/pci/xrpu.c) do. 		 */
 name|u_int
 name|tc_counter_mask
 decl_stmt|;
-comment|/* This mask should mask off any unimplemnted bits. */
+comment|/* This mask should mask off any unimplemented bits. */
 name|u_int32_t
 name|tc_frequency
 decl_stmt|;
@@ -75,27 +92,21 @@ name|char
 modifier|*
 name|tc_name
 decl_stmt|;
-comment|/* Name of the counter. */
+comment|/* Name of the timecounter. */
 name|void
 modifier|*
 name|tc_priv
 decl_stmt|;
-comment|/* Pointer to the counters private parts. */
+comment|/* Pointer to the timecounter's private parts. */
 name|struct
 name|timecounter
 modifier|*
 name|tc_next
 decl_stmt|;
-comment|/* Initialize this to NUL */
+comment|/* Pointer to the next timecounter. */
 block|}
 struct|;
 end_struct
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
 
 begin_decl_stmt
 specifier|extern
@@ -138,15 +149,6 @@ name|ts
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !_KERNEL */
-end_comment
 
 begin_endif
 endif|#

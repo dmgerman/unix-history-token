@@ -21,6 +21,12 @@ directive|include
 file|<sys/ioccom.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -378,35 +384,23 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_struct_decl
-struct_decl|struct
-name|timehands
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|timecounter
-struct_decl|;
-end_struct_decl
-
 begin_struct
 struct|struct
 name|pps_state
 block|{
-comment|/* capture information */
+comment|/* Capture information. */
 name|struct
 name|timehands
 modifier|*
 name|capth
 decl_stmt|;
-name|u_int
+name|unsigned
 name|capgen
 decl_stmt|;
-name|u_int
+name|unsigned
 name|capcount
 decl_stmt|;
-comment|/* state information */
+comment|/* State information. */
 name|pps_params_t
 name|ppsparam
 decl_stmt|;
@@ -477,7 +471,8 @@ begin_function_decl
 name|int
 name|pps_ioctl
 parameter_list|(
-name|u_long
+name|unsigned
+name|long
 name|cmd
 parameter_list|,
 name|caddr_t
@@ -851,7 +846,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_KERNEL */
+comment|/* KERNEL */
 end_comment
 
 begin_endif
@@ -860,7 +855,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _SYS_TIMEPPS_H_ */
+comment|/* !_SYS_TIMEPPS_H_ */
 end_comment
 
 end_unit

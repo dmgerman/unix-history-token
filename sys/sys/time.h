@@ -193,10 +193,6 @@ begin_comment
 comment|/* Canada */
 end_comment
 
-begin_comment
-comment|/* start of struct bintime stuff */
-end_comment
-
 begin_struct
 struct|struct
 name|bintime
@@ -374,7 +370,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  * Background information:  *  * When converting between timestamps on parallel timescales of differing  * resolutions it is historical and scientific practice to round down rather  * than doing 4/5 rounding.  *  *   The date changes at midnight, not at noon.  *  *   Even at 15:59:59.999999999 it's not four'o'clock.  *  *   time_second ticks after N.999999999 not after N.4999999999  *  */
+comment|/*-  * Background information:  *  * When converting between timestamps on parallel timescales of differing  * resolutions it is historical and scientific practice to round down rather  * than doing 4/5 rounding.  *  *   The date changes at midnight, not at noon.  *  *   Even at 15:59:59.999999999 it's not four'o'clock.  *  *   time_second ticks after N.999999999 not after N.4999999999  */
 end_comment
 
 begin_function
@@ -564,10 +560,6 @@ literal|18446744073709LL
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/* end of struct bintime stuff */
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -926,7 +918,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*-  * Functions for looking at our clock: [get]{bin,nano,micro}[up]time()  *  * Functions without the "get" prefix returns the best timestamp  * we can produce in the given format.  *  * "bin"   == struct bintime  == seconds + 64 bit fraction of seconds.  * "nano"  == struct timespec == seconds + nanoseconds.  * "micro" == struct timeval  == seconds + microseconds.  *                * Functions containing "up" returns time relative to boot and  * should be used for calculating time intervals.  *  * Functions without "up" returns GMT time.  *  * Functions with the "get" prefix returns a less precise result  * much faster than the functions without "get" prefix and should  * be used where a precision of 10 msec is acceptable or where  * performance is priority. (NB: "precision", _not_ "resolution" !)   *   */
+comment|/*  * Functions for looking at our clock: [get]{bin,nano,micro}[up]time()  *  * Functions without the "get" prefix returns the best timestamp  * we can produce in the given format.  *  * "bin"   == struct bintime  == seconds + 64 bit fraction of seconds.  * "nano"  == struct timespec == seconds + nanoseconds.  * "micro" == struct timeval  == seconds + microseconds.  *                * Functions containing "up" returns time relative to boot and  * should be used for calculating time intervals.  *  * Functions without "up" returns GMT time.  *  * Functions with the "get" prefix returns a less precise result  * much faster than the functions without "get" prefix and should  * be used where a precision of 10 msec is acceptable or where  * performance is priority. (NB: "precision", _not_ "resolution" !)   *   */
 end_comment
 
 begin_function_decl
@@ -948,7 +940,7 @@ parameter_list|(
 name|struct
 name|timespec
 modifier|*
-name|ts
+name|tsp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -960,7 +952,7 @@ parameter_list|(
 name|struct
 name|timeval
 modifier|*
-name|tv
+name|tvp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -984,7 +976,7 @@ parameter_list|(
 name|struct
 name|timespec
 modifier|*
-name|ts
+name|tsp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -996,7 +988,7 @@ parameter_list|(
 name|struct
 name|timeval
 modifier|*
-name|tv
+name|tvp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1032,7 +1024,7 @@ parameter_list|(
 name|struct
 name|timeval
 modifier|*
-name|tv
+name|tvp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1068,13 +1060,13 @@ parameter_list|(
 name|struct
 name|timeval
 modifier|*
-name|tv
+name|tvp
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* other prototypes */
+comment|/* Other functions */
 end_comment
 
 begin_function_decl
@@ -1111,10 +1103,12 @@ parameter_list|(
 name|struct
 name|timeval
 modifier|*
+name|t1
 parameter_list|,
 name|struct
 name|timeval
 modifier|*
+name|t2
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1126,10 +1120,12 @@ parameter_list|(
 name|struct
 name|timeval
 modifier|*
+name|t1
 parameter_list|,
 name|struct
 name|timeval
 modifier|*
+name|t2
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1141,6 +1137,7 @@ parameter_list|(
 name|struct
 name|timeval
 modifier|*
+name|tv
 parameter_list|)
 function_decl|;
 end_function_decl
