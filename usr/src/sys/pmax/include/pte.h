@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: pte.h 1.11 89/09/03$  *  *	@(#)pte.h	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: pte.h 1.11 89/09/03$  *  *	@(#)pte.h	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -128,6 +128,7 @@ end_struct
 begin_typedef
 typedef|typedef
 union|union
+name|pt_entry
 block|{
 name|unsigned
 name|int
@@ -251,6 +252,21 @@ parameter_list|)
 value|(((x)& PG_FRAME)>> PG_SHIFT)
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|KERNEL
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|LOCORE
+argument_list|)
+end_if
+
 begin_comment
 comment|/*  * Kernel virtual address to page table entry and visa versa.  */
 end_comment
@@ -263,7 +279,7 @@ parameter_list|(
 name|va
 parameter_list|)
 define|\
-value|((pt_entry_t *)PMAP_HASH_KADDR + \ 	(((vm_offset_t)(va) - VM_MIN_KERNEL_ADDRESS)>> PGSHIFT))
+value|(Sysmap + (((vm_offset_t)(va) - VM_MIN_KERNEL_ADDRESS)>> PGSHIFT))
 end_define
 
 begin_define
@@ -274,8 +290,36 @@ parameter_list|(
 name|pte
 parameter_list|)
 define|\
-value|((((pt_entry_t *)(pte) - PMAP_HASH_KADDR)<< PGSHIFT) + \ 	VM_MIN_KERNEL_ADDRESS)
+value|((((pt_entry_t *)(pte) - Sysmap)<< PGSHIFT) + VM_MIN_KERNEL_ADDRESS)
 end_define
+
+begin_decl_stmt
+specifier|extern
+name|pt_entry_t
+modifier|*
+name|Sysmap
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* kernel pte table */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|Sysmapsize
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* number of pte's in Sysmap */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
