@@ -172,12 +172,8 @@ begin_define
 define|#
 directive|define
 name|UHCI_STD_CHUNK
-value|128
+value|(PAGE_SIZE / UHCI_STD_SIZE)
 end_define
-
-begin_comment
-comment|/*(PAGE_SIZE / UHCI_TD_SIZE)*/
-end_comment
 
 begin_comment
 comment|/*  * Extra information that we need for a QH.  */
@@ -228,12 +224,8 @@ begin_define
 define|#
 directive|define
 name|UHCI_SQH_CHUNK
-value|128
+value|(PAGE_SIZE / UHCI_SQH_SIZE)
 end_define
-
-begin_comment
-comment|/*(PAGE_SIZE / UHCI_QH_SIZE)*/
-end_comment
 
 begin_comment
 comment|/*  * Information about an entry in the virtual frame list.  */

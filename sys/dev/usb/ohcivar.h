@@ -43,7 +43,7 @@ begin_define
 define|#
 directive|define
 name|OHCI_SED_CHUNK
-value|128
+value|(PAGE_SIZE / OHCI_SED_SIZE)
 end_define
 
 begin_typedef
@@ -113,7 +113,7 @@ begin_define
 define|#
 directive|define
 name|OHCI_STD_CHUNK
-value|128
+value|(PAGE_SIZE / OHCI_STD_SIZE)
 end_define
 
 begin_typedef
@@ -185,7 +185,7 @@ begin_define
 define|#
 directive|define
 name|OHCI_SITD_CHUNK
-value|64
+value|(PAGE_SIZE / OHCI_SITD_SIZE)
 end_define
 
 begin_define
