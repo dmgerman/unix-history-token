@@ -1042,16 +1042,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|doOptionList
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
 name|doDmesg
 parameter_list|(
 name|void
@@ -1470,10 +1460,6 @@ name|mpfps
 operator|.
 name|pap
 argument_list|)
-expr_stmt|;
-comment|/* build "options" entries for the kernel config file */
-name|doOptionList
-argument_list|()
 expr_stmt|;
 comment|/* do a dmesg output */
 if|if
@@ -4488,87 +4474,6 @@ expr_stmt|;
 name|system
 argument_list|(
 literal|"dmesg"
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  *  build "options" entries for the kernel config file  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|doOptionList
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|puts
-argument_list|(
-name|SEP_LINE
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"# SMP kernel config file options:\n\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n# Required:\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"options		SMP\t\t\t# Symmetric MultiProcessor Kernel\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"options		APIC_IO\t\t\t# Symmetric (APIC) I/O\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n# Optional (built-in defaults will work in most cases):\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#options		NCPU=%d\t\t\t# number of CPUs\n"
-argument_list|,
-name|ncpu
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#options		NBUS=%d\t\t\t# number of busses\n"
-argument_list|,
-name|nbus
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#options		NAPIC=%d\t\t\t# number of IO APICs\n"
-argument_list|,
-name|napic
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"#options		NINTR=%d\t\t# number of INTs\n"
-argument_list|,
-operator|(
-name|nintr
-operator|<
-literal|24
-operator|)
-condition|?
-literal|24
-else|:
-name|nintr
 argument_list|)
 expr_stmt|;
 block|}
