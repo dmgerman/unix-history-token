@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.43 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	8.44 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.43 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	8.44 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2622,14 +2622,14 @@ operator|<
 operator|(
 name|time_t
 operator|)
-literal|60
+literal|600
 condition|)
 name|timeout
 operator|=
 operator|(
 name|time_t
 operator|)
-literal|60
+literal|600
 expr_stmt|;
 name|timeout
 operator|+=
@@ -2637,7 +2637,7 @@ name|e
 operator|->
 name|e_nrcpts
 operator|*
-literal|90
+literal|300
 expr_stmt|;
 name|ev
 operator|=
