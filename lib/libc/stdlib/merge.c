@@ -119,7 +119,15 @@ name|int
 function_decl|(
 modifier|*
 function_decl|)
-parameter_list|()
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|)
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -140,7 +148,15 @@ name|int
 function_decl|(
 modifier|*
 function_decl|)
-parameter_list|()
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|)
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -291,9 +307,10 @@ end_function_decl
 
 begin_block
 block|{
-name|int
+name|size_t
 name|i
-decl_stmt|,
+decl_stmt|;
+name|int
 name|sense
 decl_stmt|;
 name|int
