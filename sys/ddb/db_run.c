@@ -410,9 +410,12 @@ operator|==
 name|STEP_RETURN
 condition|)
 block|{
+comment|/* continue until matching return */
 name|db_expr_t
 name|ins
-init|=
+decl_stmt|;
+name|ins
+operator|=
 name|db_get_value
 argument_list|(
 name|pc
@@ -424,8 +427,7 @@ argument_list|)
 argument_list|,
 name|FALSE
 argument_list|)
-decl_stmt|;
-comment|/* continue until matching return */
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -531,9 +533,12 @@ operator|==
 name|STEP_CALLT
 condition|)
 block|{
+comment|/* continue until call or return */
 name|db_expr_t
 name|ins
-init|=
+decl_stmt|;
+name|ins
+operator|=
 name|db_get_value
 argument_list|(
 name|pc
@@ -545,8 +550,7 @@ argument_list|)
 argument_list|,
 name|FALSE
 argument_list|)
-decl_stmt|;
-comment|/* continue until call or return */
+expr_stmt|;
 if|if
 condition|(
 operator|!
