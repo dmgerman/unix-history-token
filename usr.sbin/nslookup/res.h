@@ -4,7 +4,7 @@ comment|/*  * ++Copyright++ 1985, 1989  * -  * Copyright (c) 1985, 1989  *    Th
 end_comment
 
 begin_comment
-comment|/*  *	@(#)res.h	5.10 (Berkeley) 6/1/90  *	$Id: res.h,v 4.9.1.3 1994/06/01 21:10:16 vixie Exp $  */
+comment|/*  *	@(#)res.h	5.10 (Berkeley) 6/1/90  *	$Id: res.h,v 8.1 1994/12/15 06:24:31 vixie Exp $  */
 end_comment
 
 begin_comment
