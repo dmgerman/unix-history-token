@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file   * is totally correct for any given task and users of this file must   * accept responsibility for any damage that occurs from the application of this  * file.  *   * (julian@tfs.com julian@dialix.oz.au)  *  * User SCSI hooks added by Peter Dufault:  *  * Copyright (c) 1994 HD Associates  * (contact: dufault@hda.com)  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of HD Associates  *    may not be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY HD ASSOCIATES ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL HD ASSOCIATES BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: scsi.c,v 1.3 1995/04/17 14:35:07 dufault Exp $  */
+comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file   * is totally correct for any given task and users of this file must   * accept responsibility for any damage that occurs from the application of this  * file.  *   * (julian@tfs.com julian@dialix.oz.au)  *  * User SCSI hooks added by Peter Dufault:  *  * Copyright (c) 1994 HD Associates  * (contact: dufault@hda.com)  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of HD Associates  *    may not be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY HD ASSOCIATES ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL HD ASSOCIATES BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: scsi.c,v 1.4 1995/04/28 19:24:39 dufault Exp $  */
 end_comment
 
 begin_include
@@ -187,6 +187,14 @@ begin_comment
 comment|/* Mode sense page control */
 end_comment
 
+begin_decl_stmt
+name|int
+name|seconds
+init|=
+literal|2
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|usage
@@ -203,9 +211,9 @@ literal|"  scsi -f device [-v] -z seconds                   # To freeze bus\n"
 literal|"  scsi -f device -m page [-P pc]                   # To read mode pages\n"
 literal|"  scsi -f device -p [-b bus] [-l lun]              # To probe all devices\n"
 literal|"  scsi -f device -r [-b bus] [-t targ] [-l lun]    # To reprobe a device\n"
-literal|"  scsi -f device [-v] -c cmd_fmt [arg0 ... argn] \\ # To send a command...\n"
-literal|"                 -o count out_fmt [arg0 ... argn]  #   EITHER (for data out)\n"
-literal|"                 -i count in_fmt                   #   OR (for data in)\n"
+literal|"  scsi -f device [-v] [-s seconds] -c cmd_fmt [arg0 ... argn] # A command...\n"
+literal|"                 -o count out_fmt [arg0 ... argn]  #   EITHER (data out)\n"
+literal|"                 -i count in_fmt                   #   OR     (data in)\n"
 literal|"\n"
 literal|"\"out_fmt\" can be \"-\" to read output data from stdin;\n"
 literal|"\"in_fmt\" can be \"-\" to write input data to stdout;\n"
@@ -287,7 +295,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ceprvf:d:b:t:l:z:m:P:"
+literal|"ceprvf:d:b:t:l:z:m:P:s:"
 argument_list|)
 operator|)
 operator|!=
@@ -474,6 +482,21 @@ case|case
 literal|'P'
 case|:
 name|pagectl
+operator|=
+name|strtol
+argument_list|(
+name|optarg
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'s'
+case|:
+name|seconds
 operator|=
 name|strtol
 argument_list|(
@@ -979,6 +1002,7 @@ comment|/* do_cmd: Send a command to a SCSI device  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|do_cmd
 parameter_list|(
@@ -1283,6 +1307,14 @@ block|}
 block|}
 block|}
 block|}
+name|scsireq
+operator|->
+name|timeout
+operator|=
+name|seconds
+operator|*
+literal|1000
+expr_stmt|;
 if|if
 condition|(
 name|scsireq_enter
