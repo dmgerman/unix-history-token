@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $FreeBSD$ */
+comment|/* $Id: $ */
+end_comment
+
+begin_comment
+comment|/* isp_freebsd_cam.h 1.10 */
 end_comment
 
 begin_comment
@@ -479,7 +483,7 @@ name|XS_SNSLEN
 parameter_list|(
 name|ccb
 parameter_list|)
-value|imin((sizeof (ccb)->sense_data), ccb->sense_len)
+value|imin((sizeof((ccb)->sense_data)), ccb->sense_len)
 end_define
 
 begin_define
@@ -623,6 +627,18 @@ define|\
 value|((ccb)->ccb_h.spriv_field0 == CAM_REQ_INPROG)
 end_define
 
+begin_function_decl
+specifier|extern
+name|void
+name|isp_done
+parameter_list|(
+name|struct
+name|ccb_scsiio
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
@@ -630,8 +646,7 @@ name|XS_CMD_DONE
 parameter_list|(
 name|sccb
 parameter_list|)
-define|\
-value|if (XS_NOERR((sccb))) \ 		XS_SETERR((sccb), CAM_REQ_CMP); \ 	(sccb)->ccb_h.status&= ~CAM_STATUS_MASK; \ 	(sccb)->ccb_h.status |= (sccb)->ccb_h.spriv_field0; \ 	if (((sccb)->ccb_h.status& CAM_STATUS_MASK) == CAM_REQ_CMP&& \ 	    (sccb)->scsi_status != SCSI_STATUS_OK) { \ 		(sccb)->ccb_h.status&= ~CAM_STATUS_MASK; \ 		(sccb)->ccb_h.status |= CAM_SCSI_STATUS_ERROR; \ 	} \ 	if (((sccb)->ccb_h.status& CAM_STATUS_MASK) != CAM_REQ_CMP) { \ 		if (((sccb)->ccb_h.status& CAM_DEV_QFRZN) == 0) { \ 			struct ispsoftc *isp = XS_ISP((sccb)); \ 			IDPRINTF(3, ("%s: freeze devq %d.%d ccbstat 0x%x\n",\ 			    isp->isp_name, (sccb)->ccb_h.target_id, \ 			    (sccb)->ccb_h.target_lun, (sccb)->ccb_h.status)); \ 			xpt_freeze_devq((sccb)->ccb_h.path, 1); \ 			(sccb)->ccb_h.status |= CAM_DEV_QFRZN; \ 		} \ 	} \ 	if ((XS_ISP((sccb)))->isp_osinfo.simqfrozen) { \ 		(sccb)->ccb_h.status |= CAM_RELEASE_SIMQ; \ 		(XS_ISP((sccb)))->isp_osinfo.simqfrozen = 0; \ 	} \ 	(sccb)->ccb_h.status&= ~CAM_SIM_QUEUED; \ 	xpt_done((union ccb *)(sccb))
+value|isp_done(sccb)
 end_define
 
 begin_define
