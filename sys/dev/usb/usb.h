@@ -1960,6 +1960,17 @@ begin_comment
 comment|/* ms */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|USB_EXTRA_POWER_UP_TIME
+value|0
+end_define
+
+begin_comment
+comment|/* ms */
+end_comment
+
 begin_else
 else|#
 directive|else
@@ -2040,6 +2051,17 @@ define|#
 directive|define
 name|USB_RESUME_RECOVERY
 value|50
+end_define
+
+begin_comment
+comment|/* ms */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_EXTRA_POWER_UP_TIME
+value|20
 end_define
 
 begin_comment
