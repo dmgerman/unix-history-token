@@ -11161,7 +11161,6 @@ name|DISK_STATE_CHANGED
 end_undef
 
 begin_function
-specifier|static
 name|int
 name|g_mirror_read_metadata
 parameter_list|(
@@ -11769,7 +11768,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|g_mirror_add_disk
 parameter_list|(
