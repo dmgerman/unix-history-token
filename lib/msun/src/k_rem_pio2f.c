@@ -575,7 +575,7 @@ operator|-
 literal|1
 index|]
 operator|>>
-literal|8
+literal|7
 expr_stmt|;
 elseif|else
 if|if
