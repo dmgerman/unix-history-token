@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -75,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|<nsswitch.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
 end_include
 
 begin_function_decl
@@ -261,7 +273,7 @@ block|}
 decl_stmt|;
 name|rval
 operator|=
-name|nsdispatch
+name|_nsdispatch
 argument_list|(
 operator|(
 name|void
@@ -355,7 +367,7 @@ block|}
 decl_stmt|;
 name|rval
 operator|=
-name|nsdispatch
+name|_nsdispatch
 argument_list|(
 operator|(
 name|void

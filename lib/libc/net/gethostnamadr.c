@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -96,6 +102,12 @@ end_include
 begin_comment
 comment|/* XXX hack for _res */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"un-namespace.h"
+end_include
 
 begin_function_decl
 specifier|extern
@@ -376,7 +388,7 @@ block|}
 decl_stmt|;
 name|rval
 operator|=
-name|nsdispatch
+name|_nsdispatch
 argument_list|(
 operator|(
 name|void
@@ -477,7 +489,7 @@ block|}
 decl_stmt|;
 name|rval
 operator|=
-name|nsdispatch
+name|_nsdispatch
 argument_list|(
 operator|(
 name|void
