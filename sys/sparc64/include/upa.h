@@ -47,6 +47,7 @@ begin_define
 define|#
 directive|define
 name|UPA_CR_MID_MASK
+define|\
 value|(((1<< UPA_CR_MID_SIZE) - 1)<< UPA_CR_MID_SHIFT)
 end_define
 
@@ -59,6 +60,28 @@ name|cr
 parameter_list|)
 value|((cr& UPA_CR_MID_MASK)>> UPA_CR_MID_SHIFT)
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LOCORE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|UPA_GET_MID
+parameter_list|(
+name|r1
+parameter_list|)
+define|\
+value|ldxa	[%g0] ASI_UPA_CONFIG_REG, r1 ; \ 	srlx	r1, UPA_CR_MID_SHIFT, r1 ; \ 	and	r1, (1<< UPA_CR_MID_SIZE) - 1, r1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

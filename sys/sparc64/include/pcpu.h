@@ -46,6 +46,12 @@ name|ALT_STACK_SIZE
 value|128
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|vmspace
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/*  * Inside the kernel, the globally reserved register g7 is used to  * point at the globaldata structure.  */
 end_comment
@@ -57,7 +63,7 @@ name|PCPU_MD_FIELDS
 define|\
 value|struct	intr_queue pc_iq;
 comment|/* interrupt queue */
-value|\ 	u_int 	pc_mid;							\ 	u_int	pc_tlb_ctx;						\ 	u_int	pc_tlb_ctx_max;						\ 	u_int	pc_tlb_ctx_min;						\ 	u_int	pc_wp_insn;
+value|\ 	struct	vmspace *pc_vmspace;					\ 	vm_offset_t pc_addr;						\ 	u_int 	pc_mid;							\ 	u_int	pc_tlb_ctx;						\ 	u_int	pc_tlb_ctx_max;						\ 	u_int	pc_tlb_ctx_min;						\ 	u_int	pc_wp_insn;
 comment|/* watch point support */
 value|\ 	u_long	pc_wp_pstate;						\ 	u_long	pc_wp_va;						\ 	int	pc_wp_mask
 end_define
