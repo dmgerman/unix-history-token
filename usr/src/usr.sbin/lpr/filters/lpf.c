@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	lpf.c	4.1	81/05/09	*/
+comment|/*	lpf.c	4.2	81/06/02	*/
 end_comment
 
 begin_comment
@@ -24,6 +24,16 @@ define|#
 directive|define
 name|LINELN
 value|132
+end_define
+
+begin_define
+define|#
+directive|define
+name|output
+parameter_list|(
+name|c
+parameter_list|)
+value|(putchar(c))
 end_define
 
 begin_decl_stmt
@@ -488,6 +498,12 @@ expr_stmt|;
 block|}
 end_block
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|output
+end_ifndef
+
 begin_expr_stmt
 name|output
 argument_list|(
@@ -584,6 +600,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
