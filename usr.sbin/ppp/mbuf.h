@@ -550,6 +550,26 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|struct
+name|mbuf
+modifier|*
+name|m_append
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|int
 name|mbuf_Show
 parameter_list|(
