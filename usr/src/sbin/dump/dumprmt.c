@@ -30,6 +30,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/inode.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -49,6 +61,12 @@ begin_include
 include|#
 directive|include
 file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dumprestor.h>
 end_include
 
 begin_define
@@ -94,6 +112,17 @@ name|rmtpeer
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|ntrec
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* blocking factor on tape */
+end_comment
+
 begin_macro
 name|rmthost
 argument_list|(
@@ -130,11 +159,16 @@ name|rmtape
 operator|<
 literal|0
 condition|)
-name|exit
-argument_list|(
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+return|return
+operator|(
 literal|1
-argument_list|)
-expr_stmt|;
+operator|)
+return|;
 block|}
 end_block
 
@@ -149,7 +183,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Lost connection to remote host.\n"
+literal|"rdump: Lost connection to remote host.\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -185,6 +219,9 @@ modifier|*
 name|name
 init|=
 literal|"root"
+decl_stmt|;
+name|int
+name|size
 decl_stmt|;
 if|if
 condition|(
@@ -263,6 +300,40 @@ argument_list|,
 literal|"/etc/rmt"
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|size
+operator|=
+name|ntrec
+operator|*
+name|TP_BSIZE
+expr_stmt|;
+if|if
+condition|(
+name|setsockopt
+argument_list|(
+name|rmtape
+argument_list|,
+name|SOL_SOCKET
+argument_list|,
+name|SO_SNDBUF
+argument_list|,
+operator|&
+name|size
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|size
+argument_list|)
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"rdump: Warning: setsockopt buffer size failed.\n"
 argument_list|)
 expr_stmt|;
 block|}
