@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rwhod.c	4.18 (Berkeley) 83/06/30"
+literal|"@(#)rwhod.c	4.19 (Berkeley) 83/07/01"
 decl_stmt|;
 end_decl_stmt
 
@@ -107,7 +107,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<rwhod.h>
+file|"rwhod.h"
 end_include
 
 begin_decl_stmt
