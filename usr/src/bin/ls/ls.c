@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ls.c	4.16 (Berkeley) %G%"
+literal|"@(#)ls.c	4.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1674,6 +1674,23 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|statf
+operator|==
+name|stat
+operator|&&
+name|lstat
+argument_list|(
+name|file
+argument_list|,
+operator|&
+name|stb
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
 name|fprintf
 argument_list|(
 name|stderr
@@ -1688,6 +1705,7 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
 block|}
 name|fp
 operator|->
