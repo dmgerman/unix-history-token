@@ -3081,6 +3081,21 @@ argument_list|(
 name|cw
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|login_getcapbool
+argument_list|(
+name|lc
+argument_list|,
+literal|"nocheckmail"
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* $MAIL may have been set by class. */
 name|cw
 operator|=
 name|getenv
@@ -3088,7 +3103,6 @@ argument_list|(
 literal|"MAIL"
 argument_list|)
 expr_stmt|;
-comment|/* $MAIL may have been set by class */
 if|if
 condition|(
 name|cw
@@ -3166,6 +3180,7 @@ else|:
 literal|""
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|login_close
 argument_list|(
