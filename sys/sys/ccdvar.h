@@ -321,6 +321,17 @@ decl_stmt|;
 name|int
 name|sc_openmask
 decl_stmt|;
+name|int
+name|sc_pick
+decl_stmt|;
+comment|/* side of mirror picked */
+name|daddr_t
+name|sc_blk
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* mirror localization */
 block|}
 struct|;
 end_struct
