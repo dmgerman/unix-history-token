@@ -193,6 +193,12 @@ comment|/* 	 * More opcodes. 	 */
 name|O_IPSEC
 block|,
 comment|/* has ipsec history		*/
+name|O_IP_SRC_LOOKUP
+block|,
+comment|/* arg1=table number, u32=value	*/
+name|O_IP_DST_LOOKUP
+block|,
+comment|/* arg1=table number, u32=value	*/
 name|O_LAST_OPCODE
 comment|/* not an opcode!		*/
 block|}
@@ -792,6 +798,65 @@ end_define
 begin_comment
 comment|/* fake ICMP code (send a TCP RST) */
 end_comment
+
+begin_comment
+comment|/*  * These are used for lookup tables.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_ipfw_table_entry
+block|{
+name|in_addr_t
+name|addr
+decl_stmt|;
+comment|/* network address		*/
+name|u_int32_t
+name|value
+decl_stmt|;
+comment|/* value			*/
+name|u_int16_t
+name|tbl
+decl_stmt|;
+comment|/* table number			*/
+name|u_int8_t
+name|masklen
+decl_stmt|;
+comment|/* mask length			*/
+block|}
+name|ipfw_table_entry
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_ipfw_table
+block|{
+name|u_int32_t
+name|size
+decl_stmt|;
+comment|/* size of entries in bytes	*/
+name|u_int32_t
+name|cnt
+decl_stmt|;
+comment|/* # of entries			*/
+name|u_int16_t
+name|tbl
+decl_stmt|;
+comment|/* table number			*/
+name|ipfw_table_entry
+name|ent
+index|[
+literal|0
+index|]
+decl_stmt|;
+comment|/* entries			*/
+block|}
+name|ipfw_table
+typedef|;
+end_typedef
 
 begin_comment
 comment|/*  * Main firewall chains definitions and global var's definitions.  */
