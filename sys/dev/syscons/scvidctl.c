@@ -2927,7 +2927,6 @@ argument_list|,
 name|data
 argument_list|)
 return|;
-comment|/* XXX */
 case|case
 name|FBIO_GETPALETTE
 case|:
@@ -2940,9 +2939,6 @@ case|:
 case|case
 name|FBIOGETCMAP
 case|:
-return|return
-name|ENODEV
-return|;
 case|case
 name|FBIOGTYPE
 case|:
