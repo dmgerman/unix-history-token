@@ -244,9 +244,6 @@ block|{
 name|device_t
 name|ad_dev
 decl_stmt|;
-name|dev_t
-name|ad_dev_t
-decl_stmt|;
 name|struct
 name|aac_softc
 modifier|*
