@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	getproto.c	4.1	82/08/25	*/
+comment|/*	getproto.c	4.2	82/10/05	*/
 end_comment
 
 begin_include
@@ -13,7 +13,7 @@ begin_function
 name|struct
 name|protoent
 modifier|*
-name|getproto
+name|getprotobynumber
 parameter_list|(
 name|proto
 parameter_list|)

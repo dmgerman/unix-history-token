@@ -1,7 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	inet_addr.c	4.1	82/10/05	*/
+comment|/*	inet_addr.c	4.2	82/10/05	*/
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
 
 begin_comment
 comment|/*  * Internet address interpretation routine.  * All the network library routines call this  * routine to interpret entries in the data bases  * which are expected to be an address.  */
