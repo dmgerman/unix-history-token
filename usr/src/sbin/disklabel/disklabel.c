@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)disklabel.c	5.8 (Berkeley) %G%"
+literal|"@(#)disklabel.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -223,13 +223,6 @@ parameter_list|)
 value|(strcmp(a,b) == 0)
 end_define
 
-begin_decl_stmt
-name|char
-modifier|*
-name|dkname
-decl_stmt|;
-end_decl_stmt
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -254,6 +247,13 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+name|char
+modifier|*
+name|dkname
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -301,15 +301,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
-name|bootarea
-index|[
-name|BBSIZE
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|disklabel
 name|lab
@@ -324,8 +315,17 @@ name|readlabel
 argument_list|()
 decl_stmt|,
 modifier|*
-name|getbootarea
+name|makebootarea
 argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|bootarea
+index|[
+name|BBSIZE
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -627,7 +627,7 @@ name|readlabel
 argument_list|(
 name|f
 argument_list|,
-name|bootarea
+name|rflag
 argument_list|)
 expr_stmt|;
 if|if
@@ -665,10 +665,6 @@ name|readlabel
 argument_list|(
 name|f
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -717,8 +713,8 @@ index|]
 expr_stmt|;
 block|}
 elseif|else
-else|#
-directive|else
+endif|#
+directive|endif
 if|if
 condition|(
 name|argc
@@ -728,8 +724,6 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 name|lab
 operator|.
 name|d_secsize
@@ -746,7 +740,7 @@ expr_stmt|;
 comment|/* XXX */
 name|lp
 operator|=
-name|getbootarea
+name|makebootarea
 argument_list|(
 name|bootarea
 argument_list|,
@@ -901,7 +895,7 @@ argument_list|)
 expr_stmt|;
 name|lp
 operator|=
-name|getbootarea
+name|makebootarea
 argument_list|(
 name|bootarea
 argument_list|,
@@ -1121,6 +1115,11 @@ argument_list|(
 name|lp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rflag
+condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -1136,11 +1135,6 @@ argument_list|,
 name|L_SET
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|rflag
-condition|)
-block|{
 if|if
 condition|(
 name|write
@@ -1334,7 +1328,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Read disklabel from disk.  * If boot is given, need bootstrap too.  * If boot not needed, use ioctl to get label  * unless -r flag is given.  */
+comment|/*  * Fetch disklabel for disk.  * If needboot is given, need bootstrap too.  * Use ioctl to get label unless -r flag is given.  */
 end_comment
 
 begin_function
@@ -1345,14 +1339,12 @@ name|readlabel
 parameter_list|(
 name|f
 parameter_list|,
-name|boot
+name|needboot
 parameter_list|)
 name|int
 name|f
-decl_stmt|;
-name|char
-modifier|*
-name|boot
+decl_stmt|,
+name|needboot
 decl_stmt|;
 block|{
 specifier|register
@@ -1361,24 +1353,13 @@ name|disklabel
 modifier|*
 name|lp
 decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|buf
-decl_stmt|;
 if|if
 condition|(
-name|boot
+name|needboot
+operator|||
+name|rflag
 condition|)
-name|buf
-operator|=
-name|boot
-expr_stmt|;
-else|else
-name|buf
-operator|=
-name|bootarea
-expr_stmt|;
+block|{
 name|lp
 operator|=
 operator|(
@@ -1387,24 +1368,18 @@ name|disklabel
 operator|*
 operator|)
 operator|(
-name|buf
+name|bootarea
 operator|+
 name|LABELOFFSET
 operator|)
 expr_stmt|;
 if|if
 condition|(
-name|boot
-operator|||
-name|rflag
-condition|)
-if|if
-condition|(
 name|read
 argument_list|(
 name|f
 argument_list|,
-name|buf
+name|bootarea
 argument_list|,
 name|BBSIZE
 argument_list|)
@@ -1415,6 +1390,13 @@ name|Perror
 argument_list|(
 name|specname
 argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|lp
+operator|=
+operator|&
+name|lab
 expr_stmt|;
 if|if
 condition|(
@@ -1453,7 +1435,7 @@ expr|struct
 name|disklabel
 operator|*
 operator|)
-name|buf
+name|bootarea
 init|;
 name|lp
 operator|<=
@@ -1463,7 +1445,7 @@ name|disklabel
 operator|*
 operator|)
 operator|(
-name|buf
+name|bootarea
 operator|+
 name|BBSIZE
 operator|-
@@ -1516,7 +1498,7 @@ name|disklabel
 operator|*
 operator|)
 operator|(
-name|buf
+name|bootarea
 operator|+
 name|BBSIZE
 operator|-
@@ -1573,7 +1555,7 @@ begin_function
 name|struct
 name|disklabel
 modifier|*
-name|getbootarea
+name|makebootarea
 parameter_list|(
 name|boot
 parameter_list|,
@@ -5274,7 +5256,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%-64s%s\n%-64s%s\n%-64s%s\n%-64s%s\n"
+literal|"%-62s%s\n%-62s%s\n%-62s%s\n%-62s%s\n"
 argument_list|,
 literal|"usage: disklabel [-r] disk"
 argument_list|,
