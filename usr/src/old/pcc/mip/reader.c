@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)reader.c	4.5 (Berkeley) %G%"
+literal|"@(#)reader.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -876,12 +876,6 @@ name|tcheck
 argument_list|()
 expr_stmt|;
 continue|continue;
-default|default:
-name|cerror
-argument_list|(
-literal|"intermediate file format error"
-argument_list|)
-expr_stmt|;
 block|}
 comment|/* EOF */
 if|if
