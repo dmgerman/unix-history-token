@@ -132,16 +132,6 @@ modifier|*
 name|argvp
 decl_stmt|;
 block|{
-specifier|extern
-name|enum
-name|_vflag
-name|vflag
-decl_stmt|;
-specifier|extern
-name|FS
-modifier|*
-name|fshead
-decl_stmt|;
 name|int
 name|ch
 decl_stmt|;
@@ -465,10 +455,6 @@ modifier|*
 name|argvp
 decl_stmt|;
 block|{
-specifier|extern
-name|off_t
-name|skip
-decl_stmt|;
 name|unsigned
 name|char
 modifier|*

@@ -206,6 +206,28 @@ begin_comment
 comment|/* are we acting as od(1)? */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|length
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* amount of data to read */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|off_t
+name|skip
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* amount of data to skip at start */
+end_comment
+
 begin_enum
 enum|enum
 name|_vflag
@@ -224,6 +246,14 @@ end_enum
 begin_comment
 comment|/* -v values */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|enum
+name|_vflag
+name|vflag
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|void

@@ -1127,10 +1127,6 @@ modifier|*
 name|get
 parameter_list|()
 block|{
-specifier|extern
-name|int
-name|length
-decl_stmt|;
 specifier|static
 name|int
 name|ateof
@@ -1530,17 +1526,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_decl_stmt
-specifier|extern
-name|off_t
-name|skip
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* bytes to skip */
-end_comment
 
 begin_function
 name|int
