@@ -392,16 +392,6 @@ name|pci_map_int
 argument_list|(
 name|config_id
 argument_list|,
-operator|(
-name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|(
-name|void
-operator|*
-argument_list|)
-operator|)
 name|vxintr
 argument_list|,
 operator|(
