@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	4.23	%G%	*/
+comment|/*	conf.c	4.24	%G%	*/
 end_comment
 
 begin_include
@@ -79,12 +79,6 @@ begin_include
 include|#
 directive|include
 file|"../h/pte.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"../h/mba.h"
 end_include
 
 begin_function_decl
@@ -182,7 +176,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"ht.h"
+file|"tu.h"
 end_include
 
 begin_if
