@@ -3000,7 +3000,7 @@ comment|/* AMD 756 */
 case|case
 literal|0x05711106
 case|:
-comment|/* VIA 82C571, 82C586, 82C596, 82C686 , 8231, 8233 */
+comment|/* VIA 82C571, 82C586, 82C596, 82C686, 8231,8233,8235 */
 block|{
 name|int
 name|via_modes
@@ -3120,9 +3120,19 @@ literal|0x31471106
 argument_list|,
 literal|0
 argument_list|)
+operator|||
+comment|/* 8233a */
+name|ata_find_dev
+argument_list|(
+name|parent
+argument_list|,
+literal|0x31771106
+argument_list|,
+literal|0
+argument_list|)
 condition|)
 block|{
-comment|/* 8233a */
+comment|/* 8235 */
 name|udmamode
 operator|=
 name|imin

@@ -754,6 +754,20 @@ condition|)
 return|return
 literal|"VIA 8233 ATA133 controller"
 return|;
+if|if
+condition|(
+name|ata_find_dev
+argument_list|(
+name|dev
+argument_list|,
+literal|0x31771106
+argument_list|,
+literal|0
+argument_list|)
+condition|)
+return|return
+literal|"VIA 8235 ATA133 controller"
+return|;
 return|return
 literal|"VIA Apollo ATA controller"
 return|;
