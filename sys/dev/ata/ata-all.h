@@ -351,12 +351,34 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ATA_C_FEA_SETXFER
+name|ATA_C_F_SETXFER
 value|0x03
 end_define
 
 begin_comment
 comment|/* set transfer mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_C_F_ENAB_RCACHE
+value|0xaa
+end_define
+
+begin_comment
+comment|/* enable readahead cache */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_C_F_ENAB_WCACHE
+value|0x02
+end_define
+
+begin_comment
+comment|/* enable write cache */
 end_comment
 
 begin_define

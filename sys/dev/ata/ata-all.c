@@ -277,6 +277,17 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|IOMASK
+value|0xfffffffc
+end_define
+
+begin_comment
+comment|/* XXX SOS 0xfffc */
+end_comment
+
 begin_comment
 comment|/* prototypes */
 end_comment
@@ -1198,7 +1209,7 @@ argument_list|,
 literal|4
 argument_list|)
 operator|&
-literal|0xfffc
+name|IOMASK
 expr_stmt|;
 name|altiobase_1
 operator|=
@@ -1211,7 +1222,7 @@ argument_list|,
 literal|4
 argument_list|)
 operator|&
-literal|0xfffc
+name|IOMASK
 expr_stmt|;
 name|bmaddr_1
 operator|=
@@ -1224,7 +1235,7 @@ argument_list|,
 literal|4
 argument_list|)
 operator|&
-literal|0xfffc
+name|IOMASK
 expr_stmt|;
 name|irq1
 operator|=
@@ -1278,7 +1289,7 @@ argument_list|,
 literal|4
 argument_list|)
 operator|&
-literal|0xfffc
+name|IOMASK
 expr_stmt|;
 name|altiobase_2
 operator|=
@@ -1291,7 +1302,7 @@ argument_list|,
 literal|4
 argument_list|)
 operator|&
-literal|0xfffc
+name|IOMASK
 expr_stmt|;
 name|bmaddr_2
 operator|=
@@ -1305,7 +1316,7 @@ argument_list|,
 literal|4
 argument_list|)
 operator|&
-literal|0xfffc
+name|IOMASK
 operator|)
 operator|+
 name|ATA_BM_OFFSET1
@@ -1369,7 +1380,7 @@ argument_list|,
 literal|4
 argument_list|)
 operator|&
-literal|0xfffc
+name|IOMASK
 operator|)
 condition|)
 block|{
@@ -1407,7 +1418,83 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* the Promise controllers need this to support burst mode */
+if|if
+condition|(
+name|type
+operator|==
+literal|0x4d33105a
+operator|||
+name|type
+operator|==
+literal|0x4d38105a
+operator|||
+name|type
+operator|==
+literal|0x00041103
+condition|)
+block|{
+comment|/* Promise and HPT366 controllers support busmastering DMA */
+name|printf
+argument_list|(
+literal|"ata-pci%d: Busmastering DMA supported\n"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* we dont know this controller, disable busmastering DMA */
+name|bmaddr_1
+operator|=
+name|bmaddr_2
+operator|=
+literal|0
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"ata-pci%d: Busmastering DMA not supported\n"
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+comment|/* on the Aladdin activate the ATAPI FIFO */
+if|if
+condition|(
+name|type
+operator|==
+literal|0x522910b9
+condition|)
+block|{
+name|pci_write_config
+argument_list|(
+name|dev
+argument_list|,
+literal|0x53
+argument_list|,
+operator|(
+name|pci_read_config
+argument_list|(
+name|dev
+argument_list|,
+literal|0x53
+argument_list|,
+literal|1
+argument_list|)
+operator|&
+operator|~
+literal|0x01
+operator|)
+operator||
+literal|0x02
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* the Promise controllers needs burst mode to be turned on explicitly */
 if|if
 condition|(
 name|type
@@ -1434,46 +1521,6 @@ operator||
 literal|0x01
 argument_list|)
 expr_stmt|;
-comment|/* Promise and HPT366 controllers support busmastering DMA */
-if|if
-condition|(
-name|type
-operator|==
-literal|0x4d33105a
-operator|||
-name|type
-operator|==
-literal|0x4d38105a
-operator|||
-name|type
-operator|==
-literal|0x00041103
-condition|)
-name|printf
-argument_list|(
-literal|"ata-pci%d: Busmastering DMA supported\n"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-comment|/* we dont know this controller, disable busmastering DMA */
-else|else
-block|{
-name|bmaddr_1
-operator|=
-name|bmaddr_2
-operator|=
-literal|0
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"ata-pci%d: Busmastering DMA not supported\n"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 comment|/* now probe the addresse found for "real" ATA/ATAPI hardware */
 name|lun
 operator|=
@@ -2676,14 +2723,14 @@ decl_stmt|;
 comment|/* is this interrupt really for this channel */
 if|if
 condition|(
+operator|(
 name|scp
 operator|->
 name|flags
 operator|&
 name|ATA_DMA_ACTIVE
-condition|)
-if|if
-condition|(
+operator|)
+operator|&&
 operator|!
 operator|(
 name|ata_dmastatus
@@ -2698,6 +2745,7 @@ return|return;
 if|if
 condition|(
 operator|(
+operator|(
 name|scp
 operator|->
 name|status
@@ -2710,6 +2758,9 @@ name|ioaddr
 operator|+
 name|ATA_STATUS
 argument_list|)
+operator|)
+operator|&
+name|ATA_S_BUSY
 operator|)
 operator|==
 name|ATA_S_BUSY
