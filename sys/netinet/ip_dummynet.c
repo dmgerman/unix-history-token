@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2001 Luigi Rizzo, Universita` di Pisa  * Portions Copyright (c) 2000 Akamba Corp.  * All rights reserved  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1998-2002 Luigi Rizzo, Universita` di Pisa  * Portions Copyright (c) 2000 Akamba Corp.  * All rights reserved  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_define
@@ -49,16 +49,6 @@ include|#
 directive|include
 file|<sys/mbuf.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/queue.h>
-end_include
-
-begin_comment
-comment|/* XXX */
-end_comment
 
 begin_include
 include|#
@@ -786,22 +776,6 @@ name|ifp
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/*  * ip_fw_chain_head is used when deleting a pipe, because ipfw rules can  * hold references to the pipe.  */
-end_comment
-
-begin_extern
-extern|extern LIST_HEAD (ip_fw_head
-operator|,
-extern|ip_fw
-end_extern
-
-begin_expr_stmt
-unit|)
-name|ip_fw_chain_head
-expr_stmt|;
-end_expr_stmt
 
 begin_function
 specifier|static
@@ -4633,24 +4607,61 @@ argument|int pipe_nr
 argument_list|,
 argument|struct ip_fw *rule
 argument_list|)
-block|{     struct
+block|{
+name|ipfw_insn_pipe
+operator|*
+name|cmd
+operator|=
+operator|(
+name|ipfw_insn_pipe
+operator|*
+operator|)
+operator|(
+name|rule
+operator|->
+name|cmd
+operator|+
+name|rule
+operator|->
+name|act_ofs
+operator|)
+block|;     struct
 name|dn_flow_set
 operator|*
 name|fs
 operator|=
-name|NULL
+operator|(
+expr|struct
+name|dn_flow_set
+operator|*
+operator|)
+operator|(
+name|cmd
+operator|->
+name|pipe_ptr
+operator|)
 block|;
 if|if
 condition|(
-operator|(
-name|rule
+name|fs
+operator|!=
+name|NULL
+condition|)
+return|return
+name|fs
+return|;
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|cmd
 operator|->
-name|fw_flg
-operator|&
-name|IP_FW_F_COMMAND
-operator|)
+name|o
+operator|.
+name|opcode
 operator|==
-name|IP_FW_F_QUEUE
+name|O_QUEUE
 condition|)
 for|for
 control|(
@@ -4717,22 +4728,23 @@ name|fs
 operator|)
 expr_stmt|;
 block|}
-end_expr_stmt
+end_if
 
-begin_if
-if|if
-condition|(
-name|fs
-operator|!=
-name|NULL
-condition|)
-name|rule
+begin_expr_stmt
+operator|(
+expr|struct
+name|dn_flow_set
+operator|*
+operator|)
+operator|(
+name|cmd
 operator|->
 name|pipe_ptr
+operator|)
 operator|=
 name|fs
 expr_stmt|;
-end_if
+end_expr_stmt
 
 begin_comment
 comment|/* record for the future */
@@ -4805,6 +4817,24 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+name|int
+name|action
+init|=
+name|fwa
+operator|->
+name|rule
+operator|->
+name|cmd
+index|[
+name|fwa
+operator|->
+name|rule
+operator|->
+name|act_ofs
+index|]
+operator|.
+name|opcode
+decl_stmt|;
 name|s
 operator|=
 name|splimp
@@ -4814,21 +4844,7 @@ name|pipe_nr
 operator|&=
 literal|0xffff
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|fs
-operator|=
-name|fwa
-operator|->
-name|rule
-operator|->
-name|pipe_ptr
-operator|)
-operator|==
-name|NULL
-condition|)
-block|{
+comment|/*      * this is a dummynet rule, so we expect a O_PIPE or O_QUEUE rule      */
 name|fs
 operator|=
 name|locate_flowset
@@ -4850,7 +4866,6 @@ goto|goto
 name|dropit
 goto|;
 comment|/* this queue/pipe does not exist! */
-block|}
 name|pipe
 operator|=
 name|fs
@@ -5266,17 +5281,9 @@ goto|;
 comment|/*      * If we reach this point the flow was previously idle, so we need      * to schedule it. This involves different actions for fixed-rate or      * WF2Q queues.      */
 if|if
 condition|(
-operator|(
-name|fwa
-operator|->
-name|rule
-operator|->
-name|fw_flg
-operator|&
-name|IP_FW_F_COMMAND
-operator|)
+name|action
 operator|==
-name|IP_FW_F_PIPE
+name|O_PIPE
 condition|)
 block|{
 comment|/* 	 * Fixed-rate queue: just insert into the ready_heap. 	 */
@@ -5900,11 +5907,6 @@ modifier|*
 name|p
 decl_stmt|;
 name|struct
-name|ip_fw
-modifier|*
-name|rule
-decl_stmt|;
-name|struct
 name|dn_flow_set
 modifier|*
 name|fs
@@ -5921,19 +5923,10 @@ name|splimp
 argument_list|()
 expr_stmt|;
 comment|/* remove all references to pipes ...*/
-name|LIST_FOREACH
+name|flush_pipe_ptrs
 argument_list|(
-argument|rule
-argument_list|,
-argument|&ip_fw_chain_head
-argument_list|,
-argument|next
-argument_list|)
-name|rule
-operator|->
-name|pipe_ptr
-operator|=
 name|NULL
+argument_list|)
 expr_stmt|;
 comment|/* prevent future matches... */
 name|p
@@ -6244,14 +6237,22 @@ if|if
 condition|(
 name|pkt
 operator|->
-name|rule
+name|hdr
+operator|.
+name|mh_data
 operator|==
 name|r
 condition|)
 name|pkt
 operator|->
-name|rule
+name|hdr
+operator|.
+name|mh_data
 operator|=
+operator|(
+name|void
+operator|*
+operator|)
 name|ip_fw_default_rule
 expr_stmt|;
 block|}
@@ -7857,11 +7858,6 @@ block|{
 name|int
 name|s
 decl_stmt|;
-name|struct
-name|ip_fw
-modifier|*
-name|rule
-decl_stmt|;
 if|if
 condition|(
 name|p
@@ -8003,32 +7999,15 @@ operator|->
 name|next
 expr_stmt|;
 comment|/* remove references to this pipe from the ip_fw rules. */
-name|LIST_FOREACH
+name|flush_pipe_ptrs
 argument_list|(
-argument|rule
-argument_list|,
-argument|&ip_fw_chain_head
-argument_list|,
-argument|next
-argument_list|)
-if|if
-condition|(
-name|rule
-operator|->
-name|pipe_ptr
-operator|==
 operator|&
 operator|(
 name|b
 operator|->
 name|fs
 operator|)
-condition|)
-name|rule
-operator|->
-name|pipe_ptr
-operator|=
-name|NULL
+argument_list|)
 expr_stmt|;
 comment|/* remove all references to this pipe from flow_sets */
 for|for
@@ -8224,27 +8203,10 @@ operator|->
 name|next
 expr_stmt|;
 comment|/* remove references to this flow_set from the ip_fw rules. */
-name|LIST_FOREACH
+name|flush_pipe_ptrs
 argument_list|(
-argument|rule
-argument_list|,
-argument|&ip_fw_chain_head
-argument_list|,
-argument|next
-argument_list|)
-if|if
-condition|(
-name|rule
-operator|->
-name|pipe_ptr
-operator|==
 name|b
-condition|)
-name|rule
-operator|->
-name|pipe_ptr
-operator|=
-name|NULL
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -8949,6 +8911,11 @@ operator|==
 name|SOPT_SET
 condition|)
 block|{
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500034
 name|error
 operator|=
 name|securelevel_ge
@@ -8971,6 +8938,21 @@ operator|(
 name|error
 operator|)
 return|;
+else|#
+directive|else
+if|if
+condition|(
+name|securelevel
+operator|>=
+literal|3
+condition|)
+return|return
+operator|(
+name|EPERM
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
 switch|switch
 condition|(
