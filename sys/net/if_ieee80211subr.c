@@ -4677,12 +4677,6 @@ condition|(
 name|ireq
 operator|->
 name|i_len
-operator|<
-name|IEEE80211_WEP_KEYLEN
-operator|||
-name|ireq
-operator|->
-name|i_len
 operator|>
 sizeof|sizeof
 argument_list|(
