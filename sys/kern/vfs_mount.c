@@ -191,7 +191,7 @@ name|mountroot
 argument_list|,
 name|SI_SUB_MOUNT_ROOT
 argument_list|,
-name|SI_ORDER_FIRST
+name|SI_ORDER_SECOND
 argument_list|,
 name|vfs_mountroot
 argument_list|,
@@ -306,25 +306,18 @@ operator|&
 name|RB_DFLTROOT
 operator|)
 condition|)
+if|if
+condition|(
 operator|!
 name|vfs_mountroot_try
 argument_list|(
 name|ROOTDEVNAME
 argument_list|)
-block|)
-function|return;
-end_function
-
-begin_endif
+condition|)
+return|return;
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/*  	 * Everything so far has failed, prompt on the console if we haven't 	 * already tried that. 	 */
-end_comment
-
-begin_if
 if|if
 condition|(
 operator|!
@@ -343,23 +336,20 @@ name|vfs_mountroot_ask
 argument_list|()
 condition|)
 return|return;
-end_if
-
-begin_expr_stmt
 name|panic
 argument_list|(
 literal|"Root mount failed, startup aborted."
 argument_list|)
 expr_stmt|;
-end_expr_stmt
+block|}
+end_function
 
 begin_comment
-unit|}
 comment|/*  * Mount (mountfrom) as the root filesystem.  */
 end_comment
 
 begin_function
-unit|static
+specifier|static
 name|int
 name|vfs_mountroot_try
 parameter_list|(
@@ -392,6 +382,8 @@ decl_stmt|;
 name|vfsname
 operator|=
 name|path
+operator|=
+name|mp
 operator|=
 name|NULL
 expr_stmt|;
@@ -438,6 +430,18 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
+name|vfsname
+index|[
+literal|0
+index|]
+operator|=
+name|path
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
 name|sprintf
 argument_list|(
 name|patt
@@ -461,8 +465,8 @@ name|vfsname
 argument_list|,
 name|path
 argument_list|)
-operator|!=
-literal|2
+operator|<
+literal|1
 condition|)
 goto|goto
 name|done
@@ -507,6 +511,15 @@ expr_stmt|;
 comment|/* do our best to set rootdev */
 if|if
 condition|(
+operator|(
+name|path
+index|[
+literal|0
+index|]
+operator|!=
+literal|0
+operator|)
+operator|&&
 name|setrootbyname
 argument_list|(
 name|path
@@ -621,6 +634,12 @@ name|mnt_time
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|mp
+operator|!=
+name|NULL
+condition|)
 name|vfs_unbusy
 argument_list|(
 name|mp
