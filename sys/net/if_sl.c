@@ -1106,6 +1106,8 @@ operator||
 name|SC_AUTOCOMP
 operator||
 name|IFF_MULTICAST
+operator||
+name|IFF_NEEDSGIANT
 expr_stmt|;
 endif|#
 directive|endif
@@ -2560,6 +2562,9 @@ name|len
 init|=
 literal|0
 decl_stmt|;
+name|GIANT_REQUIRED
+expr_stmt|;
+comment|/* tty */
 for|for
 control|(
 init|;
