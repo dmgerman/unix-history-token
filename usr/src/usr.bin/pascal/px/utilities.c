@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	5.1 (Berkeley) %G%"
+literal|"@(#)utilities.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -378,7 +378,7 @@ name|i
 decl_stmt|,
 name|linum
 decl_stmt|;
-name|struct
+name|union
 name|display
 name|disp
 decl_stmt|;
