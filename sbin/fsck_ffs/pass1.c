@@ -9,26 +9,14 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static const char sccsid[] = "@(#)pass1.c	8.6 (Berkeley) 4/28/95";
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-name|rcsid
+name|sccsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"@(#)pass1.c	8.6 (Berkeley) 4/28/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,6 +33,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -707,8 +701,11 @@ literal|0
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"convert symlink %ld(%s) of size %ld\n"
+literal|"convert symlink %lu(%s) of size %ld\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|inumber
 argument_list|,
 name|symbuf
@@ -861,6 +858,9 @@ name|printf
 argument_list|(
 literal|"bad direct addr: %ld\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|dp
 operator|->
 name|di_db
@@ -928,6 +928,9 @@ name|printf
 argument_list|(
 literal|"bad indirect addr: %ld\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|dp
 operator|->
 name|di_ib

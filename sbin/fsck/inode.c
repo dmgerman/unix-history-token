@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: inode.c,v 1.14 1998/06/15 07:07:12 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -955,6 +955,9 @@ name|buf
 argument_list|,
 literal|"PARTIALLY TRUNCATED INODE I=%lu"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|idesc
 operator|->
 name|id_number
@@ -1291,8 +1294,14 @@ name|printf
 argument_list|(
 literal|"blk %ld< cgdmin %ld;"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|blk
 argument_list|,
+operator|(
+name|long
+operator|)
 name|cgdmin
 argument_list|(
 operator|&
@@ -1306,10 +1315,18 @@ name|printf
 argument_list|(
 literal|" blk + cnt %ld> cgsbase %ld\n"
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|blk
 operator|+
 name|cnt
+argument_list|)
 argument_list|,
+operator|(
+name|long
+operator|)
 name|cgsblock
 argument_list|(
 operator|&
@@ -1357,8 +1374,14 @@ name|printf
 argument_list|(
 literal|"blk %ld>= cgdmin %ld;"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|blk
 argument_list|,
+operator|(
+name|long
+operator|)
 name|cgdmin
 argument_list|(
 operator|&
@@ -1372,10 +1395,18 @@ name|printf
 argument_list|(
 literal|" blk + cnt %ld> sblock.fs_fpg %ld\n"
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|blk
 operator|+
 name|cnt
+argument_list|)
 argument_list|,
+operator|(
+name|long
+operator|)
 name|sblock
 operator|.
 name|fs_fpg
@@ -2620,6 +2651,9 @@ name|printf
 argument_list|(
 literal|" I=%lu "
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|ino
 argument_list|)
 expr_stmt|;

@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: dir.c,v 1.10 1998/06/15 07:07:10 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2811,6 +2811,9 @@ name|printf
 argument_list|(
 literal|"PARENT WAS I=%lu\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|parentdir
 argument_list|)
 expr_stmt|;

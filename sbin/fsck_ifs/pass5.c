@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: pass5.c,v 1.11 1998/06/15 07:07:19 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1352,7 +1352,7 @@ name|errx
 argument_list|(
 name|EEXIT
 argument_list|,
-literal|"BAD STATE %d FOR INODE I=%d"
+literal|"BAD STATE %d FOR INODE I=%ld"
 argument_list|,
 name|statemap
 index|[

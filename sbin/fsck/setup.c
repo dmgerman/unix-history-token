@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: setup.c,v 1.11 1998/06/15 07:07:21 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2374,7 +2374,7 @@ condition|)
 continue|continue;
 name|printf
 argument_list|(
-literal|"offset %d, original %d, alternate %d\n"
+literal|"offset %d, original %ld, alternate %ld\n"
 argument_list|,
 name|olp
 operator|-
