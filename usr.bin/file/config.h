@@ -3,6 +3,12 @@ begin_comment
 comment|/* $FreeBSD$ */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<osreldate.h>
+end_include
+
 begin_comment
 comment|/* config.h.  Generated automatically by configure.  */
 end_comment
@@ -298,12 +304,25 @@ begin_comment
 comment|/* Define if you have the<stdint.h> header file.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500019
+end_if
+
 begin_define
 define|#
 directive|define
 name|HAVE_STDINT_H
 value|1
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define if you have the<sys/mman.h> header file.  */
