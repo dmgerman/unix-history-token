@@ -8,6 +8,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"conf.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<time.h>
 end_include
 
@@ -50,7 +56,7 @@ operator|)
 name|arpadate
 operator|.
 name|c
-literal|3.9
+literal|3.10
 operator|%
 name|G
 operator|%
