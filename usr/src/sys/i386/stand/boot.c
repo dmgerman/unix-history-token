@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)boot.c	7.3 (Berkeley) %G%"
+literal|"@(#)boot.c	7.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -589,7 +589,7 @@ name|x
 operator|.
 name|a_entry
 operator|&=
-literal|0xfff00000
+literal|0x000fffff
 expr_stmt|;
 name|printf
 argument_list|(
