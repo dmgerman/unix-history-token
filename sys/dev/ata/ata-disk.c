@@ -1955,6 +1955,17 @@ name|num_tags
 condition|)
 return|return;
 block|}
+comment|/* remove request from drive queue */
+name|bioq_remove
+argument_list|(
+operator|&
+name|adp
+operator|->
+name|queue
+argument_list|,
+name|bp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1983,6 +1994,15 @@ argument_list|(
 name|atadev
 argument_list|,
 literal|"out of memory in start\n"
+argument_list|)
+expr_stmt|;
+name|biofinish
+argument_list|(
+name|bp
+argument_list|,
+name|NULL
+argument_list|,
+name|ENOMEM
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2082,17 +2102,6 @@ name|tag
 index|]
 operator|=
 name|request
-expr_stmt|;
-comment|/* remove from drive queue */
-name|bioq_remove
-argument_list|(
-operator|&
-name|adp
-operator|->
-name|queue
-argument_list|,
-name|bp
-argument_list|)
 expr_stmt|;
 comment|/* link onto controller queue */
 name|TAILQ_INSERT_TAIL
