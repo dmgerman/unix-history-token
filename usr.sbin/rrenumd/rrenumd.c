@@ -664,12 +664,12 @@ comment|/* XXX: not necessary ?? */
 end_comment
 
 begin_comment
-unit|static void join_multi(const char *addrname) { 	struct ipv6_mreq mreq;  	if (inet_pton(AF_INET6, addrname,&mreq.ipv6mr_multiaddr.s6_addr) 	    != 1) { 		syslog(LOG_ERR, "<%s> inet_pton failed(library bug?)", 		       __FUNCTION__); 		exit(1); 	}
+unit|static void join_multi(const char *addrname) { 	struct ipv6_mreq mreq;  	if (inet_pton(AF_INET6, addrname,&mreq.ipv6mr_multiaddr.s6_addr) 	    != 1) { 		syslog(LOG_ERR, "<%s> inet_pton failed(library bug?)", 		       __func__); 		exit(1); 	}
 comment|/* ADHOC: currently join only one */
 end_comment
 
 begin_endif
-unit|{ 		if ((mreq.ipv6mr_interface = if_nametoindex(ifname)) == 0) { 			syslog(LOG_ERR, "<%s> ifname %s should be invalid: %s", 			       __FUNCTION__, ifname, strerror(errno)); 			exit(1); 		} 		if (setsockopt(s, IPPROTO_IPV6, IPV6_JOIN_GROUP,&mreq, 			       sizeof(mreq))< 0) { 			syslog(LOG_ERR, "<%s> IPV6_JOIN_GROUP on %s: %s", 			       __FUNCTION__, ifname, strerror(errno)); 			exit(1); 		} 	} }
+unit|{ 		if ((mreq.ipv6mr_interface = if_nametoindex(ifname)) == 0) { 			syslog(LOG_ERR, "<%s> ifname %s should be invalid: %s", 			       __func__, ifname, strerror(errno)); 			exit(1); 		} 		if (setsockopt(s, IPPROTO_IPV6, IPV6_JOIN_GROUP,&mreq, 			       sizeof(mreq))< 0) { 			syslog(LOG_ERR, "<%s> IPV6_JOIN_GROUP on %s: %s", 			       __func__, ifname, strerror(errno)); 			exit(1); 		} 	} }
 endif|#
 directive|endif
 end_endif
@@ -810,7 +810,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s>: malloc failed"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -898,7 +898,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s>: malloc failed"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -972,7 +972,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> parse failed"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1180,7 +1180,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> socket(v6): %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|strerror
 argument_list|(
@@ -1245,7 +1245,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> IICMP6_FILTER: %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|strerror
 argument_list|(
@@ -1292,7 +1292,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> IPV6_RECVPKTINFO: %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|strerror
 argument_list|(
@@ -1428,7 +1428,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> IPV6_AUTH_TRANS_LEVEL: %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|strerror
 argument_list|(
@@ -1483,7 +1483,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> IPV6_ESP_TRANS_LEVEL: %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|strerror
 argument_list|(
@@ -1573,7 +1573,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> socket(v4): %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|strerror
 argument_list|(
@@ -1717,7 +1717,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> IP_AUTH_TRANS_LEVEL: %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|strerror
 argument_list|(
@@ -1772,7 +1772,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> IP_ESP_TRANS_LEVEL: %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|strerror
 argument_list|(
@@ -2106,7 +2106,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> sendmsg: %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|strerror
 argument_list|(
@@ -2214,7 +2214,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> recvmsg: %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|strerror
 argument_list|(
@@ -2255,7 +2255,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> packet size(%d) is too short"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|i
 argument_list|)
@@ -2338,7 +2338,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> received unknown code %d"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|rr
 operator|->
@@ -2498,7 +2498,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> config file %s open failed"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|optarg
 argument_list|)
@@ -2818,7 +2818,7 @@ name|LOG_ERR
 argument_list|,
 literal|"<%s> select: %s"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|,
 name|strerror
 argument_list|(
