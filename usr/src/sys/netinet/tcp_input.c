@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_input.c	1.63	82/03/24	*/
+comment|/*	tcp_input.c	1.64	82/03/26	*/
 end_comment
 
 begin_include
@@ -427,6 +427,8 @@ expr_stmt|;
 if|#
 directive|if
 name|vax
+operator|||
+name|pdp11
 name|ti
 operator|->
 name|ti_len
@@ -712,6 +714,8 @@ expr_stmt|;
 if|#
 directive|if
 name|vax
+operator|||
+name|pdp11
 comment|/* 	 * Convert TCP protocol specific fields to host format. 	 */
 name|ti
 operator|->
@@ -1037,6 +1041,10 @@ name|inp_laddr
 operator|=
 name|laddr
 expr_stmt|;
+name|tp
+operator|=
+literal|0
+expr_stmt|;
 goto|goto
 name|drop
 goto|;
@@ -1147,6 +1155,7 @@ name|tiflags
 operator|&
 name|TH_ACK
 condition|)
+block|{
 name|tcp_drop
 argument_list|(
 name|tp
@@ -1154,6 +1163,11 @@ argument_list|,
 name|ECONNREFUSED
 argument_list|)
 expr_stmt|;
+name|tp
+operator|=
+literal|0
+expr_stmt|;
+block|}
 goto|goto
 name|drop
 goto|;
@@ -1754,6 +1768,10 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* not quite right */
+name|tp
+operator|=
+literal|0
+expr_stmt|;
 goto|goto
 name|drop
 goto|;
@@ -1764,6 +1782,10 @@ name|tp
 argument_list|,
 name|ECONNREFUSED
 argument_list|)
+expr_stmt|;
+name|tp
+operator|=
+literal|0
 expr_stmt|;
 goto|goto
 name|drop
@@ -1787,6 +1809,10 @@ argument_list|,
 name|ECONNRESET
 argument_list|)
 expr_stmt|;
+name|tp
+operator|=
+literal|0
+expr_stmt|;
 goto|goto
 name|drop
 goto|;
@@ -1803,6 +1829,10 @@ name|tcp_close
 argument_list|(
 name|tp
 argument_list|)
+expr_stmt|;
+name|tp
+operator|=
+literal|0
 expr_stmt|;
 goto|goto
 name|drop
@@ -2342,11 +2372,17 @@ if|if
 condition|(
 name|ourfinisacked
 condition|)
+block|{
 name|tcp_close
 argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+name|tp
+operator|=
+literal|0
+expr_stmt|;
+block|}
 goto|goto
 name|drop
 goto|;
@@ -3165,6 +3201,8 @@ expr_stmt|;
 if|#
 directive|if
 name|vax
+operator|||
+name|pdp11
 name|tp
 operator|->
 name|t_maxseg
@@ -3324,6 +3362,8 @@ expr_stmt|;
 if|#
 directive|if
 name|vax
+operator|||
+name|pdp11
 name|mark
 operator|=
 name|ntohl
