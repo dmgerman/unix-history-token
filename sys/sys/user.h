@@ -855,7 +855,7 @@ comment|/* proc blocked on lock ki_lockname */
 end_comment
 
 begin_comment
-comment|/*  * Per process structure containing data that isn't needed in core  * when the process isn't running (esp. when swapped out).  */
+comment|/*  * This used to be the per-process structure containing data that  * isn't needed in core when the process is swapped out, but now it  * remains only for the benefit of a.out core dumps.  */
 end_comment
 
 begin_struct
@@ -867,7 +867,6 @@ name|pstats
 name|u_stats
 decl_stmt|;
 comment|/* *p_stats */
-comment|/* 	 * Remaining field for a.out core dumps - not valid at other times! 	 */
 name|struct
 name|kinfo_proc
 name|u_kproc
@@ -876,6 +875,21 @@ comment|/* eproc */
 block|}
 struct|;
 end_struct
+
+begin_function_decl
+name|void
+name|fill_user
+parameter_list|(
+name|struct
+name|proc
+modifier|*
+parameter_list|,
+name|struct
+name|user
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
