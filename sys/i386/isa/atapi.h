@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Device-independent level for ATAPI drivers.  *  * Copyright (C) 1995 Cronyx Ltd.  * Author Serge Vakulenko,<vak@cronyx.ru>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * Version 1.8, Thu Sep 28 20:24:38 MSK 1995  */
+comment|/*  * Device-independent level for ATAPI drivers.  *  * Copyright (C) 1995 Cronyx Ltd.  * Author Serge Vakulenko,<vak@cronyx.ru>  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * Version 1.9, Thu Oct 12 15:53:50 MSK 1995  */
 end_comment
 
 begin_comment
@@ -1031,6 +1031,188 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|atapidrv
+block|{
+comment|/* delayed attach info */
+name|int
+name|ctlr
+decl_stmt|;
+comment|/* IDE controller, 0/1 */
+name|int
+name|unit
+decl_stmt|;
+comment|/* drive unit, 0/1 */
+name|int
+name|port
+decl_stmt|;
+comment|/* controller base port */
+name|int
+name|attached
+decl_stmt|;
+comment|/* the drive is attached */
+name|struct
+name|kern_devconf
+modifier|*
+name|parent
+decl_stmt|;
+comment|/* the devconf info pattern */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|atapicmd
+block|{
+comment|/* ATAPI command block */
+name|struct
+name|atapicmd
+modifier|*
+name|next
+decl_stmt|;
+comment|/* next command in queue */
+name|int
+name|busy
+decl_stmt|;
+comment|/* busy flag */
+name|u_char
+name|cmd
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* command and args */
+name|int
+name|unit
+decl_stmt|;
+comment|/* drive unit number */
+name|int
+name|count
+decl_stmt|;
+comment|/* byte count,>0 - read,<0 - write */
+name|char
+modifier|*
+name|addr
+decl_stmt|;
+comment|/* data to transfer */
+name|void
+function_decl|(
+modifier|*
+name|callback
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* call when done */
+name|void
+modifier|*
+name|cbarg1
+decl_stmt|;
+comment|/* callback arg 1 */
+name|void
+modifier|*
+name|cbarg2
+decl_stmt|;
+comment|/* callback arg 1 */
+name|struct
+name|atapires
+name|result
+decl_stmt|;
+comment|/* resulting error code */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|atapi
+block|{
+comment|/* ATAPI controller data */
+name|u_short
+name|port
+decl_stmt|;
+comment|/* i/o port base */
+name|u_char
+name|ctrlr
+decl_stmt|;
+comment|/* physical controller number */
+name|u_char
+name|debug
+range|:
+literal|1
+decl_stmt|;
+comment|/* trace enable flag */
+name|u_char
+name|cmd16
+range|:
+literal|1
+decl_stmt|;
+comment|/* 16-byte command flag */
+name|u_char
+name|intrcmd
+range|:
+literal|1
+decl_stmt|;
+comment|/* interrupt before cmd flag */
+name|u_char
+name|slow
+range|:
+literal|1
+decl_stmt|;
+comment|/* slow reaction device */
+name|u_char
+name|attached
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* units are attached to subdrivers */
+name|struct
+name|atapi_params
+modifier|*
+name|params
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* params for units 0,1 */
+name|struct
+name|kern_devconf
+modifier|*
+name|parent
+decl_stmt|;
+comment|/* parent configuration pattern */
+name|struct
+name|atapicmd
+modifier|*
+name|queue
+decl_stmt|;
+comment|/* queue of commands to perform */
+name|struct
+name|atapicmd
+modifier|*
+name|tail
+decl_stmt|;
+comment|/* tail of queue */
+name|struct
+name|atapicmd
+modifier|*
+name|free
+decl_stmt|;
+comment|/* queue of free command blocks */
+name|struct
+name|atapicmd
+name|cmdrq
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* pool of command requests */
+block|}
+struct|;
+end_struct
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1049,8 +1231,106 @@ name|kern_devconf
 struct_decl|;
 end_struct_decl
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|atapidrv
+name|atapi_drvtab
+index|[
+literal|4
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* delayed attach info */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|atapi_ndrv
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the number of potential drives */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|atapi
+modifier|*
+name|atapi_tab
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the table of atapi controllers */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATAPI_STATIC
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|atapi_start
+value|(*atapi_start_ptr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|atapi_intr
+value|(*atapi_intr_ptr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|atapi_debug
+value|(*atapi_debug_ptr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|atapi_request_wait
+value|(*atapi_request_wait_ptr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|atapi_request_callback
+value|(*atapi_request_callback_ptr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|atapi_request_immediate
+value|(*atapi_request_immediate_ptr)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATAPI_MODULE
+end_ifndef
+
 begin_function_decl
-name|void
+name|int
 name|atapi_attach
 parameter_list|(
 name|int
@@ -1068,6 +1348,11 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|int
