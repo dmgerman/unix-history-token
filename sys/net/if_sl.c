@@ -4074,10 +4074,11 @@ name|sc_ttyp
 operator|!=
 name|NULL
 condition|)
-name|if_up
-argument_list|(
 name|ifp
-argument_list|)
+operator|->
+name|if_flags
+operator||=
+name|IFF_UP
 expr_stmt|;
 block|}
 else|else
