@@ -990,6 +990,11 @@ argument_list|(
 literal|"pppoe: asked to add too many tags to packet\n"
 argument_list|)
 expr_stmt|;
+name|neg
+operator|->
+name|numtags
+operator|--
+expr_stmt|;
 block|}
 block|}
 end_function
@@ -4799,6 +4804,15 @@ name|hdr
 argument_list|)
 expr_stmt|;
 comment|/* AC_NAME */
+name|tag
+operator|=
+name|get_tag
+argument_list|(
+name|ph
+argument_list|,
+name|PTT_HOST_UNIQ
+argument_list|)
+expr_stmt|;
 name|insert_tag
 argument_list|(
 name|sp

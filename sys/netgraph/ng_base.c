@@ -1567,6 +1567,9 @@ literal|0
 condition|)
 return|return
 operator|(
+operator|(
+name|ng_ID_t
+operator|)
 literal|0
 operator|)
 return|;
