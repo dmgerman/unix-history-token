@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1990, 1991, 1993  *	Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_prot.c	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1990, 1991, 1993  *	Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_prot.c	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2375,10 +2375,12 @@ begin_block
 block|{
 name|int
 name|s
-init|=
+decl_stmt|;
+name|s
+operator|=
 name|splimp
 argument_list|()
-decl_stmt|;
+expr_stmt|;
 comment|/* ??? */
 if|if
 condition|(
@@ -2386,20 +2388,9 @@ operator|--
 name|cr
 operator|->
 name|cr_ref
-operator|!=
+operator|==
 literal|0
 condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 name|FREE
 argument_list|(
 operator|(
