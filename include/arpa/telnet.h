@@ -1307,7 +1307,7 @@ value|18
 end_define
 
 begin_comment
-comment|/*  * For backwards compatibility, we define SLC_NAMES to be the  * list of names if SLC_NAMES is not defined.  */
+comment|/*  * For backwards compatability, we define SLC_NAMES to be the  * list of names if SLC_NAMES is not defined.  */
 end_comment
 
 begin_define

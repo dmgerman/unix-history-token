@@ -54,12 +54,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string.h>
 end_include
 
@@ -539,7 +533,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n"
+literal|"%s"
 argument_list|,
 name|clnt_sperror
 argument_list|(
@@ -779,7 +773,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n"
+literal|"%s"
 argument_list|,
 name|clnt_sperrno
 argument_list|(
@@ -999,7 +993,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n"
+literal|"%s"
 argument_list|,
 name|clnt_spcreateerror
 argument_list|(

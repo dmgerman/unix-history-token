@@ -64,36 +64,6 @@ name|Tuple
 modifier|*
 name|tuple
 decl_stmt|;
-comment|/* First check to see if we've been bound in already */
-if|if
-condition|(
-name|hash_search
-argument_list|(
-name|htable
-argument_list|,
-name|tuple
-operator|->
-name|name
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|)
-condition|)
-block|{
-name|warn
-argument_list|(
-literal|"Duplicate tuple name, %s, skipping"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ST_ERROR
-operator|)
-return|;
-block|}
 name|tuple
 operator|=
 name|malloc
@@ -140,7 +110,8 @@ name|addr
 operator|=
 name|fn
 expr_stmt|;
-comment|/* Insert it */
+if|if
+condition|(
 name|hash_search
 argument_list|(
 name|htable
@@ -153,7 +124,21 @@ name|tuple
 argument_list|,
 name|NULL
 argument_list|)
+condition|)
+block|{
+name|warn
+argument_list|(
+literal|"Duplicate tuple name, %s, skipping"
+argument_list|,
+name|name
+argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|ST_ERROR
+operator|)
+return|;
+block|}
 ifdef|#
 directive|ifdef
 name|DEBUG

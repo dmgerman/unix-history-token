@@ -856,13 +856,6 @@ name|NULL
 operator|&&
 name|getenv
 argument_list|(
-literal|"LC_ALL"
-argument_list|)
-operator|==
-name|NULL
-operator|&&
-name|getenv
-argument_list|(
 literal|"LC_CTYPE"
 argument_list|)
 operator|==

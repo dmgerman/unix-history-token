@@ -3,10 +3,6 @@ begin_comment
 comment|/*-  * Copyright (c) 1985, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  * -  * Portions Copyright (c) 1993 by Digital Equipment Corporation.  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies, and that  * the name of Digital Equipment Corporation not be used in advertising or  * publicity pertaining to distribution of the document or software without  * specific, written prior permission.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND DIGITAL EQUIPMENT CORP. DISCLAIMS ALL  * WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS.   IN NO EVENT SHALL DIGITAL EQUIPMENT  * CORPORATION BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  * -  * --Copyright--  */
 end_comment
 
-begin_comment
-comment|/* Portions Copyright (c) 1993 Carlos Leandro and Rui Salgueiro  *	Dep. Matematica Universidade de Coimbra, Portugal, Europe  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  */
-end_comment
-
 begin_if
 if|#
 directive|if
@@ -84,12 +80,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netdb.h>
 end_include
 
@@ -97,6 +87,12 @@ begin_include
 include|#
 directive|include
 file|<resolv.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_include
@@ -120,39 +116,20 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<syslog.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|"res_config.h"
-end_include
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|h_errno
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
 directive|define
-name|BYADDR
+name|BYNAME
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|BYNAME
+name|BYADDR
 value|1
 end_define
 
@@ -160,6 +137,13 @@ begin_define
 define|#
 directive|define
 name|MAXALIASES
+value|35
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXADDRS
 value|35
 end_define
 
@@ -217,7 +201,7 @@ begin_typedef
 typedef|typedef
 union|union
 block|{
-name|long
+name|int32_t
 name|al
 decl_stmt|;
 name|char
@@ -227,6 +211,13 @@ block|}
 name|align
 typedef|;
 end_typedef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|h_errno
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -439,6 +430,11 @@ name|TRY_AGAIN
 expr_stmt|;
 return|return
 operator|(
+operator|(
+expr|struct
+name|netent
+operator|*
+operator|)
 name|NULL
 operator|)
 return|;
@@ -450,6 +446,7 @@ operator|--
 operator|>
 literal|0
 condition|)
+block|{
 name|cp
 operator|+=
 name|__dn_skipname
@@ -461,6 +458,7 @@ argument_list|)
 operator|+
 name|QFIXEDSZ
 expr_stmt|;
+block|}
 name|ap
 operator|=
 name|net_aliases
@@ -624,12 +622,14 @@ name|bp
 expr_stmt|;
 name|bp
 operator|+=
+operator|(
 name|strlen
 argument_list|(
 name|bp
 argument_list|)
 operator|+
 literal|1
+operator|)
 expr_stmt|;
 name|net_entry
 operator|.
@@ -847,7 +847,6 @@ argument_list|(
 name|paux2
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
 name|net_entry
 operator|.
@@ -861,15 +860,23 @@ name|net_entry
 operator|)
 return|;
 block|}
+else|else
+block|{
 name|h_errno
 operator|=
 name|TRY_AGAIN
 expr_stmt|;
 return|return
 operator|(
+operator|(
+expr|struct
+name|netent
+operator|*
+operator|)
 name|NULL
 operator|)
 return|;
+block|}
 block|}
 end_function
 
@@ -949,6 +956,7 @@ name|net2
 operator|>>=
 literal|8
 control|)
+block|{
 name|netbr
 index|[
 operator|--
@@ -959,6 +967,7 @@ name|net2
 operator|&
 literal|0xff
 expr_stmt|;
+block|}
 switch|switch
 condition|(
 name|nn
@@ -968,6 +977,9 @@ case|case
 literal|3
 case|:
 comment|/* Class A */
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|qbuf
@@ -985,6 +997,9 @@ case|case
 literal|2
 case|:
 comment|/* Class B */
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|qbuf
@@ -1007,6 +1022,9 @@ case|case
 literal|1
 case|:
 comment|/* Class C */
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|qbuf
@@ -1034,6 +1052,9 @@ case|case
 literal|0
 case|:
 comment|/* Class D - E */
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|qbuf
@@ -1073,17 +1094,14 @@ name|C_IN
 argument_list|,
 name|T_PTR
 argument_list|,
-operator|(
-name|u_char
-operator|*
-operator|)
-operator|&
+name|buf
+operator|.
 name|buf
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|buf
-argument_list|)
+operator|.
+name|buf
 argument_list|)
 expr_stmt|;
 if|if
@@ -1093,9 +1111,6 @@ operator|<
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|_res
@@ -1109,8 +1124,6 @@ argument_list|(
 literal|"res_query failed\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|NULL
@@ -1155,25 +1168,22 @@ name|u_net
 operator|!=
 literal|0
 condition|)
+block|{
 name|u_net
 operator|>>=
 literal|8
 expr_stmt|;
+block|}
 name|net_entry
 operator|->
 name|n_net
 operator|=
 name|u_net
 expr_stmt|;
-return|return
-operator|(
-name|net_entry
-operator|)
-return|;
 block|}
 return|return
 operator|(
-name|NULL
+name|net_entry
 operator|)
 return|;
 block|}
@@ -1206,35 +1216,9 @@ index|[
 name|MAXDNAME
 index|]
 decl_stmt|;
-if|if
-condition|(
 operator|(
-name|_res
-operator|.
-name|options
-operator|&
-name|RES_INIT
+name|void
 operator|)
-operator|==
-literal|0
-operator|&&
-name|res_init
-argument_list|()
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-name|h_errno
-operator|=
-name|NETDB_INTERNAL
-expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-block|}
 name|strcpy
 argument_list|(
 operator|&
@@ -1256,17 +1240,14 @@ name|C_IN
 argument_list|,
 name|T_PTR
 argument_list|,
-operator|(
-name|u_char
-operator|*
-operator|)
-operator|&
+name|buf
+operator|.
 name|buf
 argument_list|,
 sizeof|sizeof
-argument_list|(
 name|buf
-argument_list|)
+operator|.
+name|buf
 argument_list|)
 expr_stmt|;
 if|if
@@ -1276,9 +1257,6 @@ operator|<
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
 if|if
 condition|(
 name|_res
@@ -1292,12 +1270,8 @@ argument_list|(
 literal|"res_query failed\n"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
-operator|(
 name|NULL
-operator|)
 return|;
 block|}
 return|return

@@ -218,11 +218,13 @@ expr_stmt|;
 comment|/* 	 * fetch next label in domain name 	 */
 while|while
 condition|(
+operator|(
 name|n
 operator|=
 operator|*
 name|cp
 operator|++
+operator|)
 condition|)
 block|{
 comment|/* 		 * Check for indirection 		 */
@@ -293,7 +295,6 @@ block|{
 if|if
 condition|(
 operator|(
-operator|(
 name|c
 operator|=
 operator|*
@@ -302,13 +303,6 @@ operator|++
 operator|)
 operator|==
 literal|'.'
-operator|)
-operator|||
-operator|(
-name|c
-operator|==
-literal|'\\'
-operator|)
 condition|)
 block|{
 if|if
@@ -1036,10 +1030,8 @@ break|break;
 default|default:
 comment|/* illegal type */
 return|return
-operator|(
 operator|-
 literal|1
-operator|)
 return|;
 block|}
 break|break;
@@ -1051,10 +1043,8 @@ operator|>
 name|eom
 condition|)
 return|return
-operator|(
 operator|-
 literal|1
-operator|)
 return|;
 return|return
 operator|(
@@ -1193,11 +1183,13 @@ name|cpp
 expr_stmt|;
 while|while
 condition|(
+operator|(
 name|n
 operator|=
 operator|*
 name|cp
 operator|++
+operator|)
 condition|)
 block|{
 comment|/* 			 * check for indirection 			 */
@@ -1294,6 +1286,14 @@ continue|continue;
 goto|goto
 name|next
 goto|;
+default|default:
+comment|/* illegal type */
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 case|case
 name|INDIR_MASK
 case|:
@@ -1317,15 +1317,6 @@ operator|*
 name|cp
 operator|)
 expr_stmt|;
-break|break;
-default|default:
-comment|/* illegal type */
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
 block|}
 block|}
 if|if
@@ -1356,7 +1347,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Routines to insert/extract short/long's.  */
+comment|/*  * Routines to insert/extract short/long's. Must account for byte  * order and non-alignment problems. This code at least has the  * advantage of being portable.  *  * used by sendmail.  */
 end_comment
 
 begin_function

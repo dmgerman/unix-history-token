@@ -39,7 +39,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: /home/ncvs/src/usr.sbin/rarpd/rarpd.c,v 1.4 1995/05/30 03:51:25 rgrimes Exp $ (LBL)"
+literal|"@(#) $Header: /pub/FreeBSD/FreeBSD-CVS/src/usr.sbin/rarpd/rarpd.c,v 1.4.4.1 1995/08/05 08:04:30 davidg Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 

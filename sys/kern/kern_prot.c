@@ -824,12 +824,6 @@ if|if
 condition|(
 name|targp
 operator|->
-name|p_pgrp
-operator|==
-name|NULL
-operator|||
-name|targp
-operator|->
 name|p_session
 operator|!=
 name|curp

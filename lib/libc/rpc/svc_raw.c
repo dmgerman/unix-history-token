@@ -51,12 +51,6 @@ directive|include
 file|<rpc/rpc.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
 begin_comment
 comment|/*  * This is the "network" that we will be moving data over  */
 end_comment

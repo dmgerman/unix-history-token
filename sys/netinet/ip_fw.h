@@ -122,7 +122,7 @@ name|fw_tcpf
 decl_stmt|,
 name|fw_tcpnf
 decl_stmt|;
-comment|/* TCP flags set/unset */
+comment|/* TCP flags sen/unset */
 block|}
 struct|;
 end_struct

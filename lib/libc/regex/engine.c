@@ -4252,9 +4252,6 @@ name|nope
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
-return|return
-literal|"shut up gcc"
-return|;
 block|}
 end_function
 

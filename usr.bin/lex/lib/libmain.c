@@ -4,7 +4,7 @@ comment|/* libmain - flex run-time support library "main" function */
 end_comment
 
 begin_comment
-comment|/* $Header: /home/daffy/u0/vern/flex/RCS/libmain.c,v 1.3 93/04/14 22:41:55 vern Exp $ */
+comment|/* $Header: /pub/FreeBSD/FreeBSD-CVS/src/usr.bin/lex/lib/libmain.c,v 1.1.1.1 1994/08/24 13:10:34 csgr Exp $ */
 end_comment
 
 begin_function_decl

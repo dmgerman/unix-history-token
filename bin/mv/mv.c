@@ -256,7 +256,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"fi"
+literal|"-if"
 argument_list|)
 operator|)
 operator|!=
@@ -274,10 +274,6 @@ name|iflg
 operator|=
 literal|1
 expr_stmt|;
-name|fflg
-operator|=
-literal|0
-expr_stmt|;
 break|break;
 case|case
 literal|'f'
@@ -286,16 +282,24 @@ name|fflg
 operator|=
 literal|1
 expr_stmt|;
-name|iflg
-operator|=
-literal|0
-expr_stmt|;
 break|break;
+case|case
+literal|'-'
+case|:
+comment|/* Undocumented; for compatibility. */
+goto|goto
+name|endarg
+goto|;
+case|case
+literal|'?'
+case|:
 default|default:
 name|usage
 argument_list|()
 expr_stmt|;
 block|}
+name|endarg
+label|:
 name|argc
 operator|-=
 name|optind
@@ -582,34 +586,6 @@ name|F_OK
 argument_list|)
 condition|)
 block|{
-comment|/* prompt only if source exist */
-if|if
-condition|(
-name|lstat
-argument_list|(
-name|from
-argument_list|,
-operator|&
-name|sb
-argument_list|)
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-name|warn
-argument_list|(
-literal|"%s"
-argument_list|,
-name|from
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
 name|ask
 operator|=
 literal|0
@@ -748,10 +724,6 @@ condition|(
 name|ch
 operator|!=
 literal|'y'
-operator|&&
-name|ch
-operator|!=
-literal|'Y'
 condition|)
 return|return
 operator|(
@@ -1533,11 +1505,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s\n%s\n"
-argument_list|,
-literal|"usage: mv [-f | -i] src target"
-argument_list|,
-literal|"       mv [-f | -i] src1 ... srcN directory"
+literal|"usage: mv [-if] src target;\n   or: mv [-if] src1 ... srcN directory\n"
 argument_list|)
 expr_stmt|;
 name|exit

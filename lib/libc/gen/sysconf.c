@@ -46,12 +46,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -93,6 +87,10 @@ name|int
 name|name
 decl_stmt|;
 block|{
+name|struct
+name|clockinfo
+name|clk
+decl_stmt|;
 name|struct
 name|rlimit
 name|rl

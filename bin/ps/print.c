@@ -90,12 +90,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/user.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -2206,7 +2200,7 @@ name|pgtok
 parameter_list|(
 name|a
 parameter_list|)
-value|(((a)*getpagesize())/1024)
+value|(((a)*NBPG)/1024)
 end_define
 
 begin_function
@@ -3077,8 +3071,7 @@ operator|+
 name|szptudot
 operator|)
 operator|/
-name|getpagesize
-argument_list|()
+name|CLSIZE
 operator|/
 name|mempages
 expr_stmt|;
@@ -3242,7 +3235,7 @@ operator|!=
 operator|(
 name|RLIM_INFINITY
 operator|/
-name|PAGE_SIZE
+name|NBPG
 operator|)
 condition|)
 operator|(

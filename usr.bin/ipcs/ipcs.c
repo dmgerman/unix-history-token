@@ -785,23 +785,6 @@ name|usage
 argument_list|()
 expr_stmt|;
 block|}
-comment|/* 	 * Discard setgid privileges if not the running kernel so that bad 	 * guys can't print interesting stuff from kernel memory. 	 */
-if|if
-condition|(
-name|namelist
-operator|!=
-name|NULL
-operator|||
-name|core
-operator|!=
-name|NULL
-condition|)
-name|setgid
-argument_list|(
-name|getgid
-argument_list|()
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(

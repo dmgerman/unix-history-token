@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * IPX protocol formats  *  * @(#) $Header: /home/ncvs/src/usr.sbin/tcpdump/tcpdump/ipx.h,v 1.1 1995/03/08 12:52:15 olah Exp $  */
+comment|/*  * IPX protocol formats  *  * @(#) $Header: /pub/FreeBSD/FreeBSD-CVS/src/usr.sbin/tcpdump/tcpdump/ipx.h,v 1.2 1995/05/30 03:52:37 rgrimes Exp $  */
 end_comment
 
 begin_comment

@@ -269,6 +269,8 @@ name|ch
 decl_stmt|,
 name|rflag
 decl_stmt|;
+name|Pflag
+operator|=
 name|rflag
 operator|=
 literal|0
@@ -347,6 +349,9 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+case|case
+literal|'?'
+case|:
 default|default:
 name|usage
 argument_list|()
@@ -1656,10 +1661,6 @@ operator|(
 name|first
 operator|==
 literal|'y'
-operator|||
-name|first
-operator|==
-literal|'Y'
 operator|)
 return|;
 block|}
@@ -1814,7 +1815,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: rm [-f | -i] [-dPRr] file ...\n"
+literal|"usage: rm [-dfiRr] file ...\n"
 argument_list|)
 expr_stmt|;
 name|exit

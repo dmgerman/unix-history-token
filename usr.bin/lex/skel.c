@@ -22,7 +22,7 @@ literal|""
 block|,
 literal|"/* Scanner skeleton version:"
 block|,
-literal|" * $Header: /home/daffy/u0/vern/flex/flex-2.4.7/RCS/flex.skl,v 1.2 94/08/03 11:13:24 vern Exp $"
+literal|" * $Header: /pub/FreeBSD/FreeBSD-CVS/src/usr.bin/lex/skel.c,v 1.1.1.1 1994/08/24 13:10:31 csgr Exp $"
 block|,
 literal|" */"
 block|,

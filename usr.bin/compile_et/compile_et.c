@@ -80,7 +80,7 @@ name|char
 name|rcsid_compile_et_c
 index|[]
 init|=
-literal|"$Header: /afs/rel-eng.athena.mit.edu/project/release/current/source/athena/athena.lib/et/RCS/compile_et.c,v 1.3 91/02/28 15:15:23 epeisach Exp $"
+literal|"$Header: /pub/FreeBSD/FreeBSD-CVS/src/usr.bin/compile_et/compile_et.c,v 1.2 1995/01/14 22:29:31 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 

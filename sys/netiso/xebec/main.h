@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /home/ncvs/src/sys/netiso/xebec/main.h,v 1.1.1.1 1994/05/24 10:07:49 rgrimes Exp $ */
+comment|/* $Header: /pub/FreeBSD/FreeBSD-CVS/src/sys/netiso/xebec/Attic/main.h,v 1.2 1995/05/30 08:12:05 rgrimes Exp $ */
 end_comment
 
 begin_comment
-comment|/* $Source: /home/ncvs/src/sys/netiso/xebec/main.h,v $ */
+comment|/* $Source: /pub/FreeBSD/FreeBSD-CVS/src/sys/netiso/xebec/Attic/main.h,v $ */
 end_comment
 
 begin_define

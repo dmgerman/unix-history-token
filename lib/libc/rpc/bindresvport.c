@@ -69,18 +69,6 @@ directive|include
 file|<netinet/in.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
 begin_comment
 comment|/*  * Bind a socket to a privileged IP port  */
 end_comment

@@ -58,12 +58,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/cpu.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/md_var.h>
 end_include
 
@@ -626,15 +620,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* MFS_ROOT */
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|printf
-argument_list|(
-literal|"Device configuration finished.\n"
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|CD9660
@@ -649,21 +634,10 @@ operator|&&
 operator|!
 name|mountroot
 condition|)
-block|{
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|printf
-argument_list|(
-literal|"Considering CD-ROM root f/s.\n"
-argument_list|)
-expr_stmt|;
 name|mountroot
 operator|=
 name|find_cdrom_root
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 ifdef|#
@@ -676,21 +650,10 @@ name|mountroot
 operator|&&
 name|nfs_diskless_valid
 condition|)
-block|{
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|printf
-argument_list|(
-literal|"Considering NFS root f/s.\n"
-argument_list|)
-expr_stmt|;
 name|mountroot
 operator|=
 name|nfs_mountroot
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 comment|/* NFS */
@@ -703,15 +666,6 @@ operator|!
 name|mountroot
 condition|)
 block|{
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|printf
-argument_list|(
-literal|"Considering FFS root f/s.\n"
-argument_list|)
-expr_stmt|;
 name|mountroot
 operator|=
 name|ffs_mountroot
@@ -750,30 +704,12 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Configure swap area and related system 	 * parameter based on device(s) used. 	 */
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|printf
-argument_list|(
-literal|"Configuring root and swap devs.\n"
-argument_list|)
-expr_stmt|;
 name|setconf
 argument_list|()
 expr_stmt|;
 name|cold
 operator|=
 literal|0
-expr_stmt|;
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|printf
-argument_list|(
-literal|"configure() finished.\n"
-argument_list|)
 expr_stmt|;
 block|}
 end_function

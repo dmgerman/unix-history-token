@@ -122,12 +122,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<locale.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ls.h"
 end_include
 
@@ -506,16 +500,6 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-operator|(
-name|void
-operator|)
-name|setlocale
-argument_list|(
-name|LC_ALL
-argument_list|,
-literal|""
-argument_list|)
-expr_stmt|;
 comment|/* Terminal defaults to -Cq, non-terminal defaults to -1. */
 if|if
 condition|(

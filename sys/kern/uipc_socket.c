@@ -82,18 +82,6 @@ file|<sys/signalvar.h>
 end_include
 
 begin_comment
-comment|/*  * Exported to userland via sysctl  */
-end_comment
-
-begin_decl_stmt
-name|int
-name|somaxconn
-init|=
-name|SOMAXCONN
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * Socket operation routines.  * These routines are called by the routines in  * sys_socket.c or from a system process, and  * implement the semantics of socket operations by  * switching out to the protocol specific routines.  */
 end_comment
 
@@ -511,20 +499,21 @@ condition|(
 name|backlog
 operator|<
 literal|0
-operator|||
-name|backlog
-operator|>
-name|somaxconn
 condition|)
 name|backlog
 operator|=
-name|somaxconn
+literal|0
 expr_stmt|;
 name|so
 operator|->
 name|so_qlimit
 operator|=
+name|min
+argument_list|(
 name|backlog
+argument_list|,
+name|SOMAXCONN
+argument_list|)
 expr_stmt|;
 name|splx
 argument_list|(

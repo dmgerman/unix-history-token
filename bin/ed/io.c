@@ -203,7 +203,7 @@ return|;
 block|}
 name|fprintf
 argument_list|(
-name|stdout
+name|stderr
 argument_list|,
 operator|!
 name|scripted
@@ -901,7 +901,7 @@ return|;
 block|}
 name|fprintf
 argument_list|(
-name|stdout
+name|stderr
 argument_list|,
 operator|!
 name|scripted

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* getopt_long and getopt_long_only entry points for GNU getopt.    Copyright (C) 1987, 88, 89, 90, 91, 92, 1993, 1994 	Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by the    Free Software Foundation; either version 2, or (at your option) any    later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
+comment|/* getopt_long and getopt_long_only entry points for GNU getopt.    Copyright (C) 1987, 88, 89, 90, 91, 92, 1993 	Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify it    under the terms of the GNU General Public License as published by the    Free Software Foundation; either version 2, or (at your option) any    later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
 begin_escape
@@ -12,11 +12,45 @@ directive|ifdef
 name|HAVE_CONFIG_H
 end_ifdef
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|emacs
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CONFIG_BROKETS
+argument_list|)
+end_if
+
+begin_comment
+comment|/* We use<config.h> instead of "config.h" so that a compilation    using -I. -I$srcdir will use ./config.h rather than $srcdir/config.h    (which it would do because it found this file in $srcdir).  */
+end_comment
+
 begin_include
 include|#
 directive|include
 file|<config.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -29,18 +63,11 @@ directive|include
 file|"getopt.h"
 end_include
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|__STDC__
-argument_list|)
-operator|||
-operator|!
-name|__STDC__
-end_if
+end_ifndef
 
 begin_comment
 comment|/* This is a separate conditional since some stdc systems    reject `defined (const)'.  */

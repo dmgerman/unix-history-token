@@ -103,6 +103,16 @@ end_include
 
 begin_decl_stmt
 name|int
+name|dirflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Undocumented directory flag. */
+end_comment
+
+begin_decl_stmt
+name|int
 name|fflag
 decl_stmt|;
 end_decl_stmt
@@ -223,7 +233,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"fs"
+literal|"Ffs"
 argument_list|)
 operator|)
 operator|!=
@@ -234,6 +244,15 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'F'
+case|:
+name|dirflag
+operator|=
+literal|1
+expr_stmt|;
+comment|/* XXX: deliberately undocumented. */
+break|break;
 case|case
 literal|'f'
 case|:
@@ -477,24 +496,26 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* Only symbolic links to directories. */
+comment|/* Only symbolic links to directories, unless -F option used. */
 if|if
 condition|(
-name|S_ISDIR
-argument_list|(
+operator|!
+name|dirflag
+operator|&&
+operator|(
 name|sb
 operator|.
 name|st_mode
-argument_list|)
+operator|&
+name|S_IFMT
+operator|)
+operator|==
+name|S_IFDIR
 condition|)
 block|{
-name|errno
-operator|=
-name|EISDIR
-expr_stmt|;
-name|warn
+name|warnx
 argument_list|(
-literal|"%s"
+literal|"%s: is a directory"
 argument_list|,
 name|target
 argument_list|)

@@ -23,13 +23,6 @@ directive|include
 file|"fmt.h"
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|f__Aquote
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|VOID
@@ -177,10 +170,6 @@ name|PUT
 argument_list|(
 literal|' '
 argument_list|)
-expr_stmt|;
-name|f__Aquote
-operator|=
-literal|1
 expr_stmt|;
 name|vd
 operator|=
@@ -361,10 +350,6 @@ name|nl_donewrec
 argument_list|()
 expr_stmt|;
 block|}
-name|f__Aquote
-operator|=
-literal|0
-expr_stmt|;
 name|PUT
 argument_list|(
 literal|'/'

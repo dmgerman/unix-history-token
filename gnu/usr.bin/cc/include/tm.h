@@ -29,34 +29,6 @@ directive|include
 file|"i386/perform.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|MASK_PROFILER_EPILOGUE
-value|010000000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|TARGET_PROFILER_EPILOGUE
-value|(target_flags& MASK_PROFILER_EPILOGUE)
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|SUBTARGET_SWITCHES
-end_undef
-
-begin_define
-define|#
-directive|define
-name|SUBTARGET_SWITCHES
-define|\
-value|{ "profiler-epilogue",	 MASK_PROFILER_EPILOGUE},		\      { "no-profiler-epilogue",	-MASK_PROFILER_EPILOGUE},
-end_define
-
 begin_undef
 undef|#
 directive|undef
@@ -68,14 +40,6 @@ define|#
 directive|define
 name|CPP_PREDEFINES
 value|"-Dunix -Di386 -D__FreeBSD__=2 -Asystem(unix) -Asystem(FreeBSD) -Acpu(i386) -Amachine(i386)"
-end_define
-
-begin_define
-define|#
-directive|define
-name|STARTFILE_SPEC
-define|\
-value|"%{pg:gcrt0.o%s}%{!pg:%{p:mcrt0.o%s}%{!p:%{static:scrt0.o%s}%{!static:crt0.o%s}}}"
 end_define
 
 begin_define
@@ -229,6 +193,16 @@ define|\
 value|{									\   if (flag_pic)								\     fprintf (FILE, "\tcall *mcount@GOT(%%ebx)\n");			\   else									\     fprintf (FILE, "\tcall mcount\n");					\ }
 end_define
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* not ready for this; it should be decided at compile time */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -237,8 +211,13 @@ parameter_list|(
 name|FILE
 parameter_list|)
 define|\
-value|{									\   if (TARGET_PROFILER_EPILOGUE)						\     {									\       if (flag_pic)							\ 	fprintf (FILE, "\tcall *mexitcount@GOT(%%ebx)\n");		\       else								\ 	fprintf (FILE, "\tcall mexitcount\n");				\     }									\ }
+value|{									\   if (flag_pic)								\     fprintf (FILE, "\tcall *mexitcount@GOT(%%ebx)\n");			\   else									\     fprintf (FILE, "\tcall mexitcount\n");				\ }
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Override the default comment-starter of "/".  */

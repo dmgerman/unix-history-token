@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Header: print-ppp.c,v 1.18 94/06/10 17:01:37 mccanne Exp $ (LBL)"
+literal|"@(#)$Header: /pub/FreeBSD/FreeBSD-CVS/src/usr.sbin/tcpdump/tcpdump/print-ppp.c,v 1.2 1995/03/08 12:52:40 olah Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 

@@ -1131,12 +1131,6 @@ name|if_watchdog
 operator|=
 name|fxp_watchdog
 expr_stmt|;
-name|ifp
-operator|->
-name|if_baudrate
-operator|=
-literal|100000000
-expr_stmt|;
 name|fxp_get_macaddr
 argument_list|(
 name|sc

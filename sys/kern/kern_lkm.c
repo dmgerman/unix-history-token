@@ -612,10 +612,6 @@ name|FWRITE
 operator|)
 operator|==
 literal|0
-operator|||
-name|securelevel
-operator|>
-literal|0
 condition|)
 comment|/* only allow this if writing */
 return|return
@@ -774,10 +770,6 @@ operator|&
 name|FWRITE
 operator|)
 operator|==
-literal|0
-operator|||
-name|securelevel
-operator|>
 literal|0
 condition|)
 comment|/* only allow this if writing */
@@ -946,10 +938,6 @@ name|FWRITE
 operator|)
 operator|==
 literal|0
-operator|||
-name|securelevel
-operator|>
-literal|0
 condition|)
 comment|/* only allow this if writing */
 return|return
@@ -983,10 +971,6 @@ operator|&
 name|FWRITE
 operator|)
 operator|==
-literal|0
-operator|||
-name|securelevel
-operator|>
 literal|0
 condition|)
 comment|/* only allow this if writing */
@@ -1164,10 +1148,6 @@ operator|&
 name|FWRITE
 operator|)
 operator|==
-literal|0
-operator|||
-name|securelevel
-operator|>
 literal|0
 condition|)
 comment|/* only allow this if writing */
@@ -2985,6 +2965,9 @@ index|[
 literal|0
 index|]
 decl_stmt|;
+if|#
+directive|if
+literal|1
 switch|switch
 condition|(
 name|cmd
@@ -3176,6 +3159,14 @@ case|:
 comment|/* no special handling... */
 break|break;
 block|}
+else|#
+directive|else
+name|err
+operator|=
+name|EINVAL
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|err

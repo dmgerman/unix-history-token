@@ -411,7 +411,7 @@ return|;
 block|}
 if|if
 condition|(
-name|PAGE_SIZE
+name|NBPG
 operator|*
 operator|(
 name|UPAGES
@@ -453,7 +453,7 @@ directive|ifndef
 name|TRAD_CORE_ALLOW_ANY_EXTRA_SIZE
 if|if
 condition|(
-name|PAGE_SIZE
+name|NBPG
 operator|*
 operator|(
 name|UPAGES
@@ -747,7 +747,7 @@ argument_list|)
 operator|->
 name|_raw_size
 operator|=
-name|PAGE_SIZE
+name|NBPG
 operator|*
 name|u
 operator|.
@@ -756,7 +756,7 @@ ifdef|#
 directive|ifdef
 name|TRAD_CORE_DSIZE_INCLUDES_TSIZE
 operator|-
-name|PAGE_SIZE
+name|NBPG
 operator|*
 name|u
 operator|.
@@ -771,7 +771,7 @@ argument_list|)
 operator|->
 name|_raw_size
 operator|=
-name|PAGE_SIZE
+name|NBPG
 operator|*
 name|u
 operator|.
@@ -784,7 +784,7 @@ argument_list|)
 operator|->
 name|_raw_size
 operator|=
-name|PAGE_SIZE
+name|NBPG
 operator|*
 name|UPAGES
 expr_stmt|;
@@ -814,7 +814,7 @@ operator|=
 name|HOST_TEXT_START_ADDR
 operator|+
 operator|(
-name|PAGE_SIZE
+name|NBPG
 operator|*
 name|u
 operator|.
@@ -847,7 +847,7 @@ operator|=
 name|HOST_STACK_END_ADDR
 operator|-
 operator|(
-name|PAGE_SIZE
+name|NBPG
 operator|*
 name|u
 operator|.
@@ -880,7 +880,7 @@ argument_list|)
 operator|->
 name|filepos
 operator|=
-name|PAGE_SIZE
+name|NBPG
 operator|*
 name|UPAGES
 expr_stmt|;
@@ -892,12 +892,12 @@ operator|->
 name|filepos
 operator|=
 operator|(
-name|PAGE_SIZE
+name|NBPG
 operator|*
 name|UPAGES
 operator|)
 operator|+
-name|PAGE_SIZE
+name|NBPG
 operator|*
 name|u
 operator|.
@@ -906,7 +906,7 @@ ifdef|#
 directive|ifdef
 name|TRAD_CORE_DSIZE_INCLUDES_TSIZE
 operator|-
-name|PAGE_SIZE
+name|NBPG
 operator|*
 name|u
 operator|.

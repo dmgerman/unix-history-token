@@ -180,8 +180,6 @@ decl_stmt|,
 name|pflag
 decl_stmt|,
 name|rflag
-decl_stmt|,
-name|fflag
 decl_stmt|;
 end_decl_stmt
 
@@ -293,6 +291,8 @@ name|Lflag
 operator|=
 name|Pflag
 operator|=
+name|Rflag
+operator|=
 literal|0
 expr_stmt|;
 while|while
@@ -370,10 +370,6 @@ break|break;
 case|case
 literal|'f'
 case|:
-name|fflag
-operator|=
-literal|1
-expr_stmt|;
 name|iflag
 operator|=
 literal|0
@@ -384,11 +380,13 @@ literal|'i'
 case|:
 name|iflag
 operator|=
-literal|1
-expr_stmt|;
-name|fflag
-operator|=
-literal|0
+name|isatty
+argument_list|(
+name|fileno
+argument_list|(
+name|stdin
+argument_list|)
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -407,6 +405,9 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+case|case
+literal|'?'
+case|:
 default|default:
 name|usage
 argument_list|()

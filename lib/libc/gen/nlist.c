@@ -221,6 +221,16 @@ specifier|register
 name|int
 name|nent
 decl_stmt|;
+name|size_t
+name|strsize
+decl_stmt|;
+name|struct
+name|nlist
+name|nbuf
+index|[
+literal|1024
+index|]
+decl_stmt|;
 name|struct
 name|exec
 modifier|*

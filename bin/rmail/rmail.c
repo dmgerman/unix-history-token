@@ -877,17 +877,6 @@ literal|'\0'
 expr_stmt|;
 if|if
 condition|(
-operator|*
-name|addrp
-operator|==
-literal|'\0'
-condition|)
-name|addrp
-operator|=
-literal|"<>"
-expr_stmt|;
-if|if
-condition|(
 name|from_user
 operator|!=
 name|NULL

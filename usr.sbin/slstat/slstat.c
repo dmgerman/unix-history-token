@@ -577,23 +577,6 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-comment|/*          * Discard setgid privileges if not the running kernel so that bad          * guys can't print interesting stuff from kernel memory.          */
-if|if
-condition|(
-name|system
-operator|!=
-name|NULL
-operator|||
-name|kmemf
-operator|!=
-name|NULL
-condition|)
-name|setgid
-argument_list|(
-name|getgid
-argument_list|()
-argument_list|)
-expr_stmt|;
 name|kvm_h
 operator|=
 name|kvm_openfiles

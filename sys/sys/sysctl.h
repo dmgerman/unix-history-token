@@ -592,63 +592,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|KERN_SOMAXCONN
-value|30
-end_define
-
-begin_comment
-comment|/* int: max connections in listen q */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KERN_MAXSOCKBUF
-value|31
-end_define
-
-begin_comment
-comment|/* int: max size of a socket buffer */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KERN_PS_STRINGS
-value|32
-end_define
-
-begin_comment
-comment|/* int: address of PS_STRINGS */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KERN_USRSTACK
-value|33
-end_define
-
-begin_comment
-comment|/* int: address of USRSTACK */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|KERN_SOCKBUF_WASTE
-value|34
-end_define
-
-begin_comment
-comment|/* int: reserved sockbuf space */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|KERN_MAXID
-value|35
+value|30
 end_define
 
 begin_comment
@@ -661,7 +606,7 @@ directive|define
 name|CTL_KERN_NAMES
 value|{ \ 	{ 0, 0 }, \ 	{ "ostype", CTLTYPE_STRING }, \ 	{ "osrelease", CTLTYPE_STRING }, \ 	{ "osrevision", CTLTYPE_INT }, \ 	{ "version", CTLTYPE_STRING }, \ 	{ "maxvnodes", CTLTYPE_INT }, \ 	{ "maxproc", CTLTYPE_INT }, \ 	{ "maxfiles", CTLTYPE_INT }, \ 	{ "argmax", CTLTYPE_INT }, \ 	{ "securelevel", CTLTYPE_INT }, \ 	{ "hostname", CTLTYPE_STRING }, \ 	{ "hostid", CTLTYPE_INT }, \ 	{ "clockrate", CTLTYPE_STRUCT }, \ 	{ "vnode", CTLTYPE_STRUCT }, \ 	{ "proc", CTLTYPE_STRUCT }, \ 	{ "file", CTLTYPE_STRUCT }, \ 	{ "profiling", CTLTYPE_NODE }, \ 	{ "posix1version", CTLTYPE_INT }, \ 	{ "ngroups", CTLTYPE_INT }, \ 	{ "job_control", CTLTYPE_INT }, \ 	{ "saved_ids", CTLTYPE_INT }, \ 	{ "boottime", CTLTYPE_STRUCT }, \ 	{ "domainname", CTLTYPE_STRING }, \ 	{ "update", CTLTYPE_INT }, \ 	{ "osreldate", CTLTYPE_INT }, \         { "ntp_pll", CTLTYPE_NODE }, \ 	{ "bootfile", CTLTYPE_STRING }, \ 	{ "maxfilesperproc", CTLTYPE_INT }, \ 	{ "maxprocperuid", CTLTYPE_INT }, \ 	{ "dumpdev", CTLTYPE_STRUCT },
 comment|/* we lie; don't print as int */
-value|\ 	{ "somaxconn", CTLTYPE_INT }, \ 	{ "maxsockbuf", CTLTYPE_INT }, \ 	{ "ps_strings", CTLTYPE_INT }, \ 	{ "usrstack", CTLTYPE_INT }, \ 	{ "sockbuf_waste_factor", CTLTYPE_INT }, \ }
+value|\ }
 end_define
 
 begin_comment

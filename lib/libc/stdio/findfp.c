@@ -539,20 +539,12 @@ begin_comment
 comment|/*  * XXX.  Force immediate allocation of internal memory.  Not used by stdio,  * but documented historically for certain applications.  Bad applications.  */
 end_comment
 
-begin_expr_stmt
-name|__warn_references
-argument_list|(
+begin_macro
 name|f_prealloc
-argument_list|,
-literal|"warning: this program uses f_prealloc(), which is stupid."
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+argument_list|()
+end_macro
 
-begin_function
-name|void
-name|f_prealloc
-parameter_list|()
+begin_block
 block|{
 specifier|register
 name|struct
@@ -618,7 +610,7 @@ name|n
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|/*  * exit() calls _cleanup() through *__cleanup, set whenever we  * open or buffer a file.  This chicanery is done so that programs  * that do not use stdio need not link it all in.  *  * The name `_cleanup' is, alas, fairly well known outside stdio.  */

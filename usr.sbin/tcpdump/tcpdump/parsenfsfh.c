@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|RCSid
 init|=
-literal|"$Header: parsenfsfh.c,v 1.5 94/01/13 19:06:41 leres Exp $"
+literal|"$Header: /pub/FreeBSD/FreeBSD-CVS/src/usr.sbin/tcpdump/tcpdump/parsenfsfh.c,v 1.1 1995/03/08 12:52:23 olah Exp $"
 decl_stmt|;
 end_decl_stmt
 

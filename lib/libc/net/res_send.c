@@ -2732,41 +2732,6 @@ goto|;
 block|}
 block|}
 comment|/*if vc/dg*/
-name|Dprint
-argument_list|(
-operator|(
-name|_res
-operator|.
-name|options
-operator|&
-name|RES_DEBUG
-operator|)
-operator|||
-operator|(
-operator|(
-name|_res
-operator|.
-name|pfcode
-operator|&
-name|RES_PRF_REPLY
-operator|)
-operator|&&
-operator|(
-name|_res
-operator|.
-name|pfcode
-operator|&
-name|RES_PRF_HEAD1
-operator|)
-operator|)
-argument_list|,
-operator|(
-name|stdout
-operator|,
-literal|";; got answer:\n"
-operator|)
-argument_list|)
-expr_stmt|;
 name|DprintQ
 argument_list|(
 operator|(
@@ -2788,7 +2753,7 @@ argument_list|,
 operator|(
 name|stdout
 operator|,
-literal|""
+literal|";; got answer:\n"
 operator|)
 argument_list|,
 name|ans

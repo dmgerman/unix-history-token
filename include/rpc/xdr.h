@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *  * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *  * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *  * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  *  *	from: @(#)xdr.h 1.19 87/04/22 SMI  *	from: @(#)xdr.h	2.2 88/07/29 4.0 RPCSRC  *	$Id: xdr.h,v 1.4 1996/01/30 23:32:45 mpp Exp $  */
+comment|/*  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for  * unrestricted use provided that this legend is included on all tape  * media and as a part of the software program in whole or part.  Users  * may copy or modify Sun RPC without charge, but are not authorized  * to license or distribute it to anyone else except as part of a product or  * program developed by the user.  *  * SUN RPC IS PROVIDED AS IS WITH NO WARRANTIES OF ANY KIND INCLUDING THE  * WARRANTIES OF DESIGN, MERCHANTIBILITY AND FITNESS FOR A PARTICULAR  * PURPOSE, OR ARISING FROM A COURSE OF DEALING, USAGE OR TRADE PRACTICE.  *  * Sun RPC is provided with no support and without any obligation on the  * part of Sun Microsystems, Inc. to assist in its use, correction,  * modification or enhancement.  *  * SUN MICROSYSTEMS, INC. SHALL HAVE NO LIABILITY WITH RESPECT TO THE  * INFRINGEMENT OF COPYRIGHTS, TRADE SECRETS OR ANY PATENTS BY SUN RPC  * OR ANY PART THEREOF.  *  * In no event will Sun Microsystems, Inc. be liable for any lost revenue  * or profits or other special, indirect and consequential damages, even if  * Sun has been advised of the possibility of such damages.  *  * Sun Microsystems, Inc.  * 2550 Garcia Avenue  * Mountain View, California  94043  *  *	from: @(#)xdr.h 1.19 87/04/22 SMI  *	from: @(#)xdr.h	2.2 88/07/29 4.0 RPCSRC  *	$Id: xdr.h,v 1.3 1995/05/30 04:55:38 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -89,7 +89,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * The XDR handle.  * Contains operation which is being applied to the stream,  * an operations vector for the particular implementation (e.g. see xdr_mem.c),  * and two private fields for the use of the particular implementation.  */
+comment|/*  * The XDR handle.  * Contains operation which is being applied to the stream,  * an operations vector for the paticular implementation (e.g. see xdr_mem.c),  * and two private fields for the use of the particular impelementation.  */
 end_comment
 
 begin_typedef
@@ -432,7 +432,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * In-line routines for fast encode/decode of primitive data types.  * Caveat emptor: these use single memory cycles to get the  * data from the underlying buffer, and will fail to operate  * properly if the data is not aligned.  The standard way to use these  * is to say:  *	if ((buf = XDR_INLINE(xdrs, count)) == NULL)  *		return (FALSE);  *<<< macro calls>>>  * where ``count'' is the number of bytes of data occupied  * by the primitive data types.  *  * N.B. and frozen for all time: each data type here uses 4 bytes  * of external representation.  */
+comment|/*  * In-line routines for fast encode/decode of primitve data types.  * Caveat emptor: these use single memory cycles to get the  * data from the underlying buffer, and will fail to operate  * properly if the data is not aligned.  The standard way to use these  * is to say:  *	if ((buf = XDR_INLINE(xdrs, count)) == NULL)  *		return (FALSE);  *<<< macro calls>>>  * where ``count'' is the number of bytes of data occupied  * by the primitive data types.  *  * N.B. and frozen for all time: each data type here uses 4 bytes  * of external representation.  */
 end_comment
 
 begin_define

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_search.c	8.4 (Berkeley) 7/14/94"
+literal|"@(#)rec_search.c	8.3 (Berkeley) 2/21/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -247,7 +247,9 @@ operator|->
 name|nrecs
 expr_stmt|;
 block|}
-name|BT_PUSH
+if|if
+condition|(
+name|__bt_push
 argument_list|(
 name|t
 argument_list|,
@@ -257,7 +259,14 @@ name|index
 operator|-
 literal|1
 argument_list|)
-expr_stmt|;
+operator|==
+name|RET_ERROR
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 name|pg
 operator|=
 name|r

@@ -49,10 +49,6 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
-begin_comment
-comment|/*  * This is unlikely to change over the running time of any  * program, so we cache the result to save some syscalls.  */
-end_comment
-
 begin_function
 name|int
 name|getpagesize
@@ -63,20 +59,12 @@ name|mib
 index|[
 literal|2
 index|]
-decl_stmt|;
-specifier|static
-name|int
+decl_stmt|,
 name|value
 decl_stmt|;
 name|size_t
 name|size
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|value
-condition|)
-block|{
 name|mib
 index|[
 literal|0
@@ -124,7 +112,6 @@ operator|-
 literal|1
 operator|)
 return|;
-block|}
 return|return
 operator|(
 name|value

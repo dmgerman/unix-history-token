@@ -2387,13 +2387,9 @@ argument_list|(
 literal|"hash_test command: "
 argument_list|)
 expr_stmt|;
-name|fgets
+name|gets
 argument_list|(
 name|answer
-argument_list|,
-literal|100
-argument_list|,
-name|stdin
 argument_list|)
 expr_stmt|;
 name|command
@@ -2857,13 +2853,9 @@ argument_list|,
 name|description
 argument_list|)
 expr_stmt|;
-name|fgets
+name|gets
 argument_list|(
 name|answer
-argument_list|,
-literal|100
-argument_list|,
-name|stdin
 argument_list|)
 expr_stmt|;
 comment|/* will one day clean up answer here */
@@ -3012,13 +3004,9 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|fgets
+name|gets
 argument_list|(
 name|answer
-argument_list|,
-literal|100
-argument_list|,
-name|stdin
 argument_list|)
 expr_stmt|;
 name|sscanf

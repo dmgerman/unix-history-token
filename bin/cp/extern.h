@@ -52,8 +52,6 @@ name|iflag
 decl_stmt|,
 name|pflag
 decl_stmt|,
-name|fflag
-decl_stmt|,
 name|myumask
 decl_stmt|;
 end_decl_stmt

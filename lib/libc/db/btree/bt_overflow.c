@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Olson.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Olson.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_if
@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bt_overflow.c	8.5 (Berkeley) 7/16/94"
+literal|"@(#)bt_overflow.c	8.2 (Berkeley) 2/21/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -78,7 +78,7 @@ comment|/*  * Big key/data code.  *  * Big key and data entries are stored on li
 end_comment
 
 begin_comment
-comment|/*  * __OVFL_GET -- Get an overflow key/data item.  *  * Parameters:  *	t:	tree  *	p:	pointer to { pgno_t, u_int32_t }  *	buf:	storage address  *	bufsz:	storage size  *  * Returns:  *	RET_ERROR, RET_SUCCESS  */
+comment|/*  * __OVFL_GET -- Get an overflow key/data item.  *  * Parameters:  *	t:	tree  *	p:	pointer to { pgno_t, size_t }  *	buf:	storage address  *	bufsz:	storage size  *  * Returns:  *	RET_ERROR, RET_SUCCESS  */
 end_comment
 
 begin_function
@@ -107,7 +107,7 @@ name|size_t
 modifier|*
 name|ssz
 decl_stmt|;
-name|void
+name|char
 modifier|*
 modifier|*
 name|buf
@@ -128,8 +128,7 @@ name|size_t
 name|nb
 decl_stmt|,
 name|plen
-decl_stmt|;
-name|u_int32_t
+decl_stmt|,
 name|sz
 decl_stmt|;
 name|memmove
@@ -163,7 +162,7 @@ argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|u_int32_t
+name|size_t
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -199,6 +198,9 @@ operator|<
 name|sz
 condition|)
 block|{
+if|if
+condition|(
+operator|(
 operator|*
 name|buf
 operator|=
@@ -206,17 +208,6 @@ operator|(
 name|char
 operator|*
 operator|)
-operator|(
-operator|*
-name|buf
-operator|==
-name|NULL
-condition|?
-name|malloc
-argument_list|(
-name|sz
-argument_list|)
-else|:
 name|realloc
 argument_list|(
 operator|*
@@ -225,11 +216,6 @@ argument_list|,
 name|sz
 argument_list|)
 operator|)
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|buf
 operator|==
 name|NULL
 condition|)
@@ -403,8 +389,7 @@ name|size_t
 name|nb
 decl_stmt|,
 name|plen
-decl_stmt|;
-name|u_int32_t
+decl_stmt|,
 name|sz
 decl_stmt|;
 comment|/* 	 * Allocate pages and copy the key/data record into them.  Store the 	 * number of the first page in the chain. 	 */
@@ -594,7 +579,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * __OVFL_DELETE -- Delete an overflow chain.  *  * Parameters:  *	t:	tree  *	p:	pointer to { pgno_t, u_int32_t }  *  * Returns:  *	RET_ERROR, RET_SUCCESS  */
+comment|/*  * __OVFL_DELETE -- Delete an overflow chain.  *  * Parameters:  *	t:	tree  *	p:	pointer to { pgno_t, size_t }  *  * Returns:  *	RET_ERROR, RET_SUCCESS  */
 end_comment
 
 begin_function
@@ -623,8 +608,7 @@ name|pg
 decl_stmt|;
 name|size_t
 name|plen
-decl_stmt|;
-name|u_int32_t
+decl_stmt|,
 name|sz
 decl_stmt|;
 name|memmove
@@ -658,7 +642,7 @@ argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|u_int32_t
+name|size_t
 argument_list|)
 argument_list|)
 expr_stmt|;

@@ -46,6 +46,14 @@ name|n
 decl_stmt|;
 if|if
 condition|(
+operator|!
+name|f__init
+condition|)
+name|f_init
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
 name|n
 operator|=
 name|c_le

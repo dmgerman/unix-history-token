@@ -49,22 +49,6 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_expr_stmt
-name|__warn_references
-argument_list|(
-name|gets
-argument_list|,
-literal|"warning: this program uses gets(), which is unsafe."
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_function
 name|char
 modifier|*
@@ -95,7 +79,7 @@ name|char
 name|w
 index|[]
 init|=
-literal|"warning: this program uses gets(), which is unsafe.\n"
+literal|"warning: this program uses gets(), which is unsafe.\r\n"
 decl_stmt|;
 if|if
 condition|(

@@ -1437,13 +1437,9 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|fgets
+name|gets
 argument_list|(
 name|line
-argument_list|,
-literal|512
-argument_list|,
-name|stdin
 argument_list|)
 condition|)
 name|strcpy

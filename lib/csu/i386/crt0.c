@@ -1,7 +1,56 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Paul Kranenburg  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Paul Kranenburg.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: crt0.c,v 1.23 1996/01/30 05:55:20 nate Exp $  */
+comment|/*  * Copyright (c) 1993 Paul Kranenburg  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Paul Kranenburg.  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: crt0.c,v 1.16.4.2 1995/09/28 13:16:24 davidg Exp $  */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|LIBC_SCCS
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|lint
+argument_list|)
+end_if
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sccsid
+index|[]
+init|=
+literal|"%W% (Erasmus) %G%"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* LIBC_SCCS and not lint */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|exit
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|_callmain
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_include
 include|#
@@ -12,8 +61,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|_startup_setlocale
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_ifdef
 ifdef|#
@@ -45,54 +117,6 @@ directive|include
 file|<string.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/mman.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<link.h>
-end_include
-
-begin_comment
-comment|/* !!!  * This is gross, ld.so is a ZMAGIC a.out, but has `sizeof(hdr)' for  * an entry point and not at PAGSIZ as the N_*ADDR macros assume.  */
-end_comment
-
-begin_undef
-undef|#
-directive|undef
-name|N_DATADDR
-end_undef
-
-begin_define
-define|#
-directive|define
-name|N_DATADDR
-parameter_list|(
-name|x
-parameter_list|)
-value|((x).a_text)
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|N_BSSADDR
-end_undef
-
-begin_define
-define|#
-directive|define
-name|N_BSSADDR
-parameter_list|(
-name|x
-parameter_list|)
-value|((x).a_text + (x).a_data)
-end_define
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -114,21 +138,20 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* N_GETMAGIC */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|MAP_PRIVATE
+name|N_BSSADDR
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|MAP_PRIVATE
-value|MAP_COPY
+name|N_BSSADDR
+parameter_list|(
+name|x
+parameter_list|)
+value|(N_DATADDR(x)+(x).a_data)
 end_define
 
 begin_endif
@@ -136,101 +159,69 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* MAP_PRIVATE */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MAP_FILE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MAP_FILE
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* MAP_FILE */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MAP_ANON
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MAP_ANON
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* MAP_ANON */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sys/mman.h>
+end_include
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|sun
 end_ifdef
-
-begin_comment
-comment|/*  * We need these two because we are going to call them before the ld.so is  * finished (as a matter of fact before we know if it exists !) so we must  * provide these versions for them  */
-end_comment
-
-begin_function_decl
-specifier|static
-name|char
-modifier|*
-name|_getenv
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|_strncmp
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* DEBUG */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LDSO
-end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LDSO
-value|"/usr/libexec/ld.so"
+name|MAP_COPY
+value|MAP_PRIVATE
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAP_FILE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAP_ANON
+value|0
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BSD
+end_ifdef
+
+begin_if
+if|#
+directive|if
+name|BSD
+operator|>=
+literal|199306
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|MAP_FILE
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|MAP_FILE
+value|0
 end_define
 
 begin_endif
@@ -239,8 +230,32 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* LDSO */
+comment|/* BSD>=199306 */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* BSD */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* sun */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<link.h>
+end_include
 
 begin_decl_stmt
 specifier|extern
@@ -267,6 +282,59 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|char
+modifier|*
+name|_getenv
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|_strncmp
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|sun
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|LDSO
+value|"/usr/lib/ld.so"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BSD
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|LDSO
+value|"/usr/libexec/ld.so"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
@@ -277,36 +345,13 @@ comment|/* DYNAMIC */
 end_comment
 
 begin_function_decl
-name|int
-name|_callmain
+specifier|static
+name|char
+modifier|*
+name|_strrchr
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-name|empty
-index|[
-literal|1
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|__progname
-init|=
-name|empty
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -315,6 +360,12 @@ modifier|*
 name|environ
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BSD
+end_ifdef
 
 begin_decl_stmt
 specifier|extern
@@ -354,59 +405,30 @@ unit|)
 asm|asm ("mcount");
 end_asm
 
-begin_function_decl
-specifier|extern
+begin_decl_stmt
 name|int
-name|main
-parameter_list|(
-name|int
-name|argc
-parameter_list|,
+name|errno
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|empty
+index|[
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
-modifier|*
-name|argv
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|envp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|__syscall
-parameter_list|(
-name|int
-name|syscall
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MCRT0
-end_ifdef
-
-begin_function_decl
-name|void
-name|monstartup
-parameter_list|(
-name|void
-modifier|*
-name|low
-parameter_list|,
-name|void
-modifier|*
-name|high
-parameter_list|)
-function_decl|;
-end_function_decl
+name|__progname
+init|=
+name|empty
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -414,11 +436,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* MCRT0 */
-end_comment
-
-begin_comment
-comment|/*  * We need these system calls, but can't use library stubs because the are  * not accessible until we have done the ld.so stunt.  */
+comment|/*  * We need these system calls, but can't use library stubs  */
 end_comment
 
 begin_define
@@ -428,14 +446,13 @@ name|_exit
 parameter_list|(
 name|v
 parameter_list|)
-define|\
 value|__syscall(SYS_exit, (int)(v))
 end_define
 
 begin_define
 define|#
 directive|define
-name|_open
+name|open
 parameter_list|(
 name|name
 parameter_list|,
@@ -443,14 +460,23 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-define|\
 value|__syscall(SYS_open, (char *)(name), (int)(f), (int)(m))
 end_define
 
 begin_define
 define|#
 directive|define
-name|_read
+name|close
+parameter_list|(
+name|fd
+parameter_list|)
+value|__syscall(SYS_close, (int)(fd))
+end_define
+
+begin_define
+define|#
+directive|define
+name|read
 parameter_list|(
 name|fd
 parameter_list|,
@@ -458,14 +484,13 @@ name|s
 parameter_list|,
 name|n
 parameter_list|)
-define|\
 value|__syscall(SYS_read, (int)(fd), (void *)(s), (size_t)(n))
 end_define
 
 begin_define
 define|#
 directive|define
-name|_write
+name|write
 parameter_list|(
 name|fd
 parameter_list|,
@@ -473,14 +498,41 @@ name|s
 parameter_list|,
 name|n
 parameter_list|)
-define|\
 value|__syscall(SYS_write, (int)(fd), (void *)(s), (size_t)(n))
 end_define
 
 begin_define
 define|#
 directive|define
-name|_mmap
+name|dup
+parameter_list|(
+name|fd
+parameter_list|)
+value|__syscall(SYS_dup, (int)(fd))
+end_define
+
+begin_define
+define|#
+directive|define
+name|dup2
+parameter_list|(
+name|fd
+parameter_list|,
+name|fdnew
+parameter_list|)
+value|__syscall(SYS_dup2, (int)(fd), (int)(fdnew))
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|sun
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|mmap
 parameter_list|(
 name|addr
 parameter_list|,
@@ -495,8 +547,39 @@ parameter_list|,
 name|off
 parameter_list|)
 define|\
-value|(caddr_t) __syscall(SYS_mmap, (caddr_t)(addr), (size_t)(len), \ 		(int)(prot), (int)(flags), (int)(fd), (long)0L, (off_t)(off))
+value|__syscall(SYS_mmap, (addr), (len), (prot), _MAP_NEW|(flags), (fd), (off))
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|mmap
+parameter_list|(
+name|addr
+parameter_list|,
+name|len
+parameter_list|,
+name|prot
+parameter_list|,
+name|flags
+parameter_list|,
+name|fd
+parameter_list|,
+name|off
+parameter_list|)
+define|\
+value|__syscall(SYS_mmap, (caddr_t)(addr), (size_t)(len), (int)(prot), (int)(flags), (int)(fd), (long)0L, (off_t)(off))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -507,7 +590,7 @@ name|str
 parameter_list|,
 name|len
 parameter_list|)
-value|_write(2, (str), (len))
+value|write(2, (str), (len))
 end_define
 
 begin_define
@@ -530,10 +613,12 @@ parameter_list|)
 value|( _PUTMSG(str), _exit(1) )
 end_define
 
-begin_function
-name|int
+begin_macro
 name|start
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
 struct|struct
 name|kframe
@@ -669,12 +754,24 @@ index|[
 literal|0
 index|]
 condition|)
-block|{
-specifier|register
-name|char
-modifier|*
-name|s
-decl_stmt|;
+if|if
+condition|(
+operator|(
+name|__progname
+operator|=
+name|_strrchr
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+literal|'/'
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
 name|__progname
 operator|=
 name|argv
@@ -682,39 +779,27 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-for|for
-control|(
-name|s
-operator|=
-name|__progname
-init|;
-operator|*
-name|s
-operator|!=
-literal|'\0'
-condition|;
-name|s
+else|else
 operator|++
-control|)
-if|if
-condition|(
-operator|*
-name|s
-operator|==
-literal|'/'
-condition|)
 name|__progname
-operator|=
-name|s
-operator|+
-literal|1
 expr_stmt|;
-block|}
 ifdef|#
 directive|ifdef
 name|DYNAMIC
 comment|/* ld(1) convention: if DYNAMIC = 0 then statically linked */
-comment|/* sometimes GCC is too smart/stupid for its own good */
+ifdef|#
+directive|ifdef
+name|stupid_gcc
+if|if
+condition|(
+operator|&
+name|_DYNAMIC
+condition|)
+name|__do_dynamic_link
+argument_list|()
+expr_stmt|;
+else|#
+directive|else
 name|x
 operator|=
 operator|(
@@ -730,6 +815,8 @@ condition|)
 name|__do_dynamic_link
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/* DYNAMIC */
@@ -754,6 +841,22 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* MCRT0 */
+if|if
+condition|(
+name|getenv
+argument_list|(
+literal|"ENABLE_STARTUP_LOCALE"
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+name|_startup_setlocale
+argument_list|(
+name|LC_ALL
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 asm|asm ("__callmain:");
 comment|/* Defined for the benefit of debuggers */
 name|exit
@@ -771,7 +874,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_ifdef
 ifdef|#
@@ -833,7 +936,7 @@ name|crt
 operator|.
 name|crt_ldfd
 operator|=
-name|_open
+name|open
 argument_list|(
 name|ldso
 argument_list|,
@@ -852,26 +955,16 @@ operator|-
 literal|1
 condition|)
 block|{
-name|_PUTMSG
-argument_list|(
-literal|"Couldn't open "
-argument_list|)
-expr_stmt|;
-name|_PUTMSG
-argument_list|(
-name|LDSO
-argument_list|)
-expr_stmt|;
 name|_FATAL
 argument_list|(
-literal|".\n"
+literal|"No ld.so\n"
 argument_list|)
 expr_stmt|;
 block|}
 comment|/* Read LDSO exec header */
 if|if
 condition|(
-name|_read
+name|read
 argument_list|(
 name|crt
 operator|.
@@ -934,10 +1027,7 @@ name|crt
 operator|.
 name|crt_ba
 operator|=
-operator|(
-name|int
-operator|)
-name|_mmap
+name|mmap
 argument_list|(
 literal|0
 argument_list|,
@@ -951,7 +1041,7 @@ name|PROT_EXEC
 argument_list|,
 name|MAP_FILE
 operator||
-name|MAP_PRIVATE
+name|MAP_COPY
 argument_list|,
 name|crt
 operator|.
@@ -975,21 +1065,40 @@ condition|)
 block|{
 name|_FATAL
 argument_list|(
-literal|"Cannot map ld.so (text)\n"
+literal|"Cannot map ld.so\n"
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|BSD
+comment|/* !!!  * This is gross, ld.so is a ZMAGIC a.out, but has `sizeof(hdr)' for  * an entry point and not at PAGSIZ as the N_*ADDR macros assume.  */
+undef|#
+directive|undef
+name|N_DATADDR
+undef|#
+directive|undef
+name|N_BSSADDR
+define|#
+directive|define
+name|N_DATADDR
+parameter_list|(
+name|x
+parameter_list|)
+value|((x).a_text)
+define|#
+directive|define
+name|N_BSSADDR
+parameter_list|(
+name|x
+parameter_list|)
+value|((x).a_text + (x).a_data)
+endif|#
+directive|endif
 comment|/* Map in data segment of ld.so writable */
 if|if
 condition|(
-operator|(
-name|int
-operator|)
-name|_mmap
-argument_list|(
-call|(
-name|caddr_t
-call|)
+name|mmap
 argument_list|(
 name|crt
 operator|.
@@ -998,7 +1107,6 @@ operator|+
 name|N_DATADDR
 argument_list|(
 name|hdr
-argument_list|)
 argument_list|)
 argument_list|,
 name|hdr
@@ -1013,7 +1121,7 @@ name|MAP_FIXED
 operator||
 name|MAP_FILE
 operator||
-name|MAP_PRIVATE
+name|MAP_COPY
 argument_list|,
 name|crt
 operator|.
@@ -1031,7 +1139,7 @@ condition|)
 block|{
 name|_FATAL
 argument_list|(
-literal|"Cannot map ld.so (data)\n"
+literal|"Cannot map ld.so\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1042,14 +1150,7 @@ name|hdr
 operator|.
 name|a_bss
 operator|&&
-operator|(
-name|int
-operator|)
-name|_mmap
-argument_list|(
-call|(
-name|caddr_t
-call|)
+name|mmap
 argument_list|(
 name|crt
 operator|.
@@ -1058,7 +1159,6 @@ operator|+
 name|N_BSSADDR
 argument_list|(
 name|hdr
-argument_list|)
 argument_list|)
 argument_list|,
 name|hdr
@@ -1073,7 +1173,7 @@ name|MAP_FIXED
 operator||
 name|MAP_ANON
 operator||
-name|MAP_PRIVATE
+name|MAP_COPY
 argument_list|,
 name|crt
 operator|.
@@ -1088,7 +1188,7 @@ condition|)
 block|{
 name|_FATAL
 argument_list|(
-literal|"Cannot map ld.so (bss)\n"
+literal|"Cannot map ld.so\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1409,12 +1509,6 @@ begin_comment
 comment|/*  * Support routines  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -1627,15 +1721,6 @@ return|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* DEBUG */
-end_comment
-
 begin_asm
 asm|asm("	___syscall:");
 end_asm
@@ -1696,6 +1781,71 @@ end_endif
 begin_comment
 comment|/* DYNAMIC */
 end_comment
+
+begin_function
+specifier|static
+name|char
+modifier|*
+name|_strrchr
+parameter_list|(
+name|p
+parameter_list|,
+name|ch
+parameter_list|)
+specifier|register
+name|char
+modifier|*
+name|p
+decl_stmt|,
+name|ch
+decl_stmt|;
+block|{
+specifier|register
+name|char
+modifier|*
+name|save
+decl_stmt|;
+for|for
+control|(
+name|save
+operator|=
+name|NULL
+init|;
+condition|;
+operator|++
+name|p
+control|)
+block|{
+if|if
+condition|(
+operator|*
+name|p
+operator|==
+name|ch
+condition|)
+name|save
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|p
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|*
+name|p
+condition|)
+return|return
+operator|(
+name|save
+operator|)
+return|;
+block|}
+comment|/* NOTREACHED */
+block|}
+end_function
 
 begin_ifdef
 ifdef|#

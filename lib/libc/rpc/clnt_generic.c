@@ -69,12 +69,6 @@ directive|include
 file|<netdb.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
 begin_comment
 comment|/*  * Generic client creation: takes (hostname, program-number, protocol) and  * returns client handle. Default options are set, which the user can  * change using the rpc equivalent of ioctl()'s.  */
 end_comment

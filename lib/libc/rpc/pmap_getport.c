@@ -75,12 +75,6 @@ directive|include
 file|<net/if.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
 begin_decl_stmt
 specifier|static
 name|struct

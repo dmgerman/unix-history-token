@@ -615,7 +615,7 @@ parameter_list|)
 endif|#
 directive|endif
 block|{
-name|longint
+name|long
 name|x
 decl_stmt|;
 name|int

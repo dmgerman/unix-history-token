@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Margo Seltzer.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Margo Seltzer.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_if
@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash.c	8.9 (Berkeley) 6/16/94"
+literal|"@(#)hash.c	8.7 (Berkeley) 2/21/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -207,7 +207,7 @@ specifier|const
 name|DBT
 operator|*
 operator|,
-name|u_int32_t
+name|u_int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -246,7 +246,7 @@ operator|,
 name|DBT
 operator|*
 operator|,
-name|u_int32_t
+name|u_int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -270,7 +270,7 @@ specifier|const
 name|DBT
 operator|*
 operator|,
-name|u_int32_t
+name|u_int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -313,7 +313,7 @@ operator|,
 name|DBT
 operator|*
 operator|,
-name|u_int32_t
+name|u_int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -330,7 +330,7 @@ specifier|const
 name|DB
 operator|*
 operator|,
-name|u_int32_t
+name|u_int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -492,7 +492,7 @@ name|HASH_STATISTICS
 end_ifdef
 
 begin_decl_stmt
-name|int
+name|long
 name|hash_accesses
 decl_stmt|,
 name|hash_collisions
@@ -714,37 +714,6 @@ name|errno
 argument_list|,
 name|error0
 argument_list|)
-expr_stmt|;
-comment|/* if the .db file is empty, and we had permission to create 		   a new .db file, then reinitialize the database */
-if|if
-condition|(
-operator|(
-name|flags
-operator|&
-name|O_CREAT
-operator|)
-operator|&&
-name|fstat
-argument_list|(
-name|hashp
-operator|->
-name|fp
-argument_list|,
-operator|&
-name|statbuf
-argument_list|)
-operator|==
-literal|0
-operator|&&
-name|statbuf
-operator|.
-name|st_size
-operator|==
-literal|0
-condition|)
-name|new_table
-operator|=
-literal|1
 expr_stmt|;
 operator|(
 name|void
@@ -1046,7 +1015,7 @@ name|bpages
 operator|*
 sizeof|sizeof
 argument_list|(
-name|u_int32_t
+name|u_long
 operator|*
 argument_list|)
 argument_list|)
@@ -1913,7 +1882,7 @@ expr_stmt|;
 comment|/* First bitmap page is at: splitpoint l2 page offset 1 */
 if|if
 condition|(
-name|__ibitmap
+name|__init_bitmap
 argument_list|(
 name|hashp
 argument_list|,
@@ -2340,7 +2309,7 @@ name|DB
 modifier|*
 name|dbp
 decl_stmt|;
-name|u_int32_t
+name|u_int
 name|flags
 decl_stmt|;
 block|{
@@ -2607,7 +2576,7 @@ name|EFTYPE
 expr_stmt|;
 name|hashp
 operator|->
-name|error
+name|errno
 operator|=
 name|errno
 expr_stmt|;
@@ -2718,7 +2687,7 @@ name|DBT
 modifier|*
 name|data
 decl_stmt|;
-name|u_int32_t
+name|u_int
 name|flag
 decl_stmt|;
 block|{
@@ -2743,7 +2712,7 @@ condition|)
 block|{
 name|hashp
 operator|->
-name|error
+name|errno
 operator|=
 name|errno
 operator|=
@@ -2803,7 +2772,7 @@ name|DBT
 modifier|*
 name|data
 decl_stmt|;
-name|u_int32_t
+name|u_int
 name|flag
 decl_stmt|;
 block|{
@@ -2832,7 +2801,7 @@ condition|)
 block|{
 name|hashp
 operator|->
-name|error
+name|errno
 operator|=
 name|errno
 operator|=
@@ -2859,7 +2828,7 @@ condition|)
 block|{
 name|hashp
 operator|->
-name|error
+name|errno
 operator|=
 name|errno
 operator|=
@@ -2923,7 +2892,7 @@ name|DBT
 modifier|*
 name|key
 decl_stmt|;
-name|u_int32_t
+name|u_int
 name|flag
 decl_stmt|;
 comment|/* Ignored */
@@ -2953,7 +2922,7 @@ condition|)
 block|{
 name|hashp
 operator|->
-name|error
+name|errno
 operator|=
 name|errno
 operator|=
@@ -2980,7 +2949,7 @@ condition|)
 block|{
 name|hashp
 operator|->
-name|error
+name|errno
 operator|=
 name|errno
 operator|=
@@ -3061,7 +3030,7 @@ modifier|*
 name|save_bufp
 decl_stmt|;
 specifier|register
-name|u_int16_t
+name|u_short
 modifier|*
 name|bp
 decl_stmt|;
@@ -3080,7 +3049,7 @@ name|char
 modifier|*
 name|kp
 decl_stmt|;
-name|u_int16_t
+name|u_short
 name|pageno
 decl_stmt|;
 ifdef|#
@@ -3159,7 +3128,7 @@ control|(
 name|bp
 operator|=
 operator|(
-name|u_int16_t
+name|u_short
 operator|*
 operator|)
 name|rbufp
@@ -3292,7 +3261,7 @@ comment|/* FOR LOOP INIT */
 name|bp
 operator|=
 operator|(
-name|u_int16_t
+name|u_short
 operator|*
 operator|)
 name|rbufp
@@ -3426,7 +3395,7 @@ comment|/* FOR LOOP INIT */
 name|bp
 operator|=
 operator|(
-name|u_int16_t
+name|u_short
 operator|*
 operator|)
 name|rbufp
@@ -3568,7 +3537,7 @@ case|:
 name|bp
 operator|=
 operator|(
-name|u_int16_t
+name|u_short
 operator|*
 operator|)
 name|rbufp
@@ -3762,7 +3731,7 @@ decl_stmt|;
 end_function
 
 begin_decl_stmt
-name|u_int32_t
+name|u_int
 name|flag
 decl_stmt|;
 end_decl_stmt
@@ -3770,7 +3739,7 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
-name|u_int32_t
+name|u_int
 name|bucket
 decl_stmt|;
 specifier|register
@@ -3782,7 +3751,7 @@ name|HTAB
 modifier|*
 name|hashp
 decl_stmt|;
-name|u_int16_t
+name|u_short
 modifier|*
 name|bp
 decl_stmt|,
@@ -3813,7 +3782,7 @@ condition|)
 block|{
 name|hashp
 operator|->
-name|error
+name|errno
 operator|=
 name|errno
 operator|=
@@ -3954,7 +3923,7 @@ expr_stmt|;
 name|bp
 operator|=
 operator|(
-name|u_int16_t
+name|u_short
 operator|*
 operator|)
 name|bufp
@@ -4005,7 +3974,7 @@ else|else
 name|bp
 operator|=
 operator|(
-name|u_int16_t
+name|u_short
 operator|*
 operator|)
 name|hashp
@@ -4078,7 +4047,7 @@ return|;
 name|bp
 operator|=
 operator|(
-name|u_int16_t
+name|u_short
 operator|*
 operator|)
 operator|(
@@ -4307,7 +4276,7 @@ modifier|*
 name|hashp
 decl_stmt|;
 block|{
-name|u_int32_t
+name|u_int
 name|old_bucket
 decl_stmt|,
 name|new_bucket
@@ -4644,7 +4613,7 @@ end_function
 
 begin_function
 specifier|extern
-name|u_int32_t
+name|u_int
 name|__call_hash
 parameter_list|(
 name|hashp

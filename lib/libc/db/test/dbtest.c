@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1992, 1993, 1994\n\ 	The Regents of the University of California.  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1992, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dbtest.c	8.17 (Berkeley) 9/1/94"
+literal|"@(#)dbtest.c	8.8 (Berkeley) 2/21/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -275,32 +275,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
-modifier|*
-name|sflags
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|synk
-name|__P
-argument_list|(
-operator|(
-name|DB
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|void
 modifier|*
 name|rfile
@@ -396,10 +370,6 @@ name|type
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* Database type. */
-end_comment
-
 begin_decl_stmt
 name|void
 modifier|*
@@ -407,29 +377,17 @@ name|infop
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* Iflags. */
-end_comment
-
 begin_decl_stmt
 name|u_long
 name|lineno
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* Current line in test script. */
-end_comment
-
 begin_decl_stmt
 name|u_int
 name|flags
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* Current DB flags. */
-end_comment
 
 begin_decl_stmt
 name|int
@@ -438,10 +396,6 @@ init|=
 name|STDOUT_FILENO
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* Standard output fd. */
-end_comment
 
 begin_decl_stmt
 name|DB
@@ -452,16 +406,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* Global for gdb. */
-end_comment
-
-begin_decl_stmt
-name|int
-name|XXlineno
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Fast breakpoint for gdb. */
 end_comment
 
 begin_function
@@ -514,8 +458,6 @@ name|int
 name|ch
 decl_stmt|,
 name|oflags
-decl_stmt|,
-name|sflag
 decl_stmt|;
 name|char
 modifier|*
@@ -526,9 +468,6 @@ name|infoarg
 decl_stmt|,
 modifier|*
 name|p
-decl_stmt|,
-modifier|*
-name|t
 decl_stmt|,
 name|buf
 index|[
@@ -551,10 +490,6 @@ name|O_CREAT
 operator||
 name|O_RDWR
 expr_stmt|;
-name|sflag
-operator|=
-literal|0
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -566,7 +501,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"f:i:lo:s"
+literal|"f:i:lo:"
 argument_list|)
 operator|)
 operator|!=
@@ -639,14 +574,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|'s'
-case|:
-name|sflag
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-case|case
 literal|'?'
 case|:
 default|default:
@@ -684,14 +611,6 @@ expr_stmt|;
 comment|/* Open the descriptor file. */
 if|if
 condition|(
-name|strcmp
-argument_list|(
-operator|*
-name|argv
-argument_list|,
-literal|"-"
-argument_list|)
-operator|&&
 name|freopen
 argument_list|(
 operator|*
@@ -769,7 +688,7 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Open the DB.  Delete any preexisting copy, you almost never 	 * want it around, and it often screws up tests. 	 */
+comment|/* Open the DB. */
 if|if
 condition|(
 name|fname
@@ -819,20 +738,6 @@ name|buf
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-operator|!
-name|sflag
-condition|)
-operator|(
-name|void
-operator|)
-name|unlink
-argument_list|(
-name|fname
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -902,66 +807,12 @@ operator|++
 name|lineno
 control|)
 block|{
-comment|/* Delete the newline, displaying the key/data is easier. */
-if|if
-condition|(
-name|ofd
-operator|==
-name|STDOUT_FILENO
-operator|&&
-operator|(
-name|t
-operator|=
-name|strchr
-argument_list|(
-name|p
-argument_list|,
-literal|'\n'
-argument_list|)
-operator|)
-operator|!=
-name|NULL
-condition|)
-operator|*
-name|t
-operator|=
-literal|'\0'
-expr_stmt|;
-if|if
-condition|(
-operator|(
 name|len
 operator|=
 name|strlen
 argument_list|(
 name|buf
 argument_list|)
-operator|)
-operator|==
-literal|0
-operator|||
-name|isspace
-argument_list|(
-operator|*
-name|p
-argument_list|)
-operator|||
-operator|*
-name|p
-operator|==
-literal|'#'
-condition|)
-continue|continue;
-comment|/* Convenient gdb break point. */
-if|if
-condition|(
-name|XXlineno
-operator|==
-name|lineno
-condition|)
-name|XXlineno
-operator|=
-literal|1
 expr_stmt|;
 switch|switch
 condition|(
@@ -1045,17 +896,6 @@ operator|!=
 name|len
 operator|-
 literal|1
-operator|||
-name|write
-argument_list|(
-name|ofd
-argument_list|,
-literal|"\n"
-argument_list|,
-literal|1
-argument_list|)
-operator|!=
-literal|1
 condition|)
 name|err
 argument_list|(
@@ -1137,28 +977,6 @@ argument_list|,
 name|lineno
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|flags
-operator|==
-name|R_CURSOR
-condition|)
-block|{
-name|rem
-argument_list|(
-name|dbp
-argument_list|,
-operator|&
-name|key
-argument_list|)
-expr_stmt|;
-name|state
-operator|=
-name|COMMAND
-expr_stmt|;
-block|}
-else|else
-block|{
 name|state
 operator|=
 name|KEY
@@ -1166,34 +984,6 @@ expr_stmt|;
 name|command
 operator|=
 name|REMOVE
-expr_stmt|;
-block|}
-break|break;
-case|case
-literal|'S'
-case|:
-comment|/* sync */
-if|if
-condition|(
-name|state
-operator|!=
-name|COMMAND
-condition|)
-name|err
-argument_list|(
-literal|"line %lu: not expecting command"
-argument_list|,
-name|lineno
-argument_list|)
-expr_stmt|;
-name|synk
-argument_list|(
-name|dbp
-argument_list|)
-expr_stmt|;
-name|state
-operator|=
-name|COMMAND
 expr_stmt|;
 break|break;
 case|case
@@ -1602,17 +1392,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|type
 operator|!=
 name|DB_RECNO
-operator|)
-operator|&&
-operator|(
-name|flags
-operator|!=
-name|R_CURSOR
-operator|)
 condition|)
 name|free
 argument_list|(
@@ -1639,17 +1421,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|type
 operator|!=
 name|DB_RECNO
-operator|)
-operator|&&
-operator|(
-name|flags
-operator|!=
-name|R_CURSOR
-operator|)
 condition|)
 name|free
 argument_list|(
@@ -1694,9 +1468,9 @@ name|err
 argument_list|(
 literal|"line %lu: %s: unknown command character"
 argument_list|,
-name|lineno
-argument_list|,
 name|p
+argument_list|,
+name|lineno
 argument_list|)
 expr_stmt|;
 block|}
@@ -1704,16 +1478,11 @@ block|}
 ifdef|#
 directive|ifdef
 name|STATISTICS
-comment|/* 	 * -l must be used (DB_LOCK must be set) for this to be 	 * used, otherwise a page will be locked and it will fail. 	 */
 if|if
 condition|(
 name|type
 operator|==
 name|DB_BTREE
-operator|&&
-name|oflags
-operator|&
-name|DB_LOCK
 condition|)
 name|__bt_stat
 argument_list|(
@@ -1762,6 +1531,13 @@ define|#
 directive|define
 name|NOOVERWRITE
 value|"put failed, would overwrite key\n"
+end_define
+
+begin_define
+define|#
+directive|define
+name|NOSUCHKEY
+value|"get failed, no such key\n"
 end_define
 
 begin_function
@@ -1936,24 +1712,6 @@ operator|.
 name|size
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ofd
-operator|==
-name|STDOUT_FILENO
-condition|)
-operator|(
-name|void
-operator|)
-name|write
-argument_list|(
-name|ofd
-argument_list|,
-literal|"\n"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 operator|-
@@ -1975,16 +1733,6 @@ comment|/* NOTREACHED */
 case|case
 literal|1
 case|:
-define|#
-directive|define
-name|NOSUCHKEY
-value|"get failed, no such key\n"
-if|if
-condition|(
-name|ofd
-operator|!=
-name|STDOUT_FILENO
-condition|)
 operator|(
 name|void
 operator|)
@@ -2002,7 +1750,6 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-else|else
 operator|(
 name|void
 operator|)
@@ -2010,18 +1757,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%d: %.*s: %s"
+literal|"%d: %.*s: %s\n"
 argument_list|,
 name|lineno
 argument_list|,
-name|MIN
-argument_list|(
 name|kp
 operator|->
 name|size
-argument_list|,
-literal|20
-argument_list|)
 argument_list|,
 name|kp
 operator|->
@@ -2030,9 +1772,6 @@ argument_list|,
 name|NOSUCHKEY
 argument_list|)
 expr_stmt|;
-undef|#
-directive|undef
-name|NOSUCHKEY
 break|break;
 block|}
 block|}
@@ -2105,7 +1844,7 @@ literal|1
 case|:
 name|err
 argument_list|(
-literal|"line %lu: getdata failed, no such key"
+literal|"line %lu: get failed, no such key"
 argument_list|,
 name|lineno
 argument_list|)
@@ -2243,7 +1982,7 @@ literal|1
 case|:
 name|err
 argument_list|(
-literal|"line %lu: rem: %s"
+literal|"line %lu: get: %s"
 argument_list|,
 name|lineno
 argument_list|,
@@ -2257,16 +1996,6 @@ comment|/* NOTREACHED */
 case|case
 literal|1
 case|:
-define|#
-directive|define
-name|NOSUCHKEY
-value|"rem failed, no such key\n"
-if|if
-condition|(
-name|ofd
-operator|!=
-name|STDOUT_FILENO
-condition|)
 operator|(
 name|void
 operator|)
@@ -2284,105 +2013,7 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|flags
-operator|!=
-name|R_CURSOR
-condition|)
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%d: %.*s: %s"
-argument_list|,
-name|lineno
-argument_list|,
-name|MIN
-argument_list|(
-name|kp
-operator|->
-name|size
-argument_list|,
-literal|20
-argument_list|)
-argument_list|,
-name|kp
-operator|->
-name|data
-argument_list|,
-name|NOSUCHKEY
-argument_list|)
-expr_stmt|;
-else|else
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%d: rem of cursor failed\n"
-argument_list|,
-name|lineno
-argument_list|)
-expr_stmt|;
-undef|#
-directive|undef
-name|NOSUCHKEY
 break|break;
-block|}
-block|}
-end_function
-
-begin_function
-name|void
-name|synk
-parameter_list|(
-name|dbp
-parameter_list|)
-name|DB
-modifier|*
-name|dbp
-decl_stmt|;
-block|{
-switch|switch
-condition|(
-name|dbp
-operator|->
-name|sync
-argument_list|(
-name|dbp
-argument_list|,
-name|flags
-argument_list|)
-condition|)
-block|{
-case|case
-literal|0
-case|:
-break|break;
-case|case
-operator|-
-literal|1
-case|:
-name|err
-argument_list|(
-literal|"line %lu: synk: %s"
-argument_list|,
-name|lineno
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
 block|}
 block|}
 end_function
@@ -2443,24 +2074,6 @@ operator|.
 name|size
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ofd
-operator|==
-name|STDOUT_FILENO
-condition|)
-operator|(
-name|void
-operator|)
-name|write
-argument_list|(
-name|ofd
-argument_list|,
-literal|"\n"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 operator|-
@@ -2482,16 +2095,6 @@ comment|/* NOTREACHED */
 case|case
 literal|1
 case|:
-define|#
-directive|define
-name|NOSUCHKEY
-value|"seq failed, no such key\n"
-if|if
-condition|(
-name|ofd
-operator|!=
-name|STDOUT_FILENO
-condition|)
 operator|(
 name|void
 operator|)
@@ -2509,61 +2112,6 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|flags
-operator|==
-name|R_CURSOR
-condition|)
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%d: %.*s: %s"
-argument_list|,
-name|lineno
-argument_list|,
-name|MIN
-argument_list|(
-name|kp
-operator|->
-name|size
-argument_list|,
-literal|20
-argument_list|)
-argument_list|,
-name|kp
-operator|->
-name|data
-argument_list|,
-name|NOSUCHKEY
-argument_list|)
-expr_stmt|;
-else|else
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%d: seq (%s) failed\n"
-argument_list|,
-name|lineno
-argument_list|,
-name|sflags
-argument_list|(
-name|flags
-argument_list|)
-argument_list|)
-expr_stmt|;
-undef|#
-directive|undef
-name|NOSUCHKEY
 break|break;
 block|}
 block|}
@@ -2665,24 +2213,6 @@ operator|.
 name|size
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ofd
-operator|==
-name|STDOUT_FILENO
-condition|)
-operator|(
-name|void
-operator|)
-name|write
-argument_list|(
-name|ofd
-argument_list|,
-literal|"\n"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 literal|1
@@ -2752,11 +2282,6 @@ operator|*
 name|s
 operator|==
 literal|'\n'
-operator|||
-operator|*
-name|s
-operator|==
-literal|'\0'
 condition|)
 return|return
 operator|(
@@ -2928,103 +2453,6 @@ name|s
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
-block|}
-end_function
-
-begin_function
-name|char
-modifier|*
-name|sflags
-parameter_list|(
-name|flags
-parameter_list|)
-name|int
-name|flags
-decl_stmt|;
-block|{
-switch|switch
-condition|(
-name|flags
-condition|)
-block|{
-case|case
-name|R_CURSOR
-case|:
-return|return
-operator|(
-literal|"R_CURSOR"
-operator|)
-return|;
-case|case
-name|R_FIRST
-case|:
-return|return
-operator|(
-literal|"R_FIRST"
-operator|)
-return|;
-case|case
-name|R_IAFTER
-case|:
-return|return
-operator|(
-literal|"R_IAFTER"
-operator|)
-return|;
-case|case
-name|R_IBEFORE
-case|:
-return|return
-operator|(
-literal|"R_IBEFORE"
-operator|)
-return|;
-case|case
-name|R_LAST
-case|:
-return|return
-operator|(
-literal|"R_LAST"
-operator|)
-return|;
-case|case
-name|R_NEXT
-case|:
-return|return
-operator|(
-literal|"R_NEXT"
-operator|)
-return|;
-case|case
-name|R_NOOVERWRITE
-case|:
-return|return
-operator|(
-literal|"R_NOOVERWRITE"
-operator|)
-return|;
-case|case
-name|R_PREV
-case|:
-return|return
-operator|(
-literal|"R_PREV"
-operator|)
-return|;
-case|case
-name|R_SETCURSOR
-case|:
-return|return
-operator|(
-literal|"R_SETCURSOR"
-operator|)
-return|;
-block|}
-return|return
-operator|(
-literal|"UNKNOWN!"
-operator|)
-return|;
 block|}
 end_function
 

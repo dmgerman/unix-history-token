@@ -255,10 +255,6 @@ condition|(
 name|checkch
 operator|!=
 literal|'y'
-operator|&&
-name|checkch
-operator|!=
-literal|'Y'
 condition|)
 block|{
 operator|(
@@ -276,51 +272,6 @@ operator|)
 return|;
 block|}
 block|}
-if|if
-condition|(
-name|fflag
-condition|)
-block|{
-comment|/* remove existing destination file name,  		     * create a new file  */
-operator|(
-name|void
-operator|)
-name|unlink
-argument_list|(
-name|to
-operator|.
-name|p_path
-argument_list|)
-expr_stmt|;
-name|to_fd
-operator|=
-name|open
-argument_list|(
-name|to
-operator|.
-name|p_path
-argument_list|,
-name|O_WRONLY
-operator||
-name|O_TRUNC
-operator||
-name|O_CREAT
-argument_list|,
-name|fs
-operator|->
-name|st_mode
-operator|&
-operator|~
-operator|(
-name|S_ISUID
-operator||
-name|S_ISGID
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-comment|/* overwrite existing destination file name */
 name|to_fd
 operator|=
 name|open
@@ -1343,9 +1294,9 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: cp [-R [-H | -L | -P]] [-f | -i] [-p] src target"
+literal|"usage: cp [-R [-H | -L | -P] [-fip] src target"
 argument_list|,
-literal|"       cp [-R [-H | -L | -P]] [-f | -i] [-p] src1 ... srcN directory"
+literal|"       cp [-R [-H | -L | -P] [-fip] src1 ... srcN directory"
 argument_list|)
 expr_stmt|;
 name|exit

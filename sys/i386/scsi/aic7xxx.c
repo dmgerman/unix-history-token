@@ -5996,16 +5996,6 @@ argument_list|,
 name|iobase
 argument_list|)
 expr_stmt|;
-comment|/* Stop the selection */
-name|outb
-argument_list|(
-name|SCSISEQ
-operator|+
-name|iobase
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|outb
 argument_list|(
 name|SCB_CONTROL

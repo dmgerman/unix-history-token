@@ -173,6 +173,9 @@ modifier|*
 name|result
 decl_stmt|;
 block|{
+name|int
+name|c
+decl_stmt|;
 if|if
 condition|(
 name|n

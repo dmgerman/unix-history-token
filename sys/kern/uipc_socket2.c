@@ -110,10 +110,6 @@ literal|"netcls"
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* these two are sysctl visible */
-end_comment
-
 begin_decl_stmt
 name|u_long
 name|sb_max
@@ -127,6 +123,7 @@ comment|/* patchable */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|u_long
 name|sb_efficiency
 init|=

@@ -139,7 +139,7 @@ name|b
 parameter_list|,
 name|c
 parameter_list|)
-value|{						\ 	char buf[64];							\ 	(void)snprintf(buf, sizeof(buf), a, b, c);			\ 	error(buf);							\ }
+value|{                                               \        char buf[64];                                                   \        (void)snprintf(buf, sizeof(buf), a, b, c);                       \        error(buf);                                                     \ }
 end_define
 
 begin_else

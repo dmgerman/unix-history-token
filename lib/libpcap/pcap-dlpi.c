@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Header: pcap-dlpi.c,v 1.22x 94/10/12 20:08:15 leres Exp $ (LBL)"
+literal|"@(#)$Header: /pub/FreeBSD/FreeBSD-CVS/src/lib/libpcap/pcap-dlpi.c,v 1.1.1.1 1995/01/20 04:13:03 jkh Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 

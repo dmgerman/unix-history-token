@@ -88,12 +88,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/cpu.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<i386/isa/isa_device.h>
 end_include
 
@@ -1949,10 +1943,6 @@ return|;
 block|}
 else|else
 block|{
-if|if
-condition|(
-name|bootverbose
-condition|)
 name|printf
 argument_list|(
 literal|"mse%d: wrong signature %x\n"

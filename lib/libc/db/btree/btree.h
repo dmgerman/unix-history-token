@@ -1,47 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Olson.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)btree.h	8.11 (Berkeley) 8/17/94  */
+comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Mike Olson.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)btree.h	8.5 (Berkeley) 2/21/94  */
 end_comment
-
-begin_comment
-comment|/* Macros to set/clear/test flags. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|F_SET
-parameter_list|(
-name|p
-parameter_list|,
-name|f
-parameter_list|)
-value|(p)->flags |= (f)
-end_define
-
-begin_define
-define|#
-directive|define
-name|F_CLR
-parameter_list|(
-name|p
-parameter_list|,
-name|f
-parameter_list|)
-value|(p)->flags&= ~(f)
-end_define
-
-begin_define
-define|#
-directive|define
-name|F_ISSET
-parameter_list|(
-name|p
-parameter_list|,
-name|f
-parameter_list|)
-value|((p)->flags& (f))
-end_define
 
 begin_include
 include|#
@@ -206,8 +166,7 @@ begin_define
 define|#
 directive|define
 name|BTDATAOFF
-define|\
-value|(sizeof(pgno_t) + sizeof(pgno_t) + sizeof(pgno_t) +		\ 	    sizeof(u_int32_t) + sizeof(indx_t) + sizeof(indx_t))
+value|(sizeof(pgno_t) + sizeof(pgno_t) + sizeof(pgno_t) + \ 			    sizeof(u_int32_t) + sizeof(indx_t) + sizeof(indx_t))
 end_define
 
 begin_define
@@ -231,6 +190,7 @@ name|LALIGN
 parameter_list|(
 name|n
 parameter_list|)
+define|\
 value|(((n) + sizeof(pgno_t) - 1)& ~(sizeof(pgno_t) - 1))
 end_define
 
@@ -238,7 +198,7 @@ begin_define
 define|#
 directive|define
 name|NOVFLSIZE
-value|(sizeof(pgno_t) + sizeof(u_int32_t))
+value|(sizeof(pgno_t) + sizeof(size_t))
 end_define
 
 begin_comment
@@ -250,7 +210,7 @@ typedef|typedef
 struct|struct
 name|_binternal
 block|{
-name|u_int32_t
+name|size_t
 name|ksize
 decl_stmt|;
 comment|/* key size */
@@ -312,7 +272,7 @@ parameter_list|(
 name|len
 parameter_list|)
 define|\
-value|LALIGN(sizeof(u_int32_t) + sizeof(pgno_t) + sizeof(u_char) + (len))
+value|LALIGN(sizeof(size_t) + sizeof(pgno_t) + sizeof(u_char) + (len))
 end_define
 
 begin_comment
@@ -332,7 +292,7 @@ name|pgno
 parameter_list|,
 name|flags
 parameter_list|)
-value|{				\ 	*(u_int32_t *)p = size;						\ 	p += sizeof(u_int32_t);						\ 	*(pgno_t *)p = pgno;						\ 	p += sizeof(pgno_t);						\ 	*(u_char *)p = flags;						\ 	p += sizeof(u_char);						\ }
+value|{ \ 	*(size_t *)p = size; \ 	p += sizeof(size_t); \ 	*(pgno_t *)p = pgno; \ 	p += sizeof(pgno_t); \ 	*(u_char *)p = flags; \ 	p += sizeof(u_char); \ }
 end_define
 
 begin_comment
@@ -401,7 +361,7 @@ name|nrecs
 parameter_list|,
 name|pgno
 parameter_list|)
-value|{					\ 	*(recno_t *)p = nrecs;						\ 	p += sizeof(recno_t);						\ 	*(pgno_t *)p = pgno;						\ }
+value|{ \ 	*(recno_t *)p = nrecs; \ 	p += sizeof(recno_t); \ 	*(pgno_t *)p = pgno; \ }
 end_define
 
 begin_comment
@@ -413,11 +373,11 @@ typedef|typedef
 struct|struct
 name|_bleaf
 block|{
-name|u_int32_t
+name|size_t
 name|ksize
 decl_stmt|;
 comment|/* size of key */
-name|u_int32_t
+name|size_t
 name|dsize
 decl_stmt|;
 comment|/* size of data */
@@ -482,7 +442,7 @@ parameter_list|,
 name|dsize
 parameter_list|)
 define|\
-value|LALIGN(sizeof(u_int32_t) + sizeof(u_int32_t) + sizeof(u_char) +	\ 	    (ksize) + (dsize))
+value|LALIGN(sizeof(size_t) + sizeof(size_t) + sizeof(u_char) + \ 	    (ksize) + (dsize))
 end_define
 
 begin_comment
@@ -502,7 +462,7 @@ name|data
 parameter_list|,
 name|flags
 parameter_list|)
-value|{					\ 	*(u_int32_t *)p = key->size;					\ 	p += sizeof(u_int32_t);						\ 	*(u_int32_t *)p = data->size;					\ 	p += sizeof(u_int32_t);						\ 	*(u_char *)p = flags;						\ 	p += sizeof(u_char);						\ 	memmove(p, key->data, key->size);				\ 	p += key->size;							\ 	memmove(p, data->data, data->size);				\ }
+value|{ \ 	*(size_t *)p = key->size; \ 	p += sizeof(size_t); \ 	*(size_t *)p = data->size; \ 	p += sizeof(size_t); \ 	*(u_char *)p = flags; \ 	p += sizeof(u_char); \ 	memmove(p, key->data, key->size); \ 	p += key->size; \ 	memmove(p, data->data, data->size); \ }
 end_define
 
 begin_comment
@@ -514,7 +474,7 @@ typedef|typedef
 struct|struct
 name|_rleaf
 block|{
-name|u_int32_t
+name|size_t
 name|dsize
 decl_stmt|;
 comment|/* size of data */
@@ -576,7 +536,7 @@ parameter_list|(
 name|dsize
 parameter_list|)
 define|\
-value|LALIGN(sizeof(u_int32_t) + sizeof(u_char) + (dsize))
+value|LALIGN(sizeof(size_t) + sizeof(u_char) + (dsize))
 end_define
 
 begin_comment
@@ -594,11 +554,11 @@ name|data
 parameter_list|,
 name|flags
 parameter_list|)
-value|{					\ 	*(u_int32_t *)p = data->size;					\ 	p += sizeof(u_int32_t);						\ 	*(u_char *)p = flags;						\ 	p += sizeof(u_char);						\ 	memmove(p, data->data, data->size);				\ }
+value|{ \ 	*(size_t *)p = data->size; \ 	p += sizeof(size_t); \ 	*(u_char *)p = flags; \ 	p += sizeof(u_char); \ 	memmove(p, data->data, data->size); \ }
 end_define
 
 begin_comment
-comment|/*  * A record in the tree is either a pointer to a page and an index in the page  * or a page number and an index.  These structures are used as a cursor, stack  * entry and search returns as well as to pass records to other routines.  *  * One comment about searches.  Internal page searches must find the largest  * record less than key in the tree so that descents work.  Leaf page searches  * must find the smallest record greater than key so that the returned index  * is the record's correct position for insertion.  */
+comment|/*  * A record in the tree is either a pointer to a page and an index in the page  * or a page number and an index.  These structures are used as a cursor, stack  * entry and search returns as well as to pass records to other routines.  *  * One comment about searches.  Internal page searches must find the largest  * record less than key in the tree so that descents work.  Leaf page searches  * must find the smallest record greater than key so that the returned index  * is the record's correct position for insertion.  *  * One comment about cursors.  The cursor key is never removed from the tree,  * even if deleted.  This is because it is quite difficult to decide where the  * cursor should be when other keys have been inserted/deleted in the tree;  * duplicate keys make it impossible.  This scheme does require extra work  * though, to make sure that we don't perform an operation on a deleted key.  */
 end_comment
 
 begin_typedef
@@ -639,56 +599,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * About cursors.  The cursor (and the page that contained the key/data pair  * that it referenced) can be deleted, which makes things a bit tricky.  If  * there are no duplicates of the cursor key in the tree (i.e. B_NODUPS is set  * or there simply aren't any duplicates of the key) we copy the key that it  * referenced when it's deleted, and reacquire a new cursor key if the cursor  * is used again.  If there are duplicates keys, we move to the next/previous  * key, and set a flag so that we know what happened.  NOTE: if duplicate (to  * the cursor) keys are added to the tree during this process, it is undefined  * if they will be returned or not in a cursor scan.  *  * The flags determine the possible states of the cursor:  *  * CURS_INIT	The cursor references *something*.  * CURS_ACQUIRE	The cursor was deleted, and a key has been saved so that  *		we can reacquire the right position in the tree.  * CURS_AFTER, CURS_BEFORE  *		The cursor was deleted, and now references a key/data pair  *		that has not yet been returned, either before or after the  *		deleted key/data pair.  * XXX  * This structure is broken out so that we can eventually offer multiple  * cursors as part of the DB interface.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|_cursor
-block|{
-name|EPGNO
-name|pg
-decl_stmt|;
-comment|/* B: Saved tree reference. */
-name|DBT
-name|key
-decl_stmt|;
-comment|/* B: Saved key, or key.data == NULL. */
-name|recno_t
-name|rcursor
-decl_stmt|;
-comment|/* R: recno cursor (1-based) */
-define|#
-directive|define
-name|CURS_ACQUIRE
-value|0x01
-comment|/*  B: Cursor needs to be reacquired. */
-define|#
-directive|define
-name|CURS_AFTER
-value|0x02
-comment|/*  B: Unreturned cursor after key. */
-define|#
-directive|define
-name|CURS_BEFORE
-value|0x04
-comment|/*  B: Unreturned cursor before key. */
-define|#
-directive|define
-name|CURS_INIT
-value|0x08
-comment|/* RB: Cursor initialized. */
-name|u_int8_t
-name|flags
-decl_stmt|;
-block|}
-name|CURSOR
-typedef|;
-end_typedef
-
-begin_comment
-comment|/*  * The metadata of the tree.  The nrecs field is used only by the RECNO code.  * This is because the btree doesn't really need it and it requires that every  * put or delete call modify the metadata.  */
+comment|/*  * The metadata of the tree.  The m_nrecs field is used only by the RECNO code.  * This is because the btree doesn't really need it and it requires that every  * put or delete call modify the metadata.  */
 end_comment
 
 begin_typedef
@@ -697,23 +608,23 @@ struct|struct
 name|_btmeta
 block|{
 name|u_int32_t
-name|magic
+name|m_magic
 decl_stmt|;
 comment|/* magic number */
 name|u_int32_t
-name|version
+name|m_version
 decl_stmt|;
 comment|/* version */
 name|u_int32_t
-name|psize
+name|m_psize
 decl_stmt|;
 comment|/* page size */
 name|u_int32_t
-name|free
+name|m_free
 decl_stmt|;
 comment|/* page number of first free page */
 name|u_int32_t
-name|nrecs
+name|m_nrecs
 decl_stmt|;
 comment|/* R: number of records */
 define|#
@@ -721,9 +632,13 @@ directive|define
 name|SAVEMETA
 value|(B_NODUPS | R_RECNO)
 name|u_int32_t
-name|flags
+name|m_flags
 decl_stmt|;
 comment|/* bt_flags& SAVEMETA */
+name|u_int32_t
+name|m_unused
+decl_stmt|;
+comment|/* unused */
 block|}
 name|BTMETA
 typedef|;
@@ -757,55 +672,59 @@ modifier|*
 name|bt_pinned
 decl_stmt|;
 comment|/* page pinned across calls */
-name|CURSOR
-name|bt_cursor
+name|EPGNO
+name|bt_bcursor
 decl_stmt|;
-comment|/* cursor */
-define|#
-directive|define
-name|BT_PUSH
-parameter_list|(
-name|t
-parameter_list|,
-name|p
-parameter_list|,
-name|i
-parameter_list|)
-value|{						\ 	t->bt_sp->pgno = p; 						\ 	t->bt_sp->index = i; 						\ 	++t->bt_sp;							\ }
+comment|/* B: btree cursor */
+name|recno_t
+name|bt_rcursor
+decl_stmt|;
+comment|/* R: recno cursor (1-based) */
 define|#
 directive|define
 name|BT_POP
 parameter_list|(
 name|t
 parameter_list|)
-value|(t->bt_sp == t->bt_stack ? NULL : --t->bt_sp)
+value|(t->bt_sp ? t->bt_stack + --t->bt_sp : NULL)
 define|#
 directive|define
 name|BT_CLR
 parameter_list|(
 name|t
 parameter_list|)
-value|(t->bt_sp = t->bt_stack)
-name|EPGNO
-name|bt_stack
-index|[
-literal|50
-index|]
-decl_stmt|;
-comment|/* stack of parent pages */
+value|(t->bt_sp = 0)
 name|EPGNO
 modifier|*
+name|bt_stack
+decl_stmt|;
+comment|/* stack of parent pages */
+name|u_int
 name|bt_sp
 decl_stmt|;
 comment|/* current stack pointer */
-name|DBT
-name|bt_rkey
+name|u_int
+name|bt_maxstack
 decl_stmt|;
-comment|/* returned key */
-name|DBT
-name|bt_rdata
+comment|/* largest stack */
+name|char
+modifier|*
+name|bt_kbuf
 decl_stmt|;
-comment|/* returned data */
+comment|/* key buffer */
+name|size_t
+name|bt_kbufsz
+decl_stmt|;
+comment|/* key buffer size */
+name|char
+modifier|*
+name|bt_dbuf
+decl_stmt|;
+comment|/* data buffer */
+name|size_t
+name|bt_dbufsz
+decl_stmt|;
+comment|/* data buffer size */
 name|int
 name|bt_fd
 decl_stmt|;
@@ -933,29 +852,29 @@ comment|/* R: delimiting byte/pad character */
 comment|/*  * NB:  * B_NODUPS and R_RECNO are stored on disk, and may not be changed.  */
 define|#
 directive|define
-name|B_INMEM
+name|B_DELCRSR
 value|0x00001
+comment|/* cursor has been deleted */
+define|#
+directive|define
+name|B_INMEM
+value|0x00002
 comment|/* in-memory tree */
 define|#
 directive|define
 name|B_METADIRTY
-value|0x00002
+value|0x00004
 comment|/* need to write metadata */
 define|#
 directive|define
 name|B_MODIFIED
-value|0x00004
+value|0x00008
 comment|/* tree modified */
 define|#
 directive|define
 name|B_NEEDSWAP
-value|0x00008
-comment|/* if byte order requires swapping */
-define|#
-directive|define
-name|B_RDONLY
 value|0x00010
-comment|/* read-only tree */
+comment|/* if byte order requires swapping */
 define|#
 directive|define
 name|B_NODUPS
@@ -963,66 +882,113 @@ value|0x00020
 comment|/* no duplicate keys permitted */
 define|#
 directive|define
+name|B_RDONLY
+value|0x00040
+comment|/* read-only tree */
+define|#
+directive|define
 name|R_RECNO
 value|0x00080
 comment|/* record oriented tree */
 define|#
 directive|define
+name|B_SEQINIT
+value|0x00100
+comment|/* sequential scan initialized */
+define|#
+directive|define
 name|R_CLOSEFP
-value|0x00040
+value|0x00200
 comment|/* opened a file pointer */
 define|#
 directive|define
 name|R_EOF
-value|0x00100
+value|0x00400
 comment|/* end of input file reached. */
 define|#
 directive|define
 name|R_FIXLEN
-value|0x00200
+value|0x00800
 comment|/* fixed length records */
 define|#
 directive|define
 name|R_MEMMAPPED
-value|0x00400
+value|0x01000
 comment|/* memory mapped file. */
 define|#
 directive|define
 name|R_INMEM
-value|0x00800
+value|0x02000
 comment|/* in-memory file */
 define|#
 directive|define
 name|R_MODIFIED
-value|0x01000
+value|0x04000
 comment|/* modified file */
 define|#
 directive|define
 name|R_RDONLY
-value|0x02000
+value|0x08000
 comment|/* read-only file */
 define|#
 directive|define
 name|B_DB_LOCK
-value|0x04000
+value|0x10000
 comment|/* DB_LOCK specified. */
 define|#
 directive|define
 name|B_DB_SHMEM
-value|0x08000
+value|0x20000
 comment|/* DB_SHMEM specified. */
 define|#
 directive|define
 name|B_DB_TXN
-value|0x10000
+value|0x40000
 comment|/* DB_TXN specified. */
 name|u_int32_t
-name|flags
+name|bt_flags
 decl_stmt|;
+comment|/* btree state */
 block|}
 name|BTREE
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|SET
+parameter_list|(
+name|t
+parameter_list|,
+name|f
+parameter_list|)
+value|((t)->bt_flags |= (f))
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLR
+parameter_list|(
+name|t
+parameter_list|,
+name|f
+parameter_list|)
+value|((t)->bt_flags&= ~(f))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISSET
+parameter_list|(
+name|t
+parameter_list|,
+name|f
+parameter_list|)
+value|((t)->bt_flags& (f))
+end_define
 
 begin_include
 include|#

@@ -54,24 +54,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<rpc/rpc.h>
 end_include
 
@@ -691,7 +673,7 @@ name|cb_vers
 operator|=
 name|vers
 expr_stmt|;
-comment|/* 	 * pre-serialize the static part of the call msg and stash it away 	 */
+comment|/* 	 * pre-serialize the staic part of the call msg and stash it away 	 */
 name|xdrmem_create
 argument_list|(
 operator|&
@@ -1897,13 +1879,13 @@ operator|&
 name|readfds
 argument_list|,
 operator|(
-name|fd_set
+name|int
 operator|*
 operator|)
 name|NULL
 argument_list|,
 operator|(
-name|fd_set
+name|int
 operator|*
 operator|)
 name|NULL

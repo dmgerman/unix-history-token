@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Header: print-llc.c,v 1.13 94/06/14 20:18:45 leres Exp $"
+literal|"@(#)$Header: /pub/FreeBSD/FreeBSD-CVS/src/usr.sbin/tcpdump/tcpdump/print-llc.c,v 1.1 1995/03/08 12:52:36 olah Exp $"
 decl_stmt|;
 end_decl_stmt
 

@@ -106,6 +106,9 @@ name|sgetrune
 argument_list|(
 name|s
 argument_list|,
+operator|(
+name|int
+operator|)
 name|n
 argument_list|,
 operator|&
@@ -188,6 +191,9 @@ name|sgetrune
 argument_list|(
 name|s
 argument_list|,
+operator|(
+name|int
+operator|)
 name|n
 argument_list|,
 operator|&
@@ -485,6 +491,9 @@ operator|++
 argument_list|,
 name|s
 argument_list|,
+operator|(
+name|int
+operator|)
 name|n
 argument_list|,
 operator|&
@@ -511,12 +520,6 @@ operator|)
 return|;
 name|cnt
 operator|+=
-name|e
-operator|-
-name|s
-expr_stmt|;
-name|n
-operator|-=
 name|e
 operator|-
 name|s

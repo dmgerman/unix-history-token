@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: procs.h,v 2.1 88/09/19 12:56:30 nhall Exp $ */
+comment|/* $Header: /pub/FreeBSD/FreeBSD-CVS/src/sys/netiso/xebec/Attic/procs.h,v 1.1.1.1 1994/05/24 10:07:46 rgrimes Exp $ */
 end_comment
 
 begin_comment
-comment|/* $Source: /var/home/tadl/src/argo/xebec/RCS/procs.h,v $ */
+comment|/* $Source: /pub/FreeBSD/FreeBSD-CVS/src/sys/netiso/xebec/Attic/procs.h,v $ */
 end_comment
 
 begin_function_decl

@@ -3010,12 +3010,6 @@ name|if_mtu
 operator|=
 name|FDDIMTU
 expr_stmt|;
-name|ifp
-operator|->
-name|if_baudrate
-operator|=
-literal|100000000
-expr_stmt|;
 for|for
 control|(
 name|ifa

@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Header: print-fddi.c,v 1.21 94/06/10 17:01:29 mccanne Exp $ (LBL)"
+literal|"@(#)$Header: /pub/FreeBSD/FreeBSD-CVS/src/usr.sbin/tcpdump/tcpdump/print-fddi.c,v 1.2 1995/03/08 12:52:32 olah Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 

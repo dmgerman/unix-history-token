@@ -126,7 +126,9 @@ name|SYSCALL
 parameter_list|(
 name|x
 parameter_list|)
-value|2: PIC_PROLOGUE; jmp PIC_PLT(HIDENAME(cerror)); ENTRY(x); lea __CONCAT(SYS_,x),%eax; KERNCALL; jb 2b
+value|2: jmp cerror; ENTRY(x); lea SYS_
+comment|/**/
+value|x,%eax; LCALL(7,0); jb 2b
 end_define
 
 begin_define
@@ -139,49 +141,6 @@ parameter_list|)
 value|SYSCALL(x); ret
 end_define
 
-begin_comment
-comment|/*  * For the thread_safe versions, we prepend _thread_sys_ to the function  * name so that the 'C' wrapper can go around the real name.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_THREAD_SAFE
-end_ifdef
-
-begin_comment
-comment|/* in case */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PSYSCALL
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-value|2: PIC_PROLOGUE; jmp PIC_PLT(HIDENAME(cerror)); ENTRY(y); lea __CONCAT(SYS_,x),%eax; KERNCALL; jb 2b
-end_define
-
-begin_define
-define|#
-directive|define
-name|PRSYSCALL
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-value|PSYSCALL(x,y); ret
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -191,7 +150,9 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|ENTRY(x); lea __CONCAT(SYS_,y), %eax; KERNCALL; ret
+value|ENTRY(x); lea SYS_
+comment|/**/
+value|y, %eax; ; LCALL(7,0); ret
 end_define
 
 begin_define
@@ -203,7 +164,9 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|call CNAME(y); addl $4*x,%esp
+value|call _
+comment|/**/
+value|y; addl $4*x,%esp
 end_define
 
 begin_comment
@@ -222,50 +185,18 @@ parameter_list|)
 value|.byte 0x9a ; .long y; .word x
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__ELF__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|KERNCALL
-value|int $0x80
-end_define
-
-begin_comment
-comment|/* Faster */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|KERNCALL
-value|LCALL(7,0)
-end_define
-
-begin_comment
-comment|/* The old way */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
 name|ASMSTR
 value|.asciz
 end_define
+
+begin_expr_stmt
+operator|.
+name|globl
+name|cerror
+end_expr_stmt
 
 end_unit
 

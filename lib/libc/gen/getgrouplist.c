@@ -96,6 +96,12 @@ modifier|*
 name|grp
 decl_stmt|;
 specifier|register
+name|struct
+name|passwd
+modifier|*
+name|pw
+decl_stmt|;
+specifier|register
 name|int
 name|i
 decl_stmt|,

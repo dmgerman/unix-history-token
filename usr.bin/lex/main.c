@@ -32,7 +32,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/* $Header: /home/ncvs/src/usr.bin/lex/main.c,v 1.1.1.1 1994/08/24 13:10:32 csgr Exp $ */
+comment|/* $Header: /pub/FreeBSD/FreeBSD-CVS/src/usr.bin/lex/main.c,v 1.2 1995/05/30 06:31:15 rgrimes Exp $ */
 end_comment
 
 begin_include

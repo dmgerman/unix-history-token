@@ -109,8 +109,7 @@ end_decl_stmt
 
 begin_block
 block|{
-name|unsigned
-name|char
+name|int
 name|ch
 decl_stmt|;
 while|while

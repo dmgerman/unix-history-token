@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: print-tftp.c,v 1.20 94/06/14 20:18:49 leres Exp $ (LBL)"
+literal|"@(#) $Header: /pub/FreeBSD/FreeBSD-CVS/src/usr.sbin/tcpdump/tcpdump/print-tftp.c,v 1.2 1995/03/08 12:52:45 olah Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 

@@ -50,12 +50,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/types.h>
 end_include
 
@@ -824,11 +818,18 @@ directive|ifdef
 name|YP
 name|char
 modifier|*
+name|key
+init|=
+name|NULL
+decl_stmt|,
+modifier|*
 name|val
 init|=
 name|NULL
 decl_stmt|;
 name|int
+name|keylen
+decl_stmt|,
 name|vallen
 decl_stmt|;
 endif|#

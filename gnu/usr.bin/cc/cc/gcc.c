@@ -2410,7 +2410,7 @@ block|,
 block|{
 literal|"@f2c"
 block|,
-literal|"f2c %{checksubscripts:-C} %{I2} %{onetrip} %{honorcase:-U} %{u} %{w}\         %{ANSIC:-A} %{a} %{C++}\         %{c} %{E} %{ec} %{ext} %{f} %{72} %{g} %{h} %{i2} %{kr} %{krd}\         %{P} %{p} %{r} %{r8} %{s} %{w8} %{z} %{N*}\         %i %{!pipe: -o %g.c} %{pipe:-o -}|\n"
+literal|"f2c %{checksubscripts:-C} %{I2} %{onetrip} %{honorcase:-U} %{u} %{w}\         %{ANSIC:-A} %{a} %{C++}\         %{c} %{E} %{ec} %{ext} %{f} %{72} %{g} %{h} %{i2} %{kr}\         %{P} %{p} %{r} %{r8} %{s} %{w8} %{z} %{N*}\         %i %{!pipe: -o %g.c} %{pipe:-o -}|\n"
 block|,
 literal|"cpp -lang-c %{nostdinc*} %{C} %{v} %{A*} %{I*} %{P} %I\ 	%{C:%{!E:%eGNU C does not support -C without using -E}}\ 	%{M} %{MM} %{MD:-MD %b.d} %{MMD:-MMD %b.d} %{MG}\         -undef -D__GNUC__=%v1 -D__GNUC_MINOR__=%v2\ 	%{ansi:-trigraphs -$ -D__STRICT_ANSI__}\ 	%{!undef:%{!ansi:%p} %P} %{trigraphs} \         %c %{O*:%{!O0:-D__OPTIMIZE__}} %{traditional} %{ftraditional:-traditional}\         %{traditional-cpp:-traditional}\ 	%{g*} %{W*} %{w} %{pedantic*} %{H} %{d*} %C %{D*} %{U*} %{i*}\         %{pipe:-} %{!pipe:%g.c} %{!M:%{!MM:%{!E:%{!pipe:%g.i}}}}%{E:%W{o*}}%{M:%W{o*}}%{MM:%W{o*}} |\n"
 block|,

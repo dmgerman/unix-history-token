@@ -46,13 +46,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/fcntl.h>
+file|<sys/ioctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
+file|<sys/tty.h>
 end_include
 
 begin_include
@@ -61,10 +61,38 @@ directive|include
 file|<sys/time.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|KERNEL
+end_define
+
+begin_comment
+comment|/* XXX - FREAD and FWRITE ifdef'd KERNEL*/
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/fcntl.h>
+end_include
+
+begin_undef
+undef|#
+directive|undef
+name|KERNEL
+end_undef
+
 begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_include
@@ -288,9 +316,6 @@ name|tcgetpgrp
 parameter_list|(
 name|fd
 parameter_list|)
-name|int
-name|fd
-decl_stmt|;
 block|{
 name|int
 name|s
@@ -573,8 +598,6 @@ operator|->
 name|c_cflag
 operator||=
 name|CS8
-operator||
-name|CREAD
 expr_stmt|;
 name|t
 operator|->
@@ -597,19 +620,24 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-name|int
+begin_macro
 name|tcsendbreak
-parameter_list|(
-name|fd
-parameter_list|,
-name|len
-parameter_list|)
+argument_list|(
+argument|fd
+argument_list|,
+argument|len
+argument_list|)
+end_macro
+
+begin_decl_stmt
 name|int
 name|fd
 decl_stmt|,
 name|len
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 name|struct
 name|timeval
@@ -690,17 +718,22 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
+end_block
 
-begin_function
-name|int
+begin_macro
 name|tcdrain
-parameter_list|(
-name|fd
-parameter_list|)
+argument_list|(
+argument|fd
+argument_list|)
+end_macro
+
+begin_decl_stmt
 name|int
 name|fd
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 return|return
 operator|(
@@ -715,21 +748,26 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
+end_block
 
-begin_function
-name|int
+begin_macro
 name|tcflush
-parameter_list|(
-name|fd
-parameter_list|,
-name|which
-parameter_list|)
+argument_list|(
+argument|fd
+argument_list|,
+argument|which
+argument_list|)
+end_macro
+
+begin_decl_stmt
 name|int
 name|fd
 decl_stmt|,
 name|which
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 name|int
 name|com
@@ -791,21 +829,26 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
+end_block
 
-begin_function
-name|int
+begin_macro
 name|tcflow
-parameter_list|(
-name|fd
-parameter_list|,
-name|action
-parameter_list|)
+argument_list|(
+argument|fd
+argument_list|,
+argument|action
+argument_list|)
+end_macro
+
+begin_decl_stmt
 name|int
 name|fd
 decl_stmt|,
 name|action
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 name|struct
 name|termios
@@ -936,7 +979,7 @@ return|;
 block|}
 comment|/* NOTREACHED */
 block|}
-end_function
+end_block
 
 end_unit
 

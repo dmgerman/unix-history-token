@@ -116,12 +116,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<locale.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"pax.h"
 end_include
 
@@ -489,16 +483,6 @@ decl_stmt|;
 endif|#
 directive|endif
 block|{
-operator|(
-name|void
-operator|)
-name|setlocale
-argument_list|(
-name|LC_TIME
-argument_list|,
-literal|""
-argument_list|)
-expr_stmt|;
 comment|/* 	 * parse options, determine operational mode, general init 	 */
 name|options
 argument_list|(

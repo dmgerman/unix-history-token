@@ -116,12 +116,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<locale.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"extern.h"
 end_include
 
@@ -249,16 +243,6 @@ decl_stmt|;
 name|int
 name|set_timezone
 decl_stmt|;
-operator|(
-name|void
-operator|)
-name|setlocale
-argument_list|(
-name|LC_TIME
-argument_list|,
-literal|""
-argument_list|)
-expr_stmt|;
 name|tz
 operator|.
 name|tz_dsttime
@@ -895,12 +879,8 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"nonexistent time"
-argument_list|)
+name|badformat
+argument_list|()
 expr_stmt|;
 comment|/* set the time */
 if|if

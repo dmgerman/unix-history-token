@@ -60,18 +60,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -211,7 +199,7 @@ end_define
 
 begin_function_decl
 specifier|static
-name|void
+name|bool_t
 name|marshal_new_auth
 parameter_list|()
 function_decl|;
@@ -231,7 +219,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|void
+name|int
 name|set_rpc_maxgrouplist
 parameter_list|(
 name|int
@@ -1405,7 +1393,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|bool_t
 name|marshal_new_auth
 parameter_list|(
 name|auth

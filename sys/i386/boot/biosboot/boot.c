@@ -226,7 +226,7 @@ expr_stmt|;
 name|gateA20
 argument_list|()
 expr_stmt|;
-comment|/***************************************************************\ 	* As a default set it to the first partition of the boot	* 	* floppy or hard drive						* 	* Define BOOT_HD to boot sd0 when wd0 is also installed		* 	\***************************************************************/
+comment|/***************************************************************\ 	* As a default set it to the first partition of the boot	* 	* floppy or hard drive						* 	* Define BOOT_HT to boot sd0 when wd0 is also installed		* 	\***************************************************************/
 name|part
 operator|=
 literal|0

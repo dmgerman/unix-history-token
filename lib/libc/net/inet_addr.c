@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ++Copyright++ 1983, 1990, 1993  * -  * Copyright (c) 1983, 1990, 1993  *    The Regents of the University of California.  All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  * 	This product includes software developed by the University of  * 	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  * -  * Portions Copyright (c) 1993 by Digital Equipment Corporation.  *   * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies, and that  * the name of Digital Equipment Corporation not be used in advertising or  * publicity pertaining to distribution of the document or software without  * specific, written prior permission.  *   * THE SOFTWARE IS PROVIDED "AS IS" AND DIGITAL EQUIPMENT CORP. DISCLAIMS ALL  * WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS.   IN NO EVENT SHALL DIGITAL EQUIPMENT  * CORPORATION BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS  * SOFTWARE.  * -  * --Copyright--  */
+comment|/*  * Copyright (c) 1983, 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_if
@@ -25,16 +25,6 @@ name|sccsid
 index|[]
 init|=
 literal|"@(#)inet_addr.c	8.1 (Berkeley) 6/17/93"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -118,7 +108,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * Check whether "cp" is a valid ascii representation  * of an Internet address and convert to a binary address.  * Returns 1 if the address is valid, 0 if not.  * This replaces inet_addr, the return value from which  * cannot distinguish between failure and a local broadcast address.  */
+comment|/*  * Check whether "cp" is a valid ascii representation  * of an Internet address and convert to a binary address.  * Returns 1 if the address is valid, 0 if not.  * This replaces inet_addr, the return value from which  * cannot distinguish between failure and a local broadcast address.  */
 end_comment
 
 begin_function
@@ -168,31 +158,13 @@ name|pp
 init|=
 name|parts
 decl_stmt|;
-name|c
-operator|=
-operator|*
-name|cp
-expr_stmt|;
 for|for
 control|(
 init|;
 condition|;
 control|)
 block|{
-comment|/* 		 * Collect number up to ``.''. 		 * Values are specified as for C: 		 * 0x=hex, 0=octal, isdigit=decimal. 		 */
-if|if
-condition|(
-operator|!
-name|isdigit
-argument_list|(
-name|c
-argument_list|)
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+comment|/* 		 * Collect number up to ``.''. 		 * Values are specified as for C: 		 * 0x=hex, 0=octal, other=decimal. 		 */
 name|val
 operator|=
 literal|0
@@ -203,24 +175,22 @@ literal|10
 expr_stmt|;
 if|if
 condition|(
-name|c
+operator|*
+name|cp
 operator|==
 literal|'0'
 condition|)
 block|{
-name|c
-operator|=
+if|if
+condition|(
 operator|*
 operator|++
 name|cp
-expr_stmt|;
-if|if
-condition|(
-name|c
 operator|==
 literal|'x'
 operator|||
-name|c
+operator|*
+name|cp
 operator|==
 literal|'X'
 condition|)
@@ -228,11 +198,8 @@ name|base
 operator|=
 literal|16
 operator|,
-name|c
-operator|=
-operator|*
-operator|++
 name|cp
+operator|++
 expr_stmt|;
 else|else
 name|base
@@ -240,11 +207,17 @@ operator|=
 literal|8
 expr_stmt|;
 block|}
-for|for
-control|(
-init|;
-condition|;
-control|)
+while|while
+condition|(
+operator|(
+name|c
+operator|=
+operator|*
+name|cp
+operator|)
+operator|!=
+literal|'\0'
+condition|)
 block|{
 if|if
 condition|(
@@ -273,14 +246,11 @@ operator|-
 literal|'0'
 operator|)
 expr_stmt|;
-name|c
-operator|=
-operator|*
-operator|++
 name|cp
+operator|++
 expr_stmt|;
+continue|continue;
 block|}
-elseif|else
 if|if
 condition|(
 name|base
@@ -305,7 +275,7 @@ name|val
 operator|<<
 literal|4
 operator|)
-operator||
+operator|+
 operator|(
 name|c
 operator|+
@@ -323,24 +293,22 @@ literal|'A'
 operator|)
 operator|)
 expr_stmt|;
-name|c
-operator|=
-operator|*
-operator|++
 name|cp
+operator|++
 expr_stmt|;
+continue|continue;
 block|}
-else|else
 break|break;
 block|}
 if|if
 condition|(
-name|c
+operator|*
+name|cp
 operator|==
 literal|'.'
 condition|)
 block|{
-comment|/* 			 * Internet format: 			 *	a.b.c.d 			 *	a.b.c	(with c treated as 16 bits) 			 *	a.b	(with b treated as 24 bits) 			 */
+comment|/* 			 * Internet format: 			 *	a.b.c.d 			 *	a.b.c	(with c treated as 16-bits) 			 *	a.b	(with b treated as 24 bits) 			 */
 if|if
 condition|(
 name|pp
@@ -348,6 +316,10 @@ operator|>=
 name|parts
 operator|+
 literal|3
+operator|||
+name|val
+operator|>
+literal|0xff
 condition|)
 return|return
 operator|(
@@ -359,12 +331,9 @@ name|pp
 operator|++
 operator|=
 name|val
-expr_stmt|;
-name|c
-operator|=
-operator|*
-operator|++
+operator|,
 name|cp
+operator|++
 expr_stmt|;
 block|}
 else|else
@@ -373,21 +342,22 @@ block|}
 comment|/* 	 * Check for trailing characters. 	 */
 if|if
 condition|(
-name|c
-operator|!=
-literal|'\0'
+operator|*
+name|cp
 operator|&&
 operator|(
 operator|!
 name|isascii
 argument_list|(
-name|c
+operator|*
+name|cp
 argument_list|)
 operator|||
 operator|!
 name|isspace
 argument_list|(
-name|c
+operator|*
+name|cp
 argument_list|)
 operator|)
 condition|)
@@ -410,15 +380,6 @@ condition|(
 name|n
 condition|)
 block|{
-case|case
-literal|0
-case|:
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* initial nondigit */
 case|case
 literal|1
 case|:
