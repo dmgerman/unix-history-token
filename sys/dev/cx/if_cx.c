@@ -526,6 +526,28 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* If we don't have Cronyx's sppp version, we don't have fr support via sppp */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PP_FR
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PP_FR
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -10328,7 +10350,18 @@ operator|)
 condition|?
 literal|"async"
 else|:
-comment|/*(d->pp.pp_flags& PP_FR) ? "fr" :*/
+operator|(
+name|d
+operator|->
+name|pp
+operator|.
+name|pp_flags
+operator|&
+name|PP_FR
+operator|)
+condition|?
+literal|"fr"
+else|:
 operator|(
 name|d
 operator|->
@@ -10459,7 +10492,17 @@ name|data
 argument_list|)
 condition|)
 block|{
-comment|/*	                d->pp.pp_flags&= ~(PP_FR);*/
+name|d
+operator|->
+name|pp
+operator|.
+name|pp_flags
+operator|&=
+operator|~
+operator|(
+name|PP_FR
+operator|)
+expr_stmt|;
 name|d
 operator|->
 name|pp
@@ -10478,9 +10521,46 @@ name|if_flags
 operator||=
 name|PP_CISCO
 expr_stmt|;
-comment|/*	        } else if (! strcmp ("fr", (char*)data)) {*/
-comment|/*	                d->pp.pp_if.if_flags&= ~(PP_CISCO);*/
-comment|/*	                d->pp.pp_flags |= PP_FR | PP_KEEPALIVE;*/
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+literal|"fr"
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|data
+argument_list|)
+condition|)
+block|{
+name|d
+operator|->
+name|pp
+operator|.
+name|pp_if
+operator|.
+name|if_flags
+operator|&=
+operator|~
+operator|(
+name|PP_CISCO
+operator|)
+expr_stmt|;
+name|d
+operator|->
+name|pp
+operator|.
+name|pp_flags
+operator||=
+name|PP_FR
+operator||
+name|PP_KEEPALIVE
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -10506,7 +10586,8 @@ name|pp_flags
 operator|&=
 operator|~
 operator|(
-comment|/*PP_FR |*/
+name|PP_FR
+operator||
 name|PP_KEEPALIVE
 operator|)
 expr_stmt|;
@@ -10545,7 +10626,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-comment|/*(d->pp.pp_flags& PP_FR) ||*/
+operator|(
+name|d
+operator|->
+name|pp
+operator|.
+name|pp_flags
+operator|&
+name|PP_FR
+operator|)
+operator|||
 operator|(
 name|d
 operator|->
@@ -10669,7 +10759,16 @@ name|error
 return|;
 if|if
 condition|(
-comment|/*(d->pp.pp_flags& PP_FR) ||*/
+operator|(
+name|d
+operator|->
+name|pp
+operator|.
+name|pp_flags
+operator|&
+name|PP_FR
+operator|)
+operator|||
 operator|(
 name|d
 operator|->
