@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.19 (Berkeley) %G%"
+literal|"@(#)main.c	8.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2795,13 +2795,16 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"SYSTEM IDENTITY (after readcf):\n"
+literal|"SYSTEM IDENTITY (after readcf):"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t    (short domain name) $w = %s\n"
-argument_list|,
+literal|"\n\t    (short domain name) $w = "
+argument_list|)
+expr_stmt|;
+name|xputs
+argument_list|(
 name|macvalue
 argument_list|(
 literal|'w'
@@ -2812,8 +2815,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t(canonical domain name) $j = %s\n"
-argument_list|,
+literal|"\n\t(canonical domain name) $j = "
+argument_list|)
+expr_stmt|;
+name|xputs
+argument_list|(
 name|macvalue
 argument_list|(
 literal|'j'
@@ -2824,8 +2830,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t       (subdomain name) $m = %s\n"
-argument_list|,
+literal|"\n\t       (subdomain name) $m = "
+argument_list|)
+expr_stmt|;
+name|xputs
+argument_list|(
 name|macvalue
 argument_list|(
 literal|'m'
@@ -2836,14 +2845,22 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t            (node name) $k = %s\n"
-argument_list|,
+literal|"\n\t            (node name) $k = "
+argument_list|)
+expr_stmt|;
+name|xputs
+argument_list|(
 name|macvalue
 argument_list|(
 literal|'k'
 argument_list|,
 name|CurEnv
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
