@@ -12431,20 +12431,6 @@ name|sc
 operator|=
 name|arg
 expr_stmt|;
-name|DC_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|ifp
-operator|=
-operator|&
-name|sc
-operator|->
-name|arpcom
-operator|.
-name|ac_if
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -12460,14 +12446,21 @@ operator|)
 operator|==
 literal|0
 condition|)
-block|{
-name|DC_UNLOCK
+return|return ;
+name|DC_LOCK
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-return|return ;
-block|}
+name|ifp
+operator|=
+operator|&
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
+expr_stmt|;
 comment|/* Suppress unwanted interrupts */
 if|if
 condition|(
