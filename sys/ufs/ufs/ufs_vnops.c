@@ -9272,6 +9272,8 @@ literal|0
 condition|)
 block|{
 comment|/* XXX - for old fastlink support */
+return|return
+operator|(
 name|uiomove
 argument_list|(
 name|SHORTLINK
@@ -9285,10 +9287,6 @@ name|ap
 operator|->
 name|a_uio
 argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
 operator|)
 return|;
 block|}
