@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)touch.c	5.2 (Berkeley) %G%"
+literal|"@(#)touch.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -131,7 +131,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|get_header
+name|get_arobj
 argument_list|(
 name|afd
 argument_list|)

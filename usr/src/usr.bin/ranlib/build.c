@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)build.c	5.2 (Berkeley) %G%"
+literal|"@(#)build.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -249,7 +249,7 @@ name|rhead
 expr_stmt|;
 while|while
 condition|(
-name|get_header
+name|get_arobj
 argument_list|(
 name|afd
 argument_list|)
@@ -268,15 +268,9 @@ name|RANLIBMAG
 argument_list|)
 condition|)
 block|{
-name|SKIP
+name|skip_arobj
 argument_list|(
 name|afd
-argument_list|,
-name|chdr
-operator|.
-name|size
-argument_list|,
-name|archive
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -288,7 +282,7 @@ argument_list|,
 name|tfd
 argument_list|)
 expr_stmt|;
-name|put_header
+name|put_arobj
 argument_list|(
 operator|&
 name|cf
@@ -299,16 +293,6 @@ name|stat
 operator|*
 operator|)
 name|NULL
-argument_list|)
-expr_stmt|;
-name|copyfile
-argument_list|(
-operator|&
-name|cf
-argument_list|,
-name|chdr
-operator|.
-name|size
 argument_list|)
 expr_stmt|;
 block|}
@@ -366,7 +350,7 @@ operator||
 name|WPAD
 argument_list|)
 expr_stmt|;
-name|copyfile
+name|copy_ar
 argument_list|(
 operator|&
 name|cf
