@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dmf.c	6.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dmf.c	6.18 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1535,6 +1535,9 @@ argument_list|(
 name|tp
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|PORTSELECTOR
 if|if
 condition|(
 name|tp
@@ -1544,6 +1547,17 @@ operator|==
 literal|0
 condition|)
 block|{
+else|#
+directive|else
+name|tp
+operator|->
+name|t_state
+operator||=
+name|TS_HUPCLS
+expr_stmt|;
+endif|#
+directive|endif
+endif|PORTSELECTOR
 name|tp
 operator|->
 name|t_ispeed
@@ -1562,7 +1576,13 @@ name|t_flags
 operator|=
 name|IFLAGS
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|PORTSELECTOR
 block|}
+endif|#
+directive|endif
+endif|PORTSELECTOR
 name|dmfparam
 argument_list|(
 name|unit
@@ -4532,14 +4552,6 @@ block|}
 block|}
 block|}
 end_block
-
-begin_if
-if|#
-directive|if
-name|NDMF
-operator|>
-literal|0
-end_if
 
 begin_comment
 comment|/*  * dmflopen -- open the line printer port on a dmf32  */

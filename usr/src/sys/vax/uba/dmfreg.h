@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dmfreg.h	6.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dmfreg.h	6.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -58,17 +58,20 @@ block|}
 name|dmfun
 union|;
 name|short
-name|dmfl
-index|[
-literal|2
-index|]
+name|dmfl_ctrl
 decl_stmt|;
+comment|/* line printer control register */
+name|short
+name|dmfl_indrct
+decl_stmt|;
+comment|/* line printer indirect register */
 name|short
 name|dmfd
 index|[
 literal|4
 index|]
 decl_stmt|;
+comment|/* for dr11 (not implemented) */
 block|}
 struct|;
 end_struct
@@ -928,6 +931,17 @@ end_define
 
 begin_comment
 comment|/* default # of lines/page<=255 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMFL_OPTIONS
+value|((1<< 8) | (1<< 9) | (1<< 15))
+end_define
+
+begin_comment
+comment|/* auto cr, real ff, no lower to upper */
 end_comment
 
 begin_comment
