@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)acucntrl.c	5.8 (Berkeley) %G%"
+literal|"@(#)acucntrl.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,33 +52,11 @@ directive|include
 file|<sys/conf.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|BSD4_2
-end_ifdef
-
 begin_include
 include|#
 directive|include
-file|<vaxuba/ubavar.h>
+file|"/sys/vaxuba/ubavar.h"
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<sys/ubavar.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
