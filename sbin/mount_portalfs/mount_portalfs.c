@@ -33,9 +33,17 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_comment
-comment|/* static char sccsid[] = "@(#)mount_portal.c	8.6 (Berkeley) 4/26/95"; */
-end_comment
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)mount_portal.c	8.6 (Berkeley) 4/26/95";
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -44,7 +52,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mount_portal.c,v 1.11 1997/03/24 05:53:12 imp Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -72,12 +80,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/socket.h>
 end_include
 
@@ -85,6 +87,12 @@ begin_include
 include|#
 directive|include
 file|<sys/un.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
 end_include
 
 begin_include
@@ -109,12 +117,6 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
 end_include
 
 begin_include
