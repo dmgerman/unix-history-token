@@ -15,86 +15,27 @@ directive|define
 name|_SYS_ASSYM_H_
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|offsetof
-end_ifndef
-
 begin_define
 define|#
 directive|define
-name|offsetof
+name|ASSYM_ABS
 parameter_list|(
-name|t
-parameter_list|,
-name|m
+name|value
 parameter_list|)
-value|(&((t *)0)->m)
+value|((value)< 0 ? -((value) + 1) + 1ULL : (value))
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__assym
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|__assym
-parameter_list|(
-name|sym
-parameter_list|,
-name|v
-parameter_list|)
-value|unsigned long sym = (unsigned long)v
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
 directive|define
 name|ASSYM
 parameter_list|(
-name|sym
+name|name
 parameter_list|,
-name|v
+name|value
 parameter_list|)
-value|__assym(assym_##sym, v)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ASSYM_SELF
-parameter_list|(
-name|sym
-parameter_list|)
-value|ASSYM(sym, sym)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ASSYM_OFFSET
-parameter_list|(
-name|sym
-parameter_list|,
-name|s
-parameter_list|,
-name|m
-parameter_list|)
-value|ASSYM(sym, offsetof(s, m))
+define|\
+value|char name ## sign[(value)< 0 ? 1 : 0];				\ char name ## w0[ASSYM_ABS(value)& 0xFFFFU];			\ char name ## w1[(ASSYM_ABS(value)& 0xFFFF0000UL)>> 16];	\ char name ## w2[(ASSYM_ABS(value)& 0xFFFF00000000ULL)>> 32];	\ char name ## w3[(ASSYM_ABS(value)& 0xFFFF000000000000ULL)>> 48]
 end_define
 
 begin_endif
