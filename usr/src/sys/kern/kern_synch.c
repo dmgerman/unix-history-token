@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_synch.c	4.4	%G%	*/
+comment|/*	kern_synch.c	4.5	%G%	*/
 end_comment
 
 begin_include
@@ -61,6 +61,12 @@ begin_include
 include|#
 directive|include
 file|"../h/inline.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/mtpr.h"
 end_include
 
 begin_define
@@ -834,9 +840,14 @@ name|p_pri
 operator|<
 name|curpri
 condition|)
+block|{
 name|runrun
 operator|++
 expr_stmt|;
+name|aston
+argument_list|()
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|runout
@@ -1060,9 +1071,14 @@ name|p_pri
 operator|<
 name|curpri
 condition|)
+block|{
 name|runrun
 operator|++
 expr_stmt|;
+name|aston
+argument_list|()
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|runout
