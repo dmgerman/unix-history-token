@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	7.65 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_vfsops.c	7.66 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1911,6 +1911,98 @@ name|fs_nrpos
 operator|=
 literal|8
 expr_stmt|;
+end_if
+
+begin_comment
+comment|/* XXX */
+end_comment
+
+begin_if
+if|if
+condition|(
+name|fs
+operator|->
+name|fs_inodefmt
+operator|<
+name|FS_44INODEFMT
+condition|)
+block|{
+comment|/* XXX */
+name|quad_t
+name|sizepb
+init|=
+name|fs
+operator|->
+name|fs_bsize
+decl_stmt|;
+comment|/* XXX */
+comment|/* XXX */
+name|fs
+operator|->
+name|fs_maxfilesize
+operator|=
+name|fs
+operator|->
+name|fs_bsize
+operator|*
+name|NDADDR
+operator|-
+literal|1
+expr_stmt|;
+comment|/* XXX */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|NIADDR
+condition|;
+name|i
+operator|++
+control|)
+block|{
+comment|/* XXX */
+name|sizepb
+operator|*=
+name|NINDIR
+argument_list|(
+name|fs
+argument_list|)
+expr_stmt|;
+comment|/* XXX */
+name|fs
+operator|->
+name|fs_maxfilesize
+operator|+=
+name|sizepb
+expr_stmt|;
+comment|/* XXX */
+block|}
+comment|/* XXX */
+name|fs
+operator|->
+name|fs_qbmask
+operator|=
+operator|~
+name|fs
+operator|->
+name|fs_bmask
+expr_stmt|;
+comment|/* XXX */
+name|fs
+operator|->
+name|fs_qfmask
+operator|=
+operator|~
+name|fs
+operator|->
+name|fs_fmask
+expr_stmt|;
+comment|/* XXX */
+block|}
 end_if
 
 begin_comment
