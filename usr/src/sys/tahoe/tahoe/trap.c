@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trap.c	1.2	86/01/05	*/
+comment|/*	trap.c	1.3	86/01/07	*/
 end_comment
 
 begin_include
@@ -604,41 +604,70 @@ operator|=
 name|SIGTRAP
 expr_stmt|;
 break|break;
+comment|/* 	 * For T_KSPNOTVAL and T_BUSERR, can not allow spl to 	 * drop to 0 as clock could go off and we would end up 	 * doing an rei to the interrupt stack at ipl 0 (a 	 * reserved operand fault).  Instead, we allow psignal 	 * to post an ast, then return to user mode where we 	 * will reenter the kernel on the kernel's stack and 	 * can then service the signal. 	 */
 case|case
 name|T_KSPNOTVAL
 case|:
+if|if
+condition|(
+name|noproc
+condition|)
+name|panic
+argument_list|(
+literal|"ksp not valid"
+argument_list|)
+expr_stmt|;
+comment|/* fall thru... */
 case|case
 name|T_KSPNOTVAL
 operator|+
 name|USER
 case|:
-name|i
-operator|=
-name|SIGKILL
-expr_stmt|;
-comment|/* There is nothing to do but to kill the  				 * process.. */
 name|printf
 argument_list|(
-literal|"KSP NOT VALID.\n"
+literal|"pid %d: ksp not valid\n"
+argument_list|,
+name|u
+operator|.
+name|u
+operator|.
+name|_procp
+operator|->
+name|p_pid
 argument_list|)
 expr_stmt|;
-break|break;
+comment|/* must insure valid kernel stack pointer? */
+name|psignal
+argument_list|(
+name|u
+operator|.
+name|u_procp
+argument_list|,
+name|SIGKILL
+argument_list|)
+expr_stmt|;
+return|return;
 case|case
 name|T_BUSERR
 operator|+
 name|USER
 case|:
-name|i
-operator|=
-name|SIGBUS
-expr_stmt|;
 name|u
 operator|.
 name|u_code
 operator|=
 name|code
 expr_stmt|;
-break|break;
+name|psignal
+argument_list|(
+name|u
+operator|.
+name|u_procp
+argument_list|,
+name|SIGBUS
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 name|psignal
 argument_list|(
