@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)verify.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)verify.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,6 +62,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fts.h>
 end_include
 
@@ -61,19 +86,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -125,6 +144,13 @@ name|fullpath
 index|[
 name|MAXPATHLEN
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|lineno
 decl_stmt|;
 end_decl_stmt
 
@@ -278,12 +304,11 @@ name|NULL
 condition|)
 name|err
 argument_list|(
-literal|"fts_open: %s"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"line %d: fts_open"
+argument_list|,
+name|lineno
 argument_list|)
 expr_stmt|;
 name|level
@@ -364,14 +389,9 @@ case|:
 case|case
 name|FTS_NS
 case|:
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"mtree: %s: %s\n"
+literal|"%s: %s"
 argument_list|,
 name|RP
 argument_list|(
@@ -643,14 +663,9 @@ if|if
 condition|(
 name|sflag
 condition|)
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"mtree: %s checksum: %lu\n"
+literal|"%s checksum: %lu"
 argument_list|,
 name|fullpath
 argument_list|,

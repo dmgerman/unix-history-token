@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)spec.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)spec.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,19 +56,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fts.h>
+file|<ctype.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<grp.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -67,7 +74,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<fts.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<grp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
 end_include
 
 begin_include
@@ -79,7 +98,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<unistd.h>
 end_include
 
 begin_include
@@ -256,8 +275,10 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"line %d too long"
 argument_list|,
 name|lineno
@@ -371,9 +392,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
-literal|"missing field"
+literal|1
+argument_list|,
+literal|"line %d: missing field"
+argument_list|,
+name|lineno
 argument_list|)
 expr_stmt|;
 if|if
@@ -451,9 +476,13 @@ argument_list|,
 literal|'/'
 argument_list|)
 condition|)
-name|err
+name|errx
 argument_list|(
-literal|"slash character in file name"
+literal|1
+argument_list|,
+literal|"line %d: slash character in file name"
+argument_list|,
+name|lineno
 argument_list|)
 expr_stmt|;
 if|if
@@ -516,9 +545,13 @@ expr_stmt|;
 continue|continue;
 name|noparent
 label|:
-name|err
+name|errx
 argument_list|(
-literal|"no parent node"
+literal|1
+argument_list|,
+literal|"line %d: no parent node"
+argument_list|,
+name|lineno
 argument_list|)
 expr_stmt|;
 block|}
@@ -545,14 +578,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
-literal|"%s"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"calloc"
 argument_list|)
 expr_stmt|;
 operator|*
@@ -789,9 +819,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
-literal|"missing value"
+literal|1
+argument_list|,
+literal|"line %d: missing value"
+argument_list|,
+name|lineno
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -821,9 +855,13 @@ condition|(
 operator|*
 name|ep
 condition|)
-name|err
+name|errx
 argument_list|(
-literal|"invalid checksum %s"
+literal|1
+argument_list|,
+literal|"line %d: invalid checksum %s"
+argument_list|,
+name|lineno
 argument_list|,
 name|val
 argument_list|)
@@ -849,14 +887,11 @@ operator|->
 name|md5digest
 condition|)
 block|{
-name|err
+name|errx
 argument_list|(
-literal|"%s"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"strdup"
 argument_list|)
 expr_stmt|;
 block|}
@@ -883,9 +918,13 @@ condition|(
 operator|*
 name|ep
 condition|)
-name|err
+name|errx
 argument_list|(
-literal|"invalid gid %s"
+literal|1
+argument_list|,
+literal|"line %d: invalid gid %s"
+argument_list|,
+name|lineno
 argument_list|,
 name|val
 argument_list|)
@@ -907,9 +946,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
-literal|"unknown group %s"
+literal|1
+argument_list|,
+literal|"line %d: unknown group %s"
+argument_list|,
+name|lineno
 argument_list|,
 name|val
 argument_list|)
@@ -944,9 +987,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
-literal|"invalid file mode %s"
+literal|1
+argument_list|,
+literal|"line %d: invalid file mode %s"
+argument_list|,
+name|lineno
 argument_list|,
 name|val
 argument_list|)
@@ -985,9 +1032,13 @@ condition|(
 operator|*
 name|ep
 condition|)
-name|err
+name|errx
 argument_list|(
-literal|"invalid link count %s"
+literal|1
+argument_list|,
+literal|"line %d: invalid link count %s"
+argument_list|,
+name|lineno
 argument_list|,
 name|val
 argument_list|)
@@ -1015,9 +1066,13 @@ condition|(
 operator|*
 name|ep
 condition|)
-name|err
+name|errx
 argument_list|(
-literal|"invalid size %s"
+literal|1
+argument_list|,
+literal|"line %d: invalid size %s"
+argument_list|,
+name|lineno
 argument_list|,
 name|val
 argument_list|)
@@ -1041,14 +1096,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
-literal|"%s"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"strdup"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1078,9 +1130,13 @@ name|ep
 operator|!=
 literal|'.'
 condition|)
-name|err
+name|errx
 argument_list|(
-literal|"invalid time %s"
+literal|1
+argument_list|,
+literal|"line %d: invalid time %s"
+argument_list|,
+name|lineno
 argument_list|,
 name|val
 argument_list|)
@@ -1112,9 +1168,13 @@ condition|(
 operator|*
 name|ep
 condition|)
-name|err
+name|errx
 argument_list|(
-literal|"invalid time %s"
+literal|1
+argument_list|,
+literal|"line %d: invalid time %s"
+argument_list|,
+name|lineno
 argument_list|,
 name|val
 argument_list|)
@@ -1266,9 +1326,13 @@ name|F_SOCK
 expr_stmt|;
 break|break;
 default|default:
-name|err
+name|errx
 argument_list|(
-literal|"unknown file type %s"
+literal|1
+argument_list|,
+literal|"line %d: unknown file type %s"
+argument_list|,
+name|lineno
 argument_list|,
 name|val
 argument_list|)
@@ -1297,9 +1361,13 @@ condition|(
 operator|*
 name|ep
 condition|)
-name|err
+name|errx
 argument_list|(
-literal|"invalid uid %s"
+literal|1
+argument_list|,
+literal|"line %d: invalid uid %s"
+argument_list|,
+name|lineno
 argument_list|,
 name|val
 argument_list|)
@@ -1321,9 +1389,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
-literal|"unknown user %s"
+literal|1
+argument_list|,
+literal|"line %d: unknown user %s"
+argument_list|,
+name|lineno
 argument_list|,
 name|val
 argument_list|)
