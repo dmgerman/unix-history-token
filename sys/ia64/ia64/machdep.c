@@ -195,6 +195,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/uuid.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/netisr.h>
 end_include
 

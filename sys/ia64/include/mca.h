@@ -17,29 +17,6 @@ end_define
 
 begin_struct
 struct|struct
-name|mca_guid
-block|{
-name|uint32_t
-name|data1
-decl_stmt|;
-name|uint16_t
-name|data2
-decl_stmt|;
-name|uint16_t
-name|data3
-decl_stmt|;
-name|uint8_t
-name|data4
-index|[
-literal|8
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
 name|mca_record_header
 block|{
 name|uint64_t
@@ -117,10 +94,9 @@ directive|define
 name|MCA_RH_TIME_CENT
 value|7
 name|struct
-name|mca_guid
+name|uuid
 name|rh_platform
 decl_stmt|;
-comment|/* XXX not really a GUID. */
 block|}
 struct|;
 end_struct
@@ -130,8 +106,8 @@ struct|struct
 name|mca_section_header
 block|{
 name|struct
-name|mca_guid
-name|sh_guid
+name|uuid
+name|sh_uuid
 decl_stmt|;
 name|uint8_t
 name|sh_major
@@ -513,10 +489,9 @@ name|uint64_t
 name|mem_busdata
 decl_stmt|;
 name|struct
-name|mca_guid
+name|uuid
 name|mem_oem_id
 decl_stmt|;
-comment|/* XXX not really a GUID. */
 name|uint16_t
 name|mem_oem_length
 decl_stmt|;
@@ -608,10 +583,9 @@ name|uint64_t
 name|pcibus_tgtid
 decl_stmt|;
 name|struct
-name|mca_guid
+name|uuid
 name|pcibus_oem_id
 decl_stmt|;
-comment|/* XXX not really a GUID. */
 name|uint16_t
 name|pcibus_oem_length
 decl_stmt|;
@@ -728,57 +702,57 @@ end_struct
 begin_define
 define|#
 directive|define
-name|MCA_GUID_CPU
+name|MCA_UUID_CPU
 define|\
-value|{0xe429faf1,0x3cb7,0x11d4,{0xbc,0xa7,0x00,0x80,0xc7,0x3c,0x88,0x81}}
+value|{0xe429faf1,0x3cb7,0x11d4,0xbc,0xa7,{0x00,0x80,0xc7,0x3c,0x88,0x81}}
 end_define
 
 begin_define
 define|#
 directive|define
-name|MCA_GUID_MEMORY
+name|MCA_UUID_MEMORY
 define|\
-value|{0xe429faf2,0x3cb7,0x11d4,{0xbc,0xa7,0x00,0x80,0xc7,0x3c,0x88,0x81}}
+value|{0xe429faf2,0x3cb7,0x11d4,0xbc,0xa7,{0x00,0x80,0xc7,0x3c,0x88,0x81}}
 end_define
 
 begin_define
 define|#
 directive|define
-name|MCA_GUID_SEL
+name|MCA_UUID_SEL
 define|\
-value|{0xe429faf3,0x3cb7,0x11d4,{0xbc,0xa7,0x00,0x80,0xc7,0x3c,0x88,0x81}}
+value|{0xe429faf3,0x3cb7,0x11d4,0xbc,0xa7,{0x00,0x80,0xc7,0x3c,0x88,0x81}}
 end_define
 
 begin_define
 define|#
 directive|define
-name|MCA_GUID_PCI_BUS
+name|MCA_UUID_PCI_BUS
 define|\
-value|{0xe429faf4,0x3cb7,0x11d4,{0xbc,0xa7,0x00,0x80,0xc7,0x3c,0x88,0x81}}
+value|{0xe429faf4,0x3cb7,0x11d4,0xbc,0xa7,{0x00,0x80,0xc7,0x3c,0x88,0x81}}
 end_define
 
 begin_define
 define|#
 directive|define
-name|MCA_GUID_SMBIOS
+name|MCA_UUID_SMBIOS
 define|\
-value|{0xe429faf5,0x3cb7,0x11d4,{0xbc,0xa7,0x00,0x80,0xc7,0x3c,0x88,0x81}}
+value|{0xe429faf5,0x3cb7,0x11d4,0xbc,0xa7,{0x00,0x80,0xc7,0x3c,0x88,0x81}}
 end_define
 
 begin_define
 define|#
 directive|define
-name|MCA_GUID_PCI_DEV
+name|MCA_UUID_PCI_DEV
 define|\
-value|{0xe429faf6,0x3cb7,0x11d4,{0xbc,0xa7,0x00,0x80,0xc7,0x3c,0x88,0x81}}
+value|{0xe429faf6,0x3cb7,0x11d4,0xbc,0xa7,{0x00,0x80,0xc7,0x3c,0x88,0x81}}
 end_define
 
 begin_define
 define|#
 directive|define
-name|MCA_GUID_GENERIC
+name|MCA_UUID_GENERIC
 define|\
-value|{0xe429faf7,0x3cb7,0x11d4,{0xbc,0xa7,0x00,0x80,0xc7,0x3c,0x88,0x81}}
+value|{0xe429faf7,0x3cb7,0x11d4,0xbc,0xa7,{0x00,0x80,0xc7,0x3c,0x88,0x81}}
 end_define
 
 begin_ifdef
