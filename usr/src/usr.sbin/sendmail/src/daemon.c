@@ -45,7 +45,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.48 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	6.49 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,7 +60,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	6.48 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	6.49 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -126,7 +126,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  DAEMON.C -- routines to use when running as a daemon. ** **	This entire file is highly dependent on the 4.2 BSD **	interprocess communication primitives.  No attempt has **	been made to make this file portable to Version 7, **	Version 6, MPX files, etc.  If you should try such a **	thing yourself, I recommend chucking the entire file **	and starting from scratch.  Basic semantics are: ** **	getrequests() **		Opens a port and initiates a connection. **		Returns in a child.  Must set InChannel and **		OutChannel appropriately. **	clrdaemon() **		Close any open files associated with getting **		the connection; this is used when running the queue, **		etc., to avoid having extra file descriptors during **		the queue run and to avoid confusing the network **		code (if it cares). **	makeconnection(host, port, outfile, infile, usesecureport) **		Make a connection to the named host on the given **		port.  Set *outfile and *infile to the files **		appropriate for communication.  Returns zero on **		success, else an exit status describing the **		error. **	maphostname(map, hbuf, hbufsiz, avp) **		Convert the entry in hbuf into a canonical form. */
+comment|/* **  DAEMON.C -- routines to use when running as a daemon. ** **	This entire file is highly dependent on the 4.2 BSD **	interprocess communication primitives.  No attempt has **	been made to make this file portable to Version 7, **	Version 6, MPX files, etc.  If you should try such a **	thing yourself, I recommend chucking the entire file **	and starting from scratch.  Basic semantics are: ** **	getrequests() **		Opens a port and initiates a connection. **		Returns in a child.  Must set InChannel and **		OutChannel appropriately. **	clrdaemon() **		Close any open files associated with getting **		the connection; this is used when running the queue, **		etc., to avoid having extra file descriptors during **		the queue run and to avoid confusing the network **		code (if it cares). **	makeconnection(host, port, outfile, infile, usesecureport) **		Make a connection to the named host on the given **		port.  Set *outfile and *infile to the files **		appropriate for communication.  Returns zero on **		success, else an exit status describing the **		error. **	host_map_lookup(map, hbuf, avp, pstat) **		Convert the entry in hbuf into a canonical form. */
 end_comment
 
 begin_function_decl
@@ -1389,12 +1389,6 @@ name|i
 index|]
 condition|)
 block|{
-specifier|extern
-name|char
-modifier|*
-name|errstring
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|tTd
@@ -1505,12 +1499,6 @@ name|EX_TEMPFAIL
 return|;
 else|else
 block|{
-specifier|extern
-name|char
-modifier|*
-name|errstring
-parameter_list|()
-function_decl|;
 name|message
 argument_list|(
 literal|"%s"
@@ -2535,19 +2523,17 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  MAPHOSTNAME -- turn a hostname into canonical form ** **	Parameters: **		map -- a pointer to this map (unused). **		hbuf -- a buffer containing a hostname. **		hbsize -- the size of hbuf. **		avp -- unused -- for compatibility with other mapping **			functions. **		statp -- an exit status (out parameter) -- set to **			EX_TEMPFAIL if the name server is unavailable. ** **	Returns: **		The mapping, if found. **		NULL if no mapping found. ** **	Side Effects: **		Looks up the host specified in hbuf.  If it is not **		the canonical name for that host, return the canonical **		name. */
+comment|/* **  HOST_MAP_LOOKUP -- turn a hostname into canonical form ** **	Parameters: **		map -- a pointer to this map (unused). **		name -- the (presumably unqualified) hostname. **		avp -- unused -- for compatibility with other mapping **			functions. **		statp -- an exit status (out parameter) -- set to **			EX_TEMPFAIL if the name server is unavailable. ** **	Returns: **		The mapping, if found. **		NULL if no mapping found. ** **	Side Effects: **		Looks up the host specified in hbuf.  If it is not **		the canonical name for that host, return the canonical **		name. */
 end_comment
 
 begin_function
 name|char
 modifier|*
-name|maphostname
+name|host_map_lookup
 parameter_list|(
 name|map
 parameter_list|,
-name|hbuf
-parameter_list|,
-name|hbsize
+name|name
 parameter_list|,
 name|avp
 parameter_list|,
@@ -2559,10 +2545,7 @@ name|map
 decl_stmt|;
 name|char
 modifier|*
-name|hbuf
-decl_stmt|;
-name|int
-name|hbsize
+name|name
 decl_stmt|;
 name|char
 modifier|*
@@ -2595,6 +2578,13 @@ name|STAB
 modifier|*
 name|s
 decl_stmt|;
+specifier|static
+name|char
+name|hbuf
+index|[
+name|MAXNAME
+index|]
+decl_stmt|;
 specifier|extern
 name|struct
 name|hostent
@@ -2606,16 +2596,12 @@ specifier|extern
 name|int
 name|h_errno
 decl_stmt|;
-comment|/* allow room for null */
-name|hbsize
-operator|--
-expr_stmt|;
 comment|/* 	**  See if we have already looked up this name.  If so, just 	**  return it. 	*/
 name|s
 operator|=
 name|stab
 argument_list|(
-name|hbuf
+name|name
 argument_list|,
 name|ST_NAMECANON
 argument_list|,
@@ -2647,11 +2633,9 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"maphostname(%s, %d) => CACHE %s\n"
+literal|"host_map_lookup(%s) => CACHE %s\n"
 argument_list|,
-name|hbuf
-argument_list|,
-name|hbsize
+name|name
 argument_list|,
 name|s
 operator|->
@@ -2693,11 +2677,11 @@ operator|.
 name|nc_cname
 return|;
 block|}
-comment|/* 	**  If first character is a bracket, then it is an address 	**  lookup.  Address is copied into a temporary buffer to 	**  strip the brackets and to preserve hbuf if address is 	**  unknown. 	*/
+comment|/* 	**  If first character is a bracket, then it is an address 	**  lookup.  Address is copied into a temporary buffer to 	**  strip the brackets and to preserve name if address is 	**  unknown. 	*/
 if|if
 condition|(
 operator|*
-name|hbuf
+name|name
 operator|!=
 literal|'['
 condition|)
@@ -2718,11 +2702,9 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"maphostname(%s, %d) => "
+literal|"host_map_lookup(%s) => "
 argument_list|,
-name|hbuf
-argument_list|,
-name|hbsize
+name|name
 argument_list|)
 expr_stmt|;
 name|s
@@ -2734,13 +2716,26 @@ operator||=
 name|NCF_VALID
 expr_stmt|;
 comment|/* will be soon */
+operator|(
+name|void
+operator|)
+name|strcpy
+argument_list|(
+name|hbuf
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|getcanonname
 argument_list|(
 name|hbuf
 argument_list|,
-name|hbsize
+sizeof|sizeof
+name|hbuf
+operator|-
+literal|1
 argument_list|)
 condition|)
 block|{
@@ -2915,7 +2910,7 @@ name|hp
 operator|=
 name|gethostbyname
 argument_list|(
-name|hbuf
+name|name
 argument_list|)
 expr_stmt|;
 if|if
@@ -2979,7 +2974,7 @@ name|cp
 operator|=
 name|strchr
 argument_list|(
-name|hbuf
+name|name
 argument_list|,
 literal|']'
 argument_list|)
@@ -3002,7 +2997,7 @@ operator|=
 name|inet_addr
 argument_list|(
 operator|&
-name|hbuf
+name|name
 index|[
 literal|1
 index|]
@@ -3046,12 +3041,18 @@ name|hbuf
 argument_list|,
 name|MyHostName
 argument_list|,
-name|hbsize
+sizeof|sizeof
+name|hbuf
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|hbuf
 index|[
-name|hbsize
+sizeof|sizeof
+name|hbuf
+operator|-
+literal|1
 index|]
 operator|=
 literal|'\0'
@@ -3154,13 +3155,19 @@ operator|->
 name|h_name
 argument_list|)
 operator|>
-name|hbsize
+sizeof|sizeof
+name|hbuf
+operator|-
+literal|1
 condition|)
 name|hp
 operator|->
 name|h_name
 index|[
-name|hbsize
+sizeof|sizeof
+name|hbuf
+operator|-
+literal|1
 index|]
 operator|=
 literal|'\0'
@@ -3716,7 +3723,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  MAPHOSTNAME -- turn a hostname into canonical form ** **	Parameters: **		map -- a pointer to the database map. **		hbuf -- a buffer containing a hostname. **		hbsize -- size of hbuf. **		avp -- a pointer to a (cf file defined) argument vector. **		statp -- an exit status (out parameter). ** **	Returns: **		mapped host name **		FALSE otherwise. ** **	Side Effects: **		Looks up the host specified in hbuf.  If it is not **		the canonical name for that host, replace it with **		the canonical name.  If the name is unknown, or it **		is already the canonical name, leave it unchanged. */
+comment|/* **  MAPHOSTNAME -- turn a hostname into canonical form ** **	Parameters: **		map -- a pointer to the database map. **		name -- a buffer containing a hostname. **		avp -- a pointer to a (cf file defined) argument vector. **		statp -- an exit status (out parameter). ** **	Returns: **		mapped host name **		FALSE otherwise. ** **	Side Effects: **		Looks up the host specified in name.  If it is not **		the canonical name for that host, replace it with **		the canonical name.  If the name is unknown, or it **		is already the canonical name, leave it unchanged. */
 end_comment
 
 begin_comment
@@ -3726,13 +3733,11 @@ end_comment
 begin_function
 name|char
 modifier|*
-name|maphostname
+name|host_map_lookup
 parameter_list|(
 name|map
 parameter_list|,
-name|hbuf
-parameter_list|,
-name|hbsize
+name|name
 parameter_list|,
 name|avp
 parameter_list|,
@@ -3744,10 +3749,7 @@ name|map
 decl_stmt|;
 name|char
 modifier|*
-name|hbuf
-decl_stmt|;
-name|int
-name|hbsize
+name|name
 decl_stmt|;
 name|char
 modifier|*
@@ -3769,7 +3771,7 @@ name|hp
 operator|=
 name|gethostbyname
 argument_list|(
-name|hbuf
+name|name
 argument_list|)
 expr_stmt|;
 if|if

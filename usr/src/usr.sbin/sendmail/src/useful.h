@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)useful.h	6.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)useful.h	6.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -8,65 +8,6 @@ include|#
 directive|include
 file|<sys/types.h>
 end_include
-
-begin_comment
-comment|/* support for ANSI prototypes (or not, as the case may be) */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__P
-end_ifndef
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__STDC__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|_FORGIVING_CC_
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|__P
-parameter_list|(
-name|protos
-parameter_list|)
-value|protos
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|__P
-parameter_list|(
-name|protos
-parameter_list|)
-value|()
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* support for bool type */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	6.63 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	6.64 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	6.63		%G%"
+literal|"@(#)sendmail.h	6.64		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1986,13 +1986,6 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|ALIASCLASS
-value|struct _aliasclass
-end_define
-
 begin_escape
 end_escape
 
@@ -2335,6 +2328,11 @@ modifier|*
 name|map_class
 decl_stmt|;
 comment|/* the class of this map */
+name|char
+modifier|*
+name|map_mname
+decl_stmt|;
+comment|/* name of this map */
 name|int
 name|map_flags
 decl_stmt|;
@@ -2346,9 +2344,14 @@ decl_stmt|;
 comment|/* the (nominal) filename */
 name|void
 modifier|*
-name|map_db
+name|map_db1
 decl_stmt|;
 comment|/* the open database ptr */
+name|void
+modifier|*
+name|map_db2
+decl_stmt|;
+comment|/* an "extra" database pointer */
 name|char
 modifier|*
 name|map_app
@@ -2364,12 +2367,6 @@ modifier|*
 name|map_rebuild
 decl_stmt|;
 comment|/* program to run to do auto-rebuild */
-name|char
-modifier|*
-modifier|*
-name|map_deplist
-decl_stmt|;
-comment|/* dependency list */
 block|}
 end_block
 
@@ -2385,7 +2382,7 @@ begin_define
 define|#
 directive|define
 name|MF_VALID
-value|00001
+value|0x0001
 end_define
 
 begin_comment
@@ -2396,7 +2393,7 @@ begin_define
 define|#
 directive|define
 name|MF_INCLNULL
-value|00002
+value|0x0002
 end_define
 
 begin_comment
@@ -2407,7 +2404,7 @@ begin_define
 define|#
 directive|define
 name|MF_OPTIONAL
-value|00004
+value|0x0004
 end_define
 
 begin_comment
@@ -2418,7 +2415,7 @@ begin_define
 define|#
 directive|define
 name|MF_NOFOLDCASE
-value|00010
+value|0x0008
 end_define
 
 begin_comment
@@ -2429,11 +2426,55 @@ begin_define
 define|#
 directive|define
 name|MF_MATCHONLY
-value|00020
+value|0x0010
 end_define
 
 begin_comment
 comment|/* don't use the map value */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MF_OPEN
+value|0x0020
+end_define
+
+begin_comment
+comment|/* this entry is open */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MF_WRITABLE
+value|0x0040
+end_define
+
+begin_comment
+comment|/* open for writing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MF_IMPL_HASH
+value|0x1000
+end_define
+
+begin_comment
+comment|/* implicit: underlying hash database */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MF_IMPL_NDBM
+value|0x2000
+end_define
+
+begin_comment
+comment|/* implicit: underlying NDBM database */
 end_comment
 
 begin_comment
@@ -2446,9 +2487,19 @@ end_macro
 
 begin_block
 block|{
+name|char
+modifier|*
+name|map_cname
+decl_stmt|;
+comment|/* name of this map class */
+name|char
+modifier|*
+name|map_ext
+decl_stmt|;
+comment|/* extension for database file */
 name|bool
 argument_list|(
-argument|*map_init
+argument|*map_parse
 argument_list|)
 name|__P
 argument_list|(
@@ -2458,13 +2509,10 @@ operator|*
 operator|,
 name|char
 operator|*
-operator|,
-name|char
-operator|*
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* initialization function */
+comment|/* argument parsing function */
 name|char
 operator|*
 operator|(
@@ -2480,8 +2528,6 @@ operator|,
 name|char
 operator|*
 operator|,
-name|int
-operator|,
 name|char
 operator|*
 operator|*
@@ -2492,6 +2538,71 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* lookup function */
+name|void
+argument_list|(
+argument|*map_store
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|MAP
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* store function */
+name|void
+argument_list|(
+argument|*map_rebuild
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|MAP
+operator|*
+operator|,
+name|FILE
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* rebuild function */
+name|bool
+argument_list|(
+argument|*map_open
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|MAP
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* open function */
+name|void
+argument_list|(
+argument|*map_close
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|MAP
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* close function */
 block|}
 end_block
 
@@ -2547,6 +2658,7 @@ name|sv_alias
 decl_stmt|;
 comment|/* alias */
 name|MAPCLASS
+modifier|*
 name|sv_mapclass
 decl_stmt|;
 comment|/* mapping function class */
@@ -2567,11 +2679,6 @@ name|NAMECANON
 name|sv_namecanon
 decl_stmt|;
 comment|/* canonical name cache */
-name|ALIASCLASS
-modifier|*
-name|sv_aliasclass
-decl_stmt|;
-comment|/* alias class (type) */
 block|}
 name|s_value
 union|;
@@ -2688,17 +2795,6 @@ end_define
 
 begin_comment
 comment|/* cached canonical name */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ST_ALIASCLASS
-value|9
-end_define
-
-begin_comment
-comment|/* alias class */
 end_comment
 
 begin_define
@@ -4549,6 +4645,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|errstring

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	6.17 (Berkeley) %G%"
+literal|"@(#)err.c	6.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1046,12 +1046,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-specifier|extern
-name|char
-modifier|*
-name|errstring
-parameter_list|()
-function_decl|;
 operator|(
 name|void
 operator|)
@@ -1115,6 +1109,7 @@ comment|/* **  ERRSTRING -- return string description of error code ** **	Parame
 end_comment
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|errstring
@@ -1126,8 +1121,10 @@ name|errno
 decl_stmt|;
 block|{
 specifier|extern
+specifier|const
 name|char
 modifier|*
+specifier|const
 name|sys_errlist
 index|[]
 decl_stmt|;

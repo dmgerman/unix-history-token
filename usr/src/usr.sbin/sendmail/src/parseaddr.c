@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	6.52 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	6.53 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7679,16 +7679,14 @@ return|return
 name|TRUE
 return|;
 block|}
-comment|/* **  DEQUOTE_MAP -- unquote an address ** **	Parameters: **		map -- the internal map structure (ignored). **		buf -- the buffer to dequote. **		bufsiz -- the size of that buffer. **		av -- arguments (ignored). **		statp -- pointer to status out-parameter. ** **	Returns: **		NULL -- if there were no quotes, or if the resulting **			unquoted buffer would not be acceptable to prescan. **		else -- The dequoted buffer. */
+comment|/* **  DEQUOTE_MAP -- unquote an address ** **	Parameters: **		map -- the internal map structure (ignored). **		name -- the name to dequote. **		av -- arguments (ignored). **		statp -- pointer to status out-parameter. ** **	Returns: **		NULL -- if there were no quotes, or if the resulting **			unquoted buffer would not be acceptable to prescan. **		else -- The dequoted buffer. */
 name|char
 modifier|*
 name|dequote_map
 parameter_list|(
 name|map
 parameter_list|,
-name|buf
-parameter_list|,
-name|bufsiz
+name|name
 parameter_list|,
 name|av
 parameter_list|,
@@ -7699,11 +7697,8 @@ modifier|*
 name|map
 decl_stmt|;
 name|char
-name|buf
-index|[]
-decl_stmt|;
-name|int
-name|bufsiz
+modifier|*
+name|name
 decl_stmt|;
 name|char
 modifier|*
@@ -7777,7 +7772,7 @@ name|p
 operator|=
 name|q
 operator|=
-name|buf
+name|name
 init|;
 operator|(
 name|c
@@ -7943,7 +7938,7 @@ operator|=
 literal|'\0'
 expr_stmt|;
 return|return
-name|buf
+name|name
 return|;
 block|}
 end_function
