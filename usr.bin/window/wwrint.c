@@ -75,6 +75,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_comment
 comment|/*  * Tty input interrupt handler.  * (1) Read input into buffer (wwib*).  * (2) Set the interrupt flag if anything is read.  * Currently, the last is used to get out of the blocking  * select() in wwiomux().  * To avoid race conditions, we only modify wwibq in here, except  * when the buffer is empty; and everywhere else, we only change wwibp.  * It should be completely safe.  */
 end_comment
@@ -136,7 +142,7 @@ name|n
 operator|=
 name|read
 argument_list|(
-literal|0
+name|STDIN_FILENO
 argument_list|,
 name|wwibq
 argument_list|,

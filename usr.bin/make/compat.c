@@ -81,6 +81,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"make.h"
 end_include
 
@@ -1070,7 +1076,7 @@ name|void
 operator|)
 name|write
 argument_list|(
-literal|2
+name|STDERR_FILENO
 argument_list|,
 name|av
 index|[
@@ -1091,7 +1097,7 @@ name|void
 operator|)
 name|write
 argument_list|(
-literal|2
+name|STDERR_FILENO
 argument_list|,
 literal|":"
 argument_list|,
@@ -1103,7 +1109,7 @@ name|void
 operator|)
 name|write
 argument_list|(
-literal|2
+name|STDERR_FILENO
 argument_list|,
 name|strerror
 argument_list|(
@@ -1124,7 +1130,7 @@ name|void
 operator|)
 name|write
 argument_list|(
-literal|2
+name|STDERR_FILENO
 argument_list|,
 literal|"\n"
 argument_list|,

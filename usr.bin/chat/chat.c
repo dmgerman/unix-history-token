@@ -3981,7 +3981,7 @@ argument_list|)
 expr_stmt|;
 name|write
 argument_list|(
-literal|2
+name|STDERR_FILENO
 argument_list|,
 name|s
 argument_list|,
@@ -4638,7 +4638,7 @@ name|status
 operator|=
 name|read
 argument_list|(
-literal|0
+name|STDIN_FILENO
 argument_list|,
 operator|&
 name|c
@@ -4763,7 +4763,7 @@ name|status
 operator|=
 name|write
 argument_list|(
-literal|1
+name|STDOUT_FILENO
 argument_list|,
 operator|&
 name|ch
@@ -5136,7 +5136,7 @@ literal|'\n'
 case|:
 name|write
 argument_list|(
-literal|2
+name|STDERR_FILENO
 argument_list|,
 literal|"\n"
 argument_list|,
@@ -5158,7 +5158,7 @@ argument_list|)
 expr_stmt|;
 name|write
 argument_list|(
-literal|2
+name|STDERR_FILENO
 argument_list|,
 name|s
 argument_list|,

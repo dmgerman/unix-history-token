@@ -1231,7 +1231,7 @@ name|void
 operator|)
 name|write
 argument_list|(
-literal|2
+name|STDERR_FILENO
 argument_list|,
 literal|"\0"
 argument_list|,
@@ -1857,7 +1857,7 @@ name|void
 operator|)
 name|write
 argument_list|(
-literal|2
+name|STDERR_FILENO
 argument_list|,
 name|buf
 argument_list|,
@@ -1898,7 +1898,7 @@ if|if
 condition|(
 name|read
 argument_list|(
-literal|0
+name|STDIN_FILENO
 argument_list|,
 operator|&
 name|c

@@ -11,11 +11,12 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)remcap.c	8.1 (Berkeley) 6/6/93"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,10 +24,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
 
 begin_comment
 comment|/*  * remcap - routines for dealing with the remote host data base  *  * derived from termcap  */
@@ -54,6 +51,12 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -407,7 +410,7 @@ condition|)
 block|{
 name|write
 argument_list|(
-literal|2
+name|STDERR_FILENO
 argument_list|,
 literal|"Remcap entry too long\n"
 argument_list|,
@@ -716,7 +719,7 @@ condition|)
 block|{
 name|write
 argument_list|(
-literal|2
+name|STDERR_FILENO
 argument_list|,
 literal|"Remcap entry too long\n"
 argument_list|,
@@ -837,7 +840,7 @@ condition|)
 block|{
 name|write
 argument_list|(
-literal|2
+name|STDERR_FILENO
 argument_list|,
 literal|"Bad remcap entry\n"
 argument_list|,
@@ -916,7 +919,7 @@ condition|)
 block|{
 name|write
 argument_list|(
-literal|2
+name|STDERR_FILENO
 argument_list|,
 literal|"Infinite tc= loop\n"
 argument_list|,
@@ -1013,7 +1016,7 @@ condition|)
 block|{
 name|write
 argument_list|(
-literal|2
+name|STDERR_FILENO
 argument_list|,
 literal|"Remcap entry too long\n"
 argument_list|,

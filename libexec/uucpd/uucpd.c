@@ -1021,7 +1021,7 @@ if|if
 condition|(
 name|read
 argument_list|(
-literal|0
+name|STDIN_FILENO
 argument_list|,
 operator|&
 name|c

@@ -382,7 +382,7 @@ if|if
 condition|(
 name|read
 argument_list|(
-literal|0
+name|STDIN_FILENO
 argument_list|,
 operator|&
 name|c
@@ -603,7 +603,7 @@ name|cc
 operator|=
 name|read
 argument_list|(
-literal|0
+name|STDIN_FILENO
 argument_list|,
 operator|&
 name|record
@@ -726,7 +726,7 @@ name|void
 operator|)
 name|write
 argument_list|(
-literal|1
+name|STDOUT_FILENO
 argument_list|,
 name|resp
 argument_list|,
@@ -741,7 +741,7 @@ name|void
 operator|)
 name|write
 argument_list|(
-literal|1
+name|STDOUT_FILENO
 argument_list|,
 name|record
 argument_list|,
@@ -897,7 +897,7 @@ name|void
 operator|)
 name|write
 argument_list|(
-literal|1
+name|STDOUT_FILENO
 argument_list|,
 name|resp
 argument_list|,
@@ -912,7 +912,7 @@ name|void
 operator|)
 name|write
 argument_list|(
-literal|1
+name|STDOUT_FILENO
 argument_list|,
 operator|(
 name|char
@@ -991,7 +991,7 @@ name|void
 operator|)
 name|write
 argument_list|(
-literal|1
+name|STDOUT_FILENO
 argument_list|,
 name|resp
 argument_list|,
@@ -1055,7 +1055,7 @@ if|if
 condition|(
 name|read
 argument_list|(
-literal|0
+name|STDIN_FILENO
 argument_list|,
 name|cp
 operator|+
@@ -1246,7 +1246,7 @@ name|void
 operator|)
 name|write
 argument_list|(
-literal|1
+name|STDOUT_FILENO
 argument_list|,
 name|resp
 argument_list|,

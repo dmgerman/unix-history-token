@@ -7838,7 +7838,7 @@ name|amt_read
 operator|=
 name|read
 argument_list|(
-literal|0
+name|STDIN_FILENO
 argument_list|,
 name|buf_ptr
 argument_list|,

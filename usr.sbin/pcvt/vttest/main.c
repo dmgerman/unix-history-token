@@ -355,6 +355,10 @@ name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|onbrk
 argument_list|)
 expr_stmt|;
@@ -362,6 +366,10 @@ name|signal
 argument_list|(
 name|SIGTERM
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|onterm
 argument_list|)
 expr_stmt|;
@@ -12898,6 +12906,10 @@ name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|onbrk
 argument_list|)
 expr_stmt|;
@@ -12931,6 +12943,10 @@ name|signal
 argument_list|(
 name|SIGTERM
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
 name|onterm
 argument_list|)
 expr_stmt|;
@@ -13000,7 +13016,7 @@ do|do
 block|{
 name|read
 argument_list|(
-literal|0
+name|STDIN_FILENO
 argument_list|,
 operator|&
 name|ch

@@ -623,7 +623,7 @@ condition|)
 block|{
 name|write
 argument_list|(
-literal|2
+name|STDERR_FILENO
 argument_list|,
 literal|"Remcap entry too long\n"
 argument_list|,
@@ -738,7 +738,7 @@ condition|)
 block|{
 name|write
 argument_list|(
-literal|2
+name|STDERR_FILENO
 argument_list|,
 literal|"Bad remcap entry\n"
 argument_list|,
@@ -817,7 +817,7 @@ condition|)
 block|{
 name|write
 argument_list|(
-literal|2
+name|STDERR_FILENO
 argument_list|,
 literal|"Infinite tc= loop\n"
 argument_list|,
@@ -884,7 +884,7 @@ condition|)
 block|{
 name|write
 argument_list|(
-literal|2
+name|STDERR_FILENO
 argument_list|,
 literal|"Remcap entry too long\n"
 argument_list|,

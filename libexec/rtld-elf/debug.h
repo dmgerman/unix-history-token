@@ -144,7 +144,7 @@ name|msg
 parameter_list|(
 name|s
 parameter_list|)
-value|write(1, s, strlen(s))
+value|write(STDOUT_FILENO, s, strlen(s))
 end_define
 
 begin_define

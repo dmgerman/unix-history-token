@@ -53,6 +53,12 @@ directive|include
 file|<errno.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_comment
 comment|/*  * tip  *  * lower fork of tip -- handles passive side  *  reading from the remote host  */
 end_comment
@@ -615,7 +621,7 @@ if|if
 condition|(
 name|write
 argument_list|(
-literal|1
+name|STDOUT_FILENO
 argument_list|,
 name|buf
 argument_list|,

@@ -12937,7 +12937,7 @@ return|return
 operator|(
 name|read
 argument_list|(
-literal|0
+name|STDIN_FILENO
 argument_list|,
 operator|&
 name|temp
@@ -13030,7 +13030,7 @@ index|]
 else|:
 name|read
 argument_list|(
-literal|0
+name|STDIN_FILENO
 argument_list|,
 operator|&
 name|temp
@@ -13068,7 +13068,7 @@ else|:
 operator|(
 name|read
 argument_list|(
-literal|0
+name|STDIN_FILENO
 argument_list|,
 operator|&
 name|temp
@@ -13139,7 +13139,7 @@ index|]
 else|:
 name|read
 argument_list|(
-literal|0
+name|STDIN_FILENO
 argument_list|,
 operator|&
 name|temp

@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"talk.h"
 end_include
 
@@ -304,7 +310,7 @@ name|nb
 operator|=
 name|read
 argument_list|(
-literal|0
+name|STDIN_FILENO
 argument_list|,
 name|buf
 argument_list|,

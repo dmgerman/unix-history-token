@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"acucommon.h"
 end_include
 
@@ -3520,7 +3526,7 @@ condition|)
 return|return;
 name|write
 argument_list|(
-literal|1
+name|STDOUT_FILENO
 argument_list|,
 name|buf
 argument_list|,

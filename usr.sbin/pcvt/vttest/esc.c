@@ -2,8 +2,36 @@ begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"header.h"
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$FreeBSD$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|println
@@ -1067,7 +1095,7 @@ literal|1
 expr_stmt|;
 name|read
 argument_list|(
-literal|0
+name|STDIN_FILENO
 argument_list|,
 operator|&
 name|ch
@@ -1342,7 +1370,7 @@ condition|)
 block|{
 name|read
 argument_list|(
-literal|0
+name|STDIN_FILENO
 argument_list|,
 name|result
 operator|+
@@ -1369,7 +1397,7 @@ while|while
 condition|(
 name|read
 argument_list|(
-literal|2
+name|STDERR_FILENO
 argument_list|,
 name|result
 operator|+
@@ -1417,7 +1445,7 @@ condition|)
 block|{
 name|read
 argument_list|(
-literal|0
+name|STDIN_FILENO
 argument_list|,
 name|result
 operator|+
@@ -1909,9 +1937,7 @@ directive|ifdef
 name|XENIX
 argument|while(rdchk(
 literal|0
-argument|)) read(
-literal|0
-argument|,&val,
+argument|)) read(STDIN_FILENO,&val,
 literal|1
 argument|);
 else|#
@@ -1919,9 +1945,7 @@ directive|else
 ifdef|#
 directive|ifdef
 name|SIII
-argument|while(read(
-literal|2
-argument|,&val,
+argument|while(read(STDERR_FILENO,&val,
 literal|1
 argument|));
 else|#
@@ -1930,9 +1954,7 @@ argument|long l1;   ioctl (
 literal|0
 argument|, FIONREAD,&l1);   while(l1-->
 literal|0L
-argument|) read(
-literal|0
-argument|,&val,
+argument|) read(STDIN_FILENO,&val,
 literal|1
 argument|);
 endif|#

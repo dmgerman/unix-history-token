@@ -225,7 +225,7 @@ name|void
 operator|)
 name|write
 argument_list|(
-literal|1
+name|STDOUT_FILENO
 argument_list|,
 name|MSG1
 argument_list|,
@@ -650,7 +650,7 @@ if|if
 condition|(
 name|write
 argument_list|(
-literal|1
+name|STDOUT_FILENO
 argument_list|,
 name|MSG2
 argument_list|,
@@ -705,7 +705,7 @@ if|if
 condition|(
 name|write
 argument_list|(
-literal|1
+name|STDOUT_FILENO
 argument_list|,
 name|MSG3
 argument_list|,
@@ -757,7 +757,7 @@ if|if
 condition|(
 name|write
 argument_list|(
-literal|1
+name|STDOUT_FILENO
 argument_list|,
 name|MSG4
 argument_list|,
@@ -791,7 +791,7 @@ name|void
 operator|)
 name|write
 argument_list|(
-literal|1
+name|STDOUT_FILENO
 argument_list|,
 name|MSG5
 argument_list|,

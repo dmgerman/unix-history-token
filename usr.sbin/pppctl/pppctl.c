@@ -579,7 +579,7 @@ operator|++
 expr_stmt|;
 name|write
 argument_list|(
-literal|1
+name|STDOUT_FILENO
 argument_list|,
 name|Buffer
 argument_list|,
@@ -696,7 +696,7 @@ name|REC_VERBOSE
 condition|)
 name|write
 argument_list|(
-literal|1
+name|STDOUT_FILENO
 argument_list|,
 name|Buffer
 argument_list|,
@@ -806,7 +806,7 @@ literal|1
 expr_stmt|;
 name|write
 argument_list|(
-literal|1
+name|STDOUT_FILENO
 argument_list|,
 name|Buffer
 argument_list|,
@@ -859,7 +859,7 @@ name|len
 condition|)
 name|write
 argument_list|(
-literal|1
+name|STDOUT_FILENO
 argument_list|,
 name|Buffer
 argument_list|,
@@ -979,7 +979,7 @@ literal|0
 condition|)
 name|write
 argument_list|(
-literal|1
+name|STDOUT_FILENO
 argument_list|,
 name|buf
 argument_list|,
@@ -2933,7 +2933,7 @@ name|verbose
 condition|)
 name|write
 argument_list|(
-literal|1
+name|STDOUT_FILENO
 argument_list|,
 name|Buffer
 argument_list|,
@@ -3002,7 +3002,7 @@ name|verbose
 condition|)
 name|write
 argument_list|(
-literal|1
+name|STDOUT_FILENO
 argument_list|,
 literal|"quit\n"
 argument_list|,

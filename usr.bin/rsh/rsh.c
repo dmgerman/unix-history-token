@@ -1982,7 +1982,7 @@ name|void
 operator|)
 name|write
 argument_list|(
-literal|2
+name|STDERR_FILENO
 argument_list|,
 name|buf
 argument_list|,
@@ -2079,7 +2079,7 @@ name|void
 operator|)
 name|write
 argument_list|(
-literal|1
+name|STDOUT_FILENO
 argument_list|,
 name|buf
 argument_list|,

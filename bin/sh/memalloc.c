@@ -448,7 +448,7 @@ block|{
 comment|/*DEBUG */
 name|write
 argument_list|(
-literal|2
+name|STDERR_FILENO
 argument_list|,
 literal|"stunalloc\n"
 argument_list|,

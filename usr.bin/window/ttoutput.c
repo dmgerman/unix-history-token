@@ -56,6 +56,12 @@ directive|include
 file|<errno.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_comment
 comment|/*  * Buffered output package.  * We need this because stdio fails on non-blocking writes.  */
 end_comment
@@ -143,7 +149,7 @@ name|n
 operator|=
 name|write
 argument_list|(
-literal|1
+name|STDOUT_FILENO
 argument_list|,
 name|p
 argument_list|,
