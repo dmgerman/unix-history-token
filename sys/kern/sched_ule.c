@@ -283,6 +283,11 @@ block|{
 name|int
 name|skg_slptime
 decl_stmt|;
+comment|/* Number of ticks we vol. slept */
+name|int
+name|skg_runtime
+decl_stmt|;
+comment|/* Number of ticks we were running */
 block|}
 struct|;
 end_struct
@@ -292,6 +297,13 @@ define|#
 directive|define
 name|kg_slptime
 value|kg_sched->skg_slptime
+end_define
+
+begin_define
+define|#
+directive|define
+name|kg_runtime
+value|kg_sched->skg_runtime
 end_define
 
 begin_struct
@@ -404,6 +416,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SCHED_PRI_RANGE
+value|(PRI_MAX_TIMESHARE - PRI_MIN_TIMESHARE + 1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SCHED_PRI_NRESV
 value|40
 end_define
@@ -411,30 +430,81 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCHED_PRI_RANGE
-value|((PRI_MAX_TIMESHARE - PRI_MIN_TIMESHARE + 1) - \     SCHED_PRI_NRESV)
+name|SCHED_PRI_BASE
+value|(SCHED_PRI_NRESV / 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCHED_PRI_DYN
+value|(SCHED_PRI_RANGE - SCHED_PRI_NRESV)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCHED_PRI_DYN_HALF
+value|(SCHED_PRI_DYN / 2)
 end_define
 
 begin_comment
-comment|/*  * These determine how sleep time effects the priority of a process.  *  * SLP_MAX:	Maximum amount of accrued sleep time.  * SLP_SCALE:	Scale the number of ticks slept across the dynamic priority  *		range.  * SLP_TOPRI:	Convert a number of ticks slept into a priority value.  * SLP_DECAY:	Reduce the sleep time to 50% for every granted slice.  */
+comment|/*  * These determine how sleep time effects the priority of a process.  *  * SLP_RUN_MAX:	Maximum amount of sleep time + run time we'll accumulate  *		before throttling back.  * SLP_RUN_THORTTLE:	Divisor for reducing slp/run time.  * SLP_RATIO:	Compute a bounded ratio of slp time vs run time.  * SLP_TOPRI:	Convert a number of ticks slept and ticks ran into a priority  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SCHED_SLP_MAX
-value|(hz * 2)
+name|SCHED_SLP_RUN_MAX
+value|((hz * 30) * 1024)
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCHED_SLP_SCALE
-parameter_list|(
-name|slp
-parameter_list|)
-value|(((slp) * SCHED_PRI_RANGE) / SCHED_SLP_MAX)
+name|SCHED_SLP_RUN_THROTTLE
+value|(10)
 end_define
+
+begin_function
+specifier|static
+name|__inline
+name|int
+name|sched_slp_ratio
+parameter_list|(
+name|int
+name|b
+parameter_list|,
+name|int
+name|s
+parameter_list|)
+block|{
+name|b
+operator|/=
+name|SCHED_PRI_DYN_HALF
+expr_stmt|;
+if|if
+condition|(
+name|b
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+name|s
+operator|/=
+name|b
+expr_stmt|;
+return|return
+operator|(
+name|s
+operator|)
+return|;
+block|}
+end_function
 
 begin_define
 define|#
@@ -442,23 +512,12 @@ directive|define
 name|SCHED_SLP_TOPRI
 parameter_list|(
 name|slp
+parameter_list|,
+name|run
 parameter_list|)
-value|(SCHED_PRI_RANGE - SCHED_SLP_SCALE((slp)) + \     SCHED_PRI_NRESV / 2)
+define|\
+value|((((slp)> (run))?							\     sched_slp_ratio((slp), (run)):					\     SCHED_PRI_DYN_HALF + (SCHED_PRI_DYN_HALF - sched_slp_ratio((run), (slp))))+ \     SCHED_PRI_NRESV / 2)
 end_define
-
-begin_define
-define|#
-directive|define
-name|SCHED_SLP_DECAY
-parameter_list|(
-name|slp
-parameter_list|)
-value|((slp) / 2)
-end_define
-
-begin_comment
-comment|/* XXX Multiple kses break */
-end_comment
 
 begin_comment
 comment|/*  * These parameters and macros determine the size of the time slice that is  * granted to each thread.  *  * SLICE_MIN:	Minimum time slice granted, in units of ticks.  * SLICE_MAX:	Maximum time slice granted.  * SLICE_RANGE:	Range of available time slices scaled by hz.  * SLICE_SCALE:	The number slices granted per unit of pri or slp.  * PRI_TOSLICE:	Compute a slice size that is proportional to the priority.  * SLP_TOSLICE:	Compute a slice size that is inversely proportional to the  *		amount of time slept. (smaller slices for interactive ksegs)  * PRI_COMP:	This determines what fraction of the actual slice comes from   *		the slice size computed from the priority.  * SLP_COMP:	This determines what component of the actual slice comes from  *		the slize size computed from the sleep time.  */
@@ -516,7 +575,7 @@ parameter_list|(
 name|slp
 parameter_list|)
 define|\
-value|(SCHED_SLICE_MAX - SCHED_SLICE_SCALE((slp), SCHED_SLP_MAX))
+value|(SCHED_SLICE_MAX - SCHED_SLICE_SCALE((slp), SCHED_PRI_DYN))
 end_define
 
 begin_define
@@ -548,7 +607,7 @@ comment|/* 40% */
 end_comment
 
 begin_comment
-comment|/*  * This macro determines whether or not the kse belongs on the current or  * next run queue.  */
+comment|/*  * This macro determines whether or not the kse belongs on the current or  * next run queue.  *   * XXX nice value should effect how interactive a kg is.  */
 end_comment
 
 begin_define
@@ -558,7 +617,7 @@ name|SCHED_CURR
 parameter_list|(
 name|kg
 parameter_list|)
-value|((kg)->kg_slptime> (hz / 4) || \     (kg)->kg_pri_class != PRI_TIMESHARE)
+value|(((kg)->kg_slptime> (kg)->kg_runtime&&	\ 	sched_slp_ratio((kg)->kg_slptime, (kg)->kg_runtime)> 4) ||	\ 	(kg)->kg_pri_class != PRI_TIMESHARE)
 end_define
 
 begin_comment
@@ -1374,6 +1433,10 @@ argument_list|(
 name|kg
 operator|->
 name|kg_slptime
+argument_list|,
+name|kg
+operator|->
+name|kg_runtime
 argument_list|)
 expr_stmt|;
 name|CTR2
@@ -1482,13 +1545,21 @@ argument_list|)
 expr_stmt|;
 name|sslice
 operator|=
-name|SCHED_SLP_TOSLICE
+name|SCHED_PRI_TOSLICE
+argument_list|(
+name|SCHED_SLP_TOPRI
 argument_list|(
 name|kg
 operator|->
 name|kg_slptime
+argument_list|,
+name|kg
+operator|->
+name|kg_runtime
+argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* SCHED_SLP_TOSLICE(SCHED_SLP_RATIO( 	    kg->kg_slptime, kg->kg_runtime)); */
 name|slice
 operator|=
 name|SCHED_SLP_COMP
@@ -1499,17 +1570,6 @@ operator|+
 name|SCHED_PRI_COMP
 argument_list|(
 name|pslice
-argument_list|)
-expr_stmt|;
-name|kg
-operator|->
-name|kg_slptime
-operator|=
-name|SCHED_SLP_DECAY
-argument_list|(
-name|kg
-operator|->
-name|kg_slptime
 argument_list|)
 expr_stmt|;
 name|CTR4
@@ -1548,6 +1608,35 @@ name|slice
 operator|=
 name|SCHED_SLICE_MAX
 expr_stmt|;
+comment|/* 	 * Every time we grant a new slice check to see if we need to scale 	 * back the slp and run time in the kg.  This will cause us to forget 	 * old interactivity while maintaining the current ratio. 	 */
+if|if
+condition|(
+operator|(
+name|kg
+operator|->
+name|kg_runtime
+operator|+
+name|kg
+operator|->
+name|kg_slptime
+operator|)
+operator|>
+name|SCHED_SLP_RUN_MAX
+condition|)
+block|{
+name|kg
+operator|->
+name|kg_runtime
+operator|/=
+name|SCHED_SLP_RUN_THROTTLE
+expr_stmt|;
+name|kg
+operator|->
+name|kg_slptime
+operator|/=
+name|SCHED_SLP_RUN_THROTTLE
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|slice
@@ -2186,25 +2275,15 @@ name|kg
 operator|->
 name|kg_slptime
 operator|+=
+operator|(
 name|ticks
 operator|-
 name|td
 operator|->
 name|td_slptime
-expr_stmt|;
-if|if
-condition|(
-name|kg
-operator|->
-name|kg_slptime
-operator|>
-name|SCHED_SLP_MAX
-condition|)
-name|kg
-operator|->
-name|kg_slptime
-operator|=
-name|SCHED_SLP_MAX
+operator|)
+operator|*
+literal|1024
 expr_stmt|;
 name|td
 operator|->
@@ -2349,59 +2428,73 @@ name|kg
 argument_list|)
 expr_stmt|;
 comment|/* XXX Need something better here */
-name|child
-operator|->
-name|kg_slptime
-operator|=
-name|kg
-operator|->
-name|kg_slptime
-expr_stmt|;
-name|child
-operator|->
-name|kg_user_pri
-operator|=
-name|kg
-operator|->
-name|kg_user_pri
-expr_stmt|;
 if|if
 condition|(
-name|pkse
+name|kg
 operator|->
-name|ke_cpu
-operator|!=
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
+name|kg_slptime
+operator|>
+name|kg
+operator|->
+name|kg_runtime
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"pkse->ke_cpu = %d\n"
-argument_list|,
-name|pkse
+name|child
 operator|->
-name|ke_cpu
-argument_list|)
+name|kg_slptime
+operator|=
+name|SCHED_PRI_DYN
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"cpuid = %d"
-argument_list|,
-name|PCPU_GET
-argument_list|(
-name|cpuid
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|Debugger
-argument_list|(
-literal|"stop"
-argument_list|)
+name|child
+operator|->
+name|kg_runtime
+operator|=
+name|kg
+operator|->
+name|kg_slptime
+operator|/
+name|SCHED_PRI_DYN
 expr_stmt|;
 block|}
+else|else
+block|{
+name|child
+operator|->
+name|kg_runtime
+operator|=
+name|SCHED_PRI_DYN
+expr_stmt|;
+name|child
+operator|->
+name|kg_slptime
+operator|=
+name|kg
+operator|->
+name|kg_runtime
+operator|/
+name|SCHED_PRI_DYN
+expr_stmt|;
+block|}
+if|#
+directive|if
+literal|0
+block|child->kg_slptime = kg->kg_slptime; 	child->kg_runtime = kg->kg_runtime;
+endif|#
+directive|endif
+name|child
+operator|->
+name|kg_user_pri
+operator|=
+name|kg
+operator|->
+name|kg_user_pri
+expr_stmt|;
+if|#
+directive|if
+literal|0
+block|if (pkse->ke_cpu != PCPU_GET(cpuid)) { 		printf("pkse->ke_cpu = %d\n", pkse->ke_cpu); 		printf("cpuid = %d", PCPU_GET(cpuid)); 		Debugger("stop"); 	}
+endif|#
+directive|endif
 name|ckse
 operator|->
 name|ke_slice
@@ -2484,6 +2577,14 @@ operator|=
 name|child
 operator|->
 name|kg_slptime
+expr_stmt|;
+name|kg
+operator|->
+name|kg_runtime
+operator|=
+name|child
+operator|->
+name|kg_runtime
 expr_stmt|;
 name|sched_priority
 argument_list|(
@@ -2649,17 +2750,12 @@ name|KEF_NEEDRESCHED
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * We used a tick, decrease our total sleep time.  This decreases our 	 * "interactivity". 	 */
-if|if
-condition|(
+comment|/* 	 * We used a tick charge it to the ksegrp so that we can compute our 	 * "interactivity". 	 */
 name|kg
 operator|->
-name|kg_slptime
-condition|)
-name|kg
-operator|->
-name|kg_slptime
-operator|--
+name|kg_runtime
+operator|+=
+literal|1024
 expr_stmt|;
 comment|/* 	 * We used up one time slice. 	 */
 name|ke
