@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dh.c	4.33	81/04/09	*/
+comment|/*	dh.c	4.32	81/04/22	*/
 end_comment
 
 begin_include
@@ -3103,18 +3103,21 @@ operator|)
 operator||
 name|DH_IE
 expr_stmt|;
-name|unit
-operator|=
+comment|/* 		 * The following nonsense with short word 		 * is to make sure the dhbar |= word below 		 * is done with an interlocking bisw2 instruction. 		 */
+block|{
+name|short
+name|word
+init|=
 literal|1
 operator|<<
 name|unit
-expr_stmt|;
+decl_stmt|;
 name|dhsar
 index|[
 name|dh
 index|]
 operator||=
-name|unit
+name|word
 expr_stmt|;
 name|addr
 operator|->
@@ -3133,8 +3136,9 @@ name|addr
 operator|->
 name|dhbar
 operator||=
-name|unit
+name|word
 expr_stmt|;
+block|}
 name|tp
 operator|->
 name|t_state
