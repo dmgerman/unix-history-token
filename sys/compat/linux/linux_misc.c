@@ -4042,6 +4042,13 @@ condition|)
 return|return
 name|error
 return|;
+name|PROC_LOCK
+argument_list|(
+name|td
+operator|->
+name|td_proc
+argument_list|)
+expr_stmt|;
 name|SIGDELSET
 argument_list|(
 name|td
@@ -4051,6 +4058,13 @@ operator|->
 name|p_siglist
 argument_list|,
 name|SIGCHLD
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|td
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 if|if
