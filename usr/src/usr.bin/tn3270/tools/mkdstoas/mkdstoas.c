@@ -40,10 +40,7 @@ decl_stmt|;
 comment|/* For each display code, find the ascii code that matches */
 name|printf
 argument_list|(
-literal|"unsigned char disp_asc[%d] = {"
-argument_list|,
-sizeof|sizeof
-name|disp_ebc
+literal|"unsigned char disp_asc[256] = {"
 argument_list|)
 expr_stmt|;
 for|for
@@ -80,12 +77,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"\t"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"0x%2x,"
+literal|"\t0x%2x,"
 argument_list|,
 name|ebcasc
 index|[
@@ -97,6 +89,46 @@ index|[
 name|i
 index|]
 index|]
+argument_list|)
+expr_stmt|;
+block|}
+for|for
+control|(
+name|i
+operator|=
+sizeof|sizeof
+name|disp_ebc
+init|;
+name|i
+operator|<
+literal|256
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+operator|(
+name|i
+operator|%
+literal|8
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|"\t0x%2x,"
+argument_list|,
+literal|' '
 argument_list|)
 expr_stmt|;
 block|}
