@@ -254,6 +254,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|char
+modifier|*
+name|stpcpy
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|size_t
 name|strcspn
 parameter_list|(
