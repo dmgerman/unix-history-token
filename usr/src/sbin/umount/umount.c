@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)umount.c	5.9 (Berkeley) %G%"
+literal|"@(#)umount.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -183,6 +183,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|fflag
+init|=
+name|MNT_NOFORCE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
 name|rindex
@@ -276,6 +284,36 @@ argument_list|(
 operator|*
 name|argv
 argument_list|,
+literal|"-f"
+argument_list|)
+condition|)
+block|{
+name|fflag
+operator|=
+name|MNT_FORCE
+expr_stmt|;
+name|argc
+operator|--
+operator|,
+name|argv
+operator|++
+expr_stmt|;
+goto|goto
+name|again
+goto|;
+block|}
+if|if
+condition|(
+name|argc
+operator|>
+literal|0
+operator|&&
+operator|!
+name|strcmp
+argument_list|(
+operator|*
+name|argv
+argument_list|,
 literal|"-a"
 argument_list|)
 condition|)
@@ -307,7 +345,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: umount [ -a ] [ -v ] [ dev ... ]\n"
+literal|"Usage: umount [ -a ] [ -f ] [ -v ] [ dev ... ]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -935,7 +973,7 @@ name|unmount
 argument_list|(
 name|mntpt
 argument_list|,
-name|MNT_NOFORCE
+name|fflag
 argument_list|)
 operator|<
 literal|0
