@@ -81,11 +81,22 @@ directive|ifdef
 name|SMP
 end_ifdef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|COMPILING_LINT
+end_ifndef
+
 begin_error
 error|#
 directive|error
 error|DEVICE_POLLING is not compatible with SMP
 end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -591,7 +602,6 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|volatile
 name|u_int32_t
 name|phase
 decl_stmt|;
@@ -648,7 +658,6 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|volatile
 name|u_int32_t
 name|stalled
 decl_stmt|;
