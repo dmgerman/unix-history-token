@@ -1,7 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uba.c	4.10	%G%	*/
+comment|/*	uba.c	4.11	%G%	*/
 end_comment
+
+begin_define
+define|#
+directive|define
+name|DELAY
+parameter_list|(
+name|N
+parameter_list|)
+value|{ register int d; d = N; while (--d> 0); }
+end_define
 
 begin_include
 include|#
@@ -42,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"../h/vm.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../h/uba.h"
 end_include
 
@@ -66,12 +82,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../h/vm.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"../h/conf.h"
 end_include
 
@@ -87,8 +97,252 @@ directive|include
 file|"../h/nexus.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"../h/dk.h"
+end_include
+
 begin_comment
-comment|/*  * Allocate and setup UBA map registers, and bdp's  * Flags says whether bdp is needed, whether the caller can't  * wait (e.g. if the caller is at interrupt level).  *  * Return value (cruft):  *	Bits 0-8	Byte offset  *	Bits 9-17	Start map reg. no.  *	Bits 18-27	No. mapping reg's  *	Bits 28-31	BDP no.  */
+comment|/*  * Do transfer on device argument.  The controller  * and uba involved are implied by the device.  * We queue for resource wait in the uba code if necessary.  * We return 1 if the transfer was started, 0 if it was not.  * If you call this routine with the head of the queue for a  * UBA, it will automatically remove the device from the UBA  * queue before it returns.  If some other device is given  * as argument, it will be added to the request queue if the  * request cannot be started immediately.  This means that  * passing a device which is on the queue but not at the head  * of the request queue is likely to be a disaster.  */
+end_comment
+
+begin_expr_stmt
+name|ubago
+argument_list|(
+name|ui
+argument_list|)
+specifier|register
+expr|struct
+name|uba_dinfo
+operator|*
+name|ui
+expr_stmt|;
+end_expr_stmt
+
+begin_block
+block|{
+specifier|register
+name|struct
+name|uba_minfo
+modifier|*
+name|um
+init|=
+name|ui
+operator|->
+name|ui_mi
+decl_stmt|;
+specifier|register
+name|struct
+name|uba_hd
+modifier|*
+name|uh
+decl_stmt|;
+specifier|register
+name|int
+name|s
+decl_stmt|,
+name|unit
+decl_stmt|;
+name|uh
+operator|=
+operator|&
+name|uba_hd
+index|[
+name|um
+operator|->
+name|um_ubanum
+index|]
+expr_stmt|;
+name|s
+operator|=
+name|spl6
+argument_list|()
+expr_stmt|;
+name|um
+operator|->
+name|um_ubinfo
+operator|=
+name|ubasetup
+argument_list|(
+name|um
+operator|->
+name|um_ubanum
+argument_list|,
+name|um
+operator|->
+name|um_tab
+operator|.
+name|b_actf
+operator|->
+name|b_actf
+argument_list|,
+name|UBA_NEEDBDP
+operator||
+name|UBA_CANTWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|um
+operator|->
+name|um_ubinfo
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|uh
+operator|->
+name|uh_actf
+operator|!=
+name|ui
+condition|)
+block|{
+name|ui
+operator|->
+name|ui_forw
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|uh
+operator|->
+name|uh_actf
+operator|==
+name|NULL
+condition|)
+name|uh
+operator|->
+name|uh_actf
+operator|=
+name|ui
+expr_stmt|;
+else|else
+name|uh
+operator|->
+name|uh_actl
+operator|->
+name|ui_forw
+operator|=
+name|ui
+expr_stmt|;
+name|uh
+operator|->
+name|uh_actl
+operator|=
+name|ui
+expr_stmt|;
+block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ui
+operator|->
+name|ui_dk
+operator|>=
+literal|0
+condition|)
+block|{
+name|unit
+operator|=
+name|ui
+operator|->
+name|ui_dk
+expr_stmt|;
+name|dk_busy
+operator||=
+literal|1
+operator|<<
+name|unit
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|uh
+operator|->
+name|uh_actf
+operator|==
+name|ui
+condition|)
+name|uh
+operator|->
+name|uh_actf
+operator|=
+name|ui
+operator|->
+name|ui_forw
+expr_stmt|;
+call|(
+modifier|*
+name|um
+operator|->
+name|um_driver
+operator|->
+name|ud_dgo
+call|)
+argument_list|(
+name|um
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ui
+operator|->
+name|ui_dk
+operator|>=
+literal|0
+condition|)
+block|{
+name|dk_xfer
+index|[
+name|unit
+index|]
+operator|++
+expr_stmt|;
+name|dk_wds
+index|[
+name|unit
+index|]
+operator|+=
+name|um
+operator|->
+name|um_tab
+operator|.
+name|b_actf
+operator|->
+name|b_bcount
+operator|>>
+literal|6
+expr_stmt|;
+block|}
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * Allocate and setup UBA map registers, and bdp's  * Flags says whether bdp is needed, whether the caller can't  * wait (e.g. if the caller is at interrupt level).  *  * Return value:  *	Bits 0-8	Byte offset  *	Bits 9-17	Start map reg. no.  *	Bits 18-27	No. mapping reg's  *	Bits 28-31	BDP no.  */
 end_comment
 
 begin_macro
@@ -657,7 +911,7 @@ end_return
 
 begin_comment
 unit|}
-comment|/*  * Non buffer unibus interface... set up a buffer and call ubasetup.  */
+comment|/*  * Non buffer setup interface... set up a buffer and call ubasetup.  */
 end_comment
 
 begin_expr_stmt
@@ -727,7 +981,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Old ubafree(info) is now ubarelse(&info) to avoid races.  */
+comment|/*  * Release resources on uba uban, and then unblock resource waiters.  * The map register parameter is by value since we need to block  * against uba resets on 11/780's.  */
 end_comment
 
 begin_macro
@@ -768,12 +1022,13 @@ name|reg
 decl_stmt|,
 name|npf
 decl_stmt|,
-name|a
+name|s
 decl_stmt|;
 name|int
 name|mr
 decl_stmt|;
-name|a
+comment|/* 	 * Carefully see if we should release the space, since 	 * it may be released asynchronously at uba reset time. 	 */
+name|s
 operator|=
 name|spl6
 argument_list|()
@@ -790,9 +1045,10 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* 		 * A ubareset() occurred before we got around 		 * to releasing the space... no need to bother. 		 */
 name|splx
 argument_list|(
-name|a
+name|s
 argument_list|)
 expr_stmt|;
 return|return;
@@ -802,6 +1058,12 @@ name|amr
 operator|=
 literal|0
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+comment|/* let interrupts in, we're safe for a while */
 name|bdp
 operator|=
 operator|(
@@ -879,6 +1141,7 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
+comment|/* atomic */
 if|if
 condition|(
 name|uh
@@ -904,6 +1167,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * Put back the registers in the resource map. 	 * The map code must not be reentered, so we do this 	 * at high ipl. 	 */
 name|npf
 operator|=
 operator|(
@@ -928,6 +1192,11 @@ operator|)
 operator|+
 literal|1
 expr_stmt|;
+name|s
+operator|=
+name|spl6
+argument_list|()
+expr_stmt|;
 name|mfree
 argument_list|(
 name|uh
@@ -939,6 +1208,12 @@ argument_list|,
 name|reg
 argument_list|)
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Wakeup sleepers for map registers, 	 * and also, if there are processes blocked in dgo(), 	 * give them a chance at the UNIBUS. 	 */
 if|if
 condition|(
 name|uh
@@ -963,23 +1238,26 @@ name|uh_map
 argument_list|)
 expr_stmt|;
 block|}
-name|splx
+while|while
+condition|(
+name|uh
+operator|->
+name|uh_actf
+operator|&&
+name|ubago
 argument_list|(
-name|a
+name|uh
+operator|->
+name|uh_actf
 argument_list|)
-expr_stmt|;
+condition|)
+empty_stmt|;
 block|}
 end_block
 
-begin_define
-define|#
-directive|define
-name|DELAY
-parameter_list|(
-name|N
-parameter_list|)
-value|{ register int d; d = N; while (--d> 0); }
-end_define
+begin_comment
+comment|/*  * Generate a reset on uba number uban.  Then  * call each device in the character device table,  * giving it a chance to clean up so as to be able to continue.  */
+end_comment
 
 begin_macro
 name|ubareset
@@ -987,6 +1265,12 @@ argument_list|(
 argument|uban
 argument_list|)
 end_macro
+
+begin_decl_stmt
+name|int
+name|uban
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1103,7 +1387,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* pointer rather than number so we can be called with virt and phys addrs */
+comment|/*  * Init a uba.  This is called with a pointer  * rather than a virtual address since it is called  * by code which runs with memory mapping disabled.  * In these cases we really don't need the interrupts  * enabled, but since we run with ipl high, we don't care  * if they are, they will never happen anyways.  */
 end_comment
 
 begin_expr_stmt
@@ -1160,6 +1444,10 @@ if|#
 directive|if
 name|VAX780
 end_if
+
+begin_comment
+comment|/*  * Check to make sure the UNIBUS adaptor is not hung,  * with an interrupt in the register to be presented,  * but not presenting it for an extended period (5 seconds).  */
+end_comment
 
 begin_macro
 name|unhang
@@ -1255,11 +1543,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* timeout routine to decrement ``i forgot to interrupt counts */
-end_comment
-
-begin_comment
-comment|/* this prevents the counts from growing slowly, which isn't interesting */
+comment|/*  * This is a timeout routine which decrements the ``i forgot to  * interrupt'' counts, on an 11/780.  This prevents slowly growing  * counts from causing a UBA reset since we are interested only  * in hang situations.  */
 end_comment
 
 begin_macro
@@ -1317,7 +1601,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* called from locore.s; parameters here (i.e. uvec) are value-result! */
+comment|/*  * This routine is called by the locore code to  * process a UBA error on an 11/780.  The arguments are passed  * on the stack, and value-result (through some trickery).  * In particular, the uvec argument is used for further  * uba processing so the result aspect of it is very important.  * It must not be declared register.  */
 end_comment
 
 begin_comment
