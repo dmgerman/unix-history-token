@@ -540,9 +540,9 @@ name|mtx
 name|pi_mutex
 decl_stmt|;
 name|struct
-name|pfs_bitmap
+name|unrhdr
 modifier|*
-name|pi_bitmap
+name|pi_unrhdr
 decl_stmt|;
 block|}
 struct|;

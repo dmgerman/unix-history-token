@@ -1726,9 +1726,6 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
-name|pfs_fileno_load
-argument_list|()
-expr_stmt|;
 name|pfs_vncache_load
 argument_list|()
 expr_stmt|;
@@ -1740,9 +1737,6 @@ case|case
 name|MOD_SHUTDOWN
 case|:
 name|pfs_vncache_unload
-argument_list|()
-expr_stmt|;
-name|pfs_fileno_unload
 argument_list|()
 expr_stmt|;
 break|break;
