@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)operators.c 1.2 %G%"
+literal|"@(#)operators.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -263,6 +263,9 @@ comment|/* begin tracing source line, variable, or all lines */
 name|O_TRACEOFF
 block|,
 comment|/* end tracing source line, variable, or all lines */
+name|O_TYPERENAME
+block|,
+comment|/* state the type of an expression */
 name|O_LASTOP
 block|}
 name|Operator
@@ -1051,6 +1054,13 @@ comment|/* O_TRACEOFF */
 literal|1
 block|,
 name|null
+block|,
+literal|"traceoff"
+block|,
+comment|/* O_TYPERENAME */
+literal|2
+block|,
+name|UNARY
 block|,
 literal|"traceoff"
 block|, }
