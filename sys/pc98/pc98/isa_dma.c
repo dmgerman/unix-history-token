@@ -215,68 +215,6 @@ begin_comment
 comment|/* clear first/last FF */
 end_comment
 
-begin_comment
-comment|/* **  Register definitions for DMA controller 2 (channels 4..7): */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DMA2_CHN
-parameter_list|(
-name|c
-parameter_list|)
-value|(IO_DMA2 + 2*(2*(c)))
-end_define
-
-begin_comment
-comment|/* addr reg for channel c */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DMA2_STATUS
-value|(IO_DMA2 + 2*8)
-end_define
-
-begin_comment
-comment|/* status register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DMA2_SMSK
-value|(IO_DMA2 + 2*10)
-end_define
-
-begin_comment
-comment|/* single mask register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DMA2_MODE
-value|(IO_DMA2 + 2*11)
-end_define
-
-begin_comment
-comment|/* mode register */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DMA2_FFC
-value|(IO_DMA2 + 2*12)
-end_define
-
-begin_comment
-comment|/* clear first/last FF */
-end_comment
-
 begin_function_decl
 specifier|static
 name|int
