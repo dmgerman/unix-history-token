@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setup.c	5.10 (Berkeley) %G%"
+literal|"@(#)setup.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -647,7 +647,7 @@ operator|<
 literal|1
 condition|)
 block|{
-name|pfatal
+name|pwarn
 argument_list|(
 literal|"IMPOSSIBLE INTERLEAVE=%d IN SUPERBLOCK"
 argument_list|,
@@ -664,6 +664,17 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
+name|preen
+condition|)
+name|printf
+argument_list|(
+literal|" (FIXED)\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|preen
+operator|||
 name|reply
 argument_list|(
 literal|"SET TO DEFAULT"
@@ -686,7 +697,7 @@ operator|.
 name|fs_nsect
 condition|)
 block|{
-name|pfatal
+name|pwarn
 argument_list|(
 literal|"IMPOSSIBLE NPSECT=%d IN SUPERBLOCK"
 argument_list|,
@@ -705,6 +716,17 @@ name|fs_nsect
 expr_stmt|;
 if|if
 condition|(
+name|preen
+condition|)
+name|printf
+argument_list|(
+literal|" (FIXED)\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|preen
+operator|||
 name|reply
 argument_list|(
 literal|"SET TO DEFAULT"
