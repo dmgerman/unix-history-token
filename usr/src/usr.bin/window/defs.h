@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)defs.h	1.7 83/07/28		*/
+comment|/*	@(#)defs.h	1.8 83/07/29		*/
 end_comment
 
 begin_include
@@ -138,6 +138,20 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
+modifier|*
+name|shell
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|shellname
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
 name|quit
 decl_stmt|;
 end_decl_stmt
@@ -145,6 +159,12 @@ end_decl_stmt
 begin_decl_stmt
 name|char
 name|terse
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|debug
 decl_stmt|;
 end_decl_stmt
 
