@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lookup.c	4.4 (Berkeley) 84/02/09"
+literal|"@(#)lookup.c	4.5 (Berkeley) 84/02/16"
 decl_stmt|;
 end_decl_stmt
 
@@ -192,7 +192,7 @@ name|value
 operator|=
 name|makenl
 argument_list|(
-name|name
+name|cp
 argument_list|)
 expr_stmt|;
 block|}
@@ -483,10 +483,14 @@ condition|)
 block|{
 if|if
 condition|(
+name|action
+operator|!=
+name|INSERT
+operator|||
 name|s
 operator|->
 name|s_type
-operator|==
+operator|!=
 name|CONST
 condition|)
 name|fatal
@@ -496,27 +500,6 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|action
-operator|==
-name|INSERT
-condition|)
-block|{
-name|warn
-argument_list|(
-literal|"%s redefined\n"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-name|s
-operator|->
-name|s_value
-operator|=
-name|value
-expr_stmt|;
-block|}
 block|}
 return|return
 operator|(
