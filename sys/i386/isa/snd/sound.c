@@ -5346,7 +5346,7 @@ parameter_list|(
 name|dev_t
 name|dev
 parameter_list|,
-name|int
+name|vm_offset_t
 name|offset
 parameter_list|,
 name|int
@@ -5389,6 +5389,10 @@ operator|||
 name|nprot
 operator|&
 name|PROT_EXEC
+operator|||
+name|offset
+operator|<
+literal|0
 condition|)
 return|return
 operator|-
