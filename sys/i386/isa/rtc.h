@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)rtc.h	7.1 (Berkeley) 5/12/91  *	$Id: rtc.h,v 1.4 1993/12/18 01:12:47 ache Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)rtc.h	7.1 (Berkeley) 5/12/91  *	$Id: rtc.h,v 1.5 1994/08/15 03:15:20 wollman Exp $  */
 end_comment
 
 begin_ifndef
@@ -272,23 +272,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RTCSB_HALT
-value|0x80
+name|RTCSB_DST
+value|0x01
 end_define
 
 begin_comment
-comment|/* stop clock updates */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RTCSB_PINTR
-value|0x40
-end_define
-
-begin_comment
-comment|/* periodic clock interrupt */
+comment|/* Daylight Savings Time enable	*/
 end_comment
 
 begin_define
@@ -299,7 +288,73 @@ value|0x02
 end_define
 
 begin_comment
-comment|/* 24-hour mode */
+comment|/* 0 = 12 hours, 1 = 24	hours */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTCSB_BCD
+value|0x04
+end_define
+
+begin_comment
+comment|/* 0 = BCD, 1 =	Binary coded time */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTCSB_SQWE
+value|0x08
+end_define
+
+begin_comment
+comment|/* 1 = output sqare wave at SQW	pin */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTCSB_UINTR
+value|0x10
+end_define
+
+begin_comment
+comment|/* 1 = enable update-ended interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTCSB_AINTR
+value|0x20
+end_define
+
+begin_comment
+comment|/* 1 = enable alarm interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTCSB_PINTR
+value|0x40
+end_define
+
+begin_comment
+comment|/* 1 = enable periodic clock interrupt */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTCSB_HALT
+value|0x80
+end_define
+
+begin_comment
+comment|/* stop clock updates */
 end_comment
 
 begin_define
@@ -548,7 +603,7 @@ value|0x32
 end_define
 
 begin_comment
-comment|/* current century - please increment in Dec99*/
+comment|/* current century */
 end_comment
 
 begin_endif
