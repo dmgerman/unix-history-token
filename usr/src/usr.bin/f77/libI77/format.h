@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_format[] = "@(#)format.h	1.2";  *  * format parser definitions  */
+comment|/* char id_format[] = "@(#)format.h	1.3";  *  * format parser definitions  */
 end_comment
 
 begin_struct
@@ -163,14 +163,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|BN
+name|BNZ
 value|21
 end_define
 
 begin_define
 define|#
 directive|define
-name|BZ
+name|B
 value|22
 end_define
 
