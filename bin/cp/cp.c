@@ -47,17 +47,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
 begin_endif
 endif|#
 directive|endif
@@ -66,6 +55,20 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Cp copies source files to target files.  *  * The global PATH_T structure "to" always contains the path to the  * current target file.  Since fts(3) does not change directories,  * this path can be either absolute or dot-relative.  *  * The basic algorithm is to initialize "to" and use fts(3) to traverse  * the file hierarchy rooted in the argument list.  A trivial case is the  * case of 'cp file1 file2'.  The more interesting case is the case of  * 'cp file1 file2 ... fileN dir' where the hierarchy is traversed and the  * path (relative to the root of the traversal) is appended to dir (stored  * in "to") to form the final target path.  */
