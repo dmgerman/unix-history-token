@@ -2640,11 +2640,11 @@ argument_list|)
 condition|)
 block|{
 case|case
-literal|0
+name|CIS_FEAT_MEM_NONE
 case|:
 break|break;
 case|case
-literal|1
+name|CIS_FEAT_MEM_LEN
 case|:
 name|conf
 operator|->
@@ -2682,7 +2682,7 @@ literal|8
 expr_stmt|;
 break|break;
 case|case
-literal|2
+name|CIS_FEAT_MEM_ADDR
 case|:
 name|conf
 operator|->
@@ -2735,7 +2735,7 @@ literal|8
 expr_stmt|;
 break|break;
 case|case
-literal|3
+name|CIS_FEAT_MEM_WIN
 case|:
 block|{
 name|struct
