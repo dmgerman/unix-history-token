@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_config.c,v 8.104 1999/11/08 23:09:42 vixie Exp $"
+literal|"$Id: ns_config.c,v 8.105 1999/11/16 06:01:37 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -14464,6 +14464,10 @@ expr_stmt|;
 name|loading
 operator|=
 literal|0
+expr_stmt|;
+comment|/* release queued notifies */
+name|notify_afterload
+argument_list|()
 expr_stmt|;
 block|}
 end_function

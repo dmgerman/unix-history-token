@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_ctl.c,v 8.28 1999/10/13 16:39:04 vixie Exp $"
+literal|"$Id: ns_ctl.c,v 8.28.2.1 2000/11/09 23:15:28 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1650,6 +1650,16 @@ name|next
 operator|=
 name|NEXT
 argument_list|(
+name|ctl
+argument_list|,
+name|link
+argument_list|)
+expr_stmt|;
+name|UNLINK
+argument_list|(
+operator|*
+name|new
+argument_list|,
 name|ctl
 argument_list|,
 name|link

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_name.c,v 8.12 1999/10/13 17:11:23 vixie Exp $"
+literal|"$Id: ns_name.c,v 8.12.2.1 2000/11/09 23:15:32 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2192,6 +2192,66 @@ name|lastdnptr
 argument_list|)
 operator|)
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Reset dnptrs so that there are no active references to pointers at or  * after src.  */
+end_comment
+
+begin_function
+name|void
+name|ns_name_rollback
+parameter_list|(
+specifier|const
+name|u_char
+modifier|*
+name|src
+parameter_list|,
+specifier|const
+name|u_char
+modifier|*
+modifier|*
+name|dnptrs
+parameter_list|,
+specifier|const
+name|u_char
+modifier|*
+modifier|*
+name|lastdnptr
+parameter_list|)
+block|{
+while|while
+condition|(
+name|dnptrs
+operator|<
+name|lastdnptr
+operator|&&
+operator|*
+name|dnptrs
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+operator|*
+name|dnptrs
+operator|>=
+name|src
+condition|)
+block|{
+operator|*
+name|dnptrs
+operator|=
+name|NULL
+expr_stmt|;
+break|break;
+block|}
+name|dnptrs
+operator|++
+expr_stmt|;
+block|}
 block|}
 end_function
 

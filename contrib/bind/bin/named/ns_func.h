@@ -16,7 +16,7 @@ comment|/*  * Portions Copyright (c) 1999 by Check Point Software Technologies, 
 end_comment
 
 begin_comment
-comment|/* ns_func.h - declarations for ns_*.c's externally visible functions  *  * $Id: ns_func.h,v 8.90 1999/10/11 18:22:20 vixie Exp $  */
+comment|/* ns_func.h - declarations for ns_*.c's externally visible functions  *  * $Id: ns_func.h,v 8.91 1999/11/16 06:01:38 vixie Exp $  */
 end_comment
 
 begin_comment
@@ -585,6 +585,15 @@ parameter_list|,
 name|ns_class
 parameter_list|,
 name|ns_type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|notify_afterload
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1388,6 +1397,8 @@ argument_list|(
 specifier|const
 name|char
 operator|*
+argument_list|,
+name|int
 argument_list|,
 name|int
 argument_list|,

@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_resp.c,v 8.133 1999/11/05 04:40:57 vixie Exp $"
+literal|"$Id: ns_resp.c,v 8.136 1999/11/16 07:10:34 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3582,6 +3582,11 @@ operator|!
 name|hp
 operator|->
 name|aa
+operator|&&
+operator|!
+name|hp
+operator|->
+name|tc
 operator|&&
 name|hp
 operator|->
@@ -11079,6 +11084,20 @@ argument_list|,
 name|class
 argument_list|,
 name|type
+argument_list|,
+operator|(
+name|nss
+operator|!=
+name|NULL
+operator|&&
+name|nsc
+operator|!=
+literal|0
+operator|)
+condition|?
+literal|0
+else|:
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -15229,6 +15248,12 @@ case|case
 name|cyclic_order
 case|:
 comment|/* first we do the non-SIG records */
+if|if
+condition|(
+name|non_sig_count
+operator|>
+literal|0
+condition|)
 name|choice
 operator|=
 operator|(
@@ -15242,6 +15267,11 @@ literal|3
 operator|)
 operator|%
 name|non_sig_count
+expr_stmt|;
+else|else
+name|choice
+operator|=
+literal|0
 expr_stmt|;
 for|for
 control|(

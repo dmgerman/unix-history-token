@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_forw.c,v 8.68 1999/10/13 16:39:07 vixie Exp $"
+literal|"$Id: ns_forw.c,v 8.69 1999/11/16 06:01:38 vixie Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -518,6 +518,8 @@ argument_list|,
 name|class
 argument_list|,
 name|type
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|getname
@@ -5551,6 +5553,9 @@ name|class
 parameter_list|,
 name|int
 name|type
+parameter_list|,
+name|int
+name|forward
 parameter_list|)
 block|{
 name|struct
@@ -5682,9 +5687,16 @@ name|s
 operator|=
 name|name
 expr_stmt|;
+name|qp
+operator|->
+name|q_fzone
+operator|=
+name|NULL
+expr_stmt|;
 for|for
 control|(
 init|;
+name|forward
 condition|;
 control|)
 block|{
