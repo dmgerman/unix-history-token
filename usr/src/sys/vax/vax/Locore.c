@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	Locore.c	4.10	81/05/05	*/
+comment|/*	Locore.c	4.11	81/05/15	*/
 end_comment
 
 begin_include
@@ -128,6 +128,16 @@ literal|128
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|masterpaddr
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* p_addr of current process on master cpu */
+end_comment
 
 begin_decl_stmt
 name|struct
