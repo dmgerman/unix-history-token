@@ -33,7 +33,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.49
+literal|3.50
 operator|%
 name|G
 operator|%
@@ -61,7 +61,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.49
+literal|3.50
 operator|%
 name|G
 operator|%
@@ -587,13 +587,26 @@ argument_list|,
 name|inp
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
+comment|/* arrange for backout */
+if|if
+condition|(
 name|setjmp
 argument_list|(
 name|TopFrame
 argument_list|)
+operator|>
+literal|0
+operator|&&
+name|InChild
+condition|)
+name|finis
+argument_list|()
 expr_stmt|;
 name|QuickAbort
 operator|=
@@ -603,12 +616,6 @@ name|HoldErrs
 operator|=
 name|FALSE
 expr_stmt|;
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
 comment|/* setup for the read */
 name|CurEnv
 operator|->
@@ -984,6 +991,20 @@ case|case
 name|CMDRCPT
 case|:
 comment|/* rcpt -- designate recipient */
+if|if
+condition|(
+name|setjmp
+argument_list|(
+name|TopFrame
+argument_list|)
+operator|>
+literal|0
+condition|)
+break|break;
+name|QuickAbort
+operator|=
+name|TRUE
+expr_stmt|;
 name|p
 operator|=
 name|skipword
@@ -1039,23 +1060,56 @@ endif|DEBUG
 if|if
 condition|(
 name|Errors
-operator|==
+operator|!=
 literal|0
 condition|)
-block|{
+break|break;
+comment|/* no errors during parsing, but might be a duplicate */
+name|CurEnv
+operator|->
+name|e_to
+operator|=
+name|p
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|bitset
+argument_list|(
+name|QBADADDR
+argument_list|,
+name|a
+operator|->
+name|q_flags
+argument_list|)
+condition|)
 name|message
 argument_list|(
 literal|"250"
 argument_list|,
-literal|"%s... Recipient ok"
-argument_list|,
-name|p
+literal|"Recipient ok"
 argument_list|)
+expr_stmt|;
+else|else
+block|{
+comment|/* punt -- should keep message in ADDRESS.... */
+name|message
+argument_list|(
+literal|"550"
+argument_list|,
+literal|"Addressee unknown"
+argument_list|)
+expr_stmt|;
+block|}
+name|CurEnv
+operator|->
+name|e_to
+operator|=
+name|NULL
 expr_stmt|;
 name|rcps
 operator|++
 expr_stmt|;
-block|}
 break|break;
 case|case
 name|CMDDATA

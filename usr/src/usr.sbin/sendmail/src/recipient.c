@@ -27,7 +27,7 @@ operator|)
 name|recipient
 operator|.
 name|c
-literal|3.52
+literal|3.53
 operator|%
 name|G
 operator|%
@@ -446,6 +446,12 @@ modifier|*
 name|recipient
 parameter_list|()
 function_decl|;
+specifier|extern
+name|ADDRESS
+modifier|*
+name|recipient
+parameter_list|()
+function_decl|;
 name|al
 operator|=
 name|a
@@ -643,6 +649,8 @@ comment|/* **  RECIPIENT -- Designate a message recipient ** **	Saves the named 
 end_comment
 
 begin_function
+name|ADDRESS
+modifier|*
 name|ADDRESS
 modifier|*
 name|recipient
@@ -1521,6 +1529,11 @@ expr_stmt|;
 block|}
 block|}
 block|}
+return|return
+operator|(
+name|a
+operator|)
+return|;
 return|return
 operator|(
 name|a

@@ -33,7 +33,7 @@ operator|)
 name|deliver
 operator|.
 name|c
-literal|3.153
+literal|3.154
 operator|%
 name|G
 operator|%
@@ -4283,6 +4283,12 @@ operator|!
 name|MeToo
 condition|)
 block|{
+specifier|extern
+name|ADDRESS
+modifier|*
+name|recipient
+parameter_list|()
+function_decl|;
 name|e
 operator|->
 name|e_from
@@ -4291,6 +4297,9 @@ name|q_flags
 operator||=
 name|QDONTSEND
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|recipient
 argument_list|(
 operator|&
