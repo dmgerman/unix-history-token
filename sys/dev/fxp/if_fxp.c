@@ -415,123 +415,123 @@ index|[]
 init|=
 block|{
 block|{
-literal|0x1229
-block|,
-literal|"Intel Pro 10/100B/100+ Ethernet"
-block|}
-block|,
-block|{
-literal|0x2449
-block|,
-literal|"Intel Pro/100 Ethernet"
-block|}
-block|,
-block|{
-literal|0x1209
-block|,
-literal|"Intel Embedded 10/100 Ethernet"
-block|}
-block|,
-block|{
 literal|0x1029
 block|,
-literal|"Intel Pro/100 Ethernet"
+literal|"Intel 82559 PCI/CardBus Pro/100"
 block|}
 block|,
 block|{
 literal|0x1030
 block|,
-literal|"Intel Pro/100 Ethernet"
+literal|"Intel 82559 Pro/100 Ethernet"
 block|}
 block|,
 block|{
 literal|0x1031
 block|,
-literal|"Intel Pro/100 Ethernet"
+literal|"Intel 82801CAM (ICH3) Pro/100 VE Ethernet"
 block|}
 block|,
 block|{
 literal|0x1032
 block|,
-literal|"Intel Pro/100 Ethernet"
+literal|"Intel 82801CAM (ICH3) Pro/100 VE Ethernet"
 block|}
 block|,
 block|{
 literal|0x1033
 block|,
-literal|"Intel Pro/100 Ethernet"
+literal|"Intel 82801CAM (ICH3) Pro/100 VM Ethernet"
 block|}
 block|,
 block|{
 literal|0x1034
 block|,
-literal|"Intel Pro/100 Ethernet"
+literal|"Intel 82801CAM (ICH3) Pro/100 VM Ethernet"
 block|}
 block|,
 block|{
 literal|0x1035
 block|,
-literal|"Intel Pro/100 Ethernet"
+literal|"Intel 82801CAM (ICH3) Pro/100 Ethernet"
 block|}
 block|,
 block|{
 literal|0x1036
 block|,
-literal|"Intel Pro/100 Ethernet"
+literal|"Intel 82801CAM (ICH3) Pro/100 Ethernet"
 block|}
 block|,
 block|{
 literal|0x1037
 block|,
-literal|"Intel Pro/100 Ethernet"
+literal|"Intel 82801CAM (ICH3) Pro/100 Ethernet"
 block|}
 block|,
 block|{
 literal|0x1038
 block|,
-literal|"Intel Pro/100 Ethernet"
+literal|"Intel 82801CAM (ICH3) Pro/100 VM Ethernet"
 block|}
 block|,
 block|{
 literal|0x1039
 block|,
-literal|"Intel Pro/100 Ethernet"
+literal|"Intel 82801DB (ICH4) Pro/100 VE Ethernet"
 block|}
 block|,
 block|{
 literal|0x103A
 block|,
-literal|"Intel Pro/100 Ethernet"
+literal|"Intel 82801DB (ICH4) Pro/100 Ethernet"
 block|}
 block|,
 block|{
 literal|0x103B
 block|,
-literal|"Intel Pro/100 Ethernet"
+literal|"Intel 82801DB (ICH4) Pro/100 VM Ethernet"
 block|}
 block|,
 block|{
 literal|0x103C
 block|,
-literal|"Intel Pro/100 Ethernet"
+literal|"Intel 82801DB (ICH4) Pro/100 Ethernet"
 block|}
 block|,
 block|{
 literal|0x103D
 block|,
-literal|"Intel Pro/100 Ethernet"
+literal|"Intel 82801DB (ICH4) Pro/100 VE Ethernet"
 block|}
 block|,
 block|{
 literal|0x103E
 block|,
-literal|"Intel Pro/100 Ethernet"
+literal|"Intel 82801DB (ICH4) Pro/100 VM Ethernet"
 block|}
 block|,
 block|{
 literal|0x1059
 block|,
-literal|"Intel Pro/100 M Mobile Connection"
+literal|"Intel 82551QM Pro/100 M Mobile Connection"
+block|}
+block|,
+block|{
+literal|0x1209
+block|,
+literal|"Intel 82559ER Embedded 10/100 Ethernet"
+block|}
+block|,
+block|{
+literal|0x1229
+block|,
+literal|"Intel 82557/8/9 EtherExpress Pro/100(B) Ethernet"
+block|}
+block|,
+block|{
+literal|0x2449
+block|,
+literal|"Intel 82801BA/CAM (ICH2/3) Pro/100 Ethernet"
 block|}
 block|,
 block|{
