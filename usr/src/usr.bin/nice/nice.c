@@ -1,22 +1,41 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)nice.c	4.1 (Berkeley) %G%"
+literal|"@(#)nice.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* nice */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/resource.h>
 end_include
 
 begin_function
@@ -39,13 +58,6 @@ name|int
 name|nicarg
 init|=
 literal|10
-decl_stmt|;
-extern|extern errno;
-specifier|extern
-name|char
-modifier|*
-name|sys_errlist
-index|[]
 decl_stmt|;
 if|if
 condition|(
@@ -80,7 +92,7 @@ argument_list|)
 expr_stmt|;
 name|argc
 operator|--
-expr_stmt|;
+operator|,
 name|argv
 operator|++
 expr_stmt|;
@@ -105,11 +117,31 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|nice
+if|if
+condition|(
+name|setpriority
 argument_list|(
+name|PRIO_PROCESS
+argument_list|,
+literal|0
+argument_list|,
 name|nicarg
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"setpriority"
+argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|execvp
 argument_list|(
 name|argv
@@ -124,17 +156,8 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|perror
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: %s\n"
-argument_list|,
-name|sys_errlist
-index|[
-name|errno
-index|]
-argument_list|,
 name|argv
 index|[
 literal|1
