@@ -303,7 +303,7 @@ begin_define
 define|#
 directive|define
 name|OPTIONS
-value|"dfKk:prtx"
+value|"46dfKk:prtx"
 end_define
 
 begin_else
@@ -315,7 +315,7 @@ begin_define
 define|#
 directive|define
 name|OPTIONS
-value|"dfKk:prt"
+value|"46dfKk:prt"
 end_define
 
 begin_endif
@@ -332,7 +332,7 @@ begin_define
 define|#
 directive|define
 name|OPTIONS
-value|"dfprt"
+value|"46dfprt"
 end_define
 
 begin_endif
@@ -377,6 +377,14 @@ decl_stmt|,
 name|iamrecursive
 decl_stmt|,
 name|targetshouldbedirectory
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|family
+init|=
+name|PF_UNSPEC
 decl_stmt|;
 end_decl_stmt
 
@@ -762,6 +770,22 @@ name|ch
 condition|)
 block|{
 comment|/* User-visible flags. */
+case|case
+literal|'4'
+case|:
+name|family
+operator|=
+name|PF_INET
+expr_stmt|;
+break|break;
+case|case
+literal|'6'
+case|:
+name|family
+operator|=
+name|PF_INET6
+expr_stmt|;
+break|break;
 case|case
 literal|'K'
 case|:
@@ -1810,7 +1834,7 @@ endif|#
 directive|endif
 name|rem
 operator|=
-name|rcmd
+name|rcmd_af
 argument_list|(
 operator|&
 name|host
@@ -1832,6 +1856,8 @@ argument_list|,
 name|bp
 argument_list|,
 literal|0
+argument_list|,
+name|family
 argument_list|)
 expr_stmt|;
 if|if
@@ -1845,6 +1871,13 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|family
+operator|==
+name|PF_INET
+condition|)
+block|{
 name|tos
 operator|=
 name|IPTOS_THROUGHPUT
@@ -1875,6 +1908,7 @@ argument_list|(
 literal|"TOS (ignored)"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|response
@@ -2254,7 +2288,7 @@ argument_list|)
 else|:
 endif|#
 directive|endif
-name|rcmd
+name|rcmd_af
 argument_list|(
 operator|&
 name|host
@@ -2270,6 +2304,8 @@ argument_list|,
 name|bp
 argument_list|,
 literal|0
+argument_list|,
+name|family
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2300,6 +2336,13 @@ argument_list|(
 name|userid
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|family
+operator|==
+name|PF_INET
+condition|)
+block|{
 name|tos
 operator|=
 name|IPTOS_THROUGHPUT
@@ -2330,6 +2373,7 @@ argument_list|(
 literal|"TOS (ignored)"
 argument_list|)
 expr_stmt|;
+block|}
 name|sink
 argument_list|(
 literal|1
@@ -4901,7 +4945,7 @@ endif|#
 directive|endif
 name|rem
 operator|=
-name|rcmd
+name|rcmd_af
 argument_list|(
 name|host
 argument_list|,
@@ -4914,6 +4958,8 @@ argument_list|,
 name|bp
 argument_list|,
 literal|0
+argument_list|,
+name|family
 argument_list|)
 expr_stmt|;
 block|}
@@ -5128,9 +5174,9 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: rcp [-Kpx] [-k realm] f1 f2"
+literal|"usage: rcp [-46Kpx] [-k realm] f1 f2"
 argument_list|,
-literal|"       rcp [-Kprx] [-k realm] f1 ... fn directory"
+literal|"       rcp [-46Kprx] [-k realm] f1 ... fn directory"
 argument_list|)
 expr_stmt|;
 else|#
@@ -5144,9 +5190,9 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: rcp [-Kp] [-k realm] f1 f2"
+literal|"usage: rcp [-46Kp] [-k realm] f1 f2"
 argument_list|,
-literal|"       rcp [-Kpr] [-k realm] f1 ... fn directory"
+literal|"       rcp [-46Kpr] [-k realm] f1 ... fn directory"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -5162,9 +5208,9 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: rcp [-p] f1 f2"
+literal|"usage: rcp [-46p] f1 f2"
 argument_list|,
-literal|"       rcp [-pr] f1 ... fn directory"
+literal|"       rcp [-46pr] f1 ... fn directory"
 argument_list|)
 expr_stmt|;
 endif|#
