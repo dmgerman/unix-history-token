@@ -319,6 +319,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
 begin_function
 specifier|static
 name|vm_object_t
@@ -355,18 +359,35 @@ decl_stmt|;
 name|vm_offset_t
 name|off
 decl_stmt|;
-name|mtx_assert
-argument_list|(
+comment|/* 	 * Offset should be page aligned. 	 */
+if|if
+condition|(
+name|foff
 operator|&
-name|Giant
-argument_list|,
-name|MA_OWNED
+name|PAGE_MASK
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+name|size
+operator|=
+name|round_page
+argument_list|(
+name|size
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Make sure this device can be mapped. 	 */
 name|dev
 operator|=
 name|handle
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
 expr_stmt|;
 name|mapfunc
 operator|=
@@ -403,31 +424,18 @@ operator|)
 name|mapfunc
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
 block|}
-comment|/* 	 * Offset should be page aligned. 	 */
-if|if
-condition|(
-name|foff
-operator|&
-name|PAGE_MASK
-condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-name|size
-operator|=
-name|round_page
-argument_list|(
-name|size
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Check that the specified range of the device allows the desired 	 * protection. 	 * 	 * XXX assumes VM_PROT_* == PROT_* 	 */
 name|npages
 operator|=
@@ -469,11 +477,19 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
+block|}
 comment|/* 	 * Lock to prevent object creation race condition. 	 */
 name|sx_xlock
 argument_list|(
@@ -592,6 +608,12 @@ name|sx_xunlock
 argument_list|(
 operator|&
 name|dev_pager_sx
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 return|return
