@@ -382,6 +382,8 @@ operator|+
 name|i
 argument_list|)
 argument_list|,
+name|VM_ALLOC_NOBUSY
+operator||
 name|VM_ALLOC_ZERO
 operator||
 name|VM_ALLOC_RETRY
@@ -397,11 +399,6 @@ name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
 name|vm_page_unmanage
-argument_list|(
-name|mem
-argument_list|)
-expr_stmt|;
-name|vm_page_wakeup
 argument_list|(
 name|mem
 argument_list|)
