@@ -364,12 +364,6 @@ argument_list|,
 name|irq
 argument_list|)
 expr_stmt|;
-comment|/* We're going to attempt to probe it now, so mark it probed */
-name|aha_mark_probed_iop
-argument_list|(
-name|iobase
-argument_list|)
-expr_stmt|;
 name|aha_unit
 operator|++
 expr_stmt|;
