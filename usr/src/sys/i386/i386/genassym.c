@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)genassym.c	5.13 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)genassym.c	5.14 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)genassym.c	5.13 (Berkeley) %G%"
+literal|"@(#)genassym.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -28,6 +28,12 @@ begin_comment
 comment|/* not lint */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|KERNEL
+end_define
+
 begin_include
 include|#
 directive|include
@@ -38,12 +44,6 @@ begin_include
 include|#
 directive|include
 file|"sys/buf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sys/vmmeter.h"
 end_include
 
 begin_include
@@ -61,12 +61,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"sys/user.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"sys/mbuf.h"
 end_include
 
@@ -74,12 +68,6 @@ begin_include
 include|#
 directive|include
 file|"sys/msgbuf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"sys/resourcevar.h"
 end_include
 
 begin_include
@@ -115,19 +103,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"vm/vm_param.h"
+file|"vm/vm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vm/vm_map.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"machine/pmap.h"
+file|"sys/user.h"
 end_include
 
 begin_function
