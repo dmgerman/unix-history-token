@@ -2263,7 +2263,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|msgYesNo
 argument_list|(
 literal|"Do you want to grant only normal users FTP access to this\n"
