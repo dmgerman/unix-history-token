@@ -456,6 +456,10 @@ name|bool
 name|traced
 decl_stmt|;
 comment|/* Already printed in ldd trace output */
+name|bool
+name|jmpslots_done
+decl_stmt|;
+comment|/* Already have relocated the jump slots */
 name|struct
 name|link_map
 name|linkmap
@@ -725,8 +729,16 @@ name|reloc_plt
 parameter_list|(
 name|Obj_Entry
 modifier|*
-parameter_list|,
-name|bool
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|reloc_jmpslots
+parameter_list|(
+name|Obj_Entry
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
