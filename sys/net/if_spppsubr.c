@@ -18,13 +18,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<systm.h>
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<kernel.h>
+file|<sys/kernel.h>
 end_include
 
 begin_include
