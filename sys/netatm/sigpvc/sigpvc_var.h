@@ -199,39 +199,33 @@ begin_comment
 comment|/* sigpvc_subr.c */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|sigpvc_create_pvc
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|sigpvc
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|Atm_connvc
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|sigpvc_close_vcc
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|vccb
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

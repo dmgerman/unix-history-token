@@ -69,23 +69,21 @@ name|p_idx
 decl_stmt|;
 comment|/* IE pointer index in msg */
 name|int
-argument_list|(
-argument|*decode
-argument_list|)
+function_decl|(
+modifier|*
+name|decode
+function_decl|)
 comment|/* Decoding function */
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|usfmt
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|ie_generic
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
+modifier|*
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct

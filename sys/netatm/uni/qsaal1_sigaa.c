@@ -108,100 +108,85 @@ begin_comment
 comment|/*  * Local functions  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|sscop_estreq_ready
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|sscop
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|sscop_datreq_outconn
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|sscop
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|sscop_resreq_ready
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|sscop
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|sscop_resrsp_inresyn
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|sscop
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|sscop_resrsp_conresyn
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|sscop
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Stack command state lookup tables  */
@@ -211,592 +196,620 @@ begin_comment
 comment|/* SSCOP_INIT */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
 specifier|static
 name|void
-argument_list|(
-argument|*sscop_init_tab[SOS_NUMSTATES]
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-expr|struct
+function_decl|(
+modifier|*
+name|sscop_init_tab
+index|[
+name|SOS_NUMSTATES
+index|]
+function_decl|)
+parameter_list|(
+name|struct
 name|sscop
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-operator|=
+parameter_list|)
+init|=
 block|{
 name|sscop_init_inst
-block|,
+operator|,
 comment|/* SOS_INST */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* SOS_IDLE */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* SOS_OUTCONN */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* SOS_INCONN */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* SOS_OUTDISC */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* SOS_OUTRESYN */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* SOS_INRESYN */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* SOS_CONRESYN */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* invalid */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* invalid */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* SOS_READY */
-name|NULL
-comment|/* SOS_TERM */
-block|}
-expr_stmt|;
-end_expr_stmt
+function_decl|NULL
+end_function_decl
 
 begin_comment
+comment|/* SOS_TERM */
+end_comment
+
+begin_comment
+unit|};
 comment|/* SSCOP_TERM */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
 specifier|static
 name|void
-argument_list|(
-argument|*sscop_term_tab[SOS_NUMSTATES]
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-expr|struct
+function_decl|(
+modifier|*
+name|sscop_term_tab
+index|[
+name|SOS_NUMSTATES
+index|]
+function_decl|)
+parameter_list|(
+name|struct
 name|sscop
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-operator|=
+parameter_list|)
+init|=
 block|{
 name|sscop_term_all
-block|,
+operator|,
 comment|/* SOS_INST */
-name|sscop_term_all
-block|,
+function_decl|sscop_term_all
+operator|,
 comment|/* SOS_IDLE */
-name|sscop_term_all
-block|,
+function_decl|sscop_term_all
+operator|,
 comment|/* SOS_OUTCONN */
-name|sscop_term_all
-block|,
+function_decl|sscop_term_all
+operator|,
 comment|/* SOS_INCONN */
-name|sscop_term_all
-block|,
+function_decl|sscop_term_all
+operator|,
 comment|/* SOS_OUTDISC */
-name|sscop_term_all
-block|,
+function_decl|sscop_term_all
+operator|,
 comment|/* SOS_OUTRESYN */
-name|sscop_term_all
-block|,
+function_decl|sscop_term_all
+operator|,
 comment|/* SOS_INRESYN */
-name|sscop_term_all
-block|,
+function_decl|sscop_term_all
+operator|,
 comment|/* SOS_CONRESYN */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* invalid */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* invalid */
-name|sscop_term_all
-block|,
+function_decl|sscop_term_all
+operator|,
 comment|/* SOS_READY */
-name|sscop_term_all
-comment|/* SOS_TERM */
-block|}
-expr_stmt|;
-end_expr_stmt
+function_decl|sscop_term_all
+end_function_decl
 
 begin_comment
+comment|/* SOS_TERM */
+end_comment
+
+begin_comment
+unit|};
 comment|/* SSCOP_ESTABLISH_REQ */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
 specifier|static
 name|void
-argument_list|(
-argument|*sscop_estreq_tab[SOS_NUMSTATES]
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-expr|struct
+function_decl|(
+modifier|*
+name|sscop_estreq_tab
+index|[
+name|SOS_NUMSTATES
+index|]
+function_decl|)
+parameter_list|(
+name|struct
 name|sscop
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-operator|=
+parameter_list|)
+init|=
 block|{
 name|NULL
-block|,
+operator|,
 comment|/* SOS_INST */
-name|sscop_estreq_idle
-block|,
+function_decl|sscop_estreq_idle
+operator|,
 comment|/* SOS_IDLE */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* SOS_OUTCONN */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* SOS_INCONN */
-name|sscop_estreq_ready
-block|,
+function_decl|sscop_estreq_ready
+operator|,
 comment|/* SOS_OUTDISC */
-name|sscop_estreq_ready
-block|,
+function_decl|sscop_estreq_ready
+operator|,
 comment|/* SOS_OUTRESYN */
-name|sscop_estreq_ready
-block|,
+function_decl|sscop_estreq_ready
+operator|,
 comment|/* SOS_INRESYN */
-name|sscop_estreq_ready
-block|,
+function_decl|sscop_estreq_ready
+operator|,
 comment|/* SOS_CONRESYN */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* invalid */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* invalid */
-name|sscop_estreq_ready
-block|,
+function_decl|sscop_estreq_ready
+operator|,
 comment|/* SOS_READY */
-name|sscop_aa_noop_1
-comment|/* SOS_TERM */
-block|}
-expr_stmt|;
-end_expr_stmt
+function_decl|sscop_aa_noop_1
+end_function_decl
 
 begin_comment
+comment|/* SOS_TERM */
+end_comment
+
+begin_comment
+unit|};
 comment|/* SSCOP_ESTABLISH_RSP */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
 specifier|static
 name|void
-argument_list|(
-argument|*sscop_estrsp_tab[SOS_NUMSTATES]
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-expr|struct
+function_decl|(
+modifier|*
+name|sscop_estrsp_tab
+index|[
+name|SOS_NUMSTATES
+index|]
+function_decl|)
+parameter_list|(
+name|struct
 name|sscop
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-operator|=
+parameter_list|)
+init|=
 block|{
 name|NULL
-block|,
+operator|,
 comment|/* SOS_INST */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* SOS_IDLE */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* SOS_OUTCONN */
-name|sscop_estrsp_inconn
-block|,
+function_decl|sscop_estrsp_inconn
+operator|,
 comment|/* SOS_INCONN */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* SOS_OUTDISC */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* SOS_OUTRESYN */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* SOS_INRESYN */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* SOS_CONRESYN */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* invalid */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* invalid */
-name|sscop_aa_noop_1
-block|,
+function_decl|sscop_aa_noop_1
+operator|,
 comment|/* SOS_READY */
-name|sscop_aa_noop_1
-comment|/* SOS_TERM */
-block|}
-expr_stmt|;
-end_expr_stmt
+function_decl|sscop_aa_noop_1
+end_function_decl
 
 begin_comment
+comment|/* SOS_TERM */
+end_comment
+
+begin_comment
+unit|};
 comment|/* SSCOP_RELEASE_REQ */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
 specifier|static
 name|void
-argument_list|(
-argument|*sscop_relreq_tab[SOS_NUMSTATES]
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-expr|struct
+function_decl|(
+modifier|*
+name|sscop_relreq_tab
+index|[
+name|SOS_NUMSTATES
+index|]
+function_decl|)
+parameter_list|(
+name|struct
 name|sscop
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-operator|=
+parameter_list|)
+init|=
 block|{
 name|NULL
-block|,
+operator|,
 comment|/* SOS_INST */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* SOS_IDLE */
-name|sscop_relreq_outconn
-block|,
+function_decl|sscop_relreq_outconn
+operator|,
 comment|/* SOS_OUTCONN */
-name|sscop_relreq_inconn
-block|,
+function_decl|sscop_relreq_inconn
+operator|,
 comment|/* SOS_INCONN */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* SOS_OUTDISC */
-name|sscop_relreq_outconn
-block|,
+function_decl|sscop_relreq_outconn
+operator|,
 comment|/* SOS_OUTRESYN */
-name|sscop_relreq_ready
-block|,
+function_decl|sscop_relreq_ready
+operator|,
 comment|/* SOS_INRESYN */
-name|sscop_relreq_outconn
-block|,
+function_decl|sscop_relreq_outconn
+operator|,
 comment|/* SOS_CONRESYN */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* invalid */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* invalid */
-name|sscop_relreq_ready
-block|,
+function_decl|sscop_relreq_ready
+operator|,
 comment|/* SOS_READY */
-name|sscop_aa_noop_1
-comment|/* SOS_TERM */
-block|}
-expr_stmt|;
-end_expr_stmt
+function_decl|sscop_aa_noop_1
+end_function_decl
 
 begin_comment
+comment|/* SOS_TERM */
+end_comment
+
+begin_comment
+unit|};
 comment|/* SSCOP_DATA_REQ */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
 specifier|static
 name|void
-argument_list|(
-argument|*sscop_datreq_tab[SOS_NUMSTATES]
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-expr|struct
+function_decl|(
+modifier|*
+name|sscop_datreq_tab
+index|[
+name|SOS_NUMSTATES
+index|]
+function_decl|)
+parameter_list|(
+name|struct
 name|sscop
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-operator|=
+parameter_list|)
+init|=
 block|{
 name|NULL
-block|,
+operator|,
 comment|/* SOS_INST */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* SOS_IDLE */
-name|sscop_datreq_outconn
-block|,
+function_decl|sscop_datreq_outconn
+operator|,
 comment|/* SOS_OUTCONN */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* SOS_INCONN */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* SOS_OUTDISC */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* SOS_OUTRESYN */
-name|sscop_datreq_ready
-block|,
+function_decl|sscop_datreq_ready
+operator|,
 comment|/* SOS_INRESYN */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* SOS_CONRESYN */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* invalid */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* invalid */
-name|sscop_datreq_ready
-block|,
+function_decl|sscop_datreq_ready
+operator|,
 comment|/* SOS_READY */
-name|sscop_aa_noop_1
-comment|/* SOS_TERM */
-block|}
-expr_stmt|;
-end_expr_stmt
+function_decl|sscop_aa_noop_1
+end_function_decl
 
 begin_comment
+comment|/* SOS_TERM */
+end_comment
+
+begin_comment
+unit|};
 comment|/* SSCOP_RESYNC_REQ */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
 specifier|static
 name|void
-argument_list|(
-argument|*sscop_resreq_tab[SOS_NUMSTATES]
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-expr|struct
+function_decl|(
+modifier|*
+name|sscop_resreq_tab
+index|[
+name|SOS_NUMSTATES
+index|]
+function_decl|)
+parameter_list|(
+name|struct
 name|sscop
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-operator|=
+parameter_list|)
+init|=
 block|{
 name|NULL
-block|,
+operator|,
 comment|/* SOS_INST */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* SOS_IDLE */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* SOS_OUTCONN */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* SOS_INCONN */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* SOS_OUTDISC */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* SOS_OUTRESYN */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* SOS_INRESYN */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* SOS_CONRESYN */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* invalid */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* invalid */
-name|sscop_resreq_ready
-block|,
+function_decl|sscop_resreq_ready
+operator|,
 comment|/* SOS_READY */
-name|sscop_aa_noop_1
-comment|/* SOS_TERM */
-block|}
-expr_stmt|;
-end_expr_stmt
+function_decl|sscop_aa_noop_1
+end_function_decl
 
 begin_comment
+comment|/* SOS_TERM */
+end_comment
+
+begin_comment
+unit|};
 comment|/* SSCOP_RESYNC_RSP */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
 specifier|static
 name|void
-argument_list|(
-argument|*sscop_resrsp_tab[SOS_NUMSTATES]
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-expr|struct
+function_decl|(
+modifier|*
+name|sscop_resrsp_tab
+index|[
+name|SOS_NUMSTATES
+index|]
+function_decl|)
+parameter_list|(
+name|struct
 name|sscop
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-operator|=
+parameter_list|)
+init|=
 block|{
 name|NULL
-block|,
+operator|,
 comment|/* SOS_INST */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* SOS_IDLE */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* SOS_OUTCONN */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* SOS_INCONN */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* SOS_OUTDISC */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* SOS_OUTRESYN */
-name|sscop_resrsp_inresyn
-block|,
+function_decl|sscop_resrsp_inresyn
+operator|,
 comment|/* SOS_INRESYN */
-name|sscop_resrsp_conresyn
-block|,
+function_decl|sscop_resrsp_conresyn
+operator|,
 comment|/* SOS_CONRESYN */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* invalid */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* invalid */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* SOS_READY */
-name|sscop_aa_noop_0
-comment|/* SOS_TERM */
-block|}
-expr_stmt|;
-end_expr_stmt
+function_decl|sscop_aa_noop_0
+end_function_decl
 
 begin_comment
+comment|/* SOS_TERM */
+end_comment
+
+begin_comment
+unit|};
 comment|/* SSCOP_UNITDATA_REQ */
 end_comment
 
-begin_expr_stmt
+begin_function_decl
 specifier|static
 name|void
-argument_list|(
-argument|*sscop_udtreq_tab[SOS_NUMSTATES]
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-expr|struct
+function_decl|(
+modifier|*
+name|sscop_udtreq_tab
+index|[
+name|SOS_NUMSTATES
+index|]
+function_decl|)
+parameter_list|(
+name|struct
 name|sscop
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-operator|=
+parameter_list|)
+init|=
 block|{
 name|NULL
-block|,
+operator|,
 comment|/* SOS_INST */
-name|sscop_udtreq_all
-block|,
+function_decl|sscop_udtreq_all
+operator|,
 comment|/* SOS_IDLE */
-name|sscop_udtreq_all
-block|,
+function_decl|sscop_udtreq_all
+operator|,
 comment|/* SOS_OUTCONN */
-name|sscop_udtreq_all
-block|,
+function_decl|sscop_udtreq_all
+operator|,
 comment|/* SOS_INCONN */
-name|sscop_udtreq_all
-block|,
+function_decl|sscop_udtreq_all
+operator|,
 comment|/* SOS_OUTDISC */
-name|sscop_udtreq_all
-block|,
+function_decl|sscop_udtreq_all
+operator|,
 comment|/* SOS_OUTRESYN */
-name|sscop_udtreq_all
-block|,
+function_decl|sscop_udtreq_all
+operator|,
 comment|/* SOS_INRESYN */
-name|sscop_udtreq_all
-block|,
+function_decl|sscop_udtreq_all
+operator|,
 comment|/* SOS_CONRESYN */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* invalid */
-name|NULL
-block|,
+function_decl|NULL
+operator|,
 comment|/* invalid */
-name|sscop_udtreq_all
-block|,
+function_decl|sscop_udtreq_all
+operator|,
 comment|/* SOS_READY */
-name|sscop_aa_noop_1
-comment|/* SOS_TERM */
-block|}
-expr_stmt|;
-end_expr_stmt
+function_decl|sscop_aa_noop_1
+end_function_decl
 
 begin_comment
+comment|/* SOS_TERM */
+end_comment
+
+begin_comment
+unit|};
 comment|/*  * Stack command lookup table  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|void
 argument_list|(
-argument|*(*sscop_qsaal_aatab[SSCOP_CMD_SIZE])
-argument_list|)
-end_macro
-
-begin_expr_stmt
-name|__P
-argument_list|(
+operator|*
 operator|(
+operator|*
+name|sscop_qsaal_aatab
+index|[
+name|SSCOP_CMD_SIZE
+index|]
+operator|)
+argument_list|)
+argument_list|(
 expr|struct
 name|sscop
 operator|*
-operator|,
+argument_list|,
 name|int
-operator|,
+argument_list|,
 name|int
-operator|)
 argument_list|)
 operator|=
 block|{

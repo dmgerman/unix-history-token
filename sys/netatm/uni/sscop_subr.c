@@ -162,20 +162,17 @@ begin_comment
 comment|/*  * Local functions  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|sscop_proc_xmit
-name|__P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|sscop
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Get Next Element from STAT PDU  *  * Arguments:  *	m	pointer to current buffer in STAT PDU  *	pelem	pointer to location to store element value  *  * Returns:  *	addr	pointer to updated current buffer in STAT PDU  *  */
