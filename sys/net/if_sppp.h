@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Defines for synchronous PPP/Cisco link level subroutines.  *  * Copyright (C) 1994 Cronyx Ltd.  * Author: Serge Vakulenko,<vak@cronyx.ru>  *  * Heavily revamped to conform to RFC 1661.  * Copyright (C) 1997, Joerg Wunsch.  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organizations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * From: Version 1.7, Wed Jun  7 22:12:02 MSD 1995  *  * $Id$  */
+comment|/*  * Defines for synchronous PPP/Cisco link level subroutines.  *  * Copyright (C) 1994 Cronyx Ltd.  * Author: Serge Vakulenko,<vak@cronyx.ru>  *  * Heavily revamped to conform to RFC 1661.  * Copyright (C) 1997, Joerg Wunsch.  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organizations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * From: Version 1.7, Wed Jun  7 22:12:02 MSD 1995  *  * $Id: if_sppp.h,v 1.5 1997/05/19 22:03:08 joerg Exp $  */
 end_comment
 
 begin_ifndef
@@ -155,6 +155,11 @@ name|ifqueue
 name|pp_fastq
 decl_stmt|;
 comment|/* fast output queue */
+name|struct
+name|ifqueue
+name|pp_cpq
+decl_stmt|;
+comment|/* PPP control protocol queue */
 name|struct
 name|sppp
 modifier|*

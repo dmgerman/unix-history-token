@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Synchronous PPP/Cisco link level subroutines.  * Keepalive protocol implemented in both Cisco and PPP modes.  *  * Copyright (C) 1994 Cronyx Ltd.  * Author: Serge Vakulenko,<vak@cronyx.ru>  *  * Heavily revamped to conform to RFC 1661.  * Copyright (C) 1997, Joerg Wunsch.  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * From: Version 1.9, Wed Oct  4 18:58:15 MSK 1995  *  * $Id: if_spppsubr.c,v 1.19 1997/05/19 22:03:09 joerg Exp $  */
+comment|/*  * Synchronous PPP/Cisco link level subroutines.  * Keepalive protocol implemented in both Cisco and PPP modes.  *  * Copyright (C) 1994 Cronyx Ltd.  * Author: Serge Vakulenko,<vak@cronyx.ru>  *  * Heavily revamped to conform to RFC 1661.  * Copyright (C) 1997, Joerg Wunsch.  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * From: Version 1.9, Wed Oct  4 18:58:15 MSK 1995  *  * $Id: if_spppsubr.c,v 1.20 1997/05/20 22:54:04 joerg Exp $  */
 end_comment
 
 begin_include
@@ -3533,6 +3533,14 @@ literal|32
 expr_stmt|;
 name|sp
 operator|->
+name|pp_cpq
+operator|.
+name|ifq_maxlen
+operator|=
+literal|20
+expr_stmt|;
+name|sp
+operator|->
 name|pp_loopcnt
 operator|=
 literal|0
@@ -3751,6 +3759,14 @@ operator|->
 name|pp_fastq
 argument_list|)
 expr_stmt|;
+name|sppp_qflush
+argument_list|(
+operator|&
+name|sp
+operator|->
+name|pp_cpq
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3796,6 +3812,13 @@ operator|!
 name|sp
 operator|->
 name|pp_fastq
+operator|.
+name|ifq_head
+operator|&&
+operator|!
+name|sp
+operator|->
+name|pp_cpq
 operator|.
 name|ifq_head
 operator|&&
@@ -3862,6 +3885,42 @@ operator|=
 name|splimp
 argument_list|()
 expr_stmt|;
+comment|/* 	 * Process only the control protocol queue until we are in 	 * network phase. 	 * 	 * XXX Network phase itself is still not a sufficient test, we 	 * normally should keep a separate queue for each supported 	 * protocol family, and only serve these queues as the 	 * respective NCPs were opened.  The simplistic logic used 	 * here might cause some loss of network traffic while the 	 * NCPs are being negotiated, in particular if the NCPs take a 	 * long time to negotiate. 	 * 	 * Do always serve all three queues in Cisco mode. 	 */
+name|IF_DEQUEUE
+argument_list|(
+operator|&
+name|sp
+operator|->
+name|pp_cpq
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+operator|&&
+operator|(
+name|sp
+operator|->
+name|pp_phase
+operator|==
+name|PHASE_NETWORK
+operator|||
+operator|(
+name|sp
+operator|->
+name|pp_flags
+operator|&
+name|PP_CISCO
+operator|)
+operator|!=
+literal|0
+operator|)
+condition|)
+block|{
 name|IF_DEQUEUE
 argument_list|(
 operator|&
@@ -3874,8 +3933,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|m
+operator|==
+name|NULL
 condition|)
 name|IF_DEQUEUE
 argument_list|(
@@ -3889,15 +3949,14 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+block|}
 name|splx
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|m
-operator|)
 return|;
 block|}
 end_function
@@ -4110,6 +4169,12 @@ if|if
 condition|(
 name|going_down
 condition|)
+block|{
+name|sppp_flush
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|ifp
 operator|->
 name|if_flags
@@ -4117,6 +4182,7 @@ operator|&=
 operator|~
 name|IFF_RUNNING
 expr_stmt|;
+block|}
 break|break;
 ifdef|#
 directive|ifdef
@@ -4546,7 +4612,7 @@ argument_list|(
 operator|&
 name|sp
 operator|->
-name|pp_fastq
+name|pp_cpq
 argument_list|)
 expr_stmt|;
 block|}
@@ -4978,10 +5044,18 @@ argument_list|(
 operator|&
 name|sp
 operator|->
-name|pp_fastq
+name|pp_cpq
 argument_list|)
 condition|)
 block|{
+name|IF_DROP
+argument_list|(
+operator|&
+name|sp
+operator|->
+name|pp_fastq
+argument_list|)
+expr_stmt|;
 name|IF_DROP
 argument_list|(
 operator|&
@@ -5002,7 +5076,7 @@ argument_list|(
 operator|&
 name|sp
 operator|->
-name|pp_fastq
+name|pp_cpq
 argument_list|,
 name|m
 argument_list|)
@@ -5316,10 +5390,18 @@ argument_list|(
 operator|&
 name|sp
 operator|->
-name|pp_fastq
+name|pp_cpq
 argument_list|)
 condition|)
 block|{
+name|IF_DROP
+argument_list|(
+operator|&
+name|sp
+operator|->
+name|pp_fastq
+argument_list|)
+expr_stmt|;
 name|IF_DROP
 argument_list|(
 operator|&
@@ -5345,7 +5427,7 @@ argument_list|(
 operator|&
 name|sp
 operator|->
-name|pp_fastq
+name|pp_cpq
 argument_list|,
 name|m
 argument_list|)
@@ -6971,7 +7053,7 @@ argument_list|(
 operator|&
 name|sp
 operator|->
-name|pp_fastq
+name|pp_cpq
 argument_list|)
 expr_stmt|;
 comment|/* Shut down the PPP link. */
@@ -9175,7 +9257,7 @@ argument_list|(
 operator|&
 name|sp
 operator|->
-name|pp_fastq
+name|pp_cpq
 argument_list|)
 expr_stmt|;
 comment|/* XXX ? */
@@ -12912,7 +12994,7 @@ argument_list|(
 operator|&
 name|sp
 operator|->
-name|pp_fastq
+name|pp_cpq
 argument_list|)
 expr_stmt|;
 if|if
