@@ -1552,10 +1552,7 @@ operator|=
 literal|1
 expr_stmt|;
 return|return
-name|_ftp_closefn
-argument_list|(
-name|v
-argument_list|)
+literal|0
 return|;
 block|}
 if|if
