@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -527,12 +533,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Write data to the compressed stream.  */
+comment|/*  * Write data to the compressed stream.  *  * Returns ARCHIVE_OK if all data written, error otherwise.  */
 end_comment
 
 begin_function
 specifier|static
-name|ssize_t
+name|int
 name|archive_compressor_bzip2_write
 parameter_list|(
 name|struct
@@ -562,10 +568,11 @@ name|compression_data
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|a
 operator|->
 name|client_writer
+operator|==
+name|NULL
 condition|)
 block|{
 name|archive_set_error
@@ -620,8 +627,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-operator|-
-literal|1
+name|ARCHIVE_FATAL
 operator|)
 return|;
 name|a
@@ -632,7 +638,7 @@ name|length
 expr_stmt|;
 return|return
 operator|(
-name|length
+name|ARCHIVE_OK
 operator|)
 return|;
 block|}
@@ -666,6 +672,9 @@ name|state
 decl_stmt|;
 name|ssize_t
 name|target_block_length
+decl_stmt|;
+name|ssize_t
+name|bytes_written
 decl_stmt|;
 name|unsigned
 name|tocopy
@@ -932,7 +941,7 @@ name|target_block_length
 expr_stmt|;
 block|}
 comment|/* Write the last block */
-name|ret
+name|bytes_written
 operator|=
 call|(
 name|a
@@ -953,21 +962,30 @@ argument_list|,
 name|block_length
 argument_list|)
 expr_stmt|;
+comment|/* TODO: Handle short write of final block. */
+if|if
+condition|(
+name|bytes_written
+operator|<=
+literal|0
+condition|)
+name|ret
+operator|=
+name|ARCHIVE_FATAL
+expr_stmt|;
+else|else
+block|{
 name|a
 operator|->
 name|raw_position
 operator|+=
 name|ret
 expr_stmt|;
-if|if
-condition|(
 name|ret
-operator|!=
-literal|0
-condition|)
-goto|goto
-name|cleanup
-goto|;
+operator|=
+name|ARCHIVE_OK
+expr_stmt|;
+block|}
 comment|/* Cleanup: shut down compressor, release memory, etc. */
 name|cleanup
 label|:
@@ -1068,7 +1086,10 @@ name|int
 name|finishing
 parameter_list|)
 block|{
-name|size_t
+name|ssize_t
+name|bytes_written
+decl_stmt|;
+name|int
 name|ret
 decl_stmt|;
 for|for
@@ -1088,7 +1109,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|ret
+name|bytes_written
 operator|=
 call|(
 name|a
@@ -1113,7 +1134,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ret
+name|bytes_written
 operator|<=
 literal|0
 condition|)
@@ -1128,7 +1149,10 @@ block|}
 elseif|else
 if|if
 condition|(
-name|ret
+operator|(
+name|size_t
+operator|)
+name|bytes_written
 operator|<
 name|state
 operator|->
@@ -1146,13 +1170,13 @@ name|state
 operator|->
 name|compressed
 operator|+
-name|ret
+name|bytes_written
 argument_list|,
 name|state
 operator|->
 name|compressed_buffer_size
 operator|-
-name|ret
+name|bytes_written
 argument_list|)
 expr_stmt|;
 block|}
@@ -1160,7 +1184,7 @@ name|a
 operator|->
 name|raw_position
 operator|+=
-name|ret
+name|bytes_written
 expr_stmt|;
 name|state
 operator|->
@@ -1176,7 +1200,7 @@ name|state
 operator|->
 name|compressed_buffer_size
 operator|-
-name|ret
+name|bytes_written
 expr_stmt|;
 name|state
 operator|->
@@ -1184,7 +1208,7 @@ name|stream
 operator|.
 name|avail_out
 operator|=
-name|ret
+name|bytes_written
 expr_stmt|;
 block|}
 name|ret

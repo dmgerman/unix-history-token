@@ -746,6 +746,10 @@ begin_comment
 comment|/*  * Note that the compressor is responsible for blocking.  */
 end_comment
 
+begin_comment
+comment|/* Should be "ssize_t", but that breaks the ABI.<sigh> */
+end_comment
+
 begin_function
 name|int
 name|archive_write_data
@@ -764,6 +768,9 @@ name|size_t
 name|s
 parameter_list|)
 block|{
+name|int
+name|ret
+decl_stmt|;
 name|archive_check_magic
 argument_list|(
 name|a
@@ -773,11 +780,13 @@ argument_list|,
 name|ARCHIVE_STATE_DATA
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|ret
+operator|=
+call|(
 name|a
 operator|->
 name|format_write_data
+call|)
 argument_list|(
 name|a
 argument_list|,
@@ -785,6 +794,20 @@ name|buff
 argument_list|,
 name|s
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ret
+operator|==
+name|ARCHIVE_OK
+condition|?
+operator|(
+name|ssize_t
+operator|)
+name|s
+else|:
+operator|-
+literal|1
 operator|)
 return|;
 block|}

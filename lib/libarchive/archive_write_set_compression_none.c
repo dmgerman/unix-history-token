@@ -378,7 +378,7 @@ end_comment
 
 begin_function
 specifier|static
-name|ssize_t
+name|int
 name|archive_compressor_none_write
 parameter_list|(
 name|struct
@@ -405,8 +405,8 @@ name|remaining
 decl_stmt|,
 name|to_copy
 decl_stmt|;
-name|int
-name|ret
+name|ssize_t
+name|bytes_written
 decl_stmt|;
 name|struct
 name|archive_none
@@ -469,7 +469,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|ret
+name|bytes_written
 operator|=
 call|(
 name|a
@@ -492,12 +492,23 @@ operator|->
 name|buffer_size
 argument_list|)
 expr_stmt|;
-comment|/* XXX TODO: if ret< state->buffer_size XXX */
+if|if
+condition|(
+name|bytes_written
+operator|<=
+literal|0
+condition|)
+return|return
+operator|(
+name|ARCHIVE_FATAL
+operator|)
+return|;
+comment|/* XXX TODO: if bytes_written< state->buffer_size */
 name|a
 operator|->
 name|raw_position
 operator|+=
-name|ret
+name|bytes_written
 expr_stmt|;
 name|state
 operator|->
@@ -573,7 +584,7 @@ name|length
 expr_stmt|;
 return|return
 operator|(
-name|length
+name|ARCHIVE_OK
 operator|)
 return|;
 block|}
@@ -599,6 +610,9 @@ name|block_length
 decl_stmt|;
 name|ssize_t
 name|target_block_length
+decl_stmt|;
+name|ssize_t
+name|bytes_written
 decl_stmt|;
 name|int
 name|ret
@@ -753,7 +767,7 @@ operator|=
 name|target_block_length
 expr_stmt|;
 block|}
-name|ret
+name|bytes_written
 operator|=
 call|(
 name|a
@@ -774,12 +788,29 @@ argument_list|,
 name|block_length
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bytes_written
+operator|<=
+literal|0
+condition|)
+name|ret
+operator|=
+name|ARCHIVE_FATAL
+expr_stmt|;
+else|else
+block|{
 name|a
 operator|->
 name|raw_position
 operator|+=
-name|ret
+name|bytes_written
 expr_stmt|;
+name|ret
+operator|=
+name|ARCHIVE_OK
+expr_stmt|;
+block|}
 block|}
 comment|/* Close the output */
 if|if
