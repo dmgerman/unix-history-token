@@ -47,7 +47,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	3.53	%G%"
+literal|"@(#)deliver.c	3.54	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1092,7 +1092,7 @@ condition|)
 block|{
 name|i
 operator|=
-name|smtpmrcp
+name|smtprcpt
 argument_list|(
 name|to
 argument_list|)

@@ -11,7 +11,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	3.7	%G%"
+literal|"@(#)srvrsmtp.c	3.8	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,12 +65,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CMDMRCP
+name|CMDRCPT
 value|2
 end_define
 
 begin_comment
-comment|/* mrcp -- designate recipient */
+comment|/* rcpt -- designate recipient */
 end_comment
 
 begin_define
@@ -82,17 +82,6 @@ end_define
 
 begin_comment
 comment|/* data -- send message text */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CMDDOIT
-value|4
-end_define
-
-begin_comment
-comment|/* doit -- actually do delivery */
 end_comment
 
 begin_define
@@ -161,6 +150,17 @@ begin_comment
 comment|/* mrsq -- for old mtp compat only */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CMDHELO
+value|11
+end_define
+
+begin_comment
+comment|/* helo -- be polite */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -173,17 +173,18 @@ literal|"mail"
 block|,
 name|CMDMAIL
 block|,
+literal|"rcpt"
+block|,
+name|CMDRCPT
+block|,
 literal|"mrcp"
 block|,
-name|CMDMRCP
+name|CMDRCPT
 block|,
+comment|/* for old MTP compatability */
 literal|"data"
 block|,
 name|CMDDATA
-block|,
-literal|"doit"
-block|,
-name|CMDDOIT
 block|,
 literal|"rset"
 block|,
@@ -208,6 +209,10 @@ block|,
 literal|"mrsq"
 block|,
 name|CMDMRSQ
+block|,
+literal|"helo"
+block|,
+name|CMDHELO
 block|,
 name|NULL
 block|,
@@ -435,6 +440,20 @@ name|cmdcode
 condition|)
 block|{
 case|case
+name|CMDHELO
+case|:
+comment|/* hello -- introduce yourself */
+name|message
+argument_list|(
+literal|"250"
+argument_list|,
+literal|"%s Pleased to meet you"
+argument_list|,
+name|HostName
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|CMDMAIL
 case|:
 comment|/* mail -- designate sender */
@@ -518,9 +537,9 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-name|CMDMRCP
+name|CMDRCPT
 case|:
-comment|/* mrcp -- designate recipient */
+comment|/* rcpt -- designate recipient */
 name|p
 operator|=
 name|skipword
@@ -597,6 +616,39 @@ case|case
 name|CMDDATA
 case|:
 comment|/* data -- text of mail */
+if|if
+condition|(
+operator|!
+name|hasmail
+condition|)
+block|{
+name|message
+argument_list|(
+literal|"503"
+argument_list|,
+literal|"Need MAIL command"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+elseif|else
+if|if
+condition|(
+name|rcps
+operator|<=
+literal|0
+condition|)
+block|{
+name|message
+argument_list|(
+literal|"503"
+argument_list|,
+literal|"Need RCPT (recipient)"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+comment|/* collect the text of the message */
 name|collect
 argument_list|(
 name|TRUE
@@ -605,68 +657,11 @@ expr_stmt|;
 if|if
 condition|(
 name|Errors
-operator|==
+operator|!=
 literal|0
 condition|)
-block|{
-name|message
-argument_list|(
-literal|"250"
-argument_list|,
-literal|"Message stored"
-argument_list|)
-expr_stmt|;
-name|hasdata
-operator|=
-name|TRUE
-expr_stmt|;
-block|}
 break|break;
-case|case
-name|CMDDOIT
-case|:
-comment|/* doit -- actually send everything */
-if|if
-condition|(
-operator|!
-name|hasmail
-condition|)
-name|message
-argument_list|(
-literal|"503"
-argument_list|,
-literal|"Need MAIL command"
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|rcps
-operator|<=
-literal|0
-condition|)
-name|message
-argument_list|(
-literal|"503"
-argument_list|,
-literal|"Need MRCP (recipient)"
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-operator|!
-name|hasdata
-condition|)
-name|message
-argument_list|(
-literal|"503"
-argument_list|,
-literal|"No message, use DATA"
-argument_list|)
-expr_stmt|;
-else|else
-block|{
+comment|/* if sending to multiple people, mail back errors */
 if|if
 condition|(
 name|rcps
@@ -679,11 +674,13 @@ name|MailBack
 operator|=
 name|TRUE
 expr_stmt|;
+comment|/* send to all recipients */
 name|sendall
 argument_list|(
 name|FALSE
 argument_list|)
 expr_stmt|;
+comment|/* reset strange modes */
 name|HoldErrs
 operator|=
 name|FALSE
@@ -692,6 +689,7 @@ name|To
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* issue success if appropriate */
 if|if
 condition|(
 name|Errors
@@ -709,7 +707,6 @@ argument_list|,
 literal|"Sent"
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 case|case
 name|CMDRSET

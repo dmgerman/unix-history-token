@@ -29,7 +29,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)usersmtp.c	3.4	%G%"
+literal|"@(#)usersmtp.c	3.5	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -168,6 +168,47 @@ operator|(
 name|EX_TEMPFAIL
 operator|)
 return|;
+comment|/* 	**  Send the HELO command. 	**	My mother taught me to always introduce myself, even 	**	if it is useless. 	*/
+name|smtpmessage
+argument_list|(
+literal|"HELO %s"
+argument_list|,
+name|HostName
+argument_list|)
+expr_stmt|;
+name|r
+operator|=
+name|reply
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|REPLYTYPE
+argument_list|(
+name|r
+argument_list|)
+operator|==
+literal|5
+condition|)
+return|return
+operator|(
+name|EX_UNAVAILABLE
+operator|)
+return|;
+if|if
+condition|(
+name|REPLYTYPE
+argument_list|(
+name|r
+argument_list|)
+operator|!=
+literal|2
+condition|)
+return|return
+operator|(
+name|EX_TEMPFAIL
+operator|)
+return|;
 comment|/* 	**  Send the MAIL command. 	**	Designates the sender. 	*/
 operator|(
 name|void
@@ -237,11 +278,11 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  SMTPMRCP -- designate recipient. ** **	Parameters: **		to -- address of recipient. ** **	Returns: **		exit status corresponding to recipient status. ** **	Side Effects: **		Sends the mail via SMTP. */
+comment|/* **  SMTPRCPT -- designate recipient. ** **	Parameters: **		to -- address of recipient. ** **	Returns: **		exit status corresponding to recipient status. ** **	Side Effects: **		Sends the mail via SMTP. */
 end_comment
 
 begin_macro
-name|smtpmrcp
+name|smtprcpt
 argument_list|(
 argument|to
 argument_list|)
@@ -262,7 +303,7 @@ name|r
 decl_stmt|;
 name|smtpmessage
 argument_list|(
-literal|"MRCP To:<%s>"
+literal|"RCPT To:<%s>"
 argument_list|,
 name|to
 operator|->
@@ -311,7 +352,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  SMTPFINISH -- finish up sending all the SMTP protocol. ** **	Parameters: **		m -- mailer being sent to. **		editfcn -- a function to call to output the **			text of the message with. ** **	Returns: **		exit status corresponding to DOIT command. ** **	Side Effects: **		none. */
+comment|/* **  SMTPFINISH -- finish up sending all the SMTP protocol. ** **	Parameters: **		m -- mailer being sent to. **		editfcn -- a function to call to output the **			text of the message with. ** **	Returns: **		exit status corresponding to DATA command. ** **	Side Effects: **		none. */
 end_comment
 
 begin_macro
@@ -428,28 +469,6 @@ condition|)
 return|return
 operator|(
 name|EX_SOFTWARE
-operator|)
-return|;
-comment|/* 	**  Make the actual delivery happen. 	*/
-name|smtpmessage
-argument_list|(
-literal|"DOIT"
-argument_list|)
-expr_stmt|;
-name|r
-operator|=
-name|reply
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|r
-operator|!=
-literal|250
-condition|)
-return|return
-operator|(
-name|EX_TEMPFAIL
 operator|)
 return|;
 return|return
