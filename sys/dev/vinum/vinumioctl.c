@@ -1506,59 +1506,6 @@ return|return
 literal|0
 return|;
 comment|/* not a titty */
-ifdef|#
-directive|ifdef
-name|NO_GEOM
-case|case
-name|DIOCWLABEL
-case|:
-comment|/* set or reset label writeable */
-if|if
-condition|(
-operator|(
-name|flag
-operator|&
-name|FWRITE
-operator|)
-operator|==
-literal|0
-condition|)
-comment|/* not writeable? */
-return|return
-name|EACCES
-return|;
-comment|/* no, die */
-if|if
-condition|(
-operator|*
-operator|(
-name|int
-operator|*
-operator|)
-name|data
-operator|!=
-literal|0
-condition|)
-comment|/* set it? */
-name|vol
-operator|->
-name|flags
-operator||=
-name|VF_WLABEL
-expr_stmt|;
-comment|/* yes */
-else|else
-name|vol
-operator|->
-name|flags
-operator|&=
-operator|~
-name|VF_WLABEL
-expr_stmt|;
-comment|/* no, reset */
-break|break;
-endif|#
-directive|endif
 default|default:
 return|return
 name|ENOTTY

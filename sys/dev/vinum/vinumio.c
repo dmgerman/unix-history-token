@@ -2389,15 +2389,6 @@ modifier|*
 name|config
 decl_stmt|;
 comment|/* point to config data */
-ifdef|#
-directive|ifdef
-name|NO_GEOM
-name|int
-name|wlabel_on
-decl_stmt|;
-comment|/* to set writing label on/off */
-endif|#
-directive|endif
 comment|/* don't save the configuration while we're still working on it */
 if|if
 condition|(
@@ -2703,49 +2694,6 @@ operator|)
 condition|)
 block|{
 comment|/* and it's a real drive */
-ifdef|#
-directive|ifdef
-name|NO_GEOM
-name|wlabel_on
-operator|=
-literal|1
-expr_stmt|;
-comment|/* enable writing the label */
-call|(
-name|void
-call|)
-argument_list|(
-operator|*
-name|devsw
-argument_list|(
-name|drive
-operator|->
-name|dev
-argument_list|)
-operator|->
-name|d_ioctl
-argument_list|)
-argument_list|(
-name|drive
-operator|->
-name|dev
-argument_list|,
-comment|/* make the label writeable */
-name|DIOCWLABEL
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|wlabel_on
-argument_list|,
-name|FWRITE
-argument_list|,
-name|curthread
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|error
 operator|=
 name|write_drive
@@ -2805,49 +2753,6 @@ name|MAXCONFIG
 argument_list|)
 expr_stmt|;
 comment|/* second copy */
-ifdef|#
-directive|ifdef
-name|NO_GEOM
-name|wlabel_on
-operator|=
-literal|0
-expr_stmt|;
-comment|/* enable writing the label */
-call|(
-name|void
-call|)
-argument_list|(
-operator|*
-name|devsw
-argument_list|(
-name|drive
-operator|->
-name|dev
-argument_list|)
-operator|->
-name|d_ioctl
-argument_list|)
-argument_list|(
-name|drive
-operator|->
-name|dev
-argument_list|,
-comment|/* make the label non-writeable again */
-name|DIOCWLABEL
-argument_list|,
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|wlabel_on
-argument_list|,
-name|FWRITE
-argument_list|,
-name|curthread
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|unlockdrive
 argument_list|(
 name|drive
