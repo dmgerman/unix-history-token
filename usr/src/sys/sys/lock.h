@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code contains ideas from software contributed to Berkeley by  * Avadis Tevanian, Jr., Michael Wayne Young, and the Mach Operating  * System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)lock.h	8.8 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1995  *	The Regents of the University of California.  All rights reserved.  *  * This code contains ideas from software contributed to Berkeley by  * Avadis Tevanian, Jr., Michael Wayne Young, and the Mach Operating  * System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)lock.h	8.9 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -73,7 +73,7 @@ begin_define
 define|#
 directive|define
 name|LK_TYPE_MASK
-value|0x00000007
+value|0x0000000f
 end_define
 
 begin_comment
@@ -256,8 +256,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LK_DRAINED
+name|LK_DRAINING
 value|0x00001000
+end_define
+
+begin_comment
+comment|/* lock is being drained */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LK_DRAINED
+value|0x00002000
 end_define
 
 begin_comment
@@ -312,6 +323,12 @@ name|LK_NOPROC
 value|((pid_t) -1)
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|proc
+struct_decl|;
+end_struct_decl
+
 begin_decl_stmt
 name|void
 name|lockinit
@@ -357,8 +374,10 @@ expr|struct
 name|simple_lock
 operator|*
 operator|,
-name|pid_t
-name|pid
+expr|struct
+name|proc
+operator|*
+name|p
 operator|)
 argument_list|)
 decl_stmt|;
