@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * OMRON Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)sd.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * OMRON Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)sd.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1415,24 +1415,6 @@ name|sz
 decl_stmt|,
 name|s
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
-argument_list|(
-literal|"sdstrategy: bp->b_blkno = %d, bp->bcount = %d\n"
-argument_list|,
-name|bp
-operator|->
-name|b_blkno
-argument_list|,
-name|bp
-operator|->
-name|b_bcount
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|bn
 operator|=
 name|bp
@@ -1553,20 +1535,6 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
-argument_list|(
-literal|"sdstrategy: dp->b_active = %d\n"
-argument_list|,
-name|dp
-operator|->
-name|b_active
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|dp
@@ -2090,20 +2058,6 @@ decl_stmt|;
 name|int
 name|cond
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|printf
-argument_list|(
-literal|"sdintr(unit = %d, stat = %d)\n"
-argument_list|,
-name|unit
-argument_list|,
-name|stat
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|stat
