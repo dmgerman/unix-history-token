@@ -450,6 +450,7 @@ name|getans
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 name|prompt
@@ -1820,7 +1821,7 @@ name|j
 decl_stmt|,
 name|arrow_location
 decl_stmt|,
-name|link
+name|wumplink
 decl_stmt|,
 name|ok
 decl_stmt|;
@@ -1986,7 +1987,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|link
+name|wumplink
 operator|=
 operator|(
 name|random
@@ -1997,7 +1998,7 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-name|link
+name|wumplink
 operator|==
 name|player_loc
 condition|)
@@ -2023,7 +2024,7 @@ index|]
 operator|.
 name|tunnel
 index|[
-name|link
+name|wumplink
 index|]
 operator|>
 name|room_num
@@ -2042,7 +2043,7 @@ index|]
 operator|.
 name|tunnel
 index|[
-name|link
+name|wumplink
 index|]
 argument_list|)
 expr_stmt|;
@@ -2065,7 +2066,7 @@ index|]
 operator|.
 name|tunnel
 index|[
-name|link
+name|wumplink
 index|]
 argument_list|)
 expr_stmt|;
@@ -2078,7 +2079,7 @@ index|]
 operator|.
 name|tunnel
 index|[
-name|link
+name|wumplink
 index|]
 expr_stmt|;
 break|break;
@@ -2252,7 +2253,7 @@ name|j
 decl_stmt|,
 name|k
 decl_stmt|,
-name|link
+name|wumplink
 decl_stmt|;
 name|int
 name|delta
@@ -2329,7 +2330,7 @@ operator|++
 name|i
 control|)
 block|{
-name|link
+name|wumplink
 operator|=
 operator|(
 operator|(
@@ -2354,12 +2355,12 @@ index|[
 literal|0
 index|]
 operator|=
-name|link
+name|wumplink
 expr_stmt|;
 comment|/* forw link */
 name|cave
 index|[
-name|link
+name|wumplink
 index|]
 operator|.
 name|tunnel
@@ -2417,7 +2418,7 @@ condition|)
 continue|continue;
 name|try_again
 label|:
-name|link
+name|wumplink
 operator|=
 operator|(
 name|random
@@ -2454,7 +2455,7 @@ index|[
 name|k
 index|]
 operator|==
-name|link
+name|wumplink
 condition|)
 goto|goto
 name|try_again
@@ -2469,7 +2470,7 @@ index|[
 name|j
 index|]
 operator|=
-name|link
+name|wumplink
 expr_stmt|;
 if|if
 condition|(
@@ -2500,7 +2501,7 @@ if|if
 condition|(
 name|cave
 index|[
-name|link
+name|wumplink
 index|]
 operator|.
 name|tunnel
@@ -2519,7 +2520,7 @@ if|if
 condition|(
 name|cave
 index|[
-name|link
+name|wumplink
 index|]
 operator|.
 name|tunnel
@@ -2533,7 +2534,7 @@ condition|)
 block|{
 name|cave
 index|[
-name|link
+name|wumplink
 index|]
 operator|.
 name|tunnel
@@ -2944,6 +2945,7 @@ name|getans
 parameter_list|(
 name|prompt
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|prompt
