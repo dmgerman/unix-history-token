@@ -3061,17 +3061,17 @@ name|g_consumer
 modifier|*
 name|cp
 decl_stmt|;
-name|KASSERT
-argument_list|(
+if|if
+condition|(
 name|gp
-operator|!=
+operator|==
 name|NULL
-argument_list|,
+condition|)
+return|return
 operator|(
-literal|"gv_is_open: NULL gp"
+literal|0
 operator|)
-argument_list|)
-expr_stmt|;
+return|;
 name|LIST_FOREACH
 argument_list|(
 argument|cp
