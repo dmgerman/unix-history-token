@@ -5607,7 +5607,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|pthread_keycreate
+name|pthread_key_create
 argument_list|(
 operator|&
 name|localtime_key
@@ -5989,7 +5989,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|pthread_keycreate
+name|pthread_key_create
 argument_list|(
 operator|&
 name|gmtime_key
