@@ -8991,8 +8991,6 @@ name|struct
 name|sk_tx_desc
 modifier|*
 name|cur_tx
-init|=
-name|NULL
 decl_stmt|;
 name|struct
 name|ifnet
@@ -9147,13 +9145,6 @@ name|if_timer
 operator|=
 literal|0
 expr_stmt|;
-name|ifp
-operator|->
-name|if_flags
-operator|&=
-operator|~
-name|IFF_OACTIVE
-expr_stmt|;
 block|}
 else|else
 comment|/* nudge chip to keep tx ring moving */
@@ -9168,6 +9159,25 @@ argument_list|,
 name|SK_TXBMU_TX_START
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc_if
+operator|->
+name|sk_cdata
+operator|.
+name|sk_tx_cnt
+operator|<
+name|SK_TX_RING_CNT
+operator|-
+literal|2
+condition|)
+name|ifp
+operator|->
+name|if_flags
+operator|&=
+operator|~
+name|IFF_OACTIVE
+expr_stmt|;
 name|sc_if
 operator|->
 name|sk_cdata
@@ -9176,7 +9186,6 @@ name|sk_tx_cons
 operator|=
 name|idx
 expr_stmt|;
-return|return;
 block|}
 end_function
 
