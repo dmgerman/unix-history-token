@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: pcisupport.c,v 1.79 1998/12/14 05:47:28 dillon Exp $ ** **  Device driver for DEC/INTEL PCI chipsets. ** **  FreeBSD ** **------------------------------------------------------------------------- ** **  Written for FreeBSD by **	wolf@cologne.de 	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994,1995 Stefan Esser.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: pcisupport.c,v 1.80 1998/12/14 09:46:31 n_hibma Exp $ ** **  Device driver for DEC/INTEL PCI chipsets. ** **  FreeBSD ** **------------------------------------------------------------------------- ** **  Written for FreeBSD by **	wolf@cologne.de 	Wolfgang Stanglmeier **	se@mi.Uni-Koeln.de	Stefan Esser ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994,1995 Stefan Esser.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_include
@@ -377,7 +377,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * XXX Both fixbushigh_orion() and fixbushigh_i1225() are bogus in that way,  * that they store the highest bus number to scan in this device's config   * data, though it is about PCI buses attached to the CPU independently!  */
+comment|/*  * XXX Both fixbushigh_orion() and fixbushigh_i1225() are bogus in that way,  * that they store the highest bus number to scan in this device's config   * data, though it is about PCI buses attached to the CPU independently!  * The same goes for fixbushigh_450nx.  */
 end_comment
 
 begin_function
@@ -458,6 +458,153 @@ operator|=
 name|sublementarybus
 operator|+
 literal|1
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * This reads the PCI config space for the 82451NX MIOC in the 450NX  * chipset to determine the PCI bus configuration.  *  * Assuming the BIOS has set up the MIOC properly, this will correctly  * report the number of PCI busses in the system.  *  * A small problem is that the Host to PCI bridge control is in the MIOC,  * while the host-pci bridges are separate PCI devices.  So it really  * isn't easily possible to set up the subordinatebus mappings as the  * 82454NX PCI expander bridges are probed, although that makes the  * most sense.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|fixbushigh_450nx
+parameter_list|(
+name|pcici_t
+name|tag
+parameter_list|)
+block|{
+name|int
+name|subordinatebus
+decl_stmt|;
+name|unsigned
+name|long
+name|devmap
+decl_stmt|;
+comment|/* 	 * Read the DEVMAP field, so we know which fields to check. 	 * If the Host-PCI bridge isn't marked as present by the BIOS, 	 * we have to assume it doesn't exist. 	 * If this doesn't find all the PCI busses, complain to the 	 * BIOS vendor.  There is nothing more we can do. 	 */
+name|devmap
+operator|=
+name|pci_cfgread
+argument_list|(
+name|tag
+argument_list|,
+literal|0xd6
+argument_list|,
+literal|2
+argument_list|)
+operator|&
+literal|0x3c
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|devmap
+condition|)
+name|panic
+argument_list|(
+literal|"450NX MIOC: No host to PCI bridges marked present.\n"
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Since the buses are configured in order, we just have to 	 * find the highest bus, and use those numbers. 	 */
+if|if
+condition|(
+name|devmap
+operator|&
+literal|0x20
+condition|)
+block|{
+comment|/* B1 */
+name|subordinatebus
+operator|=
+name|pci_cfgread
+argument_list|(
+name|tag
+argument_list|,
+literal|0xd5
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|devmap
+operator|&
+literal|0x10
+condition|)
+block|{
+comment|/* A1 */
+name|subordinatebus
+operator|=
+name|pci_cfgread
+argument_list|(
+name|tag
+argument_list|,
+literal|0xd4
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|devmap
+operator|&
+literal|0x8
+condition|)
+block|{
+comment|/* B0 */
+name|subordinatebus
+operator|=
+name|pci_cfgread
+argument_list|(
+name|tag
+argument_list|,
+literal|0xd2
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+comment|/* if (devmap& 0x4) */
+block|{
+comment|/* A0 */
+name|subordinatebus
+operator|=
+name|pci_cfgread
+argument_list|(
+name|tag
+argument_list|,
+literal|0xd1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"fixbushigh_450nx: subordinatebus is %d\n"
+argument_list|,
+name|subordinatebus
+argument_list|)
+expr_stmt|;
+name|tag
+operator|->
+name|secondarybus
+operator|=
+name|tag
+operator|->
+name|subordinatebus
+operator|=
+name|subordinatebus
 expr_stmt|;
 block|}
 end_function
@@ -874,6 +1021,11 @@ return|;
 case|case
 literal|0x84ca8086
 case|:
+name|fixbushigh_450nx
+argument_list|(
+name|tag
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|"Intel 82451NX Memory and I/O Controller"
