@@ -256,6 +256,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ST_SUNOS_SYSCALL
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
 name|ST_BREAKPOINT
 value|1
 end_define
@@ -266,6 +273,17 @@ directive|define
 name|ST_DIVISION_BY_ZERO
 value|2
 end_define
+
+begin_define
+define|#
+directive|define
+name|ST_FLUSH_WINDOWS
+value|3
+end_define
+
+begin_comment
+comment|/* XXX implement! */
+end_comment
 
 begin_define
 define|#
@@ -295,10 +313,14 @@ name|ST_INTEGER_OVERFLOW
 value|7
 end_define
 
+begin_comment
+comment|/* 8 is 32-bit ABI syscall (old solaris syscall?) */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|ST_SYSCALL
+name|ST_BSD_SYSCALL
 value|9
 end_define
 
@@ -308,6 +330,123 @@ directive|define
 name|ST_FP_RESTORE
 value|10
 end_define
+
+begin_comment
+comment|/* 11-15 are available */
+end_comment
+
+begin_comment
+comment|/* 16 is linux 32 bit syscall (but supposed to be reserved, grr) */
+end_comment
+
+begin_comment
+comment|/* 17 is old linux 64 bit syscall (but supposed to be reserved, grr) */
+end_comment
+
+begin_comment
+comment|/* 16-31 are reserved for user applications (utraps) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ST_GETCC
+value|32
+end_define
+
+begin_comment
+comment|/* XXX implement! */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ST_SETCC
+value|33
+end_define
+
+begin_comment
+comment|/* XXX implement! */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ST_GETPSR
+value|34
+end_define
+
+begin_comment
+comment|/* XXX implement! */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ST_SETPSR
+value|35
+end_define
+
+begin_comment
+comment|/* XXX implement! */
+end_comment
+
+begin_comment
+comment|/* 36-63 are available */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ST_SOLARIS_SYSCALL
+value|64
+end_define
+
+begin_define
+define|#
+directive|define
+name|ST_SYSCALL
+value|65
+end_define
+
+begin_define
+define|#
+directive|define
+name|ST_SYSCALL32
+value|66
+end_define
+
+begin_comment
+comment|/* 67 is reserved to OS source licensee */
+end_comment
+
+begin_comment
+comment|/* 68 is return from deferred trap (not supported) */
+end_comment
+
+begin_comment
+comment|/* 69-95 are reserved to SPARC international */
+end_comment
+
+begin_comment
+comment|/* 96-108 are available */
+end_comment
+
+begin_comment
+comment|/* 109 is linux 64 bit syscall */
+end_comment
+
+begin_comment
+comment|/* 110 is linux 64 bit getcontext (?) */
+end_comment
+
+begin_comment
+comment|/* 111 is linux 64 bit setcontext (?) */
+end_comment
+
+begin_comment
+comment|/* 112-255 are available */
+end_comment
 
 begin_define
 define|#
