@@ -15,7 +15,7 @@ name|char
 name|id
 index|[]
 init|=
-literal|"@(#)$Id: trace.c,v 8.20.22.2 2000/09/17 17:04:27 gshapiro Exp $"
+literal|"@(#)$Id: trace.c,v 8.20.22.4 2001/08/15 13:05:43 ca Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -117,6 +117,7 @@ modifier|*
 name|s
 decl_stmt|;
 block|{
+name|unsigned
 name|int
 name|first
 decl_stmt|,
@@ -162,6 +163,10 @@ argument_list|(
 operator|*
 name|s
 argument_list|)
+operator|&&
+name|i
+operator|<
+name|tTsize
 condition|)
 name|i
 operator|=
@@ -176,6 +181,28 @@ operator|++
 operator|-
 literal|'0'
 operator|)
+expr_stmt|;
+comment|/* 		**  skip over rest of a too large number 		**  Maybe we should complain if out-of-bounds values are used. 		*/
+while|while
+condition|(
+name|isascii
+argument_list|(
+operator|*
+name|s
+argument_list|)
+operator|&&
+name|isdigit
+argument_list|(
+operator|*
+name|s
+argument_list|)
+operator|&&
+name|i
+operator|>=
+name|tTsize
+condition|)
+name|s
+operator|++
 expr_stmt|;
 name|first
 operator|=
@@ -208,6 +235,10 @@ argument_list|(
 operator|*
 name|s
 argument_list|)
+operator|&&
+name|i
+operator|<
+name|tTsize
 condition|)
 name|i
 operator|=
@@ -221,6 +252,28 @@ name|s
 operator|-
 literal|'0'
 operator|)
+expr_stmt|;
+comment|/* skip over rest of a too large number */
+while|while
+condition|(
+name|isascii
+argument_list|(
+operator|*
+name|s
+argument_list|)
+operator|&&
+name|isdigit
+argument_list|(
+operator|*
+name|s
+argument_list|)
+operator|&&
+name|i
+operator|>=
+name|tTsize
+condition|)
+name|s
+operator|++
 expr_stmt|;
 block|}
 name|last
