@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vmstat.c,v 1.15.2.1 1997/08/26 06:35:18 charnier Exp $"
+literal|"$Id: vmstat.c,v 1.15.2.2 1997/08/29 05:30:11 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -214,6 +214,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sysexits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<time.h>
 end_include
 
@@ -344,7 +350,7 @@ block|}
 block|,
 ifdef|#
 directive|ifdef
-name|notdef
+name|notyet
 define|#
 directive|define
 name|X_DEFICIT
@@ -655,7 +661,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|notdef
+name|notyet
 end_ifdef
 
 begin_decl_stmt
@@ -778,19 +784,28 @@ name|optarg
 argument_list|)
 expr_stmt|;
 break|break;
-ifndef|#
-directive|ifndef
-name|notdef
 case|case
 literal|'f'
 case|:
+ifdef|#
+directive|ifdef
+name|notyet
 name|todo
 operator||=
 name|FORKSTAT
 expr_stmt|;
-break|break;
+else|#
+directive|else
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"sorry, -f is not (re)implemented yet"
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
+break|break;
 case|case
 literal|'i'
 case|:
@@ -831,19 +846,28 @@ operator||=
 name|SUMSTAT
 expr_stmt|;
 break|break;
-ifndef|#
-directive|ifndef
-name|notdef
 case|case
 literal|'t'
 case|:
+ifdef|#
+directive|ifdef
+name|notyet
 name|todo
 operator||=
 name|TIMESTAT
 expr_stmt|;
-break|break;
+else|#
+directive|else
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"sorry, -t is not (re)implemented yet"
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
+break|break;
 case|case
 literal|'w'
 case|:
@@ -1160,7 +1184,7 @@ literal|1
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|notdef
+name|notyet
 if|if
 condition|(
 name|todo
@@ -1192,7 +1216,7 @@ argument_list|()
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|notdef
+name|notyet
 if|if
 condition|(
 name|todo
@@ -2421,7 +2445,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|notdef
+name|notyet
 end_ifdef
 
 begin_function
@@ -3311,7 +3335,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|notdef
+name|notyet
 end_ifdef
 
 begin_function
