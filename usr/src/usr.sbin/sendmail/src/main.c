@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.58 (Berkeley) %G%"
+literal|"@(#)main.c	8.59 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2335,14 +2335,9 @@ case|:
 case|case
 name|MD_PRINT
 case|:
-ifdef|#
-directive|ifdef
-name|MAYBE_NEXT_RELEASE
 case|case
 name|MD_ARPAFTP
 case|:
-endif|#
-directive|endif
 name|OpMode
 operator|=
 name|j
@@ -4140,11 +4135,8 @@ case|case
 literal|'#'
 case|:
 continue|continue;
-ifdef|#
-directive|ifdef
-name|MAYBENEXTRELEASE
 case|case
-literal|'C'
+literal|'?'
 case|:
 comment|/* try crackaddr */
 name|q
@@ -4169,8 +4161,67 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 continue|continue;
-endif|#
-directive|endif
+case|case
+literal|'.'
+case|:
+comment|/* config-style settings */
+switch|switch
+condition|(
+name|buf
+index|[
+literal|1
+index|]
+condition|)
+block|{
+case|case
+literal|'D'
+case|:
+name|define
+argument_list|(
+name|buf
+index|[
+literal|2
+index|]
+argument_list|,
+operator|&
+name|buf
+index|[
+literal|3
+index|]
+argument_list|,
+name|CurEnv
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'C'
+case|:
+name|setclass
+argument_list|(
+name|buf
+index|[
+literal|2
+index|]
+argument_list|,
+operator|&
+name|buf
+index|[
+literal|3
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|printf
+argument_list|(
+literal|"Unknown config command %s"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+continue|continue;
 block|}
 for|for
 control|(
