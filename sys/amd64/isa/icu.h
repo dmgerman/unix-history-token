@@ -59,30 +59,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
-name|INTRMASK
-parameter_list|(
-name|msk
-parameter_list|,
-name|s
-parameter_list|)
-value|(msk |= (s))
-end_define
-
-begin_define
-define|#
-directive|define
-name|INTRUNMASK
-parameter_list|(
-name|msk
-parameter_list|,
-name|s
-parameter_list|)
-value|(msk&= ~(s))
-end_define
-
 begin_else
 else|#
 directive|else
@@ -125,30 +101,6 @@ parameter_list|(
 name|s
 parameter_list|)
 value|(imen |= (s), SET_ICUS())
-end_define
-
-begin_define
-define|#
-directive|define
-name|INTRMASK
-parameter_list|(
-name|msk
-parameter_list|,
-name|s
-parameter_list|)
-value|(msk |= (s))
-end_define
-
-begin_define
-define|#
-directive|define
-name|INTRUNMASK
-parameter_list|(
-name|msk
-parameter_list|,
-name|s
-parameter_list|)
-value|(msk&= ~(s))
 end_define
 
 begin_if

@@ -2695,13 +2695,11 @@ literal|0
 condition|)
 return|return;
 comment|/* the irq was included in the classes mask, remove it */
-name|INTRUNMASK
-argument_list|(
 operator|*
 name|maskptr
-argument_list|,
+operator|&=
+operator|~
 name|mask
-argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -2720,13 +2718,10 @@ literal|0
 condition|)
 return|return;
 comment|/* put the irq into the classes mask */
-name|INTRMASK
-argument_list|(
 operator|*
 name|maskptr
-argument_list|,
+operator||=
 name|mask
-argument_list|)
 expr_stmt|;
 block|}
 comment|/* we need to update all values in the intr_mask[irq] array */
