@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)clock.c	7.2 (Berkeley) 5/12/91  *	$Id: clock.c,v 1.132 1999/04/25 09:00:00 phk Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)clock.c	7.2 (Berkeley) 5/12/91  *	$Id: clock.c,v 1.133 1999/05/09 23:32:29 peter Exp $  */
 end_comment
 
 begin_comment
@@ -121,6 +121,12 @@ begin_include
 include|#
 directive|include
 file|<machine/md_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/psl.h>
 end_include
 
 begin_if
@@ -377,6 +383,12 @@ end_decl_stmt
 begin_comment
 comment|/* local offset from GMT in seconds */
 end_comment
+
+begin_decl_stmt
+name|int
+name|clkintr_pending
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -840,28 +852,17 @@ operator|==
 name|i8254_get_timecount
 condition|)
 block|{
-comment|/* 		 * Maintain i8254_offset and related variables.  Optimize 		 * the usual case where i8254 counter rollover has not been 		 * detected in i8254_get_timecount() by pretending that we 		 * read the counter when it rolled over.  Otherwise, call 		 * i8254_get_timecount() to do most of the work.  The 		 * hardware counter must be read to ensure monotonicity 		 * despite multiple rollovers and misbehaving hardware. 		 */
-call|(
 name|disable_intr
-call|)
 argument_list|()
 expr_stmt|;
-comment|/* XXX avoid clock locking */
 if|if
 condition|(
 name|i8254_ticked
 condition|)
-block|{
-name|i8254_get_timecount
-argument_list|(
-name|NULL
-argument_list|)
-expr_stmt|;
 name|i8254_ticked
 operator|=
 literal|0
 expr_stmt|;
-block|}
 else|else
 block|{
 name|i8254_offset
@@ -873,12 +874,13 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-call|(
+name|clkintr_pending
+operator|=
+literal|0
+expr_stmt|;
 name|enable_intr
-call|)
 argument_list|()
 expr_stmt|;
-comment|/* XXX avoid clock locking */
 block|}
 name|timer_func
 argument_list|(
@@ -4265,7 +4267,7 @@ argument_list|)
 expr_stmt|;
 name|count
 operator|=
-name|hardclock_max_count
+name|timer0_max_count
 operator|-
 operator|(
 operator|(
@@ -4282,7 +4284,75 @@ condition|(
 name|count
 operator|<
 name|i8254_lastcount
+operator|||
+operator|(
+operator|!
+name|i8254_ticked
+operator|&&
+operator|(
+name|clkintr_pending
+operator|||
+operator|(
+operator|(
+name|count
+operator|<
+literal|20
+operator|||
+operator|(
+operator|!
+operator|(
+name|ef
+operator|&
+name|PSL_I
+operator|)
+operator|&&
+name|count
+operator|<
+name|timer0_max_count
+operator|/
+literal|2u
+operator|)
+operator|)
+operator|&&
+ifdef|#
+directive|ifdef
+name|APIC_IO
+define|#
+directive|define
+name|lapic_irr1
+value|((volatile u_int *)&lapic)[0x210 / 4]
+comment|/* XXX XXX */
+comment|/* XXX this assumes that apic_8254_intr is< 24. */
+operator|(
+name|lapic_irr1
+operator|&
+operator|(
+literal|1
+operator|<<
+name|apic_8254_intr
+operator|)
+operator|)
+operator|)
+operator|)
+else|#
+directive|else
+operator|(
+name|inb
+argument_list|(
+name|IO_ICU1
+argument_list|)
+operator|&
+literal|1
+operator|)
+operator|)
 condition|)
+endif|#
+directive|endif
+block|)
+end_function
+
+begin_block
+unit|)
 block|{
 name|i8254_ticked
 operator|=
@@ -4290,35 +4360,49 @@ literal|1
 expr_stmt|;
 name|i8254_offset
 operator|+=
-name|hardclock_max_count
+name|timer0_max_count
 expr_stmt|;
 block|}
+end_block
+
+begin_expr_stmt
 name|i8254_lastcount
 operator|=
 name|count
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|count
 operator|+=
 name|i8254_offset
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|CLOCK_UNLOCK
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|write_eflags
 argument_list|(
 name|ef
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_return
 return|return
 operator|(
 name|count
 operator|)
 return|;
-block|}
-end_function
+end_return
 
 begin_function
-specifier|static
+unit|}  static
 name|unsigned
 name|tsc_get_timecount
 parameter_list|(
