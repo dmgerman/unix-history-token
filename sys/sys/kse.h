@@ -202,7 +202,9 @@ begin_function_decl
 name|int
 name|kse_release
 parameter_list|(
-name|void
+name|struct
+name|timespec
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
