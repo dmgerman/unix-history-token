@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_lookup.c	7.46 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_lookup.c	7.47 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -846,7 +846,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Search a pathname.  * This is a very central and rather complicated routine.  *  * The pathname is pointed to by ni_ptr and is of length ni_pathlen.  * The starting directory is taken from ni_startdir. The pathname is  * descended until done, or a symbolic link is encountered. The variable  * ni_more is clear if the path is completed; it is set to one if a  * symbolic link needing interpretation is encountered.  *  * The flag argument is LOOKUP, CREATE, RENAME, or DELETE depending on  * whether the name is to be looked up, created, renamed, or deleted.  * When CREATE, RENAME, or DELETE is specified, information usable in  * creating, renaming, or deleting a directory entry may be calculated.  * If flag has LOCKPARENT or'ed into it, the parent directory is returned  * locked. If flag has WANTPARENT or'ed into it, the parent directory is  * returned unlocked. Otherwise the parent directory is not returned. If  * the target of the pathname exists and LOCKLEAF is or'ed into the flag  * the target is returned locked, otherwise it is returned unlocked.  * When creating or renaming and LOCKPARENT is specified, the target may not  * be ".".  When deleting and LOCKPARENT is specified, the target may be ".".  * NOTE: (LOOKUP | LOCKPARENT) currently returns the parent vnode unlocked.  *   * Overall outline of lookup:  *  * dirloop:  *	identify next component of name at ndp->ni_ptr  *	handle degenerate case where name is null string  *	if .. and crossing mount points and on mounted filesys, find parent  *	call VOP_LOOKUP routine for next component name  *	    directory vnode returned in ni_dvp, unlocked unless LOCKPARENT set  *	    component vnode returned in ni_vp (if it exists), locked.  *	if result vnode is mounted on and crossing mount points,  *	    find mounted on vnode  *	if more components of name, do next level at dirloop  *	return the answer in ni_vp, locked if LOCKLEAF set  *	    if LOCKPARENT set, return locked parent in ni_dvp  *	    if WANTPARENT set, return unlocked parent in ni_dvp  */
+comment|/*  * Search a pathname.  * This is a very central and rather complicated routine.  *  * The pathname is pointed to by ni_ptr and is of length ni_pathlen.  * The starting directory is taken from ni_startdir. The pathname is  * descended until done, or a symbolic link is encountered. The variable  * ni_more is clear if the path is completed; it is set to one if a  * symbolic link needing interpretation is encountered.  *  * The flag argument is LOOKUP, CREATE, RENAME, or DELETE depending on  * whether the name is to be looked up, created, renamed, or deleted.  * When CREATE, RENAME, or DELETE is specified, information usable in  * creating, renaming, or deleting a directory entry may be calculated.  * If flag has LOCKPARENT or'ed into it, the parent directory is returned  * locked. If flag has WANTPARENT or'ed into it, the parent directory is  * returned unlocked. Otherwise the parent directory is not returned. If  * the target of the pathname exists and LOCKLEAF is or'ed into the flag  * the target is returned locked, otherwise it is returned unlocked.  * When creating or renaming and LOCKPARENT is specified, the target may not  * be ".".  When deleting and LOCKPARENT is specified, the target may be ".".  *   * Overall outline of lookup:  *  * dirloop:  *	identify next component of name at ndp->ni_ptr  *	handle degenerate case where name is null string  *	if .. and crossing mount points and on mounted filesys, find parent  *	call VOP_LOOKUP routine for next component name  *	    directory vnode returned in ni_dvp, unlocked unless LOCKPARENT set  *	    component vnode returned in ni_vp (if it exists), locked.  *	if result vnode is mounted on and crossing mount points,  *	    find mounted on vnode  *	if more components of name, do next level at dirloop  *	return the answer in ni_vp, locked if LOCKLEAF set  *	    if LOCKPARENT set, return locked parent in ni_dvp  *	    if WANTPARENT set, return unlocked parent in ni_dvp  */
 end_comment
 
 begin_function
@@ -1228,8 +1228,6 @@ operator|->
 name|cn_nameiop
 operator|!=
 name|LOOKUP
-operator|||
-name|wantparent
 condition|)
 block|{
 name|error
@@ -1259,25 +1257,46 @@ goto|;
 block|}
 if|if
 condition|(
+name|wantparent
+condition|)
+block|{
+name|ndp
+operator|->
+name|ni_dvp
+operator|=
+name|dp
+expr_stmt|;
+name|vref
+argument_list|(
+name|dp
+argument_list|)
+expr_stmt|;
+block|}
+name|ndp
+operator|->
+name|ni_vp
+operator|=
+name|dp
+expr_stmt|;
+if|if
+condition|(
 operator|!
 operator|(
 name|cnp
 operator|->
 name|cn_flags
 operator|&
+operator|(
+name|LOCKPARENT
+operator||
 name|LOCKLEAF
+operator|)
 operator|)
 condition|)
 name|VOP_UNLOCK
 argument_list|(
 name|dp
 argument_list|)
-expr_stmt|;
-name|ndp
-operator|->
-name|ni_vp
-operator|=
-name|dp
 expr_stmt|;
 if|if
 condition|(
