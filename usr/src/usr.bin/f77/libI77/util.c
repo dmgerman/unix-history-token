@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_util[] = "@(#)util.c	1.2";  *  * utility routines  */
+comment|/* char id_util[] = "@(#)util.c	1.3";  *  * utility routines  */
 end_comment
 
 begin_include
@@ -29,6 +29,8 @@ argument_list|,
 argument|F
 argument_list|,
 argument|w
+argument_list|,
+argument|i66
 argument_list|)
 end_macro
 
@@ -104,12 +106,22 @@ name|uscrtch
 operator|=
 name|p
 operator|->
-name|uprnt
-operator|=
-name|p
-operator|->
 name|uend
 operator|=
+name|NO
+expr_stmt|;
+name|p
+operator|->
+name|uprnt
+operator|=
+operator|(
+name|i66
+operator|!=
+literal|0
+operator|)
+condition|?
+name|YES
+else|:
 name|NO
 expr_stmt|;
 name|p
