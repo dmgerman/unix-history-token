@@ -764,6 +764,16 @@ literal|"hw.uart.dbgport"
 argument_list|)
 expr_stmt|;
 else|else
+name|spec
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|spec
+operator|==
+name|NULL
+condition|)
 return|return
 operator|(
 name|ENXIO
