@@ -1673,9 +1673,8 @@ name|argc
 operator|!=
 literal|2
 condition|)
-name|error
-operator|=
-literal|1
+name|usage
+argument_list|()
 expr_stmt|;
 name|spec
 operator|=
@@ -2951,6 +2950,12 @@ name|exit
 argument_list|(
 literal|1
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|nfhret
+operator|.
+name|stat
 expr_stmt|;
 name|warn
 argument_list|(
