@@ -3309,6 +3309,10 @@ name|vnode
 modifier|*
 name|vp
 parameter_list|,
+name|void
+modifier|*
+name|dummyarg
+parameter_list|,
 name|struct
 name|thread
 modifier|*
