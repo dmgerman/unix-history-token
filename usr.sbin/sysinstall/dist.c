@@ -1543,6 +1543,17 @@ operator||=
 name|DIST_COMPAT22
 expr_stmt|;
 comment|/* For certain old X applications */
+if|#
+directive|if
+name|__FreeBSD__
+operator|>
+literal|3
+name|Dists
+operator||=
+name|DIST_COMPAT3X
+expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 block|}
@@ -4585,6 +4596,12 @@ name|installFixupXFree
 argument_list|(
 name|self
 argument_list|)
+expr_stmt|;
+comment|/* Clear any local dist flags now */
+name|Dists
+operator|&=
+operator|~
+name|DIST_LOCAL
 expr_stmt|;
 if|if
 condition|(
