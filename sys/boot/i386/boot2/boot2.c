@@ -1381,11 +1381,9 @@ name|bootinfo
 operator|.
 name|bi_basemem
 operator|=
-name|memsize
-argument_list|(
-name|MEM_BASE
-argument_list|)
+literal|0
 expr_stmt|;
+comment|/* XXX will be filled by loader or kernel */
 name|bootinfo
 operator|.
 name|bi_extmem
