@@ -2431,9 +2431,7 @@ operator||
 name|CR0_NE
 operator||
 name|CR0_TS
-expr_stmt|;
-name|cr0
-operator||=
+operator||
 name|CR0_WP
 operator||
 name|CR0_AM
