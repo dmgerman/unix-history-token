@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lnumeric.h"
 end_include
 
@@ -31,6 +37,20 @@ end_define
 
 begin_decl_stmt
 specifier|static
+name|char
+name|numempty
+index|[]
+init|=
+block|{
+name|CHAR_MAX
+block|,
+literal|'\0'
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 specifier|const
 name|struct
 name|lc_numeric_T
@@ -43,7 +63,7 @@ comment|/* decimal_point */
 literal|""
 block|,
 comment|/* thousands_sep */
-literal|"-1"
+name|numempty
 comment|/* grouping */
 block|}
 decl_stmt|;

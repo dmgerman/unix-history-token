@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lmonetary.h"
 end_include
 
@@ -45,7 +51,11 @@ name|char
 name|numempty
 index|[]
 init|=
-literal|"-1"
+block|{
+name|CHAR_MAX
+block|,
+literal|'\0'
+block|}
 decl_stmt|;
 end_decl_stmt
 
