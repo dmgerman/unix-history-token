@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rk.c	4.27	81/03/09	*/
+comment|/*	rk.c	4.28	81/03/09	*/
 end_comment
 
 begin_include
@@ -2445,7 +2445,9 @@ operator|)
 operator|!=
 literal|0
 condition|)
-break|break;
+goto|goto
+name|donerecal
+goto|;
 name|rkaddr
 operator|->
 name|rkatt
@@ -2495,6 +2497,8 @@ operator|=
 literal|1
 expr_stmt|;
 return|return;
+name|donerecal
+label|:
 case|case
 literal|3
 case|:
