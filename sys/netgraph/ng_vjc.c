@@ -4,7 +4,7 @@ comment|/*  * ng_vjc.c  *  * Copyright (c) 1996-1999 Whistle Communications, Inc
 end_comment
 
 begin_comment
-comment|/*  * This node performs Van Jacobsen IP header (de)compression.  * You must have included net/slcompress.c in your kernel compilation.  */
+comment|/*  * This node performs Van Jacobson IP header (de)compression.  * You must have included net/slcompress.c in your kernel compilation.  */
 end_comment
 
 begin_include
