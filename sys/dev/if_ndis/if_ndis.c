@@ -4964,6 +4964,12 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|ndis_link
+condition|)
 name|ndis_sched
 argument_list|(
 name|ndis_ticktask
