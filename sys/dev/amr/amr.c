@@ -2152,37 +2152,6 @@ name|ac_flags
 operator||=
 name|AMR_CMD_DATAOUT
 expr_stmt|;
-comment|/* XXX debugging */
-if|if
-condition|(
-operator|(
-name|au
-operator|->
-name|au_direction
-operator|&
-name|AMR_IO_READ
-operator|)
-operator|&&
-operator|!
-operator|(
-name|au
-operator|->
-name|au_direction
-operator|&
-name|AMR_IO_WRITE
-operator|)
-condition|)
-name|memset
-argument_list|(
-name|dp
-argument_list|,
-literal|0xa5
-argument_list|,
-name|au
-operator|->
-name|au_length
-argument_list|)
-expr_stmt|;
 block|}
 comment|/* run the command */
 if|if
