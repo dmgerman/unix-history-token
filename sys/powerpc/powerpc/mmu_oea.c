@@ -9254,20 +9254,12 @@ name|pte
 modifier|*
 name|pt
 decl_stmt|;
-if|if
-condition|(
-name|pmap_attr_fetch
-argument_list|(
-name|m
-argument_list|)
-operator|&
-name|ptebit
-condition|)
-return|return
-operator|(
-name|TRUE
-operator|)
-return|;
+if|#
+directive|if
+literal|0
+block|if (pmap_attr_fetch(m)& ptebit) 		return (TRUE);
+endif|#
+directive|endif
 name|LIST_FOREACH
 argument_list|(
 argument|pvo
