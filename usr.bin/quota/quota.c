@@ -519,6 +519,12 @@ end_function_decl
 
 begin_decl_stmt
 name|int
+name|lflag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|qflag
 decl_stmt|;
 end_decl_stmt
@@ -578,7 +584,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"gquv"
+literal|"glquv"
 argument_list|)
 operator|)
 operator|!=
@@ -595,6 +601,13 @@ case|case
 literal|'g'
 case|:
 name|gflag
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'l'
+case|:
+name|lflag
 operator|++
 expr_stmt|;
 break|break;
@@ -861,11 +874,11 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: quota [-gu] [-v | -q]"
+literal|"usage: quota [-glu] [-v | -q]"
 argument_list|,
-literal|"       quota [-u] [-v | -q] user ..."
+literal|"       quota [-lu] [-v | -q] user ..."
 argument_list|,
-literal|"       quota -g [-v | -q] group ..."
+literal|"       quota -g [-l] [-v | -q] group ..."
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2364,6 +2377,11 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|lflag
+condition|)
+continue|continue;
 if|if
 condition|(
 name|getnfsquota
