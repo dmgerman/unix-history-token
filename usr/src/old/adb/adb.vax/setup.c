@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setup.c 4.4 %G%"
+literal|"@(#)setup.c	4.5 82/04/01"
 decl_stmt|;
 end_decl_stmt
 
@@ -565,6 +565,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|kernel
+operator|&&
 name|fcor
 operator|!=
 operator|-
@@ -660,7 +662,7 @@ argument_list|)
 expr_stmt|;
 name|lookup
 argument_list|(
-literal|"_masterpcbb"
+literal|"_masterpaddr"
 argument_list|)
 expr_stmt|;
 name|physrw
@@ -678,6 +680,16 @@ name|masterpcbb
 argument_list|,
 literal|1
 argument_list|)
+expr_stmt|;
+name|masterpcbb
+operator|=
+operator|(
+name|masterpcbb
+operator|&
+name|PG_PFNUM
+operator|)
+operator|*
+literal|512
 expr_stmt|;
 name|getpcb
 argument_list|()

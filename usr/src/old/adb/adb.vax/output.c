@@ -19,7 +19,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)output.c 4.1 %G%"
+literal|"@(#)output.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -412,6 +412,33 @@ name|c
 name|THEN
 name|printptr
 operator|++
+expr_stmt|;
+name|FI
+name|IF
+name|printptr
+operator|>=
+operator|&
+name|printbuf
+index|[
+name|MAXLIN
+operator|-
+literal|9
+index|]
+name|THEN
+name|write
+argument_list|(
+name|outfile
+argument_list|,
+name|printbuf
+argument_list|,
+name|printptr
+operator|-
+name|printbuf
+argument_list|)
+expr_stmt|;
+name|printptr
+operator|=
+name|printbuf
 expr_stmt|;
 name|FI
 block|}
