@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	acutab.c	4.3	81/10/09	*/
+comment|/*	acutab.c	4.4	81/11/20	*/
 end_comment
 
 begin_include
@@ -46,6 +46,15 @@ name|biz22_abort
 argument_list|()
 decl_stmt|,
 name|biz22w_dialer
+argument_list|()
+decl_stmt|,
+name|ven_dialer
+argument_list|()
+decl_stmt|,
+name|ven_disconnect
+argument_list|()
+decl_stmt|,
+name|ven_abort
 argument_list|()
 decl_stmt|,
 name|dn_dialer
@@ -143,6 +152,19 @@ block|,
 name|dn_disconnect
 block|,
 name|dn_abort
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|VENTEL
+literal|"ventel"
+block|,
+name|ven_dialer
+block|,
+name|ven_disconnect
+block|,
+name|ven_abort
 block|,
 endif|#
 directive|endif
