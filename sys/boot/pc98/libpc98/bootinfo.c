@@ -835,6 +835,8 @@ name|rootdevname
 decl_stmt|;
 name|int
 name|bootdevnr
+decl_stmt|,
+name|i
 decl_stmt|;
 name|u_int
 name|pad
@@ -848,14 +850,6 @@ name|char
 modifier|*
 name|kernelpath
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|PC98
-name|int
-name|i
-decl_stmt|;
-endif|#
-directive|endif
 operator|*
 name|howtop
 operator|=
@@ -1027,7 +1021,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* XXX would have to hook biosdisk driver for these */
-comment|/* bi.bi_bios_geom[] */
 ifdef|#
 directive|ifdef
 name|PC98
@@ -1057,6 +1050,33 @@ name|bi_bios_geom
 index|[
 name|i
 index|]
+expr_stmt|;
+else|#
+directive|else
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|N_BIOS_GEOM
+condition|;
+name|i
+operator|++
+control|)
+name|bi
+operator|.
+name|bi_bios_geom
+index|[
+name|i
+index|]
+operator|=
+name|bd_getbigeom
+argument_list|(
+name|i
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
