@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhci.c,v 1.135 2001/04/01 14:59:52 augustss Exp $	*/
+comment|/*	$NetBSD: uhci.c,v 1.136 2001/07/11 14:11:00 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -6137,6 +6137,7 @@ name|sc
 operator|->
 name|sc_dying
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"%s: host controller halted\n"
@@ -6151,6 +6152,17 @@ name|bdev
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|UHCI_DEBUG
+name|uhci_dump_all
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
 name|sc
 operator|->
 name|sc_dying
