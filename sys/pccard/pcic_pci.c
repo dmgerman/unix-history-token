@@ -568,6 +568,12 @@ init|=
 operator|(
 name|device_id
 operator|==
+name|PCI_DEVICE_ID_PCIC_TI1031
+operator|)
+operator|||
+operator|(
+name|device_id
+operator|==
 name|PCI_DEVICE_ID_PCIC_TI1130
 operator|)
 operator|||
