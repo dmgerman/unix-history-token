@@ -533,38 +533,24 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TIOCM_CAR
+name|TIOCM_DCD
 value|0100
 end_define
 
 begin_comment
-comment|/* carrier detect */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|TIOCM_CD
-value|TIOCM_CAR
-end_define
-
-begin_define
-define|#
-directive|define
-name|TIOCM_RNG
-value|0200
-end_define
-
-begin_comment
-comment|/* ring */
+comment|/* data carrier detect */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|TIOCM_RI
-value|TIOCM_RNG
+value|0200
 end_define
+
+begin_comment
+comment|/* ring indicate */
+end_comment
 
 begin_define
 define|#
@@ -576,6 +562,27 @@ end_define
 begin_comment
 comment|/* data set ready */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|TIOCM_CD
+value|TIOCM_DCD
+end_define
+
+begin_define
+define|#
+directive|define
+name|TIOCM_CAR
+value|TIOCM_DCD
+end_define
+
+begin_define
+define|#
+directive|define
+name|TIOCM_RNG
+value|TIOCM_RI
+end_define
 
 begin_define
 define|#
