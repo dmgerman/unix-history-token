@@ -1331,66 +1331,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_zero_fill:  *  *	Zero-fill the specified page.  *	Written as a standard pagein routine, to  *	be used by the zero-fill object.  */
-end_comment
-
-begin_function
-name|boolean_t
-name|vm_page_zero_fill
-parameter_list|(
-name|vm_page_t
-name|m
-parameter_list|)
-block|{
-name|pmap_zero_page
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|TRUE
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  *	vm_page_zero_fill_area:  *  *	Like vm_page_zero_fill but only fill the specified area.  */
-end_comment
-
-begin_function
-name|boolean_t
-name|vm_page_zero_fill_area
-parameter_list|(
-name|vm_page_t
-name|m
-parameter_list|,
-name|int
-name|off
-parameter_list|,
-name|int
-name|size
-parameter_list|)
-block|{
-name|pmap_zero_page_area
-argument_list|(
-name|m
-argument_list|,
-name|off
-argument_list|,
-name|size
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|TRUE
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*  *	vm_page_copy:  *  *	Copy one page to another  */
 end_comment
 

@@ -1139,7 +1139,7 @@ operator|-
 name|base
 decl_stmt|;
 comment|/* 				 * Clear out partial-page garbage in case 				 * the page has been mapped. 				 */
-name|vm_page_zero_fill_area
+name|pmap_zero_page_area
 argument_list|(
 name|m
 argument_list|,

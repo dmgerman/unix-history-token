@@ -1410,7 +1410,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|vm_page_zero_fill
+name|pmap_zero_page
 argument_list|(
 name|m
 argument_list|)

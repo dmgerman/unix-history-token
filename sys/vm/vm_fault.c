@@ -1920,7 +1920,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|vm_page_zero_fill
+name|pmap_zero_page
 argument_list|(
 name|fs
 operator|.
