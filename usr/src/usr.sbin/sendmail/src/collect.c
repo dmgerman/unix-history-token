@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	8.12 (Berkeley) %G%"
+literal|"@(#)collect.c	8.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1095,7 +1095,7 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"collect: %s on connection from %s, sender=%s: %m\n"
+literal|"collect: %s on connection from %s, sender=%s: %s\n"
 argument_list|,
 name|problem
 argument_list|,
@@ -1106,6 +1106,11 @@ operator|->
 name|e_from
 operator|.
 name|q_paddr
+argument_list|,
+name|errstring
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#

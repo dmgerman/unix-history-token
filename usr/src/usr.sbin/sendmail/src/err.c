@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	8.26 (Berkeley) %G%"
+literal|"@(#)err.c	8.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -976,7 +976,7 @@ name|syslog
 argument_list|(
 name|LOG_CRIT
 argument_list|,
-literal|"%s: SYSERR: putoutmsg (%s): error on output channel sending \"%s\": %m"
+literal|"%s: SYSERR: putoutmsg (%s): error on output channel sending \"%s\": %s"
 argument_list|,
 name|CurEnv
 operator|->
@@ -999,6 +999,11 @@ else|:
 name|CurHostName
 argument_list|,
 name|msg
+argument_list|,
+name|errstring
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
