@@ -399,14 +399,11 @@ name|needenv
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|LAZY_PS
-argument_list|)
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -416,6 +413,13 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|OPT_LAZY_f
+value|"f"
+end_define
 
 begin_else
 else|#
@@ -430,6 +434,16 @@ init|=
 literal|1
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|OPT_LAZY_f
+end_define
+
+begin_comment
+comment|/* Ie, the `-f' option is not added. */
+end_comment
 
 begin_endif
 endif|#
@@ -782,38 +796,12 @@ name|kd
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|LAZY_PS
-argument_list|)
-end_if
-
 begin_define
 define|#
 directive|define
 name|PS_ARGS
-value|"AaCcefG:gHhjLlM:mN:O:o:p:rSTt:U:uvwXxZ"
+value|"AaCc" OPT_LAZY_f "G:gHhjLlM:mN:O:o:p:rSTt:U:uvwXxZ"
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|PS_ARGS
-value|"AaCceG:gHhjLlM:mN:O:o:p:rSTt:U:uvwXxZ"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|int
@@ -5200,6 +5188,10 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+define|#
+directive|define
+name|SINGLE_OPTS
+value|"[-aC" OPT_LAZY_f "HhjlmrSTuvwXxZ]"
 operator|(
 name|void
 operator|)
@@ -5209,7 +5201,9 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: ps [-aCHhjlmrSTuvwXxZ] [-G gid[,gid]] [-O|o fmt]"
+literal|"usage: ps "
+name|SINGLE_OPTS
+literal|" [-G gid[,gid]] [-O|o fmt]"
 argument_list|,
 literal|"          [-p pid[,pid]] [-t tty[,tty]] [-U user[,user]]"
 argument_list|,
