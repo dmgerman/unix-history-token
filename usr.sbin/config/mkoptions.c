@@ -81,16 +81,6 @@ directive|include
 file|"y.tab.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|ns
-parameter_list|(
-name|s
-parameter_list|)
-value|strdup(s)
-end_define
-
 begin_struct
 specifier|static
 struct|struct
@@ -1571,7 +1561,6 @@ condition|)
 goto|goto
 name|next
 goto|;
-comment|/*************************************************\ 	* If it's a comment ignore to the end of the line * 	\*************************************************/
 if|if
 condition|(
 name|wd

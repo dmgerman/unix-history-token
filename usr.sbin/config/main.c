@@ -1804,33 +1804,6 @@ name|from_name
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|DIAG
-if|if
-condition|(
-name|changed
-condition|)
-name|printf
-argument_list|(
-literal|"CHANGED! rename (%s, %s)\n"
-argument_list|,
-name|from_name
-argument_list|,
-name|to_name
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|"SAME! unlink (%s)\n"
-argument_list|,
-name|from_name
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-return|return;
 block|}
 end_function
 

@@ -113,16 +113,6 @@ define|\
 value|{ register char *word = get_quoted_word(fp); \ 	  if (word == (char *)EOF) \ 		return; \ 	  else \ 		wd = word; \ 	}
 end_define
 
-begin_define
-define|#
-directive|define
-name|ns
-parameter_list|(
-name|s
-parameter_list|)
-value|strdup(s)
-end_define
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -1401,7 +1391,6 @@ condition|)
 goto|goto
 name|next
 goto|;
-comment|/*************************************************\ 	* If it's a comment ignore to the end of the line * 	\*************************************************/
 if|if
 condition|(
 name|wd
@@ -2049,13 +2038,13 @@ name|PSEUDO_DEVICE
 operator|&&
 name|dp
 operator|->
-name|d_slave
+name|d_count
 operator|<=
 literal|0
 condition|)
 name|dp
 operator|->
-name|d_slave
+name|d_count
 operator|=
 literal|1
 expr_stmt|;
@@ -2133,7 +2122,7 @@ name|PSEUDO_DEVICE
 expr_stmt|;
 name|dp
 operator|->
-name|d_slave
+name|d_count
 operator|=
 literal|1
 expr_stmt|;

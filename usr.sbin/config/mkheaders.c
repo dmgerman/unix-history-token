@@ -81,16 +81,6 @@ directive|include
 file|"y.tab.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|ns
-parameter_list|(
-name|s
-parameter_list|)
-value|strdup(s)
-end_define
-
 begin_decl_stmt
 specifier|static
 name|void
@@ -422,13 +412,13 @@ name|count
 operator|=
 name|dp
 operator|->
-name|d_slave
+name|d_count
 operator|!=
 name|UNKNOWN
 condition|?
 name|dp
 operator|->
-name|d_slave
+name|d_count
 else|:
 literal|1
 expr_stmt|;
