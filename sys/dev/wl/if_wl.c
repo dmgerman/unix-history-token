@@ -859,6 +859,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WLDEBUG
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|void
@@ -869,6 +875,11 @@ name|unit
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -4891,16 +4902,22 @@ decl_stmt|,
 name|i
 decl_stmt|,
 name|isroot
-decl_stmt|,
-name|size
 decl_stmt|;
 name|caddr_t
 name|up
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|WLCACHE
+name|int
+name|size
 decl_stmt|;
 name|char
 modifier|*
 name|cpt
 decl_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|WLDEBUG
@@ -10231,6 +10248,9 @@ name|cmd
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|WLDEBUG
 specifier|static
 name|void
 name|wltbd
@@ -10368,6 +10388,8 @@ name|next_tbd_offset
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 specifier|static
 name|void
 name|wlhdwsleaze
