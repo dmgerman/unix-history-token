@@ -262,7 +262,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|u_int
 name|vm_kmem_size
 decl_stmt|;

@@ -270,6 +270,11 @@ init|=
 literal|0x1800000
 block|,
 comment|/* kernel memory*/
+name|SI_SUB_KVM_RSRC
+init|=
+literal|0x1A00000
+block|,
+comment|/* kvm operational limits*/
 name|SI_SUB_CPU
 init|=
 literal|0x2000000

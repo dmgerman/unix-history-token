@@ -895,7 +895,11 @@ name|vm_map_t
 name|map
 decl_stmt|;
 block|{
-return|return
+name|vm_map_entry_t
+name|new_entry
+decl_stmt|;
+name|new_entry
+operator|=
 name|zalloc
 argument_list|(
 operator|(
@@ -911,6 +915,22 @@ name|kmapentzone
 else|:
 name|mapentzone
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|new_entry
+operator|==
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"vm_map_entry_create: kernel resources exhausted"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|new_entry
+operator|)
 return|;
 block|}
 end_function
