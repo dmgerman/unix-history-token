@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: changepw.c,v 1.37 2002/09/03 16:14:34 nectar Exp $"
+literal|"$Id: changepw.c,v 1.38 2002/09/29 11:48:34 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -765,7 +765,7 @@ operator|+
 name|priv_data
 operator|.
 name|length
-operator|>=
+operator|>
 name|reply
 operator|+
 name|len
