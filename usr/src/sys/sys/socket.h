@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982,1985,1986,1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)socket.h	7.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982,1985,1986,1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)socket.h	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -563,8 +563,52 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AF_MAX
+name|pseudo_AF_RTIP
 value|22
+end_define
+
+begin_comment
+comment|/* Help Identify RTIP packets */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AF_IPX
+value|23
+end_define
+
+begin_comment
+comment|/* Novell Internet Protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AF_SIP
+value|24
+end_define
+
+begin_comment
+comment|/* Simple Internet Protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|pseudo_AF_PIP
+value|25
+end_define
+
+begin_comment
+comment|/* Help Identify PIP packets */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AF_MAX
+value|26
 end_define
 
 begin_comment
@@ -781,6 +825,42 @@ define|#
 directive|define
 name|PF_CNT
 value|AF_CNT
+end_define
+
+begin_define
+define|#
+directive|define
+name|PF_SIP
+value|AF_SIP
+end_define
+
+begin_define
+define|#
+directive|define
+name|PF_IPX
+value|AF_IPX
+end_define
+
+begin_comment
+comment|/* same format as AF_NS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PF_RTIP
+value|pseudo_AF_FTIP
+end_define
+
+begin_comment
+comment|/* same format as AF_INET */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PF_PIP
+value|pseudo_AF_PIP
 end_define
 
 begin_define
