@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rx.c	4.15	83/04/15	*/
+comment|/*	rx.c	4.16	83/04/26	*/
 end_comment
 
 begin_include
@@ -264,14 +264,14 @@ decl_stmt|;
 comment|/* drive status flags */
 define|#
 directive|define
-name|RXF_TRKZERO
+name|RXF_DIRECT
 value|0x01
-comment|/* start mapping on track 0 */
+comment|/* if set: use direct sector mapping */
 define|#
 directive|define
-name|RXF_DIRECT
+name|RXF_TRKONE
 value|0x02
-comment|/* use direct sector mapping */
+comment|/* if set: start mapping on track 1 */
 define|#
 directive|define
 name|RXF_DBLDEN
@@ -739,12 +739,6 @@ name|dev
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|flag
-decl_stmt|;
-end_decl_stmt
-
 begin_block
 block|{
 specifier|register
@@ -848,7 +842,7 @@ argument_list|)
 operator|&
 name|RXF_DEVTYPE
 operator|)
-operator|||
+operator||
 name|RXF_LOCK
 expr_stmt|;
 name|sc
@@ -959,8 +953,7 @@ literal|0
 expr_stmt|;
 name|timeout
 argument_list|(
-name|rxtimo
-argument_list|()
+name|rxwatch
 argument_list|,
 operator|(
 name|caddr_t
@@ -1042,12 +1035,6 @@ name|dev
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|flag
-decl_stmt|;
-end_decl_stmt
-
 begin_block
 block|{
 specifier|register
@@ -1070,6 +1057,9 @@ name|sc
 operator|->
 name|sc_open
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|RXDEBUG
 name|printf
 argument_list|(
 literal|"rxclose: dev=0x%x, sc_open=%d\n"
@@ -1081,6 +1071,8 @@ operator|->
 name|sc_open
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
@@ -1520,7 +1512,7 @@ name|sc
 operator|->
 name|sc_flags
 operator|&
-name|RXF_TRKZERO
+name|RXF_TRKONE
 condition|)
 name|ptoff
 operator|++
@@ -2722,7 +2714,6 @@ name|bp
 operator|->
 name|b_back
 expr_stmt|;
-comment|/* kludge, see 'rderr:' */
 name|rxmap
 argument_list|(
 name|bp
@@ -2770,7 +2761,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"0x%x, 0x%x, 0x%x, 0x%x\n"
+literal|"%x, %x, %x, %x\n"
 argument_list|,
 name|MASKREG
 argument_list|(
@@ -3327,7 +3318,7 @@ comment|/*ARGSUSED*/
 end_comment
 
 begin_macro
-name|rxtimo
+name|rxwatch
 argument_list|()
 end_macro
 
@@ -3384,20 +3375,6 @@ index|[
 name|i
 index|]
 expr_stmt|;
-name|sc
-operator|=
-operator|&
-name|rx_softc
-index|[
-name|i
-index|]
-expr_stmt|;
-name|um
-operator|=
-name|ui
-operator|->
-name|ui_mi
-expr_stmt|;
 if|if
 condition|(
 name|ui
@@ -3411,6 +3388,14 @@ operator|==
 literal|0
 condition|)
 continue|continue;
+name|sc
+operator|=
+operator|&
+name|rx_softc
+index|[
+name|i
+index|]
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3422,9 +3407,10 @@ literal|0
 operator|)
 operator|&&
 operator|(
-name|um
-operator|->
-name|um_tab
+name|rxutab
+index|[
+name|i
+index|]
 operator|.
 name|b_active
 operator|==
@@ -3443,6 +3429,12 @@ block|}
 name|dopen
 operator|++
 expr_stmt|;
+name|um
+operator|=
+name|ui
+operator|->
+name|ui_mi
+expr_stmt|;
 name|rxc
 operator|=
 operator|&
@@ -3459,19 +3451,33 @@ operator|++
 name|rxc
 operator|->
 name|rxc_tocnt
-operator|<
+operator|>=
 name|RX_MAXTIMEOUT
+condition|)
+block|{
+name|rxc
+operator|->
+name|rxc_tocnt
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|um
+operator|->
+name|um_tab
+operator|.
+name|b_active
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"fx%d: timeout\n"
+literal|"rx%d: timeout\n"
 argument_list|,
-name|um
-operator|->
-name|um_ctlr
+name|i
 argument_list|)
 expr_stmt|;
+comment|/* for debugging */
 name|rxintr
 argument_list|(
 name|um
@@ -3481,14 +3487,14 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+block|}
 if|if
 condition|(
 name|dopen
 condition|)
 name|timeout
 argument_list|(
-name|rxtimo
-argument_list|()
+name|rxwatch
 argument_list|,
 operator|(
 name|caddr_t
@@ -3876,7 +3882,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Control routine:  * processes three kinds of requests:  *  *	(1) Set density (i.e., format the diskette) according to   *		  that specified by the open device.  *	(2) Arrange for the next sector to be written with a deleted-  *		  data mark.  *	(3) Report whether the last sector read had a deleted-data mark  *  * Requests relating to deleted-data marks can be handled right here.  * A "set density" (format) request, however, must additionally be   * processed through "rxstart", just like a read or write request.  */
+comment|/*  * Control routine:  * processes four kinds of requests:  *  *	(1) Set density (i.e., format the diskette) according to   *		  that specified data parameter  *	(2) Arrange for the next sector to be written with a deleted-  *		  data mark.  *	(3) Report whether the last sector read had a deleted-data mark  *	(4) Report the density of the diskette in the indicated drive  *	    (since the density it automatically determined by the driver,  *	     this is the only way to let an application program know the  *	     density)  *  * Requests relating to deleted-data marks can be handled right here.  * A "set density" (format) request, however, must additionally be   * processed through "rxstart", just like a read or write request.  */
 end_comment
 
 begin_comment
@@ -3903,20 +3909,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|cmd
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|caddr_t
 name|data
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|flag
 decl_stmt|;
 end_decl_stmt
 
@@ -3944,11 +3938,18 @@ decl_stmt|;
 switch|switch
 condition|(
 name|cmd
+operator|&
+name|RXIOC_MASK
 condition|)
 block|{
 case|case
 name|RXIOC_FORMAT
 case|:
+ifdef|#
+directive|ifdef
+name|notdef
+comment|/* temporarily removed (the flag argument is */
+comment|/* is actually always zero at this point) */
 if|if
 condition|(
 operator|(
@@ -3964,6 +3965,8 @@ operator|(
 name|EBADF
 operator|)
 return|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|sc
