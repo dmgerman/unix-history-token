@@ -459,6 +459,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|inline
 name|void
 name|devclose
 parameter_list|()
@@ -483,6 +484,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|inline
 name|void
 name|getfilename
 parameter_list|(
@@ -594,6 +596,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|inline
 name|void
 name|loadfile
 parameter_list|(
