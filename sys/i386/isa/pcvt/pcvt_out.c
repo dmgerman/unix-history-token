@@ -64,6 +64,25 @@ end_decl_stmt
 begin_function_decl
 specifier|static
 name|void
+name|write_char
+parameter_list|(
+name|struct
+name|video_state
+modifier|*
+name|svsp
+parameter_list|,
+name|int
+name|attrib
+parameter_list|,
+name|int
+name|ch
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
 name|check_scroll
 parameter_list|(
 name|struct
@@ -173,6 +192,7 @@ name|attrib
 decl_stmt|,
 name|ch
 decl_stmt|;
+comment|/* XXX inefficient interface */
 block|{
 if|if
 condition|(

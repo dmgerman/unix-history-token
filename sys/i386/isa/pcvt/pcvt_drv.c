@@ -41,6 +41,19 @@ begin_comment
 comment|/* global include */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|getchar
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_if
 if|#
 directive|if

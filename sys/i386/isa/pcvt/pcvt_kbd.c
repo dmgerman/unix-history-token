@@ -32,6 +32,19 @@ comment|/* global include */
 end_comment
 
 begin_decl_stmt
+specifier|extern
+name|int
+name|kbd_response
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|void
 name|fkey1
@@ -2356,7 +2369,9 @@ function_decl|(
 modifier|*
 name|fnc
 function_decl|)
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 if|if
 condition|(
