@@ -880,7 +880,8 @@ block|,
 name|KES_UNQUEUED
 block|,
 comment|/* in transit */
-name|KES_RUNNING
+name|KES_THREAD
+comment|/* slaved to thread state */
 block|}
 name|ke_state
 enum|;

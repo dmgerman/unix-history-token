@@ -1281,7 +1281,7 @@ name|ke
 operator|->
 name|ke_state
 operator|=
-name|KES_RUNNING
+name|KES_THREAD
 expr_stmt|;
 name|ke
 operator|->

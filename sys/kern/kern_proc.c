@@ -904,21 +904,6 @@ name|kg
 operator|->
 name|kg_proc
 decl_stmt|;
-name|KASSERT
-argument_list|(
-operator|(
-name|ke
-operator|->
-name|ke_state
-operator|!=
-name|KES_ONRUNQ
-operator|)
-argument_list|,
-operator|(
-literal|"linking suspect kse on run queue"
-operator|)
-argument_list|)
-expr_stmt|;
 name|TAILQ_INSERT_HEAD
 argument_list|(
 operator|&
@@ -935,21 +920,6 @@ name|kg
 operator|->
 name|kg_kses
 operator|++
-expr_stmt|;
-name|KASSERT
-argument_list|(
-operator|(
-name|ke
-operator|->
-name|ke_state
-operator|!=
-name|KES_IDLE
-operator|)
-argument_list|,
-operator|(
-literal|"already on idle queue"
-operator|)
-argument_list|)
 expr_stmt|;
 name|ke
 operator|->

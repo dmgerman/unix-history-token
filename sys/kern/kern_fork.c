@@ -2051,7 +2051,7 @@ name|ke2
 operator|->
 name|ke_state
 operator|=
-name|KES_UNQUEUED
+name|KES_THREAD
 expr_stmt|;
 name|ke2
 operator|->
@@ -2073,23 +2073,6 @@ operator|~
 name|TDF_UNBOUND
 expr_stmt|;
 comment|/* For the rest of this syscall. */
-name|KASSERT
-argument_list|(
-operator|(
-name|ke2
-operator|->
-name|ke_kgrlist
-operator|.
-name|tqe_next
-operator|!=
-name|ke2
-operator|)
-argument_list|,
-operator|(
-literal|"linked to self!"
-operator|)
-argument_list|)
-expr_stmt|;
 comment|/* note.. XXXKSE no pcb or u-area yet */
 comment|/* 	 * Duplicate sub-structures as needed. 	 * Increase reference counts on shared objects. 	 * The p_stats and p_sigacts substructs are set in vm_forkproc. 	 */
 name|p2
@@ -3338,14 +3321,6 @@ operator|=
 name|TDS_RUNNING
 expr_stmt|;
 comment|/* Already done in switch() on 386. */
-name|td
-operator|->
-name|td_kse
-operator|->
-name|ke_state
-operator|=
-name|KES_RUNNING
-expr_stmt|;
 comment|/* 	 * Finish setting up thread glue.  We need to initialize 	 * the thread into a td_critnest=1 state.  Some platforms 	 * may have already partially or fully initialized td_critnest 	 * and/or td_md.md_savecrit (when applciable). 	 * 	 * see<arch>/<arch>/critical.c 	 */
 name|sched_lock
 operator|.
