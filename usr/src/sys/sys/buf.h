@@ -1,11 +1,35 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	buf.h	4.5	%G%	*/
+comment|/*	buf.h	4.6	%G%	*/
 end_comment
 
 begin_comment
 comment|/*  * Each buffer in the pool is usually doubly linked into 2 lists:  * the device with which it is currently associated (always)  * and also on a list of blocks available for allocation  * for other use (usually).  * The latter list is kept in last-used order, and the two  * lists are doubly linked to make it easy to remove  * a buffer from one list when it was found by  * looking through the other.  * A buffer is on the available list, and is liable  * to be reassigned to another disk block, if and only  * if it is not marked BUSY.  When a buffer is busy, the  * available-list pointers can be used for other purposes.  * Most drivers use the forward ptr as a link in their I/O  * active queue.  * A buffer header contains all the information required  * to perform I/O.  * Most of the routines which manipulate these things  * are in bio.c.  */
 end_comment
+
+begin_struct
+struct|struct
+name|bufhd
+block|{
+name|long
+name|b_flags
+decl_stmt|;
+comment|/* see defines below */
+name|struct
+name|buf
+modifier|*
+name|b_forw
+decl_stmt|;
+comment|/* headed by d_tab of conf.c */
+name|struct
+name|buf
+modifier|*
+name|b_back
+decl_stmt|;
+comment|/*  "  */
+block|}
+struct|;
+end_struct
 
 begin_struct
 struct|struct
@@ -118,6 +142,39 @@ end_define
 
 begin_comment
 comment|/* number of free buffer queues */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BQ_LOCKED
+value|0
+end_define
+
+begin_comment
+comment|/* super-blocks&c */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BQ_LRU
+value|1
+end_define
+
+begin_comment
+comment|/* lru, useful buffers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BQ_AGE
+value|2
+end_define
+
+begin_comment
+comment|/* rubbish */
 end_comment
 
 begin_ifdef
