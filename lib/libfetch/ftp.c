@@ -2407,6 +2407,23 @@ name|e
 decl_stmt|,
 name|cd
 decl_stmt|;
+name|us
+operator|->
+name|size
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|us
+operator|->
+name|atime
+operator|=
+name|us
+operator|->
+name|mtime
+operator|=
+literal|0
+expr_stmt|;
 comment|/* connect to server */
 if|if
 condition|(
