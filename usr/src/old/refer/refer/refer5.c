@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)refer5.c	4.2 (Berkeley) %G%"
+literal|"@(#)refer5.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1452,6 +1452,7 @@ decl_stmt|;
 name|int
 name|x
 init|=
+literal|'a'
 operator|-
 literal|1
 decl_stmt|;
