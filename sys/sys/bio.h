@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)buf.h	8.7 (Berkeley) 1/21/94  * $Id: buf.h,v 1.20 1995/07/29 11:42:43 bde Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)buf.h	8.7 (Berkeley) 1/21/94  * $Id: buf.h,v 1.21 1995/08/24 12:57:17 davidg Exp $  */
 end_comment
 
 begin_ifndef
@@ -200,10 +200,6 @@ name|b_vp
 decl_stmt|;
 comment|/* Device vnode. */
 name|int
-name|b_pfcent
-decl_stmt|;
-comment|/* Center page when swapping cluster. */
-name|int
 name|b_dirtyoff
 decl_stmt|;
 comment|/* Offset in buffer of dirty region. */
@@ -253,6 +249,26 @@ name|void
 modifier|*
 name|b_spc
 decl_stmt|;
+union|union
+name|cluster_info
+block|{
+name|TAILQ_HEAD
+argument_list|(
+argument|cluster_list_head
+argument_list|,
+argument|buf
+argument_list|)
+name|cluster_head
+expr_stmt|;
+name|TAILQ_ENTRY
+argument_list|(
+argument|buf
+argument_list|)
+name|cluster_entry
+expr_stmt|;
+block|}
+name|b_cluster
+union|;
 name|struct
 name|vm_page
 modifier|*
@@ -679,42 +695,6 @@ end_define
 begin_comment
 comment|/* bounce buffer flag */
 end_comment
-
-begin_comment
-comment|/*  * This structure describes a clustered I/O.  It is stored in the b_saveaddr  * field of the buffer on which I/O is done.  At I/O completion, cluster  * callback uses the structure to parcel I/O's to individual buffers, and  * then free's this structure.  */
-end_comment
-
-begin_struct
-struct|struct
-name|cluster_save
-block|{
-name|long
-name|bs_bcount
-decl_stmt|;
-comment|/* Saved b_bcount. */
-name|long
-name|bs_bufsize
-decl_stmt|;
-comment|/* Saved b_bufsize. */
-name|void
-modifier|*
-name|bs_saveaddr
-decl_stmt|;
-comment|/* Saved b_addr. */
-name|int
-name|bs_nchildren
-decl_stmt|;
-comment|/* Number of associated buffers. */
-name|struct
-name|buf
-modifier|*
-modifier|*
-name|bs_children
-decl_stmt|;
-comment|/* List of associated buffers. */
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/*  * number of buffer hash entries  */
@@ -1328,17 +1308,11 @@ expr|struct
 name|vnode
 operator|*
 operator|,
-expr|struct
-name|buf
-operator|*
-operator|,
 name|long
 operator|,
 name|daddr_t
 operator|,
 name|int
-operator|,
-name|daddr_t
 operator|)
 argument_list|)
 decl_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.69 1995/11/05 20:45:49 dyson Exp $  */
+comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.70 1995/11/18 23:33:48 dyson Exp $  */
 end_comment
 
 begin_comment
@@ -317,16 +317,6 @@ name|maxbufspace
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * advisory minimum for size of LRU queue or VMIO queue  */
-end_comment
-
-begin_decl_stmt
-name|int
-name|minbuf
-decl_stmt|;
-end_decl_stmt
-
 begin_decl_stmt
 name|struct
 name|bufhashhdr
@@ -544,12 +534,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*  * maxbufspace is currently calculated to support all filesystem blocks  * to be 8K.  If you happen to use a 16K filesystem, the size of the buffer  * cache is still the same as it would be for 8K filesystems.  This  * keeps the size of the buffer cache "in check" for big block filesystems.  */
-name|minbuf
-operator|=
-name|nbuf
-operator|/
-literal|3
-expr_stmt|;
 name|maxbufspace
 operator|=
 literal|2
@@ -1659,13 +1643,6 @@ operator|&
 name|B_VMIO
 condition|)
 block|{
-name|bp
-operator|->
-name|b_flags
-operator|&=
-operator|~
-name|B_WANTED
-expr_stmt|;
 name|wakeup
 argument_list|(
 name|bp
@@ -2811,25 +2788,15 @@ operator|!=
 literal|1
 condition|)
 block|{
-name|bremfree
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
 name|cluster_wbuild
 argument_list|(
 name|vp
-argument_list|,
-name|bp
 argument_list|,
 name|size
 argument_list|,
 name|lblkno
 argument_list|,
 name|ncl
-argument_list|,
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 name|splx
@@ -2840,12 +2807,17 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-comment|/* 	 * default (old) behavior, writing out only one block 	 */
 name|bremfree
 argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+comment|/* 	 * default (old) behavior, writing out only one block 	 */
 name|bp
 operator|->
 name|b_flags
@@ -2860,11 +2832,6 @@ operator|)
 name|VOP_BWRITE
 argument_list|(
 name|bp
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -7018,38 +6985,17 @@ operator|!=
 name|VM_PAGE_BITS_ALL
 condition|)
 block|{
-for|for
-control|(
-name|j
-operator|=
-literal|0
-init|;
-name|j
-operator|<
-name|bp
-operator|->
-name|b_bufsize
-operator|/
-name|DEV_BSIZE
-condition|;
-name|j
-operator|++
-control|)
-block|{
 name|bzero
 argument_list|(
 name|bp
 operator|->
 name|b_data
-operator|+
-name|j
-operator|*
-name|DEV_BSIZE
 argument_list|,
-name|DEV_BSIZE
+name|bp
+operator|->
+name|b_bufsize
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 name|bp
 operator|->
@@ -7103,6 +7049,23 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|(
+name|bp
+operator|->
+name|b_pages
+index|[
+name|i
+index|]
+operator|->
+name|flags
+operator|&
+name|PG_ZERO
+operator|)
+operator|==
+literal|0
+condition|)
 name|bzero
 argument_list|(
 name|bp
