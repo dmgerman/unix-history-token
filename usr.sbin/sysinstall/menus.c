@@ -11306,7 +11306,7 @@ name|dmenuSetKmapVariable
 block|,
 name|NULL
 block|,
-literal|"keymap=lat-amer"
+literal|"keymap=latinamerican"
 block|}
 block|,
 block|{
