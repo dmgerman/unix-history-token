@@ -577,6 +577,10 @@ name|td_standin
 decl_stmt|;
 comment|/* (?) use this for an upcall */
 name|u_int
+name|td_usticks
+decl_stmt|;
+comment|/* Statclock hits in kernel, for UTS */
+name|u_int
 name|td_critnest
 decl_stmt|;
 comment|/* (k) Critical section nest level. */
@@ -1282,6 +1286,14 @@ name|u_int64_t
 name|ke_iticks
 decl_stmt|;
 comment|/* (j) Statclock hits in intr. */
+name|u_int
+name|ke_uuticks
+decl_stmt|;
+comment|/* Statclock hits in user, for UTS */
+name|u_int
+name|ke_usticks
+decl_stmt|;
+comment|/* Statclock hits in kernel, for UTS */
 name|u_char
 name|ke_oncpu
 decl_stmt|;
@@ -4652,6 +4664,19 @@ name|struct
 name|thread
 modifier|*
 name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|thread_add_ticks_intr
+parameter_list|(
+name|int
+name|user
+parameter_list|,
+name|uint
+name|ticks
 parameter_list|)
 function_decl|;
 end_function_decl

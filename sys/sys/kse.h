@@ -27,6 +27,12 @@ directive|include
 file|<sys/ucontext.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
 begin_comment
 comment|/*  * This file defines the structures needed for communication between  * the userland and the kernel when running a KSE-based threading system.  * The only programs that should see this file are the user thread  * scheduler (UTS) and the kernel.  */
 end_comment
@@ -77,6 +83,14 @@ modifier|*
 name|tm_udata
 decl_stmt|;
 comment|/* For use by the UTS */
+name|unsigned
+name|int
+name|tm_uticks
+decl_stmt|;
+name|unsigned
+name|int
+name|tm_sticks
+decl_stmt|;
 name|int
 name|tm_spare
 index|[
@@ -95,6 +109,10 @@ begin_struct
 struct|struct
 name|kse_mailbox
 block|{
+name|int
+name|km_version
+decl_stmt|;
+comment|/* Mailbox version */
 name|struct
 name|kse_thr_mailbox
 modifier|*
@@ -130,6 +148,11 @@ modifier|*
 name|km_udata
 decl_stmt|;
 comment|/* For use by the UTS */
+name|struct
+name|timespec
+name|km_timeofday
+decl_stmt|;
+comment|/* Time of day */
 name|int
 name|km_spare
 index|[
@@ -139,6 +162,13 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|KSE_VER_0
+value|0
+end_define
 
 begin_ifndef
 ifndef|#
