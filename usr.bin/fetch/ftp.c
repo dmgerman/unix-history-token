@@ -2709,6 +2709,8 @@ argument_list|(
 name|ftp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|display
 argument_list|(
 name|fs
@@ -2718,7 +2720,12 @@ argument_list|,
 operator|-
 literal|1
 argument_list|)
-expr_stmt|;
+operator|!=
+literal|0
+condition|)
+return|return
+name|EX_PROTOCOL
+return|;
 name|adjmodtime
 argument_list|(
 name|fs

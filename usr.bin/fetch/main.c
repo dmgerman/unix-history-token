@@ -1288,11 +1288,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* Used to generate the progress display when not in quiet mode. */
+comment|/*   * Used to generate the progress display when not in quiet mode.  * Return != 0 when the file appears to be truncated.  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|display
 parameter_list|(
 name|struct
@@ -1348,14 +1348,36 @@ decl_stmt|;
 name|float
 name|d
 decl_stmt|;
+name|int
+name|truncated
+decl_stmt|;
 if|if
 condition|(
-operator|!
-name|fs
-operator|->
-name|fs_verbose
+name|size
+operator|!=
+operator|-
+literal|1
+operator|&&
+name|n
+operator|==
+operator|-
+literal|1
+operator|&&
+name|bytes
+operator|!=
+name|size
 condition|)
-return|return;
+block|{
+name|truncated
+operator|=
+literal|1
+expr_stmt|;
+block|}
+else|else
+name|truncated
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|init
@@ -1435,6 +1457,12 @@ operator|->
 name|fs_outputfile
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fs
+operator|->
+name|fs_verbose
+condition|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -1450,7 +1478,9 @@ name|bytes
 operator|=
 name|n
 expr_stmt|;
-return|return;
+goto|goto
+name|out
+goto|;
 block|}
 name|gettimeofday
 argument_list|(
@@ -1472,6 +1502,10 @@ block|{
 if|if
 condition|(
 name|stdoutatty
+operator|&&
+name|fs
+operator|->
+name|fs_verbose
 condition|)
 block|{
 if|if
@@ -1534,6 +1568,12 @@ name|tv_usec
 operator|/
 literal|1.e6
 expr_stmt|;
+if|if
+condition|(
+name|fs
+operator|->
+name|fs_verbose
+condition|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -1555,6 +1595,13 @@ name|bytes
 operator|/
 name|d
 expr_stmt|;
+if|if
+condition|(
+name|fs
+operator|->
+name|fs_verbose
+condition|)
+block|{
 if|if
 condition|(
 name|d
@@ -1586,6 +1633,7 @@ name|d
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 name|free
 argument_list|(
 name|s
@@ -1595,7 +1643,9 @@ name|init
 operator|=
 literal|0
 expr_stmt|;
-return|return;
+goto|goto
+name|out
+goto|;
 block|}
 name|bytes
 operator|+=
@@ -1630,7 +1680,9 @@ operator|<
 literal|5
 condition|)
 comment|/* display every 5 sec. */
-return|return;
+goto|goto
+name|out
+goto|;
 name|t0
 operator|=
 name|t
@@ -1641,6 +1693,10 @@ expr_stmt|;
 if|if
 condition|(
 name|stdoutatty
+operator|&&
+name|fs
+operator|->
+name|fs_verbose
 condition|)
 block|{
 if|if
@@ -1721,6 +1777,39 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|out
+label|:
+if|if
+condition|(
+name|truncated
+operator|!=
+literal|0
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"WARNING: File %s appears to be truncated: "
+literal|"%qd/%qd bytes\n"
+argument_list|,
+name|fs
+operator|->
+name|fs_outputfile
+argument_list|,
+operator|(
+name|quad_t
+operator|)
+name|bytes
+argument_list|,
+operator|(
+name|quad_t
+operator|)
+name|size
+argument_list|)
+expr_stmt|;
+return|return
+name|truncated
+return|;
 block|}
 end_function
 

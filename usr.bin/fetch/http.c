@@ -4785,6 +4785,8 @@ operator|=
 name|errno
 expr_stmt|;
 comment|/* save errno for warn(), below, if needed */
+if|if
+condition|(
 name|display
 argument_list|(
 name|fs
@@ -4794,8 +4796,23 @@ argument_list|,
 operator|-
 literal|1
 argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* Check for truncated file */
+name|errno
+operator|=
+name|status
 expr_stmt|;
-comment|/* do here in case we have to warn */
+name|status
+operator|=
+name|EX_PROTOCOL
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 name|errno
 operator|=
 name|status
