@@ -1233,10 +1233,6 @@ literal|0
 expr_stmt|;
 comment|/* Not stopped */
 block|}
-name|Initialized
-operator|=
-literal|1
-expr_stmt|;
 block|}
 end_function
 
@@ -1581,7 +1577,11 @@ comment|/* called just before a select to conserve IO to terminal */
 if|if
 condition|(
 operator|!
-name|Initialized
+operator|(
+name|screenInitd
+operator|||
+name|screenStopped
+operator|)
 condition|)
 block|{
 return|return
