@@ -658,13 +658,11 @@ expr_stmt|;
 comment|/* 	 * Close open files and release open-file table. 	 * This may block! 	 */
 name|fdfree
 argument_list|(
-operator|&
-name|p
-operator|->
-name|p_thread
+name|td
 argument_list|)
 expr_stmt|;
 comment|/* XXXKSE */
+comment|/* may not be the one in proc */
 comment|/* 	 * Remove ourself from our leader's peer list and wake our leader. 	 */
 name|PROC_LOCK
 argument_list|(
