@@ -592,43 +592,56 @@ name|ng_type
 name|ng_atmpif_typestruct
 init|=
 block|{
+operator|.
+name|version
+operator|=
 name|NG_ABI_VERSION
 block|,
-comment|/* version */
+operator|.
+name|name
+operator|=
 name|NG_ATMPIF_NODE_TYPE
 block|,
-comment|/* name */
+operator|.
+name|mod_event
+operator|=
 name|ng_atmpif_mod_event
 block|,
-comment|/* mod_event */
+operator|.
+name|constructor
+operator|=
 name|ng_atmpif_constructor
 block|,
-comment|/* constructor */
+operator|.
+name|rcvmsg
+operator|=
 name|ng_atmpif_rcvmsg
 block|,
-comment|/* rcvmsg */
+operator|.
+name|shutdown
+operator|=
 name|ng_atmpif_rmnode
 block|,
-comment|/* shutdown */
+operator|.
+name|newhook
+operator|=
 name|ng_atmpif_newhook
 block|,
-comment|/* newhook */
-name|NULL
-block|,
-comment|/* findhook */
-name|NULL
-block|,
-comment|/* connect */
+operator|.
+name|rcvdata
+operator|=
 name|ng_atmpif_rcvdata
 block|,
-comment|/* rcvdata */
+operator|.
+name|disconnect
+operator|=
 name|ng_atmpif_disconnect
 block|,
-comment|/* disconnect */
+operator|.
+name|cmdlist
+operator|=
 name|ng_atmpif_cmdlist
-block|,
-comment|/* cmdlist */
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

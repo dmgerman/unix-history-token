@@ -186,41 +186,51 @@ name|ng_type
 name|typestruct
 init|=
 block|{
+operator|.
+name|version
+operator|=
 name|NG_ABI_VERSION
 block|,
-comment|/* version */
+operator|.
+name|name
+operator|=
 name|NG_DEVICE_NODE_TYPE
 block|,
-comment|/* name */
+operator|.
+name|mod_event
+operator|=
 name|ng_device_mod_event
 block|,
-comment|/* modevent */
+operator|.
+name|constructor
+operator|=
 name|ng_device_cons
 block|,
-comment|/* constructor */
+operator|.
+name|rcvmsg
+operator|=
 name|ng_device_rcvmsg
 block|,
-comment|/* receive msg */
-name|NULL
-block|,
-comment|/* shutdown */
+operator|.
+name|newhook
+operator|=
 name|ng_device_newhook
 block|,
-comment|/* newhook */
-name|NULL
-block|,
-comment|/* findhook */
+operator|.
+name|connect
+operator|=
 name|ng_device_connect
 block|,
-comment|/* connect */
+operator|.
+name|rcvdata
+operator|=
 name|ng_device_rcvdata
 block|,
-comment|/* receive data */
+operator|.
+name|disconnect
+operator|=
 name|ng_device_disconnect
-block|,
-comment|/* disconnect */
-name|NULL
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

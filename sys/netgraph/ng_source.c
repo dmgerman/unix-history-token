@@ -542,34 +542,51 @@ name|ng_type
 name|ng_source_typestruct
 init|=
 block|{
+operator|.
+name|version
+operator|=
 name|NG_ABI_VERSION
 block|,
+operator|.
+name|name
+operator|=
 name|NG_SOURCE_NODE_TYPE
 block|,
-name|NULL
-block|,
-comment|/* module event handler */
+operator|.
+name|constructor
+operator|=
 name|ng_source_constructor
 block|,
+operator|.
+name|rcvmsg
+operator|=
 name|ng_source_rcvmsg
 block|,
+operator|.
+name|shutdown
+operator|=
 name|ng_source_rmnode
 block|,
+operator|.
+name|newhook
+operator|=
 name|ng_source_newhook
 block|,
-name|NULL
-block|,
-comment|/* findhook */
-name|NULL
-block|,
-comment|/* connect */
+operator|.
+name|rcvdata
+operator|=
 name|ng_source_rcvdata
 block|,
-comment|/* rcvdata */
+operator|.
+name|disconnect
+operator|=
 name|ng_source_disconnect
 block|,
+operator|.
+name|cmdlist
+operator|=
 name|ng_source_cmds
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

@@ -580,37 +580,54 @@ name|ng_type
 name|ng_uni_typestruct
 init|=
 block|{
+operator|.
+name|version
+operator|=
 name|NG_ABI_VERSION
 block|,
+operator|.
+name|name
+operator|=
 name|NG_UNI_NODE_TYPE
 block|,
+operator|.
+name|mod_event
+operator|=
 name|ng_uni_mod_event
 block|,
-comment|/* Module event handler (optional) */
+operator|.
+name|constructor
+operator|=
 name|ng_uni_constructor
 block|,
-comment|/* Node constructor */
+operator|.
+name|rcvmsg
+operator|=
 name|ng_uni_rcvmsg
 block|,
-comment|/* control messages come here */
+operator|.
+name|shutdown
+operator|=
 name|ng_uni_shutdown
 block|,
-comment|/* reset, and free resources */
+operator|.
+name|newhook
+operator|=
 name|ng_uni_newhook
 block|,
-comment|/* first notification of new hook */
-name|NULL
-block|,
-comment|/* findhook */
-name|NULL
-block|,
-comment|/* connect */
+operator|.
+name|rcvdata
+operator|=
 name|ng_uni_rcvlower
 block|,
-comment|/* rcvdata */
+operator|.
+name|disconnect
+operator|=
 name|ng_uni_disconnect
 block|,
-comment|/* notify on disconnect */
+operator|.
+name|cmdlist
+operator|=
 name|ng_uni_cmdlist
 block|, }
 decl_stmt|;

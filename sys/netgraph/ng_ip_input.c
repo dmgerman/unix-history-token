@@ -129,40 +129,31 @@ name|ng_type
 name|typestruct
 init|=
 block|{
+operator|.
+name|version
+operator|=
 name|NG_ABI_VERSION
 block|,
+operator|.
+name|name
+operator|=
 name|NG_IP_INPUT_NODE_TYPE
 block|,
-name|NULL
-block|,
-comment|/* modeventhand_t */
+operator|.
+name|constructor
+operator|=
 name|ngipi_cons
 block|,
-comment|/* ng_constructor_t */
-name|NULL
-block|,
-comment|/* ng_rcvmsg_t */
-name|NULL
-block|,
-comment|/* ng_shutdown_t */
-name|NULL
-block|,
-comment|/* ng_newhook_t */
-name|NULL
-block|,
-comment|/* ng_findhook_t */
-name|NULL
-block|,
-comment|/* ng_connect_t */
+operator|.
+name|rcvdata
+operator|=
 name|ngipi_rcvdata
 block|,
-comment|/* ng_rcvdata_t */
+operator|.
+name|disconnect
+operator|=
 name|ngipi_disconnect
-block|,
-comment|/* ng_disconnect_t */
-name|NULL
-comment|/* ng_cmdlist */
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

@@ -421,37 +421,54 @@ name|ng_type
 name|ng_sscfu_typestruct
 init|=
 block|{
+operator|.
+name|version
+operator|=
 name|NG_ABI_VERSION
 block|,
+operator|.
+name|name
+operator|=
 name|NG_SSCFU_NODE_TYPE
 block|,
+operator|.
+name|mod_event
+operator|=
 name|ng_sscfu_mod_event
 block|,
-comment|/* Module event handler (optional) */
+operator|.
+name|constructor
+operator|=
 name|ng_sscfu_constructor
 block|,
-comment|/* Node constructor */
+operator|.
+name|rcvmsg
+operator|=
 name|ng_sscfu_rcvmsg
 block|,
-comment|/* control messages come here */
+operator|.
+name|shutdown
+operator|=
 name|ng_sscfu_shutdown
 block|,
-comment|/* reset, and free resources */
+operator|.
+name|newhook
+operator|=
 name|ng_sscfu_newhook
 block|,
-comment|/* first notification of new hook */
-name|NULL
-block|,
-comment|/* findhook */
-name|NULL
-block|,
-comment|/* connect */
+operator|.
+name|rcvdata
+operator|=
 name|ng_sscfu_rcvupper
 block|,
-comment|/* rcvdata */
+operator|.
+name|disconnect
+operator|=
 name|ng_sscfu_disconnect
 block|,
-comment|/* notify on disconnect */
+operator|.
+name|cmdlist
+operator|=
 name|ng_sscfu_cmdlist
 block|, }
 decl_stmt|;
