@@ -19,24 +19,6 @@ directive|define
 name|_ALIAS_H_
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NULL
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NULL
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* Alias link representative (incomplete struct) */
 end_comment
@@ -329,7 +311,7 @@ comment|/********************** Mode flags ********************/
 end_comment
 
 begin_comment
-comment|/* Set these flags using SetPacketAliasMode() */
+comment|/* Set these flags using PacketAliasSetMode() */
 end_comment
 
 begin_comment
@@ -355,7 +337,7 @@ value|0x02
 end_define
 
 begin_comment
-comment|/* If PKT_ALIAS_SAME_PORTS is set, packets will be attempted sent from 	the same port as they originated on.  This allows eg rsh to work 	*99% of the time*, but _not_ 100%.  (It will be slightly flakey 	instead of not working at all.)  This mode bit is set by         PacketAliasInit(), so it is a default mode of operation. */
+comment|/* If PKT_ALIAS_SAME_PORTS is set, packets will be attempted sent from 	the same port as they originated on.  This allows e.g. rsh to work 	*99% of the time*, but _not_ 100%.  (It will be slightly flakey 	instead of not working at all.)  This mode bit is set by         PacketAliasInit(), so it is a default mode of operation. */
 end_comment
 
 begin_define
@@ -377,7 +359,7 @@ value|0x08
 end_define
 
 begin_comment
-comment|/* If PKT_ALIAS_UNREGISTERED_ONLY is set, then only packets with with 	unregistered source addresses will be aliased (along with those 	of the ppp host maching itself.  Private addresses are those         in the following ranges: 		10.0.0.0     ->   10.255.255.255 		172.16.0.0   ->   172.31.255.255 		192.168.0.0  ->   192.168.255.255  */
+comment|/* If PKT_ALIAS_UNREGISTERED_ONLY is set, then only packets with 	unregistered source addresses will be aliased (along with those 	of the ppp host maching itself.  Private addresses are those         in the following ranges: 		10.0.0.0     ->   10.255.255.255 		172.16.0.0   ->   172.31.255.255 		192.168.0.0  ->   192.168.255.255  */
 end_comment
 
 begin_define
