@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pwd_mkdb.c	8.4 (Berkeley) %G%"
+literal|"@(#)pwd_mkdb.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -506,6 +506,15 @@ operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
+comment|/* We don't care what the user wants. */
+operator|(
+name|void
+operator|)
+name|umask
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 name|pname
 operator|=
 operator|*
@@ -584,7 +593,7 @@ name|clean
 operator|=
 name|FILE_INSECURE
 expr_stmt|;
-comment|/* 	 * Open file for old password file.  Minor trickiness -- don't want to 	 * chance the file already existing, since someone (stupidly) might 	 * still be using this for permission checking.  So, open it first and 	 * fdopen the resulting fd.  The resulting file should be readable by 	 * everyone, don't trust the user's umask. 	 */
+comment|/* 	 * Open file for old password file.  Minor trickiness -- don't want to 	 * chance the file already existing, since someone (stupidly) might 	 * still be using this for permission checking.  So, open it first and 	 * fdopen the resulting fd.  The resulting file should be readable by 	 * everyone. 	 */
 if|if
 condition|(
 name|makeold
@@ -631,16 +640,6 @@ condition|)
 name|error
 argument_list|(
 name|buf
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fchmod
-argument_list|(
-name|tfd
-argument_list|,
-name|PERM_INSECURE
 argument_list|)
 expr_stmt|;
 if|if
