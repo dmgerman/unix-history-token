@@ -185,10 +185,6 @@ argument_list|)
 expr_stmt|;
 comment|/* suspend/resume support */
 name|int
-name|extra
-decl_stmt|;
-comment|/* Controller specific size */
-name|int
 name|maxmem
 decl_stmt|;
 comment|/* Number of allowed memory windows */
@@ -224,10 +220,6 @@ name|name
 index|[
 literal|128
 index|]
-decl_stmt|;
-name|struct
-name|isa_device
-name|isahd
 decl_stmt|;
 name|int
 name|running
@@ -385,6 +377,24 @@ modifier|*
 parameter_list|,
 name|enum
 name|card_event
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|pccard_suspend
+parameter_list|(
+name|device_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|pccard_resume
+parameter_list|(
+name|device_t
 parameter_list|)
 function_decl|;
 end_function_decl

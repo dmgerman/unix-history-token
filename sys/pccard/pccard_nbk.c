@@ -143,6 +143,16 @@ name|PCCARD_NDRQ
 value|0
 end_define
 
+begin_define
+define|#
+directive|define
+name|PCCARD_DEVINFO
+parameter_list|(
+name|d
+parameter_list|)
+value|(struct pccard_devinfo *) device_get_ivars(d)
+end_define
+
 begin_function
 specifier|static
 name|int
@@ -337,7 +347,7 @@ name|pccard_devinfo
 modifier|*
 name|devi
 init|=
-name|device_get_ivars
+name|PCCARD_DEVINFO
 argument_list|(
 name|child
 argument_list|)
@@ -490,7 +500,7 @@ name|pccard_devinfo
 modifier|*
 name|devi
 init|=
-name|device_get_ivars
+name|PCCARD_DEVINFO
 argument_list|(
 name|child
 argument_list|)
@@ -643,7 +653,7 @@ name|pccard_devinfo
 modifier|*
 name|devi
 init|=
-name|device_get_ivars
+name|PCCARD_DEVINFO
 argument_list|(
 name|child
 argument_list|)
@@ -733,7 +743,7 @@ name|pccard_devinfo
 modifier|*
 name|devi
 init|=
-name|device_get_ivars
+name|PCCARD_DEVINFO
 argument_list|(
 name|child
 argument_list|)
@@ -1019,7 +1029,7 @@ name|pccard_devinfo
 modifier|*
 name|devi
 init|=
-name|device_get_ivars
+name|PCCARD_DEVINFO
 argument_list|(
 name|child
 argument_list|)
@@ -1086,14 +1096,14 @@ name|DEVMETHOD
 argument_list|(
 name|device_suspend
 argument_list|,
-name|bus_generic_suspend
+name|pccard_suspend
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|device_resume
 argument_list|,
-name|bus_generic_resume
+name|pccard_resume
 argument_list|)
 block|,
 comment|/* Bus interface */
