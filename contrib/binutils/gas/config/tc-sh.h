@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* This file is tc-sh.h    Copyright (C) 1993, 94, 95, 96, 1997 Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
+comment|/* This file is tc-sh.h    Copyright 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002    Free Software Foundation, Inc.     This file is part of GAS, the GNU Assembler.     GAS is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GAS is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with GAS; see the file COPYING.  If not, write to    the Free Software Foundation, 59 Temple Place - Suite 330,    Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_define
@@ -12,27 +12,32 @@ end_define
 begin_define
 define|#
 directive|define
-name|TARGET_BYTES_BIG_ENDIAN
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
 name|TARGET_ARCH
 value|bfd_arch_sh
 end_define
 
-begin_comment
-comment|/* Whether in little endian mode.  */
-end_comment
+begin_if
+if|#
+directive|if
+name|ANSI_PROTOTYPES
+end_if
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|shl
-decl_stmt|;
-end_decl_stmt
+begin_struct_decl
+struct_decl|struct
+name|segment_info_struct
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|internal_reloc
+struct_decl|;
+end_struct_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Whether -relax was used.  */
@@ -64,6 +69,17 @@ begin_define
 define|#
 directive|define
 name|WORKING_DOT_WORD
+end_define
+
+begin_comment
+comment|/* All SH instructions are multiples of 16 bits.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DWARF2_LINE_MIN_INSN_LENGTH
+value|2
 end_define
 
 begin_comment
@@ -121,6 +137,13 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|MAX_MEM_FOR_RS_ALIGN_CODE
+value|(1 + 2)
+end_define
+
 begin_comment
 comment|/* We need to force out some relocations when relaxing.  */
 end_comment
@@ -135,13 +158,120 @@ parameter_list|)
 value|sh_force_relocation (fix)
 end_define
 
-begin_function_decl
+begin_comment
+comment|/* The type fixS is defined (to struct fix) in write.h, but write.h uses    definitions from this file.  To avoid problems with including write.h    after the "right" definitions, don't; just forward-declare struct fix    here.  */
+end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|fix
+struct_decl|;
+end_struct_decl
+
+begin_decl_stmt
 specifier|extern
 name|int
 name|sh_force_relocation
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|fix
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OBJ_ELF
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|obj_fix_adjustable
+parameter_list|(
+name|fixP
+parameter_list|)
+value|sh_fix_adjustable(fixP)
+end_define
+
+begin_struct_decl
+struct_decl|struct
+name|fix
+struct_decl|;
+end_struct_decl
+
+begin_decl_stmt
+specifier|extern
+name|boolean
+name|sh_fix_adjustable
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|fix
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* This arranges for gas/write.c to not apply a relocation if    obj_fix_adjustable() says it is not adjustable.  */
+end_comment
+
+begin_comment
+comment|/* ??? fixups with symbols in SEC_MERGE sections are marked with    obj_fix_adjustable and have a non-section symbol, as in    "vwxyz"+1 in execute/string-opt-6.c .  Maybe the test of    (symbol_used_in_reloc_p should be done in the machine-independent code.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TC_FIX_ADJUSTABLE
+parameter_list|(
+name|fixP
+parameter_list|)
+define|\
+value|(! symbol_used_in_reloc_p (fixP->fx_addsy)&& obj_fix_adjustable (fixP))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|MD_PCREL_FROM_SECTION
+parameter_list|(
+name|FIXP
+parameter_list|,
+name|SEC
+parameter_list|)
+value|md_pcrel_from_section (FIXP, SEC)
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|long
+name|md_pcrel_from_section
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|fix
+operator|*
+operator|,
+name|segT
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -153,7 +283,8 @@ begin_define
 define|#
 directive|define
 name|LISTING_HEADER
-value|(shl ? "Hitachi Super-H GAS Little Endian" : "Hitachi Super-H GAS Big Endian")
+define|\
+value|(!target_big_endian \    ? "Hitachi Super-H GAS Little Endian" : "Hitachi Super-H GAS Big Endian")
 end_define
 
 begin_define
@@ -180,49 +311,6 @@ define|#
 directive|define
 name|TC_GENERIC_RELAX_TABLE
 value|md_relax_table
-end_define
-
-begin_comment
-comment|/* We use a special alignment function to insert the correct nop    pattern.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|sh_do_align
-name|PARAMS
-argument_list|(
-operator|(
-name|int
-operator|,
-specifier|const
-name|char
-operator|*
-operator|,
-name|int
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|md_do_align
-parameter_list|(
-name|n
-parameter_list|,
-name|fill
-parameter_list|,
-name|len
-parameter_list|,
-name|max
-parameter_list|,
-name|l
-parameter_list|)
-value|if (sh_do_align (n,fill,len,max)) goto l
 end_define
 
 begin_comment
@@ -386,7 +474,7 @@ begin_define
 define|#
 directive|define
 name|COFF_MAGIC
-value|(shl ? SH_ARCH_MAGIC_LITTLE : SH_ARCH_MAGIC_BIG)
+value|(!target_big_endian ? SH_ARCH_MAGIC_LITTLE : SH_ARCH_MAGIC_BIG)
 end_define
 
 begin_comment
@@ -420,13 +508,31 @@ define|\
 value|sh_coff_reloc_mangle ((seg), (fix), (int), (paddr))
 end_define
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|sh_coff_reloc_mangle
-parameter_list|()
-function_decl|;
-end_function_decl
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|segment_info_struct
+operator|*
+operator|,
+expr|struct
+name|fix
+operator|*
+operator|,
+expr|struct
+name|internal_reloc
+operator|*
+operator|,
+name|unsigned
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -480,6 +586,42 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BFD_ASSEMBLER
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SEG_NAME
+parameter_list|(
+name|SEG
+parameter_list|)
+value|segment_name (SEG)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SEG_NAME
+parameter_list|(
+name|SEG
+parameter_list|)
+value|obj_segment_name (SEG)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* We align most sections to a 16 byte boundary.  */
 end_comment
@@ -492,7 +634,7 @@ parameter_list|(
 name|SEG
 parameter_list|)
 define|\
-value|(strncmp (obj_segment_name (SEG), ".stabstr", 8) == 0		\    ? 0								\    : ((strncmp (obj_segment_name (SEG), ".stab", 5) == 0	\        || strcmp (obj_segment_name (SEG), ".ctors") == 0	\        || strcmp (obj_segment_name (SEG), ".dtors") == 0)	\       ? 2							\       : (sh_small ? 2 : 4)))
+value|(strncmp (SEG_NAME (SEG), ".stabstr", 8) == 0		\    ? 0							\    : ((strncmp (SEG_NAME (SEG), ".stab", 5) == 0	\        || strcmp (SEG_NAME (SEG), ".ctors") == 0	\        || strcmp (SEG_NAME (SEG), ".dtors") == 0)	\       ? 2						\       : (sh_small ? 2 : 4)))
 end_define
 
 begin_endif
@@ -525,11 +667,199 @@ name|target_big_endian
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TE_LINUX
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|TARGET_FORMAT
-value|(shl ? "elf32-shl" : "elf32-sh")
+value|(!target_big_endian ? "elf32-sh-linux" : "elf32-shbig-linux")
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|TE_NetBSD
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|TARGET_FORMAT
+value|(!target_big_endian ? "elf32-shl-nbsd" : "elf32-sh-nbsd")
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|TARGET_FORMAT
+value|(!target_big_endian ? "elf32-shl" : "elf32-sh")
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|elf_tc_final_processing
+value|sh_elf_final_processing
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|sh_elf_final_processing
+name|PARAMS
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|DIFF_EXPR_OK
+end_define
+
+begin_comment
+comment|/* foo-. gets turned into PC relative relocs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GLOBAL_OFFSET_TABLE_NAME
+value|"_GLOBAL_OFFSET_TABLE_"
+end_define
+
+begin_comment
+comment|/* This is the relocation type for direct references to    GLOBAL_OFFSET_TABLE.  It comes up in complicated expressions such    as _GLOBAL_OFFSET_TABLE_+[.-.L284], which cannot be expressed    normally with the regular expressions.  The fixup specified here    when used at runtime implies that we should add the address of the    GOT to the specified location, and as a result we have simplified    the expression into something we can use.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TC_RELOC_GLOBAL_OFFSET_TABLE
+value|BFD_RELOC_SH_GOTPC
+end_define
+
+begin_comment
+comment|/* This expression evaluates to false if the relocation is for a local object    for which we still want to do the relocation at runtime.  True if we    are willing to perform this relocation while building the .o file.    This is only used for pcrel relocations, so GOTOFF does not need to be    checked here.  I am not sure if some of the others are ever used with    pcrel, but it is easier to be safe than sorry.     We can't resolve references to the GOT or the PLT when creating the    object file, since these tables are only created by the linker.    Also, if the symbol is global, weak, common or not defined, the    assembler can't compute the appropriate reloc, since its location    can only be determined at link time.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TC_RELOC_RTSYM_LOC_FIXUP
+parameter_list|(
+name|FIX
+parameter_list|)
+define|\
+value|((FIX)->fx_r_type != BFD_RELOC_32_PLT_PCREL			\&& (FIX)->fx_r_type != BFD_RELOC_32_GOT_PCREL		\&& (FIX)->fx_r_type != BFD_RELOC_SH_GOTPC			\&& ((FIX)->fx_addsy == NULL					\        || (! S_IS_EXTERNAL ((FIX)->fx_addsy)			\&& ! S_IS_WEAK ((FIX)->fx_addsy)			\&& S_IS_DEFINED ((FIX)->fx_addsy)			\&& ! S_IS_COMMON ((FIX)->fx_addsy))))
+end_define
+
+begin_define
+define|#
+directive|define
+name|md_parse_name
+parameter_list|(
+name|name
+parameter_list|,
+name|exprP
+parameter_list|,
+name|nextcharP
+parameter_list|)
+define|\
+value|sh_parse_name ((name), (exprP), (nextcharP))
+end_define
+
+begin_decl_stmt
+name|int
+name|sh_parse_name
+name|PARAMS
+argument_list|(
+operator|(
+name|char
+specifier|const
+operator|*
+name|name
+operator|,
+name|expressionS
+operator|*
+name|exprP
+operator|,
+name|char
+operator|*
+name|nextchar
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|TC_CONS_FIX_NEW
+parameter_list|(
+name|FRAG
+parameter_list|,
+name|OFF
+parameter_list|,
+name|LEN
+parameter_list|,
+name|EXP
+parameter_list|)
+define|\
+value|sh_cons_fix_new ((FRAG), (OFF), (LEN), (EXP))
+end_define
+
+begin_decl_stmt
+name|void
+name|sh_cons_fix_new
+name|PARAMS
+argument_list|(
+operator|(
+name|fragS
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|expressionS
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* This is used to construct expressions out of @GOTOFF, @PLT and @GOT    symbols.  The relocation type is stored in X_md.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|O_PIC_reloc
+value|O_md1
 end_define
 
 begin_endif
@@ -539,10 +869,6 @@ end_endif
 
 begin_comment
 comment|/* OBJ_ELF */
-end_comment
-
-begin_comment
-comment|/* end of tc-sh.h */
 end_comment
 
 end_unit
