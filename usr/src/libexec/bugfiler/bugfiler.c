@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bugfiler.c	5.9 (Berkeley) 87/04/23"
+literal|"@(#)bugfiler.c	5.10 (Berkeley) 87/07/20"
 decl_stmt|;
 end_decl_stmt
 
@@ -399,6 +399,35 @@ operator|*
 name|strcpy
 argument_list|()
 block|;
+if|if
+condition|(
+name|access
+argument_list|(
+name|TMP_DIR
+argument_list|,
+name|F_OK
+argument_list|)
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|mkdir
+argument_list|(
+name|TMP_DIR
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|chmod
+argument_list|(
+name|TMP_DIR
+argument_list|,
+literal|0775
+argument_list|)
+expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -408,7 +437,10 @@ name|tmpname
 argument_list|,
 name|TMP_BUG
 argument_list|)
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|tfd
@@ -463,6 +495,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+end_if
+
+begin_expr_stmt
 name|error
 argument_list|(
 literal|"can't make copy using %s.\n"
