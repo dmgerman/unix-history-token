@@ -4,7 +4,7 @@ comment|/* Copyright 1988,1990,1993,1994 by Paul Vixie  * All rights reserved  *
 end_comment
 
 begin_comment
-comment|/* cron.h - header for vixie's cron  *  * $Id: cron.h,v 1.3 1996/08/05 00:31:24 pst Exp $  *  * vix 14nov88 [rest of log is in RCS]  * vix 14jan87 [0 or 7 can be sunday; thanks, mwm@berkeley]  * vix 30dec86 [written]  */
+comment|/* cron.h - header for vixie's cron  *  * $Id: cron.h,v 1.3.2.1 1997/09/16 07:01:37 charnier Exp $  *  * vix 14nov88 [rest of log is in RCS]  * vix 14jan87 [0 or 7 can be sunday; thanks, mwm@berkeley]  * vix 30dec86 [written]  */
 end_comment
 
 begin_comment
@@ -45,6 +45,12 @@ begin_include
 include|#
 directive|include
 file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -673,6 +679,28 @@ name|DOW_COUNT
 value|(LAST_DOW - FIRST_DOW + 1)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LOGIN_CAP
+end_ifdef
+
+begin_comment
+comment|/* see init.c */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RESOURCE_RC
+value|"daemon"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* each user's crontab will be held as a list of 			 * the following structure. 			 * 			 * These are the cron commands. 			 */
 end_comment
@@ -693,6 +721,15 @@ decl_stmt|;
 name|gid_t
 name|gid
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|LOGIN_CAP
+name|char
+modifier|*
+name|class
+decl_stmt|;
+endif|#
+directive|endif
 name|char
 modifier|*
 modifier|*

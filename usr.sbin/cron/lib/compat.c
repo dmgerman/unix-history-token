@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: compat.c,v 1.1.1.1 1994/08/27 13:43:02 jkh Exp $"
+literal|"$Id: compat.c,v 1.2 1995/05/30 03:47:09 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -143,6 +143,9 @@ name|char
 modifier|*
 name|temp
 decl_stmt|;
+if|if
+condition|(
+operator|(
 name|temp
 operator|=
 name|malloc
@@ -154,7 +157,19 @@ argument_list|)
 operator|+
 literal|1
 argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|errno
+operator|=
+name|ENOMEM
 expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 operator|(
 name|void
 operator|)
@@ -775,6 +790,8 @@ return|;
 block|}
 name|sprintf
 argument_list|(
+name|tmp
+argument_list|,
 literal|"%s=%s"
 argument_list|,
 name|name

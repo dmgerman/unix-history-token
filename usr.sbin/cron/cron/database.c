@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: database.c,v 1.3 1996/09/10 03:38:20 peter Exp $"
+literal|"$Id: database.c,v 1.3.2.1 1997/09/16 07:01:40 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -364,19 +364,31 @@ continue|continue;
 operator|(
 name|void
 operator|)
-name|snprintf
+name|strncpy
 argument_list|(
 name|fname
-argument_list|,
-sizeof|sizeof
-name|fname
-argument_list|,
-literal|"%s"
 argument_list|,
 name|dp
 operator|->
 name|d_name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|fname
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|fname
+index|[
+sizeof|sizeof
+argument_list|(
+name|fname
+argument_list|)
+operator|-
+literal|1
+index|]
+operator|=
+literal|'\0'
 expr_stmt|;
 operator|(
 name|void

@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: job.c,v 1.1.1.1 1994/08/27 13:43:03 jkh Exp $"
+literal|"$Id: job.c,v 1.1.1.1.8.1 1997/09/16 07:01:44 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -136,6 +136,9 @@ block|{
 return|return;
 block|}
 comment|/* build a job queue element */
+if|if
+condition|(
+operator|(
 name|j
 operator|=
 operator|(
@@ -149,7 +152,11 @@ argument_list|(
 name|job
 argument_list|)
 argument_list|)
-expr_stmt|;
+operator|)
+operator|==
+name|NULL
+condition|)
+return|return;
 name|j
 operator|->
 name|next
