@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fdec.c 1.12 %G%"
+literal|"@(#)fdec.c 1.13 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2143,7 +2143,16 @@ operator|->
 name|entloc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Put out the block entrance code and the block name. 	 * the CONG is overlaid by a patch later! 	 */
+comment|/* 	 * Put out the block entrance code and the block name. 	 * HDRSZE is the number of bytes of info in the static 	 * BEG data area exclusive of the proc name. It is 	 * currently defined as: 	/*	struct hdr { 	/*		long framesze;	/* number of bytes of local vars */
+comment|/*		long nargs;	/* number of bytes of arguments */
+comment|/*		short tests;	/* TRUE => perform runtime tests */
+comment|/*		short offset;	/* offset of procedure in source file */
+comment|/*		char name[1];	/* name of active procedure */
+comment|/*	}; 	 */
+define|#
+directive|define
+name|HDRSZE
+value|12
 name|var
 operator|=
 name|put
@@ -2159,6 +2168,8 @@ name|symbol
 argument_list|,
 literal|0
 argument_list|)
+operator|+
+name|HDRSZE
 operator|<<
 literal|8
 operator|)
