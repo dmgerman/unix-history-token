@@ -3,67 +3,19 @@ begin_comment
 comment|/*-  * Copyright (c) 1993, John Brezak  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
 literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<err.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<time.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -80,12 +32,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netdb.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<rpc/rpc.h>
 end_include
 
@@ -93,12 +39,6 @@ begin_include
 include|#
 directive|include
 file|<rpc/pmap_clnt.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<arpa/inet.h>
 end_include
 
 begin_undef
@@ -121,6 +61,54 @@ begin_include
 include|#
 directive|include
 file|<rpcsvc/rstat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<arpa/inet.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_define
@@ -150,6 +138,7 @@ struct|;
 end_struct
 
 begin_function
+specifier|static
 name|int
 name|search_host
 parameter_list|(
@@ -217,6 +206,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|remember_host
 parameter_list|(
@@ -282,6 +272,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|rstat_reply
 parameter_list|(
@@ -681,6 +672,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|onehost
 parameter_list|(
@@ -894,9 +886,12 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|allhosts
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|statstime
 name|host_stat
@@ -921,10 +916,6 @@ name|NULL
 argument_list|,
 name|xdr_statstime
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|host_stat
 argument_list|,
@@ -960,7 +951,9 @@ begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|fprintf
 argument_list|(
