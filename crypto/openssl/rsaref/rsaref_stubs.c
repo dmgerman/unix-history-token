@@ -15,6 +15,12 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<openssl/rsa.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -792,6 +798,17 @@ name|R_RandomUpdate
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_function
+name|int
+name|RSA_libversion
+parameter_list|()
+block|{
+return|return
+name|RSALIB_RSAREF
+return|;
+block|}
+end_function
 
 begin_else
 else|#

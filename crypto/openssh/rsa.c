@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *   * rsa.c  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Fri Mar  3 22:07:06 1995 ylo  *   * Description of the RSA algorithm can be found e.g. from the following sources:  *   *   Bruce Schneier: Applied Cryptography.  John Wiley& Sons, 1994.  *   *   Jennifer Seberry and Josed Pieprzyk: Cryptography: An Introduction to  *   Computer Security.  Prentice-Hall, 1989.  *   *   Man Young Rhee: Cryptography and Secure Data Communications.  McGraw-Hill,  *   1994.  *   *   R. Rivest, A. Shamir, and L. M. Adleman: Cryptographic Communications  *   System and Method.  US Patent 4,405,829, 1983.  *   *   Hans Riesel: Prime Numbers and Computer Methods for Factorization.  *   Birkhauser, 1994.  *   *   The RSA Frequently Asked Questions document by RSA Data Security, Inc., 1995.  *   *   RSA in 3 lines of perl by Adam Back<aba@atlax.ex.ac.uk>, 1995, as included  *   below:  *   *     [gone - had to be deleted - what a pity]  *  */
+comment|/*  *   * rsa.c  *   * Author: Tatu Ylonen<ylo@cs.hut.fi>  *   * Copyright (c) 1995 Tatu Ylonen<ylo@cs.hut.fi>, Espoo, Finland  *                    All rights reserved  *   * Created: Fri Mar  3 22:07:06 1995 ylo  *   * Description of the RSA algorithm can be found e.g. from the following sources:  *   *   Bruce Schneier: Applied Cryptography.  John Wiley& Sons, 1994.  *   *   Jennifer Seberry and Josed Pieprzyk: Cryptography: An Introduction to  *   Computer Security.  Prentice-Hall, 1989.  *   *   Man Young Rhee: Cryptography and Secure Data Communications.  McGraw-Hill,  *   1994.  *   *   R. Rivest, A. Shamir, and L. M. Adleman: Cryptographic Communications  *   System and Method.  US Patent 4,405,829, 1983.  *   *   Hans Riesel: Prime Numbers and Computer Methods for Factorization.  *   Birkhauser, 1994.  *   *   The RSA Frequently Asked Questions document by RSA Data Security, Inc., 1995.  *   *   RSA in 3 lines of perl by Adam Back<aba@atlax.ex.ac.uk>, 1995, as included  *   below:  *   *     [gone - had to be deleted - what a pity]  *   * $FreeBSD$  * */
 end_comment
 
 begin_include
@@ -466,9 +466,31 @@ operator|)
 operator|<=
 literal|0
 condition|)
+if|if
+condition|(
+name|BN_num_bits
+argument_list|(
+name|key
+operator|->
+name|n
+argument_list|)
+operator|>
+literal|1024
+operator|&&
+name|RSA_libversion
+argument_list|()
+operator|==
+name|RSALIB_RSAREF
+condition|)
 name|fatal
 argument_list|(
-literal|"rsa_public_encrypt() failed"
+literal|"rsa_private_encrypt() failed: RSAREF cannot handle keys larger than 1024 bits."
+argument_list|)
+expr_stmt|;
+else|else
+name|fatal
+argument_list|(
+literal|"rsa_private_encrypt() failed."
 argument_list|)
 expr_stmt|;
 name|BN_bin2bn
@@ -600,9 +622,31 @@ operator|)
 operator|<=
 literal|0
 condition|)
+if|if
+condition|(
+name|BN_num_bits
+argument_list|(
+name|key
+operator|->
+name|n
+argument_list|)
+operator|>
+literal|1024
+operator|&&
+name|RSA_libversion
+argument_list|()
+operator|==
+name|RSALIB_RSAREF
+condition|)
 name|fatal
 argument_list|(
-literal|"rsa_private_decrypt() failed"
+literal|"rsa_private_decrypt() failed: RSAREF cannot handle keys larger than 1024 bits."
+argument_list|)
+expr_stmt|;
+else|else
+name|fatal
+argument_list|(
+literal|"rsa_private_decrypt() failed."
 argument_list|)
 expr_stmt|;
 name|BN_bin2bn
