@@ -4,7 +4,7 @@ comment|/*      list.c: vinum interface program, list routines  */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: list.c,v 1.20 1999/10/12 05:40:49 grog Exp grog $  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  Parts copyright (c) 1997, 1998 Cybernet Corporation, NetMAX project.  *  *  Written by Greg Lehey  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: list.c,v 1.21 2000/01/03 02:58:07 grog Exp grog $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -41,6 +41,12 @@ begin_include
 include|#
 directive|include
 file|<setjmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_include
@@ -106,8 +112,7 @@ name|char
 modifier|*
 name|roughlength
 parameter_list|(
-name|long
-name|long
+name|int64_t
 name|bytes
 parameter_list|,
 name|int
@@ -126,8 +131,7 @@ condition|(
 name|bytes
 operator|>
 operator|(
-name|long
-name|long
+name|int64_t
 operator|)
 name|MEGABYTE
 operator|*
@@ -508,9 +512,13 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t\tSize: %16qd bytes (%qd MB)\n\t\tUsed: %16qd bytes (%qd MB)\n"
+literal|"\t\tSize: %16lld bytes (%lld MB)\n\t\tUsed: %16lld bytes (%lld MB)\n"
 literal|"\t\tAvailable: %11qd bytes (%d MB)\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|drive
 operator|.
 name|label
@@ -518,7 +526,11 @@ operator|.
 name|drive_size
 argument_list|,
 comment|/* bytes used */
-operator|(
+call|(
+name|long
+name|long
+call|)
+argument_list|(
 name|drive
 operator|.
 name|label
@@ -526,8 +538,13 @@ operator|.
 name|drive_size
 operator|/
 name|MEGABYTE
-operator|)
+argument_list|)
 argument_list|,
+call|(
+name|long
+name|long
+call|)
+argument_list|(
 name|drive
 operator|.
 name|label
@@ -539,8 +556,13 @@ operator|.
 name|sectors_available
 operator|*
 name|DEV_BSIZE
+argument_list|)
 argument_list|,
-operator|(
+call|(
+name|long
+name|long
+call|)
+argument_list|(
 name|drive
 operator|.
 name|label
@@ -552,10 +574,14 @@ operator|.
 name|sectors_available
 operator|*
 name|DEV_BSIZE
-operator|)
+argument_list|)
 operator|/
 name|MEGABYTE
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|drive
 operator|.
 name|sectors_available
@@ -742,12 +768,20 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"\t\t%9qd\t%9lld\n"
+literal|"\t\t%9lld\t%9lld\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|freelist
 operator|.
 name|offset
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|freelist
 operator|.
 name|sectors
@@ -765,7 +799,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"D %-21s State: %s\tDevice %s\tAvail: %qd/%qd MB"
+literal|"D %-21s State: %s\tDevice %s\tAvail: %lld/%lld MB"
 argument_list|,
 name|drive
 operator|.
@@ -784,6 +818,10 @@ name|drive
 operator|.
 name|devicename
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|drive
 operator|.
 name|sectors_available
@@ -792,7 +830,11 @@ name|DEV_BSIZE
 operator|/
 name|MEGABYTE
 argument_list|,
-operator|(
+call|(
+name|long
+name|long
+call|)
+argument_list|(
 name|drive
 operator|.
 name|label
@@ -800,7 +842,7 @@ operator|.
 name|drive_size
 operator|/
 name|MEGABYTE
-operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -862,12 +904,20 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\t\tReads:  \t%16qd\n\t\tBytes read:\t%16qd (%s)\n"
+literal|"\t\tReads:  \t%16lld\n\t\tBytes read:\t%16lld (%s)\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|drive
 operator|.
 name|reads
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|drive
 operator|.
 name|bytes_read
@@ -892,8 +942,12 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"\t\tAverage read:\t%16qd bytes\n"
+literal|"\t\tAverage read:\t%16lld bytes\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|drive
 operator|.
 name|bytes_read
@@ -905,12 +959,20 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t\tWrites: \t%16qd\n\t\tBytes written:\t%16qd (%s)\n"
+literal|"\t\tWrites: \t%16lld\n\t\tBytes written:\t%16lld (%s)\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|drive
 operator|.
 name|writes
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|drive
 operator|.
 name|bytes_written
@@ -935,8 +997,13 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"\t\tAverage write:\t%16qd bytes\n"
+literal|"\t\tAverage write:\t%16lld bytes\n"
 argument_list|,
+call|(
+name|long
+name|long
+call|)
+argument_list|(
 name|drive
 operator|.
 name|bytes_written
@@ -944,6 +1011,7 @@ operator|/
 name|drive
 operator|.
 name|writes
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -952,7 +1020,7 @@ block|{
 comment|/* non-verbose stats */
 name|printf
 argument_list|(
-literal|"%-15s\t%7qd\t%15qd\t"
+literal|"%-15s\t%7lld\t%15lld\t"
 argument_list|,
 name|drive
 operator|.
@@ -960,10 +1028,18 @@ name|label
 operator|.
 name|name
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|drive
 operator|.
 name|reads
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|drive
 operator|.
 name|bytes_read
@@ -979,8 +1055,13 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"%7qd\t\t"
+literal|"%7lld\t\t"
 argument_list|,
+call|(
+name|long
+name|long
+call|)
+argument_list|(
 name|drive
 operator|.
 name|bytes_read
@@ -988,6 +1069,7 @@ operator|/
 name|drive
 operator|.
 name|reads
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -998,12 +1080,20 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%7qd\t%15qd\t"
+literal|"%7lld\t%15lld\t"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|drive
 operator|.
 name|writes
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|drive
 operator|.
 name|bytes_written
@@ -1019,8 +1109,13 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"%7qd"
+literal|"%7lld"
 argument_list|,
+call|(
+name|long
+name|long
+call|)
+argument_list|(
 name|drive
 operator|.
 name|bytes_written
@@ -1028,6 +1123,7 @@ operator|/
 name|drive
 operator|.
 name|writes
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1216,7 +1312,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Volume %s:\tSize: %qd bytes (%qd MB)\n"
+literal|"Volume %s:\tSize: %lld bytes (%lld MB)\n"
 literal|"\t\tState: %s\n\t\tFlags: %s%s%s\n"
 argument_list|,
 name|vol
@@ -1398,16 +1494,28 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\t\tReads:  \t%16qd\n\t\tRecovered:\t%16qd\n\t\tBytes read:\t%16qd (%s)\n"
+literal|"\t\tReads:  \t%16lld\n\t\tRecovered:\t%16lld\n\t\tBytes read:\t%16lld (%s)\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|vol
 operator|.
 name|reads
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|vol
 operator|.
 name|recovered_reads
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|vol
 operator|.
 name|bytes_read
@@ -1432,8 +1540,13 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"\t\tAverage read:\t%16qd bytes\n"
+literal|"\t\tAverage read:\t%16lld bytes\n"
 argument_list|,
+call|(
+name|long
+name|long
+call|)
+argument_list|(
 name|vol
 operator|.
 name|bytes_read
@@ -1442,15 +1555,24 @@ name|vol
 operator|.
 name|reads
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t\tWrites: \t%16qd\n\t\tBytes written:\t%16qd (%s)\n"
+literal|"\t\tWrites: \t%16lld\n\t\tBytes written:\t%16lld (%s)\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|vol
 operator|.
 name|writes
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|vol
 operator|.
 name|bytes_written
@@ -1475,8 +1597,13 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"\t\tAverage write:\t%16qd bytes\n"
+literal|"\t\tAverage write:\t%16lld bytes\n"
 argument_list|,
+call|(
+name|long
+name|long
+call|)
+argument_list|(
 name|vol
 operator|.
 name|bytes_written
@@ -1484,6 +1611,7 @@ operator|/
 name|vol
 operator|.
 name|writes
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1501,16 +1629,24 @@ block|{
 comment|/* brief stats listing */
 name|printf
 argument_list|(
-literal|"%-15s\t%7qd\t%15qd\t"
+literal|"%-15s\t%7lld\t%15lld\t"
 argument_list|,
 name|vol
 operator|.
 name|name
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|vol
 operator|.
 name|reads
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|vol
 operator|.
 name|bytes_read
@@ -1526,8 +1662,13 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"%7qd\t"
+literal|"%7lld\t"
 argument_list|,
+call|(
+name|long
+name|long
+call|)
+argument_list|(
 name|vol
 operator|.
 name|bytes_read
@@ -1535,6 +1676,7 @@ operator|/
 name|vol
 operator|.
 name|reads
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -1545,8 +1687,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%7qd\t"
+literal|"%7lld\t"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|vol
 operator|.
 name|recovered_reads
@@ -1554,8 +1700,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%7qd\t%15qd\t"
+literal|"%7lld\t%15lld\t"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|vol
 operator|.
 name|writes
@@ -1575,8 +1725,13 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"%7qd\n"
+literal|"%7lld\n"
 argument_list|,
+call|(
+name|long
+name|long
+call|)
+argument_list|(
 name|vol
 operator|.
 name|bytes_written
@@ -1584,6 +1739,7 @@ operator|/
 name|vol
 operator|.
 name|writes
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -1983,7 +2139,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Plex %s:\tSize:\t%9qd bytes (%qd MB)\n\t\tSubdisks: %8d\n"
+literal|"Plex %s:\tSize:\t%9lld bytes (%lld MB)\n\t\tSubdisks: %8d\n"
 argument_list|,
 name|plex
 operator|.
@@ -2330,12 +2486,20 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\t\tReads:  \t%16qd\n\t\tBytes read:\t%16qd (%s)\n"
+literal|"\t\tReads:  \t%16lld\n\t\tBytes read:\t%16lld (%s)\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|plex
 operator|.
 name|reads
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|plex
 operator|.
 name|bytes_read
@@ -2360,8 +2524,13 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"\t\tAverage read:\t%16qd bytes\n"
+literal|"\t\tAverage read:\t%16lld bytes\n"
 argument_list|,
+call|(
+name|long
+name|long
+call|)
+argument_list|(
 name|plex
 operator|.
 name|bytes_read
@@ -2370,15 +2539,24 @@ name|plex
 operator|.
 name|reads
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t\tWrites: \t%16qd\n\t\tBytes written:\t%16qd (%s)\n"
+literal|"\t\tWrites: \t%16lld\n\t\tBytes written:\t%16lld (%s)\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|plex
 operator|.
 name|writes
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|plex
 operator|.
 name|bytes_written
@@ -2403,8 +2581,13 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"\t\tAverage write:\t%16qd bytes\n"
+literal|"\t\tAverage write:\t%16lld bytes\n"
 argument_list|,
+call|(
+name|long
+name|long
+call|)
+argument_list|(
 name|plex
 operator|.
 name|bytes_written
@@ -2412,6 +2595,7 @@ operator|/
 name|plex
 operator|.
 name|writes
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2450,9 +2634,13 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|"\t\tMultiblock:\t%16qd (%d%%)\n"
-literal|"\t\tMultistripe:\t%16qd (%d%%)\n"
+literal|"\t\tMultiblock:\t%16lld (%d%%)\n"
+literal|"\t\tMultistripe:\t%16lld (%d%%)\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|plex
 operator|.
 name|multiblock
@@ -2478,6 +2666,10 @@ name|writes
 operator|)
 argument_list|)
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|plex
 operator|.
 name|multistripe
@@ -2512,8 +2704,12 @@ name|recovered_reads
 condition|)
 name|printf
 argument_list|(
-literal|"\t\tRecovered reads:%16qd\n"
+literal|"\t\tRecovered reads:%16lld\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|plex
 operator|.
 name|recovered_reads
@@ -2527,8 +2723,12 @@ name|degraded_writes
 condition|)
 name|printf
 argument_list|(
-literal|"\t\tDegraded writes:%16qd\n"
+literal|"\t\tDegraded writes:%16lld\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|plex
 operator|.
 name|degraded_writes
@@ -2542,8 +2742,12 @@ name|parityless_writes
 condition|)
 name|printf
 argument_list|(
-literal|"\t\tParityless writes:%14qd\n"
+literal|"\t\tParityless writes:%14lld\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|plex
 operator|.
 name|parityless_writes
@@ -2554,16 +2758,24 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"%-15s\t%7qd\t%15qd\t"
+literal|"%-15s\t%7lld\t%15lld\t"
 argument_list|,
 name|plex
 operator|.
 name|name
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|plex
 operator|.
 name|reads
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|plex
 operator|.
 name|bytes_read
@@ -2579,8 +2791,13 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"%7qd\t"
+literal|"%7lld\t"
 argument_list|,
+call|(
+name|long
+name|long
+call|)
+argument_list|(
 name|plex
 operator|.
 name|bytes_read
@@ -2588,6 +2805,7 @@ operator|/
 name|plex
 operator|.
 name|reads
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -2598,8 +2816,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%7qd\t"
+literal|"%7lld\t"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|plex
 operator|.
 name|recovered_reads
@@ -2607,12 +2829,20 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%7qd\t%15qd\t"
+literal|"%7lld\t%15lld\t"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|plex
 operator|.
 name|writes
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|plex
 operator|.
 name|bytes_written
@@ -2628,8 +2858,13 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"%7qd\t"
+literal|"%7lld\t"
 argument_list|,
+call|(
+name|long
+name|long
+call|)
+argument_list|(
 name|plex
 operator|.
 name|bytes_written
@@ -2637,6 +2872,7 @@ operator|/
 name|plex
 operator|.
 name|writes
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -2647,12 +2883,20 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%7qd\t%7qd\n"
+literal|"%7lld\t%7lld\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|plex
 operator|.
 name|multiblock
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|plex
 operator|.
 name|multistripe
@@ -2710,7 +2954,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t\tSubdisk %d:\t%s\n\t\t  state: %s\tsize %11qd (%qd MB)\n"
+literal|"\t\tSubdisk %d:\t%s\n\t\t  state: %s\tsize %11lld (%lld MB)\n"
 argument_list|,
 name|sdno
 argument_list|,
@@ -2978,6 +3222,11 @@ name|int
 name|recurse
 parameter_list|)
 block|{
+name|long
+name|long
+name|revived
+decl_stmt|;
+comment|/* keep an eye on revive progress */
 name|get_sd_info
 argument_list|(
 operator|&
@@ -3002,7 +3251,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Subdisk %s:\n\t\tSize: %16qd bytes (%qd MB)\n\t\tState: %s\n"
+literal|"Subdisk %s:\n\t\tSize: %16lld bytes (%lld MB)\n\t\tState: %s\n"
 argument_list|,
 name|sd
 operator|.
@@ -3070,7 +3319,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" at offset %qd (%s)\n"
+literal|" at offset %lld (%s)\n"
 argument_list|,
 operator|(
 name|long
@@ -3108,6 +3357,97 @@ operator|==
 name|sd_reviving
 condition|)
 block|{
+if|if
+condition|(
+name|sd
+operator|.
+name|reviver
+operator|==
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"\t\t*** Start subdisk with 'start' command ***\n"
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"\t\tReviver PID:\t%d\n"
+argument_list|,
+name|sd
+operator|.
+name|reviver
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|kill
+argument_list|(
+name|sd
+operator|.
+name|reviver
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|ESRCH
+condition|)
+comment|/* no process */
+name|printf
+argument_list|(
+literal|"\t\t*** Revive process has died ***\n"
+argument_list|)
+expr_stmt|;
+comment|/* Don't report a problem that "can't happen" */
+block|}
+else|else
+block|{
+name|revived
+operator|=
+name|sd
+operator|.
+name|revived
+expr_stmt|;
+comment|/* note how far we were */
+name|sleep
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+name|get_sd_info
+argument_list|(
+operator|&
+name|sd
+argument_list|,
+name|sdno
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sd
+operator|.
+name|revived
+operator|==
+name|revived
+condition|)
+comment|/* no progress? */
+name|printf
+argument_list|(
+literal|"\t\t*** Revive has stalled ***\n"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 name|printf
 argument_list|(
 literal|"\t\tRevive pointer:\t\t%s (%d%%)\n"
@@ -3269,7 +3609,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"\t\tDrive %s (%s) at offset %qd (%s)\n"
+literal|"\t\tDrive %s (%s) at offset %lld (%s)\n"
 argument_list|,
 name|drive
 operator|.
@@ -3281,11 +3621,17 @@ name|drive
 operator|.
 name|devicename
 argument_list|,
+call|(
+name|long
+name|long
+call|)
+argument_list|(
 name|sd
 operator|.
 name|driveoffset
 operator|*
 name|DEV_BSIZE
+argument_list|)
 argument_list|,
 name|roughlength
 argument_list|(
@@ -3378,6 +3724,108 @@ literal|0
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sd
+operator|.
+name|state
+operator|==
+name|sd_reviving
+condition|)
+block|{
+if|if
+condition|(
+name|sd
+operator|.
+name|reviver
+operator|==
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"\t\t\t*** Start %s with 'start' command ***\n"
+argument_list|,
+name|sd
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|kill
+argument_list|(
+name|sd
+operator|.
+name|reviver
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|ESRCH
+condition|)
+comment|/* no process */
+name|printf
+argument_list|(
+literal|"\t\t\t*** Revive process for %s has died ***\n"
+argument_list|,
+name|sd
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
+comment|/* Don't report a problem that "can't happen" */
+block|}
+else|else
+block|{
+name|revived
+operator|=
+name|sd
+operator|.
+name|revived
+expr_stmt|;
+comment|/* note how far we were */
+name|sleep
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+name|get_sd_info
+argument_list|(
+operator|&
+name|sd
+argument_list|,
+name|sdno
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sd
+operator|.
+name|revived
+operator|==
+name|revived
+condition|)
+comment|/* no progress? */
+name|printf
+argument_list|(
+literal|"\t\t\t*** Revive of %s has stalled ***\n"
+argument_list|,
+name|sd
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 block|}
 if|if
 condition|(
@@ -3393,12 +3841,20 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\t\tReads:  \t%16qd\n\t\tBytes read:\t%16qd (%s)\n"
+literal|"\t\tReads:  \t%16lld\n\t\tBytes read:\t%16lld (%s)\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|sd
 operator|.
 name|reads
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|sd
 operator|.
 name|bytes_read
@@ -3423,8 +3879,13 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"\t\tAverage read:\t%16qd bytes\n"
+literal|"\t\tAverage read:\t%16lld bytes\n"
 argument_list|,
+call|(
+name|long
+name|long
+call|)
+argument_list|(
 name|sd
 operator|.
 name|bytes_read
@@ -3433,15 +3894,24 @@ name|sd
 operator|.
 name|reads
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\t\tWrites: \t%16qd\n\t\tBytes written:\t%16qd (%s)\n"
+literal|"\t\tWrites: \t%16lld\n\t\tBytes written:\t%16lld (%s)\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|sd
 operator|.
 name|writes
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|sd
 operator|.
 name|bytes_written
@@ -3466,8 +3936,13 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"\t\tAverage write:\t%16qd bytes\n"
+literal|"\t\tAverage write:\t%16lld bytes\n"
 argument_list|,
+call|(
+name|long
+name|long
+call|)
+argument_list|(
 name|sd
 operator|.
 name|bytes_written
@@ -3475,6 +3950,7 @@ operator|/
 name|sd
 operator|.
 name|writes
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3482,16 +3958,24 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"%-15s\t%7qd\t%15qd\t"
+literal|"%-15s\t%7lld\t%15lld\t"
 argument_list|,
 name|sd
 operator|.
 name|name
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|sd
 operator|.
 name|reads
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|sd
 operator|.
 name|bytes_read
@@ -3507,8 +3991,13 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"%7qd\t\t"
+literal|"%7lld\t\t"
 argument_list|,
+call|(
+name|long
+name|long
+call|)
+argument_list|(
 name|sd
 operator|.
 name|bytes_read
@@ -3516,6 +4005,7 @@ operator|/
 name|sd
 operator|.
 name|reads
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -3526,12 +4016,20 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%7qd\t%15qd\t"
+literal|"%7lld\t%15lld\t"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|sd
 operator|.
 name|writes
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|sd
 operator|.
 name|bytes_written
@@ -3547,8 +4045,13 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"%7qd\n"
+literal|"%7lld\n"
 argument_list|,
+call|(
+name|long
+name|long
+call|)
+argument_list|(
 name|sd
 operator|.
 name|bytes_written
@@ -3556,6 +4059,7 @@ operator|/
 name|sd
 operator|.
 name|writes
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
@@ -5631,7 +6135,7 @@ name|fprintf
 argument_list|(
 name|of
 argument_list|,
-literal|"%ssd name %s drive %s plex %s len %qds driveoffset %qds plexoffset %qds\n"
+literal|"%ssd name %s drive %s plex %s len %llds driveoffset %llds plexoffset %llds\n"
 argument_list|,
 name|comment
 argument_list|,
@@ -5649,14 +6153,26 @@ name|plex
 operator|.
 name|name
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|sd
 operator|.
 name|sectors
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|sd
 operator|.
 name|driveoffset
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|sd
 operator|.
 name|plexoffset
@@ -5668,7 +6184,7 @@ name|fprintf
 argument_list|(
 name|of
 argument_list|,
-literal|"%ssd name %s drive %s detached len %qds driveoffset %qds\n"
+literal|"%ssd name %s drive %s detached len %llds driveoffset %llds\n"
 argument_list|,
 name|comment
 argument_list|,
@@ -5682,10 +6198,18 @@ name|label
 operator|.
 name|name
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|sd
 operator|.
 name|sectors
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|sd
 operator|.
 name|driveoffset
