@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)subr.c	5.5 (Berkeley) %G%"
+literal|"@(#)subr.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,6 +31,12 @@ end_comment
 begin_comment
 comment|/*  * Melbourne getty.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|USE_OLD_TTY
+end_define
 
 begin_include
 include|#
