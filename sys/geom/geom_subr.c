@@ -2073,7 +2073,26 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+comment|/* If foot-shooting is enabled, any open on rank#1 is OK */
+if|if
+condition|(
+operator|(
+name|g_debugflags
+operator|&
+literal|16
+operator|)
+operator|&&
+name|pp
+operator|->
+name|geom
+operator|->
+name|rank
+operator|==
+literal|1
+condition|)
+empty_stmt|;
 comment|/* If we try exclusive but already write: fail */
+elseif|else
 if|if
 condition|(
 name|dce
@@ -2090,6 +2109,7 @@ name|EPERM
 operator|)
 return|;
 comment|/* If we try write but already exclusive: fail */
+elseif|else
 if|if
 condition|(
 name|dcw
@@ -2106,6 +2126,7 @@ name|EPERM
 operator|)
 return|;
 comment|/* If we try to open more but provider is error'ed: fail */
+elseif|else
 if|if
 condition|(
 operator|(

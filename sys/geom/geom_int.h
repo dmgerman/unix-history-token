@@ -56,19 +56,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 1	G_T_TOPOLOGY		*/
-end_comment
-
-begin_comment
-comment|/* 2	G_T_BIO			*/
-end_comment
-
-begin_comment
-comment|/* 4	G_T_ACCESS		*/
-end_comment
-
-begin_comment
-comment|/* 8	enable sanity checks	*/
+comment|/*  * 1	G_T_TOPOLOGY  * 2	G_T_BIO  * 4	G_T_ACCESS  * 8	enable sanity checks  * 16	Allow footshooting on rank#1 providers  */
 end_comment
 
 begin_comment
