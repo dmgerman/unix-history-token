@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.39 1997/02/22 09:40:48 peter Exp $ */
+comment|/*	$Id: msdosfs_vnops.c,v 1.40 1997/02/26 14:23:16 bde Exp $ */
 end_comment
 
 begin_comment
@@ -108,12 +108,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/dir.h>
+file|<sys/dirent.h>
 end_include
-
-begin_comment
-comment|/* defines dirent structure */
-end_comment
 
 begin_include
 include|#
@@ -125,12 +121,6 @@ begin_include
 include|#
 directive|include
 file|<vm/vm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_param.h>
 end_include
 
 begin_include
@@ -6466,7 +6456,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_readdir_args
-comment|/* { 		struct vnode *a_vp; 		struct uio *a_uio; 		struct ucred *a_cred; 		int *a_eofflag; 		u_long *a_cookies; 		int a_ncookies; 	} */
+comment|/* { 		struct vnode *a_vp; 		struct uio *a_uio; 		struct ucred *a_cred; 		int *a_eofflag; 		int *a_ncookies; 		u_long **a_cookies; 	} */
 modifier|*
 name|ap
 decl_stmt|;
