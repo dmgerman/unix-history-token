@@ -285,6 +285,10 @@ name|struct
 name|pthread
 modifier|*
 name|thr
+parameter_list|,
+name|int
+modifier|*
+name|err
 parameter_list|)
 block|{
 name|union
@@ -302,6 +306,11 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+operator|*
+name|err
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * If we are setting up the initial thread, the gs register 	 * won't be setup for the current thread. In any case, we 	 * don't need protection from re-entrancy at this point in 	 * the life of the program. 	 */
 if|if
 condition|(
@@ -330,9 +339,23 @@ name|ldt_free
 operator|==
 name|NULL
 condition|)
-name|abort
-argument_list|()
+block|{
+comment|/* Concurrent thread limit reached */
+operator|*
+name|err
+operator|=
+name|curthread
+operator|->
+name|error
+operator|=
+name|EAGAIN
 expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 comment|/* 	 * Pull one off of the free list and update the free list pointer. 	 */
 name|ldt_entry
 operator|=

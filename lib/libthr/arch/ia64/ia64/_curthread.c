@@ -88,8 +88,17 @@ name|struct
 name|pthread
 modifier|*
 name|thread
+parameter_list|,
+name|int
+modifier|*
+name|err
 parameter_list|)
 block|{
+operator|*
+name|err
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|uc

@@ -446,6 +446,9 @@ decl_stmt|;
 name|sigset_t
 name|set
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 name|struct
 name|clockinfo
 name|clockinfo
@@ -692,6 +695,9 @@ argument_list|(
 name|NULL
 argument_list|,
 name|pthread
+argument_list|,
+operator|&
+name|error
 argument_list|)
 expr_stmt|;
 comment|/* Get our thread id. */
