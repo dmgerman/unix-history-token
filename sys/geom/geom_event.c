@@ -46,12 +46,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/eventhandler.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/stdarg.h>
 end_include
 
@@ -141,13 +135,6 @@ specifier|static
 name|struct
 name|sx
 name|g_eventstall
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|g_shutdown
 decl_stmt|;
 end_decl_stmt
 
@@ -1550,39 +1537,10 @@ block|}
 end_function
 
 begin_function
-specifier|static
-name|void
-name|geom_shutdown
-parameter_list|(
-name|void
-modifier|*
-name|foo
-name|__unused
-parameter_list|)
-block|{
-name|g_shutdown
-operator|=
-literal|1
-expr_stmt|;
-block|}
-end_function
-
-begin_function
 name|void
 name|g_event_init
 parameter_list|()
 block|{
-name|EVENTHANDLER_REGISTER
-argument_list|(
-name|shutdown_pre_sync
-argument_list|,
-name|geom_shutdown
-argument_list|,
-name|NULL
-argument_list|,
-name|SHUTDOWN_PRI_FIRST
-argument_list|)
-expr_stmt|;
 name|mtx_init
 argument_list|(
 operator|&

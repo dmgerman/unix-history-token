@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/eventhandler.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -126,6 +132,12 @@ name|int
 name|g_collectstats
 init|=
 literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|g_shutdown
 decl_stmt|;
 end_decl_stmt
 
@@ -374,6 +386,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
+name|void
+name|geom_shutdown
+parameter_list|(
+name|void
+modifier|*
+name|foo
+name|__unused
+parameter_list|)
+block|{
+name|g_shutdown
+operator|=
+literal|1
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|void
 name|g_init
 parameter_list|(
@@ -425,6 +455,17 @@ name|mtx_unlock
 argument_list|(
 operator|&
 name|Giant
+argument_list|)
+expr_stmt|;
+name|EVENTHANDLER_REGISTER
+argument_list|(
+name|shutdown_pre_sync
+argument_list|,
+name|geom_shutdown
+argument_list|,
+name|NULL
+argument_list|,
+name|SHUTDOWN_PRI_FIRST
 argument_list|)
 expr_stmt|;
 block|}
