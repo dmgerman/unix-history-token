@@ -279,10 +279,10 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|linux_chown
+name|linux_lchown
 block|}
 block|,
-comment|/* 16 = linux_chown */
+comment|/* 16 = linux_lchown */
 block|{
 literal|1
 block|,
@@ -471,7 +471,7 @@ block|}
 block|,
 comment|/* 33 = linux_access */
 block|{
-literal|0
+literal|1
 block|,
 operator|(
 name|sy_call_t
@@ -1713,6 +1713,402 @@ name|writev
 block|}
 block|,
 comment|/* 146 = writev */
+block|{
+literal|0
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|nosys
+block|}
+block|,
+comment|/* 147 = getsid */
+block|{
+literal|0
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|nosys
+block|}
+block|,
+comment|/* 148 = fdatasync */
+block|{
+literal|0
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|nosys
+block|}
+block|,
+comment|/* 149 = _sysctl */
+block|{
+literal|2
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|mlock
+block|}
+block|,
+comment|/* 150 = mlock */
+block|{
+literal|2
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|munlock
+block|}
+block|,
+comment|/* 151 = munlock */
+block|{
+literal|0
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|nosys
+block|}
+block|,
+comment|/* 152 = mlockall */
+block|{
+literal|0
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|nosys
+block|}
+block|,
+comment|/* 153 = munlockall */
+block|{
+literal|0
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|nosys
+block|}
+block|,
+comment|/* 154 = sched_setparam */
+block|{
+literal|0
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|nosys
+block|}
+block|,
+comment|/* 155 = sched_getparam */
+block|{
+literal|0
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|nosys
+block|}
+block|,
+comment|/* 156 = sched_setscheduler */
+block|{
+literal|0
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|nosys
+block|}
+block|,
+comment|/* 157 = sched_getscheduler */
+block|{
+literal|0
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|nosys
+block|}
+block|,
+comment|/* 158 = sched_yield */
+block|{
+literal|0
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|nosys
+block|}
+block|,
+comment|/* 159 = sched_get_priority_max */
+block|{
+literal|0
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|nosys
+block|}
+block|,
+comment|/* 160 = sched_get_priority_min */
+block|{
+literal|0
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|nosys
+block|}
+block|,
+comment|/* 161 = sched_rr_get_interval */
+block|{
+literal|0
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|nosys
+block|}
+block|,
+comment|/* 162 = nanosleep */
+block|{
+literal|4
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|linux_mremap
+block|}
+block|,
+comment|/* 163 = linux_mremap */
+block|{
+literal|0
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|nosys
+block|}
+block|,
+comment|/* 164 = setresuid */
+block|{
+literal|0
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|nosys
+block|}
+block|,
+comment|/* 165 = getresuid */
+block|{
+literal|0
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|nosys
+block|}
+block|,
+comment|/* 166 = new_vm86 */
+block|{
+literal|0
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|nosys
+block|}
+block|,
+comment|/* 167 = query_module */
+block|{
+literal|0
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|nosys
+block|}
+block|,
+comment|/* 168 = poll */
+block|{
+literal|0
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|nosys
+block|}
+block|,
+comment|/* 169 = nfsservctl */
+block|{
+literal|0
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|nosys
+block|}
+block|,
+comment|/* 170 = setresgid */
+block|{
+literal|0
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|nosys
+block|}
+block|,
+comment|/* 171 = getresgid */
+block|{
+literal|0
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|nosys
+block|}
+block|,
+comment|/* 172 = prctl */
+block|{
+literal|0
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|nosys
+block|}
+block|,
+comment|/* 173 = rt_sigreturn */
+block|{
+literal|0
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|nosys
+block|}
+block|,
+comment|/* 174 = rt_sigaction */
+block|{
+literal|0
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|nosys
+block|}
+block|,
+comment|/* 175 = rt_sigprocmask */
+block|{
+literal|0
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|nosys
+block|}
+block|,
+comment|/* 176 = rt_sigpending */
+block|{
+literal|0
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|nosys
+block|}
+block|,
+comment|/* 177 = rt_sigtimedwait */
+block|{
+literal|0
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|nosys
+block|}
+block|,
+comment|/* 178 = rt_sigqueueinfo */
+block|{
+literal|0
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|nosys
+block|}
+block|,
+comment|/* 179 = rt_sigsuspend */
+block|{
+literal|0
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|nosys
+block|}
+block|,
+comment|/* 180 = pread */
+block|{
+literal|0
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|nosys
+block|}
+block|,
+comment|/* 181 = pwrite */
+block|{
+literal|3
+block|,
+operator|(
+name|sy_call_t
+operator|*
+operator|)
+name|linux_chown
+block|}
+block|,
+comment|/* 182 = linux_chown */
 block|}
 decl_stmt|;
 end_decl_stmt
