@@ -4544,6 +4544,7 @@ name|if_flags
 operator|&
 name|IFF_RUNNING
 operator|&&
+operator|!
 name|IFQ_DRV_IS_EMPTY
 argument_list|(
 operator|&
