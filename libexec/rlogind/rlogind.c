@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rlogind.c,v 1.23 1999/04/25 22:23:37 imp Exp $"
+literal|"$Id: rlogind.c,v 1.24 1999/08/21 18:15:55 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2823,7 +2823,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|cflags
+name|chflags
 argument_list|(
 name|line
 argument_list|,
@@ -2860,7 +2860,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|cflags
+name|chflags
 argument_list|(
 name|line
 argument_list|,
