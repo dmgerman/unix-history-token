@@ -779,6 +779,11 @@ index|[
 literal|256
 index|]
 decl_stmt|;
+name|int
+name|found
+init|=
+literal|0
+decl_stmt|;
 comment|/* Find manufacturer name */
 name|manf
 operator|=
@@ -902,6 +907,8 @@ argument_list|,
 literal|"#define NDIS_DEV_TABLE"
 argument_list|)
 expr_stmt|;
+name|retry
+label|:
 comment|/* 	 * Now run through all the device names listed 	 * in the manufacturer section and dump out the 	 * device descriptions and vendor/device IDs. 	 */
 name|TAILQ_FOREACH
 argument_list|(
@@ -1007,7 +1014,36 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
+name|found
+operator|++
+expr_stmt|;
 block|}
+block|}
+comment|/* Someone tried to fool us. Shame on them. */
+if|if
+condition|(
+operator|!
+name|found
+condition|)
+block|{
+name|found
+operator|++
+expr_stmt|;
+name|sec
+operator|=
+name|find_section
+argument_list|(
+name|manf
+operator|->
+name|vals
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+goto|goto
+name|retry
+goto|;
 block|}
 comment|/* Emit end of table */
 name|fprintf
@@ -2021,6 +2057,10 @@ literal|256
 index|]
 decl_stmt|;
 name|int
+name|found
+init|=
+literal|0
+decl_stmt|,
 name|i
 decl_stmt|,
 name|is_winxp
@@ -2190,6 +2230,8 @@ argument_list|,
 literal|"ndis_cfg ndis_regvals[] = {"
 argument_list|)
 expr_stmt|;
+name|retry
+label|:
 name|TAILQ_FOREACH
 argument_list|(
 argument|assign
@@ -2208,6 +2250,9 @@ operator|==
 name|sec
 condition|)
 block|{
+name|found
+operator|++
+expr_stmt|;
 comment|/* 			 * Find all the AddReg sections. 			 * Look for section names with .NT, unless 			 * this is a WinXP .INF file. 			 */
 if|if
 condition|(
@@ -2356,6 +2401,35 @@ name|devidx
 operator|++
 expr_stmt|;
 block|}
+block|}
+if|if
+condition|(
+operator|!
+name|found
+condition|)
+block|{
+name|sec
+operator|=
+name|find_section
+argument_list|(
+name|manf
+operator|->
+name|vals
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+name|is_winxp
+operator|=
+literal|0
+expr_stmt|;
+name|found
+operator|++
+expr_stmt|;
+goto|goto
+name|retry
+goto|;
 block|}
 name|fprintf
 argument_list|(
