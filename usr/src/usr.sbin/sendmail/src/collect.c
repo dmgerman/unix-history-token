@@ -2,18 +2,6 @@ begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<errno.h>
 end_include
 
@@ -29,7 +17,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)collect.c	3.15	%G%"
+literal|"@(#)collect.c	3.16	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,6 +33,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* size of message in bytes */
+end_comment
+
+begin_decl_stmt
+name|FILE
+modifier|*
+name|TempFile
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the tempfile (after creation) */
 end_comment
 
 begin_macro
@@ -688,14 +687,16 @@ comment|/* we don't have a good way to do canonical conversion .... 		define('d'
 block|}
 if|if
 condition|(
-name|freopen
+operator|(
+name|TempFile
+operator|=
+name|fopen
 argument_list|(
 name|InFileName
 argument_list|,
 literal|"r"
-argument_list|,
-name|stdin
 argument_list|)
+operator|)
 operator|==
 name|NULL
 condition|)

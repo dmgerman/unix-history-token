@@ -2,31 +2,7 @@ begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
 end_include
 
 begin_include
@@ -35,31 +11,13 @@ directive|include
 file|"sendmail.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LOG
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<syslog.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-endif|LOG
-end_endif
-
 begin_decl_stmt
 specifier|static
 name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)recipient.c	3.3	%G%"
+literal|"@(#)recipient.c	3.4	%G%"
 decl_stmt|;
 end_decl_stmt
 

@@ -1,7 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.27	%G% */
+comment|/* **  SENDMAIL.H -- Global definitions for sendmail. ** **	@(#)sendmail.h	3.28	%G% */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
 
 begin_include
 include|#
@@ -1155,6 +1167,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* the transcript file name */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|FILE
+modifier|*
+name|TempFile
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* mail temp file */
 end_comment
 
 begin_decl_stmt

@@ -2,18 +2,6 @@ begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<pwd.h>
 end_include
 
@@ -35,7 +23,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	3.15	%G%	(with DBM)"
+literal|"@(#)alias.c	3.16	%G%	(with DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,7 +39,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	3.15	%G%	(without DBM)"
+literal|"@(#)alias.c	3.16	%G%	(without DBM)"
 decl_stmt|;
 end_decl_stmt
 

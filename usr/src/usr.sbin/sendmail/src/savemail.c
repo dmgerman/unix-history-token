@@ -2,12 +2,6 @@ begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<pwd.h>
 end_include
 
@@ -23,7 +17,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)savemail.c	3.12	%G%"
+literal|"@(#)savemail.c	3.13	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -118,6 +112,10 @@ if|if
 condition|(
 name|exclusive
 operator|++
+operator|||
+name|TempFile
+operator|==
+name|NULL
 condition|)
 return|return;
 end_if

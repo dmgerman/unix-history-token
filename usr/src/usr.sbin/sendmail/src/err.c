@@ -2,18 +2,6 @@ begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"sendmail.h"
 end_include
 
@@ -41,7 +29,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)err.c	3.8	%G%"
+literal|"@(#)err.c	3.9	%G%"
 decl_stmt|;
 end_decl_stmt
 

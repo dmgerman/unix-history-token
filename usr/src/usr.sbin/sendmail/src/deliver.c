@@ -2,25 +2,7 @@ begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pwd.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
 end_include
 
 begin_include
@@ -59,7 +41,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	3.24	%G%"
+literal|"@(#)deliver.c	3.25	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2173,7 +2155,7 @@ expr_stmt|;
 comment|/* output the body of the message */
 name|rewind
 argument_list|(
-name|stdin
+name|TempFile
 argument_list|)
 expr_stmt|;
 while|while
@@ -2195,7 +2177,7 @@ literal|1
 argument_list|,
 name|BUFSIZ
 argument_list|,
-name|stdin
+name|TempFile
 argument_list|)
 operator|)
 operator|>
