@@ -618,6 +618,15 @@ case|:
 if|if
 condition|(
 operator|(
+name|uap
+operator|->
+name|req
+operator|!=
+name|PT_STEP
+operator|)
+operator|&&
+operator|(
+operator|(
 name|unsigned
 operator|)
 name|uap
@@ -625,6 +634,7 @@ operator|->
 name|data
 operator|>=
 name|NSIG
+operator|)
 condition|)
 return|return
 name|EINVAL
