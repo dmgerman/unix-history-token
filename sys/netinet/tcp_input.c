@@ -2780,36 +2780,14 @@ literal|1
 case|:
 if|if
 condition|(
+operator|(
 name|thflags
 operator|&
 name|TH_SYN
+operator|)
+operator|==
+literal|0
 condition|)
-name|log
-argument_list|(
-name|LOG_INFO
-argument_list|,
-literal|"Connection attempt to TCP %s:%d "
-literal|"from %s:%d\n"
-argument_list|,
-name|dbuf
-argument_list|,
-name|ntohs
-argument_list|(
-name|th
-operator|->
-name|th_dport
-argument_list|)
-argument_list|,
-name|sbuf
-argument_list|,
-name|ntohs
-argument_list|(
-name|th
-operator|->
-name|th_sport
-argument_list|)
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 literal|2
@@ -2819,7 +2797,7 @@ argument_list|(
 name|LOG_INFO
 argument_list|,
 literal|"Connection attempt to TCP %s:%d "
-literal|"from %s:%d flags:0x%x\n"
+literal|"from %s:%d flags:0x%02x\n"
 argument_list|,
 name|dbuf
 argument_list|,
