@@ -2192,7 +2192,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Manipulate signal mask.  * Note that we receive new mask, not pointer,  * and return old mask as return value;  * the library stub does the rest.  */
+comment|/*  * do_sigprocmask() - MP SAFE ONLY IF p == curproc  *  *	Manipulate signal mask.  This routine is MP SAFE *ONLY* if  *	p == curproc.  Also remember that in order to remain MP SAFE  *	no spl*() calls may be made.  */
 end_comment
 
 begin_function
@@ -2262,12 +2262,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|splhigh
-argument_list|()
-expr_stmt|;
 switch|switch
 condition|(
 name|how
@@ -2346,12 +2340,6 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
-operator|(
-name|void
-operator|)
-name|spl0
-argument_list|()
-expr_stmt|;
 block|}
 return|return
 operator|(
@@ -2360,6 +2348,10 @@ operator|)
 return|;
 block|}
 end_block
+
+begin_comment
+comment|/*  * sigprocmask() - MP SAFE  */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -2537,6 +2529,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * osigprocmask() - MP SAFE  */
+end_comment
 
 begin_ifndef
 ifndef|#

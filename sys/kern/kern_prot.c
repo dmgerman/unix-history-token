@@ -508,6 +508,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * getuid() - MP SAFE  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -529,10 +533,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * MP SAFE  */
-end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -604,6 +604,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * geteuid() - MP SAFE  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -670,6 +674,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * getgid() - MP SAFE  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -691,10 +699,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * MP SAFE  */
-end_comment
 
 begin_comment
 comment|/* ARGSUSED */
