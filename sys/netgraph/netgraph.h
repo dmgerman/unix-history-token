@@ -788,7 +788,7 @@ parameter_list|,
 name|order
 parameter_list|)
 define|\
-value|static moduledata_t ng_##typename##_mod = {				\ 	"ng_" #typename,						\ 	ng_mod_event,							\ 	(typestructp)							\ };									\ DECLARE_MODULE(ng_##typename, ng_##typename##_mod, sub, order)
+value|static moduledata_t ng_##typename##_mod = {				\ 	"ng_" #typename,						\ 	ng_mod_event,							\ 	(typestructp)							\ };									\ DECLARE_MODULE(ng_##typename, ng_##typename##_mod, sub, order);		\ MODULE_DEPEND(ng_##typename, netgraph, 1, 1, 1)
 end_define
 
 begin_define

@@ -97,6 +97,16 @@ directive|include
 file|<netgraph/ng_parse.h>
 end_include
 
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|netgraph
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* List of all nodes */
 end_comment
