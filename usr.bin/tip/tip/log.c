@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)log.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)log.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,6 +53,12 @@ directive|include
 file|"tip.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -60,25 +79,23 @@ begin_comment
 comment|/*  * Log file maintenance routines  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|logent
-argument_list|(
-argument|group
-argument_list|,
-argument|num
-argument_list|,
-argument|acu
-argument_list|,
-argument|message
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|group
+parameter_list|,
+name|num
+parameter_list|,
+name|acu
+parameter_list|,
+name|message
+parameter_list|)
 name|char
 modifier|*
 name|group
 decl_stmt|,
-modifier|*
+decl|*
 name|num
 decl_stmt|,
 modifier|*
@@ -87,7 +104,7 @@ decl_stmt|,
 modifier|*
 name|message
 decl_stmt|;
-end_decl_stmt
+end_function
 
 begin_block
 block|{
@@ -128,9 +145,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
-literal|"tip: flock"
+literal|"flock"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -245,12 +262,10 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
+begin_function
+name|void
 name|loginit
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|flog
 operator|=
@@ -283,7 +298,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#

@@ -9,13 +9,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)acu.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)acu.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -346,6 +359,7 @@ literal|'\0'
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|conflag
 operator|=
 call|(
@@ -359,6 +373,7 @@ name|phnum
 argument_list|,
 name|CU
 argument_list|)
+operator|)
 condition|)
 block|{
 if|if
@@ -596,6 +611,7 @@ literal|'\0'
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|conflag
 operator|=
 call|(
@@ -609,6 +625,7 @@ name|phnum
 argument_list|,
 name|CU
 argument_list|)
+operator|)
 condition|)
 block|{
 name|fclose
@@ -725,21 +742,16 @@ return|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|void
 name|disconnect
-argument_list|(
-argument|reason
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|reason
+parameter_list|)
 name|char
 modifier|*
 name|reason
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -828,7 +840,7 @@ call|)
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static

@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)tip.c	8.1 (Berkeley) 6/6/93";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)tip.c	8.1 (Berkeley) 6/6/93"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -70,6 +84,12 @@ end_function_decl
 begin_comment
 comment|/*  * tip - UNIX link to other systems  *  tip [-v] [-speed] system-name  * or  *  cu phone-number [-s speed] [-l line] [-a acu]  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
 
 begin_include
 include|#
@@ -227,6 +247,149 @@ begin_comment
 comment|/* This limits the size of a number */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|setparity
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|pwrite
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|escape
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|tipin
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|prompt
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|unraw
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|shell_uid
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|daemon_uid
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|user_uid
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|speed
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|main
@@ -325,20 +488,9 @@ name|argc
 operator|>
 literal|4
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"usage: tip [-v] [-speed] [system-name]\n"
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -347,20 +499,13 @@ argument_list|(
 literal|0
 argument_list|)
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"tip: must be interactive\n"
-argument_list|)
-expr_stmt|;
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"must be interactive"
 argument_list|)
 expr_stmt|;
-block|}
 for|for
 control|(
 init|;
@@ -459,11 +604,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"tip: %s, unknown option\n"
+literal|"%s, unknown option"
 argument_list|,
 name|argv
 index|[
@@ -507,12 +650,11 @@ name|PNbuf
 operator|-
 literal|1
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"tip: phone number too long (max = %d bytes)\n"
+literal|"phone number too long (max = %d bytes)"
 argument_list|,
 sizeof|sizeof
 name|PNbuf
@@ -520,12 +662,6 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|strncpy
 argument_list|(
 name|PNbuf
@@ -780,10 +916,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|p
 operator|=
 name|connect
 argument_list|()
+operator|)
 condition|)
 block|{
 name|printf
@@ -820,8 +958,7 @@ argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
-name|cucommon
-label|:
+comment|/* cucommon:*/
 comment|/* 	 * From here down the code is shared with 	 * the "cu" version of tip. 	 */
 if|#
 directive|if
@@ -1136,10 +1273,12 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
 name|pid
 operator|=
 name|fork
 argument_list|()
+operator|)
 condition|)
 name|tipin
 argument_list|()
@@ -1149,6 +1288,27 @@ name|tipout
 argument_list|()
 expr_stmt|;
 comment|/*NOTREACHED*/
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: tip [-v] [-speed] [system-name]\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1224,12 +1384,10 @@ name|uidswapped
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_function
+name|void
 name|user_uid
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -1249,14 +1407,12 @@ literal|1
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|daemon_uid
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|if
 condition|(
@@ -1274,14 +1430,12 @@ literal|0
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|void
 name|shell_uid
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|seteuid
 argument_list|(
@@ -1289,7 +1443,7 @@ name|uid
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * put the controlling keyboard into raw mode  */
@@ -1370,12 +1524,10 @@ begin_comment
 comment|/*  * return keyboard to normal mode  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|unraw
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 if|#
 directive|if
@@ -1453,7 +1605,7 @@ endif|#
 directive|endif
 comment|/* HAVE_TERMIOS */
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 specifier|static
@@ -1466,31 +1618,23 @@ begin_comment
 comment|/*  * Print string ``s'', then read a string  *  in from the terminal.  Handles signals& allows use of  *  normal erase and kill characters.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|prompt
-argument_list|(
-argument|s
-argument_list|,
-argument|p
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|s
+parameter_list|,
+name|p
+parameter_list|)
 name|char
 modifier|*
 name|s
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|char
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|char
@@ -1603,7 +1747,7 @@ name|b
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Interrupt service routine during prompting  */
@@ -1647,12 +1791,10 @@ begin_comment
 comment|/*  * ****TIPIN   TIPIN****  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|tipin
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|int
 name|i
@@ -1911,7 +2053,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 specifier|extern
@@ -1925,12 +2067,10 @@ begin_comment
 comment|/*  * Escape handler --  *  called on recognition of ``escapec'' at the beginning of a line  */
 end_comment
 
-begin_macro
+begin_function
+name|char
 name|escape
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|char
@@ -2061,22 +2201,17 @@ name|gch
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|speed
-argument_list|(
-argument|n
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|n
+parameter_list|)
 name|int
 name|n
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|#
 directive|if
@@ -2131,23 +2266,24 @@ return|;
 endif|#
 directive|endif
 block|}
-end_block
+end_function
 
-begin_expr_stmt
+begin_function
+name|int
 name|any
-argument_list|(
+parameter_list|(
 name|c
-argument_list|,
+parameter_list|,
 name|p
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
 name|c
-operator|,
-operator|*
+decl_stmt|,
+decl|*
 name|p
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_function
 
 begin_block
 block|{
@@ -2179,19 +2315,17 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_function
+name|int
 name|size
-argument_list|(
+parameter_list|(
 name|s
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|s
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|int
@@ -2216,7 +2350,7 @@ name|i
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|char
@@ -2252,11 +2386,13 @@ name|q
 decl_stmt|;
 while|while
 condition|(
+operator|(
 name|c
 operator|=
 operator|*
 name|s
 operator|++
+operator|)
 condition|)
 block|{
 for|for
@@ -2456,20 +2592,15 @@ begin_comment
 comment|/*  * Help command  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|help
-argument_list|(
-argument|c
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|c
+parameter_list|)
 name|char
 name|c
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|esctable_t
@@ -2554,7 +2685,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Set up the "remote" tty's state  */
@@ -2813,38 +2944,27 @@ begin_comment
 comment|/*  * Do a write to the remote machine with the correct parity.  * We are doing 8 bit wide output, so we just generate a character  * with the right parity and output it.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|pwrite
-argument_list|(
-argument|fd
-argument_list|,
-argument|buf
-argument_list|,
-argument|n
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|fd
+parameter_list|,
+name|buf
+parameter_list|,
+name|n
+parameter_list|)
 name|int
 name|fd
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 modifier|*
 name|buf
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|int
 name|n
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -2943,27 +3063,22 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Build a parity table with appropriate high-order bit.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|setparity
-argument_list|(
-argument|defparity
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|defparity
+parameter_list|)
 name|char
 modifier|*
 name|defparity
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|int
@@ -3146,7 +3261,7 @@ operator|&
 name|clr
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
