@@ -267,33 +267,10 @@ begin_comment
 comment|/* loaded from directory entry */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IN_AATTRNAME
-value|0x2000
-end_define
-
-begin_comment
-comment|/* spaec allocated for i_defattrname */
-end_comment
-
 begin_struct
 struct|struct
 name|ntnode
 block|{
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|300000
-name|struct
-name|lock
-name|i_lock
-decl_stmt|;
-comment|/* Must be first */
-endif|#
-directive|endif
 name|LIST_ENTRY
 argument_list|(
 argument|ntnode
@@ -312,33 +289,35 @@ modifier|*
 name|i_prev
 decl_stmt|;
 name|struct
-name|vnode
-modifier|*
-name|i_vnode
-decl_stmt|;
-name|struct
-name|vnode
-modifier|*
-name|i_devvp
-decl_stmt|;
-name|struct
 name|ntfsmount
 modifier|*
 name|i_mp
 decl_stmt|;
-name|enum
-name|vtype
-name|i_type
+name|ino_t
+name|i_number
 decl_stmt|;
 name|dev_t
 name|i_dev
 decl_stmt|;
-name|ino_t
-name|i_number
-decl_stmt|;
 name|u_int32_t
 name|i_flag
 decl_stmt|;
+name|int
+name|i_usecount
+decl_stmt|;
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|fnode
+argument_list|)
+name|i_fnlist
+expr_stmt|;
+name|struct
+name|ntvattr
+modifier|*
+name|i_vattrp
+decl_stmt|;
+comment|/* ntvattrs list */
 name|long
 name|i_nlink
 decl_stmt|;
@@ -351,44 +330,6 @@ name|u_int32_t
 name|i_frflag
 decl_stmt|;
 comment|/* MFR */
-name|ntfs_times_t
-name|i_times
-decl_stmt|;
-comment|/* $NAME/dirinfo */
-name|ino_t
-name|i_pnumber
-decl_stmt|;
-comment|/* $NAME/dirinfo */
-name|u_int32_t
-name|i_fflag
-decl_stmt|;
-comment|/* $NAME/dirinfo */
-name|u_int64_t
-name|i_size
-decl_stmt|;
-comment|/* defattr/dirinfo: */
-name|u_int64_t
-name|i_allocated
-decl_stmt|;
-comment|/* defattr/dirinfo */
-name|u_int32_t
-name|i_lastdattr
-decl_stmt|;
-name|u_int32_t
-name|i_lastdblnum
-decl_stmt|;
-name|u_int32_t
-name|i_lastdoff
-decl_stmt|;
-name|u_int32_t
-name|i_lastdnum
-decl_stmt|;
-name|caddr_t
-name|i_dirblbuf
-decl_stmt|;
-name|u_int32_t
-name|i_dirblsz
-decl_stmt|;
 name|uid_t
 name|i_uid
 decl_stmt|;
@@ -398,30 +339,127 @@ decl_stmt|;
 name|mode_t
 name|i_mode
 decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|FN_PRELOADED
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|FN_DEFAULT
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|FN_AATTRNAME
+value|0x0004
+end_define
+
+begin_comment
+comment|/* space allocated for f_attrname */
+end_comment
+
+begin_struct
+struct|struct
+name|fnode
+block|{
+name|struct
+name|lock
+name|f_lock
+decl_stmt|;
+comment|/* Must be first */
+name|LIST_ENTRY
+argument_list|(
+argument|fnode
+argument_list|)
+name|f_fnlist
+expr_stmt|;
+name|struct
+name|vnode
+modifier|*
+name|f_vp
+decl_stmt|;
+comment|/* Associatied vnode */
+name|struct
+name|ntnode
+modifier|*
+name|f_ip
+decl_stmt|;
+name|u_long
+name|f_flag
+decl_stmt|;
+name|struct
+name|vnode
+modifier|*
+name|f_devvp
+decl_stmt|;
+name|struct
+name|ntfsmount
+modifier|*
+name|f_mp
+decl_stmt|;
+name|dev_t
+name|f_dev
+decl_stmt|;
+name|enum
+name|vtype
+name|f_type
+decl_stmt|;
+name|ntfs_times_t
+name|f_times
+decl_stmt|;
+comment|/* $NAME/dirinfo */
+name|ino_t
+name|f_pnumber
+decl_stmt|;
+comment|/* $NAME/dirinfo */
 name|u_int32_t
-name|i_defattr
+name|f_fflag
+decl_stmt|;
+comment|/* $NAME/dirinfo */
+name|u_int64_t
+name|f_size
+decl_stmt|;
+comment|/* defattr/dirinfo: */
+name|u_int64_t
+name|f_allocated
+decl_stmt|;
+comment|/* defattr/dirinfo */
+name|u_int32_t
+name|f_attrtype
 decl_stmt|;
 name|char
 modifier|*
-name|i_defattrname
+name|f_attrname
 decl_stmt|;
-name|struct
-name|ntvattr
-modifier|*
-name|i_vattrp
+comment|/* for ntreaddir */
+name|u_int32_t
+name|f_lastdattr
 decl_stmt|;
-name|int
-name|i_lockcount
+name|u_int32_t
+name|f_lastdblnum
 decl_stmt|;
-comment|/* Process lock count (recursion) */
-name|pid_t
-name|i_lockholder
+name|u_int32_t
+name|f_lastdoff
 decl_stmt|;
-comment|/* DEBUG: holder of ntnode lock. */
-name|pid_t
-name|i_lockwaiter
+name|u_int32_t
+name|f_lastdnum
 decl_stmt|;
-comment|/* DEBUG: waiter of ntnode lock. */
+name|caddr_t
+name|f_dirblbuf
+decl_stmt|;
+name|u_int32_t
+name|f_dirblsz
+decl_stmt|;
 block|}
 struct|;
 end_struct

@@ -105,7 +105,6 @@ name|u_int8_t
 modifier|*
 name|buf
 parameter_list|,
-specifier|const
 name|u_int8_t
 modifier|*
 name|cbuf
@@ -442,7 +441,6 @@ name|u_int8_t
 modifier|*
 name|uup
 parameter_list|,
-specifier|const
 name|u_int8_t
 modifier|*
 name|cup

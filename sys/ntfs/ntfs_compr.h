@@ -24,7 +24,6 @@ parameter_list|(
 name|u_int8_t
 modifier|*
 parameter_list|,
-specifier|const
 name|u_int8_t
 modifier|*
 parameter_list|)
@@ -42,7 +41,6 @@ parameter_list|,
 name|u_int8_t
 modifier|*
 parameter_list|,
-specifier|const
 name|u_int8_t
 modifier|*
 parameter_list|)
