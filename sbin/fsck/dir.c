@@ -3540,7 +3540,7 @@ comment|/*  * allocate a new directory  */
 end_comment
 
 begin_function
-name|int
+name|ino_t
 name|allocdir
 parameter_list|(
 name|parent

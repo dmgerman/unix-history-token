@@ -143,9 +143,10 @@ name|daddr_t
 modifier|*
 name|ap
 decl_stmt|;
-name|long
+name|int
 name|ret
-decl_stmt|,
+decl_stmt|;
+name|long
 name|n
 decl_stmt|,
 name|ndb
