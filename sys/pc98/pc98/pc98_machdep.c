@@ -215,7 +215,7 @@ literal|3840
 expr_stmt|;
 block|}
 block|}
-comment|/* Disable 15MB-16MB caching */
+comment|/* Disable 15MB-16MB caching. */
 switch|switch
 condition|(
 name|epson_machine_id
@@ -233,7 +233,7 @@ case|case
 literal|0x3B
 case|:
 comment|/* PC486HA */
-comment|/* Cache control start */
+comment|/* Cache control start. */
 name|outb
 argument_list|(
 literal|0x43f
@@ -248,7 +248,7 @@ argument_list|,
 literal|0x0033
 argument_list|)
 expr_stmt|;
-comment|/* Disable 0xF00000-0xFFFFFF */
+comment|/* Disable 0xF00000-0xFFFFFF. */
 name|outb
 argument_list|(
 literal|0xc48
@@ -319,7 +319,7 @@ argument_list|,
 literal|0x00
 argument_list|)
 expr_stmt|;
-comment|/* Cache control end */
+comment|/* Cache control end. */
 name|outb
 argument_list|(
 literal|0x43f
@@ -352,7 +352,7 @@ case|case
 literal|0x38
 case|:
 comment|/* PC486SR */
-comment|/* Disable 0xF00000-0xFFFFFF */
+comment|/* Disable 0xF00000-0xFFFFFF. */
 name|outb
 argument_list|(
 literal|0x43f
@@ -397,7 +397,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* Disable 15MB-16MB RAM and enable memory window */
+comment|/* Disable 15MB-16MB RAM and enable memory window. */
 name|outb
 argument_list|(
 literal|0x43b
@@ -410,7 +410,7 @@ operator|&
 literal|0xfd
 argument_list|)
 expr_stmt|;
-comment|/* clear bit1 */
+comment|/* Clear bit1. */
 block|}
 block|}
 end_function
@@ -419,6 +419,22 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
+begin_function_decl
+specifier|static
+name|void
+name|init_cpu_accel_mem
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
@@ -665,6 +681,11 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
