@@ -5334,11 +5334,6 @@ operator|-
 literal|1
 operator|)
 return|;
-name|fclose
-argument_list|(
-name|f
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
