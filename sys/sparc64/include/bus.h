@@ -5909,7 +5909,7 @@ name|pt
 init|;
 name|lt
 operator|->
-name|dt_dmamem_alloc
+name|dt_dmamem_alloc_size
 operator|==
 name|NULL
 condition|;
@@ -6087,7 +6087,7 @@ name|pt
 init|;
 name|lt
 operator|->
-name|dt_dmamem_free
+name|dt_dmamem_free_size
 operator|==
 name|NULL
 condition|;
