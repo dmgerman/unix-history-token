@@ -424,13 +424,13 @@ operator|-
 literal|1
 return|;
 comment|/* Wait for the buffer to be transmitted */
+do|do
+block|{
 name|buf
 operator|=
 literal|0
 expr_stmt|;
 comment|/* XXX Is this needed? */
-do|do
-block|{
 name|status
 operator|=
 name|net
@@ -445,6 +445,7 @@ operator|&
 name|buf
 argument_list|)
 expr_stmt|;
+comment|/* 		 * XXX EFI1.1 and the E1000 card returns a different  		 * address than we gave.  Sigh. 		 */
 block|}
 do|while
 condition|(
@@ -453,8 +454,8 @@ operator|==
 name|EFI_SUCCESS
 operator|&&
 name|buf
-operator|!=
-name|pkt
+operator|==
+literal|0
 condition|)
 do|;
 comment|/* XXX How do we deal with status != EFI_SUCCESS now? */
@@ -515,6 +516,12 @@ decl_stmt|;
 name|time_t
 name|t
 decl_stmt|;
+name|char
+name|buf
+index|[
+literal|2048
+index|]
+decl_stmt|;
 name|net
 operator|=
 name|nif
@@ -544,7 +551,10 @@ condition|)
 block|{
 name|bufsz
 operator|=
-name|len
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
 expr_stmt|;
 name|status
 operator|=
@@ -559,7 +569,7 @@ argument_list|,
 operator|&
 name|bufsz
 argument_list|,
-name|pkt
+name|buf
 argument_list|,
 literal|0
 argument_list|,
@@ -574,9 +584,31 @@ name|status
 operator|==
 name|EFI_SUCCESS
 condition|)
+block|{
+comment|/* 			 * XXX EFI1.1 and the E1000 card trash our 			 * workspace if we do not do this silly copy. 			 * Either they are not respecting the len 			 * value or do not like the alignment. 			 */
+if|if
+condition|(
+name|bufsz
+operator|>
+name|len
+condition|)
+name|bufsz
+operator|=
+name|len
+expr_stmt|;
+name|bcopy
+argument_list|(
+name|buf
+argument_list|,
+name|pkt
+argument_list|,
+name|bufsz
+argument_list|)
+expr_stmt|;
 return|return
 name|bufsz
 return|;
+block|}
 if|if
 condition|(
 name|status
