@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: options.c,v 1.6 1995/10/31 21:21:31 peter Exp $"
+literal|"$Id: options.c,v 1.7 1995/10/31 21:29:25 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -6355,18 +6355,20 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-name|u_int32_t
+name|struct
+name|in_addr
 name|mask
 decl_stmt|;
 if|if
 condition|(
 operator|(
-name|mask
-operator|=
-name|inet_addr
+name|inet_aton
 argument_list|(
 operator|*
 name|argv
+argument_list|,
+operator|&
+name|mask
 argument_list|)
 operator|)
 operator|==
@@ -6378,9 +6380,9 @@ name|netmask
 operator|&
 operator|~
 name|mask
+operator|.
+name|s_addr
 operator|)
-operator|!=
-literal|0
 condition|)
 block|{
 name|fprintf
@@ -6394,12 +6396,16 @@ name|argv
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 name|netmask
 operator|=
 name|mask
+operator|.
+name|s_addr
 expr_stmt|;
 return|return
 operator|(
