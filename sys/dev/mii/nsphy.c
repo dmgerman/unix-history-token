@@ -592,6 +592,9 @@ decl_stmt|;
 name|int
 name|reg
 decl_stmt|;
+name|device_t
+name|parent
+decl_stmt|;
 switch|switch
 condition|(
 name|cmd
@@ -680,6 +683,15 @@ operator|==
 literal|0
 condition|)
 break|break;
+name|parent
+operator|=
+name|device_get_parent
+argument_list|(
+name|sc
+operator|->
+name|mii_dev
+argument_list|)
+expr_stmt|;
 name|reg
 operator|=
 name|PHY_READ
@@ -717,12 +729,7 @@ name|strcmp
 argument_list|(
 name|device_get_name
 argument_list|(
-name|device_get_parent
-argument_list|(
-name|sc
-operator|->
-name|mii_dev
-argument_list|)
+name|parent
 argument_list|)
 argument_list|,
 literal|"fxp"
@@ -752,9 +759,10 @@ block|{
 case|case
 name|IFM_AUTO
 case|:
-comment|/* 			 * If we're already in auto mode, just return. 			 */
+comment|/* 			 * If we're already in auto mode and don't hang off 			 * of a hme(4), just return. DP83840A on hme(4) don't 			 * advertise their media capabilities themselves 			 * properly so force writing the ANAR according to 			 * the BMSR by mii_phy_auto() every time. 			 */
 if|if
 condition|(
+operator|(
 name|PHY_READ
 argument_list|(
 name|sc
@@ -763,6 +771,21 @@ name|MII_BMCR
 argument_list|)
 operator|&
 name|BMCR_AUTOEN
+operator|)
+operator|==
+literal|0
+operator|&&
+name|strcmp
+argument_list|(
+name|device_get_name
+argument_list|(
+name|parent
+argument_list|)
+argument_list|,
+literal|"hme"
+argument_list|)
+operator|!=
+literal|0
 condition|)
 return|return
 operator|(
