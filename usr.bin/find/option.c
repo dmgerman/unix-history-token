@@ -219,6 +219,16 @@ name|O_ZERO
 block|}
 block|,
 block|{
+literal|"-empty"
+block|,
+name|N_EMPTY
+block|,
+name|c_empty
+block|,
+name|O_ZERO
+block|}
+block|,
+block|{
 literal|"-exec"
 block|,
 name|N_EXEC
