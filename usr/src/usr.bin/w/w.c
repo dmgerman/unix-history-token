@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1980, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*-  * Copyright (c) 1980, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1980, 1991, 1993\n\ 	The Regents of the University of California.  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1980, 1991, 1993, 1994\n\ 	The Regents of the University of California.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)w.c	8.1 (Berkeley) %G%"
+literal|"@(#)w.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -332,13 +332,6 @@ end_comment
 
 begin_decl_stmt
 name|char
-modifier|*
-name|program
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
 name|domain
 index|[
 name|MAXHOSTNAMELEN
@@ -465,6 +458,10 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* ../../bin/ps/fmt.c */
+end_comment
+
 begin_function
 name|int
 name|main
@@ -485,11 +482,7 @@ block|{
 specifier|extern
 name|char
 modifier|*
-name|optarg
-decl_stmt|;
-specifier|extern
-name|int
-name|optind
+name|__progname
 decl_stmt|;
 name|struct
 name|kinfo_proc
@@ -549,32 +542,14 @@ literal|256
 index|]
 decl_stmt|;
 comment|/* Are we w(1) or uptime(1)? */
-name|program
+name|p
 operator|=
-name|argv
-index|[
-literal|0
-index|]
+name|__progname
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|p
-operator|=
-name|rindex
-argument_list|(
-name|program
-argument_list|,
-literal|'/'
-argument_list|)
-operator|)
-operator|||
 operator|*
-operator|(
 name|p
-operator|=
-name|program
-operator|)
 operator|==
 literal|'-'
 condition|)
@@ -741,7 +716,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
@@ -895,17 +870,17 @@ operator|->
 name|next
 operator|)
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-operator|&
-name|utmp
-argument_list|,
 operator|&
 operator|(
 name|ep
 operator|->
 name|utmp
 operator|)
+argument_list|,
+operator|&
+name|utmp
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1126,7 +1101,6 @@ name|kp
 operator|++
 control|)
 block|{
-specifier|register
 name|struct
 name|proc
 modifier|*
@@ -1137,7 +1111,6 @@ name|kp
 operator|->
 name|kp_proc
 decl_stmt|;
-specifier|register
 name|struct
 name|eproc
 modifier|*
@@ -1495,7 +1468,7 @@ operator|||
 operator|(
 name|p
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|domain
 argument_list|,
@@ -1526,11 +1499,11 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|p
-argument_list|,
 name|domain
+argument_list|,
+name|p
 argument_list|,
 name|strlen
 argument_list|(
@@ -1579,7 +1552,7 @@ if|if
 condition|(
 name|x
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|p
 argument_list|,
@@ -1680,13 +1653,14 @@ name|hp
 operator|->
 name|h_name
 operator|&&
-operator|!
 name|strcmp
 argument_list|(
 name|p
 argument_list|,
 name|domain
 argument_list|)
+operator|==
+literal|0
 condition|)
 operator|*
 name|p
@@ -1878,30 +1852,8 @@ name|buf
 index|[
 literal|256
 index|]
-decl_stmt|,
-name|fmt
-index|[
-literal|10
-index|]
 decl_stmt|;
 comment|/* 	 * Print time of day. 	 * 	 * Note, SCCS forces the string manipulation below, as it 	 * replaces w.c with file information. 	 */
-operator|(
-name|void
-operator|)
-name|strcpy
-argument_list|(
-name|fmt
-argument_list|,
-literal|"%l:%%%p"
-argument_list|)
-expr_stmt|;
-name|fmt
-index|[
-literal|4
-index|]
-operator|=
-literal|'M'
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1914,7 +1866,12 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-name|fmt
+name|__CONCAT
+argument_list|(
+literal|"%l:%"
+argument_list|,
+literal|"M%p"
+argument_list|)
 argument_list|,
 name|localtime
 argument_list|(
