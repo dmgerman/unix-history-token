@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * @(#) $Header: os-bsd.h,v 1.18 94/06/14 20:15:17 leres Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1990, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * @(#) $Header: /home/ncvs/src/usr.sbin/tcpdump/tcpdump/os.h,v 1.2 1995/03/08 12:52:21 olah Exp $ (LBL)  */
 end_comment
 
 begin_include
@@ -201,6 +201,41 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_typedef
+typedef|typedef
+name|int64_t
+name|int64
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|u_int64_t
+name|u_int64
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|INT64_FORMAT
+value|"%qd"
+end_define
+
+begin_define
+define|#
+directive|define
+name|U_INT64_FORMAT
+value|"%qu"
+end_define
+
+begin_define
+define|#
+directive|define
+name|HEX_INT64_FORMAT
+value|"%qx"
+end_define
 
 end_unit
 

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|RCSid
 init|=
-literal|"$Header: parsenfsfh.c,v 1.5 94/01/13 19:06:41 leres Exp $"
+literal|"$Header: /home/ncvs/src/usr.sbin/tcpdump/tcpdump/parsenfsfh.c,v 1.1 1995/03/08 12:52:23 olah Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -342,6 +342,8 @@ name|Parse_fh
 parameter_list|(
 name|fh
 parameter_list|,
+name|len
+parameter_list|,
 name|fsidp
 parameter_list|,
 name|inop
@@ -356,6 +358,9 @@ specifier|register
 name|caddr_t
 modifier|*
 name|fh
+decl_stmt|;
+name|int
+name|len
 decl_stmt|;
 name|my_fsid
 modifier|*

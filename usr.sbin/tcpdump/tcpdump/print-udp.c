@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: /home/ncvs/src/usr.sbin/tcpdump/tcpdump/print-udp.c,v 1.3 1995/03/08 12:52:45 olah Exp $"
+literal|"$Id: print-udp.c,v 1.4 1995/08/29 19:48:11 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -192,7 +192,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"nfsv2.h"
+file|"nfs.h"
 end_include
 
 begin_include
