@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)spec.c	5.6 (Berkeley) %G%"
+literal|"@(#)spec.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -250,7 +250,7 @@ name|strtok
 argument_list|(
 name|p
 argument_list|,
-literal|"\n\t ,"
+literal|"\n\t "
 argument_list|)
 operator|)
 condition|)
@@ -599,7 +599,7 @@ operator|*
 operator|)
 name|NULL
 argument_list|,
-literal|"= \t\n,"
+literal|"= \t\n"
 argument_list|)
 condition|)
 block|{
@@ -624,7 +624,7 @@ operator|*
 operator|)
 name|NULL
 argument_list|,
-literal|"= \t\n,"
+literal|" \t\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -674,28 +674,57 @@ break|break;
 case|case
 name|F_MODE
 case|:
+block|{
+name|mode_t
+modifier|*
+name|set
+decl_stmt|,
+modifier|*
+name|setmode
+argument_list|()
+decl_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|set
+operator|=
+name|setmode
+argument_list|(
+name|val
+argument_list|)
+operator|)
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"mtree: invalid file mode %s.\n"
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
+name|specerr
+argument_list|()
+expr_stmt|;
+block|}
 name|ip
 operator|->
 name|st_mode
 operator|=
-operator|(
-name|mode_t
-operator|)
-name|strtol
+name|getmode
 argument_list|(
-name|val
+name|set
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
-name|NULL
-argument_list|,
-literal|8
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
 case|case
 name|F_NLINK
 case|:
@@ -940,7 +969,7 @@ operator|*
 operator|)
 name|NULL
 argument_list|,
-literal|"\n\t ,"
+literal|"\n\t "
 argument_list|)
 condition|)
 name|ip

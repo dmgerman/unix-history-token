@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)create.c	5.7 (Berkeley) %G%"
+literal|"@(#)create.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1121,7 +1121,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"\n/set group=%u, mode=%#o, nlink=1, owner=%u, type=file\n"
+literal|"\n/set group=%u mode=%#o nlink=1 owner=%u type=file\n"
 argument_list|,
 name|savegid
 argument_list|,
