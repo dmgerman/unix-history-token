@@ -1552,22 +1552,6 @@ begin_comment
 comment|/*  * Map the buffer buf into bus space using the dmamap map.  */
 end_comment
 
-begin_decl_stmt
-name|vm_offset_t
-name|alpha_XXX_dmamap_or
-init|=
-literal|1024UL
-operator|*
-literal|1024UL
-operator|*
-literal|1024UL
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*XXX */
-end_comment
-
 begin_function
 name|int
 name|bus_dmamap_load
@@ -2004,8 +1988,6 @@ operator|->
 name|ds_addr
 operator|=
 name|paddr
-operator|+
-name|alpha_XXX_dmamap_or
 expr_stmt|;
 name|sg
 operator|->
@@ -2052,8 +2034,6 @@ operator|->
 name|ds_addr
 operator|=
 name|paddr
-operator|+
-name|alpha_XXX_dmamap_or
 expr_stmt|;
 name|sg
 operator|->
