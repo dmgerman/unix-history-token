@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	8.30 (Berkeley) %G%"
+literal|"@(#)err.c	8.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -69,6 +69,20 @@ end_decl_stmt
 
 begin_comment
 comment|/* text of most recent message */
+end_comment
+
+begin_decl_stmt
+name|char
+name|HeldMessageBuf
+index|[
+sizeof|sizeof
+name|MsgBuf
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* for held messages */
 end_comment
 
 begin_function_decl
@@ -698,6 +712,8 @@ argument_list|(
 name|MsgBuf
 argument_list|,
 name|FALSE
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 comment|/* save this message for mailq printing */
@@ -834,6 +850,8 @@ argument_list|(
 name|MsgBuf
 argument_list|,
 name|FALSE
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 block|}
@@ -843,7 +861,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  PUTOUTMSG -- output error message to transcript and channel ** **	Parameters: **		msg -- message to output (in SMTP format). **		holdmsg -- if TRUE, don't output a copy of the message to **			our output channel. ** **	Returns: **		none. ** **	Side Effects: **		Outputs msg to the transcript. **		If appropriate, outputs it to the channel. **		Deletes SMTP reply code number as appropriate. */
+comment|/* **  PUTOUTMSG -- output error message to transcript and channel ** **	Parameters: **		msg -- message to output (in SMTP format). **		holdmsg -- if TRUE, don't output a copy of the message to **			our output channel. **		heldmsg -- if TRUE, this is a previously held message; **			don't log it to the transcript file. ** **	Returns: **		none. ** **	Side Effects: **		Outputs msg to the transcript. **		If appropriate, outputs it to the channel. **		Deletes SMTP reply code number as appropriate. */
 end_comment
 
 begin_macro
@@ -852,6 +870,8 @@ argument_list|(
 argument|msg
 argument_list|,
 argument|holdmsg
+argument_list|,
+argument|heldmsg
 argument_list|)
 end_macro
 
@@ -865,6 +885,12 @@ end_decl_stmt
 begin_decl_stmt
 name|bool
 name|holdmsg
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|heldmsg
 decl_stmt|;
 end_decl_stmt
 
@@ -882,11 +908,17 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"--- %s%s\n"
+literal|"--- %s%s%s\n"
 argument_list|,
 name|msg
 argument_list|,
 name|holdmsg
+condition|?
+literal|" (hold)"
+else|:
+literal|""
+argument_list|,
+name|heldmsg
 condition|?
 literal|" (held)"
 else|:
@@ -896,6 +928,9 @@ expr_stmt|;
 comment|/* output to transcript if serious */
 if|if
 condition|(
+operator|!
+name|heldmsg
+operator|&&
 name|CurEnv
 operator|->
 name|e_xfp
@@ -928,9 +963,6 @@ expr_stmt|;
 comment|/* output to channel if appropriate */
 if|if
 condition|(
-name|holdmsg
-operator|||
-operator|(
 operator|!
 name|Verbose
 operator|&&
@@ -940,9 +972,23 @@ literal|0
 index|]
 operator|==
 literal|'0'
-operator|)
 condition|)
 return|return;
+if|if
+condition|(
+name|holdmsg
+condition|)
+block|{
+comment|/* save for possible future display */
+name|strcpy
+argument_list|(
+name|HeldMessageBuf
+argument_list|,
+name|msg
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 comment|/* map warnings to something SMTP can handle */
 if|if
 condition|(
@@ -1188,6 +1234,8 @@ argument_list|(
 name|msg
 argument_list|,
 name|HoldErrs
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 comment|/* signal the error */
@@ -1508,6 +1556,83 @@ name|eb
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  BUFFER_ERRORS -- arrange to buffer future error messages ** **	Parameters: **		none ** **	Returns: **		none. */
+end_comment
+
+begin_function
+name|void
+name|buffer_errors
+parameter_list|()
+block|{
+name|HeldMessageBuf
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|HoldErrs
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  FLUSH_ERRORS -- flush the held error message buffer ** **	Parameters: **		print -- if set, print the message, otherwise just **			delete it. ** **	Returns: **		none. */
+end_comment
+
+begin_function
+name|void
+name|flush_errors
+parameter_list|(
+name|print
+parameter_list|)
+name|bool
+name|print
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|print
+operator|&&
+name|HeldMessageBuf
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+condition|)
+name|putoutmsg
+argument_list|(
+name|HeldMessageBuf
+argument_list|,
+name|FALSE
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+name|HeldMessageBuf
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|HoldErrs
+operator|=
+name|FALSE
+expr_stmt|;
 block|}
 end_function
 

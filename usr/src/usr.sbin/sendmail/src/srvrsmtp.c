@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.63 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.64 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.63 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.64 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2089,6 +2089,9 @@ name|SmtpPhase
 operator|=
 literal|"collect"
 expr_stmt|;
+name|buffer_errors
+argument_list|()
+expr_stmt|;
 name|collect
 argument_list|(
 name|InChannel
@@ -2100,6 +2103,11 @@ argument_list|,
 name|NULL
 argument_list|,
 name|e
+argument_list|)
+expr_stmt|;
+name|flush_errors
+argument_list|(
+name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -2120,9 +2128,8 @@ operator|~
 name|EF_CLRQUEUE
 expr_stmt|;
 comment|/* from now on, we have to operate silently */
-name|HoldErrs
-operator|=
-name|TRUE
+name|buffer_errors
+argument_list|()
 expr_stmt|;
 name|e
 operator|->

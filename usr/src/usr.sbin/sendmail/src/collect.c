@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	8.31 (Berkeley) %G%"
+literal|"@(#)collect.c	8.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,19 +43,6 @@ end_include
 begin_comment
 comment|/* **  COLLECT -- read& parse message header& make temp file. ** **	Creates a temporary file name and copies the standard **	input to that file.  Leading UNIX-style "From" lines are **	stripped off (after important information is extracted). ** **	Parameters: **		fp -- file to read. **		from -- the person we think it may be from.  If **			there is a "From" line, we will replace **			the name of the person by this.  If NULL, **			do no such replacement. ** **	Returns: **		Name of the "from" person extracted from the **		arpanet header. ** **	Side Effects: **		Temp file is created and filled. **		The from person may be set. */
 end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|CollectErrorMessage
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|bool
-name|CollectErrno
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -295,14 +282,6 @@ modifier|*
 name|index
 parameter_list|()
 function_decl|;
-name|CollectErrorMessage
-operator|=
-name|NULL
-expr_stmt|;
-name|CollectErrno
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|hdrp
@@ -1528,46 +1507,7 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-name|CollectErrorMessage
-operator|!=
-name|NULL
-operator|&&
-name|Errors
-operator|<=
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|CollectErrno
-operator|!=
-literal|0
-condition|)
-block|{
-name|errno
-operator|=
-name|CollectErrno
-expr_stmt|;
-name|syserr
-argument_list|(
-name|CollectErrorMessage
-argument_list|,
-name|dfname
-argument_list|)
-expr_stmt|;
-name|finis
-argument_list|()
-expr_stmt|;
-block|}
-name|usrerr
-argument_list|(
-name|CollectErrorMessage
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
+comment|/* An EOF when running SMTP is an error */
 if|if
 condition|(
 name|inputerr
@@ -1583,7 +1523,6 @@ name|MD_DAEMON
 operator|)
 condition|)
 block|{
-comment|/* An EOF when running SMTP is an error */
 name|char
 modifier|*
 name|host
@@ -2101,7 +2040,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  TFERROR -- signal error on writing the temporary file. ** **	Parameters: **		tf -- the file pointer for the temporary file. ** **	Returns: **		none. ** **	Side Effects: **		Gives an error message. **		Arranges for following output to go elsewhere. */
+comment|/* **  TFERROR -- signal error on writing the temporary file. ** **	Parameters: **		tf -- the file pointer for the temporary file. **		e -- the current envelope. ** **	Returns: **		none. ** **	Side Effects: **		Gives an error message. **		Arranges for following output to go elsewhere. */
 end_comment
 
 begin_function
@@ -2122,10 +2061,6 @@ modifier|*
 name|e
 decl_stmt|;
 block|{
-name|CollectErrno
-operator|=
-name|errno
-expr_stmt|;
 if|if
 condition|(
 name|errno
@@ -2299,18 +2234,22 @@ name|avail
 argument_list|)
 expr_stmt|;
 block|}
-name|CollectErrorMessage
-operator|=
+name|usrerr
+argument_list|(
 literal|"452 Out of disk space for temp file"
+argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
-name|CollectErrorMessage
-operator|=
-literal|"cannot write message body to disk (%s)"
+name|syserr
+argument_list|(
+literal|"collect: Cannot write tf%s"
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|)
 expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)
