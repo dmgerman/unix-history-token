@@ -483,7 +483,7 @@ if|if
 condition|(
 name|unp
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -546,7 +546,7 @@ if|if
 condition|(
 name|unp
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -559,12 +559,16 @@ condition|(
 name|unp
 operator|->
 name|unp_conn
+operator|!=
+name|NULL
 operator|&&
 name|unp
 operator|->
 name|unp_conn
 operator|->
 name|unp_addr
+operator|!=
+name|NULL
 condition|)
 block|{
 operator|*
@@ -647,7 +651,7 @@ if|if
 condition|(
 name|unp
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -700,7 +704,7 @@ if|if
 condition|(
 name|unp
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -757,7 +761,7 @@ if|if
 condition|(
 name|unp
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -809,7 +813,7 @@ if|if
 condition|(
 name|unp
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -858,7 +862,7 @@ if|if
 condition|(
 name|unp
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -903,7 +907,7 @@ if|if
 condition|(
 name|unp
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -953,13 +957,13 @@ if|if
 condition|(
 name|unp
 operator|==
-literal|0
+name|NULL
 operator|||
 name|unp
 operator|->
 name|unp_vnode
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -1010,7 +1014,7 @@ if|if
 condition|(
 name|unp
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -1022,12 +1026,16 @@ condition|(
 name|unp
 operator|->
 name|unp_conn
+operator|!=
+name|NULL
 operator|&&
 name|unp
 operator|->
 name|unp_conn
 operator|->
 name|unp_addr
+operator|!=
+name|NULL
 condition|)
 operator|*
 name|nam
@@ -1112,7 +1120,7 @@ if|if
 condition|(
 name|unp
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -1144,7 +1152,7 @@ name|unp
 operator|->
 name|unp_conn
 operator|==
-literal|0
+name|NULL
 condition|)
 break|break;
 name|so2
@@ -1319,7 +1327,7 @@ if|if
 condition|(
 name|unp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|error
@@ -1348,6 +1356,8 @@ block|}
 if|if
 condition|(
 name|control
+operator|!=
+name|NULL
 operator|&&
 operator|(
 name|error
@@ -1383,6 +1393,8 @@ decl_stmt|;
 if|if
 condition|(
 name|nam
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -1390,6 +1402,8 @@ condition|(
 name|unp
 operator|->
 name|unp_conn
+operator|!=
+name|NULL
 condition|)
 block|{
 name|error
@@ -1423,7 +1437,7 @@ name|unp
 operator|->
 name|unp_conn
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|error
@@ -1446,6 +1460,8 @@ condition|(
 name|unp
 operator|->
 name|unp_addr
+operator|!=
+name|NULL
 condition|)
 name|from
 operator|=
@@ -1488,11 +1504,11 @@ argument_list|)
 expr_stmt|;
 name|m
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|control
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 else|else
@@ -1505,6 +1521,8 @@ block|}
 if|if
 condition|(
 name|nam
+operator|!=
+name|NULL
 condition|)
 name|unp_disconnect
 argument_list|(
@@ -1534,6 +1552,8 @@ block|{
 if|if
 condition|(
 name|nam
+operator|!=
+name|NULL
 condition|)
 block|{
 name|error
@@ -1584,7 +1604,7 @@ name|unp
 operator|->
 name|unp_conn
 operator|==
-literal|0
+name|NULL
 condition|)
 name|panic
 argument_list|(
@@ -1603,6 +1623,8 @@ comment|/* 		 * Send to paired receive port, and then reduce 		 * send buffer hi
 if|if
 condition|(
 name|control
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -1621,7 +1643,7 @@ argument_list|)
 condition|)
 name|control
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 else|else
@@ -1731,7 +1753,7 @@ argument_list|)
 expr_stmt|;
 name|m
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 break|break;
 default|default:
@@ -1763,6 +1785,8 @@ block|}
 if|if
 condition|(
 name|control
+operator|!=
+name|NULL
 operator|&&
 name|error
 operator|!=
@@ -1778,6 +1802,8 @@ label|:
 if|if
 condition|(
 name|control
+operator|!=
+name|NULL
 condition|)
 name|m_freem
 argument_list|(
@@ -1787,6 +1813,8 @@ expr_stmt|;
 if|if
 condition|(
 name|m
+operator|!=
+name|NULL
 condition|)
 name|m_freem
 argument_list|(
@@ -1836,7 +1864,7 @@ if|if
 condition|(
 name|unp
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -1865,7 +1893,7 @@ name|unp
 operator|->
 name|unp_conn
 operator|!=
-literal|0
+name|NULL
 condition|)
 block|{
 name|so2
@@ -1958,7 +1986,7 @@ if|if
 condition|(
 name|unp
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -2014,7 +2042,7 @@ if|if
 condition|(
 name|unp
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -2026,6 +2054,8 @@ condition|(
 name|unp
 operator|->
 name|unp_addr
+operator|!=
+name|NULL
 condition|)
 operator|*
 name|nam
@@ -2669,6 +2699,8 @@ condition|(
 name|unp
 operator|->
 name|unp_vnode
+operator|!=
+name|NULL
 condition|)
 block|{
 name|unp
@@ -2677,7 +2709,7 @@ name|unp_vnode
 operator|->
 name|v_socket
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|vrele
 argument_list|(
@@ -2690,7 +2722,7 @@ name|unp
 operator|->
 name|unp_vnode
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 if|if
@@ -2698,6 +2730,8 @@ condition|(
 name|unp
 operator|->
 name|unp_conn
+operator|!=
+name|NULL
 condition|)
 name|unp_disconnect
 argument_list|(
@@ -2741,7 +2775,7 @@ name|unp_socket
 operator|->
 name|so_pcb
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 if|if
 condition|(
@@ -2765,6 +2799,8 @@ condition|(
 name|unp
 operator|->
 name|unp_addr
+operator|!=
+name|NULL
 condition|)
 name|FREE
 argument_list|(
@@ -3498,7 +3534,7 @@ if|if
 condition|(
 name|so2
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|error
@@ -3562,7 +3598,7 @@ literal|0
 argument_list|)
 operator|)
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|error
@@ -3599,6 +3635,8 @@ condition|(
 name|unp2
 operator|->
 name|unp_addr
+operator|!=
+name|NULL
 condition|)
 name|unp3
 operator|->
@@ -3886,14 +3924,14 @@ if|if
 condition|(
 name|unp2
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return;
 name|unp
 operator|->
 name|unp_conn
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 switch|switch
 condition|(
@@ -3938,7 +3976,7 @@ name|unp2
 operator|->
 name|unp_conn
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|soisdisconnected
 argument_list|(
@@ -4049,7 +4087,7 @@ name|req
 operator|->
 name|oldptr
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|n
@@ -4094,7 +4132,7 @@ name|req
 operator|->
 name|newptr
 operator|!=
-literal|0
+name|NULL
 condition|)
 return|return
 operator|(
@@ -4337,6 +4375,8 @@ condition|(
 name|unp
 operator|->
 name|unp_addr
+operator|!=
+name|NULL
 condition|)
 name|bcopy
 argument_list|(
@@ -4361,12 +4401,16 @@ condition|(
 name|unp
 operator|->
 name|unp_conn
+operator|!=
+name|NULL
 operator|&&
 name|unp
 operator|->
 name|unp_conn
 operator|->
 name|unp_addr
+operator|!=
+name|NULL
 condition|)
 name|bcopy
 argument_list|(
@@ -5319,7 +5363,7 @@ if|if
 condition|(
 name|unp_zone
 operator|==
-literal|0
+name|NULL
 condition|)
 name|panic
 argument_list|(
@@ -6413,7 +6457,7 @@ name|extra_ref
 init|;
 name|fp
 operator|!=
-literal|0
+name|NULL
 condition|;
 name|fp
 operator|=
@@ -6752,6 +6796,8 @@ decl_stmt|;
 while|while
 condition|(
 name|m0
+operator|!=
+name|NULL
 condition|)
 block|{
 for|for
