@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)file.h	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)file.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -8,6 +8,18 @@ ifdef|#
 directive|ifdef
 name|KERNEL
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"fcntl.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"unistd.h"
+end_include
 
 begin_comment
 comment|/*  * Descriptor table entry.  * One for each kernel object.  */
@@ -21,6 +33,16 @@ name|int
 name|f_flag
 decl_stmt|;
 comment|/* see below */
+define|#
+directive|define
+name|DTYPE_VNODE
+value|1
+comment|/* file */
+define|#
+directive|define
+name|DTYPE_SOCKET
+value|2
+comment|/* communications endpoint */
 name|short
 name|f_type
 decl_stmt|;
@@ -109,13 +131,8 @@ name|nfile
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/*  * flags- also for fcntl call.  */
+comment|/* convert O_RDONLY/O_WRONLY/O_RDWR to FREAD/FWRITE */
 end_comment
 
 begin_define
@@ -129,122 +146,68 @@ begin_define
 define|#
 directive|define
 name|FREAD
-value|00001
+value|1
 end_define
-
-begin_comment
-comment|/* descriptor read/receive'able */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|FWRITE
-value|00002
+value|2
 end_define
 
 begin_comment
-comment|/* descriptor write/send'able */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|F_DUPFD
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|FNDELAY
-value|00004
-end_define
-
-begin_comment
-comment|/* no delay */
+comment|/* kernel only versions -- deprecated, should be removed */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|FAPPEND
-value|00010
+name|FCREAT
+value|O_CREAT
 end_define
-
-begin_comment
-comment|/* append on each write */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|FMARK
-value|00020
-end_define
-
-begin_comment
-comment|/* mark during gc() */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|FDEFER
-value|00040
+value|O_DEFER
 end_define
-
-begin_comment
-comment|/* defer for next gc pass */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|F_DUPFD
-end_ifndef
 
 begin_define
 define|#
 directive|define
-name|FASYNC
-value|00100
+name|FEXCL
+value|O_EXCL
 end_define
-
-begin_comment
-comment|/* signal pgrp when data ready */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|FSHLOCK
-value|00200
-end_define
-
-begin_comment
-comment|/* shared lock present */
-end_comment
 
 begin_define
 define|#
 directive|define
 name|FEXLOCK
-value|00400
+value|O_EXLOCK
 end_define
 
-begin_comment
-comment|/* exclusive lock present */
-end_comment
+begin_define
+define|#
+directive|define
+name|FMARK
+value|O_MARK
+end_define
+
+begin_define
+define|#
+directive|define
+name|FSHLOCK
+value|O_SHLOCK
+end_define
+
+begin_define
+define|#
+directive|define
+name|FTRUNC
+value|O_TRUNC
+end_define
 
 begin_comment
 comment|/* bits to save after open */
@@ -254,139 +217,36 @@ begin_define
 define|#
 directive|define
 name|FMASK
-value|(FASYNC|FAPPEND|FNDELAY|FWRITE|FREAD)
+value|(FREAD|FWRITE|O_APPEND|O_ASYNC|O_NONBLOCK)
 end_define
+
+begin_comment
+comment|/* bits not settable by fcntl(F_SETFL, ...) */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|FCNTLCANT
-value|(FREAD|FWRITE|FMARK|FDEFER|FSHLOCK|FEXLOCK)
+value|(FREAD|FWRITE|O_DEFER|O_EXLOCK|O_MARK|O_SHLOCK)
 end_define
 
-begin_comment
-comment|/* open only modes */
-end_comment
+begin_else
+else|#
+directive|else
+end_else
 
-begin_define
-define|#
-directive|define
-name|FCREAT
-value|01000
-end_define
+begin_include
+include|#
+directive|include
+file|<sys/fcntl.h>
+end_include
 
-begin_comment
-comment|/* create if nonexistant */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FTRUNC
-value|02000
-end_define
-
-begin_comment
-comment|/* truncate to zero length */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|FEXCL
-value|04000
-end_define
-
-begin_comment
-comment|/* error if already created */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|F_DUPFD
-end_ifndef
-
-begin_comment
-comment|/* fcntl(2) requests--from<fcntl.h> */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|F_DUPFD
-value|0
-end_define
-
-begin_comment
-comment|/* Duplicate fildes */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|F_GETFD
-value|1
-end_define
-
-begin_comment
-comment|/* Get fildes flags */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|F_SETFD
-value|2
-end_define
-
-begin_comment
-comment|/* Set fildes flags */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|F_GETFL
-value|3
-end_define
-
-begin_comment
-comment|/* Get file flags */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|F_SETFL
-value|4
-end_define
-
-begin_comment
-comment|/* Set file flags */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|F_GETOWN
-value|5
-end_define
-
-begin_comment
-comment|/* Get owner */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|F_SETOWN
-value|6
-end_define
-
-begin_comment
-comment|/* Set owner */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sys/unistd.h>
+end_include
 
 begin_endif
 endif|#
@@ -394,210 +254,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * User definitions.  */
-end_comment
-
-begin_comment
-comment|/*  * Open call.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|O_RDONLY
-value|000
-end_define
-
-begin_comment
-comment|/* open for reading */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|O_WRONLY
-value|001
-end_define
-
-begin_comment
-comment|/* open for writing */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|O_RDWR
-value|002
-end_define
-
-begin_comment
-comment|/* open for read& write */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|O_NDELAY
-value|FNDELAY
-end_define
-
-begin_comment
-comment|/* non-blocking open on file */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|O_NONBLOCK
-value|FNDELAY
-end_define
-
-begin_comment
-comment|/* ditto */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|O_APPEND
-value|FAPPEND
-end_define
-
-begin_comment
-comment|/* append on each write */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|O_CREAT
-value|FCREAT
-end_define
-
-begin_comment
-comment|/* open with file create */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|O_TRUNC
-value|FTRUNC
-end_define
-
-begin_comment
-comment|/* open with truncation */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|O_EXCL
-value|FEXCL
-end_define
-
-begin_comment
-comment|/* error on create if file exists */
-end_comment
-
-begin_comment
-comment|/*  * Flock call.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LOCK_SH
-value|1
-end_define
-
-begin_comment
-comment|/* shared lock */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LOCK_EX
-value|2
-end_define
-
-begin_comment
-comment|/* exclusive lock */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LOCK_NB
-value|4
-end_define
-
-begin_comment
-comment|/* don't block when locking */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LOCK_UN
-value|8
-end_define
-
-begin_comment
-comment|/* unlock */
-end_comment
-
-begin_comment
-comment|/*  * Access call.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|F_OK
-value|0
-end_define
-
-begin_comment
-comment|/* does file exist */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|X_OK
-value|1
-end_define
-
-begin_comment
-comment|/* is it executable by caller */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|W_OK
-value|2
-end_define
-
-begin_comment
-comment|/* writable by caller */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|R_OK
-value|4
-end_define
-
-begin_comment
-comment|/* readable by caller */
-end_comment
-
-begin_comment
-comment|/*  * Lseek call.  */
+comment|/* operation for lseek(2); renamed by POSIX 1003.1 to unistd.h */
 end_comment
 
 begin_define
@@ -608,7 +265,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* absolute offset */
+comment|/* set file offset to offset */
 end_comment
 
 begin_define
@@ -619,7 +276,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* relative to current offset */
+comment|/* set file offset to current plus offset */
 end_comment
 
 begin_define
@@ -630,41 +287,8 @@ value|2
 end_define
 
 begin_comment
-comment|/* relative to end of file */
+comment|/* set file offset to EOF plus offset */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KERNEL
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|DTYPE_VNODE
-value|1
-end_define
-
-begin_comment
-comment|/* file */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DTYPE_SOCKET
-value|2
-end_define
-
-begin_comment
-comment|/* communications endpoint */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)pwd.h	5.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)pwd.h	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -8,6 +8,12 @@ include|#
 directive|include
 file|<sys/types.h>
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
 
 begin_define
 define|#
@@ -58,6 +64,11 @@ name|_PASSWORD_LEN
 value|128
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|passwd
@@ -80,7 +91,7 @@ name|int
 name|pw_gid
 decl_stmt|;
 comment|/* user gid */
-name|u_long
+name|time_t
 name|pw_change
 decl_stmt|;
 comment|/* password change time */
@@ -104,7 +115,7 @@ modifier|*
 name|pw_shell
 decl_stmt|;
 comment|/* default shell */
-name|u_long
+name|time_t
 name|pw_expire
 decl_stmt|;
 comment|/* account expiration */
@@ -122,20 +133,9 @@ begin_function_decl
 name|struct
 name|passwd
 modifier|*
-name|getpwent
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|passwd
-modifier|*
 name|getpwuid
 parameter_list|(
-name|int
+name|uid_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -149,6 +149,23 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
+
+begin_function_decl
+name|struct
+name|passwd
+modifier|*
+name|getpwent
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -190,6 +207,11 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
@@ -200,15 +222,6 @@ begin_function_decl
 name|struct
 name|passwd
 modifier|*
-name|getpwent
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|passwd
-modifier|*
 name|getpwuid
 parameter_list|()
 function_decl|;
@@ -219,6 +232,21 @@ name|struct
 name|passwd
 modifier|*
 name|getpwnam
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
+
+begin_function_decl
+name|struct
+name|passwd
+modifier|*
+name|getpwent
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -250,6 +278,11 @@ name|setpassent
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
