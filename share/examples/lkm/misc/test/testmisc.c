@@ -33,11 +33,20 @@ argument_list|(
 literal|"Table offset as reported by modstat: "
 argument_list|)
 expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|gets
+name|fgets
 argument_list|(
 name|buf
+argument_list|,
+literal|80
+argument_list|,
+name|stdin
 argument_list|)
 operator|==
 name|NULL
@@ -56,6 +65,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
 name|err
 operator|=
 name|syscall
@@ -66,6 +76,7 @@ name|buf
 argument_list|)
 comment|/* no arguments*/
 argument_list|)
+operator|)
 condition|)
 name|perror
 argument_list|(
