@@ -283,9 +283,9 @@ name|CPUARM_SA110
 block|}
 block|,
 block|{
-literal|"PowerPC 603e"
+literal|"MPC824x"
 block|,
-name|CPUPPC_603e
+name|CPUMPC_824x
 block|}
 block|,
 block|{
@@ -431,13 +431,13 @@ name|CT_RAID4
 block|}
 block|,
 block|{
-literal|"RAID 10"
+literal|"RAID 0/1"
 block|,
 name|CT_RAID10
 block|}
 block|,
 block|{
-literal|"RAID 00"
+literal|"RAID 0/0"
 block|,
 name|CT_RAID00
 block|}
@@ -452,6 +452,12 @@ block|{
 literal|"Pseudo RAID 3"
 block|,
 name|CT_PSEUDO_RAID3
+block|}
+block|,
+block|{
+literal|"RAID 0/5"
+block|,
+name|CT_RAID50
 block|}
 block|,
 block|{

@@ -925,13 +925,19 @@ argument_list|)
 expr_stmt|;
 name|device_printf
 argument_list|(
-argument|sc->aac_dev
+name|sc
+operator|->
+name|aac_dev
 argument_list|,
 literal|"  SenderSize    %d\n"
 argument_list|,
-argument|xi 		      fib->Header.SenderSize
+name|fib
+operator|->
+name|Header
+operator|.
+name|SenderSize
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|device_printf
 argument_list|(
 name|sc
@@ -998,7 +1004,7 @@ decl_stmt|;
 name|struct
 name|aac_blockwrite
 modifier|*
-name|br
+name|bw
 decl_stmt|;
 name|struct
 name|aac_sg_table

@@ -472,7 +472,7 @@ function_decl|;
 name|void
 function_decl|(
 modifier|*
-name|aif_set_istatus
+name|aif_clr_istatus
 function_decl|)
 parameter_list|(
 name|struct
@@ -558,6 +558,14 @@ name|aac_sa_interface
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|aac_interface
+name|aac_fa_interface
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -599,7 +607,7 @@ name|sc
 parameter_list|,
 name|mask
 parameter_list|)
-value|((sc)->aac_if.aif_set_istatus((sc), \ 					(mask)))
+value|((sc)->aac_if.aif_clr_istatus((sc), \ 					(mask)))
 end_define
 
 begin_define
@@ -779,14 +787,16 @@ directive|define
 name|AAC_LOCK_INIT
 parameter_list|(
 name|l
+parameter_list|,
+name|s
 parameter_list|)
-value|mtx_init(l, "AAC Container Mutex", MTX_DEF)
+value|mtx_init(l, s, MTX_DEF)
 end_define
 
 begin_define
 define|#
 directive|define
-name|AAC_LOCK_AQUIRE
+name|AAC_LOCK_ACQUIRE
 parameter_list|(
 name|l
 parameter_list|)
@@ -822,6 +832,8 @@ directive|define
 name|AAC_LOCK_INIT
 parameter_list|(
 name|l
+parameter_list|,
+name|s
 parameter_list|)
 value|simple_lock_init(l)
 end_define
@@ -829,7 +841,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|AAC_LOCK_AQUIRE
+name|AAC_LOCK_ACQUIRE
 parameter_list|(
 name|l
 parameter_list|)
@@ -845,6 +857,36 @@ name|l
 parameter_list|)
 value|simple_unlock(l)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|500005
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/selinfo.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<sys/select.h>
+end_include
 
 begin_endif
 endif|#
@@ -939,6 +981,10 @@ define|#
 directive|define
 name|AAC_HWIF_STRONGARM
 value|1
+define|#
+directive|define
+name|AAC_HWIF_FALCON
+value|2
 define|#
 directive|define
 name|AAC_HWIF_UNKNOWN
@@ -1072,6 +1118,9 @@ comment|/* management interface */
 name|dev_t
 name|aac_dev_t
 decl_stmt|;
+name|aac_lock_t
+name|aac_aifq_lock
+decl_stmt|;
 name|struct
 name|aac_aif_command
 name|aac_aifq
@@ -1084,6 +1133,10 @@ name|aac_aifq_head
 decl_stmt|;
 name|int
 name|aac_aifq_tail
+decl_stmt|;
+name|struct
+name|selinfo
+name|rcv_select
 decl_stmt|;
 name|struct
 name|proc
@@ -1741,18 +1794,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-if|if
-condition|(
-name|sc
-operator|->
-name|aac_common
-operator|->
-name|ac_printf
-index|[
-literal|0
-index|]
-condition|)
-block|{
+comment|/* 	 * XXX We have the ability to read the length of the printf string 	 * from out of the mailboxes. 	 */
 name|device_printf
 argument_list|(
 name|sc
@@ -1770,17 +1812,6 @@ operator|->
 name|ac_printf
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|aac_common
-operator|->
-name|ac_printf
-index|[
-literal|0
-index|]
-operator|=
-literal|0
-expr_stmt|;
 name|AAC_QNOTIFY
 argument_list|(
 name|sc
@@ -1788,7 +1819,6 @@ argument_list|,
 name|AAC_DB_PRINTF
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
