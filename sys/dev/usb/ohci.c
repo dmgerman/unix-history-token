@@ -8044,7 +8044,7 @@ name|a
 operator|&
 name|LE
 argument_list|(
-name|TAILMASK
+name|OHCI_TAILMASK
 argument_list|)
 operator|==
 literal|0
