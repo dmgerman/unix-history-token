@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sysexits.c	8.4 (Berkeley) %G%"
+literal|"@(#)sysexits.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sysexits.h>
+file|<sendmail.h>
 end_include
 
 begin_comment
