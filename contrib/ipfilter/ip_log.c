@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1997-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: ip_log.c,v 2.5.2.18 2002/03/26 15:54:40 darrenr Exp $  */
+comment|/*  * Copyright (C) 1997-2001 by Darren Reed.  *  * See the IPFILTER.LICENCE file for details on licencing.  *  * $Id: ip_log.c,v 2.5.2.19 2002/04/25 16:32:48 darrenr Exp $  */
 end_comment
 
 begin_include
@@ -53,6 +53,12 @@ operator|!
 name|defined
 argument_list|(
 name|IPFILTER_LKM
+argument_list|)
+operator|&&
+expr|\
+name|defined
+argument_list|(
+name|_KERNEL
 argument_list|)
 end_if
 

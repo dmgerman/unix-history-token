@@ -469,7 +469,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#)$Id: ip_proxy.c,v 2.9.2.21 2002/03/06 09:44:14 darrenr Exp $"
+literal|"@(#)$Id: ip_proxy.c,v 2.9.2.22 2002/04/26 10:23:17 darrenr Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -562,6 +562,12 @@ name|AP_SESS_SIZE
 value|53
 end_define
 
+begin_include
+include|#
+directive|include
+file|"netinet/ip_ftp_pxy.c"
+end_include
+
 begin_if
 if|#
 directive|if
@@ -570,12 +576,6 @@ argument_list|(
 name|_KERNEL
 argument_list|)
 end_if
-
-begin_include
-include|#
-directive|include
-file|"netinet/ip_ftp_pxy.c"
-end_include
 
 begin_include
 include|#
