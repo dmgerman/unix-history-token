@@ -4,7 +4,7 @@ comment|/* pam_item.c */
 end_comment
 
 begin_comment
-comment|/*  * $Id: pam_item.c,v 1.3 2001/01/22 06:07:28 agmorgan Exp $  */
+comment|/*  * $Id: pam_item.c,v 1.3 2001/01/22 06:07:28 agmorgan Exp $  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -549,7 +549,7 @@ literal|"pam_get_item: nowhere to place requested item"
 argument_list|)
 expr_stmt|;
 return|return
-name|PAM_PERM_DENIED
+name|PAM_BUF_ERR
 return|;
 block|}
 switch|switch
