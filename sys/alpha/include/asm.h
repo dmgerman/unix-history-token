@@ -655,6 +655,17 @@ comment|/*  *  * Debuggers need symbol table information to be able to properly 
 end_comment
 
 begin_comment
+comment|/*   * for `.loc' uses   */
+end_comment
+
+begin_expr_stmt
+operator|.
+name|file
+literal|1
+name|__FILE__
+end_expr_stmt
+
+begin_comment
 comment|/*  * MCOUNT  */
 end_comment
 
