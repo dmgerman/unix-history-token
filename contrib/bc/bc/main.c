@@ -4,7 +4,7 @@ comment|/* main.c: The main program for bc.  */
 end_comment
 
 begin_comment
-comment|/*  This file is part of GNU bc.     Copyright (C) 1991, 1992, 1993, 1994, 1997, 1998 Free Software Foundation, Inc.      This program is free software; you can redistribute it and/or modify     it under the terms of the GNU General Public License as published by     the Free Software Foundation; either version 2 of the License , or     (at your option) any later version.      This program is distributed in the hope that it will be useful,     but WITHOUT ANY WARRANTY; without even the implied warranty of     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the     GNU General Public License for more details.      You should have received a copy of the GNU General Public License     along with this program; see the file COPYING.  If not, write to     the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.      You may contact the author by:        e-mail:  phil@cs.wwu.edu       us-mail:  Philip A. Nelson                 Computer Science Department, 9062                 Western Washington University                 Bellingham, WA 98226-9062         *************************************************************************/
+comment|/*  This file is part of GNU bc.     Copyright (C) 1991-1994, 1997, 1998, 2000 Free Software Foundation, Inc.      This program is free software; you can redistribute it and/or modify     it under the terms of the GNU General Public License as published by     the Free Software Foundation; either version 2 of the License , or     (at your option) any later version.      This program is distributed in the hope that it will be useful,     but WITHOUT ANY WARRANTY; without even the implied warranty of     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the     GNU General Public License for more details.      You should have received a copy of the GNU General Public License     along with this program; see the file COPYING.  If not, write to       The Free Software Foundation, Inc.       59 Temple Place, Suite 330       Boston, MA 02111 USA      You may contact the author by:        e-mail:  philnelson@acm.org       us-mail:  Philip A. Nelson                 Computer Science Department, 9062                 Western Washington University                 Bellingham, WA 98226-9062         *************************************************************************/
 end_comment
 
 begin_include
@@ -42,16 +42,9 @@ comment|/* Variables for processing multiple files. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|first_file
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|FILE
-modifier|*
-name|yyin
 decl_stmt|;
 end_decl_stmt
 
@@ -68,37 +61,6 @@ init|=
 name|NULL
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|READLINE
-end_ifdef
-
-begin_comment
-comment|/* Readline support. */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|rl_readline_name
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|FILE
-modifier|*
-name|rl_instream
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* long option support */
@@ -121,6 +83,26 @@ operator|&
 name|compile_only
 block|,
 name|TRUE
+block|}
+block|,
+block|{
+literal|"help"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|'h'
+block|}
+block|,
+block|{
+literal|"interactive"
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|'i'
 block|}
 block|,
 block|{
@@ -192,6 +174,39 @@ end_decl_stmt
 
 begin_function
 name|void
+name|usage
+parameter_list|(
+name|char
+modifier|*
+name|progname
+parameter_list|)
+block|{
+name|printf
+argument_list|(
+literal|"usage: %s [options] [file ...]\n%s%s%s%s%s%s%s"
+argument_list|,
+name|progname
+argument_list|,
+literal|"  -h  --help         print this usage and exit\n"
+argument_list|,
+literal|"  -i  --interactive  force interactive mode\n"
+argument_list|,
+literal|"  -l  --mathlib      use the predefine math routnes\n"
+argument_list|,
+literal|"  -q  --quiet        don't print initial banner\n"
+argument_list|,
+literal|"  -s  --standard     non-standard bc constructs are errors\n"
+argument_list|,
+literal|"  -w  --warn         warn about non-standard bc constructs\n"
+argument_list|,
+literal|"  -v  --version      print version information and exit\n"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
 name|parse_args
 parameter_list|(
 name|argc
@@ -236,7 +251,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"lciqsvw"
+literal|"chilqswv"
 argument_list|,
 name|long_options
 argument_list|,
@@ -267,12 +282,21 @@ name|TRUE
 expr_stmt|;
 break|break;
 case|case
-literal|'l'
+literal|'h'
 case|:
-comment|/* math lib */
-name|use_math
-operator|=
-name|TRUE
+comment|/* help */
+name|usage
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -280,6 +304,15 @@ literal|'i'
 case|:
 comment|/* force interactive */
 name|interactive
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
+literal|'l'
+case|:
+comment|/* math lib */
+name|use_math
 operator|=
 name|TRUE
 expr_stmt|;
@@ -306,12 +339,8 @@ case|case
 literal|'v'
 case|:
 comment|/* Print the version. */
-name|printf
-argument_list|(
-literal|"%s\n"
-argument_list|,
-name|BC_VERSION
-argument_list|)
+name|show_bc_version
+argument_list|()
 expr_stmt|;
 name|exit
 argument_list|(
@@ -328,6 +357,20 @@ operator|=
 name|TRUE
 expr_stmt|;
 break|break;
+default|default:
+name|usage
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 comment|/* Add file names to a list of files to process. */
@@ -696,9 +739,93 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
+name|LIBEDIT
+argument_list|)
+if|if
+condition|(
+name|interactive
+condition|)
+block|{
+comment|/* Enable libedit support. */
+name|edit
+operator|=
+name|el_init
+argument_list|(
+literal|"bc"
+argument_list|,
+name|stdin
+argument_list|,
+name|stdout
+argument_list|,
+name|stderr
+argument_list|)
+expr_stmt|;
+name|hist
+operator|=
+name|history_init
+argument_list|()
+expr_stmt|;
+name|el_set
+argument_list|(
+name|edit
+argument_list|,
+name|EL_EDITOR
+argument_list|,
+literal|"emacs"
+argument_list|)
+expr_stmt|;
+name|el_set
+argument_list|(
+name|edit
+argument_list|,
+name|EL_HIST
+argument_list|,
+name|history
+argument_list|,
+name|hist
+argument_list|)
+expr_stmt|;
+name|el_set
+argument_list|(
+name|edit
+argument_list|,
+name|EL_PROMPT
+argument_list|,
+name|null_prompt
+argument_list|)
+expr_stmt|;
+name|el_source
+argument_list|(
+name|edit
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|history
+argument_list|(
+name|hist
+argument_list|,
+operator|&
+name|histev
+argument_list|,
+name|H_SETSIZE
+argument_list|,
+name|INT_MAX
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
 name|READLINE
+argument_list|)
 if|if
 condition|(
 name|interactive
@@ -781,61 +908,17 @@ operator|&&
 name|first_file
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|BC_MATH_FILE
-comment|/* Make the first file be the math library. */
-name|new_file
-operator|=
-name|fopen
-argument_list|(
-name|BC_MATH_FILE
-argument_list|,
-literal|"r"
-argument_list|)
-expr_stmt|;
-name|use_math
-operator|=
-name|FALSE
-expr_stmt|;
-if|if
-condition|(
-name|new_file
-operator|!=
-name|NULL
-condition|)
-block|{
-name|new_yy_file
-argument_list|(
-name|new_file
-argument_list|)
-expr_stmt|;
-return|return
-name|TRUE
-return|;
-block|}
-else|else
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Math Library unavailable.\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
-else|#
-directive|else
 comment|/* Load the code from a precompiled version of the math libarary. */
 specifier|extern
 name|char
+modifier|*
 name|libmath
 index|[]
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|mstr
 decl_stmt|;
 name|char
 name|tmp
@@ -895,13 +978,26 @@ argument_list|,
 name|FUNCT
 argument_list|)
 expr_stmt|;
+name|mstr
+operator|=
+name|libmath
+expr_stmt|;
+while|while
+condition|(
+operator|*
+name|mstr
+condition|)
+block|{
 name|load_code
 argument_list|(
-name|libmath
+operator|*
+name|mstr
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+name|mstr
+operator|++
+expr_stmt|;
+block|}
 block|}
 comment|/* One of the argv values. */
 if|if

@@ -20,13 +20,33 @@ name|VERSION
 end_undef
 
 begin_comment
-comment|/* define if the math lib is to be loaded from a file. */
+comment|/* VERSION number for DC target*/
 end_comment
 
 begin_undef
 undef|#
 directive|undef
-name|BC_MATH_FILE
+name|DC_VERSION
+end_undef
+
+begin_comment
+comment|/* COPYRIGHT notice for DC target */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|DC_COPYRIGHT
+end_undef
+
+begin_comment
+comment|/* COPYRIGHT notice for BC target */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|BC_COPYRIGHT
 end_undef
 
 begin_comment
@@ -37,6 +57,16 @@ begin_undef
 undef|#
 directive|undef
 name|READLINE
+end_undef
+
+begin_comment
+comment|/* Define to use the BSD libedit library. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|LIBEDIT
 end_undef
 
 begin_comment
