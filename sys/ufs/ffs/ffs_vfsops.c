@@ -186,6 +186,7 @@ file|<vm/vm_page.h>
 end_include
 
 begin_decl_stmt
+specifier|static
 name|uma_zone_t
 name|uma_inode
 decl_stmt|,
@@ -320,8 +321,43 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|vfs_unmount_t
+name|ffs_unmount
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|vfs_omount_t
 name|ffs_omount
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|vfs_statfs_t
+name|ffs_statfs
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|vfs_fhtovp_t
+name|ffs_fhtovp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|vfs_vptofh_t
+name|ffs_vptofh
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|vfs_sync_t
+name|ffs_sync
 decl_stmt|;
 end_decl_stmt
 
@@ -4128,6 +4164,7 @@ file|<sys/sysctl.h>
 end_include
 
 begin_decl_stmt
+specifier|static
 name|int
 name|bigcgs
 init|=
@@ -4601,6 +4638,7 @@ comment|/*  * unmount system call  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ffs_unmount
 parameter_list|(
@@ -5253,6 +5291,7 @@ comment|/*  * Get filesystem statistics.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ffs_statfs
 parameter_list|(
@@ -5614,6 +5653,7 @@ comment|/*  * Go through the disk queues to initiate sandbagged IO;  * go throug
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ffs_sync
 parameter_list|(
@@ -6823,6 +6863,7 @@ comment|/*  * File handle to vnode  *  * Have to be really careful about stale f
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ffs_fhtovp
 parameter_list|(
@@ -6926,6 +6967,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ffs_vptofh
 parameter_list|(
