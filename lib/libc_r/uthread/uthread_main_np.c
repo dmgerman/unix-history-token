@@ -32,7 +32,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Provide the equivelant to Solaris thr_main() function  */
+comment|/*  * Provide the equivalent to Solaris thr_main() function  */
 end_comment
 
 begin_function
