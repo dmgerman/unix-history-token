@@ -14,6 +14,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"dlvrmail.h"
 end_include
 
@@ -93,6 +99,10 @@ name|firstline
 decl_stmt|;
 name|char
 name|c
+decl_stmt|;
+specifier|extern
+name|int
+name|errno
 decl_stmt|;
 comment|/* 	**  Create the temp file name and create the file. 	*/
 name|mktemp
@@ -611,6 +621,36 @@ name|tf
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|ENOSPC
+condition|)
+block|{
+name|freopen
+argument_list|(
+name|InFileName
+argument_list|,
+literal|"w"
+argument_list|,
+name|tf
+argument_list|)
+expr_stmt|;
+name|fputs
+argument_list|(
+literal|"\nMAIL DELETED BECAUSE OF LACK OF DISK SPACE\n\n"
+argument_list|,
+name|tf
+argument_list|)
+expr_stmt|;
+name|syserr
+argument_list|(
+literal|"Out of disk space for temp file"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 name|syserr
 argument_list|(
 literal|"Cannot write %s"
@@ -618,12 +658,15 @@ argument_list|,
 name|InFileName
 argument_list|)
 expr_stmt|;
-name|clearerr
+name|freopen
 argument_list|(
+literal|"/dev/null"
+argument_list|,
+literal|"w"
+argument_list|,
 name|tf
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
 block|}
 name|fclose
