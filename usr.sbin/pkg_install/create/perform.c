@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: perform.c,v 1.18 1995/04/22 00:59:33 jkh Exp $"
+literal|"$Id: perform.c,v 1.19 1995/04/22 01:20:13 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -812,6 +812,17 @@ comment|/* Success */
 block|}
 end_function
 
+begin_comment
+comment|/*  * This is evil.  It is the command executed inline on tar's command line  * to presort file arguments in such a way as to put the all-important  * +* files at the front.  I'm sure there's a way of doing this that's  * a hundred times more efficient, but I'm in a hurry right now and I don't  * have the time to think more about it.. -jkh  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SORTED_NAMES
+value|"`find . | sed -e 's/^\\.\\///' -e '/^\\.$/D' | sort`"
+end_define
+
 begin_function
 specifier|static
 name|void
@@ -942,13 +953,15 @@ name|ret
 operator|=
 name|vsystem
 argument_list|(
-literal|"tar %sX %s %s ."
+literal|"tar %sX %s %s %s"
 argument_list|,
 name|args
 argument_list|,
 name|tball
 argument_list|,
 name|ExcludeFrom
+argument_list|,
+name|SORTED_NAMES
 argument_list|)
 expr_stmt|;
 else|else
@@ -956,11 +969,13 @@ name|ret
 operator|=
 name|vsystem
 argument_list|(
-literal|"tar %s %s ."
+literal|"tar %s %s %s"
 argument_list|,
 name|args
 argument_list|,
 name|tball
+argument_list|,
+name|SORTED_NAMES
 argument_list|)
 expr_stmt|;
 if|if
