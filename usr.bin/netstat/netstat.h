@@ -1142,6 +1142,15 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|ifmalist_dump
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|mroutepr
 parameter_list|(
 name|u_long

@@ -2464,6 +2464,14 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+name|putchar
+argument_list|(
+literal|'\n'
+argument_list|)
+expr_stmt|;
+name|ifmalist_dump
+argument_list|()
+expr_stmt|;
 name|exit
 argument_list|(
 literal|0
