@@ -1757,7 +1757,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ttyclose
+name|tty_close
 parameter_list|(
 name|struct
 name|tty
@@ -1903,7 +1903,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ttyopen
+name|tty_open
 parameter_list|(
 name|struct
 name|cdev

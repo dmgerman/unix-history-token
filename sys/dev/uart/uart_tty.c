@@ -2252,7 +2252,7 @@ goto|;
 block|}
 name|error
 operator|=
-name|ttyopen
+name|tty_open
 argument_list|(
 name|dev
 argument_list|,
@@ -2480,7 +2480,7 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
-name|ttyclose
+name|tty_close
 argument_list|(
 name|tp
 argument_list|)

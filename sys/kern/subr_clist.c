@@ -274,7 +274,7 @@ modifier|*
 name|dummy
 decl_stmt|;
 block|{
-comment|/* 	 * Allocate an initial base set of cblocks as a 'slush'. 	 * We allocate non-slush cblocks with each initial ttyopen() and 	 * deallocate them with each ttyclose(). 	 * We should adjust the slush allocation.  This can't be done in 	 * the i/o routines because they are sometimes called from 	 * interrupt handlers when it may be unsafe to call malloc(). 	 */
+comment|/* 	 * Allocate an initial base set of cblocks as a 'slush'. 	 * We allocate non-slush cblocks with each initial tty_open() and 	 * deallocate them with each tty_close(). 	 * We should adjust the slush allocation.  This can't be done in 	 * the i/o routines because they are sometimes called from 	 * interrupt handlers when it may be unsafe to call malloc(). 	 */
 name|cblock_alloc_cblocks
 argument_list|(
 name|cslushcount

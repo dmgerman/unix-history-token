@@ -861,7 +861,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Line specific close routine, called from device close routine  * and from ttioctl at>= splsofttty().  * Detach the tty from the ppp unit.  * Mimics part of ttyclose().  */
+comment|/*  * Line specific close routine, called from device close routine  * and from ttioctl at>= splsofttty().  * Detach the tty from the ppp unit.  * Mimics part of tty_close().  */
 end_comment
 
 begin_function

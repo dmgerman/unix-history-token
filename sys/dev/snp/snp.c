@@ -212,7 +212,7 @@ block|{
 operator|.
 name|l_open
 operator|=
-name|ttyopen
+name|tty_open
 block|,
 operator|.
 name|l_close

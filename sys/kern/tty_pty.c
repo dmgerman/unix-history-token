@@ -1019,7 +1019,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|ttyclose
+name|tty_close
 argument_list|(
 name|tp
 argument_list|)

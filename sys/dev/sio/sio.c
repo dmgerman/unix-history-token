@@ -2156,7 +2156,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|ttyclose
+name|tty_close
 argument_list|(
 name|com
 operator|->
@@ -6410,7 +6410,7 @@ argument_list|(
 name|com
 argument_list|)
 expr_stmt|;
-name|ttyclose
+name|tty_close
 argument_list|(
 name|tp
 argument_list|)

@@ -1562,7 +1562,7 @@ end_comment
 
 begin_function
 name|int
-name|ttyopen
+name|tty_open
 parameter_list|(
 name|struct
 name|cdev
@@ -1694,12 +1694,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Handle close() on a tty line: flush and set to initial state,  * bumping generation number so that pending read/write calls  * can detect recycling of the tty.  * XXX our caller should have done `spltty(); l_close(); ttyclose();'  * and l_close() should have flushed, but we repeat the spltty() and  * the flush in case there are buggy callers.  */
+comment|/*  * Handle close() on a tty line: flush and set to initial state,  * bumping generation number so that pending read/write calls  * can detect recycling of the tty.  * XXX our caller should have done `spltty(); l_close(); tty_close();'  * and l_close() should have flushed, but we repeat the spltty() and  * the flush in case there are buggy callers.  */
 end_comment
 
 begin_function
 name|int
-name|ttyclose
+name|tty_close
 parameter_list|(
 name|struct
 name|tty
@@ -13728,7 +13728,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Allocate a tty struct.  Clists in the struct will be allocated by  * ttyopen().  */
+comment|/*  * Allocate a tty struct.  Clists in the struct will be allocated by  * tty_open().  */
 end_comment
 
 begin_function

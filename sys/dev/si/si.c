@@ -3910,7 +3910,7 @@ argument_list|(
 name|pp
 argument_list|)
 expr_stmt|;
-name|ttyclose
+name|tty_close
 argument_list|(
 name|tp
 argument_list|)

@@ -1572,7 +1572,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|ttyclose
+name|tty_close
 argument_list|(
 name|dev
 operator|->

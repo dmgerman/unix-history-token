@@ -9373,7 +9373,7 @@ name|tty
 argument_list|)
 expr_stmt|;
 block|}
-name|ttyclose
+name|tty_close
 argument_list|(
 name|d
 operator|->
