@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)in.c	7.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)in.c	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -24,12 +24,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"protosw.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"socket.h"
 end_include
 
@@ -42,31 +36,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"user.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"in_systm.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/if.h"
+file|"net/if.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/route.h"
+file|"net/route.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../net/af.h"
+file|"net/af.h"
 end_include
 
 begin_include
@@ -1220,23 +1208,19 @@ name|SIOCSIFDSTADDR
 case|:
 if|if
 condition|(
-name|error
-operator|=
-name|suser
-argument_list|(
-name|u
-operator|.
-name|u_cred
-argument_list|,
+operator|(
+name|so
+operator|->
+name|so_state
 operator|&
-name|u
-operator|.
-name|u_acflag
-argument_list|)
+name|SS_PRIV
+operator|)
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
-name|error
+name|EPERM
 operator|)
 return|;
 if|if
@@ -1502,23 +1486,19 @@ name|SIOCSIFBRDADDR
 case|:
 if|if
 condition|(
-name|error
-operator|=
-name|suser
-argument_list|(
-name|u
-operator|.
-name|u_cred
-argument_list|,
+operator|(
+name|so
+operator|->
+name|so_state
 operator|&
-name|u
-operator|.
-name|u_acflag
-argument_list|)
+name|SS_PRIV
+operator|)
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
-name|error
+name|EPERM
 operator|)
 return|;
 comment|/* FALLTHROUGH */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)in_pcb.c	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)in_pcb.c	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -18,12 +18,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"user.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"malloc.h"
 end_include
 
@@ -31,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|"mbuf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"protosw.h"
 end_include
 
 begin_include
@@ -91,12 +91,6 @@ begin_include
 include|#
 directive|include
 file|"in_var.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"protosw.h"
 end_include
 
 begin_decl_stmt
@@ -416,10 +410,14 @@ name|aport
 operator|<
 name|IPPORT_RESERVED
 operator|&&
-name|u
-operator|.
-name|u_uid
-operator|!=
+operator|(
+name|so
+operator|->
+name|so_state
+operator|&
+name|SS_PRIV
+operator|)
+operator|==
 literal|0
 condition|)
 return|return
