@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ns.c	5.1 (Berkeley) %G%"
+literal|"@(#)ns.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -280,16 +280,7 @@ name|off
 operator|==
 literal|0
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s control block: symbol not in namelist\n"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
 name|isspp
 operator|=
 name|strcmp
@@ -337,6 +328,20 @@ operator|*
 operator|)
 name|off
 expr_stmt|;
+if|if
+condition|(
+name|nspcb
+operator|.
+name|nsp_next
+operator|==
+operator|(
+expr|struct
+name|nspcb
+operator|*
+operator|)
+name|off
+condition|)
+return|return;
 if|if
 condition|(
 name|first
@@ -733,16 +738,7 @@ name|off
 operator|==
 literal|0
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%sstat: symbol not in namelist\n"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
 name|klseek
 argument_list|(
 name|kmem
@@ -916,16 +912,7 @@ name|off
 operator|==
 literal|0
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%sstat: symbol not in namelist\n"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
 name|klseek
 argument_list|(
 name|kmem
@@ -1105,16 +1092,7 @@ name|off
 operator|==
 literal|0
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%sstat: symbol not in namelist\n"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
 name|klseek
 argument_list|(
 name|kmem
