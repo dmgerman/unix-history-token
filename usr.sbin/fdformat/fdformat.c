@@ -55,16 +55,6 @@ directive|include
 file|<machine/ioctl_fd.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<i386/isa/fdreg.h>
-end_include
-
-begin_comment
-comment|/* XXX should be in<machine> dir */
-end_comment
-
 begin_function
 specifier|static
 name|void
