@@ -2456,6 +2456,24 @@ block|}
 end_function
 
 begin_function
+name|int
+name|usbd_get_speed
+parameter_list|(
+name|usbd_device_handle
+name|dev
+parameter_list|)
+block|{
+return|return
+operator|(
+name|dev
+operator|->
+name|speed
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
 name|usb_interface_descriptor_t
 modifier|*
 name|usbd_get_interface_descriptor
