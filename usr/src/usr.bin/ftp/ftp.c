@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftp.c	4.3 (Berkeley) %G%"
+literal|"@(#)ftp.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -198,24 +198,9 @@ expr_stmt|;
 if|if
 condition|(
 name|hp
+operator|==
+name|NULL
 condition|)
-block|{
-name|hisctladdr
-operator|.
-name|sin_family
-operator|=
-name|hp
-operator|->
-name|h_addrtype
-expr_stmt|;
-name|hostname
-operator|=
-name|hp
-operator|->
-name|h_name
-expr_stmt|;
-block|}
-else|else
 block|{
 specifier|static
 name|struct
@@ -328,6 +313,20 @@ operator|&
 name|def
 expr_stmt|;
 block|}
+name|hostname
+operator|=
+name|hp
+operator|->
+name|h_name
+expr_stmt|;
+name|hisctladdr
+operator|.
+name|sin_family
+operator|=
+name|hp
+operator|->
+name|h_addrtype
+expr_stmt|;
 name|s
 operator|=
 name|socket
