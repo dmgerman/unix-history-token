@@ -659,6 +659,49 @@ name|bustype
 decl_stmt|,
 name|irq
 decl_stmt|;
+name|select
+operator|=
+name|pin
+operator|*
+literal|2
+operator|+
+name|IOAPIC_REDTBL0
+expr_stmt|;
+comment|/* register */
+comment|/*  		 * Always disable interrupts, and by default map 		 * pin X to IRQX because the disable doesn't stick 		 * and the uninitialize vector will get translated  		 * into a panic. 		 * 		 * This is correct for IRQs 1 and 3-15.  In the other cases,  		 * any robust driver will handle the spurious interrupt, and  		 * the effective NOP beats a panic. 		 * 		 * A dedicated "bogus interrupt" entry in the IDT would 		 * be a nicer hack, although some one should find out  		 * why some systems are generating interrupts when they 		 * shouldn't and stop the carnage. 		 */
+name|vector
+operator|=
+name|NRSVIDT
+operator|+
+name|pin
+expr_stmt|;
+comment|/* IDT vec */
+name|io_apic_write
+argument_list|(
+name|apic
+argument_list|,
+name|select
+argument_list|,
+operator|(
+name|io_apic_read
+argument_list|(
+name|apic
+argument_list|,
+name|select
+argument_list|)
+operator|&
+operator|~
+name|IOART_INTMASK
+operator|&
+operator|~
+literal|0xff
+operator|)
+operator||
+name|IOART_INTMSET
+operator||
+name|vector
+argument_list|)
+expr_stmt|;
 comment|/* we only deal with vectored INTs here */
 if|if
 condition|(
@@ -830,15 +873,6 @@ argument_list|,
 name|irq
 argument_list|)
 expr_stmt|;
-name|select
-operator|=
-name|pin
-operator|*
-literal|2
-operator|+
-name|IOAPIC_REDTBL0
-expr_stmt|;
-comment|/* register */
 name|vector
 operator|=
 name|NRSVIDT
