@@ -11,7 +11,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)inode.c	3.8 (Berkeley) %G%"
+literal|"@(#)inode.c	3.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -94,23 +94,6 @@ decl_stmt|;
 name|DINODE
 name|dino
 decl_stmt|;
-if|if
-condition|(
-name|SPECIAL
-argument_list|(
-name|dp
-argument_list|)
-condition|)
-return|return
-operator|(
-name|KEEPON
-operator|)
-return|;
-name|dino
-operator|=
-operator|*
-name|dp
-expr_stmt|;
 name|idesc
 operator|->
 name|id_fix
@@ -130,6 +113,23 @@ operator|=
 name|dp
 operator|->
 name|di_size
+expr_stmt|;
+if|if
+condition|(
+name|SPECIAL
+argument_list|(
+name|dp
+argument_list|)
+condition|)
+return|return
+operator|(
+name|KEEPON
+operator|)
+return|;
+name|dino
+operator|=
+operator|*
+name|dp
 expr_stmt|;
 name|ndb
 operator|=
