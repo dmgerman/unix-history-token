@@ -11849,6 +11849,10 @@ name|l_type
 operator|=
 name|F_UNLCK
 expr_stmt|;
+if|if
+condition|(
+name|locked
+condition|)
 name|VOP_ADVLOCK
 argument_list|(
 name|vp
