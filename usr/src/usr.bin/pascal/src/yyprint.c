@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)yyprint.c	8.1 (Berkeley) %G%"
+literal|"@(#)yyprint.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -124,6 +124,15 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+name|char
+name|strname
+index|[]
+init|=
+literal|"'x'\0'x'\0'x'\0'x'"
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Printing representation of a token  * 'which' as above.  */
 end_comment
@@ -147,10 +156,16 @@ name|int
 name|which
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
+decl_stmt|;
+specifier|static
+name|char
+name|buf
+index|[
+literal|16
+index|]
 decl_stmt|;
 specifier|register
 name|struct
@@ -282,9 +297,18 @@ operator|<
 literal|256
 condition|)
 block|{
+name|bcopy
+argument_list|(
+literal|"'x'\0'x'\0'x'\0'x'"
+argument_list|,
+name|buf
+argument_list|,
+literal|16
+argument_list|)
+expr_stmt|;
 name|cp
 operator|=
-literal|"'x'\0'x'\0'x'\0'x'"
+name|buf
 expr_stmt|;
 comment|/* 				 * for four times reentrant code! 				 * used to be: 				 * if (bounce = ((bounce + 1)& 1)) 				 *	cp += 4; 				 */
 name|bounce
