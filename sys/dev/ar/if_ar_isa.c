@@ -1284,6 +1284,8 @@ block|,
 name|ngar_rcvdata
 block|,
 name|ngar_disconnect
+block|,
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
