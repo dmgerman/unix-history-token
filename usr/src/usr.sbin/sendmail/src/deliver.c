@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.67.1.1 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.68 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7691,6 +7691,26 @@ name|bp
 argument_list|)
 expr_stmt|;
 block|}
+name|syslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"%s: %s"
+argument_list|,
+name|e
+operator|->
+name|e_id
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+name|buf
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 if|if
 condition|(
 name|mci
@@ -7715,7 +7735,7 @@ endif|#
 directive|endif
 name|sprintf
 argument_list|(
-name|bp
+name|buf
 argument_list|,
 literal|", relay=%s"
 argument_list|,
@@ -7732,7 +7752,7 @@ name|void
 operator|)
 name|strcat
 argument_list|(
-name|bp
+name|buf
 argument_list|,
 literal|" ["
 argument_list|)
@@ -7742,7 +7762,7 @@ name|void
 operator|)
 name|strcat
 argument_list|(
-name|bp
+name|buf
 argument_list|,
 name|anynet_ntoa
 argument_list|(
@@ -7756,7 +7776,7 @@ name|void
 operator|)
 name|strcat
 argument_list|(
-name|bp
+name|buf
 argument_list|,
 literal|"]"
 argument_list|)
@@ -7792,7 +7812,7 @@ literal|'\0'
 condition|)
 name|sprintf
 argument_list|(
-name|bp
+name|buf
 argument_list|,
 literal|", relay=%s"
 argument_list|,
@@ -7800,6 +7820,15 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|buf
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+condition|)
 name|syslog
 argument_list|(
 name|LOG_INFO
