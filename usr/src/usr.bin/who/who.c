@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)who.c	4.1 (Berkeley) %G%"
+literal|"@(#)who.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,6 +29,18 @@ begin_include
 include|#
 directive|include
 file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<whoami.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
 end_include
 
 begin_define
@@ -284,6 +296,13 @@ operator|==
 literal|3
 condition|)
 block|{
+specifier|static
+name|char
+name|myname
+index|[]
+init|=
+name|sysname
+decl_stmt|;
 if|if
 condition|(
 name|strcmp
@@ -296,16 +315,30 @@ name|tp
 argument_list|)
 condition|)
 continue|continue;
-ifdef|#
-directive|ifdef
-name|vax
-name|printf
+if|if
+condition|(
+name|islower
 argument_list|(
-literal|"(Vax) "
+operator|*
+name|myname
+argument_list|)
+condition|)
+operator|*
+name|myname
+operator|=
+name|toupper
+argument_list|(
+operator|*
+name|myname
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+name|printf
+argument_list|(
+literal|"(%s) "
+argument_list|,
+name|myname
+argument_list|)
+expr_stmt|;
 name|putline
 argument_list|()
 expr_stmt|;
