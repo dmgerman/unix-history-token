@@ -952,6 +952,11 @@ expr_stmt|;
 comment|/* ip->ip_len = len; */
 block|}
 comment|/* 	 * Save a copy of the IP header in case we want restore it 	 * for sending an ICMP error message in response. 	 */
+if|if
+condition|(
+operator|!
+name|blackhole
+condition|)
 name|save_ip
 operator|=
 operator|*
