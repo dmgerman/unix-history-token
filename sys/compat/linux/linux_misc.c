@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer   *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: linux_misc.c,v 1.2 1995/10/04 07:08:04 julian Exp $  */
+comment|/*-  * Copyright (c) 1994-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer   *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: linux_misc.c,v 1.3 1995/11/06 12:52:24 davidg Exp $  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<i386/linux/linux.h>
-end_include
 
 begin_include
 include|#
@@ -19,6 +13,18 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/sysproto.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
 end_include
 
 begin_include
@@ -102,7 +108,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
+file|<sys/sysctl.h>
 end_include
 
 begin_include
@@ -132,6 +138,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm_kern.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cpu.h>
 end_include
 
@@ -144,19 +156,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/reg.h>
+file|<i386/linux/linux.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<vm/vm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_kern.h>
+file|<i386/linux/sysproto.h>
 end_include
 
 begin_struct
@@ -190,11 +196,6 @@ modifier|*
 name|retval
 parameter_list|)
 block|{
-specifier|extern
-name|struct
-name|timeval
-name|time
-decl_stmt|;
 name|struct
 name|itimerval
 name|it
@@ -471,7 +472,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|struct vmspace *vm = p->p_vmspace;     vm_offset_t new, old;     int error;     extern int swap_pager_full;      if ((vm_offset_t)args->dsend< (vm_offset_t)vm->vm_daddr) 	return EINVAL;     if (((caddr_t)args->dsend - (caddr_t)vm->vm_daddr)> p->p_rlimit[RLIMIT_DATA].rlim_cur) 	return ENOMEM;      old = round_page((vm_offset_t)vm->vm_daddr) + ctob(vm->vm_dsize);     new = round_page((vm_offset_t)args->dsend);     *retval = old;     if ((new-old)> 0) { 	if (swap_pager_full) 	    return ENOMEM; 	error = vm_map_find(&vm->vm_map, NULL, 0,&old, (new-old), FALSE); 	if (error)  	    return error; 	vm->vm_dsize += btoc((new-old)); 	*retval = (int)(vm->vm_daddr + ctob(vm->vm_dsize));     }     return 0;
+block|struct vmspace *vm = p->p_vmspace;     vm_offset_t new, old;     int error;      if ((vm_offset_t)args->dsend< (vm_offset_t)vm->vm_daddr) 	return EINVAL;     if (((caddr_t)args->dsend - (caddr_t)vm->vm_daddr)> p->p_rlimit[RLIMIT_DATA].rlim_cur) 	return ENOMEM;      old = round_page((vm_offset_t)vm->vm_daddr) + ctob(vm->vm_dsize);     new = round_page((vm_offset_t)args->dsend);     *retval = old;     if ((new-old)> 0) { 	if (swap_pager_full) 	    return ENOMEM; 	error = vm_map_find(&vm->vm_map, NULL, 0,&old, (new-old), FALSE); 	if (error)  	    return error; 	vm->vm_dsize += btoc((new-old)); 	*retval = (int)(vm->vm_daddr + ctob(vm->vm_dsize));     }     return 0;
 else|#
 directive|else
 name|struct
@@ -2427,10 +2428,6 @@ modifier|*
 name|retval
 parameter_list|)
 block|{
-specifier|extern
-name|int
-name|hz
-decl_stmt|;
 name|struct
 name|timeval
 name|tv
@@ -2668,25 +2665,6 @@ block|{
 name|struct
 name|linux_newuname_t
 name|linux_newuname
-decl_stmt|;
-specifier|extern
-name|char
-name|ostype
-index|[]
-decl_stmt|,
-name|osrelease
-index|[]
-decl_stmt|,
-name|machine
-index|[]
-decl_stmt|;
-specifier|extern
-name|char
-name|hostname
-index|[]
-decl_stmt|,
-name|domainname
-index|[]
 decl_stmt|;
 ifdef|#
 directive|ifdef
