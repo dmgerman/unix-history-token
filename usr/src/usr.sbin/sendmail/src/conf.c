@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.86 (Berkeley) %G%"
+literal|"@(#)conf.c	8.87 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -300,6 +300,10 @@ block|,
 literal|"authwarnings"
 block|,
 name|PRIV_AUTHWARNINGS
+block|,
+literal|"noreceipts"
+block|,
+name|PRIV_NORECEIPTS
 block|,
 literal|"goaway"
 block|,

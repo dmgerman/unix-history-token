@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.33 (Berkeley) %G%"
+literal|"@(#)envelope.c	8.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -900,6 +900,14 @@ argument_list|,
 name|e
 operator|->
 name|e_flags
+argument_list|)
+operator|&&
+operator|!
+name|bitset
+argument_list|(
+name|PRIV_NORECEIPTS
+argument_list|,
+name|PrivacyFlags
 argument_list|)
 condition|)
 block|{
