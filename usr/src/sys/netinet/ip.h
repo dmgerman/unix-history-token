@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ip.h	7.6.1.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)ip.h	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -200,6 +200,91 @@ end_define
 begin_comment
 comment|/* maximum packet size */
 end_comment
+
+begin_comment
+comment|/*  * Definitions for IP type of service (ip_tos)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPTOS_LOWDELAY
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPTOS_THROUGHPUT
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPTOS_RELIABILITY
+value|0x04
+end_define
+
+begin_comment
+comment|/*  * Definitions for IP precedence (also in ip_tos) (hopefully unused)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPTOS_PREC_NETCONTROL
+value|0xe0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPTOS_PREC_INTERNETCONTROL
+value|0xc0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPTOS_PREC_CRITIC_ECP
+value|0xa0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPTOS_PREC_FLASHOVERRIDE
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPTOS_PREC_FLASH
+value|0x60
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPTOS_PREC_IMMEDIATE
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPTOS_PREC_PRIORITY
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPTOS_PREC_ROUTINE
+value|0x10
+end_define
 
 begin_comment
 comment|/*  * Definitions for options.  */
