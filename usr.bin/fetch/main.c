@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1996  *      Jean-Marc Zucconi  *  * Redistribution
 end_comment
 
 begin_comment
-comment|/* $Id: main.c,v 1.46 1998/05/09 08:56:07 des Exp $ */
+comment|/* $Id: main.c,v 1.47 1998/09/20 00:01:26 jkh Exp $ */
 end_comment
 
 begin_include
@@ -144,7 +144,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: fetch [-DHILMNPRTValmnpqrv] [-o outputfile] [-S bytes]"
+literal|"usage: fetch [-DHILMNPRTVablmnpqrtv] [-o outputfile] [-S bytes]"
 argument_list|,
 literal|"             [-f file -h host [-c dir] | URL]"
 argument_list|)
@@ -241,7 +241,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"abc:D:f:h:HilLmMnNo:pPqRrS:tT:vV:"
+literal|"abc:D:f:h:HIlLmMnNo:pPqRrS:tT:vV:"
 argument_list|)
 operator|)
 operator|!=
@@ -264,10 +264,10 @@ case|case
 literal|'I'
 case|:
 case|case
-literal|'N'
+literal|'L'
 case|:
 case|case
-literal|'L'
+literal|'N'
 case|:
 case|case
 literal|'V'
