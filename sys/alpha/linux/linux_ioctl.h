@@ -1535,6 +1535,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|LINUX_NCC
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
 name|LINUX_VQUIT
 value|9
 end_define
@@ -1551,13 +1558,6 @@ define|#
 directive|define
 name|LINUX_VTIME
 value|17
-end_define
-
-begin_define
-define|#
-directive|define
-name|LINUX_NCC
-value|8
 end_define
 
 begin_comment
