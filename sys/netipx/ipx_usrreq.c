@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995, Mike Mitchell  * Copyright (c) 1984, 1985, 1986, 1987, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ipx_usrreq.c  *  * $Id: ipx_usrreq.c,v 1.11 1997/02/22 09:41:57 peter Exp $  */
+comment|/*  * Copyright (c) 1995, Mike Mitchell  * Copyright (c) 1984, 1985, 1986, 1987, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ipx_usrreq.c  *  * $Id: ipx_usrreq.c,v 1.12 1997/04/05 20:05:09 jhay Exp $  */
 end_comment
 
 begin_include
@@ -37,6 +37,12 @@ begin_include
 include|#
 directive|include
 file|<sys/mbuf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
 end_include
 
 begin_include
@@ -222,6 +228,11 @@ name|so
 parameter_list|,
 name|int
 name|proto
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -240,6 +251,11 @@ name|struct
 name|mbuf
 modifier|*
 name|nam
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -258,6 +274,11 @@ name|struct
 name|mbuf
 modifier|*
 name|nam
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -315,6 +336,11 @@ name|struct
 name|mbuf
 modifier|*
 name|control
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -344,6 +370,11 @@ name|so
 parameter_list|,
 name|int
 name|proto
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1387,6 +1418,8 @@ parameter_list|,
 name|name
 parameter_list|,
 name|value
+parameter_list|,
+name|p
 parameter_list|)
 name|int
 name|req
@@ -1406,6 +1439,11 @@ name|mbuf
 modifier|*
 modifier|*
 name|value
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 block|{
 specifier|register
@@ -1783,6 +1821,8 @@ name|so
 argument_list|,
 operator|*
 name|value
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1802,6 +1842,8 @@ name|so
 argument_list|,
 operator|*
 name|value
+argument_list|,
+name|p
 argument_list|)
 empty_stmt|;
 break|break;
@@ -1903,6 +1945,8 @@ parameter_list|(
 name|so
 parameter_list|,
 name|proto
+parameter_list|,
+name|p
 parameter_list|)
 name|struct
 name|socket
@@ -1911,6 +1955,11 @@ name|so
 decl_stmt|;
 name|int
 name|proto
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 block|{
 name|int
@@ -1953,6 +2002,8 @@ name|so
 argument_list|,
 operator|&
 name|ipxpcb
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|splx
@@ -1993,6 +2044,8 @@ parameter_list|(
 name|so
 parameter_list|,
 name|nam
+parameter_list|,
+name|p
 parameter_list|)
 name|struct
 name|socket
@@ -2003,6 +2056,11 @@ name|struct
 name|mbuf
 modifier|*
 name|nam
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 block|{
 name|struct
@@ -2022,6 +2080,8 @@ argument_list|(
 name|ipxp
 argument_list|,
 name|nam
+argument_list|,
+name|p
 argument_list|)
 operator|)
 return|;
@@ -2036,6 +2096,8 @@ parameter_list|(
 name|so
 parameter_list|,
 name|nam
+parameter_list|,
+name|p
 parameter_list|)
 name|struct
 name|socket
@@ -2046,6 +2108,11 @@ name|struct
 name|mbuf
 modifier|*
 name|nam
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 block|{
 name|int
@@ -2091,6 +2158,8 @@ argument_list|(
 name|ipxp
 argument_list|,
 name|nam
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|splx
@@ -2303,6 +2372,8 @@ parameter_list|,
 name|nam
 parameter_list|,
 name|control
+parameter_list|,
+name|p
 parameter_list|)
 name|struct
 name|socket
@@ -2326,6 +2397,11 @@ name|struct
 name|mbuf
 modifier|*
 name|control
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 block|{
 name|int
@@ -2393,6 +2469,8 @@ argument_list|(
 name|ipxp
 argument_list|,
 name|nam
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -2579,6 +2657,8 @@ parameter_list|(
 name|so
 parameter_list|,
 name|proto
+parameter_list|,
+name|p
 parameter_list|)
 name|struct
 name|socket
@@ -2587,6 +2667,11 @@ name|so
 decl_stmt|;
 name|int
 name|proto
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 block|{
 name|int
@@ -2609,24 +2694,29 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-operator|!
+name|p
+operator|&&
 operator|(
-name|so
+name|error
+operator|=
+name|suser
+argument_list|(
+name|p
 operator|->
-name|so_state
+name|p_ucred
+argument_list|,
 operator|&
-name|SS_PRIV
+name|p
+operator|->
+name|p_acflag
+argument_list|)
 operator|)
-operator|||
-operator|(
-name|ipxp
 operator|!=
-name|NULL
-operator|)
+literal|0
 condition|)
 return|return
 operator|(
-name|EINVAL
+name|error
 operator|)
 return|;
 name|s
@@ -2642,6 +2732,8 @@ name|so
 argument_list|,
 operator|&
 name|ipxrawpcb
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|splx

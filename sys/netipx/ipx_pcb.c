@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995, Mike Mitchell  * Copyright (c) 1984, 1985, 1986, 1987, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ipx_pcb.c  *  * $Id$  */
+comment|/*  * Copyright (c) 1995, Mike Mitchell  * Copyright (c) 1984, 1985, 1986, 1987, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ipx_pcb.c  *  * $Id: ipx_pcb.c,v 1.7 1997/02/22 09:41:56 peter Exp $  */
 end_comment
 
 begin_include
@@ -30,6 +30,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/protosw.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/errno.h>
 end_include
 
@@ -43,12 +55,6 @@ begin_include
 include|#
 directive|include
 file|<sys/socketvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/protosw.h>
 end_include
 
 begin_include
@@ -95,6 +101,8 @@ parameter_list|(
 name|so
 parameter_list|,
 name|head
+parameter_list|,
+name|p
 parameter_list|)
 name|struct
 name|socket
@@ -105,6 +113,11 @@ name|struct
 name|ipxpcb
 modifier|*
 name|head
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 block|{
 name|struct
@@ -186,6 +199,8 @@ parameter_list|(
 name|ipxp
 parameter_list|,
 name|nam
+parameter_list|,
+name|p
 parameter_list|)
 specifier|register
 name|struct
@@ -197,6 +212,11 @@ name|struct
 name|mbuf
 modifier|*
 name|nam
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 block|{
 specifier|register
@@ -336,27 +356,38 @@ argument_list|(
 name|lport
 argument_list|)
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 if|if
 condition|(
 name|aport
 operator|<
 name|IPXPORT_MAX
 operator|&&
+name|p
+operator|&&
 operator|(
-name|ipxp
+name|error
+operator|=
+name|suser
+argument_list|(
+name|p
 operator|->
-name|ipxp_socket
-operator|->
-name|so_state
+name|p_ucred
+argument_list|,
 operator|&
-name|SS_PRIV
+name|p
+operator|->
+name|p_acflag
+argument_list|)
 operator|)
-operator|==
+operator|!=
 literal|0
 condition|)
 return|return
 operator|(
-name|EACCES
+name|error
 operator|)
 return|;
 if|if
@@ -458,6 +489,8 @@ parameter_list|(
 name|ipxp
 parameter_list|,
 name|nam
+parameter_list|,
+name|p
 parameter_list|)
 name|struct
 name|ipxpcb
@@ -468,6 +501,11 @@ name|struct
 name|mbuf
 modifier|*
 name|nam
+decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 block|{
 name|struct
@@ -996,6 +1034,8 @@ name|mbuf
 operator|*
 operator|)
 literal|0
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 name|ipxp
