@@ -496,6 +496,8 @@ name|resolved
 argument_list|,
 literal|'/'
 argument_list|)
+operator|+
+literal|1
 expr_stmt|;
 operator|*
 name|q
@@ -690,6 +692,8 @@ name|resolved
 argument_list|,
 literal|'/'
 argument_list|)
+operator|+
+literal|1
 expr_stmt|;
 operator|*
 name|q
