@@ -1359,7 +1359,7 @@ block|}
 operator|(
 name|void
 operator|)
-name|_fcntl
+name|fcntl
 argument_list|(
 name|fileno
 argument_list|(
