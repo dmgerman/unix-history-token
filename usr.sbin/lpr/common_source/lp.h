@@ -155,6 +155,10 @@ name|long
 name|page_plength
 decl_stmt|;
 comment|/* PY: page length in pixels */
+name|long
+name|resend_copies
+decl_stmt|;
+comment|/* RC: resend copies to remote host */
 name|char
 modifier|*
 name|restrict_grp
