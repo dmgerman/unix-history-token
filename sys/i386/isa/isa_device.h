@@ -48,7 +48,7 @@ comment|/*  * ISA Bus Autoconfiguration  */
 end_comment
 
 begin_comment
-comment|/*  * Per device structure.  *  * XXX Note:  id_conflicts should either become an array of things we're  * specifically allowed to conflict with or be subsumed into some  * more powerful mechanism for detecting and dealing with multiple types  * of non-fatal conflict.  -jkh XXX  */
+comment|/*  * Per device structure.  */
 end_comment
 
 begin_struct
@@ -122,10 +122,6 @@ name|int
 name|id_enabled
 decl_stmt|;
 comment|/* is device enabled */
-name|int
-name|id_conflicts
-decl_stmt|;
-comment|/* we're allowed to conflict with things */
 name|struct
 name|isa_device
 modifier|*

@@ -2263,8 +2263,6 @@ name|unit
 decl_stmt|,
 name|flags
 decl_stmt|,
-name|conflict_ok
-decl_stmt|,
 name|id
 decl_stmt|;
 name|int
@@ -2840,17 +2838,6 @@ name|id_flags
 expr_stmt|;
 name|scratch
 operator|.
-name|conflict_ok
-operator|=
-name|ap
-index|[
-name|i
-index|]
-operator|.
-name|id_conflicts
-expr_stmt|;
-name|scratch
-operator|.
 name|comment
 operator|=
 name|DEV_DEVICE
@@ -3026,13 +3013,6 @@ name|flags
 operator|=
 literal|0
 expr_stmt|;
-name|scratch
-operator|.
-name|conflict_ok
-operator|=
-literal|0
-expr_stmt|;
-comment|/* shouldn't conflict */
 name|scratch
 operator|.
 name|comment
@@ -4766,18 +4746,6 @@ name|dp
 condition|)
 comment|/* always conflict with itself */
 continue|continue;
-if|if
-condition|(
-name|sp
-operator|->
-name|conflict_ok
-operator|&&
-name|dp
-operator|->
-name|conflict_ok
-condition|)
-continue|continue;
-comment|/* both allowed to conflict */
 if|if
 condition|(
 operator|(
@@ -6733,21 +6701,6 @@ name|buf
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|dev
-operator|->
-name|conflict_ok
-condition|)
-name|putxy
-argument_list|(
-literal|54
-argument_list|,
-literal|18
-argument_list|,
-literal|"Conflict allowed"
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -13888,7 +13841,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Device   port       irq   drq   iomem   iosize   unit  flags      enab confl\n"
+literal|"Device   port       irq   drq   iomem   iosize   unit  flags      enab\n"
 argument_list|)
 expr_stmt|;
 operator|++
@@ -13914,7 +13867,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-9.9s%-#11x%-6d%-6d%-8p%-9d%-6d%-#11x%-5s%-3s\n"
+literal|"%-9.9s%-#11x%-6d%-6d%-8p%-9d%-6d%-#11x%-5s\n"
 argument_list|,
 name|dname
 argument_list|,
@@ -13956,14 +13909,6 @@ argument_list|,
 name|dt
 operator|->
 name|id_enabled
-condition|?
-literal|"Yes"
-else|:
-literal|"No"
-argument_list|,
-name|dt
-operator|->
-name|id_conflicts
 condition|?
 literal|"Yes"
 else|:
@@ -14307,27 +14252,6 @@ name|id_enabled
 operator|=
 operator|!
 name|val
-expr_stmt|;
-name|resource_int_value
-argument_list|(
-name|name
-argument_list|,
-name|unit
-argument_list|,
-literal|"conflicts"
-argument_list|,
-operator|(
-name|int
-operator|*
-operator|)
-operator|&
-name|isa_devtab
-index|[
-name|dt
-index|]
-operator|.
-name|id_conflicts
-argument_list|)
 expr_stmt|;
 name|isa_drvtab
 index|[
@@ -14860,19 +14784,6 @@ operator|!
 name|idev
 operator|->
 name|id_enabled
-argument_list|)
-expr_stmt|;
-name|resource_set_int
-argument_list|(
-name|name
-argument_list|,
-name|unit
-argument_list|,
-literal|"conflicts"
-argument_list|,
-name|idev
-operator|->
-name|id_conflicts
 argument_list|)
 expr_stmt|;
 block|}
