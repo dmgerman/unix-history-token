@@ -1425,21 +1425,25 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * We assume newhz is either stathz or profhz, and that neither will  * change after being set up above.  Could recalculate intervals here  * but that would be a drag.  */
-end_comment
+begin_function
+name|void
+name|cpu_startprofclock
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|/* nothing to do */
+block|}
+end_function
 
 begin_function
 name|void
-name|setstatclockrate
+name|cpu_stopprofclock
 parameter_list|(
-name|newhz
+name|void
 parameter_list|)
-name|int
-name|newhz
-decl_stmt|;
 block|{
-comment|/* nothing we can do */
+comment|/* nothing to do */
 block|}
 end_function
 

@@ -92,14 +92,20 @@ end_function
 
 begin_function
 name|void
-name|setstatclockrate
+name|cpu_startprofclock
 parameter_list|(
-name|int
-name|newhz
+name|void
 parameter_list|)
-block|{
-comment|/* TODO; */
-block|}
+block|{ }
+end_function
+
+begin_function
+name|void
+name|cpu_stopprofclock
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
 end_function
 
 begin_function

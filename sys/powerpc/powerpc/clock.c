@@ -963,9 +963,9 @@ end_comment
 
 begin_macro
 unit|void
-name|setstatclockrate
+name|cpu_startprofclock
 argument_list|(
-argument|int arg
+argument|void
 argument_list|)
 end_macro
 
@@ -974,6 +974,15 @@ block|{
 comment|/* Do nothing */
 block|}
 end_block
+
+begin_function
+name|void
+name|cpu_stopprofclock
+parameter_list|(
+name|void
+parameter_list|)
+block|{ }
+end_function
 
 end_unit
 

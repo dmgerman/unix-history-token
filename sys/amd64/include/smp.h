@@ -657,7 +657,7 @@ name|void
 name|forwarded_statclock
 parameter_list|(
 name|struct
-name|trapframe
+name|clockframe
 name|frame
 parameter_list|)
 function_decl|;
@@ -677,7 +677,7 @@ name|void
 name|forwarded_hardclock
 parameter_list|(
 name|struct
-name|trapframe
+name|clockframe
 name|frame
 parameter_list|)
 function_decl|;

@@ -189,6 +189,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|profprocs
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* number of process's profiling */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|ticks
 decl_stmt|;
 end_decl_stmt
