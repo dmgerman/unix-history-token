@@ -1311,6 +1311,8 @@ directive|ifdef
 name|KTRACE
 if|if
 condition|(
+name|p
+operator|&&
 name|KTRPOINT
 argument_list|(
 name|p
