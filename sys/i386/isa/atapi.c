@@ -5550,12 +5550,13 @@ begin_comment
 comment|/*  * Construct lkm_misc structure (see lkm.h).  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|MOD_MISC
 argument_list|(
-literal|"atapi"
+name|atapi
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|int
@@ -5594,6 +5595,7 @@ comment|/*  * Function called when loading the driver.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|atapi_load
 parameter_list|(
@@ -5777,6 +5779,7 @@ comment|/*  * Function called when unloading the driver.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|atapi_unload
 parameter_list|(

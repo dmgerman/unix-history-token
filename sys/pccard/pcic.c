@@ -664,20 +664,13 @@ begin_comment
 comment|/*  *	This defines the lkm_misc module use by modload  *	to define the module name.  */
 end_comment
 
-begin_macro
+begin_expr_stmt
 name|MOD_MISC
 argument_list|(
-literal|"pcic"
+name|pcic
 argument_list|)
-end_macro
-
-begin_function_decl
-specifier|static
-name|int
-name|pcic_unload
-parameter_list|()
-function_decl|;
-end_function_decl
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  *	Module handler that processes loads and unloads.  *	Once the module is loaded, the probe routine  *	is called to install the slots (if any).  */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Header file used by loadable kernel modules and loadable kernel module  * utilities.  *  * 23 Jan 93	Terry Lambert		Original  *  * Copyright (c) 1992 Terrence R. Lambert.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Terrence R. Lambert.  * 4. The name Terrence R. Lambert may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY TERRENCE R. LAMBERT ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE TERRENCE R. LAMBERT BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: lkm.h,v 1.7 1995/08/05 07:39:02 davidg Exp $  */
+comment|/*  * Header file used by loadable kernel modules and loadable kernel module  * utilities.  *  * 23 Jan 93	Terry Lambert		Original  *  * Copyright (c) 1992 Terrence R. Lambert.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Terrence R. Lambert.  * 4. The name Terrence R. Lambert may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY TERRENCE R. LAMBERT ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE TERRENCE R. LAMBERT BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: lkm.h,v 1.8 1995/11/13 07:18:12 bde Exp $  */
 end_comment
 
 begin_ifndef
@@ -489,16 +489,12 @@ end_define
 begin_define
 define|#
 directive|define
-name|MOD_SYSCALL
+name|MOD_DECL
 parameter_list|(
 name|name
-parameter_list|,
-name|callslot
-parameter_list|,
-name|sysentp
 parameter_list|)
 define|\
-value|static struct lkm_syscall _module = {	\ 		LM_SYSCALL,			\ 		LKM_VERSION,			\ 		name,				\ 		callslot,			\ 		sysentp				\ 	};
+value|static int name ## _load __P((struct lkm_table *lkmtp, int cmd));   \ 	static int name ## _unload __P((struct lkm_table *lkmtp, int cmd)); \ 	int name ## _mod __P((struct lkm_table *lkmtp, int cmd,	int ver))   \  #define	MOD_SYSCALL(name,callslot,sysentp)	\ 	static struct lkm_syscall _module = {	\ 		LM_SYSCALL,			\ 		LKM_VERSION,			\ 		name,				\ 		callslot,			\ 		sysentp				\ 	}
 end_define
 
 begin_define
@@ -515,7 +511,7 @@ parameter_list|,
 name|vfsconf
 parameter_list|)
 define|\
-value|static struct lkm_vfs _module = {	\ 		LM_VFS,				\ 		LKM_VERSION,			\ 		name,				\ 		vfsslot,			\ 		vnodeops,			\ 		vfsconf				\ 	};
+value|static struct lkm_vfs _module = {	\ 		LM_VFS,				\ 		LKM_VERSION,			\ 		name,				\ 		vfsslot,			\ 		vnodeops,			\ 		vfsconf				\ 	}
 end_define
 
 begin_define
@@ -532,7 +528,7 @@ parameter_list|,
 name|devp
 parameter_list|)
 define|\
-value|static struct lkm_dev _module = {	\ 		LM_DEV,				\ 		LKM_VERSION,			\ 		name,				\ 		devslot,			\ 		devtype,			\ 		(void *)devp			\ 	};
+value|MOD_DECL(name);				\ 	static struct lkm_dev name ## _module = {	\ 		LM_DEV,				\ 		LKM_VERSION,			\ 		#name ## "_mod",		\ 		devslot,			\ 		devtype,			\ 		(void *)devp			\ 	}
 end_define
 
 begin_define
@@ -547,7 +543,7 @@ parameter_list|,
 name|execsw
 parameter_list|)
 define|\
-value|static struct lkm_exec _module = {	\ 		LM_EXEC,			\ 		LKM_VERSION,			\ 		name,				\ 		execslot,			\ 		execsw				\ 	};
+value|MOD_DECL(name);				\ 	static struct lkm_exec _module = {	\ 		LM_EXEC,			\ 		LKM_VERSION,			\ 		#name ## "_mod",		\ 		execslot,			\ 		execsw				\ 	}
 end_define
 
 begin_define
@@ -558,7 +554,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|static struct lkm_misc _module = {	\ 		LM_MISC,			\ 		LKM_VERSION,			\ 		name				\ 	};
+value|MOD_DECL(name);				\ 	static struct lkm_misc _module = {	\ 		LM_MISC,			\ 		LKM_VERSION,			\ 		#name ## "_mod"			\ 	}
 end_define
 
 begin_comment

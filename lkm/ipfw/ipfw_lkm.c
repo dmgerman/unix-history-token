@@ -52,18 +52,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -127,23 +115,27 @@ directive|include
 file|<netinet/ip_fw.h>
 end_include
 
-begin_macro
+begin_expr_stmt
 name|MOD_MISC
 argument_list|(
-literal|"ipfw_mod"
+name|ipfw
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|ipfw_load
-argument_list|(
-argument|struct lkm_table *lkmtp
-argument_list|,
-argument|int cmd
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|struct
+name|lkm_table
+modifier|*
+name|lkmtp
+parameter_list|,
+name|int
+name|cmd
+parameter_list|)
 block|{
 name|int
 name|s
@@ -245,18 +237,21 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|ipfw_unload
-argument_list|(
-argument|struct lkm_table *lkmtp
-argument_list|,
-argument|int cmd
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|struct
+name|lkm_table
+modifier|*
+name|lkmtp
+parameter_list|,
+name|int
+name|cmd
+parameter_list|)
 block|{
 name|int
 name|s
@@ -304,20 +299,23 @@ return|return
 literal|0
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|ipfw_mod
-argument_list|(
-argument|struct lkm_table *lkmtp
-argument_list|,
-argument|int cmd
-argument_list|,
-argument|int ver
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|struct
+name|lkm_table
+modifier|*
+name|lkmtp
+parameter_list|,
+name|int
+name|cmd
+parameter_list|,
+name|int
+name|ver
+parameter_list|)
 block|{
 name|DISPATCH
 argument_list|(
@@ -335,7 +333,7 @@ name|lkm_nullcmd
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
