@@ -4,11 +4,11 @@ comment|/* Copyright (c) 1981 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/*	fs.h	1.10	%G%	*/
+comment|/*	fs.h	1.11	%G%	*/
 end_comment
 
 begin_comment
-comment|/*  * Each disk drive contains some number of file systems.  * A file system consists of a number of cylinder groups.  * Each cylinder group has inodes and data.  *  * A file system is described by its super-block, which in turn  * describes the cylinder groups.  The super-block is critical  * data and is replicated in each cylinder group to protect against  * catastrophic loss.  This is done at mkfs time and the critical  * super-block data does not change, so the copies need not be  * referenced further unless disaster strikes.  *  * For file system fs and a cylinder group number cg:  *	[BBLOCK]	Boot sector  *	[SBLOCK]	Super-block  *	[CBLOCK(fs)]	Cylinder group block  *	[IBLOCK(fs)..IBLOCK(fs)+fs.fs_ipg/INOPB(fs))  *			Inode blocks  *	[IBLOCK(fs)+fs.fs_ipg/INOPB(fs)..fs.fs_fpg/fs.fs_frag)  *			Data blocks  * The beginning of data blocks for cg in fs is also given by  * the ``cgdmin(cg,fs)'' macro.  *  * The boot and super blocks are given in absolute disk addresses.  */
+comment|/*  * Each disk drive contains some number of file systems.  * A file system consists of a number of cylinder groups.  * Each cylinder group has inodes and data.  *  * A file system is described by its super-block, which in turn  * describes the cylinder groups.  The super-block is critical  * data and is replicated in each cylinder group to protect against  * catastrophic loss.  This is done at mkfs time and the critical  * super-block data does not change, so the copies need not be  * referenced further unless disaster strikes.  *  * For file system fs, the offsets of the various blocks of interest  * are given in the super block as:  *	[fs->fs_bblkno]		Boot sector  *	[fs->fs_sblkno]		Super-block  *	[fs->fs_cblkno]		Cylinder group block  *	[fs->fs_iblkno]		Inode blocks  *	[fs->fs_dblkno]		Data blocks  * The beginning of cylinder group cg in fs, is given by  * the ``cgbase(cg, fs)'' macro.  *  * The first boot and super blocks are given in absolute disk addresses.  */
 end_comment
 
 begin_define
@@ -37,31 +37,6 @@ define|#
 directive|define
 name|SBLOCK
 value|((daddr_t)(BBLOCK + BBSIZE / DEV_BSIZE))
-end_define
-
-begin_comment
-comment|/*  * The cylinder group and inode blocks are given in file system  * addresses, and hence must be converted to disk addresses by  * the ``fsbtodb(fs, bno)'' macro.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CBLOCK
-parameter_list|(
-name|fs
-parameter_list|)
-define|\
-value|((daddr_t)(roundup(howmany(BBSIZE + SBSIZE, (fs)->fs_fsize), (fs)->fs_frag)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|IBLOCK
-parameter_list|(
-name|fs
-parameter_list|)
-value|((daddr_t)(CBLOCK(fs) + (fs)->fs_frag))
 end_define
 
 begin_comment
@@ -247,9 +222,25 @@ name|fs_magic
 decl_stmt|;
 comment|/* magic number */
 name|daddr_t
+name|fs_bblkno
+decl_stmt|;
+comment|/* abs addr of boot-block in filesys */
+name|daddr_t
 name|fs_sblkno
 decl_stmt|;
-comment|/* offset of super-block in filesys */
+comment|/* abs addr of super-block in filesys */
+name|daddr_t
+name|fs_cblkno
+decl_stmt|;
+comment|/* offset of cyl-block in filesys */
+name|daddr_t
+name|fs_iblkno
+decl_stmt|;
+comment|/* offset of inode-blocks in filesys */
+name|daddr_t
+name|fs_dblkno
+decl_stmt|;
+comment|/* offset of data-blocks in filesys */
 name|time_t
 name|fs_time
 decl_stmt|;
@@ -274,7 +265,7 @@ name|long
 name|fs_fsize
 decl_stmt|;
 comment|/* size of frag blocks in fs */
-name|long
+name|short
 name|fs_frag
 decl_stmt|;
 comment|/* number of frags in a block in fs */
@@ -286,6 +277,10 @@ name|short
 name|fs_rotdelay
 decl_stmt|;
 comment|/* num of ms for optimal next block */
+name|short
+name|fs_rps
+decl_stmt|;
+comment|/* disk revolutions per second */
 comment|/* sizes determined by number of cylinder groups and their sizes */
 name|daddr_t
 name|fs_csaddr
@@ -367,13 +362,20 @@ index|]
 decl_stmt|;
 comment|/* list of fs_cs info buffers */
 name|short
+name|fs_cpc
+decl_stmt|;
+comment|/* cyl per cycle in postbl */
+name|short
 name|fs_postbl
+index|[
+name|MAXCPG
+index|]
 index|[
 name|NRPOS
 index|]
 decl_stmt|;
 comment|/* head of blocks for each rotation */
-name|short
+name|u_char
 name|fs_rotbl
 index|[
 literal|1
@@ -403,14 +405,14 @@ value|fs_csp[(indx) / ((fs)->fs_bsize / sizeof(struct csum))] \ 	[(indx) % ((fs)
 end_define
 
 begin_comment
-comment|/*  * MAXBPC bounds the number of blocks of data per cylinder,  * and is limited by the fact that the super block is of size SBSIZE.  * Its size is derived from the size of blocks and the (struct fs) size,  * by the number of remaining bits.  */
+comment|/*  * MAXBPC bounds the size of the rotational layout tables and  * is limited by the fact that the super block is of size SBSIZE.  * The size of these tables is INVERSELY proportional to the block  * size of the file system. It is aggravated by sector sizes that  * are not powers of two, as this increases the number of cylinders  * included before the rotational pattern repeats (fs_cpc).  * Its size is derived from the number of bytes remaining in (struct fs)  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MAXBPC
-value|((SBSIZE - sizeof (struct fs)) / sizeof(short))
+value|(SBSIZE - sizeof (struct fs))
 end_define
 
 begin_comment
@@ -551,7 +553,35 @@ value|((b) / ((fs)->fs_fsize / DEV_BSIZE))
 end_define
 
 begin_comment
-comment|/*  * Cylinder group macros to locate things in cylinder groups.  *  * cylinder group to disk block at very beginning  */
+comment|/*  * Cylinder group macros to locate things in cylinder groups.  *  * cylinder group to disk block address of spare boot block  * and super block  * Note that these are in absolute addresses, and can NOT  * in general be expressable in terms of file system addresses.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|cgbblock
+parameter_list|(
+name|c
+parameter_list|,
+name|fs
+parameter_list|)
+value|(fsbtodb(fs, cgbase(c,fs)) + (fs)->fs_bblkno)
+end_define
+
+begin_define
+define|#
+directive|define
+name|cgsblock
+parameter_list|(
+name|c
+parameter_list|,
+name|fs
+parameter_list|)
+value|(fsbtodb(fs, cgbase(c,fs)) + (fs)->fs_sblkno)
+end_define
+
+begin_comment
+comment|/*  * cylinder group to disk block at very beginning  */
 end_comment
 
 begin_define
@@ -567,22 +597,6 @@ value|((daddr_t)((fs)->fs_fpg * (c)))
 end_define
 
 begin_comment
-comment|/*  * cylinder group to spare super block address  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|cgsblock
-parameter_list|(
-name|c
-parameter_list|,
-name|fs
-parameter_list|)
-value|(cgbase(c,fs) + dbtofsb(fs, SBLOCK))
-end_define
-
-begin_comment
 comment|/*  * convert cylinder group to index of its cg block  */
 end_comment
 
@@ -595,7 +609,7 @@ name|c
 parameter_list|,
 name|fs
 parameter_list|)
-value|(cgbase(c,fs) + CBLOCK(fs))
+value|(cgbase(c,fs) + (fs)->fs_cblkno)
 end_define
 
 begin_comment
@@ -611,7 +625,7 @@ name|c
 parameter_list|,
 name|fs
 parameter_list|)
-value|(cgbase(c,fs) + IBLOCK(fs))
+value|(cgbase(c,fs) + (fs)->fs_iblkno)
 end_define
 
 begin_comment
@@ -627,7 +641,7 @@ name|c
 parameter_list|,
 name|fs
 parameter_list|)
-value|(cgimin(c,fs) + (fs)->fs_ipg / INOPF(fs))
+value|(cgbase(c,fs) + (fs)->fs_dblkno)
 end_define
 
 begin_comment
@@ -660,7 +674,7 @@ parameter_list|,
 name|fs
 parameter_list|)
 define|\
-value|((daddr_t)(cgimin(itog(x,fs),fs) + (fs)->fs_frag * \ 	((x) % (fs)->fs_ipg / INOPB(fs))))
+value|((daddr_t)(cgimin(itog(x,fs),fs) + \ 	(x) % (fs)->fs_ipg / INOPB(fs) * (fs)->fs_frag))
 end_define
 
 begin_comment
@@ -709,6 +723,36 @@ parameter_list|,
 name|fs
 parameter_list|)
 value|((d) % (fs)->fs_fpg)
+end_define
+
+begin_comment
+comment|/*  * compute the cylinder and rotational position of a cyl block addr  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|cbtocylno
+parameter_list|(
+name|fs
+parameter_list|,
+name|bno
+parameter_list|)
+define|\
+value|((bno) * NSPF(fs) / (fs)->fs_spc)
+end_define
+
+begin_define
+define|#
+directive|define
+name|cbtorpos
+parameter_list|(
+name|fs
+parameter_list|,
+name|bno
+parameter_list|)
+define|\
+value|((bno) * NSPF(fs) % (fs)->fs_nsect * NRPOS / (fs)->fs_nsect)
 end_define
 
 begin_comment
