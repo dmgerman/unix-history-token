@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_acc.c	4.6	82/02/25	*/
+comment|/*	if_acc.c	4.7	82/02/27	*/
 end_comment
 
 begin_include
@@ -1685,18 +1685,6 @@ goto|goto
 name|setup
 goto|;
 block|}
-ifdef|#
-directive|ifdef
-name|notdef
-comment|/* adjust message length for padding. */
-name|m
-operator|->
-name|m_len
-operator|-=
-literal|2
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|sc
