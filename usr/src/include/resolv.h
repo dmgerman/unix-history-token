@@ -1,10 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)resolv.h	5.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)resolv.h	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
 comment|/*  * Global defines and variables for resolver stub.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXNS
+value|3
+end_define
+
+begin_comment
+comment|/* max # name servers we'll track */
 end_comment
 
 begin_struct
@@ -23,11 +34,23 @@ name|int
 name|options
 decl_stmt|;
 comment|/* option flags - see below. */
+name|int
+name|nscount
+decl_stmt|;
+comment|/* number of name servers */
 name|struct
 name|sockaddr_in
-name|nsaddr
+name|nsaddr_list
+index|[
+name|MAXNS
+index|]
 decl_stmt|;
 comment|/* address of name server */
+define|#
+directive|define
+name|nsaddr
+value|nsaddr_list[0]
+comment|/* for backward compatibility */
 name|u_short
 name|id
 decl_stmt|;
