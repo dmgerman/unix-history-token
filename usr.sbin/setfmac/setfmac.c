@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2002 Networks Associates Technology, Inc.  * All rights reserved.  *  * This software was developed for the FreeBSD Project by NAI Labs, the  * Security Research Division of Network Associates, Inc. under  * DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"), as part of the DARPA  * CHATS research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2002, 2004 Networks Associates Technology, Inc.  * All rights reserved.  *  * This software was developed for the FreeBSD Project by NAI Labs, the  * Security Research Division of Network Associates, Inc. under  * DARPA/SPAWAR contract N66001-01-C-8035 ("CBOSS"), as part of the DARPA  * CHATS research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -281,6 +281,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|static
+name|int
+name|qflag
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
@@ -395,9 +402,9 @@ name|argv
 argument_list|,
 name|is_setfmac
 condition|?
-literal|"Rh"
+literal|"Rhq"
 else|:
-literal|"ef:s:vx"
+literal|"ef:qs:vx"
 argument_list|)
 operator|)
 operator|!=
@@ -445,6 +452,14 @@ case|:
 name|hflag
 operator|=
 name|FTS_PHYSICAL
+expr_stmt|;
+break|break;
+case|case
+literal|'q'
+case|:
+name|qflag
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -680,6 +695,11 @@ name|fts_path
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|qflag
+condition|)
 name|warnx
 argument_list|(
 literal|"labeling not supported in %.*s"
@@ -780,7 +800,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: setfmac [-Rh] label file ...\n"
+literal|"usage: setfmac [-Rhq] label file ...\n"
 argument_list|)
 expr_stmt|;
 else|else
@@ -788,7 +808,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: setfsmac [-ehvx] [-f specfile [...]] [-s specfile [...]] file ...\n"
+literal|"usage: setfsmac [-ehqvx] [-f specfile [...]] [-s specfile [...]] file ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1341,6 +1361,11 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|qflag
+condition|)
 name|warnx
 argument_list|(
 literal|"%s: read %lu specifications"
