@@ -19,12 +19,35 @@ directive|define
 name|_MACHINE_INTR_H_
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CPU_ARM9
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|NIRQ
+value|64
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|NIRQ
 value|32
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
