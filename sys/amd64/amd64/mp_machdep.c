@@ -1191,6 +1191,13 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|volatile
+name|int
+name|smp_started
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Local data and functions.  */
 end_comment
