@@ -987,6 +987,22 @@ name|end
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rstart
+operator|>
+name|rend
+condition|)
+block|{
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"adjusted start exceeds end\n"
+operator|)
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 name|DPRINTF
 argument_list|(
 operator|(
