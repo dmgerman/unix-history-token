@@ -226,6 +226,24 @@ name|FRAME_SP
 value|26
 end_define
 
+begin_define
+define|#
+directive|define
+name|FRAME_FLAGS
+value|27
+end_define
+
+begin_define
+define|#
+directive|define
+name|FRAME_FLAGS_SYSCALL
+value|1
+end_define
+
+begin_comment
+comment|/* partial frame for syscalls */
+end_comment
+
 begin_comment
 comment|/* The following are set only when a signal is to be delivered to a process. */
 end_comment
@@ -234,31 +252,20 @@ begin_define
 define|#
 directive|define
 name|FRAME_TRAPARG_A0
-value|27
-end_define
-
-begin_define
-define|#
-directive|define
-name|FRAME_TRAPARG_A1
 value|28
 end_define
 
 begin_define
 define|#
 directive|define
-name|FRAME_TRAPARG_A2
+name|FRAME_TRAPARG_A1
 value|29
 end_define
-
-begin_comment
-comment|/* this is a flag area to see whether we need to restore all registers */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|FRAME_FLAGS
+name|FRAME_TRAPARG_A2
 value|30
 end_define
 
@@ -266,7 +273,7 @@ begin_define
 define|#
 directive|define
 name|FRAME_SW_SIZE
-value|(FRAME_FLAGS + 1)
+value|(FRAME_TRAPARG_A2 + 1)
 end_define
 
 begin_define
@@ -274,13 +281,6 @@ define|#
 directive|define
 name|FRAME_HW_OFFSET
 value|FRAME_SW_SIZE
-end_define
-
-begin_define
-define|#
-directive|define
-name|FRAME_FLAGS_SYSCALL
-value|0x1
 end_define
 
 begin_define
