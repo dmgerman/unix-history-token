@@ -81,6 +81,9 @@ name|r
 decl_stmt|;
 if|if
 condition|(
+operator|!
+name|fp
+operator|||
 name|fp
 operator|->
 name|_flags
