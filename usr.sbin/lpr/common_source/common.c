@@ -1196,6 +1196,14 @@ decl_stmt|,
 modifier|*
 name|okmsg
 decl_stmt|;
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|nomsg
+init|=
+literal|"no state msg"
+decl_stmt|;
 name|int
 name|chres
 decl_stmt|,
@@ -1291,6 +1299,31 @@ name|failmsg
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+name|action
+operator|&
+name|SQS_QCHANGED
+condition|)
+block|{
+name|chgbits
+operator||=
+name|LFM_RESET_QUE
+expr_stmt|;
+name|newbits
+operator||=
+name|LFM_RESET_QUE
+expr_stmt|;
+comment|/* The okmsg is not actually printed for this case. */
+name|okmsg
+operator|=
+name|nomsg
+expr_stmt|;
+name|failmsg
+operator|=
+literal|"set queue-changed"
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|action
@@ -1569,6 +1602,12 @@ case|:
 case|case
 name|SQS_SKIPCREOK
 case|:
+if|if
+condition|(
+name|okmsg
+operator|!=
+name|nomsg
+condition|)
 name|printf
 argument_list|(
 literal|"\t%s\n"
