@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)syslog.h	4.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)syslog.h	4.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -291,7 +291,7 @@ comment|/* mask to extract priority part */
 end_comment
 
 begin_comment
-comment|/*  *  Option flags for openlog.  */
+comment|/*  *  Option flags for openlog.  *  *	LOG_ODELAY no longer does anything; LOG_NDELAY is the  *	inverse of what it used to be.  */
 end_comment
 
 begin_define
@@ -325,6 +325,17 @@ end_define
 
 begin_comment
 comment|/* delay open until syslog() is called */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOG_NDELAY
+value|010
+end_define
+
+begin_comment
+comment|/* don't delay open */
 end_comment
 
 end_unit
