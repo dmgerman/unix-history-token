@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997, 1998, 1999  *	Bill Paul<wpaul@ctr.columbia.edu
 end_comment
 
 begin_comment
-comment|/*  * 3Com 3c90x Etherlink XL PCI NIC driver  *  * Supports the 3Com "boomerang", "cyclone" and "hurricane" PCI  * bus-master chips (3c90x cards and embedded controllers) including  * the following:  *  * 3Com 3c900-TPO	10Mbps/RJ-45  * 3Com 3c900-COMBO	10Mbps/RJ-45,AUI,BNC  * 3Com 3c905-TX	10/100Mbps/RJ-45  * 3Com 3c905-T4	10/100Mbps/RJ-45  * 3Com 3c900B-TPO	10Mbps/RJ-45  * 3Com 3c900B-COMBO	10Mbps/RJ-45,AUI,BNC  * 3Com 3c900B-TPC	10Mbps/RJ-45,BNC  * 3Com 3c900B-FL	10Mbps/Fiber-optic  * 3Com 3c905B-COMBO	10/100Mbps/RJ-45,AUI,BNC  * 3Com 3c905B-TX	10/100Mbps/RJ-45  * 3Com 3c905B-FL/FX	10/100Mbps/Fiber-optic  * 3Com 3c905C-TX	10/100Mbps/RJ-45 (Tornado ASIC)  * 3Com 3c980-TX	10/100Mbps server adapter (Hurricane ASIC)  * 3Com 3c980C-TX	10/100Mbps server adapter (Tornado ASIC)  * 3Com 3cSOHO100-TX	10/100Mbps/RJ-45 (Hurricane ASIC)  * 3Com 3c450-TX	10/100Mbps/RJ-45 (Tornado ASIC)  * 3Com 3c556		10/100Mbps/RJ-45 (MiniPCI, Hurricane ASIC)  * 3Com 3c556B		10/100Mbps/RJ-45 (MiniPCI, Hurricane ASIC)  * 3Com 3c575TX		10/100Mbps/RJ-45 (Cardbus, Hurricane ASIC)  * 3Com 3c575B		10/100Mbps/RJ-45 (Cardbus, Hurricane ASIC)  * 3Com 3c575C		10/100Mbps/RJ-45 (Cardbus, Hurricane ASIC)  * 3Com 3cxfem656c	10/100Mbps/RJ-45 (Cardbus, Hurricane ASIC)  * Dell Optiplex GX1 on-board 3c918 10/100Mbps/RJ-45  * Dell on-board 3c920 10/100Mbps/RJ-45  * Dell Precision on-board 3c905B 10/100Mbps/RJ-45  * Dell Latitude laptop docking station embedded 3c905-TX  *  * Written by Bill Paul<wpaul@ctr.columbia.edu>  * Electrical Engineering Department  * Columbia University, New York City  */
+comment|/*  * 3Com 3c90x Etherlink XL PCI NIC driver  *  * Supports the 3Com "boomerang", "cyclone" and "hurricane" PCI  * bus-master chips (3c90x cards and embedded controllers) including  * the following:  *  * 3Com 3c900-TPO	10Mbps/RJ-45  * 3Com 3c900-COMBO	10Mbps/RJ-45,AUI,BNC  * 3Com 3c905-TX	10/100Mbps/RJ-45  * 3Com 3c905-T4	10/100Mbps/RJ-45  * 3Com 3c900B-TPO	10Mbps/RJ-45  * 3Com 3c900B-COMBO	10Mbps/RJ-45,AUI,BNC  * 3Com 3c900B-TPC	10Mbps/RJ-45,BNC  * 3Com 3c900B-FL	10Mbps/Fiber-optic  * 3Com 3c905B-COMBO	10/100Mbps/RJ-45,AUI,BNC  * 3Com 3c905B-TX	10/100Mbps/RJ-45  * 3Com 3c905B-FL/FX	10/100Mbps/Fiber-optic  * 3Com 3c905C-TX	10/100Mbps/RJ-45 (Tornado ASIC)  * 3Com 3c980-TX	10/100Mbps server adapter (Hurricane ASIC)  * 3Com 3c980C-TX	10/100Mbps server adapter (Tornado ASIC)  * 3Com 3cSOHO100-TX	10/100Mbps/RJ-45 (Hurricane ASIC)  * 3Com 3c450-TX	10/100Mbps/RJ-45 (Tornado ASIC)  * 3Com 3c556		10/100Mbps/RJ-45 (MiniPCI, Hurricane ASIC)  * 3Com 3c556B		10/100Mbps/RJ-45 (MiniPCI, Hurricane ASIC)  * 3Com 3c575TX		10/100Mbps/RJ-45 (Cardbus, Hurricane ASIC)  * 3Com 3c575B		10/100Mbps/RJ-45 (Cardbus, Hurricane ASIC)  * 3Com 3c575C		10/100Mbps/RJ-45 (Cardbus, Hurricane ASIC)  * 3Com 3cxfem656	10/100Mbps/RJ-45 (Cardbus, Hurricane ASIC)  * 3Com 3cxfem656b	10/100Mbps/RJ-45 (Cardbus, Hurricane ASIC)  * 3Com 3cxfem656c	10/100Mbps/RJ-45 (Cardbus, Tornado ASIC)  * Dell Optiplex GX1 on-board 3c918 10/100Mbps/RJ-45  * Dell on-board 3c920 10/100Mbps/RJ-45  * Dell Precision on-board 3c905B 10/100Mbps/RJ-45  * Dell Latitude laptop docking station embedded 3c905-TX  *  * Written by Bill Paul<wpaul@ctr.columbia.edu>  * Electrical Engineering Department  * Columbia University, New York City  */
 end_comment
 
 begin_comment
@@ -428,7 +428,23 @@ block|,
 block|{
 name|TC_VENDORID
 block|,
-name|TC_DEVICEID_HURRICANE_656C
+name|TC_DEVICEID_HURRICANE_656
+block|,
+literal|"3Com 3c656 Fast Etherlink XL"
+block|}
+block|,
+block|{
+name|TC_VENDORID
+block|,
+name|TC_DEVICEID_HURRICANE_656B
+block|,
+literal|"3Com 3c656B Fast Etherlink XL"
+block|}
+block|,
+block|{
+name|TC_VENDORID
+block|,
+name|TC_DEVICEID_TORNADO_656C
 block|,
 literal|"3Com 3c656C Fast Etherlink XL"
 block|}
@@ -4862,9 +4878,17 @@ name|TC_DEVICEID_HURRICANE_575C
 case|:
 comment|/* 3c575C */
 case|case
-name|TC_DEVICEID_HURRICANE_656C
+name|TC_DEVICEID_HURRICANE_656
 case|:
-comment|/* 3c565C */
+comment|/* 3c656 */
+case|case
+name|TC_DEVICEID_HURRICANE_656B
+case|:
+comment|/* 3c656B */
+case|case
+name|TC_DEVICEID_TORNADO_656C
+case|:
+comment|/* 3c656C */
 name|sc
 operator|->
 name|xl_media
@@ -5204,7 +5228,14 @@ argument_list|(
 name|dev
 argument_list|)
 operator|==
-name|TC_DEVICEID_HURRICANE_656C
+name|TC_DEVICEID_HURRICANE_656B
+operator|||
+name|pci_get_device
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|TC_DEVICEID_TORNADO_656C
 condition|)
 name|sc
 operator|->
@@ -5217,6 +5248,23 @@ operator||
 name|XL_FLAG_EEPROM_OFFSET_30
 operator||
 name|XL_FLAG_8BITROM
+expr_stmt|;
+if|if
+condition|(
+name|pci_get_device
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|TC_DEVICEID_HURRICANE_656
+condition|)
+name|sc
+operator|->
+name|xl_flags
+operator||=
+name|XL_FLAG_FUNCREG
+operator||
+name|XL_FLAG_PHYOK
 expr_stmt|;
 if|if
 condition|(
@@ -5255,13 +5303,37 @@ argument_list|(
 name|dev
 argument_list|)
 operator|==
-name|TC_DEVICEID_HURRICANE_656C
+name|TC_DEVICEID_TORNADO_656C
 condition|)
 name|sc
 operator|->
 name|xl_flags
 operator||=
 name|XL_FLAG_INVERT_MII_PWR
+expr_stmt|;
+if|if
+condition|(
+name|pci_get_device
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|TC_DEVICEID_HURRICANE_656
+operator|||
+name|pci_get_device
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+name|TC_DEVICEID_HURRICANE_656B
+condition|)
+name|sc
+operator|->
+name|xl_flags
+operator||=
+name|XL_FLAG_INVERT_MII_PWR
+operator||
+name|XL_FLAG_INVERT_LED_PWR
 expr_stmt|;
 comment|/* 	 * If this is a 3c905B, we have to check one extra thing. 	 * The 905B supports power management and may be placed in 	 * a low-power mode (D3 mode), typically by certain operating 	 * systems which shall not be named. The PCI BIOS is supposed 	 * to reset the NIC and bring it out of low-power mode, but 	 * some do not. Consequently, we have to see if this chip 	 * supports power management, and if so, make sure it's not 	 * in low-power mode. If power management is available, the 	 * capid byte will be 0x01. 	 * 	 * I _think_ that what actually happens is that the chip 	 * loses its PCI configuration during the transition from 	 * D3 back to D0; this means that it should be possible for 	 * us to save the PCI iobase, membase and IRQ, put the chip 	 * back in the D0 state, then restore the PCI config ourselves. 	 */
 if|if

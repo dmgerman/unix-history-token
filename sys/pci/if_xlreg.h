@@ -3370,7 +3370,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|TC_DEVICEID_HURRICANE_656C
+name|TC_DEVICEID_HURRICANE_656
+value|0x6560
+end_define
+
+begin_define
+define|#
+directive|define
+name|TC_DEVICEID_HURRICANE_656B
+value|0x6562
+end_define
+
+begin_define
+define|#
+directive|define
+name|TC_DEVICEID_TORNADO_656C
 value|0x6564
 end_define
 
