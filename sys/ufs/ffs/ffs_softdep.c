@@ -1277,36 +1277,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
-name|softdep_fsync
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|vnode
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|int
-name|softdep_process_worklist
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|mount
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|void
 name|softdep_move_dependencies
 name|__P
@@ -2966,7 +2936,6 @@ comment|/*  * Process that runs once per second to handle items in the backgroun
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|softdep_process_worklist
 parameter_list|(
@@ -16816,7 +16785,6 @@ comment|/*  * If we are doing an fsync, then we must ensure that any directory  
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|softdep_fsync
 parameter_list|(
