@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)inode.h	7.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)inode.h	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -102,7 +102,7 @@ name|off_t
 name|i_endoff
 decl_stmt|;
 comment|/* end of useful stuff in directory */
-name|u_quad
+name|u_quad_t
 name|i_modrev
 decl_stmt|;
 comment|/* revision level for lease */
@@ -158,13 +158,39 @@ name|i_gid
 value|i_din.di_gid
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_NOQUAD
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|i_size
+value|i_din.di_qsize.val[_QUAD_LOWWORD]
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|i_size
+value|i_din.di_qsize
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_if
 if|#
 directive|if
-name|BYTE_ORDER
-operator|==
-name|LITTLE_ENDIAN
-operator|||
 name|defined
 argument_list|(
 name|tahoe
@@ -175,27 +201,17 @@ begin_comment
 comment|/* ugh! -- must be fixed */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|i_size
+end_undef
+
 begin_define
 define|#
 directive|define
 name|i_size
 value|i_din.di_qsize.val[0]
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* BYTE_ORDER == BIG_ENDIAN */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|i_size
-value|i_din.di_qsize.val[1]
 end_define
 
 begin_endif
@@ -548,7 +564,7 @@ name|t1
 parameter_list|,
 name|t2
 parameter_list|)
-value|{ \ 	if ((ip)->i_flag&(IUPD|IACC|ICHG)) { \ 		(ip)->i_flag |= IMOD; \ 		if ((ip)->i_flag&IACC) \ 			(ip)->i_atime = (t1)->tv_sec; \ 		if ((ip)->i_flag&IUPD) \ 			(ip)->i_mtime = (t2)->tv_sec; \ 		if ((ip)->i_flag&ICHG) \ 			(ip)->i_ctime = time.tv_sec; \ 		(ip)->i_flag&= ~(IACC|IUPD|ICHG); \ 	} \ }
+value|{ \ 	if ((ip)->i_flag&(IUPD|IACC|ICHG)) { \ 		(ip)->i_flag |= IMOD; \ 		if ((ip)->i_flag&IACC) \ 			(ip)->i_atime = (t1)->tv_sec; \ 		if ((ip)->i_flag&IUPD) { \ 			(ip)->i_mtime = (t2)->tv_sec; \ 			INCRQUAD((ip)->i_modrev); \ 		} \ 		if ((ip)->i_flag&ICHG) \ 			(ip)->i_ctime = time.tv_sec; \ 		(ip)->i_flag&= ~(IACC|IUPD|ICHG); \ 	} \ }
 end_define
 
 begin_comment
