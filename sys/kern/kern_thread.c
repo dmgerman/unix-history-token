@@ -6718,7 +6718,7 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-name|thread_siginfo
+name|cpu_thread_siginfo
 argument_list|(
 name|sig
 argument_list|,

@@ -7543,7 +7543,7 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|thread_siginfo
+name|cpu_thread_siginfo
 argument_list|(
 name|sig
 argument_list|,
