@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: yplib.c,v 1.18 1996/05/02 15:44:53 wpaul Exp $"
+literal|"$Id: yplib.c,v 1.20 1996/06/01 05:08:31 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -873,7 +873,7 @@ name|ypdb
 decl_stmt|;
 block|{
 specifier|static
-name|int
+name|pid_t
 name|pid
 init|=
 operator|-
