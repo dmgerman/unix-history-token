@@ -22,10 +22,6 @@ directive|include
 file|"exitfail.h"
 end_include
 
-begin_comment
-comment|/* Get uintmax_t.  */
-end_comment
-
 begin_if
 if|#
 directive|if
@@ -38,10 +34,10 @@ directive|include
 file|<inttypes.h>
 end_include
 
-begin_else
-else|#
-directive|else
-end_else
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -54,11 +50,6 @@ include|#
 directive|include
 file|<stdint.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

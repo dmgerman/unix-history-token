@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* quotearg.h - quote arguments for output     Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software    Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* quotearg.h - quote arguments for output     Copyright (C) 1998, 1999, 2000, 2001, 2002, 2004 Free Software    Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -34,26 +34,26 @@ begin_enum
 enum|enum
 name|quoting_style
 block|{
+comment|/* Output names as-is (ls --quoting-style=literal).  */
 name|literal_quoting_style
 block|,
-comment|/* --quoting-style=literal */
+comment|/* Quote names for the shell if they contain shell metacharacters        or would cause ambiguous output (ls --quoting-style=shell).  */
 name|shell_quoting_style
 block|,
-comment|/* --quoting-style=shell */
+comment|/* Quote names for the shell, even if they would normally not        require quoting (ls --quoting-style=shell-always).  */
 name|shell_always_quoting_style
 block|,
-comment|/* --quoting-style=shell-always */
+comment|/* Quote names as for a C language string (ls --quoting-style=c).  */
 name|c_quoting_style
 block|,
-comment|/* --quoting-style=c */
+comment|/* Like c_quoting_style except omit the surrounding double-quote        characters (ls --quoting-style=escape).  */
 name|escape_quoting_style
 block|,
-comment|/* --quoting-style=escape */
+comment|/* Like clocale_quoting_style, but quote `like this' instead of        "like this" in the default C locale (ls --quoting-style=locale).  */
 name|locale_quoting_style
 block|,
-comment|/* --quoting-style=locale */
+comment|/* Like c_quoting_style except use quotation marks appropriate for        the locale (ls --quoting-style=clocale).  */
 name|clocale_quoting_style
-comment|/* --quoting-style=clocale */
 block|}
 enum|;
 end_enum
@@ -207,6 +207,32 @@ parameter_list|,
 name|size_t
 name|buffersize
 parameter_list|,
+name|char
+specifier|const
+modifier|*
+name|arg
+parameter_list|,
+name|size_t
+name|argsize
+parameter_list|,
+name|struct
+name|quoting_options
+specifier|const
+modifier|*
+name|o
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Like quotearg_buffer, except return the result in a newly allocated    buffer.  It is the caller's responsibility to free the result.  */
+end_comment
+
+begin_function_decl
+name|char
+modifier|*
+name|quotearg_alloc
+parameter_list|(
 name|char
 specifier|const
 modifier|*

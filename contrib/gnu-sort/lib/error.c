@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Error handler for noninteractive utilities    Copyright (C) 1990-1998, 2000-2002, 2003 Free Software Foundation, Inc.    This file is part of the GNU C Library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License along    with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Error handler for noninteractive utilities    Copyright (C) 1990-1998, 2000-2002, 2003, 2004 Free Software Foundation, Inc.    This file is part of the GNU C Library.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License along    with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -453,6 +453,8 @@ name|char
 specifier|const
 modifier|*
 name|s
+init|=
+name|NULL
 decl_stmt|;
 if|#
 directive|if
@@ -503,22 +505,8 @@ name|s
 operator|=
 name|errbuf
 expr_stmt|;
-else|else
-name|s
-operator|=
-literal|0
-expr_stmt|;
 endif|#
 directive|endif
-else|#
-directive|else
-name|s
-operator|=
-name|strerror
-argument_list|(
-name|errnum
-argument_list|)
-expr_stmt|;
 endif|#
 directive|endif
 if|#
@@ -529,6 +517,16 @@ if|if
 condition|(
 operator|!
 name|s
+operator|&&
+operator|!
+operator|(
+name|s
+operator|=
+name|strerror
+argument_list|(
+name|errnum
+argument_list|)
+operator|)
 condition|)
 name|s
 operator|=

@@ -37,6 +37,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdbool.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -197,7 +203,7 @@ comment|/* If ARG is an unambiguous match for an element of the    null-terminat
 end_comment
 
 begin_function
-name|int
+name|ptrdiff_t
 name|argmatch
 parameter_list|(
 specifier|const
@@ -221,7 +227,7 @@ name|size_t
 name|valsize
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 comment|/* Temporary index in ARGLIST.  */
@@ -229,19 +235,19 @@ name|size_t
 name|arglen
 decl_stmt|;
 comment|/* Length of ARG.  */
-name|int
+name|ptrdiff_t
 name|matchind
 init|=
 operator|-
 literal|1
 decl_stmt|;
 comment|/* Index of first nonexact match.  */
-name|int
+name|bool
 name|ambiguous
 init|=
-literal|0
+name|false
 decl_stmt|;
-comment|/* If nonzero, multiple nonexact match(es).  */
+comment|/* If true, multiple nonexact match(es).  */
 name|arglen
 operator|=
 name|strlen
@@ -340,7 +346,7 @@ block|{
 comment|/* There is a real ambiguity, or we could not 		     disambiguate. */
 name|ambiguous
 operator|=
-literal|1
+name|true
 expr_stmt|;
 block|}
 block|}
@@ -379,7 +385,7 @@ name|char
 modifier|*
 name|value
 parameter_list|,
-name|int
+name|ptrdiff_t
 name|problem
 parameter_list|)
 block|{
@@ -457,7 +463,7 @@ name|size_t
 name|valsize
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 specifier|const
@@ -565,7 +571,7 @@ comment|/* Never failing versions of the previous functions.     CONTEXT is the 
 end_comment
 
 begin_function
-name|int
+name|ptrdiff_t
 name|__xargmatch_internal
 parameter_list|(
 specifier|const
@@ -597,7 +603,7 @@ name|argmatch_exit_fn
 name|exit_fn
 parameter_list|)
 block|{
-name|int
+name|ptrdiff_t
 name|res
 init|=
 name|argmatch
@@ -685,7 +691,7 @@ name|size_t
 name|valsize
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 for|for

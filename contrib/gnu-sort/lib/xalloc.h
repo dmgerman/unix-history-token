@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* xalloc.h -- malloc with out-of-memory checking     Copyright (C) 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2003 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* xalloc.h -- malloc with out-of-memory checking     Copyright (C) 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2003, 2004 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software Foundation,    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_ifndef
@@ -21,13 +21,21 @@ directive|include
 file|<stddef.h>
 end_include
 
-begin_ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
+
+begin_extern
+extern|extern
+literal|"C"
+block|{
+endif|#
+directive|endif
 ifndef|#
 directive|ifndef
 name|__attribute__
-end_ifndef
-
-begin_if
 if|#
 directive|if
 name|__GNUC__
@@ -45,80 +53,26 @@ literal|8
 operator|)
 operator|||
 name|__STRICT_ANSI__
-end_if
-
-begin_define
 define|#
 directive|define
 name|__attribute__
 parameter_list|(
 name|x
 parameter_list|)
-end_define
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_ifndef
 ifndef|#
 directive|ifndef
 name|ATTRIBUTE_NORETURN
-end_ifndef
-
-begin_define
 define|#
 directive|define
 name|ATTRIBUTE_NORETURN
 value|__attribute__ ((__noreturn__))
-end_define
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
-comment|/* If this pointer is non-zero, run the specified function upon each    allocation failure.  It is initialized to zero. */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-function_decl|(
-modifier|*
-name|xalloc_fail_func
-function_decl|)
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* If XALLOC_FAIL_FUNC is undefined or a function that returns, this    message is output.  It is translated via gettext.    Its value is "memory exhausted".  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-specifier|const
-name|xalloc_msg_memory_exhausted
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* This function is always triggered when memory is exhausted.  It is    in charge of honoring the two previous items.  It exits with status    exit_failure (defined in exitfail.h).  This is the    function to call when one wants the program to die because of a    memory allocation failure.  */
-end_comment
-
-begin_decl_stmt
+comment|/* This function is always triggered when memory is exhausted.    It must be defined by the application, either explicitly    or by using gnulib's xalloc-die module.  This is the    function to call when one wants the program to die because of a    memory allocation failure.  */
 specifier|extern
 name|void
 name|xalloc_die
@@ -127,9 +81,6 @@ name|void
 argument_list|)
 name|ATTRIBUTE_NORETURN
 decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
 name|void
 modifier|*
 name|xmalloc
@@ -138,9 +89,6 @@ name|size_t
 name|s
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 modifier|*
 name|xnmalloc
@@ -152,9 +100,6 @@ name|size_t
 name|s
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 modifier|*
 name|xzalloc
@@ -163,9 +108,6 @@ name|size_t
 name|s
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 modifier|*
 name|xcalloc
@@ -177,9 +119,6 @@ name|size_t
 name|s
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 modifier|*
 name|xrealloc
@@ -192,9 +131,6 @@ name|size_t
 name|s
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 modifier|*
 name|xnrealloc
@@ -210,9 +146,6 @@ name|size_t
 name|s
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 modifier|*
 name|x2realloc
@@ -226,9 +159,6 @@ modifier|*
 name|pn
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 modifier|*
 name|x2nrealloc
@@ -245,9 +175,6 @@ name|size_t
 name|s
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 modifier|*
 name|xclone
@@ -261,9 +188,6 @@ name|size_t
 name|s
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|char
 modifier|*
 name|xstrdup
@@ -274,13 +198,7 @@ modifier|*
 name|str
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* Return 1 if an array of N objects, each of size S, cannot exist due    to size arithmetic overflow.  S must be positive and N must be    nonnegative.  This is a macro, not an inline function, so that it    works correctly even when SIZE_MAX< N.     By gnulib convention, SIZE_MAX represents overflow in size    calculations, so the conservative dividend to use here is    SIZE_MAX - 1, since SIZE_MAX might represent an overflowed value.    However, malloc (SIZE_MAX) fails on all known hosts where    sizeof (ptrdiff_t)<= sizeof (size_t), so do not bother to test for    exactly-SIZE_MAX allocations on such hosts; this avoids a test and    branch when S is known to be 1.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|xalloc_oversized
@@ -291,13 +209,7 @@ name|s
 parameter_list|)
 define|\
 value|((size_t) (sizeof (ptrdiff_t)<= sizeof (size_t) ? -1 : -2) / (s)< (n))
-end_define
-
-begin_comment
 comment|/* These macros are deprecated; they will go away soon, and are retained    temporarily only to ease conversion to the functions described above.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|CCLONE
@@ -307,9 +219,6 @@ parameter_list|,
 name|n
 parameter_list|)
 value|xclone (p, (n) * sizeof *(p))
-end_define
-
-begin_define
 define|#
 directive|define
 name|CLONE
@@ -317,9 +226,6 @@ parameter_list|(
 name|p
 parameter_list|)
 value|xclone (p, sizeof *(p))
-end_define
-
-begin_define
 define|#
 directive|define
 name|NEW
@@ -329,9 +235,6 @@ parameter_list|,
 name|var
 parameter_list|)
 value|type *var = xmalloc (sizeof (type))
-end_define
-
-begin_define
 define|#
 directive|define
 name|XCALLOC
@@ -341,9 +244,6 @@ parameter_list|,
 name|n
 parameter_list|)
 value|xcalloc (n, sizeof (type))
-end_define
-
-begin_define
 define|#
 directive|define
 name|XMALLOC
@@ -353,9 +253,6 @@ parameter_list|,
 name|n
 parameter_list|)
 value|xnmalloc (n, sizeof (type))
-end_define
-
-begin_define
 define|#
 directive|define
 name|XREALLOC
@@ -367,9 +264,6 @@ parameter_list|,
 name|n
 parameter_list|)
 value|xnrealloc (p, n, sizeof (type))
-end_define
-
-begin_define
 define|#
 directive|define
 name|XFREE
@@ -377,7 +271,16 @@ parameter_list|(
 name|p
 parameter_list|)
 value|free (p)
-end_define
+ifdef|#
+directive|ifdef
+name|__cplusplus
+block|}
+end_extern
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
