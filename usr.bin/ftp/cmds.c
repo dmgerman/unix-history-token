@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: cmds.c,v 1.9 1997/06/27 10:21:22 ache Exp $ */
+comment|/*	$Id: cmds.c,v 1.10 1997/11/17 19:29:16 guido Exp $ */
 end_comment
 
 begin_comment
@@ -35,7 +35,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: cmds.c,v 1.9 1997/06/27 10:21:22 ache Exp $"
+literal|"$Id: cmds.c,v 1.10 1997/11/17 19:29:16 guido Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2083,7 +2083,7 @@ argument_list|,
 operator|&
 name|argv
 argument_list|,
-literal|"(Warning: remote file starts with '|') local-file"
+literal|"(warning: remote file starts with '|') local-file"
 argument_list|)
 condition|)
 block|{
@@ -2795,7 +2795,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-elseif|else
 if|if
 condition|(
 operator|*
@@ -2803,13 +2802,11 @@ name|cp
 operator|==
 literal|'|'
 condition|)
-block|{
 name|printf
 argument_list|(
-literal|"Note: next file starts with '|', which runs it through a pipe\n"
+literal|"note: next file starts with '|', which runs it through a pipe\n"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|mflag
