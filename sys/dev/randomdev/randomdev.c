@@ -570,7 +570,13 @@ condition|(
 name|error
 condition|)
 break|break;
-comment|/* write_random(random_buf, c); */
+name|write_random
+argument_list|(
+name|random_buf
+argument_list|,
+name|c
+argument_list|)
+expr_stmt|;
 block|}
 name|free
 argument_list|(

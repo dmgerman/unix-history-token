@@ -49,6 +49,8 @@ begin_enum
 enum|enum
 name|esource
 block|{
+name|RANDOM_WRITE
+block|,
 name|RANDOM_KEYBOARD
 block|,
 name|RANDOM_MOUSE
