@@ -6216,6 +6216,15 @@ operator|(
 literal|"Intel 82453KX/GX (Orion) PCI memory controller"
 operator|)
 return|;
+comment|/* Sony -- vendor 0x104d */
+case|case
+literal|0x8009104d
+case|:
+return|return
+operator|(
+literal|"Sony CXD1847A FireWire Host Controller"
+operator|)
+return|;
 comment|/* SiS -- vendor 0x1039 */
 case|case
 literal|0x04961039
