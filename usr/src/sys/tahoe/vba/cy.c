@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Computer Consoles Inc.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)cy.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Computer Consoles Inc.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)cy.c	7.4 (Berkeley) 5/5/89  */
 end_comment
 
 begin_include
@@ -107,18 +107,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"user.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"proc.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"signal.h"
 end_include
 
@@ -149,6 +137,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"time.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"kernel.h"
 end_include
 
@@ -161,7 +155,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"tty.h"
+file|"tprintf.h"
 end_include
 
 begin_include
@@ -461,12 +455,10 @@ name|u_short
 name|yc_dens
 decl_stmt|;
 comment|/* prototype control word with density info */
-name|struct
-name|tty
-modifier|*
-name|yc_ttyp
+name|tpr_t
+name|yc_tpr
 decl_stmt|;
-comment|/* user's tty for errors */
+comment|/* handle for tprintf */
 name|daddr_t
 name|yc_blkno
 decl_stmt|;
@@ -1642,11 +1634,10 @@ literal|0
 expr_stmt|;
 name|yc
 operator|->
-name|yc_ttyp
+name|yc_tpr
 operator|=
-name|u
-operator|.
-name|u_ttyp
+name|tprintf_open
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -1819,6 +1810,13 @@ name|yc
 operator|->
 name|yc_blks
 operator|)
+argument_list|)
+expr_stmt|;
+name|tprintf_close
+argument_list|(
+name|yc
+operator|->
+name|yc_tpr
 argument_list|)
 expr_stmt|;
 name|yc
@@ -4040,7 +4038,7 @@ name|tprintf
 argument_list|(
 name|yc
 operator|->
-name|yc_ttyp
+name|yc_tpr
 argument_list|,
 literal|"yc%d: hard error bn%d status=%b, %s\n"
 argument_list|,
