@@ -7840,12 +7840,9 @@ name|ifp
 argument_list|,
 name|copym
 argument_list|,
-operator|(
-expr|struct
-name|sockaddr
-operator|*
-operator|)
 name|dst
+operator|->
+name|sin_family
 argument_list|,
 literal|0
 argument_list|)
