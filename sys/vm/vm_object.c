@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_object.c	8.5 (Berkeley) 3/22/94  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_object.c,v 1.43 1995/04/16 12:56:19 davidg Exp $  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_object.c	8.5 (Berkeley) 3/22/94  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_object.c,v 1.44 1995/04/21 02:48:40 dyson Exp $  */
 end_comment
 
 begin_comment
@@ -135,7 +135,7 @@ begin_define
 define|#
 directive|define
 name|VM_OBJECT_HASH_COUNT
-value|509
+value|1021
 end_define
 
 begin_decl_stmt
@@ -147,6 +147,16 @@ name|VM_OBJECT_HASH_COUNT
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|OBJECT_HASH
+parameter_list|(
+name|pager
+parameter_list|)
+value|((unsigned long)(pager) % VM_OBJECT_HASH_COUNT)
+end_define
 
 begin_decl_stmt
 name|long
@@ -377,7 +387,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|TAILQ_INIT
+name|LIST_INIT
 argument_list|(
 operator|&
 name|vm_object_hashtable
@@ -3269,21 +3279,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_object_hash hashes the pager/id pair.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|vm_object_hash
-parameter_list|(
-name|pager
-parameter_list|)
-define|\
-value|(((unsigned)pager>> 5)%VM_OBJECT_HASH_COUNT)
-end_define
-
-begin_comment
 comment|/*  *	vm_object_lookup looks in the object cache for an object with the  *	specified pager and paging id.  */
 end_comment
 
@@ -3313,13 +3308,13 @@ name|entry
 operator|=
 name|vm_object_hashtable
 index|[
-name|vm_object_hash
+name|OBJECT_HASH
 argument_list|(
 name|pager
 argument_list|)
 index|]
 operator|.
-name|tqh_first
+name|lh_first
 init|;
 name|entry
 operator|!=
@@ -3331,7 +3326,7 @@ name|entry
 operator|->
 name|hash_links
 operator|.
-name|tqe_next
+name|le_next
 control|)
 block|{
 name|object
@@ -3456,7 +3451,7 @@ operator|=
 operator|&
 name|vm_object_hashtable
 index|[
-name|vm_object_hash
+name|OBJECT_HASH
 argument_list|(
 name|pager
 argument_list|)
@@ -3490,7 +3485,7 @@ expr_stmt|;
 name|vm_object_cache_lock
 argument_list|()
 expr_stmt|;
-name|TAILQ_INSERT_TAIL
+name|LIST_INSERT_HEAD
 argument_list|(
 name|bucket
 argument_list|,
@@ -3538,7 +3533,7 @@ operator|=
 operator|&
 name|vm_object_hashtable
 index|[
-name|vm_object_hash
+name|OBJECT_HASH
 argument_list|(
 name|pager
 argument_list|)
@@ -3550,7 +3545,7 @@ name|entry
 operator|=
 name|bucket
 operator|->
-name|tqh_first
+name|lh_first
 init|;
 name|entry
 operator|!=
@@ -3562,7 +3557,7 @@ name|entry
 operator|->
 name|hash_links
 operator|.
-name|tqe_next
+name|le_next
 control|)
 block|{
 name|object
@@ -3580,10 +3575,8 @@ operator|==
 name|pager
 condition|)
 block|{
-name|TAILQ_REMOVE
+name|LIST_REMOVE
 argument_list|(
-name|bucket
-argument_list|,
 name|entry
 argument_list|,
 name|hash_links
@@ -5867,7 +5860,7 @@ index|[
 name|i
 index|]
 operator|.
-name|tqh_first
+name|lh_first
 init|;
 name|entry
 operator|!=
@@ -5879,7 +5872,7 @@ name|entry
 operator|->
 name|hash_links
 operator|.
-name|tqe_next
+name|le_next
 control|)
 block|{
 if|if
