@@ -815,10 +815,6 @@ argument_list|)
 expr_stmt|;
 name|tlb_page_demap
 argument_list|(
-name|TLB_DTLB
-operator||
-name|TLB_ITLB
-argument_list|,
 name|pm
 argument_list|,
 name|ova

@@ -150,9 +150,6 @@ block|{
 name|u_int
 name|ita_mask
 decl_stmt|;
-name|u_long
-name|ita_tlb
-decl_stmt|;
 name|struct
 name|pmap
 modifier|*
@@ -675,9 +672,6 @@ name|void
 modifier|*
 name|ipi_tlb_page_demap
 parameter_list|(
-name|u_int
-name|tlb
-parameter_list|,
 name|struct
 name|pmap
 modifier|*
@@ -745,12 +739,6 @@ name|PCPU_GET
 argument_list|(
 name|cpumask
 argument_list|)
-expr_stmt|;
-name|ita
-operator|->
-name|ita_tlb
-operator|=
-name|tlb
 expr_stmt|;
 name|ita
 operator|->
@@ -1041,9 +1029,6 @@ name|void
 modifier|*
 name|ipi_tlb_page_demap
 parameter_list|(
-name|u_int
-name|tlb
-parameter_list|,
 name|struct
 name|pmap
 modifier|*

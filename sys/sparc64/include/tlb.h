@@ -204,20 +204,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|TLB_DTLB
-value|(1<< 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|TLB_ITLB
-value|(1<< 1)
-end_define
-
-begin_define
-define|#
-directive|define
 name|MMU_SFSR_ASI_SHIFT
 value|(16)
 end_define
@@ -344,9 +330,6 @@ begin_function_decl
 name|void
 name|tlb_page_demap
 parameter_list|(
-name|u_int
-name|tlb
-parameter_list|,
 name|struct
 name|pmap
 modifier|*
@@ -384,19 +367,6 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_define
-define|#
-directive|define
-name|tlb_tte_demap
-parameter_list|(
-name|tp
-parameter_list|,
-name|pm
-parameter_list|)
-define|\
-value|tlb_page_demap(TTE_GET_TLB(tp), pm, TTE_GET_VA(tp))
-end_define
 
 begin_endif
 endif|#

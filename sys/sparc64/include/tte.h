@@ -380,17 +380,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|TTE_GET_TLB
-parameter_list|(
-name|tp
-parameter_list|)
-define|\
-value|(((tp)->tte_data& TD_EXEC) ? (TLB_DTLB | TLB_ITLB) : TLB_DTLB)
-end_define
-
-begin_define
-define|#
-directive|define
 name|TTE_GET_VA
 parameter_list|(
 name|tp
