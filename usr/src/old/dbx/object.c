@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)object.c 1.9 %G%"
+literal|"@(#)object.c 1.10 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -222,13 +222,6 @@ name|linep
 decl_stmt|,
 modifier|*
 name|prevlinep
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|private
-name|Address
-name|curfaddr
 decl_stmt|;
 end_decl_stmt
 
@@ -1175,7 +1168,7 @@ operator|->
 name|n_type
 condition|)
 block|{
-comment|/* Build a symbol for the common; all GSYMS that follow will be chained;  * the head of this list is kept in common.offset, the tail in common.chain  */
+comment|/*      * Build a symbol for the common; all GSYMS that follow will be chained;      * the head of this list is kept in common.offset, the tail in common.chain      */
 case|case
 name|N_BCOMM
 case|:
@@ -1859,8 +1852,6 @@ operator|!=
 name|nil
 condition|)
 block|{
-for|for
-control|(
 name|u
 operator|=
 operator|(
@@ -1873,21 +1864,13 @@ operator|.
 name|common
 operator|.
 name|offset
-init|;
+expr_stmt|;
+while|while
+condition|(
 name|u
 operator|!=
 name|nil
-condition|;
-name|u
-operator|=
-name|u
-operator|->
-name|symvalue
-operator|.
-name|common
-operator|.
-name|chain
-control|)
+condition|)
 block|{
 name|u
 operator|->
@@ -1907,11 +1890,69 @@ name|np
 operator|->
 name|n_value
 expr_stmt|;
-block|}
+name|u
+operator|=
+name|u
+operator|->
+name|symvalue
+operator|.
+name|common
+operator|.
+name|chain
+expr_stmt|;
 block|}
 block|}
 else|else
 block|{
+name|check_var
+argument_list|(
+name|np
+argument_list|,
+name|n
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+name|check_var
+argument_list|(
+name|np
+argument_list|,
+name|n
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * Check to see if a namelist entry refers to a variable.  * If not, create a variable for the entry.  In any case,  * set the offset of the variable according to the value field  * in the entry.  */
+end_comment
+
+begin_function
+name|private
+name|check_var
+parameter_list|(
+name|np
+parameter_list|,
+name|n
+parameter_list|)
+name|struct
+name|nlist
+modifier|*
+name|np
+decl_stmt|;
+specifier|register
+name|Name
+name|n
+decl_stmt|;
+block|{
+specifier|register
+name|Symbol
+name|t
+decl_stmt|;
 name|find
 argument_list|(
 argument|t
@@ -1974,12 +2015,6 @@ name|t_int
 expr_stmt|;
 name|t
 operator|->
-name|block
-operator|=
-name|curblock
-expr_stmt|;
-name|t
-operator|->
 name|level
 operator|=
 name|program
@@ -1987,6 +2022,12 @@ operator|->
 name|level
 expr_stmt|;
 block|}
+name|t
+operator|->
+name|block
+operator|=
+name|curblock
+expr_stmt|;
 name|t
 operator|->
 name|symvalue
@@ -1997,8 +2038,6 @@ name|np
 operator|->
 name|n_value
 expr_stmt|;
-block|}
-block|}
 block|}
 end_function
 
@@ -4295,7 +4334,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Add a file to the file table.  */
+comment|/*  * Add a file to the file table.  *  * If the new address is the same as the previous file address  * this routine used to not enter the file, but this caused some  * problems so it has been removed.  It's not clear that this in  * turn may not also cause a problem.  */
 end_comment
 
 begin_function
@@ -4312,13 +4351,6 @@ decl_stmt|;
 name|Address
 name|addr
 decl_stmt|;
-block|{
-if|if
-condition|(
-name|addr
-operator|!=
-name|curfaddr
-condition|)
 block|{
 name|filep
 operator|->
@@ -4343,11 +4375,6 @@ expr_stmt|;
 operator|++
 name|filep
 expr_stmt|;
-name|curfaddr
-operator|=
-name|addr
-expr_stmt|;
-block|}
 block|}
 end_function
 
