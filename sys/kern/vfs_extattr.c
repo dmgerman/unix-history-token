@@ -1408,14 +1408,17 @@ decl_stmt|;
 name|int
 name|fsflags
 decl_stmt|;
-comment|/* Flags common to all filesystems */
+comment|/* Flags common to all filesystems. */
 name|struct
 name|uio
 modifier|*
 name|fsoptions
 decl_stmt|;
-comment|/* Options local to the filesystem */
+comment|/* Options local to the filesystem. */
 block|{
+name|linker_file_t
+name|lf
+decl_stmt|;
 name|struct
 name|vnode
 modifier|*
@@ -1463,7 +1466,7 @@ name|flag
 init|=
 literal|0
 decl_stmt|,
-name|flag2
+name|kern_flag
 init|=
 literal|0
 decl_stmt|,
@@ -1611,7 +1614,7 @@ name|buf
 operator|+
 name|offset
 expr_stmt|;
-comment|/* Ensure the name of an option is a string */
+comment|/* Ensure the name of an option is a string. */
 if|if
 condition|(
 name|opt
@@ -1752,13 +1755,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|error
-operator|!=
-literal|0
-operator|)
 operator|||
-operator|(
 name|fstype
 index|[
 name|fstypelen
@@ -1767,7 +1765,6 @@ literal|1
 index|]
 operator|!=
 literal|'\0'
-operator|)
 condition|)
 block|{
 name|error
@@ -1804,13 +1801,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|error
-operator|!=
-literal|0
-operator|)
 operator|||
-operator|(
 name|fspath
 index|[
 name|fspathlen
@@ -1819,7 +1811,6 @@ literal|1
 index|]
 operator|!=
 literal|'\0'
-operator|)
 condition|)
 block|{
 name|error
@@ -1833,21 +1824,17 @@ block|}
 comment|/* 	 * Be ultra-paranoid about making sure the type and fspath 	 * variables will fit in our mp buffers, including the 	 * terminating NUL. 	 */
 if|if
 condition|(
-operator|(
 name|fstypelen
 operator|>=
 name|MFSNAMELEN
 operator|-
 literal|1
-operator|)
 operator|||
-operator|(
 name|fspathlen
 operator|>=
 name|MNAMELEN
 operator|-
 literal|1
-operator|)
 condition|)
 block|{
 name|error
@@ -1903,21 +1890,21 @@ goto|goto
 name|bad
 goto|;
 block|}
-comment|/* 	 * Silently enforce MNT_NOSUID and MNT_NODEV for non-root users 	 */
+comment|/* 	 * Silently enforce MNT_NOSUID and MNT_NODEV for non-root users. 	 */
 if|if
 condition|(
 name|suser_xxx
 argument_list|(
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 literal|0
 argument_list|)
+operator|!=
+literal|0
 condition|)
 name|fsflags
 operator||=
@@ -2020,7 +2007,7 @@ name|mp
 operator|->
 name|mnt_flag
 expr_stmt|;
-name|flag2
+name|kern_flag
 operator|=
 name|mp
 operator|->
@@ -2073,9 +2060,7 @@ name|f_owner
 operator|!=
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 operator|->
 name|cr_uid
 condition|)
@@ -2245,9 +2230,7 @@ name|va
 argument_list|,
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 name|td
 argument_list|)
@@ -2274,9 +2257,7 @@ name|va_uid
 operator|!=
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 operator|->
 name|cr_uid
 condition|)
@@ -2316,9 +2297,7 @@ name|V_SAVE
 argument_list|,
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 argument_list|,
 name|td
 argument_list|,
@@ -2396,10 +2375,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|linker_file_t
-name|lf
-decl_stmt|;
-comment|/* Only load modules for root (very important!) */
+comment|/* Only load modules for root (very important!). */
 name|error
 operator|=
 name|suser_td
@@ -2435,8 +2411,6 @@ expr_stmt|;
 if|if
 condition|(
 name|error
-operator|!=
-literal|0
 condition|)
 block|{
 name|vput
@@ -2491,7 +2465,7 @@ operator|->
 name|userrefs
 operator|++
 expr_stmt|;
-comment|/* lookup again, see if the VFS was loaded */
+comment|/* Look up again to see if the VFS was loaded. */
 for|for
 control|(
 name|vfsp
@@ -2662,6 +2636,9 @@ argument_list|,
 name|LK_NOPAUSE
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|vfs_busy
 argument_list|(
 name|mp
@@ -2727,19 +2704,6 @@ argument_list|)
 expr_stmt|;
 name|mp
 operator|->
-name|mnt_stat
-operator|.
-name|f_fstypename
-index|[
-name|MFSNAMELEN
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-name|mp
-operator|->
 name|mnt_vnodecovered
 operator|=
 name|vp
@@ -2752,9 +2716,7 @@ name|f_owner
 operator|=
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_ucred
+name|td_ucred
 operator|->
 name|cr_uid
 expr_stmt|;
@@ -2770,19 +2732,6 @@ name|fspath
 argument_list|,
 name|MNAMELEN
 argument_list|)
-expr_stmt|;
-name|mp
-operator|->
-name|mnt_stat
-operator|.
-name|f_mntonname
-index|[
-name|MNAMELEN
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 name|mp
 operator|->
@@ -2876,31 +2825,7 @@ operator|->
 name|mnt_flag
 operator|&=
 operator|~
-operator|(
-name|MNT_NOSUID
-operator||
-name|MNT_NOEXEC
-operator||
-name|MNT_NODEV
-operator||
-name|MNT_SYNCHRONOUS
-operator||
-name|MNT_UNION
-operator||
-name|MNT_ASYNC
-operator||
-name|MNT_NOATIME
-operator||
-name|MNT_NOSYMFOLLOW
-operator||
-name|MNT_IGNORE
-operator||
-name|MNT_NOCLUSTERR
-operator||
-name|MNT_NOCLUSTERW
-operator||
-name|MNT_SUIDDIR
-operator|)
+name|MNT_UPDATEMASK
 expr_stmt|;
 name|mp
 operator|->
@@ -2909,31 +2834,9 @@ operator||=
 name|fsflags
 operator|&
 operator|(
-name|MNT_NOSUID
-operator||
-name|MNT_NOEXEC
-operator||
-name|MNT_NODEV
-operator||
-name|MNT_SYNCHRONOUS
-operator||
-name|MNT_UNION
-operator||
-name|MNT_ASYNC
+name|MNT_UPDATEMASK
 operator||
 name|MNT_FORCE
-operator||
-name|MNT_NOSYMFOLLOW
-operator||
-name|MNT_IGNORE
-operator||
-name|MNT_NOATIME
-operator||
-name|MNT_NOCLUSTERR
-operator||
-name|MNT_NOCLUSTERW
-operator||
-name|MNT_SUIDDIR
 operator|)
 expr_stmt|;
 comment|/* 	 * Mount the filesystem. 	 * XXX The final recipients of VFS_MOUNT just overwrite the ndp they 	 * get.  No freeing of cn_pnbuf. 	 */
@@ -3010,7 +2913,7 @@ name|mp
 operator|->
 name|mnt_kern_flag
 operator|=
-name|flag2
+name|kern_flag
 expr_stmt|;
 name|vfs_freeopts
 argument_list|(
@@ -3380,7 +3283,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Old Mount API  */
+comment|/*  * Old Mount API.  */
 end_comment
 
 begin_ifndef
@@ -3460,8 +3363,6 @@ argument_list|,
 name|M_TEMP
 argument_list|,
 name|M_WAITOK
-operator||
-name|M_ZERO
 argument_list|)
 expr_stmt|;
 name|fspath
@@ -3473,8 +3374,6 @@ argument_list|,
 name|M_TEMP
 argument_list|,
 name|M_WAITOK
-operator||
-name|M_ZERO
 argument_list|)
 expr_stmt|;
 comment|/* 	 * vfs_mount() actually takes a kernel string for `type' and 	 * `path' now, so extract them. 	 */
@@ -3617,6 +3516,9 @@ modifier|*
 name|fsdata
 decl_stmt|;
 block|{
+name|linker_file_t
+name|lf
+decl_stmt|;
 name|struct
 name|vnode
 modifier|*
@@ -3639,7 +3541,7 @@ name|flag
 init|=
 literal|0
 decl_stmt|,
-name|flag2
+name|kern_flag
 init|=
 literal|0
 decl_stmt|;
@@ -3651,33 +3553,22 @@ name|struct
 name|nameidata
 name|nd
 decl_stmt|;
-name|linker_file_t
-name|lf
-decl_stmt|;
 comment|/* 	 * Be ultra-paranoid about making sure the type and fspath 	 * variables will fit in our mp buffers, including the 	 * terminating NUL. 	 */
 if|if
 condition|(
-operator|(
 name|strlen
 argument_list|(
 name|fstype
 argument_list|)
 operator|>=
 name|MFSNAMELEN
-operator|-
-literal|1
-operator|)
 operator|||
-operator|(
 name|strlen
 argument_list|(
 name|fspath
 argument_list|)
 operator|>=
 name|MNAMELEN
-operator|-
-literal|1
-operator|)
 condition|)
 return|return
 operator|(
@@ -3733,7 +3624,7 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* 	 * Silently enforce MNT_NOSUID and MNT_NODEV for non-root users 	 */
+comment|/* 	 * Silently enforce MNT_NOSUID and MNT_NODEV for non-root users. 	 */
 if|if
 condition|(
 name|suser_xxx
@@ -3742,10 +3633,12 @@ name|td
 operator|->
 name|td_ucred
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
 literal|0
 argument_list|)
+operator|!=
+literal|0
 condition|)
 name|fsflags
 operator||=
@@ -3848,7 +3741,7 @@ name|mp
 operator|->
 name|mnt_flag
 expr_stmt|;
-name|flag2
+name|kern_flag
 operator|=
 name|mp
 operator|->
@@ -4210,7 +4103,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* Only load modules for root (very important!) */
+comment|/* Only load modules for root (very important!). */
 name|error
 operator|=
 name|suser_td
@@ -4306,7 +4199,7 @@ operator|->
 name|userrefs
 operator|++
 expr_stmt|;
-comment|/* lookup again, see if the VFS was loaded */
+comment|/* Look up again to see if the VFS was loaded. */
 for|for
 control|(
 name|vfsp
@@ -4541,19 +4434,6 @@ argument_list|)
 expr_stmt|;
 name|mp
 operator|->
-name|mnt_stat
-operator|.
-name|f_fstypename
-index|[
-name|MFSNAMELEN
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-name|mp
-operator|->
 name|mnt_vnodecovered
 operator|=
 name|vp
@@ -4582,19 +4462,6 @@ name|fspath
 argument_list|,
 name|MNAMELEN
 argument_list|)
-expr_stmt|;
-name|mp
-operator|->
-name|mnt_stat
-operator|.
-name|f_mntonname
-index|[
-name|MNAMELEN
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 name|mp
 operator|->
@@ -4772,7 +4639,7 @@ name|mp
 operator|->
 name|mnt_kern_flag
 operator|=
-name|flag2
+name|kern_flag
 expr_stmt|;
 block|}
 if|if
