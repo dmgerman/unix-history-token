@@ -11292,7 +11292,7 @@ name|cur_tx
 expr_stmt|;
 if|#
 directive|if
-name|NBPF
+name|NBPFILTER
 operator|>
 literal|0
 comment|/* 		 * If there's a BPF listener, bounce a copy of this frame 		 * to him. 		 */
