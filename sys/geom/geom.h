@@ -248,6 +248,7 @@ name|struct
 name|sbuf
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|indent
@@ -275,6 +276,7 @@ begin_struct
 struct|struct
 name|g_class
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
@@ -546,7 +548,7 @@ argument|g_provider
 argument_list|)
 name|orphan
 expr_stmt|;
-name|int
+name|u_int
 name|index
 decl_stmt|;
 name|off_t
@@ -625,6 +627,7 @@ parameter_list|(
 name|int
 name|level
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -902,6 +905,7 @@ name|bio
 modifier|*
 name|bp
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|attribute
@@ -925,6 +929,7 @@ name|bio
 modifier|*
 name|bp
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|attribute
@@ -944,6 +949,7 @@ name|bio
 modifier|*
 name|bp
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|attribute
@@ -960,6 +966,7 @@ name|g_geom
 modifier|*
 name|g_insert_geom
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|class
@@ -997,6 +1004,7 @@ name|g_class
 modifier|*
 name|mp
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fmt
@@ -1017,6 +1025,7 @@ name|g_geom
 modifier|*
 name|gp
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|fmt

@@ -1820,6 +1820,17 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|bp2
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"XXX: ENOMEM in a bad place"
+operator|)
+argument_list|)
+expr_stmt|;
 name|bp2
 operator|->
 name|bio_offset
@@ -1832,6 +1843,28 @@ operator|->
 name|bio_blkno
 operator|<<
 name|DEV_BSHIFT
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|bp2
+operator|->
+name|bio_offset
+operator|>=
+literal|0
+argument_list|,
+operator|(
+literal|"Negative bio_offset (%jd) on bio %p"
+operator|,
+operator|(
+name|intmax_t
+operator|)
+name|bp2
+operator|->
+name|bio_offset
+operator|,
+name|bp
+operator|)
+argument_list|)
 expr_stmt|;
 name|bp2
 operator|->
