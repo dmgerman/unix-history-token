@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)quotacheck.c	5.6 (Berkeley) %G%"
+literal|"@(#)quotacheck.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -358,6 +358,14 @@ begin_decl_stmt
 name|struct
 name|fileusage
 name|zerofileusage
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|long
+name|dev_bsize
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -1416,7 +1424,7 @@ argument_list|()
 expr_stmt|;
 name|bread
 argument_list|(
-name|SBLOCK
+name|SBOFF
 argument_list|,
 operator|(
 name|char
@@ -1426,6 +1434,20 @@ operator|&
 name|sblock
 argument_list|,
 name|SBSIZE
+argument_list|)
+expr_stmt|;
+name|dev_bsize
+operator|=
+name|sblock
+operator|.
+name|fs_fsize
+operator|/
+name|fsbtodb
+argument_list|(
+operator|&
+name|sblock
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|ino
@@ -2113,37 +2135,20 @@ end_decl_stmt
 
 begin_block
 block|{
-specifier|extern
-name|off_t
-name|lseek
-parameter_list|()
-function_decl|;
-specifier|register
-name|off_t
-name|pos
-decl_stmt|;
-name|pos
-operator|=
-operator|(
-name|off_t
-operator|)
-name|dbtob
-argument_list|(
-name|bno
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|lseek
 argument_list|(
 name|fi
 argument_list|,
-name|pos
+name|bno
+operator|*
+name|dev_bsize
 argument_list|,
 literal|0
 argument_list|)
-operator|!=
-name|pos
+operator|<
+literal|0
 condition|)
 block|{
 name|perror

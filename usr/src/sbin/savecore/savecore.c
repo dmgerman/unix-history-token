@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savecore.c	5.10 (Berkeley) %G%"
+literal|"@(#)savecore.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1880,14 +1880,7 @@ name|Lseek
 argument_list|(
 name|dfd
 argument_list|,
-call|(
-name|long
-call|)
-argument_list|(
-name|SBLOCK
-operator|*
-name|DEV_BSIZE
-argument_list|)
+name|SBOFF
 argument_list|,
 name|L_SET
 argument_list|)

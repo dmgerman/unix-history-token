@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)icheck.c	5.1 (Berkeley) %G%"
+literal|"@(#)icheck.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -315,6 +315,14 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|nerror
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|long
+name|dev_bsize
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -3629,7 +3637,9 @@ literal|0
 expr_stmt|;
 name|bwrite
 argument_list|(
-name|SBLOCK
+name|SBOFF
+operator|/
+name|dev_bsize
 argument_list|,
 operator|(
 name|char
@@ -3878,7 +3888,7 @@ if|if
 condition|(
 name|bread
 argument_list|(
-name|SBLOCK
+name|SBOFF
 argument_list|,
 name|fs
 argument_list|,
@@ -3924,6 +3934,19 @@ literal|04
 expr_stmt|;
 return|return;
 block|}
+name|dev_bsize
+operator|=
+name|fs
+operator|->
+name|fs_fsize
+operator|/
+name|fsbtodb
+argument_list|(
+name|fs
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -4068,7 +4091,7 @@ name|fi
 argument_list|,
 name|blk
 operator|*
-name|DEV_BSIZE
+name|dev_bsize
 argument_list|,
 literal|0
 argument_list|)
@@ -4155,7 +4178,7 @@ name|fi
 argument_list|,
 name|bno
 operator|*
-name|DEV_BSIZE
+name|dev_bsize
 argument_list|,
 literal|0
 argument_list|)

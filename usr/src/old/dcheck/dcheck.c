@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dcheck.c	5.1 (Berkeley) %G%"
+literal|"@(#)dcheck.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -196,6 +196,14 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|nfiles
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|long
+name|dev_bsize
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -430,7 +438,7 @@ argument_list|()
 expr_stmt|;
 name|bread
 argument_list|(
-name|SBLOCK
+name|SBOFF
 argument_list|,
 operator|(
 name|char
@@ -463,6 +471,20 @@ operator|++
 expr_stmt|;
 return|return;
 block|}
+name|dev_bsize
+operator|=
+name|sblock
+operator|.
+name|fs_fsize
+operator|/
+name|fsbtodb
+argument_list|(
+operator|&
+name|sblock
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|nfiles
 operator|=
 name|sblock
@@ -1186,7 +1208,7 @@ name|fi
 argument_list|,
 name|bno
 operator|*
-name|DEV_BSIZE
+name|dev_bsize
 argument_list|,
 literal|0
 argument_list|)

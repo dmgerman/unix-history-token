@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkproto.c	5.1 (Berkeley) %G%"
+literal|"@(#)mkproto.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -177,6 +177,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|long
+name|dev_bsize
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|ino
 init|=
@@ -294,7 +302,7 @@ name|sblock
 expr_stmt|;
 name|rdfs
 argument_list|(
-name|SBLOCK
+name|SBOFF
 argument_list|,
 name|SBSIZE
 argument_list|,
@@ -303,6 +311,19 @@ name|char
 operator|*
 operator|)
 name|fs
+argument_list|)
+expr_stmt|;
+name|dev_bsize
+operator|=
+name|fs
+operator|->
+name|fs_fsize
+operator|/
+name|fsbtodb
+argument_list|(
+name|fs
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|fscs
@@ -417,7 +438,9 @@ argument_list|)
 expr_stmt|;
 name|wtfs
 argument_list|(
-name|SBLOCK
+name|SBOFF
+operator|/
+name|dev_bsize
 argument_list|,
 name|SBSIZE
 argument_list|,
@@ -3005,7 +3028,7 @@ name|fsi
 argument_list|,
 name|bno
 operator|*
-name|DEV_BSIZE
+name|dev_bsize
 argument_list|,
 literal|0
 argument_list|)
@@ -3105,17 +3128,6 @@ block|{
 name|int
 name|n
 decl_stmt|;
-name|lseek
-argument_list|(
-name|fso
-argument_list|,
-name|bno
-operator|*
-name|DEV_BSIZE
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|lseek
@@ -3124,7 +3136,7 @@ name|fso
 argument_list|,
 name|bno
 operator|*
-name|DEV_BSIZE
+name|dev_bsize
 argument_list|,
 literal|0
 argument_list|)

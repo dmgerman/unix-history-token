@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)quot.c	4.11 (Berkeley) 85/09/09"
+literal|"@(#)quot.c	4.12 (Berkeley) 87/02/23"
 decl_stmt|;
 end_decl_stmt
 
@@ -240,6 +240,14 @@ end_decl_stmt
 begin_decl_stmt
 name|long
 name|now
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|long
+name|dev_bsize
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -794,7 +802,7 @@ name|bread
 argument_list|(
 name|fd
 argument_list|,
-name|SBLOCK
+name|SBOFF
 argument_list|,
 operator|(
 name|char
@@ -804,6 +812,20 @@ operator|&
 name|sblock
 argument_list|,
 name|SBSIZE
+argument_list|)
+expr_stmt|;
+name|dev_bsize
+operator|=
+name|sblock
+operator|.
+name|fs_fsize
+operator|/
+name|fsbtodb
+argument_list|(
+operator|&
+name|sblock
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -1491,7 +1513,7 @@ name|long
 operator|)
 name|bno
 operator|*
-name|DEV_BSIZE
+name|dev_bsize
 argument_list|,
 name|L_SET
 argument_list|)

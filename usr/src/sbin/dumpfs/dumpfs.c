@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dumpfs.c	5.4 (Berkeley) %G%"
+literal|"@(#)dumpfs.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -129,6 +129,14 @@ directive|define
 name|acg
 value|cgun.cg
 end_define
+
+begin_decl_stmt
+name|long
+name|dev_bsize
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|main
@@ -276,9 +284,7 @@ name|lseek
 argument_list|(
 literal|0
 argument_list|,
-name|SBLOCK
-operator|*
-name|DEV_BSIZE
+name|SBOFF
 argument_list|,
 literal|0
 argument_list|)
@@ -305,6 +311,20 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|dev_bsize
+operator|=
+name|afs
+operator|.
+name|fs_fsize
+operator|/
+name|fsbtodb
+argument_list|(
+operator|&
+name|afs
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"magic\t%x\ttime\t%s"
@@ -867,7 +887,7 @@ name|fs_frag
 operator|)
 argument_list|)
 operator|*
-name|DEV_BSIZE
+name|dev_bsize
 argument_list|,
 literal|0
 argument_list|)
@@ -1110,7 +1130,7 @@ name|c
 argument_list|)
 argument_list|)
 operator|*
-name|DEV_BSIZE
+name|dev_bsize
 argument_list|,
 literal|0
 argument_list|)

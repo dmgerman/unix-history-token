@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)clri.c 2.2 %G%"
+literal|"@(#)clri.c 2.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -138,6 +138,14 @@ name|status
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|long
+name|dev_bsize
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|main
 parameter_list|(
@@ -227,9 +235,7 @@ name|lseek
 argument_list|(
 name|f
 argument_list|,
-name|SBLOCK
-operator|*
-name|DEV_BSIZE
+name|SBOFF
 argument_list|,
 literal|0
 argument_list|)
@@ -285,6 +291,20 @@ literal|4
 argument_list|)
 expr_stmt|;
 block|}
+name|dev_bsize
+operator|=
+name|sblock
+operator|.
+name|fs_fsize
+operator|/
+name|fsbtodb
+argument_list|(
+operator|&
+name|sblock
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -376,7 +396,7 @@ name|n
 argument_list|)
 argument_list|)
 operator|*
-name|DEV_BSIZE
+name|dev_bsize
 expr_stmt|;
 name|lseek
 argument_list|(
@@ -481,7 +501,7 @@ name|n
 argument_list|)
 argument_list|)
 operator|*
-name|DEV_BSIZE
+name|dev_bsize
 expr_stmt|;
 name|lseek
 argument_list|(
