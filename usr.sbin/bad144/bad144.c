@@ -1314,7 +1314,7 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
-name|printf
+name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
