@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)msg.c	4.2 %G%"
+literal|"@(#)msg.c	4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -570,7 +570,39 @@ literal|"Alarm call"
 operator|,
 literal|"Terminated"
 operator|,
-literal|"Signal 16"
+literal|"Urgent condition"
+operator|,
+literal|"Stopped"
+operator|,
+literal|"Stopped from terminal"
+operator|,
+literal|"Continued"
+operator|,
+literal|"Child terminated"
+operator|,
+literal|"Stopped on terminal input"
+operator|,
+literal|"Stopped on terminal output"
+operator|,
+literal|"Asynchronous I/O"
+operator|,
+literal|"Exceeded cpu time limit"
+operator|,
+literal|"Exceeded file size limit"
+operator|,
+literal|"Virtual time alarm"
+operator|,
+literal|"Profiling time alarm"
+operator|,
+literal|"Window changed"
+operator|,
+literal|"Signal 29"
+operator|,
+literal|"Signal 30"
+operator|,
+literal|"Signal 31"
+operator|,
+literal|"Signal 32"
 operator|,
 block|}
 end_decl_stmt
@@ -578,6 +610,23 @@ end_decl_stmt
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_decl_stmt
+name|INT
+name|num_sysmsg
+init|=
+operator|(
+sizeof|sizeof
+name|sysmsg
+operator|/
+sizeof|sizeof
+name|sysmsg
+index|[
+literal|0
+index|]
+operator|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|MSG
