@@ -36,6 +36,8 @@ block|,
 comment|/* alt key released */
 name|FCN_MAKE_CTRL
 block|,
+name|FCN_CAPS_LOCK
+block|,
 name|FCN_MONOCASE
 block|,
 comment|/* DISPLAY in upper case */
@@ -239,6 +241,76 @@ name|hits
 index|[]
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * Definitions of the shift state (and the left/right shift key position).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHIFT_RIGHT
+value|0x20
+end_define
+
+begin_comment
+comment|/* Right shift key is down */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHIFT_LEFT
+value|0x10
+end_define
+
+begin_comment
+comment|/* Left shift key is down */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHIFT_CONTROL
+value|0x08
+end_define
+
+begin_comment
+comment|/* Control shift state (unused) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHIFT_ALT
+value|0x04
+end_define
+
+begin_comment
+comment|/* ALT shift state */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHIFT_CAPS
+value|0x02
+end_define
+
+begin_comment
+comment|/* Caps lock state */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHIFT_UPSHIFT
+value|0x01
+end_define
+
+begin_comment
+comment|/* Upshift state */
+end_comment
 
 end_unit
 

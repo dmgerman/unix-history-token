@@ -192,20 +192,6 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
-name|shifted
-decl_stmt|,
-comment|/* Shift state of terminal */
-name|alted
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Alt state of terminal */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
 name|InsertMode
 decl_stmt|;
 end_decl_stmt
@@ -213,6 +199,27 @@ end_decl_stmt
 begin_comment
 comment|/* is the terminal in insert mode? */
 end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|rememberedshiftstate
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Shift (alt) state of terminal */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HITNUM
+parameter_list|(
+name|s
+parameter_list|)
+value|((((s)&(SHIFT_CAPS|SHIFT_UPSHIFT))? 1:0) \ 			+ ((((s)&SHIFT_ALT)? 1:0)<<1))
+end_define
 
 begin_decl_stmt
 specifier|static
@@ -302,9 +309,7 @@ name|HadAid
 operator|=
 literal|0
 expr_stmt|;
-name|shifted
-operator|=
-name|alted
+name|rememberedshiftstate
 operator|=
 literal|0
 expr_stmt|;
@@ -2138,31 +2143,25 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* go through data until an AID character is hit, then generate an interrupt */
+comment|/*  * AcceptKeystroke()  *  * Processes one keystroke.  *  * Returns:  *  *	0	if this keystroke was NOT processed.  *	1	if everything went OK.  */
 end_comment
 
 begin_function
 name|int
-name|DataFrom3270
+name|AcceptKeystroke
 parameter_list|(
-name|buffer
+name|scancode
 parameter_list|,
-name|count
+name|shiftstate
 parameter_list|)
-name|unsigned
-name|char
-modifier|*
-name|buffer
-decl_stmt|;
-comment|/* where the data is */
 name|int
-name|count
+name|scancode
+decl_stmt|,
+comment|/* 3270 scancode */
+name|shiftstate
 decl_stmt|;
-comment|/* how much data there is */
+comment|/* The shift state */
 block|{
-name|int
-name|origCount
-decl_stmt|;
 specifier|register
 name|int
 name|c
@@ -2179,15 +2178,9 @@ name|enum
 name|ctlrfcn
 name|ctlrfcn
 decl_stmt|;
-define|#
-directive|define
-name|HITNUM
-parameter_list|()
-value|((shifted? 1:0) + ((alted?1:0)<<1))
 if|if
 condition|(
-operator|*
-name|buffer
+name|scancode
 operator|>=
 name|numberof
 argument_list|(
@@ -2199,7 +2192,7 @@ name|ExitString
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Unknown scancode encountered in DataFrom3270.\n"
+literal|"Unknown scancode encountered in AcceptKeystroke.\n"
 argument_list|,
 literal|1
 argument_list|)
@@ -2210,14 +2203,15 @@ name|ctlrfcn
 operator|=
 name|hits
 index|[
-operator|*
-name|buffer
+name|scancode
 index|]
 operator|.
 name|hit
 index|[
 name|HITNUM
-argument_list|()
+argument_list|(
+name|shiftstate
+argument_list|)
 index|]
 operator|.
 name|ctlrfcn
@@ -2226,14 +2220,15 @@ name|c
 operator|=
 name|hits
 index|[
-operator|*
-name|buffer
+name|scancode
 index|]
 operator|.
 name|hit
 index|[
 name|HITNUM
-argument_list|()
+argument_list|(
+name|shiftstate
+argument_list|)
 index|]
 operator|.
 name|code
@@ -2262,9 +2257,7 @@ argument_list|()
 condition|)
 block|{
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 comment|/* nothing to do */
 block|}
@@ -2316,17 +2309,11 @@ name|UnLocked
 condition|)
 block|{
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 block|}
 comment|/* now, either empty, or haven't seen aid yet */
-name|origCount
-operator|=
-name|count
-expr_stmt|;
 if|#
 directive|if
 operator|!
@@ -2341,71 +2328,6 @@ operator|==
 name|OutputClock
 condition|)
 block|{
-while|while
-condition|(
-name|count
-condition|)
-block|{
-if|if
-condition|(
-operator|*
-name|buffer
-operator|>=
-name|numberof
-argument_list|(
-name|hits
-argument_list|)
-condition|)
-block|{
-name|ExitString
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Unknown scancode encountered in DataFrom3270.\n"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/*NOTREACHED*/
-block|}
-name|ctlrfcn
-operator|=
-name|hits
-index|[
-operator|*
-name|buffer
-index|]
-operator|.
-name|hit
-index|[
-name|HITNUM
-argument_list|()
-index|]
-operator|.
-name|ctlrfcn
-expr_stmt|;
-name|c
-operator|=
-name|hits
-index|[
-operator|*
-name|buffer
-index|]
-operator|.
-name|hit
-index|[
-name|HITNUM
-argument_list|()
-index|]
-operator|.
-name|code
-expr_stmt|;
-name|buffer
-operator|++
-expr_stmt|;
-name|count
-operator|--
-expr_stmt|;
 if|if
 condition|(
 name|ctlrfcn
@@ -2469,88 +2391,14 @@ expr_stmt|;
 break|break;
 default|default:
 return|return
-operator|(
-name|origCount
-operator|-
-operator|(
-name|count
-operator|+
-literal|1
-operator|)
-operator|)
+literal|0
 return|;
-block|}
 block|}
 block|}
 block|}
 endif|#
 directive|endif
 comment|/* !defined(PURE3274) */
-while|while
-condition|(
-name|count
-condition|)
-block|{
-if|if
-condition|(
-operator|*
-name|buffer
-operator|>=
-name|numberof
-argument_list|(
-name|hits
-argument_list|)
-condition|)
-block|{
-name|ExitString
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Unknown scancode encountered in DataFrom3270.\n"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/*NOTREACHED*/
-block|}
-name|ctlrfcn
-operator|=
-name|hits
-index|[
-operator|*
-name|buffer
-index|]
-operator|.
-name|hit
-index|[
-name|HITNUM
-argument_list|()
-index|]
-operator|.
-name|ctlrfcn
-expr_stmt|;
-name|c
-operator|=
-name|hits
-index|[
-operator|*
-name|buffer
-index|]
-operator|.
-name|hit
-index|[
-name|HITNUM
-argument_list|()
-index|]
-operator|.
-name|code
-expr_stmt|;
-name|buffer
-operator|++
-expr_stmt|;
-name|count
-operator|--
-expr_stmt|;
 if|if
 condition|(
 name|ctlrfcn
@@ -2635,13 +2483,6 @@ expr_stmt|;
 name|SendToIBM
 argument_list|()
 expr_stmt|;
-return|return
-operator|(
-name|origCount
-operator|-
-name|count
-operator|)
-return|;
 block|}
 else|else
 block|{
@@ -2650,70 +2491,6 @@ condition|(
 name|ctlrfcn
 condition|)
 block|{
-case|case
-name|FCN_MAKE_SHIFT
-case|:
-name|shifted
-operator|++
-expr_stmt|;
-break|break;
-case|case
-name|FCN_BREAK_SHIFT
-case|:
-name|shifted
-operator|--
-expr_stmt|;
-if|if
-condition|(
-name|shifted
-operator|<
-literal|0
-condition|)
-block|{
-name|ExitString
-argument_list|(
-name|stderr
-argument_list|,
-literal|"More BREAK_SHIFT than MAKE_SHIFT.\n"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/*NOTREACHED*/
-block|}
-break|break;
-case|case
-name|FCN_MAKE_ALT
-case|:
-name|alted
-operator|++
-expr_stmt|;
-break|break;
-case|case
-name|FCN_BREAK_ALT
-case|:
-name|alted
-operator|--
-expr_stmt|;
-if|if
-condition|(
-name|alted
-operator|<
-literal|0
-condition|)
-block|{
-name|ExitString
-argument_list|(
-name|stderr
-argument_list|,
-literal|"More BREAK_ALT than MAKE_ALT.\n"
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/*NOTREACHED*/
-block|}
-break|break;
 case|case
 name|FCN_CURSEL
 case|:
@@ -3021,7 +2798,7 @@ name|i
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* we are pointing at a character in a word, or 		     * at a protected position 		     */
+comment|/* we are pointing at a character in a word, or 		 * at a protected position 		 */
 while|while
 condition|(
 operator|(
@@ -3056,7 +2833,7 @@ name|i
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* we are pointing at a space, or at a protected 		     * position 		     */
+comment|/* we are pointing at a space, or at a protected 		 * position 		 */
 name|CursorAddress
 operator|=
 name|ScreenInc
@@ -3278,7 +3055,7 @@ break|break;
 case|case
 name|FCN_NL
 case|:
-comment|/* The algorithm is to look for the first unprotected 		 * column after column 0 of the following line.  Having 		 * found that unprotected column, we check whether the 		 * cursor-address-at-entry is at or to the right of the 		 * LeftMargin AND the LeftMargin column of the found line 		 * is unprotected.  If this conjunction is true, then 		 * we set the found pointer to the address of the LeftMargin 		 * column in the found line. 		 * Then, we set the cursor address to the found address. 		 */
+comment|/* The algorithm is to look for the first unprotected 	     * column after column 0 of the following line.  Having 	     * found that unprotected column, we check whether the 	     * cursor-address-at-entry is at or to the right of the 	     * LeftMargin AND the LeftMargin column of the found line 	     * is unprotected.  If this conjunction is true, then 	     * we set the found pointer to the address of the LeftMargin 	     * column in the found line. 	     * Then, we set the cursor address to the found address. 	     */
 name|i
 operator|=
 name|SetBufferAddress
@@ -3316,8 +3093,8 @@ condition|)
 block|{
 break|break;
 block|}
-comment|/* Again (see comment in Home()), this COULD be a problem 		     * with an unformatted screen. 		     */
-comment|/* If there was a field with only an attribute byte, 		     * we may be pointing to the attribute byte of the NEXT 		     * field, so just look at the next byte. 		     */
+comment|/* Again (see comment in Home()), this COULD be a problem 		 * with an unformatted screen. 		 */
+comment|/* If there was a field with only an attribute byte, 		 * we may be pointing to the attribute byte of the NEXT 		 * field, so just look at the next byte. 		 */
 if|if
 condition|(
 name|IsStartField
@@ -3466,7 +3243,7 @@ do|;
 block|}
 else|else
 block|{
-comment|/* 			 * The algorithm is:  go through each unprotected 			 * field on the screen, clearing it out.  When 			 * we are at the start of a field, skip that field 			 * if its contents are protected. 			 */
+comment|/* 		     * The algorithm is:  go through each unprotected 		     * field on the screen, clearing it out.  When 		     * we are at the start of a field, skip that field 		     * if its contents are protected. 		     */
 name|i
 operator|=
 name|j
@@ -3643,7 +3420,7 @@ break|break;
 ifdef|#
 directive|ifdef
 name|NOTUSED
-comment|/* Actually, this is superseded by unix flow 				 * control. 				 */
+comment|/* Actually, this is superseded by unix flow 			     * control. 			     */
 case|case
 name|FCN_XOFF
 case|:
@@ -3753,7 +3530,7 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
-comment|/* 		 * Clear all tabs, home line, and left margin. 		 */
+comment|/* 	     * Clear all tabs, home line, and left margin. 	     */
 case|case
 name|FCN_CLRTAB
 case|:
@@ -3853,7 +3630,7 @@ name|CursorAddress
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* 		 * Point to first character of next unprotected word on 		 * screen. 		 */
+comment|/* 	     * Point to first character of next unprotected word on 	     * screen. 	     */
 case|case
 name|FCN_WORDTAB
 case|:
@@ -3899,7 +3676,7 @@ block|{
 break|break;
 block|}
 block|}
-comment|/* i is either protected, a space (blank or null), 		 * or wrapped 		 */
+comment|/* i is either protected, a space (blank or null), 	     * or wrapped 	     */
 while|while
 condition|(
 name|XIsProtected
@@ -3984,7 +3761,7 @@ block|{
 break|break;
 block|}
 block|}
-comment|/* i is pointing to a character IN an unprotected word 		     * (or i wrapped) 		     */
+comment|/* i is pointing to a character IN an unprotected word 		 * (or i wrapped) 		 */
 while|while
 condition|(
 operator|!
@@ -4022,7 +3799,7 @@ name|i
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* Point to last non-blank character of this/next 			 * unprotected word. 			 */
+comment|/* Point to last non-blank character of this/next 		     * unprotected word. 		     */
 case|case
 name|FCN_WORDEND
 case|:
@@ -4069,7 +3846,7 @@ block|{
 break|break;
 block|}
 block|}
-comment|/* we are pointing at a character IN an 			 * unprotected word (or we wrapped) 			 */
+comment|/* we are pointing at a character IN an 		     * unprotected word (or we wrapped) 		     */
 while|while
 condition|(
 operator|!
@@ -4107,7 +3884,7 @@ name|i
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* Get to last non-blank of this/next unprotected 			 * field. 			 */
+comment|/* Get to last non-blank of this/next unprotected 		     * field. 		     */
 case|case
 name|FCN_FIELDEND
 case|:
@@ -4176,6 +3953,161 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+return|return
+literal|1
+return|;
+comment|/* We did something! */
+block|}
+end_function
+
+begin_comment
+comment|/*  * We get data from the terminal.  We keep track of the shift state  * (including ALT, CONTROL), and then call AcceptKeystroke to actually  * process any non-shift keys.  */
+end_comment
+
+begin_function
+name|int
+name|DataFrom3270
+parameter_list|(
+name|buffer
+parameter_list|,
+name|count
+parameter_list|)
+name|unsigned
+name|char
+modifier|*
+name|buffer
+decl_stmt|;
+comment|/* where the data is */
+name|int
+name|count
+decl_stmt|;
+comment|/* how much data there is */
+block|{
+name|int
+name|origCount
+decl_stmt|;
+name|origCount
+operator|=
+name|count
+expr_stmt|;
+while|while
+condition|(
+name|count
+condition|)
+block|{
+if|if
+condition|(
+operator|*
+name|buffer
+operator|>=
+name|numberof
+argument_list|(
+name|hits
+argument_list|)
+condition|)
+block|{
+name|ExitString
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Unknown scancode encountered in DataFrom3270.\n"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/*NOTREACHED*/
+block|}
+switch|switch
+condition|(
+name|hits
+index|[
+operator|*
+name|buffer
+index|]
+operator|.
+name|hit
+index|[
+name|HITNUM
+argument_list|(
+name|rememberedshiftstate
+argument_list|)
+index|]
+operator|.
+name|ctlrfcn
+condition|)
+block|{
+case|case
+name|FCN_MAKE_SHIFT
+case|:
+name|rememberedshiftstate
+operator||=
+operator|(
+name|SHIFT_RIGHT
+operator||
+name|SHIFT_UPSHIFT
+operator|)
+expr_stmt|;
+break|break;
+case|case
+name|FCN_BREAK_SHIFT
+case|:
+name|rememberedshiftstate
+operator|&=
+operator|~
+operator|(
+name|SHIFT_RIGHT
+operator||
+name|SHIFT_UPSHIFT
+operator|)
+expr_stmt|;
+break|break;
+case|case
+name|FCN_MAKE_ALT
+case|:
+name|rememberedshiftstate
+operator||=
+name|SHIFT_ALT
+expr_stmt|;
+break|break;
+case|case
+name|FCN_BREAK_ALT
+case|:
+name|rememberedshiftstate
+operator|&=
+operator|~
+name|SHIFT_ALT
+expr_stmt|;
+break|break;
+default|default:
+if|if
+condition|(
+name|AcceptKeystroke
+argument_list|(
+operator|*
+name|buffer
+argument_list|,
+name|rememberedshiftstate
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+return|return
+operator|(
+name|origCount
+operator|-
+name|count
+operator|)
+return|;
+block|}
+break|break;
+block|}
+name|buffer
+operator|++
+expr_stmt|;
+name|count
+operator|--
+expr_stmt|;
 block|}
 return|return
 operator|(
