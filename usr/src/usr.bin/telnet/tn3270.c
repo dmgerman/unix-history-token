@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tn3270.c	5.2 (Berkeley) %G%"
+literal|"@(#)tn3270.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -94,7 +94,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../telextrn.h"
+file|"../sys_curses/telextrn.h"
 end_include
 
 begin_include
