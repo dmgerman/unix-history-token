@@ -5539,14 +5539,6 @@ name|TD_IS_SLEEPING
 argument_list|(
 name|td2
 argument_list|)
-operator|&&
-operator|(
-name|td2
-operator|->
-name|td_flags
-operator|&
-name|TDF_SINTR
-operator|)
 condition|)
 name|thread_suspend_one
 argument_list|(
