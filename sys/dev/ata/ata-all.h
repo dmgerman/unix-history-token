@@ -1585,7 +1585,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int32_t
+name|void
 name|ata_dmainit
 parameter_list|(
 name|struct

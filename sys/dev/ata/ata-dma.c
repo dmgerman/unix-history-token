@@ -195,7 +195,7 @@ literal|0
 end_if
 
 begin_function
-name|int32_t
+name|void
 name|ata_dmainit
 parameter_list|(
 name|struct
@@ -235,6 +235,19 @@ decl_stmt|;
 name|int32_t
 name|error
 decl_stmt|;
+comment|/* set our most pessimistic default mode */
+name|scp
+operator|->
+name|mode
+index|[
+name|ATA_DEV
+argument_list|(
+name|device
+argument_list|)
+index|]
+operator|=
+name|ATA_PIO
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -242,10 +255,7 @@ name|scp
 operator|->
 name|bmaddr
 condition|)
-return|return
-operator|-
-literal|1
-return|;
+return|return;
 comment|/* if simplex controller, only allow DMA on primary channel */
 if|if
 condition|(
@@ -303,10 +313,7 @@ argument_list|,
 literal|"simplex device, DMA on primary only\n"
 argument_list|)
 expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
+return|return;
 block|}
 block|}
 if|if
@@ -343,10 +350,7 @@ name|M_NOWAIT
 argument_list|)
 operator|)
 condition|)
-return|return
-operator|-
-literal|1
-return|;
+return|return;
 if|if
 condition|(
 operator|(
@@ -390,10 +394,7 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
+return|return;
 block|}
 name|scp
 operator|->
@@ -600,9 +601,7 @@ index|]
 operator|=
 name|ATA_UDMA2
 expr_stmt|;
-return|return
-literal|0
-return|;
+return|return;
 block|}
 block|}
 comment|/* FALLTHROUGH */
@@ -1012,9 +1011,7 @@ index|]
 operator|=
 name|ATA_WDMA2
 expr_stmt|;
-return|return
-literal|0
-return|;
+return|return;
 block|}
 block|}
 comment|/* we could set PIO mode timings, but we assume the BIOS did that */
@@ -1155,9 +1152,7 @@ index|]
 operator|=
 name|ATA_WDMA2
 expr_stmt|;
-return|return
-literal|0
-return|;
+return|return;
 block|}
 block|}
 break|break;
@@ -1346,9 +1341,7 @@ index|]
 operator|=
 name|ATA_UDMA2
 expr_stmt|;
-return|return
-literal|0
-return|;
+return|return;
 block|}
 block|}
 if|if
@@ -1454,9 +1447,7 @@ index|]
 operator|=
 name|ATA_WDMA2
 expr_stmt|;
-return|return
-literal|0
-return|;
+return|return;
 block|}
 block|}
 comment|/* we could set PIO mode timings, but we assume the BIOS did that */
@@ -1566,9 +1557,7 @@ index|]
 operator|=
 name|ATA_UDMA4
 expr_stmt|;
-return|return
-literal|0
-return|;
+return|return;
 block|}
 block|}
 if|if
@@ -1655,9 +1644,7 @@ index|]
 operator|=
 name|ATA_UDMA2
 expr_stmt|;
-return|return
-literal|0
-return|;
+return|return;
 block|}
 block|}
 block|}
@@ -1752,9 +1739,7 @@ index|]
 operator|=
 name|ATA_UDMA4
 expr_stmt|;
-return|return
-literal|0
-return|;
+return|return;
 block|}
 block|}
 comment|/* UDMA2 mode only on 82C586> rev1, 82C596, AMD 756 */
@@ -1905,9 +1890,7 @@ index|]
 operator|=
 name|ATA_UDMA2
 expr_stmt|;
-return|return
-literal|0
-return|;
+return|return;
 block|}
 block|}
 if|if
@@ -2025,9 +2008,7 @@ index|]
 operator|=
 name|ATA_WDMA2
 expr_stmt|;
-return|return
-literal|0
-return|;
+return|return;
 block|}
 block|}
 comment|/* we could set PIO mode timings, but we assume the BIOS did that */
@@ -2124,9 +2105,7 @@ index|]
 operator|=
 name|ATA_UDMA2
 expr_stmt|;
-return|return
-literal|0
-return|;
+return|return;
 block|}
 block|}
 if|if
@@ -2221,9 +2200,7 @@ index|]
 operator|=
 name|ATA_WDMA2
 expr_stmt|;
-return|return
-literal|0
-return|;
+return|return;
 block|}
 block|}
 comment|/* we could set PIO mode timings, but we assume the BIOS did that */
@@ -2402,9 +2379,7 @@ index|]
 operator|=
 name|ATA_UDMA4
 expr_stmt|;
-return|return
-literal|0
-return|;
+return|return;
 block|}
 block|}
 if|if
@@ -2485,9 +2460,7 @@ index|]
 operator|=
 name|ATA_UDMA2
 expr_stmt|;
-return|return
-literal|0
-return|;
+return|return;
 block|}
 block|}
 if|if
@@ -2572,9 +2545,7 @@ index|]
 operator|=
 name|ATA_WDMA2
 expr_stmt|;
-return|return
-literal|0
-return|;
+return|return;
 block|}
 block|}
 name|error
@@ -2661,10 +2632,7 @@ argument_list|(
 name|apiomode
 argument_list|)
 expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
+return|return;
 case|case
 literal|0x00041103
 case|:
@@ -2791,9 +2759,7 @@ index|]
 operator|=
 name|ATA_UDMA4
 expr_stmt|;
-return|return
-literal|0
-return|;
+return|return;
 block|}
 block|}
 if|if
@@ -2874,9 +2840,7 @@ index|]
 operator|=
 name|ATA_UDMA2
 expr_stmt|;
-return|return
-literal|0
-return|;
+return|return;
 block|}
 block|}
 if|if
@@ -2961,9 +2925,7 @@ index|]
 operator|=
 name|ATA_WDMA2
 expr_stmt|;
-return|return
-literal|0
-return|;
+return|return;
 block|}
 block|}
 name|error
@@ -3050,10 +3012,7 @@ argument_list|(
 name|apiomode
 argument_list|)
 expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
+return|return;
 default|default:
 comment|/* unknown controller chip */
 comment|/* better not try generic DMA on ATAPI devices it almost never works */
@@ -3084,6 +3043,58 @@ name|ATA_ATAPI_SLAVE
 operator|)
 condition|)
 break|break;
+comment|/* if controller says its setup for DMA take the easy way out */
+comment|/* the downside is we dont know what DMA mode we are in */
+if|if
+condition|(
+operator|(
+name|udmamode
+operator|>=
+literal|0
+operator|||
+name|wdmamode
+operator|>
+literal|1
+operator|)
+operator|&&
+operator|(
+name|inb
+argument_list|(
+name|scp
+operator|->
+name|bmaddr
+operator|+
+name|ATA_BMSTAT_PORT
+argument_list|)
+operator|&
+operator|(
+operator|(
+name|device
+operator|==
+name|ATA_MASTER
+operator|)
+condition|?
+name|ATA_BMSTAT_DMA_MASTER
+else|:
+name|ATA_BMSTAT_DMA_SLAVE
+operator|)
+operator|)
+condition|)
+block|{
+name|scp
+operator|->
+name|mode
+index|[
+name|ATA_DEV
+argument_list|(
+name|device
+argument_list|)
+index|]
+operator|=
+name|ATA_DMA
+expr_stmt|;
+return|return;
+block|}
 comment|/* well, we have no support for this, but try anyways */
 if|if
 condition|(
@@ -3164,38 +3175,10 @@ index|]
 operator|=
 name|ATA_WDMA2
 expr_stmt|;
-return|return
-literal|0
-return|;
+return|return;
 block|}
 block|}
 block|}
-name|error
-operator|=
-name|ata_command
-argument_list|(
-name|scp
-argument_list|,
-name|device
-argument_list|,
-name|ATA_C_SETFEATURES
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|ata_pio2mode
-argument_list|(
-name|apiomode
-argument_list|)
-argument_list|,
-name|ATA_C_F_SETXFER
-argument_list|,
-name|ATA_WAIT_READY
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|bootverbose
@@ -3206,46 +3189,9 @@ name|scp
 argument_list|,
 name|device
 argument_list|,
-literal|"%s setting up PIO%d mode on generic chip\n"
-argument_list|,
-operator|(
-name|error
-operator|)
-condition|?
-literal|"failed"
-else|:
-literal|"success"
-argument_list|,
-operator|(
-name|apiomode
-operator|>=
-literal|0
-operator|)
-condition|?
-name|apiomode
-else|:
-literal|0
+literal|"using PIO mode set by BIOS\n"
 argument_list|)
 expr_stmt|;
-name|scp
-operator|->
-name|mode
-index|[
-name|ATA_DEV
-argument_list|(
-name|device
-argument_list|)
-index|]
-operator|=
-name|ata_pio2mode
-argument_list|(
-name|apiomode
-argument_list|)
-expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
 block|}
 end_function
 
