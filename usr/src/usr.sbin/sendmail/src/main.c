@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.22 (Berkeley) %G%"
+literal|"@(#)main.c	6.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3544,6 +3544,24 @@ end_comment
 begin_comment
 comment|/* 	**  Do basic system initialization and set the sender 	*/
 end_comment
+
+begin_comment
+comment|/* make sendmail immune from process group signals */
+end_comment
+
+begin_expr_stmt
+operator|(
+name|void
+operator|)
+name|setpgrp
+argument_list|(
+literal|0
+argument_list|,
+name|getpid
+argument_list|()
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|initsys
