@@ -115,6 +115,12 @@ literal|"/dist"
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|CDROMInitQuiet
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|properties
@@ -277,7 +283,6 @@ return|return
 name|FALSE
 return|;
 block|}
-elseif|else
 if|if
 condition|(
 name|errno
@@ -307,10 +312,22 @@ argument_list|,
 literal|7
 argument_list|)
 expr_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 block|}
 block|}
-else|else
+if|if
+condition|(
+name|errno
+condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|CDROMInitQuiet
+condition|)
 name|msgConfirm
 argument_list|(
 literal|"Error mounting %s on %s: %s (%u)"
