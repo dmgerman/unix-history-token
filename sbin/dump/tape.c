@@ -1782,7 +1782,7 @@ argument_list|)
 expr_stmt|;
 name|broadcast
 argument_list|(
-literal|"CHANGE DUMP VOLUMES!\7\7\n"
+literal|"CHANGE DUMP VOLUMES!\a\a\n"
 argument_list|)
 expr_stmt|;
 block|}

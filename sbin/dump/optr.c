@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/wait.h>
 end_include
 
@@ -471,7 +477,7 @@ expr_stmt|;
 else|else
 name|msgtail
 argument_list|(
-literal|"\7\7"
+literal|"\a\a"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1015,7 +1021,7 @@ name|fprintf
 argument_list|(
 name|f_tty
 argument_list|,
-literal|"\n\ \7\7\7Message from the dump program to all operators at %d:%02d ...\r\n\n\ DUMP: NEEDS ATTENTION: "
+literal|"\n\ \a\a\aMessage from the dump program to all operators at %d:%02d ...\r\n\n\ DUMP: NEEDS ATTENTION: "
 argument_list|,
 name|localclock
 operator|->
@@ -1671,11 +1677,12 @@ begin_struct
 struct|struct
 name|pfstab
 block|{
-name|struct
-name|pfstab
-modifier|*
-name|pf_next
-decl_stmt|;
+name|SLIST_ENTRY
+argument_list|(
+argument|pfstab
+argument_list|)
+name|pf_list
+expr_stmt|;
 name|struct
 name|fstab
 modifier|*
@@ -1685,14 +1692,16 @@ block|}
 struct|;
 end_struct
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|static
-name|struct
-name|pfstab
-modifier|*
+name|SLIST_HEAD
+argument_list|(
+argument_list|,
+argument|pfstab
+argument_list|)
 name|table
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|void
@@ -1820,15 +1829,15 @@ name|pf_fstab
 operator|=
 name|fs
 expr_stmt|;
-name|pf
-operator|->
-name|pf_next
-operator|=
+name|SLIST_INSERT_HEAD
+argument_list|(
+operator|&
 name|table
-expr_stmt|;
-name|table
-operator|=
+argument_list|,
 name|pf
+argument_list|,
+name|pf_list
+argument_list|)
 expr_stmt|;
 block|}
 operator|(
@@ -1873,22 +1882,14 @@ name|char
 modifier|*
 name|rn
 decl_stmt|;
-for|for
-control|(
-name|pf
-operator|=
-name|table
-init|;
-name|pf
-operator|!=
-name|NULL
-condition|;
-name|pf
-operator|=
-name|pf
-operator|->
-name|pf_next
-control|)
+name|SLIST_FOREACH
+argument_list|(
+argument|pf
+argument_list|,
+argument|&table
+argument_list|,
+argument|pf_list
+argument_list|)
 block|{
 name|fs
 operator|=

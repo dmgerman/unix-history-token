@@ -2386,7 +2386,7 @@ argument_list|()
 expr_stmt|;
 name|broadcast
 argument_list|(
-literal|"DUMP IS DONE!\7\7\n"
+literal|"DUMP IS DONE!\a\a\n"
 argument_list|)
 expr_stmt|;
 name|msg

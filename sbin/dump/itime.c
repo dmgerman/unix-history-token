@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/time.h>
 end_include
 
@@ -152,6 +158,43 @@ directive|include
 file|"dump.h"
 end_include
 
+begin_struct
+struct|struct
+name|dumptime
+block|{
+name|struct
+name|dumpdates
+name|dt_value
+decl_stmt|;
+name|SLIST_ENTRY
+argument_list|(
+argument|dumptime
+argument_list|)
+name|dt_list
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_macro
+name|SLIST_HEAD
+argument_list|(
+argument|dthead
+argument_list|,
+argument|dumptime
+argument_list|)
+end_macro
+
+begin_expr_stmt
+name|dthead
+operator|=
+name|SLIST_HEAD_INITIALIZER
+argument_list|(
+name|dthead
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 name|struct
 name|dumpdates
@@ -174,16 +217,6 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|ddates_in
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|dumptime
-modifier|*
-name|dthead
 init|=
 literal|0
 decl_stmt|;
@@ -289,9 +322,9 @@ operator|!=
 name|ENOENT
 condition|)
 block|{
-name|quit
+name|msg
 argument_list|(
-literal|"cannot read %s: %s\n"
+literal|"WARNING: cannot read %s: %s\n"
 argument_list|,
 name|dumpdates
 argument_list|,
@@ -301,7 +334,7 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* NOTREACHED */
+return|return;
 block|}
 comment|/* 		 * Dumpdates does not exist, make an empty one. 		 */
 name|msg
@@ -327,9 +360,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|quit
+name|msg
 argument_list|(
-literal|"cannot create %s: %s\n"
+literal|"WARNING: cannot create %s: %s\n"
 argument_list|,
 name|dumpdates
 argument_list|,
@@ -339,7 +372,7 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* NOTREACHED */
+return|return;
 block|}
 operator|(
 name|void
@@ -475,15 +508,15 @@ break|break;
 name|nddates
 operator|++
 expr_stmt|;
-name|dtwalk
-operator|->
-name|dt_next
-operator|=
+name|SLIST_INSERT_HEAD
+argument_list|(
+operator|&
 name|dthead
-expr_stmt|;
-name|dthead
-operator|=
+argument_list|,
 name|dtwalk
+argument_list|,
+name|dt_list
+argument_list|)
 expr_stmt|;
 block|}
 name|ddates_in
@@ -520,7 +553,11 @@ argument_list|)
 expr_stmt|;
 name|dtwalk
 operator|=
+name|SLIST_FIRST
+argument_list|(
+operator|&
 name|dthead
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -539,9 +576,12 @@ operator|--
 operator|,
 name|dtwalk
 operator|=
+name|SLIST_NEXT
+argument_list|(
 name|dtwalk
-operator|->
-name|dt_next
+argument_list|,
+name|dt_list
+argument_list|)
 control|)
 name|ddatev
 index|[
@@ -770,10 +810,6 @@ operator|=
 literal|0
 expr_stmt|;
 name|nddates
-operator|=
-literal|0
-expr_stmt|;
-name|dthead
 operator|=
 literal|0
 expr_stmt|;
