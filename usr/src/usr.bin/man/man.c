@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)man.c	8.3 (Berkeley) %G%"
+literal|"@(#)man.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -385,6 +385,9 @@ modifier|*
 name|slashp
 decl_stmt|;
 name|char
+modifier|*
+name|conffile
+decl_stmt|,
 name|buf
 index|[
 name|MAXPATHLEN
@@ -392,6 +395,10 @@ operator|*
 literal|2
 index|]
 decl_stmt|;
+name|conffile
+operator|=
+name|NULL
+expr_stmt|;
 name|f_cat
 operator|=
 name|f_how
@@ -409,7 +416,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"-acfhkM:m:P:w"
+literal|"-aC:cfhkM:m:P:w"
 argument_list|)
 operator|)
 operator|!=
@@ -426,6 +433,14 @@ case|:
 name|f_all
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'C'
+case|:
+name|conffile
+operator|=
+name|optarg
 expr_stmt|;
 break|break;
 case|case
@@ -574,7 +589,9 @@ name|_PATH_PAGER
 expr_stmt|;
 comment|/* Read the configuration file. */
 name|config
-argument_list|()
+argument_list|(
+name|conffile
+argument_list|)
 expr_stmt|;
 comment|/* If there's no _default list, create an empty one. */
 if|if
@@ -4018,7 +4035,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: man [-ac] [-M path] [-m path] [section] title ...\n"
+literal|"usage: man [-ac] [-C file] [-M path] [-m path] [section] title ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
