@@ -1609,7 +1609,7 @@ block|}
 end_function
 
 begin_expr_stmt
-name|DEV_DRIVER_MODULE
+name|DRIVER_MODULE
 argument_list|(
 name|zs
 argument_list|,
@@ -1618,8 +1618,6 @@ argument_list|,
 name|zs_driver
 argument_list|,
 name|zs_devclass
-argument_list|,
-name|zs_cdevsw
 argument_list|,
 literal|0
 argument_list|,
@@ -1967,6 +1965,12 @@ name|void
 modifier|*
 name|ih
 decl_stmt|;
+name|cdevsw_add
+argument_list|(
+operator|&
+name|zs_cdevsw
+argument_list|)
+expr_stmt|;
 name|bus_generic_attach
 argument_list|(
 name|dev
