@@ -234,6 +234,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RBX_NOINTR
+value|0x1c
+end_define
+
+begin_comment
+comment|/* -n */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RBX_DUAL
 value|0x1d
 end_define
@@ -253,15 +264,12 @@ begin_comment
 comment|/* -P */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|RBX_NOINTR
-value|0x1f
-end_define
+begin_comment
+comment|/* 0x1f is reserved for the historical RB_BOOTINFO option */
+end_comment
 
 begin_comment
-comment|/* -n */
+comment|/* pass: -a, -s, -r, -d, -c, -v, -h, -C, -g, -m, -p, -D */
 end_comment
 
 begin_define
@@ -544,7 +552,7 @@ specifier|static
 name|uint32_t
 name|opts
 init|=
-name|RB_BOOTINFO
+literal|0
 decl_stmt|;
 end_decl_stmt
 
