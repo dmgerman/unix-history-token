@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)glob.c	8.1 (Berkeley) %G%"
+literal|"@(#)glob.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1845,12 +1845,6 @@ operator|=
 name|pglob
 operator|->
 name|gl_pathc
-expr_stmt|;
-name|pglob
-operator|->
-name|gl_matchc
-operator|=
-literal|0
 expr_stmt|;
 name|bufnext
 operator|=
