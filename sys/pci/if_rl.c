@@ -10783,7 +10783,7 @@ argument_list|,
 name|RL_EEMODE_WRITECFG
 argument_list|)
 expr_stmt|;
-name|CSR_WRITE_4
+name|CSR_WRITE_STREAM_4
 argument_list|(
 name|sc
 argument_list|,
@@ -10807,7 +10807,7 @@ index|]
 operator|)
 argument_list|)
 expr_stmt|;
-name|CSR_WRITE_4
+name|CSR_WRITE_STREAM_4
 argument_list|(
 name|sc
 argument_list|,

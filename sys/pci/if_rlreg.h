@@ -3467,6 +3467,21 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CSR_WRITE_STREAM_4
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|bus_space_write_stream_4(sc->rl_btag, sc->rl_bhandle, reg, val)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CSR_WRITE_4
 parameter_list|(
 name|sc
