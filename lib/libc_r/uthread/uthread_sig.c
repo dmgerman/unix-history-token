@@ -217,11 +217,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|int
-name|dispatch
-init|=
-literal|0
-decl_stmt|;
 name|pthread_t
 name|pthread
 decl_stmt|;
@@ -480,13 +475,6 @@ name|int
 name|sig
 parameter_list|)
 block|{
-name|pthread_t
-name|saved
-decl_stmt|;
-name|struct
-name|sigaction
-name|act
-decl_stmt|;
 comment|/* 	 * Flag the signal as pending. It will be dispatched later. 	 */
 name|sigaddset
 argument_list|(

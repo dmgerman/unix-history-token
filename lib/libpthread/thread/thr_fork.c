@@ -55,9 +55,6 @@ block|{
 name|int
 name|flags
 decl_stmt|;
-name|int
-name|status
-decl_stmt|;
 name|pid_t
 name|ret
 decl_stmt|;

@@ -66,9 +66,6 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
-name|int
-name|status
-decl_stmt|;
 name|va_list
 name|ap
 decl_stmt|;

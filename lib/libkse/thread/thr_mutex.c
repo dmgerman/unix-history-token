@@ -74,9 +74,6 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|status
-decl_stmt|;
 if|if
 condition|(
 name|mutex
