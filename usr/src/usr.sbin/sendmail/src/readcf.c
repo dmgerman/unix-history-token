@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	6.19 (Berkeley) %G%"
+literal|"@(#)readcf.c	6.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4491,6 +4491,24 @@ operator|=
 name|newstr
 argument_list|(
 name|val
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|RealUid
+operator|!=
+literal|0
+operator|&&
+operator|!
+name|safe
+condition|)
+name|auth_warning
+argument_list|(
+name|e
+argument_list|,
+literal|"Processed from queue %s"
+argument_list|,
+name|QueueDir
 argument_list|)
 expr_stmt|;
 break|break;

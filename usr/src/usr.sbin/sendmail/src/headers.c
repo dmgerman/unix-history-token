@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	6.24 (Berkeley) %G%"
+literal|"@(#)headers.c	6.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -772,7 +772,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  ADDHEADER -- add a header entry to the end of the queue. ** **	This bypasses the special checking of chompheader. ** **	Parameters: **		field -- the name of the header field. **		value -- the value of the field.  It must be lower-cased. **		e -- the envelope to add them to. ** **	Returns: **		none. ** **	Side Effects: **		adds the field on the list of headers for this envelope. */
+comment|/* **  ADDHEADER -- add a header entry to the end of the queue. ** **	This bypasses the special checking of chompheader. ** **	Parameters: **		field -- the name of the header field.  It must be **			lower-cased. **		value -- the value of the field. **		e -- the envelope to add them to. ** **	Returns: **		none. ** **	Side Effects: **		adds the field on the list of headers for this envelope. */
 end_comment
 
 begin_macro

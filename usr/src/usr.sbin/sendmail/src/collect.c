@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	6.11 (Berkeley) %G%"
+literal|"@(#)collect.c	6.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -865,13 +865,6 @@ block|{
 name|char
 modifier|*
 name|host
-decl_stmt|;
-name|int
-name|usrerr
-argument_list|()
-decl_stmt|,
-name|syserr
-argument_list|()
 decl_stmt|;
 name|host
 operator|=

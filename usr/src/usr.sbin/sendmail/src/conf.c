@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.40 (Berkeley) %G%"
+literal|"@(#)conf.c	6.41 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -301,13 +301,17 @@ literal|"restrictmailq"
 block|,
 name|PRIV_RESTRMAILQ
 block|,
+literal|"authwarnings"
+block|,
+name|PRIV_AUTHWARNINGS
+block|,
 literal|"goaway"
 block|,
 name|PRIV_GOAWAY
 block|,
 name|NULL
 block|,
-name|PRIV_PUBLIC
+literal|0
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -483,6 +487,11 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* option T */
+name|PrivacyFlags
+operator|=
+name|PRIV_AUTHWARNINGS
+expr_stmt|;
+comment|/* option p */
 name|setdefuser
 argument_list|()
 expr_stmt|;

@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.28 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	6.29 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.28 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	6.29 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -956,6 +956,17 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|auth_warning
+argument_list|(
+name|e
+argument_list|,
+literal|"Host %s claimed to be %s"
+argument_list|,
+name|RealHostName
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1039,7 +1050,10 @@ if|if
 condition|(
 operator|!
 name|gothello
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|bitset
 argument_list|(
 name|PRIV_NEEDMAILHELO
@@ -1047,10 +1061,19 @@ argument_list|,
 name|PrivacyFlags
 argument_list|)
 condition|)
-block|{
 name|message
 argument_list|(
 literal|"503 Polite people say HELO first"
+argument_list|)
+expr_stmt|;
+else|else
+name|auth_warning
+argument_list|(
+name|e
+argument_list|,
+literal|"Host %s didn't use HELO protocol"
+argument_list|,
+name|RealHostName
 argument_list|)
 expr_stmt|;
 break|break;
