@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_ec.c	4.3	82/04/11	*/
+comment|/*	if_ec.c	4.4	82/04/12	*/
 end_comment
 
 begin_include
@@ -2162,11 +2162,11 @@ expr_stmt|;
 if|if
 condition|(
 name|ecoff
-operator|<
+operator|<=
 name|ECRDOFF
 operator|||
 name|ecoff
-operator|>=
+operator|>
 name|ECMTU
 operator|+
 name|ECRDOFF
