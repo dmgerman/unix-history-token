@@ -33,66 +33,11 @@ directive|include
 file|<machine/db_machdep.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|V9
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|V9
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Sign extend values */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|V9
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|SIGNEX
-parameter_list|(
-name|v
-parameter_list|,
-name|width
-parameter_list|)
-value|((((long long)(v))<<(64-width))>>(64-width))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|SIGNEX
-parameter_list|(
-name|v
-parameter_list|,
-name|width
-parameter_list|)
-value|((((int)(v))<<(32-width))>>(32-width))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|<machine/instr.h>
+end_include
 
 begin_define
 define|#
@@ -108,244 +53,6 @@ begin_comment
 comment|/*  * All Sparc instructions are 32-bits, with the one exception being  * the set instruction which is actually a macro which expands into  * two instructions...  *  * There are 5 different fields that can be used to identify which  * operation is encoded into a particular 32-bit insn. There are 3  * formats for instuctions, which one being used is determined by  * bits 30-31 of the insn. Here are the bit fields and their names:  *  * 1100 0000 0000 0000 0000 0000 0000 0000 op field, determines format  * 0000 0001 1100 0000 0000 0000 0000 0000 op2 field, format 2 only  * 0000 0001 1111 1000 0000 0000 0000 0000 op3 field, format 3 only  * 0000 0000 0000 0000 0010 0000 0000 0000 f3i bit, format 3 only  * 0000 0000 0000 0000 0001 0000 0000 0000 X bit, format 3 only  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|OP
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)& 0x3)<< 30)
-end_define
-
-begin_define
-define|#
-directive|define
-name|OP2
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)& 0x7)<< 22)
-end_define
-
-begin_define
-define|#
-directive|define
-name|OP3
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)& 0x3f)<< 19)
-end_define
-
-begin_define
-define|#
-directive|define
-name|OPF
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)& 0x1ff)<< 5)
-end_define
-
-begin_define
-define|#
-directive|define
-name|F3I
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)& 0x1)<< 13)
-end_define
-
-begin_comment
-comment|/* various other fields */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|A
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)& 0x1)<< 29)
-end_define
-
-begin_define
-define|#
-directive|define
-name|P
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)& 0x1)<< 19)
-end_define
-
-begin_define
-define|#
-directive|define
-name|X
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)& 0x1)<< 12)
-end_define
-
-begin_define
-define|#
-directive|define
-name|FCN
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)& 0x1f)<< 25)
-end_define
-
-begin_define
-define|#
-directive|define
-name|RCOND2
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)& 0x7)<< 25)
-end_define
-
-begin_define
-define|#
-directive|define
-name|RCOND34
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)& 0x7)<< 10)
-end_define
-
-begin_define
-define|#
-directive|define
-name|COND
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)& 0xf)<< 25)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SW_TRAP
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)& 0x7f)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SHCNT32
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)& 0x1f)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SHCNT64
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)& 0x3f)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IMM11
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)& 0x7ff)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IMM22
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)& 0x3fffff)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DISP19
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)& 0x7ffff)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DISP22
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)& 0x3fffff)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DISP30
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)& 0x3fffffffL)
-end_define
-
-begin_comment
-comment|/* Register Operand Fields */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RS1
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)& 0x1f)<< 14)
-end_define
-
-begin_define
-define|#
-directive|define
-name|RS2
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)& 0x1f)
-end_define
-
-begin_define
-define|#
-directive|define
-name|RD
-parameter_list|(
-name|x
-parameter_list|)
-value|(((x)& 0x1f)<< 25)
-end_define
-
 begin_comment
 comment|/* FORMAT macros used in sparc_i table to decode each opcode */
 end_comment
@@ -357,7 +64,7 @@ name|FORMAT1
 parameter_list|(
 name|a
 parameter_list|)
-value|(OP(a))
+value|(EIF_OP(a))
 end_define
 
 begin_define
@@ -369,8 +76,12 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|(OP(a) | OP2(b))
+value|(EIF_OP(a) | EIF_F2_OP2(b))
 end_define
+
+begin_comment
+comment|/* For formats 3 and 4 */
+end_comment
 
 begin_define
 define|#
@@ -383,7 +94,7 @@ name|b
 parameter_list|,
 name|c
 parameter_list|)
-value|(OP(a) | OP3(b) | F3I(c))
+value|(EIF_OP(a) | EIF_F3_OP3(b) | EIF_F3_I(c))
 end_define
 
 begin_define
@@ -397,7 +108,7 @@ name|b
 parameter_list|,
 name|c
 parameter_list|)
-value|(OP(a) | OP3(b) | OPF(c))
+value|(EIF_OP(a) | EIF_F3_OP3(b) | EIF_F3_OPF(c))
 end_define
 
 begin_comment
@@ -802,7 +513,7 @@ argument_list|,
 literal|2
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|8
 argument_list|)
@@ -822,7 +533,7 @@ argument_list|,
 literal|2
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|0
 argument_list|)
@@ -842,7 +553,7 @@ argument_list|,
 literal|2
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|9
 argument_list|)
@@ -862,7 +573,7 @@ argument_list|,
 literal|2
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|1
 argument_list|)
@@ -882,7 +593,7 @@ argument_list|,
 literal|2
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|10
 argument_list|)
@@ -902,7 +613,7 @@ argument_list|,
 literal|2
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|2
 argument_list|)
@@ -922,7 +633,7 @@ argument_list|,
 literal|2
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|11
 argument_list|)
@@ -942,7 +653,7 @@ argument_list|,
 literal|2
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|3
 argument_list|)
@@ -962,7 +673,7 @@ argument_list|,
 literal|2
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|12
 argument_list|)
@@ -982,7 +693,7 @@ argument_list|,
 literal|2
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|4
 argument_list|)
@@ -1002,7 +713,7 @@ argument_list|,
 literal|2
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|13
 argument_list|)
@@ -1022,7 +733,7 @@ argument_list|,
 literal|2
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|5
 argument_list|)
@@ -1042,7 +753,7 @@ argument_list|,
 literal|2
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|14
 argument_list|)
@@ -1062,7 +773,7 @@ argument_list|,
 literal|2
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|6
 argument_list|)
@@ -1082,7 +793,7 @@ argument_list|,
 literal|2
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|15
 argument_list|)
@@ -1102,7 +813,7 @@ argument_list|,
 literal|2
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|7
 argument_list|)
@@ -1123,7 +834,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|8
 argument_list|)
@@ -1143,7 +854,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|0
 argument_list|)
@@ -1163,7 +874,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|9
 argument_list|)
@@ -1183,7 +894,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|1
 argument_list|)
@@ -1203,7 +914,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|10
 argument_list|)
@@ -1223,7 +934,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|2
 argument_list|)
@@ -1243,7 +954,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|11
 argument_list|)
@@ -1263,7 +974,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|3
 argument_list|)
@@ -1283,7 +994,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|12
 argument_list|)
@@ -1303,7 +1014,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|4
 argument_list|)
@@ -1323,7 +1034,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|13
 argument_list|)
@@ -1343,7 +1054,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|5
 argument_list|)
@@ -1363,7 +1074,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|14
 argument_list|)
@@ -1383,7 +1094,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|6
 argument_list|)
@@ -1403,7 +1114,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|15
 argument_list|)
@@ -1423,7 +1134,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|7
 argument_list|)
@@ -1444,7 +1155,7 @@ argument_list|,
 literal|3
 argument_list|)
 operator||
-name|RCOND2
+name|EIF_F2_RCOND
 argument_list|(
 literal|1
 argument_list|)
@@ -1464,17 +1175,17 @@ argument_list|,
 literal|3
 argument_list|)
 operator||
-name|A
+name|EIF_F2_A
 argument_list|(
 literal|1
 argument_list|)
 operator||
-name|P
+name|EIF_F2_P
 argument_list|(
 literal|1
 argument_list|)
 operator||
-name|RCOND2
+name|EIF_F2_RCOND
 argument_list|(
 literal|2
 argument_list|)
@@ -1494,7 +1205,7 @@ argument_list|,
 literal|3
 argument_list|)
 operator||
-name|RCOND2
+name|EIF_F2_RCOND
 argument_list|(
 literal|3
 argument_list|)
@@ -1514,7 +1225,7 @@ argument_list|,
 literal|3
 argument_list|)
 operator||
-name|RCOND2
+name|EIF_F2_RCOND
 argument_list|(
 literal|5
 argument_list|)
@@ -1534,7 +1245,7 @@ argument_list|,
 literal|3
 argument_list|)
 operator||
-name|RCOND2
+name|EIF_F2_RCOND
 argument_list|(
 literal|6
 argument_list|)
@@ -1554,7 +1265,7 @@ argument_list|,
 literal|3
 argument_list|)
 operator||
-name|RCOND2
+name|EIF_F2_RCOND
 argument_list|(
 literal|7
 argument_list|)
@@ -1575,7 +1286,7 @@ argument_list|,
 literal|5
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|8
 argument_list|)
@@ -1595,7 +1306,7 @@ argument_list|,
 literal|5
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|0
 argument_list|)
@@ -1615,7 +1326,7 @@ argument_list|,
 literal|5
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|7
 argument_list|)
@@ -1635,7 +1346,7 @@ argument_list|,
 literal|5
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|6
 argument_list|)
@@ -1655,7 +1366,7 @@ argument_list|,
 literal|5
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|5
 argument_list|)
@@ -1675,7 +1386,7 @@ argument_list|,
 literal|5
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|4
 argument_list|)
@@ -1695,7 +1406,7 @@ argument_list|,
 literal|5
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|3
 argument_list|)
@@ -1715,7 +1426,7 @@ argument_list|,
 literal|5
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|2
 argument_list|)
@@ -1735,7 +1446,7 @@ argument_list|,
 literal|5
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|1
 argument_list|)
@@ -1755,7 +1466,7 @@ argument_list|,
 literal|5
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|9
 argument_list|)
@@ -1775,7 +1486,7 @@ argument_list|,
 literal|5
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|10
 argument_list|)
@@ -1795,7 +1506,7 @@ argument_list|,
 literal|5
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|11
 argument_list|)
@@ -1815,7 +1526,7 @@ argument_list|,
 literal|5
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|12
 argument_list|)
@@ -1835,7 +1546,7 @@ argument_list|,
 literal|5
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|13
 argument_list|)
@@ -1855,7 +1566,7 @@ argument_list|,
 literal|5
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|14
 argument_list|)
@@ -1875,7 +1586,7 @@ argument_list|,
 literal|5
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|15
 argument_list|)
@@ -1896,7 +1607,7 @@ argument_list|,
 literal|6
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|8
 argument_list|)
@@ -1916,7 +1627,7 @@ argument_list|,
 literal|6
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|0
 argument_list|)
@@ -1936,7 +1647,7 @@ argument_list|,
 literal|6
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|7
 argument_list|)
@@ -1956,7 +1667,7 @@ argument_list|,
 literal|6
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|6
 argument_list|)
@@ -1976,7 +1687,7 @@ argument_list|,
 literal|6
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|5
 argument_list|)
@@ -1996,7 +1707,7 @@ argument_list|,
 literal|6
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|4
 argument_list|)
@@ -2016,7 +1727,7 @@ argument_list|,
 literal|6
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|3
 argument_list|)
@@ -2036,7 +1747,7 @@ argument_list|,
 literal|6
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|2
 argument_list|)
@@ -2056,7 +1767,7 @@ argument_list|,
 literal|6
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|1
 argument_list|)
@@ -2076,7 +1787,7 @@ argument_list|,
 literal|6
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|9
 argument_list|)
@@ -2096,7 +1807,7 @@ argument_list|,
 literal|6
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|10
 argument_list|)
@@ -2116,7 +1827,7 @@ argument_list|,
 literal|6
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|11
 argument_list|)
@@ -2136,7 +1847,7 @@ argument_list|,
 literal|6
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|12
 argument_list|)
@@ -2156,7 +1867,7 @@ argument_list|,
 literal|6
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|13
 argument_list|)
@@ -2176,7 +1887,7 @@ argument_list|,
 literal|6
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|14
 argument_list|)
@@ -2196,7 +1907,7 @@ argument_list|,
 literal|6
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|15
 argument_list|)
@@ -2328,9 +2039,6 @@ block|,
 literal|"1id"
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|V9
 block|{
 operator|(
 name|FORMAT3
@@ -2342,7 +2050,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator||
-name|RD
+name|EIF_F3_RD
 argument_list|(
 literal|0xf
 argument_list|)
@@ -2393,52 +2101,6 @@ block|,
 literal|"1iH"
 block|}
 block|,
-else|#
-directive|else
-block|{
-name|FORMAT3
-argument_list|(
-literal|2
-argument_list|,
-name|OP3_X
-argument_list|(
-literal|3
-argument_list|,
-literal|0
-argument_list|)
-argument_list|,
-literal|0
-argument_list|)
-block|,
-literal|"wr"
-block|,
-literal|"12Y"
-block|}
-block|,
-comment|/* wr 1, 2, %y  */
-block|{
-name|FORMAT3
-argument_list|(
-literal|2
-argument_list|,
-name|OP3_X
-argument_list|(
-literal|3
-argument_list|,
-literal|0
-argument_list|)
-argument_list|,
-literal|1
-argument_list|)
-block|,
-literal|"wr"
-block|,
-literal|"1iY"
-block|}
-block|,
-comment|/* wr 1, i, %y */
-endif|#
-directive|endif
 block|{
 name|FORMAT3
 argument_list|(
@@ -2559,9 +2221,6 @@ block|,
 literal|"1id"
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|V9
 block|{
 name|FORMAT3
 argument_list|(
@@ -2597,7 +2256,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator||
-name|FCN
+name|EIF_F3_FCN
 argument_list|(
 literal|1
 argument_list|)
@@ -2607,52 +2266,6 @@ block|,
 literal|""
 block|}
 block|,
-else|#
-directive|else
-block|{
-name|FORMAT3
-argument_list|(
-literal|2
-argument_list|,
-name|OP3_X
-argument_list|(
-literal|3
-argument_list|,
-literal|1
-argument_list|)
-argument_list|,
-literal|0
-argument_list|)
-block|,
-literal|"wr"
-block|,
-literal|"12P"
-block|}
-block|,
-comment|/* wr 1, 2, %psr  */
-block|{
-name|FORMAT3
-argument_list|(
-literal|2
-argument_list|,
-name|OP3_X
-argument_list|(
-literal|3
-argument_list|,
-literal|1
-argument_list|)
-argument_list|,
-literal|1
-argument_list|)
-block|,
-literal|"wr"
-block|,
-literal|"1iP"
-block|}
-block|,
-comment|/* wr 1, i, %psr */
-endif|#
-directive|endif
 block|{
 name|FORMAT3
 argument_list|(
@@ -2773,9 +2386,6 @@ block|,
 literal|"1id"
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|V9
 block|{
 name|FORMAT3
 argument_list|(
@@ -2816,52 +2426,6 @@ block|,
 literal|"1iG"
 block|}
 block|,
-else|#
-directive|else
-block|{
-name|FORMAT3
-argument_list|(
-literal|2
-argument_list|,
-name|OP3_X
-argument_list|(
-literal|3
-argument_list|,
-literal|2
-argument_list|)
-argument_list|,
-literal|0
-argument_list|)
-block|,
-literal|"wr"
-block|,
-literal|"12W"
-block|}
-block|,
-comment|/* wr 1, 2, %wim */
-block|{
-name|FORMAT3
-argument_list|(
-literal|2
-argument_list|,
-name|OP3_X
-argument_list|(
-literal|3
-argument_list|,
-literal|2
-argument_list|)
-argument_list|,
-literal|1
-argument_list|)
-block|,
-literal|"wr"
-block|,
-literal|"1iW"
-block|}
-block|,
-comment|/* wr 1, i, %wim */
-endif|#
-directive|endif
 block|{
 name|FORMAT3
 argument_list|(
@@ -2982,9 +2546,6 @@ block|,
 literal|"1id"
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|V9
 block|{
 name|FORMAT3
 argument_list|(
@@ -3005,52 +2566,6 @@ block|,
 literal|""
 block|}
 block|,
-else|#
-directive|else
-block|{
-name|FORMAT3
-argument_list|(
-literal|2
-argument_list|,
-name|OP3_X
-argument_list|(
-literal|3
-argument_list|,
-literal|3
-argument_list|)
-argument_list|,
-literal|0
-argument_list|)
-block|,
-literal|"wr"
-block|,
-literal|"12T"
-block|}
-block|,
-comment|/* wr 1, 2, %tbr */
-block|{
-name|FORMAT3
-argument_list|(
-literal|2
-argument_list|,
-name|OP3_X
-argument_list|(
-literal|3
-argument_list|,
-literal|3
-argument_list|)
-argument_list|,
-literal|1
-argument_list|)
-block|,
-literal|"wr"
-block|,
-literal|"1iT"
-block|}
-block|,
-comment|/* wr 1, i, %tbr */
-endif|#
-directive|endif
 block|{
 name|FORMAT3
 argument_list|(
@@ -3327,7 +2842,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator||
-name|X
+name|EIF_F3_X
 argument_list|(
 literal|1
 argument_list|)
@@ -3352,7 +2867,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator||
-name|X
+name|EIF_F3_X
 argument_list|(
 literal|1
 argument_list|)
@@ -3518,7 +3033,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator||
-name|X
+name|EIF_F3_X
 argument_list|(
 literal|1
 argument_list|)
@@ -3543,7 +3058,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator||
-name|X
+name|EIF_F3_X
 argument_list|(
 literal|1
 argument_list|)
@@ -3708,7 +3223,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator||
-name|X
+name|EIF_F3_X
 argument_list|(
 literal|1
 argument_list|)
@@ -3733,7 +3248,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator||
-name|X
+name|EIF_F3_X
 argument_list|(
 literal|1
 argument_list|)
@@ -3843,9 +3358,6 @@ block|,
 literal|"1id"
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|V9
 block|{
 operator|(
 name|FORMAT3
@@ -3857,7 +3369,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator||
-name|RS1
+name|EIF_F3_RS1
 argument_list|(
 literal|15
 argument_list|)
@@ -3879,7 +3391,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator||
-name|RS1
+name|EIF_F3_RS1
 argument_list|(
 literal|15
 argument_list|)
@@ -3910,30 +3422,6 @@ block|,
 literal|"Bd"
 block|}
 block|,
-else|#
-directive|else
-block|{
-name|FORMAT3
-argument_list|(
-literal|2
-argument_list|,
-name|OP3_X
-argument_list|(
-literal|2
-argument_list|,
-literal|8
-argument_list|)
-argument_list|,
-literal|0
-argument_list|)
-block|,
-literal|"rd"
-block|,
-literal|"Yd"
-block|}
-block|,
-endif|#
-directive|endif
 block|{
 name|FORMAT3
 argument_list|(
@@ -4034,9 +3522,6 @@ block|,
 literal|""
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|V9
 block|{
 name|FORMAT3
 argument_list|(
@@ -4057,30 +3542,6 @@ block|,
 literal|""
 block|}
 block|,
-else|#
-directive|else
-block|{
-name|FORMAT3
-argument_list|(
-literal|2
-argument_list|,
-name|OP3_X
-argument_list|(
-literal|2
-argument_list|,
-literal|9
-argument_list|)
-argument_list|,
-literal|0
-argument_list|)
-block|,
-literal|"rd"
-block|,
-literal|"Pd"
-block|}
-block|,
-endif|#
-directive|endif
 block|{
 name|FORMAT3
 argument_list|(
@@ -4201,9 +3662,6 @@ block|,
 literal|"1id"
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|V9
 block|{
 name|FORMAT3
 argument_list|(
@@ -4224,30 +3682,6 @@ block|,
 literal|"Ad"
 block|}
 block|,
-else|#
-directive|else
-block|{
-name|FORMAT3
-argument_list|(
-literal|2
-argument_list|,
-name|OP3_X
-argument_list|(
-literal|2
-argument_list|,
-literal|10
-argument_list|)
-argument_list|,
-literal|0
-argument_list|)
-block|,
-literal|"rd"
-block|,
-literal|"Wd"
-block|}
-block|,
-endif|#
-directive|endif
 comment|/* 		 * OP3 = (3,10): TCC: Trap on Integer Condition Codes 		 */
 block|{
 operator|(
@@ -4265,7 +3699,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator||
-name|COND
+name|EIF_F4_TCOND
 argument_list|(
 literal|0x8
 argument_list|)
@@ -4292,7 +3726,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator||
-name|COND
+name|EIF_F4_TCOND
 argument_list|(
 literal|0x8
 argument_list|)
@@ -4319,7 +3753,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator||
-name|COND
+name|EIF_F4_TCOND
 argument_list|(
 literal|0x0
 argument_list|)
@@ -4346,7 +3780,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator||
-name|COND
+name|EIF_F4_TCOND
 argument_list|(
 literal|0x0
 argument_list|)
@@ -4373,7 +3807,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator||
-name|COND
+name|EIF_F4_TCOND
 argument_list|(
 literal|0x9
 argument_list|)
@@ -4400,7 +3834,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator||
-name|COND
+name|EIF_F4_TCOND
 argument_list|(
 literal|0x9
 argument_list|)
@@ -4427,7 +3861,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator||
-name|COND
+name|EIF_F4_TCOND
 argument_list|(
 literal|0x1
 argument_list|)
@@ -4454,7 +3888,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator||
-name|COND
+name|EIF_F4_TCOND
 argument_list|(
 literal|0x1
 argument_list|)
@@ -4481,7 +3915,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator||
-name|COND
+name|EIF_F4_TCOND
 argument_list|(
 literal|0xa
 argument_list|)
@@ -4508,7 +3942,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator||
-name|COND
+name|EIF_F4_TCOND
 argument_list|(
 literal|0xa
 argument_list|)
@@ -4535,7 +3969,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator||
-name|COND
+name|EIF_F4_TCOND
 argument_list|(
 literal|0x2
 argument_list|)
@@ -4562,7 +3996,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator||
-name|COND
+name|EIF_F4_TCOND
 argument_list|(
 literal|0x2
 argument_list|)
@@ -4589,7 +4023,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator||
-name|COND
+name|EIF_F4_TCOND
 argument_list|(
 literal|0xb
 argument_list|)
@@ -4616,7 +4050,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator||
-name|COND
+name|EIF_F4_TCOND
 argument_list|(
 literal|0xb
 argument_list|)
@@ -4643,7 +4077,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator||
-name|COND
+name|EIF_F4_TCOND
 argument_list|(
 literal|0x3
 argument_list|)
@@ -4670,7 +4104,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator||
-name|COND
+name|EIF_F4_TCOND
 argument_list|(
 literal|0x3
 argument_list|)
@@ -4697,7 +4131,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator||
-name|COND
+name|EIF_F4_TCOND
 argument_list|(
 literal|0xc
 argument_list|)
@@ -4724,7 +4158,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator||
-name|COND
+name|EIF_F4_TCOND
 argument_list|(
 literal|0xc
 argument_list|)
@@ -4751,7 +4185,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator||
-name|COND
+name|EIF_F4_TCOND
 argument_list|(
 literal|0x4
 argument_list|)
@@ -4778,7 +4212,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator||
-name|COND
+name|EIF_F4_TCOND
 argument_list|(
 literal|0x4
 argument_list|)
@@ -4805,7 +4239,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator||
-name|COND
+name|EIF_F4_TCOND
 argument_list|(
 literal|0xd
 argument_list|)
@@ -4832,7 +4266,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator||
-name|COND
+name|EIF_F4_TCOND
 argument_list|(
 literal|0xd
 argument_list|)
@@ -4859,7 +4293,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator||
-name|COND
+name|EIF_F4_TCOND
 argument_list|(
 literal|0x5
 argument_list|)
@@ -4886,7 +4320,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator||
-name|COND
+name|EIF_F4_TCOND
 argument_list|(
 literal|0x5
 argument_list|)
@@ -4913,7 +4347,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator||
-name|COND
+name|EIF_F4_TCOND
 argument_list|(
 literal|0xe
 argument_list|)
@@ -4940,7 +4374,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator||
-name|COND
+name|EIF_F4_TCOND
 argument_list|(
 literal|0xe
 argument_list|)
@@ -4967,7 +4401,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator||
-name|COND
+name|EIF_F4_TCOND
 argument_list|(
 literal|0x6
 argument_list|)
@@ -4994,7 +4428,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator||
-name|COND
+name|EIF_F4_TCOND
 argument_list|(
 literal|0x6
 argument_list|)
@@ -5021,7 +4455,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator||
-name|COND
+name|EIF_F4_TCOND
 argument_list|(
 literal|0xf
 argument_list|)
@@ -5048,7 +4482,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator||
-name|COND
+name|EIF_F4_TCOND
 argument_list|(
 literal|0xf
 argument_list|)
@@ -5075,7 +4509,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator||
-name|COND
+name|EIF_F4_TCOND
 argument_list|(
 literal|0x7
 argument_list|)
@@ -5102,7 +4536,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator||
-name|COND
+name|EIF_F4_TCOND
 argument_list|(
 literal|0x7
 argument_list|)
@@ -5193,9 +4627,6 @@ block|,
 literal|"1id"
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|V9
 block|{
 name|FORMAT3
 argument_list|(
@@ -5216,30 +4647,6 @@ block|,
 literal|""
 block|}
 block|,
-else|#
-directive|else
-block|{
-name|FORMAT3
-argument_list|(
-literal|2
-argument_list|,
-name|OP3_X
-argument_list|(
-literal|2
-argument_list|,
-literal|11
-argument_list|)
-argument_list|,
-literal|0
-argument_list|)
-block|,
-literal|"rd"
-block|,
-literal|"Td"
-block|}
-block|,
-endif|#
-directive|endif
 block|{
 name|FORMAT3
 argument_list|(
@@ -7551,7 +6958,7 @@ argument_list|,
 literal|14
 argument_list|)
 operator||
-name|FCN
+name|EIF_F3_FCN
 argument_list|(
 literal|1
 argument_list|)
@@ -7661,7 +7068,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator||
-name|RCOND34
+name|EIF_F3_RCOND
 argument_list|(
 literal|1
 argument_list|)
@@ -7688,7 +7095,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator||
-name|RCOND34
+name|EIF_F3_RCOND
 argument_list|(
 literal|1
 argument_list|)
@@ -7715,7 +7122,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator||
-name|RCOND34
+name|EIF_F3_RCOND
 argument_list|(
 literal|2
 argument_list|)
@@ -7742,7 +7149,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator||
-name|RCOND34
+name|EIF_F3_RCOND
 argument_list|(
 literal|2
 argument_list|)
@@ -7769,7 +7176,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator||
-name|RCOND34
+name|EIF_F3_RCOND
 argument_list|(
 literal|3
 argument_list|)
@@ -7796,7 +7203,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator||
-name|RCOND34
+name|EIF_F3_RCOND
 argument_list|(
 literal|3
 argument_list|)
@@ -7823,7 +7230,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator||
-name|RCOND34
+name|EIF_F3_RCOND
 argument_list|(
 literal|5
 argument_list|)
@@ -7850,7 +7257,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator||
-name|RCOND34
+name|EIF_F3_RCOND
 argument_list|(
 literal|5
 argument_list|)
@@ -7877,7 +7284,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator||
-name|RCOND34
+name|EIF_F3_RCOND
 argument_list|(
 literal|6
 argument_list|)
@@ -7904,7 +7311,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator||
-name|RCOND34
+name|EIF_F3_RCOND
 argument_list|(
 literal|6
 argument_list|)
@@ -7931,7 +7338,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator||
-name|RCOND34
+name|EIF_F3_RCOND
 argument_list|(
 literal|7
 argument_list|)
@@ -7958,7 +7365,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator||
-name|RCOND34
+name|EIF_F3_RCOND
 argument_list|(
 literal|7
 argument_list|)
@@ -8273,7 +7680,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator||
-name|RD
+name|EIF_F3_RD
 argument_list|(
 literal|0
 argument_list|)
@@ -8300,7 +7707,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator||
-name|RD
+name|EIF_F3_RD
 argument_list|(
 literal|0
 argument_list|)
@@ -8327,7 +7734,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator||
-name|RD
+name|EIF_F3_RD
 argument_list|(
 literal|1
 argument_list|)
@@ -8354,7 +7761,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator||
-name|RD
+name|EIF_F3_RD
 argument_list|(
 literal|1
 argument_list|)
@@ -9043,7 +8450,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator||
-name|RD
+name|EIF_F3_RD
 argument_list|(
 literal|1
 argument_list|)
@@ -9070,7 +8477,7 @@ argument_list|,
 literal|1
 argument_list|)
 operator||
-name|RD
+name|EIF_F3_RD
 argument_list|(
 literal|1
 argument_list|)
@@ -12501,7 +11908,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator||
-name|RCOND34
+name|EIF_F3_RCOND
 argument_list|(
 literal|1
 argument_list|)
@@ -12528,7 +11935,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator||
-name|RCOND34
+name|EIF_F3_RCOND
 argument_list|(
 literal|2
 argument_list|)
@@ -12555,7 +11962,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator||
-name|RCOND34
+name|EIF_F3_RCOND
 argument_list|(
 literal|3
 argument_list|)
@@ -12582,7 +11989,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator||
-name|RCOND34
+name|EIF_F3_RCOND
 argument_list|(
 literal|5
 argument_list|)
@@ -12609,7 +12016,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator||
-name|RCOND34
+name|EIF_F3_RCOND
 argument_list|(
 literal|6
 argument_list|)
@@ -12636,7 +12043,7 @@ argument_list|,
 literal|0
 argument_list|)
 operator||
-name|RCOND34
+name|EIF_F3_RCOND
 argument_list|(
 literal|7
 argument_list|)
@@ -13717,7 +13124,7 @@ argument_list|,
 literal|0x7
 argument_list|)
 operator||
-name|COND
+name|EIF_F2_COND
 argument_list|(
 literal|0xf
 argument_list|)
@@ -13767,7 +13174,7 @@ argument_list|,
 literal|0x1
 argument_list|)
 operator||
-name|OPF
+name|EIF_F3_OPF
 argument_list|(
 literal|0x1ff
 argument_list|)
@@ -13816,7 +13223,7 @@ argument_list|,
 literal|0x1
 argument_list|)
 operator||
-name|COND
+name|EIF_F4_TCOND
 argument_list|(
 literal|0xf
 argument_list|)
@@ -13878,7 +13285,7 @@ literal|0x1
 argument_list|)
 operator|)
 operator||
-name|X
+name|EIF_F3_X
 argument_list|(
 literal|1
 argument_list|)
@@ -14112,7 +13519,7 @@ if|if
 condition|(
 name|insn
 operator|&
-name|A
+name|EIF_F2_A
 argument_list|(
 literal|1
 argument_list|)
@@ -14130,7 +13537,7 @@ if|if
 condition|(
 name|insn
 operator|&
-name|P
+name|EIF_F2_P
 argument_list|(
 literal|1
 argument_list|)
@@ -14295,7 +13702,7 @@ case|:
 comment|/* simm13 -- signed */
 name|val
 operator|=
-name|SIGNEX
+name|IF_SIMM
 argument_list|(
 name|insn
 argument_list|,
@@ -14327,7 +13734,7 @@ case|:
 comment|/* simm11 -- signed */
 name|val
 operator|=
-name|SIGNEX
+name|IF_SIMM
 argument_list|(
 name|insn
 argument_list|,
@@ -14380,7 +13787,7 @@ operator|)
 expr_stmt|;
 name|val
 operator|=
-name|SIGNEX
+name|IF_SIMM
 argument_list|(
 name|val
 argument_list|,
@@ -14420,7 +13827,7 @@ operator|+
 operator|(
 literal|4
 operator|*
-name|SIGNEX
+name|IF_SIMM
 argument_list|(
 name|insn
 argument_list|,
@@ -14447,7 +13854,7 @@ operator|+
 operator|(
 literal|4
 operator|*
-name|SIGNEX
+name|IF_SIMM
 argument_list|(
 name|insn
 argument_list|,
@@ -14474,7 +13881,7 @@ operator|+
 operator|(
 literal|4
 operator|*
-name|SIGNEX
+name|IF_SIMM
 argument_list|(
 name|insn
 argument_list|,
@@ -14598,7 +14005,7 @@ literal|'8'
 case|:
 name|val
 operator|=
-name|SIGNEX
+name|IF_SIMM
 argument_list|(
 name|insn
 argument_list|,
@@ -14924,47 +14331,6 @@ index|]
 argument_list|)
 expr_stmt|;
 break|break;
-ifndef|#
-directive|ifndef
-name|V9
-case|case
-literal|'P'
-case|:
-name|db_printf
-argument_list|(
-literal|"%%psr"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'T'
-case|:
-name|db_printf
-argument_list|(
-literal|"%%tbr"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'W'
-case|:
-name|db_printf
-argument_list|(
-literal|"%%wim"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'Y'
-case|:
-name|db_printf
-argument_list|(
-literal|"%%y"
-argument_list|)
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
 default|default:
 name|db_printf
 argument_list|(

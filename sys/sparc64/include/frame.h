@@ -70,6 +70,16 @@ name|tf_sp
 value|tf_out[6]
 end_define
 
+begin_define
+define|#
+directive|define
+name|TF_DONE
+parameter_list|(
+name|tf
+parameter_list|)
+value|do { \ 	tf->tf_tpc = tf->tf_tnpc; \ 	tf->tf_tnpc += 4; \ } while (0)
+end_define
+
 begin_struct
 struct|struct
 name|mmuframe
