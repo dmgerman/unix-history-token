@@ -3397,6 +3397,13 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
+name|Argv
+index|[
+literal|1
+index|]
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 end_block
 
