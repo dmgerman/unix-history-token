@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	optab.h	1.1	86/02/25	*/
+comment|/*	@(#)optab.h	1.2 (Berkeley) %G%	*/
 end_comment
 
 begin_comment
@@ -143,16 +143,26 @@ begin_comment
 comment|/* double */
 end_comment
 
-begin_decl_stmt
-name|TYPE
-name|struct
-name|optab
-modifier|*
-name|OPTAB
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/*  * Special instructions  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KCALL
+value|0xcf
+end_define
+
+begin_define
+define|#
+directive|define
+name|CASEL
+value|0xfc
+end_define
 
 begin_struct
+specifier|extern
 struct|struct
 name|optab
 block|{
@@ -160,13 +170,13 @@ name|char
 modifier|*
 name|iname
 decl_stmt|;
-name|char
+name|u_char
 name|val
 decl_stmt|;
-name|char
+name|u_char
 name|nargs
 decl_stmt|;
-name|char
+name|u_char
 name|argtype
 index|[
 literal|6
@@ -178,22 +188,10 @@ index|[]
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|SYSSIZ
-value|151
-end_define
-
 begin_decl_stmt
-name|STRING
-name|systab
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|STRING
+specifier|extern
+name|char
+modifier|*
 name|regname
 index|[]
 decl_stmt|;
