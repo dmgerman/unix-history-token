@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)finger.c	4.2 (Berkeley) %G%"
+literal|"@(#)finger.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6497,6 +6497,19 @@ literal|1
 operator|)
 return|;
 block|}
+elseif|else
+if|if
+condition|(
+operator|*
+name|gname
+operator|==
+literal|'\0'
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 else|else
 block|{
 if|if
