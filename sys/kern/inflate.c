@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Parts of this file are not covered by:  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: imgact_gzip.c,v 1.4 1994/10/04 06:51:42 phk Exp $  *  * This module handles execution of a.out files which have been run through  * "gzip -9".  *  * For now you need to use exactly this command to compress the binaries:  *  *		gzip -9 -v< /bin/sh> /tmp/sh  *  * TODO:  *	text-segments should be made R/O after being filled  *	is the vm-stuff safe ?  * 	should handle the entire header of gzip'ed stuff.  *	inflate isn't quite reentrant yet...  *	error-handling is a mess...  *	so is the rest...  */
+comment|/*  * Parts of this file are not covered by:  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: inflate.c,v 1.2 1994/10/07 23:18:09 csgr Exp $  *  * This module handles execution of a.out files which have been run through  * "gzip -9".  *  * For now you need to use exactly this command to compress the binaries:  *  *		gzip -9 -v< /bin/sh> /tmp/sh  *  * TODO:  *	text-segments should be made R/O after being filled  *	is the vm-stuff safe ?  * 	should handle the entire header of gzip'ed stuff.  *	inflate isn't quite reentrant yet...  *	error-handling is a mess...  *	so is the rest...  */
 end_comment
 
 begin_include
@@ -13,18 +13,6 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/resourcevar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/exec.h>
 end_include
 
 begin_include
@@ -43,30 +31,6 @@ begin_include
 include|#
 directive|include
 file|<sys/malloc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/imgact.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/imgact_aout.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sysent.h>
 end_include
 
 begin_include
@@ -1078,24 +1042,21 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|inflate_free
-name|OF
-argument_list|(
-operator|(
-expr|struct
-name|gzip
-operator|*
-operator|,
-expr|struct
-name|gz_global
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* never used - why not ? */
+end_comment
+
+begin_endif
+unit|static int inflate_free OF((struct gzip *, struct gz_global *));
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* The inflate algorithm uses a sliding 32K byte window on the uncompressed    stream to find repeated byte strings.  This is implemented here as a    circular buffer.  The index is updated simply by incrementing and then    and'ing with 0x7fff (32K-1). */
@@ -1520,7 +1481,7 @@ begin_define
 define|#
 directive|define
 name|bb
-value|(glbl->bb)
+value|(glbl->gz_bb)
 end_define
 
 begin_comment
@@ -1531,7 +1492,7 @@ begin_define
 define|#
 directive|define
 name|bk
-value|(glbl->bk)
+value|(glbl->gz_bk)
 end_define
 
 begin_comment
@@ -1654,7 +1615,7 @@ begin_define
 define|#
 directive|define
 name|hufts
-value|(glbl->hufts)
+value|(glbl->gz_hufts)
 end_define
 
 begin_function
@@ -1818,7 +1779,6 @@ name|BMAX
 index|]
 decl_stmt|;
 comment|/* table stack */
-specifier|static
 name|unsigned
 name|v
 index|[
@@ -3739,28 +3699,28 @@ begin_define
 define|#
 directive|define
 name|fixed_tl
-value|(glbl->fixed_tl)
+value|(glbl->gz_fixed_tl)
 end_define
 
 begin_define
 define|#
 directive|define
 name|fixed_td
-value|(glbl->fixed_td)
+value|(glbl->gz_fixed_td)
 end_define
 
 begin_define
 define|#
 directive|define
 name|fixed_bl
-value|(glbl->fixed_bl)
+value|(glbl->gz_fixed_bl)
 end_define
 
 begin_define
 define|#
 directive|define
 name|fixed_bd
-value|(glbl->fixed_bd)
+value|(glbl->gz_fixed_bd)
 end_define
 
 begin_function
@@ -4116,7 +4076,6 @@ comment|/* number of distance codes */
 ifdef|#
 directive|ifdef
 name|PKZIP_BUG_WORKAROUND
-specifier|static
 name|unsigned
 name|ll
 index|[
@@ -4128,7 +4087,6 @@ decl_stmt|;
 comment|/* literal/length and distance code lengths */
 else|#
 directive|else
-specifier|static
 name|unsigned
 name|ll
 index|[
@@ -5154,69 +5112,21 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|int
-name|inflate_free
-parameter_list|(
-name|gz
-parameter_list|,
-name|glbl
-parameter_list|)
-name|struct
-name|gzip
-modifier|*
-name|gz
-decl_stmt|;
-name|struct
-name|gz_global
-modifier|*
-name|glbl
-decl_stmt|;
-block|{
-if|if
-condition|(
-name|fixed_tl
-operator|!=
-operator|(
-expr|struct
-name|huft
-operator|*
-operator|)
-name|NULL
-condition|)
-block|{
-name|huft_free
-argument_list|(
-name|gz
-argument_list|,
-name|fixed_td
-argument_list|)
-expr_stmt|;
-name|huft_free
-argument_list|(
-name|gz
-argument_list|,
-name|fixed_tl
-argument_list|)
-expr_stmt|;
-name|fixed_td
-operator|=
-name|fixed_tl
-operator|=
-operator|(
-expr|struct
-name|huft
-operator|*
-operator|)
-name|NULL
-expr_stmt|;
-block|}
-return|return
+begin_if
+if|#
+directive|if
 literal|0
-return|;
-block|}
-end_function
+end_if
+
+begin_comment
+comment|/* Nobody uses this - why not? */
+end_comment
+
+begin_endif
+unit|static int inflate_free(gz, glbl) struct gzip *gz; struct gz_global * glbl; {   if (fixed_tl != (struct huft *)NULL)   {     huft_free(gz,fixed_td);     huft_free(gz,fixed_tl);     fixed_td = fixed_tl = (struct huft *)NULL;   }   return 0; }
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

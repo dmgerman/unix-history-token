@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Parts of this file are not covered by:  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: imgact_gzip.c,v 1.4 1994/10/04 06:51:42 phk Exp $  *  * This module handles execution of a.out files which have been run through  * "gzip -9".  *  * For now you need to use exactly this command to compress the binaries:  *  *		gzip -9 -v< /bin/sh> /tmp/sh  *  * TODO:  *	text-segments should be made R/O after being filled  *	is the vm-stuff safe ?  * 	should handle the entire header of gzip'ed stuff.  *	inflate isn't quite reentrant yet...  *	error-handling is a mess...  *	so is the rest...  *	tidy up unnecesary includes  */
+comment|/*  * Parts of this file are not covered by:  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: imgact_gzip.c,v 1.7 1994/10/07 22:26:51 csgr Exp $  *  * This module handles execution of a.out files which have been run through  * "gzip -9".  *  * For now you need to use exactly this command to compress the binaries:  *  *		gzip -9 -v< /bin/sh> /tmp/sh  *  * TODO:  *	text-segments should be made R/O after being filled  *	is the vm-stuff safe ?  * 	should handle the entire header of gzip'ed stuff.  *	inflate isn't quite reentrant yet...  *	error-handling is a mess...  *	so is the rest...  *	tidy up unnecesary includes  */
 end_comment
 
 begin_include
@@ -9,40 +9,14 @@ directive|include
 file|<sys/param.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/resourcevar.h>
-end_include
+begin_comment
+comment|/* some header file needs this first foo! */
+end_comment
 
 begin_include
 include|#
 directive|include
 file|<sys/exec.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/inflate.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mman.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/malloc.h>
 end_include
 
 begin_include
@@ -60,13 +34,43 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/inflate.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
 begin_include
 include|#
 directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mman.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/resourcevar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysent.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
 end_include
 
 begin_include

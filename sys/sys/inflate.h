@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Parts of this file are not covered by:  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: imgact_gzip.c,v 1.4 1994/10/04 06:51:42 phk Exp $  *  * This module handles execution of a.out files which have been run through  * "gzip -9".  *  * For now you need to use exactly this command to compress the binaries:  *  *		gzip -9 -v< /bin/sh> /tmp/sh  *  * TODO:  *	text-segments should be made R/O after being filled  *	is the vm-stuff safe ?  * 	should handle the entire header of gzip'ed stuff.  *	inflate isn't quite reentrant yet...  *	error-handling is a mess...  *	so is the rest...  *	tidy up unnecessary includes  */
+comment|/*  * Parts of this file are not covered by:  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: inflate.h,v 1.2 1994/10/07 23:18:18 csgr Exp $  *  * This module handles execution of a.out files which have been run through  * "gzip -9".  *  * For now you need to use exactly this command to compress the binaries:  *  *		gzip -9 -v< /bin/sh> /tmp/sh  *  * TODO:  *	text-segments should be made R/O after being filled  *	is the vm-stuff safe ?  * 	should handle the entire header of gzip'ed stuff.  *	inflate isn't quite reentrant yet...  *	error-handling is a mess...  *	so is the rest...  *	tidy up unnecessary includes  */
 end_comment
 
 begin_ifndef
@@ -30,36 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/resourcevar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/exec.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mman.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/malloc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/imgact.h>
 end_include
 
@@ -67,30 +37,6 @@ begin_include
 include|#
 directive|include
 file|<sys/imgact_aout.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sysent.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_kern.h>
 end_include
 
 begin_comment
@@ -189,33 +135,33 @@ struct|struct
 name|gz_global
 block|{
 name|ulg
-name|bb
+name|gz_bb
 decl_stmt|;
 comment|/* bit buffer */
 name|unsigned
-name|bk
+name|gz_bk
 decl_stmt|;
 comment|/* bits in bit buffer */
 name|unsigned
-name|hufts
+name|gz_hufts
 decl_stmt|;
 comment|/* track memory usage */
 name|struct
 name|huft
 modifier|*
-name|fixed_tl
+name|gz_fixed_tl
 decl_stmt|;
 comment|/* must init to NULL !! */
 name|struct
 name|huft
 modifier|*
-name|fixed_td
+name|gz_fixed_td
 decl_stmt|;
 name|int
-name|fixed_bl
+name|gz_fixed_bl
 decl_stmt|;
 name|int
-name|fixed_bd
+name|gz_fixed_bd
 decl_stmt|;
 block|}
 struct|;
