@@ -318,11 +318,21 @@ name|S_IFMT
 operator|)
 operator|!=
 name|S_IFCHR
+operator|&&
+operator|(
+name|statb
+operator|.
+name|st_mode
+operator|&
+name|S_IFMT
+operator|)
+operator|!=
+name|S_IFBLK
 condition|)
 block|{
 name|pfatal
 argument_list|(
-literal|"%s is not a character device"
+literal|"%s is not a disk device"
 argument_list|,
 name|dev
 argument_list|)
