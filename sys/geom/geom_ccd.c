@@ -30,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/bio.h>
 end_include
 
@@ -43,36 +37,6 @@ begin_include
 include|#
 directive|include
 file|<sys/malloc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/namei.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/conf.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/disk.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/fcntl.h>
 end_include
 
 begin_include
@@ -181,12 +145,6 @@ begin_struct
 struct|struct
 name|ccdcinfo
 block|{
-name|struct
-name|vnode
-modifier|*
-name|ci_vp
-decl_stmt|;
-comment|/* device's vnode */
 name|size_t
 name|ci_size
 decl_stmt|;
@@ -225,13 +183,6 @@ name|int
 name|sc_unit
 decl_stmt|;
 comment|/* logical unit number */
-name|struct
-name|vnode
-modifier|*
-modifier|*
-name|sc_vpp
-decl_stmt|;
-comment|/* array of component vnodes */
 name|int
 name|sc_flags
 decl_stmt|;
@@ -366,7 +317,9 @@ name|g_consumer
 modifier|*
 name|cp
 parameter_list|)
-block|{ }
+block|{
+comment|/* 	 * XXX: We don't do anything here.  It is not obvious 	 * XXX: what DTRT would be, so we do what the previous 	 * XXX: code did: ignore it and let the user cope. 	 */
+block|}
 end_function
 
 begin_function
@@ -2021,6 +1974,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+comment|/* XXX: check for NULL */
 name|cbp
 operator|->
 name|bio_done
@@ -2132,6 +2086,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+comment|/* XXX: check for NULL */
 name|cbp
 operator|->
 name|bio_done
@@ -2221,7 +2176,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Called only for mirrored reads.  */
+comment|/*  * Called only for mirrored operations.  */
 end_comment
 
 begin_function
@@ -2273,18 +2228,14 @@ operator|==
 literal|0
 condition|)
 block|{
-name|g_std_done
-argument_list|(
-name|cbp
-argument_list|)
-expr_stmt|;
+comment|/* We will not be needing the partner bio */
 if|if
 condition|(
 name|mbp
-operator|==
+operator|!=
 name|NULL
 condition|)
-return|return;
+block|{
 name|pbp
 operator|->
 name|bio_inbed
@@ -2295,23 +2246,10 @@ argument_list|(
 name|mbp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|pbp
-operator|->
-name|bio_children
-operator|==
-name|pbp
-operator|->
-name|bio_inbed
-condition|)
-name|g_io_deliver
+block|}
+name|g_std_done
 argument_list|(
-name|pbp
-argument_list|,
-name|pbp
-operator|->
-name|bio_error
+name|cbp
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2323,6 +2261,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* Try partner the bio instead */
 name|mbp
 operator|->
 name|bio_caller1
@@ -2348,6 +2287,7 @@ operator|->
 name|bio_from
 argument_list|)
 expr_stmt|;
+comment|/* 			 * XXX: If this comes back OK, we should actually 			 * try to write the good data on the failed mirror 			 */
 return|return;
 block|}
 name|g_std_done
@@ -2385,7 +2325,7 @@ operator|&&
 name|pbp
 operator|->
 name|bio_error
-operator|!=
+operator|==
 literal|0
 condition|)
 name|pbp
