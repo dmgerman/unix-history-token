@@ -166,6 +166,16 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|void
+name|net_print
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|int
 name|net_getparams
 parameter_list|(
@@ -194,6 +204,8 @@ block|,
 name|net_close
 block|,
 name|noioctl
+block|,
+name|net_print
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -866,6 +878,19 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|net_print
+parameter_list|(
+name|int
+name|verbose
+parameter_list|)
+block|{
+return|return;
 block|}
 end_function
 
