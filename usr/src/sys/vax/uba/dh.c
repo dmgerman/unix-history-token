@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	dh.c	4.23	81/02/23	*/
+comment|/*	dh.c	4.24	81/02/26	*/
 end_comment
 
 begin_include
@@ -936,8 +936,8 @@ name|cvec
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
+ifndef|#
+directive|ifndef
 name|notdef
 name|dhaddr
 operator|->
@@ -1455,11 +1455,6 @@ operator|.
 name|dhcsr
 operator||=
 name|DH_IE
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|5
-argument_list|)
 expr_stmt|;
 name|dhact
 operator||=
@@ -2561,11 +2556,6 @@ operator|&
 name|DH_NXM
 condition|)
 block|{
-name|DELAY
-argument_list|(
-literal|5
-argument_list|)
-expr_stmt|;
 name|addr
 operator|->
 name|un
@@ -2698,11 +2688,6 @@ literal|017
 operator|)
 operator||
 name|DH_IE
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|5
-argument_list|)
 expr_stmt|;
 comment|/* 				 * Do arithmetic in a short to make up 				 * for lost 16&17 bits. 				 */
 name|cntr
@@ -3081,11 +3066,6 @@ name|dhcar
 operator|=
 name|car
 expr_stmt|;
-name|DELAY
-argument_list|(
-literal|5
-argument_list|)
-expr_stmt|;
 name|addr
 operator|->
 name|dhbcr
@@ -3202,11 +3182,6 @@ literal|017
 operator|)
 operator||
 name|DH_IE
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|5
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3407,11 +3382,6 @@ operator|.
 name|dhcsr
 operator||=
 name|DH_IE
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|5
-argument_list|)
 expr_stmt|;
 operator|(
 operator|(
