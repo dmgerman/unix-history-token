@@ -208,7 +208,7 @@ file|<netgraph/ng_fec.h>
 end_include
 
 begin_comment
-comment|/*  * We need a way to stash a pointer to our netgraph node in the  * ifnet structure so that receive handling works. As far as I can  * tell, although there is an AF_NETGRAPH address family, it's only  * used to identify sockaddr_ng structures: there is no netgraph address  * family domain. This means the AF_NETGRAPH entry in ifp->if_afdata[]  * should be unused, so we can (ab)use it to hold our node context.  */
+comment|/*  * We need a way to stash a pointer to our netgraph node in the  * ifnet structure so that receive handling works. As far as I can  * tell, although there is an AF_NETGRAPH address family, it's only  * used to identify sockaddr_ng structures: there is no netgraph address  * family domain. This means the AF_NETGRAPH entry in ifp->if_afdata  * should be unused, so we can use to hold our node context.  */
 end_comment
 
 begin_define
@@ -305,6 +305,29 @@ decl_stmt|;
 name|int
 name|fec_btype
 decl_stmt|;
+name|int
+function_decl|(
+modifier|*
+name|fec_if_output
+function_decl|)
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+parameter_list|,
+name|struct
+name|rtentry
+modifier|*
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct
@@ -1354,6 +1377,47 @@ operator|)
 return|;
 block|}
 block|}
+comment|/* 	 * All interfaces must use the same output vector. Once the 	 * user attaches an interface of one type, make all subsequent 	 * interfaces have the same output vector. 	 */
+if|if
+condition|(
+name|b
+operator|->
+name|fec_if_output
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|b
+operator|->
+name|fec_if_output
+operator|!=
+name|bifp
+operator|->
+name|if_output
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"fec%d: iface %s is not the same type "
+literal|"as the other interface(s) already in "
+literal|"the bundle\n"
+argument_list|,
+name|priv
+operator|->
+name|unit
+argument_list|,
+name|iface
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
+block|}
 comment|/* Allocate new list entry. */
 name|MALLOC
 argument_list|(
@@ -1592,6 +1656,23 @@ operator|->
 name|if_input
 operator|=
 name|ng_fec_input
+expr_stmt|;
+comment|/* Save output vector too. */
+if|if
+condition|(
+name|b
+operator|->
+name|fec_if_output
+operator|==
+name|NULL
+condition|)
+name|b
+operator|->
+name|fec_if_output
+operator|=
+name|bifp
+operator|->
+name|if_output
 expr_stmt|;
 comment|/* Add to the queue */
 name|new
@@ -1918,6 +1999,20 @@ name|b
 operator|->
 name|fec_ifcnt
 operator|--
+expr_stmt|;
+if|if
+condition|(
+name|b
+operator|->
+name|fec_ifcnt
+operator|==
+literal|0
+condition|)
+name|b
+operator|->
+name|fec_if_output
+operator|=
+name|NULL
 expr_stmt|;
 return|return
 operator|(
@@ -2396,15 +2491,6 @@ operator|.
 name|ifm_status
 operator|&
 name|IFM_AVALID
-operator|&&
-name|IFM_TYPE
-argument_list|(
-name|ifmr
-operator|.
-name|ifm_active
-argument_list|)
-operator|==
-name|IFM_ETHER
 condition|)
 block|{
 if|if
@@ -3148,7 +3234,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Take a quick peek at the packet and see if it's ok for us to use  * the inet or inet6 hash methods on it, if they're enabled. We do  * this by setting flags in the mbuf header. Once we've made up our  * mind what to do, we pass the frame to ether_output() for further  * processing.  */
+comment|/*  * Take a quick peek at the packet and see if it's ok for us to use  * the inet or inet6 hash methods on it, if they're enabled. We do  * this by setting flags in the mbuf header. Once we've made up our  * mind what to do, we pass the frame to output vector for further  * processing.  */
 end_comment
 
 begin_function
@@ -3343,7 +3429,7 @@ operator|)
 return|;
 break|break;
 block|}
-comment|/* 	 * Pass the frame to ether_output() for all the protocol 	 * handling. This will put the ethernet header on the packet 	 * for us. 	 */
+comment|/* 	 * Pass the frame to the output vector for all the protocol 	 * handling. This will put the ethernet header on the packet 	 * for us. 	 */
 name|priv
 operator|->
 name|if_error
@@ -3352,7 +3438,12 @@ literal|0
 expr_stmt|;
 name|error
 operator|=
-name|ether_output
+call|(
+modifier|*
+name|b
+operator|->
+name|fec_if_output
+call|)
 argument_list|(
 name|ifp
 argument_list|,
@@ -3946,12 +4037,21 @@ name|priv
 operator|->
 name|if_error
 operator|=
-name|ether_output_frame
+name|IF_HANDOFF
 argument_list|(
+operator|&
 name|oifp
+operator|->
+name|if_snd
 argument_list|,
 name|m0
+argument_list|,
+name|oifp
 argument_list|)
+condition|?
+literal|0
+else|:
+name|ENOBUFS
 expr_stmt|;
 return|return;
 block|}
@@ -4227,14 +4327,6 @@ expr_stmt|;
 name|priv
 operator|->
 name|node
-operator|=
-name|node
-expr_stmt|;
-name|priv
-operator|->
-name|arpcom
-operator|.
-name|ac_netgraph
 operator|=
 name|node
 expr_stmt|;
