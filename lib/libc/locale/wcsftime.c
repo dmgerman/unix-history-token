@@ -77,14 +77,6 @@ name|__restrict
 name|timeptr
 parameter_list|)
 block|{
-specifier|static
-specifier|const
-name|mbstate_t
-name|initial
-decl_stmt|;
-name|mbstate_t
-name|state
-decl_stmt|;
 name|char
 modifier|*
 name|dst
@@ -109,11 +101,7 @@ name|dst
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* 	 * Convert the supplied format string to a multibyte representation 	 * for strftime(), which only handles single-byte characters. 	 */
-name|state
-operator|=
-name|initial
-expr_stmt|;
+comment|/* 	 * Convert the supplied format string to a multibyte representation 	 * for strftime(), which only handles single-byte characters. 	 * 	 * We pass NULL as the state pointer to wcrtomb() because we don't 	 * support state-dependent encodings and don't want to waste time 	 * creating a zeroed mbstate_t that will not be used. 	 */
 name|sflen
 operator|=
 name|wcsrtombs
@@ -125,8 +113,7 @@ name|format
 argument_list|,
 literal|0
 argument_list|,
-operator|&
-name|state
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -160,10 +147,6 @@ condition|)
 goto|goto
 name|error
 goto|;
-name|state
-operator|=
-name|initial
-expr_stmt|;
 name|wcsrtombs
 argument_list|(
 name|sformat
@@ -175,8 +158,7 @@ name|sflen
 operator|+
 literal|1
 argument_list|,
-operator|&
-name|state
+name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Allocate memory for longest multibyte sequence that will fit 	 * into the caller's buffer and call strftime() to fill it. 	 * Then, copy and convert the result back into wide characters in 	 * the caller's buffer. 	 */
@@ -234,10 +216,6 @@ condition|)
 goto|goto
 name|error
 goto|;
-name|state
-operator|=
-name|initial
-expr_stmt|;
 name|dstp
 operator|=
 name|dst
@@ -259,8 +237,7 @@ name|dstp
 argument_list|,
 name|maxsize
 argument_list|,
-operator|&
-name|state
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
