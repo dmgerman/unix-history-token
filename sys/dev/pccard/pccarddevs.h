@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.57 2003/07/15 03:27:53 imp Exp   */
+comment|/*  * THIS FILE AUTOMATICALLY GENERATED.  DO NOT EDIT.  *  * generated from:  *	FreeBSD: src/sys/dev/pccard/pccarddevs,v 1.58 2003/07/15 07:21:40 imp Exp   */
 end_comment
 
 begin_comment
@@ -697,12 +697,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PCMCIA_VENDOR_OEM1
+name|PCMCIA_VENDOR_AIRVAST
 value|0x50c2
 end_define
 
 begin_comment
-comment|/* Mystery OEM #1 */
+comment|/* AirVast Technology */
 end_comment
 
 begin_define
@@ -1256,6 +1256,31 @@ define|#
 directive|define
 name|PCMCIA_STR_AIRONET_350
 value|"Aironet 350 Wireless LAN Adapter"
+end_define
+
+begin_comment
+comment|/* AirVast */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_CIS_AIRVAST_WN_100
+value|{ NULL, NULL, NULL, NULL }
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_PRODUCT_AIRVAST_WN_100
+value|0x7300
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCMCIA_STR_AIRVAST_WN_100
+value|"AirVast WN-100"
 end_define
 
 begin_comment
@@ -3390,31 +3415,6 @@ define|#
 directive|define
 name|PCMCIA_STR_NWN_WLAN_1148
 value|"NWN 1148 WLAN"
-end_define
-
-begin_comment
-comment|/* Mystery OEM #1 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_CIS_OEM1_PRISM3
-value|{ NULL, NULL, NULL, NULL }
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_PRODUCT_OEM1_PRISM3
-value|0x7300
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCMCIA_STR_OEM1_PRISM3
-value|"Prism 3 37300P"
 end_define
 
 begin_comment
