@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)bib.h	2.2	%G%  */
+comment|/*  *	@(#)bib.h	2.3	%G%  */
 end_comment
 
 begin_comment
@@ -95,7 +95,7 @@ begin_define
 define|#
 directive|define
 name|TMPREFFILE
-value|"/usr/tmp/bibrXXXXXX"
+value|"/tmp/bibrXXXXXX"
 end_define
 
 begin_comment
@@ -106,7 +106,7 @@ begin_define
 define|#
 directive|define
 name|TMPTEXTFILE
-value|"/usr/tmp/bibpXXXXXX"
+value|"/tmp/bibpXXXXXX"
 end_define
 
 begin_comment
@@ -117,7 +117,7 @@ begin_define
 define|#
 directive|define
 name|INVTEMPFILE
-value|"/usr/tmp/invertXXXXXX"
+value|"/tmp/invertXXXXXX"
 end_define
 
 begin_comment
@@ -215,6 +215,96 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*     *	Reference information     */
+end_comment
+
+begin_struct
+struct|struct
+name|refinfo
+block|{
+name|char
+modifier|*
+name|ri_ref
+decl_stmt|;
+comment|/* actual value */
+name|char
+modifier|*
+name|ri_cite
+decl_stmt|;
+comment|/* citation string */
+name|int
+name|ri_length
+decl_stmt|;
+comment|/* length of reference string, plus null */
+name|long
+name|int
+name|ri_pos
+decl_stmt|;
+comment|/* reference seek position */
+name|int
+name|ri_n
+decl_stmt|;
+comment|/* number of citation in pass1 */
+name|struct
+name|refinfo
+modifier|*
+name|ri_hp
+decl_stmt|;
+comment|/* hash chain */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|wordinfo
+block|{
+name|char
+modifier|*
+name|wi_word
+decl_stmt|;
+comment|/* actual word */
+name|char
+modifier|*
+name|wi_def
+decl_stmt|;
+comment|/* actual definition */
+name|int
+name|wi_length
+decl_stmt|;
+comment|/* word length */
+name|struct
+name|wordinfo
+modifier|*
+name|wi_hp
+decl_stmt|;
+comment|/* hash chain */
+block|}
+struct|;
+end_struct
+
+begin_function_decl
+name|int
+name|strhash
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|HASHSIZE
+value|509
+end_define
+
+begin_define
+define|#
+directive|define
+name|reg
+value|register
+end_define
 
 end_unit
 
