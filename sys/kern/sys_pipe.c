@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vnode.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/uio.h>
 end_include
 
@@ -1132,7 +1138,7 @@ name|pipe_busy
 operator|=
 literal|0
 expr_stmt|;
-name|getnanotime
+name|vfs_timestamp
 argument_list|(
 operator|&
 name|cpipe
@@ -1929,7 +1935,7 @@ name|error
 operator|==
 literal|0
 condition|)
-name|getnanotime
+name|vfs_timestamp
 argument_list|(
 operator|&
 name|rpipe
@@ -4081,7 +4087,7 @@ name|error
 operator|==
 literal|0
 condition|)
-name|getnanotime
+name|vfs_timestamp
 argument_list|(
 operator|&
 name|wpipe
