@@ -1196,6 +1196,7 @@ parameter_list|(
 name|void
 modifier|*
 name|v
+name|__unused
 parameter_list|,
 name|struct
 name|svc_req
