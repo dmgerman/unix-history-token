@@ -446,7 +446,7 @@ name|rip_input
 block|,
 literal|0
 block|,
-literal|0
+name|rip_ctlinput
 block|,
 name|rip_ctloutput
 block|,

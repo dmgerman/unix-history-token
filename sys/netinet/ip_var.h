@@ -772,6 +772,25 @@ end_decl_stmt
 
 begin_decl_stmt
 name|void
+name|rip_ctlinput
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+expr|struct
+name|sockaddr
+operator|*
+operator|,
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
 name|rip_init
 name|__P
 argument_list|(

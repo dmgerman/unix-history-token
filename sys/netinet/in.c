@@ -147,25 +147,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|void
-name|in_ifscrub
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|ifnet
-operator|*
-operator|,
-expr|struct
-name|in_ifaddr
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|int
 name|subnetsarelocal
 init|=
@@ -1824,7 +1805,6 @@ comment|/*  * Delete any existing route for an interface.  */
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|in_ifscrub
 parameter_list|(
