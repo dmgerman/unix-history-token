@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)csh.c	5.13 (Berkeley) %G%"
+literal|"@(#)csh.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1205,6 +1205,16 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
+name|setpgrp
+argument_list|(
+literal|0
+argument_list|,
+name|shpgrp
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
 name|ioctl
 argument_list|(
 name|f
@@ -1216,16 +1226,6 @@ name|char
 operator|*
 operator|)
 operator|&
-name|shpgrp
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|setpgrp
-argument_list|(
-literal|0
-argument_list|,
 name|shpgrp
 argument_list|)
 expr_stmt|;
