@@ -103,6 +103,14 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
+name|LOADER_EXT2FS_SUPPORT
+operator|&
+name|ext2fs_fsops
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
 name|LOADER_NET_SUPPORT
 operator|&
 name|nfs_fsops
