@@ -4,7 +4,7 @@ comment|/*  * A bunch of global variable declarations lie herein.  * def.h must 
 end_comment
 
 begin_comment
-comment|/*  * Sccs Id = "@(#)glob.h	2.1 %G%";  */
+comment|/*  * Sccs Id = "@(#)glob.h	2.2 %G%";  */
 end_comment
 
 begin_decl_stmt
@@ -66,6 +66,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* -r address for network */
+end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|Tflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* -T temp file for netnews */
 end_comment
 
 begin_decl_stmt
