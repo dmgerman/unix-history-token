@@ -8829,6 +8829,9 @@ block|,
 literal|'<'
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|__i386__
 block|{
 literal|" APM"
 block|,
@@ -8843,6 +8846,8 @@ block|,
 literal|"apm_enable=YES"
 block|}
 block|,
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|PCCARD_ARCH
