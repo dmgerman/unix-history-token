@@ -105,20 +105,48 @@ name|in_masks
 index|[]
 init|=
 block|{
-if|#
-directive|if
-literal|0
+ifndef|#
+directive|ifndef
+name|__ARMEB__
 comment|/*0 bytes*/
 comment|/*1 byte*/
 comment|/*2 bytes*/
 comment|/*3 bytes*/
-block|0x00000000, 0x000000FF, 0x0000FFFF, 0x00FFFFFF,
+literal|0x00000000
+block|,
+literal|0x000000FF
+block|,
+literal|0x0000FFFF
+block|,
+literal|0x00FFFFFF
+block|,
 comment|/* offset 0 */
-block|0x00000000, 0x0000FF00, 0x00FFFF00, 0xFFFFFF00,
+literal|0x00000000
+block|,
+literal|0x0000FF00
+block|,
+literal|0x00FFFF00
+block|,
+literal|0xFFFFFF00
+block|,
 comment|/* offset 1 */
-block|0x00000000, 0x00FF0000, 0xFFFF0000, 0xFFFF0000,
+literal|0x00000000
+block|,
+literal|0x00FF0000
+block|,
+literal|0xFFFF0000
+block|,
+literal|0xFFFF0000
+block|,
 comment|/* offset 2 */
-block|0x00000000, 0xFF000000, 0xFF000000, 0xFF000000,
+literal|0x00000000
+block|,
+literal|0xFF000000
+block|,
+literal|0xFF000000
+block|,
+literal|0xFF000000
+block|,
 comment|/* offset 3 */
 else|#
 directive|else
