@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	times.c	4.1	83/05/31	*/
+comment|/*	times.c	4.2	83/06/02	*/
 end_comment
 
 begin_include
@@ -50,7 +50,7 @@ name|tmsp
 argument_list|)
 specifier|register
 expr|struct
-name|times
+name|tms
 operator|*
 name|tmsp
 expr_stmt|;
@@ -89,7 +89,7 @@ argument_list|(
 operator|&
 name|ru
 operator|.
-name|ru_time
+name|ru_utime
 argument_list|)
 expr_stmt|;
 name|tmsp
