@@ -80,7 +80,7 @@ decl_stmt|;
 name|int
 name|transfer_rate
 decl_stmt|;
-comment|/* fdreg.h: FDC_???KBPS */
+comment|/* FDC_???KBPS */
 union|union
 block|{
 struct|struct
@@ -246,15 +246,11 @@ comment|/* gap len between sectors   */
 name|int
 name|tracks
 decl_stmt|;
-comment|/* total num of tracks       */
+comment|/* total number of cylinders */
 name|int
 name|size
 decl_stmt|;
 comment|/* size of disk in sectors   */
-name|int
-name|steptrac
-decl_stmt|;
-comment|/* steps per cylinder        */
 name|int
 name|trans
 decl_stmt|;
@@ -271,6 +267,29 @@ name|int
 name|f_inter
 decl_stmt|;
 comment|/* format interleave factor  */
+name|int
+name|offset_side2
+decl_stmt|;
+comment|/* offset of sectors on side2 */
+name|int
+name|flags
+decl_stmt|;
+comment|/* misc. features */
+define|#
+directive|define
+name|FL_MFM
+value|0x0001
+comment|/* MFM recording */
+define|#
+directive|define
+name|FL_2STEP
+value|0x0002
+comment|/* 2 steps between cylinders */
+define|#
+directive|define
+name|FL_PERPND
+value|0x0004
+comment|/* perpendicular recording */
 block|}
 struct|;
 end_struct
@@ -316,6 +335,31 @@ comment|/* N - log2(secsize / 128) */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Diskette drive type, basically the same as stored in RTC on ISA  * machines (see /sys/isa/rtc.h), but right-shifted by four bits.  */
+end_comment
+
+begin_enum
+enum|enum
+name|fd_drivetype
+block|{
+name|FDT_NONE
+block|,
+name|FDT_360K
+block|,
+name|FDT_12M
+block|,
+name|FDT_720K
+block|,
+name|FDT_144M
+block|,
+name|FDT_288M_1
+block|,
+name|FDT_288M
+block|}
+enum|;
+end_enum
 
 begin_define
 define|#
@@ -405,8 +449,19 @@ begin_define
 define|#
 directive|define
 name|FD_GSTAT
-value|_IOR('F', 68, struct fdc_status)
+value|_IOR('F', 69, struct fdc_status)
 end_define
+
+begin_define
+define|#
+directive|define
+name|FD_GDTYPE
+value|_IOR('F', 70, enum fd_drivetype)
+end_define
+
+begin_comment
+comment|/* obtain drive type */
+end_comment
 
 begin_comment
 comment|/* Options for FD_GOPTS/FD_SOPTS, cleared on device close */
@@ -445,15 +500,20 @@ begin_comment
 comment|/* do not indicate errors, caller will use 				   FD_GSTAT in order to obtain status */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|FDOPT_AUTOSEL
+value|0x8000
+end_define
+
 begin_comment
-comment|/*  * The following definitions duplicate those in sys/i386/isa/fdreg.h  * They are here since their values are to be used in the above  * structure when formatting a floppy. For very obvious reasons, both  * definitions must match ;-)  */
+comment|/* read/only option: device performs media 				 * autoselection */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|FDC_500KBPS
-end_ifndef
+begin_comment
+comment|/*  * Transfer rate definitions.  Used in the structures above.  They  * represent the hardware encoding of bits 0 and 1 of the FDC control  * register when writing to the register.  * Transfer rates for FM encoding are half the values listed here  * (but we currently don't support FM encoding).  */
+end_comment
 
 begin_define
 define|#
@@ -491,25 +551,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FDC_125KBPS
+name|FDC_1MBPS
 value|0x03
 end_define
 
 begin_comment
-comment|/* 125KBPS FM drive transfer rate */
-end_comment
-
-begin_comment
-comment|/* for some controllers 1MPBS instead */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* FDC_500KBPS */
+comment|/* 1MPBS MFM drive transfer rate */
 end_comment
 
 begin_endif
