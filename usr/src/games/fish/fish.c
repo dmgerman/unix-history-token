@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fish.c	5.1 (Berkeley) %G%"
+literal|"@(#)fish.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -428,9 +428,9 @@ end_block
 begin_macro
 name|mark
 argument_list|(
-argument|cd
-argument_list|,
 argument|hand
+argument_list|,
+argument|cd
 argument_list|)
 end_macro
 
@@ -1069,11 +1069,6 @@ argument_list|(
 name|yourhand
 argument_list|,
 literal|7
-argument_list|)
-expr_stmt|;
-name|start
-argument_list|(
-name|myhand
 argument_list|)
 expr_stmt|;
 for|for
@@ -1938,25 +1933,6 @@ name|CTSIZ
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_macro
-name|start
-argument_list|(
-argument|h
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|HAND
-name|h
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-empty_stmt|;
-block|}
-end_block
 
 begin_macro
 name|hedrew
