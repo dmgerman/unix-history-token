@@ -113,6 +113,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MPPE_56
+value|0x00000080
+end_define
+
+begin_comment
+comment|/* use 56 bit key */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MPPE_128
 value|0x00000040
 end_define
@@ -125,7 +136,7 @@ begin_define
 define|#
 directive|define
 name|MPPE_BITS
-value|0x00000060
+value|0x000000e0
 end_define
 
 begin_comment
@@ -147,7 +158,7 @@ begin_define
 define|#
 directive|define
 name|MPPC_VALID_BITS
-value|0x01000061
+value|0x010000e1
 end_define
 
 begin_comment
