@@ -298,6 +298,14 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* MODULE_DEPEND(snd_driver, snd_sb8, 1, 1, 1); */
+end_comment
+
+begin_comment
+comment|/* MODULE_DEPEND(snd_driver, snd_sb16, 1, 1, 1); */
+end_comment
+
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
