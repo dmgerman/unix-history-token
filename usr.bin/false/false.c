@@ -58,7 +58,9 @@ end_comment
 begin_function
 name|int
 name|main
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 literal|1
