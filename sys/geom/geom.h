@@ -122,17 +122,17 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|g_createargs
+name|g_configargs
 struct_decl|;
 end_struct_decl
 
 begin_typedef
 typedef|typedef
 name|int
-name|g_create_geom_t
+name|g_config_t
 parameter_list|(
 name|struct
-name|g_createargs
+name|g_configargs
 modifier|*
 name|ca
 parameter_list|)
@@ -268,7 +268,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * The g_class structure describes a transformation class.  In other words  * all BSD disklabel handlers share one g_class, all MBR handlers share  * one common g_class and so on.  * Certain operations are instantiated on the class, most notably the  * taste and create_geom functions.  */
+comment|/*  * The g_class structure describes a transformation class.  In other words  * all BSD disklabel handlers share one g_class, all MBR handlers share  * one common g_class and so on.  * Certain operations are instantiated on the class, most notably the  * taste and config_geom functions.  */
 end_comment
 
 begin_struct
@@ -283,9 +283,9 @@ name|g_taste_t
 modifier|*
 name|taste
 decl_stmt|;
-name|g_create_geom_t
+name|g_config_t
 modifier|*
-name|create_geom
+name|config
 decl_stmt|;
 comment|/* 	 * The remaning elements are private and classes should use 	 * the G_CLASS_INITIALIZER macro to initialize them.          */
 name|LIST_ENTRY
@@ -1547,31 +1547,13 @@ begin_comment
 comment|/*  * IOCTLS for talking to the geom.ctl device.  */
 end_comment
 
-begin_struct
-struct|struct
-name|geomgetconf
-block|{
-name|char
-modifier|*
-name|ptr
-decl_stmt|;
-name|u_int
-name|len
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|GEOMGETCONF
-value|_IOW('G',  0, struct geomgetconf)
-end_define
+begin_comment
+comment|/*  * This is the structure used internally in the kernel, it is created and  * populated by geom_ctl.c.  */
+end_comment
 
 begin_struct
 struct|struct
-name|g_createargs
+name|g_configargs
 block|{
 comment|/* Valid on call */
 name|struct
@@ -1603,6 +1585,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * This is the structure used to communicate with userland.  */
+end_comment
+
 begin_struct
 struct|struct
 name|geomconfiggeom
@@ -1630,7 +1616,6 @@ name|void
 modifier|*
 name|ptr
 decl_stmt|;
-comment|/* Valid on return */
 block|}
 struct|;
 end_struct
@@ -1641,6 +1626,115 @@ directive|define
 name|GEOMCONFIGGEOM
 value|_IOW('G',  0, struct geomconfiggeom)
 end_define
+
+begin_define
+define|#
+directive|define
+name|GCFG_GENERIC0
+value|0x00000000
+end_define
+
+begin_comment
+comment|/* 	 * Generic requests suitable for all classes. 	 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GCFG_CLASS0
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* 	 * Class specific verbs.  Allocations in this part of the numberspace 	 * can only be done after review and approval of phk@FreeBSD.org. 	 * All allocations in this space will be listed in this file. 	 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GCFG_PRIVATE0
+value|0x20000000
+end_define
+
+begin_comment
+comment|/* 	 * Lowest allocation for private flag definitions. 	 * If you define you own private "verbs", please express them in 	 * your code as (GCFG_PRIVATE0 + somenumber), where somenumber is 	 * a magic number in the range [0x0 ... 0xfffffff] chosen the way 	 * magic numbers are chosen.  Such allocation SHALL NOT be listed 	 * here but SHOULD be listed in some suitable .h file. 	 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GCFG_RESERVED0
+value|0x30000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|GCFG_RESERVEDN
+value|0xffffffff
+end_define
+
+begin_comment
+comment|/* 	 * This area is reserved for the future. 	 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GCFG_CREATE
+value|(GCFG_GENERIC0 + 0x0)
+end_define
+
+begin_comment
+comment|/* 	 * Request geom construction. 	 * ptr/len is class-specific. 	 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GCFG_DISMANTLE
+value|(GCFG_GENERIC0 + 0x1)
+end_define
+
+begin_comment
+comment|/* 	 * Request orderly geom dismantling. 	 * ptr/len is class-specific. 	 */
+end_comment
+
+begin_struct
+struct|struct
+name|gcfg_magicrw
+block|{
+name|off_t
+name|offset
+decl_stmt|;
+name|u_int
+name|len
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|GCFG_MAGICREAD
+value|(GCFG_GENERIC0 + 0x100)
+end_define
+
+begin_comment
+comment|/* 	 * Read of magic spaces. 	 * ptr/len is gcfgmagicrw structure followed by bufferspace 	 * for data to be read. 	 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GCFG_MAGICWRITE
+value|(GCFG_GENERIC0 + 0x101)
+end_define
+
+begin_comment
+comment|/* 	 * Write of magic spaces. 	 * as above, only the other way. 	 */
+end_comment
 
 begin_comment
 comment|/* geom_enc.c */

@@ -442,10 +442,10 @@ end_function
 begin_function
 specifier|static
 name|int
-name|g_bde_create
+name|g_bde_config
 parameter_list|(
 name|struct
-name|g_createargs
+name|g_configargs
 modifier|*
 name|ga
 parameter_list|)
@@ -488,7 +488,7 @@ name|g_trace
 argument_list|(
 name|G_T_TOPOLOGY
 argument_list|,
-literal|"g_bde_create(%d)"
+literal|"g_bde_config(%d)"
 argument_list|,
 name|ga
 operator|->
@@ -508,7 +508,7 @@ name|ga
 operator|->
 name|flag
 operator|==
-literal|1
+name|GCFG_DISMANTLE
 condition|)
 block|{
 comment|/* 		 * Orderly dettachment. 		 */
@@ -840,7 +840,7 @@ name|ga
 operator|->
 name|flag
 operator|!=
-literal|0
+name|GCFG_CREATE
 condition|)
 return|return
 operator|(
@@ -1347,7 +1347,7 @@ name|BDE_CLASS_NAME
 block|,
 name|NULL
 block|,
-name|g_bde_create
+name|g_bde_config
 block|,
 name|G_CLASS_INITIALIZER
 block|}

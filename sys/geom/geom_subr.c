@@ -2886,7 +2886,7 @@ if|if
 condition|(
 name|mp
 operator|->
-name|create_geom
+name|config
 operator|==
 name|NULL
 condition|)
