@@ -4450,6 +4450,13 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+name|cdevsw_add
+argument_list|(
+operator|&
+name|fd_cdevsw
+argument_list|)
+expr_stmt|;
+comment|/* XXX */
 name|make_dev
 argument_list|(
 operator|&
@@ -4600,7 +4607,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|DEV_DRIVER_MODULE
+name|DRIVER_MODULE
 argument_list|(
 name|fd
 argument_list|,
@@ -4609,8 +4616,6 @@ argument_list|,
 name|fd_driver
 argument_list|,
 name|fd_devclass
-argument_list|,
-name|fd_cdevsw
 argument_list|,
 literal|0
 argument_list|,
