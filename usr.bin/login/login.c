@@ -40,7 +40,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: login.c,v 1.42 1998/11/11 05:47:45 jdp Exp $"
+literal|"$Id: login.c,v 1.43 1998/11/21 02:22:14 jdp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -486,6 +486,16 @@ literal|300
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Buffer for signal handling of timeout */
+end_comment
+
+begin_decl_stmt
+name|jmp_buf
+name|timeout_buf
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 name|struct
 name|passwd
@@ -625,7 +635,8 @@ name|MAXPATHLEN
 operator|+
 literal|2
 index|]
-decl_stmt|,
+decl_stmt|;
+name|char
 name|tname
 index|[
 sizeof|sizeof
@@ -659,24 +670,6 @@ name|void
 operator|)
 name|signal
 argument_list|(
-name|SIGALRM
-argument_list|,
-name|timedout
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|alarm
-argument_list|(
-name|timeout
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|signal
-argument_list|(
 name|SIGQUIT
 argument_list|,
 name|SIG_IGN
@@ -690,6 +683,59 @@ argument_list|(
 name|SIGINT
 argument_list|,
 name|SIG_IGN
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|setjmp
+argument_list|(
+name|timeout_buf
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|failures
+condition|)
+name|badlogin
+argument_list|(
+name|tbuf
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Login timed out after %d seconds\n"
+argument_list|,
+name|timeout
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGALRM
+argument_list|,
+name|timedout
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|alarm
+argument_list|(
+name|timeout
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1218,10 +1264,6 @@ name|badlogin
 argument_list|(
 name|tbuf
 argument_list|)
-expr_stmt|;
-name|failures
-operator|=
-literal|0
 expr_stmt|;
 block|}
 operator|(
@@ -3670,21 +3712,11 @@ name|int
 name|signo
 decl_stmt|;
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|longjmp
 argument_list|(
-name|stderr
+name|timeout_buf
 argument_list|,
-literal|"Login timed out after %d seconds\n"
-argument_list|,
-name|timeout
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|0
+name|signo
 argument_list|)
 expr_stmt|;
 block|}
@@ -4099,6 +4131,10 @@ name|name
 argument_list|)
 expr_stmt|;
 block|}
+name|failures
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 
