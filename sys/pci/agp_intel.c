@@ -226,6 +226,14 @@ literal|"Intel 82820 host to AGP bridge"
 operator|)
 return|;
 case|case
+literal|0x35758086
+case|:
+return|return
+operator|(
+literal|"Intel 82830 host to AGP bridge"
+operator|)
+return|;
+case|case
 literal|0x1a218086
 case|:
 return|return
