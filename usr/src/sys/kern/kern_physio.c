@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_physio.c	6.3	84/08/29	*/
+comment|/*	kern_physio.c	6.4	84/10/31	*/
 end_comment
 
 begin_include
@@ -994,10 +994,6 @@ name|struct
 name|iovec
 modifier|*
 name|iov
-init|=
-name|uio
-operator|->
-name|uio_iov
 decl_stmt|;
 specifier|register
 name|int
@@ -1029,6 +1025,12 @@ operator|(
 literal|0
 operator|)
 return|;
+name|iov
+operator|=
+name|uio
+operator|->
+name|uio_iov
+expr_stmt|;
 if|if
 condition|(
 name|useracc
