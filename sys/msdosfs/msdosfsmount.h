@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id$ */
+comment|/*	$Id: msdosfsmount.h,v 1.10 1997/02/22 09:40:49 peter Exp $ */
 end_comment
 
 begin_comment
@@ -14,6 +14,24 @@ end_comment
 begin_comment
 comment|/*  * Written by Paul Popelka (paulp@uts.amdahl.com)  *  * You can do anything you want with this software, just don't say you wrote  * it, and don't remove this notice.  *  * This software is provided "as is".  *  * The author supplies this software to be publicly redistributed on the  * understanding that the author is not responsible for the correct  * functioning of this software in any circumstances and is not liable for  * any damages caused by this software.  *  * October 1992  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_MSDOSFS_MSDOSFSMOUNT_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_MSDOSFS_MSDOSFSMOUNT_H_
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
 
 begin_comment
 comment|/*  * Layout of the mount control block for a msdos file system.  */
@@ -391,6 +409,15 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* KERNEL */
+end_comment
+
 begin_comment
 comment|/*  *  Arguments to mount MSDOS filesystems.  */
 end_comment
@@ -424,6 +451,15 @@ comment|/* mask to be applied for msdosfs perms */
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_MSDOSFS_MSDOSFSMOUNT_H_ */
+end_comment
 
 end_unit
 
