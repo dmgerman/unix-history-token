@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)trees.c	4.14 (Berkeley) %G%"
+literal|"@(#)trees.c	4.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -765,6 +765,29 @@ case|:
 case|case
 name|NE
 case|:
+if|if
+condition|(
+name|l
+operator|->
+name|in
+operator|.
+name|type
+operator|==
+name|ENUMTY
+operator|&&
+name|r
+operator|->
+name|in
+operator|.
+name|type
+operator|==
+name|ENUMTY
+condition|)
+name|chkpun
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 case|case
 name|ANDAND
 case|:
@@ -2253,7 +2276,7 @@ argument|); 	if( q->tn.rval != NONAME&& o!=PLUS ) return(
 literal|0
 argument|); 	if( p->tn.rval != NONAME&& o!=PLUS&& o!=MINUS ) return(
 literal|0
-argument|);  	switch( o ){  	case PLUS: 		p->tn.lval += val; 		if( p->tn.rval == NONAME ){ 			p->tn.rval = q->tn.rval; 			p->in.type = q->in.type; 			} 		break; 	case MINUS: 		p->tn.lval -= val; 		break; 	case MUL: 		if ( u ) p->tn.lval *= (unsigned) val; 		else p->tn.lval *= val; 		break; 	case DIV: 		if( val ==
+argument|);  	switch( o ){  	case PLUS: 		p->tn.lval += val; 		if( p->tn.rval == NONAME ){ 			p->tn.rval = q->tn.rval; 			p->in.type = q->in.type; 			} 		break; 	case MINUS: 		p->tn.lval -= val; 		break; 	case MUL: 		p->tn.lval *= val; 		break; 	case DIV: 		if( val ==
 literal|0
 argument|) uerror(
 literal|"division by 0"
@@ -2261,7 +2284,15 @@ argument|); 		else if ( u ) p->tn.lval = (unsigned) p->tn.lval / val; 		else p->
 literal|0
 argument|) uerror(
 literal|"division by 0"
-argument|); 		else if ( u ) p->tn.lval = (unsigned) p->tn.lval % val; 		else p->tn.lval %= val; 		break; 	case AND: 		p->tn.lval&= val; 		break; 	case OR: 		p->tn.lval |= val; 		break; 	case ER: 		p->tn.lval ^= val; 		break; 	case LS: 		i = val; 		p->tn.lval = p->tn.lval<< i; 		break; 	case RS: 		i = val; 		if ( u ) p->tn.lval = (unsigned) p->tn.lval>> i; 		else p->tn.lval = p->tn.lval>> i; 		break;  	case UNARY MINUS: 		p->tn.lval = - p->tn.lval; 		break; 	case COMPL: 		p->tn.lval = ~p->tn.lval; 		break; 	case NOT: 		p->tn.lval = !p->tn.lval; 		break; 	case LT: 		p->tn.lval = p->tn.lval< val; 		break; 	case LE: 		p->tn.lval = p->tn.lval<= val; 		break; 	case GT: 		p->tn.lval = p->tn.lval> val; 		break; 	case GE: 		p->tn.lval = p->tn.lval>= val; 		break; 	case ULT: 		p->tn.lval = p->tn.lval< (unsigned) val; 		break; 	case ULE: 		p->tn.lval = p->tn.lval<= (unsigned) val; 		break; 	case UGT: 		p->tn.lval = p->tn.lval> (unsigned) val; 		break; 	case UGE: 		p->tn.lval = p->tn.lval>= (unsigned) val; 		break; 	case EQ: 		p->tn.lval = p->tn.lval == val; 		break; 	case NE: 		p->tn.lval = p->tn.lval != val; 		break; 	default: 		return(
+argument|); 		else if ( u ) p->tn.lval = (unsigned) p->tn.lval % val; 		else p->tn.lval %= val; 		break; 	case AND: 		p->tn.lval&= val; 		break; 	case OR: 		p->tn.lval |= val; 		break; 	case ER: 		p->tn.lval ^= val; 		break; 	case LS: 		i = val; 		p->tn.lval = p->tn.lval<< i; 		break; 	case RS: 		i = val; 		if ( u ) p->tn.lval = (unsigned) p->tn.lval>> i; 		else p->tn.lval = p->tn.lval>> i; 		break;  	case UNARY MINUS: 		p->tn.lval = - p->tn.lval; 		break; 	case COMPL: 		p->tn.lval = ~p->tn.lval; 		break; 	case NOT: 		p->tn.lval = !p->tn.lval; 		break; 	case LT: 		p->tn.lval = p->tn.lval< val; 		break; 	case LE: 		p->tn.lval = p->tn.lval<= val; 		break; 	case GT: 		p->tn.lval = p->tn.lval> val; 		break; 	case GE: 		p->tn.lval = p->tn.lval>= val; 		break; 	case ULT: 		p->tn.lval = (p->tn.lval-val)<
+literal|0
+argument|; 		break; 	case ULE: 		p->tn.lval = (p->tn.lval-val)<=
+literal|0
+argument|; 		break; 	case UGE: 		p->tn.lval = (p->tn.lval-val)>=
+literal|0
+argument|; 		break; 	case UGT: 		p->tn.lval = (p->tn.lval-val)>
+literal|0
+argument|; 		break; 	case EQ: 		p->tn.lval = p->tn.lval == val; 		break; 	case NE: 		p->tn.lval = p->tn.lval != val; 		break; 	default: 		return(
 literal|0
 argument|); 		} 	return(
 literal|1
@@ -2275,9 +2306,9 @@ comment|/* in the case of ASSIGN, any assignment of pointer to integer is illega
 comment|/* this falls out, because the LHS is never 0 */
 argument|register NODE *q; 	register t1, t2; 	register d1, d2;  	t1 = p->in.left->in.type; 	t2 = p->in.right->in.type;  	if( t1==ENUMTY || t2==ENUMTY ) {
 comment|/* check for enumerations */
-argument|if( logop( p->in.op )&& p->in.op != EQ&& p->in.op != NE ) { 			uerror(
-literal|"illegal comparison of enums"
-argument|); 			return; 			} 		if( t1==ENUMTY&& t2==ENUMTY&& p->in.left->fn.csiz==p->in.right->fn.csiz ) return; 		werror(
+argument|if( logop( p->in.op )&& p->in.op != EQ&& p->in.op != NE ) 			werror(
+literal|"comparison of enums"
+argument|); 		if( t1==ENUMTY&& t2==ENUMTY&& 		    p->in.left->fn.csiz!=p->in.right->fn.csiz ) 			werror(
 literal|"enumeration type clash, operator %s"
 argument|, opst[p->in.op] ); 		return; 		}  	if( ISPTR(t1) || ISARY(t1) ) q = p->in.right; 	else q = p->in.left;  	if( !ISPTR(q->in.type)&& !ISARY(q->in.type) ){ 		if( q->in.op != ICON || q->tn.lval !=
 literal|0
@@ -2386,30 +2417,15 @@ directive|else
 argument|if (t1 == DOUBLE || t1 == FLOAT || t2 == DOUBLE || t2 == FLOAT) 		t = DOUBLE;
 endif|#
 directive|endif
-argument|else if( t1==LONG || t2==LONG ) t = LONG; 	else t = INT;
-ifdef|#
-directive|ifdef
-name|tahoe
-argument|if( asgop(o) ){
-else|#
-directive|else
-argument|if( o == ASSIGN || o == CAST || o == RETURN ){
-endif|#
-directive|endif
-argument|tu = p->in.left->in.type; 		t = t1; 		} 	else { 		tu = (u&& UNSIGNABLE(t))?ENUNSIGN(t):t; 		}
+argument|else if( t1==LONG || t2==LONG ) t = LONG; 	else t = INT;  	if( o == ASSIGN || o == CAST || o == RETURN ){ 		tu = p->in.left->in.type; 		t = t1; 		} 	else { 		tu = (u&& UNSIGNABLE(t))?ENUNSIGN(t):t; 		}
 comment|/* because expressions have values that are at least as wide 	   as INT or UNSIGNED, the only conversions needed 	   are those involving FLOAT/DOUBLE, and those 	   from LONG to INT and ULONG to UNSIGNED */
-ifdef|#
-directive|ifdef
-name|tahoe
-argument|if( t != t1 )
-else|#
-directive|else
-argument|if( t != t1&& ! asgop(o) )
-endif|#
-directive|endif
-argument|p->in.left = makety( p->in.left, tu,
+argument|if( t != t1&& ! asgop(o) ) 		p->in.left = makety( p->in.left, tu,
 literal|0
-argument|, (int)tu );  	if( t != t2 || o==CAST ) 		p->in.right = makety( p->in.right, tu,
+argument|, (int)tu );  	if( t != t2 || o==CAST) 		if ( tu == ENUMTY ) {
+comment|/* always asgop */
+argument|p->in.right = makety( p->in.right, INT,
+literal|0
+argument|, INT ); 			p->in.right->in.type = tu; 			p->in.right->fn.cdim = p->in.left->fn.cdim; 			p->in.right->fn.csiz = p->in.left->fn.csiz; 			} 		else 			p->in.right = makety( p->in.right, tu,
 literal|0
 argument|, (int)tu );  	if( asgop(o) ){ 		p->in.type = p->in.left->in.type; 		p->fn.cdim = p->in.left->fn.cdim; 		p->fn.csiz = p->in.left->fn.csiz; 		} 	else if( !logop(o) ){ 		p->in.type = tu; 		p->fn.cdim =
 literal|0
@@ -2426,7 +2442,11 @@ argument|return(p); 	}  NODE * makety( p, t, d, s ) register NODE *p; TWORD t; {
 comment|/* make p into type t by inserting a conversion */
 argument|if( p->in.type == ENUMTY&& p->in.op == ICON ) econvert(p); 	if( t == p->in.type ){ 		p->fn.cdim = d; 		p->fn.csiz = s; 		return( p ); 		}  	if( t& TMASK ){
 comment|/* non-simple type */
-argument|return( block( PCONV, p, NIL, t, d, s ) ); 		}  	if( p->in.op == ICON ){ 		if (t == DOUBLE) { 			p->in.op = DCON; 			if (ISUNSIGNED(p->in.type)) 				p->dpn.dval = (unsigned CONSZ) p->tn.lval; 			else 				p->dpn.dval = p->tn.lval; 			p->in.type = p->fn.csiz = t; 			return (clocal(p)); 		} 		if (t == FLOAT) { 			p->in.op = FCON; 			if( ISUNSIGNED(p->in.type) ){ 				p->fpn.fval = (unsigned CONSZ) p->tn.lval; 				} 			else { 				p->fpn.fval = p->tn.lval; 				}  			p->in.type = p->fn.csiz = t; 			return( clocal(p) ); 			} 		} 	else if (p->in.op == FCON&& t == DOUBLE) { 		double db;  		p->in.op = DCON; 		db = p->fpn.fval; 		p->dpn.dval = db; 		p->in.type = p->fn.csiz = t; 		return (clocal(p)); 	} else if (p->in.op == DCON&& t == FLOAT) { 		float fl;  		p->in.op = FCON; 		fl = p->dpn.dval;
+argument|return( block( PCONV, p, NIL, t, d, s ) ); 		}  	if( p->in.op == ICON ){ 		if (t == DOUBLE) { 			p->in.op = DCON; 			if (ISUNSIGNED(p->in.type)) 				p->dpn.dval =
+comment|/* (unsigned CONSZ) */
+argument|p->tn.lval; 			else 				p->dpn.dval = p->tn.lval; 			p->in.type = p->fn.csiz = t; 			return (clocal(p)); 		} 		if (t == FLOAT) { 			p->in.op = FCON; 			if( ISUNSIGNED(p->in.type) ){ 				p->fpn.fval =
+comment|/* (unsigned CONSZ) */
+argument|p->tn.lval; 				} 			else { 				p->fpn.fval = p->tn.lval; 				}  			p->in.type = p->fn.csiz = t; 			return( clocal(p) ); 			} 		} 	else if (p->in.op == FCON&& t == DOUBLE) { 		double db;  		p->in.op = DCON; 		db = p->fpn.fval; 		p->dpn.dval = db; 		p->in.type = p->fn.csiz = t; 		return (clocal(p)); 	} else if (p->in.op == DCON&& t == FLOAT) { 		float fl;  		p->in.op = FCON; 		fl = p->dpn.dval;
 ifdef|#
 directive|ifdef
 name|notdef
@@ -2492,27 +2512,19 @@ argument|);  	case NOT: 	case CBRANCH: 		if( mt1& MSTR ) break; 		return(
 literal|0
 argument|);  	case ANDAND: 	case OROR: 		if( (mt1& MSTR) || (mt2& MSTR) ) break; 		return(
 literal|0
-argument|);  	case MUL: 	case DIV: 		if( mt12& MDBI ) return( TYMATCH ); 		break;  	case MOD: 	case AND: 	case OR: 	case ER: 		if( mt12& MINT ) return( TYMATCH ); 		break;  	case LS: 	case RS: 		if( mt12& MINT ) return( TYMATCH+OTHER ); 		break;  	case EQ: 	case NE: 	case LT: 	case LE: 	case GT: 	case GE: 		if( (mt1&MENU)||(mt2&MENU) ) return( PTMATCH+PUN+NCVT ); 		if( mt12& MDBI ) return( TYMATCH+CVTO ); 		else if( mt12& MPTR ) return( PTMATCH+PUN ); 		else if( mt12& MPTI ) return( PTMATCH+PUN ); 		else break;  	case QUEST: 	case COMOP: 		if( mt2&MENU ) return( TYPR+NCVTR ); 		return( TYPR );  	case STREF: 		return( NCVTR+OTHER );  	case FORCE: 		return( TYPL );  	case COLON: 		if( mt12& MENU ) return( NCVT+PUN+PTMATCH ); 		else if( mt12& MDBI ) return( TYMATCH ); 		else if( mt12& MPTR ) return( TYPL+PTMATCH+PUN ); 		else if( (mt1&MINT)&& (mt2&MPTR) ) return( TYPR+PUN ); 		else if( (mt1&MPTR)&& (mt2&MINT) ) return( TYPL+PUN ); 		else if( mt12& MSTR ) return( NCVT+TYPL+OTHER ); 		break;  	case ASSIGN: 	case RETURN: 		if( mt12& MSTR ) return( LVAL+NCVT+TYPL+OTHER ); 	case CAST: 		if(o==CAST&& mt1==
+argument|);  	case MUL: 	case DIV: 		if( mt12& MDBI ) return( TYMATCH ); 		break;  	case MOD: 	case AND: 	case OR: 	case ER: 		if( mt12& MINT ) return( TYMATCH ); 		break;  	case LS: 	case RS: 		if( mt12& MINT ) return( TYMATCH+OTHER ); 		break;  	case EQ: 	case NE: 	case LT: 	case LE: 	case GT: 	case GE: 		if( (mt1&MENU)||(mt2&MENU) ) return( PTMATCH+PUN+NCVT ); 		if( mt12& MDBI ) return( TYMATCH+CVTO ); 		else if( mt12& MPTR ) return( PTMATCH+PUN ); 		else if( mt12& MPTI ) return( PTMATCH+PUN ); 		else break;  	case QUEST: 	case COMOP: 		if( mt2&MENU ) return( TYPR+NCVTR ); 		return( TYPR );  	case STREF: 		return( NCVTR+OTHER );  	case FORCE: 		return( TYPL );  	case COLON: 		if( mt12& MENU ) return( NCVT+PUN+PTMATCH ); 		else if( mt12& MDBI ) return( TYMATCH ); 		else if( mt12& MPTR ) return( TYPL+PTMATCH+PUN ); 		else if( (mt1&MINT)&& (mt2&MPTR) ) return( TYPR+PUN ); 		else if( (mt1&MPTR)&& (mt2&MINT) ) return( TYPL+PUN ); 		else if( mt12& MSTR ) return( NCVT+TYPL+OTHER ); 		break;  	case ASSIGN: 	case RETURN: 		if( mt12& MSTR ) return( LVAL+NCVT+TYPL+OTHER ); 		else if( (mt1&MENU)||(mt2&MENU) ) return( LVAL+NCVT+TYPL+PTMATCH+PUN ); 	case CAST: 		if(o==CAST&& mt1==
 literal|0
-argument|)return(TYPL+TYMATCH); 		if( mt12& MDBI ) return( TYPL+LVAL+TYMATCH ); 		else if( (mt1&MENU)||(mt2&MENU) ) return( LVAL+NCVT+TYPL+PTMATCH+PUN ); 		else if( mt2 ==
+argument|)return(TYPL+TYMATCH); 		else if( mt12& MDBI ) return( TYPL+LVAL+TYMATCH ); 		else if( mt2 ==
 literal|0
 argument|&& 		        ( p->in.right->in.op == CALL || 			  p->in.right->in.op == UNARY CALL)) break; 		else if( mt1& MPTR ) return( LVAL+PTMATCH+PUN ); 		else if( mt12& MPTI ) return( TYPL+LVAL+TYMATCH+PUN ); 		break;  	case ASG LS: 	case ASG RS: 		if( mt12& MINT ) return( TYPL+LVAL+OTHER ); 		break;  	case ASG MUL: 	case ASG DIV: 		if( mt12& MDBI ) return( LVAL+TYMATCH ); 		break;  	case ASG MOD: 	case ASG AND: 	case ASG OR: 	case ASG ER: 		if( mt12& MINT ) return( LVAL+TYMATCH ); 		break;  	case ASG PLUS: 	case ASG MINUS: 	case INCR: 	case DECR: 		if( mt12& MDBI ) return( TYMATCH+LVAL ); 		else if( (mt1&MPTR)&& (mt2&MINT) ) return( TYPL+LVAL+CVTR ); 		break;  	case MINUS: 		if( mt12& MPTR ) return( CVTO+PTMATCH+PUN ); 		if( mt2& MPTR ) break; 	case PLUS: 		if( mt12& MDBI ) return( TYMATCH ); 		else if( (mt1&MPTR)&& (mt2&MINT) ) return( TYPL+CVTR ); 		else if( (mt1&MINT)&& (mt2&MPTR) ) return( TYPR+CVTL );  		} 	if( mt12 == MSTR ) 		uerror(
 literal|"%s is not a permitted struct/union operation"
 argument|, opst[o] ); 	else 		uerror(
 literal|"operands of %s have incompatible types"
-argument|, opst[o] ); 	return( NCVT ); 	}  moditype( ty ) TWORD ty; {  	switch( ty ){  	case TVOID: 		return( MPTR ); 	case UNDEF: 		return( MVOID ); 	case ENUMTY: 	case MOETY: 		return( MENU );  	case STRTY: 	case UNIONTY: 		return( MSTR );  	case CHAR: 	case SHORT: 	case UCHAR: 	case USHORT: 		return( MINT|MPTI|MDBI ); 	case UNSIGNED: 	case ULONG: 	case INT: 	case LONG: 		return( MINT|MDBI|MPTI ); 	case FLOAT: 	case DOUBLE: 		return( MDBI ); 	default: 		return( MPTR|MPTI );  		} 	}  int	nsizeof;  static haseffects(p) register NODE *	p; { 	register	o, ty;  	o = p->in.op; 	ty = optype(o); 	if (ty == LTYPE) 		return
-literal|0
-argument|; 	if (asgop(o) || callop(o)) 		return
-literal|1
-argument|; 	if (haseffects(p->in.left)) 		return
-literal|1
-argument|; 	if (ty == UTYPE) 		return
-literal|0
-argument|; 	return haseffects(p->in.right); }  NODE * doszof( p )  register NODE *p; {
+argument|, opst[o] ); 	return( NCVT ); 	}  moditype( ty ) TWORD ty; {  	switch( ty ){  	case TVOID: 		return( MPTR ); 	case UNDEF: 		return( MVOID ); 	case ENUMTY: 	case MOETY: 		return( MENU|MINT|MDBI|MPTI );
+comment|/* enums are ints */
+argument|case STRTY: 	case UNIONTY: 		return( MSTR );  	case CHAR: 	case SHORT: 	case UCHAR: 	case USHORT: 		return( MINT|MPTI|MDBI ); 	case UNSIGNED: 	case ULONG: 	case INT: 	case LONG: 		return( MINT|MDBI|MPTI ); 	case FLOAT: 	case DOUBLE: 		return( MDBI ); 	default: 		return( MPTR|MPTI );  		} 	}  NODE * doszof( p )  register NODE *p; {
 comment|/* do sizeof p */
-argument|int i;  	--nsizeof; 	if (haseffects(p)) 		werror(
-literal|"operations in object of sizeof are skipped"
-argument|);
+argument|int i;
 comment|/* whatever is the meaning of this if it is a bitfield? */
 argument|i = tsize( p->in.type, p->fn.cdim, p->fn.csiz )/SZCHAR;  	tfree(p); 	if( i<=
 literal|0
@@ -2541,16 +2553,9 @@ literal|", %d, %d\n"
 argument|, p->fn.cdim, p->fn.csiz ); 	}
 endif|#
 directive|endif
-ifndef|#
-directive|ifndef
-name|PRTDCON
 argument|prtdcon( p ) register NODE *p; { 	int o = p->in.op, i;  	if( o == DCON || o == FCON ){ 		locctr( DATA ); 		defalign( o == DCON ? ALDOUBLE : ALFLOAT ); 		deflab( i = getlab() ); 		if( o == FCON ) 			fincode( p->fpn.fval, SZFLOAT ); 		else 			fincode( p->dpn.dval, SZDOUBLE ); 		p->tn.lval =
 literal|0
-argument|; 		p->tn.rval = -i; 		p->in.type = (o == DCON ? DOUBLE : FLOAT); 		p->in.op = NAME; 		} 	}
-endif|#
-directive|endif
-endif|PRTDCON
-argument|int edebug =
+argument|; 		p->tn.rval = -i; 		p->in.type = (o == DCON ? DOUBLE : FLOAT); 		p->in.op = NAME; 		} 	}   int edebug =
 literal|0
 argument|; ecomp( p ) register NODE *p; {
 ifndef|#
