@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)ka630.c	7.1 (Berkeley) %G%  */
+comment|/*  *	@(#)ka630.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_if
@@ -75,6 +75,7 @@ comment|/*  * These two fuctions handle the tod clock  * This code is defunct at
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|cldevice
 name|cldevice
@@ -82,6 +83,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|ka630cpu
 name|ka630cpu
@@ -148,17 +150,6 @@ name|tmp1
 decl_stmt|,
 name|tmp2
 decl_stmt|;
-name|struct
-name|pte
-modifier|*
-name|pte
-init|=
-operator|&
-name|Clockmap
-index|[
-literal|0
-index|]
-decl_stmt|;
 specifier|register
 name|struct
 name|cldevice
@@ -177,51 +168,38 @@ operator|&
 name|ka630cpu
 decl_stmt|;
 comment|/* Enable system page for registers */
-operator|*
-operator|(
-name|int
-operator|*
-operator|)
-name|pte
-operator|=
-name|PG_V
-operator||
-name|PG_KW
-operator||
-name|btop
+name|ioaccess
 argument_list|(
 literal|0x200b8000
+argument_list|,
+operator|&
+name|Clockmap
+index|[
+literal|0
+index|]
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|cldevice
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|pte
-operator|=
+name|ioaccess
+argument_list|(
+literal|0x20080000
+argument_list|,
 operator|&
 name|Ka630map
 index|[
 literal|0
 index|]
-expr_stmt|;
-operator|*
-operator|(
-name|int
-operator|*
-operator|)
-name|pte
-operator|=
-name|PG_V
-operator||
-name|PG_KW
-operator||
-name|btop
-argument_list|(
-literal|0x20080000
-argument_list|)
-expr_stmt|;
-name|mtpr
-argument_list|(
-name|TBIA
 argument_list|,
-literal|0
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ka630cpu
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Clear restart and boot in progress flags in the CPMBX. This has 	 * nothing to do with the clock except that it the CPMBX reg. is a 	 * byte in the clock's ram. 	 */
