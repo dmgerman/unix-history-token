@@ -376,6 +376,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_define
+define|#
+directive|define
+name|LOCKDRIVE
+parameter_list|(
+name|d
+parameter_list|)
+value|lockdrive (d, __FILE__, __LINE__)
+end_define
+
 begin_else
 else|#
 directive|else
@@ -399,6 +409,16 @@ parameter_list|(
 name|x
 parameter_list|)
 value|free((x), M_DEVBUF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LOCKDRIVE
+parameter_list|(
+name|d
+parameter_list|)
+value|lockdrive (d)
 end_define
 
 begin_endif
