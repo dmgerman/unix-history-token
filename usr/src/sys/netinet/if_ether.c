@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_ether.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_ether.c	7.1.1.1 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -690,6 +690,18 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_decl_stmt
+name|int
+name|useloopback
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* use loopback interface for local traffic */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -1597,6 +1609,11 @@ operator|=
 name|splimp
 argument_list|()
 expr_stmt|;
+name|s
+operator|=
+name|splimp
+argument_list|()
+expr_stmt|;
 name|ARPTAB_LOOK
 argument_list|(
 name|at
@@ -1754,6 +1771,11 @@ name|ATF_COM
 expr_stmt|;
 block|}
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 name|splx
 argument_list|(
 name|s
