@@ -12,11 +12,11 @@ comment|/*   * Copyright (c) 2000 Christian E. Hopps  * All rights reserved.  * 
 end_comment
 
 begin_comment
-comment|/*  *  * Card configuration  * ==================  *  * This card is unusual in that it uses both common and attribute  * memory whilst working. The -stable versions of FreeBSD have a real  * problem managing and setting up the correct memory maps. This  * driver should reset the memory maps correctly under PAO and non-PAO  * -stable systems. Work is in hand to fix these problems for -current.  *  * The first fixes the brain deadness of pccardd (where it reads the  * CIS for common memory, sets it all up and then throws it all away  * assuming the card is an ed driver...). Note that this could be  * dangerous (because it doesn't interact with pccardd) if you  * use other memory mapped cards at the same time.  *  * The second option ensures that common memory is remapped whenever  * we are going to access it (we can't just do it once, as something  * like pccardd may have read the attribute memory and pccard.c  * doesn't re-map the last active window - it remaps the last  * non-active window...).  *  *  * Ad-hoc and infra-structure modes  * ================================  *   * At present only the ad-hoc mode is being worked on.  *  * Apart from just writing the code for infrastructure mode I have a  * few concerns about both the Linux and NetBSD drivers in this area.  * They don't seem to differentiate between the MAC address of the AP  * and the BSS_ID of the network. I presume this is handled when  * joining a managed n/w and the network parameters are updated, but  * I'm not sure. How does this interact with ARP? For mobility we want  * to be able to move around without worrying about which AP we are  * actually talking to - we should always talk to the BSS_ID.  *  * The Linux driver also seems to have the capability to act as an AP.  * I wonder what facilities the "AP" can provide within a driver? We can  * probably use the BRIDGE code to form an ESS but I don't think  * power saving etc. is easy.  *  *  * Packet framing/encapsulation  * ================================  *   * Currently we only support the Webgear encapsulation  *	802.11	header<net/if_ieee80211.h>struct ieee80211_header  *	802.3	header<net/ethernet.h>struct ether_header  *	802.2	LLC header  *	802.2	SNAP header  *  * We should support whatever packet types the following drivers have  *   	if_wi.c		FreeBSD, RFC1042  *	if_ray.c	NetBSD	Webgear, RFC1042  *	rayctl.c	Linux Webgear, RFC1042  * also whatever we can divine from the NDC Access points and Kanda's boxes.  *  * Most drivers appear to have a RFC1042 framing. The incoming packet is  *	802.11	header<net/if_ieee80211.h>struct ieee80211_header  *	802.2	LLC header  *	802.2	SNAP header  *  * This is translated to  *	802.3	header<net/ethernet.h>struct ether_header  *	802.2	LLC header  *	802.2	SNAP header  *  * Linux seems to look at the SNAP org_code and do some framings  * for IPX and APPLEARP on that. This just may be how Linux does IPX  * and NETATALK. Need to see how FreeBSD does these.  *  * Translation should be selected via if_media stuff or link types.  *  *  * Authentication  * ==============  *  * 802.11 provides two authentication mechanisms. The first is a very  * simple host based mechanism (like xhost) called Open System and the  * second is a more complex challenge/response called Shared Key built  * ontop of WEP.  *  * This driver only supports Open System and does not implement any  * host based control lists. In otherwords authentication is always  * granted to hosts wanting to authenticate with this station. This is  * the only sensible behaviour as the Open System mechanism uses MAC  * addresses to identify hosts. Send me patches if you need it!  */
+comment|/*  * Card configuration  * ==================  *  * This card is unusual in that it uses both common and attribute  * memory whilst working. It should use common memory and an IO port.  *  * The 3.x branch of FreeBSD has a real problem managing and setting  * up the correct memory maps. However, this driver should reset the  * memory maps correctly - it works around for the brain deadness of  * pccardd (where it reads the CIS for common memory, sets it all up  * and then throws it all away assuming the card is an ed driver...).  * Note that this could be dangerous (because it doesn't interact with  * pccardd) if you use other memory mapped cards at the same time.  *  * There is no support for running this driver on 4.0.  *  * For>4.1 and -cuurent things are a lot better.  *  * Ad-hoc and infra-structure modes  * ================================  *   * At present only the ad-hoc mode is being worked on.  *  * I hope to start work on support for infrastructure when an AP arrives  * from FreeBSD Labs.  *  * The Linux driver also seems to have the capability to act as an AP.  * I wonder what facilities the "AP" can provide within a driver? We can  * probably use the BRIDGE code to form an ESS but I don't think  * power saving etc. is easy.  *  *  * Packet framing/encapsulation  * ================================  *   * Currently we only support the Webgear encapsulation  *	802.11	header<net/if_ieee80211.h>struct ieee80211_header  *	802.3	header<net/ethernet.h>struct ether_header  *	802.2	LLC header  *	802.2	SNAP header  *  * We should support whatever packet types the following drivers have  *   	if_wi.c		FreeBSD, RFC1042  *	if_ray.c	NetBSD	Webgear, RFC1042  *	rayctl.c	Linux Webgear, RFC1042  * also whatever we can divine from the NDC Access points and Kanda's boxes.  *  * Most drivers appear to have a RFC1042 framing. The incoming packet is  *	802.11	header<net/if_ieee80211.h>struct ieee80211_header  *	802.2	LLC header  *	802.2	SNAP header  *  * This is translated to  *	802.3	header<net/ethernet.h>struct ether_header  *	802.2	LLC header  *	802.2	SNAP header  *  * Linux seems to look at the SNAP org_code and do some framings  * for IPX and APPLEARP on that. This just may be how Linux does IPX  * and NETATALK. Need to see how FreeBSD does these.  *  * Translation should be selected via if_media stuff or link types.  *  *  * Authentication  * ==============  *  * 802.11 provides two authentication mechanisms. The first is a very  * simple host based mechanism (like xhost) called Open System and the  * second is a more complex challenge/response called Shared Key built  * ontop of WEP.  *  * This driver only supports Open System and does not implement any  * host based control lists. In otherwords authentication is always  * granted to hosts wanting to authenticate with this station. This is  * the only sensible behaviour as the Open System mechanism uses MAC  * addresses to identify hosts. Send me patches if you need it!  */
 end_comment
 
 begin_comment
-comment|/*  * TODO  *  * _stop - mostly done  *	would be nice to understand shutdown/or power save to prevent RX  * _reset - done  * 	just needs calling in the right places  *	converted panics to resets - when tx packets are the wrong length  *	may be needed in a couple of other places when I do more commands  * havenet - mostly done  *	i think i've got all the places to set it right, but not so sure  *	we reset it in all the right places  * _unload - done  *	recreated most of stop but as card is unplugged don't try and  *	access it to turn it off  * TX bpf - done  * RX bpf - done  *	I would much prefer to have the complete 802.11 packet dropped to  *	the bpf tap and then have a user land program parse the headers  *	as needed. This way, tcpdump -w can be used to grab the raw data. If  *	needed the 802.11 aware program can "translate" the .11 to ethernet  *	for tcpdump -r  * use std timeout code for download - done  *	was mainly moving a call and removing a load of stuff in  *	download_done as it duplicates check_ccs and ccs_done  * promisoius - done  * add the start_join_net - done  *	i needed it anyway  * remove startccs and startcmd - done  *	as those were used for the NetBSD start timeout  * multicast - done but UNTESTED  *	I don't have the ability/facilty to test this  * rxlevel - done  *	stats reported via raycontrol  * getparams ioctl - done  *	reported via raycontrol  * start_join_done needs a restart in download_done - done  *	now use netbsd style start up  * ioctls - done  *	use raycontrol  *	translation, BSS_ID, countrycode, changing mode  * ifp->if_hdr length - done  * rx level and antenna cache - done  *	antenna not used yet  * antenna tx side - done  *	not tested!  * shutdown - done  *	the driver seems to do the right thing for plugging and unplugging  *	cards  * apm/resume - ignore  *	apm+pccard is borken for 3.x - no one knows how to do it anymore  * fix the XXX code in start_join_done - n/a  *	i've removed this as the error handling should be consistent for  *	all ECF commands and none of the other commands bother!  * ray_update_params_done needs work - done  *	as part of scheduler/promisc re-write  * raycontrol to be firmware version aware - done  *	also report and update parameters IOCTLs are version aware  * make RAY_DPRINTFN RAY_DPRINTF - done  * make all printfs RAY_PRINTF - done  * faster TX routine - done  *	see comments but OACTIVE is gone  * __P to die - done  *	the rest is ansi anyway  * macroize the attribute read/write and 3.x driver - done  *	like the SRAM macros?  * rename "translation" to framing for consitency with Webgear - done  * severe breakage with CCS allocation - done  *	ccs are now allocated in a sleepable context with error recovery  * resource allocation should be be in attach and not probe - done  * resources allocated in probe hould be released before probe exits - done  * softc and ifp in variable definition block - done  * callout handles need rationalising. can probably remove sj_timerh - done  * why can't download use sc_promisc? - done  *	still use the specific update in _init to ensure that the state is  *	right until promisc is moved into current/desired parameters  * for ALLMULTI must go into PROMISC and filter unicast packets - done  *	recent changes to ether_input mean I don't need this  * IFF_RUNNING checks are they really needed? - done  *	this whole area is circumspect as RUNNING is reflection of the  *	driver state and is subject to waits etc.  *	- need to return EIO from runq routines that check  *	- now understood and I have to get the runq routines to  *	  check as required  *		init sequence is done  *		stop sequence is done  *		others are done  * mcast code resurrection - done  * remove ray_reset - done  * detach needs to drain comq - done  *	in fact we don't drain the comq just get the hell out asap  * remember to ccs_free on error in _user routines - done  *	not relevant anymore  * macro for gone and check is at head of all externally called routines - done  *	not relevant anymore  * probably function/macro to test unload at top of commands - done  * detach checks in all routines that access the card - done  *	not relevant anymore as they won't be called by runq  * reset in ray_init_user? - done  *	no as I don't want to remove it (people can always cycle power  *	from the command line)  * check RECERRs and make sure that some are RAY_PRINTF not RAY_DPRINTF - done  * _reset - check where needed - done  * check and rationalise CM mappings - done  * PCATCH tsleeps and have something that will clean the runq - done  * tidy #includes - we cant need all of these - done  * priorities for each tsleep - done  * make RAY_DEBUG a knob somehow - either sysctl or IFF_DEBUG - done  * splimp or splnet? - done  * could do with selectively calling ray_mcast in ray_init - done  *	just ensure that the list is reset  *  * ***watchdog to catch screwed up removals?  * ***error handling of ECF command completions  * use /sys/net/if_ieee80211.h and update it  * write up driver structure in comments above  * UPDATE_PARAMS seems to return via an interrupt - maybe the timeout  *	is needed for wrong values?  * havenet needs checking again  * proper setting of mib_hop_seq_len with country code for v4 firmware  *	best done with raycontrol?  * more translations  * spinning in ray_com_ecf  * countrycode setting is broken I think  *	userupdate should trap and do via startjoin etc.  * fragmentation when rx level drops?  *  * infra mode stuff  * 	proper handling of the basic rate set - see the manual  *	all ray_sj, ray_assoc sequencues need a "nicer" solution as we  *		remember association and authentication  *	need to consider WEP  * acting as ap - should be able to get working from the manual  *  * ray_nw_param  *	promisc in here too? - done  *	should be able to update the parameters before we download to the  *		device  * 	differeniate between parameters set in attach and init  * 	sc_station_addr in here too (for changing mac address)  * 	move desired into the command structure?  *	take downloaded MIB from a complete nw_param?  */
+comment|/*  * ***watchdog to catch screwed up removals?  * ***error handling of RAY_COM_RUNQ  * ***error handling of ECF command completions  * ***can't seem to create a n/w that Win95 wants to see.  * ***need decent association code  * use /sys/net/if_ieee80211.h and update it  * write up driver structure in comments above  * UPDATE_PARAMS seems to return via an interrupt - maybe the timeout  *	is needed for wrong values?  * havenet needs checking again  * proper setting of mib_hop_seq_len with country code for v4 firmware  *	best done with raycontrol?  * more translations  * spinning in ray_com_ecf  * countrycode setting is broken I think  *	userupdate should trap and do via startjoin etc.  * fragmentation when rx level drops?  *  * infra mode stuff  * 	proper handling of the basic rate set - see the manual  *	all ray_sj, ray_assoc sequencues need a "nicer" solution as we  *		remember association and authentication  *	need to consider WEP  *	acting as ap - should be able to get working from the manual  *	need to finish RAY_ECMD_REJOIN_DONE  *  * ray_nw_param  *	promisc in here too? - done  *	should be able to update the parameters before we download to the  *		device. This means we must attach a desired struct to the  *		runq entry and maybe have another big case statement to  *		move these desired into current when not running.  *		init must then use the current settings (pre-loaded  *		in attach now!) and pass to download. But we can't access  *		current nw params outside of the runq - ahhh  * 	differeniate between parameters set in attach and init  * 	sc_station_addr in here too (for changing mac address)  * 	move desired into the command structure?  *	take downloaded MIB from a complete nw_param?  *	longer term need to attach a desired nw params to the runq entry  *  *  * RAY_COM_RUNQ errors  *  * if sleeping in ccs_alloc with eintr/erestart/enxio/enodev  *	erestart	try again from the top  *			XXX do not malloc more comqs  *			XXX ccs allocation hard  *	eintr		clean up and return  *	enxio		clean up and return - done in macro  *  * if sleeping in runq_arr itself with eintr/erestart/enxio/enodev  *	erestart	try again from the top  *			XXX do not malloc more comqs  *			XXX ccs allocation hard  *			XXX reinsert comqs at head of list  *	eintr		clean up and return  *	enxio		clean up and return - done in macro  */
 end_comment
 
 begin_define
@@ -52,12 +52,14 @@ define|#
 directive|define
 name|RAY_DEBUG
 value|(				\
-comment|/* RAY_DBG_RECERR	| */
-value|\
 comment|/* RAY_DBG_SUBR		| */
-value|\ 			   RAY_DBG_BOOTPARAM	|    	\ 			   RAY_DBG_STARTJOIN	|   	\
+value|\ 			   RAY_DBG_BOOTPARAM	|    	\
+comment|/* RAY_DBG_STARTJOIN	| */
+value|\
 comment|/* RAY_DBG_CCS		| */
-value|\                            RAY_DBG_IOCTL	|   	\
+value|\
+comment|/* RAY_DBG_IOCTL	| */
+value|\
 comment|/* RAY_DBG_MBUF		| */
 value|\
 comment|/* RAY_DBG_RX		| */
@@ -102,17 +104,6 @@ end_define
 
 begin_comment
 comment|/* Timeout for CCS commands */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RAY_RESET_TIMEOUT
-value|(5*hz)
-end_define
-
-begin_comment
-comment|/* Timeout for resetting the card */
 end_comment
 
 begin_define
@@ -680,6 +671,11 @@ name|struct
 name|ray_softc
 modifier|*
 name|sc
+parameter_list|,
+name|struct
+name|ray_comq_entry
+modifier|*
+name|com
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -693,6 +689,11 @@ name|struct
 name|ray_softc
 modifier|*
 name|sc
+parameter_list|,
+name|struct
+name|ray_comq_entry
+modifier|*
+name|com
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1058,6 +1059,30 @@ name|struct
 name|mbuf
 modifier|*
 name|m0
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|ray_rx_data
+parameter_list|(
+name|struct
+name|ray_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+name|m0
+parameter_list|,
+name|u_int8_t
+name|siglev
+parameter_list|,
+name|u_int8_t
+name|antenna
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2053,36 +2078,26 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Set the parameters that will survive stop/init and 	 * reset a few things on the card. 	 * 	 * Do not update these in ray_init_download's parameter setup 	 */
+comment|/* 	 * Set the parameters that will survive stop/init and 	 * reset a few things on the card. 	 * 	 * Do not update these in ray_init_download's parameter setup 	 * 	 * XXX see the ray_init_download section for stuff to move 	 */
 name|RAY_MAP_CM
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|XXX
-name|see
-name|the
-name|ray_init_download
-name|section
-for|for stuff to move
-endif|#
-directive|endif
-for|bzero
-control|(
+name|bzero
+argument_list|(
 operator|&
 name|sc
 operator|->
 name|sc_d
-operator|,
+argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|ray_nw_param
 argument_list|)
-control|)
-empty_stmt|;
+argument_list|)
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|&
@@ -2360,21 +2375,6 @@ name|ether_header
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|XXX
-name|at_shutdown
-argument_list|(
-name|ray_shutdown
-argument_list|,
-name|sc
-argument_list|,
-name|SHUTDOWN_POST_SYNC
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* XXX */
 comment|/* 	 * Print out some useful information 	 */
 if|if
 condition|(
@@ -3573,10 +3573,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* XXX runq_arr may fail:      if sleeping in ccs_alloc with eintr/erestart/enxio/enodev 		erestart	try again from the top 				XXX do not malloc more comqs 				XXX ccs allocation hard     		eintr		clean up and return 		enxio		clean up and return - done in macro      if sleeping in runq_arr itself with eintr/erestart/enxio/enodev 		erestart	try again from the top 				XXX do not malloc more comqs 				XXX ccs allocation hard 				XXX reinsert comqs at head of list     		eintr		clean up and return 		enxio		clean up and return - done in macro      longer term need to attach a desired nw params to the runq entry  */
-end_comment
-
-begin_comment
 comment|/*  * Runq entry for resetting driver and downloading start up structures to card  */
 end_comment
 
@@ -3646,19 +3642,15 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Reset instance variables 	 * 	 * The first set are network parameters that are read back when 	 * the card starts or joins the network. 	 * 	 * The second set are network parameters that are downloaded to 	 * the card. 	 * 	 * The third set are driver parameters. 	 * 	 * All of the variables in these sets can be updated by the 	 * card or ioctls. 	 */
-if|#
-directive|if
-name|XXX
-name|see
-name|the
-name|ray_attach
-name|section
-for|for stuff to move
-endif|#
-directive|endif
-for|sc->sc_d.np_upd_param = 0
-empty_stmt|;
+comment|/* 	 * Reset instance variables 	 * 	 * The first set are network parameters that are read back when 	 * the card starts or joins the network. 	 * 	 * The second set are network parameters that are downloaded to 	 * the card. 	 * 	 * The third set are driver parameters. 	 * 	 * All of the variables in these sets can be updated by the 	 * card or ioctls. 	 * 	 * XXX see the ray_attach section for stuff to move 	 */
+name|sc
+operator|->
+name|sc_d
+operator|.
+name|np_upd_param
+operator|=
+literal|0
+expr_stmt|;
 name|bzero
 argument_list|(
 name|sc
@@ -3776,7 +3768,7 @@ name|framing
 operator|=
 name|SC_FRAMING_WEBGEAR
 expr_stmt|;
-comment|/* 	 * Download the right firmware defaults 	 */
+comment|/* XXX this is a hack whilst I transition the code. The instance  * XXX variables above should be set somewhere else. This is needed for  * XXX start_join /  bcopy(&sc->sc_d,&com->c_desired, sizeof(struct ray_nw_param)); 	     	/* 	 * Download the right firmware defaults 	 */
 if|if
 condition|(
 name|sc
@@ -3788,12 +3780,16 @@ condition|)
 name|ray_init_download_v4
 argument_list|(
 name|sc
+argument_list|,
+name|com
 argument_list|)
 expr_stmt|;
 else|else
 name|ray_init_download_v5
 argument_list|(
 name|sc
+argument_list|,
+name|com
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Kick the card 	 */
@@ -3844,6 +3840,11 @@ name|struct
 name|ray_softc
 modifier|*
 name|sc
+parameter_list|,
+name|struct
+name|ray_comq_entry
+modifier|*
+name|com
 parameter_list|)
 block|{
 name|struct
@@ -3878,9 +3879,9 @@ argument_list|(
 name|mib_net_type
 argument_list|)
 operator|=
-name|sc
+name|com
 operator|->
-name|sc_d
+name|c_desired
 operator|.
 name|np_net_type
 expr_stmt|;
@@ -3889,17 +3890,17 @@ argument_list|(
 name|mib_ap_status
 argument_list|)
 operator|=
-name|sc
+name|com
 operator|->
-name|sc_d
+name|c_desired
 operator|.
 name|np_ap_status
 expr_stmt|;
 name|bcopy
 argument_list|(
-name|sc
+name|com
 operator|->
-name|sc_d
+name|c_desired
 operator|.
 name|np_ssid
 argument_list|,
@@ -4074,9 +4075,9 @@ argument_list|(
 name|mib_promisc
 argument_list|)
 operator|=
-name|sc
+name|com
 operator|->
-name|sc_d
+name|c_desired
 operator|.
 name|np_promisc
 expr_stmt|;
@@ -4250,6 +4251,11 @@ name|struct
 name|ray_softc
 modifier|*
 name|sc
+parameter_list|,
+name|struct
+name|ray_comq_entry
+modifier|*
+name|com
 parameter_list|)
 block|{
 name|struct
@@ -4284,9 +4290,9 @@ argument_list|(
 name|mib_net_type
 argument_list|)
 operator|=
-name|sc
+name|com
 operator|->
-name|sc_d
+name|c_desired
 operator|.
 name|np_net_type
 expr_stmt|;
@@ -4295,17 +4301,17 @@ argument_list|(
 name|mib_ap_status
 argument_list|)
 operator|=
-name|sc
+name|com
 operator|->
-name|sc_d
+name|c_desired
 operator|.
 name|np_ap_status
 expr_stmt|;
 name|bcopy
 argument_list|(
-name|sc
+name|com
 operator|->
-name|sc_d
+name|c_desired
 operator|.
 name|np_ssid
 argument_list|,
@@ -4480,9 +4486,9 @@ argument_list|(
 name|mib_promisc
 argument_list|)
 operator|=
-name|sc
+name|com
 operator|->
-name|sc_d
+name|c_desired
 operator|.
 name|np_promisc
 expr_stmt|;
@@ -4640,9 +4646,9 @@ argument_list|(
 name|mib_privacy_must_start
 argument_list|)
 operator|=
-name|sc
+name|com
 operator|->
-name|sc_d
+name|c_desired
 operator|.
 name|np_priv_start
 expr_stmt|;
@@ -4651,9 +4657,9 @@ argument_list|(
 name|mib_privacy_can_join
 argument_list|)
 operator|=
-name|sc
+name|com
 operator|->
-name|sc_d
+name|c_desired
 operator|.
 name|np_priv_join
 expr_stmt|;
@@ -4665,9 +4671,9 @@ literal|0
 index|]
 argument_list|)
 operator|=
-name|sc
+name|com
 operator|->
-name|sc_d
+name|c_desired
 operator|.
 name|np_def_txrate
 expr_stmt|;
@@ -4732,26 +4738,6 @@ argument_list|(
 name|sc
 argument_list|,
 name|ccs
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Copy the downloaded desired parameters to the current set 	 * 	 * XXX these potentially break serialisation until we attach the 	 * XXX desired parameters to the runq 	 */
-name|bcopy
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_d
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|sc_c
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ray_nw_param
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|ray_com_ecf_done
@@ -4929,7 +4915,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If card already running we don't need to start the n/w. 	 * 	 * XXX When we cope with errors and re-call this routine we 	 * XXX need better checking 	 */
+comment|/* 	 * If card already running we don't need to start the n/w. 	 */
 if|if
 condition|(
 operator|(
@@ -5472,7 +5458,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * If card already running we don't need to associate. 	 * 	 * XXX When we cope with errors and re-call this routine we 	 * XXX need better checking 	 */
+comment|/* 	 * If card already running we don't need to associate. 	 */
 if|if
 condition|(
 operator|(
@@ -6775,7 +6761,7 @@ name|sc
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * XXX From NetBSD code: 		 * 		 * XXX If this can really happen perhaps we need to save 		 * XXX the chain and use it later.  I think this might 		 * XXX be a confused state though because we check above 		 * XXX and don't issue any commands between. 		 */
+comment|/* 		 * XXX If this can really happen perhaps we need to save 		 * XXX the chain and use it later. 		 */
 name|RAY_RECERR
 argument_list|(
 name|sc
@@ -7154,11 +7140,6 @@ modifier|*
 name|header
 decl_stmt|;
 name|struct
-name|ether_header
-modifier|*
-name|eh
-decl_stmt|;
-name|struct
 name|ifnet
 modifier|*
 name|ifp
@@ -7190,13 +7171,6 @@ decl_stmt|,
 name|ebufp
 decl_stmt|;
 name|u_int8_t
-modifier|*
-name|dst
-decl_stmt|,
-modifier|*
-name|src
-decl_stmt|;
-name|u_int8_t
 name|siglev
 decl_stmt|,
 name|antenna
@@ -7207,6 +7181,10 @@ decl_stmt|,
 name|ni
 decl_stmt|,
 name|i
+decl_stmt|;
+name|u_int8_t
+modifier|*
+name|dst
 decl_stmt|;
 name|RAY_DPRINTF
 argument_list|(
@@ -7735,7 +7713,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
-comment|/* 	 * Check the 802.11 packet type 	 * 	 * DATA packets are dealt with below, CTL and MGT packets 	 * are handled in their own functions. 	 */
+comment|/* 	 * Check the 802.11 packet type and hand off to 	 * appropriate functions. 	 */
 name|header
 operator|=
 name|mtod
@@ -7802,6 +7780,21 @@ name|IEEE80211_FC0_TYPE_MASK
 condition|)
 block|{
 case|case
+name|IEEE80211_FC0_TYPE_DATA
+case|:
+name|ray_rx_data
+argument_list|(
+name|sc
+argument_list|,
+name|m0
+argument_list|,
+name|siglev
+argument_list|,
+name|antenna
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|IEEE80211_FC0_TYPE_MGT
 case|:
 name|ray_rx_mgt
@@ -7811,12 +7804,6 @@ argument_list|,
 name|m0
 argument_list|)
 expr_stmt|;
-name|m_freem
-argument_list|(
-name|m0
-argument_list|)
-expr_stmt|;
-return|return;
 break|break;
 case|case
 name|IEEE80211_FC0_TYPE_CTL
@@ -7828,16 +7815,6 @@ argument_list|,
 name|m0
 argument_list|)
 expr_stmt|;
-name|m_freem
-argument_list|(
-name|m0
-argument_list|)
-expr_stmt|;
-return|return;
-break|break;
-case|case
-name|IEEE80211_FC0_TYPE_DATA
-case|:
 break|break;
 default|default:
 name|RAY_RECERR
@@ -7852,6 +7829,168 @@ name|i_fc
 index|[
 literal|0
 index|]
+argument_list|)
+expr_stmt|;
+name|ifp
+operator|->
+name|if_ierrors
+operator|++
+expr_stmt|;
+name|m_freem
+argument_list|(
+name|m0
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/*  * Deal with DATA packet types  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|ray_rx_data
+parameter_list|(
+name|struct
+name|ray_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+name|m0
+parameter_list|,
+name|u_int8_t
+name|siglev
+parameter_list|,
+name|u_int8_t
+name|antenna
+parameter_list|)
+block|{
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+init|=
+operator|&
+name|sc
+operator|->
+name|arpcom
+operator|.
+name|ac_if
+decl_stmt|;
+name|struct
+name|ieee80211_header
+modifier|*
+name|header
+init|=
+name|mtod
+argument_list|(
+name|m0
+argument_list|,
+expr|struct
+name|ieee80211_header
+operator|*
+argument_list|)
+decl_stmt|;
+name|struct
+name|ether_header
+modifier|*
+name|eh
+decl_stmt|;
+name|u_int8_t
+modifier|*
+name|src
+decl_stmt|;
+name|RAY_DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|RAY_DBG_SUBR
+operator||
+name|RAY_DBG_MGT
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Obtain the .11 src addresses. 	 */
+switch|switch
+condition|(
+name|header
+operator|->
+name|i_fc
+index|[
+literal|1
+index|]
+operator|&
+name|IEEE80211_FC1_DS_MASK
+condition|)
+block|{
+case|case
+name|IEEE80211_FC1_STA_TO_STA
+case|:
+name|RAY_DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|RAY_DBG_RX
+argument_list|,
+literal|"packet from sta %6D"
+argument_list|,
+name|src
+argument_list|,
+literal|":"
+argument_list|)
+expr_stmt|;
+name|src
+operator|=
+name|header
+operator|->
+name|i_addr2
+expr_stmt|;
+break|break;
+case|case
+name|IEEE80211_FC1_AP_TO_STA
+case|:
+name|RAY_DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|RAY_DBG_RX
+argument_list|,
+literal|"packet from ap %6D"
+argument_list|,
+name|src
+argument_list|,
+literal|":"
+argument_list|)
+expr_stmt|;
+name|src
+operator|=
+name|header
+operator|->
+name|i_addr3
+expr_stmt|;
+break|break;
+default|default:
+name|RAY_RECERR
+argument_list|(
+name|sc
+argument_list|,
+literal|"DATA TODS/FROMDS wrong fc1 0x%x"
+argument_list|,
+name|header
+operator|->
+name|i_fc
+index|[
+literal|1
+index|]
+operator|&
+name|IEEE80211_FC1_DS_MASK
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -7944,166 +8083,6 @@ literal|0
 index|]
 operator|&
 name|IEEE80211_FC0_SUBTYPE_MASK
-argument_list|)
-expr_stmt|;
-name|ifp
-operator|->
-name|if_ierrors
-operator|++
-expr_stmt|;
-name|m_freem
-argument_list|(
-name|m0
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-comment|/* 	 * Obtain the .11 src addresses. 	 * 	 * XXX This needs some work for INFRA mode 	 * XXX Do I need this at all? MGT and CTL is far easier. 	 */
-name|src
-operator|=
-name|header
-operator|->
-name|i_addr2
-expr_stmt|;
-switch|switch
-condition|(
-name|header
-operator|->
-name|i_fc
-index|[
-literal|1
-index|]
-operator|&
-name|IEEE80211_FC1_DS_MASK
-condition|)
-block|{
-case|case
-name|IEEE80211_FC1_STA_TO_STA
-case|:
-name|RAY_DPRINTF
-argument_list|(
-name|sc
-argument_list|,
-name|RAY_DBG_RX
-argument_list|,
-literal|"packet from sta %6D"
-argument_list|,
-name|src
-argument_list|,
-literal|":"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|IEEE80211_FC1_STA_TO_AP
-case|:
-comment|/* XXX XXX_ACTING_AP */
-name|RAY_DPRINTF
-argument_list|(
-name|sc
-argument_list|,
-name|RAY_DBG_RX
-argument_list|,
-literal|"packet from sta to ap %6D %6D"
-argument_list|,
-name|src
-argument_list|,
-literal|":"
-argument_list|,
-name|header
-operator|->
-name|i_addr3
-argument_list|,
-literal|":"
-argument_list|)
-expr_stmt|;
-name|ifp
-operator|->
-name|if_ierrors
-operator|++
-expr_stmt|;
-name|m_freem
-argument_list|(
-name|m0
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|IEEE80211_FC1_AP_TO_STA
-case|:
-comment|/* XXX_INFRA */
-name|RAY_DPRINTF
-argument_list|(
-name|sc
-argument_list|,
-name|RAY_DBG_RX
-argument_list|,
-literal|"packet from ap %6D"
-argument_list|,
-name|src
-argument_list|,
-literal|":"
-argument_list|)
-expr_stmt|;
-name|ifp
-operator|->
-name|if_ierrors
-operator|++
-expr_stmt|;
-name|m_freem
-argument_list|(
-name|m0
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|IEEE80211_FC1_AP_TO_AP
-case|:
-comment|/* XXX XXX_ACTING_AP */
-name|RAY_DPRINTF
-argument_list|(
-name|sc
-argument_list|,
-name|RAY_DBG_RX
-argument_list|,
-literal|"packet between aps %6D %6D"
-argument_list|,
-name|src
-argument_list|,
-literal|":"
-argument_list|,
-name|header
-operator|->
-name|i_addr2
-argument_list|,
-literal|":"
-argument_list|)
-expr_stmt|;
-name|ifp
-operator|->
-name|if_ierrors
-operator|++
-expr_stmt|;
-name|m_freem
-argument_list|(
-name|m0
-argument_list|)
-expr_stmt|;
-return|return;
-break|break;
-default|default:
-name|RAY_RECERR
-argument_list|(
-name|sc
-argument_list|,
-literal|"unknown packet fc1 0x%x"
-argument_list|,
-name|header
-operator|->
-name|i_fc
-index|[
-literal|1
-index|]
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -8225,7 +8204,6 @@ argument_list|,
 name|m0
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -8323,6 +8301,11 @@ operator|->
 name|if_ierrors
 operator|++
 expr_stmt|;
+name|m_freem
+argument_list|(
+name|m0
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * Check the the mgt packet subtype, some packets should be 	 * dropped depending on the mode the station is in. See pg 	 * 52(60) of docs 	 * 	 * P - proccess, J - Junk, E - ECF deals with, I - Illegal  	 * ECF Proccesses   	 *  AHDOC procces or junk    	 *   INFRA STA process or junk     	 *    INFRA AP process or jumk 	 *   	 * +PPP	IEEE80211_FC0_SUBTYPE_MGT_BEACON  	 * +EEE	IEEE80211_FC0_SUBTYPE_MGT_PROBE_REQ  	 * +EEE	IEEE80211_FC0_SUBTYPE_MGT_PROBE_RESP  	 *  PPP	IEEE80211_FC0_SUBTYPE_MGT_AUTH  	 *  PPP	IEEE80211_FC0_SUBTYPE_MGT_DEAUTH  	 *  JJP	IEEE80211_FC0_SUBTYPE_MGT_ASSOC_REQ  	 *  JPJ	IEEE80211_FC0_SUBTYPE_MGT_ASSOC_RESP  	 *  JPP	IEEE80211_FC0_SUBTYPE_MGT_DISASSOC  	 *  JJP	IEEE80211_FC0_SUBTYPE_MGT_REASSOC_REQ  	 *  JPJ	IEEE80211_FC0_SUBTYPE_MGT_REASSOC_RESP  	 * +EEE	IEEE80211_FC0_SUBTYPE_MGT_ATIM 	 */
@@ -8396,6 +8379,7 @@ argument_list|,
 literal|"DEAUTH MGT packet"
 argument_list|)
 expr_stmt|;
+comment|/* XXX ray_rx_mgt_deauth(sc, m0); */
 break|break;
 case|case
 name|IEEE80211_FC0_SUBTYPE_MGT_ASSOC_REQ
@@ -8414,16 +8398,26 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|sc
+operator|->
+name|sc_d
+operator|.
+name|np_net_type
+operator|==
+name|RAY_MIB_NET_TYPE_INFRA
+operator|)
+operator|&&
+operator|(
 name|sc
 operator|->
 name|sc_c
 operator|.
 name|np_ap_status
-operator|!=
+operator|==
 name|RAY_MIB_AP_STATUS_AP
+operator|)
 condition|)
-return|return;
-else|else
 name|RAY_PANIC
 argument_list|(
 name|sc
@@ -8457,9 +8451,9 @@ name|sc_d
 operator|.
 name|np_net_type
 operator|==
-name|RAY_MIB_NET_TYPE_ADHOC
+name|RAY_MIB_NET_TYPE_INFRA
 operator|)
-operator|||
+operator|&&
 operator|(
 name|sc
 operator|->
@@ -8467,11 +8461,9 @@ name|sc_c
 operator|.
 name|np_ap_status
 operator|==
-name|RAY_MIB_AP_STATUS_AP
+name|RAY_MIB_AP_STATUS_TERMINAL
 operator|)
 condition|)
-return|return;
-else|else
 name|RAY_PANIC
 argument_list|(
 name|sc
@@ -8501,10 +8493,8 @@ name|sc_d
 operator|.
 name|np_net_type
 operator|==
-name|RAY_MIB_NET_TYPE_ADHOC
+name|RAY_MIB_NET_TYPE_INFRA
 condition|)
-return|return;
-else|else
 name|RAY_PANIC
 argument_list|(
 name|sc
@@ -8567,8 +8557,12 @@ operator|->
 name|if_ierrors
 operator|++
 expr_stmt|;
-return|return;
 block|}
+name|m_freem
+argument_list|(
+name|m0
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -8970,6 +8964,11 @@ operator|->
 name|if_ierrors
 operator|++
 expr_stmt|;
+name|m_freem
+argument_list|(
+name|m0
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * Check the the ctl packet subtype, some packets should be 	 * dropped depending on the mode the station is in. The ECF 	 * should deal with everything but the power save poll to an 	 * AP. See pg 52(60) of docs. 	 */
@@ -9010,16 +9009,26 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|sc
+operator|->
+name|sc_d
+operator|.
+name|np_net_type
+operator|==
+name|RAY_MIB_NET_TYPE_INFRA
+operator|)
+operator|&&
+operator|(
 name|sc
 operator|->
 name|sc_c
 operator|.
 name|np_ap_status
-operator|!=
+operator|==
 name|RAY_MIB_AP_STATUS_AP
+operator|)
 condition|)
-return|return;
-else|else
 name|RAY_PANIC
 argument_list|(
 name|sc
@@ -9088,8 +9097,12 @@ operator|->
 name|if_ierrors
 operator|++
 expr_stmt|;
-return|return;
 block|}
+name|m_freem
+argument_list|(
+name|m0
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -10738,7 +10751,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * User land entry to parameter reporting  */
+comment|/*  * User land entry to parameter reporting  *  * As we by pass the runq to report current parameters this function  * only provides a snap shot of the driver's state.  */
 end_comment
 
 begin_function
@@ -11689,11 +11702,7 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Handle certain parameters specially 	 * 	 * XXX Do I want a field to skip start/join in the command? 	 */
-name|todo
-operator|=
-literal|0
-expr_stmt|;
+comment|/* 	 * Check that the parameter is available based on firmware version 	 */
 name|pr
 operator|->
 name|r_failcause
@@ -11773,6 +11782,11 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+comment|/* 	 * Handle certain parameters specially 	 */
+name|todo
+operator|=
+literal|0
+expr_stmt|;
 switch|switch
 condition|(
 name|pr
@@ -11905,7 +11919,7 @@ comment|/* Unsupported */
 case|case
 name|RAY_MIB_MAC_ADDR
 case|:
-comment|/* XXX Need interface up */
+comment|/* XXX Need interface up but could be done */
 case|case
 name|RAY_MIB_PROMISC
 case|:
@@ -11927,6 +11941,7 @@ name|RAY_UPP_SJ
 expr_stmt|;
 break|break;
 block|}
+comment|/* 	 * Generate the runq entries as needed 	 */
 name|ncom
 operator|=
 literal|0
@@ -13116,34 +13131,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|RAY_DEBUG
-operator|&
-name|RAY_DBG_COM
-if|if
-condition|(
-name|com
-operator|!=
-name|TAILQ_FIRST
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_comq
-argument_list|)
-condition|)
-name|RAY_PANIC
-argument_list|(
-name|sc
-argument_list|,
-literal|"com and head of queue"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* RAY_DEBUG& RAY_DBG_COM */
-comment|/* 	 * XXX other drivers did this, but I think  	 * XXX what we really want to do is just make sure we don't 	 * XXX get here or that spinning is ok 	 * 	 * XXX actually we probably want to call a timeout on 	 * XXX ourself here... 	 */
+comment|/* 	 * XXX we probably want to call a timeout on ourself here... 	 */
 name|i
 operator|=
 literal|0
@@ -13338,28 +13326,6 @@ operator|->
 name|sc_comq
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|RAY_DEBUG
-operator|&
-name|RAY_DBG_COM
-comment|/* XXX get rid of this at some point or make it KASSERT */
-if|if
-condition|(
-name|com
-operator|==
-name|NULL
-condition|)
-name|RAY_PANIC
-argument_list|(
-name|sc
-argument_list|,
-literal|"no command queue"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* RAY_DEBUG& RAY_DBG_COM */
 name|cmd
 operator|=
 name|SRAM_READ_FIELD_1
@@ -14643,7 +14609,7 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-comment|/* XXX Ensure 8bit access */
+comment|/* XXX Ensure 8bit access somehow */
 if|#
 directive|if
 name|XXX_8BIT
