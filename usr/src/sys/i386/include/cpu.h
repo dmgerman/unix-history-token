@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)cpu.h	5.6 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)cpu.h	5.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -263,6 +263,39 @@ define|#
 directive|define
 name|CPU_586
 value|4
+end_define
+
+begin_comment
+comment|/*  * CTL_MACHDEP definitions.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_CONSDEV
+value|1
+end_define
+
+begin_comment
+comment|/* dev_t: console terminal device */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPU_MAXID
+value|2
+end_define
+
+begin_comment
+comment|/* number of valid machdep ids */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTL_MACHDEP_NAMES
+value|{ \ 	{ 0, 0 }, \ 	{ "console_device", CTLTYPE_STRUCT }, \ }
 end_define
 
 end_unit
