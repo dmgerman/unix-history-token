@@ -66,24 +66,12 @@ begin_comment
 comment|/*  *	Routine:	pmap_kextract  *	Function:  *		Extract the physical page address associated  *		kernel virtual address.  */
 end_comment
 
-begin_function
-specifier|static
-name|__inline
-name|vm_offset_t
+begin_define
+define|#
+directive|define
 name|pmap_kextract
-parameter_list|(
-name|vm_offset_t
-name|va
-parameter_list|)
-block|{
-return|return
-name|ia64_tpa
-argument_list|(
-name|va
-argument_list|)
-return|;
-block|}
-end_function
+value|ia64_tpa
+end_define
 
 begin_define
 define|#
