@@ -459,6 +459,7 @@ name|i486_bzero
 name|__P
 argument_list|(
 operator|(
+specifier|volatile
 name|void
 operator|*
 name|buf
@@ -498,6 +499,7 @@ name|i586_bzero
 name|__P
 argument_list|(
 operator|(
+specifier|volatile
 name|void
 operator|*
 name|buf
