@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)cmd3.c	2.2 %G%"
+literal|"@(#)cmd3.c	2.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1311,6 +1311,34 @@ argument_list|(
 name|np
 argument_list|,
 name|myname
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|altnames
+operator|!=
+literal|0
+condition|)
+for|for
+control|(
+name|ap
+operator|=
+name|altnames
+init|;
+operator|*
+name|ap
+condition|;
+name|ap
+operator|++
+control|)
+name|np
+operator|=
+name|delname
+argument_list|(
+name|np
+argument_list|,
+operator|*
+name|ap
 argument_list|)
 expr_stmt|;
 name|head
