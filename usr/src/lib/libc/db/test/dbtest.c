@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dbtest.c	8.7 (Berkeley) %G%"
+literal|"@(#)dbtest.c	8.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2258,6 +2258,10 @@ block|{
 name|char
 modifier|*
 name|p
+decl_stmt|,
+modifier|*
+name|index
+argument_list|()
 decl_stmt|;
 for|for
 control|(
@@ -2551,6 +2555,10 @@ decl_stmt|;
 name|char
 modifier|*
 name|eq
+decl_stmt|,
+modifier|*
+name|index
+argument_list|()
 decl_stmt|;
 if|if
 condition|(
@@ -3116,6 +3124,10 @@ decl_stmt|;
 name|char
 modifier|*
 name|np
+decl_stmt|,
+modifier|*
+name|index
+argument_list|()
 decl_stmt|;
 for|for
 control|(
@@ -3220,6 +3232,10 @@ condition|(
 operator|(
 name|p
 operator|=
+operator|(
+name|void
+operator|*
+operator|)
 name|malloc
 argument_list|(
 operator|(
@@ -3309,6 +3325,10 @@ condition|(
 operator|(
 name|p
 operator|=
+operator|(
+name|void
+operator|*
+operator|)
 name|malloc
 argument_list|(
 name|len
