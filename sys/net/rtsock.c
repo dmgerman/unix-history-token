@@ -1658,11 +1658,12 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* XXX why this odd cast to (caddr_t *) ? Maybe wrong ? */
 if|if
 condition|(
 name|t
 operator|&&
-name|Bcmp
+name|bcmp
 argument_list|(
 operator|(
 name|caddr_t
@@ -2215,7 +2216,7 @@ name|ENOBUFS
 argument_list|)
 expr_stmt|;
 block|}
-name|Bcopy
+name|bcopy
 argument_list|(
 name|rtm
 argument_list|,
@@ -5845,7 +5846,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-name|Bzero
+name|bzero
 argument_list|(
 operator|&
 name|w
