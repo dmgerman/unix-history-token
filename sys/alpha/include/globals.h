@@ -40,35 +40,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-literal|1
-end_if
-
 begin_define
 define|#
 directive|define
 name|GLOBALP
 value|globalp
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|GLOBALP
-value|((struct globaldata *) alpha_pal_rdval())
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
