@@ -33,35 +33,11 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|500000
-end_if
-
 begin_include
 include|#
 directive|include
 file|<sys/timetc.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -186,7 +162,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|unsigned
+name|u_int
 name|acpi_timer_get_timecount
 parameter_list|(
 name|struct
@@ -199,7 +175,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|unsigned
+name|u_int
 name|acpi_timer_get_timecount_safe
 parameter_list|(
 name|struct
@@ -232,7 +208,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|uint32_t
+name|u_int
 name|read_counter
 parameter_list|(
 name|void
@@ -350,16 +326,34 @@ name|timecounter
 name|acpi_timer_timecounter
 init|=
 block|{
+operator|.
+name|tc_get_timecount
+operator|=
 name|acpi_timer_get_timecount_safe
 block|,
+operator|.
+name|tc_poll_pps
+operator|=
 literal|0
 block|,
-literal|0xffffff
-block|,
+operator|.
+name|tc_counter_mask
+operator|=
 literal|0
 block|,
+operator|.
+name|tc_frequency
+operator|=
+literal|0
+block|,
+operator|.
+name|tc_name
+operator|=
 literal|"ACPI"
 block|,
+operator|.
+name|tc_quality
+operator|=
 literal|1000
 block|}
 decl_stmt|;
@@ -367,7 +361,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-name|uint32_t
+name|u_int
 name|read_counter
 parameter_list|()
 block|{
@@ -377,7 +371,7 @@ decl_stmt|;
 name|bus_space_tag_t
 name|bst
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|tv
 decl_stmt|;
 name|bsh
@@ -439,7 +433,7 @@ name|int
 name|test_counter
 parameter_list|()
 block|{
-name|u_int
+name|uint32_t
 name|last
 decl_stmt|,
 name|this
@@ -487,13 +481,12 @@ argument_list|()
 expr_stmt|;
 name|delta
 operator|=
-operator|(
+name|acpi_TimerDelta
+argument_list|(
 name|this
-operator|-
+argument_list|,
 name|last
-operator|)
-operator|&
-literal|0xffffff
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -779,6 +772,33 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|AcpiGbl_FADT
+operator|->
+name|TmrValExt
+operator|!=
+literal|0
+condition|)
+name|acpi_timer_timecounter
+operator|.
+name|tc_counter_mask
+operator|=
+literal|0xffffffff
+expr_stmt|;
+else|else
+name|acpi_timer_timecounter
+operator|.
+name|tc_counter_mask
+operator|=
+literal|0x00ffffff
+expr_stmt|;
+name|acpi_timer_timecounter
+operator|.
+name|tc_frequency
+operator|=
+name|acpi_timer_frequency
+expr_stmt|;
+if|if
+condition|(
 name|testenv
 argument_list|(
 literal|"debug.acpi.timer_test"
@@ -786,12 +806,6 @@ argument_list|)
 condition|)
 name|acpi_timer_test
 argument_list|()
-expr_stmt|;
-name|acpi_timer_timecounter
-operator|.
-name|tc_frequency
-operator|=
-name|acpi_timer_frequency
 expr_stmt|;
 name|j
 operator|=
@@ -934,7 +948,7 @@ end_comment
 
 begin_function
 specifier|static
-name|unsigned
+name|u_int
 name|acpi_timer_get_timecount
 parameter_list|(
 name|struct
@@ -958,7 +972,7 @@ end_comment
 
 begin_function
 specifier|static
-name|unsigned
+name|u_int
 name|acpi_timer_get_timecount_safe
 parameter_list|(
 name|struct
@@ -967,7 +981,7 @@ modifier|*
 name|tc
 parameter_list|)
 block|{
-name|unsigned
+name|u_int
 name|u1
 decl_stmt|,
 name|u2
@@ -1150,7 +1164,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|u1
 decl_stmt|,
 name|u2
@@ -1233,37 +1247,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_comment
-comment|/*  * Chipset workaround driver hung off PCI.  *  * Some ACPI timers are known or believed to suffer from implementation  * problems which can lead to erroneous values being read from the timer.  *  * Since we can't trust unknown chipsets, we default to a timer-read  * routine which compensates for the most common problem (as detailed  * in the excerpt from the Intel PIIX4 datasheet below).  *  * When we detect a known-functional chipset, we disable the workaround  * to improve speed.  *  * ] 20. ACPI Timer Errata  * ]  * ]   Problem: The power management timer may return improper result when  * ]   read. Although the timer value settles properly after incrementing,  * ]   while incrementing there is a 3nS window every 69.8nS where the  * ]   timer value is indeterminate (a 4.2% chance that the data will be  * ]   incorrect when read). As a result, the ACPI free running count up  * ]   timer specification is violated due to erroneous reads.  Implication:  * ]   System hangs due to the "inaccuracy" of the timer when used by  * ]   software for time critical events and delays.  * ]  * ] Workaround: Read the register twice and compare.  * ] Status: This will not be fixed in the PIIX4 or PIIX4E, it is fixed  * ] in the PIIX4M.  *  * The counter is in other words not latched to the PCI bus clock when  * read.  Notice the workaround isn't:  We need to read until we have  * three monotonic samples and then use the middle one, otherwise we are  * not protected against the fact that the bits can be wrong in two  * directions.  If we only cared about monosity two reads would be enough.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-unit|static int	acpi_timer_pci_probe(device_t dev);  static device_method_t acpi_timer_pci_methods[] = {     DEVMETHOD(device_probe,	acpi_timer_pci_probe),     {0, 0} };  static driver_t acpi_timer_pci_driver = {     "acpi_timer_pci",     acpi_timer_pci_methods,     0, };  devclass_t acpi_timer_pci_devclass; DRIVER_MODULE(acpi_timer_pci, pci, acpi_timer_pci_driver, 	      acpi_timer_pci_devclass, 0, 0);
-comment|/*  * Look at PCI devices going past; if we detect one we know contains  * a functional ACPI timer device, enable the faster timecounter read  * routine.  */
-end_comment
-
-begin_comment
-unit|static int acpi_timer_pci_probe(device_t dev) {     int vendor, device, revid;          vendor = pci_get_vendor(dev);     device = pci_get_device(dev);     revid  = pci_get_revid(dev);
-comment|/* Detect the PIIX4M and i440MX, respectively */
-end_comment
-
-begin_comment
-unit|if ((vendor == 0x8086&& device == 0x7113&& revid>= 0x03)	|| 	(vendor == 0x8086&& device == 0x719b)) {  	acpi_timer_timecounter.tc_get_timecount = acpi_timer_get_timecount; 	acpi_timer_timecounter.tc_name = "ACPI-fast"; 	if (bootverbose) { 	    device_printf(acpi_timer_dev,"functional ACPI timer detected, " 			  "enabling fast timecount interface\n"); 	}     }
-comment|/* We never match anything */
-end_comment
-
-begin_endif
-unit|return (ENXIO); }
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
