@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)user.h	7.8 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)user.h	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -95,28 +95,6 @@ begin_comment
 comment|/*  * Per process structure containing data that  * isn't needed in core when the process is swapped out.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MAXCOMLEN
-value|16
-end_define
-
-begin_comment
-comment|/*<= MAXNAMLEN,>= sizeof(ac_comm) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAXLOGNAME
-value|12
-end_define
-
-begin_comment
-comment|/*>= UT_NAMESIZE */
-end_comment
-
 begin_struct
 struct|struct
 name|user
@@ -136,14 +114,6 @@ modifier|*
 name|u_ar0
 decl_stmt|;
 comment|/* address of users saved R0 */
-name|char
-name|u_comm
-index|[
-name|MAXCOMLEN
-operator|+
-literal|1
-index|]
-decl_stmt|;
 comment|/* syscall parameters, results and catches */
 name|int
 name|u_arg
@@ -201,13 +171,6 @@ name|u_eosys
 decl_stmt|;
 comment|/* special action on end of syscall */
 comment|/* 1.1 - processes and protection */
-name|char
-name|u_logname
-index|[
-name|MAXLOGNAME
-index|]
-decl_stmt|;
-comment|/* login name, if available */
 define|#
 directive|define
 name|u_ruid
@@ -380,16 +343,6 @@ directive|define
 name|u_rdir
 value|u_nd.ni_rdir
 comment|/* root directory of current process */
-name|struct
-name|tty
-modifier|*
-name|u_ttyp
-decl_stmt|;
-comment|/* controlling tty pointer */
-name|dev_t
-name|u_ttyd
-decl_stmt|;
-comment|/* controlling tty dev */
 name|short
 name|u_cmask
 decl_stmt|;
