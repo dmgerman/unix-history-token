@@ -621,6 +621,15 @@ operator|==
 name|NULL
 condition|)
 return|return;
+name|VOP_LOCK
+argument_list|(
+name|vp
+argument_list|,
+name|LK_EXCLUSIVE
+argument_list|,
+name|curthread
+argument_list|)
+expr_stmt|;
 name|vp
 operator|->
 name|v_object
@@ -680,6 +689,15 @@ name|obj
 argument_list|)
 expr_stmt|;
 block|}
+name|VOP_UNLOCK
+argument_list|(
+name|vp
+argument_list|,
+literal|0
+argument_list|,
+name|curthread
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

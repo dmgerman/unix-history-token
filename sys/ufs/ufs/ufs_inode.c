@@ -660,6 +660,11 @@ block|}
 block|}
 endif|#
 directive|endif
+name|vnode_destroy_vobject
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|UFS_DIRHASH
@@ -690,11 +695,6 @@ operator|->
 name|v_data
 operator|=
 literal|0
-expr_stmt|;
-name|vnode_destroy_vobject
-argument_list|(
-name|vp
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
