@@ -2635,9 +2635,6 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|FAST_IPSEC
-ifdef|#
-directive|ifdef
-name|INET6
 if|if
 condition|(
 name|isipv6
@@ -2663,9 +2660,6 @@ goto|;
 block|}
 block|}
 elseif|else
-endif|#
-directive|endif
-comment|/* INET6 */
 if|if
 condition|(
 name|inp
@@ -7788,10 +7782,8 @@ operator|(
 name|u_long
 operator|)
 name|tlen
-ifdef|#
-directive|ifdef
-name|SO_OOBINLINE
 operator|&&
+operator|!
 operator|(
 name|so
 operator|->
@@ -7799,11 +7791,9 @@ name|so_options
 operator|&
 name|SO_OOBINLINE
 operator|)
-operator|==
-literal|0
-endif|#
-directive|endif
 condition|)
+block|{
+comment|/* hdr drop is delayed */
 name|tcp_pulloutofband
 argument_list|(
 name|so
@@ -7815,7 +7805,7 @@ argument_list|,
 name|drop_hdrlen
 argument_list|)
 expr_stmt|;
-comment|/* hdr drop is delayed */
+block|}
 block|}
 else|else
 block|{
