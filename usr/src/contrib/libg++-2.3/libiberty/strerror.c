@@ -1980,6 +1980,12 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|notdef
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|NEED_sys_errlist
 end_ifdef
 
@@ -2019,6 +2025,11 @@ name|sys_errlist
 index|[]
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
