@@ -107,11 +107,18 @@ end_if
 begin_define
 define|#
 directive|define
+name|LDBL_NBIT
+value|0x80000000
+end_define
+
+begin_define
+define|#
+directive|define
 name|mask_nbit_l
 parameter_list|(
 name|u
 parameter_list|)
-value|((u).bits.manh&= 0x7fffffff)
+value|((u).bits.manh&= ~LDBL_NBIT)
 end_define
 
 begin_else
@@ -123,6 +130,17 @@ begin_comment
 comment|/* _BIG_ENDIAN */
 end_comment
 
+begin_comment
+comment|/*  * XXX This doesn't look right.  Very few machines have a different  *     endianness for integers and floating-point, and in nextafterl()  *     we assume that none do.  If you have an environment for testing  *     this, please let me know. --das  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LDBL_NBIT
+value|0x80
+end_define
+
 begin_define
 define|#
 directive|define
@@ -130,7 +148,7 @@ name|mask_nbit_l
 parameter_list|(
 name|u
 parameter_list|)
-value|((u).bits.manh&= 0xffffff7f)
+value|((u).bits.manh&= ~LDBL_NBIT)
 end_define
 
 begin_endif
