@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.h,v 1.33 1998/07/06 03:20:15 julian Exp $  */
+comment|/*  * Copyright (c) 1993 Daniel Boulet  * Copyright (c) 1994 Ugen J.S.Antsilevich  *  * Redistribution and use in source forms, with and without modification,  * are permitted provided that this entire comment appears intact.  *  * Redistribution in binary form may occur without any restrictions.  * Obviously, it would be nice if you gave credit where credit is due  * but requiring it would be too onerous.  *  * This software is provided ``AS IS'' without any warranties of any kind.  *  *	$Id: ip_fw.h,v 1.34 1998/08/23 03:07:14 wollman Exp $  */
 end_comment
 
 begin_ifndef
@@ -90,7 +90,7 @@ name|u_short
 name|fw_number
 decl_stmt|;
 comment|/* Rule number */
-name|u_short
+name|u_int
 name|fw_flg
 decl_stmt|;
 comment|/* Flags word */
@@ -283,52 +283,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IP_FW_F_IN
-value|0x0001
-end_define
-
-begin_comment
-comment|/* Check inbound packets		*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IP_FW_F_OUT
-value|0x0002
-end_define
-
-begin_comment
-comment|/* Check outbound packets		*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IP_FW_F_IIFACE
-value|0x0004
-end_define
-
-begin_comment
-comment|/* Apply inbound interface test		*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IP_FW_F_OIFACE
-value|0x0008
-end_define
-
-begin_comment
-comment|/* Apply outbound interface test	*/
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IP_FW_F_COMMAND
-value|0x0070
+value|0x000000ff
 end_define
 
 begin_comment
@@ -339,7 +295,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_DENY
-value|0x0000
+value|0x00000000
 end_define
 
 begin_comment
@@ -350,7 +306,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_REJECT
-value|0x0010
+value|0x00000001
 end_define
 
 begin_comment
@@ -361,7 +317,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_ACCEPT
-value|0x0020
+value|0x00000002
 end_define
 
 begin_comment
@@ -372,7 +328,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_COUNT
-value|0x0030
+value|0x00000003
 end_define
 
 begin_comment
@@ -383,7 +339,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_DIVERT
-value|0x0040
+value|0x00000004
 end_define
 
 begin_comment
@@ -394,7 +350,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_TEE
-value|0x0050
+value|0x00000005
 end_define
 
 begin_comment
@@ -405,7 +361,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_SKIPTO
-value|0x0060
+value|0x00000006
 end_define
 
 begin_comment
@@ -416,7 +372,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_FWD
-value|0x0070
+value|0x00000007
 end_define
 
 begin_comment
@@ -426,8 +382,52 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IP_FW_F_IN
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* Check inbound packets		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_F_OUT
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* Check outbound packets		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_F_IIFACE
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* Apply inbound interface test		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_F_OIFACE
+value|0x00000800
+end_define
+
+begin_comment
+comment|/* Apply outbound interface test	*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IP_FW_F_PRN
-value|0x0080
+value|0x00001000
 end_define
 
 begin_comment
@@ -438,29 +438,40 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_SRNG
-value|0x0100
+value|0x00002000
 end_define
 
 begin_comment
-comment|/* The first two src ports are a min	* 				 * and max range (stored in host byte	* 				 * order).				*/
+comment|/* The first two src ports are a min	* 					 * and max range (stored in host byte	* 					 * order).				*/
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IP_FW_F_DRNG
-value|0x0200
+value|0x00004000
 end_define
 
 begin_comment
-comment|/* The first two dst ports are a min	* 				 * and max range (stored in host byte	* 				 * order).				*/
+comment|/* The first two dst ports are a min	* 					 * and max range (stored in host byte	* 					 * order).				*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IP_FW_F_FRAG
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* Fragment				*/
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IP_FW_F_IIFNAME
-value|0x0400
+value|0x00010000
 end_define
 
 begin_comment
@@ -471,7 +482,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_OIFNAME
-value|0x0800
+value|0x00020000
 end_define
 
 begin_comment
@@ -482,7 +493,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_INVSRC
-value|0x1000
+value|0x00040000
 end_define
 
 begin_comment
@@ -493,7 +504,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_INVDST
-value|0x2000
+value|0x00080000
 end_define
 
 begin_comment
@@ -503,19 +514,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IP_FW_F_FRAG
-value|0x4000
-end_define
-
-begin_comment
-comment|/* Fragment				*/
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IP_FW_F_ICMPBIT
-value|0x8000
+value|0x00100000
 end_define
 
 begin_comment
@@ -526,7 +526,7 @@ begin_define
 define|#
 directive|define
 name|IP_FW_F_MASK
-value|0xFFFF
+value|0x001FFFFF
 end_define
 
 begin_comment
