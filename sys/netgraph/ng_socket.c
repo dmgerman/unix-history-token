@@ -403,7 +403,7 @@ specifier|static
 name|u_long
 name|ngpdg_sendspace
 init|=
-literal|2
+literal|20
 operator|*
 literal|1024
 decl_stmt|;
