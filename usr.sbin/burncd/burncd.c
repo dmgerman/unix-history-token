@@ -603,6 +603,31 @@ name|struct
 name|ioc_read_toc_single_entry
 name|entry
 decl_stmt|;
+name|struct
+name|ioc_toc_header
+name|header
+decl_stmt|;
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|fd
+argument_list|,
+name|CDIOREADTOCHEADER
+argument_list|,
+operator|&
+name|header
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|err
+argument_list|(
+name|EX_IOERR
+argument_list|,
+literal|"ioctl(CDIOREADTOCHEADER)"
+argument_list|)
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|&
@@ -620,6 +645,14 @@ operator|.
 name|address_format
 operator|=
 name|CD_LBA_FORMAT
+expr_stmt|;
+name|entry
+operator|.
+name|track
+operator|=
+name|header
+operator|.
+name|ending_track
 expr_stmt|;
 if|if
 condition|(
@@ -1622,7 +1655,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"adding type 0x%02x file %s size %jd KB %d blocks %s\n"
+literal|"adding type 0x%02x file %s size %d KB %d blocks %s\n"
 argument_list|,
 name|tracks
 index|[
@@ -1634,7 +1667,7 @@ argument_list|,
 name|name
 argument_list|,
 operator|(
-name|intmax_t
+name|int
 operator|)
 name|sb
 operator|.
@@ -3102,7 +3135,7 @@ name|int
 name|track
 parameter_list|,
 name|int
-name|ind
+name|idx
 parameter_list|,
 name|int
 name|dataform
@@ -3136,7 +3169,7 @@ name|cue
 operator|->
 name|index
 operator|=
-name|ind
+name|idx
 expr_stmt|;
 name|cue
 operator|->
