@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)flvalue.c 1.2 %G%"
+literal|"@(#)flvalue.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,7 +74,7 @@ name|OBJ
 end_ifdef
 
 begin_comment
-comment|/*  * define the display structure for purposes of allocating  * a temporary  */
+comment|/*  * runtime display structure  */
 end_comment
 
 begin_struct
@@ -83,8 +83,15 @@ name|dispsave
 block|{
 name|char
 modifier|*
-name|ptr
+name|locvars
 decl_stmt|;
+comment|/* pointer to local variables */
+name|struct
+name|stack
+modifier|*
+name|stp
+decl_stmt|;
+comment|/* pointer to local stack frame */
 block|}
 struct|;
 end_struct

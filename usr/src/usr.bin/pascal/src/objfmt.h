@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static	char sccsid[] = "@(#)objfmt.h 1.2 %G%"; */
+comment|/* static	char sccsid[] = "@(#)objfmt.h 1.3 %G%"; */
 end_comment
 
 begin_ifdef
@@ -65,6 +65,17 @@ end_define
 
 begin_comment
 comment|/* the interpreter's name */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INDX
+value|0
+end_define
+
+begin_comment
+comment|/* amt to shift display index */
 end_comment
 
 begin_endif
@@ -138,17 +149,6 @@ ifdef|#
 directive|ifdef
 name|VAX
 end_ifdef
-
-begin_define
-define|#
-directive|define
-name|INDX
-value|2
-end_define
-
-begin_comment
-comment|/* log2 of sizeof( * ) */
-end_comment
 
 begin_define
 define|#
@@ -329,13 +329,6 @@ ifdef|#
 directive|ifdef
 name|PDP11
 end_ifdef
-
-begin_define
-define|#
-directive|define
-name|INDX
-value|1
-end_define
 
 begin_define
 define|#

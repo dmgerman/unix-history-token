@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)var.c 1.3 %G%"
+literal|"@(#)var.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,6 +31,12 @@ directive|include
 file|"align.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"iorec.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -47,12 +53,6 @@ begin_include
 include|#
 directive|include
 file|"pcops.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"iorec.h"
 end_include
 
 begin_endif
@@ -860,24 +860,6 @@ return|;
 case|case
 name|FILET
 case|:
-ifdef|#
-directive|ifdef
-name|OBJ
-return|return
-operator|(
-sizeof|sizeof
-argument_list|(
-name|int
-operator|*
-argument_list|)
-operator|)
-return|;
-endif|#
-directive|endif
-endif|OBJ
-ifdef|#
-directive|ifdef
-name|PC
 return|return
 operator|(
 sizeof|sizeof
@@ -894,9 +876,6 @@ name|type
 argument_list|)
 operator|)
 return|;
-endif|#
-directive|endif
-endif|PC
 case|case
 name|RANGE
 case|:

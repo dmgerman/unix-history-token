@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)func.c 1.3 %G%"
+literal|"@(#)func.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -443,6 +443,35 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Evaluate the argmument 	 */
+if|if
+condition|(
+name|op
+operator|==
+name|O_EOF
+operator|||
+name|op
+operator|==
+name|O_EOLN
+condition|)
+name|p1
+operator|=
+name|stklval
+argument_list|(
+operator|(
+name|int
+operator|*
+operator|)
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+name|NLNIL
+argument_list|,
+name|LREQ
+argument_list|)
+expr_stmt|;
+else|else
 name|p1
 operator|=
 name|stkrval

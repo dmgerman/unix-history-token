@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)put.c 1.4 %G%"
+literal|"@(#)put.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -303,12 +303,6 @@ name|O_MAX
 case|:
 case|case
 name|O_MIN
-case|:
-case|case
-name|O_PACK
-case|:
-case|case
-name|O_UNPACK
 case|:
 case|case
 name|O_ARGV

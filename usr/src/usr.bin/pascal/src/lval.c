@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lval.c 1.1 %G%"
+literal|"@(#)lval.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -574,6 +574,35 @@ condition|(
 name|f
 condition|)
 block|{
+if|if
+condition|(
+name|p
+operator|->
+name|class
+operator|==
+name|FILET
+operator|&&
+name|bn
+operator|!=
+literal|0
+condition|)
+name|put
+argument_list|(
+literal|2
+argument_list|,
+name|O_LV
+operator||
+name|bn
+operator|<<
+literal|8
+operator|+
+name|INDX
+argument_list|,
+name|o
+argument_list|)
+expr_stmt|;
+else|else
+comment|/* 					 * this is the indirection from 					 * the address of the pointer  					 * to the pointer itself. 					 * kirk sez: 					 * fnil doesn't want this. 					 * and does it itself for files 					 * since only it knows where the 					 * actual window is. 					 * but i have to do this for 					 * regular pointers. 					 * This is further complicated by 					 * the fact that global variables 					 * are referenced through pointers 					 * on the stack. Thus an RV on a 					 * global variable is the same as 					 * an LV of a non-global one ?!? 					 */
 name|put
 argument_list|(
 literal|2
@@ -724,6 +753,27 @@ condition|(
 name|f
 condition|)
 block|{
+if|if
+condition|(
+name|bn
+operator|==
+literal|0
+condition|)
+comment|/* 						 * global variables are 						 * referenced through pointers 						 * on the stack 						 */
+name|put2
+argument_list|(
+name|PTR_RV
+operator||
+name|bn
+operator|<<
+literal|8
+operator|+
+name|INDX
+argument_list|,
+name|o
+argument_list|)
+expr_stmt|;
+else|else
 name|put2
 argument_list|(
 name|O_LV
@@ -942,6 +992,27 @@ condition|(
 name|f
 condition|)
 block|{
+if|if
+condition|(
+name|bn
+operator|==
+literal|0
+condition|)
+comment|/* 			 * global variables are referenced through 			 * pointers on the stack 			 */
+name|put2
+argument_list|(
+name|PTR_RV
+operator||
+name|bn
+operator|<<
+literal|8
+operator|+
+name|INDX
+argument_list|,
+name|o
+argument_list|)
+expr_stmt|;
+else|else
 name|put2
 argument_list|(
 name|O_LV
