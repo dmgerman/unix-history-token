@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_query.c	5.1 (Berkeley) %G%"
+literal|"@(#)res_query.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -149,7 +149,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Formulate a normal query, send, and await answer.  * Returned answer is placed in supplied buffer "answer".  * Perform preliminary check of answer, returning success only  * if no error is indicated and the answer count is nonzero.  * Return the size of the response on success, -1 on error.  * Error number is left in h_errno.  */
+comment|/*  * Formulate a normal query, send, and await answer.  * Returned answer is placed in supplied buffer "answer".  * Perform preliminary check of answer, returning success only  * if no error is indicated and the answer count is nonzero.  * Return the size of the response on success, -1 on error.  * Error number is left in h_errno.  * Caller must parse answer and determine whether it answers the question.  */
 end_comment
 
 begin_macro
@@ -452,21 +452,9 @@ block|{
 case|case
 name|NXDOMAIN
 case|:
-comment|/* Check if it's an authoritive answer */
-if|if
-condition|(
-name|hp
-operator|->
-name|aa
-condition|)
 name|h_errno
 operator|=
 name|HOST_NOT_FOUND
-expr_stmt|;
-else|else
-name|h_errno
-operator|=
-name|TRY_AGAIN
 expr_stmt|;
 break|break;
 case|case
@@ -480,20 +468,9 @@ break|break;
 case|case
 name|NOERROR
 case|:
-if|if
-condition|(
-name|hp
-operator|->
-name|aa
-condition|)
 name|h_errno
 operator|=
 name|NO_ADDRESS
-expr_stmt|;
-else|else
-name|h_errno
-operator|=
-name|TRY_AGAIN
 expr_stmt|;
 break|break;
 case|case
@@ -505,10 +482,12 @@ case|:
 case|case
 name|REFUSED
 case|:
+default|default:
 name|h_errno
 operator|=
 name|NO_RECOVERY
 expr_stmt|;
+break|break;
 block|}
 return|return
 operator|(
