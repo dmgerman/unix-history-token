@@ -2124,6 +2124,9 @@ name|obj
 decl_stmt|,
 name|bigobj
 decl_stmt|;
+name|int
+name|nothingwired
+decl_stmt|;
 if|if
 condition|(
 name|lockmgr
@@ -2152,6 +2155,10 @@ block|}
 name|bigobj
 operator|=
 name|NULL
+expr_stmt|;
+name|nothingwired
+operator|=
+name|TRUE
 expr_stmt|;
 comment|/* 	 * first, search out the biggest object, and try to free pages from 	 * that. 	 */
 name|tmpe
@@ -2234,6 +2241,18 @@ name|obj
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|tmpe
+operator|->
+name|wired_count
+operator|>
+literal|0
+condition|)
+name|nothingwired
+operator|=
+name|FALSE
+expr_stmt|;
 name|tmpe
 operator|=
 name|tmpe
@@ -2339,6 +2358,8 @@ condition|(
 name|desired
 operator|==
 literal|0
+operator|&&
+name|nothingwired
 condition|)
 name|pmap_remove
 argument_list|(
