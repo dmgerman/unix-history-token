@@ -1325,6 +1325,17 @@ name|u_long
 operator|)
 name|tf
 expr_stmt|;
+comment|/* Terminate stack traces at this frame. */
+name|fp
+operator|->
+name|fr_pc
+operator|=
+name|fp
+operator|->
+name|fr_fp
+operator|=
+literal|0
+expr_stmt|;
 name|pcb2
 operator|->
 name|pcb_sp
