@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)column.c	8.1 (Berkeley) %G%"
+literal|"@(#)column.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,7 +68,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
 end_include
 
 begin_include
@@ -87,12 +99,6 @@ begin_include
 include|#
 directive|include
 file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
 end_include
 
 begin_decl_stmt
@@ -136,18 +142,6 @@ end_decl_stmt
 begin_decl_stmt
 name|void
 name|maketbl
-name|__P
-argument_list|(
-operator|(
-name|void
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|nomem
 name|__P
 argument_list|(
 operator|(
@@ -470,22 +464,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"column: %s: %s\n"
+literal|"%s"
 argument_list|,
 operator|*
 name|argv
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|eval
@@ -552,7 +536,6 @@ name|void
 name|c_columnate
 parameter_list|()
 block|{
-specifier|register
 name|int
 name|chcnt
 decl_stmt|,
@@ -560,10 +543,9 @@ name|col
 decl_stmt|,
 name|cnt
 decl_stmt|,
-name|numcols
-decl_stmt|;
-name|int
 name|endcol
+decl_stmt|,
+name|numcols
 decl_stmt|;
 name|char
 modifier|*
@@ -713,7 +695,6 @@ name|void
 name|r_columnate
 parameter_list|()
 block|{
-specifier|register
 name|int
 name|base
 decl_stmt|,
@@ -722,8 +703,7 @@ decl_stmt|,
 name|cnt
 decl_stmt|,
 name|col
-decl_stmt|;
-name|int
+decl_stmt|,
 name|endcol
 decl_stmt|,
 name|numcols
@@ -883,11 +863,9 @@ name|void
 name|print
 parameter_list|()
 block|{
-specifier|register
 name|int
 name|cnt
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 modifier|*
@@ -956,18 +934,15 @@ name|void
 name|maketbl
 parameter_list|()
 block|{
-specifier|register
 name|TBL
 modifier|*
 name|t
 decl_stmt|;
-specifier|register
 name|int
 name|coloff
 decl_stmt|,
 name|cnt
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
@@ -1140,10 +1115,14 @@ argument_list|)
 argument_list|)
 operator|)
 condition|)
-name|nomem
-argument_list|()
+name|err
+argument_list|(
+literal|1
+argument_list|,
+name|NULL
+argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
@@ -1157,6 +1136,8 @@ sizeof|sizeof
 argument_list|(
 name|int
 argument_list|)
+argument_list|,
+literal|0
 argument_list|,
 name|DEFCOLS
 operator|*
@@ -1369,7 +1350,7 @@ begin_define
 define|#
 directive|define
 name|MAXLINELEN
-value|(2048 + 1)
+value|(LINE_MAX + 1)
 end_define
 
 begin_function
@@ -1378,7 +1359,6 @@ name|input
 parameter_list|(
 name|fp
 parameter_list|)
-specifier|register
 name|FILE
 modifier|*
 name|fp
@@ -1388,16 +1368,13 @@ specifier|static
 name|int
 name|maxentry
 decl_stmt|;
-specifier|register
 name|int
 name|len
 decl_stmt|;
-specifier|register
 name|char
 modifier|*
 name|p
-decl_stmt|;
-name|char
+decl_stmt|,
 name|buf
 index|[
 name|MAXLINELEN
@@ -1469,7 +1446,7 @@ operator|!
 operator|(
 name|p
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|p
 argument_list|,
@@ -1478,14 +1455,9 @@ argument_list|)
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"column: line too long.\n"
+literal|"line too long"
 argument_list|)
 expr_stmt|;
 name|eval
@@ -1549,8 +1521,12 @@ argument_list|)
 argument_list|)
 operator|)
 condition|)
-name|nomem
-argument_list|()
+name|err
+argument_list|(
+literal|1
+argument_list|,
+name|NULL
+argument_list|)
 expr_stmt|;
 block|}
 name|list
@@ -1595,12 +1571,18 @@ name|size
 argument_list|)
 operator|)
 condition|)
-name|nomem
-argument_list|()
+name|err
+argument_list|(
+literal|1
+argument_list|,
+name|NULL
+argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|p
+argument_list|,
+literal|0
 argument_list|,
 name|size
 argument_list|)
@@ -1610,29 +1592,6 @@ operator|(
 name|p
 operator|)
 return|;
-block|}
-end_function
-
-begin_function
-name|void
-name|nomem
-parameter_list|()
-block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"column: out of memory.\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
