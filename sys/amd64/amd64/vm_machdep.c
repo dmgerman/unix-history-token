@@ -2255,11 +2255,6 @@ name|queue
 operator|=
 name|PQ_NONE
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|pmap_zero_page
 argument_list|(
 name|VM_PAGE_TO_PHYS
@@ -2267,12 +2262,6 @@ argument_list|(
 name|m
 argument_list|)
 argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|splvm
-argument_list|()
 expr_stmt|;
 name|vm_page_flag_set
 argument_list|(
