@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	%H%	3.19	kern_clock.c	*/
+comment|/*	%H%	3.20	kern_clock.c	*/
 end_comment
 
 begin_include
@@ -107,7 +107,23 @@ value|9/10
 end_define
 
 begin_comment
-comment|/*  * clock is called straight from  * the real time clock interrupt.  *  * Functions:  *	implement callouts  *	maintain user/system times  *	maintain date  *	profile  *	lightning bolt wakeup (every second)  *	alarm clock signals  *	jab the scheduler  */
+comment|/*  * Constant for decay filter for cpu usage.  */
+end_comment
+
+begin_decl_stmt
+name|double
+name|ccpu
+init|=
+literal|0.93550698503161773774
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* exp(-1/15) */
+end_comment
+
+begin_comment
+comment|/*  * Clock is called straight from  * the real time clock interrupt.  *  * Functions:  *	implement callouts  *	maintain user/system times  *	maintain date  *	profile  *	lightning bolt wakeup (every second)  *	alarm clock signals  *	jab the scheduler  */
 end_comment
 
 begin_ifdef
@@ -595,6 +611,11 @@ name|u
 operator|.
 name|u_procp
 expr_stmt|;
+name|pp
+operator|->
+name|p_cpticks
+operator|++
+expr_stmt|;
 if|if
 condition|(
 operator|++
@@ -879,27 +900,39 @@ name|p_flag
 operator|&
 name|SLOAD
 condition|)
-block|{
-name|ave
-argument_list|(
 name|pp
 operator|->
-name|p_aveflt
-argument_list|,
+name|p_pctcpu
+operator|=
+name|ccpu
+operator|*
 name|pp
 operator|->
-name|p_faults
-argument_list|,
-literal|5
-argument_list|)
+name|p_pctcpu
+operator|+
+operator|(
+literal|1.0
+operator|-
+name|ccpu
+operator|)
+operator|*
+operator|(
+name|pp
+operator|->
+name|p_cpticks
+operator|/
+operator|(
+name|float
+operator|)
+name|HZ
+operator|)
 expr_stmt|;
 name|pp
 operator|->
-name|p_faults
+name|p_cpticks
 operator|=
 literal|0
 expr_stmt|;
-block|}
 name|a
 operator|=
 operator|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	3.24	%G%	*/
+comment|/*	kern_proc.c	3.25	%G%	*/
 end_comment
 
 begin_include
@@ -2192,7 +2192,13 @@ argument_list|()
 expr_stmt|;
 name|p
 operator|->
-name|p_aveflt
+name|p_cpticks
+operator|=
+literal|0
+expr_stmt|;
+name|p
+operator|->
+name|p_pctcpu
 operator|=
 literal|0
 expr_stmt|;
