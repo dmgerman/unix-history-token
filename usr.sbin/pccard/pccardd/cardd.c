@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995 Andrew McRae.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: cardd.c,v 1.9 1996/04/23 16:46:48 nate Exp $  */
+comment|/*  * Copyright (c) 1995 Andrew McRae.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: cardd.c,v 1.10 1996/06/18 19:52:28 nate Exp $  */
 end_comment
 
 begin_include
@@ -1788,11 +1788,85 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/* Allocate a free IRQ if none has been specified */
+if|if
+condition|(
+name|conf
+operator|->
+name|irq
+operator|==
+literal|0
+condition|)
+block|{
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|1
+init|;
+name|i
+operator|<
+literal|16
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|pool_irq
+index|[
+name|i
+index|]
+condition|)
+block|{
+name|conf
+operator|->
+name|irq
+operator|=
+name|i
+expr_stmt|;
+name|pool_irq
+index|[
+name|i
+index|]
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+name|conf
+operator|->
+name|irq
+operator|==
+literal|0
+condition|)
+block|{
+name|log_1s
+argument_list|(
+literal|"Failed to allocate IRQ for %s\n"
+argument_list|,
+name|cp
+operator|->
+name|manuf
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+block|}
 if|#
 directive|if
 literal|0
-comment|/* Allocate I/O, memory and IRQ resources. */
-block|for (ap = drvp->io; ap; ap = ap->next) { 		if (ap->addr == 0&& ap->size) { 			int     i = bit_fns(io_avail, IOPORTS, ap->size);  			if (i< 0) { 				log_1s("Failed to allocate I/O ports for %s\n", 				    cp->manuf); 				return (0); 			} 			ap->addr = i; 			bit_nclear(io_avail, i, ap->size); 		} 	} 	if (drvp->irq == 0) { 		int     i; 		for (i = 1; i< 16; i++) 			if (pool_irq[i]) { 				drvp->irq = i; 				pool_irq[i] = 0; 				break; 			} 		if (drvp->irq == 0) { 			log_1s("Failed to allocate IRQ for %s\n", cp->manuf); 			return (0); 		} 	} 	for (ap = drvp->mem; ap; ap = ap->next) { 		if (ap->addr == 0&& ap->size) { 			ap->addr = alloc_memory(ap->size); 			if (ap->addr == 0) { 				log_1s("Failed to allocate memory for %s\n", 				    cp->manuf); 				return (0); 			} 		} 	}
+comment|/* Allocate I/O and memory resources. */
+block|for (ap = drvp->io; ap; ap = ap->next) { 		if (ap->addr == 0&& ap->size) { 			int     i = bit_fns(io_avail, IOPORTS, ap->size);  			if (i< 0) { 				log_1s("Failed to allocate I/O ports for %s\n", 				    cp->manuf); 				return (0); 			} 			ap->addr = i; 			bit_nclear(io_avail, i, ap->size); 		} 	} 	for (ap = drvp->mem; ap; ap = ap->next) { 		if (ap->addr == 0&& ap->size) { 			ap->addr = alloc_memory(ap->size); 			if (ap->addr == 0) { 				log_1s("Failed to allocate memory for %s\n", 				    cp->manuf); 				return (0); 			} 		} 	}
 endif|#
 directive|endif
 comment|/* 0 */
