@@ -734,7 +734,7 @@ name|base
 parameter_list|,
 name|off
 parameter_list|)
-value|(*hc->src_get8)(base,(u_int)&off)
+value|(*hc->src_get8)(base,(uintptr_t)&off)
 end_define
 
 begin_define
@@ -746,7 +746,7 @@ name|base
 parameter_list|,
 name|off
 parameter_list|)
-value|(*hc->src_get16)(base,(u_int)&off)
+value|(*hc->src_get16)(base,(uintptr_t)&off)
 end_define
 
 begin_define
@@ -760,7 +760,7 @@ name|off
 parameter_list|,
 name|d
 parameter_list|)
-value|(*hc->src_put8)(base,(u_int)&off,d)
+value|(*hc->src_put8)(base,(uintptr_t)&off,d)
 end_define
 
 begin_define
@@ -774,7 +774,7 @@ name|off
 parameter_list|,
 name|d
 parameter_list|)
-value|(*hc->src_put16)(base,(u_int)&off,d)
+value|(*hc->src_put16)(base,(uintptr_t)&off,d)
 end_define
 
 begin_comment
