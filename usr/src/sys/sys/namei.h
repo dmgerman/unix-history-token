@@ -142,7 +142,7 @@ value|ni_uio.uio_resid
 end_define
 
 begin_comment
-comment|/*  * namei opertions  */
+comment|/*  * namei operations and modifiers  */
 end_comment
 
 begin_define
@@ -228,22 +228,28 @@ end_comment
 
 begin_struct
 struct|struct
-name|nch
+name|namecache
 block|{
 name|struct
-name|nch
+name|namecache
 modifier|*
 name|nc_forw
-decl_stmt|,
+decl_stmt|;
+comment|/* hash chain, MUST BE FIRST */
+name|struct
+name|namecache
 modifier|*
 name|nc_back
 decl_stmt|;
 comment|/* hash chain, MUST BE FIRST */
 name|struct
-name|nch
+name|namecache
 modifier|*
 name|nc_nxt
-decl_stmt|,
+decl_stmt|;
+comment|/* LRU chain */
+name|struct
+name|namecache
 modifier|*
 modifier|*
 name|nc_prev
@@ -293,9 +299,9 @@ end_struct
 
 begin_decl_stmt
 name|struct
-name|nch
+name|namecache
 modifier|*
-name|nch
+name|namecache
 decl_stmt|;
 end_decl_stmt
 
