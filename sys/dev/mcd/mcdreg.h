@@ -48,6 +48,32 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* toc */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCD_MAXTOCS
+value|104
+end_define
+
+begin_comment
+comment|/* from the Linux driver */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCD_LASTPLUS1
+value|170
+end_define
+
+begin_comment
+comment|/* special toc entry */
+end_comment
+
 begin_typedef
 typedef|typedef
 name|unsigned
@@ -100,35 +126,35 @@ end_define
 begin_define
 define|#
 directive|define
-name|mcd_command
+name|MCD_REG_COMMAND
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|mcd_status
+name|MCD_REG_STATUS
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|mcd_rdata
+name|MCD_REG_RDATA
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|mcd_reset
+name|MCD_REG_RESET
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|mcd_ctl2
+name|MCD_REG_CTL2
 value|2
 end_define
 
@@ -139,7 +165,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|mcd_config
+name|MCD_REG_CONFIG
 value|3
 end_define
 
