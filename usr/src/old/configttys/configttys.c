@@ -1,8 +1,4 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/*  * configttys - configure "tty" ports  *  * David L. Wasley  * U.C.Berkeley  */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -14,7 +10,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)configttys.c	4.4 Berkeley %G%"
+literal|"@(#)configttys.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -22,6 +18,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * configttys - configure "tty" ports  *  * David L. Wasley  * U.C.Berkeley  */
+end_comment
 
 begin_include
 include|#
@@ -1224,6 +1224,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * read ttys file  */
+end_comment
+
 begin_macro
 name|readttys
 argument_list|()
@@ -1231,7 +1235,6 @@ end_macro
 
 begin_block
 block|{
-comment|/* 	 * read ttys file 	 */
 name|FILE
 modifier|*
 name|tyf
@@ -1626,8 +1629,9 @@ return|;
 block|}
 end_block
 
-begin_escape
-end_escape
+begin_comment
+comment|/*  * invoke editor  */
+end_comment
 
 begin_macro
 name|edit
@@ -1636,7 +1640,6 @@ end_macro
 
 begin_block
 block|{
-comment|/* 	 * invoke editor 	 */
 name|int
 name|child
 decl_stmt|;
@@ -1720,9 +1723,6 @@ operator|)
 return|;
 block|}
 end_block
-
-begin_escape
-end_escape
 
 begin_macro
 name|quit
@@ -1915,9 +1915,6 @@ return|;
 block|}
 end_block
 
-begin_escape
-end_escape
-
 begin_struct
 struct|struct
 name|speeds
@@ -2035,14 +2032,14 @@ block|}
 block|,
 comment|/* 300-1200  "     "       "     "    */
 block|{
-literal|"crt_hcpy"
+literal|"crt"
 block|,
 name|GT_CRT_HCPY
 block|}
 block|,
 comment|/* 9600-300 CRT + hardcopy rotation */
 block|{
-literal|"hcpy_crt"
+literal|"hardcopy"
 block|,
 name|GT_HCPY_CRT
 block|}
@@ -2096,7 +2093,7 @@ block|,
 name|GT_NETWORK
 block|}
 block|,
-comment|/* ethernet port */
+comment|/* network port */
 block|{
 literal|""
 block|,
