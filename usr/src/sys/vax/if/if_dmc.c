@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_dmc.c	4.20	82/10/31	*/
+comment|/*	if_dmc.c	4.21	82/11/13	*/
 end_comment
 
 begin_include
@@ -100,6 +100,12 @@ begin_include
 include|#
 directive|include
 file|"../net/if.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../net/netisr.h"
 end_include
 
 begin_include
@@ -1861,9 +1867,6 @@ argument_list|(
 name|inq
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|m_freem
 argument_list|(
 name|m
@@ -1955,9 +1958,6 @@ operator|.
 name|ifu_xtofree
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|m_freem
 argument_list|(
 name|sc
@@ -2140,7 +2140,9 @@ name|ifp
 operator|->
 name|if_unit
 argument_list|,
-name|pf
+name|dst
+operator|->
+name|sa_family
 argument_list|)
 expr_stmt|;
 name|m_freem

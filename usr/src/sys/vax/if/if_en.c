@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_en.c	4.71	82/10/31	*/
+comment|/*	if_en.c	4.72	82/11/13	*/
 end_comment
 
 begin_include
@@ -2235,9 +2235,21 @@ name|s_addr
 expr_stmt|;
 if|if
 condition|(
-name|dest
+name|in_lnaof
+argument_list|(
+operator|*
+operator|(
+operator|(
+expr|struct
+name|in_addr
+operator|*
+operator|)
 operator|&
-literal|0x00ffff00
+name|dest
+operator|)
+argument_list|)
+operator|>=
+literal|0x100
 condition|)
 block|{
 name|error

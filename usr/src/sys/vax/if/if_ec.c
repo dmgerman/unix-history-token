@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_ec.c	4.28	82/10/31	*/
+comment|/*	if_ec.c	4.29	82/11/13	*/
 end_comment
 
 begin_include
@@ -162,6 +162,13 @@ define|#
 directive|define
 name|ECMTU
 value|1500
+end_define
+
+begin_define
+define|#
+directive|define
+name|ECMIN
+value|(60-14)
 end_define
 
 begin_define
@@ -3115,7 +3122,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Routine to copy from mbuf chain to transmitter  * buffer in UNIBUS memory.  */
+comment|/*  * Routine to copy from mbuf chain to transmit  * buffer in UNIBUS memory.  * If packet size is less than the minimum legal size,  * the buffer is expanded.  We probably should zero out the extra  * bytes for security, but that would slow things down.  */
 end_comment
 
 begin_macro
@@ -3181,6 +3188,32 @@ operator|-=
 name|mp
 operator|->
 name|m_len
+expr_stmt|;
+if|if
+condition|(
+literal|2048
+operator|-
+name|off
+operator|<
+name|ECMIN
+operator|+
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ec_header
+argument_list|)
+condition|)
+name|off
+operator|=
+literal|2048
+operator|-
+name|ECMIN
+operator|-
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ec_header
+argument_list|)
 expr_stmt|;
 operator|*
 operator|(

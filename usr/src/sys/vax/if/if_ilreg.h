@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_ilreg.h	4.2	82/06/23	*/
+comment|/*	if_ilreg.h	4.3	82/11/13	*/
 end_comment
 
 begin_comment
@@ -232,6 +232,61 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ILC_ISA
+value|0x0d00
+end_define
+
+begin_comment
+comment|/* Set Insert Source Address Mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ILC_CISA
+value|0x0e00
+end_define
+
+begin_comment
+comment|/* Clear Insert Source Address Mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ILC_DEFPA
+value|0x0f00
+end_define
+
+begin_comment
+comment|/* Set Physical Address to Default */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ILC_ALLMC
+value|0x1000
+end_define
+
+begin_comment
+comment|/* Set Receive All Multicast Packets */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ILC_CALLMC
+value|0x1100
+end_define
+
+begin_comment
+comment|/* Clear Receive All Multicast */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ILC_STAT
 value|0x1800
 end_define
@@ -304,6 +359,17 @@ end_define
 
 begin_comment
 comment|/* Delete Group Addresses */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ILC_LDPA
+value|0x2c00
+end_define
+
+begin_comment
+comment|/* Load Physical Address */
 end_comment
 
 begin_define

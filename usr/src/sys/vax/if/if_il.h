@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_il.h	4.2	82/06/23	*/
+comment|/*	if_il.h	4.3	82/11/13	*/
 end_comment
 
 begin_comment
-comment|/*  * Structure of an Ethernet header -- transmit format  */
+comment|/*  * Structure of an Ethernet header -- transmit format  *	(source address insertion disabled)  */
 end_comment
 
 begin_struct
@@ -18,6 +18,13 @@ literal|6
 index|]
 decl_stmt|;
 comment|/* Destination Host */
+name|u_char
+name|ilx_shost
+index|[
+literal|6
+index|]
+decl_stmt|;
+comment|/* Source Host */
 name|u_short
 name|ilx_type
 decl_stmt|;
