@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, Revision 2.2  92/04/04  11:35:49  rpd  *	$Id: disk.c,v 1.8 1995/02/16 15:06:09 bde Exp $  */
+comment|/*  * Mach Operating System  * Copyright (c) 1992, 1991 Carnegie Mellon University  * All Rights Reserved.  *   * Permission to use, copy, modify and distribute this software and its  * documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *   *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *   * any improvements or extensions that they make and grant Carnegie Mellon  * the rights to redistribute these changes.  *  *	from: Mach, Revision 2.2  92/04/04  11:35:49  rpd  *	$Id: disk.c,v 1.9 1995/04/14 21:26:50 joerg Exp $  */
 end_comment
 
 begin_comment
@@ -254,8 +254,13 @@ name|int
 name|i
 decl_stmt|,
 name|sector
+init|=
+literal|0
 decl_stmt|,
 name|di
+decl_stmt|;
+name|u_long
+name|bend
 decl_stmt|;
 name|di
 operator|=
@@ -343,10 +348,6 @@ operator|+
 name|DOSPARTOFF
 operator|)
 expr_stmt|;
-name|sector
-operator|=
-name|LABELSECTOR
-expr_stmt|;
 name|slice
 operator|=
 name|WHOLE_DISK_SLICE
@@ -387,8 +388,6 @@ operator|=
 name|dptr
 operator|->
 name|dp_start
-operator|+
-name|LABELSECTOR
 expr_stmt|;
 break|break;
 block|}
@@ -397,7 +396,8 @@ argument_list|(
 name|dosdev
 argument_list|,
 name|sector
-operator|++
+operator|+
+name|LABELSECTOR
 argument_list|)
 expr_stmt|;
 name|dl
@@ -483,6 +483,7 @@ expr_stmt|;
 comment|/* must be ESDI/IDE */
 block|}
 block|}
+comment|/* This little trick is for OnTrack DiskManager disks */
 name|boff
 operator|=
 name|dl
@@ -493,10 +494,19 @@ name|part
 index|]
 operator|.
 name|p_offset
+operator|-
+name|dl
+operator|->
+name|d_partitions
+index|[
+literal|2
+index|]
+operator|.
+name|p_offset
+operator|+
+name|sector
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DO_BAD144
+comment|/* This is a good idea for all disks */
 name|bsize
 operator|=
 name|dl
@@ -508,6 +518,35 @@ index|]
 operator|.
 name|p_size
 expr_stmt|;
+name|bend
+operator|=
+name|boff
+operator|+
+name|bsize
+operator|-
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|bend
+operator|/
+name|spt
+operator|>
+literal|1024
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"partition is out of reach from the bios\n"
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+ifdef|#
+directive|ifdef
+name|DO_BAD144
 name|do_bad144
 operator|=
 literal|0
