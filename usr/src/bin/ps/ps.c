@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ps.c	4.30 (Berkeley) %G%"
+literal|"@(#)ps.c	4.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -854,14 +854,6 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|argaddr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|_sobuf
-index|[]
 decl_stmt|;
 end_decl_stmt
 
@@ -3438,7 +3430,7 @@ argument_list|)
 operator|||
 name|is
 argument_list|(
-name|r
+name|h
 argument_list|,
 name|k
 argument_list|)
@@ -3447,7 +3439,7 @@ name|is
 argument_list|(
 name|r
 argument_list|,
-name|m
+name|b
 argument_list|)
 operator|||
 name|is
@@ -3546,6 +3538,45 @@ name|cp
 argument_list|,
 literal|"null"
 argument_list|)
+condition|)
+return|return;
+if|if
+condition|(
+operator|!
+name|strncmp
+argument_list|(
+name|cp
+argument_list|,
+literal|"nrmt"
+argument_list|,
+literal|4
+argument_list|)
+condition|)
+return|return;
+break|break;
+case|case
+literal|'p'
+case|:
+if|if
+condition|(
+name|cp
+index|[
+literal|1
+index|]
+operator|&&
+name|cp
+index|[
+literal|1
+index|]
+operator|==
+literal|'t'
+operator|&&
+name|cp
+index|[
+literal|2
+index|]
+operator|==
+literal|'y'
 condition|)
 return|return;
 break|break;
