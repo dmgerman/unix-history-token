@@ -665,7 +665,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|__alpha__
-comment|/* 	 * DEC is evil.  They switch the red and blue attributes in the 	 * palette in the system console.  As a simple work-around, re-map 	 * the ANSI colors appropriately. 	 */
+comment|/* 		 * DEC is evil.  They switch the red and blue attributes in 		 * the palette in the system console.  As a simple work-around, 		 * re-map the ANSI colors appropriately. 		 */
 name|FG_BLACK
 block|,
 name|FG_BLUE
