@@ -78,12 +78,6 @@ modifier|*
 name|i_ump
 decl_stmt|;
 comment|/* Ufsmount point associated with this inode. */
-name|struct
-name|vnode
-modifier|*
-name|i_devvp
-decl_stmt|;
-comment|/* Vnode for block I/O. */
 name|u_int32_t
 name|i_flag
 decl_stmt|;
@@ -324,6 +318,13 @@ end_define
 begin_comment
 comment|/* Blocks to be freed in free count. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|i_devvp
+value|i_ump->um_devvp
+end_define
 
 begin_define
 define|#

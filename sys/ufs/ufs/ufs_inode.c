@@ -606,13 +606,6 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ip
-operator|->
-name|i_devvp
-condition|)
-block|{
 name|vrele
 argument_list|(
 name|ip
@@ -620,13 +613,6 @@ operator|->
 name|i_devvp
 argument_list|)
 expr_stmt|;
-name|ip
-operator|->
-name|i_devvp
-operator|=
-literal|0
-expr_stmt|;
-block|}
 ifdef|#
 directive|ifdef
 name|QUOTA

@@ -6661,15 +6661,7 @@ name|error
 operator|)
 return|;
 block|}
-comment|/* 	 * Finish inode initialization now that aliasing has been resolved. 	 */
-name|ip
-operator|->
-name|i_devvp
-operator|=
-name|ump
-operator|->
-name|um_devvp
-expr_stmt|;
+comment|/* 	 * Finish inode initialization. 	 */
 name|VREF
 argument_list|(
 name|ip
