@@ -177,7 +177,7 @@ operator|)
 operator|&
 name|packet
 index|[
-name|ETHER_HDR_SIZE
+name|ETHER_HDR_LEN
 index|]
 expr_stmt|;
 if|if
@@ -420,7 +420,7 @@ operator|)
 operator|&
 name|packet
 index|[
-name|ETHER_HDR_SIZE
+name|ETHER_HDR_LEN
 index|]
 expr_stmt|;
 if|if
@@ -541,6 +541,8 @@ argument_list|,
 argument|path
 argument_list|,
 argument|file_fh
+argument_list|,
+argument|sizep
 argument_list|)
 end_macro
 
@@ -574,6 +576,13 @@ begin_decl_stmt
 name|char
 modifier|*
 name|file_fh
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+modifier|*
+name|sizep
 decl_stmt|;
 end_decl_stmt
 
@@ -708,7 +717,7 @@ operator|)
 operator|&
 name|packet
 index|[
-name|ETHER_HDR_SIZE
+name|ETHER_HDR_LEN
 index|]
 expr_stmt|;
 if|if
@@ -794,6 +803,27 @@ argument_list|,
 name|file_fh
 argument_list|,
 literal|32
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sizep
+condition|)
+operator|*
+name|sizep
+operator|=
+name|ntohl
+argument_list|(
+name|rpc
+operator|->
+name|u
+operator|.
+name|reply
+operator|.
+name|data
+index|[
+literal|14
+index|]
 argument_list|)
 expr_stmt|;
 return|return
@@ -1006,7 +1036,7 @@ operator|)
 operator|&
 name|packet
 index|[
-name|ETHER_HDR_SIZE
+name|ETHER_HDR_LEN
 index|]
 expr_stmt|;
 if|if
@@ -1109,7 +1139,7 @@ name|rlen
 condition|)
 name|printf
 argument_list|(
-literal|"short read\r\n"
+literal|"short read\n"
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -1188,7 +1218,7 @@ argument_list|)
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"***RPC Error: (%d,%d,%d):\r\n "
+literal|"***RPC Error: (%d,%d,%d):\n "
 argument_list|,
 name|ntohl
 argument_list|(
@@ -1292,7 +1322,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\r\n"
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
