@@ -2949,7 +2949,13 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|"> has %d address%s:\n"
+literal|"> mtu %d has %d address%s:\n"
+argument_list|,
+name|arg
+operator|->
+name|bundle
+operator|->
+name|mtu
 argument_list|,
 name|iface
 operator|->
