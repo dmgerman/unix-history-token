@@ -291,6 +291,20 @@ name|BIOCSSEESENT
 value|_IOW('B',119, u_int)
 end_define
 
+begin_define
+define|#
+directive|define
+name|BIOCSDLT
+value|_IOW('B',120, u_int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BIOCGDLTLIST
+value|_IOWR('B',121, struct bpf_dltlist)
+end_define
+
 begin_comment
 comment|/*  * Structure prepended to each packet.  */
 end_comment
@@ -1093,6 +1107,27 @@ name|jf
 parameter_list|)
 value|{ (u_short)(code), jt, jf, k }
 end_define
+
+begin_comment
+comment|/*  * Structure to retrieve available DLTs for the interface.  */
+end_comment
+
+begin_struct
+struct|struct
+name|bpf_dltlist
+block|{
+name|u_int
+name|bfl_len
+decl_stmt|;
+comment|/* number of bfd_list array */
+name|u_int
+modifier|*
+name|bfl_list
+decl_stmt|;
+comment|/* array of DLTs */
+block|}
+struct|;
+end_struct
 
 begin_ifdef
 ifdef|#
