@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)vmstat.c	5.6 (Berkeley) %G%"
+literal|"@(#)vmstat.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2393,6 +2393,26 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<tahoe/cpu.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|dosum
