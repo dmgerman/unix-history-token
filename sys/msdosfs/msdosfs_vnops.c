@@ -7396,6 +7396,24 @@ operator|->
 name|b_resid
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|n
+operator|==
+literal|0
+condition|)
+block|{
+name|brelse
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EIO
+operator|)
+return|;
+block|}
 comment|/* 		 * Convert from dos directory entries to fs-independent 		 * directory entries. 		 */
 for|for
 control|(
