@@ -2272,7 +2272,7 @@ argument_list|)
 operator|=
 name|NULL
 expr_stmt|;
-name|destroy_dev
+name|revoke_and_destroy_dev
 argument_list|(
 name|ifdev_byindex
 argument_list|(
