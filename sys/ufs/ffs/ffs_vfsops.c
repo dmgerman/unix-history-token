@@ -4201,6 +4201,15 @@ operator|->
 name|fs_fmask
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|fs
+operator|->
+name|fs_magic
+operator|==
+name|FS_UFS1_MAGIC
+condition|)
+block|{
 name|ump
 operator|->
 name|um_savedmaxfilesize
@@ -4236,6 +4245,7 @@ name|fs_maxfilesize
 operator|=
 name|maxfilesize
 expr_stmt|;
+block|}
 comment|/* Compatibility for old filesystems */
 if|if
 condition|(
@@ -4380,7 +4390,6 @@ name|fs_cstotal
 operator|.
 name|cs_nffree
 expr_stmt|;
-block|}
 name|fs
 operator|->
 name|fs_maxfilesize
@@ -4389,6 +4398,7 @@ name|ump
 operator|->
 name|um_savedmaxfilesize
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|bigcgs

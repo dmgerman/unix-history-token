@@ -1049,6 +1049,14 @@ operator|=
 name|inumber
 expr_stmt|;
 comment|/* This should match the file size limit in ffs_mountfs(). */
+if|if
+condition|(
+name|sblock
+operator|.
+name|fs_magic
+operator|==
+name|FS_UFS1_MAGIC
+condition|)
 name|kernmaxfilesize
 operator|=
 operator|(
@@ -1061,6 +1069,13 @@ operator|.
 name|fs_bsize
 operator|-
 literal|1
+expr_stmt|;
+else|else
+name|kernmaxfilesize
+operator|=
+name|sblock
+operator|.
+name|fs_maxfilesize
 expr_stmt|;
 if|if
 condition|(
