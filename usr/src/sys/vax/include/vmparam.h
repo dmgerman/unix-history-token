@@ -299,5 +299,28 @@ name|LOTSOFMEM
 value|2
 end_define
 
+begin_comment
+comment|/*  * BEWARE THIS DEFINITION WORKS ONLY WITH COUNT OF 1  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|mapin
+parameter_list|(
+name|pte
+parameter_list|,
+name|v
+parameter_list|,
+name|pfnum
+parameter_list|,
+name|count
+parameter_list|,
+name|prot
+parameter_list|)
+define|\
+value|(*(int *)(pte) = (pfnum) | (prot), mtpr(TBIS, ptob(v)))
+end_define
+
 end_unit
 
