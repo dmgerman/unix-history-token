@@ -249,6 +249,8 @@ name|mp
 argument_list|,
 operator|&
 name|rvp
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 if|if
