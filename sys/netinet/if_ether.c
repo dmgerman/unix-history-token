@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)if_ether.c	8.1 (Berkeley) 6/10/93  * $Id: if_ether.c,v 1.17 1995/05/30 08:09:18 rgrimes Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)if_ether.c	8.1 (Berkeley) 6/10/93  * $Id: if_ether.c,v 1.18 1995/06/27 20:36:34 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -65,6 +65,12 @@ begin_include
 include|#
 directive|include
 file|<sys/syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
 end_include
 
 begin_include
@@ -219,6 +225,51 @@ name|rt_expire
 value|rt_rmx.rmx_expire
 end_define
 
+begin_struct
+struct|struct
+name|llinfo_arp
+block|{
+name|LIST_ENTRY
+argument_list|(
+argument|llinfo_arp
+argument_list|)
+name|la_le
+expr_stmt|;
+name|struct
+name|rtentry
+modifier|*
+name|la_rt
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|la_hold
+decl_stmt|;
+comment|/* last packet until resolved/timeout */
+name|long
+name|la_asked
+decl_stmt|;
+comment|/* last time we QUERIED for this addr */
+define|#
+directive|define
+name|la_timer
+value|la_rt->rt_rmx.rmx_expire
+comment|/* deletion time in seconds */
+block|}
+struct|;
+end_struct
+
+begin_expr_stmt
+specifier|static
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|llinfo_arp
+argument_list|)
+name|llinfo_arp
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 name|void
@@ -307,17 +358,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|llinfo_arp
-name|llinfo_arp
-init|=
-block|{
-operator|&
-name|llinfo_arp
-block|,
-operator|&
-name|llinfo_arp
-block|}
+modifier|*
+name|arptnew
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|in_addr
+operator|*
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -429,7 +482,12 @@ name|la
 init|=
 name|llinfo_arp
 operator|.
-name|la_next
+name|lh_first
+decl_stmt|;
+name|struct
+name|llinfo_arp
+modifier|*
+name|ola
 decl_stmt|;
 name|timeout
 argument_list|(
@@ -447,10 +505,13 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+operator|(
+name|ola
+operator|=
 name|la
+operator|)
 operator|!=
-operator|&
-name|llinfo_arp
+literal|0
 condition|)
 block|{
 specifier|register
@@ -467,7 +528,9 @@ name|la
 operator|=
 name|la
 operator|->
-name|la_next
+name|la_le
+operator|.
+name|le_next
 expr_stmt|;
 if|if
 condition|(
@@ -485,9 +548,7 @@ name|tv_sec
 condition|)
 name|arptfree
 argument_list|(
-name|la
-operator|->
-name|la_prev
+name|ola
 argument_list|)
 expr_stmt|;
 comment|/* timer has expired, clear */
@@ -578,6 +639,12 @@ block|{
 name|arpinit_done
 operator|=
 literal|1
+expr_stmt|;
+name|LIST_INIT
+argument_list|(
+operator|&
+name|llinfo_arp
+argument_list|)
 expr_stmt|;
 name|timeout
 argument_list|(
@@ -906,12 +973,14 @@ name|rt_flags
 operator||=
 name|RTF_LLINFO
 expr_stmt|;
-name|insque
+name|LIST_INSERT_HEAD
 argument_list|(
-name|la
-argument_list|,
 operator|&
 name|llinfo_arp
+argument_list|,
+name|la
+argument_list|,
+name|la_le
 argument_list|)
 expr_stmt|;
 if|if
@@ -1007,9 +1076,11 @@ break|break;
 name|arp_inuse
 operator|--
 expr_stmt|;
-name|remque
+name|LIST_REMOVE
 argument_list|(
 name|la
+argument_list|,
+name|la_le
 argument_list|)
 expr_stmt|;
 name|rt
