@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ioctl.h	6.20 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ioctl.h	6.21 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -173,26 +173,30 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Window/terminal size structure.  * This information is stored by the kernel  * in order to provide a consistent interface,  * but is not used by the kernel.  */
+comment|/*  * Window/terminal size structure.  * This information is stored by the kernel  * in order to provide a consistent interface,  * but is not used by the kernel.  *  * Type must be "unsigned short" so that types.h not required.  */
 end_comment
 
 begin_struct
 struct|struct
 name|winsize
 block|{
-name|u_short
+name|unsigned
+name|short
 name|ws_row
 decl_stmt|;
 comment|/* rows, in characters */
-name|u_short
+name|unsigned
+name|short
 name|ws_col
 decl_stmt|;
 comment|/* columns, in characters */
-name|u_short
+name|unsigned
+name|short
 name|ws_xpixel
 decl_stmt|;
 comment|/* horizontal size, pixels */
-name|u_short
+name|unsigned
+name|short
 name|ws_ypixel
 decl_stmt|;
 comment|/* vertical size, pixels */
@@ -208,16 +212,20 @@ begin_struct
 struct|struct
 name|ttysize
 block|{
-name|u_short
+name|unsigned
+name|short
 name|ts_lines
 decl_stmt|;
-name|u_short
+name|unsigned
+name|short
 name|ts_cols
 decl_stmt|;
-name|u_short
+name|unsigned
+name|short
 name|ts_xxx
 decl_stmt|;
-name|u_short
+name|unsigned
+name|short
 name|ts_yyy
 decl_stmt|;
 block|}
