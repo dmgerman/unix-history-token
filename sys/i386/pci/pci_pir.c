@@ -1183,10 +1183,10 @@ name|int
 name|bytes
 parameter_list|)
 block|{
-return|return
-operator|(
+if|if
+condition|(
 name|usebios
-condition|?
+condition|)
 name|pcibios_cfgwrite
 argument_list|(
 name|bus
@@ -1201,7 +1201,8 @@ name|data
 argument_list|,
 name|bytes
 argument_list|)
-else|:
+expr_stmt|;
+else|else
 name|pcireg_cfgwrite
 argument_list|(
 name|bus
@@ -1216,8 +1217,7 @@ name|data
 argument_list|,
 name|bytes
 argument_list|)
-operator|)
-return|;
+expr_stmt|;
 block|}
 end_function
 
