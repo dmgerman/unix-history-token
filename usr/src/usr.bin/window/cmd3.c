@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd3.c	3.1 83/08/11"
+literal|"@(#)cmd3.c	3.2 83/08/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -127,7 +127,7 @@ name|window
 index|[
 name|i
 index|]
-operator|!=
+operator|==
 literal|0
 condition|;
 name|i
