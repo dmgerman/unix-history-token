@@ -63,7 +63,10 @@ decl_stmt|;
 name|chtype
 name|blank
 init|=
-literal|' '
+name|_nc_background
+argument_list|(
+name|win
+argument_list|)
 decl_stmt|;
 name|saved
 operator|=

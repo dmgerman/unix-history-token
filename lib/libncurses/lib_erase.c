@@ -19,13 +19,6 @@ directive|include
 file|"terminfo.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|BLANK
-value|' '
-end_define
-
 begin_function
 name|int
 name|werase
@@ -143,7 +136,10 @@ expr_stmt|;
 operator|*
 name|sp
 operator|=
-name|BLANK
+name|_nc_background
+argument_list|(
+name|win
+argument_list|)
 expr_stmt|;
 block|}
 if|if

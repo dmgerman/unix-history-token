@@ -13,13 +13,6 @@ directive|include
 file|"curses.priv.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|BLANK
-value|' '|A_NORMAL
-end_define
-
 begin_function
 name|int
 name|wclrtoeol
@@ -113,12 +106,20 @@ name|ptr
 operator|++
 control|)
 block|{
+name|chtype
+name|blank
+init|=
+name|_nc_background
+argument_list|(
+name|win
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
 operator|*
 name|ptr
 operator|!=
-name|BLANK
+name|blank
 condition|)
 block|{
 name|maxx
@@ -145,7 +146,7 @@ expr_stmt|;
 operator|*
 name|ptr
 operator|=
-name|BLANK
+name|blank
 expr_stmt|;
 block|}
 block|}

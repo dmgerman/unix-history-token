@@ -104,11 +104,12 @@ expr_stmt|;
 operator|*
 name|temp1
 operator|=
-name|c
-operator||
+name|_nc_render
+argument_list|(
 name|win
-operator|->
-name|_attrs
+argument_list|,
+name|c
+argument_list|)
 expr_stmt|;
 name|win
 operator|->
