@@ -399,7 +399,7 @@ name|char
 modifier|*
 name|stl_drvversion
 init|=
-literal|"0.0.3"
+literal|"0.0.4"
 decl_stmt|;
 end_decl_stmt
 
@@ -9547,6 +9547,10 @@ condition|)
 block|{
 name|ch
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 operator|(
 name|portp
