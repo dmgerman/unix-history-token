@@ -94,6 +94,21 @@ name|u_long
 name|um_seqinc
 decl_stmt|;
 comment|/* inc between seq blocks */
+name|struct
+name|g_geom
+modifier|*
+name|um_gp
+decl_stmt|;
+name|struct
+name|g_consumer
+modifier|*
+name|um_cp
+decl_stmt|;
+name|struct
+name|bufobj
+modifier|*
+name|um_bo
+decl_stmt|;
 block|}
 struct|;
 end_struct
