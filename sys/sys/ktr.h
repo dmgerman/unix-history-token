@@ -579,7 +579,7 @@ name|p5
 parameter_list|,
 name|p6
 parameter_list|)
-value|do {			\ 	if (KTR_COMPILE& (m))						\ 		ktr_tracepoint((m), __FILE__, __LINE__, format,		\ 		    (u_long)p1, (u_long)p2, (u_long)p3, (u_long)p4,	\ 		    (u_long)p5, (u_long)p6);				\ 	} while(0)
+value|do {			\ 	if (KTR_COMPILE& (m))						\ 		ktr_tracepoint((m), __FILE__, __LINE__, format,		\ 		    (u_long)(p1), (u_long)(p2), (u_long)(p3),		\ 		    (u_long)(p4), (u_long)(p5), (u_long)(p6));		\ 	} while(0)
 end_define
 
 begin_define
