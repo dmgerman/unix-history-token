@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cbrt.c	1.1 (Berkeley) 5/23/85; 5.1 (ucb.elefunt) %G%"
+literal|"@(#)cbrt.c	1.1 (Berkeley) 5/23/85; 5.2 (ucb.elefunt) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -364,7 +364,7 @@ operator|+
 name|r
 operator|)
 expr_stmt|;
-comment|/* r-s is exact */
+comment|/* r-t is exact */
 name|t
 operator|=
 name|t
