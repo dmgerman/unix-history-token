@@ -1,28 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and that due credit is given  * to the University of California at Berkeley. The name of the University  * may not be used to endorse or promote products derived from this  * software without specific prior written permission. This software  * is provided ``as is'' without express or implied warranty.  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-name|char
-name|copyright
-index|[]
-init|=
-literal|"@(#) Copyright (c) 1982 Regents of the University of California.\n\  All rights reserved.\n"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-endif|not lint
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -36,15 +15,18 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)comp.c	5.1 (Berkeley) %G%"
+literal|"@(#)comp.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
-endif|not lint
 end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_include
 include|#
@@ -485,6 +467,9 @@ name|M_DRAW
 expr_stmt|;
 return|return;
 block|}
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 name|Debug
@@ -502,6 +487,8 @@ argument_list|,
 name|safe
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|foundend
@@ -560,6 +547,9 @@ name|canstop
 operator|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 name|Debug
@@ -578,6 +568,8 @@ argument_list|,
 name|foundend
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|playsafe
 label|:
 name|Movetype
@@ -696,6 +688,9 @@ name|card
 operator|-=
 literal|7
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 name|Debug
@@ -713,6 +708,8 @@ operator|/
 literal|4
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|card
@@ -879,6 +876,9 @@ literal|0
 operator|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 name|Debug
@@ -895,6 +895,8 @@ name|card
 index|]
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 switch|switch
 condition|(
 name|card
@@ -2014,6 +2016,9 @@ name|value
 expr_stmt|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 name|Debug
@@ -2042,6 +2047,8 @@ index|]
 index|]
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|value
 operator|++
 expr_stmt|;
@@ -2090,6 +2097,9 @@ argument_list|,
 literal|"PLAY\n"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 name|Debug
@@ -2107,6 +2117,17 @@ operator|==
 name|M_DRAW
 condition|)
 block|{
+else|#
+directive|else
+if|if
+condition|(
+name|Movetype
+operator|==
+name|M_DRAW
+condition|)
+block|{
+endif|#
+directive|endif
 name|Movetype
 operator|=
 name|M_PLAY
@@ -2152,6 +2173,9 @@ argument_list|,
 literal|"DISCARD\n"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 name|Debug
@@ -2169,6 +2193,17 @@ operator|==
 name|M_DRAW
 condition|)
 block|{
+else|#
+directive|else
+if|if
+condition|(
+name|Movetype
+operator|==
+name|M_DRAW
+condition|)
+block|{
+endif|#
+directive|endif
 name|Movetype
 operator|=
 name|M_DISCARD
@@ -2201,9 +2236,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-end_block
-
-begin_expr_stmt
 name|onecard
 argument_list|(
 name|pp
@@ -2213,9 +2245,6 @@ name|PLAY
 operator|*
 name|pp
 expr_stmt|;
-end_expr_stmt
-
-begin_block
 block|{
 specifier|register
 name|CARD
@@ -2401,9 +2430,6 @@ return|return
 name|FALSE
 return|;
 block|}
-end_block
-
-begin_expr_stmt
 name|canplay
 argument_list|(
 name|pp
@@ -2420,16 +2446,10 @@ operator|,
 operator|*
 name|op
 expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
 specifier|register
 name|CARD
 name|card
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 switch|switch
 condition|(
