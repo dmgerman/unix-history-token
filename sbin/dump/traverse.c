@@ -1723,6 +1723,43 @@ argument_list|,
 name|dumpinomap
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Zero out the size of a snapshot so that it will be dumped 	 * as a zero length file. 	 */
+if|if
+condition|(
+operator|(
+name|DIP
+argument_list|(
+name|dp
+argument_list|,
+name|di_flags
+argument_list|)
+operator|&
+name|SF_SNAPSHOT
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|DIP
+argument_list|(
+name|dp
+argument_list|,
+name|di_size
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+name|DIP
+argument_list|(
+name|dp
+argument_list|,
+name|di_flags
+argument_list|)
+operator|&=
+operator|~
+name|SF_SNAPSHOT
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|sblock
@@ -2016,9 +2053,6 @@ case|case
 name|S_IFLNK
 case|:
 comment|/* 		 * Check for short symbolic link. 		 */
-ifdef|#
-directive|ifdef
-name|FS_44INODEFMT
 if|if
 condition|(
 name|DIP
@@ -2140,8 +2174,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-endif|#
-directive|endif
 comment|/* FALLTHROUGH */
 case|case
 name|S_IFDIR
