@@ -176,19 +176,15 @@ directive|include
 file|"ps.h"
 end_include
 
-begin_function_decl
-specifier|static
-name|void
-name|printval
+begin_define
+define|#
+directive|define
+name|ps_pgtok
 parameter_list|(
-name|void
-modifier|*
-parameter_list|,
-name|VAR
-modifier|*
+name|a
 parameter_list|)
-function_decl|;
-end_function_decl
+value|(((a) * getpagesize()) / 1024)
+end_define
 
 begin_function
 name|void
@@ -2673,27 +2669,6 @@ block|}
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|pgtok
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|pgtok
-parameter_list|(
-name|a
-parameter_list|)
-value|(((a)*getpagesize())/1024)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 name|void
 name|vsize
@@ -3461,7 +3436,7 @@ argument_list|,
 operator|(
 name|long
 operator|)
-name|pgtok
+name|ps_pgtok
 argument_list|(
 name|k
 operator|->
