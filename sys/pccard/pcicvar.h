@@ -63,6 +63,17 @@ parameter_list|,
 name|u_char
 parameter_list|)
 function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|intrack
+function_decl|)
+parameter_list|(
+name|struct
+name|pcic_slot
+modifier|*
+parameter_list|)
+function_decl|;
 name|bus_space_tag_t
 name|bst
 decl_stmt|;
