@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lint.c	1.12	(Berkeley)	%G%"
+literal|"@(#)lint.c	1.13	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -826,15 +826,15 @@ argument|;  	cfp =&stab[curftn];
 comment|/* if creating library, don't do static functions */
 argument|if( Cflag&& cfp->sclass == STATIC ) return;
 comment|/* if variable number of arguments, only print the ones which will be checked */
-argument|if( vaflag>
+argument|if( vaflag>=
 literal|0
 argument|){ 		if( n< vaflag ) werror(
 literal|"declare the VARARGS arguments you want checked!"
 argument|); 		else n = vaflag; 		} 	fsave( ftitle ); 	if( cfp->sclass == STATIC ) outdef( cfp, LST, vaflag>=
 literal|0
-argument|?-n:n ); 	else outdef( cfp, libflag?LIB:LDI, vaflag>=
+argument|?~n:n ); 	else outdef( cfp, libflag?LIB:LDI, vaflag>=
 literal|0
-argument|?-n:n ); 	vaflag = -
+argument|?~n:n ); 	vaflag = -
 literal|1
 argument|;
 comment|/* output the arguments */
@@ -934,7 +934,7 @@ endif|#
 directive|endif
 argument|q->sflags |= SSET; 						} 					} 				} 			if( uses& VALASGOP ) break;
 comment|/* not a real use */
-argument|if( uses& VALSET ) q->sflags |= SSET; 			if( uses& VALUSED ) q->sflags |= SREF; 			if( uses& VALADDR ) q->sflags |= (SREF|SSET); 			if (uses& (VALSET | VALADDR)) 				q->suse = -lineno; 			if( p->tn.lval ==
+argument|if( uses& VALSET ) q->sflags |= SSET; 			if( uses& VALUSED ) q->sflags |= SREF; 			if( uses& VALADDR ) q->sflags |= (SREF|SSET); 			if( p->tn.lval ==
 literal|0
 argument|){ 				lnp->lid = id; 				lnp->flgs = (uses&VALADDR)?
 literal|0
@@ -1139,7 +1139,7 @@ argument|); 	p->tn.lval = off/SZCHAR; 	return(p); 	}  noinit(){
 comment|/* storage class for such as "int a;" */
 argument|return( pflag ? EXTDEF : EXTERN ); 	}   cinit( p, sz ) NODE *p; {
 comment|/* initialize p into size sz */
-argument|inoff += sz; 	if( p->in.op == INIT ){ 		if( p->in.left->in.op == ICON ) return; 		if( p->in.left->in.op == NAME&& p->in.left->in.type == MOE ) return; 		} 	uerror(
+argument|register int id;  	inoff += sz; 	if( p->in.op == INIT ){ 		if( p->in.left->in.op == ICON ) return; 		if( p->in.left->in.op == NAME&& p->in.left->in.type == MOE ) return; 		} 	uerror(
 literal|"illegal initialization"
 argument|); 	}  char * exname( p ) char *p; {
 comment|/* make a name look like an external name in the local machine */
@@ -1812,7 +1812,7 @@ literal|"nonportable field type"
 argument|); 		} 	else uerror(
 literal|"illegal field type"
 argument|); 	return(ALINT); 	}  main(argc, argv) 	int	argc; 	char	**argv; { 	extern char	*optarg; 	extern int	optind; 	int	ch;  	while ((ch = getopt(argc,argv,
-literal|"C:D:I:U:LPabchnpuvxz"
+literal|"C:D:I:U:LX:Pabchnpuvxz"
 argument|)) != EOF) 		switch((char)ch) { 			case
 literal|'C'
 argument|: 				Cflag =
@@ -1829,6 +1829,10 @@ argument|case
 literal|'U'
 argument|:
 comment|/* #undef */
+argument|case
+literal|'X'
+argument|:
+comment|/* debugging, done in first pass */
 argument|case
 literal|'P'
 argument|:
