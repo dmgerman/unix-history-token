@@ -1689,6 +1689,35 @@ operator|!=
 literal|0
 condition|)
 block|{
+comment|/* XXX, non-root users get a zero fsid, so don't warn. */
+if|if
+condition|(
+name|errno
+operator|!=
+name|ENOENT
+operator|||
+name|sfs
+operator|->
+name|f_fsid
+operator|.
+name|val
+index|[
+literal|0
+index|]
+operator|!=
+literal|0
+operator|||
+name|sfs
+operator|->
+name|f_fsid
+operator|.
+name|val
+index|[
+literal|1
+index|]
+operator|!=
+literal|0
+condition|)
 name|warn
 argument_list|(
 literal|"unmount of %s failed"
