@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_inode.c	4.13	82/06/29	*/
+comment|/*	ufs_inode.c	4.14	82/06/30	*/
 end_comment
 
 begin_include
@@ -465,14 +465,12 @@ name|inode
 modifier|*
 name|ip
 decl_stmt|;
-comment|/* known to be r11 - see "asm" below */
 specifier|register
 name|union
 name|ihead
 modifier|*
 name|ih
 decl_stmt|;
-comment|/* known to be r10 - see "asm" below */
 specifier|register
 name|struct
 name|mount
@@ -803,79 +801,18 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* 	 * Now to take inode off the hash chain it was on 	 * (initially, or after an iflush, it is on a "hash chain" 	 * consisting entirely of itself, and pointed to by no-one, 	 * but that doesn't matter), and put it on the chain for 	 * its new (ino, dev) pair 	 */
-ifndef|#
-directive|ifndef
-name|UNFAST
-asm|asm("remque	(r11),r0");
-asm|asm("insque	(r11),(r10)");
-else|#
-directive|else
-comment|/* remque */
+name|remque
+argument_list|(
 name|ip
-operator|->
-name|i_back
-operator|->
-name|i_forw
-operator|=
-name|ip
-operator|->
-name|i_forw
+argument_list|)
 expr_stmt|;
+name|insque
+argument_list|(
 name|ip
-operator|->
-name|i_forw
-operator|->
-name|i_back
-operator|=
-name|ip
-operator|->
-name|i_back
-expr_stmt|;
-comment|/* insque */
-name|ip
-operator|->
-name|i_forw
-operator|=
+argument_list|,
 name|ih
-operator|->
-name|ih_chain
-index|[
-literal|0
-index|]
+argument_list|)
 expr_stmt|;
-name|ip
-operator|->
-name|i_back
-operator|=
-operator|(
-expr|struct
-name|inode
-operator|*
-operator|)
-name|ih
-expr_stmt|;
-name|ih
-operator|->
-name|ih_chain
-index|[
-literal|0
-index|]
-operator|->
-name|i_back
-operator|=
-name|ip
-expr_stmt|;
-name|ih
-operator|->
-name|ih_chain
-index|[
-literal|0
-index|]
-operator|=
-name|ip
-expr_stmt|;
-endif|#
-directive|endif
 name|ip
 operator|->
 name|i_dev
@@ -954,34 +891,11 @@ name|bp
 argument_list|)
 expr_stmt|;
 comment|/* 		 * the inode doesn't contain anything useful, so it would 		 * be misleading to leave it on its hash chain. 		 * 'iput' will take care of putting it back on the free list. 		 */
-ifndef|#
-directive|ifndef
-name|UNFAST
-asm|asm("remque	(r11),r0");
-else|#
-directive|else
+name|remque
+argument_list|(
 name|ip
-operator|->
-name|i_back
-operator|->
-name|i_forw
-operator|=
-name|ip
-operator|->
-name|i_forw
+argument_list|)
 expr_stmt|;
-name|ip
-operator|->
-name|i_forw
-operator|->
-name|i_back
-operator|=
-name|ip
-operator|->
-name|i_back
-expr_stmt|;
-endif|#
-directive|endif
 name|ip
 operator|->
 name|i_forw
@@ -2772,7 +2686,6 @@ name|inode
 modifier|*
 name|ip
 decl_stmt|;
-comment|/* known to be r11 - see 'asm' below */
 specifier|register
 name|open
 operator|=
@@ -2814,34 +2727,11 @@ operator|)
 return|;
 else|else
 block|{
-ifndef|#
-directive|ifndef
-name|UNFAST
-asm|asm("remque	(r11),r0");
-else|#
-directive|else
+name|remque
+argument_list|(
 name|ip
-operator|->
-name|i_back
-operator|->
-name|i_forw
-operator|=
-name|ip
-operator|->
-name|i_forw
+argument_list|)
 expr_stmt|;
-name|ip
-operator|->
-name|i_forw
-operator|->
-name|i_back
-operator|=
-name|ip
-operator|->
-name|i_back
-expr_stmt|;
-endif|#
-directive|endif
 name|ip
 operator|->
 name|i_forw
