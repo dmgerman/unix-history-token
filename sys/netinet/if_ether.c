@@ -3068,7 +3068,7 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"arp: %6D attempts to modify permanent entry for %s on %s%d"
+literal|"arp: %6D attempts to modify permanent entry for %s on %s%d\n"
 argument_list|,
 name|ea
 operator|->
