@@ -66,16 +66,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/dmap.h>
-end_include
-
-begin_comment
-comment|/* XXX */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<sys/vnode.h>
 end_include
 
@@ -172,6 +162,24 @@ end_include
 begin_comment
 comment|/*  * Indirect driver for multi-controller paging.  */
 end_comment
+
+begin_typedef
+typedef|typedef
+name|int32_t
+name|swblk_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* swap offset */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|dmmax
+decl_stmt|;
+end_decl_stmt
 
 begin_ifndef
 ifndef|#
