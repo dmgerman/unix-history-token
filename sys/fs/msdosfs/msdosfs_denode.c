@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_denode.c,v 1.34 1998/03/26 20:52:51 phk Exp $ */
+comment|/*	$Id: msdosfs_denode.c,v 1.35 1998/04/04 13:25:55 phk Exp $ */
 end_comment
 
 begin_comment
@@ -1239,7 +1239,7 @@ name|v_type
 operator|=
 name|VREG
 expr_stmt|;
-name|getmicroruntime
+name|getmicrouptime
 argument_list|(
 operator|&
 name|tv
