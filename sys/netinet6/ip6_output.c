@@ -1843,7 +1843,7 @@ name|in6_addr
 operator|*
 operator|)
 operator|(
-name|rh
+name|rh0
 operator|+
 literal|1
 operator|)
