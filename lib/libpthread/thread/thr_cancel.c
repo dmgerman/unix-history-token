@@ -268,7 +268,7 @@ break|break;
 case|case
 name|PS_JOIN
 case|:
-comment|/* 				 * Disconnect the thread from the joinee and 				 * detach: 				 */
+comment|/* 				 * Disconnect the thread from the joinee: 				 */
 if|if
 condition|(
 name|pthread
@@ -289,18 +289,6 @@ operator|->
 name|joiner
 operator|=
 name|NULL
-expr_stmt|;
-name|pthread_detach
-argument_list|(
-operator|(
-name|pthread_t
-operator|)
-name|pthread
-operator|->
-name|join_status
-operator|.
-name|thread
-argument_list|)
 expr_stmt|;
 block|}
 name|pthread
