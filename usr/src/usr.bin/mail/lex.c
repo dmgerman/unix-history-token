@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)lex.c	1.13 %G%"
+literal|"@(#)lex.c	1.14 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1915,6 +1915,9 @@ condition|(
 name|msgCount
 operator|>
 literal|0
+operator|&&
+operator|!
+name|noheader
 condition|)
 name|headers
 argument_list|(
