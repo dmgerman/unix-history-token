@@ -248,6 +248,13 @@ name|TPDWN
 value|290
 end_define
 
+begin_define
+define|#
+directive|define
+name|TPASTE
+value|291
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|int

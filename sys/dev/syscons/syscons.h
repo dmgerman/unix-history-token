@@ -2566,6 +2566,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|sc_mouse_paste
+parameter_list|(
+name|scr_stat
+modifier|*
+name|scp
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_else
 else|#
 directive|else
@@ -2623,6 +2634,15 @@ begin_define
 define|#
 directive|define
 name|sc_remove_all_mouse
+parameter_list|(
+name|scp
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sc_mouse_paste
 parameter_list|(
 name|scp
 parameter_list|)

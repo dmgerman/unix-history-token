@@ -1222,6 +1222,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|PASTE
+value|0xa3
+end_define
+
+begin_comment
+comment|/* paste from cut-paste buffer */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|F
 parameter_list|(
 name|x

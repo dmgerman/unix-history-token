@@ -363,18 +363,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|void
-name|mouse_paste
-parameter_list|(
-name|scr_stat
-modifier|*
-name|scp
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif
@@ -3219,9 +3207,8 @@ comment|/* paste cut buffer contents into the current vty */
 end_comment
 
 begin_function
-specifier|static
 name|void
-name|mouse_paste
+name|sc_mouse_paste
 parameter_list|(
 name|scr_stat
 modifier|*
@@ -4263,7 +4250,7 @@ name|mouse_buttons
 operator|&
 name|MOUSE_BUTTON3DOWN
 condition|)
-name|mouse_paste
+name|sc_mouse_paste
 argument_list|(
 name|cur_scp
 argument_list|)
@@ -4582,7 +4569,7 @@ case|:
 comment|/* up */
 break|break;
 default|default:
-name|mouse_paste
+name|sc_mouse_paste
 argument_list|(
 name|cur_scp
 argument_list|)

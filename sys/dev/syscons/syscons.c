@@ -16438,6 +16438,40 @@ directive|endif
 block|}
 block|}
 break|break;
+case|case
+name|PASTE
+case|:
+ifndef|#
+directive|ifndef
+name|SC_NO_CUTPASTE
+comment|/* XXX need to set MOUSE_VISIBLE flag 'cause sc_mouse_paste() */
+comment|/* and sc_paste() will not operate without it. */
+name|i
+operator|=
+name|scp
+operator|->
+name|status
+expr_stmt|;
+name|scp
+operator|->
+name|status
+operator||=
+name|MOUSE_VISIBLE
+expr_stmt|;
+name|sc_mouse_paste
+argument_list|(
+name|scp
+argument_list|)
+expr_stmt|;
+name|scp
+operator|->
+name|status
+operator|=
+name|i
+expr_stmt|;
+endif|#
+directive|endif
+break|break;
 comment|/* NON-LOCKING KEYS */
 case|case
 name|NOP
