@@ -2912,14 +2912,22 @@ condition|(
 name|error
 operator|==
 literal|0
-operator|||
-name|error
-operator|==
-name|ERESTART
 condition|)
 goto|goto
 name|retry
 goto|;
+comment|/* don't restart after signals... */
+if|if
+condition|(
+name|error
+operator|==
+name|ERESTART
+condition|)
+name|error
+operator|=
+name|EINTR
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|error
