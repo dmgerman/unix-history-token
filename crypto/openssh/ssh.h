@@ -1345,6 +1345,22 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Returns the local IP address as an ascii string.  */
+end_comment
+
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|get_ipaddr
+parameter_list|(
+name|int
+name|socket
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Returns the remote IP address as an ascii string.  The value need not be  * freed by the caller.  */
 end_comment
 

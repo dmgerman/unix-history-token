@@ -120,12 +120,6 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|LOGIN_CAP
-end_define
-
-begin_define
-define|#
-directive|define
 name|_PATH_CHPASS
 value|"/usr/bin/passwd"
 end_define
@@ -2842,7 +2836,9 @@ name|pw_name
 argument_list|,
 name|hostname
 argument_list|,
-name|ttyname
+name|s
+operator|->
+name|tty
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2897,7 +2893,9 @@ name|auth_ttyok
 argument_list|(
 name|lc
 argument_list|,
-name|ttyname
+name|s
+operator|->
+name|tty
 argument_list|)
 condition|)
 block|{
@@ -2919,7 +2917,9 @@ name|pw_name
 argument_list|,
 name|hostname
 argument_list|,
-name|ttyname
+name|s
+operator|->
+name|tty
 argument_list|)
 expr_stmt|;
 name|exit

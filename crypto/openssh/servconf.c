@@ -524,7 +524,7 @@ name|options
 operator|->
 name|login_grace_time
 operator|=
-literal|60
+literal|120
 expr_stmt|;
 if|if
 condition|(
@@ -630,7 +630,7 @@ name|options
 operator|->
 name|x11_forwarding
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 if|if
 condition|(

@@ -83,6 +83,12 @@ directive|include
 file|"session.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<login_cap.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -827,6 +833,7 @@ argument_list|(
 literal|"Kerberos v4 authentication disabled."
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
 else|else
 block|{
@@ -1732,6 +1739,7 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 ifdef|#
 directive|ifdef
 name|LOGIN_CAP
@@ -1886,7 +1894,6 @@ name|get_canonical_hostname
 argument_list|()
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* Raise logging level */
 if|if
 condition|(

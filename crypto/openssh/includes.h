@@ -230,12 +230,23 @@ begin_comment
 comment|/* Define this to be the path of the xauth program. */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|XAUTH_PATH
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|XAUTH_PATH
 value|"/usr/X11R6/bin/xauth"
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Define this to use pipes instead of socketpairs for communicating with the  * client program.  Socketpairs do not seem to work on all systems.  * Although pipes are bi-directional in FreeBSD, using pipes here will  * make<stdin> uni-directional !  */
