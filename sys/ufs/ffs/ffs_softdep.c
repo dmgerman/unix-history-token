@@ -3599,11 +3599,9 @@ if|if
 condition|(
 name|curthread
 operator|->
-name|td_proc
-operator|->
-name|p_flag
+name|td_pflags
 operator|&
-name|P_COWINPROGRESS
+name|TDP_COWINPROGRESS
 condition|)
 return|return
 operator|(
@@ -24748,17 +24746,14 @@ expr_stmt|;
 comment|/* 	 * If we are being called because of a process doing a 	 * copy-on-write, then it is not safe to update the vnode 	 * as we may recurse into the copy-on-write routine. 	 */
 if|if
 condition|(
+operator|!
 operator|(
 name|curthread
 operator|->
-name|td_proc
-operator|->
-name|p_flag
+name|td_pflags
 operator|&
-name|P_COWINPROGRESS
+name|TDP_COWINPROGRESS
 operator|)
-operator|==
-literal|0
 operator|&&
 name|UFS_UPDATE
 argument_list|(

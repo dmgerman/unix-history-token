@@ -981,6 +981,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TDP_COWINPROGRESS
+value|0x0010
+end_define
+
+begin_comment
+comment|/* Snapshot copy-on-write in progress. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TDI_SUSPENDED
 value|0x0001
 end_define
@@ -2395,21 +2406,6 @@ end_define
 
 begin_comment
 comment|/* Process pending signals changed */
-end_comment
-
-begin_comment
-comment|/* Should be moved to machine-dependent areas. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|P_COWINPROGRESS
-value|0x400000
-end_define
-
-begin_comment
-comment|/* Snapshot copy-on-write in progress. */
 end_comment
 
 begin_define

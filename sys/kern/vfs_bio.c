@@ -3960,11 +3960,9 @@ if|if
 condition|(
 name|td
 operator|->
-name|td_proc
-operator|->
-name|p_flag
+name|td_pflags
 operator|&
-name|P_COWINPROGRESS
+name|TDP_COWINPROGRESS
 condition|)
 block|{
 name|recursiveflushes
