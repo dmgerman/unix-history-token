@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: print-wb.c,v 1.23 96/12/10 23:21:43 leres Exp $ (LBL)"
+literal|"@(#) $Header: print-wb.c,v 1.24 96/12/31 21:27:44 leres Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -605,19 +605,15 @@ argument_list|(
 literal|" wb-id:"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|len
-operator|-=
+operator|<
 sizeof|sizeof
 argument_list|(
 operator|*
 name|id
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|len
-operator|<
-literal|0
 operator|||
 operator|(
 name|u_char
@@ -637,6 +633,14 @@ operator|-
 literal|1
 operator|)
 return|;
+name|len
+operator|-=
+sizeof|sizeof
+argument_list|(
+operator|*
+name|id
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|" %u/%s:%u (max %u/%s:%u) "
@@ -1584,19 +1588,15 @@ argument_list|(
 literal|" wb-rrep:"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|len
-operator|-=
+operator|<
 sizeof|sizeof
 argument_list|(
 operator|*
 name|rrep
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|len
-operator|<
-literal|0
 operator|||
 operator|(
 name|u_char
@@ -1616,6 +1616,14 @@ operator|-
 literal|1
 operator|)
 return|;
+name|len
+operator|-=
+sizeof|sizeof
+argument_list|(
+operator|*
+name|rrep
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|" for %s %s:%u<%u:%u>"
@@ -1735,19 +1743,15 @@ argument_list|(
 literal|" wb-dop:"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|len
-operator|-=
+operator|<
 sizeof|sizeof
 argument_list|(
 operator|*
 name|dop
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|len
-operator|<
-literal|0
 operator|||
 operator|(
 name|u_char
@@ -1767,6 +1771,14 @@ operator|-
 literal|1
 operator|)
 return|;
+name|len
+operator|-=
+sizeof|sizeof
+argument_list|(
+operator|*
+name|dop
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|" %s:%u<%u:%u>"
@@ -1894,19 +1906,15 @@ operator|*
 operator|)
 name|hdr
 expr_stmt|;
+if|if
+condition|(
 name|len
-operator|-=
+operator|<
 sizeof|sizeof
 argument_list|(
 operator|*
 name|ph
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|len
-operator|<
-literal|0
 operator|||
 operator|(
 name|u_char
@@ -1917,10 +1925,25 @@ name|ph
 operator|+
 literal|1
 operator|)
-operator|<=
+operator|>
 name|snapend
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"[|wb]"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|len
+operator|-=
+sizeof|sizeof
+argument_list|(
+operator|*
+name|ph
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ph
@@ -2110,12 +2133,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-block|}
-name|printf
-argument_list|(
-literal|"[|wb]"
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990, 1991, 1993, 1994, 1995, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by John Robert LoVerso.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * This implementation has been influenced by the CMU SNMP release,  * by Steve Waldbusser.  However, this shares no code with that system.  * Additional ASN.1 insight gained from Marshall T. Rose's _The_Open_Book_.  * Earlier forms of this implementation were derived and/or inspired by an  * awk script originally written by C. Philip Wood of LANL (but later  * heavily modified by John Robert LoVerso).  The copyright notice for  * that work is preserved below, even though it may not rightly apply  * to this file.  *  * This started out as a very simple program, but the incremental decoding  * (into the BE structure) complicated things.  *  #			Los Alamos National Laboratory  #  #	Copyright, 1990.  The Regents of the University of California.  #	This software was produced under a U.S. Government contract  #	(W-7405-ENG-36) by Los Alamos National Laboratory, which is  #	operated by the	University of California for the U.S. Department  #	of Energy.  The U.S. Government is licensed to use, reproduce,  #	and distribute this software.  Permission is granted to the  #	public to copy and use this software without charge, provided  #	that this Notice and any statement of authorship are reproduced  #	on all copies.  Neither the Government nor the University makes  #	any warranty, express or implied, or assumes any liability or  #	responsibility for the use of this software.  #	@(#)snmp.awk.x	1.1 (LANL) 1/15/90  */
+comment|/*  * Copyright (c) 1990, 1991, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by John Robert LoVerso.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * This implementation has been influenced by the CMU SNMP release,  * by Steve Waldbusser.  However, this shares no code with that system.  * Additional ASN.1 insight gained from Marshall T. Rose's _The_Open_Book_.  * Earlier forms of this implementation were derived and/or inspired by an  * awk script originally written by C. Philip Wood of LANL (but later  * heavily modified by John Robert LoVerso).  The copyright notice for  * that work is preserved below, even though it may not rightly apply  * to this file.  *  * This started out as a very simple program, but the incremental decoding  * (into the BE structure) complicated things.  *  #			Los Alamos National Laboratory  #  #	Copyright (c) 1990, 1991, 1993, 1994, 1995, 1996, 1997  #	This software was produced under a U.S. Government contract  #	(W-7405-ENG-36) by Los Alamos National Laboratory, which is  #	operated by the	University of California for the U.S. Department  #	of Energy.  The U.S. Government is licensed to use, reproduce,  #	and distribute this software.  Permission is granted to the  #	public to copy and use this software without charge, provided  #	that this Notice and any statement of authorship are reproduced  #	on all copies.  Neither the Government nor the University makes  #	any warranty, express or implied, or assumes any liability or  #	responsibility for the use of this software.  #	@(#)snmp.awk.x	1.1 (LANL) 1/15/90  */
 end_comment
 
 begin_ifndef
@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: print-snmp.c,v 1.31 96/12/10 23:22:55 leres Exp $ (LBL)"
+literal|"@(#) $Header: print-snmp.c,v 1.33 97/06/15 13:20:28 leres Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,13 +40,30 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<ctype.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_MEMORY_H
+end_ifdef
 
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<memory.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_include

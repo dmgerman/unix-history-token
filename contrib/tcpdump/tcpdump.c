@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
+comment|/*  * Copyright (c) 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
 begin_ifndef
@@ -16,7 +16,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996\n\ The Regents of the University of California.  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997\n\ The Regents of the University of California.  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,7 +27,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: tcpdump.c,v 1.118 96/12/10 23:22:27 leres Exp $ (LBL)"
+literal|"@(#) $Header: tcpdump.c,v 1.129 97/06/13 13:10:11 leres Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -112,6 +112,48 @@ directive|include
 file|"machdep.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"setsignal.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"gmt2local.h"
+end_include
+
+begin_decl_stmt
+name|int
+name|aflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* translate network and broadcast addresses */
+end_comment
+
+begin_decl_stmt
+name|int
+name|dflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* print filter code */
+end_comment
+
+begin_decl_stmt
+name|int
+name|eflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* print ethernet header */
+end_comment
+
 begin_decl_stmt
 name|int
 name|fflag
@@ -144,6 +186,18 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|Oflag
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* run filter code optimizer */
+end_comment
+
+begin_decl_stmt
+name|int
 name|pflag
 decl_stmt|;
 end_decl_stmt
@@ -164,6 +218,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|Sflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* print raw TCP sequence numbers */
+end_comment
+
+begin_decl_stmt
+name|int
 name|tflag
 init|=
 literal|1
@@ -172,16 +236,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* print packet arrival time */
-end_comment
-
-begin_decl_stmt
-name|int
-name|eflag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* print ethernet header */
 end_comment
 
 begin_decl_stmt
@@ -206,41 +260,9 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|Oflag
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* run filter code optimizer */
-end_comment
-
-begin_decl_stmt
-name|int
-name|Sflag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* print raw TCP sequence numbers */
-end_comment
-
-begin_decl_stmt
-name|int
 name|packettype
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|dflag
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* print filter code */
-end_comment
 
 begin_decl_stmt
 name|char
@@ -334,28 +356,6 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/* XXX needed if using old bpf.h */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|DLT_ATM_RFC1483
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|DLT_ATM_RFC1483
-value|11
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -383,9 +383,21 @@ name|DLT_SLIP
 block|}
 block|,
 block|{
+name|sl_bsdos_if_print
+block|,
+name|DLT_SLIP_BSDOS
+block|}
+block|,
+block|{
 name|ppp_if_print
 block|,
 name|DLT_PPP
+block|}
+block|,
+block|{
+name|ppp_bsdos_if_print
+block|,
+name|DLT_PPP_BSDOS
 block|}
 block|,
 block|{
@@ -398,6 +410,12 @@ block|{
 name|null_if_print
 block|,
 name|DLT_NULL
+block|}
+block|,
+block|{
+name|raw_if_print
+block|,
+name|DLT_RAW
 block|}
 block|,
 block|{
@@ -549,6 +567,15 @@ name|struct
 name|bpf_program
 name|fcode
 decl_stmt|;
+name|RETSIGTYPE
+function_decl|(
+modifier|*
+name|oldhandler
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
 name|u_char
 modifier|*
 name|pcap_userdata
@@ -643,7 +670,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"c:defF:i:lnNOpqr:s:StT:vw:xY"
+literal|"ac:defF:i:lnNOpqr:s:StT:vw:xY"
 argument_list|)
 operator|)
 operator|!=
@@ -654,6 +681,13 @@ condition|(
 name|op
 condition|)
 block|{
+case|case
+literal|'a'
+case|:
+operator|++
+name|aflag
+expr_stmt|;
+break|break;
 case|case
 literal|'c'
 case|:
@@ -965,6 +999,17 @@ comment|/* NOTREACHED */
 block|}
 if|if
 condition|(
+name|aflag
+operator|&&
+name|nflag
+condition|)
+name|error
+argument_list|(
+literal|"-a and -n options are incompatible"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|tflag
 operator|>
 literal|0
@@ -972,7 +1017,9 @@ condition|)
 name|thiszone
 operator|=
 name|gmt2local
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1134,13 +1181,23 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|error
+block|{
+name|localnet
+operator|=
+literal|0
+expr_stmt|;
+name|netmask
+operator|=
+literal|0
+expr_stmt|;
+name|warning
 argument_list|(
 literal|"%s"
 argument_list|,
 name|ebuf
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 		 * Let user own process after socket has been opened. 		 */
 name|setuid
 argument_list|(
@@ -1221,8 +1278,6 @@ expr_stmt|;
 block|}
 name|init_addrtoname
 argument_list|(
-name|fflag
-argument_list|,
 name|localnet
 argument_list|,
 name|netmask
@@ -1231,7 +1286,7 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|signal
+name|setsignal
 argument_list|(
 name|SIGTERM
 argument_list|,
@@ -1241,21 +1296,37 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
-name|signal
+name|setsignal
 argument_list|(
 name|SIGINT
 argument_list|,
 name|cleanup
 argument_list|)
 expr_stmt|;
+comment|/* Cooperate with nohup(1) */
+if|if
+condition|(
 operator|(
-name|void
-operator|)
-name|signal
+name|oldhandler
+operator|=
+name|setsignal
 argument_list|(
 name|SIGHUP
 argument_list|,
 name|cleanup
+argument_list|)
+operator|)
+operator|!=
+name|SIG_DFL
+condition|)
+operator|(
+name|void
+operator|)
+name|setsignal
+argument_list|(
+name|SIGHUP
+argument_list|,
+name|oldhandler
 argument_list|)
 expr_stmt|;
 if|if
@@ -1670,6 +1741,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*  * By default, print the packet out in hex.  *  * (BTW, please don't send us patches to print the packet out in ascii)  */
+end_comment
+
 begin_function
 name|void
 name|default_print
@@ -1842,6 +1917,11 @@ name|char
 name|version
 index|[]
 decl_stmt|;
+specifier|extern
+name|char
+name|pcap_version
+index|[]
+decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -1849,7 +1929,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Version %s\n"
+literal|"%s version %s\n"
+argument_list|,
+name|program_name
 argument_list|,
 name|version
 argument_list|)
@@ -1861,7 +1943,21 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: tcpdump [-deflnNOpqStvx] [-c count] [ -F file ]\n"
+literal|"libpcap version %s\n"
+argument_list|,
+name|pcap_version
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Usage: %s [-adeflnNOpqStvx] [-c count] [ -F file ]\n"
+argument_list|,
+name|program_name
 argument_list|)
 expr_stmt|;
 operator|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1993, 1994, 1995, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * OSPF support contributed by Jeffrey Honig (jch@mitchell.cit.cornell.edu)  */
+comment|/*  * Copyright (c) 1992, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * OSPF support contributed by Jeffrey Honig (jch@mitchell.cit.cornell.edu)  */
 end_comment
 
 begin_ifndef
@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"@(#) $Header: print-ospf.c,v 1.23 96/12/10 23:15:46 leres Exp $ (LBL)"
+literal|"@(#) $Header: print-ospf.c,v 1.24 97/04/26 13:31:46 leres Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -987,47 +987,10 @@ name|j
 operator|--
 condition|)
 block|{
-specifier|register
-name|struct
-name|rlalink
-modifier|*
-name|rln
-init|=
-operator|(
-expr|struct
-name|rlalink
-operator|*
-operator|)
-operator|(
-operator|(
-name|u_char
-operator|*
-operator|)
-operator|(
-name|rlp
-operator|+
-literal|1
-operator|)
-operator|+
-operator|(
-operator|(
-name|rlp
-operator|->
-name|link_toscount
-operator|)
-operator|*
-sizeof|sizeof
-argument_list|(
-operator|*
-name|tosp
-argument_list|)
-operator|)
-operator|)
-decl_stmt|;
 name|TCHECK
 argument_list|(
 operator|*
-name|rln
+name|rlp
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1231,7 +1194,36 @@ argument_list|)
 expr_stmt|;
 name|rlp
 operator|=
-name|rln
+operator|(
+expr|struct
+name|rlalink
+operator|*
+operator|)
+operator|(
+operator|(
+name|u_char
+operator|*
+operator|)
+operator|(
+name|rlp
+operator|+
+literal|1
+operator|)
+operator|+
+operator|(
+operator|(
+name|rlp
+operator|->
+name|link_toscount
+operator|)
+operator|*
+sizeof|sizeof
+argument_list|(
+operator|*
+name|tosp
+argument_list|)
+operator|)
+operator|)
 expr_stmt|;
 block|}
 break|break;
@@ -2451,6 +2443,35 @@ name|ip_dst
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* XXX Before we do anything else, strip off the MD5 trailer */
+name|TCHECK
+argument_list|(
+name|op
+operator|->
+name|ospf_authtype
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ntohs
+argument_list|(
+name|op
+operator|->
+name|ospf_authtype
+argument_list|)
+operator|==
+name|OSPF_AUTH_MD5
+condition|)
+block|{
+name|length
+operator|-=
+name|OSPF_AUTH_MD5_LEN
+expr_stmt|;
+name|snapend
+operator|-=
+name|OSPF_AUTH_MD5_LEN
+expr_stmt|;
+block|}
 comment|/* If the type is valid translate it, or just print the type */
 comment|/* value.  If it's not valid, say so and return */
 name|TCHECK
@@ -2671,6 +2692,15 @@ expr_stmt|;
 name|printf
 argument_list|(
 literal|"\""
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|OSPF_AUTH_MD5
+case|:
+name|printf
+argument_list|(
+literal|" auth MD5"
 argument_list|)
 expr_stmt|;
 break|break;
