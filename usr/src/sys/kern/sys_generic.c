@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sys_generic.c	5.12	82/09/04	*/
+comment|/*	sys_generic.c	5.13	82/09/06	*/
 end_comment
 
 begin_include
@@ -3176,6 +3176,24 @@ name|cmd
 operator|)
 return|;
 block|}
+end_block
+
+begin_macro
+name|ostty
+argument_list|()
+end_macro
+
+begin_block
+block|{  }
+end_block
+
+begin_macro
+name|ogtty
+argument_list|()
+end_macro
+
+begin_block
+block|{  }
 end_block
 
 end_unit

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_sig.c	5.5	82/09/04	*/
+comment|/*	kern_sig.c	5.6	82/09/06	*/
 end_comment
 
 begin_include
@@ -2637,6 +2637,8 @@ condition|(
 name|u
 operator|.
 name|u_error
+operator|==
+literal|0
 condition|)
 name|rdwri
 argument_list|(
@@ -2683,6 +2685,8 @@ condition|(
 name|u
 operator|.
 name|u_error
+operator|==
+literal|0
 condition|)
 name|rdwri
 argument_list|(
@@ -2804,13 +2808,15 @@ operator|=
 name|spl7
 argument_list|()
 block|;
+name|timerclear
+argument_list|(
+operator|&
 name|p
 operator|->
 name|p_realtimer
 operator|.
-name|itimer_reload
-operator|=
-literal|0
+name|it_interval
+argument_list|)
 block|;
 name|u
 operator|.
@@ -2822,7 +2828,7 @@ name|p
 operator|->
 name|p_realtimer
 operator|.
-name|itimer_value
+name|it_value
 operator|.
 name|tv_sec
 block|;
@@ -2830,7 +2836,7 @@ name|p
 operator|->
 name|p_realtimer
 operator|.
-name|itimer_value
+name|it_value
 operator|.
 name|tv_sec
 operator|=
@@ -2842,7 +2848,7 @@ name|p
 operator|->
 name|p_realtimer
 operator|.
-name|itimer_value
+name|it_value
 operator|.
 name|tv_usec
 operator|=

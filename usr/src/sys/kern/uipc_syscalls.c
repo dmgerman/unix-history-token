@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_syscalls.c	4.25	82/09/04	*/
+comment|/*	uipc_syscalls.c	4.26	82/09/06	*/
 end_comment
 
 begin_include
@@ -154,15 +154,6 @@ block|{  }
 end_block
 
 begin_macro
-name|spipe
-argument_list|()
-end_macro
-
-begin_block
-block|{  }
-end_block
-
-begin_macro
 name|sendto
 argument_list|()
 end_macro
@@ -243,12 +234,8 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * Pipe system call interface.  */
-end_comment
-
 begin_macro
-name|opipe
+name|pipe
 argument_list|()
 end_macro
 
