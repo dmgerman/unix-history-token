@@ -3322,7 +3322,7 @@ value|0x24
 end_define
 
 begin_comment
-comment|/* inbound interrupt mask register */
+comment|/* inbound interrupt status register */
 end_comment
 
 begin_define
@@ -3333,7 +3333,7 @@ value|0x28
 end_define
 
 begin_comment
-comment|/* inbound interrupt status register */
+comment|/* inbound interrupt mask register */
 end_comment
 
 begin_define
