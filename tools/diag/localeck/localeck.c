@@ -15,8 +15,14 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
 begin_comment
-comment|/*  * Try setlocale() for locale with given name  */
+comment|/*  * Try setlocale() for locale with given name.  */
 end_comment
 
 begin_struct
@@ -26,6 +32,7 @@ block|{
 name|int
 name|catid
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|catname
@@ -100,6 +107,7 @@ name|i
 decl_stmt|,
 name|result
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|localename
@@ -111,6 +119,9 @@ operator|!=
 literal|2
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
