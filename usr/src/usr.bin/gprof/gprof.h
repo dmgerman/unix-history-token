@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	gprof.h	1.20	84/08/07	*/
+comment|/*	gprof.h	1.21	84/08/09	*/
 end_comment
 
 begin_include
@@ -167,14 +167,14 @@ begin_define
 define|#
 directive|define
 name|FLAT_BLURB
-value|"/usr/lib/gprof.flat.blurb"
+value|"/usr/lib/gprof.flat"
 end_define
 
 begin_define
 define|#
 directive|define
 name|CALLG_BLURB
-value|"/usr/lib/gprof.callg.blurb"
+value|"/usr/lib/gprof.callg"
 end_define
 
 begin_comment
