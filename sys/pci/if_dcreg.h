@@ -2635,6 +2635,34 @@ parameter_list|)
 value|(x) = (x + 1) % y
 end_define
 
+begin_comment
+comment|/* Macros to easily get the DMA address of a descriptor. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DC_RXDESC
+parameter_list|(
+name|sc
+parameter_list|,
+name|i
+parameter_list|)
+value|(sc->dc_laddr +				\     (uintptr_t)(sc->dc_ldata->dc_rx_list + i) - (uintptr_t)sc->dc_ldata)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DC_TXDESC
+parameter_list|(
+name|sc
+parameter_list|,
+name|i
+parameter_list|)
+value|(sc->dc_laddr +				\     (uintptr_t)(sc->dc_ldata->dc_tx_list + i) - (uintptr_t)sc->dc_ldata)
+end_define
+
 begin_struct
 struct|struct
 name|dc_list_data
@@ -2677,22 +2705,33 @@ index|[
 name|DC_TX_LIST_CNT
 index|]
 decl_stmt|;
-name|u_int32_t
-name|dc_sbuf
+name|bus_dmamap_t
+name|dc_rx_map
 index|[
-name|DC_SFRAME_LEN
-operator|/
-sizeof|sizeof
-argument_list|(
-name|u_int32_t
-argument_list|)
+name|DC_RX_LIST_CNT
 index|]
+decl_stmt|;
+name|bus_dmamap_t
+name|dc_tx_map
+index|[
+name|DC_TX_LIST_CNT
+index|]
+decl_stmt|;
+name|u_int32_t
+modifier|*
+name|dc_sbuf
 decl_stmt|;
 name|u_int8_t
 name|dc_pad
 index|[
 name|DC_MIN_FRAMELEN
 index|]
+decl_stmt|;
+name|int
+name|dc_tx_err
+decl_stmt|;
+name|int
+name|dc_tx_first
 decl_stmt|;
 name|int
 name|dc_tx_prod
@@ -2702,6 +2741,12 @@ name|dc_tx_cons
 decl_stmt|;
 name|int
 name|dc_tx_cnt
+decl_stmt|;
+name|int
+name|dc_rx_err
+decl_stmt|;
+name|int
+name|dc_rx_cur
 decl_stmt|;
 name|int
 name|dc_rx_prod
@@ -3727,6 +3772,37 @@ name|bus_space_tag_t
 name|dc_btag
 decl_stmt|;
 comment|/* bus space tag */
+name|bus_dma_tag_t
+name|dc_ltag
+decl_stmt|;
+comment|/* tag for descriptor ring */
+name|bus_dmamap_t
+name|dc_lmap
+decl_stmt|;
+comment|/* map for descriptor ring */
+name|u_int32_t
+name|dc_laddr
+decl_stmt|;
+comment|/* DMA address of dc_ldata */
+name|bus_dma_tag_t
+name|dc_mtag
+decl_stmt|;
+comment|/* tag for mbufs */
+name|bus_dmamap_t
+name|dc_sparemap
+decl_stmt|;
+name|bus_dma_tag_t
+name|dc_stag
+decl_stmt|;
+comment|/* tag for the setup frame */
+name|bus_dmamap_t
+name|dc_smap
+decl_stmt|;
+comment|/* map for the setup frame */
+name|u_int32_t
+name|dc_saddr
+decl_stmt|;
+comment|/* DMA address of setup frame */
 name|void
 modifier|*
 name|dc_intrhand
@@ -5731,33 +5807,6 @@ comment|/*	u_int16_t		dc_reset_dat[n]; */
 block|}
 struct|;
 end_struct
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__alpha__
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|vtophys
-end_undef
-
-begin_define
-define|#
-directive|define
-name|vtophys
-parameter_list|(
-name|va
-parameter_list|)
-value|alpha_XXX_dmamap((vm_offset_t)va)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
