@@ -102,40 +102,11 @@ name|OLD_PS_STRINGS
 value|((struct old_ps_strings *) \ 	(USRSTACK - SPARE_USRSPACE - sizeof(struct old_ps_strings)))
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__STDC__
-argument_list|)
-end_if
-
-begin_comment
-comment|/* from other parts of sendmail */
-end_comment
-
 begin_include
 include|#
 directive|include
 file|<stdarg.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<varargs.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -162,12 +133,6 @@ end_comment
 
 begin_function
 name|void
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__STDC__
-argument_list|)
 name|setproctitle
 parameter_list|(
 specifier|const
@@ -177,22 +142,6 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-else|#
-directive|else
-function|setproctitle
-parameter_list|(
-name|fmt
-parameter_list|,
-name|va_alist
-parameter_list|)
-specifier|const
-name|char
-modifier|*
-name|fmt
-decl_stmt|;
-function|va_dcl
-endif|#
-directive|endif
 block|{
 specifier|static
 name|struct
@@ -268,12 +217,6 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__STDC__
-argument_list|)
 name|va_start
 argument_list|(
 name|ap
@@ -281,15 +224,6 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|va_start
-argument_list|(
-name|ap
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|fmt
@@ -307,6 +241,27 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+if|if
+condition|(
+name|fmt
+index|[
+literal|0
+index|]
+operator|==
+literal|'-'
+condition|)
+block|{
+comment|/* skip program name prefix */
+name|fmt
+operator|++
+expr_stmt|;
+name|len
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
 comment|/* print program name heading for grep */
 operator|(
 name|void
@@ -325,7 +280,6 @@ argument_list|,
 name|__progname
 argument_list|)
 expr_stmt|;
-comment|/* 		 * can't use return from sprintf, as that is the count of how 		 * much it wanted to write, not how much it actually did. 		 */
 name|len
 operator|=
 name|strlen
@@ -333,6 +287,7 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* print the argument string */
 operator|(
 name|void
