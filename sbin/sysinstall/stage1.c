@@ -556,7 +556,7 @@ operator|++
 argument_list|,
 literal|50
 argument_list|,
-literal|"|Your kernel and /etc/fstab"
+literal|"|Your old kernel, /etc/fstab"
 argument_list|)
 expr_stmt|;
 name|mvprintw
@@ -566,773 +566,156 @@ operator|++
 argument_list|,
 literal|50
 argument_list|,
-literal|"|are backed up and /sbin/init"
+literal|"|and /sbin/init files are"
 argument_list|)
 expr_stmt|;
 name|mvprintw
 argument_list|(
-name|j
-operator|++
+argument|j++
 argument_list|,
 literal|50
 argument_list|,
-literal|"|is renamed"
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|mvprintw
-argument_list|(
-name|j
-operator|++
+literal|"|renamed since the kernel and); 	    mvprintw(j++, 50, "
+argument||/etc/fstab are replaced from
+literal|"); 	    mvprintw(j++, 50, "
+argument||this floppy.
+literal|"); 	} else { 	    mvprintw(j++, 50, "
+argument||You should now assign some
+literal|"); 	    mvprintw(j++, 50, "
+argument||space to root
 argument_list|,
-literal|50
+argument|swap
 argument_list|,
-literal|"|You must assign some space"
-argument_list|)
-expr_stmt|;
-name|mvprintw
-argument_list|(
-name|j
-operator|++
-argument_list|,
-literal|50
-argument_list|,
-literal|"|to a root (/), swap, and"
-argument_list|)
-expr_stmt|;
-name|mvprintw
-argument_list|(
-name|j
-operator|++
-argument_list|,
-literal|50
-argument_list|,
-literal|"|optionally a /usr partition"
-argument_list|)
-expr_stmt|;
-name|mvprintw
-argument_list|(
-name|j
-operator|++
-argument_list|,
-literal|50
-argument_list|,
-literal|"|"
-argument_list|)
-expr_stmt|;
-name|mvprintw
-argument_list|(
-name|j
-operator|++
-argument_list|,
-literal|50
-argument_list|,
-literal|"|Root should be a minimum of"
-argument_list|)
-expr_stmt|;
-name|mvprintw
-argument_list|(
-name|j
-operator|++
-argument_list|,
-literal|50
-argument_list|,
-literal|"|18MB with a 30MB /usr, or"
-argument_list|)
-expr_stmt|;
-name|mvprintw
-argument_list|(
-name|j
-operator|++
-argument_list|,
-literal|50
-argument_list|,
-literal|"|50MB without a /usr."
-argument_list|)
-expr_stmt|;
-name|mvprintw
-argument_list|(
-name|j
-operator|++
-argument_list|,
-literal|50
-argument_list|,
-literal|"|"
-argument_list|)
-expr_stmt|;
-name|mvprintw
-argument_list|(
-name|j
-operator|++
-argument_list|,
-literal|50
-argument_list|,
-literal|"|Swap space should be a"
-argument_list|)
-expr_stmt|;
-name|mvprintw
-argument_list|(
-name|j
-operator|++
-argument_list|,
-literal|50
-argument_list|,
-literal|"|minimum of 12MB or MEM * 2"
-argument_list|)
-expr_stmt|;
-name|mvprintw
-argument_list|(
-name|j
-operator|++
-argument_list|,
-literal|50
-argument_list|,
-literal|"|Also be sure to Assign"
-argument_list|)
-expr_stmt|;
-name|mvprintw
-argument_list|(
-name|j
-operator|++
-argument_list|,
-literal|50
-argument_list|,
-literal|"|mount points to each or"
-argument_list|)
-expr_stmt|;
-name|mvprintw
-argument_list|(
-name|j
-operator|++
-argument_list|,
-literal|50
-argument_list|,
-literal|"|they will NOT be enabled."
-argument_list|)
-expr_stmt|;
-name|mvprintw
-argument_list|(
-name|j
-operator|++
-argument_list|,
-literal|50
-argument_list|,
-literal|"|"
-argument_list|)
-expr_stmt|;
-name|mvprintw
-argument_list|(
-name|j
-operator|++
-argument_list|,
-literal|50
-argument_list|,
-literal|"|We suggest that you invoke"
-argument_list|)
-expr_stmt|;
-name|mvprintw
-argument_list|(
-name|j
-operator|++
-argument_list|,
-literal|50
-argument_list|,
-literal|"|(F)disk, then (D)isklabel"
-argument_list|)
-expr_stmt|;
-name|mvprintw
-argument_list|(
-name|j
-operator|++
-argument_list|,
-literal|50
-argument_list|,
-literal|"|in setting up your disk."
-argument_list|)
-expr_stmt|;
-name|mvprintw
-argument_list|(
-name|j
-operator|++
-argument_list|,
-literal|50
-argument_list|,
-literal|"|If installing on a drive"
-argument_list|)
-expr_stmt|;
-name|mvprintw
-argument_list|(
-name|j
-operator|++
-argument_list|,
-literal|50
-argument_list|,
-literal|"|other than 0, read the"
-argument_list|)
-expr_stmt|;
-name|mvprintw
-argument_list|(
-name|j
-operator|++
-argument_list|,
-literal|50
-argument_list|,
-literal|"|troubleshooting doc first"
-argument_list|)
-expr_stmt|;
-block|}
-name|j
-operator|=
-literal|0
-expr_stmt|;
-name|mvprintw
-argument_list|(
-name|j
-operator|++
-argument_list|,
+argument|and
+literal|"); 	    mvprintw(j++, 50, "
+argument||(optionally) /usr partitions
+literal|");  	    mvprintw(j++, 50, "
+argument||Root (/) should be a minimum
+literal|"); 	    mvprintw(j++, 50, "
+argument||of
+literal|18MB
+argument|with a
+literal|30MB
+argument|/usr
+literal|"); 	    mvprintw(j++, 50, "
+argument||or
+literal|50MB
+argument|without a /usr.
+literal|");  	    mvprintw(j++, 50, "
+argument||Swap space should be a
+literal|"); 	    mvprintw(j++, 50, "
+argument||minimum of
+literal|12MB
+argument|or RAM *
+literal|2
+literal|"); 	    mvprintw(j++, 50, "
+argument||Be sure to also (A)ssign a
+literal|"); 	    mvprintw(j++, 50, "
+argument||mount point to each one or
+literal|"); 	    mvprintw(j++, 50, "
+argument||it will NOT be enabled.
+literal|");  	    mvprintw(j++, 50, "
+argument||
+literal|"); 	    mvprintw(j++, 50, "
+argument||We suggest that you invoke
+literal|"); 	    mvprintw(j++, 50, "
+argument||(F)disk then (D)isklabel
+literal|"); 	    mvprintw(j++, 50, "
+argument||in setting up your disk.
+literal|"); 	    mvprintw(j++, 50, "
+argument||If installing on a drive
+literal|"); 	    mvprintw(j++, 50, "
+argument||other than
 literal|0
 argument_list|,
-literal|"%s -- Diskspace editor"
+argument|read the
+literal|"); 	    mvprintw(j++, 50, "
+argument||TROUBLESHOOTING doc first
+literal|"); 	}  	j = 0; 	mvprintw(j++, 0, "
+argument|%s -- Diskspace editor
+literal|", TITLE); 	j++; 	mvprintw(j++, 0, "
+argument|Disks         Total   FreeBSD
+literal|"); 	j++; 	for(i = 0; i< MAX_NO_DISKS&& Dname[i]; i++) { 	    mvprintw(j++, 0, "
+argument|%
+literal|2d
+argument|: %-
+literal|6s
+argument|%
+literal|5lu
+argument|MB  %
+literal|5lu
+argument|MB
+literal|", 		     i, 		     Dname[i], 		     PartMb(Dlbl[i],RAWPART), 		     PartMb(Dlbl[i],OURPART)); 	} 	j++; 	mvprintw(j++, 0, "
+argument|Filesystems  Type        Size  Action Mountpoint
+literal|"); 	j++; 	for(i = 0; i< MAX_NO_FS; i++) { 	    if(!Fname[i]) 		continue; 	    if(!strcmp(Ftype[i],"
+argument|swap
+literal|")) { 		mvprintw(j++, 0, "
+argument|%
+literal|2d
+argument|: %-
+literal|5s
+argument|%-
+literal|5s
+argument|%
+literal|5lu
+argument|MB  %-
+literal|6s
+argument|%-s
+literal|", 		     i, Fname[i], Ftype[i], Fsize[i], "
+argument|swap
+literal|", Fmount[i]); 	    } else { 		mvprintw(j++, 0, "
+argument|%
+literal|2d
+argument|: %-
+literal|5s
+argument|%-
+literal|5s
+argument|%
+literal|5lu
+argument|MB  %-
+literal|6s
+argument|%-s
+literal|", 		     i, Fname[i], Ftype[i], Fsize[i],  			     Faction[i] ? "
+argument|newfs
+literal|" : "
+argument|mount
+literal|", Fmount[i]); 	    } 	}  	mvprintw(20, 0, "
+argument|Commands available:
+literal|"); 	mvprintw(21, 0, "
+argument|(H)elp  (T)utorial  (F)disk  (D)isklabel  (P)roceed  (Q)uit
+literal|"); 	if(complaint) { 		standout(); 		mvprintw(22, 0, complaint); 		standend(); 		complaint = 0; 	} 	mvprintw(23, 0, "
+argument|Enter Command>
+literal|"); 	i = getch(); 	switch(i) { 	case 'h': case 'H': 	    clear(); 	    mvprintw(0, 0,  "
+argument|%s -- Diskspace editor -- Command Help  (T)utorial	- Read a more detailed tutorial on how disklabels
 argument_list|,
-name|TITLE
-argument_list|)
-expr_stmt|;
-name|j
-operator|++
-expr_stmt|;
-name|mvprintw
-argument_list|(
-name|j
-operator|++
+argument|MBRs
 argument_list|,
-literal|0
-argument_list|,
-literal|"Disks         Total   FreeBSD "
-argument_list|)
-expr_stmt|;
-name|j
-operator|++
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|MAX_NO_DISKS
-operator|&&
-name|Dname
-index|[
-name|i
-index|]
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|mvprintw
-argument_list|(
-name|j
-operator|++
-argument_list|,
-literal|0
-argument_list|,
-literal|"%2d: %-6s %5lu MB  %5lu MB"
-argument_list|,
-name|i
-argument_list|,
-name|Dname
-index|[
-name|i
-index|]
-argument_list|,
-name|PartMb
-argument_list|(
-name|Dlbl
-index|[
-name|i
-index|]
-argument_list|,
-name|RAWPART
-argument_list|)
-argument_list|,
-name|PartMb
-argument_list|(
-name|Dlbl
-index|[
-name|i
-index|]
-argument_list|,
-name|OURPART
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-name|j
-operator|++
-expr_stmt|;
-name|mvprintw
-argument_list|(
-name|j
-operator|++
-argument_list|,
-literal|0
-argument_list|,
-literal|"Filesystems  Type        Size  Action Mountpoint"
-argument_list|)
-expr_stmt|;
-name|j
-operator|++
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|MAX_NO_FS
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-operator|!
-name|Fname
-index|[
-name|i
-index|]
-condition|)
-continue|continue;
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|Ftype
-index|[
-name|i
-index|]
-argument_list|,
-literal|"swap"
-argument_list|)
-condition|)
-block|{
-name|mvprintw
-argument_list|(
-name|j
-operator|++
-argument_list|,
-literal|0
-argument_list|,
-literal|"%2d: %-5s    %-5s   %5lu MB  %-6s %-s"
-argument_list|,
-name|i
-argument_list|,
-name|Fname
-index|[
-name|i
-index|]
-argument_list|,
-name|Ftype
-index|[
-name|i
-index|]
-argument_list|,
-name|Fsize
-index|[
-name|i
-index|]
-argument_list|,
-literal|"swap"
-argument_list|,
-name|Fmount
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|mvprintw
-argument_list|(
-name|j
-operator|++
-argument_list|,
-literal|0
-argument_list|,
-literal|"%2d: %-5s    %-5s   %5lu MB  %-6s %-s"
-argument_list|,
-name|i
-argument_list|,
-name|Fname
-index|[
-name|i
-index|]
-argument_list|,
-name|Ftype
-index|[
-name|i
-index|]
-argument_list|,
-name|Fsize
-index|[
-name|i
-index|]
-argument_list|,
-name|Faction
-index|[
-name|i
-index|]
-condition|?
-literal|"newfs"
-else|:
-literal|"mount"
-argument_list|,
-name|Fmount
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-name|mvprintw
-argument_list|(
-literal|20
-argument_list|,
-literal|0
-argument_list|,
-literal|"Commands available:"
-argument_list|)
-expr_stmt|;
-name|mvprintw
-argument_list|(
-literal|21
-argument_list|,
-literal|0
-argument_list|,
-literal|"(H)elp  (T)utorial  (F)disk  (D)isklabel  (P)roceed  (Q)uit"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|complaint
-condition|)
-block|{
-name|standout
-argument_list|()
-expr_stmt|;
-name|mvprintw
-argument_list|(
-literal|22
-argument_list|,
-literal|0
-argument_list|,
-name|complaint
-argument_list|)
-expr_stmt|;
-name|standend
-argument_list|()
-expr_stmt|;
-name|complaint
-operator|=
-literal|0
-expr_stmt|;
-block|}
-name|mvprintw
-argument_list|(
-literal|23
-argument_list|,
-literal|0
-argument_list|,
-literal|"Enter Command> "
-argument_list|)
-expr_stmt|;
-name|i
-operator|=
-name|getch
-argument_list|()
-expr_stmt|;
-switch|switch
-condition|(
-name|i
-condition|)
-block|{
-case|case
-literal|'h'
-case|:
-case|case
-literal|'H'
-case|:
-name|clear
-argument_list|()
-expr_stmt|;
-name|mvprintw
-argument_list|(
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|"%s -- Diskspace editor -- Command Help  (T)utorial	- Read a more detailed tutorial on how disklabels, MBRs, 		  etc. work. (P)roceed	- Proceed with system installation. (Q)uit		- Don't install anything. (F)disk		- Enter the FDISK (MBR) editor. (D)isklabel	- Enter the disklabel editor.  Press any key to return to Diskspace editor..."
-argument_list|,
-name|TITLE
-argument_list|)
-expr_stmt|;
-name|getch
-argument_list|()
-expr_stmt|;
-break|break;
-case|case
-literal|'t'
-case|:
-case|case
-literal|'T'
-case|:
-name|ShowFile
-argument_list|(
-name|HELPME_FILE
-argument_list|,
-literal|"Help file for disklayout"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'p'
-case|:
-case|case
-literal|'P'
-case|:
-name|foundroot
-operator|=
-literal|0
-operator|,
-name|foundusr
-operator|=
-literal|0
-operator|,
-name|foundswap
-operator|=
-literal|0
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|1
-init|;
-name|Fmount
-index|[
-name|i
-index|]
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|Fmount
-index|[
-name|i
-index|]
-argument_list|,
-literal|"/"
-argument_list|)
-condition|)
-name|foundroot
-operator|=
-name|i
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|Fmount
-index|[
-name|i
-index|]
-argument_list|,
-literal|"swap"
-argument_list|)
-condition|)
-name|foundswap
-operator|=
-name|i
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|Fmount
-index|[
-name|i
-index|]
-argument_list|,
-literal|"/usr"
-argument_list|)
-condition|)
-name|foundusr
-operator|=
-name|i
-expr_stmt|;
-block|}
-if|if
-condition|(
-operator|!
-name|foundroot
-condition|)
-block|{
-name|complaint
-operator|=
-literal|"Please assign mountpoint for '/'"
-expr_stmt|;
-break|break;
-block|}
-if|if
-condition|(
-operator|!
-name|foundswap
-condition|)
-block|{
-name|complaint
-operator|=
-literal|"Please assign mountpoint for swap"
-expr_stmt|;
-break|break;
-block|}
-if|if
-condition|(
-operator|!
-name|fixit
-operator|&&
-operator|!
-name|foundusr
-operator|&&
-name|Fsize
-index|[
-name|foundroot
-index|]
-operator|<
-literal|60
-condition|)
-block|{
-name|complaint
-operator|=
-literal|"Please assign mountpoint for /usr"
-expr_stmt|;
-break|break;
-block|}
-if|if
-condition|(
-name|dialog_yesno
-argument_list|(
-literal|"Last Chance!"
-argument_list|,
-literal|"Are you sure you want to proceed with the installation?\nLast chance before wiping your hard disk!"
-argument_list|,
-operator|-
-literal|1
-argument_list|,
-operator|-
-literal|1
-argument_list|)
-condition|)
-break|break;
-name|ret
-operator|=
-literal|0
-expr_stmt|;
-goto|goto
-name|leave
-goto|;
-case|case
-literal|'q'
-case|:
-case|case
-literal|'Q'
-case|:
-name|ret
-operator|=
-literal|1
-expr_stmt|;
-goto|goto
-name|leave
-goto|;
-case|case
-literal|'f'
-case|:
-case|case
-literal|'F'
-case|:
-name|Fdisk
-argument_list|()
-expr_stmt|;
-name|query_disks
-argument_list|()
-expr_stmt|;
-break|break;
-case|case
-literal|'d'
-case|:
-case|case
-literal|'D'
-case|:
-name|DiskLabel
-argument_list|()
-expr_stmt|;
-break|break;
-default|default:
-name|beep
-argument_list|()
-expr_stmt|;
-block|}
-block|}
-name|leave
-label|:
-name|clear
-argument_list|()
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|Dname
-index|[
-name|i
-index|]
-condition|;
-name|i
-operator|++
-control|)
-name|close
-argument_list|(
-name|Dfd
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
-return|return
-name|ret
-return|;
-block|}
+argument|etc. work. (P)roceed	- Proceed with system installation. (Q)uit		- Don
+literal|'t install anything. (F)disk		- Enter the FDISK (MBR) editor. (D)isklabel	- Enter the disklabel editor.  Press any key to return to Diskspace editor...", TITLE); 	    getch(); 	    break; 	case '
+argument|t
+literal|': case '
+argument|T
+literal|':             ShowFile(HELPME_FILE,"Help file for disklayout"); 	    break; 	case '
+argument|p
+literal|': case '
+argument|P
+literal|': 	    foundroot=0,foundusr=0,foundswap=0; 	    for (i = 1; Fmount[i]; i++) { 		if(!strcmp(Fmount[i],"/")) foundroot=i; 		if(!strcmp(Fmount[i],"swap")) foundswap=i; 		if(!strcmp(Fmount[i],"/usr")) foundusr=i; 	    } 	    if (!foundroot) { 		complaint = "Please assign mountpoint for '
+argument|/
+literal|'"; 		break; 	    } 	    if (!foundswap) { 		complaint = "Please assign mountpoint for swap"; 		break; 	    } 	    if (!fixit&& !foundusr&& Fsize[foundroot]< 60) { 		complaint = "Please assign mountpoint for /usr"; 		break; 	    } 	    if (dialog_yesno("Last Chance!", 		"Are you sure you want to proceed with the installation?\nLast chance before wiping your hard disk!", -1, -1)) 		break; 	    ret = 0; 	    goto leave; 	case '
+argument|q
+literal|': case '
+argument|Q
+literal|': 	    ret = 1; 	    goto leave; 	case '
+argument|f
+literal|': case '
+argument|F
+literal|': 	    Fdisk(); 	    query_disks(); 	    break; 	case '
+argument|d
+literal|': case '
+argument|D
+literal|'
 end_function
 
+unit|: 	    DiskLabel(); 	    break; 	default: 	    beep(); 	}     } leave:     clear();     for (i = 0; Dname[i]; i++) 	close(Dfd[i]);     return ret; }
 end_unit
 

@@ -209,10 +209,20 @@ case|case
 literal|6
 case|:
 comment|/* Proceed (do nothing special, really) */
+name|fixit
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 case|case
 literal|7
 case|:
+name|dialog_clear
+argument_list|()
+expr_stmt|;
+name|dialog_update
+argument_list|()
+expr_stmt|;
 name|dialog_msgbox
 argument_list|(
 literal|"WARNING!"
