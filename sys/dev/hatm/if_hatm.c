@@ -1560,7 +1560,9 @@ literal|0
 index|]
 argument_list|)
 operator|*
-name|HE_CONFIG_MAX_MBUF_PAGES
+name|sc
+operator|->
+name|mbuf_max_pages
 argument_list|,
 name|M_DEVBUF
 argument_list|,
@@ -8066,6 +8068,23 @@ operator|->
 name|max_tpd
 argument_list|,
 name|HE_CONFIG_TPD_MAXCC
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* external mbuf pages */
+name|kenv_getuint
+argument_list|(
+name|sc
+argument_list|,
+literal|"max_mbuf_pages"
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|mbuf_max_pages
+argument_list|,
+name|HE_CONFIG_MAX_MBUF_PAGES
 argument_list|,
 literal|0
 argument_list|)

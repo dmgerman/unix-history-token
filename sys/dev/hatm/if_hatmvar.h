@@ -1232,6 +1232,9 @@ decl_stmt|;
 name|u_int
 name|mbuf_npages
 decl_stmt|;
+name|u_int
+name|mbuf_max_pages
+decl_stmt|;
 name|struct
 name|mbufx_free
 modifier|*
