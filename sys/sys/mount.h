@@ -1947,9 +1947,10 @@ typedef|typedef
 name|int
 name|vfs_cmount_t
 parameter_list|(
-name|char
+name|struct
+name|mntarg
 modifier|*
-name|path
+name|ma
 parameter_list|,
 name|void
 modifier|*
