@@ -116,19 +116,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|ENCRYPTION
-name|encrypt_init
-argument_list|(
-name|name
-argument_list|,
-name|server
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* ENCRYPTION */
 if|if
 condition|(
 name|UserNameRequested
