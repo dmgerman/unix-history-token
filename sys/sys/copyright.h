@@ -28,7 +28,7 @@ define|#
 directive|define
 name|COPYRIGHT_UCB
 define|\
-value|"Copyright (c) 1982, 1986, 1989, 1991, 1993\n\tThe Regents of the University of California. All rights reserved.\n"
+value|"Copyright (c) 1979, 1980, 1983, 1986, 1988, 1989, 1991, 1992, 1993, 1994\n\tThe Regents of the University of California. All rights reserved.\n"
 end_define
 
 begin_comment
