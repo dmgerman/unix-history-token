@@ -928,7 +928,9 @@ call|(
 name|u_char
 call|)
 argument_list|(
-name|BITS
+operator|(
+name|maxbits
+operator|)
 operator||
 name|block_compress
 argument_list|)
