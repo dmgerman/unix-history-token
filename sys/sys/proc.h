@@ -487,15 +487,27 @@ name|u_int64_t
 name|p_runtime
 decl_stmt|;
 comment|/* Real time in microsec. */
-name|u_quad_t
+name|u_int64_t
+name|p_uu
+decl_stmt|;
+comment|/* Previous user time in microsec. */
+name|u_int64_t
+name|p_su
+decl_stmt|;
+comment|/* Previous system time in microsec. */
+name|u_int64_t
+name|p_iu
+decl_stmt|;
+comment|/* Previous interrupt time in usec. */
+name|u_int64_t
 name|p_uticks
 decl_stmt|;
 comment|/* Statclock hits in user mode. */
-name|u_quad_t
+name|u_int64_t
 name|p_sticks
 decl_stmt|;
 comment|/* Statclock hits in system mode. */
-name|u_quad_t
+name|u_int64_t
 name|p_iticks
 decl_stmt|;
 comment|/* Statclock hits processing intr. */

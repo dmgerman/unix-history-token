@@ -43,18 +43,6 @@ name|rusage
 name|p_cru
 decl_stmt|;
 comment|/* sum of stats for reaped children */
-name|u_int64_t
-name|p_uu
-decl_stmt|;
-comment|/* previous user time (us) */
-name|u_int64_t
-name|p_su
-decl_stmt|;
-comment|/* previous system time (us) */
-name|u_int64_t
-name|p_iu
-decl_stmt|;
-comment|/* previous interrupt time (us) */
 define|#
 directive|define
 name|pstat_endzero
