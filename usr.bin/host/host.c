@@ -43,7 +43,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: host.c,v 1.3 1995/05/30 06:30:50 rgrimes Exp $"
+literal|"$Id: host.c,v 1.3.4.1 1995/08/30 04:06:18 davidg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -357,6 +357,9 @@ name|c
 parameter_list|,
 name|v
 parameter_list|)
+name|int
+name|c
+decl_stmt|;
 name|char
 modifier|*
 modifier|*
@@ -859,6 +862,11 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|c
+operator|>
+literal|1
+operator|&&
+operator|(
 name|strcmp
 argument_list|(
 name|v
@@ -887,6 +895,7 @@ operator|)
 operator|&
 name|addr
 argument_list|)
+operator|)
 condition|)
 name|addr
 operator|=
@@ -1019,6 +1028,13 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+name|strcat
+argument_list|(
+name|cname
+argument_list|,
+literal|"."
+argument_list|)
+expr_stmt|;
 name|oldcname
 operator|=
 name|cname
@@ -2665,6 +2681,12 @@ name|domain
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|type
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 name|HEADER
@@ -4181,6 +4203,9 @@ condition|(
 name|type
 operator|==
 name|T_MX
+operator|&&
+operator|!
+name|verbose
 condition|)
 name|fprintf
 argument_list|(
