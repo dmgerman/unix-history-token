@@ -5308,6 +5308,7 @@ block|}
 ifndef|#
 directive|ifndef
 name|ISP_NO_RIO_FC
+comment|/* 	 * RIO seems to be enabled in 2100s for fw>= 1.17.0. 	 * 	 * I've had some questionable problems with RIO on 2200. 	 * More specifically, on a 2204 I had problems with RIO 	 * on a Linux system where I was dropping commands right 	 * and left. It's not clear to me what the actual problem 	 * was, but it seems safer to only support this on the 	 * 23XX cards. 	 * 	 * I have it disabled if we support a target mode role for 	 * reasons I can't now remember. 	 */
 if|if
 condition|(
 operator|(
@@ -5320,40 +5321,10 @@ operator|)
 operator|==
 literal|0
 operator|&&
-operator|(
-operator|(
-name|IS_2100
-argument_list|(
-name|isp
-argument_list|)
-operator|&&
-name|ISP_FW_REVX
-argument_list|(
-name|isp
-operator|->
-name|isp_fwrev
-argument_list|)
-operator|>=
-name|ISP_FW_REV
-argument_list|(
-literal|1
-argument_list|,
-literal|17
-argument_list|,
-literal|0
-argument_list|)
-operator|)
-operator|||
-name|IS_2200
-argument_list|(
-name|isp
-argument_list|)
-operator|||
 name|IS_23XX
 argument_list|(
 name|isp
 argument_list|)
-operator|)
 condition|)
 block|{
 name|icbp
@@ -15203,6 +15174,11 @@ continue|continue;
 block|}
 else|else
 block|{
+comment|/* 			 * Somebody reachable via isp_handle_other_response 			 * may have updated the response queue pointers for 			 * us. 			 */
+name|oop
+operator|=
+name|optr
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -15227,6 +15203,17 @@ name|QENTRY_LEN
 argument_list|)
 expr_stmt|;
 comment|/* PERF */
+if|if
+condition|(
+name|oop
+operator|!=
+name|optr
+condition|)
+block|{
+goto|goto
+name|out
+goto|;
+block|}
 continue|continue;
 block|}
 comment|/* 			 * After this point, we'll just look at the header as 			 * we don't know how to deal with the rest of the 			 * response. 			 */
@@ -16298,7 +16285,7 @@ argument_list|,
 name|optr
 argument_list|)
 expr_stmt|;
-comment|/* 		 * While we're at it, reqad the requst queue out pointer. 		 */
+comment|/* 		 * While we're at it, read the requst queue out pointer. 		 */
 name|isp
 operator|->
 name|isp_reqodx
@@ -16329,6 +16316,8 @@ name|isp_residx
 operator|=
 name|optr
 expr_stmt|;
+name|out
+label|:
 for|for
 control|(
 name|i
