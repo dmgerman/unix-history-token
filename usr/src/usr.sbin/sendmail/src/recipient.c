@@ -29,7 +29,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)recipient.c	3.25	%G%"
+literal|"@(#)recipient.c	3.26	%G%"
 decl_stmt|;
 end_decl_stmt
 

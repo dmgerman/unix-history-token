@@ -17,7 +17,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)collect.c	3.23	%G%"
+literal|"@(#)collect.c	3.24	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -445,6 +445,13 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|bp
+init|=
+name|buf
+decl_stmt|;
 comment|/* check for end-of-message */
 if|if
 condition|(
@@ -475,6 +482,19 @@ literal|'\0'
 operator|)
 condition|)
 break|break;
+comment|/* check for transparent dot */
+if|if
+condition|(
+name|Smtp
+operator|&&
+operator|*
+name|bp
+operator|==
+literal|'.'
+condition|)
+name|bp
+operator|++
+expr_stmt|;
 ifndef|#
 directive|ifndef
 name|NOTUNIX
@@ -483,7 +503,7 @@ if|if
 condition|(
 name|strncmp
 argument_list|(
-name|buf
+name|bp
 argument_list|,
 literal|"From "
 argument_list|,
@@ -512,7 +532,7 @@ name|i
 operator|=
 name|strlen
 argument_list|(
-name|buf
+name|bp
 argument_list|)
 expr_stmt|;
 name|MsgSize
@@ -521,14 +541,14 @@ name|i
 expr_stmt|;
 name|fputs
 argument_list|(
-name|buf
+name|bp
 argument_list|,
 name|tf
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|buf
+name|bp
 index|[
 name|i
 operator|-

@@ -29,7 +29,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)err.c	3.10	%G%"
+literal|"@(#)err.c	3.11	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -247,16 +247,20 @@ operator|&&
 operator|!
 name|HasXscrpt
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|OutChannel
+argument_list|,
 literal|"%s\r\n"
 argument_list|,
 name|errbuf
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|fprintf
 argument_list|(
+name|OutChannel
+argument_list|,
 literal|"sendmail: %s\n"
 argument_list|,
 operator|&
@@ -271,7 +275,7 @@ name|void
 operator|)
 name|fflush
 argument_list|(
-name|stdout
+name|OutChannel
 argument_list|)
 expr_stmt|;
 name|Errors
@@ -481,8 +485,10 @@ operator|&&
 operator|!
 name|HasXscrpt
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|OutChannel
+argument_list|,
 literal|"%.3s "
 argument_list|,
 name|num
@@ -501,15 +507,19 @@ index|]
 operator|!=
 literal|'\0'
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|OutChannel
+argument_list|,
 literal|"%s... "
 argument_list|,
 name|To
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|OutChannel
+argument_list|,
 name|msg
 argument_list|,
 name|a
@@ -532,13 +542,17 @@ operator|&&
 operator|!
 name|HasXscrpt
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|OutChannel
+argument_list|,
 literal|"\r"
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|OutChannel
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -547,7 +561,7 @@ name|void
 operator|)
 name|fflush
 argument_list|(
-name|stdout
+name|OutChannel
 argument_list|)
 expr_stmt|;
 block|}

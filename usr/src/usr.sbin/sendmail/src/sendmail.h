@@ -21,7 +21,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.47	%G%"
+literal|"@(#)sendmail.h	3.48	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -206,6 +206,17 @@ end_define
 
 begin_comment
 comment|/* reading over data connection */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARPA_SMTP
+value|4
+end_define
+
+begin_comment
+comment|/* running SMTP protocol */
 end_comment
 
 begin_decl_stmt
@@ -1295,6 +1306,75 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
+name|bool
+name|Smtp
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* using SMTP over connection */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|bool
+name|SuprErrs
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* set if we are suppressing errors */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|bool
+name|HasXscrpt
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* set if we have a transcript */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|FILE
+modifier|*
+name|InChannel
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* input connection */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|FILE
+modifier|*
+name|OutChannel
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* output connection */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|FILE
+modifier|*
+name|TempFile
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* mail temp file */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
 name|int
 name|RealUid
 decl_stmt|;
@@ -1372,13 +1452,60 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|long
-name|MsgSize
+name|int
+name|HopCount
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* size of the message in bytes */
+comment|/* hop count */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|int
+name|AliasLevel
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* depth of aliasing */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
+name|OrigFrom
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the From: line read from the message */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
+name|To
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* the target person */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|char
+modifier|*
+name|HostName
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* name of this host for SMTP messages */
 end_comment
 
 begin_decl_stmt
@@ -1407,18 +1534,6 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|FILE
-modifier|*
-name|TempFile
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* mail temp file */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
 name|ADDRESS
 name|From
 decl_stmt|;
@@ -1430,25 +1545,13 @@ end_comment
 
 begin_decl_stmt
 name|EXTERN
-name|char
-modifier|*
-name|To
+name|long
+name|MsgSize
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* the target person */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|int
-name|HopCount
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* hop count */
+comment|/* size of the message in bytes */
 end_comment
 
 begin_decl_stmt
@@ -1460,51 +1563,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* time of this message */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|int
-name|AliasLevel
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* depth of aliasing */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|char
-modifier|*
-name|OrigFrom
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* the From: line read from the message */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|bool
-name|SuprErrs
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* set if we are suppressing errors */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|bool
-name|HasXscrpt
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* set if we have a transcript */
 end_comment
 
 begin_include
