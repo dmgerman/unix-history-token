@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setbuffer.c	5.4 (Berkeley) %G%"
+literal|"@(#)setbuffer.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -77,9 +77,9 @@ name|buf
 argument_list|,
 name|buf
 condition|?
-name|_IONBF
-else|:
 name|_IOFBF
+else|:
+name|_IONBF
 argument_list|,
 name|size
 argument_list|)
