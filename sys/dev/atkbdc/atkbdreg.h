@@ -73,7 +73,7 @@ name|int
 name|unit
 parameter_list|,
 name|int
-name|port
+name|ctlr
 parameter_list|,
 name|int
 name|irq
@@ -97,7 +97,7 @@ modifier|*
 name|kbd
 parameter_list|,
 name|int
-name|port
+name|ctlr
 parameter_list|,
 name|int
 name|irq

@@ -51,6 +51,18 @@ directive|include
 file|<sys/malloc.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/resource.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -141,7 +153,7 @@ name|int
 name|unit
 parameter_list|,
 name|int
-name|port
+name|ctlr
 parameter_list|,
 name|int
 name|irq
@@ -184,7 +196,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|port
+name|ctlr
 expr_stmt|;
 name|args
 index|[
@@ -235,7 +247,7 @@ modifier|*
 name|kbd
 parameter_list|,
 name|int
-name|port
+name|ctlr
 parameter_list|,
 name|int
 name|irq
@@ -279,7 +291,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|port
+name|ctlr
 expr_stmt|;
 name|args
 index|[
@@ -1224,6 +1236,7 @@ operator|*
 operator|)
 name|arg
 decl_stmt|;
+comment|/* data[0]: controller, data[1]: irq */
 comment|/* XXX */
 if|if
 condition|(
@@ -1246,7 +1259,7 @@ return|;
 block|}
 name|kbdc
 operator|=
-name|kbdc_open
+name|atkbdc_open
 argument_list|(
 name|data
 index|[
@@ -1353,6 +1366,7 @@ operator|*
 operator|)
 name|arg
 decl_stmt|;
+comment|/* data[0]: controller, data[1]: irq */
 comment|/* XXX */
 if|if
 condition|(
@@ -1726,7 +1740,7 @@ name|state
 operator|->
 name|kbdc
 operator|=
-name|kbdc_open
+name|atkbdc_open
 argument_list|(
 name|data
 index|[
@@ -1757,12 +1771,9 @@ name|unit
 argument_list|,
 name|flags
 argument_list|,
-name|data
-index|[
 literal|0
-index|]
 argument_list|,
-name|IO_KBDSIZE
+literal|0
 argument_list|)
 expr_stmt|;
 name|bcopy

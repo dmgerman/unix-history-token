@@ -804,15 +804,38 @@ name|kqueue
 typedef|;
 end_typedef
 
+begin_struct_decl
+struct_decl|struct
+name|resource
+struct_decl|;
+end_struct_decl
+
 begin_typedef
 typedef|typedef
 struct|struct
 name|atkbdc_softc
 block|{
-name|int
-name|port
+name|struct
+name|resource
+modifier|*
+name|port0
 decl_stmt|;
-comment|/* base port address */
+comment|/* data port */
+name|struct
+name|resource
+modifier|*
+name|port1
+decl_stmt|;
+comment|/* status port */
+name|bus_space_tag_t
+name|iot
+decl_stmt|;
+name|bus_space_handle_t
+name|ioh0
+decl_stmt|;
+name|bus_space_handle_t
+name|ioh1
+decl_stmt|;
 name|int
 name|command_byte
 decl_stmt|;
@@ -842,12 +865,18 @@ begin_enum
 enum|enum
 name|kbdc_device_ivar
 block|{
-name|KBDC_IVAR_PORT
-block|,
 name|KBDC_IVAR_IRQ
 block|,
 name|KBDC_IVAR_FLAGS
-block|, }
+block|,
+name|KBDC_IVAR_VENDORID
+block|,
+name|KBDC_IVAR_SERIAL
+block|,
+name|KBDC_IVAR_LOGICALID
+block|,
+name|KBDC_IVAR_COMPATID
+block|,  }
 enum|;
 end_enum
 
@@ -880,8 +909,15 @@ parameter_list|(
 name|int
 name|unit
 parameter_list|,
-name|int
-name|port
+name|struct
+name|resource
+modifier|*
+name|port0
+parameter_list|,
+name|struct
+name|resource
+modifier|*
+name|port1
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -897,8 +933,15 @@ name|atkbdc_softc_t
 modifier|*
 name|sc
 parameter_list|,
-name|int
-name|port
+name|struct
+name|resource
+modifier|*
+name|port0
+parameter_list|,
+name|struct
+name|resource
+modifier|*
+name|port1
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -914,10 +957,10 @@ end_function_decl
 
 begin_function_decl
 name|KBDC
-name|kbdc_open
+name|atkbdc_open
 parameter_list|(
 name|int
-name|port
+name|unit
 parameter_list|)
 function_decl|;
 end_function_decl
