@@ -11,6 +11,12 @@ directive|include
 file|<signal.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -53,9 +59,28 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)popen.c	1.2.1.1 %G%"
+literal|"@(#)popen.c	1.2.1.2 %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VMUNIX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|vfork
+value|fork
+end_define
+
+begin_endif
+endif|#
+directive|endif
+endif|VMUNIX
+end_endif
 
 begin_function
 name|FILE
@@ -243,6 +268,10 @@ expr_stmt|;
 name|int
 name|status
 decl_stmt|;
+specifier|extern
+name|int
+name|errno
+decl_stmt|;
 name|f
 operator|=
 name|fileno
@@ -255,6 +284,9 @@ argument_list|(
 name|ptr
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VMUNIX
 name|sighold
 argument_list|(
 name|SIGINT
@@ -270,6 +302,9 @@ argument_list|(
 name|SIGHUP
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+endif|VMUNIX
 while|while
 condition|(
 operator|(
@@ -291,6 +326,10 @@ name|r
 operator|!=
 operator|-
 literal|1
+operator|&&
+name|errno
+operator|!=
+name|EINTR
 condition|)
 empty_stmt|;
 if|if
@@ -305,6 +344,9 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VMUNIX
 name|sigrelse
 argument_list|(
 name|SIGINT
@@ -320,6 +362,9 @@ argument_list|(
 name|SIGHUP
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+endif|VMUNIX
 return|return
 operator|(
 name|status

@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)cmd1.c	2.5 %G%"
+literal|"@(#)cmd1.c	2.2.1.1 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1359,11 +1359,25 @@ end_macro
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|VMUNIX
 name|sigrelse
 argument_list|(
 name|SIGPIPE
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|signal
+argument_list|(
+name|SIGPIPE
+argument_list|,
+name|brokpipe
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|longjmp
 argument_list|(
 name|pipestop

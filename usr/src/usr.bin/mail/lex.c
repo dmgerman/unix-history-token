@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)lex.c	2.7 %G%"
+literal|"@(#)lex.c	2.5.1.1 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -356,6 +356,9 @@ decl_stmt|,
 name|contin
 argument_list|()
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|VMUNIX
 name|sigset
 argument_list|(
 name|SIGCONT
@@ -363,6 +366,9 @@ argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+endif|VMUNIX
 if|if
 condition|(
 name|rcvmode
@@ -452,6 +458,9 @@ argument_list|,
 name|contin
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+endif|VMUNIX
 name|printf
 argument_list|(
 name|prompt
@@ -590,6 +599,9 @@ operator|=
 literal|' '
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|VMUNIX
 name|sigset
 argument_list|(
 name|SIGCONT
@@ -597,6 +609,9 @@ argument_list|,
 name|SIG_DFL
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+endif|VMUNIX
 if|if
 condition|(
 name|execute
@@ -1800,6 +1815,16 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|VMUNIX
+name|s
+operator|=
+name|SIGINT
+expr_stmt|;
+endif|#
+directive|endif
+endif|VMUNIX
 name|noreset
 operator|=
 literal|0
@@ -1936,11 +1961,25 @@ argument_list|(
 literal|"Interrupt\n"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VMUNIX
 name|sigrelse
 argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|signal
+argument_list|(
+name|s
+argument_list|,
+name|stop
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|reset
 argument_list|(
 literal|0

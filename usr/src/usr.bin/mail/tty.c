@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)tty.c	2.2 %G%"
+literal|"@(#)tty.c	2.1.1.1 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -152,6 +152,9 @@ decl_stmt|;
 name|int
 name|errs
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|VMUNIX
 name|savecont
 operator|=
 name|sigset
@@ -161,6 +164,9 @@ argument_list|,
 name|signull
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+endif|VMUNIX
 name|errs
 operator|=
 literal|0
@@ -527,6 +533,9 @@ name|h_seq
 operator|++
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|VMUNIX
 name|sigset
 argument_list|(
 name|SIGCONT
@@ -534,6 +543,9 @@ argument_list|,
 name|savecont
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+endif|VMUNIX
 ifndef|#
 directive|ifndef
 name|TIOCSTI
@@ -825,6 +837,9 @@ condition|)
 goto|goto
 name|redo
 goto|;
+ifdef|#
+directive|ifdef
+name|VMUNIX
 name|sigset
 argument_list|(
 name|SIGCONT
@@ -832,6 +847,9 @@ argument_list|,
 name|ttycont
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+endif|VMUNIX
 while|while
 condition|(
 name|cp2
@@ -871,6 +889,9 @@ name|cp2
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VMUNIX
 name|sigset
 argument_list|(
 name|SIGCONT
@@ -878,6 +899,9 @@ argument_list|,
 name|signull
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+endif|VMUNIX
 if|if
 condition|(
 name|c
@@ -932,12 +956,12 @@ directive|ifndef
 name|TIOCSTI
 if|if
 condition|(
-name|cp2
+name|cp
 operator|==
 name|NOSTR
 operator|||
 operator|*
-name|cp2
+name|cp
 operator|==
 literal|'\0'
 condition|)
@@ -946,9 +970,9 @@ operator|(
 name|src
 operator|)
 return|;
-name|cp
-operator|=
 name|cp2
+operator|=
+name|cp
 expr_stmt|;
 if|if
 condition|(
@@ -1106,6 +1130,12 @@ return|;
 block|}
 end_block
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|VMUNIX
+end_ifdef
+
 begin_comment
 comment|/*  * Receipt continuation.  */
 end_comment
@@ -1136,6 +1166,12 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+endif|VMUNIX
+end_endif
 
 begin_comment
 comment|/*  * Null routine to satisfy  * silly system bug that denies us holding SIGCONT  */
