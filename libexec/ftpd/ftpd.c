@@ -8327,11 +8327,11 @@ argument_list|(
 operator|*
 name|mode
 operator|==
-literal|'w'
+literal|'a'
 condition|?
-literal|"put"
-else|:
 literal|"append"
+else|:
+literal|"put"
 argument_list|,
 name|name
 argument_list|,
