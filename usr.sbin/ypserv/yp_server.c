@@ -88,7 +88,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: yp_server.c,v 1.9 1996/04/28 04:38:52 wpaul Exp $"
+literal|"$Id: yp_server.c,v 1.10 1996/05/31 16:01:51 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1419,16 +1419,26 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
 name|yp_error
 argument_list|(
-literal|"%s"
+literal|"%s: %s"
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|addr
+operator|->
+name|sin_addr
+argument_list|)
 argument_list|,
 name|clnt_spcreateerror
 argument_list|(
-literal|"failed to establish \ callback handle"
+literal|"failed to establish callback handle"
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
 name|ypxfr_resp
 operator|.
 name|status
