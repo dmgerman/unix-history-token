@@ -54,12 +54,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/mutex.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<fs/hpfs/hpfs.h>
 end_include
 
@@ -239,29 +233,14 @@ operator|&
 name|hpfs_hphash_slock
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|hp
-operator|=
-name|HPNOHASH
+name|LIST_FOREACH
 argument_list|(
-name|dev
+argument|hp
 argument_list|,
-name|ino
+argument|HPNOHASH(dev, ino)
+argument_list|,
+argument|h_hash
 argument_list|)
-operator|->
-name|lh_first
-init|;
-name|hp
-condition|;
-name|hp
-operator|=
-name|hp
-operator|->
-name|h_hash
-operator|.
-name|le_next
-control|)
 if|if
 condition|(
 name|ino
@@ -298,7 +277,7 @@ literal|0
 end_if
 
 begin_endif
-unit|struct hpfsnode * hpfs_hphashget(dev, ino) 	dev_t dev; 	lsn_t ino; { 	struct hpfsnode *hp;  loop: 	simple_lock(&hpfs_hphash_slock); 	for (hp = HPNOHASH(dev, ino)->lh_first; hp; hp = hp->h_hash.le_next) { 		if (ino == hp->h_no&& dev == hp->h_dev) { 			LOCKMGR(&hp->h_intlock, LK_EXCLUSIVE | LK_INTERLOCK,&hpfs_hphash_slock, NULL); 			return (hp); 		} 	} 	simple_unlock(&hpfs_hphash_slock); 	return (hp); }
+unit|struct hpfsnode * hpfs_hphashget(dev, ino) 	dev_t dev; 	lsn_t ino; { 	struct hpfsnode *hp;  loop: 	simple_lock(&hpfs_hphash_slock); 	LIST_FOREACH(hp, HPNOHASH(dev, ino), h_hash) { 		if (ino == hp->h_no&& dev == hp->h_dev) { 			LOCKMGR(&hp->h_intlock, LK_EXCLUSIVE | LK_INTERLOCK,&hpfs_hphash_slock, NULL); 			return (hp); 		} 	} 	simple_unlock(&hpfs_hphash_slock); 	return (hp); }
 endif|#
 directive|endif
 end_endif
@@ -345,29 +324,14 @@ operator|&
 name|hpfs_hphash_slock
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|hp
-operator|=
-name|HPNOHASH
+name|LIST_FOREACH
 argument_list|(
-name|dev
+argument|hp
 argument_list|,
-name|ino
+argument|HPNOHASH(dev, ino)
+argument_list|,
+argument|h_hash
 argument_list|)
-operator|->
-name|lh_first
-init|;
-name|hp
-condition|;
-name|hp
-operator|=
-name|hp
-operator|->
-name|h_hash
-operator|.
-name|le_next
-control|)
 block|{
 if|if
 condition|(
