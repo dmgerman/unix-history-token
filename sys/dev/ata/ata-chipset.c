@@ -4955,7 +4955,35 @@ literal|"Intel ICH4"
 block|}
 block|,
 block|{
+name|ATA_I82801DB_1
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0x00
+block|,
+name|ATA_UDMA5
+block|,
+literal|"Intel ICH4"
+block|}
+block|,
+block|{
 name|ATA_I82801EB
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0x00
+block|,
+name|ATA_UDMA5
+block|,
+literal|"Intel ICH5"
+block|}
+block|,
+block|{
+name|ATA_I82801EB_1
 block|,
 literal|0
 block|,
