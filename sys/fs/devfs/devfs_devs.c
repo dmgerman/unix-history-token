@@ -1,11 +1,4 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_define
-define|#
-directive|define
-name|DEBUG
-value|1
-end_define
-
 begin_comment
 comment|/*  * Copyright (c) 2000  *	Poul-Henning Kamp.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * From: FreeBSD: src/sys/miscfs/kernfs/kernfs_vfsops.c 1.36  *  * $FreeBSD$  */
 end_comment
@@ -2302,38 +2295,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_function
-specifier|static
-name|void
-name|devfs_init
-parameter_list|(
-name|void
-modifier|*
-name|junk
-parameter_list|)
-block|{
-name|devfs_rules_init
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_expr_stmt
-name|SYSINIT
-argument_list|(
-name|devfs
-argument_list|,
-name|SI_SUB_DEVFS
-argument_list|,
-name|SI_ORDER_FIRST
-argument_list|,
-name|devfs_init
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 end_unit
 

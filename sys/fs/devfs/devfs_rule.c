@@ -529,10 +529,14 @@ comment|/*  * Rule subsystem SYSINIT hook.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|devfs_rules_init
 parameter_list|(
 name|void
+modifier|*
+name|junk
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -568,6 +572,22 @@ expr_stmt|;
 comment|/* Prevent reaping. */
 block|}
 end_function
+
+begin_expr_stmt
+name|SYSINIT
+argument_list|(
+name|devfs_rules
+argument_list|,
+name|SI_SUB_DEVFS
+argument_list|,
+name|SI_ORDER_FIRST
+argument_list|,
+name|devfs_rules_init
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * Rule subsystem ioctl hook.  */
