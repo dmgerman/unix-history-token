@@ -2070,16 +2070,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|sc_resume_unit
-parameter_list|(
-name|int
-name|unit
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|set_mode
 parameter_list|(
 name|scr_stat
