@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ts.c	6.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ts.c	6.8 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2167,6 +2167,7 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+comment|/* 	 * The uba code uses byte-offset mode if using bdp; 	 * mask off the low bit here. 	 */
 name|i
 operator|=
 name|um
@@ -2174,6 +2175,20 @@ operator|->
 name|um_ubinfo
 operator|&
 literal|0777777
+expr_stmt|;
+if|if
+condition|(
+name|UBAI_BDP
+argument_list|(
+name|um
+operator|->
+name|um_ubinfo
+argument_list|)
+condition|)
+name|i
+operator|&=
+operator|~
+literal|1
 expr_stmt|;
 name|sc
 operator|->
