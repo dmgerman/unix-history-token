@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parser.c	8.2 (Berkeley) %G%"
+literal|"@(#)parser.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2486,10 +2486,28 @@ expr_stmt|;
 break|break;
 comment|/* Handle an empty command like other simple commands.  */
 case|case
+name|TSEMI
+case|:
+comment|/* 		 * An empty command before a ; doesn't make much sense, and 		 * should certainly be disallowed in the case of `if ;'. 		 */
+if|if
+condition|(
+operator|!
+name|redir
+condition|)
+name|synexpect
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+case|case
 name|TNL
 case|:
 case|case
 name|TWORD
+case|:
+case|case
+name|TRP
 case|:
 name|tokpushback
 operator|++
