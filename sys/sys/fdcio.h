@@ -405,6 +405,24 @@ name|FD_SOPTS
 value|_IOW('F', 65, int)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|FD_DEBUG
+value|_IOW('F', 66, int)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
