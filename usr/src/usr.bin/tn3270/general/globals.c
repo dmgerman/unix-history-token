@@ -53,6 +53,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"../ctlr/oia.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"../ctlr/options.h"
 end_include
 
