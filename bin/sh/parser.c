@@ -2579,24 +2579,18 @@ comment|/* Handle an empty command like other simple commands.  */
 case|case
 name|TSEMI
 case|:
-comment|/* 		 * An empty command before a ; doesn't make much sense, and 		 * should certainly be disallowed in the case of `if ;'. 		 */
-if|if
-condition|(
-operator|!
-name|redir
-condition|)
-name|synexpect
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
 case|case
 name|TAND
 case|:
 case|case
 name|TOR
 case|:
+comment|/* 		 * An empty command before a ; doesn't make much sense, and 		 * should certainly be disallowed in the case of `if ;'. 		 */
+if|if
+condition|(
+operator|!
+name|redir
+condition|)
 name|synexpect
 argument_list|(
 operator|-
