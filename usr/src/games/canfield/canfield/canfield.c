@@ -65,12 +65,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<curses.h>
 end_include
 
@@ -78,6 +72,18 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<termios.h>
 end_include
 
 begin_include
@@ -6624,15 +6630,13 @@ literal|2
 operator|&&
 name|ch
 operator|!=
-name|_tty
-operator|.
-name|sg_erase
+name|erasechar
+argument_list|()
 operator|&&
 name|ch
 operator|!=
-name|_tty
-operator|.
-name|sg_kill
+name|killchar
+argument_list|()
 condition|)
 block|{
 if|if
@@ -6664,9 +6668,8 @@ if|if
 condition|(
 name|ch
 operator|==
-name|_tty
-operator|.
-name|sg_erase
+name|erasechar
+argument_list|()
 operator|&&
 name|i
 operator|>
@@ -6690,9 +6693,8 @@ if|if
 condition|(
 name|ch
 operator|==
-name|_tty
-operator|.
-name|sg_kill
+name|killchar
+argument_list|()
 operator|&&
 name|i
 operator|>
