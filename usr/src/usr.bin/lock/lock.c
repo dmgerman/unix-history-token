@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lock.c	5.10 (Berkeley) %G%"
+literal|"@(#)lock.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -118,7 +118,7 @@ value|15
 end_define
 
 begin_decl_stmt
-name|int
+name|void
 name|quit
 argument_list|()
 decl_stmt|,
@@ -312,11 +312,23 @@ operator|)
 operator|<=
 literal|0
 condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"lock: illegal timeout value.\n"
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'p'
@@ -339,6 +351,9 @@ argument_list|)
 operator|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -369,6 +384,9 @@ case|case
 literal|'?'
 case|:
 default|default:
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -438,6 +456,9 @@ argument_list|)
 operator|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"lock: not a terminal?\n"
@@ -465,6 +486,9 @@ name|NULL
 argument_list|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -569,6 +593,9 @@ name|mypw
 condition|)
 block|{
 comment|/* get key and check again */
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"Key: "
@@ -597,6 +624,9 @@ condition|)
 name|quit
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"\nAgain: "
@@ -618,6 +648,9 @@ argument_list|,
 name|stdin
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|putchar
 argument_list|(
 literal|'\n'
@@ -633,6 +666,9 @@ name|s
 argument_list|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"\07lock: passwords didn't match.\n"
@@ -731,6 +767,9 @@ name|otimer
 argument_list|)
 expr_stmt|;
 comment|/* header info */
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"lock: %s on %s. timeout in %d minutes\ntime now is %.20s%s%s"
@@ -756,6 +795,9 @@ init|;
 condition|;
 control|)
 block|{
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"Key: "
@@ -833,6 +875,9 @@ name|s1
 argument_list|)
 condition|)
 break|break;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"\07\n"
@@ -862,14 +907,15 @@ expr_stmt|;
 block|}
 end_function
 
-begin_expr_stmt
-specifier|static
+begin_function
+name|void
 name|hi
-argument_list|()
-block|{ 	struct
+parameter_list|()
+block|{
+name|struct
 name|timeval
 name|timval
-block|;
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -886,6 +932,9 @@ operator|)
 name|NULL
 argument_list|)
 condition|)
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"lock: type in the unlock key. timeout in %ld:%ld minutes\n"
@@ -912,18 +961,21 @@ literal|60
 argument_list|)
 expr_stmt|;
 block|}
-end_expr_stmt
+end_function
 
-begin_expr_stmt
-specifier|static
+begin_function
+name|void
 name|quit
-argument_list|()
+parameter_list|()
 block|{
+operator|(
+name|void
+operator|)
 name|putchar
 argument_list|(
 literal|'\n'
 argument_list|)
-block|;
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -936,15 +988,19 @@ argument_list|,
 operator|&
 name|tty
 argument_list|)
-block|;
+expr_stmt|;
 name|exit
 argument_list|(
 literal|0
 argument_list|)
-block|; }
-specifier|static
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
 name|bye
-argument_list|()
+parameter_list|()
 block|{
 operator|(
 name|void
@@ -958,18 +1014,22 @@ argument_list|,
 operator|&
 name|tty
 argument_list|)
-block|;
+expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"lock: timeout\n"
 argument_list|)
-block|;
+expr_stmt|;
 name|exit
 argument_list|(
 literal|1
 argument_list|)
-block|; }
-end_expr_stmt
+expr_stmt|;
+block|}
+end_function
 
 end_unit
 
