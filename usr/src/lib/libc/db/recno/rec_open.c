@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rec_open.c	5.16 (Berkeley) %G%"
+literal|"@(#)rec_open.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -544,6 +544,22 @@ condition|)
 goto|goto
 name|err
 goto|;
+comment|/* 			 * Kludge -- but we don't know what size an off_t 			 * is or what size a size_t is, although we do 			 * know that the former is signed and the latter 			 * unsigned. 			 */
+if|if
+condition|(
+sizeof|sizeof
+argument_list|(
+name|sb
+operator|.
+name|st_size
+argument_list|)
+operator|>
+sizeof|sizeof
+argument_list|(
+name|size_t
+argument_list|)
+condition|)
+block|{
 if|if
 condition|(
 name|sb
@@ -563,6 +579,30 @@ expr_stmt|;
 goto|goto
 name|err
 goto|;
+block|}
+block|}
+else|else
+block|{
+if|if
+condition|(
+operator|(
+name|size_t
+operator|)
+name|sb
+operator|.
+name|st_size
+operator|>
+name|SIZE_T_MAX
+condition|)
+block|{
+name|errno
+operator|=
+name|EFBIG
+expr_stmt|;
+goto|goto
+name|err
+goto|;
+block|}
 block|}
 if|if
 condition|(
