@@ -3648,52 +3648,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return default port  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|_ftp_default_port
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|struct
-name|servent
-modifier|*
-name|se
-decl_stmt|;
-if|if
-condition|(
-operator|(
-name|se
-operator|=
-name|getservbyname
-argument_list|(
-name|SCHEME_FTP
-argument_list|,
-literal|"tcp"
-argument_list|)
-operator|)
-operator|!=
-name|NULL
-condition|)
-return|return
-name|ntohs
-argument_list|(
-name|se
-operator|->
-name|s_port
-argument_list|)
-return|;
-return|return
-name|FTP_DEFAULT_PORT
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Log on to FTP server  */
 end_comment
 
@@ -3928,7 +3882,12 @@ name|url
 operator|->
 name|port
 operator|==
-name|FTP_DEFAULT_PORT
+name|_fetch_default_port
+argument_list|(
+name|url
+operator|->
+name|scheme
+argument_list|)
 condition|)
 name|e
 operator|=
@@ -4323,8 +4282,12 @@ name|url
 operator|->
 name|port
 operator|=
-name|_ftp_default_port
-argument_list|()
+name|_fetch_default_port
+argument_list|(
+name|url
+operator|->
+name|scheme
+argument_list|)
 expr_stmt|;
 comment|/* try to use previously cached connection */
 if|if
@@ -4486,7 +4449,7 @@ name|purl
 operator|->
 name|scheme
 argument_list|,
-name|SCHEME_FTP
+name|SCHEME_HTTP
 argument_list|)
 expr_stmt|;
 if|if
@@ -4500,8 +4463,12 @@ name|purl
 operator|->
 name|port
 operator|=
-name|_ftp_default_port
-argument_list|()
+name|_fetch_default_proxy_port
+argument_list|(
+name|purl
+operator|->
+name|scheme
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
