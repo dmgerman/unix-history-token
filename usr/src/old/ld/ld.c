@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ld.c	5.8 (Berkeley) %G%"
+literal|"@(#)ld.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7680,7 +7680,9 @@ name|cursym
 operator|.
 name|n_type
 operator|=
-name|N_TEXT
+name|N_EXT
+operator||
+name|N_FN
 expr_stmt|;
 name|cursym
 operator|.
