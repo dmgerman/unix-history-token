@@ -144,26 +144,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm.h>
-end_include
-
-begin_comment
-comment|/* for vtophys */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<vm/pmap.h>
-end_include
-
-begin_comment
-comment|/* for vtophys */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<machine/clock.h>
 end_include
 
