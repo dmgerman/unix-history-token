@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	8.29 (Berkeley) %G%"
+literal|"@(#)collect.c	8.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -436,6 +436,12 @@ name|HasEightBits
 operator|=
 name|FALSE
 expr_stmt|;
+name|e
+operator|->
+name|e_msgsize
+operator|=
+literal|0
+expr_stmt|;
 block|}
 comment|/* 	**  Tell ARPANET to go ahead. 	*/
 if|if
@@ -725,6 +731,11 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|headeronly
+condition|)
 name|e
 operator|->
 name|e_msgsize

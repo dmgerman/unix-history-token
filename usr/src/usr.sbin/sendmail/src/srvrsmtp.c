@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.57 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.58 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.57 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.58 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1562,7 +1562,9 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* now parse ESMTP arguments */
-name|msize
+name|e
+operator|->
+name|e_msgsize
 operator|=
 literal|0
 expr_stmt|;
@@ -1749,7 +1751,9 @@ name|MaxMessageSize
 operator|>
 literal|0
 operator|&&
-name|msize
+name|e
+operator|->
+name|e_msgsize
 operator|>
 name|MaxMessageSize
 condition|)
@@ -1768,7 +1772,9 @@ condition|(
 operator|!
 name|enoughspace
 argument_list|(
-name|msize
+name|e
+operator|->
+name|e_msgsize
 argument_list|)
 condition|)
 block|{
@@ -2990,7 +2996,9 @@ block|}
 ifdef|#
 directive|ifdef
 name|__STDC__
-name|msize
+name|e
+operator|->
+name|e_msgsize
 operator|=
 name|strtoul
 argument_list|(
@@ -3008,7 +3016,9 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|msize
+name|e
+operator|->
+name|e_msgsize
 operator|=
 name|strtol
 argument_list|(
