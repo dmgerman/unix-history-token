@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vdreg.h	1.11	87/06/30	*/
+comment|/*	vdreg.h	1.12	88/05/21	*/
 end_comment
 
 begin_comment
@@ -2122,6 +2122,69 @@ end_define
 
 begin_comment
 comment|/* Write Protect 1=Read Only Sector */
+end_comment
+
+begin_comment
+comment|/* input register assignments for DIOCWFORMAT ioctl */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|dk_op
+value|df_reg[0]
+end_define
+
+begin_comment
+comment|/* opcode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|dk_althdr
+value|df_reg[1]
+end_define
+
+begin_comment
+comment|/* alt. sect. header, in an int! */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|dk_fmtflags
+value|df_reg[2]
+end_define
+
+begin_comment
+comment|/* header format flags */
+end_comment
+
+begin_comment
+comment|/* output register assignments for DIOCWFORMAT ioctl */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|dk_operrsta
+value|df_reg[0]
+end_define
+
+begin_comment
+comment|/* dcb operrsta */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|dk_ecode
+value|df_reg[1]
+end_define
+
+begin_comment
+comment|/* smd-e err_code */
 end_comment
 
 end_unit
