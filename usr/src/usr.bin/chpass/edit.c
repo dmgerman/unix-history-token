@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)edit.c	5.3 (Berkeley) %G%"
+literal|"@(#)edit.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -157,15 +157,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Some editors O_TRUNC the file when they write it out.  This 		 * can result in an empty file with a changed modified time if 		 * the file system is out of space. 		 */
 if|if
 condition|(
-name|end
-operator|.
-name|st_size
-operator|==
-literal|0
-operator|||
 name|begin
 operator|.
 name|st_mtime
@@ -648,6 +641,10 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+name|struct
+name|stat
+name|sb
+decl_stmt|;
 name|FILE
 modifier|*
 name|fp
@@ -684,6 +681,51 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|fstat
+argument_list|(
+name|fileno
+argument_list|(
+name|fp
+argument_list|)
+argument_list|,
+operator|&
+name|sb
+argument_list|)
+condition|)
+name|pw_error
+argument_list|(
+name|tempname
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sb
+operator|.
+name|st_size
+operator|==
+literal|0
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"chpass: corrupted temporary file.\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|bad
+goto|;
+block|}
 while|while
 condition|(
 name|fgets
