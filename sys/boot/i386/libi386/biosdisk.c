@@ -970,6 +970,36 @@ operator|)
 condition|)
 block|{
 comment|/* unit # OK */
+if|if
+condition|(
+operator|(
+name|v86
+operator|.
+name|ecx
+operator|&
+literal|0x3f
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* absurd sector size */
+name|DEBUG
+argument_list|(
+literal|"Invalid geometry for unit %d"
+argument_list|,
+name|bd
+operator|->
+name|bd_unit
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* skip device */
+block|}
 name|bd
 operator|->
 name|bd_flags
