@@ -178,11 +178,15 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|fflag
+decl_stmt|,
 name|iflag
+decl_stmt|,
+name|nflag
 decl_stmt|,
 name|pflag
 decl_stmt|,
-name|fflag
+name|vflag
 decl_stmt|;
 end_decl_stmt
 
@@ -192,8 +196,6 @@ name|int
 name|Rflag
 decl_stmt|,
 name|rflag
-decl_stmt|,
-name|vflag
 decl_stmt|;
 end_decl_stmt
 
@@ -306,7 +308,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"HLPRfiprv"
+literal|"HLPRfinprv"
 argument_list|)
 operator|)
 operator|!=
@@ -377,6 +379,8 @@ literal|1
 expr_stmt|;
 name|iflag
 operator|=
+name|nflag
+operator|=
 literal|0
 expr_stmt|;
 break|break;
@@ -388,6 +392,22 @@ operator|=
 literal|1
 expr_stmt|;
 name|fflag
+operator|=
+name|nflag
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|'n'
+case|:
+name|nflag
+operator|=
+literal|1
+expr_stmt|;
+name|fflag
+operator|=
+name|iflag
 operator|=
 literal|0
 expr_stmt|;

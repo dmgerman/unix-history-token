@@ -43,7 +43,11 @@ name|fflag
 decl_stmt|,
 name|iflag
 decl_stmt|,
+name|nflag
+decl_stmt|,
 name|pflag
+decl_stmt|,
+name|vflag
 decl_stmt|;
 end_decl_stmt
 
