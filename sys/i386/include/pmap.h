@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Derived from hp300 version by Mike Hibler, this version by William  * Jolitz uses a recursive map [a pde points to the page directory] to  * map the page tables using the pagetables themselves. This is done to  * reduce the impact on kernel virtual memory for lots of sparse address  * space, and to reduce the cost of memory to each process.  *  *	from: hp300: @(#)pmap.h	7.2 (Berkeley) 12/16/90  *	from: @(#)pmap.h	7.4 (Berkeley) 5/12/91  * 	$Id: pmap.h,v 1.9 1994/01/27 03:36:14 davidg Exp $  */
+comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and William Jolitz of UUNET Technologies Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Derived from hp300 version by Mike Hibler, this version by William  * Jolitz uses a recursive map [a pde points to the page directory] to  * map the page tables using the pagetables themselves. This is done to  * reduce the impact on kernel virtual memory for lots of sparse address  * space, and to reduce the cost of memory to each process.  *  *	from: hp300: @(#)pmap.h	7.2 (Berkeley) 12/16/90  *	from: @(#)pmap.h	7.4 (Berkeley) 5/12/91  * 	$Id: pmap.h,v 1.10 1994/01/31 04:19:00 davidg Exp $  */
 end_comment
 
 begin_ifndef
@@ -352,29 +352,39 @@ begin_comment
 comment|/* access from User mode (UPL) */
 end_comment
 
-begin_typedef
-typedef|typedef
-name|struct
-name|pde
-name|pd_entry_t
-typedef|;
-end_typedef
+begin_comment
+comment|/* typedef struct pde	pd_entry_t;	*/
+end_comment
 
 begin_comment
 comment|/* page directory entry */
 end_comment
 
-begin_typedef
-typedef|typedef
-name|struct
-name|pte
-name|pt_entry_t
-typedef|;
-end_typedef
+begin_comment
+comment|/* typedef struct pte	pt_entry_t;	*/
+end_comment
 
 begin_comment
 comment|/* Mach page table entry */
 end_comment
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|int
+modifier|*
+name|pd_entry_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|int
+modifier|*
+name|pt_entry_t
+typedef|;
+end_typedef
 
 begin_comment
 comment|/*  * NKPDE controls the virtual space of the kernel, what ever is left, minus  * the alternate page table area is given to the user (NUPDE)  */
@@ -491,7 +501,7 @@ begin_define
 define|#
 directive|define
 name|KSTKPTEOFF
-value|(NBPG/sizeof(struct pde)-UPAGES)
+value|(NBPG/sizeof(pd_entry_t)-UPAGES)
 end_define
 
 begin_comment
@@ -502,7 +512,7 @@ begin_define
 define|#
 directive|define
 name|PDESIZE
-value|sizeof(struct pde)
+value|sizeof(pd_entry_t)
 end_define
 
 begin_comment
@@ -513,7 +523,7 @@ begin_define
 define|#
 directive|define
 name|PTESIZE
-value|sizeof(struct pte)
+value|sizeof(pt_entry_t)
 end_define
 
 begin_comment
@@ -532,8 +542,7 @@ end_ifdef
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|pte
+name|pt_entry_t
 name|PTmap
 index|[]
 decl_stmt|,
@@ -546,8 +555,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|pde
+name|pd_entry_t
 name|PTD
 index|[]
 decl_stmt|,
@@ -627,7 +635,7 @@ name|vtophys
 parameter_list|(
 name|va
 parameter_list|)
-value|(i386_ptob(vtopte(va)->pg_pfnum) | ((int)(va)& PGOFSET))
+value|(((int) (*vtopte(va))&PG_FRAME) | ((int)(va)& PGOFSET))
 end_define
 
 begin_define
@@ -667,7 +675,7 @@ name|avtophys
 parameter_list|(
 name|va
 parameter_list|)
-value|(i386_ptob(avtopte(va)->pg_pfnum) | ((int)(va)& PGOFSET))
+value|(((int) (*avtopte(va))&PG_FRAME) | ((int)(va)& PGOFSET))
 end_define
 
 begin_comment
@@ -1020,8 +1028,7 @@ end_function_decl
 begin_function_decl
 specifier|extern
 specifier|inline
-name|struct
-name|pte
+name|pt_entry_t
 modifier|*
 name|pmap_pte
 parameter_list|(
