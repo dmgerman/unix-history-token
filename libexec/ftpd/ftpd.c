@@ -11303,6 +11303,10 @@ modifier|*
 name|name
 parameter_list|)
 block|{
+name|char
+modifier|*
+name|s
+decl_stmt|;
 name|LOGCMD
 argument_list|(
 literal|"mkdir"
@@ -11345,13 +11349,40 @@ name|name
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+if|if
+condition|(
+operator|(
+name|s
+operator|=
+name|doublequote
+argument_list|(
+name|name
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|fatalerror
+argument_list|(
+literal|"Ran out of memory."
+argument_list|)
+expr_stmt|;
 name|reply
 argument_list|(
 literal|257
 argument_list|,
-literal|"MKD command successful."
+literal|"\"%s\" directory created."
+argument_list|,
+name|s
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|void
 name|removedir
