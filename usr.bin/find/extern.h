@@ -398,6 +398,12 @@ end_decl_stmt
 
 begin_decl_stmt
 name|exec_f
+name|f_depth
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|exec_f
 name|f_empty
 decl_stmt|;
 end_decl_stmt

@@ -224,7 +224,7 @@ literal|"-depth"
 block|,
 name|c_depth
 block|,
-name|f_always_true
+name|f_depth
 block|,
 literal|0
 block|}
