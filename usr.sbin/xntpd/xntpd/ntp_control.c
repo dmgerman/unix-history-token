@@ -3,6 +3,10 @@ begin_comment
 comment|/*  * ntp_control.c - respond to control messages and send async traps  */
 end_comment
 
+begin_comment
+comment|/*  * $FreeBSD$  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -8057,6 +8061,10 @@ literal|','
 operator|||
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|reqpt
 argument_list|)
@@ -8195,6 +8203,10 @@ name|reqend
 operator|&&
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp
 argument_list|)
@@ -8266,6 +8278,10 @@ name|reqend
 operator|&&
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|cp
 argument_list|)
@@ -8284,6 +8300,7 @@ name|cp
 operator|!=
 literal|','
 condition|)
+block|{
 operator|*
 name|tp
 operator|++
@@ -8292,6 +8309,23 @@ operator|*
 name|cp
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|tp
+operator|>=
+name|buf
+operator|+
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|cp
@@ -8308,8 +8342,16 @@ literal|'\0'
 expr_stmt|;
 while|while
 condition|(
+name|tp
+operator|!=
+name|buf
+operator|&&
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 operator|(
 name|tp
