@@ -338,6 +338,10 @@ comment|/* 86 - EILSEQ */
 literal|"Attribute not found"
 block|,
 comment|/* 87 - ENOATTR */
+comment|/* General */
+literal|"Programming error"
+block|,
+comment|/* 88 - EDOFUS */
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -1149,6 +1149,17 @@ begin_comment
 comment|/* Must be equal largest errno */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|EDOFUS
+value|88
+end_define
+
+begin_comment
+comment|/* Programming error */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
