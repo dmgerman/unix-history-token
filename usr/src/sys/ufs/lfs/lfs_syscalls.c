@@ -291,7 +291,7 @@ condition|)
 block|{
 name|free
 argument_list|(
-name|blkp
+name|start
 argument_list|,
 name|M_SEGMENT
 argument_list|)
@@ -314,12 +314,7 @@ name|um_lfs
 expr_stmt|;
 name|bsize
 operator|=
-name|VFSTOUFS
-argument_list|(
-name|mntp
-argument_list|)
-operator|->
-name|um_lfs
+name|fs
 operator|->
 name|lfs_bsize
 expr_stmt|;
@@ -491,7 +486,7 @@ name|bp
 operator|->
 name|b_un
 operator|.
-name|b_daddr
+name|b_addr
 argument_list|,
 name|bsize
 argument_list|)
@@ -505,7 +500,7 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-name|blkp
+name|start
 argument_list|,
 name|M_SEGMENT
 argument_list|)
@@ -576,7 +571,7 @@ condition|)
 block|{
 name|free
 argument_list|(
-name|inop
+name|start
 argument_list|,
 name|M_SEGMENT
 argument_list|)
