@@ -305,18 +305,39 @@ end_define
 begin_define
 define|#
 directive|define
+name|ST_FP_RESTORE
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
 name|UTH_NOCHANGE
 value|(-1)
 end_define
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__ASM__
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|int
+name|utrap_entry_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
+modifier|*
+name|utrap_handler_t
+typedef|;
+end_typedef
 
 begin_endif
-unit|typedef	int utrap_entry_t; typedef void *utrap_handler_t;
 endif|#
 directive|endif
 end_endif
