@@ -1308,6 +1308,42 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KDB
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DEBUGGER
+parameter_list|(
+name|x
+parameter_list|)
+value|kdb_enter(x)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|DEBUGGER
+parameter_list|(
+name|x
+parameter_list|)
+value|printf("mac_test: %x\n", (x))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Policy module operations.  */
 end_comment
@@ -1974,7 +2010,7 @@ operator|==
 name|EXMAGIC
 condition|)
 block|{
-name|kdb_enter
+name|DEBUGGER
 argument_list|(
 literal|"mac_test_destroy_bpfdesc: dup destroy"
 argument_list|)
@@ -1982,7 +2018,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|kdb_enter
+name|DEBUGGER
 argument_list|(
 literal|"mac_test_destroy_bpfdesc: corrupted label"
 argument_list|)
@@ -2046,7 +2082,7 @@ operator|==
 name|EXMAGIC
 condition|)
 block|{
-name|kdb_enter
+name|DEBUGGER
 argument_list|(
 literal|"mac_test_destroy_cred: dup destroy"
 argument_list|)
@@ -2054,7 +2090,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|kdb_enter
+name|DEBUGGER
 argument_list|(
 literal|"mac_test_destroy_cred: corrupted label"
 argument_list|)
@@ -2118,7 +2154,7 @@ operator|==
 name|EXMAGIC
 condition|)
 block|{
-name|kdb_enter
+name|DEBUGGER
 argument_list|(
 literal|"mac_test_destroy_devfsdirent: dup destroy"
 argument_list|)
@@ -2126,7 +2162,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|kdb_enter
+name|DEBUGGER
 argument_list|(
 literal|"mac_test_destroy_devfsdirent: corrupted label"
 argument_list|)
@@ -2190,7 +2226,7 @@ operator|==
 name|EXMAGIC
 condition|)
 block|{
-name|kdb_enter
+name|DEBUGGER
 argument_list|(
 literal|"mac_test_destroy_ifnet: dup destroy"
 argument_list|)
@@ -2198,7 +2234,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|kdb_enter
+name|DEBUGGER
 argument_list|(
 literal|"mac_test_destroy_ifnet: corrupted label"
 argument_list|)
@@ -2262,7 +2298,7 @@ operator|==
 name|EXMAGIC
 condition|)
 block|{
-name|kdb_enter
+name|DEBUGGER
 argument_list|(
 literal|"mac_test_destroy_inpcb: dup destroy"
 argument_list|)
@@ -2270,7 +2306,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|kdb_enter
+name|DEBUGGER
 argument_list|(
 literal|"mac_test_destroy_inpcb: corrupted label"
 argument_list|)
@@ -2334,7 +2370,7 @@ operator|==
 name|EXMAGIC
 condition|)
 block|{
-name|kdb_enter
+name|DEBUGGER
 argument_list|(
 literal|"mac_test_destroy_ipq: dup destroy"
 argument_list|)
@@ -2342,7 +2378,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|kdb_enter
+name|DEBUGGER
 argument_list|(
 literal|"mac_test_destroy_ipq: corrupted label"
 argument_list|)
@@ -2414,7 +2450,7 @@ operator|==
 name|EXMAGIC
 condition|)
 block|{
-name|kdb_enter
+name|DEBUGGER
 argument_list|(
 literal|"mac_test_destroy_mbuf: dup destroy"
 argument_list|)
@@ -2422,7 +2458,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|kdb_enter
+name|DEBUGGER
 argument_list|(
 literal|"mac_test_destroy_mbuf: corrupted label"
 argument_list|)
@@ -2488,7 +2524,7 @@ operator|==
 name|EXMAGIC
 condition|)
 block|{
-name|kdb_enter
+name|DEBUGGER
 argument_list|(
 literal|"mac_test_destroy_mount: dup destroy"
 argument_list|)
@@ -2496,7 +2532,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|kdb_enter
+name|DEBUGGER
 argument_list|(
 literal|"mac_test_destroy_mount: corrupted label"
 argument_list|)
@@ -2562,7 +2598,7 @@ operator|==
 name|EXMAGIC
 condition|)
 block|{
-name|kdb_enter
+name|DEBUGGER
 argument_list|(
 literal|"mac_test_destroy_mount_fslabel: dup destroy"
 argument_list|)
@@ -2570,7 +2606,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|kdb_enter
+name|DEBUGGER
 argument_list|(
 literal|"mac_test_destroy_mount_fslabel: corrupted label"
 argument_list|)
@@ -2636,7 +2672,7 @@ operator|==
 name|EXMAGIC
 condition|)
 block|{
-name|kdb_enter
+name|DEBUGGER
 argument_list|(
 literal|"mac_test_destroy_socket: dup destroy"
 argument_list|)
@@ -2644,7 +2680,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|kdb_enter
+name|DEBUGGER
 argument_list|(
 literal|"mac_test_destroy_socket: corrupted label"
 argument_list|)
@@ -2710,7 +2746,7 @@ operator|==
 name|EXMAGIC
 condition|)
 block|{
-name|kdb_enter
+name|DEBUGGER
 argument_list|(
 literal|"mac_test_destroy_socket_peerlabel: dup destroy"
 argument_list|)
@@ -2718,7 +2754,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|kdb_enter
+name|DEBUGGER
 argument_list|(
 literal|"mac_test_destroy_socket_peerlabel: corrupted label"
 argument_list|)
@@ -2784,7 +2820,7 @@ operator|==
 name|EXMAGIC
 condition|)
 block|{
-name|kdb_enter
+name|DEBUGGER
 argument_list|(
 literal|"mac_test_destroy_pipe: dup destroy"
 argument_list|)
@@ -2792,7 +2828,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|kdb_enter
+name|DEBUGGER
 argument_list|(
 literal|"mac_test_destroy_pipe: corrupted label"
 argument_list|)
@@ -2858,7 +2894,7 @@ operator|==
 name|EXMAGIC
 condition|)
 block|{
-name|kdb_enter
+name|DEBUGGER
 argument_list|(
 literal|"mac_test_destroy_proc: dup destroy"
 argument_list|)
@@ -2866,7 +2902,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|kdb_enter
+name|DEBUGGER
 argument_list|(
 literal|"mac_test_destroy_proc: corrupted label"
 argument_list|)
@@ -2930,7 +2966,7 @@ operator|==
 name|EXMAGIC
 condition|)
 block|{
-name|kdb_enter
+name|DEBUGGER
 argument_list|(
 literal|"mac_test_destroy_vnode: dup destroy"
 argument_list|)
@@ -2938,7 +2974,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|kdb_enter
+name|DEBUGGER
 argument_list|(
 literal|"mac_test_destroy_vnode: corrupted label"
 argument_list|)
