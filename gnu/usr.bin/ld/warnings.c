@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: warnings.c,v 1.7 1994/06/14 12:45:41 csgr Exp $  */
+comment|/*  * $Id: warnings.c,v 1.8 1994/06/15 22:40:00 rich Exp $  */
 end_comment
 
 begin_include
@@ -844,9 +844,6 @@ comment|/* All done with them.  */
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/* Static vars for do_warnings and subroutines of it */
 end_comment
@@ -860,17 +857,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* List unresolved refs */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|list_warning_symbols
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* List warning syms */
 end_comment
 
 begin_decl_stmt
@@ -949,13 +935,13 @@ comment|/*  * Helper routines for do_file_warnings.  */
 end_comment
 
 begin_comment
-comment|/* Return an integer less than, equal to, or greater than 0 as per the    relation between the two relocation entries.  Used by qsort.  */
+comment|/*  * Return an integer less than, equal to, or greater than 0 as per the  * relation between the two relocation entries.  Used by qsort.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|relocation_entries_relation
+name|reloc_cmp
 parameter_list|(
 name|rel1
 parameter_list|,
@@ -988,7 +974,7 @@ block|}
 end_block
 
 begin_comment
-comment|/* Moves to the next debugging symbol in the file.  USE_DATA_SYMBOLS    determines the type of the debugging symbol to look for (DSLINE or    SLINE).  STATE_POINTER keeps track of the old and new locatiosn in    the file.  It assumes that state_pointer[1] is valid; ie    that it.sym points into some entry in the symbol table.  If    state_pointer[1].sym == 0, this routine should not be called.  */
+comment|/*  * Moves to the next debugging symbol in the file.  USE_DATA_SYMBOLS  * determines the type of the debugging symbol to look for (DSLINE or  * SLINE).  STATE_POINTER keeps track of the old and new locatiosn in  * the file.  It assumes that state_pointer[1] is valid; ie  * that it.sym points into some entry in the symbol table.  If  * state_pointer[1].sym == 0, this routine should not be called.  */
 end_comment
 
 begin_function
@@ -1053,7 +1039,7 @@ decl_stmt|;
 name|struct
 name|localsymbol
 modifier|*
-name|endp
+name|lspend
 init|=
 name|entry
 operator|->
@@ -1096,7 +1082,7 @@ operator|->
 name|sym
 operator|)
 operator|<
-name|endp
+name|lspend
 condition|)
 block|{
 name|struct
@@ -1248,7 +1234,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Create a structure to save the state of a scan through the debug symbols.  * USE_DATA_SYMBOLS is set if we should be scanning for DSLINE's instead of  * SLINE's.  entry is the file entry which points at the symbols to use.  */
+comment|/*  * Create a structure to save the state of a scan through the debug symbols.  * USE_DATA_SYMBOLS is set if we should be scanning for DSLINE's instead of  * SLINE's. ENTRY is the file entry which points at the symbols to use.  */
 end_comment
 
 begin_function
@@ -1271,16 +1257,31 @@ modifier|*
 name|entry
 decl_stmt|;
 block|{
+specifier|register
 name|struct
 name|localsymbol
 modifier|*
 name|lsp
+decl_stmt|,
+modifier|*
+name|lspend
 decl_stmt|;
 name|struct
 name|line_debug_entry
 modifier|*
 name|state_pointer
-init|=
+decl_stmt|,
+modifier|*
+name|current
+decl_stmt|,
+modifier|*
+name|next
+decl_stmt|,
+modifier|*
+name|source
+decl_stmt|;
+name|state_pointer
+operator|=
 operator|(
 expr|struct
 name|line_debug_entry
@@ -1292,34 +1293,38 @@ literal|3
 operator|*
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|line_debug_entry
-argument_list|)
-argument_list|)
-decl_stmt|;
-specifier|register
-name|struct
-name|line_debug_entry
-modifier|*
-name|current
-init|=
+operator|*
 name|state_pointer
-decl_stmt|,
-modifier|*
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|current
+operator|=
+name|state_pointer
+operator|,
 name|next
-init|=
+operator|=
 name|state_pointer
 operator|+
 literal|1
-decl_stmt|,
-modifier|*
+operator|,
 name|source
-init|=
+operator|=
 name|state_pointer
 operator|+
 literal|2
-decl_stmt|;
+expr_stmt|;
 comment|/* Used to store source file */
+name|lspend
+operator|=
+name|entry
+operator|->
+name|symbols
+operator|+
+name|entry
+operator|->
+name|nsymbols
+expr_stmt|;
 for|for
 control|(
 name|lsp
@@ -1330,13 +1335,7 @@ name|symbols
 init|;
 name|lsp
 operator|<
-name|entry
-operator|->
-name|symbols
-operator|+
-name|entry
-operator|->
-name|nsymbols
+name|lspend
 condition|;
 name|lsp
 operator|++
@@ -1358,13 +1357,7 @@ if|if
 condition|(
 name|lsp
 operator|>=
-name|entry
-operator|->
-name|symbols
-operator|+
-name|entry
-operator|->
-name|nsymbols
+name|lspend
 condition|)
 block|{
 comment|/* I believe this translates to "We lose" */
@@ -1622,7 +1615,7 @@ name|current
 operator|->
 name|line
 return|;
-comment|/* Go back to the beginning if we've already passed it.  */
+comment|/* Go back to the beginning if we've already passed it. */
 if|if
 condition|(
 name|current
@@ -1696,7 +1689,7 @@ name|tmp_pointer
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* If we're still in a bad way, return -1, meaning invalid line.  */
+comment|/* If we're still in a bad way, return -1, meaning invalid line. */
 if|if
 condition|(
 name|current
@@ -1815,81 +1808,26 @@ block|{
 name|struct
 name|relocation_info
 modifier|*
-name|reloc
+name|rp
 decl_stmt|,
 modifier|*
-name|reloc_start
-init|=
-name|data_segment
-condition|?
-name|entry
-operator|->
-name|datarel
-else|:
-name|entry
-operator|->
-name|textrel
-decl_stmt|;
-name|int
-name|reloc_size
-init|=
-operator|(
-name|data_segment
-condition|?
-name|entry
-operator|->
-name|ndatarel
-else|:
-name|entry
-operator|->
-name|ntextrel
-operator|)
+name|erp
 decl_stmt|;
 name|int
 name|start_of_segment
-init|=
-operator|(
-name|data_segment
-condition|?
-name|entry
-operator|->
-name|data_start_address
-else|:
-name|entry
-operator|->
-name|text_start_address
-operator|)
 decl_stmt|;
 name|struct
 name|localsymbol
 modifier|*
 name|start_of_syms
-init|=
-name|entry
-operator|->
-name|symbols
 decl_stmt|;
 name|struct
 name|line_debug_entry
 modifier|*
 name|state_pointer
-init|=
-name|init_debug_scan
-argument_list|(
-name|data_segment
-operator|!=
-literal|0
-argument_list|,
-name|entry
-argument_list|)
-decl_stmt|;
-specifier|register
-name|struct
-name|line_debug_entry
+decl_stmt|,
 modifier|*
 name|current
-init|=
-name|state_pointer
 decl_stmt|;
 comment|/* Assigned to generally static values; should not be written into.  */
 name|char
@@ -1904,37 +1842,101 @@ decl_stmt|;
 name|int
 name|invalidate_line_number
 decl_stmt|;
+name|rp
+operator|=
+name|data_segment
+condition|?
+name|entry
+operator|->
+name|datarel
+else|:
+name|entry
+operator|->
+name|textrel
+expr_stmt|;
+name|erp
+operator|=
+name|data_segment
+condition|?
+operator|(
+name|rp
+operator|+
+name|entry
+operator|->
+name|ndatarel
+operator|)
+else|:
+operator|(
+name|rp
+operator|+
+name|entry
+operator|->
+name|ntextrel
+operator|)
+expr_stmt|;
+name|start_of_syms
+operator|=
+name|entry
+operator|->
+name|symbols
+expr_stmt|;
+name|start_of_segment
+operator|=
+operator|(
+name|data_segment
+condition|?
+name|entry
+operator|->
+name|data_start_address
+else|:
+name|entry
+operator|->
+name|text_start_address
+operator|)
+expr_stmt|;
+name|state_pointer
+operator|=
+name|init_debug_scan
+argument_list|(
+name|data_segment
+operator|!=
+literal|0
+argument_list|,
+name|entry
+argument_list|)
+expr_stmt|;
+name|current
+operator|=
+name|state_pointer
+expr_stmt|;
 comment|/* 	 * We need to sort the relocation info here.  Sheesh, so much effort 	 * for one lousy error optimization. 	 */
 name|qsort
 argument_list|(
-name|reloc_start
+name|rp
 argument_list|,
-name|reloc_size
+name|erp
+operator|-
+name|rp
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|relocation_info
+name|rp
+index|[
+literal|0
+index|]
 argument_list|)
 argument_list|,
-name|relocation_entries_relation
+name|reloc_cmp
 argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|reloc
-operator|=
-name|reloc_start
 init|;
-name|reloc
+name|rp
 operator|<
-operator|(
-name|reloc_start
-operator|+
-name|reloc_size
-operator|)
+name|erp
 condition|;
-name|reloc
+name|rp
 operator|++
 control|)
 block|{
@@ -1949,13 +1951,13 @@ name|symbol
 modifier|*
 name|g
 decl_stmt|;
-comment|/* 		 * If the relocation isn't resolved through a symbol, 		 * continue 		 */
+comment|/* 		 * If the relocation isn't resolved through a symbol, continue. 		 */
 if|if
 condition|(
 operator|!
 name|RELOC_EXTERN_P
 argument_list|(
-name|reloc
+name|rp
 argument_list|)
 condition|)
 continue|continue;
@@ -1968,7 +1970,7 @@ name|symbols
 index|[
 name|RELOC_SYMBOL
 argument_list|(
-name|reloc
+name|rp
 argument_list|)
 index|]
 expr_stmt|;
@@ -2040,7 +2042,7 @@ operator|&&
 name|list_unresolved_refs
 condition|)
 block|{
-comment|/* Mark as being noted by relocation warning pass.  */
+comment|/* Mark as being noted by relocation warning pass. */
 name|SET_BIT
 argument_list|(
 name|nlist_bitvector
@@ -2104,6 +2106,18 @@ operator|!
 name|g
 operator|->
 name|warning
+condition|)
+continue|continue;
+if|if
+condition|(
+name|BIT_SET_P
+argument_list|(
+name|nlist_bitvector
+argument_list|,
+name|lsp
+operator|-
+name|start_of_syms
+argument_list|)
 condition|)
 continue|continue;
 comment|/* Mark as being noted by relocation warning pass.  */
@@ -2203,7 +2217,7 @@ name|address_to_line
 argument_list|(
 name|RELOC_ADDRESS
 argument_list|(
-name|reloc
+name|rp
 argument_list|)
 operator|+
 name|start_of_segment
@@ -2297,40 +2311,7 @@ name|outfile
 decl_stmt|;
 block|{
 name|int
-name|number_of_syms
-init|=
-name|entry
-operator|->
-name|nsymbols
-decl_stmt|;
-name|unsigned
-name|char
-modifier|*
-name|nlist_bitvector
-init|=
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
-name|alloca
-argument_list|(
-operator|(
-name|number_of_syms
-operator|>>
-literal|3
-operator|)
-operator|+
-literal|1
-argument_list|)
-decl_stmt|;
-name|struct
-name|line_debug_entry
-modifier|*
-name|text_scan
-decl_stmt|,
-modifier|*
-name|data_scan
+name|nsym
 decl_stmt|;
 name|int
 name|i
@@ -2348,12 +2329,34 @@ decl_stmt|;
 name|int
 name|dont_allow_symbol_name
 decl_stmt|;
-name|bzero
-argument_list|(
+name|u_char
+modifier|*
 name|nlist_bitvector
-argument_list|,
+decl_stmt|;
+name|struct
+name|line_debug_entry
+modifier|*
+name|text_scan
+decl_stmt|,
+modifier|*
+name|data_scan
+decl_stmt|;
+name|nsym
+operator|=
+name|entry
+operator|->
+name|nsymbols
+expr_stmt|;
+name|nlist_bitvector
+operator|=
 operator|(
-name|number_of_syms
+name|u_char
+operator|*
+operator|)
+name|alloca
+argument_list|(
+operator|(
+name|nsym
 operator|>>
 literal|3
 operator|)
@@ -2361,18 +2364,20 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Read in the files strings if they aren't available */
-if|if
-condition|(
-operator|!
-name|entry
-operator|->
-name|strings
-condition|)
-block|{
-name|int
-name|desc
-decl_stmt|;
+name|bzero
+argument_list|(
+name|nlist_bitvector
+argument_list|,
+operator|(
+name|nsym
+operator|>>
+literal|3
+operator|)
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* Read in the strings */
 name|entry
 operator|->
 name|strings
@@ -2388,21 +2393,16 @@ operator|->
 name|string_size
 argument_list|)
 expr_stmt|;
-name|desc
-operator|=
+name|read_entry_strings
+argument_list|(
 name|file_open
 argument_list|(
 name|entry
 argument_list|)
-expr_stmt|;
-name|read_entry_strings
-argument_list|(
-name|desc
 argument_list|,
 name|entry
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -2467,7 +2467,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|number_of_syms
+name|nsym
 condition|;
 name|i
 operator|++
@@ -2476,7 +2476,7 @@ block|{
 name|struct
 name|nlist
 modifier|*
-name|s
+name|np
 decl_stmt|;
 name|symbol
 modifier|*
@@ -2493,7 +2493,7 @@ index|]
 operator|.
 name|symbol
 expr_stmt|;
-name|s
+name|np
 operator|=
 operator|&
 name|entry
@@ -2507,14 +2507,6 @@ name|nzlist
 operator|.
 name|nlist
 expr_stmt|;
-comment|/* 		 * XXX This is a temporary fence to correct an 		 * incorrect assumption made in the case of symbols 		 * which do not have entries in the (global) 		 * symbol table. 		 */
-if|if
-condition|(
-name|g
-operator|==
-name|NULL
-condition|)
-continue|continue;
 if|if
 condition|(
 name|g
@@ -2526,7 +2518,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|s
+name|np
 operator|->
 name|n_type
 operator|&
@@ -2536,7 +2528,7 @@ operator|&&
 operator|!
 name|SET_ELEMENT_P
 argument_list|(
-name|s
+name|np
 operator|->
 name|n_type
 argument_list|)
@@ -2593,7 +2585,7 @@ literal|"Definition of symbol `%s' (multiply defined)"
 expr_stmt|;
 switch|switch
 condition|(
-name|s
+name|np
 operator|->
 name|n_type
 condition|)
@@ -2607,7 +2599,7 @@ name|line_number
 operator|=
 name|address_to_line
 argument_list|(
-name|s
+name|np
 operator|->
 name|n_value
 argument_list|,
@@ -2633,7 +2625,7 @@ name|line_number
 operator|=
 name|address_to_line
 argument_list|(
-name|s
+name|np
 operator|->
 name|n_value
 argument_list|,
@@ -2681,7 +2673,7 @@ condition|)
 continue|continue;
 name|errfmt
 operator|=
-literal|"First set element definition of symbol %s (multiply defined)"
+literal|"First set element definition of symbol `%s' (multiply defined)"
 expr_stmt|;
 name|line_number
 operator|=
@@ -2690,15 +2682,15 @@ literal|1
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|warnx
 argument_list|(
-literal|"multiply defined: %s, type %#x\n"
+literal|"Unexpected multiple definitions of symbol `%s', type %#x\n"
 argument_list|,
 name|g
 operator|->
 name|name
 argument_list|,
-name|s
+name|np
 operator|->
 name|n_type
 argument_list|)
@@ -2758,12 +2750,12 @@ name|MAX_UREFS_PRINTED
 condition|)
 name|errfmt
 operator|=
-literal|"More undefined \"%s\" refs follow"
+literal|"More undefined `%s' refs follow"
 expr_stmt|;
 else|else
 name|errfmt
 operator|=
-literal|"Undefined symbol \"%s\" referenced"
+literal|"Undefined symbol `%s' referenced"
 expr_stmt|;
 name|line_number
 operator|=
@@ -2776,13 +2768,73 @@ if|if
 condition|(
 name|g
 operator|->
+name|def_lsp
+operator|&&
+name|g
+operator|->
+name|def_lsp
+operator|->
+name|entry
+operator|!=
+name|entry
+operator|&&
+operator|!
+operator|(
+name|entry
+operator|->
+name|flags
+operator|&
+name|E_DYNAMIC
+operator|)
+operator|&&
+name|g
+operator|->
+name|def_lsp
+operator|->
+name|entry
+operator|->
+name|flags
+operator|&
+name|E_SECONDCLASS
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|outfile
+argument_list|,
+literal|"%s: Undefined symbol `%s' referenced (use %s ?)\n"
+argument_list|,
+name|entry
+operator|->
+name|filename
+argument_list|,
+name|g
+operator|->
+name|name
+argument_list|,
+name|g
+operator|->
+name|def_lsp
+operator|->
+name|entry
+operator|->
+name|local_sym_name
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+elseif|else
+if|if
+condition|(
+name|g
+operator|->
 name|warning
 condition|)
 block|{
-comment|/* 			 * There are two cases in which we don't want to do 			 * this. The first is if this is a definition instead 			 * do a reference. The second is if it's the reference 			 * used by the warning stabs itself. 			 */
+comment|/* 			 * There are two cases in which we don't want to do 			 * this. The first is if this is a definition instead 			 * of a reference. The second is if it's the reference 			 * used by the warning stabs itself. 			 */
 if|if
 condition|(
-name|s
+name|np
 operator|->
 name|n_type
 operator|!=
@@ -2793,17 +2845,16 @@ name|N_UNDF
 operator|)
 operator|||
 operator|(
-name|i
-operator|&&
-operator|(
-name|s
-operator|-
-literal|1
-operator|)
+name|entry
 operator|->
-name|n_type
-operator|==
-name|N_WARNING
+name|symbols
+index|[
+name|i
+index|]
+operator|.
+name|flags
+operator|&
+name|LS_WARNING
 operator|)
 condition|)
 continue|continue;
@@ -2904,7 +2955,7 @@ name|strings
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Since it will dissapear anyway. */
+comment|/* Since it will disappear anyway. */
 block|}
 end_function
 
@@ -2929,10 +2980,6 @@ name|undefined_global_sym_count
 operator|||
 name|undefined_shobj_sym_count
 operator|)
-expr_stmt|;
-name|list_warning_symbols
-operator|=
-name|warning_count
 expr_stmt|;
 name|list_multiple_defs
 operator|=
@@ -2968,7 +3015,7 @@ name|fprintf
 argument_list|(
 name|outfile
 argument_list|,
-literal|"Undefined entry symbol %s\n"
+literal|"Undefined entry symbol `%s'\n"
 argument_list|,
 name|entry_symbol
 operator|->

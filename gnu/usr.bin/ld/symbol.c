@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: symbol.c,v 1.4 1994/02/13 20:41:46 jkh Exp $		- symbol table routines  */
+comment|/*  * $Id: symbol.c,v 1.5 1994/06/15 22:39:56 rich Exp $		- symbol table routines  */
 end_comment
 
 begin_comment
@@ -577,7 +577,7 @@ literal|0
 expr_stmt|;
 name|bp
 operator|->
-name|def_nlist
+name|def_lsp
 operator|=
 literal|0
 expr_stmt|;
@@ -652,7 +652,7 @@ name|symbol
 modifier|*
 name|bp
 decl_stmt|;
-comment|/* Determine which bucket.  */
+comment|/* Determine which bucket. */
 name|hashval
 operator|=
 name|hash_string
@@ -662,7 +662,7 @@ argument_list|)
 operator|%
 name|SYMTABSIZE
 expr_stmt|;
-comment|/* Search the bucket.  */
+comment|/* Search the bucket. */
 for|for
 control|(
 name|bp

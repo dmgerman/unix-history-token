@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	$Id: ld.h,v 1.10 1994/02/13 20:41:34 jkh Exp $  */
+comment|/*  *	$Id: ld.h,v 1.11 1994/06/15 22:39:46 rich Exp $  */
 end_comment
 
 begin_comment
@@ -131,23 +131,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|FreeBSD
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -214,7 +197,7 @@ end_ifndef
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|FreeBSD
+name|__FreeBSD__
 end_ifdef
 
 begin_define
@@ -932,6 +915,11 @@ directive|define
 name|LS_GOTSLOTCLAIMED
 value|8
 comment|/* This symbol has a GOT entry */
+define|#
+directive|define
+name|LS_WARNING
+value|16
+comment|/* Second part of a N_WARNING duo */
 block|}
 name|localsymbol_t
 typedef|;
@@ -992,10 +980,9 @@ name|int
 name|rrs_symbolnum
 decl_stmt|;
 comment|/* Symbol index in RRS symbol table */
-name|struct
-name|nlist
+name|localsymbol_t
 modifier|*
-name|def_nlist
+name|def_lsp
 decl_stmt|;
 comment|/* The local symbol that gave this 					   global symbol its definition */
 name|char
@@ -1176,7 +1163,14 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|warning_count
+name|warn_sym_count
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|list_warning_symbols
 decl_stmt|;
 end_decl_stmt
 
@@ -1438,6 +1432,11 @@ directive|define
 name|E_SYMBOLS_USED
 value|0x80
 comment|/* Symbols from this entry were used */
+define|#
+directive|define
+name|E_SECONDCLASS
+value|0x100
+comment|/* Shared object is a subsidiary */
 block|}
 struct|;
 end_struct

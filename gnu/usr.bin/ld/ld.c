@@ -37,7 +37,7 @@ comment|/* Written by Richard Stallman with some help from Eric Albert.    Set, 
 end_comment
 
 begin_comment
-comment|/*  *	$Id: ld.c,v 1.21 1994/02/17 03:57:00 davidg Exp $  */
+comment|/*  *	$Id: ld.c,v 1.22 1994/06/15 22:39:40 rich Exp $  */
 end_comment
 
 begin_comment
@@ -767,12 +767,22 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|warning_count
+name|warn_sym_count
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* # of warning symbols encountered. */
+end_comment
+
+begin_decl_stmt
+name|int
+name|list_warning_symbols
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 1 => warning symbols referenced */
 end_comment
 
 begin_decl_stmt
@@ -1457,7 +1467,11 @@ name|undefined_global_sym_count
 operator|=
 literal|0
 expr_stmt|;
-name|warning_count
+name|warn_sym_count
+operator|=
+literal|0
+expr_stmt|;
+name|list_warning_symbols
 operator|=
 literal|0
 expr_stmt|;
@@ -2403,7 +2417,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"-T argument not multiple of page size, with sharable output"
+literal|"incorrect alignment of text start address"
 argument_list|)
 expr_stmt|;
 comment|/* Append the standard search directories to the user-specified ones. */
@@ -3255,9 +3269,6 @@ expr_stmt|;
 block|}
 block|}
 end_block
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/* Convenient functions for operating on one or all files being loaded. */
@@ -4211,7 +4222,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: bad magic number"
+literal|"%s: bad magic"
 argument_list|,
 name|get_file_name
 argument_list|(
@@ -4397,7 +4408,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: read_symbols: lseek(syms) failed"
+literal|"%s: read_symbols: lseek(syms)"
 argument_list|,
 name|get_file_name
 argument_list|(
@@ -4594,7 +4605,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: read_symbols: lseek(strings) failed"
+literal|"%s: read_symbols: lseek(strings)"
 argument_list|,
 name|get_file_name
 argument_list|(
@@ -4854,7 +4865,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: read_reloc(text): lseek failed"
+literal|"%s: read_reloc(text): lseek"
 argument_list|,
 name|get_file_name
 argument_list|(
@@ -5001,7 +5012,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: read_reloc(data): lseek failed"
+literal|"%s: read_reloc(data): lseek"
 argument_list|,
 name|get_file_name
 argument_list|(
@@ -5259,7 +5270,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: -r and shared objects currently not supported "
+literal|"%s: -r and shared objects currently not supported"
 argument_list|,
 name|get_file_name
 argument_list|(
@@ -5269,6 +5280,34 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|#
+directive|if
+name|notyet
+comment|/* Compatibility */
+if|if
+condition|(
+operator|!
+operator|(
+name|N_GETFLAG
+argument_list|(
+name|hdr
+argument_list|)
+operator|&
+name|EX_PIC
+operator|)
+condition|)
+name|warnx
+argument_list|(
+literal|"%s: EX_PIC not set"
+argument_list|,
+name|get_file_name
+argument_list|(
+name|entry
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|entry
 operator|->
 name|flags
@@ -5303,6 +5342,19 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|N_GETFLAG
+argument_list|(
+name|hdr
+argument_list|)
+operator|&
+name|EX_PIC
+condition|)
+name|pic_code_seen
+operator|=
+literal|1
+expr_stmt|;
 name|read_entry_symbols
 argument_list|(
 name|fd
@@ -5588,7 +5640,7 @@ condition|)
 block|{
 name|char
 modifier|*
-name|name
+name|msg
 init|=
 name|p
 operator|->
@@ -5601,8 +5653,17 @@ operator|->
 name|strings
 decl_stmt|;
 comment|/* Grab the next entry.  */
-name|p
+name|lsp
 operator|++
+expr_stmt|;
+name|p
+operator|=
+operator|&
+name|lsp
+operator|->
+name|nzlist
+operator|.
+name|nlist
 expr_stmt|;
 if|if
 condition|(
@@ -5631,7 +5692,7 @@ name|make_executable
 operator|=
 literal|0
 expr_stmt|;
-name|p
+name|lsp
 operator|--
 expr_stmt|;
 comment|/* Process normally.  */
@@ -5644,7 +5705,7 @@ name|sp
 decl_stmt|;
 name|char
 modifier|*
-name|sname
+name|name
 init|=
 name|p
 operator|->
@@ -5657,19 +5718,17 @@ operator|->
 name|strings
 decl_stmt|;
 comment|/* Deal with the warning symbol.  */
+name|lsp
+operator|->
+name|flags
+operator||=
+name|LS_WARNING
+expr_stmt|;
 name|enter_global_ref
 argument_list|(
 name|lsp
 argument_list|,
-name|p
-operator|->
-name|n_un
-operator|.
-name|n_strx
-operator|+
-name|entry
-operator|->
-name|strings
+name|name
 argument_list|,
 name|entry
 argument_list|)
@@ -5678,9 +5737,18 @@ name|sp
 operator|=
 name|getsym
 argument_list|(
-name|sname
+name|name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sp
+operator|->
+name|warning
+operator|==
+name|NULL
+condition|)
+block|{
 name|sp
 operator|->
 name|warning
@@ -5693,7 +5761,7 @@ name|xmalloc
 argument_list|(
 name|strlen
 argument_list|(
-name|name
+name|msg
 argument_list|)
 operator|+
 literal|1
@@ -5705,11 +5773,38 @@ name|sp
 operator|->
 name|warning
 argument_list|,
-name|name
+name|msg
 argument_list|)
 expr_stmt|;
-name|warning_count
+name|warn_sym_count
 operator|++
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|sp
+operator|->
+name|warning
+argument_list|,
+name|msg
+argument_list|)
+condition|)
+name|warnx
+argument_list|(
+literal|"%s: multiple definitions for warning symbol `%s'"
+argument_list|,
+name|get_file_name
+argument_list|(
+name|entry
+argument_list|)
+argument_list|,
+name|sp
+operator|->
+name|name
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -5972,6 +6067,12 @@ name|sorefs
 operator|=
 name|lsp
 expr_stmt|;
+name|lsp
+operator|->
+name|symbol
+operator|=
+name|sp
+expr_stmt|;
 comment|/* 		 * Handle commons from shared objects: 		 *   1) If symbol hitherto undefined, turn it into a common. 		 *   2) If symbol already common, update size if necessary. 		 */
 comment|/*XXX - look at case where commons are only in shared objects */
 if|if
@@ -6094,11 +6195,28 @@ name|nzp
 operator|->
 name|nz_size
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|lsp
 operator|->
-name|symbol
-operator|=
+name|flags
+operator|&
+name|LS_WARNING
+operator|)
+operator|&&
+operator|(
 name|sp
+operator|->
+name|flags
+operator|&
+name|GS_REFERENCED
+operator|)
+condition|)
+comment|/* 			 * Prevent warning symbols from getting 			 * gratuitously referenced. 			 */
+name|list_warning_symbols
+operator|=
+literal|1
 expr_stmt|;
 return|return;
 block|}
@@ -6121,6 +6239,40 @@ operator|->
 name|symbol
 operator|=
 name|sp
+expr_stmt|;
+if|if
+condition|(
+name|lsp
+operator|->
+name|flags
+operator|&
+name|LS_WARNING
+condition|)
+block|{
+comment|/* 		 * Prevent warning symbols from getting 		 * gratuitously referenced. 		 */
+if|if
+condition|(
+name|sp
+operator|->
+name|flags
+operator|&
+name|GS_REFERENCED
+condition|)
+name|list_warning_symbols
+operator|=
+literal|1
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|sp
+operator|->
+name|warning
+condition|)
+name|list_warning_symbols
+operator|=
+literal|1
 expr_stmt|;
 name|sp
 operator|->
@@ -7008,11 +7160,20 @@ name|relocatable_output
 operator|||
 name|building_shared_object
 condition|)
+block|{
 comment|/* For each alias we write out two struct nlists */
 name|global_sym_count
 operator|+=
 name|global_alias_count
 expr_stmt|;
+comment|/* Propagate warning symbols; costs two extra struct nlists */
+name|global_sym_count
+operator|+=
+literal|2
+operator|*
+name|warn_sym_count
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|relocatable_output
@@ -7027,7 +7188,7 @@ directive|ifdef
 name|DEBUG
 name|printf
 argument_list|(
-literal|"global symbols %d (defined %d, undefined %d, aliases %d), locals: %d, \ debug symbols: %d, set_symbols %d\n"
+literal|"global symbols %d (defined %d, undefined %d, aliases %d, warnings 2 * %d), \ locals: %d, debug symbols: %d, set_symbols %d\n"
 argument_list|,
 name|global_sym_count
 argument_list|,
@@ -7036,6 +7197,8 @@ argument_list|,
 name|undefined_global_sym_count
 argument_list|,
 name|global_alias_count
+argument_list|,
+name|warn_sym_count
 argument_list|,
 name|local_sym_count
 argument_list|,
@@ -7356,9 +7519,9 @@ expr_stmt|;
 block|}
 name|sp
 operator|->
-name|def_nlist
+name|def_lsp
 operator|=
-name|p
+name|lsp
 expr_stmt|;
 name|lsp
 operator|->
@@ -7526,17 +7689,9 @@ block|{
 comment|/* non-common definition */
 name|sp
 operator|->
-name|def_nlist
+name|def_lsp
 operator|=
-name|p
-expr_stmt|;
 name|lsp
-operator|->
-name|entry
-operator|->
-name|flags
-operator||=
-name|E_SYMBOLS_USED
 expr_stmt|;
 name|sp
 operator|->
@@ -7552,6 +7707,25 @@ name|N_AUX
 argument_list|(
 name|p
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|lsp
+operator|->
+name|entry
+operator|->
+name|flags
+operator|&
+name|E_SECONDCLASS
+condition|)
+continue|continue;
+name|lsp
+operator|->
+name|entry
+operator|->
+name|flags
+operator||=
+name|E_SYMBOLS_USED
 expr_stmt|;
 if|if
 condition|(
@@ -7798,6 +7972,7 @@ name|pic_code_seen
 operator|=
 literal|1
 expr_stmt|;
+comment|/* Compatibility */
 if|if
 condition|(
 operator|!
@@ -8971,13 +9146,15 @@ if|if
 condition|(
 name|sp
 operator|->
-name|defined
-operator|&&
+name|def_lsp
+condition|)
+block|{
+if|if
+condition|(
 name|sp
 operator|->
-name|def_nlist
+name|defined
 operator|&&
-operator|(
 operator|(
 name|sp
 operator|->
@@ -8988,7 +9165,6 @@ name|N_EXT
 operator|)
 operator|!=
 name|N_SETV
-operator|)
 condition|)
 name|sp
 operator|->
@@ -8996,10 +9172,34 @@ name|value
 operator|=
 name|sp
 operator|->
-name|def_nlist
+name|def_lsp
 operator|->
-name|n_value
+name|nzlist
+operator|.
+name|nz_value
 expr_stmt|;
+if|if
+condition|(
+name|sp
+operator|->
+name|so_defined
+operator|&&
+operator|(
+name|sp
+operator|->
+name|def_lsp
+operator|->
+name|entry
+operator|->
+name|flags
+operator|&
+name|E_SECONDCLASS
+operator|)
+condition|)
+name|undefined_global_sym_count
+operator|++
+expr_stmt|;
+block|}
 comment|/* 		 * If not -r'ing, allocate common symbols in the BSS section. 		 */
 if|if
 condition|(
@@ -9469,17 +9669,44 @@ parameter_list|()
 block|{
 name|int
 name|flags
-init|=
-operator|(
+decl_stmt|;
+if|if
+condition|(
+name|link_mode
+operator|&
+name|SHAREABLE
+condition|)
+name|flags
+operator|=
+name|EX_DYNAMIC
+operator||
+name|EX_PIC
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|pic_code_seen
+condition|)
+name|flags
+operator|=
+name|EX_PIC
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|rrs_section_type
 operator|==
 name|RRS_FULL
-operator|)
-condition|?
+condition|)
+name|flags
+operator|=
 name|EX_DYNAMIC
-else|:
+expr_stmt|;
+else|else
+name|flags
+operator|=
 literal|0
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|oldmagic
@@ -9487,7 +9714,7 @@ operator|&&
 operator|(
 name|flags
 operator|&
-name|EX_DYNAMIC
+name|EX_DPMASK
 operator|)
 condition|)
 name|warnx
@@ -9657,9 +9884,6 @@ endif|#
 directive|endif
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*  * Relocate the text segment of each input file  * and write to the output file.  */
@@ -9850,7 +10074,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: copy_text: premature EOF in text section"
+literal|"%s: copy_text: premature EOF"
 argument_list|,
 name|get_file_name
 argument_list|(
@@ -9900,9 +10124,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/*  * Relocate the data segment of each input file  * and write to the output file.  */
@@ -9955,7 +10176,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"write_data: failed to lseek to data offset"
+literal|"write_data: lseek"
 argument_list|)
 expr_stmt|;
 name|each_full_file
@@ -10167,7 +10388,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: copy_data: premature EOF in data section"
+literal|"%s: copy_data: premature EOF"
 argument_list|,
 name|get_file_name
 argument_list|(
@@ -11131,9 +11352,6 @@ block|}
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/*  * For relocatable_output only: write out the relocation,  * relocating the addresses-to-be-relocated.  */
 end_comment
@@ -11186,9 +11404,23 @@ block|{
 if|if
 condition|(
 name|sp
-operator|!=
+operator|==
 name|dynamic_symbol
-operator|&&
+condition|)
+continue|continue;
+if|if
+condition|(
+name|sp
+operator|->
+name|warning
+condition|)
+name|count
+operator|+=
+literal|2
+expr_stmt|;
+if|if
+condition|(
+operator|!
 operator|(
 name|sp
 operator|->
@@ -11197,7 +11429,7 @@ operator|&
 name|GS_REFERENCED
 operator|)
 condition|)
-block|{
+continue|continue;
 name|sp
 operator|->
 name|symbolnum
@@ -11223,7 +11455,6 @@ condition|)
 name|count
 operator|++
 expr_stmt|;
-block|}
 block|}
 name|END_EACH_SYMBOL
 expr_stmt|;
@@ -11987,9 +12218,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_decl_stmt
 name|void
 name|write_file_syms
@@ -12038,7 +12266,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Address in output file where string table starts.  */
+comment|/* Address in output file where string table starts. */
 end_comment
 
 begin_decl_stmt
@@ -12049,7 +12277,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Offset within string table    where the strings in `strtab_vector' should be written.  */
+comment|/* Offset within string table    where the strings in `strtab_vector' should be written. */
 end_comment
 
 begin_decl_stmt
@@ -12060,7 +12288,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Total size of string table strings allocated so far,    including strings in `strtab_vector'.  */
+comment|/* Total size of string table strings allocated so far,    including strings in `strtab_vector'. */
 end_comment
 
 begin_decl_stmt
@@ -12071,7 +12299,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Vector whose elements are strings to be added to the string table.  */
+comment|/* Vector whose elements are strings to be added to the string table. */
 end_comment
 
 begin_decl_stmt
@@ -12084,7 +12312,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Vector whose elements are the lengths of those strings.  */
+comment|/* Vector whose elements are the lengths of those strings. */
 end_comment
 
 begin_decl_stmt
@@ -12096,7 +12324,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Index in `strtab_vector' at which the next string will be stored.  */
+comment|/* Index in `strtab_vector' at which the next string will be stored. */
 end_comment
 
 begin_decl_stmt
@@ -12296,11 +12524,8 @@ expr_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
-comment|/* Write the symbol table and string table of the output file.  */
+comment|/* Write the symbol table and string table of the output file. */
 end_comment
 
 begin_function
@@ -12527,6 +12752,115 @@ name|dynamic_symbol
 condition|)
 comment|/* Already dealt with above */
 continue|continue;
+comment|/* 		 * Propagate N_WARNING symbols. 		 */
+if|if
+condition|(
+operator|(
+name|relocatable_output
+operator|||
+name|building_shared_object
+operator|)
+operator|&&
+name|sp
+operator|->
+name|warning
+condition|)
+block|{
+name|nl
+operator|.
+name|n_type
+operator|=
+name|N_WARNING
+expr_stmt|;
+name|nl
+operator|.
+name|n_un
+operator|.
+name|n_strx
+operator|=
+name|assign_string_table_index
+argument_list|(
+name|sp
+operator|->
+name|warning
+argument_list|)
+expr_stmt|;
+name|nl
+operator|.
+name|n_value
+operator|=
+literal|0
+expr_stmt|;
+name|nl
+operator|.
+name|n_other
+operator|=
+literal|0
+expr_stmt|;
+name|nl
+operator|.
+name|n_desc
+operator|=
+literal|0
+expr_stmt|;
+operator|*
+name|bufp
+operator|++
+operator|=
+name|nl
+expr_stmt|;
+name|syms_written
+operator|++
+expr_stmt|;
+name|nl
+operator|.
+name|n_type
+operator|=
+name|N_UNDF
+operator|+
+name|N_EXT
+expr_stmt|;
+name|nl
+operator|.
+name|n_un
+operator|.
+name|n_strx
+operator|=
+name|assign_string_table_index
+argument_list|(
+name|sp
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+name|nl
+operator|.
+name|n_value
+operator|=
+literal|0
+expr_stmt|;
+name|nl
+operator|.
+name|n_other
+operator|=
+literal|0
+expr_stmt|;
+name|nl
+operator|.
+name|n_desc
+operator|=
+literal|0
+expr_stmt|;
+operator|*
+name|bufp
+operator|++
+operator|=
+name|nl
+expr_stmt|;
+name|syms_written
+operator|++
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!

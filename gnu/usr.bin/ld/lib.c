@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: lib.c,v 1.9 1994/02/13 20:41:37 jkh Exp $	- library routines  */
+comment|/*  * $Id: lib.c,v 1.10 1994/06/15 22:39:49 rich Exp $	- library routines  */
 end_comment
 
 begin_include
@@ -1388,7 +1388,7 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-comment|/* 				 * We'll read the strings again 				 * if we need them. 			 */
+comment|/* 				 * We'll read the strings again 				 * if we need them. 				 */
 name|subentry
 operator|->
 name|strings
@@ -2954,6 +2954,12 @@ operator|->
 name|superfile
 operator|=
 name|entry
+expr_stmt|;
+name|subentry
+operator|->
+name|flags
+operator|=
+name|E_SECONDCLASS
 expr_stmt|;
 if|if
 condition|(
