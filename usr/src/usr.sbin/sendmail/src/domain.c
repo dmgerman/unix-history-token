@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.28 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	8.29 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	8.28 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	8.29 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -603,46 +603,25 @@ case|:
 ifdef|#
 directive|ifdef
 name|BROKEN_RES_SEARCH
-comment|/* Ultrix resolver returns failure w/ h_errno=0 */
 case|case
 literal|0
 case|:
+comment|/* Ultrix resolver retns failure w/ h_errno=0 */
 endif|#
 directive|endif
-comment|/* the host just doesn't exist */
+comment|/* host doesn't exist in DNS; might be in /etc/hosts */
 operator|*
 name|rcode
 operator|=
 name|EX_NOHOST
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|UseNameServer
-condition|)
-block|{
-comment|/* might exist in /etc/hosts */
 goto|goto
 name|punt
 goto|;
-block|}
-break|break;
 case|case
 name|TRY_AGAIN
 case|:
 comment|/* couldn't connect to the name server */
-if|if
-condition|(
-operator|!
-name|UseNameServer
-operator|&&
-name|errno
-operator|==
-name|ECONNREFUSED
-condition|)
-goto|goto
-name|punt
-goto|;
 comment|/* it might come up later; better queue it up */
 operator|*
 name|rcode
