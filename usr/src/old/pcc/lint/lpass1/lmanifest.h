@@ -1,52 +1,52 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	@(#)lmanifest.h	1.1	(Berkeley)	%G%  */
+comment|/*  *	@(#)lmanifest.h	1.2	(Berkeley)	%G%  */
 end_comment
 
 begin_comment
-comment|/*	the key: 	LDI	defined and initialized: storage set aside 	LIB	defined on a library 	LDC	defined as a common region on UNIX 	LDX	defined by an extern: if ! pflag, same as LDI 	LRV	function returns a value 	LUV	function used in a value context 	LUE	function used in effects context 	LUM	mentioned somewhere other than at the declaration 	*/
+comment|/*	the key: 	LDI	defined and initialized: storage set aside 	LIB	defined on a library 	LDC	defined as a common region on UNIX 	LDX	defined by an extern: if ! pflag, same as LDI 	LRV	function returns a value 	LUV	function used in a value context 	LUE	function used in effects context 	LUM	mentioned somewhere other than at the declaration 	LST	defined as a static 	*/
 end_comment
 
 begin_define
 define|#
 directive|define
 name|LDI
-value|01
+value|0001
 end_define
 
 begin_define
 define|#
 directive|define
 name|LIB
-value|02
+value|0002
 end_define
 
 begin_define
 define|#
 directive|define
 name|LDC
-value|04
+value|0004
 end_define
 
 begin_define
 define|#
 directive|define
 name|LDX
-value|010
+value|0010
 end_define
 
 begin_define
 define|#
 directive|define
 name|LRV
-value|020
+value|0020
 end_define
 
 begin_define
 define|#
 directive|define
 name|LUV
-value|040
+value|0040
 end_define
 
 begin_define
@@ -66,8 +66,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|LFN
+name|LST
 value|0400
+end_define
+
+begin_define
+define|#
+directive|define
+name|LFN
+value|01000
 end_define
 
 begin_comment
@@ -114,10 +121,24 @@ decl_stmt|;
 name|short
 name|extra
 decl_stmt|;
+name|short
+name|extra1
+decl_stmt|;
 block|}
 name|ATYPE
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|X_NONAME
+value|0x8000
+end_define
+
+begin_comment
+comment|/* for extra1, if structure has no name */
+end_comment
 
 begin_typedef
 typedef|typedef

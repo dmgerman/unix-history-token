@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpass2.c	1.2	(Berkeley)	%G%"
+literal|"@(#)lpass2.c	1.3	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -338,6 +338,22 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
+name|zflag
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|Pflag
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|cfno
 decl_stmt|;
 end_decl_stmt
@@ -453,6 +469,22 @@ operator|=
 literal|0
 expr_stmt|;
 break|break;
+case|case
+literal|'z'
+case|:
+name|zflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'P'
+case|:
+name|Pflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 block|}
 block|}
 block|}
@@ -487,11 +519,27 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|Pflag
+condition|)
+block|{
+name|pfile
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|mloop
 argument_list|(
 name|LDI
 operator||
 name|LIB
+operator||
+name|LST
 argument_list|)
 expr_stmt|;
 name|rewind
@@ -655,6 +703,15 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|Pflag
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 name|setfno
 argument_list|(
 name|r
@@ -702,11 +759,6 @@ expr_stmt|;
 if|if
 condition|(
 name|n
-condition|)
-block|{
-if|if
-condition|(
-name|n
 operator|>=
 name|NTY
 condition|)
@@ -735,7 +787,6 @@ argument_list|,
 name|stdin
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -811,7 +862,6 @@ argument_list|,
 name|LFNM
 argument_list|)
 condition|)
-block|{
 else|#
 directive|else
 if|if
@@ -823,9 +873,9 @@ index|]
 operator|==
 name|s
 condition|)
-block|{
 endif|#
 directive|endif
+block|{
 name|cfno
 operator|=
 name|i
@@ -879,17 +929,29 @@ name|ffree
 operator|++
 expr_stmt|;
 block|}
+end_block
+
+begin_comment
 comment|/* VARARGS */
+end_comment
+
+begin_macro
 name|error
 argument_list|(
 argument|s
 argument_list|,
 argument|a
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|char
 modifier|*
 name|s
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 ifndef|#
 directive|ifndef
@@ -946,12 +1008,14 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+end_block
+
+begin_function
 name|STAB
 modifier|*
 name|find
 parameter_list|()
 block|{
-comment|/* for this to work, NSZ should be a power of 2 */
 specifier|register
 name|h
 operator|=
@@ -960,86 +1024,25 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|FLEXNAMES
-block|{
-specifier|register
-name|char
-modifier|*
-name|p
-decl_stmt|,
-modifier|*
-name|q
-decl_stmt|;
-for|for
-control|(
 name|h
 operator|=
-literal|0
-operator|,
-name|p
-operator|=
+name|hashstr
+argument_list|(
 name|r
 operator|.
 name|l
 operator|.
 name|name
-operator|,
-name|q
-operator|=
-name|p
-operator|+
+argument_list|,
 name|LCHNM
-init|;
-operator|*
-name|p
-operator|&&
-name|p
-operator|<
-name|q
-condition|;
-operator|++
-name|p
-control|)
-block|{
-name|h
-operator|=
-operator|(
-name|h
-operator|<<
-literal|1
-operator|)
-operator|+
-operator|*
-name|p
-expr_stmt|;
-if|if
-condition|(
-name|h
-operator|>=
+argument_list|)
+operator|%
 name|NSZ
-condition|)
-block|{
-name|h
-operator|=
-operator|(
-name|h
-operator|+
-literal|1
-operator|)
-operator|&
-operator|(
-name|NSZ
-operator|-
-literal|1
-operator|)
 expr_stmt|;
-block|}
-block|}
-block|}
 else|#
 directive|else
 name|h
 operator|=
-operator|(
 operator|(
 name|int
 operator|)
@@ -1048,7 +1051,6 @@ operator|.
 name|l
 operator|.
 name|name
-operator|)
 operator|%
 name|NSZ
 expr_stmt|;
@@ -1081,7 +1083,6 @@ name|decflag
 condition|;
 control|)
 block|{
-comment|/* this call to strncmp should be taken out... */
 ifndef|#
 directive|ifndef
 name|FLEXNAMES
@@ -1103,11 +1104,6 @@ argument_list|,
 name|LCHNM
 argument_list|)
 condition|)
-return|return
-operator|(
-name|q
-operator|)
-return|;
 else|#
 directive|else
 if|if
@@ -1122,13 +1118,39 @@ name|q
 operator|->
 name|name
 condition|)
+endif|#
+directive|endif
+if|if
+condition|(
+operator|(
+operator|(
+name|q
+operator|->
+name|decflag
+operator||
+name|r
+operator|.
+name|l
+operator|.
+name|decflag
+operator|)
+operator|&
+name|LST
+operator|)
+operator|==
+literal|0
+operator|||
+name|q
+operator|->
+name|fno
+operator|==
+name|cfno
+condition|)
 return|return
 operator|(
 name|q
 operator|)
 return|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|++
@@ -1195,6 +1217,9 @@ operator|)
 return|;
 block|}
 block|}
+end_function
+
+begin_function
 name|STYPE
 modifier|*
 name|tget
@@ -1224,14 +1249,23 @@ index|]
 operator|)
 return|;
 block|}
+end_function
+
+begin_macro
 name|chkcompat
 argument_list|(
 argument|q
 argument_list|)
+end_macro
+
+begin_decl_stmt
 name|STAB
 modifier|*
 name|q
 decl_stmt|;
+end_decl_stmt
+
+begin_block
 block|{
 comment|/* are the types, etc. in r.l and q compatible */
 specifier|register
@@ -1262,6 +1296,8 @@ operator||
 name|LUV
 operator||
 name|LUE
+operator||
+name|LST
 operator|)
 condition|)
 block|{
@@ -1372,6 +1408,8 @@ operator|(
 name|LDI
 operator||
 name|LIB
+operator||
+name|LST
 operator|)
 operator|)
 condition|)
@@ -1459,7 +1497,7 @@ endif|#
 directive|endif
 argument|q->name, i+
 literal|1
-argument|); 					viceversa(q); 					} 				} 			} 		}  	if( (q->decflag&(LDI|LIB|LUV))&& r.l.decflag==LUV ){ 		if( chktype(&r.l.type,&q->symty.t ) ){
+argument|); 					viceversa(q); 					} 				} 			} 		}  	if( (q->decflag&(LDI|LIB|LUV|LST))&& r.l.decflag==LUV ){ 		if( chktype(&r.l.type,&q->symty.t ) ){
 ifndef|#
 directive|ifndef
 name|FLEXNAMES
@@ -1475,7 +1513,7 @@ endif|#
 directive|endif
 argument|viceversa(q); 			} 		}
 comment|/* check for multiple declaration */
-argument|if( (q->decflag&LDI)&& (r.l.decflag&(LDI|LIB)) ){
+argument|if( (q->decflag&(LDI|LST))&& (r.l.decflag&(LDI|LIB|LST)) ){
 ifndef|#
 directive|ifndef
 name|FLEXNAMES
@@ -1491,7 +1529,7 @@ endif|#
 directive|endif
 argument|viceversa(q); 		}
 comment|/* do a bit of checking of definitions and uses... */
-argument|if( (q->decflag& (LDI|LIB|LDX|LDC|LUM))&& (r.l.decflag& (LDX|LDC|LUM))&& q->symty.t.aty != r.l.type.aty ){
+argument|if( (q->decflag& (LDI|LIB|LDX|LDC|LUM|LST))&& (r.l.decflag& (LDX|LDC|LUM))&& q->symty.t.aty != r.l.type.aty ){
 ifndef|#
 directive|ifndef
 name|FLEXNAMES
@@ -1507,7 +1545,7 @@ endif|#
 directive|endif
 argument|viceversa(q); 		}
 comment|/* better not call functions which are declared to be structure or union returning */
-argument|if( (q->decflag& (LDI|LIB|LDX|LDC))&& (r.l.decflag& LUE)&& q->symty.t.aty != r.l.type.aty ){
+argument|if( (q->decflag& (LDI|LIB|LDX|LDC|LST))&& (r.l.decflag& LUE)&& q->symty.t.aty != r.l.type.aty ){
 comment|/* only matters if the function returns union or structure */
 argument|TWORD ty; 		ty = q->symty.t.aty; 		if( ISFTN(ty)&& ((ty = DECREF(ty))==STRTY || ty==UNIONTY ) ){
 ifndef|#
@@ -1599,73 +1637,78 @@ argument|break; 		case LDX: 			if( !xflag ) break; 		case LUV: 		case LUE:
 comment|/* 01/04/80 */
 argument|case LUV | LUE: 		case LUM: 			nd =
 literal|1
-argument|; 			} 		} 	if( uflag&& ( nu || nd ) ) printf( mess[nu][nd],
+argument|; 			} 		} 	if( uflag&& ( nu || nd ) )
 ifndef|#
 directive|ifndef
 name|FLEXNAMES
-argument|q->name, LFNM, fnm[q->fno], q->fline );
+argument|printf( mess[nu][nd], q->name, LFNM, fnm[q->fno], q->fline );
 else|#
 directive|else
-argument|q->name
-argument_list|,
-argument|fnm[q->fno]
-argument_list|,
-argument|q->fline
-argument_list|)
-empty_stmt|;
+argument|printf( mess[nu][nd], q->name, fnm[q->fno], q->fline );
 endif|#
 directive|endif
-if|if
-condition|(
-operator|(
-name|uses
-operator|&
-operator|(
-name|RVAL
-operator|+
-name|EUSED
-operator|)
-operator|)
-operator|==
-operator|(
-name|RVAL
-operator|+
-name|EUSED
-operator|)
-condition|)
-block|{
+argument|if( (uses&(RVAL+EUSED)) == (RVAL+EUSED) ){
+comment|/* if functions is static, then print the file name too */
+argument|if( q->decflag& LST )
 ifndef|#
 directive|ifndef
 name|FLEXNAMES
-name|printf
-argument_list|(
-literal|"%.8s returns value which is %s ignored\n"
-argument_list|,
-argument|q->name
-argument_list|,
+argument|printf(
+literal|"%.*s(%d):"
+argument|, LFNM, fnm[q->fno], q->fline );
+else|#
+directive|else
+argument|printf(
+literal|"%s(%d):"
+argument|, fnm[q->fno], q->fline );
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|FLEXNAMES
+argument|printf(
+literal|"%.*s returns value which is %s ignored\n"
+argument|, 			LCHNM, q->name, uses&VUSED ?
+literal|"sometimes"
+argument|:
+literal|"always"
+argument|);
 else|#
 directive|else
 argument|printf(
 literal|"%s returns value which is %s ignored\n"
-argument|, q->name,
-endif|#
-directive|endif
-argument|uses&VUSED ?
+argument|, 			q->name, uses&VUSED ?
 literal|"sometimes"
 argument|:
 literal|"always"
-argument|); 		}  	if( (uses&(RVAL+VUSED)) == (VUSED)&& (q->decflag&(LDI|LIB)) ){
+argument|);
+endif|#
+directive|endif
+argument|}  	if( (uses&(RVAL+VUSED)) == (VUSED)&& (q->decflag&(LDI|LIB|LST)) ){ 		if( q->decflag& LST )
 ifndef|#
 directive|ifndef
 name|FLEXNAMES
 argument|printf(
-literal|"%.8s value is used, but none returned\n"
-argument|, q->name );
+literal|"%.*s(%d):"
+argument|, LFNM, fnm[q->fno], q->fline );
+else|#
+directive|else
+argument|printf(
+literal|"%s(%d):"
+argument|, fnm[q->fno], q->fline );
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|FLEXNAMES
+argument|printf(
+literal|"%.*s value is used, but none returned\n"
+argument|, 			LCHNM, q->name);
 else|#
 directive|else
 argument|printf(
 literal|"%s value is used, but none returned\n"
-argument|, q->name );
+argument|, q->name);
 endif|#
 directive|endif
 argument|} 	}  cleanup(){
@@ -1689,7 +1732,17 @@ argument_list|,
 argument|*pt2; { 	TWORD t;
 comment|/* check the two type words to see if they are compatible */
 comment|/* for the moment, enums are turned into ints, and should be checked as such */
-argument|if( pt1->aty == ENUMTY ) pt1->aty =  INT; 	if( pt2->aty == ENUMTY ) pt2->aty = INT;  	if( (t=BTYPE(pt1->aty)==STRTY) || t==UNIONTY ){ 		return( pt1->aty!=pt2->aty || ( 			pt1->extra!=pt2->extra ) ); 		}  	if( pt2->extra ){
+argument|if( pt1->aty == ENUMTY ) pt1->aty =  INT; 	if( pt2->aty == ENUMTY ) pt2->aty = INT;  	if( (t=BTYPE(pt1->aty)==STRTY) || t==UNIONTY ){ 		if( pt1->aty != pt2->aty || pt1->extra1 != pt2->extra1 ) 			return
+literal|1
+argument|;
+comment|/* if -z then don't worry about undefined structures, 		   as long as the names match */
+argument|if( zflag&& (pt1->extra ==
+literal|0
+argument||| pt2->extra ==
+literal|0
+argument|) ) return
+literal|0
+argument|; 		return pt1->extra != pt2->extra; 		}  	if( pt2->extra ){
 comment|/* constant passed in */
 argument|if( pt1->aty == UNSIGNED&& pt2->aty == INT ) return(
 literal|0
@@ -1701,17 +1754,7 @@ argument|if( pt2->aty == UNSIGNED&& pt1->aty == INT ) return(
 literal|0
 argument|); 		else if( pt2->aty == ULONG&& pt1->aty == LONG ) return(
 literal|0
-argument|); 		}  	return( pt1->aty != pt2->aty ); 	}  struct tb { int m; char * nm }; ptb( v, tp ) struct tb *tp; {
-comment|/* print a value from the table */
-argument|int flag; 	flag =
-literal|0
-argument|; 	for( ; tp->m; ++tp ){ 		if( v&tp->m ){ 			if( flag++ ) putchar(
-literal|'|'
-argument|); 			printf(
-literal|"%s"
-argument|, tp->nm ); 			} 		} 	}  pst( q ) STAB *q; {
-comment|/* give a debugging output for q */
-argument|static struct tb dfs[] = { 		LDI
+argument|); 		}  	return( pt1->aty != pt2->aty ); 	}  struct tb { int m; char * nm };  struct tb dfs[] = { 	LDI
 argument_list|,
 literal|"LDI"
 argument_list|,
@@ -1743,10 +1786,18 @@ argument|LUM
 argument_list|,
 literal|"LUM"
 argument_list|,
+argument|LST
+argument_list|,
+literal|"LST"
+argument_list|,
+argument|LFN
+argument_list|,
+literal|"LFN"
+argument_list|,
 literal|0
 argument_list|,
 literal|""
-argument|};  	static struct tb us[] = { 		USED
+argument|};  struct tb us[] = { 	USED
 argument_list|,
 literal|"USED"
 argument_list|,
@@ -1768,9 +1819,17 @@ literal|"VARARGS"
 argument_list|,
 literal|0
 argument_list|,
+literal|""
+argument|};  ptb( v, tp ) struct tb *tp; {
+comment|/* print a value from the table */
+argument|int flag; 	flag =
 literal|0
-argument_list|,
-argument|};
+argument|; 	for( ; tp->m; ++tp ){ 		if( v&tp->m ){ 			if( flag++ ) putchar(
+literal|'|'
+argument|); 			printf(
+literal|"%s"
+argument|, tp->nm ); 			} 		} 	}  pst( q ) STAB *q; {
+comment|/* give a debugging output for q */
 ifndef|#
 directive|ifndef
 name|FLEXNAMES
@@ -1788,7 +1847,153 @@ argument|ptb( q->decflag, dfs ); 	printf(
 literal|"), use= "
 argument|); 	ptb( q->use, us ); 	printf(
 literal|", line %d, nargs=%d\n"
-argument|, q->fline, q->nargs ); 	}
+argument|, q->fline, q->nargs ); 	}  pfile() {
+comment|/* print the input file in readable form */
+argument|while( lread( LDI|LIB|LDC|LDX|LRV|LUV|LUE|LUM|LST|LFN ) ) 		prc(); 	}  prc() {
+comment|/* print out 'r' for debugging */
+argument|register i
+argument_list|,
+argument|j
+argument_list|,
+argument|k;  	printf(
+literal|"decflag\t"
+argument|); 	ptb( r.l.decflag, dfs ); 	putchar(
+literal|'\n'
+argument|); 	if( r.l.decflag& LFN ){
+ifdef|#
+directive|ifdef
+name|FLEXNAMES
+argument|printf(
+literal|"fn\t\t%s\n"
+argument|, r.f.fn );
+else|#
+directive|else
+argument|printf(
+literal|"fn\t%\t.*s\n"
+argument|, LFNM, r.f.fn );
+endif|#
+directive|endif
+argument|} 	else {
+ifdef|#
+directive|ifdef
+name|FLEXNAMES
+argument|printf(
+literal|"name\t%s\n"
+argument|, r.l.name );
+else|#
+directive|else
+argument|printf(
+literal|"name\t%.*s\n"
+argument|, LCHNM, r.l.name );
+endif|#
+directive|endif
+argument|printf(
+literal|"nargs\t%d\n"
+argument|, r.l.nargs ); 		printf(
+literal|"fline\t%d\n"
+argument|, r.l.fline ); 		printf(
+literal|"type.aty\t0%o ("
+argument|, r.l.type.aty ); 		pty( r.l.type.aty, r.l.name ); 		printf(
+literal|")\ntype.extra\t%d\n"
+argument|, r.l.type.extra ); 		j = r.l.type.extra1; 		printf(
+literal|"type.extra1\t0x%x (%d,%d)\n"
+argument|, 			j, j& X_NONAME ?
+literal|1
+argument|:
+literal|0
+argument|, j& ~X_NONAME ); 		k = r.l.nargs; 		if( k<
+literal|0
+argument|) k = -k; 		for( i =
+literal|0
+argument|; i< k; i++ ){ 			printf(
+literal|"atyp[%d].aty\t0%o ("
+argument|, i, atyp[i].aty ); 			pty( atyp[i].aty,
+literal|""
+argument|); 			printf(
+literal|")\natyp[%d].extra\t%d\n"
+argument|, i, atyp[i].extra); 			j = atyp[i].extra1; 			printf(
+literal|"atyp[%d].extra1\t0x%x (%d,%d)\n"
+argument|, 				i, j, j& X_NONAME ?
+literal|1
+argument|:
+literal|0
+argument|, j& ~X_NONAME ); 			} 		} 		putchar(
+literal|'\n'
+argument|); 	}  pty( t, name )  TWORD t; { 	static char * tnames[] = {
+literal|"void"
+argument_list|,
+literal|"farg"
+argument_list|,
+literal|"char"
+argument_list|,
+literal|"short"
+argument_list|,
+literal|"int"
+argument_list|,
+literal|"long"
+argument_list|,
+literal|"float"
+argument_list|,
+literal|"double"
+argument_list|,
+literal|"struct xxx"
+argument_list|,
+literal|"union %s"
+argument_list|,
+literal|"enum"
+argument_list|,
+literal|"moety"
+argument_list|,
+literal|"unsigned char"
+argument_list|,
+literal|"unsigned short"
+argument_list|,
+literal|"unsigned"
+argument_list|,
+literal|"unsigned long"
+argument_list|,
+literal|"?"
+argument_list|,
+literal|"?"
+argument|};  	printf(
+literal|"%s "
+argument|, tnames[BTYPE(t)] ); 	pty1( t, name, (
+literal|8
+argument|* sizeof (int) - BTSHIFT) / TSHIFT ); 	}  pty1( t, name, level ) TWORD t; { 	register TWORD u;  	if( level<
+literal|0
+argument|){ 		printf(
+literal|"%s"
+argument|, name ); 		return; 		} 	u = t>> level * TSHIFT; 	if( ISPTR(u) ){ 		printf(
+literal|"*"
+argument|); 		pty1( t, name, level-
+literal|1
+argument|); 		} 	else if( ISFTN(u) ){ 		if( level>
+literal|0
+argument|&& ISPTR(u<< TSHIFT) ){ 			printf(
+literal|"("
+argument|); 			pty1( t, name, level-
+literal|1
+argument|); 			printf(
+literal|")()"
+argument|); 			} 		else { 			pty1( t, name, level-
+literal|1
+argument|); 			printf(
+literal|"()"
+argument|); 			} 		} 	else if( ISARY(u) ){ 		if( level>
+literal|0
+argument|&& ISPTR(u<< TSHIFT) ){ 			printf(
+literal|"("
+argument|); 			pty1( t, name, level-
+literal|1
+argument|); 			printf(
+literal|")[]"
+argument|); 			} 		else { 			pty1( t, name, level-
+literal|1
+argument|); 			printf(
+literal|"[]"
+argument|); 			} 		} 	else { 		pty1( t, name, level-
+literal|1
+argument|); 		} 	}
 ifdef|#
 directive|ifdef
 name|FLEXNAMES
@@ -1798,8 +2003,8 @@ argument|); 	while ((c = getchar())>
 literal|0
 argument|) 		*cp++ = c; 	if (c<
 literal|0
-argument|) { 		fprintf(stderr,
-literal|"pass 2 error: intermediate file format error (getstr)"
+argument|) { 		error(
+literal|"intermediate file format error (getstr)"
 argument|); 		exit(
 literal|1
 argument|); 	} 	*cp++ =
@@ -1813,8 +2018,8 @@ argument|char	*savetab; int	saveleft;  char * savestr(cp) 	register char *cp; { 
 literal|1
 argument|; 	if (len> saveleft) { 		saveleft = NSAVETAB; 		if (len> saveleft) 			saveleft = len; 		savetab = (char *)malloc(saveleft); 		if (savetab ==
 literal|0
-argument|) { 			fprintf(stderr,
-literal|"pass 2 error: ran out of memory (savestr)"
+argument|) { 			error(
+literal|"ran out of memory (savestr)"
 argument|); 			exit(
 literal|1
 argument|); 		} 	} 	strncpy(savetab, cp, len); 	cp = savetab; 	savetab += len; 	saveleft -= len; 	return (cp); }
@@ -1827,22 +2032,14 @@ define|#
 directive|define
 name|HASHINC
 value|1013
-argument|struct ht { 	char	**ht_low; 	char	**ht_high; 	int	ht_used; } htab[MAXHASH];  char * hash(s) 	char *s; { 	register char **h; 	register i; 	register char *cp; 	struct ht *htp; 	int sh;
-comment|/* 	 * The hash function is a modular hash of 	 * the sum of the characters with the sum 	 * doubled before each successive character 	 * is added. 	 */
-argument|cp = s; 	i =
-literal|0
-argument|; 	while (*cp) 		i = i*
-literal|2
-argument|+ *cp++; 	sh = (i&
-literal|077777
-argument|) % HASHINC; 	cp = s;
+argument|struct ht { 	char	**ht_low; 	char	**ht_high; 	int	ht_used; } htab[MAXHASH];  char * hash(s) 	char *s; { 	register char **h; 	register i; 	register char *cp; 	struct ht *htp; 	int sh;  	sh = hashstr(s) % HASHINC; 	cp = s;
 comment|/* 	 * There are as many as MAXHASH active 	 * hash tables at any given point in time. 	 * The search starts with the first table 	 * and continues through the active tables 	 * as necessary. 	 */
 argument|for (htp = htab; htp<&htab[MAXHASH]; htp++) { 		if (htp->ht_low ==
 literal|0
 argument|) { 			register char **hp = 			    (char **) calloc(sizeof (char **), HASHINC); 			if (hp ==
 literal|0
-argument|) { 				fprintf(stderr,
-literal|"pass 2 error: ran out of memory (hash)"
+argument|) { 				error(
+literal|"ran out of memory (hash)"
 argument|); 				exit(
 literal|1
 argument|); 			} 			htp->ht_low = hp; 			htp->ht_high = htp->ht_low + HASHINC; 		} 		h = htp->ht_low + sh;
@@ -1859,8 +2056,8 @@ argument|) 					break; 				htp->ht_used++; 				*h = savestr(cp); 				return (*h)
 literal|0
 argument|) 				return (*h); 			h += i; 			i +=
 literal|2
-argument|; 			if (h>= htp->ht_high) 				h -= HASHINC; 		} while (i< HASHINC); 	} 	fprintf(stderr,
-literal|"pass 2 error: ran out of hash tables"
+argument|; 			if (h>= htp->ht_high) 				h -= HASHINC; 		} while (i< HASHINC); 	} 	error(
+literal|"ran out of hash tables"
 argument|); 	exit(
 literal|1
 argument|); } char	*tstrbuf[

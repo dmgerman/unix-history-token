@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lint.c	1.3	(Berkeley)	%G%"
+literal|"@(#)lint.c	1.4	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -248,6 +248,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* used to check precision of assignments */
+end_comment
+
+begin_decl_stmt
+name|int
+name|zflag
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* no 'structure never defined' error */
 end_comment
 
 begin_decl_stmt
@@ -636,6 +648,9 @@ condition|)
 block|{
 if|if
 condition|(
+operator|!
+name|zflag
+operator|&&
 name|dimtab
 index|[
 name|p
@@ -744,6 +759,9 @@ argument|); 	}  astype( t, i ) ATYPE *t; { 	TWORD tt; 	int j
 argument_list|,
 argument|k=
 literal|0
+argument_list|,
+argument|l=
+literal|0
 argument|;  	if( (tt=BTYPE(t->aty))==STRTY || tt==UNIONTY ){ 		if( i<
 literal|0
 argument||| i>= DIMTABSZ-
@@ -754,11 +772,7 @@ argument|); 			} 		else { 			j = dimtab[i+
 literal|3
 argument|]; 			if( j<
 literal|0
-argument||| j>SYMTSZ ){ 				k = ((-j)<<
-literal|5
-argument|)^dimtab[i]|
-literal|1
-argument|; 				} 			else { 				if( stab[j].suse<=
+argument||| j>SYMTSZ ){ 				k = dimtab[i]; 				l = X_NONAME | stab[j].suse; 				} 			else { 				if( stab[j].suse<=
 literal|0
 argument|) {
 ifndef|#
@@ -774,9 +788,17 @@ literal|"no line number for %s"
 argument|,
 endif|#
 directive|endif
-argument|stab[j].sname ); 					} 				else k = (stab[j].suse<<
-literal|5
-argument|) ^ dimtab[i]; 				} 			} 		 		t->extra = k; 		return(
+argument|stab[j].sname ); 					} 				else { 					k = dimtab[i];
+ifdef|#
+directive|ifdef
+name|FLEXNAMES
+argument|l = hashstr(stab[j].sname);
+else|#
+directive|else
+argument|l = hashstr(stab[j].sname, LCHNM);
+endif|#
+directive|endif
+argument|} 				} 			} 		 		t->extra = k; 		t->extra1 = l; 		return(
 literal|1
 argument|); 		} 	else return(
 literal|0
@@ -793,7 +815,9 @@ argument|if( vaflag>
 literal|0
 argument|){ 		if( n< vaflag ) werror(
 literal|"declare the VARARGS arguments you want checked!"
-argument|); 		else n = vaflag; 		} 	fsave( ftitle ); 	outdef( cfp, libflag?LIB:LDI, vaflag>=
+argument|); 		else n = vaflag; 		} 	fsave( ftitle ); 	if( cfp->sclass == STATIC ) outdef( cfp, LST, vaflag>=
+literal|0
+argument|?-n:n ); 	else outdef( cfp, libflag?LIB:LDI, vaflag>=
 literal|0
 argument|?-n:n ); 	vaflag = -
 literal|1
@@ -802,6 +826,8 @@ comment|/* output the arguments */
 argument|if( n ){ 		for( i=
 literal|0
 argument|; i<n; ++i ) { 			t.aty = stab[a[i]].stype; 			t.extra =
+literal|0
+argument|; 			t.extra1 =
 literal|0
 argument|; 			if( !astype(&t, stab[a[i]].sizoff ) ) { 				switch( t.aty ){  				case ULONG: 					break;  				case CHAR: 				case SHORT: 					t.aty = INT; 					break;  				case UCHAR: 				case USHORT: 				case UNSIGNED: 					t.aty = UNSIGNED; 					break;  					} 				} 			fwrite( (char *)&t, sizeof(ATYPE),
 literal|1
@@ -812,7 +838,9 @@ argument|register c; 	c =
 literal|1
 argument|;
 comment|/* count the rhs */
-argument|while( p->in.op == CM ){ 		++c; 		p = p->in.left; 		} 	return( c ); 	}  lpta( p ) NODE *p; { 	static ATYPE t;  	if( p->in.op == CM ){ 		lpta( p->in.left ); 		p = p->in.right; 		}  	t.aty = p->in.type; 	t.extra = (p->in.op==ICON);  	if( !astype(&t, p->in.csiz ) ) { 		switch( t.aty ){  			case CHAR: 			case SHORT: 				t.aty = INT; 			case LONG: 			case ULONG: 			case INT: 			case UNSIGNED: 				break;  			case UCHAR: 			case USHORT: 				t.aty = UNSIGNED; 				break;  			case FLOAT: 				t.aty = DOUBLE; 				t.extra =
+argument|while( p->in.op == CM ){ 		++c; 		p = p->in.left; 		} 	return( c ); 	}  lpta( p ) NODE *p; { 	static ATYPE t;  	if( p->in.op == CM ){ 		lpta( p->in.left ); 		p = p->in.right; 		}  	t.aty = p->in.type; 	t.extra = (p->in.op==ICON); 	t.extra1 =
+literal|0
+argument|;  	if( !astype(&t, p->in.csiz ) ) { 		switch( t.aty ){  			case CHAR: 			case SHORT: 				t.aty = INT; 			case LONG: 			case ULONG: 			case INT: 			case UNSIGNED: 				break;  			case UCHAR: 			case USHORT: 				t.aty = UNSIGNED; 				break;  			case FLOAT: 				t.aty = DOUBLE; 				t.extra =
 literal|0
 argument|; 				break;  			default: 				t.extra =
 literal|0
@@ -875,7 +903,7 @@ argument|if( (id = p->tn.rval)>=
 literal|0
 argument|&& id != NONAME ){ 			q =&stab[id]; 			q->sflags |= (SREF|SSET); 			q->suse = -lineno; 			} 		return;  	case NAME: 		if( (id = p->tn.rval)>=
 literal|0
-argument|&& id != NONAME ){ 			q =&stab[id]; 			if( (uses&VALUSED)&& !(q->sflags&SSET) ){ 				if( q->sclass == AUTO || q->sclass == REGISTER ){ 					if( !ISARY(q->stype )&& !ISFTN(q->stype)&& q->stype!=STRTY ){
+argument|&& id != NONAME ){ 			q =&stab[id]; 			if( (uses&VALUSED)&& !(q->sflags&SSET) ){ 				if( q->sclass == AUTO || q->sclass == REGISTER ){ 					if( !ISARY(q->stype )&& !ISFTN(q->stype)&& q->stype!=STRTY&& q->stype!=UNIONTY ){
 ifndef|#
 directive|ifndef
 name|FLEXNAMES
@@ -1001,24 +1029,20 @@ literal|"%s set but not used in function %s"
 argument|, p->sname, cfs->sname );
 endif|#
 directive|endif
-argument|}  	if( p->stype == STRTY || p->stype == UNIONTY || p->stype == ENUMTY ){
-ifndef|#
-directive|ifndef
-name|FLEXNAMES
-argument|if( dimtab[p->sizoff+
+argument|}  	if( p->stype == STRTY || p->stype == UNIONTY || p->stype == ENUMTY ){ 		if( !zflag&& dimtab[p->sizoff+
 literal|1
 argument|]<
 literal|0
-argument|) werror(
+argument|)
+ifndef|#
+directive|ifndef
+name|FLEXNAMES
+argument|werror(
 literal|"structure %.8s never defined"
 argument|, p->sname );
 else|#
 directive|else
-argument|if( dimtab[p->sizoff+
-literal|1
-argument|]<
-literal|0
-argument|) werror(
+argument|werror(
 literal|"structure %s never defined"
 argument|, p->sname );
 endif|#
@@ -1027,7 +1051,7 @@ argument|}  	}  defnam( p ) register struct symtab *p; {
 comment|/* define the current location as the name p->sname */
 argument|if( p->sclass == STATIC&& (p->slevel>
 literal|1
-argument||| Cflag) ) return;  	if( !ISFTN( p->stype ) ) outdef( p, libflag?LIB:LDI, USUAL ); 	}  zecode( n ){
+argument||| Cflag) ) return;  	if( !ISFTN( p->stype ) ) 		if( p->sclass == STATIC ) outdef( p, LST, USUAL ); 		else outdef( p, libflag?LIB:LDI, USUAL ); 	}  zecode( n ){
 comment|/* n integer words of zeros */
 argument|OFFSZ temp; 	temp = n; 	inoff += temp*SZINT; 	; 	}  andable( p ) NODE *p; {
 comment|/* p is a NAME node; can it accept& ? */
@@ -1267,10 +1291,18 @@ literal|'n'
 argument|:
 comment|/* done in shell script */
 argument|continue;  			case
+literal|'z'
+argument|: 				zflag =
+literal|1
+argument|; 				continue;  			case
 literal|'t'
 argument|: 				werror(
 literal|"option %c now default: see `man 6 lint'"
 argument|, *p ); 				continue;  			case
+literal|'P'
+argument|:
+comment|/* debugging, done in second pass */
+argument|continue;  			case
 literal|'C'
 argument|: 				Cflag =
 literal|1
@@ -1315,7 +1347,7 @@ argument|}  	return( mainp1( argc, argv ) ); 	}  ctype( type ) unsigned type; {
 comment|/* are there any funny types? */
 argument|return( type ); 	}  commdec( i ){
 comment|/* put out a common declaration */
-argument|outdef(&stab[i], libflag?LIB:LDC, USUAL ); 	}  isitfloat ( s ) char *s; {
+argument|if( stab[i].sclass == STATIC ) outdef(&stab[i], LST, USUAL ); 	else outdef(&stab[i], libflag?LIB:LDC, USUAL ); 	}  isitfloat ( s ) char *s; {
 comment|/* s is a character string; 	   if floating point is implemented, set dcon to the value of s */
 comment|/* lint version 	*/
 argument|dcon = atof( s ); 	return( FCON ); 	}  fldcon( p ) register NODE *p; {
@@ -1348,6 +1380,8 @@ argument|strncpy( rc.l.name, exname(p->sname), LCHNM );
 endif|#
 directive|endif
 argument|rc.l.decflag = lty; 	t = p->stype; 	if( mode == DECTY ) t = DECREF(t); 	rc.l.type.aty = t; 	rc.l.type.extra =
+literal|0
+argument|; 	rc.l.type.extra1 =
 literal|0
 argument|; 	astype(&rc.l.type, p->sizoff ); 	rc.l.nargs = (mode>USUAL) ? mode :
 literal|0
