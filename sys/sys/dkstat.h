@@ -98,6 +98,10 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* # seeks */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|long
@@ -107,6 +111,10 @@ name|DK_NDRIVE
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* time busy */
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -118,6 +126,10 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* # 16-bit words transferred */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|long
@@ -128,6 +140,10 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* 16-bit words per msec */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|long
@@ -137,6 +153,10 @@ name|DK_NDRIVE
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* # transfers */
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -151,6 +171,10 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* name of drive */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -158,12 +182,20 @@ name|dk_busy
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* bit field of busy drives */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|int
 name|dk_ndrive
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* number of installed drives */
+end_comment
 
 begin_decl_stmt
 specifier|extern
