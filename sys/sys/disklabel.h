@@ -1155,6 +1155,12 @@ begin_comment
 comment|/* set, update disk */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NO_GEOM
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -1165,6 +1171,11 @@ end_define
 begin_comment
 comment|/* write en/disable label */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
