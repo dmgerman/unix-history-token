@@ -145,6 +145,7 @@ file|<unistd.h>
 end_include
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -154,6 +155,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|u_int
 name|get_pageins
 parameter_list|(
@@ -181,6 +183,7 @@ name|argv
 index|[]
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|passwd
 modifier|*
@@ -208,19 +211,18 @@ decl_stmt|;
 name|u_int
 name|pageins
 decl_stmt|;
+specifier|const
 name|char
+modifier|*
+name|p
+decl_stmt|,
+modifier|*
+name|user
+decl_stmt|,
 modifier|*
 name|kernel
 init|=
 name|NULL
-decl_stmt|,
-modifier|*
-name|p
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|user
 decl_stmt|;
 if|if
 condition|(
@@ -829,6 +831,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|()
@@ -858,6 +861,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|u_int
 name|get_pageins
 parameter_list|()
