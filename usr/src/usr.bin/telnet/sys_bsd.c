@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sys_bsd.c	1.17 (Berkeley) %G%"
+literal|"@(#)sys_bsd.c	1.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2534,6 +2534,23 @@ return|return
 operator|-
 literal|1
 return|;
+block|}
+if|if
+condition|(
+name|termdata
+condition|)
+block|{
+name|Dump
+argument_list|(
+literal|'<'
+argument_list|,
+name|ttyiring
+operator|.
+name|supply
+argument_list|,
+name|c
+argument_list|)
+expr_stmt|;
 block|}
 name|ring_supplied
 argument_list|(

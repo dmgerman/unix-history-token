@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tn3270.c	1.17 (Berkeley) %G%"
+literal|"@(#)tn3270.c	1.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -117,6 +117,9 @@ name|int
 name|HaveInput
 decl_stmt|,
 comment|/* There is input available to scan */
+name|cursesdata
+decl_stmt|,
+comment|/* Do we dump curses data? */
 name|sigiocount
 decl_stmt|;
 end_decl_stmt
@@ -1017,6 +1020,22 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* defined(sun) */
+if|if
+condition|(
+name|cursesdata
+condition|)
+block|{
+name|Dump
+argument_list|(
+literal|'>'
+argument_list|,
+operator|&
+name|c
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!

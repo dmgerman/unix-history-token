@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)terminal.c	1.14 (Berkeley) %G%"
+literal|"@(#)terminal.c	1.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -81,6 +81,16 @@ name|BUFSIZ
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|termdata
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Debugging flag */
+end_comment
 
 begin_decl_stmt
 name|char
@@ -251,6 +261,25 @@ operator|>
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|termdata
+operator|&&
+name|n
+condition|)
+block|{
+name|Dump
+argument_list|(
+literal|'>'
+argument_list|,
+name|ttyoring
+operator|.
+name|consume
+argument_list|,
+name|n
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * If we wrote everything, and the full count is 	 * larger than what we wrote, then write the 	 * rest of the buffer. 	 */
 if|if
 condition|(

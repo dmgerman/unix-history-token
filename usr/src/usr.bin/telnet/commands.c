@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)commands.c	1.17 (Berkeley) %G%"
+literal|"@(#)commands.c	1.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2035,6 +2035,35 @@ literal|1
 block|}
 block|,
 comment|/* empty line */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|unix
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|TN3270
+argument_list|)
+block|{
+literal|"cursesdata"
+block|,
+literal|"(debugging) toggle printing of hexadecimal curses data"
+block|,
+literal|0
+block|,
+literal|1
+block|,
+operator|&
+name|cursesdata
+block|,
+literal|"print hexadecimal representation of curses data"
+block|}
+block|,
+endif|#
+directive|endif
+comment|/* defined(unix)&& defined(TN3270) */
 block|{
 literal|"debug"
 block|,
@@ -2080,6 +2109,30 @@ block|,
 literal|"show option processing"
 block|}
 block|,
+if|#
+directive|if
+name|defined
+argument_list|(
+name|unix
+argument_list|)
+block|{
+literal|"termdata"
+block|,
+literal|"(debugging) toggle printing of hexadecimal terminal data"
+block|,
+literal|0
+block|,
+literal|1
+block|,
+operator|&
+name|termdata
+block|,
+literal|"print hexadecimal representation of terminal traffic"
+block|}
+block|,
+endif|#
+directive|endif
+comment|/* defined(unix) */
 block|{
 literal|" "
 block|,
