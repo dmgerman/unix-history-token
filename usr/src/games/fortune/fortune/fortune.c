@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fortune.c	5.5 (Berkeley) %G%"
+literal|"@(#)fortune.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -92,6 +92,12 @@ begin_include
 include|#
 directive|include
 file|"strfile.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_ifdef
@@ -341,28 +347,6 @@ end_define
 
 begin_comment
 comment|/* no prob specified for file */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|FORTDIR
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|FORTDIR
-value|"/usr/games/lib/fortune"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* FORTDIR */
 end_comment
 
 begin_ifdef
