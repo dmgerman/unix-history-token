@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"@(#)$Header: /home/ncvs/src/usr.sbin/traceroute/traceroute.c,v 1.8 1996/08/17 10:37:28 peter Exp $ (LBL)"
+literal|"@(#)$Header: /home/ncvs/src/usr.sbin/traceroute/traceroute.c,v 1.9 1996/08/21 04:31:28 peter Exp $ (LBL)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2650,6 +2650,36 @@ argument_list|(
 literal|" !C"
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|ICMP_UNREACH_FILTER_PROHIB
+case|:
+operator|++
+name|unreachable
+expr_stmt|;
+name|Printf
+argument_list|(
+literal|" !F"
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+comment|/* unknown */
+name|Printf
+argument_list|(
+literal|" !<%d>"
+argument_list|,
+name|i
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+operator|-
+literal|2
+case|:
+comment|/* normal reply */
 break|break;
 block|}
 break|break;
