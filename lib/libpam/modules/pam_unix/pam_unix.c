@@ -1951,6 +1951,11 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+name|free
+argument_list|(
+name|old_pwd
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -1965,11 +1970,6 @@ literal|"Illegal 'flags'"
 argument_list|)
 expr_stmt|;
 block|}
-name|free
-argument_list|(
-name|old_pwd
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|retval
