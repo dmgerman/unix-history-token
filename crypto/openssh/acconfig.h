@@ -242,8 +242,8 @@ undef|#
 directive|undef
 name|DISABLE_PUTUTXLINE
 comment|/* Define if you don't want to use lastlog */
-define|#
-directive|define
+undef|#
+directive|undef
 name|DISABLE_LASTLOG
 comment|/* Define if you don't want to use lastlog in session.c */
 undef|#
