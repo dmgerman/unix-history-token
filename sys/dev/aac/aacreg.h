@@ -3355,7 +3355,7 @@ value|0x30
 end_define
 
 begin_comment
-comment|/* outbound interrupt mask register */
+comment|/* outbound interrupt status register */
 end_comment
 
 begin_define
@@ -3366,7 +3366,7 @@ value|0x34
 end_define
 
 begin_comment
-comment|/* outbound interrupt status register */
+comment|/* outbound interrupt mask register */
 end_comment
 
 begin_define
