@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*  * Copyright (c) 1983 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ifconfig.c	5.2 (Berkeley) %G%"
+literal|"@(#)ifconfig.c	5.1 (Berkeley) 2/28/91"
 decl_stmt|;
 end_decl_stmt
 
@@ -525,6 +525,57 @@ name|setnsellength
 block|}
 block|,
 block|{
+literal|"llc0"
+block|,
+name|IFF_LLC0
+block|,
+name|setifflags
+block|}
+block|,
+block|{
+literal|"-llc0"
+block|,
+operator|-
+name|IFF_LLC0
+block|,
+name|setifflags
+block|}
+block|,
+block|{
+literal|"llc1"
+block|,
+name|IFF_LLC1
+block|,
+name|setifflags
+block|}
+block|,
+block|{
+literal|"-llc1"
+block|,
+operator|-
+name|IFF_LLC1
+block|,
+name|setifflags
+block|}
+block|,
+block|{
+literal|"llc2"
+block|,
+name|IFF_LLC2
+block|,
+name|setifflags
+block|}
+block|,
+block|{
+literal|"-llc2"
+block|,
+operator|-
+name|IFF_LLC2
+block|,
+name|setifflags
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -765,7 +816,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: ifconfig interface\n%s%s%s%s%s"
+literal|"usage: ifconfig interface\n%s%s%s%s%s%s"
 argument_list|,
 literal|"\t[ af [ address [ dest_addr ] ] [ up ] [ down ]"
 argument_list|,
@@ -776,6 +827,8 @@ argument_list|,
 literal|"\t[ trailers | -trailers ]\n"
 argument_list|,
 literal|"\t[ arp | -arp ]\n"
+argument_list|,
+literal|"\t[ llc0 | -llc0 ] [ llc1 | -llc1 ] [ llc2 | -llc2 ] \n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1877,7 +1930,7 @@ define|#
 directive|define
 name|IFFBITS
 define|\
-value|"\020\1UP\2BROADCAST\3DEBUG\4LOOPBACK\5POINTOPOINT\6NOTRAILERS\7RUNNING\ \10NOARP\11PROMISC\12ALLMULTI\13OACTIVE\14SIMPLEX"
+value|"\020\1UP\2BROADCAST\3DEBUG\4LOOPBACK\5POINTOPOINT\6NOTRAILERS\7RUNNING\10NOARP\ \11PROMISC\12ALLMULTI\13OACTIVE\14SIMPLEX\15LLC0\16LLC1\16LLC2"
 end_define
 
 begin_comment
