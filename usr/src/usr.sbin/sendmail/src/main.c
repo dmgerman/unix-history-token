@@ -4348,6 +4348,9 @@ expr_stmt|;
 case|case
 name|MD_DAEMON
 case|:
+case|case
+name|MD_SMTP
+case|:
 comment|/* don't open alias database -- done in srvrsmtp */
 break|break;
 default|default:
