@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_err[] = "@(#)err.c	1.2";  *  * file i/o error and initialization routines  */
+comment|/* char id_err[] = "@(#)err.c	1.3";  *  * file i/o error and initialization routines  */
 end_comment
 
 begin_include
@@ -367,6 +367,16 @@ include|#
 directive|include
 file|"f_errlist.h"
 end_include
+
+begin_decl_stmt
+name|int
+name|f_nerr
+init|=
+name|MAXERR
+operator|-
+name|F_ER
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|fatal
