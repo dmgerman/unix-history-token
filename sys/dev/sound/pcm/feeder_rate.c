@@ -29,6 +29,15 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
+
 begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(
@@ -40,6 +49,12 @@ literal|"pcm rate feeder"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RATE_ASSERT
+end_ifndef
 
 begin_define
 define|#
@@ -53,8 +68,23 @@ parameter_list|)
 end_define
 
 begin_comment
-comment|/* KASSERT(x,y) */
+comment|/* KASSERT(x) */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* RATE_ASSERT */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RATE_TRACE
+end_ifndef
 
 begin_define
 define|#
@@ -76,15 +106,11 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _KERNEL */
-end_comment
-
-begin_comment
 comment|/*****************************************************************************/
 end_comment
 
 begin_comment
-comment|/* All of the following coefficients are coupled.  They are chosen to be  * good in the operating space 4000-96000kHz work.  Decreasing the  * granularity increases the required buffer size and affects the gain  * values at different points in the space.  These values were found by  * running the test program with -p (probe) and some trial and error.  *  * ROUNDHZ	the granularity of sample rates (fits n*11025 and n*8000).  * FEEDBUFSZ	the amount of buffer space.  * MINGAIN	the minimum acceptable gain in coefficients search.  */
+comment|/* The following coefficients are coupled.  They are chosen to be  * guarantee calculable factors for the interpolation routine.  They  * have been tested over the range of RATEMIN-RATEMAX Hz.  Decreasing  * the granularity increases the required buffer size and affects the  * gain values at different points in the space.  These values were  * found by running the test program with -p (probe) and some trial  * and error.  *  * ROUNDHZ	the granularity of sample rates (fits n*11025 and n*8000).  * FEEDBUFSZ	the amount of buffer space.  * MINGAIN	the minimum acceptable gain in coefficients search.  */
 end_comment
 
 begin_define
@@ -119,7 +145,7 @@ begin_define
 define|#
 directive|define
 name|RATEMAX
-value|96000
+value|48000
 end_define
 
 begin_struct_decl
@@ -1853,15 +1879,45 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
+name|RATE_ASSERT
+argument_list|(
+name|info
+operator|->
+name|buffer_ticks
+operator|<=
+name|src_ticks_per_cycle
+argument_list|(
+name|info
+argument_list|)
+argument_list|,
+operator|(
+literal|"too many ticks %d /  %d\n"
+operator|,
+name|info
+operator|->
+name|buffer_ticks
+operator|,
+name|src_ticks_per_cycle
+argument_list|(
+name|info
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 name|RATE_TRACE
 argument_list|(
-literal|"%s: ticks %5d pos %d\n"
+literal|"%s: ticks %5d / %d pos %d\n"
 argument_list|,
 name|__func__
 argument_list|,
 name|info
 operator|->
 name|buffer_ticks
+argument_list|,
+name|src_ticks_per_cycle
+argument_list|(
+name|info
+argument_list|)
 argument_list|,
 name|info
 operator|->
@@ -1986,12 +2042,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -2015,6 +2065,12 @@ literal|0
 block|}
 block|,
 block|{
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|,
 literal|0
 block|}
 block|, }
@@ -2083,15 +2139,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _KERNEL */
-end_comment
 
 end_unit
 
