@@ -223,7 +223,7 @@ begin_decl_stmt
 name|int
 name|s
 decl_stmt|,
-comment|/* main RAW socket 	   */
+comment|/* main RAW socket	   */
 name|do_resolv
 decl_stmt|,
 comment|/* Would try to resolve all */
@@ -232,7 +232,7 @@ decl_stmt|,
 comment|/* Show packet/byte count  */
 name|do_time
 decl_stmt|,
-comment|/* Show time stamps        */
+comment|/* Show time stamps	   */
 name|do_quiet
 decl_stmt|,
 comment|/* Be quiet in add and flush  */
@@ -244,12 +244,13 @@ decl_stmt|,
 comment|/* this cmd refers to a pipe */
 name|do_sort
 decl_stmt|,
-comment|/* field to sort results (0=no) */
+comment|/* field to sort results (0 = no) */
 name|do_dynamic
-init|=
-literal|1
 decl_stmt|,
 comment|/* display dynamic rules */
+name|do_expired
+decl_stmt|,
+comment|/* display expired dynamic rules */
 name|verbose
 decl_stmt|;
 end_decl_stmt
@@ -493,65 +494,46 @@ specifier|static
 name|void
 name|print_port
 parameter_list|(
-name|prot
-parameter_list|,
-name|port
-parameter_list|,
-name|comma
-parameter_list|)
 name|u_char
 name|prot
-decl_stmt|;
+parameter_list|,
 name|u_short
 name|port
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
-modifier|*
 name|comma
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|servent
 modifier|*
 name|se
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|protoent
 modifier|*
 name|pe
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|protocol
-decl_stmt|;
-name|int
-name|printed
-init|=
-literal|0
-decl_stmt|;
 if|if
 condition|(
-operator|!
-name|strcmp
-argument_list|(
 name|comma
-argument_list|,
-literal|":"
-argument_list|)
+operator|==
+literal|':'
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s0x%04x"
+literal|"%c0x%04x"
 argument_list|,
 name|comma
 argument_list|,
 name|port
 argument_list|)
 expr_stmt|;
-return|return ;
+return|return;
 block|}
 if|if
 condition|(
@@ -565,21 +547,6 @@ argument_list|(
 name|prot
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|pe
-condition|)
-name|protocol
-operator|=
-name|pe
-operator|->
-name|p_name
-expr_stmt|;
-else|else
-name|protocol
-operator|=
-name|NULL
-expr_stmt|;
 name|se
 operator|=
 name|getservbyport
@@ -589,17 +556,23 @@ argument_list|(
 name|port
 argument_list|)
 argument_list|,
-name|protocol
+name|pe
+condition|?
+name|pe
+operator|->
+name|p_name
+else|:
+name|NULL
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|se
 condition|)
-block|{
 name|printf
 argument_list|(
-literal|"%s%s"
+literal|"%c%s"
 argument_list|,
 name|comma
 argument_list|,
@@ -608,20 +581,10 @@ operator|->
 name|s_name
 argument_list|)
 expr_stmt|;
-name|printed
-operator|=
-literal|1
-expr_stmt|;
-block|}
-block|}
-if|if
-condition|(
-operator|!
-name|printed
-condition|)
+else|else
 name|printf
 argument_list|(
-literal|"%s%d"
+literal|"%c%d"
 argument_list|,
 name|comma
 argument_list|,
@@ -823,16 +786,9 @@ name|struct
 name|ip_fw
 modifier|*
 name|chain
-parameter_list|,
-name|int
-name|pcwidth
-parameter_list|,
-name|int
-name|bcwidth
 parameter_list|)
 block|{
 name|char
-modifier|*
 name|comma
 decl_stmt|;
 name|u_long
@@ -894,15 +850,11 @@ name|do_acct
 condition|)
 name|printf
 argument_list|(
-literal|"%*qu %*qu "
-argument_list|,
-name|pcwidth
+literal|"%10qu %10qu "
 argument_list|,
 name|chain
 operator|->
 name|fw_pcnt
-argument_list|,
-name|bcwidth
 argument_list|,
 name|chain
 operator|->
@@ -963,11 +915,13 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|printf
 argument_list|(
-literal|"                         "
+literal|"			 "
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -1115,7 +1069,7 @@ operator|->
 name|fw_skipto_rule
 argument_list|)
 expr_stmt|;
-break|break ;
+break|break;
 case|case
 name|IP_FW_F_QUEUE
 case|:
@@ -1128,7 +1082,7 @@ operator|->
 name|fw_skipto_rule
 argument_list|)
 expr_stmt|;
-break|break ;
+break|break;
 case|case
 name|IP_FW_F_REJECT
 case|:
@@ -1356,7 +1310,6 @@ name|he
 operator|==
 name|NULL
 condition|)
-block|{
 name|printf
 argument_list|(
 name|inet_ntoa
@@ -1367,7 +1320,6 @@ name|fw_src
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 name|printf
 argument_list|(
@@ -1379,8 +1331,7 @@ name|h_name
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
+elseif|else
 if|if
 condition|(
 name|adrt
@@ -1410,8 +1361,7 @@ literal|"any"
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
+elseif|else
 if|if
 condition|(
 name|mb
@@ -1466,8 +1416,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-block|}
 else|else
+block|{
 name|printf
 argument_list|(
 name|inet_ntoa
@@ -1497,7 +1447,7 @@ condition|)
 block|{
 name|comma
 operator|=
-literal|" "
+literal|' '
 expr_stmt|;
 for|for
 control|(
@@ -1547,7 +1497,7 @@ operator|)
 condition|)
 name|comma
 operator|=
-literal|"-"
+literal|'-'
 expr_stmt|;
 elseif|else
 if|if
@@ -1566,12 +1516,12 @@ operator|)
 condition|)
 name|comma
 operator|=
-literal|":"
+literal|':'
 expr_stmt|;
 else|else
 name|comma
 operator|=
-literal|","
+literal|','
 expr_stmt|;
 block|}
 block|}
@@ -1662,7 +1612,6 @@ name|he
 operator|==
 name|NULL
 condition|)
-block|{
 name|printf
 argument_list|(
 name|inet_ntoa
@@ -1673,7 +1622,6 @@ name|fw_dst
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 name|printf
 argument_list|(
@@ -1685,8 +1633,7 @@ name|h_name
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
+elseif|else
 if|if
 condition|(
 name|adrt
@@ -1716,8 +1663,7 @@ literal|"any"
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
+elseif|else
 if|if
 condition|(
 name|mb
@@ -1772,8 +1718,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-block|}
 else|else
+block|{
 name|printf
 argument_list|(
 name|inet_ntoa
@@ -1803,7 +1749,7 @@ condition|)
 block|{
 name|comma
 operator|=
-literal|" "
+literal|' '
 expr_stmt|;
 for|for
 control|(
@@ -1855,7 +1801,7 @@ operator|)
 condition|)
 name|comma
 operator|=
-literal|"-"
+literal|'-'
 expr_stmt|;
 elseif|else
 if|if
@@ -1874,12 +1820,12 @@ operator|)
 condition|)
 name|comma
 operator|=
-literal|":"
+literal|':'
 expr_stmt|;
 else|else
 name|comma
 operator|=
-literal|","
+literal|','
 expr_stmt|;
 block|}
 block|}
@@ -2965,12 +2911,14 @@ name|IP_FW_F_ICMPBIT
 condition|)
 block|{
 name|int
-name|type_index
-decl_stmt|;
-name|int
+name|i
+decl_stmt|,
 name|first
 init|=
 literal|1
+decl_stmt|;
+name|unsigned
+name|j
 decl_stmt|;
 name|printf
 argument_list|(
@@ -2979,14 +2927,25 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|type_index
+name|i
 operator|=
 literal|0
 init|;
-name|type_index
+name|i
 operator|<
 name|IP_FW_ICMPTYPES_DIM
-operator|*
+condition|;
+operator|++
+name|i
+control|)
+for|for
+control|(
+name|j
+operator|=
+literal|0
+init|;
+name|j
+operator|<
 sizeof|sizeof
 argument_list|(
 name|unsigned
@@ -2995,7 +2954,7 @@ operator|*
 literal|8
 condition|;
 operator|++
-name|type_index
+name|j
 control|)
 if|if
 condition|(
@@ -3005,33 +2964,13 @@ name|fw_uar
 operator|.
 name|fw_icmptypes
 index|[
-name|type_index
-operator|/
-operator|(
-sizeof|sizeof
-argument_list|(
-name|unsigned
-argument_list|)
-operator|*
-literal|8
-operator|)
+name|i
 index|]
 operator|&
 operator|(
-literal|1U
+literal|1
 operator|<<
-operator|(
-name|type_index
-operator|%
-operator|(
-sizeof|sizeof
-argument_list|(
-name|unsigned
-argument_list|)
-operator|*
-literal|8
-operator|)
-operator|)
+name|j
 operator|)
 condition|)
 block|{
@@ -3040,14 +2979,12 @@ argument_list|(
 literal|"%c%d"
 argument_list|,
 name|first
-operator|==
-literal|1
 condition|?
 literal|' '
 else|:
 literal|','
 argument_list|,
-name|type_index
+name|i
 argument_list|)
 expr_stmt|;
 name|first
@@ -3069,6 +3006,203 @@ name|do_resolv
 condition|)
 name|endservent
 argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|show_dyn_ipfw
+parameter_list|(
+name|struct
+name|ipfw_dyn_rule
+modifier|*
+name|d
+parameter_list|)
+block|{
+name|struct
+name|protoent
+modifier|*
+name|pe
+decl_stmt|;
+name|struct
+name|in_addr
+name|a
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|d
+operator|->
+name|expire
+operator|&&
+operator|!
+name|do_expired
+condition|)
+return|return;
+name|printf
+argument_list|(
+literal|"%05d %qu %qu (T %d, # %d) ty %d"
+argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
+name|d
+operator|->
+name|chain
+argument_list|)
+argument_list|,
+name|d
+operator|->
+name|pcnt
+argument_list|,
+name|d
+operator|->
+name|bcnt
+argument_list|,
+name|d
+operator|->
+name|expire
+argument_list|,
+name|d
+operator|->
+name|bucket
+argument_list|,
+name|d
+operator|->
+name|type
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|do_resolv
+operator|&&
+operator|(
+name|pe
+operator|=
+name|getprotobynumber
+argument_list|(
+name|d
+operator|->
+name|id
+operator|.
+name|proto
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+name|printf
+argument_list|(
+literal|" %s,"
+argument_list|,
+name|pe
+operator|->
+name|p_name
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|" %u,"
+argument_list|,
+name|d
+operator|->
+name|id
+operator|.
+name|proto
+argument_list|)
+expr_stmt|;
+name|a
+operator|.
+name|s_addr
+operator|=
+name|htonl
+argument_list|(
+name|d
+operator|->
+name|id
+operator|.
+name|src_ip
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" %s"
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|a
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" %d"
+argument_list|,
+name|d
+operator|->
+name|id
+operator|.
+name|src_port
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|d
+operator|->
+name|type
+condition|)
+block|{
+default|default:
+comment|/* bidir, no mask */
+name|printf
+argument_list|(
+literal|"<->"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+name|a
+operator|.
+name|s_addr
+operator|=
+name|htonl
+argument_list|(
+name|d
+operator|->
+name|id
+operator|.
+name|dst_ip
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" %s"
+argument_list|,
+name|inet_ntoa
+argument_list|(
+name|a
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" %d"
+argument_list|,
+name|d
+operator|->
+name|id
+operator|.
+name|dst_port
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -3148,7 +3282,7 @@ name|b
 operator|->
 name|len
 expr_stmt|;
-break|break ;
+break|break;
 case|case
 literal|2
 case|:
@@ -3163,7 +3297,7 @@ name|b
 operator|->
 name|len_bytes
 expr_stmt|;
-break|break ;
+break|break;
 case|case
 literal|3
 case|:
@@ -3178,7 +3312,7 @@ name|b
 operator|->
 name|tot_pkts
 expr_stmt|;
-break|break ;
+break|break;
 case|case
 literal|4
 case|:
@@ -3193,7 +3327,7 @@ name|b
 operator|->
 name|tot_bytes
 expr_stmt|;
-break|break ;
+break|break;
 block|}
 if|if
 condition|(
@@ -3294,7 +3428,7 @@ name|rq_elements
 operator|==
 literal|0
 condition|)
-return|return ;
+return|return;
 name|printf
 argument_list|(
 literal|"BKT Prot ___Source IP/port____ "
@@ -3316,10 +3450,8 @@ operator|->
 name|rq_elements
 argument_list|,
 sizeof|sizeof
-argument_list|(
-operator|*
+expr|*
 name|q
-argument_list|)
 argument_list|,
 name|sort_q
 argument_list|)
@@ -3677,7 +3809,7 @@ name|sprintf
 argument_list|(
 name|red
 argument_list|,
-literal|"\n   %cRED w_q %f min_th %d max_th %d max_p %f"
+literal|"\n	  %cRED w_q %f min_th %d max_th %d max_p %f"
 argument_list|,
 operator|(
 name|fs
@@ -3773,23 +3905,30 @@ specifier|static
 name|void
 name|list
 parameter_list|(
-name|ac
-parameter_list|,
-name|av
-parameter_list|)
 name|int
 name|ac
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
-modifier|*
 name|av
-decl_stmt|;
+index|[]
+parameter_list|)
 block|{
 name|struct
 name|ip_fw
 modifier|*
 name|rules
+decl_stmt|,
+modifier|*
+name|r
+decl_stmt|;
+name|struct
+name|ipfw_dyn_rule
+modifier|*
+name|dynrules
+decl_stmt|,
+modifier|*
+name|d
 decl_stmt|;
 name|struct
 name|dn_pipe
@@ -3803,24 +3942,38 @@ init|=
 name|NULL
 decl_stmt|;
 name|int
-name|pcwidth
-init|=
-literal|0
-decl_stmt|;
-name|int
-name|bcwidth
-init|=
-literal|0
-decl_stmt|;
-name|int
 name|n
 decl_stmt|,
-name|num
-init|=
-literal|0
+name|nbytes
+decl_stmt|,
+name|nstat
+decl_stmt|,
+name|ndyn
 decl_stmt|;
 name|int
-name|nbytes
+name|exitval
+init|=
+name|EX_OK
+decl_stmt|;
+name|int
+name|lac
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|lav
+decl_stmt|;
+name|u_long
+name|rnum
+decl_stmt|;
+name|char
+modifier|*
+name|endptr
+decl_stmt|;
+name|int
+name|seen
+init|=
+literal|0
 decl_stmt|;
 comment|/* get rules or pipes from kernel, resizing array as necessary */
 block|{
@@ -4005,10 +4158,8 @@ init|;
 name|nbytes
 operator|>=
 sizeof|sizeof
-argument_list|(
-operator|*
+expr|*
 name|p
-argument_list|)
 condition|;
 name|p
 operator|=
@@ -4052,7 +4203,7 @@ operator|*
 operator|)
 name|DN_IS_PIPE
 condition|)
-break|break ;
+break|break;
 name|l
 operator|=
 sizeof|sizeof
@@ -4267,10 +4418,8 @@ init|;
 name|nbytes
 operator|>=
 sizeof|sizeof
-argument_list|(
-operator|*
+expr|*
 name|fs
-argument_list|)
 condition|;
 name|fs
 operator|=
@@ -4301,7 +4450,7 @@ operator|*
 operator|)
 name|DN_IS_QUEUE
 condition|)
-break|break ;
+break|break;
 name|l
 operator|=
 sizeof|sizeof
@@ -4397,120 +4546,62 @@ operator|*
 operator|)
 name|data
 expr_stmt|;
-comment|/* determine num more accurately */
-name|num
+for|for
+control|(
+name|nstat
 operator|=
 literal|0
-expr_stmt|;
-while|while
-condition|(
+init|;
 name|rules
 index|[
-name|num
+name|nstat
 index|]
 operator|.
 name|fw_number
 operator|<
 literal|65535
-condition|)
-name|num
+condition|;
 operator|++
-expr_stmt|;
-name|num
+name|nstat
+control|)
+comment|/* nothing */
+empty_stmt|;
+name|nstat
 operator|++
 expr_stmt|;
 comment|/* counting starts from 0 ... */
-comment|/* if showing stats, figure out column widths ahead of time */
-if|if
-condition|(
-name|do_acct
-condition|)
-block|{
-for|for
-control|(
-name|n
+name|dynrules
 operator|=
-literal|0
-init|;
-name|n
-operator|<
-name|num
-condition|;
-name|n
-operator|++
-control|)
-block|{
-name|struct
-name|ip_fw
-modifier|*
-specifier|const
-name|r
-init|=
+operator|(
+expr|struct
+name|ipfw_dyn_rule
+operator|*
+operator|)
 operator|&
 name|rules
 index|[
-name|n
+name|nstat
 index|]
-decl_stmt|;
-name|char
-name|temp
-index|[
-literal|32
-index|]
-decl_stmt|;
-name|int
-name|width
-decl_stmt|;
-comment|/* packet counter */
-name|width
-operator|=
-name|sprintf
-argument_list|(
-name|temp
-argument_list|,
-literal|"%qu"
-argument_list|,
-name|r
-operator|->
-name|fw_pcnt
-argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|width
-operator|>
-name|pcwidth
-condition|)
-name|pcwidth
+name|ndyn
 operator|=
-name|width
+operator|(
+name|nbytes
+operator|-
+operator|(
+name|nstat
+operator|*
+sizeof|sizeof
+expr|*
+name|rules
+operator|)
+operator|)
+operator|/
+sizeof|sizeof
+expr|*
+name|dynrules
 expr_stmt|;
-comment|/* byte counter */
-name|width
-operator|=
-name|sprintf
-argument_list|(
-name|temp
-argument_list|,
-literal|"%qu"
-argument_list|,
-name|r
-operator|->
-name|fw_bcnt
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|width
-operator|>
-name|bcwidth
-condition|)
-name|bcwidth
-operator|=
-name|width
-expr_stmt|;
-block|}
-block|}
+comment|/* if no rule numbers were specified, list all rules */
 if|if
 condition|(
 name|ac
@@ -4518,7 +4609,6 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* display all rules */
 for|for
 control|(
 name|n
@@ -4527,66 +4617,91 @@ literal|0
 init|;
 name|n
 operator|<
-name|num
+name|nstat
 condition|;
 name|n
 operator|++
 control|)
-block|{
-name|struct
-name|ip_fw
-modifier|*
-specifier|const
-name|r
-init|=
+name|show_ipfw
+argument_list|(
 operator|&
 name|rules
 index|[
 name|n
 index|]
-decl_stmt|;
-name|show_ipfw
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|do_dynamic
+operator|&&
+name|ndyn
+condition|)
+block|{
+name|printf
 argument_list|(
-name|r
-argument_list|,
-name|pcwidth
-argument_list|,
-name|bcwidth
+literal|"## Dynamic rules:\n"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|n
+operator|=
+literal|0
+operator|,
+name|d
+operator|=
+name|dynrules
+init|;
+name|n
+operator|<
+name|ndyn
+condition|;
+name|n
+operator|++
+operator|,
+name|d
+operator|++
+control|)
+name|show_dyn_ipfw
+argument_list|(
+name|d
 argument_list|)
 expr_stmt|;
 block|}
+name|free
+argument_list|(
+name|data
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
-else|else
-block|{
 comment|/* display specific rules requested on command line */
-name|int
-name|exitval
-init|=
-name|EX_OK
-decl_stmt|;
-while|while
-condition|(
+for|for
+control|(
+name|lac
+operator|=
 name|ac
+operator|,
+name|lav
+operator|=
+name|av
+init|;
+name|lac
+operator|!=
+literal|0
+condition|;
+name|lac
 operator|--
-condition|)
+control|)
 block|{
-name|u_long
-name|rnum
-decl_stmt|;
-name|char
-modifier|*
-name|endptr
-decl_stmt|;
-name|int
-name|seen
-decl_stmt|;
 comment|/* convert command line rule # */
 name|rnum
 operator|=
 name|strtoul
 argument_list|(
 operator|*
-name|av
+name|lav
 operator|++
 argument_list|,
 operator|&
@@ -4611,7 +4726,7 @@ literal|"invalid rule number: %s"
 argument_list|,
 operator|*
 operator|(
-name|av
+name|lav
 operator|-
 literal|1
 operator|)
@@ -4619,38 +4734,29 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|do_dynamic
-operator|=
-literal|0
-expr_stmt|;
 for|for
 control|(
-name|seen
-operator|=
 name|n
 operator|=
+name|seen
+operator|=
 literal|0
+operator|,
+name|r
+operator|=
+name|rules
 init|;
 name|n
 operator|<
-name|num
+name|nstat
 condition|;
 name|n
 operator|++
+operator|,
+name|r
+operator|++
 control|)
 block|{
-name|struct
-name|ip_fw
-modifier|*
-specifier|const
-name|r
-init|=
-operator|&
-name|rules
-index|[
-name|n
-index|]
-decl_stmt|;
 if|if
 condition|(
 name|r
@@ -4672,10 +4778,6 @@ block|{
 name|show_ipfw
 argument_list|(
 name|r
-argument_list|,
-name|pcwidth
-argument_list|,
-name|bcwidth
 argument_list|)
 expr_stmt|;
 name|seen
@@ -4710,6 +4812,122 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|printf
+argument_list|(
+literal|"## Dynamic rules:\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|do_dynamic
+operator|&&
+name|ndyn
+condition|)
+block|{
+for|for
+control|(
+name|lac
+operator|=
+name|ac
+operator|,
+name|lav
+operator|=
+name|av
+init|;
+name|lac
+operator|!=
+literal|0
+condition|;
+name|lac
+operator|--
+control|)
+block|{
+name|rnum
+operator|=
+name|strtoul
+argument_list|(
+operator|*
+name|lav
+operator|++
+argument_list|,
+operator|&
+name|endptr
+argument_list|,
+literal|10
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|endptr
+condition|)
+comment|/* already warned */
+continue|continue;
+for|for
+control|(
+name|n
+operator|=
+literal|0
+operator|,
+name|d
+operator|=
+name|dynrules
+init|;
+name|n
+operator|<
+name|ndyn
+condition|;
+name|n
+operator|++
+operator|,
+name|d
+operator|++
+control|)
+block|{
+if|if
+condition|(
+call|(
+name|int
+call|)
+argument_list|(
+name|d
+operator|->
+name|chain
+argument_list|)
+operator|>
+name|rnum
+condition|)
+break|break;
+if|if
+condition|(
+call|(
+name|int
+call|)
+argument_list|(
+name|d
+operator|->
+name|chain
+argument_list|)
+operator|==
+name|rnum
+condition|)
+name|show_dyn_ipfw
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
+name|ac
+operator|=
+literal|0
+expr_stmt|;
+name|free
+argument_list|(
+name|data
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|exitval
@@ -4719,238 +4937,6 @@ condition|)
 name|exit
 argument_list|(
 name|exitval
-argument_list|)
-expr_stmt|;
-block|}
-comment|/*          * show dynamic rules          */
-if|if
-condition|(
-name|do_dynamic
-operator|&&
-name|num
-operator|*
-sizeof|sizeof
-argument_list|(
-name|rules
-index|[
-literal|0
-index|]
-argument_list|)
-operator|!=
-name|nbytes
-condition|)
-block|{
-name|struct
-name|ipfw_dyn_rule
-modifier|*
-name|d
-init|=
-operator|(
-expr|struct
-name|ipfw_dyn_rule
-operator|*
-operator|)
-operator|&
-name|rules
-index|[
-name|num
-index|]
-decl_stmt|;
-name|struct
-name|in_addr
-name|a
-decl_stmt|;
-name|struct
-name|protoent
-modifier|*
-name|pe
-decl_stmt|;
-name|printf
-argument_list|(
-literal|"## Dynamic rules:\n"
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-init|;
-condition|;
-name|d
-operator|++
-control|)
-block|{
-name|printf
-argument_list|(
-literal|"%05d %qu %qu (T %d, # %d) ty %d"
-argument_list|,
-call|(
-name|int
-call|)
-argument_list|(
-name|d
-operator|->
-name|chain
-argument_list|)
-argument_list|,
-name|d
-operator|->
-name|pcnt
-argument_list|,
-name|d
-operator|->
-name|bcnt
-argument_list|,
-name|d
-operator|->
-name|expire
-argument_list|,
-name|d
-operator|->
-name|bucket
-argument_list|,
-name|d
-operator|->
-name|type
-argument_list|)
-expr_stmt|;
-name|pe
-operator|=
-name|getprotobynumber
-argument_list|(
-name|d
-operator|->
-name|id
-operator|.
-name|proto
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|pe
-condition|)
-name|printf
-argument_list|(
-literal|" %s,"
-argument_list|,
-name|pe
-operator|->
-name|p_name
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
-literal|" %u,"
-argument_list|,
-name|d
-operator|->
-name|id
-operator|.
-name|proto
-argument_list|)
-expr_stmt|;
-name|a
-operator|.
-name|s_addr
-operator|=
-name|htonl
-argument_list|(
-name|d
-operator|->
-name|id
-operator|.
-name|src_ip
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|" %s"
-argument_list|,
-name|inet_ntoa
-argument_list|(
-name|a
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|" %d"
-argument_list|,
-name|d
-operator|->
-name|id
-operator|.
-name|src_port
-argument_list|)
-expr_stmt|;
-switch|switch
-condition|(
-name|d
-operator|->
-name|type
-condition|)
-block|{
-default|default:
-comment|/* bidir, no mask */
-name|printf
-argument_list|(
-literal|"<->"
-argument_list|)
-expr_stmt|;
-break|break ;
-block|}
-name|a
-operator|.
-name|s_addr
-operator|=
-name|htonl
-argument_list|(
-name|d
-operator|->
-name|id
-operator|.
-name|dst_ip
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|" %s"
-argument_list|,
-name|inet_ntoa
-argument_list|(
-name|a
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|" %d"
-argument_list|,
-name|d
-operator|->
-name|id
-operator|.
-name|dst_port
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|d
-operator|->
-name|next
-operator|==
-name|NULL
-condition|)
-break|break ;
-block|}
-block|}
-name|free
-argument_list|(
-name|data
 argument_list|)
 expr_stmt|;
 block|}
@@ -5033,31 +5019,31 @@ literal|"    pipe number config [pipeconfig]\n"
 literal|"  rule: [prob<match_probability>] action proto src dst extras...\n"
 literal|"    action:\n"
 literal|"      {allow|permit|accept|pass|deny|drop|reject|unreach code|\n"
-literal|"       reset|count|skipto num|divert port|tee port|fwd ip|\n"
-literal|"       pipe num} [log [logamount count]]\n"
-literal|"    proto: {ip|tcp|udp|icmp|<number>}\n"
-literal|"    src: from [not] {me|any|ip[{/bits|:mask}]} [{port|port-port},[port],...]\n"
-literal|"    dst: to [not] {me|any|ip[{/bits|:mask}]} [{port|port-port},[port],...]\n"
+literal|"	reset|count|skipto num|divert port|tee port|fwd ip|\n"
+literal|"	pipe num} [log [logamount count]]\n"
+literal|"    proto: {ip|tcp|udp|icmp|< number>}\n"
+literal|"    src: from [not] {me|any|ip[{/bits|:mask}]} [{port[-port]}, [port], ...]\n"
+literal|"    dst: to [not] {me|any|ip[{/bits|:mask}]} [{port[-port]}, [port], ...]\n"
 literal|"  extras:\n"
 literal|"    uid {user id}\n"
 literal|"    gid {group id}\n"
-literal|"    fragment     (may not be used with ports or tcpflags)\n"
+literal|"    fragment	  (may not be used with ports or tcpflags)\n"
 literal|"    in\n"
 literal|"    out\n"
 literal|"    {xmit|recv|via} {iface|ip|any}\n"
 literal|"    {established|setup}\n"
-literal|"    tcpflags [!]{syn|fin|rst|ack|psh|urg},...\n"
-literal|"    ipoptions [!]{ssrr|lsrr|rr|ts},...\n"
+literal|"    tcpflags [!]{syn|fin|rst|ack|psh|urg}, ...\n"
+literal|"    ipoptions [!]{ssrr|lsrr|rr|ts}, ...\n"
 literal|"    iplen {length}\n"
 literal|"    ipid {identification number}\n"
-literal|"    iptos [!]{lowdelay|throughput|reliability|mincost|congestion},...\n"
+literal|"    iptos [!]{lowdelay|throughput|reliability|mincost|congestion}, ...\n"
 literal|"    ipttl {time to live}\n"
 literal|"    ipversion {version number}\n"
-literal|"    tcpoptions [!]{mss|window|sack|ts|cc},...\n"
+literal|"    tcpoptions [!]{mss|window|sack|ts|cc}, ...\n"
 literal|"    tcpseq {sequence number}\n"
 literal|"    tcpack {acknowledgement number}\n"
 literal|"    tcpwin {window size}\n"
-literal|"    icmptypes {type[,type]}...\n"
+literal|"    icmptypes {type[, type]}...\n"
 literal|"  pipeconfig:\n"
 literal|"    {bw|bandwidth}<number>{bit/s|Kbit/s|Mbit/s|Bytes/s|KBytes/s|MBytes/s}\n"
 literal|"    {bw|bandwidth} interface_name\n"
@@ -5083,19 +5069,15 @@ specifier|static
 name|int
 name|lookup_host
 parameter_list|(
-name|host
-parameter_list|,
-name|ipaddr
-parameter_list|)
 name|char
 modifier|*
 name|host
-decl_stmt|;
+parameter_list|,
 name|struct
 name|in_addr
 modifier|*
 name|ipaddr
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|hostent
@@ -5162,41 +5144,26 @@ specifier|static
 name|void
 name|fill_ip
 parameter_list|(
-name|ipno
-parameter_list|,
-name|mask
-parameter_list|,
-name|acp
-parameter_list|,
-name|avp
-parameter_list|)
 name|struct
 name|in_addr
 modifier|*
 name|ipno
-decl_stmt|,
-decl|*
+parameter_list|,
+name|struct
+name|in_addr
+modifier|*
 name|mask
-decl_stmt|;
-end_function
-
-begin_decl_stmt
+parameter_list|,
 name|int
 modifier|*
 name|acp
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 modifier|*
 name|avp
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 name|int
 name|ac
@@ -5450,7 +5417,7 @@ operator|=
 name|av
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
@@ -5563,28 +5530,20 @@ specifier|static
 name|void
 name|add_port
 parameter_list|(
-name|cnt
-parameter_list|,
-name|ptr
-parameter_list|,
-name|off
-parameter_list|,
-name|port
-parameter_list|)
 name|u_short
 modifier|*
 name|cnt
-decl_stmt|,
-decl|*
+parameter_list|,
+name|u_short
+modifier|*
 name|ptr
-decl_stmt|,
+parameter_list|,
+name|u_short
 name|off
-decl_stmt|,
+parameter_list|,
+name|u_short
 name|port
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -5621,7 +5580,7 @@ operator|)
 operator|++
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
@@ -5843,7 +5802,6 @@ condition|(
 operator|!
 name|test
 condition|)
-block|{
 name|errx
 argument_list|(
 name|EX_DATAERR
@@ -5853,7 +5811,6 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-block|}
 name|val
 operator|=
 operator|-
@@ -5879,7 +5836,6 @@ condition|(
 operator|!
 name|test
 condition|)
-block|{
 name|errx
 argument_list|(
 name|EX_DATAERR
@@ -5889,7 +5845,6 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
-block|}
 name|val
 operator|=
 operator|-
@@ -7076,7 +7031,7 @@ if|#
 directive|if
 literal|0
 comment|/* conflicting! */
-block|if (!strncmp(p,"ecntransport",strlen(p))) 			*d |= IPTOS_ECT;
+block|if (!strncmp(p, "ecntransport", strlen(p))) 			*d |= IPTOS_ECT;
 endif|#
 directive|endif
 name|p
@@ -7092,26 +7047,24 @@ specifier|static
 name|void
 name|fill_icmptypes
 parameter_list|(
-name|types
-parameter_list|,
-name|vp
-parameter_list|,
-name|fw_flg
-parameter_list|)
-name|u_long
+name|unsigned
 modifier|*
 name|types
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|vp
-decl_stmt|;
+parameter_list|,
 name|u_int
 modifier|*
 name|fw_flg
-decl_stmt|;
+parameter_list|)
 block|{
+name|unsigned
+name|long
+name|icmptype
+decl_stmt|;
 name|char
 modifier|*
 name|c
@@ -7125,10 +7078,6 @@ operator|*
 name|c
 condition|)
 block|{
-name|unsigned
-name|long
-name|icmptype
-decl_stmt|;
 if|if
 condition|(
 operator|*
@@ -7229,18 +7178,14 @@ specifier|static
 name|void
 name|delete
 parameter_list|(
-name|ac
-parameter_list|,
-name|av
-parameter_list|)
 name|int
 name|ac
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
-modifier|*
 name|av
-decl_stmt|;
+index|[]
+parameter_list|)
 block|{
 name|struct
 name|ip_fw
@@ -7424,13 +7369,11 @@ name|EX_UNAVAILABLE
 expr_stmt|;
 name|warn
 argument_list|(
-literal|"rule %u: setsockopt(%s)"
+literal|"rule %u: setsockopt(IP_FW_DEL)"
 argument_list|,
 name|rule
 operator|.
 name|fw_number
-argument_list|,
-literal|"IP_FW_DEL"
 argument_list|)
 expr_stmt|;
 block|}
@@ -8096,11 +8039,11 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-comment|/* per-flow queue, mask is dst_ip, dst_port,                  * src_ip, src_port, proto measured in bits                  */
+comment|/* per-flow queue, mask is dst_ip, dst_port, 			 * src_ip, src_port, proto measured in bits 			 */
 name|u_int32_t
 name|a
 decl_stmt|;
-name|u_int32_t
+name|void
 modifier|*
 name|par
 init|=
@@ -8258,22 +8201,24 @@ expr_stmt|;
 name|ac
 operator|--
 expr_stmt|;
+continue|continue;
 block|}
-else|else
-block|{
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
-if|if
+while|while
 condition|(
 name|ac
-operator|<
+operator|>=
 literal|1
 condition|)
-break|break ;
+block|{
+name|int
+name|len
+init|=
+name|strlen
+argument_list|(
+operator|*
+name|av
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -8284,17 +8229,12 @@ name|av
 argument_list|,
 literal|"dst-ip"
 argument_list|,
-name|strlen
-argument_list|(
-operator|*
-name|av
-argument_list|)
+name|len
 argument_list|)
 condition|)
 name|par
 operator|=
 operator|&
-operator|(
 name|pipe
 operator|.
 name|fs
@@ -8302,7 +8242,6 @@ operator|.
 name|flow_mask
 operator|.
 name|dst_ip
-operator|)
 expr_stmt|;
 elseif|else
 if|if
@@ -8315,17 +8254,12 @@ name|av
 argument_list|,
 literal|"src-ip"
 argument_list|,
-name|strlen
-argument_list|(
-operator|*
-name|av
-argument_list|)
+name|len
 argument_list|)
 condition|)
 name|par
 operator|=
 operator|&
-operator|(
 name|pipe
 operator|.
 name|fs
@@ -8333,7 +8267,6 @@ operator|.
 name|flow_mask
 operator|.
 name|src_ip
-operator|)
 expr_stmt|;
 elseif|else
 if|if
@@ -8346,21 +8279,12 @@ name|av
 argument_list|,
 literal|"dst-port"
 argument_list|,
-name|strlen
-argument_list|(
-operator|*
-name|av
-argument_list|)
+name|len
 argument_list|)
 condition|)
-operator|(
-name|u_int16_t
-operator|*
-operator|)
 name|par
 operator|=
 operator|&
-operator|(
 name|pipe
 operator|.
 name|fs
@@ -8368,7 +8292,6 @@ operator|.
 name|flow_mask
 operator|.
 name|dst_port
-operator|)
 expr_stmt|;
 elseif|else
 if|if
@@ -8381,21 +8304,12 @@ name|av
 argument_list|,
 literal|"src-port"
 argument_list|,
-name|strlen
-argument_list|(
-operator|*
-name|av
-argument_list|)
+name|len
 argument_list|)
 condition|)
-operator|(
-name|u_int16_t
-operator|*
-operator|)
 name|par
 operator|=
 operator|&
-operator|(
 name|pipe
 operator|.
 name|fs
@@ -8403,7 +8317,6 @@ operator|.
 name|flow_mask
 operator|.
 name|src_port
-operator|)
 expr_stmt|;
 elseif|else
 if|if
@@ -8416,21 +8329,12 @@ name|av
 argument_list|,
 literal|"proto"
 argument_list|,
-name|strlen
-argument_list|(
-operator|*
-name|av
-argument_list|)
+name|len
 argument_list|)
 condition|)
-operator|(
-name|u_int8_t
-operator|*
-operator|)
 name|par
 operator|=
 operator|&
-operator|(
 name|pipe
 operator|.
 name|fs
@@ -8438,10 +8342,9 @@ operator|.
 name|flow_mask
 operator|.
 name|proto
-operator|)
 expr_stmt|;
 else|else
-break|break ;
+break|break;
 if|if
 condition|(
 name|ac
@@ -8507,17 +8410,9 @@ operator|)
 operator|-
 literal|1
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|" mask is 0x%08x\n"
-argument_list|,
-name|a
-argument_list|)
-expr_stmt|;
 block|}
 else|else
+block|{
 name|a
 operator|=
 name|strtoul
@@ -8533,16 +8428,12 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
-operator|(
-name|u_int16_t
-operator|*
-operator|)
 name|par
 operator|==
 operator|&
-operator|(
 name|pipe
 operator|.
 name|fs
@@ -8550,16 +8441,10 @@ operator|.
 name|flow_mask
 operator|.
 name|src_port
-operator|)
 operator|||
-operator|(
-name|u_int16_t
-operator|*
-operator|)
 name|par
 operator|==
 operator|&
-operator|(
 name|pipe
 operator|.
 name|fs
@@ -8567,7 +8452,6 @@ operator|.
 name|flow_mask
 operator|.
 name|dst_port
-operator|)
 condition|)
 block|{
 if|if
@@ -8582,7 +8466,8 @@ operator|)
 condition|)
 name|show_usage
 argument_list|(
-literal|"mask: %s must be 16 bit, not 0x%08x"
+literal|"mask: %s must be "
+literal|"16 bit, not 0x%08x"
 argument_list|,
 operator|*
 name|av
@@ -8608,14 +8493,9 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|(
-name|u_int8_t
-operator|*
-operator|)
 name|par
 operator|==
 operator|&
-operator|(
 name|pipe
 operator|.
 name|fs
@@ -8623,7 +8503,6 @@ operator|.
 name|flow_mask
 operator|.
 name|proto
-operator|)
 condition|)
 block|{
 if|if
@@ -8638,7 +8517,8 @@ operator|)
 condition|)
 name|show_usage
 argument_list|(
-literal|"mask: %s must be 8 bit, not 0x%08x"
+literal|"mask: %s must be "
+literal|"8 bit, not 0x%08x"
 argument_list|,
 operator|*
 name|av
@@ -8663,7 +8543,13 @@ expr_stmt|;
 block|}
 else|else
 operator|*
+operator|(
+operator|(
+name|u_int32_t
+operator|*
+operator|)
 name|par
+operator|)
 operator|=
 name|a
 expr_stmt|;
@@ -8691,7 +8577,6 @@ literal|2
 expr_stmt|;
 block|}
 comment|/* end for */
-block|}
 block|}
 elseif|else
 if|if
@@ -8794,7 +8679,8 @@ literal|0
 condition|)
 name|show_usage
 argument_list|(
-literal|"w_q %f must be 0< x<= 1"
+literal|"w_q %f must be "
+literal|"0< x<= 1"
 argument_list|,
 name|w_q
 argument_list|)
@@ -8969,7 +8855,8 @@ literal|0
 condition|)
 name|show_usage
 argument_list|(
-literal|"max_p %f must be 0< x<= 1"
+literal|"max_p %f must be "
+literal|"0< x<= 1"
 argument_list|,
 name|max_p
 argument_list|)
@@ -9047,6 +8934,15 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|int
+name|len
+init|=
+name|strlen
+argument_list|(
+operator|*
+name|av
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
 name|do_pipe
@@ -9065,11 +8961,7 @@ name|av
 argument_list|,
 literal|"bw"
 argument_list|,
-name|strlen
-argument_list|(
-operator|*
-name|av
-argument_list|)
+name|len
 argument_list|)
 operator|||
 operator|!
@@ -9080,11 +8972,7 @@ name|av
 argument_list|,
 literal|"bandwidth"
 argument_list|,
-name|strlen
-argument_list|(
-operator|*
-name|av
-argument_list|)
+name|len
 argument_list|)
 condition|)
 block|{
@@ -9194,15 +9082,17 @@ name|end
 operator|==
 literal|'k'
 condition|)
+block|{
 name|end
 operator|++
-operator|,
+expr_stmt|;
 name|pipe
 operator|.
 name|bandwidth
 operator|*=
 literal|1000
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -9211,15 +9101,17 @@ name|end
 operator|==
 literal|'M'
 condition|)
+block|{
 name|end
 operator|++
-operator|,
+expr_stmt|;
 name|pipe
 operator|.
 name|bandwidth
 operator|*=
 literal|1000000
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|*
@@ -9264,11 +9156,7 @@ name|av
 argument_list|,
 literal|"delay"
 argument_list|,
-name|strlen
-argument_list|(
-operator|*
-name|av
-argument_list|)
+name|len
 argument_list|)
 condition|)
 block|{
@@ -9298,14 +9186,17 @@ literal|2
 expr_stmt|;
 block|}
 else|else
+block|{
 name|show_usage
 argument_list|(
-literal|"unrecognised pipe option ``%s''"
+literal|"unrecognised pipe option "
+literal|"``%s''"
 argument_list|,
 operator|*
 name|av
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -9320,11 +9211,7 @@ name|av
 argument_list|,
 literal|"weight"
 argument_list|,
-name|strlen
-argument_list|(
-operator|*
-name|av
-argument_list|)
+name|len
 argument_list|)
 condition|)
 block|{
@@ -9367,11 +9254,7 @@ name|av
 argument_list|,
 literal|"pipe"
 argument_list|,
-name|strlen
-argument_list|(
-operator|*
-name|av
-argument_list|)
+name|len
 argument_list|)
 condition|)
 block|{
@@ -9404,14 +9287,17 @@ literal|2
 expr_stmt|;
 block|}
 else|else
+block|{
 name|show_usage
 argument_list|(
-literal|"unrecognised option ``%s''"
+literal|"unrecognised option "
+literal|"``%s''"
 argument_list|,
 operator|*
 name|av
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 block|}
@@ -9798,7 +9684,7 @@ name|pipe
 operator|.
 name|bandwidth
 expr_stmt|;
-comment|/* 		 * max idle time (in ticks) before avg queue size becomes 0.  		 * NOTA:  (3/w_q) is approx the value x so that  		 * (1-w_q)^x< 10^-3.  		 */
+comment|/* 			 * max idle time (in ticks) before avg queue size 			 * becomes 0. 			 * NOTA:  (3/w_q) is approx the value x so that 			 * (1-w_q)^x< 10^-3. 			 */
 name|w_q
 operator|=
 operator|(
@@ -9907,7 +9793,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|printf("configuring pipe %d bw %d delay %d size %d\n",                 pipe.pipe_nr, pipe.bandwidth, pipe.delay, pipe.queue_size);
+block|printf("configuring pipe %d bw %d delay %d size %d\n", 	    pipe.pipe_nr, pipe.bandwidth, pipe.delay, pipe.queue_size);
 endif|#
 directive|endif
 name|i
@@ -9948,18 +9834,14 @@ specifier|static
 name|void
 name|add
 parameter_list|(
-name|ac
-parameter_list|,
-name|av
-parameter_list|)
 name|int
 name|ac
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
-modifier|*
 name|av
-decl_stmt|;
+index|[]
+parameter_list|)
 block|{
 name|struct
 name|ip_fw
@@ -12020,8 +11902,8 @@ expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
-continue|continue;
 block|}
+elseif|else
 if|if
 condition|(
 operator|!
@@ -12138,8 +12020,8 @@ expr_stmt|;
 name|av
 operator|++
 expr_stmt|;
-continue|continue;
 block|}
+elseif|else
 if|if
 condition|(
 operator|!
@@ -12170,8 +12052,8 @@ expr_stmt|;
 name|ac
 operator|--
 expr_stmt|;
-continue|continue;
 block|}
+elseif|else
 if|if
 condition|(
 operator|!
@@ -12240,8 +12122,8 @@ name|ac
 operator|--
 expr_stmt|;
 block|}
-continue|continue;
 block|}
+elseif|else
 if|if
 condition|(
 operator|!
@@ -12272,8 +12154,8 @@ expr_stmt|;
 name|ac
 operator|--
 expr_stmt|;
-continue|continue;
 block|}
+elseif|else
 if|if
 condition|(
 operator|!
@@ -12304,8 +12186,8 @@ expr_stmt|;
 name|ac
 operator|--
 expr_stmt|;
-continue|continue;
 block|}
+elseif|else
 if|if
 condition|(
 name|ac
@@ -12401,8 +12283,8 @@ expr_stmt|;
 name|ac
 operator|--
 expr_stmt|;
-continue|continue;
 block|}
+elseif|else
 if|if
 condition|(
 name|ac
@@ -12491,8 +12373,8 @@ expr_stmt|;
 name|ac
 operator|--
 expr_stmt|;
-continue|continue;
 block|}
+elseif|else
 if|if
 condition|(
 name|ac
@@ -12585,8 +12467,8 @@ expr_stmt|;
 name|ac
 operator|--
 expr_stmt|;
-continue|continue;
 block|}
+elseif|else
 if|if
 condition|(
 operator|!
@@ -12617,8 +12499,8 @@ expr_stmt|;
 name|ac
 operator|--
 expr_stmt|;
-continue|continue;
 block|}
+elseif|else
 if|if
 condition|(
 operator|!
@@ -12696,8 +12578,8 @@ expr_stmt|;
 name|ac
 operator|--
 expr_stmt|;
-continue|continue;
 block|}
+elseif|else
 if|if
 condition|(
 operator|!
@@ -12762,8 +12644,8 @@ expr_stmt|;
 name|ac
 operator|--
 expr_stmt|;
-continue|continue;
 block|}
+elseif|else
 if|if
 condition|(
 operator|!
@@ -12864,8 +12746,8 @@ expr_stmt|;
 name|ac
 operator|--
 expr_stmt|;
-continue|continue;
 block|}
+elseif|else
 if|if
 condition|(
 operator|!
@@ -12928,8 +12810,8 @@ expr_stmt|;
 name|ac
 operator|--
 expr_stmt|;
-continue|continue;
 block|}
+elseif|else
 if|if
 condition|(
 operator|!
@@ -12994,8 +12876,8 @@ expr_stmt|;
 name|ac
 operator|--
 expr_stmt|;
-continue|continue;
 block|}
+elseif|else
 if|if
 condition|(
 operator|!
@@ -13075,8 +12957,8 @@ expr_stmt|;
 name|ac
 operator|--
 expr_stmt|;
-continue|continue;
 block|}
+elseif|else
 if|if
 condition|(
 name|rule
@@ -13116,8 +12998,8 @@ expr_stmt|;
 name|ac
 operator|--
 expr_stmt|;
-continue|continue;
 block|}
+elseif|else
 if|if
 condition|(
 operator|!
@@ -13160,8 +13042,8 @@ expr_stmt|;
 name|ac
 operator|--
 expr_stmt|;
-continue|continue;
 block|}
+elseif|else
 if|if
 condition|(
 operator|!
@@ -13239,8 +13121,8 @@ expr_stmt|;
 name|ac
 operator|--
 expr_stmt|;
-continue|continue;
 block|}
+elseif|else
 if|if
 condition|(
 operator|!
@@ -13318,8 +13200,8 @@ expr_stmt|;
 name|ac
 operator|--
 expr_stmt|;
-continue|continue;
 block|}
+elseif|else
 if|if
 condition|(
 operator|!
@@ -13367,9 +13249,6 @@ name|fw_tcpseq
 operator|=
 name|htonl
 argument_list|(
-operator|(
-name|u_int32_t
-operator|)
 name|strtoul
 argument_list|(
 operator|*
@@ -13387,8 +13266,8 @@ expr_stmt|;
 name|ac
 operator|--
 expr_stmt|;
-continue|continue;
 block|}
+elseif|else
 if|if
 condition|(
 operator|!
@@ -13436,9 +13315,6 @@ name|fw_tcpack
 operator|=
 name|htonl
 argument_list|(
-operator|(
-name|u_int32_t
-operator|)
 name|strtoul
 argument_list|(
 operator|*
@@ -13456,8 +13332,8 @@ expr_stmt|;
 name|ac
 operator|--
 expr_stmt|;
-continue|continue;
 block|}
+elseif|else
 if|if
 condition|(
 operator|!
@@ -13525,9 +13401,9 @@ expr_stmt|;
 name|ac
 operator|--
 expr_stmt|;
-continue|continue;
 block|}
 block|}
+elseif|else
 if|if
 condition|(
 name|rule
@@ -13594,9 +13470,10 @@ expr_stmt|;
 name|ac
 operator|--
 expr_stmt|;
-continue|continue;
 block|}
 block|}
+else|else
+block|{
 name|show_usage
 argument_list|(
 literal|"unknown argument ``%s''"
@@ -13605,6 +13482,7 @@ operator|*
 name|av
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* No direction specified -> do both directions */
 if|if
@@ -13686,11 +13564,13 @@ operator|&
 name|IP_FW_F_IN
 operator|)
 condition|)
+block|{
 name|show_usage
 argument_list|(
 literal|"can't check xmit interface of incoming packets"
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* frag may not be used in conjunction with ports or TCP flags */
 if|if
 condition|(
@@ -13857,10 +13737,6 @@ name|show_ipfw
 argument_list|(
 operator|&
 name|rule
-argument_list|,
-literal|10
-argument_list|,
-literal|10
 argument_list|)
 expr_stmt|;
 block|}
@@ -13871,19 +13747,24 @@ specifier|static
 name|void
 name|zero
 parameter_list|(
-name|ac
-parameter_list|,
-name|av
-parameter_list|)
 name|int
 name|ac
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
-modifier|*
 name|av
-decl_stmt|;
+index|[]
+parameter_list|)
 block|{
+name|struct
+name|ip_fw
+name|rule
+decl_stmt|;
+name|int
+name|failed
+init|=
+name|EX_OK
+decl_stmt|;
 name|av
 operator|++
 expr_stmt|;
@@ -13933,18 +13814,8 @@ argument_list|(
 literal|"Accounting cleared.\n"
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
-else|else
-block|{
-name|struct
-name|ip_fw
-name|rule
-decl_stmt|;
-name|int
-name|failed
-init|=
-name|EX_OK
-decl_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -14008,13 +13879,11 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"rule %u: setsockopt(%s)"
+literal|"rule %u: setsockopt(IP_FW_ZERO)"
 argument_list|,
 name|rule
 operator|.
 name|fw_number
-argument_list|,
-literal|"IP_FW_ZERO"
 argument_list|)
 expr_stmt|;
 name|failed
@@ -14039,6 +13908,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|show_usage
 argument_list|(
 literal|"invalid rule number ``%s''"
@@ -14047,6 +13917,7 @@ operator|*
 name|av
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -14060,7 +13931,6 @@ name|failed
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 end_function
 
 begin_function
@@ -14068,19 +13938,24 @@ specifier|static
 name|void
 name|resetlog
 parameter_list|(
-name|ac
-parameter_list|,
-name|av
-parameter_list|)
 name|int
 name|ac
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
-modifier|*
 name|av
-decl_stmt|;
+index|[]
+parameter_list|)
 block|{
+name|struct
+name|ip_fw
+name|rule
+decl_stmt|;
+name|int
+name|failed
+init|=
+name|EX_OK
+decl_stmt|;
 name|av
 operator|++
 expr_stmt|;
@@ -14115,9 +13990,7 @@ name|err
 argument_list|(
 name|EX_UNAVAILABLE
 argument_list|,
-literal|"setsockopt(%s)"
-argument_list|,
-literal|"IP_FW_RESETLOG"
+literal|"setsockopt(IP_FW_RESETLOG)"
 argument_list|)
 expr_stmt|;
 if|if
@@ -14130,18 +14003,8 @@ argument_list|(
 literal|"Logging counts reset.\n"
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
-else|else
-block|{
-name|struct
-name|ip_fw
-name|rule
-decl_stmt|;
-name|int
-name|failed
-init|=
-name|EX_OK
-decl_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -14205,13 +14068,11 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"rule %u: setsockopt(%s)"
+literal|"rule %u: setsockopt(IP_FW_RESETLOG)"
 argument_list|,
 name|rule
 operator|.
 name|fw_number
-argument_list|,
-literal|"IP_FW_RESETLOG"
 argument_list|)
 expr_stmt|;
 name|failed
@@ -14236,6 +14097,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|show_usage
 argument_list|(
 literal|"invalid rule number ``%s''"
@@ -14244,6 +14106,7 @@ operator|*
 name|av
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -14257,7 +14120,6 @@ name|failed
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 end_function
 
 begin_function
@@ -14265,18 +14127,14 @@ specifier|static
 name|int
 name|ipfw_main
 parameter_list|(
-name|ac
-parameter_list|,
-name|av
-parameter_list|)
 name|int
 name|ac
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|av
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|ch
@@ -14287,29 +14145,10 @@ name|ac
 operator|==
 literal|1
 condition|)
-block|{
 name|show_usage
 argument_list|(
 name|NULL
 argument_list|)
-expr_stmt|;
-block|}
-comment|/* Initialize globals. */
-name|do_resolv
-operator|=
-name|do_acct
-operator|=
-name|do_time
-operator|=
-name|do_quiet
-operator|=
-name|do_pipe
-operator|=
-name|do_sort
-operator|=
-name|verbose
-operator|=
-literal|0
 expr_stmt|;
 comment|/* Set the force flag for non-interactive processes */
 name|do_force
@@ -14337,7 +14176,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"s:adfqtvN"
+literal|"s:adefNqtv"
 argument_list|)
 operator|)
 operator|!=
@@ -14374,13 +14213,29 @@ literal|'d'
 case|:
 name|do_dynamic
 operator|=
-literal|0
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'e'
+case|:
+name|do_expired
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
 literal|'f'
 case|:
 name|do_force
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'N'
+case|:
+name|do_resolv
 operator|=
 literal|1
 expr_stmt|;
@@ -14407,14 +14262,6 @@ case|:
 comment|/* verbose */
 name|verbose
 operator|++
-expr_stmt|;
-break|break;
-case|case
-literal|'N'
-case|:
-name|do_resolv
-operator|=
-literal|1
 expr_stmt|;
 break|break;
 default|default:
@@ -14510,13 +14357,11 @@ condition|(
 operator|!
 name|ac
 condition|)
-block|{
 name|show_usage
 argument_list|(
 literal|"pipe requires arguments"
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* allow argument swapping */
 if|if
 condition|(
@@ -14695,13 +14540,13 @@ argument_list|(
 literal|"Are you sure? [yn] "
 argument_list|)
 expr_stmt|;
-do|do
-block|{
 name|fflush
 argument_list|(
 name|stdout
 argument_list|)
 expr_stmt|;
+do|do
+block|{
 name|c
 operator|=
 name|toupper
@@ -14984,18 +14829,14 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|ac
-parameter_list|,
-name|av
-parameter_list|)
 name|int
 name|ac
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
-modifier|*
 name|av
-decl_stmt|;
+index|[]
+parameter_list|)
 block|{
 define|#
 directive|define
@@ -15711,21 +15552,24 @@ name|status
 argument_list|,
 literal|0
 argument_list|)
-operator|!=
+operator|==
 operator|-
 literal|1
 condition|)
-block|{
+name|errx
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"waitpid()"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|WIFEXITED
 argument_list|(
 name|status
 argument_list|)
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 name|WEXITSTATUS
 argument_list|(
 name|status
@@ -15745,7 +15589,6 @@ name|status
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -15754,7 +15597,6 @@ argument_list|(
 name|status
 argument_list|)
 condition|)
-block|{
 name|errx
 argument_list|(
 name|EX_UNAVAILABLE
@@ -15769,9 +15611,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-block|}
-block|}
 else|else
+block|{
 name|ipfw_main
 argument_list|(
 name|ac
@@ -15779,6 +15620,7 @@ argument_list|,
 name|av
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|EX_OK
 return|;
