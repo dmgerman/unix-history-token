@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_node.c	7.29 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_node.c	7.30 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -13,12 +13,6 @@ begin_include
 include|#
 directive|include
 file|"systm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"user.h"
 end_include
 
 begin_include
@@ -42,7 +36,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"errno.h"
+file|"kernel.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"malloc.h"
 end_include
 
 begin_include
@@ -67,18 +67,6 @@ begin_include
 include|#
 directive|include
 file|"nfsmount.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"kernel.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"malloc.h"
 end_include
 
 begin_comment
@@ -1122,9 +1110,7 @@ name|np
 operator|->
 name|n_lockholder
 operator|==
-name|u
-operator|.
-name|u_procp
+name|curproc
 operator|->
 name|p_pid
 condition|)
@@ -1137,9 +1123,7 @@ name|np
 operator|->
 name|n_lockwaiter
 operator|=
-name|u
-operator|.
-name|u_procp
+name|curproc
 operator|->
 name|p_pid
 expr_stmt|;
@@ -1171,19 +1155,9 @@ name|np
 operator|->
 name|n_lockholder
 operator|=
-name|u
-operator|.
-name|u_procp
+name|curproc
 operator|->
 name|p_pid
-expr_stmt|;
-name|u
-operator|.
-name|u_spare
-index|[
-literal|0
-index|]
-operator|++
 expr_stmt|;
 name|np
 operator|->
@@ -1250,14 +1224,6 @@ operator|->
 name|n_lockholder
 operator|=
 literal|0
-expr_stmt|;
-name|u
-operator|.
-name|u_spare
-index|[
-literal|0
-index|]
-operator|--
 expr_stmt|;
 name|np
 operator|->

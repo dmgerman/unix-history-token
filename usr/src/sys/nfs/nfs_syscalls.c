@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_syscalls.c	7.24 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_syscalls.c	7.25 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -13,12 +13,6 @@ begin_include
 include|#
 directive|include
 file|"systm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"user.h"
 end_include
 
 begin_include
@@ -55,12 +49,6 @@ begin_include
 include|#
 directive|include
 file|"proc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"uio.h"
 end_include
 
 begin_include
@@ -1637,9 +1625,7 @@ index|[
 name|myiod
 index|]
 operator|=
-name|u
-operator|.
-name|u_procp
+name|curproc
 expr_stmt|;
 name|error
 operator|=

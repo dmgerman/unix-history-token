@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	7.55 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	7.56 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -10,19 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"machine/mtpr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"param.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"user.h"
 end_include
 
 begin_include
@@ -65,12 +53,6 @@ begin_include
 include|#
 directive|include
 file|"mbuf.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"errno.h"
 end_include
 
 begin_include
@@ -149,6 +131,12 @@ begin_include
 include|#
 directive|include
 file|"nfsiom.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"machine/mtpr.h"
 end_include
 
 begin_comment
@@ -846,9 +834,7 @@ name|vp
 argument_list|,
 name|NFSPROC_NULL
 argument_list|,
-name|u
-operator|.
-name|u_procp
+name|curproc
 argument_list|,
 literal|0
 argument_list|)
@@ -1452,9 +1438,7 @@ name|vp
 argument_list|,
 name|NFSPROC_GETATTR
 argument_list|,
-name|u
-operator|.
-name|u_procp
+name|curproc
 argument_list|,
 name|tryhard
 argument_list|)
@@ -1822,9 +1806,7 @@ name|vp
 argument_list|,
 name|NFSPROC_SETATTR
 argument_list|,
-name|u
-operator|.
-name|u_procp
+name|curproc
 argument_list|,
 literal|1
 argument_list|)
@@ -2323,9 +2305,7 @@ name|vp
 argument_list|,
 name|NFSPROC_LOOKUP
 argument_list|,
-name|u
-operator|.
-name|u_procp
+name|curproc
 argument_list|,
 literal|0
 argument_list|)
@@ -4145,9 +4125,7 @@ name|ni_dvp
 argument_list|,
 name|NFSPROC_CREATE
 argument_list|,
-name|u
-operator|.
-name|u_procp
+name|curproc
 argument_list|,
 literal|1
 argument_list|)
@@ -4418,9 +4396,7 @@ name|ni_dvp
 argument_list|,
 name|NFSPROC_CREATE
 argument_list|,
-name|u
-operator|.
-name|u_procp
+name|curproc
 argument_list|,
 literal|1
 argument_list|)
@@ -4644,9 +4620,7 @@ name|ni_dvp
 argument_list|,
 name|NFSPROC_REMOVE
 argument_list|,
-name|u
-operator|.
-name|u_procp
+name|curproc
 argument_list|,
 literal|1
 argument_list|)
@@ -4845,9 +4819,7 @@ name|ni_dvp
 argument_list|,
 name|NFSPROC_REMOVE
 argument_list|,
-name|u
-operator|.
-name|u_procp
+name|curproc
 argument_list|,
 literal|1
 argument_list|)
@@ -5045,9 +5017,7 @@ name|ni_dvp
 argument_list|,
 name|NFSPROC_RENAME
 argument_list|,
-name|u
-operator|.
-name|u_procp
+name|curproc
 argument_list|,
 literal|1
 argument_list|)
@@ -5371,9 +5341,7 @@ name|ni_dvp
 argument_list|,
 name|NFSPROC_RENAME
 argument_list|,
-name|u
-operator|.
-name|u_procp
+name|curproc
 argument_list|,
 literal|1
 argument_list|)
@@ -5568,9 +5536,7 @@ name|vp
 argument_list|,
 name|NFSPROC_LINK
 argument_list|,
-name|u
-operator|.
-name|u_procp
+name|curproc
 argument_list|,
 literal|1
 argument_list|)
@@ -5897,9 +5863,7 @@ name|ni_dvp
 argument_list|,
 name|NFSPROC_SYMLINK
 argument_list|,
-name|u
-operator|.
-name|u_procp
+name|curproc
 argument_list|,
 literal|1
 argument_list|)
@@ -6187,9 +6151,7 @@ name|ni_dvp
 argument_list|,
 name|NFSPROC_MKDIR
 argument_list|,
-name|u
-operator|.
-name|u_procp
+name|curproc
 argument_list|,
 literal|1
 argument_list|)
@@ -6299,9 +6261,7 @@ name|ni_dvp
 argument_list|,
 name|NFSPROC_LOOKUP
 argument_list|,
-name|u
-operator|.
-name|u_procp
+name|curproc
 argument_list|,
 literal|1
 argument_list|)
@@ -6521,9 +6481,7 @@ name|ni_dvp
 argument_list|,
 name|NFSPROC_RMDIR
 argument_list|,
-name|u
-operator|.
-name|u_procp
+name|curproc
 argument_list|,
 literal|1
 argument_list|)
@@ -7673,9 +7631,7 @@ expr_stmt|;
 comment|/* Fudge together a funny name */
 name|pid
 operator|=
-name|u
-operator|.
-name|u_procp
+name|curproc
 operator|->
 name|p_pid
 expr_stmt|;
@@ -8058,9 +8014,7 @@ name|vp
 argument_list|,
 name|NFSPROC_LOOKUP
 argument_list|,
-name|u
-operator|.
-name|u_procp
+name|curproc
 argument_list|,
 literal|1
 argument_list|)
@@ -8271,9 +8225,7 @@ name|bp
 operator|->
 name|b_proc
 operator|=
-name|u
-operator|.
-name|u_procp
+name|curproc
 expr_stmt|;
 block|}
 comment|/* 	 * If the op is asynchronous and an i/o daemon is waiting 	 * queue the request, wake it up and wait for completion 	 * otherwise just do it ourselves. 	 */
