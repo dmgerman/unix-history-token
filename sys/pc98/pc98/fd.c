@@ -30,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/bio.h>
 end_include
 
@@ -54,19 +48,31 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/disklabel.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/devicestat.h>
 end_include
 
 begin_include
 include|#
 directive|include
+file|<sys/disklabel.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/lock.h>
 end_include
 
 begin_include
@@ -79,6 +85,12 @@ begin_include
 include|#
 directive|include
 file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mutex.h>
 end_include
 
 begin_include
