@@ -5178,109 +5178,6 @@ name|struct
 name|vattr
 name|vattr
 decl_stmt|;
-name|vhold
-argument_list|(
-operator|*
-name|vpp
-argument_list|)
-expr_stmt|;
-name|vp
-operator|=
-operator|*
-name|vpp
-expr_stmt|;
-if|if
-condition|(
-name|dvp
-operator|==
-name|vp
-condition|)
-block|{
-comment|/* lookup on current */
-name|vref
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
-name|error
-operator|=
-literal|0
-expr_stmt|;
-name|SMBVDEBUG
-argument_list|(
-literal|"cached '.'\n"
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|flags
-operator|&
-name|ISDOTDOT
-condition|)
-block|{
-name|VOP_UNLOCK
-argument_list|(
-name|dvp
-argument_list|,
-literal|0
-argument_list|,
-name|td
-argument_list|)
-expr_stmt|;
-comment|/* unlock parent */
-name|error
-operator|=
-name|vget
-argument_list|(
-name|vp
-argument_list|,
-name|LK_EXCLUSIVE
-argument_list|,
-name|td
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-if|if
-condition|(
-name|vn_lock
-argument_list|(
-name|dvp
-argument_list|,
-name|LK_EXCLUSIVE
-argument_list|,
-name|td
-argument_list|)
-condition|)
-name|panic
-argument_list|(
-literal|"smbfs_lookup: Can't "
-literal|"relock directory."
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|error
-operator|=
-name|vget
-argument_list|(
-name|vp
-argument_list|,
-name|LK_EXCLUSIVE
-argument_list|,
-name|td
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|error
-condition|)
-block|{
 name|killit
 operator|=
 literal|0
@@ -5301,7 +5198,7 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-comment|/* 			 * If the file type on the server is inconsistent 			 * with what it was when we created the vnode, 			 * kill the bogus vnode now and fall through to 			 * the code below to create a new one with the 			 * right type. 			 */
+comment|/* 		 * If the file type on the server is inconsistent 		 * with what it was when we created the vnode, 		 * kill the bogus vnode now and fall through to 		 * the code below to create a new one with the 		 * right type. 		 */
 if|if
 condition|(
 name|error
@@ -5384,11 +5281,6 @@ argument_list|(
 literal|"use cached vnode\n"
 argument_list|)
 expr_stmt|;
-name|vdrop
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -5400,7 +5292,7 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-comment|/* 			 * XXX This is not quite right, if '.' is 			 * inconsistent, we really need to start the lookup 			 * all over again.  Hopefully there is some other 			 * guarantee that prevents this case from happening. 			 */
+comment|/* 		 * XXX This is not quite right, if '.' is 		 * inconsistent, we really need to start the lookup 		 * all over again.  Hopefully there is some other 		 * guarantee that prevents this case from happening. 		 */
 if|if
 condition|(
 name|killit
@@ -5450,14 +5342,7 @@ argument_list|)
 condition|)
 name|panic
 argument_list|(
-literal|"smbfs_lookup: Can't "
-literal|"relock directory."
-argument_list|)
-expr_stmt|;
-block|}
-name|vdrop
-argument_list|(
-name|vp
+literal|"smbfs_lookup: Can't relock directory."
 argument_list|)
 expr_stmt|;
 operator|*
