@@ -158,12 +158,6 @@ directive|include
 file|<i386/isa/if_rdpreg.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<i386/isa/intr_machdep.h>
-end_include
-
 begin_ifndef
 ifndef|#
 directive|ifndef
