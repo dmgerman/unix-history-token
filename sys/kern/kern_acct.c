@@ -678,7 +678,7 @@ name|log
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"Process accounting disabled.\n"
+literal|"Accounting disabled\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -739,7 +739,7 @@ name|log
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"Process accounting enabled.\n"
+literal|"Accounting enabled\n"
 argument_list|)
 expr_stmt|;
 name|acctwatch
