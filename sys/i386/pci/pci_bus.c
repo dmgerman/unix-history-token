@@ -755,6 +755,15 @@ comment|/* FALLTHROUGH */
 case|case
 literal|0x00081166
 case|:
+comment|/* FALLTHROUGH */
+case|case
+literal|0x02011166
+case|:
+comment|/* FALLTHROUGH */
+case|case
+literal|0x010f1014
+case|:
+comment|/* IBM re-badged ServerWorks chipset */
 name|s
 operator|=
 literal|"ServerWorks host to PCI bridge"
@@ -784,6 +793,37 @@ case|:
 name|s
 operator|=
 literal|"ServerWorks NB6635 3.0LE host to PCI bridge"
+expr_stmt|;
+operator|*
+name|busnum
+operator|=
+name|nexus_pcib_read_config
+argument_list|(
+literal|0
+argument_list|,
+name|bus
+argument_list|,
+name|slot
+argument_list|,
+name|func
+argument_list|,
+literal|0x44
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|0x00111166
+case|:
+comment|/* FALLTHROUGH */
+case|case
+literal|0x03021014
+case|:
+comment|/* IBM re-badged ServerWorks chipset */
+name|s
+operator|=
+literal|"ServerWorks CMIC-HE host to PCI-X bridge"
 expr_stmt|;
 operator|*
 name|busnum
