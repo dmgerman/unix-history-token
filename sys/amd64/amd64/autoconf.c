@@ -16,18 +16,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_ffs.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_cd9660.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_isa.h"
 end_include
 
@@ -47,12 +35,6 @@ begin_include
 include|#
 directive|include
 file|"opt_bus.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_rootdevname.h"
 end_include
 
 begin_include
