@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)p2put.c 1.7 %G%"
+literal|"@(#)p2put.c 1.8 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -889,6 +889,9 @@ name|char
 modifier|*
 name|printname
 decl_stmt|;
+name|int
+name|regnumber
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -905,18 +908,43 @@ operator|==
 name|REGVAR
 condition|)
 block|{
-name|putleaf
-argument_list|(
-name|P2REG
-argument_list|,
-literal|0
-argument_list|,
+name|regnumber
+operator|=
 operator|(
 operator|-
 name|offset
 operator|)
 operator|>>
 literal|1
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|regnumber
+operator|<
+literal|0
+operator|)
+operator|||
+operator|(
+name|regnumber
+operator|>
+name|P2FP
+operator|)
+condition|)
+block|{
+name|panic
+argument_list|(
+literal|"putRV regnumber"
+argument_list|)
+expr_stmt|;
+block|}
+name|putleaf
+argument_list|(
+name|P2REG
+argument_list|,
+literal|0
+argument_list|,
+name|regnumber
 argument_list|,
 name|type
 argument_list|,
@@ -1307,7 +1335,7 @@ name|REGVAR
 case|:
 name|panic
 argument_list|(
-literal|"lval of reg"
+literal|"putLV regvar"
 argument_list|)
 expr_stmt|;
 block|}

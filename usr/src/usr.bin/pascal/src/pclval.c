@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pclval.c 1.2 %G%"
+literal|"@(#)pclval.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -455,7 +455,7 @@ index|[
 name|NL_FORV
 index|]
 operator|&
-name|FORBOUND
+name|FORVAR
 operator|)
 condition|)
 block|{
