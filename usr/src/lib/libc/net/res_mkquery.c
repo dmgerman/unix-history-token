@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_mkquery.c	6.8 (Berkeley) %G%"
+literal|"@(#)res_mkquery.c	6.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -252,6 +252,16 @@ endif|#
 directive|endif
 endif|DEBUG
 comment|/* 	 * Initialize header fields. 	 */
+name|bzero
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|HEADER
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|hp
 operator|=
 operator|(
@@ -277,24 +287,6 @@ operator|->
 name|opcode
 operator|=
 name|op
-expr_stmt|;
-name|hp
-operator|->
-name|qr
-operator|=
-name|hp
-operator|->
-name|aa
-operator|=
-name|hp
-operator|->
-name|tc
-operator|=
-name|hp
-operator|->
-name|ra
-operator|=
-literal|0
 expr_stmt|;
 name|hp
 operator|->
@@ -329,30 +321,6 @@ operator|->
 name|rcode
 operator|=
 name|NOERROR
-expr_stmt|;
-name|hp
-operator|->
-name|qdcount
-operator|=
-literal|0
-expr_stmt|;
-name|hp
-operator|->
-name|ancount
-operator|=
-literal|0
-expr_stmt|;
-name|hp
-operator|->
-name|nscount
-operator|=
-literal|0
-expr_stmt|;
-name|hp
-operator|->
-name|arcount
-operator|=
-literal|0
 expr_stmt|;
 name|cp
 operator|=
