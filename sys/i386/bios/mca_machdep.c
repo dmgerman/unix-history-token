@@ -132,9 +132,9 @@ name|feature
 decl_stmt|;
 define|#
 directive|define
-name|FEATURE_RESV
+name|FEATURE_MCAISA
 value|0x01
-comment|/* Reserved				*/
+comment|/* Machine contains both MCA and ISA bus*/
 define|#
 directive|define
 name|FEATURE_MCABUS
@@ -386,14 +386,15 @@ operator|->
 name|feature
 argument_list|,
 literal|"\20"
-literal|"\01RESV"
-literal|"\02MCABUS"
+literal|"\01MCA+ISA"
+literal|"\02MCA"
 literal|"\03EBDA"
 literal|"\04WAITEV"
 literal|"\05KBDINT"
 literal|"\06RTC"
 literal|"\07IC2"
-literal|"\08DMA3\n"
+literal|"\08DMA3"
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
