@@ -1378,7 +1378,12 @@ operator|->
 name|mon_name
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+operator|&
+name|dummy
+operator|)
+return|;
 block|}
 name|lp
 operator|=
@@ -1393,7 +1398,8 @@ name|lp
 condition|)
 return|return
 operator|(
-name|FALSE
+operator|&
+name|dummy
 operator|)
 return|;
 comment|/* We know this host, but have no	*/
@@ -1423,7 +1429,12 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+comment|/* no answer, the client will retry */
 block|}
 if|if
 condition|(
