@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)sys_process.c	7.18 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)sys_process.c	7.19 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -377,8 +377,7 @@ name|p
 parameter_list|,
 name|o
 parameter_list|)
-define|\
-value|((physadr)(p)+((o)/sizeof(((physadr)0)->r[0])))
+value|((caddr_t)(p) + (o))
 end_define
 
 begin_if
@@ -485,6 +484,11 @@ name|i
 decl_stmt|,
 modifier|*
 name|poff
+decl_stmt|;
+specifier|extern
+name|char
+name|kstack
+index|[]
 decl_stmt|;
 if|if
 condition|(
@@ -659,10 +663,9 @@ name|ip_addr
 expr_stmt|;
 if|if
 condition|(
-name|i
-operator|<
-literal|0
-operator|||
+operator|(
+name|u_int
+operator|)
 name|i
 operator|>
 name|ctob
@@ -674,6 +677,14 @@ sizeof|sizeof
 argument_list|(
 name|int
 argument_list|)
+operator|||
+operator|(
+name|i
+operator|&
+literal|1
+operator|)
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|error
@@ -930,9 +941,7 @@ operator|*
 operator|)
 name|PHYSOFF
 argument_list|(
-name|p
-operator|->
-name|p_addr
+name|kstack
 argument_list|,
 name|i
 argument_list|)
@@ -1035,9 +1044,15 @@ operator|(
 name|int
 operator|*
 operator|)
-name|p
-operator|->
-name|p_addr
+operator|&
+operator|(
+operator|(
+expr|struct
+name|user
+operator|*
+operator|)
+name|kstack
+operator|)
 operator|->
 name|u_pcb
 operator|.
@@ -1052,9 +1067,14 @@ name|int
 operator|*
 operator|)
 operator|&
-name|p
-operator|->
-name|p_addr
+operator|(
+operator|(
+expr|struct
+name|user
+operator|*
+operator|)
+name|kstack
+operator|)
 operator|->
 name|u_pcb
 operator|.
