@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)resume.c 1.2 %G%"
+literal|"@(#)resume.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -163,10 +163,21 @@ condition|)
 block|{
 if|if
 condition|(
-name|pcframe
-operator|==
-name|NIL
+name|isbperr
+argument_list|()
 condition|)
+block|{
+name|pc
+operator|=
+name|p
+operator|->
+name|reg
+index|[
+literal|11
+index|]
+expr_stmt|;
+block|}
+else|else
 block|{
 name|dread
 argument_list|(
@@ -184,25 +195,6 @@ expr_stmt|;
 name|pcframe
 operator|++
 expr_stmt|;
-block|}
-if|if
-condition|(
-name|isbperr
-argument_list|()
-condition|)
-block|{
-name|pc
-operator|=
-name|p
-operator|->
-name|reg
-index|[
-literal|11
-index|]
-expr_stmt|;
-block|}
-else|else
-block|{
 name|pc
 operator|=
 name|fetchpc
@@ -707,9 +699,11 @@ argument_list|(
 name|process
 argument_list|)
 expr_stmt|;
-name|exit
+name|quit
 argument_list|(
-literal|0
+name|process
+operator|->
+name|exitval
 argument_list|)
 expr_stmt|;
 block|}
@@ -730,7 +724,24 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\nEntering debugger, type 'help' for help\n"
+literal|"\nEntering debugger ..."
+argument_list|)
+expr_stmt|;
+name|init
+argument_list|()
+expr_stmt|;
+name|option
+argument_list|(
+literal|'r'
+argument_list|)
+operator|=
+name|FALSE
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|" type 'help' for help.\n"
 argument_list|)
 expr_stmt|;
 block|}
