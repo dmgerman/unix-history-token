@@ -239,7 +239,7 @@ begin_define
 define|#
 directive|define
 name|VINUM_GETCONFIG
-value|_IOR(L, 65, struct _vinum_conf)
+value|_IOR(L, 65, struct __vinum_conf)
 end_define
 
 begin_comment
@@ -250,7 +250,7 @@ begin_define
 define|#
 directive|define
 name|VINUM_DRIVECONFIG
-value|_IOWR(L, 66, struct drive)
+value|_IOWR(L, 66, struct _drive)
 end_define
 
 begin_comment
@@ -261,7 +261,7 @@ begin_define
 define|#
 directive|define
 name|VINUM_SDCONFIG
-value|_IOWR(L, 67, struct sd)
+value|_IOWR(L, 67, struct _sd)
 end_define
 
 begin_comment
@@ -272,7 +272,7 @@ begin_define
 define|#
 directive|define
 name|VINUM_PLEXCONFIG
-value|_IOWR(L, 68, struct plex)
+value|_IOWR(L, 68, struct _plex)
 end_define
 
 begin_comment
@@ -283,7 +283,7 @@ begin_define
 define|#
 directive|define
 name|VINUM_VOLCONFIG
-value|_IOWR(L, 69, struct volume)
+value|_IOWR(L, 69, struct _volume)
 end_define
 
 begin_comment
@@ -294,7 +294,7 @@ begin_define
 define|#
 directive|define
 name|VINUM_PLEXSDCONFIG
-value|_IOWR(L, 70, struct sd)
+value|_IOWR(L, 70, struct _sd)
 end_define
 
 begin_comment
