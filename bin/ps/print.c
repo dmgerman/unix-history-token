@@ -2124,9 +2124,6 @@ name|k
 argument_list|)
 operator|->
 name|p_wchan
-operator|&
-operator|~
-name|KERNBASE
 argument_list|)
 expr_stmt|;
 block|}
@@ -3522,9 +3519,6 @@ name|u_long
 operator|*
 operator|)
 name|bp
-operator|&
-operator|~
-name|KERNBASE
 argument_list|)
 expr_stmt|;
 break|break;

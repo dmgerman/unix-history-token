@@ -992,7 +992,7 @@ name|pvar
 block|,
 name|NULL
 block|,
-literal|6
+literal|8
 block|,
 name|POFF
 argument_list|(
@@ -1075,7 +1075,7 @@ name|evar
 block|,
 name|NULL
 block|,
-literal|6
+literal|8
 block|,
 name|EOFF
 argument_list|(
