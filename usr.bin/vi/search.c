@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1992, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)search.c	8.32 (Berkeley) 1/9/94"
+literal|"@(#)search.c	8.40 (Berkeley) 3/23/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,6 +37,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<bitstring.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<ctype.h>
 end_include
 
@@ -44,6 +62,24 @@ begin_include
 include|#
 directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_include
@@ -61,19 +97,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<termios.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vi.h"
+file|<db.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"interrupt.h"
+file|<regex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"vi.h"
 end_include
 
 begin_decl_stmt
@@ -171,19 +219,6 @@ operator|*
 operator|,
 name|u_int
 operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-name|search_intr
-name|__P
-argument_list|(
-operator|(
-name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1036,73 +1071,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * search_intr --  *	Set the interrupt bit in any screen that is interruptible.  *  * XXX  * In the future this may be a problem.  The user should be able to move to  * another screen and keep typing while this runs.  If so, and the user has  * more than one search/global (see ex/ex_global.c) running, it will be hard  * to decide which one to stop.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|search_intr
-parameter_list|(
-name|signo
-parameter_list|)
-name|int
-name|signo
-decl_stmt|;
-block|{
-name|SCR
-modifier|*
-name|sp
-decl_stmt|;
-for|for
-control|(
-name|sp
-operator|=
-name|__global_list
-operator|->
-name|dq
-operator|.
-name|cqh_first
-init|;
-name|sp
-operator|!=
-operator|(
-name|void
-operator|*
-operator|)
-operator|&
-name|__global_list
-operator|->
-name|dq
-condition|;
-name|sp
-operator|=
-name|sp
-operator|->
-name|q
-operator|.
-name|cqe_next
-control|)
-if|if
-condition|(
-name|F_ISSET
-argument_list|(
-name|sp
-argument_list|,
-name|S_INTERRUPTIBLE
-argument_list|)
-condition|)
-name|F_SET
-argument_list|(
-name|sp
-argument_list|,
-name|S_INTERRUPTED
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_define
 define|#
 directive|define
@@ -1193,8 +1161,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|DECLARE_INTERRUPTS
-expr_stmt|;
 name|regmatch_t
 name|match
 index|[
@@ -1222,7 +1188,11 @@ name|u_int
 name|flags
 decl_stmt|;
 name|int
+name|btear
+decl_stmt|,
 name|eval
+decl_stmt|,
+name|itear
 decl_stmt|,
 name|rval
 decl_stmt|,
@@ -1462,27 +1432,32 @@ literal|1
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Set up busy message, interrupts. 	 * 	 * F_search is called from the ex_tagfirst() routine, which runs 	 * before the screen really exists.  Make sure we don't step on 	 * anything. 	 */
-if|if
-condition|(
+comment|/* Set up busy message, interrupts. */
+name|btear
+operator|=
+name|F_ISSET
+argument_list|(
 name|sp
-operator|->
-name|s_position
-operator|!=
-name|NULL
-condition|)
+argument_list|,
+name|S_EXSILENT
+argument_list|)
+condition|?
+literal|0
+else|:
+operator|!
 name|busy_on
 argument_list|(
 name|sp
 argument_list|,
-literal|1
-argument_list|,
 literal|"Searching..."
 argument_list|)
 expr_stmt|;
-name|SET_UP_INTERRUPTS
+name|itear
+operator|=
+operator|!
+name|intr_init
 argument_list|(
-name|search_intr
+name|sp
 argument_list|)
 expr_stmt|;
 for|for
@@ -1875,23 +1850,24 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
-name|interrupt_err
-label|:
 comment|/* Turn off busy message, interrupts. */
 if|if
 condition|(
-name|sp
-operator|->
-name|s_position
-operator|!=
-name|NULL
+name|btear
 condition|)
 name|busy_off
 argument_list|(
 name|sp
 argument_list|)
 expr_stmt|;
-name|TEAR_DOWN_INTERRUPTS
+if|if
+condition|(
+name|itear
+condition|)
+name|intr_end
+argument_list|(
+name|sp
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -1956,8 +1932,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|DECLARE_INTERRUPTS
-expr_stmt|;
 name|regmatch_t
 name|match
 index|[
@@ -1987,7 +1961,11 @@ name|u_int
 name|flags
 decl_stmt|;
 name|int
+name|btear
+decl_stmt|,
 name|eval
+decl_stmt|,
+name|itear
 decl_stmt|,
 name|rval
 decl_stmt|,
@@ -2150,29 +2128,31 @@ operator|->
 name|lno
 expr_stmt|;
 comment|/* Turn on busy message, interrupts. */
+name|btear
+operator|=
+name|F_ISSET
+argument_list|(
+name|sp
+argument_list|,
+name|S_EXSILENT
+argument_list|)
+condition|?
+literal|0
+else|:
+operator|!
 name|busy_on
 argument_list|(
 name|sp
 argument_list|,
-literal|1
-argument_list|,
 literal|"Searching..."
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|F_ISSET
+name|itear
+operator|=
+operator|!
+name|intr_init
 argument_list|(
 name|sp
-operator|->
-name|gp
-argument_list|,
-name|G_ISFROMTTY
-argument_list|)
-condition|)
-name|SET_UP_INTERRUPTS
-argument_list|(
-name|search_intr
 argument_list|)
 expr_stmt|;
 for|for
@@ -2377,10 +2357,6 @@ index|]
 operator|.
 name|rm_eo
 operator|=
-name|coff
-condition|?
-name|coff
-else|:
 name|len
 expr_stmt|;
 if|#
@@ -2465,6 +2441,23 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+comment|/* Check for a match starting past the cursor. */
+if|if
+condition|(
+name|coff
+operator|!=
+literal|0
+operator|&&
+name|match
+index|[
+literal|0
+index|]
+operator|.
+name|rm_so
+operator|>=
+name|coff
+condition|)
+continue|continue;
 comment|/* Warn if wrapped. */
 if|if
 condition|(
@@ -2558,7 +2551,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 			 * Find the last acceptable one in this line.  This 			 * is really painful, we need a cleaner interface to 			 * regexec to make this possible. 			 */
+comment|/* 			 * We now have the first match on the line.  Step 			 * through the line character by character until we 			 * find the last acceptable match.  This is painful, 			 * we need a better interface to regex to make this 			 * work. 			 */
 for|for
 control|(
 init|;
@@ -2573,22 +2566,7 @@ literal|0
 index|]
 operator|.
 name|rm_so
-expr_stmt|;
-name|match
-index|[
-literal|0
-index|]
-operator|.
-name|rm_so
-operator|=
-name|match
-index|[
-literal|0
-index|]
-operator|.
-name|rm_eo
-operator|+
-literal|1
+operator|++
 expr_stmt|;
 if|if
 condition|(
@@ -2600,17 +2578,6 @@ operator|.
 name|rm_so
 operator|>=
 name|len
-operator|||
-name|coff
-operator|&&
-name|match
-index|[
-literal|0
-index|]
-operator|.
-name|rm_so
-operator|>=
-name|coff
 condition|)
 break|break;
 name|match
@@ -2620,10 +2587,6 @@ index|]
 operator|.
 name|rm_eo
 operator|=
-name|coff
-condition|?
-name|coff
-else|:
 name|len
 expr_stmt|;
 name|eval
@@ -2683,6 +2646,20 @@ goto|goto
 name|err
 goto|;
 block|}
+if|if
+condition|(
+name|coff
+operator|&&
+name|match
+index|[
+literal|0
+index|]
+operator|.
+name|rm_so
+operator|>=
+name|coff
+condition|)
+break|break;
 block|}
 name|rm
 operator|->
@@ -2730,10 +2707,12 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* Turn off busy message, interrupts. */
-name|interrupt_err
-label|:
 name|err
 label|:
+if|if
+condition|(
+name|btear
+condition|)
 name|busy_off
 argument_list|(
 name|sp
@@ -2741,16 +2720,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|F_ISSET
+name|itear
+condition|)
+name|intr_end
 argument_list|(
 name|sp
-operator|->
-name|gp
-argument_list|,
-name|G_ISFROMTTY
 argument_list|)
-condition|)
-name|TEAR_DOWN_INTERRUPTS
 expr_stmt|;
 return|return
 operator|(
@@ -2761,7 +2736,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * re_conv --  *	Convert vi's regular expressions into something that the  *	the POSIX 1003.2 RE functions can handle.  *  * There are three conversions we make to make vi's RE's (specifically  * the global, search, and substitute patterns) work with POSIX RE's.  *  * 1: If O_MAGIC is not set, strip backslashes from the magic character  *    set (.[]*~) that have them, and add them to the ones that don't.   * 2: If O_MAGIC is not set, the string "\~" is replaced with the text  *    from the last substitute command's replacement string.  If O_MAGIC  *    is set, it's the string "~".  * 3: The pattern \<ptrn\> does "word" searches, convert it to use the  *    new RE escapes.  */
+comment|/*  * re_conv --  *	Convert vi's regular expressions into something that the  *	the POSIX 1003.2 RE functions can handle.  *  * There are three conversions we make to make vi's RE's (specifically  * the global, search, and substitute patterns) work with POSIX RE's.  *  * 1: If O_MAGIC is not set, strip backslashes from the magic character  *    set (.[]*~) that have them, and add them to the ones that don't.  * 2: If O_MAGIC is not set, the string "\~" is replaced with the text  *    from the last substitute command's replacement string.  If O_MAGIC  *    is set, it's the string "~".  * 3: The pattern \<ptrn\> does "word" searches, convert it to use the  *    new RE escapes.  */
 end_comment
 
 begin_function

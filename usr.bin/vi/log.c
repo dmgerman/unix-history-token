@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1992, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)log.c	8.9 (Berkeley) 12/28/93"
+literal|"@(#)log.c	8.14 (Berkeley) 3/14/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,7 +37,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<bitstring.h>
 end_include
 
 begin_include
@@ -55,6 +73,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -67,11 +103,29 @@ end_include
 begin_include
 include|#
 directive|include
+file|<termios.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<regex.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"vi.h"
 end_include
 
 begin_comment
-comment|/*  * The log consists of records, each containing a type byte and a variable  * length byte string, as follows:  *  *	LOG_CURSOR_INIT		MARK  *	LOG_CURSOR_END		MARK  *	LOG_LINE_APPEND 	recno_t		char *  *	LOG_LINE_DELETE		recno_t		char *  *	LOG_LINE_INSERT		recno_t		char *  *	LOG_LINE_RESET_F	recno_t		char *  *	LOG_LINE_RESET_B	recno_t		char *  *	LOG_MARK		MARK  *  * We do before image physical logging.  This means that the editor layer  * MAY NOT modify records in place, even if simply deleting or overwriting  * characters.  Since the smallest unit of logging is a line, we're using  * up lots of space.  This may eventually have to be reduced, probably by  * doing logical logging, which is a much cooler database phrase.  *  * The implementation of the historic vi 'u' command, using roll-forward and  * roll-back, is simple.  Each set of changes has a LOG_CURSOR_INIT record,  * followed by a number of other records, followed by a LOG_CURSOR_END record.  * LOG_LINE_RESET records come in pairs.  The first is a LOG_LINE_RESET_B  * record, and is the line before the change.  The second is LOG_LINE_RESET_F,  * and is the line after the change.  Roll-back is done by backing up to the  * first LOG_CURSOR_INIT record before a change.  Roll-forward is done in a  * similar fashion.  *  * The 'U' command is implemented by rolling backward to a LOG_CURSOR_END  * record for a line different from the current one.  It should be noted that  * this means that a subsequent 'u' command will make a change based on the  * new position of the log's cursor.  This is okay, and, in fact, historic vi  * behaved that way.  */
+comment|/*  * The log consists of records, each containing a type byte and a variable  * length byte string, as follows:  *  *	LOG_CURSOR_INIT		MARK  *	LOG_CURSOR_END		MARK  *	LOG_LINE_APPEND 	recno_t		char *  *	LOG_LINE_DELETE		recno_t		char *  *	LOG_LINE_INSERT		recno_t		char *  *	LOG_LINE_RESET_F	recno_t		char *  *	LOG_LINE_RESET_B	recno_t		char *  *	LOG_MARK		LMARK  *  * We do before image physical logging.  This means that the editor layer  * MAY NOT modify records in place, even if simply deleting or overwriting  * characters.  Since the smallest unit of logging is a line, we're using  * up lots of space.  This may eventually have to be reduced, probably by  * doing logical logging, which is a much cooler database phrase.  *  * The implementation of the historic vi 'u' command, using roll-forward and  * roll-back, is simple.  Each set of changes has a LOG_CURSOR_INIT record,  * followed by a number of other records, followed by a LOG_CURSOR_END record.  * LOG_LINE_RESET records come in pairs.  The first is a LOG_LINE_RESET_B  * record, and is the line before the change.  The second is LOG_LINE_RESET_F,  * and is the line after the change.  Roll-back is done by backing up to the  * first LOG_CURSOR_INIT record before a change.  Roll-forward is done in a  * similar fashion.  *  * The 'U' command is implemented by rolling backward to a LOG_CURSOR_END  * record for a line different from the current one.  It should be noted that  * this means that a subsequent 'u' command will make a change based on the  * new position of the log's cursor.  This is okay, and, in fact, historic vi  * behaved that way.  */
 end_comment
 
 begin_decl_stmt
@@ -1168,7 +1222,7 @@ name|sp
 parameter_list|,
 name|ep
 parameter_list|,
-name|mp
+name|lmp
 parameter_list|)
 name|SCR
 modifier|*
@@ -1178,9 +1232,9 @@ name|EXF
 modifier|*
 name|ep
 decl_stmt|;
-name|MARK
+name|LMARK
 modifier|*
-name|mp
+name|lmp
 decl_stmt|;
 block|{
 name|DBT
@@ -1258,7 +1312,7 @@ argument_list|)
 operator|+
 sizeof|sizeof
 argument_list|(
-name|MARK
+name|LMARK
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1282,11 +1336,11 @@ argument_list|(
 name|u_char
 argument_list|)
 argument_list|,
-name|mp
+name|lmp
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|MARK
+name|LMARK
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1327,7 +1381,7 @@ argument_list|)
 operator|+
 sizeof|sizeof
 argument_list|(
-name|MARK
+name|LMARK
 argument_list|)
 expr_stmt|;
 if|if
@@ -1356,6 +1410,39 @@ literal|1
 condition|)
 name|LOG_ERR
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DEBUG
+argument_list|)
+operator|&&
+literal|0
+name|TRACE
+argument_list|(
+name|sp
+argument_list|,
+literal|"%lu: mark %c: %lu/%u\n"
+argument_list|,
+name|ep
+operator|->
+name|l_cur
+argument_list|,
+name|lmp
+operator|->
+name|name
+argument_list|,
+name|lmp
+operator|->
+name|lno
+argument_list|,
+name|lmp
+operator|->
+name|cno
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* Reset high water mark. */
 name|ep
 operator|->
@@ -1405,6 +1492,9 @@ name|DBT
 name|key
 decl_stmt|,
 name|data
+decl_stmt|;
+name|LMARK
+name|lm
 decl_stmt|;
 name|MARK
 name|m
@@ -1829,7 +1919,7 @@ expr_stmt|;
 name|memmove
 argument_list|(
 operator|&
-name|m
+name|lm
 argument_list|,
 name|p
 operator|+
@@ -1840,9 +1930,25 @@ argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|MARK
+name|LMARK
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|m
+operator|.
+name|lno
+operator|=
+name|lm
+operator|.
+name|lno
+expr_stmt|;
+name|m
+operator|.
+name|cno
+operator|=
+name|lm
+operator|.
+name|cno
 expr_stmt|;
 if|if
 condition|(
@@ -1852,7 +1958,7 @@ name|sp
 argument_list|,
 name|ep
 argument_list|,
-name|m
+name|lm
 operator|.
 name|name
 argument_list|,
@@ -1914,6 +2020,9 @@ name|DBT
 name|key
 decl_stmt|,
 name|data
+decl_stmt|;
+name|LMARK
+name|lm
 decl_stmt|;
 name|MARK
 name|m
@@ -2262,7 +2371,7 @@ case|:
 name|memmove
 argument_list|(
 operator|&
-name|m
+name|lm
 argument_list|,
 name|p
 operator|+
@@ -2273,9 +2382,25 @@ argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|MARK
+name|LMARK
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|m
+operator|.
+name|lno
+operator|=
+name|lm
+operator|.
+name|lno
+expr_stmt|;
+name|m
+operator|.
+name|cno
+operator|=
+name|lm
+operator|.
+name|cno
 expr_stmt|;
 if|if
 condition|(
@@ -2285,7 +2410,7 @@ name|sp
 argument_list|,
 name|ep
 argument_list|,
-name|m
+name|lm
 operator|.
 name|name
 argument_list|,
@@ -2353,6 +2478,9 @@ name|DBT
 name|key
 decl_stmt|,
 name|data
+decl_stmt|;
+name|LMARK
+name|lm
 decl_stmt|;
 name|MARK
 name|m
@@ -2784,7 +2912,7 @@ expr_stmt|;
 name|memmove
 argument_list|(
 operator|&
-name|m
+name|lm
 argument_list|,
 name|p
 operator|+
@@ -2795,9 +2923,25 @@ argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|MARK
+name|LMARK
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|m
+operator|.
+name|lno
+operator|=
+name|lm
+operator|.
+name|lno
+expr_stmt|;
+name|m
+operator|.
+name|cno
+operator|=
+name|lm
+operator|.
+name|cno
 expr_stmt|;
 if|if
 condition|(
@@ -2807,7 +2951,7 @@ name|sp
 argument_list|,
 name|ep
 argument_list|,
-name|m
+name|lm
 operator|.
 name|name
 argument_list|,
@@ -2884,6 +3028,9 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
+name|LMARK
+name|lm
+decl_stmt|;
 name|MARK
 name|m
 decl_stmt|;
@@ -3159,7 +3306,7 @@ case|:
 name|memmove
 argument_list|(
 operator|&
-name|m
+name|lm
 argument_list|,
 name|p
 operator|+
@@ -3170,7 +3317,7 @@ argument_list|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|MARK
+name|LMARK
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3184,11 +3331,11 @@ name|rno
 argument_list|,
 name|msg
 argument_list|,
-name|m
+name|lm
 operator|.
 name|lno
 argument_list|,
-name|m
+name|lm
 operator|.
 name|cno
 argument_list|)

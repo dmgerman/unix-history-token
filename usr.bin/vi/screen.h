@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)screen.h	8.81 (Berkeley) 12/29/93  */
+comment|/*-  * Copyright (c) 1992, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)screen.h	8.92 (Berkeley) 3/23/94  */
 end_comment
 
 begin_comment
@@ -55,6 +55,23 @@ block|,
 name|P_MIDDLE
 block|,
 name|P_TOP
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/* Screen adjustment operations. */
+end_comment
+
+begin_enum
+enum|enum
+name|adjust
+block|{
+name|A_DECREASE
+block|,
+name|A_INCREASE
+block|,
+name|A_SET
 block|}
 enum|;
 end_enum
@@ -357,22 +374,31 @@ modifier|*
 name|script
 decl_stmt|;
 comment|/* Vi: script mode information .*/
+name|struct
+name|timeval
+name|busy_tod
+decl_stmt|;
+comment|/* ITIMER_REAL: busy time-of-day. */
 name|char
 specifier|const
 modifier|*
-name|time_msg
+name|busy_msg
 decl_stmt|;
-comment|/* ITIMER_REAL message. */
-name|struct
-name|itimerval
-name|time_value
-decl_stmt|;
-comment|/* ITIMER_REAL saved value. */
+comment|/* ITIMER_REAL: busy message. */
 name|struct
 name|sigaction
-name|time_handler
+name|intr_act
 decl_stmt|;
-comment|/* ITIMER_REAL saved handler. */
+comment|/* Interrupt saved signal state. */
+name|struct
+name|termios
+name|intr_term
+decl_stmt|;
+comment|/* Interrupt saved terminal state. */
+name|int
+name|intr_level
+decl_stmt|;
+comment|/* 0-N: Interrupt level. */
 name|void
 modifier|*
 name|vi_private
@@ -413,15 +439,6 @@ name|direction
 name|searchdir
 decl_stmt|;
 comment|/* File search direction. */
-name|enum
-name|cdirection
-name|csearchdir
-decl_stmt|;
-comment|/* Character search direction. */
-name|CHAR_T
-name|lastckey
-decl_stmt|;
-comment|/* Last search character. */
 name|regmatch_t
 modifier|*
 name|match
@@ -529,10 +546,23 @@ name|operation
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* Clear the screen. */
+name|int
+argument_list|(
+argument|*s_clear
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|SCR
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Return column close to specified. */
 name|size_t
 argument_list|(
-argument|*s_chposition
+argument|*s_colpos
 argument_list|)
 name|__P
 argument_list|(
@@ -546,19 +576,6 @@ operator|,
 name|recno_t
 operator|,
 name|size_t
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* Clear the screen. */
-name|int
-argument_list|(
-argument|*s_clear
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-name|SCR
-operator|*
 operator|)
 argument_list|)
 expr_stmt|;
@@ -605,6 +622,21 @@ operator|*
 operator|)
 argument_list|)
 decl_stmt|;
+comment|/* Change the relative screen size. */
+name|int
+argument_list|(
+argument|*s_crel
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|SCR
+operator|*
+operator|,
+name|long
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Move down the screen. */
 name|int
 argument_list|(
@@ -852,6 +884,27 @@ name|SCR
 operator|*
 operator|,
 name|long
+operator|,
+expr|enum
+name|adjust
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* Return column close to selection. */
+name|size_t
+argument_list|(
+argument|*s_rcm
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+name|SCR
+operator|*
+operator|,
+name|EXF
+operator|*
+operator|,
+name|recno_t
 operator|)
 argument_list|)
 expr_stmt|;
@@ -868,39 +921,6 @@ operator|*
 operator|,
 name|EXF
 operator|*
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* Return column close to last char. */
-name|size_t
-argument_list|(
-argument|*s_relative
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-name|SCR
-operator|*
-operator|,
-name|EXF
-operator|*
-operator|,
-name|recno_t
-operator|)
-argument_list|)
-expr_stmt|;
-comment|/* Change the relative screen size. */
-name|int
-argument_list|(
-argument|*s_rrel
-argument_list|)
-name|__P
-argument_list|(
-operator|(
-name|SCR
-operator|*
-operator|,
-name|long
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1101,20 +1121,112 @@ value|0x0200000
 comment|/* The substitute RE has been set. */
 define|#
 directive|define
-name|S_TIMER_SET
+name|S_UPDATE_MODE
 value|0x0400000
-comment|/* If a busy timer is running. */
+comment|/* Don't repaint modeline. */
 define|#
 directive|define
-name|S_UPDATE_MODE
+name|S_VLITONLY
 value|0x0800000
-comment|/* Don't repaint modeline. */
-name|u_int
+comment|/* ^V literal next only. */
+name|u_int32_t
 name|flags
 decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* Timers have no structure, so routines are here. */
+end_comment
+
+begin_decl_stmt
+name|void
+name|h_alrm
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|busy_on
+name|__P
+argument_list|(
+operator|(
+name|SCR
+operator|*
+operator|,
+name|char
+specifier|const
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|busy_off
+name|__P
+argument_list|(
+operator|(
+name|SCR
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|rcv_on
+name|__P
+argument_list|(
+operator|(
+name|SCR
+operator|*
+operator|,
+name|EXF
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Interrupts have no structure, so routines are here. */
+end_comment
+
+begin_decl_stmt
+name|void
+name|intr_end
+name|__P
+argument_list|(
+operator|(
+name|SCR
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|intr_init
+name|__P
+argument_list|(
+operator|(
+name|SCR
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Generic routines to start/stop a screen. */

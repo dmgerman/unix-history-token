@@ -1,91 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vi.h	8.33 (Berkeley) 1/9/94  */
+comment|/*-  * Copyright (c) 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)vi.h	8.39 (Berkeley) 3/23/94  */
 end_comment
-
-begin_comment
-comment|/* System includes. */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<queue.h>
-end_include
-
-begin_comment
-comment|/* Required by screen.h. */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_comment
-comment|/* Required by screen.h. */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<bitstring.h>
-end_include
-
-begin_comment
-comment|/* Required by screen.h. */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<limits.h>
-end_include
-
-begin_comment
-comment|/* Required by screen.h. */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<signal.h>
-end_include
-
-begin_comment
-comment|/* Required by screen.h. */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_comment
-comment|/* Required by screen.h. */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<termios.h>
-end_include
-
-begin_comment
-comment|/* Required by gs.h. */
-end_comment
-
-begin_comment
-comment|/*  * Required by screen.h.  This is the first include that can pull  * in "compat.h".  Should be after every other system include.  */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<regex.h>
-end_include
 
 begin_comment
 comment|/*  * Forward structure declarations.  Not pretty, but the include files  * are far too interrelated for a clean solution.  */
@@ -152,6 +68,14 @@ typedef|typedef
 name|struct
 name|_ibuf
 name|IBUF
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|_lmark
+name|LMARK
 typedef|;
 end_typedef
 
@@ -236,63 +160,27 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Fundamental character types.  *  * CHAR_T	An integral type that can hold any character.  * ARG_CHAR_T	The type of a CHAR_T when passed as an argument using  *		traditional promotion rules.  It should also be able  *		to be compared against any CHAR_T for equality without  *		problems.  * MAX_CHAR_T	The maximum value of any character.  *  * If no integral type can hold a character, don't even try the port.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|u_char
-name|CHAR_T
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|u_int
-name|ARG_CHAR_T
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|MAX_CHAR_T
-value|0xff
-end_define
-
-begin_comment
-comment|/* The maximum number of columns any character can take up on a screen. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAX_CHARACTER_COLUMNS
-value|4
-end_define
-
-begin_comment
 comment|/*  * Local includes.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<db.h>
+file|"compat.h"
 end_include
 
 begin_comment
-comment|/* Required by exf.h; includes compat.h. */
+comment|/* typedef u_int8_t et al. */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"search.h"
+file|"term.h"
 end_include
 
 begin_comment
-comment|/* Required by screen.h. */
+comment|/* Required by args.h. */
 end_comment
 
 begin_include
@@ -318,7 +206,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"term.h"
+file|"search.h"
 end_include
 
 begin_comment
@@ -648,38 +536,6 @@ name|SCR
 operator|*
 operator|,
 name|ARG_CHAR_T
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|busy_off
-name|__P
-argument_list|(
-operator|(
-name|SCR
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|busy_on
-name|__P
-argument_list|(
-operator|(
-name|SCR
-operator|*
-operator|,
-name|int
-operator|,
-name|char
-specifier|const
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;

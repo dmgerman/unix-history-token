@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)exf.c	8.65 (Berkeley) 1/11/94"
+literal|"@(#)exf.c	8.71 (Berkeley) 3/23/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,7 +37,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_comment
@@ -48,6 +60,12 @@ begin_include
 include|#
 directive|include
 file|<sys/file.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<bitstring.h>
 end_include
 
 begin_include
@@ -65,6 +83,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -77,7 +113,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<termios.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<regex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pathnames.h>
 end_include
 
 begin_include
@@ -90,12 +150,6 @@ begin_include
 include|#
 directive|include
 file|"excmd.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"pathnames.h"
 end_include
 
 begin_comment
@@ -1932,7 +1986,11 @@ decl_stmt|,
 name|nch
 decl_stmt|;
 name|int
+name|btear
+decl_stmt|,
 name|fd
+decl_stmt|,
+name|itear
 decl_stmt|,
 name|oflags
 decl_stmt|,
@@ -2499,7 +2557,34 @@ operator|&
 name|to
 expr_stmt|;
 block|}
-comment|/* Write the file. */
+comment|/* Write the file, allowing interrupts. */
+name|btear
+operator|=
+name|F_ISSET
+argument_list|(
+name|sp
+argument_list|,
+name|S_EXSILENT
+argument_list|)
+condition|?
+literal|0
+else|:
+operator|!
+name|busy_on
+argument_list|(
+name|sp
+argument_list|,
+literal|"Writing..."
+argument_list|)
+expr_stmt|;
+name|itear
+operator|=
+operator|!
+name|intr_init
+argument_list|(
+name|sp
+argument_list|)
+expr_stmt|;
 name|rval
 operator|=
 name|ex_writefp
@@ -2523,13 +2608,25 @@ operator|&
 name|nch
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Save the new last modification time -- even if the write fails 	 * we re-init the time if we wrote anything.  That way the user can 	 * clean up the disk and rewrite without having to force it. 	 */
 if|if
 condition|(
-name|nlno
-operator|||
-name|nch
+name|btear
 condition|)
+name|busy_off
+argument_list|(
+name|sp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|itear
+condition|)
+name|intr_end
+argument_list|(
+name|sp
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Save the new last modification time -- even if the write fails 	 * we re-init the time.  That way the user can clean up the disk 	 * and rewrite without having to force it. 	 */
 name|frp
 operator|->
 name|mtime

@@ -1,7 +1,43 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)term.h	8.26 (Berkeley) 1/7/94  */
+comment|/*-  * Copyright (c) 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)term.h	8.37 (Berkeley) 3/22/94  */
 end_comment
+
+begin_comment
+comment|/*  * Fundamental character types.  *  * CHAR_T	An integral type that can hold any character.  * ARG_CHAR_T	The type of a CHAR_T when passed as an argument using  *		traditional promotion rules.  It should also be able  *		to be compared against any CHAR_T for equality without  *		problems.  * MAX_CHAR_T	The maximum value of any character.  *  * If no integral type can hold a character, don't even try the port.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|u_char
+name|CHAR_T
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|u_int
+name|ARG_CHAR_T
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|MAX_CHAR_T
+value|0xff
+end_define
+
+begin_comment
+comment|/* The maximum number of columns any character can take up on a screen. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_CHARACTER_COLUMNS
+value|4
+end_define
 
 begin_comment
 comment|/* Structure to return a character and associated information. */
@@ -17,55 +53,59 @@ decl_stmt|;
 comment|/* Character. */
 define|#
 directive|define
+name|K_NOTUSED
+value|0
+define|#
+directive|define
 name|K_CARAT
 value|1
 define|#
 directive|define
-name|K_CNTRLR
+name|K_CNTRLD
 value|2
 define|#
 directive|define
-name|K_CNTRLT
+name|K_CNTRLR
 value|3
 define|#
 directive|define
-name|K_CNTRLZ
+name|K_CNTRLT
 value|4
 define|#
 directive|define
-name|K_COLON
+name|K_CNTRLZ
 value|5
 define|#
 directive|define
-name|K_CR
+name|K_COLON
 value|6
 define|#
 directive|define
-name|K_ESCAPE
+name|K_CR
 value|7
 define|#
 directive|define
-name|K_FORMFEED
+name|K_ESCAPE
 value|8
 define|#
 directive|define
-name|K_NL
+name|K_FORMFEED
 value|9
 define|#
 directive|define
-name|K_RIGHTBRACE
+name|K_NL
 value|10
 define|#
 directive|define
-name|K_RIGHTPAREN
+name|K_RIGHTBRACE
 value|11
 define|#
 directive|define
-name|K_TAB
+name|K_RIGHTPAREN
 value|12
 define|#
 directive|define
-name|K_VEOF
+name|K_TAB
 value|13
 define|#
 directive|define
@@ -91,7 +131,7 @@ define|#
 directive|define
 name|K_ZERO
 value|19
-name|u_char
+name|u_int8_t
 name|value
 decl_stmt|;
 comment|/* Special character flag values. */
@@ -110,7 +150,7 @@ directive|define
 name|CH_QUOTED
 value|0x04
 comment|/* Character is already quoted. */
-name|u_char
+name|u_int8_t
 name|flags
 decl_stmt|;
 block|}
@@ -118,7 +158,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Structure for the key input buffer.  *  * MAX_MAP_COUNT was chosen based on the vi maze script, which remaps  * characters roughly 250 times.  */
+comment|/* Structure for the key input buffer. */
 end_comment
 
 begin_struct
@@ -130,7 +170,7 @@ modifier|*
 name|ch
 decl_stmt|;
 comment|/* Array of characters. */
-name|u_char
+name|u_int8_t
 modifier|*
 name|chf
 decl_stmt|;
@@ -138,9 +178,9 @@ comment|/* Array of character flags (CH_*). */
 define|#
 directive|define
 name|MAX_MAP_COUNT
-value|270
-comment|/* Maximum times a character can remap. */
-name|u_char
+value|50
+comment|/* Infinite loop check. */
+name|u_int8_t
 modifier|*
 name|cmap
 decl_stmt|;
@@ -150,9 +190,9 @@ name|cnt
 decl_stmt|;
 comment|/* Count of remaining characters. */
 name|size_t
-name|len
+name|nelem
 decl_stmt|;
-comment|/* Array length. */
+comment|/* Numer of array elements. */
 name|size_t
 name|next
 decl_stmt|;
@@ -199,7 +239,7 @@ modifier|*
 name|name
 decl_stmt|;
 comment|/* Character name. */
-name|u_char
+name|u_int8_t
 name|len
 decl_stmt|;
 comment|/* Length of the character name. */
@@ -269,6 +309,17 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* The "standard" tab width, for displaying things to users. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STANDARD_TAB
+value|6
+end_define
+
+begin_comment
 comment|/* Various special characters, messages. */
 end_comment
 
@@ -303,6 +354,17 @@ end_define
 
 begin_comment
 comment|/* Leading hex number. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LITERAL_CH
+value|'\026'
+end_define
+
+begin_comment
+comment|/* Standard literal ^V. */
 end_comment
 
 begin_define
@@ -378,7 +440,7 @@ begin_define
 define|#
 directive|define
 name|TXT_AICHARS
-value|0x000001
+value|0x0000001
 end_define
 
 begin_comment
@@ -389,7 +451,7 @@ begin_define
 define|#
 directive|define
 name|TXT_ALTWERASE
-value|0x000002
+value|0x0000002
 end_define
 
 begin_comment
@@ -400,7 +462,7 @@ begin_define
 define|#
 directive|define
 name|TXT_APPENDEOL
-value|0x000004
+value|0x0000004
 end_define
 
 begin_comment
@@ -411,7 +473,7 @@ begin_define
 define|#
 directive|define
 name|TXT_AUTOINDENT
-value|0x000008
+value|0x0000008
 end_define
 
 begin_comment
@@ -422,7 +484,7 @@ begin_define
 define|#
 directive|define
 name|TXT_BEAUTIFY
-value|0x000010
+value|0x0000010
 end_define
 
 begin_comment
@@ -433,7 +495,7 @@ begin_define
 define|#
 directive|define
 name|TXT_BS
-value|0x000020
+value|0x0000020
 end_define
 
 begin_comment
@@ -443,8 +505,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TXT_CNTRLD
+value|0x0000040
+end_define
+
+begin_comment
+comment|/* Control-D is a special command. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TXT_CNTRLT
-value|0x000040
+value|0x0000080
 end_define
 
 begin_comment
@@ -455,7 +528,7 @@ begin_define
 define|#
 directive|define
 name|TXT_CR
-value|0x000080
+value|0x0000100
 end_define
 
 begin_comment
@@ -466,7 +539,7 @@ begin_define
 define|#
 directive|define
 name|TXT_EMARK
-value|0x000100
+value|0x0000200
 end_define
 
 begin_comment
@@ -477,7 +550,7 @@ begin_define
 define|#
 directive|define
 name|TXT_ESCAPE
-value|0x000200
+value|0x0000400
 end_define
 
 begin_comment
@@ -488,7 +561,7 @@ begin_define
 define|#
 directive|define
 name|TXT_INFOLINE
-value|0x000400
+value|0x0000800
 end_define
 
 begin_comment
@@ -499,7 +572,7 @@ begin_define
 define|#
 directive|define
 name|TXT_MAPCOMMAND
-value|0x000800
+value|0x0001000
 end_define
 
 begin_comment
@@ -510,7 +583,7 @@ begin_define
 define|#
 directive|define
 name|TXT_MAPINPUT
-value|0x001000
+value|0x0002000
 end_define
 
 begin_comment
@@ -521,7 +594,7 @@ begin_define
 define|#
 directive|define
 name|TXT_MAPNODIGIT
-value|0x002000
+value|0x0004000
 end_define
 
 begin_comment
@@ -532,7 +605,7 @@ begin_define
 define|#
 directive|define
 name|TXT_NLECHO
-value|0x004000
+value|0x0008000
 end_define
 
 begin_comment
@@ -543,7 +616,7 @@ begin_define
 define|#
 directive|define
 name|TXT_OVERWRITE
-value|0x008000
+value|0x0010000
 end_define
 
 begin_comment
@@ -554,7 +627,7 @@ begin_define
 define|#
 directive|define
 name|TXT_PROMPT
-value|0x010000
+value|0x0020000
 end_define
 
 begin_comment
@@ -565,7 +638,7 @@ begin_define
 define|#
 directive|define
 name|TXT_RECORD
-value|0x020000
+value|0x0040000
 end_define
 
 begin_comment
@@ -576,7 +649,7 @@ begin_define
 define|#
 directive|define
 name|TXT_REPLACE
-value|0x040000
+value|0x0080000
 end_define
 
 begin_comment
@@ -587,7 +660,7 @@ begin_define
 define|#
 directive|define
 name|TXT_REPLAY
-value|0x080000
+value|0x0100000
 end_define
 
 begin_comment
@@ -598,7 +671,7 @@ begin_define
 define|#
 directive|define
 name|TXT_RESOLVE
-value|0x100000
+value|0x0200000
 end_define
 
 begin_comment
@@ -609,7 +682,7 @@ begin_define
 define|#
 directive|define
 name|TXT_SHOWMATCH
-value|0x200000
+value|0x0400000
 end_define
 
 begin_comment
@@ -620,7 +693,7 @@ begin_define
 define|#
 directive|define
 name|TXT_TTYWERASE
-value|0x400000
+value|0x0800000
 end_define
 
 begin_comment
@@ -631,20 +704,12 @@ begin_define
 define|#
 directive|define
 name|TXT_WRAPMARGIN
-value|0x800000
+value|0x1000000
 end_define
 
 begin_comment
 comment|/* Option: wrapmargin. */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|TXT_VALID_EX
-define|\
-value|(TXT_BEAUTIFY | TXT_CR | TXT_NLECHO | TXT_PROMPT)
-end_define
 
 begin_comment
 comment|/* Support keyboard routines. */
@@ -708,24 +773,6 @@ name|CH
 operator|*
 operator|,
 name|u_int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|term_key_ch
-name|__P
-argument_list|(
-operator|(
-name|SCR
-operator|*
-operator|,
-name|int
-operator|,
-name|CHAR_T
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;

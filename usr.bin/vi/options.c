@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)options.c	8.36 (Berkeley) 12/29/93"
+literal|"@(#)options.c	8.52 (Berkeley) 3/24/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,7 +37,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/stat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<bitstring.h>
 end_include
 
 begin_include
@@ -49,13 +67,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<curses.h>
+file|<errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_include
@@ -73,7 +103,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<termios.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<db.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<regex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pathnames.h>
 end_include
 
 begin_include
@@ -86,12 +140,6 @@ begin_include
 include|#
 directive|include
 file|"excmd.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"pathnames.h"
 end_include
 
 begin_decl_stmt
@@ -161,9 +209,6 @@ operator|,
 name|OPTLIST
 specifier|const
 operator|*
-operator|,
-name|OPTION
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -232,6 +277,17 @@ block|,
 name|NULL
 block|,
 name|OPT_0BOOL
+block|,
+literal|0
+block|}
+block|,
+comment|/* O_CDPATH	  4.4BSD */
+block|{
+literal|"cdpath"
+block|,
+name|f_cdpath
+block|,
+name|OPT_STR
 block|,
 literal|0
 block|}
@@ -391,6 +447,7 @@ name|OPT_NOSAVE
 block|}
 block|,
 comment|/* O_LISP	    4BSD */
+comment|/*  * XXX  * When the lisp option is implemented, delete  * the OPT_NOSAVE flag, so that :mkexrc dumps it.  */
 block|{
 literal|"lisp"
 block|,
@@ -398,7 +455,7 @@ name|f_lisp
 block|,
 name|OPT_0BOOL
 block|,
-literal|0
+name|OPT_NOSAVE
 block|}
 block|,
 comment|/* O_LIST	    4BSD */
@@ -482,7 +539,7 @@ comment|/* O_OPTIMIZE	    4BSD */
 block|{
 literal|"optimize"
 block|,
-name|f_optimize
+name|NULL
 block|,
 name|OPT_1BOOL
 block|,
@@ -547,6 +604,17 @@ block|,
 comment|/* O_REMAP	    4BSD */
 block|{
 literal|"remap"
+block|,
+name|NULL
+block|,
+name|OPT_1BOOL
+block|,
+literal|0
+block|}
+block|,
+comment|/* O_REMAPMAX	  4.4BSD */
+block|{
+literal|"remapmax"
 block|,
 name|NULL
 block|,
@@ -784,6 +852,8 @@ block|,
 name|OPT_NUM
 block|,
 name|OPT_NEVER
+operator||
+name|OPT_NOSAVE
 block|}
 block|,
 comment|/* O_W300	    4BSD */
@@ -795,6 +865,8 @@ block|,
 name|OPT_NUM
 block|,
 name|OPT_NEVER
+operator||
+name|OPT_NOSAVE
 block|}
 block|,
 comment|/* O_W9600	    4BSD */
@@ -806,6 +878,8 @@ block|,
 name|OPT_NUM
 block|,
 name|OPT_NEVER
+operator||
+name|OPT_NOSAVE
 block|}
 block|,
 comment|/* O_WARN	    4BSD */
@@ -1298,6 +1372,43 @@ argument_list|,
 name|cnt
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|snprintf
+argument_list|(
+name|b1
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|b1
+argument_list|)
+argument_list|,
+literal|"cdpath=%s"
+argument_list|,
+operator|(
+name|s
+operator|=
+name|getenv
+argument_list|(
+literal|"CDPATH"
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|?
+literal|":"
+else|:
+name|s
+argument_list|)
+expr_stmt|;
+name|SET_DEF
+argument_list|(
+name|O_CDPATH
+argument_list|,
+name|b1
+argument_list|)
+expr_stmt|;
 comment|/* 	 * !!! 	 * Vi historically stored temporary files in /var/tmp.  We store them 	 * in /tmp by default, hoping it's a memory based file system.  There 	 * are two ways to change this -- the user can set either the directory 	 * option or the TMPDIR environmental variable. 	 */
 operator|(
 name|void
@@ -1757,6 +1868,10 @@ block|}
 comment|/* Find equals sign or end of set, skipping backquoted chars. */
 for|for
 control|(
+name|equals
+operator|=
+name|NULL
+operator|,
 name|p
 operator|=
 name|name
@@ -1767,15 +1882,15 @@ literal|0
 index|]
 operator|->
 name|bp
-operator|,
-name|equals
-operator|=
-name|NULL
 init|;
+operator|(
 name|ch
 operator|=
 operator|*
 name|p
+operator|)
+operator|!=
+literal|'\0'
 condition|;
 operator|++
 name|p
@@ -2547,6 +2662,8 @@ block|}
 if|if
 condition|(
 name|disp
+operator|!=
+name|NO_DISPLAY
 condition|)
 name|opts_dump
 argument_list|(
@@ -2628,12 +2745,28 @@ index|[
 literal|20
 index|]
 decl_stmt|;
-comment|/* 	 * Options are output in two groups -- those that fit in a column and 	 * those that don't.  Output is done on 6 character "tab" boundaries 	 * for no particular reason.  (Since we don't output tab characters, 	 * we can ignore the terminal's tab settings.)  Ignore the user's tab 	 * setting because we have no idea how reasonable it is. 	 */
-define|#
-directive|define
-name|BOUND
-value|6
-comment|/* Find a column width we can live with. */
+comment|/* 	 * XXX 	 * It's possible to get here by putting "set option" in the 	 * .exrc file.  I can't think of a clean way to layer this, 	 * or a reasonable check to make, so we block it here. 	 */
+if|if
+condition|(
+name|sp
+operator|->
+name|stdfp
+operator|==
+name|NULL
+condition|)
+block|{
+name|msgq
+argument_list|(
+name|sp
+argument_list|,
+name|M_ERR
+argument_list|,
+literal|"Option display requires that the screen be initialized."
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/* 	 * Options are output in two groups -- those that fit in a column and 	 * those that don't.  Output is done on 6 character "tab" boundaries 	 * for no particular reason.  (Since we don't output tab characters, 	 * we can ignore the terminal's tab settings.)  Ignore the user's tab 	 * setting because we have no idea how reasonable it is. 	 * 	 * Find a column width we can live with. 	 */
 for|for
 control|(
 name|cnt
@@ -2662,7 +2795,7 @@ name|cnt
 operator|&
 operator|~
 operator|(
-name|BOUND
+name|STANDARD_TAB
 operator|-
 literal|1
 operator|)
@@ -2679,12 +2812,12 @@ operator|=
 operator|(
 name|colwidth
 operator|+
-name|BOUND
+name|STANDARD_TAB
 operator|)
 operator|&
 operator|~
 operator|(
-name|BOUND
+name|STANDARD_TAB
 operator|-
 literal|1
 operator|)
@@ -2696,7 +2829,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/*  	 * Two passes.  First, get the set of options to list, entering them 	 * into the column list or the overflow list.  No error checking, 	 * since we know that at least one option (O_TERM) has the OPT_SET bit 	 * set. 	 */
+comment|/* 	 * Get the set of options to list, entering them into 	 * the column list or the overflow list. 	 */
 for|for
 control|(
 name|b_num
@@ -2712,6 +2845,8 @@ init|;
 name|op
 operator|->
 name|name
+operator|!=
+name|NULL
 condition|;
 operator|++
 name|op
@@ -2926,6 +3061,14 @@ operator|=
 name|cnt
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|s_num
+operator|>
+literal|0
+condition|)
+block|{
+comment|/* Figure out the number of columns. */
 name|numcols
 operator|=
 operator|(
@@ -2966,13 +3109,7 @@ name|numrows
 operator|=
 literal|1
 expr_stmt|;
-if|if
-condition|(
-name|s_num
-operator|>
-literal|0
-condition|)
-block|{
+comment|/* Display the options in sorted order. */
 for|for
 control|(
 name|row
@@ -3011,17 +3148,6 @@ name|sp
 argument_list|,
 operator|&
 name|optlist
-index|[
-name|s_op
-index|[
-name|base
-index|]
-index|]
-argument_list|,
-operator|&
-name|sp
-operator|->
-name|opts
 index|[
 name|s_op
 index|[
@@ -3111,17 +3237,6 @@ index|[
 name|row
 index|]
 index|]
-argument_list|,
-operator|&
-name|sp
-operator|->
-name|opts
-index|[
-name|b_op
-index|[
-name|row
-index|]
-index|]
 argument_list|)
 expr_stmt|;
 if|if
@@ -3167,8 +3282,6 @@ parameter_list|(
 name|sp
 parameter_list|,
 name|op
-parameter_list|,
-name|spo
 parameter_list|)
 name|SCR
 modifier|*
@@ -3178,10 +3291,6 @@ name|OPTLIST
 specifier|const
 modifier|*
 name|op
-decl_stmt|;
-name|OPTION
-modifier|*
-name|spo
 decl_stmt|;
 block|{
 name|int
@@ -3315,10 +3424,6 @@ modifier|*
 name|fp
 decl_stmt|;
 block|{
-name|OPTION
-modifier|*
-name|spo
-decl_stmt|;
 name|OPTLIST
 specifier|const
 modifier|*
@@ -3335,12 +3440,6 @@ name|p
 decl_stmt|;
 for|for
 control|(
-name|spo
-operator|=
-name|sp
-operator|->
-name|opts
-operator|,
 name|op
 operator|=
 name|optlist
@@ -3348,6 +3447,8 @@ init|;
 name|op
 operator|->
 name|name
+operator|!=
+name|NULL
 condition|;
 operator|++
 name|op
