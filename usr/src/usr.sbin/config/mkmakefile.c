@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkmakefile.c	5.29 (Berkeley) %G%"
+literal|"@(#)mkmakefile.c	5.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2747,29 +2747,9 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t-ln -s $S/%ss %sc\n"
+literal|"\t${CPP} ${COPTS} $S/%ss | ${AS} -o %so\n"
 argument_list|,
 name|np
-argument_list|,
-name|tp
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|f
-argument_list|,
-literal|"\t${CC} -E ${COPTS} %sc | ${AS} -o %so\n"
-argument_list|,
-name|tp
-argument_list|,
-name|tp
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|f
-argument_list|,
-literal|"\trm -f %sc\n\n"
 argument_list|,
 name|tp
 argument_list|)
