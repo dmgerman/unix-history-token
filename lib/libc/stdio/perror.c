@@ -105,9 +105,8 @@ expr_stmt|;
 if|if
 condition|(
 name|s
-operator|&&
-operator|*
-name|s
+operator|!=
+name|NULL
 condition|)
 block|{
 name|v
