@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: xinstall.c,v 1.25 1997/09/14 08:21:44 peter Exp $"
+literal|"$Id: xinstall.c,v 1.26 1997/10/27 22:53:33 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3169,7 +3169,7 @@ name|mkdir
 argument_list|(
 name|path
 argument_list|,
-literal|0777
+literal|0755
 argument_list|)
 operator|<
 literal|0
@@ -3187,6 +3187,26 @@ expr_stmt|;
 comment|/* NOTREACHED */
 block|}
 block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|S_ISDIR
+argument_list|(
+name|sb
+operator|.
+name|st_mode
+argument_list|)
+condition|)
+name|errx
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"%s exists but is not a directory"
+argument_list|,
+name|path
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -3239,7 +3259,6 @@ argument_list|,
 name|path
 argument_list|)
 expr_stmt|;
-elseif|else
 if|if
 condition|(
 name|chmod
