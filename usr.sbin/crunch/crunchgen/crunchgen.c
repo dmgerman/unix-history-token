@@ -858,7 +858,7 @@ argument_list|(
 name|tempfname
 argument_list|)
 argument_list|,
-literal|".tmp_%sXXXXXX"
+literal|"/tmp/crunchgen_%sXXXXXX"
 argument_list|,
 name|confname
 argument_list|)
