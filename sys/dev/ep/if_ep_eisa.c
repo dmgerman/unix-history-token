@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  * 	3COM 3C579 and 3C509(in eisa config mode) ethernet controllers  *  * Copyright (c) 1996 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id$  */
+comment|/*  * Product specific probe and attach routines for:  * 	3COM 3C579 and 3C509(in eisa config mode) ethernet controllers  *  * Copyright (c) 1996 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: 3c5x9.c,v 1.9 1997/02/22 09:31:52 peter Exp $  */
 end_comment
 
 begin_include
@@ -301,6 +301,7 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|ep_match
@@ -316,6 +317,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|ep_match
@@ -644,17 +646,6 @@ name|unit
 decl_stmt|;
 name|int
 name|irq
-init|=
-name|ffs
-argument_list|(
-name|e_dev
-operator|->
-name|ioconf
-operator|.
-name|irq
-argument_list|)
-operator|-
-literal|1
 decl_stmt|;
 name|resvaddr_t
 modifier|*
@@ -670,6 +661,38 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+name|TAILQ_FIRST
+argument_list|(
+operator|&
+name|e_dev
+operator|->
+name|ioconf
+operator|.
+name|irqs
+argument_list|)
+operator|==
+name|NULL
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+name|irq
+operator|=
+name|TAILQ_FIRST
+argument_list|(
+operator|&
+name|e_dev
+operator|->
+name|ioconf
+operator|.
+name|irqs
+argument_list|)
+operator|->
+name|irq_no
+expr_stmt|;
 comment|/* 	 * The addresses are sorted in increasing order 	 * so we know the port to pass to the core ep 	 * driver comes first. 	 */
 name|ioport
 operator|=

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Product specific probe and attach routines for:  * 	Buslogic BT74x SCSI controllers  *  * Copyright (c) 1995 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: bt74x.c,v 1.10 1997/07/20 06:31:09 bde Exp $  */
+comment|/*  * Product specific probe and attach routines for:  * 	Buslogic BT74x SCSI controllers  *  * Copyright (c) 1995 Justin T. Gibbs  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: bt74x.c,v 1.11 1997/08/21 19:56:40 bde Exp $  */
 end_comment
 
 begin_include
@@ -450,6 +450,7 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|bt_match
@@ -465,6 +466,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|bt_match
@@ -1017,17 +1019,6 @@ name|unit
 decl_stmt|;
 name|int
 name|irq
-init|=
-name|ffs
-argument_list|(
-name|e_dev
-operator|->
-name|ioconf
-operator|.
-name|irq
-argument_list|)
-operator|-
-literal|1
 decl_stmt|;
 name|resvaddr_t
 modifier|*
@@ -1040,6 +1031,40 @@ decl_stmt|;
 name|u_char
 name|level_intr
 decl_stmt|;
+if|if
+condition|(
+name|TAILQ_FIRST
+argument_list|(
+operator|&
+name|e_dev
+operator|->
+name|ioconf
+operator|.
+name|irqs
+argument_list|)
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+name|irq
+operator|=
+name|TAILQ_FIRST
+argument_list|(
+operator|&
+name|e_dev
+operator|->
+name|ioconf
+operator|.
+name|irqs
+argument_list|)
+operator|->
+name|irq_no
+expr_stmt|;
 comment|/* 	 * The addresses are sorted in increasing order 	 * so we know the port to pass to the core bt 	 * driver comes first. 	 */
 name|ioport
 operator|=

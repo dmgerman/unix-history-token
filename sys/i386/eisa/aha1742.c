@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  *  *      $Id: aha1742.c,v 1.59 1997/07/20 06:31:08 bde Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  *  *      $Id: aha1742.c,v 1.60 1997/08/21 19:46:13 bde Exp $  */
 end_comment
 
 begin_ifdef
@@ -1319,6 +1319,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|ahbmatch
@@ -2190,6 +2191,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|ahbmatch
@@ -2772,18 +2774,41 @@ name|iospace
 decl_stmt|;
 name|int
 name|irq
-init|=
-name|ffs
+decl_stmt|;
+if|if
+condition|(
+name|TAILQ_FIRST
 argument_list|(
+operator|&
 name|e_dev
 operator|->
 name|ioconf
 operator|.
-name|irq
+name|irqs
 argument_list|)
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
 operator|-
 literal|1
-decl_stmt|;
+operator|)
+return|;
+name|irq
+operator|=
+name|TAILQ_FIRST
+argument_list|(
+operator|&
+name|e_dev
+operator|->
+name|ioconf
+operator|.
+name|irqs
+argument_list|)
+operator|->
+name|irq_no
+expr_stmt|;
 name|iospace
 operator|=
 name|e_dev
@@ -3433,6 +3458,12 @@ operator|(
 name|caddr_t
 operator|)
 name|ecb
+argument_list|,
+name|ecb
+operator|->
+name|xs
+operator|->
+name|timeout_ch
 argument_list|)
 expr_stmt|;
 name|ahb_done
@@ -4632,6 +4663,10 @@ argument_list|,
 name|AHB_TARG_RESET
 argument_list|)
 expr_stmt|;
+name|xs
+operator|->
+name|timeout_ch
+operator|=
 name|timeout
 argument_list|(
 name|ahb_timeout
@@ -5317,6 +5352,10 @@ argument_list|,
 name|ecb
 argument_list|)
 expr_stmt|;
+name|xs
+operator|->
+name|timeout_ch
+operator|=
 name|timeout
 argument_list|(
 name|ahb_timeout
@@ -5720,6 +5759,12 @@ name|ecb
 argument_list|)
 expr_stmt|;
 comment|/* 2 secs for the abort */
+name|ecb
+operator|->
+name|xs
+operator|->
+name|timeout_ch
+operator|=
 name|timeout
 argument_list|(
 name|ahb_timeout
