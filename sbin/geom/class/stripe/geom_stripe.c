@@ -110,7 +110,7 @@ specifier|static
 name|intmax_t
 name|stripesize
 init|=
-literal|65536
+literal|4096
 decl_stmt|;
 end_decl_stmt
 
