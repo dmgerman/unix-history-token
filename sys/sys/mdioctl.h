@@ -108,6 +108,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MD_MODNAME
+value|"g_md"
+end_define
+
+begin_define
+define|#
+directive|define
 name|MDCTL_NAME
 value|"mdctl"
 end_define

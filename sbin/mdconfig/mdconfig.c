@@ -1691,7 +1691,7 @@ name|cp
 decl_stmt|;
 name|name
 operator|=
-name|MD_NAME
+name|MD_MODNAME
 expr_stmt|;
 comment|/* scan files in kernel */
 name|mstat
