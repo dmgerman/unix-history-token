@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: milter.c,v 8.197.2.2 2002/08/06 22:58:38 gshapiro Exp $"
+literal|"@(#)$Id: milter.c,v 8.197.2.5 2002/11/11 23:22:28 ca Exp $"
 argument_list|)
 end_macro
 
@@ -1829,7 +1829,7 @@ if|if
 condition|(
 name|MilterLogLevel
 operator|>
-literal|10
+literal|0
 condition|)
 name|sm_syslog
 argument_list|(
@@ -1951,6 +1951,12 @@ else|#
 directive|else
 comment|/* NETINET6 */
 comment|/* no protocols available */
+if|if
+condition|(
+name|MilterLogLevel
+operator|>
+literal|0
+condition|)
 name|sm_syslog
 argument_list|(
 name|LOG_ERR
@@ -2133,7 +2139,7 @@ if|if
 condition|(
 name|MilterLogLevel
 operator|>
-literal|10
+literal|0
 condition|)
 name|sm_syslog
 argument_list|(
@@ -2275,7 +2281,7 @@ if|if
 condition|(
 name|MilterLogLevel
 operator|>
-literal|10
+literal|0
 condition|)
 name|sm_syslog
 argument_list|(
@@ -2439,7 +2445,7 @@ if|if
 condition|(
 name|MilterLogLevel
 operator|>
-literal|10
+literal|0
 condition|)
 name|sm_syslog
 argument_list|(
@@ -2603,7 +2609,7 @@ if|if
 condition|(
 name|MilterLogLevel
 operator|>
-literal|10
+literal|0
 condition|)
 name|sm_syslog
 argument_list|(
@@ -2712,7 +2718,7 @@ if|if
 condition|(
 name|MilterLogLevel
 operator|>
-literal|10
+literal|0
 condition|)
 name|sm_syslog
 argument_list|(
@@ -2815,7 +2821,7 @@ if|if
 condition|(
 name|MilterLogLevel
 operator|>
-literal|10
+literal|0
 condition|)
 name|sm_syslog
 argument_list|(
@@ -3100,7 +3106,7 @@ if|if
 condition|(
 name|MilterLogLevel
 operator|>
-literal|10
+literal|0
 condition|)
 name|sm_syslog
 argument_list|(
@@ -3174,7 +3180,7 @@ if|if
 condition|(
 name|MilterLogLevel
 operator|>
-literal|10
+literal|0
 condition|)
 name|sm_syslog
 argument_list|(
@@ -3276,7 +3282,7 @@ if|if
 condition|(
 name|MilterLogLevel
 operator|>
-literal|10
+literal|0
 condition|)
 name|sm_syslog
 argument_list|(
@@ -3465,7 +3471,7 @@ if|if
 condition|(
 name|MilterLogLevel
 operator|>
-literal|10
+literal|0
 condition|)
 name|sm_syslog
 argument_list|(
@@ -3554,7 +3560,7 @@ if|if
 condition|(
 name|MilterLogLevel
 operator|>
-literal|10
+literal|0
 condition|)
 name|sm_syslog
 argument_list|(
@@ -12434,11 +12440,38 @@ name|response
 operator|==
 literal|'4'
 condition|)
+block|{
+if|#
+directive|if
+name|_FFR_MILTER_421
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|response
+argument_list|,
+literal|"421 "
+argument_list|,
+literal|4
+argument_list|)
+operator|==
+literal|0
+condition|)
+operator|*
+name|state
+operator|=
+name|SMFIR_SHUTDOWN
+expr_stmt|;
+else|else
+endif|#
+directive|endif
+comment|/* _FFR_MILTER_421 */
 operator|*
 name|state
 operator|=
 name|SMFIR_TEMPFAIL
 expr_stmt|;
+block|}
 else|else
 operator|*
 name|state
@@ -14288,7 +14321,7 @@ if|if
 condition|(
 name|MilterLogLevel
 operator|>
-literal|0
+literal|9
 condition|)
 name|sm_syslog
 argument_list|(

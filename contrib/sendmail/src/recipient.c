@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: recipient.c,v 8.330 2002/05/29 18:20:03 gshapiro Exp $"
+literal|"@(#)$Id: recipient.c,v 8.330.2.1 2002/08/27 20:21:02 gshapiro Exp $"
 argument_list|)
 end_macro
 
@@ -2544,6 +2544,8 @@ expr_stmt|;
 comment|/* 	**  If this message is going to the queue or FastSplit is set 	**  and it is the first try and the envelope hasn't split, then we 	**  avoid doing an MX RR lookup now because one will be done when the 	**  message is extracted from the queue later. It can go to the queue 	**  because all messages are going to the queue or this mailer of 	**  the current recipient is marked expensive. 	*/
 if|if
 condition|(
+name|UseMSP
+operator|||
 name|WILL_BE_QUEUED
 argument_list|(
 name|e

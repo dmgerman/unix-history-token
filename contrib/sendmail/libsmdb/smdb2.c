@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: smdb2.c,v 8.72 2002/05/24 23:09:11 gshapiro Exp $"
+literal|"@(#)$Id: smdb2.c,v 8.72.2.4 2002/12/03 17:01:15 ca Exp $"
 argument_list|)
 end_macro
 
@@ -2100,20 +2100,22 @@ name|db
 operator|)
 operator|->
 name|open
-argument_list|(
+operator|(
 operator|*
 name|db
-argument_list|,
+operator|,
+name|DBTXN
+comment|/* transaction for DB 4.1 */
 name|db_name
-argument_list|,
+operator|,
 name|NULL
-argument_list|,
+operator|,
 name|db_type
-argument_list|,
+operator|,
 name|db_flags
-argument_list|,
+operator|,
 name|DBMMODE
-argument_list|)
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -2466,22 +2468,11 @@ name|db_flags
 operator||=
 name|DB_RDONLY
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|HASFLOCK
-operator|&&
-name|defined
+name|SM_DB_FLAG_ADD
 argument_list|(
-name|DB_FCNTL_LOCKING
-argument_list|)
 name|db_flags
-operator||=
-name|DB_FCNTL_LOCKING
+argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* !HASFLOCK&& defined(DB_FCNTL_LOCKING) */
 name|result
 operator|=
 name|smdb_db_open_internal

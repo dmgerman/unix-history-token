@@ -204,7 +204,7 @@ end_macro
 
 begin_expr_stmt
 operator|=
-literal|"@(#)$Id: sendmail.h,v 8.919.2.4 2002/08/16 14:56:01 ca Exp $"
+literal|"@(#)$Id: sendmail.h,v 8.919.2.15 2002/12/12 22:46:35 ca Exp $"
 expr_stmt|;
 end_expr_stmt
 
@@ -2372,6 +2372,32 @@ begin_comment
 comment|/* ensure blank line at end of message */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|_FFR_STRIPBACKSL
+end_if
+
+begin_define
+define|#
+directive|define
+name|M_STRIPBACKSL
+value|'B'
+end_define
+
+begin_comment
+comment|/* strip leading backslash from user */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_STRIPBACKSL */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -3610,7 +3636,7 @@ comment|/* SASL>= 20101 */
 define|#
 directive|define
 name|MAXOUTLEN
-value|1024
+value|8192
 comment|/* length of output buffer */
 comment|/* functions */
 specifier|extern
@@ -4339,6 +4365,17 @@ end_define
 
 begin_comment
 comment|/* PIPELINING supported */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCIF_VERB
+value|0x00080000
+end_define
+
+begin_comment
+comment|/* VERB supported */
 end_comment
 
 begin_if
@@ -6166,6 +6203,20 @@ name|ENVELOPE
 operator|*
 operator|,
 name|SM_RPOOL_T
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|clrsessenvelope
+name|__P
+argument_list|(
+operator|(
+name|ENVELOPE
 operator|*
 operator|)
 argument_list|)
@@ -10942,7 +10993,7 @@ value|0x00000001
 end_define
 
 begin_comment
-comment|/* CERT must exist */
+comment|/* cert must exist */
 end_comment
 
 begin_define
@@ -10953,7 +11004,7 @@ value|0x00000002
 end_define
 
 begin_comment
-comment|/* CERT must be g/o unreadable */
+comment|/* cert must be g/o unreadable */
 end_comment
 
 begin_define
@@ -10964,7 +11015,7 @@ value|0x00000004
 end_define
 
 begin_comment
-comment|/* KEY must exist */
+comment|/* key must exist */
 end_comment
 
 begin_define
@@ -10975,7 +11026,7 @@ value|0x00000008
 end_define
 
 begin_comment
-comment|/* KEY must be g/o unreadable */
+comment|/* key must be g/o unreadable */
 end_comment
 
 begin_define
@@ -10986,7 +11037,7 @@ value|0x00000010
 end_define
 
 begin_comment
-comment|/* CA CERT PATH must exist */
+comment|/* CA cert path must exist */
 end_comment
 
 begin_define
@@ -10997,7 +11048,7 @@ value|0x00000020
 end_define
 
 begin_comment
-comment|/* CA CERT PATH must be g/o unreadable */
+comment|/* CA cert path must be g/o unreadable */
 end_comment
 
 begin_define
@@ -11008,7 +11059,7 @@ value|0x00000040
 end_define
 
 begin_comment
-comment|/* CA CERT FILE must exist */
+comment|/* CA cert file must exist */
 end_comment
 
 begin_define
@@ -11019,7 +11070,7 @@ value|0x00000080
 end_define
 
 begin_comment
-comment|/* CA CERT FILE must be g/o unreadable */
+comment|/* CA cert file must be g/o unreadable */
 end_comment
 
 begin_define
@@ -11184,7 +11235,7 @@ value|0x00400000
 end_define
 
 begin_comment
-comment|/* KEY must be o unreadable */
+comment|/* Key must be other unreadable */
 end_comment
 
 begin_comment
@@ -11391,7 +11442,7 @@ begin_decl_stmt
 name|EXTERN
 name|char
 modifier|*
-name|CACERTpath
+name|CACertPath
 decl_stmt|;
 end_decl_stmt
 
@@ -11403,7 +11454,7 @@ begin_decl_stmt
 name|EXTERN
 name|char
 modifier|*
-name|CACERTfile
+name|CACertFile
 decl_stmt|;
 end_decl_stmt
 
@@ -11415,7 +11466,7 @@ begin_decl_stmt
 name|EXTERN
 name|char
 modifier|*
-name|CltCERTfile
+name|CltCertFile
 decl_stmt|;
 end_decl_stmt
 
@@ -11427,7 +11478,7 @@ begin_decl_stmt
 name|EXTERN
 name|char
 modifier|*
-name|Cltkeyfile
+name|CltKeyFile
 decl_stmt|;
 end_decl_stmt
 
@@ -11502,7 +11553,7 @@ begin_decl_stmt
 name|EXTERN
 name|char
 modifier|*
-name|SrvCERTfile
+name|SrvCertFile
 decl_stmt|;
 end_decl_stmt
 
@@ -11514,7 +11565,7 @@ begin_decl_stmt
 name|EXTERN
 name|char
 modifier|*
-name|Srvkeyfile
+name|SrvKeyFile
 decl_stmt|;
 end_decl_stmt
 
@@ -11993,6 +12044,52 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* run_work_group() flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RWG_NONE
+value|0x0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|RWG_FORK
+value|0x0001
+end_define
+
+begin_define
+define|#
+directive|define
+name|RWG_VERBOSE
+value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|RWG_PERSISTENT
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|RWG_FORCE
+value|0x0008
+end_define
+
+begin_define
+define|#
+directive|define
+name|RWG_RUNALL
+value|0x0010
+end_define
 
 begin_typedef
 typedef|typedef
@@ -12511,13 +12608,7 @@ argument_list|(
 operator|(
 name|int
 operator|,
-name|bool
-operator|,
-name|bool
-operator|,
-name|bool
-operator|,
-name|bool
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -13409,6 +13500,32 @@ begin_comment
 comment|/*  .... but only if we want a quick abort */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|_FFR_REQ_DIR_FSYNC_OPT
+end_if
+
+begin_decl_stmt
+name|EXTERN
+name|bool
+name|RequiresDirfsync
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* requires fsync() for directory */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_REQ_DIR_FSYNC_OPT */
+end_comment
+
 begin_decl_stmt
 name|EXTERN
 name|bool
@@ -14010,6 +14127,32 @@ end_decl_stmt
 
 begin_comment
 comment|/* load average refusing connections */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|_FFR_REJECT_LOG
+end_if
+
+begin_decl_stmt
+name|EXTERN
+name|time_t
+name|RejectLogInterval
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* time btwn log msgs while refusing */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_REJECT_LOG */
 end_comment
 
 begin_decl_stmt
@@ -17488,6 +17631,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|NISPLUS
+end_if
+
 begin_decl_stmt
 specifier|extern
 name|char
@@ -17504,6 +17653,15 @@ end_decl_stmt
 
 begin_comment
 comment|/* extern for Sun */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NISPLUS */
 end_comment
 
 begin_decl_stmt
@@ -18267,6 +18425,35 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|_FFR_STRIPBACKSL
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|stripbackslash
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _FFR_STRIPBACKSL */
+end_comment
 
 begin_decl_stmt
 specifier|extern

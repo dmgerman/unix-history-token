@@ -12,9 +12,15 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: control.c,v 8.118 2002/03/19 00:23:27 gshapiro Exp $"
+literal|"@(#)$Id: control.c,v 8.118.4.3 2002/11/14 00:15:56 ca Exp $"
 argument_list|)
 end_macro
+
+begin_include
+include|#
+directive|include
+file|<sm/fdset.h>
+end_include
 
 begin_comment
 comment|/* values for cmd_code */
@@ -327,6 +333,29 @@ return|return
 operator|-
 literal|1
 return|;
+if|if
+condition|(
+name|SM_FD_SETSIZE
+operator|>
+literal|0
+operator|&&
+name|ControlSocket
+operator|>=
+name|SM_FD_SETSIZE
+condition|)
+block|{
+name|clrcontrol
+argument_list|()
+expr_stmt|;
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 operator|(
 name|void
 operator|)

@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: comm.c,v 8.54.2.2 2002/08/16 17:09:13 ca Exp $"
+literal|"@(#)$Id: comm.c,v 8.54.2.4 2002/12/03 17:32:45 ca Exp $"
 argument_list|)
 end_macro
 
@@ -117,35 +117,6 @@ name|rlen
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-name|sd
-operator|>=
-name|FD_SETSIZE
-condition|)
-block|{
-name|smi_log
-argument_list|(
-name|SMI_LOG_ERR
-argument_list|,
-literal|"%s: fd %d is larger than FD_SETSIZE %d"
-argument_list|,
-name|name
-argument_list|,
-name|sd
-argument_list|,
-name|FD_SETSIZE
-argument_list|)
-expr_stmt|;
-operator|*
-name|cmd
-operator|=
-name|SMFIC_SELECT
-expr_stmt|;
-return|return
-name|NULL
-return|;
-block|}
 name|i
 operator|=
 literal|0
@@ -253,6 +224,9 @@ literal|"%s, mi_rd_cmd: read returned %d: %s"
 argument_list|,
 name|name
 argument_list|,
+operator|(
+name|int
+operator|)
 name|len
 argument_list|,
 name|sm_errstring
@@ -581,6 +555,9 @@ literal|"%s: mi_rd_cmd: read returned %d: %s"
 argument_list|,
 name|name
 argument_list|,
+operator|(
+name|int
+operator|)
 name|len
 argument_list|,
 name|sm_errstring
@@ -751,7 +728,7 @@ comment|/* **  MI_WR_CMD -- write a cmd to sd ** **	Parameters: **		sd -- socket
 end_comment
 
 begin_comment
-comment|/* **  we don't care much about the timeout here, it's very long anyway **  FD_SETSIZE is only checked in mi_rd_cmd. **  XXX l == 0 ? */
+comment|/* **  we don't care much about the timeout here, it's very long anyway **  FD_SETSIZE is checked when socket is created. **  XXX l == 0 ? */
 end_comment
 
 begin_define

@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: daemon.c,v 8.613 2002/06/05 21:26:35 gshapiro Exp $"
+literal|"@(#)$Id: daemon.c,v 8.613.2.11 2002/12/05 16:13:52 ca Exp $"
 argument_list|)
 end_macro
 
@@ -2401,11 +2401,38 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* NAMED_BIND */
-if|#
-directive|if
-operator|!
-name|PROFILING
-comment|/* 		**  Create a pipe to keep the child from writing to the 		**  socket until after the parent has closed it.  Otherwise 		**  the parent may hang if the child has closed it first. 		*/
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|93
+argument_list|,
+literal|100
+argument_list|)
+condition|)
+block|{
+comment|/* don't fork, handle connection in this process */
+name|pid
+operator|=
+literal|0
+expr_stmt|;
+name|pipefd
+index|[
+literal|0
+index|]
+operator|=
+name|pipefd
+index|[
+literal|1
+index|]
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 			**  Create a pipe to keep the child from writing to 			**  the socket until after the parent has closed 			**  it.  Otherwise the parent may hang if the child 			**  has closed it first. 			*/
 if|if
 condition|(
 name|pipe
@@ -2513,16 +2540,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-else|#
-directive|else
-comment|/* !PROFILING */
-name|pid
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* !PROFILING */
+block|}
 if|if
 condition|(
 name|pid
@@ -2819,10 +2837,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-operator|!
-name|PROFILING
 if|if
 condition|(
 name|pipefd
@@ -2886,9 +2900,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* !PROFILING */
 comment|/* control socket processing */
 if|if
 condition|(
@@ -3611,6 +3622,10 @@ operator|=
 literal|0
 init|;
 operator|(
+name|i
+operator|<
+name|MAXFILTERS
+operator|&&
 name|Daemons
 index|[
 name|curdaemon
@@ -3622,10 +3637,6 @@ name|i
 index|]
 operator|!=
 name|NULL
-operator|&&
-name|i
-operator|<
-name|MAXFILTERS
 operator|)
 condition|;
 name|i
@@ -4243,6 +4254,40 @@ operator|-
 literal|1
 expr_stmt|;
 continue|continue;
+block|}
+if|if
+condition|(
+name|SM_FD_SETSIZE
+operator|>
+literal|0
+operator|&&
+name|d
+operator|->
+name|d_socket
+operator|>=
+name|SM_FD_SETSIZE
+condition|)
+block|{
+name|save_errno
+operator|=
+name|EINVAL
+expr_stmt|;
+name|syserr
+argument_list|(
+literal|"opendaemonsocket: daemon %s: server SMTP socket (%d) too large"
+argument_list|,
+name|d
+operator|->
+name|d_name
+argument_list|,
+name|d
+operator|->
+name|d_socket
+argument_list|)
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
 block|}
 comment|/* turn on network debugging? */
 if|if
@@ -12946,8 +12991,8 @@ name|char
 name|hbuf
 index|[
 name|MAXNAME
-operator|*
-literal|2
+operator|+
+name|MAXAUTHINFO
 operator|+
 literal|11
 index|]
@@ -14112,7 +14157,7 @@ index|]
 argument_list|,
 name|p
 argument_list|,
-name|MAXNAME
+name|MAXAUTHINFO
 argument_list|)
 expr_stmt|;
 block|}
@@ -14123,7 +14168,7 @@ name|hbuf
 argument_list|,
 name|p
 argument_list|,
-name|MAXNAME
+name|MAXAUTHINFO
 argument_list|)
 expr_stmt|;
 name|len
