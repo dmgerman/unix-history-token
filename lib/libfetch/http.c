@@ -1082,6 +1082,8 @@ block|,
 name|hdr_location
 block|,
 name|hdr_transfer_encoding
+block|,
+name|hdr_www_authenticate
 block|}
 name|hdr
 typedef|;
@@ -1136,6 +1138,12 @@ block|{
 name|hdr_transfer_encoding
 block|,
 literal|"Transfer-Encoding"
+block|}
+block|,
+block|{
+name|hdr_www_authenticate
+block|,
+literal|"WWW-Authenticate"
 block|}
 block|,
 block|{
@@ -2533,6 +2541,30 @@ decl_stmt|;
 name|int
 name|r
 decl_stmt|;
+name|DEBUG
+argument_list|(
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usr: [\033[1m%s\033[m]\n"
+argument_list|,
+name|usr
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|DEBUG
+argument_list|(
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"pwd: [\033[1m%s\033[m]\n"
+argument_list|,
+name|pwd
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|asprintf
@@ -3195,6 +3227,10 @@ name|i
 operator|=
 literal|0
 expr_stmt|;
+name|need_auth
+operator|=
+literal|0
+expr_stmt|;
 do|do
 block|{
 name|new
@@ -3202,10 +3238,6 @@ operator|=
 name|NULL
 expr_stmt|;
 name|chunked
-operator|=
-literal|0
-expr_stmt|;
-name|need_auth
 operator|=
 literal|0
 expr_stmt|;
@@ -3232,8 +3264,6 @@ name|mtime
 operator|=
 literal|0
 expr_stmt|;
-name|retry
-label|:
 comment|/* check port */
 if|if
 condition|(
@@ -3388,6 +3418,43 @@ name|doc
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* virtual host */
+if|if
+condition|(
+name|url
+operator|->
+name|port
+operator|==
+name|_fetch_default_port
+argument_list|(
+name|url
+operator|->
+name|scheme
+argument_list|)
+condition|)
+name|_http_cmd
+argument_list|(
+name|fd
+argument_list|,
+literal|"Host: %s"
+argument_list|,
+name|host
+argument_list|)
+expr_stmt|;
+else|else
+name|_http_cmd
+argument_list|(
+name|fd
+argument_list|,
+literal|"Host: %s:%d"
+argument_list|,
+name|host
+argument_list|,
+name|url
+operator|->
+name|port
+argument_list|)
+expr_stmt|;
 comment|/* proxy authorization */
 if|if
 condition|(
@@ -3454,6 +3521,16 @@ comment|/* server authorization */
 if|if
 condition|(
 name|need_auth
+operator|||
+operator|*
+name|url
+operator|->
+name|user
+operator|||
+operator|*
+name|url
+operator|->
+name|pwd
 condition|)
 block|{
 if|if
@@ -3526,40 +3603,32 @@ block|}
 comment|/* other headers */
 if|if
 condition|(
-name|url
-operator|->
-name|port
-operator|==
-name|_fetch_default_port
+operator|(
+name|p
+operator|=
+name|getenv
 argument_list|(
-name|url
-operator|->
-name|scheme
+literal|"HTTP_USER_AGENT"
 argument_list|)
+operator|)
+operator|!=
+name|NULL
+operator|&&
+operator|*
+name|p
+operator|!=
+literal|'\0'
 condition|)
 name|_http_cmd
 argument_list|(
 name|fd
 argument_list|,
-literal|"Host: %s"
+literal|"User-Agent: %s"
 argument_list|,
-name|host
+name|p
 argument_list|)
 expr_stmt|;
 else|else
-name|_http_cmd
-argument_list|(
-name|fd
-argument_list|,
-literal|"Host: %s:%d"
-argument_list|,
-name|host
-argument_list|,
-name|url
-operator|->
-name|port
-argument_list|)
-expr_stmt|;
 name|_http_cmd
 argument_list|(
 name|fd
@@ -3658,18 +3727,7 @@ argument_list|(
 literal|"server requires authorization"
 argument_list|)
 expr_stmt|;
-name|need_auth
-operator|=
-literal|1
-expr_stmt|;
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
-goto|goto
-name|retry
-goto|;
+break|break;
 case|case
 name|HTTP_NEED_PROXY_AUTH
 case|:
@@ -3959,6 +4017,18 @@ operator|)
 expr_stmt|;
 break|break;
 case|case
+name|hdr_www_authenticate
+case|:
+if|if
+condition|(
+name|code
+operator|!=
+name|HTTP_NEED_AUTH
+condition|)
+break|break;
+comment|/* if we were smarter, we'd check the method and realm */
+break|break;
+case|case
 name|hdr_end
 case|:
 comment|/* fall through */
@@ -3976,7 +4046,7 @@ operator|>
 name|hdr_end
 condition|)
 do|;
-comment|/* we either have a hit, or a redirect with no Location: header */
+comment|/* we have a hit */
 if|if
 condition|(
 name|code
@@ -3986,12 +4056,20 @@ operator|||
 name|code
 operator|==
 name|HTTP_PARTIAL
-operator|||
-operator|!
-name|new
 condition|)
 break|break;
-comment|/* we have a redirect */
+comment|/* we need to provide authentication */
+if|if
+condition|(
+name|code
+operator|==
+name|HTTP_NEED_AUTH
+condition|)
+block|{
+name|need_auth
+operator|=
+literal|1
+expr_stmt|;
 name|close
 argument_list|(
 name|fd
@@ -4002,6 +4080,41 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+continue|continue;
+block|}
+comment|/* all other cases: we got a redirect */
+name|need_auth
+operator|=
+literal|0
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+name|fd
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|new
+condition|)
+block|{
+name|DEBUG
+argument_list|(
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"redirect with no new location\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 name|url
@@ -4026,7 +4139,7 @@ operator|<
 name|n
 condition|)
 do|;
-comment|/* no success */
+comment|/* we failed, or ran out of retries */
 if|if
 condition|(
 name|fd
