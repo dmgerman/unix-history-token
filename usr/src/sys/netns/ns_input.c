@@ -203,7 +203,7 @@ begin_decl_stmt
 name|int
 name|idpcksum
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -1856,6 +1856,14 @@ name|sns_addr
 operator|=
 operator|*
 name|src
+expr_stmt|;
+name|dst
+operator|->
+name|sns_addr
+operator|.
+name|x_port
+operator|=
+literal|0
 expr_stmt|;
 name|rtalloc
 argument_list|(
