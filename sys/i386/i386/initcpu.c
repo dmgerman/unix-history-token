@@ -1800,7 +1800,7 @@ block|{
 name|u_int64_t
 name|apicbase
 decl_stmt|;
-comment|/* 	 * Local APIC should be disabled in UP kernel. 	 */
+comment|/* 	 * Local APIC should be disabled if it is not going to be used. 	 */
 name|apicbase
 operator|=
 name|rdmsr
