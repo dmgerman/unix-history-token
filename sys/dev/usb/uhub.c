@@ -419,7 +419,7 @@ name|DEVMETHOD
 argument_list|(
 name|device_resume
 argument_list|,
-name|bus_generic_suspend
+name|bus_generic_resume
 argument_list|)
 block|,
 name|DEVMETHOD
