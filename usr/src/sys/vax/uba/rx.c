@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rx.c	4.17	83/04/29	*/
+comment|/*	rx.c	4.18	83/05/11	*/
 end_comment
 
 begin_include
@@ -302,6 +302,11 @@ directive|define
 name|RXF_FORMAT
 value|0x80
 comment|/* format in progress */
+define|#
+directive|define
+name|RXF_BAD
+value|0x100
+comment|/* drive bad, cannot be used */
 name|int
 name|sc_csbits
 decl_stmt|;
@@ -385,6 +390,14 @@ name|rxminfo
 index|[
 name|NFX
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|buf
+modifier|*
+name|savebp
 decl_stmt|;
 end_decl_stmt
 
@@ -891,6 +904,18 @@ name|b_blkno
 operator|=
 literal|0
 expr_stmt|;
+name|sc
+operator|->
+name|sc_offset
+operator|=
+literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|sc_resid
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 		 * read device status to determine if 		 * a floppy is present in the drive and 		 * what density it is 		 */
 name|rxstrategy
 argument_list|(
@@ -1179,12 +1204,36 @@ condition|)
 goto|goto
 name|bad
 goto|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|RXF_BAD
+condition|)
+block|{
+name|bp
+operator|->
+name|b_error
+operator|=
+name|EIO
+expr_stmt|;
+goto|goto
+name|dbad
+goto|;
+block|}
+name|s
+operator|=
+name|spl5
+argument_list|()
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|RXDEBUG
 name|printf
 argument_list|(
-literal|"rxstrategy: bp=0x%x, flgs=0x%x, unit=%d, block=%d, count=%d\n"
+literal|"rxstrat: bp=0x%x, fl=0x%x, un=%d, bl=%d, cnt=%d\n"
 argument_list|,
 name|bp
 argument_list|,
@@ -1205,11 +1254,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|s
-operator|=
-name|spl5
-argument_list|()
-expr_stmt|;
 name|bp
 operator|->
 name|b_cylin
@@ -1287,6 +1331,14 @@ name|bad
 label|:
 name|bp
 operator|->
+name|b_error
+operator|=
+name|ENXIO
+expr_stmt|;
+name|dbad
+label|:
+name|bp
+operator|->
 name|b_flags
 operator||=
 name|B_ERROR
@@ -1295,12 +1347,6 @@ name|iodone
 argument_list|(
 name|bp
 argument_list|)
-expr_stmt|;
-name|bp
-operator|->
-name|b_error
-operator|=
-name|ENXIO
 expr_stmt|;
 return|return;
 block|}
@@ -1699,6 +1745,22 @@ index|[
 name|unit
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|RXF_BAD
+condition|)
+block|{
+name|rxpurge
+argument_list|(
+name|um
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|dp
@@ -2386,7 +2448,7 @@ directive|ifdef
 name|RXDEBUG
 name|printf
 argument_list|(
-literal|"rxintr: dev=%x, state=%d, status=0x%x"
+literal|"rxint: dev=%x, st=%d, cs=0x%x, db=0x%x\n"
 argument_list|,
 name|bp
 operator|->
@@ -2399,6 +2461,10 @@ argument_list|,
 name|rxaddr
 operator|->
 name|rxcs
+argument_list|,
+name|rxaddr
+operator|->
+name|rxdb
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2485,16 +2551,6 @@ argument_list|(
 name|ui
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|RXDEBUG
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return;
 case|case
 name|RXS_FILL
@@ -2592,16 +2648,6 @@ name|rxdb
 operator|=
 name|track
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|RXDEBUG
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return;
 comment|/* 	 * Possibly completed command. 	 */
 case|case
@@ -2678,7 +2724,7 @@ name|bp
 operator|->
 name|b_error
 operator|=
-name|EBUSY
+name|ENODEV
 expr_stmt|;
 name|bp
 operator|->
@@ -2710,9 +2756,7 @@ name|RXS_RDERR
 case|:
 name|bp
 operator|=
-name|bp
-operator|->
-name|b_back
+name|savebp
 expr_stmt|;
 name|rxmap
 argument_list|(
@@ -2862,8 +2906,10 @@ block|{
 if|if
 condition|(
 operator|++
-name|bp
+name|um
 operator|->
+name|um_tab
+operator|.
 name|b_errcnt
 operator|>=
 literal|10
@@ -2875,16 +2921,20 @@ goto|goto
 name|retry
 goto|;
 block|}
-name|bp
+name|um
 operator|->
+name|um_tab
+operator|.
 name|b_errcnt
 operator|+=
 literal|9
 expr_stmt|;
 if|if
 condition|(
-name|bp
+name|um
 operator|->
+name|um_tab
+operator|.
 name|b_errcnt
 operator|>=
 literal|10
@@ -2958,32 +3008,20 @@ expr_stmt|;
 return|return;
 name|giveup
 label|:
-comment|/* 	 * Hard I/O error -- 	 * Density errors are not noted on the console since the 	 * only way to determine the density of an unknown disk 	 * is to try one density or the other at random and see 	 * which one doesn't give a density error. 	 */
-if|if
-condition|(
-name|rxaddr
+comment|/* 	 * Hard I/O error -- 	 * ALL errors are considered fatal and will abort the 	 * transfer and purge the i/o request queue 	 */
+name|sc
 operator|->
-name|rxdb
-operator|&
-name|RXES_DENERR
-condition|)
-block|{
-name|bp
-operator|->
-name|b_error
-operator|=
-name|ENODEV
-expr_stmt|;
-name|bp
-operator|->
-name|b_flags
+name|sc_flags
 operator||=
-name|B_ERROR
+name|RXF_BAD
 expr_stmt|;
-goto|goto
-name|done
-goto|;
-block|}
+name|sc
+operator|->
+name|sc_resid
+operator|=
+literal|0
+expr_stmt|;
+comment|/* make sure the transfer is terminated */
 name|rxc
 operator|->
 name|rxc_state
@@ -3003,7 +3041,7 @@ expr_stmt|;
 return|return;
 name|rderr
 label|:
-comment|/* 	 * A hard error (other than not ready or density) has occurred. 	 * Read the extended error status information. 	 * Before doing this, save the current CS and DB register values, 	 * because the read error status operation may modify them. 	 * Insert buffer with request at the head of the queue, and 	 * save a pointer to the data buffer, so it can be restored 	 * when the read error status operation is finished. 	 */
+comment|/* 	 * A hard error (other than not ready) has occurred. 	 * Read the extended error status information. 	 * Before doing this, save the current CS and DB register values, 	 * because the read error status operation may modify them. 	 * Insert buffer with request at the head of the queue. 	 */
 name|bp
 operator|->
 name|b_error
@@ -3016,21 +3054,21 @@ name|b_flags
 operator||=
 name|B_ERROR
 expr_stmt|;
+if|if
+condition|(
+name|um
+operator|->
+name|um_ubinfo
+condition|)
 name|ubadone
 argument_list|(
 name|um
 argument_list|)
 expr_stmt|;
-name|erxbuf
-index|[
-name|unit
-index|]
-operator|.
-name|b_back
+name|savebp
 operator|=
 name|bp
 expr_stmt|;
-comment|/* save the data buffer pointer */
 name|er
 operator|->
 name|rxcs
@@ -3189,16 +3227,6 @@ name|b_addr
 operator|+=
 name|NBPS
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|RXDEBUG
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|rxstart
 argument_list|(
 name|um
@@ -3282,7 +3310,7 @@ directive|ifdef
 name|RXDEBUG
 name|printf
 argument_list|(
-literal|" old bp=0x%x, new=0x%x\n"
+literal|".. bp=%x, new=%x\n"
 argument_list|,
 name|bp
 argument_list|,
@@ -3938,18 +3966,11 @@ decl_stmt|;
 switch|switch
 condition|(
 name|cmd
-operator|&
-name|RXIOC_MASK
 condition|)
 block|{
 case|case
 name|RXIOC_FORMAT
 case|:
-ifdef|#
-directive|ifdef
-name|notdef
-comment|/* temporarily removed (the flag argument is */
-comment|/* is actually always zero at this point) */
 if|if
 condition|(
 operator|(
@@ -3965,8 +3986,6 @@ operator|(
 name|EBADF
 operator|)
 return|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|sc
@@ -4211,6 +4230,89 @@ operator|(
 name|error
 operator|)
 return|;
+block|}
+end_block
+
+begin_comment
+comment|/*  * A permanent hard error condition has occured,  * purge the buffer queue  */
+end_comment
+
+begin_expr_stmt
+name|rxpurge
+argument_list|(
+name|um
+argument_list|)
+specifier|register
+expr|struct
+name|uba_ctlr
+operator|*
+name|um
+expr_stmt|;
+end_expr_stmt
+
+begin_block
+block|{
+specifier|register
+name|struct
+name|buf
+modifier|*
+name|bp
+decl_stmt|,
+modifier|*
+name|dp
+decl_stmt|;
+name|dp
+operator|=
+name|um
+operator|->
+name|um_tab
+operator|.
+name|b_actf
+expr_stmt|;
+while|while
+condition|(
+name|dp
+operator|->
+name|b_actf
+condition|)
+block|{
+name|dp
+operator|->
+name|b_errcnt
+operator|++
+expr_stmt|;
+name|bp
+operator|=
+name|dp
+operator|->
+name|b_actf
+expr_stmt|;
+name|bp
+operator|->
+name|b_error
+operator|=
+name|EIO
+expr_stmt|;
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_ERROR
+expr_stmt|;
+name|iodone
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+name|dp
+operator|->
+name|b_actf
+operator|=
+name|bp
+operator|->
+name|av_forw
+expr_stmt|;
+block|}
 block|}
 end_block
 
