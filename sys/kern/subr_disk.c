@@ -2638,7 +2638,7 @@ name|sn
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"%s: %s"
+literal|"%s: %s "
 argument_list|,
 name|devtoname
 argument_list|(
@@ -2662,7 +2662,7 @@ name|BIO_READ
 case|:
 name|printf
 argument_list|(
-literal|"cmd=read"
+literal|"cmd=read "
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2671,7 +2671,7 @@ name|BIO_WRITE
 case|:
 name|printf
 argument_list|(
-literal|"cmd=write"
+literal|"cmd=write "
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2680,7 +2680,7 @@ name|BIO_DELETE
 case|:
 name|printf
 argument_list|(
-literal|"cmd=delete"
+literal|"cmd=delete "
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2689,7 +2689,7 @@ name|BIO_GETATTR
 case|:
 name|printf
 argument_list|(
-literal|"cmd=getattr"
+literal|"cmd=getattr "
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2698,14 +2698,14 @@ name|BIO_SETATTR
 case|:
 name|printf
 argument_list|(
-literal|"cmd=setattr"
+literal|"cmd=setattr "
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"cmd=%x"
+literal|"cmd=%x "
 argument_list|,
 name|bp
 operator|->
