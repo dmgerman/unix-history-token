@@ -142,6 +142,18 @@ name|ng_nodelist_mtx
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Mutex that protects the free queue item list */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|mtx
+name|ngq_mtx
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -546,30 +558,6 @@ parameter_list|)
 define|\
 value|do { 								\ 		LIST_FOREACH(node,&ng_ID_hash[NG_IDHASH_FN(ID)],	\ 						nd_idnodes) {		\ 			if (NG_NODE_IS_VALID(node)			\&& (NG_NODE_ID(node) == ID)) {			\ 				break;					\ 			}						\ 		}							\ 	} while (0)
 end_define
-
-begin_comment
-comment|/* Mutex that protects the free queue item list */
-end_comment
-
-begin_decl_stmt
-specifier|static
-specifier|volatile
-name|item_p
-name|ngqfree
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* free ones */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|mtx
-name|ngq_mtx
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* Internal functions */
@@ -11049,7 +11037,7 @@ argument_list|(
 operator|&
 name|ngq_mtx
 argument_list|,
-literal|"netgraph netisr mutex"
+literal|"netgraph free item list mutex"
 argument_list|,
 name|NULL
 argument_list|,
@@ -11324,6 +11312,18 @@ begin_comment
 comment|/* number of cached entries */
 end_comment
 
+begin_decl_stmt
+specifier|static
+specifier|volatile
+name|item_p
+name|ngqfree
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* free ones */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -11352,7 +11352,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Get a queue entry  * This is usually called when a packet first enters netgraph.  * By definition, this is usually from an interrupt, or from a user.  * Users are not so important, but try be quick for the times that it's  * an interrupt. Use atomic operations to cope with collisions  * with interrupts and other processors. Assumes MALLOC is SMP safe.  * XXX If reserve is low, we should try to get 2 from malloc as this  * would indicate it often fails.  */
+comment|/*  * Get a queue entry  * This is usually called when a packet first enters netgraph.  * By definition, this is usually from an interrupt, or from a user.  * Users are not so important, but try be quick for the times that it's  * an interrupt.  * XXX If reserve is low, we should try to get 2 from malloc as this  * would indicate it often fails.  */
 end_comment
 
 begin_function
@@ -11368,13 +11368,13 @@ name|item
 init|=
 name|NULL
 decl_stmt|;
-comment|/* 	 * Try get a cached queue block, or else allocate a new one 	 * If we are less than our reserve, try malloc. If malloc 	 * fails, then that's what the reserve is for... 	 * Don't completely trust ngqfreesize, as it is subject 	 * to races.. (it'll eventually catch up but may be out by one or two 	 * for brief moments(under SMP or interrupts). 	 * ngqfree is the final arbiter. We have our little reserve 	 * because we use M_NOWAIT for malloc. This just helps us 	 * avoid dropping packets while not increasing the time 	 * we take to service the interrupt (on average) (I hope). 	 */
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
+comment|/* 	 * Try get a cached queue block, or else allocate a new one 	 * If we are less than our reserve, try malloc. If malloc 	 * fails, then that's what the reserve is for... 	 * We have our little reserve 	 * because we use M_NOWAIT for malloc. This just helps us 	 * avoid dropping packets while not increasing the time 	 * we take to service the interrupt (on average) (I hope). 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|ngq_mtx
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -11440,21 +11440,19 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* NETGRAPH_DEBUG */
-name|atomic_add_int
-argument_list|(
-operator|&
 name|allocated
-argument_list|,
-literal|1
-argument_list|)
+operator|++
 expr_stmt|;
-break|break;
 block|}
 block|}
 block|}
-comment|/* 		 * We didn't or couldn't malloc. 		 * try get one from our cache. 		 * item must be NULL to get here. 		 */
+comment|/* 	 * We didn't or couldn't malloc. 	 * try get one from our cache. 	 */
 if|if
 condition|(
+name|item
+operator|==
+name|NULL
+operator|&&
 operator|(
 name|item
 operator|=
@@ -11464,29 +11462,14 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 			 * Atomically try grab the first item 			 * and put it's successor in its place. 			 * If we fail, just try again.. someone else 			 * beat us to this one or freed one. 			 * Don't worry about races with ngqfreesize. 			 * Close enough is good enough.. 			 */
-if|if
-condition|(
-name|atomic_cmpset_ptr
-argument_list|(
-operator|&
 name|ngqfree
-argument_list|,
-name|item
-argument_list|,
+operator|=
 name|item
 operator|->
 name|el_next
-argument_list|)
-condition|)
-block|{
-name|atomic_subtract_int
-argument_list|(
-operator|&
+expr_stmt|;
 name|ngqfreesize
-argument_list|,
-literal|1
-argument_list|)
+operator|--
 expr_stmt|;
 name|item
 operator|->
@@ -11495,20 +11478,13 @@ operator|&=
 operator|~
 name|NGQF_FREE
 expr_stmt|;
-break|break;
 block|}
-comment|/*  			 * something got there before we did.. try again 			 * (go around the loop again) 			 */
-name|item
-operator|=
-name|NULL
+name|mtx_unlock
+argument_list|(
+operator|&
+name|ngq_mtx
+argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* We really ran out */
-break|break;
-block|}
-block|}
 return|return
 operator|(
 name|item
@@ -11641,7 +11617,12 @@ name|el_flags
 operator||=
 name|NGQF_FREE
 expr_stmt|;
-comment|/* 	 * We have freed any resources held by the item. 	 * now we can free the item itself. 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|ngq_mtx
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ngqfreesize
@@ -11649,49 +11630,22 @@ operator|<
 name|ngqfreemax
 condition|)
 block|{
-comment|/* don't worry about races */
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
+name|ngqfreesize
+operator|++
+expr_stmt|;
 name|item
 operator|->
 name|el_next
 operator|=
 name|ngqfree
 expr_stmt|;
-if|if
-condition|(
-name|atomic_cmpset_ptr
-argument_list|(
-operator|&
 name|ngqfree
-argument_list|,
+operator|=
 name|item
-operator|->
-name|el_next
-argument_list|,
-name|item
-argument_list|)
-condition|)
-block|{
-break|break;
-block|}
-block|}
-name|atomic_add_int
-argument_list|(
-operator|&
-name|ngqfreesize
-argument_list|,
-literal|1
-argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* This is the only place that should use this Macro */
 ifdef|#
 directive|ifdef
 name|NETGRAPH_DEBUG
@@ -11713,15 +11667,16 @@ argument_list|(
 name|item
 argument_list|)
 expr_stmt|;
-name|atomic_subtract_int
-argument_list|(
-operator|&
 name|allocated
-argument_list|,
-literal|1
-argument_list|)
+operator|--
 expr_stmt|;
 block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|ngq_mtx
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
