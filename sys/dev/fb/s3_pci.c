@@ -661,27 +661,14 @@ modifier|*
 name|info
 parameter_list|)
 block|{
-name|device_t
-name|dev
-init|=
-name|s3pci_dev
-decl_stmt|;
+if|#
+directive|if
+literal|0
+block|device_t dev = s3pci_dev;
 comment|/* XXX */
-name|struct
-name|s3pci_softc
-modifier|*
-name|sc
-init|=
-operator|(
-expr|struct
-name|s3pci_softc
-operator|*
-operator|)
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
-decl_stmt|;
+block|struct s3pci_softc *sc = (struct s3pci_softc *)device_get_softc(dev);
+endif|#
+directive|endif
 name|int
 name|error
 decl_stmt|;
@@ -838,15 +825,12 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|u_long
-name|cr59
-decl_stmt|,
-name|cr5A
-decl_stmt|;
-name|unsigned
-name|char
-name|tmp
-decl_stmt|;
+if|#
+directive|if
+literal|0
+block|unsigned char tmp;
+endif|#
+directive|endif
 name|int
 name|error
 decl_stmt|;
