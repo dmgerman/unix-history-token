@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 1994,1995 by Andrey A. Chernov, Moscow, Russia.  * A
 end_comment
 
 begin_comment
-comment|/* $Id: termcap.h,v 1.6 1995/08/05 21:21:54 ache Exp $ */
+comment|/* $Id: termcap.h,v 1.7 1996/07/12 18:57:26 jkh Exp $ */
 end_comment
 
 begin_ifndef
@@ -116,7 +116,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|void
+name|int
 name|tputs
 name|__P
 argument_list|(

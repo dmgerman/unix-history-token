@@ -107,7 +107,7 @@ comment|/*  * Put the character string cp out, with padding.  * The number of af
 end_comment
 
 begin_function
-name|void
+name|int
 name|tputs
 parameter_list|(
 specifier|const
@@ -144,7 +144,9 @@ name|cp
 operator|==
 literal|0
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 comment|/* 	 * Convert the number representing the delay. 	 */
 if|if
 condition|(
@@ -259,7 +261,9 @@ name|i
 operator|==
 literal|0
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 if|if
 condition|(
 name|ospeed
@@ -279,7 +283,9 @@ literal|0
 index|]
 operator|)
 condition|)
-return|return;
+return|return
+literal|0
+return|;
 comment|/* 	 * Round up by a half a character frame, 	 * and then do the delay. 	 * Too bad there are no user program accessible programmed delays. 	 * Transmitting pad characters slows many 	 * terminals down and also loads the system. 	 */
 name|mspc10
 operator|=
@@ -315,6 +321,9 @@ argument_list|(
 name|PC
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 end_function
 
