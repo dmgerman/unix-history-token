@@ -3171,7 +3171,7 @@ name|log_Printf
 argument_list|(
 name|LogPHASE
 argument_list|,
-literal|"Internal CBCP error - agreed on %d ??!?\n"
+literal|"Internal CBCP error - agreed on %d !\n"
 argument_list|,
 operator|(
 name|int
