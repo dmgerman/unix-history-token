@@ -7892,7 +7892,7 @@ name|char
 name|value
 parameter_list|)
 block|{
-name|outb
+name|outbv
 argument_list|(
 name|IOAddress
 argument_list|,
@@ -8065,7 +8065,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|inb
+name|inbv
 argument_list|(
 name|IOAddress
 argument_list|)
