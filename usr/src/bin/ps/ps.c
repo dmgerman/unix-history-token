@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ps.c	4.25 (Berkeley) %G%"
+literal|"@(#)ps.c	4.26 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7097,7 +7097,12 @@ if|if
 condition|(
 name|freebase
 operator|==
-literal|0
+operator|(
+name|char
+operator|*
+operator|)
+operator|-
+literal|1
 condition|)
 block|{
 name|fprintf
