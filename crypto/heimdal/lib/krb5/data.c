@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: data.c,v 1.16 2001/05/14 06:14:46 assar Exp $"
+literal|"$Id: data.c,v 1.17 2003/03/25 22:07:17 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -70,6 +70,26 @@ operator|->
 name|length
 operator|=
 literal|0
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|krb5_free_data_contents
+parameter_list|(
+name|krb5_context
+name|context
+parameter_list|,
+name|krb5_data
+modifier|*
+name|data
+parameter_list|)
+block|{
+name|krb5_data_free
+argument_list|(
+name|data
+argument_list|)
 expr_stmt|;
 block|}
 end_function

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: get.c,v 1.21 2001/10/29 12:53:52 nectar Exp $"
+literal|"$Id: get.c,v 1.22 2003/01/16 19:03:23 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -233,11 +233,6 @@ name|optind
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|i
-decl_stmt|,
-name|j
-decl_stmt|;
 name|struct
 name|getarg_strings
 name|etype_strs
@@ -346,9 +341,17 @@ name|NULL
 block|}
 block|}
 decl_stmt|;
+name|int
+name|i
+init|=
+literal|0
+decl_stmt|,
+name|j
+decl_stmt|;
 name|args
 index|[
-literal|0
+name|i
+operator|++
 index|]
 operator|.
 name|value
@@ -358,7 +361,8 @@ name|principal
 expr_stmt|;
 name|args
 index|[
-literal|1
+name|i
+operator|++
 index|]
 operator|.
 name|value
@@ -368,7 +372,8 @@ name|etype_strs
 expr_stmt|;
 name|args
 index|[
-literal|2
+name|i
+operator|++
 index|]
 operator|.
 name|value
@@ -378,7 +383,8 @@ name|realm
 expr_stmt|;
 name|args
 index|[
-literal|3
+name|i
+operator|++
 index|]
 operator|.
 name|value
@@ -388,7 +394,8 @@ name|admin_server
 expr_stmt|;
 name|args
 index|[
-literal|4
+name|i
+operator|++
 index|]
 operator|.
 name|value
@@ -398,7 +405,8 @@ name|server_port
 expr_stmt|;
 name|args
 index|[
-literal|5
+name|i
+operator|++
 index|]
 operator|.
 name|value

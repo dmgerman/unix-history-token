@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kfd.c,v 1.10 2002/09/04 20:31:48 joda Exp $"
+literal|"$Id: kfd.c,v 1.11 2003/04/16 15:40:24 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1294,11 +1294,16 @@ condition|(
 name|status
 condition|)
 block|{
-name|strcpy
+name|strlcpy
 argument_list|(
 name|ret_string
 argument_list|,
 literal|"no"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ret_string
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|krb5_warnx
@@ -1311,11 +1316,16 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|strcpy
+name|strlcpy
 argument_list|(
 name|ret_string
 argument_list|,
 literal|"ok"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ret_string
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

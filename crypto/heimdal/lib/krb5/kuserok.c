@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kuserok.c,v 1.5.12.1 2002/10/21 14:37:55 joda Exp $"
+literal|"$Id: kuserok.c,v 1.7 2003/03/13 19:53:43 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -65,6 +65,23 @@ decl_stmt|;
 name|krb5_boolean
 name|b
 decl_stmt|;
+name|pwd
+operator|=
+name|getpwnam
+argument_list|(
+name|luser
+argument_list|)
+expr_stmt|;
+comment|/* XXX - Should use k_getpwnam? */
+if|if
+condition|(
+name|pwd
+operator|==
+name|NULL
+condition|)
+return|return
+name|FALSE
+return|;
 name|ret
 operator|=
 name|krb5_get_default_realms
@@ -181,23 +198,6 @@ argument_list|,
 name|realms
 argument_list|)
 expr_stmt|;
-name|pwd
-operator|=
-name|getpwnam
-argument_list|(
-name|luser
-argument_list|)
-expr_stmt|;
-comment|/* XXX - Should use k_getpwnam? */
-if|if
-condition|(
-name|pwd
-operator|==
-name|NULL
-condition|)
-return|return
-name|FALSE
-return|;
 name|snprintf
 argument_list|(
 name|buf

@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: ls.c,v 1.25 2002/08/22 08:31:03 joda Exp $"
+literal|"$Id: ls.c,v 1.26 2003/02/25 10:51:30 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1554,6 +1554,8 @@ sizeof|sizeof
 argument_list|(
 name|buf
 argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 if|if

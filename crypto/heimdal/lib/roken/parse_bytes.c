@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: parse_bytes.c,v 1.3 2001/09/04 09:56:00 assar Exp $"
+literal|"$Id: parse_bytes.c,v 1.4 2003/03/07 15:51:53 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -42,6 +42,7 @@ end_include
 
 begin_decl_stmt
 specifier|static
+name|struct
 name|units
 name|bytes_units
 index|[]
@@ -130,6 +131,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|struct
 name|units
 name|bytes_short_units
 index|[]

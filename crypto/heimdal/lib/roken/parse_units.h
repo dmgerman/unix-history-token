@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997 - 2001 Kungliga Tekniska Högskolan  * (Royal I
 end_comment
 
 begin_comment
-comment|/* $Id: parse_units.h,v 1.7 2001/09/04 09:56:00 assar Exp $ */
+comment|/* $Id: parse_units.h,v 1.8 2003/04/16 17:30:54 lha Exp $ */
 end_comment
 
 begin_ifndef
@@ -46,14 +46,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_typedef
-typedef|typedef
-name|struct
-name|units
-name|units
-typedef|;
-end_typedef
 
 begin_function_decl
 name|int

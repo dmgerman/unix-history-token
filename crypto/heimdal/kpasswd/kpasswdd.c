@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kpasswdd.c,v 1.53 2002/08/19 15:07:31 joda Exp $"
+literal|"$Id: kpasswdd.c,v 1.54 2002/12/02 14:31:52 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2005,6 +2005,11 @@ control|)
 block|{
 name|int
 name|sa_size
+init|=
+sizeof|sizeof
+argument_list|(
+name|__ss
+argument_list|)
 decl_stmt|;
 name|krb5_addr2sockaddr
 argument_list|(

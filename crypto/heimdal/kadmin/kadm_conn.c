@@ -29,7 +29,7 @@ end_endif
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kadm_conn.c,v 1.13.6.1 2002/10/21 14:53:39 joda Exp $"
+literal|"$Id: kadm_conn.c,v 1.14 2002/10/21 13:21:24 joda Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -41,7 +41,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: ftpd.c,v 1.161 2002/02/28 15:50:14 joda Exp $"
+literal|"$Id: ftpd.c,v 1.166 2003/04/16 15:02:05 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1753,6 +1753,10 @@ if|if
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|port_string
 index|[
 literal|0
@@ -4185,18 +4189,12 @@ argument_list|,
 name|princ
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|KRB4
 if|if
 condition|(
 name|k_hasafs
 argument_list|()
 condition|)
 block|{
-name|k_setpag
-argument_list|()
-expr_stmt|;
 name|krb5_afslog_uid_home
 argument_list|(
 name|context
@@ -4217,9 +4215,6 @@ name|pw_dir
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* KRB4 */
 name|krb5_cc_destroy
 argument_list|(
 name|context
@@ -5353,12 +5348,18 @@ modifier|*
 name|filename
 parameter_list|)
 block|{
+name|unsigned
 name|char
 modifier|*
 name|p
 decl_stmt|;
 name|p
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|strrchr
 argument_list|(
 name|filename
@@ -6075,7 +6076,7 @@ name|sockaddr
 modifier|*
 name|address
 parameter_list|,
-name|size_t
+name|socklen_t
 modifier|*
 name|address_len
 parameter_list|,

@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: strcasecmp.c,v 1.9 1999/12/02 16:58:52 joda Exp $"
+literal|"$Id: strcasecmp.c,v 1.10 2003/04/14 11:26:27 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -77,12 +77,20 @@ while|while
 condition|(
 name|toupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|s1
 argument_list|)
 operator|==
 name|toupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|s2
 argument_list|)
@@ -108,12 +116,20 @@ block|}
 return|return
 name|toupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|s1
 argument_list|)
 operator|-
 name|toupper
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|s2
 argument_list|)

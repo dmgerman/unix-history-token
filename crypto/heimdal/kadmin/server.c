@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 - 2002 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997 - 2003 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: server.c,v 1.36.2.1 2002/10/21 14:53:39 joda Exp $"
+literal|"$Id: server.c,v 1.38 2003/01/29 12:33:05 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1104,7 +1104,7 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The change is allowed if at least one of: 	 * a) it's for the principal him/herself and this was an initial ticket 	 * b) the user is on the CPW ACL. 	 */
+comment|/* 	 * The change is allowed if at least one of:  	 * a) it's for the principal him/herself and this was an 	 *    initial ticket, but then, check with the password quality 	 *    function. 	 * b) the user is on the CPW ACL. 	 */
 if|if
 condition|(
 name|initial
@@ -1122,10 +1122,60 @@ argument_list|,
 name|princ
 argument_list|)
 condition|)
+block|{
+name|krb5_data
+name|pwd_data
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|pwd_reason
+decl_stmt|;
+name|pwd_data
+operator|.
+name|data
+operator|=
+name|password
+expr_stmt|;
+name|pwd_data
+operator|.
+name|length
+operator|=
+name|strlen
+argument_list|(
+name|password
+argument_list|)
+expr_stmt|;
+name|pwd_reason
+operator|=
+name|kadm5_check_password_quality
+argument_list|(
+name|context
+operator|->
+name|context
+argument_list|,
+name|princ
+argument_list|,
+operator|&
+name|pwd_data
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pwd_reason
+operator|!=
+name|NULL
+condition|)
+name|ret
+operator|=
+name|KADM5_PASS_Q_DICT
+expr_stmt|;
+else|else
 name|ret
 operator|=
 literal|0
 expr_stmt|;
+block|}
 else|else
 name|ret
 operator|=
@@ -1150,6 +1200,23 @@ operator|->
 name|context
 argument_list|,
 name|princ
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+name|password
+argument_list|,
+literal|0
+argument_list|,
+name|strlen
+argument_list|(
+name|password
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|password
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1450,29 +1517,7 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The change is allowed if at least one of: 	 * a) it's for the principal him/herself and this was an initial ticket 	 * b) the user is on the CPW ACL. 	 */
-if|if
-condition|(
-name|initial
-operator|&&
-name|krb5_principal_compare
-argument_list|(
-name|context
-operator|->
-name|context
-argument_list|,
-name|context
-operator|->
-name|caller
-argument_list|,
-name|princ
-argument_list|)
-condition|)
-name|ret
-operator|=
-literal|0
-expr_stmt|;
-else|else
+comment|/* 	 * The change is only allowed if the user is on the CPW ACL, 	 * this it to force password quality check on the user. 	 */
 name|ret
 operator|=
 name|_kadm5_acl_check_permission

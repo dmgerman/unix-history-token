@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: util.c,v 1.37 2002/06/07 18:28:46 joda Exp $"
+literal|"$Id: util.c,v 1.39 2003/04/14 11:55:27 lha Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2255,6 +2255,11 @@ argument_list|,
 name|osig
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
 return|return
 literal|1
 return|;
@@ -2401,7 +2406,8 @@ argument_list|,
 name|tolower
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 name|c
 argument_list|)
