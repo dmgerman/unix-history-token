@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	route.h	4.3	82/03/29	*/
+comment|/*	route.h	4.4	82/03/29	*/
 end_comment
 
 begin_comment
@@ -86,19 +86,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RTF_MUNGE
-value|0x2
-end_define
-
-begin_comment
-comment|/* munge packet src address */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|RTF_DIRECT
-value|0x4
+value|0x2
 end_define
 
 begin_comment
