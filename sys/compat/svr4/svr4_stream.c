@@ -8668,7 +8668,7 @@ comment|/* Solaris seems to use sc.cmd = 3 to 				 * send "expedited" data.  tel
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"sending expedited data (??)\n"
+literal|"sending expedited data ??\n"
 operator|)
 argument_list|)
 expr_stmt|;
