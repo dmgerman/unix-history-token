@@ -3578,6 +3578,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|badlogin
 parameter_list|(
@@ -3757,6 +3758,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|refused
 parameter_list|(
@@ -3843,6 +3845,7 @@ comment|/*  * Log a PAM error  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|pam_syslog
 parameter_list|(
@@ -3876,6 +3879,7 @@ comment|/*  * Shut down PAM  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|pam_cleanup
 parameter_list|()
