@@ -413,30 +413,43 @@ name|cdevsw
 name|ufm_cdevsw
 init|=
 block|{
+comment|/* open */
 name|ufmopen
 block|,
+comment|/* close */
 name|ufmclose
 block|,
+comment|/* read */
 name|noread
 block|,
+comment|/* write */
 name|nowrite
 block|,
+comment|/* ioctl */
 name|ufmioctl
 block|,
+comment|/* poll */
 name|nopoll
 block|,
+comment|/* mmap */
 name|nommap
 block|,
+comment|/* strategy */
 name|nostrategy
 block|,
+comment|/* name */
 literal|"ufm"
 block|,
+comment|/* maj */
 name|UFM_CDEV_MAJOR
 block|,
+comment|/* dump */
 name|nodump
 block|,
+comment|/* psize */
 name|nopsize
 block|,
+comment|/* flags */
 literal|0
 block|,
 if|#

@@ -475,30 +475,43 @@ name|cdevsw
 name|raidctl_cdevsw
 init|=
 block|{
+comment|/* open */
 name|raidctlopen
 block|,
+comment|/* close */
 name|raidctlclose
 block|,
+comment|/* read */
 name|noread
 block|,
+comment|/* write */
 name|nowrite
 block|,
+comment|/* ioctl */
 name|raidctlioctl
 block|,
+comment|/* poll */
 name|nopoll
 block|,
+comment|/* mmap */
 name|nommap
 block|,
+comment|/* strategy */
 name|nostrategy
 block|,
+comment|/* name */
 literal|"raidctl"
 block|,
+comment|/* maj */
 literal|201
 block|,
+comment|/* dump */
 name|nodump
 block|,
+comment|/* psize */
 name|nopsize
 block|,
+comment|/* flags */
 literal|0
 block|, }
 decl_stmt|;

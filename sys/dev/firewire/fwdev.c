@@ -166,30 +166,43 @@ name|cdevsw
 name|firewire_cdevsw
 init|=
 block|{
+comment|/* open */
 name|fw_open
 block|,
+comment|/* close */
 name|fw_close
 block|,
+comment|/* read */
 name|fw_read
 block|,
+comment|/* write */
 name|fw_write
 block|,
+comment|/* ioctl */
 name|fw_ioctl
 block|,
+comment|/* poll */
 name|fw_poll
 block|,
+comment|/* mmap */
 name|fw_mmap
 block|,
+comment|/* strategy */
 name|nostrategy
 block|,
+comment|/* name */
 literal|"fw"
 block|,
+comment|/* maj */
 name|CDEV_MAJOR
 block|,
+comment|/* dump */
 name|nodump
 block|,
+comment|/* psize */
 name|nopsize
 block|,
+comment|/* flags */
 name|D_MEM
 block|}
 decl_stmt|;

@@ -505,30 +505,43 @@ name|cdevsw
 name|urio_cdevsw
 init|=
 block|{
+comment|/* open */
 name|urioopen
 block|,
+comment|/* close */
 name|urioclose
 block|,
+comment|/* read */
 name|urioread
 block|,
+comment|/* write */
 name|uriowrite
 block|,
+comment|/* ioctl */
 name|urioioctl
 block|,
+comment|/* poll */
 name|nopoll
 block|,
+comment|/* mmap */
 name|nommap
 block|,
+comment|/* strategy */
 name|nostrategy
 block|,
+comment|/* name */
 literal|"urio"
 block|,
+comment|/* maj */
 name|URIO_CDEV_MAJOR
 block|,
+comment|/* dump */
 name|nodump
 block|,
+comment|/* psize */
 name|nopsize
 block|,
+comment|/* flags */
 literal|0
 block|,
 if|#

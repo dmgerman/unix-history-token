@@ -187,30 +187,43 @@ name|cdevsw
 name|twe_cdevsw
 init|=
 block|{
+comment|/* open */
 name|twe_open
 block|,
+comment|/* close */
 name|twe_close
 block|,
+comment|/* read */
 name|noread
 block|,
+comment|/* write */
 name|nowrite
 block|,
+comment|/* ioctl */
 name|twe_ioctl_wrapper
 block|,
+comment|/* poll */
 name|nopoll
 block|,
+comment|/* mmap */
 name|nommap
 block|,
+comment|/* strategy */
 name|nostrategy
 block|,
+comment|/* name */
 literal|"twe"
 block|,
+comment|/* maj */
 name|TWE_CDEV_MAJOR
 block|,
+comment|/* dump */
 name|nodump
 block|,
+comment|/* psize */
 name|nopsize
 block|,
+comment|/* flags */
 literal|0
 block|}
 decl_stmt|;
