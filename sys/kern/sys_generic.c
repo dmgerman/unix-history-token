@@ -4366,8 +4366,6 @@ literal|0
 decl_stmt|,
 name|timo
 decl_stmt|,
-name|lim
-decl_stmt|,
 name|nfds
 decl_stmt|;
 name|size_t
@@ -4382,14 +4380,11 @@ argument_list|,
 name|nfds
 argument_list|)
 expr_stmt|;
-comment|/* 	 * This is kinda bogus.  We have fd limits, but that doesn't 	 * map too well to the size of the pfd[] array.  Make sure 	 * we let the process use at least FD_SETSIZE entries. 	 * The specs say we only have to support OPEN_MAX entries (64). 	 */
-name|lim
-operator|=
-name|min
-argument_list|(
-operator|(
-name|int
-operator|)
+comment|/* 	 * This is kinda bogus.  We have fd limits, but that is not 	 * really related to the size of the pollfd array.  Make sure 	 * we let the process use at least FD_SETSIZE entries and at 	 * least enough for the current limits.  We want to be reasonably 	 * safe, but not overly restrictive. 	 */
+if|if
+condition|(
+name|nfds
+operator|>
 name|p
 operator|->
 name|p_rlimit
@@ -4398,24 +4393,10 @@ name|RLIMIT_NOFILE
 index|]
 operator|.
 name|rlim_cur
-argument_list|,
-name|maxfilesperproc
-argument_list|)
-expr_stmt|;
-name|lim
-operator|=
-name|min
-argument_list|(
-name|lim
-argument_list|,
-name|FD_SETSIZE
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|&&
 name|nfds
 operator|>
-name|lim
+name|FD_SETSIZE
 condition|)
 return|return
 operator|(
