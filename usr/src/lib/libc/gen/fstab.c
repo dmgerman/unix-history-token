@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fstab.c	4.3 (Berkeley) %G%"
+literal|"@(#)fstab.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -437,11 +437,17 @@ if|if
 condition|(
 name|fs_file
 condition|)
+block|{
 name|fclose
 argument_list|(
 name|fs_file
 argument_list|)
 expr_stmt|;
+name|fs_file
+operator|=
+literal|0
+expr_stmt|;
+block|}
 return|return
 operator|(
 literal|1
