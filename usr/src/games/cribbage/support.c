@@ -601,6 +601,8 @@ argument_list|,
 name|CINHAND
 argument_list|,
 name|FALSE
+argument_list|,
+name|explain
 argument_list|)
 expr_stmt|;
 comment|/* count */
@@ -767,6 +769,8 @@ argument_list|,
 name|turnover
 argument_list|,
 name|CINHAND
+argument_list|,
+name|FALSE
 argument_list|,
 name|FALSE
 argument_list|)
@@ -1415,6 +1419,8 @@ argument_list|,
 name|CINHAND
 argument_list|,
 name|TRUE
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 if|if
