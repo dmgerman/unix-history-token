@@ -41,7 +41,7 @@ name|char
 name|privatehid
 index|[]
 init|=
-literal|"@(#)private.h	7.48"
+literal|"@(#)private.h	7.53"
 decl_stmt|;
 end_decl_stmt
 
@@ -114,6 +114,28 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|HAVE_INCOMPATIBLE_CTIME_R
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|HAVE_INCOMPATIBLE_CTIME_R
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined INCOMPATIBLE_CTIME_R */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|HAVE_SETTIMEOFDAY
 end_ifndef
 
@@ -143,7 +165,7 @@ begin_define
 define|#
 directive|define
 name|HAVE_STRERROR
-value|0
+value|1
 end_define
 
 begin_endif
@@ -175,6 +197,50 @@ end_endif
 
 begin_comment
 comment|/* !defined HAVE_SYMLINK */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_SYS_STAT_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_STAT_H
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined HAVE_SYS_STAT_H */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_SYS_WAIT_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_WAIT_H
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined HAVE_SYS_WAIT_H */
 end_comment
 
 begin_ifndef
@@ -241,6 +307,35 @@ end_endif
 
 begin_comment
 comment|/* !defined LOCALE_HOME */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|HAVE_INCOMPATIBLE_CTIME_R
+end_if
+
+begin_define
+define|#
+directive|define
+name|asctime_r
+value|_incompatible_asctime_r
+end_define
+
+begin_define
+define|#
+directive|define
+name|ctime_r
+value|_incompatible_ctime_r
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_INCOMPATIBLE_CTIME_R */
 end_comment
 
 begin_comment
@@ -318,6 +413,83 @@ end_endif
 
 begin_comment
 comment|/* HAVE_GETTEXT - 0 */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|HAVE_SYS_WAIT_H
+operator|-
+literal|0
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/wait.h>
+end_include
+
+begin_comment
+comment|/* for WIFEXITED and WEXITSTATUS */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_SYS_WAIT_H - 0 */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|WIFEXITED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|WIFEXITED
+parameter_list|(
+name|status
+parameter_list|)
+value|(((status)& 0xff) == 0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined WIFEXITED */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|WEXITSTATUS
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|WEXITSTATUS
+parameter_list|(
+name|status
+parameter_list|)
+value|(((status)>> 8)& 0xff)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !defined WEXITSTATUS */
 end_comment
 
 begin_if
@@ -427,46 +599,6 @@ end_define
 
 begin_comment
 comment|/* ** Workarounds for compilers/systems. */
-end_comment
-
-begin_comment
-comment|/* ** SunOS 4.1.1 cc lacks const. */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|const
-end_ifndef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__STDC__
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|const
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined __STDC__ */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !defined const */
 end_comment
 
 begin_comment
@@ -1254,8 +1386,72 @@ begin_comment
 comment|/* !defined TZ_DOMAIN */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|HAVE_INCOMPATIBLE_CTIME_R
+end_if
+
+begin_undef
+undef|#
+directive|undef
+name|asctime_r
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|ctime_r
+end_undef
+
+begin_decl_stmt
+name|char
+modifier|*
+name|asctime_r
+name|P
+argument_list|(
+operator|(
+expr|struct
+name|tm
+specifier|const
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|ctime_r
+name|P
+argument_list|(
+operator|(
+name|time_t
+specifier|const
+operator|*
+operator|,
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/* ** UNIX was a registered trademark of UNIX System Laboratories in 1993. */
+comment|/* HAVE_INCOMPATIBLE_CTIME_R */
+end_comment
+
+begin_comment
+comment|/* ** UNIX was a registered trademark of The Open Group in 2003. */
 end_comment
 
 begin_endif
