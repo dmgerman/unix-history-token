@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_output.c	4.15	81/11/20	*/
+comment|/*	tcp_output.c	4.16	81/11/23	*/
 end_comment
 
 begin_include
@@ -1166,23 +1166,17 @@ name|n
 operator|->
 name|ti_sport
 operator|=
-name|htons
-argument_list|(
 name|inp
 operator|->
 name|inp_lport
-argument_list|)
 expr_stmt|;
 name|n
 operator|->
 name|ti_dport
 operator|=
-name|htons
-argument_list|(
 name|inp
 operator|->
 name|inp_fport
-argument_list|)
 expr_stmt|;
 name|n
 operator|->
