@@ -79,8 +79,6 @@ name|stat
 decl_stmt|;
 name|OnVTY
 operator|=
-name|OnSerial
-operator|=
 name|RunningAsInit
 operator|=
 name|FALSE
@@ -192,10 +190,6 @@ name|dup
 argument_list|(
 literal|1
 argument_list|)
-expr_stmt|;
-name|OnSerial
-operator|=
-name|TRUE
 expr_stmt|;
 block|}
 else|else
