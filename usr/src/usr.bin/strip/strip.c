@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)strip.c	5.9 (Berkeley) %G%"
+literal|"@(#)strip.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -690,7 +690,7 @@ argument_list|(
 name|NULL
 argument_list|,
 operator|(
-name|int
+name|size_t
 operator|)
 name|sb
 operator|.
@@ -700,8 +700,6 @@ name|PROT_READ
 operator||
 name|PROT_WRITE
 argument_list|,
-name|MAP_FILE
-operator||
 name|MAP_SHARED
 argument_list|,
 name|fd
@@ -981,6 +979,9 @@ name|caddr_t
 operator|)
 name|ep
 argument_list|,
+operator|(
+name|size_t
+operator|)
 name|sb
 operator|.
 name|st_size
