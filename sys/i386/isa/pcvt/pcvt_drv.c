@@ -2398,9 +2398,6 @@ name|unit
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|i
-decl_stmt|;
 comment|/* See if this driver is disabled in probe hint. */
 if|if
 condition|(

@@ -1436,6 +1436,7 @@ argument_list|,
 name|i
 argument_list|)
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"CPU %d disabled by loader.\n"
@@ -1457,9 +1458,6 @@ name|mp_ncpus
 operator|++
 expr_stmt|;
 block|}
-end_function
-
-begin_expr_stmt
 name|PCPU_SET
 argument_list|(
 name|other_cpus
@@ -1474,9 +1472,6 @@ name|boot_cpu_id
 operator|)
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_for
 for|for
 control|(
 name|i
@@ -1516,19 +1511,17 @@ name|i
 argument_list|)
 expr_stmt|;
 block|}
-end_for
+block|}
+end_function
 
-begin_macro
-unit|}  void
+begin_function
+name|void
 name|cpu_mp_announce
-argument_list|(
-argument|void
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|void
+parameter_list|)
 block|{ }
-end_block
+end_function
 
 begin_comment
 comment|/*  * send an IPI to a set of cpus.  */
