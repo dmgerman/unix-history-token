@@ -1851,7 +1851,7 @@ name|ent
 operator|->
 name|pp_product
 operator|==
-name|PCCARD_VENDOR_ANY
+name|PCCARD_PRODUCT_ANY
 operator|&&
 name|ent
 operator|->
