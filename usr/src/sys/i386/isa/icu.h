@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.386.c%  *  *	@(#)icu.h	5.2 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * %sccs.include.386.c%  *  *	@(#)icu.h	5.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -73,6 +73,18 @@ begin_comment
 comment|/* things that get masked with splbio() */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|short
+name|netmask
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* things that get masked with splimp() */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -93,13 +105,25 @@ parameter_list|)
 value|imen |= (s)
 end_define
 
+begin_define
+define|#
+directive|define
+name|INTRMASK
+parameter_list|(
+name|msk
+parameter_list|,
+name|s
+parameter_list|)
+value|msk |= (s)
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* Interrupt enable bits */
+comment|/* Interrupt enable bits -- in order of priority */
 end_comment
 
 begin_define
@@ -118,6 +142,13 @@ define|#
 directive|define
 name|IRQ1
 value|0x0002
+end_define
+
+begin_define
+define|#
+directive|define
+name|IRQ_SLAVE
+value|0x0004
 end_define
 
 begin_define
