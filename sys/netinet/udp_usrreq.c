@@ -3771,17 +3771,12 @@ name|so
 operator|->
 name|so_pcb
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INET6
 name|inp
 operator|->
 name|inp_vflag
 operator||=
 name|INP_IPV4
 expr_stmt|;
-endif|#
-directive|endif
 name|inp
 operator|->
 name|inp_ip_ttl
