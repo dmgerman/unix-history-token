@@ -499,6 +499,10 @@ name|is_crypto_keyfail
 decl_stmt|;
 comment|/* driver key alloc failed */
 name|u_int32_t
+name|is_crypto_enmicfail
+decl_stmt|;
+comment|/* en-MIC failed */
+name|u_int32_t
 name|is_ibss_capmismatch
 decl_stmt|;
 comment|/* merge failed-cap mismatch */
