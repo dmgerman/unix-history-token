@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)compile.c	5.1 (Berkeley) %G%"
+literal|"@(#)compile.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1492,7 +1492,7 @@ name|err
 argument_list|(
 name|COMPILE
 argument_list|,
-literal|"newline in substitution pattern"
+literal|"unterminated substitute pattern"
 argument_list|)
 expr_stmt|;
 name|cmd
@@ -2232,7 +2232,7 @@ name|err
 argument_list|(
 name|COMPILE
 argument_list|,
-literal|"EOF in substitute pattern"
+literal|"unterminated substitute pattern"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2336,9 +2336,9 @@ name|gn
 condition|)
 name|err
 argument_list|(
-name|WARNING
+name|COMPILE
 argument_list|,
-literal|"both g and number in substitute flags"
+literal|"more than one number or 'g' in substitute flags"
 argument_list|)
 expr_stmt|;
 name|gn
@@ -2409,9 +2409,9 @@ name|gn
 condition|)
 name|err
 argument_list|(
-name|WARNING
+name|COMPILE
 argument_list|,
-literal|"both g and number in substitute flags"
+literal|"more than one number or 'g' in substitute flags"
 argument_list|)
 expr_stmt|;
 name|gn
@@ -2514,7 +2514,7 @@ name|err
 argument_list|(
 name|COMPILE
 argument_list|,
-literal|"empty wfile specified"
+literal|"no wfile specified"
 argument_list|)
 expr_stmt|;
 name|s
@@ -2581,11 +2581,8 @@ name|COMPILE
 argument_list|,
 literal|"bad flag in substitute command: '%c'"
 argument_list|,
+operator|*
 name|p
-index|[
-operator|-
-literal|1
-index|]
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3545,7 +3542,7 @@ name|err
 argument_list|(
 name|COMPILE2
 argument_list|,
-literal|"unspecified label %s"
+literal|"undefined label '%s'"
 argument_list|,
 name|cp
 operator|->
