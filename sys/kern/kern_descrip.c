@@ -6928,12 +6928,6 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|fd
-operator|<
-literal|0
-condition|?
-name|EINVAL
-else|:
 name|EBADF
 operator|)
 return|;
