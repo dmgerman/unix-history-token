@@ -606,8 +606,6 @@ name|options
 operator|->
 name|protocol
 operator|=
-name|SSH_PROTO_1
-operator||
 name|SSH_PROTO_2
 expr_stmt|;
 if|if
