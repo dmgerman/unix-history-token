@@ -2507,6 +2507,34 @@ literal|"\040PBE"
 comment|/* Pending Break Enable */
 argument_list|)
 expr_stmt|;
+comment|/* 			 * If this CPU supports hyperthreading then mention 			 * the number of logical CPU's it contains. 			 */
+if|if
+condition|(
+name|cpu_feature
+operator|&
+name|CPUID_HTT
+operator|&&
+operator|(
+name|cpuid_cpuinfo
+operator|&
+name|CPUID_HTT_CORES
+operator|)
+operator|>
+literal|0x100
+condition|)
+name|printf
+argument_list|(
+literal|"\n  Hyperthreading: %d logical CPUs"
+argument_list|,
+operator|(
+name|cpuid_cpuinfo
+operator|&
+name|CPUID_HTT_CORES
+operator|)
+operator|>>
+literal|16
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
