@@ -1079,11 +1079,6 @@ if|if
 condition|(
 operator|!
 name|scp
-operator|||
-operator|!
-name|scp
-operator|->
-name|devices
 condition|)
 return|return
 name|ENXIO
