@@ -6611,13 +6611,12 @@ condition|(
 operator|*
 name|rid
 operator|<
-name|PCIR_MAPS
-operator|+
-literal|4
-operator|*
+name|PCIR_BAR
+argument_list|(
 name|cfg
 operator|->
 name|nummaps
+argument_list|)
 condition|)
 block|{
 comment|/* 				 * Enable the I/O mode.  We should 				 * also be allocating resources 				 * too. XXX 				 */
