@@ -94,22 +94,6 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|int
-name|CompareProc
-parameter_list|(
-specifier|const
-name|void
-modifier|*
-parameter_list|,
-specifier|const
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_typedef
-typedef|typedef
 name|void
 modifier|*
 name|DuplicateProc
@@ -439,49 +423,6 @@ comment|/*  * Functions for entire lists  */
 end_comment
 
 begin_comment
-comment|/* Find an element in a list */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|Lst_Find
-parameter_list|(
-name|LST
-parameter_list|,
-name|D
-parameter_list|,
-name|FN
-parameter_list|)
-value|(Lst_FindFrom((LST), Lst_First(LST), (D), (FN)))
-end_define
-
-begin_comment
-comment|/* Find an element starting from somewhere */
-end_comment
-
-begin_function_decl
-name|LstNode
-modifier|*
-name|Lst_FindFrom
-parameter_list|(
-name|Lst
-modifier|*
-parameter_list|,
-name|LstNode
-modifier|*
-parameter_list|,
-specifier|const
-name|void
-modifier|*
-parameter_list|,
-name|CompareProc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  * See if the given datum is on the list. Returns the LstNode containing  * the datum  */
 end_comment
 
@@ -503,6 +444,10 @@ begin_comment
 comment|/* Loop through a list. Note, that you may not delete the list element. */
 end_comment
 
+begin_comment
+comment|/* #define	LST_FOREACH(PTR, LST)						\ 	for ((PTR) = (LST)->firstPtr; (PTR) != NULL; (PTR) = (PTR)->nextPtr) */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -513,7 +458,7 @@ parameter_list|,
 name|LST
 parameter_list|)
 define|\
-value|for ((PTR) = (LST)->firstPtr; (PTR) != NULL; (PTR) = (PTR)->nextPtr)
+value|for (LstNode *_tmp1 = (LST)->firstPtr, *_tmp2 = Lst_Succ(_tmp1);\ 	    ((PTR) = _tmp1) != NULL;					\ 	    (Lst_Succ(_tmp1) != _tmp2 ? abort() : (void)0),		\ 	    (_tmp1 = _tmp2), _tmp2 = Lst_Succ(_tmp1))
 end_define
 
 begin_comment
