@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)comm.c	5.1 (Berkeley) %G%"
+literal|"@(#)comm.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -370,7 +370,7 @@ name|col2
 condition|)
 name|show
 argument_list|(
-name|fp1
+name|fp2
 argument_list|,
 name|col2
 argument_list|,
@@ -393,7 +393,7 @@ name|col1
 condition|)
 name|show
 argument_list|(
-name|fp2
+name|fp1
 argument_list|,
 name|col1
 argument_list|,
