@@ -8513,6 +8513,10 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|SBP_DEBUG
+argument_list|(
+literal|0
+argument_list|)
 name|printf
 argument_list|(
 literal|"sbp_detach_target %d\n"
@@ -8522,6 +8526,7 @@ operator|->
 name|target_id
 argument_list|)
 expr_stmt|;
+name|END_DEBUG
 for|for
 control|(
 name|i
