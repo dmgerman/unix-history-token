@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: ssh-keygen.c,v 1.25 2000/05/08 18:23:07 markus Exp $"
+literal|"$Id: ssh-keygen.c,v 1.26 2000/05/30 17:32:06 markus Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2710,7 +2710,7 @@ name|char
 modifier|*
 name|optarg
 decl_stmt|;
-name|OpenSSL_add_all_algorithms
+name|SSLeay_add_all_algorithms
 argument_list|()
 expr_stmt|;
 comment|/* we need this for the home * directory.  */
