@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	1.12 (Berkeley) %G%"
+literal|"@(#)utilities.c	1.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -365,7 +365,7 @@ name|fprintf
 argument_list|(
 name|NetTrace
 argument_list|,
-literal|"\n"
+literal|"\r\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -375,7 +375,7 @@ name|fprintf
 argument_list|(
 name|NetTrace
 argument_list|,
-literal|"\r\n"
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
