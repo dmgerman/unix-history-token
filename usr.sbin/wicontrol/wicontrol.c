@@ -643,6 +643,9 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+name|int
+name|retval
+decl_stmt|;
 name|bzero
 argument_list|(
 operator|(
@@ -708,8 +711,8 @@ argument_list|,
 literal|"socket"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|retval
+operator|=
 name|ioctl
 argument_list|(
 name|s
@@ -719,31 +722,7 @@ argument_list|,
 operator|&
 name|ifr
 argument_list|)
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-if|if
-condition|(
-name|errno
-operator|!=
-name|EINPROGRESS
-condition|)
-name|err
-argument_list|(
-literal|1
-argument_list|,
-literal|"SIOCGWAVELAN"
-argument_list|)
 expr_stmt|;
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-block|}
 name|close
 argument_list|(
 name|s
@@ -751,7 +730,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|retval
 operator|)
 return|;
 block|}
@@ -1691,6 +1670,9 @@ name|wi_key
 modifier|*
 name|k
 decl_stmt|;
+name|int
+name|has_wep
+decl_stmt|;
 name|bzero
 argument_list|(
 operator|(
@@ -1718,6 +1700,8 @@ name|wi_type
 operator|=
 name|WI_RID_WEP_AVAIL
 expr_stmt|;
+if|if
+condition|(
 name|wi_getval
 argument_list|(
 name|iface
@@ -1725,17 +1709,27 @@ argument_list|,
 operator|&
 name|wreq
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|==
+literal|0
+condition|)
+name|has_wep
+operator|=
 name|wreq
 operator|.
 name|wi_val
 index|[
 literal|0
 index|]
-operator|==
+expr_stmt|;
+else|else
+name|has_wep
+operator|=
 literal|0
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|has_wep
 condition|)
 name|errx
 argument_list|(
@@ -1771,12 +1765,24 @@ name|wi_type
 operator|=
 name|WI_RID_DEFLT_CRYPT_KEYS
 expr_stmt|;
+if|if
+condition|(
 name|wi_getval
 argument_list|(
 name|iface
 argument_list|,
 operator|&
 name|wreq
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"Cannot get default key index"
 argument_list|)
 expr_stmt|;
 name|keys
@@ -2716,6 +2722,8 @@ name|wi_type
 operator|=
 name|WI_RID_PRISM2
 expr_stmt|;
+if|if
+condition|(
 name|wi_getval
 argument_list|(
 name|iface
@@ -2723,7 +2731,9 @@ argument_list|,
 operator|&
 name|wreq
 argument_list|)
-expr_stmt|;
+operator|==
+literal|0
+condition|)
 name|prism2
 operator|=
 name|wreq
@@ -2732,6 +2742,11 @@ name|wi_val
 index|[
 literal|0
 index|]
+expr_stmt|;
+else|else
+name|prism2
+operator|=
+literal|0
 expr_stmt|;
 comment|/* send out a scan request */
 name|wreq
@@ -3488,6 +3503,8 @@ name|wi_type
 operator|=
 name|WI_RID_WEP_AVAIL
 expr_stmt|;
+if|if
+condition|(
 name|wi_getval
 argument_list|(
 name|iface
@@ -3495,7 +3512,9 @@ argument_list|,
 operator|&
 name|wreq
 argument_list|)
-expr_stmt|;
+operator|==
+literal|0
+condition|)
 name|has_wep
 operator|=
 name|wreq
@@ -3504,6 +3523,11 @@ name|wi_val
 index|[
 literal|0
 index|]
+expr_stmt|;
+else|else
+name|has_wep
+operator|=
+literal|0
 expr_stmt|;
 name|w
 operator|=
@@ -3558,6 +3582,8 @@ index|]
 operator|.
 name|wi_code
 expr_stmt|;
+if|if
+condition|(
 name|wi_getval
 argument_list|(
 name|iface
@@ -3565,7 +3591,11 @@ argument_list|,
 operator|&
 name|wreq
 argument_list|)
-expr_stmt|;
+operator|==
+operator|-
+literal|1
+condition|)
+continue|continue;
 name|printf
 argument_list|(
 literal|"%s"
@@ -3725,6 +3755,8 @@ index|]
 operator|.
 name|wi_code
 expr_stmt|;
+if|if
+condition|(
 name|wi_getval
 argument_list|(
 name|iface
@@ -3732,7 +3764,11 @@ argument_list|,
 operator|&
 name|wreq
 argument_list|)
-expr_stmt|;
+operator|==
+operator|-
+literal|1
+condition|)
+continue|continue;
 name|printf
 argument_list|(
 literal|"%s"
@@ -3904,12 +3940,24 @@ name|wi_type
 operator|=
 name|WI_RID_IFACE_STATS
 expr_stmt|;
+if|if
+condition|(
 name|wi_getval
 argument_list|(
 name|iface
 argument_list|,
 operator|&
 name|wreq
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"Cannot get interface stats"
 argument_list|)
 expr_stmt|;
 name|c
@@ -4776,12 +4824,24 @@ name|wi_type
 operator|=
 name|WI_RID_READ_APS
 expr_stmt|;
+if|if
+condition|(
 name|wi_getval
 argument_list|(
 name|iface
 argument_list|,
 operator|&
 name|wreq
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"Cannot get stations"
 argument_list|)
 expr_stmt|;
 name|wi_printaps
@@ -4936,12 +4996,24 @@ name|wi_type
 operator|=
 name|WI_RID_READ_CACHE
 expr_stmt|;
+if|if
+condition|(
 name|wi_getval
 argument_list|(
 name|iface
 argument_list|,
 operator|&
 name|wreq
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"Cannot read signal cache"
 argument_list|)
 expr_stmt|;
 name|wi_sigitems
@@ -5152,6 +5224,34 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function
+specifier|static
+name|void
+name|dep
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|flag
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|opt
+parameter_list|)
+block|{
+name|warnx
+argument_list|(
+literal|"warning: flag %s deprecated, migrate to ifconfig %s"
+argument_list|,
+name|flag
+argument_list|,
+name|opt
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 name|int
@@ -5366,9 +5466,11 @@ break|break;
 case|case
 literal|'c'
 case|:
-name|warnx
+name|dep
 argument_list|(
-literal|"c obsolete, use ifconfig mediaopt"
+literal|"c"
+argument_list|,
+literal|"mediaopt"
 argument_list|)
 expr_stmt|;
 name|wi_setword
@@ -5413,9 +5515,11 @@ break|break;
 case|case
 literal|'e'
 case|:
-name|warnx
+name|dep
 argument_list|(
-literal|"e obsolete, use ifconfig wepmode"
+literal|"e"
+argument_list|,
+literal|"wepmode"
 argument_list|)
 expr_stmt|;
 name|wi_setword
@@ -5439,9 +5543,11 @@ break|break;
 case|case
 literal|'f'
 case|:
-name|warnx
+name|dep
 argument_list|(
-literal|"f obsolete, use ifconfig channel"
+literal|"f"
+argument_list|,
+literal|"channel"
 argument_list|)
 expr_stmt|;
 name|wi_setword
@@ -5486,9 +5592,11 @@ break|break;
 case|case
 literal|'k'
 case|:
-name|warnx
+name|dep
 argument_list|(
-literal|"k obsolete, use ifconfig wepkey"
+literal|"k"
+argument_list|,
+literal|"wepkey"
 argument_list|)
 expr_stmt|;
 name|key
@@ -5520,9 +5628,11 @@ break|break;
 case|case
 literal|'p'
 case|:
-name|warnx
+name|dep
 argument_list|(
-literal|"p obsolete, use ifconfig mediaopt"
+literal|"p"
+argument_list|,
+literal|"mediaopt"
 argument_list|)
 expr_stmt|;
 name|wi_setword
@@ -5567,9 +5677,11 @@ break|break;
 case|case
 literal|'t'
 case|:
-name|warnx
+name|dep
 argument_list|(
-literal|"t obsolete, use ifconfig meidaopt"
+literal|"t"
+argument_list|,
+literal|"mediaopt"
 argument_list|)
 expr_stmt|;
 name|wi_setword
@@ -5593,9 +5705,11 @@ break|break;
 case|case
 literal|'n'
 case|:
-name|warnx
+name|dep
 argument_list|(
-literal|"n obsolete, use ifconfig ssid"
+literal|"n"
+argument_list|,
+literal|"ssid"
 argument_list|)
 expr_stmt|;
 name|wi_setstr
@@ -5616,9 +5730,11 @@ break|break;
 case|case
 literal|'s'
 case|:
-name|warnx
+name|dep
 argument_list|(
-literal|"s obsolete, use ifconfig stationname"
+literal|"s"
+argument_list|,
+literal|"stationname"
 argument_list|)
 expr_stmt|;
 name|wi_setstr
@@ -5665,9 +5781,11 @@ break|break;
 case|case
 literal|'q'
 case|:
-name|warnx
+name|dep
 argument_list|(
-literal|"q obsolete, use ifconfig ssid"
+literal|"q"
+argument_list|,
+literal|"ssid"
 argument_list|)
 expr_stmt|;
 name|wi_setstr
@@ -5688,9 +5806,11 @@ break|break;
 case|case
 literal|'S'
 case|:
-name|warnx
+name|dep
 argument_list|(
-literal|"S obsolete, use ifconfig powersleep"
+literal|"S"
+argument_list|,
+literal|"powersleep"
 argument_list|)
 expr_stmt|;
 name|wi_setword
@@ -5714,9 +5834,11 @@ break|break;
 case|case
 literal|'T'
 case|:
-name|warnx
+name|dep
 argument_list|(
-literal|"T obsolete, use ifconfig weptxkey"
+literal|"T"
+argument_list|,
+literal|"weptxkey"
 argument_list|)
 expr_stmt|;
 name|wi_setword
@@ -5742,9 +5864,11 @@ break|break;
 case|case
 literal|'P'
 case|:
-name|warnx
+name|dep
 argument_list|(
-literal|"P obsolete, use ifconfig powersave"
+literal|"P"
+argument_list|,
+literal|"powersave"
 argument_list|)
 expr_stmt|;
 name|wi_setword
