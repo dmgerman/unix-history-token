@@ -213,11 +213,14 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|__i386__
-end_ifdef
+operator|||
+name|defined
+name|__arm__
+end_if
 
 begin_define
 define|#
