@@ -53,7 +53,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	3.46	%G%"
+literal|"@(#)deliver.c	3.47	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -214,6 +214,13 @@ name|prescan
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_expr_stmt
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
 
 begin_if
 if|if
@@ -414,13 +421,6 @@ end_comment
 
 begin_expr_stmt
 name|Errors
-operator|=
-literal|0
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|errno
 operator|=
 literal|0
 expr_stmt|;
@@ -1211,6 +1211,13 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
+
 begin_return
 return|return
 operator|(
@@ -1397,6 +1404,13 @@ endif|#
 directive|endif
 endif|DEBUG
 end_endif
+
+begin_expr_stmt
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* create a pipe to shove the mail through */

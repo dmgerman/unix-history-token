@@ -47,7 +47,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	3.40	%G%"
+literal|"@(#)main.c	3.41	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1477,10 +1477,6 @@ name|To
 operator|=
 name|NULL
 expr_stmt|;
-name|errno
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1490,6 +1486,10 @@ name|GrabTo
 condition|)
 name|collect
 argument_list|()
+expr_stmt|;
+name|errno
+operator|=
+literal|0
 expr_stmt|;
 comment|/* collect statistics */
 name|Stat
@@ -1842,6 +1842,24 @@ argument_list|)
 operator|!=
 literal|0
 operator|&&
+ifdef|#
+directive|ifdef
+name|DEBUG
+operator|(
+name|Debug
+operator|==
+literal|0
+operator|||
+name|getuid
+argument_list|()
+operator|!=
+name|geteuid
+argument_list|()
+operator|)
+operator|&&
+endif|#
+directive|endif
+endif|DEBUG
 name|index
 argument_list|(
 name|from
