@@ -1,9 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_escape
-end_escape
-
 begin_comment
-comment|/* graphics.c -  *  * Copyright -C- 1982 Barry S. Roitblat  *  *  * This file contains primitive functions to manipulate an AED512  * color display.  *  * (Modified from software written by John Ousterhout for the caesar  *  program)  */
+comment|/* @(#)graphics1.c	1.2	%G%  *  * Copyright -C- 1982 Barry S. Roitblat  *  *  * This file contains primitive functions to manipulate an AED512  * color display.  *  * (Modified from software written by John Ousterhout for the caesar  *  program)  */
 end_comment
 
 begin_include
@@ -57,6 +54,19 @@ end_decl_stmt
 
 begin_comment
 comment|/* Used to save flags from sgttyb */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sgispeed
+decl_stmt|,
+name|sgospeed
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Used to save baud rates */
 end_comment
 
 begin_decl_stmt
@@ -319,9 +329,6 @@ literal|"0123456789ABCDEF"
 decl_stmt|;
 end_decl_stmt
 
-begin_escape
-end_escape
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -573,9 +580,6 @@ begin_comment
 comment|/* end setcolor */
 end_comment
 
-begin_escape
-end_escape
-
 begin_macro
 name|GRoutxy20
 argument_list|(
@@ -793,9 +797,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_escape
-end_escape
-
 begin_macro
 name|GRsetcharstyle
 argument_list|(
@@ -923,9 +924,6 @@ endif|#
 directive|endif
 block|}
 end_block
-
-begin_escape
-end_escape
 
 begin_macro
 name|GRsetcharsize
@@ -1183,9 +1181,6 @@ directive|endif
 block|}
 end_block
 
-begin_escape
-end_escape
-
 begin_macro
 name|GRInit
 argument_list|(
@@ -1239,7 +1234,7 @@ name|ldisc
 init|=
 name|NTTYDISC
 decl_stmt|;
-comment|/* First, grab up the display modes, then reset them to put it      * into cooked mode.  Also, lock the terminal.  If doing fast I/O      * then set the LLITOUT bit.  Note:  setting the LLITOUT bit only      * works if it happens before the stty.      */
+comment|/* First, grab up the display modes, then reset them to put it      * into cooked mode.  Also, lock the terminal.  If doing fast I/O      * then set the LLITOUT bit.  Note:  setting the LLITOUT bit only      * works if it happens before the stty.  Also forces the display to      * run at 9600 baud.      */
 operator|(
 name|void
 operator|)
@@ -1325,6 +1320,18 @@ name|sgttyb
 operator|.
 name|sg_flags
 expr_stmt|;
+name|sgispeed
+operator|=
+name|sgttyb
+operator|.
+name|sg_ispeed
+expr_stmt|;
+name|sgospeed
+operator|=
+name|sgttyb
+operator|.
+name|sg_ospeed
+expr_stmt|;
 name|sgttyb
 operator|.
 name|sg_flags
@@ -1349,6 +1356,18 @@ operator||
 name|EVENP
 operator||
 name|ODDP
+expr_stmt|;
+name|sgttyb
+operator|.
+name|sg_ispeed
+operator|=
+name|B9600
+expr_stmt|;
+name|sgttyb
+operator|.
+name|sg_ospeed
+operator|=
+name|B9600
 expr_stmt|;
 operator|(
 name|void
@@ -1616,9 +1635,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_escape
-end_escape
-
 begin_macro
 name|GRClose
 argument_list|()
@@ -1692,9 +1708,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_escape
-end_escape
 
 begin_macro
 name|GRSetMap
