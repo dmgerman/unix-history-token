@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)interp.c	5.4 (Berkeley) %G%"
+literal|"@(#)interp.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -515,7 +515,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|PXDEBUG
 end_ifdef
 
 begin_decl_stmt
@@ -538,7 +538,7 @@ end_decl_stmt
 begin_endif
 endif|#
 directive|endif
-endif|DEBUG
+endif|PXDEBUG
 end_endif
 
 begin_escape
@@ -834,7 +834,7 @@ control|)
 block|{
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|PXDEBUG
 if|if
 condition|(
 operator|++
@@ -858,7 +858,7 @@ name|ucp
 expr_stmt|;
 endif|#
 directive|endif
-endif|DEBUG
+endif|PXDEBUG
 ifdef|#
 directive|ifdef
 name|PROFILE
