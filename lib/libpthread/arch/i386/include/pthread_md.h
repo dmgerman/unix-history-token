@@ -229,7 +229,7 @@ name|KCB_GET32
 parameter_list|(
 name|name
 parameter_list|)
-value|({					\ 	__kcb_type(name) __result;				\ 								\ 	u_int __i;						\ 	__asm __volatile("movl %%gs:%1, %0"			\ 	    : "=r" (__i)					\ 	    : "m" (*(u_int *)(__kcb_offset(name))));		\ 	__result = __kcb_type(name)__i;				\ 								\ 	__result;						\ })
+value|({					\ 	__kcb_type(name) __result;				\ 								\ 	u_int __i;						\ 	__asm __volatile("movl %%gs:%1, %0"			\ 	    : "=r" (__i)					\ 	    : "m" (*(u_int *)(__kcb_offset(name))));		\ 	__result = (__kcb_type(name))__i;			\ 								\ 	__result;						\ })
 end_define
 
 begin_comment
