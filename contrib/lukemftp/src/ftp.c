@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ftp.c,v 1.122 2003/08/07 11:13:55 agc Exp $	*/
+comment|/*	$NetBSD: ftp.c,v 1.125 2004/04/10 12:21:39 lukem Exp $	*/
 end_comment
 
 begin_comment
@@ -42,7 +42,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: ftp.c,v 1.122 2003/08/07 11:13:55 agc Exp $"
+literal|"$NetBSD: ftp.c,v 1.125 2004/04/10 12:21:39 lukem Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -715,9 +715,6 @@ literal|"socket"
 expr_stmt|;
 continue|continue;
 block|}
-while|while
-condition|(
-operator|(
 name|error
 operator|=
 name|xconnect
@@ -732,17 +729,7 @@ name|res
 operator|->
 name|ai_addrlen
 argument_list|)
-operator|)
-operator|<
-literal|0
-operator|&&
-name|errno
-operator|==
-name|EINTR
-condition|)
-block|{
-empty_stmt|;
-block|}
+expr_stmt|;
 if|if
 condition|(
 name|error
@@ -974,6 +961,10 @@ argument_list|)
 argument_list|)
 operator|<
 literal|0
+condition|)
+if|if
+condition|(
+name|debug
 condition|)
 name|warn
 argument_list|(
@@ -6720,6 +6711,10 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+if|if
+condition|(
+name|debug
+condition|)
 name|warn
 argument_list|(
 literal|"setsockopt (ignored)"
@@ -7942,13 +7937,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|errno
-operator|==
-name|EINTR
-condition|)
-continue|continue;
-if|if
-condition|(
 name|activefallback
 condition|)
 block|{
@@ -8028,6 +8016,10 @@ argument_list|)
 argument_list|)
 operator|<
 literal|0
+condition|)
+if|if
+condition|(
+name|debug
 condition|)
 name|warn
 argument_list|(
@@ -8215,6 +8207,10 @@ argument_list|)
 argument_list|)
 operator|<
 literal|0
+condition|)
+if|if
+condition|(
+name|debug
 condition|)
 name|warn
 argument_list|(
@@ -8897,6 +8893,10 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+if|if
+condition|(
+name|debug
+condition|)
 name|warn
 argument_list|(
 literal|"setsockopt TOS (ignored)"
@@ -9085,6 +9085,10 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|debug
+condition|)
 name|warn
 argument_list|(
 literal|"setsockopt TOS (ignored)"

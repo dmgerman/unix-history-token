@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: progressbar.h,v 1.3 2003/02/28 09:53:49 lukem Exp $	*/
+comment|/*	$NetBSD: progressbar.h,v 1.4 2004/03/09 17:04:24 hubertf Exp $	*/
 end_comment
 
 begin_comment
@@ -135,6 +135,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* offset to restart transfer */
+end_comment
+
+begin_decl_stmt
+name|GLOBAL
+name|char
+modifier|*
+name|prefix
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Text written left of progress bar */
 end_comment
 
 begin_ifndef

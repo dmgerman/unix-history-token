@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: progressbar.c,v 1.4 2003/07/17 12:06:18 lukem Exp $	*/
+comment|/*	$NetBSD: progressbar.c,v 1.5 2004/03/09 17:04:24 hubertf Exp $	*/
 end_comment
 
 begin_comment
@@ -22,7 +22,7 @@ end_ifndef
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: progressbar.c,v 1.4 2003/07/17 12:06:18 lukem Exp $"
+literal|"$NetBSD: progressbar.c,v 1.5 2004/03/09 17:04:24 hubertf Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -86,6 +86,12 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -631,6 +637,25 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|prefix
+condition|)
+name|len
+operator|+=
+name|snprintf
+argument_list|(
+name|buf
+operator|+
+name|len
+argument_list|,
+name|BUFLEFT
+argument_list|,
+literal|"%s"
+argument_list|,
+name|prefix
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|filesize
 operator|>
 literal|0
@@ -704,6 +729,17 @@ name|ttywidth
 argument_list|)
 operator|-
 name|BAROVERHEAD
+expr_stmt|;
+if|if
+condition|(
+name|prefix
+condition|)
+name|barlength
+operator|-=
+name|strlen
+argument_list|(
+name|prefix
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
