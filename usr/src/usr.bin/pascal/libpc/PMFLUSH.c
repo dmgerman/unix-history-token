@@ -25,6 +25,8 @@ argument_list|(
 argument|cntrs
 argument_list|,
 argument|rtns
+argument_list|,
+argument|bufaddr
 argument_list|)
 end_macro
 
@@ -48,6 +50,17 @@ begin_comment
 comment|/* number of func and proc counters */
 end_comment
 
+begin_decl_stmt
+name|long
+modifier|*
+name|bufaddr
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* address of count buffers */
+end_comment
+
 begin_block
 block|{
 specifier|register
@@ -55,14 +68,14 @@ name|FILE
 modifier|*
 name|filep
 decl_stmt|;
-name|_pcpcount
+name|bufaddr
 index|[
 literal|0
 index|]
 operator|=
 literal|0426
 expr_stmt|;
-name|_pcpcount
+name|bufaddr
 index|[
 literal|1
 index|]
@@ -70,14 +83,14 @@ operator|=
 name|time
 argument_list|()
 expr_stmt|;
-name|_pcpcount
+name|bufaddr
 index|[
 literal|2
 index|]
 operator|=
 name|cntrs
 expr_stmt|;
-name|_pcpcount
+name|bufaddr
 index|[
 literal|3
 index|]
@@ -104,11 +117,7 @@ name|ioerr
 goto|;
 name|fwrite
 argument_list|(
-operator|&
-name|_pcpcount
-index|[
-literal|0
-index|]
+name|bufaddr
 argument_list|,
 name|cntrs
 operator|+
