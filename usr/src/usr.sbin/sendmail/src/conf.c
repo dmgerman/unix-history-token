@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.46 (Berkeley) %G%"
+literal|"@(#)conf.c	6.47 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3824,6 +3824,42 @@ block|{
 return|return
 literal|0
 return|;
+block|}
+end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  SETSID -- set session id (for non-POSIX systems) */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HASSETSID
+end_ifndef
+
+begin_macro
+name|setsid
+argument_list|()
+end_macro
+
+begin_block
+block|{
+ifdef|#
+directive|ifdef
+name|SYSTEM5
+name|setpgrp
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_block
 
