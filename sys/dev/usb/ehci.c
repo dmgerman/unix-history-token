@@ -4,7 +4,7 @@ comment|/*	$NetBSD: ehci.c,v 1.46 2003/03/09 19:51:13 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/* Also ported from NetBSD:  *	$NetBSD: ehci.c,v 1.50 2003/10/18 04:50:35 simonb Exp $  *	$NetBSD: ehci.c,v 1.54 2004/01/17 13:15:05 jdolecek Exp $  *	    up to  *	$NetBSD: ehci.c,v 1.64 2004/06/23 06:45:56 mycroft Exp $  *	$NetBSD: ehci.c,v 1.66 2004/06/30 03:11:56 mycroft Exp $  *	$NetBSD: ehci.c,v 1.67 2004/07/06 04:18:05 mycroft Exp $  *	$NetBSD: ehci.c,v 1.68 2004/07/09 05:07:06 mycroft Exp $  */
+comment|/* Also ported from NetBSD:  *	$NetBSD: ehci.c,v 1.50 2003/10/18 04:50:35 simonb Exp $  *	$NetBSD: ehci.c,v 1.54 2004/01/17 13:15:05 jdolecek Exp $  *	    up to  *	$NetBSD: ehci.c,v 1.64 2004/06/23 06:45:56 mycroft Exp $  *	$NetBSD: ehci.c,v 1.66 2004/06/30 03:11:56 mycroft Exp $  *	$NetBSD: ehci.c,v 1.67 2004/07/06 04:18:05 mycroft Exp $  *	$NetBSD: ehci.c,v 1.68 2004/07/09 05:07:06 mycroft Exp $  *	$NetBSD: ehci.c,v 1.69 2004/07/17 20:12:02 mycroft Exp $  */
 end_comment
 
 begin_comment
@@ -9329,14 +9329,7 @@ parameter_list|(
 name|usbd_xfer_handle
 name|xfer
 parameter_list|)
-block|{
-name|xfer
-operator|->
-name|hcpriv
-operator|=
-name|NULL
-expr_stmt|;
-block|}
+block|{ }
 end_function
 
 begin_function
@@ -9560,14 +9553,7 @@ parameter_list|(
 name|usbd_xfer_handle
 name|xfer
 parameter_list|)
-block|{
-name|xfer
-operator|->
-name|hcpriv
-operator|=
-name|NULL
-expr_stmt|;
-block|}
+block|{ }
 end_function
 
 begin_comment

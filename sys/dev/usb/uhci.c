@@ -4,7 +4,7 @@ comment|/*	$NetBSD: uhci.c,v 1.170 2003/02/19 01:35:04 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	Also already incorporated from NetBSD:  *	$NetBSD: uhci.c,v 1.172 2003/02/23 04:19:26 simonb Exp $  *	$NetBSD: uhci.c,v 1.173 2003/05/13 04:41:59 gson Exp $  *	$NetBSD: uhci.c,v 1.175 2003/09/12 16:18:08 mycroft Exp $  *	$NetBSD: uhci.c,v 1.176 2003/11/04 19:11:21 mycroft Exp $  *	$NetBSD: uhci.c,v 1.177 2003/12/29 08:17:10 toshii Exp $  *	$NetBSD: uhci.c,v 1.178 2004/03/02 16:32:05 martin Exp $  */
+comment|/*	Also already incorporated from NetBSD:  *	$NetBSD: uhci.c,v 1.172 2003/02/23 04:19:26 simonb Exp $  *	$NetBSD: uhci.c,v 1.173 2003/05/13 04:41:59 gson Exp $  *	$NetBSD: uhci.c,v 1.175 2003/09/12 16:18:08 mycroft Exp $  *	$NetBSD: uhci.c,v 1.176 2003/11/04 19:11:21 mycroft Exp $  *	$NetBSD: uhci.c,v 1.177 2003/12/29 08:17:10 toshii Exp $  *	$NetBSD: uhci.c,v 1.178 2004/03/02 16:32:05 martin Exp $  *	$NetBSD: uhci.c,v 1.180 2004/07/17 20:12:03 mycroft Exp $  */
 end_comment
 
 begin_include
@@ -9839,12 +9839,6 @@ name|s
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Step 3: Execute callback. 	 */
-name|xfer
-operator|->
-name|hcpriv
-operator|=
-name|ii
-expr_stmt|;
 name|DPRINTFN
 argument_list|(
 literal|1
