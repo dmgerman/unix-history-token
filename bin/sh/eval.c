@@ -2718,6 +2718,9 @@ decl_stmt|;
 name|int
 name|realstatus
 decl_stmt|;
+name|int
+name|do_clearcmdentry
+decl_stmt|;
 if|#
 directive|if
 name|__GNUC__
@@ -2745,6 +2748,12 @@ name|void
 operator|)
 operator|&
 name|flags
+expr_stmt|;
+operator|(
+name|void
+operator|)
+operator|&
+name|do_clearcmdentry
 expr_stmt|;
 endif|#
 directive|endif
@@ -2790,6 +2799,10 @@ expr_stmt|;
 name|varflag
 operator|=
 literal|1
+expr_stmt|;
+name|do_clearcmdentry
+operator|=
+literal|0
 expr_stmt|;
 name|oexitstatus
 operator|=
@@ -3199,6 +3212,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
 name|path
 operator|=
 name|sp
@@ -3212,6 +3226,17 @@ argument_list|)
 operator|-
 literal|1
 expr_stmt|;
+comment|/*  				 * On `PATH=... command`, we need to make 				 * sure that the command isn't using the 				 * non-updated hash table of the outer PATH 				 * setting and we need to make sure that  				 * the hash table isn't filled with items 				 * from the temporary setting. 				 * 				 * It would be better to forbit using and  				 * updating the table while this command 				 * runs, by the command finding mechanism 				 * is heavily integrated with hash handling, 				 * so we just delete the hash before and after 				 * the command runs. Partly deleting like 				 * changepatch() does doesn't seem worth the 				 * bookinging effort, since most such runs add 				 * diretories in front of the new PATH. 				 */
+name|clearcmdentry
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+name|do_clearcmdentry
+operator|=
+literal|1
+expr_stmt|;
+block|}
 name|find_command
 argument_list|(
 name|argv
@@ -4327,6 +4352,15 @@ literal|"_"
 argument_list|,
 name|lastarg
 argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|do_clearcmdentry
+condition|)
+name|clearcmdentry
+argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
