@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/pcpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -261,12 +267,6 @@ begin_include
 include|#
 directive|include
 file|<machine/pal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/globaldata.h>
 end_include
 
 begin_include
@@ -10112,16 +10112,11 @@ name|gd_current_asngen
 operator|=
 literal|1
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMP
 name|globaldata_register
 argument_list|(
 name|globaldata
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 

@@ -144,6 +144,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/pcpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -354,12 +360,6 @@ end_include
 begin_comment
 comment|/* pcb.h included via sys/user.h */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<machine/globaldata.h>
-end_include
 
 begin_include
 include|#
@@ -2017,16 +2017,14 @@ expr_stmt|;
 name|vm_pager_bufferinit
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMP
 name|globaldata_register
 argument_list|(
 name|GLOBALDATA
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
+ifndef|#
+directive|ifndef
+name|SMP
 comment|/* For SMP, we delay the cpu_setregs() until after SMP startup. */
 name|cpu_setregs
 argument_list|()

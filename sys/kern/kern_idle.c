@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -48,19 +54,13 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/pcpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/signalvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/smp.h>
 end_include
 
 begin_include
@@ -72,13 +72,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vmmeter.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/sysctl.h>
+file|<sys/smp.h>
 end_include
 
 begin_include
@@ -87,29 +81,11 @@ directive|include
 file|<sys/unistd.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/ipl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/kthread.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/queue.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/eventhandler.h>
-end_include
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
 begin_include
 include|#
@@ -122,6 +98,11 @@ include|#
 directive|include
 file|<vm/vm_extern.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -145,30 +126,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<machine/cpu.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/md_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/globaldata.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/globals.h>
-end_include
 
 begin_function_decl
 specifier|static

@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/pcpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -5800,16 +5806,11 @@ name|gd_cpuid
 operator|=
 name|cpuid
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMP
 name|globaldata_register
 argument_list|(
 name|globaldata
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
