@@ -84,7 +84,7 @@ file|<netdb.h>
 end_include
 
 begin_comment
-comment|/* for gethostbyname()		*/
+comment|/* for getaddrinfo()		*/
 end_comment
 
 begin_include
@@ -286,6 +286,11 @@ name|sm_stat_res
 name|res
 decl_stmt|;
 name|struct
+name|addrinfo
+modifier|*
+name|ai
+decl_stmt|;
+name|struct
 name|sockaddr_in
 modifier|*
 name|claddr
@@ -347,19 +352,35 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|gethostbyname
+name|getaddrinfo
 argument_list|(
 name|arg
 operator|->
 name|mon_name
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+operator|&
+name|ai
 argument_list|)
+operator|==
+literal|0
 condition|)
+block|{
 name|res
 operator|.
 name|res_stat
 operator|=
 name|stat_succ
 expr_stmt|;
+name|freeaddrinfo
+argument_list|(
+name|ai
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 block|{
 name|claddr
@@ -419,7 +440,7 @@ comment|/* sm_mon_1 ------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/*    Purpose:	RPC procedure to establish a monitor request    Returns:	Success, unless lack of resources prevents 		the necessary structures from being set up 		to record the request, or if the hostname is not 		valid (as judged by gethostbyname()) */
+comment|/*    Purpose:	RPC procedure to establish a monitor request    Returns:	Success, unless lack of resources prevents 		the necessary structures from being set up 		to record the request, or if the hostname is not 		valid (as judged by getaddrinfo()) */
 end_comment
 
 begin_function
@@ -453,6 +474,11 @@ decl_stmt|;
 name|MonList
 modifier|*
 name|lp
+decl_stmt|;
+name|struct
+name|addrinfo
+modifier|*
+name|ai
 decl_stmt|;
 if|if
 condition|(
@@ -563,15 +589,23 @@ comment|/* Find existing host entry, or create one if not found            */
 comment|/* If find_host() fails, it will have logged the error already.    */
 if|if
 condition|(
-operator|!
-name|gethostbyname
+name|getaddrinfo
 argument_list|(
 name|arg
 operator|->
 name|mon_id
 operator|.
 name|mon_name
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+operator|&
+name|ai
 argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|syslog
@@ -587,8 +621,18 @@ operator|.
 name|mon_name
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+operator|&
+name|res
+operator|)
+return|;
 block|}
-elseif|else
+name|freeaddrinfo
+argument_list|(
+name|ai
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
