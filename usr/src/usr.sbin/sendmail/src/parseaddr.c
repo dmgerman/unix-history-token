@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	5.18 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -862,7 +862,7 @@ name|av
 expr_stmt|;
 name|state
 operator|=
-name|OPR
+name|ATM
 expr_stmt|;
 name|c
 operator|=
@@ -973,11 +973,6 @@ operator|==
 literal|'\0'
 condition|)
 break|break;
-name|c
-operator|&=
-operator|~
-literal|0200
-expr_stmt|;
 if|if
 condition|(
 name|tTd
@@ -1014,14 +1009,17 @@ name|c
 operator|!=
 literal|'!'
 condition|)
-name|c
-operator||=
-literal|0200
+operator|*
+name|q
+operator|++
+operator|=
+literal|'\\'
 expr_stmt|;
 name|bslashmode
 operator|=
 name|FALSE
 expr_stmt|;
+continue|continue;
 block|}
 if|if
 condition|(
@@ -1038,6 +1036,7 @@ name|c
 operator|=
 name|NOCHAR
 expr_stmt|;
+continue|continue;
 block|}
 elseif|else
 if|if

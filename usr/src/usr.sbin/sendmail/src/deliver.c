@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	5.57 (Berkeley) %G%"
+literal|"@(#)deliver.c	5.58 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1029,32 +1029,11 @@ block|{
 name|stripquotes
 argument_list|(
 name|user
-argument_list|,
-name|TRUE
 argument_list|)
 expr_stmt|;
 name|stripquotes
 argument_list|(
 name|host
-argument_list|,
-name|TRUE
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|stripquotes
-argument_list|(
-name|user
-argument_list|,
-name|FALSE
-argument_list|)
-expr_stmt|;
-name|stripquotes
-argument_list|(
-name|host
-argument_list|,
-name|FALSE
 argument_list|)
 expr_stmt|;
 block|}

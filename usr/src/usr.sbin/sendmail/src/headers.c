@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	5.17 (Berkeley) %G%"
+literal|"@(#)headers.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2632,6 +2632,10 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
+specifier|register
+name|int
+name|c
+decl_stmt|;
 name|char
 name|savechar
 decl_stmt|;
@@ -2872,7 +2876,7 @@ block|}
 comment|/* output the name with nice formatting */
 name|opos
 operator|+=
-name|qstrlen
+name|strlen
 argument_list|(
 name|name
 argument_list|)
@@ -2942,7 +2946,7 @@ name|opos
 expr_stmt|;
 name|opos
 operator|+=
-name|qstrlen
+name|strlen
 argument_list|(
 name|name
 argument_list|)
@@ -2973,8 +2977,13 @@ block|}
 comment|/* strip off quote bits as we output */
 while|while
 condition|(
+operator|(
+name|c
+operator|=
 operator|*
 name|name
+operator|++
+operator|)
 operator|!=
 literal|'\0'
 operator|&&
@@ -2989,30 +2998,24 @@ condition|)
 block|{
 if|if
 condition|(
-name|bitset
+name|bitnset
 argument_list|(
-literal|0200
+name|M_7BITS
 argument_list|,
-operator|*
-name|name
+name|m
+operator|->
+name|m_flags
 argument_list|)
 condition|)
-operator|*
-name|obp
-operator|++
-operator|=
-literal|'\\'
+name|c
+operator|&=
+literal|0177
 expr_stmt|;
 operator|*
 name|obp
 operator|++
 operator|=
-operator|*
-name|name
-operator|++
-operator|&
-operator|~
-literal|0200
+name|c
 expr_stmt|;
 block|}
 name|firstone

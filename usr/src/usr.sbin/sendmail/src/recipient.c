@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	5.30 (Berkeley) %G%"
+literal|"@(#)recipient.c	5.31 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -892,8 +892,6 @@ block|}
 name|stripquotes
 argument_list|(
 name|buf
-argument_list|,
-name|TRUE
 argument_list|)
 expr_stmt|;
 comment|/* do sickly crude mapping for program mailing, etc. */
