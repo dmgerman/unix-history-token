@@ -1026,16 +1026,21 @@ block|}
 block|,
 comment|/* 74 = linux_mprotect */
 block|{
-literal|0
+name|SYF_MPSAFE
+operator||
+name|AS
+argument_list|(
+name|madvise_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|linux_madvise
+name|madvise
 block|}
 block|,
-comment|/* 75 = linux_madvise */
+comment|/* 75 = madvise */
 block|{
 literal|0
 block|,

@@ -321,7 +321,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|LINUX_SYS_linux_madvise
+name|LINUX_SYS_madvise
 value|75
 end_define
 

@@ -272,14 +272,6 @@ end_expr_stmt
 begin_expr_stmt
 name|DUMMY
 argument_list|(
-name|madvise
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|DUMMY
-argument_list|(
 name|mincore
 argument_list|)
 expr_stmt|;
