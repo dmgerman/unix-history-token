@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: show.c,v 1.5 1995/01/05 01:10:13 swallace Exp $"
+literal|"$Id: show.c,v 1.6 1995/05/30 03:50:02 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -91,16 +91,15 @@ condition|(
 operator|!
 name|fp
 condition|)
-block|{
-name|whinge
+name|printf
 argument_list|(
-literal|"show_file: Can't open '%s' for reading."
+literal|"ERROR: show_file: Can't open '%s' for reading!\n"
 argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
+else|else
+block|{
 while|while
 condition|(
 name|n
@@ -132,6 +131,7 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+block|}
 name|printf
 argument_list|(
 literal|"\n"
