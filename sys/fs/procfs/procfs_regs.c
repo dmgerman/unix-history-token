@@ -188,7 +188,7 @@ expr_stmt|;
 else|else
 name|error
 operator|=
-name|procfs_read_regs
+name|proc_read_regs
 argument_list|(
 operator|&
 name|p
@@ -245,7 +245,7 @@ expr_stmt|;
 else|else
 name|error
 operator|=
-name|procfs_write_regs
+name|proc_write_regs
 argument_list|(
 operator|&
 name|p

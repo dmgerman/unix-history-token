@@ -837,7 +837,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|procfs_sstep
+name|proc_sstep
 argument_list|(
 operator|&
 name|p

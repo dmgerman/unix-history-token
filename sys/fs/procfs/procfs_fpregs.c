@@ -182,7 +182,7 @@ expr_stmt|;
 else|else
 name|error
 operator|=
-name|procfs_read_fpregs
+name|proc_read_fpregs
 argument_list|(
 operator|&
 name|p
@@ -238,7 +238,7 @@ expr_stmt|;
 else|else
 name|error
 operator|=
-name|procfs_write_fpregs
+name|proc_write_fpregs
 argument_list|(
 operator|&
 name|p

@@ -212,7 +212,7 @@ end_struct_decl
 
 begin_function_decl
 name|int
-name|procfs_read_regs
+name|proc_read_regs
 parameter_list|(
 name|struct
 name|thread
@@ -229,7 +229,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|procfs_write_regs
+name|proc_write_regs
 parameter_list|(
 name|struct
 name|thread
@@ -246,7 +246,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|procfs_read_fpregs
+name|proc_read_fpregs
 parameter_list|(
 name|struct
 name|thread
@@ -263,7 +263,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|procfs_write_fpregs
+name|proc_write_fpregs
 parameter_list|(
 name|struct
 name|thread
@@ -280,7 +280,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|procfs_read_dbregs
+name|proc_read_dbregs
 parameter_list|(
 name|struct
 name|thread
@@ -297,7 +297,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|procfs_write_dbregs
+name|proc_write_dbregs
 parameter_list|(
 name|struct
 name|thread
@@ -314,7 +314,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|procfs_sstep
+name|proc_sstep
 parameter_list|(
 name|struct
 name|thread

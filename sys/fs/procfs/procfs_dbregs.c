@@ -184,7 +184,7 @@ expr_stmt|;
 else|else
 name|error
 operator|=
-name|procfs_read_dbregs
+name|proc_read_dbregs
 argument_list|(
 operator|&
 name|p
@@ -241,7 +241,7 @@ expr_stmt|;
 else|else
 name|error
 operator|=
-name|procfs_write_dbregs
+name|proc_write_dbregs
 argument_list|(
 operator|&
 name|p
