@@ -2190,6 +2190,11 @@ expr_stmt|;
 comment|/* do not free env, as putenv has control of it */
 endif|#
 directive|endif
+name|parseopts
+argument_list|(
+name|CVSroot_directory
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
