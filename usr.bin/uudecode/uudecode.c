@@ -29,17 +29,17 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
 begin_if
 if|#
 directive|if
 literal|0
 end_if
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
 
 begin_endif
 unit|static char sccsid[] = "@(#)uudecode.c	8.2 (Berkeley) 4/2/94";
@@ -47,25 +47,28 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-init|=
-literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* not lint */
-end_comment
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * uudecode [file ...]  *  * create the specified file, decoding as you go.  * used with uuencode.  */
@@ -427,7 +430,9 @@ end_function
 begin_function
 name|int
 name|decode
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|flag
@@ -490,11 +495,9 @@ begin_function
 name|int
 name|decode2
 parameter_list|(
-name|flag
-parameter_list|)
 name|int
 name|flag
-decl_stmt|;
+parameter_list|)
 block|{
 name|struct
 name|passwd
@@ -1608,13 +1611,11 @@ begin_function
 name|void
 name|base64_decode
 parameter_list|(
-name|stream
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|stream
-decl_stmt|;
+parameter_list|)
 block|{
 name|unsigned
 name|char
@@ -1726,7 +1727,9 @@ begin_function
 specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 operator|(
 name|void
