@@ -30,12 +30,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vnode.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<security/mac_bsdextended/mac_bsdextended.h>
 end_include
 
