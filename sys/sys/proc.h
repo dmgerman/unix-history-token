@@ -3784,10 +3784,37 @@ begin_function_decl
 name|void
 name|mi_switch
 parameter_list|(
-name|void
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* Flags for mi_switch(). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SW_VOL
+value|0x0001
+end_define
+
+begin_comment
+comment|/* Voluntary switch. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SW_INVOL
+value|0x0002
+end_define
+
+begin_comment
+comment|/* Involuntary switch. */
+end_comment
 
 begin_function_decl
 name|int

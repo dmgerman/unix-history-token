@@ -2020,17 +2020,6 @@ literal|"ithread_schedule: Bad state for curthread."
 operator|)
 argument_list|)
 expr_stmt|;
-name|ctd
-operator|->
-name|td_proc
-operator|->
-name|p_stats
-operator|->
-name|p_ru
-operator|.
-name|ru_nivcsw
-operator|++
-expr_stmt|;
 if|if
 condition|(
 name|ctd
@@ -2047,7 +2036,9 @@ name|TDS_CAN_RUN
 expr_stmt|;
 comment|/* XXXKSE */
 name|mi_switch
-argument_list|()
+argument_list|(
+name|SW_INVOL
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -2799,15 +2790,6 @@ name|td
 argument_list|)
 expr_stmt|;
 comment|/* we're idle */
-name|p
-operator|->
-name|p_stats
-operator|->
-name|p_ru
-operator|.
-name|ru_nvcsw
-operator|++
-expr_stmt|;
 name|CTR2
 argument_list|(
 name|KTR_INTR
@@ -2822,7 +2804,9 @@ name|p_pid
 argument_list|)
 expr_stmt|;
 name|mi_switch
-argument_list|()
+argument_list|(
+name|SW_VOL
+argument_list|)
 expr_stmt|;
 name|CTR2
 argument_list|(

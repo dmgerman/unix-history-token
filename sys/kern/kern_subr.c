@@ -2100,19 +2100,10 @@ name|kg_user_pri
 argument_list|)
 expr_stmt|;
 comment|/* XXXKSE */
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_stats
-operator|->
-name|p_ru
-operator|.
-name|ru_nivcsw
-operator|++
-expr_stmt|;
 name|mi_switch
-argument_list|()
+argument_list|(
+name|SW_INVOL
+argument_list|)
 expr_stmt|;
 name|mtx_unlock_spin
 argument_list|(

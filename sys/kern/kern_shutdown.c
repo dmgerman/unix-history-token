@@ -1246,21 +1246,12 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
-name|curthread
-operator|->
-name|td_proc
-operator|->
-name|p_stats
-operator|->
-name|p_ru
-operator|.
-name|ru_nvcsw
-operator|++
-expr_stmt|;
+comment|/* 					 * Allow interrupt threads to run 					 */
 name|mi_switch
-argument_list|()
+argument_list|(
+name|SW_VOL
+argument_list|)
 expr_stmt|;
-comment|/* Allow interrupt threads to run */
 name|mtx_unlock_spin
 argument_list|(
 operator|&

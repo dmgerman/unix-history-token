@@ -7662,19 +7662,10 @@ name|cpu
 argument_list|)
 expr_stmt|;
 comment|/* When we return from mi_switch we'll be on the correct cpu. */
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_stats
-operator|->
-name|p_ru
-operator|.
-name|ru_nvcsw
-operator|++
-expr_stmt|;
 name|mi_switch
-argument_list|()
+argument_list|(
+name|SW_VOL
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
