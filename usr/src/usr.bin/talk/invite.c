@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)invite.c	5.1 (Berkeley) %G%"
+literal|"@(#)invite.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -145,14 +145,39 @@ name|msg
 operator|.
 name|addr
 operator|=
+operator|*
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
+operator|&
 name|my_addr
+expr_stmt|;
+name|msg
+operator|.
+name|addr
+operator|.
+name|sa_family
+operator|=
+name|htons
+argument_list|(
+name|msg
+operator|.
+name|addr
+operator|.
+name|sa_family
+argument_list|)
 expr_stmt|;
 name|msg
 operator|.
 name|id_num
 operator|=
+name|htonl
+argument_list|(
 operator|-
 literal|1
+argument_list|)
 expr_stmt|;
 comment|/* an impossible id_num */
 name|invitation_waiting
@@ -253,7 +278,10 @@ name|msg
 operator|.
 name|id_num
 operator|=
+name|htonl
+argument_list|(
 name|local_id
+argument_list|)
 expr_stmt|;
 name|ctl_transact
 argument_list|(
@@ -271,7 +299,10 @@ name|msg
 operator|.
 name|id_num
 operator|=
+name|htonl
+argument_list|(
 name|remote_id
+argument_list|)
 expr_stmt|;
 name|ctl_transact
 argument_list|(
@@ -314,9 +345,12 @@ name|msg
 operator|.
 name|id_num
 operator|=
+name|htonl
+argument_list|(
 name|remote_id
 operator|+
 literal|1
+argument_list|)
 expr_stmt|;
 name|announce_invite
 argument_list|()
@@ -330,6 +364,49 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|answers
+index|[]
+init|=
+block|{
+literal|"Your party is not logged on"
+block|,
+comment|/* NOT_HERE */
+literal|"Target machine does not recognize us"
+block|,
+comment|/* MACHINE_UNKNOWN */
+literal|"Target machine can not handle remote talk"
+block|,
+comment|/* UNKNOWN_REQUEST */
+literal|"Target machine is too confused to talk to us"
+block|,
+comment|/* FAILED */
+literal|"Your party is refusing messages"
+block|,
+comment|/* PERMISSION_REFUSED */
+literal|"Target machine indicates protocol mismatch"
+block|,
+comment|/* BADVERSION */
+literal|"Target machine indicates protocol botch (addr)"
+block|,
+comment|/* BADADDR */
+literal|"Target machine indicates protocol botch (ctl_addr)"
+block|,
+comment|/* BADCTLADDR */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|NANSWERS
+value|(sizeof (answers) / sizeof (answers[0]))
+end_define
 
 begin_comment
 comment|/*  * Transmit the invitation and process the response  */
@@ -376,59 +453,24 @@ operator|!=
 name|SUCCESS
 condition|)
 block|{
-switch|switch
+if|if
 condition|(
 name|response
 operator|.
 name|answer
+operator|<
+name|NANSWERS
 condition|)
-block|{
-case|case
-name|NOT_HERE
-case|:
 name|message
 argument_list|(
-literal|"Your party is not logged on"
+name|answers
+index|[
+name|response
+operator|.
+name|answer
+index|]
 argument_list|)
 expr_stmt|;
-break|break;
-case|case
-name|MACHINE_UNKNOWN
-case|:
-name|message
-argument_list|(
-literal|"Target machine does not recognize us"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|UNKNOWN_REQUEST
-case|:
-name|message
-argument_list|(
-literal|"Target machine can not handle remote talk"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|FAILED
-case|:
-name|message
-argument_list|(
-literal|"Target machine is too confused to talk to us"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|PERMISSION_DENIED
-case|:
-name|message
-argument_list|(
-literal|"Your party is refusing messages"
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
 name|quit
 argument_list|()
 expr_stmt|;
@@ -477,7 +519,10 @@ name|msg
 operator|.
 name|id_num
 operator|=
+name|htonl
+argument_list|(
 name|remote_id
+argument_list|)
 expr_stmt|;
 name|daemon_addr
 operator|.
@@ -496,7 +541,7 @@ name|msg
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|CTL_MSG
+name|msg
 argument_list|)
 argument_list|,
 literal|0
@@ -512,19 +557,22 @@ argument_list|)
 operator|!=
 sizeof|sizeof
 argument_list|(
-name|CTL_MSG
+name|msg
 argument_list|)
 condition|)
 name|perror
 argument_list|(
-literal|"send_delete remote"
+literal|"send_delete (remote)"
 argument_list|)
 expr_stmt|;
 name|msg
 operator|.
 name|id_num
 operator|=
+name|htonl
+argument_list|(
 name|local_id
+argument_list|)
 expr_stmt|;
 name|daemon_addr
 operator|.
@@ -543,7 +591,7 @@ name|msg
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|CTL_MSG
+name|msg
 argument_list|)
 argument_list|,
 literal|0
@@ -559,12 +607,12 @@ argument_list|)
 operator|!=
 sizeof|sizeof
 argument_list|(
-name|CTL_MSG
+name|msg
 argument_list|)
 condition|)
 name|perror
 argument_list|(
-literal|"send_delete local"
+literal|"send_delete (local)"
 argument_list|)
 expr_stmt|;
 block|}

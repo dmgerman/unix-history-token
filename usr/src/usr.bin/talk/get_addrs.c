@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)get_addrs.c	5.1 (Berkeley) %G%"
+literal|"@(#)get_addrs.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,23 +31,11 @@ directive|include
 file|"talk_ctl.h"
 end_include
 
-begin_function_decl
-name|struct
-name|hostent
-modifier|*
-name|gethostbyname
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|struct
-name|servent
-modifier|*
-name|getservbyname
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_include
+include|#
+directive|include
+file|<netdb.h>
+end_include
 
 begin_macro
 name|get_addrs
@@ -62,11 +50,7 @@ begin_decl_stmt
 name|char
 modifier|*
 name|my_machine_name
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
+decl_stmt|,
 modifier|*
 name|his_machine_name
 decl_stmt|;
@@ -88,8 +72,11 @@ name|msg
 operator|.
 name|pid
 operator|=
+name|htonl
+argument_list|(
 name|getpid
 argument_list|()
+argument_list|)
 expr_stmt|;
 comment|/* look up the address of the local host */
 name|hp
@@ -111,9 +98,13 @@ operator|)
 literal|0
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
-literal|"This machine doesn't exist. Boy, am I confused!\n"
+name|stderr
+argument_list|,
+literal|"talk: %s: Can't figure out network address.\n"
+argument_list|,
+name|my_machine_name
 argument_list|)
 expr_stmt|;
 name|exit
@@ -141,58 +132,17 @@ operator|->
 name|h_length
 argument_list|)
 expr_stmt|;
-comment|/* if he is on the same machine, then simply copy */
+comment|/* 	 * If the callee is on-machine, just copy the 	 * network address, otherwise do a lookup... 	 */
 if|if
 condition|(
-name|bcmp
+name|strcmp
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
 name|his_machine_name
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
 name|my_machine_name
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|his_machine_name
 argument_list|)
-argument_list|)
-operator|==
-literal|0
 condition|)
-name|bcopy
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|my_machine_addr
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|his_machine_addr
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|his_machine_name
-argument_list|)
-argument_list|)
-expr_stmt|;
-else|else
 block|{
-comment|/* look up the address of the recipient's machine */
 name|hp
 operator|=
 name|gethostbyname
@@ -212,9 +162,11 @@ operator|)
 literal|0
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
-literal|"%s is an unknown host\n"
+name|stderr
+argument_list|,
+literal|"talk: %s: Can't figure out network address.\n"
 argument_list|,
 name|his_machine_name
 argument_list|)
@@ -245,12 +197,17 @@ name|h_length
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* find the daemon portal */
+else|else
+name|his_machine_addr
+operator|=
+name|my_machine_addr
+expr_stmt|;
+comment|/* find the server's port */
 name|sp
 operator|=
 name|getservbyname
 argument_list|(
-literal|"talk"
+literal|"ntalk"
 argument_list|,
 literal|"udp"
 argument_list|)
@@ -262,9 +219,15 @@ operator|==
 literal|0
 condition|)
 block|{
-name|p_error
+name|fprintf
 argument_list|(
-literal|"This machine doesn't support talk"
+name|stderr
+argument_list|,
+literal|"talk: %s/%s: service is not registered.\n"
+argument_list|,
+literal|"ntalk"
+argument_list|,
+literal|"udp"
 argument_list|)
 expr_stmt|;
 name|exit

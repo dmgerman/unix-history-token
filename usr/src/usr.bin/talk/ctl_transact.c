@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ctl_transact.c	5.1 (Berkeley) %G%"
+literal|"@(#)ctl_transact.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,7 +61,7 @@ argument|msg
 argument_list|,
 argument|type
 argument_list|,
-argument|response
+argument|rp
 argument_list|)
 end_macro
 
@@ -87,30 +87,20 @@ end_decl_stmt
 begin_decl_stmt
 name|CTL_RESPONSE
 modifier|*
-name|response
+name|rp
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
-name|struct
-name|sockaddr
-name|junk
-decl_stmt|;
 name|int
 name|read_mask
-decl_stmt|;
-name|int
+decl_stmt|,
 name|ctl_mask
-decl_stmt|;
-name|int
+decl_stmt|,
 name|nready
-decl_stmt|;
-name|int
+decl_stmt|,
 name|cc
-decl_stmt|;
-name|int
-name|junk_size
 decl_stmt|;
 name|struct
 name|timeval
@@ -140,7 +130,7 @@ literal|1
 operator|<<
 name|ctl_sockt
 expr_stmt|;
-comment|/* 	 * keep sending the message until a response of the right 	 * type is obtained 	 */
+comment|/* 	 * Keep sending the message until a response of 	 * the proper type is obtained. 	 */
 do|do
 block|{
 name|wait
@@ -155,7 +145,7 @@ name|tv_usec
 operator|=
 literal|0
 expr_stmt|;
-comment|/* keep sending the message until a response is obtained */
+comment|/* resend message until a response is obtained */
 do|do
 block|{
 name|cc
@@ -173,7 +163,7 @@ name|msg
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|CTL_MSG
+name|msg
 argument_list|)
 argument_list|,
 literal|0
@@ -193,7 +183,7 @@ name|cc
 operator|!=
 sizeof|sizeof
 argument_list|(
-name|CTL_MSG
+name|msg
 argument_list|)
 condition|)
 block|{
@@ -214,9 +204,6 @@ name|read_mask
 operator|=
 name|ctl_mask
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|nready
 operator|=
 name|select
@@ -233,7 +220,10 @@ argument_list|,
 operator|&
 name|wait
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|nready
 operator|<
 literal|0
 condition|)
@@ -259,19 +249,12 @@ operator|==
 literal|0
 condition|)
 do|;
-comment|/* keep reading while there are queued messages  		   (this is not necessary, it just saves extra 		   request/acknowledgements being sent) 		 */
+comment|/* 		 * Keep reading while there are queued messages  		 * (this is not necessary, it just saves extra 		 * request/acknowledgements being sent) 		 */
 do|do
 block|{
-name|junk_size
-operator|=
-sizeof|sizeof
-argument_list|(
-name|junk
-argument_list|)
-expr_stmt|;
 name|cc
 operator|=
-name|recvfrom
+name|recv
 argument_list|(
 name|ctl_sockt
 argument_list|,
@@ -279,20 +262,15 @@ operator|(
 name|char
 operator|*
 operator|)
-name|response
+name|rp
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|CTL_RESPONSE
+operator|*
+name|rp
 argument_list|)
 argument_list|,
 literal|0
-argument_list|,
-operator|&
-name|junk
-argument_list|,
-operator|&
-name|junk_size
 argument_list|)
 expr_stmt|;
 if|if
@@ -350,23 +328,63 @@ name|nready
 operator|>
 literal|0
 operator|&&
-name|response
+operator|(
+name|rp
+operator|->
+name|vers
+operator|!=
+name|TALK_VERSION
+operator|||
+name|rp
 operator|->
 name|type
 operator|!=
 name|type
+operator|)
 condition|)
 do|;
 block|}
 do|while
 condition|(
-name|response
+name|rp
+operator|->
+name|vers
+operator|!=
+name|TALK_VERSION
+operator|||
+name|rp
 operator|->
 name|type
 operator|!=
 name|type
 condition|)
 do|;
+name|rp
+operator|->
+name|id_num
+operator|=
+name|ntohl
+argument_list|(
+name|rp
+operator|->
+name|id_num
+argument_list|)
+expr_stmt|;
+name|rp
+operator|->
+name|addr
+operator|.
+name|sa_family
+operator|=
+name|ntohs
+argument_list|(
+name|rp
+operator|->
+name|addr
+operator|.
+name|sa_family
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
