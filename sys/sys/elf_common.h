@@ -949,7 +949,7 @@ value|4
 end_define
 
 begin_comment
-comment|/* relocation section with addends*/
+comment|/* relocation section with addends */
 end_comment
 
 begin_define
@@ -1004,7 +1004,7 @@ value|9
 end_define
 
 begin_comment
-comment|/* relation section without addends */
+comment|/* relocation section - no addends */
 end_comment
 
 begin_define
