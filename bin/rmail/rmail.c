@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: rmail.c,v 1.13 1997/08/07 15:41:51 steve Exp $"
+literal|"$Id: rmail.c,v 1.14 1997/08/07 22:33:01 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -257,6 +257,21 @@ index|[
 literal|2048
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|lint
+name|fplen
+operator|=
+name|fptlen
+operator|=
+literal|0
+expr_stmt|;
+name|addrp
+operator|=
+name|NULL
+expr_stmt|;
+endif|#
+directive|endif
 name|debug
 operator|=
 literal|0
