@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)if_le.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)if_le.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -4010,7 +4010,7 @@ name|m
 operator|->
 name|m_len
 operator|=
-name|MIN
+name|min
 argument_list|(
 name|resid
 argument_list|,
