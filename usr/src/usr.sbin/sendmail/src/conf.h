@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.81 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.82 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -4824,6 +4824,38 @@ end_define
 begin_comment
 comment|/* function to call to fork mailer */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* **  If we are going to link scanf anyway, use it in readcf */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|HASUNAME
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SCANF
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|SCANF
+value|1
+end_define
 
 begin_endif
 endif|#
