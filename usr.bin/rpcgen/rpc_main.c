@@ -4587,7 +4587,7 @@ argument_list|,
 literal|'.'
 argument_list|)
 expr_stmt|;
-name|strcat
+name|strcpy
 argument_list|(
 name|mkfilename
 argument_list|,
