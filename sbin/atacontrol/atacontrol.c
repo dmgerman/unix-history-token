@@ -819,7 +819,7 @@ name|ATA_SUPPORT_DMA
 condition|?
 literal|" "
 else|:
-literal|" not"
+literal|" not "
 argument_list|)
 expr_stmt|;
 name|printf
