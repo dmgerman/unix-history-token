@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)vm_pager.h	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  *	@(#)vm_pager.h	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -41,7 +41,8 @@ modifier|*
 name|pg_ops
 decl_stmt|;
 comment|/* pager operations */
-name|caddr_t
+name|void
+modifier|*
 name|pg_data
 decl_stmt|;
 comment|/* private pager data */
@@ -110,6 +111,8 @@ operator|,
 name|vm_size_t
 operator|,
 name|vm_prot_t
+operator|,
+name|vm_offset_t
 operator|)
 argument_list|)
 expr_stmt|;
@@ -224,8 +227,10 @@ parameter_list|,
 name|s
 parameter_list|,
 name|p
+parameter_list|,
+name|o
 parameter_list|)
-value|(*(pg)->pg_ops->pgo_alloc)(h, s, p)
+value|(*(pg)->pg_ops->pgo_alloc)(h, s, p, o)
 end_define
 
 begin_define
@@ -306,6 +311,8 @@ operator|,
 name|vm_size_t
 operator|,
 name|vm_prot_t
+operator|,
+name|vm_offset_t
 operator|)
 argument_list|)
 decl_stmt|;

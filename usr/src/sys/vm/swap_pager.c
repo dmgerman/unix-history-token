@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: swap_pager.c 1.4 91/04/30$  *  *	@(#)swap_pager.c	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 University of Utah.  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: swap_pager.c 1.4 91/04/30$  *  *	@(#)swap_pager.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -425,6 +425,8 @@ operator|,
 name|vm_size_t
 operator|,
 name|vm_prot_t
+operator|,
+name|vm_offset_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -869,6 +871,8 @@ parameter_list|,
 name|size
 parameter_list|,
 name|prot
+parameter_list|,
+name|foff
 parameter_list|)
 name|caddr_t
 name|handle
@@ -879,6 +883,9 @@ name|size
 decl_stmt|;
 name|vm_prot_t
 name|prot
+decl_stmt|;
+name|vm_offset_t
+name|foff
 decl_stmt|;
 block|{
 specifier|register
