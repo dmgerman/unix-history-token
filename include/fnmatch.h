@@ -59,6 +59,17 @@ begin_comment
 comment|/* Period must be matched by period. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|FNM_ICASE
+value|0x08
+end_define
+
+begin_comment
+comment|/* case insensitive search */
+end_comment
+
 begin_include
 include|#
 directive|include
