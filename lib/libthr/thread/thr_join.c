@@ -123,7 +123,7 @@ operator|==
 name|pthread
 condition|)
 block|{
-name|THR_LOCK
+name|UMTX_LOCK
 argument_list|(
 operator|&
 name|pthread
@@ -155,7 +155,7 @@ operator|==
 name|pthread
 condition|)
 block|{
-name|THR_LOCK
+name|UMTX_LOCK
 argument_list|(
 operator|&
 name|pthread
@@ -193,7 +193,7 @@ name|thread
 operator|!=
 name|NULL
 condition|)
-name|THR_UNLOCK
+name|UMTX_UNLOCK
 argument_list|(
 operator|&
 name|pthread
@@ -224,7 +224,7 @@ condition|)
 block|{
 comment|/* Multiple joiners are not supported. */
 comment|/* XXXTHR - support multiple joiners. */
-name|THR_UNLOCK
+name|UMTX_UNLOCK
 argument_list|(
 operator|&
 name|pthread
@@ -261,7 +261,7 @@ name|joiner
 operator|=
 name|curthread
 expr_stmt|;
-name|THR_UNLOCK
+name|UMTX_UNLOCK
 argument_list|(
 operator|&
 name|pthread
@@ -421,7 +421,7 @@ name|flags
 operator||=
 name|PTHREAD_DETACHED
 expr_stmt|;
-name|THR_UNLOCK
+name|UMTX_UNLOCK
 argument_list|(
 operator|&
 name|pthread

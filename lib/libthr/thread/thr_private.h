@@ -194,7 +194,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|THR_LOCK
+name|UMTX_LOCK
 parameter_list|(
 name|m
 parameter_list|)
@@ -205,7 +205,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|THR_TRYLOCK
+name|UMTX_TRYLOCK
 parameter_list|(
 name|m
 parameter_list|,
@@ -218,7 +218,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|THR_UNLOCK
+name|UMTX_UNLOCK
 parameter_list|(
 name|m
 parameter_list|)

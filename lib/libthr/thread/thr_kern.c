@@ -104,7 +104,7 @@ block|{
 name|_thread_sigblock
 argument_list|()
 expr_stmt|;
-name|THR_LOCK
+name|UMTX_LOCK
 argument_list|(
 operator|&
 name|pthread
@@ -123,7 +123,7 @@ name|pthread_t
 name|pthread
 parameter_list|)
 block|{
-name|THR_UNLOCK
+name|UMTX_UNLOCK
 argument_list|(
 operator|&
 name|pthread

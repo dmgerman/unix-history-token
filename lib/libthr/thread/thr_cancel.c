@@ -267,7 +267,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|THR_TRYLOCK
+name|UMTX_TRYLOCK
 argument_list|(
 operator|&
 name|joined
@@ -303,7 +303,7 @@ name|joiner
 operator|=
 name|NULL
 expr_stmt|;
-name|THR_UNLOCK
+name|UMTX_UNLOCK
 argument_list|(
 operator|&
 name|joined

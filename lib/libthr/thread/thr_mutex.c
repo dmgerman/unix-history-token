@@ -3920,7 +3920,7 @@ decl_stmt|;
 comment|/* 	 * Defer signals to protect the scheduling queues from 	 * access by the signal handler: 	 */
 comment|/* _thread_kern_sig_defer();*/
 comment|/* XXX - Necessary to obey lock order */
-name|THR_LOCK
+name|UMTX_LOCK
 argument_list|(
 operator|&
 name|pthread
@@ -3936,7 +3936,7 @@ name|data
 operator|.
 name|mutex
 expr_stmt|;
-name|THR_UNLOCK
+name|UMTX_UNLOCK
 argument_list|(
 operator|&
 name|pthread

@@ -228,7 +228,7 @@ operator|==
 name|_thread_initial
 condition|)
 continue|continue;
-name|THR_LOCK
+name|UMTX_LOCK
 argument_list|(
 operator|&
 name|pthread
@@ -300,7 +300,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|THR_UNLOCK
+name|UMTX_UNLOCK
 argument_list|(
 operator|&
 name|pthread
@@ -326,7 +326,7 @@ name|pthread_cln
 operator|=
 name|pthread
 expr_stmt|;
-name|THR_UNLOCK
+name|UMTX_UNLOCK
 argument_list|(
 operator|&
 name|pthread
