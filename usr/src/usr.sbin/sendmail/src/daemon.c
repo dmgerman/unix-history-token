@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.96 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.97 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.96 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.97 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1892,9 +1892,74 @@ literal|'.'
 argument_list|)
 operator|==
 name|NULL
+condition|)
+block|{
+name|int
+name|nmaps
+decl_stmt|;
+name|int
+name|i
+decl_stmt|;
+name|char
+modifier|*
+name|maptype
+index|[
+name|MAXMAPSTACK
+index|]
+decl_stmt|;
+name|short
+name|mapreturn
+index|[
+name|MAXMAPACTIONS
+index|]
+decl_stmt|;
+name|nmaps
+operator|=
+name|switch_map_find
+argument_list|(
+literal|"hosts"
+argument_list|,
+name|maptype
+argument_list|,
+name|mapreturn
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|nmaps
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|maptype
+index|[
+name|i
+index|]
+argument_list|,
+literal|"dns"
+argument_list|)
+operator|==
+literal|0
+condition|)
+break|break;
+if|if
+condition|(
+name|i
+operator|<
+name|nmaps
 operator|&&
 operator|!
-name|getcanonname
+name|dns_getcanonname
 argument_list|(
 name|hostbuf
 argument_list|,
@@ -1924,7 +1989,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|getcanonname
+name|dns_getcanonname
 argument_list|(
 name|hostbuf
 argument_list|,
@@ -1939,6 +2004,7 @@ name|h_errno
 operator|+
 name|E_DNSBASE
 expr_stmt|;
+block|}
 block|}
 endif|#
 directive|endif
