@@ -226,7 +226,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|usbd_do_request
+name|usbd_do_request_flags
 argument_list|(
 name|dev
 argument_list|,
@@ -234,6 +234,10 @@ operator|&
 name|req
 argument_list|,
 name|desc
+argument_list|,
+name|USBD_SHORT_XFER_OK
+argument_list|,
+name|NULL
 argument_list|)
 operator|)
 return|;
