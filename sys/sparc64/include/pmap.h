@@ -18,12 +18,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/kobj.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/tte.h>
 end_include
 
@@ -166,6 +160,34 @@ name|vm_offset_t
 name|virtual_end
 decl_stmt|;
 end_decl_stmt
+
+begin_function
+specifier|static
+name|__inline
+name|int
+name|pmap_track_modified
+parameter_list|(
+name|vm_offset_t
+name|va
+parameter_list|)
+block|{
+return|return
+operator|(
+operator|(
+name|va
+operator|<
+name|clean_sva
+operator|)
+operator|||
+operator|(
+name|va
+operator|>=
+name|clean_eva
+operator|)
+operator|)
+return|;
+block|}
+end_function
 
 begin_endif
 endif|#
