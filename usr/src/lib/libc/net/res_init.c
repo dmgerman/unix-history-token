@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_init.c	6.11 (Berkeley) %G%"
+literal|"@(#)res_init.c	6.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -337,10 +337,19 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+operator|(
 operator|*
 name|cp
 operator|==
 literal|'\0'
+operator|)
+operator|||
+operator|(
+operator|*
+name|cp
+operator|==
+literal|'\n'
+operator|)
 condition|)
 continue|continue;
 operator|(
@@ -445,10 +454,19 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+operator|(
 operator|*
 name|cp
 operator|==
 literal|'\0'
+operator|)
+operator|||
+operator|(
+operator|*
+name|cp
+operator|==
+literal|'\n'
+operator|)
 condition|)
 continue|continue;
 operator|(
@@ -638,10 +656,19 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+operator|(
 operator|*
 name|cp
 operator|==
 literal|'\0'
+operator|)
+operator|||
+operator|(
+operator|*
+name|cp
+operator|==
+literal|'\n'
+operator|)
 condition|)
 continue|continue;
 if|if
