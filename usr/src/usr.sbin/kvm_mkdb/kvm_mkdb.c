@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)kvm_mkdb.c	5.11 (Berkeley) %G%"
+literal|"@(#)kvm_mkdb.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -260,7 +260,7 @@ argument_list|)
 expr_stmt|;
 name|db
 operator|=
-name|hash_open
+name|dbopen
 argument_list|(
 name|dbtemp
 argument_list|,
@@ -277,6 +277,8 @@ operator||
 name|S_IRGRP
 operator||
 name|S_IROTH
+argument_list|,
+name|DB_HASH
 argument_list|,
 name|NULL
 argument_list|)

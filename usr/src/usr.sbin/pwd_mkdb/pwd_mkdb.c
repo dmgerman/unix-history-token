@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pwd_mkdb.c	5.5 (Berkeley) %G%"
+literal|"@(#)pwd_mkdb.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -438,7 +438,7 @@ argument_list|)
 expr_stmt|;
 name|dp
 operator|=
-name|hash_open
+name|dbopen
 argument_list|(
 name|buf
 argument_list|,
@@ -449,6 +449,8 @@ operator||
 name|O_EXCL
 argument_list|,
 name|PERM_INSECURE
+argument_list|,
+name|DB_HASH
 argument_list|,
 name|NULL
 argument_list|)
@@ -482,7 +484,7 @@ argument_list|)
 expr_stmt|;
 name|edp
 operator|=
-name|hash_open
+name|dbopen
 argument_list|(
 name|buf
 argument_list|,
@@ -493,6 +495,8 @@ operator||
 name|O_EXCL
 argument_list|,
 name|PERM_SECURE
+argument_list|,
+name|DB_HASH
 argument_list|,
 name|NULL
 argument_list|)
