@@ -1296,6 +1296,20 @@ name|DaemonMode
 argument_list|()
 expr_stmt|;
 comment|/*  * Catch signals to manage shutdown and  * refresh of interface address.  */
+name|siginterrupt
+argument_list|(
+name|SIGTERM
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|siginterrupt
+argument_list|(
+name|SIGHUP
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|signal
 argument_list|(
 name|SIGTERM
@@ -3212,13 +3226,6 @@ name|int
 name|sig
 parameter_list|)
 block|{
-name|signal
-argument_list|(
-name|SIGHUP
-argument_list|,
-name|RefreshAddr
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ifName
@@ -3240,6 +3247,13 @@ name|sig
 parameter_list|)
 block|{
 comment|/*  * Start timer to allow kernel gracefully  * shutdown existing connections when system  * is shut down.  */
+name|siginterrupt
+argument_list|(
+name|SIGALRM
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|signal
 argument_list|(
 name|SIGALRM
