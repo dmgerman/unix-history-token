@@ -2501,6 +2501,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|xvp
+operator|->
+name|v_iflag
+operator|&
+name|VI_XLOCK
+operator|)
+operator|||
 name|xvp
 operator|->
 name|v_usecount
