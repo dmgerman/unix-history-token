@@ -120,7 +120,11 @@ comment|/* mask for file creation */
 name|u_short
 name|fd_refcnt
 decl_stmt|;
-comment|/* reference count */
+comment|/* thread reference count */
+name|u_short
+name|fd_holdcnt
+decl_stmt|;
+comment|/* hold count on structure + mutex */
 name|struct
 name|mtx
 name|fd_mtx
