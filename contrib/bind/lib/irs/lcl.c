@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: lcl.c,v 1.16 2000/02/28 07:52:16 vixie Exp $"
+literal|"$Id: lcl.c,v 1.17 2001/05/29 05:49:02 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -198,6 +198,11 @@ name|lcl_p
 modifier|*
 name|lcl
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|options
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!

@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: irs_data.c,v 1.15 2000/12/23 08:14:54 vixie Exp $"
+literal|"$Id: irs_data.c,v 1.19 2001/08/20 07:08:41 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -75,6 +75,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -232,7 +238,7 @@ name|net_data
 init|=
 name|p
 decl_stmt|;
-name|res_nclose
+name|res_ndestroy
 argument_list|(
 name|net_data
 operator|->
@@ -724,6 +730,18 @@ operator|)
 return|;
 if|if
 condition|(
+operator|(
+name|net_data
+operator|->
+name|res
+operator|->
+name|options
+operator|&
+name|RES_INIT
+operator|)
+operator|==
+literal|0
+operator|&&
 name|res_ninit
 argument_list|(
 name|net_data
@@ -766,6 +784,12 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_REENTRANT
+end_ifdef
 
 begin_function
 name|struct
@@ -810,6 +834,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int

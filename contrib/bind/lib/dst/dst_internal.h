@@ -260,6 +260,7 @@ name|EREPORT
 parameter_list|(
 name|str
 parameter_list|)
+value|(void)0
 end_define
 
 begin_endif
@@ -284,7 +285,8 @@ name|SAFE_FREE
 parameter_list|(
 name|a
 parameter_list|)
-value|if(a != NULL){memset(a,0, sizeof(*a)); free(a); a=NULL;}
+define|\
+value|do{if(a != NULL){memset(a,0, sizeof(*a)); free(a); a=NULL;}} while (0)
 end_define
 
 begin_define
@@ -526,6 +528,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|key_file_fmt_str
@@ -534,6 +537,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|dst_path
@@ -565,35 +569,45 @@ end_endif
 begin_function_decl
 name|int
 name|dst_bsafe_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|int
 name|dst_rsaref_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|int
 name|dst_hmac_md5_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|int
 name|dst_cylink_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|int
 name|dst_eay_dss_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -930,6 +944,31 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function_decl
+name|void
+name|dst_s_dump
+parameter_list|(
+specifier|const
+name|int
+name|mode
+parameter_list|,
+specifier|const
+name|u_char
+modifier|*
+name|data
+parameter_list|,
+specifier|const
+name|int
+name|size
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|msg
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

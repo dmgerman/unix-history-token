@@ -26,7 +26,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: getprotoent.c,v 1.15 1999/10/13 16:39:31 vixie Exp $"
+literal|"$Id: getprotoent.c,v 1.16 2001/11/01 07:34:33 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -89,6 +89,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_glob.h,v 8.56 2000/12/02 18:39:25 vixie Exp $  */
+comment|/*  *	from ns.h	4.33 (Berkeley) 8/23/90  *	$Id: ns_glob.h,v 8.58 2002/06/05 04:53:50 marka Exp $  */
 end_comment
 
 begin_comment
@@ -1345,6 +1345,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|DECL
+name|char
+modifier|*
+name|working_dir
+name|INIT
+parameter_list|(
+name|NULL
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 name|DECL
 name|int
@@ -1385,6 +1397,17 @@ name|qserials_running
 name|INIT
 argument_list|(
 literal|0
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|DECL
+name|int
+name|initial_configuration
+name|INIT
+argument_list|(
+literal|1
 argument_list|)
 decl_stmt|;
 end_decl_stmt

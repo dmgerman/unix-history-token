@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_signal.c,v 8.13 2000/07/11 07:10:12 vixie Exp $"
+literal|"$Id: ns_signal.c,v 8.15 2002/05/18 01:39:15 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -131,11 +131,22 @@ else|#
 directive|else
 end_else
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__hpux
+end_ifndef
+
 begin_include
 include|#
 directive|include
 file|<sys/mbuf.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -530,6 +541,11 @@ name|int
 name|sig
 parameter_list|)
 block|{
+name|UNUSED
+argument_list|(
+name|sig
+argument_list|)
+expr_stmt|;
 name|ns_need_unsafe
 argument_list|(
 name|main_need_reload
@@ -547,6 +563,11 @@ name|int
 name|sig
 parameter_list|)
 block|{
+name|UNUSED
+argument_list|(
+name|sig
+argument_list|)
+expr_stmt|;
 name|ns_need_unsafe
 argument_list|(
 name|main_need_exit
@@ -564,6 +585,11 @@ name|int
 name|sig
 parameter_list|)
 block|{
+name|UNUSED
+argument_list|(
+name|sig
+argument_list|)
+expr_stmt|;
 name|ns_need_unsafe
 argument_list|(
 name|main_need_dump
@@ -587,6 +613,11 @@ name|int
 name|sig
 parameter_list|)
 block|{
+name|UNUSED
+argument_list|(
+name|sig
+argument_list|)
+expr_stmt|;
 name|desired_debug
 operator|++
 expr_stmt|;
@@ -607,6 +638,11 @@ name|int
 name|sig
 parameter_list|)
 block|{
+name|UNUSED
+argument_list|(
+name|sig
+argument_list|)
+expr_stmt|;
 name|desired_debug
 operator|=
 literal|0
@@ -651,6 +687,11 @@ name|int
 name|sig
 parameter_list|)
 block|{
+name|UNUSED
+argument_list|(
+name|sig
+argument_list|)
+expr_stmt|;
 name|ns_need_unsafe
 argument_list|(
 name|main_need_qrylog
@@ -677,6 +718,11 @@ name|int
 name|sig
 parameter_list|)
 block|{
+name|UNUSED
+argument_list|(
+name|sig
+argument_list|)
+expr_stmt|;
 name|ns_need_unsafe
 argument_list|(
 name|main_need_statsdump
@@ -706,6 +752,11 @@ name|struct
 name|sigaction
 name|sa
 decl_stmt|;
+name|UNUSED
+argument_list|(
+name|sig
+argument_list|)
+expr_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -759,6 +810,13 @@ name|errno
 operator|=
 name|saved_errno
 expr_stmt|;
+else|#
+directive|else
+name|UNUSED
+argument_list|(
+name|sig
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 block|}
@@ -773,6 +831,11 @@ name|int
 name|sig
 parameter_list|)
 block|{
+name|UNUSED
+argument_list|(
+name|sig
+argument_list|)
+expr_stmt|;
 name|ns_need_unsafe
 argument_list|(
 name|main_need_reap
@@ -792,7 +855,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|sh
 decl_stmt|;
 comment|/* The mask of all our handlers will block all our other handlers. */

@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_ncache.c,v 8.27 2000/04/21 06:54:09 vixie Exp $"
+literal|"$Id: ns_ncache.c,v 8.29 2001/06/18 14:43:16 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -526,7 +526,7 @@ block|{
 name|u_int32_t
 name|ttl
 decl_stmt|;
-name|u_int
+name|int
 name|atype
 decl_stmt|,
 name|aclass
@@ -1256,9 +1256,6 @@ operator||
 name|DB_NOHINTS
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|(
 name|n
 operator|=
 name|db_update
@@ -1277,11 +1274,13 @@ name|hashtab
 argument_list|,
 name|from
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|n
 operator|!=
 name|OK
 condition|)
-block|{
 name|ns_debug
 argument_list|(
 name|ns_log_ncache
@@ -1293,13 +1292,7 @@ argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
-name|db_freedata
-argument_list|(
-name|dp
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
+else|else
 name|ns_debug
 argument_list|(
 name|ns_log_ncache
@@ -1336,6 +1329,12 @@ name|tt
 operator|.
 name|tv_sec
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|db_detach
+argument_list|(
+operator|&
+name|dp
 argument_list|)
 expr_stmt|;
 block|}

@@ -16,7 +16,7 @@ comment|/*  * Portions Copyright (c) 1999 by Check Point Software Technologies, 
 end_comment
 
 begin_comment
-comment|/* db_proc.h - prototypes for functions in db_*.c  *  * $Id: db_func.h,v 8.44 2000/12/02 23:28:33 vixie Exp $  */
+comment|/* db_proc.h - prototypes for functions in db_*.c  *  * $Id: db_func.h,v 8.46 2001/06/18 14:42:51 marka Exp $  */
 end_comment
 
 begin_comment
@@ -184,6 +184,7 @@ operator|*
 argument_list|,
 name|int
 argument_list|,
+specifier|const
 name|char
 operator|*
 argument_list|)
@@ -487,6 +488,7 @@ name|enum
 name|transport
 name|transport
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -686,10 +688,11 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|db_freedata
+name|db_detach
 parameter_list|(
 name|struct
 name|databuf
+modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
@@ -969,6 +972,7 @@ comment|/* ++from db_tsig.c++ */
 end_comment
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|tsig_alg_name

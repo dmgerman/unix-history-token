@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: bitncmp.c,v 1.6 1999/01/08 19:25:20 vixie Exp $"
+literal|"$Id: bitncmp.c,v 1.7 2001/05/29 05:49:23 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -126,6 +126,7 @@ name|lb
 operator|=
 operator|(
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -139,6 +140,7 @@ name|rb
 operator|=
 operator|(
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)

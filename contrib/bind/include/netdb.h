@@ -4,7 +4,7 @@ comment|/*  * ++Copyright++ 1980, 1983, 1988, 1993  * -  * Copyright (c) 1980, 1
 end_comment
 
 begin_comment
-comment|/*  *      @(#)netdb.h	8.1 (Berkeley) 6/2/93  *	$Id: netdb.h,v 8.15 1999/09/18 06:23:46 vixie Exp $  */
+comment|/*  *      @(#)netdb.h	8.1 (Berkeley) 6/2/93  *	$Id: netdb.h,v 8.17 2001/06/18 14:43:48 marka Exp $  */
 end_comment
 
 begin_ifndef
@@ -23,6 +23,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
 end_include
 
 begin_if
@@ -58,6 +64,12 @@ begin_include
 include|#
 directive|include
 file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
 end_include
 
 begin_include
@@ -162,12 +174,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_REENTRANT
-end_ifdef
-
 begin_decl_stmt
 name|__BEGIN_DECLS
 specifier|extern
@@ -185,6 +191,9 @@ end_decl_stmt
 
 begin_decl_stmt
 name|__END_DECLS
+ifdef|#
+directive|ifdef
+name|_REENTRANT
 define|#
 directive|define
 name|h_errno
@@ -720,6 +729,31 @@ name|NI_DGRAM
 value|0x00000010
 end_define
 
+begin_define
+define|#
+directive|define
+name|NI_WITHSCOPEID
+value|0x00000020
+end_define
+
+begin_define
+define|#
+directive|define
+name|NI_NUMERICSCOPE
+value|0x00000040
+end_define
+
+begin_comment
+comment|/*  * Scope delimit character  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCOPE_DELIMITER
+value|'%'
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -737,6 +771,11 @@ operator|||
 name|defined
 argument_list|(
 name|__osf__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_AIX
 argument_list|)
 end_if
 
@@ -1124,6 +1163,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|freehostent
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|hostent
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|hostent
 modifier|*
@@ -1186,6 +1239,52 @@ name|__P
 argument_list|(
 operator|(
 name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|hostent
+modifier|*
+name|getipnodebyaddr
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|void
+operator|*
+operator|,
+name|size_t
+operator|,
+name|int
+operator|,
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|hostent
+modifier|*
+name|getipnodebyname
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|int
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1486,6 +1585,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|gai_strerror
@@ -1576,6 +1676,11 @@ name|defined
 argument_list|(
 name|__osf__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_AIX
+argument_list|)
 end_if
 
 begin_decl_stmt
@@ -1644,6 +1749,36 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_AIX
+argument_list|)
+end_if
+
+begin_decl_stmt
+name|void
+name|sethostent_r
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+expr|struct
+name|hostent_data
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 name|int
 name|sethostent_r
@@ -1659,6 +1794,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -2117,24 +2257,14 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_else
+else|#
+directive|else
+end_else
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|bsdi
-argument_list|)
-end_if
+begin_comment
+comment|/* defined(sun) || defined(bsdi) */
+end_comment
 
 begin_decl_stmt
 name|struct

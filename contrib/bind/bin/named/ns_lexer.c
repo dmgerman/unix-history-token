@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_lexer.c,v 8.22 2000/11/29 06:55:58 marka Exp $"
+literal|"$Id: ns_lexer.c,v 8.31 2002/05/24 03:05:03 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -215,7 +215,6 @@ typedef|typedef
 struct|struct
 name|lexer_file_context
 block|{
-specifier|const
 name|char
 modifier|*
 name|name
@@ -583,6 +582,37 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|static
+name|void
+name|parser_complain
+parameter_list|(
+name|int
+name|is_warning
+parameter_list|,
+name|int
+name|print_last_token
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|format
+parameter_list|,
+name|va_list
+name|args
+parameter_list|)
+function_decl|ISC_FORMAT_PRINTF
+parameter_list|(
+function_decl|3
+operator|,
+function_decl|0
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_function
 specifier|static
 name|void
@@ -881,6 +911,8 @@ name|parser_error
 argument_list|(
 literal|1
 argument_list|,
+literal|"%s"
+argument_list|,
 name|message
 argument_list|)
 expr_stmt|;
@@ -895,6 +927,7 @@ begin_struct
 struct|struct
 name|keyword
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1086,6 +1119,18 @@ name|T_DYNAMIC
 block|}
 block|,
 block|{
+literal|"edns"
+block|,
+name|T_EDNS
+block|}
+block|,
+block|{
+literal|"explicit"
+block|,
+name|T_EXPLICIT
+block|}
+block|,
+block|{
 literal|"fail"
 block|,
 name|T_FAIL
@@ -1185,6 +1230,12 @@ block|{
 literal|"host-statistics-max"
 block|,
 name|T_HOSTSTATSMAX
+block|}
+block|,
+block|{
+literal|"hostname"
+block|,
+name|T_HOSTNAME
 block|}
 block|,
 block|{
@@ -1409,6 +1460,12 @@ name|T_PORT
 block|}
 block|,
 block|{
+literal|"preferred-glue"
+block|,
+name|T_PREFERRED_GLUE
+block|}
+block|,
+block|{
 literal|"print-category"
 block|,
 name|T_PRINT_CATEGORY
@@ -1534,6 +1591,17 @@ block|,
 name|T_SUPPORT_IXFR
 block|}
 block|,
+ifdef|#
+directive|ifdef
+name|BIND_NOTIFY
+block|{
+literal|"suppress-initial-notify"
+block|,
+name|T_NOTIFY_INITIAL
+block|}
+block|,
+endif|#
+directive|endif
 block|{
 literal|"syslog"
 block|,
@@ -1877,9 +1945,13 @@ name|lf
 operator|->
 name|name
 operator|=
+name|savestr
+argument_list|(
 name|filename
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
-comment|/* note copy by reference */
 name|lf
 operator|->
 name|line_number
@@ -1961,6 +2033,13 @@ argument_list|(
 name|lf
 operator|->
 name|stream
+argument_list|)
+expr_stmt|;
+name|freestr
+argument_list|(
+name|lf
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
 name|memput
@@ -2143,6 +2222,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|get_next_char
 parameter_list|(
@@ -2338,6 +2418,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|put_back_char
 parameter_list|(

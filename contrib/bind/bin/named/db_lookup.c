@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: db_lookup.c,v 8.26 2000/04/21 06:54:03 vixie Exp $"
+literal|"$Id: db_lookup.c,v 8.27 2001/06/18 14:42:55 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -964,6 +964,9 @@ name|d_type
 operator|==
 name|T_SIG
 operator|&&
+operator|(
+name|int
+operator|)
 name|SIG_COVERS
 argument_list|(
 name|dp

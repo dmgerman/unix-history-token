@@ -18,7 +18,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /proj/cvs/isc/bind8/src/lib/dst/hmac_link.c,v 1.8 1999/10/15 21:30:07 vixie Exp $"
+literal|"$Header: /proj/cvs/isc/bind8/src/lib/dst/hmac_link.c,v 1.9 2001/05/29 05:48:10 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -375,10 +375,6 @@ name|MD5Update
 argument_list|(
 name|ctx
 argument_list|,
-operator|(
-name|u_char
-operator|*
-operator|)
 name|data
 argument_list|,
 name|len
@@ -658,10 +654,6 @@ name|MD5Update
 argument_list|(
 name|ctx
 argument_list|,
-operator|(
-name|u_char
-operator|*
-operator|)
 name|data
 argument_list|,
 name|len
@@ -938,10 +930,6 @@ argument_list|(
 operator|&
 name|ctx
 argument_list|,
-operator|(
-name|u_char
-operator|*
-operator|)
 name|key
 argument_list|,
 name|keylen
@@ -1805,6 +1793,10 @@ name|n
 decl_stmt|,
 name|size
 decl_stmt|;
+name|i
+operator|=
+name|nothing
+expr_stmt|;
 if|if
 condition|(
 name|key

@@ -12,7 +12,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /proj/cvs/isc/bind8/src/lib/dst/dst_api.c,v 1.17.2.2 2001/07/26 01:58:06 marka Exp $"
+literal|"$Header: /proj/cvs/isc/bind8/src/lib/dst/dst_api.c,v 1.20 2001/07/26 01:20:08 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -161,6 +161,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|key_file_fmt_str
@@ -170,6 +171,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|dst_path
@@ -392,7 +394,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|dst_path
+name|char
+modifier|*
+name|tmp
+decl_stmt|;
+name|tmp
 operator|=
 operator|(
 name|char
@@ -407,7 +413,7 @@ argument_list|)
 expr_stmt|;
 name|memcpy
 argument_list|(
-name|dst_path
+name|tmp
 argument_list|,
 name|s
 argument_list|,
@@ -418,11 +424,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|dst_path
+name|tmp
 index|[
 name|strlen
 argument_list|(
-name|dst_path
+name|tmp
 argument_list|)
 operator|-
 literal|1
@@ -431,11 +437,11 @@ operator|!=
 literal|'/'
 condition|)
 block|{
-name|dst_path
+name|tmp
 index|[
 name|strlen
 argument_list|(
-name|dst_path
+name|tmp
 argument_list|)
 operator|+
 literal|1
@@ -443,17 +449,21 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-name|dst_path
+name|tmp
 index|[
 name|strlen
 argument_list|(
-name|dst_path
+name|tmp
 argument_list|)
 index|]
 operator|=
 literal|'/'
 expr_stmt|;
 block|}
+name|dst_path
+operator|=
+name|tmp
+expr_stmt|;
 block|}
 block|}
 name|memset
@@ -2155,8 +2165,12 @@ name|enckey
 init|;
 name|isspace
 argument_list|(
+operator|(
 operator|*
 name|notspace
+operator|)
+operator|&
+literal|0xff
 argument_list|)
 condition|;
 name|len
@@ -2263,6 +2277,9 @@ name|int
 name|len
 init|=
 literal|0
+decl_stmt|;
+name|int
+name|mode
 decl_stmt|;
 name|memset
 argument_list|(
@@ -2373,6 +2390,21 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/* XXX in general this should be a check for symmetric keys */
+name|mode
+operator|=
+operator|(
+name|key
+operator|->
+name|dk_alg
+operator|==
+name|KEY_HMAC_MD5
+operator|)
+condition|?
+literal|0600
+else|:
+literal|0644
+expr_stmt|;
 comment|/* create public key file */
 if|if
 condition|(
@@ -2385,7 +2417,7 @@ name|filename
 argument_list|,
 literal|"w+"
 argument_list|,
-literal|0644
+name|mode
 argument_list|)
 operator|)
 operator|==

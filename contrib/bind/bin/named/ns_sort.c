@@ -33,7 +33,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ns_sort.c,v 8.6 2000/04/21 06:54:13 vixie Exp $"
+literal|"$Id: ns_sort.c,v 8.8 2001/09/25 04:50:22 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -126,6 +126,12 @@ begin_include
 include|#
 directive|include
 file|<resolv.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -369,6 +375,10 @@ literal|1
 expr_stmt|;
 break|break;
 default|default:
+name|indirect
+operator|=
+literal|0
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"unexpected ime type in ip_match_address()"
@@ -551,6 +561,10 @@ name|list
 expr_stmt|;
 break|break;
 default|default:
+name|iml
+operator|=
+name|NULL
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"unexpected ime type in ip_match_address()"
@@ -650,6 +664,8 @@ decl_stmt|,
 name|distance
 decl_stmt|,
 name|closest
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|in_addr
@@ -663,6 +679,8 @@ name|NULL
 decl_stmt|,
 modifier|*
 name|rrbest
+init|=
+name|NULL
 decl_stmt|,
 modifier|*
 name|cpstart
@@ -1035,6 +1053,10 @@ literal|1
 expr_stmt|;
 break|break;
 default|default:
+name|indirect
+operator|=
+literal|0
+expr_stmt|;
 name|panic
 argument_list|(
 literal|"unexpected ime type in ip_match_address()"

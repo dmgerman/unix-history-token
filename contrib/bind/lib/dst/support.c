@@ -6,7 +6,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /proj/cvs/isc/bind8/src/lib/dst/support.c,v 1.9.2.1 2001/06/06 21:45:17 marka Exp $"
+literal|"$Header: /proj/cvs/isc/bind8/src/lib/dst/support.c,v 1.11 2001/05/29 05:48:16 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -853,6 +853,7 @@ return|return
 name|dst_s_get_int16
 argument_list|(
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -1422,6 +1423,7 @@ argument_list|,
 name|my_id
 argument_list|,
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)
@@ -1514,7 +1516,7 @@ index|[
 name|PATH_MAX
 index|]
 decl_stmt|;
-name|int
+name|size_t
 name|plen
 init|=
 sizeof|sizeof
@@ -1636,6 +1638,11 @@ modifier|*
 name|msg
 parameter_list|)
 block|{
+name|UNUSED
+argument_list|(
+name|data
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|size

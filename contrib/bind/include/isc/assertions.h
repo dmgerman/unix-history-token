@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1997-1999 by Internet Software Consortium.  *  * Per
 end_comment
 
 begin_comment
-comment|/*  * $Id: assertions.h,v 8.3 2000/07/17 07:53:59 vixie Exp $  */
+comment|/*  * $Id: assertions.h,v 8.4 2001/05/29 05:47:07 marka Exp $  */
 end_comment
 
 begin_ifndef
@@ -44,6 +44,7 @@ modifier|*
 name|assertion_failure_callback
 function_decl|)
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -51,6 +52,7 @@ name|int
 parameter_list|,
 name|assertion_type
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -77,6 +79,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|assertion_type_to_text

@@ -22,7 +22,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dnskeygen.c,v 1.11.2.1 2001/04/26 02:56:06 marka Exp $"
+literal|"$Id: dnskeygen.c,v 1.14 2001/09/25 04:50:14 marka Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -123,6 +123,7 @@ specifier|static
 name|void
 name|usage
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str
@@ -1299,6 +1300,7 @@ specifier|static
 name|void
 name|usage
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|str
@@ -1518,7 +1520,6 @@ expr_stmt|;
 block|}
 name|exit
 argument_list|(
-operator|-
 literal|3
 argument_list|)
 expr_stmt|;

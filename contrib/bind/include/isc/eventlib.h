@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1995-1999 by Internet Software Consortium  *  * Perm
 end_comment
 
 begin_comment
-comment|/* eventlib.h - exported interfaces for eventlib  * vix 09sep95 [initial]  *  * $Id: eventlib.h,v 1.22 1999/08/18 22:09:04 vixie Exp $  */
+comment|/* eventlib.h - exported interfaces for eventlib  * vix 09sep95 [initial]  *  * $Id: eventlib.h,v 1.23 2001/05/29 05:47:09 marka Exp $  */
 end_comment
 
 begin_ifndef
@@ -747,6 +747,7 @@ operator|,
 name|int
 name|fd
 operator|,
+specifier|const
 name|void
 operator|*
 name|ra
