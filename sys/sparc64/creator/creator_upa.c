@@ -757,12 +757,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|node
+name|unit
 operator|==
-name|OF_instance_to_package
-argument_list|(
-name|stdout
-argument_list|)
+literal|0
+comment|/*node == OF_instance_to_package(stdout)*/
 condition|)
 block|{
 name|sc
