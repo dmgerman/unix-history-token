@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)if_x25subr.c	8.1 (Berkeley) 6/10/93  * $Id: if_x25subr.c,v 1.7 1995/07/29 11:41:21 bde Exp $  */
+comment|/*  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)if_x25subr.c	8.1 (Berkeley) 6/10/93  * $Id: if_x25subr.c,v 1.8 1995/10/26 20:30:34 julian Exp $  */
 end_comment
 
 begin_include
@@ -583,6 +583,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|x25_lxfree
 parameter_list|(
@@ -698,6 +699,7 @@ comment|/*  * Process a x25 packet as datagram;  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|x25_ifinput
 parameter_list|(
@@ -978,6 +980,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|x25_connect_callback
 parameter_list|(
@@ -1140,6 +1143,7 @@ value|((struct rtentry *)(p))
 end_define
 
 begin_function
+specifier|static
 name|void
 name|x25_dgram_incoming
 parameter_list|(
@@ -1359,6 +1363,7 @@ comment|/*  * X.25 output routine.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|x25_ifoutput
 parameter_list|(
@@ -1936,6 +1941,7 @@ comment|/*  * Simpleminded timer routine.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|x25_iftimeout
 parameter_list|(
@@ -2065,6 +2071,7 @@ comment|/*  * This routine gets called when validating additions of new routes  
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|x25_rtrequest
 parameter_list|(
@@ -2373,6 +2380,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|void
 name|x25_rtinvert
 parameter_list|(
@@ -2607,33 +2615,26 @@ begin_comment
 comment|/*  * The following is totally bogus and here only to preserve  * the IP to X.25 translation.  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|x25_ddnip_to_ccitt
-argument_list|(
-argument|src
-argument_list|,
-argument|rt
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|src
+parameter_list|,
+name|rt
+parameter_list|)
 name|struct
 name|sockaddr_in
 modifier|*
 name|src
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|rtentry
 modifier|*
 name|rt
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2929,41 +2930,34 @@ literal|10
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * This routine is a sketch and is not to be believed!!!!!  *  * This is a utility routine to be called by x25 devices when a  * call request is honored with the intent of starting datagram forwarding.  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|x25_dg_rtinit
-argument_list|(
-argument|dst
-argument_list|,
-argument|ia
-argument_list|,
-argument|af
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|dst
+parameter_list|,
+name|ia
+parameter_list|,
+name|af
+parameter_list|)
 name|struct
 name|sockaddr_x25
 modifier|*
 name|dst
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|register
 name|struct
 name|x25_ifaddr
 modifier|*
 name|ia
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|sockaddr
@@ -3451,7 +3445,7 @@ name|rt_refcnt
 operator|--
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_decl_stmt
 name|int
@@ -4146,30 +4140,26 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_function
+specifier|static
+name|int
 name|x25_rtattach
-argument_list|(
+parameter_list|(
 name|lcp0
-argument_list|,
+parameter_list|,
 name|rt
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|pklcd
-operator|*
+modifier|*
 name|lcp0
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|struct
 name|rtentry
 modifier|*
 name|rt
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -4285,7 +4275,7 @@ operator|)
 name|lx
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 

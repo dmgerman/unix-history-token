@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file  * is totally correct for any given task and users of this file must  * accept responsibility for any damage that occurs from the application of this  * file.  *  * Written by Julian Elischer (julian@dialix.oz.au)  *      $Id: scsi_base.c,v 1.32 1995/12/07 12:47:46 davidg Exp $  */
+comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file  * is totally correct for any given task and users of this file must  * accept responsibility for any damage that occurs from the application of this  * file.  *  * Written by Julian Elischer (julian@dialix.oz.au)  *      $Id: scsi_base.c,v 1.33 1995/12/14 09:54:26 phk Exp $  */
 end_comment
 
 begin_define
@@ -218,22 +218,6 @@ modifier|*
 parameter_list|,
 name|int
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|errval
-name|scsi_change_def
-parameter_list|(
-name|struct
-name|scsi_link
-modifier|*
-name|sc_link
-parameter_list|,
-name|u_int32
-name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -984,7 +968,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|notyet
+name|SCSI_2_DEF
 end_ifdef
 
 begin_comment
@@ -992,7 +976,6 @@ comment|/*  * Do a scsi operation, asking a device to run as SCSI-II if it can. 
 end_comment
 
 begin_function
-specifier|static
 name|errval
 name|scsi_change_def
 parameter_list|(
@@ -1076,6 +1059,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* SCSI_2_DEF */
+end_comment
 
 begin_comment
 comment|/*  * Do a scsi operation asking a device what it is  * Use the scsi_cmd routine in the switch table.  */

@@ -12,7 +12,7 @@ comment|/*  * Very small patch for IBM Ethernet PCMCIA Card II and IBM ThinkPad2
 end_comment
 
 begin_comment
-comment|/*  * $Id: if_ze.c,v 1.25 1995/12/05 02:01:16 davidg Exp $  */
+comment|/*  * $Id: if_ze.c,v 1.26 1995/12/13 10:36:03 phk Exp $  */
 end_comment
 
 begin_include
@@ -296,6 +296,7 @@ comment|/*  * ze_softc: per line info and status  */
 end_comment
 
 begin_struct
+specifier|static
 struct|struct
 name|ze_softc
 block|{
