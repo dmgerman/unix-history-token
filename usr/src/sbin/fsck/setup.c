@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setup.c	8.1 (Berkeley) %G%"
+literal|"@(#)setup.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -135,38 +135,6 @@ name|num
 parameter_list|)
 value|(((num)& ((num) - 1)) == 0)
 end_define
-
-begin_comment
-comment|/*  * The size of a cylinder group is calculated by CGSIZE. The maximum size  * is limited by the fact that cylinder groups are at most one block.  * Its size is derived from the size of the maps maintained in the   * cylinder group and the (struct cg) size.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CGSIZE
-parameter_list|(
-name|fs
-parameter_list|)
-define|\
-comment|/* base cg */
-value|(sizeof(struct cg) + \
-comment|/* blktot size */
-value|(fs)->fs_cpg * sizeof(long) + \
-comment|/* blks size */
-value|(fs)->fs_cpg * (fs)->fs_nrpos * sizeof(short) + \
-comment|/* inode map */
-value|howmany((fs)->fs_ipg, NBBY) + \
-comment|/* block map */
-value|howmany((fs)->fs_cpg * (fs)->fs_spc / NSPF(fs), NBBY))
-end_define
-
-begin_function_decl
-name|char
-modifier|*
-name|index
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|struct
