@@ -254,11 +254,6 @@ operator|~
 name|APIC_TPR_PRIO
 expr_stmt|;
 comment|/* clear priority field */
-name|temp
-operator||=
-name|LOPRIO_LEVEL
-expr_stmt|;
-comment|/* allow INT arbitration */
 name|lapic
 operator|.
 name|tpr
