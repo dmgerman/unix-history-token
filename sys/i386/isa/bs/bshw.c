@@ -83,7 +83,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/i386/cons.h>
+file|<sys/cons.h>
 end_include
 
 begin_endif

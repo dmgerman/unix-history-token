@@ -34,13 +34,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/reg.h>
+file|<sys/cons.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/cons.h>
+file|<machine/reg.h>
 end_include
 
 begin_include

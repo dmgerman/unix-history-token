@@ -440,7 +440,7 @@ end_elif
 begin_include
 include|#
 directive|include
-file|<machine/cons.h>
+file|<sys/cons.h>
 end_include
 
 begin_else
