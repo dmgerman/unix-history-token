@@ -15,7 +15,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)deliver.c	5.5 (Berkeley) %G%"
+literal|"@(#)deliver.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3010,13 +3010,15 @@ endif|#
 directive|endif
 endif|FIOCLEX
 comment|/* try to execute the mailer */
-name|execv
+name|execve
 argument_list|(
 name|m
 operator|->
 name|m_mailer
 argument_list|,
 name|pvp
+argument_list|,
+name|UserEnviron
 argument_list|)
 expr_stmt|;
 ifdef|#

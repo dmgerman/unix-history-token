@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* **  Sendmail **  Copyright (c) 1983  Eric P. Allman **  Berkeley, California ** **  Copyright (c) 1983 Regents of the University of California. **  All rights reserved.  The Berkeley software License Agreement **  specifies the terms and conditions for redistribution. ** **	@(#)conf.h	5.3 (Berkeley) %G% */
+comment|/* **  Sendmail **  Copyright (c) 1983  Eric P. Allman **  Berkeley, California ** **  Copyright (c) 1983 Regents of the University of California. **  All rights reserved.  The Berkeley software License Agreement **  specifies the terms and conditions for redistribution. ** **	@(#)conf.h	5.4 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -119,6 +119,17 @@ end_define
 
 begin_comment
 comment|/* maximum number of trusted users */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXUSERENVIRON
+value|40
+end_define
+
+begin_comment
+comment|/* max # of items in user environ */
 end_comment
 
 begin_comment
