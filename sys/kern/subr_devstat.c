@@ -90,7 +90,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|u_int
+name|long
 name|devstat_generation
 decl_stmt|;
 end_decl_stmt
@@ -1177,7 +1177,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|u_int
+name|long
 name|mygen
 decl_stmt|;
 name|struct
@@ -1437,7 +1437,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_LONG
 argument_list|(
 name|_kern_devstat
 argument_list|,
