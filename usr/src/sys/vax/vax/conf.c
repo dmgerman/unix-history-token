@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	conf.c	3.5	%G%	*/
+comment|/*	conf.c	3.6	%G%	*/
 end_comment
 
 begin_include
@@ -939,6 +939,10 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* WRONG (eventually) */
+end_comment
+
 begin_decl_stmt
 name|dev_t
 name|pipedev
@@ -969,6 +973,37 @@ name|int
 name|nswap
 init|=
 literal|33439
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|swdevt
+name|swdevt
+index|[]
+init|=
+block|{
+name|makedev
+argument_list|(
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|0
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nswdev
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
