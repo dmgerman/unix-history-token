@@ -307,7 +307,7 @@ block|}
 end_block
 
 begin_macro
-name|ipfw_init
+name|ipfw_mod
 argument_list|(
 argument|struct lkm_table *lkmtp
 argument_list|,
