@@ -12472,13 +12472,13 @@ literal|"Exit this menu (returning to previous)"
 block|,
 name|NULL
 block|,
-name|configSecurityModerate
+name|dmenuExit
 block|}
 block|,
 block|{
 literal|"Medium"
 block|,
-literal|"Moderate security settings [DEFAULT]."
+literal|"Moderate security settings."
 block|,
 name|NULL
 block|,
