@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.65 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.66 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -8125,13 +8125,6 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-specifier|static
-name|char
-name|myhostbuf
-index|[
-name|MAXNAME
-index|]
-decl_stmt|;
 endif|#
 directive|endif
 comment|/* 	**  Check to see if this uses IPC -- if not, it can't have MX records. 	*/
@@ -8235,33 +8228,6 @@ operator|)
 expr_stmt|;
 comment|/* XXX */
 block|}
-if|if
-condition|(
-name|myhostbuf
-index|[
-literal|0
-index|]
-operator|==
-literal|'\0'
-condition|)
-name|expand
-argument_list|(
-literal|"\201j"
-argument_list|,
-name|myhostbuf
-argument_list|,
-operator|&
-name|myhostbuf
-index|[
-sizeof|sizeof
-name|myhostbuf
-operator|-
-literal|1
-index|]
-argument_list|,
-name|e
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|hp
@@ -8305,7 +8271,7 @@ name|hp
 argument_list|,
 name|mxhosts
 argument_list|,
-name|myhostbuf
+name|TRUE
 argument_list|,
 operator|&
 name|rcode

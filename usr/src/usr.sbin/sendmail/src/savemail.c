@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	6.34 (Berkeley) %G%"
+literal|"@(#)savemail.c	6.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2760,7 +2760,7 @@ name|hostbuf
 argument_list|,
 name|mxhosts
 argument_list|,
-literal|""
+name|FALSE
 argument_list|,
 operator|&
 name|rcode

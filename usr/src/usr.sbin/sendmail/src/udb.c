@@ -21,7 +21,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	6.16 (Berkeley) %G% (with USERDB)"
+literal|"@(#)udb.c	6.17 (Berkeley) %G% (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	6.16 (Berkeley) %G% (without USERDB)"
+literal|"@(#)udb.c	6.17 (Berkeley) %G% (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1931,7 +1931,7 @@ literal|1
 argument_list|,
 name|mxhosts
 argument_list|,
-literal|""
+name|FALSE
 argument_list|,
 operator|&
 name|rcode

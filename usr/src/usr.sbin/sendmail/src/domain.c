@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	6.20 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	6.21 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	6.20 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	6.21 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -195,7 +195,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  GETMXRR -- get MX resource records for a domain ** **	Parameters: **		host -- the name of the host to MX. **		mxhosts -- a pointer to a return buffer of MX records. **		localhost -- the name of the local host.  All MX records **			less preferred than this one will be discarded. **		rcode -- a pointer to an EX_ status code. ** **	Returns: **		The number of MX records found. **		-1 if there is an internal failure. **		If no MX records are found, mxhosts[0] is set to host **			and 1 is returned. */
+comment|/* **  GETMXRR -- get MX resource records for a domain ** **	Parameters: **		host -- the name of the host to MX. **		mxhosts -- a pointer to a return buffer of MX records. **		droplocalhost -- If TRUE, all MX records less preferred **			than the local host (as determined by $=w) will **			be discarded. **		rcode -- a pointer to an EX_ status code. ** **	Returns: **		The number of MX records found. **		-1 if there is an internal failure. **		If no MX records are found, mxhosts[0] is set to host **			and 1 is returned. */
 end_comment
 
 begin_macro
@@ -205,7 +205,7 @@ argument|host
 argument_list|,
 argument|mxhosts
 argument_list|,
-argument|localhost
+argument|droplocalhost
 argument_list|,
 argument|rcode
 argument_list|)
@@ -227,9 +227,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
-modifier|*
-name|localhost
+name|bool
+name|droplocalhost
 decl_stmt|;
 end_decl_stmt
 
@@ -305,6 +304,10 @@ name|firsttime
 init|=
 name|TRUE
 decl_stmt|;
+name|STAB
+modifier|*
+name|st
+decl_stmt|;
 name|u_short
 name|prefer
 index|[
@@ -361,14 +364,31 @@ block|}
 elseif|else
 if|if
 condition|(
-name|strcasecmp
+name|droplocalhost
+operator|&&
+operator|(
+name|st
+operator|=
+name|stab
 argument_list|(
 name|fallbackMX
 argument_list|,
-name|localhost
+name|ST_CLASS
+argument_list|,
+name|ST_FIND
 argument_list|)
-operator|==
-literal|0
+operator|)
+operator|!=
+name|NULL
+operator|&&
+name|bitnset
+argument_list|(
+literal|'w'
+argument_list|,
+name|st
+operator|->
+name|s_class
+argument_list|)
 condition|)
 block|{
 comment|/* don't use fallback for this pass */
@@ -758,14 +778,31 @@ name|n
 expr_stmt|;
 if|if
 condition|(
-name|strcasecmp
+name|droplocalhost
+operator|&&
+operator|(
+name|st
+operator|=
+name|stab
 argument_list|(
 name|bp
 argument_list|,
-name|localhost
+name|ST_CLASS
+argument_list|,
+name|ST_FIND
 argument_list|)
-operator|==
-literal|0
+operator|)
+operator|!=
+name|NULL
+operator|&&
+name|bitnset
+argument_list|(
+literal|'w'
+argument_list|,
+name|st
+operator|->
+name|s_class
+argument_list|)
 condition|)
 block|{
 if|if
