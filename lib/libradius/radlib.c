@@ -5431,7 +5431,7 @@ name|generr
 argument_list|(
 name|h
 argument_list|,
-literal|"malloc failure (%d bytes)"
+literal|"malloc failure (%zu bytes)"
 argument_list|,
 name|len
 operator|+
@@ -6284,7 +6284,7 @@ name|generr
 argument_list|(
 name|h
 argument_list|,
-literal|"Mangled data seems to be garbage %d %d"
+literal|"Mangled data seems to be garbage %zu %zu"
 argument_list|,
 operator|*
 name|len
@@ -6312,7 +6312,7 @@ name|generr
 argument_list|(
 name|h
 argument_list|,
-literal|"Key to long (%d) for me max. %d"
+literal|"Key to long (%zu) for me max. %d"
 argument_list|,
 operator|*
 name|len
