@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)shutdown.c	4.7 (Berkeley) 81/05/11"
+literal|"@(#)shutdown.c	4.8 (Berkeley) 81/06/11"
 decl_stmt|;
 end_decl_stmt
 
@@ -128,7 +128,7 @@ value|20
 end_define
 
 begin_comment
-comment|/* no of lines possible for message */
+comment|/* no of args possible for message */
 end_comment
 
 begin_define
@@ -383,6 +383,12 @@ block|,
 literal|30
 name|SECONDS
 block|,
+literal|40
+name|SECONDS
+block|,
+literal|10
+name|SECONDS
+block|,
 literal|0
 name|SECONDS
 block|,
@@ -554,7 +560,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Usage: %s [ -krd ] shutdowntime [ message ]\n"
+literal|"Usage: %s [ -krh ] shutdowntime [ message ]\n"
 argument_list|,
 name|argv
 index|[
@@ -767,6 +773,11 @@ name|nice
 argument_list|(
 operator|-
 literal|20
+argument_list|)
+expr_stmt|;
+name|fflush
+argument_list|(
+name|stdout
 argument_list|)
 expr_stmt|;
 ifndef|#
@@ -1540,6 +1551,32 @@ name|char
 modifier|*
 name|ts
 decl_stmt|;
+specifier|register
+name|delay
+operator|=
+name|std
+operator|-
+name|nowtime
+expr_stmt|;
+if|if
+condition|(
+name|delay
+operator|>
+literal|8
+condition|)
+while|while
+condition|(
+name|delay
+operator|%
+literal|5
+condition|)
+name|delay
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|shutter
+condition|)
 name|fprintf
 argument_list|(
 name|term
@@ -1547,6 +1584,14 @@ argument_list|,
 literal|"\007\007*** System shutdown message from %s ***\n"
 argument_list|,
 name|shutter
+argument_list|)
+expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|term
+argument_list|,
+literal|"\007\007*** System shutdown message ***\n"
 argument_list|)
 expr_stmt|;
 name|ts
@@ -1559,9 +1604,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sdt
-operator|-
-name|nowtime
+name|delay
 operator|>
 literal|10
 name|MINUTES
@@ -1580,9 +1623,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|sdt
-operator|-
-name|nowtime
+name|delay
 operator|>
 literal|60
 name|SECONDS
@@ -1595,9 +1636,7 @@ argument_list|,
 literal|"System going down in %d minute%s\n"
 argument_list|,
 operator|(
-name|sdt
-operator|-
-name|nowtime
+name|delay
 operator|+
 literal|30
 operator|)
@@ -1605,9 +1644,7 @@ operator|/
 literal|60
 argument_list|,
 operator|(
-name|sdt
-operator|-
-name|nowtime
+name|delay
 operator|+
 literal|30
 operator|)
@@ -1625,9 +1662,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|sdt
-operator|-
-name|nowtime
+name|delay
 operator|>
 literal|0
 condition|)
@@ -1638,13 +1673,9 @@ name|term
 argument_list|,
 literal|"System going down in %d second%s\n"
 argument_list|,
-name|sdt
-operator|-
-name|nowtime
+name|delay
 argument_list|,
-name|sdt
-operator|-
-name|nowtime
+name|delay
 operator|!=
 literal|1
 condition|?
@@ -1723,6 +1754,13 @@ operator|+
 literal|11
 argument_list|)
 expr_stmt|;
+name|putc
+argument_list|(
+literal|'\t'
+argument_list|,
+name|nologf
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|mess
@@ -1739,10 +1777,17 @@ name|fprintf
 argument_list|(
 name|nologf
 argument_list|,
-literal|"\t%s\n"
+literal|" %s"
 argument_list|,
 operator|*
 name|mess
+argument_list|)
+expr_stmt|;
+name|putc
+argument_list|(
+literal|'\n'
+argument_list|,
+name|nologf
 argument_list|)
 expr_stmt|;
 name|fclose
@@ -1987,6 +2032,19 @@ literal|" %s"
 argument_list|,
 operator|*
 name|mess
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|shutter
+condition|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|" (by %s)"
+argument_list|,
+name|shutter
 argument_list|)
 expr_stmt|;
 name|fputc
