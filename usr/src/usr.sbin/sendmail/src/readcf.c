@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	8.91 (Berkeley) %G%"
+literal|"@(#)readcf.c	8.92 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -307,7 +307,7 @@ name|MD_DAEMON
 operator|||
 name|OpMode
 operator|==
-name|MD_FREEZE
+name|MD_INITALIAS
 condition|)
 name|fprintf
 argument_list|(
