@@ -1404,25 +1404,6 @@ operator|==
 literal|0
 condition|)
 break|break;
-if|if
-condition|(
-name|strlen
-argument_list|(
-name|i
-argument_list|)
-operator|>=
-name|SAVEFILENAMESIZE
-condition|)
-comment|/* avoid overflow */
-name|i
-index|[
-name|SAVEFILENAMESIZE
-operator|-
-literal|1
-index|]
-operator|=
-literal|0
-expr_stmt|;
 name|strcpy
 argument_list|(
 name|savefilename
