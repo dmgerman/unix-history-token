@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftp.c	4.14 (Berkeley) %G%"
+literal|"@(#)ftp.c	4.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1446,7 +1446,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: not a plain file."
+literal|"%s: not a plain file.\n"
 argument_list|,
 name|local
 argument_list|)
