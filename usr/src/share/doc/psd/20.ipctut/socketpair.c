@@ -2,7 +2,7 @@ begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_expr_stmt
 operator|.
 operator|\
-literal|" Copyright (c) 1986 Regents of the University of California. .\" All rights reserved.  The Berkeley software License Agreement .\" specifies the terms and conditions for redistribution. .\" .\"	@(#)socketpair.c	6.1 (Berkeley) %G% .\" #include<sys/types.h> #include<sys/socket.h> #include<stdio.h>  #define DATA1 "
+literal|" Copyright (c) 1986 Regents of the University of California. .\" All rights reserved.  The Berkeley software License Agreement .\" specifies the terms and conditions for redistribution. .\" .\"	@(#)socketpair.c	6.2 (Berkeley) %G% .\" #include<sys/types.h> #include<sys/socket.h> #include<stdio.h>  #define DATA1 "
 name|In
 name|Xanadu
 operator|,
@@ -21,12 +21,14 @@ name|decree
 operator|.
 expr|.
 operator|.
-literal|"  /*  * This program creates a pair of connected sockets then forks and  * communicates over them.  This is very similar to communication with pipes,  * however, socketpairs are two-way communications objects. Therefore I can  * send messages in both directions.   */  main() { 	int             sockets[2], child; 	char            buf[1024];  	if (socketpair(AF_UNIX, SOCK_STREAM, 0, sockets)< 0) 		perror("
+literal|"  /*  * This program creates a pair of connected sockets then forks and  * communicates over them.  This is very similar to communication with pipes,  * however, socketpairs are two-way communications objects. Therefore I can  * send messages in both directions.   */  main() { 	int sockets[2], child; 	char buf[1024];  	if (socketpair(AF_UNIX, SOCK_STREAM, 0, sockets)< 0) { 		perror("
 name|opening
 name|stream
 name|socket
 name|pair
-literal|"); 	if (child = fork()) {	/* This is the parent. */ 		close(sockets[0]); 		if (read(sockets[1], buf, 1024, 0)< 0) 			perror("
+literal|"); 		exit(1); 	}  	if ((child = fork()) == -1) 		perror("
+name|fork
+literal|"); 	else if (child) {	/* This is the parent. */ 		close(sockets[0]); 		if (read(sockets[1], buf, 1024, 0)< 0) 			perror("
 name|reading
 name|stream
 name|message
