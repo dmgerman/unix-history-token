@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)if_hdhreg.h	6.2 (Berkeley) %G% */
+comment|/*	@(#)if_hdhreg.h	6.3 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -538,7 +538,7 @@ begin_define
 define|#
 directive|define
 name|HDHRQST
-value|HDHSUP+0x0000
+value|(HDHSUP+0x0000)
 end_define
 
 begin_comment
@@ -549,7 +549,7 @@ begin_define
 define|#
 directive|define
 name|HDHRQUP
-value|HDHSUP+0x0100
+value|(HDHSUP+0x0100)
 end_define
 
 begin_comment
@@ -560,7 +560,7 @@ begin_define
 define|#
 directive|define
 name|HDHRQDN
-value|HDHSUP+0x0200
+value|(HDHSUP+0x0200)
 end_define
 
 begin_comment
@@ -575,7 +575,7 @@ begin_define
 define|#
 directive|define
 name|HDHIACK
-value|HDHSUP+0x4200
+value|(HDHSUP+0x4200)
 end_define
 
 begin_comment
@@ -586,7 +586,7 @@ begin_define
 define|#
 directive|define
 name|HDHLNUP
-value|HDHSUP+0x0100
+value|(HDHSUP+0x0100)
 end_define
 
 begin_comment
@@ -597,7 +597,7 @@ begin_define
 define|#
 directive|define
 name|HDHLNDN
-value|HDHSUP+0x0200
+value|(HDHSUP+0x0200)
 end_define
 
 begin_comment
@@ -608,7 +608,7 @@ begin_define
 define|#
 directive|define
 name|HDHLNACK
-value|HDHSUP+0x0300
+value|(HDHSUP+0x0300)
 end_define
 
 begin_comment
@@ -619,7 +619,7 @@ begin_define
 define|#
 directive|define
 name|HDHTIMO
-value|HDHSUP+0x0400
+value|(HDHSUP+0x0400)
 end_define
 
 begin_comment
@@ -630,7 +630,7 @@ begin_define
 define|#
 directive|define
 name|HDHLOOP
-value|HDHSUP+0x0500
+value|(HDHSUP+0x0500)
 end_define
 
 begin_comment
@@ -641,7 +641,7 @@ begin_define
 define|#
 directive|define
 name|HDHDTERR
-value|HDHSUP+0x0600
+value|(HDHSUP+0x0600)
 end_define
 
 begin_comment
@@ -652,7 +652,7 @@ begin_define
 define|#
 directive|define
 name|HDHSQRCV
-value|HDHSUP+0x0700
+value|(HDHSUP+0x0700)
 end_define
 
 begin_comment
@@ -663,7 +663,7 @@ begin_define
 define|#
 directive|define
 name|HDHSQERR
-value|HDHSUP+0x0800
+value|(HDHSUP+0x0800)
 end_define
 
 begin_comment

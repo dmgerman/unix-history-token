@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)if_hdh.c	6.3 (Berkeley) %G% */
+comment|/*	@(#)if_hdh.c	6.4 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -968,37 +968,12 @@ name|sc
 decl_stmt|;
 specifier|register
 name|struct
-name|hdhregs
-modifier|*
-name|addr
-decl_stmt|;
-specifier|register
-name|struct
 name|uba_device
 modifier|*
 name|ui
 decl_stmt|;
-specifier|register
-name|struct
-name|umc_chan
-modifier|*
-name|up
-decl_stmt|;
-specifier|register
-name|struct
-name|mbuf
-modifier|*
-name|m
-decl_stmt|,
-modifier|*
-name|n
-decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|s
-decl_stmt|,
-name|ubano
 decl_stmt|;
 ifdef|#
 directive|ifdef
@@ -1048,17 +1023,6 @@ literal|0
 operator|)
 return|;
 block|}
-name|addr
-operator|=
-operator|(
-expr|struct
-name|hdhregs
-operator|*
-operator|)
-name|ui
-operator|->
-name|ui_addr
-expr_stmt|;
 name|sc
 operator|=
 operator|&
@@ -1840,12 +1804,6 @@ index|]
 operator|->
 name|ui_addr
 decl_stmt|;
-specifier|register
-name|struct
-name|mbuf
-modifier|*
-name|m
-decl_stmt|;
 name|int
 name|lcn
 decl_stmt|,
@@ -1854,8 +1812,6 @@ decl_stmt|,
 name|cc
 decl_stmt|,
 name|cnt
-decl_stmt|,
-name|s
 decl_stmt|;
 comment|/* 	 * Check for hardware errors. 	 */
 if|if
@@ -2405,18 +2361,9 @@ index|[
 name|lcn
 index|]
 decl_stmt|;
-specifier|register
-name|struct
-name|uba_device
-modifier|*
-name|ui
-decl_stmt|;
 name|short
 modifier|*
 name|p
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 comment|/* was it read or write? */
 if|if
@@ -2635,20 +2582,6 @@ operator|&
 name|hdh_softc
 index|[
 name|unit
-index|]
-decl_stmt|;
-specifier|register
-name|struct
-name|hdh_chan
-modifier|*
-name|hc
-init|=
-operator|&
-name|sc
-operator|->
-name|hdh_chan
-index|[
-name|HDHSUPW
 index|]
 decl_stmt|;
 specifier|register
