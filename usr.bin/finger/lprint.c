@@ -396,7 +396,7 @@ name|pn
 operator|->
 name|dir
 argument_list|,
-name|_PATH_PUBLICKEY
+name|_PATH_PUBKEY
 argument_list|,
 literal|"Public key"
 argument_list|)

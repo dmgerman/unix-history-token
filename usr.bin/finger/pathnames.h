@@ -33,8 +33,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|_PATH_PUBLICKEY
-value|".publickey"
+name|_PATH_PUBKEY
+value|".pubkey"
 end_define
 
 begin_ifndef
