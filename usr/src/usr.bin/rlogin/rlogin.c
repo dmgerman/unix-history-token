@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogin.c	4.1 82/04/02"
+literal|"@(#)rlogin.c	4.2 82/04/06"
 decl_stmt|;
 end_decl_stmt
 
@@ -748,6 +748,8 @@ name|char
 name|defkill
 decl_stmt|,
 name|deferase
+decl_stmt|,
+name|defflags
 decl_stmt|;
 end_decl_stmt
 
@@ -795,6 +797,18 @@ operator|=
 name|stbuf
 operator|.
 name|sg_erase
+expr_stmt|;
+name|defflags
+operator|=
+name|stbuf
+operator|.
+name|sg_flags
+operator|&
+operator|(
+name|ECHO
+operator||
+name|CRMOD
+operator|)
 expr_stmt|;
 name|ioctl
 argument_list|(
@@ -3022,9 +3036,7 @@ name|stbuf
 operator|.
 name|sg_flags
 operator||=
-name|ECHO
-operator||
-name|CRMOD
+name|defflags
 expr_stmt|;
 name|ioctl
 argument_list|(
