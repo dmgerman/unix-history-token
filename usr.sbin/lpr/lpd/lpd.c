@@ -2073,7 +2073,7 @@ name|n
 operator|=
 name|read
 argument_list|(
-literal|1
+name|STDOUT_FILENO
 argument_list|,
 name|cp
 argument_list|,
