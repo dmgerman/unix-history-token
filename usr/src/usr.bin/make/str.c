@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)str.c	8.3 (Berkeley) %G%"
+literal|"@(#)str.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1125,9 +1125,20 @@ name|p
 operator|==
 literal|'\0'
 condition|)
+block|{
+comment|/* Null pattern is the whole string */
+operator|*
+name|len
+operator|=
+name|strlen
+argument_list|(
+name|w
+argument_list|)
+expr_stmt|;
 return|return
-name|NULL
+name|w
 return|;
+block|}
 if|if
 condition|(
 operator|(
