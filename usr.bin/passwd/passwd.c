@@ -739,6 +739,12 @@ operator|==
 name|KSUCCESS
 condition|)
 block|{
+name|setuid
+argument_list|(
+name|getuid
+argument_list|()
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
