@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vba.c	1.3	86/01/24	*/
+comment|/*	vba.c	1.4	86/12/16	*/
 end_comment
 
 begin_include
@@ -737,33 +737,6 @@ name|NBPG
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|bp
-operator|->
-name|b_resid
-operator|!=
-literal|0
-condition|)
-name|log
-argument_list|(
-name|LOG_NOTICE
-argument_list|,
-literal|"vbadone: dev %o bcount %d resid %d\n"
-argument_list|,
-name|bp
-operator|->
-name|b_dev
-argument_list|,
-name|bp
-operator|->
-name|b_bcount
-argument_list|,
-name|bp
-operator|->
-name|b_resid
-argument_list|)
-expr_stmt|;
 name|bcopy
 argument_list|(
 name|v
