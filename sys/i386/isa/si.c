@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Device driver for Specialix range (SI/XIO) of serial line multiplexors.  *  * Copyright (C) 1990, 1992, 1998 Specialix International,  * Copyright (C) 1993, Andy Rutter<andy@acronym.co.uk>  * Copyright (C) 1995, Peter Wemm<peter@netplex.com.au>  *  * Originally derived from:	SunOS 4.x version  * Ported from BSDI version to FreeBSD by Peter Wemm.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notices, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notices, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Andy Rutter of  *	Advanced Methods and Tools Ltd. based on original information  *	from Specialix International.  * 4. Neither the name of Advanced Methods and Tools, nor Specialix  *    International may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN  * NO EVENT SHALL THE AUTHORS BE LIABLE.  *  *	$Id: si.c,v 1.89 1999/08/23 20:58:48 phk Exp $  */
+comment|/*  * Device driver for Specialix range (SI/XIO) of serial line multiplexors.  *  * Copyright (C) 1990, 1992, 1998 Specialix International,  * Copyright (C) 1993, Andy Rutter<andy@acronym.co.uk>  * Copyright (C) 1995, Peter Wemm<peter@netplex.com.au>  *  * Originally derived from:	SunOS 4.x version  * Ported from BSDI version to FreeBSD by Peter Wemm.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notices, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notices, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Andy Rutter of  *	Advanced Methods and Tools Ltd. based on original information  *	from Specialix International.  * 4. Neither the name of Advanced Methods and Tools, nor Specialix  *    International may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN  * NO EVENT SHALL THE AUTHORS BE LIABLE.  *  *	$Id: si.c,v 1.90 1999/08/27 06:53:34 peter Exp $  */
 end_comment
 
 begin_ifndef
@@ -1261,82 +1261,112 @@ name|bdrates
 index|[]
 init|=
 block|{
+block|{
 name|B75
 block|,
 name|CLK75
+block|, }
 block|,
 comment|/* 0x0 */
+block|{
 name|B110
 block|,
 name|CLK110
+block|, }
 block|,
 comment|/* 0x1 */
+block|{
 name|B150
 block|,
 name|CLK150
+block|, }
 block|,
 comment|/* 0x3 */
+block|{
 name|B300
 block|,
 name|CLK300
+block|, }
 block|,
 comment|/* 0x4 */
+block|{
 name|B600
 block|,
 name|CLK600
+block|, }
 block|,
 comment|/* 0x5 */
+block|{
 name|B1200
 block|,
 name|CLK1200
+block|, }
 block|,
 comment|/* 0x6 */
+block|{
 name|B2000
 block|,
 name|CLK2000
+block|, }
 block|,
 comment|/* 0x7 */
+block|{
 name|B2400
 block|,
 name|CLK2400
+block|, }
 block|,
 comment|/* 0x8 */
+block|{
 name|B4800
 block|,
 name|CLK4800
+block|, }
 block|,
 comment|/* 0x9 */
+block|{
 name|B9600
 block|,
 name|CLK9600
+block|, }
 block|,
 comment|/* 0xb */
+block|{
 name|B19200
 block|,
 name|CLK19200
+block|, }
 block|,
 comment|/* 0xc */
+block|{
 name|B38400
 block|,
 name|CLK38400
+block|, }
 block|,
 comment|/* 0x2 (out of order!) */
+block|{
 name|B57600
 block|,
 name|CLK57600
+block|, }
 block|,
 comment|/* 0xd */
+block|{
 name|B115200
 block|,
 name|CLK110
+block|, }
 block|,
 comment|/* 0x1 (dupe!, 110 baud on "si") */
+block|{
 operator|-
 literal|1
 block|,
 operator|-
 literal|1
 block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -1361,68 +1391,98 @@ name|chartimes
 index|[]
 init|=
 block|{
+block|{
 name|B75
 block|,
 literal|8
+block|, }
 block|,
+block|{
 name|B110
 block|,
 literal|11
+block|, }
 block|,
+block|{
 name|B150
 block|,
 literal|15
+block|, }
 block|,
+block|{
 name|B300
 block|,
 literal|30
+block|, }
 block|,
+block|{
 name|B600
 block|,
 literal|60
+block|, }
 block|,
+block|{
 name|B1200
 block|,
 literal|120
+block|, }
 block|,
+block|{
 name|B2000
 block|,
 literal|200
+block|, }
 block|,
+block|{
 name|B2400
 block|,
 literal|240
+block|, }
 block|,
+block|{
 name|B4800
 block|,
 literal|480
+block|, }
 block|,
+block|{
 name|B9600
 block|,
 literal|960
+block|, }
 block|,
+block|{
 name|B19200
 block|,
 literal|1920
+block|, }
 block|,
+block|{
 name|B38400
 block|,
 literal|3840
+block|, }
 block|,
+block|{
 name|B57600
 block|,
 literal|5760
+block|, }
 block|,
+block|{
 name|B115200
 block|,
 literal|11520
+block|, }
 block|,
+block|{
 operator|-
 literal|1
 block|,
 operator|-
 literal|1
 block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -3588,15 +3648,10 @@ begin_comment
 comment|/*  * We have to make an 8 bit version of bcopy, since some cards can't  * deal with 32 bit I/O  */
 end_comment
 
-begin_if
-if|#
-directive|if
-literal|1
-end_if
-
 begin_function
 specifier|static
 name|void
+name|__inline
 name|si_bcopy
 parameter_list|(
 specifier|const
@@ -3633,6 +3688,7 @@ operator|*
 operator|(
 operator|(
 operator|(
+specifier|const
 name|u_char
 operator|*
 operator|)
@@ -3644,22 +3700,113 @@ expr_stmt|;
 block|}
 end_function
 
-begin_else
-else|#
-directive|else
-end_else
+begin_function
+specifier|static
+name|void
+name|__inline
+name|si_vbcopy
+parameter_list|(
+specifier|const
+specifier|volatile
+name|void
+modifier|*
+name|src
+parameter_list|,
+name|void
+modifier|*
+name|dst
+parameter_list|,
+name|size_t
+name|len
+parameter_list|)
+block|{
+while|while
+condition|(
+name|len
+operator|--
+condition|)
+operator|*
+operator|(
+operator|(
+operator|(
+name|u_char
+operator|*
+operator|)
+name|dst
+operator|)
+operator|++
+operator|)
+operator|=
+operator|*
+operator|(
+operator|(
+operator|(
+specifier|const
+specifier|volatile
+name|u_char
+operator|*
+operator|)
+name|src
+operator|)
+operator|++
+operator|)
+expr_stmt|;
+block|}
+end_function
 
-begin_define
-define|#
-directive|define
-name|si_bcopy
-value|bcopy
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_function
+specifier|static
+name|void
+name|__inline
+name|si_bcopyv
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|src
+parameter_list|,
+specifier|volatile
+name|void
+modifier|*
+name|dst
+parameter_list|,
+name|size_t
+name|len
+parameter_list|)
+block|{
+while|while
+condition|(
+name|len
+operator|--
+condition|)
+operator|*
+operator|(
+operator|(
+operator|(
+specifier|volatile
+name|u_char
+operator|*
+operator|)
+name|dst
+operator|)
+operator|++
+operator|)
+operator|=
+operator|*
+operator|(
+operator|(
+operator|(
+specifier|const
+name|u_char
+operator|*
+operator|)
+name|src
+operator|)
+operator|++
+operator|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Attach the device.  Initialize the card.  *  * This routine also gets called by the EISA and PCI attach routines.  * It presumes that the softstate for the unit has had had its type field  * and the EISA specific stuff filled in, as well as the kernel virtual  * base address and the unit number of the isa_device struct.  */
@@ -8759,12 +8906,8 @@ name|TCSI_CCB
 case|:
 name|SUCHECK
 expr_stmt|;
-name|si_bcopy
+name|si_vbcopy
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|xpp
 operator|->
 name|sp_ccb
@@ -11070,11 +11213,8 @@ name|hi_rxbuf
 operator|+
 name|op
 expr_stmt|;
-name|si_bcopy
+name|si_vbcopy
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|z
 argument_list|,
 name|si_rxbuf
@@ -11116,11 +11256,8 @@ name|hi_rxbuf
 operator|+
 name|op
 expr_stmt|;
-name|si_bcopy
+name|si_vbcopy
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|z
 argument_list|,
 name|si_rxbuf
@@ -11149,11 +11286,8 @@ name|ccbp
 operator|->
 name|hi_rxbuf
 expr_stmt|;
-name|si_bcopy
+name|si_vbcopy
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|z
 argument_list|,
 name|si_rxbuf
@@ -11700,14 +11834,10 @@ operator|>=
 name|n
 condition|)
 block|{
-name|si_bcopy
+name|si_bcopyv
 argument_list|(
 name|si_txbuf
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|ccbp
 operator|->
@@ -11722,14 +11852,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|si_bcopy
+name|si_bcopyv
 argument_list|(
 name|si_txbuf
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|ccbp
 operator|->
@@ -11743,7 +11869,7 @@ operator|-
 name|ipos
 argument_list|)
 expr_stmt|;
-name|si_bcopy
+name|si_bcopyv
 argument_list|(
 name|si_txbuf
 operator|+
@@ -11753,10 +11879,6 @@ operator|-
 name|ipos
 operator|)
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 operator|&
 name|ccbp
 operator|->
@@ -13135,13 +13257,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_decl_stmt
-specifier|static
-name|int
-name|si_devsw_installed
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 specifier|static
