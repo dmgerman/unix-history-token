@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sem.c	5.13 (Berkeley) %G%"
+literal|"@(#)sem.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,29 +52,54 @@ directive|include
 file|"extern.h"
 end_include
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
 name|vffree
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
 name|doio
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|command
+operator|*
+name|t
+operator|,
+name|int
+operator|*
+operator|,
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
 name|chkclob
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|Char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|void
@@ -1851,7 +1876,12 @@ begin_function
 specifier|static
 name|void
 name|vffree
-parameter_list|()
+parameter_list|(
+name|i
+parameter_list|)
+name|int
+name|i
+decl_stmt|;
 block|{
 specifier|register
 name|Char
@@ -1901,7 +1931,7 @@ expr_stmt|;
 block|}
 name|_exit
 argument_list|(
-literal|1
+name|i
 argument_list|)
 expr_stmt|;
 block|}

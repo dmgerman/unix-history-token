@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)time.c	5.10 (Berkeley) %G%"
+literal|"@(#)time.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -44,13 +44,24 @@ begin_comment
 comment|/*  * C Shell - routines handling process timing and niceing  */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|void
 name|pdeltat
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|timeval
+operator|*
+operator|,
+expr|struct
+name|timevail
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|void
@@ -608,56 +619,6 @@ name|cp
 operator|=
 literal|"%Uu %Ss %E %P %X+%Dk %I+%Oio %Fpf+%Ww"
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|TDEBUG
-name|xprintf
-argument_list|(
-literal|"es->tms_utime %lu bs->tms_utime %lu\n"
-argument_list|,
-name|es
-operator|->
-name|tms_utime
-argument_list|,
-name|bs
-operator|->
-name|tms_utime
-argument_list|)
-expr_stmt|;
-name|xprintf
-argument_list|(
-literal|"es->tms_stime %lu bs->tms_stime %lu\n"
-argument_list|,
-name|es
-operator|->
-name|tms_stime
-argument_list|,
-name|bs
-operator|->
-name|tms_stime
-argument_list|)
-expr_stmt|;
-name|xprintf
-argument_list|(
-literal|"ms %lu e %lu b %lu\n"
-argument_list|,
-name|ms
-argument_list|,
-name|e
-argument_list|,
-name|b
-argument_list|)
-expr_stmt|;
-name|xprintf
-argument_list|(
-literal|"t %lu\n"
-argument_list|,
-name|t
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* TDEBUG */
 if|if
 condition|(
 name|vp
@@ -778,26 +739,24 @@ case|case
 literal|'P'
 case|:
 comment|/* percent time spent running */
+comment|/* check if it did not run at all */
 name|i
 operator|=
-call|(
-name|int
-call|)
-argument_list|(
+operator|(
+name|ms
+operator|==
+literal|0
+operator|)
+condition|?
+literal|0
+else|:
+operator|(
 name|t
 operator|*
 literal|1000
 operator|/
-operator|(
-operator|(
 name|ms
-condition|?
-name|ms
-else|:
-literal|1
 operator|)
-operator|)
-argument_list|)
 expr_stmt|;
 name|xprintf
 argument_list|(

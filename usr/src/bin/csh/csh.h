@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1980, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)csh.h	5.13 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1980, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)csh.h	5.14 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -122,6 +122,138 @@ directive|include
 file|"pathnames.h"
 end_include
 
+begin_comment
+comment|/*  * Fundamental definitions which may vary from system to system.  *  *	BUFSIZ		The i/o buffering size; also limits word size  *	MAILINTVL	How often to mailcheck; more often is more expensive  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BUFSIZ
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|BUFSIZ
+value|1024
+end_define
+
+begin_comment
+comment|/* default buffer size */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* BUFSIZ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FORKSLEEP
+value|10
+end_define
+
+begin_comment
+comment|/* delay loop on non-interactive fork failure */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAILINTVL
+value|600
+end_define
+
+begin_comment
+comment|/* 10 minutes */
+end_comment
+
+begin_comment
+comment|/*  * The shell moves std in/out/diag and the old std input away from units  * 0, 1, and 2 so that it is easy to set up these standards for invoked  * commands.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FSHTTY
+value|15
+end_define
+
+begin_comment
+comment|/* /dev/tty when manip pgrps */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FSHIN
+value|16
+end_define
+
+begin_comment
+comment|/* Preferred desc for shell input */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FSHOUT
+value|17
+end_define
+
+begin_comment
+comment|/* ... shell output */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FSHDIAG
+value|18
+end_define
+
+begin_comment
+comment|/* ... shell diagnostics */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FOLDSTD
+value|19
+end_define
+
+begin_comment
+comment|/* ... old std input */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PROF
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|xexit
+parameter_list|(
+name|n
+parameter_list|)
+value|done(n)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -207,12 +339,6 @@ begin_include
 include|#
 directive|include
 file|"tc.const.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"local.h"
 end_include
 
 begin_include

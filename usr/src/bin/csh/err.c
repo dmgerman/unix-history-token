@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	5.7 (Berkeley) %G%"
+literal|"@(#)err.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -977,11 +977,7 @@ operator|)
 operator|&&
 name|seterr
 operator|==
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+name|NULL
 condition|)
 return|return;
 if|if
@@ -1120,11 +1116,7 @@ argument_list|)
 expr_stmt|;
 name|seterr
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+name|NULL
 expr_stmt|;
 block|}
 if|if

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)misc.c	5.9 (Berkeley) %G%"
+literal|"@(#)misc.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,13 +40,20 @@ directive|include
 file|"extern.h"
 end_include
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
 name|int
 name|renum
-parameter_list|()
-function_decl|;
-end_function_decl
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|int
@@ -654,11 +661,7 @@ condition|)
 do|;
 return|return
 operator|(
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
+name|NULL
 operator|)
 return|;
 block|}
