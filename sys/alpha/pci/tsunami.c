@@ -182,9 +182,8 @@ struct|;
 end_struct
 
 begin_decl_stmt
-specifier|static
 name|int
-name|num_pchips
+name|tsunami_num_pchips
 init|=
 literal|0
 decl_stmt|;
@@ -1137,7 +1136,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|int bus;						\         vm_offset_t va;						\ 	type data;						\ 	if (h == (u_int8_t)-1)					\ 		h = tsunami_hose_from_bus(b);			\ 	bus = tsunami_bus_within_hose(h, b) ? b : 0;		\ 	va = TSUNAMI_CFGADDR(bus, s, f, r, h);			\ 	tsunami_clear_abort();					\ 	if (badaddr((caddr_t)va, width)) {			\ 		tsunami_check_abort();				\ 		return ~0;					\ 	}							\ 	data = ##op##(va);					\ 	if (tsunami_check_abort())				\ 		return ~0;					\ 	return data;
+value|int bus;						\         vm_offset_t va;						\ 	type data;						\ 	if (h == (u_int8_t)-1)					\ 		h = tsunami_hose_from_bus(b);			\ 	bus = tsunami_bus_within_hose(h, b);			\ 	va = TSUNAMI_CFGADDR(bus, s, f, r, h);			\ 	tsunami_clear_abort();					\ 	if (badaddr((caddr_t)va, width)) {			\ 		tsunami_check_abort();				\ 		return ~0;					\ 	}							\ 	data = ##op##(va);					\ 	if (tsunami_check_abort())				\ 		return ~0;					\ 	return data;
 end_define
 
 begin_define
@@ -1162,7 +1161,7 @@ parameter_list|,
 name|width
 parameter_list|)
 define|\
-value|int bus;						\         vm_offset_t va;						\ 	if (h == (u_int8_t)-1)					\ 		h = tsunami_hose_from_bus(b);			\ 	bus = tsunami_bus_within_hose(h, b) ? b : 0;		\ 	va = TSUNAMI_CFGADDR(bus, s, f, r, h);			\ 	tsunami_clear_abort();					\ 	if (badaddr((caddr_t)va, width)) 			\ 		return;						\ 	##op##(va, data);					\ 	tsunami_check_abort();
+value|int bus;						\         vm_offset_t va;						\ 	if (h == (u_int8_t)-1)					\ 		h = tsunami_hose_from_bus(b);			\ 	bus = tsunami_bus_within_hose(h, b);			\ 	va = TSUNAMI_CFGADDR(bus, s, f, r, h);			\ 	tsunami_clear_abort();					\ 	if (badaddr((caddr_t)va, width)) 			\ 		return;						\ 	##op##(va, data);					\ 	tsunami_check_abort();
 end_define
 
 begin_function
@@ -1960,7 +1959,7 @@ argument_list|()
 expr_stmt|;
 switch|switch
 condition|(
-name|num_pchips
+name|tsunami_num_pchips
 condition|)
 block|{
 case|case
@@ -2157,7 +2156,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|num_pchips
+name|tsunami_num_pchips
 condition|;
 name|i
 operator|++
@@ -2327,12 +2326,12 @@ name|reg
 operator|&
 name|CSC_P1P
 condition|)
-name|num_pchips
+name|tsunami_num_pchips
 operator|=
 literal|2
 expr_stmt|;
 else|else
-name|num_pchips
+name|tsunami_num_pchips
 operator|=
 literal|1
 expr_stmt|;
@@ -2350,7 +2349,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|num_pchips
+name|tsunami_num_pchips
 condition|;
 name|i
 operator|++
