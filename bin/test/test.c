@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: test.c,v 1.22 1999/08/14 05:38:04 chris Exp $"
+literal|"$Id: test.c,v 1.23 1999/08/16 09:44:09 sheldonh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1601,7 +1601,8 @@ return|;
 case|case
 name|FILEX
 case|:
-return|return
+if|if
+condition|(
 name|access
 argument_list|(
 name|nm
@@ -1610,6 +1611,34 @@ name|X_OK
 argument_list|)
 operator|==
 literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|getuid
+argument_list|()
+operator|==
+literal|0
+operator|&&
+operator|(
+name|s
+operator|.
+name|st_mode
+operator|&
+literal|0111
+operator|)
+operator|==
+literal|0
+condition|)
+return|return
+literal|0
+return|;
+return|return
+literal|1
+return|;
+block|}
+return|return
+literal|1
 return|;
 case|case
 name|FILEXIST
