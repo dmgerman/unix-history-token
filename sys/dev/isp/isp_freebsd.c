@@ -101,60 +101,6 @@ name|NULL
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
-begin_decl_stmt
-name|int
-name|isp_debug
-init|=
-literal|2
-decl_stmt|;
-end_decl_stmt
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|CAMDEBUG
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|DIAGNOSTIC
-argument_list|)
-end_elif
-
-begin_decl_stmt
-name|int
-name|isp_debug
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-name|int
-name|isp_debug
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 name|void
 name|isp_attach
@@ -2194,6 +2140,10 @@ condition|)
 block|{
 name|int
 name|rv
+init|=
+literal|2
+operator|*
+literal|1000000
 decl_stmt|;
 name|fcparam
 modifier|*
@@ -2216,7 +2166,8 @@ name|isp
 argument_list|,
 name|ISPCTL_FCLINK_TEST
 argument_list|,
-name|NULL
+operator|&
+name|rv
 argument_list|)
 expr_stmt|;
 name|ISP_UNLOCK
@@ -4076,27 +4027,20 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|isp_tdebug
-operator|>
-literal|1
-operator|&&
-operator|(
 name|cto
 operator|->
 name|ct_flags
 operator|&
 name|CAM_SEND_STATUS
-operator|)
 condition|)
 block|{
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s:CTIO2 RX_ID 0x%x SCSI STATUS 0x%x "
-literal|"datalength %u\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGTDEBUG2
+argument_list|,
+literal|"CTIO2 RX_ID 0x%x SCSI STATUS 0x%x datalength %u"
 argument_list|,
 name|cto
 operator|->
@@ -4301,26 +4245,20 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|isp_tdebug
-operator|>
-literal|1
-operator|&&
-operator|(
 name|cto
 operator|->
 name|ct_flags
 operator|&
 name|CAM_SEND_STATUS
-operator|)
 condition|)
 block|{
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s:CTIO SCSI STATUS 0x%x resid %d\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGTDEBUG2
+argument_list|,
+literal|"CTIO SCSI STATUS 0x%x resid %d"
 argument_list|,
 name|cso
 operator|->
@@ -4356,7 +4294,7 @@ argument_list|(
 name|isp
 argument_list|,
 operator|(
-name|ISP_SCSI_XFER_T
+name|XS_T
 operator|*
 operator|)
 name|ccb
@@ -4385,7 +4323,7 @@ name|CAM_RESRC_UNAVAIL
 operator|)
 return|;
 block|}
-comment|/* 	 * Call the dma setup routines for this entry (and any subsequent 	 * CTIOs) if there's data to move, and then tell the f/w it's got 	 * new things to play with. As with ispscsicmd's usage of DMA setup, 	 * any swizzling is done in the machine dependent layer. Because 	 * of this, we put the request onto the queue area first in native 	 * format. 	 */
+comment|/* 	 * Call the dma setup routines for this entry (and any subsequent 	 * CTIOs) if there's data to move, and then tell the f/w it's got 	 * new things to play with. As with isp_start's usage of DMA setup, 	 * any swizzling is done in the machine dependent layer. Because 	 * of this, we put the request onto the queue area first in native 	 * format. 	 */
 name|save_handle
 operator|=
 operator|*
@@ -4411,9 +4349,6 @@ block|{
 case|case
 name|CMD_QUEUED
 case|:
-name|MemoryBarrier
-argument_list|()
-expr_stmt|;
 name|ISP_ADD_REQUEST
 argument_list|(
 name|isp
@@ -4754,9 +4689,6 @@ name|optr
 argument_list|,
 name|qe
 argument_list|)
-expr_stmt|;
-name|MemoryBarrier
-argument_list|()
 expr_stmt|;
 name|ISP_ADD_REQUEST
 argument_list|(
@@ -5311,20 +5243,13 @@ operator|)
 name|atiop
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|isp_tdebug
-operator|>
-literal|1
-condition|)
-block|{
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s:ATIO CDB=0x%x iid%d->lun%d tag 0x%x ttype 0x%x %s"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGTDEBUG2
+argument_list|,
+literal|"ATIO CDB=0x%x iid%d->lun%d tag 0x%x ttype 0x%x %s"
 argument_list|,
 name|aep
 operator|->
@@ -5361,12 +5286,11 @@ operator|&
 name|AT_NODISC
 operator|)
 condition|?
-literal|"nondisc\n"
+literal|"nondisc"
 else|:
-literal|"\n"
+literal|"disconnecting"
 argument_list|)
 expr_stmt|;
-block|}
 name|rls_lun_statep
 argument_list|(
 name|isp
@@ -5865,21 +5789,13 @@ operator|)
 name|atiop
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|isp_tdebug
-operator|>
-literal|1
-condition|)
-block|{
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s:ATIO2 RX_ID 0x%x CDB=0x%x iid%d->lun%d tattr 0x%x "
-literal|"datalen %u\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGTDEBUG2
+argument_list|,
+literal|"ATIO2 RX_ID 0x%x CDB=0x%x iid%d->lun%d tattr 0x%x datalen %u"
 argument_list|,
 name|aep
 operator|->
@@ -5911,7 +5827,6 @@ operator|->
 name|at_datalen
 argument_list|)
 expr_stmt|;
-block|}
 name|rls_lun_statep
 argument_list|(
 name|isp
@@ -6064,21 +5979,13 @@ operator||=
 name|CAM_SENT_SENSE
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|isp_tdebug
-operator|>
-literal|1
-condition|)
-block|{
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s:CTIO2 RX_ID 0x%x sts 0x%x flg 0x%x sns "
-literal|"%d FIN\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGTDEBUG2
+argument_list|,
+literal|"CTIO2 RX_ID 0x%x sts 0x%x flg 0x%x sns %d FIN"
 argument_list|,
 name|ct
 operator|->
@@ -6105,7 +6012,6 @@ operator|!=
 literal|0
 argument_list|)
 expr_stmt|;
-block|}
 name|notify_cam
 operator|=
 name|ct
@@ -6144,20 +6050,13 @@ operator|)
 operator|==
 name|CT_OK
 expr_stmt|;
-if|if
-condition|(
-name|isp_tdebug
-operator|>
-literal|1
-condition|)
-block|{
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s:CTIO tag 0x%x sts 0x%x flg 0x%x FIN\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGTDEBUG2
+argument_list|,
+literal|"CTIO tag 0x%x sts 0x%x flg 0x%x FIN"
 argument_list|,
 name|ct
 operator|->
@@ -6172,7 +6071,6 @@ operator|->
 name|ct_flags
 argument_list|)
 expr_stmt|;
-block|}
 name|notify_cam
 operator|=
 name|ct
@@ -6226,46 +6124,30 @@ operator|==
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|isp_tdebug
-operator|>
-literal|1
-condition|)
-block|{
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s:Intermediate CTIO done\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGTDEBUG1
+argument_list|,
+literal|"Intermediate CTIO done"
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 literal|0
 operator|)
 return|;
 block|}
-if|if
-condition|(
-name|isp_tdebug
-operator|>
-literal|1
-condition|)
-block|{
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s:Final CTIO done\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGTDEBUG1
+argument_list|,
+literal|"Final CTIO done"
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|isp_target_putback_atio
@@ -6404,17 +6286,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|IDPRINTF
+name|isp_prt
 argument_list|(
-literal|3
-argument_list|,
-operator|(
-literal|"%s: isp_done -> relsimq\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|)
+argument_list|,
+name|ISP_LOGDEBUG2
+argument_list|,
+literal|"ctio->relsimq"
 argument_list|)
 expr_stmt|;
 name|ccb
@@ -6428,40 +6306,32 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|IDPRINTF
+name|isp_prt
 argument_list|(
-literal|3
-argument_list|,
-operator|(
-literal|"%s: isp_done -> devq frozen\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|)
+argument_list|,
+name|ISP_LOGDEBUG2
+argument_list|,
+literal|"ctio->devqfrozen"
 argument_list|)
 expr_stmt|;
 block|}
 block|}
 else|else
 block|{
-name|IDPRINTF
+name|isp_prt
 argument_list|(
-literal|3
-argument_list|,
-operator|(
-literal|"%s: isp_done -> simqfrozen = %x\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|,
+argument_list|,
+name|ISP_LOGDEBUG2
+argument_list|,
+literal|"ctio->simqfrozen(%x)"
+argument_list|,
 name|isp
 operator|->
 name|isp_osinfo
 operator|.
 name|simqfrozen
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -6840,17 +6710,13 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|IDPRINTF
+name|isp_prt
 argument_list|(
-literal|3
-argument_list|,
-operator|(
-literal|"%s: timed relsimq\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|)
+argument_list|,
+name|ISP_LOGDEBUG2
+argument_list|,
+literal|"timed relsimq"
 argument_list|)
 expr_stmt|;
 block|}
@@ -6873,7 +6739,7 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-name|ISP_SCSI_XFER_T
+name|XS_T
 modifier|*
 name|xs
 init|=
@@ -6923,13 +6789,13 @@ name|xs
 argument_list|)
 condition|)
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: watchdog found done cmd (handle 0x%x)\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGDEBUG1
+argument_list|,
+literal|"watchdog found done cmd (handle 0x%x)"
 argument_list|,
 name|handle
 argument_list|)
@@ -6949,13 +6815,13 @@ name|xs
 argument_list|)
 condition|)
 block|{
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: recursive watchdog (handle 0x%x)\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGDEBUG2
+argument_list|,
+literal|"recursive watchdog (handle 0x%x)"
 argument_list|,
 name|handle
 argument_list|)
@@ -7001,21 +6867,17 @@ name|xs
 argument_list|)
 condition|)
 block|{
-name|IDPRINTF
+name|isp_prt
 argument_list|(
-literal|2
-argument_list|,
-operator|(
-literal|"%s: watchdog cleanup (%x, %x)\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|,
+argument_list|,
+name|ISP_LOGDEBUG2
+argument_list|,
+literal|"watchdog cleanup (%x, %x)"
+argument_list|,
 name|handle
-operator|,
+argument_list|,
 name|r
-operator|)
 argument_list|)
 expr_stmt|;
 name|xpt_done
@@ -7237,9 +7099,6 @@ argument_list|,
 name|mp
 argument_list|)
 expr_stmt|;
-name|MemoryBarrier
-argument_list|()
-expr_stmt|;
 name|ISP_ADD_REQUEST
 argument_list|(
 name|isp
@@ -7251,17 +7110,13 @@ block|}
 block|}
 else|else
 block|{
-name|IDPRINTF
+name|isp_prt
 argument_list|(
-literal|2
-argument_list|,
-operator|(
-literal|"%s: watchdog with no command\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|)
+argument_list|,
+name|ISP_LOGDEBUG2
+argument_list|,
+literal|"watchdog with no command"
 argument_list|)
 expr_stmt|;
 block|}
@@ -7455,23 +7310,19 @@ name|isp
 argument_list|)
 expr_stmt|;
 block|}
-name|IDPRINTF
+name|isp_prt
 argument_list|(
-literal|4
-argument_list|,
-operator|(
-literal|"%s: isp_action code %x\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|,
+argument_list|,
+name|ISP_LOGDEBUG2
+argument_list|,
+literal|"isp_action code %x"
+argument_list|,
 name|ccb
 operator|->
 name|ccb_h
 operator|.
 name|func_code
-operator|)
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -7653,10 +7504,10 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|ispscsicmd
+name|isp_start
 argument_list|(
 operator|(
-name|ISP_SCSI_XFER_T
+name|XS_T
 operator|*
 operator|)
 name|ccb
@@ -7789,17 +7640,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|IDPRINTF
+name|isp_prt
 argument_list|(
-literal|3
-argument_list|,
-operator|(
-literal|"%s: RQLATER freeze simq\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|)
+argument_list|,
+name|ISP_LOGDEBUG2
+argument_list|,
+literal|"RQLATER freeze simq"
 argument_list|)
 expr_stmt|;
 name|isp
@@ -7861,17 +7708,13 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|IDPRINTF
+name|isp_prt
 argument_list|(
-literal|3
-argument_list|,
-operator|(
-literal|"%s: EAGAIN freeze simq\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|)
+argument_list|,
+name|ISP_LOGDEBUG2
+argument_list|,
+literal|"EAGAIN freeze simq"
 argument_list|)
 expr_stmt|;
 block|}
@@ -8367,13 +8210,13 @@ break|break;
 case|case
 name|XPT_CONT_TARGET_IO
 case|:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: cannot abort CTIOs yet\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"cannot abort CTIOs yet"
 argument_list|)
 expr_stmt|;
 name|ccb
@@ -9899,39 +9742,35 @@ name|scsi_status
 operator|!=
 name|SCSI_STATUS_OK
 condition|)
-name|IDPRINTF
+name|isp_prt
 argument_list|(
-literal|3
-argument_list|,
-operator|(
-literal|"%s: fdevq %d.%d %x %x\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|,
+argument_list|,
+name|ISP_LOGDEBUG2
+argument_list|,
+literal|"freeze devq %d.%d %x %x"
+argument_list|,
 name|sccb
 operator|->
 name|ccb_h
 operator|.
 name|target_id
-operator|,
+argument_list|,
 name|sccb
 operator|->
 name|ccb_h
 operator|.
 name|target_lun
-operator|,
+argument_list|,
 name|sccb
 operator|->
 name|ccb_h
 operator|.
 name|status
-operator|,
+argument_list|,
 name|sccb
 operator|->
 name|scsi_status
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -9983,17 +9822,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|IDPRINTF
+name|isp_prt
 argument_list|(
-literal|3
-argument_list|,
-operator|(
-literal|"%s: isp_done -> relsimq\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|)
+argument_list|,
+name|ISP_LOGDEBUG2
+argument_list|,
+literal|"isp_done->relsimq"
 argument_list|)
 expr_stmt|;
 name|sccb
@@ -10007,40 +9842,32 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|IDPRINTF
+name|isp_prt
 argument_list|(
-literal|3
-argument_list|,
-operator|(
-literal|"%s: isp_done -> devq frozen\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|)
+argument_list|,
+name|ISP_LOGDEBUG2
+argument_list|,
+literal|"isp_done->devq frozen"
 argument_list|)
 expr_stmt|;
 block|}
 block|}
 else|else
 block|{
-name|IDPRINTF
+name|isp_prt
 argument_list|(
-literal|3
-argument_list|,
-operator|(
-literal|"%s: isp_done -> simqfrozen = %x\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|,
+argument_list|,
+name|ISP_LOGDEBUG2
+argument_list|,
+literal|"isp_done -> simqfrozen = %x"
+argument_list|,
 name|isp
 operator|->
 name|isp_osinfo
 operator|.
 name|simqfrozen
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -10133,17 +9960,13 @@ name|sccb
 argument_list|)
 condition|)
 block|{
-name|IDPRINTF
+name|isp_prt
 argument_list|(
-literal|2
-argument_list|,
-operator|(
-literal|"%s: finished command on borrowed time\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|)
+argument_list|,
+name|ISP_LOGDEBUG2
+argument_list|,
+literal|"finished command on borrowed time"
 argument_list|)
 expr_stmt|;
 block|}
@@ -10413,32 +10236,27 @@ operator||
 name|CCB_TRANS_SYNC_OFFSET_VALID
 expr_stmt|;
 block|}
-name|IDPRINTF
+name|isp_prt
 argument_list|(
-literal|3
-argument_list|,
-operator|(
-literal|"%s: NEW_TGT_PARAMS bus %d tgt %d period "
-literal|"0x%x offset 0x%x flags 0x%x\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|,
+argument_list|,
+name|ISP_LOGDEBUG2
+argument_list|,
+literal|"NEW_TGT_PARAMS bus %d tgt %d period %x offset %x flags %x"
+argument_list|,
 name|bus
-operator|,
+argument_list|,
 name|tgt
-operator|,
+argument_list|,
 name|neg
 operator|.
 name|sync_period
-operator|,
+argument_list|,
 name|neg
 operator|.
 name|sync_offset
-operator|,
+argument_list|,
 name|flags
-operator|)
 argument_list|)
 expr_stmt|;
 name|xpt_setup_ccb
@@ -10484,13 +10302,13 @@ operator|)
 name|arg
 operator|)
 expr_stmt|;
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: SCSI bus reset on bus %d detected\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
+literal|"SCSI bus reset on bus %d detected"
 argument_list|,
 name|bus
 argument_list|)
@@ -10560,17 +10378,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|IDPRINTF
+name|isp_prt
 argument_list|(
-literal|3
-argument_list|,
-operator|(
-literal|"%s: loop down freeze simq\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|)
+argument_list|,
+name|ISP_LOGDEBUG2
+argument_list|,
+literal|"loop down freeze simq"
 argument_list|)
 expr_stmt|;
 name|xpt_freeze_simq
@@ -10592,13 +10406,13 @@ operator||=
 name|SIMQFRZ_LOOPDOWN
 expr_stmt|;
 block|}
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: Loop DOWN\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
+literal|"Loop DOWN"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -10654,28 +10468,24 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|IDPRINTF
+name|isp_prt
 argument_list|(
-literal|3
-argument_list|,
-operator|(
-literal|"%s: loop up release simq\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|)
+argument_list|,
+name|ISP_LOGDEBUG2
+argument_list|,
+literal|"loop up release simq"
 argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: Loop UP\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
+literal|"Loop UP"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -10688,8 +10498,8 @@ name|char
 modifier|*
 name|fmt
 init|=
-literal|"%s: Target %d (Loop 0x%x) Port ID 0x%x "
-literal|"role %s %s\n Port WWN 0x%08x%08x\n Node WWN 0x%08x%08x\n"
+literal|"Target %d (Loop 0x%x) Port ID 0x%x "
+literal|"role %s %s\n Port WWN 0x%08x%08x\n Node WWN 0x%08x%08x"
 decl_stmt|;
 specifier|const
 specifier|static
@@ -10766,13 +10576,13 @@ operator|=
 literal|"disappeared"
 expr_stmt|;
 block|}
-name|printf
+name|isp_prt
 argument_list|(
-name|fmt
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
+name|fmt
 argument_list|,
 name|tgt
 argument_list|,
@@ -10845,13 +10655,13 @@ block|}
 case|case
 name|ISPASYNC_CHANGE_NOTIFY
 case|:
-name|printf
+name|isp_prt
 argument_list|(
-literal|"%s: Name Server Database Changed\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
+literal|"Name Server Database Changed"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -11296,13 +11106,13 @@ literal|"?"
 expr_stmt|;
 break|break;
 block|}
-name|CFGPRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: %s @ 0x%x, Node 0x%08x%08x Port %08x%08x\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGINFO
+argument_list|,
+literal|"%s @ 0x%x, Node 0x%08x%08x Port %08x%08x"
 argument_list|,
 name|pt
 argument_list|,
@@ -11345,12 +11155,6 @@ name|wwpn
 operator|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|if ((resp->snscb_fc4_types[1]& 0x1) == 0) { 			rv = 0; 			printf("Types 0..3: 0x%x 0x%x 0x%x 0x%x\n", 			    resp->snscb_fc4_types[0], resp->snscb_fc4_types[1], 			    resp->snscb_fc4_types[3], resp->snscb_fc4_types[3]); 			break; 		}
-endif|#
-directive|endif
 for|for
 control|(
 name|target
@@ -11499,58 +11303,53 @@ name|mp
 init|=
 name|arg
 decl_stmt|;
-name|ITDEBUG
+name|isp_prt
 argument_list|(
-literal|2
-argument_list|,
-operator|(
-literal|"%s: bus %d iid %d tgt %d lun %d ttype %x tval %x"
-literal|" msg[0]=0x%x\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|,
+argument_list|,
+name|ISP_LOGDEBUG2
+argument_list|,
+literal|"bus %d iid %d tgt %d lun %d ttype %x tval %x msg[0]=%x"
+argument_list|,
 name|mp
 operator|->
 name|nt_bus
-operator|,
+argument_list|,
 operator|(
 name|int
 operator|)
 name|mp
 operator|->
 name|nt_iid
-operator|,
+argument_list|,
 operator|(
 name|int
 operator|)
 name|mp
 operator|->
 name|nt_tgt
-operator|,
+argument_list|,
 operator|(
 name|int
 operator|)
 name|mp
 operator|->
 name|nt_lun
-operator|,
+argument_list|,
 name|mp
 operator|->
 name|nt_tagtype
-operator|,
+argument_list|,
 name|mp
 operator|->
 name|nt_tagval
-operator|,
+argument_list|,
 name|mp
 operator|->
 name|nt_msg
 index|[
 literal|0
 index|]
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -11565,25 +11364,21 @@ name|ep
 init|=
 name|arg
 decl_stmt|;
-name|ITDEBUG
+name|isp_prt
 argument_list|(
-literal|2
-argument_list|,
-operator|(
-literal|"%s: bus %d event code 0x%x\n"
-operator|,
 name|isp
-operator|->
-name|isp_name
-operator|,
+argument_list|,
+name|ISP_LOGDEBUG2
+argument_list|,
+literal|"bus %d event code 0x%x"
+argument_list|,
 name|ep
 operator|->
 name|ev_bus
-operator|,
+argument_list|,
 name|ep
 operator|->
 name|ev_event
-operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -11702,13 +11497,13 @@ break|break;
 endif|#
 directive|endif
 default|default:
-name|PRINTF
+name|isp_prt
 argument_list|(
-literal|"%s: unknown isp_async event %d\n"
-argument_list|,
 name|isp
-operator|->
-name|isp_name
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"unknown isp_async event %d"
 argument_list|,
 name|cmd
 argument_list|)
@@ -11754,6 +11549,90 @@ expr_stmt|;
 name|DISABLE_INTS
 argument_list|(
 name|isp
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_include
+include|#
+directive|include
+file|<stdarg.h>
+end_include
+
+begin_function
+name|void
+name|isp_prt
+parameter_list|(
+name|struct
+name|ispsoftc
+modifier|*
+name|isp
+parameter_list|,
+name|int
+name|level
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+block|{
+name|va_list
+name|ap
+decl_stmt|;
+if|if
+condition|(
+name|level
+operator|!=
+name|ISP_LOGALL
+operator|&&
+operator|(
+name|level
+operator|&
+name|isp
+operator|->
+name|isp_dblev
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+return|return;
+block|}
+name|printf
+argument_list|(
+literal|"%s: "
+argument_list|,
+name|isp
+operator|->
+name|isp_name
+argument_list|)
+expr_stmt|;
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|fmt
+argument_list|)
+expr_stmt|;
+name|vprintf
+argument_list|(
+name|fmt
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
