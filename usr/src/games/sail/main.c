@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)main.c	2.1 85/03/04"
+literal|"@(#)main.c	2.2 85/04/22"
 decl_stmt|;
 end_decl_stmt
 
@@ -206,6 +206,13 @@ case|case
 literal|'l'
 case|:
 name|longfmt
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'b'
+case|:
+name|nobells
 operator|++
 expr_stmt|;
 break|break;

@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)sync.c	2.8 85/04/06"
+literal|"@(#)sync.c	2.9 85/04/22"
 decl_stmt|;
 end_decl_stmt
 
@@ -1577,6 +1577,20 @@ name|mode
 operator|==
 name|MODE_PLAYER
 condition|)
+if|if
+condition|(
+name|nobells
+condition|)
+name|Signal
+argument_list|(
+literal|"%s (%c%c): %s"
+argument_list|,
+name|ship
+argument_list|,
+name|a
+argument_list|)
+expr_stmt|;
+else|else
 name|Signal
 argument_list|(
 literal|"\7%s (%c%c): %s"

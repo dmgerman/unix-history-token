@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * @(#)extern.h	2.5 85/03/04  */
+comment|/*  * @(#)extern.h	2.6 85/04/22  */
 end_comment
 
 begin_include
@@ -91,7 +91,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* -x */
+comment|/* -x, give first available ship */
 end_comment
 
 begin_decl_stmt
@@ -101,7 +101,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* -l */
+comment|/* -l, print score in long format */
+end_comment
+
+begin_decl_stmt
+name|char
+name|nobells
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* -b, don't ring bell before Signal */
 end_comment
 
 begin_comment
