@@ -21,7 +21,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)iso.c	5.3 (Berkeley) %G%"
+literal|"@(#)iso.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -210,13 +210,6 @@ directive|include
 file|<netdb.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|kmem
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  *	Dump esis stats  */
 end_comment
@@ -256,18 +249,9 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|klseek
+name|kvm_read
 argument_list|(
-name|kmem
-argument_list|,
 name|off
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|read
-argument_list|(
-name|kmem
 argument_list|,
 operator|(
 name|char
@@ -416,18 +400,9 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|klseek
+name|kvm_read
 argument_list|(
-name|kmem
-argument_list|,
 name|off
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|read
-argument_list|(
-name|kmem
 argument_list|,
 operator|(
 name|char
@@ -619,18 +594,9 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|klseek
+name|kvm_read
 argument_list|(
-name|kmem
-argument_list|,
 name|off
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|read
-argument_list|(
-name|kmem
 argument_list|,
 operator|(
 name|char
@@ -749,15 +715,8 @@ parameter_list|,
 name|p
 parameter_list|)
 define|\
-value|(klseek(kmem, (off_t)(o), 0), read(kmem, (char *)&p, sizeof (p)))
+value|(kvm_read((off_t)(o), (char *)&p, sizeof (p)))
 end_define
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|kmem
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -1873,18 +1832,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|klseek
+name|kvm_read
 argument_list|(
-name|kmem
-argument_list|,
 name|off
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|read
-argument_list|(
-name|kmem
 argument_list|,
 operator|&
 name|xpcb
@@ -1939,21 +1889,12 @@ name|isopcb
 operator|.
 name|isop_next
 expr_stmt|;
-name|klseek
+name|kvm_read
 argument_list|(
-name|kmem
-argument_list|,
 operator|(
 name|off_t
 operator|)
 name|next
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|read
-argument_list|(
-name|kmem
 argument_list|,
 operator|&
 name|xpcb
@@ -1981,23 +1922,14 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|klseek
+name|kvm_read
 argument_list|(
-name|kmem
-argument_list|,
 operator|(
 name|off_t
 operator|)
 name|xpcb
 operator|.
 name|x_socket
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|read
-argument_list|(
-name|kmem
 argument_list|,
 operator|&
 name|sockb

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mbuf.c	5.8 (Berkeley) %G%"
+literal|"@(#)mbuf.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,13 +64,6 @@ begin_decl_stmt
 name|struct
 name|mbstat
 name|mbstat
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|kmem
 decl_stmt|;
 end_decl_stmt
 
@@ -288,20 +281,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|klseek
-argument_list|(
-name|kmem
-argument_list|,
-name|mbaddr
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|read
+name|kvm_read
 argument_list|(
-name|kmem
+name|mbaddr
 argument_list|,
 operator|(
 name|char
