@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)system_.c	5.2	%G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)system_.c	5.3	%G%  */
 end_comment
 
 begin_comment
@@ -133,30 +133,26 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * this is a sane version of the libc/stdio routine.  */
+comment|/*  * this is a sane version of the libc routine.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<signal.h>
+file|<sys/signal.h>
 end_include
 
-begin_function_decl
-name|char
-modifier|*
-name|getenv
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
 
-begin_function_decl
-name|char
-modifier|*
-name|rindex
-parameter_list|()
-function_decl|;
-end_function_decl
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
 
 begin_macro
 name|system
@@ -235,7 +231,7 @@ condition|(
 operator|(
 name|pid
 operator|=
-name|fork
+name|vfork
 argument_list|()
 operator|)
 operator|==
@@ -252,6 +248,10 @@ literal|"-c"
 argument_list|,
 name|s
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -261,6 +261,19 @@ literal|127
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|pid
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 name|istat
 operator|=
 name|signal
