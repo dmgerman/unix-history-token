@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)trap.c	7.10 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the University of Utah, and William Jolitz.  *  * %sccs.include.redist.c%  *  *	@(#)trap.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -213,6 +213,8 @@ expr_stmt|;
 if|if
 condition|(
 name|curpcb
+operator|&&
+name|curpcb
 operator|->
 name|pcb_onfault
 operator|&&
@@ -223,6 +225,8 @@ operator|!=
 literal|0xc
 condition|)
 block|{
+name|copyfault
+label|:
 name|frame
 operator|.
 name|tf_eip
@@ -367,13 +371,17 @@ operator||
 name|T_USER
 case|:
 case|case
+name|T_STKFLT
+operator||
+name|T_USER
+case|:
+comment|/* 386bsd */
+case|case
 name|T_PROTFLT
 operator||
 name|T_USER
 case|:
 comment|/* protection fault */
-name|copyfault
-label|:
 name|ucode
 operator|=
 name|code
