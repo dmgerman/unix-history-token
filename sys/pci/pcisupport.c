@@ -5893,6 +5893,15 @@ operator|(
 literal|"Cypress 82C693 PCI-ISA bridge"
 operator|)
 return|;
+comment|/* ServerWorks -- vendor 0x1166 */
+case|case
+literal|0x02001166
+case|:
+return|return
+operator|(
+literal|"ServerWorks IB6566 PCI to ISA bridge"
+operator|)
+return|;
 block|}
 if|if
 condition|(
