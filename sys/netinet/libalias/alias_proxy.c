@@ -133,6 +133,11 @@ begin_struct
 struct|struct
 name|proxy_entry
 block|{
+name|struct
+name|libalias
+modifier|*
+name|la
+decl_stmt|;
 define|#
 directive|define
 name|PROXY_TYPE_ENCODE_NONE
@@ -198,15 +203,6 @@ begin_comment
 comment|/*     File scope variables */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|proxy_entry
-modifier|*
-name|proxyList
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Local (static) functions:      IpMask()                 -- Utility function for creating IP                                 masks from integer (1-32) specification.     IpAddr()                 -- Utility function for converting string                                 to IP address     IpPort()                 -- Utility function for converting string                                 to port number     RuleAdd()                -- Adds an element to the rule list.     RuleDelete()             -- Removes an element from the rule list.     RuleNumberDelete()       -- Removes all elements from the rule list                                 having a certain rule number.     ProxyEncodeTcpStream()   -- Adds [DEST x.x.x.x xxxx] to the beginning                                 of a TCP stream.     ProxyEncodeIpHeader()    -- Adds an IP option indicating the true                                 destination of a proxied IP packet */
 end_comment
@@ -262,6 +258,11 @@ name|void
 name|RuleAdd
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
+name|struct
 name|proxy_entry
 modifier|*
 parameter_list|)
@@ -285,6 +286,11 @@ specifier|static
 name|int
 name|RuleNumberDelete
 parameter_list|(
+name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
@@ -549,6 +555,11 @@ name|void
 name|RuleAdd
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
+name|struct
 name|proxy_entry
 modifier|*
 name|entry
@@ -569,11 +580,15 @@ name|ptr_last
 decl_stmt|;
 if|if
 condition|(
+name|la
+operator|->
 name|proxyList
 operator|==
 name|NULL
 condition|)
 block|{
+name|la
+operator|->
 name|proxyList
 operator|=
 name|entry
@@ -592,6 +607,12 @@ name|NULL
 expr_stmt|;
 return|return;
 block|}
+name|entry
+operator|->
+name|la
+operator|=
+name|la
+expr_stmt|;
 name|rule_index
 operator|=
 name|entry
@@ -600,6 +621,8 @@ name|rule_index
 expr_stmt|;
 name|ptr
 operator|=
+name|la
+operator|->
 name|proxyList
 expr_stmt|;
 name|ptr_last
@@ -633,6 +656,8 @@ name|entry
 operator|->
 name|next
 operator|=
+name|la
+operator|->
 name|proxyList
 expr_stmt|;
 name|entry
@@ -641,12 +666,16 @@ name|last
 operator|=
 name|NULL
 expr_stmt|;
+name|la
+operator|->
 name|proxyList
 operator|->
 name|last
 operator|=
 name|entry
 expr_stmt|;
+name|la
+operator|->
 name|proxyList
 operator|=
 name|entry
@@ -724,6 +753,17 @@ modifier|*
 name|entry
 parameter_list|)
 block|{
+name|struct
+name|libalias
+modifier|*
+name|la
+decl_stmt|;
+name|la
+operator|=
+name|entry
+operator|->
+name|la
+expr_stmt|;
 if|if
 condition|(
 name|entry
@@ -743,6 +783,8 @@ operator|->
 name|next
 expr_stmt|;
 else|else
+name|la
+operator|->
 name|proxyList
 operator|=
 name|entry
@@ -780,6 +822,11 @@ specifier|static
 name|int
 name|RuleNumberDelete
 parameter_list|(
+name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
 name|int
 name|rule_index
 parameter_list|)
@@ -799,6 +846,8 @@ literal|1
 expr_stmt|;
 name|ptr
 operator|=
+name|la
+operator|->
 name|proxyList
 expr_stmt|;
 while|while
@@ -1558,6 +1607,11 @@ name|int
 name|ProxyCheck
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
+name|struct
 name|ip
 modifier|*
 name|pip
@@ -1629,6 +1683,8 @@ name|th_dport
 expr_stmt|;
 name|ptr
 operator|=
+name|la
+operator|->
 name|proxyList
 expr_stmt|;
 while|while
@@ -1791,6 +1847,11 @@ name|void
 name|ProxyModify
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
+name|struct
 name|alias_link
 modifier|*
 name|link
@@ -1846,8 +1907,13 @@ end_comment
 
 begin_function
 name|int
-name|PacketAliasProxyRule
+name|LibAliasProxyRule
 parameter_list|(
+name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -2572,6 +2638,8 @@ name|err
 operator|=
 name|RuleNumberDelete
 argument_list|(
+name|la
+argument_list|,
 name|rule_to_delete
 argument_list|)
 expr_stmt|;
@@ -3081,6 +3149,8 @@ name|dst_mask
 expr_stmt|;
 name|RuleAdd
 argument_list|(
+name|la
+argument_list|,
 name|proxy_entry
 argument_list|)
 expr_stmt|;

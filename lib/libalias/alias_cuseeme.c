@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -155,6 +161,11 @@ name|void
 name|AliasHandleCUSeeMeOut
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
+name|struct
 name|ip
 modifier|*
 name|pip
@@ -262,6 +273,8 @@ name|cu_link
 operator|=
 name|FindUdpTcpOut
 argument_list|(
+name|la
+argument_list|,
 name|pip
 operator|->
 name|ip_src
@@ -304,6 +317,11 @@ begin_function
 name|void
 name|AliasHandleCUSeeMeIn
 parameter_list|(
+name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
 name|struct
 name|ip
 modifier|*

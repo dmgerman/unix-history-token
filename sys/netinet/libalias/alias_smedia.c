@@ -241,6 +241,11 @@ name|int
 name|alias_rtsp_out
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
+name|struct
 name|ip
 modifier|*
 name|pip
@@ -736,10 +741,14 @@ name|salias
 operator|=
 name|FindNewPortGroup
 argument_list|(
+name|la
+argument_list|,
 name|null_addr
 argument_list|,
 name|FindAliasAddress
 argument_list|(
+name|la
+argument_list|,
 name|pip
 operator|->
 name|ip_src
@@ -799,6 +808,8 @@ name|rtsp_link
 operator|=
 name|FindRtspOut
 argument_list|(
+name|la
+argument_list|,
 name|GetOriginalAddress
 argument_list|(
 name|link
@@ -1132,6 +1143,11 @@ name|int
 name|alias_pna_out
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
+name|struct
 name|ip
 modifier|*
 name|pip
@@ -1270,6 +1286,8 @@ name|pna_links
 operator|=
 name|FindUdpTcpOut
 argument_list|(
+name|la
+argument_list|,
 name|pip
 operator|->
 name|ip_src
@@ -1382,6 +1400,11 @@ begin_function
 name|void
 name|AliasHandleRtspOut
 parameter_list|(
+name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
 name|struct
 name|ip
 modifier|*
@@ -1572,6 +1595,8 @@ condition|)
 block|{
 name|alias_rtsp_out
 argument_list|(
+name|la
+argument_list|,
 name|pip
 argument_list|,
 name|link
@@ -1613,6 +1638,8 @@ condition|)
 block|{
 name|alias_pna_out
 argument_list|(
+name|la
+argument_list|,
 name|pip
 argument_list|,
 name|link
@@ -1751,6 +1778,8 @@ literal|0
 condition|)
 name|alias_rtsp_out
 argument_list|(
+name|la
+argument_list|,
 name|pip
 argument_list|,
 name|link

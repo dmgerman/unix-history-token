@@ -453,6 +453,11 @@ name|int
 name|alias_skinny_opnrcvch_ack
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
+name|struct
 name|OpenReceiveChannelAck
 modifier|*
 name|opnrcvch_ack
@@ -518,6 +523,8 @@ name|opnrcv_link
 operator|=
 name|FindUdpTcpOut
 argument_list|(
+name|la
+argument_list|,
 name|pip
 operator|->
 name|ip_src
@@ -595,6 +602,11 @@ begin_function
 name|void
 name|AliasHandleSkinny
 parameter_list|(
+name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
 name|struct
 name|ip
 modifier|*
@@ -725,6 +737,8 @@ operator|->
 name|th_dport
 argument_list|)
 operator|==
+name|la
+operator|->
 name|skinnyPort
 condition|)
 block|{
@@ -743,6 +757,8 @@ operator|->
 name|th_sport
 argument_list|)
 operator|==
+name|la
+operator|->
 name|skinnyPort
 condition|)
 block|{
@@ -1038,6 +1054,8 @@ name|msgId
 expr_stmt|;
 name|alias_skinny_opnrcvch_ack
 argument_list|(
+name|la
+argument_list|,
 name|opnrcvchn_ack
 argument_list|,
 name|pip

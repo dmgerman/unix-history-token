@@ -19,6 +19,210 @@ directive|define
 name|_ALIAS_LOCAL_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
+begin_comment
+comment|/* Sizes of input and output link tables */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINK_TABLE_OUT_SIZE
+value|101
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINK_TABLE_IN_SIZE
+value|4001
+end_define
+
+begin_struct_decl
+struct_decl|struct
+name|proxy_entry
+struct_decl|;
+end_struct_decl
+
+begin_struct
+struct|struct
+name|libalias
+block|{
+name|LIST_ENTRY
+argument_list|(
+argument|libalias
+argument_list|)
+name|instancelist
+expr_stmt|;
+name|int
+name|packetAliasMode
+decl_stmt|;
+comment|/* Mode flags                      */
+comment|/*        - documented in alias.h  */
+name|struct
+name|in_addr
+name|aliasAddress
+decl_stmt|;
+comment|/* Address written onto source     */
+comment|/*   field of IP packet.           */
+name|struct
+name|in_addr
+name|targetAddress
+decl_stmt|;
+comment|/* IP address incoming packets     */
+comment|/*   are sent to if no aliasing    */
+comment|/*   link already exists           */
+name|struct
+name|in_addr
+name|nullAddress
+decl_stmt|;
+comment|/* Used as a dummy parameter for   */
+comment|/*   some function calls           */
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|alias_link
+argument_list|)
+name|linkTableOut
+index|[
+name|LINK_TABLE_OUT_SIZE
+index|]
+expr_stmt|;
+comment|/* Lookup table of pointers to     */
+comment|/*   chains of link records. Each  */
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|alias_link
+argument_list|)
+name|linkTableIn
+index|[
+name|LINK_TABLE_IN_SIZE
+index|]
+expr_stmt|;
+comment|/*   link record is doubly indexed */
+comment|/*   into input and output lookup  */
+comment|/*   tables.                       */
+comment|/* Link statistics                 */
+name|int
+name|icmpLinkCount
+decl_stmt|;
+name|int
+name|udpLinkCount
+decl_stmt|;
+name|int
+name|tcpLinkCount
+decl_stmt|;
+name|int
+name|pptpLinkCount
+decl_stmt|;
+name|int
+name|protoLinkCount
+decl_stmt|;
+name|int
+name|fragmentIdLinkCount
+decl_stmt|;
+name|int
+name|fragmentPtrLinkCount
+decl_stmt|;
+name|int
+name|sockCount
+decl_stmt|;
+name|int
+name|cleanupIndex
+decl_stmt|;
+comment|/* Index to chain of link table    */
+comment|/* being inspected for old links   */
+name|int
+name|timeStamp
+decl_stmt|;
+comment|/* System time in seconds for      */
+comment|/* current packet                  */
+name|int
+name|lastCleanupTime
+decl_stmt|;
+comment|/* Last time IncrementalCleanup()  */
+comment|/* was called                      */
+name|int
+name|houseKeepingResidual
+decl_stmt|;
+comment|/* used by HouseKeeping()          */
+name|int
+name|deleteAllLinks
+decl_stmt|;
+comment|/* If equal to zero, DeleteLink()  */
+comment|/* will not remove permanent links */
+name|FILE
+modifier|*
+name|monitorFile
+decl_stmt|;
+comment|/* File descriptor for link        */
+comment|/* statistics monitoring file      */
+name|int
+name|newDefaultLink
+decl_stmt|;
+comment|/* Indicates if a new aliasing     */
+comment|/* link has been created after a   */
+comment|/* call to PacketAliasIn/Out().    */
+ifndef|#
+directive|ifndef
+name|NO_FW_PUNCH
+name|int
+name|fireWallFD
+decl_stmt|;
+comment|/* File descriptor to be able to   */
+comment|/* control firewall.  Opened by    */
+comment|/* PacketAliasSetMode on first     */
+comment|/* setting the PKT_ALIAS_PUNCH_FW  */
+comment|/* flag.                           */
+name|int
+name|fireWallBaseNum
+decl_stmt|;
+comment|/* The first firewall entry free for our use */
+name|int
+name|fireWallNumNums
+decl_stmt|;
+comment|/* How many entries can we use? */
+name|int
+name|fireWallActiveNum
+decl_stmt|;
+comment|/* Which entry did we last use? */
+name|char
+modifier|*
+name|fireWallField
+decl_stmt|;
+comment|/* bool array for entries */
+endif|#
+directive|endif
+name|unsigned
+name|int
+name|skinnyPort
+decl_stmt|;
+comment|/* TCP port used by the Skinny     */
+comment|/* protocol.                       */
+name|struct
+name|proxy_entry
+modifier|*
+name|proxyList
+decl_stmt|;
+name|struct
+name|in_addr
+name|true_addr
+decl_stmt|;
+comment|/* in network byte order. */
+name|u_short
+name|true_port
+decl_stmt|;
+comment|/* in host byte order. */
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* Macros */
 end_comment
@@ -39,25 +243,6 @@ parameter_list|)
 define|\
 value|do { \ 		acc += cksum; \ 		if (acc< 0) { \ 			acc = -acc; \ 			acc = (acc>> 16) + (acc& 0xffff); \ 			acc += acc>> 16; \ 			cksum = (u_short) ~acc; \ 		} else { \ 			acc = (acc>> 16) + (acc& 0xffff); \ 			acc += acc>> 16; \ 			cksum = (u_short) acc; \ 		} \ 	} while (0)
 end_define
-
-begin_comment
-comment|/* Globals */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|packetAliasMode
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|unsigned
-name|int
-name|skinnyPort
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* Prototypes */
@@ -124,6 +309,11 @@ modifier|*
 name|FindIcmpIn
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
+name|struct
 name|in_addr
 name|_dst_addr
 parameter_list|,
@@ -146,6 +336,11 @@ name|alias_link
 modifier|*
 name|FindIcmpOut
 parameter_list|(
+name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
 name|struct
 name|in_addr
 name|_src_addr
@@ -170,6 +365,11 @@ modifier|*
 name|FindFragmentIn1
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
+name|struct
 name|in_addr
 name|_dst_addr
 parameter_list|,
@@ -189,6 +389,11 @@ name|alias_link
 modifier|*
 name|FindFragmentIn2
 parameter_list|(
+name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
 name|struct
 name|in_addr
 name|_dst_addr
@@ -210,6 +415,11 @@ modifier|*
 name|AddFragmentPtrLink
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
+name|struct
 name|in_addr
 name|_dst_addr
 parameter_list|,
@@ -226,6 +436,11 @@ modifier|*
 name|FindFragmentPtr
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
+name|struct
 name|in_addr
 name|_dst_addr
 parameter_list|,
@@ -241,6 +456,11 @@ name|alias_link
 modifier|*
 name|FindProtoIn
 parameter_list|(
+name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
 name|struct
 name|in_addr
 name|_dst_addr
@@ -262,6 +482,11 @@ modifier|*
 name|FindProtoOut
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
+name|struct
 name|in_addr
 name|_src_addr
 parameter_list|,
@@ -281,6 +506,11 @@ name|alias_link
 modifier|*
 name|FindUdpTcpIn
 parameter_list|(
+name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
 name|struct
 name|in_addr
 name|_dst_addr
@@ -311,6 +541,11 @@ modifier|*
 name|FindUdpTcpOut
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
+name|struct
 name|in_addr
 name|_src_addr
 parameter_list|,
@@ -340,6 +575,11 @@ modifier|*
 name|AddPptp
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
+name|struct
 name|in_addr
 name|_src_addr
 parameter_list|,
@@ -364,6 +604,11 @@ modifier|*
 name|FindPptpOutByCallId
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
+name|struct
 name|in_addr
 name|_src_addr
 parameter_list|,
@@ -383,6 +628,11 @@ name|alias_link
 modifier|*
 name|FindPptpInByCallId
 parameter_list|(
+name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
 name|struct
 name|in_addr
 name|_dst_addr
@@ -404,6 +654,11 @@ modifier|*
 name|FindPptpOutByPeerCallId
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
+name|struct
 name|in_addr
 name|_src_addr
 parameter_list|,
@@ -424,6 +679,11 @@ modifier|*
 name|FindPptpInByPeerCallId
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
+name|struct
 name|in_addr
 name|_dst_addr
 parameter_list|,
@@ -443,6 +703,11 @@ name|alias_link
 modifier|*
 name|FindRtspOut
 parameter_list|(
+name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
 name|struct
 name|in_addr
 name|_src_addr
@@ -469,6 +734,11 @@ name|in_addr
 name|FindOriginalAddress
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
+name|struct
 name|in_addr
 name|_alias_addr
 parameter_list|)
@@ -480,6 +750,11 @@ name|struct
 name|in_addr
 name|FindAliasAddress
 parameter_list|(
+name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
 name|struct
 name|in_addr
 name|_original_addr
@@ -495,6 +770,11 @@ begin_function_decl
 name|int
 name|FindNewPortGroup
 parameter_list|(
+name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
 name|struct
 name|in_addr
 name|_dst_addr
@@ -685,7 +965,10 @@ name|struct
 name|in_addr
 name|GetDefaultAliasAddress
 parameter_list|(
-name|void
+name|struct
+name|libalias
+modifier|*
+name|la
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -694,6 +977,11 @@ begin_function_decl
 name|void
 name|SetDefaultAliasAddress
 parameter_list|(
+name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
 name|struct
 name|in_addr
 name|_alias_addr
@@ -878,7 +1166,10 @@ begin_function_decl
 name|void
 name|ClearCheckNewLink
 parameter_list|(
-name|void
+name|struct
+name|libalias
+modifier|*
+name|la
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -956,7 +1247,9 @@ begin_function_decl
 name|void
 name|HouseKeeping
 parameter_list|(
-name|void
+name|struct
+name|libalias
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -977,6 +1270,11 @@ begin_function_decl
 name|void
 name|AliasHandleFtpOut
 parameter_list|(
+name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
 name|struct
 name|ip
 modifier|*
@@ -1002,6 +1300,11 @@ name|void
 name|AliasHandleIrcOut
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
+name|struct
 name|ip
 modifier|*
 name|_pip
@@ -1025,6 +1328,11 @@ begin_function_decl
 name|void
 name|AliasHandleRtspOut
 parameter_list|(
+name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
 name|struct
 name|ip
 modifier|*
@@ -1050,6 +1358,11 @@ name|void
 name|AliasHandlePptpOut
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
+name|struct
 name|ip
 modifier|*
 name|_pip
@@ -1066,6 +1379,11 @@ begin_function_decl
 name|void
 name|AliasHandlePptpIn
 parameter_list|(
+name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
 name|struct
 name|ip
 modifier|*
@@ -1084,6 +1402,11 @@ name|int
 name|AliasHandlePptpGreOut
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
+name|struct
 name|ip
 modifier|*
 name|_pip
@@ -1095,6 +1418,11 @@ begin_function_decl
 name|int
 name|AliasHandlePptpGreIn
 parameter_list|(
+name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
 name|struct
 name|ip
 modifier|*
@@ -1111,6 +1439,11 @@ begin_function_decl
 name|int
 name|AliasHandleUdpNbt
 parameter_list|(
+name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
 name|struct
 name|ip
 modifier|*
@@ -1136,6 +1469,11 @@ begin_function_decl
 name|int
 name|AliasHandleUdpNbtNS
 parameter_list|(
+name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
 name|struct
 name|ip
 modifier|*
@@ -1176,6 +1514,11 @@ name|void
 name|AliasHandleCUSeeMeOut
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
+name|struct
 name|ip
 modifier|*
 name|_pip
@@ -1192,6 +1535,11 @@ begin_function_decl
 name|void
 name|AliasHandleCUSeeMeIn
 parameter_list|(
+name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
 name|struct
 name|ip
 modifier|*
@@ -1212,6 +1560,11 @@ begin_function_decl
 name|void
 name|AliasHandleSkinny
 parameter_list|(
+name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
 name|struct
 name|ip
 modifier|*
@@ -1234,6 +1587,11 @@ name|int
 name|ProxyCheck
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
+name|struct
 name|ip
 modifier|*
 name|_pip
@@ -1254,6 +1612,11 @@ begin_function_decl
 name|void
 name|ProxyModify
 parameter_list|(
+name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
 name|struct
 name|alias_link
 modifier|*

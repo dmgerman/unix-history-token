@@ -742,6 +742,11 @@ name|int
 name|AliasHandleUdpNbt
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
+name|struct
 name|ip
 modifier|*
 name|pip
@@ -2783,6 +2788,11 @@ begin_function
 name|int
 name|AliasHandleUdpNbtNS
 parameter_list|(
+name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
 name|struct
 name|ip
 modifier|*

@@ -28,6 +28,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -69,8 +75,13 @@ end_include
 
 begin_function
 name|u_short
-name|PacketAliasInternetChecksum
+name|LibAliasInternetChecksum
 parameter_list|(
+name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
 name|u_short
 modifier|*
 name|ptr

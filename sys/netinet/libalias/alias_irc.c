@@ -103,6 +103,11 @@ name|void
 name|AliasHandleIrcOut
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
+name|struct
 name|ip
 modifier|*
 name|pip
@@ -1045,6 +1050,8 @@ name|dcc_link
 operator|=
 name|FindUdpTcpOut
 argument_list|(
+name|la
+argument_list|,
 name|true_addr
 argument_list|,
 name|destaddr

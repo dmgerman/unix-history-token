@@ -332,6 +332,11 @@ name|void
 name|AliasHandlePptpOut
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
+name|struct
 name|ip
 modifier|*
 name|pip
@@ -405,6 +410,8 @@ name|pptp_link
 operator|=
 name|AddPptp
 argument_list|(
+name|la
+argument_list|,
 name|GetOriginalAddress
 argument_list|(
 name|link
@@ -437,6 +444,8 @@ name|pptp_link
 operator|=
 name|FindPptpOutByCallId
 argument_list|(
+name|la
+argument_list|,
 name|GetOriginalAddress
 argument_list|(
 name|link
@@ -592,6 +601,11 @@ name|void
 name|AliasHandlePptpIn
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
+name|struct
 name|ip
 modifier|*
 name|pip
@@ -688,6 +702,8 @@ name|pptp_link
 operator|=
 name|FindPptpInByCallId
 argument_list|(
+name|la
+argument_list|,
 name|GetDestAddress
 argument_list|(
 name|link
@@ -725,6 +741,8 @@ name|pptp_link
 operator|=
 name|FindPptpInByPeerCallId
 argument_list|(
+name|la
+argument_list|,
 name|GetDestAddress
 argument_list|(
 name|link
@@ -1083,6 +1101,11 @@ name|int
 name|AliasHandlePptpGreOut
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
+name|struct
 name|ip
 modifier|*
 name|pip
@@ -1150,6 +1173,8 @@ name|link
 operator|=
 name|FindPptpOutByPeerCallId
 argument_list|(
+name|la
+argument_list|,
 name|pip
 operator|->
 name|ip_src
@@ -1226,6 +1251,11 @@ name|int
 name|AliasHandlePptpGreIn
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
+name|struct
 name|ip
 modifier|*
 name|pip
@@ -1293,6 +1323,8 @@ name|link
 operator|=
 name|FindPptpInByPeerCallId
 argument_list|(
+name|la
+argument_list|,
 name|pip
 operator|->
 name|ip_src

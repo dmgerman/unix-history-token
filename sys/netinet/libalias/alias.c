@@ -437,6 +437,10 @@ name|int
 name|IcmpAliasIn1
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+parameter_list|,
+name|struct
 name|ip
 modifier|*
 parameter_list|)
@@ -448,6 +452,10 @@ specifier|static
 name|int
 name|IcmpAliasIn2
 parameter_list|(
+name|struct
+name|libalias
+modifier|*
+parameter_list|,
 name|struct
 name|ip
 modifier|*
@@ -461,6 +469,10 @@ name|int
 name|IcmpAliasIn
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+parameter_list|,
+name|struct
 name|ip
 modifier|*
 parameter_list|)
@@ -472,6 +484,10 @@ specifier|static
 name|int
 name|IcmpAliasOut1
 parameter_list|(
+name|struct
+name|libalias
+modifier|*
+parameter_list|,
 name|struct
 name|ip
 modifier|*
@@ -485,6 +501,10 @@ name|int
 name|IcmpAliasOut2
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+parameter_list|,
+name|struct
 name|ip
 modifier|*
 parameter_list|)
@@ -496,6 +516,10 @@ specifier|static
 name|int
 name|IcmpAliasOut
 parameter_list|(
+name|struct
+name|libalias
+modifier|*
+parameter_list|,
 name|struct
 name|ip
 modifier|*
@@ -509,6 +533,10 @@ name|int
 name|ProtoAliasIn
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+parameter_list|,
+name|struct
 name|ip
 modifier|*
 parameter_list|)
@@ -520,6 +548,10 @@ specifier|static
 name|int
 name|ProtoAliasOut
 parameter_list|(
+name|struct
+name|libalias
+modifier|*
+parameter_list|,
 name|struct
 name|ip
 modifier|*
@@ -533,6 +565,10 @@ name|int
 name|UdpAliasOut
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+parameter_list|,
+name|struct
 name|ip
 modifier|*
 parameter_list|)
@@ -545,6 +581,10 @@ name|int
 name|UdpAliasIn
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+parameter_list|,
+name|struct
 name|ip
 modifier|*
 parameter_list|)
@@ -556,6 +596,10 @@ specifier|static
 name|int
 name|TcpAliasOut
 parameter_list|(
+name|struct
+name|libalias
+modifier|*
+parameter_list|,
 name|struct
 name|ip
 modifier|*
@@ -571,6 +615,10 @@ name|int
 name|TcpAliasIn
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+parameter_list|,
+name|struct
 name|ip
 modifier|*
 parameter_list|)
@@ -582,6 +630,11 @@ specifier|static
 name|int
 name|IcmpAliasIn1
 parameter_list|(
+name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
 name|struct
 name|ip
 modifier|*
@@ -627,6 +680,8 @@ name|link
 operator|=
 name|FindIcmpIn
 argument_list|(
+name|la
+argument_list|,
 name|pip
 operator|->
 name|ip_src
@@ -755,6 +810,11 @@ name|int
 name|IcmpAliasIn2
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
+name|struct
 name|ip
 modifier|*
 name|pip
@@ -872,6 +932,8 @@ name|link
 operator|=
 name|FindUdpTcpIn
 argument_list|(
+name|la
+argument_list|,
 name|ip
 operator|->
 name|ip_dst
@@ -906,6 +968,8 @@ name|link
 operator|=
 name|FindUdpTcpIn
 argument_list|(
+name|la
+argument_list|,
 name|ip
 operator|->
 name|ip_dst
@@ -955,6 +1019,8 @@ name|link
 operator|=
 name|FindIcmpIn
 argument_list|(
+name|la
+argument_list|,
 name|ip
 operator|->
 name|ip_dst
@@ -1365,6 +1431,11 @@ name|int
 name|IcmpAliasIn
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
+name|struct
 name|ip
 modifier|*
 name|pip
@@ -1381,6 +1452,8 @@ decl_stmt|;
 comment|/* Return if proxy-only mode is enabled */
 if|if
 condition|(
+name|la
+operator|->
 name|packetAliasMode
 operator|&
 name|PKT_ALIAS_PROXY_ONLY
@@ -1441,6 +1514,8 @@ name|iresult
 operator|=
 name|IcmpAliasIn1
 argument_list|(
+name|la
+argument_list|,
 name|pip
 argument_list|)
 expr_stmt|;
@@ -1462,6 +1537,8 @@ name|iresult
 operator|=
 name|IcmpAliasIn2
 argument_list|(
+name|la
+argument_list|,
 name|pip
 argument_list|)
 expr_stmt|;
@@ -1476,6 +1553,8 @@ name|iresult
 operator|=
 name|IcmpAliasIn1
 argument_list|(
+name|la
+argument_list|,
 name|pip
 argument_list|)
 expr_stmt|;
@@ -1494,6 +1573,11 @@ specifier|static
 name|int
 name|IcmpAliasOut1
 parameter_list|(
+name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
 name|struct
 name|ip
 modifier|*
@@ -1539,6 +1623,8 @@ name|link
 operator|=
 name|FindIcmpOut
 argument_list|(
+name|la
+argument_list|,
 name|pip
 operator|->
 name|ip_src
@@ -1667,6 +1753,11 @@ name|int
 name|IcmpAliasOut2
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
+name|struct
 name|ip
 modifier|*
 name|pip
@@ -1784,6 +1875,8 @@ name|link
 operator|=
 name|FindUdpTcpOut
 argument_list|(
+name|la
+argument_list|,
 name|ip
 operator|->
 name|ip_dst
@@ -1818,6 +1911,8 @@ name|link
 operator|=
 name|FindUdpTcpOut
 argument_list|(
+name|la
+argument_list|,
 name|ip
 operator|->
 name|ip_dst
@@ -1867,6 +1962,8 @@ name|link
 operator|=
 name|FindIcmpOut
 argument_list|(
+name|la
+argument_list|,
 name|ip
 operator|->
 name|ip_dst
@@ -2255,6 +2352,11 @@ name|int
 name|IcmpAliasOut
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
+name|struct
 name|ip
 modifier|*
 name|pip
@@ -2271,6 +2373,8 @@ decl_stmt|;
 comment|/* Return if proxy-only mode is enabled */
 if|if
 condition|(
+name|la
+operator|->
 name|packetAliasMode
 operator|&
 name|PKT_ALIAS_PROXY_ONLY
@@ -2331,6 +2435,8 @@ name|iresult
 operator|=
 name|IcmpAliasOut1
 argument_list|(
+name|la
+argument_list|,
 name|pip
 argument_list|)
 expr_stmt|;
@@ -2352,6 +2458,8 @@ name|iresult
 operator|=
 name|IcmpAliasOut2
 argument_list|(
+name|la
+argument_list|,
 name|pip
 argument_list|)
 expr_stmt|;
@@ -2366,6 +2474,8 @@ name|iresult
 operator|=
 name|IcmpAliasOut1
 argument_list|(
+name|la
+argument_list|,
 name|pip
 argument_list|)
 expr_stmt|;
@@ -2384,6 +2494,11 @@ name|int
 name|ProtoAliasIn
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
+name|struct
 name|ip
 modifier|*
 name|pip
@@ -2398,6 +2513,8 @@ decl_stmt|;
 comment|/* Return if proxy-only mode is enabled */
 if|if
 condition|(
+name|la
+operator|->
 name|packetAliasMode
 operator|&
 name|PKT_ALIAS_PROXY_ONLY
@@ -2409,6 +2526,8 @@ name|link
 operator|=
 name|FindProtoIn
 argument_list|(
+name|la
+argument_list|,
 name|pip
 operator|->
 name|ip_src
@@ -2493,6 +2612,11 @@ name|int
 name|ProtoAliasOut
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
+name|struct
 name|ip
 modifier|*
 name|pip
@@ -2507,6 +2631,8 @@ decl_stmt|;
 comment|/* Return if proxy-only mode is enabled */
 if|if
 condition|(
+name|la
+operator|->
 name|packetAliasMode
 operator|&
 name|PKT_ALIAS_PROXY_ONLY
@@ -2518,6 +2644,8 @@ name|link
 operator|=
 name|FindProtoOut
 argument_list|(
+name|la
+argument_list|,
 name|pip
 operator|->
 name|ip_src
@@ -2602,6 +2730,11 @@ name|int
 name|UdpAliasIn
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
+name|struct
 name|ip
 modifier|*
 name|pip
@@ -2620,6 +2753,8 @@ decl_stmt|;
 comment|/* Return if proxy-only mode is enabled */
 if|if
 condition|(
+name|la
+operator|->
 name|packetAliasMode
 operator|&
 name|PKT_ALIAS_PROXY_ONLY
@@ -2654,6 +2789,8 @@ name|link
 operator|=
 name|FindUdpTcpIn
 argument_list|(
+name|la
+argument_list|,
 name|pip
 operator|->
 name|ip_src
@@ -2748,6 +2885,8 @@ name|CUSEEME_PORT_NUMBER
 condition|)
 name|AliasHandleCUSeeMeIn
 argument_list|(
+name|la
+argument_list|,
 name|pip
 argument_list|,
 name|original_address
@@ -2779,6 +2918,8 @@ name|r
 operator|=
 name|AliasHandleUdpNbt
 argument_list|(
+name|la
+argument_list|,
 name|pip
 argument_list|,
 name|link
@@ -2816,6 +2957,8 @@ name|r
 operator|=
 name|AliasHandleUdpNbtNS
 argument_list|(
+name|la
+argument_list|,
 name|pip
 argument_list|,
 name|link
@@ -2972,6 +3115,11 @@ name|int
 name|UdpAliasOut
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
+name|struct
 name|ip
 modifier|*
 name|pip
@@ -2990,6 +3138,8 @@ decl_stmt|;
 comment|/* Return if proxy-only mode is enabled */
 if|if
 condition|(
+name|la
+operator|->
 name|packetAliasMode
 operator|&
 name|PKT_ALIAS_PROXY_ONLY
@@ -3024,6 +3174,8 @@ name|link
 operator|=
 name|FindUdpTcpOut
 argument_list|(
+name|la
+argument_list|,
 name|pip
 operator|->
 name|ip_src
@@ -3087,6 +3239,8 @@ name|CUSEEME_PORT_NUMBER
 condition|)
 name|AliasHandleCUSeeMeOut
 argument_list|(
+name|la
+argument_list|,
 name|pip
 argument_list|,
 name|link
@@ -3116,6 +3270,8 @@ name|NETBIOS_DGM_PORT_NUMBER
 condition|)
 name|AliasHandleUdpNbt
 argument_list|(
+name|la
+argument_list|,
 name|pip
 argument_list|,
 name|link
@@ -3149,6 +3305,8 @@ name|NETBIOS_NS_PORT_NUMBER
 condition|)
 name|AliasHandleUdpNbtNS
 argument_list|(
+name|la
+argument_list|,
 name|pip
 argument_list|,
 name|link
@@ -3185,6 +3343,8 @@ name|TFTP_PORT_NUMBER
 condition|)
 name|FindRtspOut
 argument_list|(
+name|la
+argument_list|,
 name|pip
 operator|->
 name|ip_src
@@ -3344,6 +3504,11 @@ name|int
 name|TcpAliasIn
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
+name|struct
 name|ip
 modifier|*
 name|pip
@@ -3386,6 +3551,8 @@ name|link
 operator|=
 name|FindUdpTcpIn
 argument_list|(
+name|la
+argument_list|,
 name|pip
 operator|->
 name|ip_src
@@ -3406,6 +3573,8 @@ name|IPPROTO_TCP
 argument_list|,
 operator|!
 operator|(
+name|la
+operator|->
 name|packetAliasMode
 operator|&
 name|PKT_ALIAS_PROXY_ONLY
@@ -3467,6 +3636,8 @@ name|PPTP_CONTROL_PORT_NUMBER
 condition|)
 name|AliasHandlePptpIn
 argument_list|(
+name|la
+argument_list|,
 name|pip
 argument_list|,
 name|link
@@ -3475,6 +3646,8 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+name|la
+operator|->
 name|skinnyPort
 operator|!=
 literal|0
@@ -3487,6 +3660,8 @@ operator|->
 name|th_dport
 argument_list|)
 operator|==
+name|la
+operator|->
 name|skinnyPort
 operator|||
 name|ntohs
@@ -3496,11 +3671,15 @@ operator|->
 name|th_sport
 argument_list|)
 operator|==
+name|la
+operator|->
 name|skinnyPort
 operator|)
 condition|)
 name|AliasHandleSkinny
 argument_list|(
+name|la
+argument_list|,
 name|pip
 argument_list|,
 name|link
@@ -3920,6 +4099,11 @@ name|int
 name|TcpAliasOut
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
+name|struct
 name|ip
 modifier|*
 name|pip
@@ -3982,6 +4166,8 @@ name|proxy_type
 operator|=
 name|ProxyCheck
 argument_list|(
+name|la
+argument_list|,
 name|pip
 argument_list|,
 operator|&
@@ -3998,6 +4184,8 @@ operator|==
 literal|0
 operator|&&
 operator|(
+name|la
+operator|->
 name|packetAliasMode
 operator|&
 name|PKT_ALIAS_PROXY_ONLY
@@ -4172,6 +4360,8 @@ name|link
 operator|=
 name|FindUdpTcpOut
 argument_list|(
+name|la
+argument_list|,
 name|pip
 operator|->
 name|ip_src
@@ -4238,6 +4428,8 @@ argument_list|)
 expr_stmt|;
 name|ProxyModify
 argument_list|(
+name|la
+argument_list|,
 name|link
 argument_list|,
 name|pip
@@ -4317,6 +4509,8 @@ name|FTP_CONTROL_PORT_NUMBER
 condition|)
 name|AliasHandleFtpOut
 argument_list|(
+name|la
+argument_list|,
 name|pip
 argument_list|,
 name|link
@@ -4347,6 +4541,8 @@ name|IRC_CONTROL_PORT_NUMBER_2
 condition|)
 name|AliasHandleIrcOut
 argument_list|(
+name|la
+argument_list|,
 name|pip
 argument_list|,
 name|link
@@ -4395,6 +4591,8 @@ name|RTSP_CONTROL_PORT_NUMBER_2
 condition|)
 name|AliasHandleRtspOut
 argument_list|(
+name|la
+argument_list|,
 name|pip
 argument_list|,
 name|link
@@ -4425,6 +4623,8 @@ name|PPTP_CONTROL_PORT_NUMBER
 condition|)
 name|AliasHandlePptpOut
 argument_list|(
+name|la
+argument_list|,
 name|pip
 argument_list|,
 name|link
@@ -4433,6 +4633,8 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+name|la
+operator|->
 name|skinnyPort
 operator|!=
 literal|0
@@ -4445,6 +4647,8 @@ operator|->
 name|th_sport
 argument_list|)
 operator|==
+name|la
+operator|->
 name|skinnyPort
 operator|||
 name|ntohs
@@ -4454,11 +4658,15 @@ operator|->
 name|th_dport
 argument_list|)
 operator|==
+name|la
+operator|->
 name|skinnyPort
 operator|)
 condition|)
 name|AliasHandleSkinny
 argument_list|(
+name|la
+argument_list|,
 name|pip
 argument_list|,
 name|link
@@ -4721,6 +4929,10 @@ name|int
 name|FragmentIn
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+parameter_list|,
+name|struct
 name|ip
 modifier|*
 parameter_list|)
@@ -4733,6 +4945,10 @@ name|int
 name|FragmentOut
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+parameter_list|,
+name|struct
 name|ip
 modifier|*
 parameter_list|)
@@ -4744,6 +4960,11 @@ specifier|static
 name|int
 name|FragmentIn
 parameter_list|(
+name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
 name|struct
 name|ip
 modifier|*
@@ -4759,6 +4980,8 @@ name|link
 operator|=
 name|FindFragmentIn2
 argument_list|(
+name|la
+argument_list|,
 name|pip
 operator|->
 name|ip_src
@@ -4843,6 +5066,11 @@ name|int
 name|FragmentOut
 parameter_list|(
 name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
+name|struct
 name|ip
 modifier|*
 name|pip
@@ -4856,6 +5084,8 @@ name|alias_address
 operator|=
 name|FindAliasAddress
 argument_list|(
+name|la
+argument_list|,
 name|pip
 operator|->
 name|ip_src
@@ -4907,8 +5137,13 @@ end_comment
 
 begin_function
 name|int
-name|PacketAliasSaveFragment
+name|LibAliasSaveFragment
 parameter_list|(
+name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
 name|char
 modifier|*
 name|ptr
@@ -4940,6 +5175,8 @@ name|link
 operator|=
 name|AddFragmentPtrLink
 argument_list|(
+name|la
+argument_list|,
 name|pip
 operator|->
 name|ip_src
@@ -4983,8 +5220,13 @@ end_function
 begin_function
 name|char
 modifier|*
-name|PacketAliasGetFragment
+name|LibAliasGetFragment
 parameter_list|(
+name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
 name|char
 modifier|*
 name|ptr
@@ -5017,6 +5259,8 @@ name|link
 operator|=
 name|FindFragmentPtr
 argument_list|(
+name|la
+argument_list|,
 name|pip
 operator|->
 name|ip_src
@@ -5075,8 +5319,13 @@ end_function
 
 begin_function
 name|void
-name|PacketAliasFragmentIn
+name|LibAliasFragmentIn
 parameter_list|(
+name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
 name|char
 modifier|*
 name|ptr
@@ -5157,8 +5406,13 @@ end_function
 
 begin_function
 name|int
-name|PacketAliasIn
+name|LibAliasIn
 parameter_list|(
+name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
 name|char
 modifier|*
 name|ptr
@@ -5181,11 +5435,15 @@ name|iresult
 decl_stmt|;
 if|if
 condition|(
+name|la
+operator|->
 name|packetAliasMode
 operator|&
 name|PKT_ALIAS_REVERSE
 condition|)
 block|{
+name|la
+operator|->
 name|packetAliasMode
 operator|&=
 operator|~
@@ -5200,6 +5458,8 @@ argument_list|,
 name|maxpacketsize
 argument_list|)
 expr_stmt|;
+name|la
+operator|->
 name|packetAliasMode
 operator||=
 name|PKT_ALIAS_REVERSE
@@ -5209,10 +5469,14 @@ name|iresult
 return|;
 block|}
 name|HouseKeeping
-argument_list|()
+argument_list|(
+name|la
+argument_list|)
 expr_stmt|;
 name|ClearCheckNewLink
-argument_list|()
+argument_list|(
+name|la
+argument_list|)
 expr_stmt|;
 name|pip
 operator|=
@@ -5288,6 +5552,8 @@ name|iresult
 operator|=
 name|IcmpAliasIn
 argument_list|(
+name|la
+argument_list|,
 name|pip
 argument_list|)
 expr_stmt|;
@@ -5299,6 +5565,8 @@ name|iresult
 operator|=
 name|UdpAliasIn
 argument_list|(
+name|la
+argument_list|,
 name|pip
 argument_list|)
 expr_stmt|;
@@ -5310,6 +5578,8 @@ name|iresult
 operator|=
 name|TcpAliasIn
 argument_list|(
+name|la
+argument_list|,
 name|pip
 argument_list|)
 expr_stmt|;
@@ -5319,12 +5589,16 @@ name|IPPROTO_GRE
 case|:
 if|if
 condition|(
+name|la
+operator|->
 name|packetAliasMode
 operator|&
 name|PKT_ALIAS_PROXY_ONLY
 operator|||
 name|AliasHandlePptpGreIn
 argument_list|(
+name|la
+argument_list|,
 name|pip
 argument_list|)
 operator|==
@@ -5339,6 +5613,8 @@ name|iresult
 operator|=
 name|ProtoAliasIn
 argument_list|(
+name|la
+argument_list|,
 name|pip
 argument_list|)
 expr_stmt|;
@@ -5348,6 +5624,8 @@ name|iresult
 operator|=
 name|ProtoAliasIn
 argument_list|(
+name|la
+argument_list|,
 name|pip
 argument_list|)
 expr_stmt|;
@@ -5374,6 +5652,8 @@ name|link
 operator|=
 name|FindFragmentIn1
 argument_list|(
+name|la
+argument_list|,
 name|pip
 operator|->
 name|ip_src
@@ -5421,6 +5701,8 @@ name|iresult
 operator|=
 name|FragmentIn
 argument_list|(
+name|la
+argument_list|,
 name|pip
 argument_list|)
 expr_stmt|;
@@ -5493,8 +5775,13 @@ end_define
 
 begin_function
 name|int
-name|PacketAliasOut
+name|LibAliasOut
 parameter_list|(
+name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
 name|char
 modifier|*
 name|ptr
@@ -5519,11 +5806,15 @@ name|pip
 decl_stmt|;
 if|if
 condition|(
+name|la
+operator|->
 name|packetAliasMode
 operator|&
 name|PKT_ALIAS_REVERSE
 condition|)
 block|{
+name|la
+operator|->
 name|packetAliasMode
 operator|&=
 operator|~
@@ -5538,6 +5829,8 @@ argument_list|,
 name|maxpacketsize
 argument_list|)
 expr_stmt|;
+name|la
+operator|->
 name|packetAliasMode
 operator||=
 name|PKT_ALIAS_REVERSE
@@ -5547,10 +5840,14 @@ name|iresult
 return|;
 block|}
 name|HouseKeeping
-argument_list|()
+argument_list|(
+name|la
+argument_list|)
 expr_stmt|;
 name|ClearCheckNewLink
-argument_list|()
+argument_list|(
+name|la
+argument_list|)
 expr_stmt|;
 name|pip
 operator|=
@@ -5589,10 +5886,14 @@ return|;
 name|addr_save
 operator|=
 name|GetDefaultAliasAddress
-argument_list|()
+argument_list|(
+name|la
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|la
+operator|->
 name|packetAliasMode
 operator|&
 name|PKT_ALIAS_UNREGISTERED_ONLY
@@ -5672,6 +5973,8 @@ condition|)
 block|{
 name|SetDefaultAliasAddress
 argument_list|(
+name|la
+argument_list|,
 name|pip
 operator|->
 name|ip_src
@@ -5682,6 +5985,8 @@ block|}
 elseif|else
 if|if
 condition|(
+name|la
+operator|->
 name|packetAliasMode
 operator|&
 name|PKT_ALIAS_PROXY_ONLY
@@ -5689,6 +5994,8 @@ condition|)
 block|{
 name|SetDefaultAliasAddress
 argument_list|(
+name|la
+argument_list|,
 name|pip
 operator|->
 name|ip_src
@@ -5729,6 +6036,8 @@ name|iresult
 operator|=
 name|IcmpAliasOut
 argument_list|(
+name|la
+argument_list|,
 name|pip
 argument_list|)
 expr_stmt|;
@@ -5740,6 +6049,8 @@ name|iresult
 operator|=
 name|UdpAliasOut
 argument_list|(
+name|la
+argument_list|,
 name|pip
 argument_list|)
 expr_stmt|;
@@ -5751,6 +6062,8 @@ name|iresult
 operator|=
 name|TcpAliasOut
 argument_list|(
+name|la
+argument_list|,
 name|pip
 argument_list|,
 name|maxpacketsize
@@ -5764,6 +6077,8 @@ if|if
 condition|(
 name|AliasHandlePptpGreOut
 argument_list|(
+name|la
+argument_list|,
 name|pip
 argument_list|)
 operator|==
@@ -5778,6 +6093,8 @@ name|iresult
 operator|=
 name|ProtoAliasOut
 argument_list|(
+name|la
+argument_list|,
 name|pip
 argument_list|)
 expr_stmt|;
@@ -5787,6 +6104,8 @@ name|iresult
 operator|=
 name|ProtoAliasOut
 argument_list|(
+name|la
+argument_list|,
 name|pip
 argument_list|)
 expr_stmt|;
@@ -5799,12 +6118,16 @@ name|iresult
 operator|=
 name|FragmentOut
 argument_list|(
+name|la
+argument_list|,
 name|pip
 argument_list|)
 expr_stmt|;
 block|}
 name|SetDefaultAliasAddress
 argument_list|(
+name|la
+argument_list|,
 name|addr_save
 argument_list|)
 expr_stmt|;
@@ -5818,8 +6141,13 @@ end_function
 
 begin_function
 name|int
-name|PacketUnaliasOut
+name|LibAliasUnaliasOut
 parameter_list|(
+name|struct
+name|libalias
+modifier|*
+name|la
+parameter_list|,
 name|char
 modifier|*
 name|ptr
@@ -5950,6 +6278,8 @@ name|link
 operator|=
 name|FindUdpTcpIn
 argument_list|(
+name|la
+argument_list|,
 name|pip
 operator|->
 name|ip_dst
@@ -5984,6 +6314,8 @@ name|link
 operator|=
 name|FindUdpTcpIn
 argument_list|(
+name|la
+argument_list|,
 name|pip
 operator|->
 name|ip_dst
@@ -6018,6 +6350,8 @@ name|link
 operator|=
 name|FindIcmpIn
 argument_list|(
+name|la
+argument_list|,
 name|pip
 operator|->
 name|ip_dst
