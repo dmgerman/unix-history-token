@@ -12,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<strings.h>
 end_include
 
 begin_include
@@ -355,6 +355,18 @@ expr_stmt|;
 comment|/* "name" of this one */
 if|if
 condition|(
+operator|(
+name|tbl
+index|[
+name|c
+index|]
+operator|.
+name|shift
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
 name|tbl
 index|[
 name|c
@@ -366,6 +378,7 @@ literal|0
 index|]
 operator|==
 literal|0
+operator|)
 condition|)
 block|{
 name|tbl
