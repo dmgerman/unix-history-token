@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)init.c	5.13 (Berkeley) %G%"
+literal|"@(#)init.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -386,6 +386,14 @@ literal|0
 block|,
 name|INF
 block|,
+literal|"printf"
+block|,
+name|doprintf
+block|,
+literal|1
+block|,
+name|INF
+block|,
 literal|"pushd"
 block|,
 name|dopushd
@@ -529,6 +537,14 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+literal|"which"
+block|,
+name|dowhich
+block|,
+literal|1
+block|,
+name|INF
 block|,
 literal|"while"
 block|,
