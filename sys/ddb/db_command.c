@@ -1099,6 +1099,7 @@ name|cmd_table
 operator|==
 name|db_show_cmds
 condition|)
+block|{
 name|aux_cmd_tablep
 operator|=
 name|SET_BEGIN
@@ -1113,6 +1114,7 @@ argument_list|(
 name|db_show_cmd_set
 argument_list|)
 expr_stmt|;
+block|}
 name|t
 operator|=
 name|db_read_token
