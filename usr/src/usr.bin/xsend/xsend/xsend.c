@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)xsend.c	4.1 %G%"
+literal|"@(#)xsend.c	4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -29,25 +29,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|"sys/types.h"
+file|<sys/types.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"pwd.h"
+file|<pwd.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/stat.h"
+file|<sys/stat.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"sys/dir.h"
+file|<dir.h>
 end_include
 
 begin_decl_stmt
@@ -96,6 +96,7 @@ end_decl_stmt
 begin_decl_stmt
 name|struct
 name|direct
+modifier|*
 name|dbuf
 decl_stmt|;
 end_decl_stmt
@@ -116,7 +117,11 @@ name|kf
 decl_stmt|,
 modifier|*
 name|mf
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|DIR
 modifier|*
 name|df
 decl_stmt|;
@@ -162,6 +167,19 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|dbg
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|malloc
+argument_list|()
+decl_stmt|,
+modifier|*
+name|getlogin
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
@@ -342,11 +360,9 @@ argument_list|)
 expr_stmt|;
 name|df
 operator|=
-name|fopen
+name|opendir
 argument_list|(
 name|maildir
-argument_list|,
-literal|"r"
 argument_list|)
 expr_stmt|;
 if|if
@@ -386,47 +402,26 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-for|for
-control|(
-init|;
-operator|!
-name|feof
-argument_list|(
-name|df
-argument_list|)
-condition|;
-control|)
-block|{
-name|fread
-argument_list|(
-operator|&
-name|dbuf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|dbuf
-argument_list|)
-argument_list|,
-literal|1
-argument_list|,
-name|df
-argument_list|)
-expr_stmt|;
-if|if
+while|while
 condition|(
+operator|(
 name|dbuf
-operator|.
-name|d_ino
-operator|==
-literal|0
+operator|=
+name|readdir
+argument_list|(
+name|df
+argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
-continue|continue;
+block|{
 if|if
 condition|(
 name|sscanf
 argument_list|(
 name|dbuf
-operator|.
+operator|->
 name|d_name
 argument_list|,
 name|line
