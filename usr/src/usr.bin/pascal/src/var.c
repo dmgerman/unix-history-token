@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)var.c 1.16.1.1 %G%"
+literal|"@(#)var.c 2.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -714,26 +714,8 @@ argument_list|)
 expr_stmt|;
 name|stabgvar
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|vidl
-operator|->
-name|list_node
-operator|.
-name|list
+name|vp
 argument_list|,
-name|p2type
-argument_list|(
-name|np
-argument_list|)
-argument_list|,
-name|o2
-argument_list|,
-operator|(
-name|int
-operator|)
 name|w
 argument_list|,
 name|line
