@@ -49,6 +49,23 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"opt_acpi.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|ACPI_DEBUG
 end_ifdef
 
@@ -72,12 +89,6 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"opt_acpi.h"
-end_include
 
 begin_include
 include|#
