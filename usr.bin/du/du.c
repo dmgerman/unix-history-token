@@ -1392,8 +1392,7 @@ name|new_size
 decl_stmt|;
 name|int
 name|count
-decl_stmt|;
-name|int
+decl_stmt|,
 name|hash
 decl_stmt|;
 name|st
@@ -1439,7 +1438,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"No memory for hardlink detection."
+literal|"No memory for hardlink detection"
 argument_list|)
 expr_stmt|;
 for|for
@@ -1564,7 +1563,7 @@ literal|1
 expr_stmt|;
 name|warnx
 argument_list|(
-literal|"No more memory for tracking hard links."
+literal|"No more memory for tracking hard links"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1909,7 +1908,7 @@ literal|1
 expr_stmt|;
 name|warnx
 argument_list|(
-literal|"No more memory for tracking hard links."
+literal|"No more memory for tracking hard links"
 argument_list|)
 expr_stmt|;
 return|return
