@@ -9366,6 +9366,12 @@ literal|"headlocked should be 1"
 operator|)
 argument_list|)
 expr_stmt|;
+name|INP_INFO_WUNLOCK
+argument_list|(
+operator|&
+name|tcbinfo
+argument_list|)
+expr_stmt|;
 name|tp
 operator|->
 name|t_flags
@@ -9383,12 +9389,6 @@ expr_stmt|;
 name|INP_UNLOCK
 argument_list|(
 name|inp
-argument_list|)
-expr_stmt|;
-name|INP_INFO_WUNLOCK
-argument_list|(
-operator|&
-name|tcbinfo
 argument_list|)
 expr_stmt|;
 name|m_freem
