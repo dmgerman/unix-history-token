@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)setup.c 4.3 %G%"
+literal|"@(#)setup.c 4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -582,6 +582,10 @@ name|struct
 name|stat
 name|stb
 decl_stmt|;
+name|kcore
+operator|=
+literal|1
+expr_stmt|;
 name|fstat
 argument_list|(
 name|fcor
@@ -589,18 +593,6 @@ argument_list|,
 operator|&
 name|stb
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|stb
-operator|.
-name|st_mode
-operator|&
-name|S_IFREG
-condition|)
-name|kcore
-operator|=
-literal|1
 expr_stmt|;
 name|datmap
 operator|.
@@ -671,15 +663,6 @@ argument_list|(
 literal|"_masterpcbb"
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"masterpcbb at %X\n"
-argument_list|,
-name|cursym
-operator|->
-name|n_value
-argument_list|)
-expr_stmt|;
 name|physrw
 argument_list|(
 name|fcor
@@ -695,23 +678,6 @@ name|masterpcbb
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"masterpcbb value %X\n"
-argument_list|,
-name|masterpcbb
-argument_list|)
-expr_stmt|;
-name|var
-index|[
-name|varchk
-argument_list|(
-literal|'p'
-argument_list|)
-index|]
-operator|=
-name|masterpcbb
 expr_stmt|;
 name|getpcb
 argument_list|()
@@ -971,13 +937,6 @@ end_macro
 
 begin_block
 block|{
-name|printf
-argument_list|(
-literal|"getpcb: masterpcbb is %X\n"
-argument_list|,
-name|masterpcbb
-argument_list|)
-expr_stmt|;
 name|lseek
 argument_list|(
 name|fcor
@@ -1004,6 +963,13 @@ name|pcb
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|pcb
+operator|.
+name|pcb_p0lr
+operator|&=
+operator|~
+name|AST_CLR
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"p0br %X p0lr %X p1br %X p1lr %X\n"
@@ -1024,13 +990,6 @@ name|pcb
 operator|.
 name|pcb_p1lr
 argument_list|)
-expr_stmt|;
-name|pcb
-operator|.
-name|pcb_p0lr
-operator|&=
-operator|~
-name|AST_CLR
 expr_stmt|;
 block|}
 end_block
