@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: clnt_tcp.c,v 1.7 1996/12/30 14:36:17 peter Exp $"
+literal|"$Id: clnt_tcp.c,v 1.10 1997/05/28 05:05:08 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2434,7 +2434,9 @@ expr_stmt|;
 name|timersub
 argument_list|(
 operator|&
-name|delta
+name|ct
+operator|->
+name|ct_wait
 argument_list|,
 operator|&
 name|duration
