@@ -403,7 +403,7 @@ name|button_dev
 argument_list|,
 literal|"couldn't install Notify handler - %s\n"
 argument_list|,
-name|acpi_strerror
+name|AcpiFormatException
 argument_list|(
 name|status
 argument_list|)

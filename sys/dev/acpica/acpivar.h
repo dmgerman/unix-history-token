@@ -1256,20 +1256,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* XXX hack to handle old code, should be fixed */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|acpi_strerror
-parameter_list|(
-name|e
-parameter_list|)
-value|AcpiFormatException(e)
-end_define
-
-begin_comment
 comment|/*   * ACPI event handling  */
 end_comment
 

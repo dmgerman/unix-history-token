@@ -61,12 +61,6 @@ directive|include
 file|<dev/acpica/acpivar.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<dev/acpica/acpi_ecreg.h>
-end_include
-
 begin_comment
 comment|/*  * Hooks for the ACPI CA debugging infrastructure  */
 end_comment
@@ -1071,7 +1065,7 @@ name|dev
 argument_list|,
 literal|"can't evaluate _GPE - %s\n"
 argument_list|,
-name|acpi_strerror
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -1121,7 +1115,7 @@ operator|->
 name|ec_handle
 argument_list|)
 argument_list|,
-name|acpi_strerror
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -1180,7 +1174,7 @@ operator|->
 name|ec_handle
 argument_list|)
 argument_list|,
-name|acpi_strerror
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -1300,7 +1294,7 @@ name|ec_dev
 argument_list|,
 literal|"GPE query failed - %s\n"
 argument_list|,
-name|acpi_strerror
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -1366,7 +1360,7 @@ literal|"evaluation of GPE query method %s failed - %s\n"
 argument_list|,
 name|qxx
 argument_list|,
-name|acpi_strerror
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)

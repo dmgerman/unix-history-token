@@ -574,7 +574,7 @@ name|bus
 argument_list|,
 literal|"no ACPI _SB_ scope - %s\n"
 argument_list|,
-name|acpi_strerror
+name|AcpiFormatException
 argument_list|(
 name|status
 argument_list|)
@@ -612,7 +612,7 @@ name|bus
 argument_list|,
 literal|"AcpiWalkNamespace on _SB_ failed - %s\n"
 argument_list|,
-name|acpi_strerror
+name|AcpiFormatException
 argument_list|(
 name|status
 argument_list|)

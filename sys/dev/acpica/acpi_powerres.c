@@ -1893,7 +1893,7 @@ name|String
 operator|.
 name|Pointer
 operator|,
-name|acpi_strerror
+name|AcpiFormatException
 argument_list|(
 name|status
 argument_list|)
@@ -2178,7 +2178,7 @@ operator|->
 name|ap_resource
 argument_list|)
 operator|,
-name|acpi_strerror
+name|AcpiFormatException
 argument_list|(
 name|status
 argument_list|)
@@ -2355,7 +2355,7 @@ operator|->
 name|ap_resource
 argument_list|)
 operator|,
-name|acpi_strerror
+name|AcpiFormatException
 argument_list|(
 name|status
 argument_list|)

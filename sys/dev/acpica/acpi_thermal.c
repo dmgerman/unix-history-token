@@ -2282,7 +2282,7 @@ name|String
 operator|.
 name|Pointer
 argument_list|,
-name|acpi_strerror
+name|AcpiFormatException
 argument_list|(
 name|status
 argument_list|)
@@ -2950,7 +2950,7 @@ operator|->
 name|tz_handle
 argument_list|)
 argument_list|,
-name|acpi_strerror
+name|AcpiFormatException
 argument_list|(
 name|status
 argument_list|)

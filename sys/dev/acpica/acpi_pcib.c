@@ -598,7 +598,7 @@ name|dev
 argument_list|,
 literal|"could not evaluate _SEG - %s\n"
 argument_list|,
-name|acpi_strerror
+name|AcpiFormatException
 argument_list|(
 name|status
 argument_list|)
@@ -655,7 +655,7 @@ name|dev
 argument_list|,
 literal|"could not evaluate _BBN - %s\n"
 argument_list|,
-name|acpi_strerror
+name|AcpiFormatException
 argument_list|(
 name|status
 argument_list|)
@@ -727,7 +727,7 @@ name|dev
 argument_list|,
 literal|"could not get PCI interrupt routing table - %s\n"
 argument_list|,
-name|acpi_strerror
+name|AcpiFormatException
 argument_list|(
 name|status
 argument_list|)
@@ -1528,7 +1528,7 @@ name|ap_dev
 argument_list|,
 literal|"couldn't get PCI interrupt link device _CRS data - %s\n"
 argument_list|,
-name|acpi_strerror
+name|AcpiFormatException
 argument_list|(
 name|status
 argument_list|)
@@ -1566,7 +1566,7 @@ name|ap_dev
 argument_list|,
 literal|"couldn't get PCI interrupt link device _PRS data - %s\n"
 argument_list|,
-name|acpi_strerror
+name|AcpiFormatException
 argument_list|(
 name|status
 argument_list|)
@@ -2016,7 +2016,7 @@ argument_list|(
 name|lnkdev
 argument_list|)
 argument_list|,
-name|acpi_strerror
+name|AcpiFormatException
 argument_list|(
 name|status
 argument_list|)

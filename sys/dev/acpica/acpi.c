@@ -981,7 +981,7 @@ name|printf
 argument_list|(
 literal|"ACPI: initialisation failed: %s\n"
 argument_list|,
-name|acpi_strerror
+name|AcpiFormatException
 argument_list|(
 name|error
 argument_list|)
@@ -1026,7 +1026,7 @@ name|printf
 argument_list|(
 literal|"ACPI: table load failed: %s\n"
 argument_list|,
-name|acpi_strerror
+name|AcpiFormatException
 argument_list|(
 name|error
 argument_list|)
@@ -1129,7 +1129,7 @@ name|dev
 argument_list|,
 literal|"couldn't get XSDT header: %s\n"
 argument_list|,
-name|acpi_strerror
+name|AcpiFormatException
 argument_list|(
 name|status
 argument_list|)
@@ -1302,7 +1302,7 @@ name|dev
 argument_list|,
 literal|"could not initialise SystemMemory handler: %s\n"
 argument_list|,
-name|acpi_strerror
+name|AcpiFormatException
 argument_list|(
 name|status
 argument_list|)
@@ -1340,7 +1340,7 @@ name|dev
 argument_list|,
 literal|"could not initialise SystemIO handler: %s\n"
 argument_list|,
-name|acpi_strerror
+name|AcpiFormatException
 argument_list|(
 name|status
 argument_list|)
@@ -1378,7 +1378,7 @@ name|dev
 argument_list|,
 literal|"could not initialise PciConfig handler: %s\n"
 argument_list|,
-name|acpi_strerror
+name|AcpiFormatException
 argument_list|(
 name|status
 argument_list|)
@@ -1431,7 +1431,7 @@ name|dev
 argument_list|,
 literal|"could not enable ACPI: %s\n"
 argument_list|,
-name|acpi_strerror
+name|AcpiFormatException
 argument_list|(
 name|status
 argument_list|)
@@ -3088,7 +3088,7 @@ name|printf
 argument_list|(
 literal|"ACPI power-off failed - %s\n"
 argument_list|,
-name|acpi_strerror
+name|AcpiFormatException
 argument_list|(
 name|status
 argument_list|)
@@ -4594,7 +4594,7 @@ name|acpi_dev
 argument_list|,
 literal|"AcpiEnterSleepState failed - %s\n"
 argument_list|,
-name|acpi_strerror
+name|AcpiFormatException
 argument_list|(
 name|status
 argument_list|)
@@ -4710,7 +4710,7 @@ name|acpi_dev
 argument_list|,
 literal|"AcpiEnterSleepState failed - %s\n"
 argument_list|,
-name|acpi_strerror
+name|AcpiFormatException
 argument_list|(
 name|status
 argument_list|)

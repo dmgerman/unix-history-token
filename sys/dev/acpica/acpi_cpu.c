@@ -804,7 +804,7 @@ name|cpu_dev
 argument_list|,
 literal|"couldn't get Processor object - %s\n"
 argument_list|,
-name|acpi_strerror
+name|AcpiFormatException
 argument_list|(
 name|status
 argument_list|)
