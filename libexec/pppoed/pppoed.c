@@ -1722,7 +1722,7 @@ argument_list|(
 name|env
 argument_list|)
 argument_list|,
-literal|"%s=%2x:%2x:%2x:%2x:%2x:%2x"
+literal|"%s=%x:%x:%x:%x:%x:%x"
 argument_list|,
 name|HISMACADDR
 argument_list|,
