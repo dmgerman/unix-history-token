@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinum.c,v 1.5 1998/12/28 04:56:24 peter Exp $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinum.c,v 1.23 1999/01/15 05:03:15 grog Exp grog $  */
 end_comment
 
 begin_define
@@ -66,74 +66,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* pointer to ioctl p parameter, to save passing it around */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|proc
-modifier|*
-name|myproc
-decl_stmt|;
-end_decl_stmt
-
-begin_if
-if|#
-directive|if
-name|__FreeBSD__
-operator|<
-literal|3
-end_if
-
-begin_decl_stmt
-name|STATIC
-name|struct
-name|cdevsw
-name|vinum_cdevsw
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|STATIC
-name|struct
-name|bdevsw
-name|vinum_bdevsw
-init|=
-block|{
-name|vinumopen
-block|,
-name|vinumclose
-block|,
-name|vinumstrategy
-block|,
-name|vinumioctl
-block|,
-name|vinumdump
-block|,
-name|vinumsize
-block|,
-literal|0
-block|,
-literal|"vinum"
-block|,
-operator|&
-name|vinum_cdevsw
-block|,
-operator|-
-literal|1
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* goodbye, bdevsw */
-end_comment
+begin_include
+include|#
+directive|include
+file|<dev/vinum/request.h>
+end_include
 
 begin_decl_stmt
 name|STATIC
@@ -185,11 +122,6 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* Called by main() during pseudo-device attachment. */
 end_comment
@@ -211,15 +143,6 @@ name|void
 name|vinumgetdisklabel
 parameter_list|(
 name|dev_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|vinum_scandisk
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -271,14 +194,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|__FreeBSD__
-operator|>=
-literal|3
-end_if
-
 begin_comment
 comment|/* Why aren't these declared anywhere? XXX */
 end_comment
@@ -302,11 +217,6 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -352,8 +262,6 @@ modifier|*
 name|dummy
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|char
 modifier|*
 name|buf
@@ -403,28 +311,15 @@ operator||=
 name|VF_LOADED
 expr_stmt|;
 comment|/* we're loaded now */
-comment|/* We don't have a p pointer here, so take it from curproc */
-name|myproc
+name|daemonq
 operator|=
-name|curproc
+name|NULL
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD__
-operator|<
-literal|3
-name|bdevsw_add_generic
-argument_list|(
-name|BDEV_MAJOR
-argument_list|,
-name|CDEV_MAJOR
-argument_list|,
-operator|&
-name|vinum_bdevsw
-argument_list|)
+comment|/* initialize daemon's work queue */
+name|dqend
+operator|=
+name|NULL
 expr_stmt|;
-else|#
-directive|else
 name|cdevsw_add_generic
 argument_list|(
 name|BDEV_MAJOR
@@ -435,8 +330,6 @@ operator|&
 name|vinum_cdevsw
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|DEVFS
@@ -708,8 +601,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -745,9 +636,9 @@ index|[
 name|i
 index|]
 operator|.
-name|pid
+name|opencount
 operator|!=
-name|NULL
+literal|0
 condition|)
 block|{
 comment|/* volume is open */
@@ -779,8 +670,6 @@ name|int
 name|cleardrive
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -856,6 +745,14 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|queue_daemon_request
+argument_list|(
+name|daemonrq_return
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+comment|/* tell daemon to stop */
 if|if
 condition|(
 name|SD
@@ -926,32 +823,6 @@ operator|->
 name|sdnos
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|plex
-operator|->
-name|unmapped_regions
-condition|)
-name|Free
-argument_list|(
-name|plex
-operator|->
-name|unmapped_region
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|plex
-operator|->
-name|defective_regions
-condition|)
-name|Free
-argument_list|(
-name|plex
-operator|->
-name|defective_region
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 name|Free
@@ -982,6 +853,47 @@ name|vinum_conf
 argument_list|)
 argument_list|)
 expr_stmt|;
+while|while
+condition|(
+operator|(
+name|daemon_options
+operator|&
+name|daemon_stopped
+operator|)
+operator|==
+literal|0
+condition|)
+comment|/* daemon hasn't stopped yet, */
+name|tsleep
+argument_list|(
+operator|&
+name|vinum_daemon
+argument_list|,
+name|PRIBIO
+argument_list|,
+literal|"vdaemn"
+argument_list|,
+literal|10
+operator|*
+name|hz
+argument_list|)
+expr_stmt|;
+comment|/* wait for it to stop */
+name|tsleep
+argument_list|(
+operator|&
+name|vinum_daemon
+argument_list|,
+name|PRIBIO
+argument_list|,
+literal|"diedie"
+argument_list|,
+literal|3
+operator|*
+name|hz
+argument_list|)
+expr_stmt|;
+comment|/* and wait another 3 secs XXX */
 block|}
 end_function
 
@@ -1021,8 +933,6 @@ name|int
 name|cmd
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|vinumattach
 argument_list|(
 name|NULL
@@ -1053,8 +963,6 @@ name|int
 name|cmd
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 if|if
 condition|(
 name|vinum_inactive
@@ -1070,40 +978,11 @@ block|{
 literal|0
 block|}
 decl_stmt|;
-if|#
-directive|if
-name|__FreeBSD__
-operator|<
-literal|3
-name|int
-name|retval
-decl_stmt|;
-endif|#
-directive|endif
 name|printf
 argument_list|(
 literal|"vinum: unloaded\n"
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD__
-operator|<
-literal|3
-name|sync
-argument_list|(
-name|curproc
-argument_list|,
-operator|&
-name|dummyarg
-argument_list|,
-operator|&
-name|retval
-argument_list|)
-expr_stmt|;
-comment|/* write out buffers */
-else|#
-directive|else
 name|sync
 argument_list|(
 name|curproc
@@ -1113,29 +992,12 @@ name|dummyarg
 argument_list|)
 expr_stmt|;
 comment|/* write out buffers */
-endif|#
-directive|endif
 name|free_vinum
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
 comment|/* no: clean up */
-if|#
-directive|if
-name|__FreeBSD__
-operator|<
-literal|3
-name|bdevsw
-index|[
-name|BDEV_MAJOR
-index|]
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* clear bdevsw */
-endif|#
-directive|endif
 name|cdevsw
 index|[
 name|CDEV_MAJOR
@@ -1175,8 +1037,6 @@ name|int
 name|ver
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|MOD_DISPATCH
 argument_list|(
 name|vinum
@@ -1235,8 +1095,6 @@ block|{
 literal|0
 block|}
 decl_stmt|;
-name|BROKEN_GDB
-expr_stmt|;
 switch|switch
 condition|(
 name|type
@@ -1366,8 +1224,6 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|int
 name|s
 decl_stmt|;
@@ -1426,7 +1282,7 @@ name|VINUM_VOLUME_TYPE
 case|:
 name|index
 operator|=
-name|VOLNO
+name|Volno
 argument_list|(
 name|dev
 argument_list|)
@@ -1470,38 +1326,11 @@ return|;
 case|case
 name|volume_up
 case|:
-name|s
-operator|=
-name|splhigh
-argument_list|()
-expr_stmt|;
-comment|/* quick lock */
-if|if
-condition|(
-name|error
-condition|)
-return|return
-name|error
-return|;
-if|if
-condition|(
 name|vol
 operator|->
 name|opencount
-operator|==
-literal|0
-condition|)
-name|vol
-operator|->
-name|openflags
 operator|=
-name|flags
-expr_stmt|;
-comment|/* set our flags */
-name|vol
-operator|->
-name|opencount
-operator|++
+literal|1
 expr_stmt|;
 name|vol
 operator|->
@@ -1512,11 +1341,6 @@ operator|->
 name|p_pid
 expr_stmt|;
 comment|/* and say who we are (do we need this? XXX) */
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
@@ -1536,7 +1360,7 @@ name|VINUM_PLEX_TYPE
 case|:
 if|if
 condition|(
-name|VOLNO
+name|Volno
 argument_list|(
 name|dev
 argument_list|)
@@ -1550,7 +1374,7 @@ name|ENXIO
 return|;
 name|index
 operator|=
-name|PLEXNO
+name|Plexno
 argument_list|(
 name|dev
 argument_list|)
@@ -1648,7 +1472,7 @@ case|:
 if|if
 condition|(
 operator|(
-name|VOLNO
+name|Volno
 argument_list|(
 name|dev
 argument_list|)
@@ -1660,7 +1484,7 @@ operator|)
 operator|||
 comment|/* no such volume */
 operator|(
-name|PLEXNO
+name|Plexno
 argument_list|(
 name|dev
 argument_list|)
@@ -1677,7 +1501,7 @@ return|;
 comment|/* no such device */
 name|index
 operator|=
-name|SDNO
+name|Sdno
 argument_list|(
 name|dev
 argument_list|)
@@ -1799,9 +1623,10 @@ comment|/* root calling, */
 name|vinum_conf
 operator|.
 name|opencount
-operator|++
+operator|=
+literal|1
 expr_stmt|;
-comment|/* one more opener */
+comment|/* we're open */
 return|return
 literal|0
 return|;
@@ -1839,8 +1664,6 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|unsigned
 name|int
 name|index
@@ -1875,7 +1698,7 @@ name|dev
 decl_stmt|;
 name|index
 operator|=
-name|VOLNO
+name|Volno
 argument_list|(
 name|dev
 argument_list|)
@@ -1963,7 +1786,7 @@ name|VINUM_PLEX_TYPE
 case|:
 if|if
 condition|(
-name|VOLNO
+name|Volno
 argument_list|(
 name|dev
 argument_list|)
@@ -1977,7 +1800,7 @@ name|ENXIO
 return|;
 name|index
 operator|=
-name|PLEXNO
+name|Plexno
 argument_list|(
 name|dev
 argument_list|)
@@ -2018,7 +1841,7 @@ case|:
 if|if
 condition|(
 operator|(
-name|VOLNO
+name|Volno
 argument_list|(
 name|dev
 argument_list|)
@@ -2030,7 +1853,7 @@ operator|)
 operator|||
 comment|/* no such volume */
 operator|(
-name|PLEXNO
+name|Plexno
 argument_list|(
 name|dev
 argument_list|)
@@ -2047,7 +1870,7 @@ return|;
 comment|/* no such device */
 name|index
 operator|=
-name|SDNO
+name|Sdno
 argument_list|(
 name|dev
 argument_list|)
@@ -2099,9 +1922,10 @@ comment|/* root calling, */
 name|vinum_conf
 operator|.
 name|opencount
-operator|--
+operator|=
+literal|0
 expr_stmt|;
-comment|/* one less opener */
+comment|/* no longer open */
 return|return
 literal|0
 return|;
@@ -2130,8 +1954,6 @@ name|dev_t
 name|dev
 parameter_list|)
 block|{
-name|BROKEN_GDB
-expr_stmt|;
 name|struct
 name|volume
 modifier|*
@@ -2145,7 +1967,7 @@ operator|=
 operator|&
 name|VOL
 index|[
-name|VOLNO
+name|Volno
 argument_list|(
 name|dev
 argument_list|)
