@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	1.1	86/01/12	*/
+comment|/*	machdep.c	1.2	86/12/18	*/
 end_comment
 
 begin_include
@@ -27,17 +27,14 @@ name|set
 name|_scb
 operator|,
 literal|0x0
-operator|#
-name|mask
-end_expr_stmt
-
-begin_for
-for|for total disable 	.set	HIGH
+operator|.
+name|set
+name|HIGH
 operator|,
 literal|0x1f
 operator|#
 name|mask
-end_for
+end_expr_stmt
 
 begin_for
 for|for total disable 	.set	BERVEC
@@ -361,7 +358,7 @@ argument_list|,
 literal|0
 argument_list|)
 name|movob
-literal|9
+literal|11
 operator|(
 name|fp
 operator|)
