@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.40 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.41 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2802,6 +2802,7 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
+specifier|static
 name|char
 name|hostbuf
 index|[
@@ -3992,6 +3993,12 @@ index|[
 name|MAXLINE
 index|]
 decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|errstring
+parameter_list|()
+function_decl|;
 comment|/* 	**  Compute status message from code. 	*/
 name|i
 operator|=
@@ -4061,6 +4068,8 @@ name|SysExMsg
 index|[
 name|i
 index|]
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -4072,13 +4081,6 @@ name|h_errno
 operator|==
 name|TRY_AGAIN
 condition|)
-block|{
-specifier|extern
-name|char
-modifier|*
-name|errstring
-parameter_list|()
-function_decl|;
 name|statmsg
 operator|=
 name|errstring
@@ -4088,7 +4090,6 @@ operator|+
 name|MAX_ERRNO
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 endif|#
 directive|endif
@@ -4099,13 +4100,6 @@ name|errno
 operator|!=
 literal|0
 condition|)
-block|{
-specifier|extern
-name|char
-modifier|*
-name|errstring
-parameter_list|()
-function_decl|;
 name|statmsg
 operator|=
 name|errstring
@@ -4113,7 +4107,6 @@ argument_list|(
 name|errno
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 block|{
 ifdef|#
@@ -4189,6 +4182,37 @@ index|[
 name|i
 index|]
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|statmsg
+operator|++
+operator|==
+literal|':'
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"%s: %s"
+argument_list|,
+name|statmsg
+argument_list|,
+name|errstring
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|statmsg
+operator|=
+name|buf
+expr_stmt|;
+block|}
 block|}
 comment|/* 	**  Print the message as appropriate 	*/
 if|if
@@ -7223,6 +7247,24 @@ index|[
 name|MAXNAME
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SETPROCTITLE
+name|char
+name|ptbuf
+index|[
+name|MAXNAME
+index|]
+decl_stmt|;
+specifier|extern
+name|char
+name|ProcTitleBuf
+index|[
+name|MAXNAME
+index|]
+decl_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/* 	**  Check to see if this uses IPC -- if not, it can't have MX records. 	*/
@@ -7327,6 +7369,28 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SETPROCTITLE
+operator|(
+name|void
+operator|)
+name|strcpy
+argument_list|(
+name|ptbuf
+argument_list|,
+name|ProcTitleBuf
+argument_list|)
+expr_stmt|;
+name|setproctitle
+argument_list|(
+literal|"getmxrr(%s)"
+argument_list|,
+name|host
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|nmx
 operator|=
 name|getmxrr
@@ -7341,6 +7405,18 @@ operator|&
 name|rcode
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SETPROCTITLE
+name|setproctitle
+argument_list|(
+name|NULL
+argument_list|,
+name|ptbuf
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|nmx
