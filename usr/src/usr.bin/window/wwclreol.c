@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwclreol.c	3.2 83/08/11"
+literal|"@(#)wwclreol.c	3.3 83/08/15"
 decl_stmt|;
 end_decl_stmt
 
@@ -429,13 +429,9 @@ for|for
 control|(
 name|i
 operator|=
-name|w
-operator|->
-name|ww_w
-operator|.
-name|nc
+name|wwncol
 operator|-
-name|col
+name|scol
 init|;
 operator|--
 name|i
