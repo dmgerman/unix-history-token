@@ -1016,7 +1016,8 @@ begin_define
 define|#
 directive|define
 name|TARGET_DEFAULT
-value|(MASK_NO_FANCY_MATH_387 | 0301)
+define|\
+value|(MASK_80387 | MASK_IEEE_FP | MASK_FLOAT_RETURNS | MASK_NO_FANCY_MATH_387)
 end_define
 
 begin_comment
