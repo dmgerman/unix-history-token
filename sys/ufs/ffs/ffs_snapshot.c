@@ -957,7 +957,7 @@ name|LOCKPARENT
 operator||
 name|LOCKLEAF
 argument_list|,
-name|UIO_USERSPACE
+name|UIO_SYSSPACE
 argument_list|,
 name|snapfile
 argument_list|,
