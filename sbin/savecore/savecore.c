@@ -2298,14 +2298,6 @@ block|}
 operator|(
 name|void
 operator|)
-name|printf
-argument_list|(
-literal|"\n"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
 name|close
 argument_list|(
 name|ifd
