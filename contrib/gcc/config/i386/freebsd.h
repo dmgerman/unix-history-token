@@ -298,6 +298,27 @@ value|do {									\         output_file_directive (FILE, main_input_filename);	
 end_define
 
 begin_comment
+comment|/* Identify the front-end which produced this file.  To keep symbol    space down, and not confuse kdb, only do this if the language is    not C. (svr4.h defines ASM_IDENTIFY_GCC but neglects this) */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_IDENTIFY_LANGUAGE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ASM_IDENTIFY_LANGUAGE
+parameter_list|(
+name|STREAM
+parameter_list|)
+define|\
+value|{									\   if (strcmp (lang_identify (), "c") != 0)				\     output_lang_identify (STREAM);					\ }
+end_define
+
+begin_comment
 comment|/* This is how to store into the string BUF    the symbol_ref name of an internal numbered label where          PREFIX is the class of label and NUM is the number within the class.      This is suitable for output with `assemble_name'.  */
 end_comment
 
