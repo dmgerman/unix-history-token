@@ -6342,6 +6342,7 @@ return|return;
 block|}
 endif|#
 directive|endif
+comment|/* if it's a null transfer, return immediatly. */
 if|if
 condition|(
 name|bp
