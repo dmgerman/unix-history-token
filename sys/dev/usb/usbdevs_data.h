@@ -19,6 +19,18 @@ index|[]
 init|=
 block|{
 block|{
+name|USB_VENDOR_THRUST
+block|,
+name|USB_PRODUCT_THRUST_FUSION_PAD
+block|,
+literal|0
+block|,
+literal|"Thrustmaster"
+block|,
+literal|"Fusion Digital Gamepad"
+block|, 	}
+block|,
+block|{
 name|USB_VENDOR_NEC
 block|,
 name|USB_PRODUCT_NEC_HUB
@@ -602,6 +614,18 @@ block|,
 name|USB_KNOWNDEV_NOPROD
 block|,
 literal|"Nanao"
+block|,
+name|NULL
+block|, 	}
+block|,
+block|{
+name|USB_VENDOR_THRUST
+block|,
+literal|0
+block|,
+name|USB_KNOWNDEV_NOPROD
+block|,
+literal|"Thrustmaster"
 block|,
 name|NULL
 block|, 	}

@@ -66,6 +66,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|USB_VENDOR_THRUST
+value|0x044f
+end_define
+
+begin_comment
+comment|/* Thrustmaster */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|USB_VENDOR_UNIXTAR
 value|0x0451
 end_define
@@ -454,6 +465,21 @@ end_comment
 
 begin_comment
 comment|/*  * List of known products.  Grouped by vendor.  */
+end_comment
+
+begin_comment
+comment|/* Thrustmaster products */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_PRODUCT_THRUST_FUSION_PAD
+value|0xa0a3
+end_define
+
+begin_comment
+comment|/* Fusion Digital Gamepad */
 end_comment
 
 begin_comment
