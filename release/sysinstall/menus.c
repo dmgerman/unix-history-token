@@ -10889,6 +10889,34 @@ literal|"keymap=br275.iso"
 block|}
 block|,
 block|{
+literal|" Bulgarian BDS"
+block|,
+literal|"Bulgarian BDS keymap"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetKmapVariable
+block|,
+name|NULL
+block|,
+literal|"keymap=bg.bds.ctrlcaps"
+block|}
+block|,
+block|{
+literal|" Bulgarian Phonetic"
+block|,
+literal|"Bulgarian Phonetic keymap"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuSetKmapVariable
+block|,
+name|NULL
+block|,
+literal|"keymap=bg.phonetic.ctrlcaps"
+block|}
+block|,
+block|{
 literal|" Croatian ISO"
 block|,
 literal|"Croatian ISO keymap"
