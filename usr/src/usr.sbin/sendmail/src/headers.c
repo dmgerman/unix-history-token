@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	8.32 (Berkeley) %G%"
+literal|"@(#)headers.c	8.33 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -620,11 +620,16 @@ argument_list|)
 operator|!=
 name|NULL
 operator|&&
+name|bitnset
+argument_list|(
+name|M_CHECKUDB
+argument_list|,
 name|a
 operator|.
 name|q_mailer
-operator|==
-name|LocalMailer
+operator|->
+name|m_flags
+argument_list|)
 operator|&&
 operator|(
 name|p

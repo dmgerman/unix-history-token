@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.35 (Berkeley) %G%"
+literal|"@(#)envelope.c	8.36 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2673,13 +2673,18 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
+name|bitnset
+argument_list|(
+name|M_CHECKUDB
+argument_list|,
 name|e
 operator|->
 name|e_from
 operator|.
 name|q_mailer
-operator|==
-name|LocalMailer
+operator|->
+name|m_flags
+argument_list|)
 condition|)
 block|{
 ifdef|#

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.86 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.87 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2818,21 +2818,18 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* compute effective uid/gid when sending */
-comment|/* XXX perhaps this should be to->q_mailer != LocalMailer ?? */
-comment|/* XXX perhaps it should be a mailer flag? */
 if|if
 condition|(
+name|bitnset
+argument_list|(
+name|M_RUNASRCPT
+argument_list|,
 name|to
 operator|->
 name|q_mailer
-operator|==
-name|ProgMailer
-operator|||
-name|to
 operator|->
-name|q_mailer
-operator|==
-name|FileMailer
+name|m_flags
+argument_list|)
 condition|)
 name|ctladdr
 operator|=
@@ -2902,9 +2899,11 @@ operator|->
 name|m_maxsize
 condition|)
 block|{
-name|NoReturn
-operator|=
-name|TRUE
+name|e
+operator|->
+name|e_flags
+operator||=
+name|EF_NORETURN
 expr_stmt|;
 name|usrerr
 argument_list|(
@@ -5091,9 +5090,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|bitnset
+argument_list|(
+name|M_LOCALMAILER
+argument_list|,
 name|m
-operator|==
-name|LocalMailer
+operator|->
+name|m_flags
+argument_list|)
 operator|||
 name|transienterror
 argument_list|(

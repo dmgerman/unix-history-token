@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.96 (Berkeley) %G%"
+literal|"@(#)conf.c	8.97 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -369,46 +369,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* set if you have broken SMTP peers */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NOLOOPBACKCHECK
-end_ifdef
-
-begin_decl_stmt
-name|bool
-name|CheckLoopBack
-init|=
-name|FALSE
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* set to check HELO loopback */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-name|bool
-name|CheckLoopBack
-init|=
-name|TRUE
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* set to check HELO loopback */
 end_comment
 
 begin_endif
@@ -1417,7 +1377,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  CHECKCOMPAT -- check for From and To person compatible. ** **	This routine can be supplied on a per-installation basis **	to determine whether a person is allowed to send a message. **	This allows restriction of certain types of internet **	forwarding or registration of users. ** **	If the hosts are found to be incompatible, an error **	message should be given using "usrerr" and 0 should **	be returned. ** **	'NoReturn' can be set to suppress the return-to-sender **	function; this should be done on huge messages. ** **	Parameters: **		to -- the person being sent to. ** **	Returns: **		an exit status ** **	Side Effects: **		none (unless you include the usrerr stuff) */
+comment|/* **  CHECKCOMPAT -- check for From and To person compatible. ** **	This routine can be supplied on a per-installation basis **	to determine whether a person is allowed to send a message. **	This allows restriction of certain types of internet **	forwarding or registration of users. ** **	If the hosts are found to be incompatible, an error **	message should be given using "usrerr" and 0 should **	be returned. ** **	EF_NORETURN can be set in e->e_flags to suppress the return-to-sender **	function; this should be done on huge messages. ** **	Parameters: **		to -- the person being sent to. ** **	Returns: **		an exit status ** **	Side Effects: **		none (unless you include the usrerr stuff) */
 end_comment
 
 begin_expr_stmt
@@ -1509,13 +1469,20 @@ name|s
 operator|!=
 name|NULL
 operator|&&
+name|strcmp
+argument_list|(
 name|e
 operator|->
 name|e_from
 operator|.
 name|q_mailer
+operator|->
+name|m_name
+argument_list|,
+literal|"local"
+argument_list|)
 operator|!=
-name|LocalMailer
+literal|0
 operator|&&
 name|to
 operator|->
@@ -1531,7 +1498,7 @@ argument_list|(
 literal|"553 No ARPA mail through this machine: see your system administration"
 argument_list|)
 expr_stmt|;
-comment|/* NoReturn = TRUE; to supress return copy */
+comment|/* e->e_flags |= EF_NORETURN; to supress return copy */
 return|return
 operator|(
 name|EX_UNAVAILABLE

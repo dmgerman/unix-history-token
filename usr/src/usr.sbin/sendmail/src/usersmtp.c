@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.19 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	8.20 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.19 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	8.20 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -610,7 +610,7 @@ condition|)
 goto|goto
 name|tempfail1
 goto|;
-comment|/* 	**  Check to see if we actually ended up talking to ourself. 	**  This means we didn't know about an alias or MX, or we managed 	**  to connect to an echo server. 	** 	**	If this code remains at all, "CheckLoopBack" should be 	**	a mailer flag.  This is a MAYBENEXTRELEASE feature. 	*/
+comment|/* 	**  Check to see if we actually ended up talking to ourself. 	**  This means we didn't know about an alias or MX, or we managed 	**  to connect to an echo server. 	*/
 name|p
 operator|=
 name|strchr
@@ -637,7 +637,15 @@ literal|'\0'
 expr_stmt|;
 if|if
 condition|(
-name|CheckLoopBack
+operator|!
+name|bitnset
+argument_list|(
+name|M_NOLOOPCHECK
+argument_list|,
+name|m
+operator|->
+name|m_flags
+argument_list|)
 operator|&&
 name|strcasecmp
 argument_list|(
@@ -1344,13 +1352,18 @@ name|buf
 expr_stmt|;
 if|if
 condition|(
+name|bitnset
+argument_list|(
+name|M_LOCALMAILER
+argument_list|,
 name|e
 operator|->
 name|e_from
 operator|.
 name|q_mailer
-operator|==
-name|LocalMailer
+operator|->
+name|m_flags
+argument_list|)
 operator|||
 operator|!
 name|bitnset

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.31 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.32 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -483,13 +483,18 @@ name|ESM_QUIET
 case|:
 if|if
 condition|(
+name|bitnset
+argument_list|(
+name|M_LOCALMAILER
+argument_list|,
 name|e
 operator|->
 name|e_from
 operator|.
 name|q_mailer
-operator|==
-name|LocalMailer
+operator|->
+name|m_flags
+argument_list|)
 condition|)
 name|state
 operator|=
@@ -937,13 +942,18 @@ name|NULL
 expr_stmt|;
 if|if
 condition|(
+name|bitnset
+argument_list|(
+name|M_HASPWENT
+argument_list|,
 name|e
 operator|->
 name|e_from
 operator|.
 name|q_mailer
-operator|==
-name|LocalMailer
+operator|->
+name|m_flags
+argument_list|)
 condition|)
 block|{
 if|if
@@ -1757,7 +1767,14 @@ begin_if
 if|if
 condition|(
 operator|!
-name|NoReturn
+name|bitset
+argument_list|(
+name|EF_NORETURN
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
 condition|)
 name|ee
 operator|->
@@ -2904,7 +2921,14 @@ expr_stmt|;
 comment|/* 	**  Output text of original message 	*/
 if|if
 condition|(
-name|NoReturn
+name|bitset
+argument_list|(
+name|EF_NORETURN
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
 condition|)
 name|SendBody
 operator|=

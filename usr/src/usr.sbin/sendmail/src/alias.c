@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	8.28 (Berkeley) %G%"
+literal|"@(#)alias.c	8.29 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2829,11 +2829,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|bitnset
+argument_list|(
+name|M_HASPWENT
+argument_list|,
 name|user
 operator|->
 name|q_mailer
-operator|!=
-name|LocalMailer
+operator|->
+name|m_flags
+argument_list|)
 operator|||
 name|bitset
 argument_list|(

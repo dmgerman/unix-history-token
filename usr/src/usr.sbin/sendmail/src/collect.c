@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	8.15 (Berkeley) %G%"
+literal|"@(#)collect.c	8.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -206,9 +206,11 @@ operator|->
 name|e_df
 argument_list|)
 expr_stmt|;
-name|NoReturn
-operator|=
-name|TRUE
+name|e
+operator|->
+name|e_flags
+operator||=
+name|EF_NORETURN
 expr_stmt|;
 name|finis
 argument_list|()
@@ -1536,9 +1538,11 @@ decl_stmt|;
 name|long
 name|bsize
 decl_stmt|;
-name|NoReturn
-operator|=
-name|TRUE
+name|e
+operator|->
+name|e_flags
+operator||=
+name|EF_NORETURN
 expr_stmt|;
 if|if
 condition|(

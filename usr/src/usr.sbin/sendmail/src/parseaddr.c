@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	8.33 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	8.34 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6512,10 +6512,6 @@ expr_stmt|;
 comment|/* do special mapping for local mailer */
 if|if
 condition|(
-name|m
-operator|==
-name|LocalMailer
-operator|&&
 operator|*
 name|tv
 operator|!=
@@ -6546,6 +6542,15 @@ operator|*
 name|p
 operator|==
 literal|'|'
+operator|&&
+name|bitnset
+argument_list|(
+name|M_CHECKPROG
+argument_list|,
+name|m
+operator|->
+name|m_flags
+argument_list|)
 condition|)
 name|a
 operator|->
@@ -6562,6 +6567,15 @@ operator|*
 name|p
 operator|==
 literal|'/'
+operator|&&
+name|bitnset
+argument_list|(
+name|M_CHECKFILE
+argument_list|,
+name|m
+operator|->
+name|m_flags
+argument_list|)
 condition|)
 name|a
 operator|->
@@ -6578,6 +6592,15 @@ operator|*
 name|p
 operator|==
 literal|':'
+operator|&&
+name|bitnset
+argument_list|(
+name|M_CHECKINCLUDE
+argument_list|,
+name|m
+operator|->
+name|m_flags
+argument_list|)
 condition|)
 block|{
 comment|/* may be :include: */
@@ -6643,9 +6666,14 @@ block|}
 block|}
 if|if
 condition|(
+name|bitnset
+argument_list|(
+name|M_CHECKUDB
+argument_list|,
 name|m
-operator|==
-name|LocalMailer
+operator|->
+name|m_flags
+argument_list|)
 operator|&&
 operator|*
 name|tv

@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.41 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.42 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.41 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.42 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1527,14 +1527,19 @@ name|OpMode
 operator|==
 name|MD_SMTP
 operator|&&
-operator|(
+operator|!
+name|bitnset
+argument_list|(
+name|M_LOCALMAILER
+argument_list|,
 name|e
 operator|->
 name|e_from
 operator|.
 name|q_mailer
-operator|!=
-name|LocalMailer
+operator|->
+name|m_flags
+argument_list|)
 operator|&&
 name|strcmp
 argument_list|(
@@ -1548,7 +1553,6 @@ name|RealUserName
 argument_list|)
 operator|!=
 literal|0
-operator|)
 condition|)
 block|{
 name|auth_warning

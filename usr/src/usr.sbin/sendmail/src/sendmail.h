@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.44 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.45 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	8.44		%G%"
+literal|"@(#)sendmail.h	8.45		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -746,6 +746,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|M_ALIASABLE
+value|'A'
+end_define
+
+begin_comment
+comment|/* user can be LHS of an alias */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|M_BLANKEND
 value|'b'
 end_define
@@ -875,6 +886,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|M_NOLOOPCHECK
+value|'k'
+end_define
+
+begin_comment
+comment|/* don't check for loops in HELO command */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|M_LIMITS
 value|'L'
 end_define
@@ -918,6 +940,17 @@ end_define
 
 begin_comment
 comment|/* MAIL11V3: DATA returns multi-status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_RUNASRCPT
+value|'o'
+end_define
+
+begin_comment
+comment|/* always run mailer as recipient */
 end_comment
 
 begin_define
@@ -1005,6 +1038,17 @@ begin_comment
 comment|/*	'V'	/* UIUC: !-relativize all addresses */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|M_HASPWENT
+value|'w'
+end_define
+
+begin_comment
+comment|/* check for /etc/passwd entry */
+end_comment
+
 begin_comment
 comment|/*	'x'	/* CF: include Full-Name: */
 end_comment
@@ -1023,12 +1067,67 @@ end_comment
 begin_define
 define|#
 directive|define
+name|M_TRYRULESET5
+value|'5'
+end_define
+
+begin_comment
+comment|/* use ruleset 5 after local aliasing */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|M_7BITS
 value|'7'
 end_define
 
 begin_comment
 comment|/* use 7-bit path */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_CHECKINCLUDE
+value|':'
+end_define
+
+begin_comment
+comment|/* check for :include: files */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_CHECKPROG
+value|'|'
+end_define
+
+begin_comment
+comment|/* check for |program addresses */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_CHECKFILE
+value|'/'
+end_define
+
+begin_comment
+comment|/* check for /file addresses */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_CHECKUDB
+value|'@'
+end_define
+
+begin_comment
+comment|/* user can be user database key */
 end_comment
 
 begin_decl_stmt
@@ -1820,6 +1919,17 @@ end_define
 
 begin_comment
 comment|/* this message is fully queued */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EF_NORETURN
+value|0x0000004
+end_define
+
+begin_comment
+comment|/* don't return the message on error */
 end_comment
 
 begin_define
@@ -3892,17 +4002,6 @@ end_comment
 begin_decl_stmt
 name|EXTERN
 name|bool
-name|NoReturn
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* don't return letter to sender */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|bool
 name|SuprErrs
 decl_stmt|;
 end_decl_stmt
@@ -4427,17 +4526,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* if we are the best MX, try host directly */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|bool
-name|CheckLoopBack
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* check for loopback on HELO packet */
 end_comment
 
 begin_decl_stmt

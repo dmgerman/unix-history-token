@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.45 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.46 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1580,13 +1580,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-name|m
-operator|!=
-name|LocalMailer
-condition|)
-block|{
+comment|/* try aliasing */
 if|if
 condition|(
 operator|!
@@ -1598,17 +1592,16 @@ name|a
 operator|->
 name|q_flags
 argument_list|)
-condition|)
-name|e
+operator|&&
+name|bitnset
+argument_list|(
+name|M_ALIASABLE
+argument_list|,
+name|m
 operator|->
-name|e_nrcpts
-operator|++
-expr_stmt|;
-goto|goto
-name|testselfdestruct
-goto|;
-block|}
-comment|/* try aliasing */
+name|m_flags
+argument_list|)
+condition|)
 name|alias
 argument_list|(
 name|a
@@ -1636,6 +1629,15 @@ argument_list|,
 name|a
 operator|->
 name|q_flags
+argument_list|)
+operator|&&
+name|bitnset
+argument_list|(
+name|M_CHECKUDB
+argument_list|,
+name|m
+operator|->
+name|m_flags
 argument_list|)
 condition|)
 block|{
@@ -1738,25 +1740,6 @@ block|}
 block|}
 endif|#
 directive|endif
-comment|/* if it was an alias or a UDB expansion, just return now */
-if|if
-condition|(
-name|bitset
-argument_list|(
-name|QDONTSEND
-operator||
-name|QQUEUEUP
-operator||
-name|QVERIFIED
-argument_list|,
-name|a
-operator|->
-name|q_flags
-argument_list|)
-condition|)
-goto|goto
-name|testselfdestruct
-goto|;
 comment|/* 	**  If we have a level two config file, then pass the name through 	**  Ruleset 5 before sending it off.  Ruleset 5 has the right 	**  to send rewrite it to another mailer.  This gives us a hook 	**  after local aliasing has been done. 	*/
 if|if
 condition|(
@@ -1794,6 +1777,12 @@ operator|!
 name|bitset
 argument_list|(
 name|QNOTREMOTE
+operator||
+name|QDONTSEND
+operator||
+name|QQUEUEUP
+operator||
+name|QVERIFIED
 argument_list|,
 name|a
 operator|->
@@ -1810,6 +1799,15 @@ literal|5
 index|]
 operator|!=
 name|NULL
+operator|&&
+name|bitnset
+argument_list|(
+name|M_TRYRULESET5
+argument_list|,
+name|m
+operator|->
+name|m_flags
+argument_list|)
 condition|)
 block|{
 name|maplocaluser
@@ -1831,10 +1829,21 @@ argument_list|(
 name|QDONTSEND
 operator||
 name|QQUEUEUP
+operator||
+name|QVERIFIED
 argument_list|,
 name|a
 operator|->
 name|q_flags
+argument_list|)
+operator|&&
+name|bitnset
+argument_list|(
+name|M_HASPWENT
+argument_list|,
+name|m
+operator|->
+name|m_flags
 argument_list|)
 condition|)
 block|{
