@@ -93,6 +93,17 @@ directive|include
 file|"util.h"
 end_include
 
+begin_decl_stmt
+specifier|static
+name|void
+name|enomem
+argument_list|(
+name|void
+argument_list|)
+name|__dead2
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*-  * Debug --  *	Print a debugging message given its format.  *  * Results:  *	None.  *  * Side Effects:  *	The message is printed.  */
 end_comment
@@ -558,6 +569,7 @@ comment|/*  * enomem --  *	die when out of memory.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|enomem
 parameter_list|(
