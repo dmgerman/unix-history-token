@@ -1675,17 +1675,70 @@ parameter_list|(
 name|PFS_FILL_ARGS
 parameter_list|)
 block|{
+name|int
+name|name
+index|[
+literal|2
+index|]
+decl_stmt|,
+name|olen
+decl_stmt|,
+name|plen
+decl_stmt|;
+name|int
+name|i
+decl_stmt|,
+name|ncpu
+decl_stmt|;
+name|name
+index|[
+literal|0
+index|]
+operator|=
+name|CTL_HW
+expr_stmt|;
+name|name
+index|[
+literal|1
+index|]
+operator|=
+name|HW_NCPU
+expr_stmt|;
+if|if
+condition|(
+name|kernel_sysctl
+argument_list|(
+name|td
+argument_list|,
+name|name
+argument_list|,
+literal|2
+argument_list|,
+operator|&
+name|ncpu
+argument_list|,
+operator|&
+name|olen
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|plen
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|ncpu
+operator|=
+literal|0
+expr_stmt|;
 name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
 literal|"cpu %ld %ld %ld %ld\n"
-literal|"disk 0 0 0 0\n"
-literal|"page %u %u\n"
-literal|"swap %u %u\n"
-literal|"intr %u\n"
-literal|"ctxt %u\n"
-literal|"btime %lld\n"
 argument_list|,
 name|T2J
 argument_list|(
@@ -1719,6 +1772,80 @@ index|[
 name|CP_IDLE
 index|]
 argument_list|)
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|ncpu
+condition|;
+operator|++
+name|i
+control|)
+name|sbuf_printf
+argument_list|(
+name|sb
+argument_list|,
+literal|"cpu%d %ld %ld %ld %ld\n"
+argument_list|,
+name|i
+argument_list|,
+name|T2J
+argument_list|(
+name|cp_time
+index|[
+name|CP_USER
+index|]
+argument_list|)
+operator|/
+name|ncpu
+argument_list|,
+name|T2J
+argument_list|(
+name|cp_time
+index|[
+name|CP_NICE
+index|]
+argument_list|)
+operator|/
+name|ncpu
+argument_list|,
+name|T2J
+argument_list|(
+name|cp_time
+index|[
+name|CP_SYS
+index|]
+argument_list|)
+operator|/
+name|ncpu
+argument_list|,
+name|T2J
+argument_list|(
+name|cp_time
+index|[
+name|CP_IDLE
+index|]
+argument_list|)
+operator|/
+name|ncpu
+argument_list|)
+expr_stmt|;
+name|sbuf_printf
+argument_list|(
+name|sb
+argument_list|,
+literal|"disk 0 0 0 0\n"
+literal|"page %u %u\n"
+literal|"swap %u %u\n"
+literal|"intr %u\n"
+literal|"ctxt %u\n"
+literal|"btime %lld\n"
 argument_list|,
 name|cnt
 operator|.
