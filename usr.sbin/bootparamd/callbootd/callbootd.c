@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  This code is not copyright, and is placed in the public domain. Feel free to  use and modify. Please send modifications and/or suggestions + bug fixes to          Klas Heggemann<klas@nada.kth.se>  	$Id$ */
+comment|/*  This code is not copyright, and is placed in the public domain. Feel free to  use and modify. Please send modifications and/or suggestions + bug fixes to          Klas Heggemann<klas@nada.kth.se>  	$Id: callbootd.c,v 1.1.1.1 1995/02/26 23:40:53 wpaul Exp $ */
 end_comment
 
 begin_include
@@ -404,6 +404,33 @@ argument_list|,
 name|BOOTPARAMVERS
 argument_list|,
 literal|"udp"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|clnt
+operator|==
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: could not contact bootparam server on host %s\n"
+argument_list|,
+name|argv
+index|[
+literal|0
+index|]
+argument_list|,
+name|server
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
