@@ -3,15 +3,26 @@ begin_comment
 comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nl.c 1.12 %G%"
+literal|"@(#)nl.c 1.13 %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -693,13 +704,20 @@ index|[
 name|INL
 index|]
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|defnl
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|NLNIL
 argument_list|,
 literal|0
 argument_list|)
@@ -719,6 +737,9 @@ condition|;
 name|cp
 operator|++
 control|)
+operator|(
+name|void
+operator|)
 name|hdefnl
 argument_list|(
 operator|*
@@ -755,6 +776,10 @@ name|np
 operator|=
 name|defnl
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|,
 name|RANGE
@@ -809,6 +834,9 @@ operator|=
 name|in_ctypes
 expr_stmt|;
 comment|/* 	 *	Boolean = boolean; 	 */
+operator|(
+name|void
+operator|)
 name|hdefnl
 argument_list|(
 operator|*
@@ -817,9 +845,16 @@ operator|++
 argument_list|,
 name|TYPE
 argument_list|,
+operator|(
+expr|struct
+name|nl
+operator|*
+operator|)
+operator|(
 name|nl
 operator|+
 name|T1BOOL
+operator|)
 argument_list|,
 literal|0
 argument_list|)
@@ -827,12 +862,26 @@ expr_stmt|;
 comment|/* 	 *	intset = set of 0 .. 127; 	 */
 name|intset
 operator|=
+operator|(
+operator|(
+expr|struct
+name|nl
+operator|*
+operator|)
 operator|*
 name|cp
 operator|++
+operator|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|hdefnl
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|intset
 argument_list|,
 name|TYPE
@@ -844,8 +893,15 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|defnl
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|,
 name|SET
@@ -861,6 +917,10 @@ name|np
 operator|=
 name|defnl
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|,
 name|RANGE
@@ -895,6 +955,10 @@ name|np
 operator|=
 name|defnl
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|,
 name|RANGE
@@ -926,6 +990,10 @@ literal|10L
 expr_stmt|;
 name|defnl
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|,
 name|ARRAY
@@ -941,6 +1009,9 @@ name|chain
 operator|=
 name|np
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|hdefnl
 argument_list|(
 operator|*
@@ -957,6 +1028,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 *	text = file of char; 	 */
+operator|(
+name|void
+operator|)
 name|hdefnl
 argument_list|(
 operator|*
@@ -976,6 +1050,10 @@ name|np
 operator|=
 name|defnl
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|,
 name|FILET
@@ -1239,6 +1317,9 @@ index|]
 operator|=
 name|MAXINT
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|hdefnl
 argument_list|(
 operator|*
@@ -1254,6 +1335,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|hdefnl
 argument_list|(
 operator|*
@@ -1269,6 +1353,9 @@ argument_list|,
 literal|127
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|hdefnl
 argument_list|(
 operator|*
@@ -1284,6 +1371,9 @@ argument_list|,
 literal|'\007'
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|hdefnl
 argument_list|(
 operator|*
@@ -1321,6 +1411,9 @@ condition|;
 name|cp
 operator|++
 control|)
+operator|(
+name|void
+operator|)
 name|hdefnl
 argument_list|(
 operator|*
@@ -1328,7 +1421,7 @@ name|cp
 argument_list|,
 name|FUNC
 argument_list|,
-literal|0
+name|NLNIL
 argument_list|,
 operator|*
 name|ip
@@ -1353,6 +1446,9 @@ condition|;
 name|cp
 operator|++
 control|)
+operator|(
+name|void
+operator|)
 name|hdefnl
 argument_list|(
 operator|*
@@ -1360,7 +1456,7 @@ name|cp
 argument_list|,
 name|PROC
 argument_list|,
-literal|0
+name|NLNIL
 argument_list|,
 operator|*
 name|ip
@@ -1383,6 +1479,9 @@ condition|;
 name|cp
 operator|++
 control|)
+operator|(
+name|void
+operator|)
 name|hdefnl
 argument_list|(
 operator|*
@@ -1390,7 +1489,7 @@ name|cp
 argument_list|,
 name|FUNC
 argument_list|,
-literal|0
+name|NLNIL
 argument_list|,
 literal|0
 argument_list|)
@@ -1409,6 +1508,9 @@ operator|,
 name|cp
 operator|++
 control|)
+operator|(
+name|void
+operator|)
 name|hdefnl
 argument_list|(
 operator|*
@@ -1416,7 +1518,7 @@ name|cp
 argument_list|,
 name|PROC
 argument_list|,
-literal|0
+name|NLNIL
 argument_list|,
 literal|0
 argument_list|)
@@ -1448,6 +1550,21 @@ name|typ
 parameter_list|,
 name|val
 parameter_list|)
+name|char
+modifier|*
+name|sym
+decl_stmt|;
+name|int
+name|cls
+decl_stmt|;
+name|struct
+name|nl
+modifier|*
+name|typ
+decl_stmt|;
+name|int
+name|val
+decl_stmt|;
 block|{
 specifier|register
 name|struct
@@ -1462,6 +1579,9 @@ if|if
 condition|(
 name|sym
 condition|)
+operator|(
+name|void
+operator|)
 name|hash
 argument_list|(
 name|sym
@@ -1488,6 +1608,9 @@ if|if
 condition|(
 name|sym
 condition|)
+operator|(
+name|void
+operator|)
 name|enter
 argument_list|(
 name|p
@@ -1543,6 +1666,10 @@ condition|)
 block|{
 name|free
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|nlact
 operator|->
 name|nls_low
@@ -1591,6 +1718,18 @@ end_endif
 begin_escape
 end_escape
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PC
+end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OBJ
+end_ifndef
+
 begin_decl_stmt
 name|char
 modifier|*
@@ -1599,6 +1738,18 @@ init|=
 literal|"variable"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+endif|PC
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+endif|OBJ
+end_endif
 
 begin_decl_stmt
 name|char
@@ -1663,6 +1814,18 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PC
+end_ifndef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|OBJ
+end_ifndef
+
 begin_decl_stmt
 name|char
 modifier|*
@@ -1671,6 +1834,16 @@ init|=
 literal|"SNARK"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -1757,6 +1930,10 @@ begin_comment
 comment|/*  * Dump the namelist from the  * current nlp down to 'to'.  * All the namelist is dumped if  * to is NIL.  */
 end_comment
 
+begin_comment
+comment|/*VARARGS*/
+end_comment
+
 begin_macro
 name|dumpnl
 argument_list|(
@@ -1782,18 +1959,12 @@ name|nl
 modifier|*
 name|p
 decl_stmt|;
-specifier|register
-name|int
-name|j
-decl_stmt|;
 name|struct
 name|nls
 modifier|*
 name|nlsp
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|v
 decl_stmt|,
 name|head
@@ -2308,8 +2479,6 @@ literal|1
 index|]
 expr_stmt|;
 default|default:
-name|casedef
-label|:
 if|if
 condition|(
 name|v
@@ -2719,7 +2888,13 @@ expr_stmt|;
 comment|/* 	 * Zero out this entry 	 */
 name|q
 operator|=
+operator|(
+operator|(
+name|int
+operator|*
+operator|)
 name|p
+operator|)
 expr_stmt|;
 name|i
 operator|=
@@ -2802,6 +2977,10 @@ name|NLINC
 expr_stmt|;
 name|cp
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|malloc
 argument_list|(
 name|NLINC
@@ -2826,6 +3005,10 @@ literal|2
 expr_stmt|;
 name|cp
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|malloc
 argument_list|(
 operator|(
@@ -2885,6 +3068,11 @@ expr_stmt|;
 block|}
 name|nlp
 operator|=
+operator|(
+expr|struct
+name|nl
+operator|*
+operator|)
 name|cp
 expr_stmt|;
 name|nlact
@@ -2931,13 +3119,16 @@ name|p
 decl_stmt|;
 block|{
 specifier|register
-name|int
+name|struct
+name|nl
 modifier|*
 name|p1
 decl_stmt|,
 modifier|*
 name|p2
-decl_stmt|,
+decl_stmt|;
+specifier|register
+name|int
 name|i
 decl_stmt|;
 name|p1
@@ -2950,11 +3141,15 @@ name|p2
 operator|=
 name|defnl
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|NLNIL
 argument_list|,
 literal|0
 argument_list|)
@@ -3124,6 +3319,9 @@ endif|#
 directive|endif
 name|i
 operator|=
+operator|(
+name|int
+operator|)
 name|rp
 operator|->
 name|symbol

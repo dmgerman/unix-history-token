@@ -3,15 +3,26 @@ begin_comment
 comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fdec.c 1.23 %G%"
+literal|"@(#)fdec.c 1.24 %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -152,11 +163,6 @@ name|cbn
 index|]
 expr_stmt|;
 block|}
-return|return
-operator|(
-name|fp
-operator|)
-return|;
 block|}
 end_block
 
@@ -164,22 +170,19 @@ begin_comment
 comment|/*  * Funcext marks the procedure or  * function external in the symbol  * table. Funcext should only be  * called if PC, and is an error  * otherwise.  */
 end_comment
 
-begin_macro
+begin_function
+name|struct
+name|nl
+modifier|*
 name|funcext
-argument_list|(
-argument|fp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|fp
+parameter_list|)
 name|struct
 name|nl
 modifier|*
 name|fp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 ifdef|#
 directive|ifdef
@@ -276,37 +279,31 @@ name|fp
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Funcbody is called  * when the actual (resolved)  * declaration of a procedure is  * encountered. It puts the names  * of the (function) and parameters  * into the symbol table.  */
 end_comment
 
-begin_macro
+begin_function
+name|struct
+name|nl
+modifier|*
 name|funcbody
-argument_list|(
-argument|fp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|fp
+parameter_list|)
 name|struct
 name|nl
 modifier|*
 name|fp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
 name|nl
 modifier|*
 name|q
-decl_stmt|,
-modifier|*
-name|p
 decl_stmt|;
 name|cbn
 operator|++
@@ -411,6 +408,9 @@ operator|->
 name|chain
 control|)
 block|{
+operator|(
+name|void
+operator|)
 name|enter
 argument_list|(
 name|q
@@ -440,6 +440,9 @@ name|FUNC
 condition|)
 block|{
 comment|/* 		 * For functions, enter the fvar 		 */
+operator|(
+name|void
+operator|)
 name|enter
 argument_list|(
 name|fp
@@ -529,7 +532,7 @@ name|fp
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Segend is called to check for  * unresolved variables, funcs and  * procs, and deliver unresolved and  * baduse error diagnostics at the  * end of a routine segment (a separately  * compiled segment that is not the   * main program) for PC. This  * routine should only be called  * by PC (not standard).  */
@@ -542,6 +545,9 @@ end_macro
 
 begin_block
 block|{
+ifdef|#
+directive|ifdef
+name|PC
 specifier|register
 name|struct
 name|nl
@@ -558,9 +564,6 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|PC
 if|if
 condition|(
 name|monflg
@@ -656,13 +659,22 @@ name|BADUSE
 case|:
 name|cp
 operator|=
-literal|'s'
+literal|"s"
 expr_stmt|;
 if|if
 condition|(
+operator|(
+operator|(
+expr|struct
+name|udinfo
+operator|*
+operator|)
+operator|(
 name|p
 operator|->
 name|chain
+operator|)
+operator|)
 operator|->
 name|ud_next
 operator|==
@@ -714,9 +726,16 @@ literal|10
 expr_stmt|;
 name|pnums
 argument_list|(
+operator|(
+expr|struct
+name|udinfo
+operator|*
+operator|)
+operator|(
 name|p
 operator|->
 name|chain
+operator|)
 argument_list|)
 expr_stmt|;
 name|pchr
@@ -987,6 +1006,10 @@ expr_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/*VARARGS*/
+end_comment
+
 begin_macro
 name|nerror
 argument_list|(
@@ -997,6 +1020,19 @@ argument_list|,
 argument|a3
 argument_list|)
 end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|a1
+decl_stmt|,
+modifier|*
+name|a2
+decl_stmt|,
+modifier|*
+name|a3
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{

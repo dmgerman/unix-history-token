@@ -3,15 +3,26 @@ begin_comment
 comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)yycosts.c 1.4 %G%"
+literal|"@(#)yycosts.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -24,6 +35,16 @@ include|#
 directive|include
 file|"0.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"tree_ty.h"
+end_include
+
+begin_comment
+comment|/* must be included for yy.h */
+end_comment
 
 begin_include
 include|#
@@ -378,6 +399,8 @@ operator|+
 name|inscost
 argument_list|(
 name|with
+argument_list|,
+name|what
 argument_list|)
 expr_stmt|;
 comment|/* 	 * It costs extra to replace something which has 	 * semantics by something which doesn't. 	 */
@@ -670,6 +693,8 @@ operator|!=
 name|inscost
 argument_list|(
 name|YID
+argument_list|,
+name|c
 argument_list|)
 operator|+
 name|delcost
@@ -696,6 +721,8 @@ argument_list|,
 name|charname
 argument_list|(
 name|c
+argument_list|,
+literal|1
 argument_list|)
 argument_list|)
 expr_stmt|;

@@ -3,15 +3,26 @@ begin_comment
 comment|/* Copyright (c) 1980 Regents of the University of California */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)flvalue.c 1.13 %G%"
+literal|"@(#)flvalue.c 1.14 %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -41,6 +52,12 @@ begin_include
 include|#
 directive|include
 file|"objfmt.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tree_ty.h"
 end_include
 
 begin_ifdef
@@ -87,10 +104,12 @@ name|r
 parameter_list|,
 name|formalp
 parameter_list|)
-name|int
+name|struct
+name|tnode
 modifier|*
 name|r
 decl_stmt|;
+comment|/* T_VAR */
 name|struct
 name|nl
 modifier|*
@@ -127,11 +146,11 @@ if|if
 condition|(
 name|r
 operator|==
-name|NIL
+name|TR_NIL
 condition|)
 block|{
 return|return
-name|NIL
+name|NLNIL
 return|;
 block|}
 name|typename
@@ -149,9 +168,8 @@ expr_stmt|;
 if|if
 condition|(
 name|r
-index|[
-literal|0
-index|]
+operator|->
+name|tag
 operator|!=
 name|T_VAR
 condition|)
@@ -170,7 +188,7 @@ name|symbol
 argument_list|)
 expr_stmt|;
 return|return
-name|NIL
+name|NLNIL
 return|;
 block|}
 name|p
@@ -178,20 +196,21 @@ operator|=
 name|lookup
 argument_list|(
 name|r
-index|[
-literal|2
-index|]
+operator|->
+name|var_node
+operator|.
+name|cptr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|p
 operator|==
-name|NIL
+name|NLNIL
 condition|)
 block|{
 return|return
-name|NIL
+name|NLNIL
 return|;
 block|}
 switch|switch
@@ -210,11 +229,12 @@ case|:
 if|if
 condition|(
 name|r
-index|[
-literal|3
-index|]
+operator|->
+name|var_node
+operator|.
+name|qual
 operator|!=
-name|NIL
+name|TR_NIL
 condition|)
 block|{
 name|error
@@ -229,12 +249,15 @@ name|symbol
 argument_list|)
 expr_stmt|;
 return|return
-name|NIL
+name|NLNIL
 return|;
 block|}
 ifdef|#
 directive|ifdef
 name|OBJ
+operator|(
+name|void
+operator|)
 name|put
 argument_list|(
 literal|2
@@ -304,11 +327,12 @@ case|:
 if|if
 condition|(
 name|r
-index|[
-literal|3
-index|]
+operator|->
+name|var_node
+operator|.
+name|qual
 operator|!=
-name|NIL
+name|TR_NIL
 condition|)
 block|{
 name|error
@@ -323,7 +347,7 @@ name|symbol
 argument_list|)
 expr_stmt|;
 return|return
-name|NIL
+name|NLNIL
 return|;
 block|}
 if|if
@@ -345,7 +369,7 @@ name|symbol
 argument_list|)
 expr_stmt|;
 return|return
-name|NIL
+name|NLNIL
 return|;
 block|}
 comment|/* 			 *	allocate space for the thunk 			 */
@@ -353,13 +377,18 @@ name|tempnlp
 operator|=
 name|tmpalloc
 argument_list|(
+call|(
+name|long
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
 name|formalrtn
 argument_list|)
+argument_list|)
 argument_list|,
-name|NIL
+name|NLNIL
 argument_list|,
 name|NOREG
 argument_list|)
@@ -367,6 +396,9 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|OBJ
+operator|(
+name|void
+operator|)
 name|put
 argument_list|(
 literal|2
@@ -390,6 +422,9 @@ name|NL_OFFS
 index|]
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|put
 argument_list|(
 literal|2
@@ -495,6 +530,10 @@ literal|0
 argument_list|,
 name|P2INT
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -507,6 +546,10 @@ argument_list|)
 expr_stmt|;
 name|putLV
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|,
 name|cbn
@@ -562,7 +605,7 @@ name|symbol
 argument_list|)
 expr_stmt|;
 return|return
-name|NIL
+name|NLNIL
 return|;
 block|}
 block|}

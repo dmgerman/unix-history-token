@@ -3,15 +3,26 @@ begin_comment
 comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)string.c 1.2 %G%"
+literal|"@(#)string.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -339,7 +350,10 @@ operator|=
 name|strngp
 expr_stmt|;
 block|}
-name|strcpy
+operator|(
+name|void
+operator|)
+name|pstrcpy
 argument_list|(
 name|strngp
 argument_list|,
@@ -388,21 +402,17 @@ directive|ifndef
 name|PXP
 end_ifndef
 
-begin_macro
+begin_function
+name|char
+modifier|*
 name|esavestr
-argument_list|(
-argument|cp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|cp
+parameter_list|)
 name|char
 modifier|*
 name|cp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 ifdef|#
 directive|ifdef
@@ -447,7 +457,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#

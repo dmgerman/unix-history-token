@@ -3,15 +3,26 @@ begin_comment
 comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tree.c 1.2 %G%"
+literal|"@(#)tree.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -154,8 +165,13 @@ begin_comment
 comment|/*  * Tree builds the nodes in the  * parse tree. It is rarely called  * directly, rather calls are made  * to tree[12345] which supplies the  * first argument to save space in  * the code. Tree also guarantees  * that spacep points to the beginning  * of the next slot it will return,  * a property required by the parser  * which was always true before we  * segmented the tree space.  */
 end_comment
 
+begin_comment
+comment|/*VARARGS*/
+end_comment
+
 begin_function
-name|int
+name|struct
+name|tnode
 modifier|*
 name|tree
 parameter_list|(
@@ -233,6 +249,11 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+operator|(
+expr|struct
+name|tnode
+operator|*
+operator|)
 name|q
 operator|)
 return|;
@@ -279,11 +300,16 @@ name|cp
 operator|=
 name|malloc
 argument_list|(
+call|(
+name|unsigned
+call|)
+argument_list|(
 name|i
 operator|*
 sizeof|sizeof
 argument_list|(
 name|int
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -307,6 +333,10 @@ expr_stmt|;
 block|}
 name|spacep
 operator|=
+operator|(
+name|int
+operator|*
+operator|)
 name|cp
 expr_stmt|;
 name|tract
@@ -338,6 +368,10 @@ name|tract
 operator|->
 name|tr_low
 operator|=
+operator|(
+name|int
+operator|*
+operator|)
 name|cp
 expr_stmt|;
 name|tract
@@ -361,9 +395,14 @@ name|yylacnt
 decl_stmt|;
 end_decl_stmt
 
-begin_extern
-extern|extern	bottled;
-end_extern
+begin_decl_stmt
+specifier|extern
+name|struct
+name|B
+modifier|*
+name|bottled
+decl_stmt|;
+end_decl_stmt
 
 begin_ifdef
 ifdef|#
@@ -430,6 +469,10 @@ condition|)
 block|{
 name|free
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|tract
 operator|->
 name|tr_low
@@ -536,8 +579,15 @@ name|int
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strcpy
+operator|(
+name|void
+operator|)
+name|pstrcpy
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|spacep
 argument_list|,
 name|token
@@ -545,13 +595,23 @@ argument_list|)
 expr_stmt|;
 name|cp
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|spacep
 expr_stmt|;
 name|spacep
 operator|=
+operator|(
+operator|(
+name|int
+operator|*
+operator|)
 name|cp
 operator|+
 name|i
+operator|)
 expr_stmt|;
 name|tralloc
 argument_list|(
@@ -560,6 +620,9 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+operator|(
+name|int
+operator|)
 name|cp
 operator|)
 return|;

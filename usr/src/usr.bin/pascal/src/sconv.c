@@ -3,15 +3,26 @@ begin_comment
 comment|/* Copyright (c) 1983 Regents of the University of California */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sconv.c 1.2 %G%"
+literal|"@(#)sconv.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*      *	functions to help pi put out      *	polish postfix binary portable c compiler intermediate code      *	thereby becoming the portable pascal compiler      */

@@ -3,15 +3,26 @@ begin_comment
 comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)clas.c 1.6 %G%"
+literal|"@(#)clas.c 1.7 %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -29,6 +40,12 @@ begin_include
 include|#
 directive|include
 file|"tree.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tree_ty.h"
 end_include
 
 begin_comment
@@ -139,7 +156,7 @@ if|if
 condition|(
 name|p
 operator|==
-name|NIL
+name|NLNIL
 condition|)
 block|{
 name|nocascade
@@ -295,11 +312,18 @@ name|TSCAL
 operator|)
 return|;
 default|default:
+block|{
 name|panic
 argument_list|(
 literal|"clas"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|NIL
+operator|)
+return|;
+block|}
 block|}
 block|}
 end_block
@@ -364,22 +388,19 @@ begin_comment
 comment|/*  * Scalar returns a pointer to  * the the base scalar type of  * its argument if its argument  * is a SCALar else NIL.  */
 end_comment
 
-begin_macro
+begin_function
+name|struct
+name|nl
+modifier|*
 name|scalar
-argument_list|(
-argument|p1
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|p1
+parameter_list|)
 name|struct
 name|nl
 modifier|*
 name|p1
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -395,11 +416,11 @@ if|if
 condition|(
 name|p
 operator|==
-name|NIL
+name|NLNIL
 condition|)
 return|return
 operator|(
-name|NIL
+name|NLNIL
 operator|)
 return|;
 if|if
@@ -420,11 +441,11 @@ if|if
 condition|(
 name|p
 operator|==
-name|NIL
+name|NLNIL
 condition|)
 return|return
 operator|(
-name|NIL
+name|NLNIL
 operator|)
 return|;
 return|return
@@ -437,11 +458,11 @@ name|SCAL
 condition|?
 name|p
 else|:
-name|NIL
+name|NLNIL
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Isa tells whether p  * is one of a group of  * namelist classes.  The  * classes wanted are specified  * by the characters in s.  * (Note that s would more efficiently,  * if less clearly, be given by a mask.)  */
@@ -603,6 +624,21 @@ argument|s
 argument_list|)
 end_macro
 
+begin_decl_stmt
+name|struct
+name|nl
+modifier|*
+name|p
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|s
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 return|return
@@ -623,14 +659,18 @@ begin_comment
 comment|/*  * "shorthand"  */
 end_comment
 
-begin_macro
+begin_function
+name|char
+modifier|*
 name|nameof
-argument_list|(
-argument|p
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|p
+parameter_list|)
+name|struct
+name|nl
+modifier|*
+name|p
+decl_stmt|;
 block|{
 return|return
 operator|(
@@ -644,7 +684,7 @@ index|]
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_ifndef
 ifndef|#
@@ -652,28 +692,27 @@ directive|ifndef
 name|PI0
 end_ifndef
 
-begin_macro
-name|nowexp
-argument_list|(
-argument|r
-argument_list|)
-end_macro
+begin_comment
+comment|/* find out for sure what kind of node this is being passed    possibly several different kinds of node are passed to it */
+end_comment
 
-begin_decl_stmt
+begin_function
 name|int
+name|nowexp
+parameter_list|(
+name|r
+parameter_list|)
+name|struct
+name|tnode
 modifier|*
 name|r
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
 name|r
-index|[
-literal|0
-index|]
+operator|->
+name|tag
 operator|==
 name|T_WEXP
 condition|)
@@ -681,9 +720,10 @@ block|{
 if|if
 condition|(
 name|r
-index|[
-literal|2
-index|]
+operator|->
+name|var_node
+operator|.
+name|cptr
 operator|==
 name|NIL
 condition|)
@@ -710,7 +750,7 @@ name|NIL
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
@@ -721,22 +761,18 @@ begin_comment
 comment|/*      *	is a variable a local, a formal parameter, or a global?      *	all this from just the offset:      *	    globals are at levels 0 or 1      *	    positives are parameters      *	    negative evens are locals      */
 end_comment
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_macro
 name|whereis
 argument_list|(
-argument|level
-argument_list|,
 argument|offset
 argument_list|,
 argument|other_flags
 argument_list|)
 end_macro
-
-begin_decl_stmt
-name|int
-name|level
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -787,6 +823,12 @@ name|NNLOCAL
 operator|)
 condition|)
 block|{
+default|default:
+name|panic
+argument_list|(
+literal|"whereis"
+argument_list|)
+expr_stmt|;
 case|case
 name|NGLOBAL
 case|:
@@ -811,12 +853,6 @@ case|:
 return|return
 name|LOCALVAR
 return|;
-default|default:
-name|panic
-argument_list|(
-literal|"whereis"
-argument_list|)
-expr_stmt|;
 block|}
 endif|#
 directive|endif

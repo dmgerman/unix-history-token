@@ -3,43 +3,45 @@ begin_comment
 comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)yylex.c 1.3 %G%"
+literal|"@(#)yylex.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
-begin_include
+begin_expr_stmt
+operator|*
+operator|/
+endif|#
+directive|endif
 include|#
 directive|include
 file|"whoami.h"
-end_include
-
-begin_include
 include|#
 directive|include
 file|"0.h"
-end_include
-
-begin_include
+include|#
+directive|include
+file|"tree_ty.h"
+comment|/* must be included for yy.h */
 include|#
 directive|include
 file|"yy.h"
-end_include
-
-begin_comment
 comment|/*  * Scanner  */
-end_comment
-
-begin_decl_stmt
 name|int
 name|yylacnt
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_define
 define|#
@@ -67,7 +69,7 @@ end_macro
 
 begin_decl_stmt
 name|struct
-name|yylex
+name|yytok
 modifier|*
 name|y
 decl_stmt|;
@@ -88,12 +90,20 @@ argument_list|)
 expr_stmt|;
 name|copy
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|Yla
 index|[
 name|yylacnt
 index|]
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|y
 argument_list|,
 sizeof|sizeof
@@ -120,10 +130,11 @@ specifier|register
 name|c
 expr_stmt|;
 specifier|register
-operator|*
-operator|*
+name|int
+modifier|*
+modifier|*
 name|ip
-expr_stmt|;
+decl_stmt|;
 specifier|register
 name|char
 modifier|*
@@ -147,9 +158,17 @@ operator|--
 expr_stmt|;
 name|copy
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|Y
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|Yla
 index|[
@@ -501,8 +520,17 @@ name|c
 expr_stmt|;
 name|ip
 operator|=
+operator|(
+name|int
+operator|*
+operator|*
+operator|)
 name|hash
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|,
 literal|1
@@ -513,16 +541,27 @@ condition|(
 operator|*
 name|ip
 operator|<
+operator|(
+name|int
+operator|*
+operator|)
 name|yykey
 operator|||
 operator|*
 name|ip
 operator|>=
+operator|(
+name|int
+operator|*
+operator|)
 name|lastkey
 condition|)
 block|{
 name|yylval
 operator|=
+operator|(
+name|int
+operator|)
 operator|*
 name|ip
 expr_stmt|;
@@ -955,6 +994,10 @@ name|yerror
 argument_list|(
 literal|"Unmatched %c for string"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|delim
 argument_list|)
 expr_stmt|;
@@ -1391,6 +1434,10 @@ name|yerror
 argument_list|(
 literal|"%c is non-standard"
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|c
 argument_list|)
 expr_stmt|;

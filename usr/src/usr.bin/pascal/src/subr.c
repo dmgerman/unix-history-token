@@ -3,15 +3,26 @@ begin_comment
 comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)subr.c 1.5 %G%"
+literal|"@(#)subr.c 1.6 %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -207,13 +218,16 @@ decl_stmt|,
 modifier|*
 name|dp
 decl_stmt|;
+specifier|extern
+name|char
+modifier|*
+name|ctime
+parameter_list|()
+function_decl|;
 name|char
 modifier|*
 name|cpp
 decl_stmt|;
-specifier|register
-name|i
-expr_stmt|;
 specifier|static
 name|char
 name|mycbuf
@@ -311,10 +325,13 @@ begin_block
 block|{
 specifier|register
 name|i
-operator|,
-operator|*
-name|pfp
 expr_stmt|;
+specifier|register
+name|char
+modifier|*
+modifier|*
+name|pfp
+decl_stmt|;
 name|pfp
 operator|=
 name|pflist
@@ -334,7 +351,7 @@ operator|--
 control|)
 if|if
 condition|(
-name|strcmp
+name|pstrcmp
 argument_list|(
 name|fp
 argument_list|,
@@ -421,7 +438,7 @@ end_block
 begin_function
 name|int
 modifier|*
-name|calloc
+name|pcalloc
 parameter_list|(
 name|num
 parameter_list|,
@@ -435,6 +452,7 @@ decl_stmt|;
 block|{
 specifier|register
 name|int
+modifier|*
 name|p1
 decl_stmt|,
 modifier|*
@@ -478,8 +496,15 @@ condition|(
 operator|(
 name|p1
 operator|=
+operator|(
+name|int
+operator|*
+operator|)
 name|malloc
 argument_list|(
+operator|(
+name|unsigned
+operator|)
 name|nbyte
 argument_list|)
 operator|)
@@ -530,7 +555,7 @@ comment|/*  * Compare strings:  s1>s2:>0  s1==s2: 0  s1<s2:<0  */
 end_comment
 
 begin_expr_stmt
-name|strcmp
+name|pstrcmp
 argument_list|(
 name|s1
 argument_list|,
@@ -587,28 +612,32 @@ begin_comment
 comment|/*  * Copy string s2 to s1.  * S1 must be large enough.  * Return s1.  */
 end_comment
 
-begin_expr_stmt
-name|strcpy
-argument_list|(
+begin_function
+name|char
+modifier|*
+name|pstrcpy
+parameter_list|(
 name|s1
-argument_list|,
+parameter_list|,
 name|s2
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|s1
-operator|,
-operator|*
+decl_stmt|,
+decl|*
 name|s2
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_function
 
 begin_block
 block|{
 specifier|register
+name|char
+modifier|*
 name|os1
-expr_stmt|;
+decl_stmt|;
 name|os1
 operator|=
 name|s1

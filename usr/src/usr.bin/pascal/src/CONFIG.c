@@ -3,15 +3,26 @@ begin_comment
 comment|/*      *	make sure you are editing      *		CONFIG.c      *	editing config.c won't work      */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)CONFIG.c	2.3 (Berkeley) 82/04/01"
+literal|"@(#)CONFIG.c	2.4 (Berkeley) 83/08/19"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*      *	the version of translator      */
@@ -82,6 +93,12 @@ begin_comment
 comment|/*      *	things about the interpreter.      *	these are not used by the compiler.      */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PC
+end_ifndef
+
 begin_decl_stmt
 name|char
 modifier|*
@@ -94,6 +111,17 @@ end_decl_stmt
 begin_comment
 comment|/* px_header's name */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PXP
+end_ifdef
 
 begin_decl_stmt
 name|char
@@ -133,6 +161,11 @@ end_decl_stmt
 begin_comment
 comment|/* the debugger's name */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

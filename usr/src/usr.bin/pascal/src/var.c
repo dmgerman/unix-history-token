@@ -3,15 +3,26 @@ begin_comment
 comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)var.c 1.16 %G%"
+literal|"@(#)var.c 1.17 %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -73,8 +84,18 @@ directive|include
 file|"tmps.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"tree_ty.h"
+end_include
+
 begin_comment
 comment|/*  * Declare variables of a var part.  DPOFF1 is  * the local variable storage for all prog/proc/func  * modules aside from the block mark.  The total size  * of all the local variables is entered into the  * size array.  */
+end_comment
+
+begin_comment
+comment|/*ARGSUSED*/
 end_comment
 
 begin_macro
@@ -269,7 +290,12 @@ end_ifdef
 begin_decl_stmt
 name|int
 name|vline
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|tnode
 modifier|*
 name|vidl
 decl_stmt|,
@@ -287,7 +313,8 @@ modifier|*
 name|np
 decl_stmt|;
 specifier|register
-name|int
+name|struct
+name|tnode
 modifier|*
 name|vl
 decl_stmt|;
@@ -302,6 +329,7 @@ name|line
 operator|=
 name|vline
 expr_stmt|;
+comment|/* why is this here? */
 for|for
 control|(
 name|vl
@@ -310,14 +338,15 @@ name|vidl
 init|;
 name|vl
 operator|!=
-name|NIL
+name|TR_NIL
 condition|;
 name|vl
 operator|=
 name|vl
-index|[
-literal|2
-index|]
+operator|->
+name|list_node
+operator|.
+name|next
 control|)
 block|{ 		}
 block|}
@@ -351,14 +380,16 @@ end_expr_stmt
 
 begin_decl_stmt
 specifier|register
-name|int
+name|struct
+name|tnode
 modifier|*
 name|vidl
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|struct
+name|tnode
 modifier|*
 name|vtype
 decl_stmt|;
@@ -384,17 +415,16 @@ decl_stmt|;
 name|int
 name|o2
 decl_stmt|;
-name|int
-modifier|*
-name|ovidl
-init|=
-name|vidl
-decl_stmt|;
+ifdef|#
+directive|ifdef
+name|PC
 name|struct
 name|nl
 modifier|*
 name|vp
 decl_stmt|;
+endif|#
+directive|endif
 name|np
 operator|=
 name|gtype
@@ -426,14 +456,15 @@ control|(
 init|;
 name|vidl
 operator|!=
-name|NIL
+name|TR_NIL
 condition|;
 name|vidl
 operator|=
 name|vidl
-index|[
-literal|2
-index|]
+operator|->
+name|list_node
+operator|.
+name|next
 control|)
 block|{
 ifdef|#
@@ -541,16 +572,24 @@ block|}
 endif|#
 directive|endif
 endif|PC
+ifdef|#
+directive|ifdef
+name|PC
 name|vp
 operator|=
 name|enter
 argument_list|(
 name|defnl
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|vidl
-index|[
-literal|1
-index|]
+operator|->
+name|list_node
+operator|.
+name|list
 argument_list|,
 name|VAR
 argument_list|,
@@ -560,6 +599,35 @@ name|o2
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+operator|(
+name|void
+operator|)
+name|enter
+argument_list|(
+name|defnl
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|vidl
+operator|->
+name|list_node
+operator|.
+name|list
+argument_list|,
+name|VAR
+argument_list|,
+name|np
+argument_list|,
+name|o2
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|np
@@ -615,10 +683,14 @@ name|EXTFORMAT
 argument_list|,
 literal|1
 argument_list|,
+operator|(
+name|int
+operator|)
 name|vidl
-index|[
-literal|1
-index|]
+operator|->
+name|list_node
+operator|.
+name|list
 argument_list|)
 expr_stmt|;
 name|putprintf
@@ -627,6 +699,9 @@ literal|",%d"
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|int
+operator|)
 name|w
 argument_list|)
 expr_stmt|;
@@ -639,10 +714,15 @@ argument_list|)
 expr_stmt|;
 name|stabgvar
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|vidl
-index|[
-literal|1
-index|]
+operator|->
+name|list_node
+operator|.
+name|list
 argument_list|,
 name|p2type
 argument_list|(
@@ -651,6 +731,9 @@ argument_list|)
 argument_list|,
 name|o2
 argument_list|,
+operator|(
+name|int
+operator|)
 name|w
 argument_list|,
 name|line
@@ -792,6 +875,12 @@ begin_comment
 comment|/*  * Evening  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PC
+end_ifndef
+
 begin_function
 name|long
 name|leven
@@ -830,6 +919,17 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PC
+end_ifndef
+
 begin_function
 name|int
 name|even
@@ -852,6 +952,11 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Find the width of a type in bytes.  */
@@ -903,9 +1008,6 @@ name|nl
 modifier|*
 name|p
 decl_stmt|;
-name|long
-name|w
-decl_stmt|;
 name|p
 operator|=
 name|np
@@ -930,6 +1032,12 @@ operator|->
 name|class
 condition|)
 block|{
+default|default:
+name|panic
+argument_list|(
+literal|"wclass"
+argument_list|)
+expr_stmt|;
 case|case
 name|TYPE
 case|:
@@ -1128,12 +1236,6 @@ name|NL_OFFS
 index|]
 operator|)
 return|;
-default|default:
-name|panic
-argument_list|(
-literal|"wclass"
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 end_function
@@ -1270,6 +1372,12 @@ operator|->
 name|class
 condition|)
 block|{
+default|default:
+name|panic
+argument_list|(
+literal|"align"
+argument_list|)
+expr_stmt|;
 case|case
 name|TYPE
 case|:
@@ -1433,12 +1541,6 @@ name|p
 operator|->
 name|align_info
 return|;
-default|default:
-name|panic
-argument_list|(
-literal|"align"
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 end_function
@@ -1767,11 +1869,7 @@ name|p
 operator|==
 name|NIL
 condition|)
-return|return
-operator|(
-name|NIL
-operator|)
-return|;
+return|return;
 name|lb
 operator|=
 name|p

@@ -3,15 +3,26 @@ begin_comment
 comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lab.c 1.17 %G%"
+literal|"@(#)lab.c 1.18 %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -67,6 +78,12 @@ directive|endif
 endif|PC
 end_endif
 
+begin_include
+include|#
+directive|include
+file|"tree_ty.h"
+end_include
+
 begin_comment
 comment|/*  * Label enters the definitions  * of the label declaration part  * into the namelist.  */
 end_comment
@@ -81,10 +98,15 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|int
+name|struct
+name|tnode
 modifier|*
 name|r
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
 name|l
 decl_stmt|;
 end_decl_stmt
@@ -119,9 +141,11 @@ ifndef|#
 directive|ifndef
 name|PI0
 specifier|register
-operator|*
+name|struct
+name|tnode
+modifier|*
 name|ll
-expr_stmt|;
+decl_stmt|;
 specifier|register
 name|struct
 name|nl
@@ -291,18 +315,22 @@ name|r
 init|;
 name|ll
 operator|!=
-name|NIL
+name|TR_NIL
 condition|;
 name|ll
 operator|=
 name|ll
-index|[
-literal|2
-index|]
+operator|->
+name|list_node
+operator|.
+name|next
 control|)
 block|{
 name|l
 operator|=
+operator|(
+name|int
+operator|)
 name|getlab
 argument_list|()
 expr_stmt|;
@@ -312,15 +340,23 @@ name|enter
 argument_list|(
 name|defnl
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|ll
-index|[
-literal|1
-index|]
+operator|->
+name|list_node
+operator|.
+name|list
 argument_list|,
 name|LABEL
 argument_list|,
-literal|0
+name|NLNIL
 argument_list|,
+operator|(
+name|int
+operator|)
 name|l
 argument_list|)
 argument_list|)
@@ -333,6 +369,9 @@ index|[
 literal|1
 index|]
 operator|=
+operator|(
+name|int
+operator|)
 name|getlab
 argument_list|()
 expr_stmt|;
@@ -378,11 +417,21 @@ ifdef|#
 directive|ifdef
 name|OBJ
 comment|/* 		     * This operator is between 		     * the bodies of two procedures 		     * and provides a target for 		     * gotos for this label via TRA. 		     */
+operator|(
+name|void
+operator|)
 name|putlab
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|l
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|put
 argument_list|(
 literal|2
@@ -428,6 +477,9 @@ literal|"	.globl	%s"
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|int
+operator|)
 name|extname
 argument_list|)
 expr_stmt|;
@@ -550,14 +602,13 @@ name|p
 operator|==
 name|NIL
 condition|)
-return|return
-operator|(
-name|NIL
-operator|)
-return|;
+return|return;
 ifdef|#
 directive|ifdef
 name|OBJ
+operator|(
+name|void
+operator|)
 name|put
 argument_list|(
 literal|2
@@ -610,6 +661,9 @@ literal|"	jmp	%s"
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|int
+operator|)
 name|extname
 argument_list|)
 expr_stmt|;
@@ -625,6 +679,9 @@ literal|"	jra	%s"
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|int
+operator|)
 name|extname
 argument_list|)
 expr_stmt|;
@@ -729,6 +786,10 @@ else|else
 block|{
 name|putLV
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|,
 name|bn
@@ -787,6 +848,10 @@ argument_list|)
 expr_stmt|;
 name|putLV
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|,
 name|bn
@@ -978,11 +1043,7 @@ name|p
 operator|==
 name|NIL
 condition|)
-return|return
-operator|(
-name|NIL
-operator|)
-return|;
+return|return;
 if|if
 condition|(
 name|bn
@@ -1033,6 +1094,9 @@ directive|ifdef
 name|OBJ
 name|patch4
 argument_list|(
+operator|(
+name|PTR_DCL
+operator|)
 name|p
 operator|->
 name|value
@@ -1064,6 +1128,9 @@ literal|"%s:"
 argument_list|,
 literal|0
 argument_list|,
+operator|(
+name|int
+operator|)
 name|extname
 argument_list|)
 expr_stmt|;
@@ -1102,6 +1169,10 @@ literal|"Goto %s from line %d is into a structured statement"
 argument_list|,
 name|s
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|p
 operator|->
 name|value

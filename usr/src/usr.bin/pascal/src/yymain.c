@@ -3,15 +3,26 @@ begin_comment
 comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)yymain.c 1.4 %G%"
+literal|"@(#)yymain.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -24,6 +35,16 @@ include|#
 directive|include
 file|"0.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"tree_ty.h"
+end_include
+
+begin_comment
+comment|/* must be included for yy.h */
+end_comment
 
 begin_include
 include|#
@@ -171,7 +192,7 @@ name|OBJ
 comment|/* 	 * save outermost block of namelist 	 */
 name|savenl
 argument_list|(
-literal|0
+name|NLNIL
 argument_list|)
 expr_stmt|;
 name|magic2
@@ -185,7 +206,7 @@ directive|ifdef
 name|DEBUG
 name|dumpnl
 argument_list|(
-literal|0
+name|NLNIL
 argument_list|)
 expr_stmt|;
 endif|#
@@ -237,6 +258,9 @@ name|ERRS
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGHUP
@@ -244,6 +268,9 @@ argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGINT
@@ -291,6 +318,9 @@ specifier|register
 name|int
 name|c
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 literal|1
@@ -319,6 +349,9 @@ name|ERRS
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|lseek
 argument_list|(
 name|fout
@@ -394,14 +427,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|exec
-name|magichdr
-decl_stmt|;
-end_decl_stmt
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -413,6 +438,14 @@ ifdef|#
 directive|ifdef
 name|OBJ
 end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|exec
+name|magichdr
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|magic
@@ -436,6 +469,10 @@ name|unsigned
 modifier|*
 name|ubuf
 init|=
+operator|(
+name|unsigned
+operator|*
+operator|)
 name|buf
 decl_stmt|;
 specifier|register
@@ -463,6 +500,10 @@ name|read
 argument_list|(
 name|hf
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 argument_list|,
 name|HEADER_BYTES
@@ -574,6 +615,9 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|hf
@@ -605,6 +649,11 @@ name|struct
 name|pxhdr
 name|pxhd
 decl_stmt|;
+specifier|extern
+name|long
+name|lseek
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|magichdr
@@ -672,12 +721,21 @@ name|pxhd
 operator|.
 name|symtabsize
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|time
 argument_list|(
+operator|(
+name|long
+operator|*
+operator|)
+operator|(
 operator|&
 name|pxhd
 operator|.
 name|maketime
+operator|)
 argument_list|)
 expr_stmt|;
 name|pxhd
@@ -686,6 +744,9 @@ name|magicnum
 operator|=
 name|MAGICNUM
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|lseek
 argument_list|(
 name|ofil
@@ -699,8 +760,14 @@ name|write
 argument_list|(
 name|ofil
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|(
 operator|&
 name|magichdr
+operator|)
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -709,6 +776,9 @@ name|exec
 argument_list|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|lseek
 argument_list|(
 name|ofil
@@ -732,8 +802,14 @@ name|write
 argument_list|(
 name|ofil
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|(
 operator|&
 name|pxhd
+operator|)
 argument_list|,
 sizeof|sizeof
 argument_list|(

@@ -3,15 +3,26 @@ begin_comment
 comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conv.c 1.4 %G%"
+literal|"@(#)conv.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -55,6 +66,18 @@ directive|endif
 endif|PC
 end_endif
 
+begin_include
+include|#
+directive|include
+file|"tree_ty.h"
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PC
+end_ifndef
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -91,11 +114,11 @@ if|if
 condition|(
 name|p1
 operator|==
-name|NIL
+name|NLNIL
 operator|||
 name|p2
 operator|==
-name|NIL
+name|NLNIL
 condition|)
 return|return;
 switch|switch
@@ -119,6 +142,9 @@ case|case
 operator|-
 literal|6
 case|:
+operator|(
+name|void
+operator|)
 name|put
 argument_list|(
 literal|1
@@ -131,6 +157,9 @@ case|case
 operator|-
 literal|4
 case|:
+operator|(
+name|void
+operator|)
 name|put
 argument_list|(
 literal|1
@@ -147,6 +176,9 @@ case|case
 operator|-
 literal|2
 case|:
+operator|(
+name|void
+operator|)
 name|put
 argument_list|(
 literal|1
@@ -172,6 +204,9 @@ case|:
 case|case
 literal|3
 case|:
+operator|(
+name|void
+operator|)
 name|put
 argument_list|(
 literal|1
@@ -193,6 +228,12 @@ end_block
 begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+endif|PC
 end_endif
 
 begin_comment
@@ -218,6 +259,14 @@ name|p1
 decl_stmt|,
 modifier|*
 name|p2
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|tnode
+modifier|*
+name|t
 decl_stmt|;
 end_decl_stmt
 
@@ -326,16 +375,16 @@ name|TINT
 operator|&&
 name|divflg
 operator|==
-literal|0
+name|FALSE
 operator|&&
 name|t
 operator|!=
-name|NIL
+name|TR_NIL
 condition|)
 block|{
 name|divchk
 operator|=
-literal|1
+name|TRUE
 expr_stmt|;
 name|c1
 operator|=
@@ -353,7 +402,7 @@ argument_list|)
 expr_stmt|;
 name|divchk
 operator|=
-name|NIL
+name|FALSE
 expr_stmt|;
 if|if
 condition|(
@@ -379,7 +428,7 @@ argument_list|)
 expr_stmt|;
 name|divflg
 operator|=
-literal|1
+name|TRUE
 expr_stmt|;
 return|return
 operator|(
@@ -595,6 +644,12 @@ directive|ifndef
 name|PI0
 end_ifndef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PC
+end_ifndef
+
 begin_comment
 comment|/*  * Rangechk generates code to  * check if the type p on top  * of the stack is in range for  * assignment to a variable  * of type q.  */
 end_comment
@@ -627,6 +682,9 @@ name|nl
 modifier|*
 name|rp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|OBJ
 specifier|register
 name|op
 expr_stmt|;
@@ -635,6 +693,8 @@ name|wq
 decl_stmt|,
 name|wrp
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|opt
@@ -746,6 +806,9 @@ name|wrp
 operator|<=
 literal|2
 condition|)
+operator|(
+name|void
+operator|)
 name|put
 argument_list|(
 literal|3
@@ -784,6 +847,9 @@ name|nl
 operator|+
 name|T4INT
 condition|)
+operator|(
+name|void
+operator|)
 name|put
 argument_list|(
 literal|3
@@ -821,6 +887,9 @@ name|wrp
 operator|<=
 literal|2
 condition|)
+operator|(
+name|void
+operator|)
 name|put
 argument_list|(
 literal|3
@@ -859,6 +928,9 @@ name|nl
 operator|+
 name|T4INT
 condition|)
+operator|(
+name|void
+operator|)
 name|put
 argument_list|(
 literal|3
@@ -898,6 +970,9 @@ name|nl
 operator|+
 name|T4INT
 condition|)
+operator|(
+name|void
+operator|)
 name|put
 argument_list|(
 literal|3
@@ -941,6 +1016,9 @@ name|wrp
 operator|<=
 literal|2
 condition|)
+operator|(
+name|void
+operator|)
 name|put
 argument_list|(
 literal|2
@@ -961,6 +1039,9 @@ index|]
 argument_list|)
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|put
 argument_list|(
 literal|2
@@ -1002,6 +1083,11 @@ directive|endif
 endif|PC
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1272,6 +1358,9 @@ name|putleaf
 argument_list|(
 name|P2ICON
 argument_list|,
+operator|(
+name|int
+operator|)
 name|need
 operator|->
 name|range
@@ -1283,6 +1372,10 @@ literal|0
 argument_list|,
 name|P2INT
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -1298,6 +1391,9 @@ name|putleaf
 argument_list|(
 name|P2ICON
 argument_list|,
+operator|(
+name|int
+operator|)
 name|need
 operator|->
 name|range
@@ -1309,6 +1405,10 @@ literal|0
 argument_list|,
 name|P2INT
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 literal|0
 argument_list|)
 expr_stmt|;
@@ -1391,13 +1491,25 @@ name|double
 modifier|*
 name|dp
 init|=
+operator|(
+operator|(
+name|double
+operator|*
+operator|)
 name|dub
+operator|)
 decl_stmt|;
 name|long
 modifier|*
 name|lp
 init|=
+operator|(
+operator|(
+name|long
+operator|*
+operator|)
 name|dub
+operator|)
 decl_stmt|;
 specifier|register
 name|int

@@ -3,15 +3,26 @@ begin_comment
 comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)yyparse.c 1.2 %G%"
+literal|"@(#)yyparse.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -24,6 +35,16 @@ include|#
 directive|include
 file|"0.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"tree_ty.h"
+end_include
+
+begin_comment
+comment|/* must be included for yy.h */
+end_comment
 
 begin_include
 include|#
@@ -46,7 +67,8 @@ comment|/* Current parser state */
 end_comment
 
 begin_decl_stmt
-name|int
+name|union
+name|semstack
 modifier|*
 name|yypv
 decl_stmt|;
@@ -115,7 +137,8 @@ comment|/*  * Parse and parallel semantic stack  */
 end_comment
 
 begin_decl_stmt
-name|int
+name|union
+name|semstack
 name|yyv
 index|[
 name|MAXDEPTH
@@ -161,6 +184,19 @@ name|panicps
 decl_stmt|,
 name|idfail
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|lint
+name|panicps
+operator|=
+operator|(
+name|int
+operator|*
+operator|)
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
 name|yystate
 operator|=
 literal|0
@@ -283,8 +319,6 @@ literal|1
 index|]
 index|]
 expr_stmt|;
-name|actn
-label|:
 comment|/* 	 * Search the parse actions table 	 * for something useful to do. 	 * While n is non-positive, it is the negation 	 * of the token we are testing for. 	 */
 ifdef|#
 directive|ifdef
@@ -414,6 +448,8 @@ operator|&
 literal|07777
 expr_stmt|;
 name|yyval
+operator|.
+name|i_entry
 operator|=
 name|yylval
 expr_stmt|;
@@ -479,6 +515,8 @@ name|yypv
 index|[
 literal|0
 index|]
+operator|.
+name|cptr
 argument_list|)
 condition|)
 block|{

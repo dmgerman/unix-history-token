@@ -3,6 +3,12 @@ begin_comment
 comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
@@ -19,9 +25,14 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c 1.9 %G%"
+literal|"@(#)main.c 1.10 %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -34,6 +45,16 @@ include|#
 directive|include
 file|"0.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"tree_ty.h"
+end_include
+
+begin_comment
+comment|/* must be included for yy.h */
+end_comment
 
 begin_include
 include|#
@@ -74,24 +95,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-name|pixusage
-index|[]
-init|=
-literal|"pix [ -blnpstuw ] [ -i file ... ] name.p [ arg ... ]"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-name|pcusage
-index|[]
-init|=
-literal|"pc [ options ] [ -o file ] [ -i file ... ] name.p"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
 modifier|*
 name|usageis
 init|=
@@ -104,6 +107,15 @@ ifdef|#
 directive|ifdef
 name|OBJ
 end_ifdef
+
+begin_decl_stmt
+name|char
+name|pixusage
+index|[]
+init|=
+literal|"pix [ -blnpstuw ] [ -i file ... ] name.p [ arg ... ]"
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -132,6 +144,24 @@ modifier|*
 name|pcname
 init|=
 literal|"pc.pc0"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|pcusage
+index|[]
+init|=
+literal|"pc [ options ] [ -o file ] [ -i file ... ] name.p"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|FILE
+modifier|*
+name|pcstream
+init|=
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -184,15 +214,6 @@ name|ibuf
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|FILE
-modifier|*
-name|pcstream
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * these are made real variables  * so they can be changed  * if you are compiling on a smaller machine  */
 end_comment
@@ -242,6 +263,22 @@ decl_stmt|;
 specifier|register
 name|c
 expr_stmt|;
+name|FILE
+modifier|*
+name|fopen
+parameter_list|()
+function_decl|;
+specifier|extern
+name|char
+modifier|*
+name|myctime
+parameter_list|()
+function_decl|;
+specifier|extern
+name|long
+name|lseek
+parameter_list|()
+function_decl|;
 name|int
 name|i
 decl_stmt|;
@@ -554,7 +591,7 @@ literal|'U'
 case|:
 name|yyunique
 operator|=
-literal|0
+name|FALSE
 expr_stmt|;
 continue|continue;
 endif|#
@@ -822,7 +859,7 @@ literal|'U'
 case|:
 name|yyunique
 operator|=
-literal|0
+name|FALSE
 expr_stmt|;
 break|break;
 endif|#
@@ -1190,6 +1227,9 @@ argument_list|)
 operator|!=
 name|SIG_IGN
 condition|)
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGINT
@@ -1426,6 +1466,9 @@ end_macro
 
 begin_block
 block|{
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGINT
@@ -1469,6 +1512,9 @@ end_decl_stmt
 
 begin_block
 block|{
+operator|(
+name|void
+operator|)
 name|lseek
 argument_list|(
 name|efil
@@ -1558,8 +1604,14 @@ name|version
 argument_list|,
 name|myctime
 argument_list|(
+operator|(
+name|int
+operator|*
+operator|)
+operator|(
 operator|&
 name|tvec
+operator|)
 argument_list|)
 argument_list|,
 name|filename
@@ -1579,8 +1631,14 @@ name|version
 argument_list|,
 name|myctime
 argument_list|(
+operator|(
+name|int
+operator|*
+operator|)
+operator|(
 operator|&
 name|tvec
+operator|)
 argument_list|)
 argument_list|,
 name|filename

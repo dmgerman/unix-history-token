@@ -3,15 +3,26 @@ begin_comment
 comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gen.c 1.2 %G%"
+literal|"@(#)gen.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1102,14 +1113,18 @@ name|j
 expr_stmt|;
 name|int
 name|op
-decl_stmt|,
-name|off
 decl_stmt|;
 switch|switch
 condition|(
 name|p
 condition|)
 block|{
+default|default:
+name|panic
+argument_list|(
+literal|"gen"
+argument_list|)
+expr_stmt|;
 case|case
 name|O_AS2
 case|:
@@ -1192,6 +1207,9 @@ operator|==
 name|O_AS2
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|put
 argument_list|(
 literal|1
@@ -1224,6 +1242,9 @@ operator|==
 name|O_REL2
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|put
 argument_list|(
 literal|1
@@ -1256,6 +1277,9 @@ name|TBOOL
 operator|)
 return|;
 block|}
+operator|(
+name|void
+operator|)
 name|put
 argument_list|(
 literal|1
@@ -1306,6 +1330,9 @@ case|:
 case|case
 name|TSTR
 case|:
+operator|(
+name|void
+operator|)
 name|put
 argument_list|(
 literal|2
@@ -1362,6 +1389,9 @@ literal|8
 operator|+
 name|INDX
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|put
 argument_list|(
 literal|2
@@ -1386,12 +1416,6 @@ operator|+
 name|TSET
 operator|)
 return|;
-default|default:
-name|panic
-argument_list|(
-literal|"gen"
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 end_function

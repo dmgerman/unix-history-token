@@ -3,15 +3,26 @@ begin_comment
 comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)yyput.c 1.2 %G%"
+literal|"@(#)yyput.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -30,6 +41,16 @@ include|#
 directive|include
 file|"tree.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"tree_ty.h"
+end_include
+
+begin_comment
+comment|/* must be included for yy.h */
+end_comment
 
 begin_include
 include|#
@@ -136,6 +157,11 @@ condition|)
 block|{
 name|bp
 operator|=
+operator|(
+expr|struct
+name|B
+operator|*
+operator|)
 name|tree
 argument_list|(
 literal|6
@@ -495,6 +521,9 @@ name|yygetunit
 operator|!=
 name|NULL
 condition|)
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|yygetunit
@@ -1032,8 +1061,14 @@ literal|"%s  %s:\n"
 argument_list|,
 name|myctime
 argument_list|(
+operator|(
+name|int
+operator|*
+operator|)
+operator|(
 operator|&
 name|tvec
+operator|)
 argument_list|)
 argument_list|,
 name|cp

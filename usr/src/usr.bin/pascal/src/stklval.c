@@ -3,15 +3,26 @@ begin_comment
 comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stklval.c 1.1 %G%"
+literal|"@(#)stklval.c 1.2 %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -43,6 +54,12 @@ directive|include
 file|"objfmt.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"tree_ty.h"
+end_include
+
 begin_comment
 comment|/*  * Lvalue computes the address  * of a qualified name and  * leaves it on the stack.  */
 end_comment
@@ -57,10 +74,12 @@ name|r
 parameter_list|,
 name|modflag
 parameter_list|)
-name|int
+name|struct
+name|tnode
 modifier|*
 name|r
-decl_stmt|,
+decl_stmt|;
+name|int
 name|modflag
 decl_stmt|;
 block|{

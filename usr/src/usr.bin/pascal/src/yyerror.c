@@ -3,15 +3,26 @@ begin_comment
 comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)yyerror.c 1.2 %G%"
+literal|"@(#)yyerror.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -28,11 +39,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"tree_ty.h"
+end_include
+
+begin_comment
+comment|/* must be included for yy.h */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|"yy.h"
 end_include
 
 begin_comment
 comment|/*  * Yerror prints an error  * message and then returns  * NIL for the tree if needed.  * The error is flagged on the  * current line which is printed  * if the listing is turned off. #ifdef PXP  *  * As is obvious from the fooling around  * with fout below, the Pascal system should  * be changed to use the new library "lS". #endif  */
+end_comment
+
+begin_comment
+comment|/*VARARGS*/
 end_comment
 
 begin_macro
@@ -59,6 +84,25 @@ name|s
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|char
+modifier|*
+name|a1
+decl_stmt|,
+modifier|*
+name|a2
+decl_stmt|,
+modifier|*
+name|a3
+decl_stmt|,
+modifier|*
+name|a4
+decl_stmt|,
+modifier|*
+name|a5
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 ifdef|#
@@ -75,8 +119,6 @@ directive|endif
 specifier|register
 name|int
 name|i
-decl_stmt|,
-name|j
 decl_stmt|;
 specifier|static
 name|yySerrs
@@ -140,6 +182,9 @@ directive|ifdef
 name|PI
 name|geterr
 argument_list|(
+operator|(
+name|int
+operator|)
 name|s
 argument_list|,
 name|buf
@@ -337,6 +382,10 @@ literal|"End matched %s on line %d"
 argument_list|,
 name|what
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|where
 argument_list|)
 expr_stmt|;
@@ -359,6 +408,10 @@ literal|"Inserted keyword end matching %s on line %d"
 argument_list|,
 name|what
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|where
 argument_list|)
 expr_stmt|;

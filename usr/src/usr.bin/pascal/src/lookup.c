@@ -3,15 +3,26 @@ begin_comment
 comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lookup.c 1.2 %G%"
+literal|"@(#)lookup.c 1.3 %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -63,11 +74,9 @@ modifier|*
 name|p
 decl_stmt|;
 specifier|register
-name|struct
+struct_decl|struct
 name|udinfo
-modifier|*
-name|udp
-decl_stmt|;
+struct_decl|;
 if|if
 condition|(
 name|s
@@ -80,7 +89,7 @@ argument_list|()
 expr_stmt|;
 return|return
 operator|(
-name|NIL
+name|NLNIL
 operator|)
 return|;
 block|}
@@ -95,7 +104,7 @@ if|if
 condition|(
 name|p
 operator|==
-name|NIL
+name|NLNIL
 condition|)
 block|{
 name|derror
@@ -107,7 +116,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|NIL
+name|NLNIL
 operator|)
 return|;
 block|}
@@ -202,7 +211,7 @@ name|NIL
 condition|)
 return|return
 operator|(
-name|NIL
+name|NLNIL
 operator|)
 return|;
 name|bn
@@ -221,7 +230,7 @@ name|withlist
 init|;
 name|p
 operator|!=
-name|NIL
+name|NLNIL
 condition|;
 name|p
 operator|=
@@ -240,7 +249,7 @@ if|if
 condition|(
 name|q
 operator|==
-name|NIL
+name|NLNIL
 condition|)
 continue|continue;
 if|if
@@ -284,7 +293,7 @@ index|]
 init|;
 name|p
 operator|!=
-name|NIL
+name|NLNIL
 condition|;
 name|p
 operator|=
@@ -348,7 +357,7 @@ return|;
 block|}
 return|return
 operator|(
-name|NIL
+name|NLNIL
 operator|)
 return|;
 block|}
@@ -406,7 +415,7 @@ index|]
 init|;
 name|p
 operator|!=
-name|NIL
+name|NLNIL
 condition|;
 name|p
 operator|=

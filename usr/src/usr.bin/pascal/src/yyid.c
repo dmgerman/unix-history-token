@@ -3,6 +3,12 @@ begin_comment
 comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
@@ -12,6 +18,11 @@ init|=
 literal|"@(#)yyid.c 1.5 %G%"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -28,6 +39,16 @@ end_include
 begin_include
 include|#
 directive|include
+file|"tree_ty.h"
+end_include
+
+begin_comment
+comment|/* must be included for yy.h */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|"yy.h"
 end_include
 
@@ -39,7 +60,8 @@ end_ifdef
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|union
+name|semstack
 modifier|*
 name|yypv
 decl_stmt|;
@@ -248,6 +270,8 @@ name|yypv
 index|[
 literal|0
 index|]
+operator|.
+name|i_entry
 operator|=
 name|NIL
 expr_stmt|;
@@ -267,31 +291,28 @@ begin_comment
 comment|/*  * A bad reference to the identifier cp on line  * line and use implying the addition of kindmask  * to the mask of kind information.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|struct
+name|nl
+modifier|*
 name|yybaduse
-argument_list|(
+parameter_list|(
 name|cp
-argument_list|,
+parameter_list|,
 name|line
-argument_list|,
+parameter_list|,
 name|kindmask
-argument_list|)
+parameter_list|)
 specifier|register
 name|char
-operator|*
+modifier|*
 name|cp
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|int
 name|line
 decl_stmt|,
 name|kindmask
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -370,7 +391,7 @@ name|cp
 argument_list|,
 name|BADUSE
 argument_list|,
-literal|0
+name|NLNIL
 argument_list|,
 literal|0
 argument_list|)
@@ -398,7 +419,7 @@ name|oldp
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*      *	ud is initialized so that esavestr will allocate      *	sizeof ( struct udinfo ) bytes for the 'real' struct udinfo      */
@@ -413,6 +434,11 @@ block|{
 operator|~
 literal|0
 block|,
+operator|(
+expr|struct
+name|udinfo
+operator|*
+operator|)
 operator|~
 literal|0
 block|,
@@ -462,9 +488,16 @@ name|chain
 operator|!=
 name|NIL
 operator|&&
+operator|(
+operator|(
+expr|struct
+name|udinfo
+operator|*
+operator|)
 name|p
 operator|->
 name|chain
+operator|)
 operator|->
 name|ud_line
 operator|==
@@ -473,8 +506,17 @@ condition|)
 return|return;
 name|udp
 operator|=
+operator|(
+expr|struct
+name|udinfo
+operator|*
+operator|)
 name|esavestr
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|ud
 argument_list|)
@@ -489,6 +531,11 @@ name|udp
 operator|->
 name|ud_next
 operator|=
+operator|(
+expr|struct
+name|udinfo
+operator|*
+operator|)
 name|p
 operator|->
 name|chain
@@ -497,6 +544,11 @@ name|p
 operator|->
 name|chain
 operator|=
+operator|(
+expr|struct
+name|nl
+operator|*
+operator|)
 name|udp
 expr_stmt|;
 block|}
@@ -642,14 +694,12 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
-name|i
-decl_stmt|;
 switch|switch
 condition|(
 name|kind
 condition|)
 block|{
+default|default:
 case|case
 name|FUNC
 case|:
