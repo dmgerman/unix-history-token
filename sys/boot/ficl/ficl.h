@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************* ** f i c l . h ** Forth Inspired Command Language ** Author: John Sadler (john_sadler@alum.mit.edu) ** Created: 19 July 1997 ** $Id: ficl.h,v 1.11 2001-04-26 21:41:48-07 jsadler Exp jsadler $ *******************************************************************/
+comment|/******************************************************************* ** f i c l . h ** Forth Inspired Command Language ** Author: John Sadler (john_sadler@alum.mit.edu) ** Created: 19 July 1997 ** Dedicated to RHS, in loving memory ** $Id: ficl.h,v 1.18 2001/12/05 07:21:34 jsadler Exp $ *******************************************************************/
 end_comment
 
 begin_comment
-comment|/* ** Copyright (c) 1997-2001 John Sadler (john_sadler@alum.mit.edu) ** All rights reserved. ** ** Get the latest Ficl release at http://ficl.sourceforge.net ** ** L I C E N S E  and  D I S C L A I M E R **  ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ** ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE ** IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ** ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE ** FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL ** DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS ** OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) ** HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT ** LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY ** OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF ** SUCH DAMAGE. ** ** I am interested in hearing from anyone who uses ficl. If you have ** a problem, a success story, a defect, an enhancement request, or ** if you would like to contribute to the ficl release, please send ** contact me by email at the address above. ** ** $Id: ficl.h,v 1.11 2001-04-26 21:41:48-07 jsadler Exp jsadler $ */
+comment|/* ** Copyright (c) 1997-2001 John Sadler (john_sadler@alum.mit.edu) ** All rights reserved. ** ** Get the latest Ficl release at http://ficl.sourceforge.net ** ** I am interested in hearing from anyone who uses ficl. If you have ** a problem, a success story, a defect, an enhancement request, or ** if you would like to contribute to the ficl release, please ** contact me by email at the address above. ** ** L I C E N S E  and  D I S C L A I M E R **  ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ** ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE ** IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ** ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE ** FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL ** DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS ** OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) ** HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT ** LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY ** OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF ** SUCH DAMAGE. */
 end_comment
 
 begin_comment
@@ -28,7 +28,7 @@ name|__FICL_H__
 end_define
 
 begin_comment
-comment|/* ** Ficl (Forth-inspired command language) is an ANS Forth ** interpreter written in C. Unlike traditional Forths, this ** interpreter is designed to be embedded into other systems ** as a command/macro/development prototype language.  ** ** Where Forths usually view themselves as the center of the system ** and expect the rest of the system to be coded in Forth, Ficl ** acts as a component of the system. It is easy to export  ** code written in C or ASM to Ficl in the style of TCL, or to invoke ** Ficl code from a compiled module. This allows you to do incremental ** development in a way that combines the best features of threaded  ** languages (rapid development, quick code/test/debug cycle, ** reasonably fast) with the best features of C (everyone knows it, ** easier to support large blocks of code, efficient, type checking). ** ** Ficl provides facilities for interoperating ** with programs written in C: C functions can be exported to Ficl, ** and Ficl commands can be executed via a C calling interface. The ** interpreter is re-entrant, so it can be used in multiple instances ** in a multitasking system. Unlike Forth, Ficl's outer interpreter ** expects a text block as input, and returns to the caller after each ** text block, so the "data pump" is somewhere in external code. This ** is more like TCL than Forth, which usually expcets to be at the center ** of the system, requesting input at its convenience. Each Ficl virtual  ** machine can be bound to a different I/O channel, and is independent ** of all others in in the same address space except that all virtual ** machines share a common dictionary (a sort or open symbol table that ** defines all of the elements of the language). ** ** Code is written in ANSI C for portability.  ** ** Summary of Ficl features and constraints: ** - Standard: Implements the ANSI Forth CORE word set and part  **   of the CORE EXT word-set, SEARCH and SEARCH EXT, TOOLS and **   TOOLS EXT, LOCAL and LOCAL ext and various extras. ** - Extensible: you can export code written in Forth, C,  **   or asm in a straightforward way. Ficl provides open **   facilities for extending the language in an application **   specific way. You can even add new control structures! ** - Ficl and C can interact in two ways: Ficl can encapsulate **   C code, or C code can invoke Ficl code. ** - Thread-safe, re-entrant: The shared system dictionary  **   uses a locking mechanism that you can either supply **   or stub out to provide exclusive access. Each Ficl **   virtual machine has an otherwise complete state, and **   each can be bound to a separate I/O channel (or none at all). ** - Simple encapsulation into existing systems: a basic implementation **   requires three function calls (see the example program in testmain.c). ** - ROMable: Ficl is designed to work in RAM-based and ROM code / RAM data **   environments. It does require somewhat more memory than a pure **   ROM implementation because it builds its system dictionary in  **   RAM at startup time. ** - Written an ANSI C to be as simple as I can make it to understand, **   support, debug, and port. Compiles without complaint at /Az /W4  **   (require ANSI C, max warnings) under Microsoft VC++ 5. ** - Does full 32 bit math (but you need to implement **   two mixed precision math primitives (see sysdep.c)) ** - Indirect threaded interpreter is not the fastest kind of **   Forth there is (see pForth 68K for a really fast subroutine **   threaded interpreter), but it's the cleanest match to a **   pure C implementation. ** ** P O R T I N G   F i c l ** ** To install Ficl on your target system, you need an ANSI C compiler ** and its runtime library. Inspect the system dependent macros and ** functions in sysdep.h and sysdep.c and edit them to suit your ** system. For example, INT16 is a short on some compilers and an ** int on others. Check the default CELL alignment controlled by ** FICL_ALIGN. If necessary, add new definitions of ficlMalloc, ficlFree, ** ficlLockDictionary, and ficlTextOut to work with your operating system. ** Finally, use testmain.c as a guide to installing the Ficl system and  ** one or more virtual machines into your code. You do not need to include ** testmain.c in your build. ** ** T o   D o   L i s t ** ** 1. Unimplemented system dependent CORE word: key ** 2. Kludged CORE word: ACCEPT  ** 3. Dictionary locking is full of holes - only one vm at a time **    can alter the dict.  ** 4. Ficl uses the pad in CORE words - this violates the standard, **    but it's cleaner for a multithreaded system. I'll have to make a **    second pad for reference by the word PAD to fix this. ** ** F o r   M o r e   I n f o r m a t i o n ** ** Web home of ficl **   http://www.taygeta.com/forth/compilers ** Check this website for Forth literature (including the ANSI standard) **   http://www.taygeta.com/forthlit.html ** and here for software and more links **   http://www.taygeta.com/forth.html ** ** Obvious Performance enhancement opportunities ** Compile speed ** - work on interpret speed ** - turn off locals (FICL_WANT_LOCALS) ** Interpret speed  ** - Change inner interpreter (and everything else) **   so that a definition is a list of pointers to functions **   and inline data rather than pointers to words. This gets **   rid of vm->runningWord and a level of indirection in the **   inner loop. I'll look at it for ficl 3.0 ** - Make the main hash table a bigger prime (HASHSIZE) ** - FORGET about twiddling the hash function - my experience is **   that that is a waste of time. ** - eliminate the need to pass the pVM parameter on the stack **   by dedicating a register to it. Most words need access to the **   vm, but the parameter passing overhead can be reduced. One way **   requires that the host OS have a task switch callout. Create **   a global variable for the running VM and refer to it in words **   that need VM access. Alternative: use thread local storage.  **   For single threaded implementations, you can just use a global. **   The first two solutions create portability problems, so I **   haven't considered doing them. Another possibility is to **   declare the pVm parameter to be "register", and hope the compiler **   pays attention. ** */
+comment|/* ** Ficl (Forth-inspired command language) is an ANS Forth ** interpreter written in C. Unlike traditional Forths, this ** interpreter is designed to be embedded into other systems ** as a command/macro/development prototype language.  ** ** Where Forths usually view themselves as the center of the system ** and expect the rest of the system to be coded in Forth, Ficl ** acts as a component of the system. It is easy to export  ** code written in C or ASM to Ficl in the style of TCL, or to invoke ** Ficl code from a compiled module. This allows you to do incremental ** development in a way that combines the best features of threaded  ** languages (rapid development, quick code/test/debug cycle, ** reasonably fast) with the best features of C (everyone knows it, ** easier to support large blocks of code, efficient, type checking). ** ** Ficl provides facilities for interoperating ** with programs written in C: C functions can be exported to Ficl, ** and Ficl commands can be executed via a C calling interface. The ** interpreter is re-entrant, so it can be used in multiple instances ** in a multitasking system. Unlike Forth, Ficl's outer interpreter ** expects a text block as input, and returns to the caller after each ** text block, so the "data pump" is somewhere in external code. This ** is more like TCL than Forth, which usually expcets to be at the center ** of the system, requesting input at its convenience. Each Ficl virtual  ** machine can be bound to a different I/O channel, and is independent ** of all others in in the same address space except that all virtual ** machines share a common dictionary (a sort or open symbol table that ** defines all of the elements of the language). ** ** Code is written in ANSI C for portability.  ** ** Summary of Ficl features and constraints: ** - Standard: Implements the ANSI Forth CORE word set and part  **   of the CORE EXT word-set, SEARCH and SEARCH EXT, TOOLS and **   TOOLS EXT, LOCAL and LOCAL ext and various extras. ** - Extensible: you can export code written in Forth, C,  **   or asm in a straightforward way. Ficl provides open **   facilities for extending the language in an application **   specific way. You can even add new control structures! ** - Ficl and C can interact in two ways: Ficl can encapsulate **   C code, or C code can invoke Ficl code. ** - Thread-safe, re-entrant: The shared system dictionary  **   uses a locking mechanism that you can either supply **   or stub out to provide exclusive access. Each Ficl **   virtual machine has an otherwise complete state, and **   each can be bound to a separate I/O channel (or none at all). ** - Simple encapsulation into existing systems: a basic implementation **   requires three function calls (see the example program in testmain.c). ** - ROMable: Ficl is designed to work in RAM-based and ROM code / RAM data **   environments. It does require somewhat more memory than a pure **   ROM implementation because it builds its system dictionary in  **   RAM at startup time. ** - Written an ANSI C to be as simple as I can make it to understand, **   support, debug, and port. Compiles without complaint at /Az /W4  **   (require ANSI C, max warnings) under Microsoft VC++ 5. ** - Does full 32 bit math (but you need to implement **   two mixed precision math primitives (see sysdep.c)) ** - Indirect threaded interpreter is not the fastest kind of **   Forth there is (see pForth 68K for a really fast subroutine **   threaded interpreter), but it's the cleanest match to a **   pure C implementation. ** ** P O R T I N G   F i c l ** ** To install Ficl on your target system, you need an ANSI C compiler ** and its runtime library. Inspect the system dependent macros and ** functions in sysdep.h and sysdep.c and edit them to suit your ** system. For example, INT16 is a short on some compilers and an ** int on others. Check the default CELL alignment controlled by ** FICL_ALIGN. If necessary, add new definitions of ficlMalloc, ficlFree, ** ficlLockDictionary, and ficlTextOut to work with your operating system. ** Finally, use testmain.c as a guide to installing the Ficl system and  ** one or more virtual machines into your code. You do not need to include ** testmain.c in your build. ** ** T o   D o   L i s t ** ** 1. Unimplemented system dependent CORE word: key ** 2. Ficl uses the PAD in some CORE words - this violates the standard, **    but it's cleaner for a multithreaded system. I'll have to make a **    second pad for reference by the word PAD to fix this. ** ** F o r   M o r e   I n f o r m a t i o n ** ** Web home of ficl **   http://ficl.sourceforge.net ** Check this website for Forth literature (including the ANSI standard) **   http://www.taygeta.com/forthlit.html ** and here for software and more links **   http://www.taygeta.com/forth.html ** ** Obvious Performance enhancement opportunities ** Compile speed ** - work on interpret speed ** - turn off locals (FICL_WANT_LOCALS) ** Interpret speed  ** - Change inner interpreter (and everything else) **   so that a definition is a list of pointers to functions **   and inline data rather than pointers to words. This gets **   rid of vm->runningWord and a level of indirection in the **   inner loop. I'll look at it for ficl 3.0 ** - Make the main hash table a bigger prime (HASHSIZE) ** - FORGET about twiddling the hash function - my experience is **   that that is a waste of time. ** - Eliminate the need to pass the pVM parameter on the stack **   by dedicating a register to it. Most words need access to the **   vm, but the parameter passing overhead can be reduced. One way **   requires that the host OS have a task switch callout. Create **   a global variable for the running VM and refer to it in words **   that need VM access. Alternative: use thread local storage.  **   For single threaded implementations, you can just use a global. **   The first two solutions create portability problems, so I **   haven't considered doing them. Another possibility is to **   declare the pVm parameter to be "register", and hope the compiler **   pays attention. ** */
 end_comment
 
 begin_comment
@@ -58,12 +58,27 @@ comment|/* ** Forward declarations... read on. */
 struct_decl|struct
 name|ficl_word
 struct_decl|;
+typedef|typedef
+name|struct
+name|ficl_word
+name|FICL_WORD
+typedef|;
 struct_decl|struct
 name|vm
 struct_decl|;
+typedef|typedef
+name|struct
+name|vm
+name|FICL_VM
+typedef|;
 struct_decl|struct
 name|ficl_dict
 struct_decl|;
+typedef|typedef
+name|struct
+name|ficl_dict
+name|FICL_DICT
+typedef|;
 struct_decl|struct
 name|ficl_system
 struct_decl|;
@@ -72,11 +87,27 @@ name|struct
 name|ficl_system
 name|FICL_SYSTEM
 typedef|;
+struct_decl|struct
+name|ficl_system_info
+struct_decl|;
+typedef|typedef
+name|struct
+name|ficl_system_info
+name|FICL_SYSTEM_INFO
+typedef|;
 comment|/*  ** the Good Stuff starts here... */
 define|#
 directive|define
 name|FICL_VER
-value|"2.05"
+value|"3.02"
+define|#
+directive|define
+name|FICL_VER_MAJOR
+value|3
+define|#
+directive|define
+name|FICL_VER_MINOR
+value|2
 if|#
 directive|if
 operator|!
@@ -106,7 +137,7 @@ parameter_list|(
 name|x
 parameter_list|)
 value|((x) ? FICL_TRUE : FICL_FALSE)
-comment|/* ** A CELL is the main storage type. It must be large enough ** to contain a pointer or a scalar. In order to accommodate  ** 32 bit and 64 bit processors, use abstract types for i and u. */
+comment|/* ** A CELL is the main storage type. It must be large enough ** to contain a pointer or a scalar. In order to accommodate  ** 32 bit and 64 bit processors, use abstract types for int,  ** unsigned, and float. */
 typedef|typedef
 union|union
 name|_cell
@@ -143,7 +174,7 @@ function_decl|;
 block|}
 name|CELL
 typedef|;
-comment|/* ** LVALUEtoCELL does a little pointer trickery to cast any 32 bit ** lvalue (informal definition: an expression whose result has an ** address) to CELL. Remember that constants and casts are NOT ** themselves lvalues! */
+comment|/* ** LVALUEtoCELL does a little pointer trickery to cast any CELL sized ** lvalue (informal definition: an expression whose result has an ** address) to CELL. Remember that constants and casts are NOT ** themselves lvalues! */
 define|#
 directive|define
 name|LVALUEtoCELL
@@ -527,7 +558,7 @@ name|FICL_STACK
 modifier|*
 name|pStack
 parameter_list|,
-name|float
+name|FICL_FLOAT
 name|f
 parameter_list|)
 function_decl|;
@@ -683,8 +714,7 @@ parameter_list|)
 value|stackRoll(pVM->fStack,n)
 comment|/*  ** The virtual machine (VM) contains the state for one interpreter. ** Defined operations include: ** Create& initialize ** Delete ** Execute a block of text ** Parse a word out of the input stream ** Call return, and branch  ** Text output ** Throw an exception */
 typedef|typedef
-name|struct
-name|ficl_word
+name|FICL_WORD
 modifier|*
 modifier|*
 name|IPTYPE
@@ -698,8 +728,7 @@ modifier|*
 name|OUTFUNC
 function_decl|)
 parameter_list|(
-name|struct
-name|vm
+name|FICL_VM
 modifier|*
 name|pVM
 parameter_list|,
@@ -746,7 +775,6 @@ value|31
 endif|#
 directive|endif
 comment|/* ** OK - now we can really define the VM... */
-typedef|typedef
 struct|struct
 name|vm
 block|{
@@ -755,8 +783,7 @@ modifier|*
 name|pSys
 decl_stmt|;
 comment|/* Which system this VM belongs to  */
-name|struct
-name|vm
+name|FICL_VM
 modifier|*
 name|link
 decl_stmt|;
@@ -774,7 +801,7 @@ name|void
 modifier|*
 name|pExtend
 decl_stmt|;
-comment|/* vm extension pointer             */
+comment|/* vm extension pointer for app use - initialized from FICL_SYSTEM */
 name|short
 name|fRestart
 decl_stmt|;
@@ -783,8 +810,7 @@ name|IPTYPE
 name|ip
 decl_stmt|;
 comment|/* instruction pointer              */
-name|struct
-name|ficl_word
+name|FICL_WORD
 modifier|*
 name|runningWord
 decl_stmt|;
@@ -820,7 +846,7 @@ directive|endif
 name|CELL
 name|sourceID
 decl_stmt|;
-comment|/* -1 if string, 0 if normal input  */
+comment|/* -1 if EVALUATE, 0 if normal input */
 name|TIB
 name|tib
 decl_stmt|;
@@ -844,8 +870,7 @@ index|]
 decl_stmt|;
 comment|/* the scratch area (see above)     */
 block|}
-name|FICL_VM
-typedef|;
+struct|;
 comment|/* ** A FICL_CODE points to a function that gets called to help execute ** a word in the dictionary. It always gets passed a pointer to the ** running virtual machine, and from there it can get the address ** of the parameter area of the word it's supposed to operate on. ** For precompiled words, the code is all there is. For user defined ** words, the code assumes that the word's parameter area is a list ** of pointers to the code fields of other words to execute, and ** may also contain inline data. The first parameter is always ** a pointer to a code field. */
 typedef|typedef
 name|void
@@ -879,8 +904,7 @@ name|pVM
 parameter_list|)
 endif|#
 directive|endif
-comment|/*  ** Ficl models memory as a contiguous space divided into ** words in a linked list called the dictionary. ** A FICL_WORD starts each entry in the list. ** Version 1.02: space for the name characters is allotted from ** the dictionary ahead of the word struct - this saves about half  ** the storage on average with very little runtime cost. */
-typedef|typedef
+comment|/*  ** Ficl models memory as a contiguous space divided into ** words in a linked list called the dictionary. ** A FICL_WORD starts each entry in the list. ** Version 1.02: space for the name characters is allotted from ** the dictionary ahead of the word struct, rather than using ** a fixed size array for each name. */
 struct|struct
 name|ficl_word
 block|{
@@ -918,8 +942,7 @@ index|]
 decl_stmt|;
 comment|/* First data cell of the word          */
 block|}
-name|FICL_WORD
-typedef|;
+struct|;
 comment|/* ** Worst-case size of a word header: nFICLNAME chars in name */
 define|#
 directive|define
@@ -958,6 +981,11 @@ directive|define
 name|FW_SMUDGE
 value|4
 comment|/* definition in progress - hide me */
+define|#
+directive|define
+name|FW_ISOBJECT
+value|8
+comment|/* word is an object or object member variable */
 define|#
 directive|define
 name|FW_COMPIMMED
@@ -1056,6 +1084,15 @@ parameter_list|,
 name|FICL_WORD
 modifier|*
 name|pWord
+parameter_list|)
+function_decl|;
+name|FICL_DICT
+modifier|*
+name|vmGetDict
+parameter_list|(
+name|FICL_VM
+modifier|*
+name|pVM
 parameter_list|)
 function_decl|;
 name|char
@@ -1188,19 +1225,21 @@ name|OUTFUNC
 name|textOut
 parameter_list|)
 function_decl|;
-if|#
-directive|if
-name|FICL_WANT_DEBUGGER
 name|void
-name|vmStep
+name|vmTextOut
 parameter_list|(
 name|FICL_VM
 modifier|*
 name|pVM
+parameter_list|,
+name|char
+modifier|*
+name|text
+parameter_list|,
+name|int
+name|fNewline
 parameter_list|)
 function_decl|;
-endif|#
-directive|endif
 name|void
 name|vmTextOut
 parameter_list|(
@@ -1256,7 +1295,15 @@ parameter_list|(
 name|pVM
 parameter_list|)
 define|\
-value|FICL_WORD *tempFW = *(pVM)->ip++; \         (pVM)->runningWord = tempFW; \         tempFW->code(pVM); \  #define M_INNER_LOOP(pVM) \     for (;;)  { M_VM_STEP(pVM) }
+value|FICL_WORD *tempFW = *(pVM)->ip++; \         (pVM)->runningWord = tempFW; \         tempFW->code(pVM);
+define|#
+directive|define
+name|M_INNER_LOOP
+parameter_list|(
+name|pVM
+parameter_list|)
+define|\
+value|for (;;)  { M_VM_STEP(pVM) }
 if|#
 directive|if
 name|INLINE_INNER_LOOP
@@ -1601,8 +1648,7 @@ name|FICL_WORD
 modifier|*
 name|hashLookup
 parameter_list|(
-name|struct
-name|ficl_hash
+name|FICL_HASH
 modifier|*
 name|pHash
 parameter_list|,
@@ -1622,7 +1668,6 @@ name|pHash
 parameter_list|)
 function_decl|;
 comment|/* ** A Dictionary is a linked list of FICL_WORDs. It is also Ficl's ** memory model. Description of fields: ** ** here -- points to the next free byte in the dictionary. This **      pointer is forced to be CELL-aligned before a definition is added. **      Do not assume any specific alignment otherwise - Use dictAlign(). ** ** smudge -- pointer to word currently being defined (or last defined word) **      If the definition completes successfully, the word will be **      linked into the hash table. If unsuccessful, dictUnsmudge **      uses this pointer to restore the previous state of the dictionary. **      Smudge prevents unintentional recursion as a side-effect: the **      dictionary search algo examines only completed definitions, so a  **      word cannot invoke itself by name. See the ficl word "recurse". **      NOTE: smudge always points to the last word defined. IMMEDIATE **      makes use of this fact. Smudge is initially NULL. ** ** pForthWords -- pointer to the default wordlist (FICL_HASH). **      This is the initial compilation list, and contains all **      ficl's precompiled words. ** ** pCompile -- compilation wordlist - initially equal to pForthWords ** pSearch  -- array of pointers to wordlists. Managed as a stack. **      Highest index is the first list in the search order. ** nLists   -- number of lists in pSearch. nLists-1 is the highest  **      filled slot in pSearch, and points to the first wordlist **      in the search order ** size -- number of cells in the dictionary (total) ** dict -- start of data area. Must be at the end of the struct. */
-typedef|typedef
 struct|struct
 name|ficl_dict
 block|{
@@ -1662,8 +1707,7 @@ name|dict
 decl_stmt|;
 comment|/* Base of dictionary memory      */
 block|}
-name|FICL_DICT
-typedef|;
+struct|;
 name|void
 modifier|*
 name|alignPtr
@@ -1809,7 +1853,7 @@ modifier|*
 name|pVM
 parameter_list|,
 name|int
-name|nCells
+name|n
 parameter_list|)
 function_decl|;
 name|FICL_DICT
@@ -1862,6 +1906,19 @@ name|unsigned
 name|nHash
 parameter_list|)
 function_decl|;
+if|#
+directive|if
+name|FICL_WANT_FLOAT
+name|void
+name|dictHashSummary
+parameter_list|(
+name|FICL_VM
+modifier|*
+name|pVM
+parameter_list|)
+function_decl|;
+endif|#
+directive|endif
 name|int
 name|dictIncludes
 parameter_list|(
@@ -1891,11 +1948,11 @@ directive|if
 name|FICL_WANT_LOCALS
 name|FICL_WORD
 modifier|*
-name|dictLookupLoc
+name|ficlLookupLoc
 parameter_list|(
-name|FICL_DICT
+name|FICL_SYSTEM
 modifier|*
-name|pDict
+name|pSys
 parameter_list|,
 name|STRINGINFO
 name|si
@@ -2003,7 +2060,23 @@ modifier|*
 name|pVM
 parameter_list|)
 function_decl|;
-comment|/* ** F I C L _ S Y S T E M ** The top level data structure of the system - ficl_system ties a list of ** virtual machines with their corresponding dictionaries. Ficl 3.0 will ** support multiple Ficl systems, allowing multiple concurrent sessions  ** to separate dictionaries with some constraints.  ** The present model allows multiple sessions to one dictionary provided ** you implement ficlLockDictionary() as specified in sysdep.h ** ** RESTRICTIONS: due to the use of static variables in words.c for compiling ** comtrol structures faster, if you use multiple ficl systems these variables ** will point into the most recently initialized dictionary - this is probably ** not a problem provided the precompiled dictionaries are identical for  ** all systems. */
+comment|/* ** FICL_BREAKPOINT record. ** origXT - if NULL, this breakpoint is unused. Otherwise it stores the xt  ** that the breakpoint overwrote. This is restored to the dictionary when the ** BP executes or gets cleared ** address - the location of the breakpoint (address of the instruction that **           has been replaced with the breakpoint trap ** origXT  - The original contents of the location with the breakpoint ** Note: address is NULL when this breakpoint is empty */
+typedef|typedef
+struct|struct
+name|FICL_BREAKPOINT
+block|{
+name|void
+modifier|*
+name|address
+decl_stmt|;
+name|FICL_WORD
+modifier|*
+name|origXT
+decl_stmt|;
+block|}
+name|FICL_BREAKPOINT
+typedef|;
+comment|/* ** F I C L _ S Y S T E M ** The top level data structure of the system - ficl_system ties a list of ** virtual machines with their corresponding dictionaries. Ficl 3.0 will ** support multiple Ficl systems, allowing multiple concurrent sessions  ** to separate dictionaries with some constraints.  ** The present model allows multiple sessions to one dictionary provided ** you implement ficlLockDictionary() as specified in sysdep.h ** Note: the pExtend pointer is there to provide context for applications. It is copied ** to each VM's pExtend field as that VM is created. */
 struct|struct
 name|ficl_system
 block|{
@@ -2011,13 +2084,11 @@ name|FICL_SYSTEM
 modifier|*
 name|link
 decl_stmt|;
-name|FICL_WORD
+name|void
 modifier|*
-name|parseList
-index|[
-name|FICL_MAX_PARSE_STEPS
-index|]
+name|pExtend
 decl_stmt|;
+comment|/* Initializes VM's pExtend pointer (for application use) */
 name|FICL_VM
 modifier|*
 name|vmList
@@ -2046,11 +2117,184 @@ index|[
 literal|3
 index|]
 decl_stmt|;
+name|FICL_WORD
+modifier|*
+name|parseList
+index|[
+name|FICL_MAX_PARSE_STEPS
+index|]
+decl_stmt|;
+name|OUTFUNC
+name|textOut
+decl_stmt|;
+name|FICL_WORD
+modifier|*
+name|pBranchParen
+decl_stmt|;
+name|FICL_WORD
+modifier|*
+name|pDoParen
+decl_stmt|;
+name|FICL_WORD
+modifier|*
+name|pDoesParen
+decl_stmt|;
+name|FICL_WORD
+modifier|*
+name|pExitInner
+decl_stmt|;
+name|FICL_WORD
+modifier|*
+name|pExitParen
+decl_stmt|;
+name|FICL_WORD
+modifier|*
+name|pIfParen
+decl_stmt|;
+name|FICL_WORD
+modifier|*
+name|pInterpret
+decl_stmt|;
+name|FICL_WORD
+modifier|*
+name|pLitParen
+decl_stmt|;
+name|FICL_WORD
+modifier|*
+name|pTwoLitParen
+decl_stmt|;
+name|FICL_WORD
+modifier|*
+name|pLoopParen
+decl_stmt|;
+name|FICL_WORD
+modifier|*
+name|pPLoopParen
+decl_stmt|;
+name|FICL_WORD
+modifier|*
+name|pQDoParen
+decl_stmt|;
+name|FICL_WORD
+modifier|*
+name|pSemiParen
+decl_stmt|;
+name|FICL_WORD
+modifier|*
+name|pStore
+decl_stmt|;
+name|FICL_WORD
+modifier|*
+name|pCStringLit
+decl_stmt|;
+name|FICL_WORD
+modifier|*
+name|pStringLit
+decl_stmt|;
+if|#
+directive|if
+name|FICL_WANT_LOCALS
+name|FICL_WORD
+modifier|*
+name|pGetLocalParen
+decl_stmt|;
+name|FICL_WORD
+modifier|*
+name|pGet2LocalParen
+decl_stmt|;
+name|FICL_WORD
+modifier|*
+name|pGetLocal0
+decl_stmt|;
+name|FICL_WORD
+modifier|*
+name|pGetLocal1
+decl_stmt|;
+name|FICL_WORD
+modifier|*
+name|pToLocalParen
+decl_stmt|;
+name|FICL_WORD
+modifier|*
+name|pTo2LocalParen
+decl_stmt|;
+name|FICL_WORD
+modifier|*
+name|pToLocal0
+decl_stmt|;
+name|FICL_WORD
+modifier|*
+name|pToLocal1
+decl_stmt|;
+name|FICL_WORD
+modifier|*
+name|pLinkParen
+decl_stmt|;
+name|FICL_WORD
+modifier|*
+name|pUnLinkParen
+decl_stmt|;
+name|FICL_INT
+name|nLocals
+decl_stmt|;
+name|CELL
+modifier|*
+name|pMarkLocals
+decl_stmt|;
+endif|#
+directive|endif
+name|FICL_BREAKPOINT
+name|bpStep
+decl_stmt|;
 block|}
 struct|;
-comment|/* ** External interface to FICL... */
-comment|/*  ** f i c l I n i t S y s t e m ** Binds a global dictionary to the interpreter system and initializes ** the dict to contain the ANSI CORE wordset.  ** You specify the address and size of the allocated area. ** After that, ficl manages it. ** First step is to set up the static pointers to the area. ** Then write the "precompiled" portion of the dictionary in. ** The dictionary needs to be at least large enough to hold the ** precompiled part. Try 1K cells minimum. Use "words" to find ** out how much of the dictionary is used at any time. */
+struct|struct
+name|ficl_system_info
+block|{
+name|int
+name|size
+decl_stmt|;
+comment|/* structure size tag for versioning */
+name|int
+name|nDictCells
+decl_stmt|;
+comment|/* Size of system's Dictionary */
+name|OUTFUNC
+name|textOut
+decl_stmt|;
+comment|/* default textOut function */
 name|void
+modifier|*
+name|pExtend
+decl_stmt|;
+comment|/* Initializes VM's pExtend pointer - for application use */
+name|int
+name|nEnvCells
+decl_stmt|;
+comment|/* Size of Environment dictionary */
+block|}
+struct|;
+define|#
+directive|define
+name|ficlInitInfo
+parameter_list|(
+name|x
+parameter_list|)
+value|{ memset((x), 0, sizeof(FICL_SYSTEM_INFO)); \          (x)->size = sizeof(FICL_SYSTEM_INFO); }
+comment|/* ** External interface to FICL... */
+comment|/*  ** f i c l I n i t S y s t e m ** Binds a global dictionary to the interpreter system and initializes ** the dict to contain the ANSI CORE wordset.  ** You can specify the address and size of the allocated area. ** Using ficlInitSystemEx you can also specify the text output function. ** After that, ficl manages it. ** First step is to set up the static pointers to the area. ** Then write the "precompiled" portion of the dictionary in. ** The dictionary needs to be at least large enough to hold the ** precompiled part. Try 1K cells minimum. Use "words" to find ** out how much of the dictionary is used at any time. */
+name|FICL_SYSTEM
+modifier|*
+name|ficlInitSystemEx
+parameter_list|(
+name|FICL_SYSTEM_INFO
+modifier|*
+name|fsi
+parameter_list|)
+function_decl|;
+comment|/* Deprecated call */
+name|FICL_SYSTEM
+modifier|*
 name|ficlInitSystem
 parameter_list|(
 name|int
@@ -2061,10 +2305,25 @@ comment|/* ** f i c l T e r m S y s t e m ** Deletes the system dictionary and a
 name|void
 name|ficlTermSystem
 parameter_list|(
-name|void
+name|FICL_SYSTEM
+modifier|*
+name|pSys
 parameter_list|)
 function_decl|;
-comment|/* ** f i c l E x e c ** Evaluates a block of input text in the context of the ** specified interpreter. Emits any requested output to the ** interpreter's output function. If the input string is NULL ** terminated, you can pass -1 as nChars rather than count it. ** Execution returns when the text block has been executed, ** or an error occurs. ** Returns one of the VM_XXXX codes defined in ficl.h: ** VM_OUTOFTEXT is the normal exit condition ** VM_ERREXIT means that the interp encountered a syntax error **      and the vm has been reset to recover (some or all **      of the text block got ignored ** VM_USEREXIT means that the user executed the "bye" command **      to shut down the interpreter. This would be a good **      time to delete the vm, etc -- or you can ignore this **      signal. ** VM_ABORT and VM_ABORTQ are generated by 'abort' and 'abort"' **      commands. ** Preconditions: successful execution of ficlInitSystem, **      Successful creation and init of the VM by ficlNewVM (or equiv) */
+comment|/* ** f i c l E v a l u a t e ** Evaluates a block of input text in the context of the ** specified interpreter. Also sets SOURCE-ID properly. ** ** PLEASE USE THIS FUNCTION when throwing a hard-coded ** string to the FICL interpreter. */
+name|int
+name|ficlEvaluate
+parameter_list|(
+name|FICL_VM
+modifier|*
+name|pVM
+parameter_list|,
+name|char
+modifier|*
+name|pText
+parameter_list|)
+function_decl|;
+comment|/* ** f i c l E x e c ** Evaluates a block of input text in the context of the ** specified interpreter. Emits any requested output to the ** interpreter's output function. If the input string is NULL ** terminated, you can pass -1 as nChars rather than count it. ** Execution returns when the text block has been executed, ** or an error occurs. ** Returns one of the VM_XXXX codes defined in ficl.h: ** VM_OUTOFTEXT is the normal exit condition ** VM_ERREXIT means that the interp encountered a syntax error **      and the vm has been reset to recover (some or all **      of the text block got ignored ** VM_USEREXIT means that the user executed the "bye" command **      to shut down the interpreter. This would be a good **      time to delete the vm, etc -- or you can ignore this **      signal. ** VM_ABORT and VM_ABORTQ are generated by 'abort' and 'abort"' **      commands. ** Preconditions: successful execution of ficlInitSystem, **      Successful creation and init of the VM by ficlNewVM (or equiv) ** ** If you call ficlExec() or one of its brothers, you MUST ** ensure pVM->sourceID was set to a sensible value. ** ficlExec() explicitly DOES NOT manage SOURCE-ID for you. */
 name|int
 name|ficlExec
 parameter_list|(
@@ -2121,7 +2380,9 @@ name|FICL_VM
 modifier|*
 name|ficlNewVM
 parameter_list|(
-name|void
+name|FICL_SYSTEM
+modifier|*
+name|pSys
 parameter_list|)
 function_decl|;
 comment|/* ** Force deletion of a VM. You do not need to do this  ** unless you're creating and discarding a lot of VMs. ** For systems that use a constant pool of VMs for the life ** of the system, ficltermSystem takes care of VM cleanup ** automatically. */
@@ -2146,6 +2407,10 @@ name|FICL_WORD
 modifier|*
 name|ficlLookup
 parameter_list|(
+name|FICL_SYSTEM
+modifier|*
+name|pSys
+parameter_list|,
 name|char
 modifier|*
 name|name
@@ -2156,19 +2421,27 @@ name|FICL_DICT
 modifier|*
 name|ficlGetDict
 parameter_list|(
-name|void
+name|FICL_SYSTEM
+modifier|*
+name|pSys
 parameter_list|)
 function_decl|;
 name|FICL_DICT
 modifier|*
 name|ficlGetEnv
 parameter_list|(
-name|void
+name|FICL_SYSTEM
+modifier|*
+name|pSys
 parameter_list|)
 function_decl|;
 name|void
 name|ficlSetEnv
 parameter_list|(
+name|FICL_SYSTEM
+modifier|*
+name|pSys
+parameter_list|,
 name|char
 modifier|*
 name|name
@@ -2180,6 +2453,10 @@ function_decl|;
 name|void
 name|ficlSetEnvD
 parameter_list|(
+name|FICL_SYSTEM
+modifier|*
+name|pSys
+parameter_list|,
 name|char
 modifier|*
 name|name
@@ -2198,7 +2475,9 @@ name|FICL_DICT
 modifier|*
 name|ficlGetLoc
 parameter_list|(
-name|void
+name|FICL_SYSTEM
+modifier|*
+name|pSys
 parameter_list|)
 function_decl|;
 endif|#
@@ -2207,6 +2486,10 @@ comment|/*  ** f i c l B u i l d ** Builds a word into the system default dictio
 name|int
 name|ficlBuild
 parameter_list|(
+name|FICL_SYSTEM
+modifier|*
+name|pSys
+parameter_list|,
 name|char
 modifier|*
 name|name
@@ -2259,6 +2542,14 @@ modifier|*
 name|pSys
 parameter_list|)
 function_decl|;
+name|void
+name|ficlCompileFile
+parameter_list|(
+name|FICL_SYSTEM
+modifier|*
+name|pSys
+parameter_list|)
+function_decl|;
 if|#
 directive|if
 name|FICL_WANT_FLOAT
@@ -2270,6 +2561,18 @@ modifier|*
 name|pSys
 parameter_list|)
 function_decl|;
+name|int
+name|ficlParseFloatNumber
+parameter_list|(
+name|FICL_VM
+modifier|*
+name|pVM
+parameter_list|,
+name|STRINGINFO
+name|si
+parameter_list|)
+function_decl|;
+comment|/* float.c */
 endif|#
 directive|endif
 if|#
@@ -2285,6 +2588,17 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
+name|int
+name|ficlParsePrefix
+parameter_list|(
+name|FICL_VM
+modifier|*
+name|pVM
+parameter_list|,
+name|STRINGINFO
+name|si
+parameter_list|)
+function_decl|;
 comment|/* ** from words.c... */
 name|void
 name|constantParen
@@ -2333,6 +2647,10 @@ comment|/* ** From tools.c */
 name|int
 name|isAFiclWord
 parameter_list|(
+name|FICL_DICT
+modifier|*
+name|pd
+parameter_list|,
 name|FICL_WORD
 modifier|*
 name|pFW
@@ -2368,8 +2686,15 @@ name|QDO
 block|,
 name|STRINGLIT
 block|,
+name|CSTRINGLIT
+block|,
+if|#
+directive|if
+name|FICL_WANT_USER
 name|USER
 block|,
+endif|#
+directive|endif
 name|VARIABLE
 block|,  }
 name|WORDKIND
@@ -2521,6 +2846,54 @@ modifier|*
 name|pVM
 parameter_list|)
 function_decl|;
+endif|#
+directive|endif
+comment|/* ** Used with File-Access wordset. */
+define|#
+directive|define
+name|FICL_FAM_READ
+value|1
+define|#
+directive|define
+name|FICL_FAM_WRITE
+value|2
+define|#
+directive|define
+name|FICL_FAM_APPEND
+value|4
+define|#
+directive|define
+name|FICL_FAM_BINARY
+value|8
+define|#
+directive|define
+name|FICL_FAM_OPEN_MODE
+parameter_list|(
+name|fam
+parameter_list|)
+value|((fam)& (FICL_FAM_READ | FICL_FAM_WRITE | FICL_FAM_APPEND))
+if|#
+directive|if
+operator|(
+name|FICL_WANT_FILE
+operator|)
+typedef|typedef
+struct|struct
+name|ficlFILE
+block|{
+name|FILE
+modifier|*
+name|f
+decl_stmt|;
+name|char
+name|filename
+index|[
+literal|256
+index|]
+decl_stmt|;
+block|}
+name|ficlFILE
+typedef|;
 endif|#
 directive|endif
 ifdef|#

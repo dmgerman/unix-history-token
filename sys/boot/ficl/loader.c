@@ -2523,7 +2523,11 @@ argument_list|,
 name|dictCellsAvail
 argument_list|(
 name|ficlGetDict
-argument_list|()
+argument_list|(
+name|pVM
+operator|->
+name|pSys
+argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2926,6 +2930,8 @@ name|__i386__
 argument_list|)
 name|ficlSetEnv
 argument_list|(
+name|pSys
+argument_list|,
 literal|"arch-i386"
 argument_list|,
 name|FICL_TRUE
@@ -2933,6 +2939,8 @@ argument_list|)
 expr_stmt|;
 name|ficlSetEnv
 argument_list|(
+name|pSys
+argument_list|,
 literal|"arch-alpha"
 argument_list|,
 name|FICL_FALSE
@@ -2940,6 +2948,8 @@ argument_list|)
 expr_stmt|;
 name|ficlSetEnv
 argument_list|(
+name|pSys
+argument_list|,
 literal|"arch-ia64"
 argument_list|,
 name|FICL_FALSE
@@ -2953,6 +2963,8 @@ name|__alpha__
 argument_list|)
 name|ficlSetEnv
 argument_list|(
+name|pSys
+argument_list|,
 literal|"arch-i386"
 argument_list|,
 name|FICL_FALSE
@@ -2960,6 +2972,8 @@ argument_list|)
 expr_stmt|;
 name|ficlSetEnv
 argument_list|(
+name|pSys
+argument_list|,
 literal|"arch-alpha"
 argument_list|,
 name|FICL_TRUE
@@ -2967,6 +2981,8 @@ argument_list|)
 expr_stmt|;
 name|ficlSetEnv
 argument_list|(
+name|pSys
+argument_list|,
 literal|"arch-ia64"
 argument_list|,
 name|FICL_FALSE
@@ -2980,6 +2996,8 @@ name|__ia64__
 argument_list|)
 name|ficlSetEnv
 argument_list|(
+name|pSys
+argument_list|,
 literal|"arch-i386"
 argument_list|,
 name|FICL_FALSE
@@ -2987,6 +3005,8 @@ argument_list|)
 expr_stmt|;
 name|ficlSetEnv
 argument_list|(
+name|pSys
+argument_list|,
 literal|"arch-alpha"
 argument_list|,
 name|FICL_FALSE
@@ -2994,6 +3014,8 @@ argument_list|)
 expr_stmt|;
 name|ficlSetEnv
 argument_list|(
+name|pSys
+argument_list|,
 literal|"arch-ia64"
 argument_list|,
 name|FICL_TRUE

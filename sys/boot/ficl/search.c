@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************* ** s e a r c h . c ** Forth Inspired Command Language ** ANS Forth SEARCH and SEARCH-EXT word-set written in C ** Author: John Sadler (john_sadler@alum.mit.edu) ** Created: 6 June 2000 ** $Id: search.c,v 1.4 2001-04-26 21:41:31-07 jsadler Exp jsadler $ *******************************************************************/
+comment|/******************************************************************* ** s e a r c h . c ** Forth Inspired Command Language ** ANS Forth SEARCH and SEARCH-EXT word-set written in C ** Author: John Sadler (john_sadler@alum.mit.edu) ** Created: 6 June 2000 ** $Id: search.c,v 1.9 2001/12/05 07:21:34 jsadler Exp $ *******************************************************************/
 end_comment
 
 begin_comment
-comment|/* ** Copyright (c) 1997-2001 John Sadler (john_sadler@alum.mit.edu) ** All rights reserved. ** ** Get the latest Ficl release at http://ficl.sourceforge.net ** ** L I C E N S E  and  D I S C L A I M E R **  ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ** ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE ** IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ** ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE ** FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL ** DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS ** OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) ** HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT ** LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY ** OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF ** SUCH DAMAGE. ** ** I am interested in hearing from anyone who uses ficl. If you have ** a problem, a success story, a defect, an enhancement request, or ** if you would like to contribute to the ficl release, please send ** contact me by email at the address above. ** ** $Id: search.c,v 1.4 2001-04-26 21:41:31-07 jsadler Exp jsadler $ */
+comment|/* ** Copyright (c) 1997-2001 John Sadler (john_sadler@alum.mit.edu) ** All rights reserved. ** ** Get the latest Ficl release at http://ficl.sourceforge.net ** ** I am interested in hearing from anyone who uses ficl. If you have ** a problem, a success story, a defect, an enhancement request, or ** if you would like to contribute to the ficl release, please ** contact me by email at the address above. ** ** L I C E N S E  and  D I S C L A I M E R **  ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ** ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE ** IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ** ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE ** FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL ** DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS ** OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) ** HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT ** LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY ** OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF ** SUCH DAMAGE. */
 end_comment
 
 begin_comment
@@ -47,8 +47,10 @@ name|FICL_DICT
 modifier|*
 name|pDict
 init|=
-name|ficlGetDict
-argument_list|()
+name|vmGetDict
+argument_list|(
+name|pVM
+argument_list|)
 decl_stmt|;
 name|assert
 argument_list|(
@@ -109,8 +111,10 @@ name|FICL_HASH
 modifier|*
 name|pHash
 init|=
-name|ficlGetDict
-argument_list|()
+name|vmGetDict
+argument_list|(
+name|pVM
+argument_list|)
 operator|->
 name|pForthWords
 decl_stmt|;
@@ -152,8 +156,10 @@ name|pVM
 operator|->
 name|pStack
 argument_list|,
-name|ficlGetDict
-argument_list|()
+name|vmGetDict
+argument_list|(
+name|pVM
+argument_list|)
 operator|->
 name|pCompile
 argument_list|)
@@ -185,8 +191,10 @@ name|FICL_DICT
 modifier|*
 name|pDict
 init|=
-name|ficlGetDict
-argument_list|()
+name|vmGetDict
+argument_list|(
+name|pVM
+argument_list|)
 decl_stmt|;
 name|int
 name|nLists
@@ -417,8 +425,10 @@ name|FICL_DICT
 modifier|*
 name|pDict
 init|=
-name|ficlGetDict
-argument_list|()
+name|vmGetDict
+argument_list|(
+name|pVM
+argument_list|)
 decl_stmt|;
 name|ficlLockDictionary
 argument_list|(
@@ -471,8 +481,10 @@ name|FICL_DICT
 modifier|*
 name|dp
 init|=
-name|ficlGetDict
-argument_list|()
+name|vmGetDict
+argument_list|(
+name|pVM
+argument_list|)
 decl_stmt|;
 if|if
 condition|(
@@ -574,8 +586,10 @@ name|FICL_DICT
 modifier|*
 name|dp
 init|=
-name|ficlGetDict
-argument_list|()
+name|vmGetDict
+argument_list|(
+name|pVM
+argument_list|)
 decl_stmt|;
 name|FICL_HASH
 modifier|*
@@ -649,8 +663,10 @@ name|FICL_DICT
 modifier|*
 name|dp
 init|=
-name|ficlGetDict
-argument_list|()
+name|vmGetDict
+argument_list|(
+name|pVM
+argument_list|)
 decl_stmt|;
 name|int
 name|nLists
@@ -725,8 +741,10 @@ name|FICL_DICT
 modifier|*
 name|dp
 init|=
-name|ficlGetDict
-argument_list|()
+name|vmGetDict
+argument_list|(
+name|pVM
+argument_list|)
 decl_stmt|;
 name|ficlLockDictionary
 argument_list|(
@@ -809,7 +827,7 @@ name|pHash
 operator|->
 name|name
 decl_stmt|;
-name|int
+name|FICL_INT
 name|len
 init|=
 literal|0
@@ -1112,6 +1130,8 @@ expr_stmt|;
 comment|/*     ** Set SEARCH environment query values     */
 name|ficlSetEnv
 argument_list|(
+name|pSys
+argument_list|,
 literal|"search-order"
 argument_list|,
 name|FICL_TRUE
@@ -1119,6 +1139,8 @@ argument_list|)
 expr_stmt|;
 name|ficlSetEnv
 argument_list|(
+name|pSys
+argument_list|,
 literal|"search-order-ext"
 argument_list|,
 name|FICL_TRUE
@@ -1126,6 +1148,8 @@ argument_list|)
 expr_stmt|;
 name|ficlSetEnv
 argument_list|(
+name|pSys
+argument_list|,
 literal|"wordlists"
 argument_list|,
 name|FICL_DEFAULT_VOCS

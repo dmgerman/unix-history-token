@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************                     s y s d e p . h ** Forth Inspired Command Language ** Author: John Sadler (john_sadler@alum.mit.edu) ** Created: 16 Oct 1997 ** Ficl system dependent types and prototypes... ** ** Note: Ficl also depends on the use of "assert" when ** FICL_ROBUST is enabled. This may require some consideration ** in firmware systems since assert often ** assumes stderr/stdout.   ** $Id: sysdep.h,v 1.6 2001-04-26 21:41:55-07 jsadler Exp jsadler $ *******************************************************************/
+comment|/*******************************************************************                     s y s d e p . h ** Forth Inspired Command Language ** Author: John Sadler (john_sadler@alum.mit.edu) ** Created: 16 Oct 1997 ** Ficl system dependent types and prototypes... ** ** Note: Ficl also depends on the use of "assert" when ** FICL_ROBUST is enabled. This may require some consideration ** in firmware systems since assert often ** assumes stderr/stdout.   ** $Id: sysdep.h,v 1.11 2001/12/05 07:21:34 jsadler Exp $ *******************************************************************/
 end_comment
 
 begin_comment
-comment|/* ** Copyright (c) 1997-2001 John Sadler (john_sadler@alum.mit.edu) ** All rights reserved. ** ** Get the latest Ficl release at http://ficl.sourceforge.net ** ** L I C E N S E  and  D I S C L A I M E R **  ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ** ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE ** IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ** ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE ** FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL ** DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS ** OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) ** HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT ** LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY ** OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF ** SUCH DAMAGE. ** ** I am interested in hearing from anyone who uses ficl. If you have ** a problem, a success story, a defect, an enhancement request, or ** if you would like to contribute to the ficl release, please send ** contact me by email at the address above. ** ** $Id: sysdep.h,v 1.6 2001-04-26 21:41:55-07 jsadler Exp jsadler $ */
+comment|/* ** Copyright (c) 1997-2001 John Sadler (john_sadler@alum.mit.edu) ** All rights reserved. ** ** Get the latest Ficl release at http://ficl.sourceforge.net ** ** I am interested in hearing from anyone who uses ficl. If you have ** a problem, a success story, a defect, an enhancement request, or ** if you would like to contribute to the ficl release, please ** contact me by email at the address above. ** ** L I C E N S E  and  D I S C L A I M E R **  ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ** ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE ** IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ** ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE ** FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL ** DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS ** OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) ** HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT ** LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY ** OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF ** SUCH DAMAGE. */
 end_comment
 
 begin_comment
@@ -450,6 +450,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|FICL_WANT_FILE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
 name|FICL_WANT_FLOAT
 value|0
 end_define
@@ -542,6 +549,32 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* ** FICL_WANT_FILE ** Includes the FILE and FILE-EXT wordset and associated code. Turn this off if you do not ** have a file system! ** Contributed by Larry Hastings */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|FICL_WANT_FILE
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|FICL_WANT_FILE
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* ** FICL_WANT_FLOAT ** Includes a floating point stack for the VM, and words to do float operations. ** Contributed by Guy Carver */
 end_comment
 
@@ -586,6 +619,30 @@ define|#
 directive|define
 name|FICL_WANT_DEBUGGER
 value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ** FICL_EXTENDED_PREFIX enables a bunch of extra prefixes in prefix.c and prefix.fr (if ** included as part of softcore.c) */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+name|FICL_EXTENDED_PREFIX
+end_if
+
+begin_define
+define|#
+directive|define
+name|FICL_EXTENDED_PREFIX
+value|0
 end_define
 
 begin_endif
@@ -1017,30 +1074,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ** FICL_EXTENDED_PREFIX enables a bunch of extra prefixes in prefix.c and prefix.fr (if ** included as part of softcore.c) */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-name|FICL_EXTENDED_PREFIX
-end_if
-
-begin_define
-define|#
-directive|define
-name|FICL_EXTENDED_PREFIX
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* ** FICL_ALIGN is the power of two to which the dictionary ** pointer address must be aligned. This value is usually ** either 1 or 2, depending on the memory architecture ** of the target system; 2 is safe on any 16 or 32 bit ** machine. 3 would be appropriate for a 64 bit machine. */
 end_comment
 
@@ -1210,6 +1243,32 @@ name|y
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* ** FICL_HAVE_FTRUNCATE indicates whether the current OS supports ** the ftruncate() function (available on most UNIXes).  This ** function is necessary to provide the complete File-Access wordset. */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|FICL_HAVE_FTRUNCATE
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|FICL_HAVE_FTRUNCATE
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

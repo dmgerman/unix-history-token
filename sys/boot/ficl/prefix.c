@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************* ** p r e f i x . c ** Forth Inspired Command Language ** Parser extensions for Ficl ** Authors: Larry Hastings& John Sadler (john_sadler@alum.mit.edu) ** Created: April 2001 ** $Id: prefix.c,v 1.1 2001-04-26 21:41:33-07 jsadler Exp jsadler $ *******************************************************************/
+comment|/******************************************************************* ** p r e f i x . c ** Forth Inspired Command Language ** Parser extensions for Ficl ** Authors: Larry Hastings& John Sadler (john_sadler@alum.mit.edu) ** Created: April 2001 ** $Id: prefix.c,v 1.6 2001/12/05 07:21:34 jsadler Exp $ *******************************************************************/
 end_comment
 
 begin_comment
-comment|/* ** Copyright (c) 1997-2001 John Sadler (john_sadler@alum.mit.edu) ** All rights reserved. ** ** Get the latest Ficl release at http://ficl.sourceforge.net ** ** L I C E N S E  and  D I S C L A I M E R **  ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ** ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE ** IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ** ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE ** FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL ** DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS ** OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) ** HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT ** LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY ** OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF ** SUCH DAMAGE. ** ** I am interested in hearing from anyone who uses ficl. If you have ** a problem, a success story, a defect, an enhancement request, or ** if you would like to contribute to the ficl release, please send ** contact me by email at the address above. ** ** $Id: prefix.c,v 1.1 2001-04-26 21:41:33-07 jsadler Exp jsadler $ */
+comment|/* ** Copyright (c) 1997-2001 John Sadler (john_sadler@alum.mit.edu) ** All rights reserved. ** ** Get the latest Ficl release at http://ficl.sourceforge.net ** ** I am interested in hearing from anyone who uses ficl. If you have ** a problem, a success story, a defect, an enhancement request, or ** if you would like to contribute to the ficl release, please ** contact me by email at the address above. ** ** L I C E N S E  and  D I S C L A I M E R **  ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ** ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE ** IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ** ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE ** FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL ** DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS ** OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) ** HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT ** LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY ** OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF ** SUCH DAMAGE. */
 end_comment
 
 begin_comment
@@ -78,14 +78,22 @@ name|pFW
 init|=
 name|ficlLookup
 argument_list|(
+name|pVM
+operator|->
+name|pSys
+argument_list|,
 name|list_name
 argument_list|)
 decl_stmt|;
-name|assert
-argument_list|(
+comment|/*      ** Make sure we found the prefix dictionary - otherwise silently fail     ** If forth-wordlist is not in the search order, we won't find the prefixes.     */
+if|if
+condition|(
+operator|!
 name|pFW
-argument_list|)
-expr_stmt|;
+condition|)
+return|return
+name|FICL_FALSE
+return|;
 name|pHash
 operator|=
 operator|(
@@ -170,23 +178,22 @@ name|n
 argument_list|)
 condition|)
 block|{
+comment|/* (sadler) fixed off-by-one error when the token has no trailing space in the TIB */
 name|vmSetTibIndex
 argument_list|(
 name|pVM
 argument_list|,
-name|vmGetTibIndex
-argument_list|(
-name|pVM
-argument_list|)
-operator|-
-literal|1
-operator|-
-name|SI_COUNT
-argument_list|(
 name|si
-argument_list|)
+operator|.
+name|cp
 operator|+
 name|n
+operator|-
+name|pVM
+operator|->
+name|tib
+operator|.
+name|cp
 argument_list|)
 expr_stmt|;
 name|vmExecute
@@ -271,7 +278,7 @@ name|vmThrowErr
 argument_list|(
 name|pVM
 argument_list|,
-literal|"0x%.*s is not a valid hex value"
+literal|"%.*s not recognized"
 argument_list|,
 name|i
 argument_list|,
@@ -444,6 +451,7 @@ name|pHash
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 	** Put __tempbase in the forth-wordlist 	*/
 name|dictAppendWord
 argument_list|(
 name|dp
@@ -493,6 +501,8 @@ name|pFW
 operator|=
 name|ficlLookup
 argument_list|(
+name|pSys
+argument_list|,
 literal|"\\"
 argument_list|)
 expr_stmt|;
@@ -522,15 +532,6 @@ operator|->
 name|pCompile
 operator|=
 name|pPrevCompile
-expr_stmt|;
-name|ficlAddPrecompiledParseStep
-argument_list|(
-name|pSys
-argument_list|,
-literal|"prefix?"
-argument_list|,
-name|ficlParsePrefix
-argument_list|)
 expr_stmt|;
 return|return;
 block|}

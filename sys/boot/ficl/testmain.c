@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ** stub main for testing FICL under Win32 ** $Id: testmain.c,v 1.6 2000-06-17 07:43:50-07 jsadler Exp jsadler $ */
+comment|/* ** stub main for testing FICL under userland ** $Id: testmain.c,v 1.13 2001/12/05 07:21:34 jsadler Exp $ */
+end_comment
+
+begin_comment
+comment|/* ** Copyright (c) 1997-2001 John Sadler (john_sadler@alum.mit.edu) ** All rights reserved. ** ** Get the latest Ficl release at http://ficl.sourceforge.net ** ** I am interested in hearing from anyone who uses ficl. If you have ** a problem, a success story, a defect, an enhancement request, or ** if you would like to contribute to the ficl release, please ** contact me by email at the address above. ** ** L I C E N S E  and  D I S C L A I M E R **  ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ** ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE ** IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ** ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE ** FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL ** DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS ** OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) ** HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT ** LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY ** OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF ** SUCH DAMAGE. */
 end_comment
 
 begin_comment
@@ -194,7 +198,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ** Ficl interface to system (ANSI) ** Gets a newline (or NULL) delimited string from the input ** and feeds it to system() ** Example: **    system del *.* **    \ ouch! */
+comment|/* ** Ficl interface to system (ANSI) ** Gets a newline (or NULL) delimited string from the input ** and feeds it to system() ** Example: **    system rm -rf / **    \ ouch! */
 end_comment
 
 begin_function
@@ -615,6 +619,20 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+comment|/* handle "bye" in loaded files. --lch */
+if|if
+condition|(
+name|result
+operator|==
+name|VM_USEREXIT
+condition|)
+name|vmThrow
+argument_list|(
+name|pVM
+argument_list|,
+name|VM_USEREXIT
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 end_function
@@ -637,8 +655,10 @@ name|FICL_HASH
 modifier|*
 name|pHash
 init|=
-name|ficlGetDict
-argument_list|()
+name|vmGetDict
+argument_list|(
+name|pVM
+argument_list|)
 operator|->
 name|pForthWords
 decl_stmt|;
@@ -937,11 +957,15 @@ begin_function
 name|void
 name|buildTestInterface
 parameter_list|(
-name|void
+name|FICL_SYSTEM
+modifier|*
+name|pSys
 parameter_list|)
 block|{
 name|ficlBuild
 argument_list|(
+name|pSys
+argument_list|,
 literal|"break"
 argument_list|,
 name|ficlBreak
@@ -951,6 +975,8 @@ argument_list|)
 expr_stmt|;
 name|ficlBuild
 argument_list|(
+name|pSys
+argument_list|,
 literal|"clock"
 argument_list|,
 name|ficlClock
@@ -960,6 +986,8 @@ argument_list|)
 expr_stmt|;
 name|ficlBuild
 argument_list|(
+name|pSys
+argument_list|,
 literal|"cd"
 argument_list|,
 name|ficlChDir
@@ -969,6 +997,8 @@ argument_list|)
 expr_stmt|;
 name|ficlBuild
 argument_list|(
+name|pSys
+argument_list|,
 literal|"execxt"
 argument_list|,
 name|execxt
@@ -978,6 +1008,8 @@ argument_list|)
 expr_stmt|;
 name|ficlBuild
 argument_list|(
+name|pSys
+argument_list|,
 literal|"load"
 argument_list|,
 name|ficlLoad
@@ -987,6 +1019,8 @@ argument_list|)
 expr_stmt|;
 name|ficlBuild
 argument_list|(
+name|pSys
+argument_list|,
 literal|"pwd"
 argument_list|,
 name|ficlGetCWD
@@ -996,6 +1030,8 @@ argument_list|)
 expr_stmt|;
 name|ficlBuild
 argument_list|(
+name|pSys
+argument_list|,
 literal|"system"
 argument_list|,
 name|ficlSystem
@@ -1005,6 +1041,8 @@ argument_list|)
 expr_stmt|;
 name|ficlBuild
 argument_list|(
+name|pSys
+argument_list|,
 literal|"spewhash"
 argument_list|,
 name|spewHash
@@ -1014,6 +1052,8 @@ argument_list|)
 expr_stmt|;
 name|ficlBuild
 argument_list|(
+name|pSys
+argument_list|,
 literal|"clocks/sec"
 argument_list|,
 name|clocksPerSec
@@ -1048,20 +1088,30 @@ name|FICL_VM
 modifier|*
 name|pVM
 decl_stmt|;
+name|FICL_SYSTEM
+modifier|*
+name|pSys
+decl_stmt|;
+name|pSys
+operator|=
 name|ficlInitSystem
 argument_list|(
 literal|10000
 argument_list|)
 expr_stmt|;
 name|buildTestInterface
-argument_list|()
+argument_list|(
+name|pSys
+argument_list|)
 expr_stmt|;
 name|pVM
 operator|=
 name|ficlNewVM
-argument_list|()
+argument_list|(
+name|pSys
+argument_list|)
 expr_stmt|;
-name|ficlExec
+name|ficlEvaluate
 argument_list|(
 name|pVM
 argument_list|,
@@ -1095,7 +1145,7 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|ficlExec
+name|ficlEvaluate
 argument_list|(
 name|pVM
 argument_list|,
@@ -1148,7 +1198,9 @@ name|VM_USEREXIT
 condition|)
 block|{
 name|ficlTermSystem
-argument_list|()
+argument_list|(
+name|pSys
+argument_list|)
 expr_stmt|;
 break|break;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************* ** v m . c ** Forth Inspired Command Language - virtual machine methods ** Author: John Sadler (john_sadler@alum.mit.edu) ** Created: 19 July 1997 ** $Id: vm.c,v 1.8 2001-04-26 21:41:23-07 jsadler Exp jsadler $ *******************************************************************/
+comment|/******************************************************************* ** v m . c ** Forth Inspired Command Language - virtual machine methods ** Author: John Sadler (john_sadler@alum.mit.edu) ** Created: 19 July 1997 ** $Id: vm.c,v 1.13 2001/12/05 07:21:34 jsadler Exp $ *******************************************************************/
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/* ** This file implements the virtual machine of FICL. Each virtual ** 
 end_comment
 
 begin_comment
-comment|/* ** Copyright (c) 1997-2001 John Sadler (john_sadler@alum.mit.edu) ** All rights reserved. ** ** Get the latest Ficl release at http://ficl.sourceforge.net ** ** L I C E N S E  and  D I S C L A I M E R **  ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ** ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE ** IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ** ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE ** FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL ** DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS ** OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) ** HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT ** LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY ** OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF ** SUCH DAMAGE. ** ** I am interested in hearing from anyone who uses ficl. If you have ** a problem, a success story, a defect, an enhancement request, or ** if you would like to contribute to the ficl release, please send ** contact me by email at the address above. ** ** $Id: vm.c,v 1.8 2001-04-26 21:41:23-07 jsadler Exp jsadler $ */
+comment|/* ** Copyright (c) 1997-2001 John Sadler (john_sadler@alum.mit.edu) ** All rights reserved. ** ** Get the latest Ficl release at http://ficl.sourceforge.net ** ** I am interested in hearing from anyone who uses ficl. If you have ** a problem, a success story, a defect, an enhancement request, or ** if you would like to contribute to the ficl release, please ** contact me by email at the address above. ** ** L I C E N S E  and  D I S C L A I M E R **  ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ** ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE ** IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ** ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE ** FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL ** DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS ** OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) ** HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT ** LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY ** OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF ** SUCH DAMAGE. */
 end_comment
 
 begin_comment
@@ -377,6 +377,51 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* ** Recast inner loop that inlines tokens for control structures, arithmetic and stack operations,  ** as well as create does> : ; and various literals */
+end_comment
+
+begin_endif
+unit|typedef enum {     PATCH = 0,     L0,     L1,     L2,     LMINUS1,     LMINUS2,     DROP,     SWAP,     DUP,     PICK,     ROLL,     FETCH,     STORE,     BRANCH,     CBRANCH,     LEAVE,     TO_R,     R_FROM,     EXIT; } OPCODE;  typedef CELL *IPTYPE;  void vmInnerLoop(FICL_VM *pVM) {     IPTYPE ip = pVM->ip;     FICL_STACK *pStack = pVM->pStack;      for (;;)     {         OPCODE o = (*ip++).i;         CELL c;         switch (o)         {         case L0:             stackPushINT(pStack, 0);             break;         case L1:             stackPushINT(pStack, 1);             break;         case L2:             stackPushINT(pStack, 2);             break;         case LMINUS1:             stackPushINT(pStack, -1);             break;         case LMINUS2:             stackPushINT(pStack, -2);             break;         case DROP:             stackDrop(pStack, 1);             break;         case SWAP:             stackRoll(pStack, 1);             break;         case DUP:             stackPick(pStack, 0);             break;         case PICK:             c = *ip++;             stackPick(pStack, c.i);             break;         case ROLL:             c = *ip++;             stackRoll(pStack, c.i);             break;         case EXIT:             return;         }     }      return; }
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/**************************************************************************                         v m G e t D i c t ** Returns the address dictionary for this VM's system **************************************************************************/
+end_comment
+
+begin_function
+name|FICL_DICT
+modifier|*
+name|vmGetDict
+parameter_list|(
+name|FICL_VM
+modifier|*
+name|pVM
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|pVM
+argument_list|)
+expr_stmt|;
+return|return
+name|pVM
+operator|->
+name|pSys
+operator|->
+name|dp
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/**************************************************************************                         v m G e t S t r i n g ** Parses a string out of the VM input buffer and copies up to the first ** FICL_STRING_MAX characters to the supplied destination buffer, a ** FICL_STRING. The destination string is NULL terminated. **  ** Returns the address of the first unused character in the dest buffer. **************************************************************************/
@@ -1327,38 +1372,6 @@ expr_stmt|;
 return|return;
 block|}
 end_function
-
-begin_comment
-comment|/**************************************************************************                         v m S t e p ** Single step the vm - equivalent to "step into" - used for debugging **************************************************************************/
-end_comment
-
-begin_if
-if|#
-directive|if
-name|FICL_WANT_DEBUGGER
-end_if
-
-begin_function
-name|void
-name|vmStep
-parameter_list|(
-name|FICL_VM
-modifier|*
-name|pVM
-parameter_list|)
-block|{
-name|M_VM_STEP
-argument_list|(
-name|pVM
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/**************************************************************************                         v m T e x t O u t ** Feeds text to the vm's output callback **************************************************************************/
