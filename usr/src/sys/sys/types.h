@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)types.h	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)types.h	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -21,6 +21,12 @@ name|short
 name|dev_t
 typedef|;
 end_typedef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
 
 begin_comment
 comment|/* major part of a device */
@@ -66,6 +72,11 @@ parameter_list|)
 value|((dev_t)(((x)<<8) | (y)))
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_typedef
 typedef|typedef
 name|unsigned
@@ -107,7 +118,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* sys V compatibility */
+comment|/* Sys V compatibility */
 end_comment
 
 begin_ifdef
@@ -141,6 +152,54 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|_CLOCK_T_
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|_CLOCK_T_
+name|clock_t
+typedef|;
+end_typedef
+
+begin_undef
+undef|#
+directive|undef
+name|_CLOCK_T_
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_TIME_T_
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|_TIME_T_
+name|time_t
+typedef|;
+end_typedef
+
+begin_undef
+undef|#
+directive|undef
+name|_TIME_T_
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|_SIZE_T_
 end_ifdef
 
@@ -161,6 +220,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
 
 begin_typedef
 typedef|typedef
@@ -194,6 +259,11 @@ block|}
 name|quad
 typedef|;
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
@@ -246,20 +316,6 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|long
-name|time_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|u_long
-name|clock_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|long
 name|off_t
 typedef|;
 end_typedef
@@ -305,6 +361,12 @@ name|u_long
 name|fixpt_t
 typedef|;
 end_typedef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_POSIX_SOURCE
+end_ifndef
 
 begin_define
 define|#
@@ -446,6 +508,15 @@ name|p
 parameter_list|)
 value|bzero((char *)(p), sizeof(*(p)))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_POSIX_SOURCE */
+end_comment
 
 begin_endif
 endif|#
