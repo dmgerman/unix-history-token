@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)specdev.h	7.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)specdev.h	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -525,6 +525,20 @@ directive|define
 name|spec_islocked
 value|((int (*) __P((struct  vop_islocked_args *)))nullop)
 end_define
+
+begin_decl_stmt
+name|int
+name|spec_pathconf
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|vop_pathconf_args
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|int
