@@ -3624,6 +3624,14 @@ break|break;
 case|case
 name|MOD_SHUTDOWN
 case|:
+name|dg
+operator|.
+name|buf
+operator|->
+name|magic
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 default|default:
 name|err
