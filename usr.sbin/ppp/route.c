@@ -4691,7 +4691,7 @@ argument_list|(
 name|LogERROR
 argument_list|,
 literal|"rt_Set: Cannot add a route with"
-literal|" destination 0.0.0.0\n"
+literal|" gateway 0.0.0.0\n"
 argument_list|)
 expr_stmt|;
 name|close
