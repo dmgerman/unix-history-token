@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: do_command.c,v 2.12 1994/01/15 20:43:43 vixie Exp $"
+literal|"$Id: do_command.c,v 1.1.1.1 1994/08/27 13:43:03 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -313,6 +313,34 @@ operator|->
 name|envp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mailto
+operator|&&
+operator|*
+name|mailto
+operator|==
+literal|'-'
+condition|)
+block|{
+name|log_it
+argument_list|(
+literal|"CRON"
+argument_list|,
+name|getpid
+argument_list|()
+argument_list|,
+name|usernm
+argument_list|,
+literal|"attempts to crack"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+name|ERROR_EXIT
+argument_list|)
+expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|USE_SIGCHLD
@@ -610,11 +638,16 @@ name|u
 argument_list|)
 expr_stmt|;
 comment|/* set our directory, uid and gid.  Set gid first, since once 		 * we set uid, we've lost root privledges. 		 */
-name|setgid
+name|chdir
 argument_list|(
+name|env_get
+argument_list|(
+literal|"HOME"
+argument_list|,
 name|e
 operator|->
-name|gid
+name|envp
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|#
@@ -641,6 +674,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|setgid
+argument_list|(
+name|e
+operator|->
+name|gid
+argument_list|)
+expr_stmt|;
 name|setuid
 argument_list|(
 name|e
@@ -649,18 +689,6 @@ name|uid
 argument_list|)
 expr_stmt|;
 comment|/* we aren't root after this... */
-name|chdir
-argument_list|(
-name|env_get
-argument_list|(
-literal|"HOME"
-argument_list|,
-name|e
-operator|->
-name|envp
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* exec the command. 		 */
 block|{
 name|char
