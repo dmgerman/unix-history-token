@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)args.c	5.4 (Berkeley) %G%"
+literal|"@(#)args.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -591,6 +591,8 @@ operator|(
 name|C_BLOCK
 operator||
 name|C_LCASE
+operator||
+name|C_SWAB
 operator||
 name|C_UCASE
 operator||
