@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*-  * Copyright (c) 1990, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pr_time.c	8.1 (Berkeley) %G%"
+literal|"@(#)pr_time.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,7 +65,7 @@ file|"extern.h"
 end_include
 
 begin_comment
-comment|/*  * pr_attime --  *	Print the time since the user logged in.   *  *	Note: SCCS forces the bizarre string manipulation, things like  *	8.1 get replaced in the source code.  */
+comment|/*  * pr_attime --  *	Print the time since the user logged in.   *  *	Note: SCCS forces the bizarre string manipulation, things like  *	8.2 get replaced in the source code.  */
 end_comment
 
 begin_function
@@ -164,15 +164,13 @@ name|strcpy
 argument_list|(
 name|fmt
 argument_list|,
-literal|"%a%%%p"
+name|__CONCAT
+argument_list|(
+literal|"%a%"
+argument_list|,
+literal|"I%p"
 argument_list|)
-expr_stmt|;
-name|fmt
-index|[
-literal|3
-index|]
-operator|=
-literal|'I'
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* Default is hh:mm{am,pm}. */
@@ -185,15 +183,13 @@ name|strcpy
 argument_list|(
 name|fmt
 argument_list|,
-literal|"%l:%%%p"
+name|__CONCAT
+argument_list|(
+literal|"%l:%"
+argument_list|,
+literal|"M%p"
 argument_list|)
-expr_stmt|;
-name|fmt
-index|[
-literal|4
-index|]
-operator|=
-literal|'M'
+argument_list|)
 expr_stmt|;
 block|}
 operator|(
