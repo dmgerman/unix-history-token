@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mbareg.h	4.15	81/05/03	*/
+comment|/*	mbareg.h	4.16	82/02/08	*/
 end_comment
 
 begin_comment
@@ -673,6 +673,20 @@ name|MBDT_RM80
 value|026
 end_define
 
+begin_define
+define|#
+directive|define
+name|MBDT_ML11A
+value|0110
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBDT_ML11B
+value|0111
+end_define
+
 begin_comment
 comment|/* type codes for tape drives */
 end_comment
@@ -711,10 +725,6 @@ directive|define
 name|MBDT_TU78
 value|0101
 end_define
-
-begin_comment
-comment|/* can't handle these (yet) */
-end_comment
 
 end_unit
 
