@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	6.6 (Berkeley) %G%"
+literal|"@(#)headers.c	6.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -261,10 +261,16 @@ index|]
 expr_stmt|;
 while|while
 condition|(
-name|isspace
+name|isascii
 argument_list|(
 operator|*
 operator|--
+name|p
+argument_list|)
+operator|&&
+name|isspace
+argument_list|(
+operator|*
 name|p
 argument_list|)
 condition|)
@@ -1078,6 +1084,12 @@ expr_stmt|;
 comment|/* following technically violates RFC822 */
 while|while
 condition|(
+name|isascii
+argument_list|(
+operator|*
+name|s
+argument_list|)
+operator|&&
 name|isspace
 argument_list|(
 operator|*
@@ -1916,6 +1928,12 @@ name|addr
 operator|!=
 literal|'\0'
 operator|&&
+name|isascii
+argument_list|(
+operator|*
+name|addr
+argument_list|)
+operator|&&
 name|isspace
 argument_list|(
 operator|*
@@ -2257,10 +2275,16 @@ name|p
 expr_stmt|;
 while|while
 condition|(
-name|isspace
+name|isascii
 argument_list|(
 operator|*
 operator|--
+name|p
+argument_list|)
+operator|&&
+name|isspace
+argument_list|(
+operator|*
 name|p
 argument_list|)
 condition|)
@@ -2454,7 +2478,7 @@ operator|*
 name|bp
 operator|++
 operator|=
-literal|'\001'
+name|MACROEXPAND
 expr_stmt|;
 operator|*
 name|bp
@@ -3115,11 +3139,19 @@ comment|/* 		**  Find the end of the name.  New style names 		**  end with a com
 comment|/* find end of name */
 while|while
 condition|(
+operator|(
+name|isascii
+argument_list|(
+operator|*
+name|p
+argument_list|)
+operator|&&
 name|isspace
 argument_list|(
 operator|*
 name|p
 argument_list|)
+operator|)
 operator|||
 operator|*
 name|p
@@ -3193,6 +3225,12 @@ name|p
 operator|!=
 literal|'\0'
 operator|&&
+name|isascii
+argument_list|(
+operator|*
+name|p
+argument_list|)
+operator|&&
 name|isspace
 argument_list|(
 operator|*
@@ -3240,6 +3278,12 @@ name|p
 operator|!=
 literal|'\0'
 operator|&&
+name|isascii
+argument_list|(
+operator|*
+name|p
+argument_list|)
+operator|&&
 name|isspace
 argument_list|(
 operator|*
@@ -3259,11 +3303,19 @@ operator|>=
 name|name
 operator|&&
 operator|(
+operator|(
+name|isascii
+argument_list|(
+operator|*
+name|p
+argument_list|)
+operator|&&
 name|isspace
 argument_list|(
 operator|*
 name|p
 argument_list|)
+operator|)
 operator|||
 operator|*
 name|p
@@ -3566,6 +3618,14 @@ literal|2
 index|]
 operator|!=
 literal|'\0'
+operator|&&
+name|isascii
+argument_list|(
+name|p
+index|[
+literal|2
+index|]
+argument_list|)
 operator|&&
 name|isspace
 argument_list|(

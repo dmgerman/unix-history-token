@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)macro.c	6.4 (Berkeley) %G%"
+literal|"@(#)macro.c	6.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -201,6 +201,8 @@ expr_stmt|;
 switch|switch
 condition|(
 name|c
+operator|&
+literal|0377
 condition|)
 block|{
 case|case
@@ -272,7 +274,7 @@ operator|--
 expr_stmt|;
 continue|continue;
 case|case
-literal|'\001'
+name|MACROEXPAND
 case|:
 comment|/* macro interpolation */
 name|c
@@ -355,18 +357,16 @@ literal|1
 index|]
 condition|)
 block|{
+comment|/* check for any sendmail metacharacters */
 if|if
 condition|(
-name|iscntrl
-argument_list|(
+operator|(
 name|c
-argument_list|)
-operator|&&
-operator|!
-name|isspace
-argument_list|(
-name|c
-argument_list|)
+operator|&
+literal|0340
+operator|)
+operator|==
+literal|0200
 condition|)
 name|recurse
 operator|=

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	6.5 (Berkeley) %G%"
+literal|"@(#)savemail.c	6.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -450,7 +450,7 @@ break|break;
 block|}
 name|expand
 argument_list|(
-literal|"\001n"
+literal|"\201n"
 argument_list|,
 name|buf
 argument_list|,
@@ -873,7 +873,7 @@ argument_list|)
 expr_stmt|;
 name|expand
 argument_list|(
-literal|"\001z/dead.letter"
+literal|"\201z/dead.letter"
 argument_list|,
 name|buf
 argument_list|,
@@ -1322,7 +1322,7 @@ name|define
 argument_list|(
 literal|'g'
 argument_list|,
-literal|"\001f"
+literal|"\201f"
 argument_list|,
 name|e
 argument_list|)
@@ -1334,7 +1334,7 @@ name|define
 argument_list|(
 literal|'<'
 argument_list|,
-literal|"\001f"
+literal|"\201f"
 argument_list|,
 name|e
 argument_list|)
@@ -1357,7 +1357,7 @@ name|define
 argument_list|(
 literal|'a'
 argument_list|,
-literal|"\001b"
+literal|"\201b"
 argument_list|,
 name|ee
 argument_list|)
@@ -1541,7 +1541,7 @@ end_comment
 begin_expr_stmt
 name|expand
 argument_list|(
-literal|"\001n"
+literal|"\201n"
 argument_list|,
 name|buf
 argument_list|,
@@ -1646,7 +1646,7 @@ name|define
 argument_list|(
 literal|'f'
 argument_list|,
-literal|"\001n"
+literal|"\201n"
 argument_list|,
 name|ee
 argument_list|)

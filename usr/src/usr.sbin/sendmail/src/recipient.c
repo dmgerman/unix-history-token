@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	6.9 (Berkeley) %G%"
+literal|"@(#)recipient.c	6.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -277,11 +277,19 @@ comment|/* defined in prescan */
 comment|/* parse the address */
 while|while
 condition|(
+operator|(
+name|isascii
+argument_list|(
+operator|*
+name|p
+argument_list|)
+operator|&&
 name|isspace
 argument_list|(
 operator|*
 name|p
 argument_list|)
+operator|)
 operator|||
 operator|*
 name|p

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.16 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -666,35 +666,44 @@ name|NULL
 condition|;
 control|)
 block|{
+comment|/* can't use strchr here because of sign extension problems */
 while|while
 condition|(
-operator|(
+operator|*
 name|p
-operator|=
-name|strchr
-argument_list|(
-name|p
-argument_list|,
-literal|'\001'
-argument_list|)
-operator|)
 operator|!=
-name|NULL
+literal|'\0'
 condition|)
+block|{
+if|if
+condition|(
+operator|(
+operator|*
+name|p
+operator|++
+operator|&
+literal|0377
+operator|)
+operator|==
+name|MACROEXPAND
+condition|)
+block|{
 if|if
 condition|(
 operator|*
-operator|++
 name|p
 operator|==
 literal|'u'
 condition|)
 break|break;
+block|}
+block|}
 if|if
 condition|(
+operator|*
 name|p
 operator|!=
-name|NULL
+literal|'\0'
 condition|)
 break|break;
 comment|/* this entry is safe -- go ahead and process it */
@@ -4407,7 +4416,7 @@ name|char
 modifier|*
 name|template
 init|=
-literal|"\001l\n"
+literal|"\201l\n"
 decl_stmt|;
 name|char
 name|buf
@@ -4459,7 +4468,7 @@ index|]
 decl_stmt|;
 name|expand
 argument_list|(
-literal|"\001<"
+literal|"\201<"
 argument_list|,
 name|buf
 argument_list|,
@@ -4512,7 +4521,7 @@ name|sprintf
 argument_list|(
 name|xbuf
 argument_list|,
-literal|"From %s  \001d remote from %s\n"
+literal|"From %s  \201d remote from %s\n"
 argument_list|,
 name|bang
 argument_list|,
@@ -6585,7 +6594,7 @@ literal|'\0'
 condition|)
 name|expand
 argument_list|(
-literal|"\001j"
+literal|"\201j"
 argument_list|,
 name|myhostbuf
 argument_list|,

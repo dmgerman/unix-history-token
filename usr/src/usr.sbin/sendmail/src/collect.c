@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	6.3 (Berkeley) %G%"
+literal|"@(#)collect.c	6.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1443,11 +1443,19 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
+operator|(
+name|isascii
+argument_list|(
+operator|*
+name|p
+argument_list|)
+operator|&&
 name|isupper
 argument_list|(
 operator|*
 name|p
 argument_list|)
+operator|)
 operator|||
 name|p
 index|[

@@ -21,7 +21,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	6.6 (Berkeley) %G% (with USERDB)"
+literal|"@(#)udb.c	6.7 (Berkeley) %G% (with USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udb.c	6.6 (Berkeley) %G% (without USERDB)"
+literal|"@(#)udb.c	6.7 (Berkeley) %G% (without USERDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2329,6 +2329,12 @@ name|p
 decl_stmt|;
 while|while
 condition|(
+name|isascii
+argument_list|(
+operator|*
+name|spec
+argument_list|)
+operator|&&
 name|isspace
 argument_list|(
 operator|*

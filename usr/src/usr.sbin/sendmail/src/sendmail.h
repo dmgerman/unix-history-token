@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	6.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	6.12 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	6.11		%G%"
+literal|"@(#)sendmail.h	6.12		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1501,7 +1501,7 @@ begin_define
 define|#
 directive|define
 name|MATCHZANY
-value|'\020'
+value|0220
 end_define
 
 begin_comment
@@ -1512,7 +1512,7 @@ begin_define
 define|#
 directive|define
 name|MATCHANY
-value|'\021'
+value|0221
 end_define
 
 begin_comment
@@ -1523,7 +1523,7 @@ begin_define
 define|#
 directive|define
 name|MATCHONE
-value|'\022'
+value|0222
 end_define
 
 begin_comment
@@ -1534,7 +1534,7 @@ begin_define
 define|#
 directive|define
 name|MATCHCLASS
-value|'\023'
+value|0223
 end_define
 
 begin_comment
@@ -1545,7 +1545,7 @@ begin_define
 define|#
 directive|define
 name|MATCHNCLASS
-value|'\024'
+value|0224
 end_define
 
 begin_comment
@@ -1556,7 +1556,7 @@ begin_define
 define|#
 directive|define
 name|MATCHREPL
-value|'\025'
+value|0225
 end_define
 
 begin_comment
@@ -1593,7 +1593,7 @@ begin_define
 define|#
 directive|define
 name|CANONNET
-value|'\026'
+value|0226
 end_define
 
 begin_comment
@@ -1604,7 +1604,7 @@ begin_define
 define|#
 directive|define
 name|CANONHOST
-value|'\027'
+value|0227
 end_define
 
 begin_comment
@@ -1615,7 +1615,7 @@ begin_define
 define|#
 directive|define
 name|CANONUSER
-value|'\030'
+value|0230
 end_define
 
 begin_comment
@@ -1626,7 +1626,7 @@ begin_define
 define|#
 directive|define
 name|CALLSUBR
-value|'\031'
+value|0231
 end_define
 
 begin_comment
@@ -1641,7 +1641,7 @@ begin_define
 define|#
 directive|define
 name|CONDIF
-value|'\032'
+value|0232
 end_define
 
 begin_comment
@@ -1652,7 +1652,7 @@ begin_define
 define|#
 directive|define
 name|CONDELSE
-value|'\033'
+value|0233
 end_define
 
 begin_comment
@@ -1663,7 +1663,7 @@ begin_define
 define|#
 directive|define
 name|CONDFI
-value|'\034'
+value|0234
 end_define
 
 begin_comment
@@ -1678,7 +1678,7 @@ begin_define
 define|#
 directive|define
 name|HOSTBEGIN
-value|'\035'
+value|0235
 end_define
 
 begin_comment
@@ -1689,7 +1689,7 @@ begin_define
 define|#
 directive|define
 name|HOSTEND
-value|'\036'
+value|0236
 end_define
 
 begin_comment
@@ -1704,7 +1704,7 @@ begin_define
 define|#
 directive|define
 name|LOOKUPBEGIN
-value|'\005'
+value|0205
 end_define
 
 begin_comment
@@ -1715,7 +1715,7 @@ begin_define
 define|#
 directive|define
 name|LOOKUPEND
-value|'\006'
+value|0206
 end_define
 
 begin_comment
@@ -1723,7 +1723,18 @@ comment|/* generalized lookup end */
 end_comment
 
 begin_comment
-comment|/* \001 is also reserved as the macro expansion character */
+comment|/* macro substitution character */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MACROEXPAND
+value|0201
+end_define
+
+begin_comment
+comment|/* macro expansion */
 end_comment
 
 begin_comment

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.17 (Berkeley) %G%"
+literal|"@(#)main.c	6.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3133,6 +3133,12 @@ name|p
 operator|=
 name|buf
 init|;
+name|isascii
+argument_list|(
+operator|*
+name|p
+argument_list|)
+operator|&&
 name|isspace
 argument_list|(
 operator|*
@@ -3155,11 +3161,19 @@ operator|!=
 literal|'\0'
 operator|&&
 operator|!
+operator|(
+name|isascii
+argument_list|(
+operator|*
+name|p
+argument_list|)
+operator|&&
 name|isspace
 argument_list|(
 operator|*
 name|p
 argument_list|)
+operator|)
 condition|)
 name|p
 operator|++

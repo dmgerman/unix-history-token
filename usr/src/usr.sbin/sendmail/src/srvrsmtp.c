@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.7 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	6.8 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	6.7 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	6.8 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -496,7 +496,7 @@ argument_list|)
 expr_stmt|;
 name|expand
 argument_list|(
-literal|"\001e"
+literal|"\201e"
 argument_list|,
 name|inp
 argument_list|,
@@ -673,6 +673,12 @@ name|p
 operator|=
 name|inp
 init|;
+name|isascii
+argument_list|(
+operator|*
+name|p
+argument_list|)
+operator|&&
 name|isspace
 argument_list|(
 operator|*
@@ -695,11 +701,19 @@ operator|!=
 literal|'\0'
 operator|&&
 operator|!
+operator|(
+name|isascii
+argument_list|(
+operator|*
+name|p
+argument_list|)
+operator|&&
 name|isspace
 argument_list|(
 operator|*
 name|p
 argument_list|)
+operator|)
 operator|&&
 name|cmd
 operator|<
@@ -728,6 +742,12 @@ expr_stmt|;
 comment|/* throw away leading whitespace */
 while|while
 condition|(
+name|isascii
+argument_list|(
+operator|*
+name|p
+argument_list|)
+operator|&&
 name|isspace
 argument_list|(
 operator|*
@@ -1744,6 +1764,12 @@ decl_stmt|;
 comment|/* find beginning of word */
 while|while
 condition|(
+name|isascii
+argument_list|(
+operator|*
+name|p
+argument_list|)
+operator|&&
 name|isspace
 argument_list|(
 operator|*
@@ -1771,17 +1797,31 @@ operator|!=
 literal|':'
 operator|&&
 operator|!
+operator|(
+name|isascii
+argument_list|(
+operator|*
+name|p
+argument_list|)
+operator|&&
 name|isspace
 argument_list|(
 operator|*
 name|p
 argument_list|)
+operator|)
 condition|)
 name|p
 operator|++
 expr_stmt|;
 while|while
 condition|(
+name|isascii
+argument_list|(
+operator|*
+name|p
+argument_list|)
+operator|&&
 name|isspace
 argument_list|(
 operator|*
@@ -1828,6 +1868,12 @@ literal|'\0'
 expr_stmt|;
 while|while
 condition|(
+name|isascii
+argument_list|(
+operator|*
+name|p
+argument_list|)
+operator|&&
 name|isspace
 argument_list|(
 operator|*

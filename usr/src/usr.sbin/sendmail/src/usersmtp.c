@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.9 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	6.10 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	6.9 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	6.10 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -666,7 +666,7 @@ name|MCIS_ACTIVE
 expr_stmt|;
 name|expand
 argument_list|(
-literal|"\001<"
+literal|"\201<"
 argument_list|,
 name|buf
 argument_list|,
@@ -2240,6 +2240,15 @@ operator|==
 literal|'-'
 operator|||
 operator|!
+operator|(
+name|isascii
+argument_list|(
+name|SmtpReplyBuffer
+index|[
+literal|0
+index|]
+argument_list|)
+operator|&&
 name|isdigit
 argument_list|(
 name|SmtpReplyBuffer
@@ -2247,6 +2256,7 @@ index|[
 literal|0
 index|]
 argument_list|)
+operator|)
 condition|)
 continue|continue;
 comment|/* decode the reply code */

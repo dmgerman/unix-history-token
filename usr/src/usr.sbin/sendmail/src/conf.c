@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	6.14 (Berkeley) %G%"
+literal|"@(#)conf.c	6.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -854,6 +854,12 @@ control|)
 block|{
 while|while
 condition|(
+name|isascii
+argument_list|(
+operator|*
+name|p
+argument_list|)
+operator|&&
 name|isspace
 argument_list|(
 operator|*
@@ -898,11 +904,19 @@ operator|!=
 literal|'\0'
 operator|&&
 operator|!
+operator|(
+name|isascii
+argument_list|(
+operator|*
+name|p
+argument_list|)
+operator|&&
 name|isspace
 argument_list|(
 operator|*
 name|p
 argument_list|)
+operator|)
 condition|)
 name|p
 operator|++

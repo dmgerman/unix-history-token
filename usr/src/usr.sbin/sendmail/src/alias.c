@@ -99,7 +99,7 @@ name|char
 name|sccsid
 index|[]
 operator|=
-literal|"@(#)alias.c	6.10 (Berkeley) %G% (with NEWDB and NDBM)"
+literal|"@(#)alias.c	6.11 (Berkeley) %G% (with NEWDB and NDBM)"
 expr_stmt|;
 end_expr_stmt
 
@@ -114,7 +114,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.10 (Berkeley) %G% (with NEWDB)"
+literal|"@(#)alias.c	6.11 (Berkeley) %G% (with NEWDB)"
 decl_stmt|;
 end_decl_stmt
 
@@ -140,7 +140,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.10 (Berkeley) %G% (with NDBM)"
+literal|"@(#)alias.c	6.11 (Berkeley) %G% (with NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -155,7 +155,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	6.10 (Berkeley) %G% (without NEWDB or NDBM)"
+literal|"@(#)alias.c	6.11 (Berkeley) %G% (without NEWDB or NDBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2390,11 +2390,19 @@ name|DelimChar
 decl_stmt|;
 while|while
 condition|(
+operator|(
+name|isascii
+argument_list|(
+operator|*
+name|p
+argument_list|)
+operator|&&
 name|isspace
 argument_list|(
 operator|*
 name|p
 argument_list|)
+operator|)
 operator|||
 operator|*
 name|p
@@ -3235,7 +3243,7 @@ name|ForwardPath
 operator|=
 name|newstr
 argument_list|(
-literal|"\001z/.forward"
+literal|"\201z/.forward"
 argument_list|)
 expr_stmt|;
 for|for
