@@ -1865,6 +1865,7 @@ name|softc
 argument_list|,
 sizeof|sizeof
 argument_list|(
+operator|*
 name|softc
 argument_list|)
 argument_list|)
@@ -2710,9 +2711,12 @@ argument_list|(
 name|no_lun_inq_data
 argument_list|)
 argument_list|,
+name|SCSI_CDB6_LEN
+argument_list|(
 name|inq
 operator|->
 name|length
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|descr
@@ -2798,9 +2802,12 @@ name|descr
 operator|->
 name|data_resid
 argument_list|,
+name|SCSI_CDB6_LEN
+argument_list|(
 name|rsense
 operator|->
 name|length
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|descr
