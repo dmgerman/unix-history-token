@@ -1047,32 +1047,7 @@ block|,
 name|ds1pchan_getptr
 block|,
 name|ds1pchan_getcaps
-block|,
-name|NULL
-block|,
-comment|/* free */
-name|NULL
-block|,
-comment|/* nop1 */
-name|NULL
-block|,
-comment|/* nop2 */
-name|NULL
-block|,
-comment|/* nop3 */
-name|NULL
-block|,
-comment|/* nop4 */
-name|NULL
-block|,
-comment|/* nop5 */
-name|NULL
-block|,
-comment|/* nop6 */
-name|NULL
-block|,
-comment|/* nop7 */
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -1097,32 +1072,7 @@ block|,
 name|ds1rchan_getptr
 block|,
 name|ds1rchan_getcaps
-block|,
-name|NULL
-block|,
-comment|/* free */
-name|NULL
-block|,
-comment|/* nop1 */
-name|NULL
-block|,
-comment|/* nop2 */
-name|NULL
-block|,
-comment|/* nop3 */
-name|NULL
-block|,
-comment|/* nop4 */
-name|NULL
-block|,
-comment|/* nop5 */
-name|NULL
-block|,
-comment|/* nop6 */
-name|NULL
-block|,
-comment|/* nop7 */
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
