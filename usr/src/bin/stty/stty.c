@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stty.c	5.5 (Berkeley) %G%"
+literal|"@(#)stty.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,13 +53,19 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/ioctl.h>
+file|"pathnames.h"
 end_include
 
 begin_struct
@@ -1888,7 +1894,7 @@ name|ioctl
 argument_list|(
 name|open
 argument_list|(
-literal|"/dev/tty"
+name|_PATH_DEVTTY
 argument_list|,
 literal|0
 argument_list|)
@@ -1978,7 +1984,7 @@ name|ioctl
 argument_list|(
 name|open
 argument_list|(
-literal|"/dev/tty"
+name|_PATH_DEVTTY
 argument_list|,
 literal|0
 argument_list|)
