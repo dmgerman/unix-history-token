@@ -2043,7 +2043,7 @@ define|#
 directive|define
 name|CPP_CPU64_SPEC
 define|\
-value|"-Acpu=x86_64 -Amachine=x86_64 -D__x86_64 -D__x86_64__ %(cpp_cpu64sizet)"
+value|"-Acpu=x86_64 -Amachine=x86_64 -D__x86_64 -D__x86_64__ %(cpp_cpu64sizet) -D__amd64__ -D__AMD64__"
 end_define
 
 begin_define

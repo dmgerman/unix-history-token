@@ -1107,7 +1107,7 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|__x86_64__
+name|__amd64__
 argument_list|)
 end_elif
 
