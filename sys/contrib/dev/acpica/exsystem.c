@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exsystem - Interface to OS services  *              $Revision: 75 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exsystem - Interface to OS services  *              $Revision: 79 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -163,7 +163,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExSystemDoStall  *  * PARAMETERS:  HowLong             - The amount of time to stall  *  * RETURN:      Status  *  * DESCRIPTION: Suspend running thread for specified amount of time.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExSystemDoStall  *  * PARAMETERS:  HowLong             - The amount of time to stall,  *                                    in microseconds  *  * RETURN:      Status  *  * DESCRIPTION: Suspend running thread for specified amount of time.  *              Note: ACPI specification requires that Stall() does not  *              relinquish the processor, and delays longer than 100 usec  *              should use Sleep() instead.  We allow stalls up to 255 usec  *              for compatibility with other interpreters and existing BIOSs.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -186,39 +186,30 @@ if|if
 condition|(
 name|HowLong
 operator|>
-literal|1000
+literal|255
 condition|)
-comment|/* 1 millisecond */
+comment|/* 255 microseconds */
 block|{
-comment|/* Since this thread will sleep, we must release the interpreter */
-name|AcpiExExitInterpreter
-argument_list|()
-expr_stmt|;
-name|AcpiOsStall
+comment|/*          * Longer than 255 usec, this is an error          *          * (ACPI specifies 100 usec as max, but this gives some slack in          * order to support existing BIOSs)          */
+name|ACPI_REPORT_ERROR
 argument_list|(
+operator|(
+literal|"Stall: Time parameter is too large (%d)\n"
+operator|,
 name|HowLong
+operator|)
 argument_list|)
 expr_stmt|;
-comment|/* And now we must get the interpreter again */
 name|Status
 operator|=
-name|AcpiExEnterInterpreter
-argument_list|()
+name|AE_AML_OPERAND_VALUE
 expr_stmt|;
 block|}
 else|else
 block|{
-name|AcpiOsSleep
+name|AcpiOsStall
 argument_list|(
-literal|0
-argument_list|,
-operator|(
 name|HowLong
-operator|/
-literal|1000
-operator|)
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -231,7 +222,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExSystemDoSuspend  *  * PARAMETERS:  HowLong             - The amount of time to suspend  *  * RETURN:      None  *  * DESCRIPTION: Suspend running thread for specified amount of time.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExSystemDoSuspend  *  * PARAMETERS:  HowLong             - The amount of time to suspend,  *                                    in milliseconds  *  * RETURN:      None  *  * DESCRIPTION: Suspend running thread for specified amount of time.  *  ******************************************************************************/
 end_comment
 
 begin_function
