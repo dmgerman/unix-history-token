@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)format.c	7.3 (Berkeley) %G%"
+literal|"@(#)format.c	7.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2765,6 +2765,11 @@ name|top
 label|:
 do|do
 block|{
+name|printf
+argument_list|(
+literal|"Enter device name as \"type(adaptor,controller,drive,0)\"\n"
+argument_list|)
+expr_stmt|;
 name|cp
 operator|=
 name|prompt
@@ -2791,7 +2796,7 @@ condition|)
 do|;
 name|printf
 argument_list|(
-literal|"Formatting drive %c%c%d on adaptor %d: "
+literal|"Formatting %c%c drive %d on controller %d, adaptor %d: "
 argument_list|,
 name|cp
 index|[
@@ -2811,8 +2816,6 @@ literal|3
 index|]
 operator|.
 name|i_unit
-operator|%
-literal|8
 argument_list|,
 name|iob
 index|[
@@ -2821,9 +2824,16 @@ operator|-
 literal|3
 index|]
 operator|.
-name|i_unit
-operator|/
-literal|8
+name|i_ctlr
+argument_list|,
+name|iob
+index|[
+name|fd
+operator|-
+literal|3
+index|]
+operator|.
+name|i_adapt
 argument_list|)
 expr_stmt|;
 name|cp
