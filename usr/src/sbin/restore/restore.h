@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1983 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/*	@(#)restore.h	3.6	(Berkeley)	83/04/11	*/
+comment|/*	@(#)restore.h	3.7	(Berkeley)	83/04/19	*/
 end_comment
 
 begin_include
@@ -193,6 +193,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* opration being performed */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|FILE
+modifier|*
+name|terminal
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* file descriptor for the terminal input */
 end_comment
 
 begin_comment
@@ -569,8 +581,24 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|ino_t
+name|dirlookup
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|long
 name|listfile
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|long
+name|deletefile
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -630,7 +658,34 @@ begin_function_decl
 specifier|extern
 name|char
 modifier|*
+name|strncat
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
 name|strcpy
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|strncpy
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|fgets
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -658,6 +713,15 @@ specifier|extern
 name|char
 modifier|*
 name|calloc
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
+name|realloc
 parameter_list|()
 function_decl|;
 end_function_decl
