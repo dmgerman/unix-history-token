@@ -379,6 +379,45 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|pci_hdrtypedata
+parameter_list|(
+name|device_t
+name|pcib
+parameter_list|,
+name|int
+name|b
+parameter_list|,
+name|int
+name|s
+parameter_list|,
+name|int
+name|f
+parameter_list|,
+name|pcicfgregs
+modifier|*
+name|cfg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|pci_read_extcap
+parameter_list|(
+name|device_t
+name|pcib
+parameter_list|,
+name|pcicfgregs
+modifier|*
+name|cfg
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|static
 name|device_method_t
@@ -1304,6 +1343,7 @@ comment|/* extract header type specific config data */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|pci_hdrtypedata
 parameter_list|(
@@ -1947,6 +1987,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|pci_read_extcap
 parameter_list|(
