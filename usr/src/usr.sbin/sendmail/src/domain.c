@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*  * Copyright (c) 1986 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_include
@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	6.22 (Berkeley) %G% (with name server)"
+literal|"@(#)domain.c	6.23 (Berkeley) %G% (with name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)domain.c	6.22 (Berkeley) %G% (without name server)"
+literal|"@(#)domain.c	6.23 (Berkeley) %G% (without name server)"
 decl_stmt|;
 end_decl_stmt
 
@@ -189,6 +189,17 @@ end_define
 
 begin_comment
 comment|/* size of a long (really, must be 4) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAXCNAMEDEPTH
+value|10
+end_define
+
+begin_comment
+comment|/* maximum depth of CNAME recursion */
 end_comment
 
 begin_escape
@@ -1407,6 +1418,9 @@ decl_stmt|;
 name|int
 name|qtype
 decl_stmt|;
+name|int
+name|loopcnt
+decl_stmt|;
 name|char
 name|nbuf
 index|[
@@ -1471,6 +1485,10 @@ name|FALSE
 operator|)
 return|;
 comment|/* 	**  Initialize domain search list.  If there is at least one 	**  dot in the name, search the unmodified name first so we 	**  find "vse.CS" in Czechoslovakia instead of in the local 	**  domain (e.g., vse.CS.Berkeley.EDU). 	** 	**  Older versions of the resolver could create this 	**  list by tearing apart the host name. 	*/
+name|loopcnt
+operator|=
+literal|0
+expr_stmt|;
 name|cnameloop
 label|:
 for|for
@@ -2038,6 +2056,23 @@ continue|continue;
 case|case
 name|T_CNAME
 case|:
+if|if
+condition|(
+name|loopcnt
+operator|++
+operator|>
+name|MAXCNAMEDEPTH
+condition|)
+block|{
+name|syserr
+argument_list|(
+literal|"DNS failure: CNAME loop for %s"
+argument_list|,
+name|host
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 comment|/* value points at name */
 if|if
 condition|(
