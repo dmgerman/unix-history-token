@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1992 by the University of Guelph  *  * Permission to use, copy and modify this  * software and its documentation for any purpose and without  * fee is hereby granted, provided that the above copyright  * notice appear in all copies and that both that copyright  * notice and this permission notice appear in supporting  * documentation.  * University of Guelph makes no representations about the suitability of  * this software for any purpose.  It is provided "as is"  * without express or implied warranty.  *  * $Id: mse.c,v 1.18 1998/10/22 05:58:45 bde Exp $  */
+comment|/*  * Copyright 1992 by the University of Guelph  *  * Permission to use, copy and modify this  * software and its documentation for any purpose and without  * fee is hereby granted, provided that the above copyright  * notice appear in all copies and that both that copyright  * notice and this permission notice appear in supporting  * documentation.  * University of Guelph makes no representations about the suitability of  * this software for any purpose.  It is provided "as is"  * without express or implied warranty.  *  * $Id: mse.c,v 1.19 1999/04/28 10:53:55 dt Exp $  */
 end_comment
 
 begin_comment
@@ -2104,8 +2104,6 @@ name|sc_flags
 operator||=
 name|MSESC_WANT
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|tsleep
@@ -2123,6 +2121,10 @@ literal|"mseread"
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 block|{
 name|splx
@@ -2352,8 +2354,6 @@ operator|->
 name|sc_bytesread
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|error
 operator|=
 name|uiomove
@@ -2372,6 +2372,10 @@ name|xfer
 argument_list|,
 name|uio
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
 return|return
 operator|(
@@ -3021,6 +3025,7 @@ operator||
 name|POLLRDNORM
 operator|)
 condition|)
+block|{
 if|if
 condition|(
 name|sc
@@ -3080,6 +3085,7 @@ operator|->
 name|sc_selp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|splx
 argument_list|(
