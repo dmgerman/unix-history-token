@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)termios.c	8.1 (Berkeley) %G%"
+literal|"@(#)termios.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,6 +53,12 @@ begin_include
 include|#
 directive|include
 file|<sys/tty.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_define
