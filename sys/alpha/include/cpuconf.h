@@ -188,9 +188,13 @@ argument_list|)
 name|__P
 argument_list|(
 operator|(
-name|device_t
+expr|struct
+name|device
+operator|*
 operator|,
-name|device_t
+expr|struct
+name|device
+operator|*
 operator|,
 name|int
 operator|)
