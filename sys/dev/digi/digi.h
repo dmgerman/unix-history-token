@@ -249,10 +249,6 @@ name|int
 name|active_out
 decl_stmt|;
 comment|/* nonzero if the callout device is open */
-name|int
-name|dtr_wait
-decl_stmt|;
-comment|/* time to hold DTR down on close (* 1/hz) */
 name|u_int
 name|wopeners
 decl_stmt|;

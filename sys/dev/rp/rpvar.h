@@ -74,9 +74,6 @@ decl_stmt|;
 comment|/* state of dtr */
 comment|/* Time to hold DTR down on close */
 name|int
-name|dtr_wait
-decl_stmt|;
-name|int
 name|wopeners
 decl_stmt|;
 comment|/* processes waiting for DCD */

@@ -348,6 +348,10 @@ name|int
 name|t_hotchar
 decl_stmt|;
 comment|/* linedisc preferred hot char */
+name|int
+name|t_dtr_wait
+decl_stmt|;
+comment|/* Inter-session DTR holddown [hz] */
 comment|/* Driver supplied methods */
 name|t_oproc_t
 modifier|*
@@ -959,6 +963,28 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|TS_DTR_WAIT
+value|0x1000000
+end_define
+
+begin_comment
+comment|/* DTR hold-down between sessions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TS_GONE
+value|0x2000000
+end_define
+
+begin_comment
+comment|/* Hardware detached */
+end_comment
 
 begin_comment
 comment|/* Character type information. */
@@ -1742,6 +1768,30 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|ttydtrwaitsleep
+parameter_list|(
+name|struct
+name|tty
+modifier|*
+name|tp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ttydtrwaitstart
+parameter_list|(
+name|struct
+name|tty
+modifier|*
+name|tp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|ttyflush
 parameter_list|(
@@ -1752,6 +1802,18 @@ name|tp
 parameter_list|,
 name|int
 name|rw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ttygone
+parameter_list|(
+name|struct
+name|tty
+modifier|*
+name|tp
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -28,10 +28,6 @@ name|sp_active_out
 decl_stmt|;
 comment|/* callout is open */
 name|int
-name|sp_dtr_wait
-decl_stmt|;
-comment|/* DTR holddown in hz */
-name|int
 name|sp_delta_overflows
 decl_stmt|;
 name|u_int

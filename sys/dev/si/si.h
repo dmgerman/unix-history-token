@@ -1259,10 +1259,6 @@ name|sp_active_out
 decl_stmt|;
 comment|/* callout is open */
 name|int
-name|sp_dtr_wait
-decl_stmt|;
-comment|/* DTR holddown in hz */
-name|int
 name|sp_delta_overflows
 decl_stmt|;
 name|u_int
@@ -1405,17 +1401,6 @@ directive|define
 name|SS_BLOCKWRITE
 value|0x2000
 end_define
-
-begin_define
-define|#
-directive|define
-name|SS_DTR_OFF
-value|0x4000
-end_define
-
-begin_comment
-comment|/* DTR held off				*/
-end_comment
 
 begin_comment
 comment|/*  *	Command post flags  */
