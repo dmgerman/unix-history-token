@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fstat.c	5.15 (Berkeley) %G%"
+literal|"@(#)fstat.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -200,6 +200,12 @@ directive|include
 file|<pwd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -256,34 +262,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|N_KMEM
-value|"/dev/kmem"
-end_define
-
-begin_define
-define|#
-directive|define
-name|N_MEM
-value|"/dev/mem"
-end_define
-
-begin_define
-define|#
-directive|define
-name|N_SWAP
-value|"/dev/drum"
-end_define
-
-begin_define
-define|#
-directive|define
-name|N_UNIX
-value|"/vmunix"
-end_define
 
 begin_define
 define|#
@@ -718,7 +696,7 @@ if|if
 condition|(
 name|nlist
 argument_list|(
-name|N_UNIX
+name|_PATH_UNIX
 argument_list|,
 name|nl
 argument_list|)
@@ -741,7 +719,7 @@ name|stderr
 argument_list|,
 literal|"%s: No namelist\n"
 argument_list|,
-name|N_UNIX
+name|_PATH_UNIX
 argument_list|)
 expr_stmt|;
 name|exit
@@ -885,7 +863,7 @@ name|rerr1
 argument_list|(
 literal|"proc table"
 argument_list|,
-name|N_KMEM
+name|_PATH_KMEM
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1102,7 +1080,7 @@ name|mproc
 operator|->
 name|p_pid
 argument_list|,
-name|N_SWAP
+name|_PATH_SWAP
 argument_list|)
 expr_stmt|;
 return|return
@@ -1195,7 +1173,7 @@ name|mproc
 operator|->
 name|p_pid
 argument_list|,
-name|N_SWAP
+name|_PATH_SWAP
 argument_list|)
 expr_stmt|;
 return|return
@@ -1276,7 +1254,7 @@ name|mproc
 operator|->
 name|p_pid
 argument_list|,
-name|N_KMEM
+name|_PATH_KMEM
 argument_list|)
 expr_stmt|;
 return|return
@@ -1392,7 +1370,7 @@ name|mproc
 operator|->
 name|p_pid
 argument_list|,
-name|N_MEM
+name|_PATH_MEM
 argument_list|)
 expr_stmt|;
 return|return
@@ -1470,7 +1448,7 @@ name|rerr1
 argument_list|(
 literal|"text table"
 argument_list|,
-name|N_KMEM
+name|_PATH_KMEM
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2882,7 +2860,7 @@ name|rerr1
 argument_list|(
 literal|"file"
 argument_list|,
-name|N_KMEM
+name|_PATH_KMEM
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -3040,8 +3018,17 @@ name|statbuf
 argument_list|)
 condition|)
 block|{
-name|perror
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
+literal|"fstat: %s: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|,
 name|filename
 argument_list|)
 expr_stmt|;
@@ -3169,7 +3156,7 @@ name|kmem
 operator|=
 name|open
 argument_list|(
-name|N_KMEM
+name|_PATH_KMEM
 argument_list|,
 name|O_RDONLY
 argument_list|,
@@ -3180,9 +3167,21 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-name|N_KMEM
+name|stderr
+argument_list|,
+literal|"fstat: %s: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|,
+name|_PATH_KMEM
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3201,7 +3200,7 @@ name|mem
 operator|=
 name|open
 argument_list|(
-name|N_MEM
+name|_PATH_MEM
 argument_list|,
 name|O_RDONLY
 argument_list|,
@@ -3212,9 +3211,21 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-name|N_MEM
+name|stderr
+argument_list|,
+literal|"fstat: %s: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|,
+name|_PATH_MEM
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3233,7 +3244,7 @@ name|swap
 operator|=
 name|open
 argument_list|(
-name|N_SWAP
+name|_PATH_SWAP
 argument_list|,
 name|O_RDONLY
 argument_list|,
@@ -3244,9 +3255,21 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-name|N_SWAP
+name|stderr
+argument_list|,
+literal|"fstat: %s: %s\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|,
+name|_PATH_SWAP
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3285,7 +3308,7 @@ name|vflg
 condition|)
 name|printf
 argument_list|(
-literal|"fstat: error reading %s from %s"
+literal|"error reading %s from %s"
 argument_list|,
 name|what
 argument_list|,
@@ -3327,13 +3350,15 @@ name|vflg
 condition|)
 name|printf
 argument_list|(
-literal|"error %d reading %s at %x from kmem\n"
+literal|"error %d reading %s at %x from %s\n"
 argument_list|,
 name|errno
 argument_list|,
 name|what
 argument_list|,
 name|address
+argument_list|,
+name|_PATH_KMEM
 argument_list|)
 expr_stmt|;
 block|}
