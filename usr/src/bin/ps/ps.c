@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ps.c	5.29 (Berkeley) %G%"
+literal|"@(#)ps.c	5.30 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -204,9 +204,6 @@ decl_stmt|;
 name|struct
 name|rusage
 name|u_cru
-decl_stmt|;
-name|short
-name|u_cmask
 decl_stmt|;
 name|char
 name|u_acflag
@@ -1403,31 +1400,6 @@ block|}
 block|,
 block|{
 block|{
-literal|"umask"
-block|,
-literal|"u_cmask"
-block|}
-block|,
-literal|"UMASK"
-block|,
-name|USER
-block|,
-name|uvar
-block|,
-literal|3
-block|,
-name|UOFF
-argument_list|(
-name|u_cmask
-argument_list|)
-block|,
-name|CHAR
-block|,
-literal|"#o"
-block|}
-block|,
-block|{
-block|{
 literal|"acflag"
 block|,
 literal|"acflg"
@@ -2221,6 +2193,9 @@ name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
 name|argv
@@ -3006,9 +2981,6 @@ comment|/* 	 * scan requested variables, noting what structures are needed, 	 * 
 name|scanvars
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
 if|if
 condition|(
 name|sortby
@@ -3019,8 +2991,6 @@ name|neednlist
 operator|=
 literal|1
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|neednlist
@@ -4972,13 +4942,6 @@ literal|"-"
 argument_list|)
 expr_stmt|;
 block|}
-define|#
-directive|define
-name|pgtok
-parameter_list|(
-name|a
-parameter_list|)
-value|(((a)*NBPG)/1024)
 name|vsize
 argument_list|(
 argument|k
@@ -6597,14 +6560,6 @@ name|u_cru
 expr_stmt|;
 name|usp
 operator|->
-name|u_cmask
-operator|=
-name|up
-operator|->
-name|u_cmask
-expr_stmt|;
-name|usp
-operator|->
 name|u_acflag
 operator|=
 name|up
@@ -6659,7 +6614,7 @@ operator|)
 return|;
 ifdef|#
 directive|ifdef
-name|notyet
+name|notdef
 if|if
 condition|(
 name|sortby
