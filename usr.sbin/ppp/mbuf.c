@@ -713,9 +713,7 @@ name|memcpy
 argument_list|(
 name|bp
 operator|+
-sizeof|sizeof
-expr|*
-name|bp
+literal|1
 argument_list|,
 operator|(
 specifier|const
