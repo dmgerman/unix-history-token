@@ -150,7 +150,7 @@ comment|/* (g) connection timeout */
 name|u_short
 name|so_error
 decl_stmt|;
-comment|/* error affecting connection */
+comment|/* (f) error affecting connection */
 name|struct
 name|sigio
 modifier|*
@@ -1007,7 +1007,7 @@ name|sowwakeup_locked
 parameter_list|(
 name|so
 parameter_list|)
-value|do {					\ 	if (sb_notify(&(so)->so_snd))					\ 		sowakeup((so),&(so)->so_snd); 				\ 	else								\ 		SOCKBUF_UNLOCK(&(so)->so_snd);				\ } while (0)
+value|do {					\ 	SOCKBUF_LOCK_ASSERT(&(so)->so_snd);				\ 	if (sb_notify(&(so)->so_snd))					\ 		sowakeup((so),&(so)->so_snd); 				\ 	else								\ 		SOCKBUF_UNLOCK(&(so)->so_snd);				\ } while (0)
 end_define
 
 begin_define
