@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.181 (Berkeley) %G%"
+literal|"@(#)conf.c	8.182 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -8395,9 +8395,9 @@ name|NULL
 return|;
 else|#
 directive|else
-ifdef|#
-directive|ifdef
-name|_AIX3
+if|#
+directive|if
+name|USEGETCONFATTR
 specifier|auto
 name|char
 modifier|*
@@ -8432,10 +8432,10 @@ condition|)
 return|return
 name|TRUE
 return|;
-ifdef|#
-directive|ifdef
-name|_AIX3
-comment|/* naturally IBM has a "better" idea..... */
+if|#
+directive|if
+name|USEGETCONFATTR
+comment|/* 	**  Naturally IBM has a "better" idea..... 	** 	**	What a crock.  This interface isn't documented, it is 	**	considered part of the security library (-ls), and it 	**	only works if you are running as root (since the list 	**	of valid shells is obviously a source of great concern). 	**	I recommend that you do NOT define USEGETCONFATTR, 	**	especially since you are going to have to set up an 	**	/etc/shells anyhow to handle the cases where getconfattr 	**	fails. 	*/
 if|if
 condition|(
 name|getconfattr
@@ -8451,14 +8451,14 @@ name|SEC_LIST
 argument_list|)
 operator|==
 literal|0
+operator|&&
+name|v
+operator|!=
+name|NULL
 condition|)
 block|{
 while|while
 condition|(
-name|v
-operator|!=
-name|NULL
-operator|&&
 operator|*
 name|v
 operator|!=
@@ -8498,6 +8498,9 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
+return|return
+name|FALSE
+return|;
 block|}
 endif|#
 directive|endif
