@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.2 (Berkeley) %G%"
+literal|"@(#)main.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -215,16 +215,6 @@ operator|&
 name|files
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|compile_errors
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Compile error count. */
-end_comment
 
 begin_decl_stmt
 name|int
@@ -447,15 +437,6 @@ expr_stmt|;
 block|}
 name|compile
 argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|compile_errors
-condition|)
-name|exit
-argument_list|(
-literal|1
-argument_list|)
 expr_stmt|;
 comment|/* Continue with first and start second usage */
 if|if
