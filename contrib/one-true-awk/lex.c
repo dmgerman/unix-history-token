@@ -3183,6 +3183,9 @@ name|yysbuf
 condition|)
 name|c
 operator|=
+operator|(
+name|uschar
+operator|)
 operator|*
 operator|--
 name|yysptr
@@ -3201,6 +3204,9 @@ condition|(
 operator|(
 name|c
 operator|=
+operator|(
+name|uschar
+operator|)
 operator|*
 name|lexprog
 operator|)
