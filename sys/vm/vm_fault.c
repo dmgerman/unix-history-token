@@ -987,8 +987,6 @@ condition|)
 block|{
 name|int
 name|queue
-decl_stmt|,
-name|s
 decl_stmt|;
 comment|/*  			 * check for page-based copy on write. 			 * We check fs.object == fs.first_object so 			 * as to ensure the legacy COW mechanism is 			 * used when the page in question is part of 			 * a shadow object.  Otherwise, vm_page_cowfault() 			 * removes the page from the backing object,  			 * which is not what we want. 			 */
 name|vm_page_lock_queues
@@ -1021,21 +1019,11 @@ name|first_object
 operator|)
 condition|)
 block|{
-name|s
-operator|=
-name|splvm
-argument_list|()
-expr_stmt|;
 name|vm_page_cowfault
 argument_list|(
 name|fs
 operator|.
 name|m
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 name|vm_page_unlock_queues
@@ -1130,21 +1118,11 @@ name|m
 operator|->
 name|queue
 expr_stmt|;
-name|s
-operator|=
-name|splvm
-argument_list|()
-expr_stmt|;
 name|vm_pageq_remove_nowakeup
 argument_list|(
 name|fs
 operator|.
 name|m
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 if|if
@@ -2624,7 +2602,6 @@ operator|&=
 name|retry_prot
 expr_stmt|;
 block|}
-comment|/* 	 * Put this page into the physical map. We had to do the unlock above 	 * because pmap_enter may cause other faults.   We don't put the page 	 * back on the active queue until later so that the page-out daemon 	 * won't find us (yet). 	 */
 if|if
 condition|(
 name|prot
@@ -2707,9 +2684,6 @@ operator|&
 name|VM_FAULT_DIRTY
 condition|)
 block|{
-name|int
-name|s
-decl_stmt|;
 name|vm_page_dirty
 argument_list|(
 name|fs
@@ -2717,21 +2691,11 @@ operator|.
 name|m
 argument_list|)
 expr_stmt|;
-name|s
-operator|=
-name|splvm
-argument_list|()
-expr_stmt|;
 name|vm_pager_page_unswapped
 argument_list|(
 name|fs
 operator|.
 name|m
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 block|}
@@ -2794,6 +2758,7 @@ operator|.
 name|object
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Put this page into the physical map.  We had to do the unlock above 	 * because pmap_enter() may sleep.  We don't put the page 	 * back on the active queue until later so that the pageout daemon 	 * won't find it (yet). 	 */
 name|pmap_enter
 argument_list|(
 name|fs
