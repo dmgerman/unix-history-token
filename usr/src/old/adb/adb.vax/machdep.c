@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)machdep.c	5.2 (Berkeley) %G%"
+literal|"@(#)machdep.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1544,6 +1544,12 @@ for|for
 control|(
 name|i
 operator|=
+name|narg
+operator|>
+literal|20
+condition|?
+literal|20
+else|:
 name|narg
 init|;
 name|i
