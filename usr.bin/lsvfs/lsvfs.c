@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * lsvfs - lsit loaded VFSes  * Garrett A. Wollman, September 1994  * This file is in the public domain.  *  * $Id: lsvfs.c,v 1.3 1995/03/16 18:37:47 wollman Exp $  */
+comment|/*  * lsvfs - lsit loaded VFSes  * Garrett A. Wollman, September 1994  * This file is in the public domain.  *  * $Id: lsvfs.c,v 1.4 1995/03/16 20:29:11 wollman Exp $  */
 end_comment
 
 begin_include
@@ -217,9 +217,12 @@ name|vfc
 operator|->
 name|vfc_refcount
 argument_list|,
+name|fmt_flags
+argument_list|(
 name|vfc
 operator|->
 name|vfc_flags
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
