@@ -921,26 +921,14 @@ name|splimp
 argument_list|()
 expr_stmt|;
 comment|/* find internet addresses and delete routes */
-for|for
-control|(
-name|ifa
-operator|=
-name|ifp
-operator|->
-name|if_addrhead
-operator|.
-name|tqh_first
-init|;
-name|ifa
-condition|;
-name|ifa
-operator|=
-name|ifa
-operator|->
-name|ifa_link
-operator|.
-name|tqe_next
-control|)
+name|TAILQ_FOREACH
+argument_list|(
+argument|ifa
+argument_list|,
+argument|&ifp->if_addrhead
+argument_list|,
+argument|ifa_link
+argument_list|)
 if|if
 condition|(
 name|ifa
@@ -1048,6 +1036,11 @@ name|ifaddr
 modifier|*
 name|ifa
 decl_stmt|;
+name|int
+name|error
+init|=
+literal|0
+decl_stmt|;
 name|TUNDEBUG
 argument_list|(
 literal|"%s%d: tuninit\n"
@@ -1081,22 +1074,40 @@ for|for
 control|(
 name|ifa
 operator|=
+name|TAILQ_FIRST
+argument_list|(
+operator|&
 name|ifp
 operator|->
 name|if_addrhead
-operator|.
-name|tqh_first
+argument_list|)
 init|;
 name|ifa
 condition|;
 name|ifa
 operator|=
+name|TAILQ_NEXT
+argument_list|(
+name|ifa
+argument_list|,
+name|ifa_link
+argument_list|)
+control|)
+block|{
+if|if
+condition|(
 name|ifa
 operator|->
-name|ifa_link
-operator|.
-name|tqe_next
-control|)
+name|ifa_addr
+operator|==
+name|NULL
+condition|)
+name|error
+operator|=
+name|EFAULT
+expr_stmt|;
+comment|/* XXX: Should maybe return straight off? */
+else|else
 block|{
 ifdef|#
 directive|ifdef
@@ -1130,8 +1141,6 @@ name|ifa_addr
 expr_stmt|;
 if|if
 condition|(
-name|si
-operator|&&
 name|si
 operator|->
 name|sin_addr
@@ -1175,8 +1184,11 @@ block|}
 endif|#
 directive|endif
 block|}
+block|}
 return|return
-literal|0
+operator|(
+name|error
+operator|)
 return|;
 block|}
 end_function
@@ -1288,14 +1300,12 @@ operator|->
 name|tun_pid
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+break|break;
 case|case
 name|SIOCSIFADDR
 case|:
+name|error
+operator|=
 name|tuninit
 argument_list|(
 name|ifp
@@ -1303,7 +1313,7 @@ argument_list|)
 expr_stmt|;
 name|TUNDEBUG
 argument_list|(
-literal|"%s%d: address set\n"
+literal|"%s%d: address set, error=%d\n"
 argument_list|,
 name|ifp
 operator|->
@@ -1312,12 +1322,16 @@ argument_list|,
 name|ifp
 operator|->
 name|if_unit
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|SIOCSIFDSTADDR
 case|:
+name|error
+operator|=
 name|tuninit
 argument_list|(
 name|ifp
@@ -1325,7 +1339,7 @@ argument_list|)
 expr_stmt|;
 name|TUNDEBUG
 argument_list|(
-literal|"%s%d: destination address set\n"
+literal|"%s%d: destination address set, error=%d\n"
 argument_list|,
 name|ifp
 operator|->
@@ -1334,6 +1348,8 @@ argument_list|,
 name|ifp
 operator|->
 name|if_unit
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 break|break;
