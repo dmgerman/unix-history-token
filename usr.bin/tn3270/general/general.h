@@ -146,7 +146,7 @@ name|c
 parameter_list|,
 name|n
 parameter_list|)
-value|if (c == 0) { \ 				    bzero(s,n); \ 				} else { \ 				    register char *src = s; \ 				    register int count = n; \ 					\ 				    while (count--) { \ 					*src++ = c; \ 				    } \ 				}
+value|if (c == 0) { \ 				    bzero(s,n); \ 				} else { \ 				    register char *src = (char *)s; \ 				    register int count = n; \ 					\ 				    while (count--) { \ 					*src++ = c; \ 				    } \ 				}
 end_define
 
 begin_define
