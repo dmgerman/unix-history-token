@@ -659,6 +659,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|NBBY
+value|8
+end_define
+
+begin_comment
+comment|/* number of bits in a byte */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|NBPW
 value|sizeof(int)
 end_define
