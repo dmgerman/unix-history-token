@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)popen.c	5.5 (Berkeley) %G%"
+literal|"@(#)popen.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -481,6 +481,17 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|dup2
+argument_list|(
+name|pdes
+index|[
+literal|1
+index|]
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+comment|/* stderr, too! */
 operator|(
 name|void
 operator|)
