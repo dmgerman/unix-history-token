@@ -23,7 +23,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)savemail.c	3.6	%G%"
+literal|"@(#)savemail.c	3.7	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -511,6 +511,13 @@ comment|/* 	**  Save the message in dead.letter. 	**	If we weren't mailing back,
 end_comment
 
 begin_expr_stmt
+name|To
+operator|=
+name|NULL
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|setuid
 argument_list|(
 name|getuid
@@ -628,15 +635,19 @@ argument_list|)
 operator|!=
 name|EX_OK
 condition|)
-name|printf
+name|message
 argument_list|(
-literal|"Cannot save mail, sorry\n"
+literal|"050"
+argument_list|,
+literal|"Cannot save mail, sorry"
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|message
 argument_list|(
-literal|"Letter saved in dead.letter\n"
+literal|"050"
+argument_list|,
+literal|"Letter saved in dead.letter"
 argument_list|)
 expr_stmt|;
 block|}
