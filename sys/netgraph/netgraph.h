@@ -1172,10 +1172,16 @@ name|unsigned
 name|long
 name|strtoul
 parameter_list|(
+name|char
+modifier|*
 name|nptr
 parameter_list|,
+name|char
+modifier|*
+modifier|*
 name|endptr
 parameter_list|,
+name|int
 name|base
 parameter_list|)
 function_decl|;
