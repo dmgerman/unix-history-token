@@ -748,6 +748,12 @@ argument_list|(
 literal|", accel"
 argument_list|)
 expr_stmt|;
+name|ata
+operator|->
+name|accel
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 default|default:
 name|printf
@@ -773,6 +779,31 @@ name|intrcmd
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 	 * If we have two devices, one supporting INTR and one ACCEL, we 	 * have to pessimise - clear INTR and set slow. 	 */
+if|if
+condition|(
+name|ata
+operator|->
+name|accel
+operator|&&
+name|ata
+operator|->
+name|intrcmd
+condition|)
+block|{
+name|ata
+operator|->
+name|intrcmd
+operator|=
+literal|0
+expr_stmt|;
+name|ata
+operator|->
+name|slow
+operator|=
+literal|1
+expr_stmt|;
+block|}
 comment|/* overlap operation supported */
 if|if
 condition|(

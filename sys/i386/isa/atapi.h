@@ -1317,6 +1317,12 @@ literal|1
 decl_stmt|;
 comment|/* slow reaction device */
 name|u_char
+name|accel
+range|:
+literal|1
+decl_stmt|;
+comment|/* accelerated device */
+name|u_char
 name|attached
 index|[
 literal|2
