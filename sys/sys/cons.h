@@ -198,8 +198,19 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CN_NORMAL
+name|CN_LOW
 value|1
+end_define
+
+begin_comment
+comment|/* device is a last restort only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CN_NORMAL
+value|2
 end_define
 
 begin_comment
@@ -210,7 +221,7 @@ begin_define
 define|#
 directive|define
 name|CN_INTERNAL
-value|2
+value|3
 end_define
 
 begin_comment
@@ -221,7 +232,7 @@ begin_define
 define|#
 directive|define
 name|CN_REMOTE
-value|3
+value|4
 end_define
 
 begin_comment
