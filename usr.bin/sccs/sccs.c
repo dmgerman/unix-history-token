@@ -82,7 +82,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/dir.h>
+file|<sys/wait.h>
 end_include
 
 begin_include
@@ -100,7 +100,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dirent.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_include
@@ -118,7 +136,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pathnames.h"
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_comment
@@ -152,8 +182,11 @@ end_comment
 begin_endif
 endif|#
 directive|endif
-endif|NOT SCCSPATH
 end_endif
+
+begin_comment
+comment|/* NOT SCCSPATH */
+end_comment
 
 begin_ifndef
 ifndef|#
@@ -175,8 +208,11 @@ end_comment
 begin_endif
 endif|#
 directive|endif
-endif|NOT MYNAME
 end_endif
+
+begin_comment
+comment|/* NOT MYNAME */
+end_comment
 
 begin_comment
 comment|/****************  End of Configuration Information  ****************/
@@ -856,8 +892,11 @@ end_function_decl
 begin_endif
 endif|#
 directive|endif
-endif|V6
 end_endif
+
+begin_comment
+comment|/* V6 */
+end_comment
 
 begin_decl_stmt
 name|char
@@ -1131,10 +1170,10 @@ block|}
 block|}
 endif|#
 directive|endif
-endif|SCCSDIR
+comment|/* SCCSDIR */
 endif|#
 directive|endif
-endif|V6
+comment|/* V6 */
 comment|/* 	**  Detect and decode flags intended for this program. 	*/
 if|if
 condition|(
@@ -3545,7 +3584,7 @@ end_decl_stmt
 begin_block
 block|{
 name|struct
-name|direct
+name|dirent
 modifier|*
 name|dir
 decl_stmt|;
@@ -5725,7 +5764,7 @@ operator|)
 return|;
 endif|#
 directive|endif
-endif|UIDUSER
+comment|/* UIDUSER */
 block|}
 end_function
 
