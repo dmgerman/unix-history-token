@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.c	7.12 (Berkeley) %G%  */
+comment|/*   * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)pmap.c	7.13 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -3703,16 +3703,6 @@ operator|++
 expr_stmt|;
 endif|#
 directive|endif
-name|printf
-argument_list|(
-literal|"pmap_enter: UNMANAGED ADDRESS va %x pa %x\n"
-argument_list|,
-name|va
-argument_list|,
-name|pa
-argument_list|)
-expr_stmt|;
-comment|/* XXX */
 name|npte
 operator|=
 operator|(
@@ -3721,9 +3711,17 @@ operator|&
 name|VM_PROT_WRITE
 operator|)
 condition|?
+operator|(
 name|PG_M
+operator||
+name|PG_N
+operator|)
 else|:
+operator|(
 name|PG_RO
+operator||
+name|PG_N
+operator|)
 expr_stmt|;
 block|}
 comment|/* 	 * The only time we need to flush the cache is if we 	 * execute from a physical address and then change the data. 	 * This is the best place to do this. 	 * pmap_protect() and pmap_remove() are mostly used to switch 	 * between R/W and R/O pages. 	 * NOTE: we only support cache flush for read only text. 	 */
@@ -5701,12 +5699,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|panic
-argument_list|(
-literal|"pmap_phys_address"
-argument_list|)
-expr_stmt|;
-comment|/* XXX */
 return|return
 operator|(
 name|pmax_ptob
