@@ -1,16 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)printf.c	5.1 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)printf.c	5.2 (Berkeley) %G%  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
-
 begin_comment
-comment|/*  * Scaled down version of C Library printf.  *  * Used to print diagnostic information directly on the console tty.  Since  * it is not interrupt driven, all system activities are suspended.  Printf  * should not be used for chit-chat.  *  * One additional format: %b is supported to decode error registers.  * Its usage is:  *  *	printf("reg=%b\n", regval, "<base><arg>*");  *  * where<base> is the output base expressed as a control character, e.g.  * \10 gives octal; \20 gives hex.  Each arg is a sequence of characters,  * the first of which gives the bit number to be inspected (origin 1), and  * the next characters (up to a control character, i.e. a character<= 32),  * give the name of the register.  Thus:  *  *	printf("reg=%b\n", 3, "\10\2BITTWO\1BITONE\n");  *  * would produce output:  *  *	reg=3<BITTWO,BITONE>  */
+comment|/*  * Scaled down version of printf(3).  *  * Used to print diagnostic information directly on the console tty.  Since  * it is not interrupt driven, all system activities are suspended.  Printf  * should not be used for chit-chat.  *  * One additional format: %b is supported to decode error registers.  * Its usage is:  *  *	printf("reg=%b\n", regval, "<base><arg>*");  *  * where<base> is the output base expressed as a control character, e.g.  * \10 gives octal; \20 gives hex.  Each arg is a sequence of characters,  * the first of which gives the bit number to be inspected (origin 1), and  * the next characters (up to a control character, i.e. a character<= 32),  * give the name of the register.  Thus:  *  *	printf("reg=%b\n", 3, "\10\2BITTWO\1BITONE\n");  *  * would produce output:  *  *	reg=3<BITTWO,BITONE>  */
 end_comment
 
 begin_if
