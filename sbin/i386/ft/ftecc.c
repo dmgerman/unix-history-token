@@ -41,6 +41,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|UCHAR
 name|alpha_power
 index|[]
@@ -567,6 +568,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|UCHAR
 name|alpha_log
 index|[]
@@ -1093,6 +1095,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|UCHAR
 name|mult_c0
 index|[]
@@ -2624,9 +2627,6 @@ modifier|*
 name|es
 parameter_list|)
 block|{
-name|UCHAR
-name|tmp
-decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -3059,13 +3059,9 @@ index|]
 decl_stmt|;
 name|int
 name|col
-decl_stmt|,
-name|row
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|j
 decl_stmt|,
 name|nblks
 decl_stmt|;
@@ -3084,8 +3080,6 @@ name|int
 name|i1
 decl_stmt|,
 name|i2
-decl_stmt|,
-name|saverrs
 decl_stmt|;
 name|struct
 name|inv_mat
