@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	8.6 (Berkeley) %G%"
+literal|"@(#)map.c	8.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1995,7 +1995,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|YPCOMPAT
+name|NIS
 name|bool
 name|inclnull
 decl_stmt|;
@@ -4639,7 +4639,7 @@ argument_list|)
 operator|&&
 name|defined
 argument_list|(
-name|YPCOMPAT
+name|NIS
 argument_list|)
 if|if
 condition|(
