@@ -179,6 +179,12 @@ directive|include
 file|<sys/conf.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
+end_include
+
 begin_else
 else|#
 directive|else
@@ -5580,12 +5586,30 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* XXX keep in sync with switch() below */
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+if|if
+condition|(
+name|securelevel_gt
+argument_list|(
+name|td
+operator|->
+name|td_ucred
+argument_list|,
+literal|1
+argument_list|)
+condition|)
+else|#
+directive|else
 if|if
 condition|(
 name|securelevel
 operator|>
 literal|1
 condition|)
+endif|#
+directive|endif
 switch|switch
 condition|(
 name|cmd
