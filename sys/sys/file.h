@@ -476,6 +476,12 @@ name|int
 name|f_count
 decl_stmt|;
 comment|/* (f) reference count */
+name|struct
+name|vnode
+modifier|*
+name|f_vnode
+decl_stmt|;
+comment|/* NULL or applicable vnode */
 comment|/* DFLAG_SEEKABLE specific fields */
 name|off_t
 name|f_offset

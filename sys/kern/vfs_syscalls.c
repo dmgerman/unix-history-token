@@ -1333,16 +1333,9 @@ operator|)
 return|;
 name|mp
 operator|=
-operator|(
-operator|(
-expr|struct
-name|vnode
-operator|*
-operator|)
 name|fp
 operator|->
-name|f_data
-operator|)
+name|f_vnode
 operator|->
 name|v_mount
 expr_stmt|;
@@ -1995,7 +1988,7 @@ name|vp
 operator|=
 name|fp
 operator|->
-name|f_data
+name|f_vnode
 expr_stmt|;
 name|VREF
 argument_list|(
@@ -2518,7 +2511,7 @@ name|vp
 operator|=
 name|fp
 operator|->
-name|f_data
+name|f_vnode
 expr_stmt|;
 if|if
 condition|(
@@ -3593,6 +3586,12 @@ return|return
 literal|0
 return|;
 block|}
+name|fp
+operator|->
+name|f_vnode
+operator|=
+name|vp
+expr_stmt|;
 name|fp
 operator|->
 name|f_data
@@ -6858,7 +6857,7 @@ name|vp
 operator|=
 name|fp
 operator|->
-name|f_data
+name|f_vnode
 expr_stmt|;
 name|noneg
 operator|=
@@ -10316,7 +10315,7 @@ name|td
 argument_list|,
 name|fp
 operator|->
-name|f_data
+name|f_vnode
 argument_list|,
 name|uap
 operator|->
@@ -10911,7 +10910,7 @@ name|td
 argument_list|,
 name|fp
 operator|->
-name|f_data
+name|f_vnode
 argument_list|,
 name|uap
 operator|->
@@ -11588,7 +11587,7 @@ name|td
 argument_list|,
 name|fp
 operator|->
-name|f_data
+name|f_vnode
 argument_list|,
 name|uap
 operator|->
@@ -12676,7 +12675,7 @@ name|td
 argument_list|,
 name|fp
 operator|->
-name|f_data
+name|f_vnode
 argument_list|,
 name|ts
 argument_list|,
@@ -13207,7 +13206,7 @@ name|vp
 operator|=
 name|fp
 operator|->
-name|f_data
+name|f_vnode
 expr_stmt|;
 if|if
 condition|(
@@ -13688,7 +13687,7 @@ name|vp
 operator|=
 name|fp
 operator|->
-name|f_data
+name|f_vnode
 expr_stmt|;
 if|if
 condition|(
@@ -15703,7 +15702,7 @@ name|vp
 operator|=
 name|fp
 operator|->
-name|f_data
+name|f_vnode
 expr_stmt|;
 name|unionread
 label|:
@@ -16259,6 +16258,12 @@ argument_list|)
 expr_stmt|;
 name|fp
 operator|->
+name|f_vnode
+operator|=
+name|vp
+expr_stmt|;
+name|fp
+operator|->
 name|f_data
 operator|=
 name|vp
@@ -16487,7 +16492,7 @@ name|vp
 operator|=
 name|fp
 operator|->
-name|f_data
+name|f_vnode
 expr_stmt|;
 name|unionread
 label|:
@@ -16777,6 +16782,12 @@ name|VREF
 argument_list|(
 name|vp
 argument_list|)
+expr_stmt|;
+name|fp
+operator|->
+name|f_vnode
+operator|=
+name|vp
 expr_stmt|;
 name|fp
 operator|->
@@ -18402,6 +18413,12 @@ argument_list|)
 expr_stmt|;
 name|nfp
 operator|->
+name|f_vnode
+operator|=
+name|vp
+expr_stmt|;
+name|nfp
+operator|->
 name|f_data
 operator|=
 name|vp
@@ -19878,7 +19895,7 @@ name|extattr_set_vp
 argument_list|(
 name|fp
 operator|->
-name|f_data
+name|f_vnode
 argument_list|,
 name|uap
 operator|->
@@ -20594,7 +20611,7 @@ name|extattr_get_vp
 argument_list|(
 name|fp
 operator|->
-name|f_data
+name|f_vnode
 argument_list|,
 name|uap
 operator|->
@@ -21162,7 +21179,7 @@ name|vp
 operator|=
 name|fp
 operator|->
-name|f_data
+name|f_vnode
 expr_stmt|;
 name|error
 operator|=
@@ -21796,7 +21813,7 @@ name|extattr_list_vp
 argument_list|(
 name|fp
 operator|->
-name|f_data
+name|f_vnode
 argument_list|,
 name|uap
 operator|->

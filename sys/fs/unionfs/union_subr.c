@@ -5476,6 +5476,12 @@ argument_list|)
 expr_stmt|;
 name|fp
 operator|->
+name|f_vnode
+operator|=
+name|lvp
+expr_stmt|;
+name|fp
+operator|->
 name|f_data
 operator|=
 name|lvp

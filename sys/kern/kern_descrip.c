@@ -1531,7 +1531,7 @@ name|vp
 operator|=
 name|fp
 operator|->
-name|f_data
+name|f_vnode
 expr_stmt|;
 switch|switch
 condition|(
@@ -1940,7 +1940,7 @@ name|vp
 operator|=
 name|fp
 operator|->
-name|f_data
+name|f_vnode
 expr_stmt|;
 name|error
 operator|=
@@ -4424,7 +4424,7 @@ name|vp
 operator|=
 name|fp
 operator|->
-name|f_data
+name|f_vnode
 expr_stmt|;
 name|mtx_lock
 argument_list|(
@@ -6709,7 +6709,7 @@ name|vp
 operator|=
 name|fp
 operator|->
-name|f_data
+name|f_vnode
 expr_stmt|;
 operator|(
 name|void
@@ -7155,7 +7155,7 @@ name|vp
 init|=
 name|fp
 operator|->
-name|f_data
+name|f_vnode
 decl_stmt|;
 if|if
 condition|(
@@ -7841,6 +7841,14 @@ argument_list|)
 expr_stmt|;
 name|fp
 operator|->
+name|f_vnode
+operator|=
+name|nd
+operator|.
+name|ni_vp
+expr_stmt|;
+name|fp
+operator|->
 name|f_data
 operator|=
 name|nd
@@ -8029,7 +8037,7 @@ name|vp
 operator|=
 name|fp
 operator|->
-name|f_data
+name|f_vnode
 expr_stmt|;
 operator|(
 name|void
@@ -8161,7 +8169,7 @@ name|vp
 operator|=
 name|fp
 operator|->
-name|f_data
+name|f_vnode
 expr_stmt|;
 operator|(
 name|void
@@ -8687,7 +8695,7 @@ name|vpp
 operator|=
 name|fp
 operator|->
-name|f_data
+name|f_vnode
 expr_stmt|;
 name|vref
 argument_list|(
@@ -9112,7 +9120,7 @@ name|vp
 operator|=
 name|fp
 operator|->
-name|f_data
+name|f_vnode
 expr_stmt|;
 operator|(
 name|void
@@ -9307,7 +9315,7 @@ name|vp
 operator|=
 name|fp
 operator|->
-name|f_data
+name|f_vnode
 expr_stmt|;
 name|lf
 operator|.

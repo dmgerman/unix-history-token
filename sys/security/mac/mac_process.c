@@ -14020,7 +14020,7 @@ name|vp
 operator|=
 name|fp
 operator|->
-name|f_data
+name|f_vnode
 expr_stmt|;
 name|mac_init_vnode_label
 argument_list|(
@@ -15060,7 +15060,7 @@ name|vp
 operator|=
 name|fp
 operator|->
-name|f_data
+name|f_vnode
 expr_stmt|;
 name|error
 operator|=

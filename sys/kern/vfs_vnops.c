@@ -2193,7 +2193,7 @@ name|vp
 operator|=
 name|fp
 operator|->
-name|f_data
+name|f_vnode
 expr_stmt|;
 name|ioflag
 operator|=
@@ -2468,7 +2468,7 @@ name|vp
 operator|=
 name|fp
 operator|->
-name|f_data
+name|f_vnode
 expr_stmt|;
 if|if
 condition|(
@@ -2791,7 +2791,7 @@ name|vp
 init|=
 name|fp
 operator|->
-name|f_data
+name|f_vnode
 decl_stmt|;
 name|int
 name|error
@@ -3423,7 +3423,7 @@ name|vp
 init|=
 name|fp
 operator|->
-name|f_data
+name|f_vnode
 decl_stmt|;
 name|struct
 name|vnode
@@ -3811,7 +3811,7 @@ name|vp
 operator|=
 name|fp
 operator|->
-name|f_data
+name|f_vnode
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -4120,7 +4120,7 @@ name|vn_close
 argument_list|(
 name|fp
 operator|->
-name|f_data
+name|f_vnode
 argument_list|,
 name|fp
 operator|->
@@ -4733,7 +4733,7 @@ name|VOP_KQFILTER
 argument_list|(
 name|fp
 operator|->
-name|f_data
+name|f_vnode
 argument_list|,
 name|kn
 argument_list|)

@@ -1906,7 +1906,7 @@ name|vp
 operator|=
 name|fp
 operator|->
-name|f_data
+name|f_vnode
 expr_stmt|;
 if|if
 condition|(

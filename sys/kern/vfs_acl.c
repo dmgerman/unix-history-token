@@ -3393,7 +3393,7 @@ name|td
 argument_list|,
 name|fp
 operator|->
-name|f_data
+name|f_vnode
 argument_list|,
 name|uap
 operator|->
@@ -3492,7 +3492,7 @@ name|td
 argument_list|,
 name|fp
 operator|->
-name|f_data
+name|f_vnode
 argument_list|,
 name|uap
 operator|->
@@ -3797,7 +3797,7 @@ name|td
 argument_list|,
 name|fp
 operator|->
-name|f_data
+name|f_vnode
 argument_list|,
 name|uap
 operator|->
@@ -4106,7 +4106,7 @@ name|td
 argument_list|,
 name|fp
 operator|->
-name|f_data
+name|f_vnode
 argument_list|,
 name|uap
 operator|->

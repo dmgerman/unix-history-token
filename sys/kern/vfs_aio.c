@@ -4977,7 +4977,7 @@ name|vp
 operator|=
 name|fp
 operator|->
-name|f_data
+name|f_vnode
 expr_stmt|;
 comment|/* 	 * If its not a disk, we don't want to return a positive error. 	 * It causes the aio code to not fall through to try the thread 	 * way when you're talking to a regular file. 	 */
 if|if
@@ -8421,7 +8421,7 @@ name|vp
 operator|=
 name|fp
 operator|->
-name|f_data
+name|f_vnode
 expr_stmt|;
 if|if
 condition|(

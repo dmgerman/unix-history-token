@@ -1267,7 +1267,7 @@ name|vp
 operator|=
 name|fp
 operator|->
-name|f_data
+name|f_vnode
 expr_stmt|;
 if|if
 condition|(
@@ -2129,7 +2129,7 @@ name|vp
 operator|=
 name|fp
 operator|->
-name|f_data
+name|f_vnode
 expr_stmt|;
 if|if
 condition|(
@@ -3008,7 +3008,7 @@ name|vp
 operator|=
 name|fp
 operator|->
-name|f_data
+name|f_vnode
 expr_stmt|;
 name|vn_lock
 argument_list|(
