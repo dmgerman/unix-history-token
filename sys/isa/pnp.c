@@ -2692,7 +2692,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Read 'amount' bytes of resources from the card, allocating memory  * as needed. If a buffer is already available, it should be passed in  * '*resourcesp' and its length in '*spacep'. The number of resource  * bytes already in the buffer should be passed in '*lenp'. The memory  * allocated will be returned in '*resourcesp' with its size and the  * number of bytes of resources in '*spacep' and '*lenp' respectively.  */
+comment|/*  * Read 'amount' bytes of resources from the card, allocating memory  * as needed. If a buffer is already available, it should be passed in  * '*resourcesp' and its length in '*spacep'. The number of resource  * bytes already in the buffer should be passed in '*lenp'. The memory  * allocated will be returned in '*resourcesp' with its size and the  * number of bytes of resources in '*spacep' and '*lenp' respectively.  *  * XXX: Multiple problems here, we forget to free() stuff in one  * XXX: error return, and in another case we free (*resourcesp) but  * XXX: don't tell the caller.  */
 end_comment
 
 begin_function
