@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_vnops.c	7.30 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_vnops.c	7.31 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -170,7 +170,7 @@ if|if
 condition|(
 name|fmode
 operator|&
-name|FCREAT
+name|O_CREAT
 condition|)
 block|{
 name|ndp
@@ -188,7 +188,7 @@ condition|(
 operator|(
 name|fmode
 operator|&
-name|FEXCL
+name|O_EXCL
 operator|)
 operator|==
 literal|0
@@ -262,7 +262,7 @@ return|;
 name|fmode
 operator|&=
 operator|~
-name|FTRUNC
+name|O_TRUNC
 expr_stmt|;
 name|vp
 operator|=
@@ -319,7 +319,7 @@ if|if
 condition|(
 name|fmode
 operator|&
-name|FEXCL
+name|O_EXCL
 condition|)
 block|{
 name|error
@@ -333,7 +333,7 @@ block|}
 name|fmode
 operator|&=
 operator|~
-name|FCREAT
+name|O_CREAT
 expr_stmt|;
 block|}
 block|}
@@ -394,7 +394,7 @@ condition|(
 operator|(
 name|fmode
 operator|&
-name|FCREAT
+name|O_CREAT
 operator|)
 operator|==
 literal|0
@@ -433,7 +433,7 @@ operator|&
 operator|(
 name|FWRITE
 operator||
-name|FTRUNC
+name|O_TRUNC
 operator|)
 condition|)
 block|{
@@ -489,7 +489,7 @@ if|if
 condition|(
 name|fmode
 operator|&
-name|FTRUNC
+name|O_TRUNC
 condition|)
 block|{
 name|VATTR_NULL
@@ -522,11 +522,9 @@ goto|goto
 name|bad
 goto|;
 block|}
-name|VOP_UNLOCK
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
+if|if
+condition|(
+operator|(
 name|error
 operator|=
 name|VOP_OPEN
@@ -539,19 +537,13 @@ name|cred
 argument_list|,
 name|p
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
+operator|)
+operator|==
+literal|0
 condition|)
-name|vrele
-argument_list|(
-name|vp
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
-name|error
+literal|0
 operator|)
 return|;
 name|bad
@@ -1004,7 +996,7 @@ name|fp
 operator|->
 name|f_flag
 operator|&
-name|FNDELAY
+name|FNONBLOCK
 operator|)
 condition|?
 name|IO_NDELAY
@@ -1111,7 +1103,7 @@ name|fp
 operator|->
 name|f_flag
 operator|&
-name|FAPPEND
+name|O_APPEND
 operator|)
 condition|)
 name|ioflag
@@ -1124,7 +1116,7 @@ name|fp
 operator|->
 name|f_flag
 operator|&
-name|FNDELAY
+name|FNONBLOCK
 condition|)
 name|ioflag
 operator||=
