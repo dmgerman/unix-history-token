@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.49 (Berkeley) %G%"
+literal|"@(#)main.c	6.50 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2118,6 +2118,17 @@ argument_list|(
 name|optarg
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|realuser
+argument_list|,
+name|from
+argument_list|)
+operator|!=
+literal|0
+condition|)
 name|auth_warning
 argument_list|(
 name|CurEnv
