@@ -43,7 +43,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: host.c,v 1.5 1995/10/23 16:07:56 peter Exp $"
+literal|"$Id: host.c,v 1.6 1996/01/07 06:21:56 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -862,6 +862,11 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|c
+operator|>
+literal|1
+operator|&&
+operator|(
 name|strcmp
 argument_list|(
 name|v
@@ -890,6 +895,7 @@ operator|)
 operator|&
 name|addr
 argument_list|)
+operator|)
 condition|)
 name|addr
 operator|=
