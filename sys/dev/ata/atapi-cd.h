@@ -1037,6 +1037,24 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|acd_devlist
+block|{
+name|dev_t
+name|dev
+decl_stmt|;
+name|TAILQ_ENTRY
+argument_list|(
+argument|acd_devlist
+argument_list|)
+name|chain
+expr_stmt|;
+comment|/* list management */
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* Structure describing an ATAPI CDROM device */
 end_comment
@@ -1069,6 +1087,14 @@ name|bio_queue_head
 name|queue
 decl_stmt|;
 comment|/* queue of i/o requests */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|acd_devlist
+argument_list|)
+name|dev_list
+expr_stmt|;
+comment|/* list of "track" devices */
 name|struct
 name|toc
 name|toc
