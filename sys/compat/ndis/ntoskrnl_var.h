@@ -276,7 +276,7 @@ parameter_list|,
 name|e
 parameter_list|)
 define|\
-value|do {					\ 		list_entry		*b;	\ 						\ 		b = l->nle_blink;		\ 		e->nle_flink = l		\ 		e->nle_blink = b;		\ 		b->nle_flink = e;		\ 		l->nle_blink = e;		\ 	} while (0)
+value|do {					\ 		list_entry		*b;	\ 						\ 		b = l->nle_blink;		\ 		e->nle_flink = l;		\ 		e->nle_blink = b;		\ 		b->nle_flink = e;		\ 		l->nle_blink = e;		\ 	} while (0)
 end_define
 
 begin_define
@@ -649,6 +649,13 @@ name|kmutant
 name|kmutant
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|LOOKASIDE_DEPTH
+value|256
+end_define
 
 begin_struct
 struct|struct

@@ -9157,7 +9157,7 @@ name|TRUE
 operator|)
 return|;
 block|}
-name|INSERT_LIST_HEAD
+name|INSERT_LIST_TAIL
 argument_list|(
 operator|(
 operator|&
