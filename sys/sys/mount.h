@@ -410,6 +410,10 @@ name|vnodelst
 name|mnt_reservedvnlist
 decl_stmt|;
 comment|/* (future) dirty vnode list */
+name|int
+name|mnt_nvnodelistsize
+decl_stmt|;
+comment|/* # of vnodes on this mount */
 block|}
 struct|;
 end_struct

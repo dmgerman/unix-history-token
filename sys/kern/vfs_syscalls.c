@@ -1392,6 +1392,12 @@ operator|->
 name|mnt_reservedvnlist
 argument_list|)
 expr_stmt|;
+name|mp
+operator|->
+name|mnt_nvnodelistsize
+operator|=
+literal|0
+expr_stmt|;
 name|lockinit
 argument_list|(
 operator|&
