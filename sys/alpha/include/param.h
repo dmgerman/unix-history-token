@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: param.h,v 1.1 1998/01/10 10:13:15 jb Exp $ */
+comment|/* $Id: param.h,v 1.2 1998/03/09 05:53:10 jb Exp $ */
 end_comment
 
 begin_comment
@@ -98,7 +98,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|NBPG
+name|PAGE_SIZE
 value|(1<< ALPHA_PGSHIFT)
 end_define
 
@@ -109,75 +109,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PAGE_SIZE
-value|NBPG
-end_define
-
-begin_define
-define|#
-directive|define
-name|PGOFSET
-value|(NBPG-1)
-end_define
-
-begin_comment
-comment|/* byte off. into pg */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PGSHIFT
+name|PAGE_SHIFT
 value|ALPHA_PGSHIFT
 end_define
 
-begin_comment
-comment|/* LOG2(NBPG) */
-end_comment
+begin_define
+define|#
+directive|define
+name|PAGE_MASK
+value|(PAGE_SIZE-1)
+end_define
 
 begin_define
 define|#
 directive|define
 name|NPTEPG
-value|(1<< (PGSHIFT-PTESHIFT))
+value|(PAGE_SIZE/(sizeof (pt_entry_t)))
 end_define
-
-begin_comment
-comment|/* pte's/page */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SEGSHIFT
-value|(PGSHIFT + (PGSHIFT-PTESHIFT))
-end_define
-
-begin_comment
-comment|/* LOG2(NBSEG) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NBSEG
-value|(1<< SEGSHIFT)
-end_define
-
-begin_comment
-comment|/* bytes/segment (8M) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SEGOFSET
-value|(NBSEG-1)
-end_define
-
-begin_comment
-comment|/* byte off. into seg */
-end_comment
 
 begin_define
 define|#
@@ -200,13 +148,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|DEV_BSIZE
-value|512
-end_define
-
-begin_define
-define|#
-directive|define
 name|DEV_BSHIFT
 value|9
 end_define
@@ -218,31 +159,38 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DEV_BSIZE
+value|(1<<DEV_BSHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
 name|BLKDEV_IOSIZE
 value|2048
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MAXPHYS
-end_ifndef
+begin_define
+define|#
+directive|define
+name|DFLTPHYS
+value|(64 * 1024)
+end_define
+
+begin_comment
+comment|/* default max raw I/O transfer size */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|MAXPHYS
-value|(64 * 1024)
+value|(128 * 1024)
 end_define
 
 begin_comment
 comment|/* max raw I/O transfer size */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -299,7 +247,7 @@ begin_define
 define|#
 directive|define
 name|USPACE
-value|(UPAGES * NBPG)
+value|(UPAGES * PAGE_SIZE)
 end_define
 
 begin_comment
@@ -316,7 +264,7 @@ begin_define
 define|#
 directive|define
 name|MSGBUFSIZE
-value|NBPG
+value|PAGE_SIZE
 end_define
 
 begin_comment
@@ -477,7 +425,7 @@ name|ctod
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)<< (PGSHIFT - DEV_BSHIFT))
+value|((x)<< (PAGE_SHIFT - DEV_BSHIFT))
 end_define
 
 begin_define
@@ -487,7 +435,7 @@ name|dtoc
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)>> (PGSHIFT - DEV_BSHIFT))
+value|((x)>> (PAGE_SHIFT - DEV_BSHIFT))
 end_define
 
 begin_comment
@@ -501,7 +449,7 @@ name|ctob
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)<< PGSHIFT)
+value|((x)<< PAGE_SHIFT)
 end_define
 
 begin_define
@@ -511,7 +459,7 @@ name|btoc
 parameter_list|(
 name|x
 parameter_list|)
-value|(((x) + PGOFSET)>> PGSHIFT)
+value|(((x) + PAGE_MASK)>> PAGE_SHIFT)
 end_define
 
 begin_comment
@@ -559,21 +507,41 @@ end_comment
 begin_define
 define|#
 directive|define
-name|alpha_round_page
+name|round_page
 parameter_list|(
 name|x
 parameter_list|)
-value|((((unsigned long)(x)) + NBPG - 1)& ~(NBPG-1))
+value|((((unsigned long)(x)) + PAGE_MASK)& ~(PAGE_MASK))
 end_define
 
 begin_define
 define|#
 directive|define
-name|alpha_trunc_page
+name|trunc_page
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned long)(x)& ~(NBPG-1))
+value|((unsigned long)(x)& ~(PAGE_MASK))
+end_define
+
+begin_define
+define|#
+directive|define
+name|atop
+parameter_list|(
+name|x
+parameter_list|)
+value|((unsigned long)(x)>> PAGE_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ptoa
+parameter_list|(
+name|x
+parameter_list|)
+value|((unsigned long)(x)<< PAGE_SHIFT)
 end_define
 
 begin_define
@@ -583,7 +551,7 @@ name|alpha_btop
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned long)(x)>> PGSHIFT)
+value|((unsigned long)(x)>> PAGE_SHIFT)
 end_define
 
 begin_define
@@ -593,7 +561,7 @@ name|alpha_ptob
 parameter_list|(
 name|x
 parameter_list|)
-value|((unsigned long)(x)<< PGSHIFT)
+value|((unsigned long)(x)<< PAGE_SHIFT)
 end_define
 
 begin_include

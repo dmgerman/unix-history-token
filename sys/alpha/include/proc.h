@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ /* From: NetBSD: proc.h,v 1.3 1997/04/06 08:47:36 cgd Exp */
+comment|/* $Id: proc.h,v 1.1.1.1 1998/03/09 05:43:16 jb Exp $ */
+end_comment
+
+begin_comment
+comment|/* From: NetBSD: proc.h,v 1.3 1997/04/06 08:47:36 cgd Exp */
 end_comment
 
 begin_comment

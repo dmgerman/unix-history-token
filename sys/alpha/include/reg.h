@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: reg.h,v 1.1.1.1 1998/03/09 05:43:16 jb Exp $ */
 end_comment
 
 begin_comment
@@ -293,7 +293,7 @@ end_struct
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_KERNEL
+name|KERNEL
 end_ifdef
 
 begin_decl_stmt
@@ -319,6 +319,24 @@ operator|(
 expr|struct
 name|fpreg
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|setregs
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|,
+name|u_long
+operator|,
+name|u_long
 operator|)
 argument_list|)
 decl_stmt|;

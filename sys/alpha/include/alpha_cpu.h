@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: alpha_cpu.h,v 1.1 1998/01/10 10:13:13 jb Exp $ */
 end_comment
 
 begin_comment
@@ -593,11 +593,47 @@ name|ALPHA_PGSHIFT
 value|13
 end_define
 
+begin_comment
+comment|/* bits that index within page */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ALPHA_PTSHIFT
+value|10
+end_define
+
+begin_comment
+comment|/* bits that index within page tables */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|ALPHA_PGBYTES
 value|(1<< ALPHA_PGSHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALPHA_L3SHIFT
+value|ALPHA_PGSHIFT
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALPHA_L2SHIFT
+value|(ALPHA_L3SHIFT+ALPHA_PTSHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ALPHA_L1SHIFT
+value|(ALPHA_L2SHIFT+ALPHA_PTSHIFT)
 end_define
 
 begin_define
@@ -787,7 +823,7 @@ name|ALPHA_PTE_TO_PFN
 parameter_list|(
 name|pte
 parameter_list|)
-value|((pte)>> 32)
+value|((u_long)(pte)>> 32)
 end_define
 
 begin_define
@@ -797,7 +833,7 @@ name|ALPHA_PTE_FROM_PFN
 parameter_list|(
 name|pfn
 parameter_list|)
-value|((pfn)<< 32)
+value|((u_long)(pfn)<< 32)
 end_define
 
 begin_typedef
@@ -1334,6 +1370,20 @@ name|__P
 argument_list|(
 operator|(
 name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|unsigned
+name|long
+name|alpha_pal_swpctx
+name|__P
+argument_list|(
+operator|(
+name|unsigned
+name|long
 operator|)
 argument_list|)
 decl_stmt|;

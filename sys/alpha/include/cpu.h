@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: cpu.h,v 1.1 1998/01/10 10:13:14 jb Exp $ */
 end_comment
 
 begin_comment
@@ -32,23 +32,6 @@ include|#
 directive|include
 file|<machine/frame.h>
 end_include
-
-begin_comment
-comment|/*  * definitions of cpu-dependent requirements  * referenced in generic code  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|cpu_wait
-parameter_list|(
-name|p
-parameter_list|)
-end_define
-
-begin_comment
-comment|/* nothing */
-end_comment
 
 begin_comment
 comment|/*  * Arguments to hardclock and gatherstats encapsulate the previous  * machine state in an opaque clockframe.  One the Alpha, we use  * what we push on an interrupt (a trapframe).  */
@@ -163,7 +146,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_KERNEL
+name|KERNEL
 end_ifdef
 
 begin_decl_stmt
@@ -282,7 +265,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_KERNEL
+name|KERNEL
 end_ifdef
 
 begin_struct_decl
@@ -314,13 +297,6 @@ struct_decl|struct
 name|trapframe
 struct_decl|;
 end_struct_decl
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|cold
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -499,6 +475,20 @@ operator|,
 name|u_long
 operator|,
 name|u_long
+operator|,
+name|u_long
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|alpha_pa_access
+name|__P
+argument_list|(
+operator|(
+name|u_long
 operator|)
 argument_list|)
 decl_stmt|;
@@ -561,18 +551,6 @@ expr|struct
 name|proc
 operator|*
 name|p
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|configure
-name|__P
-argument_list|(
-operator|(
-name|void
 operator|)
 argument_list|)
 decl_stmt|;
@@ -674,7 +652,9 @@ name|init_prom_interface
 name|__P
 argument_list|(
 operator|(
-name|void
+expr|struct
+name|rpb
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;
@@ -888,6 +868,33 @@ name|long
 operator|,
 expr|struct
 name|trapframe
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|cpu_set_fork_handler
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|proc
+operator|*
+operator|,
+name|void
+argument_list|(
+operator|*
+name|pc
+argument_list|)
+argument_list|(
+name|void
+operator|*
+argument_list|)
+operator|,
+name|void
 operator|*
 operator|)
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: asm.h,v 1.1 1998/01/10 22:09:52 jb Exp $ */
 end_comment
 
 begin_comment
@@ -1089,7 +1089,11 @@ value|.globl	_name_;						\ 	.ent	_name_ 0;					\ _name_:;							\ 	.mask	_i_mas
 end_define
 
 begin_comment
-comment|/*	.livereg _i_mask_|IM_EXC,0 /* should have been 	.proc	_name_,1;					\ 	.frame	MSS_SIZE,$31,_i_mask_,0;			\ */
+comment|/*	.livereg _i_mask_|IM_EXC,0 */
+end_comment
+
+begin_comment
+comment|/* should have been 	.proc	_name_,1;					\ 	.frame	MSS_SIZE,$31,_i_mask_,0;			\ */
 end_comment
 
 begin_comment
@@ -1704,7 +1708,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_KERNEL
+name|KERNEL
 end_ifdef
 
 begin_ifdef

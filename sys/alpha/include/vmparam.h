@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id$ */
+comment|/* $Id: vmparam.h,v 1.1.1.1 1998/03/09 05:43:16 jb Exp $ */
 end_comment
 
 begin_comment
@@ -159,6 +159,28 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SGROWSIZ
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SGROWSIZ
+value|(128UL*1024)
+end_define
+
+begin_comment
+comment|/* amount to grow stack */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * PTEs for mapping user space into the kernel for phyio operations.  * 64 pte's are enough to cover 8 disks * MAXBSIZE.  */
 end_comment
@@ -278,12 +300,8 @@ begin_define
 define|#
 directive|define
 name|VM_MAXUSER_ADDRESS
-value|((vm_offset_t)0x0000000200000000)
+value|((vm_offset_t)(ALPHA_USEG_END + 1L))
 end_define
-
-begin_comment
-comment|/* 8G XXX */
-end_comment
 
 begin_define
 define|#
@@ -313,65 +331,62 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_KERNEL
+name|VM_KMEM_SIZE
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|VM_MBUF_SIZE
-value|(NMBCLUSTERS*MCLBYTES)
-end_define
-
-begin_define
-define|#
-directive|define
 name|VM_KMEM_SIZE
-value|(NKMEMCLUSTERS*CLBYTES)
+value|(12 * 1024 * 1024)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * How many physical pages per KVA page allocated.  * min(max(VM_KMEM_SIZE, Physical memory/VM_KMEM_SIZE_SCALE), VM_KMEM_SIZE_MAX)  * is the total KVA space allocated for kmem_map.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VM_KMEM_SIZE_SCALE
+end_ifndef
 
 begin_define
 define|#
 directive|define
-name|VM_PHYS_SIZE
-value|(USRIOSIZE*CLBYTES)
+name|VM_KMEM_SIZE_SCALE
+value|(4)
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
+begin_comment
+comment|/* XXX 8192 byte pages */
+end_comment
 
-begin_decl_stmt
-specifier|extern
-name|u_int32_t
-name|vm_mbuf_size
-decl_stmt|,
-name|vm_kmem_size
-decl_stmt|,
-name|vm_phys_size
-decl_stmt|;
-end_decl_stmt
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* initial pagein size of beginning of executable file */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VM_INITIAL_PAGEIN
+end_ifndef
 
 begin_define
 define|#
 directive|define
-name|VM_MBUF_SIZE
-value|vm_mbuf_size
-end_define
-
-begin_define
-define|#
-directive|define
-name|VM_KMEM_SIZE
-value|vm_kmem_size
-end_define
-
-begin_define
-define|#
-directive|define
-name|VM_PHYS_SIZE
-value|vm_phys_size
+name|VM_INITIAL_PAGEIN
+value|16
 end_define
 
 begin_endif
@@ -387,7 +402,7 @@ begin_define
 define|#
 directive|define
 name|VPTBASE
-value|((vm_offset_t)0xfffffffc00000000)
+value|((vm_offset_t)0xfffffffe00000000)
 end_define
 
 begin_comment

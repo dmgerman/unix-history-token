@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1996-1997 John D. Polstra.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: elf.h,v 1.2 1997/08/30 18:59:48 peter Exp $  */
+comment|/*-  * Copyright (c) 1996-1997 John D. Polstra.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: elf.h,v 1.1.1.1 1998/03/09 05:42:33 jb Exp $  */
 end_comment
 
 begin_ifndef
@@ -17,17 +17,17 @@ value|1
 end_define
 
 begin_comment
-comment|/*  * ELF definitions for the i386 architecture.  */
+comment|/*  * ELF definitions for the alpha architecture.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|<sys/elf32.h>
+file|<sys/elf64.h>
 end_include
 
 begin_comment
-comment|/* Definitions common to all 32 bit architectures. */
+comment|/* Definitions common to all 64 bit architectures. */
 end_comment
 
 begin_comment
@@ -39,7 +39,7 @@ typedef|typedef
 struct|struct
 block|{
 comment|/* Auxiliary vector entry on initial stack */
-name|int
+name|long
 name|a_type
 decl_stmt|;
 comment|/* Entry type. */
@@ -68,7 +68,7 @@ block|}
 name|a_un
 union|;
 block|}
-name|Elf32_Auxinfo
+name|Elf64_Auxinfo
 typedef|;
 end_typedef
 
@@ -289,134 +289,285 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_386_NONE
+name|R_ALPHA_NONE
 value|0
 end_define
 
 begin_comment
-comment|/* No relocation. */
+comment|/* No reloc */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|R_386_32
+name|R_ALPHA_REFLONG
 value|1
 end_define
 
 begin_comment
-comment|/* Add symbol value. */
+comment|/* Direct 32 bit */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|R_386_PC32
+name|R_ALPHA_REFQUAD
 value|2
 end_define
 
 begin_comment
-comment|/* Add PC-relative symbol value. */
+comment|/* Direct 64 bit */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|R_386_GOT32
+name|R_ALPHA_GPREL32
 value|3
 end_define
 
 begin_comment
-comment|/* Add PC-relative GOT offset. */
+comment|/* GP relative 32 bit */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|R_386_PLT32
+name|R_ALPHA_LITERAL
 value|4
 end_define
 
 begin_comment
-comment|/* Add PC-relative PLT offset. */
+comment|/* GP relative 16 bit w/optimization */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|R_386_COPY
+name|R_ALPHA_LITUSE
 value|5
 end_define
 
 begin_comment
-comment|/* Copy data from shared object. */
+comment|/* Optimization hint for LITERAL */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|R_386_GLOB_DAT
+name|R_ALPHA_GPDISP
 value|6
 end_define
 
 begin_comment
-comment|/* Set GOT entry to data address. */
+comment|/* Add displacement to GP */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|R_386_JMP_SLOT
+name|R_ALPHA_BRADDR
 value|7
 end_define
 
 begin_comment
-comment|/* Set GOT entry to code address. */
+comment|/* PC+4 relative 23 bit shifted */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|R_386_RELATIVE
+name|R_ALPHA_HINT
 value|8
 end_define
 
 begin_comment
-comment|/* Add load address of shared object. */
+comment|/* PC+4 relative 16 bit shifted */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|R_386_GOTOFF
+name|R_ALPHA_SREL16
 value|9
 end_define
 
 begin_comment
-comment|/* Add GOT-relative symbol address. */
+comment|/* PC relative 16 bit */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|R_386_GOTPC
+name|R_ALPHA_SREL32
 value|10
 end_define
 
 begin_comment
-comment|/* Add PC-relative GOT table address. */
+comment|/* PC relative 32 bit */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|R_386_COUNT
+name|R_ALPHA_SREL64
 value|11
 end_define
 
 begin_comment
-comment|/* Count of defined relocation types. */
+comment|/* PC relative 64 bit */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|R_ALPHA_OP_PUSH
+value|12
+end_define
+
+begin_comment
+comment|/* OP stack push */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_ALPHA_OP_STORE
+value|13
+end_define
+
+begin_comment
+comment|/* OP stack pop and store */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_ALPHA_OP_PSUB
+value|14
+end_define
+
+begin_comment
+comment|/* OP stack subtract */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_ALPHA_OP_PRSHIFT
+value|15
+end_define
+
+begin_comment
+comment|/* OP stack right shift */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_ALPHA_GPVALUE
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_ALPHA_GPRELHIGH
+value|17
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_ALPHA_GPRELLOW
+value|18
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_ALPHA_IMMED_GP_16
+value|19
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_ALPHA_IMMED_GP_HI32
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_ALPHA_IMMED_SCN_HI32
+value|21
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_ALPHA_IMMED_BR_HI32
+value|22
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_ALPHA_IMMED_LO32
+value|23
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_ALPHA_COPY
+value|24
+end_define
+
+begin_comment
+comment|/* Copy symbol at runtime */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_ALPHA_GLOB_DAT
+value|25
+end_define
+
+begin_comment
+comment|/* Create GOT entry */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_ALPHA_JMP_SLOT
+value|26
+end_define
+
+begin_comment
+comment|/* Create PLT entry */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_ALPHA_RELATIVE
+value|27
+end_define
+
+begin_comment
+comment|/* Adjust by program base */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_ALPHA_COUNT
+value|28
+end_define
 
 begin_comment
 comment|/* Define "machine" characteristics */
@@ -426,7 +577,7 @@ begin_define
 define|#
 directive|define
 name|ELF_TARG_CLASS
-value|ELFCLASS32
+value|ELFCLASS64
 end_define
 
 begin_define
@@ -440,7 +591,7 @@ begin_define
 define|#
 directive|define
 name|ELF_TARG_MACH
-value|EM_386
+value|EM_ALPHA
 end_define
 
 begin_define
