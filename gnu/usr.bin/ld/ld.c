@@ -8778,6 +8778,14 @@ name|N_UNDF
 operator||
 name|N_EXT
 operator|)
+operator|&&
+operator|(
+name|type
+operator|&
+name|N_TYPE
+operator|)
+operator|!=
+name|N_FN
 condition|)
 block|{
 comment|/* non-common definition */
