@@ -2811,7 +2811,7 @@ end_ifdef
 
 begin_decl_stmt
 name|keymap_t
-name|keymap
+name|key_map
 init|=
 block|{
 literal|0x69
@@ -5603,7 +5603,7 @@ end_ifdef
 
 begin_decl_stmt
 name|keymap_t
-name|keymap
+name|key_map
 init|=
 block|{
 literal|0x69
@@ -8395,7 +8395,7 @@ end_ifdef
 
 begin_decl_stmt
 name|keymap_t
-name|keymap
+name|key_map
 init|=
 block|{
 literal|0x69
@@ -11187,7 +11187,7 @@ end_ifdef
 
 begin_decl_stmt
 name|keymap_t
-name|keymap
+name|key_map
 init|=
 block|{
 literal|0xe9
