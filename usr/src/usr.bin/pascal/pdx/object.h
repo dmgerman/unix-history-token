@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1982 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)object.h 1.2 %G%"; */
+comment|/* static char sccsid[] = "@(#)object.h 1.3 %G%"; */
 end_comment
 
 begin_comment
@@ -80,28 +80,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* name of compiled file */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SIZELOC
-value|1016
-end_define
-
-begin_comment
-comment|/* location of objsize in obj file */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BASEADDR
-value|1024
-end_define
-
-begin_comment
-comment|/* beginning of object code */
 end_comment
 
 begin_expr_stmt
