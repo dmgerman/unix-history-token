@@ -789,6 +789,10 @@ for|for
 control|(
 name|bb
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|b
 init|;
 name|len
