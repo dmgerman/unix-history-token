@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utils.c	5.4 (Berkeley) %G%"
+literal|"@(#)utils.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1123,6 +1123,44 @@ condition|)
 name|err
 argument_list|(
 literal|"chown: %s: %s"
+argument_list|,
+name|to
+operator|.
+name|p_path
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fd
+condition|?
+name|fchflags
+argument_list|(
+name|fd
+argument_list|,
+name|fs
+operator|->
+name|st_flags
+argument_list|)
+else|:
+name|chflags
+argument_list|(
+name|to
+operator|.
+name|p_path
+argument_list|,
+name|fs
+operator|->
+name|st_flags
+argument_list|)
+condition|)
+name|err
+argument_list|(
+literal|"chflags: %s: %s"
 argument_list|,
 name|to
 operator|.
