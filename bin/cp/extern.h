@@ -39,11 +39,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
+name|fflag
+decl_stmt|,
 name|iflag
 decl_stmt|,
-name|pflag
+name|nflag
 decl_stmt|,
-name|fflag
+name|pflag
 decl_stmt|,
 name|vflag
 decl_stmt|;

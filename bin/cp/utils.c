@@ -249,6 +249,31 @@ name|YESNO
 value|"(y/n [n]) "
 if|if
 condition|(
+name|nflag
+condition|)
+block|{
+if|if
+condition|(
+name|vflag
+condition|)
+name|printf
+argument_list|(
+literal|"%s not overwritten\n"
+argument_list|,
+name|to
+operator|.
+name|p_path
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+elseif|else
+if|if
+condition|(
 name|iflag
 condition|)
 block|{
@@ -1479,9 +1504,9 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: cp [-R [-H | -L | -P]] [-f | -i] [-pv] src target"
+literal|"usage: cp [-R [-H | -L | -P]] [-f | -i | -n] [-pv] src target"
 argument_list|,
-literal|"       cp [-R [-H | -L | -P]] [-f | -i] [-pv] src1 ... srcN directory"
+literal|"       cp [-R [-H | -L | -P]] [-f | -i | -n] [-pv] src1 ... srcN directory"
 argument_list|)
 expr_stmt|;
 name|exit
