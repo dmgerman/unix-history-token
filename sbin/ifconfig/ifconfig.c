@@ -1724,6 +1724,23 @@ name|setifcap
 block|}
 block|,
 block|{
+literal|"polling"
+block|,
+name|IFCAP_POLLING
+block|,
+name|setifcap
+block|}
+block|,
+block|{
+literal|"-polling"
+block|,
+operator|-
+name|IFCAP_POLLING
+block|,
+name|setifcap
+block|}
+block|,
+block|{
 literal|"normal"
 block|,
 operator|-
@@ -6178,7 +6195,7 @@ define|#
 directive|define
 name|IFCAPBITS
 define|\
-value|"\020\1RXCSUM\2TXCSUM\3NETCONS"
+value|"\020\1RXCSUM\2TXCSUM\3NETCONS\7POLLING"
 end_define
 
 begin_comment

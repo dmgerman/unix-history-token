@@ -565,6 +565,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IFCAP_POLLING
+value|0x0040
+end_define
+
+begin_comment
+comment|/* driver supports polling */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IFCAP_HWCSUM
 value|(IFCAP_RXCSUM | IFCAP_TXCSUM)
 end_define
