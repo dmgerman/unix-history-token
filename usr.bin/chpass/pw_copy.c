@@ -340,9 +340,6 @@ name|err
 goto|;
 continue|continue;
 block|}
-ifdef|#
-directive|ifdef
-name|PASSWD_IGNORE_COMMENTS
 for|for
 control|(
 name|p
@@ -407,8 +404,6 @@ name|err
 goto|;
 continue|continue;
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!

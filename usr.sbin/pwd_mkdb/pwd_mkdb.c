@@ -1501,16 +1501,6 @@ name|yp_enabled
 operator|=
 literal|1
 expr_stmt|;
-define|#
-directive|define
-name|COMPACT
-parameter_list|(
-name|e
-parameter_list|)
-value|t = e; while ((*p++ = *t++));
-ifdef|#
-directive|ifdef
-name|PASSWD_IGNORE_COMMENTS
 if|if
 condition|(
 name|is_comment
@@ -1518,8 +1508,13 @@ condition|)
 operator|--
 name|cnt
 expr_stmt|;
-endif|#
-directive|endif
+define|#
+directive|define
+name|COMPACT
+parameter_list|(
+name|e
+parameter_list|)
+value|t = e; while ((*p++ = *t++));
 if|if
 condition|(
 operator|!
@@ -2944,9 +2939,6 @@ name|p
 operator|=
 literal|'\0'
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PASSWD_IGNORE_COMMENTS
 comment|/*  	 * Ignore comments: ^[ \t]*# 	 */
 for|for
 control|(
@@ -3003,8 +2995,6 @@ name|is_comment
 operator|=
 literal|0
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!
