@@ -2459,8 +2459,10 @@ comment|/* start everything */
 name|int
 name|devs
 init|=
-name|getnumdevs
-argument_list|()
+name|devstat_getnumdevs
+argument_list|(
+name|NULL
+argument_list|)
 decl_stmt|;
 name|struct
 name|statinfo
@@ -2597,8 +2599,10 @@ expr_stmt|;
 comment|/* no tokens yet */
 if|if
 condition|(
-name|getdevs
+name|devstat_getdevs
 argument_list|(
+name|NULL
+argument_list|,
 operator|&
 name|statinfo
 argument_list|)
