@@ -6739,7 +6739,7 @@ name|cs
 decl_stmt|;
 block|{
 specifier|register
-name|uch
+name|short
 name|h
 init|=
 name|cs
