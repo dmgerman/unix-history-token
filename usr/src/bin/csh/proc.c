@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)proc.c	4.5 (Berkeley) 81/04/05"
+literal|"@(#)proc.c	4.6 (Berkeley) 81/05/03"
 decl_stmt|;
 end_decl_stmt
 
@@ -758,26 +758,7 @@ block|{
 empty_stmt|;
 comment|/* print in pjwait */
 block|}
-elseif|else
-if|if
-condition|(
-operator|(
-name|jobflags
-operator|&
-operator|(
-name|PTIME
-operator||
-name|PSTOPPED
-operator|)
-operator|)
-operator|==
-name|PTIME
-condition|)
-name|ptprint
-argument_list|(
-name|fp
-argument_list|)
-expr_stmt|;
+comment|/* 		else if ((jobflags& (PTIME|PSTOPPED)) == PTIME) 				ptprint(fp); */
 block|}
 else|else
 block|{
