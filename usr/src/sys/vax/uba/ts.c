@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ts.c	4.10	81/04/14	*/
+comment|/*	ts.c	4.11	81/04/15	*/
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"tm.h"
+file|"te.h"
 end_include
 
 begin_if
