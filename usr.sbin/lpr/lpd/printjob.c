@@ -965,7 +965,7 @@ name|_pp
 parameter_list|,
 name|char
 modifier|*
-name|_user
+name|_userid
 parameter_list|,
 name|int
 name|_bombed
@@ -7342,7 +7342,7 @@ name|pp
 parameter_list|,
 name|char
 modifier|*
-name|user
+name|userid
 parameter_list|,
 name|int
 name|bombed
@@ -7481,7 +7481,7 @@ name|printf
 argument_list|(
 literal|"To: %s@%s\n"
 argument_list|,
-name|user
+name|userid
 argument_list|,
 name|origin_host
 argument_list|)
@@ -7691,7 +7691,7 @@ name|LOG_WARNING
 argument_list|,
 literal|"unable to send mail to %s: %m"
 argument_list|,
-name|user
+name|userid
 argument_list|)
 expr_stmt|;
 return|return;
@@ -7729,7 +7729,7 @@ name|LOG_INFO
 argument_list|,
 literal|"mail sent to user %s about job %s on printer %s (%s)"
 argument_list|,
-name|user
+name|userid
 argument_list|,
 operator|*
 name|jobname
