@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)n7.c	2.1 (CWI) 85/07/18"
+literal|"@(#)n7.c	2.2 (CWI) 85/12/12"
 decl_stmt|;
 end_decl_stmt
 
@@ -141,7 +141,31 @@ if|if
 condition|(
 name|nb
 condition|)
+block|{
+if|if
+condition|(
+name|dip
+operator|==
+name|d
+operator|&&
+name|numtab
+index|[
+name|NL
+index|]
+operator|.
+name|val
+operator|==
+operator|-
+literal|1
+condition|)
+name|newline
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+else|else
 return|return;
+block|}
 if|if
 condition|(
 name|dip
