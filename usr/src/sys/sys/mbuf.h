@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mbuf.h	7.17 (Berkeley) %G%  */
+comment|/*  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mbuf.h	7.18 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -1245,52 +1245,52 @@ block|{
 comment|/* XXX */
 name|M_FREE
 block|,
-comment|/* MT_FREE	0	/* should be on free list */
+comment|/* MT_FREE	0	   should be on free list */
 name|M_MBUF
 block|,
-comment|/* MT_DATA	1	/* dynamic (data) allocation */
+comment|/* MT_DATA	1	   dynamic (data) allocation */
 name|M_MBUF
 block|,
-comment|/* MT_HEADER	2	/* packet header */
+comment|/* MT_HEADER	2	   packet header */
 name|M_SOCKET
 block|,
-comment|/* MT_SOCKET	3	/* socket structure */
+comment|/* MT_SOCKET	3	   socket structure */
 name|M_PCB
 block|,
-comment|/* MT_PCB	4	/* protocol control block */
+comment|/* MT_PCB	4	   protocol control block */
 name|M_RTABLE
 block|,
-comment|/* MT_RTABLE	5	/* routing tables */
+comment|/* MT_RTABLE	5	   routing tables */
 name|M_HTABLE
 block|,
-comment|/* MT_HTABLE	6	/* IMP host tables */
+comment|/* MT_HTABLE	6	   IMP host tables */
 literal|0
 block|,
-comment|/* MT_ATABLE	7	/* address resolution tables */
+comment|/* MT_ATABLE	7	   address resolution tables */
 name|M_MBUF
 block|,
-comment|/* MT_SONAME	8	/* socket name */
+comment|/* MT_SONAME	8	   socket name */
 literal|0
 block|,
 comment|/* 		9 */
 name|M_SOOPTS
 block|,
-comment|/* MT_SOOPTS	10	/* socket options */
+comment|/* MT_SOOPTS	10	   socket options */
 name|M_FTABLE
 block|,
-comment|/* MT_FTABLE	11	/* fragment reassembly header */
+comment|/* MT_FTABLE	11	   fragment reassembly header */
 name|M_MBUF
 block|,
-comment|/* MT_RIGHTS	12	/* access rights */
+comment|/* MT_RIGHTS	12	   access rights */
 name|M_IFADDR
 block|,
-comment|/* MT_IFADDR	13	/* interface address */
+comment|/* MT_IFADDR	13	   interface address */
 name|M_MBUF
 block|,
-comment|/* MT_CONTROL	14	/* extra-data protocol message */
+comment|/* MT_CONTROL	14	   extra-data protocol message */
 name|M_MBUF
 block|,
-comment|/* MT_OOBDATA	15	/* expedited data  */
+comment|/* MT_OOBDATA	15	   expedited data  */
 ifdef|#
 directive|ifdef
 name|DATAKIT
