@@ -97,7 +97,7 @@ value|ACPI_SYSTEM
 end_define
 
 begin_macro
-name|MODULE_NAME
+name|ACPI_MODULE_NAME
 argument_list|(
 literal|"TIMER"
 argument_list|)
@@ -379,7 +379,7 @@ decl_stmt|;
 name|int
 name|rid
 decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 name|__func__
 argument_list|)

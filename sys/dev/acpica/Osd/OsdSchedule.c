@@ -111,7 +111,7 @@ value|ACPI_OS_SERVICES
 end_define
 
 begin_macro
-name|MODULE_NAME
+name|ACPI_MODULE_NAME
 argument_list|(
 literal|"SCHEDULE"
 argument_list|)
@@ -596,7 +596,7 @@ decl_stmt|;
 name|int
 name|pri
 decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 name|__func__
 argument_list|)
@@ -777,7 +777,7 @@ name|void
 modifier|*
 name|Context
 decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 name|__func__
 argument_list|)
@@ -929,7 +929,7 @@ specifier|static
 name|int
 name|dummy
 decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 name|__func__
 argument_list|)
@@ -983,7 +983,7 @@ name|UINT32
 name|Microseconds
 parameter_list|)
 block|{
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 name|__func__
 argument_list|)

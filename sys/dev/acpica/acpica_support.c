@@ -12,13 +12,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cpufunc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/acpica/acpica_support.h>
 end_include
 
 begin_macro
-name|MODULE_NAME
+name|ACPI_MODULE_NAME
 argument_list|(
-literal|"support"
+literal|"SUPPORT"
 argument_list|)
 end_macro
 
@@ -56,13 +62,13 @@ decl_stmt|;
 name|ACPI_OBJECT
 name|Arg
 decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"AcpiEnterSleepStateS4Bios"
 argument_list|)
 expr_stmt|;
 comment|/* run the _PTS and _GTS methods */
-name|MEMSET
+name|ACPI_MEMSET
 argument_list|(
 operator|&
 name|ArgList
@@ -88,7 +94,7 @@ operator|=
 operator|&
 name|Arg
 expr_stmt|;
-name|MEMSET
+name|ACPI_MEMSET
 argument_list|(
 operator|&
 name|Arg
@@ -140,18 +146,16 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* clear wake status */
-name|AcpiHwRegisterBitAccess
+name|AcpiHwBitRegisterWrite
 argument_list|(
-name|ACPI_WRITE
-argument_list|,
-name|ACPI_MTX_LOCK
-argument_list|,
-name|WAK_STS
+name|ACPI_BITREG_WAKE_STATUS
 argument_list|,
 literal|1
+argument_list|,
+name|ACPI_MTX_LOCK
 argument_list|)
 expr_stmt|;
-name|disable
+name|acpi_disable_irqs
 argument_list|()
 expr_stmt|;
 name|AcpiHwDisableNonWakeupGpes
@@ -186,20 +190,18 @@ block|}
 do|while
 condition|(
 operator|!
-name|AcpiHwRegisterBitAccess
+name|AcpiHwBitRegisterRead
 argument_list|(
-name|ACPI_READ
+name|ACPI_BITREG_WAKE_STATUS
 argument_list|,
 name|ACPI_MTX_LOCK
-argument_list|,
-name|WAK_STS
 argument_list|)
 condition|)
 do|;
 name|AcpiHwEnableNonWakeupGpes
 argument_list|()
 expr_stmt|;
-name|enable
+name|acpi_enable_irqs
 argument_list|()
 expr_stmt|;
 name|return_ACPI_STATUS
@@ -236,7 +238,7 @@ modifier|*
 name|TablePtr
 parameter_list|)
 block|{
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 literal|"AcpiSetDsdtTablePtr"
 argument_list|)

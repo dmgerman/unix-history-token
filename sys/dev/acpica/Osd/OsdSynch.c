@@ -57,7 +57,7 @@ value|ACPI_OS_SERVICES
 end_define
 
 begin_macro
-name|MODULE_NAME
+name|ACPI_MODULE_NAME
 argument_list|(
 literal|"SYNCH"
 argument_list|)
@@ -200,7 +200,7 @@ name|acpi_semaphore
 modifier|*
 name|as
 decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 name|__func__
 argument_list|)
@@ -373,7 +373,7 @@ operator|*
 operator|)
 name|Handle
 decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 name|__func__
 argument_list|)
@@ -470,7 +470,7 @@ name|currenttv
 decl_stmt|,
 name|timelefttv
 decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 name|__func__
 argument_list|)
@@ -1060,7 +1060,7 @@ operator|*
 operator|)
 name|Handle
 decl_stmt|;
-name|FUNCTION_TRACE
+name|ACPI_FUNCTION_TRACE
 argument_list|(
 name|__func__
 argument_list|)
