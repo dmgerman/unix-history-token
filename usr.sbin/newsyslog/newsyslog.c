@@ -403,6 +403,7 @@ comment|/* Directory path to old logfiles archive */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|conf
@@ -554,7 +555,9 @@ begin_function_decl
 specifier|static
 name|void
 name|usage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -567,6 +570,7 @@ name|char
 modifier|*
 name|log
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|pid_file
@@ -657,6 +661,7 @@ specifier|static
 name|pid_t
 name|get_pid
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|pid_file
@@ -835,6 +840,7 @@ name|size
 decl_stmt|,
 name|modtime
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|pid_file
@@ -2884,6 +2890,7 @@ name|char
 modifier|*
 name|log
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|pid_file
@@ -4614,6 +4621,7 @@ specifier|static
 name|pid_t
 name|get_pid
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|pid_file
@@ -5742,10 +5750,6 @@ expr_stmt|;
 if|if
 condition|(
 name|ul
-operator|<
-literal|0
-operator|||
-name|ul
 operator|>
 literal|23
 condition|)
@@ -5792,10 +5796,6 @@ expr_stmt|;
 if|if
 condition|(
 name|ul
-operator|<
-literal|0
-operator|||
-name|ul
 operator|>
 literal|6
 condition|)
@@ -5807,6 +5807,9 @@ if|if
 condition|(
 name|ul
 operator|!=
+operator|(
+name|unsigned
+operator|)
 name|tm
 operator|.
 name|tm_wday
@@ -5819,6 +5822,9 @@ if|if
 condition|(
 name|ul
 operator|<
+operator|(
+name|unsigned
+operator|)
 name|tm
 operator|.
 name|tm_wday
@@ -5959,6 +5965,9 @@ if|if
 condition|(
 name|ul
 operator|>
+operator|(
+name|unsigned
+operator|)
 name|nd
 condition|)
 return|return
