@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1995-2000 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_state.h	1.3 1/12/96 (C) 1995 Darren Reed  * $Id: ip_state.h,v 2.13.2.1 2000/07/08 02:15:35 darrenr Exp $  */
+comment|/*  * Copyright (C) 1995-2000 by Darren Reed.  *  * Redistribution and use in source and binary forms are permitted  * provided that this notice is preserved and due credit is given  * to the original author and the contributors.  *  * @(#)ip_state.h	1.3 1/12/96 (C) 1995 Darren Reed  * $Id: ip_state.h,v 2.13.2.2 2000/08/23 11:01:31 darrenr Exp $  */
 end_comment
 
 begin_ifndef
@@ -688,6 +688,13 @@ begin_decl_stmt
 specifier|extern
 name|u_long
 name|fr_tcpclosed
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_long
+name|fr_tcphalfclosed
 decl_stmt|;
 end_decl_stmt
 
