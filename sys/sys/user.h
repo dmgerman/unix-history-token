@@ -303,6 +303,50 @@ begin_comment
 comment|/* size of returned mutex name */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|OCOMMLEN
+value|16
+end_define
+
+begin_comment
+comment|/* size of returned ki_ocomm name */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|COMMLEN
+value|19
+end_define
+
+begin_comment
+comment|/* size of returned ki_comm name */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KI_NGROUPS
+value|16
+end_define
+
+begin_comment
+comment|/* number of groups in ki_groups */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOGNAMELEN
+value|17
+end_define
+
+begin_comment
+comment|/* size of returned ki_login */
+end_comment
+
 begin_struct
 struct|struct
 name|kinfo_proc
@@ -437,7 +481,7 @@ comment|/* number of groups */
 name|gid_t
 name|ki_groups
 index|[
-name|NGROUPS
+name|KI_NGROUPS
 index|]
 decl_stmt|;
 comment|/* groups */
@@ -540,9 +584,9 @@ name|ki_lastcpu
 decl_stmt|;
 comment|/* Last cpu we were on */
 name|char
-name|ki_comm
+name|ki_ocomm
 index|[
-name|MAXCOMLEN
+name|OCOMMLEN
 operator|+
 literal|1
 index|]
@@ -560,7 +604,7 @@ comment|/* wchan message */
 name|char
 name|ki_login
 index|[
-name|MAXLOGNAME
+name|LOGNAMELEN
 operator|+
 literal|1
 index|]
@@ -576,9 +620,18 @@ index|]
 decl_stmt|;
 comment|/* mutex name */
 name|char
+name|ki_comm
+index|[
+name|COMMLEN
+operator|+
+literal|1
+index|]
+decl_stmt|;
+comment|/* command name */
+name|char
 name|ki_sparestrings
 index|[
-literal|99
+literal|85
 index|]
 decl_stmt|;
 comment|/* spare string space */
