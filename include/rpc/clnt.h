@@ -752,6 +752,13 @@ begin_comment
 comment|/* get retry timeout (timeval) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CLSET_ASYNC
+value|19
+end_define
+
 begin_comment
 comment|/*  * void  * CLNT_DESTROY(rh);  * 	CLIENT *rh;  */
 end_comment
