@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)process.c	5.3 (Berkeley) %G%"
+literal|"@(#)process.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3218,6 +3218,17 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|cp
+operator|->
+name|u
+operator|.
+name|s
+operator|->
+name|wfd
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 break|break;
 case|case
 literal|'w'
@@ -3257,6 +3268,15 @@ argument_list|(
 name|errno
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|cp
+operator|->
+name|u
+operator|.
+name|fd
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 break|break;
 case|case
