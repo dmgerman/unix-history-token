@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_denode.c,v 1.35 1998/04/04 13:25:55 phk Exp $ */
+comment|/*	$Id: msdosfs_denode.c,v 1.36 1998/05/17 11:53:06 phk Exp $ */
 end_comment
 
 begin_comment
@@ -884,12 +884,6 @@ expr_stmt|;
 name|ldep
 operator|->
 name|de_devvp
-operator|=
-literal|0
-expr_stmt|;
-name|ldep
-operator|->
-name|de_lockf
 operator|=
 literal|0
 expr_stmt|;

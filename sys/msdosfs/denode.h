@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: denode.h,v 1.14 1997/10/17 12:36:16 phk Exp $ */
+comment|/*	$Id: denode.h,v 1.15 1998/02/18 09:28:26 jkh Exp $ */
 end_comment
 
 begin_comment
@@ -191,12 +191,6 @@ modifier|*
 name|de_pmp
 decl_stmt|;
 comment|/* addr of our mount struct */
-name|struct
-name|lockf
-modifier|*
-name|de_lockf
-decl_stmt|;
-comment|/* byte level lock list */
 name|u_char
 name|de_Name
 index|[
