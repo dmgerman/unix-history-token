@@ -54,6 +54,8 @@ block|,
 name|Mprot
 block|,
 name|Mmapflags
+block|,
+name|Whence
 block|}
 enum|;
 end_enum
