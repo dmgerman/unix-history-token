@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: shutdown.c,v 1.15 1998/12/11 11:04:19 bde Exp $"
+literal|"$Id: shutdown.c,v 1.16 1998/12/11 11:21:47 bde Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1057,6 +1057,10 @@ else|else
 block|{
 while|while
 condition|(
+name|tp
+operator|->
+name|timeleft
+operator|&&
 name|offset
 operator|<
 name|tp
@@ -1875,6 +1879,9 @@ condition|)
 name|badtime
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|offset
 operator|=
 name|atoi
@@ -1883,6 +1890,12 @@ name|timearg
 argument_list|)
 operator|*
 literal|60
+operator|)
+operator|<
+literal|0
+condition|)
+name|badtime
+argument_list|()
 expr_stmt|;
 name|shuttime
 operator|=
