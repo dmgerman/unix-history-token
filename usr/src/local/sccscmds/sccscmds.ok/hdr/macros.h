@@ -169,7 +169,7 @@ name|SCCSID
 parameter_list|(
 name|arg
 parameter_list|)
-value|static char Sccsid[] "arg"
+value|static char Sccsid[] = "arg"
 end_define
 
 begin_define
