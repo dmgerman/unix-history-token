@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	1.11 (Berkeley) %G%"
+literal|"@(#)main.c	1.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -249,15 +249,21 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+name|argc
+operator|--
+expr_stmt|;
+name|argv
+operator|++
+expr_stmt|;
 while|while
 condition|(
 name|argc
 operator|>
-literal|1
+literal|0
 operator|&&
 name|argv
 index|[
-literal|1
+literal|0
 index|]
 index|[
 literal|0
@@ -270,7 +276,7 @@ switch|switch
 condition|(
 name|argv
 index|[
-literal|1
+literal|0
 index|]
 index|[
 literal|1
@@ -305,13 +311,13 @@ if|if
 condition|(
 name|argc
 operator|>
-literal|1
+literal|0
 condition|)
 name|freopen
 argument_list|(
 name|argv
 index|[
-literal|1
+literal|0
 index|]
 argument_list|,
 literal|"r"
@@ -323,13 +329,13 @@ if|if
 condition|(
 name|argc
 operator|>
-literal|2
+literal|1
 condition|)
 name|freopen
 argument_list|(
 name|argv
 index|[
-literal|2
+literal|1
 index|]
 argument_list|,
 literal|"w"
