@@ -11604,6 +11604,12 @@ name|va
 argument_list|)
 expr_stmt|;
 block|}
+name|pmap_dcache_wbinv_all
+argument_list|(
+name|pmap
+argument_list|)
+comment|/* XXX: Shouldn't be needed. */
+expr_stmt|;
 name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
