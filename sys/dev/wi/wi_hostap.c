@@ -472,6 +472,10 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Spl use in this driver.  *  * splnet is used everywhere here to block timeouts when we need to do  * so.  */
+end_comment
+
+begin_comment
 comment|/*  * take_hword()  *  *	Used for parsing management frames.  The pkt pointer and length  *	variables are updated after the value is removed.  */
 end_comment
 
@@ -1392,7 +1396,7 @@ return|return;
 comment|/* XXX: I read somewhere you can deauth all the stations with 	 * a single broadcast.  Maybe try that someday. 	 */
 name|s
 operator|=
-name|splimp
+name|splnet
 argument_list|()
 expr_stmt|;
 name|sta
@@ -1517,6 +1521,11 @@ operator|->
 name|apflags
 operator|=
 literal|0
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -4982,7 +4991,7 @@ return|;
 block|}
 name|s
 operator|=
-name|splclock
+name|splnet
 argument_list|()
 expr_stmt|;
 comment|/* Find source station. */
@@ -5345,7 +5354,7 @@ condition|)
 break|break;
 name|s
 operator|=
-name|splimp
+name|splnet
 argument_list|()
 expr_stmt|;
 name|sta
@@ -5448,7 +5457,7 @@ condition|)
 break|break;
 name|s
 operator|=
-name|splimp
+name|splnet
 argument_list|()
 expr_stmt|;
 name|sta
@@ -5468,10 +5477,17 @@ name|sta
 operator|==
 name|NULL
 condition|)
+block|{
 name|error
 operator|=
 name|ENOENT
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 block|{
 name|reqsta
@@ -5514,6 +5530,11 @@ name|sta
 operator|->
 name|rates
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|copyout
@@ -5532,11 +5553,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|SIOCHOSTAP_ADD
@@ -5577,7 +5593,7 @@ condition|)
 break|break;
 name|s
 operator|=
-name|splimp
+name|splnet
 argument_list|()
 expr_stmt|;
 name|sta
@@ -5797,7 +5813,7 @@ literal|0
 expr_stmt|;
 name|s
 operator|=
-name|splimp
+name|splnet
 argument_list|()
 expr_stmt|;
 name|sta
