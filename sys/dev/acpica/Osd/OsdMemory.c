@@ -201,7 +201,7 @@ name|void
 modifier|*
 name|Pointer
 parameter_list|,
-name|UINT32
+name|ACPI_SIZE
 name|Length
 parameter_list|)
 block|{
@@ -221,7 +221,7 @@ name|void
 modifier|*
 name|Pointer
 parameter_list|,
-name|UINT32
+name|ACPI_SIZE
 name|Length
 parameter_list|)
 block|{
