@@ -2140,7 +2140,7 @@ comment|/* free pcicfgregs structure and all depending data structures */
 end_comment
 
 begin_comment
-unit|static int pci_freecfg(struct pci_devinfo *dinfo) { 	struct devlist *devlist_head;  	devlist_head =&pci_devq;  	if (dinfo->cfg.hdrspec != NULL) 		free(dinfo->cfg.hdrspec, M_DEVBUF); 	if (dinfo->cfg.map != NULL) 		free(dinfo->cfg.map, M_DEVBUF);
+unit|static int pci_freecfg(struct pci_devinfo *dinfo) { 	struct devlist *devlist_head;  	devlist_head =&pci_devq;  	if (dinfo->cfg.map != NULL) 		free(dinfo->cfg.map, M_DEVBUF);
 comment|/* XXX this hasn't been tested */
 end_comment
 
