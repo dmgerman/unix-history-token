@@ -42,12 +42,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ed.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"fe.h"
 end_include
 
@@ -367,14 +361,6 @@ specifier|extern
 name|struct
 name|isa_driver
 name|cxdriver
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|isa_driver
-name|eddriver
 decl_stmt|;
 end_decl_stmt
 
@@ -1046,20 +1032,6 @@ block|,
 endif|#
 directive|endif
 comment|/* NET */
-if|#
-directive|if
-name|NED
-operator|>
-literal|0
-block|{
-name|INTR_TYPE_NET
-block|,
-operator|&
-name|eddriver
-block|}
-block|,
-endif|#
-directive|endif
 if|#
 directive|if
 name|NLE
