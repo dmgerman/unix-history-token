@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.145 1997/10/04 15:50:09 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: menus.c,v 1.146 1997/10/13 11:45:36 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -6862,7 +6862,22 @@ name|MenuNetworking
 block|}
 block|,
 block|{
-literal|"7 Options"
+literal|"6 Startup"
+block|,
+literal|"Configure system startup services"
+block|,
+name|NULL
+block|,
+name|dmenuSubmenu
+block|,
+name|NULL
+block|,
+operator|&
+name|MenuStartup
+block|}
+block|,
+block|{
+literal|"8 Options"
 block|,
 literal|"View/Set various installation options"
 block|,
@@ -6872,7 +6887,7 @@ name|optionsEditor
 block|}
 block|,
 block|{
-literal|"8 Packages"
+literal|"9 Packages"
 block|,
 literal|"Install pre-packaged software for FreeBSD"
 block|,
@@ -6882,7 +6897,7 @@ name|configPackages
 block|}
 block|,
 block|{
-literal|"9 Root Password"
+literal|"A Root Password"
 block|,
 literal|"Set the system manager's password"
 block|,
@@ -6896,7 +6911,7 @@ literal|"passwd root"
 block|}
 block|,
 block|{
-literal|"A HTML Docs"
+literal|"B HTML Docs"
 block|,
 literal|"Go to the HTML documentation menu (post-install)"
 block|,
@@ -6984,6 +6999,287 @@ block|}
 block|, }
 block|;
 name|DMenu
+name|MenuStartup
+operator|=
+block|{
+name|DMENU_CHECKLIST_TYPE
+operator||
+name|DMENU_SELECTION_RETURNS
+block|,
+literal|"Startup Services Menu"
+block|,
+literal|"This menu allows you to configure various aspects of your system's\n"
+literal|"startup configuration.  Remember to use SPACE to select items!  The\n"
+literal|"RETURN key will leave this menu (as with all checkbox menus)."
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+block|{
+block|{
+literal|"APM"
+block|,
+literal|"Auto-power management services (typically laptops)"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuToggleVariable
+block|,
+name|NULL
+block|,
+literal|"apm_enable=YES"
+block|}
+block|,
+block|{
+literal|"pccard"
+block|,
+literal|"Enable PCCARD (AKA PCMCIA) services (also laptops)"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuToggleVariable
+block|,
+name|NULL
+block|,
+literal|"pccard_enable=YES"
+block|}
+block|,
+block|{
+literal|"pccard mem"
+block|,
+literal|"Set PCCARD memory address (if enabled)"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuISetVariable
+block|,
+name|NULL
+block|,
+literal|"pccard_mem"
+block|}
+block|,
+block|{
+literal|"pccard ifconfig"
+block|,
+literal|"List of PCCARD ethernet devices to configure"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuISetVariable
+block|,
+name|NULL
+block|,
+literal|"pccard_ifconfig"
+block|}
+block|,
+block|{
+literal|" "
+block|,
+literal|" -- "
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|}
+block|,
+block|{
+literal|"startup dirs"
+block|,
+literal|"Set the list of dirs to look for startup scripts"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuISetVariable
+block|,
+name|NULL
+block|,
+literal|"local_startup"
+block|}
+block|,
+block|{
+literal|"named"
+block|,
+literal|"Run a local name server on this host"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuToggleVariable
+block|,
+name|NULL
+block|,
+literal|"named_enable=YES"
+block|}
+block|,
+block|{
+literal|"named flags"
+block|,
+literal|"Set default flags to named (if enabled)"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuISetVariable
+block|,
+name|NULL
+block|,
+literal|"named_flags"
+block|}
+block|,
+block|{
+literal|"nis client"
+block|,
+literal|"This host wishes to be an NIS client."
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuToggleVariable
+block|,
+name|NULL
+block|,
+literal|"nis_client_enable=YES"
+block|}
+block|,
+block|{
+literal|"nis server"
+block|,
+literal|"This host wishes to be an NIS server."
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuToggleVariable
+block|,
+name|NULL
+block|,
+literal|"nis_server_enable=YES"
+block|}
+block|,
+block|{
+literal|" "
+block|,
+literal|" -- "
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|' '
+block|,
+literal|' '
+block|,
+literal|' '
+block|}
+block|,
+block|{
+literal|"accounting"
+block|,
+literal|"This host wishes to run process accounting."
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuToggleVariable
+block|,
+name|NULL
+block|,
+literal|"accounting_enable=YES"
+block|}
+block|,
+block|{
+literal|"lpd"
+block|,
+literal|"This host has a printer and wants to run lpd."
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuToggleVariable
+block|,
+name|NULL
+block|,
+literal|"lpd_enable=YES"
+block|}
+block|,
+block|{
+literal|"linux"
+block|,
+literal|"This host wants to be able to run linux binaries."
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuToggleVariable
+block|,
+name|NULL
+block|,
+literal|"linux_enable=YES"
+block|}
+block|,
+block|{
+literal|"quotas"
+block|,
+literal|"This host wishes to check quotas on startup."
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuToggleVariable
+block|,
+name|NULL
+block|,
+literal|"check_quotas=YES"
+block|}
+block|,
+block|{
+literal|"SCO"
+block|,
+literal|"This host wants to be able to run IBCS2 binaries."
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuToggleVariable
+block|,
+name|NULL
+block|,
+literal|"ibcs2_enable=YES"
+block|}
+block|,
+block|{
+literal|"Exit"
+block|,
+literal|"Exit this menu (returning to previous)"
+block|,
+name|checkTrue
+block|,
+name|dmenuExit
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|'<'
+block|,
+literal|'<'
+block|,
+literal|'<'
+block|}
+block|,
+block|{
+name|NULL
+block|}
+block|}
+block|, }
+block|;
+name|DMenu
 name|MenuNetworking
 operator|=
 block|{
@@ -7039,6 +7335,48 @@ block|,
 name|NULL
 block|,
 literal|"nfs_server_enable"
+block|}
+block|,
+block|{
+literal|"AMD"
+block|,
+literal|"This machine wants to run the auto-mounter service"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuToggleVariable
+block|,
+name|NULL
+block|,
+literal|"amd_enable=YES"
+block|}
+block|,
+block|{
+literal|"AMD Flags"
+block|,
+literal|"Set flags to AMD service (if enabled)"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuISetVariable
+block|,
+name|NULL
+block|,
+literal|"amd_flags"
+block|}
+block|,
+block|{
+literal|"TCP Extentions"
+block|,
+literal|"Allow RFC1323 and RFC1544 TCP extentions?"
+block|,
+name|dmenuVarCheck
+block|,
+name|dmenuToggleVariable
+block|,
+name|NULL
+block|,
+literal|"tcp_extentions=YES"
 block|}
 block|,
 block|{
