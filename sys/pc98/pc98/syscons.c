@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992-1995 Sen Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: syscons.c,v 1.13.2.31 1998/07/08 09:10:05 kato Exp $  */
+comment|/*-  * Copyright (c) 1992-1995 Sen Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: syscons.c,v 1.13.2.32 1998/08/07 18:08:05 kato Exp $  */
 end_comment
 
 begin_include
@@ -29692,6 +29692,9 @@ comment|/* enable palette */
 if|#
 directive|if
 name|SLOW_VGA
+ifndef|#
+directive|ifndef
+name|SC_BAD_FLICKER
 name|outb
 argument_list|(
 name|TSIDX
@@ -29706,6 +29709,8 @@ argument_list|,
 literal|0x01
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|outb
 argument_list|(
 name|TSIDX
@@ -29734,6 +29739,9 @@ argument_list|,
 literal|0x07
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|SC_BAD_FLICKER
 name|outb
 argument_list|(
 name|TSIDX
@@ -29748,6 +29756,8 @@ argument_list|,
 literal|0x03
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|outb
 argument_list|(
 name|GDCIDX
@@ -29792,6 +29802,9 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+ifndef|#
+directive|ifndef
+name|SC_BAD_FLICKER
 name|outw
 argument_list|(
 name|TSIDX
@@ -29799,6 +29812,8 @@ argument_list|,
 literal|0x0100
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|outw
 argument_list|(
 name|TSIDX
@@ -29813,6 +29828,9 @@ argument_list|,
 literal|0x0704
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|SC_BAD_FLICKER
 name|outw
 argument_list|(
 name|TSIDX
@@ -29820,6 +29838,8 @@ argument_list|,
 literal|0x0300
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|outw
 argument_list|(
 name|GDCIDX
@@ -29914,6 +29934,9 @@ comment|/* enable palette */
 if|#
 directive|if
 name|SLOW_VGA
+ifndef|#
+directive|ifndef
+name|SC_BAD_FLICKER
 name|outb
 argument_list|(
 name|TSIDX
@@ -29928,6 +29951,8 @@ argument_list|,
 literal|0x01
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|outb
 argument_list|(
 name|TSIDX
@@ -29962,6 +29987,9 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|SC_BAD_FLICKER
 name|outb
 argument_list|(
 name|TSIDX
@@ -29976,6 +30004,8 @@ argument_list|,
 literal|0x03
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|outb
 argument_list|(
 name|GDCIDX
@@ -30069,6 +30099,9 @@ expr_stmt|;
 block|}
 else|#
 directive|else
+ifndef|#
+directive|ifndef
+name|SC_BAD_FLICKER
 name|outw
 argument_list|(
 name|TSIDX
@@ -30076,6 +30109,8 @@ argument_list|,
 literal|0x0100
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|outw
 argument_list|(
 name|TSIDX
@@ -30108,6 +30143,9 @@ literal|8
 operator|)
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|SC_BAD_FLICKER
 name|outw
 argument_list|(
 name|TSIDX
@@ -30115,6 +30153,8 @@ argument_list|,
 literal|0x0300
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|outw
 argument_list|(
 name|GDCIDX
