@@ -1972,6 +1972,8 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+literal|0
+operator|&&
 name|bootverbose
 condition|)
 name|printf
