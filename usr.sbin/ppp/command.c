@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.71 1997/08/20 23:47:41 brian Exp $  *  */
+comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.72 1997/08/21 16:18:07 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -915,6 +915,69 @@ condition|)
 do|;
 return|return
 literal|0
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|SetLoopback
+parameter_list|(
+name|struct
+name|cmdtab
+modifier|*
+name|cmdlist
+parameter_list|,
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|argv
+parameter_list|)
+block|{
+if|if
+condition|(
+name|argc
+operator|==
+literal|1
+condition|)
+if|if
+condition|(
+operator|!
+name|strcasecmp
+argument_list|(
+operator|*
+name|argv
+argument_list|,
+literal|"on"
+argument_list|)
+condition|)
+name|VarLoopback
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcasecmp
+argument_list|(
+operator|*
+name|argv
+argument_list|,
+literal|"off"
+argument_list|)
+condition|)
+name|VarLoopback
+operator|=
+literal|0
+expr_stmt|;
+return|return
+operator|-
+literal|1
 return|;
 block|}
 end_function
@@ -2016,6 +2079,35 @@ end_function_decl
 begin_function
 specifier|static
 name|int
+name|ShowLoopback
+parameter_list|()
+block|{
+if|if
+condition|(
+name|VarTerm
+condition|)
+name|fprintf
+argument_list|(
+name|VarTerm
+argument_list|,
+literal|"Local loopback is %s\n"
+argument_list|,
+name|VarLoopback
+condition|?
+literal|"on"
+else|:
+literal|"off"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
 name|ShowLogLevel
 parameter_list|()
 block|{
@@ -2917,6 +3009,20 @@ block|,
 literal|"Show LCP status"
 block|,
 literal|"show lcp"
+block|}
+block|,
+block|{
+literal|"loopback"
+block|,
+name|NULL
+block|,
+name|ShowLoopback
+block|,
+name|LOCAL_AUTH
+block|,
+literal|"Show current loopback setting"
+block|,
+literal|"show loopback"
 block|}
 block|,
 block|{
@@ -6905,6 +7011,20 @@ block|,
 literal|"Set input filter"
 block|,
 literal|"set ifilter ..."
+block|}
+block|,
+block|{
+literal|"loopback"
+block|,
+name|NULL
+block|,
+name|SetLoopback
+block|,
+name|LOCAL_AUTH
+block|,
+literal|"Set loopback facility"
+block|,
+literal|"set loopback on|off"
 block|}
 block|,
 block|{
