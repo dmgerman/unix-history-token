@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rmt.c	4.5 (Berkeley) 84/12/19"
+literal|"@(#)rmt.c	4.6 (Berkeley) 85/01/23"
 decl_stmt|;
 end_decl_stmt
 
@@ -809,6 +809,33 @@ expr_stmt|;
 operator|(
 name|void
 operator|)
+name|sprintf
+argument_list|(
+name|resp
+argument_list|,
+literal|"A%d\n"
+argument_list|,
+name|rval
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|write
+argument_list|(
+literal|1
+argument_list|,
+name|resp
+argument_list|,
+name|strlen
+argument_list|(
+name|resp
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 literal|1
@@ -827,7 +854,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
-name|respond
+name|top
 goto|;
 block|}
 default|default:
