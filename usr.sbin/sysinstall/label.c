@@ -125,7 +125,7 @@ begin_define
 define|#
 directive|define
 name|ROOT_DEFAULT_SIZE
-value|70
+value|90
 end_define
 
 begin_else
@@ -137,7 +137,7 @@ begin_define
 define|#
 directive|define
 name|ROOT_DEFAULT_SIZE
-value|50
+value|70
 end_define
 
 begin_endif
