@@ -4,6 +4,23 @@ comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  
 end_comment
 
 begin_comment
+comment|/* Receiver clock frequency for "standard" pc serial ports. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_RCLK
+value|1843200
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_comment
 comment|/* 16 bit baud rate divisor (lower byte in dca_data, upper in dca_ier) */
 end_comment
 
@@ -16,12 +33,6 @@ name|x
 parameter_list|)
 value|(1843200 / (16*(x)))
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PC98
-end_ifdef
 
 begin_define
 define|#
