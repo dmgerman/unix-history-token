@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)w.c	5.8 (Berkeley) %G%"
+literal|"@(#)w.c	5.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2221,12 +2221,10 @@ begin_comment
 comment|/* find& return number of minutes current tty has been idle */
 end_comment
 
-begin_macro
+begin_function
+name|time_t
 name|findidle
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 name|struct
 name|stat
@@ -2310,7 +2308,7 @@ name|diff
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_define
 define|#
