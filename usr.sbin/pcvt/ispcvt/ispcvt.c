@@ -1,20 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, 1995 Hellmuth Michaelis  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Hellmuth Michaelis  * 4. The name authors may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
+comment|/*  * Copyright (c) 1992, 2000 Hellmuth Michaelis  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|id
-init|=
-literal|"@(#)ispcvt.c, 3.20, Last Edit-Date: [Wed Apr  5 17:53:28 1995]"
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/*---------------------------------------------------------------------------*  *  *	history:  *  *	-hm	upgraded to report pcvt compile time configuration  *	-hm	PCVT_INHIBIT_NUMLOCK patch from Joerg  *	-hm	PCVT_META_ESC patch from Joerg  *	-hm	PCVT_PCBURST  *	-hm	new ioctl VGAPCVTINFO  *	-hm	new CONF_ values for 3.10  *	-hm	new CONF_ values for 3.20  *	-hm	removed PCVT_FAKE_SYSCONS10  *	-hm	added PCVT_PORTIO_DELAY  *	-hm	removed PCVT_386BSD  *	-hm	add -d option to specify a device  *	-hm	PCVT_XSERVER -> XSERVER  *  *---------------------------------------------------------------------------*/
+comment|/*---------------------------------------------------------------------------*  *  *	ispcvt - check for pcvt driver running and its options  *	------------------------------------------------------  *  *	Last Edit-Date: [Mon Mar 27 16:29:18 2000]  *  * $FreeBSD$  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -102,6 +92,11 @@ init|=
 literal|0
 decl_stmt|;
 name|int
+name|n_screens
+init|=
+literal|0
+decl_stmt|;
+name|int
 name|fd
 decl_stmt|;
 name|char
@@ -119,7 +114,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"vcd:"
+literal|"cd:nv"
 argument_list|)
 operator|)
 operator|!=
@@ -132,14 +127,6 @@ condition|(
 name|c
 condition|)
 block|{
-case|case
-literal|'v'
-case|:
-name|verbose
-operator|=
-literal|1
-expr_stmt|;
-break|break;
 case|case
 literal|'c'
 case|:
@@ -156,6 +143,22 @@ operator|=
 name|optarg
 expr_stmt|;
 name|dflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'n'
+case|:
+name|n_screens
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'v'
+case|:
+name|verbose
 operator|=
 literal|1
 expr_stmt|;
@@ -407,6 +410,10 @@ condition|(
 name|config
 operator|==
 literal|0
+operator|&&
+name|n_screens
+operator|==
+literal|0
 condition|)
 name|exit
 argument_list|(
@@ -446,62 +453,29 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|n_screens
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%d"
+argument_list|,
+name|pcvtinfo
+operator|.
+name|nscreens
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|verbose
 condition|)
 block|{
-switch|switch
-condition|(
-name|pcvtinfo
-operator|.
-name|opsys
-condition|)
-block|{
-case|case
-name|CONF_NETBSD
-case|:
-name|p
-operator|=
-literal|"PCVT_NETBSD"
-expr_stmt|;
-break|break;
-case|case
-name|CONF_FREEBSD
-case|:
-name|p
-operator|=
-literal|"PCVT_FREEBSD"
-expr_stmt|;
-break|break;
-default|default:
-case|case
-name|CONF_UNKNOWNOPSYS
-case|:
-name|p
-operator|=
-literal|"UNKNOWN"
-expr_stmt|;
-break|break;
-block|}
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Operating System     = %s\t"
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"OS Release Id        = %u\n"
-argument_list|,
-name|pcvtinfo
-operator|.
-name|opsysrel
-argument_list|)
-expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
@@ -617,28 +591,6 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"PCVT_BACKUP_FONTS    = %s"
-argument_list|,
-operator|(
-name|pcvtinfo
-operator|.
-name|compile_opts
-operator|&
-name|CONF_BACKUP_FONTS
-operator|)
-condition|?
-literal|"ON"
-else|:
-literal|"OFF"
-argument_list|)
-expr_stmt|;
-name|next
-argument_list|()
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
 literal|"PCVT_CTRL_ALT_DEL    = %s"
 argument_list|,
 operator|(
@@ -647,28 +599,6 @@ operator|.
 name|compile_opts
 operator|&
 name|CONF_CTRL_ALT_DEL
-operator|)
-condition|?
-literal|"ON"
-else|:
-literal|"OFF"
-argument_list|)
-expr_stmt|;
-name|next
-argument_list|()
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"PCVT_EMU_MOUSE       = %s"
-argument_list|,
-operator|(
-name|pcvtinfo
-operator|.
-name|compile_opts
-operator|&
-name|CONF_EMU_MOUSE
 operator|)
 condition|?
 literal|"ON"
@@ -705,50 +635,6 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"PCVT_KEYBDID         = %s"
-argument_list|,
-operator|(
-name|pcvtinfo
-operator|.
-name|compile_opts
-operator|&
-name|CONF_KEYBDID
-operator|)
-condition|?
-literal|"ON"
-else|:
-literal|"OFF"
-argument_list|)
-expr_stmt|;
-name|next
-argument_list|()
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"PCVT_KBD_FIFO        = %s"
-argument_list|,
-operator|(
-name|pcvtinfo
-operator|.
-name|compile_opts
-operator|&
-name|CONF_KBD_FIFO
-operator|)
-condition|?
-literal|"ON"
-else|:
-literal|"OFF"
-argument_list|)
-expr_stmt|;
-name|next
-argument_list|()
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
 literal|"PCVT_META_ESC        = %s"
 argument_list|,
 operator|(
@@ -757,28 +643,6 @@ operator|.
 name|compile_opts
 operator|&
 name|CONF_META_ESC
-operator|)
-condition|?
-literal|"ON"
-else|:
-literal|"OFF"
-argument_list|)
-expr_stmt|;
-name|next
-argument_list|()
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"PCVT_NOFASTSCROLL    = %s"
-argument_list|,
-operator|(
-name|pcvtinfo
-operator|.
-name|compile_opts
-operator|&
-name|CONF_NOFASTSCROLL
 operator|)
 condition|?
 literal|"ON"
@@ -823,50 +687,6 @@ operator|.
 name|compile_opts
 operator|&
 name|CONF_NULLCHARS
-operator|)
-condition|?
-literal|"ON"
-else|:
-literal|"OFF"
-argument_list|)
-expr_stmt|;
-name|next
-argument_list|()
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"PCVT_PALFLICKER      = %s"
-argument_list|,
-operator|(
-name|pcvtinfo
-operator|.
-name|compile_opts
-operator|&
-name|CONF_PALFLICKER
-operator|)
-condition|?
-literal|"ON"
-else|:
-literal|"OFF"
-argument_list|)
-expr_stmt|;
-name|next
-argument_list|()
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"PCVT_PORTIO_DELAY    = %s"
-argument_list|,
-operator|(
-name|pcvtinfo
-operator|.
-name|compile_opts
-operator|&
-name|CONF_PORTIO_DELAY
 operator|)
 condition|?
 literal|"ON"
@@ -969,28 +789,6 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"PCVT_SIGWINCH        = %s"
-argument_list|,
-operator|(
-name|pcvtinfo
-operator|.
-name|compile_opts
-operator|&
-name|CONF_SIGWINCH
-operator|)
-condition|?
-literal|"ON"
-else|:
-literal|"OFF"
-argument_list|)
-expr_stmt|;
-name|next
-argument_list|()
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
 literal|"PCVT_SLOW_INTERRUPT  = %s"
 argument_list|,
 operator|(
@@ -1013,28 +811,6 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"PCVT_SW0CNOUTP       = %s"
-argument_list|,
-operator|(
-name|pcvtinfo
-operator|.
-name|compile_opts
-operator|&
-name|CONF_SW0CNOUTP
-operator|)
-condition|?
-literal|"ON"
-else|:
-literal|"OFF"
-argument_list|)
-expr_stmt|;
-name|next
-argument_list|()
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
 literal|"PCVT_USEKBDSEC       = %s"
 argument_list|,
 operator|(
@@ -1043,28 +819,6 @@ operator|.
 name|compile_opts
 operator|&
 name|CONF_USEKBDSEC
-operator|)
-condition|?
-literal|"ON"
-else|:
-literal|"OFF"
-argument_list|)
-expr_stmt|;
-name|next
-argument_list|()
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"PCVT_USL_VT_COMPAT   = %s"
-argument_list|,
-operator|(
-name|pcvtinfo
-operator|.
-name|compile_opts
-operator|&
-name|CONF_USL_VT_COMPAT
 operator|)
 condition|?
 literal|"ON"
@@ -1107,28 +861,6 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"PCVT_WAITRETRACE     = %s"
-argument_list|,
-operator|(
-name|pcvtinfo
-operator|.
-name|compile_opts
-operator|&
-name|CONF_WAITRETRACE
-operator|)
-condition|?
-literal|"ON"
-else|:
-literal|"OFF"
-argument_list|)
-expr_stmt|;
-name|next
-argument_list|()
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
 literal|"XSERVER              = %s"
 argument_list|,
 operator|(
@@ -1155,17 +887,6 @@ block|}
 else|else
 comment|/* !verbose */
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"BSD Version      = %u\n"
-argument_list|,
-name|pcvtinfo
-operator|.
-name|opsys
-argument_list|)
-expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
@@ -1243,28 +964,35 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"  usage: ispcvt [-v] [-c] [-d device]\n"
+literal|"  usage: ispcvt [-c] [-d device] [-n] [-v]\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"options: -v         be verbose\n"
+literal|"options: -c         print compile time configuration\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"         -c         print compile time configuration\n"
+literal|"         -d<name>  use devicefile<name>\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"         -d<name>  use devicefile<name> for verification\n\n"
+literal|"         -n         print number of virtual screens (to stdout)\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"         -v         be verbose\n\n"
 argument_list|)
 expr_stmt|;
 name|exit
