@@ -3484,10 +3484,22 @@ name|NULL
 argument_list|,
 literal|"System call %s returning"
 argument_list|,
+operator|(
+name|code
+operator|>=
+literal|0
+operator|&&
+name|code
+operator|<
+name|SYS_MAXSYSCALL
+operator|)
+condition|?
 name|syscallnames
 index|[
 name|code
 index|]
+else|:
+literal|"???"
 argument_list|)
 expr_stmt|;
 name|mtx_assert
@@ -4200,10 +4212,22 @@ name|NULL
 argument_list|,
 literal|"System call %s returning"
 argument_list|,
+operator|(
+name|code
+operator|>=
+literal|0
+operator|&&
+name|code
+operator|<
+name|SYS_MAXSYSCALL
+operator|)
+condition|?
 name|syscallnames
 index|[
 name|code
 index|]
+else|:
+literal|"???"
 argument_list|)
 expr_stmt|;
 name|mtx_assert
