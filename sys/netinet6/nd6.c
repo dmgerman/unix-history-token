@@ -642,12 +642,12 @@ define|#
 directive|define
 name|ND
 value|nd_ifinfo[ifp->if_index]
-comment|/* don't initialize if called twice */
+comment|/* 	 * Don't initialize if called twice. 	 * XXX: to detect this, we should choose a member that is never set 	 * before initialization of the ND structure itself.  We formaly used 	 * the linkmtu member, which was not suitable because it could be  	 * initialized via "ifconfig mtu". 	 */
 if|if
 condition|(
 name|ND
 operator|.
-name|linkmtu
+name|basereachable
 condition|)
 return|return;
 name|ND
