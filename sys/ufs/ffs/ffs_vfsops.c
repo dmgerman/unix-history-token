@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mac.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/vnode.h>
 end_include
 
@@ -6565,6 +6571,59 @@ expr_stmt|;
 comment|/* XXX */
 block|}
 comment|/* XXX */
+ifdef|#
+directive|ifdef
+name|MAC
+if|if
+condition|(
+operator|(
+name|mp
+operator|->
+name|mnt_flag
+operator|&
+name|MNT_MULTILABEL
+operator|)
+operator|&&
+name|ip
+operator|->
+name|i_mode
+condition|)
+block|{
+comment|/* 		 * If this vnode is already allocated, and we're running 		 * multi-label, attempt to perform a label association 		 * from the extended attributes on the inode. 		 */
+name|error
+operator|=
+name|mac_associate_vnode_extattr
+argument_list|(
+name|mp
+argument_list|,
+name|vp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
+comment|/* ufs_inactive will release ip->i_devvp ref. */
+name|vput
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+operator|*
+name|vpp
+operator|=
+name|NULL
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+block|}
+endif|#
+directive|endif
 operator|*
 name|vpp
 operator|=

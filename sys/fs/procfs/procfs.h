@@ -158,19 +158,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* MAC */
-end_comment
-
-begin_function_decl
-name|int
-name|procfs_piddir_refreshlabel
-parameter_list|(
-name|PFS_REFRESHLABEL_ARGS
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* Visibility */
 end_comment
 

@@ -844,8 +844,10 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|MAC
-name|mac_create_devfs_vnode
+name|mac_associate_vnode_devfs
 argument_list|(
+name|mp
+argument_list|,
 name|de
 argument_list|,
 name|vp

@@ -502,12 +502,6 @@ argument_list|,
 name|PFS_PROCDEP
 argument_list|)
 expr_stmt|;
-name|dir
-operator|->
-name|pn_refreshlabel
-operator|=
-name|procfs_piddir_refreshlabel
-expr_stmt|;
 name|pfs_create_file
 argument_list|(
 name|dir
