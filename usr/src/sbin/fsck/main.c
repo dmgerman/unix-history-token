@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.27 (Berkeley) %G%"
+literal|"@(#)main.c	5.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1083,6 +1083,15 @@ operator|)
 literal|0
 expr_stmt|;
 name|duplist
+operator|=
+operator|(
+expr|struct
+name|dups
+operator|*
+operator|)
+literal|0
+expr_stmt|;
+name|muldup
 operator|=
 operator|(
 expr|struct
