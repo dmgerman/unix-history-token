@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * define path names  *  * $Id$  */
+comment|/*  * define path names  *  * $Id: pathnames.h,v 1.5 1997/02/22 16:11:52 peter Exp $  */
 end_comment
 
 begin_ifdef
@@ -93,6 +93,20 @@ define|#
 directive|define
 name|_PATH_USEROPT
 value|".ppprc"
+end_define
+
+begin_define
+define|#
+directive|define
+name|_PATH_PPPDISABLED
+value|"/etc/ppp/ppp.disabled"
+end_define
+
+begin_define
+define|#
+directive|define
+name|_PATH_PPPSHELLS
+value|"/etc/ppp/ppp.shells"
 end_define
 
 end_unit
