@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mime.c	8.22 (Berkeley) %G%"
+literal|"@(#)mime.c	8.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2220,6 +2220,18 @@ literal|0x3f
 index|]
 expr_stmt|;
 block|}
+operator|*
+name|bp
+operator|=
+literal|'\0'
+expr_stmt|;
+name|putline
+argument_list|(
+name|buf
+argument_list|,
+name|mci
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -2442,22 +2454,6 @@ name|c2
 operator|&
 literal|0x0f
 index|]
-expr_stmt|;
-operator|*
-name|bp
-operator|=
-literal|'\0'
-expr_stmt|;
-name|putline
-argument_list|(
-name|buf
-argument_list|,
-name|mci
-argument_list|)
-expr_stmt|;
-name|bp
-operator|=
-name|buf
 expr_stmt|;
 block|}
 operator|*
@@ -2740,12 +2736,18 @@ operator|+=
 literal|3
 expr_stmt|;
 block|}
-block|}
 if|if
 condition|(
 name|linelen
 operator|>
 literal|0
+operator|||
+name|boundaries
+index|[
+literal|0
+index|]
+operator|!=
+name|NULL
 condition|)
 block|{
 operator|*
@@ -2760,6 +2762,7 @@ argument_list|,
 name|mci
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
