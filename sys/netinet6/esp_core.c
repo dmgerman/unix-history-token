@@ -3078,51 +3078,7 @@ operator|*
 literal|2
 argument_list|)
 expr_stmt|;
-name|des_ecb_encrypt
-argument_list|(
-operator|(
-name|des_cblock
-operator|*
-operator|)
-name|d
-argument_list|,
-operator|(
-name|des_cblock
-operator|*
-operator|)
-name|d
-argument_list|,
-name|p
-index|[
-literal|2
-index|]
-argument_list|,
-name|DES_DECRYPT
-argument_list|)
-expr_stmt|;
-name|des_ecb_encrypt
-argument_list|(
-operator|(
-name|des_cblock
-operator|*
-operator|)
-name|d
-argument_list|,
-operator|(
-name|des_cblock
-operator|*
-operator|)
-name|d
-argument_list|,
-name|p
-index|[
-literal|1
-index|]
-argument_list|,
-name|DES_ENCRYPT
-argument_list|)
-expr_stmt|;
-name|des_ecb_encrypt
+name|des_ecb3_encrypt
 argument_list|(
 operator|(
 name|des_cblock
@@ -3139,6 +3095,16 @@ argument_list|,
 name|p
 index|[
 literal|0
+index|]
+argument_list|,
+name|p
+index|[
+literal|1
+index|]
+argument_list|,
+name|p
+index|[
+literal|2
 index|]
 argument_list|,
 name|DES_DECRYPT
@@ -3212,7 +3178,7 @@ operator|*
 literal|2
 argument_list|)
 expr_stmt|;
-name|des_ecb_encrypt
+name|des_ecb3_encrypt
 argument_list|(
 operator|(
 name|des_cblock
@@ -3231,44 +3197,10 @@ index|[
 literal|0
 index|]
 argument_list|,
-name|DES_ENCRYPT
-argument_list|)
-expr_stmt|;
-name|des_ecb_encrypt
-argument_list|(
-operator|(
-name|des_cblock
-operator|*
-operator|)
-name|d
-argument_list|,
-operator|(
-name|des_cblock
-operator|*
-operator|)
-name|d
-argument_list|,
 name|p
 index|[
 literal|1
 index|]
-argument_list|,
-name|DES_DECRYPT
-argument_list|)
-expr_stmt|;
-name|des_ecb_encrypt
-argument_list|(
-operator|(
-name|des_cblock
-operator|*
-operator|)
-name|d
-argument_list|,
-operator|(
-name|des_cblock
-operator|*
-operator|)
-name|d
 argument_list|,
 name|p
 index|[
@@ -3382,13 +3314,13 @@ name|soff
 decl_stmt|,
 name|doff
 decl_stmt|;
-comment|/*offset from the head of chain, to head of this mbuf */
+comment|/* offset from the head of chain, to head of this mbuf */
 name|int
 name|sn
 decl_stmt|,
 name|dn
 decl_stmt|;
-comment|/*offset from the head of the mbuf, to meat */
+comment|/* offset from the head of the mbuf, to meat */
 name|size_t
 name|ivoff
 decl_stmt|,
@@ -4414,13 +4346,13 @@ name|soff
 decl_stmt|,
 name|doff
 decl_stmt|;
-comment|/*offset from the head of chain, to head of this mbuf */
+comment|/* offset from the head of chain, to head of this mbuf */
 name|int
 name|sn
 decl_stmt|,
 name|dn
 decl_stmt|;
-comment|/*offset from the head of the mbuf, to meat */
+comment|/* offset from the head of the mbuf, to meat */
 name|size_t
 name|ivoff
 decl_stmt|,
@@ -5860,7 +5792,7 @@ argument_list|,
 name|siz
 argument_list|)
 expr_stmt|;
-comment|/*XXX*/
+comment|/* XXX */
 return|return
 literal|0
 return|;
