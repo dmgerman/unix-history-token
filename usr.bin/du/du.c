@@ -743,6 +743,8 @@ name|savednumber
 operator|=
 name|p
 operator|->
+name|fts_parent
+operator|->
 name|fts_number
 expr_stmt|;
 block|}
