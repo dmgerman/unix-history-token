@@ -1073,7 +1073,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: nilename too long\n"
+literal|"%s: filename too long\n"
 argument_list|,
 name|prog
 argument_list|)
