@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	clock.h	4.7	82/09/12	*/
+comment|/*	clock.h	4.8	82/10/31	*/
 end_comment
 
 begin_comment
@@ -104,18 +104,8 @@ comment|/* good till time becomes negative */
 end_comment
 
 begin_comment
-comment|/*  * Start a 60 HZ clock.  */
+comment|/*  * Has the time-of-day clock wrapped around?  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|clkstart
-parameter_list|()
-value|{\ 	mtpr(NICR, -1000000/hz);
-comment|/* 10 milli-seconds */
-value|\ 	mtpr(ICCS, ICCS_RUN+ICCS_IE+ICCS_TRANS+ICCS_INT+ICCS_ERR);\ }
-end_define
 
 begin_define
 define|#
