@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)input.c	1.11 (Berkeley) 84/12/11"
+literal|"@(#)input.c	1.12 (Berkeley) 84/12/18"
 decl_stmt|;
 end_decl_stmt
 
@@ -2679,8 +2679,10 @@ name|Errorclass
 name|mod2
 parameter_list|()
 block|{
+comment|/* 	 *	for decwrl modula2 compiler (powell) 	 */
 if|if
 condition|(
+operator|(
 operator|(
 name|strcmp
 argument_list|(
@@ -2694,6 +2696,23 @@ argument_list|)
 operator|==
 literal|0
 operator|)
+comment|/* early version */
+operator|||
+operator|(
+name|strcmp
+argument_list|(
+name|wordv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|"File"
+argument_list|)
+operator|==
+literal|0
+operator|)
+operator|)
+comment|/* later version */
 operator|&&
 operator|(
 name|lastchar
