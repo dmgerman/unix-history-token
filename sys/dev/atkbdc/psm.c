@@ -3776,7 +3776,7 @@ name|endprobe
 parameter_list|(
 name|v
 parameter_list|)
-value|{   if (bootverbose) 				\ 				--verbose;   				\                             kbdc_set_device_mask(sc->kbdc, mask);	\ 			    kbdc_lock(sc->kbdc, FALSE);			\ 			    return (v);	     				\ 			}
+value|do {   if (bootverbose)				\ 				--verbose;   				\                             kbdc_set_device_mask(sc->kbdc, mask);	\ 			    kbdc_lock(sc->kbdc, FALSE);			\ 			    return (v);	     				\ 			} while (0)
 end_define
 
 begin_function
