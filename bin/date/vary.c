@@ -240,6 +240,8 @@ parameter_list|,
 name|char
 parameter_list|,
 name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -258,18 +260,10 @@ name|char
 name|type
 parameter_list|)
 block|{
-name|int
+name|time_t
 name|ret
 decl_stmt|;
-comment|/*    * Don't let mktime have a specific tm_isdst value.  If we do,    * it gets confused when we ``vary'' in and out of Summer time    */
-name|t
-operator|->
-name|tm_isdst
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-if|if
+while|while
 condition|(
 operator|(
 name|ret
@@ -295,9 +289,7 @@ name|tm_year
 operator|<
 literal|138
 condition|)
-comment|/*      * If mktime() fails, adjust by an hour.  If we're actually      * bridging a savings of several hours, we'll recurse several      * times.      */
-name|ret
-operator|=
+comment|/* While mktime() fails, adjust by an hour */
 name|adjhour
 argument_list|(
 name|t
@@ -311,6 +303,8 @@ else|:
 literal|'+'
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -667,6 +661,9 @@ name|type
 parameter_list|,
 name|int
 name|val
+parameter_list|,
+name|int
+name|mk
 parameter_list|)
 block|{
 switch|switch
@@ -735,6 +732,9 @@ comment|/* struct tm holds years since 1900 */
 break|break;
 block|}
 return|return
+operator|!
+name|mk
+operator|||
 name|domktime
 argument_list|(
 name|t
@@ -766,6 +766,9 @@ name|val
 parameter_list|,
 name|int
 name|istext
+parameter_list|,
+name|int
+name|mk
 parameter_list|)
 block|{
 if|if
@@ -841,6 +844,8 @@ name|val
 operator|)
 operator|/
 literal|12
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 return|return
@@ -931,6 +936,8 @@ argument_list|,
 name|val
 operator|/
 literal|12
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 return|return
@@ -959,6 +966,8 @@ argument_list|,
 literal|'-'
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 return|return
@@ -1000,6 +1009,9 @@ name|val
 expr_stmt|;
 block|}
 return|return
+operator|!
+name|mk
+operator|||
 name|domktime
 argument_list|(
 name|t
@@ -1028,6 +1040,9 @@ name|type
 parameter_list|,
 name|int
 name|val
+parameter_list|,
+name|int
+name|mk
 parameter_list|)
 block|{
 name|int
@@ -1092,6 +1107,8 @@ argument_list|,
 literal|1
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 return|return
@@ -1153,6 +1170,8 @@ argument_list|,
 literal|1
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 return|return
@@ -1209,6 +1228,9 @@ return|;
 break|break;
 block|}
 return|return
+operator|!
+name|mk
+operator|||
 name|domktime
 argument_list|(
 name|t
@@ -1240,6 +1262,9 @@ name|val
 parameter_list|,
 name|int
 name|istext
+parameter_list|,
+name|int
+name|mk
 parameter_list|)
 block|{
 if|if
@@ -1307,6 +1332,8 @@ argument_list|,
 literal|'+'
 argument_list|,
 name|val
+argument_list|,
+literal|0
 argument_list|)
 return|;
 case|case
@@ -1364,6 +1391,8 @@ argument_list|,
 literal|'-'
 argument_list|,
 name|val
+argument_list|,
+literal|0
 argument_list|)
 return|;
 default|default:
@@ -1387,6 +1416,8 @@ operator|->
 name|tm_wday
 operator|-
 name|val
+argument_list|,
+literal|0
 argument_list|)
 return|;
 elseif|else
@@ -1420,6 +1451,8 @@ operator|-
 name|t
 operator|->
 name|tm_wday
+argument_list|,
+literal|0
 argument_list|)
 return|;
 block|}
@@ -1444,9 +1477,11 @@ name|type
 parameter_list|,
 name|int
 name|val
+parameter_list|,
+name|int
+name|mk
 parameter_list|)
 block|{
-comment|/*    * We've got to be careful here in case    *   domktime() calls    *   adjhour() calls    *   adjday() calls    *   domktime() calls    *   adjhour() and recurses forever.  It's vital that we've adjusted our    *   number of hours before calling adjday().    */
 if|if
 condition|(
 name|val
@@ -1510,6 +1545,8 @@ argument_list|,
 literal|'+'
 argument_list|,
 name|days
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 return|return
@@ -1570,9 +1607,9 @@ name|t
 argument_list|,
 literal|'-'
 argument_list|,
-name|val
-operator|/
-literal|24
+name|days
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 return|return
@@ -1598,6 +1635,9 @@ name|val
 expr_stmt|;
 block|}
 return|return
+operator|!
+name|mk
+operator|||
 name|domktime
 argument_list|(
 name|t
@@ -1626,6 +1666,9 @@ name|type
 parameter_list|,
 name|int
 name|val
+parameter_list|,
+name|int
+name|mk
 parameter_list|)
 block|{
 if|if
@@ -1668,6 +1711,8 @@ name|val
 operator|)
 operator|/
 literal|60
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 return|return
@@ -1719,6 +1764,8 @@ argument_list|,
 name|val
 operator|/
 literal|60
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 return|return
@@ -1747,6 +1794,8 @@ argument_list|,
 literal|'-'
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 return|return
@@ -1783,6 +1832,9 @@ name|val
 expr_stmt|;
 block|}
 return|return
+operator|!
+name|mk
+operator|||
 name|domktime
 argument_list|(
 name|t
@@ -1811,6 +1863,9 @@ name|type
 parameter_list|,
 name|int
 name|val
+parameter_list|,
+name|int
+name|mk
 parameter_list|)
 block|{
 if|if
@@ -1853,6 +1908,8 @@ name|val
 operator|)
 operator|/
 literal|60
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 return|return
@@ -1904,6 +1961,8 @@ argument_list|,
 name|val
 operator|/
 literal|60
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 return|return
@@ -1932,6 +1991,8 @@ argument_list|,
 literal|'-'
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 return|return
@@ -1968,6 +2029,9 @@ name|val
 expr_stmt|;
 block|}
 return|return
+operator|!
+name|mk
+operator|||
 name|domktime
 argument_list|(
 name|t
@@ -2077,6 +2141,19 @@ name|v
 return|;
 if|if
 condition|(
+name|type
+operator|==
+literal|'\0'
+condition|)
+name|t
+operator|->
+name|tm_isdst
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+if|if
+condition|(
 name|strspn
 argument_list|(
 name|arg
@@ -2118,6 +2195,8 @@ argument_list|,
 name|val
 argument_list|,
 literal|1
+argument_list|,
+literal|1
 argument_list|)
 condition|)
 return|return
@@ -2153,6 +2232,8 @@ argument_list|,
 name|type
 argument_list|,
 name|val
+argument_list|,
+literal|1
 argument_list|,
 literal|1
 argument_list|)
@@ -2203,6 +2284,8 @@ argument_list|,
 name|type
 argument_list|,
 name|val
+argument_list|,
+literal|1
 argument_list|)
 condition|)
 return|return
@@ -2222,6 +2305,8 @@ argument_list|,
 name|type
 argument_list|,
 name|val
+argument_list|,
+literal|1
 argument_list|)
 condition|)
 return|return
@@ -2241,6 +2326,8 @@ argument_list|,
 name|type
 argument_list|,
 name|val
+argument_list|,
+literal|1
 argument_list|)
 condition|)
 return|return
@@ -2250,6 +2337,13 @@ break|break;
 case|case
 literal|'d'
 case|:
+name|t
+operator|->
+name|tm_isdst
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2260,6 +2354,8 @@ argument_list|,
 name|type
 argument_list|,
 name|val
+argument_list|,
+literal|1
 argument_list|)
 condition|)
 return|return
@@ -2269,6 +2365,13 @@ break|break;
 case|case
 literal|'w'
 case|:
+name|t
+operator|->
+name|tm_isdst
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2281,6 +2384,8 @@ argument_list|,
 name|val
 argument_list|,
 literal|0
+argument_list|,
+literal|1
 argument_list|)
 condition|)
 return|return
@@ -2290,6 +2395,13 @@ break|break;
 case|case
 literal|'m'
 case|:
+name|t
+operator|->
+name|tm_isdst
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2302,6 +2414,8 @@ argument_list|,
 name|val
 argument_list|,
 literal|0
+argument_list|,
+literal|1
 argument_list|)
 condition|)
 return|return
@@ -2311,6 +2425,13 @@ break|break;
 case|case
 literal|'y'
 case|:
+name|t
+operator|->
+name|tm_isdst
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -2321,6 +2442,8 @@ argument_list|,
 name|type
 argument_list|,
 name|val
+argument_list|,
+literal|1
 argument_list|)
 condition|)
 return|return
