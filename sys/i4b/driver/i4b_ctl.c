@@ -783,7 +783,7 @@ operator|)
 return|;
 endif|#
 directive|endif
-endif|DO_I4B_DEBUG
+comment|/* DO_I4B_DEBUG */
 block|}
 end_function
 
