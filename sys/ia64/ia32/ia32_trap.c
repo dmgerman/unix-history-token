@@ -119,6 +119,26 @@ directive|include
 file|<i386/include/psl.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITNESS
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|syscallnames
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|void
