@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fortune.c	5.4 (Berkeley) %G%"
+literal|"@(#)fortune.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -32,51 +32,94 @@ begin_comment
 comment|/* fortune.c		 Larn is copyrighted 1986 by Noah Morgan. */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"header.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"pathnames.h"
-end_include
-
 begin_comment
 comment|/*  * function to return a random fortune from the fortune file  */
 end_comment
+
+begin_decl_stmt
+name|char
+modifier|*
+name|flines
+index|[]
+init|=
+block|{
+literal|"gem value = gem * 2 ^ perfection"
+block|,
+literal|"sitting down can have unexpected results"
+block|,
+literal|"don't pry into the affairs of others"
+block|,
+literal|"drinking can be hazardous to your health"
+block|,
+literal|"beware of the gusher!"
+block|,
+literal|"some monsters are greedy"
+block|,
+literal|"nymphs have light fingers"
+block|,
+literal|"try kissing a disenchantress!"
+block|,
+literal|"hammers and brains don't mix"
+block|,
+literal|"what does a potion of cure dianthroritis taste like?"
+block|,
+literal|"hit point gain/loss when raising a level depends on constitution"
+block|,
+literal|"healing a mighty wizard can be exhilarating"
+block|,
+literal|"be sure to pay your taxes"
+block|,
+literal|"are Vampires afraid of something?"
+block|,
+literal|"some dragons can fly"
+block|,
+literal|"dos thou strive for perfection?"
+block|,
+literal|"patience is a virtue, unless your daughter dies"
+block|,
+literal|"what does the Eye of Larn see in its guardian?"
+block|,
+literal|"a level 25 player casts like crazy!"
+block|,
+literal|"energy rings affect spell regeneration"
+block|,
+literal|"difficulty affects regeneration"
+block|,
+literal|"control of the pesty spirits is most helpful"
+block|,
+literal|"don't fall into a bottomless pit"
+block|,
+literal|"dexterity allows you to carry more"
+block|,
+literal|"you can get 2 points of WC for the price of one"
+block|,
+literal|"never enter the dungeon naked!  the monsters will laugh at you!"
+block|,
+literal|"did someone put itching powder in your armor?"
+block|,
+literal|"you klutz!"
+block|,
+literal|"avoid opening doors.  you never know whats on the other side."
+block|,
+literal|"infinite regeneration ---> temptation"
+block|,
+literal|"the greatest weapon in the game has not the highest Weapon Class"
+block|,
+literal|"you can't buy the most powerful scroll"
+block|,
+literal|"identify things before you use them"
+block|,
+literal|"there's more than one way through a wall"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|NFORTUNES
+value|34
+end_define
 
 begin_function
 name|char
@@ -84,47 +127,6 @@ modifier|*
 name|fortune
 parameter_list|()
 block|{
-specifier|static
-name|int
-name|fd
-init|=
-operator|-
-literal|1
-decl_stmt|;
-comment|/* true if we have load the fortune info */
-specifier|static
-name|int
-name|nlines
-decl_stmt|;
-comment|/* # lines in fortune database */
-specifier|register
-name|int
-name|tmp
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|p
-decl_stmt|;
-name|char
-modifier|*
-name|base
-decl_stmt|,
-modifier|*
-modifier|*
-name|flines
-decl_stmt|;
-name|struct
-name|stat
-name|sb
-decl_stmt|;
-if|if
-condition|(
-name|fd
-operator|!=
-operator|-
-literal|1
-condition|)
 return|return
 operator|(
 name|flines
@@ -132,257 +134,8 @@ index|[
 name|random
 argument_list|()
 operator|%
-name|nlines
+name|NFORTUNES
 index|]
-operator|)
-return|;
-if|if
-condition|(
-operator|(
-name|fd
-operator|=
-name|open
-argument_list|(
-name|_PATH_FORTS
-argument_list|,
-name|O_RDONLY
-argument_list|)
-operator|)
-operator|<
-literal|0
-condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
-comment|/* Find out how big fortune file is and get memory for it. */
-if|if
-condition|(
-operator|(
-name|fstat
-argument_list|(
-name|fd
-argument_list|,
-operator|&
-name|sb
-argument_list|)
-operator|<
-literal|0
-operator|)
-operator|||
-operator|(
-operator|(
-name|base
-operator|=
-name|malloc
-argument_list|(
-literal|1
-operator|+
-name|sb
-operator|.
-name|st_size
-argument_list|)
-operator|)
-operator|==
-name|NULL
-operator|)
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
-goto|goto
-name|bad
-goto|;
-block|}
-comment|/* Read in the entire fortune file. */
-if|if
-condition|(
-name|read
-argument_list|(
-name|fd
-argument_list|,
-name|base
-argument_list|,
-name|sb
-operator|.
-name|st_size
-argument_list|)
-operator|!=
-name|sb
-operator|.
-name|st_size
-condition|)
-block|{
-name|free
-argument_list|(
-name|base
-argument_list|)
-expr_stmt|;
-goto|goto
-name|bad
-goto|;
-block|}
-name|base
-index|[
-name|sb
-operator|.
-name|st_size
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-comment|/* Final NULL termination. */
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Count up all the lines (and NULL terminate) to know memory 	 * needs. 	 */
-for|for
-control|(
-name|p
-operator|=
-name|base
-init|;
-name|p
-operator|<
-name|base
-operator|+
-name|sb
-operator|.
-name|st_size
-condition|;
-name|p
-operator|++
-control|)
-if|if
-condition|(
-operator|*
-name|p
-operator|==
-literal|'\n'
-condition|)
-block|{
-operator|*
-name|p
-operator|=
-literal|'\0'
-expr_stmt|;
-operator|++
-name|nlines
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|nlines
-operator|<=
-literal|0
-condition|)
-block|{
-name|free
-argument_list|(
-name|base
-argument_list|)
-expr_stmt|;
-goto|goto
-name|bad
-goto|;
-block|}
-comment|/* Get memory for array of pointers to each fortune. */
-if|if
-condition|(
-operator|(
-name|flines
-operator|=
-name|malloc
-argument_list|(
-name|nlines
-operator|*
-sizeof|sizeof
-argument_list|(
-name|char
-operator|*
-argument_list|)
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-block|{
-name|free
-argument_list|(
-name|base
-argument_list|)
-expr_stmt|;
-goto|goto
-name|bad
-goto|;
-block|}
-comment|/* Now assign each pointer to a line. */
-for|for
-control|(
-name|p
-operator|=
-name|base
-operator|,
-name|tmp
-operator|=
-literal|0
-init|;
-name|tmp
-operator|<
-name|nlines
-condition|;
-operator|++
-name|tmp
-control|)
-block|{
-name|flines
-index|[
-name|tmp
-index|]
-operator|=
-name|p
-expr_stmt|;
-while|while
-condition|(
-operator|*
-name|p
-operator|++
-condition|)
-empty_stmt|;
-block|}
-return|return
-operator|(
-name|flines
-index|[
-name|random
-argument_list|()
-operator|%
-name|nlines
-index|]
-operator|)
-return|;
-name|bad
-label|:
-name|fd
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-return|return
-operator|(
-name|NULL
 operator|)
 return|;
 block|}
