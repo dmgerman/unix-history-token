@@ -1511,6 +1511,23 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+name|struct
+name|sockaddr
+modifier|*
+name|in_sockaddr
+parameter_list|(
+name|in_port_t
+name|port
+parameter_list|,
+name|struct
+name|in_addr
+modifier|*
+name|addr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|in_pcbremlists
 parameter_list|(
