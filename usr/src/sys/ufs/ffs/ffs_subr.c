@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_subr.c	8.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ffs_subr.c	8.5 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -15,12 +15,11 @@ directive|ifndef
 name|KERNEL
 end_ifndef
 
-begin_typedef
-typedef|typedef
-name|u_int32_t
-name|ufs_daddr_t
-typedef|;
-end_typedef
+begin_include
+include|#
+directive|include
+file|<ufs/ufs/dinode.h>
+end_include
 
 begin_include
 include|#
