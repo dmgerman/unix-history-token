@@ -346,6 +346,11 @@ return|;
 block|}
 name|vm
 operator|->
+name|PTD
+operator|=
+literal|0
+name|vm
+operator|->
 name|IdlePTD
 operator|=
 literal|0
