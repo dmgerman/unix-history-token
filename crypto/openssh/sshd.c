@@ -535,7 +535,7 @@ name|int
 name|magic_hash
 parameter_list|(
 name|struct
-name|sockaddr
+name|sockaddr_storage
 modifier|*
 name|sa
 parameter_list|)
@@ -3051,9 +3051,8 @@ name|magic_connections
 index|[
 name|magic_hash
 argument_list|(
-name|ai
-operator|->
-name|ai_addr
+operator|&
+name|from
 argument_list|)
 index|]
 expr_stmt|;
