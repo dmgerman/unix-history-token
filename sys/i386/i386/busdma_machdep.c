@@ -2503,13 +2503,6 @@ comment|/* XXX better return value here? */
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|BUS_DMAMAP_NSEGS
-value|((64 * 1024) / PAGE_SIZE + 1)
-end_define
-
 begin_comment
 comment|/*  * Map the buffer buf into bus space using the dmamap map.  */
 end_comment
