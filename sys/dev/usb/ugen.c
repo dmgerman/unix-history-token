@@ -5573,20 +5573,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-comment|/* make the new devices */
-name|ugen_make_devnodes
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* change setting */
 name|err
 operator|=
@@ -5702,6 +5688,20 @@ operator|=
 name|iface
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+comment|/* make the new devices */
+name|ugen_make_devnodes
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
