@@ -242,7 +242,7 @@ comment|/* counter_mask */
 literal|0
 block|,
 comment|/* frequency */
-literal|"alpha"
+literal|"IA64 ITC"
 comment|/* name */
 block|}
 decl_stmt|;
@@ -439,16 +439,16 @@ block|{
 name|u_int32_t
 name|freq
 decl_stmt|;
-if|if
-condition|(
-name|clockdev
-operator|==
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"cpu_initclocks: no clock attached"
-argument_list|)
+if|#
+directive|if
+literal|0
+block|if (clockdev == NULL) 		panic("cpu_initclocks: no clock attached");
+endif|#
+directive|endif
+comment|/* 	 * We use cr.itc and cr.itm to implement a 1024hz clock. 	 */
+name|hz
+operator|=
+literal|1024
 expr_stmt|;
 name|tick
 operator|=
@@ -509,14 +509,34 @@ literal|1
 operator|)
 expr_stmt|;
 block|}
-comment|/* 	 * Establish the clock interrupt; it's a special case. 	 * 	 * We establish the clock interrupt this late because if 	 * we do it at clock attach time, we may have never been at 	 * spl0() since taking over the system.  Some versions of 	 * PALcode save a clock interrupt, which would get delivered 	 * when we spl0() in autoconf.c.  If established the clock 	 * interrupt handler earlier, that interrupt would go to 	 * hardclock, which would then fall over because p->p_stats 	 * isn't set at that time. 	 */
+comment|/* 	 * XXX we should call SAL_FREQ_BASE_INTERVAL_TIMER here. 	 */
+name|cycles_per_sec
+operator|=
+literal|700000000
+expr_stmt|;
+name|ia64_set_itm
+argument_list|(
+name|ia64_get_itc
+argument_list|()
+operator|+
+operator|(
+name|cycles_per_sec
+operator|+
+name|hz
+operator|/
+literal|2
+operator|)
+operator|/
+name|hz
+argument_list|)
+expr_stmt|;
 name|freq
 operator|=
 name|cycles_per_sec
 expr_stmt|;
 name|last_time
 operator|=
-name|ia64_read_itc
+name|ia64_get_itc
 argument_list|()
 expr_stmt|;
 name|scaled_ticks_per_cycle
@@ -556,12 +576,13 @@ name|stathz
 operator|=
 literal|128
 expr_stmt|;
+if|#
+directive|if
+literal|0
 comment|/* 	 * Get the clock started. 	 */
-name|CLOCK_INIT
-argument_list|(
-name|clockdev
-argument_list|)
-expr_stmt|;
+block|CLOCK_INIT(clockdev);
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -642,7 +663,7 @@ block|}
 comment|/* Start keeping track of the PCC. */
 name|start_pcc
 operator|=
-name|ia64_read_itc
+name|ia64_get_itc
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Wait for the mc146818A seconds counter to change. 	 */
@@ -680,7 +701,7 @@ block|}
 comment|/* 	 * Read the PCC again to work out frequency. 	 */
 name|stop_pcc
 operator|=
-name|ia64_read_itc
+name|ia64_get_itc
 argument_list|()
 expr_stmt|;
 if|if
@@ -741,7 +762,7 @@ block|{
 name|u_int32_t
 name|now
 init|=
-name|ia64_read_itc
+name|ia64_get_itc
 argument_list|()
 decl_stmt|;
 name|u_int32_t
@@ -1505,7 +1526,7 @@ name|tc
 parameter_list|)
 block|{
 return|return
-name|ia64_read_itc
+name|ia64_get_itc
 argument_list|()
 return|;
 block|}

@@ -774,7 +774,7 @@ begin_function
 specifier|static
 name|__inline
 name|u_int64_t
-name|ia64_read_itc
+name|ia64_get_itc
 parameter_list|(
 name|void
 parameter_list|)
@@ -788,6 +788,51 @@ name|result
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Read the value of ar.itm.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|u_int64_t
+name|ia64_get_itm
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|u_int64_t
+name|result
+decl_stmt|;
+asm|__asm __volatile("mov %0=cr.itm" : "=r" (result));
+return|return
+name|result
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Write the value of ar.itm.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|ia64_set_itm
+parameter_list|(
+name|u_int64_t
+name|v
+parameter_list|)
+block|{
+asm|__asm __volatile("mov cr.itm=%0" :: "r" (v));
+block|}
+end_function
+
+begin_comment
+comment|/*  * Write a region register.  */
+end_comment
 
 begin_function
 specifier|static

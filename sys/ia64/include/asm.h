@@ -168,17 +168,9 @@ parameter_list|(
 name|_name_
 parameter_list|,
 name|_n_args_
-parameter_list|,
-name|_n_locals_
-parameter_list|,
-name|_n_outputs_
-parameter_list|,			\
-name|_pfs_reg_
-parameter_list|,
-name|_rp_reg_
 parameter_list|)
 define|\
-value|.globl	_name_;							\ 	.proc	_name_;							\ _name_:;								\ 	alloc	_pfs_reg_=ar.pfs,_n_args_,_n_locals_,_n_outputs_,0;;	\ 	mov	_rp_reg_=rp						\ 	MCOUNT
+value|.globl	_name_;				\ 	.proc	_name_;				\ _name_:;					\ 	.regstk	_n_args_, 0, 0, 0		\ 	MCOUNT
 end_define
 
 begin_define
@@ -189,17 +181,9 @@ parameter_list|(
 name|_name_
 parameter_list|,
 name|_n_args_
-parameter_list|,
-name|_n_locals_
-parameter_list|,
-name|_n_outputs_
-parameter_list|,	\
-name|_pfs_reg_
-parameter_list|,
-name|_rp_reg_
 parameter_list|)
 define|\
-value|.globl	_name_;							\ 	.proc	_name_;							\ _name_:;								\ 	alloc	_pfs_reg_=ar.pfs,_n_args_,_n_locals_,_n_outputs_,0;;	\ 	mov	_rp_reg_=rp
+value|.globl	_name_;				\ 	.proc	_name_;				\ _name_:;					\ 	.regstk	_n_args_, 0, 0, 0
 end_define
 
 begin_comment
@@ -214,17 +198,9 @@ parameter_list|(
 name|_name_
 parameter_list|,
 name|_n_args_
-parameter_list|,
-name|_n_locals_
-parameter_list|,
-name|_n_outputs_
-parameter_list|,		\
-name|_pfs_reg_
-parameter_list|,
-name|_rp_reg_
 parameter_list|)
 define|\
-value|.proc	_name_;							\ _name_:;								\ 	alloc	_pfs_reg_=ar.pfs,_n_args_,_n_locals_,_n_outputs_,0;;	\ 	mov	_rp_reg_=rp;;						\ 	MCOUNT
+value|.proc	_name_;				\ _name_:;					\ 	.regstk	_n_args_, 0, 0, 0		\ 	MCOUNT
 end_define
 
 begin_comment

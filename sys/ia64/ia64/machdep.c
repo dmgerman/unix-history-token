@@ -346,14 +346,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|struct
-name|user
-modifier|*
-name|proc0paddr
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|char
 name|machine
 index|[]
@@ -2504,8 +2496,6 @@ name|proc0
 operator|.
 name|p_addr
 operator|=
-name|proc0paddr
-operator|=
 operator|(
 expr|struct
 name|user
@@ -2564,31 +2554,10 @@ comment|/* 	 * Initialize the virtual memory system, and set the 	 * page table 
 name|pmap_bootstrap
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Initialize the rest of proc 0's PCB, and cache its physical 	 * address. 	 */
+comment|/* 	 * Initialize the rest of proc 0's PCB. 	 * 	 * Set the kernel sp, reserving space for an (empty) trapframe, 	 * and make proc0's trapframe pointer point to it for sanity. 	 * Initialise proc0's backing store to start after u area. 	 */
 name|proc0
 operator|.
-name|p_md
-operator|.
-name|md_pcbpaddr
-operator|=
-operator|(
-expr|struct
-name|pcb
-operator|*
-operator|)
-name|IA64_RR_MASK
-argument_list|(
-operator|(
-name|vm_offset_t
-operator|)
-operator|&
-name|proc0paddr
-operator|->
-name|u_pcb
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Set the kernel sp, reserving space for an (empty) trapframe, 	 * and make proc0's trapframe pointer point to it for sanity. 	 */
-name|proc0paddr
+name|p_addr
 operator|->
 name|u_pcb
 operator|.
@@ -2597,7 +2566,9 @@ operator|=
 operator|(
 name|u_int64_t
 operator|)
-name|proc0paddr
+name|proc0
+operator|.
+name|p_addr
 operator|+
 name|USPACE
 operator|-
@@ -2605,6 +2576,27 @@ sizeof|sizeof
 argument_list|(
 expr|struct
 name|trapframe
+argument_list|)
+operator|-
+literal|16
+expr_stmt|;
+name|proc0
+operator|.
+name|p_addr
+operator|->
+name|u_pcb
+operator|.
+name|pcb_bspstore
+operator|=
+call|(
+name|u_int64_t
+call|)
+argument_list|(
+name|proc0
+operator|.
+name|p_addr
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 name|proc0
@@ -2618,11 +2610,17 @@ expr|struct
 name|trapframe
 operator|*
 operator|)
-name|proc0paddr
+operator|(
+name|proc0
+operator|.
+name|p_addr
 operator|->
 name|u_pcb
 operator|.
 name|pcb_sp
+operator|+
+literal|16
+operator|)
 expr_stmt|;
 name|PCPU_SET
 argument_list|(
@@ -2897,6 +2895,11 @@ literal|1
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * Force verbose mode for a while. 	 */
+name|bootverbose
+operator|=
+literal|1
+expr_stmt|;
 comment|/* 	 * Initialize debuggers, and break into them if appropriate. 	 */
 ifdef|#
 directive|ifdef
@@ -3970,10 +3973,11 @@ name|FRAME_SP
 index|]
 operator|=
 operator|(
-name|unsigned
-name|long
+name|u_int64_t
 operator|)
 name|sfp
+operator|-
+literal|16
 expr_stmt|;
 ifdef|#
 directive|ifdef

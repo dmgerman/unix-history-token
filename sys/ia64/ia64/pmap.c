@@ -2100,30 +2100,6 @@ name|PG_WRITEABLE
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * The pcb may be at a different physical address now so cache the 	 * new address. 	 */
-name|p
-operator|->
-name|p_md
-operator|.
-name|md_pcbpaddr
-operator|=
-operator|(
-name|void
-operator|*
-operator|)
-name|vtophys
-argument_list|(
-operator|(
-name|vm_offset_t
-operator|)
-operator|&
-name|p
-operator|->
-name|p_addr
-operator|->
-name|u_pcb
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

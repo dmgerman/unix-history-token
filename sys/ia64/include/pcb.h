@@ -52,6 +52,25 @@ name|ia64_fpreg
 name|pcb_f5
 decl_stmt|;
 name|u_int64_t
+name|pcb_b0
+decl_stmt|;
+comment|/* really restart address */
+name|u_int64_t
+name|pcb_b1
+decl_stmt|;
+name|u_int64_t
+name|pcb_b2
+decl_stmt|;
+name|u_int64_t
+name|pcb_b3
+decl_stmt|;
+name|u_int64_t
+name|pcb_b4
+decl_stmt|;
+name|u_int64_t
+name|pcb_b5
+decl_stmt|;
+name|u_int64_t
 name|pcb_old_unat
 decl_stmt|;
 comment|/* caller's ar.unat */
@@ -76,16 +95,10 @@ name|pcb_pr
 decl_stmt|;
 comment|/* predicates */
 name|u_int64_t
-name|pcb_iip
-decl_stmt|;
-comment|/* address to restart */
-name|unsigned
-name|long
 name|pcb_onfault
 decl_stmt|;
 comment|/* for copy faults */
-name|unsigned
-name|long
+name|u_int64_t
 name|pcb_accessaddr
 decl_stmt|;
 comment|/* for [fs]uswintr */

@@ -40,12 +40,6 @@ modifier|*
 name|md_tf
 decl_stmt|;
 comment|/* trap/syscall registers */
-name|struct
-name|pcb
-modifier|*
-name|md_pcbpaddr
-decl_stmt|;
-comment|/* phys addr of the pcb */
 block|}
 struct|;
 end_struct

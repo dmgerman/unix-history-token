@@ -275,30 +275,6 @@ operator||
 name|MDP_UAC_MASK
 operator|)
 expr_stmt|;
-comment|/* 	 * Cache the physical address of the pcb, so we can 	 * swap to it easily. 	 */
-name|p2
-operator|->
-name|p_md
-operator|.
-name|md_pcbpaddr
-operator|=
-operator|(
-name|void
-operator|*
-operator|)
-name|vtophys
-argument_list|(
-operator|(
-name|vm_offset_t
-operator|)
-operator|&
-name|p2
-operator|->
-name|p_addr
-operator|->
-name|u_pcb
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Copy floating point state from the FP chip to the PCB 	 * if this process has state stored there. 	 */
 name|ia64_fpstate_save
 argument_list|(
@@ -320,12 +296,6 @@ name|p_addr
 operator|->
 name|u_pcb
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|p2->p_addr->u_pcb.pcb_hw.apcb_usp = ia64_pal_rdusp(); 	p2->p_addr->u_pcb.pcb_hw.apcb_flags&= ~IA64_PCB_FLAGS_FEN;
-endif|#
-directive|endif
 comment|/* 	 * Set the floating point state. 	 */
 if|#
 directive|if
@@ -370,6 +340,19 @@ name|struct
 name|trapframe
 modifier|*
 name|p2tf
+decl_stmt|;
+name|u_int64_t
+name|bspstore
+decl_stmt|,
+modifier|*
+name|p1bs
+decl_stmt|,
+modifier|*
+name|p2bs
+decl_stmt|,
+name|rnatloc
+decl_stmt|,
+name|rnat
 decl_stmt|;
 comment|/* 		 * Pick a stack pointer, leaving room for a trapframe; 		 * copy trapframe from parent so return to user mode 		 * will be to right address, with correct registers. 		 */
 name|p2tf
@@ -425,26 +408,243 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Set up return-value registers as fork() libc stub expects. 		 */
-if|#
-directive|if
+name|p2tf
+operator|->
+name|tf_r
+index|[
+name|FRAME_R8
+index|]
+operator|=
 literal|0
-block|p2tf->tf_regs[FRAME_V0] = 0;
+expr_stmt|;
 comment|/* child's pid (linux) 	*/
-block|p2tf->tf_regs[FRAME_A3] = 0;
+name|p2tf
+operator|->
+name|tf_r
+index|[
+name|FRAME_R9
+index|]
+operator|=
+literal|0
+expr_stmt|;
 comment|/* no error 		*/
-block|p2tf->tf_regs[FRAME_A4] = 1;
+name|p2tf
+operator|->
+name|tf_r
+index|[
+name|FRAME_R10
+index|]
+operator|=
+literal|1
+expr_stmt|;
 comment|/* is child (FreeBSD) 	*/
-comment|/* 		 * Arrange for continuation at child_return(), which 		 * will return to exception_return().  Note that the child 		 * process doesn't stay in the kernel for long! 		 *  		 * This is an inlined version of cpu_set_kpc. 		 */
-block|up->u_pcb.pcb_hw.apcb_ksp = (u_int64_t)p2tf;	 		up->u_pcb.pcb_context[0] = 		    (u_int64_t)child_return;
-comment|/* s0: pc */
-block|up->u_pcb.pcb_context[1] = 		    (u_int64_t)exception_return;
-comment|/* s1: ra */
-block|up->u_pcb.pcb_context[2] = (u_long) p2;
-comment|/* s2: a0 */
-block|up->u_pcb.pcb_context[7] = 		    (u_int64_t)switch_trampoline;
-comment|/* ra: assembly magic */
-endif|#
-directive|endif
+comment|/* 		 * Turn off RSE for a moment and work out our current 		 * ar.bspstore. This assumes that p1==curproc. Also 		 * flush dirty regs to ensure that the user's stacked 		 * regs are written out to backing store. 		 * 		 * We could cope with p1!=curproc by digging values 		 * out of its PCB but I don't see the point since 		 * current usage never allows it. 		 */
+asm|__asm __volatile("mov ar.rsc=0;;");
+asm|__asm __volatile("flushrs;;" ::: "memory");
+asm|__asm __volatile("mov %0=ar.bspstore" : "=r"(bspstore));
+name|p1bs
+operator|=
+operator|(
+name|u_int64_t
+operator|*
+operator|)
+operator|(
+name|p1
+operator|->
+name|p_addr
+operator|+
+literal|1
+operator|)
+expr_stmt|;
+name|p2bs
+operator|=
+operator|(
+name|u_int64_t
+operator|*
+operator|)
+operator|(
+name|p2
+operator|->
+name|p_addr
+operator|+
+literal|1
+operator|)
+expr_stmt|;
+comment|/* 		 * Copy enough of p1's backing store to include all 		 * the user's stacked regs. 		 */
+name|bcopy
+argument_list|(
+name|p1bs
+argument_list|,
+name|p2bs
+argument_list|,
+operator|(
+name|p1
+operator|->
+name|p_md
+operator|.
+name|md_tf
+operator|->
+name|tf_ar_bsp
+operator|-
+name|p1
+operator|->
+name|p_md
+operator|.
+name|md_tf
+operator|->
+name|tf_ar_bspstore
+operator|)
+argument_list|)
+expr_stmt|;
+comment|/* 		 * To calculate the ar.rnat for p2, we need to decide 		 * if p1's ar.bspstore has advanced past the place 		 * where the last ar.rnat which covers the user's 		 * saved registers would be placed. If so, we read 		 * that one from memory, otherwise we take p1's 		 * current ar.rnat. 		 */
+name|rnatloc
+operator|=
+call|(
+name|u_int64_t
+call|)
+argument_list|(
+name|p1bs
+operator|+
+operator|(
+name|p1
+operator|->
+name|p_md
+operator|.
+name|md_tf
+operator|->
+name|tf_ar_bsp
+operator|-
+name|p1
+operator|->
+name|p_md
+operator|.
+name|md_tf
+operator|->
+name|tf_ar_bspstore
+operator|)
+argument_list|)
+expr_stmt|;
+name|rnatloc
+operator||=
+literal|0x1f8
+expr_stmt|;
+if|if
+condition|(
+name|bspstore
+operator|>
+name|rnatloc
+condition|)
+name|rnat
+operator|=
+operator|*
+operator|(
+name|u_int64_t
+operator|*
+operator|)
+name|rnatloc
+expr_stmt|;
+else|else
+asm|__asm __volatile("mov %0=ar.rnat;;" : "=r"(rnat));
+comment|/* 		 * Switch the RSE back on. 		 */
+asm|__asm __volatile("mov ar.rsc=3;;");
+comment|/* 		 * Setup the child's pcb so that its ar.bspstore 		 * starts just above the region which we copied. This 		 * should work since the child will normally return 		 * straight into exception_return. 		 */
+name|up
+operator|->
+name|u_pcb
+operator|.
+name|pcb_bspstore
+operator|=
+call|(
+name|u_int64_t
+call|)
+argument_list|(
+name|p2bs
+operator|+
+operator|(
+name|p1
+operator|->
+name|p_md
+operator|.
+name|md_tf
+operator|->
+name|tf_ar_bsp
+operator|-
+name|p1
+operator|->
+name|p_md
+operator|.
+name|md_tf
+operator|->
+name|tf_ar_bspstore
+operator|)
+argument_list|)
+expr_stmt|;
+name|up
+operator|->
+name|u_pcb
+operator|.
+name|pcb_rnat
+operator|=
+name|rnat
+expr_stmt|;
+comment|/* 		 * Arrange for continuation at child_return(), which 		 * will return to exception_return().  Note that the child 		 * process doesn't stay in the kernel for long! 		 */
+name|up
+operator|->
+name|u_pcb
+operator|.
+name|pcb_sp
+operator|=
+operator|(
+name|u_int64_t
+operator|)
+name|p2tf
+operator|-
+literal|16
+expr_stmt|;
+name|up
+operator|->
+name|u_pcb
+operator|.
+name|pcb_r4
+operator|=
+operator|(
+name|u_int64_t
+operator|)
+name|child_return
+expr_stmt|;
+name|up
+operator|->
+name|u_pcb
+operator|.
+name|pcb_r5
+operator|=
+operator|(
+name|u_int64_t
+operator|)
+name|exception_return
+expr_stmt|;
+name|up
+operator|->
+name|u_pcb
+operator|.
+name|pcb_r6
+operator|=
+operator|(
+name|u_int64_t
+operator|)
+name|p2
+expr_stmt|;
+name|up
+operator|->
+name|u_pcb
+operator|.
+name|pcb_b0
+operator|=
+operator|(
+name|u_int64_t
+operator|)
+name|switch_trampoline
+expr_stmt|;
 block|}
 block|}
 end_block
@@ -494,13 +694,32 @@ end_decl_stmt
 
 begin_block
 block|{
-if|#
-directive|if
-literal|0
-comment|/* 	 * Note that the trap frame follows the args, so the function 	 * is really called like this:  func(arg, frame); 	 */
-block|p->p_addr->u_pcb.pcb_context[0] = (u_long) func; 	p->p_addr->u_pcb.pcb_context[2] = (u_long) arg;
-endif|#
-directive|endif
+name|p
+operator|->
+name|p_addr
+operator|->
+name|u_pcb
+operator|.
+name|pcb_r4
+operator|=
+operator|(
+name|u_int64_t
+operator|)
+name|func
+expr_stmt|;
+name|p
+operator|->
+name|p_addr
+operator|->
+name|u_pcb
+operator|.
+name|pcb_r6
+operator|=
+operator|(
+name|u_int64_t
+operator|)
+name|arg
+expr_stmt|;
 block|}
 end_block
 
