@@ -395,6 +395,14 @@ name|Ealternative
 decl_stmt|,
 name|Oalternative
 decl_stmt|;
+name|struct
+name|lc_time_T
+modifier|*
+name|tptr
+init|=
+name|__get_current_time_locale
+argument_list|()
+decl_stmt|;
 for|for
 control|(
 init|;
@@ -460,7 +468,7 @@ operator|)
 condition|?
 literal|"?"
 else|:
-name|Locale
+name|tptr
 operator|->
 name|weekday
 index|[
@@ -498,7 +506,7 @@ operator|)
 condition|?
 literal|"?"
 else|:
-name|Locale
+name|tptr
 operator|->
 name|wday
 index|[
@@ -539,11 +547,11 @@ else|:
 operator|(
 name|Oalternative
 condition|?
-name|Locale
+name|tptr
 operator|->
 name|alt_month
 else|:
-name|Locale
+name|tptr
 operator|->
 name|month
 operator|)
@@ -585,7 +593,7 @@ operator|)
 condition|?
 literal|"?"
 else|:
-name|Locale
+name|tptr
 operator|->
 name|mon
 index|[
@@ -745,7 +753,7 @@ name|pt
 operator|=
 name|_fmt
 argument_list|(
-name|Locale
+name|tptr
 operator|->
 name|Ef_fmt
 argument_list|,
@@ -770,7 +778,7 @@ name|pt
 operator|=
 name|_fmt
 argument_list|(
-name|Locale
+name|tptr
 operator|->
 name|EF_fmt
 argument_list|,
@@ -1001,11 +1009,11 @@ operator|>=
 literal|12
 operator|)
 condition|?
-name|Locale
+name|tptr
 operator|->
 name|pm
 else|:
-name|Locale
+name|tptr
 operator|->
 name|am
 argument_list|,
@@ -1597,7 +1605,7 @@ name|pt
 operator|=
 name|_fmt
 argument_list|(
-name|Locale
+name|tptr
 operator|->
 name|X_fmt
 argument_list|,
@@ -1616,7 +1624,7 @@ name|pt
 operator|=
 name|_fmt
 argument_list|(
-name|Locale
+name|tptr
 operator|->
 name|x_fmt
 argument_list|,
@@ -1843,7 +1851,7 @@ name|pt
 operator|=
 name|_fmt
 argument_list|(
-name|Locale
+name|tptr
 operator|->
 name|date_fmt
 argument_list|,

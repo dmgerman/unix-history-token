@@ -214,6 +214,14 @@ name|Ealternative
 decl_stmt|,
 name|Oalternative
 decl_stmt|;
+name|struct
+name|lc_time_T
+modifier|*
+name|tptr
+init|=
+name|__get_current_time_locale
+argument_list|()
+decl_stmt|;
 name|ptr
 operator|=
 name|fmt
@@ -340,7 +348,7 @@ name|_strptime
 argument_list|(
 name|buf
 argument_list|,
-name|Locale
+name|tptr
 operator|->
 name|date_fmt
 argument_list|,
@@ -548,11 +556,11 @@ operator|==
 literal|'f'
 operator|)
 condition|?
-name|Locale
+name|tptr
 operator|->
 name|Ef_fmt
 else|:
-name|Locale
+name|tptr
 operator|->
 name|EF_fmt
 argument_list|,
@@ -650,7 +658,7 @@ name|_strptime
 argument_list|(
 name|buf
 argument_list|,
-name|Locale
+name|tptr
 operator|->
 name|X_fmt
 argument_list|,
@@ -676,7 +684,7 @@ name|_strptime
 argument_list|(
 name|buf
 argument_list|,
-name|Locale
+name|tptr
 operator|->
 name|x_fmt
 argument_list|,
@@ -1105,7 +1113,7 @@ name|len
 operator|=
 name|strlen
 argument_list|(
-name|Locale
+name|tptr
 operator|->
 name|am
 argument_list|)
@@ -1116,7 +1124,7 @@ name|strncasecmp
 argument_list|(
 name|buf
 argument_list|,
-name|Locale
+name|tptr
 operator|->
 name|am
 argument_list|,
@@ -1161,7 +1169,7 @@ name|len
 operator|=
 name|strlen
 argument_list|(
-name|Locale
+name|tptr
 operator|->
 name|pm
 argument_list|)
@@ -1172,7 +1180,7 @@ name|strncasecmp
 argument_list|(
 name|buf
 argument_list|,
-name|Locale
+name|tptr
 operator|->
 name|pm
 argument_list|,
@@ -1232,7 +1240,7 @@ name|i
 operator|<
 name|asizeof
 argument_list|(
-name|Locale
+name|tptr
 operator|->
 name|weekday
 argument_list|)
@@ -1252,7 +1260,7 @@ name|len
 operator|=
 name|strlen
 argument_list|(
-name|Locale
+name|tptr
 operator|->
 name|weekday
 index|[
@@ -1266,7 +1274,7 @@ name|strncasecmp
 argument_list|(
 name|buf
 argument_list|,
-name|Locale
+name|tptr
 operator|->
 name|weekday
 index|[
@@ -1286,7 +1294,7 @@ name|len
 operator|=
 name|strlen
 argument_list|(
-name|Locale
+name|tptr
 operator|->
 name|wday
 index|[
@@ -1300,7 +1308,7 @@ name|strncasecmp
 argument_list|(
 name|buf
 argument_list|,
-name|Locale
+name|tptr
 operator|->
 name|wday
 index|[
@@ -1321,7 +1329,7 @@ name|i
 operator|==
 name|asizeof
 argument_list|(
-name|Locale
+name|tptr
 operator|->
 name|weekday
 argument_list|)
@@ -1679,7 +1687,7 @@ name|i
 operator|<
 name|asizeof
 argument_list|(
-name|Locale
+name|tptr
 operator|->
 name|month
 argument_list|)
@@ -1704,7 +1712,7 @@ name|len
 operator|=
 name|strlen
 argument_list|(
-name|Locale
+name|tptr
 operator|->
 name|alt_month
 index|[
@@ -1718,7 +1726,7 @@ name|strncasecmp
 argument_list|(
 name|buf
 argument_list|,
-name|Locale
+name|tptr
 operator|->
 name|alt_month
 index|[
@@ -1746,7 +1754,7 @@ name|len
 operator|=
 name|strlen
 argument_list|(
-name|Locale
+name|tptr
 operator|->
 name|month
 index|[
@@ -1760,7 +1768,7 @@ name|strncasecmp
 argument_list|(
 name|buf
 argument_list|,
-name|Locale
+name|tptr
 operator|->
 name|month
 index|[
@@ -1780,7 +1788,7 @@ name|len
 operator|=
 name|strlen
 argument_list|(
-name|Locale
+name|tptr
 operator|->
 name|mon
 index|[
@@ -1794,7 +1802,7 @@ name|strncasecmp
 argument_list|(
 name|buf
 argument_list|,
-name|Locale
+name|tptr
 operator|->
 name|mon
 index|[
@@ -1816,7 +1824,7 @@ name|i
 operator|==
 name|asizeof
 argument_list|(
-name|Locale
+name|tptr
 operator|->
 name|month
 argument_list|)
