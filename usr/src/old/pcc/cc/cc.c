@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cc.c 4.8 %G%"
+literal|"@(#)cc.c 4.9 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -617,6 +617,21 @@ case|:
 name|plist
 index|[
 name|np
+operator|++
+index|]
+operator|=
+name|argv
+index|[
+name|i
+index|]
+expr_stmt|;
+continue|continue;
+case|case
+literal|'L'
+case|:
+name|llist
+index|[
+name|nl
 operator|++
 index|]
 operator|=
