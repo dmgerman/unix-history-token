@@ -5052,7 +5052,14 @@ name|j
 operator|<=
 name|hlen
 operator|-
-name|INADDR_LEN
+operator|(
+name|int
+operator|)
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ip
+argument_list|)
 condition|)
 block|{
 for|for
