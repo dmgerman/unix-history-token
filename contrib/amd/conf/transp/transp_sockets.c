@@ -36,6 +36,24 @@ directive|include
 file|<amu.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RPC_MAXDATASIZE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|RPC_MAXDATASIZE
+value|9000
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * find the IP address that can be used to connect to the local host  */
 end_comment
@@ -767,6 +785,11 @@ modifier|*
 name|tcp_amqpp
 parameter_list|)
 block|{
+name|int
+name|maxrec
+init|=
+name|RPC_MAXDATASIZE
+decl_stmt|;
 comment|/* first create TCP service */
 if|if
 condition|(
@@ -842,6 +865,22 @@ literal|2
 return|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|SVCSET_CONNMAXREC
+name|SVC_CONTROL
+argument_list|(
+operator|*
+name|tcp_amqpp
+argument_list|,
+name|SVCSET_CONNMAXREC
+argument_list|,
+operator|&
+name|maxrec
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* next create UDP service */
 if|if
 condition|(
