@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.66 1997/07/12 19:22:34 brian Exp $  *  */
+comment|/*  *		PPP User command processing module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: command.c,v 1.67 1997/07/14 01:41:26 brian Exp $  *  */
 end_comment
 
 begin_include
@@ -2019,6 +2019,48 @@ end_function
 begin_function
 specifier|static
 name|int
+name|ShowStopped
+parameter_list|()
+block|{
+if|if
+condition|(
+operator|!
+name|VarTerm
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
+operator|!
+name|VarStoppedTimeout
+condition|)
+name|fprintf
+argument_list|(
+name|VarTerm
+argument_list|,
+literal|" Stopped Timer: Disabled\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|VarTerm
+argument_list|,
+literal|" Stopped Timer: %d secs\n"
+argument_list|,
+name|VarStoppedTimeout
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
 name|ShowAuthKey
 parameter_list|()
 block|{
@@ -2723,6 +2765,20 @@ block|,
 literal|"Show Idle timeout value"
 block|,
 literal|"show timeout"
+block|}
+block|,
+block|{
+literal|"stopped"
+block|,
+name|NULL
+block|,
+name|ShowStopped
+block|,
+name|LOCAL_AUTH
+block|,
+literal|"Show STOPPED timeout value"
+block|,
+literal|"show stopped"
 block|}
 block|,
 ifndef|#
@@ -4156,6 +4212,59 @@ literal|1
 return|;
 block|}
 block|}
+return|return
+literal|0
+return|;
+block|}
+return|return
+operator|-
+literal|1
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
+name|SetStoppedTimeout
+parameter_list|(
+name|list
+parameter_list|,
+name|argc
+parameter_list|,
+name|argv
+parameter_list|)
+name|struct
+name|cmdtab
+modifier|*
+name|list
+decl_stmt|;
+name|int
+name|argc
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|argv
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|argc
+operator|==
+literal|1
+condition|)
+block|{
+name|VarStoppedTimeout
+operator|=
+name|atoi
+argument_list|(
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -6566,6 +6675,20 @@ block|,
 literal|"Set Redial timeout"
 block|,
 literal|"set redial value|random[.value|random] [dial_attempts]"
+block|}
+block|,
+block|{
+literal|"stopped"
+block|,
+name|NULL
+block|,
+name|SetStoppedTimeout
+block|,
+name|LOCAL_AUTH
+block|,
+literal|"Set STOPPED timeout"
+block|,
+literal|"set stopped value"
 block|}
 block|,
 block|{
