@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	7.62 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	7.63 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -108,37 +108,37 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ufs/quota.h>
+file|<ufs/ufs/quota.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ufs/inode.h>
+file|<ufs/ufs/inode.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ufs/ufsmount.h>
+file|<ufs/ufs/ufsmount.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ufs/ufs_extern.h>
+file|<ufs/ufs/ufs_extern.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<lfs/lfs.h>
+file|<ufs/lfs/lfs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<lfs/lfs_extern.h>
+file|<ufs/lfs/lfs_extern.h>
 end_include
 
 begin_decl_stmt
@@ -190,17 +190,6 @@ name|ufs_vptofh
 block|,
 name|lfs_init
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * Flag to allow forcible unmounting.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|doforce
 decl_stmt|;
 end_decl_stmt
 
@@ -289,7 +278,8 @@ modifier|*
 name|ump
 decl_stmt|;
 specifier|register
-name|LFS
+name|struct
+name|lfs
 modifier|*
 name|fs
 decl_stmt|;
@@ -959,7 +949,8 @@ modifier|*
 name|rootvp
 decl_stmt|;
 specifier|register
-name|LFS
+name|struct
+name|lfs
 modifier|*
 name|fs
 decl_stmt|;
@@ -1210,7 +1201,8 @@ name|malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|LFS
+expr|struct
+name|lfs
 argument_list|)
 argument_list|,
 name|M_SUPERBLK
@@ -1235,7 +1227,8 @@ name|um_lfs
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|LFS
+expr|struct
+name|lfs
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1246,7 +1239,8 @@ if|if
 condition|(
 sizeof|sizeof
 argument_list|(
-name|LFS
+expr|struct
+name|lfs
 argument_list|)
 operator|<
 name|LFS_SBPAD
@@ -1867,9 +1861,6 @@ condition|)
 block|{
 name|free
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|ump
 operator|->
 name|um_lfs
@@ -1879,9 +1870,6 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|ump
 argument_list|,
 name|M_UFSMNT
@@ -1944,6 +1932,10 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|extern
+name|int
+name|doforce
+decl_stmt|;
 specifier|register
 name|struct
 name|ufsmount
@@ -1951,7 +1943,8 @@ modifier|*
 name|ump
 decl_stmt|;
 specifier|register
-name|LFS
+name|struct
+name|lfs
 modifier|*
 name|fs
 decl_stmt|;
@@ -2219,7 +2212,8 @@ name|p
 decl_stmt|;
 block|{
 specifier|register
-name|LFS
+name|struct
+name|lfs
 modifier|*
 name|fs
 decl_stmt|;
