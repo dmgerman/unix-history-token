@@ -573,6 +573,7 @@ sizeof|sizeof
 argument_list|(
 expr|struct
 name|fd_table_entry
+operator|*
 argument_list|)
 operator|*
 name|_thread_dtablesize
