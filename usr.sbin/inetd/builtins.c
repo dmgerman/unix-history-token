@@ -1175,6 +1175,7 @@ name|struct
 name|servtab
 modifier|*
 name|sep
+name|__unused
 decl_stmt|;
 block|{
 name|char
@@ -1257,6 +1258,7 @@ name|struct
 name|servtab
 modifier|*
 name|sep
+name|__unused
 decl_stmt|;
 block|{
 name|char
@@ -3678,6 +3680,7 @@ name|struct
 name|servtab
 modifier|*
 name|sep
+name|__unused
 decl_stmt|;
 block|{
 name|unsigned
