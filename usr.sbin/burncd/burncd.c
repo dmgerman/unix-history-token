@@ -687,7 +687,7 @@ name|fixate
 operator|=
 literal|1
 expr_stmt|;
-break|break;
+continue|continue;
 block|}
 if|if
 condition|(
