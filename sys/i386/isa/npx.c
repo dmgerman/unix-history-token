@@ -38,12 +38,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_math_emulate.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_npx.h"
 end_include
 
@@ -383,13 +377,6 @@ define|#
 directive|define
 name|NPX_DISABLE_I586_OPTIMIZED_COPYIO
 value|(1<< 2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NPX_PREFER_EMULATOR
-value|(1<< 3)
 end_define
 
 begin_if
@@ -1779,30 +1766,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|MATH_EMULATE
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|GPL_MATH_EMULATE
-argument_list|)
 if|if
 condition|(
 name|npx_ex16
-condition|)
-block|{
-if|if
-condition|(
-operator|!
-operator|(
-name|flags
-operator|&
-name|NPX_PREFER_EMULATOR
-operator|)
 condition|)
 name|device_printf
 argument_list|(
@@ -1812,92 +1778,13 @@ literal|"INT 16 interface\n"
 argument_list|)
 expr_stmt|;
 else|else
-block|{
 name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"FPU exists, but flags request "
-literal|"emulator\n"
+literal|"WARNING: no FPU!\n"
 argument_list|)
 expr_stmt|;
-name|hw_float
-operator|=
-name|npx_exists
-operator|=
-literal|0
-expr_stmt|;
-block|}
-block|}
-elseif|else
-if|if
-condition|(
-name|npx_exists
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"error reporting broken; using 387 emulator\n"
-argument_list|)
-expr_stmt|;
-name|hw_float
-operator|=
-name|npx_exists
-operator|=
-literal|0
-expr_stmt|;
-block|}
-else|else
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"387 emulator\n"
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-if|if
-condition|(
-name|npx_ex16
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"INT 16 interface\n"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|flags
-operator|&
-name|NPX_PREFER_EMULATOR
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"emulator requested, but none compiled "
-literal|"into kernel, using FPU\n"
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-else|else
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"no 387 emulator in kernel and no FPU!\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 name|npxinit
 argument_list|(
