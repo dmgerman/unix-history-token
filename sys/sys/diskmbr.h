@@ -49,17 +49,6 @@ name|_PATH_DISKTAB
 value|"/etc/disktab"
 end_define
 
-begin_define
-define|#
-directive|define
-name|DISKTAB
-value|"/etc/disktab"
-end_define
-
-begin_comment
-comment|/* deprecated */
-end_comment
-
 begin_comment
 comment|/*  * Each disk has a label which includes information about the hardware  * disk geometry, filesystem partitions, and drive specific information.  * The label is in block 0 or 1, possibly offset from the beginning  * to leave room for a bootstrap, etc.  */
 end_comment
@@ -273,12 +262,6 @@ end_define
 begin_comment
 comment|/* partition normally containing swap */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LOCORE
-end_ifndef
 
 begin_struct
 struct|struct
@@ -578,153 +561,166 @@ return|;
 block|}
 end_function
 
-begin_else
-else|#
-directive|else
-end_else
-
 begin_comment
-comment|/* LOCORE */
-end_comment
-
-begin_comment
-comment|/* 	 * offsets for asm boot files. 	 */
-end_comment
-
-begin_expr_stmt
-operator|.
-name|set
-name|d_secsize
-operator|,
-literal|40
-operator|.
-name|set
-name|d_nsectors
-operator|,
-literal|44
-operator|.
-name|set
-name|d_ntracks
-operator|,
-literal|48
-operator|.
-name|set
-name|d_ncylinders
-operator|,
-literal|52
-operator|.
-name|set
-name|d_secpercyl
-operator|,
-literal|56
-operator|.
-name|set
-name|d_secperunit
-operator|,
-literal|60
-operator|.
-name|set
-name|d_end_
-operator|,
-literal|276
-comment|/* size of disk label */
-endif|#
-directive|endif
-comment|/* LOCORE */
 comment|/* d_type values: */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|DTYPE_SMD
 value|1
+end_define
+
+begin_comment
 comment|/* SMD, XSMD; VAX hp/up */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|DTYPE_MSCP
 value|2
+end_define
+
+begin_comment
 comment|/* MSCP */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|DTYPE_DEC
 value|3
+end_define
+
+begin_comment
 comment|/* other DEC (rk, rl) */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|DTYPE_SCSI
 value|4
+end_define
+
+begin_comment
 comment|/* SCSI */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|DTYPE_ESDI
 value|5
+end_define
+
+begin_comment
 comment|/* ESDI interface */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|DTYPE_ST506
 value|6
+end_define
+
+begin_comment
 comment|/* ST506 etc. */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|DTYPE_HPIB
 value|7
+end_define
+
+begin_comment
 comment|/* CS/80 on HP-IB */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|DTYPE_HPFL
 value|8
+end_define
+
+begin_comment
 comment|/* HP Fiber-link */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|DTYPE_FLOPPY
 value|10
+end_define
+
+begin_comment
 comment|/* floppy */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|DTYPE_CCD
 value|11
+end_define
+
+begin_comment
 comment|/* concatenated disk */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|DTYPE_VINUM
 value|12
+end_define
+
+begin_comment
 comment|/* vinum volume */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|DTYPE_DOC2K
 value|13
+end_define
+
+begin_comment
 comment|/* Msys DiskOnChip */
+end_comment
+
+begin_define
 define|#
 directive|define
 name|DTYPE_JFS2
 value|16
+end_define
+
+begin_comment
 comment|/* IBM JFS 2 */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|PC98
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|PC98_ATCOMPAT
-argument_list|)
-define|#
-directive|define
-name|DSTYPE_SEC256
-value|0x80
-comment|/* physical sector size=256 */
-endif|#
-directive|endif
+end_comment
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|DKTYPENAMES
+end_ifdef
+
+begin_decl_stmt
 specifier|static
 name|char
-operator|*
+modifier|*
 name|dktypenames
 index|[]
-operator|=
+init|=
 block|{
 literal|"unknown"
 block|,
@@ -762,8 +758,8 @@ literal|"jfs"
 block|,
 name|NULL
 block|}
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -1093,42 +1089,6 @@ begin_comment
 comment|/* can do back-back transfers */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LOCORE
-end_ifndef
-
-begin_comment
-comment|/*  * Structure used to perform a format or other raw operation, returning  * data and/or register values.  Register identification and format  * are device- and driver-dependent.  */
-end_comment
-
-begin_struct
-struct|struct
-name|format_op
-block|{
-name|char
-modifier|*
-name|df_buf
-decl_stmt|;
-name|int
-name|df_count
-decl_stmt|;
-comment|/* value-result */
-name|daddr_t
-name|df_startblk
-decl_stmt|;
-name|int
-name|df_reg
-index|[
-literal|8
-index|]
-decl_stmt|;
-comment|/* result */
-block|}
-struct|;
-end_struct
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1195,17 +1155,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DOSLABELSECTOR
-value|1
-end_define
-
-begin_comment
-comment|/* 0: 256b/s, 1: 512b/s */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|DOSPARTOFF
 value|0
 end_define
@@ -1226,17 +1175,6 @@ end_define
 
 begin_comment
 comment|/* 386BSD partition type */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MBR_PTYPE_FreeBSD
-value|0x94
-end_define
-
-begin_comment
-comment|/* FreeBSD partition type */
 end_comment
 
 begin_struct
@@ -1904,15 +1842,6 @@ end_endif
 
 begin_comment
 comment|/* _KERNEL */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* LOCORE */
 end_comment
 
 begin_ifndef
