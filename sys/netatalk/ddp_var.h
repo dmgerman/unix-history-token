@@ -51,6 +51,10 @@ decl_stmt|,
 modifier|*
 name|ddp_pnext
 decl_stmt|;
+name|struct
+name|mtx
+name|ddp_mtx
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -140,6 +144,14 @@ specifier|extern
 name|struct
 name|pr_usrreqs
 name|ddp_usrreqs
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mtx
+name|ddp_list_mtx
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990,1994 Regents of The University of Michigan.  * All Rights Reserved.  See COPYRIGHT.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 2004 Robert N. M. Watson  * Copyright (c) 1990,1994 Regents of The University of Michigan.  * All Rights Reserved.  See COPYRIGHT.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -94,6 +94,13 @@ file|<netatalk/at_extern.h>
 end_include
 
 begin_decl_stmt
+name|struct
+name|mtx
+name|ddp_list_mtx
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|struct
 name|ddpcb
@@ -131,6 +138,12 @@ modifier|*
 name|addr
 parameter_list|)
 block|{
+comment|/*      * Prevent modification of ddp during copy of addr.      */
+name|DDP_LOCK_ASSERT
+argument_list|(
+name|ddp
+argument_list|)
+expr_stmt|;
 operator|*
 name|addr
 operator|=
@@ -189,6 +202,15 @@ name|ddpcb
 modifier|*
 name|ddpp
 decl_stmt|;
+comment|/*      * We read and write both the ddp passed in, and also ddp_ports.      */
+name|DDP_LIST_XLOCK_ASSERT
+argument_list|()
+expr_stmt|;
+name|DDP_LOCK_ASSERT
+argument_list|(
+name|ddp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ddp
@@ -746,6 +768,14 @@ literal|0
 decl_stmt|,
 name|net
 decl_stmt|;
+name|DDP_LIST_XLOCK_ASSERT
+argument_list|()
+expr_stmt|;
+name|DDP_LOCK_ASSERT
+argument_list|(
+name|ddp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sat
@@ -1201,6 +1231,11 @@ modifier|*
 name|ddp
 parameter_list|)
 block|{
+name|DDP_LOCK_ASSERT
+argument_list|(
+name|ddp
+argument_list|)
+expr_stmt|;
 name|ddp
 operator|->
 name|ddp_fsat
@@ -1247,6 +1282,9 @@ name|ddpcb
 modifier|*
 name|ddp
 decl_stmt|;
+name|DDP_LIST_XLOCK_ASSERT
+argument_list|()
+expr_stmt|;
 name|MALLOC
 argument_list|(
 name|ddp
@@ -1261,9 +1299,14 @@ name|ddp
 argument_list|,
 name|M_PCB
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
+argument_list|)
+expr_stmt|;
+name|DDP_LOCK_INIT
+argument_list|(
+name|ddp
 argument_list|)
 expr_stmt|;
 name|ddp
@@ -1273,6 +1316,21 @@ operator|.
 name|sat_port
 operator|=
 name|ATADDR_ANYPORT
+expr_stmt|;
+name|ddp
+operator|->
+name|ddp_socket
+operator|=
+name|so
+expr_stmt|;
+name|so
+operator|->
+name|so_pcb
+operator|=
+operator|(
+name|caddr_t
+operator|)
+name|ddp
 expr_stmt|;
 name|ddp
 operator|->
@@ -1316,21 +1374,6 @@ name|ddpcb_list
 operator|=
 name|ddp
 expr_stmt|;
-name|ddp
-operator|->
-name|ddp_socket
-operator|=
-name|so
-expr_stmt|;
-name|so
-operator|->
-name|so_pcb
-operator|=
-operator|(
-name|caddr_t
-operator|)
-name|ddp
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1354,6 +1397,15 @@ modifier|*
 name|ddp
 parameter_list|)
 block|{
+comment|/*      * We modify ddp, ddp_ports, and the global list.      */
+name|DDP_LIST_XLOCK_ASSERT
+argument_list|()
+expr_stmt|;
+name|DDP_LOCK_ASSERT
+argument_list|(
+name|ddp
+argument_list|)
+expr_stmt|;
 name|soisdisconnected
 argument_list|(
 name|so
@@ -1523,6 +1575,16 @@ operator|->
 name|ddp_prev
 expr_stmt|;
 block|}
+name|DDP_UNLOCK
+argument_list|(
+name|ddp
+argument_list|)
+expr_stmt|;
+name|DDP_LOCK_DESTROY
+argument_list|(
+name|ddp
+argument_list|)
+expr_stmt|;
 name|FREE
 argument_list|(
 name|ddp
@@ -1564,6 +1626,9 @@ name|ddpcb
 modifier|*
 name|ddp
 decl_stmt|;
+name|DDP_LIST_SLOCK_ASSERT
+argument_list|()
+expr_stmt|;
 comment|/*      * Check for bad ports.      */
 if|if
 condition|(
@@ -1609,6 +1674,11 @@ operator|->
 name|ddp_pnext
 control|)
 block|{
+name|DDP_LOCK
+argument_list|(
+name|ddp
+argument_list|)
+expr_stmt|;
 comment|/* XXX should we handle 0.YY? */
 comment|/* XXXX.YY to socket on destination interface */
 if|if
@@ -1642,6 +1712,11 @@ operator|.
 name|s_node
 condition|)
 block|{
+name|DDP_UNLOCK
+argument_list|(
+name|ddp
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 comment|/* 0.255 to socket on receiving interface */
@@ -1697,6 +1772,11 @@ operator|.
 name|s_net
 condition|)
 block|{
+name|DDP_UNLOCK
+argument_list|(
+name|ddp
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 comment|/* XXXX.0 to socket on destination interface */
@@ -1757,8 +1837,18 @@ name|aa_lastnet
 argument_list|)
 condition|)
 block|{
+name|DDP_UNLOCK
+argument_list|(
+name|ddp
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
+name|DDP_UNLOCK
+argument_list|(
+name|ddp
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 operator|(

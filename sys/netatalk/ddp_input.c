@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1990,1994 Regents of The University of Michigan.  * All Rights Reserved.  See COPYRIGHT.  *  * $FreeBSD$  */
+comment|/*  * Copyright (c) 2004 Robert N. M. Watson  * Copyright (c) 1990,1994 Regents of The University of Michigan.  * All Rights Reserved.  See COPYRIGHT.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -103,6 +103,12 @@ begin_include
 include|#
 directive|include
 file|<netatalk/ddp_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netatalk/ddp_pcb.h>
 end_include
 
 begin_include
@@ -1586,6 +1592,9 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/*       * Search for ddp protocol control blocks that match these      * addresses.       */
+name|DDP_LIST_SLOCK
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1606,12 +1615,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-return|return;
+goto|goto
+name|out
+goto|;
 block|}
 ifdef|#
 directive|ifdef
@@ -1644,12 +1650,9 @@ operator|->
 name|ddp_socket
 argument_list|)
 expr_stmt|;
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-return|return;
+goto|goto
+name|out
+goto|;
 block|}
 name|SOCK_UNLOCK
 argument_list|(
@@ -1694,12 +1697,9 @@ operator|.
 name|ddps_nosockspace
 operator|++
 expr_stmt|;
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-return|return;
+goto|goto
+name|out
+goto|;
 block|}
 comment|/*      * And wake up whatever might be waiting for it      */
 name|sorwakeup
@@ -1707,6 +1707,26 @@ argument_list|(
 name|ddp
 operator|->
 name|ddp_socket
+argument_list|)
+expr_stmt|;
+name|m
+operator|=
+name|NULL
+expr_stmt|;
+name|out
+label|:
+name|DDP_LIST_SUNLOCK
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|m
+operator|!=
+name|NULL
+condition|)
+name|m_freem
+argument_list|(
+name|m
 argument_list|)
 expr_stmt|;
 block|}
