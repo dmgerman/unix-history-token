@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)hunt2.c	4.3 (Berkeley) %G%"
+literal|"@(#)hunt2.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -169,10 +169,6 @@ name|reached
 decl_stmt|;
 name|long
 name|getl
-parameter_list|()
-function_decl|;
-name|unsigned
-name|getw
 parameter_list|()
 function_decl|;
 specifier|extern
