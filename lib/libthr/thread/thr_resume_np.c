@@ -89,7 +89,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|GIANT_LOCK
+name|_thread_critical_enter
 argument_list|(
 name|curthread
 argument_list|)
@@ -111,7 +111,7 @@ argument_list|(
 name|thread
 argument_list|)
 expr_stmt|;
-name|GIANT_UNLOCK
+name|_thread_critical_exit
 argument_list|(
 name|curthread
 argument_list|)
@@ -137,10 +137,7 @@ name|pthread
 modifier|*
 name|thread
 decl_stmt|;
-name|GIANT_LOCK
-argument_list|(
-name|curthread
-argument_list|)
+name|THREAD_LIST_LOCK
 expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
@@ -171,19 +168,32 @@ operator|!=
 literal|0
 operator|)
 condition|)
+block|{
+name|_thread_critical_enter
+argument_list|(
+name|thread
+argument_list|)
+expr_stmt|;
 name|resume_common
 argument_list|(
 name|thread
 argument_list|)
 expr_stmt|;
-block|}
-name|GIANT_UNLOCK
+name|_thread_critical_exit
 argument_list|(
-name|curthread
+name|thread
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+name|THREAD_LIST_UNLOCK
+expr_stmt|;
+block|}
 end_function
+
+begin_comment
+comment|/*  * The caller is required to have locked the thread before  * calling this function.  */
+end_comment
 
 begin_function
 specifier|static
