@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)hp.c	6.20 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)hp.c	6.21 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -4711,6 +4711,8 @@ operator|->
 name|b_bcount
 operator|-
 name|bcr
+operator|+
+literal|511
 argument_list|)
 expr_stmt|;
 name|o
