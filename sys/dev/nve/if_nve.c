@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2003,2004 by Quinton Dolan<q@onthenet.com.au>.   * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions   * are met:   * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * $Id: if_nv.c,v 1.19 2004/08/12 14:00:05 q Exp $  */
+comment|/*  * Copyright (c) 2005 by David E. O'Brien<obrien@FreeBSD.org>.  * Copyright (c) 2003,2004 by Quinton Dolan<q@onthenet.com.au>.   * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions   * are met:   * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * $Id: if_nv.c,v 1.19 2004/08/12 14:00:05 q Exp $  */
 end_comment
 
 begin_comment
@@ -1096,6 +1096,70 @@ block|,
 name|NFORCE_MCPNET3_DEVICEID
 block|,
 literal|"NVIDIA nForce MCP3 Networking Adapter"
+block|}
+block|,
+block|{
+name|NVIDIA_VENDORID
+block|,
+name|NFORCE_MCPNET4_DEVICEID
+block|,
+literal|"NVIDIA nForce MCP4 Networking Adapter"
+block|}
+block|,
+block|{
+name|NVIDIA_VENDORID
+block|,
+name|NFORCE_MCPNET5_DEVICEID
+block|,
+literal|"NVIDIA nForce MCP5 Networking Adapter"
+block|}
+block|,
+block|{
+name|NVIDIA_VENDORID
+block|,
+name|NFORCE_MCPNET6_DEVICEID
+block|,
+literal|"NVIDIA nForce MCP6 Networking Adapter"
+block|}
+block|,
+block|{
+name|NVIDIA_VENDORID
+block|,
+name|NFORCE_MCPNET7_DEVICEID
+block|,
+literal|"NVIDIA nForce MCP7 Networking Adapter"
+block|}
+block|,
+block|{
+name|NVIDIA_VENDORID
+block|,
+name|NFORCE_MCPNET8_DEVICEID
+block|,
+literal|"NVIDIA nForce MCP8 Networking Adapter"
+block|}
+block|,
+block|{
+name|NVIDIA_VENDORID
+block|,
+name|NFORCE_MCPNET9_DEVICEID
+block|,
+literal|"NVIDIA nForce MCP9 Networking Adapter"
+block|}
+block|,
+block|{
+name|NVIDIA_VENDORID
+block|,
+name|NFORCE_MCPNET10_DEVICEID
+block|,
+literal|"NVIDIA nForce MCP10 Networking Adapter"
+block|}
+block|,
+block|{
+name|NVIDIA_VENDORID
+block|,
+name|NFORCE_MCPNET11_DEVICEID
+block|,
+literal|"NVIDIA nForce MCP11 Networking Adapter"
 block|}
 block|,
 block|{
