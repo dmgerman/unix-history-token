@@ -1921,6 +1921,10 @@ name|fs
 operator|->
 name|st_mode
 argument_list|)
+operator|&&
+name|errno
+operator|!=
+name|EOPNOTSUPP
 condition|)
 name|cwarn
 argument_list|(
@@ -1939,6 +1943,10 @@ name|fs
 operator|->
 name|st_flags
 argument_list|)
+operator|&&
+name|errno
+operator|!=
+name|EOPNOTSUPP
 condition|)
 name|cwarn
 argument_list|(
