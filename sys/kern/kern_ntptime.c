@@ -1802,16 +1802,15 @@ begin_function
 name|void
 name|ntp_update_second
 parameter_list|(
-name|struct
-name|timecounter
+name|int64_t
 modifier|*
-name|tcp
-parameter_list|)
-block|{
-name|u_int32_t
+name|adjustment
+parameter_list|,
+name|time_t
 modifier|*
 name|newsec
-decl_stmt|;
+parameter_list|)
+block|{
 name|int
 name|tickrate
 decl_stmt|;
@@ -1819,15 +1818,6 @@ name|l_fp
 name|ftemp
 decl_stmt|;
 comment|/* 32/64-bit temporary */
-name|newsec
-operator|=
-operator|&
-name|tcp
-operator|->
-name|tc_offset
-operator|.
-name|sec
-expr_stmt|;
 comment|/* 	 * On rollover of the second both the nanosecond and microsecond 	 * clocks are updated and the state machine cranked as 	 * necessary. The phase adjustment to be used for the next 	 * second is calculated and the maximum error is increased by 	 * the tolerance. 	 */
 name|time_maxerror
 operator|+=
@@ -2153,9 +2143,8 @@ name|ftemp
 argument_list|)
 expr_stmt|;
 block|}
-name|tcp
-operator|->
-name|tc_adjustment
+operator|*
+name|adjustment
 operator|=
 name|time_adj
 expr_stmt|;

@@ -663,7 +663,7 @@ end_ifdef
 
 begin_struct_decl
 struct_decl|struct
-name|timecounter
+name|timehands
 struct_decl|;
 end_struct_decl
 
@@ -671,10 +671,13 @@ begin_function_decl
 name|void
 name|ntp_update_second
 parameter_list|(
-name|struct
-name|timecounter
+name|int64_t
 modifier|*
-name|tc
+name|adjustment
+parameter_list|,
+name|time_t
+modifier|*
+name|newsec
 parameter_list|)
 function_decl|;
 end_function_decl

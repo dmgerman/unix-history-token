@@ -861,9 +861,8 @@ name|tv_nsec
 operator|=
 literal|1000000000
 operator|/
-name|timecounter
-operator|->
-name|tc_frequency
+name|tc_getfrequency
+argument_list|()
 expr_stmt|;
 name|error
 operator|=

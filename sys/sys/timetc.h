@@ -139,6 +139,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+name|u_int32_t
+name|tc_getfrequency
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|tc_init
 parameter_list|(
