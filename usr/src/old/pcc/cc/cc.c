@@ -5,7 +5,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cc.c 4.2 %G%"
+literal|"@(#)cc.c 4.3 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,7 +40,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dir.h>
+file|<ndir.h>
 end_include
 
 begin_decl_stmt
@@ -1798,7 +1798,7 @@ if|if
 condition|(
 name|c
 operator|<=
-name|DIRSIZ
+name|MAXNAMLEN
 operator|&&
 name|c
 operator|>
