@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tm.c	4.3	81/03/15	*/
+comment|/*	tm.c	4.4	81/04/03	*/
 end_comment
 
 begin_comment
@@ -103,16 +103,13 @@ name|i_cc
 operator|=
 literal|0
 expr_stmt|;
-while|while
-condition|(
 name|tmstrategy
 argument_list|(
 name|io
 argument_list|,
 name|TM_SFORW
 argument_list|)
-condition|)
-empty_stmt|;
+expr_stmt|;
 block|}
 block|}
 end_block
@@ -339,7 +336,6 @@ name|TM_CUR
 condition|)
 break|break;
 block|}
-empty_stmt|;
 name|ubafree
 argument_list|(
 name|io
@@ -352,6 +348,15 @@ operator|=
 name|tmaddr
 operator|->
 name|tmer
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"tmer %b\n"
+argument_list|,
+name|word
+argument_list|,
+name|TMER_BITS
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -379,11 +384,13 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"te error: er=%o"
+literal|"te error: er=%b"
 argument_list|,
 name|tmaddr
 operator|->
 name|tmer
+argument_list|,
+name|TMER_BITS
 argument_list|)
 expr_stmt|;
 if|if
