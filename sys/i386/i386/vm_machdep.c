@@ -1156,6 +1156,14 @@ operator|)
 operator|-
 literal|1
 expr_stmt|;
+name|td
+operator|->
+name|td_pcb
+operator|->
+name|pcb_ext
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 end_function
 
