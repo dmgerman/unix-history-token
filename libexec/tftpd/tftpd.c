@@ -1633,13 +1633,9 @@ block|{
 name|int
 name|err
 decl_stmt|;
-comment|/* 		 * Relative file name: search the approved locations for it. 		 * Don't allow write requests or ones that avoid directory 		 * restrictions. 		 */
+comment|/* 		 * Relative file name: search the approved locations for it. 		 * Don't allow write requests that avoid directory 		 * restrictions. 		 */
 if|if
 condition|(
-name|mode
-operator|!=
-name|RRQ
-operator|||
 operator|!
 name|strncmp
 argument_list|(
