@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash.c	5.35 (Berkeley) %G%"
+literal|"@(#)hash.c	8.1 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
