@@ -609,6 +609,12 @@ if|if
 condition|(
 operator|(
 name|res
+operator|==
+name|NULL
+operator|)
+operator|||
+operator|(
+name|res
 operator|->
 name|Type
 operator|!=
@@ -890,6 +896,12 @@ name|Pointer
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|res
+operator|==
+name|NULL
+operator|)
+operator|||
 operator|(
 name|res
 operator|->
