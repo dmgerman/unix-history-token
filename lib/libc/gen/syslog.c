@@ -970,6 +970,21 @@ name|tbuf_cookie
 operator|.
 name|left
 expr_stmt|;
+comment|/* Remove a trailing newline */
+if|if
+condition|(
+name|tbuf
+index|[
+name|cnt
+operator|-
+literal|1
+index|]
+operator|==
+literal|'\n'
+condition|)
+name|cnt
+operator|--
+expr_stmt|;
 comment|/* Output to stderr if requested. */
 if|if
 condition|(
