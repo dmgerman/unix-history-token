@@ -364,6 +364,12 @@ case|:
 case|case
 literal|0x0d30105a
 case|:
+case|case
+literal|0x4d68105a
+case|:
+case|case
+literal|0x6268105a
+case|:
 return|return
 operator|(
 name|ar_promise_conf
