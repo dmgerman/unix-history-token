@@ -22,7 +22,7 @@ name|lint
 end_ifndef
 
 begin_endif
-unit|__RCSID("$NetBSD: stat.c,v 1.10 2003/05/08 13:05:38 atatat Exp $");
+unit|__RCSID("$NetBSD: stat.c,v 1.13 2003/07/25 03:21:17 atatat Exp $");
 endif|#
 directive|endif
 end_endif
@@ -39,6 +39,71 @@ literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_if
+if|#
+directive|if
+name|HAVE_CONFIG_H
+end_if
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* HAVE_CONFIG_H */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRUCT_STAT_ST_FLAGS
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRUCT_STAT_ST_GEN
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRUCT_STAT_ST_BIRTHTIME
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRUCT_STAT_ST_MTIMENSEC
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_DEVNAME
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_CONFIG_H */
+end_comment
 
 begin_include
 include|#
@@ -112,19 +177,181 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|HAVE_STRUCT_STAT_ST_FLAGS
+end_if
+
+begin_define
+define|#
+directive|define
+name|DEF_F
+value|"%#Xf "
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAW_F
+value|"%f "
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHELL_F
+value|" st_flags=%f"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* HAVE_STRUCT_STAT_ST_FLAGS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEF_F
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAW_F
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHELL_F
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_STRUCT_STAT_ST_FLAGS */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|HAVE_STRUCT_STAT_ST_BIRTHTIME
+end_if
+
+begin_define
+define|#
+directive|define
+name|DEF_B
+value|"\"%SB\" "
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAW_B
+value|"%B "
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHELL_B
+value|"st_birthtime=%B "
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* HAVE_STRUCT_STAT_ST_BIRTHTIME */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEF_B
+end_define
+
+begin_define
+define|#
+directive|define
+name|RAW_B
+end_define
+
+begin_define
+define|#
+directive|define
+name|SHELL_B
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_STRUCT_STAT_ST_BIRTHTIME */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|HAVE_STRUCT_STAT_ST_ATIM
+end_if
+
+begin_define
+define|#
+directive|define
+name|st_atimespec
+value|st_atim
+end_define
+
+begin_define
+define|#
+directive|define
+name|st_ctimespec
+value|st_ctim
+end_define
+
+begin_define
+define|#
+directive|define
+name|st_mtimespec
+value|st_mtim
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HAVE_STRUCT_STAT_ST_ATIM */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|DEF_FORMAT
 define|\
-value|"%d %i %Sp %l %Su %Sg %r %z \"%Sa\" \"%Sm\" \"%Sc\" \"%SB\" %k %b %N"
+value|"%d %i %Sp %l %Su %Sg %r %z \"%Sa\" \"%Sm\" \"%Sc\" " DEF_B \ 	"%k %b " DEF_F "%N"
 end_define
 
 begin_define
 define|#
 directive|define
 name|RAW_FORMAT
-value|"%d %i %#p %l %u %g %r %z %a %m %c %B %k %b %N"
+value|"%d %i %#p %l %u %g %r %z %a %m %c " RAW_B \ 	"%k %b " RAW_F "%N"
 end_define
 
 begin_define
@@ -146,7 +373,7 @@ define|#
 directive|define
 name|SHELL_FORMAT
 define|\
-value|"st_dev=%d st_ino=%i st_mode=%#p st_nlink=%l " \ 	"st_uid=%u st_gid=%g st_rdev=%r st_size=%z " \ 	"st_atime=%a st_mtime=%m st_ctime=%c st_birthtime=%B " \ 	"st_blksize=%k st_blocks=%b"
+value|"st_dev=%d st_ino=%i st_mode=%#p st_nlink=%l " \ 	"st_uid=%u st_gid=%g st_rdev=%r st_size=%z " \ 	"st_atime=%a st_mtime=%m st_ctime=%c " SHELL_B \ 	"st_blksize=%k st_blocks=%b" SHELL_F
 end_define
 
 begin_define
@@ -2186,6 +2413,9 @@ name|st
 operator|->
 name|st_rdev
 expr_stmt|;
+if|#
+directive|if
+name|HAVE_DEVNAME
 name|sdata
 operator|=
 operator|(
@@ -2240,6 +2470,9 @@ name|sdata
 operator|=
 literal|"???"
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* HAVE_DEVNAME */
 if|if
 condition|(
 name|hilo
@@ -2292,8 +2525,19 @@ name|FMTF_UNSIGNED
 operator||
 name|FMTF_HEX
 operator||
+if|#
+directive|if
+name|HAVE_DEVNAME
 name|FMTF_STRING
 expr_stmt|;
+else|#
+directive|else
+comment|/* HAVE_DEVNAME */
+literal|0
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* HAVE_DEVNAME */
 if|if
 condition|(
 name|ofmt
@@ -2801,6 +3045,9 @@ operator|->
 name|st_ctimespec
 expr_stmt|;
 comment|/* FALLTHROUGH */
+if|#
+directive|if
+name|HAVE_STRUCT_STAT_ST_BIRTHTIME
 case|case
 name|SHOW_st_btime
 case|:
@@ -2817,6 +3064,9 @@ name|st
 operator|->
 name|st_birthtimespec
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* HAVE_STRUCT_STAT_ST_BIRTHTIME */
 name|ts
 operator|=
 operator|*
@@ -3043,6 +3293,9 @@ operator|=
 name|FMTF_UNSIGNED
 expr_stmt|;
 break|break;
+if|#
+directive|if
+name|HAVE_STRUCT_STAT_ST_FLAGS
 case|case
 name|SHOW_st_flags
 case|:
@@ -3090,6 +3343,12 @@ operator|=
 name|FMTF_UNSIGNED
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+comment|/* HAVE_STRUCT_STAT_ST_FLAGS */
+if|#
+directive|if
+name|HAVE_STRUCT_STAT_ST_GEN
 case|case
 name|SHOW_st_gen
 case|:
@@ -3137,6 +3396,9 @@ operator|=
 name|FMTF_UNSIGNED
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+comment|/* HAVE_STRUCT_STAT_ST_GEN */
 case|case
 name|SHOW_symlink
 case|:
@@ -3390,6 +3652,9 @@ literal|"="
 argument_list|)
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|S_IFWHT
 case|case
 name|S_IFWHT
 case|:
@@ -3404,6 +3669,29 @@ literal|"%"
 argument_list|)
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+comment|/* S_IFWHT */
+ifdef|#
+directive|ifdef
+name|S_IFDOOR
+case|case
+name|S_IFDOOR
+case|:
+operator|(
+name|void
+operator|)
+name|strcat
+argument_list|(
+name|sdata
+argument_list|,
+literal|">"
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* S_IFDOOR */
 block|}
 name|hilo
 operator|=
@@ -3483,6 +3771,9 @@ operator|=
 literal|"Socket"
 expr_stmt|;
 break|break;
+ifdef|#
+directive|ifdef
+name|S_IFWHT
 case|case
 name|S_IFWHT
 case|:
@@ -3491,6 +3782,23 @@ operator|=
 literal|"Whiteout File"
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+comment|/* S_IFWHT */
+ifdef|#
+directive|ifdef
+name|S_IFDOOR
+case|case
+name|S_IFDOOR
+case|:
+name|sdata
+operator|=
+literal|"Door"
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* S_IFDOOR */
 default|default:
 name|sdata
 operator|=
