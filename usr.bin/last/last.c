@@ -473,7 +473,8 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: last [-#] [-f file] [-h hostname] [-t tty] [-s|w] [user ...]\n"
+literal|"usage: last [-#] [-d [[CC]YY][MMDD]hhmm[.SS]] [-f file] [-h hostname]\n"
+literal|"\t[-t tty] [-s|w] [user ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
