@@ -360,7 +360,7 @@ name|t
 operator|->
 name|an_vid
 operator|&&
-name|pci_get_vendor
+name|pci_get_device
 argument_list|(
 name|dev
 argument_list|)
