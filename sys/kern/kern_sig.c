@@ -385,33 +385,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|do_sigprocmask
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|int
-name|how
-parameter_list|,
-name|sigset_t
-modifier|*
-name|set
-parameter_list|,
-name|sigset_t
-modifier|*
-name|oset
-parameter_list|,
-name|int
-name|old
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
 name|kern_sigtimedwait
 parameter_list|(
 name|struct
@@ -3023,13 +2996,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * do_sigprocmask()  *  *	Manipulate signal mask.  */
+comment|/*  * kern_sigprocmask()  *  *	Manipulate signal mask.  */
 end_comment
 
 begin_function
-specifier|static
 name|int
-name|do_sigprocmask
+name|kern_sigprocmask
 parameter_list|(
 name|td
 parameter_list|,
@@ -3205,7 +3177,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * sigprocmask() - MP SAFE (XXXKSE not under KSE it isn't)  */
+comment|/*  * sigprocmask() - MP SAFE  */
 end_comment
 
 begin_ifndef
@@ -3337,7 +3309,7 @@ return|;
 block|}
 name|error
 operator|=
-name|do_sigprocmask
+name|kern_sigprocmask
 argument_list|(
 name|td
 argument_list|,
@@ -3463,7 +3435,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|do_sigprocmask
+name|kern_sigprocmask
 argument_list|(
 name|td
 argument_list|,
