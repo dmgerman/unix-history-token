@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Filter command Interface  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: filter.c,v 1.16 1997/10/26 01:02:34 brian Exp $  *  *	TODO: Shoud send ICMP error message when we discard packets.  */
+comment|/*  *		PPP Filter command Interface  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: filter.c,v 1.17 1997/11/09 14:18:38 brian Exp $  *  *	TODO: Shoud send ICMP error message when we discard packets.  */
 end_comment
 
 begin_include
@@ -2223,7 +2223,52 @@ index|[
 name|fp
 operator|->
 name|action
+operator|&
+operator|(
+name|A_PERMIT
+operator||
+name|A_DENY
+operator|)
 index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fp
+operator|->
+name|action
+operator|&
+name|A_UHOST
+condition|)
+name|fprintf
+argument_list|(
+name|VarTerm
+argument_list|,
+literal|"host "
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|fp
+operator|->
+name|action
+operator|&
+name|A_UPORT
+condition|)
+name|fprintf
+argument_list|(
+name|VarTerm
+argument_list|,
+literal|"port "
+argument_list|)
+expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|VarTerm
+argument_list|,
+literal|"     "
 argument_list|)
 expr_stmt|;
 name|fprintf
