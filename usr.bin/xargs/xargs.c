@@ -659,6 +659,19 @@ name|optind
 expr_stmt|;
 if|if
 condition|(
+name|Iflag
+operator|&&
+name|Jflag
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"the -I and -J options may not be used together"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|xflag
 operator|&&
 operator|!
