@@ -799,10 +799,6 @@ name|orientation
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
-comment|/* Stateful encoding/decoding is not yet supported. */
 name|memset
 argument_list|(
 operator|&
@@ -810,7 +806,7 @@ name|fp
 operator|->
 name|_extra
 operator|->
-name|wstate
+name|mbstate
 argument_list|,
 literal|0
 argument_list|,
@@ -820,25 +816,6 @@ name|mbstate_t
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memset
-argument_list|(
-operator|&
-name|fp
-operator|->
-name|_extra
-operator|->
-name|rstate
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|mbstate_t
-argument_list|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|fp

@@ -496,20 +496,10 @@ name|int
 name|orientation
 decl_stmt|;
 comment|/* orientation for fwide() */
-ifdef|#
-directive|ifdef
-name|notdef
-comment|/* 	 * XXX These are not used yet -- they will be used to store the 	 * multibyte conversion state for writing and reading when 	 * stateful encodings are supported by the locale framework. 	 */
 name|mbstate_t
-name|wstate
+name|mbstate
 decl_stmt|;
-comment|/* write conversion state */
-name|mbstate_t
-name|rstate
-decl_stmt|;
-comment|/* read conversion state */
-endif|#
-directive|endif
+comment|/* multibyte conversion state */
 block|}
 struct|;
 end_struct
@@ -584,11 +574,7 @@ name|INITEXTRA
 parameter_list|(
 name|fp
 parameter_list|)
-value|{ \ 	(fp)->_extra->_up = NULL; \ 	(fp)->_extra->fl_mutex = PTHREAD_MUTEX_INITIALIZER; \ 	(fp)->_extra->fl_owner = NULL; \ 	(fp)->_extra->fl_count = 0; \ 	(fp)->_extra->orientation = 0; \
-comment|/* memset(&(fp)->_extra->wstate, 0, sizeof(mbstate_t)); */
-value|\
-comment|/* memset(&(fp)->_extra->rstate, 0, sizeof(mbstate_t)); */
-value|\ }
+value|{ \ 	(fp)->_extra->_up = NULL; \ 	(fp)->_extra->fl_mutex = PTHREAD_MUTEX_INITIALIZER; \ 	(fp)->_extra->fl_owner = NULL; \ 	(fp)->_extra->fl_count = 0; \ 	(fp)->_extra->orientation = 0; \ 	memset(&(fp)->_extra->mbstate, 0, sizeof(mbstate_t)); \ }
 end_define
 
 begin_comment
