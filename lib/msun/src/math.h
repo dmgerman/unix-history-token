@@ -1192,6 +1192,16 @@ name|__pure2
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|double
+name|nearbyint
+argument_list|(
+name|double
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|double
 name|nextafter
@@ -1885,6 +1895,16 @@ name|copysignf
 argument_list|(
 name|float
 argument_list|,
+name|float
+argument_list|)
+name|__pure2
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|float
+name|nearbyintf
+argument_list|(
 name|float
 argument_list|)
 name|__pure2
