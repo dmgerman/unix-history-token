@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.12 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)sendmail.h	8.13 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	8.12		%G%"
+literal|"@(#)sendmail.h	8.13		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -589,6 +589,13 @@ end_define
 begin_comment
 comment|/* report this address in return message */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|NULLADDR
+value|((ADDRESS *) NULL)
+end_define
 
 begin_define
 define|#
@@ -2407,6 +2414,10 @@ modifier|*
 name|map_rebuild
 decl_stmt|;
 comment|/* program to run to do auto-rebuild */
+name|time_t
+name|map_mtime
+decl_stmt|;
+comment|/* last database modification time */
 block|}
 end_block
 
@@ -3443,7 +3454,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* **  Flags passed to remotename */
+comment|/* **  Flags passed to remotename, parseaddr, allocaddr, and buildaddr. */
 end_comment
 
 begin_define
@@ -3489,6 +3500,42 @@ end_define
 begin_comment
 comment|/* OK to do domain extension */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|RF_COPYPARSE
+value|0020
+end_define
+
+begin_comment
+comment|/* copy parsed user& host */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RF_COPYPADDR
+value|0040
+end_define
+
+begin_comment
+comment|/* copy print address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RF_COPYALL
+value|(RF_COPYPARSE|RF_COPYPADDR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RF_COPYNONE
+value|0
+end_define
 
 begin_comment
 comment|/* **  Regular UNIX sockaddrs are too small to handle ISO addresses, so **  we are forced to declare a supertype here. */

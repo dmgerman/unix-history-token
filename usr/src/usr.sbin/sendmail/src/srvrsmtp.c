@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.11 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.12 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.11 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.12 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -966,6 +966,26 @@ name|RealHostName
 argument_list|)
 operator|!=
 literal|0
+operator|&&
+operator|(
+name|strcasecmp
+argument_list|(
+name|RealHostName
+argument_list|,
+literal|"localhost"
+argument_list|)
+operator|!=
+literal|0
+operator|||
+name|strcasecmp
+argument_list|(
+name|p
+argument_list|,
+name|MyHostName
+argument_list|)
+operator|!=
+literal|0
+operator|)
 condition|)
 block|{
 name|auth_warning

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.14 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -309,13 +309,9 @@ name|parseaddr
 argument_list|(
 name|p
 argument_list|,
-operator|(
-name|ADDRESS
-operator|*
-operator|)
-name|NULL
+name|NULLADDR
 argument_list|,
-literal|1
+name|RF_COPYALL
 argument_list|,
 name|delimiter
 argument_list|,

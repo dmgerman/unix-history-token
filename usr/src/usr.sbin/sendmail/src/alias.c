@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)alias.c	8.7 (Berkeley) %G%"
+literal|"@(#)alias.c	8.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2162,8 +2162,7 @@ argument_list|,
 operator|&
 name|bl
 argument_list|,
-operator|-
-literal|1
+name|RF_COPYNONE
 argument_list|,
 literal|','
 argument_list|,

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.9 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -688,11 +688,7 @@ name|sendtolist
 argument_list|(
 literal|"postmaster"
 argument_list|,
-operator|(
-name|ADDRESS
-operator|*
-operator|)
-name|NULL
+name|NULLADDR
 argument_list|,
 operator|&
 name|e
@@ -730,11 +726,7 @@ name|e_from
 operator|.
 name|q_paddr
 argument_list|,
-operator|(
-name|ADDRESS
-operator|*
-operator|)
-name|NULL
+name|NULLADDR
 argument_list|,
 operator|&
 name|e
@@ -1702,7 +1694,7 @@ name|q_paddr
 argument_list|,
 name|q
 argument_list|,
-literal|0
+name|RF_COPYPARSE
 argument_list|,
 literal|'\0'
 argument_list|,
@@ -1903,7 +1895,9 @@ name|ee
 operator|->
 name|e_from
 argument_list|,
-literal|1
+name|RF_COPYALL
+operator||
+name|RF_SENDERADDR
 argument_list|,
 literal|'\0'
 argument_list|,
@@ -2003,11 +1997,7 @@ name|markstats
 argument_list|(
 name|ee
 argument_list|,
-operator|(
-name|ADDRESS
-operator|*
-operator|)
-name|NULL
+name|NULLADDR
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	8.6 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	8.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -174,7 +174,7 @@ comment|/* set to point to the delimiter */
 end_comment
 
 begin_comment
-comment|/* **  PARSEADDR -- Parse an address ** **	Parses an address and breaks it up into three parts: a **	net to transmit the message on, the host to transmit it **	to, and a user on that host.  These are loaded into an **	ADDRESS header with the values squirreled away if necessary. **	The "user" part may not be a real user; the process may **	just reoccur on that machine.  For example, on a machine **	with an arpanet connection, the address **		csvax.bill@berkeley **	will break up to a "user" of 'csvax.bill' and a host **	of 'berkeley' -- to be transmitted over the arpanet. ** **	Parameters: **		addr -- the address to parse. **		a -- a pointer to the address descriptor buffer. **			If NULL, a header will be created. **		copyf -- determines what shall be copied: **			-1 -- don't copy anything.  The printname **				(q_paddr) is just addr, and the **				user& host are allocated internally **				to parse. **			0 -- copy out the parsed user& host, but **				don't copy the printname. **			+1 -- copy everything. **		delim -- the character to terminate the address, passed **			to prescan. **		delimptr -- if non-NULL, set to the location of the **			delim character that was found. **		e -- the envelope that will contain this address. ** **	Returns: **		A pointer to the address descriptor header (`a' if **			`a' is non-NULL). **		NULL on error. ** **	Side Effects: **		none */
+comment|/* **  PARSEADDR -- Parse an address ** **	Parses an address and breaks it up into three parts: a **	net to transmit the message on, the host to transmit it **	to, and a user on that host.  These are loaded into an **	ADDRESS header with the values squirreled away if necessary. **	The "user" part may not be a real user; the process may **	just reoccur on that machine.  For example, on a machine **	with an arpanet connection, the address **		csvax.bill@berkeley **	will break up to a "user" of 'csvax.bill' and a host **	of 'berkeley' -- to be transmitted over the arpanet. ** **	Parameters: **		addr -- the address to parse. **		a -- a pointer to the address descriptor buffer. **			If NULL, a header will be created. **		flags -- describe detail for parsing.  See RF_ definitions **			in sendmail.h. **		delim -- the character to terminate the address, passed **			to prescan. **		delimptr -- if non-NULL, set to the location of the **			delim character that was found. **		e -- the envelope that will contain this address. ** **	Returns: **		A pointer to the address descriptor header (`a' if **			`a' is non-NULL). **		NULL on error. ** **	Side Effects: **		none */
 end_comment
 
 begin_comment
@@ -201,7 +201,7 @@ name|addr
 parameter_list|,
 name|a
 parameter_list|,
-name|copyf
+name|flags
 parameter_list|,
 name|delim
 parameter_list|,
@@ -219,7 +219,7 @@ modifier|*
 name|a
 decl_stmt|;
 name|int
-name|copyf
+name|flags
 decl_stmt|;
 name|int
 name|delim
@@ -511,6 +511,8 @@ name|pvp
 argument_list|,
 name|a
 argument_list|,
+name|flags
+argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
@@ -530,7 +532,7 @@ name|allocaddr
 argument_list|(
 name|a
 argument_list|,
-name|copyf
+name|flags
 argument_list|,
 name|addr
 argument_list|,
@@ -692,7 +694,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  ALLOCADDR -- do local allocations of address on demand. ** **	Also lowercases the host name if requested. ** **	Parameters: **		a -- the address to reallocate. **		copyf -- the copy flag (see parseaddr for description). **		paddr -- the printname of the address. **		delimptr -- a pointer to the address delimiter.  Must be set. ** **	Returns: **		none. ** **	Side Effects: **		Copies portions of a into local buffers as requested. */
+comment|/* **  ALLOCADDR -- do local allocations of address on demand. ** **	Also lowercases the host name if requested. ** **	Parameters: **		a -- the address to reallocate. **		flags -- the copy flag (see RF_ definitions in sendmail.h **			for a description). **		paddr -- the printname of the address. **		delimptr -- a pointer to the address delimiter.  Must be set. ** **	Returns: **		none. ** **	Side Effects: **		Copies portions of a into local buffers as requested. */
 end_comment
 
 begin_expr_stmt
@@ -700,7 +702,7 @@ name|allocaddr
 argument_list|(
 name|a
 argument_list|,
-name|copyf
+name|flags
 argument_list|,
 name|paddr
 argument_list|,
@@ -715,7 +717,7 @@ end_expr_stmt
 
 begin_decl_stmt
 name|int
-name|copyf
+name|flags
 decl_stmt|;
 end_decl_stmt
 
@@ -746,18 +748,21 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"allocaddr(copyf=%d, paddr=%s)\n"
+literal|"allocaddr(flags=%o, paddr=%s)\n"
 argument_list|,
-name|copyf
+name|flags
 argument_list|,
 name|paddr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|copyf
-operator|>
-literal|0
+name|bitset
+argument_list|(
+name|RF_COPYPADDR
+argument_list|,
+name|flags
+argument_list|)
 operator|&&
 name|paddr
 operator|!=
@@ -839,9 +844,12 @@ literal|""
 expr_stmt|;
 if|if
 condition|(
-name|copyf
-operator|>=
-literal|0
+name|bitset
+argument_list|(
+name|RF_COPYPARSE
+argument_list|,
+name|flags
+argument_list|)
 condition|)
 block|{
 name|a
@@ -5182,7 +5190,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  BUILDADDR -- build address from token vector. ** **	Parameters: **		tv -- token vector. **		a -- pointer to address descriptor to fill. **			If NULL, one will be allocated. **		e -- the current envelope. ** **	Returns: **		NULL if there was an error. **		'a' otherwise. ** **	Side Effects: **		fills in 'a' */
+comment|/* **  BUILDADDR -- build address from token vector. ** **	Parameters: **		tv -- token vector. **		a -- pointer to address descriptor to fill. **			If NULL, one will be allocated. **		flags -- info regarding whether this is a sender or **			a recipient. **		e -- the current envelope. ** **	Returns: **		NULL if there was an error. **		'a' otherwise. ** **	Side Effects: **		fills in 'a' */
 end_comment
 
 begin_struct
@@ -5257,6 +5265,8 @@ name|tv
 parameter_list|,
 name|a
 parameter_list|,
+name|flags
+parameter_list|,
 name|e
 parameter_list|)
 specifier|register
@@ -5269,6 +5279,9 @@ specifier|register
 name|ADDRESS
 modifier|*
 name|a
+decl_stmt|;
+name|int
+name|flags
 decl_stmt|;
 specifier|register
 name|ENVELOPE
@@ -7409,6 +7422,8 @@ name|pvp
 argument_list|,
 name|NULL
 argument_list|,
+literal|0
+argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
@@ -7466,7 +7481,7 @@ name|allocaddr
 argument_list|(
 name|a1
 argument_list|,
-literal|1
+name|RF_COPYALL
 argument_list|,
 name|NULL
 argument_list|,

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.7 (Berkeley) %G%"
+literal|"@(#)envelope.c	8.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -889,11 +889,7 @@ name|e
 operator|->
 name|e_receiptto
 argument_list|,
-operator|(
-name|ADDRESS
-operator|*
-operator|)
-name|NULL
+name|NULLADDR
 argument_list|,
 operator|&
 name|rlist
@@ -973,11 +969,7 @@ name|sendtolist
 argument_list|(
 name|PostMasterCopy
 argument_list|,
-operator|(
-name|ADDRESS
-operator|*
-operator|)
-name|NULL
+name|NULLADDR
 argument_list|,
 operator|&
 name|rlist
@@ -2199,7 +2191,9 @@ name|e
 operator|->
 name|e_from
 argument_list|,
-literal|1
+name|RF_COPYALL
+operator||
+name|RF_SENDERADDR
 argument_list|,
 name|delimchar
 argument_list|,
@@ -2336,7 +2330,9 @@ name|e
 operator|->
 name|e_from
 argument_list|,
-literal|1
+name|RF_COPYALL
+operator||
+name|RF_SENDERADDR
 argument_list|,
 literal|' '
 argument_list|,
@@ -2363,7 +2359,7 @@ name|e
 operator|->
 name|e_from
 argument_list|,
-literal|1
+name|RF_COPYALL
 argument_list|,
 literal|' '
 argument_list|,
@@ -2501,7 +2497,11 @@ name|p
 operator|=
 name|udbsender
 argument_list|(
-name|from
+name|e
+operator|->
+name|e_from
+operator|.
+name|q_user
 argument_list|)
 expr_stmt|;
 if|if
