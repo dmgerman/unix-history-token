@@ -155,6 +155,17 @@ end_macro
 begin_macro
 name|DO_SETBITS
 argument_list|(
+argument|setsoftcrypto
+argument_list|,
+argument|&ipending
+argument_list|,
+argument|SWI_CRYPTO_PENDING
+argument_list|)
+end_macro
+
+begin_macro
+name|DO_SETBITS
+argument_list|(
 argument|schedsoftcamnet
 argument_list|,
 argument|&idelayed
@@ -875,6 +886,19 @@ argument_list|,
 argument|net_imask | bio_imask | cam_imask
 argument_list|,
 literal|15
+argument_list|)
+end_macro
+
+begin_macro
+name|GENSPL
+argument_list|(
+argument|splcrypto
+argument_list|,
+argument||=
+argument_list|,
+argument|net_imask | SWI_NET_MASK | SWI_CRYPTO_MASK
+argument_list|,
+literal|16
 argument_list|)
 end_macro
 

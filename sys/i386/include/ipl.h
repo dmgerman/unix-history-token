@@ -71,6 +71,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SWI_CRYPTO
+value|SWI_CAMNET
+end_define
+
+begin_define
+define|#
+directive|define
 name|SWI_CAMBIO
 value|(NHWI + 3)
 end_define
@@ -131,6 +138,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SWI_CRYPTO_PENDING
+value|SWI_CAMNET_PENDING
+end_define
+
+begin_define
+define|#
+directive|define
 name|SWI_CAMBIO_PENDING
 value|(1<< SWI_CAMBIO)
 end_define
@@ -172,6 +186,13 @@ define|#
 directive|define
 name|SWI_CAMNET_MASK
 value|(SWI_CAMNET_PENDING | SWI_LOW_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SWI_CRYPTO_MASK
+value|SWI_CAMNET_MASK
 end_define
 
 begin_define
