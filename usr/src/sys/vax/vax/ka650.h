@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988  Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ka650.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988  Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ka650.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -146,76 +146,6 @@ begin_comment
 comment|/* VAX Can't Restart flag */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LOCORE
-end_ifndef
-
-begin_comment
-comment|/*  * Local registers (in I/O space)  * This is done in disjoint sections.  Map names are set in locore.s  * and they are mapped in routine configcpu()  */
-end_comment
-
-begin_comment
-comment|/*  * memory error& configuration registers  */
-end_comment
-
-begin_struct
-struct|struct
-name|ka650_merr
-block|{
-name|u_long
-name|merr_scr
-decl_stmt|;
-comment|/* System Config Register */
-name|u_long
-name|merr_dser
-decl_stmt|;
-comment|/* DMA System Error Register */
-name|u_long
-name|merr_qbear
-decl_stmt|;
-comment|/* QBus Error Address Register */
-name|u_long
-name|merr_dear
-decl_stmt|;
-comment|/* DMA Error Address Register */
-name|u_long
-name|merr_qbmbr
-decl_stmt|;
-comment|/* Q Bus Map Base address Register */
-name|u_long
-name|pad
-index|[
-literal|59
-index|]
-decl_stmt|;
-name|u_long
-name|merr_csr
-index|[
-literal|16
-index|]
-decl_stmt|;
-comment|/* Main Memory Config Regs (16 banks) */
-name|u_long
-name|merr_errstat
-decl_stmt|;
-comment|/* Main Memory Error Status */
-name|u_long
-name|merr_cont
-decl_stmt|;
-comment|/* Main Memory Control */
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|KA650_MERR
-value|0x20080000
-end_define
-
 begin_comment
 comment|/*  * DMA System Error Register (merr_dser)  */
 end_comment
@@ -291,6 +221,84 @@ define|#
 directive|define
 name|DSER_CLEAR
 value|(DSER_QNXM | DSER_QPE | DSER_MEM |  \ 			 DSER_LOST | DSER_NOGRANT | DSER_DNXM)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DMASER_BITS
+define|\
+value|"\20\20BHALT\17DCNEG\10QBNXM\6QBPE\5MEMERR\4LOSTERR\3NOGRANT\1DMANXM"
+end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
+
+begin_comment
+comment|/*  * Local registers (in I/O space)  * This is done in disjoint sections.  Map names are set in locore.s  * and they are mapped in routine configcpu()  */
+end_comment
+
+begin_comment
+comment|/*  * memory error& configuration registers  */
+end_comment
+
+begin_struct
+struct|struct
+name|ka650_merr
+block|{
+name|u_long
+name|merr_scr
+decl_stmt|;
+comment|/* System Config Register */
+name|u_long
+name|merr_dser
+decl_stmt|;
+comment|/* DMA System Error Register */
+name|u_long
+name|merr_qbear
+decl_stmt|;
+comment|/* QBus Error Address Register */
+name|u_long
+name|merr_dear
+decl_stmt|;
+comment|/* DMA Error Address Register */
+name|u_long
+name|merr_qbmbr
+decl_stmt|;
+comment|/* Q Bus Map Base address Register */
+name|u_long
+name|pad
+index|[
+literal|59
+index|]
+decl_stmt|;
+name|u_long
+name|merr_csr
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* Main Memory Config Regs (16 banks) */
+name|u_long
+name|merr_errstat
+decl_stmt|;
+comment|/* Main Memory Error Status */
+name|u_long
+name|merr_cont
+decl_stmt|;
+comment|/* Main Memory Control */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|KA650_MERR
+value|0x20080000
 end_define
 
 begin_comment

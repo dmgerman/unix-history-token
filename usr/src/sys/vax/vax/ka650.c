@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988  Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ka650.c	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988  Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ka650.c	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_if
@@ -29,6 +29,12 @@ begin_include
 include|#
 directive|include
 file|"kernel.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"systm.h"
 end_include
 
 begin_include
@@ -134,6 +140,38 @@ expr_stmt|;
 name|ka650encache
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|ctob
+argument_list|(
+name|physmem
+argument_list|)
+operator|>
+name|ka650merr
+operator|.
+name|merr_qbmbr
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"physmem(0x%x)> qbmbr(0x%x)\n"
+argument_list|,
+name|ctob
+argument_list|(
+name|physmem
+argument_list|)
+argument_list|,
+name|ka650merr
+operator|.
+name|merr_qbmbr
+argument_list|)
+expr_stmt|;
+name|panic
+argument_list|(
+literal|"qbus map unprotected"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_block
 
@@ -540,6 +578,31 @@ operator|->
 name|mc65_psl
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"dmaser=0x%b qbear=0x%x dmaear=0x%x\n"
+argument_list|,
+name|ka650merr
+operator|.
+name|merr_dser
+argument_list|,
+name|DMASER_BITS
+argument_list|,
+name|ka650merr
+operator|.
+name|merr_qbear
+argument_list|,
+name|ka650merr
+operator|.
+name|merr_dear
+argument_list|)
+expr_stmt|;
+name|ka650merr
+operator|.
+name|merr_dser
+operator|=
+name|DSER_CLEAR
+expr_stmt|;
 name|i
 operator|=
 name|mfpr
@@ -567,7 +630,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cache 1"
+literal|"cache 1 "
 argument_list|)
 expr_stmt|;
 if|if
