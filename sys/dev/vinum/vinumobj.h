@@ -551,6 +551,10 @@ name|sectors
 decl_stmt|;
 comment|/* and length in sectors */
 name|int
+name|sectorsize
+decl_stmt|;
+comment|/* sector size for DIOCGSECTORSIZE */
+name|int
 name|plexno
 decl_stmt|;
 comment|/* index of plex, if it belongs */
@@ -675,6 +679,10 @@ name|int
 name|stripesize
 decl_stmt|;
 comment|/* size of stripe or raid band, in sectors */
+name|int
+name|sectorsize
+decl_stmt|;
+comment|/* sector size for DIOCGSECTORSIZE */
 name|int
 name|subdisks
 decl_stmt|;
@@ -850,6 +858,10 @@ name|int
 name|blocksize
 decl_stmt|;
 comment|/* logical block size */
+name|int
+name|sectorsize
+decl_stmt|;
+comment|/* sector size for DIOCGSECTORSIZE */
 name|int
 name|active
 decl_stmt|;
