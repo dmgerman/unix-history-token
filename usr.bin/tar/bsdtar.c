@@ -215,7 +215,7 @@ name|char
 modifier|*
 name|tar_opts
 init|=
-literal|"b:C:cF:f:HhjkLlmnOoPprtUuvwXxyZz"
+literal|"b:C:cF:f:HhjkLlmnOoPprtT:UuvwXxyZz"
 decl_stmt|;
 end_decl_stmt
 
@@ -874,11 +874,16 @@ literal|'x'
 case|:
 break|break;
 default|default:
-name|fprintf
+name|bsdtar_errc
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"First option must be one of: -c, -r, -t, -u, -x\n"
+literal|0
+argument_list|,
+literal|"First option '%c' unrecognized; "
+literal|"should be -c, -r, -t, -u, -x"
+argument_list|,
+name|mode
 argument_list|)
 expr_stmt|;
 name|usage
@@ -1321,6 +1326,26 @@ operator|->
 name|extract_flags
 operator||=
 name|ARCHIVE_EXTRACT_PERM
+expr_stmt|;
+break|break;
+case|case
+literal|'T'
+case|:
+comment|/* GNU tar */
+name|only_mode
+argument_list|(
+name|mode
+argument_list|,
+name|opt
+argument_list|,
+literal|"c"
+argument_list|)
+expr_stmt|;
+name|bsdtar
+operator|->
+name|names_from_file
+operator|=
+name|optarg
 expr_stmt|;
 break|break;
 case|case

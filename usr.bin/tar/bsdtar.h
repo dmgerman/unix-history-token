@@ -64,13 +64,16 @@ modifier|*
 name|start_dir
 decl_stmt|;
 comment|/* -C dir */
+specifier|const
+name|char
+modifier|*
+name|names_from_file
+decl_stmt|;
+comment|/* -T file */
 name|int
 name|bytes_per_block
 decl_stmt|;
 comment|/* -b block_size */
-name|int
-name|records_per_block
-decl_stmt|;
 name|int
 name|verbose
 decl_stmt|;
