@@ -136,8 +136,6 @@ typedef|typedef
 enum|enum
 block|{
 name|CAM_PERIPH_BIO
-block|,
-name|CAM_PERIPH_NET
 block|}
 name|cam_periph_type
 typedef|;
