@@ -1812,8 +1812,6 @@ operator|&
 name|launch_requests
 argument_list|,
 name|PRIBIO
-operator||
-name|PCATCH
 argument_list|,
 literal|"vinbuf"
 argument_list|,
