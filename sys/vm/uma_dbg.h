@@ -20,7 +20,7 @@ name|VM_UMA_DBG_H
 end_define
 
 begin_function_decl
-name|void
+name|int
 name|trash_ctor
 parameter_list|(
 name|void
@@ -33,6 +33,9 @@ parameter_list|,
 name|void
 modifier|*
 name|arg
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -56,7 +59,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|trash_init
 parameter_list|(
 name|void
@@ -65,6 +68,9 @@ name|mem
 parameter_list|,
 name|int
 name|size
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -88,7 +94,7 @@ comment|/* For use only by malloc */
 end_comment
 
 begin_function_decl
-name|void
+name|int
 name|mtrash_ctor
 parameter_list|(
 name|void
@@ -101,6 +107,9 @@ parameter_list|,
 name|void
 modifier|*
 name|arg
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -124,7 +133,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|mtrash_init
 parameter_list|(
 name|void
@@ -133,6 +142,9 @@ name|mem
 parameter_list|,
 name|int
 name|size
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -656,7 +656,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|thread_ctor
 parameter_list|(
 name|void
@@ -669,6 +669,9 @@ parameter_list|,
 name|void
 modifier|*
 name|arg
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|struct
@@ -704,6 +707,11 @@ name|td_critnest
 operator|=
 literal|1
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -795,7 +803,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|thread_init
 parameter_list|(
 name|void
@@ -804,6 +812,9 @@ name|mem
 parameter_list|,
 name|int
 name|size
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|struct
@@ -1109,6 +1120,11 @@ index|[
 literal|1
 index|]
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -1278,7 +1294,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|kse_init
 parameter_list|(
 name|void
@@ -1287,6 +1303,9 @@ name|mem
 parameter_list|,
 name|int
 name|size
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|struct
@@ -1318,6 +1337,11 @@ index|[
 literal|1
 index|]
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -1327,7 +1351,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|ksegrp_init
 parameter_list|(
 name|void
@@ -1336,6 +1360,9 @@ name|mem
 parameter_list|,
 name|int
 name|size
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|struct
@@ -1367,6 +1394,11 @@ index|[
 literal|1
 index|]
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

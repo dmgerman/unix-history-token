@@ -219,7 +219,7 @@ end_decl_stmt
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|vmspace_zinit
 parameter_list|(
 name|void
@@ -228,6 +228,9 @@ name|mem
 parameter_list|,
 name|int
 name|size
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -249,7 +252,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|vm_map_zinit
 parameter_list|(
 name|void
@@ -257,7 +260,10 @@ modifier|*
 name|mem
 parameter_list|,
 name|int
-name|size
+name|ize
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -527,7 +533,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|vmspace_zinit
 parameter_list|(
 name|void
@@ -536,6 +542,9 @@ name|mem
 parameter_list|,
 name|int
 name|size
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|struct
@@ -552,6 +561,9 @@ operator|*
 operator|)
 name|mem
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|vm_map_zinit
 argument_list|(
 operator|&
@@ -565,6 +577,8 @@ name|vm
 operator|->
 name|vm_map
 argument_list|)
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 name|pmap_pinit
@@ -575,6 +589,11 @@ name|vm
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -622,7 +641,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|vm_map_zinit
 parameter_list|(
 name|void
@@ -631,6 +650,9 @@ name|mem
 parameter_list|,
 name|int
 name|size
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|vm_map_t
@@ -687,6 +709,11 @@ argument_list|,
 literal|"user map"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

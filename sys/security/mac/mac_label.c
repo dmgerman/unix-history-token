@@ -67,7 +67,7 @@ end_decl_stmt
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|mac_labelzone_ctor
 parameter_list|(
 name|void
@@ -80,6 +80,9 @@ parameter_list|,
 name|void
 modifier|*
 name|arg
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -140,7 +143,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|mac_labelzone_ctor
 parameter_list|(
 name|void
@@ -153,6 +156,9 @@ parameter_list|,
 name|void
 modifier|*
 name|arg
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|struct
@@ -196,6 +202,11 @@ name|l_flags
 operator|=
 name|MAC_FLAG_INITIALIZED
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

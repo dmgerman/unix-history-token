@@ -78,12 +78,12 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*   * Item constructor  *  * Arguments:  *	item  A pointer to the memory which has been allocated.  *	arg   The arg field passed to uma_zalloc_arg  *	size  The size of the allocated item  *   * Returns:  *	Nothing  *  * Discussion:  *	The constructor is called just before the memory is returned  *	to the user. It may block if necessary.  */
+comment|/*   * Item constructor  *  * Arguments:  *	item  A pointer to the memory which has been allocated.  *	arg   The arg field passed to uma_zalloc_arg  *	size  The size of the allocated item  *	flags See zalloc flags  *   * Returns:  *	0      on success  *      errno  on failure  *  * Discussion:  *	The constructor is called just before the memory is returned  *	to the user. It may block if necessary.  */
 end_comment
 
 begin_typedef
 typedef|typedef
-name|void
+name|int
 function_decl|(
 modifier|*
 name|uma_ctor
@@ -99,6 +99,9 @@ parameter_list|,
 name|void
 modifier|*
 name|arg
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_typedef
@@ -130,12 +133,12 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*   * Item initializer  *  * Arguments:  *	item  A pointer to the memory which has been allocated.  *	size  The size of the item being initialized.  *   * Returns:  *	Nothing  *  * Discussion:  *	The initializer is called when the memory is cached in the uma zone.   *	this should be the same state that the destructor leaves the object in.  */
+comment|/*   * Item initializer  *  * Arguments:  *	item  A pointer to the memory which has been allocated.  *	size  The size of the item being initialized.  *	flags See zalloc flags  *   * Returns:  *	0      on success  *      errno  on failure  *  * Discussion:  *	The initializer is called when the memory is cached in the uma zone.   *	this should be the same state that the destructor leaves the object in.  */
 end_comment
 
 begin_typedef
 typedef|typedef
-name|void
+name|int
 function_decl|(
 modifier|*
 name|uma_init
@@ -147,6 +150,9 @@ name|mem
 parameter_list|,
 name|int
 name|size
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_typedef

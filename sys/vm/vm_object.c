@@ -364,7 +364,7 @@ end_define
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|vm_object_zinit
 parameter_list|(
 name|void
@@ -373,6 +373,9 @@ name|mem
 parameter_list|,
 name|int
 name|size
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -513,7 +516,7 @@ end_endif
 
 begin_function
 specifier|static
-name|void
+name|int
 name|vm_object_zinit
 parameter_list|(
 name|void
@@ -522,6 +525,9 @@ name|mem
 parameter_list|,
 name|int
 name|size
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|vm_object_t
@@ -575,6 +581,11 @@ name|shadow_count
 operator|=
 literal|0
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

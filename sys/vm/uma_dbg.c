@@ -116,11 +116,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Checks an item to make sure it hasn't been overwritten since freed.  *  * Complies with standard ctor arg/return  *  */
+comment|/*  * Checks an item to make sure it hasn't been overwritten since it was freed,  * prior to subsequent reallocation.  *  * Complies with standard ctor arg/return  *  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|trash_ctor
 parameter_list|(
 name|void
@@ -133,6 +133,9 @@ parameter_list|,
 name|void
 modifier|*
 name|arg
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|int
@@ -188,6 +191,11 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -256,7 +264,7 @@ comment|/*  * Fills an item with predictable garbage  *  * Complies with standar
 end_comment
 
 begin_function
-name|void
+name|int
 name|trash_init
 parameter_list|(
 name|void
@@ -265,6 +273,9 @@ name|mem
 parameter_list|,
 name|int
 name|size
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|trash_dtor
@@ -276,6 +287,11 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -295,6 +311,9 @@ name|int
 name|size
 parameter_list|)
 block|{
+operator|(
+name|void
+operator|)
 name|trash_ctor
 argument_list|(
 name|mem
@@ -302,17 +321,15 @@ argument_list|,
 name|size
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Checks an item to make sure it hasn't been overwritten since freed.  *  * Complies with standard ctor arg/return  *  */
-end_comment
-
 begin_function
-name|void
+name|int
 name|mtrash_ctor
 parameter_list|(
 name|void
@@ -325,6 +342,9 @@ parameter_list|,
 name|void
 modifier|*
 name|arg
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|struct
@@ -441,6 +461,11 @@ name|ks_shortdesc
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -518,7 +543,7 @@ comment|/*  * Fills an item with predictable garbage  *  * Complies with standar
 end_comment
 
 begin_function
-name|void
+name|int
 name|mtrash_init
 parameter_list|(
 name|void
@@ -527,6 +552,9 @@ name|mem
 parameter_list|,
 name|int
 name|size
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|struct
@@ -574,11 +602,16 @@ name|ksp
 operator|=
 name|NULL
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Checks an item to make sure it hasn't been overwritten since it was freed.  *  * Complies with standard fini arg/return  *  */
+comment|/*  * Checks an item to make sure it hasn't been overwritten since it was freed,  * prior to freeing it back to available memory.  *  * Complies with standard fini arg/return  *  */
 end_comment
 
 begin_function
@@ -593,6 +626,9 @@ name|int
 name|size
 parameter_list|)
 block|{
+operator|(
+name|void
+operator|)
 name|mtrash_ctor
 argument_list|(
 name|mem
@@ -600,6 +636,8 @@ argument_list|,
 name|size
 argument_list|,
 name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

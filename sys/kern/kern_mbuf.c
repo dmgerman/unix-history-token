@@ -254,7 +254,7 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|mb_ctor_mbuf
 parameter_list|(
 name|void
@@ -264,13 +264,15 @@ name|int
 parameter_list|,
 name|void
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|mb_ctor_clust
 parameter_list|(
 name|void
@@ -280,13 +282,15 @@ name|int
 parameter_list|,
 name|void
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|mb_ctor_pack
 parameter_list|(
 name|void
@@ -296,6 +300,8 @@ name|int
 parameter_list|,
 name|void
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -358,11 +364,13 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|mb_init_pack
 parameter_list|(
 name|void
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|)
@@ -609,7 +617,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|mb_ctor_mbuf
 parameter_list|(
 name|void
@@ -622,6 +630,9 @@ parameter_list|,
 name|void
 modifier|*
 name|arg
+parameter_list|,
+name|int
+name|how
 parameter_list|)
 block|{
 name|struct
@@ -634,11 +645,16 @@ name|mb_args
 modifier|*
 name|args
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC
+name|int
+name|error
+decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|flags
-decl_stmt|;
-name|int
-name|how
 decl_stmt|;
 name|short
 name|type
@@ -666,12 +682,6 @@ operator|=
 name|args
 operator|->
 name|flags
-expr_stmt|;
-name|how
-operator|=
-name|args
-operator|->
-name|how
 expr_stmt|;
 name|type
 operator|=
@@ -748,31 +758,24 @@ ifdef|#
 directive|ifdef
 name|MAC
 comment|/* If the label init fails, fail the alloc */
-if|if
-condition|(
+name|error
+operator|=
 name|mac_init_mbuf
 argument_list|(
 name|m
 argument_list|,
 name|how
 argument_list|)
-operator|!=
-literal|0
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
-block|{
-name|m_free
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-comment|/* XXX*/
-name|panic
-argument_list|(
-literal|"mb_ctor_mbuf(): can't deal with failure!"
-argument_list|)
-expr_stmt|;
-comment|/*			return 0; */
-block|}
+return|return
+operator|(
+name|error
+operator|)
+return|;
 endif|#
 directive|endif
 block|}
@@ -792,7 +795,11 @@ operator|+=
 literal|1
 expr_stmt|;
 comment|/* XXX */
-comment|/*	return 1; */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -937,7 +944,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|mb_ctor_clust
 parameter_list|(
 name|void
@@ -950,6 +957,9 @@ parameter_list|,
 name|void
 modifier|*
 name|arg
+parameter_list|,
+name|int
+name|how
 parameter_list|)
 block|{
 name|struct
@@ -1064,7 +1074,11 @@ operator|+=
 literal|1
 expr_stmt|;
 comment|/* XXX */
-comment|/*	return 1; */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -1105,7 +1119,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|mb_init_pack
 parameter_list|(
 name|void
@@ -1114,6 +1128,9 @@ name|mem
 parameter_list|,
 name|int
 name|size
+parameter_list|,
+name|int
+name|how
 parameter_list|)
 block|{
 name|struct
@@ -1144,7 +1161,7 @@ name|zone_clust
 argument_list|,
 name|m
 argument_list|,
-name|M_NOWAIT
+name|how
 argument_list|)
 expr_stmt|;
 if|if
@@ -1157,12 +1174,11 @@ name|ext_buf
 operator|==
 name|NULL
 condition|)
-comment|/* XXX */
-name|panic
-argument_list|(
-literal|"mb_init_pack(): Can't deal with failure yet."
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
 name|mbstat
 operator|.
 name|m_mclusts
@@ -1170,6 +1186,11 @@ operator|-=
 literal|1
 expr_stmt|;
 comment|/* XXX */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -1241,7 +1262,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|mb_ctor_pack
 parameter_list|(
 name|void
@@ -1254,6 +1275,9 @@ parameter_list|,
 name|void
 modifier|*
 name|arg
+parameter_list|,
+name|int
+name|how
 parameter_list|)
 block|{
 name|struct
@@ -1266,10 +1290,16 @@ name|mb_args
 modifier|*
 name|args
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC
+name|int
+name|error
+decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|flags
-decl_stmt|,
-name|how
 decl_stmt|;
 name|short
 name|type
@@ -1303,12 +1333,6 @@ operator|=
 name|args
 operator|->
 name|type
-expr_stmt|;
-name|how
-operator|=
-name|args
-operator|->
-name|how
 expr_stmt|;
 name|m
 operator|->
@@ -1426,31 +1450,24 @@ ifdef|#
 directive|ifdef
 name|MAC
 comment|/* If the label init fails, fail the alloc */
-if|if
-condition|(
+name|error
+operator|=
 name|mac_init_mbuf
 argument_list|(
 name|m
 argument_list|,
 name|how
 argument_list|)
-operator|!=
-literal|0
+expr_stmt|;
+if|if
+condition|(
+name|error
 condition|)
-block|{
-name|m_free
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-comment|/* XXX*/
-name|panic
-argument_list|(
-literal|"mb_ctor_pack(): can't deal with failure!"
-argument_list|)
-expr_stmt|;
-comment|/*			return 0; */
-block|}
+return|return
+operator|(
+name|error
+operator|)
+return|;
 endif|#
 directive|endif
 block|}
@@ -1468,7 +1485,11 @@ operator|+=
 literal|1
 expr_stmt|;
 comment|/* XXX */
-comment|/*	return 1; */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

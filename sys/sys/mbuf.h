@@ -157,10 +157,6 @@ name|int
 name|flags
 decl_stmt|;
 comment|/* Flags for mbuf being allocated */
-name|int
-name|how
-decl_stmt|;
-comment|/* How to allocate: M_WAITOK or M_DONTWAIT */
 name|short
 name|type
 decl_stmt|;
@@ -1450,12 +1446,6 @@ literal|0
 block|;
 name|args
 operator|.
-name|how
-operator|=
-name|how
-block|;
-name|args
-operator|.
 name|type
 operator|=
 name|type
@@ -1505,12 +1495,6 @@ operator|.
 name|flags
 operator|=
 literal|0
-block|;
-name|args
-operator|.
-name|how
-operator|=
-name|how
 block|;
 name|args
 operator|.
@@ -1580,12 +1564,6 @@ name|M_PKTHDR
 expr_stmt|;
 name|args
 operator|.
-name|how
-operator|=
-name|how
-expr_stmt|;
-name|args
-operator|.
 name|type
 operator|=
 name|type
@@ -1629,12 +1607,6 @@ operator|.
 name|flags
 operator|=
 name|flags
-block|;
-name|args
-operator|.
-name|how
-operator|=
-name|how
 block|;
 name|args
 operator|.
