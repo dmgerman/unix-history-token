@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mv.c	4.11 (Berkeley) 83/01/31"
+literal|"@(#)mv.c	4.12 (Berkeley) 83/03/21"
 decl_stmt|;
 end_decl_stmt
 
@@ -517,6 +517,9 @@ end_decl_stmt
 
 begin_block
 block|{
+name|int
+name|targetexists
+decl_stmt|;
 if|if
 condition|(
 name|lstat
@@ -544,8 +547,8 @@ operator|)
 return|;
 block|}
 comment|/* 	 * First, try to rename source to destination. 	 * The only reason we continue on failure is if 	 * the move is on a nondirectory and not across 	 * file systems. 	 */
-if|if
-condition|(
+name|targetexists
+operator|=
 name|lstat
 argument_list|(
 name|target
@@ -555,6 +558,10 @@ name|s2
 argument_list|)
 operator|>=
 literal|0
+expr_stmt|;
+if|if
+condition|(
+name|targetexists
 condition|)
 block|{
 if|if
@@ -658,6 +665,7 @@ literal|1
 operator|)
 return|;
 block|}
+block|}
 if|if
 condition|(
 name|rename
@@ -715,6 +723,8 @@ return|;
 block|}
 if|if
 condition|(
+name|targetexists
+operator|&&
 name|unlink
 argument_list|(
 name|target
@@ -735,47 +745,6 @@ operator|(
 literal|1
 operator|)
 return|;
-block|}
-block|}
-else|else
-block|{
-if|if
-condition|(
-name|rename
-argument_list|(
-name|source
-argument_list|,
-name|target
-argument_list|)
-operator|>=
-literal|0
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-if|if
-condition|(
-name|ISDIR
-argument_list|(
-name|s1
-argument_list|)
-condition|)
-block|{
-name|Perror2
-argument_list|(
-name|source
-argument_list|,
-literal|"rename"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-block|}
 block|}
 comment|/* 	 * File can't be renamed, try to recreate the symbolic 	 * link or special device, or copy the file wholesale 	 * between file systems. 	 */
 if|if
