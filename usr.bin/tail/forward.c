@@ -1189,13 +1189,15 @@ block|}
 comment|/* Set the file pointer to reflect the length displayed. */
 if|if
 condition|(
-name|fseek
+name|fseeko
 argument_list|(
 name|fp
 argument_list|,
-literal|0L
+name|sbp
+operator|->
+name|st_size
 argument_list|,
-name|SEEK_END
+name|SEEK_SET
 argument_list|)
 operator|==
 operator|-
