@@ -2832,7 +2832,7 @@ operator|(
 name|unsigned
 operator|)
 name|cmd
-operator|>
+operator|>=
 name|PRC_NCMDS
 operator|||
 name|dst

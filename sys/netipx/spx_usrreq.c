@@ -3481,7 +3481,7 @@ operator|<
 literal|0
 operator|||
 name|cmd
-operator|>
+operator|>=
 name|PRC_NCMDS
 condition|)
 return|return;
