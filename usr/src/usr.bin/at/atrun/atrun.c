@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)atrun.c	4.7	(Berkeley)	%G%"
+literal|"@(#)atrun.c	4.8	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -53,6 +53,18 @@ begin_include
 include|#
 directive|include
 file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/quota.h>
 end_include
 
 begin_include
@@ -884,8 +896,35 @@ expr_stmt|;
 block|}
 comment|/* 	 * HERE'S WHERE WE SET UP AND FORK THE SHELL. 	 */
 comment|/* 	 * Run the job as the owner of the jobfile 	 */
+name|quota
+argument_list|(
+name|Q_SETUID
+argument_list|,
+name|jobbuf
+operator|.
+name|st_uid
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|setgid
 argument_list|(
+name|jobbuf
+operator|.
+name|st_gid
+argument_list|)
+expr_stmt|;
+name|initgroups
+argument_list|(
+name|getname
+argument_list|(
+name|jobbuf
+operator|.
+name|st_uid
+argument_list|)
+argument_list|,
 name|jobbuf
 operator|.
 name|st_gid
@@ -903,14 +942,14 @@ for|for
 control|(
 name|i
 operator|=
-literal|0
+name|getdtablesize
+argument_list|()
 init|;
+operator|--
 name|i
-operator|<
-literal|15
+operator|>=
+literal|0
 condition|;
-name|i
-operator|++
 control|)
 name|close
 argument_list|(
@@ -929,7 +968,7 @@ name|open
 argument_list|(
 literal|"/dev/null"
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 name|open
@@ -1014,6 +1053,11 @@ argument_list|,
 literal|"%s: Can't execl shell\n"
 argument_list|,
 name|shell
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
