@@ -12,7 +12,7 @@ comment|/*  * Copyright (c) 1996 Charles M. Hannum.  All rights reserved.  * Cop
 end_comment
 
 begin_comment
-comment|/* $Id: bus.h,v 1.1 1998/01/15 07:32:54 gibbs Exp $ */
+comment|/* $Id: bus.h,v 1.2 1998/04/19 15:28:30 bde Exp $ */
 end_comment
 
 begin_ifndef
@@ -121,6 +121,13 @@ define|#
 directive|define
 name|BUS_SPACE_MAXADDR
 value|0xFFFFFFFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|BUS_SPACE_UNRESTRICTED
+value|(~0)
 end_define
 
 begin_comment
@@ -5004,7 +5011,11 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/*  * Allocate a device specific dma_tag encapsulating the constraints of  * the parent tag in addition to other restrictions specified:  *  *	boundary:	Boundary that segments cannot cross.  *	lowaddr:	Low restricted address that cannot appear in a mapping.  *	highaddr:	High restricted address that cannot appear in a mapping.  *	filtfunc:	An optional function to further test if an address  *			within the range of lowaddr and highaddr cannot appear  *			in a mapping.  *	filtfuncarg:	An argument that will be passed to filtfunc in addition  *			to the address to test.  *	flags:		Bus DMA flags.  *	dmat:		A pointer to set to a valid dma tag should the return  *			value of this function indicate success.  */
+comment|/*  * Allocate a device specific dma_tag encapsulating the constraints of  * the parent tag in addition to other restrictions specified:  *  *	alignment:	alignment for segments.  *	boundary:	Boundary that segments cannot cross.  *	lowaddr:	Low restricted address that cannot appear in a mapping.  *	highaddr:	High restricted address that cannot appear in a mapping.  *	filtfunc:	An optional function to further test if an address  *			within the range of lowaddr and highaddr cannot appear  *			in a mapping.  *	filtfuncarg:	An argument that will be passed to filtfunc in addition  *			to the address to test.  *	maxsize:	Maximum mapping size supported by this tag.  *	nsegments:	Number of discontinuities allowed in maps.  *	maxsegsz:	Maximum size of a segment in the map.  *	flags:		Bus DMA flags.  *	dmat:		A pointer to set to a valid dma tag should the return  *			value of this function indicate success.  */
+end_comment
+
+begin_comment
+comment|/* XXX Should probably allow specification of alignment */
 end_comment
 
 begin_function_decl
@@ -5013,6 +5024,9 @@ name|bus_dma_tag_create
 parameter_list|(
 name|bus_dma_tag_t
 name|parent
+parameter_list|,
+name|bus_size_t
+name|alignemnt
 parameter_list|,
 name|bus_size_t
 name|boundary
@@ -5061,7 +5075,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Allocate a handle for mapping from kva/uva/physical  * address space into bus device space.  *  *	maxsize:	Maximum mapping size supported by this handle.  *	nsegments:	Number of discontinuities allowed in the map.  *	maxsegsz:	Maximum size of a segment in the map.  */
+comment|/*  * Allocate a handle for mapping from kva/uva/physical  * address space into bus device space.  */
 end_comment
 
 begin_function_decl
@@ -5091,6 +5105,53 @@ name|bus_dmamap_destroy
 parameter_list|(
 name|bus_dma_tag_t
 name|dmat
+parameter_list|,
+name|bus_dmamap_t
+name|map
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Allocate a piece of memory that can be efficiently mapped into  * bus device space based on the constraints lited in the dma tag.  * A dmamap to for use with dmamap_load is also allocated.  */
+end_comment
+
+begin_function_decl
+name|int
+name|bus_dmamem_alloc
+parameter_list|(
+name|bus_dma_tag_t
+name|dmat
+parameter_list|,
+name|void
+modifier|*
+modifier|*
+name|vaddr
+parameter_list|,
+name|int
+name|flags
+parameter_list|,
+name|bus_dmamap_t
+modifier|*
+name|mapp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Free a piece of memory and it's allociated dmamap, that was allocated  * via bus_dmamem_alloc.  */
+end_comment
+
+begin_function_decl
+name|void
+name|bus_dmamem_free
+parameter_list|(
+name|bus_dma_tag_t
+name|dmat
+parameter_list|,
+name|void
+modifier|*
+name|vaddr
 parameter_list|,
 name|bus_dmamap_t
 name|map

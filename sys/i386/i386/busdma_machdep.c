@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: busdma_machdep.c,v 1.4 1998/02/20 13:11:47 bde Exp $  */
+comment|/*  * Copyright (c) 1997 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: busdma_machdep.c,v 1.5 1998/04/17 22:36:26 des Exp $  */
 end_comment
 
 begin_include
@@ -90,6 +90,9 @@ name|bus_dma_tag_t
 name|parent
 decl_stmt|;
 name|bus_size_t
+name|alignment
+decl_stmt|;
+name|bus_size_t
 name|boundary
 decl_stmt|;
 name|bus_addr_t
@@ -109,7 +112,7 @@ decl_stmt|;
 name|bus_size_t
 name|maxsize
 decl_stmt|;
-name|int
+name|u_int
 name|nsegments
 decl_stmt|;
 name|bus_size_t
@@ -456,6 +459,13 @@ return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|BUS_DMA_MIN_ALLOC_COMP
+value|BUS_DMA_BUS4
+end_define
+
 begin_comment
 comment|/*  * Allocate a device specific dma_tag.  */
 end_comment
@@ -466,6 +476,9 @@ name|bus_dma_tag_create
 parameter_list|(
 name|bus_dma_tag_t
 name|parent
+parameter_list|,
+name|bus_size_t
+name|alignment
 parameter_list|,
 name|bus_size_t
 name|boundary
@@ -678,7 +691,7 @@ name|newtag
 operator|->
 name|boundary
 operator|=
-name|MIN
+name|MAX
 argument_list|(
 name|parent
 operator|->
@@ -750,6 +763,14 @@ name|ptoa
 argument_list|(
 name|Maxmem
 argument_list|)
+operator|&&
+operator|(
+name|flags
+operator|&
+name|BUS_DMA_ALLOCNOW
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 comment|/* Must bounce */
@@ -763,7 +784,7 @@ block|{
 comment|/* 			 * Go through the pool and kill any pages 			 * that don't reside below lowaddr. 			 */
 name|panic
 argument_list|(
-literal|"bus_dmamap_create: page reallocation "
+literal|"bus_dma_tag_create: page reallocation "
 literal|"not implemented"
 argument_list|)
 expr_stmt|;
@@ -807,6 +828,13 @@ operator|=
 name|ENOMEM
 expr_stmt|;
 block|}
+comment|/* Performed initial allocation */
+name|newtag
+operator|->
+name|flags
+operator||=
+name|BUS_DMA_MIN_ALLOC_COMP
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -989,10 +1017,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|error
-operator|=
+return|return
+operator|(
 name|ENOMEM
-expr_stmt|;
+operator|)
+return|;
 block|}
 else|else
 block|{
@@ -1043,6 +1072,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|dmat
+operator|->
+name|flags
+operator|&
+name|BUS_DMA_MIN_ALLOC_COMP
+operator|)
+operator|==
+literal|0
+operator|||
+operator|(
 name|dmat
 operator|->
 name|map_count
@@ -1052,11 +1092,29 @@ operator|&&
 name|total_bpages
 operator|<
 name|maxpages
+operator|)
 condition|)
 block|{
 name|int
 name|pages
 decl_stmt|;
+if|if
+condition|(
+name|dmat
+operator|->
+name|lowaddr
+operator|>
+name|bounce_lowaddr
+condition|)
+block|{
+comment|/* 				 * Go through the pool and kill any pages 				 * that don't reside below lowaddr. 				 */
+name|panic
+argument_list|(
+literal|"bus_dmamap_create: page reallocation "
+literal|"not implemented"
+argument_list|)
+expr_stmt|;
+block|}
 name|pages
 operator|=
 name|atop
@@ -1077,6 +1135,8 @@ argument_list|,
 name|pages
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
 name|alloc_bounce_pages
 argument_list|(
 name|dmat
@@ -1084,6 +1144,39 @@ argument_list|,
 name|pages
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|dmat
+operator|->
+name|flags
+operator|&
+name|BUS_DMA_MIN_ALLOC_COMP
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+name|dmat
+operator|->
+name|flags
+operator||=
+name|BUS_DMA_MIN_ALLOC_COMP
+expr_stmt|;
+block|}
+else|else
+block|{
+name|error
+operator|=
+literal|0
+expr_stmt|;
+block|}
 block|}
 block|}
 else|else
@@ -1091,7 +1184,8 @@ block|{
 operator|*
 name|mapp
 operator|=
-name|NULL
+operator|&
+name|nobounce_dmamap
 expr_stmt|;
 block|}
 if|if
@@ -1170,6 +1264,179 @@ operator|(
 literal|0
 operator|)
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Allocate a piece of memory that can be efficiently mapped into  * bus device space based on the constraints lited in the dma tag.  * A dmamap to for use with dmamap_load is also allocated.  */
+end_comment
+
+begin_function
+name|int
+name|bus_dmamem_alloc
+parameter_list|(
+name|bus_dma_tag_t
+name|dmat
+parameter_list|,
+name|void
+modifier|*
+modifier|*
+name|vaddr
+parameter_list|,
+name|int
+name|flags
+parameter_list|,
+name|bus_dmamap_t
+modifier|*
+name|mapp
+parameter_list|)
+block|{
+comment|/* If we succeed, no mapping/bouncing will be required */
+operator|*
+name|mapp
+operator|=
+operator|&
+name|nobounce_dmamap
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|dmat
+operator|->
+name|maxsize
+operator|<=
+name|PAGE_SIZE
+operator|)
+operator|&&
+name|dmat
+operator|->
+name|lowaddr
+operator|>=
+name|ptoa
+argument_list|(
+name|Maxmem
+argument_list|)
+condition|)
+block|{
+operator|*
+name|vaddr
+operator|=
+name|malloc
+argument_list|(
+name|dmat
+operator|->
+name|maxsize
+argument_list|,
+name|M_DEVBUF
+argument_list|,
+operator|(
+name|flags
+operator|&
+name|BUS_DMA_NOWAIT
+operator|)
+condition|?
+name|M_NOWAIT
+else|:
+name|M_WAITOK
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 		 * XXX Use Contigmalloc until it is merged into this facility 		 *     and handles multi-seg allocations.  Nobody is doing 		 *     multi-seg allocations yet though. 		 */
+operator|*
+name|vaddr
+operator|=
+name|contigmalloc
+argument_list|(
+name|dmat
+operator|->
+name|maxsize
+argument_list|,
+name|M_DEVBUF
+argument_list|,
+operator|(
+name|flags
+operator|&
+name|BUS_DMA_NOWAIT
+operator|)
+condition|?
+name|M_NOWAIT
+else|:
+name|M_WAITOK
+argument_list|,
+literal|0ul
+argument_list|,
+name|dmat
+operator|->
+name|lowaddr
+argument_list|,
+literal|1ul
+argument_list|,
+name|dmat
+operator|->
+name|boundary
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|*
+name|vaddr
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Free a piece of memory and it's allociated dmamap, that was allocated  * via bus_dmamem_alloc.  */
+end_comment
+
+begin_function
+name|void
+name|bus_dmamem_free
+parameter_list|(
+name|bus_dma_tag_t
+name|dmat
+parameter_list|,
+name|void
+modifier|*
+name|vaddr
+parameter_list|,
+name|bus_dmamap_t
+name|map
+parameter_list|)
+block|{
+comment|/* 	 * dmamem does not need to be bounced, so the map should be 	 * NULL 	 */
+if|if
+condition|(
+name|map
+operator|!=
+name|NULL
+condition|)
+name|panic
+argument_list|(
+literal|"bus_dmamem_free: Invalid map freed\n"
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|vaddr
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1331,17 +1598,6 @@ name|PAGE_SIZE
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-name|map
-operator|==
-name|NULL
-condition|)
-name|map
-operator|=
-operator|&
-name|nobounce_dmamap
-expr_stmt|;
 comment|/* Reserve Necessary Bounce Pages */
 if|if
 condition|(
@@ -1463,6 +1719,7 @@ decl_stmt|;
 name|vm_offset_t
 name|nextpaddr
 decl_stmt|;
+comment|/* GCC warning expected */
 name|paddr
 operator|=
 name|pmap_kextract
@@ -1619,7 +1876,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"bus_dmamap_load: Too many segs!\n"
+literal|"bus_dmamap_load: Too many segs! buf_len = 0x%x\n"
+argument_list|,
+name|buflen
 argument_list|)
 expr_stmt|;
 name|error
@@ -1971,7 +2230,7 @@ name|lowaddr
 argument_list|,
 name|PAGE_SIZE
 argument_list|,
-literal|0x10000
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
