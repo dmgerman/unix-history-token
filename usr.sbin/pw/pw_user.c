@@ -502,13 +502,21 @@ literal|""
 block|,
 literal|"User&"
 block|,
+literal|"/nonexistent"
+block|,
 literal|"/bin/sh"
 block|,
 literal|0
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 block|,
 literal|0
-block|,
-literal|0
+endif|#
+directive|endif
 block|}
 decl_stmt|;
 comment|/* 	 * With M_NEXT, we only need to return the 	 * next uid to stdout 	 */
@@ -2370,10 +2378,8 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|warnc
+name|warn
 argument_list|(
-name|rc
-argument_list|,
 literal|"passwd update"
 argument_list|)
 expr_stmt|;
@@ -2431,10 +2437,8 @@ name|rc
 operator|!=
 literal|0
 condition|)
-name|warnc
+name|warn
 argument_list|(
-name|rc
-argument_list|,
 literal|"WARNING: NIS passwd update"
 argument_list|)
 expr_stmt|;
@@ -3938,10 +3942,8 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|warnc
+name|warn
 argument_list|(
-name|rc
-argument_list|,
 literal|"passwd file update"
 argument_list|)
 expr_stmt|;
@@ -3991,10 +3993,8 @@ name|pw_name
 argument_list|)
 expr_stmt|;
 else|else
-name|warnc
+name|warn
 argument_list|(
-name|rc
-argument_list|,
 literal|"NIS passwd update"
 argument_list|)
 expr_stmt|;
@@ -4063,10 +4063,8 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|warnc
+name|warn
 argument_list|(
-name|rc
-argument_list|,
 literal|"passwd file update"
 argument_list|)
 expr_stmt|;
@@ -4120,10 +4118,8 @@ name|pw_name
 argument_list|)
 expr_stmt|;
 else|else
-name|warnc
+name|warn
 argument_list|(
-name|rc
-argument_list|,
 literal|"NIS passwd update"
 argument_list|)
 expr_stmt|;
@@ -6873,7 +6869,7 @@ argument_list|,
 sizeof|sizeof
 name|acexpire
 argument_list|,
-literal|"%c"
+literal|"%e-%b-%Y %T"
 argument_list|,
 name|tptr
 argument_list|)
@@ -6910,7 +6906,7 @@ argument_list|,
 sizeof|sizeof
 name|pwexpire
 argument_list|,
-literal|"%c"
+literal|"%e-%b-%Y %T"
 argument_list|,
 name|tptr
 argument_list|)

@@ -595,10 +595,8 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|warnc
+name|warn
 argument_list|(
-name|rc
-argument_list|,
 literal|"group update"
 argument_list|)
 expr_stmt|;
@@ -1466,10 +1464,8 @@ name|gr_name
 argument_list|)
 expr_stmt|;
 else|else
-name|warnc
+name|warn
 argument_list|(
-name|rc
-argument_list|,
 literal|"group update"
 argument_list|)
 expr_stmt|;
@@ -1700,23 +1696,29 @@ name|NULL
 condition|)
 if|if
 condition|(
+operator|(
+name|gid_t
+operator|)
 name|grp
 operator|->
 name|gr_gid
 operator|>=
 operator|(
-name|int
+name|gid_t
 operator|)
 name|cnf
 operator|->
 name|min_gid
 operator|&&
+operator|(
+name|gid_t
+operator|)
 name|grp
 operator|->
 name|gr_gid
 operator|<=
 operator|(
-name|int
+name|gid_t
 operator|)
 name|cnf
 operator|->

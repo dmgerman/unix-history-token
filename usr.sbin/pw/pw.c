@@ -59,6 +59,28 @@ directive|include
 file|"pw.h"
 end_include
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|_PATH_YP
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|_PATH_YP
+value|"/var/yp/"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|const
 name|char
@@ -755,7 +777,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-name|NULL
+literal|"unknown switch"
 argument_list|)
 expr_stmt|;
 else|else
