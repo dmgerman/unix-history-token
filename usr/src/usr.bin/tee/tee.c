@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tee.c	5.6 (Berkeley) %G%"
+literal|"@(#)tee.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -305,6 +305,8 @@ condition|?
 name|O_WRONLY
 operator||
 name|O_CREAT
+operator||
+name|O_APPEND
 else|:
 name|O_WRONLY
 operator||
@@ -337,23 +339,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
-block|{
-if|if
-condition|(
-name|append
-condition|)
-operator|(
-name|void
-operator|)
-name|lseek
-argument_list|(
-name|fd
-argument_list|,
-literal|0L
-argument_list|,
-name|L_XTND
-argument_list|)
-expr_stmt|;
 name|add
 argument_list|(
 name|fd
@@ -362,7 +347,6 @@ operator|*
 name|argv
 argument_list|)
 expr_stmt|;
-block|}
 name|exitval
 operator|=
 literal|0
