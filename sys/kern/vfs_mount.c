@@ -887,13 +887,39 @@ argument_list|(
 literal|"<fstype>:<device>  Mount<device> using filesystem<fstype>\n"
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
 name|printf
 argument_list|(
-literal|"                       eg. ufs:%sda0s1a\n"
+literal|"                       eg. ufs:%s%s\n"
 argument_list|,
 name|_PATH_DEV
+argument_list|,
+literal|"da0s1a"
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|printf
+argument_list|(
+literal|"                       eg. ufs:%s%s\n"
+argument_list|,
+name|_PATH_DEV
+argument_list|,
+literal|"da0a"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"  ?                  List valid disk boot devices\n"
