@@ -2071,6 +2071,33 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"%lu requests for sfbufs denied\n"
+argument_list|,
+name|mbstat
+operator|->
+name|sf_allocfail
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%lu requests for sfbufs delayed\n"
+argument_list|,
+name|mbstat
+operator|->
+name|sf_allocwait
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%lu requests for I/O initiated by sendfile\n"
+argument_list|,
+name|mbstat
+operator|->
+name|sf_iocnt
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"%lu calls to protocol drain routines\n"
 argument_list|,
 name|mbstat
