@@ -1,7 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
 comment|/*-  * Copyright (c) 1992-1995 S
-comment|en Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: syscons.c,v 1.5 1996/09/03 10:24:01 asami Exp $  */
+comment|en Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: syscons.c,v 1.6 1996/09/04 09:52:29 asami Exp $  */
 end_comment
 
 begin_include
@@ -2856,6 +2856,9 @@ modifier|*
 name|scp
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|PC98
 comment|/*     u_short cursor_image, *ptr;      ptr = Crtat + (scp->cursor_oldpos - scp->scr_buf);  	cursor_image = scp->cursor_saveunder;     *ptr = cursor_image; SOS */
 operator|*
 operator|(
@@ -2876,6 +2879,8 @@ name|scp
 operator|->
 name|cursor_saveunder
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -2980,6 +2985,9 @@ name|scp
 operator|->
 name|xpos
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PC98
 name|scp
 operator|->
 name|cursor_atr
@@ -3000,6 +3008,8 @@ name|scp
 operator|->
 name|xpos
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -9707,6 +9717,14 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|scp
+operator|->
+name|cursor_oldpos
+operator|=
+name|scp
+operator|->
+name|cursor_pos
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|PC98
@@ -14253,6 +14271,7 @@ operator|->
 name|term
 argument_list|)
 expr_stmt|;
+break|break;
 case|case
 literal|40
 case|:
@@ -18483,6 +18502,54 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
+name|scp
+operator|->
+name|history_head
+operator|=
+name|scp
+operator|->
+name|history_pos
+operator|=
+name|scp
+operator|->
+name|history
+operator|=
+operator|(
+name|u_short
+operator|*
+operator|)
+name|malloc
+argument_list|(
+name|scp
+operator|->
+name|history_size
+operator|*
+sizeof|sizeof
+argument_list|(
+name|u_short
+argument_list|)
+argument_list|,
+name|M_DEVBUF
+argument_list|,
+name|M_WAITOK
+argument_list|)
+expr_stmt|;
+name|bzero
+argument_list|(
+name|scp
+operator|->
+name|history_head
+argument_list|,
+name|scp
+operator|->
+name|history_size
+operator|*
+sizeof|sizeof
+argument_list|(
+name|u_short
+argument_list|)
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|PC98
@@ -18572,54 +18639,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|scp
-operator|->
-name|history_head
-operator|=
-name|scp
-operator|->
-name|history_pos
-operator|=
-name|scp
-operator|->
-name|history
-operator|=
-operator|(
-name|u_short
-operator|*
-operator|)
-name|malloc
-argument_list|(
-name|scp
-operator|->
-name|history_size
-operator|*
-sizeof|sizeof
-argument_list|(
-name|u_short
-argument_list|)
-argument_list|,
-name|M_DEVBUF
-argument_list|,
-name|M_WAITOK
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|scp
-operator|->
-name|history_head
-argument_list|,
-name|scp
-operator|->
-name|history_size
-operator|*
-sizeof|sizeof
-argument_list|(
-name|u_short
-argument_list|)
-argument_list|)
-expr_stmt|;
 ifndef|#
 directive|ifndef
 name|PC98
@@ -23711,6 +23730,9 @@ modifier|*
 name|scp
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|PC98
 specifier|static
 name|int
 name|last_xpos
@@ -24039,6 +24061,8 @@ literal|0x00
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 block|}
 specifier|static
 name|void
@@ -24049,6 +24073,9 @@ modifier|*
 name|scp
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|PC98
 name|int
 name|i
 decl_stmt|;
@@ -24180,6 +24207,8 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+endif|#
+directive|endif
 block|}
 specifier|static
 name|void
@@ -24190,6 +24219,9 @@ modifier|*
 name|scp
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|PC98
 if|if
 condition|(
 name|scp
@@ -24207,6 +24239,8 @@ operator|~
 name|MOUSE_CUTTING
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 specifier|static
 name|void
@@ -24217,6 +24251,9 @@ modifier|*
 name|scp
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|PC98
 if|if
 condition|(
 name|scp
@@ -24273,6 +24310,8 @@ name|tp
 operator|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 specifier|static
 name|void
@@ -24952,6 +24991,9 @@ modifier|*
 name|scp
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|PC98
 name|u_short
 modifier|*
 name|crt_pos
@@ -25072,6 +25114,8 @@ operator|->
 name|scr_buf
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 specifier|static
 name|void
@@ -25082,6 +25126,9 @@ modifier|*
 name|scp
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|PC98
 name|u_short
 modifier|*
 name|ptr
@@ -25326,6 +25373,8 @@ operator|=
 name|nch
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 specifier|static
 name|void
@@ -25336,6 +25385,9 @@ modifier|*
 name|scp
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|PC98
 name|scp
 operator|->
 name|mouse_cut_start
@@ -25358,10 +25410,9 @@ argument_list|(
 name|scp
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
-ifndef|#
-directive|ifndef
-name|PC98
 specifier|static
 name|void
 name|save_palette
@@ -25369,6 +25420,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|PC98
 name|int
 name|i
 decl_stmt|;
@@ -25410,9 +25464,9 @@ literal|6
 argument_list|)
 expr_stmt|;
 comment|/* reset flip/flop */
-block|}
 endif|#
 directive|endif
+block|}
 name|void
 name|load_palette
 parameter_list|(

@@ -102,18 +102,6 @@ directive|include
 file|<pc98/pc98/pc98.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<pc98/pc98/pc98_device.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pc98/pc98/icu.h>
-end_include
-
 begin_else
 else|#
 directive|else
@@ -124,6 +112,15 @@ include|#
 directive|include
 file|<i386/isa/isa.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* PC98 */
+end_comment
 
 begin_include
 include|#
@@ -136,15 +133,6 @@ include|#
 directive|include
 file|<i386/isa/icu.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* PC98 */
-end_comment
 
 begin_include
 include|#
