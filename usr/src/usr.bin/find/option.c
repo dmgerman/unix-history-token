@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Cimarron D. Taylor of the University of California, Berkeley.  *  * %sccs.include.redist.c%  */
+comment|/*-  * Copyright (c) 1990, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Cimarron D. Taylor of the University of California, Berkeley.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)option.c	8.1 (Berkeley) %G%"
+literal|"@(#)option.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -76,6 +76,21 @@ directive|include
 file|"find.h"
 end_include
 
+begin_decl_stmt
+specifier|static
+name|OPTION
+modifier|*
+name|option
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* NB: the following table must be sorted lexically. */
 end_comment
@@ -83,6 +98,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|OPTION
+specifier|const
 name|options
 index|[]
 init|=
@@ -577,6 +593,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|OPTION
 modifier|*
 name|option
