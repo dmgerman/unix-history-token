@@ -359,10 +359,6 @@ name|exitlist
 modifier|*
 name|ep
 decl_stmt|;
-name|struct
-name|timeval
-name|new_switchtime
-decl_stmt|;
 if|if
 condition|(
 name|p
@@ -1179,21 +1175,10 @@ argument_list|)
 expr_stmt|;
 name|microuptime
 argument_list|(
-operator|&
-name|new_switchtime
-argument_list|)
-expr_stmt|;
-name|PCPU_SET
+name|PCPU_PTR
 argument_list|(
 name|switchtime
-argument_list|,
-name|new_switchtime
 argument_list|)
-expr_stmt|;
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|sched_lock
 argument_list|)
 expr_stmt|;
 name|PCPU_SET
@@ -1201,6 +1186,12 @@ argument_list|(
 name|switchticks
 argument_list|,
 name|ticks
+argument_list|)
+expr_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|sched_lock
 argument_list|)
 expr_stmt|;
 comment|/* 	 * notify interested parties of our demise. 	 */
