@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)w.c	8.4 (Berkeley) %G%"
+literal|"@(#)w.c	8.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1732,9 +1732,19 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%s:%s"
+literal|"%s:%.*s"
 argument_list|,
 name|p
+argument_list|,
+name|ep
+operator|->
+name|utmp
+operator|.
+name|ut_host
+operator|+
+name|UT_HOSTSIZE
+operator|-
+name|x
 argument_list|,
 name|x
 argument_list|)
