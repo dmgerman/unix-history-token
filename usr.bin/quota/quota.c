@@ -238,13 +238,6 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|FOUND
-value|0x01
-end_define
-
 begin_function_decl
 specifier|static
 specifier|const
