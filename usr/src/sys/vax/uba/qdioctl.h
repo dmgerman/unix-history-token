@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * QDSS IOCTL definitions  *	@(#)qdioctl.h	1.1 (Berkeley) %G%  */
+comment|/*  * QDSS IOCTL definitions  *	@(#)qdioctl.h	1.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -47,7 +47,7 @@ begin_define
 define|#
 directive|define
 name|QD_GETEVENT
-value|_IOR(g, 1, struct _vs_event)
+value|_IOR('g', 1, struct _vs_event)
 end_define
 
 begin_comment
@@ -58,7 +58,7 @@ begin_define
 define|#
 directive|define
 name|QD_WTCURSOR
-value|_IOW(g, 2, short[32])
+value|_IOW('g', 2, short[32])
 end_define
 
 begin_comment
@@ -69,7 +69,7 @@ begin_define
 define|#
 directive|define
 name|QD_RDCURSOR
-value|_IOR(g, 3, 64)
+value|_IOR('g', 3, 64)
 end_define
 
 begin_comment
@@ -80,7 +80,7 @@ begin_define
 define|#
 directive|define
 name|QD_CLRSCRN
-value|_IO(g, 4)
+value|_IO('g', 4)
 end_define
 
 begin_comment
@@ -91,7 +91,7 @@ begin_define
 define|#
 directive|define
 name|QD_RDCONFIG
-value|_IOR(g, 5, short)
+value|_IOR('g', 5, short)
 end_define
 
 begin_comment
@@ -102,7 +102,7 @@ begin_define
 define|#
 directive|define
 name|QD_PRGMOUSE
-value|_IOW(g, 6, char)
+value|_IOW('g', 6, char)
 end_define
 
 begin_comment
@@ -113,7 +113,7 @@ begin_define
 define|#
 directive|define
 name|QD_PRGTABLET
-value|_IOW(g, 7, char)
+value|_IOW('g', 7, char)
 end_define
 
 begin_comment
@@ -124,7 +124,7 @@ begin_define
 define|#
 directive|define
 name|QD_PRGKBD
-value|_IOW(g, 8, struct prgkbd)
+value|_IOW('g', 8, struct prgkbd)
 end_define
 
 begin_comment
@@ -135,7 +135,7 @@ begin_define
 define|#
 directive|define
 name|QD_MAPDEVICE
-value|_IOR(g, 9, struct qdmap)
+value|_IOR('g', 9, struct qdmap)
 end_define
 
 begin_comment
@@ -146,7 +146,7 @@ begin_define
 define|#
 directive|define
 name|QD_MAPIOBUF
-value|_IOWR(g, 10, caddr_t)
+value|_IOWR('g', 10, caddr_t)
 end_define
 
 begin_comment
@@ -157,7 +157,7 @@ begin_define
 define|#
 directive|define
 name|QD_MAPEVENT
-value|_IOR(g, 11, caddr_t)
+value|_IOR('g', 11, caddr_t)
 end_define
 
 begin_comment
@@ -168,7 +168,7 @@ begin_define
 define|#
 directive|define
 name|QD_PRGCURSOR
-value|_IOW(g, 12, struct prg_cursor)
+value|_IOW('g', 12, struct prg_cursor)
 end_define
 
 begin_comment
@@ -179,7 +179,7 @@ begin_define
 define|#
 directive|define
 name|QD_RESET
-value|_IO(g, 13)
+value|_IO('g', 13)
 end_define
 
 begin_comment
@@ -190,7 +190,7 @@ begin_define
 define|#
 directive|define
 name|QD_POSCURSOR
-value|_IOW(g, 14, struct _vs_cursor)
+value|_IOW('g', 14, struct _vs_cursor)
 end_define
 
 begin_comment
@@ -201,7 +201,7 @@ begin_define
 define|#
 directive|define
 name|QD_SET
-value|_IO(g, 15)
+value|_IO('g', 15)
 end_define
 
 begin_comment
@@ -212,7 +212,7 @@ begin_define
 define|#
 directive|define
 name|QD_MAPSCROLL
-value|_IOR(g, 16, caddr_t)
+value|_IOR('g', 16, caddr_t)
 end_define
 
 begin_comment
@@ -223,7 +223,7 @@ begin_define
 define|#
 directive|define
 name|QD_UNMAPSCROLL
-value|_IO(g, 17)
+value|_IO('g', 17)
 end_define
 
 begin_comment
@@ -234,7 +234,7 @@ begin_define
 define|#
 directive|define
 name|QD_MAPCOLOR
-value|_IOR(g, 18, caddr_t)
+value|_IOR('g', 18, caddr_t)
 end_define
 
 begin_comment
@@ -245,7 +245,7 @@ begin_define
 define|#
 directive|define
 name|QD_UNMAPCOLOR
-value|_IO(g, 19)
+value|_IO('g', 19)
 end_define
 
 begin_comment
@@ -256,7 +256,7 @@ begin_define
 define|#
 directive|define
 name|QD_KERN_LOOP
-value|_IO(g, 20)
+value|_IO('g', 20)
 end_define
 
 begin_comment
@@ -267,7 +267,7 @@ begin_define
 define|#
 directive|define
 name|QD_KERN_UNLOOP
-value|_IO(g, 21)
+value|_IO('g', 21)
 end_define
 
 begin_comment
@@ -278,7 +278,7 @@ begin_define
 define|#
 directive|define
 name|QD_PRGTABRES
-value|_IOW(g, 22, short)
+value|_IOW('g', 22, short)
 end_define
 
 begin_comment
