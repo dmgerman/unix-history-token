@@ -1062,7 +1062,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-comment|/* This is to catch some wierd stuff on the UDB (mj) */
+comment|/* This is to catch some weird stuff on the UDB (mj) */
 block|if (framep->tf_regs[FRAME_PC]> 0&&  		    framep->tf_regs[FRAME_PC]< 0x120000000) { 			printf("PC Out of Whack\n"); 			printtrap(a0, a1, a2, entry, framep, 1, user); 		}
 endif|#
 directive|endif
