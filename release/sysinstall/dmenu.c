@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated for what's essentially a complete rewrite.  *  * $Id$  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated for what's essentially a complete rewrite.  *  * $Id: dmenu.c,v 1.1.1.1 1995/04/27 12:50:34 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,   *    verbatim and that no modifications are made prior to this   *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -349,6 +349,7 @@ operator|->
 name|type
 condition|)
 block|{
+comment|/* User whapped ESC twice and wants a sub-shell */
 case|case
 name|MENU_SHELL_ESCAPE
 case|:
@@ -457,6 +458,7 @@ operator|=
 name|TRUE
 expr_stmt|;
 break|break;
+comment|/* We want to simply display a file */
 case|case
 name|MENU_DISPLAY_FILE
 case|:
@@ -633,6 +635,7 @@ expr_stmt|;
 block|}
 block|}
 break|break;
+comment|/* It's a sub-menu; recurse on it */
 case|case
 name|MENU_SUBMENU
 case|:
@@ -681,6 +684,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+comment|/* Execute it as a system command */
 case|case
 name|MENU_SYSTEM_COMMAND
 case|:
@@ -699,12 +703,42 @@ name|ptr
 argument_list|)
 expr_stmt|;
 break|break;
+comment|/* Same as above, but execute it in a prgbox */
+case|case
+name|MENU_SYSTEM_COMMAND_BOX
+case|:
+name|dialog_prgbox
+argument_list|(
+name|tmp
+operator|->
+name|title
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+name|tmp
+operator|->
+name|ptr
+argument_list|,
+literal|22
+argument_list|,
+literal|76
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+break|break;
 case|case
 name|MENU_CALL
 case|:
+if|if
+condition|(
 operator|(
 operator|(
-name|void
+name|int
 argument_list|(
 operator|*
 argument_list|)
@@ -716,8 +750,33 @@ name|ptr
 operator|)
 operator|(
 operator|)
+condition|)
+block|{
+name|items_free
+argument_list|(
+name|nitems
+argument_list|,
+name|curr
+argument_list|,
+name|max
+argument_list|)
 expr_stmt|;
+return|return;
+block|}
 break|break;
+case|case
+name|MENU_CANCEL
+case|:
+name|items_free
+argument_list|(
+name|nitems
+argument_list|,
+name|curr
+argument_list|,
+name|max
+argument_list|)
+expr_stmt|;
+return|return;
 case|case
 name|MENU_SET_VARIABLE
 case|:
@@ -808,6 +867,15 @@ expr_stmt|;
 name|VarHead
 operator|=
 name|newvar
+expr_stmt|;
+name|msgInfo
+argument_list|(
+literal|"Set variable %s"
+argument_list|,
+name|newvar
+operator|->
+name|value
+argument_list|)
 expr_stmt|;
 block|}
 break|break;
