@@ -5453,6 +5453,8 @@ name|which
 operator|!=
 name|RTA_DST
 operator|||
+name|forcehost
+operator|||
 name|inet_lnaof
 argument_list|(
 name|su
