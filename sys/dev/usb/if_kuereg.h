@@ -658,9 +658,33 @@ name|struct
 name|kue_cdata
 name|kue_cdata
 decl_stmt|;
+name|struct
+name|mtx
+name|kue_mtx
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|KUE_LOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_enter(&(_sc)->kue_mtx, MTX_DEF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KUE_UNLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_exit(&(_sc)->kue_mtx, MTX_DEF)
+end_define
 
 end_unit
 
