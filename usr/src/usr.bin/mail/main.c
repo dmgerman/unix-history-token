@@ -25,7 +25,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)main.c	2.1 %G%"
+literal|"@(#)main.c	2.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -232,6 +232,45 @@ name|mustsend
 operator|++
 expr_stmt|;
 name|rflag
+operator|=
+name|argv
+index|[
+name|i
+operator|+
+literal|1
+index|]
+expr_stmt|;
+name|i
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'T'
+case|:
+comment|/* 			 * Next argument is temp file to write which 			 * articles have been read/deleted for netnews. 			 */
+if|if
+condition|(
+name|i
+operator|>=
+name|argc
+operator|-
+literal|1
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Name required after -T\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|Tflag
 operator|=
 name|argv
 index|[
