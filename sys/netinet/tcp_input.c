@@ -5538,8 +5538,15 @@ operator|.
 name|tcps_pawsdrop
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|tlen
+condition|)
 goto|goto
 name|dropafterack
+goto|;
+goto|goto
+name|drop
 goto|;
 block|}
 block|}
