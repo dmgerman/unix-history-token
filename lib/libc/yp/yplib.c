@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: yplib.c,v 1.4 1996/04/24 18:32:22 wpaul Exp wpaul $"
+literal|"$Id: yplib.c,v 1.18 1996/05/02 15:44:53 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1960,6 +1960,12 @@ modifier|*
 name|ypb
 decl_stmt|;
 block|{
+if|if
+condition|(
+name|ypb
+operator|->
+name|dom_client
+condition|)
 name|clnt_destroy
 argument_list|(
 name|ypb
@@ -1976,6 +1982,13 @@ expr_stmt|;
 name|ypb
 operator|->
 name|dom_socket
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|ypb
+operator|->
+name|dom_vers
 operator|=
 operator|-
 literal|1
@@ -2057,11 +2070,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|clnt_destroy
+name|_yp_unbind
 argument_list|(
 name|ypb
-operator|->
-name|dom_client
 argument_list|)
 expr_stmt|;
 if|if
@@ -2417,12 +2428,10 @@ argument_list|,
 literal|"yp_match: clnt_call"
 argument_list|)
 expr_stmt|;
+name|_yp_unbind
+argument_list|(
 name|ysd
-operator|->
-name|dom_vers
-operator|=
-operator|-
-literal|1
+argument_list|)
 expr_stmt|;
 goto|goto
 name|again
@@ -2525,12 +2534,6 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-else|else
-name|_yp_unbind
-argument_list|(
-name|ysd
-argument_list|)
-expr_stmt|;
 name|xdr_free
 argument_list|(
 name|xdr_ypresp_val
@@ -2797,11 +2800,10 @@ argument_list|,
 literal|"yp_first: clnt_call"
 argument_list|)
 expr_stmt|;
+name|_yp_unbind
+argument_list|(
 name|ysd
-operator|->
-name|dom_vers
-operator|=
-literal|0
+argument_list|)
 expr_stmt|;
 goto|goto
 name|again
@@ -2923,12 +2925,6 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-else|else
-name|_yp_unbind
-argument_list|(
-name|ysd
-argument_list|)
-expr_stmt|;
 name|xdr_free
 argument_list|(
 name|xdr_ypresp_key_val
@@ -3186,12 +3182,10 @@ argument_list|,
 literal|"yp_next: clnt_call"
 argument_list|)
 expr_stmt|;
+name|_yp_unbind
+argument_list|(
 name|ysd
-operator|->
-name|dom_vers
-operator|=
-operator|-
-literal|1
+argument_list|)
 expr_stmt|;
 goto|goto
 name|again
@@ -3313,12 +3307,6 @@ operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-else|else
-name|_yp_unbind
-argument_list|(
-name|ysd
-argument_list|)
-expr_stmt|;
 name|xdr_free
 argument_list|(
 name|xdr_ypresp_key_val
@@ -3416,6 +3404,8 @@ condition|)
 return|return
 name|YPERR_BADARGS
 return|;
+name|again
+label|:
 if|if
 condition|(
 name|_yp_dobind
@@ -3443,6 +3433,7 @@ name|tv_usec
 operator|=
 literal|0
 expr_stmt|;
+comment|/* YPPROC_ALL manufactures its own channel to ypserv using TCP */
 name|clnt_sock
 operator|=
 name|RPC_ANYSOCK
@@ -3522,9 +3513,8 @@ name|incallback
 operator|->
 name|data
 expr_stmt|;
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|clnt_call
 argument_list|(
 name|clnt
@@ -3543,7 +3533,33 @@ name|status
 argument_list|,
 name|tv
 argument_list|)
+operator|!=
+name|RPC_SUCCESS
+condition|)
+block|{
+name|clnt_perror
+argument_list|(
+name|ysd
+operator|->
+name|dom_client
+argument_list|,
+literal|"yp_next: clnt_call"
+argument_list|)
 expr_stmt|;
+name|clnt_destroy
+argument_list|(
+name|clnt
+argument_list|)
+expr_stmt|;
+name|_yp_unbind
+argument_list|(
+name|ysd
+argument_list|)
+expr_stmt|;
+goto|goto
+name|again
+goto|;
+block|}
 name|clnt_destroy
 argument_list|(
 name|clnt
@@ -3566,11 +3582,6 @@ name|status
 argument_list|)
 expr_stmt|;
 comment|/* not really needed... */
-name|_yp_unbind
-argument_list|(
-name|ysd
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|savstat
@@ -3755,12 +3766,10 @@ argument_list|,
 literal|"yp_order: clnt_call"
 argument_list|)
 expr_stmt|;
+name|_yp_unbind
+argument_list|(
 name|ysd
-operator|->
-name|dom_vers
-operator|=
-operator|-
-literal|1
+argument_list|)
 expr_stmt|;
 goto|goto
 name|again
@@ -3789,12 +3798,6 @@ operator|.
 name|ordernum
 expr_stmt|;
 block|}
-else|else
-name|_yp_unbind
-argument_list|(
-name|ysd
-argument_list|)
-expr_stmt|;
 name|xdr_free
 argument_list|(
 name|xdr_ypresp_order
@@ -3807,18 +3810,10 @@ operator|&
 name|ypro
 argument_list|)
 expr_stmt|;
-name|_yp_unbind
-argument_list|(
-name|ysd
-argument_list|)
-expr_stmt|;
 return|return
-name|ypprot_err
-argument_list|(
-name|ypro
-operator|.
-name|stat
-argument_list|)
+operator|(
+name|r
+operator|)
 return|;
 block|}
 end_function
@@ -3986,12 +3981,10 @@ argument_list|,
 literal|"yp_master: clnt_call"
 argument_list|)
 expr_stmt|;
+name|_yp_unbind
+argument_list|(
 name|ysd
-operator|->
-name|dom_vers
-operator|=
-operator|-
-literal|1
+argument_list|)
 expr_stmt|;
 goto|goto
 name|again
@@ -4027,12 +4020,6 @@ name|peer
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-name|_yp_unbind
-argument_list|(
-name|ysd
-argument_list|)
-expr_stmt|;
 name|xdr_free
 argument_list|(
 name|xdr_ypresp_master
@@ -4046,7 +4033,9 @@ name|yprm
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|r
+operator|)
 return|;
 block|}
 end_function
@@ -4187,12 +4176,10 @@ argument_list|,
 literal|"yp_maplist: clnt_call"
 argument_list|)
 expr_stmt|;
+name|_yp_unbind
+argument_list|(
 name|ysd
-operator|->
-name|dom_vers
-operator|=
-operator|-
-literal|1
+argument_list|)
 expr_stmt|;
 goto|goto
 name|again
@@ -4221,20 +4208,11 @@ operator|.
 name|maps
 expr_stmt|;
 block|}
-else|else
-name|_yp_unbind
-argument_list|(
-name|ysd
-argument_list|)
-expr_stmt|;
 comment|/* NO: xdr_free(xdr_ypresp_maplist,&ypml);*/
 return|return
-name|ypprot_err
-argument_list|(
-name|ypml
-operator|.
-name|stat
-argument_list|)
+operator|(
+name|r
+operator|)
 return|;
 block|}
 end_function
