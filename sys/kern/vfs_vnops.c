@@ -1731,11 +1731,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* 			 * XXX This should be LK_SHARED but I don't trust VFS 			 * enough to leave it like that until it has been 			 * reviewed further. 			 */
 name|vn_lock
 argument_list|(
 name|vp
 argument_list|,
-name|LK_SHARED
+name|LK_EXCLUSIVE
 operator||
 name|LK_RETRY
 argument_list|,
@@ -2282,11 +2283,12 @@ argument_list|,
 name|LEASE_READ
 argument_list|)
 expr_stmt|;
+comment|/* 	 * According to McKusick the vn lock is protecting f_offset here. 	 * Once this field has it's own lock we can acquire this shared. 	 */
 name|vn_lock
 argument_list|(
 name|vp
 argument_list|,
-name|LK_SHARED
+name|LK_EXCLUSIVE
 operator||
 name|LK_NOPAUSE
 operator||
