@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_lookup.c	6.20	85/02/22	*/
+comment|/*	ufs_lookup.c	6.21	85/02/22	*/
 end_comment
 
 begin_include
