@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.45 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.46 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -791,8 +791,15 @@ begin_comment
 comment|/* has the statfs(2) syscall */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HASFLOCK
+value|1
+end_define
+
 begin_comment
-comment|/* #  define HASFLOCK	1	/* has flock(2) call */
+comment|/* has flock(2) call */
 end_comment
 
 begin_include
@@ -1101,8 +1108,15 @@ begin_comment
 comment|/* has initgroups(3) call */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HASFLOCK
+value|1
+end_define
+
 begin_comment
-comment|/* # define HASFLOCK	1	/* has flock(2) call */
+comment|/* has flock(2) call */
 end_comment
 
 begin_define
@@ -1304,7 +1318,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  4.4 BSD */
+comment|/* **  4.4 BSD ** **	See also BSD defines. */
 end_comment
 
 begin_ifdef
@@ -1375,7 +1389,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* **  386BSD / FreeBSD 1.0E (works) / NetBSD (not tested) ** **  4.3BSD clone, closer to 4.4BSD */
+comment|/* **  386BSD / FreeBSD 1.0E (works) / NetBSD (not tested) ** **  4.3BSD clone, closer to 4.4BSD ** **	See also BSD defines. */
 end_comment
 
 begin_ifdef
@@ -1905,8 +1919,15 @@ begin_comment
 comment|/* has unsetenv(3) call */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HASFLOCK
+value|1
+end_define
+
 begin_comment
-comment|/* # define HASFLOCK	1	/* has flock(2) call */
+comment|/* has flock(2) call */
 end_comment
 
 begin_define
