@@ -43,6 +43,11 @@ decl_stmt|,
 name|dst_mask
 decl_stmt|;
 comment|/* Mask for src and dest IP addr */
+name|struct
+name|in_addr
+name|via
+decl_stmt|;
+comment|/* IP addr of interface "via" */
 name|u_short
 name|flags
 decl_stmt|;
@@ -248,20 +253,6 @@ define|#
 directive|define
 name|IP_FW_ADD_FWD
 value|(IP_FW_BASE_CTL+1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IP_FW_CHK_BLK
-value|(IP_FW_BASE_CTL+2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IP_FW_CHK_FWD
-value|(IP_FW_BASE_CTL+3)
 end_define
 
 begin_define
