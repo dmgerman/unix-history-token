@@ -101,6 +101,47 @@ name|pthread_t
 name|pthread
 parameter_list|)
 block|{
+name|_thread_sigblock
+argument_list|()
+expr_stmt|;
+name|_SPINLOCK
+argument_list|(
+operator|&
+name|pthread
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|_thread_critical_exit
+parameter_list|(
+name|pthread_t
+name|pthread
+parameter_list|)
+block|{
+name|_SPINUNLOCK
+argument_list|(
+operator|&
+name|pthread
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
+name|_thread_sigunblock
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|_thread_sigblock
+parameter_list|()
+block|{
 name|sigset_t
 name|set
 decl_stmt|;
@@ -113,22 +154,20 @@ argument_list|(
 name|set
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We can not use the global 'restore' set until after we have 	 * acquired the giant lock. 	 */
-name|_SPINLOCK
+name|SIGADDSET
 argument_list|(
-operator|&
-name|pthread
-operator|->
-name|lock
+name|set
+argument_list|,
+name|SIGTHR
 argument_list|)
 expr_stmt|;
-comment|/* If we are already in a critical section, just up the refcount */
+comment|/* If we have already blocked signals, just up the refcount */
 if|if
 condition|(
 operator|++
 name|curthread
 operator|->
-name|crit_ref
+name|signest
 operator|>
 literal|1
 condition|)
@@ -137,12 +176,12 @@ name|PTHREAD_ASSERT
 argument_list|(
 name|curthread
 operator|->
-name|crit_ref
+name|signest
 operator|==
 literal|1
 argument_list|,
 operator|(
-literal|"Critical section reference count must be 1!"
+literal|"Blocked signal nesting level must be 1!"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -184,22 +223,19 @@ end_function
 
 begin_function
 name|void
-name|_thread_critical_exit
-parameter_list|(
-name|pthread_t
-name|pthread
-parameter_list|)
+name|_thread_sigunblock
+parameter_list|()
 block|{
 name|sigset_t
 name|set
 decl_stmt|;
-comment|/* We might be in a nested critical section */
+comment|/* We might be in a nested 'blocked signal' section */
 if|if
 condition|(
 operator|--
 name|curthread
 operator|->
-name|crit_ref
+name|signest
 operator|>
 literal|0
 condition|)
@@ -208,12 +244,12 @@ name|PTHREAD_ASSERT
 argument_list|(
 name|curthread
 operator|->
-name|crit_ref
+name|signest
 operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"Non-Zero critical section reference count."
+literal|"Non-Zero blocked signal nesting level."
 operator|)
 argument_list|)
 expr_stmt|;
@@ -250,14 +286,6 @@ name|abort
 argument_list|()
 expr_stmt|;
 block|}
-name|_SPINUNLOCK
-argument_list|(
-operator|&
-name|pthread
-operator|->
-name|lock
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

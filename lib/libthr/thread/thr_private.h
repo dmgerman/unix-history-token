@@ -1051,9 +1051,9 @@ name|sigset_t
 name|savedsig
 decl_stmt|;
 name|int
-name|crit_ref
+name|signest
 decl_stmt|;
-comment|/* crit. section netsting level */
+comment|/* blocked signal netsting level */
 comment|/* 	 * Lock for accesses to this thread structure. 	 */
 name|spinlock_t
 name|lock
@@ -2324,6 +2324,20 @@ name|_thread_critical_exit
 parameter_list|(
 name|pthread_t
 parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_thread_sigblock
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_thread_sigunblock
+parameter_list|()
 function_decl|;
 end_function_decl
 
