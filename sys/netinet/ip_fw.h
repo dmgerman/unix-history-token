@@ -218,6 +218,9 @@ comment|/* u32 = id			*/
 name|O_ALTQ
 block|,
 comment|/* u32 = altq classif. qid	*/
+name|O_DIVERTED
+block|,
+comment|/* arg1=bitmap (1:loop, 2:out)	*/
 name|O_LAST_OPCODE
 comment|/* not an opcode!		*/
 block|}
@@ -911,21 +914,35 @@ begin_define
 define|#
 directive|define
 name|IP_FW_PORT_DYNT_FLAG
-value|0x10000
+value|0x00010000
 end_define
 
 begin_define
 define|#
 directive|define
 name|IP_FW_PORT_TEE_FLAG
-value|0x20000
+value|0x00020000
 end_define
 
 begin_define
 define|#
 directive|define
 name|IP_FW_PORT_DENY_FLAG
-value|0x40000
+value|0x00040000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IP_FW_DIVERT_LOOPBACK_FLAG
+value|0x00080000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IP_FW_DIVERT_OUTPUT_FLAG
+value|0x00100000
 end_define
 
 begin_comment
