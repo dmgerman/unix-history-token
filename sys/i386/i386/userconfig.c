@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 Jordan K. Hubbard  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed by the   * University of California Berkeley, Jordan K. Hubbard,  * David Greenman and Naffy, the Wonder Porpoise.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: userconfig.c,v 1.11 1994/11/13 00:42:01 jkh Exp $  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  * Copyright (c) 1994 Jordan K. Hubbard  * All rights reserved.  * Copyright (c) 1994 David Greenman  * All rights reserved.  *  * This code is derived from software contributed by the   * University of California Berkeley, Jordan K. Hubbard,  * David Greenman and Naffy, the Wonder Porpoise.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the University of  *      California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: userconfig.c,v 1.12 1994/11/13 00:43:29 jkh Exp $  */
 end_comment
 
 begin_include
@@ -441,23 +441,59 @@ index|[]
 init|=
 block|{
 block|{
-literal|"ls"
+literal|"?"
 block|,
-name|list_devices
-block|,
-name|NULL
-block|}
-block|,
-comment|/* ls		*/
-block|{
-literal|"list"
-block|,
-name|list_devices
+name|helpfunc
 block|,
 name|NULL
 block|}
 block|,
 comment|/* ""		*/
+block|{
+literal|"di"
+block|,
+name|set_device_disable
+block|,
+name|dev_parms
+block|}
+block|,
+comment|/* disable dev	*/
+block|{
+literal|"dr"
+block|,
+name|set_device_drq
+block|,
+name|int_parms
+block|}
+block|,
+comment|/* drq dev #	*/
+block|{
+literal|"en"
+block|,
+name|set_device_enable
+block|,
+name|dev_parms
+block|}
+block|,
+comment|/* enable dev	*/
+block|{
+literal|"ex"
+block|,
+name|quitfunc
+block|,
+name|NULL
+block|}
+block|,
+comment|/* ""		*/
+block|{
+literal|"h"
+block|,
+name|helpfunc
+block|,
+name|NULL
+block|}
+block|,
+comment|/* help		*/
 block|{
 literal|"io"
 block|,
@@ -468,7 +504,7 @@ block|}
 block|,
 comment|/* io dev addr	*/
 block|{
-literal|"irq"
+literal|"ir"
 block|,
 name|set_device_irq
 block|,
@@ -477,16 +513,16 @@ block|}
 block|,
 comment|/* irq dev #	*/
 block|{
-literal|"drq"
+literal|"l"
 block|,
-name|set_device_drq
+name|list_devices
 block|,
-name|int_parms
+name|NULL
 block|}
 block|,
-comment|/* drq dev #	*/
+comment|/* ls		*/
 block|{
-literal|"mem"
+literal|"m"
 block|,
 name|set_device_mem
 block|,
@@ -495,63 +531,9 @@ block|}
 block|,
 comment|/* mem dev addr	*/
 block|{
-literal|"enable"
-block|,
-name|set_device_enable
-block|,
-name|dev_parms
-block|}
-block|,
-comment|/* enable dev	*/
-block|{
-literal|"disable"
-block|,
-name|set_device_disable
-block|,
-name|dev_parms
-block|}
-block|,
-comment|/* disable dev	*/
-block|{
-literal|"quit"
-block|,
-name|quitfunc
-block|,
-name|NULL
-block|}
-block|,
-comment|/* quit		*/
-block|{
 literal|"q"
 block|,
 name|quitfunc
-block|,
-name|NULL
-block|}
-block|,
-comment|/* ""		*/
-block|{
-literal|"exit"
-block|,
-name|quitfunc
-block|,
-name|NULL
-block|}
-block|,
-comment|/* ""		*/
-block|{
-literal|"help"
-block|,
-name|helpfunc
-block|,
-name|NULL
-block|}
-block|,
-comment|/* help		*/
-block|{
-literal|"?"
-block|,
-name|helpfunc
 block|,
 name|NULL
 block|}
@@ -1440,7 +1422,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"help\t\t\tThis message\n"
+literal|"help\t\t\tThis message\n\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Commands may also be abbreviated to a unique number of characters\n"
 argument_list|)
 expr_stmt|;
 return|return
