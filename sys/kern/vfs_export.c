@@ -10060,6 +10060,10 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*  * High level function to manipulate export options on a mount point  * and the passed in netexport.  * Struct export_args *argp is the variable used to twiddle options,  * the structure is described in sys/mount.h  */
+end_comment
+
 begin_function
 name|int
 name|vfs_export
@@ -10543,6 +10547,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Used by the filesystems to determine if a given network address  * (passed in 'nam') is present in thier exports list, returns a pointer  * to struct netcred so that the filesystem can examine it for  * access rights (read/write/etc).  */
+end_comment
 
 begin_function
 name|struct
