@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)mbuf.h	8.5 (Berkeley) 2/19/95  * $Id: mbuf.h,v 1.15 1996/02/25 23:34:03 hsu Exp $  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)mbuf.h	8.5 (Berkeley) 2/19/95  * $Id: mbuf.h,v 1.14 1996/03/11 02:14:16 hsu Exp $  */
 end_comment
 
 begin_ifndef
@@ -611,6 +611,29 @@ value|M_WAITOK
 end_define
 
 begin_comment
+comment|/* Freelists:  *  * Normal mbuf clusters are normally treated as character arrays  * after allocation, but use the first word of the buffer as a free list  * pointer while on the free list.  */
+end_comment
+
+begin_union
+union|union
+name|mcluster
+block|{
+name|union
+name|mcluster
+modifier|*
+name|mcl_next
+decl_stmt|;
+name|char
+name|mcl_buf
+index|[
+name|MCLBYTES
+index|]
+decl_stmt|;
+block|}
+union|;
+end_union
+
+begin_comment
 comment|/*  * mbuf utility macros:  *  *	MBUFLOCK(code)  * prevents a section of code from from being interrupted by network  * drivers.  */
 end_comment
 
@@ -640,7 +663,7 @@ name|how
 parameter_list|,
 name|type
 parameter_list|)
-value|{ \ 	MALLOC((m), struct mbuf *, MSIZE, mbtypes[type], (how)); \ 	if (m) { \ 		(m)->m_type = (type); \ 		MBUFLOCK(mbstat.m_mtypes[type]++;) \ 		(m)->m_next = (struct mbuf *)NULL; \ 		(m)->m_nextpkt = (struct mbuf *)NULL; \ 		(m)->m_data = (m)->m_dat; \ 		(m)->m_flags = 0; \ 	} else \ 		(m) = m_retry((how), (type)); \ }
+value|{ \ 	  int _ms = splimp(); \ 	  if (mmbfree == 0) \ 		(void)m_mballoc(1, (how)); \ 	  if (((m) = mmbfree) != 0) { \ 		mmbfree = (m)->m_next; \ 		mbstat.m_mtypes[MT_FREE]--; \ 		(m)->m_type = (type); \ 		mbstat.m_mtypes[type]++; \ 		(m)->m_next = (struct mbuf *)NULL; \ 		(m)->m_nextpkt = (struct mbuf *)NULL; \ 		(m)->m_data = (m)->m_dat; \ 		(m)->m_flags = 0; \ 		splx(_ms); \ 	} else { \ 		splx(_ms); \ 		(m) = m_retry((how), (type)); \ 	} \ }
 end_define
 
 begin_define
@@ -654,31 +677,12 @@ name|how
 parameter_list|,
 name|type
 parameter_list|)
-value|{ \ 	MALLOC((m), struct mbuf *, MSIZE, mbtypes[type], (how)); \ 	if (m) { \ 		(m)->m_type = (type); \ 		MBUFLOCK(mbstat.m_mtypes[type]++;) \ 		(m)->m_next = (struct mbuf *)NULL; \ 		(m)->m_nextpkt = (struct mbuf *)NULL; \ 		(m)->m_data = (m)->m_pktdat; \ 		(m)->m_flags = M_PKTHDR; \ 	} else \ 		(m) = m_retryhdr((how), (type)); \ }
+value|{ \ 	  int _ms = splimp(); \ 	  if (mmbfree == 0) \ 		(void)m_mballoc(1, (how)); \ 	  if (((m) = mmbfree) != 0) { \ 		mmbfree = (m)->m_next; \ 		mbstat.m_mtypes[MT_FREE]--; \ 		(m)->m_type = (type); \ 		mbstat.m_mtypes[type]++; \ 		(m)->m_next = (struct mbuf *)NULL; \ 		(m)->m_nextpkt = (struct mbuf *)NULL; \ 		(m)->m_data = (m)->m_pktdat; \ 		(m)->m_flags = M_PKTHDR; \ 		splx(_ms); \ 	} else { \ 		splx(_ms); \ 		(m) = m_retryhdr((how), (type)); \ 	} \ }
 end_define
 
 begin_comment
-comment|/*  * Mbuf cluster macros.  * MCLALLOC(caddr_t p, int how) allocates an mbuf cluster.  * MCLGET adds such clusters to a normal mbuf;  * the flag M_EXT is set upon success.  * MCLFREE releases a reference to a cluster allocated by MCLALLOC,  * freeing the cluster if the reference count has reached 0.  *  * Normal mbuf clusters are normally treated as character arrays  * after allocation, but use the first word of the buffer as a free list  * pointer while on the free list.  */
+comment|/*  * Mbuf cluster macros.  * MCLALLOC(caddr_t p, int how) allocates an mbuf cluster.  * MCLGET adds such clusters to a normal mbuf;  * the flag M_EXT is set upon success.  * MCLFREE releases a reference to a cluster allocated by MCLALLOC,  * freeing the cluster if the reference count has reached 0.  */
 end_comment
-
-begin_union
-union|union
-name|mcluster
-block|{
-name|union
-name|mcluster
-modifier|*
-name|mcl_next
-decl_stmt|;
-name|char
-name|mcl_buf
-index|[
-name|MCLBYTES
-index|]
-decl_stmt|;
-block|}
-union|;
-end_union
 
 begin_define
 define|#
@@ -737,7 +741,7 @@ parameter_list|,
 name|n
 parameter_list|)
 define|\
-value|{ MBUFLOCK(mbstat.m_mtypes[(m)->m_type]--;) \ 	  if ((m)->m_flags& M_EXT) { \ 		if ((m)->m_ext.ext_free) \ 			(*((m)->m_ext.ext_free))((m)->m_ext.ext_buf, \ 			    (m)->m_ext.ext_size); \ 		else \ 			MCLFREE((m)->m_ext.ext_buf); \ 	  } \ 	  (n) = (m)->m_next; \ 	  FREE((m), mbtypes[(m)->m_type]); \ 	}
+value|{ MBUFLOCK(mbstat.m_mtypes[(m)->m_type]--;) \ 	  if ((m)->m_flags& M_EXT) { \ 		if ((m)->m_ext.ext_free) \ 			(*((m)->m_ext.ext_free))((m)->m_ext.ext_buf, \ 			    (m)->m_ext.ext_size); \ 		else { \ 			char *p = (m)->m_ext.ext_buf; \ 			if (--mclrefcnt[mtocl(p)] == 0) { \ 			((union mcluster *)(p))->mcl_next = mclfree; \ 			mclfree = (union mcluster *)(p); \ 			mbstat.m_clfree++; \ 		} \ 	  } \ 	  (n) = (m)->m_next; \ 	  (m)->m_type = MT_FREE; \ 	  mbstat.m_mtypes[MT_FREE]++; \ 	  (m)->m_next = mmbfree; \ 	  mmbfree = (m); \ 	}
 end_define
 
 begin_else
@@ -759,7 +763,7 @@ parameter_list|,
 name|nn
 parameter_list|)
 define|\
-value|{ MBUFLOCK(mbstat.m_mtypes[(m)->m_type]--;) \ 	  if ((m)->m_flags& M_EXT) { \ 		MCLFREE((m)->m_ext.ext_buf); \ 	  } \ 	  (nn) = (m)->m_next; \ 	  FREE((m), mbtypes[(m)->m_type]); \ 	}
+value|MBUFLOCK ( \ 		mbstat.m_mtypes[(m)->m_type]--; \ 		if ((m)->m_flags& M_EXT) { \ 			char *p = (m)->m_ext.ext_buf; \ 			if (--mclrefcnt[mtocl(p)] == 0) { \ 				((union mcluster *)(p))->mcl_next = mclfree; \ 				mclfree = (union mcluster *)(p); \ 				mbstat.m_clfree++; \ 			} \ 		} \ 		(nn) = (m)->m_next; \ 		(m)->m_type = MT_FREE; \ 		mbstat.m_mtypes[MT_FREE]++; \ 		(m)->m_next = mmbfree; \ 		mmbfree = (m); \ 	)
 end_define
 
 begin_endif
@@ -1007,6 +1011,15 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|struct
+name|mbuf
+modifier|*
+name|mmbfree
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|union
 name|mcluster
 modifier|*
@@ -1085,6 +1098,24 @@ operator|,
 name|int
 operator|,
 name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|mbuf
+modifier|*
+name|m_copypacket
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mbuf
+operator|*
 operator|,
 name|int
 operator|)
@@ -1312,6 +1343,20 @@ operator|,
 expr|struct
 name|mbuf
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|m_mballoc
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
