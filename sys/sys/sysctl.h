@@ -2914,6 +2914,23 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|sysctl_move_oid
+parameter_list|(
+name|struct
+name|sysctl_oid
+modifier|*
+name|oidp
+parameter_list|,
+name|struct
+name|sysctl_oid_list
+modifier|*
+name|parent
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|sysctl_remove_oid
 parameter_list|(
 name|struct
