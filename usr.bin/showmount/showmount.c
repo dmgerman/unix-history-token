@@ -590,6 +590,9 @@ name|mntvers
 argument_list|,
 name|RPCMNT_DUMP
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_void
 argument_list|,
 operator|(
@@ -598,6 +601,9 @@ operator|*
 operator|)
 literal|0
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_mntdump
 argument_list|,
 operator|(
@@ -646,6 +652,9 @@ name|mntvers
 argument_list|,
 name|RPCMNT_EXPORT
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_void
 argument_list|,
 operator|(
@@ -654,6 +663,9 @@ operator|*
 operator|)
 literal|0
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_exports
 argument_list|,
 operator|(
