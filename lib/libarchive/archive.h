@@ -333,14 +333,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * XXX Kill this function.  The client callback is now responsible for  * read blocking. XXX  */
-end_comment
-
-begin_comment
-comment|/*   int		 archive_read_set_bytes_per_block(struct archive *, 		     int bytes_per_blk); */
-end_comment
-
-begin_comment
 comment|/*  * The archive_read_support_XXX calls enable auto-detect for this  * archive handle.  They also link in the necessary support code.  * For example, if you don't want bzlib linked in, don't invoke  * support_compression_bzip2().  The "all" functions provide the  * obvious shorthand.  */
 end_comment
 
