@@ -9,7 +9,7 @@ name|char
 name|rev
 index|[]
 init|=
-literal|"$Revision: 1.3 $"
+literal|"$Revision: 1.2 $"
 decl_stmt|;
 end_decl_stmt
 
@@ -553,7 +553,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Too many scsi CDs..(%d> %d) reconfigure kernel"
+literal|"Too many scsi CDs..(%d> %d) reconfigure kernel\n"
 argument_list|,
 operator|(
 name|unit

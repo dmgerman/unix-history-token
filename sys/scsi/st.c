@@ -964,7 +964,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\tst%d: tape present: %d blocks of %d bytes\n"
+literal|"st%d: tape present: %d blocks of %d bytes\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -982,7 +982,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"\tst%d: drive empty\n"
+literal|"st%d: drive empty\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -993,7 +993,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"\tst%d: drive offline\n"
+literal|"st%d: drive offline\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -1225,7 +1225,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"	st%d: couldn't get device type, using default\n"
+literal|"st%d: couldn't get device type, using default\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -1432,7 +1432,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"	st%d: %s is a known rogue\n"
+literal|"st%d: %s is a known rogue\n"
 argument_list|,
 name|unit
 argument_list|,
