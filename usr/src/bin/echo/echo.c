@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)echo.c	4.1 (Berkeley) %G%"
+literal|"@(#)echo.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,6 +66,15 @@ literal|1
 index|]
 operator|==
 literal|'n'
+operator|&&
+operator|!
+name|argv
+index|[
+literal|1
+index|]
+index|[
+literal|2
+index|]
 condition|)
 block|{
 name|nflg
