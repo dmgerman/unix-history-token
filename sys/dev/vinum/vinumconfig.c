@@ -2802,27 +2802,6 @@ modifier|*
 name|drive
 parameter_list|)
 block|{
-if|if
-condition|(
-operator|(
-name|drive
-operator|->
-name|state
-operator|>
-name|drive_referenced
-operator|)
-comment|/* real drive */
-operator|||
-operator|(
-name|drive
-operator|->
-name|flags
-operator|&
-name|VF_OPEN
-operator|)
-condition|)
-block|{
-comment|/* how can it be open without a state? */
 name|LOCKDRIVE
 argument_list|(
 name|drive
@@ -2836,7 +2815,6 @@ name|flags
 operator|&
 name|VF_OPEN
 condition|)
-block|{
 comment|/* it's open, */
 name|close_locked_drive
 argument_list|(
@@ -2844,14 +2822,6 @@ name|drive
 argument_list|)
 expr_stmt|;
 comment|/* close it */
-name|drive
-operator|->
-name|state
-operator|=
-name|drive_down
-expr_stmt|;
-comment|/* and note the fact */
-block|}
 if|if
 condition|(
 name|drive
@@ -2882,7 +2852,6 @@ argument_list|(
 name|drive
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
