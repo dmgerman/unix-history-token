@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sys_term.c	5.1 (Berkeley) %G%"
+literal|"@(#)sys_term.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4209,11 +4209,11 @@ endif|#
 directive|endif
 comment|/* CRAY */
 comment|/* 	 * set up standard paths before forking to login 	 */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|BSD
-name|>
-name|43
+operator|>
+literal|43
 if|if
 condition|(
 name|setsid
