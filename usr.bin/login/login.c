@@ -1289,10 +1289,6 @@ name|olduser
 argument_list|)
 expr_stmt|;
 block|}
-name|olduser
-operator|=
-name|username
-expr_stmt|;
 comment|/* 		 * Load the PAM policy and set some variables 		 */
 name|pam_err
 operator|=
