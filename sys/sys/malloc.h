@@ -58,19 +58,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_ASLEEP
-value|0x0004
-end_define
-
-begin_comment
-comment|/* async sleep on failure */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|M_ZERO
-value|0x0008
+value|0x0004
 end_define
 
 begin_comment

@@ -994,26 +994,6 @@ operator|=
 name|splbio
 argument_list|()
 expr_stmt|;
-comment|/* if not using callbacks, prepare to sleep for this request */
-if|if
-condition|(
-operator|!
-name|callback
-condition|)
-name|asleep
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|request
-argument_list|,
-name|PRIBIO
-argument_list|,
-literal|"atprq"
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 comment|/* append onto controller queue and try to start controller */
 ifdef|#
 directive|ifdef
@@ -1121,9 +1101,16 @@ literal|0
 return|;
 block|}
 comment|/* wait for request to complete */
-name|await
+name|tsleep
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|request
+argument_list|,
 name|PRIBIO
+argument_list|,
+literal|"atprq"
 argument_list|,
 literal|0
 argument_list|)
