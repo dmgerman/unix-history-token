@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: vidcontrol.c,v 1.4 1994/05/26 04:13:59 jkh Exp $  */
+comment|/*-  * Copyright (c) 1994 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: vidcontrol.c,v 1.1 1994/08/17 09:00:13 sos Exp $  */
 end_comment
 
 begin_include
@@ -1453,12 +1453,12 @@ operator|*
 name|index
 index|]
 argument_list|,
-literal|"80x25"
+literal|"VGA_40x25"
 argument_list|)
 condition|)
 name|mode
 operator|=
-name|CONS_80x25TEXT
+name|SW_VGA_C40x25
 expr_stmt|;
 elseif|else
 if|if
@@ -1472,12 +1472,88 @@ operator|*
 name|index
 index|]
 argument_list|,
-literal|"80x50"
+literal|"VGA_80x25"
 argument_list|)
 condition|)
 name|mode
 operator|=
-name|CONS_80x50TEXT
+name|SW_VGA_C80x25
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|argv
+index|[
+operator|*
+name|index
+index|]
+argument_list|,
+literal|"VGA_80x50"
+argument_list|)
+condition|)
+name|mode
+operator|=
+name|SW_VGA_C80x50
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|argv
+index|[
+operator|*
+name|index
+index|]
+argument_list|,
+literal|"VGA_320x200"
+argument_list|)
+condition|)
+name|mode
+operator|=
+name|SW_VGA_CG320
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|argv
+index|[
+operator|*
+name|index
+index|]
+argument_list|,
+literal|"EGA_80x25"
+argument_list|)
+condition|)
+name|mode
+operator|=
+name|SW_ENH_C80x25
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|argv
+index|[
+operator|*
+name|index
+index|]
+argument_list|,
+literal|"EGA_80x43"
+argument_list|)
+condition|)
+name|mode
+operator|=
+name|SW_ENH_C80x43
 expr_stmt|;
 else|else
 return|return;
@@ -1938,7 +2014,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: vidcontrol mode             (available modes: 80x25, 80x50)\n"
+literal|"Usage: vidcontrol mode             (available modes: VGA_40x25, VGA_80x25,\n"
+literal|"                                                     VGA_80x50, VGA_320x200,\n"
+literal|"                                                     EGA_80x25, EGA_80x43)\n"
 literal|"                  show             (show available colors)\n"
 literal|"                  fgcol bgcol      (set fore-& background colors)\n"
 literal|"                  -r fgcol bgcol   (set reverse fore-& background colors)\n"
