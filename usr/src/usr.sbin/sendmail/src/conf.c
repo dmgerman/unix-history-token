@@ -428,6 +428,8 @@ block|,
 name|M_FOPT
 operator||
 name|M_HDR
+operator||
+name|M_STRIPQ
 block|,
 name|EX_UNAVAIL
 block|,
@@ -456,7 +458,7 @@ comment|/* arpanet mail */
 block|{
 literal|"/usr/lib/mailers/arpa"
 block|,
-literal|0
+name|M_STRIPQ
 block|,
 literal|0
 block|,
