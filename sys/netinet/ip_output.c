@@ -293,19 +293,6 @@ name|ip_id
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-specifier|static
-name|void
-name|in_delayed_cksum
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-name|m
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|static
 name|struct
@@ -4045,7 +4032,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|in_delayed_cksum
 parameter_list|(
