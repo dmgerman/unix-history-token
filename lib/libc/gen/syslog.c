@@ -29,7 +29,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: syslog.c,v 1.9 1996/07/12 18:54:07 jkh Exp $"
+literal|"$Id: syslog.c,v 1.9.2.1 1997/03/23 19:08:54 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -64,6 +64,12 @@ begin_include
 include|#
 directive|include
 file|<sys/uio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/un.h>
 end_include
 
 begin_include
@@ -1232,7 +1238,7 @@ name|connectlog
 parameter_list|()
 block|{
 name|struct
-name|sockaddr
+name|sockaddr_un
 name|SyslogAddr
 decl_stmt|;
 comment|/* AF_UNIX address of local logger */
@@ -1289,7 +1295,7 @@ condition|)
 block|{
 name|SyslogAddr
 operator|.
-name|sa_len
+name|sun_len
 operator|=
 sizeof|sizeof
 argument_list|(
@@ -1298,7 +1304,7 @@ argument_list|)
 expr_stmt|;
 name|SyslogAddr
 operator|.
-name|sa_family
+name|sun_family
 operator|=
 name|AF_UNIX
 expr_stmt|;
@@ -1309,7 +1315,7 @@ name|strncpy
 argument_list|(
 name|SyslogAddr
 operator|.
-name|sa_data
+name|sun_path
 argument_list|,
 name|_PATH_LOG
 argument_list|,
@@ -1317,7 +1323,7 @@ sizeof|sizeof
 argument_list|(
 name|SyslogAddr
 operator|.
-name|sa_data
+name|sun_path
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1327,6 +1333,11 @@ name|connect
 argument_list|(
 name|LogFile
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|SyslogAddr
 argument_list|,
@@ -1353,7 +1364,7 @@ name|strncpy
 argument_list|(
 name|SyslogAddr
 operator|.
-name|sa_data
+name|sun_path
 argument_list|,
 name|_PATH_OLDLOG
 argument_list|,
@@ -1361,7 +1372,7 @@ sizeof|sizeof
 argument_list|(
 name|SyslogAddr
 operator|.
-name|sa_data
+name|sun_path
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1371,6 +1382,11 @@ name|connect
 argument_list|(
 name|LogFile
 argument_list|,
+operator|(
+expr|struct
+name|sockaddr
+operator|*
+operator|)
 operator|&
 name|SyslogAddr
 argument_list|,
