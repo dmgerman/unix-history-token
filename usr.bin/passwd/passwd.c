@@ -353,28 +353,13 @@ name|pw_name
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-name|_PWF_HESIOD
-case|:
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"can't change Hesiod password"
-argument_list|)
-expr_stmt|;
-break|break;
 default|default:
-comment|/* specieist! */
+comment|/* XXX: Green men ought to be supported via PAM. */
 name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"can't change little green men's passwords (0x%x)"
-argument_list|,
-name|pwd
-operator|->
-name|pw_fields
+literal|"Sorry, `passwd' can only change passwords for local or NIS users."
 argument_list|)
 expr_stmt|;
 block|}
