@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)msgs.c	4.12 (Berkeley) %G%"
+literal|"@(#)msgs.c	4.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2824,6 +2824,11 @@ argument_list|,
 name|onsusp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|mailing
+condition|)
 name|longjmp
 argument_list|(
 name|tstpbuf
