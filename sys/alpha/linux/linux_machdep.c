@@ -589,11 +589,6 @@ name|EINVAL
 operator|)
 return|;
 comment|/*	if (exit_signal<= LINUX_SIGTBLSZ) 		exit_signal = linux_to_bsd_signal[_SIG_IDX(exit_signal)]; */
-comment|/* RFTHREAD probably not necessary here, but it shouldn't hurt */
-name|ff
-operator||=
-name|RFTHREAD
-expr_stmt|;
 if|if
 condition|(
 name|args
