@@ -2175,6 +2175,19 @@ argument_list|)
 condition|)
 empty_stmt|;
 comment|/* nothing */
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|t
+argument_list|,
+literal|"CCD"
+argument_list|)
+condition|)
+empty_stmt|;
+comment|/* nothing */
 else|else
 block|{
 name|printf
