@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: label.c,v 1.32.2.7 1995/10/04 12:08:12 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: label.c,v 1.32.2.8 1995/10/07 11:55:27 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -1129,7 +1129,8 @@ name|dialog_menu
 argument_list|(
 literal|"Please choose a partition type"
 argument_list|,
-literal|"If you want to use this partition for swap space, select Swap.\nIf you want to put a filesystem on it, choose FS."
+literal|"If you want to use this partition for swap space, select Swap.\n"
+literal|"If you want to put a filesystem on it, choose FS."
 argument_list|,
 operator|-
 literal|1
@@ -1216,7 +1217,8 @@ name|p
 operator|->
 name|newfs_cmd
 argument_list|,
-literal|"Please enter the newfs command and options you'd like to use in\ncreating this file system."
+literal|"Please enter the newfs command and options you'd like to use in\n"
+literal|"creating this file system."
 argument_list|)
 expr_stmt|;
 if|if
@@ -2363,7 +2365,10 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Sorry, I can't fit any more partitions on the screen!  You can get around\nthis limitation by partitioning your disks individually rather than all\nat once.  This will be fixed just as soon as we get a scrolling partition\nbox written.  Sorry for the inconvenience!"
+literal|"Sorry, I can't fit any more partitions on the screen!  You can get around\n"
+literal|"this limitation by partitioning your disks individually rather than all\n"
+literal|"at once.  This will be fixed just as soon as we get a scrolling partition\n"
+literal|"box written.  Sorry for the inconvenience!"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2626,7 +2631,8 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Less than %dMB free for /var - you will need to\npartition your disk manually with a custom install!"
+literal|"Less than %dMB free for /var - you will need to\n"
+literal|"partition your disk manually with a custom install!"
 argument_list|,
 name|VAR_MIN_SIZE
 operator|/
@@ -2683,7 +2689,8 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Less than %dMB free for /usr - you will need to\npartition your disk manually with a custom install!"
+literal|"Less than %dMB free for /usr - you will need to\n"
+literal|"partition your disk manually with a custom install!"
 argument_list|,
 name|USR_MIN_SIZE
 operator|/
@@ -2729,7 +2736,8 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Unable to create the /usr partition.  Not enough space?\nYou will need to partition your disk manually with a custom install!"
+literal|"Unable to create the /usr partition.  Not enough space?\n"
+literal|"You will need to partition your disk manually with a custom install!"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2831,7 +2839,10 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Sorry, I can't fit any more partitions on the screen!  You can get around\nthis limitation by partitioning your disks individually rather than all\nat once.  This will be fixed just as soon as we get a scrolling partition\nbox written.  Sorry for the inconvenience!"
+literal|"Sorry, I can't fit any more partitions on the screen!  You can get around\n"
+literal|"this limitation by partitioning your disks individually rather than all\n"
+literal|"at once.  This will be fixed just as soon as we get a scrolling partition\n"
+literal|"box written.  Sorry for the inconvenience!"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2904,7 +2915,9 @@ name|msgGetInput
 argument_list|(
 name|osize
 argument_list|,
-literal|"Please specify the size for new FreeBSD partition in blocks, or\nappend a trailing `M' for megabytes (e.g. 20M) or `C' for cylinders.\n\nSpace free is %d blocks (%dMB)"
+literal|"Please specify the size for new FreeBSD partition in blocks, or\n"
+literal|"append a trailing `M' for megabytes (e.g. 20M) or `C' for cylinders.\n\n"
+literal|"Space free is %d blocks (%dMB)"
 argument_list|,
 name|sz
 argument_list|,
@@ -3101,7 +3114,10 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"This region cannot be used for your root partition as the\nFreeBSD boot code cannot deal with a root partition created\nin that location.  Please choose another location or smaller\nsize for your root partition and try again!"
+literal|"This region cannot be used for your root partition as the\n"
+literal|"FreeBSD boot code cannot deal with a root partition created\n"
+literal|"in that location.  Please choose another location or smaller\n"
+literal|"size for your root partition and try again!"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3114,7 +3130,9 @@ name|ROOT_MIN_SIZE
 condition|)
 name|msgConfirm
 argument_list|(
-literal|"Warning: This is smaller than the recommended size for a\nroot partition.  For a variety of reasons, root\npartitions should usually be at least %dMB in size"
+literal|"Warning: This is smaller than the recommended size for a\n"
+literal|"root partition.  For a variety of reasons, root\n"
+literal|"partitions should usually be at least %dMB in size"
 argument_list|,
 name|ROOT_MIN_SIZE
 operator|/
@@ -3191,7 +3209,10 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"This region cannot be used for your root partition as it starts\nor extends past the 1024'th cylinder mark and is thus a\npoor location to boot from.  Please choose another\nlocation (or smaller size) for your root partition and try again!"
+literal|"This region cannot be used for your root partition as it starts\n"
+literal|"or extends past the 1024'th cylinder mark and is thus a\n"
+literal|"poor location to boot from.  Please choose another\n"
+literal|"location (or smaller size) for your root partition and try again!"
 argument_list|)
 expr_stmt|;
 name|Delete_Chunk
@@ -3718,7 +3739,10 @@ condition|(
 operator|!
 name|msgYesNo
 argument_list|(
-literal|"Are you sure that you wish to make and mount all filesystems\nat this time?  You also have the option of doing it later in\none final 'commit' operation, and if you're at all unsure as\nto which option to chose, then please chose No!"
+literal|"Are you sure that you wish to make and mount all filesystems\n"
+literal|"at this time?  You also have the option of doing it later in\n"
+literal|"one final 'commit' operation, and if you're at all unsure as\n"
+literal|"to which option to chose, then please chose No!"
 argument_list|)
 condition|)
 block|{
@@ -3744,7 +3768,9 @@ condition|(
 operator|!
 name|msgYesNo
 argument_list|(
-literal|"Are you sure you want to go into Wizard mode?\n\nThis is an entirely undocumented feature which you are not\nexpected to understand!"
+literal|"Are you sure you want to go into Wizard mode?\n\n"
+literal|"This is an entirely undocumented feature which you are not\n"
+literal|"expected to understand!"
 argument_list|)
 condition|)
 block|{
@@ -3933,13 +3959,15 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-operator|!
 name|installFilesystems
 argument_list|()
+operator|!=
+name|RET_SUCCESS
 condition|)
 name|msgConfirm
 argument_list|(
-literal|"Failed to make/mount all filesystems.  Please correct\nwhatever went wrong and try again."
+literal|"Failed to make/mount all filesystems.  Please correct\n"
+literal|"whatever went wrong and try again."
 argument_list|)
 expr_stmt|;
 else|else

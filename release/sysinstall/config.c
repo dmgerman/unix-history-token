@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: config.c,v 1.16.2.9 1995/10/11 09:57:21 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: config.c,v 1.16.2.10 1995/10/14 09:30:42 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -195,6 +195,66 @@ operator|)
 operator|->
 name|mountpoint
 argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|char
+modifier|*
+name|name_of
+parameter_list|(
+name|Chunk
+modifier|*
+name|c1
+parameter_list|)
+block|{
+specifier|static
+name|char
+name|rootname
+index|[
+literal|64
+index|]
+decl_stmt|;
+comment|/* Our boot blocks can't deal with root partitions on slices - need the comp atbility name */
+if|if
+condition|(
+name|c1
+operator|->
+name|type
+operator|==
+name|part
+operator|&&
+name|c1
+operator|->
+name|flags
+operator|&
+name|CHUNK_IS_ROOT
+condition|)
+block|{
+name|sprintf
+argument_list|(
+name|rootname
+argument_list|,
+literal|"%sa"
+argument_list|,
+name|c1
+operator|->
+name|disk
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+return|return
+name|rootname
+return|;
+block|}
+else|else
+return|return
+name|c1
+operator|->
+name|name
 return|;
 block|}
 end_function
@@ -680,7 +740,8 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Unable to create a new /etc/fstab file!\nManual intervention will be required."
+literal|"Unable to create a new /etc/fstab file!\n"
+literal|"Manual intervention will be required."
 argument_list|)
 expr_stmt|;
 return|return
@@ -712,12 +773,13 @@ name|fstab
 argument_list|,
 literal|"/dev/%s\t\t\t%s\t\t%s\t%s %d %d\n"
 argument_list|,
+name|name_of
+argument_list|(
 name|chunk_list
 index|[
 name|i
 index|]
-operator|->
-name|name
+argument_list|)
 argument_list|,
 name|mount_point
 argument_list|(
@@ -951,7 +1013,8 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Unable to open /etc/sysconfig file!  Things may work\nrather strangely as a result of this."
+literal|"Unable to open /etc/sysconfig file!  Things may work\n"
+literal|"rather strangely as a result of this."
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1190,7 +1253,8 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Unable to re-write /etc/sysconfig file!  Things may work\nrather strangely as a result of this."
+literal|"Unable to re-write /etc/sysconfig file!  Things may work\n"
+literal|"rather strangely as a result of this."
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1368,7 +1432,15 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"You have chosen to be an NFS server but have not yet configured\nthe /etc/exports file.  The format for an exports entry is:\n<mountpoint><opts><host [..host]>\nWhere<mounpoint> is the name of a filesystem as specified\nin the Label editor,<opts> is a list of special options we\nwon't concern ourselves with here (``man exports'' when the\nsystem is fully installed) and<host> is one or more host\nnames who are allowed to mount this file system.  Press\n[ENTER] now to invoke the editor on /etc/exports"
+literal|"You have chosen to be an NFS server but have not yet configured\n"
+literal|"the /etc/exports file.  The format for an exports entry is:\n"
+literal|"<mountpoint><opts><host [..host]>\n"
+literal|"Where<mounpoint> is the name of a filesystem as specified\n"
+literal|"in the Label editor,<opts> is a list of special options we\n"
+literal|"won't concern ourselves with here (``man exports'' when the\n"
+literal|"system is fully installed) and<host> is one or more host\n"
+literal|"names who are allowed to mount this file system.  Press\n"
+literal|"[ENTER] now to invoke the editor on /etc/exports"
 argument_list|)
 expr_stmt|;
 name|systemExecute
@@ -1513,7 +1585,8 @@ operator|)
 condition|)
 name|msgConfirm
 argument_list|(
-literal|"Warning:  Missing name server value - network operations\nmay fail as a result!"
+literal|"Warning:  Missing name server value - network operations\n"
+literal|"may fail as a result!"
 argument_list|)
 expr_stmt|;
 goto|goto
