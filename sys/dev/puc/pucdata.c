@@ -4290,6 +4290,73 @@ block|}
 block|, 	    }
 block|, 	}
 block|,
+comment|/* Avlab Technology, Inc. Low Profile PCI 4 Serial: 4S */
+block|{
+literal|"Avlab Low Profile PCI 4 Serial"
+block|,
+block|{
+literal|0x14db
+block|,
+literal|0x2150
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0xffff
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+block|{
+name|PUC_PORT_TYPE_COM
+block|,
+literal|0x10
+block|,
+literal|0x00
+block|,
+name|COM_FREQ
+block|}
+block|,
+block|{
+name|PUC_PORT_TYPE_COM
+block|,
+literal|0x14
+block|,
+literal|0x00
+block|,
+name|COM_FREQ
+block|}
+block|,
+block|{
+name|PUC_PORT_TYPE_COM
+block|,
+literal|0x18
+block|,
+literal|0x00
+block|,
+name|COM_FREQ
+block|}
+block|,
+block|{
+name|PUC_PORT_TYPE_COM
+block|,
+literal|0x1c
+block|,
+literal|0x00
+block|,
+name|COM_FREQ
+block|}
+block|, 	    }
+block|, 	}
+block|,
 comment|/* Decision Computer Inc, serial ports */
 block|{
 literal|"Decision Computer Inc, PCCOM 4-port serial"
