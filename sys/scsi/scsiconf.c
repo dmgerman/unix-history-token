@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  * New configuration setup: dufault@hda.com  *  *      $Id$  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  * New configuration setup: dufault@hda.com  *  *      $Id: scsiconf.c,v 1.79 1997/02/22 09:44:34 peter Exp $  */
 end_comment
 
 begin_include
@@ -1392,9 +1392,56 @@ block|,
 literal|0
 block|}
 block|,
+block|{
+name|T_SEQUENTIAL
+block|,
+name|T_SEQUENTIAL
+block|,
+name|T_REMOV
+block|,
+literal|"ARCHIVE"
+block|,
+literal|"Python 28849-*"
+block|,
+literal|"*"
+block|,
+literal|"st"
+block|,
+name|SC_MORE_LUS
+block|,
+literal|0
+block|}
+block|,
 endif|#
 directive|endif
 comment|/* NST */
+if|#
+directive|if
+name|NCH
+operator|>
+literal|0
+comment|/* 	 * The<ARCHIVE, Python 28849-XXX, 4.98> is a SCSI changer device 	 * with an Archive Python DAT drive built-in.  The tape appears 	 * at LUN 0 and the changer at LUN 1. 	 * This entry should not be needed at all. 	 */
+block|{
+name|T_CHANGER
+block|,
+name|T_CHANGER
+block|,
+name|T_REMOV
+block|,
+literal|"ARCHIVE"
+block|,
+literal|"Python 28849-*"
+block|,
+literal|"*"
+block|,
+literal|"ch"
+block|,
+name|SC_MORE_LUS
+block|}
+block|,
+endif|#
+directive|endif
+comment|/* NCH */
 if|#
 directive|if
 name|NCD
@@ -1712,6 +1759,7 @@ directive|if
 name|NCH
 operator|>
 literal|0
+comment|/* 	 * Due to the way media changers are working, they are most 	 * likely always on a different LUN than the transfer element 	 * device.  Thus, it should be safe to always probe all LUNs 	 * on them. 	 */
 block|{
 name|T_CHANGER
 block|,
@@ -1727,7 +1775,7 @@ literal|"*"
 block|,
 literal|"ch"
 block|,
-name|SC_ONE_LU
+name|SC_MORE_LUS
 block|}
 block|,
 endif|#
