@@ -2748,6 +2748,13 @@ index|[
 literal|5
 index|]
 operator|=
+literal|"-F"
+expr_stmt|;
+name|av
+index|[
+literal|6
+index|]
+operator|=
 literal|0
 expr_stmt|;
 name|fo
@@ -2836,6 +2843,8 @@ condition|?
 name|title
 else|:
 literal|" "
+argument_list|,
+literal|"-F"
 argument_list|,
 literal|0
 argument_list|)
