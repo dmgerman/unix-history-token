@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.30 1995/02/22 09:30:13 davidg Exp $  */
+comment|/*  * Copyright (c) 1994 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: vfs_bio.c,v 1.31 1995/02/25 01:46:26 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -2150,12 +2150,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|pmap_page_protect
-argument_list|(
-name|VM_PAGE_TO_PHYS
+name|vm_page_protect
 argument_list|(
 name|m
-argument_list|)
 argument_list|,
 name|VM_PROT_NONE
 argument_list|)
@@ -3833,14 +3830,8 @@ name|cnt
 operator|.
 name|v_cache_min
 condition|)
-name|wakeup
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-operator|&
-name|vm_pages_needed
-argument_list|)
+name|pagedaemon_wakeup
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -4697,12 +4688,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|pmap_page_protect
-argument_list|(
-name|VM_PAGE_TO_PHYS
+name|vm_page_protect
 argument_list|(
 name|m
-argument_list|)
 argument_list|,
 name|VM_PROT_NONE
 argument_list|)
@@ -5880,11 +5868,19 @@ name|b_flags
 operator|&
 name|B_DONE
 condition|)
+block|{
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"biodone: buffer already done\n"
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
 name|bp
 operator|->
 name|b_flags
@@ -6908,12 +6904,9 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-name|pmap_page_protect
-argument_list|(
-name|VM_PAGE_TO_PHYS
+name|vm_page_protect
 argument_list|(
 name|m
-argument_list|)
 argument_list|,
 name|VM_PROT_READ
 argument_list|)
