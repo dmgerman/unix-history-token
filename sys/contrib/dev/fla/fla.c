@@ -929,12 +929,9 @@ name|bio_bcount
 expr_stmt|;
 name|unit
 operator|=
-name|dkunit
-argument_list|(
-name|bp
+name|sc
 operator|->
-name|bio_dev
-argument_list|)
+name|unit
 expr_stmt|;
 if|if
 condition|(
