@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)routed.c	4.17 82/06/17"
+literal|"@(#)routed.c	4.18 82/06/20"
 decl_stmt|;
 end_decl_stmt
 
@@ -273,6 +273,18 @@ init|=
 literal|1
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|externalinterfaces
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* # of remote and local interfaces */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -576,6 +588,7 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * We use two sockets.  One for which outgoing 	 * packets are routed and for which they're not. 	 * The latter allows us to delete routing table 	 * entries in the kernel for network interfaces 	 * attached to our host which we believe are down 	 * while still polling it to see when/if it comes 	 * back up.  With the new ipc interface we'll be 	 * able to specify ``don't route'' as an option 	 * to send, but until then we utilize a second port. 	 */
 ifdef|#
 directive|ifdef
 name|vax
@@ -776,7 +789,11 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Collect an initial view of the world by 	 * snooping in the kernel and the gateway kludge 	 * file.  Then, send a request packet on all 	 * directly connected networks to find out what 	 * everyone else thinks. 	 */
 name|rtinit
+argument_list|()
+expr_stmt|;
+name|gwkludge
 argument_list|()
 expr_stmt|;
 name|ifinit
@@ -791,9 +808,6 @@ condition|)
 name|supplier
 operator|=
 literal|0
-expr_stmt|;
-name|gwkludge
-argument_list|()
 expr_stmt|;
 name|msg
 operator|->
@@ -997,6 +1011,10 @@ name|ifnet
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Probe the kernel through /dev/kmem to find the network  * interfaces which have configured themselves.  If the  * interface is present but not yet up (for example an  * ARPANET IMP), set the lookforinterfaces flag so we'll  * come back later and look again.  */
+end_comment
+
 begin_macro
 name|ifinit
 argument_list|()
@@ -1015,11 +1033,6 @@ name|ifs
 decl_stmt|,
 modifier|*
 name|next
-decl_stmt|;
-name|int
-name|externalinterfaces
-init|=
-literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -1229,6 +1242,7 @@ literal|1
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* already known to us? */
 if|if
 condition|(
 name|if_ifwithaddr
@@ -1240,6 +1254,7 @@ name|if_addr
 argument_list|)
 condition|)
 continue|continue;
+comment|/* argh, this'll have to change sometime */
 if|if
 condition|(
 name|ifs
@@ -1251,6 +1266,7 @@ operator|!=
 name|AF_INET
 condition|)
 continue|continue;
+comment|/* no one cares about software loopback interfaces */
 if|if
 condition|(
 name|ifs
@@ -1290,7 +1306,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* 		 * Count the # of directly connected networks 		 * and point to point links which aren't looped 		 * back to ourself.  This is used below to 		 * decide if we should be a routing "supplier". 		 */
+comment|/* 		 * Count the # of directly connected networks 		 * and point to point links which aren't looped 		 * back to ourself.  This is used below to 		 * decide if we should be a routing ``supplier''. 		 */
 if|if
 condition|(
 operator|(
@@ -1518,6 +1534,15 @@ operator|&
 name|net
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|rtlookup
+argument_list|(
+name|dst
+argument_list|)
+operator|==
+literal|0
+condition|)
 name|rtadd
 argument_list|(
 name|dst
@@ -1546,6 +1571,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_comment
+comment|/*  * As a concession to the ARPANET we read a list of gateways  * from /etc/gateways and add them to our tables.  This file  * exists at each ARPANET gateway and indicates a set of ``remote''  * gateways (i.e. a gateway which we can't immediately determine  * if it's present or not as we can do for those directly connected  * at the hardware level).  If a gateway is marked ``passive''  * in the file, then we assume it doesn't have a routing process  * of our design and simply assume it's always present.  Those  * not marked passive are treated as if they were directly  * connected -- they're added into the interface list so we'll  * send them routing updates.  */
+end_comment
 
 begin_macro
 name|gwkludge
@@ -1766,6 +1795,11 @@ name|int_flags
 operator||=
 name|IFF_PASSIVE
 expr_stmt|;
+else|else
+comment|/* assume no duplicate entries */
+name|externalinterfaces
+operator|++
+expr_stmt|;
 name|ifp
 operator|->
 name|int_addr
@@ -1811,6 +1845,10 @@ expr_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/*  * Timer routine.  Performs routing information supply  * duties and manages timers on routing table entries.  */
+end_comment
+
 begin_macro
 name|timer
 argument_list|()
@@ -1842,7 +1880,7 @@ name|doinghost
 init|=
 literal|1
 decl_stmt|,
-name|supplyeverything
+name|timetobroadcast
 decl_stmt|;
 name|timeval
 operator|+=
@@ -1863,7 +1901,7 @@ condition|)
 name|ifinit
 argument_list|()
 expr_stmt|;
-name|supplyeverything
+name|timetobroadcast
 operator|=
 name|supplier
 operator|&&
@@ -1927,6 +1965,7 @@ operator|->
 name|rt_forw
 control|)
 block|{
+comment|/* 			 * We don't advance time on a routing entry for 			 * a passive gateway or that for our only interface.  			 * The latter is excused because we don't act as 			 * a routing information supplier and hence would 			 * time it out.  This is fair as if it's down 			 * we're cut off from the world anyway and it's 			 * not likely we'll grow any new hardware in 			 * the mean time. 			 */
 if|if
 condition|(
 operator|!
@@ -1936,6 +1975,19 @@ operator|->
 name|rt_state
 operator|&
 name|RTS_PASSIVE
+operator|)
+operator|&&
+operator|(
+name|supplier
+operator|||
+operator|!
+operator|(
+name|rt
+operator|->
+name|rt_state
+operator|&
+name|RTS_INTERFACE
+operator|)
 operator|)
 condition|)
 name|rt
@@ -2008,7 +2060,10 @@ expr_stmt|;
 comment|/* don't send extraneous packets */
 if|if
 condition|(
-name|supplyeverything
+operator|!
+name|supplier
+operator|||
+name|timetobroadcast
 condition|)
 continue|continue;
 name|log
@@ -2084,7 +2139,7 @@ goto|;
 block|}
 if|if
 condition|(
-name|supplyeverything
+name|timetobroadcast
 condition|)
 name|toall
 argument_list|(
@@ -2258,6 +2313,10 @@ operator|)
 expr_stmt|;
 block|}
 end_block
+
+begin_comment
+comment|/*  * Supply dst with the contents of the routing tables.  * If this won't fit in one packet, chop it up into several.  */
+end_comment
 
 begin_macro
 name|supply
@@ -2650,6 +2709,12 @@ block|{
 case|case
 name|RIPCMD_REQUEST
 case|:
+if|if
+condition|(
+operator|!
+name|supplier
+condition|)
+return|return;
 name|newsize
 operator|=
 literal|0
@@ -3193,7 +3258,7 @@ operator|->
 name|rt_timer
 argument_list|)
 expr_stmt|;
-comment|/* 			 * update if from gateway, shorter, or getting 			 * stale and equivalent. 			 */
+comment|/* 			 * Update if from gateway, shorter, or getting 			 * stale and equivalent. 			 */
 if|if
 condition|(
 name|equal
@@ -3267,6 +3332,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
+
+begin_comment
+comment|/*  * Lookup dst in the tables for an exact match.  */
+end_comment
 
 begin_function
 name|struct
@@ -3443,6 +3512,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Find a route to dst as the kernel would.  */
+end_comment
 
 begin_function
 name|struct
