@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)system_.c	5.1	%G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)system_.c	5.2	%G%  */
 end_comment
 
 begin_comment
@@ -175,18 +175,10 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
-name|int
-argument_list|(
-operator|*
+name|sig_t
 name|istat
-argument_list|)
-argument_list|()
 decl_stmt|,
-argument_list|(
-operator|*
 name|qstat
-argument_list|)
-argument_list|()
 decl_stmt|;
 name|int
 name|status
@@ -319,6 +311,9 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGINT
@@ -326,6 +321,9 @@ argument_list|,
 name|istat
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|signal
 argument_list|(
 name|SIGQUIT
