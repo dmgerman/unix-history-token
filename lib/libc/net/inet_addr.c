@@ -219,7 +219,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|val
+name|errno
 operator|==
 name|ERANGE
 condition|)
