@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.7 (Berkeley) %G%"
+literal|"@(#)main.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -182,10 +182,7 @@ argument_list|)
 expr_stmt|;
 name|setlogmask
 argument_list|(
-name|LOG_UPTO
-argument_list|(
 name|LOG_WARNING
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|sp
@@ -341,10 +338,7 @@ operator|++
 expr_stmt|;
 name|setlogmask
 argument_list|(
-name|LOG_UPTO
-argument_list|(
 name|LOG_DEBUG
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|argv
@@ -370,10 +364,7 @@ condition|)
 block|{
 name|setlogmask
 argument_list|(
-name|LOG_UPTO
-argument_list|(
 name|LOG_DEBUG
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|argv
