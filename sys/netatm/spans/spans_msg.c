@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: spans_msg.c,v 1.8 1998/08/26 23:29:09 mks Exp $  *  */
+comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: spans_msg.c,v 1.1 1998/09/15 08:23:03 phk Exp $  *  */
 end_comment
 
 begin_comment
@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|RCSid
 init|=
-literal|"@(#) $Id: spans_msg.c,v 1.8 1998/08/26 23:29:09 mks Exp $"
+literal|"@(#) $Id: spans_msg.c,v 1.1 1998/09/15 08:23:03 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -481,7 +481,7 @@ directive|ifdef
 name|NOTDEF
 name|ATM_DEBUG2
 argument_list|(
-literal|"spans_send_msg: msg=0x%x, type=%d\n"
+literal|"spans_send_msg: msg=%p, type=%d\n"
 argument_list|,
 name|msg
 argument_list|,
@@ -707,7 +707,7 @@ literal|0
 decl_stmt|;
 name|ATM_DEBUG1
 argument_list|(
-literal|"spans_send_open_req: svp=0x%x\n"
+literal|"spans_send_open_req: svp=%p\n"
 argument_list|,
 name|svp
 argument_list|)
@@ -885,7 +885,7 @@ name|rc
 decl_stmt|;
 name|ATM_DEBUG2
 argument_list|(
-literal|"spans_send_open_rsp: svp=0x%x, result=%d\n"
+literal|"spans_send_open_rsp: svp=%p, result=%d\n"
 argument_list|,
 name|svp
 argument_list|,
@@ -1031,7 +1031,7 @@ literal|0
 decl_stmt|;
 name|ATM_DEBUG1
 argument_list|(
-literal|"spans_send_close_req: svp=0x%x\n"
+literal|"spans_send_close_req: svp=%p\n"
 argument_list|,
 name|svp
 argument_list|)
@@ -1592,7 +1592,7 @@ name|call_attrs
 decl_stmt|;
 name|ATM_DEBUG2
 argument_list|(
-literal|"spans_open_req: spp=0x%x, msg=0x%x\n"
+literal|"spans_open_req: spp=%p, msg=%p\n"
 argument_list|,
 name|spp
 argument_list|,
@@ -2884,7 +2884,7 @@ name|svp
 decl_stmt|;
 name|ATM_DEBUG2
 argument_list|(
-literal|"spans_open_rsp: spp=0x%x, msg=0x%x\n"
+literal|"spans_open_rsp: spp=%p, msg=%p\n"
 argument_list|,
 name|spp
 argument_list|,
@@ -3210,7 +3210,7 @@ name|cvp
 decl_stmt|;
 name|ATM_DEBUG2
 argument_list|(
-literal|"spans_close_req: spp=0x%x, msg=0x%x\n"
+literal|"spans_close_req: spp=%p, msg=%p\n"
 argument_list|,
 name|spp
 argument_list|,
@@ -3585,7 +3585,7 @@ name|svp
 decl_stmt|;
 name|ATM_DEBUG2
 argument_list|(
-literal|"spans_close_rsp: spp=0x%x, msg=0x%x\n"
+literal|"spans_close_rsp: spp=%p, msg=%p\n"
 argument_list|,
 name|spp
 argument_list|,
@@ -4472,7 +4472,7 @@ name|rsp_msg
 decl_stmt|;
 name|ATM_DEBUG1
 argument_list|(
-literal|"spans_query_req: msg=0x%x\n"
+literal|"spans_query_req: msg=%p\n"
 argument_list|,
 name|msg
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: unisig_if.c,v 1.12 1998/07/30 22:36:57 mks Exp $  *  */
+comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: unisig_if.c,v 1.1 1998/09/15 08:23:11 phk Exp $  *  */
 end_comment
 
 begin_comment
@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|RCSid
 init|=
-literal|"@(#) $Id: unisig_if.c,v 1.12 1998/07/30 22:36:57 mks Exp $"
+literal|"@(#) $Id: unisig_if.c,v 1.1 1998/09/15 08:23:11 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -598,7 +598,7 @@ name|NULL
 decl_stmt|;
 name|ATM_DEBUG2
 argument_list|(
-literal|"unisig_attach: smp=%x, pip=%x\n"
+literal|"unisig_attach: smp=%p, pip=%p\n"
 argument_list|,
 name|smp
 argument_list|,
@@ -908,7 +908,7 @@ name|err
 decl_stmt|;
 name|ATM_DEBUG1
 argument_list|(
-literal|"unisig_detach: pip=0x%x\n"
+literal|"unisig_detach: pip=%p\n"
 argument_list|,
 name|pip
 argument_list|)
@@ -1042,7 +1042,7 @@ literal|0
 decl_stmt|;
 name|ATM_DEBUG1
 argument_list|(
-literal|"unisig_setup: cvp=0x%x\n"
+literal|"unisig_setup: cvp=%p\n"
 argument_list|,
 name|cvp
 argument_list|)
@@ -1194,7 +1194,7 @@ name|pif_siginst
 decl_stmt|;
 name|ATM_DEBUG1
 argument_list|(
-literal|"unisig_release: vcp=0x%x\n"
+literal|"unisig_release: vcp=%p\n"
 argument_list|,
 name|vcp
 argument_list|)
@@ -1357,7 +1357,7 @@ name|pif_siginst
 decl_stmt|;
 name|ATM_DEBUG1
 argument_list|(
-literal|"unisig_accept: vcp=0x%x\n"
+literal|"unisig_accept: vcp=%p\n"
 argument_list|,
 name|vcp
 argument_list|)
@@ -1548,7 +1548,7 @@ name|pif_siginst
 decl_stmt|;
 name|ATM_DEBUG1
 argument_list|(
-literal|"unisig_reject: uvp=0x%x\n"
+literal|"unisig_reject: uvp=%p\n"
 argument_list|,
 name|uvp
 argument_list|)
@@ -1680,11 +1680,8 @@ decl_stmt|;
 block|{
 name|ATM_DEBUG1
 argument_list|(
-literal|"unisig_abort: vcp=0x%x\n"
+literal|"unisig_abort: vcp=%p\n"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|vcp
 argument_list|)
 expr_stmt|;
@@ -1773,7 +1770,7 @@ name|pif_siginst
 decl_stmt|;
 name|ATM_DEBUG1
 argument_list|(
-literal|"unisig_free: vcp = 0x%x\n"
+literal|"unisig_free: vcp = %p\n"
 argument_list|,
 name|vcp
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: unisig_proto.c,v 1.9 1998/08/26 23:29:23 mks Exp $  *  */
+comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: unisig_proto.c,v 1.1 1998/09/15 08:23:12 phk Exp $  *  */
 end_comment
 
 begin_comment
@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|RCSid
 init|=
-literal|"@(#) $Id: unisig_proto.c,v 1.9 1998/08/26 23:29:23 mks Exp $"
+literal|"@(#) $Id: unisig_proto.c,v 1.1 1998/09/15 08:23:12 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -113,11 +113,8 @@ operator|)
 expr_stmt|;
 name|ATM_DEBUG2
 argument_list|(
-literal|"unisig_timer: usp=0x%x,state=%d\n"
+literal|"unisig_timer: usp=%p,state=%d\n"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|usp
 argument_list|,
 name|usp
@@ -218,11 +215,8 @@ name|pif_siginst
 expr_stmt|;
 name|ATM_DEBUG3
 argument_list|(
-literal|"unisig_vctimer: uvp=0x%x, sstate=%d, ustate=%d\n"
+literal|"unisig_vctimer: uvp=%p, sstate=%d, ustate=%d\n"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|uvp
 argument_list|,
 name|uvp
@@ -326,11 +320,8 @@ name|tok
 decl_stmt|;
 name|ATM_DEBUG4
 argument_list|(
-literal|"unisig_upper: usp=0x%x,state=%d,cmd=%d,a1=0x%x,\n"
+literal|"unisig_upper: usp=%p,state=%d,cmd=%d,a1=0x%lx,\n"
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|usp
 argument_list|,
 name|usp
@@ -436,11 +427,8 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"unisig: unknown SAAL cmd: usp=0x%x, state=%d, cmd=%d\n"
+literal|"unisig: unknown SAAL cmd: usp=%p, state=%d, cmd=%d\n"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|usp
 argument_list|,
 name|usp
@@ -484,11 +472,8 @@ name|tok
 decl_stmt|;
 name|ATM_DEBUG3
 argument_list|(
-literal|"unisig_saal_data: usp=0x%x,state=%d,m=0x%x,\n"
+literal|"unisig_saal_data: usp=%p,state=%d,m=%p,\n"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|usp
 argument_list|,
 name|usp
@@ -610,11 +595,8 @@ name|tok
 decl_stmt|;
 name|ATM_DEBUG2
 argument_list|(
-literal|"unisig_connected: usp=0x%x,state=%d\n"
+literal|"unisig_connected: usp=%p,state=%d\n"
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|usp
 argument_list|,
 name|usp
@@ -627,11 +609,8 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"unisig: connected notification, usp=0x%x\n"
+literal|"unisig: connected notification, usp=%p\n"
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|usp
 argument_list|)
 expr_stmt|;
@@ -669,11 +648,8 @@ name|tok
 decl_stmt|;
 name|ATM_DEBUG3
 argument_list|(
-literal|"unisig_cleared: usp=0x%x, state=%d, cause=%d\n"
+literal|"unisig_cleared: usp=%p, state=%d, cause=%d\n"
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|usp
 argument_list|,
 name|usp

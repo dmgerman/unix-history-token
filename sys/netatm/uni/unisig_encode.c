@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: unisig_encode.c,v 1.11 1998/08/26 23:29:21 mks Exp $  *  */
+comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: unisig_encode.c,v 1.1 1998/09/15 08:23:11 phk Exp $  *  */
 end_comment
 
 begin_comment
@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|RCSid
 init|=
-literal|"@(#) $Id: unisig_encode.c,v 1.11 1998/08/26 23:29:21 mks Exp $"
+literal|"@(#) $Id: unisig_encode.c,v 1.1 1998/09/15 08:23:11 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -758,16 +758,10 @@ name|su
 union|;
 name|ATM_DEBUG2
 argument_list|(
-literal|"usf_enc_msg: usf=0x%x, msg=0x%x\n"
+literal|"usf_enc_msg: usf=%p, msg=%p\n"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|usf
 argument_list|,
-operator|(
-name|int
-operator|)
 name|msg
 argument_list|)
 expr_stmt|;
@@ -1156,16 +1150,10 @@ name|su
 union|;
 name|ATM_DEBUG2
 argument_list|(
-literal|"usf_enc_ie: usf=0x%x, ie=0x%x\n"
+literal|"usf_enc_ie: usf=%p, ie=%p\n"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|usf
 argument_list|,
-operator|(
-name|int
-operator|)
 name|ie
 argument_list|)
 expr_stmt|;
@@ -1482,16 +1470,10 @@ literal|0
 decl_stmt|;
 name|ATM_DEBUG2
 argument_list|(
-literal|"usf_enc_ie_aalp: usf=0x%x, ie=0x%x\n"
+literal|"usf_enc_ie_aalp: usf=%p, ie=%p\n"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|usf
 argument_list|,
-operator|(
-name|int
-operator|)
 name|ie
 argument_list|)
 expr_stmt|;
@@ -1732,16 +1714,10 @@ name|rc
 decl_stmt|;
 name|ATM_DEBUG2
 argument_list|(
-literal|"usf_enc_ie_clrt: usf=0x%x, ie=0x%x\n"
+literal|"usf_enc_ie_clrt: usf=%p, ie=%p\n"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|usf
 argument_list|,
-operator|(
-name|int
-operator|)
 name|ie
 argument_list|)
 expr_stmt|;
@@ -1929,16 +1905,10 @@ name|c
 decl_stmt|;
 name|ATM_DEBUG2
 argument_list|(
-literal|"usf_enc_ie_bbcp: usf=0x%x, ie=0x%x\n"
+literal|"usf_enc_ie_bbcp: usf=%p, ie=%p\n"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|usf
 argument_list|,
-operator|(
-name|int
-operator|)
 name|ie
 argument_list|)
 expr_stmt|;
@@ -2156,16 +2126,10 @@ name|type
 decl_stmt|;
 name|ATM_DEBUG2
 argument_list|(
-literal|"usf_enc_ie_bhli: usf=0x%x, ie=0x%x\n"
+literal|"usf_enc_ie_bhli: usf=%p, ie=%p\n"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|usf
 argument_list|,
-operator|(
-name|int
-operator|)
 name|ie
 argument_list|)
 expr_stmt|;
@@ -2448,16 +2412,10 @@ name|ipi
 decl_stmt|;
 name|ATM_DEBUG2
 argument_list|(
-literal|"usf_enc_ie_blli: usf=0x%x, ie=0x%x\n"
+literal|"usf_enc_ie_blli: usf=%p, ie=%p\n"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|usf
 argument_list|,
-operator|(
-name|int
-operator|)
 name|ie
 argument_list|)
 expr_stmt|;
@@ -3411,16 +3369,10 @@ name|c
 decl_stmt|;
 name|ATM_DEBUG2
 argument_list|(
-literal|"usf_enc_ie_clst: usf=0x%x, ie=0x%x\n"
+literal|"usf_enc_ie_clst: usf=%p, ie=%p\n"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|usf
 argument_list|,
-operator|(
-name|int
-operator|)
 name|ie
 argument_list|)
 expr_stmt|;
@@ -3497,16 +3449,10 @@ name|rc
 decl_stmt|;
 name|ATM_DEBUG2
 argument_list|(
-literal|"usf_enc_ie_cdad: usf=0x%x, ie=0x%x\n"
+literal|"usf_enc_ie_cdad: usf=%p, ie=%p\n"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|usf
 argument_list|,
-operator|(
-name|int
-operator|)
 name|ie
 argument_list|)
 expr_stmt|;
@@ -3765,16 +3711,10 @@ name|rc
 decl_stmt|;
 name|ATM_DEBUG2
 argument_list|(
-literal|"usf_enc_ie_cgad: usf=0x%x, ie=0x%x\n"
+literal|"usf_enc_ie_cgad: usf=%p, ie=%p\n"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|usf
 argument_list|,
-operator|(
-name|int
-operator|)
 name|ie
 argument_list|)
 expr_stmt|;
@@ -4084,16 +4024,10 @@ name|c
 decl_stmt|;
 name|ATM_DEBUG2
 argument_list|(
-literal|"usf_enc_ie_caus: usf=0x%x, ie=0x%x\n"
+literal|"usf_enc_ie_caus: usf=%p, ie=%p\n"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|usf
 argument_list|,
-operator|(
-name|int
-operator|)
 name|ie
 argument_list|)
 expr_stmt|;
@@ -4269,16 +4203,10 @@ name|c
 decl_stmt|;
 name|ATM_DEBUG2
 argument_list|(
-literal|"usf_enc_ie_cnid: usf=0x%x, ie=0x%x\n"
+literal|"usf_enc_ie_cnid: usf=%p, ie=%p\n"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|usf
 argument_list|,
-operator|(
-name|int
-operator|)
 name|ie
 argument_list|)
 expr_stmt|;
@@ -4410,16 +4338,10 @@ name|rc
 decl_stmt|;
 name|ATM_DEBUG2
 argument_list|(
-literal|"usf_enc_ie_qosp: usf=0x%x, ie=0x%x\n"
+literal|"usf_enc_ie_qosp: usf=%p, ie=%p\n"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|usf
 argument_list|,
-operator|(
-name|int
-operator|)
 name|ie
 argument_list|)
 expr_stmt|;
@@ -4523,16 +4445,10 @@ name|c
 decl_stmt|;
 name|ATM_DEBUG2
 argument_list|(
-literal|"usf_enc_ie_brpi: usf=0x%x, ie=0x%x\n"
+literal|"usf_enc_ie_brpi: usf=%p, ie=%p\n"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|usf
 argument_list|,
-operator|(
-name|int
-operator|)
 name|ie
 argument_list|)
 expr_stmt|;
@@ -4595,16 +4511,10 @@ name|c
 decl_stmt|;
 name|ATM_DEBUG2
 argument_list|(
-literal|"usf_enc_ie_rsti: usf=0x%x, ie=0x%x\n"
+literal|"usf_enc_ie_rsti: usf=%p, ie=%p\n"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|usf
 argument_list|,
-operator|(
-name|int
-operator|)
 name|ie
 argument_list|)
 expr_stmt|;
@@ -4677,16 +4587,10 @@ name|c
 decl_stmt|;
 name|ATM_DEBUG2
 argument_list|(
-literal|"usf_enc_ie_bsdc: usf=0x%x, ie=0x%x\n"
+literal|"usf_enc_ie_bsdc: usf=%p, ie=%p\n"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|usf
 argument_list|,
-operator|(
-name|int
-operator|)
 name|ie
 argument_list|)
 expr_stmt|;
@@ -4755,16 +4659,10 @@ name|c
 decl_stmt|;
 name|ATM_DEBUG2
 argument_list|(
-literal|"usf_enc_ie_trnt: usf=0x%x, ie=0x%x\n"
+literal|"usf_enc_ie_trnt: usf=%p, ie=%p\n"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|usf
 argument_list|,
-operator|(
-name|int
-operator|)
 name|ie
 argument_list|)
 expr_stmt|;
@@ -4958,21 +4856,12 @@ name|iv
 decl_stmt|;
 name|ATM_DEBUG3
 argument_list|(
-literal|"usf_enc_ie_ident: usf=0x%x, ie=0x%x, tbl=0x%x\n"
+literal|"usf_enc_ie_ident: usf=%p, ie=%p, tbl=%p\n"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|usf
 argument_list|,
-operator|(
-name|int
-operator|)
 name|ie
 argument_list|,
-operator|(
-name|int
-operator|)
 name|tbl
 argument_list|)
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: atm_subr.c,v 1.10 1998/05/18 19:06:02 mks Exp $  *  */
+comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: atm_subr.c,v 1.1 1998/09/15 08:22:59 phk Exp $  *  */
 end_comment
 
 begin_comment
@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|RCSid
 init|=
-literal|"@(#) $Id: atm_subr.c,v 1.10 1998/05/18 19:06:02 mks Exp $"
+literal|"@(#) $Id: atm_subr.c,v 1.1 1998/09/15 08:22:59 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2641,18 +2641,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%cbfr=0x%x data=0x%x len=%d: "
+literal|"%cbfr=%p data=%p len=%d: "
 argument_list|,
 name|c
 argument_list|,
-operator|(
-name|int
-operator|)
 name|m
 argument_list|,
-operator|(
-name|int
-operator|)
 name|cp
 argument_list|,
 name|KB_LEN

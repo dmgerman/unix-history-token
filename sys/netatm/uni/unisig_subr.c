@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: unisig_subr.c,v 1.12 1998/08/26 23:29:24 mks Exp $  *  */
+comment|/*  *  * ===================================  * HARP  |  Host ATM Research Platform  * ===================================  *  *  * This Host ATM Research Platform ("HARP") file (the "Software") is  * made available by Network Computing Services, Inc. ("NetworkCS")  * "AS IS".  NetworkCS does not provide maintenance, improvements or  * support of any kind.  *  * NETWORKCS MAKES NO WARRANTIES OR REPRESENTATIONS, EXPRESS OR IMPLIED,  * INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS FOR A PARTICULAR PURPOSE, AS TO ANY ELEMENT OF THE  * SOFTWARE OR ANY SUPPORT PROVIDED IN CONNECTION WITH THIS SOFTWARE.  * In no event shall NetworkCS be responsible for any damages, including  * but not limited to consequential damages, arising from or relating to  * any use of the Software or related support.  *  * Copyright 1994-1998 Network Computing Services, Inc.  *  * Copies of this Software may be made, however, the above copyright  * notice must be reproduced on all copies.  *  *	@(#) $Id: unisig_subr.c,v 1.1 1998/09/15 08:23:12 phk Exp $  *  */
 end_comment
 
 begin_comment
@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|RCSid
 init|=
-literal|"@(#) $Id: unisig_subr.c,v 1.12 1998/08/26 23:29:24 mks Exp $"
+literal|"@(#) $Id: unisig_subr.c,v 1.1 1998/09/15 08:23:12 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -355,7 +355,7 @@ name|pvc
 decl_stmt|;
 name|ATM_DEBUG2
 argument_list|(
-literal|"unisig_open_vcc: usp=0x%x, cvp=0x%x\n"
+literal|"unisig_open_vcc: usp=%p, cvp=%p\n"
 argument_list|,
 name|usp
 argument_list|,
@@ -939,7 +939,7 @@ literal|0
 decl_stmt|;
 name|ATM_DEBUG2
 argument_list|(
-literal|"unisig_close_vcc: uvp=0x%x, state=%d\n"
+literal|"unisig_close_vcc: uvp=%p, state=%d\n"
 argument_list|,
 name|uvp
 argument_list|,
@@ -1074,11 +1074,8 @@ name|outstate
 decl_stmt|;
 name|ATM_DEBUG3
 argument_list|(
-literal|"unisig_clear_vcc: uvp=0x%x, state=%d, cause=%d\n"
+literal|"unisig_clear_vcc: uvp=%p, state=%d, cause=%d\n"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|uvp
 argument_list|,
 name|uvp
@@ -1251,7 +1248,7 @@ name|vnext
 decl_stmt|;
 name|ATM_DEBUG2
 argument_list|(
-literal|"unisig_switch_reset: usp=0x%x, cause=%d\n"
+literal|"unisig_switch_reset: usp=%p, cause=%d\n"
 argument_list|,
 name|usp
 argument_list|,
@@ -1373,7 +1370,7 @@ name|log
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"unisig: invalid VCC type: vccb=0x%x, type=%d\n"
+literal|"unisig: invalid VCC type: vccb=%p, type=%d\n"
 argument_list|,
 name|uvp
 argument_list|,
