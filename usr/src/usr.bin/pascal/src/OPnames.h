@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* static	char sccsid[] = "@(#)OPnames.h 1.2 10/2/80"; */
+comment|/* static	char sccsid[] = "@(#)OPnames.h 1.4 %G%"; */
 end_comment
 
 begin_decl_stmt
@@ -324,11 +324,11 @@ literal|"*CONC4"
 block|,
 literal|"*ABORT"
 block|,
+literal|"*BPT"
+block|,
 literal|" PXPBUF"
 block|,
 literal|" COUNT"
-block|,
-literal|0
 block|,
 literal|" CASE1OP"
 block|,
