@@ -8691,8 +8691,6 @@ condition|)
 block|{
 if|if
 condition|(
-literal|1
-operator|||
 name|bootverbose
 condition|)
 name|printf
@@ -8724,8 +8722,6 @@ condition|)
 block|{
 if|if
 condition|(
-literal|1
-operator|||
 name|bootverbose
 condition|)
 name|printf
