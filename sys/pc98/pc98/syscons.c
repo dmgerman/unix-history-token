@@ -114,6 +114,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/random.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/clock.h>
 end_include
 
@@ -15944,6 +15950,21 @@ operator|)
 condition|)
 name|sc_touch_scrn_saver
 argument_list|()
+expr_stmt|;
+comment|/* do the /dev/random device a favour */
+name|random_harvest
+argument_list|(
+operator|(
+name|u_int64_t
+operator|)
+name|c
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+name|RANDOM_KEYBOARD
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
