@@ -354,6 +354,10 @@ name|vm_size_t
 name|size
 decl_stmt|;
 comment|/* virtual size */
+name|u_int
+name|timestamp
+decl_stmt|;
+comment|/* Version number */
 name|u_char
 name|needs_wakeup
 decl_stmt|;
@@ -373,11 +377,6 @@ name|vm_map_entry_t
 name|root
 decl_stmt|;
 comment|/* Root of a binary search tree */
-name|unsigned
-name|int
-name|timestamp
-decl_stmt|;
-comment|/* Version number */
 name|vm_map_entry_t
 name|first_free
 decl_stmt|;
