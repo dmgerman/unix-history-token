@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990, 1991 William F. Jolitz.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)if_ne.c	7.4 (Berkeley) 5/21/91  */
+comment|/*-  * Copyright (c) 1990, 1991 William F. Jolitz.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)if_is.c	  */
 end_comment
 
 begin_comment
-comment|/*  * Isolink 4110-2 Ethernet driver  */
+comment|/*  * Isolan AT 4141-0 Ethernet driver  * Isolink 4110   *  * By Paul Richards   * */
 end_comment
 
 begin_include
@@ -240,7 +240,7 @@ value|64
 end_define
 
 begin_comment
-comment|/*  * Ethernet software status per interface.  *  * Each interface is referenced by a network interface structure,  * ns_if, which the routing code uses to locate the interface.  * This structure contains the output queue for the interface, its address, ...  */
+comment|/*  * Ethernet software status per interface.  *  * Each interface is referenced by a network interface structure,  * is_if, which the routing code uses to locate the interface.  * This structure contains the output queue for the interface, its address, ...  */
 end_comment
 
 begin_struct
@@ -254,14 +254,38 @@ decl_stmt|;
 comment|/* Ethernet common part */
 define|#
 directive|define
-name|ns_if
+name|is_if
 value|ns_ac.ac_if
 comment|/* network-visible interface */
 define|#
 directive|define
-name|ns_addr
+name|is_addr
 value|ns_ac.ac_enaddr
 comment|/* hardware Ethernet address */
+name|int
+name|iobase
+decl_stmt|;
+comment|/* IO base address of card */
+name|struct
+name|mds
+modifier|*
+name|rd
+decl_stmt|;
+name|struct
+name|mds
+modifier|*
+name|td
+decl_stmt|;
+name|unsigned
+name|char
+modifier|*
+name|rbuf
+decl_stmt|;
+name|unsigned
+name|char
+modifier|*
+name|tbuf
+decl_stmt|;
 name|int
 name|last_rd
 decl_stmt|;
@@ -283,45 +307,28 @@ begin_decl_stmt
 name|struct
 name|init_block
 name|init_block
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|mds
-modifier|*
-name|td
-decl_stmt|,
-modifier|*
-name|rd
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|unsigned
-name|char
-modifier|*
-name|rbuf
-decl_stmt|,
-modifier|*
-name|tbuf
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|isc
+index|[
+name|NIS
+index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_macro
 name|iswrcsr
 argument_list|(
+argument|unit
+argument_list|,
 argument|port
 argument_list|,
 argument|val
 argument_list|)
 end_macro
+
+begin_decl_stmt
+name|int
+name|unit
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|u_short
@@ -337,9 +344,21 @@ end_decl_stmt
 
 begin_block
 block|{
+name|int
+name|iobase
+decl_stmt|;
+name|iobase
+operator|=
+name|is_softc
+index|[
+name|unit
+index|]
+operator|.
+name|iobase
+expr_stmt|;
 name|outw
 argument_list|(
-name|isc
+name|iobase
 operator|+
 name|RAP
 argument_list|,
@@ -348,7 +367,7 @@ argument_list|)
 expr_stmt|;
 name|outw
 argument_list|(
-name|isc
+name|iobase
 operator|+
 name|RDP
 argument_list|,
@@ -362,15 +381,32 @@ begin_function
 name|u_short
 name|isrdcsr
 parameter_list|(
+name|unit
+parameter_list|,
 name|port
 parameter_list|)
+name|int
+name|unit
+decl_stmt|;
 name|u_short
 name|port
 decl_stmt|;
 block|{
+name|int
+name|iobase
+decl_stmt|;
+name|iobase
+operator|=
+name|is_softc
+index|[
+name|unit
+index|]
+operator|.
+name|iobase
+expr_stmt|;
 name|outw
 argument_list|(
-name|isc
+name|iobase
 operator|+
 name|RAP
 argument_list|,
@@ -381,7 +417,7 @@ return|return
 operator|(
 name|inw
 argument_list|(
-name|isc
+name|iobase
 operator|+
 name|RDP
 argument_list|)
@@ -393,7 +429,7 @@ end_function
 begin_macro
 name|isprobe
 argument_list|(
-argument|dvp
+argument|isdev
 argument_list|)
 end_macro
 
@@ -401,7 +437,7 @@ begin_decl_stmt
 name|struct
 name|isa_device
 modifier|*
-name|dvp
+name|isdev
 decl_stmt|;
 end_decl_stmt
 
@@ -414,21 +450,30 @@ name|i
 decl_stmt|,
 name|s
 decl_stmt|;
+name|int
+name|unit
+init|=
+name|isdev
+operator|->
+name|id_unit
+decl_stmt|;
 specifier|register
 name|struct
 name|is_softc
 modifier|*
-name|ns
+name|is
 init|=
 operator|&
 name|is_softc
 index|[
-literal|0
+name|unit
 index|]
 decl_stmt|;
-name|isc
+name|is
+operator|->
+name|iobase
 operator|=
-name|dvp
+name|isdev
 operator|->
 name|id_iobase
 expr_stmt|;
@@ -440,6 +485,8 @@ expr_stmt|;
 comment|/* Stop the lance chip, put it known state */
 name|iswrcsr
 argument_list|(
+name|unit
+argument_list|,
 literal|0
 argument_list|,
 name|STOP
@@ -453,6 +500,8 @@ expr_stmt|;
 comment|/* is there a lance? */
 name|iswrcsr
 argument_list|(
+name|unit
+argument_list|,
 literal|3
 argument_list|,
 literal|0xffff
@@ -462,13 +511,17 @@ if|if
 condition|(
 name|isrdcsr
 argument_list|(
+name|unit
+argument_list|,
 literal|3
 argument_list|)
 operator|!=
 literal|7
 condition|)
 block|{
-name|isc
+name|is
+operator|->
+name|iobase
 operator|=
 literal|0
 expr_stmt|;
@@ -480,6 +533,8 @@ return|;
 block|}
 name|iswrcsr
 argument_list|(
+name|unit
+argument_list|,
 literal|3
 argument_list|,
 literal|0
@@ -499,16 +554,18 @@ condition|;
 name|i
 operator|++
 control|)
-name|ns
+name|is
 operator|->
-name|ns_addr
+name|is_addr
 index|[
 name|i
 index|]
 operator|=
 name|inb
 argument_list|(
-name|isc
+name|is
+operator|->
+name|iobase
 operator|+
 operator|(
 name|i
@@ -582,7 +639,7 @@ end_comment
 begin_macro
 name|isattach
 argument_list|(
-argument|dvp
+argument|isdev
 argument_list|)
 end_macro
 
@@ -590,7 +647,7 @@ begin_decl_stmt
 name|struct
 name|isa_device
 modifier|*
-name|dvp
+name|isdev
 decl_stmt|;
 end_decl_stmt
 
@@ -599,7 +656,7 @@ block|{
 name|int
 name|unit
 init|=
-name|dvp
+name|isdev
 operator|->
 name|id_unit
 decl_stmt|;
@@ -624,12 +681,12 @@ init|=
 operator|&
 name|is
 operator|->
-name|ns_if
+name|is_if
 decl_stmt|;
 comment|/* Set up DMA */
 name|isa_dmacascade
 argument_list|(
-name|dvp
+name|isdev
 operator|->
 name|id_drq
 argument_list|)
@@ -662,7 +719,7 @@ name|ether_sprintf
 argument_list|(
 name|is
 operator|->
-name|ns_addr
+name|is_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -726,8 +783,16 @@ end_comment
 
 begin_macro
 name|init_mem
-argument_list|()
+argument_list|(
+argument|unit
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|int
+name|unit
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -736,6 +801,17 @@ name|i
 decl_stmt|;
 name|u_long
 name|temp
+decl_stmt|;
+name|struct
+name|is_softc
+modifier|*
+name|is
+init|=
+operator|&
+name|is_softc
+index|[
+name|unit
+index|]
 decl_stmt|;
 comment|/* Allocate memory */
 comment|/* Temporary hack, will use kmem_alloc in future */
@@ -746,6 +822,9 @@ value|((NRBUF+NTBUF)*(BUFSIZE) + (NRBUF+NTBUF)*sizeof(struct mds) + 8)
 specifier|static
 name|u_char
 name|lance_mem
+index|[
+name|NIS
+index|]
 index|[
 name|MAXMEM
 index|]
@@ -758,6 +837,9 @@ name|u_long
 operator|)
 operator|&
 name|lance_mem
+index|[
+name|unit
+index|]
 expr_stmt|;
 name|temp
 operator|=
@@ -773,6 +855,8 @@ operator|%
 literal|8
 operator|)
 expr_stmt|;
+name|is
+operator|->
 name|rd
 operator|=
 operator|(
@@ -782,6 +866,8 @@ operator|*
 operator|)
 name|temp
 expr_stmt|;
+name|is
+operator|->
 name|td
 operator|=
 operator|(
@@ -818,6 +904,9 @@ name|mds
 argument_list|)
 expr_stmt|;
 name|init_block
+index|[
+name|unit
+index|]
 operator|.
 name|mode
 operator|=
@@ -838,22 +927,24 @@ name|i
 operator|++
 control|)
 name|init_block
+index|[
+name|unit
+index|]
 operator|.
 name|padr
 index|[
 name|i
 index|]
 operator|=
-name|inb
-argument_list|(
-name|isc
-operator|+
-operator|(
+name|is_softc
+index|[
+name|unit
+index|]
+operator|.
+name|is_addr
+index|[
 name|i
-operator|*
-literal|2
-operator|)
-argument_list|)
+index|]
 expr_stmt|;
 comment|/* Clear multicast address for now */
 for|for
@@ -870,6 +961,9 @@ name|i
 operator|++
 control|)
 name|init_block
+index|[
+name|unit
+index|]
 operator|.
 name|ladrf
 index|[
@@ -879,15 +973,23 @@ operator|=
 literal|0
 expr_stmt|;
 name|init_block
+index|[
+name|unit
+index|]
 operator|.
 name|rdra
 operator|=
 name|kvtop
 argument_list|(
+name|is
+operator|->
 name|rd
 argument_list|)
 expr_stmt|;
 name|init_block
+index|[
+name|unit
+index|]
 operator|.
 name|rlen
 operator|=
@@ -895,6 +997,8 @@ operator|(
 operator|(
 name|kvtop
 argument_list|(
+name|is
+operator|->
 name|rd
 argument_list|)
 operator|>>
@@ -911,15 +1015,23 @@ literal|13
 operator|)
 expr_stmt|;
 name|init_block
+index|[
+name|unit
+index|]
 operator|.
 name|tdra
 operator|=
 name|kvtop
 argument_list|(
+name|is
+operator|->
 name|td
 argument_list|)
 expr_stmt|;
 name|init_block
+index|[
+name|unit
+index|]
 operator|.
 name|tlen
 operator|=
@@ -927,6 +1039,8 @@ operator|(
 operator|(
 name|kvtop
 argument_list|(
+name|is
+operator|->
 name|td
 argument_list|)
 operator|>>
@@ -943,6 +1057,8 @@ literal|13
 operator|)
 expr_stmt|;
 comment|/* Set up receive ring descriptors */
+name|is
+operator|->
 name|rbuf
 operator|=
 operator|(
@@ -967,6 +1083,8 @@ operator|++
 control|)
 block|{
 operator|(
+name|is
+operator|->
 name|rd
 operator|+
 name|i
@@ -980,6 +1098,8 @@ name|temp
 argument_list|)
 expr_stmt|;
 operator|(
+name|is
+operator|->
 name|rd
 operator|+
 name|i
@@ -1003,6 +1123,8 @@ operator||
 name|OWN
 expr_stmt|;
 operator|(
+name|is
+operator|->
 name|rd
 operator|+
 name|i
@@ -1014,6 +1136,8 @@ operator|-
 name|BUFSIZE
 expr_stmt|;
 operator|(
+name|is
+operator|->
 name|rd
 operator|+
 name|i
@@ -1029,6 +1153,8 @@ name|BUFSIZE
 expr_stmt|;
 block|}
 comment|/* Set up transmit ring descriptors */
+name|is
+operator|->
 name|tbuf
 operator|=
 operator|(
@@ -1038,21 +1164,33 @@ operator|*
 operator|)
 name|temp
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|ISDEBUG
+operator|>
+literal|4
 name|printf
 argument_list|(
 literal|"rd = %x,td = %x, rbuf = %x, tbuf = %x,td+1=%x\n"
 argument_list|,
+name|is
+operator|->
 name|rd
 argument_list|,
+name|is
+operator|->
 name|td
 argument_list|,
+name|is
+operator|->
 name|rbuf
 argument_list|,
+name|is
+operator|->
 name|tbuf
 argument_list|,
+name|is
+operator|->
 name|td
 operator|+
 literal|1
@@ -1075,6 +1213,8 @@ operator|++
 control|)
 block|{
 operator|(
+name|is
+operator|->
 name|td
 operator|+
 name|i
@@ -1088,6 +1228,8 @@ name|temp
 argument_list|)
 expr_stmt|;
 operator|(
+name|is
+operator|->
 name|td
 operator|+
 name|i
@@ -1109,6 +1251,8 @@ literal|0xff
 operator|)
 expr_stmt|;
 operator|(
+name|is
+operator|->
 name|td
 operator|+
 name|i
@@ -1119,6 +1263,8 @@ operator|=
 literal|0
 expr_stmt|;
 operator|(
+name|is
+operator|->
 name|td
 operator|+
 name|i
@@ -1159,7 +1305,7 @@ specifier|register
 name|struct
 name|is_softc
 modifier|*
-name|ns
+name|is
 init|=
 operator|&
 name|is_softc
@@ -1173,9 +1319,9 @@ modifier|*
 name|ifp
 init|=
 operator|&
-name|ns
+name|is
 operator|->
-name|ns_if
+name|is_if
 decl_stmt|;
 name|int
 name|s
@@ -1197,15 +1343,15 @@ operator|)
 literal|0
 condition|)
 return|return;
-name|ns
+name|is
 operator|->
 name|last_rd
 operator|=
-name|ns
+name|is
 operator|->
 name|last_td
 operator|=
-name|ns
+name|is
 operator|->
 name|no_td
 operator|=
@@ -1218,11 +1364,15 @@ argument_list|()
 expr_stmt|;
 comment|/* Set up lance's memory area */
 name|init_mem
-argument_list|()
+argument_list|(
+name|unit
+argument_list|)
 expr_stmt|;
 comment|/* Stop Lance to get access to other registers */
 name|iswrcsr
 argument_list|(
+name|unit
+argument_list|,
 literal|0
 argument_list|,
 name|STOP
@@ -1231,6 +1381,8 @@ expr_stmt|;
 comment|/* I wish I knew what this was */
 name|iswrcsr
 argument_list|(
+name|unit
+argument_list|,
 literal|3
 argument_list|,
 literal|0
@@ -1239,17 +1391,24 @@ expr_stmt|;
 comment|/* Give lance the physical address of its memory area */
 name|iswrcsr
 argument_list|(
+name|unit
+argument_list|,
 literal|1
 argument_list|,
 name|kvtop
 argument_list|(
 operator|&
 name|init_block
+index|[
+name|unit
+index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
 name|iswrcsr
 argument_list|(
+name|unit
+argument_list|,
 literal|2
 argument_list|,
 operator|(
@@ -1257,6 +1416,9 @@ name|kvtop
 argument_list|(
 operator|&
 name|init_block
+index|[
+name|unit
+index|]
 argument_list|)
 operator|>>
 literal|16
@@ -1268,6 +1430,8 @@ expr_stmt|;
 comment|/* OK, let's try and initialise the Lance */
 name|iswrcsr
 argument_list|(
+name|unit
+argument_list|,
 literal|0
 argument_list|,
 name|INIT
@@ -1292,6 +1456,8 @@ if|if
 condition|(
 name|isrdcsr
 argument_list|(
+name|unit
+argument_list|,
 literal|0
 argument_list|)
 operator|&
@@ -1303,6 +1469,8 @@ if|if
 condition|(
 name|isrdcsr
 argument_list|(
+name|unit
+argument_list|,
 literal|0
 argument_list|)
 operator|&
@@ -1312,6 +1480,8 @@ block|{
 comment|/* Start lance */
 name|iswrcsr
 argument_list|(
+name|unit
+argument_list|,
 literal|0
 argument_list|,
 name|STRT
@@ -1321,9 +1491,9 @@ operator||
 name|INEA
 argument_list|)
 expr_stmt|;
-name|ns
+name|is
 operator|->
-name|ns_if
+name|is_if
 operator|.
 name|if_flags
 operator||=
@@ -1370,18 +1540,23 @@ end_decl_stmt
 
 begin_block
 block|{
+name|int
+name|unit
+init|=
+name|ifp
+operator|->
+name|if_unit
+decl_stmt|;
 specifier|register
 name|struct
 name|is_softc
 modifier|*
-name|ns
+name|is
 init|=
 operator|&
 name|is_softc
 index|[
-name|ifp
-operator|->
-name|if_unit
+name|unit
 index|]
 decl_stmt|;
 name|struct
@@ -1411,9 +1586,9 @@ decl_stmt|;
 if|if
 condition|(
 operator|(
-name|ns
+name|is
 operator|->
-name|ns_if
+name|is_if
 operator|.
 name|if_flags
 operator|&
@@ -1428,9 +1603,11 @@ block|{
 name|cdm
 operator|=
 operator|(
+name|is
+operator|->
 name|td
 operator|+
-name|ns
+name|is
 operator|->
 name|last_td
 operator|)
@@ -1447,9 +1624,9 @@ return|return;
 name|IF_DEQUEUE
 argument_list|(
 operator|&
-name|ns
+name|is
 operator|->
-name|ns_if
+name|is_if
 operator|.
 name|if_snd
 argument_list|,
@@ -1466,12 +1643,14 @@ return|return;
 comment|/* 	 	* Copy the mbuf chain into the transmit buffer 	 	*/
 name|buffer
 operator|=
+name|is
+operator|->
 name|tbuf
 operator|+
 operator|(
 name|BUFSIZE
 operator|*
-name|ns
+name|is
 operator|->
 name|last_td
 operator|)
@@ -1566,12 +1745,16 @@ name|mcnt
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|ISDEBUG
+operator|>
+literal|3
 name|xmit_print
 argument_list|(
-name|ns
+name|unit
+argument_list|,
+name|is
 operator|->
 name|last_td
 argument_list|)
@@ -1580,6 +1763,8 @@ endif|#
 directive|endif
 name|iswrcsr
 argument_list|(
+name|unit
+argument_list|,
 literal|0
 argument_list|,
 name|TDMD
@@ -1590,13 +1775,13 @@ expr_stmt|;
 if|if
 condition|(
 operator|++
-name|ns
+name|is
 operator|->
 name|last_td
 operator|>=
 name|NTBUF
 condition|)
-name|ns
+name|is
 operator|->
 name|last_td
 operator|=
@@ -1606,39 +1791,41 @@ block|}
 do|while
 condition|(
 operator|++
-name|ns
+name|is
 operator|->
 name|no_td
 operator|<
 name|NTBUF
 condition|)
 do|;
-name|ns
+name|is
 operator|->
 name|no_td
 operator|=
 name|NTBUF
 expr_stmt|;
-name|ns
+name|is
 operator|->
-name|ns_if
+name|is_if
 operator|.
 name|if_flags
 operator||=
 name|IFF_OACTIVE
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|ISDEBUG
+operator|>
+literal|4
 name|printf
 argument_list|(
 literal|"no_td = %x, last_td = %x\n"
 argument_list|,
-name|ns
+name|is
 operator|->
 name|no_td
 argument_list|,
-name|ns
+name|is
 operator|->
 name|last_td
 argument_list|)
@@ -1670,7 +1857,7 @@ specifier|register
 name|struct
 name|is_softc
 modifier|*
-name|ns
+name|is
 init|=
 operator|&
 name|is_softc
@@ -1688,6 +1875,8 @@ name|isr
 operator|=
 name|isrdcsr
 argument_list|(
+name|unit
+argument_list|,
 literal|0
 argument_list|)
 operator|)
@@ -1710,7 +1899,9 @@ name|BABL
 condition|)
 name|printf
 argument_list|(
-literal|"BABL\n"
+literal|"is%d:BABL\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 if|if
@@ -1721,7 +1912,9 @@ name|CERR
 condition|)
 name|printf
 argument_list|(
-literal|"CERR\n"
+literal|"is%d:CERR\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 if|if
@@ -1732,7 +1925,9 @@ name|MISS
 condition|)
 name|printf
 argument_list|(
-literal|"MISS\n"
+literal|"is%d:MISS\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 if|if
@@ -1743,11 +1938,15 @@ name|MERR
 condition|)
 name|printf
 argument_list|(
-literal|"MERR\n"
+literal|"is%d:MERR\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 name|iswrcsr
 argument_list|(
+name|unit
+argument_list|,
 literal|0
 argument_list|,
 name|BABL
@@ -1768,10 +1967,15 @@ operator|!
 operator|(
 name|isr
 operator|&
-name|TXON
+name|RXON
 operator|)
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"!(isr&RXON)\n"
+argument_list|)
+expr_stmt|;
 name|isreset
 argument_list|(
 name|unit
@@ -1789,10 +1993,15 @@ operator|!
 operator|(
 name|isr
 operator|&
-name|RXON
+name|TXON
 operator|)
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|"!(isr&TXON)\n"
+argument_list|)
+expr_stmt|;
 name|isreset
 argument_list|(
 name|unit
@@ -1826,6 +2035,8 @@ condition|)
 block|{
 name|iswrcsr
 argument_list|(
+name|unit
+argument_list|,
 literal|0
 argument_list|,
 name|TINT
@@ -1878,7 +2089,7 @@ init|=
 operator|&
 name|is
 operator|->
-name|ns_if
+name|is_if
 decl_stmt|;
 name|int
 name|i
@@ -1917,14 +2128,18 @@ expr_stmt|;
 name|cdm
 operator|=
 operator|(
+name|is
+operator|->
 name|td
 operator|+
 name|i
 operator|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|ISDEBUG
+operator|>
+literal|4
 name|printf
 argument_list|(
 literal|"Trans cdm = %x\n"
@@ -1955,7 +2170,7 @@ operator|++
 expr_stmt|;
 name|is
 operator|->
-name|ns_if
+name|is_if
 operator|.
 name|if_flags
 operator|&=
@@ -1986,7 +2201,7 @@ define|#
 directive|define
 name|NEXTRDS
 define|\
-value|if (++rmd == NRBUF) rmd=0, cdm=rd; else ++cdm
+value|if (++rmd == NRBUF) rmd=0, cdm=is->rd; else ++cdm
 end_define
 
 begin_macro
@@ -2030,6 +2245,8 @@ modifier|*
 name|cdm
 init|=
 operator|(
+name|is
+operator|->
 name|rd
 operator|+
 name|rmd
@@ -2047,11 +2264,15 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"is0 error: out of sync\n"
+literal|"is%d error: out of sync\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 name|iswrcsr
 argument_list|(
+name|unit
+argument_list|,
 literal|0
 argument_list|,
 name|RINT
@@ -2077,6 +2298,8 @@ block|{
 comment|/* Clear interrupt to avoid race condition */
 name|iswrcsr
 argument_list|(
+name|unit
+argument_list|,
 literal|0
 argument_list|,
 name|RINT
@@ -2103,7 +2326,9 @@ name|FRAM
 condition|)
 name|printf
 argument_list|(
-literal|"FRAM\n"
+literal|"is%d:FRAM\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 if|if
@@ -2116,7 +2341,9 @@ name|OFLO
 condition|)
 name|printf
 argument_list|(
-literal|"OFLO\n"
+literal|"is%d:OFLO\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 if|if
@@ -2129,7 +2356,9 @@ name|CRC
 condition|)
 name|printf
 argument_list|(
-literal|"CRC\n"
+literal|"is%d:CRC\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 if|if
@@ -2142,7 +2371,9 @@ name|RBUFF
 condition|)
 name|printf
 argument_list|(
-literal|"RBUFF\n"
+literal|"is%d:RBUFF\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 block|}
@@ -2170,6 +2401,8 @@ do|do
 block|{
 name|iswrcsr
 argument_list|(
+name|unit
+argument_list|,
 literal|0
 argument_list|,
 name|RINT
@@ -2220,7 +2453,9 @@ name|rmd
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Chained buffer\n"
+literal|"is%d:Chained buffer\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 if|if
@@ -2254,11 +2489,15 @@ block|}
 block|}
 else|else
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|ISDEBUG
+operator|>
+literal|2
 name|recv_print
 argument_list|(
+name|unit
+argument_list|,
 name|is
 operator|->
 name|last_rd
@@ -2270,6 +2509,8 @@ name|isread
 argument_list|(
 name|is
 argument_list|,
+name|is
+operator|->
 name|rbuf
 operator|+
 operator|(
@@ -2298,9 +2539,11 @@ literal|0
 expr_stmt|;
 name|NEXTRDS
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|ISDEBUG
+operator|>
+literal|4
 name|printf
 argument_list|(
 literal|"is->last_rd = %x, cdm = %x\n"
@@ -2336,7 +2579,7 @@ end_comment
 begin_expr_stmt
 name|isread
 argument_list|(
-name|ns
+name|is
 argument_list|,
 name|buf
 argument_list|,
@@ -2346,7 +2589,7 @@ specifier|register
 expr|struct
 name|is_softc
 operator|*
-name|ns
+name|is
 expr_stmt|;
 end_expr_stmt
 
@@ -2550,9 +2793,9 @@ argument_list|,
 name|off
 argument_list|,
 operator|&
-name|ns
+name|is
 operator|->
-name|ns_if
+name|is_if
 argument_list|)
 expr_stmt|;
 if|if
@@ -2565,9 +2808,9 @@ return|return;
 name|ether_input
 argument_list|(
 operator|&
-name|ns
+name|is
 operator|->
-name|ns_if
+name|is_if
 argument_list|,
 name|eh
 argument_list|,
@@ -2991,17 +3234,22 @@ operator|*
 operator|)
 name|data
 decl_stmt|;
+name|int
+name|unit
+init|=
+name|ifp
+operator|->
+name|if_unit
+decl_stmt|;
 name|struct
 name|is_softc
 modifier|*
-name|ns
+name|is
 init|=
 operator|&
 name|is_softc
 index|[
-name|ifp
-operator|->
-name|if_unit
+name|unit
 index|]
 decl_stmt|;
 name|struct
@@ -3111,7 +3359,7 @@ case|:
 block|{
 specifier|register
 name|struct
-name|ns_addr
+name|is_addr
 modifier|*
 name|ina
 init|=
@@ -3144,9 +3392,9 @@ name|ns_host
 operator|*
 operator|)
 operator|(
-name|ns
+name|is
 operator|->
-name|ns_addr
+name|is_addr
 operator|)
 expr_stmt|;
 else|else
@@ -3173,15 +3421,15 @@ argument_list|,
 operator|(
 name|caddr_t
 operator|)
-name|ns
+name|is
 operator|->
-name|ns_addr
+name|is_addr
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|ns
+name|is
 operator|->
-name|ns_addr
+name|is_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3240,6 +3488,8 @@ name|IFF_RUNNING
 expr_stmt|;
 name|iswrcsr
 argument_list|(
+name|unit
+argument_list|,
 literal|0
 argument_list|,
 name|STOP
@@ -3284,9 +3534,9 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
-name|ns
+name|is
 operator|->
-name|ns_addr
+name|is_addr
 argument_list|,
 operator|(
 name|caddr_t
@@ -3298,9 +3548,9 @@ name|ifr_data
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|ns
+name|is
 operator|->
-name|ns_addr
+name|is_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -3329,18 +3579,34 @@ end_block
 begin_macro
 name|recv_print
 argument_list|(
+argument|unit
+argument_list|,
 argument|no
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|int
+name|unit
+decl_stmt|,
 name|no
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
+specifier|register
+name|struct
+name|is_softc
+modifier|*
+name|is
+init|=
+operator|&
+name|is_softc
+index|[
+name|unit
+index|]
+decl_stmt|;
 name|struct
 name|mds
 modifier|*
@@ -3354,6 +3620,8 @@ decl_stmt|;
 name|rmd
 operator|=
 operator|(
+name|is
+operator|->
 name|rd
 operator|+
 name|no
@@ -3367,7 +3635,9 @@ name|mcnt
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Receive buffer %d, len = %d\n"
+literal|"is%d: Receive buffer %d, len = %d\n"
+argument_list|,
+name|unit
 argument_list|,
 name|no
 argument_list|,
@@ -3376,10 +3646,14 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Status %x\n"
+literal|"is%d: Status %x\n"
+argument_list|,
+name|unit
 argument_list|,
 name|isrdcsr
 argument_list|(
+name|unit
+argument_list|,
 literal|0
 argument_list|)
 argument_list|)
@@ -3403,6 +3677,8 @@ literal|"%x "
 argument_list|,
 operator|*
 operator|(
+name|is
+operator|->
 name|rbuf
 operator|+
 operator|(
@@ -3426,18 +3702,34 @@ end_block
 begin_macro
 name|xmit_print
 argument_list|(
+argument|unit
+argument_list|,
 argument|no
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|int
+name|unit
+decl_stmt|,
 name|no
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
+specifier|register
+name|struct
+name|is_softc
+modifier|*
+name|is
+init|=
+operator|&
+name|is_softc
+index|[
+name|unit
+index|]
+decl_stmt|;
 name|struct
 name|mds
 modifier|*
@@ -3452,6 +3744,8 @@ decl_stmt|;
 name|rmd
 operator|=
 operator|(
+name|is
+operator|->
 name|td
 operator|+
 name|no
@@ -3468,7 +3762,9 @@ operator|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Transmit buffer %d, len = %d\n"
+literal|"is%d:Transmit buffer %d, len = %d\n"
+argument_list|,
+name|unit
 argument_list|,
 name|no
 argument_list|,
@@ -3477,10 +3773,14 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Status %x\n"
+literal|"is%d:Status %x\n"
+argument_list|,
+name|unit
 argument_list|,
 name|isrdcsr
 argument_list|(
+name|unit
+argument_list|,
 literal|0
 argument_list|)
 argument_list|)
@@ -3525,6 +3825,8 @@ literal|"%x "
 argument_list|,
 operator|*
 operator|(
+name|is
+operator|->
 name|tbuf
 operator|+
 operator|(
