@@ -135,7 +135,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: yp_access.c,v 1.9 1996/06/05 02:01:29 wpaul Exp $"
+literal|"$Id: yp_access.c,v 1.11 1996/10/24 18:58:22 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -872,6 +872,11 @@ name|sin_port
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 ifdef|#
 directive|ifdef
