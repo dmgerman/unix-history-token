@@ -104,7 +104,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/if_ether.h>
+file|<net/ethernet.h>
 end_include
 
 begin_include
