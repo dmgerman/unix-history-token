@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	7.21 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	7.22 (Berkeley) %G%  */
 end_comment
 
 begin_typedef
@@ -436,6 +436,12 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__STDC__
 end_ifdef
 
@@ -805,6 +811,15 @@ name|FIDP
 parameter_list|)
 value|(*(VP)->v_mount->mnt_op->vfs_vptofh)(VP, FIDP)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* KERNEL */
+end_comment
 
 begin_comment
 comment|/*  * Flags for various system call interfaces.  *  * forcibly flags for vfs_umount().  * waitfor flags to vfs_sync() and getfsstat()  */
