@@ -3874,17 +3874,6 @@ end_comment
 
 begin_function_decl
 name|void
-name|_mext_free
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|_mclfree
 parameter_list|(
 name|struct
