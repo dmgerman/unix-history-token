@@ -146,6 +146,13 @@ begin_comment
 comment|/* XXX finger.h? */
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|sa_family_t
+name|family
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|void
@@ -271,7 +278,7 @@ name|hint
 operator|.
 name|ai_family
 operator|=
-name|PF_UNSPEC
+name|family
 expr_stmt|;
 name|hint
 operator|.
