@@ -1738,12 +1738,12 @@ comment|/* set up CPU registers and state */
 name|cpu_setregs
 argument_list|()
 expr_stmt|;
-comment|/* set up FPU state on the AP */
-name|fpuinit
-argument_list|()
-expr_stmt|;
 comment|/* set up SSE/NX registers */
 name|initializecpu
+argument_list|()
+expr_stmt|;
+comment|/* set up FPU state on the AP */
+name|fpuinit
 argument_list|()
 expr_stmt|;
 comment|/* A quick check from sanity claus */
