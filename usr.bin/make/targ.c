@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*-  * targ.c --  *	Functions for maintaining the Lst allTargets. Target nodes are  * kept in two structures: a Lst, maintained by the list library, and a  * hash table, maintained by the hash library.  *  * Interface:  *	Targ_Init 	    	Initialization procedure.  *  *	Targ_NewGN	    	Create a new GNode for the passed target  *	    	  	    	(string). The node is *not* placed in the  *	    	  	    	hash table, though all its fields are  *	    	  	    	initialized.  *  *	Targ_FindNode	    	Find the node for a given target, creating  *	    	  	    	and storing it if it doesn't exist and the  *	    	  	    	flags are right (TARG_CREATE)  *  *	Targ_FindList	    	Given a list of names, find nodes for all  *	    	  	    	of them. If a name doesn't exist and the  *	    	  	    	TARG_NOCREATE flag was given, an error message  *	    	  	    	is printed. Else, if a name doesn't exist,  *	    	  	    	its node is created.  *  *	Targ_Ignore	    	Return TRUE if errors should be ignored when  *	    	  	    	creating the given target.  *  *	Targ_Silent	    	Return TRUE if we should be silent when  *	    	  	    	creating the given target.  *  *	Targ_Precious	    	Return TRUE if the target is precious and  *	    	  	    	should not be removed if we are interrupted.  *  * Debugging:  *	Targ_PrintGraph	    	Print out the entire graphm all variables  *	    	  	    	and statistics for the directory cache. Should  *	    	  	    	print something for suffixes, too, but...  */
+comment|/*  * Functions for maintaining the Lst allTargets. Target nodes are  * kept in two structures: a Lst, maintained by the list library, and a  * hash table, maintained by the hash library.  *  * Interface:  *	Targ_Init	Initialization procedure.  *  *	Targ_NewGN	Create a new GNode for the passed target (string).  *			The node is *not* placed in the hash table, though all  *			its fields are initialized.  *  *	Targ_FindNode	Find the node for a given target, creating and storing  *			it if it doesn't exist and the flags are right  *			(TARG_CREATE)  *  *	Targ_FindList	Given a list of names, find nodes for all of them. If a  *			name doesn't exist and the TARG_NOCREATE flag was given,  *			an error message is printed. Else, if a name doesn't  *			exist, its node is created.  *  *	Targ_Ignore	Return TRUE if errors should be ignored when creating  *			the given target.  *  *	Targ_Silent	Return TRUE if we should be silent when creating the  *			given target.  *  *	Targ_Precious	Return TRUE if the target is precious and should not  *			be removed if we are interrupted.  *  * Debugging:  *	Targ_PrintGraph	Print out the entire graphm all variables and statistics  *			for the directory cache. Should print something for  *			suffixes, too, but...  */
 end_comment
 
 begin_include
@@ -126,7 +126,7 @@ comment|/* initial size of hash table */
 end_comment
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Targ_Init --  *	Initialize this module  *  * Results:  *	None  *  * Side Effects:  *	The allTargets list and the targets hash table are initialized  *-----------------------------------------------------------------------  */
+comment|/**  * Targ_Init  *	Initialize this module  *  * Side Effects:  *	The allTargets list and the targets hash table are initialized  */
 end_comment
 
 begin_function
@@ -148,7 +148,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Targ_NewGN  --  *	Create and initialize a new graph node  *  * Results:  *	An initialized graph node with the name field filled with a copy  *	of the passed name  *  * Side Effects:  *	The gnode is added to the list of all gnodes.  *-----------------------------------------------------------------------  */
+comment|/**  * Targ_NewGN  *	Create and initialize a new graph node  *  * Results:  *	An initialized graph node with the name field filled with a copy  *	of the passed name  *  * Side Effects:  *	The gnode is added to the list of all gnodes.  */
 end_comment
 
 begin_function
@@ -343,7 +343,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Targ_FindNode  --  *	Find a node in the list using the given name for matching  *  * Results:  *	The node in the list if it was. If it wasn't, return NULL of  *	flags was TARG_NOCREATE or the newly created and initialized node  *	if it was TARG_CREATE  *  * Side Effects:  *	Sometimes a node is created and added to the list  *-----------------------------------------------------------------------  */
+comment|/**  * Targ_FindNode  *	Find a node in the list using the given name for matching  *  * Results:  *	The node in the list if it was. If it wasn't, return NULL of  *	flags was TARG_NOCREATE or the newly created and initialized node  *	if it was TARG_CREATE  *  * Side Effects:  *	Sometimes a node is created and added to the list  */
 end_comment
 
 begin_function
@@ -465,7 +465,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Targ_FindList --  *	Make a complete list of GNodes from the given list of names  *  * Results:  *	A complete list of graph nodes corresponding to all instances of all  *	the names in names.  *  * Side Effects:  *	If flags is TARG_CREATE, nodes will be created for all names in  *	names which do not yet have graph nodes. If flags is TARG_NOCREATE,  *	an error message will be printed for each name which can't be found.  * -----------------------------------------------------------------------  */
+comment|/**  * Targ_FindList  *	Make a complete list of GNodes from the given list of names  *  * Results:  *	A complete list of graph nodes corresponding to all instances of all  *	the names in names.  *  * Side Effects:  *	If flags is TARG_CREATE, nodes will be created for all names in  *	names which do not yet have graph nodes. If flags is TARG_NOCREATE,  *	an error message will be printed for each name which can't be found.  */
 end_comment
 
 begin_function
@@ -542,7 +542,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 	     * Note: Lst_AtEnd must come before the Lst_Concat so the nodes 	     * are added to the list in the order in which they were 	     * encountered in the makefile. 	     */
+comment|/* 			 * Note: Lst_AtEnd must come before the Lst_Concat so 			 * the nodes are added to the list in the order in which 			 * they were encountered in the makefile. 			 */
 name|Lst_AtEnd
 argument_list|(
 name|nodes
@@ -594,7 +594,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Targ_Ignore  --  *	Return true if should ignore errors when creating gn  *  * Results:  *	TRUE if should ignore errors  *  * Side Effects:  *	None  *-----------------------------------------------------------------------  */
+comment|/**  * Targ_Ignore  *	Return true if should ignore errors when creating gn  *  * Results:  *	TRUE if should ignore errors  */
 end_comment
 
 begin_function
@@ -637,7 +637,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Targ_Silent  --  *	Return true if be silent when creating gn  *  * Results:  *	TRUE if should be silent  *  * Side Effects:  *	None  *-----------------------------------------------------------------------  */
+comment|/**  * Targ_Silent  *	Return true if be silent when creating gn  *  * Results:  *	TRUE if should be silent  */
 end_comment
 
 begin_function
@@ -680,7 +680,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Targ_Precious --  *	See if the given target is precious  *  * Results:  *	TRUE if it is precious. FALSE otherwise  *  * Side Effects:  *	None  *-----------------------------------------------------------------------  */
+comment|/**  * Targ_Precious  *	See if the given target is precious  *  * Results:  *	TRUE if it is precious. FALSE otherwise  */
 end_comment
 
 begin_function
@@ -726,10 +726,6 @@ block|}
 block|}
 end_function
 
-begin_comment
-comment|/******************* DEBUG INFO PRINTING ****************/
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|GNode
@@ -743,7 +739,7 @@ comment|/* the main target, as set by Targ_SetMain */
 end_comment
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Targ_SetMain --  *	Set our idea of the main target we'll be creating. Used for  *	debugging output.  *  * Results:  *	None.  *  * Side Effects:  *	"mainTarg" is set to the main target's node.  *-----------------------------------------------------------------------  */
+comment|/**  * Targ_SetMain  *	Set our idea of the main target we'll be creating. Used for  *	debugging output.  *  * Side Effects:  *	"mainTarg" is set to the main target's node.  */
 end_comment
 
 begin_function
@@ -763,7 +759,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Targ_FmtTime --  *	Format a modification time in some reasonable way and return it.  *  * Results:  *	The time reformatted.  *  * Side Effects:  *	The time is placed in a static area, so it is overwritten  *	with each call.  *  *-----------------------------------------------------------------------  */
+comment|/**  * Targ_FmtTime  *	Format a modification time in some reasonable way and return it.  *  * Results:  *	The time reformatted.  *  * Side Effects:  *	The time is placed in a static area, so it is overwritten  *	with each call.  */
 end_comment
 
 begin_function
@@ -830,7 +826,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Targ_PrintType --  *	Print out a type field giving only those attributes the user can  *	set.  *  * Results:  *  * Side Effects:  *  *-----------------------------------------------------------------------  */
+comment|/**  * Targ_PrintType  *	Print out a type field giving only those attributes the user can  *	set.  */
 end_comment
 
 begin_function
@@ -850,14 +846,16 @@ name|PRINTBIT
 parameter_list|(
 name|attr
 parameter_list|)
-value|case CONCAT(OP_,attr): printf("." #attr " "); break
+define|\
+value|case CONCAT(OP_,attr):			\ 		printf("." #attr " ");		\ 		break
 define|#
 directive|define
 name|PRINTDBIT
 parameter_list|(
 name|attr
 parameter_list|)
-value|case CONCAT(OP_,attr): DEBUGF(TARG, ("." #attr " ")); break
+define|\
+value|case CONCAT(OP_,attr):			\ 		DEBUGF(TARG, ("." #attr " "));	\ 		break
 name|type
 operator|&=
 operator|~
@@ -971,7 +969,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * TargPrintNode --  *	print the contents of a node  *-----------------------------------------------------------------------  */
+comment|/**  * TargPrintNode  *	print the contents of a node  */
 end_comment
 
 begin_function
@@ -1092,7 +1090,6 @@ operator|->
 name|mtime
 argument_list|)
 argument_list|,
-operator|(
 name|gn
 operator|->
 name|made
@@ -1101,7 +1098,6 @@ name|UNMADE
 condition|?
 literal|"unmade"
 else|:
-operator|(
 name|gn
 operator|->
 name|made
@@ -1110,7 +1106,6 @@ name|MADE
 condition|?
 literal|"made"
 else|:
-operator|(
 name|gn
 operator|->
 name|made
@@ -1120,9 +1115,6 @@ condition|?
 literal|"up-to-date"
 else|:
 literal|"error when made"
-operator|)
-operator|)
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1140,7 +1132,6 @@ name|printf
 argument_list|(
 literal|"# non-existent (maybe): %s\n"
 argument_list|,
-operator|(
 name|gn
 operator|->
 name|made
@@ -1149,7 +1140,6 @@ name|MADE
 condition|?
 literal|"made"
 else|:
-operator|(
 name|gn
 operator|->
 name|made
@@ -1158,7 +1148,6 @@ name|UPTODATE
 condition|?
 literal|"up-to-date"
 else|:
-operator|(
 name|gn
 operator|->
 name|made
@@ -1168,9 +1157,6 @@ condition|?
 literal|"error when made"
 else|:
 literal|"aborted"
-operator|)
-operator|)
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1432,7 +1418,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * Targ_PrintGraph --  *	Print the entire graph.  *  * Results:  *	none  *  * Side Effects:  *	lots o' output  *-----------------------------------------------------------------------  */
+comment|/**  * Targ_PrintGraph  *	Print the entire graph.  */
 end_comment
 
 begin_function
