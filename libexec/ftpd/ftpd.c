@@ -8987,6 +8987,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* 				 * Calculate byte_count before OOB processing. 				 * It can be used in myoob() later. 				 */
+name|byte_count
+operator|+=
+name|cnt
+expr_stmt|;
 if|if
 condition|(
 name|recvurg
@@ -8994,10 +8999,6 @@ condition|)
 goto|goto
 name|got_oob
 goto|;
-name|byte_count
-operator|+=
-name|cnt
-expr_stmt|;
 name|offset
 operator|+=
 name|cnt
