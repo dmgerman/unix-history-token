@@ -3231,6 +3231,13 @@ block|}
 block|,
 comment|/* BRI3400 - Internal ACF Modem */
 block|{
+literal|0x0094490a
+block|,
+name|NULL
+block|}
+block|,
+comment|/* BRI9400 - Boca K56Flex PnP */
+block|{
 literal|0x00b4490a
 block|,
 name|NULL
