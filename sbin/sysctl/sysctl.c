@@ -802,6 +802,32 @@ operator|&
 name|CTLFLAG_WR
 operator|)
 condition|)
+if|if
+condition|(
+name|kind
+operator|&
+name|CTLFLAG_TUN
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Tunable values are set in /boot/loader.conf and require a reboot to take effect.\n"
+argument_list|)
+expr_stmt|;
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"oid '%s' is a tunable."
+argument_list|,
+name|bufp
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|errx
 argument_list|(
 literal|1
@@ -811,6 +837,7 @@ argument_list|,
 name|bufp
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|(
