@@ -1379,29 +1379,6 @@ literal|255
 block|}
 block|,
 block|{
-comment|/* 		 * The Hitachi DK32 has problems with tagged queuing under 		 * load; submitter has<HITACHI DK32CJ-36MC J8A8>. 		 * Reported by: Y.Amagai<amagai@nue.org> 		 */
-block|{
-name|T_DIRECT
-block|,
-name|SIP_MEDIA_FIXED
-block|,
-literal|"HITACHI"
-block|,
-literal|"DK32*"
-block|,
-literal|"*"
-block|}
-block|,
-name|CAM_QUIRK_NOLUNS
-block|,
-comment|/*mintags*/
-literal|0
-block|,
-comment|/*maxtags*/
-literal|0
-block|}
-block|,
-block|{
 comment|/* 		 * This old revision of the TDC3600 is also SCSI-1, and 		 * hangs upon serial number probing. 		 */
 block|{
 name|T_SEQUENTIAL
