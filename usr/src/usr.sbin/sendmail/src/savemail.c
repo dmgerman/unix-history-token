@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.3 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -669,7 +669,40 @@ break|break;
 case|case
 name|ESM_MAIL
 case|:
-comment|/* 			**  If mailing back, do it. 			**	Throw away all further output.  Don't alias, 			**	since this could cause loops, e.g., if joe 			**	mails to joe@x, and for some reason the network 			**	for @x is down, then the response gets sent to 			**	joe@x, which gives a response, etc.  Also force 			**	the mail to be delivered even if a version of 			**	it has already been sent to the sender. 			*/
+comment|/* 			**  If mailing back, do it. 			**	Throw away all further output.  Don't alias, 			**	since this could cause loops, e.g., if joe 			**	mails to joe@x, and for some reason the network 			**	for @x is down, then the response gets sent to 			**	joe@x, which gives a response, etc.  Also force 			**	the mail to be delivered even if a version of 			**	it has already been sent to the sender. 			** 			**  If this is a configuration or local software 			**	error, send to the local postmaster as well, 			**	since the originator can't do anything 			**	about it anyway.  Note that this is a full 			**	copy of the message (intentionally) so that 			**	the Postmaster can forward things along. 			*/
+if|if
+condition|(
+name|ExitStat
+operator|==
+name|EX_CONFIG
+operator|||
+name|ExitStat
+operator|==
+name|EX_SOFTWARE
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|sendtolist
+argument_list|(
+literal|"postmaster"
+argument_list|,
+operator|(
+name|ADDRESS
+operator|*
+operator|)
+name|NULL
+argument_list|,
+operator|&
+name|e
+operator|->
+name|e_errorqueue
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|strcmp
@@ -685,6 +718,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -710,7 +744,8 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
-comment|/* deliver a cc: to the postmaster if desired */
+block|}
+comment|/* 			**  Deliver a non-delivery report to the 			**  Postmaster-designate (not necessarily 			**  Postmaster).  This does not include the 			**  body of the message, for privacy reasons. 			**  You really shouldn't need this. 			*/
 if|if
 condition|(
 name|PostMasterCopy
