@@ -889,9 +889,9 @@ name|int
 name|nfslockdans
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
 parameter_list|,
 name|struct
 name|lockd_ans
@@ -899,6 +899,11 @@ modifier|*
 name|ansp
 parameter_list|)
 block|{
+name|struct
+name|proc
+modifier|*
+name|targetp
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -910,13 +915,17 @@ name|error
 operator|=
 name|suser
 argument_list|(
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|)
 operator|)
 operator|!=
 literal|0
 operator|&&
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_ucred
 operator|->
@@ -947,7 +956,7 @@ comment|/* Find the process, set its return errno and wake it up. */
 if|if
 condition|(
 operator|(
-name|p
+name|targetp
 operator|=
 name|pfind
 argument_list|(
@@ -969,7 +978,7 @@ return|;
 comment|/* verify the pid hasn't been reused (if we can), and it isn't waiting 	 * for an answer from a more recent request.  We return an EPIPE if 	 * the match fails, because we've already used ESRCH above, and this 	 * is sort of like writing on a pipe after the reader has closed it. 	 */
 if|if
 condition|(
-name|p
+name|targetp
 operator|->
 name|p_nlminfo
 operator|==
@@ -991,7 +1000,7 @@ operator|(
 name|timevalcmp
 argument_list|(
 operator|&
-name|p
+name|targetp
 operator|->
 name|p_nlminfo
 operator|->
@@ -1007,7 +1016,7 @@ argument_list|,
 operator|!=
 argument_list|)
 operator|||
-name|p
+name|targetp
 operator|->
 name|p_nlminfo
 operator|->
@@ -1024,7 +1033,7 @@ condition|)
 block|{
 name|PROC_UNLOCK
 argument_list|(
-name|p
+name|targetp
 argument_list|)
 expr_stmt|;
 return|return
@@ -1033,7 +1042,7 @@ name|EPIPE
 operator|)
 return|;
 block|}
-name|p
+name|targetp
 operator|->
 name|p_nlminfo
 operator|->
@@ -1043,7 +1052,7 @@ name|ansp
 operator|->
 name|la_errno
 expr_stmt|;
-name|p
+name|targetp
 operator|->
 name|p_nlminfo
 operator|->
@@ -1053,7 +1062,7 @@ name|ansp
 operator|->
 name|la_set_getlk_pid
 expr_stmt|;
-name|p
+name|targetp
 operator|->
 name|p_nlminfo
 operator|->
@@ -1072,14 +1081,14 @@ operator|(
 name|void
 operator|*
 operator|)
-name|p
+name|targetp
 operator|->
 name|p_nlminfo
 argument_list|)
 expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
-name|p
+name|targetp
 argument_list|)
 expr_stmt|;
 return|return

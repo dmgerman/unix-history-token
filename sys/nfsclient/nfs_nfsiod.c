@@ -454,8 +454,6 @@ else|:
 name|nfslockdans
 argument_list|(
 name|td
-operator|->
-name|td_proc
 argument_list|,
 operator|&
 name|la
