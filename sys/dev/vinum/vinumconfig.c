@@ -4125,6 +4125,10 @@ modifier|*
 name|drive
 decl_stmt|;
 comment|/* and pointer to it */
+name|int
+name|otherdriveno
+decl_stmt|;
+comment|/* index of possible second drive */
 if|if
 condition|(
 name|tokens
@@ -4237,6 +4241,57 @@ case|:
 name|parameter
 operator|++
 expr_stmt|;
+name|otherdriveno
+operator|=
+name|find_drive_by_dev
+argument_list|(
+name|token
+index|[
+name|parameter
+index|]
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* see if it exists already */
+if|if
+condition|(
+name|otherdriveno
+operator|>=
+literal|0
+condition|)
+block|{
+comment|/* yup, */
+name|drive
+operator|->
+name|state
+operator|=
+name|drive_unallocated
+expr_stmt|;
+comment|/* deallocate the drive */
+name|throw_rude_remark
+argument_list|(
+name|EEXIST
+argument_list|,
+comment|/* and complain */
+literal|"Drive %s would have same device as drive %s"
+argument_list|,
+name|token
+index|[
+literal|1
+index|]
+argument_list|,
+name|DRIVE
+index|[
+name|otherdriveno
+index|]
+operator|.
+name|label
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|drive
@@ -9408,6 +9463,18 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|/* Local Variables: */
+end_comment
+
+begin_comment
+comment|/* fill-column: 50 */
+end_comment
+
+begin_comment
+comment|/* End: */
+end_comment
 
 end_unit
 
