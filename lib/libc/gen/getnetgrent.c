@@ -548,6 +548,12 @@ name|_yp_innetgr
 condition|)
 block|{
 comment|/* dohw! */
+if|if
+condition|(
+name|netf
+operator|!=
+name|NULL
+condition|)
 name|fclose
 argument_list|(
 name|netf
