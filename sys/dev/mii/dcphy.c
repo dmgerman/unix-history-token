@@ -1282,12 +1282,6 @@ name|dc_sc
 argument_list|,
 name|DC_10BTSTAT
 argument_list|)
-operator|&
-operator|(
-name|DC_TSTAT_LS10
-operator||
-name|DC_TSTAT_LS100
-operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -1306,7 +1300,7 @@ name|DC_TSTAT_LS100
 operator|)
 condition|)
 break|break;
-comment|/*                  * Only retry autonegotiation every 5 seconds.                  */
+comment|/*                  * Only retry autonegotiation every 5 seconds. 		 * 		 * Otherwise, fall through to calling dcphy_status() 		 * since real Intel 21143 chips don't show valid link 		 * status until autonegotiation is switched off, and 		 * that only happens in dcphy_status().  Without this, 		 * successful autonegotation is never recognised on 		 * these chips.                  */
 if|if
 condition|(
 operator|++
@@ -1316,11 +1310,7 @@ name|mii_ticks
 operator|!=
 literal|50
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+break|break;
 name|sc
 operator|->
 name|mii_ticks
@@ -1445,12 +1435,6 @@ name|dc_sc
 argument_list|,
 name|DC_10BTSTAT
 argument_list|)
-operator|&
-operator|(
-name|DC_TSTAT_LS10
-operator||
-name|DC_TSTAT_LS100
-operator|)
 expr_stmt|;
 if|if
 condition|(
