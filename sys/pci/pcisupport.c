@@ -4935,6 +4935,14 @@ operator|)
 return|;
 comment|/* VIA Technologies -- vendor 0x1106 */
 case|case
+literal|0x83051106
+case|:
+return|return
+operator|(
+literal|"VIA 8363 (Apollo KT133) PCI-PCI (AGP) bridge"
+operator|)
+return|;
+case|case
 literal|0x85981106
 case|:
 return|return
