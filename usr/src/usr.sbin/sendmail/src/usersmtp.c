@@ -8,6 +8,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sysexits.h>
 end_include
 
@@ -33,7 +39,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.12.1.1
+literal|3.13
 operator|%
 name|G
 operator|%
@@ -61,7 +67,7 @@ operator|)
 name|usersmtp
 operator|.
 name|c
-literal|3.12.1.1
+literal|3.13
 operator|%
 name|G
 operator|%
@@ -175,13 +181,28 @@ index|[
 name|MAXNAME
 index|]
 decl_stmt|;
+extern|extern tick(
+block|)
+end_block
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/* 	**  Open the connection to the mailer. 	*/
+end_comment
+
+begin_expr_stmt
 name|SmtpIn
 operator|=
 name|SmtpOut
 operator|=
 name|NULL
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SmtpPid
 operator|=
 name|openmailer
@@ -201,6 +222,9 @@ operator|&
 name|SmtpIn
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|SmtpPid
@@ -239,12 +263,34 @@ name|ExitStat
 operator|)
 return|;
 block|}
+end_if
+
+begin_expr_stmt
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGALRM
+argument_list|,
+name|tick
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* 	**  Get the greeting message. 	**	This should appear spontaneously. 	*/
+end_comment
+
+begin_expr_stmt
 name|r
 operator|=
 name|reply
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|REPLYTYPE
@@ -259,7 +305,13 @@ operator|(
 name|EX_TEMPFAIL
 operator|)
 return|;
+end_if
+
+begin_comment
 comment|/* 	**  Send the HELO command. 	**	My mother taught me to always introduce myself, even 	**	if it is useless. 	*/
+end_comment
+
+begin_expr_stmt
 name|smtpmessage
 argument_list|(
 literal|"HELO %s"
@@ -267,11 +319,17 @@ argument_list|,
 name|HostName
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|r
 operator|=
 name|reply
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|REPLYTYPE
@@ -286,6 +344,9 @@ operator|(
 name|EX_UNAVAILABLE
 operator|)
 return|;
+end_if
+
+begin_if
 if|if
 condition|(
 name|REPLYTYPE
@@ -300,8 +361,17 @@ operator|(
 name|EX_TEMPFAIL
 operator|)
 return|;
+end_if
+
+begin_comment
 comment|/* 	**  Send the HOPS command. 	**	This is non-standard and may give an "unknown command". 	**		This is not an error. 	**	It can give a "bad hop count" error if the hop 	**		count is exceeded. 	*/
+end_comment
+
+begin_comment
 comment|/* 	**  Send the MAIL command. 	**	Designates the sender. 	*/
+end_comment
+
+begin_expr_stmt
 name|expand
 argument_list|(
 literal|"$g"
@@ -320,6 +390,9 @@ argument_list|,
 name|CurEnv
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|smtpmessage
 argument_list|(
 literal|"MAIL From:<%s>"
@@ -327,11 +400,17 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|r
 operator|=
 name|reply
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
 name|REPLYTYPE
@@ -346,6 +425,9 @@ operator|(
 name|EX_TEMPFAIL
 operator|)
 return|;
+end_if
+
+begin_if
 if|if
 condition|(
 name|r
@@ -357,34 +439,34 @@ operator|(
 name|EX_SOFTWARE
 operator|)
 return|;
+end_if
+
+begin_return
 return|return
 operator|(
 name|EX_OK
 operator|)
 return|;
-block|}
-end_block
+end_return
 
 begin_escape
+unit|}
 end_escape
 
 begin_comment
 comment|/* **  SMTPRCPT -- designate recipient. ** **	Parameters: **		to -- address of recipient. ** **	Returns: **		exit status corresponding to recipient status. ** **	Side Effects: **		Sends the mail via SMTP. */
 end_comment
 
-begin_macro
-name|smtprcpt
-argument_list|(
-argument|to
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|ADDRESS
-modifier|*
+begin_expr_stmt
+unit|smtprcpt
+operator|(
 name|to
-decl_stmt|;
-end_decl_stmt
+operator|)
+name|ADDRESS
+operator|*
+name|to
+expr_stmt|;
+end_expr_stmt
 
 begin_block
 block|{
@@ -738,7 +820,7 @@ argument_list|(
 literal|"reply\n"
 argument_list|)
 expr_stmt|;
-comment|/* read the input line */
+comment|/* 	**  Read the input line, being careful not to hang. 	*/
 for|for
 control|(
 init|;
@@ -755,8 +837,38 @@ specifier|register
 name|int
 name|r
 decl_stmt|;
+specifier|register
+name|char
+modifier|*
+name|p
+decl_stmt|;
+comment|/* arrange to time out the read */
 if|if
 condition|(
+name|setjmp
+argument_list|(
+name|TickFrame
+argument_list|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+operator|(
+name|void
+operator|)
+name|alarm
+argument_list|(
+name|ReadTimeout
+argument_list|)
+expr_stmt|;
+comment|/* actually do the read */
+name|p
+operator|=
 name|fgets
 argument_list|(
 name|buf
@@ -766,6 +878,19 @@ name|buf
 argument_list|,
 name|SmtpIn
 argument_list|)
+expr_stmt|;
+comment|/* clean up timeout and check for errors */
+operator|(
+name|void
+operator|)
+name|alarm
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p
 operator|==
 name|NULL
 condition|)
@@ -775,6 +900,7 @@ operator|-
 literal|1
 operator|)
 return|;
+comment|/* log the input in the transcript for future error returns */
 if|if
 condition|(
 name|Verbose
@@ -796,6 +922,7 @@ argument_list|,
 name|Xscript
 argument_list|)
 expr_stmt|;
+comment|/* if continuation is required, we can go on */
 if|if
 condition|(
 name|buf
@@ -815,6 +942,7 @@ index|]
 argument_list|)
 condition|)
 continue|continue;
+comment|/* decode the reply code */
 name|r
 operator|=
 name|atoi
@@ -822,6 +950,7 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
+comment|/* extra semantics: 0xx codes are "informational" */
 if|if
 condition|(
 name|r

@@ -25,7 +25,7 @@ operator|)
 name|conf
 operator|.
 name|c
-literal|3.47
+literal|3.48
 operator|%
 name|G
 operator|%
@@ -374,6 +374,20 @@ end_decl_stmt
 
 begin_comment
 comment|/* default timeout for queue files */
+end_comment
+
+begin_decl_stmt
+name|int
+name|ReadTimeout
+init|=
+literal|10
+operator|*
+literal|60
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* timeout on external reads */
 end_comment
 
 begin_comment

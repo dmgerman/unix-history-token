@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.21
+literal|3.22
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.21
+literal|3.22
 operator|%
 name|G
 operator|%
@@ -1711,6 +1711,14 @@ name|MAXNAME
 index|]
 decl_stmt|;
 comment|/* 		**  CHILD 		**	Change the name of the control file to avoid 		**		duplicate deliveries.   Then run the file 		**		as though we had just read it. 		**	We save an idea of the temporary name so we 		**		can recover on interrupt. 		*/
+operator|(
+name|void
+operator|)
+name|alarm
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
 name|FatalErrors
 operator|=
 name|FALSE
@@ -1984,11 +1992,13 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* 	**  Read and process the file. 	*/
-name|message
+if|if
+condition|(
+name|Verbose
+condition|)
+name|printf
 argument_list|(
-name|Arpa_Info
-argument_list|,
-literal|"Running %s"
+literal|"\nRunning %s\n"
 argument_list|,
 name|cf
 argument_list|)

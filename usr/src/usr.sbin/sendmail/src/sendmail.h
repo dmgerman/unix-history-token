@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.74		%G%"
+literal|"@(#)sendmail.h	3.75		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,6 +66,12 @@ begin_include
 include|#
 directive|include
 file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<setjmp.h>
 end_include
 
 begin_include
@@ -2100,6 +2106,28 @@ end_decl_stmt
 
 begin_comment
 comment|/* time of this message */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|jmp_buf
+name|TickFrame
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* frame for clock ticks to jump to */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ReadTimeout
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* timeout on reads before clock ticks */
 end_comment
 
 begin_include
