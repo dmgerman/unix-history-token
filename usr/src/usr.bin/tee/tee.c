@@ -36,7 +36,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)tee.c	5.1 (Berkeley) %G%"
+literal|"@(#)tee.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -219,6 +219,7 @@ expr_stmt|;
 block|}
 operator|*
 name|lastf
+operator|++
 operator|=
 name|stdout
 expr_stmt|;
