@@ -616,13 +616,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"not exist\n"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
