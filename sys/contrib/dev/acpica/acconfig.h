@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acconfig.h - Global configuration constants  *       $Revision: 112 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acconfig.h - Global configuration constants  *       $Revision: 118 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -39,7 +39,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20021002
+value|0x20021115
 end_define
 
 begin_comment
@@ -425,6 +425,17 @@ define|#
 directive|define
 name|ACPI_RSDP_XCHECKSUM_LENGTH
 value|36
+end_define
+
+begin_comment
+comment|/* SMBus bidirectional buffer size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_SMBUS_BUFFER_SIZE
+value|34
 end_define
 
 begin_comment

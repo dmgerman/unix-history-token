@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbfileio - Debugger file I/O commands.  These can't usually  *              be used when running the debugger in Ring 0 (Kernel mode)  *              $Revision: 68 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbfileio - Debugger file I/O commands.  These can't usually  *              be used when running the debugger in Ring 0 (Kernel mode)  *              $Revision: 69 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -603,6 +603,15 @@ operator|==
 name|AmlLength
 condition|)
 block|{
+comment|/* Now validate the checksum */
+name|Status
+operator|=
+name|AcpiTbVerifyTableChecksum
+argument_list|(
+operator|*
+name|TablePtr
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|AE_OK
@@ -822,6 +831,10 @@ ifdef|#
 directive|ifdef
 name|ACPI_APPLICATION
 end_ifdef
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbGetAcpiTable  *  * PARAMETERS:  Filname         - File where table is located  *  * RETURN:      Status  *  * DESCRIPTION: Get an ACPI table from a file  *  ******************************************************************************/
+end_comment
 
 begin_function
 name|ACPI_STATUS

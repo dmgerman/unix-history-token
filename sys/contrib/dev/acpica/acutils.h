@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acutils.h -- prototypes for the common (subsystem-wide) procedures  *       $Revision: 146 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acutils.h -- prototypes for the common (subsystem-wide) procedures  *       $Revision: 148 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1587,6 +1587,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|AcpiUtCreateBufferObject
+parameter_list|(
+name|ACPI_SIZE
+name|BufferSize
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * UtRefCnt - Object reference count management  */
 end_comment
@@ -1855,6 +1866,20 @@ end_function_decl
 begin_comment
 comment|/*  * utmisc  */
 end_comment
+
+begin_function_decl
+name|void
+name|AcpiUtPrintString
+parameter_list|(
+name|char
+modifier|*
+name|String
+parameter_list|,
+name|UINT8
+name|MaxLength
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS

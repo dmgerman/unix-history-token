@@ -369,7 +369,7 @@ block|{
 name|ACPI_STATUS
 name|status
 decl_stmt|;
-comment|/* XXX WAIT_FOREVER is probably a bad idea, what is a better time? */
+comment|/* XXX ACPI_WAIT_FOREVER is probably a bad idea, what is a better time? */
 if|if
 condition|(
 name|ACPI_SUCCESS
@@ -378,7 +378,7 @@ name|status
 operator|=
 name|AcpiAcquireGlobalLock
 argument_list|(
-name|WAIT_FOREVER
+name|ACPI_WAIT_FOREVER
 argument_list|,
 operator|&
 name|sc

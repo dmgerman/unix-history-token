@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: hwsleep.c - ACPI Hardware Sleep/Wake Interface  *              $Revision: 46 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: hwsleep.c - ACPI Hardware Sleep/Wake Interface  *              $Revision: 47 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -789,6 +789,31 @@ operator|!
 name|InValue
 condition|)
 do|;
+name|Status
+operator|=
+name|AcpiSetRegister
+argument_list|(
+name|ACPI_BITREG_ARB_DISABLE
+argument_list|,
+literal|0
+argument_list|,
+name|ACPI_MTX_LOCK
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_OK

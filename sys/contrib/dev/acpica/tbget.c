@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbget - ACPI Table get* routines  *              $Revision: 80 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbget - ACPI Table get* routines  *              $Revision: 81 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -858,12 +858,6 @@ operator|->
 name|Allocation
 operator|=
 name|Allocation
-expr_stmt|;
-name|TableInfo
-operator|->
-name|BasePointer
-operator|=
-name|FullTable
 expr_stmt|;
 name|ACPI_DEBUG_PRINT
 argument_list|(

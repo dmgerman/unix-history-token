@@ -574,7 +574,7 @@ parameter_list|,
 name|UINT32
 name|Units
 parameter_list|,
-name|UINT32
+name|UINT16
 name|Timeout
 parameter_list|)
 block|{
@@ -649,12 +649,12 @@ literal|0
 block|if (as->as_units< Units&& as->as_timeouts> 10) { 	printf("%s: semaphore %p too many timeouts, resetting\n", __func__, as); 	AS_LOCK(as); 	as->as_units = as->as_maxunits; 	if (as->as_pendings) 	    as->as_resetting = 1; 	as->as_timeouts = 0; 	wakeup(as); 	AS_UNLOCK(as); 	return_ACPI_STATUS(AE_TIME);     }      if (as->as_resetting) { 	return_ACPI_STATUS(AE_TIME);     }
 endif|#
 directive|endif
-comment|/* a timeout of WAIT_FOREVER means "forever" */
+comment|/* a timeout of ACPI_WAIT_FOREVER means "forever" */
 if|if
 condition|(
 name|Timeout
 operator|==
-name|WAIT_FOREVER
+name|ACPI_WAIT_FOREVER
 condition|)
 block|{
 name|tmo

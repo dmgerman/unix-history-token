@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbcmds - debug commands and output routines  *              $Revision: 88 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbcmds - debug commands and output routines  *              $Revision: 90 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -2226,7 +2226,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDisplayResources  *  * PARAMETERS:  ObjectArg       - String with hex value of the object  *  * RETURN:      None  *  * DESCRIPTION:  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDisplayResources  *  * PARAMETERS:  ObjectArg       - String with hex value of the object  *  * RETURN:      None  *  * DESCRIPTION: Display the resource objects associated with a device.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -2750,7 +2750,7 @@ name|Node
 operator|->
 name|Type
 operator|>
-name|INTERNAL_TYPE_MAX
+name|ACPI_TYPE_LOCAL_MAX
 condition|)
 block|{
 name|AcpiOsPrintf

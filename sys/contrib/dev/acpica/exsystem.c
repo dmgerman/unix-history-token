@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exsystem - Interface to OS services  *              $Revision: 73 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exsystem - Interface to OS services  *              $Revision: 74 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -56,7 +56,7 @@ parameter_list|(
 name|ACPI_HANDLE
 name|Semaphore
 parameter_list|,
-name|UINT32
+name|UINT16
 name|Timeout
 parameter_list|)
 block|{
@@ -351,7 +351,7 @@ operator|=
 name|AcpiEvAcquireGlobalLock
 argument_list|(
 operator|(
-name|UINT32
+name|UINT16
 operator|)
 name|TimeDesc
 operator|->
@@ -377,7 +377,7 @@ operator|.
 name|Semaphore
 argument_list|,
 operator|(
-name|UINT32
+name|UINT16
 operator|)
 name|TimeDesc
 operator|->
@@ -566,7 +566,7 @@ operator|.
 name|Semaphore
 argument_list|,
 operator|(
-name|UINT32
+name|UINT16
 operator|)
 name|TimeDesc
 operator|->

@@ -247,7 +247,7 @@ parameter_list|,
 name|UINT32
 name|Units
 parameter_list|,
-name|UINT32
+name|UINT16
 name|Timeout
 parameter_list|)
 function_decl|;

@@ -666,7 +666,7 @@ begin_function_decl
 name|ACPI_STATUS
 name|AcpiAcquireGlobalLock
 parameter_list|(
-name|UINT32
+name|UINT16
 name|Timeout
 parameter_list|,
 name|UINT32

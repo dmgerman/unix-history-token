@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exfldio - Aml Field I/O  *              $Revision: 88 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exfldio - Aml Field I/O  *              $Revision: 90 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -97,6 +97,7 @@ name|CommonField
 operator|.
 name|RegionObj
 expr_stmt|;
+comment|/* We must have a valid region */
 if|if
 condition|(
 name|ACPI_GET_OBJECT_TYPE
@@ -168,6 +169,24 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+if|if
+condition|(
+name|RgnDesc
+operator|->
+name|Region
+operator|.
+name|SpaceId
+operator|==
+name|ACPI_ADR_SPACE_SMBUS
+condition|)
+block|{
+comment|/* SMBus has a non-linear address space */
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
+argument_list|)
+expr_stmt|;
 block|}
 comment|/*      * Validate the request.  The entire request from the byte offset for a      * length of one field datum (access width) must fit within the region.      * (Region length is specified in bytes)      */
 if|if
@@ -318,7 +337,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExAccessRegion  *  * PARAMETERS:  *ObjDesc                - Field to be read  *              FieldDatumByteOffset    - Byte offset of this datum within the  *                                        parent field  *              *Value                  - Where to store value (must be 32 bits)  *              ReadWrite               - Read or Write flag  *  * RETURN:      Status  *  * DESCRIPTION: Read or Write a single field datum to an Operation Region.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExAccessRegion  *  * PARAMETERS:  *ObjDesc                - Field to be read  *              FieldDatumByteOffset    - Byte offset of this datum within the  *                                        parent field  *              *Value                  - Where to store value (must at least  *                                        the size of ACPI_INTEGER)  *              Function                - Read or Write flag plus other region-  *                                        dependent flags  *  * RETURN:      Status  *  * DESCRIPTION: Read or Write a single field datum to an Operation Region.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -337,7 +356,7 @@ modifier|*
 name|Value
 parameter_list|,
 name|UINT32
-name|ReadWrite
+name|Function
 parameter_list|)
 block|{
 name|ACPI_STATUS
@@ -355,6 +374,30 @@ argument_list|(
 literal|"ExAccessRegion"
 argument_list|)
 expr_stmt|;
+comment|/*       * Ensure that the region operands are fully evaluated and verify      * the validity of the request      */
+name|Status
+operator|=
+name|AcpiExSetupRegion
+argument_list|(
+name|ObjDesc
+argument_list|,
+name|FieldDatumByteOffset
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*      * The physical address of this field datum is:      *      * 1) The base of the region, plus      * 2) The base offset of the field, plus      * 3) The current offset into the field      */
 name|RgnDesc
 operator|=
@@ -382,7 +425,11 @@ name|FieldDatumByteOffset
 expr_stmt|;
 if|if
 condition|(
-name|ReadWrite
+operator|(
+name|Function
+operator|&
+name|ACPI_IO_MASK
+operator|)
 operator|==
 name|ACPI_READ
 condition|)
@@ -464,7 +511,7 @@ name|AcpiEvAddressSpaceDispatch
 argument_list|(
 name|RgnDesc
 argument_list|,
-name|ReadWrite
+name|Function
 argument_list|,
 name|Address
 argument_list|,
@@ -827,7 +874,7 @@ name|AE_OK
 expr_stmt|;
 break|break;
 case|case
-name|INTERNAL_TYPE_BANK_FIELD
+name|ACPI_TYPE_LOCAL_BANK_FIELD
 case|:
 comment|/* Ensure that the BankValue is not beyond the capacity of the register */
 if|if
@@ -902,32 +949,9 @@ block|}
 comment|/*          * Now that the Bank has been selected, fall through to the          * RegionField case and write the datum to the Operation Region          */
 comment|/*lint -fallthrough */
 case|case
-name|INTERNAL_TYPE_REGION_FIELD
+name|ACPI_TYPE_LOCAL_REGION_FIELD
 case|:
 comment|/*          * For simple RegionFields, we just directly access the owning          * Operation Region.          */
-name|Status
-operator|=
-name|AcpiExSetupRegion
-argument_list|(
-name|ObjDesc
-argument_list|,
-name|FieldDatumByteOffset
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-name|return_ACPI_STATUS
-argument_list|(
-name|Status
-argument_list|)
-expr_stmt|;
-block|}
 name|Status
 operator|=
 name|AcpiExAccessRegion
@@ -943,7 +967,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|INTERNAL_TYPE_INDEX_FIELD
+name|ACPI_TYPE_LOCAL_INDEX_FIELD
 case|:
 comment|/* Ensure that the IndexValue is not beyond the capacity of the register */
 if|if
