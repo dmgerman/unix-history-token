@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	cyvar.h	1.1	86/01/12	*/
+comment|/*	cyvar.h	1.2	86/12/18	*/
 end_comment
 
 begin_define
@@ -58,17 +58,6 @@ directive|define
 name|GATE_CLOSED
 value|(char)(0xFF)
 end_define
-
-begin_define
-define|#
-directive|define
-name|cyaddr
-value|((char *)(0xf4000 + IOBASE))
-end_define
-
-begin_comment
-comment|/* controller physical addr */
-end_comment
 
 begin_define
 define|#
@@ -1269,13 +1258,6 @@ end_define
 begin_comment
 comment|/* streaming terminated */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|WRITE_FMARK
-value|5
-end_define
 
 end_unit
 
