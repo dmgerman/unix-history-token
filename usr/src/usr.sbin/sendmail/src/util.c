@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.39.1.1 (Berkeley) %G%"
+literal|"@(#)util.c	8.48 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5750,6 +5750,20 @@ name|int
 name|l
 decl_stmt|;
 block|{
+ifdef|#
+directive|ifdef
+name|LOG
+comment|/* check for newlines and log if necessary */
+operator|(
+name|void
+operator|)
+name|denlstring
+argument_list|(
+name|f
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|l
 operator|--
 expr_stmt|;
@@ -5942,6 +5956,37 @@ operator|++
 operator|=
 literal|' '
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LOG
+name|p
+operator|=
+name|macvalue
+argument_list|(
+literal|'_'
+argument_list|,
+name|CurEnv
+argument_list|)
+expr_stmt|;
+name|syslog
+argument_list|(
+name|LOG_ALERT
+argument_list|,
+literal|"POSSIBLE ATTACK from %s: newline in string \"%s\""
+argument_list|,
+name|p
+operator|==
+name|NULL
+condition|?
+literal|"[UNKNOWN]"
+else|:
+name|p
+argument_list|,
+name|bp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|bp
 return|;
