@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: cleanerd.c,v 1.4 1996/09/22 21:53:45 wosch Exp $  */
+comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)cleanerd.c	8.2 (Berkeley) 1/13/94";
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)cleanerd.c	8.2 (Berkeley) 1/13/94"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -86,6 +100,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<signal.h>
 end_include
 
@@ -112,15 +132,6 @@ include|#
 directive|include
 file|"clean.h"
 end_include
-
-begin_decl_stmt
-name|char
-modifier|*
-name|special
-init|=
-literal|"cleanerd"
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -424,6 +435,19 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Cleaning Cost Functions:  *  * These return the cost of cleaning a segment.  The higher the cost value  * the better it is to clean the segment, so empty segments have the highest  * cost.  (It is probably better to think of this as a priority value  * instead).  *  * This is the cost-benefit policy simulated and described in Rosenblum's  * 1991 SOSP paper.  */
 end_comment
@@ -545,11 +569,9 @@ name|lfsp
 argument_list|)
 condition|)
 block|{
-name|err
+name|warnx
 argument_list|(
-literal|0
-argument_list|,
-literal|"Bad segusage count: %d"
+literal|"bad segusage count: %d"
 argument_list|,
 name|live
 argument_list|)
@@ -630,8 +652,6 @@ name|fsid_t
 name|fsid
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|nodaemon
 decl_stmt|;
 name|int
@@ -644,10 +664,6 @@ modifier|*
 name|fs_name
 decl_stmt|;
 comment|/* name of filesystem to clean */
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
 name|cmd_err
 operator|=
 name|nodaemon
@@ -727,12 +743,8 @@ operator|!=
 literal|1
 operator|)
 condition|)
-name|err
-argument_list|(
-literal|1
-argument_list|,
-literal|"usage: lfs_cleanerd [-smd] fs_name"
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 name|fs_name
 operator|=
@@ -778,11 +790,11 @@ literal|0
 condition|)
 block|{
 comment|/* didn't find the filesystem */
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"lfs_cleanerd: filesystem %s isn't an LFS!"
+literal|"filesystem %s isn't an LFS"
 argument_list|,
 name|fs_name
 argument_list|)
@@ -806,11 +818,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"lfs_cleanerd: couldn't become a daemon!"
+literal|"couldn't become a daemon"
 argument_list|)
 expr_stmt|;
 name|timeout
@@ -901,11 +913,9 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|err
+name|warnx
 argument_list|(
-literal|0
-argument_list|,
-literal|"lfs_segwait: returned error\n"
+literal|"lfs_segwait: returned error"
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -922,6 +932,27 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|usage
+parameter_list|()
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: lfs_cleanerd [-smd] fs_name\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1019,7 +1050,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Cleaner Running  at %s (%d of %d segments available)\n"
+literal|"Cleaner Running at %s (%d of %ld segments available)\n"
 argument_list|,
 name|ctime
 argument_list|(
@@ -1065,9 +1096,9 @@ operator|-
 literal|1
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
-literal|"getloadavg: failed\n"
+literal|"getloadavg failed"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1221,10 +1252,8 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|err
+name|warnx
 argument_list|(
-literal|0
-argument_list|,
 literal|"malloc failed"
 argument_list|)
 expr_stmt|;
@@ -1306,7 +1335,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|perror
+name|warn
 argument_list|(
 literal|"clean_segment failed"
 argument_list|)
@@ -1330,7 +1359,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|perror
+name|warn
 argument_list|(
 literal|"lfs_segclean failed"
 argument_list|)
@@ -1788,10 +1817,8 @@ operator|<
 literal|0
 condition|)
 block|{
-name|err
+name|warn
 argument_list|(
-literal|0
-argument_list|,
 literal|"mmap_segment failed"
 argument_list|)
 expr_stmt|;
@@ -1828,10 +1855,8 @@ operator|<
 literal|0
 condition|)
 block|{
-name|err
+name|warn
 argument_list|(
-literal|0
-argument_list|,
 literal|"clean_segment: lfs_segmapv failed"
 argument_list|)
 expr_stmt|;
@@ -1897,9 +1922,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|warn
 argument_list|(
-literal|"clean_segment: lfs_bmapv failed\n"
+literal|"clean_segment: lfs_bmapv failed"
 argument_list|)
 expr_stmt|;
 operator|++
@@ -2115,10 +2140,8 @@ operator|<
 literal|0
 condition|)
 block|{
-name|err
+name|warn
 argument_list|(
-literal|0
-argument_list|,
 literal|"clean_segment: lfs_markv failed"
 argument_list|)
 expr_stmt|;
