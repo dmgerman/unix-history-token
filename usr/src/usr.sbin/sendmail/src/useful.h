@@ -1,24 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)useful.h	4.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)useful.h	4.5 (Berkeley) %G%  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|makedev
-end_ifndef
 
 begin_include
 include|#
 directive|include
 file|<sys/types.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* support for bool type */
@@ -287,12 +276,6 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|V6
-end_ifndef
-
 begin_function_decl
 specifier|extern
 name|char
@@ -301,53 +284,6 @@ name|getenv
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-endif|V6
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|VMUNIX
-end_ifndef
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|short
-name|u_short
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|long
-name|u_long
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|char
-name|u_char
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|int
-name|void
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-endif|VMUNIX
-end_endif
 
 end_unit
 
