@@ -125,7 +125,7 @@ name|next
 parameter_list|(
 name|a
 parameter_list|)
-value|(*++*(a) ? *(a) : (*++(a) ? *(a) : (char *)usage()))
+value|(*++*(a) ? *(a) : (*++(a) ? *(a) : (char *)(uintptr_t)usage()))
 end_define
 
 begin_comment
