@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)input.c	5.12 (Berkeley) %G%"
+literal|"@(#)input.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -876,18 +876,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|(
-name|unsigned
-operator|)
-name|n
-operator|->
-name|rip_metric
-operator|>
-name|HOPCNT_INFINITY
-condition|)
-continue|continue;
-if|if
-condition|(
 name|n
 operator|->
 name|rip_dst
@@ -1023,6 +1011,23 @@ operator|+=
 name|ifp
 operator|->
 name|int_metric
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|unsigned
+operator|)
+name|n
+operator|->
+name|rip_metric
+operator|>
+name|HOPCNT_INFINITY
+condition|)
+name|n
+operator|->
+name|rip_metric
+operator|=
+name|HOPCNT_INFINITY
 expr_stmt|;
 name|rt
 operator|=
@@ -1207,14 +1212,12 @@ block|}
 elseif|else
 if|if
 condition|(
-call|(
+operator|(
 name|unsigned
-call|)
-argument_list|(
+operator|)
 name|n
 operator|->
 name|rip_metric
-argument_list|)
 operator|<
 name|rt
 operator|->
@@ -1239,6 +1242,9 @@ name|n
 operator|->
 name|rip_metric
 operator|&&
+operator|(
+name|unsigned
+operator|)
 name|n
 operator|->
 name|rip_metric
