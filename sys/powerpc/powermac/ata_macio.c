@@ -106,13 +106,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/ofw/openfirm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<powerpc/powermac/maciovar.h>
+file|<dev/ofw/ofw_bus.h>
 end_include
 
 begin_comment
@@ -276,11 +270,12 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|type
 init|=
-name|macio_get_devtype
+name|ofw_bus_get_type
 argument_list|(
 name|dev
 argument_list|)

@@ -92,15 +92,7 @@ name|SBUS_IVAR_BURSTSZ
 block|,
 name|SBUS_IVAR_CLOCKFREQ
 block|,
-name|SBUS_IVAR_COMPAT
-block|,
-name|SBUS_IVAR_NAME
-block|,
-name|SBUS_IVAR_NODE
-block|,
 name|SBUS_IVAR_SLOT
-block|,
-name|SBUS_IVAR_DEVICE_TYPE
 block|, }
 enum|;
 end_enum
@@ -149,55 +141,11 @@ end_macro
 begin_macro
 name|SBUS_ACCESSOR
 argument_list|(
-argument|compat
-argument_list|,
-argument|COMPAT
-argument_list|,
-argument|char *
-argument_list|)
-end_macro
-
-begin_macro
-name|SBUS_ACCESSOR
-argument_list|(
-argument|name
-argument_list|,
-argument|NAME
-argument_list|,
-argument|char *
-argument_list|)
-end_macro
-
-begin_macro
-name|SBUS_ACCESSOR
-argument_list|(
-argument|node
-argument_list|,
-argument|NODE
-argument_list|,
-argument|phandle_t
-argument_list|)
-end_macro
-
-begin_macro
-name|SBUS_ACCESSOR
-argument_list|(
 argument|slot
 argument_list|,
 argument|SLOT
 argument_list|,
 argument|int
-argument_list|)
-end_macro
-
-begin_macro
-name|SBUS_ACCESSOR
-argument_list|(
-argument|device_type
-argument_list|,
-argument|DEVICE_TYPE
-argument_list|,
-argument|char *
 argument_list|)
 end_macro
 

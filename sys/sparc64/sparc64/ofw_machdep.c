@@ -16,6 +16,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -23,6 +29,12 @@ begin_include
 include|#
 directive|include
 file|<net/ethernet.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/ofw/ofw_bus.h>
 end_include
 
 begin_include
@@ -166,7 +178,7 @@ name|node
 decl_stmt|;
 name|node
 operator|=
-name|ofw_pci_get_node
+name|ofw_bus_get_node
 argument_list|(
 name|dev
 argument_list|)

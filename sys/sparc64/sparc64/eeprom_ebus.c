@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/ofw/ofw_bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
@@ -72,12 +78,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/ofw/openfirm.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/eeprom.h>
 end_include
 
@@ -90,28 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sparc64/ebus/ebusvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clock_if.h"
 end_include
 
 begin_comment
 comment|/*  * clock (eeprom) attaches at the sbus or the ebus  */
 end_comment
-
-begin_function_decl
-specifier|static
-name|int
-name|eeprom_ebus_probe
-parameter_list|(
-name|device_t
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|static
@@ -135,7 +119,7 @@ name|DEVMETHOD
 argument_list|(
 name|device_probe
 argument_list|,
-name|eeprom_ebus_probe
+name|eeprom_probe
 argument_list|)
 block|,
 name|DEVMETHOD
@@ -201,51 +185,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_function
-specifier|static
-name|int
-name|eeprom_ebus_probe
-parameter_list|(
-name|device_t
-name|dev
-parameter_list|)
-block|{
-if|if
-condition|(
-name|strcmp
-argument_list|(
-literal|"eeprom"
-argument_list|,
-name|ebus_get_name
-argument_list|(
-name|dev
-argument_list|)
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-name|device_set_desc
-argument_list|(
-name|dev
-argument_list|,
-literal|"EBus EEPROM/clock"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
-end_function
 
 begin_comment
 comment|/*  * Attach a clock (really `eeprom') to the ebus.  *  * This is mapped read-only on NetBSD for safety, but this is not possible  * with the current FreeBSD bus code.  *  * the MK48T02 is 2K.  the MK48T08 is 8K, and the MK48T59 is supposed to be  * identical to it.  */
@@ -313,11 +252,6 @@ operator|=
 name|eeprom_attach
 argument_list|(
 name|dev
-argument_list|,
-name|ebus_get_node
-argument_list|(
-name|dev
-argument_list|)
 argument_list|,
 name|rman_get_bustag
 argument_list|(

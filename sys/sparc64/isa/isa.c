@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/ofw/ofw_bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/ofw/openfirm.h>
 end_include
 
@@ -357,7 +363,7 @@ argument_list|)
 expr_stmt|;
 name|isab_node
 operator|=
-name|ofw_pci_get_node
+name|ofw_bus_get_node
 argument_list|(
 name|bridge
 argument_list|)

@@ -70,13 +70,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/ofw/openfirm.h>
+file|<dev/ofw/ofw_bus.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<dev/ofw/ofw_pci.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/ofw/openfirm.h>
 end_include
 
 begin_include
@@ -467,7 +473,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|ofw_pci_get_node_t
+name|ofw_bus_get_node_t
 name|psycho_get_node
 decl_stmt|;
 end_decl_stmt
@@ -587,6 +593,14 @@ argument_list|,
 name|psycho_route_interrupt
 argument_list|)
 block|,
+comment|/* ofw_bus interface */
+name|DEVMETHOD
+argument_list|(
+name|ofw_bus_get_node
+argument_list|,
+name|psycho_get_node
+argument_list|)
+block|,
 comment|/* ofw_pci interface */
 name|DEVMETHOD
 argument_list|(
@@ -600,13 +614,6 @@ argument_list|(
 name|ofw_pci_get_bus_handle
 argument_list|,
 name|psycho_get_bus_handle
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|ofw_pci_get_node
-argument_list|,
-name|psycho_get_node
 argument_list|)
 block|,
 name|DEVMETHOD
@@ -4157,7 +4164,7 @@ decl_stmt|;
 name|phandle_t
 name|node
 init|=
-name|ofw_pci_get_node
+name|ofw_bus_get_node
 argument_list|(
 name|dev
 argument_list|)

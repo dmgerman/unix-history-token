@@ -30,13 +30,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/ofw/openfirm.h>
+file|<dev/ofw/ofw_bus.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<dev/ofw/ofw_pci.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/ofw/openfirm.h>
 end_include
 
 begin_include
@@ -120,7 +126,7 @@ name|sc
 operator|->
 name|ops_node
 operator|=
-name|ofw_pci_get_node
+name|ofw_bus_get_node
 argument_list|(
 name|bridge
 argument_list|)
@@ -281,7 +287,7 @@ decl_stmt|;
 name|phandle_t
 name|node
 init|=
-name|ofw_pci_get_node
+name|ofw_bus_get_node
 argument_list|(
 name|dev
 argument_list|)

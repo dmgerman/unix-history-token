@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/ofw/ofw_bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
@@ -63,18 +69,6 @@ begin_include
 include|#
 directive|include
 file|<machine/resource.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/ofw/openfirm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sparc64/ebus/ebusvar.h>
 end_include
 
 begin_include
@@ -203,14 +197,14 @@ name|NULL
 expr_stmt|;
 name|nm
 operator|=
-name|ebus_get_name
+name|ofw_bus_get_name
 argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
 name|cmpt
 operator|=
-name|ebus_get_compat
+name|ofw_bus_get_compat
 argument_list|(
 name|dev
 argument_list|)

@@ -76,13 +76,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/bus.h>
+file|<dev/ofw/ofw_bus.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<dev/ofw/openfirm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/bus.h>
 end_include
 
 begin_include
@@ -540,13 +546,14 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|name
 decl_stmt|;
 name|name
 operator|=
-name|sbus_get_name
+name|ofw_bus_get_name
 argument_list|(
 name|dev
 argument_list|)
@@ -633,7 +640,7 @@ name|dev
 expr_stmt|;
 name|node
 operator|=
-name|sbus_get_node
+name|ofw_bus_get_node
 argument_list|(
 name|dev
 argument_list|)

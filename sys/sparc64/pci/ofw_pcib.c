@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/ofw/ofw_bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/ofw/openfirm.h>
 end_include
 
@@ -237,14 +243,15 @@ argument_list|,
 name|ofw_pcib_gen_route_interrupt
 argument_list|)
 block|,
-comment|/* ofw_pci interface */
+comment|/* ofw_bus interface */
 name|DEVMETHOD
 argument_list|(
-name|ofw_pci_get_node
+name|ofw_bus_get_node
 argument_list|,
 name|ofw_pcib_gen_get_node
 argument_list|)
 block|,
+comment|/* ofw_pci interface */
 name|DEVMETHOD
 argument_list|(
 name|ofw_pci_adjust_busrange
@@ -327,7 +334,7 @@ operator|==
 name|PCIS_BRIDGE_PCI
 operator|)
 operator|&&
-name|ofw_pci_get_node
+name|ofw_bus_get_node
 argument_list|(
 name|dev
 argument_list|)

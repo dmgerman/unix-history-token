@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/ofw/ofw_bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
@@ -75,18 +81,6 @@ begin_include
 include|#
 directive|include
 file|<machine/resource.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/ofw/openfirm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sparc64/sbus/sbusvar.h>
 end_include
 
 begin_define
@@ -118,7 +112,7 @@ name|nm
 decl_stmt|;
 name|nm
 operator|=
-name|sbus_get_name
+name|ofw_bus_get_name
 argument_list|(
 name|dev
 argument_list|)

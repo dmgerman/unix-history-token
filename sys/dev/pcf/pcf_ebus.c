@@ -60,6 +60,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/ofw/ofw_bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/ofw/openfirm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
@@ -73,18 +85,6 @@ begin_include
 include|#
 directive|include
 file|<sys/rman.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/ofw/openfirm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sparc64/ebus/ebusvar.h>
 end_include
 
 begin_include
@@ -265,6 +265,7 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|compat
@@ -276,7 +277,7 @@ name|strcmp
 argument_list|(
 literal|"i2c"
 argument_list|,
-name|ebus_get_name
+name|ofw_bus_get_name
 argument_list|(
 name|dev
 argument_list|)
@@ -287,7 +288,7 @@ condition|)
 block|{
 name|compat
 operator|=
-name|ebus_get_compat
+name|ofw_bus_get_compat
 argument_list|(
 name|dev
 argument_list|)
@@ -379,7 +380,7 @@ condition|(
 operator|(
 name|node
 operator|=
-name|ebus_get_node
+name|ofw_bus_get_node
 argument_list|(
 name|dev
 argument_list|)

@@ -51,7 +51,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|ofw_pci_get_node_t
+name|ofw_bus_get_node_t
 name|ofw_pcib_gen_get_node
 decl_stmt|;
 end_decl_stmt

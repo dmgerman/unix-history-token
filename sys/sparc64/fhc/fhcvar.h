@@ -15,19 +15,6 @@ directive|define
 name|_SPARC64_FHC_FHCVAR_H_
 end_define
 
-begin_enum
-enum|enum
-name|fhc_device_ivars
-block|{
-name|FHC_IVAR_NAME
-block|,
-name|FHC_IVAR_NODE
-block|,
-name|FHC_IVAR_TYPE
-block|}
-enum|;
-end_enum
-
 begin_define
 define|#
 directive|define
@@ -131,37 +118,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|fhc_read_ivar
-parameter_list|(
-name|device_t
-parameter_list|,
-name|device_t
-parameter_list|,
-name|int
-parameter_list|,
-name|uintptr_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|fhc_write_ivar
-parameter_list|(
-name|device_t
-parameter_list|,
-name|device_t
-parameter_list|,
-name|int
-parameter_list|,
-name|uintptr_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|fhc_setup_intr
 parameter_list|(
 name|device_t
@@ -250,59 +206,35 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
-name|FHC_ACCESSOR
-parameter_list|(
-name|var
-parameter_list|,
-name|ivar
-parameter_list|,
-name|type
-parameter_list|)
-define|\
-value|__BUS_ACCESSOR(fhc, var, FHC, ivar, type)
-end_define
+begin_decl_stmt
+name|ofw_bus_get_compat_t
+name|fhc_get_compat
+decl_stmt|;
+end_decl_stmt
 
-begin_macro
-name|FHC_ACCESSOR
-argument_list|(
-argument|name
-argument_list|,
-argument|NAME
-argument_list|,
-argument|char *
-argument_list|)
-end_macro
+begin_decl_stmt
+name|ofw_bus_get_model_t
+name|fhc_get_model
+decl_stmt|;
+end_decl_stmt
 
-begin_macro
-name|FHC_ACCESSOR
-argument_list|(
-argument|node
-argument_list|,
-argument|NODE
-argument_list|,
-argument|phandle_t
-argument_list|)
-end_macro
+begin_decl_stmt
+name|ofw_bus_get_name_t
+name|fhc_get_name
+decl_stmt|;
+end_decl_stmt
 
-begin_macro
-name|FHC_ACCESSOR
-argument_list|(
-argument|type
-argument_list|,
-argument|TYPE
-argument_list|,
-argument|char *
-argument_list|)
-end_macro
+begin_decl_stmt
+name|ofw_bus_get_node_t
+name|fhc_get_node
+decl_stmt|;
+end_decl_stmt
 
-begin_undef
-undef|#
-directive|undef
-name|FHC_ACCESSOR
-end_undef
+begin_decl_stmt
+name|ofw_bus_get_type_t
+name|fhc_get_type
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

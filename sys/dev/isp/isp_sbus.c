@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/ofw/ofw_bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
@@ -69,18 +75,6 @@ begin_include
 include|#
 directive|include
 file|<sys/rman.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/ofw/openfirm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/ofw_machdep.h>
 end_include
 
 begin_include
@@ -443,11 +437,12 @@ name|found
 init|=
 literal|0
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
 init|=
-name|sbus_get_name
+name|ofw_bus_get_name
 argument_list|(
 name|dev
 argument_list|)
@@ -1090,7 +1085,7 @@ name|strcmp
 argument_list|(
 literal|"PTI,ptisp"
 argument_list|,
-name|sbus_get_name
+name|ofw_bus_get_name
 argument_list|(
 name|dev
 argument_list|)
@@ -1102,7 +1097,7 @@ name|strcmp
 argument_list|(
 literal|"ptisp"
 argument_list|,
-name|sbus_get_name
+name|ofw_bus_get_name
 argument_list|(
 name|dev
 argument_list|)

@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/ofw/ofw_bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
@@ -91,18 +97,6 @@ begin_include
 include|#
 directive|include
 file|<sys/rman.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/ofw/openfirm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sparc64/ebus/ebusvar.h>
 end_include
 
 begin_include
@@ -299,7 +293,7 @@ name|strcmp
 argument_list|(
 literal|"SUNW,envctrl"
 argument_list|,
-name|ebus_get_name
+name|ofw_bus_get_name
 argument_list|(
 name|dev
 argument_list|)
