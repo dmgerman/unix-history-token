@@ -4794,6 +4794,11 @@ comment|/* read this drive's configuration */
 block|}
 name|Free
 argument_list|(
+name|config_line
+argument_list|)
+expr_stmt|;
+name|Free
+argument_list|(
 name|config_text
 argument_list|)
 expr_stmt|;
