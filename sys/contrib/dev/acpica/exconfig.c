@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exconfig - Namespace reconfiguration (Load/Unload opcodes)  *              $Revision: 34 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exconfig - Namespace reconfiguration (Load/Unload opcodes)  *              $Revision: 36 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -198,7 +198,7 @@ block|}
 comment|/* Allocate a buffer for the entire table */
 name|TablePtr
 operator|=
-name|AcpiUtAllocate
+name|ACPI_MEM_ALLOCATE
 argument_list|(
 name|TableHeader
 operator|.
@@ -481,12 +481,12 @@ argument_list|)
 expr_stmt|;
 name|Cleanup
 label|:
-name|AcpiUtFree
+name|ACPI_MEM_FREE
 argument_list|(
 name|TableDesc
 argument_list|)
 expr_stmt|;
-name|AcpiUtFree
+name|ACPI_MEM_FREE
 argument_list|(
 name|TablePtr
 argument_list|)
@@ -749,7 +749,7 @@ argument_list|,
 operator|(
 literal|"bad operand(s) (Load) (%s)\n"
 operator|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -795,7 +795,7 @@ argument_list|,
 operator|(
 literal|"bad operand(s) (unload) (%s)\n"
 operator|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)

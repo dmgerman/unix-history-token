@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsnames - Name manipulation and search  *              $Revision: 59 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsnames - Name manipulation and search  *              $Revision: 60 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -147,7 +147,7 @@ block|}
 comment|/* Allocate a buffer to be returned to caller */
 name|NameBuffer
 operator|=
-name|AcpiUtCallocate
+name|ACPI_MEM_CALLOCATE
 argument_list|(
 name|Size
 operator|+

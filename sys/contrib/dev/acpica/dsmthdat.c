@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dsmthdat - control method arguments and local variables  *              $Revision: 46 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dsmthdat - control method arguments and local variables  *              $Revision: 47 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -84,7 +84,7 @@ argument_list|(
 literal|"DsMethodDataInit"
 argument_list|)
 expr_stmt|;
-comment|/*      * WalkState fields are initialized to zero by the      * AcpiUtCallocate().      *      * An Node is assigned to each argument and local so      * that RefOf() can return a pointer to the Node.      */
+comment|/*      * WalkState fields are initialized to zero by the      * ACPI_MEM_CALLOCATE().      *      * An Node is assigned to each argument and local so      * that RefOf() can return a pointer to the Node.      */
 comment|/* Init the method arguments */
 for|for
 control|(

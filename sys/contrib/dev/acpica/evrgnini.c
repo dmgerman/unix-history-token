@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evrgnini- ACPI AddressSpace (OpRegion) init  *              $Revision: 40 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evrgnini- ACPI AddressSpace (OpRegion) init  *              $Revision: 44 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -99,7 +99,7 @@ operator|*
 name|RegionContext
 condition|)
 block|{
-name|AcpiUtFree
+name|ACPI_MEM_FREE
 argument_list|(
 operator|*
 name|RegionContext
@@ -121,7 +121,7 @@ comment|/* Activate.  Create a new context */
 operator|*
 name|RegionContext
 operator|=
-name|AcpiUtCallocate
+name|ACPI_MEM_CALLOCATE
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -242,9 +242,9 @@ decl_stmt|;
 name|ACPI_INTEGER
 name|Temp
 decl_stmt|;
-name|ACPI_PCI_SPACE_CONTEXT
+name|ACPI_PCI_ID
 modifier|*
-name|PciContext
+name|PciId
 init|=
 operator|*
 name|RegionContext
@@ -316,12 +316,12 @@ condition|)
 block|{
 if|if
 condition|(
-name|PciContext
+name|PciId
 condition|)
 block|{
-name|AcpiUtFree
+name|ACPI_MEM_FREE
 argument_list|(
-name|PciContext
+name|PciId
 argument_list|)
 expr_stmt|;
 operator|*
@@ -337,20 +337,20 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Create a new context */
-name|PciContext
+name|PciId
 operator|=
-name|AcpiUtCallocate
+name|ACPI_MEM_CALLOCATE
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|ACPI_PCI_SPACE_CONTEXT
+name|ACPI_PCI_ID
 argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|!
-name|PciContext
+name|PciId
 condition|)
 block|{
 name|return_ACPI_STATUS
@@ -361,15 +361,6 @@ expr_stmt|;
 block|}
 comment|/*      *  For PCI Config space access, we have to pass the segment, bus,      *  device and function numbers.  This routine must acquire those.      */
 comment|/*      *  First get device and function numbers from the _ADR object      *  in the parent's scope.      */
-name|ACPI_ASSERT
-argument_list|(
-name|RegionObj
-operator|->
-name|Region
-operator|.
-name|Node
-argument_list|)
-expr_stmt|;
 name|Node
 operator|=
 name|AcpiNsGetParentObject
@@ -403,14 +394,23 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|PciContext
+name|PciId
 operator|->
-name|DevFunc
+name|Device
 operator|=
-operator|(
-name|UINT32
-operator|)
+name|HIWORD
+argument_list|(
 name|Temp
+argument_list|)
+expr_stmt|;
+name|PciId
+operator|->
+name|Function
+operator|=
+name|LOWORD
+argument_list|(
+name|Temp
+argument_list|)
 expr_stmt|;
 block|}
 comment|/*      *  Get the _SEG and _BBN values from the device upon which the handler      *  is installed.      *      *  We need to get the _SEG and _BBN objects relative to the PCI BUS device.      *  This is the device the handler has been registered to handle.      */
@@ -508,6 +508,7 @@ operator|.
 name|Node
 expr_stmt|;
 block|}
+comment|/*      * The PCI segment number comes from the _SEG method      */
 name|Status
 operator|=
 name|AcpiUtEvaluateNumericObject
@@ -528,16 +529,17 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|PciContext
+name|PciId
 operator|->
-name|Seg
+name|Segment
 operator|=
-operator|(
-name|UINT32
-operator|)
+name|LOWORD
+argument_list|(
 name|Temp
+argument_list|)
 expr_stmt|;
 block|}
+comment|/*      * The PCI bus number comes from the _BBN method       */
 name|Status
 operator|=
 name|AcpiUtEvaluateNumericObject
@@ -558,20 +560,20 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|PciContext
+name|PciId
 operator|->
 name|Bus
 operator|=
-operator|(
-name|UINT32
-operator|)
+name|LOWORD
+argument_list|(
 name|Temp
+argument_list|)
 expr_stmt|;
 block|}
 operator|*
 name|RegionContext
 operator|=
-name|PciContext
+name|PciId
 expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
@@ -706,15 +708,6 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
-name|ACPI_ASSERT
-argument_list|(
-name|RegionObj
-operator|->
-name|Region
-operator|.
-name|Node
-argument_list|)
-expr_stmt|;
 name|Node
 operator|=
 name|AcpiNsGetParentObject

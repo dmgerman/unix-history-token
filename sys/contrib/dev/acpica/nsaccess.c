@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsaccess - Top-level functions for accessing ACPI namespace  *              $Revision: 126 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsaccess - Top-level functions for accessing ACPI namespace  *              $Revision: 128 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -190,7 +190,7 @@ name|InitVal
 operator|->
 name|Name
 operator|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -285,7 +285,7 @@ name|String
 operator|.
 name|Pointer
 operator|=
-name|AcpiUtAllocate
+name|ACPI_MEM_ALLOCATE
 argument_list|(
 operator|(
 name|ObjDesc

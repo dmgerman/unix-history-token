@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: hwacpi - ACPI Hardware Initialization/Mode Interface  *              $Revision: 40 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: hwacpi - ACPI Hardware Initialization/Mode Interface  *              $Revision: 42 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -235,7 +235,7 @@ block|{
 comment|/* GPE0 specified in FADT  */
 name|AcpiGbl_Gpe0EnableRegisterSave
 operator|=
-name|AcpiUtAllocate
+name|ACPI_MEM_ALLOCATE
 argument_list|(
 name|DIV_2
 argument_list|(
@@ -322,7 +322,7 @@ block|{
 comment|/* GPE1 defined */
 name|AcpiGbl_Gpe1EnableRegisterSave
 operator|=
-name|AcpiUtAllocate
+name|ACPI_MEM_ALLOCATE
 argument_list|(
 name|DIV_2
 argument_list|(
@@ -429,7 +429,7 @@ name|SYS_MODE_ACPI
 condition|)
 block|{
 comment|/* BIOS should have disabled ALL fixed and GP events */
-name|AcpiOsOut8
+name|AcpiOsWritePort
 argument_list|(
 name|AcpiGbl_FADT
 operator|->
@@ -438,6 +438,8 @@ argument_list|,
 name|AcpiGbl_FADT
 operator|->
 name|AcpiEnable
+argument_list|,
+literal|8
 argument_list|)
 expr_stmt|;
 name|DEBUG_PRINTP
@@ -459,7 +461,7 @@ name|SYS_MODE_LEGACY
 condition|)
 block|{
 comment|/*          * BIOS should clear all fixed status bits and restore fixed event          * enable bits to default          */
-name|AcpiOsOut8
+name|AcpiOsWritePort
 argument_list|(
 name|AcpiGbl_FADT
 operator|->
@@ -468,6 +470,8 @@ argument_list|,
 name|AcpiGbl_FADT
 operator|->
 name|AcpiDisable
+argument_list|,
+literal|8
 argument_list|)
 expr_stmt|;
 name|DEBUG_PRINTP

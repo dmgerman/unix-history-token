@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: utmisc - common utility procedures  *              $Revision: 42 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: utmisc - common utility procedures  *              $Revision: 44 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -769,7 +769,7 @@ argument_list|(
 name|MutexId
 argument_list|)
 operator|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -986,7 +986,7 @@ argument_list|(
 name|MutexId
 argument_list|)
 operator|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -1343,7 +1343,7 @@ argument_list|)
 expr_stmt|;
 name|State
 operator|=
-name|AcpiUtCallocate
+name|ACPI_MEM_CALLOCATE
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -1636,7 +1636,7 @@ operator|>=
 name|MAX_STATE_CACHE_DEPTH
 condition|)
 block|{
-name|AcpiUtFree
+name|ACPI_MEM_FREE
 argument_list|(
 name|State
 argument_list|)
@@ -1733,7 +1733,7 @@ name|Common
 operator|.
 name|Next
 expr_stmt|;
-name|AcpiUtFree
+name|ACPI_MEM_FREE
 argument_list|(
 name|AcpiGbl_GenericStateCache
 argument_list|)

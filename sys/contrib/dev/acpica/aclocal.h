@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: aclocal.h - Internal data types used across the ACPI subsystem  *       $Revision: 123 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: aclocal.h - Internal data types used across the ACPI subsystem  *       $Revision: 124 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1653,60 +1653,6 @@ define|#
 directive|define
 name|PCI_ROOT_HID_STRING
 value|"PNP0A03"
-end_define
-
-begin_define
-define|#
-directive|define
-name|PCI_ROOT_HID_VALUE
-value|0x030AD041
-end_define
-
-begin_comment
-comment|/* EISAID("PNP0A03") */
-end_comment
-
-begin_comment
-comment|/* Sleep states */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SLWA_DEBUG_LEVEL
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|GTS_CALL
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|GTS_WAKE
-value|1
-end_define
-
-begin_comment
-comment|/* Cx States */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MAX_CX_STATE_LATENCY
-value|0xFFFFFFFF
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAX_CX_STATES
-value|4
 end_define
 
 begin_comment

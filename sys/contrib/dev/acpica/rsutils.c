@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rsutils - Utilities for the resource manager  *              $Revision: 19 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rsutils - Utilities for the resource manager  *              $Revision: 20 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -565,7 +565,7 @@ block|}
 comment|/*      * Allocate the buffer needed      */
 name|ByteStream
 operator|=
-name|AcpiUtCallocate
+name|ACPI_MEM_CALLOCATE
 argument_list|(
 name|BufferSizeNeeded
 argument_list|)
@@ -675,7 +675,7 @@ expr_stmt|;
 comment|/*      * Clean up and return the status from AcpiNsEvaluateRelative      */
 name|Cleanup
 label|:
-name|AcpiUtFree
+name|ACPI_MEM_FREE
 argument_list|(
 name|ByteStream
 argument_list|)

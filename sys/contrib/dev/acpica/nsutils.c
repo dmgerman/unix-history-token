@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsutils - Utilities for accessing ACPI namespace, accessing  *                        parents and siblings and Scope manipulation  *              $Revision: 83 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsutils - Utilities for accessing ACPI namespace, accessing  *                        parents and siblings and Scope manipulation  *              $Revision: 85 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -866,7 +866,7 @@ expr_stmt|;
 comment|/* We need a segment to store the internal  name */
 name|InternalName
 operator|=
-name|AcpiUtCallocate
+name|ACPI_MEM_CALLOCATE
 argument_list|(
 name|Info
 operator|.
@@ -908,7 +908,7 @@ name|Status
 argument_list|)
 condition|)
 block|{
-name|AcpiUtFree
+name|ACPI_MEM_FREE
 argument_list|(
 name|InternalName
 argument_list|)
@@ -1212,7 +1212,7 @@ operator|*
 name|ConvertedName
 operator|)
 operator|=
-name|AcpiUtCallocate
+name|ACPI_MEM_CALLOCATE
 argument_list|(
 operator|*
 name|ConvertedNameLength
@@ -1766,7 +1766,7 @@ literal|"%s, %s\n"
 operator|,
 name|InternalPath
 operator|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -1780,7 +1780,7 @@ name|ACPI_MTX_NAMESPACE
 argument_list|)
 expr_stmt|;
 comment|/* Cleanup */
-name|AcpiUtFree
+name|ACPI_MEM_FREE
 argument_list|(
 name|InternalPath
 argument_list|)

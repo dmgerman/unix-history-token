@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acutils.h -- prototypes for the common (subsystem-wide) procedures  *       $Revision: 100 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acutils.h -- prototypes for the common (subsystem-wide) procedures  *       $Revision: 104 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1171,21 +1171,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * UtError - exception interfaces  */
-end_comment
-
-begin_function_decl
-name|NATIVE_CHAR
-modifier|*
-name|AcpiUtFormatException
-parameter_list|(
-name|ACPI_STATUS
-name|Status
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*  * UtMutex - mutual exclusion interfaces  */
 end_comment
 
@@ -1621,7 +1606,7 @@ end_comment
 begin_function_decl
 name|void
 modifier|*
-name|_UtAllocate
+name|AcpiUtAllocate
 parameter_list|(
 name|UINT32
 name|Size
@@ -1642,7 +1627,7 @@ end_function_decl
 begin_function_decl
 name|void
 modifier|*
-name|_UtCallocate
+name|AcpiUtCallocate
 parameter_list|(
 name|UINT32
 name|Size
@@ -1662,7 +1647,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|_UtFree
+name|AcpiUtFree
 parameter_list|(
 name|void
 modifier|*
@@ -1695,7 +1680,7 @@ end_function_decl
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ACPI_DEBUG_TRACK_ALLOCATIONS
+name|ACPI_DBG_TRACK_ALLOCATIONS
 end_ifdef
 
 begin_function_decl
@@ -1725,36 +1710,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|AcpiUtAllocate
-parameter_list|(
-name|a
-parameter_list|)
-value|_UtAllocate(a,_COMPONENT,_THIS_MODULE,__LINE__)
-end_define
-
-begin_define
-define|#
-directive|define
-name|AcpiUtCallocate
-parameter_list|(
-name|a
-parameter_list|)
-value|_UtCallocate(a, _COMPONENT,_THIS_MODULE,__LINE__)
-end_define
-
-begin_define
-define|#
-directive|define
-name|AcpiUtFree
-parameter_list|(
-name|a
-parameter_list|)
-value|_UtFree(a,_COMPONENT,_THIS_MODULE,__LINE__)
-end_define
 
 begin_endif
 endif|#

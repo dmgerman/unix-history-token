@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbdisply - debug display commands  *              $Revision: 45 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbdisply - debug display commands  *              $Revision: 46 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -874,7 +874,7 @@ name|ACPI_TYPE_STRING
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"(%d) \"%.16s\"..."
+literal|"(%d) \"%.24s"
 argument_list|,
 name|ObjDesc
 operator|->
@@ -889,6 +889,31 @@ operator|.
 name|Pointer
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ObjDesc
+operator|->
+name|String
+operator|.
+name|Length
+operator|>
+literal|24
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"..."
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"\""
+argument_list|)
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|ACPI_TYPE_BUFFER

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbinput - user front-end to the AML debugger  *              $Revision: 61 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbinput - user front-end to the AML debugger  *              $Revision: 62 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -1458,6 +1458,9 @@ break|break;
 case|case
 name|CMD_ALLOCATIONS
 case|:
+ifdef|#
+directive|ifdef
+name|ACPI_DBG_TRACK_ALLOCATIONS
 name|AcpiUtDumpCurrentAllocations
 argument_list|(
 operator|(
@@ -1469,6 +1472,8 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 case|case
 name|CMD_ARGS

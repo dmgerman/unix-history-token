@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: hwgpe - Low level GPE enable/disable/clear functions  *              $Revision: 29 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: hwgpe - Low level GPE enable/disable/clear functions  *              $Revision: 31 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -57,13 +57,13 @@ name|UINT32
 name|GpeNumber
 parameter_list|)
 block|{
-name|UINT8
+name|UINT32
 name|InByte
 decl_stmt|;
 name|UINT32
 name|RegisterIndex
 decl_stmt|;
-name|UINT8
+name|UINT32
 name|BitMask
 decl_stmt|;
 comment|/*      * Translate GPE number to index into global registers array.      */
@@ -88,17 +88,9 @@ expr_stmt|;
 comment|/*      * Read the current value of the register, set the appropriate bit      * to enable the GPE, and write out the new register.      */
 name|InByte
 operator|=
-name|AcpiOsIn8
-argument_list|(
-name|AcpiGbl_GpeRegisters
-index|[
-name|RegisterIndex
-index|]
-operator|.
-name|EnableAddr
-argument_list|)
+literal|0
 expr_stmt|;
-name|AcpiOsOut8
+name|AcpiOsReadPort
 argument_list|(
 name|AcpiGbl_GpeRegisters
 index|[
@@ -107,14 +99,28 @@ index|]
 operator|.
 name|EnableAddr
 argument_list|,
-call|(
-name|UINT8
-call|)
+operator|&
+name|InByte
+argument_list|,
+literal|8
+argument_list|)
+expr_stmt|;
+name|AcpiOsWritePort
 argument_list|(
+name|AcpiGbl_GpeRegisters
+index|[
+name|RegisterIndex
+index|]
+operator|.
+name|EnableAddr
+argument_list|,
+operator|(
 name|InByte
 operator||
 name|BitMask
-argument_list|)
+operator|)
+argument_list|,
+literal|8
 argument_list|)
 expr_stmt|;
 block|}
@@ -132,13 +138,13 @@ name|UINT32
 name|GpeNumber
 parameter_list|)
 block|{
-name|UINT8
+name|UINT32
 name|InByte
 decl_stmt|;
 name|UINT32
 name|RegisterIndex
 decl_stmt|;
-name|UINT8
+name|UINT32
 name|BitMask
 decl_stmt|;
 comment|/*      * Translate GPE number to index into global registers array.      */
@@ -163,17 +169,9 @@ expr_stmt|;
 comment|/*      * Read the current value of the register, clear the appropriate bit,      * and write out the new register value to disable the GPE.      */
 name|InByte
 operator|=
-name|AcpiOsIn8
-argument_list|(
-name|AcpiGbl_GpeRegisters
-index|[
-name|RegisterIndex
-index|]
-operator|.
-name|EnableAddr
-argument_list|)
+literal|0
 expr_stmt|;
-name|AcpiOsOut8
+name|AcpiOsReadPort
 argument_list|(
 name|AcpiGbl_GpeRegisters
 index|[
@@ -182,15 +180,29 @@ index|]
 operator|.
 name|EnableAddr
 argument_list|,
-call|(
-name|UINT8
-call|)
+operator|&
+name|InByte
+argument_list|,
+literal|8
+argument_list|)
+expr_stmt|;
+name|AcpiOsWritePort
 argument_list|(
+name|AcpiGbl_GpeRegisters
+index|[
+name|RegisterIndex
+index|]
+operator|.
+name|EnableAddr
+argument_list|,
+operator|(
 name|InByte
 operator|&
 operator|~
 name|BitMask
-argument_list|)
+operator|)
+argument_list|,
+literal|8
 argument_list|)
 expr_stmt|;
 block|}
@@ -211,7 +223,7 @@ block|{
 name|UINT32
 name|RegisterIndex
 decl_stmt|;
-name|UINT8
+name|UINT32
 name|BitMask
 decl_stmt|;
 comment|/*      * Translate GPE number to index into global registers array.      */
@@ -234,7 +246,7 @@ argument_list|)
 index|]
 expr_stmt|;
 comment|/*      * Write a one to the appropriate bit in the status register to      * clear this GPE.      */
-name|AcpiOsOut8
+name|AcpiOsWritePort
 argument_list|(
 name|AcpiGbl_GpeRegisters
 index|[
@@ -244,6 +256,8 @@ operator|.
 name|StatusAddr
 argument_list|,
 name|BitMask
+argument_list|,
+literal|8
 argument_list|)
 expr_stmt|;
 block|}
@@ -265,7 +279,7 @@ modifier|*
 name|EventStatus
 parameter_list|)
 block|{
-name|UINT8
+name|UINT32
 name|InByte
 init|=
 literal|0
@@ -275,7 +289,7 @@ name|RegisterIndex
 init|=
 literal|0
 decl_stmt|;
-name|UINT8
+name|UINT32
 name|BitMask
 init|=
 literal|0
@@ -317,7 +331,9 @@ expr_stmt|;
 comment|/*      * Enabled?:      */
 name|InByte
 operator|=
-name|AcpiOsIn8
+literal|0
+expr_stmt|;
+name|AcpiOsReadPort
 argument_list|(
 name|AcpiGbl_GpeRegisters
 index|[
@@ -325,6 +341,11 @@ name|RegisterIndex
 index|]
 operator|.
 name|EnableAddr
+argument_list|,
+operator|&
+name|InByte
+argument_list|,
+literal|8
 argument_list|)
 expr_stmt|;
 if|if
@@ -345,7 +366,9 @@ block|}
 comment|/*      * Set?      */
 name|InByte
 operator|=
-name|AcpiOsIn8
+literal|0
+expr_stmt|;
+name|AcpiOsReadPort
 argument_list|(
 name|AcpiGbl_GpeRegisters
 index|[
@@ -353,6 +376,11 @@ name|RegisterIndex
 index|]
 operator|.
 name|StatusAddr
+argument_list|,
+operator|&
+name|InByte
+argument_list|,
+literal|8
 argument_list|)
 expr_stmt|;
 if|if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dsutils - Dispatcher utilities  *              $Revision: 58 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dsutils - Dispatcher utilities  *              $Revision: 62 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -727,7 +727,7 @@ name|ObjDesc
 argument_list|)
 expr_stmt|;
 comment|/* Free the namestring created above */
-name|AcpiUtFree
+name|ACPI_MEM_FREE
 argument_list|(
 name|NameString
 argument_list|)
@@ -948,7 +948,7 @@ argument_list|,
 operator|(
 literal|"Missing or null operand, %s\n"
 operator|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -1187,7 +1187,7 @@ operator|+
 literal|1
 operator|)
 operator|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -1432,6 +1432,9 @@ break|break;
 case|case
 name|AML_PACKAGE_OP
 case|:
+case|case
+name|AML_VAR_PACKAGE_OP
+case|:
 name|DataType
 operator|=
 name|ACPI_TYPE_PACKAGE
@@ -1482,10 +1485,13 @@ case|case
 name|OPTYPE_DYADIC2S
 case|:
 case|case
-name|OPTYPE_INDEX
+name|OPTYPE_TRIADIC
 case|:
 case|case
-name|OPTYPE_MATCH
+name|OPTYPE_QUADRADIC
+case|:
+case|case
+name|OPTYPE_HEXADIC
 case|:
 case|case
 name|OPTYPE_RETURN

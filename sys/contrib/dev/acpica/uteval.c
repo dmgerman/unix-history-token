@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: uteval - Object evaluation  *              $Revision: 27 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: uteval - Object evaluation  *              $Revision: 28 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -141,7 +141,7 @@ name|DeviceNode
 operator|->
 name|Name
 operator|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -328,7 +328,7 @@ name|DeviceNode
 operator|->
 name|Name
 operator|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -575,7 +575,7 @@ name|DeviceNode
 operator|->
 name|Name
 operator|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -818,7 +818,7 @@ name|DeviceNode
 operator|->
 name|Name
 operator|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dswexec - Dispatcher method execution callbacks;  *                        dispatch to interpreter.  *              $Revision: 61 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dswexec - Dispatcher method execution callbacks;  *                        dispatch to interpreter.  *              $Revision: 63 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -145,7 +145,7 @@ argument_list|,
 operator|(
 literal|"Could not get result from predicate evaluation, %s\n"
 operator|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -697,13 +697,13 @@ case|case
 name|OPTYPE_RECONFIGURATION
 case|:
 case|case
-name|OPTYPE_INDEX
+name|OPTYPE_TRIADIC
 case|:
 case|case
-name|OPTYPE_MATCH
+name|OPTYPE_QUADRADIC
 case|:
 case|case
-name|OPTYPE_FATAL
+name|OPTYPE_HEXADIC
 case|:
 case|case
 name|OPTYPE_CREATE_FIELD
@@ -982,13 +982,13 @@ case|case
 name|OPTYPE_RECONFIGURATION
 case|:
 case|case
-name|OPTYPE_INDEX
+name|OPTYPE_TRIADIC
 case|:
 case|case
-name|OPTYPE_MATCH
+name|OPTYPE_QUADRADIC
 case|:
 case|case
-name|OPTYPE_FATAL
+name|OPTYPE_HEXADIC
 case|:
 comment|/* Build resolved operand stack */
 name|Status
@@ -1152,14 +1152,16 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|OPTYPE_INDEX
+name|OPTYPE_TRIADIC
 case|:
-comment|/* Type 2 opcode with 3 operands */
+comment|/* Opcode with 3 operands */
 comment|/* 3 Operands, 1 ExternalResult, 1 InternalResult */
 name|Status
 operator|=
-name|AcpiExIndex
+name|AcpiExTriadic
 argument_list|(
+name|Opcode
+argument_list|,
 name|WalkState
 argument_list|,
 operator|&
@@ -1168,14 +1170,21 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|OPTYPE_MATCH
+name|OPTYPE_QUADRADIC
 case|:
-comment|/* Type 2 opcode with 6 operands */
+comment|/* Opcode with 4 operands */
+break|break;
+case|case
+name|OPTYPE_HEXADIC
+case|:
+comment|/* Opcode with 6 operands */
 comment|/* 6 Operands, 0 ExternalResult, 1 InternalResult */
 name|Status
 operator|=
-name|AcpiExMatch
+name|AcpiExHexadic
 argument_list|(
+name|Opcode
+argument_list|,
 name|WalkState
 argument_list|,
 operator|&
@@ -1193,18 +1202,6 @@ name|AcpiExReconfiguration
 argument_list|(
 name|Opcode
 argument_list|,
-name|WalkState
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|OPTYPE_FATAL
-case|:
-comment|/* 3 Operands, 0 ExternalResult, 0 InternalResult */
-name|Status
-operator|=
-name|AcpiExFatal
-argument_list|(
 name|WalkState
 argument_list|)
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evregion - ACPI AddressSpace (OpRegion) handler dispatch  *              $Revision: 103 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evregion - ACPI AddressSpace (OpRegion) handler dispatch  *              $Revision: 106 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -569,7 +569,7 @@ argument_list|,
 operator|(
 literal|"Region Init: %s [%s]\n"
 operator|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -631,7 +631,7 @@ name|VERBOSE_INFO
 operator|)
 argument_list|,
 operator|(
-literal|"Addrhandler %p (%p), Address %p\n"
+literal|"Addrhandler %p (%p), Address %8.8lX%8.8lX\n"
 operator|,
 operator|&
 name|RegionObj
@@ -644,7 +644,15 @@ name|AddrHandler
 operator|,
 name|Handler
 operator|,
+name|HIDWORD
+argument_list|(
 name|Address
+argument_list|)
+operator|,
+name|LODWORD
+argument_list|(
+name|Address
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -712,7 +720,7 @@ argument_list|,
 operator|(
 literal|"Region handler: %s [%s]\n"
 operator|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -967,7 +975,7 @@ argument_list|,
 operator|(
 literal|"%s from region init, [%s]\n"
 operator|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -996,17 +1004,6 @@ name|AOPOBJ_INITIALIZED
 operator|)
 expr_stmt|;
 comment|/*              *  Remove handler reference in the region              *              *  NOTE: this doesn't mean that the region goes away              *  The region is just inaccessible as indicated to              *  the _REG method              *              *  If the region is on the handler's list              *  this better be the region's handler              */
-name|ACPI_ASSERT
-argument_list|(
-name|RegionObj
-operator|->
-name|Region
-operator|.
-name|AddrHandler
-operator|==
-name|HandlerObj
-argument_list|)
-expr_stmt|;
 name|RegionObj
 operator|->
 name|Region
@@ -1107,32 +1104,6 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|ACPI_ASSERT
-argument_list|(
-name|RegionObj
-operator|->
-name|Region
-operator|.
-name|SpaceId
-operator|==
-name|HandlerObj
-operator|->
-name|AddrHandler
-operator|.
-name|SpaceId
-argument_list|)
-expr_stmt|;
-name|ACPI_ASSERT
-argument_list|(
-name|RegionObj
-operator|->
-name|Region
-operator|.
-name|AddrHandler
-operator|==
-literal|0
-argument_list|)
-expr_stmt|;
 comment|/*      *  Link this region to the front of the handler's list      */
 name|RegionObj
 operator|->
@@ -1155,7 +1126,6 @@ operator|=
 name|RegionObj
 expr_stmt|;
 comment|/*      *  set the region's handler      */
-comment|/*     HandlerObj->Common.ReferenceCount =                                 (UINT16) (HandlerObj->Common.ReferenceCount +                                 RegionObj->Common.ReferenceCount - 1); */
 name|RegionObj
 operator|->
 name|Region
@@ -1437,17 +1407,6 @@ operator|)
 return|;
 block|}
 comment|/*      *  Only here if it was a region      */
-name|ACPI_ASSERT
-argument_list|(
-name|ObjDesc
-operator|->
-name|Common
-operator|.
-name|Type
-operator|==
-name|ACPI_TYPE_REGION
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ObjDesc

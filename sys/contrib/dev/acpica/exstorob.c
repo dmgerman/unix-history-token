@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exstorob - AML Interpreter object store support, store to object  *              $Revision: 32 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exstorob - AML Interpreter object store support, store to object  *              $Revision: 33 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -132,7 +132,7 @@ name|Buffer
 operator|.
 name|Pointer
 operator|=
-name|AcpiUtAllocate
+name|ACPI_MEM_ALLOCATE
 argument_list|(
 name|Length
 argument_list|)
@@ -364,7 +364,7 @@ argument_list|)
 condition|)
 block|{
 comment|/*              * Only free if not a pointer into the DSDT              */
-name|AcpiUtFree
+name|ACPI_MEM_FREE
 argument_list|(
 name|TargetDesc
 operator|->
@@ -380,7 +380,7 @@ name|String
 operator|.
 name|Pointer
 operator|=
-name|AcpiUtAllocate
+name|ACPI_MEM_ALLOCATE
 argument_list|(
 name|Length
 operator|+

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utalloc - local memory allocation routines  *              $Revision: 90 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utalloc - local memory allocation routines  *              $Revision: 93 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -60,11 +60,11 @@ end_macro
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|ACPI_DEBUG_TRACK_ALLOCATIONS
+name|ACPI_DBG_TRACK_ALLOCATIONS
 end_ifdef
 
 begin_comment
-comment|/*  * Most of this code is for tracking memory leaks in the subsystem, and it  * gets compiled out when the ACPI_DEBUG flag is not set.  * Every memory allocation is kept track of in a doubly linked list.  Each  * element contains the caller's component, module name, function name, and  * line number.  _UtAllocate and _UtCallocate call AcpiUtAddElementToAllocList  * to add an element to the list; deletion occurs in the bosy of _UtFree.  */
+comment|/*  * This module is used for tracking memory leaks in the subsystem, and it  * gets compiled out when the ACPI_DBG_TRACK_ALLOCATIONS is not set.  *  * Each memory allocation is tracked via a doubly linked list.  Each  * element contains the caller's component, module name, function name, and  * line number.  AcpiUtAllocate and AcpiUtCallocate call   * AcpiUtAddElementToAllocList to add an element to the list; deletion   * occurs in the body of AcpiUtFree.  */
 end_comment
 
 begin_comment
@@ -787,7 +787,7 @@ argument_list|,
 name|Component
 argument_list|,
 operator|(
-literal|"_UtFree: Entry not found in list\n"
+literal|"AcpiUtFree: Entry not found in list\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1337,23 +1337,14 @@ expr_stmt|;
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/* #ifdef ACPI_DEBUG_TRACK_ALLOCATIONS */
-end_comment
-
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    _UtAllocate  *  * PARAMETERS:  Size                - Size of the allocation  *              Component           - Component type of caller  *              Module              - Source file name of caller  *              Line                - Line number of caller  *  * RETURN:      Address of the allocated memory on success, NULL on failure.  *  * DESCRIPTION: The subsystem's equivalent of malloc.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtAllocate  *  * PARAMETERS:  Size                - Size of the allocation  *              Component           - Component type of caller  *              Module              - Source file name of caller  *              Line                - Line number of caller  *  * RETURN:      Address of the allocated memory on success, NULL on failure.  *  * DESCRIPTION: The subsystem's equivalent of malloc.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 modifier|*
-name|_UtAllocate
+name|AcpiUtAllocate
 parameter_list|(
 name|UINT32
 name|Size
@@ -1377,7 +1368,7 @@ name|NULL
 decl_stmt|;
 name|FUNCTION_TRACE_U32
 argument_list|(
-literal|"_UtAllocate"
+literal|"AcpiUtAllocate"
 argument_list|,
 name|Size
 argument_list|)
@@ -1442,9 +1433,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|ACPI_DEBUG_TRACK_ALLOCATIONS
 if|if
 condition|(
 name|ACPI_FAILURE
@@ -1490,8 +1478,6 @@ name|Size
 operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|return_PTR
 argument_list|(
 name|Address
@@ -1501,13 +1487,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    _UtCallocate  *  * PARAMETERS:  Size                - Size of the allocation  *              Component           - Component type of caller  *              Module              - Source file name of caller  *              Line                - Line number of caller  *  * RETURN:      Address of the allocated memory on success, NULL on failure.  *  * DESCRIPTION: Subsystem equivalent of calloc.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtCallocate  *  * PARAMETERS:  Size                - Size of the allocation  *              Component           - Component type of caller  *              Module              - Source file name of caller  *              Line                - Line number of caller  *  * RETURN:      Address of the allocated memory on success, NULL on failure.  *  * DESCRIPTION: Subsystem equivalent of calloc.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
 modifier|*
-name|_UtCallocate
+name|AcpiUtCallocate
 parameter_list|(
 name|UINT32
 name|Size
@@ -1531,7 +1517,7 @@ name|NULL
 decl_stmt|;
 name|FUNCTION_TRACE_U32
 argument_list|(
-literal|"_UtCallocate"
+literal|"AcpiUtCallocate"
 argument_list|,
 name|Size
 argument_list|)
@@ -1597,9 +1583,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|ACPI_DEBUG_TRACK_ALLOCATIONS
 if|if
 condition|(
 name|ACPI_FAILURE
@@ -1632,8 +1615,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|DEBUG_PRINTP
 argument_list|(
 name|TRACE_ALLOCATIONS
@@ -1656,12 +1637,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    _UtFree  *  * PARAMETERS:  Address             - Address of the memory to deallocate  *              Component           - Component type of caller  *              Module              - Source file name of caller  *              Line                - Line number of caller  *  * RETURN:      None  *  * DESCRIPTION: Frees the memory at Address  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtFree  *  * PARAMETERS:  Address             - Address of the memory to deallocate  *              Component           - Component type of caller  *              Module              - Source file name of caller  *              Line                - Line number of caller  *  * RETURN:      None  *  * DESCRIPTION: Frees the memory at Address  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|void
-name|_UtFree
+name|AcpiUtFree
 parameter_list|(
 name|void
 modifier|*
@@ -1680,7 +1661,7 @@ parameter_list|)
 block|{
 name|FUNCTION_TRACE_PTR
 argument_list|(
-literal|"_UtFree"
+literal|"AcpiUtFree"
 argument_list|,
 name|Address
 argument_list|)
@@ -1701,16 +1682,13 @@ argument_list|,
 name|Component
 argument_list|,
 operator|(
-literal|"_UtFree: Trying to delete a NULL address\n"
+literal|"AcpiUtFree: Trying to delete a NULL address\n"
 operator|)
 argument_list|)
 expr_stmt|;
 name|return_VOID
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|ACPI_DEBUG_TRACK_ALLOCATIONS
 name|AcpiUtDeleteElementFromAllocList
 argument_list|(
 name|Address
@@ -1722,8 +1700,6 @@ argument_list|,
 name|Line
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|AcpiOsFree
 argument_list|(
 name|Address
@@ -1744,6 +1720,15 @@ name|return_VOID
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* #ifdef ACPI_DBG_TRACK_ALLOCATIONS */
+end_comment
 
 end_unit
 

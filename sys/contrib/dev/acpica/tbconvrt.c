@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbconvrt - ACPI Table conversion utilities  *              $Revision: 23 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbconvrt - ACPI Table conversion utilities  *              $Revision: 24 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -183,7 +183,7 @@ expr_stmt|;
 comment|/* Allocate an XSDT */
 name|NewTable
 operator|=
-name|AcpiUtCallocate
+name|ACPI_MEM_CALLOCATE
 argument_list|(
 name|TableSize
 argument_list|)
@@ -434,7 +434,7 @@ comment|/* AcpiGbl_FADT is valid */
 comment|/* Allocate and zero the 2.0 buffer */
 name|FADT2
 operator|=
-name|AcpiUtCallocate
+name|ACPI_MEM_CALLOCATE
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -1387,7 +1387,7 @@ expr_stmt|;
 comment|/* Allocate a common FACS */
 name|CommonFacs
 operator|=
-name|AcpiUtCallocate
+name|ACPI_MEM_CALLOCATE
 argument_list|(
 sizeof|sizeof
 argument_list|(

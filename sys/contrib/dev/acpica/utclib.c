@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: cmclib - Local implementation of C library functions  * $Revision: 38 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: cmclib - Local implementation of C library functions  * $Revision: 39 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -447,7 +447,7 @@ control|)
 block|{
 empty_stmt|;
 block|}
-comment|/* Concatinate the string */
+comment|/* Concatenate the string */
 for|for
 control|(
 operator|--
@@ -521,7 +521,7 @@ control|)
 block|{
 empty_stmt|;
 block|}
-comment|/* Concatinate the string */
+comment|/* Concatenate the string */
 for|for
 control|(
 operator|--

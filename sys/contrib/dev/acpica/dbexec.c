@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbexec - debugger control method execution  *              $Revision: 26 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbexec - debugger control method execution  *              $Revision: 27 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -599,7 +599,7 @@ name|Info
 operator|.
 name|Pathname
 argument_list|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -867,7 +867,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"Could not create semaphore, %s\n"
 argument_list|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utobject - ACPI object create/delete/size/cache routines  *              $Revision: 46 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utobject - ACPI object create/delete/size/cache routines  *              $Revision: 49 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -386,18 +386,12 @@ expr_stmt|;
 comment|/* Attempt to allocate new descriptor */
 name|Object
 operator|=
-name|_UtCallocate
+name|ACPI_MEM_CALLOCATE
 argument_list|(
 sizeof|sizeof
 argument_list|(
 name|ACPI_OPERAND_OBJECT
 argument_list|)
-argument_list|,
-name|ComponentId
-argument_list|,
-name|ModuleName
-argument_list|,
-name|LineNumber
 argument_list|)
 expr_stmt|;
 if|if
@@ -562,7 +556,7 @@ name|ACPI_OPERAND_OBJECT
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|AcpiUtFree
+name|ACPI_MEM_FREE
 argument_list|(
 name|Object
 argument_list|)
@@ -676,7 +670,7 @@ name|ACPI_OPERAND_OBJECT
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|AcpiUtFree
+name|ACPI_MEM_FREE
 argument_list|(
 name|AcpiGbl_ObjectCache
 argument_list|)

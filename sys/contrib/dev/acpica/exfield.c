@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exfield - ACPI AML (p-code) execution - field manipulation  *              $Revision: 90 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exfield - ACPI AML (p-code) execution - field manipulation  *              $Revision: 91 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -170,7 +170,7 @@ name|Buffer
 operator|.
 name|Pointer
 operator|=
-name|AcpiUtCallocate
+name|ACPI_MEM_CALLOCATE
 argument_list|(
 name|Length
 argument_list|)

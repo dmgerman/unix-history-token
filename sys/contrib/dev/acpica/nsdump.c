@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsdump - table dumping routines for debug  *              $Revision: 93 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsdump - table dumping routines for debug  *              $Revision: 94 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -125,7 +125,7 @@ expr_stmt|;
 block|}
 name|Buffer
 operator|=
-name|AcpiUtAllocate
+name|ACPI_MEM_ALLOCATE
 argument_list|(
 name|PATHNAME_MAX
 argument_list|)
@@ -175,7 +175,7 @@ name|Handle
 argument_list|)
 expr_stmt|;
 block|}
-name|AcpiUtFree
+name|ACPI_MEM_FREE
 argument_list|(
 name|Buffer
 argument_list|)

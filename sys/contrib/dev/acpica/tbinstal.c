@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbinstal - ACPI table installation and removal  *              $Revision: 39 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbinstal - ACPI table installation and removal  *              $Revision: 40 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -444,7 +444,7 @@ condition|)
 block|{
 name|TableDesc
 operator|=
-name|AcpiUtCallocate
+name|ACPI_MEM_CALLOCATE
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -904,7 +904,7 @@ break|break;
 case|case
 name|ACPI_MEM_ALLOCATED
 case|:
-name|AcpiUtFree
+name|ACPI_MEM_FREE
 argument_list|(
 name|TableDesc
 operator|->
@@ -1061,7 +1061,7 @@ name|TableDesc
 operator|->
 name|Next
 expr_stmt|;
-name|AcpiUtFree
+name|ACPI_MEM_FREE
 argument_list|(
 name|TableDesc
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: hwtimer.c - ACPI Power Management Timer Interface  *              $Revision: 10 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: hwtimer.c - ACPI Power Management Timer Interface  *              $Revision: 11 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -170,10 +170,7 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
-operator|*
-name|Ticks
-operator|=
-name|AcpiOsIn32
+name|AcpiOsReadPort
 argument_list|(
 operator|(
 name|ACPI_IO_ADDRESS
@@ -186,6 +183,10 @@ name|XPmTmrBlk
 operator|.
 name|Address
 argument_list|)
+argument_list|,
+name|Ticks
+argument_list|,
+literal|32
 argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acmacros.h - C macros for the entire subsystem.  *       $Revision: 72 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acmacros.h - C macros for the entire subsystem.  *       $Revision: 80 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -22,48 +22,6 @@ end_define
 begin_comment
 comment|/*  * Data manipulation macros  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LODWORD
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|LODWORD
-parameter_list|(
-name|l
-parameter_list|)
-value|((UINT32)(UINT64)(l))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HIDWORD
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|HIDWORD
-parameter_list|(
-name|l
-parameter_list|)
-value|((UINT32)((((UINT64)(l))>> 32)& 0xFFFFFFFF))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -289,6 +247,48 @@ begin_comment
 comment|/*  * For 16-bit addresses, we have to assume that the upper 32 bits  * are zero.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LODWORD
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LODWORD
+parameter_list|(
+name|l
+parameter_list|)
+value|(l)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HIDWORD
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|HIDWORD
+parameter_list|(
+name|l
+parameter_list|)
+value|(0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -329,6 +329,48 @@ end_else
 begin_comment
 comment|/*  * Full 64-bit address on 32-bit and 64-bit platforms  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LODWORD
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LODWORD
+parameter_list|(
+name|l
+parameter_list|)
+value|((UINT32)(UINT64)(l))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HIDWORD
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|HIDWORD
+parameter_list|(
+name|l
+parameter_list|)
+value|((UINT32)((((UINT64)(l))>> 32)& 0xFFFFFFFF))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -905,26 +947,15 @@ parameter_list|)
 value|(((UINT32)(-1))<< ((UINT32) (position)))
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG_ASSERT
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|DEBUG_ASSERT
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* Macros for GAS addressing */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_IA16
+end_ifndef
 
 begin_define
 define|#
@@ -954,7 +985,7 @@ name|ACPI_PCI_FUNCTION
 parameter_list|(
 name|a
 parameter_list|)
-value|(UINT32) ((((a)& ACPI_PCI_FUNCTION_MASK)>> 16))
+value|(UINT16) ((((a)& ACPI_PCI_FUNCTION_MASK)>> 16))
 end_define
 
 begin_define
@@ -964,14 +995,8 @@ name|ACPI_PCI_DEVICE
 parameter_list|(
 name|a
 parameter_list|)
-value|(UINT32) ((((a)& ACPI_PCI_DEVICE_MASK)>> 32))
+value|(UINT16) ((((a)& ACPI_PCI_DEVICE_MASK)>> 32))
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_IA16
-end_ifndef
 
 begin_define
 define|#
@@ -980,17 +1005,7 @@ name|ACPI_PCI_REGISTER
 parameter_list|(
 name|a
 parameter_list|)
-value|(UINT32) (((a)& ACPI_PCI_REGISTER_MASK))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_PCI_DEVFUN
-parameter_list|(
-name|a
-parameter_list|)
-value|(UINT32) ((ACPI_PCI_DEVICE(a)<< 16) | ACPI_PCI_FUNCTION(a))
+value|(UINT16) (((a)& ACPI_PCI_REGISTER_MASK))
 end_define
 
 begin_else
@@ -998,6 +1013,30 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* No support for GAS and PCI IDs in 16-bit mode  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_PCI_FUNCTION
+parameter_list|(
+name|a
+parameter_list|)
+value|(UINT16) ((a)& 0xFFFF0000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PCI_DEVICE
+parameter_list|(
+name|a
+parameter_list|)
+value|(UINT16) ((a)& 0x0000FFFF)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -1005,17 +1044,7 @@ name|ACPI_PCI_REGISTER
 parameter_list|(
 name|a
 parameter_list|)
-value|(UINT32) (((a)& 0x0000FFFF))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_PCI_DEVFUN
-parameter_list|(
-name|a
-parameter_list|)
-value|(UINT32) ((((a)& 0xFFFF0000)>> 16))
+value|(UINT16) ((a)& 0x0000FFFF)
 end_define
 
 begin_endif
@@ -1911,7 +1940,7 @@ name|BREAK_MSG
 parameter_list|(
 name|a
 parameter_list|)
-value|AcpiOsBreakpoint (a)
+value|AcpiOsSignal (ACPI_SIGNAL_BREAKPOINT,(a))
 end_define
 
 begin_comment
@@ -1937,7 +1966,7 @@ name|BREAK_ON_ERROR
 parameter_list|(
 name|lvl
 parameter_list|)
-value|if ((lvl)&ACPI_ERROR) AcpiOsBreakpoint("Fatal error encountered\n")
+value|if ((lvl)&ACPI_ERROR) AcpiOsSignal(ACPI_SIGNAL_BREAKPOINT,"Fatal error encountered\n")
 end_define
 
 begin_else
@@ -2007,32 +2036,6 @@ parameter_list|,
 name|fp
 parameter_list|)
 value|TEST_DEBUG_SWITCH(lvl) {\                                             DebugPrintRaw PARAM_LIST(fp);}
-end_define
-
-begin_comment
-comment|/* Assert macros */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_ASSERT
-parameter_list|(
-name|exp
-parameter_list|)
-value|if(!(exp)) \                                             AcpiOsDbgAssert(#exp, __FILE__, __LINE__, "Failed Assertion")
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEBUG_ASSERT
-parameter_list|(
-name|msg
-parameter_list|,
-name|exp
-parameter_list|)
-value|if(!(exp)) \                                             AcpiOsDbgAssert(#exp, __FILE__, __LINE__, msg)
 end_define
 
 begin_else
@@ -2323,26 +2326,6 @@ parameter_list|)
 value|return(s)
 end_define
 
-begin_define
-define|#
-directive|define
-name|ACPI_ASSERT
-parameter_list|(
-name|exp
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEBUG_ASSERT
-parameter_list|(
-name|msg
-parameter_list|,
-name|exp
-parameter_list|)
-end_define
-
 begin_endif
 endif|#
 directive|endif
@@ -2473,59 +2456,41 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ACPI_DEBUG_TRACK_ALLOCATIONS
+name|ACPI_DBG_TRACK_ALLOCATIONS
 end_ifndef
 
+begin_comment
+comment|/* Memory allocation */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|AcpiUtAddElementToAllocList
+name|ACPI_MEM_ALLOCATE
 parameter_list|(
 name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|,
-name|d
-parameter_list|,
-name|e
-parameter_list|,
-name|f
 parameter_list|)
+value|AcpiOsAllocate(a)
 end_define
 
 begin_define
 define|#
 directive|define
-name|AcpiUtDeleteElementFromAllocList
+name|ACPI_MEM_CALLOCATE
 parameter_list|(
 name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|,
-name|d
 parameter_list|)
+value|AcpiOsCallocate(a)
 end_define
 
 begin_define
 define|#
 directive|define
-name|AcpiUtDumpCurrentAllocations
+name|ACPI_MEM_FREE
 parameter_list|(
 name|a
-parameter_list|,
-name|b
 parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|AcpiUtDumpAllocationInfo
-parameter_list|()
+value|AcpiOsFree(a)
 end_define
 
 begin_define
@@ -2575,6 +2540,40 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_comment
+comment|/* Memory allocation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_MEM_ALLOCATE
+parameter_list|(
+name|a
+parameter_list|)
+value|AcpiUtAllocate(a,_COMPONENT,_THIS_MODULE,__LINE__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MEM_CALLOCATE
+parameter_list|(
+name|a
+parameter_list|)
+value|AcpiUtCallocate(a, _COMPONENT,_THIS_MODULE,__LINE__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MEM_FREE
+parameter_list|(
+name|a
+parameter_list|)
+value|AcpiUtFree(a,_COMPONENT,_THIS_MODULE,__LINE__)
+end_define
 
 begin_define
 define|#
@@ -2635,7 +2634,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* ACPI_DEBUG_TRACK_ALLOCATIONS */
+comment|/* ACPI_DBG_TRACK_ALLOCATIONS */
 end_comment
 
 begin_endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbstats - Generation and display of ACPI table statistics  *              $Revision: 40 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbstats - Generation and display of ACPI table statistics  *              $Revision: 41 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -738,9 +738,14 @@ name|PARSER_ONLY
 case|case
 name|CMD_ALLOCATIONS
 case|:
+ifdef|#
+directive|ifdef
+name|ACPI_DBG_TRACK_ALLOCATIONS
 name|AcpiUtDumpAllocationInfo
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 endif|#
 directive|endif

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 180 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: actypes.h - Common data types for the entire ACPI subsystem  *       $Revision: 184 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -595,7 +595,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* 4-INT8 ACPI name */
+comment|/* 4-byte ACPI name */
 end_comment
 
 begin_typedef
@@ -785,6 +785,17 @@ value|0x20
 end_define
 
 begin_comment
+comment|/*  * Initialization state  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_INITIALIZED_OK
+value|0x01
+end_define
+
+begin_comment
 comment|/*  * Power state values  */
 end_comment
 
@@ -835,17 +846,6 @@ define|#
 directive|define
 name|ACPI_STATE_S5
 value|(UINT8) 5
-end_define
-
-begin_comment
-comment|/* let's pretend S4BIOS didn't exist for now. ASG */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_STATE_S4BIOS
-value|(UINT8) 6
 end_define
 
 begin_define
@@ -2164,62 +2164,6 @@ value|0x0003
 end_define
 
 begin_comment
-comment|/*  *  ACPI CPU Cx state handler  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|ACPI_STATUS
-function_decl|(
-modifier|*
-name|ACPI_SET_C_STATE_HANDLER
-function_decl|)
-parameter_list|(
-name|NATIVE_UINT
-name|PblkAddress
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_comment
-comment|/*  *  ACPI Cx State info  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|UINT32
-name|StateNumber
-decl_stmt|;
-name|UINT32
-name|Latency
-decl_stmt|;
-block|}
-name|ACPI_CX_STATE
-typedef|;
-end_typedef
-
-begin_comment
-comment|/*  *  ACPI CPU throttling info  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|UINT32
-name|StateNumber
-decl_stmt|;
-name|UINT32
-name|PercentOfClock
-decl_stmt|;
-block|}
-name|ACPI_CPU_THROTTLING_STATE
-typedef|;
-end_typedef
-
-begin_comment
 comment|/*  * ACPI Table Info.  One per ACPI table _type_  */
 end_comment
 
@@ -2277,26 +2221,6 @@ index|]
 decl_stmt|;
 block|}
 name|ACPI_SYSTEM_INFO
-typedef|;
-end_typedef
-
-begin_comment
-comment|/*  *  System Initiailization data.  This data is passed to ACPIInitialize  *  copyied to global data and retained by ACPI CA  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|_AcpiInitData
-block|{
-name|void
-modifier|*
-name|RSDP_PhysicalAddress
-decl_stmt|;
-comment|/*  Address of RSDP, needed it it is    */
-comment|/*  not found in the IA32 manner        */
-block|}
-name|ACPI_INIT_DATA
 typedef|;
 end_typedef
 
@@ -2598,17 +2522,20 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|UINT32
-name|Seg
+name|UINT16
+name|Segment
 decl_stmt|;
-name|UINT32
+name|UINT16
 name|Bus
 decl_stmt|;
-name|UINT32
-name|DevFunc
+name|UINT16
+name|Device
+decl_stmt|;
+name|UINT16
+name|Function
 decl_stmt|;
 block|}
-name|ACPI_PCI_SPACE_CONTEXT
+name|ACPI_PCI_ID
 typedef|;
 end_typedef
 
@@ -2629,26 +2556,6 @@ decl_stmt|;
 block|}
 name|ACPI_MEM_SPACE_CONTEXT
 typedef|;
-end_typedef
-
-begin_comment
-comment|/*  * C-state handler  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|ACPI_STATUS
-function_decl|(
-modifier|*
-name|ACPI_C_STATE_HANDLER
-function_decl|)
-parameter_list|(
-name|ACPI_IO_ADDRESS
-parameter_list|,
-name|UINT32
-modifier|*
-parameter_list|)
-function_decl|;
 end_typedef
 
 begin_comment

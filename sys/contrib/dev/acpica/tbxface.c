@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbxface - Public interfaces to the ACPI subsystem  *                         ACPI table oriented interfaces  *              $Revision: 39 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbxface - Public interfaces to the ACPI subsystem  *                         ACPI table oriented interfaces  *              $Revision: 41 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -59,10 +59,12 @@ begin_function
 name|ACPI_STATUS
 name|AcpiLoadTables
 parameter_list|(
-name|ACPI_PHYSICAL_ADDRESS
-name|RsdpPhysicalAddress
+name|void
 parameter_list|)
 block|{
+name|ACPI_PHYSICAL_ADDRESS
+name|RsdpPhysicalAddress
+decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
@@ -96,6 +98,41 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Get the RSDP */
+name|Status
+operator|=
+name|AcpiOsGetRootPointer
+argument_list|(
+name|ACPI_LOGICAL_ADDRESSING
+argument_list|,
+operator|&
+name|RsdpPhysicalAddress
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|REPORT_ERROR
+argument_list|(
+operator|(
+literal|"AcpiLoadTables: Could not get RSDP, %s\n"
+operator|,
+name|AcpiFormatException
+argument_list|(
+name|Status
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|ErrorExit
+goto|;
+block|}
 comment|/* Map and validate the RSDP */
 name|Status
 operator|=
@@ -117,7 +154,7 @@ argument_list|(
 operator|(
 literal|"AcpiLoadTables: RSDP Failed validation: %s\n"
 operator|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -150,7 +187,7 @@ argument_list|(
 operator|(
 literal|"AcpiLoadTables: Could not load RSDT: %s\n"
 operator|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -184,7 +221,7 @@ argument_list|(
 operator|(
 literal|"AcpiLoadTables: Error getting required tables (DSDT/FADT/FACS): %s\n"
 operator|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -223,7 +260,7 @@ argument_list|(
 operator|(
 literal|"AcpiLoadTables: Could not load namespace: %s\n"
 operator|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)
@@ -246,7 +283,7 @@ argument_list|(
 operator|(
 literal|"AcpiLoadTables: Could not load tables: %s\n"
 operator|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)

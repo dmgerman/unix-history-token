@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exprep - ACPI AML (p-code) execution - field prep utilities  *              $Revision: 90 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exprep - ACPI AML (p-code) execution - field prep utilities  *              $Revision: 91 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -71,6 +71,10 @@ name|Access
 parameter_list|,
 name|UINT16
 name|Length
+parameter_list|,
+name|UINT32
+modifier|*
+name|Alignment
 parameter_list|)
 block|{
 switch|switch
@@ -81,6 +85,11 @@ block|{
 case|case
 name|ACCESS_ANY_ACC
 case|:
+operator|*
+name|Alignment
+operator|=
+literal|8
+expr_stmt|;
 comment|/* Use the length to set the access type */
 if|if
 condition|(
@@ -147,6 +156,11 @@ break|break;
 case|case
 name|ACCESS_BYTE_ACC
 case|:
+operator|*
+name|Alignment
+operator|=
+literal|8
+expr_stmt|;
 return|return
 operator|(
 literal|8
@@ -156,6 +170,11 @@ break|break;
 case|case
 name|ACCESS_WORD_ACC
 case|:
+operator|*
+name|Alignment
+operator|=
+literal|16
+expr_stmt|;
 return|return
 operator|(
 literal|16
@@ -165,6 +184,11 @@ break|break;
 case|case
 name|ACCESS_DWORD_ACC
 case|:
+operator|*
+name|Alignment
+operator|=
+literal|32
+expr_stmt|;
 return|return
 operator|(
 literal|32
@@ -175,6 +199,11 @@ case|case
 name|ACCESS_QWORD_ACC
 case|:
 comment|/* ACPI 2.0 */
+operator|*
+name|Alignment
+operator|=
+literal|64
+expr_stmt|;
 return|return
 operator|(
 literal|64
@@ -227,6 +256,9 @@ parameter_list|)
 block|{
 name|UINT32
 name|AccessBitWidth
+decl_stmt|;
+name|UINT32
+name|Alignment
 decl_stmt|;
 name|UINT32
 name|NearestByteAddress
@@ -288,7 +320,7 @@ name|UINT16
 operator|)
 name|FieldBitLength
 expr_stmt|;
-comment|/* Decode the access type so we can compute offsets */
+comment|/*       * Decode the access type so we can compute offsets.  The access type gives      * two pieces of information - the width of each field access and the      * necessary alignment of the access.  For AnyAcc, the width used is the      * largest necessary/possible in an attempt to access the whole field in one      * I/O operation.  However, for AnyAcc, the alignment is 8.  For all other      * access types (Byte, Word, Dword, Qword), the width is the same as the      * alignment.      */
 name|AccessBitWidth
 operator|=
 name|AcpiExDecodeFieldAccessType
@@ -308,6 +340,9 @@ operator|->
 name|Field
 operator|.
 name|BitLength
+argument_list|,
+operator|&
+name|Alignment
 argument_list|)
 expr_stmt|;
 if|if
@@ -361,8 +396,8 @@ operator|==
 name|ACPI_TYPE_BUFFER_FIELD
 condition|)
 block|{
-comment|/*          * BufferField access can be on any byte boundary, so the          * granularity is always 8          */
-name|AccessBitWidth
+comment|/*          * BufferField access can be on any byte boundary, so the          * alignment is always 8 (regardless of any alignment implied by the          * field access type.)          */
+name|Alignment
 operator|=
 literal|8
 expr_stmt|;
@@ -387,7 +422,7 @@ name|NearestByteAddress
 argument_list|,
 name|DIV_8
 argument_list|(
-name|AccessBitWidth
+name|Alignment
 argument_list|)
 argument_list|)
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsalloc - Namespace allocation and deletion utilities  *              $Revision: 50 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsalloc - Namespace allocation and deletion utilities  *              $Revision: 51 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -69,7 +69,7 @@ argument_list|)
 expr_stmt|;
 name|Node
 operator|=
-name|AcpiUtCallocate
+name|ACPI_MEM_CALLOCATE
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -253,7 +253,7 @@ name|Node
 argument_list|)
 expr_stmt|;
 block|}
-name|AcpiUtFree
+name|ACPI_MEM_FREE
 argument_list|(
 name|Node
 argument_list|)
@@ -657,7 +657,7 @@ name|ChildNode
 argument_list|)
 expr_stmt|;
 block|}
-name|AcpiUtFree
+name|ACPI_MEM_FREE
 argument_list|(
 name|ChildNode
 argument_list|)

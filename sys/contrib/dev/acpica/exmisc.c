@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exmisc - ACPI AML (p-code) execution - specific opcodes  *              $Revision: 77 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exmisc - ACPI AML (p-code) execution - specific opcodes  *              $Revision: 79 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -237,13 +237,16 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExIndex  *  * PARAMETERS:  none  *  * RETURN:      Status  *  * DESCRIPTION: Execute Index operator  *  * ALLOCATION:  Deletes one operand descriptor -- other remains on stack  *  *  ACPI SPECIFICATION REFERENCES:  *  DefIndex    :=  IndexOp BuffPkgObj IndexValue Result  *  IndexValue  :=  TermArg=>Integer  *  NameString  :=<RootChar NamePath> |<PrefixPath NamePath>  *  Result      :=  SuperName  *  SuperName   :=  NameString | ArgObj | LocalObj | DebugObj | DefIndex  *                             Local4Op | Local5Op | Local6Op | Local7Op  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExTriadic  *  * PARAMETERS:  Opcode              - The opcode to be executed  *              WalkState           - Current walk state  *              ReturnDesc          - Where to store the return object  *  * RETURN:      Status  *  * DESCRIPTION: Execute Triadic operator (3 operands)  *  * ALLOCATION:  Deletes one operand descriptor -- other remains on stack  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiExIndex
+name|AcpiExTriadic
 parameter_list|(
+name|UINT16
+name|Opcode
+parameter_list|,
 name|ACPI_WALK_STATE
 modifier|*
 name|WalkState
@@ -256,11 +259,11 @@ parameter_list|)
 block|{
 name|ACPI_OPERAND_OBJECT
 modifier|*
-name|ObjDesc
+name|ObjDesc1
 decl_stmt|;
 name|ACPI_OPERAND_OBJECT
 modifier|*
-name|IdxDesc
+name|ObjDesc2
 decl_stmt|;
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -276,12 +279,16 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 name|TmpDesc
 decl_stmt|;
+name|ACPI_SIGNAL_FATAL_INFO
+modifier|*
+name|Fatal
+decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"ExIndex"
+literal|"ExTriadic"
 argument_list|)
 expr_stmt|;
 comment|/* Resolve operands */
@@ -329,7 +336,7 @@ operator||=
 name|AcpiDsObjStackPopObject
 argument_list|(
 operator|&
-name|IdxDesc
+name|ObjDesc2
 argument_list|,
 name|WalkState
 argument_list|)
@@ -339,7 +346,7 @@ operator||=
 name|AcpiDsObjStackPopObject
 argument_list|(
 operator|&
-name|ObjDesc
+name|ObjDesc1
 argument_list|,
 name|WalkState
 argument_list|)
@@ -368,6 +375,131 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
+switch|switch
+condition|(
+name|Opcode
+condition|)
+block|{
+case|case
+name|AML_FATAL_OP
+case|:
+comment|/* DefFatal    :=  FatalOp  FatalType   FatalCode   FatalArg    */
+name|DEBUG_PRINTP
+argument_list|(
+name|ACPI_INFO
+argument_list|,
+operator|(
+literal|"FatalOp: Type %x Code %x Arg %x<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n"
+operator|,
+operator|(
+name|UINT32
+operator|)
+name|ObjDesc1
+operator|->
+name|Integer
+operator|.
+name|Value
+operator|,
+operator|(
+name|UINT32
+operator|)
+name|ObjDesc2
+operator|->
+name|Integer
+operator|.
+name|Value
+operator|,
+operator|(
+name|UINT32
+operator|)
+name|ResDesc
+operator|->
+name|Integer
+operator|.
+name|Value
+operator|)
+argument_list|)
+expr_stmt|;
+name|Fatal
+operator|=
+name|ACPI_MEM_ALLOCATE
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|ACPI_SIGNAL_FATAL_INFO
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Fatal
+condition|)
+block|{
+name|Fatal
+operator|->
+name|Type
+operator|=
+operator|(
+name|UINT32
+operator|)
+name|ObjDesc1
+operator|->
+name|Integer
+operator|.
+name|Value
+expr_stmt|;
+name|Fatal
+operator|->
+name|Code
+operator|=
+operator|(
+name|UINT32
+operator|)
+name|ObjDesc2
+operator|->
+name|Integer
+operator|.
+name|Value
+expr_stmt|;
+name|Fatal
+operator|->
+name|Argument
+operator|=
+operator|(
+name|UINT32
+operator|)
+name|ResDesc
+operator|->
+name|Integer
+operator|.
+name|Value
+expr_stmt|;
+block|}
+comment|/*          * Signal the OS          */
+name|AcpiOsSignal
+argument_list|(
+name|ACPI_SIGNAL_FATAL
+argument_list|,
+name|Fatal
+argument_list|)
+expr_stmt|;
+comment|/* Might return while OS is shutting down */
+name|ACPI_MEM_FREE
+argument_list|(
+name|Fatal
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|AML_MID_OP
+case|:
+comment|/* DefMid       := MidOp Source Index  Length Result */
+comment|/* Create the internal return object (string or buffer) */
+break|break;
+case|case
+name|AML_INDEX_OP
+case|:
+comment|/* DefIndex     := IndexOp Source Index Destination */
 comment|/* Create the internal return object */
 name|RetDesc
 operator|=
@@ -390,10 +522,10 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-comment|/*      * At this point, the ObjDesc operand is either a Package or a Buffer      */
+comment|/*          * At this point, the ObjDesc1 operand is either a Package or a Buffer          */
 if|if
 condition|(
-name|ObjDesc
+name|ObjDesc1
 operator|->
 name|Common
 operator|.
@@ -405,13 +537,13 @@ block|{
 comment|/* Object to be indexed is a Package */
 if|if
 condition|(
-name|IdxDesc
+name|ObjDesc2
 operator|->
 name|Integer
 operator|.
 name|Value
 operator|>=
-name|ObjDesc
+name|ObjDesc1
 operator|->
 name|Package
 operator|.
@@ -458,7 +590,7 @@ name|AML_ZERO_OP
 operator|)
 condition|)
 block|{
-comment|/*              * There is no actual result descriptor (the ZeroOp Result              * descriptor is a placeholder), so just delete the placeholder and              * return a reference to the package element              */
+comment|/*                  * There is no actual result descriptor (the ZeroOp Result                  * descriptor is a placeholder), so just delete the placeholder and                  * return a reference to the package element                  */
 name|AcpiUtRemoveReference
 argument_list|(
 name|ResDesc
@@ -467,16 +599,16 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*              * Each element of the package is an internal object.  Get the one              * we are after.              */
+comment|/*                  * Each element of the package is an internal object.  Get the one                  * we are after.                  */
 name|TmpDesc
 operator|=
-name|ObjDesc
+name|ObjDesc1
 operator|->
 name|Package
 operator|.
 name|Elements
 index|[
-name|IdxDesc
+name|ObjDesc2
 operator|->
 name|Integer
 operator|.
@@ -531,7 +663,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/*          * The local return object must always be a reference to the package element,          * not the element itself.          */
+comment|/*              * The local return object must always be a reference to the package element,              * not the element itself.              */
 name|RetDesc
 operator|->
 name|Reference
@@ -555,13 +687,13 @@ operator|.
 name|Where
 operator|=
 operator|&
-name|ObjDesc
+name|ObjDesc1
 operator|->
 name|Package
 operator|.
 name|Elements
 index|[
-name|IdxDesc
+name|ObjDesc2
 operator|->
 name|Integer
 operator|.
@@ -574,13 +706,13 @@ block|{
 comment|/* Object to be indexed is a Buffer */
 if|if
 condition|(
-name|IdxDesc
+name|ObjDesc2
 operator|->
 name|Integer
 operator|.
 name|Value
 operator|>=
-name|ObjDesc
+name|ObjDesc1
 operator|->
 name|Buffer
 operator|.
@@ -626,7 +758,7 @@ name|Reference
 operator|.
 name|Object
 operator|=
-name|ObjDesc
+name|ObjDesc1
 expr_stmt|;
 name|RetDesc
 operator|->
@@ -637,7 +769,7 @@ operator|=
 operator|(
 name|UINT32
 operator|)
-name|IdxDesc
+name|ObjDesc2
 operator|->
 name|Integer
 operator|.
@@ -655,17 +787,19 @@ name|WalkState
 argument_list|)
 expr_stmt|;
 block|}
+break|break;
+block|}
 name|Cleanup
 label|:
 comment|/* Always delete operands */
 name|AcpiUtRemoveReference
 argument_list|(
-name|ObjDesc
+name|ObjDesc1
 argument_list|)
 expr_stmt|;
 name|AcpiUtRemoveReference
 argument_list|(
-name|IdxDesc
+name|ObjDesc2
 argument_list|)
 expr_stmt|;
 comment|/* Delete return object on error */
@@ -713,13 +847,16 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExMatch  *  * PARAMETERS:  none  *  * RETURN:      Status  *  * DESCRIPTION: Execute Match operator  *  * ACPI SPECIFICATION REFERENCES:  *  DefMatch    :=  MatchOp SearchPkg   Opcode1     Operand1  *                              Opcode2 Operand2    StartIndex  *  Opcode1     :=  ByteData: MTR, MEQ, MLE, MLT, MGE, or MGT  *  Opcode2     :=  ByteData: MTR, MEQ, MLE, MLT, MGE, or MGT  *  Operand1    :=  TermArg=>Integer  *  Operand2    :=  TermArg=>Integer  *  SearchPkg   :=  TermArg=>PackageObject  *  StartIndex  :=  TermArg=>Integer  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExHexadic  *  * PARAMETERS:  Opcode              - The opcode to be executed  *              WalkState           - Current walk state  *              ReturnDesc          - Where to store the return object  *  * RETURN:      Status  *  * DESCRIPTION: Execute Match operator  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiExMatch
+name|AcpiExHexadic
 parameter_list|(
+name|UINT16
+name|Opcode
+parameter_list|,
 name|ACPI_WALK_STATE
 modifier|*
 name|WalkState
@@ -777,7 +914,7 @@ literal|1
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
-literal|"ExMatch"
+literal|"ExHexadic"
 argument_list|)
 expr_stmt|;
 comment|/* Resolve all operands */
@@ -893,6 +1030,14 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
+switch|switch
+condition|(
+name|Opcode
+condition|)
+block|{
+case|case
+name|AML_MATCH_OP
+case|:
 comment|/* Validate match comparison sub-opcodes */
 if|if
 condition|(
@@ -997,7 +1142,7 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-comment|/*      * Examine each element until a match is found.  Within the loop,      * "continue" signifies that the current element does not match      * and the next should be examined.      * Upon finding a match, the loop will terminate via "break" at      * the bottom.  If it terminates "normally", MatchValue will be -1      * (its initial value) indicating that no match was found.  When      * returned as a Number, this will produce the Ones value as specified.      */
+comment|/*          * Examine each element until a match is found.  Within the loop,          * "continue" signifies that the current element does not match          * and the next should be examined.          * Upon finding a match, the loop will terminate via "break" at          * the bottom.  If it terminates "normally", MatchValue will be -1          * (its initial value) indicating that no match was found.  When          * returned as a Number, this will produce the Ones value as specified.          */
 for|for
 control|(
 init|;
@@ -1013,7 +1158,7 @@ operator|++
 name|Index
 control|)
 block|{
-comment|/*          * Treat any NULL or non-numeric elements as non-matching.          * TBD [Unhandled] - if an element is a Name,          *      should we examine its value?          */
+comment|/*              * Treat any NULL or non-numeric elements as non-matching.              * TBD [Unhandled] - if an element is a Name,              *      should we examine its value?              */
 if|if
 condition|(
 operator|!
@@ -1044,7 +1189,7 @@ condition|)
 block|{
 continue|continue;
 block|}
-comment|/*          * Within these switch statements:          *      "break" (exit from the switch) signifies a match;          *      "continue" (proceed to next iteration of enclosing          *          "for" loop) signifies a non-match.          */
+comment|/*              * Within these switch statements:              *      "break" (exit from the switch) signifies a match;              *      "continue" (proceed to next iteration of enclosing              *          "for" loop) signifies a non-match.              */
 switch|switch
 condition|(
 name|Op1Desc
@@ -1380,6 +1525,8 @@ name|Value
 operator|=
 name|MatchValue
 expr_stmt|;
+break|break;
+block|}
 name|Cleanup
 label|:
 comment|/* Free the operands */

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsobject - Utilities for objects attached to namespace  *                         table entries  *              $Revision: 55 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsobject - Utilities for objects attached to namespace  *                         table entries  *              $Revision: 56 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -708,7 +708,7 @@ name|Name
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*      * Not every value is an object allocated via AcpiUtCallocate,      * - must check      */
+comment|/*      * Not every value is an object allocated via ACPI_MEM_CALLOCATE,      * - must check      */
 if|if
 condition|(
 operator|!

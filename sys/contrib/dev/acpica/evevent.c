@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evevent - Fixed and General Purpose AcpiEvent  *                          handling and dispatch  *              $Revision: 43 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evevent - Fixed and General Purpose AcpiEvent  *                          handling and dispatch  *              $Revision: 46 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -777,7 +777,7 @@ block|}
 comment|/*      * Allocate the Gpe information block      */
 name|AcpiGbl_GpeRegisters
 operator|=
-name|AcpiUtCallocate
+name|ACPI_MEM_CALLOCATE
 argument_list|(
 name|AcpiGbl_GpeRegisterCount
 operator|*
@@ -811,7 +811,7 @@ block|}
 comment|/*      * Allocate the Gpe dispatch handler block      * There are eight distinct GP events per register.      * Initialization to zeros is sufficient      */
 name|AcpiGbl_GpeInfo
 operator|=
-name|AcpiUtCallocate
+name|ACPI_MEM_CALLOCATE
 argument_list|(
 name|MUL_8
 argument_list|(
@@ -830,7 +830,7 @@ operator|!
 name|AcpiGbl_GpeInfo
 condition|)
 block|{
-name|AcpiUtFree
+name|ACPI_MEM_FREE
 argument_list|(
 name|AcpiGbl_GpeRegisters
 argument_list|)
@@ -983,7 +983,7 @@ name|RegisterIndex
 expr_stmt|;
 block|}
 comment|/*          * Clear the status/enable registers.  Note that status registers          * are cleared by writing a '1', while enable registers are cleared          * by writing a '0'.          */
-name|AcpiOsOut8
+name|AcpiOsWritePort
 argument_list|(
 name|AcpiGbl_GpeRegisters
 index|[
@@ -993,9 +993,11 @@ operator|.
 name|EnableAddr
 argument_list|,
 literal|0x00
+argument_list|,
+literal|8
 argument_list|)
 expr_stmt|;
-name|AcpiOsOut8
+name|AcpiOsWritePort
 argument_list|(
 name|AcpiGbl_GpeRegisters
 index|[
@@ -1005,6 +1007,8 @@ operator|.
 name|StatusAddr
 argument_list|,
 literal|0xFF
+argument_list|,
+literal|8
 argument_list|)
 expr_stmt|;
 name|RegisterIndex
@@ -1132,7 +1136,7 @@ name|RegisterIndex
 expr_stmt|;
 block|}
 comment|/*          * Clear the status/enable registers.  Note that status registers          * are cleared by writing a '1', while enable registers are cleared          * by writing a '0'.          */
-name|AcpiOsOut8
+name|AcpiOsWritePort
 argument_list|(
 name|AcpiGbl_GpeRegisters
 index|[
@@ -1142,9 +1146,11 @@ operator|.
 name|EnableAddr
 argument_list|,
 literal|0x00
+argument_list|,
+literal|8
 argument_list|)
 expr_stmt|;
-name|AcpiOsOut8
+name|AcpiOsWritePort
 argument_list|(
 name|AcpiGbl_GpeRegisters
 index|[
@@ -1154,6 +1160,8 @@ operator|.
 name|StatusAddr
 argument_list|,
 literal|0xFF
+argument_list|,
+literal|8
 argument_list|)
 expr_stmt|;
 name|RegisterIndex
@@ -1533,14 +1541,7 @@ name|i
 operator|++
 control|)
 block|{
-name|AcpiGbl_GpeRegisters
-index|[
-name|i
-index|]
-operator|.
-name|Status
-operator|=
-name|AcpiOsIn8
+name|AcpiOsReadPort
 argument_list|(
 name|AcpiGbl_GpeRegisters
 index|[
@@ -1548,16 +1549,19 @@ name|i
 index|]
 operator|.
 name|StatusAddr
-argument_list|)
-expr_stmt|;
+argument_list|,
+operator|&
 name|AcpiGbl_GpeRegisters
 index|[
 name|i
 index|]
 operator|.
-name|Enable
-operator|=
-name|AcpiOsIn8
+name|Status
+argument_list|,
+literal|8
+argument_list|)
+expr_stmt|;
+name|AcpiOsReadPort
 argument_list|(
 name|AcpiGbl_GpeRegisters
 index|[
@@ -1565,6 +1569,16 @@ name|i
 index|]
 operator|.
 name|EnableAddr
+argument_list|,
+operator|&
+name|AcpiGbl_GpeRegisters
+index|[
+name|i
+index|]
+operator|.
+name|Enable
+argument_list|,
+literal|8
 argument_list|)
 expr_stmt|;
 name|DEBUG_PRINT

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rscreate - Create resource lists/tables  *              $Revision: 33 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rscreate - Create resource lists/tables  *              $Revision: 34 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -961,7 +961,7 @@ literal|"ByteStreamSizeNeeded=%X, %s\n"
 operator|,
 name|ByteStreamSizeNeeded
 operator|,
-name|AcpiUtFormatException
+name|AcpiFormatException
 argument_list|(
 name|Status
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psxface - Parser external interfaces  *              $Revision: 44 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psxface - Parser external interfaces  *              $Revision: 45 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -64,7 +64,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*****************************************************************************  *  * FUNCTION:    AcpiPsxExecute  *  * PARAMETERS:  MethodNode          - A method object containing both the AML  *                                    address and length.  *              **Params            - List of parameters to pass to method,  *                                    terminated by NULL. Params itself may be  *                                    NULL if no parameters are being passed.  *              **ReturnObjDesc     - Return object from execution of the  *                                    method.  *  * RETURN:      Status  *  * DESCRIPTION: Execute a control method  *  ****************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiPsxExecute  *  * PARAMETERS:  MethodNode          - A method object containing both the AML  *                                    address and length.  *              **Params            - List of parameters to pass to method,  *                                    terminated by NULL. Params itself may be  *                                    NULL if no parameters are being passed.  *              **ReturnObjDesc     - Return object from execution of the  *                                    method.  *  * RETURN:      Status  *  * DESCRIPTION: Execute a control method  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -374,7 +374,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*      * Normal exit is with Status == AE_RETURN_VALUE when a ReturnOp has been      * executed, or with Status == AE_PENDING at end of AML block (end of      * Method code)      */
+comment|/*      * If the method has returned an object, signal this to the caller with      * a control exception code      */
 if|if
 condition|(
 operator|*
