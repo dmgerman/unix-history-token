@@ -1050,13 +1050,6 @@ name|NTOHS
 argument_list|(
 name|ip
 operator|->
-name|ip_id
-argument_list|)
-expr_stmt|;
-name|NTOHS
-argument_list|(
-name|ip
-operator|->
 name|ip_off
 argument_list|)
 expr_stmt|;

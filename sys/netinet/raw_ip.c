@@ -986,8 +986,11 @@ name|ip
 operator|->
 name|ip_id
 operator|=
+name|htons
+argument_list|(
 name|ip_id
 operator|++
+argument_list|)
 expr_stmt|;
 comment|/* XXX prevent ip_output from overwriting header fields */
 name|flags

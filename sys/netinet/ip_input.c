@@ -1761,13 +1761,6 @@ name|NTOHS
 argument_list|(
 name|ip
 operator|->
-name|ip_id
-argument_list|)
-expr_stmt|;
-name|NTOHS
-argument_list|(
-name|ip
-operator|->
 name|ip_off
 argument_list|)
 expr_stmt|;
@@ -3059,13 +3052,6 @@ operator|->
 name|ip_off
 argument_list|)
 expr_stmt|;
-name|HTONS
-argument_list|(
-name|ip
-operator|->
-name|ip_id
-argument_list|)
-expr_stmt|;
 name|ip
 operator|->
 name|ip_sum
@@ -3079,13 +3065,6 @@ operator|=
 name|in_cksum_hdr
 argument_list|(
 name|ip
-argument_list|)
-expr_stmt|;
-name|NTOHS
-argument_list|(
-name|ip
-operator|->
-name|ip_id
 argument_list|)
 expr_stmt|;
 name|NTOHS
@@ -3187,13 +3166,6 @@ argument_list|(
 name|ip
 operator|->
 name|ip_off
-argument_list|)
-expr_stmt|;
-name|HTONS
-argument_list|(
-name|ip
-operator|->
-name|ip_id
 argument_list|)
 expr_stmt|;
 comment|/* Deliver packet to divert input routine */

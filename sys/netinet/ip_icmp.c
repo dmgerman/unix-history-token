@@ -868,13 +868,6 @@ name|HTONS
 argument_list|(
 name|nip
 operator|->
-name|ip_id
-argument_list|)
-expr_stmt|;
-name|HTONS
-argument_list|(
-name|nip
-operator|->
 name|ip_off
 argument_list|)
 expr_stmt|;
