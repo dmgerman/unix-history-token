@@ -2184,6 +2184,21 @@ decl_stmt|,
 modifier|*
 name|bp
 decl_stmt|;
+if|if
+condition|(
+name|name
+operator|==
+name|NULL
+operator|||
+operator|*
+name|name
+operator|==
+literal|'\0'
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 comment|/* 	 * Start search at beginning of record. 	 */
 name|bp
 operator|=
