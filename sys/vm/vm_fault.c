@@ -785,7 +785,7 @@ name|vaddr
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Make a reference to this object to prevent its disposal while we 	 * are messing with it.  Once we have the reference, the map is free 	 * to be diddled.  Since objects reference their shadows (and copies), 	 * they will stay around as well. 	 * 	 * Bump the paging-in-progress count to prevent size changes (e.g.  	 * truncation operations) during I/O.  This must be done after 	 * obtaining the vnode lock in order to avoid possible deadlocks. 	 */
+comment|/* 	 * Make a reference to this object to prevent its disposal while we 	 * are messing with it.  Once we have the reference, the map is free 	 * to be diddled.  Since objects reference their shadows (and copies), 	 * they will stay around as well. 	 * 	 * Bump the paging-in-progress count to prevent size changes (e.g.  	 * truncation operations) during I/O.  This must be done after 	 * obtaining the vnode lock in order to avoid possible deadlocks. 	 * 	 * XXX vnode_pager_lock() can block without releasing the map lock. 	 */
 name|vm_object_reference
 argument_list|(
 name|fs
@@ -1523,7 +1523,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* 			 * now we find out if any other pages should be paged 			 * in at this time this routine checks to see if the 			 * pages surrounding this fault reside in the same 			 * object as the page for this fault.  If they do, 			 * then they are faulted in also into the object.  The 			 * array "marray" returned contains an array of 			 * vm_page_t structs where one of them is the 			 * vm_page_t passed to the routine.  The reqpage 			 * return value is the index into the marray for the 			 * vm_page_t passed to the routine. 			 * 			 * fs.m plus the additional pages are PG_BUSY'd. 			 */
+comment|/* 			 * now we find out if any other pages should be paged 			 * in at this time this routine checks to see if the 			 * pages surrounding this fault reside in the same 			 * object as the page for this fault.  If they do, 			 * then they are faulted in also into the object.  The 			 * array "marray" returned contains an array of 			 * vm_page_t structs where one of them is the 			 * vm_page_t passed to the routine.  The reqpage 			 * return value is the index into the marray for the 			 * vm_page_t passed to the routine. 			 * 			 * fs.m plus the additional pages are PG_BUSY'd. 			 * 			 * XXX vm_fault_additional_pages() can block 			 * without releasing the map lock. 			 */
 name|faultcount
 operator|=
 name|vm_fault_additional_pages
@@ -1542,7 +1542,7 @@ operator|&
 name|reqpage
 argument_list|)
 expr_stmt|;
-comment|/* 			 * update lastr imperfectly (we do not know how much 			 * getpages will actually read), but good enough. 			 */
+comment|/* 			 * update lastr imperfectly (we do not know how much 			 * getpages will actually read), but good enough. 			 * 			 * XXX The following assignment modifies the map 			 * without holding a write lock on it. 			 */
 name|fs
 operator|.
 name|entry
