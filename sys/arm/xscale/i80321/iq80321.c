@@ -1001,6 +1001,15 @@ name|device_add_child
 argument_list|(
 name|dev
 argument_list|,
+literal|"iqseg"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|device_add_child
+argument_list|(
+name|dev
+argument_list|,
 literal|"pcib"
 argument_list|,
 name|busno
