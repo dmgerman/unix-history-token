@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static	char sccsid[] = "@(#)pc.h 1.7 %G%"; */
+comment|/* static	char sccsid[] = "@(#)pc.h 1.8 %G%"; */
 end_comment
 
 begin_include
@@ -357,7 +357,7 @@ name|mc68000
 end_ifdef
 
 begin_comment
-comment|/*      *	this magic numbers lifted from pcc/mac2defs      */
+comment|/*      *	these magic numbers lifted from pcc/mac2defs      */
 end_comment
 
 begin_define

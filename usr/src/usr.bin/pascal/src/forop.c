@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)forop.c 1.15 %G%"
+literal|"@(#)forop.c 1.16 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,6 +66,12 @@ endif|#
 directive|endif
 endif|PC
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"tmps.h"
+end_include
 
 begin_comment
 comment|/*      *	for-statements.      *      *	the relevant quote from the standard:  6.8.3.9:      *	``The control-variable shall be an entire-variable whose identifier      *	is declared in the variable-declaration-part of the block closest-      *	containing the for-statement.  The control-variable shall possess      *	an ordinal-type, and the initial-value and the final-value shall be      *	of a type compatible with this type.  The statement of a for-statement      *	shall not contain an assigning-reference to the control-variable      *	of the for-statement.  The value of the final-value shall be       *	assignment-compatible with the control-variable when the initial-value      *	is assigned to the control-variable.  After a for-statement is      *	executed (other than being left by a goto-statement leading out of it)      *	the control-variable shall be undefined.  Apart from the restrictions      *	imposed by these requirements, the for-statement      *		for v := e1 to e2 do body      *	shall be equivalent to      *		begin      *		    temp1 := e1;      *		    temp2 := e2;      *		    if temp1<= temp2 then begin      *			v := temp1;      *			body;      *			while v<> temp2 do begin      *			    v := succ(v);      *			    body;      *			end      *		    end      *		end      *	where temp1 and temp2 denote auxiliary variables that the program      *	does not otherwise contain, and that possess the type possessed by      *	the variable v if that type is not a subrange-type;  otherwise the      *	host type possessed by the variable v.''      *      *	The Berkeley Pascal systems try to do all that without duplicating      *	the body, and shadowing the control-variable in (possibly) a      *	register variable.      *      *	arg here looks like:      *	arg[0]	T_FORU or T_FORD      *	   [1]	lineof "for"      *	   [2]	[0]	T_ASGN      *		[1]	lineof ":="      *		[2]	[0]	T_VAR      *			[1]	lineof id      *			[2]	char * to id      *			[3]	qualifications      *		[3]	initial expression      *	  [3]	termination expression      *	  [4]	statement      */

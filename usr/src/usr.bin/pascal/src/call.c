@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)call.c 1.21 %G%"
+literal|"@(#)call.c 1.22 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,6 +66,12 @@ endif|#
 directive|endif
 endif|PC
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"tmps.h"
+end_include
 
 begin_comment
 comment|/*  * Call generates code for calls to  * user defined procedures and functions  * and is called by proc and funccod.  * P is the result of the lookup  * of the procedure/function symbol,  * and porf is PROC or FUNC.  * Psbn is the block number of p.  *  *	the idea here is that regular scalar functions are just called,  *	while structure functions and formal functions have their results  *	stored in a temporary after the call.  *	structure functions do this because they return pointers  *	to static results, so we copy the static  *	and return a pointer to the copy.  *	formal functions do this because we have to save the result  *	around a call to the runtime routine which restores the display,  *	so we can't just leave the result lying around in registers.  *	formal calls save the address of the descriptor in a local  *	temporary, so it can be addressed for the call which restores  *	the display (FRTN).  *	calls to formal parameters pass the formal as a hidden argument   *	to a special entry point for the formal call.  *	[this is somewhat dependent on the way arguments are addressed.]  *	so PROCs and scalar FUNCs look like  *		p(...args...)  *	structure FUNCs look like  *		(temp = p(...args...),&temp)  *	formal FPROCs look like  *		( t=p,( t -> entryaddr )(...args...,t,s),FRTN(t,s))  *	formal scalar FFUNCs look like  *		( t=p,temp=( t -> entryaddr )(...args...,t,s),FRTN(t,s),temp)  *	formal structure FFUNCs look like  *		(t=p,temp = ( t -> entryaddr )(...args...,t,s),FRTN(t,s),&temp)  */

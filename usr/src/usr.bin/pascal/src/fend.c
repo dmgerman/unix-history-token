@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fend.c 1.20 %G%"
+literal|"@(#)fend.c 1.21 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -47,6 +47,12 @@ begin_include
 include|#
 directive|include
 file|"align.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tmps.h"
 end_include
 
 begin_comment
@@ -747,13 +753,11 @@ name|putlbracket
 argument_list|(
 name|ftnno
 argument_list|,
-operator|-
+operator|&
 name|sizes
 index|[
 name|cbn
 index|]
-operator|.
-name|om_max
 argument_list|)
 expr_stmt|;
 name|fp_entrycode

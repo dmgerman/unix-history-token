@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)pccaseop.c 1.10 %G%"
+literal|"@(#)pccaseop.c 1.11 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,6 +57,12 @@ begin_include
 include|#
 directive|include
 file|"pc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tmps.h"
 end_include
 
 begin_comment

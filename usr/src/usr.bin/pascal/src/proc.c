@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)proc.c 1.16 %G%"
+literal|"@(#)proc.c 1.17 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,6 +51,12 @@ begin_include
 include|#
 directive|include
 file|"objfmt.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tmps.h"
 end_include
 
 begin_comment

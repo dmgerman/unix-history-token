@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)var.c 1.14 %G%"
+literal|"@(#)var.c 1.15 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,6 +66,12 @@ endif|#
 directive|endif
 endif|PC
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"tmps.h"
+end_include
 
 begin_comment
 comment|/*  * Declare variables of a var part.  DPOFF1 is  * the local variable storage for all prog/proc/func  * modules aside from the block mark.  The total size  * of all the local variables is entered into the  * size array.  */

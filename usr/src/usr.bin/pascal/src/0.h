@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)0.h 1.19 %G%"; */
+comment|/* static char sccsid[] = "@(#)0.h 1.20 %G%"; */
 end_comment
 
 begin_define
@@ -1444,54 +1444,6 @@ define|#
 directive|define
 name|DSPLYSZ
 value|20
-end_define
-
-begin_comment
-comment|/*  * The following structure is used  * to keep track of the amount of variable  * storage required by each block.  * "Max" is the high water mark, "off"  * the current need. Temporaries for "for"  * loops and "with" statements are allocated  * in the local variable area and these  * numbers are thereby changed if necessary.  */
-end_comment
-
-begin_struct
-struct|struct
-name|om
-block|{
-name|long
-name|om_max
-decl_stmt|;
-name|long
-name|reg_max
-decl_stmt|;
-struct|struct
-name|tmps
-block|{
-name|long
-name|om_off
-decl_stmt|;
-name|long
-name|reg_off
-decl_stmt|;
-block|}
-name|curtmps
-struct|;
-block|}
-name|sizes
-index|[
-name|DSPLYSZ
-index|]
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|NOREG
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|REGOK
-value|1
 end_define
 
 begin_comment

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)p2put.c 1.12 %G%"
+literal|"@(#)p2put.c 1.13 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,6 +57,12 @@ begin_include
 include|#
 directive|include
 file|"align.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tmps.h"
 end_include
 
 begin_comment
@@ -314,7 +320,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*      *	emit a left bracket operator to pcstream      *	with function number, the maximum temp register, and total local bytes      *	until i figure out how to use them, regs 0 .. 11 are free.      *	one idea for one reg is to save the display pointer on block entry      */
+comment|/*      *	emit a left bracket operator to pcstream      *	with function number, the maximum temp register, and total local bytes      */
 end_comment
 
 begin_macro
@@ -322,7 +328,7 @@ name|putlbracket
 argument_list|(
 argument|ftnno
 argument_list|,
-argument|localbytes
+argument|sizesp
 argument_list|)
 end_macro
 
@@ -333,24 +339,82 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|localbytes
+name|struct
+name|om
+modifier|*
+name|sizesp
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
-define|#
-directive|define
-name|MAXTP2REG
-value|11
+name|int
+name|maxtempreg
+decl_stmt|;
+name|int
+name|alignedframesize
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|vax
+name|maxtempreg
+operator|=
+name|sizesp
+operator|->
+name|curtmps
+operator|.
+name|next_avail
+index|[
+name|REG_GENERAL
+index|]
+expr_stmt|;
+endif|#
+directive|endif
+endif|vax
+ifdef|#
+directive|ifdef
+name|mc68000
+comment|/* 	     *	this is a5 and d7 mashed together. 	     */
+name|maxtempreg
+operator|=
+operator|(
+literal|5
+operator|<<
+literal|4
+operator|)
+operator||
+operator|(
+literal|7
+operator|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|mc68000
+name|alignedframesize
+operator|=
+name|roundup
+argument_list|(
+name|BITSPERBYTE
+operator|*
+operator|-
+name|sizesp
+operator|->
+name|curtmps
+operator|.
+name|om_off
+argument_list|,
+name|BITSPERBYTE
+operator|*
+name|A_STACK
+argument_list|)
+expr_stmt|;
 name|p2word
 argument_list|(
 name|TOF77
 argument_list|(
 name|P2FLBRAC
 argument_list|,
-name|MAXTP2REG
+name|maxtempreg
 argument_list|,
 name|ftnno
 argument_list|)
@@ -358,16 +422,7 @@ argument_list|)
 expr_stmt|;
 name|p2word
 argument_list|(
-name|roundup
-argument_list|(
-name|BITSPERBYTE
-operator|*
-name|localbytes
-argument_list|,
-name|BITSPERBYTE
-operator|*
-name|A_STACK
-argument_list|)
+name|alignedframesize
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -385,22 +440,13 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
-literal|"P2FLBRAC | %3d | %d	"
+literal|"P2FLBRAC | %3d | %d	%d\n"
 argument_list|,
-name|MAXTP2REG
+name|maxtempreg
 argument_list|,
 name|ftnno
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stdout
 argument_list|,
-literal|"%d\n"
-argument_list|,
-name|BITSPERBYTE
-operator|*
-name|localbytes
+name|alignedframesize
 argument_list|)
 expr_stmt|;
 block|}

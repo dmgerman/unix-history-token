@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)stat.c 1.9 %G%"
+literal|"@(#)stat.c 1.10 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,6 +60,12 @@ endif|#
 directive|endif
 endif|PC
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"tmps.h"
+end_include
 
 begin_decl_stmt
 name|int

@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rval.c 1.15 %G%"
+literal|"@(#)rval.c 1.16 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,6 +66,12 @@ endif|#
 directive|endif
 endif|PC
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"tmps.h"
+end_include
 
 begin_decl_stmt
 specifier|extern

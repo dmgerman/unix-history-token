@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)flvalue.c 1.12 %G%"
+literal|"@(#)flvalue.c 1.13 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,6 +66,12 @@ endif|#
 directive|endif
 endif|PC
 end_endif
+
+begin_include
+include|#
+directive|include
+file|"tmps.h"
+end_include
 
 begin_comment
 comment|/*      *	flvalue generates the code to either pass on a formal routine,      *	or construct the structure which is the environment for passing.      *	it tells the difference by looking at the tree it's given.      */
