@@ -9,11 +9,11 @@ directive|include
 file|<sys/types.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__FreeBSD__
-end_ifndef
+end_ifdef
 
 begin_include
 include|#
@@ -25,12 +25,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|<arpa/inet.h>
-end_include
 
 begin_include
 include|#
