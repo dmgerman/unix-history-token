@@ -2416,8 +2416,6 @@ operator|&&
 name|nothingwired
 condition|)
 block|{
-name|GIANT_REQUIRED
-expr_stmt|;
 name|pmap_remove
 argument_list|(
 name|vm_map_pmap
