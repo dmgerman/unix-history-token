@@ -4035,8 +4035,10 @@ name|off
 decl_stmt|;
 name|struct
 name|sockaddr_in6
+modifier|*
 name|sa6_src
 decl_stmt|,
+modifier|*
 name|sa6_dst
 decl_stmt|;
 if|if
@@ -4209,6 +4211,21 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* 			 * Check to see if we have a valid SA corresponding to 			 * the address in the ICMP message payload. 			 */
+name|sa6_src
+operator|=
+name|ip6cp
+operator|->
+name|ip6c_src
+expr_stmt|;
+name|sa6_dst
+operator|=
+operator|(
+expr|struct
+name|sockaddr_in6
+operator|*
+operator|)
+name|sa
+expr_stmt|;
 name|sav
 operator|=
 name|key_allocsa
@@ -4220,7 +4237,7 @@ name|caddr_t
 operator|)
 operator|&
 name|sa6_src
-operator|.
+operator|->
 name|sin6_addr
 argument_list|,
 operator|(
@@ -4228,7 +4245,7 @@ name|caddr_t
 operator|)
 operator|&
 name|sa6_dst
-operator|.
+operator|->
 name|sin6_addr
 argument_list|,
 name|IPPROTO_AH
