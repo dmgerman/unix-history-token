@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	3.5	(Berkeley)	83/02/28"
+literal|"@(#)tape.c	3.6	(Berkeley)	83/03/05"
 decl_stmt|;
 end_decl_stmt
 
@@ -248,7 +248,7 @@ name|nohost
 label|:
 name|msg
 argument_list|(
-literal|"need keyletter ``f'' and device ``host:tape''"
+literal|"need keyletter ``f'' and device ``host:tape''\n"
 argument_list|)
 expr_stmt|;
 name|done
@@ -505,7 +505,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|readhdr
+name|gethead
 argument_list|(
 operator|&
 name|spcl
@@ -523,7 +523,7 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-name|readhdr
+name|gethead
 argument_list|(
 operator|&
 name|spcl
@@ -1106,7 +1106,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Specify volume #: "
+literal|"Specify next volume #: "
 argument_list|)
 expr_stmt|;
 if|if
@@ -1156,7 +1156,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Mount tape volume %d then type return: "
+literal|"Mount tape volume %d then type return "
 argument_list|,
 name|newvol
 argument_list|)
@@ -1324,6 +1324,10 @@ goto|goto
 name|again
 goto|;
 block|}
+name|blksread
+operator|=
+name|savecnt
+expr_stmt|;
 if|if
 condition|(
 name|curfile
@@ -1344,25 +1348,15 @@ argument_list|(
 literal|"active file into volume 1\n"
 argument_list|)
 expr_stmt|;
-name|blksread
-operator|=
-name|savecnt
-expr_stmt|;
 return|return;
 block|}
-if|if
-condition|(
-name|readhdr
+operator|(
+name|void
+operator|)
+name|gethead
 argument_list|(
 operator|&
 name|spcl
-argument_list|)
-operator|==
-name|FAIL
-condition|)
-name|panic
-argument_list|(
-literal|"no header after volume mark!\n"
 argument_list|)
 expr_stmt|;
 name|findinode
@@ -2207,7 +2201,7 @@ break|break;
 block|}
 if|if
 condition|(
-name|gethead
+name|readhdr
 argument_list|(
 operator|&
 name|spcl
@@ -3182,11 +3176,22 @@ argument_list|)
 operator|==
 name|FAIL
 condition|)
+block|{
+name|dprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"readhdr fails at %d blocks\n"
+argument_list|,
+name|blksread
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|FAIL
 operator|)
 return|;
+block|}
 return|return
 operator|(
 name|GOOD
@@ -3216,6 +3221,9 @@ end_decl_stmt
 
 begin_block
 block|{
+name|long
+name|i
+decl_stmt|;
 union|union
 name|u_ospcl
 block|{
@@ -3341,36 +3349,14 @@ argument_list|)
 operator|==
 name|FAIL
 condition|)
-block|{
-name|dprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"gethead fails at %d blocks\n"
-argument_list|,
-name|blksread
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|FAIL
 operator|)
 return|;
-block|}
-if|if
-condition|(
-name|dflag
-condition|)
-name|accthdr
-argument_list|(
-name|buf
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|GOOD
-operator|)
-return|;
+goto|goto
+name|good
+goto|;
 block|}
 name|readtape
 argument_list|(
@@ -3660,28 +3646,107 @@ argument_list|)
 operator|==
 name|FAIL
 condition|)
-block|{
-name|dprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"gethead fails at %d blocks\n"
-argument_list|,
-name|blksread
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|FAIL
 operator|)
 return|;
-block|}
 name|buf
 operator|->
 name|c_magic
 operator|=
 name|NFS_MAGIC
 expr_stmt|;
+name|good
+label|:
+switch|switch
+condition|(
+name|buf
+operator|->
+name|c_type
+condition|)
+block|{
+case|case
+name|TS_CLRI
+case|:
+case|case
+name|TS_BITS
+case|:
+comment|/* 		 * Have to patch up missing information in bit map headers 		 */
+name|buf
+operator|->
+name|c_inumber
+operator|=
+literal|0
+expr_stmt|;
+name|buf
+operator|->
+name|c_dinode
+operator|.
+name|di_size
+operator|=
+name|buf
+operator|->
+name|c_count
+operator|*
+name|TP_BSIZE
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|buf
+operator|->
+name|c_count
+condition|;
+name|i
+operator|++
+control|)
+name|buf
+operator|->
+name|c_addr
+index|[
+name|i
+index|]
+operator|++
+expr_stmt|;
+break|break;
+case|case
+name|TS_TAPE
+case|:
+case|case
+name|TS_END
+case|:
+name|buf
+operator|->
+name|c_inumber
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
+name|TS_INODE
+case|:
+case|case
+name|TS_ADDR
+case|:
+break|break;
+default|default:
+name|panic
+argument_list|(
+literal|"gethead: unknown inode type %d\n"
+argument_list|,
+name|buf
+operator|->
+name|c_type
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 name|dflag
@@ -3724,7 +3789,7 @@ specifier|static
 name|ino_t
 name|previno
 init|=
-literal|0
+literal|0xffffffff
 decl_stmt|;
 specifier|static
 name|int
@@ -3741,9 +3806,27 @@ name|i
 decl_stmt|;
 if|if
 condition|(
+name|header
+operator|->
+name|c_type
+operator|==
+name|TS_TAPE
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Volume header\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
 name|previno
 operator|==
-literal|0
+literal|0xffffffff
 condition|)
 goto|goto
 name|newcalc
@@ -3754,24 +3837,13 @@ name|prevtype
 condition|)
 block|{
 case|case
-name|TS_TAPE
-case|:
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Volume"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
 name|TS_BITS
 case|:
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Dump mask"
+literal|"Dump mask header"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3782,7 +3854,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Remove mask"
+literal|"Remove mask header"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3793,7 +3865,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"File"
+literal|"File header, ino %d"
+argument_list|,
+name|previno
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3804,7 +3878,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"File continuation"
+literal|"File continuation header, ino %d"
+argument_list|,
+name|previno
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3815,20 +3891,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"End of tape"
+literal|"End of tape header"
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|" header, ino %d"
-argument_list|,
-name|previno
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|predict
@@ -3865,12 +3932,6 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|header
-operator|->
-name|c_type
-operator|!=
-name|TS_TAPE
-operator|&&
 name|header
 operator|->
 name|c_type
@@ -3963,9 +4024,6 @@ name|long
 name|skipcnt
 init|=
 literal|0
-decl_stmt|;
-name|long
-name|i
 decl_stmt|;
 name|curfile
 operator|.
@@ -4097,41 +4155,6 @@ name|name
 operator|=
 literal|"<file removal list>"
 expr_stmt|;
-name|header
-operator|->
-name|c_dinode
-operator|.
-name|di_size
-operator|=
-name|header
-operator|->
-name|c_count
-operator|*
-name|TP_BSIZE
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|header
-operator|->
-name|c_count
-condition|;
-name|i
-operator|++
-control|)
-name|header
-operator|->
-name|c_addr
-index|[
-name|i
-index|]
-operator|++
-expr_stmt|;
 break|break;
 block|}
 if|if
@@ -4151,41 +4174,6 @@ operator|.
 name|name
 operator|=
 literal|"<file dump list>"
-expr_stmt|;
-name|header
-operator|->
-name|c_dinode
-operator|.
-name|di_size
-operator|=
-name|header
-operator|->
-name|c_count
-operator|*
-name|TP_BSIZE
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|header
-operator|->
-name|c_count
-condition|;
-name|i
-operator|++
-control|)
-name|header
-operator|->
-name|c_addr
-index|[
-name|i
-index|]
-operator|++
 expr_stmt|;
 break|break;
 block|}

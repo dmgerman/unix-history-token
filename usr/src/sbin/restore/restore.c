@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)restore.c	3.4	(Berkeley)	83/02/28"
+literal|"@(#)restore.c	3.5	(Berkeley)	83/03/05"
 decl_stmt|;
 end_decl_stmt
 
@@ -375,7 +375,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	For each directory entry, determine which catagory it falls  *	into as follows:  *	KEEP - entries that are to be left alone.  *	NEW - new entries to be added.  *	RENAME - entries whose name is to be changed.  *	EXTRACT - files that must be updated with new contents.  *	CHANGE - REMOVE followed by EXTRACT.  *	RENUMBER - same as CHANGE, but not reusing same inode number.  */
+comment|/*  *	For each directory entry, determine which category it falls  *	into as follows:  *	KEEP - entries that are to be left alone.  *	NEW - new entries to be added.  *	RENAME - entries whose name is to be changed.  *	EXTRACT - files that must be updated with new contents.  *	CHANGE - REMOVE followed by EXTRACT.  *	RENUMBER - same as CHANGE, but not reusing same inode number.  */
 end_comment
 
 begin_function
@@ -448,7 +448,7 @@ index|[
 literal|1
 index|]
 decl_stmt|;
-comment|/* 	 * This routine is called once for each element in the  	 * directory heirarchy, with a full path name. 	 * The "type" value is incorrectly specified as LEAF for 	 * directories that are not on the dump tape. 	 */
+comment|/* 	 * This routine is called once for each element in the  	 * directory hierarchy, with a full path name. 	 * The "type" value is incorrectly specified as LEAF for 	 * directories that are not on the dump tape. 	 */
 name|strcpy
 argument_list|(
 name|keybuf
@@ -2345,6 +2345,12 @@ operator|)
 literal|1
 argument_list|)
 expr_stmt|;
+name|skipmaps
+argument_list|()
+expr_stmt|;
+name|skipdirs
+argument_list|()
+expr_stmt|;
 name|first
 operator|=
 name|lowerbnd
@@ -2367,12 +2373,6 @@ init|;
 condition|;
 control|)
 block|{
-name|skipmaps
-argument_list|()
-expr_stmt|;
-name|skipdirs
-argument_list|()
-expr_stmt|;
 name|first
 operator|=
 name|lowerbnd
@@ -2387,6 +2387,7 @@ argument_list|(
 name|last
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Check to see if any files remain to be extracted 		 */
 if|if
 condition|(
 name|first
@@ -2394,6 +2395,7 @@ operator|>
 name|last
 condition|)
 return|return;
+comment|/* 		 * Reject any volumes with inodes greater 		 * than the last one needed 		 */
 while|while
 condition|(
 name|curfile
@@ -2417,13 +2419,6 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|volno
-operator|==
-literal|1
-condition|)
-block|{
 name|skipmaps
 argument_list|()
 expr_stmt|;
@@ -2431,7 +2426,7 @@ name|skipdirs
 argument_list|()
 expr_stmt|;
 block|}
-block|}
+comment|/* 		 * Decide on the next inode needed. 		 * Skip across the inodes until it is found 		 * or an out of order volume change is encountered 		 */
 name|next
 operator|=
 name|lowerbnd
@@ -2462,6 +2457,12 @@ condition|)
 name|skipfile
 argument_list|()
 expr_stmt|;
+name|skipmaps
+argument_list|()
+expr_stmt|;
+name|skipdirs
+argument_list|()
+expr_stmt|;
 block|}
 do|while
 condition|(
@@ -2472,6 +2473,7 @@ operator|+
 literal|1
 condition|)
 do|;
+comment|/* 		 * If volume change out of order occurred the 		 * current state must be re calculated 		 */
 if|if
 condition|(
 name|volno
@@ -2479,6 +2481,7 @@ operator|!=
 name|curvol
 condition|)
 continue|continue;
+comment|/* 		 * If the current inode is greater than the one we were 		 * looking for then we missed the one we were looking for. 		 * Since we only attempt to extract files listed in the 		 * dump map, the file must have been lost due to a tape 		 * read error. Thus we report all requested files between 		 * the one we were looking for, and the one we found as 		 * missing, and delete their request flags. 		 */
 while|while
 condition|(
 name|next
@@ -2530,11 +2533,10 @@ operator|=
 name|lowerbnd
 argument_list|(
 name|next
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 		 * The current inode is the one that we are looking for, 		 * so extract it per its requested name. 		 */
 if|if
 condition|(
 name|next
