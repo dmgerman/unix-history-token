@@ -381,6 +381,18 @@ begin_comment
 comment|/* HyperThreading Info / Brand Index / CLFUSH */
 end_comment
 
+begin_decl_stmt
+name|u_int
+name|cpu_exthigh
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Highest arg to extended CPUID */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -417,6 +429,21 @@ end_decl_stmt
 
 begin_comment
 comment|/* CPU Origin code */
+end_comment
+
+begin_decl_stmt
+name|char
+name|cpu_brand
+index|[
+literal|48
+index|]
+init|=
+literal|""
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Brand name */
 end_comment
 
 begin_ifdef
