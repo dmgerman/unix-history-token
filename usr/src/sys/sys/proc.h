@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	proc.h	6.2	84/06/06	*/
+comment|/*	proc.h	6.3	85/05/05	*/
 end_comment
 
 begin_comment
@@ -168,6 +168,12 @@ modifier|*
 name|p_p0br
 decl_stmt|;
 comment|/* page table base P0BR */
+name|struct
+name|pte
+modifier|*
+name|p_p1br
+decl_stmt|;
+comment|/* page table base P1BR */
 name|struct
 name|proc
 modifier|*
