@@ -53,7 +53,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)main.c	3.51	%G%"
+literal|"@(#)main.c	3.52	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1434,6 +1434,27 @@ name|From
 operator|.
 name|q_paddr
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|Debug
+operator|>
+literal|1
+condition|)
+name|printf
+argument_list|(
+literal|"setfrom(%s, %s)\n"
+argument_list|,
+name|from
+argument_list|,
+name|realname
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|DEBUG
 if|if
 condition|(
 name|from
@@ -1519,7 +1540,7 @@ argument_list|,
 operator|&
 name|From
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 operator|==
 name|NULL
@@ -1542,7 +1563,7 @@ argument_list|,
 operator|&
 name|From
 argument_list|,
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
