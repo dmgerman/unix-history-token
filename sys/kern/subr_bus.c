@@ -4579,6 +4579,12 @@ name|flags
 operator|&
 name|DF_EXTERNALSOFTC
 operator|)
+operator|&&
+name|driver
+operator|->
+name|size
+operator|>
+literal|0
 condition|)
 block|{
 name|dev
