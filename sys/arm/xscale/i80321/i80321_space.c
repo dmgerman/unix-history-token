@@ -141,14 +141,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|bs_protos
-argument_list|(
-name|bs_notimpl
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/*  * Template bus_space -- copied, and the bits that are NULL are  * filled in.  */
 end_comment
