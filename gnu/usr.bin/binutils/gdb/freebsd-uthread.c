@@ -1610,6 +1610,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* XXX: this needs to be selected by target, not [build] host */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2206,6 +2210,48 @@ operator|-
 literal|1
 block|,
 comment|/* pc, vfp */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__sparc64__
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|char
+name|sigmap
+index|[
+literal|125
+index|]
+init|=
+comment|/* map reg to sigcontext  */
+block|{
+operator|-
+literal|1
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|jmpmap
+index|[
+literal|125
+index|]
+init|=
+block|{
+operator|-
+literal|1
 block|}
 decl_stmt|;
 end_decl_stmt
