@@ -9628,11 +9628,16 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|perror_reply
+name|reply
 argument_list|(
 literal|425
 argument_list|,
-literal|"Can't build data connection"
+literal|"Can't build data connection: %s."
+argument_list|,
+name|strerror
+argument_list|(
+name|conerrno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
