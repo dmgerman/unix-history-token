@@ -110,7 +110,7 @@ parameter_list|,
 name|char
 name|resolved_path
 index|[
-name|MAXPATHLEN
+name|PATH_MAX
 index|]
 parameter_list|)
 block|{
@@ -127,7 +127,7 @@ decl_stmt|;
 name|char
 name|left
 index|[
-name|MAXPATHLEN
+name|PATH_MAX
 index|]
 decl_stmt|;
 name|size_t
@@ -185,7 +185,7 @@ name|path
 operator|+
 literal|1
 argument_list|,
-name|MAXPATHLEN
+name|PATH_MAX
 argument_list|)
 expr_stmt|;
 block|}
@@ -197,7 +197,7 @@ name|getcwd
 argument_list|(
 name|resolved_path
 argument_list|,
-name|MAXPATHLEN
+name|PATH_MAX
 argument_list|)
 operator|==
 name|NULL
@@ -209,7 +209,7 @@ name|resolved_path
 argument_list|,
 literal|"."
 argument_list|,
-name|MAXPATHLEN
+name|PATH_MAX
 argument_list|)
 expr_stmt|;
 return|return
@@ -231,7 +231,7 @@ name|left
 argument_list|,
 name|path
 argument_list|,
-name|MAXPATHLEN
+name|PATH_MAX
 argument_list|)
 expr_stmt|;
 block|}
@@ -239,11 +239,11 @@ if|if
 condition|(
 name|left_len
 operator|>=
-name|MAXPATHLEN
+name|PATH_MAX
 operator|||
 name|resolved_len
 operator|>=
-name|MAXPATHLEN
+name|PATH_MAX
 condition|)
 block|{
 name|errno
@@ -268,7 +268,7 @@ decl_stmt|;
 name|char
 name|next_token
 index|[
-name|MAXPATHLEN
+name|PATH_MAX
 index|]
 decl_stmt|;
 name|char
@@ -359,7 +359,7 @@ name|resolved_len
 operator|+
 literal|1
 operator|>=
-name|MAXPATHLEN
+name|PATH_MAX
 condition|)
 block|{
 name|errno
@@ -473,14 +473,14 @@ name|resolved_path
 argument_list|,
 name|next_token
 argument_list|,
-name|MAXPATHLEN
+name|PATH_MAX
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|resolved_len
 operator|>=
-name|MAXPATHLEN
+name|PATH_MAX
 condition|)
 block|{
 name|errno
@@ -543,7 +543,7 @@ block|{
 name|char
 name|symlink
 index|[
-name|MAXPATHLEN
+name|PATH_MAX
 index|]
 decl_stmt|;
 name|int
@@ -573,7 +573,9 @@ name|resolved_path
 argument_list|,
 name|symlink
 argument_list|,
-name|MAXPATHLEN
+name|PATH_MAX
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -678,7 +680,7 @@ if|if
 condition|(
 name|slen
 operator|>=
-name|MAXPATHLEN
+name|PATH_MAX
 condition|)
 block|{
 name|errno
@@ -720,14 +722,14 @@ name|symlink
 argument_list|,
 name|left
 argument_list|,
-name|MAXPATHLEN
+name|PATH_MAX
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|left_len
 operator|>
-name|MAXPATHLEN
+name|PATH_MAX
 condition|)
 block|{
 name|errno
@@ -746,7 +748,7 @@ name|left
 argument_list|,
 name|symlink
 argument_list|,
-name|MAXPATHLEN
+name|PATH_MAX
 argument_list|)
 expr_stmt|;
 block|}
