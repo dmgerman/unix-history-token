@@ -308,6 +308,8 @@ argument_list|,
 name|bar
 operator|->
 name|b_count
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 name|THR_UMTX_UNLOCK
