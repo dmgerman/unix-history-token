@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_input.c	8.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988, 1990, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tcp_input.c	8.8 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -1519,6 +1519,41 @@ operator|&
 name|SO_ACCEPTCONN
 condition|)
 block|{
+if|if
+condition|(
+operator|(
+name|tiflags
+operator|&
+operator|(
+name|TH_RST
+operator||
+name|TH_ACK
+operator||
+name|TH_SYN
+operator|)
+operator|)
+operator|!=
+name|TH_SYN
+condition|)
+block|{
+comment|/* 				 * Note: dropwithreset makes sure we don't 				 * send a reset in response to a RST. 				 */
+if|if
+condition|(
+name|tiflags
+operator|&
+operator|(
+name|TH_ACK
+operator||
+name|TH_RST
+operator|)
+condition|)
+goto|goto
+name|dropwithreset
+goto|;
+goto|goto
+name|drop
+goto|;
+block|}
 name|so
 operator|=
 name|sonewconn
@@ -3159,12 +3194,6 @@ operator|&=
 operator|~
 name|TH_FIN
 expr_stmt|;
-name|tp
-operator|->
-name|t_flags
-operator||=
-name|TF_ACKNOW
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -3187,6 +3216,12 @@ goto|goto
 name|dropafterack
 goto|;
 block|}
+name|tp
+operator|->
+name|t_flags
+operator||=
+name|TF_ACKNOW
+expr_stmt|;
 block|}
 else|else
 block|{
