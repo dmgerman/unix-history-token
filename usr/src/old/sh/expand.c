@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)expand.c	4.5 %G%"
+literal|"@(#)expand.c	4.6 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -822,6 +822,9 @@ name|DONE
 name|FI
 name|makearg
 argument_list|(
+operator|(
+name|ARGPTR
+operator|)
 name|endstak
 argument_list|(
 name|s2
@@ -840,7 +843,7 @@ end_macro
 
 begin_decl_stmt
 name|REG
-name|STRING
+name|ARGPTR
 name|args
 decl_stmt|;
 end_decl_stmt
