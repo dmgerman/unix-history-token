@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rshd.c	5.6 (Berkeley) %G%"
+literal|"@(#)rshd.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -71,7 +71,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/wait.h>
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -137,11 +137,15 @@ decl_stmt|,
 modifier|*
 name|rindex
 argument_list|()
+decl_stmt|,
+modifier|*
+name|strncat
+argument_list|()
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* VARARGS 1 */
+comment|/*VARARGS1*/
 end_comment
 
 begin_function_decl
@@ -150,6 +154,10 @@ name|error
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
 
 begin_function
 name|main
@@ -249,6 +257,10 @@ name|SOL_SOCKET
 argument_list|,
 name|SO_KEEPALIVE
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|on
 argument_list|,
@@ -260,7 +272,6 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
 name|syslog
 argument_list|(
 name|LOG_WARNING
@@ -268,7 +279,6 @@ argument_list|,
 literal|"setsockopt (SO_KEEPALIVE): %m"
 argument_list|)
 expr_stmt|;
-block|}
 name|linger
 operator|.
 name|l_onoff
@@ -292,6 +302,10 @@ name|SOL_SOCKET
 argument_list|,
 name|SO_LINGER
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|linger
 argument_list|,
@@ -303,7 +317,6 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
 name|syslog
 argument_list|(
 name|LOG_WARNING
@@ -311,7 +324,6 @@ argument_list|,
 literal|"setsockopt (SO_LINGER): %m"
 argument_list|)
 expr_stmt|;
-block|}
 name|doit
 argument_list|(
 name|dup
@@ -441,8 +453,6 @@ name|pwd
 decl_stmt|;
 name|int
 name|s
-decl_stmt|,
-name|backoff
 decl_stmt|;
 name|struct
 name|hostent
@@ -698,8 +708,6 @@ init|=
 name|IPPORT_RESERVED
 operator|-
 literal|1
-decl_stmt|,
-name|retryshift
 decl_stmt|;
 name|s
 operator|=
@@ -774,8 +782,6 @@ argument_list|(
 operator|*
 name|fromp
 argument_list|)
-argument_list|,
-literal|0
 argument_list|)
 operator|<
 literal|0
@@ -820,6 +826,10 @@ name|hp
 operator|=
 name|gethostbyaddr
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|fromp
 operator|->
@@ -935,6 +945,9 @@ operator|<
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|chdir
 argument_list|(
 literal|"/"
@@ -1160,10 +1173,23 @@ argument_list|,
 operator|&
 name|ready
 argument_list|,
+operator|(
+name|fd_set
+operator|*
+operator|)
 literal|0
 argument_list|,
+operator|(
+name|fd_set
+operator|*
+operator|)
 literal|0
 argument_list|,
+operator|(
+expr|struct
+name|timeval
+operator|*
+operator|)
 literal|0
 argument_list|)
 operator|<
@@ -1369,6 +1395,9 @@ name|void
 operator|)
 name|setgid
 argument_list|(
+operator|(
+name|gid_t
+operator|)
 name|pwd
 operator|->
 name|pw_gid
@@ -1390,6 +1419,9 @@ name|void
 operator|)
 name|setuid
 argument_list|(
+operator|(
+name|uid_t
+operator|)
 name|pwd
 operator|->
 name|pw_uid
@@ -1499,23 +1531,11 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-name|protofail
-label|:
-name|error
-argument_list|(
-literal|"rsh: protocol failure detected by remote\n"
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 
 begin_comment
-comment|/* VARARGS 1 */
+comment|/*VARARGS1*/
 end_comment
 
 begin_macro
