@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)column.c	5.6 (Berkeley) %G%"
+literal|"@(#)column.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -411,8 +411,7 @@ condition|)
 name|maketbl
 argument_list|()
 expr_stmt|;
-else|else
-block|{
+elseif|else
 if|if
 condition|(
 name|maxlength
@@ -422,6 +421,7 @@ condition|)
 name|print
 argument_list|()
 expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|xflag
@@ -433,7 +433,6 @@ else|else
 name|r_columnate
 argument_list|()
 expr_stmt|;
-block|}
 name|exit
 argument_list|(
 name|eval
