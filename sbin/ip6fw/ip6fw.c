@@ -719,7 +719,7 @@ block|{
 name|char
 name|ifnb
 index|[
-name|FW_IFNLEN
+name|IP6FW_IFNLEN
 operator|+
 literal|1
 index|]
@@ -739,12 +739,12 @@ name|fu_via_if
 operator|.
 name|name
 argument_list|,
-name|FW_IFNLEN
+name|IP6FW_IFNLEN
 argument_list|)
 expr_stmt|;
 name|ifnb
 index|[
-name|FW_IFNLEN
+name|IP6FW_IFNLEN
 index|]
 operator|=
 literal|'\0'
