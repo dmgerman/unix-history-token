@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)files.c	4.18 (Berkeley) 88/09/13"
+literal|"@(#)files.c	4.19 (Berkeley) 90/01/30"
 decl_stmt|;
 end_decl_stmt
 
@@ -623,7 +623,7 @@ name|strcpy
 argument_list|()
 decl_stmt|;
 name|struct
-name|direct
+name|dirent
 modifier|*
 name|dptr
 decl_stmt|;
