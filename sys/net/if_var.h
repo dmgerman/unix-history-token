@@ -1981,19 +1981,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|ifnet
-modifier|*
-name|if_withname
-parameter_list|(
-name|struct
-name|sockaddr
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|if_poll_recv_slow
 parameter_list|(
