@@ -2369,14 +2369,9 @@ return|return;
 comment|/* ACPI already active */
 if|if
 condition|(
-name|devclass_get_softc
-argument_list|(
 name|devclass_find
 argument_list|(
 literal|"acpi"
-argument_list|)
-argument_list|,
-literal|0
 argument_list|)
 operator|!=
 name|NULL
