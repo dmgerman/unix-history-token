@@ -37,6 +37,31 @@ begin_comment
 comment|/* LIBC_SCCS and not lint */
 end_comment
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|lint
+argument_list|)
+end_if
+
+begin_decl_stmt
+specifier|static
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"@(#)$FreeBSD$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -634,7 +659,7 @@ decl_stmt|;
 name|recno_t
 name|nrec
 decl_stmt|;
-name|indx_t
+name|size_t
 name|len
 decl_stmt|;
 name|size_t
