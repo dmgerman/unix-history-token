@@ -195,12 +195,13 @@ directive|include
 file|"opt_isp.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|ISP_DMA_ADDR_T
-value|bus_addr_t
-end_define
+begin_comment
+comment|/*  * Not quite yet  */
+end_comment
+
+begin_comment
+comment|/* #define	ISP_DAC_SUPPORTED	1 */
+end_comment
 
 begin_comment
 comment|/*  * Efficiency- get rid of SBus code&& tests unless we need them.  */
