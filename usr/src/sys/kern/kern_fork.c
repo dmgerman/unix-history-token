@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_fork.c	6.3	84/06/06	*/
+comment|/*	kern_fork.c	6.4	84/07/14	*/
 end_comment
 
 begin_include
@@ -410,8 +410,6 @@ operator|.
 name|u_start
 operator|=
 name|time
-operator|.
-name|tv_sec
 expr_stmt|;
 name|u
 operator|.
