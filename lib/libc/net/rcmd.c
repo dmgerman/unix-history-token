@@ -2922,6 +2922,12 @@ literal|'\n'
 argument_list|)
 operator|==
 name|NULL
+operator|&&
+operator|!
+name|feof
+argument_list|(
+name|hostf
+argument_list|)
 condition|)
 block|{
 while|while
