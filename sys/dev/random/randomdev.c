@@ -505,6 +505,7 @@ operator|&
 name|FWRITE
 operator|)
 operator|&&
+operator|!
 operator|(
 name|securelevel
 operator|>
