@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: yppush_main.c,v 1.25 1996/01/27 19:44:48 wpaul Exp $  */
+comment|/*  * Copyright (c) 1995  *	Bill Paul<wpaul@ctr.columbia.edu>.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Bill Paul.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY Bill Paul AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL Bill Paul OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: yppush_main.c,v 1.26 1996/04/03 00:27:53 wpaul Exp wpaul $  */
 end_comment
 
 begin_include
@@ -32,23 +32,6 @@ include|#
 directive|include
 file|<signal.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LONGJMP
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<setjmp.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -148,7 +131,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: yppush_main.c,v 1.25 1996/01/27 19:44:48 wpaul Exp $"
+literal|"$Id: yppush_main.c,v 1.26 1996/04/03 00:27:53 wpaul Exp wpaul $"
 decl_stmt|;
 end_decl_stmt
 
@@ -287,35 +270,6 @@ begin_comment
 comment|/* Number of currently running jobs. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LONGJMP
-end_ifdef
-
-begin_decl_stmt
-name|int
-name|yppush_pausing
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Flag set when longjmp()s are allowed. */
-end_comment
-
-begin_decl_stmt
-name|jmp_buf
-name|env
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 name|int
 name|yppush_alarm_tripped
@@ -335,9 +289,6 @@ block|{
 name|unsigned
 name|long
 name|tid
-decl_stmt|;
-name|int
-name|pid
 decl_stmt|;
 name|int
 name|sock
@@ -636,20 +587,6 @@ operator|&&
 name|still_pending
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|LONGJMP
-name|yppush_pausing
-operator|++
-expr_stmt|;
-name|setjmp
-argument_list|(
-name|env
-argument_list|)
-expr_stmt|;
-comment|/* more magic */
-endif|#
-directive|endif
 name|jptr
 operator|=
 name|yppush_joblist
@@ -754,15 +691,6 @@ expr_stmt|;
 name|pause
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LONGJMP
-name|yppush_pausing
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
 name|alarm
 argument_list|(
 literal|0
@@ -1072,22 +1000,6 @@ argument_list|,
 name|SIGALRM
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|LONGJMP
-if|if
-condition|(
-name|yppush_pausing
-condition|)
-name|longjmp
-argument_list|(
-name|env
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return;
 block|}
 end_function
@@ -1935,25 +1847,6 @@ operator|<=
 literal|1
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|LONGJMP
-name|yppush_pausing
-operator|++
-expr_stmt|;
-while|while
-condition|(
-operator|!
-name|setjmp
-argument_list|(
-name|env
-argument_list|)
-operator|&&
-name|yppush_running_jobs
-condition|)
-block|{
-else|#
-directive|else
 name|yppush_alarm_tripped
 operator|=
 literal|0
@@ -1966,8 +1859,6 @@ operator|&&
 name|yppush_running_jobs
 condition|)
 block|{
-endif|#
-directive|endif
 name|alarm
 argument_list|(
 name|yppush_timeout
@@ -1986,39 +1877,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|LONGJMP
-name|yppush_pausing
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 else|else
 block|{
-ifdef|#
-directive|ifdef
-name|LONGJMP
-name|yppush_pausing
-operator|++
-expr_stmt|;
-while|while
-condition|(
-operator|!
-name|setjmp
-argument_list|(
-name|env
-argument_list|)
-operator|&&
-name|yppush_running_jobs
-operator|>=
-name|yppush_jobs
-condition|)
-block|{
-else|#
-directive|else
 name|yppush_alarm_tripped
 operator|=
 literal|0
@@ -2033,8 +1894,6 @@ operator|>=
 name|yppush_jobs
 condition|)
 block|{
-endif|#
-directive|endif
 name|alarm
 argument_list|(
 name|yppush_timeout
@@ -2053,15 +1912,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|LONGJMP
-name|yppush_pausing
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 comment|/* Cleared for takeoff: set everything in motion. */
 if|if
@@ -2094,6 +1944,9 @@ literal|0
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|void
 name|usage
@@ -2114,7 +1967,13 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/*  * Entry point. (About time!)  */
+end_comment
+
+begin_function
 name|main
 parameter_list|(
 name|argc
@@ -2503,16 +2362,21 @@ condition|)
 block|{
 name|yp_error
 argument_list|(
-literal|"this host is not the master for %s"
+literal|"warning: this host is not the master for %s"
 argument_list|,
 name|yppush_mapname
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NITPICKY
 name|yppush_exit
 argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 name|yppush_master
 operator|=
