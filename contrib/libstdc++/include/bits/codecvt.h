@@ -4,7 +4,7 @@ comment|// Locale support (codecvt) -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+comment|// Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -755,9 +755,10 @@ name|state_type
 typedef|;
 end_typedef
 
-begin_comment
-comment|// Data Members:
-end_comment
+begin_label
+name|public
+label|:
+end_label
 
 begin_expr_stmt
 specifier|static
@@ -1030,9 +1031,10 @@ name|state_type
 typedef|;
 end_typedef
 
-begin_comment
-comment|// Data Members:
-end_comment
+begin_label
+name|public
+label|:
+end_label
 
 begin_expr_stmt
 specifier|static
@@ -1295,9 +1297,10 @@ name|state_type
 typedef|;
 end_typedef
 
-begin_comment
-comment|// Data Members:
-end_comment
+begin_label
+name|public
+label|:
+end_label
 
 begin_expr_stmt
 specifier|static
@@ -1546,7 +1549,7 @@ operator|:
 name|explicit
 name|codecvt_byname
 argument_list|(
-argument|const char*
+argument|const char* __s
 argument_list|,
 argument|size_t __refs =
 literal|0

@@ -4412,7 +4412,6 @@ name|_M_c_locale_collate
 operator|=
 name|_S_c_locale
 block|; }
-comment|// Non-standard.
 name|explicit
 name|collate
 argument_list|(
@@ -8927,6 +8926,41 @@ argument_list|)
 specifier|const
 expr_stmt|;
 end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_GLIBCPP_USE_WCHAR_T
+end_ifdef
+
+begin_expr_stmt
+name|template
+operator|<
+operator|>
+name|wstring
+name|messages
+operator|<
+name|wchar_t
+operator|>
+operator|::
+name|do_get
+argument_list|(
+argument|catalog
+argument_list|,
+argument|int
+argument_list|,
+argument|int
+argument_list|,
+argument|const wstring&
+argument_list|)
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|// Include host and configuration specific messages virtual functions.
