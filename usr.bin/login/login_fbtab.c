@@ -4,12 +4,22 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
-begin_comment
 comment|/*     SYNOPSIS 	void login_fbtab(tty, uid, gid) 	char *tty; 	uid_t uid; 	gid_t gid;      DESCRIPTION 	This module implements device security as described in the 	SunOS 4.1.x fbtab(5) and SunOS 5.x logindevperm(4) manual 	pages. The program first looks for /etc/fbtab. If that file 	cannot be opened it attempts to process /etc/logindevperm. 	We expect entries with the folowing format:  	    Comments start with a # and extend to the end of the line.  	    Blank lines or lines with only a comment are ignored.  	    All other lines consist of three fields delimited by 	    whitespace: a login device (/dev/console), an octal 	    permission number (0600), and a ":"-delimited list of 	    devices (/dev/kbd:/dev/mouse). All device names are 	    absolute paths. A path that ends in "*" refers to all 	    directory entries except "." and "..".  	    If the tty argument (relative path) matches a login device 	    name (absolute path), the permissions of the devices in the 	    ":"-delimited list are set as specified in the second 	    field, and their ownership is changed to that of the uid 	    and gid arguments.      DIAGNOSTICS 	Problems are reported via the syslog daemon with severity 	LOG_ERR.      BUGS 	This module uses strtok(3), which may cause conflicts with other 	uses of that same routine.      AUTHOR 	Wietse Venema (wietse@wzv.win.tue.nl) 	Eindhoven University of Technology 	The Netherlands  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
