@@ -1848,6 +1848,15 @@ name|fd_rdir
 operator|=
 name|rootvnode
 expr_stmt|;
+name|VREF
+argument_list|(
+name|p
+operator|->
+name|p_fd
+operator|->
+name|fd_rdir
+argument_list|)
+expr_stmt|;
 name|VOP_UNLOCK
 argument_list|(
 name|rootvnode
