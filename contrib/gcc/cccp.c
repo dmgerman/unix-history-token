@@ -17499,6 +17499,8 @@ case|:
 block|{
 name|int
 name|backslash_newlines_p
+init|=
+literal|0
 decl_stmt|;
 specifier|register
 name|U_CHAR
