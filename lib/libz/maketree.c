@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* maketree.c -- make inffixed.h table for decoding fixed codes  * Copyright (C) 1998 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h   */
+comment|/* maketree.c -- make inffixed.h table for decoding fixed codes  * Copyright (C) 1995-2002 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h   */
 end_comment
 
 begin_include
