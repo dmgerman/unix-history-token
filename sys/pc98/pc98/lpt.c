@@ -4266,6 +4266,15 @@ name|IFF_RUNNING
 expr_stmt|;
 break|break;
 block|}
+ifdef|#
+directive|ifdef
+name|PC98
+comment|/* XXX */
+return|return
+name|ENOBUFS
+return|;
+else|#
+directive|else
 if|if
 condition|(
 operator|(
@@ -4346,6 +4355,8 @@ name|IFF_RUNNING
 expr_stmt|;
 block|}
 break|break;
+endif|#
+directive|endif
 case|case
 name|SIOCSIFMTU
 case|:
@@ -5622,6 +5633,9 @@ operator|=
 name|splhigh
 argument_list|()
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|PC98
 comment|/* Suspend (on laptops) or receive-errors might have taken us offline */
 name|outb
 argument_list|(
@@ -5630,6 +5644,8 @@ argument_list|,
 name|LPC_ENA
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|ifp
