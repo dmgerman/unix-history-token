@@ -1034,20 +1034,44 @@ directive|include
 file|<ctype.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|isascii
-end_ifndef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
 
 begin_define
 define|#
 directive|define
-name|isascii
+name|ISASCII
 parameter_list|(
 name|c
 parameter_list|)
 value|1
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ISASCII
+parameter_list|(
+name|c
+parameter_list|)
+value|isascii (c)
 end_define
 
 begin_endif
@@ -1068,7 +1092,7 @@ name|ISBLANK
 parameter_list|(
 name|c
 parameter_list|)
-value|(isascii (c)&& isblank (c))
+value|(ISASCII (c)&& isblank (c))
 end_define
 
 begin_else
@@ -1104,7 +1128,7 @@ name|ISGRAPH
 parameter_list|(
 name|c
 parameter_list|)
-value|(isascii (c)&& isgraph (c))
+value|(ISASCII (c)&& isgraph (c))
 end_define
 
 begin_else
@@ -1119,7 +1143,7 @@ name|ISGRAPH
 parameter_list|(
 name|c
 parameter_list|)
-value|(isascii (c)&& isprint (c)&& !isspace (c))
+value|(ISASCII (c)&& isprint (c)&& !isspace (c))
 end_define
 
 begin_endif
@@ -1134,7 +1158,7 @@ name|ISPRINT
 parameter_list|(
 name|c
 parameter_list|)
-value|(isascii (c)&& isprint (c))
+value|(ISASCII (c)&& isprint (c))
 end_define
 
 begin_define
@@ -1144,7 +1168,7 @@ name|ISDIGIT
 parameter_list|(
 name|c
 parameter_list|)
-value|(isascii (c)&& isdigit (c))
+value|(ISASCII (c)&& isdigit (c))
 end_define
 
 begin_define
@@ -1154,7 +1178,7 @@ name|ISALNUM
 parameter_list|(
 name|c
 parameter_list|)
-value|(isascii (c)&& isalnum (c))
+value|(ISASCII (c)&& isalnum (c))
 end_define
 
 begin_define
@@ -1164,7 +1188,7 @@ name|ISALPHA
 parameter_list|(
 name|c
 parameter_list|)
-value|(isascii (c)&& isalpha (c))
+value|(ISASCII (c)&& isalpha (c))
 end_define
 
 begin_define
@@ -1174,7 +1198,7 @@ name|ISCNTRL
 parameter_list|(
 name|c
 parameter_list|)
-value|(isascii (c)&& iscntrl (c))
+value|(ISASCII (c)&& iscntrl (c))
 end_define
 
 begin_define
@@ -1184,7 +1208,7 @@ name|ISLOWER
 parameter_list|(
 name|c
 parameter_list|)
-value|(isascii (c)&& islower (c))
+value|(ISASCII (c)&& islower (c))
 end_define
 
 begin_define
@@ -1194,7 +1218,7 @@ name|ISPUNCT
 parameter_list|(
 name|c
 parameter_list|)
-value|(isascii (c)&& ispunct (c))
+value|(ISASCII (c)&& ispunct (c))
 end_define
 
 begin_define
@@ -1204,7 +1228,7 @@ name|ISSPACE
 parameter_list|(
 name|c
 parameter_list|)
-value|(isascii (c)&& isspace (c))
+value|(ISASCII (c)&& isspace (c))
 end_define
 
 begin_define
@@ -1214,7 +1238,7 @@ name|ISUPPER
 parameter_list|(
 name|c
 parameter_list|)
-value|(isascii (c)&& isupper (c))
+value|(ISASCII (c)&& isupper (c))
 end_define
 
 begin_define
@@ -1224,7 +1248,7 @@ name|ISXDIGIT
 parameter_list|(
 name|c
 parameter_list|)
-value|(isascii (c)&& isxdigit (c))
+value|(ISASCII (c)&& isxdigit (c))
 end_define
 
 end_unit
