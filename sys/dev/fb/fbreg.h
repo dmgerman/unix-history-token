@@ -611,33 +611,9 @@ parameter_list|)
 function_decl|;
 end_typedef
 
-begin_define
-define|#
-directive|define
-name|V_DISPLAY_ON
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_DISPLAY_BLANK
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_DISPLAY_STAND_BY
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_DISPLAY_SUSPEND
-value|3
-end_define
+begin_comment
+comment|/* defined in sys/fbio.h #define V_DISPLAY_ON		0 #define V_DISPLAY_BLANK		1 #define V_DISPLAY_STAND_BY	2 #define V_DISPLAY_SUSPEND	3 */
+end_comment
 
 begin_typedef
 typedef|typedef

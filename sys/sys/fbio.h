@@ -578,9 +578,12 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/*	FBIOSATTR	_IOW('F', 5, struct fbsattr) -- unsupported */
-end_comment
+begin_define
+define|#
+directive|define
+name|FBIOSATTR
+value|_IOW('F', 5, struct fbsattr)
+end_define
 
 begin_define
 define|#
@@ -619,6 +622,17 @@ define|#
 directive|define
 name|FBIOGVIDEO
 value|_IOR('F', 8, int)
+end_define
+
+begin_comment
+comment|/* vertical retrace */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FBIOVERTICAL
+value|_IO('F', 9)
 end_define
 
 begin_comment
@@ -790,6 +804,202 @@ define|#
 directive|define
 name|FBIOGCURMAX
 value|_IOR('F', 28, struct fbcurpos)
+end_define
+
+begin_comment
+comment|/*  * Video board information  */
+end_comment
+
+begin_struct
+struct|struct
+name|brd_info
+block|{
+name|u_short
+name|accessible_width
+decl_stmt|;
+comment|/* accessible bytes in scanline */
+name|u_short
+name|accessible_height
+decl_stmt|;
+comment|/* number of accessible scanlines */
+name|u_short
+name|line_bytes
+decl_stmt|;
+comment|/* number of bytes/scanline */
+name|u_short
+name|hdb_capable
+decl_stmt|;
+comment|/* can this thing hardware db? */
+name|u_short
+name|vmsize
+decl_stmt|;
+comment|/* video memory size */
+name|u_char
+name|boardrev
+decl_stmt|;
+comment|/* board revision # */
+name|u_char
+name|pad0
+decl_stmt|;
+name|u_long
+name|pad1
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|FBIOGXINFO
+value|_IOR('F', 39, struct brd_info)
+end_define
+
+begin_comment
+comment|/*  * Monitor information  */
+end_comment
+
+begin_struct
+struct|struct
+name|mon_info
+block|{
+name|u_long
+name|mon_type
+decl_stmt|;
+comment|/* bit array */
+define|#
+directive|define
+name|MON_TYPE_STEREO
+value|0x8
+comment|/* stereo display */
+define|#
+directive|define
+name|MON_TYPE_0_OFFSET
+value|0x4
+comment|/* black level 0 ire instead of 7.5 */
+define|#
+directive|define
+name|MON_TYPE_OVERSCAN
+value|0x2
+comment|/* overscan */
+define|#
+directive|define
+name|MON_TYPE_GRAY
+value|0x1
+comment|/* greyscale monitor */
+name|u_long
+name|pixfreq
+decl_stmt|;
+comment|/* pixel frequency in Hz */
+name|u_long
+name|hfreq
+decl_stmt|;
+comment|/* horizontal freq in Hz */
+name|u_long
+name|vfreq
+decl_stmt|;
+comment|/* vertical freq in Hz */
+name|u_long
+name|vsync
+decl_stmt|;
+comment|/* vertical sync in scanlines */
+name|u_long
+name|hsync
+decl_stmt|;
+comment|/* horizontal sync in pixels */
+comment|/* these are in pixel units */
+name|u_short
+name|hfporch
+decl_stmt|;
+comment|/* horizontal front porch */
+name|u_short
+name|hbporch
+decl_stmt|;
+comment|/* horizontal back porch */
+name|u_short
+name|vfporch
+decl_stmt|;
+comment|/* vertical front porch */
+name|u_short
+name|vbporch
+decl_stmt|;
+comment|/* vertical back porch */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|FBIOMONINFO
+value|_IOR('F', 40, struct mon_info)
+end_define
+
+begin_comment
+comment|/*  * Color map I/O.  */
+end_comment
+
+begin_struct
+struct|struct
+name|fbcmap_i
+block|{
+name|unsigned
+name|int
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|FB_CMAP_BLOCK
+value|(1<< 0)
+comment|/* wait for vertical refresh */
+define|#
+directive|define
+name|FB_CMAP_KERNEL
+value|(1<< 1)
+comment|/* called within kernel */
+name|int
+name|id
+decl_stmt|;
+comment|/* color map id */
+name|int
+name|index
+decl_stmt|;
+comment|/* first element (0 origin) */
+name|int
+name|count
+decl_stmt|;
+comment|/* number of elements */
+name|u_char
+modifier|*
+name|red
+decl_stmt|;
+comment|/* red color map elements */
+name|u_char
+modifier|*
+name|green
+decl_stmt|;
+comment|/* green color map elements */
+name|u_char
+modifier|*
+name|blue
+decl_stmt|;
+comment|/* blue color map elements */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|FBIOPUTCMAPI
+value|_IOW('F', 41, struct fbcmap_i)
+end_define
+
+begin_define
+define|#
+directive|define
+name|FBIOGETCMAPI
+value|_IOW('F', 42, struct fbcmap_i)
 end_define
 
 begin_comment
@@ -1036,6 +1246,10 @@ name|V_ADP_VESA
 value|(1<< 7)
 define|#
 directive|define
+name|V_ADP_BOOTDISPLAY
+value|(1<< 8)
+define|#
+directive|define
 name|V_ADP_PROBED
 value|(1<< 16)
 define|#
@@ -1046,6 +1260,10 @@ define|#
 directive|define
 name|V_ADP_REGISTERED
 value|(1<< 18)
+define|#
+directive|define
+name|V_ADP_ATTACHED
+value|(1<< 19)
 name|int
 name|va_io_base
 decl_stmt|;
@@ -2430,6 +2648,45 @@ define|#
 directive|define
 name|FBIO_SETPALETTE
 value|_IOW('F', 114, video_color_palette_t)
+end_define
+
+begin_comment
+comment|/* blank display */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|V_DISPLAY_ON
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_DISPLAY_BLANK
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_DISPLAY_STAND_BY
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_DISPLAY_SUSPEND
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|FBIO_BLANK
+value|_IOW('F', 115, int)
 end_define
 
 begin_endif
