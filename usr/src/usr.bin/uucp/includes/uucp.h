@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)uucp.h	5.13	%G%	*/
+comment|/*	@(#)uucp.h	5.14	%G%	*/
 end_comment
 
 begin_include
@@ -80,8 +80,14 @@ begin_comment
 comment|/*  * Define the various kinds of connections to include.  * The complete list is in the condevs array in condevs.c  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ATT2224
+end_define
+
 begin_comment
-comment|/* #define ATT2224		/* AT&T 2224 */
+comment|/* AT&T 2224 */
 end_comment
 
 begin_define
@@ -91,27 +97,51 @@ name|BSDTCP
 end_define
 
 begin_comment
-comment|/* 4.2bsd or 2.9bsd TCP/IP */
+comment|/* 4.2bsd TCP/IP */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CDS224
+end_define
+
 begin_comment
-comment|/* #define CDS224		/* Concord Data Systems 2400 */
+comment|/* Concord Data Systems 2400 */
 end_comment
 
 begin_comment
 comment|/* #define DATAKIT	/* ATT's datakit */
 end_comment
 
-begin_comment
-comment|/* #define DF02		/* Dec's DF02/DF03 */
-end_comment
+begin_define
+define|#
+directive|define
+name|DF02
+end_define
 
 begin_comment
-comment|/* #define DF112		/* Dec's DF112 */
+comment|/* Dec's DF02/DF03 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DF112
+end_define
+
 begin_comment
-comment|/* #define DN11		/* "standard" DEC dialer */
+comment|/* Dec's DF112 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DN11
+end_define
+
+begin_comment
+comment|/* "standard" DEC dialer */
 end_comment
 
 begin_define
@@ -124,32 +154,62 @@ begin_comment
 comment|/* Hayes' Smartmodem */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|HAYES2400
+end_define
+
 begin_comment
-comment|/* #define HAYES2400	/* Hayes' 2400 baud Smartmodem */
+comment|/* Hayes' 2400 baud Smartmodem */
 end_comment
 
 begin_comment
 comment|/* #define MICOM	/* Micom Mux port */
 end_comment
 
-begin_comment
-comment|/* #define NOVATION	/* Novation modem */
-end_comment
+begin_define
+define|#
+directive|define
+name|NOVATION
+end_define
 
 begin_comment
-comment|/* #define PAD		/* X.25 PAD */
+comment|/* Novation modem */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PAD
+end_define
+
 begin_comment
-comment|/* #define PENRIL		/* PENRIL Dialer */
+comment|/* X.25 PAD */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PENRIL
+end_define
+
+begin_comment
+comment|/* PENRIL Dialer */
 end_comment
 
 begin_comment
 comment|/* #define PNET		/* Purdue network */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|RVMACS
+end_define
+
 begin_comment
-comment|/* #define RVMACS		/* Racal-Vadic MACS  820 dialer, 831 adaptor */
+comment|/* Racal-Vadic MACS  820 dialer, 831 adaptor */
 end_comment
 
 begin_comment
@@ -170,28 +230,64 @@ begin_comment
 comment|/* USRobotics Courier 2400 */
 end_comment
 
-begin_comment
-comment|/* #define VA212		/* Racal-Vadic 212 */
-end_comment
+begin_define
+define|#
+directive|define
+name|VA212
+end_define
 
 begin_comment
-comment|/* #define VA811S		/* Racal-Vadic 811S dialer, 831 adaptor */
+comment|/* Racal-Vadic 212 */
 end_comment
 
-begin_comment
-comment|/* #define VA820		/* Racal-Vadic 820 dialer, 831 adaptor */
-end_comment
+begin_define
+define|#
+directive|define
+name|VA811S
+end_define
 
 begin_comment
-comment|/* #define VADIC		/* Racal-Vadic 345x */
+comment|/* Racal-Vadic 811S dialer, 831 adaptor */
 end_comment
 
-begin_comment
-comment|/* #define VENTEL		/* Ventel Dialer */
-end_comment
+begin_define
+define|#
+directive|define
+name|VA820
+end_define
 
 begin_comment
-comment|/* #define VMACS		/* Racal-Vadic MACS  811 dialer, 831 adaptor */
+comment|/* Racal-Vadic 820 dialer, 831 adaptor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VADIC
+end_define
+
+begin_comment
+comment|/* Racal-Vadic 345x */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VENTEL
+end_define
+
+begin_comment
+comment|/* Ventel Dialer */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VMACS
+end_define
+
+begin_comment
+comment|/* Racal-Vadic MACS  811 dialer, 831 adaptor */
 end_comment
 
 begin_if
@@ -405,29 +501,16 @@ begin_comment
 comment|/*  *	If you want to use the same modem for dialing in and out define  *	DIALINOUT to be the localtion of the acucntrl program  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|DIALINOUT
-value|"/usr/lib/uucp/acucntrl"
-end_define
-
 begin_comment
-comment|/**/
+comment|/* #define DIALINOUT	"/usr/lib/uucp/acucntrl" /**/
 end_comment
 
 begin_comment
 comment|/*  *	If you want all ACU lines to be DIALINOUT, define ALLACUINOUT  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|ALLACUINOUT
-end_define
-
 begin_comment
-comment|/**/
+comment|/* #define ALLACUINOUT	/**/
 end_comment
 
 begin_comment
@@ -489,19 +572,19 @@ begin_comment
 comment|/*  * Traditionally LCK (lock) files have been kept in /usr/spool/uucp.  * If you want that define LOCKDIR to be ".".  * If you want the locks kept in a subdirectory, define LOCKDIR as "LCK".  * Good news about LCK. subdirectory: the directory can be mode 777 so  * unprivileged programs can share the uucp locking system,  * and the subdirectory keeps down clutter in the main directory.  * The BAD news: you have to change 'tip' and another programs that  * know where the LCK files are kept, and you have to change your /etc/rc  * if your rc cleans out the lock files (as it should).  */
 end_comment
 
+begin_comment
+comment|/* #define	LOCKDIR	"LCK"	/**/
+end_comment
+
 begin_define
 define|#
 directive|define
 name|LOCKDIR
-value|"LCK"
+value|"."
 end_define
 
 begin_comment
 comment|/**/
-end_comment
-
-begin_comment
-comment|/* #define LOCKDIR	"." /**/
 end_comment
 
 begin_comment
@@ -530,15 +613,8 @@ begin_comment
 comment|/*  * If you want the logfile stored in a file for each site instead  * of one file  * define LOGBYSITE as the directory to put the files in  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|LOGBYSITE
-value|"/usr/spool/uucp/LOG"
-end_define
-
 begin_comment
-comment|/**/
+comment|/* #define LOGBYSITE	"/usr/spool/uucp/LOG" /**/
 end_comment
 
 begin_comment
