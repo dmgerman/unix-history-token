@@ -11,7 +11,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: /b/source/CVS/src/sbin/mount_isofs/mount_isofs.c,v 1.5 1993/07/19 13:31:39 cgd Exp $"
+literal|"$Header: /a/cvs/386BSD/src/sbin/mount_isofs/mount_isofs.c,v 1.2 1993/07/20 03:33:49 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,12 +31,6 @@ include|#
 directive|include
 file|<sys/types.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|ISOFS
-end_define
 
 begin_include
 include|#
@@ -170,7 +164,7 @@ condition|)
 block|{
 name|opts
 operator||=
-name|ISOFSMNT_NORRIP
+name|MNT_NORRIP
 expr_stmt|;
 name|argc
 operator|--
