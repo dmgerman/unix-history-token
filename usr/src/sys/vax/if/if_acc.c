@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_acc.c	6.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)if_acc.c	6.7 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -739,6 +739,8 @@ operator|)
 name|btoc
 argument_list|(
 name|IMPMTU
+operator|+
+literal|2
 argument_list|)
 argument_list|)
 operator|==
@@ -876,7 +878,11 @@ name|iwc
 operator|=
 operator|-
 operator|(
+operator|(
 name|IMPMTU
+operator|+
+literal|2
+operator|)
 operator|>>
 literal|1
 operator|)
@@ -1623,6 +1629,8 @@ name|len
 operator|=
 name|IMPMTU
 operator|+
+literal|2
+operator|+
 operator|(
 name|addr
 operator|->
@@ -1640,11 +1648,15 @@ operator|||
 name|len
 operator|>
 name|IMPMTU
+operator|+
+literal|2
 condition|)
 block|{
 name|printf
 argument_list|(
 literal|"acc%d: bad length=%d\n"
+argument_list|,
+name|unit
 argument_list|,
 name|len
 argument_list|)
@@ -1792,7 +1804,11 @@ name|iwc
 operator|=
 operator|-
 operator|(
+operator|(
 name|IMPMTU
+operator|+
+literal|2
+operator|)
 operator|>>
 literal|1
 operator|)
