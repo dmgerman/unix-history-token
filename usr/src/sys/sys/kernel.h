@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kernel.h	7.9 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kernel.h	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -147,31 +147,6 @@ begin_comment
 comment|/* once a second sleep address */
 end_comment
 
-begin_struct
-struct|struct
-name|loadavg
-block|{
-name|fixpt_t
-name|ldavg
-index|[
-literal|3
-index|]
-decl_stmt|;
-name|long
-name|fscale
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|loadavg
-name|averunnable
-decl_stmt|;
-end_decl_stmt
-
 begin_if
 if|#
 directive|if
@@ -206,10 +181,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* COMPAT_43 */
-end_comment
 
 begin_ifdef
 ifdef|#

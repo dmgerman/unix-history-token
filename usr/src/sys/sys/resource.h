@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)resource.h	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)resource.h	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -307,11 +307,45 @@ block|}
 struct|;
 end_struct
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_comment
+comment|/* Load average structure. */
+end_comment
+
+begin_struct
+struct|struct
+name|loadavg
+block|{
+name|fixpt_t
+name|ldavg
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|long
+name|fscale
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|KERNEL
-end_ifndef
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|loadavg
+name|averunnable
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_include
 include|#
@@ -423,7 +457,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !KERNEL */
+comment|/* KERNEL */
 end_comment
 
 begin_endif
