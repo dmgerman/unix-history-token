@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_send.c,v 1.20 1997/09/16 06:03:54 peter Exp $"
+literal|"$Id: res_send.c,v 1.21 1998/05/02 13:11:02 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -2593,6 +2593,12 @@ name|tv_sec
 operator|=
 literal|1
 expr_stmt|;
+name|timeout
+operator|.
+name|tv_usec
+operator|=
+literal|0
+expr_stmt|;
 block|}
 name|wait
 label|:
@@ -2917,6 +2923,38 @@ argument_list|(
 name|dsmaskp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|n
+operator|<
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|EINTR
+condition|)
+goto|goto
+name|wait
+goto|;
+name|Perror
+argument_list|(
+name|stderr
+argument_list|,
+literal|"select"
+argument_list|,
+name|errno
+argument_list|)
+expr_stmt|;
+name|res_close
+argument_list|()
+expr_stmt|;
+goto|goto
+name|next_ns
+goto|;
+block|}
 block|}
 if|if
 condition|(
