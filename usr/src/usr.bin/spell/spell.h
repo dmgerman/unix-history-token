@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)spell.h	4.1	%G%	*/
+comment|/*	@(#)spell.h	4.2	%G%	*/
 end_comment
 
 begin_include
@@ -158,20 +158,29 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
+begin_macro
 name|prime
 argument_list|(
-name|argc
+argument|argc
 argument_list|,
-name|argv
+argument|argv
 argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+name|argc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|register
 name|char
-operator|*
-operator|*
+modifier|*
+modifier|*
 name|argv
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{

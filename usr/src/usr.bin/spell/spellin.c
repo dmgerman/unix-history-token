@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)spellin.c	4.1 %G%"
+literal|"@(#)spellin.c	4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,6 +37,9 @@ name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
 modifier|*

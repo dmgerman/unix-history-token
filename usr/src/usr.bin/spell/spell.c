@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)spell.c	4.3 %G%"
+literal|"@(#)spell.c	4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -881,6 +881,9 @@ name|argc
 parameter_list|,
 name|argv
 parameter_list|)
+name|int
+name|argc
+decl_stmt|;
 name|char
 modifier|*
 modifier|*
@@ -1288,6 +1291,12 @@ name|ep
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|lev
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 specifier|register
@@ -1537,6 +1546,12 @@ name|a
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|lev
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 return|return
@@ -1584,6 +1599,12 @@ name|d
 decl_stmt|,
 modifier|*
 name|a
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|lev
 decl_stmt|;
 end_decl_stmt
 
@@ -1665,6 +1686,12 @@ name|a
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|lev
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 if|if
@@ -1723,6 +1750,12 @@ name|a
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|lev
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 operator|*
@@ -1771,6 +1804,12 @@ name|d
 decl_stmt|,
 modifier|*
 name|a
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|lev
 decl_stmt|;
 end_decl_stmt
 
@@ -1848,6 +1887,12 @@ name|a
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|lev
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 if|if
@@ -1915,6 +1960,12 @@ name|d
 decl_stmt|,
 modifier|*
 name|a
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|lev
 decl_stmt|;
 end_decl_stmt
 
@@ -1990,6 +2041,12 @@ name|a
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|lev
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 operator|*
@@ -2038,6 +2095,12 @@ name|d
 decl_stmt|,
 modifier|*
 name|a
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|lev
 decl_stmt|;
 end_decl_stmt
 
@@ -2107,6 +2170,12 @@ name|d
 decl_stmt|,
 modifier|*
 name|a
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|lev
 decl_stmt|;
 end_decl_stmt
 
@@ -2211,6 +2280,12 @@ name|a
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|lev
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 name|ep
@@ -2269,6 +2344,12 @@ name|d
 decl_stmt|,
 modifier|*
 name|a
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|lev
 decl_stmt|;
 end_decl_stmt
 
@@ -2354,6 +2435,12 @@ name|d
 decl_stmt|,
 modifier|*
 name|a
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|lev
 decl_stmt|;
 end_decl_stmt
 
@@ -2561,6 +2648,12 @@ name|d
 decl_stmt|,
 modifier|*
 name|a
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|lev
 decl_stmt|;
 end_decl_stmt
 
@@ -2814,6 +2907,12 @@ name|a
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|lev
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 specifier|register
@@ -2850,7 +2949,7 @@ name|a
 expr_stmt|;
 if|if
 condition|(
-name|putw
+name|putword
 argument_list|(
 name|word
 argument_list|,
@@ -2914,7 +3013,7 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
-name|putw
+name|putword
 argument_list|(
 name|bp
 argument_list|,
@@ -2958,7 +3057,7 @@ block|}
 end_block
 
 begin_macro
-name|putw
+name|putword
 argument_list|(
 argument|bp
 argument_list|,
@@ -2975,6 +3074,12 @@ name|bp
 decl_stmt|,
 modifier|*
 name|ep
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|lev
 decl_stmt|;
 end_decl_stmt
 
@@ -3331,6 +3436,12 @@ argument_list|(
 argument|c
 argument_list|)
 end_macro
+
+begin_decl_stmt
+name|int
+name|c
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
