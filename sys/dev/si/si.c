@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Device driver for Specialix range (SI/XIO) of serial line multiplexors.  *  * Copyright (C) 1990, 1992 Specialix International,  * Copyright (C) 1993, Andy Rutter<andy@acronym.co.uk>  * Copyright (C) 1995, Peter Wemm<peter@haywire.dialix.com>  *  * Originally derived from:	SunOS 4.x version  * Ported from BSDI version to FreeBSD by Peter Wemm.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notices, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notices, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Andy Rutter of  *	Advanced Methods and Tools Ltd. based on original information  *	from Specialix International.  * 4. Neither the name of Advanced Methods and Tools, nor Specialix  *    International may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN  * NO EVENT SHALL THE AUTHORS BE LIABLE.  *  *	$Id: si.c,v 1.29 1995/12/14 14:29:10 peter Exp $  */
+comment|/*  * Device driver for Specialix range (SI/XIO) of serial line multiplexors.  *  * Copyright (C) 1990, 1992 Specialix International,  * Copyright (C) 1993, Andy Rutter<andy@acronym.co.uk>  * Copyright (C) 1995, Peter Wemm<peter@haywire.dialix.com>  *  * Originally derived from:	SunOS 4.x version  * Ported from BSDI version to FreeBSD by Peter Wemm.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notices, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notices, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Andy Rutter of  *	Advanced Methods and Tools Ltd. based on original information  *	from Specialix International.  * 4. Neither the name of Advanced Methods and Tools, nor Specialix  *    International may be used to endorse or promote products derived from  *    this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY ``AS IS'' AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN  * NO EVENT SHALL THE AUTHORS BE LIABLE.  *  *	$Id: si.c,v 1.30 1995/12/16 14:03:02 peter Exp $  */
 end_comment
 
 begin_ifndef
@@ -877,6 +877,10 @@ literal|32
 index|]
 struct|;
 comment|/* what is the max per card? */
+name|void
+modifier|*
+name|control_token
+decl_stmt|;
 endif|#
 directive|endif
 block|}
@@ -3610,7 +3614,7 @@ for|for
 control|(
 name|x
 operator|=
-literal|1
+literal|0
 init|;
 name|x
 operator|<=
@@ -3620,6 +3624,13 @@ name|x
 operator|++
 control|)
 block|{
+name|y
+operator|=
+name|x
+operator|+
+literal|1
+expr_stmt|;
+comment|/* For sync with the manuals that start at 1 */
 name|sprintf
 argument_list|(
 name|name
@@ -3628,14 +3639,14 @@ literal|"ttyA%c%c"
 argument_list|,
 name|chardev
 index|[
-name|x
+name|y
 operator|/
 literal|10
 index|]
 argument_list|,
 name|chardev
 index|[
-name|x
+name|y
 operator|%
 literal|10
 index|]
@@ -3678,14 +3689,14 @@ literal|"cuaA%c%c"
 argument_list|,
 name|chardev
 index|[
-name|x
+name|y
 operator|/
 literal|10
 index|]
 argument_list|,
 name|chardev
 index|[
-name|x
+name|y
 operator|%
 literal|10
 index|]
@@ -3730,14 +3741,14 @@ literal|"ttyiA%c%c"
 argument_list|,
 name|chardev
 index|[
-name|x
+name|y
 operator|/
 literal|10
 index|]
 argument_list|,
 name|chardev
 index|[
-name|x
+name|y
 operator|%
 literal|10
 index|]
@@ -3782,14 +3793,14 @@ literal|"ttylA%c%c"
 argument_list|,
 name|chardev
 index|[
-name|x
+name|y
 operator|/
 literal|10
 index|]
 argument_list|,
 name|chardev
 index|[
-name|x
+name|y
 operator|%
 literal|10
 index|]
@@ -3827,7 +3838,30 @@ literal|0600
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* XXX: no global yet */
+name|sc
+operator|->
+name|control_token
+operator|=
+name|devfs_add_devsw
+argument_list|(
+literal|"/"
+argument_list|,
+literal|"si_control"
+argument_list|,
+operator|&
+name|si_cdevsw
+argument_list|,
+literal|0x40000
+argument_list|,
+name|DV_CHR
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0600
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 return|return
