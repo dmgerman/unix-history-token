@@ -451,7 +451,11 @@ name|a
 argument_list|,
 name|errno
 argument_list|,
-literal|"Failed to open"
+literal|"Failed to open '%s'"
+argument_list|,
+name|mine
+operator|->
+name|filename
 argument_list|)
 expr_stmt|;
 return|return
