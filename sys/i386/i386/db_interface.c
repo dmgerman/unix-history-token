@@ -832,8 +832,10 @@ condition|)
 block|{
 name|ptep0
 operator|=
-name|vtopte
+name|pmap_pte
 argument_list|(
+name|kernel_pmap
+argument_list|,
 name|addr
 argument_list|)
 expr_stmt|;
@@ -883,8 +885,10 @@ condition|)
 block|{
 name|ptep1
 operator|=
-name|vtopte
+name|pmap_pte
 argument_list|(
+name|kernel_pmap
+argument_list|,
 name|addr1
 argument_list|)
 expr_stmt|;
@@ -925,8 +929,10 @@ condition|)
 block|{
 name|ptep1
 operator|=
-name|vtopte
+name|pmap_pte
 argument_list|(
+name|kernel_pmap
+argument_list|,
 name|addr1
 argument_list|)
 expr_stmt|;
