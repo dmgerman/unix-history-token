@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/************************************************************************** ** **  $Id: pcibus.c,v 1.15 1995/09/22 19:10:54 se Exp $ ** **  pci bus subroutines for i386 architecture. ** **  FreeBSD ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
+comment|/************************************************************************** ** **  $Id: pcibus.c,v 1.16 1995/10/09 21:56:24 se Exp $ ** **  pci bus subroutines for i386 architecture. ** **  FreeBSD ** **------------------------------------------------------------------------- ** ** Copyright (c) 1994 Wolfgang Stanglmeier.  All rights reserved. ** ** Redistribution and use in source and binary forms, with or without ** modification, are permitted provided that the following conditions ** are met: ** 1. Redistributions of source code must retain the above copyright **    notice, this list of conditions and the following disclaimer. ** 2. Redistributions in binary form must reproduce the above copyright **    notice, this list of conditions and the following disclaimer in the **    documentation and/or other materials provided with the distribution. ** 3. The name of the author may not be used to endorse or promote products **    derived from this software without specific prior written permission. ** ** THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR ** IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES ** OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. ** IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, ** INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT ** NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, ** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. ** *************************************************************************** */
 end_comment
 
 begin_include
@@ -314,7 +314,7 @@ begin_define
 define|#
 directive|define
 name|CONF1_ENABLE_MSK1
-value|0x80000000ul
+value|0x80000001ul
 end_define
 
 begin_define
@@ -467,59 +467,19 @@ name|unsigned
 name|long
 name|mode1res
 decl_stmt|,
-name|oldval
+name|oldval1
 decl_stmt|;
 name|unsigned
 name|char
 name|mode2res
+decl_stmt|,
+name|oldval2
 decl_stmt|;
-name|oldval
+name|oldval1
 operator|=
 name|inl
 argument_list|(
 name|CONF1_ADDR_PORT
-argument_list|)
-expr_stmt|;
-name|outl
-argument_list|(
-name|CONF1_ADDR_PORT
-argument_list|,
-name|CONF1_ENABLE_CHK
-argument_list|)
-expr_stmt|;
-name|outb
-argument_list|(
-name|CONF2_ENABLE_PORT
-argument_list|,
-name|CONF2_ENABLE_CHK
-argument_list|)
-expr_stmt|;
-name|mode1res
-operator|=
-name|inl
-argument_list|(
-name|CONF1_ADDR_PORT
-argument_list|)
-expr_stmt|;
-name|mode2res
-operator|=
-name|inb
-argument_list|(
-name|CONF2_ENABLE_PORT
-argument_list|)
-expr_stmt|;
-name|outb
-argument_list|(
-name|CONF2_ENABLE_PORT
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|outl
-argument_list|(
-name|CONF1_ADDR_PORT
-argument_list|,
-name|oldval
 argument_list|)
 expr_stmt|;
 if|if
@@ -529,41 +489,24 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"pcibus_setup(1):\tmode1res=0x%08lx (0x%08lx), "
-literal|"mode2res=0x%02x (0x%02x)\n"
+literal|"pcibus_setup(1):\tmode1 addr port (0x0cf8) is 0x%08lx\n"
 argument_list|,
-name|mode1res
-argument_list|,
-name|CONF1_ENABLE_CHK
-argument_list|,
-operator|(
-name|int
-operator|)
-name|mode2res
-argument_list|,
-name|CONF2_ENABLE_CHK
+name|oldval1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*--------------------------------------- 	**	No PCI, if neither mode1res nor mode2res could be read back 	**--------------------------------------- 	*/
+comment|/*--------------------------------------- 	**      Assume configuration mechanism 1 for now ... 	**--------------------------------------- 	*/
 if|if
 condition|(
 operator|(
-name|mode1res
-operator|!=
-name|CONF1_ENABLE_CHK
+name|oldval1
+operator|&
+name|CONF1_ENABLE
 operator|)
-operator|&&
-operator|(
-name|mode2res
-operator|!=
-name|CONF2_ENABLE_CHK
-operator|)
+operator|==
+literal|0
 condition|)
 block|{
-return|return;
-block|}
-comment|/*--------------------------------------- 	**      Assume configuration mechanism 1 for now ... 	**--------------------------------------- 	*/
 name|pci_mechanism
 operator|=
 literal|1
@@ -599,7 +542,7 @@ name|outl
 argument_list|(
 name|CONF1_ADDR_PORT
 argument_list|,
-name|oldval
+name|oldval1
 argument_list|)
 expr_stmt|;
 if|if
@@ -608,7 +551,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"pcibus_setup(2):\tmode1res=0x%08lx (0x%08lx)\n"
+literal|"pcibus_setup(1a):\tmode1res=0x%08lx (0x%08lx)\n"
 argument_list|,
 name|mode1res
 argument_list|,
@@ -635,13 +578,6 @@ argument_list|,
 name|CONF1_ENABLE_CHK1
 argument_list|)
 expr_stmt|;
-name|outl
-argument_list|(
-name|CONF1_DATA_PORT
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|mode1res
 operator|=
 name|inl
@@ -653,7 +589,7 @@ name|outl
 argument_list|(
 name|CONF1_ADDR_PORT
 argument_list|,
-name|oldval
+name|oldval1
 argument_list|)
 expr_stmt|;
 if|if
@@ -662,7 +598,7 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"pcibus_setup(3):\tmode1res=0x%08lx (0x%08lx)\n"
+literal|"pcibus_setup(1b):\tmode1res=0x%08lx (0x%08lx)\n"
 argument_list|,
 name|mode1res
 argument_list|,
@@ -688,16 +624,39 @@ condition|)
 return|return;
 block|}
 empty_stmt|;
+block|}
 comment|/*--------------------------------------- 	**      Try configuration mechanism 2 ... 	**--------------------------------------- 	*/
+name|oldval2
+operator|=
+name|inb
+argument_list|(
+name|CONF2_ENABLE_PORT
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bootverbose
 condition|)
+block|{
 name|printf
 argument_list|(
-literal|"pcibus_setup(4):\tnow trying mechanism 2\n"
+literal|"pcibus_setup(2):\tmode 2 enable port (0x0cf8) is 0x%02x\n"
+argument_list|,
+name|oldval2
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+name|oldval2
+operator|&
+literal|0xf0
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 name|pci_mechanism
 operator|=
 literal|2
@@ -706,12 +665,64 @@ name|pci_maxdevice
 operator|=
 literal|16
 expr_stmt|;
+name|outb
+argument_list|(
+name|CONF2_ENABLE_PORT
+argument_list|,
+name|CONF2_ENABLE_CHK
+argument_list|)
+expr_stmt|;
+name|mode2res
+operator|=
+name|inb
+argument_list|(
+name|CONF2_ENABLE_PORT
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|CONF2_ENABLE_PORT
+argument_list|,
+name|oldval2
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"pcibus_setup(2a):\tmode2res=0x%02x (0x%02x)\n"
+argument_list|,
+name|mode2res
+argument_list|,
+name|CONF2_ENABLE_CHK
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mode2res
+operator|==
+name|CONF2_ENABLE_RES
+condition|)
+block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
+name|printf
+argument_list|(
+literal|"pcibus_setup(2a):\tnow trying mechanism 2\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pcibus_check
 argument_list|()
 condition|)
 return|return;
+block|}
+block|}
 comment|/*--------------------------------------- 	**      No PCI bus host bridge found 	**--------------------------------------- 	*/
 name|pci_mechanism
 operator|=
