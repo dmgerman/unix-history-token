@@ -27,11 +27,21 @@ begin_comment
 comment|/* not lint */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|lint
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SCCSID
+argument_list|)
+end_if
 
 begin_decl_stmt
 specifier|static
@@ -39,7 +49,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)test.c	5.2 (Berkeley) %G%"
+literal|"@(#)test.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,11 +59,11 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* not lint */
+comment|/* not lint&& not SCCSID */
 end_comment
 
 begin_comment
-comment|/*  * el.test.c: A little test program  */
+comment|/*  * test.c: A little test program  */
 end_comment
 
 begin_include
@@ -598,6 +608,14 @@ argument_list|,
 literal|"j"
 argument_list|,
 literal|"ed-next-line"
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+comment|/*      * Source the user's defaults file.      */
+name|el_source
+argument_list|(
+name|el
 argument_list|,
 name|NULL
 argument_list|)

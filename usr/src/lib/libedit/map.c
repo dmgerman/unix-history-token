@@ -3,11 +3,21 @@ begin_comment
 comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christos Zoulas of Cornell University.  *  * %sccs.include.redist.c%  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|lint
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SCCSID
+argument_list|)
+end_if
 
 begin_decl_stmt
 specifier|static
@@ -15,7 +25,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	5.1 (Berkeley) %G%"
+literal|"@(#)map.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,11 +35,11 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* not lint */
+comment|/* not lint&& not SCCSID */
 end_comment
 
 begin_comment
-comment|/*  * el.map.c: Editor function definitions   */
+comment|/*  * map.c: Editor function definitions   */
 end_comment
 
 begin_include
@@ -1231,7 +1241,7 @@ block|,
 comment|/* ^H */
 comment|/* BackSpace key */
 comment|/*   9 */
-name|ED_UNASSIGNED
+name|ED_INSERT
 block|,
 comment|/* ^I */
 comment|/* Tab Key  */
@@ -4195,7 +4205,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|term_bind_arrows
+name|term_bind_arrow
 argument_list|(
 name|el
 argument_list|)
@@ -4383,7 +4393,7 @@ argument_list|,
 name|XK_CMD
 argument_list|)
 expr_stmt|;
-name|term_bind_arrows
+name|term_bind_arrow
 argument_list|(
 name|el
 argument_list|)
@@ -5160,6 +5170,25 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|el
+operator|->
+name|el_outfile
+argument_list|,
+literal|"Arrow key bindings\n"
+argument_list|)
+expr_stmt|;
+name|term_print_arrow
+argument_list|(
+name|el
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -5219,10 +5248,14 @@ decl_stmt|;
 name|char
 modifier|*
 name|in
+init|=
+name|NULL
 decl_stmt|;
 name|char
 modifier|*
 name|out
+init|=
+name|NULL
 decl_stmt|;
 name|el_bindings_t
 modifier|*
@@ -5230,6 +5263,9 @@ name|bp
 decl_stmt|;
 name|int
 name|cmd
+decl_stmt|;
+name|int
+name|key
 decl_stmt|;
 if|if
 condition|(
@@ -5253,6 +5289,8 @@ name|ntype
 operator|=
 name|XK_CMD
 expr_stmt|;
+name|key
+operator|=
 name|remove
 operator|=
 literal|0
@@ -5327,6 +5365,14 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
+case|case
+literal|'k'
+case|:
+name|key
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'r'
 case|:
@@ -5449,6 +5495,19 @@ return|;
 block|}
 if|if
 condition|(
+name|key
+condition|)
+name|in
+operator|=
+name|argv
+index|[
+name|argc
+operator|++
+index|]
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 operator|(
 name|in
 operator|=
@@ -5494,6 +5553,26 @@ condition|(
 name|remove
 condition|)
 block|{
+if|if
+condition|(
+name|key
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|term_clear_arrow
+argument_list|(
+name|el
+argument_list|,
+name|in
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 if|if
 condition|(
 name|in
@@ -5563,6 +5642,18 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|key
+condition|)
+name|term_print_arrow
+argument_list|(
+name|el
+argument_list|,
+name|in
+argument_list|)
+expr_stmt|;
+else|else
 name|map_print_key
 argument_list|(
 name|el
@@ -5653,6 +5744,27 @@ operator|-
 literal|1
 return|;
 block|}
+if|if
+condition|(
+name|key
+condition|)
+name|term_set_arrow
+argument_list|(
+name|el
+argument_list|,
+name|in
+argument_list|,
+name|key_map_str
+argument_list|(
+name|el
+argument_list|,
+name|out
+argument_list|)
+argument_list|,
+name|ntype
+argument_list|)
+expr_stmt|;
+else|else
 name|key_add
 argument_list|(
 name|el
@@ -5734,6 +5846,28 @@ return|;
 block|}
 if|if
 condition|(
+name|key
+condition|)
+name|term_set_arrow
+argument_list|(
+name|el
+argument_list|,
+name|in
+argument_list|,
+name|key_map_str
+argument_list|(
+name|el
+argument_list|,
+name|out
+argument_list|)
+argument_list|,
+name|ntype
+argument_list|)
+expr_stmt|;
+else|else
+block|{
+if|if
+condition|(
 name|in
 index|[
 literal|1
@@ -5792,6 +5926,7 @@ index|]
 operator|=
 name|cmd
 expr_stmt|;
+block|}
 block|}
 break|break;
 default|default:

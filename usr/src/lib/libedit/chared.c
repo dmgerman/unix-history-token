@@ -3,11 +3,21 @@ begin_comment
 comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christos Zoulas of Cornell University.  *  * %sccs.include.redist.c%  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|lint
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SCCSID
+argument_list|)
+end_if
 
 begin_decl_stmt
 specifier|static
@@ -15,7 +25,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)chared.c	5.1 (Berkeley) %G%"
+literal|"@(#)chared.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,11 +35,11 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* not lint */
+comment|/* not lint&& not SCCSID */
 end_comment
 
 begin_comment
-comment|/*   * el.chared.c: Character editor utilities  */
+comment|/*   * chared.c: Character editor utilities  */
 end_comment
 
 begin_include
@@ -2218,6 +2228,16 @@ operator|.
 name|lastcmd
 operator|=
 name|ED_UNASSIGNED
+expr_stmt|;
+name|el
+operator|->
+name|el_chared
+operator|.
+name|c_macro
+operator|.
+name|nline
+operator|=
+name|NULL
 expr_stmt|;
 name|el
 operator|->

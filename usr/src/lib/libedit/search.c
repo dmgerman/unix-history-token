@@ -3,11 +3,21 @@ begin_comment
 comment|/*-  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christos Zoulas of Cornell University.  *  * %sccs.include.redist.c%  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|lint
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|SCCSID
+argument_list|)
+end_if
 
 begin_decl_stmt
 specifier|static
@@ -15,7 +25,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)search.c	5.1 (Berkeley) %G%"
+literal|"@(#)search.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,11 +35,11 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* not lint */
+comment|/* not lint&& not SCCSID */
 end_comment
 
 begin_comment
-comment|/*  * el.search.c: History and character search functions  */
+comment|/*  * search.c: History and character search functions  */
 end_comment
 
 begin_include
@@ -67,24 +77,20 @@ directive|include
 file|"el.h"
 end_include
 
-begin_decl_stmt
-name|private
-name|int
-name|el_match
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-specifier|const
-name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+begin_comment
+comment|/*  * Adjust cursor in vi mode to include the character under it  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EL_CURSOR
+parameter_list|(
+name|el
+parameter_list|)
+define|\
+value|((el)->el_line.cursor + (((el)->el_map.type == MAP_VI)&& \ 			    ((el)->el_map.current == (el)->el_map.alt)))
+end_define
 
 begin_comment
 comment|/* search_init():  *	Initialize the search stuff  */
@@ -232,7 +238,7 @@ comment|/* el_match():  *	Return if string matches pattern  */
 end_comment
 
 begin_function
-name|private
+name|protected
 name|int
 name|el_match
 parameter_list|(
@@ -480,11 +486,10 @@ name|el_search
 operator|.
 name|patlen
 operator|=
+name|EL_CURSOR
+argument_list|(
 name|el
-operator|->
-name|el_line
-operator|.
-name|cursor
+argument_list|)
 operator|-
 name|el
 operator|->
@@ -648,11 +653,10 @@ name|el_errfile
 argument_list|,
 literal|"cursor %d lastchar %d\n"
 argument_list|,
+name|EL_CURSOR
+argument_list|(
 name|el
-operator|->
-name|el_line
-operator|.
-name|cursor
+argument_list|)
 operator|-
 name|el
 operator|->
