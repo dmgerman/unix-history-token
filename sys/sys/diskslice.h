@@ -21,6 +21,12 @@ directive|ifndef
 name|raidframe_has_been_fixed
 end_ifndef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -40,6 +46,11 @@ directive|define
 name|DIOCSYNCSLICEINFO
 value|_IOW('d', 112, int)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
