@@ -525,7 +525,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Cd:ps:u:vN"
+literal|"Cd:pqs:u:vN"
 argument_list|)
 operator|)
 operator|!=
@@ -569,6 +569,14 @@ comment|/* create V7 "file.orig" */
 name|makeold
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'q'
+case|:
+name|pw_big_ids_warning
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
