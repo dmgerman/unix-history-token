@@ -1374,6 +1374,7 @@ unit|} 	if
 operator|(
 operator|!
 name|warned
+operator|++
 operator|)
 name|syslog
 argument_list|(
