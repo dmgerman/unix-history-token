@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)library.c	5.10 (Berkeley) %G%"
+literal|"@(#)library.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -541,7 +541,7 @@ argument_list|)
 condition|)
 name|err
 argument_list|(
-literal|0
+literal|1
 argument_list|,
 literal|"reread_fs_info: statfs failed"
 argument_list|)
