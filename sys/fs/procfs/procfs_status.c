@@ -767,6 +767,9 @@ name|p
 operator|->
 name|p_args
 operator|&&
+operator|(
+name|ps_argsopen
+operator|||
 operator|!
 name|p_trespass
 argument_list|(
@@ -774,6 +777,7 @@ name|curp
 argument_list|,
 name|p
 argument_list|)
+operator|)
 condition|)
 block|{
 name|bp

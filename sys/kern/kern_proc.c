@@ -2951,6 +2951,11 @@ operator|)
 return|;
 if|if
 condition|(
+operator|(
+operator|!
+name|ps_argsopen
+operator|)
+operator|&&
 name|p_trespass
 argument_list|(
 name|curproc

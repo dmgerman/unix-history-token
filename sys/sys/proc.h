@@ -1626,6 +1626,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+name|int
+name|ps_argsopen
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|proc
 modifier|*

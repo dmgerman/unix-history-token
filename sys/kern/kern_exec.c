@@ -320,6 +320,35 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+name|int
+name|ps_argsopen
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|ps_argsopen
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ps_argsopen
+argument_list|,
+literal|0
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Each of the items is a pointer to a `const struct execsw', hence the  * double pointer here.  */
 end_comment
