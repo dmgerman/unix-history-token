@@ -1236,6 +1236,20 @@ name|lock_class_mtx_sleep
 block|}
 block|,
 block|{
+literal|"so_snd"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
+literal|"so_rcv"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
 literal|"sellck"
 block|,
 operator|&
@@ -1249,6 +1263,13 @@ name|NULL
 block|}
 block|,
 comment|/* 	 * Routing 	 */
+block|{
+literal|"so_rcv"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
 block|{
 literal|"radix node head"
 block|,
@@ -1276,7 +1297,27 @@ block|,
 name|NULL
 block|}
 block|,
-comment|/* 	 * UNIX Domain Sockets 	{ NULL, NULL }, 	 */
+comment|/* 	 * UNIX Domain Sockets 	 */
+block|{
+literal|"unp"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
+literal|"so_snd"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|}
+block|,
 comment|/* 	 * UDP/IP 	 */
 block|{
 literal|"udp"
@@ -1287,6 +1328,13 @@ block|}
 block|,
 block|{
 literal|"udpinp"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
+literal|"so_snd"
 block|,
 operator|&
 name|lock_class_mtx_sleep
@@ -1308,6 +1356,13 @@ block|}
 block|,
 block|{
 literal|"tcpinp"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
+literal|"so_snd"
 block|,
 operator|&
 name|lock_class_mtx_sleep
