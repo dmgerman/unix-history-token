@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	5.15 (Berkeley) %G%"
+literal|"@(#)err.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -106,17 +106,7 @@ end_comment
 begin_macro
 name|syserr
 argument_list|(
-argument|fmt
-argument_list|,
-argument|a
-argument_list|,
-argument|b
-argument_list|,
-argument|c
-argument_list|,
-argument|d
-argument_list|,
-argument|e
+argument|fmt VA_ARG_FORMAL
 argument_list|)
 end_macro
 
@@ -126,6 +116,10 @@ modifier|*
 name|fmt
 decl_stmt|;
 end_decl_stmt
+
+begin_macro
+name|VA_ARG_DECL
+end_macro
 
 begin_block
 block|{
@@ -139,6 +133,7 @@ name|olderrno
 init|=
 name|errno
 decl_stmt|;
+name|VA_LOCAL_DECL
 specifier|extern
 name|char
 name|Arpa_PSyserr
@@ -165,6 +160,11 @@ name|p
 operator|=
 name|Arpa_TSyserr
 expr_stmt|;
+name|VA_START
+argument_list|(
+name|fmt
+argument_list|)
+expr_stmt|;
 name|fmtmsg
 argument_list|(
 name|MsgBuf
@@ -181,16 +181,10 @@ name|olderrno
 argument_list|,
 name|fmt
 argument_list|,
-name|a
-argument_list|,
-name|b
-argument_list|,
-name|c
-argument_list|,
-name|d
-argument_list|,
-name|e
+name|ap
 argument_list|)
+expr_stmt|;
+name|VA_END
 expr_stmt|;
 name|puterrmsg
 argument_list|(
@@ -290,17 +284,7 @@ end_comment
 begin_macro
 name|usrerr
 argument_list|(
-argument|fmt
-argument_list|,
-argument|a
-argument_list|,
-argument|b
-argument_list|,
-argument|c
-argument_list|,
-argument|d
-argument_list|,
-argument|e
+argument|fmt VA_ARG_FORMAL
 argument_list|)
 end_macro
 
@@ -311,8 +295,13 @@ name|fmt
 decl_stmt|;
 end_decl_stmt
 
+begin_macro
+name|VA_ARG_DECL
+end_macro
+
 begin_block
 block|{
+name|VA_LOCAL_DECL
 specifier|extern
 name|char
 name|SuprErrs
@@ -331,6 +320,11 @@ condition|(
 name|SuprErrs
 condition|)
 return|return;
+name|VA_START
+argument_list|(
+name|fmt
+argument_list|)
+expr_stmt|;
 name|fmtmsg
 argument_list|(
 name|MsgBuf
@@ -345,16 +339,10 @@ name|errno
 argument_list|,
 name|fmt
 argument_list|,
-name|a
-argument_list|,
-name|b
-argument_list|,
-name|c
-argument_list|,
-name|d
-argument_list|,
-name|e
+name|ap
 argument_list|)
+expr_stmt|;
+name|VA_END
 expr_stmt|;
 name|puterrmsg
 argument_list|(
@@ -425,43 +413,44 @@ begin_comment
 comment|/*VARARGS2*/
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|message
 argument_list|(
-name|num
+argument|num
 argument_list|,
-name|msg
-argument_list|,
-name|a
-argument_list|,
-name|b
-argument_list|,
-name|c
-argument_list|,
-name|d
-argument_list|,
-name|e
+argument|msg VA_ARG_FORMAL
 argument_list|)
-specifier|register
-name|char
-operator|*
-name|num
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_decl_stmt
-specifier|register
+name|char
+modifier|*
+name|num
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
 name|msg
 decl_stmt|;
 end_decl_stmt
 
+begin_macro
+name|VA_ARG_DECL
+end_macro
+
 begin_block
 block|{
+name|VA_LOCAL_DECL
 name|errno
-operator|=
+init|=
 literal|0
+decl_stmt|;
+name|VA_START
+argument_list|(
+name|msg
+argument_list|)
 expr_stmt|;
 name|fmtmsg
 argument_list|(
@@ -477,16 +466,10 @@ literal|0
 argument_list|,
 name|msg
 argument_list|,
-name|a
-argument_list|,
-name|b
-argument_list|,
-name|c
-argument_list|,
-name|d
-argument_list|,
-name|e
+name|ap
 argument_list|)
+expr_stmt|;
+name|VA_END
 expr_stmt|;
 name|putmsg
 argument_list|(
@@ -509,43 +492,44 @@ begin_comment
 comment|/*VARARGS2*/
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|nmessage
 argument_list|(
-name|num
+argument|num
 argument_list|,
-name|msg
-argument_list|,
-name|a
-argument_list|,
-name|b
-argument_list|,
-name|c
-argument_list|,
-name|d
-argument_list|,
-name|e
+argument|msg VA_ARG_FORMAL
 argument_list|)
-specifier|register
-name|char
-operator|*
-name|num
-expr_stmt|;
-end_expr_stmt
+end_macro
 
 begin_decl_stmt
-specifier|register
+name|char
+modifier|*
+name|num
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 modifier|*
 name|msg
 decl_stmt|;
 end_decl_stmt
 
+begin_macro
+name|VA_ARG_DECL
+end_macro
+
 begin_block
 block|{
+name|VA_LOCAL_DECL
 name|errno
-operator|=
+init|=
 literal|0
+decl_stmt|;
+name|VA_START
+argument_list|(
+name|msg
+argument_list|)
 expr_stmt|;
 name|fmtmsg
 argument_list|(
@@ -563,16 +547,10 @@ literal|0
 argument_list|,
 name|msg
 argument_list|,
-name|a
-argument_list|,
-name|b
-argument_list|,
-name|c
-argument_list|,
-name|d
-argument_list|,
-name|e
+name|ap
 argument_list|)
+expr_stmt|;
+name|VA_END
 expr_stmt|;
 name|putmsg
 argument_list|(
@@ -778,10 +756,6 @@ begin_comment
 comment|/* **  FMTMSG -- format a message into buffer. ** **	Parameters: **		eb -- error buffer to get result. **		to -- the recipient tag for this message. **		num -- arpanet error number. **		en -- the error number to display. **		fmt -- format of string. **		a, b, c, d, e -- arguments. ** **	Returns: **		none. ** **	Side Effects: **		none. */
 end_comment
 
-begin_comment
-comment|/*VARARGS5*/
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -797,15 +771,7 @@ name|eno
 parameter_list|,
 name|fmt
 parameter_list|,
-name|a
-parameter_list|,
-name|b
-parameter_list|,
-name|c
-parameter_list|,
-name|d
-parameter_list|,
-name|e
+name|ap
 parameter_list|)
 specifier|register
 name|char
@@ -826,6 +792,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|fmt
+decl_stmt|;
+name|va_list
+name|ap
 decl_stmt|;
 block|{
 name|char
@@ -979,21 +948,13 @@ comment|/* output the message */
 operator|(
 name|void
 operator|)
-name|sprintf
+name|vsprintf
 argument_list|(
 name|eb
 argument_list|,
 name|fmt
 argument_list|,
-name|a
-argument_list|,
-name|b
-argument_list|,
-name|c
-argument_list|,
-name|d
-argument_list|,
-name|e
+name|ap
 argument_list|)
 expr_stmt|;
 while|while

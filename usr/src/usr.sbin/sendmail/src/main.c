@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.59 (Berkeley) %G%"
+literal|"@(#)main.c	5.60 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4870,20 +4870,12 @@ condition|(
 name|fulldrop
 condition|)
 block|{
-if|#
-directive|if
-name|BSD
-operator|>
-literal|43
-name|daemon
-argument_list|(
-literal|1
-argument_list|,
-literal|1
-argument_list|)
+operator|(
+name|void
+operator|)
+name|setsid
+argument_list|()
 expr_stmt|;
-else|#
-directive|else
 ifdef|#
 directive|ifdef
 name|TIOCNOTTY
@@ -4944,9 +4936,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* TIOCNOTTY */
-endif|#
-directive|endif
-comment|/* BSD */
 name|errno
 operator|=
 literal|0

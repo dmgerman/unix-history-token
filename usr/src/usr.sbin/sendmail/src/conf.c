@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	5.45 (Berkeley) %G%"
+literal|"@(#)conf.c	5.46 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2125,13 +2125,7 @@ end_comment
 begin_macro
 name|setproctitle
 argument_list|(
-argument|fmt
-argument_list|,
-argument|a
-argument_list|,
-argument|b
-argument_list|,
-argument|c
+argument|fmt VA_ARG_FORMAL
 argument_list|)
 end_macro
 
@@ -2141,6 +2135,10 @@ modifier|*
 name|fmt
 decl_stmt|;
 end_decl_stmt
+
+begin_macro
+name|VA_ARG_DECL
+end_macro
 
 begin_block
 block|{
@@ -2156,6 +2154,13 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
+name|char
+name|buf
+index|[
+name|MAXLINE
+index|]
+decl_stmt|;
+name|VA_LOCAL_DECL
 specifier|extern
 name|char
 modifier|*
@@ -2166,12 +2171,6 @@ specifier|extern
 name|char
 modifier|*
 name|LastArgv
-decl_stmt|;
-name|char
-name|buf
-index|[
-name|MAXLINE
-index|]
 decl_stmt|;
 name|p
 operator|=
@@ -2196,21 +2195,24 @@ name|p
 argument_list|)
 expr_stmt|;
 comment|/* print the argument string */
+name|VA_START
+argument_list|(
+name|fmt
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|vsprintf
 argument_list|(
 name|p
 argument_list|,
 name|fmt
 argument_list|,
-name|a
-argument_list|,
-name|b
-argument_list|,
-name|c
+name|ap
 argument_list|)
+expr_stmt|;
+name|VA_END
 expr_stmt|;
 name|i
 operator|=

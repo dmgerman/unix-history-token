@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	5.24 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	5.25 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	5.24 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	5.25 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -2108,13 +2108,7 @@ argument|f
 argument_list|,
 argument|m
 argument_list|,
-argument|mci
-argument_list|,
-argument|a
-argument_list|,
-argument|b
-argument_list|,
-argument|c
+argument|mci VA_ARG_FORMAL
 argument_list|)
 end_macro
 
@@ -2139,23 +2133,31 @@ name|mci
 decl_stmt|;
 end_decl_stmt
 
+begin_macro
+name|VA_ARG_DECL
+end_macro
+
 begin_block
 block|{
+name|VA_LOCAL_DECL
+name|VA_START
+parameter_list|(
+name|f
+parameter_list|)
+function_decl|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|vsprintf
 argument_list|(
 name|SmtpMsgBuffer
 argument_list|,
 name|f
 argument_list|,
-name|a
-argument_list|,
-name|b
-argument_list|,
-name|c
+name|ap
 argument_list|)
+expr_stmt|;
+name|VA_END
 expr_stmt|;
 if|if
 condition|(
