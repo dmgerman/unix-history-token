@@ -661,6 +661,10 @@ while|while
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|strp
 argument_list|)
@@ -679,6 +683,10 @@ while|while
 condition|(
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|strp
 argument_list|)
@@ -690,6 +698,10 @@ while|while
 condition|(
 name|isdigit
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|strp
 argument_list|)
