@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ctime.c	5.24 (Berkeley) %G%"
+literal|"@(#)ctime.c	5.25 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -154,18 +154,6 @@ parameter_list|(
 name|s
 parameter_list|)
 value|()
-end_define
-
-begin_define
-define|#
-directive|define
-name|const
-end_define
-
-begin_define
-define|#
-directive|define
-name|volatile
 end_define
 
 begin_typedef
