@@ -373,6 +373,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|VAR_FIXIT_TTY
+value|"fixitTty"
+end_define
+
+begin_define
+define|#
+directive|define
 name|VAR_FTP_DIR
 value|"ftpDirectory"
 end_define

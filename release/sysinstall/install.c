@@ -1683,6 +1683,8 @@ name|int
 name|i
 decl_stmt|,
 name|fd
+decl_stmt|,
+name|fdstop
 decl_stmt|;
 name|struct
 name|termios
@@ -1704,6 +1706,24 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|fdstop
+operator|=
+name|strcmp
+argument_list|(
+name|variable_get
+argument_list|(
+name|VAR_FIXIT_TTY
+argument_list|)
+argument_list|,
+literal|"serial"
+argument_list|)
+operator|==
+literal|0
+condition|?
+literal|3
+else|:
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1713,7 +1733,7 @@ argument_list|()
 init|;
 name|i
 operator|>=
-literal|0
+name|fdstop
 condition|;
 operator|--
 name|i
@@ -1723,6 +1743,21 @@ argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|variable_get
+argument_list|(
+name|VAR_FIXIT_TTY
+argument_list|)
+argument_list|,
+literal|"standard"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
 name|fd
 operator|=
 name|open
@@ -1756,6 +1791,7 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
+block|}
 name|DebugFD
 operator|=
 literal|2
@@ -1883,6 +1919,21 @@ block|{
 name|dialog_clear_norefresh
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|variable_get
+argument_list|(
+name|VAR_FIXIT_TTY
+argument_list|)
+argument_list|,
+literal|"standard"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
 name|msgNotify
 argument_list|(
 literal|"Waiting for fixit shell to exit.  Go to VTY4 now by\n"
@@ -1890,6 +1941,17 @@ literal|"typing ALT-F4.  When you are done, type ``exit'' to exit\n"
 literal|"the fixit shell and be returned here."
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|msgNotify
+argument_list|(
+literal|"Waiting for fixit shell to exit.\n"
+literal|"When you are done, type ``exit'' to exit\n"
+literal|"the fixit shell and be returned here."
+argument_list|)
+expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -4523,6 +4585,15 @@ literal|"NO"
 argument_list|,
 operator|-
 literal|1
+argument_list|)
+expr_stmt|;
+name|variable_set2
+argument_list|(
+name|VAR_FIXIT_TTY
+argument_list|,
+literal|"standard"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|variable_set2

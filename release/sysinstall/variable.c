@@ -328,7 +328,19 @@ name|value
 condition|)
 name|msgFatal
 argument_list|(
-literal|"Null name or value passed to set_variable2!"
+literal|"Null name or value passed to set_variable2(%s) = %s!"
+argument_list|,
+name|var
+condition|?
+name|var
+else|:
+literal|""
+argument_list|,
+name|value
+condition|?
+name|value
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -344,7 +356,11 @@ name|value
 condition|)
 name|msgDebug
 argument_list|(
-literal|"Warning:  Zero length name or value passed to variable_set2()\n"
+literal|"Warning:  Zero length name or value passed to variable_set2(%s) = %s\n"
+argument_list|,
+name|var
+argument_list|,
+name|value
 argument_list|)
 expr_stmt|;
 name|make_variable

@@ -1928,6 +1928,10 @@ argument_list|(
 name|self
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|var_hostname
+condition|)
 name|variable_set2
 argument_list|(
 name|VAR_NAMESERVER
@@ -2046,7 +2050,7 @@ operator|==
 name|NULL
 operator|||
 operator|*
-name|cp
+name|idx
 operator|!=
 literal|':'
 condition|)
