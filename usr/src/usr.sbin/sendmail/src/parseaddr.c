@@ -15,7 +15,7 @@ operator|)
 name|parseaddr
 operator|.
 name|c
-literal|3.70
+literal|3.71
 operator|%
 name|G
 operator|%
@@ -3424,7 +3424,9 @@ argument|char * canonname(name, ruleset) 	char *name; 	int ruleset; { 	static ch
 literal|'\0'
 argument|); 	rewrite(pvp,
 literal|3
-argument|); 	rewrite(pvp, ruleset); 	cataddr(pvp, nbuf, sizeof nbuf); 	return (nbuf); }
+argument|); 	rewrite(pvp, ruleset); 	rewrite(pvp,
+literal|4
+argument|); 	cataddr(pvp, nbuf, sizeof nbuf); 	return (nbuf); }
 end_block
 
 end_unit
