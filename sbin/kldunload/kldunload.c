@@ -234,9 +234,11 @@ name|argc
 operator|!=
 literal|0
 operator|||
+operator|(
 name|fileid
 operator|&&
 name|filename
+operator|)
 condition|)
 name|usage
 argument_list|()
