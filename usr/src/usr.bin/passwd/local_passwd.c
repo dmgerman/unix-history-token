@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)local_passwd.c	5.1 (Berkeley) %G%"
+literal|"@(#)local_passwd.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -205,6 +205,8 @@ expr_stmt|;
 name|pw_copy
 argument_list|(
 name|pfd
+argument_list|,
+name|tfd
 argument_list|,
 name|pw
 argument_list|)
