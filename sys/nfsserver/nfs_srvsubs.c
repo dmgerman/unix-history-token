@@ -5223,11 +5223,6 @@ name|struct
 name|timespec
 name|mtime
 decl_stmt|;
-name|struct
-name|vnode
-modifier|*
-name|nvp
-decl_stmt|;
 name|int
 name|v3
 init|=

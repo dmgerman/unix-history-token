@@ -8152,9 +8152,6 @@ name|struct
 name|vnode
 modifier|*
 name|vq
-decl_stmt|,
-modifier|*
-name|vnext
 decl_stmt|;
 name|int
 name|count

@@ -9576,9 +9576,6 @@ name|struct
 name|vnode
 modifier|*
 name|vp
-decl_stmt|,
-modifier|*
-name|nvp
 decl_stmt|;
 name|struct
 name|timeval
