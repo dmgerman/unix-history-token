@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cpmv.c	5.4 (Berkeley) %G%"
+literal|"@(#)cpmv.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,7 +37,7 @@ comment|/*LINTLIBRARY*/
 end_comment
 
 begin_comment
-comment|/*  *	copy f1 to f2  *  *	return - 0 ok  |  FAIL failed  */
+comment|/*  *	copy f1 to f2  *  *	return - SUCCESS | FAIL  */
 end_comment
 
 begin_macro
@@ -85,7 +85,7 @@ function_decl|;
 name|char
 name|full
 index|[
-literal|100
+name|MAXFULLNAME
 index|]
 decl_stmt|;
 name|struct
@@ -267,7 +267,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  *	xmv(f1, f2)	move f1 to f2  *	char * f1, *f2;  *  *	return  0 ok  |  FAIL failed  */
+comment|/*  *	move f1 to f2  *  *	return  0 ok  |  FAIL failed  */
 end_comment
 
 begin_expr_stmt
@@ -293,6 +293,17 @@ specifier|register
 name|int
 name|ret
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|unlink
+argument_list|(
+name|subfile
+argument_list|(
+name|f2
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|link
@@ -339,6 +350,9 @@ return|return
 name|ret
 return|;
 block|}
+operator|(
+name|void
+operator|)
 name|unlink
 argument_list|(
 name|subfile
