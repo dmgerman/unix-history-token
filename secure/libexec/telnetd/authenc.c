@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)authenc.c	8.1 (Berkeley) 6/4/93"
+literal|"@(#)authenc.c	8.2 (Berkeley) 5/30/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -82,19 +82,19 @@ operator|+
 name|BUFSIZ
 condition|)
 block|{
-name|bcopy
+name|memmove
 argument_list|(
 operator|(
 name|void
 operator|*
 operator|)
-name|str
+name|nfrontp
 argument_list|,
 operator|(
 name|void
 operator|*
 operator|)
-name|nfrontp
+name|str
 argument_list|,
 name|len
 argument_list|)

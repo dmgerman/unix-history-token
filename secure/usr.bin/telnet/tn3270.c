@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tn3270.c	8.1 (Berkeley) 6/6/93"
+literal|"@(#)tn3270.c	8.2 (Berkeley) 5/30/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -851,7 +851,7 @@ operator|!=
 name|Ibuf
 condition|)
 block|{
-name|memcpy
+name|memmove
 argument_list|(
 name|Ibuf
 argument_list|,

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)state.c	8.2 (Berkeley) 12/15/93"
+literal|"@(#)state.c	8.5 (Berkeley) 5/30/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -1224,11 +1224,11 @@ name|opfrontp
 decl_stmt|,
 name|oc
 decl_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|opfrontp
-argument_list|,
 name|xptyobuf
+argument_list|,
+name|opfrontp
 argument_list|,
 name|n
 argument_list|)
@@ -2156,10 +2156,6 @@ operator|!=
 name|REAL_LINEMODE
 condition|)
 break|break;
-name|lmodetype
-operator|=
-name|KLUDGE_LINEMODE
-expr_stmt|;
 endif|#
 directive|endif
 comment|/* KLUDGELINEMODE */
@@ -4680,7 +4676,7 @@ name|ADD
 parameter_list|(
 name|c
 parameter_list|)
-value|*ncp++ = c;
+value|*ncp++ = c
 end_define
 
 begin_define
@@ -4690,7 +4686,7 @@ name|ADD_DATA
 parameter_list|(
 name|c
 parameter_list|)
-value|{ *ncp++ = c; if (c == SE) *ncp++ = c; }
+value|{ *ncp++ = c; if (c == SE || c == IAC) *ncp++ = c; }
 end_define
 
 begin_function
@@ -4781,17 +4777,6 @@ argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|i
-operator|==
-name|IAC
-condition|)
-name|ADD
-argument_list|(
-name|IAC
-argument_list|)
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -4809,17 +4794,6 @@ expr_stmt|;
 name|ADD_DATA
 argument_list|(
 name|i
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|i
-operator|==
-name|IAC
-condition|)
-name|ADD
-argument_list|(
-name|IAC
 argument_list|)
 expr_stmt|;
 block|}
@@ -4875,8 +4849,9 @@ condition|)
 block|{
 name|ADD
 argument_list|(
-argument|SB
+name|SB
 argument_list|)
+expr_stmt|;
 name|ADD
 argument_list|(
 name|TELOPT_LFLOW
@@ -4903,11 +4878,7 @@ expr_stmt|;
 block|}
 name|ADD
 argument_list|(
-argument|SE
-argument_list|)
-name|ADD
-argument_list|(
-name|SB
+name|SE
 argument_list|)
 expr_stmt|;
 block|}
@@ -4952,17 +4923,6 @@ expr_stmt|;
 name|ADD_DATA
 argument_list|(
 name|editmode
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|editmode
-operator|==
-name|IAC
-condition|)
-name|ADD
-argument_list|(
-name|IAC
 argument_list|)
 expr_stmt|;
 name|ADD

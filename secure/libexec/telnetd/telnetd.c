@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnetd.c	8.2 (Berkeley) 12/15/93"
+literal|"@(#)telnetd.c	8.4 (Berkeley) 5/30/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -1824,7 +1824,7 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* SO_SEC_MULTI */
-name|bzero
+name|memset
 argument_list|(
 operator|(
 name|char
@@ -1832,6 +1832,8 @@ operator|*
 operator|)
 operator|&
 name|dv
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2758,11 +2760,11 @@ block|,
 name|SE
 block|}
 decl_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|sb
-argument_list|,
 name|nfrontp
+argument_list|,
+name|sb
 argument_list|,
 sizeof|sizeof
 name|sb
@@ -2773,6 +2775,19 @@ operator|+=
 sizeof|sizeof
 name|sb
 expr_stmt|;
+name|DIAG
+argument_list|(
+argument|TD_OPTIONS
+argument_list|,
+argument|printsub(
+literal|'>'
+argument|, sb +
+literal|2
+argument|, sizeof sb -
+literal|2
+argument|);
+argument_list|)
+empty_stmt|;
 block|}
 if|if
 condition|(
@@ -2802,11 +2817,11 @@ block|,
 name|SE
 block|}
 decl_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|sb
-argument_list|,
 name|nfrontp
+argument_list|,
+name|sb
 argument_list|,
 sizeof|sizeof
 name|sb
@@ -2817,6 +2832,19 @@ operator|+=
 sizeof|sizeof
 name|sb
 expr_stmt|;
+name|DIAG
+argument_list|(
+argument|TD_OPTIONS
+argument_list|,
+argument|printsub(
+literal|'>'
+argument|, sb +
+literal|2
+argument|, sizeof sb -
+literal|2
+argument|);
+argument_list|)
+empty_stmt|;
 block|}
 if|if
 condition|(
@@ -2846,11 +2874,11 @@ block|,
 name|SE
 block|}
 decl_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|sb
-argument_list|,
 name|nfrontp
+argument_list|,
+name|sb
 argument_list|,
 sizeof|sizeof
 name|sb
@@ -2861,6 +2889,19 @@ operator|+=
 sizeof|sizeof
 name|sb
 expr_stmt|;
+name|DIAG
+argument_list|(
+argument|TD_OPTIONS
+argument_list|,
+argument|printsub(
+literal|'>'
+argument|, sb +
+literal|2
+argument|, sizeof sb -
+literal|2
+argument|);
+argument_list|)
+empty_stmt|;
 block|}
 elseif|else
 if|if
@@ -2891,11 +2932,11 @@ block|,
 name|SE
 block|}
 decl_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|sb
-argument_list|,
 name|nfrontp
+argument_list|,
+name|sb
 argument_list|,
 sizeof|sizeof
 name|sb
@@ -2906,6 +2947,19 @@ operator|+=
 sizeof|sizeof
 name|sb
 expr_stmt|;
+name|DIAG
+argument_list|(
+argument|TD_OPTIONS
+argument_list|,
+argument|printsub(
+literal|'>'
+argument|, sb +
+literal|2
+argument|, sizeof sb -
+literal|2
+argument|);
+argument_list|)
+empty_stmt|;
 block|}
 if|if
 condition|(
@@ -2915,11 +2969,11 @@ name|TELOPT_TTYPE
 argument_list|)
 condition|)
 block|{
-name|bcopy
+name|memmove
 argument_list|(
-name|ttytype_sbbuf
-argument_list|,
 name|nfrontp
+argument_list|,
+name|ttytype_sbbuf
 argument_list|,
 sizeof|sizeof
 name|ttytype_sbbuf
@@ -2930,6 +2984,19 @@ operator|+=
 sizeof|sizeof
 name|ttytype_sbbuf
 expr_stmt|;
+name|DIAG
+argument_list|(
+argument|TD_OPTIONS
+argument_list|,
+argument|printsub(
+literal|'>'
+argument|, ttytype_sbbuf +
+literal|2
+argument|, 					sizeof ttytype_sbbuf -
+literal|2
+argument|);
+argument_list|)
+empty_stmt|;
 block|}
 if|if
 condition|(
@@ -3222,11 +3289,11 @@ argument_list|(
 name|baseline
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-name|ttytype_sbbuf
-argument_list|,
 name|nfrontp
+argument_list|,
+name|ttytype_sbbuf
 argument_list|,
 sizeof|sizeof
 name|ttytype_sbbuf
@@ -3237,6 +3304,19 @@ operator|+=
 sizeof|sizeof
 name|ttytype_sbbuf
 expr_stmt|;
+name|DIAG
+argument_list|(
+argument|TD_OPTIONS
+argument_list|,
+argument|printsub(
+literal|'>'
+argument|, ttytype_sbbuf +
+literal|2
+argument|, 					sizeof ttytype_sbbuf -
+literal|2
+argument|);
+argument_list|)
+empty_stmt|;
 while|while
 condition|(
 name|sequenceIs
@@ -3352,32 +3432,6 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|convex
-end_ifndef
-
-begin_decl_stmt
-specifier|extern
-name|void
-name|telnet
-name|P
-argument_list|(
-operator|(
-name|int
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_decl_stmt
 specifier|extern
 name|void
@@ -3396,10 +3450,20 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_decl_stmt
+name|int
+name|level
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|user_name
+index|[
+literal|256
+index|]
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Get a pty, scan input lines.  */
@@ -3439,16 +3503,7 @@ modifier|*
 name|hp
 decl_stmt|;
 name|int
-name|level
-decl_stmt|;
-name|int
 name|ptynum
-decl_stmt|;
-name|char
-name|user_name
-index|[
-literal|256
-index|]
 decl_stmt|;
 comment|/* 	 * Find an available pty to use. 	 */
 ifndef|#
@@ -3682,7 +3737,11 @@ operator|->
 name|h_name
 argument_list|)
 operator|<=
-operator|(
+call|(
+name|unsigned
+name|int
+call|)
+argument_list|(
 operator|(
 name|utmp_len
 operator|<
@@ -3693,7 +3752,7 @@ operator|-
 name|utmp_len
 else|:
 name|utmp_len
-operator|)
+argument_list|)
 operator|)
 condition|)
 block|{
@@ -3817,19 +3876,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Start up the login process on the slave side of the terminal 	 */
-ifndef|#
-directive|ifndef
-name|convex
-name|startslave
-argument_list|(
-name|host
-argument_list|,
-name|level
-argument_list|,
-name|user_name
-argument_list|)
-expr_stmt|;
 if|#
 directive|if
 name|defined
@@ -3886,22 +3932,11 @@ argument_list|(
 name|net
 argument_list|,
 name|pty
-argument_list|)
-expr_stmt|;
-comment|/* begin server processing */
-else|#
-directive|else
-name|telnet
-argument_list|(
-name|net
-argument_list|,
-name|pty
 argument_list|,
 name|host
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+comment|/* begin server process */
 comment|/*NOTREACHED*/
 block|}
 end_block
@@ -4021,41 +4056,23 @@ end_comment
 
 begin_function
 name|void
-ifndef|#
-directive|ifndef
-name|convex
 name|telnet
 parameter_list|(
 name|f
 parameter_list|,
 name|p
-parameter_list|)
-else|#
-directive|else
-function|telnet
-parameter_list|(
-name|f
-parameter_list|,
-name|p
 parameter_list|,
 name|host
 parameter_list|)
-endif|#
-directive|endif
 name|int
 name|f
 decl_stmt|,
 name|p
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|convex
 name|char
 modifier|*
 name|host
 decl_stmt|;
-endif|#
-directive|endif
 block|{
 name|int
 name|on
@@ -4097,6 +4114,9 @@ name|void
 name|netflush
 parameter_list|()
 function_decl|;
+name|int
+name|nfd
+decl_stmt|;
 comment|/* 	 * Initialize the slc mapping table. 	 */
 name|get_slc_defaults
 argument_list|()
@@ -4785,16 +4805,32 @@ literal|"td: Entering processing loop\r\n"
 argument|); 		 nfrontp += strlen(nfrontp);}
 argument_list|)
 empty_stmt|;
-ifdef|#
-directive|ifdef
-name|convex
+comment|/* 	 * Startup the login process on the slave side of the terminal 	 * now.  We delay this until here to insure option negotiation 	 * is complete. 	 */
 name|startslave
 argument_list|(
 name|host
+argument_list|,
+name|level
+argument_list|,
+name|user_name
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+name|nfd
+operator|=
+operator|(
+operator|(
+name|f
+operator|>
+name|p
+operator|)
+condition|?
+name|f
+else|:
+name|p
+operator|)
+operator|+
+literal|1
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -4947,7 +4983,7 @@ name|c
 operator|=
 name|select
 argument_list|(
-literal|16
+name|nfd
 argument_list|,
 operator|&
 name|ibits
@@ -5410,6 +5446,18 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* off by one XXX */
+name|DIAG
+argument_list|(
+name|TD_OPTIONS
+argument_list|,
+name|printoption
+argument_list|(
+literal|"td: send IAC"
+argument_list|,
+name|DM
+argument_list|)
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 block|}
@@ -5489,6 +5537,19 @@ name|nfrontp
 operator|+=
 literal|6
 expr_stmt|;
+name|DIAG
+argument_list|(
+argument|TD_OPTIONS
+argument_list|,
+argument|printsub(
+literal|'>'
+argument|, 						    (unsigned char *)nfrontp-
+literal|4
+argument|,
+literal|4
+argument|);
+argument_list|)
+empty_stmt|;
 block|}
 block|}
 name|pcc
@@ -6287,6 +6348,52 @@ name|ptyflush
 argument_list|()
 expr_stmt|;
 comment|/* half-hearted */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|STREAMSPTY
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|TIOCSIGNAL
+argument_list|)
+comment|/* Streams PTY style ioctl to post a signal */
+block|{
+name|int
+name|sig
+init|=
+name|SIGINT
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|ioctl
+argument_list|(
+name|pty
+argument_list|,
+name|TIOCSIGNAL
+argument_list|,
+operator|&
+name|sig
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|ioctl
+argument_list|(
+name|pty
+argument_list|,
+name|I_FLUSH
+argument_list|,
+name|FLUSHR
+argument_list|)
+expr_stmt|;
+block|}
+else|#
+directive|else
 ifdef|#
 directive|ifdef
 name|TCSIG
@@ -6340,6 +6447,8 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* TCSIG */
+endif|#
+directive|endif
 block|}
 end_function
 

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)krb4encpwd.c	8.1 (Berkeley) 6/4/93"
+literal|"@(#)krb4encpwd.c	8.3 (Berkeley) 5/30/95"
 decl_stmt|;
 end_decl_stmt
 
@@ -683,7 +683,7 @@ argument_list|)
 expr_stmt|;
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|hostname
 argument_list|,
@@ -893,14 +893,8 @@ block|{
 case|case
 name|KRB4_ENCPWD_AUTH
 case|:
-name|bcopy
+name|memmove
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-name|data
-argument_list|,
 operator|(
 name|void
 operator|*
@@ -908,6 +902,12 @@ operator|)
 name|auth
 operator|.
 name|dat
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|data
 argument_list|,
 name|auth
 operator|.
@@ -931,7 +931,7 @@ condition|(
 operator|(
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|lhostname
 argument_list|,
@@ -1042,8 +1042,14 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|bcopy
+name|memmove
 argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|session_key
+argument_list|,
 operator|(
 name|void
 operator|*
@@ -1051,12 +1057,6 @@ operator|)
 name|adat
 operator|.
 name|session
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-name|session_key
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1091,19 +1091,19 @@ case|case
 name|KRB4_ENCPWD_CHALLENGE
 case|:
 comment|/* 		 *  Take the received random challenge text and save 		 *  for future authentication. 		 */
-name|bcopy
+name|memmove
 argument_list|(
 operator|(
 name|void
 operator|*
 operator|)
-name|data
+name|challenge
 argument_list|,
 operator|(
 name|void
 operator|*
 operator|)
-name|challenge
+name|data
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1116,7 +1116,7 @@ case|case
 name|KRB4_ENCPWD_ACK
 case|:
 comment|/* 		 *  Receive ack, if mutual then send random challenge 		 */
-comment|/* 		 * If we are doing mutual authentication, get set up to send 		 * the challange, and verify it when the response comes back. 		 */
+comment|/* 		 * If we are doing mutual authentication, get set up to send 		 * the challenge, and verify it when the response comes back. 		 */
 if|if
 condition|(
 operator|(
@@ -1329,26 +1329,28 @@ argument_list|(
 name|hostname
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memmove
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-name|data
-argument_list|,
 operator|(
 name|void
 operator|*
 operator|)
 name|challenge
 argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|data
+argument_list|,
 name|cnt
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|user_passwd
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1392,7 +1394,7 @@ condition|(
 operator|(
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|instance
 argument_list|,
