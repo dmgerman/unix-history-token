@@ -227,9 +227,6 @@ name|sysctl_oid
 modifier|*
 name|q
 decl_stmt|;
-name|int
-name|n
-decl_stmt|;
 comment|/* 	 * First check if another oid with the same name already 	 * exists in the parent's list. 	 */
 name|p
 operator|=
