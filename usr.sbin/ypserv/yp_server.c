@@ -1639,6 +1639,7 @@ if|if
 condition|(
 name|debug
 condition|)
+block|{
 name|close
 argument_list|(
 literal|0
@@ -1654,6 +1655,7 @@ argument_list|(
 literal|2
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|strcmp
