@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ifconfig.c	4.12 (Berkeley) %G%"
+literal|"@(#)ifconfig.c	4.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
