@@ -21,7 +21,7 @@ end_decl_stmt
 begin_function
 name|void
 modifier|*
-name|malloc
+name|kzipmalloc
 parameter_list|(
 name|nbytes
 parameter_list|)
@@ -81,7 +81,7 @@ end_function
 
 begin_function
 name|void
-name|free
+name|kzipfree
 parameter_list|(
 name|cp
 parameter_list|)
