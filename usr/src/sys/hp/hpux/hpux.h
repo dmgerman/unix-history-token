@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux.h 1.33 93/08/05$  *  *	@(#)hpux.h	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: hpux.h 1.33 93/08/05$  *  *	@(#)hpux.h	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -898,6 +898,13 @@ end_comment
 begin_comment
 comment|/* sysconf stuff */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|HPUX_SYSCONF_CLKTICK
+value|2
+end_define
 
 begin_define
 define|#
