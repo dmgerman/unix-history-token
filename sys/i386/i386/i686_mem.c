@@ -3017,6 +3017,14 @@ literal|0xf00
 operator|)
 operator|==
 literal|0x600
+operator|||
+operator|(
+name|cpu_id
+operator|&
+literal|0xf00
+operator|)
+operator|==
+literal|0xf00
 operator|)
 operator|&&
 operator|(
