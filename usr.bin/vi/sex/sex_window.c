@@ -103,6 +103,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"compat.h"
 end_include
 
@@ -185,6 +191,8 @@ literal|2048
 index|]
 decl_stmt|;
 comment|/* 	 * Get the screen rows and columns.  If the values are wrong, it's 	 * not a big deal -- as soon as the user sets them explicitly the 	 * environment will be set and the screen package will use the new 	 * values. 	 * 	 * Try TIOCGWINSZ. 	 */
+name|errno
+operator|=
 name|row
 operator|=
 name|col
@@ -242,6 +250,12 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|errno
+operator|>
+literal|0
+condition|)
 name|msgq
 argument_list|(
 name|sp
