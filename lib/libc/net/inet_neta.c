@@ -36,7 +36,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: inet_neta.c,v 1.3 1997/02/22 15:00:20 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_ifdef
