@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)print.c	5.4 (Berkeley) %G%"
+literal|"@(#)print.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -169,21 +169,33 @@ name|VAR
 modifier|*
 name|v
 decl_stmt|;
+specifier|register
+name|struct
+name|varent
+modifier|*
+name|vent
+decl_stmt|;
 for|for
 control|(
-name|v
+name|vent
 operator|=
 name|vhead
 init|;
-name|v
+name|vent
 condition|;
-name|v
+name|vent
 operator|=
-name|v
+name|vent
 operator|->
 name|next
 control|)
 block|{
+name|v
+operator|=
+name|vent
+operator|->
+name|var
+expr_stmt|;
 if|if
 condition|(
 name|v
@@ -195,7 +207,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|v
+name|vent
 operator|->
 name|next
 operator|==
@@ -251,7 +263,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|v
+name|vent
 operator|->
 name|next
 operator|!=
@@ -283,6 +295,8 @@ argument_list|(
 argument|k
 argument_list|,
 argument|v
+argument_list|,
+argument|next
 argument_list|)
 end_macro
 
@@ -310,8 +324,6 @@ name|totwidth
 decl_stmt|;
 if|if
 condition|(
-name|v
-operator|->
 name|next
 operator|==
 name|NULL

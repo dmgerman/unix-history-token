@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)keyword.c	5.3 (Berkeley) %G%"
+literal|"@(#)keyword.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3409,6 +3409,12 @@ name|char
 modifier|*
 name|cp
 decl_stmt|;
+specifier|register
+name|struct
+name|varent
+modifier|*
+name|vent
+decl_stmt|;
 specifier|static
 name|VAR
 modifier|*
@@ -3445,6 +3451,7 @@ name|cp
 operator|==
 literal|'\0'
 condition|)
+comment|/* void */
 empty_stmt|;
 if|if
 condition|(
@@ -3461,6 +3468,57 @@ condition|)
 continue|continue;
 if|if
 condition|(
+operator|(
+name|vent
+operator|=
+operator|(
+expr|struct
+name|varent
+operator|*
+operator|)
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|varent
+argument_list|)
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"ps: no space\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|vent
+operator|->
+name|var
+operator|=
+name|v
+expr_stmt|;
+name|vent
+operator|->
+name|next
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
 name|vhead
 operator|==
 name|NULL
@@ -3469,7 +3527,7 @@ name|vhead
 operator|=
 name|vtail
 operator|=
-name|v
+name|vent
 expr_stmt|;
 else|else
 block|{
@@ -3477,11 +3535,11 @@ name|vtail
 operator|->
 name|next
 operator|=
-name|v
+name|vent
 expr_stmt|;
 name|vtail
 operator|=
-name|v
+name|vent
 expr_stmt|;
 block|}
 block|}
