@@ -1767,17 +1767,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * [dfr] Kludge until I get around to fixing all the vfs locking.  */
+comment|/*  * This only exists to supress warnings from unlocked specfs accesses.  It is  * no longer ok to have an unlocked VFS.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|IS_LOCKING_VFS
+name|IGNORE_LOCK
 parameter_list|(
 name|vp
 parameter_list|)
-value|(  ((vp)->v_tag == VT_UFS		\ 				 || (vp)->v_tag == VT_NFS		\ 				 || (vp)->v_tag == VT_LFS		\ 				 || (vp)->v_tag == VT_ISOFS		\ 				 || (vp)->v_tag == VT_MSDOSFS		\ 				 || (vp)->v_tag == VT_DEVFS		\ 				 || (vp)->v_tag == VT_UDF		\ 				 || (vp)->v_tag == VT_PSEUDOFS		\ 				 || (vp)->v_tag == VT_PROCFS)		\&& (vp)->v_type != VCHR)
+value|((vp)->v_type == VCHR)
 end_define
 
 begin_define
@@ -1790,7 +1790,7 @@ parameter_list|,
 name|str
 parameter_list|)
 define|\
-value|do {									\ 	struct vnode *_vp = (vp);					\ 									\ 	if (_vp&& IS_LOCKING_VFS(_vp)&& !VOP_ISLOCKED(_vp, NULL)) {	\ 		if (vfs_badlock_print)					\ 			printf("%s: %p is not locked but should be\n",	\ 			    str, _vp);					\ 		if (vfs_badlock_panic)					\ 			Debugger("Lock violation.\n");			\ 	}								\ } while (0)
+value|do {									\ 	struct vnode *_vp = (vp);					\ 									\ 	if (_vp&& !IGNORE_LOCK(_vp)&& !VOP_ISLOCKED(_vp, NULL)) {	\ 		if (vfs_badlock_print)					\ 			printf("%s: %p is not locked but should be\n",	\ 			    str, _vp);					\ 		if (vfs_badlock_panic)					\ 			Debugger("Lock violation.\n");			\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -1803,7 +1803,7 @@ parameter_list|,
 name|str
 parameter_list|)
 define|\
-value|do {									\ 	struct vnode *_vp = (vp);					\ 	int lockstate;							\ 									\ 	if (_vp&& IS_LOCKING_VFS(_vp)) {				\ 		lockstate = VOP_ISLOCKED(_vp, curthread);		\ 		if (lockstate == LK_EXCLUSIVE) {			\ 			if (vfs_badlock_print)				\ 				printf("%s: %p is locked but should not be\n",	\ 				    str, _vp);				\ 			if (vfs_badlock_panic)				\ 				Debugger("Lock Violation.\n");		\ 		}							\ 	}								\ } while (0)
+value|do {									\ 	struct vnode *_vp = (vp);					\ 	int lockstate;							\ 									\ 	if (_vp&& !IGNORE_LOCK(_vp)) {					\ 		lockstate = VOP_ISLOCKED(_vp, curthread);		\ 		if (lockstate == LK_EXCLUSIVE) {			\ 			if (vfs_badlock_print)				\ 				printf("%s: %p is locked but should not be\n",	\ 				    str, _vp);				\ 			if (vfs_badlock_panic)				\ 				Debugger("Lock Violation.\n");		\ 		}							\ 	}								\ } while (0)
 end_define
 
 begin_define
@@ -1816,7 +1816,7 @@ parameter_list|,
 name|str
 parameter_list|)
 define|\
-value|do {									\ 	struct vnode *_vp = (vp);					\ 									\ 	if (_vp&& IS_LOCKING_VFS(_vp)&&				\ 	    VOP_ISLOCKED(_vp, curthread) != LK_EXCLUSIVE)			\ 		panic("%s: %p is not exclusive locked but should be",	\ 		    str, _vp);						\ } while (0)
+value|do {									\ 	struct vnode *_vp = (vp);					\ 									\ 	if (_vp&& !IGNORE_LOCK(_vp)&&					\ 	    VOP_ISLOCKED(_vp, curthread) != LK_EXCLUSIVE)		\ 		panic("%s: %p is not exclusive locked but should be",	\ 		    str, _vp);						\ } while (0)
 end_define
 
 begin_define
@@ -1829,7 +1829,7 @@ parameter_list|,
 name|str
 parameter_list|)
 define|\
-value|do {									\ 	struct vnode *_vp = (vp);					\ 									\ 	if (_vp&& IS_LOCKING_VFS(_vp)&&				\ 	    VOP_ISLOCKED(_vp, curthread) != LK_EXCLOTHER)			\ 		panic("%s: %p is not exclusive locked by another thread",	\ 		    str, _vp);						\ } while (0)
+value|do {									\ 	struct vnode *_vp = (vp);					\ 									\ 	if (_vp&& !IGNORE_LOCK(_vp)&&					\ 	    VOP_ISLOCKED(_vp, curthread) != LK_EXCLOTHER)		\ 		panic("%s: %p is not exclusive locked by another thread",	\ 		    str, _vp);						\ } while (0)
 end_define
 
 begin_define
@@ -1842,7 +1842,7 @@ parameter_list|,
 name|str
 parameter_list|)
 define|\
-value|do {									\ 	struct vnode *_vp = (vp);					\ 									\ 	if (_vp&& IS_LOCKING_VFS(_vp)&&				\ 	    VOP_ISLOCKED(_vp, NULL) != LK_SHARED)			\ 		panic("%s: %p is not locked shared but should be",	\ 		    str, _vp);						\ } while (0)
+value|do {									\ 	struct vnode *_vp = (vp);					\ 									\ 	if (_vp&& !IGNORE_LOCK(_vp)&&					\ 	    VOP_ISLOCKED(_vp, NULL) != LK_SHARED)			\ 		panic("%s: %p is not locked shared but should be",	\ 		    str, _vp);						\ } while (0)
 end_define
 
 begin_function_decl
@@ -1863,6 +1863,31 @@ parameter_list|(
 name|void
 modifier|*
 name|a
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vop_lookup_pre
+parameter_list|(
+name|void
+modifier|*
+name|a
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vop_lookup_post
+parameter_list|(
+name|void
+modifier|*
+name|a
+parameter_list|,
+name|int
+name|rc
 parameter_list|)
 function_decl|;
 end_function_decl
