@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: modstat.c,v 1.9 1997/07/28 07:01:02 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -297,7 +297,7 @@ name|sbuf
 operator|.
 name|size
 argument_list|,
-comment|/* size in pages(K) */
+comment|/* size in K */
 name|sbuf
 operator|.
 name|private
