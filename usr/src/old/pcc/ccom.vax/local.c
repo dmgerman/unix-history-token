@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)local.c	1.8 (Berkeley) %G%"
+literal|"@(#)local.c	1.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1422,6 +1422,11 @@ comment|/* inoff is updated to have the proper final value */
 comment|/* we also assume sz< SZINT */
 if|if
 condition|(
+name|nerrors
+condition|)
+return|return;
+if|if
+condition|(
 operator|(
 name|sz
 operator|+
@@ -1519,6 +1524,11 @@ comment|/* output code to initialize space of size sz to the value d */
 comment|/* the proper alignment has been obtained */
 comment|/* inoff is updated to have the proper final value */
 comment|/* on the target machine, write it out in octal! */
+if|if
+condition|(
+name|nerrors
+condition|)
+return|return;
 name|printf
 argument_list|(
 literal|"	%s	0%c%.20e\n"
@@ -1748,6 +1758,11 @@ condition|(
 name|n
 operator|<=
 literal|0
+condition|)
+return|return;
+if|if
+condition|(
+name|nerrors
 condition|)
 return|return;
 name|inwd
@@ -1996,6 +2011,11 @@ decl_stmt|,
 name|tsize
 argument_list|()
 decl_stmt|;
+if|if
+condition|(
+name|nerrors
+condition|)
+return|return;
 name|q
 operator|=
 operator|&
