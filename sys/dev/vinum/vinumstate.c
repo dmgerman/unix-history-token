@@ -1434,6 +1434,9 @@ case|:
 case|case
 name|sd_reviving
 case|:
+case|case
+name|sd_empty
+case|:
 name|sd
 operator|->
 name|state
