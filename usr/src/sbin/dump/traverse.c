@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)traverse.c	5.7 (Berkeley) %G%"
+literal|"@(#)traverse.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -27,6 +27,59 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/dir.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/dinode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/fs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<protocols/dumprestore.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#

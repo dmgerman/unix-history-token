@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)optr.c	5.5 (Berkeley) %G%"
+literal|"@(#)optr.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"dump.h"
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -43,7 +43,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<ufs/dir.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fstab.h>
 end_include
 
 begin_include
@@ -56,6 +74,59 @@ begin_include
 include|#
 directive|include
 file|<varargs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utmp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|"dump.h"
 end_include
 
 begin_include

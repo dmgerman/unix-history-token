@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)unctime.c	5.2 (Berkeley) %G%"
+literal|"@(#)unctime.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,7 +37,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/time.h>
+file|<time.h>
 end_include
 
 begin_include
@@ -45,6 +45,12 @@ include|#
 directive|include
 file|<stdio.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
 
 begin_include
 include|#
@@ -57,6 +63,11 @@ include|#
 directive|include
 file|<string.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Convert a ctime(3) format string into a system format date.  * Return the date thus calculated.  *  * Return -1 if the string is not in ctime format.  */

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dumprmt.c	5.9 (Berkeley) %G%"
+literal|"@(#)dumprmt.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,6 +61,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -88,6 +94,18 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__STDC__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
 begin_include
 include|#
 directive|include
@@ -99,6 +117,11 @@ include|#
 directive|include
 file|<string.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
