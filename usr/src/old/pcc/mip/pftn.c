@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pftn.c	1.17 (Berkeley) %G%"
+literal|"@(#)pftn.c	1.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3959,6 +3959,12 @@ argument|; 	}
 endif|#
 directive|endif
 argument|defid( p, class );
+comment|/* if an array is not initialized, no empty dimension */
+argument|if( class!=EXTERN&& ISARY(p->in.type)&& dimtab[p->fn.cdim]==
+literal|0
+argument|) 		uerror(
+literal|"null storage definition"
+argument|);
 ifndef|#
 directive|ifndef
 name|LCOMM
@@ -4040,10 +4046,10 @@ comment|/* build a type, and stash away dimensions, from a parse tree of the dec
 comment|/* the type is build top down, the dimensions bottom up */
 argument|register o
 argument_list|,
-argument|temp; 	register unsigned t;  	o = p->in.op; 	p->in.op = FREE;  	if( o == NAME ) return;  	t = INCREF( p->in.type ); 	if( o == UNARY CALL ) t += (FTN-PTR); 	else if( o == LB ){ 		t += (ARY-PTR); 		temp = p->in.right->tn.lval; 		p->in.right->in.op = FREE; 		if( ( temp ==
+argument|temp; 	register unsigned t;  	o = p->in.op; 	p->in.op = FREE;  	if( o == NAME ) return;  	t = INCREF( p->in.type ); 	if( o == UNARY CALL ) t += (FTN-PTR); 	else if( o == LB ){ 		t += (ARY-PTR); 		temp = p->in.right->tn.lval; 		p->in.right->in.op = FREE; 		if( temp ==
 literal|0
-argument|)& ( p->in.left->tn.op == LB ) ) 			uerror(
-literal|"Null dimension"
+argument|&& p->in.left->tn.op == LB ) 			uerror(
+literal|"null dimension"
 argument|); 		}  	p->in.left->in.type = t; 	tyreduce( p->in.left );  	if( o == LB ) dstash( temp );  	p->tn.rval = p->in.left->tn.rval; 	p->in.type = p->in.left->in.type;  	}  fixtype( p, class ) register NODE *p; { 	register unsigned t
 argument_list|,
 argument|type; 	register mod1
@@ -4060,13 +4066,24 @@ argument|); 				type =
 literal|0
 argument|; 				} 			t = DECREF(t); 			} 		}
 comment|/* detect function arguments, watching out for structure declarations */
-comment|/* for example, beware of f(x) struct [ int a[10]; } *x; { ... } */
+comment|/* for example, beware of f(x) struct { int a[10]; } *x; { ... } */
 comment|/* the danger is that "a" will be converted to a pointer */
 argument|if( class==SNULL&& blevel==
 literal|1
-argument|&& !(instruct&(INSTRUCT|INUNION)) ) class = PARAM; 	if( class == PARAM || ( class==REGISTER&& blevel==
+argument|&& !(instruct&(INSTRUCT|INUNION)) ) 		class = PARAM; 	if( class == PARAM || ( class==REGISTER&& blevel==
 literal|1
-argument|) ){ 		if( type == FLOAT ) type = DOUBLE; 		else if( ISARY(type) ){ 			++p->fn.cdim; 			type += (PTR-ARY); 			} 		else if( ISFTN(type) ){ 			werror(
+argument|) ){ 		if( type == FLOAT ) type = DOUBLE; 		else if( ISARY(type) ){
+ifdef|#
+directive|ifdef
+name|LINT
+argument|if( hflag&& dimtab[p->fn.cdim]!=
+literal|0
+argument|) 				werror(
+literal|"array[%d] type changed to pointer"
+argument|, 					dimtab[p->fn.cdim]);
+endif|#
+directive|endif
+argument|++p->fn.cdim; 			type += (PTR-ARY); 			} 		else if( ISFTN(type) ){ 			werror(
 literal|"a function is declared as an argument"
 argument|); 			type = INCREF(type); 			}  		}  	if( instruct&& ISFTN(type) ){ 		uerror(
 literal|"function illegal in structure or union"
