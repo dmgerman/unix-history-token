@@ -1566,6 +1566,16 @@ goto|goto
 name|bad
 goto|;
 block|}
+name|fcntl
+argument_list|(
+literal|0
+argument_list|,
+name|F_SETOWN
+argument_list|,
+name|getpid
+argument_list|()
+argument_list|)
+expr_stmt|;
 comment|/* catch typeahead before ASYNC was set */
 operator|(
 name|void
