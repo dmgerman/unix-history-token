@@ -45,7 +45,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: nfsstat.c,v 1.4 1995/10/29 09:53:00 phk Exp $"
+literal|"$Id: nfsstat.c,v 1.5 1995/10/30 15:44:44 phk Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -594,7 +594,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|CTL_FS
+name|CTL_VFS
 expr_stmt|;
 name|name
 index|[

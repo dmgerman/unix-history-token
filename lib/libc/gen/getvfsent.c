@@ -136,9 +136,9 @@ literal|2
 index|]
 init|=
 block|{
-name|CTL_FS
+name|CTL_VFS
 block|,
-name|FS_VFSCONF
+name|VFS_VFSCONF
 block|}
 decl_stmt|;
 name|size_t
