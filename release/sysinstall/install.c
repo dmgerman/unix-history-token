@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.71.2.23 1995/10/09 11:14:53 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last program in the `sysinstall' line - the next  * generation being essentially a complete rewrite.  *  * $Id: install.c,v 1.71.2.24 1995/10/11 00:53:58 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Jordan Hubbard  *	for the FreeBSD Project.  * 4. The name of Jordan Hubbard or the FreeBSD project may not be used to  *    endorse or promote products derived from this software without specific  *    prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -490,35 +490,6 @@ return|return
 name|FALSE
 return|;
 block|}
-elseif|else
-if|if
-condition|(
-name|rootdev
-operator|->
-name|name
-index|[
-name|strlen
-argument_list|(
-name|rootdev
-operator|->
-name|name
-argument_list|)
-operator|-
-literal|1
-index|]
-operator|!=
-literal|'a'
-condition|)
-block|{
-name|msgConfirm
-argument_list|(
-literal|"Invalid placement of root partition.  For now, we only support\nmounting root partitions on \"a\" partitions due to limitations\nin the FreeBSD boot code.  Please correct this and\ntry again."
-argument_list|)
-expr_stmt|;
-return|return
-name|FALSE
-return|;
-block|}
 operator|*
 name|rdev
 operator|=
@@ -546,7 +517,7 @@ name|usrdev
 condition|)
 name|msgConfirm
 argument_list|(
-literal|"WARNING:  No /usr filesystem found.  This is not technically\nan error if your root filesystem is big enough (or you later\nintend to get your /usr filesystem over NFS), but it may otherwise\ncause you trouble and is not recommended procedure!"
+literal|"WARNING:  No /usr filesystem found.  This is not technically\nan error if your root filesystem is big enough (or you later\nintend to get your /usr filesystem over NFS), but it may otherwise\ncause you trouble and is not recommended procedure if you don't know what you are doing!"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1024,6 +995,13 @@ name|i
 decl_stmt|,
 name|fd
 decl_stmt|;
+specifier|extern
+name|int
+name|login_tty
+argument_list|(
+name|int
+argument_list|)
+decl_stmt|;
 for|for
 control|(
 name|i
@@ -1483,79 +1461,13 @@ name|file_readable
 argument_list|(
 literal|"/kernel"
 argument_list|)
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 name|file_readable
 argument_list|(
 literal|"/kernel.GENERIC"
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-name|file_readable
-argument_list|(
-literal|"/kernel.ATAPI"
-argument_list|)
-condition|)
-block|{
-name|dialog_clear
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|msgYesNo
-argument_list|(
-literal|"There are two kernels available - one for ATAPI (IDE CDROM)\n"
-literal|"systems and a GENERIC kernel for all other systems.  The\n"
-literal|"IDE CDROM driver was still in BETA test at the time of this\n"
-literal|"release and therefore got a copy of the generic kernel image\n"
-literal|"all for itself.\n\n"
-literal|"Would you like to install the GENERIC kernel image?  Otherwise\n"
-literal|"the ATAPI image will be used."
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|vsystem
-argument_list|(
-literal|"ln -f /kernel.GENERIC /kernel"
-argument_list|)
-condition|)
-block|{
-name|msgConfirm
-argument_list|(
-literal|"Unable to link /kernel into place!"
-argument_list|)
-expr_stmt|;
-return|return
-name|RET_FAIL
-return|;
-block|}
-block|}
-elseif|else
-if|if
-condition|(
-name|vsystem
-argument_list|(
-literal|"ln -f /kernel.ATAPI /kernel"
-argument_list|)
-condition|)
-block|{
-name|msgConfirm
-argument_list|(
-literal|"Unable to link /kernel into place!"
-argument_list|)
-expr_stmt|;
-return|return
-name|RET_FAIL
-return|;
-block|}
-block|}
-elseif|else
 if|if
 condition|(
 name|vsystem
@@ -1578,7 +1490,7 @@ else|else
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Can't find a kernel image to link to on the root filesystem!\n"
+literal|"Can't find a kernel image to link to on the root file system!\n"
 literal|"You're going to have a hard time getting this system to\n"
 literal|"boot from the hard disk, I'm afraid!"
 argument_list|)
@@ -1586,7 +1498,6 @@ expr_stmt|;
 return|return
 name|RET_FAIL
 return|;
-block|}
 block|}
 comment|/* Resurrect /dev after bin distribution screws it up */
 if|if
@@ -1831,18 +1742,18 @@ modifier|*
 modifier|*
 name|devs
 decl_stmt|;
-name|char
-name|dname
-index|[
-literal|40
-index|]
-decl_stmt|;
 name|PartInfo
 modifier|*
 name|p
 decl_stmt|;
 name|Boolean
 name|RootReadOnly
+decl_stmt|;
+name|char
+name|dname
+index|[
+literal|40
+index|]
 decl_stmt|;
 if|if
 condition|(
@@ -1904,37 +1815,28 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|sprintf
-argument_list|(
-name|dname
-argument_list|,
-literal|"/dev/r%sa"
-argument_list|,
-name|rootdev
-operator|->
-name|disk
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
 name|msgNotify
 argument_list|(
 literal|"Making a new root filesystem on %s"
 argument_list|,
-name|dname
+name|rootdev
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
 name|i
 operator|=
 name|vsystem
 argument_list|(
-literal|"%s %s"
+literal|"%s /dev/%s"
 argument_list|,
 name|p
 operator|->
 name|newfs_cmd
 argument_list|,
-name|dname
+name|rootdev
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
 if|if
@@ -1969,33 +1871,24 @@ argument_list|(
 literal|"Warning:  You have selected a Read-Only root device\nand may be unable to find the appropriate device entries on it\nif it is from an older pre-slice version of FreeBSD."
 argument_list|)
 expr_stmt|;
-name|sprintf
-argument_list|(
-name|dname
-argument_list|,
-literal|"/dev/r%sa"
-argument_list|,
-name|rootdev
-operator|->
-name|disk
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
 name|msgNotify
 argument_list|(
 literal|"Checking integrity of existing %s filesystem"
 argument_list|,
-name|dname
+name|rootdev
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
 name|i
 operator|=
 name|vsystem
 argument_list|(
-literal|"fsck -y %s"
+literal|"fsck -y /dev/%s"
 argument_list|,
-name|dname
+name|rootdev
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
 if|if
@@ -2014,11 +1907,9 @@ name|sprintf
 argument_list|(
 name|dname
 argument_list|,
-literal|"/dev/%sa"
+literal|"/dev/%s"
 argument_list|,
 name|rootdev
-operator|->
-name|disk
 operator|->
 name|name
 argument_list|)
@@ -2035,7 +1926,9 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"Unable to mount the root file system!  Giving up."
+literal|"Unable to mount the root file system on %s!  Giving up."
+argument_list|,
+name|dname
 argument_list|)
 expr_stmt|;
 return|return
