@@ -4618,6 +4618,25 @@ name|EAGAIN
 operator|)
 return|;
 block|}
+name|KASSERT
+argument_list|(
+name|bp
+operator|->
+name|b_bufobj
+operator|==
+name|bo
+argument_list|,
+operator|(
+literal|"wrong b_bufobj %p should be %p"
+operator|,
+name|bp
+operator|->
+name|b_bufobj
+operator|,
+name|bo
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bp
@@ -4628,6 +4647,11 @@ name|bo
 condition|)
 block|{
 comment|/* XXX: necessary ? */
+name|BUF_UNLOCK
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 name|BO_LOCK
 argument_list|(
 name|bo
