@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.24
+literal|3.25
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.24
+literal|3.25
 operator|%
 name|G
 operator|%
@@ -750,34 +750,9 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
-begin_if
-if|if
-condition|(
-name|QueueIntvl
-operator|!=
-literal|0
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|signal
-argument_list|(
-name|SIGALRM
-argument_list|,
-name|reordersig
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|alarm
-argument_list|(
-name|QueueIntvl
-argument_list|)
-expr_stmt|;
-block|}
-end_if
+begin_comment
+comment|/* 	**  See if we want to go off and do other useful work. 	*/
+end_comment
 
 begin_if
 if|if
@@ -812,6 +787,43 @@ expr_stmt|;
 block|}
 end_if
 
+begin_comment
+comment|/* 	**  Arrange to reorder the queue at polite intervals. 	*/
+end_comment
+
+begin_if
+if|if
+condition|(
+name|QueueIntvl
+operator|!=
+literal|0
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|signal
+argument_list|(
+name|SIGALRM
+argument_list|,
+name|reordersig
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|alarm
+argument_list|(
+name|QueueIntvl
+argument_list|)
+expr_stmt|;
+block|}
+end_if
+
+begin_comment
+comment|/* 	**  Start making passes through the queue. 	**	First, read and sort the entire queue. 	**	Then, process the work in that order. 	**		But if you take too long, start over. 	**	There is a race condition at the end -- we could get 	**		a reorder signal after finishing the queue. 	**		In this case we will hang for one more queue 	**		interval -- clearly a botch, but rare and 	**		relatively innocuous. 	*/
+end_comment
+
 begin_for
 for|for
 control|(
@@ -819,35 +831,15 @@ init|;
 condition|;
 control|)
 block|{
-comment|/* 		**  Order the existing work requests. 		*/
+comment|/* order the existing work requests */
 name|orderq
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|WorkQ
-operator|==
-name|NULL
-condition|)
-block|{
-comment|/* no work?  well, maybe later */
-if|if
-condition|(
-name|QueueIntvl
-operator|==
-literal|0
-condition|)
-break|break;
-name|pause
-argument_list|()
-expr_stmt|;
-continue|continue;
-block|}
 name|ReorderQueue
 operator|=
 name|FALSE
 expr_stmt|;
-comment|/* 		**  Process them once at a time. 		**	The queue could be reordered while we do this to take 		**	new requests into account.  If so, the existing job 		**	will be finished but the next thing taken off WorkQ 		**	may be something else. 		*/
+comment|/* process them once at a time */
 while|while
 condition|(
 name|WorkQ
@@ -894,6 +886,7 @@ name|ReorderQueue
 condition|)
 break|break;
 block|}
+comment|/* if we are just doing one pass, then we are done */
 if|if
 condition|(
 name|QueueIntvl
@@ -901,6 +894,15 @@ operator|==
 literal|0
 condition|)
 break|break;
+comment|/* wait for work -- note (harmless) race condition here */
+if|if
+condition|(
+operator|!
+name|ReorderQueue
+condition|)
+name|pause
+argument_list|()
+expr_stmt|;
 block|}
 end_for
 
