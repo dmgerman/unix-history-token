@@ -40,7 +40,7 @@ name|isdigit
 end_undef
 
 begin_comment
-comment|/*  * Sccs Id = "@(#)def.h	1.5 %G%";  */
+comment|/*  * Sccs Id = "@(#)def.h	1.6 %G%";  */
 end_comment
 
 begin_comment
@@ -501,6 +501,28 @@ end_define
 
 begin_comment
 comment|/* Illegal when read only bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|C
+value|01000
+end_define
+
+begin_comment
+comment|/* Is a conditional command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T
+value|02000
+end_define
+
+begin_comment
+comment|/* Is a transparent command */
 end_comment
 
 begin_comment
@@ -985,6 +1007,43 @@ end_define
 
 begin_comment
 comment|/* Maximum length of string token */
+end_comment
+
+begin_comment
+comment|/*  * Constants for conditional commands.  These describe whether  * we should be executing stuff or not.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CANY
+value|0
+end_define
+
+begin_comment
+comment|/* Execute in send or receive mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CRCV
+value|1
+end_define
+
+begin_comment
+comment|/* Execute in receive mode only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CSEND
+value|2
+end_define
+
+begin_comment
+comment|/* Execute in send mode only */
 end_comment
 
 begin_comment
