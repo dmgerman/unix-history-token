@@ -136,17 +136,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|_thread_ctxtype_offset
-init|=
-name|OFF
-argument_list|(
-name|ctxtype
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|_thread_ctx_offset
 init|=
 name|OFF
@@ -175,38 +164,6 @@ name|int
 name|_thread_PS_DEAD_value
 init|=
 name|PS_DEAD
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|_thread_CTX_JB_NOSIG_value
-init|=
-name|CTX_JB_NOSIG
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|_thread_CTX_JB_value
-init|=
-name|CTX_JB
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|_thread_CTX_SJB_value
-init|=
-name|CTX_SJB
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|_thread_CTX_UC_value
-init|=
-name|CTX_UC
 decl_stmt|;
 end_decl_stmt
 
@@ -528,13 +485,6 @@ argument_list|(
 name|double
 argument_list|)
 argument_list|)
-expr_stmt|;
-comment|/* Initialize the rest of the frame: */
-name|new_thread
-operator|->
-name|ctxtype
-operator|=
-name|CTX_JB_NOSIG
 expr_stmt|;
 comment|/* Copy the thread attributes: */
 name|memcpy

@@ -1695,7 +1695,8 @@ name|pthread
 modifier|*
 name|thread
 decl_stmt|;
-name|int
+name|void
+modifier|*
 name|ret
 decl_stmt|;
 name|int
@@ -1706,31 +1707,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Normally thread contexts are stored as jmp_bufs via _setjmp()/_longjmp(),  * but they may also be sigjmp_buf and ucontext_t.  When a thread is  * interrupted by a signal, it's context is saved as a ucontext_t.  An  * application is also free to use [_]longjmp()/[_]siglongjmp() to jump  * between contexts within the same thread.  Future support will also  * include setcontext()/getcontext().  *  * Define an enumerated type that can identify the 4 different context  * types.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-enum|enum
-block|{
-name|CTX_JB_NOSIG
-block|,
-comment|/* context is jmp_buf without saved sigset */
-name|CTX_JB
-block|,
-comment|/* context is jmp_buf (with saved sigset) */
-name|CTX_SJB
-block|,
-comment|/* context is sigjmp_buf (with saved sigset) */
-name|CTX_UC
-comment|/* context is ucontext_t (with saved sigset) */
-block|}
-name|thread_context_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/*  * There are 2 basic contexts that a frame may contain at any  * one time:  *  *   o ctx - The context that the thread should return to after normal  *     completion of the signal handler.  *   o sig_jb - The context just before the signal handler is invoked.  *     Attempts at abnormal returns from user supplied signal handlers  *     will return back to the signal context to perform any necessary  *     cleanup.  */
+comment|/*  * The frame that is added to the top of a threads stack when setting up  * up the thread to run a signal handler.  */
 end_comment
 
 begin_struct
@@ -1742,14 +1719,11 @@ name|struct
 name|pthread_state_data
 name|saved_state
 decl_stmt|;
-comment|/* 	 * Threads return context; ctxtype identifies the type of context. 	 * For signal frame 0, these point to the context storage area 	 * within the pthread structure.  When handling signals (frame> 0), 	 * these point to a context storage area that is allocated off the 	 * threads stack. 	 */
+comment|/* 	 * Threads return context; we use only jmp_buf's for now. 	 */
 union|union
 block|{
 name|jmp_buf
 name|jb
-decl_stmt|;
-name|sigjmp_buf
-name|sigjb
 decl_stmt|;
 name|ucontext_t
 name|uc
@@ -1757,12 +1731,6 @@ decl_stmt|;
 block|}
 name|ctx
 union|;
-name|thread_context_t
-name|ctxtype
-decl_stmt|;
-name|int
-name|longjmp_val
-decl_stmt|;
 name|int
 name|signo
 decl_stmt|;
@@ -1847,14 +1815,11 @@ name|struct
 name|pthread_attr
 name|attr
 decl_stmt|;
-comment|/* 	 * Threads return context; ctxtype identifies the type of context. 	 */
+comment|/* 	 * Threads return context; we use only jmp_buf's for now. 	 */
 union|union
 block|{
 name|jmp_buf
 name|jb
-decl_stmt|;
-name|sigjmp_buf
-name|sigjb
 decl_stmt|;
 name|ucontext_t
 name|uc
@@ -1862,12 +1827,6 @@ decl_stmt|;
 block|}
 name|ctx
 union|;
-name|thread_context_t
-name|ctxtype
-decl_stmt|;
-name|int
-name|longjmp_val
-decl_stmt|;
 comment|/* 	 * Used for tracking delivery of signal handlers. 	 */
 name|struct
 name|pthread_signal_frame
@@ -3055,18 +3014,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The signal stack. */
-end_comment
-
-begin_decl_stmt
-name|SCLASS
-name|struct
-name|sigaltstack
-name|_thread_sigstack
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/* Thread switch hook. */
 end_comment
 
@@ -3989,7 +3936,9 @@ begin_function_decl
 name|void
 name|_thread_sig_check_pending
 parameter_list|(
-name|pthread_t
+name|struct
+name|pthread
+modifier|*
 name|pthread
 parameter_list|)
 function_decl|;
@@ -4008,7 +3957,9 @@ begin_function_decl
 name|void
 name|_thread_sig_send
 parameter_list|(
-name|pthread_t
+name|struct
+name|pthread
+modifier|*
 name|pthread
 parameter_list|,
 name|int
@@ -4030,7 +3981,9 @@ begin_function_decl
 name|void
 name|_thread_sigframe_restore
 parameter_list|(
-name|pthread_t
+name|struct
+name|pthread
+modifier|*
 name|thread
 parameter_list|,
 name|struct

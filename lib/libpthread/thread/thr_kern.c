@@ -269,7 +269,7 @@ name|_thread_kern_sched
 parameter_list|(
 name|ucontext_t
 modifier|*
-name|scp
+name|ucp
 parameter_list|)
 block|{
 name|struct
@@ -288,11 +288,17 @@ expr_stmt|;
 comment|/* Check if this function was called from the signal handler: */
 if|if
 condition|(
-name|scp
+name|ucp
 operator|!=
 name|NULL
 condition|)
 block|{
+comment|/* XXX - Save FP registers? */
+name|FP_SAVE_UC
+argument_list|(
+name|ucp
+argument_list|)
+expr_stmt|;
 name|called_from_handler
 operator|=
 literal|1
@@ -303,8 +309,6 @@ literal|"Entering scheduler due to signal\n"
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
 comment|/* Save the state of the current thread: */
 if|if
 condition|(
@@ -316,25 +320,9 @@ name|ctx
 operator|.
 name|jb
 argument_list|)
-operator|==
+operator|!=
 literal|0
 condition|)
-block|{
-comment|/* Flag the jump buffer was the last state saved: */
-name|curthread
-operator|->
-name|ctxtype
-operator|=
-name|CTX_JB_NOSIG
-expr_stmt|;
-name|curthread
-operator|->
-name|longjmp_val
-operator|=
-literal|1
-expr_stmt|;
-block|}
-else|else
 block|{
 name|DBG_MSG
 argument_list|(
@@ -343,7 +331,7 @@ argument_list|,
 name|curthread
 argument_list|)
 expr_stmt|;
-comment|/* 			 * This point is reached when a longjmp() is called 			 * to restore the state of a thread. 			 * 			 * This is the normal way out of the scheduler. 			 */
+comment|/* 		 * This point is reached when a longjmp() is called 		 * to restore the state of a thread. 		 * 		 * This is the normal way out of the scheduler. 		 */
 name|_thread_kern_in_sched
 operator|=
 literal|0
@@ -383,7 +371,7 @@ operator|!=
 literal|0
 operator|)
 condition|)
-comment|/* 					 * Cancellations override signals. 					 * 					 * Stick a cancellation point at the 					 * start of each async-cancellable 					 * thread's resumption. 					 * 					 * We allow threads woken at cancel 					 * points to do their own checks. 					 */
+comment|/* 				 * Cancellations override signals. 				 * 				 * Stick a cancellation point at the 				 * start of each async-cancellable 				 * thread's resumption. 				 * 				 * We allow threads woken at cancel 				 * points to do their own checks. 				 */
 name|pthread_testcancel
 argument_list|()
 expr_stmt|;
@@ -404,7 +392,34 @@ name|curthread
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|ucp
+operator|==
+name|NULL
+condition|)
 return|return;
+else|else
+block|{
+comment|/* XXX - Restore FP registers? */
+name|FP_RESTORE_UC
+argument_list|(
+name|ucp
+argument_list|)
+expr_stmt|;
+comment|/* 			 * Set the process signal mask in the context; it 			 * could have changed by the handler. 			 */
+name|ucp
+operator|->
+name|uc_sigmask
+operator|=
+name|_process_sigmask
+expr_stmt|;
+comment|/* Resume the interrupted thread: */
+name|__sys_sigreturn
+argument_list|(
+name|ucp
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 comment|/* Switch to the thread scheduler: */
@@ -510,7 +525,7 @@ name|called_from_handler
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 		 * The signal handler should have saved the state of 		 * the current thread.  Restore the process signal 		 * mask. 		 */
+comment|/* 		 * We were called from a signal handler; restore the process 		 * signal mask. 		 */
 if|if
 condition|(
 name|__sys_sigprocmask
@@ -528,24 +543,6 @@ condition|)
 name|PANIC
 argument_list|(
 literal|"Unable to restore process mask after signal"
-argument_list|)
-expr_stmt|;
-comment|/* 		 * Since the signal handler didn't return normally, we 		 * have to tell the kernel to reuse the signal stack. 		 */
-if|if
-condition|(
-name|__sys_sigaltstack
-argument_list|(
-operator|&
-name|_thread_sigstack
-argument_list|,
-name|NULL
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|PANIC
-argument_list|(
-literal|"Unable to restore alternate signal stack"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1432,83 +1429,6 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 			 * Continue the thread at its current frame: 			 */
-switch|switch
-condition|(
-name|curthread
-operator|->
-name|ctxtype
-condition|)
-block|{
-case|case
-name|CTX_JB_NOSIG
-case|:
-name|___longjmp
-argument_list|(
-name|curthread
-operator|->
-name|ctx
-operator|.
-name|jb
-argument_list|,
-name|curthread
-operator|->
-name|longjmp_val
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|CTX_JB
-case|:
-name|__longjmp
-argument_list|(
-name|curthread
-operator|->
-name|ctx
-operator|.
-name|jb
-argument_list|,
-name|curthread
-operator|->
-name|longjmp_val
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|CTX_SJB
-case|:
-name|__siglongjmp
-argument_list|(
-name|curthread
-operator|->
-name|ctx
-operator|.
-name|sigjb
-argument_list|,
-name|curthread
-operator|->
-name|longjmp_val
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|CTX_UC
-case|:
-comment|/* XXX - Restore FP regsisters? */
-name|FP_RESTORE_UC
-argument_list|(
-operator|&
-name|curthread
-operator|->
-name|ctx
-operator|.
-name|uc
-argument_list|)
-expr_stmt|;
-comment|/* 				 * Do a sigreturn to restart the thread that 				 * was interrupted by a signal: 				 */
-name|_thread_kern_in_sched
-operator|=
-literal|0
-expr_stmt|;
 if|#
 directive|if
 name|NOT_YET
@@ -1524,31 +1444,19 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* 				 * Ensure the process signal mask is set 				 * correctly: 				 */
-name|curthread
-operator|->
-name|ctx
-operator|.
-name|uc
-operator|.
-name|uc_sigmask
-operator|=
-name|_process_sigmask
-expr_stmt|;
-name|__sys_sigreturn
+name|___longjmp
 argument_list|(
-operator|&
 name|curthread
 operator|->
 name|ctx
 operator|.
-name|uc
+name|jb
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-break|break;
-block|}
 comment|/* This point should not be reached. */
 name|PANIC
 argument_list|(
