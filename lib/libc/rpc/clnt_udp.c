@@ -1967,6 +1967,35 @@ block|}
 comment|/* end of valid reply message */
 else|else
 block|{
+comment|/* 		 * It's possible for xdr_replymsg() to fail partway 		 * through its attempt to decode the result from the 		 * server. If this happens, it will leave the reply 		 * structure partially populated with dynamically 		 * allocated memory. (This can happen if someone uses 		 * clntudp_bufcreate() to create a CLIENT handle and 		 * specifies a receive buffer size that is too small.) 		 * This memory must be free()ed to avoid a leak. 		 */
+name|int
+name|op
+init|=
+name|reply_xdrs
+operator|.
+name|x_op
+decl_stmt|;
+name|reply_xdrs
+operator|.
+name|x_op
+operator|=
+name|XDR_FREE
+expr_stmt|;
+name|xdr_replymsg
+argument_list|(
+operator|&
+name|reply_xdrs
+argument_list|,
+operator|&
+name|reply_msg
+argument_list|)
+expr_stmt|;
+name|reply_xdrs
+operator|.
+name|x_op
+operator|=
+name|op
+expr_stmt|;
 name|cu
 operator|->
 name|cu_error
