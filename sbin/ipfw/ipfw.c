@@ -388,12 +388,7 @@ specifier|static
 name|void
 name|show_usage
 parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|fmt
-parameter_list|,
-modifier|...
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4729,62 +4724,9 @@ specifier|static
 name|void
 name|show_usage
 parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|fmt
-parameter_list|,
-modifier|...
+name|void
 parameter_list|)
 block|{
-if|if
-condition|(
-name|fmt
-condition|)
-block|{
-name|char
-name|buf
-index|[
-literal|100
-index|]
-decl_stmt|;
-name|va_list
-name|args
-decl_stmt|;
-name|va_start
-argument_list|(
-name|args
-argument_list|,
-name|fmt
-argument_list|)
-expr_stmt|;
-name|vsnprintf
-argument_list|(
-name|buf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
-argument_list|,
-name|fmt
-argument_list|,
-name|args
-argument_list|)
-expr_stmt|;
-name|va_end
-argument_list|(
-name|args
-argument_list|)
-expr_stmt|;
-name|warnx
-argument_list|(
-literal|"error: %s"
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
-block|}
 name|fprintf
 argument_list|(
 name|stderr
@@ -4801,23 +4743,23 @@ literal|"    pipe number config [pipeconfig]\n"
 literal|"  rule: [prob<match_probability>] action proto src dst extras...\n"
 literal|"    action:\n"
 literal|"      {allow|permit|accept|pass|deny|drop|reject|unreach code|\n"
-literal|"	reset|count|skipto num|divert port|tee port|fwd ip|\n"
-literal|"	pipe num} [log [logamount count]]\n"
+literal|"       reset|count|skipto num|divert port|tee port|fwd ip|\n"
+literal|"       pipe num} [log [logamount count]]\n"
 literal|"    proto: {ip|tcp|udp|icmp|<number>}\n"
-literal|"    src: from [not] {me|any|ip[{/bits|:mask}]} [{port[-port]}, [port], ...]\n"
-literal|"    dst: to [not] {me|any|ip[{/bits|:mask}]} [{port[-port]}, [port], ...]\n"
+literal|"    src: from [not] {me|any|ip[{/bits|:mask}]} [{port|port-port},[port],...]\n"
+literal|"    dst: to [not] {me|any|ip[{/bits|:mask}]} [{port|port-port},[port],...]\n"
 literal|"  extras:\n"
 literal|"    uid {user id}\n"
 literal|"    gid {group id}\n"
-literal|"    fragment	  (may not be used with ports or tcpflags)\n"
+literal|"    fragment     (may not be used with ports or tcpflags)\n"
 literal|"    in\n"
 literal|"    out\n"
 literal|"    {xmit|recv|via} {iface|ip|any}\n"
 literal|"    {established|setup}\n"
-literal|"    tcpflags [!]{syn|fin|rst|ack|psh|urg}, ...\n"
-literal|"    ipoptions [!]{ssrr|lsrr|rr|ts}, ...\n"
-literal|"    tcpoptions [!]{mss|window|sack|ts|cc}, ...\n"
-literal|"    icmptypes {type[, type]}...\n"
+literal|"    tcpflags [!]{syn|fin|rst|ack|psh|urg},...\n"
+literal|"    ipoptions [!]{ssrr|lsrr|rr|ts},...\n"
+literal|"    tcpoptions [!]{mss|window|sack|ts|cc},...\n"
+literal|"    icmptypes {type[,type]}...\n"
 literal|"  pipeconfig:\n"
 literal|"    {bw|bandwidth}<number>{bit/s|Kbit/s|Mbit/s|Bytes/s|KBytes/s|MBytes/s}\n"
 literal|"    {bw|bandwidth} interface_name\n"
@@ -5075,8 +5017,10 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|show_usage
+name|errx
 argument_list|(
+name|EX_NOHOST
+argument_list|,
 literal|"hostname ``%s'' unknown"
 argument_list|,
 operator|*
@@ -5101,8 +5045,10 @@ argument_list|,
 name|mask
 argument_list|)
 condition|)
-name|show_usage
+name|errx
 argument_list|(
+name|EX_DATAERR
+argument_list|,
 literal|"bad netmask ``%s''"
 argument_list|,
 name|p
@@ -5140,8 +5086,10 @@ operator|>
 literal|32
 condition|)
 block|{
-name|show_usage
+name|errx
 argument_list|(
+name|EX_DATAERR
+argument_list|,
 literal|"bad width ``%s''"
 argument_list|,
 name|p
@@ -5308,8 +5256,10 @@ name|code
 expr_stmt|;
 return|return;
 block|}
-name|show_usage
+name|errx
 argument_list|(
+name|EX_DATAERR
+argument_list|,
 literal|"unknown ICMP unreachable code ``%s''"
 argument_list|,
 name|str
@@ -6242,8 +6192,10 @@ literal|0
 index|]
 argument_list|)
 condition|)
-name|show_usage
+name|errx
 argument_list|(
+name|EX_DATAERR
+argument_list|,
 literal|"invalid tcp flag ``%s''"
 argument_list|,
 name|p
@@ -6463,8 +6415,10 @@ literal|0
 index|]
 argument_list|)
 condition|)
-name|show_usage
+name|errx
 argument_list|(
+name|EX_DATAERR
+argument_list|,
 literal|"invalid tcp option ``%s''"
 argument_list|,
 name|p
@@ -6725,8 +6679,10 @@ name|c
 operator|!=
 literal|'\0'
 condition|)
-name|show_usage
+name|errx
 argument_list|(
+name|EX_DATAERR
+argument_list|,
 literal|"invalid ICMP type"
 argument_list|)
 expr_stmt|;
@@ -6743,8 +6699,10 @@ argument_list|)
 operator|*
 literal|8
 condition|)
-name|show_usage
+name|errx
 argument_list|(
+name|EX_DATAERR
+argument_list|,
 literal|"ICMP type out of range"
 argument_list|)
 expr_stmt|;
@@ -7124,8 +7082,10 @@ condition|(
 operator|!
 name|ac
 condition|)
-name|show_usage
+name|errx
 argument_list|(
+name|EX_USAGE
+argument_list|,
 literal|"missing argument for ``%s''"
 argument_list|,
 name|which
@@ -7293,8 +7253,10 @@ name|fu_via_ip
 argument_list|)
 condition|)
 block|{
-name|show_usage
+name|errx
 argument_list|(
+name|EX_DATAERR
+argument_list|,
 literal|"bad ip address ``%s''"
 argument_list|,
 name|arg
@@ -8010,8 +7972,10 @@ name|ac
 operator|<
 literal|2
 condition|)
-name|show_usage
+name|errx
 argument_list|(
+name|EX_USAGE
+argument_list|,
 literal|"mask: %s value missing"
 argument_list|,
 operator|*
@@ -8142,10 +8106,12 @@ operator|<<
 literal|16
 operator|)
 condition|)
-name|show_usage
+name|errx
 argument_list|(
-literal|"mask: %s must be "
-literal|"16 bit, not 0x%08x"
+name|EX_DATAERR
+argument_list|,
+literal|"mask: %s must be 16 bit,"
+literal|" not 0x%08x"
 argument_list|,
 operator|*
 name|av
@@ -8199,10 +8165,12 @@ operator|<<
 literal|8
 operator|)
 condition|)
-name|show_usage
+name|errx
 argument_list|(
-literal|"mask: %s must be "
-literal|"8 bit, not 0x%08x"
+name|EX_DATAERR
+argument_list|,
+literal|"mask: %s must be 8 bit,"
+literal|" not 0x%08x"
 argument_list|,
 operator|*
 name|av
@@ -8356,10 +8324,11 @@ name|w_q
 operator|<=
 literal|0
 condition|)
-name|show_usage
+name|errx
 argument_list|(
-literal|"w_q %f must be "
-literal|"0< x<= 1"
+name|EX_DATAERR
+argument_list|,
+literal|"w_q %f must be 0< x<= 1"
 argument_list|,
 name|w_q
 argument_list|)
@@ -8532,10 +8501,11 @@ name|max_p
 operator|<=
 literal|0
 condition|)
-name|show_usage
+name|errx
 argument_list|(
-literal|"max_p %f must be "
-literal|"0< x<= 1"
+name|EX_DATAERR
+argument_list|,
+literal|"max_p %f must be 0< x<= 1"
 argument_list|,
 name|max_p
 argument_list|)
@@ -8864,17 +8834,16 @@ literal|2
 expr_stmt|;
 block|}
 else|else
-block|{
-name|show_usage
+name|errx
 argument_list|(
-literal|"unrecognised pipe option "
-literal|"``%s''"
+name|EX_DATAERR
+argument_list|,
+literal|"unrecognised pipe option ``%s''"
 argument_list|,
 operator|*
 name|av
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 else|else
 block|{
@@ -8973,17 +8942,16 @@ literal|2
 expr_stmt|;
 block|}
 else|else
-block|{
-name|show_usage
+name|errx
 argument_list|(
-literal|"unrecognised option "
-literal|"``%s''"
+name|EX_DATAERR
+argument_list|,
+literal|"unrecognised option ``%s''"
 argument_list|,
 operator|*
 name|av
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 block|}
@@ -9002,8 +8970,10 @@ name|pipe_nr
 operator|==
 literal|0
 condition|)
-name|show_usage
+name|errx
 argument_list|(
+name|EX_DATAERR
+argument_list|,
 literal|"pipe_nr %d must be> 0"
 argument_list|,
 name|pipe
@@ -9019,8 +8989,10 @@ name|delay
 operator|>
 literal|10000
 condition|)
-name|show_usage
+name|errx
 argument_list|(
+name|EX_DATAERR
+argument_list|,
 literal|"delay %d must be< 10000"
 argument_list|,
 name|pipe
@@ -9042,8 +9014,10 @@ name|parent_nr
 operator|==
 literal|0
 condition|)
-name|show_usage
+name|errx
 argument_list|(
+name|EX_DATAERR
+argument_list|,
 literal|"pipe %d must be> 0"
 argument_list|,
 name|pipe
@@ -9063,8 +9037,10 @@ name|weight
 operator|>
 literal|100
 condition|)
-name|show_usage
+name|errx
 argument_list|(
+name|EX_DATAERR
+argument_list|,
 literal|"weight %d must be<= 100"
 argument_list|,
 name|pipe
@@ -9098,8 +9074,10 @@ literal|1024
 operator|*
 literal|1024
 condition|)
-name|show_usage
+name|errx
 argument_list|(
+name|EX_DATAERR
+argument_list|,
 literal|"queue size %d, must be< 1MB"
 argument_list|,
 name|pipe
@@ -9122,8 +9100,10 @@ name|qsize
 operator|>
 literal|100
 condition|)
-name|show_usage
+name|errx
 argument_list|(
+name|EX_DATAERR
+argument_list|,
 literal|"queue size %d, must be 2<= x<= 100"
 argument_list|,
 name|pipe
@@ -9159,8 +9139,10 @@ name|fs
 operator|.
 name|max_th
 condition|)
-name|show_usage
+name|errx
 argument_list|(
+name|EX_DATAERR
+argument_list|,
 literal|"min_th %d must be< than max_th %d"
 argument_list|,
 name|pipe
@@ -9186,8 +9168,10 @@ name|max_th
 operator|==
 literal|0
 condition|)
-name|show_usage
+name|errx
 argument_list|(
+name|EX_DATAERR
+argument_list|,
 literal|"max_th must be> 0"
 argument_list|)
 expr_stmt|;
@@ -9264,10 +9248,12 @@ name|lookup_depth
 operator|==
 literal|0
 condition|)
-name|show_usage
+name|errx
 argument_list|(
-literal|"net.inet.ip.dummynet.red_lookup_depth must"
-literal|"greater than zero"
+name|EX_DATAERR
+argument_list|,
+literal|"net.inet.ip.dummynet.red_lookup_depth"
+literal|" must greater than zero"
 argument_list|)
 expr_stmt|;
 name|len
@@ -9312,10 +9298,12 @@ name|avg_pkt_size
 operator|==
 literal|0
 condition|)
-name|show_usage
+name|errx
 argument_list|(
-literal|"net.inet.ip.dummynet.red_avg_pkt_size must"
-literal|"greater than zero"
+name|EX_DATAERR
+argument_list|,
+literal|"net.inet.ip.dummynet.red_avg_pkt_size"
+literal|" must be greater than zero"
 argument_list|)
 expr_stmt|;
 name|len
@@ -9650,8 +9638,10 @@ name|d
 operator|>
 literal|1
 condition|)
-name|show_usage
+name|errx
 argument_list|(
+name|EX_DATAERR
+argument_list|,
 literal|"illegal match prob. %s"
 argument_list|,
 name|av
@@ -9711,8 +9701,10 @@ name|ac
 operator|==
 literal|0
 condition|)
-name|show_usage
+name|errx
 argument_list|(
+name|EX_USAGE
+argument_list|,
 literal|"missing action"
 argument_list|)
 expr_stmt|;
@@ -9860,8 +9852,10 @@ condition|(
 operator|!
 name|ac
 condition|)
-name|show_usage
+name|errx
 argument_list|(
+name|EX_DATAERR
+argument_list|,
 literal|"missing pipe number"
 argument_list|)
 expr_stmt|;
@@ -9922,8 +9916,10 @@ condition|(
 operator|!
 name|ac
 condition|)
-name|show_usage
+name|errx
 argument_list|(
+name|EX_DATAERR
+argument_list|,
 literal|"missing queue number"
 argument_list|)
 expr_stmt|;
@@ -9984,8 +9980,10 @@ condition|(
 operator|!
 name|ac
 condition|)
-name|show_usage
+name|errx
 argument_list|(
+name|EX_DATAERR
+argument_list|,
 literal|"missing %s port"
 argument_list|,
 literal|"divert"
@@ -10061,8 +10059,10 @@ name|s_port
 argument_list|)
 expr_stmt|;
 else|else
-name|show_usage
+name|errx
 argument_list|(
+name|EX_DATAERR
+argument_list|,
 literal|"illegal %s port"
 argument_list|,
 literal|"divert"
@@ -10106,8 +10106,10 @@ condition|(
 operator|!
 name|ac
 condition|)
-name|show_usage
+name|errx
 argument_list|(
+name|EX_USAGE
+argument_list|,
 literal|"missing %s port"
 argument_list|,
 literal|"tee divert"
@@ -10183,8 +10185,10 @@ name|s_port
 argument_list|)
 expr_stmt|;
 else|else
-name|show_usage
+name|errx
 argument_list|(
+name|EX_DATAERR
+argument_list|,
 literal|"illegal %s port"
 argument_list|,
 literal|"tee divert"
@@ -10251,8 +10255,10 @@ condition|(
 operator|!
 name|ac
 condition|)
-name|show_usage
+name|errx
 argument_list|(
+name|EX_USAGE
+argument_list|,
 literal|"missing forwarding IP address"
 argument_list|)
 expr_stmt|;
@@ -10345,9 +10351,12 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|show_usage
+name|errx
 argument_list|(
-literal|"illegal forwarding port ``%s''"
+name|EX_DATAERR
+argument_list|,
+literal|"illegal forwarding port"
+literal|" ``%s''"
 argument_list|,
 name|pp
 argument_list|)
@@ -10398,8 +10407,10 @@ name|s_addr
 operator|==
 literal|0
 condition|)
-name|show_usage
+name|errx
 argument_list|(
+name|EX_DATAERR
+argument_list|,
 literal|"illegal forwarding IP address"
 argument_list|)
 expr_stmt|;
@@ -10440,8 +10451,10 @@ condition|(
 operator|!
 name|ac
 condition|)
-name|show_usage
+name|errx
 argument_list|(
+name|EX_DATAERR
+argument_list|,
 literal|"missing skipto rule number"
 argument_list|)
 expr_stmt|;
@@ -10678,8 +10691,10 @@ goto|;
 block|}
 else|else
 block|{
-name|show_usage
+name|errx
 argument_list|(
+name|EX_DATAERR
+argument_list|,
 literal|"invalid action ``%s''"
 argument_list|,
 operator|*
@@ -10752,9 +10767,12 @@ operator|&
 name|IP_FW_F_PRN
 operator|)
 condition|)
-name|show_usage
+name|errx
 argument_list|(
-literal|"``logamount'' not valid without ``log''"
+name|EX_USAGE
+argument_list|,
+literal|"``logamount'' not valid without"
+literal|" ``log''"
 argument_list|)
 expr_stmt|;
 name|ac
@@ -10768,8 +10786,10 @@ condition|(
 operator|!
 name|ac
 condition|)
-name|show_usage
+name|errx
 argument_list|(
+name|EX_USAGE
+argument_list|,
 literal|"``logamount'' requires argument"
 argument_list|)
 expr_stmt|;
@@ -10791,9 +10811,12 @@ name|fw_logamount
 operator|<
 literal|0
 condition|)
-name|show_usage
+name|errx
 argument_list|(
-literal|"``logamount'' argument must be positive"
+name|EX_DATAERR
+argument_list|,
+literal|"``logamount'' argument must be"
+literal|" positive"
 argument_list|)
 expr_stmt|;
 if|if
@@ -10825,8 +10848,10 @@ name|ac
 operator|==
 literal|0
 condition|)
-name|show_usage
+name|errx
 argument_list|(
+name|EX_USAGE
+argument_list|,
 literal|"missing protocol"
 argument_list|)
 expr_stmt|;
@@ -10923,8 +10948,10 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|show_usage
+name|errx
 argument_list|(
+name|EX_DATAERR
+argument_list|,
 literal|"invalid protocol ``%s''"
 argument_list|,
 operator|*
@@ -10956,8 +10983,10 @@ name|fw_reject_code
 operator|==
 name|IP_FW_REJECT_RST
 condition|)
-name|show_usage
+name|errx
 argument_list|(
+name|EX_DATAERR
+argument_list|,
 literal|"``reset'' is only valid for tcp packets"
 argument_list|)
 expr_stmt|;
@@ -10990,8 +11019,10 @@ operator|--
 expr_stmt|;
 block|}
 else|else
-name|show_usage
+name|errx
 argument_list|(
+name|EX_USAGE
+argument_list|,
 literal|"missing ``from''"
 argument_list|)
 expr_stmt|;
@@ -11033,8 +11064,10 @@ condition|(
 operator|!
 name|ac
 condition|)
-name|show_usage
+name|errx
 argument_list|(
+name|EX_USAGE
+argument_list|,
 literal|"missing arguments"
 argument_list|)
 expr_stmt|;
@@ -11223,8 +11256,10 @@ operator|--
 expr_stmt|;
 block|}
 else|else
-name|show_usage
+name|errx
 argument_list|(
+name|EX_USAGE
+argument_list|,
 literal|"missing ``to''"
 argument_list|)
 expr_stmt|;
@@ -11266,8 +11301,10 @@ condition|(
 operator|!
 name|ac
 condition|)
-name|show_usage
+name|errx
 argument_list|(
+name|EX_USAGE
+argument_list|,
 literal|"missing arguments"
 argument_list|)
 expr_stmt|;
@@ -11464,8 +11501,10 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|show_usage
+name|errx
 argument_list|(
+name|EX_USAGE
+argument_list|,
 literal|"only TCP and UDP protocols are valid"
 literal|" with port specifications"
 argument_list|)
@@ -11523,8 +11562,10 @@ condition|(
 operator|!
 name|ac
 condition|)
-name|show_usage
+name|errx
 argument_list|(
+name|EX_DATAERR
+argument_list|,
 literal|"``uid'' requires argument"
 argument_list|)
 expr_stmt|;
@@ -11570,9 +11611,12 @@ name|pwd
 operator|==
 name|NULL
 condition|)
-name|show_usage
+name|errx
 argument_list|(
-literal|"uid \"%s\" is nonexistant"
+name|EX_DATAERR
+argument_list|,
+literal|"uid \"%s\" is"
+literal|" nonexistent"
 argument_list|,
 operator|*
 name|av
@@ -11641,8 +11685,10 @@ condition|(
 operator|!
 name|ac
 condition|)
-name|show_usage
+name|errx
 argument_list|(
+name|EX_DATAERR
+argument_list|,
 literal|"``gid'' requires argument"
 argument_list|)
 expr_stmt|;
@@ -11688,9 +11734,12 @@ name|grp
 operator|==
 name|NULL
 condition|)
-name|show_usage
+name|errx
 argument_list|(
-literal|"gid \"%s\" is nonexistant"
+name|EX_DATAERR
+argument_list|,
+literal|"gid \"%s\" is"
+literal|" nonexistent"
 argument_list|,
 operator|*
 name|av
@@ -11912,8 +11961,10 @@ condition|)
 block|{
 name|badviacombo
 label|:
-name|show_usage
+name|errx
 argument_list|(
+name|EX_USAGE
+argument_list|,
 literal|"``via'' is incompatible"
 literal|" with ``xmit'' and ``recv''"
 argument_list|)
@@ -12220,8 +12271,10 @@ condition|(
 operator|!
 name|ac
 condition|)
-name|show_usage
+name|errx
 argument_list|(
+name|EX_USAGE
+argument_list|,
 literal|"missing argument"
 literal|" for ``ipoptions''"
 argument_list|)
@@ -12372,8 +12425,10 @@ condition|(
 operator|!
 name|ac
 condition|)
-name|show_usage
+name|errx
 argument_list|(
+name|EX_USAGE
+argument_list|,
 literal|"missing argument"
 literal|" for ``tcpflags''"
 argument_list|)
@@ -12445,8 +12500,10 @@ condition|(
 operator|!
 name|ac
 condition|)
-name|show_usage
+name|errx
 argument_list|(
+name|EX_USAGE
+argument_list|,
 literal|"missing argument"
 literal|" for ``tcpoptions''"
 argument_list|)
@@ -12513,8 +12570,10 @@ condition|(
 operator|!
 name|ac
 condition|)
-name|show_usage
+name|errx
 argument_list|(
+name|EX_DATAERR
+argument_list|,
 literal|"missing argument"
 literal|" for ``icmptypes''"
 argument_list|)
@@ -12544,8 +12603,10 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
-name|show_usage
+name|errx
 argument_list|(
+name|EX_DATAERR
+argument_list|,
 literal|"unknown argument ``%s''"
 argument_list|,
 operator|*
@@ -12633,9 +12694,12 @@ operator|&
 name|IP_FW_F_IN
 operator|)
 condition|)
-name|show_usage
+name|errx
 argument_list|(
-literal|"can't check xmit interface of incoming packets"
+name|EX_DATAERR
+argument_list|,
+literal|"can't check xmit interface of incoming"
+literal|" packets"
 argument_list|)
 expr_stmt|;
 comment|/* frag may not be used in conjunction with ports or TCP flags */
@@ -12658,8 +12722,10 @@ name|rule
 operator|.
 name|fw_tcpnf
 condition|)
-name|show_usage
+name|errx
 argument_list|(
+name|EX_DATAERR
+argument_list|,
 literal|"can't mix 'frag' and tcpflags"
 argument_list|)
 expr_stmt|;
@@ -12669,9 +12735,12 @@ name|rule
 operator|.
 name|fw_nports
 condition|)
-name|show_usage
+name|errx
 argument_list|(
-literal|"can't mix 'frag' and port specifications"
+name|EX_DATAERR
+argument_list|,
+literal|"can't mix 'frag' and port"
+literal|" specifications"
 argument_list|)
 expr_stmt|;
 block|}
@@ -12986,8 +13055,10 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|show_usage
+name|errx
 argument_list|(
+name|EX_DATAERR
+argument_list|,
 literal|"invalid rule number ``%s''"
 argument_list|,
 operator|*
@@ -13183,8 +13254,10 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|show_usage
+name|errx
 argument_list|(
+name|EX_DATAERR
+argument_list|,
 literal|"invalid rule number ``%s''"
 argument_list|,
 operator|*
@@ -13236,9 +13309,7 @@ literal|1
 condition|)
 block|{
 name|show_usage
-argument_list|(
-name|NULL
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 comment|/* Initialize globals. */
@@ -13374,9 +13445,7 @@ expr_stmt|;
 break|break;
 default|default:
 name|show_usage
-argument_list|(
-name|NULL
-argument_list|)
+argument_list|()
 expr_stmt|;
 block|}
 name|ac
@@ -13395,8 +13464,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|show_usage
+name|errx
 argument_list|(
+name|EX_DATAERR
+argument_list|,
 literal|"bad arguments"
 argument_list|)
 expr_stmt|;
@@ -13466,8 +13537,10 @@ operator|!
 name|ac
 condition|)
 block|{
-name|show_usage
+name|errx
 argument_list|(
+name|EX_DATAERR
+argument_list|,
 literal|"pipe requires arguments"
 argument_list|)
 expr_stmt|;
@@ -13923,9 +13996,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|show_usage
+name|errx
 argument_list|(
-literal|"bad arguments"
+name|EX_USAGE
+argument_list|,
+literal|"bad arguments, for usage summary ``ipfw''"
 argument_list|)
 expr_stmt|;
 block|}
@@ -14240,9 +14315,12 @@ literal|1
 expr_stmt|;
 break|break;
 default|default:
-name|show_usage
+name|errx
 argument_list|(
-name|NULL
+name|EX_USAGE
+argument_list|,
+literal|"bad arguments, for usage"
+literal|" summary ``ipfw''"
 argument_list|)
 expr_stmt|;
 block|}
@@ -14260,8 +14338,10 @@ name|ac
 operator|!=
 literal|1
 condition|)
-name|show_usage
+name|errx
 argument_list|(
+name|EX_USAGE
+argument_list|,
 literal|"extraneous filename arguments"
 argument_list|)
 expr_stmt|;
