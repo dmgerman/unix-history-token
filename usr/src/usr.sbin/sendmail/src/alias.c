@@ -45,7 +45,7 @@ operator|)
 name|alias
 operator|.
 name|c
-literal|4.3
+literal|4.4
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|alias
 operator|.
 name|c
-literal|4.3
+literal|4.4
 operator|%
 name|G
 operator|%
@@ -1133,6 +1133,12 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+name|loweraddr
+argument_list|(
+operator|&
+name|al
+argument_list|)
+expr_stmt|;
 comment|/* 		**  Process the RHS. 		**	'al' is the internal form of the LHS address. 		**	'p' points to the text of the RHS. 		**		'p' may begin with a colon (i.e., the 		**		separator was "::") which will use the 		**		first address as the person to send 		**		errors to -- i.e., designates the 		**		list maintainer. 		*/
 if|if
 condition|(
