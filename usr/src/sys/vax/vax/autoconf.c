@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)autoconf.c	6.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)autoconf.c	6.16 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -862,7 +862,13 @@ literal|0
 operator|,
 name|nxv
 operator|=
+operator|&
 name|nexus
+index|[
+name|nsbi
+operator|*
+literal|16
+index|]
 expr_stmt|;
 for|for
 control|(
@@ -883,7 +889,7 @@ name|nxv
 operator|++
 control|)
 block|{
-comment|/* 			 * the 16 below shouldn't be there, but the constant 			 * is used at other points (vax/Locore.c) 			 */
+comment|/* 			 * the 16 below shouldn't be there, but the constant 			 * is used at other points (vax/locore.s) 			 */
 name|nxaccess
 argument_list|(
 name|nxp
