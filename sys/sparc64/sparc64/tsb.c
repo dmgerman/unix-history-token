@@ -1024,7 +1024,10 @@ name|void
 name|tsb_foreach
 parameter_list|(
 name|pmap_t
-name|pm
+name|pm1
+parameter_list|,
+name|pmap_t
+name|pm2
 parameter_list|,
 name|vm_offset_t
 name|start
@@ -1048,6 +1051,11 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|TSB_STATS_INC
+argument_list|(
+name|tsb_nforeach
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1065,7 +1073,7 @@ block|{
 name|tp
 operator|=
 operator|&
-name|pm
+name|pm1
 operator|->
 name|pm_tsb
 index|[
@@ -1109,7 +1117,9 @@ condition|(
 operator|!
 name|callback
 argument_list|(
-name|pm
+name|pm1
+argument_list|,
+name|pm2
 argument_list|,
 name|tp
 argument_list|,

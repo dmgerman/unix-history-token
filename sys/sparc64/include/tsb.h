@@ -225,6 +225,10 @@ name|pmap
 modifier|*
 parameter_list|,
 name|struct
+name|pmap
+modifier|*
+parameter_list|,
+name|struct
 name|tte
 modifier|*
 parameter_list|,
@@ -299,7 +303,10 @@ name|void
 name|tsb_foreach
 parameter_list|(
 name|pmap_t
-name|pm
+name|pm1
+parameter_list|,
+name|pmap_t
+name|pm2
 parameter_list|,
 name|vm_offset_t
 name|start
