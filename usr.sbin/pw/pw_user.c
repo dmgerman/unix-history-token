@@ -1068,12 +1068,27 @@ operator|!=
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+operator|*
+operator|(
 name|p
 operator|=
 name|arg
 operator|->
 name|val
+operator|)
+condition|)
+comment|/* Handle empty group list specially */
+name|cnf
+operator|->
+name|default_group
+operator|=
+literal|""
 expr_stmt|;
+else|else
+block|{
 if|if
 condition|(
 operator|(
@@ -1139,6 +1154,7 @@ operator|->
 name|gr_name
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
