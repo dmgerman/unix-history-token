@@ -53,7 +53,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/*  * $Source: mit/rlogin/RCS/rlogin.c,v $  * $Header: mit/rlogin/RCS/rlogin.c,v 5.2 89/07/26 12:11:21 kfall  *	Exp Locker: kfall $  */
+comment|/*  * $Source: /a/cvs/386BSD/src/usr.bin/rlogin/rlogin.c,v $  * $Header: mit/rlogin/RCS/rlogin.c,v 5.2 89/07/26 12:11:21 kfall  *	Exp Locker: kfall $  */
 end_comment
 
 begin_comment
@@ -351,6 +351,10 @@ block|,
 literal|"19200"
 block|,
 literal|"38400"
+block|,
+literal|"57600"
+block|,
+literal|"115200"
 block|}
 decl_stmt|;
 end_decl_stmt
