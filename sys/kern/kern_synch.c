@@ -3422,12 +3422,6 @@ init|=
 name|curproc
 decl_stmt|;
 comment|/* XXX */
-specifier|register
-name|struct
-name|rlimit
-modifier|*
-name|rlim
-decl_stmt|;
 name|int
 name|x
 decl_stmt|;
@@ -3541,7 +3535,7 @@ if|#
 directive|if
 literal|0
 comment|/* 	 * Check if the process exceeds its cpu resource allocation. 	 * If over max, kill it. 	 * 	 * XXX drop sched_lock, pickup Giant 	 */
-block|if (p->p_stat != SZOMB&& p->p_limit->p_cpulimit != RLIM_INFINITY&& 	    p->p_runtime> p->p_limit->p_cpulimit) { 		rlim =&p->p_rlimit[RLIMIT_CPU]; 		if (p->p_runtime / (rlim_t)1000000>= rlim->rlim_max) { 			killproc(p, "exceeded maximum CPU limit"); 		} else { 			psignal(p, SIGXCPU); 			if (rlim->rlim_cur< rlim->rlim_max) {
+block|if (p->p_stat != SZOMB&& p->p_limit->p_cpulimit != RLIM_INFINITY&& 	    p->p_runtime> p->p_limit->p_cpulimit) { 		register struct rlimit *rlim =&p->p_rlimit[RLIMIT_CPU]; 		if (p->p_runtime / (rlim_t)1000000>= rlim->rlim_max) { 			killproc(p, "exceeded maximum CPU limit"); 		} else { 			psignal(p, SIGXCPU); 			if (rlim->rlim_cur< rlim->rlim_max) {
 comment|/* XXX: we should make a private copy */
 block|rlim->rlim_cur += 5; 			} 		} 	}
 endif|#
