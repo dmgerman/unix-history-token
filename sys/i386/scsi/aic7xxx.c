@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Product specific probe and attach routines can be found in:  * i386/isa/aic7770.c	27/284X and aic7770 motherboard controllers  * /pci/aic7870.c	294x and aic7870 motherboard controllers  *  * Portions of this driver are based on the FreeBSD 1742 Driver:  *  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  *  *      $Id: aic7xxx.c,v 1.27 1995/05/17 07:06:00 davidg Exp $  */
+comment|/*  * Generic driver for the aic7xxx based adaptec SCSI controllers  * Copyright (c) 1994, 1995 Justin T. Gibbs.  * All rights reserved.  *  * Product specific probe and attach routines can be found in:  * i386/isa/aic7770.c	27/284X and aic7770 motherboard controllers  * /pci/aic7870.c	294x and aic7870 motherboard controllers  *  * Portions of this driver are based on the FreeBSD 1742 Driver:  *  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * commenced: Sun Sep 27 18:14:01 PDT 1992  *  *      $Id: aic7xxx.c,v 1.28 1995/05/30 08:04:52 rgrimes Exp $  */
 end_comment
 
 begin_comment
@@ -727,7 +727,7 @@ value|0x01
 end_define
 
 begin_comment
-comment|/* XXX document this thing */
+comment|/*   * SCSI Rate Control (p. 3-17).  * Contents of this register determine the Synchronous SCSI data transfer  * rate and the maximum synchronous Req/Ack offset.  An offset of 0 in the  * SOFS (3:0) bits disables synchronous data transfers.  Any offset value  * greater than 0 enables synchronous transfers.  */
 end_comment
 
 begin_define
@@ -736,6 +736,39 @@ directive|define
 name|SCSIRATE
 value|0xc04ul
 end_define
+
+begin_define
+define|#
+directive|define
+name|WIDEXFER
+value|0x80
+end_define
+
+begin_comment
+comment|/* Wide transfer control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SXFR
+value|0x70
+end_define
+
+begin_comment
+comment|/* Sync transfer rate */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SOFS
+value|0x0f
+end_define
+
+begin_comment
+comment|/* Sync offset */
+end_comment
 
 begin_comment
 comment|/*  * SCSI ID (p. 3-18).  * Contains the ID of the board and the current target on the  * selected channel  */
@@ -3043,10 +3076,64 @@ operator|&
 name|SEQINT
 condition|)
 block|{
-name|unsigned
-name|char
-name|transfer
+name|u_short
+name|targ_mask
 decl_stmt|;
+name|u_char
+name|target
+init|=
+operator|(
+name|inb
+argument_list|(
+name|SCSIID
+operator|+
+name|iobase
+argument_list|)
+operator|>>
+literal|4
+operator|)
+operator|&
+literal|0x0f
+decl_stmt|;
+name|u_char
+name|scratch_offset
+init|=
+name|target
+decl_stmt|;
+name|char
+name|channel
+init|=
+name|inb
+argument_list|(
+name|SBLKCTL
+operator|+
+name|iobase
+argument_list|)
+operator|&
+name|SELBUSB
+condition|?
+literal|'B'
+else|:
+literal|'A'
+decl_stmt|;
+if|if
+condition|(
+name|channel
+operator|==
+literal|'B'
+condition|)
+name|scratch_offset
+operator|+=
+literal|8
+expr_stmt|;
+name|targ_mask
+operator|=
+operator|(
+literal|0x01
+operator|<<
+name|scratch_offset
+operator|)
+expr_stmt|;
 switch|switch
 condition|(
 name|intstat
@@ -3059,10 +3146,14 @@ name|BAD_PHASE
 case|:
 name|panic
 argument_list|(
-literal|"ahc%d: unknown scsi bus phase.  "
+literal|"ahc%d:%c:%d: unknown scsi bus phase.  "
 literal|"Attempting to continue\n"
 argument_list|,
 name|unit
+argument_list|,
+name|channel
+argument_list|,
+name|target
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3071,10 +3162,14 @@ name|SEND_REJECT
 case|:
 name|printf
 argument_list|(
-literal|"ahc%d: Warning - "
+literal|"ahc%d:%c:%d: Warning - "
 literal|"message reject, message type: 0x%x\n"
 argument_list|,
 name|unit
+argument_list|,
+name|channel
+argument_list|,
+name|target
 argument_list|,
 name|inb
 argument_list|(
@@ -3090,42 +3185,14 @@ name|NO_IDENT
 case|:
 name|panic
 argument_list|(
-literal|"ahc%d: No IDENTIFY message from reconnecting "
-literal|"target %d at seqaddr = 0x%lx "
-literal|"SAVED_TCL == 0x%x\n"
+literal|"ahc%d:%c:%d: Target did not send an IDENTIFY "
+literal|"message. SAVED_TCL == 0x%x\n"
 argument_list|,
 name|unit
 argument_list|,
-operator|(
-name|inb
-argument_list|(
-name|SELID
-operator|+
-name|iobase
-argument_list|)
-operator|>>
-literal|4
-operator|)
-operator|&
-literal|0xf
+name|channel
 argument_list|,
-operator|(
-name|inb
-argument_list|(
-name|SEQADDR1
-operator|+
-name|iobase
-argument_list|)
-operator|<<
-literal|8
-operator|)
-operator||
-name|inb
-argument_list|(
-name|SEQADDR0
-operator|+
-name|iobase
-argument_list|)
+name|target
 argument_list|,
 name|inb
 argument_list|(
@@ -3150,45 +3217,16 @@ name|HA_ACTIVE0
 operator|+
 name|iobase
 decl_stmt|;
-name|int
-name|tcl
-init|=
-name|inb
-argument_list|(
-name|SCBARRAY
-operator|+
-literal|1
-operator|+
-name|iobase
-argument_list|)
-decl_stmt|;
-name|int
-name|target
-init|=
-operator|(
-name|tcl
-operator|>>
-literal|4
-operator|)
-operator|&
-literal|0x0f
-decl_stmt|;
 name|printf
 argument_list|(
-literal|"ahc%d: no active SCB for reconnecting "
-literal|"target %d, channel %c - issuing ABORT\n"
+literal|"ahc%d:%c:%d: no active SCB - "
+literal|"issuing ABORT\n"
 argument_list|,
 name|unit
 argument_list|,
-name|target
+name|channel
 argument_list|,
-name|tcl
-operator|&
-literal|0x08
-condition|?
-literal|'B'
-else|:
-literal|'A'
+name|target
 argument_list|)
 expr_stmt|;
 name|printf
@@ -3205,12 +3243,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|tcl
+name|targ_mask
 operator|&
-literal|0x88
+literal|0xff00
 condition|)
 block|{
-comment|/* Second channel stores its info 					 * in byte two of HA_ACTIVE 					 */
+comment|/*  					 * targets on the Second channel or 					 * above id 7 store info in byte two  					 * of HA_ACTIVE 					 */
 name|active_port
 operator|++
 expr_stmt|;
@@ -3272,21 +3310,20 @@ name|MSG_SDTR
 case|:
 block|{
 name|u_char
-name|scsi_id
+name|period
 decl_stmt|,
 name|offset
 decl_stmt|,
 name|rate
-decl_stmt|,
+decl_stmt|;
+name|u_char
 name|targ_scratch
 decl_stmt|;
 name|u_char
 name|maxoffset
-decl_stmt|,
-name|mask
 decl_stmt|;
-comment|/* 				 * Help the sequencer to translate the 				 * negotiated transfer rate.  Transfer is 				 * 1/4 the period in ns as is returned by 				 * the sync negotiation message.  So, we must 				 * multiply by four 				 */
-name|transfer
+comment|/*  				 * Help the sequencer to translate the  				 * negotiated transfer rate.  Transfer is  				 * 1/4 the period in ns as is returned by  				 * the sync negotiation message.  So, we must  				 * multiply by four 				 */
+name|period
 operator|=
 name|inb
 argument_list|(
@@ -3297,7 +3334,6 @@ argument_list|)
 operator|<<
 literal|2
 expr_stmt|;
-comment|/* The bottom half of SCSIXFER */
 name|offset
 operator|=
 name|inb
@@ -3307,41 +3343,6 @@ operator|+
 name|iobase
 argument_list|)
 expr_stmt|;
-name|scsi_id
-operator|=
-name|inb
-argument_list|(
-name|SCSIID
-operator|+
-name|iobase
-argument_list|)
-operator|>>
-literal|0x4
-expr_stmt|;
-if|if
-condition|(
-name|inb
-argument_list|(
-name|SBLKCTL
-operator|+
-name|iobase
-argument_list|)
-operator|&
-literal|0x08
-condition|)
-comment|/* B channel */
-name|scsi_id
-operator|+=
-literal|8
-expr_stmt|;
-name|mask
-operator|=
-operator|(
-literal|0x01
-operator|<<
-name|scsi_id
-operator|)
-expr_stmt|;
 name|targ_scratch
 operator|=
 name|inb
@@ -3350,14 +3351,14 @@ name|HA_TARG_SCRATCH
 operator|+
 name|iobase
 operator|+
-name|scsi_id
+name|scratch_offset
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|targ_scratch
 operator|&
-literal|0x80
+name|WIDEXFER
 condition|)
 name|maxoffset
 operator|=
@@ -3373,7 +3374,7 @@ argument_list|(
 operator|&
 name|rate
 argument_list|,
-name|transfer
+name|period
 argument_list|,
 name|MIN
 argument_list|(
@@ -3384,15 +3385,19 @@ argument_list|)
 argument_list|,
 name|unit
 argument_list|,
-name|scsi_id
+name|target
 argument_list|)
 expr_stmt|;
 comment|/* Preserve the WideXfer flag */
+name|targ_scratch
+operator|=
 name|rate
-operator||=
+operator||
+operator|(
 name|targ_scratch
 operator|&
-literal|0x80
+name|WIDEXFER
+operator|)
 expr_stmt|;
 name|outb
 argument_list|(
@@ -3400,9 +3405,9 @@ name|HA_TARG_SCRATCH
 operator|+
 name|iobase
 operator|+
-name|scsi_id
+name|scratch_offset
 argument_list|,
-name|rate
+name|targ_scratch
 argument_list|)
 expr_stmt|;
 name|outb
@@ -3411,13 +3416,13 @@ name|SCSIRATE
 operator|+
 name|iobase
 argument_list|,
-name|rate
+name|targ_scratch
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|(
-name|rate
+name|targ_scratch
 operator|&
 literal|0x0f
 operator|)
@@ -3444,7 +3449,7 @@ name|ahc
 operator|->
 name|sdtrpending
 operator|&
-name|mask
+name|targ_mask
 condition|)
 block|{
 comment|/* 					 * Don't send an SDTR back to 					 * the target 					 */
@@ -3493,14 +3498,14 @@ operator|->
 name|needsdtr
 operator|&=
 operator|~
-name|mask
+name|targ_mask
 expr_stmt|;
 name|ahc
 operator|->
 name|sdtrpending
 operator|&=
 operator|~
-name|mask
+name|targ_mask
 expr_stmt|;
 break|break;
 block|}
@@ -3509,8 +3514,6 @@ name|MSG_WDTR
 case|:
 block|{
 name|u_char
-name|scsi_id
-decl_stmt|,
 name|scratch
 decl_stmt|,
 name|bus_width
@@ -3524,33 +3527,6 @@ operator|+
 name|iobase
 argument_list|)
 expr_stmt|;
-name|scsi_id
-operator|=
-name|inb
-argument_list|(
-name|SCSIID
-operator|+
-name|iobase
-argument_list|)
-operator|>>
-literal|0x4
-expr_stmt|;
-if|if
-condition|(
-name|inb
-argument_list|(
-name|SBLKCTL
-operator|+
-name|iobase
-argument_list|)
-operator|&
-literal|0x08
-condition|)
-comment|/* B channel */
-name|scsi_id
-operator|+=
-literal|8
-expr_stmt|;
 name|scratch
 operator|=
 name|inb
@@ -3559,7 +3535,7 @@ name|HA_TARG_SCRATCH
 operator|+
 name|iobase
 operator|+
-name|scsi_id
+name|scratch_offset
 argument_list|)
 expr_stmt|;
 if|if
@@ -3568,11 +3544,7 @@ name|ahc
 operator|->
 name|wdtrpending
 operator|&
-operator|(
-literal|0x01
-operator|<<
-name|scsi_id
-operator|)
+name|targ_mask
 condition|)
 block|{
 comment|/* 					 * Don't send a WDTR back to the 					 * target, since we asked first. 					 */
@@ -3609,7 +3581,7 @@ literal|"transfers\n"
 argument_list|,
 name|unit
 argument_list|,
-name|scsi_id
+name|target
 argument_list|)
 expr_stmt|;
 name|scratch
@@ -3659,7 +3631,7 @@ literal|"transfers\n"
 argument_list|,
 name|unit
 argument_list|,
-name|scsi_id
+name|target
 argument_list|)
 expr_stmt|;
 name|scratch
@@ -3685,22 +3657,14 @@ operator|->
 name|needwdtr
 operator|&=
 operator|~
-operator|(
-literal|0x01
-operator|<<
-name|scsi_id
-operator|)
+name|targ_mask
 expr_stmt|;
 name|ahc
 operator|->
 name|wdtrpending
 operator|&=
 operator|~
-operator|(
-literal|0x01
-operator|<<
-name|scsi_id
-operator|)
+name|targ_mask
 expr_stmt|;
 name|outb
 argument_list|(
@@ -3708,7 +3672,7 @@ name|HA_TARG_SCRATCH
 operator|+
 name|iobase
 operator|+
-name|scsi_id
+name|scratch_offset
 argument_list|,
 name|scratch
 argument_list|)
@@ -3732,37 +3696,6 @@ comment|/* 				 * What we care about here is if we had an 				 * outstanding SDT
 name|u_char
 name|targ_scratch
 decl_stmt|;
-name|u_char
-name|scsi_id
-init|=
-name|inb
-argument_list|(
-name|SCSIID
-operator|+
-name|iobase
-argument_list|)
-operator|>>
-literal|0x4
-decl_stmt|;
-name|u_short
-name|mask
-decl_stmt|;
-if|if
-condition|(
-name|inb
-argument_list|(
-name|SBLKCTL
-operator|+
-name|iobase
-argument_list|)
-operator|&
-literal|0x08
-condition|)
-comment|/* B channel */
-name|scsi_id
-operator|+=
-literal|8
-expr_stmt|;
 name|targ_scratch
 operator|=
 name|inb
@@ -3771,16 +3704,8 @@ name|HA_TARG_SCRATCH
 operator|+
 name|iobase
 operator|+
-name|scsi_id
+name|scratch_offset
 argument_list|)
-expr_stmt|;
-name|mask
-operator|=
-operator|(
-literal|0x01
-operator|<<
-name|scsi_id
-operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -3788,7 +3713,7 @@ name|ahc
 operator|->
 name|wdtrpending
 operator|&
-name|mask
+name|targ_mask
 condition|)
 block|{
 comment|/* note 8bit xfers and clear flag */
@@ -3801,24 +3726,26 @@ operator|->
 name|needwdtr
 operator|&=
 operator|~
-name|mask
+name|targ_mask
 expr_stmt|;
 name|ahc
 operator|->
 name|wdtrpending
 operator|&=
 operator|~
-name|mask
+name|targ_mask
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ahc%d: target %d refusing "
+literal|"ahc%d:%c:%d: refusing "
 literal|"WIDE negotiation.  Using "
 literal|"8bit transfers\n"
 argument_list|,
 name|unit
 argument_list|,
-name|scsi_id
+name|channel
+argument_list|,
+name|target
 argument_list|)
 expr_stmt|;
 block|}
@@ -3829,7 +3756,7 @@ name|ahc
 operator|->
 name|sdtrpending
 operator|&
-name|mask
+name|targ_mask
 condition|)
 block|{
 comment|/* note asynch xfers and clear flag */
@@ -3842,24 +3769,26 @@ operator|->
 name|needsdtr
 operator|&=
 operator|~
-name|mask
+name|targ_mask
 expr_stmt|;
 name|ahc
 operator|->
 name|sdtrpending
 operator|&=
 operator|~
-name|mask
+name|targ_mask
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ahc%d: target %d refusing "
+literal|"ahc%d:%c:%d: refusing "
 literal|"syncronous negotiation.  Using "
 literal|"asyncronous transfers\n"
 argument_list|,
 name|unit
 argument_list|,
-name|scsi_id
+name|channel
+argument_list|,
+name|target
 argument_list|)
 expr_stmt|;
 block|}
@@ -3877,8 +3806,13 @@ name|AHC_SHOWMISC
 condition|)
 name|printf
 argument_list|(
-literal|"Message reject -- "
-literal|"ignored\n"
+literal|"ahc%d:%c:%d: Message  							reject -- ignored\n"
+argument_list|,
+name|unit
+argument_list|,
+name|channel
+argument_list|,
+name|target
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3891,7 +3825,7 @@ name|HA_TARG_SCRATCH
 operator|+
 name|iobase
 operator|+
-name|scsi_id
+name|scratch_offset
 argument_list|,
 name|targ_scratch
 argument_list|)
@@ -3960,10 +3894,14 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ahc%d: ahcintr - referenced scb not "
-literal|"valid during seqint 0x%x scb(%d)\n"
+literal|"ahc%d:%c:%d: ahcintr - referenced scb "
+literal|"not valid during seqint 0x%x scb(%d)\n"
 argument_list|,
 name|unit
+argument_list|,
+name|channel
+argument_list|,
+name|target
 argument_list|,
 name|intstat
 argument_list|,
@@ -4040,38 +3978,16 @@ case|:
 ifdef|#
 directive|ifdef
 name|AHC_DEBUG
+name|sc_print_addr
+argument_list|(
+name|xs
+operator|->
+name|sc_link
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"ahc%d: target %d, lun %d (%s%d) "
 literal|"requests Check Status\n"
-argument_list|,
-name|unit
-argument_list|,
-name|xs
-operator|->
-name|sc_link
-operator|->
-name|target
-argument_list|,
-name|xs
-operator|->
-name|sc_link
-operator|->
-name|lun
-argument_list|,
-name|xs
-operator|->
-name|sc_link
-operator|->
-name|device
-operator|->
-name|name
-argument_list|,
-name|xs
-operator|->
-name|sc_link
-operator|->
-name|dev_unit
 argument_list|)
 expr_stmt|;
 endif|#
@@ -4127,13 +4043,6 @@ name|sense_cmd
 operator|)
 decl_stmt|;
 name|u_char
-name|control
-init|=
-name|scb
-operator|->
-name|control
-decl_stmt|;
-name|u_char
 name|tcl
 init|=
 name|scb
@@ -4143,38 +4052,16 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|AHC_DEBUG
+name|sc_print_addr
+argument_list|(
+name|xs
+operator|->
+name|sc_link
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"ahc%d: target %d, lun %d "
-literal|"(%s%d) Sending Sense\n"
-argument_list|,
-name|unit
-argument_list|,
-name|xs
-operator|->
-name|sc_link
-operator|->
-name|target
-argument_list|,
-name|xs
-operator|->
-name|sc_link
-operator|->
-name|lun
-argument_list|,
-name|xs
-operator|->
-name|sc_link
-operator|->
-name|device
-operator|->
-name|name
-argument_list|,
-name|xs
-operator|->
-name|sc_link
-operator|->
-name|dev_unit
+literal|"Sending Sense\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -4191,16 +4078,6 @@ operator|->
 name|flags
 operator||=
 name|SCB_SENSE
-expr_stmt|;
-name|scb
-operator|->
-name|control
-operator|=
-operator|(
-name|control
-operator|&
-name|SCB_TE
-operator|)
 expr_stmt|;
 name|sc
 operator|->
@@ -4502,11 +4379,16 @@ name|error
 operator|=
 name|XS_BUSY
 expr_stmt|;
+name|sc_print_addr
+argument_list|(
+name|xs
+operator|->
+name|sc_link
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"ahc%d: Target Busy\n"
-argument_list|,
-name|unit
+literal|"Target Busy\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4514,11 +4396,16 @@ case|case
 name|SCSI_QUEUE_FULL
 case|:
 comment|/* 				 * The upper level SCSI code will eventually 				 * handle this properly. 				 */
+name|sc_print_addr
+argument_list|(
+name|xs
+operator|->
+name|sc_link
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"ahc%d: Queue Full\n"
-argument_list|,
-name|unit
+literal|"Queue Full\n"
 argument_list|)
 expr_stmt|;
 name|xs
@@ -4529,6 +4416,13 @@ name|XS_BUSY
 expr_stmt|;
 break|break;
 default|default:
+name|sc_print_addr
+argument_list|(
+name|xs
+operator|->
+name|sc_link
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"unexpected targ_status: %x\n"
@@ -4572,6 +4466,12 @@ name|scbarray
 index|[
 name|scb_index
 index|]
+expr_stmt|;
+name|xs
+operator|=
+name|scb
+operator|->
+name|xs
 expr_stmt|;
 comment|/* 			 * Don't clobber valid resid info with 			 * a resid coming from a check sense 			 * operation. 			 */
 if|if
@@ -4629,9 +4529,16 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|AHC_DEBUG
+name|sc_print_addr
+argument_list|(
+name|xs
+operator|->
+name|sc_link
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"ahc: Handled Residual\n"
+literal|"Handled Residual\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -4663,42 +4570,23 @@ index|[
 name|scb_index
 index|]
 expr_stmt|;
+name|xs
+operator|=
+name|scb
+operator|->
+name|xs
+expr_stmt|;
 comment|/* 			 * We didn't recieve a valid tag back from 			 * the target on a reconnect. 			 */
+name|sc_print_addr
+argument_list|(
+name|xs
+operator|->
+name|sc_link
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"ahc%d: invalid tag recieved on channel %c "
-literal|"target %d, lun %d -- sending ABORT_TAG\n"
-argument_list|,
-name|unit
-argument_list|,
-operator|(
-operator|(
-name|u_long
-operator|)
-name|xs
-operator|->
-name|sc_link
-operator|->
-name|fordriver
-operator|&
-literal|0x08
-operator|)
-condition|?
-literal|'B'
-else|:
-literal|'A'
-argument_list|,
-name|xs
-operator|->
-name|sc_link
-operator|->
-name|target
-argument_list|,
-name|xs
-operator|->
-name|sc_link
-operator|->
-name|lun
+literal|"invalid tag recieved -- sending ABORT_TAG\n"
 argument_list|)
 expr_stmt|;
 name|scb
@@ -5107,41 +4995,16 @@ operator|&
 name|SCSIPERR
 condition|)
 block|{
+name|sc_print_addr
+argument_list|(
+name|xs
+operator|->
+name|sc_link
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"ahc%d: parity error on channel %c "
-literal|"target %d, lun %d\n"
-argument_list|,
-name|unit
-argument_list|,
-operator|(
-operator|(
-name|u_long
-operator|)
-name|xs
-operator|->
-name|sc_link
-operator|->
-name|fordriver
-operator|&
-literal|0x08
-operator|)
-condition|?
-literal|'B'
-else|:
-literal|'A'
-argument_list|,
-name|xs
-operator|->
-name|sc_link
-operator|->
-name|target
-argument_list|,
-name|xs
-operator|->
-name|sc_link
-operator|->
-name|lun
+literal|"parity error\n"
 argument_list|)
 expr_stmt|;
 name|xs
@@ -5189,11 +5052,16 @@ name|BUSFREE
 operator|)
 condition|)
 block|{
+name|sc_print_addr
+argument_list|(
+name|xs
+operator|->
+name|sc_link
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"ahc%d: Unknown SCSIINT. Status = 0x%x\n"
-argument_list|,
-name|unit
+literal|"Unknown SCSIINT. Status = 0x%x\n"
 argument_list|,
 name|status
 argument_list|)
@@ -5848,18 +5716,51 @@ literal|0x4
 expr_stmt|;
 break|break;
 case|case
+name|AHC_AIC7850
+case|:
+case|case
 name|AHC_AIC7870
 case|:
 case|case
 name|AHC_294
 case|:
+name|ahc
+operator|->
+name|maxscbs
+operator|=
+literal|0x10
+expr_stmt|;
 if|if
 condition|(
 name|ahc
 operator|->
 name|type
 operator|==
-name|AHC_AIC7870
+name|AHC_AIC7850
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ahc%d: aic7850 "
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+name|ahc
+operator|->
+name|maxscbs
+operator|=
+literal|0x03
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|ahc
+operator|->
+name|type
+operator|==
+name|AHC_AIC7850
 condition|)
 name|printf
 argument_list|(
@@ -5875,12 +5776,6 @@ literal|"ahc%d: 294x "
 argument_list|,
 name|unit
 argument_list|)
-expr_stmt|;
-name|ahc
-operator|->
-name|maxscbs
-operator|=
-literal|0x10
 expr_stmt|;
 define|#
 directive|define
@@ -6124,7 +6019,7 @@ name|ahc
 operator|->
 name|type
 operator|&
-name|AHC_AIC7870
+name|AHC_AIC78X0
 operator|)
 condition|)
 block|{
@@ -6223,7 +6118,7 @@ name|ahc
 operator|->
 name|type
 operator|&
-name|AHC_AIC7870
+name|AHC_AIC78X0
 operator|)
 condition|)
 block|{
@@ -6259,7 +6154,7 @@ name|ahc
 operator|->
 name|type
 operator|&
-name|AHC_AIC7870
+name|AHC_AIC78X0
 operator|)
 condition|)
 block|{
@@ -6784,7 +6679,7 @@ name|ahc
 operator|->
 name|type
 operator|&
-name|AHC_AIC7870
+name|AHC_AIC78X0
 operator|)
 condition|)
 name|outb
