@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: vidcontrol.c,v 1.7 1995/02/07 11:56:21 sos Exp $  */
+comment|/*-  * Copyright (c) 1994-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *	$Id: vidcontrol.c,v 1.8 1995/02/08 01:07:16 dima Exp $  */
 end_comment
 
 begin_include
@@ -105,6 +105,39 @@ name|vid_info
 name|info
 decl_stmt|;
 end_decl_stmt
+
+begin_function
+name|void
+name|usage
+parameter_list|()
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Usage: vidcontrol mode             (available modes: VGA_40x25, VGA_80x25,\n"
+literal|"                                                     VGA_80x50, VGA_320x200,\n"
+literal|"                                                     EGA_80x25, EGA_80x43)\n"
+literal|"                                   (experimental)    VGA_80x30, VGA_80x60)\n"
+literal|"\n"
+literal|"                  show             (show available colors)\n"
+literal|"                  fgcol bgcol      (set fore-& background colors)\n"
+literal|"                  -r fgcol bgcol   (set reverse fore-& background colors)\n"
+literal|"                  -b color         (set border color)\n"
+literal|"                  -c normal        (set cursor to inverting block)\n"
+literal|"                  -c blink         (set cursor to blinking inverted block)\n"
+literal|"                  -c destructive   (set cursor to blinking destructive char)\n"
+literal|"                  -d               (dump screenmap to stdout)\n"
+literal|"                  -l filename      (load srceenmap file filename)\n"
+literal|"                  -L               (load default screenmap)\n"
+literal|"                  -f DxL filename  (load font, D dots wide& L lines high)\n"
+literal|"                  -s saver | help  (set screensaver type or help for a list)\n"
+literal|"                  -t N             (set screensaver timeout in seconds)\n"
+literal|"                  -x               (use hex numbers for output)\n"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 name|char
@@ -521,11 +554,11 @@ name|void
 name|load_default_scrnmap
 parameter_list|()
 block|{
-name|int
-name|i
-decl_stmt|;
 name|scrmap_t
 name|scrnmap
+decl_stmt|;
+name|int
+name|i
 decl_stmt|;
 for|for
 control|(
@@ -1069,212 +1102,6 @@ argument_list|(
 literal|"setting screensaver period"
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|set_screensaver_type
-parameter_list|(
-name|char
-modifier|*
-name|type
-parameter_list|)
-block|{
-name|ssaver_t
-name|saver
-decl_stmt|;
-name|int
-name|i
-decl_stmt|,
-name|e
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|type
-argument_list|,
-literal|"help"
-argument_list|)
-condition|)
-block|{
-name|i
-operator|=
-literal|0
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"available screen saver types:\n"
-argument_list|)
-expr_stmt|;
-do|do
-block|{
-name|saver
-operator|.
-name|num
-operator|=
-name|i
-expr_stmt|;
-name|e
-operator|=
-name|ioctl
-argument_list|(
-literal|0
-argument_list|,
-name|CONS_GSAVER
-argument_list|,
-operator|&
-name|saver
-argument_list|)
-expr_stmt|;
-name|i
-operator|++
-expr_stmt|;
-if|if
-condition|(
-name|e
-operator|==
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"\t%s\n"
-argument_list|,
-name|saver
-operator|.
-name|name
-argument_list|)
-expr_stmt|;
-block|}
-do|while
-condition|(
-name|e
-operator|==
-literal|0
-condition|)
-do|;
-if|if
-condition|(
-name|e
-operator|==
-operator|-
-literal|1
-operator|&&
-name|errno
-operator|!=
-name|EIO
-condition|)
-name|perror
-argument_list|(
-literal|"getting screensaver info"
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|i
-operator|=
-literal|0
-expr_stmt|;
-do|do
-block|{
-name|saver
-operator|.
-name|num
-operator|=
-name|i
-expr_stmt|;
-name|e
-operator|=
-name|ioctl
-argument_list|(
-literal|0
-argument_list|,
-name|CONS_GSAVER
-argument_list|,
-operator|&
-name|saver
-argument_list|)
-expr_stmt|;
-name|i
-operator|++
-expr_stmt|;
-if|if
-condition|(
-name|e
-operator|==
-literal|0
-operator|&&
-operator|!
-name|strcmp
-argument_list|(
-name|type
-argument_list|,
-name|saver
-operator|.
-name|name
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-name|ioctl
-argument_list|(
-literal|0
-argument_list|,
-name|CONS_SSAVER
-argument_list|,
-operator|&
-name|saver
-argument_list|)
-operator|==
-operator|-
-literal|1
-condition|)
-name|perror
-argument_list|(
-literal|"setting screensaver type"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-block|}
-do|while
-condition|(
-name|e
-operator|==
-literal|0
-condition|)
-do|;
-if|if
-condition|(
-name|e
-operator|==
-operator|-
-literal|1
-operator|&&
-name|errno
-operator|!=
-name|EIO
-condition|)
-name|perror
-argument_list|(
-literal|"getting screensaver info"
-argument_list|)
-expr_stmt|;
-else|else
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: No such screensaver\n"
-argument_list|,
-name|type
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -1985,41 +1812,6 @@ expr_stmt|;
 block|}
 end_block
 
-begin_macro
-name|usage
-argument_list|()
-end_macro
-
-begin_block
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"Usage: vidcontrol mode             (available modes: VGA_40x25, VGA_80x25,\n"
-literal|"                                                     VGA_80x50, VGA_320x200,\n"
-literal|"                                                     EGA_80x25, EGA_80x43)\n"
-literal|"                                   (experimental)    VGA_80x30, VGA_80x60)\n"
-literal|"\n"
-literal|"                  show             (show available colors)\n"
-literal|"                  fgcol bgcol      (set fore-& background colors)\n"
-literal|"                  -r fgcol bgcol   (set reverse fore-& background colors)\n"
-literal|"                  -b color         (set border color)\n"
-literal|"                  -c normal        (set cursor to inverting block)\n"
-literal|"                  -c blink         (set cursor to blinking inverted block)\n"
-literal|"                  -c destructive   (set cursor to blinking destructive char)\n"
-literal|"                  -d               (dump screenmap to stdout)\n"
-literal|"                  -l filename      (load srceenmap file filename)\n"
-literal|"                  -L               (load default screenmap)\n"
-literal|"                  -f DxL filename  (load font, D dots wide& L lines high)\n"
-literal|"                  -s saver | help  (set screensaver type or help for a list)\n"
-literal|"                  -t N             (set screensaver timeout in seconds)\n"
-literal|"                  -x               (use hex numbers for output)\n"
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
 begin_function
 name|void
 name|main
@@ -2071,7 +1863,7 @@ condition|)
 block|{
 name|perror
 argument_list|(
-literal|"Must be on a vrtual console"
+literal|"Must be on a virtual console"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2091,7 +1883,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"b:c:df:l:Lr:s:t:x"
+literal|"b:c:df:l:Lr:t:x"
 argument_list|)
 operator|)
 operator|!=
@@ -2176,15 +1968,6 @@ name|argv
 argument_list|,
 operator|&
 name|optind
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'s'
-case|:
-name|set_screensaver_type
-argument_list|(
-name|optarg
 argument_list|)
 expr_stmt|;
 break|break;
