@@ -75,6 +75,12 @@ name|u_long
 typedef|;
 end_typedef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
 begin_typedef
 typedef|typedef
 name|unsigned
@@ -98,6 +104,11 @@ end_typedef
 begin_comment
 comment|/* Sys V compatibility */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
