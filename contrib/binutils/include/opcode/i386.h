@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* opcode/i386.h -- Intel 80386 opcode table    Copyright 1989, 91, 92, 93, 94, 95, 96, 97, 98, 1999 Free Software Foundation.  This file is part of GAS, the GNU Assembler, and GDB, the GNU Debugger.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* opcode/i386.h -- Intel 80386 opcode table    Copyright 1989, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation.  This file is part of GAS, the GNU Assembler, and GDB, the GNU Debugger.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -99,6 +99,10 @@ define|#
 directive|define
 name|wl_Suf
 value|(No_bSuf|No_sSuf|No_dSuf|No_xSuf)
+define|#
+directive|define
+name|wld_Suf
+value|(No_bSuf|No_sSuf|No_xSuf)
 define|#
 directive|define
 name|sl_Suf
@@ -486,7 +490,7 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* Intel Syntax */
+comment|/* Intel Syntax next 2 insns */
 block|{
 literal|"movsx"
 block|,
@@ -586,7 +590,7 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* Intel Syntax */
+comment|/* Intel Syntax next 2 insns */
 block|{
 literal|"movzx"
 block|,
@@ -791,7 +795,7 @@ literal|0x60
 block|,
 name|X
 block|,
-name|wl_Suf
+name|wld_Suf
 operator||
 name|DefaultSize
 block|,
@@ -916,7 +920,7 @@ literal|0x61
 block|,
 name|X
 block|,
-name|wl_Suf
+name|wld_Suf
 operator||
 name|DefaultSize
 block|,
@@ -1487,7 +1491,7 @@ literal|0x9c
 block|,
 name|X
 block|,
-name|wl_Suf
+name|wld_Suf
 operator||
 name|DefaultSize
 block|,
@@ -1509,7 +1513,7 @@ literal|0x9d
 block|,
 name|X
 block|,
-name|wl_Suf
+name|wld_Suf
 operator||
 name|DefaultSize
 block|,
@@ -2479,7 +2483,7 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* iclr with 1 operand is really xor with 2 operands.  */
+comment|/* clr with 1 operand is really xor with 2 operands.  */
 block|{
 literal|"clr"
 block|,
@@ -3904,6 +3908,214 @@ block|}
 block|}
 block|,
 block|{
+literal|"shr"
+block|,
+literal|2
+block|,
+literal|0xd0
+block|,
+literal|5
+block|,
+name|bwl_Suf
+operator||
+name|W
+operator||
+name|Modrm
+block|,
+block|{
+name|Imm1
+block|,
+name|Reg
+operator||
+name|AnyMem
+block|,
+literal|0
+block|}
+block|}
+block|,
+block|{
+literal|"shr"
+block|,
+literal|2
+block|,
+literal|0xc0
+block|,
+literal|5
+block|,
+name|bwl_Suf
+operator||
+name|W
+operator||
+name|Modrm
+block|,
+block|{
+name|Imm8
+block|,
+name|Reg
+operator||
+name|AnyMem
+block|,
+literal|0
+block|}
+block|}
+block|,
+block|{
+literal|"shr"
+block|,
+literal|2
+block|,
+literal|0xd2
+block|,
+literal|5
+block|,
+name|bwl_Suf
+operator||
+name|W
+operator||
+name|Modrm
+block|,
+block|{
+name|ShiftCount
+block|,
+name|Reg
+operator||
+name|AnyMem
+block|,
+literal|0
+block|}
+block|}
+block|,
+block|{
+literal|"shr"
+block|,
+literal|1
+block|,
+literal|0xd0
+block|,
+literal|5
+block|,
+name|bwl_Suf
+operator||
+name|W
+operator||
+name|Modrm
+block|,
+block|{
+name|Reg
+operator||
+name|AnyMem
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|}
+block|,
+block|{
+literal|"sar"
+block|,
+literal|2
+block|,
+literal|0xd0
+block|,
+literal|7
+block|,
+name|bwl_Suf
+operator||
+name|W
+operator||
+name|Modrm
+block|,
+block|{
+name|Imm1
+block|,
+name|Reg
+operator||
+name|AnyMem
+block|,
+literal|0
+block|}
+block|}
+block|,
+block|{
+literal|"sar"
+block|,
+literal|2
+block|,
+literal|0xc0
+block|,
+literal|7
+block|,
+name|bwl_Suf
+operator||
+name|W
+operator||
+name|Modrm
+block|,
+block|{
+name|Imm8
+block|,
+name|Reg
+operator||
+name|AnyMem
+block|,
+literal|0
+block|}
+block|}
+block|,
+block|{
+literal|"sar"
+block|,
+literal|2
+block|,
+literal|0xd2
+block|,
+literal|7
+block|,
+name|bwl_Suf
+operator||
+name|W
+operator||
+name|Modrm
+block|,
+block|{
+name|ShiftCount
+block|,
+name|Reg
+operator||
+name|AnyMem
+block|,
+literal|0
+block|}
+block|}
+block|,
+block|{
+literal|"sar"
+block|,
+literal|1
+block|,
+literal|0xd0
+block|,
+literal|7
+block|,
+name|bwl_Suf
+operator||
+name|W
+operator||
+name|Modrm
+block|,
+block|{
+name|Reg
+operator||
+name|AnyMem
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|}
+block|,
+block|{
 literal|"shld"
 block|,
 literal|3
@@ -3976,110 +4188,6 @@ block|}
 block|}
 block|,
 block|{
-literal|"shr"
-block|,
-literal|2
-block|,
-literal|0xd0
-block|,
-literal|5
-block|,
-name|bwl_Suf
-operator||
-name|W
-operator||
-name|Modrm
-block|,
-block|{
-name|Imm1
-block|,
-name|Reg
-operator||
-name|AnyMem
-block|,
-literal|0
-block|}
-block|}
-block|,
-block|{
-literal|"shr"
-block|,
-literal|2
-block|,
-literal|0xc0
-block|,
-literal|5
-block|,
-name|bwl_Suf
-operator||
-name|W
-operator||
-name|Modrm
-block|,
-block|{
-name|Imm8
-block|,
-name|Reg
-operator||
-name|AnyMem
-block|,
-literal|0
-block|}
-block|}
-block|,
-block|{
-literal|"shr"
-block|,
-literal|2
-block|,
-literal|0xd2
-block|,
-literal|5
-block|,
-name|bwl_Suf
-operator||
-name|W
-operator||
-name|Modrm
-block|,
-block|{
-name|ShiftCount
-block|,
-name|Reg
-operator||
-name|AnyMem
-block|,
-literal|0
-block|}
-block|}
-block|,
-block|{
-literal|"shr"
-block|,
-literal|1
-block|,
-literal|0xd0
-block|,
-literal|5
-block|,
-name|bwl_Suf
-operator||
-name|W
-operator||
-name|Modrm
-block|,
-block|{
-name|Reg
-operator||
-name|AnyMem
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|}
-block|,
-block|{
 literal|"shrd"
 block|,
 literal|3
@@ -4146,110 +4254,6 @@ block|,
 name|WordReg
 operator||
 name|WordMem
-block|,
-literal|0
-block|}
-block|}
-block|,
-block|{
-literal|"sar"
-block|,
-literal|2
-block|,
-literal|0xd0
-block|,
-literal|7
-block|,
-name|bwl_Suf
-operator||
-name|W
-operator||
-name|Modrm
-block|,
-block|{
-name|Imm1
-block|,
-name|Reg
-operator||
-name|AnyMem
-block|,
-literal|0
-block|}
-block|}
-block|,
-block|{
-literal|"sar"
-block|,
-literal|2
-block|,
-literal|0xc0
-block|,
-literal|7
-block|,
-name|bwl_Suf
-operator||
-name|W
-operator||
-name|Modrm
-block|,
-block|{
-name|Imm8
-block|,
-name|Reg
-operator||
-name|AnyMem
-block|,
-literal|0
-block|}
-block|}
-block|,
-block|{
-literal|"sar"
-block|,
-literal|2
-block|,
-literal|0xd2
-block|,
-literal|7
-block|,
-name|bwl_Suf
-operator||
-name|W
-operator||
-name|Modrm
-block|,
-block|{
-name|ShiftCount
-block|,
-name|Reg
-operator||
-name|AnyMem
-block|,
-literal|0
-block|}
-block|}
-block|,
-block|{
-literal|"sar"
-block|,
-literal|1
-block|,
-literal|0xd0
-block|,
-literal|7
-block|,
-name|bwl_Suf
-operator||
-name|W
-operator||
-name|Modrm
-block|,
-block|{
-name|Reg
-operator||
-name|AnyMem
-block|,
-literal|0
 block|,
 literal|0
 block|}
@@ -7347,7 +7351,9 @@ literal|0xcf
 block|,
 name|X
 block|,
-name|wl_Suf
+name|wld_Suf
+operator||
+name|DefaultSize
 block|,
 block|{
 literal|0
@@ -7833,7 +7839,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* register */
 block|{
 literal|"fld"
 block|,
@@ -7860,7 +7865,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* %st0<-- mem float/double */
 block|{
 literal|"fld"
 block|,
@@ -7908,7 +7912,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* %st0<-- mem efloat */
 block|{
 literal|"fild"
 block|,
@@ -7918,7 +7921,7 @@ literal|0xdf
 block|,
 literal|0
 block|,
-name|sl_Suf
+name|sl_FP
 operator||
 name|FloatMF
 operator||
@@ -7935,7 +7938,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* %st0<-- mem word(16)/dword(32) */
 comment|/* Intel Syntax */
 block|{
 literal|"fildd"
@@ -7959,7 +7961,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* %st0<-- mem qword (64) */
 block|{
 literal|"fildq"
 block|,
@@ -7982,7 +7983,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* %st0<-- mem qword (64) */
 block|{
 literal|"fildll"
 block|,
@@ -8005,7 +8005,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* %st0<-- mem qword (64) */
 block|{
 literal|"fldt"
 block|,
@@ -8028,7 +8027,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* %st0<-- mem efloat */
 block|{
 literal|"fbld"
 block|,
@@ -8051,7 +8049,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* %st0<-- mem bcd */
 comment|/* store (no pop) */
 block|{
 literal|"fst"
@@ -8075,7 +8072,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* register */
 block|{
 literal|"fst"
 block|,
@@ -8102,7 +8098,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* %st0 --> mem float/double */
 block|{
 literal|"fst"
 block|,
@@ -8153,7 +8148,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* %st0 --> mem word(16)/dword(32) */
 comment|/* store (with pop) */
 block|{
 literal|"fstp"
@@ -8177,7 +8171,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* register */
 block|{
 literal|"fstp"
 block|,
@@ -8204,7 +8197,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* %st0 --> mem float/double */
 block|{
 literal|"fstp"
 block|,
@@ -8252,7 +8244,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* %st0 --> mem efloat */
 block|{
 literal|"fistp"
 block|,
@@ -8279,7 +8270,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* %st0 --> mem word(16)/dword(32) */
 comment|/* Intel Syntax */
 block|{
 literal|"fistpd"
@@ -8303,7 +8293,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* %st0 --> mem qword (64) */
 block|{
 literal|"fistpq"
 block|,
@@ -8326,7 +8315,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* %st0 --> mem qword (64) */
 block|{
 literal|"fistpll"
 block|,
@@ -8349,7 +8337,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* %st0 --> mem qword (64) */
 block|{
 literal|"fstpt"
 block|,
@@ -8372,7 +8359,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* %st0 --> mem efloat */
 block|{
 literal|"fbstp"
 block|,
@@ -8395,7 +8381,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* %st0 --> mem bcd */
 comment|/* exchange %st<n> with %st0 */
 block|{
 literal|"fxch"
@@ -8419,6 +8404,7 @@ literal|0
 block|}
 block|}
 block|,
+comment|/* alias for fxch %st(1) */
 block|{
 literal|"fxch"
 block|,
@@ -8439,7 +8425,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* alias for fxch %st(1) */
 comment|/* comparison (without pop) */
 block|{
 literal|"fcom"
@@ -8463,6 +8448,7 @@ literal|0
 block|}
 block|}
 block|,
+comment|/* alias for fcom %st(1) */
 block|{
 literal|"fcom"
 block|,
@@ -8483,7 +8469,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* alias for fcom %st(1) */
 block|{
 literal|"fcom"
 block|,
@@ -8510,7 +8495,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* compare %st0, mem float/double */
 block|{
 literal|"fcom"
 block|,
@@ -8561,7 +8545,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* compare %st0, mem word/dword */
 comment|/* comparison (with pop) */
 block|{
 literal|"fcomp"
@@ -8585,6 +8568,7 @@ literal|0
 block|}
 block|}
 block|,
+comment|/* alias for fcomp %st(1) */
 block|{
 literal|"fcomp"
 block|,
@@ -8605,7 +8589,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* alias for fcomp %st(1) */
 block|{
 literal|"fcomp"
 block|,
@@ -8632,7 +8615,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* compare %st0, mem float/double */
 block|{
 literal|"fcomp"
 block|,
@@ -8683,7 +8665,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* compare %st0, mem word/dword */
 block|{
 literal|"fcompp"
 block|,
@@ -8704,7 +8685,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* compare %st0, %st1& pop 2 */
 comment|/* unordered comparison (with pop) */
 block|{
 literal|"fucom"
@@ -8728,6 +8708,7 @@ literal|0
 block|}
 block|}
 block|,
+comment|/* alias for fucom %st(1) */
 block|{
 literal|"fucom"
 block|,
@@ -8748,7 +8729,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* alias for fucom %st(1) */
 block|{
 literal|"fucomp"
 block|,
@@ -8771,6 +8751,7 @@ literal|0
 block|}
 block|}
 block|,
+comment|/* alias for fucomp %st(1) */
 block|{
 literal|"fucomp"
 block|,
@@ -8791,7 +8772,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* alias for fucomp %st(1) */
 block|{
 literal|"fucompp"
 block|,
@@ -8812,7 +8792,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* ucompare %st0, %st1& pop twice */
 block|{
 literal|"ftst"
 block|,
@@ -8833,7 +8812,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* test %st0 */
 block|{
 literal|"fxam"
 block|,
@@ -8854,7 +8832,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* examine %st0 */
 comment|/* load constants into %st0 */
 block|{
 literal|"fld1"
@@ -8876,7 +8853,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* %st0<-- 1.0 */
 block|{
 literal|"fldl2t"
 block|,
@@ -8897,7 +8873,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* %st0<-- log2(10) */
 block|{
 literal|"fldl2e"
 block|,
@@ -8918,7 +8893,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* %st0<-- log2(e) */
 block|{
 literal|"fldpi"
 block|,
@@ -8939,7 +8913,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* %st0<-- pi */
 block|{
 literal|"fldlg2"
 block|,
@@ -8960,7 +8933,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* %st0<-- log10(2) */
 block|{
 literal|"fldln2"
 block|,
@@ -8981,7 +8953,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* %st0<-- ln(2) */
 block|{
 literal|"fldz"
 block|,
@@ -9002,7 +8973,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* %st0<-- 0.0 */
 comment|/* arithmetic */
 comment|/* add */
 block|{
@@ -9029,6 +8999,7 @@ literal|0
 block|}
 block|}
 block|,
+comment|/* alias for fadd %st(i), %st */
 block|{
 literal|"fadd"
 block|,
@@ -9051,10 +9022,10 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* alias for fadd %st(i), %st */
 if|#
 directive|if
 name|SYSV386_COMPAT
+comment|/* alias for faddp */
 block|{
 literal|"fadd"
 block|,
@@ -9077,7 +9048,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* alias for faddp */
 endif|#
 directive|endif
 block|{
@@ -9176,6 +9146,7 @@ literal|0
 block|}
 block|}
 block|,
+comment|/* alias for faddp %st, %st(1) */
 block|{
 literal|"faddp"
 block|,
@@ -9196,7 +9167,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* alias for faddp %st, %st(1) */
 block|{
 literal|"faddp"
 block|,
@@ -9271,6 +9241,7 @@ block|,
 if|#
 directive|if
 name|SYSV386_COMPAT
+comment|/* alias for fsubp */
 block|{
 literal|"fsub"
 block|,
@@ -9293,7 +9264,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* alias for fsubp */
 endif|#
 directive|endif
 block|{
@@ -9562,6 +9532,7 @@ block|,
 if|#
 directive|if
 name|SYSV386_COMPAT
+comment|/* alias for fsubrp */
 block|{
 literal|"fsubr"
 block|,
@@ -9584,7 +9555,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* alias for fsubrp */
 endif|#
 directive|endif
 block|{
@@ -9853,6 +9823,7 @@ block|,
 if|#
 directive|if
 name|SYSV386_COMPAT
+comment|/* alias for fmulp */
 block|{
 literal|"fmul"
 block|,
@@ -9875,7 +9846,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* alias for fmulp */
 endif|#
 directive|endif
 block|{
@@ -10068,6 +10038,7 @@ block|,
 if|#
 directive|if
 name|SYSV386_COMPAT
+comment|/* alias for fdivp */
 block|{
 literal|"fdiv"
 block|,
@@ -10090,7 +10061,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* alias for fdivp */
 endif|#
 directive|endif
 block|{
@@ -10359,6 +10329,7 @@ block|,
 if|#
 directive|if
 name|SYSV386_COMPAT
+comment|/* alias for fdivrp */
 block|{
 literal|"fdivr"
 block|,
@@ -10381,7 +10352,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* alias for fdivrp */
 endif|#
 directive|endif
 block|{
@@ -12249,6 +12219,7 @@ literal|0
 block|}
 block|}
 block|,
+comment|/* Pentium II/Pentium Pro extensions.  */
 block|{
 literal|"sysenter"
 block|,
@@ -12333,7 +12304,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* Pentium Pro extensions.  */
 block|{
 literal|"rdpmc"
 block|,
@@ -12354,6 +12324,7 @@ literal|0
 block|}
 block|}
 block|,
+comment|/* official undefined instr. */
 block|{
 literal|"ud2"
 block|,
@@ -12374,7 +12345,7 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* official undefined instr. */
+comment|/* alias for ud2 */
 block|{
 literal|"ud2a"
 block|,
@@ -12395,7 +12366,7 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* alias for ud2 */
+comment|/* 2nd. official undefined instr. */
 block|{
 literal|"ud2b"
 block|,
@@ -12416,7 +12387,6 @@ literal|0
 block|}
 block|}
 block|,
-comment|/* 2nd. official undefined instr. */
 block|{
 literal|"cmovo"
 block|,
@@ -17773,6 +17743,7 @@ block|}
 block|}
 block|,
 comment|/* Athlon */
+comment|/* sentinel */
 block|{
 name|NULL
 block|,
@@ -17792,7 +17763,6 @@ block|,
 literal|0
 block|}
 block|}
-comment|/* sentinel */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -17855,6 +17825,12 @@ begin_undef
 undef|#
 directive|undef
 name|wl_Suf
+end_undef
+
+begin_undef
+undef|#
+directive|undef
+name|wld_Suf
 end_undef
 
 begin_undef

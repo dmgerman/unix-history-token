@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Opcode table for the ARM.     Copyright 1994, 1995, 1996, 1997 Free Software Foundation, Inc.        This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Opcode table for the ARM.     Copyright 1994, 1995, 1996, 1997, 2000 Free Software Foundation, Inc.        This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_struct
@@ -199,9 +199,9 @@ block|,
 block|{
 literal|0x0120f000
 block|,
-literal|0x0db6f000
+literal|0x0db0f000
 block|,
-literal|"msr%c\t%22?scpsr%C, %o"
+literal|"msr%c\t%22?SCPSR%C, %o"
 block|}
 block|,
 block|{
@@ -209,7 +209,7 @@ literal|0x010f0000
 block|,
 literal|0x0fbf0fff
 block|,
-literal|"mrs%c\t%12-15r, %22?scpsr"
+literal|"mrs%c\t%12-15r, %22?SCPSR"
 block|}
 block|,
 block|{
@@ -1045,7 +1045,7 @@ literal|0x5600
 block|,
 literal|0xF600
 block|,
-literal|"lds%11?hb\t%0-2r, [%3-5r, %6-8r]"
+literal|"ldrs%11?hb\t%0-2r, [%3-5r, %6-8r]"
 block|}
 block|,
 comment|/* format 7 */

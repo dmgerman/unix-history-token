@@ -5020,6 +5020,12 @@ name|stab_info
 operator|=
 name|NULL
 expr_stmt|;
+name|table
+operator|->
+name|dynlocal
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 name|_bfd_link_hash_table_init
 argument_list|(
@@ -15188,7 +15194,7 @@ index|[
 name|EI_OSABI
 index|]
 operator|=
-name|ELFOSABI_SYSV
+name|ELFOSABI_NONE
 expr_stmt|;
 name|i_ehdrp
 operator|->

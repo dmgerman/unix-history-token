@@ -1421,7 +1421,7 @@ operator|->
 name|filename
 argument_list|,
 operator|(
-literal|0x777
+literal|0777
 operator|&
 operator|(
 name|buf

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* objcopy.c -- copy object file from input to output, optionally massaging it.    Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98, 1999    Free Software Foundation, Inc.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
+comment|/* objcopy.c -- copy object file from input to output, optionally massaging it.    Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98, 99, 2000    Free Software Foundation, Inc.     This file is part of GNU Binutils.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2 of the License, or    (at your option) any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; if not, write to the Free Software    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA    02111-1307, USA.  */
 end_comment
 
 begin_escape
@@ -40,6 +40,12 @@ begin_include
 include|#
 directive|include
 file|"budbg.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"filenames.h"
 end_include
 
 begin_include
@@ -10108,6 +10114,44 @@ argument_list|(
 name|program_name
 argument_list|)
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_DOS_BASED_FILE_SYSTEM
+comment|/* Drop the .exe suffix, if any.  */
+if|if
+condition|(
+name|i
+operator|>
+literal|4
+operator|&&
+name|FILENAME_CMP
+argument_list|(
+name|program_name
+operator|+
+name|i
+operator|-
+literal|4
+argument_list|,
+literal|".exe"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|i
+operator|-=
+literal|4
+expr_stmt|;
+name|program_name
+index|[
+name|i
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|is_strip
 operator|=
 operator|(
@@ -10115,7 +10159,7 @@ name|i
 operator|>=
 literal|5
 operator|&&
-name|strcmp
+name|FILENAME_CMP
 argument_list|(
 name|program_name
 operator|+

@@ -55,6 +55,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"filenames.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/stat.h>
 end_include
 
@@ -790,7 +796,7 @@ operator|)
 operator|&&
 operator|(
 operator|!
-name|strcmp
+name|FILENAME_CMP
 argument_list|(
 name|normalize
 argument_list|(
@@ -1238,6 +1244,61 @@ argument_list|,
 literal|'/'
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_DOS_BASED_FILE_SYSTEM
+block|{
+comment|/* We could have foo/bar\\baz, or foo\\bar, or d:bar.  */
+name|char
+modifier|*
+name|bslash
+init|=
+name|strrchr
+argument_list|(
+name|file
+argument_list|,
+literal|'\\'
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|bslash
+operator|>
+name|filename
+condition|)
+name|filename
+operator|=
+name|bslash
+expr_stmt|;
+if|if
+condition|(
+name|filename
+operator|==
+name|NULL
+operator|&&
+name|file
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+operator|&&
+name|file
+index|[
+literal|1
+index|]
+operator|==
+literal|':'
+condition|)
+name|filename
+operator|=
+name|file
+operator|+
+literal|1
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|filename
@@ -1560,6 +1621,61 @@ argument_list|,
 literal|'/'
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_DOS_BASED_FILE_SYSTEM
+block|{
+comment|/* We could have foo/bar\\baz, or foo\\bar, or d:bar.  */
+name|char
+modifier|*
+name|bslash
+init|=
+name|strrchr
+argument_list|(
+name|program_name
+argument_list|,
+literal|'\\'
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|bslash
+operator|>
+name|temp
+condition|)
+name|temp
+operator|=
+name|bslash
+expr_stmt|;
+if|if
+condition|(
+name|temp
+operator|==
+name|NULL
+operator|&&
+name|program_name
+index|[
+literal|0
+index|]
+operator|!=
+literal|'\0'
+operator|&&
+name|program_name
+index|[
+literal|1
+index|]
+operator|==
+literal|':'
+condition|)
+name|temp
+operator|=
+name|program_name
+operator|+
+literal|1
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|temp
@@ -1583,7 +1699,7 @@ argument_list|)
 operator|>=
 literal|6
 operator|&&
-name|strcmp
+name|FILENAME_CMP
 argument_list|(
 name|temp
 operator|+
@@ -2627,10 +2743,20 @@ operator|!=
 literal|0
 condition|)
 block|{
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|__GO32__
-comment|/* KLUDGE ALERT! Temporary fix until I figger why  * stat() is wrong ... think it's buried in GO32's IDT  * - Jax  */
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__DJGPP__
+argument_list|)
+comment|/* FIXME: I don't understand why this fragment was ifndef'ed 	 away for __GO32__; perhaps it was in the days of DJGPP v1.x. 	 stat() works just fine in v2.x, so I think this should be 	 removed.  For now, I enable it for DJGPP v2. -- EZ.  */
+comment|/* KLUDGE ALERT! Temporary fix until I figger why    stat() is wrong ... think it's buried in GO32's IDT - Jax */
 if|if
 condition|(
 name|errno
@@ -3461,15 +3587,28 @@ begin_comment
 comment|/* Just do it quickly; don't worry about dups, armap, or anything like that */
 end_comment
 
-begin_ifndef
+begin_if
 unit|static void do_quick_append (archive_filename, files_to_append)      const char *archive_filename;      char **files_to_append; {   FILE *ofile, *ifile;   char *buf = xmalloc (BUFSIZE);   long tocopy, thistime;   bfd *temp;   struct stat sbuf;   boolean newfile = false;   bfd_set_error (bfd_error_no_error);    if (stat (archive_filename,&sbuf) != 0)     {
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|__GO32__
-end_ifndef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__DJGPP__
+argument_list|)
+end_if
 
 begin_comment
-comment|/* KLUDGE ALERT! Temporary fix until I figger why  * stat() is wrong ... think it's buried in GO32's IDT  * - Jax  */
+comment|/* FIXME: I don't understand why this fragment was ifndef'ed 	 away for __GO32__; perhaps it was in the days of DJGPP v1.x. 	 stat() works just fine in v2.x, so I think this should be 	 removed.  For now, I enable it for DJGPP v2.  	 (And yes, I know this is all unused, but somebody, someday, 	 might wish to resurrect this again... -- EZ.  */
+end_comment
+
+begin_comment
+comment|/* KLUDGE ALERT! Temporary fix until I figger why    stat() is wrong ... think it's buried in GO32's IDT - Jax  */
 end_comment
 
 begin_endif
@@ -3815,7 +3954,7 @@ name|next
 control|)
 if|if
 condition|(
-name|strcmp
+name|FILENAME_CMP
 argument_list|(
 operator|(
 operator|*
@@ -3953,7 +4092,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|strcmp
+name|FILENAME_CMP
 argument_list|(
 name|normalize
 argument_list|(
@@ -4154,7 +4293,7 @@ name|current_ptr_ptr
 decl_stmt|;
 if|if
 condition|(
-name|strcmp
+name|FILENAME_CMP
 argument_list|(
 name|normalize
 argument_list|(
@@ -4359,7 +4498,7 @@ expr_stmt|;
 comment|/* For compatibility with existing ar programs, we 		 permit the same file to be added multiple times.  */
 if|if
 condition|(
-name|strcmp
+name|FILENAME_CMP
 argument_list|(
 name|normalize
 argument_list|(

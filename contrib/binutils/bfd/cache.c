@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* BFD library -- caching of file descriptors.    Copyright 1990, 91, 92, 93, 94, 95, 1996 Free Software Foundation, Inc.    Hacked by Steve Chamberlain of Cygnus Support (steve@cygnus.com).  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* BFD library -- caching of file descriptors.    Copyright 1990, 91, 92, 93, 94, 95, 1996, 2000    Free Software Foundation, Inc.    Hacked by Steve Chamberlain of Cygnus Support (steve@cygnus.com).  This file is part of BFD, the Binary File Descriptor library.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -648,6 +648,10 @@ block|}
 else|else
 block|{
 comment|/* Create the file.  	     Some operating systems won't let us overwrite a running 	     binary.  For them, we want to unlink the file first.  	     However, gcc 2.95 will create temporary files using 	     O_EXCL and tight permissions to prevent other users from 	     substituting other .o files during the compilation.  gcc 	     will then tell the assembler to use the newly created 	     file as an output file.  If we unlink the file here, we 	     open a brief window when another user could still 	     substitute a file.  	     So we unlink the output file if and only if it has 	     non-zero size.  */
+ifndef|#
+directive|ifndef
+name|__MSDOS__
+comment|/* Don't do this for MSDOS: it doesn't care about overwriting 	     a running binary, but if this file is already open by 	     another BFD, we will be in deep trouble if we delete an 	     open file.  In fact, objdump does just that if invoked with 	     the --info option.  */
 name|struct
 name|stat
 name|s
@@ -679,6 +683,8 @@ operator|->
 name|filename
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|abfd
 operator|->
 name|iostream

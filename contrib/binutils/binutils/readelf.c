@@ -237,34 +237,6 @@ directive|include
 file|"getopt.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ANSI_PROTOTYPES
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<stdarg.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<varargs.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 name|char
 modifier|*
@@ -9214,7 +9186,7 @@ name|osabi
 condition|)
 block|{
 case|case
-name|ELFOSABI_SYSV
+name|ELFOSABI_NONE
 case|:
 return|return
 name|_
@@ -9232,12 +9204,93 @@ literal|"UNIX - HP-UX"
 argument_list|)
 return|;
 case|case
+name|ELFOSABI_NETBSD
+case|:
+return|return
+name|_
+argument_list|(
+literal|"UNIX - NetBSD"
+argument_list|)
+return|;
+case|case
 name|ELFOSABI_LINUX
 case|:
 return|return
 name|_
 argument_list|(
 literal|"UNIX - Linux"
+argument_list|)
+return|;
+case|case
+name|ELFOSABI_HURD
+case|:
+return|return
+name|_
+argument_list|(
+literal|"GNU/Hurd"
+argument_list|)
+return|;
+case|case
+name|ELFOSABI_SOLARIS
+case|:
+return|return
+name|_
+argument_list|(
+literal|"UNIX - Solaris"
+argument_list|)
+return|;
+case|case
+name|ELFOSABI_MONTEREY
+case|:
+return|return
+name|_
+argument_list|(
+literal|"UNIX - Monterey"
+argument_list|)
+return|;
+case|case
+name|ELFOSABI_IRIX
+case|:
+return|return
+name|_
+argument_list|(
+literal|"UNIX - IRIX"
+argument_list|)
+return|;
+case|case
+name|ELFOSABI_FREEBSD
+case|:
+return|return
+name|_
+argument_list|(
+literal|"UNIX - FreeBSD"
+argument_list|)
+return|;
+case|case
+name|ELFOSABI_TRU64
+case|:
+return|return
+name|_
+argument_list|(
+literal|"UNIX - TRU64"
+argument_list|)
+return|;
+case|case
+name|ELFOSABI_MODESTO
+case|:
+return|return
+name|_
+argument_list|(
+literal|"Novell - Modesto"
+argument_list|)
+return|;
+case|case
+name|ELFOSABI_OPENBSD
+case|:
+return|return
+name|_
+argument_list|(
+literal|"UNIX - OpenBSD"
 argument_list|)
 return|;
 case|case

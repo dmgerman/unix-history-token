@@ -19,118 +19,125 @@ begin_define
 define|#
 directive|define
 name|NAME
-value|258
+value|257
 end_define
 
 begin_define
 define|#
 directive|define
 name|LIBRARY
-value|259
+value|258
 end_define
 
 begin_define
 define|#
 directive|define
 name|DESCRIPTION
-value|260
+value|259
 end_define
 
 begin_define
 define|#
 directive|define
 name|STACKSIZE
-value|261
+value|260
 end_define
 
 begin_define
 define|#
 directive|define
 name|HEAPSIZE
-value|262
+value|261
 end_define
 
 begin_define
 define|#
 directive|define
 name|CODE
-value|263
+value|262
 end_define
 
 begin_define
 define|#
 directive|define
 name|DATA
-value|264
+value|263
 end_define
 
 begin_define
 define|#
 directive|define
 name|SECTIONS
-value|265
+value|264
 end_define
 
 begin_define
 define|#
 directive|define
 name|EXPORTS
-value|266
+value|265
 end_define
 
 begin_define
 define|#
 directive|define
 name|IMPORTS
-value|267
+value|266
 end_define
 
 begin_define
 define|#
 directive|define
 name|VERSIONK
-value|268
+value|267
 end_define
 
 begin_define
 define|#
 directive|define
 name|BASE
-value|269
+value|268
 end_define
 
 begin_define
 define|#
 directive|define
 name|CONSTANT
-value|270
+value|269
 end_define
 
 begin_define
 define|#
 directive|define
 name|READ
-value|271
+value|270
 end_define
 
 begin_define
 define|#
 directive|define
 name|WRITE
-value|272
+value|271
 end_define
 
 begin_define
 define|#
 directive|define
 name|EXECUTE
-value|273
+value|272
 end_define
 
 begin_define
 define|#
 directive|define
 name|SHARED
+value|273
+end_define
+
+begin_define
+define|#
+directive|define
+name|NONSHARED
 value|274
 end_define
 
@@ -144,15 +151,57 @@ end_define
 begin_define
 define|#
 directive|define
-name|ID
+name|SINGLE
 value|276
 end_define
 
 begin_define
 define|#
 directive|define
-name|NUMBER
+name|MULTIPLE
 value|277
+end_define
+
+begin_define
+define|#
+directive|define
+name|INITINSTANCE
+value|278
+end_define
+
+begin_define
+define|#
+directive|define
+name|INITGLOBAL
+value|279
+end_define
+
+begin_define
+define|#
+directive|define
+name|TERMINSTANCE
+value|280
+end_define
+
+begin_define
+define|#
+directive|define
+name|TERMGLOBAL
+value|281
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID
+value|282
+end_define
+
+begin_define
+define|#
+directive|define
+name|NUMBER
+value|283
 end_define
 
 begin_decl_stmt
