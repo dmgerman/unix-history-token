@@ -2382,6 +2382,14 @@ name|struct
 name|timeval
 name|tv
 decl_stmt|;
+name|mtx_assert
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
 comment|/* XXX: why spl-protect ?  worst case is an off-by-one report */
 name|s
 operator|=
@@ -2939,6 +2947,14 @@ name|p_stats
 operator|->
 name|p_ru
 expr_stmt|;
+name|mtx_enter
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MTX_SPIN
+argument_list|)
+expr_stmt|;
 name|calcru
 argument_list|(
 name|p
@@ -2954,6 +2970,14 @@ operator|->
 name|ru_stime
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|mtx_exit
+argument_list|(
+operator|&
+name|sched_lock
+argument_list|,
+name|MTX_SPIN
 argument_list|)
 expr_stmt|;
 break|break;
