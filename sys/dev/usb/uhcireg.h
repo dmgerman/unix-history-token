@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhcireg.h,v 1.14 2001/08/06 15:15:08 augustss Exp $	*/
+comment|/*	$NetBSD: uhcireg.h,v 1.15 2002/02/11 11:41:30 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -220,6 +220,13 @@ define|#
 directive|define
 name|UHCI_STS_HCH
 value|0x0020
+end_define
+
+begin_define
+define|#
+directive|define
+name|UHCI_STS_ALLINTRS
+value|0x003f
 end_define
 
 begin_define

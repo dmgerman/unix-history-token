@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: uhcivar.h,v 1.32 2000/08/13 16:18:09 augustss Exp $	*/
+comment|/*	$NetBSD: uhcivar.h,v 1.33 2002/02/11 11:41:30 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -111,6 +111,10 @@ name|xfer
 decl_stmt|;
 name|uhci_intr_info_t
 name|iinfo
+decl_stmt|;
+name|struct
+name|usb_task
+name|abort_task
 decl_stmt|;
 name|int
 name|curframe
@@ -392,6 +396,9 @@ name|sc_saved_sof
 decl_stmt|;
 name|u_int16_t
 name|sc_saved_frnum
+decl_stmt|;
+name|char
+name|sc_softwake
 decl_stmt|;
 name|char
 name|sc_isreset
