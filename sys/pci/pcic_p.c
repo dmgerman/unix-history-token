@@ -745,14 +745,6 @@ literal|"Cirrus Logic PD6832 PCI-CardBus Bridge"
 expr_stmt|;
 break|break;
 case|case
-name|PCI_DEVICE_ID_PCIC_TI1031
-case|:
-name|desc
-operator|=
-literal|"TI PCI-1031 PCI-PCMCIA Bridge"
-expr_stmt|;
-break|break;
-case|case
 name|PCI_DEVICE_ID_PCIC_TI1130
 case|:
 name|desc
@@ -935,6 +927,14 @@ case|:
 name|desc
 operator|=
 literal|"O2micro OZ6730 PC-Card Bridge"
+expr_stmt|;
+break|break;
+case|case
+name|PCI_DEVICE_ID_PCIC_TI1031
+case|:
+name|desc
+operator|=
+literal|"TI PCI-1031 PCI-PCMCIA Bridge"
 expr_stmt|;
 break|break;
 default|default:
