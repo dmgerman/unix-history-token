@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_input.c	6.8	84/12/20	*/
+comment|/*	ip_input.c	6.9	85/03/18	*/
 end_comment
 
 begin_include
@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"in_var.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ip.h"
 end_include
 
@@ -130,14 +136,14 @@ end_decl_stmt
 
 begin_decl_stmt
 name|struct
-name|ifnet
+name|in_ifaddr
 modifier|*
-name|ifinet
+name|in_ifaddr
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* first inet interface */
+comment|/* first inet address */
 end_comment
 
 begin_comment
@@ -276,13 +282,6 @@ name|ifq_maxlen
 operator|=
 name|ipqmaxlen
 expr_stmt|;
-name|ifinet
-operator|=
-name|if_ifwithaf
-argument_list|(
-name|AF_INET
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 
@@ -351,6 +350,12 @@ name|struct
 name|ipq
 modifier|*
 name|fp
+decl_stmt|;
+specifier|register
+name|struct
+name|in_ifaddr
+modifier|*
+name|ia
 decl_stmt|;
 name|int
 name|hlen
@@ -443,9 +448,6 @@ name|ip
 operator|*
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
 name|hlen
 operator|=
 name|ip
@@ -453,7 +455,27 @@ operator|->
 name|ip_hl
 operator|<<
 literal|2
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|hlen
+operator|<
+literal|10
+condition|)
+block|{
+comment|/* minimum header length */
+name|ipstat
+operator|.
+name|ips_badhlen
+operator|++
+expr_stmt|;
+goto|goto
+name|next
+goto|;
+block|}
+if|if
+condition|(
+name|hlen
 operator|>
 name|m
 operator|->
@@ -696,32 +718,35 @@ condition|)
 goto|goto
 name|next
 goto|;
-comment|/* 	 * Fast check on the first internet 	 * interface in the list. 	 */
-if|if
-condition|(
-name|ifinet
-condition|)
-block|{
-name|struct
-name|sockaddr_in
-modifier|*
-name|sin
-decl_stmt|;
-name|sin
+comment|/* 	 * Check our list of addresses, to see if the packet is for us. 	 */
+for|for
+control|(
+name|ia
 operator|=
-operator|(
-expr|struct
-name|sockaddr_in
-operator|*
-operator|)
-operator|&
-name|ifinet
+name|in_ifaddr
+init|;
+name|ia
+condition|;
+name|ia
+operator|=
+name|ia
 operator|->
-name|if_addr
-expr_stmt|;
+name|ia_next
+control|)
+block|{
+define|#
+directive|define
+name|satosin
+parameter_list|(
+name|sa
+parameter_list|)
+value|((struct sockaddr_in *)(sa))
 if|if
 condition|(
-name|sin
+name|IA_SIN
+argument_list|(
+name|ia
+argument_list|)
 operator|->
 name|sin_addr
 operator|.
@@ -733,32 +758,26 @@ name|ip_dst
 operator|.
 name|s_addr
 condition|)
-goto|goto
-name|ours
-goto|;
-name|sin
-operator|=
-operator|(
-expr|struct
-name|sockaddr_in
-operator|*
-operator|)
-operator|&
-name|ifinet
-operator|->
-name|if_broadaddr
-expr_stmt|;
+break|break;
 if|if
 condition|(
 operator|(
-name|ifinet
+name|ia
+operator|->
+name|ia_ifp
 operator|->
 name|if_flags
 operator|&
 name|IFF_BROADCAST
 operator|)
 operator|&&
-name|sin
+name|satosin
+argument_list|(
+operator|&
+name|ia
+operator|->
+name|ia_broadaddr
+argument_list|)
 operator|->
 name|sin_addr
 operator|.
@@ -770,31 +789,44 @@ name|ip_dst
 operator|.
 name|s_addr
 condition|)
-goto|goto
-name|ours
-goto|;
-block|}
-name|ipaddr
-operator|.
-name|sin_addr
-operator|=
+break|break;
+comment|/* 		 * Look for all-0's host part (old broadcast addr). 		 */
+if|if
+condition|(
+operator|(
+name|ia
+operator|->
+name|ia_ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_BROADCAST
+operator|)
+operator|&&
+name|ia
+operator|->
+name|ia_subnet
+operator|==
+name|ntohl
+argument_list|(
 name|ip
 operator|->
 name|ip_dst
-expr_stmt|;
+operator|.
+name|s_addr
+argument_list|)
+condition|)
+break|break;
+block|}
 if|if
 condition|(
-name|if_ifwithaddr
-argument_list|(
+name|ia
+operator|==
 operator|(
 expr|struct
-name|sockaddr
+name|in_ifaddr
 operator|*
 operator|)
-operator|&
-name|ipaddr
-argument_list|)
-operator|==
 literal|0
 condition|)
 block|{
@@ -807,8 +839,6 @@ goto|goto
 name|next
 goto|;
 block|}
-name|ours
-label|:
 comment|/* 	 * Look for queue of fragments 	 * of this datagram. 	 */
 for|for
 control|(
@@ -2051,9 +2081,9 @@ name|ipt
 decl_stmt|;
 specifier|register
 name|struct
-name|ifnet
+name|ifaddr
 modifier|*
-name|ifp
+name|ifa
 decl_stmt|;
 name|struct
 name|in_addr
@@ -2213,9 +2243,9 @@ operator|=
 operator|*
 name|sin
 expr_stmt|;
-name|ifp
+name|ifa
 operator|=
-name|if_ifwithaddr
+name|ifa_ifwithaddr
 argument_list|(
 operator|(
 expr|struct
@@ -2236,7 +2266,7 @@ name|ICMP_UNREACH_SRCFAIL
 expr_stmt|;
 if|if
 condition|(
-name|ifp
+name|ifa
 operator|==
 literal|0
 condition|)
@@ -2311,7 +2341,7 @@ name|opt
 operator|==
 name|IPOPT_SSRR
 operator|&&
-name|if_ifonnetof
+name|in_iaonnetof
 argument_list|(
 name|in_netof
 argument_list|(
@@ -2441,7 +2471,7 @@ name|bad
 goto|;
 if|if
 condition|(
-name|ifinet
+name|in_ifaddr
 operator|==
 literal|0
 condition|)
@@ -2453,17 +2483,10 @@ operator|*
 name|sin
 operator|++
 operator|=
-operator|(
-operator|(
-expr|struct
-name|sockaddr_in
-operator|*
-operator|)
-operator|&
-name|ifinet
-operator|->
-name|if_addr
-operator|)
+name|IA_SIN
+argument_list|(
+name|in_ifaddr
+argument_list|)
 operator|->
 name|sin_addr
 expr_stmt|;
@@ -2480,7 +2503,7 @@ name|sin
 expr_stmt|;
 if|if
 condition|(
-name|if_ifwithaddr
+name|ifa_ifwithaddr
 argument_list|(
 operator|(
 expr|struct
@@ -2987,7 +3010,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Forward a packet.  If some error occurs return the sender  * and icmp packet.  Note we can't always generate a meaningful  * icmp message because icmp doesn't have a large enough repetoire  * of codes and types.  */
+comment|/*  * Forward a packet.  If some error occurs return the sender  * an icmp packet.  Note we can't always generate a meaningful  * icmp message because icmp doesn't have a large enough repetoire  * of codes and types.  */
 end_comment
 
 begin_expr_stmt
@@ -3016,9 +3039,6 @@ decl_stmt|;
 name|struct
 name|mbuf
 modifier|*
-name|mopt
-decl_stmt|,
-modifier|*
 name|mcopy
 decl_stmt|;
 if|if
@@ -3040,6 +3060,17 @@ argument_list|,
 name|ip
 operator|->
 name|ip_ttl
+argument_list|)
+expr_stmt|;
+name|ip
+operator|->
+name|ip_id
+operator|=
+name|htons
+argument_list|(
+name|ip
+operator|->
+name|ip_id
 argument_list|)
 expr_stmt|;
 if|if
@@ -3089,32 +3120,6 @@ name|ip_ttl
 operator|-=
 name|IPTTLDEC
 expr_stmt|;
-name|mopt
-operator|=
-name|m_get
-argument_list|(
-name|M_DONTWAIT
-argument_list|,
-name|MT_DATA
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|mopt
-operator|==
-name|NULL
-condition|)
-block|{
-name|m_freem
-argument_list|(
-name|dtom
-argument_list|(
-name|ip
-argument_list|)
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 comment|/* 	 * Save at most 64 bytes of the packet in case 	 * we need to generate an ICMP message to the src. 	 */
 name|mcopy
 operator|=
@@ -3137,13 +3142,6 @@ literal|64
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ip_stripoptions
-argument_list|(
-name|ip
-argument_list|,
-name|mopt
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|ip_output
@@ -3153,7 +3151,12 @@ argument_list|(
 name|ip
 argument_list|)
 argument_list|,
-name|mopt
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|)
+literal|0
 argument_list|,
 operator|(
 expr|struct
