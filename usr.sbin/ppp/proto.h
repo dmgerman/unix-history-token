@@ -102,7 +102,7 @@ name|PROTO_COMPRESSIBLE
 parameter_list|(
 name|p
 parameter_list|)
-value|(((p)& 0xffe1) == 0x21)
+value|(((p)& 0xff81) == 0x01)
 end_define
 
 begin_define
