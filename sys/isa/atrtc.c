@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)clock.c	7.2 (Berkeley) 5/12/91  *	$Id: clock.c,v 1.63 1996/07/17 11:26:05 bde Exp $  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz and Don Ahn.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)clock.c	7.2 (Berkeley) 5/12/91  *	$Id: clock.c,v 1.64 1996/07/20 18:47:23 joerg Exp $  */
 end_comment
 
 begin_comment
@@ -161,7 +161,7 @@ value|20
 end_define
 
 begin_comment
-comment|/*  * Maximal frequency that we are willing to allow for timer0.  Must be  * low enough to guarantee that the timer interrupt handler returns  * before the next timer interrupt.  Must result in a lower TIMER_DIV  * value than TIMER0_LATCH_COUNT so that we don't have to worry about  * underflow in the calculation of timer0_overflow_threshold.  */
+comment|/*  * Maximum frequency that we are willing to allow for timer0.  Must be  * low enough to guarantee that the timer interrupt handler returns  * before the next timer interrupt.  Must result in a lower TIMER_DIV  * value than TIMER0_LATCH_COUNT so that we don't have to worry about  * underflow in the calculation of timer0_overflow_threshold.  */
 end_comment
 
 begin_define
@@ -272,6 +272,38 @@ init|=
 name|SWI_CLOCK_MASK
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|TIMER_FREQ
+end_ifdef
+
+begin_decl_stmt
+name|u_int
+name|timer_freq
+init|=
+name|TIMER_FREQ
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+name|u_int
+name|timer_freq
+init|=
+literal|1193182
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -403,40 +435,6 @@ operator||
 name|RTCSB_PINTR
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TIMER_FREQ
-end_ifdef
-
-begin_decl_stmt
-specifier|static
-name|u_int
-name|timer_freq
-init|=
-name|TIMER_FREQ
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|static
-name|u_int
-name|timer_freq
-init|=
-literal|1193182
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Values for timerX_state: */
@@ -746,7 +744,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * The following functions must be called at ipl>= splclock.  */
+comment|/*  * The acquire and release functions must be called at ipl>= splclock().  */
 end_comment
 
 begin_decl_stmt
@@ -819,7 +817,7 @@ operator|-
 literal|1
 operator|)
 return|;
-comment|/* 		   * The timer has been released recently, but is 		   * re-acquired before the release got complete.  In 		   * this case, we simply reclaim it as if it had not 		   * been released at all. 		   */
+comment|/* 		 * The timer has been released recently, but is being 		 * re-acquired before the release completed.  In this 		 * case, we simply reclaim it as if it had not been 		 * released at all. 		 */
 name|timer0_state
 operator|=
 name|ACQUIRED
@@ -860,9 +858,6 @@ name|int
 name|mode
 parameter_list|)
 block|{
-name|u_long
-name|eflags
-decl_stmt|;
 if|if
 condition|(
 name|timer2_state
@@ -879,14 +874,7 @@ name|timer2_state
 operator|=
 name|ACQUIRED
 expr_stmt|;
-name|eflags
-operator|=
-name|read_eflags
-argument_list|()
-expr_stmt|;
-name|disable_intr
-argument_list|()
-expr_stmt|;
+comment|/* 	 * This access to the timer registers is as atomic as possible 	 * because it is a single instruction.  We could do better if we 	 * knew the rate.  Use of splclock() limits glitches to 10-100us, 	 * and this is probably good enough for timer2, so we aren't as 	 * careful with it as with timer0. 	 */
 name|outb
 argument_list|(
 name|TIMER_MODE
@@ -898,11 +886,6 @@ name|mode
 operator|&
 literal|0x3f
 operator|)
-argument_list|)
-expr_stmt|;
-name|write_eflags
-argument_list|(
-name|eflags
 argument_list|)
 expr_stmt|;
 return|return
@@ -961,9 +944,6 @@ name|int
 name|release_timer2
 parameter_list|()
 block|{
-name|u_long
-name|eflags
-decl_stmt|;
 if|if
 condition|(
 name|timer2_state
@@ -980,14 +960,6 @@ name|timer2_state
 operator|=
 name|RELEASED
 expr_stmt|;
-name|eflags
-operator|=
-name|read_eflags
-argument_list|()
-expr_stmt|;
-name|disable_intr
-argument_list|()
-expr_stmt|;
 name|outb
 argument_list|(
 name|TIMER_MODE
@@ -998,14 +970,6 @@ name|TIMER_SQWAVE
 operator||
 name|TIMER_16BIT
 argument_list|)
-expr_stmt|;
-name|write_eflags
-argument_list|(
-name|eflags
-argument_list|)
-expr_stmt|;
-name|enable_intr
-argument_list|()
 expr_stmt|;
 return|return
 operator|(
