@@ -153,7 +153,7 @@ comment|/* ipfw_insn_limit		*/
 name|O_LIMIT_PARENT
 block|,
 comment|/* dyn_type, not an opcode.	*/
-comment|/* 	 * these are really 'actions', and must be last in the list. 	 */
+comment|/* 	 * These are really 'actions'. 	 */
 name|O_LOG
 block|,
 comment|/* ipfw_insn_log		*/
@@ -196,6 +196,10 @@ comment|/* fwd sockaddr			*/
 name|O_FORWARD_MAC
 block|,
 comment|/* fwd mac			*/
+comment|/* 	 * More opcodes. 	 */
+name|O_IPSEC
+block|,
+comment|/* has ipsec history 		*/
 name|O_LAST_OPCODE
 comment|/* not an opcode!		*/
 block|}
@@ -337,7 +341,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * This is used to forward to a given address (ip)  */
+comment|/*  * This is used to forward to a given address (ip).  */
 end_comment
 
 begin_typedef
@@ -389,7 +393,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * This is used for interface match rules (recv xx, xmit xx)  */
+comment|/*  * This is used for interface match rules (recv xx, xmit xx).  */
 end_comment
 
 begin_typedef
@@ -489,7 +493,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * This is used for log instructions  */
+comment|/*  * This is used for log instructions.  */
 end_comment
 
 begin_typedef
@@ -533,14 +537,7 @@ modifier|*
 name|next_rule
 decl_stmt|;
 comment|/* ptr to next [skipto] rule	*/
-if|#
-directive|if
-literal|0
-comment|/* passed up using 'next_rule' */
-block|u_int32_t	set_disable;
-comment|/* disabled sets (for userland)	*/
-endif|#
-directive|endif
+comment|/* 'next_rule' is used to pass up 'set_disable' status		*/
 name|u_int16_t
 name|act_ofs
 decl_stmt|;
@@ -638,7 +635,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * dynamic ipfw rule  */
+comment|/*  * Dynamic ipfw rule.  */
 end_comment
 
 begin_typedef
@@ -664,6 +661,7 @@ modifier|*
 name|rule
 decl_stmt|;
 comment|/* pointer to rule		*/
+comment|/* 'rule' is used to pass up the rule number (from the parent)	*/
 name|ipfw_dyn_rule
 modifier|*
 name|parent
@@ -711,14 +709,6 @@ name|u_int16_t
 name|count
 decl_stmt|;
 comment|/* refcount			*/
-if|#
-directive|if
-literal|0
-comment|/* passed up with 'rule' */
-block|u_int16_t	rulenum;
-comment|/* rule number (for userland)	*/
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
@@ -837,7 +827,7 @@ value|0x40000
 end_define
 
 begin_comment
-comment|/*  * arguments for calling ipfw_chk() and dummynet_io(). We put them  * all into a structure because this way it is easier and more  * efficient to pass variables around and extend the interface.  */
+comment|/*  * Arguments for calling ipfw_chk() and dummynet_io(). We put them  * all into a structure because this way it is easier and more  * efficient to pass variables around and extend the interface.  */
 end_comment
 
 begin_struct
