@@ -145,21 +145,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Return 1 if process has special kernel digging privileges */
-end_comment
-
-begin_function_decl
-name|int
-name|procfs_kmemaccess
-parameter_list|(
-name|struct
-name|proc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* Attributes */
 end_comment
 
