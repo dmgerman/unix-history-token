@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machparam.h 1.11 89/08/14$  *  *	@(#)param.h	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department and Ralph Campbell.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: machparam.h 1.11 89/08/14$  *  *	@(#)param.h	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -84,6 +84,39 @@ end_define
 begin_define
 define|#
 directive|define
+name|NBSEG
+value|0x400000
+end_define
+
+begin_comment
+comment|/* bytes/segment */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SEGOFSET
+value|(NBSEG-1)
+end_define
+
+begin_comment
+comment|/* byte offset into segment */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SEGSHIFT
+value|22
+end_define
+
+begin_comment
+comment|/* LOG2(NBSEG) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|KERNBASE
 value|0x80000000
 end_define
@@ -128,7 +161,7 @@ begin_define
 define|#
 directive|define
 name|MAXPHYS
-value|(24 * 1024)
+value|(128 * 1024)
 end_define
 
 begin_comment
