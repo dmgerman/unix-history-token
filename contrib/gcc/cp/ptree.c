@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Prints out trees in human readable form.    Copyright (C) 1992, 1993, 1994, 1995, 1996, 1998,    1999 Free Software Foundation, Inc.    Hacked by Michael Tiemann (tiemann@cygnus.com)  This file is part of GNU CC.  GNU CC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GNU CC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU CC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+comment|/* Prints out trees in human readable form.    Copyright (C) 1992, 1993, 1994, 1995, 1996, 1998,    1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.    Hacked by Michael Tiemann (tiemann@cygnus.com)  This file is part of GCC.  GCC is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  GCC is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GCC; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 end_comment
 
 begin_comment
@@ -17,6 +17,18 @@ begin_include
 include|#
 directive|include
 file|"system.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"coretypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"tm.h"
 end_include
 
 begin_include
@@ -71,22 +83,16 @@ begin_function
 name|void
 name|cxx_print_decl
 parameter_list|(
-name|file
-parameter_list|,
-name|node
-parameter_list|,
-name|indent
-parameter_list|)
 name|FILE
 modifier|*
 name|file
-decl_stmt|;
+parameter_list|,
 name|tree
 name|node
-decl_stmt|;
+parameter_list|,
 name|int
 name|indent
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -157,24 +163,16 @@ argument_list|(
 name|node
 argument_list|)
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|file
-argument_list|,
-literal|" pending-inline-info "
-argument_list|)
-expr_stmt|;
 name|fprintf
 argument_list|(
 argument|file
 argument_list|,
+literal|" pending-inline-info "
 argument|HOST_PTR_PRINTF_FORMAT
 argument_list|,
 argument|HOST_PTR_PRINTF_TYPE DECL_PENDING_INLINE_INFO (node)
 argument_list|)
 empty_stmt|;
-block|}
 if|if
 condition|(
 name|TREE_CODE
@@ -189,24 +187,16 @@ argument_list|(
 name|node
 argument_list|)
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|file
-argument_list|,
-literal|" sorted-fields "
-argument_list|)
-expr_stmt|;
 name|fprintf
 argument_list|(
 argument|file
 argument_list|,
+literal|" sorted-fields "
 argument|HOST_PTR_PRINTF_FORMAT
 argument_list|,
 argument|HOST_PTR_PRINTF_TYPE DECL_SORTED_FIELDS (node)
 argument_list|)
 empty_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -230,24 +220,16 @@ argument_list|(
 name|node
 argument_list|)
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|file
-argument_list|,
-literal|" template-info "
-argument_list|)
-expr_stmt|;
 name|fprintf
 argument_list|(
 argument|file
 argument_list|,
+literal|" template-info "
 argument|HOST_PTR_PRINTF_FORMAT
 argument_list|,
 argument|HOST_PTR_PRINTF_TYPE DECL_TEMPLATE_INFO (node)
 argument_list|)
 empty_stmt|;
-block|}
 block|}
 end_function
 
@@ -255,23 +237,16 @@ begin_function
 name|void
 name|cxx_print_type
 parameter_list|(
-name|file
-parameter_list|,
-name|node
-parameter_list|,
-name|indent
-parameter_list|)
 name|FILE
 modifier|*
 name|file
-decl_stmt|;
-specifier|register
+parameter_list|,
 name|tree
 name|node
-decl_stmt|;
+parameter_list|,
 name|int
 name|indent
-decl_stmt|;
+parameter_list|)
 block|{
 switch|switch
 condition|(
@@ -299,56 +274,26 @@ operator|+
 literal|3
 argument_list|)
 expr_stmt|;
-name|fputs
-argument_list|(
-literal|"index "
-argument_list|,
-name|file
-argument_list|)
-expr_stmt|;
 name|fprintf
 argument_list|(
 name|file
 argument_list|,
+literal|"index "
+name|HOST_WIDE_INT_PRINT_DEC
+literal|" level "
+name|HOST_WIDE_INT_PRINT_DEC
+literal|" orig_level "
 name|HOST_WIDE_INT_PRINT_DEC
 argument_list|,
 name|TEMPLATE_TYPE_IDX
 argument_list|(
 name|node
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|fputs
-argument_list|(
-literal|" level "
-argument_list|,
-name|file
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|file
-argument_list|,
-name|HOST_WIDE_INT_PRINT_DEC
 argument_list|,
 name|TEMPLATE_TYPE_LEVEL
 argument_list|(
 name|node
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|fputs
-argument_list|(
-literal|" orig_level "
-argument_list|,
-name|file
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|file
-argument_list|,
-name|HOST_WIDE_INT_PRINT_DEC
 argument_list|,
 name|TEMPLATE_TYPE_ORIG_LEVEL
 argument_list|(
@@ -615,48 +560,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|TYPE_OVERLOADS_CALL_EXPR
-argument_list|(
-name|node
-argument_list|)
-condition|)
-name|fputs
-argument_list|(
-literal|" op()"
-argument_list|,
-name|file
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|TYPE_OVERLOADS_ARRAY_REF
-argument_list|(
-name|node
-argument_list|)
-condition|)
-name|fputs
-argument_list|(
-literal|" op[]"
-argument_list|,
-name|file
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|TYPE_OVERLOADS_ARROW
-argument_list|(
-name|node
-argument_list|)
-condition|)
-name|fputs
-argument_list|(
-literal|" op->"
-argument_list|,
-name|file
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|TYPE_USES_MULTIPLE_INHERITANCE
 argument_list|(
 name|node
@@ -772,29 +675,17 @@ parameter_list|)
 block|{
 name|fprintf
 argument_list|(
-name|stream
-argument_list|,
-literal|"%s<"
-argument_list|,
-name|prefix
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
 argument|stream
 argument_list|,
+literal|"%s<"
 argument|HOST_PTR_PRINTF_FORMAT
+literal|">"
+argument_list|,
+argument|prefix
 argument_list|,
 argument|HOST_PTR_PRINTF_TYPE binding
 argument_list|)
 empty_stmt|;
-name|fprintf
-argument_list|(
-name|stream
-argument_list|,
-literal|">"
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -802,23 +693,24 @@ begin_function
 name|void
 name|cxx_print_identifier
 parameter_list|(
-name|file
-parameter_list|,
-name|node
-parameter_list|,
-name|indent
-parameter_list|)
 name|FILE
 modifier|*
 name|file
-decl_stmt|;
+parameter_list|,
 name|tree
 name|node
-decl_stmt|;
+parameter_list|,
 name|int
 name|indent
-decl_stmt|;
+parameter_list|)
 block|{
+name|indent_to
+argument_list|(
+name|file
+argument_list|,
+name|indent
+argument_list|)
+expr_stmt|;
 name|cxx_print_binding
 argument_list|(
 name|file
@@ -845,6 +737,13 @@ argument_list|,
 name|indent
 operator|+
 literal|4
+argument_list|)
+expr_stmt|;
+name|indent_to
+argument_list|(
+name|file
+argument_list|,
+name|indent
 argument_list|)
 expr_stmt|;
 name|cxx_print_binding
@@ -930,22 +829,16 @@ begin_function
 name|void
 name|cxx_print_xnode
 parameter_list|(
-name|file
-parameter_list|,
-name|node
-parameter_list|,
-name|indent
-parameter_list|)
 name|FILE
 modifier|*
 name|file
-decl_stmt|;
+parameter_list|,
 name|tree
 name|node
-decl_stmt|;
+parameter_list|,
 name|int
 name|indent
-decl_stmt|;
+parameter_list|)
 block|{
 switch|switch
 condition|(
@@ -1003,56 +896,26 @@ operator|+
 literal|3
 argument_list|)
 expr_stmt|;
-name|fputs
-argument_list|(
-literal|"index "
-argument_list|,
-name|file
-argument_list|)
-expr_stmt|;
 name|fprintf
 argument_list|(
 name|file
 argument_list|,
+literal|"index "
+name|HOST_WIDE_INT_PRINT_DEC
+literal|" level "
+name|HOST_WIDE_INT_PRINT_DEC
+literal|" orig_level "
 name|HOST_WIDE_INT_PRINT_DEC
 argument_list|,
 name|TEMPLATE_PARM_IDX
 argument_list|(
 name|node
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|fputs
-argument_list|(
-literal|" level "
-argument_list|,
-name|file
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|file
-argument_list|,
-name|HOST_WIDE_INT_PRINT_DEC
 argument_list|,
 name|TEMPLATE_PARM_LEVEL
 argument_list|(
 name|node
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|fputs
-argument_list|(
-literal|" orig_level "
-argument_list|,
-name|file
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|file
-argument_list|,
-name|HOST_WIDE_INT_PRINT_DEC
 argument_list|,
 name|TEMPLATE_PARM_ORIG_LEVEL
 argument_list|(
