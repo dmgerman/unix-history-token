@@ -72,7 +72,7 @@ define|#
 directive|define
 name|LINK_SPEC
 define|\
-value|"%{!nostdlib:%{!r*:%{!e*:-e start}}} -dc -dp %{static:-Bstatic} %{assert*} \    %{p:-Bstatic} %{pg:-Bstatic} %{Z}"
+value|"%{!nostdlib:%{!r:%{!e*:-e start}}} -dc -dp %{static:-Bstatic} %{assert*} \    %{p:-Bstatic} %{pg:-Bstatic} %{Z}"
 end_define
 
 begin_comment
