@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: ite.c 1.1 90/07/09$  *  *	@(#)ite.c	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: ite.c 1.1 90/07/09$  *  *	@(#)ite.c	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -351,7 +351,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|int
+name|void
 name|itestart
 parameter_list|()
 function_decl|;
@@ -1574,20 +1574,18 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_function
+name|void
 name|itestart
-argument_list|(
+parameter_list|(
 name|tp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|tty
-operator|*
+modifier|*
 name|tp
-expr_stmt|;
-end_expr_stmt
-
-begin_block
+decl_stmt|;
 block|{
 specifier|register
 name|int
@@ -1668,6 +1666,9 @@ name|TS_ASLEEP
 expr_stmt|;
 name|wakeup
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 operator|&
 name|tp
 operator|->
@@ -1801,7 +1802,7 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_expr_stmt
 name|itefilter
