@@ -246,6 +246,8 @@ init|=
 block|{
 literal|"Usage: %s %s\n"
 block|,
+literal|"(Specify the --help global option for a list of other help options)\n"
+block|,
 name|NULL
 block|}
 decl_stmt|;
@@ -306,6 +308,9 @@ decl_stmt|,
 name|already_entered
 init|=
 literal|0
+decl_stmt|;
+name|int
+name|line_length
 decl_stmt|;
 if|if
 condition|(
@@ -414,8 +419,6 @@ argument_list|(
 name|typed_password
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
 name|connect_to_pserver
 argument_list|(
 name|NULL
@@ -423,22 +426,10 @@ argument_list|,
 name|NULL
 argument_list|,
 literal|1
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* The password is wrong, according to the server. */
-name|error
-argument_list|(
-literal|1
 argument_list|,
 literal|0
-argument_list|,
-literal|"incorrect password"
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* IF we have a password for this "[user@]host:/path" already      *  THEN      *    IF it's the same as the password we read from the prompt      *     THEN       *       do nothing      *     ELSE      *       replace the old password with the new one      *  ELSE      *    append new entry to the end of the file.      */
 name|root_len
 operator|=
@@ -468,6 +459,9 @@ block|{
 comment|/* Check each line to see if we have this entry already. */
 while|while
 condition|(
+operator|(
+name|line_length
+operator|=
 name|getline
 argument_list|(
 operator|&
@@ -478,6 +472,7 @@ name|linebuf_len
 argument_list|,
 name|fp
 argument_list|)
+operator|)
 operator|>=
 literal|0
 condition|)
@@ -503,12 +498,47 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+if|if
+condition|(
 name|fclose
 argument_list|(
 name|fp
 argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot close %s"
+argument_list|,
+name|passfile
+argument_list|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|existence_error
+argument_list|(
+name|errno
+argument_list|)
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot open %s"
+argument_list|,
+name|passfile
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|already_entered
@@ -643,6 +673,9 @@ argument_list|)
 expr_stmt|;
 while|while
 condition|(
+operator|(
+name|line_length
+operator|=
 name|getline
 argument_list|(
 operator|&
@@ -653,6 +686,7 @@ name|linebuf_len
 argument_list|,
 name|fp
 argument_list|)
+operator|)
 operator|>=
 literal|0
 condition|)
@@ -668,6 +702,9 @@ argument_list|,
 name|root_len
 argument_list|)
 condition|)
+block|{
+if|if
+condition|(
 name|fprintf
 argument_list|(
 name|tmp_fp
@@ -676,8 +713,25 @@ literal|"%s"
 argument_list|,
 name|linebuf
 argument_list|)
+operator|==
+name|EOF
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot write %s"
+argument_list|,
+name|tmp_name
+argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
+if|if
+condition|(
 name|fprintf
 argument_list|(
 name|tmp_fp
@@ -688,8 +742,45 @@ name|CVSroot_original
 argument_list|,
 name|typed_password
 argument_list|)
+operator|==
+name|EOF
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot write %s"
+argument_list|,
+name|tmp_name
+argument_list|)
 expr_stmt|;
 block|}
+block|}
+if|if
+condition|(
+name|line_length
+operator|<
+literal|0
+operator|&&
+operator|!
+name|feof
+argument_list|(
+name|fp
+argument_list|)
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot read %s"
+argument_list|,
+name|passfile
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|linebuf
@@ -699,16 +790,47 @@ argument_list|(
 name|linebuf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|fclose
 argument_list|(
 name|tmp_fp
 argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot close %s"
+argument_list|,
+name|tmp_name
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|fclose
 argument_list|(
 name|fp
 argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot close %s"
+argument_list|,
+name|passfile
+argument_list|)
 expr_stmt|;
+comment|/* FIXME: rename_file would make more sense (e.g. almost 	       always faster).  */
 name|copy_file
 argument_list|(
 name|tmp_name
@@ -782,6 +904,8 @@ return|return
 literal|1
 return|;
 block|}
+if|if
+condition|(
 name|fprintf
 argument_list|(
 name|fp
@@ -792,10 +916,38 @@ name|CVSroot_original
 argument_list|,
 name|typed_password
 argument_list|)
+operator|==
+name|EOF
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot write %s"
+argument_list|,
+name|passfile
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|fclose
 argument_list|(
 name|fp
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot close %s"
+argument_list|,
+name|passfile
 argument_list|)
 expr_stmt|;
 block|}
@@ -886,6 +1038,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|passfile
+decl_stmt|;
+name|int
+name|line_length
 decl_stmt|;
 comment|/* If someone (i.e., login()) is calling connect_to_pserver() out of        context, then assume they have supplied the correct, scrambled        password. */
 if|if
@@ -1029,6 +1184,9 @@ expr_stmt|;
 comment|/* Check each line to see if we have this entry already. */
 while|while
 condition|(
+operator|(
+name|line_length
+operator|=
 name|getline
 argument_list|(
 operator|&
@@ -1039,6 +1197,7 @@ name|linebuf_len
 argument_list|,
 name|fp
 argument_list|)
+operator|)
 operator|>=
 literal|0
 condition|)
@@ -1065,6 +1224,49 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+if|if
+condition|(
+name|line_length
+operator|<
+literal|0
+operator|&&
+operator|!
+name|feof
+argument_list|(
+name|fp
+argument_list|)
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot read %s"
+argument_list|,
+name|passfile
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fclose
+argument_list|(
+name|fp
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot close %s"
+argument_list|,
+name|passfile
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|found_it
@@ -1169,6 +1371,8 @@ init|=
 block|{
 literal|"Usage: %s %s\n"
 block|,
+literal|"(Specify the --help global option for a list of other help options)\n"
+block|,
 name|NULL
 block|}
 decl_stmt|;
@@ -1230,6 +1434,9 @@ decl_stmt|,
 name|found
 init|=
 literal|0
+decl_stmt|;
+name|int
+name|line_length
 decl_stmt|;
 if|if
 condition|(
@@ -1398,6 +1605,9 @@ comment|/* Check each line to see if we have this entry. */
 comment|/* Copy only those lines that do not match this entry */
 while|while
 condition|(
+operator|(
+name|line_length
+operator|=
 name|getline
 argument_list|(
 operator|&
@@ -1408,6 +1618,7 @@ name|linebuf_len
 argument_list|,
 name|fp
 argument_list|)
+operator|)
 operator|>=
 literal|0
 condition|)
@@ -1423,6 +1634,9 @@ argument_list|,
 name|root_len
 argument_list|)
 condition|)
+block|{
+if|if
+condition|(
 name|fprintf
 argument_list|(
 name|tmp_fp
@@ -1431,13 +1645,50 @@ literal|"%s"
 argument_list|,
 name|linebuf
 argument_list|)
+operator|==
+name|EOF
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot write %s"
+argument_list|,
+name|tmp_name
+argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|found
 operator|=
-name|TRUE
+literal|1
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|line_length
+operator|<
+literal|0
+operator|&&
+operator|!
+name|feof
+argument_list|(
+name|fp
+argument_list|)
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot read %s"
+argument_list|,
+name|passfile
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|linebuf
@@ -1447,14 +1698,44 @@ argument_list|(
 name|linebuf
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|fclose
 argument_list|(
 name|fp
 argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot close %s"
+argument_list|,
+name|passfile
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|fclose
 argument_list|(
 name|tmp_fp
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|0
+argument_list|,
+name|errno
+argument_list|,
+literal|"cannot close %s"
+argument_list|,
+name|tmp_name
 argument_list|)
 expr_stmt|;
 if|if
@@ -1478,6 +1759,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* FIXME: rename_file would make more sense (e.g. almost 	   always faster).  */
 name|copy_file
 argument_list|(
 name|tmp_name

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Extended regular expression matching and search library,    version 0.12.    (Implements POSIX draft P10003.2/D11.2, except for    internationalization features.)     Copyright (C) 1993, 1994, 1995, 1996 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.  */
+comment|/* Extended regular expression matching and search library, version    0.12.  (Implements POSIX draft P10003.2/D11.2, except for    internationalization features.)     Copyright (C) 1993, 1994, 1995, 1996 Free Software Foundation, Inc.     This program is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     This program is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.  */
 end_comment
 
 begin_comment
@@ -99,21 +99,47 @@ directive|include
 file|"buffer.h"
 end_include
 
+begin_comment
+comment|/* Make syntax table lookup grant data in gl_state.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYNTAX_ENTRY_VIA_PROPERTY
+end_define
+
 begin_include
 include|#
 directive|include
 file|"syntax.h"
 end_include
 
-begin_comment
-comment|/* Emacs uses `NULL' as a predicate.  */
-end_comment
+begin_include
+include|#
+directive|include
+file|"charset.h"
+end_include
 
-begin_undef
-undef|#
-directive|undef
-name|NULL
-end_undef
+begin_include
+include|#
+directive|include
+file|"category.h"
+end_include
+
+begin_define
+define|#
+directive|define
+name|malloc
+value|xmalloc
+end_define
+
+begin_define
+define|#
+directive|define
+name|free
+value|xfree
+end_define
 
 begin_else
 else|#
@@ -705,7 +731,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* We remove any previous definition of `SIGN_EXTEND_CHAR',    since ours (we hope) works properly with all combinations of    machines, compilers, `char' and `unsigned char' argument types.    (Per Bothner suggested the basic approach.)  */
+comment|/* We remove any previous definition of `SIGN_EXTEND_CHAR',    since ours (we hope) works properly with all combinations of    machines, compilers, `char' and `unsigned char' argument types.    (Per Bothner suggested the basic approach.)	*/
 end_comment
 
 begin_undef
@@ -11845,20 +11871,14 @@ index|[
 name|r
 index|]
 expr_stmt|;
-comment|/* xx why this test?  */
+comment|/* xx why this test?	*/
 if|if
 condition|(
-operator|(
-name|int
-operator|)
 name|old_regend
 index|[
 name|r
 index|]
 operator|>=
-operator|(
-name|int
-operator|)
 name|regstart
 index|[
 name|r

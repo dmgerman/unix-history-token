@@ -319,7 +319,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/* Print the program name and error message MESSAGE, which is a printf-style    format string with optional args.    If ERRNUM is nonzero, print its corresponding system error message.    Exit with status EXIT_FAILURE if STATUS is nonzero.  If MESSAGE is "",    no need to print a message.  */
+comment|/* Print the program name and error message MESSAGE, which is a printf-style    format string with optional args.    If ERRNUM is nonzero, print its corresponding system error message.    Exit with status EXIT_FAILURE if STATUS is nonzero.  If MESSAGE is "",    no need to print a message.     I think this is largely cleaned up to the point where it does the right    thing for the server, whether the normal server_active (child process)    case or the error_use_protocol (parent process) case.  The one exception    is that STATUS nonzero for error_use_protocol probably doesn't work yet;    in that case still need to use the pending_error machinery in server.c.  */
 end_comment
 
 begin_comment

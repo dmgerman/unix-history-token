@@ -42,6 +42,12 @@ directive|include
 file|<assert.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -88,7 +94,7 @@ value|64
 end_define
 
 begin_comment
-comment|/* Read up to (and including) a TERMINATOR from STREAM into *LINEPTR    + OFFSET (and null-terminate it). *LINEPTR is a pointer returned from    malloc (or NULL), pointing to *N characters of space.  It is realloc'd    as necessary.  Return the number of characters read (not including the    null terminator), or -1 on error or EOF.  */
+comment|/* Read up to (and including) a TERMINATOR from STREAM into *LINEPTR    + OFFSET (and null-terminate it). *LINEPTR is a pointer returned from    malloc (or NULL), pointing to *N characters of space.  It is realloc'd    as necessary.  Return the number of characters read (not including the    null terminator), or -1 on error or EOF.  On a -1 return, the caller    should check feof(), if not then errno has been set to indicate    the error.  */
 end_comment
 
 begin_function
@@ -148,10 +154,16 @@ operator|||
 operator|!
 name|stream
 condition|)
+block|{
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
 return|return
 operator|-
 literal|1
 return|;
+block|}
 if|if
 condition|(
 operator|!
@@ -179,10 +191,16 @@ operator|!
 operator|*
 name|lineptr
 condition|)
+block|{
+name|errno
+operator|=
+name|ENOMEM
+expr_stmt|;
 return|return
 operator|-
 literal|1
 return|;
+block|}
 block|}
 name|nchars_avail
 operator|=
@@ -204,6 +222,9 @@ init|;
 condition|;
 control|)
 block|{
+name|int
+name|save_errno
+decl_stmt|;
 specifier|register
 name|int
 name|c
@@ -213,6 +234,10 @@ argument_list|(
 name|stream
 argument_list|)
 decl_stmt|;
+name|save_errno
+operator|=
+name|errno
+expr_stmt|;
 comment|/* We always want at least one char left in the buffer, since we 	 always (unless we get an error while reading the first char) 	 NUL-terminate the line buffer.  */
 name|assert
 argument_list|(
@@ -284,10 +309,16 @@ operator|!
 operator|*
 name|lineptr
 condition|)
+block|{
+name|errno
+operator|=
+name|ENOMEM
+expr_stmt|;
 return|return
 operator|-
 literal|1
 return|;
+block|}
 name|read_pos
 operator|=
 operator|*
@@ -318,14 +349,27 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|c
-operator|==
-name|EOF
-operator|||
 name|ferror
 argument_list|(
 name|stream
 argument_list|)
+condition|)
+block|{
+comment|/* Might like to return partial line, but there is no 	     place for us to store errno.  And we don't want to just 	     lose errno.  */
+name|errno
+operator|=
+name|save_errno
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+if|if
+condition|(
+name|c
+operator|==
+name|EOF
 condition|)
 block|{
 comment|/* Return partial line, if any.  */

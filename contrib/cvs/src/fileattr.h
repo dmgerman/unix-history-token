@@ -161,6 +161,52 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Get all the attributes for file FILENAME.  They are returned as malloc'd    data in an unspecified format which is guaranteed only to be good for    passing to fileattr_setall, or NULL if no attributes.  If FILENAME is    NULL, get default attributes.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|fileattr_getall
+name|PROTO
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+name|filename
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Set the attributes for file FILENAME to ATTRS, overwriting all previous    attributes for that file.  ATTRS was obtained from a previous call to    fileattr_getall (malloc'd data or NULL).  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|fileattr_setall
+name|PROTO
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+name|filename
+operator|,
+specifier|const
+name|char
+operator|*
+name|attrs
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Set the attributes for file FILENAME in whatever manner is appropriate    for a newly created file.  */
 end_comment
 

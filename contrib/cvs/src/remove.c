@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *   * Remove a File  *   * Removes entries from the present version. The entries will be removed from  * the RCS repository upon the next "commit".  *   * "remove" accepts no options, only file names that are to be removed.  The  * file must not exist in the current directory for "remove" to work  * correctly.  */
+comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * Remove a File  *   * Removes entries from the present version. The entries will be removed from  * the RCS repository upon the next "commit".  *   * "remove" accepts no options, only file names that are to be removed.  The  * file must not exist in the current directory for "remove" to work  * correctly.  */
 end_comment
 
 begin_include
@@ -136,6 +136,8 @@ block|,
 literal|"\t-l\tProcess this directory only (not recursive).\n"
 block|,
 literal|"\t-R\tProcess directories recursively.\n"
+block|,
+literal|"(Specify the --help global option for a list of other help options)\n"
 block|,
 name|NULL
 block|}
@@ -878,6 +880,43 @@ argument_list|,
 name|finfo
 operator|->
 name|fullname
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|vers
+operator|->
+name|tag
+operator|!=
+name|NULL
+operator|&&
+name|isdigit
+argument_list|(
+operator|*
+name|vers
+operator|->
+name|tag
+argument_list|)
+condition|)
+block|{
+comment|/* Commit will just give an error, and so there seems to be 	   little reason to allow the remove.  I mean, conflicts that 	   arise out of parallel development are one thing, but conflicts 	   that arise from sticky tags are quite another.  	   I would have thought that non-branch sticky tags should be the 	   same but at least now, removing a file with a non-branch sticky 	   tag means to delete the tag from the file.  I'm not sure that 	   is a good behavior, but until it is changed, we need to allow 	   it.  */
+name|error
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|"\ cannot remove file `%s' which has a numeric sticky tag of `%s'"
+argument_list|,
+name|finfo
+operator|->
+name|fullname
+argument_list|,
+name|vers
+operator|->
+name|tag
 argument_list|)
 expr_stmt|;
 block|}

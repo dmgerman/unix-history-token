@@ -543,23 +543,23 @@ name|cvswrappers_contents
 index|[]
 init|=
 block|{
-literal|"# This file describes wrappers and other binary files to CVS.\n"
+literal|"# This file affects handling of files based on their names.\n"
 block|,
 literal|"#\n"
 block|,
-literal|"# Wrappers are the concept where directories of files are to be\n"
+literal|"# The -t/-f options allow one to treat directories of files\n"
 block|,
-literal|"# treated as a single file.  The intended use is to wrap up a wrapper\n"
+literal|"# as a single file, or to transform a file in other ways on\n"
 block|,
-literal|"# into a single tar such that the tar archive can be treated as a\n"
-block|,
-literal|"# single binary file in CVS.\n"
+literal|"# its way in and out of CVS.\n"
 block|,
 literal|"#\n"
 block|,
-literal|"# To solve the problem effectively, it was also necessary to be able to\n"
+literal|"# The -m option specifies whether CVS attempts to merge files.\n"
 block|,
-literal|"# prevent rcsmerge from merging these files.\n"
+literal|"#\n"
+block|,
+literal|"# The -k option specifies keyword expansion (e.g. -kb for binary).\n"
 block|,
 literal|"#\n"
 block|,
@@ -579,13 +579,15 @@ literal|"#  -t		to cvs filter		value: path to filter\n"
 block|,
 literal|"#  -m		update methodology	value: MERGE or COPY\n"
 block|,
+literal|"#  -k		expansion mode		value: b, o, kkv,&c\n"
+block|,
 literal|"#\n"
 block|,
 literal|"#  and value is a single-quote delimited value.\n"
 block|,
-literal|"#\n"
-block|,
 literal|"# For example:\n"
+block|,
+literal|"#*.gif -k 'b'\n"
 block|,
 name|NULL
 block|}
@@ -692,6 +694,33 @@ block|,
 literal|"# can be useful for creating a module that consists of many directories\n"
 block|,
 literal|"# spread out over the entire source repository.\n"
+block|,
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+specifier|const
+name|config_contents
+index|[]
+init|=
+block|{
+literal|"# Set this to \"no\" if pserver shouldn't check system users/passwords\n"
+block|,
+literal|"#SystemAuth=no\n"
+block|,
+literal|"\n"
+block|,
+literal|"# Set `PreservePermissions' to `yes' to save file status information\n"
+block|,
+literal|"# in the repository.\n"
+block|,
+literal|"#PreservePermissions=no\n"
 block|,
 name|NULL
 block|}
@@ -816,7 +845,15 @@ block|,
 name|NULL
 block|}
 block|,
-comment|/* Some have suggested listing CVSROOTADM_PASSWD here too.  The        security implications of transmitting hashed passwords over the        net are no worse than transmitting cleartext passwords which pserver        does, so this isn't a problem.  But I'm worried about the implications        of storing old passwords--if someone used a password in the past        they might be using it elsewhere, using a similar password, etc,        and so it doesn't seem to me like we should be saving old passwords,        even hashed.  */
+comment|/* Some have suggested listing CVSROOTADM_PASSWD here too.  This        would mean that CVS commands which operate on the        CVSROOTADM_PASSWD file would transmit hashed passwords over the        net.  This might seem to be no big deal, as pserver normally        transmits cleartext passwords, but the difference is that        CVSROOTADM_PASSWD contains *all* passwords, not just the ones        currently being used.  For example, it could be too easy to        accidentally give someone readonly access to CVSROOTADM_PASSWD        (e.g. via anonymous CVS or cvsweb), and then if there are any        guessable passwords for read/write access (usually there will be)        they get read/write access.         Another worry is the implications of storing old passwords--if        someone used a password in the past they might be using it        elsewhere, using a similar password, etc, and so saving old        passwords, even hashed, is probably not a good idea.  */
+block|{
+name|CVSROOTADM_CONFIG
+block|,
+literal|"a %s file configures various behaviors"
+block|,
+name|config_contents
+block|}
+block|,
 block|{
 name|NULL
 block|,
@@ -1662,13 +1699,6 @@ name|error
 argument_list|(
 literal|0
 argument_list|,
-name|retcode
-operator|==
-operator|-
-literal|1
-condition|?
-name|errno
-else|:
 literal|0
 argument_list|,
 literal|"failed to check out %s file"
@@ -2710,6 +2740,8 @@ init|=
 block|{
 literal|"Usage: %s %s\n"
 block|,
+literal|"(Specify the --help global option for a list of other help options)\n"
+block|,
 name|NULL
 block|}
 decl_stmt|;
@@ -3080,11 +3112,18 @@ literal|"1.1"
 argument_list|,
 name|NULL
 argument_list|,
+comment|/* No vendor branch.  */
+name|NULL
+argument_list|,
 name|NULL
 argument_list|,
 literal|0
 argument_list|,
 name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|,
 name|NULL
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS 1.4 kit.  *   * Status Information  */
+comment|/*  * Copyright (c) 1992, Brian Berliner and Jeff Polk  * Copyright (c) 1989-1992, Brian Berliner  *   * You may distribute under the terms of the GNU General Public License as  * specified in the README file that comes with the CVS source distribution.  *   * Status Information  */
 end_comment
 
 begin_include
@@ -122,6 +122,8 @@ block|,
 literal|"\t-l\tProcess this directory only (not recursive).\n"
 block|,
 literal|"\t-R\tProcess directories recursively.\n"
+block|,
+literal|"(Specify the --help global option for a list of other help options)\n"
 block|,
 name|NULL
 block|}
@@ -281,7 +283,7 @@ argument_list|,
 name|SEND_EXPAND_WILD
 argument_list|)
 expr_stmt|;
-comment|/* Note that by setting SEND_NO_CONTENTS, we do prevent the 	 server from updating our timestamp if the timestamp is 	 unchanged and the file is unmodified.  And I think it is a 	 user-visible thing in that case (shows "locally modified" 	 instead of "up to date" I would think).  But the speed seems 	 to be worth it.  */
+comment|/* For a while, we tried setting SEND_NO_CONTENTS here so this 	 could be a fast operation.  That prevents the 	 server from updating our timestamp if the timestamp is 	 changed but the file is unmodified.  Worse, it is user-visible 	 (shows "locally modified" instead of "up to date" if 	 timestamp is changed but file is not).  And there is no good 	 workaround (you might not want to run "cvs update"; "cvs -n 	 update" doesn't update CVS/Entries; "cvs diff --brief" or 	 something perhaps could be made to work but somehow that 	 seems nonintuitive to me even if so).  Given that timestamps 	 seem to have the potential to get munged for any number of 	 reasons, it seems better to not rely too much on them.  */
 name|send_files
 argument_list|(
 name|argc
@@ -292,7 +294,7 @@ name|local
 argument_list|,
 literal|0
 argument_list|,
-name|SEND_NO_CONTENTS
+literal|0
 argument_list|)
 expr_stmt|;
 name|send_to_server
@@ -955,7 +957,7 @@ name|NULL
 decl_stmt|;
 if|if
 condition|(
-name|RCS_isbranch
+name|RCS_nodeisbranch
 argument_list|(
 name|finfo
 operator|->
@@ -1344,7 +1346,7 @@ name|buf
 decl_stmt|;
 if|if
 condition|(
-name|RCS_isbranch
+name|RCS_nodeisbranch
 argument_list|(
 name|xrcsnode
 argument_list|,

@@ -50,6 +50,8 @@ literal|"-a (add/remove): Specify what actions, one of\n"
 block|,
 literal|"    edit,unedit,commit,all,none\n"
 block|,
+literal|"(Specify the --help global option for a list of other help options)\n"
+block|,
 name|NULL
 block|}
 decl_stmt|;
@@ -1803,6 +1805,8 @@ block|,
 literal|"\t-l\tProcess this directory only (not recursive).\n"
 block|,
 literal|"\t-R\tProcess directories recursively.\n"
+block|,
+literal|"(Specify the --help global option for a list of other help options)\n"
 block|,
 name|NULL
 block|}

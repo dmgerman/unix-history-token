@@ -648,7 +648,7 @@ name|char
 modifier|*
 name|s
 decl_stmt|;
-comment|/* +2 to hold the 'A' prefix that indicates which version of    * scrambling this is (the first, obviously, since we only do one    * kind of scrambling so far), and then the '\0' of course.    */
+comment|/* +2 to hold the 'A' prefix that indicates which version of        scrambling this is (the first, obviously, since we only do one        kind of scrambling so far), and then the '\0' of course.  */
 name|s
 operator|=
 operator|(
@@ -665,6 +665,7 @@ operator|+
 literal|2
 argument_list|)
 expr_stmt|;
+comment|/* Scramble (TM) version prefix. */
 name|s
 index|[
 literal|0
@@ -672,7 +673,6 @@ index|]
 operator|=
 literal|'A'
 expr_stmt|;
-comment|/* Scramble (TM) version prefix. */
 name|strcpy
 argument_list|(
 name|s
@@ -744,7 +744,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* For now we can only handle one kind of scrambling.  In the future    * there may be other kinds, and this `if' will become a `switch'.    */
+comment|/* For now we can only handle one kind of scrambling.  In the future        there may be other kinds, and this `if' will become a `switch'.  */
 if|if
 condition|(
 name|str
@@ -803,7 +803,7 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* Shift the whole string one char to the left, pushing the unwanted      'A' off the left end.  Safe, because s is null-terminated. */
+comment|/* Shift the whole string one char to the left, pushing the unwanted        'A' off the left end.  Safe, because s is null-terminated. */
 for|for
 control|(
 name|i
@@ -914,7 +914,7 @@ operator|=
 name|biggie
 expr_stmt|;
 comment|/* Set up the most important test string: */
-comment|/* Can't have a real ASCII zero in the string, because we want to      use printf, so we substitute the character zero. */
+comment|/* Can't have a real ASCII zero in the string, because we want to        use printf, so we substitute the character zero. */
 name|biggie
 index|[
 literal|0
