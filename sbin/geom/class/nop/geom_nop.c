@@ -105,7 +105,7 @@ block|}
 block|}
 block|,
 block|{
-literal|"config"
+literal|"configure"
 block|,
 name|G_FLAG_VERBOSE
 block|,
@@ -189,7 +189,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"       %s config [-v] [-f failprob]<dev1> [dev2 [...]]\n"
+literal|"       %s configure [-v] [-f failprob]<prov1> [prov2 [...]]\n"
 argument_list|,
 name|name
 argument_list|)
@@ -198,7 +198,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"       %s destroy [-fv]<dev1> [dev2 [...]]\n"
+literal|"       %s destroy [-fv]<prov1> [prov2 [...]]\n"
 argument_list|,
 name|name
 argument_list|)

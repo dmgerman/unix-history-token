@@ -26,7 +26,7 @@ begin_define
 define|#
 directive|define
 name|G_NOP_VERSION
-value|0
+value|1
 end_define
 
 begin_define

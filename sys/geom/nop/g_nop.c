@@ -1346,7 +1346,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|g_nop_ctl_config
+name|g_nop_ctl_configure
 parameter_list|(
 name|struct
 name|gctl_req
@@ -2073,13 +2073,13 @@ name|strcmp
 argument_list|(
 name|verb
 argument_list|,
-literal|"config"
+literal|"configure"
 argument_list|)
 operator|==
 literal|0
 condition|)
 block|{
-name|g_nop_ctl_config
+name|g_nop_ctl_configure
 argument_list|(
 name|req
 argument_list|,
