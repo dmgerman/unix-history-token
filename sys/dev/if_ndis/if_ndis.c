@@ -2311,8 +2311,7 @@ operator|*
 operator|)
 name|ifp
 decl_stmt|;
-name|ndis_80211_rates
-comment|/*_ex*/
+name|ndis_80211_rates_ex
 name|rates
 decl_stmt|;
 name|struct
@@ -2844,6 +2843,8 @@ name|TESTSETRATE
 argument_list|(
 name|IEEE80211_MODE_11B
 argument_list|,
+name|IEEE80211_RATE_BASIC
+operator||
 literal|2
 argument_list|)
 expr_stmt|;
@@ -2851,6 +2852,8 @@ name|TESTSETRATE
 argument_list|(
 name|IEEE80211_MODE_11B
 argument_list|,
+name|IEEE80211_RATE_BASIC
+operator||
 literal|4
 argument_list|)
 expr_stmt|;
@@ -2858,6 +2861,8 @@ name|TESTSETRATE
 argument_list|(
 name|IEEE80211_MODE_11B
 argument_list|,
+name|IEEE80211_RATE_BASIC
+operator||
 literal|11
 argument_list|)
 expr_stmt|;
@@ -2865,6 +2870,8 @@ name|TESTSETRATE
 argument_list|(
 name|IEEE80211_MODE_11B
 argument_list|,
+name|IEEE80211_RATE_BASIC
+operator||
 literal|22
 argument_list|)
 expr_stmt|;
@@ -3006,6 +3013,15 @@ name|IEEE80211_CHAN_B
 expr_stmt|;
 if|if
 condition|(
+name|ic
+operator|->
+name|ic_sup_rates
+index|[
+name|IEEE80211_MODE_11A
+index|]
+operator|.
+name|rs_nrates
+operator|&&
 name|i
 operator|>
 literal|14
@@ -6671,8 +6687,6 @@ name|ic_curmode
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|arg
@@ -6716,6 +6730,8 @@ name|rval
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|len
 operator|=
 sizeof|sizeof
