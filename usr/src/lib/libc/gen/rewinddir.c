@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rewinddir.c	8.1 (Berkeley) %G%"
+literal|"@(#)rewinddir.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,20 +60,18 @@ modifier|*
 name|dirp
 decl_stmt|;
 block|{
-specifier|extern
-name|long
-name|_rewinddir
-decl_stmt|;
 name|_seekdir
 argument_list|(
-operator|(
 name|dirp
-operator|)
 argument_list|,
-name|_rewinddir
+name|dirp
+operator|->
+name|dd_rewind
 argument_list|)
 expr_stmt|;
-name|_rewinddir
+name|dirp
+operator|->
+name|dd_rewind
 operator|=
 name|telldir
 argument_list|(

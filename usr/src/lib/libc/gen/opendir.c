@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)opendir.c	8.1 (Berkeley) %G%"
+literal|"@(#)opendir.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,12 +66,6 @@ include|#
 directive|include
 file|<unistd.h>
 end_include
-
-begin_decl_stmt
-name|long
-name|_rewinddir
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * open a directory.  */
@@ -243,7 +237,9 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 	 * Set up seek point for rewinddir. 	 */
-name|_rewinddir
+name|dirp
+operator|->
+name|dd_rewind
 operator|=
 name|telldir
 argument_list|(
