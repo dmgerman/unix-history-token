@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)mscp.c	1.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)mscp.c	1.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -29,6 +29,18 @@ begin_include
 include|#
 directive|include
 file|"dkstat.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ioctl.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"disklabel.h"
 end_include
 
 begin_include
@@ -1634,11 +1646,28 @@ case|case
 name|MSCP_FAILED
 case|:
 comment|/* no luck */
-name|harderr
+name|diskerr
 argument_list|(
 name|bp
 argument_list|,
 name|drivename
+argument_list|,
+literal|"hard error"
+argument_list|,
+name|LOG_PRINTF
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+operator|&
+name|md
+operator|->
+name|md_lab
+index|[
+name|ui
+operator|->
+name|ui_unit
+index|]
 argument_list|)
 expr_stmt|;
 name|mscp_printevent
@@ -2960,7 +2989,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"%s (%s) (code %d, subcode %d)\n"
+literal|" %s (%s) (code %d, subcode %d)\n"
 argument_list|,
 name|cm
 argument_list|,
@@ -3085,7 +3114,7 @@ parameter_list|)
 value|((h)& 0xfffffff)
 name|printf
 argument_list|(
-literal|"%s%d: %s error datagram%s: "
+literal|"%s%d: %s error datagram%s:"
 argument_list|,
 name|name
 argument_list|,
@@ -3128,7 +3157,7 @@ case|:
 comment|/* host memory access error */
 name|printf
 argument_list|(
-literal|"memory addr 0x%x: "
+literal|" memory addr 0x%x:"
 argument_list|,
 name|mp
 operator|->
@@ -3143,7 +3172,7 @@ name|M_FM_DISKTRN
 case|:
 name|printf
 argument_list|(
-literal|"unit %d: level %d retry %d, %s %d: "
+literal|" unit %d: level %d retry %d, %s %d:"
 argument_list|,
 name|mp
 operator|->
@@ -3186,7 +3215,7 @@ name|M_FM_SDI
 case|:
 name|printf
 argument_list|(
-literal|"unit %d: %s %d: "
+literal|" unit %d: %s %d:"
 argument_list|,
 name|mp
 operator|->
@@ -3217,7 +3246,7 @@ name|M_FM_SMLDSK
 case|:
 name|printf
 argument_list|(
-literal|"unit %d: small disk error, cyl %d: "
+literal|" unit %d: small disk error, cyl %d:"
 argument_list|,
 name|mp
 operator|->
@@ -3234,7 +3263,7 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"unit %d: unknown error, format 0x%x: "
+literal|" unit %d: unknown error, format 0x%x:"
 argument_list|,
 name|mp
 operator|->
