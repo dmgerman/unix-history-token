@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.1 (Berkeley) %G%"
+literal|"@(#)util.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -199,7 +199,7 @@ name|sprintf
 argument_list|(
 name|tbuf
 argument_list|,
-literal|"%s %d, 19%d"
+literal|"%s %d, %d"
 argument_list|,
 name|months
 index|[
@@ -215,6 +215,8 @@ argument_list|,
 name|tp
 operator|->
 name|tm_year
+operator|+
+name|TM_YEAR_BASE
 argument_list|)
 expr_stmt|;
 block|}
