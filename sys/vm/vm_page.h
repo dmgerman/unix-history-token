@@ -990,7 +990,7 @@ begin_define
 define|#
 directive|define
 name|VM_ALLOC_ZERO
-value|3
+value|0x40
 end_define
 
 begin_define

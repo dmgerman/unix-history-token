@@ -2215,6 +2215,9 @@ name|m
 init|=
 name|NULL
 decl_stmt|;
+name|boolean_t
+name|prefer_zero
+decl_stmt|;
 name|int
 name|s
 decl_stmt|;
@@ -2234,6 +2237,25 @@ operator|(
 literal|"vm_page_alloc: page already allocated"
 operator|)
 argument_list|)
+expr_stmt|;
+name|prefer_zero
+operator|=
+operator|(
+name|page_req
+operator|&
+name|VM_ALLOC_ZERO
+operator|)
+operator|!=
+literal|0
+condition|?
+name|TRUE
+else|:
+name|FALSE
+expr_stmt|;
+name|page_req
+operator|&=
+operator|~
+name|VM_ALLOC_ZERO
 expr_stmt|;
 comment|/* 	 * The pager is allowed to eat deeper into the free page list. 	 */
 if|if
@@ -2276,12 +2298,6 @@ name|v_free_reserved
 condition|)
 block|{
 comment|/* 		 * Allocate from the free queue if there are plenty of pages 		 * in it. 		 */
-if|if
-condition|(
-name|page_req
-operator|==
-name|VM_ALLOC_ZERO
-condition|)
 name|m
 operator|=
 name|vm_page_select_free
@@ -2290,19 +2306,7 @@ name|object
 argument_list|,
 name|pindex
 argument_list|,
-name|TRUE
-argument_list|)
-expr_stmt|;
-else|else
-name|m
-operator|=
-name|vm_page_select_free
-argument_list|(
-name|object
-argument_list|,
-name|pindex
-argument_list|,
-name|FALSE
+name|prefer_zero
 argument_list|)
 expr_stmt|;
 block|}
