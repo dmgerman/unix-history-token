@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*     YPS-0.2, NIS-Server for Linux     Copyright (C) 1994  Tobias Reber      This program is free software; you can redistribute it and/or modify     it under the terms of the GNU General Public License as published by     the Free Software Foundation; either version 2 of the License, or     (at your option) any later version.      This program is distributed in the hope that it will be useful,     but WITHOUT ANY WARRANTY; without even the implied warranty of     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the     GNU General Public License for more details.      You should have received a copy of the GNU General Public License     along with this program; if not, write to the Free Software     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.      Modified for use with FreeBSD 2.x by Bill Paul (wpaul@ctr.columbia.edu)  	$Id: yppush.c,v 1.5 1995/04/02 20:01:50 wpaul Exp $ */
+comment|/*     YPS-0.2, NIS-Server for Linux     Copyright (C) 1994  Tobias Reber      This program is free software; you can redistribute it and/or modify     it under the terms of the GNU General Public License as published by     the Free Software Foundation; either version 2 of the License, or     (at your option) any later version.      This program is distributed in the hope that it will be useful,     but WITHOUT ANY WARRANTY; without even the implied warranty of     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the     GNU General Public License for more details.      You should have received a copy of the GNU General Public License     along with this program; if not, write to the Free Software     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.      Modified for use with FreeBSD 2.x by Bill Paul (wpaul@ctr.columbia.edu)  	$Id: yppush.c,v 1.6 1995/05/30 05:05:20 rgrimes Exp $ */
 end_comment
 
 begin_include
@@ -956,7 +956,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%sh: callback timed out\n, progname"
+literal|"%s: callback timed out\n"
+argument_list|,
+name|progname
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2037,7 +2039,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: cannot get default domain\n, 								progname"
+literal|"%s: cannot get default domain\n"
+argument_list|,
+name|progname
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2063,7 +2067,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: cannot determine local hostname\n, 								progname"
+literal|"%s: cannot determine local hostname\n"
+argument_list|,
+name|progname
 argument_list|)
 expr_stmt|;
 name|exit
