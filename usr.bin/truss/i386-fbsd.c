@@ -1232,7 +1232,7 @@ block|}
 block|}
 block|}
 comment|/*    * It would probably be a good idea to merge the error handling,    * but that complicates things considerably.    */
-name|print_syscall
+name|print_syscall_ret
 argument_list|(
 name|outfile
 argument_list|,
@@ -1247,42 +1247,12 @@ argument_list|,
 name|fsc
 operator|.
 name|s_args
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+argument_list|,
 name|errorp
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|outfile
-argument_list|,
-literal|"errno %d '%s'\n"
-argument_list|,
-name|retval
-argument_list|,
-name|strerror
-argument_list|(
-name|retval
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|fprintf
-argument_list|(
-name|outfile
-argument_list|,
-literal|"returns %d (0x%x)\n"
-argument_list|,
-name|retval
 argument_list|,
 name|retval
 argument_list|)
 expr_stmt|;
-block|}
 name|clear_fsc
 argument_list|()
 expr_stmt|;
