@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_vnops.c	7.13 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_vnops.c	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -5427,8 +5427,6 @@ name|siz
 decl_stmt|;
 name|int
 name|more_dirs
-decl_stmt|,
-name|eofflg
 decl_stmt|;
 name|off_t
 name|off
@@ -5728,7 +5726,6 @@ condition|(
 operator|!
 name|more_dirs
 condition|)
-block|{
 name|nfsm_disecton
 argument_list|(
 name|p
@@ -5739,17 +5736,6 @@ argument_list|,
 name|NFSX_UNSIGNED
 argument_list|)
 expr_stmt|;
-name|eofflg
-operator|=
-name|fxdr_unsigned
-argument_list|(
-name|long
-argument_list|,
-operator|*
-name|p
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * If there is too much to fit in the data buffer, use savoff and 	 * savdp to trim off the last record. 	 * --> we are not at eof 	 */
 if|if
 condition|(
@@ -5760,10 +5746,6 @@ operator|->
 name|uio_resid
 condition|)
 block|{
-name|eofflg
-operator|=
-name|FALSE
-expr_stmt|;
 name|off
 operator|=
 name|savoff
@@ -5786,28 +5768,6 @@ operator|>
 literal|0
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|notdef
-if|if
-condition|(
-operator|!
-name|eofflg
-condition|)
-name|dp
-operator|->
-name|d_reclen
-operator|+=
-operator|(
-name|uiop
-operator|->
-name|uio_resid
-operator|-
-name|siz
-operator|)
-expr_stmt|;
-endif|#
-directive|endif
 name|md
 operator|=
 name|md2
@@ -5823,22 +5783,6 @@ argument_list|,
 name|siz
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
-if|if
-condition|(
-operator|!
-name|eofflg
-condition|)
-name|uiop
-operator|->
-name|uio_resid
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
 operator|*
 name|offp
 operator|=
