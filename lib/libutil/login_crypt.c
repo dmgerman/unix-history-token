@@ -81,10 +81,6 @@ name|lc
 argument_list|,
 literal|"passwd_format"
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|def
 argument_list|,
 name|NULL

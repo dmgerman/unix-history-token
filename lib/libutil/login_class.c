@@ -577,6 +577,7 @@ name|char
 modifier|*
 name|substvar
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|var
@@ -632,14 +633,14 @@ name|NULL
 condition|)
 block|{
 comment|/* Count the number of ~'s in var to substitute */
-name|p
-operator|=
-name|var
-expr_stmt|;
 for|for
 control|(
 name|p
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|var
 init|;
 operator|(
@@ -662,14 +663,14 @@ operator|++
 name|tildes
 expr_stmt|;
 comment|/* Count the number of $'s in var to substitute */
-name|p
-operator|=
-name|var
-expr_stmt|;
 for|for
 control|(
 name|p
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|var
 init|;
 operator|(
@@ -1004,6 +1005,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|var

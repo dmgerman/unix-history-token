@@ -162,6 +162,7 @@ modifier|*
 name|lc
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|file

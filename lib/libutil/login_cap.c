@@ -1244,6 +1244,7 @@ comment|/*  * login_getcapstr()  * Given a login_cap entry, and a capability nam
 end_comment
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|login_getcapstr
@@ -1257,10 +1258,12 @@ name|char
 modifier|*
 name|cap
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|def
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|error
@@ -1383,6 +1386,10 @@ condition|(
 operator|(
 name|lstring
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|login_getcapstr
 argument_list|(
 name|lc
@@ -1418,6 +1425,7 @@ comment|/*  * login_getpath()  * From the login_cap_t<lc>, get the capability<ca
 end_comment
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|login_getpath
@@ -1431,11 +1439,13 @@ name|char
 modifier|*
 name|cap
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|error
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|str
@@ -1449,10 +1459,6 @@ name|login_getcapstr
 argument_list|(
 name|lc
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|cap
 argument_list|,
 name|NULL
@@ -1473,6 +1479,10 @@ name|char
 modifier|*
 name|ptr
 init|=
+operator|(
+name|char
+operator|*
+operator|)
 name|str
 decl_stmt|;
 while|while
@@ -2798,6 +2808,7 @@ comment|/*  * login_getstyle()  * Given a login_cap entry<lc>, and optionally a 
 end_comment
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|login_getstyle
@@ -2806,6 +2817,7 @@ name|login_cap_t
 modifier|*
 name|lc
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|style
