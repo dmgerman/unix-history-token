@@ -2230,7 +2230,7 @@ operator|!=
 name|NOSTR
 operator|&&
 name|w
-operator|&&
+operator|&
 name|GREPLYTO
 condition|)
 name|fprintf
@@ -2256,7 +2256,7 @@ operator|!=
 name|NOSTR
 operator|&&
 name|w
-operator|&&
+operator|&
 name|GINREPLYTO
 condition|)
 name|fprintf
