@@ -80,13 +80,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"namespace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<err.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|"un-namespace.h"
 end_include
 
 begin_include
@@ -858,16 +864,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|warnx
+name|_warn
 argument_list|(
-literal|"_mcleanup: %s - %s"
+literal|"_mcleanup: %s"
 argument_list|,
 name|outname
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -897,7 +898,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|_warn
 argument_list|(
 literal|"_mcleanup: gmon.log"
 argument_list|)
