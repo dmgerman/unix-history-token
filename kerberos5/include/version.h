@@ -29,7 +29,7 @@ name|char
 modifier|*
 name|heimdal_long_version
 init|=
-literal|"@(#)$Version: Heimdal 0.4f (FreeBSD) $"
+literal|"@(#)$Version: Heimdal 0.5 (FreeBSD) $"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,7 +39,7 @@ name|char
 modifier|*
 name|heimdal_version
 init|=
-literal|"Heimdal 0.4f"
+literal|"Heimdal 0.5"
 decl_stmt|;
 end_decl_stmt
 
