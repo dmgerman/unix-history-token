@@ -3786,6 +3786,11 @@ name|void
 name|setup_acls
 parameter_list|(
 name|struct
+name|bsdtar
+modifier|*
+name|bsdtar
+parameter_list|,
+name|struct
 name|archive_entry
 modifier|*
 name|entry
@@ -3796,6 +3801,11 @@ modifier|*
 name|accpath
 parameter_list|)
 block|{
+operator|(
+name|void
+operator|)
+name|bsdtar
+expr_stmt|;
 operator|(
 name|void
 operator|)
