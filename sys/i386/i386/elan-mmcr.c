@@ -129,6 +129,10 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"Doing h0h0magic for AMD Elan sc520\n"
@@ -141,13 +145,6 @@ argument_list|(
 literal|0xfffef000
 argument_list|,
 literal|0x1000
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"MMCR at %p\n"
-argument_list|,
-name|elan_mmcr
 argument_list|)
 expr_stmt|;
 comment|/*- 	 * The i8254 is driven with a nonstandard frequency which is 	 * derived thusly: 	 *   f = 32768 * 45 * 25 / 31 = 1189161.29... 	 * We use the sysctl to get the timecounter etc into whack. 	 */
@@ -177,6 +174,10 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"sysctl machdep.i8254_freq=%d returns %d\n"
@@ -439,7 +440,9 @@ condition|)
 return|return;
 name|printf
 argument_list|(
-literal|"Elan-mmcr driver\n"
+literal|"Elan-mmcr driver: MMCR at %p\n"
+argument_list|,
+name|elan_mmcr
 argument_list|)
 expr_stmt|;
 name|make_dev
