@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mbuf.h	6.1	83/07/29	*/
+comment|/*	mbuf.h	6.2	84/08/21	*/
 end_comment
 
 begin_comment
@@ -309,6 +309,17 @@ begin_comment
 comment|/* fragment reassembly header */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MT_RIGHTS
+value|12
+end_define
+
+begin_comment
+comment|/* access rights */
+end_comment
+
 begin_comment
 comment|/* flags to m_get */
 end_comment
@@ -387,7 +398,7 @@ parameter_list|,
 name|t
 parameter_list|)
 define|\
-value|{ int ms = splimp(); \ 	  if ((m)=mfree) \ 		{ if ((m)->m_type != MT_FREE) panic("mget"); (m)->m_type = t; \ 		  mbstat.m_mbfree--; mbstat.m_mtypes[t]++; \ 		  mfree = (m)->m_next; (m)->m_next = 0; \ 		  (m)->m_off = MMINOFF; } \ 	  else \ 		(m) = m_more(i, t); \ 	  splx(ms); }
+value|{ int ms = splimp(); \ 	  if ((m)=mfree) \ 		{ if ((m)->m_type != MT_FREE) panic("mget"); (m)->m_type = t; \ 		  mbstat.m_mtypes[MT_FREE]--; mbstat.m_mtypes[t]++; \ 		  mfree = (m)->m_next; (m)->m_next = 0; \ 		  (m)->m_off = MMINOFF; } \ 	  else \ 		(m) = m_more(i, t); \ 	  splx(ms); }
 end_define
 
 begin_define
@@ -413,7 +424,7 @@ parameter_list|,
 name|n
 parameter_list|)
 define|\
-value|{ int ms = splimp(); \ 	  if ((m)->m_type == MT_FREE) panic("mfree"); \ 	  mbstat.m_mtypes[(m)->m_type]--; (m)->m_type = MT_FREE; \ 	  if ((m)->m_off> MSIZE) { \ 		(n) = (struct mbuf *)(mtod(m, int)&~CLOFSET); \ 		if (--mclrefcnt[mtocl(n)] == 0) \ 		    { (n)->m_next = mclfree;mclfree = (n);mbstat.m_clfree++;} \ 	  } \ 	  (n) = (m)->m_next; (m)->m_next = mfree; \ 	  (m)->m_off = 0; (m)->m_act = 0; mfree = (m); mbstat.m_mbfree++; \ 	  splx(ms); }
+value|{ int ms = splimp(); \ 	  if ((m)->m_type == MT_FREE) panic("mfree"); \ 	  mbstat.m_mtypes[(m)->m_type]--; mbstat.m_mtypes[MT_FREE]++; \ 	  (m)->m_type = MT_FREE; \ 	  if ((m)->m_off> MSIZE) { \ 		(n) = (struct mbuf *)(mtod(m, int)&~CLOFSET); \ 		if (--mclrefcnt[mtocl(n)] == 0) \ 		    { (n)->m_next = mclfree;mclfree = (n);mbstat.m_clfree++;} \ 	  } \ 	  (n) = (m)->m_next; (m)->m_next = mfree; \ 	  (m)->m_off = 0; (m)->m_act = 0; mfree = (m); \ 	  splx(ms); }
 end_define
 
 begin_comment
@@ -428,10 +439,6 @@ name|short
 name|m_mbufs
 decl_stmt|;
 comment|/* mbufs obtained from page pool */
-name|short
-name|m_mbfree
-decl_stmt|;
-comment|/* mbufs on our free list */
 name|short
 name|m_clusters
 decl_stmt|;

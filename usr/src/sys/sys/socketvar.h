@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	socketvar.h	6.3	84/03/22	*/
+comment|/*	socketvar.h	6.4	84/08/21	*/
 end_comment
 
 begin_comment
@@ -431,6 +431,24 @@ name|struct
 name|socket
 modifier|*
 name|sonewconn
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|mbuf
+modifier|*
+name|sbdrop
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|mbuf
+modifier|*
+name|sbdroprecord
 parameter_list|()
 function_decl|;
 end_function_decl

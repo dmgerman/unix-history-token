@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	domain.h	6.1	83/07/29	*/
+comment|/*	domain.h	6.2	84/08/21	*/
 end_comment
 
 begin_comment
@@ -19,6 +19,30 @@ name|char
 modifier|*
 name|dom_name
 decl_stmt|;
+name|int
+function_decl|(
+modifier|*
+name|dom_init
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* initialize domain data structures */
+name|int
+function_decl|(
+modifier|*
+name|dom_externalize
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* externalize access rights */
+name|int
+function_decl|(
+modifier|*
+name|dom_dispose
+function_decl|)
+parameter_list|()
+function_decl|;
+comment|/* dispose of internalized rights */
 name|struct
 name|protosw
 modifier|*

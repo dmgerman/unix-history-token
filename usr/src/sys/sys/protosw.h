@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	protosw.h	6.2	83/09/19	*/
+comment|/*	protosw.h	6.3	84/08/21	*/
 end_comment
 
 begin_comment
@@ -15,10 +15,12 @@ name|short
 name|pr_type
 decl_stmt|;
 comment|/* socket type used for */
-name|short
-name|pr_family
+name|struct
+name|domain
+modifier|*
+name|pr_domain
 decl_stmt|;
-comment|/* protocol family */
+comment|/* domain protocol a member of */
 name|short
 name|pr_protocol
 decl_stmt|;
