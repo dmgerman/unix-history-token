@@ -158,7 +158,7 @@ begin_define
 define|#
 directive|define
 name|ISP_CORE_VERSION_MINOR
-value|0
+value|1
 end_define
 
 begin_comment
@@ -258,7 +258,7 @@ operator|,
 name|XS_T
 operator|*
 operator|,
-name|u_int32_t
+name|u_int16_t
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2223,6 +2223,9 @@ comment|/* Send a LIP */
 name|ISPCTL_GET_POSMAP
 block|,
 comment|/* Get FC-AL position map */
+name|ISPCTL_RUN_MBOXCMD
+block|,
+comment|/* run a mailbox command */
 name|ISPCTL_TOGGLE_TMODE
 comment|/* toggle target mode */
 block|}
@@ -2250,7 +2253,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Platform Dependent to Internal to External Control Function  * (each platform must provide such a function)  *  * Assumes locks are held.  *  * A few notes about some of these functions:  *  * ISPASYNC_CHANGE_NOTIFY notifies the outer layer that a change has  * occurred that invalidates the list of fabric devices known and/or  * the list of known loop devices. The argument passed is a pointer  * whose values are defined below  (local loop change, name server  * change, other). 'Other' may simply be a LIP, or a change in  * connection topology.  *  * ISPASYNC_FABRIC_DEV announces the next element in a list of  * fabric device names we're getting out of the name server. The  * argument points to a GET ALL NEXT response structure. The list  * is known to terminate with an entry that refers to ourselves.  * One of the main purposes of this function is to allow outer  * layers, which are OS dependent, to set policy as to which fabric  * devices might actually be logged into (and made visible) later  * at ISPCTL_PDB_SYNC time. Since there's a finite number of fabric  * devices that we can log into (256 less 3 'reserved' for F-port  * topologies), and fabrics can grow up to 8 million or so entries  * (24 bits of Port Address, less a wad of reserved spaces), clearly  * we had better let the OS determine login policy.  *  * ISPASYNC_PROMENADE has an argument that is a pointer to an integer which  * is an index into the portdb in the softc ('target'). Whether that entrie's  * valid tag is set or not says whether something has arrived or departed.  * The name refers to a favorite pastime of many city dwellers- watching  * people come and go, talking of Michaelangelo, and so on..  */
+comment|/*  * Platform Dependent to Internal to External Control Function  * (each platform must provide such a function)  *  * Assumes locks are held.  *  * A few notes about some of these functions:  *  * ISPASYNC_CHANGE_NOTIFY notifies the outer layer that a change has  * occurred that invalidates the list of fabric devices known and/or  * the list of known loop devices. The argument passed is a pointer  * whose values are defined below  (local loop change, name server  * change, other). 'Other' may simply be a LIP, or a change in  * connection topology.  *  * ISPASYNC_FABRIC_DEV announces the next element in a list of  * fabric device names we're getting out of the name server. The  * argument points to a GET ALL NEXT response structure. The list  * is known to terminate with an entry that refers to ourselves.  * One of the main purposes of this function is to allow outer  * layers, which are OS dependent, to set policy as to which fabric  * devices might actually be logged into (and made visible) later  * at ISPCTL_PDB_SYNC time. Since there's a finite number of fabric  * devices that we can log into (256 less 3 'reserved' for F-port  * topologies), and fabrics can grow up to 8 million or so entries  * (24 bits of Port Address, less a wad of reserved spaces), clearly  * we had better let the OS determine login policy.  *  * ISPASYNC_PROMENADE has an argument that is a pointer to an integer which  * is an index into the portdb in the softc ('target'). Whether that entrie's  * valid tag is set or not says whether something has arrived or departed.  * The name refers to a favorite pastime of many city dwellers- watching  * people come and go, talking of Michaelangelo, and so on..  *  * ISPASYNC_UNHANDLED_RESPONSE gives outer layers a chance to parse a  * response queue entry not otherwise handled. The outer layer should  * return non-zero if it handled it. The 'arg' points to a (possibly only  * partially) massaged response queue entry (see the platform's  * ISP_UNSWIZZLE_RESPONSE macro).  */
 end_comment
 
 begin_typedef
@@ -2288,7 +2291,10 @@ name|ISPASYNC_TARGET_ACTION
 block|,
 comment|/* other target command action */
 name|ISPASYNC_CONF_CHANGE
+block|,
 comment|/* Platform Configuration Change */
+name|ISPASYNC_UNHANDLED_RESPONSE
+comment|/* Unhandled Response Entry */
 block|}
 name|ispasync_t
 typedef|;
