@@ -113,6 +113,10 @@ name|sigset_t
 name|ps_osigset
 decl_stmt|;
 comment|/* signals that use osigset_t */
+name|sigset_t
+name|ps_usertramp
+decl_stmt|;
+comment|/* SunOS compat; libc sigtramp XXX */
 block|}
 struct|;
 end_struct
