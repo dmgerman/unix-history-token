@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ls.c	5.15 (Berkeley) %G%"
+literal|"@(#)ls.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -139,36 +139,6 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|f_listdot
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* list files beginning with . */
-end_comment
-
-begin_decl_stmt
-name|int
-name|f_listalldot
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* list . and .. as well */
-end_comment
-
-begin_decl_stmt
-name|int
-name|f_modtime
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* use time of last change for time */
-end_comment
-
-begin_decl_stmt
-name|int
 name|f_accesstime
 decl_stmt|;
 end_decl_stmt
@@ -179,52 +149,14 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|f_statustime
+name|f_firsttime
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* use time of last mode change */
-end_comment
-
-begin_decl_stmt
-name|int
-name|f_singlecol
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* use single column output */
-end_comment
-
-begin_decl_stmt
-name|int
-name|f_listdir
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* list actual directory, not contents */
-end_comment
-
-begin_decl_stmt
-name|int
-name|f_specialdir
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* force params to be directories */
-end_comment
-
-begin_decl_stmt
-name|int
-name|f_type
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* add type character for non-regular files */
+comment|/* to control recursion */
 end_comment
 
 begin_decl_stmt
@@ -239,12 +171,52 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|f_ignorelink
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* indirect through symbolic link operands */
+end_comment
+
+begin_decl_stmt
+name|int
 name|f_inode
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 comment|/* print inode */
+end_comment
+
+begin_decl_stmt
+name|int
+name|f_listalldot
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* list . and .. as well */
+end_comment
+
+begin_decl_stmt
+name|int
+name|f_listdir
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* list actual directory, not contents */
+end_comment
+
+begin_decl_stmt
+name|int
+name|f_listdot
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* list files beginning with . */
 end_comment
 
 begin_decl_stmt
@@ -269,6 +241,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|f_recursive
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* ls subdirectories also */
+end_comment
+
+begin_decl_stmt
+name|int
 name|f_reversesort
 decl_stmt|;
 end_decl_stmt
@@ -279,12 +261,12 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|f_recursive
+name|f_singlecol
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* ls subdirectories also */
+comment|/* use single column output */
 end_comment
 
 begin_decl_stmt
@@ -299,6 +281,26 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|f_specialdir
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* force params to be directories */
+end_comment
+
+begin_decl_stmt
+name|int
+name|f_statustime
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* use time of last mode change */
+end_comment
+
+begin_decl_stmt
+name|int
 name|f_timesort
 decl_stmt|;
 end_decl_stmt
@@ -309,14 +311,12 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|f_firsttime
-init|=
-literal|1
+name|f_type
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* to control recursion */
+comment|/* add type character for non-regular files */
 end_comment
 
 begin_function
@@ -371,7 +371,7 @@ decl_stmt|,
 name|revstatcmp
 argument_list|()
 decl_stmt|;
-comment|/* set up defaults for terminal/nonterminal stdout */
+comment|/* 	 * terminal defaults to -C -q 	 * non-terminal defaults to -1 	 */
 if|if
 condition|(
 name|isatty
@@ -394,7 +394,7 @@ name|f_singlecol
 operator|=
 literal|1
 expr_stmt|;
-comment|/* root sees all files automatically */
+comment|/* root is -A automatically */
 if|if
 condition|(
 operator|!
@@ -428,6 +428,7 @@ condition|(
 name|ch
 condition|)
 block|{
+comment|/* 		 * -1, -C and -l all override each other 		 * so shell aliasing works right 		 */
 case|case
 literal|'1'
 case|:
@@ -435,11 +436,54 @@ name|f_singlecol
 operator|=
 literal|1
 expr_stmt|;
+name|f_longform
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 case|case
 literal|'C'
 case|:
+name|f_longform
+operator|=
 name|f_singlecol
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|'l'
+case|:
+name|f_longform
+operator|=
+literal|1
+expr_stmt|;
+name|f_singlecol
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+comment|/* -c and -u override each other */
+case|case
+literal|'c'
+case|:
+name|f_statustime
+operator|=
+literal|1
+expr_stmt|;
+name|f_accesstime
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|'u'
+case|:
+name|f_accesstime
+operator|=
+literal|1
+expr_stmt|;
+name|f_statustime
 operator|=
 literal|0
 expr_stmt|;
@@ -455,9 +499,9 @@ break|break;
 case|case
 literal|'L'
 case|:
-name|statfcn
+name|f_ignorelink
 operator|=
-name|stat
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -466,10 +510,6 @@ case|:
 name|f_recursive
 operator|=
 literal|1
-expr_stmt|;
-name|statfcn
-operator|=
-name|lstat
 expr_stmt|;
 break|break;
 case|case
@@ -486,20 +526,6 @@ case|:
 name|f_listdot
 operator|=
 literal|1
-expr_stmt|;
-break|break;
-case|case
-literal|'c'
-case|:
-name|f_statustime
-operator|=
-literal|1
-expr_stmt|;
-name|f_modtime
-operator|=
-name|f_accesstime
-operator|=
-literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -542,34 +568,6 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-literal|'l'
-case|:
-name|f_longform
-operator|=
-literal|1
-expr_stmt|;
-name|f_singlecol
-operator|=
-literal|0
-expr_stmt|;
-name|statfcn
-operator|=
-name|lstat
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|f_accesstime
-operator|&&
-operator|!
-name|f_statustime
-condition|)
-name|f_modtime
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-case|case
 literal|'q'
 case|:
 name|f_nonprint
@@ -596,41 +594,11 @@ name|f_size
 operator|=
 literal|1
 expr_stmt|;
-name|statfcn
-operator|=
-name|lstat
-expr_stmt|;
 break|break;
 case|case
 literal|'t'
 case|:
 name|f_timesort
-operator|=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|f_accesstime
-operator|&&
-operator|!
-name|f_statustime
-condition|)
-name|f_modtime
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-case|case
-literal|'u'
-case|:
-name|f_modtime
-operator|=
-name|f_statustime
-operator|=
-literal|0
-expr_stmt|;
-name|f_accesstime
 operator|=
 literal|1
 expr_stmt|;
@@ -730,20 +698,17 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|f_modtime
-condition|)
-name|sortfcn
-operator|=
-name|revmodcmp
-expr_stmt|;
-elseif|else
-if|if
-condition|(
 name|f_statustime
 condition|)
 name|sortfcn
 operator|=
 name|revstatcmp
+expr_stmt|;
+else|else
+comment|/* use modification time */
+name|sortfcn
+operator|=
+name|revmodcmp
 expr_stmt|;
 block|}
 else|else
@@ -769,20 +734,17 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|f_modtime
-condition|)
-name|sortfcn
-operator|=
-name|modcmp
-expr_stmt|;
-elseif|else
-if|if
-condition|(
 name|f_statustime
 condition|)
 name|sortfcn
 operator|=
 name|statcmp
+expr_stmt|;
+else|else
+comment|/* use modification time */
+name|sortfcn
+operator|=
+name|modcmp
 expr_stmt|;
 block|}
 if|if
@@ -830,7 +792,7 @@ name|names
 decl_stmt|;
 if|if
 condition|(
-name|statfcn
+name|lstat
 argument_list|(
 name|local
 operator|.
@@ -965,6 +927,18 @@ name|stats
 decl_stmt|;
 name|int
 name|num
+decl_stmt|,
+argument_list|(
+operator|*
+name|statfcn
+argument_list|)
+argument_list|()
+decl_stmt|,
+name|stat
+argument_list|()
+decl_stmt|,
+name|lstat
+argument_list|()
 decl_stmt|;
 name|char
 modifier|*
@@ -975,6 +949,14 @@ operator|=
 name|rstats
 operator|=
 name|NULL
+expr_stmt|;
+name|statfcn
+operator|=
+name|f_ignorelink
+condition|?
+name|stat
+else|:
+name|lstat
 expr_stmt|;
 for|for
 control|(
@@ -2001,7 +1983,7 @@ if|if
 condition|(
 name|needstat
 operator|&&
-name|statfcn
+name|lstat
 argument_list|(
 name|entry
 operator|->
