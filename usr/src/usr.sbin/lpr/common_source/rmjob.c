@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rmjob.c	4.8 (Berkeley) %G%"
+literal|"@(#)rmjob.c	4.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -477,7 +477,7 @@ operator|&&
 operator|!
 name|startdaemon
 argument_list|(
-name|host
+name|printer
 argument_list|)
 condition|)
 name|fatal
