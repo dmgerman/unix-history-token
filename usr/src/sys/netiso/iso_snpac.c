@@ -16,7 +16,7 @@ comment|/* $Source: /usr/argo/sys/netiso/RCS/iso_snpac.c,v $ */
 end_comment
 
 begin_comment
-comment|/*	@(#)iso_snpac.c	7.8 (Berkeley) %G% */
+comment|/*	@(#)iso_snpac.c	7.9 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -190,6 +190,25 @@ end_decl_stmt
 begin_comment
 comment|/* default to be an ES */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|short
+name|esis_holding_time
+decl_stmt|,
+name|esis_config_time
+decl_stmt|,
+name|esis_esconfig_time
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+specifier|extern
+name|int
+name|esis_config
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|struct
@@ -2094,12 +2113,6 @@ operator|*
 operator|)
 name|data
 decl_stmt|;
-specifier|extern
-name|short
-name|esis_holding_time
-decl_stmt|,
-name|esis_config_time
-decl_stmt|;
 name|IFDEBUG
 argument_list|(
 argument|D_IOCTL
@@ -2234,6 +2247,35 @@ name|rq
 operator|->
 name|sr_configt
 expr_stmt|;
+if|if
+condition|(
+name|esis_esconfig_time
+operator|!=
+name|rq
+operator|->
+name|sr_esconfigt
+condition|)
+block|{
+name|untimeout
+argument_list|(
+name|esis_config
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+name|esis_esconfig_time
+operator|=
+name|rq
+operator|->
+name|sr_esconfigt
+expr_stmt|;
+name|esis_config
+argument_list|()
+expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
@@ -2260,6 +2302,12 @@ operator|->
 name|sr_configt
 operator|=
 name|esis_config_time
+expr_stmt|;
+name|rq
+operator|->
+name|sr_esconfigt
+operator|=
+name|esis_esconfig_time
 expr_stmt|;
 block|}
 else|else

@@ -8,7 +8,7 @@ comment|/*  * ARGO Project, Computer Sciences Dept., University of Wisconsin - M
 end_comment
 
 begin_comment
-comment|/*	@(#)iso_snpac.h	7.6 (Berkeley) %G% */
+comment|/*	@(#)iso_snpac.h	7.7 (Berkeley) %G% */
 end_comment
 
 begin_define
@@ -94,6 +94,10 @@ name|short
 name|sr_configt
 decl_stmt|;
 comment|/* configuration timer */
+name|short
+name|sr_esconfigt
+decl_stmt|;
+comment|/* suggested ES configuration timer */
 name|char
 name|sr_type
 decl_stmt|;
@@ -180,11 +184,11 @@ begin_define
 define|#
 directive|define
 name|SIOCGSTYPE
-value|_IOW('a', 40, struct systype_req)
+value|_IOR('a', 40, struct systype_req)
 end_define
 
 begin_comment
-comment|/* set system type */
+comment|/* get system type */
 end_comment
 
 begin_ifdef

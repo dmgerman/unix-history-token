@@ -16,7 +16,7 @@ comment|/* $Source: /usr/argo/sys/netiso/RCS/iso.h,v $ */
 end_comment
 
 begin_comment
-comment|/*	@(#)iso.h	7.3 (Berkeley) %G% */
+comment|/*	@(#)iso.h	7.4 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -174,6 +174,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ISOPROTO_INTRAISIS
+value|35
+end_define
+
+begin_comment
+comment|/* IS-IS protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ISOPROTO_RAW
 value|255
 end_define
@@ -291,6 +302,13 @@ define|#
 directive|define
 name|ISO9542X25_ESIS
 value|0x8a
+end_define
+
+begin_define
+define|#
+directive|define
+name|ISO10589_ISIS
+value|0x83
 end_define
 
 begin_ifndef
