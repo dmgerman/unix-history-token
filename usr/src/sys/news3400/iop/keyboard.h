@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: keyboard.h,v 4.300 91/06/09 06:42:48 root Rel41 $ SONY  *  *	@(#)keyboard.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Sony Corp. and Kazumasa Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: $Hdr: keyboard.h,v 4.300 91/06/09 06:42:48 root Rel41 $ SONY  *  *	@(#)keyboard.h	8.1 (Berkeley) %G%  */
 end_comment
 
 begin_comment
