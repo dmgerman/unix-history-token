@@ -340,7 +340,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|session
+name|sess_con
 block|{
 name|hook_p
 name|hook
@@ -348,12 +348,6 @@ decl_stmt|;
 name|u_int16_t
 name|Session_ID
 decl_stmt|;
-name|struct
-name|session
-modifier|*
-name|hash_next
-decl_stmt|;
-comment|/* not yet uesed */
 name|enum
 name|state
 name|state
@@ -376,6 +370,8 @@ name|negp
 name|neg
 decl_stmt|;
 comment|/* used when negotiating */
+comment|/*struct sess_con	*hash_next;*/
+comment|/* not yet used */
 block|}
 struct|;
 end_struct
@@ -383,7 +379,7 @@ end_struct
 begin_typedef
 typedef|typedef
 name|struct
-name|session
+name|sess_con
 modifier|*
 name|sessp
 typedef|;
@@ -418,7 +414,7 @@ comment|/* packets out towards ethernet */
 name|u_int32_t
 name|flags
 decl_stmt|;
-comment|/*struct session *buckets[HASH_SIZE];*/
+comment|/*struct sess_con *buckets[HASH_SIZE];*/
 comment|/* not yet used */
 block|}
 struct|;
