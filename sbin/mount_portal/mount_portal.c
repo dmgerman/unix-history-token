@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mount_portal.c,v 1.9 1997/02/22 14:32:53 peter Exp $"
+literal|"$Id: mount_portal.c,v 1.10 1997/03/11 12:34:58 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -342,6 +342,9 @@ name|struct
 name|vfsconf
 name|vfc
 decl_stmt|;
+name|mode_t
+name|um
+decl_stmt|;
 name|qelem
 name|q
 decl_stmt|;
@@ -528,6 +531,13 @@ literal|"socket"
 argument_list|)
 expr_stmt|;
 block|}
+name|um
+operator|=
+name|umask
+argument_list|(
+literal|077
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -575,6 +585,14 @@ argument_list|(
 name|un
 operator|.
 name|sun_path
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|umask
+argument_list|(
+name|um
 argument_list|)
 expr_stmt|;
 operator|(
