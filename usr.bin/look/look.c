@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: look.c,v 1.3.2.2 1997/08/29 05:29:32 imp Exp $"
+literal|"$Id: look.c,v 1.3.2.3 1997/09/15 08:32:20 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -379,13 +379,13 @@ modifier|*
 name|file
 decl_stmt|,
 modifier|*
+name|front
+decl_stmt|,
+modifier|*
 name|string
 decl_stmt|,
 modifier|*
 name|p
-decl_stmt|;
-name|caddr_t
-name|front
 decl_stmt|;
 operator|(
 name|void
