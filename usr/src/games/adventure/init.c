@@ -13,14 +13,32 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"	init.c	4.1	82/05/11	"
+literal|"	init.c	4.2	89/03/05	"
 decl_stmt|;
 end_decl_stmt
 
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"hdr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"pathnames.h"
 end_include
 
 begin_decl_stmt
@@ -128,53 +146,34 @@ expr_stmt|;
 comment|/* indicate that data is in     */
 if|if
 condition|(
-name|confirm
-argument_list|(
-literal|"got the data.  save as \"advent\"? "
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
 name|save
 argument_list|(
 name|command
 argument_list|,
-literal|"advent"
+literal|"adventure"
 argument_list|)
 operator|<
 literal|0
 condition|)
-comment|/* save core image      */
 block|{
-name|printf
+name|fprintf
 argument_list|(
-literal|"Save failed\n"
+name|stderr
+argument_list|,
+literal|"adventure: save failed\n"
 argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|0
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-else|else
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Save succeeded.  Adding messages.\n"
-argument_list|)
-expr_stmt|;
 name|adfd
 operator|=
 name|open
 argument_list|(
-literal|"advent"
+literal|"adventure"
 argument_list|,
 literal|1
 argument_list|)
@@ -195,27 +194,22 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|fork
+name|vfork
 argument_list|()
 operator|==
 literal|0
 condition|)
-comment|/* child process                */
 block|{
-name|close
+name|dup2
 argument_list|(
+name|adfd
+argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|dup
-argument_list|(
-name|adfd
-argument_list|)
-expr_stmt|;
-comment|/* output goes to advent file   */
 name|execl
 argument_list|(
-literal|"/bin/cat"
+name|_PATH_CAT
 argument_list|,
 literal|"cat"
 argument_list|,
@@ -224,9 +218,18 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
-literal|"unable to find /bin/cat\n"
+name|stderr
+argument_list|,
+literal|"adventure: unable to find %s\n"
+argument_list|,
+name|_PATH_CAT
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -241,14 +244,9 @@ argument_list|(
 name|TMPFILE
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"Advent is ready.\n"
-argument_list|)
-expr_stmt|;
 name|exit
 argument_list|(
-literal|0
+name|stat
 argument_list|)
 expr_stmt|;
 block|}
@@ -1177,12 +1175,10 @@ end_macro
 
 begin_block
 block|{
-name|int
-name|tvec
-index|[
-literal|2
-index|]
-decl_stmt|;
+name|time_t
+name|time
+parameter_list|()
+function_decl|;
 name|demo
 operator|=
 name|start
@@ -1190,24 +1186,25 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|time
-argument_list|(
-name|tvec
-argument_list|)
-expr_stmt|;
 name|srand
 argument_list|(
-name|tvec
-index|[
-literal|1
-index|]
-operator||
-literal|1
+call|(
+name|int
+call|)
+argument_list|(
+name|time
+argument_list|(
+operator|(
+name|time_t
+operator|*
+operator|)
+name|NULL
+argument_list|)
+argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* random odd seed              */
-comment|/*      srand(371);             */
-comment|/* non-random seed                      */
+comment|/* random seed */
+comment|/* srand(371);				/* non-random seed */
 name|hinted
 index|[
 literal|3
