@@ -235,7 +235,7 @@ value|(((c) == '#') || ((c) == '\0') || \ 			 ((c) == '\n') || ((c) == '\r'))
 end_define
 
 begin_function
-name|void
+name|int
 name|lm_init
 parameter_list|(
 name|void
@@ -304,7 +304,11 @@ operator|)
 operator|==
 name|NULL
 condition|)
-return|return;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 name|p
 operator|=
 name|NULL
@@ -616,7 +620,11 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

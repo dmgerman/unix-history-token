@@ -1909,6 +1909,11 @@ condition|(
 operator|!
 name|libmap_disable
 condition|)
+name|libmap_disable
+operator|=
+operator|(
+name|bool
+operator|)
 name|lm_init
 argument_list|()
 expr_stmt|;
