@@ -77,7 +77,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<kerberosIV/des.h>
+file|<des.h>
 end_include
 
 begin_include
