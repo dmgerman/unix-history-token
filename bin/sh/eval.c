@@ -1135,6 +1135,7 @@ condition|)
 name|dotrap
 argument_list|()
 expr_stmt|;
+comment|/* 	 * XXX - Like "!(n->type == NSEMI)", more types will probably 	 * need to be excluded from this test. It's probably better 	 * to set or unset EV_TESTED in the loop above than to bloat 	 * the conditional here. 	 */
 if|if
 condition|(
 operator|(
@@ -1153,6 +1154,15 @@ operator|(
 name|flags
 operator|&
 name|EV_TESTED
+operator|)
+operator|&&
+operator|!
+operator|(
+name|n
+operator|->
+name|type
+operator|==
+name|NSEMI
 operator|)
 operator|)
 condition|)
@@ -2170,6 +2180,22 @@ operator|>=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|prevfd
+operator|>=
+literal|0
+operator|&&
+name|pip
+index|[
+literal|0
+index|]
+operator|==
+literal|0
+operator|)
+condition|)
 name|close
 argument_list|(
 name|pip
