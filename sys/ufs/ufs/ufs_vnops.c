@@ -9056,6 +9056,10 @@ name|dirent
 operator|*
 operator|)
 operator|(
+operator|(
+name|char
+operator|*
+operator|)
 name|uio
 operator|->
 name|uio_iov

@@ -573,7 +573,15 @@ expr_stmt|;
 name|iov
 operator|->
 name|iov_base
-operator|+=
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|iov
+operator|->
+name|iov_base
+operator|+
 name|PAGE_SIZE
 expr_stmt|;
 name|iov

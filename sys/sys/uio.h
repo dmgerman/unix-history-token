@@ -15,15 +15,11 @@ directive|define
 name|_SYS_UIO_H_
 end_define
 
-begin_comment
-comment|/*  * XXX  * iov_base should be a void *.  */
-end_comment
-
 begin_struct
 struct|struct
 name|iovec
 block|{
-name|char
+name|void
 modifier|*
 name|iov_base
 decl_stmt|;

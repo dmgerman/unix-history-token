@@ -457,7 +457,15 @@ block|{
 name|iov
 operator|->
 name|iov_base
-operator|+=
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|iov
+operator|->
+name|iov_base
+operator|+
 name|wret
 expr_stmt|;
 name|iov

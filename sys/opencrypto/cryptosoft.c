@@ -1925,6 +1925,10 @@ block|}
 comment|/* 			 * Warning: idat may point to garbage here, but 			 * we only use it in the while() loop, only if 			 * there are indeed enough data. 			 */
 name|idat
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|iov
 operator|->
 name|iov_base
