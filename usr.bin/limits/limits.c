@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997 by  * David L. Nugent<davidn@blaze.net.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, is permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. This work was done expressly for inclusion into FreeBSD.  Other use  *    is permitted provided this notation is included.  * 4. Absolutely no warranty of function or purpose is made by the authors.  * 5. Modifications may be freely made to this file providing the above  *    conditions are met.  *  * Display/change(+runprogram)/eval resource limits.  *  *	$Id: limits.c,v 1.3 1997/03/29 04:30:26 imp Exp $  */
+comment|/*-  * Copyright (c) 1997 by  * David L. Nugent<davidn@blaze.net.au>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, is permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. This work was done expressly for inclusion into FreeBSD.  Other use  *    is permitted provided this notation is included.  * 4. Absolutely no warranty of function or purpose is made by the authors.  * 5. Modifications may be freely made to this file providing the above  *    conditions are met.  *  * Display/change(+runprogram)/eval resource limits.  *  *	$Id: limits.c,v 1.4 1997/05/10 19:00:58 davidn Exp $  */
 end_comment
 
 begin_include
@@ -2567,7 +2567,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"limits [-C class|-U user] [-eaSHBE] [-cdflmnstu [val]] [[name=val ...] cmd]\n"
+literal|"usage: limits [-C class|-U user] [-eaSHBE] [-cdflmnstu [val]] [[name=val ...] cmd]\n"
 argument_list|)
 expr_stmt|;
 name|exit
