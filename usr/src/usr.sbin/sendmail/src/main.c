@@ -39,7 +39,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|4.9.1.1
+literal|4.10
 operator|%
 name|G
 operator|%
@@ -1441,6 +1441,28 @@ end_while
 begin_comment
 comment|/* 	**  Do basic initialization. 	**	Read system control file. 	**	Extract special fields for local use. 	*/
 end_comment
+
+begin_if
+if|if
+condition|(
+operator|!
+name|safecf
+condition|)
+block|{
+name|setgid
+argument_list|(
+name|getrgid
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|setuid
+argument_list|(
+name|getruid
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+end_if
 
 begin_if
 if|if
