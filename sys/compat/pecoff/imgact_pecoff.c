@@ -2660,13 +2660,6 @@ operator|=
 operator|&
 name|pecoff_sysvec
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-goto|goto
-name|fail
-goto|;
 name|imgp
 operator|->
 name|auxargs
