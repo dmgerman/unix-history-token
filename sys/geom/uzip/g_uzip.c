@@ -2278,7 +2278,7 @@ name|free
 argument_list|(
 name|buf
 argument_list|,
-name|M_GEOM_UZIP
+name|M_GEOM
 argument_list|)
 expr_stmt|;
 name|buf
@@ -2618,7 +2618,7 @@ name|free
 argument_list|(
 name|buf
 argument_list|,
-name|M_GEOM_UZIP
+name|M_GEOM
 argument_list|)
 expr_stmt|;
 if|if
