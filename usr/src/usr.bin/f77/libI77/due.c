@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* char id_due[] = "@(#)due.c	1.2";  *  * direct unformatted external i/o  */
+comment|/* char id_due[] = "@(#)due.c	1.3";  *  * direct unformatted external i/o  */
 end_comment
 
 begin_include
@@ -11,10 +11,19 @@ end_include
 
 begin_decl_stmt
 name|char
-modifier|*
-name|due
+name|rdue
+index|[]
 init|=
-literal|"due"
+literal|"read due"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|wdue
+index|[]
+init|=
+literal|"write due"
 decl_stmt|;
 end_decl_stmt
 
@@ -62,10 +71,20 @@ condition|(
 name|curunit
 operator|->
 name|uwrt
-condition|)
+operator|&&
+operator|!
 name|nowreading
 argument_list|(
 name|curunit
+argument_list|)
+condition|)
+name|err
+argument_list|(
+name|errflag
+argument_list|,
+name|errno
+argument_list|,
+name|rdue
 argument_list|)
 expr_stmt|;
 return|return
@@ -127,12 +146,21 @@ operator|!
 name|curunit
 operator|->
 name|uwrt
-condition|)
+operator|&&
+operator|!
 name|nowwriting
 argument_list|(
 name|curunit
 argument_list|)
-expr_stmt|;
+condition|)
+name|err
+argument_list|(
+argument|errflag
+argument_list|,
+argument|errno
+argument_list|,
+argument|wdue
+argument_list|)
 return|return
 operator|(
 name|OK
@@ -217,7 +245,9 @@ name|errflag
 argument_list|,
 name|F_ERUNIT
 argument_list|,
-name|due
+name|rdue
+operator|+
+literal|5
 argument_list|)
 expr_stmt|;
 name|curunit
@@ -259,7 +289,8 @@ argument|errflag
 argument_list|,
 argument|n
 argument_list|,
-argument|due
+argument|rdue+
+literal|5
 argument_list|)
 name|cf
 operator|=
@@ -289,7 +320,8 @@ argument|errflag
 argument_list|,
 argument|F_ERNOUIO
 argument_list|,
-argument|due
+argument|rdue+
+literal|5
 argument_list|)
 if|if
 condition|(
@@ -309,7 +341,8 @@ argument|errflag
 argument_list|,
 argument|F_ERNODIO
 argument_list|,
-argument|due
+argument|rdue+
+literal|5
 argument_list|)
 if|if
 condition|(
@@ -343,7 +376,9 @@ return|return
 operator|(
 name|due_err
 argument_list|(
-name|due
+name|rdue
+operator|+
+literal|5
 argument_list|)
 operator|)
 return|;
@@ -440,7 +475,9 @@ return|return
 operator|(
 name|due_err
 argument_list|(
-name|due
+name|rdue
+operator|+
+literal|5
 argument_list|)
 operator|)
 return|;
