@@ -20,7 +20,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: moused.c,v 1.14 1998/01/20 03:38:36 yokota Exp $"
+literal|"$Id: moused.c,v 1.15 1998/02/04 06:46:33 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3535,7 +3535,7 @@ block|,
 literal|3
 block|,
 operator|~
-literal|0x23
+literal|0x33
 block|,
 literal|0x00
 block|}
@@ -6126,6 +6126,16 @@ case|case
 name|MOUSE_PROTO_LOGIMOUSEMAN
 case|:
 comment|/* MouseMan/TrackMan */
+name|act
+operator|->
+name|button
+operator|=
+name|act
+operator|->
+name|obutton
+operator|&
+name|MOUSE_BUTTON4DOWN
+expr_stmt|;
 if|if
 condition|(
 name|rodent
@@ -6137,7 +6147,7 @@ condition|)
 name|act
 operator|->
 name|button
-operator|=
+operator||=
 operator|(
 operator|(
 name|pBuf
@@ -6171,7 +6181,7 @@ else|else
 name|act
 operator|->
 name|button
-operator|=
+operator||=
 operator|(
 name|act
 operator|->
