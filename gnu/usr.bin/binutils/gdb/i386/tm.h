@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/* Target macro definitions for i386 running FreeBSD    Copyright (C) 1997 Free Software Foundation, Inc.  This file is part of GDB.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 end_comment
 
@@ -164,6 +168,62 @@ parameter_list|(
 name|pc
 parameter_list|)
 value|0xbfbfdff0
+end_define
+
+begin_struct_decl
+struct_decl|struct
+name|objfile
+struct_decl|;
+end_struct_decl
+
+begin_decl_stmt
+name|void
+name|freebsd_uthread_new_objfile
+name|PARAMS
+argument_list|(
+operator|(
+expr|struct
+name|objfile
+operator|*
+name|objfile
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|target_new_objfile
+parameter_list|(
+name|OBJFILE
+parameter_list|)
+value|freebsd_uthread_new_objfile (OBJFILE)
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|freebsd_uthread_pid_to_str
+name|PARAMS
+argument_list|(
+operator|(
+name|int
+name|pid
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|target_pid_to_str
+parameter_list|(
+name|PID
+parameter_list|)
+value|freebsd_uthread_pid_to_str (PID)
 end_define
 
 begin_endif
