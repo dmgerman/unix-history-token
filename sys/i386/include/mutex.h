@@ -951,10 +951,14 @@ name|WITNESS_ENTER
 parameter_list|(
 name|m
 parameter_list|,
+name|t
+parameter_list|,
 name|f
+parameter_list|,
+name|l
 parameter_list|)
 define|\
-value|if ((m)->mtx_witness != NULL)					\ 		witness_enter((m), (f), __FILE__, __LINE__)
+value|if ((m)->mtx_witness != NULL)					\ 		witness_enter((m), (t), (f), (l))
 end_define
 
 begin_define
@@ -964,10 +968,14 @@ name|WITNESS_EXIT
 parameter_list|(
 name|m
 parameter_list|,
+name|t
+parameter_list|,
 name|f
+parameter_list|,
+name|l
 parameter_list|)
 define|\
-value|if ((m)->mtx_witness != NULL)					\ 		witness_exit((m), (f), __FILE__, __LINE__)
+value|if ((m)->mtx_witness != NULL)					\ 		witness_exit((m), (t), (f), (l))
 end_define
 
 begin_define
@@ -1051,6 +1059,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -1086,6 +1095,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -1134,6 +1144,7 @@ parameter_list|,
 name|mtx_t
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -1192,7 +1203,11 @@ name|WITNESS_ENTER
 parameter_list|(
 name|m
 parameter_list|,
-name|flag
+name|t
+parameter_list|,
+name|f
+parameter_list|,
+name|l
 parameter_list|)
 end_define
 
@@ -1203,7 +1218,11 @@ name|WITNESS_EXIT
 parameter_list|(
 name|m
 parameter_list|,
-name|flag
+name|t
+parameter_list|,
+name|f
+parameter_list|,
+name|l
 parameter_list|)
 end_define
 
@@ -1281,7 +1300,7 @@ name|witness_enter
 parameter_list|(
 name|m
 parameter_list|,
-name|flag
+name|t
 parameter_list|,
 name|f
 parameter_list|,
@@ -1296,7 +1315,7 @@ name|witness_try_enter
 parameter_list|(
 name|m
 parameter_list|,
-name|flag
+name|t
 parameter_list|,
 name|f
 parameter_list|,
@@ -1311,7 +1330,7 @@ name|witness_exit
 parameter_list|(
 name|m
 parameter_list|,
-name|flag
+name|t
 parameter_list|,
 name|f
 parameter_list|,
@@ -2136,6 +2155,10 @@ argument_list|(
 name|mpp
 argument_list|,
 name|type
+argument_list|,
+name|file
+argument_list|,
+name|line
 argument_list|)
 expr_stmt|;
 name|CTR5
@@ -2328,6 +2351,10 @@ argument_list|(
 name|mpp
 argument_list|,
 name|type
+argument_list|,
+name|file
+argument_list|,
+name|line
 argument_list|)
 expr_stmt|;
 name|CTR5

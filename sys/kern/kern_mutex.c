@@ -888,6 +888,7 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|file
@@ -1581,6 +1582,7 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|file
@@ -2075,6 +2077,7 @@ name|mtx_t
 modifier|*
 name|mtx
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|file
