@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parse.c	8.2 (Berkeley) %G%"
+literal|"@(#)parse.c	8.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1087,19 +1087,8 @@ else|#
 directive|else
 function|Parse_Error
 parameter_list|(
-name|type
-parameter_list|,
-name|fmt
-parameter_list|,
 name|va_alist
 parameter_list|)
-name|int
-name|type
-decl_stmt|;
-name|char
-modifier|*
-name|fmt
-decl_stmt|;
 function|va_dcl
 endif|#
 directive|endif
@@ -1119,9 +1108,36 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+name|int
+name|type
+decl_stmt|;
+comment|/* Error type (PARSE_WARNING, PARSE_FATAL) */
+name|char
+modifier|*
+name|fmt
+decl_stmt|;
 name|va_start
 argument_list|(
 name|ap
+argument_list|)
+expr_stmt|;
+name|type
+operator|=
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
+name|int
+argument_list|)
+expr_stmt|;
+name|fmt
+operator|=
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
+name|char
+operator|*
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3738,7 +3754,6 @@ name|ctxt
 decl_stmt|;
 comment|/* Context in which to do the assignment */
 block|{
-specifier|register
 name|char
 modifier|*
 name|cp
@@ -3762,6 +3777,24 @@ modifier|*
 name|opc
 decl_stmt|;
 comment|/* ptr to operator character to  				 * null-terminate the variable name */
+comment|/*        * Avoid clobbered variable warnings by forcing the compiler      * to ``unregister'' variables      */
+if|#
+directive|if
+name|__GNUC__
+operator|(
+name|void
+operator|)
+operator|&
+name|cp
+expr_stmt|;
+operator|(
+name|void
+operator|)
+operator|&
+name|line
+expr_stmt|;
+endif|#
+directive|endif
 comment|/*      * Skip to variable name      */
 while|while
 condition|(
@@ -4029,6 +4062,18 @@ name|Boolean
 name|freeCmd
 decl_stmt|;
 comment|/* TRUE if the command needs to be freed, i.e. 				 * if any variable expansion was performed */
+comment|/*   	 * Avoid clobbered variable warnings by forcing the compiler 	 * to ``unregister'' variables 	 */
+if|#
+directive|if
+name|__GNUC__
+operator|(
+name|void
+operator|)
+operator|&
+name|freeCmd
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Set up arguments for shell 	 */
 name|args
 index|[
