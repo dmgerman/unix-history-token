@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_descrip.c	7.33 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_descrip.c	7.34 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -4217,8 +4217,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|USES_VOP_OPEN
-expr_stmt|;
 comment|/* 	 * XXX Kludge: set curproc->p_dupfd to contain the value of the 	 * the file descriptor being sought for duplication. The error  	 * return ensures that the vnode for this device will be released 	 * by vn_open. Open will detect this special error and take the 	 * actions in dupfdopen below. Other callers of vn_open or VOP_OPEN 	 * will simply report the error. 	 */
 name|p
 operator|->
@@ -4251,6 +4249,8 @@ argument_list|,
 name|dfd
 argument_list|,
 name|mode
+argument_list|,
+name|error
 argument_list|)
 specifier|register
 expr|struct
@@ -4272,6 +4272,12 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|mode
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|error
 decl_stmt|;
 end_decl_stmt
 
@@ -4331,7 +4337,16 @@ operator|(
 name|EBADF
 operator|)
 return|;
-comment|/* 	 * Check that the mode the file is being opened for is a subset  	 * of the mode of the existing descriptor. 	 */
+comment|/* 	 * There are two cases of interest here. 	 * 	 * For ENODEV simply dup (dfd) to file descriptor 	 * (indx) and return. 	 * 	 * For ENXIO steal away the file structure from (dfd) and 	 * store it in (indx).  (dfd) is effectively closed by 	 * this operation. 	 * 	 * Any other error code is just returned. 	 */
+switch|switch
+condition|(
+name|error
+condition|)
+block|{
+case|case
+name|ENODEV
+case|:
+comment|/* 		 * Check that the mode the file is being opened for is a 		 * subset of the mode of the existing descriptor. 		 */
 if|if
 condition|(
 operator|(
@@ -4406,6 +4421,123 @@ operator|(
 literal|0
 operator|)
 return|;
+case|case
+name|ENXIO
+case|:
+comment|/* 		 * Steal away the file pointer from dfd, and stuff it into indx. 		 */
+name|fdp
+operator|->
+name|fd_ofiles
+index|[
+name|indx
+index|]
+operator|=
+name|fdp
+operator|->
+name|fd_ofiles
+index|[
+name|dfd
+index|]
+expr_stmt|;
+name|fdp
+operator|->
+name|fd_ofiles
+index|[
+name|dfd
+index|]
+operator|=
+name|NULL
+expr_stmt|;
+name|fdp
+operator|->
+name|fd_ofileflags
+index|[
+name|indx
+index|]
+operator|=
+name|fdp
+operator|->
+name|fd_ofileflags
+index|[
+name|dfd
+index|]
+expr_stmt|;
+name|fdp
+operator|->
+name|fd_ofileflags
+index|[
+name|dfd
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* 		 * Complete the clean up of the filedesc structure by 		 * recomputing the various hints. 		 */
+if|if
+condition|(
+name|indx
+operator|>
+name|fdp
+operator|->
+name|fd_lastfile
+condition|)
+name|fdp
+operator|->
+name|fd_lastfile
+operator|=
+name|indx
+expr_stmt|;
+else|else
+while|while
+condition|(
+name|fdp
+operator|->
+name|fd_lastfile
+operator|>
+literal|0
+operator|&&
+name|fdp
+operator|->
+name|fd_ofiles
+index|[
+name|fdp
+operator|->
+name|fd_lastfile
+index|]
+operator|==
+name|NULL
+condition|)
+name|fdp
+operator|->
+name|fd_lastfile
+operator|--
+expr_stmt|;
+if|if
+condition|(
+name|dfd
+operator|<
+name|fdp
+operator|->
+name|fd_freefile
+condition|)
+name|fdp
+operator|->
+name|fd_freefile
+operator|=
+name|dfd
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+default|default:
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+comment|/* NOTREACHED */
 block|}
 end_block
 
