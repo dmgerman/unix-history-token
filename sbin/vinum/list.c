@@ -161,7 +161,7 @@ name|description
 argument_list|,
 name|lj
 condition|?
-literal|"%d GB"
+literal|"%lld GB"
 else|:
 literal|"%10d GB"
 argument_list|,
@@ -186,7 +186,7 @@ name|description
 argument_list|,
 name|lj
 condition|?
-literal|"%d MB"
+literal|"%lld MB"
 else|:
 literal|"%10d MB"
 argument_list|,
@@ -209,7 +209,7 @@ name|description
 argument_list|,
 name|lj
 condition|?
-literal|"%d kB"
+literal|"%lld kB"
 else|:
 literal|"%10d kB"
 argument_list|,
@@ -226,7 +226,7 @@ name|description
 argument_list|,
 name|lj
 condition|?
-literal|"%d  B"
+literal|"%lld  B"
 else|:
 literal|"%10d  B"
 argument_list|,
