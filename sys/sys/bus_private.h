@@ -369,6 +369,11 @@ directive|define
 name|DF_DONENOMATCH
 value|32
 comment|/* don't execute DEVICE_NOMATCH again */
+define|#
+directive|define
+name|DF_EXTERNALSOFTC
+value|64
+comment|/* softc not allocated by us */
 name|u_char
 name|order
 decl_stmt|;
