@@ -136,6 +136,18 @@ begin_comment
 comment|/* -s */
 end_comment
 
+begin_comment
+comment|/* 0x2 is reserved for log2(RB_NOSYNC). */
+end_comment
+
+begin_comment
+comment|/* 0x3 is reserved for log2(RB_HALT). */
+end_comment
+
+begin_comment
+comment|/* 0x4 is reserved for log2(RB_INITNAME). */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -156,6 +168,18 @@ end_define
 
 begin_comment
 comment|/* -d */
+end_comment
+
+begin_comment
+comment|/* 0x7 is reserved for log2(RB_RDONLY). */
+end_comment
+
+begin_comment
+comment|/* 0x8 is reserved for log2(RB_DUMP). */
+end_comment
+
+begin_comment
+comment|/* 0x9 is reserved for log2(RB_MINIROOT). */
 end_comment
 
 begin_define
@@ -202,6 +226,10 @@ begin_comment
 comment|/* -C */
 end_comment
 
+begin_comment
+comment|/* 0xe is reserved for log2(RB_POWEROFF). */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -224,11 +252,23 @@ begin_comment
 comment|/* -m */
 end_comment
 
+begin_comment
+comment|/* 0x11 is reserved for log2(RB_SELFTEST). */
+end_comment
+
+begin_comment
+comment|/* 0x12 is reserved for boot programs. */
+end_comment
+
+begin_comment
+comment|/* 0x13 is reserved for boot programs. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|RBX_PAUSE
-value|0x12
+value|0x14
 end_define
 
 begin_comment
@@ -244,6 +284,10 @@ end_define
 
 begin_comment
 comment|/* -n */
+end_comment
+
+begin_comment
+comment|/* 0x1d is reserved for log2(RB_MULTIPLE) and is just misnamed here. */
 end_comment
 
 begin_define
@@ -269,7 +313,7 @@ comment|/* -P */
 end_comment
 
 begin_comment
-comment|/* 0x1f is reserved for the RB_BOOTINFO flag. */
+comment|/* 0x1f is reserved for log2(RB_BOOTINFO). */
 end_comment
 
 begin_comment
