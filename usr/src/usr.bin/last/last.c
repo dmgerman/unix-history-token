@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)last.c	5.19 (Berkeley) %G%"
+literal|"@(#)last.c	5.20 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,10 +50,6 @@ end_endif
 
 begin_comment
 comment|/* not lint */
-end_comment
-
-begin_comment
-comment|/*  * last  */
 end_comment
 
 begin_include
@@ -71,7 +67,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
 end_include
 
 begin_include
@@ -107,6 +115,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<tzfile.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -115,23 +129,6 @@ include|#
 directive|include
 file|<utmp.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<paths.h>
-end_include
-
-begin_define
-define|#
-directive|define
-name|SECDAY
-value|(24*60*60)
-end_define
-
-begin_comment
-comment|/* seconds in a day */
-end_comment
 
 begin_define
 define|#
@@ -395,8 +392,8 @@ name|argc
 decl_stmt|;
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 decl_stmt|;
 block|{
 specifier|extern
@@ -439,9 +436,6 @@ name|EOF
 condition|)
 switch|switch
 condition|(
-operator|(
-name|char
-operator|)
 name|ch
 condition|)
 block|{
@@ -590,11 +584,14 @@ case|case
 literal|'?'
 case|:
 default|default:
-name|fputs
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-literal|"usage: last [-#] [-f file] [-t tty] [-h hostname] [user ...]\n"
-argument_list|,
 name|stderr
+argument_list|,
+literal|"usage: last [-#] [-f file] [-t tty] [-h hostname] [user ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -740,18 +737,15 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|perror
+name|err
 argument_list|(
+literal|1
+argument_list|,
+literal|"%s"
+argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|bl
 operator|=
 operator|(
@@ -821,7 +815,7 @@ argument_list|(
 name|wfd
 argument_list|,
 call|(
-name|long
+name|off_t
 call|)
 argument_list|(
 name|bl
@@ -845,10 +839,6 @@ name|read
 argument_list|(
 name|wfd
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|buf
 argument_list|,
 sizeof|sizeof
@@ -861,31 +851,15 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|fprintf
+name|err
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"last: %s: "
+literal|"%s"
 argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
-name|perror
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 for|for
 control|(
 name|bp
@@ -1335,7 +1309,7 @@ if|if
 condition|(
 name|delta
 operator|<
-name|SECDAY
+name|SECSPERDAY
 condition|)
 name|printf
 argument_list|(
@@ -1360,7 +1334,7 @@ literal|" (%ld+%5.5s)\n"
 argument_list|,
 name|delta
 operator|/
-name|SECDAY
+name|SECSPERDAY
 argument_list|,
 name|asctime
 argument_list|(
@@ -1839,10 +1813,6 @@ decl_stmt|;
 name|char
 modifier|*
 name|argdot
-decl_stmt|,
-modifier|*
-name|index
-argument_list|()
 decl_stmt|;
 if|if
 condition|(
@@ -1880,18 +1850,13 @@ name|name
 argument_list|)
 argument_list|)
 condition|)
-block|{
-name|perror
-argument_list|(
-literal|"last: gethostname"
-argument_list|)
-expr_stmt|;
-name|exit
+name|err
 argument_list|(
 literal|1
+argument_list|,
+literal|"gethostname"
 argument_list|)
 expr_stmt|;
-block|}
 name|hostdot
 operator|=
 name|index
@@ -2083,10 +2048,6 @@ block|{
 name|char
 modifier|*
 name|ct
-decl_stmt|,
-modifier|*
-name|ctime
-argument_list|()
 decl_stmt|;
 name|ct
 operator|=
