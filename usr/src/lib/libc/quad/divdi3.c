@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)divdi3.c	5.3 (Berkeley) %G%"
+literal|"@(#)divdi3.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,17 +48,20 @@ comment|/*  * Divide two signed quads.  * ??? if -1/2 should produce -1 on this 
 end_comment
 
 begin_function
-name|quad
+name|quad_t
 name|__divdi3
 parameter_list|(
-name|quad
 name|a
 parameter_list|,
-name|quad
 name|b
 parameter_list|)
+name|quad_t
+name|a
+decl_stmt|,
+name|b
+decl_stmt|;
 block|{
-name|u_quad
+name|u_quad_t
 name|ua
 decl_stmt|,
 name|ub
@@ -78,7 +81,7 @@ name|ua
 operator|=
 operator|-
 operator|(
-name|u_quad
+name|u_quad_t
 operator|)
 name|a
 operator|,
@@ -105,7 +108,7 @@ name|ub
 operator|=
 operator|-
 operator|(
-name|u_quad
+name|u_quad_t
 operator|)
 name|b
 operator|,
@@ -127,7 +130,7 @@ argument_list|,
 name|ub
 argument_list|,
 operator|(
-name|u_quad
+name|u_quad_t
 operator|*
 operator|)
 literal|0

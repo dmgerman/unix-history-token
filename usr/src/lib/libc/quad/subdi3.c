@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)subdi3.c	5.4 (Berkeley) %G%"
+literal|"@(#)subdi3.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,15 +48,18 @@ comment|/*  * Subtract two quad values.  This is trivial since a one-bit carry  
 end_comment
 
 begin_function
-name|quad
+name|quad_t
 name|__subdi3
 parameter_list|(
-name|quad
 name|a
 parameter_list|,
-name|quad
 name|b
 parameter_list|)
+name|quad_t
+name|a
+decl_stmt|,
+name|b
+decl_stmt|;
 block|{
 name|union
 name|uu

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lshldi3.c	5.6 (Berkeley) %G%"
+literal|"@(#)lshldi3.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,15 +48,19 @@ comment|/*  * Shift an (unsigned) quad value left (logical shift left).  * This 
 end_comment
 
 begin_function
-name|quad
+name|quad_t
 name|__lshldi3
 parameter_list|(
-name|quad
 name|a
 parameter_list|,
-name|qshift_t
 name|shift
 parameter_list|)
+name|quad_t
+name|a
+decl_stmt|;
+name|qshift_t
+name|shift
+decl_stmt|;
 block|{
 name|union
 name|uu

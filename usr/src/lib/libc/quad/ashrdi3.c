@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ashrdi3.c	5.6 (Berkeley) %G%"
+literal|"@(#)ashrdi3.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,15 +48,19 @@ comment|/*  * Shift a (signed) quad value right (arithmetic shift right).  */
 end_comment
 
 begin_function
-name|quad
+name|quad_t
 name|__ashrdi3
 parameter_list|(
-name|quad
 name|a
 parameter_list|,
-name|qshift_t
 name|shift
 parameter_list|)
+name|quad_t
+name|a
+decl_stmt|;
+name|qshift_t
+name|shift
+decl_stmt|;
 block|{
 name|union
 name|uu

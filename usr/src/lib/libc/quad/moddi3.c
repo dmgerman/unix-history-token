@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)moddi3.c	5.4 (Berkeley) %G%"
+literal|"@(#)moddi3.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,17 +48,20 @@ comment|/*  * Return remainder after dividing two signed quads.  *  * XXX  * If 
 end_comment
 
 begin_function
-name|quad
+name|quad_t
 name|__moddi3
 parameter_list|(
-name|quad
 name|a
 parameter_list|,
-name|quad
 name|b
 parameter_list|)
+name|quad_t
+name|a
+decl_stmt|,
+name|b
+decl_stmt|;
 block|{
-name|u_quad
+name|u_quad_t
 name|ua
 decl_stmt|,
 name|ub
@@ -78,7 +81,7 @@ name|ua
 operator|=
 operator|-
 operator|(
-name|u_quad
+name|u_quad_t
 operator|)
 name|a
 operator|,
@@ -105,7 +108,7 @@ name|ub
 operator|=
 operator|-
 operator|(
-name|u_quad
+name|u_quad_t
 operator|)
 name|b
 operator|,

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)floatunsdidf.c	5.1 (Berkeley) %G%"
+literal|"@(#)floatunsdidf.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,9 +51,11 @@ begin_function
 name|double
 name|__floatunsdidf
 parameter_list|(
-name|u_quad
 name|x
 parameter_list|)
+name|u_quad_t
+name|x
+decl_stmt|;
 block|{
 name|double
 name|d

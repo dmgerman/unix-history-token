@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)udivdi3.c	5.3 (Berkeley) %G%"
+literal|"@(#)udivdi3.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,15 +48,18 @@ comment|/*  * Divide two unsigned quads.  */
 end_comment
 
 begin_function
-name|u_quad
+name|u_quad_t
 name|__udivdi3
 parameter_list|(
-name|u_quad
 name|a
 parameter_list|,
-name|u_quad
 name|b
 parameter_list|)
+name|u_quad_t
+name|a
+decl_stmt|,
+name|b
+decl_stmt|;
 block|{
 return|return
 operator|(
@@ -67,7 +70,7 @@ argument_list|,
 name|b
 argument_list|,
 operator|(
-name|u_quad
+name|u_quad_t
 operator|*
 operator|)
 literal|0

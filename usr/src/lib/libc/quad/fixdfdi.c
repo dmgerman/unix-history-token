@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fixdfdi.c	5.3 (Berkeley) %G%"
+literal|"@(#)fixdfdi.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,46 +43,19 @@ directive|include
 file|"quad.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|QUAD_MAX
-end_ifndef
-
-begin_comment
-comment|/* should be in<limits.h> maybe? */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|QUAD_MAX
-value|((quad)(((u_quad)1<< (QUAD_BITS - 1)) - 1))
-end_define
-
-begin_define
-define|#
-directive|define
-name|QUAD_MIN
-value|(-QUAD_MAX - 1)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Convert double to (signed) quad.  * We clamp anything that is out of range.  */
 end_comment
 
 begin_function
-name|quad
+name|quad_t
 name|__fixdfdi
 parameter_list|(
-name|double
 name|x
 parameter_list|)
+name|double
+name|x
+decl_stmt|;
 block|{
 if|if
 condition|(
@@ -105,11 +78,11 @@ else|else
 return|return
 operator|(
 operator|(
-name|quad
+name|quad_t
 operator|)
 operator|-
 operator|(
-name|u_quad
+name|u_quad_t
 operator|)
 operator|-
 name|x
@@ -131,10 +104,10 @@ else|else
 return|return
 operator|(
 operator|(
-name|quad
+name|quad_t
 operator|)
 operator|(
-name|u_quad
+name|u_quad_t
 operator|)
 name|x
 operator|)

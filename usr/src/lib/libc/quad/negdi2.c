@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)negdi2.c	5.4 (Berkeley) %G%"
+literal|"@(#)negdi2.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,12 +48,14 @@ comment|/*  * Return -a (or, equivalently, 0 - a), in quad.  See subdi3.c.  */
 end_comment
 
 begin_function
-name|quad
+name|quad_t
 name|__negdi2
 parameter_list|(
-name|quad
 name|a
 parameter_list|)
+name|quad_t
+name|a
+decl_stmt|;
 block|{
 name|union
 name|uu

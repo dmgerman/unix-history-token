@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)xordi3.c	5.3 (Berkeley) %G%"
+literal|"@(#)xordi3.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,15 +48,18 @@ comment|/*  * Return a ^ b, in quad.  */
 end_comment
 
 begin_function
-name|quad
+name|quad_t
 name|__xordi3
 parameter_list|(
-name|quad
 name|a
 parameter_list|,
-name|quad
 name|b
 parameter_list|)
+name|quad_t
+name|a
+decl_stmt|,
+name|b
+decl_stmt|;
 block|{
 name|union
 name|uu

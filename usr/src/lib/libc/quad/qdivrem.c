@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)qdivrem.c	5.6 (Berkeley) %G%"
+literal|"@(#)qdivrem.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -208,19 +208,26 @@ comment|/*  * __qdivrem(u, v, rem) returns u/v and, optionally, sets *rem to u%v
 end_comment
 
 begin_function
-name|u_quad
+name|u_quad_t
 name|__qdivrem
 parameter_list|(
-name|u_quad
 name|uq
 parameter_list|,
-name|u_quad
 name|vq
 parameter_list|,
-name|u_quad
-modifier|*
 name|arq
 parameter_list|)
+name|u_quad_t
+name|uq
+decl_stmt|,
+name|vq
+decl_stmt|,
+decl|*
+name|arq
+decl_stmt|;
+end_function
+
+begin_block
 block|{
 name|union
 name|uu
@@ -1279,7 +1286,7 @@ name|q
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 end_unit
 

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)muldi3.c	5.7 (Berkeley) %G%"
+literal|"@(#)muldi3.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,7 +49,7 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|quad
+name|quad_t
 name|__lmulq
 parameter_list|(
 name|u_long
@@ -60,15 +60,18 @@ function_decl|;
 end_function_decl
 
 begin_function
-name|quad
+name|quad_t
 name|__muldi3
 parameter_list|(
-name|quad
 name|a
 parameter_list|,
-name|quad
 name|b
 parameter_list|)
+name|quad_t
+name|a
+decl_stmt|,
+name|b
+decl_stmt|;
 block|{
 name|union
 name|uu
@@ -348,7 +351,7 @@ end_comment
 
 begin_function
 specifier|static
-name|quad
+name|quad_t
 name|__lmulq
 parameter_list|(
 name|u_long

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)adddi3.c	5.4 (Berkeley) %G%"
+literal|"@(#)adddi3.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -48,15 +48,18 @@ comment|/*  * Add two quads.  This is trivial since a one-bit carry from a singl
 end_comment
 
 begin_function
-name|quad
+name|quad_t
 name|__adddi3
 parameter_list|(
-name|quad
 name|a
 parameter_list|,
-name|quad
 name|b
 parameter_list|)
+name|quad_t
+name|a
+decl_stmt|,
+name|b
+decl_stmt|;
 block|{
 name|union
 name|uu

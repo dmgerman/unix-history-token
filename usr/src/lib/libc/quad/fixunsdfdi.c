@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fixunsdfdi.c	5.3 (Berkeley) %G%"
+literal|"@(#)fixunsdfdi.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,28 +42,6 @@ include|#
 directive|include
 file|"quad.h"
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|UQUAD_MAX
-end_ifndef
-
-begin_comment
-comment|/* should be in<limits.h> maybe? */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|UQUAD_MAX
-value|((u_quad)0 - 1)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -91,12 +69,14 @@ comment|/*  * Convert double to (unsigned) quad.  * Not sure what to do with neg
 end_comment
 
 begin_function
-name|u_quad
+name|u_quad_t
 name|__fixunsdfdi
 parameter_list|(
-name|double
 name|x
 parameter_list|)
+name|double
+name|x
+decl_stmt|;
 block|{
 name|double
 name|toppart
@@ -139,7 +119,7 @@ operator|)
 operator|/
 name|ONE
 expr_stmt|;
-comment|/* 	 * Now build a u_quad out of the top part.  The difference 	 * between x and this is the bottom part (this may introduce 	 * a few fuzzy bits, but what the heck).  With any luck this 	 * difference will be nonnegative: x should wind up in the 	 * range [0..ULONG_MAX].  For paranoia, we assume [LONG_MIN.. 	 * 2*ULONG_MAX] instead. 	 */
+comment|/* 	 * Now build a u_quad_t out of the top part.  The difference 	 * between x and this is the bottom part (this may introduce 	 * a few fuzzy bits, but what the heck).  With any luck this 	 * difference will be nonnegative: x should wind up in the 	 * range [0..ULONG_MAX].  For paranoia, we assume [LONG_MIN.. 	 * 2*ULONG_MAX] instead. 	 */
 name|t
 operator|.
 name|ul

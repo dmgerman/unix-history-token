@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ucmpdi2.c	5.4 (Berkeley) %G%"
+literal|"@(#)ucmpdi2.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,12 +51,15 @@ begin_function
 name|int
 name|__ucmpdi2
 parameter_list|(
-name|u_quad
 name|a
 parameter_list|,
-name|u_quad
 name|b
 parameter_list|)
+name|u_quad_t
+name|a
+decl_stmt|,
+name|b
+decl_stmt|;
 block|{
 name|union
 name|uu
