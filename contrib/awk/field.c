@@ -1416,18 +1416,18 @@ operator|=
 name|INITIAL_SIZE
 expr_stmt|;
 block|}
-comment|/* make sure there's enough room */
+comment|/* 		 * Make sure there's enough room. Since we sometimes need 		 * to place a sentinel at the end, we make sure 		 * databuf_size is> cnt after allocation. 		 */
 if|if
 condition|(
 name|cnt
-operator|>
+operator|>=
 name|databuf_size
 condition|)
 block|{
 while|while
 condition|(
 name|cnt
-operator|>
+operator|>=
 name|databuf_size
 operator|&&
 name|databuf_size
