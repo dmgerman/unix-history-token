@@ -61,7 +61,7 @@ begin_define
 define|#
 directive|define
 name|MAXTHR
-value|128
+value|8192
 end_define
 
 begin_define
