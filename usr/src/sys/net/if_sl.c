@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)if_sl.c	7.3 (Berkeley) %G% */
+comment|/*	@(#)if_sl.c	7.4 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -136,23 +136,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|vax
-end_ifdef
-
 begin_include
 include|#
 directive|include
-file|"../vax/mtpr.h"
+file|"../machine/mtpr.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-endif|vax
-end_endif
 
 begin_comment
 comment|/*  * N.B.: SLMTU is now a hard limit on input packet size.  * SLMTU must be<= CLBYTES - sizeof(struct ifnet *).  */
