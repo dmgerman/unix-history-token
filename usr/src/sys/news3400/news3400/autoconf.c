@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, Ralph Campbell, Sony Corp. and Kazumasa  * Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: autoconf.c 1.31 91/01/21$  *  *	@(#)autoconf.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department, Ralph Campbell, Sony Corp. and Kazumasa  * Utashiro of Software Research Associates, Inc.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: autoconf.c 1.31 91/01/21$  *  *	@(#)autoconf.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -302,7 +302,7 @@ name|cp_imp
 condition|)
 block|{
 case|case
-name|MIPS_R2010_FPU
+name|MIPS_R2010
 case|:
 name|printf
 argument_list|(
@@ -323,7 +323,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|MIPS_R3010_FPU
+name|MIPS_R3010
 case|:
 name|printf
 argument_list|(
@@ -344,7 +344,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|MIPS_R4000_FPU
+name|MIPS_R4010
 case|:
 name|printf
 argument_list|(
