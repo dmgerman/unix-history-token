@@ -24,7 +24,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/module.h>
 end_include
 
 begin_include
@@ -534,10 +546,7 @@ name|device_t
 operator|)
 name|arg
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DDB
-name|Debugger
+name|kdb_enter
 argument_list|(
 name|device_get_nameunit
 argument_list|(
@@ -545,17 +554,6 @@ name|dev
 argument_list|)
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"close, but no debugger\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
