@@ -1008,6 +1008,8 @@ expr_stmt|;
 comment|/* 	 * Good {morning,afternoon,evening,night}. 	 */
 name|printf
 argument_list|(
+literal|"%s"
+argument_list|,
 name|version
 argument_list|)
 expr_stmt|;
