@@ -395,6 +395,18 @@ operator|+
 literal|9
 argument_list|)
 operator|!=
+literal|0xE0
+condition|)
+block|{
+if|if
+condition|(
+name|inb
+argument_list|(
+name|eth_asic_base
+operator|+
+literal|9
+argument_list|)
+operator|!=
 literal|0
 condition|)
 continue|continue;
@@ -410,6 +422,7 @@ operator|!=
 literal|0xC0
 condition|)
 continue|continue;
+block|}
 for|for
 control|(
 name|i

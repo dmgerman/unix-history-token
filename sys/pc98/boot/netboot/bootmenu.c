@@ -212,7 +212,7 @@ literal|"rootfs"
 block|,
 name|cmd_rootfs
 block|,
-literal|"ip:/fs      set root filesystem"
+literal|"[ip:]/fs    set root filesystem"
 block|}
 block|,
 block|{
@@ -220,7 +220,7 @@ literal|"swapfs"
 block|,
 name|cmd_swapfs
 block|,
-literal|"ip:/fs      set swap filesystem"
+literal|"[ip:]/fs    set swap filesystem"
 block|}
 block|,
 block|{
@@ -843,6 +843,37 @@ begin_block
 block|{
 if|if
 condition|(
+operator|*
+name|p
+operator|==
+literal|'/'
+condition|)
+block|{
+name|bcopy
+argument_list|(
+operator|&
+name|arptable
+index|[
+name|ARP_SERVER
+index|]
+operator|.
+name|ipaddr
+argument_list|,
+operator|&
+name|arptable
+index|[
+name|ARP_ROOTSERVER
+index|]
+operator|.
+name|ipaddr
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 operator|!
 name|setip
 argument_list|(
@@ -860,7 +891,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Root filesystem is %I:%s\n"
+literal|"Root filesystem is %I:%s\r\n"
 argument_list|,
 name|nfsdiskless
 operator|.
@@ -873,29 +904,10 @@ operator|.
 name|root_hostnam
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 else|else
 block|{
-name|bcopy
-argument_list|(
-operator|&
-name|arptable
-index|[
-name|ARP_ROOTSERVER
-index|]
-operator|.
-name|ipaddr
-argument_list|,
-operator|&
-name|nfsdiskless
-operator|.
-name|root_saddr
-operator|.
-name|sin_addr
-argument_list|,
-literal|4
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 operator|*
@@ -921,6 +933,27 @@ condition|)
 name|p
 operator|++
 expr_stmt|;
+block|}
+name|bcopy
+argument_list|(
+operator|&
+name|arptable
+index|[
+name|ARP_ROOTSERVER
+index|]
+operator|.
+name|ipaddr
+argument_list|,
+operator|&
+name|nfsdiskless
+operator|.
+name|root_saddr
+operator|.
+name|sin_addr
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
 name|sprintf
 argument_list|(
 operator|&
@@ -933,7 +966,6 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_block
 
@@ -1695,21 +1727,16 @@ condition|(
 operator|*
 name|q
 operator|&&
-operator|(
 operator|*
-operator|(
 name|q
-operator|++
-operator|)
 operator|==
 operator|*
-operator|(
 name|p
 operator|++
-operator|)
-operator|)
 condition|)
-empty_stmt|;
+name|q
+operator|++
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1928,6 +1955,8 @@ argument_list|)
 condition|)
 break|break;
 block|}
+endif|#
+directive|endif
 name|eth_reset
 argument_list|()
 expr_stmt|;
