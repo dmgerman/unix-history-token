@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_balloc.c	7.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1989 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_balloc.c	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -115,38 +115,30 @@ begin_comment
 comment|/*  * Bmap converts a the logical block number of a file  * to its physical block number on the disk. The conversion  * is done by using the logical block number to index into  * the array of block pointers described by the dinode.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|lfs_bmap
-argument_list|(
+parameter_list|(
 name|ip
-argument_list|,
+parameter_list|,
 name|bn
-argument_list|,
+parameter_list|,
 name|bnp
-argument_list|)
+parameter_list|)
 specifier|register
-expr|struct
+name|struct
 name|inode
-operator|*
+modifier|*
 name|ip
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 specifier|register
 name|daddr_t
 name|bn
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|daddr_t
 modifier|*
 name|bnp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|LFS
@@ -181,8 +173,6 @@ name|daddr_t
 name|lbn_ind
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|j
 decl_stmt|,
 name|off
@@ -259,11 +249,7 @@ block|{
 operator|*
 name|bnp
 operator|=
-operator|(
-name|daddr_t
-operator|)
-operator|-
-literal|1
+name|UNASSIGNED
 expr_stmt|;
 return|return
 operator|(
@@ -399,11 +385,7 @@ condition|)
 block|{
 name|daddr
 operator|=
-operator|(
-name|daddr_t
-operator|)
-operator|-
-literal|1
+name|UNASSIGNED
 expr_stmt|;
 break|break;
 block|}
@@ -596,7 +578,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#
