@@ -62,9 +62,12 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_extern
-extern|extern total_malloced;
-end_extern
+begin_decl_stmt
+specifier|extern
+name|int
+name|total_malloced
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -913,10 +916,15 @@ block|{
 name|int
 name|i
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INVARIANTS
 name|int
 modifier|*
 name|poke
 decl_stmt|;
+endif|#
+directive|endif
 for|for
 control|(
 name|i
@@ -935,7 +943,7 @@ if|if
 condition|(
 name|debug
 operator|&
-name|DEBUG_EXITFREE
+name|DEBUG_WARNINGS
 condition|)
 comment|/* want to hear about them */
 name|log
