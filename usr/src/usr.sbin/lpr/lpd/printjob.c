@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)printjob.c	4.14 (Berkeley) %G%"
+literal|"@(#)printjob.c	4.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -221,7 +221,7 @@ specifier|static
 name|char
 name|jobname
 index|[
-literal|32
+literal|100
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -1326,12 +1326,19 @@ index|]
 operator|==
 literal|'\0'
 condition|)
-name|strcpy
+name|strncpy
 argument_list|(
 name|class
 argument_list|,
 name|line
 operator|+
+literal|1
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|class
+argument_list|)
+operator|-
 literal|1
 argument_list|)
 expr_stmt|;
@@ -1339,12 +1346,19 @@ continue|continue;
 case|case
 literal|'P'
 case|:
-name|strcpy
+name|strncpy
 argument_list|(
 name|logname
 argument_list|,
 name|line
 operator|+
+literal|1
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|logname
+argument_list|)
+operator|-
 literal|1
 argument_list|)
 expr_stmt|;
@@ -1396,12 +1410,19 @@ index|]
 operator|!=
 literal|'\0'
 condition|)
-name|strcpy
+name|strncpy
 argument_list|(
 name|jobname
 argument_list|,
 name|line
 operator|+
+literal|1
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|jobname
+argument_list|)
+operator|-
 literal|1
 argument_list|)
 expr_stmt|;
@@ -1426,12 +1447,19 @@ index|]
 operator|!=
 literal|'\0'
 condition|)
-name|strcpy
+name|strncpy
 argument_list|(
 name|class
 argument_list|,
 name|line
 operator|+
+literal|1
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|class
+argument_list|)
+operator|-
 literal|1
 argument_list|)
 expr_stmt|;
@@ -1460,12 +1488,19 @@ case|case
 literal|'T'
 case|:
 comment|/* header title for pr */
-name|strcpy
+name|strncpy
 argument_list|(
 name|title
 argument_list|,
 name|line
 operator|+
+literal|1
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|title
+argument_list|)
+operator|-
 literal|1
 argument_list|)
 expr_stmt|;
@@ -1533,7 +1568,7 @@ case|case
 literal|'W'
 case|:
 comment|/* page width */
-name|strcpy
+name|strncpy
 argument_list|(
 name|width
 operator|+
@@ -1542,6 +1577,13 @@ argument_list|,
 name|line
 operator|+
 literal|1
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|width
+argument_list|)
+operator|-
+literal|3
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1549,7 +1591,7 @@ case|case
 literal|'I'
 case|:
 comment|/* indent amount */
-name|strcpy
+name|strncpy
 argument_list|(
 name|indent
 operator|+
@@ -1558,6 +1600,13 @@ argument_list|,
 name|line
 operator|+
 literal|1
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|indent
+argument_list|)
+operator|-
+literal|3
 argument_list|)
 expr_stmt|;
 continue|continue;
