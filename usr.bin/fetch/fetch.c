@@ -3017,7 +3017,9 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"invalid buffer size"
+literal|"invalid buffer size (%s)"
+argument_list|,
+name|optarg
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3202,7 +3204,9 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"invalid size"
+literal|"invalid size (%s)"
+argument_list|,
+name|optarg
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3234,7 +3238,9 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"invalid timeout"
+literal|"invalid timeout (%s)"
+argument_list|,
+name|optarg
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3290,7 +3296,9 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"invalid delay"
+literal|"invalid delay (%s)"
+argument_list|,
+name|optarg
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3483,7 +3491,9 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"FTP_TIMEOUT is not a positive integer"
+literal|"FTP_TIMEOUT (%s) is not a positive integer"
+argument_list|,
+name|optarg
 argument_list|)
 expr_stmt|;
 name|ftp_timeout
@@ -3522,7 +3532,9 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"HTTP_TIMEOUT is not a positive integer"
+literal|"HTTP_TIMEOUT (%s) is not a positive integer"
+argument_list|,
+name|optarg
 argument_list|)
 expr_stmt|;
 name|http_timeout
