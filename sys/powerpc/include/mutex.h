@@ -1945,14 +1945,6 @@ return|;
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|mtx_legal2block
-parameter_list|()
-value|(read_eflags()& 0x200)
-end_define
-
 begin_comment
 comment|/*  * Release lock m  */
 end_comment
