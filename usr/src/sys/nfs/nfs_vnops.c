@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	7.74 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	7.75 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -508,7 +508,7 @@ block|{
 operator|&
 name|vop_bwrite_desc
 block|,
-name|bwrite
+name|vn_bwrite
 block|}
 block|,
 block|{
@@ -891,7 +891,7 @@ block|{
 operator|&
 name|vop_bwrite_desc
 block|,
-name|bwrite
+name|vn_bwrite
 block|}
 block|,
 block|{
@@ -1276,7 +1276,7 @@ block|{
 operator|&
 name|vop_bwrite_desc
 block|,
-name|bwrite
+name|vn_bwrite
 block|}
 block|,
 block|{
@@ -11845,7 +11845,7 @@ comment|/*  * NFS flat namespace free.  * Currently unsupported.  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|nfs_vfree
 parameter_list|(
 name|ap
@@ -11868,7 +11868,11 @@ directive|define
 name|mode
 value|(ap->a_mode)
 block|{
-return|return;
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
 block|}
 end_function
 
