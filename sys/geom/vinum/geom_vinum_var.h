@@ -920,6 +920,14 @@ comment|/* BIO queue. */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
+argument|gv_bioq
+argument_list|)
+name|wqueue
+expr_stmt|;
+comment|/* Waiting BIO queue. */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
 argument|gv_raid5_packet
 argument_list|)
 name|packets
