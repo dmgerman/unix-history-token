@@ -2176,10 +2176,16 @@ name|clp
 argument_list|,
 name|RPCMNT_UMOUNT
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_dir
 argument_list|,
 name|nfsdirname
 argument_list|,
+operator|(
+name|xdrproc_t
+operator|)
 name|xdr_void
 argument_list|,
 operator|(
