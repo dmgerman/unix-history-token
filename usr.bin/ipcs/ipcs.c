@@ -1267,7 +1267,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tmsgmax: %6d\t(max characters in a message)\n"
+literal|"\tmsgmax: %12d\t(max characters in a message)\n"
 argument_list|,
 name|msginfo
 operator|.
@@ -1276,7 +1276,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tmsgmni: %6d\t(# of message queues)\n"
+literal|"\tmsgmni: %12d\t(# of message queues)\n"
 argument_list|,
 name|msginfo
 operator|.
@@ -1285,7 +1285,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tmsgmnb: %6d\t(max characters in a message queue)\n"
+literal|"\tmsgmnb: %12d\t(max characters in a message queue)\n"
 argument_list|,
 name|msginfo
 operator|.
@@ -1294,7 +1294,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tmsgtql: %6d\t(max # of messages in system)\n"
+literal|"\tmsgtql: %12d\t(max # of messages in system)\n"
 argument_list|,
 name|msginfo
 operator|.
@@ -1303,7 +1303,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tmsgssz: %6d\t(size of a message segment)\n"
+literal|"\tmsgssz: %12d\t(size of a message segment)\n"
 argument_list|,
 name|msginfo
 operator|.
@@ -1312,7 +1312,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tmsgseg: %6d\t(# of message segments in system)\n\n"
+literal|"\tmsgseg: %12d\t(# of message segments in system)\n\n"
 argument_list|,
 name|msginfo
 operator|.
@@ -1370,7 +1370,17 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"T     ID     KEY        MODE       OWNER    GROUP"
+literal|"T %12s %12s %-11s %-8s %-8s"
+argument_list|,
+literal|"ID"
+argument_list|,
+literal|"KEY"
+argument_list|,
+literal|"MODE"
+argument_list|,
+literal|"OWNER"
+argument_list|,
+literal|"GROUP"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1381,7 +1391,11 @@ name|CREATOR
 condition|)
 name|printf
 argument_list|(
-literal|"  CREATOR   CGROUP"
+literal|" %-8s %-8s"
+argument_list|,
+literal|"CREATOR"
+argument_list|,
+literal|"CGROUP"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1392,7 +1406,11 @@ name|OUTSTANDING
 condition|)
 name|printf
 argument_list|(
-literal|" CBYTES  QNUM"
+literal|" %20s %20s"
+argument_list|,
+literal|"CBYTES"
+argument_list|,
+literal|"QNUM"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1403,7 +1421,9 @@ name|BIGGEST
 condition|)
 name|printf
 argument_list|(
-literal|" QBYTES"
+literal|" %20s"
+argument_list|,
+literal|"QBYTES"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1414,7 +1434,11 @@ name|PID
 condition|)
 name|printf
 argument_list|(
-literal|" LSPID LRPID"
+literal|" %12s %12s"
+argument_list|,
+literal|"LSPID"
+argument_list|,
+literal|"LRPID"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1425,7 +1449,13 @@ name|TIME
 condition|)
 name|printf
 argument_list|(
-literal|"    STIME    RTIME    CTIME"
+literal|" %-8s %-8s %-8s"
+argument_list|,
+literal|"STIME"
+argument_list|,
+literal|"RTIME"
+argument_list|,
+literal|"CTIME"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1543,7 +1573,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"q %6d %10d %s %8s %8s"
+literal|"q %12d %12d %s %8s %8s"
 argument_list|,
 name|IXSEQ_TO_IPCID
 argument_list|(
@@ -1650,7 +1680,7 @@ name|OUTSTANDING
 condition|)
 name|printf
 argument_list|(
-literal|" %6lu %6lu"
+literal|" %12lu %12lu"
 argument_list|,
 name|kmsqptr
 operator|->
@@ -1673,7 +1703,7 @@ name|BIGGEST
 condition|)
 name|printf
 argument_list|(
-literal|" %6lu"
+literal|" %20lu"
 argument_list|,
 name|kmsqptr
 operator|->
@@ -1690,7 +1720,7 @@ name|PID
 condition|)
 name|printf
 argument_list|(
-literal|" %6d %6d"
+literal|" %12d %12d"
 argument_list|,
 name|kmsqptr
 operator|->
@@ -1796,7 +1826,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tshmmax: %7d\t(max shared memory segment size)\n"
+literal|"\tshmmax: %12d\t(max shared memory segment size)\n"
 argument_list|,
 name|shminfo
 operator|.
@@ -1805,7 +1835,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tshmmin: %7d\t(min shared memory segment size)\n"
+literal|"\tshmmin: %12d\t(min shared memory segment size)\n"
 argument_list|,
 name|shminfo
 operator|.
@@ -1814,7 +1844,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tshmmni: %7d\t(max number of shared memory identifiers)\n"
+literal|"\tshmmni: %12d\t(max number of shared memory identifiers)\n"
 argument_list|,
 name|shminfo
 operator|.
@@ -1823,7 +1853,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tshmseg: %7d\t(max shared memory segments per process)\n"
+literal|"\tshmseg: %12d\t(max shared memory segments per process)\n"
 argument_list|,
 name|shminfo
 operator|.
@@ -1832,7 +1862,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tshmall: %7d\t(max amount of shared memory in pages)\n\n"
+literal|"\tshmall: %12d\t(max amount of shared memory in pages)\n\n"
 argument_list|,
 name|shminfo
 operator|.
@@ -1890,7 +1920,17 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"T     ID     KEY        MODE       OWNER    GROUP"
+literal|"T %12s %12s %-11s %-8s %-8s"
+argument_list|,
+literal|"ID"
+argument_list|,
+literal|"KEY"
+argument_list|,
+literal|"MODE"
+argument_list|,
+literal|"OWNER"
+argument_list|,
+literal|"GROUP"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1901,7 +1941,11 @@ name|CREATOR
 condition|)
 name|printf
 argument_list|(
-literal|"  CREATOR   CGROUP"
+literal|" %-8s %-8s"
+argument_list|,
+literal|"CREATOR"
+argument_list|,
+literal|"CGROUP"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1912,7 +1956,9 @@ name|OUTSTANDING
 condition|)
 name|printf
 argument_list|(
-literal|" NATTCH"
+literal|" %12s"
+argument_list|,
+literal|"NATTCH"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1923,7 +1969,9 @@ name|BIGGEST
 condition|)
 name|printf
 argument_list|(
-literal|"  SEGSZ"
+literal|" %12s"
+argument_list|,
+literal|"SEGSZ"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1934,7 +1982,11 @@ name|PID
 condition|)
 name|printf
 argument_list|(
-literal|"  CPID  LPID"
+literal|" %12s %12s"
+argument_list|,
+literal|"CPID"
+argument_list|,
+literal|"LPID"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1945,7 +1997,13 @@ name|TIME
 condition|)
 name|printf
 argument_list|(
-literal|"    ATIME    DTIME    CTIME"
+literal|" %-8s %-8s %-8s"
+argument_list|,
+literal|"ATIME"
+argument_list|,
+literal|"DTIME"
+argument_list|,
+literal|"CTIME"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2065,7 +2123,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"m %6d %10d %s %8s %8s"
+literal|"m %12d %12d %s %8s %8s"
 argument_list|,
 name|IXSEQ_TO_IPCID
 argument_list|(
@@ -2172,7 +2230,7 @@ name|OUTSTANDING
 condition|)
 name|printf
 argument_list|(
-literal|" %6d"
+literal|" %12d"
 argument_list|,
 name|kshmptr
 operator|->
@@ -2189,7 +2247,7 @@ name|BIGGEST
 condition|)
 name|printf
 argument_list|(
-literal|" %6d"
+literal|" %12d"
 argument_list|,
 name|kshmptr
 operator|->
@@ -2206,7 +2264,7 @@ name|PID
 condition|)
 name|printf
 argument_list|(
-literal|" %6d %6d"
+literal|" %12d %12d"
 argument_list|,
 name|kshmptr
 operator|->
@@ -2320,7 +2378,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tsemmap: %6d\t(# of entries in semaphore map)\n"
+literal|"\tsemmap: %12d\t(# of entries in semaphore map)\n"
 argument_list|,
 name|seminfo
 operator|.
@@ -2329,7 +2387,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tsemmni: %6d\t(# of semaphore identifiers)\n"
+literal|"\tsemmni: %12d\t(# of semaphore identifiers)\n"
 argument_list|,
 name|seminfo
 operator|.
@@ -2338,7 +2396,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tsemmns: %6d\t(# of semaphores in system)\n"
+literal|"\tsemmns: %12d\t(# of semaphores in system)\n"
 argument_list|,
 name|seminfo
 operator|.
@@ -2347,7 +2405,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tsemmnu: %6d\t(# of undo structures in system)\n"
+literal|"\tsemmnu: %12d\t(# of undo structures in system)\n"
 argument_list|,
 name|seminfo
 operator|.
@@ -2356,7 +2414,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tsemmsl: %6d\t(max # of semaphores per id)\n"
+literal|"\tsemmsl: %12d\t(max # of semaphores per id)\n"
 argument_list|,
 name|seminfo
 operator|.
@@ -2365,7 +2423,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tsemopm: %6d\t(max # of operations per semop call)\n"
+literal|"\tsemopm: %12d\t(max # of operations per semop call)\n"
 argument_list|,
 name|seminfo
 operator|.
@@ -2374,7 +2432,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tsemume: %6d\t(max # of undo entries per process)\n"
+literal|"\tsemume: %12d\t(max # of undo entries per process)\n"
 argument_list|,
 name|seminfo
 operator|.
@@ -2383,7 +2441,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tsemusz: %6d\t(size in bytes of undo structure)\n"
+literal|"\tsemusz: %12d\t(size in bytes of undo structure)\n"
 argument_list|,
 name|seminfo
 operator|.
@@ -2392,7 +2450,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tsemvmx: %6d\t(semaphore maximum value)\n"
+literal|"\tsemvmx: %12d\t(semaphore maximum value)\n"
 argument_list|,
 name|seminfo
 operator|.
@@ -2401,7 +2459,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tsemaem: %6d\t(adjust on exit max value)\n\n"
+literal|"\tsemaem: %12d\t(adjust on exit max value)\n\n"
 argument_list|,
 name|seminfo
 operator|.
@@ -2451,7 +2509,17 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"T     ID     KEY        MODE       OWNER    GROUP"
+literal|"T %12s %12s %-11s %-8s %-8s"
+argument_list|,
+literal|"ID"
+argument_list|,
+literal|"KEY"
+argument_list|,
+literal|"MODE"
+argument_list|,
+literal|"OWNER"
+argument_list|,
+literal|"GROUP"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2462,7 +2530,11 @@ name|CREATOR
 condition|)
 name|printf
 argument_list|(
-literal|"  CREATOR   CGROUP"
+literal|" %-8s %-8s"
+argument_list|,
+literal|"CREATOR"
+argument_list|,
+literal|"CGROUP"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2473,7 +2545,9 @@ name|BIGGEST
 condition|)
 name|printf
 argument_list|(
-literal|" NSEMS"
+literal|" %12s"
+argument_list|,
+literal|"NSEMS"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2484,7 +2558,11 @@ name|TIME
 condition|)
 name|printf
 argument_list|(
-literal|"    OTIME    CTIME"
+literal|" %-8s %-8s"
+argument_list|,
+literal|"OTIME"
+argument_list|,
+literal|"CTIME"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2592,7 +2670,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"s %6d %10d %s %8s %8s"
+literal|"s %12d %12d %s %8s %8s"
 argument_list|,
 name|IXSEQ_TO_IPCID
 argument_list|(
@@ -2699,7 +2777,7 @@ name|BIGGEST
 condition|)
 name|printf
 argument_list|(
-literal|" %6d"
+literal|" %12d"
 argument_list|,
 name|ksemaptr
 operator|->
