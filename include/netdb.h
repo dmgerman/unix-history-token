@@ -501,15 +501,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|EAI_RESNULL
-value|14
-end_define
-
-begin_define
-define|#
-directive|define
 name|EAI_MAX
-value|15
+value|14
 end_define
 
 begin_comment
