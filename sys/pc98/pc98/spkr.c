@@ -2849,6 +2849,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|PC98
 name|DRIVER_MODULE
 argument_list|(
 name|atspeaker
@@ -2865,6 +2868,11 @@ literal|0
 argument_list|)
 expr_stmt|;
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* spkr.c ends here */
