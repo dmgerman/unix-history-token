@@ -3273,9 +3273,13 @@ name|INVERSE_ESTCPU_WEIGHT
 operator|+
 name|NICE_WEIGHT
 operator|*
+operator|(
 name|p
 operator|->
 name|p_nice
+operator|-
+name|PRIO_MIN
+operator|)
 expr_stmt|;
 name|newpriority
 operator|=

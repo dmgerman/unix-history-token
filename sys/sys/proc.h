@@ -1668,17 +1668,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ESTCPULIM
-parameter_list|(
-name|e
-parameter_list|)
-define|\
-value|min((e), INVERSE_ESTCPU_WEIGHT * (NICE_WEIGHT * PRIO_MAX - PPQ) + \ 	     INVERSE_ESTCPU_WEIGHT - 1)
-end_define
-
-begin_define
-define|#
-directive|define
 name|INVERSE_ESTCPU_WEIGHT
 value|8
 end_define
@@ -1691,7 +1680,7 @@ begin_define
 define|#
 directive|define
 name|NICE_WEIGHT
-value|2
+value|1
 end_define
 
 begin_comment
@@ -1708,6 +1697,17 @@ end_define
 begin_comment
 comment|/* priorities per queue */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ESTCPULIM
+parameter_list|(
+name|e
+parameter_list|)
+define|\
+value|min((e), INVERSE_ESTCPU_WEIGHT * (NICE_WEIGHT * PRIO_TOTAL - PPQ) + \ 	INVERSE_ESTCPU_WEIGHT - 1)
+end_define
 
 begin_decl_stmt
 specifier|extern

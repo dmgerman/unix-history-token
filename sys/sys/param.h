@@ -385,7 +385,7 @@ begin_define
 define|#
 directive|define
 name|PUSER
-value|50
+value|48
 end_define
 
 begin_define
