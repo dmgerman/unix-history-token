@@ -2460,8 +2460,6 @@ modifier|*
 name|cop
 decl_stmt|;
 name|int
-name|buf_len
-decl_stmt|,
 name|err
 init|=
 literal|0
@@ -2471,6 +2469,9 @@ decl_stmt|,
 name|vpi
 decl_stmt|,
 name|vci
+decl_stmt|;
+name|size_t
+name|buf_len
 decl_stmt|;
 name|caddr_t
 name|buf_addr

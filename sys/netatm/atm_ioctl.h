@@ -127,7 +127,7 @@ name|caddr_t
 name|asru_arp_pbuf
 decl_stmt|;
 comment|/* Prefix buffer addr */
-name|int
+name|size_t
 name|asru_arp_plen
 decl_stmt|;
 comment|/* Prefix buffer len */
@@ -169,7 +169,7 @@ name|IFNAMSIZ
 index|]
 decl_stmt|;
 comment|/* I/f prefix name */
-name|int
+name|u_int
 name|asru_nif_cnt
 decl_stmt|;
 comment|/* Number of i/fs */
@@ -651,7 +651,7 @@ name|caddr_t
 name|air_buf_addr
 decl_stmt|;
 comment|/* Buffer for returned info */
-name|int
+name|size_t
 name|air_buf_len
 decl_stmt|;
 comment|/* Buffer length */
@@ -845,7 +845,7 @@ name|IFNAMSIZ
 index|]
 decl_stmt|;
 comment|/* Interface name */
-name|int
+name|size_t
 name|avsp_len
 decl_stmt|;
 comment|/* Length of returned 							Vendor Info block */
@@ -1056,7 +1056,7 @@ name|IFNAMSIZ
 index|]
 decl_stmt|;
 comment|/* Netif prefix */
-name|int
+name|u_int
 name|anp_nif_cnt
 decl_stmt|;
 comment|/* No. of netifs */
@@ -1166,27 +1166,27 @@ name|Atm_addr
 name|avp_dsubaddr
 decl_stmt|;
 comment|/* Subaddress of far end */
-name|long
+name|u_long
 name|avp_ipdus
 decl_stmt|;
 comment|/* PDUs received from VCC */
-name|long
+name|u_long
 name|avp_opdus
 decl_stmt|;
 comment|/* PDUs sent to VCC */
-name|long
+name|u_long
 name|avp_ibytes
 decl_stmt|;
 comment|/* Bytes received from VCC */
-name|long
+name|u_long
 name|avp_obytes
 decl_stmt|;
 comment|/* Bytes sent to VCC */
-name|long
+name|u_long
 name|avp_ierrors
 decl_stmt|;
 comment|/* Errors receiving from VCC */
-name|long
+name|u_long
 name|avp_oerrors
 decl_stmt|;
 comment|/* Errors sending to VCC */

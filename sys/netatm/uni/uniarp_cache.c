@@ -1434,7 +1434,7 @@ name|uniarp_prf
 modifier|*
 name|upp
 decl_stmt|;
-name|int
+name|u_int
 name|i
 decl_stmt|;
 comment|/* 	 * Can't be multicast or broadcast address 	 */

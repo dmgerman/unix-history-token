@@ -83,27 +83,27 @@ modifier|*
 name|vc_connvc
 decl_stmt|;
 comment|/* CM connection VCC instance */
-name|long
+name|u_long
 name|vc_ipdus
 decl_stmt|;
 comment|/* PDUs received from VCC */
-name|long
+name|u_long
 name|vc_opdus
 decl_stmt|;
 comment|/* PDUs sent to VCC */
-name|long
+name|u_long
 name|vc_ibytes
 decl_stmt|;
 comment|/* Bytes received from VCC */
-name|long
+name|u_long
 name|vc_obytes
 decl_stmt|;
 comment|/* Bytes sent to VCC */
-name|long
+name|u_long
 name|vc_ierrors
 decl_stmt|;
 comment|/* Errors receiving from VCC */
-name|long
+name|u_long
 name|vc_oerrors
 decl_stmt|;
 comment|/* Errors sending to VCC */

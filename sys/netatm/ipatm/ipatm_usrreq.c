@@ -234,11 +234,12 @@ name|in_addr
 name|ip
 decl_stmt|;
 name|int
-name|space
-decl_stmt|,
 name|err
 init|=
 literal|0
+decl_stmt|;
+name|size_t
+name|space
 decl_stmt|;
 name|struct
 name|t_atm_traffic

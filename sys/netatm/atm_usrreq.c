@@ -1062,21 +1062,17 @@ expr_stmt|;
 comment|/* 			 * Validate interface count - logical interfaces 			 * are differentiated by the atm address selector. 			 */
 if|if
 condition|(
-operator|(
 name|asp
 operator|->
 name|asr_nif_cnt
-operator|<=
+operator|==
 literal|0
-operator|)
 operator|||
-operator|(
 name|asp
 operator|->
 name|asr_nif_cnt
 operator|>
 literal|256
-operator|)
 condition|)
 name|ATM_RETERR
 argument_list|(
