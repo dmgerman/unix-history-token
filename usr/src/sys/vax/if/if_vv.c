@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_vv.c	6.2	83/12/22	*/
+comment|/*	if_vv.c	6.3	83/12/22	*/
 end_comment
 
 begin_include
@@ -227,18 +227,6 @@ end_define
 
 begin_comment
 comment|/* space for trailer */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|ifnet
-name|loif
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* loopback */
 end_comment
 
 begin_decl_stmt
@@ -2949,54 +2937,6 @@ name|sin_addr
 operator|.
 name|s_addr
 expr_stmt|;
-comment|/* Check if the loopback can be used */
-if|if
-condition|(
-operator|(
-name|dest
-operator|==
-operator|(
-operator|(
-expr|struct
-name|sockaddr_in
-operator|*
-operator|)
-operator|&
-name|ifp
-operator|->
-name|if_addr
-operator|)
-operator|->
-name|sin_addr
-operator|.
-name|s_addr
-operator|)
-operator|&&
-operator|(
-operator|(
-name|loif
-operator|.
-name|if_flags
-operator|&
-name|IFF_UP
-operator|)
-operator|!=
-literal|0
-operator|)
-condition|)
-return|return
-operator|(
-name|looutput
-argument_list|(
-operator|&
-name|loif
-argument_list|,
-name|m0
-argument_list|,
-name|dst
-argument_list|)
-operator|)
-return|;
 if|if
 condition|(
 operator|(
