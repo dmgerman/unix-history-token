@@ -98,7 +98,7 @@ name|PF_APPLETALK
 argument_list|,
 name|SOCK_DGRAM
 argument_list|,
-literal|0
+name|ATPROTO_DDP
 argument_list|)
 expr_stmt|;
 if|if
