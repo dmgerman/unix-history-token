@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	4.7	%G%	*/
+comment|/*	kern_clock.c	4.8	%G%	*/
 end_comment
 
 begin_include
@@ -119,29 +119,8 @@ value|9/10
 end_define
 
 begin_comment
-comment|/*  * Hardclock is called straight from  * the real time clock interrupt.  * We limit the work we do at real clock interrupt time to:  *	reloading clock  *	decrementing time to callouts  *	recording cpu time usage  *	modifying priority of current processing  *	arrange for soft clock interrupt  *	kernel pc profiling  *  * At softclock interrupt time we:  *	implement callouts  *	maintain date  *	lightning bolt wakeup (every second)  *	alarm clock signals  *	jab the scheduler  *  * On the vax softclock interrupts are implemented by  * software interrupts.  Note that we may have multiple softclock  * interrupts compressed into one (due to excessive interrupt load),  * but that hardclock interrupts should never be lost.  */
+comment|/*  * Hardclock is called straight from  * the real time clock interrupt.  * We limit the work we do at real clock interrupt time to:  *	reloading clock  *	decrementing time to callouts  *	recording cpu time usage  *	modifying priority of current process  *	arrange for soft clock interrupt  *	kernel pc profiling  *  * At softclock interrupt time we:  *	implement callouts  *	maintain date  *	lightning bolt wakeup (every second)  *	alarm clock signals  *	jab the scheduler  *  * On the vax softclock interrupts are implemented by  * software interrupts.  Note that we may have multiple softclock  * interrupts compressed into one (due to excessive interrupt load),  * but that hardclock interrupts should never be lost.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KPROF
-end_ifdef
-
-begin_decl_stmt
-name|unsigned
-name|short
-name|kcount
-index|[
-literal|20000
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_macro
 name|hardclock
@@ -151,6 +130,12 @@ argument_list|,
 argument|ps
 argument_list|)
 end_macro
+
+begin_decl_stmt
+name|caddr_t
+name|pc
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -528,65 +513,6 @@ block|}
 operator|++
 name|lbolt
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|KPROF
-if|if
-condition|(
-operator|!
-name|USERMODE
-argument_list|(
-name|ps
-argument_list|)
-operator|&&
-operator|!
-name|noproc
-condition|)
-block|{
-specifier|register
-name|int
-name|indx
-init|=
-operator|(
-operator|(
-name|int
-operator|)
-name|pc
-operator|&
-literal|0x7fffffff
-operator|)
-operator|/
-literal|4
-decl_stmt|;
-if|if
-condition|(
-name|indx
-operator|>=
-literal|0
-operator|&&
-name|indx
-operator|<
-literal|20000
-condition|)
-if|if
-condition|(
-operator|++
-name|kcount
-index|[
-name|indx
-index|]
-operator|==
-literal|0
-condition|)
-operator|--
-name|kcount
-index|[
-name|indx
-index|]
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 if|#
 directive|if
 name|VAX
@@ -805,6 +731,28 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * If idling and processes are waiting to swap in, 	 * check on them. 	 */
+if|if
+condition|(
+name|noproc
+operator|&&
+name|runin
+condition|)
+block|{
+name|runin
+operator|=
+literal|0
+expr_stmt|;
+name|wakeup
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|runin
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Run paging daemon and reschedule every 1/4 sec. 	 */
 if|if
 condition|(
