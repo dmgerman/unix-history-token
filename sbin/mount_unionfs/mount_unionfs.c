@@ -10,6 +10,8 @@ name|lint
 end_ifndef
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -33,15 +35,33 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_else
+unit|static char sccsid[] = "@(#)mount_union.c	8.5 (Berkeley) 3/27/94";
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)mount_union.c	8.5 (Berkeley) 3/27/94"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -484,6 +504,8 @@ condition|)
 name|err
 argument_list|(
 name|EX_OSERR
+argument_list|,
+literal|"%s"
 argument_list|,
 name|target
 argument_list|)
