@@ -124,6 +124,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/if_types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/route.h>
 end_include
 
@@ -569,6 +575,12 @@ operator|=
 name|IFF_POINTOPOINT
 operator||
 name|IFF_MULTICAST
+expr_stmt|;
+name|ifp
+operator|->
+name|if_type
+operator|=
+name|IFT_PPP
 expr_stmt|;
 name|ifp
 operator|->
