@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hpmaptype.c	4.6	83/03/01	*/
+comment|/*	hpmaptype.c	4.7	83/03/03	*/
 end_comment
 
 begin_comment
@@ -557,7 +557,7 @@ literal|48
 block|,
 literal|20
 block|,
-literal|43
+literal|48
 operator|*
 literal|20
 block|,
