@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	up.c	4.9	83/02/27	*/
+comment|/*	up.c	4.10	83/03/01	*/
 end_comment
-
-begin_define
-define|#
-directive|define
-name|UPECCDEBUG
-end_define
 
 begin_comment
 comment|/*  * UNIBUS peripheral standalone driver  * with ECC correction and bad block forwarding.  * Also supports header operation and write  * check for data and/or header.  */
@@ -136,10 +130,6 @@ name|MAXNUBA
 operator|*
 literal|8
 index|]
-init|=
-block|{
-literal|0
-block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -151,10 +141,6 @@ name|MAXNUBA
 operator|*
 literal|8
 index|]
-init|=
-block|{
-literal|0
-block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -166,6 +152,65 @@ name|upst
 index|[]
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|dkbad
+name|upbad
+index|[
+name|MAXNUBA
+operator|*
+literal|8
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* bad sector table */
+end_comment
+
+begin_decl_stmt
+name|int
+name|sectsiz
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* real sector size */
+end_comment
+
+begin_decl_stmt
+name|int
+name|updebug
+index|[
+name|MAXNUBA
+operator|*
+literal|8
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|UPF_BSEDEBUG
+value|01
+end_define
+
+begin_comment
+comment|/* debugging bad sector forwarding */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UPF_ECCDEBUG
+value|02
+end_define
+
+begin_comment
+comment|/* debugging ecc correction */
+end_comment
 
 begin_decl_stmt
 name|u_char
@@ -209,32 +254,6 @@ literal|0
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-name|struct
-name|dkbad
-name|upbad
-index|[
-name|MAXNUBA
-operator|*
-literal|8
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* bad sector table */
-end_comment
-
-begin_decl_stmt
-name|int
-name|sectsiz
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* real sector size */
-end_comment
 
 begin_expr_stmt
 name|upopen
@@ -393,7 +412,7 @@ argument_list|(
 literal|"up bad unit"
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Read in the bad sector table: 		 *	copy the contents of the io structure 		 *	to tio for use during the bb pointer 		 *	read operation. 		 */
+comment|/* 		 * Read in the bad sector table. 		 */
 name|tio
 operator|=
 operator|*
@@ -687,6 +706,8 @@ operator|->
 name|upcs2
 operator|=
 name|unit
+operator|%
+literal|8
 expr_stmt|;
 if|if
 condition|(
@@ -840,11 +861,20 @@ name|sectsiz
 expr_stmt|;
 if|if
 condition|(
-name|doprintf
+name|updebug
+index|[
+name|unit
+index|]
+operator|&
+operator|(
+name|UPF_ECCDEBUG
+operator||
+name|UPF_BSEDEBUG
+operator|)
 condition|)
 name|printf
 argument_list|(
-literal|"upwc %d o %d i_bn %d bn %d\n"
+literal|"upwc=%d o=%d i_bn=%d bn=%d\n"
 argument_list|,
 name|upaddr
 operator|->
@@ -958,12 +988,23 @@ name|i_cc
 operator|)
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|LOGALLERRS
+if|if
+condition|(
+name|updebug
+index|[
+name|unit
+index|]
+operator|&
+operator|(
+name|UPF_ECCDEBUG
+operator||
+name|UPF_BSEDEBUG
+operator|)
+condition|)
+block|{
 name|printf
 argument_list|(
-literal|"uper: (c,t,s)=(%d,%d,%d) cs2=%b er1=%b er2=%b wc=%x\n"
+literal|"up error: (cyl,trk,sec)=(%d,%d,%d) "
 argument_list|,
 name|upaddr
 operator|->
@@ -984,6 +1025,11 @@ literal|0x1f
 operator|-
 literal|1
 operator|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"cs2=%b er1=%b er2=%b wc=%x\n"
 argument_list|,
 name|upaddr
 operator|->
@@ -1009,8 +1055,7 @@ operator|->
 name|upwc
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+block|}
 name|waitdry
 operator|=
 literal|0
@@ -1539,7 +1584,7 @@ goto|goto
 name|restart
 goto|;
 block|}
-comment|/* 	 * Release unibus  	 */
+comment|/* 	 * Release UNIBUS  	 */
 name|ubafree
 argument_list|(
 name|io
@@ -1585,6 +1630,15 @@ end_decl_stmt
 begin_block
 block|{
 specifier|register
+name|i
+operator|,
+name|unit
+operator|=
+name|io
+operator|->
+name|i_unit
+expr_stmt|;
+specifier|register
 name|struct
 name|updevice
 modifier|*
@@ -1597,9 +1651,7 @@ operator|*
 operator|)
 name|ubamem
 argument_list|(
-name|io
-operator|->
-name|i_unit
+name|unit
 argument_list|,
 name|ubastd
 index|[
@@ -1612,10 +1664,6 @@ name|struct
 name|st
 modifier|*
 name|st
-decl_stmt|;
-specifier|register
-name|int
-name|i
 decl_stmt|;
 name|caddr_t
 name|addr
@@ -1664,12 +1712,18 @@ operator|)
 operator|/
 name|sectsiz
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|UPECCDEBUG
+if|if
+condition|(
+name|updebug
+index|[
+name|unit
+index|]
+operator|&
+name|UPF_ECCDEBUG
+condition|)
 name|printf
 argument_list|(
-literal|"npf %d mask 0x%x pos %d wc 0x%x\n"
+literal|"npf=%d mask=0x%x pos=%d wc=0x%x\n"
 argument_list|,
 name|npf
 argument_list|,
@@ -1685,8 +1739,6 @@ operator|-
 name|twc
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|bn
 operator|=
 name|io
@@ -1702,9 +1754,7 @@ name|upst
 index|[
 name|up_type
 index|[
-name|io
-operator|->
-name|i_unit
+name|unit
 index|]
 index|]
 expr_stmt|;
@@ -1769,9 +1819,7 @@ name|printf
 argument_list|(
 literal|"up%d: soft ecc sn%d\n"
 argument_list|,
-name|io
-operator|->
-name|i_unit
+name|unit
 argument_list|,
 name|bn
 argument_list|)
@@ -1856,25 +1904,6 @@ operator|)
 operator|+
 name|o
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|UPECCDEBUG
-name|printf
-argument_list|(
-literal|"addr %x old: %x "
-argument_list|,
-name|addr
-argument_list|,
-operator|(
-operator|*
-name|addr
-operator|&
-literal|0xff
-operator|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 			 * No data transfer occurs with a write check, 			 * so don't correct the resident copy of data. 			 */
 if|if
 condition|(
@@ -1892,21 +1921,21 @@ operator|)
 operator|==
 literal|0
 condition|)
-operator|*
-name|addr
-operator|^=
-operator|(
-name|mask
-operator|<<
-name|bit
-operator|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|UPECCDEBUG
+block|{
+if|if
+condition|(
+name|updebug
+index|[
+name|unit
+index|]
+operator|&
+name|UPF_ECCDEBUG
+condition|)
 name|printf
 argument_list|(
-literal|"new: %x\n"
+literal|"addr=0x%x old=0x%x "
+argument_list|,
+name|addr
 argument_list|,
 operator|(
 operator|*
@@ -1916,8 +1945,37 @@ literal|0xff
 operator|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+operator|*
+name|addr
+operator|^=
+operator|(
+name|mask
+operator|<<
+name|bit
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|updebug
+index|[
+name|unit
+index|]
+operator|&
+name|UPF_ECCDEBUG
+condition|)
+name|printf
+argument_list|(
+literal|"new=0x%x\n"
+argument_list|,
+operator|(
+operator|*
+name|addr
+operator|&
+literal|0xff
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
 name|o
 operator|++
 operator|,
@@ -1981,9 +2039,7 @@ argument_list|(
 operator|&
 name|upbad
 index|[
-name|io
-operator|->
-name|i_unit
+name|unit
 index|]
 argument_list|,
 name|cn
@@ -2041,18 +2097,24 @@ name|short
 argument_list|)
 operator|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|UPECCDEBUG
+if|if
+condition|(
+name|updebug
+index|[
+name|unit
+index|]
+operator|&
+name|UPF_BSEDEBUG
+condition|)
 name|printf
 argument_list|(
-literal|"revector to block %d\n"
+literal|"revector sn %d to %d\n"
+argument_list|,
+name|sn
 argument_list|,
 name|bbn
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 	 * Clear the drive& read the replacement 		 * sector.  If this is in the middle of a 		 * transfer, then set up the controller 		 * registers in a normal fashion.  	 	 * The UNIBUS address need not be changed. 	 	 */
 while|while
 condition|(
@@ -2432,6 +2494,15 @@ end_decl_stmt
 
 begin_block
 block|{
+name|int
+name|unit
+init|=
+name|io
+operator|->
+name|i_unit
+decl_stmt|,
+name|flag
+decl_stmt|;
 name|struct
 name|st
 modifier|*
@@ -2442,9 +2513,7 @@ name|upst
 index|[
 name|up_type
 index|[
-name|io
-operator|->
-name|i_unit
+name|unit
 index|]
 index|]
 decl_stmt|,
@@ -2456,6 +2525,43 @@ condition|(
 name|cmd
 condition|)
 block|{
+case|case
+name|SAIODEBUG
+case|:
+name|flag
+operator|=
+operator|(
+name|int
+operator|)
+name|arg
+expr_stmt|;
+if|if
+condition|(
+name|flag
+operator|>
+literal|0
+condition|)
+name|updebug
+index|[
+name|unit
+index|]
+operator||=
+name|flag
+expr_stmt|;
+else|else
+name|updebug
+index|[
+name|unit
+index|]
+operator|&=
+operator|~
+name|flag
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 case|case
 name|SAIODEVDATA
 case|:
