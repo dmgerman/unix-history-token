@@ -24,6 +24,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_npx.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -1438,6 +1444,21 @@ operator|&
 name|control
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|FPU_ERROR_BROKEN
+comment|/* 			 * FPU error signal doesn't work on some CPU 			 * accelerator board. 			 */
+name|npx_ex16
+operator|=
+literal|1
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+endif|#
+directive|endif
 name|npx_traps_while_probing
 operator|=
 name|npx_intrs_while_probing
