@@ -753,13 +753,7 @@ expr_stmt|;
 comment|/* some options make no sense when creating directories */
 if|if
 condition|(
-operator|(
-name|safecopy
-operator|||
-name|docompare
-operator|||
 name|dostrip
-operator|)
 operator|&&
 name|dodir
 condition|)
