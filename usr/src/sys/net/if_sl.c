@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)if_sl.c	5.7 (Berkeley) %G% */
+comment|/*	@(#)if_sl.c	5.8 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -122,13 +122,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../netinet/ip.h"
+file|"../netinet/in_var.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"../netinet/ip_var.h"
+file|"../netinet/ip.h"
 end_include
 
 begin_endif
