@@ -5940,6 +5940,8 @@ condition|)
 continue|continue;
 if|if
 condition|(
+operator|(
+operator|(
 name|f
 operator|->
 name|fw_tcpf
@@ -5947,6 +5949,16 @@ operator|!=
 name|f
 operator|->
 name|fw_tcpnf
+operator|)
+operator|||
+operator|(
+name|f
+operator|->
+name|fw_ipflg
+operator|&
+name|IP_FW_IF_TCPEST
+operator|)
+operator|)
 operator|&&
 operator|!
 name|tcpflg_match
