@@ -188,12 +188,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/vnode.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/usb/usb.h>
 end_include
 
@@ -3829,7 +3823,7 @@ if|if
 condition|(
 name|flag
 operator|&
-name|IO_NDELAY
+name|O_NONBLOCK
 condition|)
 block|{
 name|splx
@@ -4193,7 +4187,7 @@ if|if
 condition|(
 name|flag
 operator|&
-name|IO_NDELAY
+name|O_NONBLOCK
 condition|)
 block|{
 name|splx
