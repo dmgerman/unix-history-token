@@ -76,6 +76,24 @@ directive|include
 file|<string.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SEEK_SET
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SEEK_SET
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Local stuff. */
 end_comment
@@ -429,7 +447,7 @@ return|return;
 block|}
 endif|#
 directive|endif
-comment|/*      * Use one unbuffered stdio stream for writing to and for reading from      * the RFC931 etc. server. This is done because of a bug in the SunOS      * 4.1.x stdio library. The bug may live in other stdio implementations,      * too. When we use a single, buffered, bidirectional stdio stream ("r+"      * or "w+" mode) we read our own output. Such behaviour would make sense      * with resources that support random-access operations, but not with      * sockets.      */
+comment|/*      * If we use a single, buffered, bidirectional stdio stream ("r+" or      * "w+" mode) we may read our own output. Such behaviour would make sense      * with resources that support random-access operations, but not with      * sockets. ANSI C suggests several functions which can be called when      * you want to change IO direction, fseek seems the most portable.      */
 ifdef|#
 directive|ifdef
 name|INET6
@@ -475,17 +493,6 @@ condition|)
 block|{
 endif|#
 directive|endif
-name|setbuf
-argument_list|(
-name|fp
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Set up a timer so we won't get stuck while waiting for the server. 	 */
 if|if
 condition|(
@@ -802,6 +809,15 @@ directive|endif
 name|fflush
 argument_list|(
 name|fp
+argument_list|)
+expr_stmt|;
+name|fseek
+argument_list|(
+name|fp
+argument_list|,
+literal|0
+argument_list|,
+name|SEEK_SET
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Read response from server. Use fgets()/sscanf() so we can 		 * work around System V stdio libraries that incorrectly 		 * assume EOF when a read from a socket returns less than 		 * requested. 		 */
