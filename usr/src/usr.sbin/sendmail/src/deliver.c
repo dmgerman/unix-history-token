@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.122 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.123 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2375,6 +2375,11 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+name|xstart
+operator|=
+name|curtime
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|tTd
@@ -2861,11 +2866,6 @@ expr_stmt|;
 name|ctladdr
 operator|=
 name|NULL
-expr_stmt|;
-name|xstart
-operator|=
-name|curtime
-argument_list|()
 expr_stmt|;
 name|firstsig
 operator|=
