@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	5.21 (Berkeley) %G%"
+literal|"@(#)conf.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -300,6 +300,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* max open files; reset in 4.2bsd */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|la
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* load average */
 end_comment
 
 begin_escape
