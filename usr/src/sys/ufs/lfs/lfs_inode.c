@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_inode.c	7.68 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_inode.c	7.69 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -566,6 +566,12 @@ specifier|register
 name|int
 name|cnt
 decl_stmt|;
+specifier|register
+name|struct
+name|dinode
+modifier|*
+name|ldip
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|VERBOSE
@@ -586,16 +592,26 @@ name|INOPB
 argument_list|(
 name|fs
 argument_list|)
+operator|,
+name|ldip
+operator|=
+name|dip
+operator|+
+operator|(
+name|cnt
+operator|-
+literal|1
+operator|)
 init|;
 name|cnt
 operator|--
 condition|;
-operator|++
-name|dip
+operator|--
+name|ldip
 control|)
 if|if
 condition|(
-name|dip
+name|ldip
 operator|->
 name|di_inum
 operator|==
@@ -603,7 +619,7 @@ name|ino
 condition|)
 return|return
 operator|(
-name|dip
+name|ldip
 operator|)
 return|;
 name|panic

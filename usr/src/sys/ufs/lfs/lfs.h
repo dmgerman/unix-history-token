@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	7.13 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs.h	7.14 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -75,6 +75,11 @@ directive|define
 name|SEGUSE_SUPERBLOCK
 value|0x4
 comment|/* segment contains a superblock */
+define|#
+directive|define
+name|SEGUSE_LIVELOG
+value|0x8
+comment|/* segment has not been checkpointed */
 name|u_long
 name|su_flags
 decl_stmt|;
@@ -217,6 +222,10 @@ name|daddr_t
 name|lfs_offset
 decl_stmt|;
 comment|/* offset in curseg for next partial */
+name|daddr_t
+name|lfs_lastpseg
+decl_stmt|;
+comment|/* address of last partial written */
 name|u_long
 name|lfs_tstamp
 decl_stmt|;
@@ -337,6 +346,18 @@ name|u_long
 name|lfs_iocount
 decl_stmt|;
 comment|/* number of ios pending */
+name|u_long
+name|lfs_writer
+decl_stmt|;
+comment|/* don't allow any dirops to start */
+name|u_long
+name|lfs_dirops
+decl_stmt|;
+comment|/* count of active directory ops */
+name|u_long
+name|lfs_doifile
+decl_stmt|;
+comment|/* Write ifile blocks on next write */
 name|u_char
 name|lfs_fmod
 decl_stmt|;
@@ -615,14 +636,32 @@ name|u_long
 name|ss_create
 decl_stmt|;
 comment|/* creation time stamp */
-name|u_long
+name|u_short
 name|ss_nfinfo
 decl_stmt|;
 comment|/* number of file info structures */
-name|u_long
+name|u_short
 name|ss_ninos
 decl_stmt|;
 comment|/* number of inodes in summary */
+define|#
+directive|define
+name|SS_DIROP
+value|0x01
+comment|/* segment begins a dirop */
+define|#
+directive|define
+name|SS_CONT
+value|0x02
+comment|/* more partials to finish this write*/
+name|u_short
+name|ss_flags
+decl_stmt|;
+comment|/* used for directory operations */
+name|u_short
+name|ss_pad
+decl_stmt|;
+comment|/* extra space */
 comment|/* FINFO's and inode daddr's... */
 block|}
 struct|;

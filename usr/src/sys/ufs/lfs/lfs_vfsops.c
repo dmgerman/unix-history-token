@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	7.74 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	7.75 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1263,6 +1263,37 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/* Set up the ifile flags */
+end_comment
+
+begin_expr_stmt
+name|fs
+operator|->
+name|lfs_doifile
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|fs
+operator|->
+name|lfs_writer
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|fs
+operator|->
+name|lfs_dirops
+operator|=
+literal|0
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* Set the file system readonly/modify bits. */
 end_comment
 
@@ -1675,6 +1706,20 @@ operator||=
 name|FORCECLOSE
 expr_stmt|;
 block|}
+comment|/* 	 * FFS does a mntflushbuf here.  Our analagous operation 	 * would be a segment write, but that has already been 	 * done in the vfs code. 	 */
+if|if
+condition|(
+name|lfs_mntinvalbuf
+argument_list|(
+name|mp
+argument_list|)
+condition|)
+return|return
+operator|(
+name|EBUSY
+operator|)
+return|;
+comment|/* Need to checkpoint again to pick up any new ifile changes */
 if|if
 condition|(
 name|error
@@ -1691,42 +1736,44 @@ operator|(
 name|error
 operator|)
 return|;
-name|ndirty
-operator|=
-name|lfs_umountdebug
-argument_list|(
-name|mp
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"lfs_umountdebug: returned %d dirty\n"
-argument_list|,
-name|ndirty
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-if|if
-condition|(
-name|mntinvalbuf
-argument_list|(
-name|mp
-argument_list|)
-condition|)
-return|return
-operator|(
-name|EBUSY
-operator|)
-return|;
 name|ump
 operator|=
 name|VFSTOUFS
 argument_list|(
 name|mp
+argument_list|)
+expr_stmt|;
+name|fs
+operator|=
+name|ump
+operator|->
+name|um_lfs
+expr_stmt|;
+if|if
+condition|(
+name|fs
+operator|->
+name|lfs_ivnode
+operator|->
+name|v_dirtyblkhd
+condition|)
+name|panic
+argument_list|(
+literal|"Still have dirty blocks on ifile vnode\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|lfs_vinvalbuf
+argument_list|(
+name|fs
+operator|->
+name|lfs_ivnode
+argument_list|)
+condition|)
+name|panic
+argument_list|(
+literal|"lfs_vinvalbuf failed on ifile\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1754,7 +1801,9 @@ name|vflush
 argument_list|(
 name|mp
 argument_list|,
-name|NULLVP
+name|fs
+operator|->
+name|lfs_ivnode
 argument_list|,
 name|SKIPSYSTEM
 operator||
@@ -1806,6 +1855,13 @@ comment|/* 		 * Here we fall through to vflush again to ensure 		 * that we have
 block|}
 endif|#
 directive|endif
+name|vrele
+argument_list|(
+name|fs
+operator|->
+name|lfs_ivnode
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|error
@@ -1824,25 +1880,12 @@ operator|(
 name|error
 operator|)
 return|;
-name|fs
-operator|=
-name|ump
-operator|->
-name|um_lfs
-expr_stmt|;
 name|ronly
 operator|=
 operator|!
 name|fs
 operator|->
 name|lfs_ronly
-expr_stmt|;
-name|vrele
-argument_list|(
-name|fs
-operator|->
-name|lfs_ivnode
-argument_list|)
 expr_stmt|;
 operator|*
 name|Get
