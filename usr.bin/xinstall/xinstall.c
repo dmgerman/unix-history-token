@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: xinstall.c,v 1.26 1997/10/27 22:53:33 ache Exp $"
+literal|"$Id: xinstall.c,v 1.27 1997/10/28 14:20:10 ache Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -3341,6 +3341,10 @@ condition|)
 return|return
 literal|0
 return|;
+comment|/* NetBSD MOUNT_XXX defines are strings, but doesn't have a MOUNT_NONE. */
+ifdef|#
+directive|ifdef
+name|MOUNT_NONE
 switch|switch
 condition|(
 name|stfs
@@ -3360,6 +3364,37 @@ return|return
 literal|1
 return|;
 block|}
+else|#
+directive|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|stfs
+operator|.
+name|f_fstypename
+argument_list|,
+name|MOUNT_UFS
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strcmp
+argument_list|(
+name|stfs
+operator|.
+name|f_fstypename
+argument_list|,
+name|MOUNT_CD9660
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+literal|1
+return|;
+endif|#
+directive|endif
 return|return
 literal|0
 return|;
