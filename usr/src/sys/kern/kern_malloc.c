@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_malloc.c	7.32 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)kern_malloc.c	7.33 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -207,14 +207,11 @@ block|{
 name|long
 name|spare0
 decl_stmt|;
-name|long
-name|spare1
-decl_stmt|;
 name|short
 name|type
 decl_stmt|;
-name|short
-name|spare2
+name|long
+name|spare1
 decl_stmt|;
 name|caddr_t
 name|next
