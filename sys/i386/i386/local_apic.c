@@ -132,8 +132,28 @@ argument_list|(
 name|APIC_IO_INTS
 operator|+
 name|APIC_NUM_IOINTS
-operator|<=
+operator|==
+name|APIC_TIMER_INT
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+name|APIC_TIMER_INT
+operator|<
 name|APIC_LOCAL_INTS
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+name|APIC_LOCAL_INTS
+operator|==
+literal|240
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1095,23 +1115,11 @@ name|lvt_lint1
 argument_list|)
 expr_stmt|;
 comment|/* XXX: more LVT entries */
-comment|/* Clear the TPR. */
-name|value
-operator|=
-name|lapic
-operator|->
-name|tpr
-expr_stmt|;
-name|value
-operator|&=
-operator|~
-name|APIC_TPR_PRIO
-expr_stmt|;
-name|lapic
-operator|->
-name|tpr
-operator|=
-name|value
+comment|/* Initialize the TPR to allow all interrupts. */
+name|lapic_set_tpr
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 comment|/* Use the cluster model for logical IDs. */
 name|value
@@ -2084,6 +2092,56 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Adjust the TPR of the current CPU so that it blocks all interrupts below  * the passed in vector.  */
+end_comment
+
+begin_function
+name|void
+name|lapic_set_tpr
+parameter_list|(
+name|u_int
+name|vector
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|CHEAP_TPR
+name|lapic
+operator|->
+name|tpr
+operator|=
+name|vector
+expr_stmt|;
+else|#
+directive|else
+name|u_int32_t
+name|tpr
+decl_stmt|;
+name|tpr
+operator|=
+name|lapic
+operator|->
+name|tpr
+operator|&
+operator|~
+name|APIC_TPR_PRIO
+expr_stmt|;
+name|tpr
+operator||=
+name|vector
+expr_stmt|;
+name|lapic
+operator|->
+name|tpr
+operator|=
+name|tpr
+expr_stmt|;
+endif|#
+directive|endif
+block|}
+end_function
+
 begin_function
 name|void
 name|lapic_eoi
@@ -2683,7 +2741,7 @@ name|SMP
 end_ifdef
 
 begin_comment
-comment|/*  * Inter Processor Interrupt functions.  The lapic_ipi_*() functions are  * private the sys/i386 code.  The public interface for the rest of the  * kernel is defined in mp_machdep.c.  */
+comment|/*  * Inter Processor Interrupt functions.  The lapic_ipi_*() functions are  * private to the sys/i386 code.  The public interface for the rest of the  * kernel is defined in mp_machdep.c.  */
 end_comment
 
 begin_function
@@ -3078,7 +3136,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|needsattention
-comment|/* 		 * XXX FIXME: 		 * 		 * The above function waits for the message to actually be 		 * delivered.  It breaks out after an arbitrary timeout 		 * since the message should eventually be delivered (at 		 * least in theory) and that if it wasn't we would catch 		 * the failure with the check above when the next IPI is 		 * sent. 		 * 		 * We could skiip this wait entirely, EXCEPT it probably 		 * protects us from other routines that assume that the 		 * message was delivered and acted upon when this function 		 * returns. 		 */
+comment|/* 		 * XXX FIXME: 		 * 		 * The above function waits for the message to actually be 		 * delivered.  It breaks out after an arbitrary timeout 		 * since the message should eventually be delivered (at 		 * least in theory) and that if it wasn't we would catch 		 * the failure with the check above when the next IPI is 		 * sent. 		 * 		 * We could skip this wait entirely, EXCEPT it probably 		 * protects us from other routines that assume that the 		 * message was delivered and acted upon when this function 		 * returns. 		 */
 name|printf
 argument_list|(
 literal|"APIC: IPI might be stuck\n"
