@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_sig.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kern_sig.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3031,6 +3031,58 @@ goto|goto
 name|out
 goto|;
 block|}
+ifdef|#
+directive|ifdef
+name|MMAP
+block|{
+specifier|register
+name|int
+name|fd
+decl_stmt|;
+comment|/* unmasp funky devices in the user's address space */
+for|for
+control|(
+name|fd
+operator|=
+literal|0
+init|;
+name|fd
+operator|<
+name|u
+operator|.
+name|u_lastfile
+condition|;
+name|fd
+operator|++
+control|)
+if|if
+condition|(
+name|u
+operator|.
+name|u_ofile
+index|[
+name|fd
+index|]
+operator|&&
+operator|(
+name|u
+operator|.
+name|u_pofile
+index|[
+name|fd
+index|]
+operator|&
+name|UF_MAPPED
+operator|)
+condition|)
+name|munmapfd
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|itrunc
 argument_list|(
 name|ip
