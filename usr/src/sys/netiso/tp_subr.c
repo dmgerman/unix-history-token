@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_subr.c	7.16 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)tp_subr.c	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -150,6 +150,13 @@ name|int
 name|tprexmtthresh
 init|=
 literal|3
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ticks
 decl_stmt|;
 end_decl_stmt
 
@@ -308,20 +315,18 @@ name|tpcb
 decl_stmt|;
 block|{
 name|int
-name|new
-decl_stmt|,
 name|old
 init|=
 name|tpcb
 operator|->
-name|tp_dt_ticks
+name|tp_rtt
 decl_stmt|;
 name|int
 name|delta
 decl_stmt|,
 name|elapsed
 init|=
-name|tick
+name|ticks
 operator|-
 name|tpcb
 operator|->
@@ -458,26 +463,34 @@ literal|128
 comment|/* XXX */
 argument_list|)
 expr_stmt|;
-name|IFTRACE
+name|IFDEBUG
 argument_list|(
 argument|D_RTT
 argument_list|)
-name|tptraceTPCB
+name|printf
 argument_list|(
-name|TPPTmisc
+literal|"%s tpcb 0x%x, elapsed %d, delta %d, rtt %d, rtv %d, old %d\n"
 argument_list|,
-literal|"oldticks ,rtv, rtt, newticks"
+literal|"tp_rtt_rtv:"
+argument_list|,
+name|tpcb
+argument_list|,
+name|elapsed
+argument_list|,
+name|delta
+argument_list|,
+name|tpcb
+operator|->
+name|tp_rtt
+argument_list|,
+name|tpcb
+operator|->
+name|tp_rtv
 argument_list|,
 name|old
-argument_list|,
-name|rtv
-argument_list|,
-name|rtt
-argument_list|,
-name|new
 argument_list|)
 expr_stmt|;
-name|ENDTRACE
+name|ENDDEBUG
 name|tpcb
 operator|->
 name|tp_rxtcur
@@ -750,6 +763,28 @@ argument_list|)
 operator|/
 literal|2
 decl_stmt|;
+name|IFDEBUG
+argument_list|(
+argument|D_ACKRECV
+argument_list|)
+name|printf
+argument_list|(
+literal|"%s tpcb 0x%x seq 0x%x rttseq 0x%x onxt 0x%x\n"
+argument_list|,
+literal|"goodack dupacks:"
+argument_list|,
+name|tpcb
+argument_list|,
+name|seq
+argument_list|,
+name|tpcb
+operator|->
+name|tp_rttseq
+argument_list|,
+name|onxt
+argument_list|)
+expr_stmt|;
+name|ENDDEBUG
 if|if
 condition|(
 name|win
@@ -1503,7 +1538,7 @@ name|TP_PERF_MEAS
 name|int
 name|send_start_time
 init|=
-name|tick
+name|ticks
 decl_stmt|;
 name|SeqNum
 name|oldnxt
@@ -1981,7 +2016,7 @@ name|tpcb
 operator|->
 name|tp_rttemit
 operator|=
-name|tick
+name|ticks
 expr_stmt|;
 name|tpcb
 operator|->
@@ -2090,7 +2125,7 @@ decl_stmt|;
 name|int
 name|elapsed
 init|=
-name|tick
+name|ticks
 operator|-
 name|send_start_time
 decl_stmt|,
