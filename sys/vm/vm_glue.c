@@ -713,6 +713,8 @@ argument_list|,
 name|VM_ALLOC_NORMAL
 operator||
 name|VM_ALLOC_RETRY
+operator||
+name|VM_ALLOC_WIRED
 argument_list|)
 expr_stmt|;
 name|ma
@@ -721,17 +723,6 @@ name|i
 index|]
 operator|=
 name|m
-expr_stmt|;
-comment|/* 		 * Wire the page. 		 */
-name|m
-operator|->
-name|wire_count
-operator|++
-expr_stmt|;
-name|cnt
-operator|.
-name|v_wire_count
-operator|++
 expr_stmt|;
 name|vm_page_wakeup
 argument_list|(
