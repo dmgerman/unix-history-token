@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)mba.c	6.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)mba.c	6.6 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -179,87 +179,6 @@ operator|==
 name|NULL
 condition|)
 return|return;
-comment|/* 	 * Make sure the drive is still there before starting it up. 	 */
-if|if
-condition|(
-operator|(
-name|mi
-operator|->
-name|mi_drv
-operator|->
-name|mbd_dt
-operator|&
-name|MBDT_TYPE
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s%d: nonexistent\n"
-argument_list|,
-name|mi
-operator|->
-name|mi_driver
-operator|->
-name|md_dname
-argument_list|,
-name|mbunit
-argument_list|(
-name|bp
-operator|->
-name|b_dev
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|mi
-operator|->
-name|mi_alive
-operator|=
-literal|0
-expr_stmt|;
-name|mi
-operator|->
-name|mi_tab
-operator|.
-name|b_actf
-operator|=
-name|bp
-operator|->
-name|av_forw
-expr_stmt|;
-name|mi
-operator|->
-name|mi_tab
-operator|.
-name|b_active
-operator|=
-literal|0
-expr_stmt|;
-name|mi
-operator|->
-name|mi_tab
-operator|.
-name|b_errcnt
-operator|=
-literal|0
-expr_stmt|;
-name|bp
-operator|->
-name|b_flags
-operator||=
-name|B_ERROR
-expr_stmt|;
-name|iodone
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
-goto|goto
-name|loop
-goto|;
-block|}
 comment|/* 	 * Let the drivers unit start routine have at it 	 * and then process the request further, per its instructions. 	 */
 switch|switch
 condition|(
@@ -1147,9 +1066,30 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|MBD_REPOSITION
+case|:
+comment|/* driver started repositioning */
+comment|/* 			 * Drive is repositioning, not doing data transfer. 			 * Free controller, but don't have to restart drive. 			 */
+name|mhp
+operator|->
+name|mh_active
+operator|=
+literal|0
+expr_stmt|;
+name|mhp
+operator|->
+name|mh_actf
+operator|=
+name|mi
+operator|->
+name|mi_forw
+expr_stmt|;
+break|break;
+case|case
 name|MBD_RESTARTED
 case|:
-comment|/* driver restarted op (ecc, e.g.) 			/* 			 * Note that mhp->mh_active is still on. 			 */
+comment|/* driver restarted op (ecc, e.g.) */
+comment|/* 			 * Note that mhp->mh_active is still on. 			 */
 break|break;
 default|default:
 name|panic
