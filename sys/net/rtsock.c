@@ -5340,7 +5340,15 @@ literal|3
 condition|)
 return|return
 operator|(
-name|EINVAL
+operator|(
+name|namelen
+operator|<
+literal|3
+operator|)
+condition|?
+name|EISDIR
+else|:
+name|ENOTDIR
 operator|)
 return|;
 name|af
