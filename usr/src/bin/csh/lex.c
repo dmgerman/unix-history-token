@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lex.c	5.26 (Berkeley) %G%"
+literal|"@(#)lex.c	5.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7370,13 +7370,9 @@ name|a_seek
 expr_stmt|;
 name|evalp
 operator|=
-operator|(
-name|Char
-operator|*
-operator|)
 name|l
 operator|->
-name|f_seek
+name|c_seek
 expr_stmt|;
 return|return;
 case|case
@@ -7390,13 +7386,9 @@ name|a_seek
 expr_stmt|;
 name|alvecp
 operator|=
-operator|(
-name|Char
-operator|*
-operator|)
 name|l
 operator|->
-name|f_seek
+name|c_seek
 expr_stmt|;
 return|return;
 case|case
@@ -7461,11 +7453,8 @@ name|evalvec
 expr_stmt|;
 name|l
 operator|->
-name|f_seek
+name|c_seek
 operator|=
-operator|(
-name|off_t
-operator|)
 name|evalp
 expr_stmt|;
 return|return;
@@ -7480,11 +7469,8 @@ name|alvec
 expr_stmt|;
 name|l
 operator|->
-name|f_seek
+name|c_seek
 operator|=
-operator|(
-name|off_t
-operator|)
 name|alvecp
 expr_stmt|;
 return|return;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1980, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)csh.h	5.23 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1980, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)csh.h	5.24 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1029,9 +1029,26 @@ directive|define
 name|E_SEEK
 value|2
 comment|/* Eval seek */
+union|union
+block|{
 name|off_t
-name|f_seek
+name|_f_seek
 decl_stmt|;
+name|Char
+modifier|*
+name|_c_seek
+decl_stmt|;
+block|}
+name|fc
+union|;
+define|#
+directive|define
+name|f_seek
+value|fc._f_seek
+define|#
+directive|define
+name|c_seek
+value|fc._c_seek
 name|Char
 modifier|*
 modifier|*
