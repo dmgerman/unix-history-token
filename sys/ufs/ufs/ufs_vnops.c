@@ -4814,6 +4814,11 @@ literal|0
 decl_stmt|,
 name|ioflag
 decl_stmt|;
+name|int
+name|in_rename_flag
+init|=
+literal|0
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
@@ -5333,6 +5338,11 @@ operator|->
 name|i_flag
 operator||=
 name|IN_RENAME
+expr_stmt|;
+comment|/* note: only the routine that sets IN_RENAME can clear it */
+name|in_rename_flag
+operator|=
+literal|1
 expr_stmt|;
 name|oldparent
 operator|=
@@ -6350,6 +6360,10 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|in_rename_flag
+condition|)
 name|xp
 operator|->
 name|i_flag
@@ -6422,6 +6436,8 @@ label|:
 if|if
 condition|(
 name|doingdirectory
+operator|&&
+name|in_rename_flag
 condition|)
 name|ip
 operator|->
@@ -6460,6 +6476,10 @@ name|i_flag
 operator||=
 name|IN_CHANGE
 expr_stmt|;
+if|if
+condition|(
+name|in_rename_flag
+condition|)
 name|ip
 operator|->
 name|i_flag
@@ -6467,6 +6487,7 @@ operator|&=
 operator|~
 name|IN_RENAME
 expr_stmt|;
+comment|/* XXX huh?  Why again? */
 if|if
 condition|(
 name|DOINGSOFTDEP
