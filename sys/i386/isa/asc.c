@@ -443,6 +443,7 @@ comment|/***  *** THE GEMOMETRY TABLE  ***/
 end_comment
 
 begin_struct
+specifier|static
 specifier|const
 struct|struct
 name|asc_geom

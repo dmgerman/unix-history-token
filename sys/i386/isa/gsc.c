@@ -317,6 +317,7 @@ value|7
 end_define
 
 begin_struct
+specifier|static
 specifier|const
 struct|struct
 name|gsc_geom
