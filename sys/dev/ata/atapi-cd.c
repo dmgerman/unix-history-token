@@ -246,7 +246,6 @@ parameter_list|(
 name|struct
 name|ata_device
 modifier|*
-name|atadev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -259,7 +258,6 @@ parameter_list|(
 name|struct
 name|ata_device
 modifier|*
-name|atadev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -744,7 +742,6 @@ parameter_list|(
 name|struct
 name|ata_device
 modifier|*
-name|atadev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -757,12 +754,10 @@ parameter_list|(
 name|struct
 name|ata_device
 modifier|*
-name|atadev
 parameter_list|,
 name|struct
 name|atapi_sense
 modifier|*
-name|sense
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4587,8 +4582,8 @@ argument_list|,
 name|M_ACD
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 name|CDIOREADTOCENTRY
 case|:
@@ -5154,8 +5149,8 @@ operator|->
 name|data_len
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 name|CDIOCPLAYMSF
 case|:
@@ -5209,8 +5204,8 @@ name|end_f
 argument_list|)
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 name|CDIOCPLAYBLOCKS
 case|:
@@ -5246,8 +5241,8 @@ operator|->
 name|len
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 name|CDIOCPLAYTRACKS
 case|:
@@ -5442,8 +5437,8 @@ name|lba
 argument_list|)
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 name|CDIOCGETVOL
 case|:
@@ -5578,8 +5573,8 @@ index|]
 operator|.
 name|volume
 expr_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 name|CDIOCSETVOL
 case|:
@@ -5843,8 +5838,8 @@ name|au
 argument_list|)
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 name|CDIOCSETPATCH
 case|:
@@ -5896,8 +5891,8 @@ literal|3
 index|]
 argument_list|)
 expr_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 name|CDIOCSETMONO
 case|:

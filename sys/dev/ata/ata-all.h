@@ -1159,6 +1159,7 @@ parameter_list|(
 name|struct
 name|ata_request
 modifier|*
+name|request
 parameter_list|)
 function_decl|;
 name|int
@@ -1251,6 +1252,7 @@ parameter_list|(
 name|struct
 name|ata_device
 modifier|*
+name|atadev
 parameter_list|)
 function_decl|;
 name|void
@@ -1262,6 +1264,7 @@ parameter_list|(
 name|struct
 name|ata_device
 modifier|*
+name|atadev
 parameter_list|)
 function_decl|;
 name|void
@@ -1273,6 +1276,7 @@ parameter_list|(
 name|struct
 name|ata_device
 modifier|*
+name|atadev
 parameter_list|)
 function_decl|;
 name|int
@@ -1311,8 +1315,10 @@ parameter_list|(
 name|struct
 name|ata_device
 modifier|*
+name|atadev
 parameter_list|,
 name|int
+name|mode
 parameter_list|)
 function_decl|;
 block|}
@@ -1405,6 +1411,7 @@ parameter_list|(
 name|struct
 name|ata_channel
 modifier|*
+name|ch
 parameter_list|)
 function_decl|;
 name|void
@@ -1416,6 +1423,7 @@ parameter_list|(
 name|struct
 name|ata_channel
 modifier|*
+name|ch
 parameter_list|)
 function_decl|;
 name|int
@@ -1427,10 +1435,13 @@ parameter_list|(
 name|struct
 name|ata_device
 modifier|*
+name|atadev
 parameter_list|,
 name|caddr_t
+name|data
 parameter_list|,
 name|int32_t
+name|count
 parameter_list|)
 function_decl|;
 name|int
@@ -1442,12 +1453,16 @@ parameter_list|(
 name|struct
 name|ata_channel
 modifier|*
+name|ch
 parameter_list|,
 name|caddr_t
+name|data
 parameter_list|,
 name|int32_t
+name|count
 parameter_list|,
 name|int
+name|dir
 parameter_list|)
 function_decl|;
 name|int
@@ -1459,6 +1474,7 @@ parameter_list|(
 name|struct
 name|ata_channel
 modifier|*
+name|ch
 parameter_list|)
 function_decl|;
 block|}
@@ -1482,6 +1498,7 @@ parameter_list|(
 name|struct
 name|ata_channel
 modifier|*
+name|ch
 parameter_list|)
 function_decl|;
 name|int
@@ -1493,6 +1510,7 @@ parameter_list|(
 name|struct
 name|ata_request
 modifier|*
+name|request
 parameter_list|)
 function_decl|;
 name|void
@@ -1503,6 +1521,7 @@ function_decl|)
 parameter_list|(
 name|void
 modifier|*
+name|channel
 parameter_list|)
 function_decl|;
 block|}
@@ -1882,6 +1901,7 @@ name|int
 name|ata_probe
 parameter_list|(
 name|device_t
+name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1891,6 +1911,7 @@ name|int
 name|ata_attach
 parameter_list|(
 name|device_t
+name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1900,6 +1921,7 @@ name|int
 name|ata_detach
 parameter_list|(
 name|device_t
+name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1909,6 +1931,7 @@ name|int
 name|ata_suspend
 parameter_list|(
 name|device_t
+name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1918,6 +1941,7 @@ name|int
 name|ata_resume
 parameter_list|(
 name|device_t
+name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1929,12 +1953,15 @@ parameter_list|(
 name|struct
 name|ata_channel
 modifier|*
+name|ch
 parameter_list|,
 name|int
+name|device
 parameter_list|,
 specifier|const
 name|char
 modifier|*
+name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
@@ -1957,10 +1984,12 @@ parameter_list|(
 name|struct
 name|ata_device
 modifier|*
+name|atadev
 parameter_list|,
 specifier|const
 name|char
 modifier|*
+name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
@@ -1983,11 +2012,14 @@ parameter_list|(
 name|struct
 name|ata_device
 modifier|*
+name|atadev
 parameter_list|,
 name|char
 modifier|*
+name|name
 parameter_list|,
 name|int
+name|lun
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1999,6 +2031,7 @@ parameter_list|(
 name|struct
 name|ata_device
 modifier|*
+name|atadev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2009,6 +2042,7 @@ name|ata_get_lun
 parameter_list|(
 name|u_int32_t
 modifier|*
+name|map
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2019,8 +2053,10 @@ name|ata_test_lun
 parameter_list|(
 name|u_int32_t
 modifier|*
+name|map
 parameter_list|,
 name|int
+name|lun
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2031,8 +2067,10 @@ name|ata_free_lun
 parameter_list|(
 name|u_int32_t
 modifier|*
+name|map
 parameter_list|,
 name|int
+name|lun
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2043,6 +2081,7 @@ modifier|*
 name|ata_mode2str
 parameter_list|(
 name|int
+name|mode
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2268,6 +2307,7 @@ parameter_list|(
 name|struct
 name|ata_device
 modifier|*
+name|atadev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2279,6 +2319,7 @@ parameter_list|(
 name|struct
 name|ata_device
 modifier|*
+name|atadev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2290,6 +2331,7 @@ parameter_list|(
 name|struct
 name|ata_device
 modifier|*
+name|atadev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2301,6 +2343,7 @@ parameter_list|(
 name|struct
 name|ata_device
 modifier|*
+name|atadev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2312,6 +2355,7 @@ parameter_list|(
 name|struct
 name|ata_channel
 modifier|*
+name|ch
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2323,6 +2367,7 @@ parameter_list|(
 name|struct
 name|ata_channel
 modifier|*
+name|ch
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2334,6 +2379,7 @@ parameter_list|(
 name|struct
 name|ata_channel
 modifier|*
+name|ch
 parameter_list|)
 function_decl|;
 end_function_decl

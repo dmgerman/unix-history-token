@@ -101,7 +101,6 @@ parameter_list|(
 name|struct
 name|ata_request
 modifier|*
-name|request
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -113,7 +112,6 @@ name|ata_interrupt
 parameter_list|(
 name|void
 modifier|*
-name|data
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -126,7 +124,6 @@ parameter_list|(
 name|struct
 name|ata_channel
 modifier|*
-name|ch
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -139,10 +136,8 @@ parameter_list|(
 name|struct
 name|ata_device
 modifier|*
-name|atadev
 parameter_list|,
 name|u_int8_t
-name|mask
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -155,19 +150,14 @@ parameter_list|(
 name|struct
 name|ata_device
 modifier|*
-name|atadev
 parameter_list|,
 name|u_int8_t
-name|command
 parameter_list|,
 name|u_int64_t
-name|lba
 parameter_list|,
 name|u_int16_t
-name|count
 parameter_list|,
 name|u_int16_t
-name|feature
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -180,10 +170,8 @@ parameter_list|(
 name|struct
 name|ata_request
 modifier|*
-name|request
 parameter_list|,
 name|int
-name|length
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -196,10 +184,8 @@ parameter_list|(
 name|struct
 name|ata_request
 modifier|*
-name|request
 parameter_list|,
 name|int
-name|length
 parameter_list|)
 function_decl|;
 end_function_decl

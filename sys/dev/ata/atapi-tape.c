@@ -210,7 +210,6 @@ parameter_list|(
 name|struct
 name|ata_device
 modifier|*
-name|atadev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -223,7 +222,6 @@ parameter_list|(
 name|struct
 name|ata_device
 modifier|*
-name|atadev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -425,7 +423,6 @@ parameter_list|(
 name|struct
 name|ata_device
 modifier|*
-name|atadev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -438,10 +435,8 @@ parameter_list|(
 name|struct
 name|ata_device
 modifier|*
-name|atadev
 parameter_list|,
 name|int
-name|timeout
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2180,8 +2175,8 @@ name|mt_comp3
 operator|=
 literal|0
 expr_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 name|MTIOCTOP
 case|:
@@ -2398,8 +2393,8 @@ operator|=
 name|EINVAL
 expr_stmt|;
 block|}
-break|break;
 block|}
+break|break;
 case|case
 name|MTIOCRDSPOS
 case|:
@@ -2436,8 +2431,8 @@ name|position
 operator|.
 name|tape
 expr_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 name|MTIOCRDHPOS
 case|:
@@ -2474,8 +2469,8 @@ name|position
 operator|.
 name|tape
 expr_stmt|;
-break|break;
 block|}
+break|break;
 case|case
 name|MTIOCSLOCATE
 case|:

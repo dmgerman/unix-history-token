@@ -273,8 +273,6 @@ argument_list|,
 name|NULL
 argument_list|)
 operator|)
-operator|!=
-name|NULL
 condition|)
 block|{
 if|if

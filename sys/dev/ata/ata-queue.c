@@ -112,10 +112,8 @@ name|ata_completed
 parameter_list|(
 name|void
 modifier|*
-name|context
 parameter_list|,
 name|int
-name|pending
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -128,7 +126,6 @@ parameter_list|(
 name|struct
 name|ata_request
 modifier|*
-name|request
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -140,7 +137,6 @@ modifier|*
 name|ata_sensekey2str
 parameter_list|(
 name|u_int8_t
-name|skey
 parameter_list|)
 function_decl|;
 end_function_decl

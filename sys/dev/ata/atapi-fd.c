@@ -152,7 +152,6 @@ parameter_list|(
 name|struct
 name|ata_device
 modifier|*
-name|atadev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -165,7 +164,6 @@ parameter_list|(
 name|struct
 name|ata_device
 modifier|*
-name|atadev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -256,7 +254,6 @@ parameter_list|(
 name|struct
 name|ata_device
 modifier|*
-name|atadev
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -217,10 +217,8 @@ name|ata_shutdown
 parameter_list|(
 name|void
 modifier|*
-name|arg
 parameter_list|,
 name|int
-name|howto
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -233,10 +231,8 @@ parameter_list|(
 name|struct
 name|ata_device
 modifier|*
-name|atadev
 parameter_list|,
 name|u_int8_t
-name|command
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -249,7 +245,6 @@ parameter_list|(
 name|struct
 name|ata_channel
 modifier|*
-name|ch
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -271,10 +266,8 @@ name|bswap
 parameter_list|(
 name|int8_t
 modifier|*
-name|buf
 parameter_list|,
 name|int
-name|len
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -286,10 +279,8 @@ name|btrim
 parameter_list|(
 name|int8_t
 modifier|*
-name|buf
 parameter_list|,
 name|int
-name|len
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -301,14 +292,11 @@ name|bpack
 parameter_list|(
 name|int8_t
 modifier|*
-name|src
 parameter_list|,
 name|int8_t
 modifier|*
-name|dst
 parameter_list|,
 name|int
-name|len
 parameter_list|)
 function_decl|;
 end_function_decl

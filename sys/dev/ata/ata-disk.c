@@ -167,7 +167,6 @@ parameter_list|(
 name|struct
 name|ata_device
 modifier|*
-name|atadev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -180,7 +179,6 @@ parameter_list|(
 name|struct
 name|ata_device
 modifier|*
-name|atadev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -193,7 +191,6 @@ parameter_list|(
 name|struct
 name|ata_request
 modifier|*
-name|request
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -226,7 +223,6 @@ parameter_list|(
 name|struct
 name|ad_softc
 modifier|*
-name|adp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -237,7 +233,6 @@ name|int
 name|ad_version
 parameter_list|(
 name|u_int16_t
-name|version
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -886,13 +886,11 @@ name|type
 operator|==
 name|SYS_RES_IRQ
 condition|)
-block|{
 return|return
 name|ctlr
 operator|->
 name|irq
 return|;
-block|}
 return|return
 literal|0
 return|;
