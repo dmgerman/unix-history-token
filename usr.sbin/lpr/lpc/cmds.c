@@ -1619,7 +1619,7 @@ name|jnum_X
 parameter_list|,
 name|seq_X
 parameter_list|)
-value|do { \ 	cat_X = cat_other;    \ 	ch = *(fname_X + 2);  \ 	jnum_X = fname_X + 3; \ 	if ((*(fname_X + 1) == 'f')&& (isalpha(ch))) { \ 		seq_X = ch; \ 		if (*fname_X == 'c') \ 			cat_X = 1; \ 		else if (*fname_X == 'd') \ 			cat_X = 2; \ 		else if (*fname_X == 't') \ 			cat_X = 3; \ 		if (cat_X != cat_other) { \ 			ch = *jnum_X; \ 			if (!isdigit(ch)) { \ 				if (isalpha(ch)) { \ 					jnum_X++; \ 					ch = *jnum_X; \ 					seq_X = (seq_X<< 8) + ch; \ 				} \ 				if (!isdigit(ch)) \ 					cat_X = cat_other; \ 			} \ 		} \ 	} \ } while (0)
+value|do { \ 	cat_X = cat_other;    \ 	ch = *(fname_X + 2);  \ 	jnum_X = fname_X + 3; \ 	seq_X = 0;            \ 	if ((*(fname_X + 1) == 'f')&& (isalpha(ch))) { \ 		seq_X = ch; \ 		if (*fname_X == 'c') \ 			cat_X = 1; \ 		else if (*fname_X == 'd') \ 			cat_X = 2; \ 		else if (*fname_X == 't') \ 			cat_X = 3; \ 		if (cat_X != cat_other) { \ 			ch = *jnum_X; \ 			if (!isdigit(ch)) { \ 				if (isalpha(ch)) { \ 					jnum_X++; \ 					ch = *jnum_X; \ 					seq_X = (seq_X<< 8) + ch; \ 				} \ 				if (!isdigit(ch)) \ 					cat_X = cat_other; \ 			} \ 		} \ 	} \ } while (0)
 name|MAP_TO_CAT
 argument_list|(
 name|fname_a
