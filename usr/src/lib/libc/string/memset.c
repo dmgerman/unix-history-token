@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)memset.c	5.7 (Berkeley) %G%"
+literal|"@(#)memset.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -69,10 +69,31 @@ name|wmask
 value|(wsize - 1)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BZERO
+end_ifdef
+
 begin_function
 name|void
+name|bzero
+parameter_list|(
+name|dst0
+parameter_list|,
+name|length
+parameter_list|)
+name|void
 modifier|*
-name|memset
+name|dst0
+decl_stmt|;
+specifier|register
+name|size_t
+name|length
+decl_stmt|;
+else|#
+directive|else
+function|void * memset
 parameter_list|(
 name|dst0
 parameter_list|,
@@ -92,6 +113,8 @@ specifier|register
 name|size_t
 name|length
 decl_stmt|;
+endif|#
+directive|endif
 block|{
 specifier|register
 name|size_t
@@ -102,16 +125,12 @@ name|u_int
 name|c
 decl_stmt|;
 specifier|register
-name|char
+name|u_char
 modifier|*
 name|dst
 decl_stmt|;
 name|dst
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|dst0
 expr_stmt|;
 comment|/* 	 * If not enough words, just fill bytes.  A length>= 2 words 	 * guarantees that at least one of them is `complete' after 	 * any necessary alignment.  For instance: 	 * 	 *	|-----------|-----------|-----------| 	 *	|00|01|02|03|04|05|06|07|08|09|0A|00| 	 *	          ^---------------------^ 	 *		 dst		 dst+length-1 	 * 	 * but we use a minimum of 3 here since the overhead of the code 	 * to do word writes is substantial. 	 */
@@ -131,22 +150,46 @@ operator|!=
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|BZERO
+operator|*
+name|dst
+operator|++
+operator|=
+literal|0
+expr_stmt|;
+else|#
+directive|else
 operator|*
 name|dst
 operator|++
 operator|=
 name|c0
 expr_stmt|;
+endif|#
+directive|endif
 operator|--
 name|length
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|BZERO
+return|return;
+else|#
+directive|else
 return|return
 operator|(
 name|dst0
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
+ifndef|#
+directive|ifndef
+name|BZERO
 if|if
 condition|(
 operator|(
@@ -161,7 +204,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* Copy value into the word. */
+comment|/* Fill the word. */
 name|c
 operator|=
 operator|(
@@ -177,7 +220,7 @@ if|#
 directive|if
 name|UINT_MAX
 operator|>
-literal|65535
+literal|0xffff
 name|c
 operator|=
 operator|(
@@ -196,7 +239,6 @@ directive|if
 name|UINT_MAX
 operator|>
 literal|0xffffffff
-comment|/* GCC will bitch, otherwise. */
 name|c
 operator|=
 operator|(
@@ -211,6 +253,8 @@ comment|/* u_int is 64 bits. */
 endif|#
 directive|endif
 block|}
+endif|#
+directive|endif
 comment|/* Align destination by filling in bytes. */
 if|if
 condition|(
@@ -240,12 +284,25 @@ name|t
 expr_stmt|;
 do|do
 block|{
+ifdef|#
+directive|ifdef
+name|BZERO
+operator|*
+name|dst
+operator|++
+operator|=
+literal|0
+expr_stmt|;
+else|#
+directive|else
 operator|*
 name|dst
 operator|++
 operator|=
 name|c0
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 do|while
 condition|(
@@ -265,6 +322,20 @@ name|wsize
 expr_stmt|;
 do|do
 block|{
+ifdef|#
+directive|ifdef
+name|BZERO
+operator|*
+operator|(
+name|u_int
+operator|*
+operator|)
+name|dst
+operator|=
+literal|0
+expr_stmt|;
+else|#
+directive|else
 operator|*
 operator|(
 name|u_int
@@ -274,6 +345,8 @@ name|dst
 operator|=
 name|c
 expr_stmt|;
+endif|#
+directive|endif
 name|dst
 operator|+=
 name|wsize
@@ -302,12 +375,25 @@ literal|0
 condition|)
 do|do
 block|{
+ifdef|#
+directive|ifdef
+name|BZERO
+operator|*
+name|dst
+operator|++
+operator|=
+literal|0
+expr_stmt|;
+else|#
+directive|else
 operator|*
 name|dst
 operator|++
 operator|=
 name|c0
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 do|while
 condition|(
@@ -317,11 +403,19 @@ operator|!=
 literal|0
 condition|)
 do|;
+ifdef|#
+directive|ifdef
+name|BZERO
+return|return;
+else|#
+directive|else
 return|return
 operator|(
 name|dst0
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
