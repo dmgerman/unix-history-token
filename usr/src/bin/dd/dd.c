@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)dd.c	5.15 (Berkeley) %G%"
+literal|"@(#)dd.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -79,19 +79,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
+file|<ctype.h>
 end_include
 
 begin_include
@@ -103,13 +91,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<fcntl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<signal.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_include
@@ -122,6 +116,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -197,15 +197,22 @@ begin_comment
 comment|/* statistics */
 end_comment
 
-begin_function_decl
+begin_macro
 name|void
-function_decl|(
-modifier|*
-name|cfunc
-function_decl|)
-parameter_list|()
-function_decl|;
-end_function_decl
+argument_list|(
+argument|*cfunc
+argument_list|)
+end_macro
+
+begin_expr_stmt
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* conversion function */
@@ -1201,11 +1208,13 @@ name|dbsz
 argument_list|)
 expr_stmt|;
 else|else
-name|bzero
+name|memset
 argument_list|(
 name|in
 operator|.
 name|dbp
+argument_list|,
+literal|0
 argument_list|,
 name|in
 operator|.
@@ -1798,8 +1807,12 @@ name|out
 operator|.
 name|dbcnt
 condition|)
-name|bcopy
+name|memmove
 argument_list|(
+name|out
+operator|.
+name|db
+argument_list|,
 name|out
 operator|.
 name|dbp
@@ -1807,10 +1820,6 @@ operator|-
 name|out
 operator|.
 name|dbcnt
-argument_list|,
-name|out
-operator|.
-name|db
 argument_list|,
 name|out
 operator|.
