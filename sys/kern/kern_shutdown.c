@@ -2111,11 +2111,20 @@ return|;
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|__i386__
-end_ifndef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|PC98
+argument_list|)
+end_if
 
 begin_function
 name|void
