@@ -1057,6 +1057,9 @@ comment|/* timer initialization */
 name|rtadvd_timer_init
 argument_list|()
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|HAVE_ARC4RANDOM
 comment|/* random value initialization */
 ifdef|#
 directive|ifdef
@@ -1077,6 +1080,8 @@ name|NULL
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/* get iflist block from kernel */
@@ -7343,6 +7348,26 @@ name|rai
 operator|->
 name|mininterval
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HAVE_ARC4RANDOM
+name|interval
+operator|+=
+name|arc4random
+argument_list|()
+operator|%
+operator|(
+name|rai
+operator|->
+name|maxinterval
+operator|-
+name|rai
+operator|->
+name|mininterval
+operator|)
+expr_stmt|;
+else|#
+directive|else
 name|interval
 operator|+=
 name|random
@@ -7358,6 +7383,8 @@ operator|->
 name|mininterval
 operator|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * For the first few advertisements (up to 	 * MAX_INITIAL_RTR_ADVERTISEMENTS), if the randomly chosen interval 	 * is greater than MAX_INITIAL_RTR_ADVERT_INTERVAL, the timer 	 * SHOULD be set to MAX_INITIAL_RTR_ADVERT_INTERVAL instead. 	 * (RFC-2461 6.2.4) 	 */
 if|if
 condition|(
