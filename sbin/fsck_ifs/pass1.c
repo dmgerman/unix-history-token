@@ -358,10 +358,8 @@ name|mode_t
 name|mode
 decl_stmt|;
 name|char
+modifier|*
 name|symbuf
-index|[
-name|MAXSYMLINKLEN
-index|]
 decl_stmt|;
 name|dp
 operator|=
@@ -656,6 +654,13 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|symbuf
+operator|=
+name|alloca
+argument_list|(
+name|secsize
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bread
@@ -680,9 +685,7 @@ argument_list|,
 operator|(
 name|long
 operator|)
-name|dp
-operator|->
-name|di_size
+name|secsize
 argument_list|)
 operator|!=
 literal|0
