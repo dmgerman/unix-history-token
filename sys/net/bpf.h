@@ -567,6 +567,17 @@ comment|/* PPP over Ethernet */
 end_comment
 
 begin_comment
+comment|/*  * Reserved for the Symantec Enterprise Firewall.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_SYMANTEC_FIREWALL
+value|99
+end_define
+
+begin_comment
 comment|/*  * This value was defined by libpcap 0.5; platforms that have defined  * it with a different value should define it here with that value -  * a link type of 104 in a save file will be mapped to DLT_C_HDLC,  * whatever value that happens to be, so programs will correctly  * handle files with that link type regardless of the value of  * DLT_C_HDLC.  *  * The name DLT_C_HDLC was used by BSD/OS; we use that name for source  * compatibility with programs written for BSD/OS.  *  * libpcap 0.5 defined it as DLT_CHDLC; we define DLT_CHDLC as well,  * for source compatibility with programs written for libpcap 0.5.  */
 end_comment
 
@@ -740,6 +751,17 @@ value|121
 end_define
 
 begin_comment
+comment|/*  * Reserved for Siemens HiPath HDLC. XXX  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_HHDLC
+value|121
+end_define
+
+begin_comment
 comment|/*  * Reserved for RFC 2625 IP-over-Fibre Channel.  */
 end_comment
 
@@ -760,6 +782,43 @@ directive|define
 name|DLT_SUNATM
 value|123
 end_define
+
+begin_comment
+comment|/*  * Reserved as per request from Kent Dahlgren<kent@praesum.com>  * for private use.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_RIO
+value|124
+end_define
+
+begin_comment
+comment|/* RapidIO */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_PCI_EXP
+value|125
+end_define
+
+begin_comment
+comment|/* PCI Express */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_AURORA
+value|126
+end_define
+
+begin_comment
+comment|/* Xilinx Aurora link layer */
+end_comment
 
 begin_comment
 comment|/*  * BSD header for 802.11 plus a number of bits of link-layer information  * including radio information.  */
@@ -784,6 +843,21 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * Reserved for TZSP encapsulation.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_TZSP
+value|128
+end_define
+
+begin_comment
+comment|/* Tazmen Sniffer Protocol */
+end_comment
+
+begin_comment
 comment|/*  * Reserved for Linux ARCNET.  */
 end_comment
 
@@ -792,6 +866,66 @@ define|#
 directive|define
 name|DLT_ARCNET_LINUX
 value|129
+end_define
+
+begin_comment
+comment|/*  * Juniper-private data link types.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_JUNIPER_MLPPP
+value|130
+end_define
+
+begin_define
+define|#
+directive|define
+name|DLT_JUNIPER_MLFR
+value|131
+end_define
+
+begin_define
+define|#
+directive|define
+name|DLT_JUNIPER_ES
+value|132
+end_define
+
+begin_define
+define|#
+directive|define
+name|DLT_JUNIPER_GGSN
+value|133
+end_define
+
+begin_define
+define|#
+directive|define
+name|DLT_JUNIPER_MFR
+value|134
+end_define
+
+begin_define
+define|#
+directive|define
+name|DLT_JUNIPER_ATM2
+value|135
+end_define
+
+begin_define
+define|#
+directive|define
+name|DLT_JUNIPER_SERVICES
+value|136
+end_define
+
+begin_define
+define|#
+directive|define
+name|DLT_JUNIPER_ATM1
+value|137
 end_define
 
 begin_comment
@@ -806,6 +940,17 @@ value|138
 end_define
 
 begin_comment
+comment|/*  * Reserved for DOCSIS.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_DOCSIS
+value|143
+end_define
+
+begin_comment
 comment|/*  * Reserved for Linux IrDA.  */
 end_comment
 
@@ -817,6 +962,24 @@ value|144
 end_define
 
 begin_comment
+comment|/*  * Reserved for IBM SP switch and IBM Next Federation switch.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_IBM_SP
+value|145
+end_define
+
+begin_define
+define|#
+directive|define
+name|DLT_IBM_SN
+value|146
+end_define
+
+begin_comment
 comment|/*  * Reserved for AbsoluteValue Systems 802.11 capture.  */
 end_comment
 
@@ -825,6 +988,17 @@ define|#
 directive|define
 name|DLT_IEEE802_11_RADIO_AVS
 value|163
+end_define
+
+begin_comment
+comment|/*  * Reserved for Juniper-private DLT.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DLT_JUNIPER_MONITOR
+value|164
 end_define
 
 begin_comment
