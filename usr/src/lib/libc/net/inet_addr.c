@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	inet_addr.c	4.3	82/10/07	*/
+comment|/*	inet_addr.c	4.4	82/10/07	*/
 end_comment
 
 begin_include
@@ -26,8 +26,7 @@ comment|/*  * Internet address interpretation routine.  * All the network librar
 end_comment
 
 begin_function
-name|struct
-name|in_addr
+name|u_long
 name|inet_addr
 parameter_list|(
 name|cp
