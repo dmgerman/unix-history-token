@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ed.c	4.3 (Berkeley) %G%"
+literal|"@(#)ed.c	4.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3471,15 +3471,6 @@ decl_stmt|;
 name|nlall
 operator|+=
 literal|512
-expr_stmt|;
-name|free
-argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
-name|zero
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
