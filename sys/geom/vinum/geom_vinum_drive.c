@@ -1367,6 +1367,13 @@ name|gp
 operator|->
 name|softc
 expr_stmt|;
+if|if
+condition|(
+name|d
+operator|!=
+name|NULL
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"gvinum: lost drive '%s'\n"
@@ -1413,6 +1420,7 @@ argument_list|,
 name|GV_SETSTATE_FORCE
 argument_list|)
 expr_stmt|;
+block|}
 name|gp
 operator|->
 name|softc
@@ -2244,7 +2252,6 @@ modifier|*
 name|gp
 parameter_list|)
 block|{
-comment|/*struct gv_drive *d;*/
 name|g_trace
 argument_list|(
 name|G_T_TOPOLOGY
@@ -2259,7 +2266,6 @@ expr_stmt|;
 name|g_topology_assert
 argument_list|()
 expr_stmt|;
-comment|/* g_free(sc); */
 name|g_wither_geom
 argument_list|(
 name|gp

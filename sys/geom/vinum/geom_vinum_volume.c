@@ -225,6 +225,12 @@ name|gp
 operator|->
 name|softc
 expr_stmt|;
+if|if
+condition|(
+name|v
+operator|!=
+name|NULL
+condition|)
 name|v
 operator|->
 name|geom
@@ -1023,7 +1029,6 @@ expr_stmt|;
 name|g_topology_assert
 argument_list|()
 expr_stmt|;
-comment|/* 	if (gp->softc != NULL) 		g_free(gp->softc); 	gp->softc = NULL; */
 name|g_wither_geom
 argument_list|(
 name|gp
