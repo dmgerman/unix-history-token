@@ -878,6 +878,12 @@ argument_list|(
 name|chan
 argument_list|)
 expr_stmt|;
+name|dmap
+operator|->
+name|dma_chan
+operator|=
+name|chan
+expr_stmt|;
 name|dma_init_buffers
 argument_list|(
 name|dev
@@ -931,7 +937,9 @@ name|DMA_BUSY
 expr_stmt|;
 name|isa_dma_release
 argument_list|(
-name|chan
+name|dmap
+operator|->
+name|dma_chan
 argument_list|)
 expr_stmt|;
 ifdef|#
