@@ -1521,6 +1521,13 @@ name|first
 operator|==
 literal|3
 operator|&&
+name|fl_lookup
+argument_list|(
+name|this
+argument_list|)
+operator|==
+literal|0
+operator|&&
 operator|(
 name|tp
 operator|=
