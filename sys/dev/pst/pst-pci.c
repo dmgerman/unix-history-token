@@ -320,17 +320,6 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|phys_ibase
-operator|=
-name|vtophys
-argument_list|(
-name|sc
-operator|->
-name|ibase
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
 name|reg
 operator|=
 operator|(
