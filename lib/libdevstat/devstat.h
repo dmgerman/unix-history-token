@@ -163,6 +163,7 @@ begin_struct
 struct|struct
 name|devstat_match_table
 block|{
+specifier|const
 name|char
 modifier|*
 name|match_str

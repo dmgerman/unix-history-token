@@ -478,6 +478,7 @@ end_struct
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|namelist
@@ -570,6 +571,7 @@ name|kvm_t
 modifier|*
 name|kd
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -627,6 +629,7 @@ decl_stmt|;
 name|int
 name|numdevs
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|func_name
@@ -756,6 +759,7 @@ decl_stmt|;
 name|long
 name|generation
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|func_name
@@ -884,6 +888,7 @@ decl_stmt|;
 name|int
 name|version
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|func_name
@@ -1006,6 +1011,7 @@ modifier|*
 name|kd
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|func_name
@@ -1219,6 +1225,7 @@ name|devinfo
 modifier|*
 name|dinfo
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|func_name
@@ -3212,11 +3219,10 @@ block|}
 comment|/* 			 * If we get here, then the device at index i in 			 * the current array isn't the same device as the 			 * device at index i in the old array. 			 */
 else|else
 block|{
-name|int
 name|found
-init|=
+operator|=
 literal|0
-decl_stmt|;
+expr_stmt|;
 comment|/* 				 * Search through the old selection array 				 * looking for a device with the same 				 * device number as the device at index i 				 * in the current array.  If the selection 				 * status is the same, then we mark it as 				 * found.  If the selection status isn't 				 * the same, we break out of the loop. 				 * Since found isn't set, changed will be 				 * set to 1 below. 				 */
 for|for
 control|(
@@ -3358,6 +3364,7 @@ condition|(
 operator|(
 operator|(
 operator|(
+specifier|const
 expr|struct
 name|device_selection
 operator|*
@@ -3371,6 +3378,7 @@ operator|&&
 operator|(
 operator|(
 operator|(
+specifier|const
 expr|struct
 name|device_selection
 operator|*
@@ -3395,6 +3403,7 @@ condition|(
 operator|(
 operator|(
 operator|(
+specifier|const
 expr|struct
 name|device_selection
 operator|*
@@ -3410,6 +3419,7 @@ operator|&&
 operator|(
 operator|(
 operator|(
+specifier|const
 expr|struct
 name|device_selection
 operator|*
@@ -3430,6 +3440,7 @@ if|if
 condition|(
 operator|(
 operator|(
+specifier|const
 expr|struct
 name|device_selection
 operator|*
@@ -3441,6 +3452,7 @@ name|bytes
 operator|<
 operator|(
 operator|(
+specifier|const
 expr|struct
 name|device_selection
 operator|*
@@ -3461,6 +3473,7 @@ if|if
 condition|(
 operator|(
 operator|(
+specifier|const
 expr|struct
 name|device_selection
 operator|*
@@ -3472,6 +3485,7 @@ name|bytes
 operator|>
 operator|(
 operator|(
+specifier|const
 expr|struct
 name|device_selection
 operator|*
@@ -3539,6 +3553,7 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|func_name
@@ -4268,6 +4283,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|func_name
@@ -5305,6 +5321,7 @@ name|size_t
 name|nbytes
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|func_name
@@ -5371,6 +5388,7 @@ name|kvm_t
 modifier|*
 name|kd
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|name
@@ -5383,6 +5401,7 @@ name|size_t
 name|nbytes
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|func_name
@@ -5395,17 +5414,30 @@ name|nl
 index|[
 literal|2
 index|]
-init|=
-block|{
-block|{
-name|name
-block|}
-block|,
-block|{
-name|NULL
-block|}
-block|}
 decl_stmt|;
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+name|nl
+index|[
+literal|0
+index|]
+operator|.
+name|n_name
+operator|=
+name|name
+expr_stmt|;
+name|nl
+index|[
+literal|1
+index|]
+operator|.
+name|n_name
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|kvm_nlist
@@ -5514,6 +5546,7 @@ name|rv
 init|=
 name|NULL
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|func_name
