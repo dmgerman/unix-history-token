@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)path.c	5.1 (Berkeley) %G%"
+literal|"@(#)path.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -37,19 +37,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"cp.h"
+file|"extern.h"
 end_include
 
 begin_comment
@@ -70,28 +64,23 @@ begin_comment
 comment|/*  * Move specified string into path.  Convert "" to "." to handle BSD  * semantics for a null path.  Strip trailing slashes.  */
 end_comment
 
-begin_expr_stmt
+begin_function
+name|int
 name|path_set
-argument_list|(
+parameter_list|(
 name|p
-argument_list|,
+parameter_list|,
 name|string
-argument_list|)
+parameter_list|)
 specifier|register
 name|PATH_T
-operator|*
+modifier|*
 name|p
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
+decl_stmt|;
 name|char
 modifier|*
 name|string
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -103,16 +92,9 @@ operator|>
 name|MAXPATHLEN
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|err
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: %s: name too long.\n"
-argument_list|,
-name|progname
+literal|"%s: name too long"
 argument_list|,
 name|string
 argument_list|)
@@ -188,7 +170,7 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Append specified string to path, inserting '/' if necessary.  Return a  * pointer to the old end of path for restoration.  */
@@ -262,16 +244,9 @@ operator|>
 name|MAXPATHLEN
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|err
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: %s/%s: name too long.\n"
-argument_list|,
-name|progname
+literal|"%s/%s: name too long"
 argument_list|,
 name|p
 operator|->
