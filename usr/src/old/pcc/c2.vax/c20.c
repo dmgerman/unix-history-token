@@ -9,12 +9,12 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)c20.c 4.1 %G%"
+literal|"@(#)c20.c 4.2 %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* char C20[] = {"@(#)c20.c 1.33 80/08/08 10:01:02"}; /* sccs ident */
+comment|/* char C20[] = {"@(#)c20.c 1.35 80/08/26 14:13:40"}; /* sccs ident */
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|long
 name|isn
 init|=
 literal|2000000
@@ -86,32 +86,32 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-name|int
+name|long
 name|lgensym
 index|[
 literal|10
 index|]
 init|=
 block|{
-literal|100000
+literal|100000L
 block|,
-literal|200000
+literal|200000L
 block|,
-literal|300000
+literal|300000L
 block|,
-literal|400000
+literal|400000L
 block|,
-literal|500000
+literal|500000L
 block|,
-literal|600000
+literal|600000L
 block|,
-literal|700000
+literal|700000L
 block|,
-literal|800000
+literal|800000L
 block|,
-literal|900000
+literal|900000L
 block|,
-literal|1000000
+literal|1000000L
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -137,6 +137,29 @@ decl_stmt|;
 name|n
 operator|=
 name|an
+expr_stmt|;
+name|n
+operator|+=
+sizeof|sizeof
+argument_list|(
+name|char
+operator|*
+argument_list|)
+operator|-
+literal|1
+expr_stmt|;
+name|n
+operator|&=
+operator|~
+operator|(
+sizeof|sizeof
+argument_list|(
+name|char
+operator|*
+argument_list|)
+operator|-
+literal|1
+operator|)
 expr_stmt|;
 name|n
 operator|++
@@ -844,6 +867,12 @@ name|LABEL
 expr_stmt|;
 if|if
 condition|(
+name|p
+operator|->
+name|labno
+operator|<
+literal|100000L
+operator|&&
 name|isn
 operator|<=
 name|p
