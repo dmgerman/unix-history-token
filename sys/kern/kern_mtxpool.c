@@ -1,7 +1,21 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001 Matthew Dillon.  All Rights Reserved.  Copyright   * terms are as specified in the COPYRIGHT file at the base of the source  * tree.  *  * Mutex pool routines.  These routines are designed to be used as short  * term leaf mutexes (e.g. the last mutex you might aquire other then  * calling msleep()).  They operate using a shared pool.  A mutex is chosen  * from the pool based on the supplied pointer (which may or may not be  * valid).  *  * Advantages:  *	- no structural overhead.  Mutexes can be associated with structures  *	  without adding bloat to the structures.  *	- mutexes can be obtained for invalid pointers, useful when uses  *	  mutexes to interlock destructor ops.  *	- no initialization/destructor overhead  *	- can be used with msleep.  *  * Disadvantages:  *	- should generally only be used as leaf mutexes  *	- pool/pool dependancy ordering cannot be depended on.  *	- possible L1 cache mastersip contention between cpus  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2001 Matthew Dillon.  All Rights Reserved.  Copyright   * terms are as specified in the COPYRIGHT file at the base of the source  * tree.  *  * Mutex pool routines.  These routines are designed to be used as short  * term leaf mutexes (e.g. the last mutex you might aquire other then  * calling msleep()).  They operate using a shared pool.  A mutex is chosen  * from the pool based on the supplied pointer (which may or may not be  * valid).  *  * Advantages:  *	- no structural overhead.  Mutexes can be associated with structures  *	  without adding bloat to the structures.  *	- mutexes can be obtained for invalid pointers, useful when uses  *	  mutexes to interlock destructor ops.  *	- no initialization/destructor overhead  *	- can be used with msleep.  *  * Disadvantages:  *	- should generally only be used as leaf mutexes  *	- pool/pool dependancy ordering cannot be depended on.  *	- possible L1 cache mastersip contention between cpus  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#

@@ -4,8 +4,22 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Adapted from the original sources for FreeBSD and timecounters by:  * Poul-Henning Kamp<phk@FreeBSD.org>.  *  * The 32bit version of the "LP" macros seems a bit past its "sell by"   * date so I have retained only the 64bit version and included it directly  * in this file.  *  * Only minor changes done to interface with the timecounters over in  * sys/kern/kern_clock.c.   Some of the comments below may be (even more)  * confusing and/or plain wrong in that context.  *  * $FreeBSD$  */
+comment|/*  * Adapted from the original sources for FreeBSD and timecounters by:  * Poul-Henning Kamp<phk@FreeBSD.org>.  *  * The 32bit version of the "LP" macros seems a bit past its "sell by"   * date so I have retained only the 64bit version and included it directly  * in this file.  *  * Only minor changes done to interface with the timecounters over in  * sys/kern/kern_clock.c.   Some of the comments below may be (even more)  * confusing and/or plain wrong in that context.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
