@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tty_pty.c	4.29	82/12/05	*/
+comment|/*	tty_pty.c	4.30	83/05/21	*/
 end_comment
 
 begin_comment
@@ -303,6 +303,16 @@ name|tp
 argument_list|)
 expr_stmt|;
 comment|/* Set up default chars */
+name|tp
+operator|->
+name|t_ispeed
+operator|=
+name|tp
+operator|->
+name|t_ospeed
+operator|=
+name|EXTB
+expr_stmt|;
 name|tp
 operator|->
 name|t_flags
