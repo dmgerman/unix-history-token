@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_pager.c	7.7 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
+comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)vm_pager.c	7.8 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
 end_comment
 
 begin_comment
@@ -10,31 +10,37 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"malloc.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vm.h"
+file|<sys/malloc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vm_page.h"
+file|<vm/vm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vm_kern.h"
+file|<vm/vm_page.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/vm_kern.h>
 end_include
 
 begin_include
@@ -413,36 +419,25 @@ expr_stmt|;
 block|}
 end_function
 
-begin_macro
+begin_function
+name|int
 name|vm_pager_get
-argument_list|(
-argument|pager
-argument_list|,
-argument|m
-argument_list|,
-argument|sync
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|pager
+parameter_list|,
+name|m
+parameter_list|,
+name|sync
+parameter_list|)
 name|vm_pager_t
 name|pager
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|vm_page_t
 name|m
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|boolean_t
 name|sync
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|extern
 name|boolean_t
@@ -480,38 +475,27 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
-begin_macro
+begin_function
+name|int
 name|vm_pager_put
-argument_list|(
-argument|pager
-argument_list|,
-argument|m
-argument_list|,
-argument|sync
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|pager
+parameter_list|,
+name|m
+parameter_list|,
+name|sync
+parameter_list|)
 name|vm_pager_t
 name|pager
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|vm_page_t
 name|m
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|boolean_t
 name|sync
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -537,7 +521,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 name|boolean_t
@@ -899,28 +883,20 @@ begin_comment
 comment|/*  * This routine gains a reference to the object.  * Explicit deallocation is necessary.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|pager_cache
-argument_list|(
-argument|object
-argument_list|,
-argument|should_cache
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|object
+parameter_list|,
+name|should_cache
+parameter_list|)
 name|vm_object_t
 name|object
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|boolean_t
 name|should_cache
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 if|if
 condition|(
@@ -978,7 +954,7 @@ name|KERN_SUCCESS
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 end_unit
 

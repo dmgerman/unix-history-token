@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_unix.c 1.1 89/11/07$  *  *	@(#)vm_unix.c	7.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: Utah $Hdr: vm_unix.c 1.1 89/11/07$  *  *	@(#)vm_unix.c	7.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -10,50 +10,48 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"param.h"
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"systm.h"
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"proc.h"
+file|<sys/proc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"resourcevar.h"
+file|<sys/resourcevar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"vm.h"
+file|<vm/vm.h>
 end_include
 
 begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_decl_stmt
+name|int
 name|obreak
 argument_list|(
-argument|p
+name|p
 argument_list|,
-argument|uap
+name|uap
 argument_list|,
-argument|retval
+name|retval
 argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
+decl|struct
 name|proc
 modifier|*
 name|p
@@ -291,30 +289,22 @@ begin_comment
 comment|/*  * Enlarge the "stack segment" to include the specified  * stack pointer for the process.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|grow
-argument_list|(
-argument|p
-argument_list|,
-argument|sp
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|p
+parameter_list|,
+name|sp
+parameter_list|)
 name|struct
 name|proc
 modifier|*
 name|p
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|unsigned
 name|sp
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -420,25 +410,23 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/* ARGSUSED */
 end_comment
 
-begin_macro
+begin_decl_stmt
+name|int
 name|ovadvise
 argument_list|(
-argument|p
+name|p
 argument_list|,
-argument|uap
+name|uap
 argument_list|,
-argument|retval
+name|retval
 argument_list|)
-end_macro
-
-begin_decl_stmt
-name|struct
+decl|struct
 name|proc
 modifier|*
 name|p
