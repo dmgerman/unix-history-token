@@ -8,10 +8,10 @@ end_ifndef
 begin_decl_stmt
 specifier|static
 name|char
-name|SccsId
+name|sccsid
 index|[]
 init|=
-literal|"@(#)syslogd.c	4.2 (Berkeley) %G%"
+literal|"@(#)syslogd.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -21,7 +21,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  *  syslogd -- log system messages  *  * This program implements a system log. It takes a series of lines.  * Each line may have a priority, signified as "<n>" as  * the first three characters of the line.  If this is  * not present, a default priority (DefPri) is used, which  * starts out as LOG_NOTICE.  The default priority can get  * changed using "<*>n".  *  * To kill syslogd, send a signal 15 (terminate).  A signal 1 (hup) will  * cause it to reread its configuration file.  *  * Defined Constants:  *  * DAEMON -- Userid number to setuid to after setup.  * MAXLINE -- the maximimum line length that can be handled.  * NLOGS -- the maximum number of simultaneous log files.  * NUSERS -- the maximum number of people that can  *	be designated as "superusers" on your system.  */
+comment|/*  *  syslogd -- log system messages  *  * This program implements a system log. It takes a series of lines.  * Each line may have a priority, signified as "<n>" as  * the first three characters of the line.  If this is  * not present, a default priority (DefPri) is used, which  * starts out as LOG_NOTICE.  The default priority can get  * changed using "<*>n".  *  * To kill syslogd, send a signal 15 (terminate).  A signal 1 (hup) will  * cause it to reread its configuration file.  *  * Defined Constants:  *  * DAEMON -- Userid number to setuid to after setup.  * MAXLINE -- the maximimum line length that can be handled.  * NLOGS -- the maximum number of simultaneous log files.  * NUSERS -- the maximum number of people that can  *	be designated as "superusers" on your system.  *  * Author: Eric Allman  * Modified to use UNIX domain IPC by Ralph Campbell  */
 end_comment
 
 begin_define
@@ -143,6 +143,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/uio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/un.h>
 end_include
 
@@ -193,27 +199,6 @@ init|=
 literal|"/dev/console"
 decl_stmt|;
 end_decl_stmt
-
-begin_typedef
-typedef|typedef
-name|char
-name|bool
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|TRUE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|FALSE
-value|0
-end_define
 
 begin_define
 define|#
@@ -381,8 +366,6 @@ end_comment
 begin_decl_stmt
 name|int
 name|Sumask
-init|=
-name|LOG_SALERT
 decl_stmt|;
 end_decl_stmt
 
@@ -417,6 +400,19 @@ end_comment
 
 begin_decl_stmt
 name|char
+name|host
+index|[
+literal|32
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* our hostname */
+end_comment
+
+begin_decl_stmt
+name|char
 name|rhost
 index|[
 literal|32
@@ -426,6 +422,28 @@ end_decl_stmt
 
 begin_comment
 comment|/* hostname of sender (forwarded messages) */
+end_comment
+
+begin_decl_stmt
+name|int
+name|inet
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* non-zero if INET sockets are being used */
+end_comment
+
+begin_decl_stmt
+name|int
+name|port
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* port number for INET connections */
 end_comment
 
 begin_decl_stmt
@@ -513,29 +531,20 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-extern|extern die(
-block|)
-function|;
-end_function
-
-begin_function_decl
 specifier|extern
 name|int
+name|die
+argument_list|()
+decl_stmt|,
 name|domark
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_expr_stmt
+argument_list|()
+decl_stmt|;
 name|sun
 operator|.
 name|sun_family
 operator|=
 name|AF_UNIX
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|strncpy
 argument_list|(
 name|sun
@@ -550,9 +559,14 @@ operator|.
 name|sun_path
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_while
+name|gethostname
+argument_list|(
+name|host
+argument_list|,
+sizeof|sizeof
+name|host
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|--
@@ -644,7 +658,7 @@ break|break;
 case|case
 literal|'p'
 case|:
-comment|/* port */
+comment|/* path */
 if|if
 condition|(
 name|p
@@ -676,9 +690,6 @@ break|break;
 block|}
 block|}
 block|}
-end_while
-
-begin_if
 if|if
 condition|(
 operator|!
@@ -752,7 +763,7 @@ name|open
 argument_list|(
 literal|"/dev/tty"
 argument_list|,
-literal|2
+name|O_RDWR
 argument_list|)
 expr_stmt|;
 if|if
@@ -785,9 +796,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_if
-
-begin_expr_stmt
 name|signal
 argument_list|(
 name|SIGTERM
@@ -795,9 +803,6 @@ argument_list|,
 name|die
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|funix
 operator|=
 name|socket
@@ -809,9 +814,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|funix
@@ -854,9 +856,6 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-end_if
-
-begin_if
 if|if
 condition|(
 name|funix
@@ -899,18 +898,12 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_expr_stmt
 name|defreadfds
 operator|=
 literal|1
 operator|<<
 name|funix
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|finet
 operator|=
 name|socket
@@ -922,9 +915,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|finet
@@ -976,6 +966,8 @@ name|sin
 operator|.
 name|sin_port
 operator|=
+name|port
+operator|=
 name|sp
 operator|->
 name|s_port
@@ -1015,14 +1007,12 @@ literal|1
 operator|<<
 name|finet
 expr_stmt|;
+name|inet
+operator|=
+literal|1
+expr_stmt|;
 block|}
-end_if
-
-begin_comment
 comment|/* tuck my process id away */
-end_comment
-
-begin_expr_stmt
 name|fp
 operator|=
 name|fopen
@@ -1032,9 +1022,6 @@ argument_list|,
 literal|"w"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|fp
@@ -1058,17 +1045,11 @@ name|fp
 argument_list|)
 expr_stmt|;
 block|}
-end_if
-
-begin_expr_stmt
 name|dprintf
 argument_list|(
 literal|"off& running....\n"
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_for
 for|for
 control|(
 name|i
@@ -1092,15 +1073,9 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-end_for
-
-begin_expr_stmt
 name|init
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|signal
 argument_list|(
 name|SIGALRM
@@ -1108,9 +1083,6 @@ argument_list|,
 name|domark
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|alarm
 argument_list|(
 name|MarkIntvl
@@ -1118,9 +1090,6 @@ operator|*
 literal|60
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_for
 for|for
 control|(
 init|;
@@ -1313,24 +1282,27 @@ name|line
 argument_list|)
 expr_stmt|;
 block|}
-end_for
+block|}
+end_function
 
 begin_comment
-unit|}
 comment|/*  * Take a raw input line, decode the message, and print the message  * on the appropriate log files.  */
 end_comment
 
-begin_expr_stmt
-unit|printline
-operator|(
-name|local
-operator|,
-name|msg
-operator|)
+begin_macro
+name|printline
+argument_list|(
+argument|local
+argument_list|,
+argument|msg
+argument_list|)
+end_macro
+
+begin_decl_stmt
 name|int
 name|local
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|char
@@ -1485,29 +1457,6 @@ name|q
 operator|=
 name|line
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|local
-condition|)
-block|{
-name|sprintf
-argument_list|(
-name|q
-argument_list|,
-literal|"%s: "
-argument_list|,
-name|rhost
-argument_list|)
-expr_stmt|;
-name|q
-operator|+=
-name|strlen
-argument_list|(
-name|q
-argument_list|)
-expr_stmt|;
-block|}
 while|while
 condition|(
 operator|(
@@ -1573,12 +1522,6 @@ expr_stmt|;
 block|}
 operator|*
 name|q
-operator|++
-operator|=
-literal|'\n'
-expr_stmt|;
-operator|*
-name|q
 operator|=
 literal|'\0'
 expr_stmt|;
@@ -1587,6 +1530,12 @@ argument_list|(
 name|pri
 argument_list|,
 name|line
+argument_list|,
+name|local
+condition|?
+name|host
+else|:
+name|rhost
 argument_list|)
 expr_stmt|;
 block|}
@@ -1602,6 +1551,8 @@ argument_list|(
 argument|pri
 argument_list|,
 argument|msg
+argument_list|,
+argument|from
 argument_list|)
 end_macro
 
@@ -1615,6 +1566,9 @@ begin_decl_stmt
 name|char
 modifier|*
 name|msg
+decl_stmt|,
+modifier|*
+name|from
 decl_stmt|;
 end_decl_stmt
 
@@ -1638,6 +1592,76 @@ specifier|register
 name|int
 name|l
 decl_stmt|;
+name|struct
+name|iovec
+name|iov
+index|[
+literal|4
+index|]
+decl_stmt|;
+specifier|register
+name|struct
+name|iovec
+modifier|*
+name|v
+init|=
+name|iov
+decl_stmt|;
+name|v
+operator|->
+name|iov_base
+operator|=
+name|from
+expr_stmt|;
+name|v
+operator|->
+name|iov_len
+operator|=
+name|strlen
+argument_list|(
+name|v
+operator|->
+name|iov_base
+argument_list|)
+expr_stmt|;
+name|v
+operator|++
+expr_stmt|;
+name|v
+operator|->
+name|iov_base
+operator|=
+literal|" "
+expr_stmt|;
+name|v
+operator|->
+name|iov_len
+operator|=
+literal|1
+expr_stmt|;
+name|v
+operator|++
+expr_stmt|;
+name|v
+operator|->
+name|iov_base
+operator|=
+name|msg
+expr_stmt|;
+name|v
+operator|->
+name|iov_len
+operator|=
+name|strlen
+argument_list|(
+name|v
+operator|->
+name|iov_base
+argument_list|)
+expr_stmt|;
+name|v
+operator|++
+expr_stmt|;
 comment|/* log the message to the particular outputs */
 for|for
 control|(
@@ -1743,76 +1767,57 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|l
-operator|=
-name|strlen
-argument_list|(
-name|msg
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|write
-argument_list|(
-name|f
-operator|->
-name|f_file
-argument_list|,
-name|msg
-argument_list|,
-name|l
-argument_list|)
-operator|!=
-name|l
-condition|)
-block|{
-name|logerror
-argument_list|(
-name|f
-operator|->
-name|f_name
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|f
-operator|->
-name|f_file
-argument_list|)
-expr_stmt|;
-name|f
-operator|->
-name|f_file
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-block|}
-if|if
-condition|(
-operator|(
 name|f
 operator|->
 name|f_flags
 operator|&
 name|F_TTY
-operator|)
-operator|&&
-name|write
+condition|)
+block|{
+name|v
+operator|->
+name|iov_base
+operator|=
+literal|"\r\n"
+expr_stmt|;
+name|v
+operator|->
+name|iov_len
+operator|=
+literal|2
+expr_stmt|;
+block|}
+else|else
+block|{
+name|v
+operator|->
+name|iov_base
+operator|=
+literal|"\n"
+expr_stmt|;
+name|v
+operator|->
+name|iov_len
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|writev
 argument_list|(
 name|f
 operator|->
 name|f_file
 argument_list|,
-literal|"\r"
+name|iov
 argument_list|,
-literal|1
+literal|4
 argument_list|)
-operator|!=
-literal|1
+operator|<
+literal|0
 condition|)
 block|{
 name|logerror
@@ -1853,6 +1858,8 @@ argument_list|(
 name|pri
 argument_list|,
 name|msg
+argument_list|,
+name|from
 argument_list|)
 expr_stmt|;
 block|}
@@ -2182,6 +2189,12 @@ operator|==
 literal|'@'
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|inet
+condition|)
+continue|continue;
 name|hp
 operator|=
 name|gethostbyname
@@ -2192,15 +2205,37 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sp
-operator|!=
-name|NULL
-operator|&&
 name|hp
-operator|!=
+operator|==
 name|NULL
 condition|)
 block|{
+name|char
+name|buf
+index|[
+literal|100
+index|]
+decl_stmt|;
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"unknown host %s"
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+name|logerror
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 name|bzero
 argument_list|(
 operator|&
@@ -2228,9 +2263,7 @@ name|f_addr
 operator|.
 name|sin_port
 operator|=
-name|sp
-operator|->
-name|s_port
+name|port
 expr_stmt|;
 name|bcopy
 argument_list|(
@@ -2282,7 +2315,6 @@ literal|"socket"
 argument_list|)
 expr_stmt|;
 continue|continue;
-block|}
 block|}
 name|flags
 operator||=
@@ -2402,6 +2434,10 @@ operator|++
 expr_stmt|;
 block|}
 comment|/* 	 *  Read the list of users. 	 * 	 *	Anyone in this list is informed directly if s/he 	 *	is logged in when a high priority message comes through. 	 */
+name|Sumask
+operator|=
+name|LOG_SALERT
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -2512,6 +2548,8 @@ index|]
 operator|.
 name|s_pmask
 operator|=
+name|pmask
+operator|=
 name|LOG_SALERT
 expr_stmt|;
 name|strncpy
@@ -2567,30 +2605,9 @@ argument_list|(
 name|cf
 argument_list|)
 expr_stmt|;
-name|time
+name|dprintf
 argument_list|(
-operator|&
-name|now
-argument_list|)
-expr_stmt|;
-name|sprintf
-argument_list|(
-name|cline
-argument_list|,
-literal|"syslog restarted %s"
-argument_list|,
-name|ctime
-argument_list|(
-operator|&
-name|now
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|logmsg
-argument_list|(
-name|LOG_DEBUG
-argument_list|,
-name|cline
+literal|"syslogd: restarted\n"
 argument_list|)
 expr_stmt|;
 comment|/* arrange for signal 1 to reconfigure */
@@ -2614,6 +2631,8 @@ argument_list|(
 argument|pri
 argument_list|,
 argument|msg
+argument_list|,
+argument|from
 argument_list|)
 end_macro
 
@@ -2627,6 +2646,9 @@ begin_decl_stmt
 name|char
 modifier|*
 name|msg
+decl_stmt|,
+modifier|*
+name|from
 decl_stmt|;
 end_decl_stmt
 
@@ -2644,13 +2666,15 @@ decl_stmt|;
 name|int
 name|f
 decl_stmt|,
-name|uf
-decl_stmt|,
 name|flags
 decl_stmt|,
 name|len
 decl_stmt|,
 name|e
+decl_stmt|;
+name|FILE
+modifier|*
+name|uf
 decl_stmt|;
 name|struct
 name|utmp
@@ -2667,50 +2691,43 @@ operator|+
 literal|100
 index|]
 decl_stmt|;
-name|char
-name|hbuf
-index|[
-literal|32
-index|]
-decl_stmt|;
 comment|/* open the user login file */
+if|if
+condition|(
+operator|(
 name|uf
 operator|=
-name|open
+name|fopen
 argument_list|(
 literal|"/etc/utmp"
 argument_list|,
-literal|0
+literal|"r"
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|logerror
+argument_list|(
+literal|"/etc/utmp"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|uf
-operator|<
-literal|0
-condition|)
 return|return;
+block|}
 name|time
 argument_list|(
 operator|&
 name|now
 argument_list|)
 expr_stmt|;
-name|gethostname
-argument_list|(
-name|hbuf
-argument_list|,
-sizeof|sizeof
-name|hbuf
-argument_list|)
-expr_stmt|;
 name|sprintf
 argument_list|(
 name|line
 argument_list|,
-literal|"\r\n\007Message from syslogd@%s at %.24s ...\r\n%s\r"
+literal|"\r\n\7Message from syslogd@%s at %.24s ...\r\n%s\r\n"
 argument_list|,
-name|hbuf
+name|from
 argument_list|,
 name|ctime
 argument_list|(
@@ -2731,19 +2748,20 @@ expr_stmt|;
 comment|/* scan the user login file */
 while|while
 condition|(
-name|read
+name|fread
 argument_list|(
-name|uf
-argument_list|,
 operator|&
 name|ut
 argument_list|,
 sizeof|sizeof
 name|ut
+argument_list|,
+literal|1
+argument_list|,
+name|uf
 argument_list|)
 operator|==
-sizeof|sizeof
-name|ut
+literal|1
 condition|)
 block|{
 comment|/* is this slot used? */
@@ -3107,7 +3125,7 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|" --- MARK --- %s"
+literal|"syslogd: %.24s-- MARK"
 argument_list|,
 name|ctime
 argument_list|(
@@ -3122,6 +3140,8 @@ operator|-
 literal|1
 argument_list|,
 name|buf
+argument_list|,
+name|host
 argument_list|)
 expr_stmt|;
 block|}
@@ -3283,6 +3303,15 @@ index|[
 literal|100
 index|]
 decl_stmt|;
+name|long
+name|now
+decl_stmt|;
+name|time
+argument_list|(
+operator|&
+name|now
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|errno
@@ -3293,7 +3322,13 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"syslogd: %s\n"
+literal|"syslogd: %.24s-- %s"
+argument_list|,
+name|ctime
+argument_list|(
+operator|&
+name|now
+argument_list|)
 argument_list|,
 name|type
 argument_list|)
@@ -3312,7 +3347,13 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"syslogd: %s: error %d\n"
+literal|"syslogd: %.24s-- %s: error %d"
+argument_list|,
+name|ctime
+argument_list|(
+operator|&
+name|now
+argument_list|)
 argument_list|,
 name|type
 argument_list|,
@@ -3324,7 +3365,13 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"syslogd: %s: %s\n"
+literal|"syslogd: %.24s-- %s: %s"
+argument_list|,
+name|ctime
+argument_list|(
+operator|&
+name|now
+argument_list|)
 argument_list|,
 name|type
 argument_list|,
@@ -3340,6 +3387,8 @@ literal|0
 expr_stmt|;
 name|dprintf
 argument_list|(
+literal|"%s\n"
+argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
@@ -3348,6 +3397,8 @@ argument_list|(
 name|LOG_ERR
 argument_list|,
 name|buf
+argument_list|,
+name|host
 argument_list|)
 expr_stmt|;
 block|}
@@ -3360,11 +3411,9 @@ end_macro
 
 begin_block
 block|{
-name|logmsg
+name|dprintf
 argument_list|(
-name|LOG_DEBUG
-argument_list|,
-literal|"syslog: down\n"
+literal|"syslogd: going down\n"
 argument_list|)
 expr_stmt|;
 operator|(
