@@ -480,6 +480,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
 begin_function
 name|int
 name|read
@@ -509,6 +513,12 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -527,14 +537,10 @@ argument_list|,
 name|FREAD
 argument_list|)
 operator|)
-operator|==
+operator|!=
 name|NULL
 condition|)
-return|return
-operator|(
-name|EBADF
-operator|)
-return|;
+block|{
 name|error
 operator|=
 name|dofileread
@@ -569,6 +575,20 @@ argument_list|(
 name|fp
 argument_list|,
 name|p
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|error
+operator|=
+name|EBADF
+expr_stmt|;
+block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 return|return
@@ -618,6 +638,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
 begin_function
 name|int
 name|pread
@@ -647,6 +671,12 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -668,11 +698,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 name|EBADF
-operator|)
-return|;
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|fp
@@ -685,6 +717,13 @@ block|{
 name|error
 operator|=
 name|ESPIPE
+expr_stmt|;
+name|fdrop
+argument_list|(
+name|fp
+argument_list|,
+name|p
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -716,12 +755,18 @@ argument_list|,
 name|FOF_OFFSET
 argument_list|)
 expr_stmt|;
-block|}
 name|fdrop
 argument_list|(
 name|fp
 argument_list|,
 name|p
+argument_list|)
+expr_stmt|;
+block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 return|return
@@ -1066,6 +1111,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
 begin_function
 name|int
 name|readv
@@ -1097,10 +1146,6 @@ name|struct
 name|filedesc
 modifier|*
 name|fdp
-init|=
-name|p
-operator|->
-name|p_fd
 decl_stmt|;
 name|struct
 name|uio
@@ -1152,6 +1197,18 @@ name|ktruio
 decl_stmt|;
 endif|#
 directive|endif
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+name|fdp
+operator|=
+name|p
+operator|->
+name|p_fd
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1171,11 +1228,15 @@ operator|)
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 name|EBADF
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
+block|}
 comment|/* note: can't use iovlen until iovcnt is validated */
 name|iovlen
 operator|=
@@ -1206,11 +1267,15 @@ name|iovcnt
 operator|>
 name|UIO_MAXIOV
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 name|EINVAL
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
+block|}
 name|MALLOC
 argument_list|(
 name|iov
@@ -1564,6 +1629,14 @@ argument_list|,
 name|M_IOV
 argument_list|)
 expr_stmt|;
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -1606,6 +1679,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
 begin_function
 name|int
 name|write
@@ -1635,6 +1712,12 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1653,14 +1736,10 @@ argument_list|,
 name|FWRITE
 argument_list|)
 operator|)
-operator|==
+operator|!=
 name|NULL
 condition|)
-return|return
-operator|(
-name|EBADF
-operator|)
-return|;
+block|{
 name|error
 operator|=
 name|dofilewrite
@@ -1695,6 +1774,20 @@ argument_list|(
 name|fp
 argument_list|,
 name|p
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|error
+operator|=
+name|EBADF
+expr_stmt|;
+block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 return|return
@@ -1745,6 +1838,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
 begin_function
 name|int
 name|pwrite
@@ -1774,6 +1871,12 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1795,11 +1898,13 @@ operator|)
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 name|EBADF
-operator|)
-return|;
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|fp
@@ -1812,6 +1917,13 @@ block|{
 name|error
 operator|=
 name|ESPIPE
+expr_stmt|;
+name|fdrop
+argument_list|(
+name|fp
+argument_list|,
+name|p
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -1843,12 +1955,18 @@ argument_list|,
 name|FOF_OFFSET
 argument_list|)
 expr_stmt|;
-block|}
 name|fdrop
 argument_list|(
 name|fp
 argument_list|,
 name|p
+argument_list|)
+expr_stmt|;
+block|}
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
 argument_list|)
 expr_stmt|;
 return|return
@@ -2231,6 +2349,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
 begin_function
 name|int
 name|writev
@@ -2262,10 +2384,6 @@ name|struct
 name|filedesc
 modifier|*
 name|fdp
-init|=
-name|p
-operator|->
-name|p_fd
 decl_stmt|;
 name|struct
 name|uio
@@ -2317,6 +2435,18 @@ name|ktruio
 decl_stmt|;
 endif|#
 directive|endif
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+name|fdp
+operator|=
+name|p
+operator|->
+name|p_fd
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -2336,11 +2466,15 @@ operator|)
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 name|EBADF
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
+block|}
 comment|/* note: can't use iovlen until iovcnt is validated */
 name|iovlen
 operator|=
@@ -2773,6 +2907,14 @@ argument_list|,
 name|M_IOV
 argument_list|)
 expr_stmt|;
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -2812,6 +2954,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_comment
 comment|/* ARGSUSED */
@@ -2855,6 +3001,8 @@ name|com
 decl_stmt|;
 name|int
 name|error
+init|=
+literal|0
 decl_stmt|;
 specifier|register
 name|u_int
@@ -2886,6 +3034,12 @@ decl_stmt|;
 block|}
 name|ubuf
 union|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 name|fdp
 operator|=
 name|p
@@ -2920,11 +3074,15 @@ operator|)
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 name|EBADF
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
+block|}
 if|if
 condition|(
 operator|(
@@ -2941,11 +3099,15 @@ operator|)
 operator|==
 literal|0
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 name|EBADF
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
+block|}
 switch|switch
 condition|(
 name|com
@@ -2970,11 +3132,9 @@ operator|&=
 operator|~
 name|UF_EXCLOSE
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 case|case
 name|FIOCLEX
 case|:
@@ -2989,11 +3149,9 @@ index|]
 operator||=
 name|UF_EXCLOSE
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 block|}
 comment|/* 	 * Interpret high order word to find amount of data to be 	 * copied to/from the user's address space. 	 */
 name|size
@@ -3009,11 +3167,15 @@ name|size
 operator|>
 name|IOCPARM_MAX
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 name|ENOTTY
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
+block|}
 name|fhold
 argument_list|(
 name|fp
@@ -3117,11 +3279,9 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|done2
+goto|;
 block|}
 block|}
 else|else
@@ -3346,6 +3506,14 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -3433,6 +3601,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_function
 name|int
@@ -3543,6 +3715,12 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|uap
@@ -4241,6 +4419,12 @@ argument_list|,
 name|M_SELECT
 argument_list|)
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -4740,6 +4924,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
+
 begin_function
 name|int
 name|poll
@@ -4818,6 +5006,12 @@ argument_list|,
 name|nfds
 argument_list|)
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 comment|/* 	 * This is kinda bogus.  We have fd limits, but that is not 	 * really related to the size of the pollfd array.  Make sure 	 * we let the process use at least FD_SETSIZE entries and at 	 * least enough for the current limits.  We want to be reasonably 	 * safe, but not overly restrictive. 	 */
 if|if
 condition|(
@@ -4836,11 +5030,15 @@ name|nfds
 operator|>
 name|FD_SETSIZE
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 name|EINVAL
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|done2
+goto|;
+block|}
 name|ni
 operator|=
 name|nfds
@@ -5401,6 +5599,14 @@ argument_list|,
 name|M_TEMP
 argument_list|)
 expr_stmt|;
+name|done2
+label|:
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -5781,6 +5987,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * MPSAFE  */
+end_comment
 
 begin_function
 name|int
