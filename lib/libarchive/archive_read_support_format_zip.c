@@ -2011,7 +2011,7 @@ name|zip
 modifier|*
 name|zip
 decl_stmt|;
-name|size_t
+name|ssize_t
 name|bytes_read
 decl_stmt|;
 specifier|const
