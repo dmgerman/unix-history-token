@@ -528,6 +528,18 @@ name|fprintf
 argument_list|(
 name|ofp
 argument_list|,
+literal|"KERN_IDENT=%s\n"
+argument_list|,
+name|raise
+argument_list|(
+name|ident
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|ofp
+argument_list|,
 literal|"IDENT=-D%s"
 argument_list|,
 name|raise
@@ -772,7 +784,7 @@ name|fprintf
 argument_list|(
 name|ofp
 argument_list|,
-literal|"PARAM=-DTIMEZONE=%d -DDST=%d -DMAXUSERS=%d"
+literal|"PARAM=-DTIMEZONE=%d -DDST=%d -DMAXUSERS=%d\n"
 argument_list|,
 name|zone
 argument_list|,
@@ -783,26 +795,22 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|hz
-operator|>
-literal|0
+name|loadaddress
+operator|!=
+operator|-
+literal|1
 condition|)
+block|{
 name|fprintf
 argument_list|(
 name|ofp
 argument_list|,
-literal|" -DHZ=%d"
+literal|"LOAD_ADDRESS=%X\n"
 argument_list|,
-name|hz
+name|loadaddress
 argument_list|)
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|ofp
-argument_list|,
-literal|"\n"
-argument_list|)
-expr_stmt|;
+block|}
 for|for
 control|(
 name|op
@@ -1094,6 +1102,24 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|ident
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"no ident line specified\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|next
 label|:
 comment|/* 	 * filename	[ standard | optional ] [ config-dependent ] 	 *	[ dev* | profiling-routine ] [ device-driver] 	 *	[ compile-with "compile rule" ] 	 */
@@ -1204,6 +1230,43 @@ condition|)
 goto|goto
 name|next
 goto|;
+comment|/*************************************************\ 	* If it's a comment ignore to the end of the line * 	\*************************************************/
+if|if
+condition|(
+name|wd
+index|[
+literal|0
+index|]
+operator|==
+literal|'#'
+condition|)
+block|{
+while|while
+condition|(
+operator|(
+operator|(
+name|wd
+operator|=
+name|get_word
+argument_list|(
+name|fp
+argument_list|)
+operator|)
+operator|!=
+operator|(
+name|char
+operator|*
+operator|)
+name|EOF
+operator|)
+operator|&&
+name|wd
+condition|)
+empty_stmt|;
+goto|goto
+name|next
+goto|;
+block|}
 name|this
 operator|=
 name|ns
@@ -2964,7 +3027,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|" newvers"
+literal|" vers.o"
 argument_list|)
 expr_stmt|;
 name|fprintf

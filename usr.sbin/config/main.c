@@ -316,6 +316,11 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
+name|loadaddress
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|dtab
 operator|=
 name|NULL

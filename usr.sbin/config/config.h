@@ -700,12 +700,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|hz
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|profiling
 decl_stmt|;
 end_decl_stmt
@@ -719,6 +713,12 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|maxusers
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|u_int
+name|loadaddress
 decl_stmt|;
 end_decl_stmt
 
