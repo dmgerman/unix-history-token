@@ -110,6 +110,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/linker.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/wait.h>
 end_include
 
@@ -195,6 +207,10 @@ name|_ioctl_reply
 modifier|*
 name|reply
 decl_stmt|;
+name|int
+name|ioctltype
+decl_stmt|;
+comment|/* for ioctl call */
 if|if
 condition|(
 name|argc
@@ -419,6 +435,11 @@ name|dfd
 argument_list|)
 expr_stmt|;
 comment|/* done with the config file */
+name|ioctltype
+operator|=
+literal|0
+expr_stmt|;
+comment|/* saveconfig after update */
 name|error
 operator|=
 name|ioctl
@@ -427,7 +448,8 @@ name|superdev
 argument_list|,
 name|VINUM_SAVECONFIG
 argument_list|,
-name|NULL
+operator|&
+name|ioctltype
 argument_list|)
 expr_stmt|;
 comment|/* save the config to disk */
@@ -1588,27 +1610,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|make_devices
+argument_list|()
+expr_stmt|;
+comment|/* recreate the /dev/vinum hierarchy */
 name|printf
 argument_list|(
 literal|"\b Vinum configuration obliterated\n"
-argument_list|)
-expr_stmt|;
-name|system
-argument_list|(
-literal|"rm -rf "
-name|VINUM_DIR
-literal|"/"
-literal|"*"
-argument_list|)
-expr_stmt|;
-comment|/* remove the old /dev/vinum */
-name|syslog
-argument_list|(
-name|LOG_NOTICE
-operator||
-name|LOG_KERN
-argument_list|,
-literal|"configuration obliterated"
 argument_list|)
 expr_stmt|;
 name|start_daemon
@@ -2439,26 +2447,30 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|token
-index|[
-literal|0
-index|]
-operator|=
-literal|"read"
-expr_stmt|;
-comment|/* make a read command of this mess */
 name|tokens
 operator|=
-literal|1
+literal|0
 expr_stmt|;
-comment|/* so far, it's the only token */
+comment|/* no tokens yet */
+if|if
+condition|(
 name|getdevs
 argument_list|(
 operator|&
 name|statinfo
 argument_list|)
-expr_stmt|;
+operator|<
+literal|0
+condition|)
+block|{
 comment|/* find out what devices we have */
+name|perror
+argument_list|(
+literal|"Can't get device list"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|namelist
 index|[
 literal|0
@@ -2849,14 +2861,97 @@ name|argc
 operator|==
 literal|0
 condition|)
-comment|/* stop everything */
+block|{
+comment|/* stop vinum */
+name|int
+name|fileid
+init|=
+literal|0
+decl_stmt|;
+comment|/* ID of Vinum kld */
+name|close
+argument_list|(
+name|superdev
+argument_list|)
+expr_stmt|;
+comment|/* we can't stop if we have vinum open */
+name|fileid
+operator|=
+name|kldfind
+argument_list|(
+name|VINUMMOD
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|fileid
+operator|<
+literal|0
+operator|)
+comment|/* no go */
+operator|||
+operator|(
+name|kldunload
+argument_list|(
+name|fileid
+argument_list|)
+operator|<
+literal|0
+operator|)
+condition|)
+name|perror
+argument_list|(
+literal|"Can't unload "
+name|VINUMMOD
+argument_list|)
+expr_stmt|;
+else|else
+block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"stop must have an argument\n"
+name|VINUMMOD
+literal|" unloaded\n"
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* If we got here, the stop failed.  Reopen the superdevice. */
+name|superdev
+operator|=
+name|open
+argument_list|(
+name|VINUM_SUPERDEV_NAME
+argument_list|,
+name|O_RDWR
+argument_list|)
+expr_stmt|;
+comment|/* reopen vinum superdevice */
+if|if
+condition|(
+name|superdev
+operator|<
+literal|0
+condition|)
+block|{
+name|perror
+argument_list|(
+literal|"Can't reopen Vinum superdevice"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 else|else
 block|{
 comment|/* stop specified objects */
@@ -5701,6 +5796,81 @@ literal|"Usage: \tsetdaemon [<bitmask>]\n"
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/* Save config info */
+end_comment
+
+begin_function
+name|void
+name|vinum_saveconfig
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+name|argv
+index|[]
+parameter_list|,
+name|char
+modifier|*
+name|argv0
+index|[]
+parameter_list|)
+block|{
+name|int
+name|ioctltype
+decl_stmt|;
+if|if
+condition|(
+name|argc
+operator|!=
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Usage: saveconfig\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|ioctltype
+operator|=
+literal|1
+expr_stmt|;
+comment|/* user saveconfig */
+if|if
+condition|(
+name|ioctl
+argument_list|(
+name|superdev
+argument_list|,
+name|VINUM_SAVECONFIG
+argument_list|,
+operator|&
+name|ioctltype
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Can't set daemon options: %s (%d)\n"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|,
+name|errno
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
