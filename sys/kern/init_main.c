@@ -1548,6 +1548,12 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* Allocate a prototype map so we have something to fork. */
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 name|pmap_pinit0
 argument_list|(
 name|vmspace_pmap
@@ -1598,6 +1604,12 @@ name|vmspace_pmap
 argument_list|(
 operator|&
 name|vmspace0
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
 argument_list|)
 expr_stmt|;
 name|p
@@ -1983,12 +1995,6 @@ operator|-
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -2054,12 +2060,6 @@ name|mtx_unlock
 argument_list|(
 operator|&
 name|vm_mtx
-argument_list|)
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|Giant
 argument_list|)
 expr_stmt|;
 if|if
