@@ -226,7 +226,7 @@ comment|/* struct in_addr addr; */
 define|\
 comment|/* struct ifnet *ifp; */
 define|\
-value|{ \ 	register struct in_ifaddr *ia; \ \ 	for (ia = in_ifaddrhead.tqh_first; \ 	    ia != NULL&& ((ia->ia_ifp->if_flags& IFF_POINTOPOINT)? \ 		IA_DSTSIN(ia):IA_SIN(ia))->sin_addr.s_addr != (addr).s_addr; \ 	    ia = ia->ia_link.tqe_next) \ 		 continue; \ 	if (ia == NULL) \ 	    for (ia = in_ifaddrhead.tqh_first; \ 		ia != NULL; \ 		ia = ia->ia_link.tqe_next) \ 		    if (ia->ia_ifp->if_flags& IFF_POINTOPOINT&& \ 			IA_SIN(ia)->sin_addr.s_addr == (addr).s_addr) \ 			    break; \ 	(ifp) = (ia == NULL) ? NULL : ia->ia_ifp; \ }
+value|{ \ 	struct in_ifaddr *ia; \ \ 	TAILQ_FOREACH(ia,&in_ifaddrhead, ia_link) \ 		if (IA_SIN(ia)->sin_addr.s_addr == (addr).s_addr) \ 			break; \ 	(ifp) = (ia == NULL) ? NULL : ia->ia_ifp; \ }
 end_define
 
 begin_comment
@@ -247,7 +247,7 @@ comment|/* struct ifnet *ifp; */
 define|\
 comment|/* struct in_ifaddr *ia; */
 define|\
-value|{ \ 	for ((ia) = in_ifaddrhead.tqh_first; \ 	    (ia) != NULL&& (ia)->ia_ifp != (ifp); \ 	    (ia) = (ia)->ia_link.tqe_next) \ 		continue; \ }
+value|{ \ 	for ((ia) = TAILQ_FIRST(&in_ifaddrhead); \ 	    (ia) != NULL&& (ia)->ia_ifp != (ifp); \ 	    (ia) = TAILQ_NEXT((ia), ia_link)) \ 		continue; \ }
 end_define
 
 begin_endif
@@ -419,7 +419,7 @@ comment|/* struct ifnet *ifp; */
 define|\
 comment|/* struct in_multi *inm; */
 define|\
-value|do { \ 	register struct ifmultiaddr *ifma; \ \ 	for (ifma = (ifp)->if_multiaddrs.lh_first; ifma; \ 	     ifma = ifma->ifma_link.le_next) { \ 		if (ifma->ifma_addr->sa_family == AF_INET \&& ((struct sockaddr_in *)ifma->ifma_addr)->sin_addr.s_addr == \ 		    (addr).s_addr) \ 			break; \ 	} \ 	(inm) = ifma ? ifma->ifma_protospec : 0; \ } while(0)
+value|do { \ 	struct ifmultiaddr *ifma; \ \ 	LIST_FOREACH(ifma,&((ifp)->if_multiaddrs), ifma_link) { \ 		if (ifma->ifma_addr->sa_family == AF_INET \&& ((struct sockaddr_in *)ifma->ifma_addr)->sin_addr.s_addr == \ 		    (addr).s_addr) \ 			break; \ 	} \ 	(inm) = ifma ? ifma->ifma_protospec : 0; \ } while(0)
 end_define
 
 begin_comment
@@ -440,7 +440,7 @@ comment|/* struct in_multistep  step; */
 define|\
 comment|/* struct in_multi *inm; */
 define|\
-value|do { \ 	if (((inm) = (step).i_inm) != NULL) \ 		(step).i_inm = (step).i_inm->inm_link.le_next; \ } while(0)
+value|do { \ 	if (((inm) = (step).i_inm) != NULL) \ 		(step).i_inm = LIST_NEXT((step).i_inm, inm_link); \ } while(0)
 end_define
 
 begin_define
@@ -457,7 +457,7 @@ comment|/* struct in_multistep step; */
 define|\
 comment|/* struct in_multi *inm; */
 define|\
-value|do { \ 	(step).i_inm = in_multihead.lh_first; \ 	IN_NEXT_MULTI((step), (inm)); \ } while(0)
+value|do { \ 	(step).i_inm = LIST_FIRST(&in_multihead); \ 	IN_NEXT_MULTI((step), (inm)); \ } while(0)
 end_define
 
 begin_struct_decl
