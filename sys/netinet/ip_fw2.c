@@ -9916,9 +9916,6 @@ name|opcode
 condition|)
 block|{
 case|case
-name|O_NOP
-case|:
-case|case
 name|O_PROBE_STATE
 case|:
 case|case
@@ -10171,6 +10168,9 @@ goto|goto
 name|bad_size
 goto|;
 break|break;
+case|case
+name|O_NOP
+case|:
 case|case
 name|O_IPID
 case|:
