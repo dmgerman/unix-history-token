@@ -2141,7 +2141,7 @@ name|errx
 argument_list|(
 name|EX_OSFILE
 argument_list|,
-literal|"%s:%d: %s %d %s"
+literal|"%s:%d: %s %zd %s"
 argument_list|,
 name|pagedb_path
 argument_list|,
@@ -2204,7 +2204,7 @@ name|errx
 argument_list|(
 name|EX_OSFILE
 argument_list|,
-literal|"%s:%d: %s %d %s"
+literal|"%s:%d: %s %zd %s"
 argument_list|,
 name|pagedb_path
 argument_list|,
@@ -2269,7 +2269,7 @@ name|errx
 argument_list|(
 name|EX_OSFILE
 argument_list|,
-literal|"%s:%d: %s %d %s"
+literal|"%s:%d: %s %zd %s"
 argument_list|,
 name|pagedb_path
 argument_list|,

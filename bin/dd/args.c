@@ -953,7 +953,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"bs must be between 1 and %d"
+literal|"bs must be between 1 and %zd"
 argument_list|,
 name|SSIZE_MAX
 argument_list|)
@@ -1008,7 +1008,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"cbs must be between 1 and %d"
+literal|"cbs must be between 1 and %zd"
 argument_list|,
 name|SSIZE_MAX
 argument_list|)

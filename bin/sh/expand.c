@@ -2535,11 +2535,16 @@ name|error
 argument_list|(
 literal|"%.*s: parameter %snot set"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|p
 operator|-
 name|str
 operator|-
 literal|1
+argument_list|)
 argument_list|,
 name|str
 argument_list|,
@@ -3211,11 +3216,16 @@ name|error
 argument_list|(
 literal|"%.*s: parameter not set"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|p
 operator|-
 name|var
 operator|-
 literal|1
+argument_list|)
 argument_list|,
 name|var
 argument_list|)
