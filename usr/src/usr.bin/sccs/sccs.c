@@ -41,7 +41,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)sccs.c	1.24 %G%"
+literal|"@(#)sccs.c	1.25 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -187,6 +187,43 @@ end_define
 
 begin_comment
 comment|/* protected (e.g., admin) */
+end_comment
+
+begin_comment
+comment|/* modes for the "clean", "info", "check" ops */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLEANC
+value|0
+end_define
+
+begin_comment
+comment|/* clean command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INFOC
+value|1
+end_define
+
+begin_comment
+comment|/* info command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHECKC
+value|2
+end_define
+
+begin_comment
+comment|/* check command */
 end_comment
 
 begin_ifdef
@@ -397,7 +434,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|TRUE
+name|CLEANC
 block|,
 literal|"info"
 block|,
@@ -409,7 +446,19 @@ operator|(
 name|char
 operator|*
 operator|)
-name|FALSE
+name|INFOC
+block|,
+literal|"check"
+block|,
+name|CLEAN
+block|,
+name|REALUSER
+block|,
+operator|(
+name|char
+operator|*
+operator|)
+name|CHECKC
 block|,
 literal|"unedit"
 block|,
@@ -1141,7 +1190,7 @@ case|:
 name|clean
 argument_list|(
 operator|(
-name|bool
+name|int
 operator|)
 name|cmd
 operator|->
@@ -2122,19 +2171,19 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  CLEAN -- clean out recreatable files ** **	Any file for which an "s." file exists but no "p." file **	exists in the current directory is purged. ** **	Parameters: **		really -- if TRUE, remove everything. **			else, just report status. ** **	Returns: **		none. ** **	Side Effects: **		removes files in the current directory. */
+comment|/* **  CLEAN -- clean out recreatable files ** **	Any file for which an "s." file exists but no "p." file **	exists in the current directory is purged. ** **	Parameters: **		tells whether this came from a "clean", "info", or **		"check" command. ** **	Returns: **		none. ** **	Side Effects: **		Removes files in the current directory. **		Prints information regarding files being edited. **		Exits if a "check" command. */
 end_comment
 
 begin_macro
 name|clean
 argument_list|(
-argument|really
+argument|mode
 argument_list|)
 end_macro
 
 begin_decl_stmt
-name|bool
-name|really
+name|int
+name|mode
 decl_stmt|;
 end_decl_stmt
 
@@ -2360,7 +2409,9 @@ block|}
 comment|/* the s. file exists and no p. file exists -- unlink the g-file */
 if|if
 condition|(
-name|really
+name|mode
+operator|==
+name|CLEANC
 condition|)
 block|{
 name|strncpy
@@ -2412,12 +2463,24 @@ condition|(
 operator|!
 name|gotedit
 operator|&&
-operator|!
-name|really
+name|mode
+operator|==
+name|INFOC
 condition|)
 name|printf
 argument_list|(
 literal|"Nothing being edited\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mode
+operator|==
+name|CHECKC
+condition|)
+name|exit
+argument_list|(
+name|gotedit
 argument_list|)
 expr_stmt|;
 block|}
