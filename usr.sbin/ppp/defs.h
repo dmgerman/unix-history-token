@@ -239,6 +239,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CHAPAUTHRESPONSELEN
+value|48
+end_define
+
+begin_comment
+comment|/* Maximum chap authresponse (chap81) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MAXARGS
 value|40
 end_define

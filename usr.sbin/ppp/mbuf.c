@@ -261,6 +261,124 @@ block|}
 end_function
 
 begin_function
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|mbuftype
+parameter_list|(
+name|int
+name|type
+parameter_list|)
+block|{
+specifier|static
+specifier|const
+name|char
+modifier|*
+specifier|const
+name|mbufdesc
+index|[
+name|MB_MAX
+index|]
+init|=
+block|{
+literal|"ip in"
+block|,
+literal|"ip out"
+block|,
+literal|"nat in"
+block|,
+literal|"nat out"
+block|,
+literal|"mp in"
+block|,
+literal|"mp out"
+block|,
+literal|"vj in"
+block|,
+literal|"vj out"
+block|,
+literal|"icompd in"
+block|,
+literal|"icompd out"
+block|,
+literal|"compd in"
+block|,
+literal|"compd out"
+block|,
+literal|"lqr in"
+block|,
+literal|"lqr out"
+block|,
+literal|"echo in"
+block|,
+literal|"echo out"
+block|,
+literal|"proto in"
+block|,
+literal|"proto out"
+block|,
+literal|"acf in"
+block|,
+literal|"acf out"
+block|,
+literal|"sync in"
+block|,
+literal|"sync out"
+block|,
+literal|"hdlc in"
+block|,
+literal|"hdlc out"
+block|,
+literal|"async in"
+block|,
+literal|"async out"
+block|,
+literal|"cbcp in"
+block|,
+literal|"cbcp out"
+block|,
+literal|"chap in"
+block|,
+literal|"chap out"
+block|,
+literal|"pap in"
+block|,
+literal|"pap out"
+block|,
+literal|"ccp in"
+block|,
+literal|"ccp out"
+block|,
+literal|"ipcp in"
+block|,
+literal|"ipcp out"
+block|,
+literal|"lcp in"
+block|,
+literal|"lcp out"
+block|}
+decl_stmt|;
+return|return
+name|type
+operator|<
+literal|0
+operator|||
+name|type
+operator|>=
+name|MB_MAX
+condition|?
+literal|"unknown"
+else|:
+name|mbufdesc
+index|[
+name|type
+index|]
+return|;
+block|}
+end_function
+
+begin_function
 name|struct
 name|mbuf
 modifier|*
@@ -323,12 +441,17 @@ name|log_Printf
 argument_list|(
 name|LogERROR
 argument_list|,
-literal|"Request for mbuf size %lu denied\n"
+literal|"Request for mbuf size %lu (\"%s\") denied !\n"
 argument_list|,
 operator|(
 name|u_long
 operator|)
 name|m_len
+argument_list|,
+name|mbuftype
+argument_list|(
+name|type
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|AbortProgram
@@ -1437,94 +1560,6 @@ block|{
 name|int
 name|i
 decl_stmt|;
-specifier|static
-specifier|const
-name|char
-modifier|*
-specifier|const
-name|mbuftype
-index|[]
-init|=
-block|{
-literal|"ip in"
-block|,
-literal|"ip out"
-block|,
-literal|"nat in"
-block|,
-literal|"nat out"
-block|,
-literal|"mp in"
-block|,
-literal|"mp out"
-block|,
-literal|"vj in"
-block|,
-literal|"vj out"
-block|,
-literal|"icompd in"
-block|,
-literal|"icompd out"
-block|,
-literal|"compd in"
-block|,
-literal|"compd out"
-block|,
-literal|"lqr in"
-block|,
-literal|"lqr out"
-block|,
-literal|"echo in"
-block|,
-literal|"echo out"
-block|,
-literal|"proto in"
-block|,
-literal|"proto out"
-block|,
-literal|"acf in"
-block|,
-literal|"acf out"
-block|,
-literal|"sync in"
-block|,
-literal|"sync out"
-block|,
-literal|"hdlc in"
-block|,
-literal|"hdlc out"
-block|,
-literal|"async in"
-block|,
-literal|"async out"
-block|,
-literal|"cbcp in"
-block|,
-literal|"cbcp out"
-block|,
-literal|"chap in"
-block|,
-literal|"chap out"
-block|,
-literal|"pap in"
-block|,
-literal|"pap out"
-block|,
-literal|"ccp in"
-block|,
-literal|"ccp out"
-block|,
-literal|"ipcp in"
-block|,
-literal|"ipcp out"
-block|,
-literal|"lcp in"
-block|,
-literal|"lcp out"
-block|,
-literal|"unknown"
-block|}
-decl_stmt|;
 name|prompt_Printf
 argument_list|(
 name|arg
@@ -1558,9 +1593,9 @@ literal|"%10.10s: %04lu (%06lu)\t"
 literal|"%10.10s: %04lu (%06lu)\n"
 argument_list|,
 name|mbuftype
-index|[
+argument_list|(
 name|i
-index|]
+argument_list|)
 argument_list|,
 operator|(
 name|u_long
@@ -1583,11 +1618,11 @@ operator|.
 name|octets
 argument_list|,
 name|mbuftype
-index|[
+argument_list|(
 name|i
 operator|+
 literal|1
-index|]
+argument_list|)
 argument_list|,
 operator|(
 name|u_long
@@ -1629,9 +1664,9 @@ argument_list|,
 literal|"%10.10s: %04lu (%06lu)\n"
 argument_list|,
 name|mbuftype
-index|[
+argument_list|(
 name|i
-index|]
+argument_list|)
 argument_list|,
 operator|(
 name|u_long

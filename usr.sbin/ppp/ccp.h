@@ -90,6 +90,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TY_MPPE
+value|18
+end_define
+
+begin_comment
+comment|/* Microsoft PPE */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TY_GAND
 value|19
 end_define
@@ -163,12 +174,42 @@ name|CCP_NEG_DEFLATE24
 value|2
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_DES
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|CCP_NEG_MPPE
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|CCP_NEG_TOTAL
+value|4
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|CCP_NEG_TOTAL
 value|3
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct_decl
 struct_decl|struct
@@ -201,6 +242,19 @@ struct|;
 block|}
 name|deflate
 struct|;
+ifdef|#
+directive|ifdef
+name|HAVE_DES
+struct|struct
+block|{
+name|int
+name|keybits
+decl_stmt|;
+block|}
+name|mppe
+struct|;
+endif|#
+directive|endif
 name|struct
 name|fsm_retry
 name|fsm
@@ -276,7 +330,7 @@ name|struct
 name|lcp_opt
 name|opt
 decl_stmt|;
-comment|/* Set by implementations OptInit() */
+comment|/* Set by implementation's OptInit() */
 block|}
 name|in
 struct|;
@@ -296,7 +350,7 @@ name|ccp_opt
 modifier|*
 name|opt
 decl_stmt|;
-comment|/* Set by implementations OptInit() */
+comment|/* Set by implementation's OptInit() */
 block|}
 name|out
 struct|;

@@ -452,6 +452,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|"tcpmss.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -2352,8 +2358,19 @@ block|{
 if|if
 condition|(
 name|errno
-operator|!=
+operator|==
 name|EAGAIN
+condition|)
+name|result
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|errno
+operator|!=
+name|ENOBUFS
 condition|)
 block|{
 name|log_Printf
@@ -2388,10 +2405,6 @@ name|CLOSE_NORMAL
 argument_list|)
 expr_stmt|;
 block|}
-name|result
-operator|=
-literal|1
-expr_stmt|;
 block|}
 comment|/* else we shouldn't really have been called !  select() is broken ! */
 block|}
@@ -7049,6 +7062,17 @@ name|link
 argument_list|,
 operator|&
 name|vjlayer
+argument_list|)
+expr_stmt|;
+name|link_Stack
+argument_list|(
+operator|&
+name|p
+operator|->
+name|link
+argument_list|,
+operator|&
+name|tcpmsslayer
 argument_list|)
 expr_stmt|;
 ifndef|#

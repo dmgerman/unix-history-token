@@ -2947,8 +2947,6 @@ expr|*
 name|data
 operator|+
 name|providerlen
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
 name|snprintf
@@ -2969,13 +2967,15 @@ operator|->
 name|hook
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|memcpy
 argument_list|(
 name|data
 operator|->
 name|data
 argument_list|,
 name|provider
+argument_list|,
+name|providerlen
 argument_list|)
 expr_stmt|;
 name|data

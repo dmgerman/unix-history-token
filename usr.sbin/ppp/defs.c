@@ -1262,9 +1262,12 @@ name|script
 operator|==
 literal|'#'
 operator|&&
+operator|!
+operator|(
 name|flags
 operator|&
 name|PARSE_NOHASH
+operator|)
 condition|)
 block|{
 operator|*

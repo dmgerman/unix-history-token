@@ -128,15 +128,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|OPT_THROUGHPUT
+name|OPT_TCPMSSFIXUP
 value|0x0200
 end_define
 
 begin_define
 define|#
 directive|define
-name|OPT_UTMP
+name|OPT_THROUGHPUT
 value|0x0400
+end_define
+
+begin_define
+define|#
+directive|define
+name|OPT_UTMP
+value|0x0800
 end_define
 
 begin_define
@@ -257,6 +264,10 @@ name|u_long
 name|bandwidth
 decl_stmt|;
 comment|/* struct tuninfo speed */
+name|int
+name|mtu
+decl_stmt|;
+comment|/* struct tuninfo MTU */
 name|struct
 name|iface
 modifier|*
@@ -359,7 +370,7 @@ comment|/* last thing `load'ed */
 name|u_short
 name|mtu
 decl_stmt|;
-comment|/* Interface mtu */
+comment|/* Required interface MTU */
 name|u_short
 name|ifqueue
 decl_stmt|;
@@ -456,6 +467,10 @@ name|radius
 name|radius
 decl_stmt|;
 comment|/* Info retrieved from radius server */
+name|struct
+name|radacct
+name|radacct
+decl_stmt|;
 endif|#
 directive|endif
 block|}

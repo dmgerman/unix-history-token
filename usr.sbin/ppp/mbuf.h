@@ -367,8 +367,12 @@ begin_define
 define|#
 directive|define
 name|M_MAXLEN
-value|(4096 - sizeof(struct mbuf))
+value|(4352 - sizeof(struct mbuf))
 end_define
+
+begin_comment
+comment|/*> HDLCSIZE */
+end_comment
 
 begin_struct_decl
 struct_decl|struct

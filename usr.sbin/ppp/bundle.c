@@ -3993,6 +3993,12 @@ literal|0
 expr_stmt|;
 name|bundle
 operator|.
+name|mtu
+operator|=
+literal|1500
+expr_stmt|;
+name|bundle
+operator|.
 name|routing_seq
 operator|=
 literal|0
@@ -4109,6 +4115,8 @@ operator||
 name|OPT_IDCHECK
 operator||
 name|OPT_LOOPBACK
+operator||
+name|OPT_TCPMSSFIXUP
 operator||
 name|OPT_THROUGHPUT
 operator||
@@ -4690,6 +4698,13 @@ ifndef|#
 directive|ifndef
 name|NORADIUS
 comment|/* Tell the radius server the bad news */
+name|log_Printf
+argument_list|(
+name|LogDEBUG
+argument_list|,
+literal|"Radius: Destroy called from bundle_Destroy\n"
+argument_list|)
+expr_stmt|;
 name|radius_Destroy
 argument_list|(
 operator|&
@@ -6910,7 +6925,25 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|" Throughput:    %-20.20s"
+literal|" TCPMSS Fixup:  %-20.20s"
+argument_list|,
+name|optval
+argument_list|(
+name|arg
+operator|->
+name|bundle
+argument_list|,
+name|OPT_TCPMSSFIXUP
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|prompt_Printf
+argument_list|(
+name|arg
+operator|->
+name|prompt
+argument_list|,
+literal|" Throughput:    %s\n"
 argument_list|,
 name|optval
 argument_list|(
@@ -6928,7 +6961,7 @@ name|arg
 operator|->
 name|prompt
 argument_list|,
-literal|" Utmp Logging:  %s\n"
+literal|" Utmp Logging:  %-20.20s"
 argument_list|,
 name|optval
 argument_list|(
@@ -10811,8 +10844,6 @@ modifier|*
 name|dl
 decl_stmt|;
 name|int
-name|mtu
-decl_stmt|,
 name|sp
 decl_stmt|;
 name|bundle
@@ -10821,6 +10852,8 @@ name|bandwidth
 operator|=
 literal|0
 expr_stmt|;
+name|bundle
+operator|->
 name|mtu
 operator|=
 literal|0
@@ -10915,6 +10948,8 @@ operator|.
 name|active
 condition|)
 block|{
+name|bundle
+operator|->
 name|mtu
 operator|=
 name|dl
@@ -10955,6 +10990,8 @@ name|mp
 operator|.
 name|active
 condition|)
+name|bundle
+operator|->
 name|mtu
 operator|=
 name|bundle
@@ -10969,8 +11006,12 @@ elseif|else
 if|if
 condition|(
 operator|!
+name|bundle
+operator|->
 name|mtu
 condition|)
+name|bundle
+operator|->
 name|mtu
 operator|=
 literal|1500
@@ -10998,6 +11039,8 @@ name|radius
 operator|.
 name|mtu
 operator|<
+name|bundle
+operator|->
 name|mtu
 condition|)
 block|{
@@ -11014,6 +11057,8 @@ operator|.
 name|mtu
 argument_list|)
 expr_stmt|;
+name|bundle
+operator|->
 name|mtu
 operator|=
 name|bundle
@@ -11028,8 +11073,6 @@ directive|endif
 name|tun_configure
 argument_list|(
 name|bundle
-argument_list|,
-name|mtu
 argument_list|)
 expr_stmt|;
 block|}

@@ -287,9 +287,6 @@ name|struct
 name|bundle
 modifier|*
 name|bundle
-parameter_list|,
-name|int
-name|mtu
 parameter_list|)
 block|{
 ifdef|#
@@ -351,6 +348,8 @@ name|ifr
 operator|.
 name|ifr_mtu
 operator|=
+name|bundle
+operator|->
 name|mtu
 expr_stmt|;
 if|if
@@ -411,6 +410,8 @@ name|info
 operator|.
 name|mtu
 operator|=
+name|bundle
+operator|->
 name|mtu
 expr_stmt|;
 name|info

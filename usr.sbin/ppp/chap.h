@@ -120,6 +120,13 @@ comment|/* Our last response */
 name|int
 name|peertries
 decl_stmt|;
+name|u_char
+name|authresponse
+index|[
+name|CHAPAUTHRESPONSELEN
+index|]
+decl_stmt|;
+comment|/* CHAP 81 response */
 endif|#
 directive|endif
 block|}
@@ -144,7 +151,8 @@ name|auth2chap
 parameter_list|(
 name|a
 parameter_list|)
-value|(struct chap *)((char *)a - (int)&((struct chap *)0)->auth)
+define|\
+value|((struct chap *)((char *)a - (int)&((struct chap *)0)->auth))
 end_define
 
 begin_function_decl
