@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cp.c	4.10 %G%"
+literal|"@(#)cp.c	4.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -166,9 +166,17 @@ break|break;
 case|case
 literal|'p'
 case|:
-comment|/* preserve mtimes and atimes */
+comment|/* preserve mtimes, atimes, and modes */
 name|pflag
 operator|++
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|umask
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 break|break;
 default|default:
@@ -282,7 +290,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: cp [-ip] f1 f2; or: cp [-irp] f1 ... fn d2"
+literal|"Usage: cp [-ip] f1 f2; or: cp [-irp] f1 ... fn d2\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -320,6 +328,8 @@ decl_stmt|,
 name|fnew
 decl_stmt|,
 name|n
+decl_stmt|,
+name|exists
 decl_stmt|;
 name|char
 modifier|*
@@ -601,6 +611,25 @@ literal|1
 operator|)
 return|;
 block|}
+elseif|else
+if|if
+condition|(
+name|pflag
+condition|)
+operator|(
+name|void
+operator|)
+name|chmod
+argument_list|(
+name|to
+argument_list|,
+name|stfrom
+operator|.
+name|st_mode
+operator|&
+literal|07777
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|rcopy
@@ -633,8 +662,8 @@ argument_list|,
 name|from
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|exists
+operator|=
 name|stat
 argument_list|(
 name|to
@@ -642,8 +671,12 @@ argument_list|,
 operator|&
 name|stto
 argument_list|)
-operator|>=
+operator|==
 literal|0
+expr_stmt|;
+if|if
+condition|(
+name|exists
 condition|)
 block|{
 if|if
@@ -801,6 +834,26 @@ literal|1
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|exists
+operator|&&
+name|pflag
+condition|)
+operator|(
+name|void
+operator|)
+name|fchmod
+argument_list|(
+name|fnew
+argument_list|,
+name|stfrom
+operator|.
+name|st_mode
+operator|&
+literal|07777
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 init|;
