@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.44 (Berkeley) %G%"
+literal|"@(#)main.c	8.45 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4548,6 +4548,10 @@ condition|(
 name|OpMode
 operator|==
 name|MD_SMTP
+operator|||
+name|OpMode
+operator|==
+name|MD_DAEMON
 condition|)
 name|smtp
 argument_list|(

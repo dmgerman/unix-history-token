@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	8.18 (Berkeley) %G%"
+literal|"@(#)err.c	8.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -755,6 +755,10 @@ condition|(
 name|OpMode
 operator|==
 name|MD_SMTP
+operator|||
+name|OpMode
+operator|==
+name|MD_DAEMON
 condition|)
 name|fprintf
 argument_list|(
@@ -794,9 +798,15 @@ argument_list|,
 name|getpid
 argument_list|()
 argument_list|,
+operator|(
 name|OpMode
 operator|==
 name|MD_SMTP
+operator|||
+name|OpMode
+operator|==
+name|MD_DAEMON
+operator|)
 condition|?
 name|msg
 else|:

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)collect.c	8.7 (Berkeley) %G%"
+literal|"@(#)collect.c	8.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -760,9 +760,15 @@ break|break;
 comment|/* check for transparent dot */
 if|if
 condition|(
+operator|(
 name|OpMode
 operator|==
 name|MD_SMTP
+operator|||
+name|OpMode
+operator|==
+name|MD_DAEMON
+operator|)
 operator|&&
 name|bp
 index|[
@@ -932,9 +938,15 @@ if|if
 condition|(
 name|inputerr
 operator|&&
+operator|(
 name|OpMode
 operator|==
 name|MD_SMTP
+operator|||
+name|OpMode
+operator|==
+name|MD_DAEMON
+operator|)
 condition|)
 block|{
 name|char

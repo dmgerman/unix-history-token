@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.60 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.61 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -162,9 +162,15 @@ operator|->
 name|e_flags
 argument_list|)
 operator|&&
+operator|(
 name|OpMode
 operator|==
 name|MD_SMTP
+operator|||
+name|OpMode
+operator|==
+name|MD_DAEMON
+operator|)
 condition|)
 block|{
 name|e
@@ -4775,6 +4781,10 @@ condition|(
 name|OpMode
 operator|==
 name|MD_SMTP
+operator|||
+name|OpMode
+operator|==
+name|MD_DAEMON
 operator|||
 name|HoldErrs
 condition|)

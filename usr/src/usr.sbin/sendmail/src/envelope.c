@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.26 (Berkeley) %G%"
+literal|"@(#)envelope.c	8.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2251,6 +2251,10 @@ operator|||
 name|OpMode
 operator|==
 name|MD_SMTP
+operator|||
+name|OpMode
+operator|==
+name|MD_DAEMON
 condition|)
 name|realname
 operator|=
@@ -2954,6 +2958,10 @@ if|if
 condition|(
 operator|!
 name|internal
+operator|&&
+name|OpMode
+operator|!=
+name|MD_DAEMON
 condition|)
 block|{
 if|if
