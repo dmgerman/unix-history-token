@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.15 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.16 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.15 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.16 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -4856,6 +4856,17 @@ index|[
 name|MAXNAME
 index|]
 decl_stmt|;
+name|printf
+argument_list|(
+literal|"%8s"
+argument_list|,
+name|w
+operator|->
+name|w_name
+operator|+
+literal|2
+argument_list|)
+expr_stmt|;
 name|f
 operator|=
 name|fopen
@@ -4874,23 +4885,17 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|printf
+argument_list|(
+literal|" (job completed)\n"
+argument_list|)
+expr_stmt|;
 name|errno
 operator|=
 literal|0
 expr_stmt|;
 continue|continue;
 block|}
-name|printf
-argument_list|(
-literal|"%8s"
-argument_list|,
-name|w
-operator|->
-name|w_name
-operator|+
-literal|2
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
