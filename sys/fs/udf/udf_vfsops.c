@@ -30,37 +30,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/namei.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/vnode.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/mount.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/fcntl.h>
+file|<sys/uio.h>
 end_include
 
 begin_include
@@ -78,7 +54,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/malloc.h>
+file|<sys/conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/dirent.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/fcntl.h>
 end_include
 
 begin_include
@@ -90,13 +78,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/malloc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mount.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/conf.h>
+file|<sys/namei.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/proc.h>
 end_include
 
 begin_include
@@ -108,7 +108,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/dirent.h>
+file|<sys/vnode.h>
 end_include
 
 begin_include
