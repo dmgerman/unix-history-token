@@ -12,7 +12,7 @@ comment|/*  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All righ
 end_comment
 
 begin_comment
-comment|/*  * Issues to be discussed:  * - Thread safe-ness must be checked  * - RFC2553 says that we should raise error on short buffer.  X/Open says  *   we need to truncate the result.  We obey RFC2553 (and X/Open should be  *   modified).  ipngwg rough consensus seems to follow RFC2553.  * - What is "local" in NI_FQDN?  * - NI_NAMEREQD and NI_NUMERICHOST conflict with each other.  * - (KAME extension) NI_WITHSCOPEID when called with global address,  *   and sin6_scope_id filled  */
+comment|/*  * Issues to be discussed:  * - Thread safe-ness must be checked  * - RFC2553 says that we should raise error on short buffer.  X/Open says  *   we need to truncate the result.  We obey RFC2553 (and X/Open should be  *   modified).  ipngwg rough consensus seems to follow RFC2553.  * - What is "local" in NI_FQDN?  * - NI_NAMEREQD and NI_NUMERICHOST conflict with each other.  * - (KAME extension) always attach textual scopeid (fe80::1%lo0), if  *   sin6_scope_id is filled - standardization status?  *   XXX breaks backward compat for code that expects no scopeid.  *   beware on merge.  */
 end_comment
 
 begin_include
@@ -1208,38 +1208,8 @@ argument_list|,
 name|numaddr
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NI_WITHSCOPEID
 if|if
 condition|(
-ifdef|#
-directive|ifdef
-name|DONT_OPAQUE_SCOPEID
-operator|(
-name|IN6_IS_ADDR_LINKLOCAL
-argument_list|(
-operator|(
-expr|struct
-name|in6_addr
-operator|*
-operator|)
-name|addr
-argument_list|)
-operator|||
-name|IN6_IS_ADDR_MULTICAST
-argument_list|(
-operator|(
-expr|struct
-name|in6_addr
-operator|*
-operator|)
-name|addr
-argument_list|)
-operator|)
-operator|&&
-endif|#
-directive|endif
 operator|(
 operator|(
 specifier|const
@@ -1253,30 +1223,17 @@ operator|->
 name|sin6_scope_id
 condition|)
 block|{
-ifndef|#
-directive|ifndef
-name|ALWAYS_WITHSCOPE
-if|if
-condition|(
-name|flags
-operator|&
-name|NI_WITHSCOPEID
-condition|)
-endif|#
-directive|endif
-comment|/* !ALWAYS_WITHSCOPE */
-block|{
 name|char
-name|scopebuf
+name|zonebuf
 index|[
 name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
 name|int
-name|scopelen
+name|zonelen
 decl_stmt|;
 comment|/* ip6_sa2str never fails */
-name|scopelen
+name|zonelen
 operator|=
 name|ip6_sa2str
 argument_list|(
@@ -1286,13 +1243,18 @@ expr|struct
 name|sockaddr_in6
 operator|*
 operator|)
+operator|(
+specifier|const
+name|void
+operator|*
+operator|)
 name|sa
 argument_list|,
-name|scopebuf
+name|zonebuf
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|scopebuf
+name|zonebuf
 argument_list|)
 argument_list|,
 name|flags
@@ -1300,7 +1262,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|scopelen
+name|zonelen
+operator|<
+literal|0
+condition|)
+return|return
+name|EAI_MEMORY
+return|;
+if|if
+condition|(
+name|zonelen
 operator|+
 literal|1
 operator|+
@@ -1313,7 +1284,7 @@ condition|)
 return|return
 name|ENI_MEMORY
 return|;
-comment|/* 			 * construct<numeric-addr><delim><scopeid> 			 */
+comment|/* construct<numeric-addr><delim><scopeid> */
 name|memcpy
 argument_list|(
 name|host
@@ -1322,9 +1293,12 @@ name|numaddrlen
 operator|+
 literal|1
 argument_list|,
-name|scopebuf
+name|zonebuf
 argument_list|,
-name|scopelen
+operator|(
+name|size_t
+operator|)
+name|zonelen
 argument_list|)
 expr_stmt|;
 name|host
@@ -1340,16 +1314,12 @@ name|numaddrlen
 operator|+
 literal|1
 operator|+
-name|scopelen
+name|zonelen
 index|]
 operator|=
 literal|'\0'
 expr_stmt|;
 block|}
-block|}
-endif|#
-directive|endif
-comment|/* NI_WITHSCOPEID */
 return|return
 literal|0
 return|;
