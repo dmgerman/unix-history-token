@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_syscalls.c	7.27 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_syscalls.c	7.28 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -124,7 +124,7 @@ parameter_list|(
 name|s
 parameter_list|)
 define|\
-value|if (sp->sum_bytes_left< (s)) {		\ 	(void) lfs_writeseg(fs, sp);	\ 	lfs_initseg(fs, sp);		\ }
+value|if (sp->sum_bytes_left< (s)) {		\ 	(void) lfs_writeseg(fs, sp);	\ }
 end_define
 
 begin_decl_stmt
@@ -306,70 +306,6 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/* Initialize a segment. */
-name|sp
-operator|=
-name|malloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|segment
-argument_list|)
-argument_list|,
-name|M_SEGMENT
-argument_list|,
-name|M_WAITOK
-argument_list|)
-expr_stmt|;
-name|sp
-operator|->
-name|bpp
-operator|=
-name|malloc
-argument_list|(
-operator|(
-operator|(
-name|LFS_SUMMARY_SIZE
-operator|-
-sizeof|sizeof
-argument_list|(
-name|SEGSUM
-argument_list|)
-operator|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|daddr_t
-argument_list|)
-operator|+
-literal|1
-operator|)
-operator|*
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|buf
-operator|*
-argument_list|)
-argument_list|,
-name|M_SEGMENT
-argument_list|,
-name|M_WAITOK
-argument_list|)
-expr_stmt|;
-name|sp
-operator|->
-name|seg_flags
-operator|=
-name|SEGM_CKP
-expr_stmt|;
-name|sp
-operator|->
-name|vp
-operator|=
-name|NULL
-expr_stmt|;
 name|cnt
 operator|=
 name|uap
@@ -438,20 +374,17 @@ expr_stmt|;
 name|lfs_seglock
 argument_list|(
 name|fs
-argument_list|)
-expr_stmt|;
-name|lfs_initseg
-argument_list|(
-name|fs
 argument_list|,
-name|sp
+name|SEGM_SYNC
+operator||
+name|SEGM_CLEAN
 argument_list|)
 expr_stmt|;
 name|sp
+operator|=
+name|fs
 operator|->
-name|seg_flags
-operator||=
-name|SEGM_CLEAN
+name|lfs_sp
 expr_stmt|;
 for|for
 control|(
@@ -506,7 +439,7 @@ argument_list|,
 name|ip
 argument_list|)
 expr_stmt|;
-name|vput
+name|lfs_vunref
 argument_list|(
 name|vp
 argument_list|)
@@ -916,7 +849,7 @@ argument_list|,
 name|ip
 argument_list|)
 expr_stmt|;
-name|vput
+name|lfs_vunref
 argument_list|(
 name|vp
 argument_list|)
@@ -974,22 +907,6 @@ argument_list|,
 name|M_SEGMENT
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|sp
-operator|->
-name|bpp
-argument_list|,
-name|M_SEGMENT
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|sp
-argument_list|,
-name|M_SEGMENT
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
@@ -998,7 +915,7 @@ return|;
 comment|/*  * XXX If we come in to error 2, we might have indirect blocks that were  * updated and now have bad block pointers.  I don't know what to do  * about this.  */
 name|err2
 label|:
-name|vput
+name|lfs_vunref
 argument_list|(
 name|vp
 argument_list|)
@@ -1063,22 +980,6 @@ argument_list|)
 expr_stmt|;
 name|err1
 label|:
-name|free
-argument_list|(
-name|sp
-operator|->
-name|bpp
-argument_list|,
-name|M_SEGMENT
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|sp
-argument_list|,
-name|M_SEGMENT
-argument_list|)
-expr_stmt|;
 name|free
 argument_list|(
 name|start
@@ -1297,6 +1198,7 @@ operator|==
 name|LFS_UNUSED_LBN
 condition|)
 continue|continue;
+comment|/* Could be a deadlock ? */
 if|if
 condition|(
 name|VFS_VGET
@@ -2044,13 +1946,14 @@ name|ump
 operator|->
 name|um_dev
 expr_stmt|;
+comment|/* 	 * This is playing fast and loose.  Someone may have the inode 	 * locked, in which case they are going to be distinctly unhappy 	 * if we trash something. 	 */
 if|if
 condition|(
 operator|(
 operator|*
 name|vpp
 operator|=
-name|ufs_ihashget
+name|ufs_ihashlookup
 argument_list|(
 name|dev
 argument_list|,
@@ -2061,12 +1964,47 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|lfs_vref
+argument_list|(
+operator|*
+name|vpp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|*
+name|vpp
+operator|)
+operator|->
+name|v_flag
+operator|&
+name|VXLOCK
+condition|)
+name|printf
+argument_list|(
+literal|"Cleaned vnode VXLOCKED\n"
+argument_list|)
+expr_stmt|;
 name|ip
 operator|=
 name|VTOI
 argument_list|(
 operator|*
 name|vpp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ip
+operator|->
+name|i_flags
+operator|&
+name|ILOCKED
+condition|)
+name|printf
+argument_list|(
+literal|"Cleaned vnode ILOCKED\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2223,7 +2161,7 @@ name|ip
 argument_list|)
 expr_stmt|;
 comment|/* Unlock and discard unneeded inode. */
-name|vput
+name|lfs_vunref
 argument_list|(
 name|vp
 argument_list|)
@@ -2295,7 +2233,7 @@ name|vp
 argument_list|)
 condition|)
 block|{
-name|vput
+name|lfs_vunref
 argument_list|(
 name|vp
 argument_list|)
