@@ -67,48 +67,6 @@ parameter_list|)
 value|((struct kernfs_node *)(vp)->v_data)
 end_define
 
-begin_define
-define|#
-directive|define
-name|kernfs_fhtovp
-value|((int (*) __P((struct mount *, struct fid *, \ 	    struct sockaddr *, struct vnode **, int *, struct ucred **)))eopnotsupp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|kernfs_quotactl
-value|((int (*) __P((struct mount *, int, uid_t, caddr_t, \ 	    struct proc *)))eopnotsupp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|kernfs_sync
-value|((int (*) __P((struct mount *, int, struct ucred *, \ 	    struct proc *)))nullop)
-end_define
-
-begin_define
-define|#
-directive|define
-name|kernfs_sysctl
-value|((int (*) __P((int *, u_int, void *, size_t *, void *, \ 	    size_t, struct proc *)))eopnotsupp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|kernfs_vget
-value|((int (*) __P((struct mount *, ino_t, struct vnode **))) \ 	    eopnotsupp)
-end_define
-
-begin_define
-define|#
-directive|define
-name|kernfs_vptofh
-value|((int (*) __P((struct vnode *, struct fid *)))eopnotsupp)
-end_define
-
 begin_decl_stmt
 specifier|extern
 name|vop_t
