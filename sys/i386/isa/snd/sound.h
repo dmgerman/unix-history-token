@@ -3,11 +3,34 @@ begin_comment
 comment|/*  * sound.h  *  * include file for kernel sources, sound driver.  *   * Copyright by Hannu Savolainen 1995  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|"pcm.h"
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|NPCM
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -32,6 +55,12 @@ define|#
 directive|define
 name|_OS_H_
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
 
 begin_include
 include|#
@@ -136,6 +165,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/poll.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<i386/isa/isa_device.h>
 end_include
 
@@ -147,6 +182,73 @@ end_include
 
 begin_comment
 comment|/* for DELAY */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_struct
+struct|struct
+name|isa_device
+block|{
+name|int
+name|dummy
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|d_open_t
+value|void
+end_define
+
+begin_define
+define|#
+directive|define
+name|d_close_t
+value|void
+end_define
+
+begin_define
+define|#
+directive|define
+name|d_read_t
+value|void
+end_define
+
+begin_define
+define|#
+directive|define
+name|d_write_t
+value|void
+end_define
+
+begin_define
+define|#
+directive|define
+name|d_ioctl_t
+value|void
+end_define
+
+begin_define
+define|#
+directive|define
+name|d_poll_t
+value|void
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* KERNEL */
 end_comment
 
 begin_typedef
@@ -172,7 +274,7 @@ comment|/* _OS_H_ */
 end_comment
 
 begin_comment
-comment|/*        * descriptor of a dma buffer. See dmabuf.c for documentation.  * (rp,rl) and (fp,fl) identify the READY and FREE regions of the  * buffer. (dp,dl) identify the region currently used by the DMA.  * Only dmabuf.c should test the value of dl. The reason is that  * in auto-dma mode looking at dl alone does not make much sense,  * since the transfer potentially spans the entire buffer.  */
+comment|/*        * descriptor of a dma buffer. See dmabuf.c for documentation.  * (rp,rl) and (fp,fl) identify the READY and FREE regions of the  * buffer. dl contains the length used for dma transfer, dl>0 also  * means that the channel is busy and there is a DMA transfer in progress.  */
 end_comment
 
 begin_typedef
@@ -189,27 +291,37 @@ name|bufsize
 decl_stmt|;
 specifier|volatile
 name|int
-name|dp
-decl_stmt|,
 name|rp
 decl_stmt|,
 name|fp
 decl_stmt|;
+comment|/* pointers to the ready and free area */
 specifier|volatile
 name|int
 name|dl
-decl_stmt|,
+decl_stmt|;
+comment|/* transfer size */
+specifier|volatile
+name|int
 name|rl
 decl_stmt|,
 name|fl
 decl_stmt|;
-specifier|volatile
-name|int
-name|dl0
-decl_stmt|;
-comment|/* value used last time in dl */
+comment|/* lenght of ready and free areas. */
 name|int
 name|int_count
+decl_stmt|;
+name|int
+name|chan
+decl_stmt|;
+comment|/* dma channel */
+name|int
+name|sample_size
+decl_stmt|;
+comment|/* 1, 2, 4 */
+name|struct
+name|selinfo
+name|sel
 decl_stmt|;
 block|}
 name|snd_dbuf
@@ -345,11 +457,6 @@ value|0x01
 comment|/* start dma op */
 define|#
 directive|define
-name|SND_CB_RESTART
-value|0x02
-comment|/* restart dma op */
-define|#
-directive|define
 name|SND_CB_STOP
 value|0x03
 comment|/* stop dma op */
@@ -392,12 +499,14 @@ comment|/* base for the synth */
 name|int
 name|irq
 decl_stmt|;
-name|int
+define|#
+directive|define
 name|dma1
-decl_stmt|,
+value|dbuf_out.chan
+define|#
+directive|define
 name|dma2
-decl_stmt|;
-comment|/* dma2=dma1 for half-duplex cards */
+value|dbuf_in.chan
 name|int
 name|bd_id
 decl_stmt|;
@@ -453,6 +562,9 @@ name|SND_F_WRITING
 value|0x0008
 comment|/* have a pending write */
 comment|/*      * these mark pending DMA operations. When you have pending dma ops,      * you might get interrupts, so some manipulations of the      * descriptors must be done with interrupts blocked.      */
+if|#
+directive|if
+literal|0
 define|#
 directive|define
 name|SND_F_RD_DMA
@@ -471,10 +583,12 @@ define|#
 directive|define
 name|SND_F_PENDING_OUT
 value|(SND_F_WRITING | SND_F_WR_DMA)
+endif|#
+directive|endif
 define|#
 directive|define
 name|SND_F_PENDING_IO
-value|(SND_F_PENDING_IN | SND_F_PENDING_OUT)
+value|(SND_F_READING | SND_F_WRITING)
 comment|/*      * flag used to mark a pending close.      */
 define|#
 directive|define
@@ -521,11 +635,6 @@ directive|define
 name|SND_F_INIT
 value|0x4000
 comment|/* changed parameters. need init */
-define|#
-directive|define
-name|SND_F_AUTO_DMA
-value|0x8000
-comment|/* use auto-dma */
 name|u_long
 name|bd_flags
 decl_stmt|;
@@ -566,18 +675,28 @@ index|[
 literal|32
 index|]
 decl_stmt|;
-name|struct
-name|selinfo
+define|#
+directive|define
 name|wsel
-decl_stmt|,
+value|dbuf_out.sel
+define|#
+directive|define
 name|rsel
-decl_stmt|,
-name|esel
-decl_stmt|;
+value|dbuf_in.sel
 name|u_long
 name|interrupts
 decl_stmt|;
 comment|/* counter of interrupts */
+name|u_long
+name|magic
+decl_stmt|;
+define|#
+directive|define
+name|MAGIC
+parameter_list|(
+name|unit
+parameter_list|)
+value|( 0xa4d10de0 + unit )
 name|void
 modifier|*
 name|device_data
@@ -848,19 +967,69 @@ end_define
 begin_define
 define|#
 directive|define
+name|MD_CS4237
+value|0xA7
+end_define
+
+begin_define
+define|#
+directive|define
 name|MD_OPTI931
 value|0xB1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MD_GUSPNP
+value|0xB8
+end_define
+
+begin_define
+define|#
+directive|define
+name|MD_YM0020
+value|0xC1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MD_VIVO
+value|0xD1
 end_define
 
 begin_comment
 comment|/*  * TODO: add some card classes rather than specific types.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<i386/isa/snd/soundcard.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|</sys/i386/isa/snd/soundcard.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * many variables should be reduced to a range. Here define a macro  */
@@ -888,22 +1057,22 @@ begin_define
 define|#
 directive|define
 name|DSP_BUFFSIZE
-value|65536
+value|(65536 - 256)
 end_define
 
 begin_comment
 comment|/* XXX */
 end_comment
 
-begin_if
-if|#
-directive|if
-literal|1
-end_if
-
 begin_comment
-comment|/* prepare for pnp support! */
+comment|/*  * the last 256 bytes are room for buggy soundcard to overflow.  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
 
 begin_include
 include|#
@@ -938,6 +1107,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* KERNEL */
+end_comment
 
 begin_comment
 comment|/*  * Minor numbers for the sound driver.  *  * Unfortunately Creative called the codec chip of SB as a DSP. For this  * reason the /dev/dsp is reserved for digitized audio use. There is a  * device for true DSP processors but it will be called something else.  * In v3.0 it's /dev/sndproc but this could be a temporary solution.  */
@@ -1190,6 +1363,12 @@ index|]
 typedef|;
 end_typedef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -1238,6 +1417,16 @@ name|len_r
 parameter_list|)
 define|\
 value|{{reg_l, 0, pos_l, len_l}, {reg_r, 0, pos_r, len_r}}
+end_define
+
+begin_define
+define|#
+directive|define
+name|MIX_NONE
+parameter_list|(
+name|name
+parameter_list|)
+value|MIX_ENT(name, 0,0,0,0, 0,0,0,0)
 end_define
 
 begin_define
@@ -1479,20 +1668,6 @@ name|d
 parameter_list|,
 name|int
 name|size
-parameter_list|,
-name|int
-name|b16
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|reset_dbuf
-parameter_list|(
-name|snd_dbuf
-modifier|*
-name|b
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1504,6 +1679,45 @@ parameter_list|(
 name|snddev_info
 modifier|*
 name|d
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* the following parameters are used in snd_sync and reset_dbuf  * to decide whether or not to restart a channel  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SND_CHAN_NONE
+value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SND_CHAN_WR
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SND_CHAN_RD
+value|0x2
+end_define
+
+begin_function_decl
+name|void
+name|reset_dbuf
+parameter_list|(
+name|snd_dbuf
+modifier|*
+name|b
+parameter_list|,
+name|int
+name|chan
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1532,6 +1746,9 @@ parameter_list|(
 name|snddev_info
 modifier|*
 name|d
+parameter_list|,
+name|int
+name|restart
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1543,6 +1760,9 @@ parameter_list|(
 name|snddev_info
 modifier|*
 name|d
+parameter_list|,
+name|int
+name|restart
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1551,9 +1771,9 @@ begin_function_decl
 name|void
 name|dsp_wr_dmaupdate
 parameter_list|(
-name|snddev_info
+name|snd_dbuf
 modifier|*
-name|d
+name|b
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1562,9 +1782,9 @@ begin_function_decl
 name|void
 name|dsp_rd_dmaupdate
 parameter_list|(
-name|snddev_info
+name|snd_dbuf
 modifier|*
-name|d
+name|b
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1762,6 +1982,15 @@ name|port
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* KERNEL */
+end_comment
 
 begin_comment
 comment|/*  * usage of flags in device config entry (config file)  */

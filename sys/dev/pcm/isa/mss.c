@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sound/ad1848.c  *   * Modified by Luigi Rizzo (luigi@iet.unipi.it)  *  * Driver for Microsoft Sound System/Windows Sound System (mss)  * -compatible boards. This includes:  *   * AD1848, CS4248  *  * CS4231, used in the GUS MAX and some other cards;  * AD1845, CS4231A (CS4231-like)  * CS4232 (CS4231+SB and MPU, PnP)  * CS4236 (upgrade of the CS4232, has a better mixer)  * OPTi931 (WSS compatible, full duplex, some differences from CS42xx)  *  * Copyright Luigi Rizzo, 1997  * Copyright by Hannu Savolainen 1994, 1995  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met: 1. Redistributions of source code must retain the above  * copyright notice, this list of conditions and the following  * disclaimer. 2.  Redistributions in binary form must reproduce the  * above copyright notice, this list of conditions and the following  * disclaimer in the documentation and/or other materials provided  * with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS''  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A  * PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR  * OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *   *  * Full data sheets in PDF format for the MSS-compatible chips  * are available at  *  *	http://www.crystal.com/ for the CS42XX series, or  *	http://www.opti.com/	for the OPTi931  *  * The OPTi931 appears to be quite buggy.  */
+comment|/*  * sound/ad1848.c  *   * Driver for Microsoft Sound System/Windows Sound System (mss)  * -compatible boards. This includes:  *   * AD1848, CS4248, CS423x, OPTi931, Yamaha SA2 and many others.  *  * Copyright Luigi Rizzo, 1997  * Copyright by Hannu Savolainen 1994, 1995  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer  *    in the documentation and/or other materials provided with the  *    distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS''  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A  * PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR  * OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *   * Full data sheets in PDF format for the MSS-compatible chips  * are available at  *  *	http://www.crystal.com/ for the CS42XX series, or  *	http://www.opti.com/	for the OPTi931  */
 end_comment
 
 begin_include
@@ -307,13 +307,13 @@ operator||
 name|AFMT_A_LAW
 block|,
 comment|/* audio formats */
-comment|/*      * the enhanced boards also have AFMT_IMA_ADPCM | AFMT_S16_BE      */
+comment|/*      * the enhanced boards also have AFMT_IMA_ADPCM | AFMT_S16_BE      * but we do not use these modes.      */
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * this is the probe routine. Note, it is not necessary to  * go through this for PnP devices, since they are already  * indentified precisely using their PnP id.  *  * The base address supplied in the device refers to the old MSS  * specs where the four 4 registers in io space contain configuration  * information. Some boards (as an example, early MSS boards)  * has such a block of registers, whereas others (generally CS42xx)  * do not.  In order to distinguish between the two and do not have  * to supply two separate probe routines, the flags entry in isa_device  * has a bit to mark this.  *  */
+comment|/*  * mss_probe() is the probe routine. Note, it is not necessary to  * go through this for PnP devices, since they are already  * indentified precisely using their PnP id.  *  * The base address supplied in the device refers to the old MSS  * specs where the four 4 registers in io space contain configuration  * information. Some boards (as an example, early MSS boards)  * has such a block of registers, whereas others (generally CS42xx)  * do not.  In order to distinguish between the two and do not have  * to supply two separate probe routines, the flags entry in isa_device  * has a bit to mark this.  *  */
 end_comment
 
 begin_function
@@ -436,7 +436,7 @@ literal|0xff
 condition|)
 block|{
 comment|/* Bus float */
-name|DDB
+name|DEB
 argument_list|(
 name|printf
 argument_list|(
@@ -476,7 +476,7 @@ operator|!=
 literal|0x00
 condition|)
 block|{
-name|DDB
+name|DEB
 argument_list|(
 name|printf
 argument_list|(
@@ -687,6 +687,14 @@ operator|->
 name|id_flags
 argument_list|)
 expr_stmt|;
+name|dev
+operator|->
+name|id_alive
+operator|=
+literal|8
+expr_stmt|;
+comment|/* number of io ports */
+comment|/* should be already set but just in case... */
 if|if
 condition|(
 name|dev
@@ -934,6 +942,13 @@ name|id_irq
 operator|=
 literal|0
 expr_stmt|;
+name|dev
+operator|->
+name|id_alive
+operator|=
+literal|0
+expr_stmt|;
+comment|/* this makes attach fail. */
 return|return
 literal|0
 return|;
@@ -949,6 +964,22 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|d
+operator|->
+name|dma1
+operator|!=
+name|d
+operator|->
+name|dma2
+condition|)
+name|d
+operator|->
+name|audio_fmt
+operator||=
+name|AFMT_FULLDUPLEX
+expr_stmt|;
 name|mss_reinit
 argument_list|(
 name|d
@@ -1130,22 +1161,6 @@ name|si_flags
 operator|=
 literal|0
 expr_stmt|;
-name|d
-operator|->
-name|esel
-operator|.
-name|si_pid
-operator|=
-literal|0
-expr_stmt|;
-name|d
-operator|->
-name|esel
-operator|.
-name|si_flags
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|flags
@@ -1207,31 +1222,12 @@ name|AFMT_S16_LE
 expr_stmt|;
 break|break;
 block|}
-name|reset_dbuf
-argument_list|(
-operator|&
-operator|(
-name|d
-operator|->
-name|dbuf_in
-operator|)
-argument_list|)
-expr_stmt|;
-name|reset_dbuf
-argument_list|(
-operator|&
-operator|(
-name|d
-operator|->
-name|dbuf_out
-operator|)
-argument_list|)
-expr_stmt|;
 name|ask_init
 argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
+comment|/* and reset buffers... */
 block|}
 name|splx
 argument_list|(
@@ -1522,7 +1518,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * the callback routine to handle all dma ops etc.  */
+comment|/*  * the callback routine to handle all dma ops etc.  * With the exception of INIT, all other callbacks are invoked  * with interrupts disabled.  */
 end_comment
 
 begin_function
@@ -1538,9 +1534,6 @@ name|int
 name|reason
 parameter_list|)
 block|{
-name|u_long
-name|s
-decl_stmt|;
 name|u_char
 name|m
 decl_stmt|;
@@ -1600,6 +1593,30 @@ argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
+name|reset_dbuf
+argument_list|(
+operator|&
+operator|(
+name|d
+operator|->
+name|dbuf_in
+operator|)
+argument_list|,
+name|SND_CHAN_RD
+argument_list|)
+expr_stmt|;
+name|reset_dbuf
+argument_list|(
+operator|&
+operator|(
+name|d
+operator|->
+name|dbuf_out
+operator|)
+argument_list|,
+name|SND_CHAN_WR
+argument_list|)
+expr_stmt|;
 return|return
 literal|1
 return|;
@@ -1607,15 +1624,6 @@ break|break ;
 case|case
 name|SND_CB_START
 case|:
-comment|/* fallthrough */
-case|case
-name|SND_CB_RESTART
-case|:
-name|s
-operator|=
-name|spltty
-argument_list|()
-expr_stmt|;
 name|cnt
 operator|=
 name|wr
@@ -1624,13 +1632,13 @@ name|d
 operator|->
 name|dbuf_out
 operator|.
-name|dl0
+name|dl
 else|:
 name|d
 operator|->
 name|dbuf_in
 operator|.
-name|dl0
+name|dl
 expr_stmt|;
 if|if
 condition|(
@@ -1678,7 +1686,7 @@ argument_list|,
 literal|9
 argument_list|)
 expr_stmt|;
-name|DDB
+name|DEB
 argument_list|(
 argument|if (m&
 literal|4
@@ -1784,11 +1792,6 @@ argument_list|,
 name|cnt
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 break|break ;
 case|case
 name|SND_CB_STOP
@@ -1797,11 +1800,6 @@ case|case
 name|SND_CB_ABORT
 case|:
 comment|/* XXX check this... */
-name|s
-operator|=
-name|spltty
-argument_list|()
-expr_stmt|;
 name|m
 operator|=
 name|ad_read
@@ -1877,7 +1875,10 @@ literal|9
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* disable DMA by clearing count registers. */
+if|#
+directive|if
+literal|1
+comment|/* 	 * try to disable DMA by clearing count registers. Not sure it 	 * is needed, and it might cause false interrupts when the 	 * DMA is re-enabled later. 	 */
 if|if
 condition|(
 name|wr
@@ -1911,12 +1912,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 break|break;
+endif|#
+directive|endif
 block|}
 return|return
 literal|0
@@ -1925,7 +1923,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * main irq handler for the CS423x. The OPTi931 code is  * a separate one.  */
+comment|/*  * main irq handler for the CS423x. The OPTi931 code is  * a separate one.  * The correct way to operate for a device with multiple internal  * interrupt sources is to loop on the status register and ack  * interrupts until all interrupts are served and none are reported. At  * this point the IRQ line to the ISA IRQ controller should go low  * and be raised at the next interrupt.  *  * Since the ISA IRQ controller is sent EOI _before_ passing control  * to the isr, it might happen that we serve an interrupt early, in  * which case the status register at the next interrupt should just  * say that there are no more interrupts...  */
 end_comment
 
 begin_function
@@ -1948,16 +1946,23 @@ name|unit
 index|]
 decl_stmt|;
 name|u_char
-name|i11
-decl_stmt|,
 name|c
+decl_stmt|,
+name|served
+init|=
+literal|0
 decl_stmt|;
-name|u_char
-name|reason
+name|int
+name|i
 decl_stmt|;
-comment|/* b0 = playback, b1 = capture, b2 = timer */
-name|i11
-operator|=
+name|DEB
+argument_list|(
+name|printf
+argument_list|(
+literal|"mss_intr\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|ad_read
 argument_list|(
 name|d
@@ -1965,8 +1970,16 @@ argument_list|,
 literal|11
 argument_list|)
 expr_stmt|;
-name|reason
+comment|/* fake read of status bits */
+comment|/*      * loop until there are interrupts, but no more than 10 times.      */
+for|for
+control|(
+name|i
 operator|=
+literal|10
+init|;
+name|i
+operator|&&
 name|inb
 argument_list|(
 name|io_Status
@@ -1974,19 +1987,14 @@ argument_list|(
 name|d
 argument_list|)
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|reason
 operator|&
 literal|1
-operator|)
-condition|)
-comment|/* no int, maybe a shared line ? */
-return|return;
-comment|/* get exact reason */
+condition|;
+name|i
+operator|--
+control|)
+block|{
+comment|/* get exact reason for full-duplex boards */
 name|c
 operator|=
 operator|(
@@ -1999,7 +2007,7 @@ operator|->
 name|dma2
 operator|)
 condition|?
-literal|0x10
+literal|0x30
 else|:
 name|ad_read
 argument_list|(
@@ -2008,15 +2016,18 @@ argument_list|,
 literal|24
 argument_list|)
 expr_stmt|;
+name|c
+operator|&=
+operator|~
+name|served
+expr_stmt|;
 if|if
 condition|(
-operator|(
 name|d
 operator|->
-name|flags
-operator|&
-name|SND_F_WR_DMA
-operator|)
+name|dbuf_out
+operator|.
+name|dl
 operator|&&
 operator|(
 name|c
@@ -2024,41 +2035,24 @@ operator|&
 literal|0x10
 operator|)
 condition|)
+block|{
+name|served
+operator||=
+literal|0x10
+expr_stmt|;
 name|dsp_wrintr
 argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
-name|c
-operator|=
-operator|(
-name|d
-operator|->
-name|dma1
-operator|==
-name|d
-operator|->
-name|dma2
-operator|)
-condition|?
-literal|0x20
-else|:
-name|ad_read
-argument_list|(
-name|d
-argument_list|,
-literal|24
-argument_list|)
-expr_stmt|;
+block|}
 if|if
 condition|(
-operator|(
 name|d
 operator|->
-name|flags
-operator|&
-name|SND_F_RD_DMA
-operator|)
+name|dbuf_in
+operator|.
+name|dl
 operator|&&
 operator|(
 name|c
@@ -2066,12 +2060,18 @@ operator|&
 literal|0x20
 operator|)
 condition|)
+block|{
+name|served
+operator||=
+literal|0x20
+expr_stmt|;
 name|dsp_rdintr
 argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
-comment|/* XXX check this on the 4236... */
+block|}
+comment|/*  	 * now ack the interrupt 	 */
 if|if
 condition|(
 name|d
@@ -2106,10 +2106,11 @@ argument_list|)
 expr_stmt|;
 comment|/* ack selectively */
 block|}
+block|}
 end_function
 
 begin_comment
-comment|/*  * the opti931 seems to miss interrupts when working in full  * duplex. god know why...  */
+comment|/*  * the opti931 seems to miss interrupts when working in full  * duplex, so we try some heuristics to catch them.  */
 end_comment
 
 begin_function
@@ -2153,22 +2154,6 @@ name|loops
 init|=
 literal|10
 decl_stmt|;
-name|int
-name|w_miss
-init|=
-literal|0
-decl_stmt|,
-name|r_miss
-init|=
-literal|0
-decl_stmt|;
-specifier|static
-name|int
-name|misses
-init|=
-literal|0
-decl_stmt|;
-comment|/* XXX kludge */
 if|#
 directive|if
 literal|0
@@ -2227,7 +2212,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Warning CD interrupt\n"
+literal|"Warning: CD interrupt\n"
 argument_list|)
 expr_stmt|;
 name|mc11
@@ -2244,7 +2229,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Warning MPU interrupt\n"
+literal|"Warning: MPU interrupt\n"
 argument_list|)
 expr_stmt|;
 name|mc11
@@ -2307,50 +2292,11 @@ goto|;
 block|}
 if|if
 condition|(
-name|w_miss
-operator|||
-name|r_miss
-condition|)
-block|{
-name|misses
-operator|++
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|misses
-operator|&
-literal|0xff
-operator|)
-operator|==
-literal|1
-condition|)
-name|printf
-argument_list|(
-literal|"opti931: %d missed irq (now %s%s)\n"
-argument_list|,
-name|misses
-argument_list|,
-name|w_miss
-condition|?
-literal|"play "
-else|:
-literal|""
-argument_list|,
-name|r_miss
-condition|?
-literal|"capture "
-else|:
-literal|""
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
 name|loops
 operator|==
 literal|10
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"ouch, intr but nothing in mcir11 0x%02x\n"
@@ -2358,39 +2304,16 @@ argument_list|,
 name|mc11
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|w_miss
-condition|)
-name|mc11
-operator||=
-literal|4
-expr_stmt|;
-if|if
-condition|(
-name|r_miss
-condition|)
-name|mc11
-operator||=
-literal|8
-expr_stmt|;
-if|if
-condition|(
-name|mc11
-operator|==
-literal|0
-condition|)
+block|}
 return|return;
 block|}
 if|if
 condition|(
-operator|(
 name|d
 operator|->
-name|flags
-operator|&
-name|SND_F_RD_DMA
-operator|)
+name|dbuf_in
+operator|.
+name|dl
 operator|&&
 operator|(
 name|mc11
@@ -2404,44 +2327,14 @@ argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
-name|r_miss
-operator|=
-literal|0
-expr_stmt|;
 block|}
-elseif|else
 if|if
 condition|(
-name|isa_dmastatus1
-argument_list|(
 name|d
 operator|->
-name|dma2
-argument_list|)
-operator|==
-literal|0
-operator|&&
-operator|(
-name|d
-operator|->
-name|flags
-operator|&
-name|SND_F_RD_DMA
-operator|)
-condition|)
-name|r_miss
-operator|=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|d
-operator|->
-name|flags
-operator|&
-name|SND_F_WR_DMA
-operator|)
+name|dbuf_out
+operator|.
+name|dl
 operator|&&
 operator|(
 name|mc11
@@ -2450,63 +2343,12 @@ literal|4
 operator|)
 condition|)
 block|{
-if|if
-condition|(
-name|isa_dmastatus1
-argument_list|(
-name|d
-operator|->
-name|dma1
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|printf
-argument_list|(
-literal|"opti931_intr: wr dma %d\n"
-argument_list|,
-name|isa_dmastatus1
-argument_list|(
-name|d
-operator|->
-name|dma1
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|dsp_wrintr
 argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
-name|w_miss
-operator|=
-literal|0
-expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|isa_dmastatus1
-argument_list|(
-name|d
-operator|->
-name|dma1
-argument_list|)
-operator|==
-literal|0
-operator|&&
-operator|(
-name|d
-operator|->
-name|flags
-operator|&
-name|SND_F_WR_DMA
-operator|)
-condition|)
-name|w_miss
-operator|=
-literal|1
-expr_stmt|;
 name|opti_write
 argument_list|(
 name|d
@@ -2599,6 +2441,142 @@ argument_list|(
 name|io_base
 operator|+
 literal|1
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|gus_write
+parameter_list|(
+name|int
+name|io_base
+parameter_list|,
+name|u_char
+name|reg
+parameter_list|,
+name|u_char
+name|value
+parameter_list|)
+block|{
+name|outb
+argument_list|(
+name|io_base
+operator|+
+literal|3
+argument_list|,
+name|reg
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|io_base
+operator|+
+literal|5
+argument_list|,
+name|value
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|gus_writew
+parameter_list|(
+name|int
+name|io_base
+parameter_list|,
+name|u_char
+name|reg
+parameter_list|,
+name|u_short
+name|value
+parameter_list|)
+block|{
+name|outb
+argument_list|(
+name|io_base
+operator|+
+literal|3
+argument_list|,
+name|reg
+argument_list|)
+expr_stmt|;
+name|outb
+argument_list|(
+name|io_base
+operator|+
+literal|4
+argument_list|,
+name|value
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|u_char
+name|gus_read
+parameter_list|(
+name|int
+name|io_base
+parameter_list|,
+name|u_char
+name|reg
+parameter_list|)
+block|{
+name|outb
+argument_list|(
+name|io_base
+operator|+
+literal|3
+argument_list|,
+name|reg
+argument_list|)
+expr_stmt|;
+return|return
+name|inb
+argument_list|(
+name|io_base
+operator|+
+literal|5
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|u_short
+name|gus_readw
+parameter_list|(
+name|int
+name|io_base
+parameter_list|,
+name|u_char
+name|reg
+parameter_list|)
+block|{
+name|outb
+argument_list|(
+name|io_base
+operator|+
+literal|3
+argument_list|,
+name|reg
+argument_list|)
+expr_stmt|;
+return|return
+name|inw
+argument_list|(
+name|io_base
+operator|+
+literal|4
 argument_list|)
 return|;
 block|}
@@ -3033,6 +3011,11 @@ name|d
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|prev
+operator|&=
+operator|~
+name|IA_TRD
+expr_stmt|;
 name|outb
 argument_list|(
 name|io_Index_Addr
@@ -3043,8 +3026,6 @@ argument_list|,
 name|prev
 operator||
 name|IA_MCE
-operator||
-name|IA_TRD
 argument_list|)
 expr_stmt|;
 block|}
@@ -3115,6 +3096,11 @@ name|d
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|prev
+operator|&=
+operator|~
+name|IA_TRD
+expr_stmt|;
 name|outb
 argument_list|(
 name|io_Index_Addr
@@ -3122,14 +3108,10 @@ argument_list|(
 name|d
 argument_list|)
 argument_list|,
-operator|(
 name|prev
 operator|&
 operator|~
 name|IA_MCE
-operator|)
-operator||
-name|IA_TRD
 argument_list|)
 expr_stmt|;
 comment|/* Clear the MCE bit */
@@ -3147,7 +3129,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * only one source can be set...  *  * fixed -- lr 970725  */
+comment|/*  * only one source can be set...  */
 end_comment
 
 begin_function
@@ -3603,7 +3585,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|DDB
+name|DEB
 argument_list|(
 name|printf
 argument_list|(
@@ -3756,7 +3738,7 @@ name|DEB
 argument_list|(
 name|printf
 argument_list|(
-literal|"dev %d reg %d old 0x%02x new 0x%02x\n"
+literal|"LEFT: dev %d reg %d old 0x%02x new 0x%02x\n"
 argument_list|,
 name|dev
 argument_list|,
@@ -3803,6 +3785,8 @@ index|]
 operator|.
 name|regno
 expr_stmt|;
+name|old
+operator|=
 name|val
 operator|=
 name|ad_read
@@ -3846,6 +3830,22 @@ argument_list|,
 name|regoffs
 argument_list|,
 name|val
+argument_list|)
+expr_stmt|;
+name|DEB
+argument_list|(
+name|printf
+argument_list|(
+literal|"RIGHT: dev %d reg %d old 0x%02x new 0x%02x\n"
+argument_list|,
+name|dev
+argument_list|,
+name|regoffs
+argument_list|,
+name|old
+argument_list|,
+name|val
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3909,7 +3909,7 @@ name|d
 operator|->
 name|mix_rec_devs
 operator|=
-name|MODE1_REC_DEVICES
+name|MSS_REC_DEVICES
 expr_stmt|;
 for|for
 control|(
@@ -3955,11 +3955,64 @@ argument_list|,
 name|SOUND_MASK_MIC
 argument_list|)
 expr_stmt|;
+comment|/*      * some device-specific things, mostly mute the mic to      * the output mixer so as to avoid hisses. In many cases this      * is the default after reset, this code is here mostly as a      * reminder that this might be necessary on other boards.      */
+switch|switch
+condition|(
+name|d
+operator|->
+name|bd_id
+condition|)
+block|{
+case|case
+name|MD_OPTI931
+case|:
+name|ad_write
+argument_list|(
+name|d
+argument_list|,
+literal|20
+argument_list|,
+literal|0x88
+argument_list|)
+expr_stmt|;
+name|ad_write
+argument_list|(
+name|d
+argument_list|,
+literal|21
+argument_list|,
+literal|0x88
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|MD_GUSPNP
+case|:
+comment|/* this is only necessary in mode 3 ... */
+name|ad_write
+argument_list|(
+name|d
+argument_list|,
+literal|22
+argument_list|,
+literal|0x88
+argument_list|)
+expr_stmt|;
+name|ad_write
+argument_list|(
+name|d
+argument_list|,
+literal|23
+argument_list|,
+literal|0x88
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
 begin_comment
-comment|/*  * mss_speed processes the value in play_speed finding the  * matching one. As a side effect, it returns the value to  * be written in the speed bits of the codec. It does _NOT_  * set the speed of the device (but it should!)  *  * fixed lr970724  */
+comment|/*  * mss_speed processes the value in play_speed finding the  * matching one. As a side effect, it returns the value to  * be written in the speed bits of the codec. It does _NOT_  * set the speed of the device (but it should!)  */
 end_comment
 
 begin_function
@@ -4406,7 +4459,7 @@ literal|0x00
 condition|)
 block|{
 comment|/* Not a AD1848 */
-name|DDB
+name|DEB
 argument_list|(
 name|printf
 argument_list|(
@@ -4475,7 +4528,7 @@ operator|!=
 literal|0x45
 condition|)
 block|{
-name|DDB
+name|DEB
 argument_list|(
 name|printf
 argument_list|(
@@ -4538,7 +4591,7 @@ operator|!=
 literal|0xaa
 condition|)
 block|{
-name|DDB
+name|DEB
 argument_list|(
 name|printf
 argument_list|(
@@ -4602,7 +4655,7 @@ literal|0x0f
 operator|)
 condition|)
 block|{
-name|DDB
+name|DEB
 argument_list|(
 name|printf
 argument_list|(
@@ -4679,7 +4732,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|DDB
+name|DEB
 argument_list|(
 name|printf
 argument_list|(
@@ -4822,7 +4875,7 @@ literal|0xaa
 condition|)
 block|{
 comment|/* Rotten bits? */
-name|DDB
+name|DEB
 argument_list|(
 name|printf
 argument_list|(
@@ -4837,7 +4890,7 @@ literal|0
 return|;
 block|}
 comment|/* 	     * Verify that some bits of I25 are read only. 	     */
-name|DDB
+name|DEB
 argument_list|(
 name|printf
 argument_list|(
@@ -5026,7 +5079,7 @@ comment|/* CS4236 */
 case|case
 literal|0x03
 case|:
-comment|/* CS4236 on Intel PR440FX motherboard */
+comment|/* CS4236 on Intel PR440FX motherboard XXX */
 name|name
 operator|=
 literal|"CS4236"
@@ -5067,7 +5120,7 @@ expr_stmt|;
 comment|/* Restore bits */
 block|}
 block|}
-name|DDB
+name|DEB
 argument_list|(
 name|printf
 argument_list|(
@@ -5271,6 +5324,14 @@ operator|->
 name|dma2
 condition|)
 block|{
+if|#
+directive|if
+literal|0
+block|if (d->bd_id == MD_GUSPNP&& d->play_fmt == AFMT_MU_LAW) { 	    printf("warning, cannot do ulaw rec + play on the GUS\n"); 	    r = 0 ;
+comment|/* move to U8 */
+block|}
+endif|#
+directive|endif
 name|ad_write
 argument_list|(
 name|d
@@ -5310,6 +5371,7 @@ argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
+comment|/*      * not sure if this is really needed...      */
 name|ad_write_cnt
 argument_list|(
 name|d
@@ -5421,7 +5483,7 @@ begin_function_decl
 specifier|static
 name|char
 modifier|*
-name|cs4236_probe
+name|cs423x_probe
 parameter_list|(
 name|u_long
 name|csn
@@ -5435,7 +5497,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|cs4236_attach
+name|cs423x_attach
 parameter_list|(
 name|u_long
 name|csn
@@ -5459,14 +5521,14 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|pnp_device
-name|cs4236
+name|cs423x
 init|=
 block|{
-literal|"cs423x"
+literal|"cs423x/ymh0020"
 block|,
-name|cs4236_probe
+name|cs423x_probe
 block|,
-name|cs4236_attach
+name|cs423x_attach
 block|,
 operator|&
 name|nsnd
@@ -5484,7 +5546,7 @@ name|DATA_SET
 argument_list|(
 name|pnpdevice_set
 argument_list|,
-name|cs4236
+name|cs423x
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -5493,7 +5555,7 @@ begin_function
 specifier|static
 name|char
 modifier|*
-name|cs4236_probe
+name|cs423x_probe
 parameter_list|(
 name|u_long
 name|csn
@@ -5508,11 +5570,18 @@ name|s
 init|=
 name|NULL
 decl_stmt|;
+name|u_long
+name|id
+init|=
+name|vend_id
+operator|&
+literal|0xff00ffff
+decl_stmt|;
 if|if
 condition|(
-name|vend_id
+name|id
 operator|==
-literal|0x3742630e
+literal|0x3700630e
 condition|)
 name|s
 operator|=
@@ -5521,9 +5590,9 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|vend_id
+name|id
 operator|==
-literal|0x3642630e
+literal|0x3600630e
 condition|)
 name|s
 operator|=
@@ -5532,24 +5601,35 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|vend_id
+name|id
 operator|==
-literal|0x360b630e
-condition|)
-name|s
-operator|=
-literal|"CS4236"
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|vend_id
-operator|==
-literal|0x3242630e
+literal|0x3200630e
 condition|)
 name|s
 operator|=
 literal|"CS4232"
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|id
+operator|==
+literal|0x2000a865
+condition|)
+name|s
+operator|=
+literal|"Yamaha SA2"
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|vend_id
+operator|==
+literal|0x8140d315
+condition|)
+name|s
+operator|=
+literal|"SoundscapeVIVO"
 expr_stmt|;
 if|if
 condition|(
@@ -5608,7 +5688,7 @@ end_decl_stmt
 begin_function
 specifier|static
 name|void
-name|cs4236_attach
+name|cs423x_attach
 parameter_list|(
 name|u_long
 name|csn
@@ -5673,11 +5753,65 @@ operator|&
 name|DV_PNP_SBCODEC
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"CS423x use sb-compatible codec\n"
-argument_list|)
+comment|/*** use sb-compatible codec ***/
+name|dev
+operator|->
+name|id_alive
+operator|=
+literal|16
 expr_stmt|;
+comment|/* number of io ports ? */
+name|tmp_d
+operator|=
+name|sb_op_desc
+expr_stmt|;
+if|if
+condition|(
+name|vend_id
+operator|==
+literal|0x2000a865
+operator|||
+name|vend_id
+operator|==
+literal|0x8140d315
+condition|)
+block|{
+comment|/* Yamaha SA2 or ENSONIQ SoundscapeVIVO ENS4081 */
+name|dev
+operator|->
+name|id_iobase
+operator|=
+name|d
+operator|.
+name|port
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|tmp_d
+operator|.
+name|alt_base
+operator|=
+name|d
+operator|.
+name|port
+index|[
+literal|1
+index|]
+expr_stmt|;
+name|d
+operator|.
+name|irq
+index|[
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
+comment|/* only needed for the VIVO */
+block|}
+else|else
+block|{
 name|dev
 operator|->
 name|id_iobase
@@ -5688,10 +5822,6 @@ name|port
 index|[
 literal|2
 index|]
-expr_stmt|;
-name|tmp_d
-operator|=
-name|sb_op_desc
 expr_stmt|;
 name|tmp_d
 operator|.
@@ -5706,6 +5836,7 @@ index|]
 operator|-
 literal|4
 expr_stmt|;
+block|}
 name|d
 operator|.
 name|drq
@@ -5722,6 +5853,17 @@ block|{
 comment|/* mss-compatible codec */
 name|dev
 operator|->
+name|id_alive
+operator|=
+literal|8
+expr_stmt|;
+comment|/* number of io ports ? */
+name|tmp_d
+operator|=
+name|mss_op_desc
+expr_stmt|;
+name|dev
+operator|->
 name|id_iobase
 operator|=
 name|d
@@ -5735,33 +5877,119 @@ literal|4
 expr_stmt|;
 comment|/* XXX old mss have 4 bytes before... */
 name|tmp_d
+operator|.
+name|alt_base
 operator|=
-name|mss_op_desc
+name|d
+operator|.
+name|port
+index|[
+literal|2
+index|]
 expr_stmt|;
 switch|switch
 condition|(
 name|vend_id
+operator|&
+literal|0xff00ffff
 condition|)
 block|{
 case|case
-literal|0x3742630e
+literal|0x2000a865
+case|:
+comment|/* yamaha SA-2 */
+name|dev
+operator|->
+name|id_iobase
+operator|=
+name|d
+operator|.
+name|port
+index|[
+literal|1
+index|]
+expr_stmt|;
+name|tmp_d
+operator|.
+name|alt_base
+operator|=
+name|d
+operator|.
+name|port
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|tmp_d
+operator|.
+name|bd_id
+operator|=
+name|MD_YM0020
+expr_stmt|;
+break|break;
+case|case
+literal|0x8100d315
+case|:
+comment|/* ENSONIQ SoundscapeVIVO */
+name|dev
+operator|->
+name|id_iobase
+operator|=
+name|d
+operator|.
+name|port
+index|[
+literal|1
+index|]
+expr_stmt|;
+name|tmp_d
+operator|.
+name|alt_base
+operator|=
+name|d
+operator|.
+name|port
+index|[
+literal|0
+index|]
+expr_stmt|;
+name|tmp_d
+operator|.
+name|bd_id
+operator|=
+name|MD_VIVO
+expr_stmt|;
+name|d
+operator|.
+name|irq
+index|[
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|0x3700630e
 case|:
 comment|/* CS4237 */
+name|tmp_d
+operator|.
+name|bd_id
+operator|=
+name|MD_CS4237
+expr_stmt|;
+break|break;
 case|case
-literal|0x3642630e
+literal|0x3600630e
 case|:
 comment|/* CS4236 */
-case|case
-literal|0x360b630e
-case|:
-comment|/* CS4236 on Intel PR440FX motherboard */
 name|tmp_d
 operator|.
 name|bd_id
 operator|=
 name|MD_CS4236
 expr_stmt|;
-comment|/* to short-circuit the detect routine */
 break|break;
 default|default:
 name|tmp_d
@@ -5773,17 +6001,6 @@ expr_stmt|;
 comment|/* to short-circuit the detect routine */
 break|break;
 block|}
-name|tmp_d
-operator|.
-name|alt_base
-operator|=
-name|d
-operator|.
-name|port
-index|[
-literal|2
-index|]
-expr_stmt|;
 name|strcpy
 argument_list|(
 name|tmp_d
@@ -5858,12 +6075,6 @@ index|[
 literal|1
 index|]
 operator|)
-expr_stmt|;
-name|dev
-operator|->
-name|id_alive
-operator|=
-literal|1
 expr_stmt|;
 name|pcmattach
 argument_list|(
@@ -6211,8 +6422,8 @@ name|p
 argument_list|,
 literal|4
 argument_list|,
-literal|0x56
-comment|/* fifo 1/2, OPL3, audio enable, SB3.2 */
+literal|0xd6
+comment|/* fifo empty, OPL3, audio enable, SB3.2 */
 argument_list|)
 expr_stmt|;
 name|ad_write
@@ -6391,6 +6602,18 @@ end_function
 
 begin_function_decl
 specifier|static
+name|void
+name|gus_mem_cfg
+parameter_list|(
+name|snddev_info
+modifier|*
+name|tmp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|guspnp_probe
@@ -6550,6 +6773,9 @@ name|snddev_info
 name|tmp_d
 decl_stmt|;
 comment|/* patched copy of the basic snddev_info */
+name|u_char
+name|tmp
+decl_stmt|;
 name|read_pnp_parms
 argument_list|(
 operator|&
@@ -6558,6 +6784,25 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* d.irq[1] = d.irq[0] ; */
+name|printf
+argument_list|(
+literal|"pnp_read 0xf2 returns 0x%x\n"
+argument_list|,
+name|pnp_read
+argument_list|(
+literal|0xf2
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|pnp_write
+argument_list|(
+literal|0xf2
+argument_list|,
+literal|0xff
+argument_list|)
+expr_stmt|;
+comment|/* enable power on the guspnp */
 name|write_pnp_parms
 argument_list|(
 operator|&
@@ -6600,10 +6845,10 @@ name|d
 operator|.
 name|drq
 index|[
-literal|0
+literal|1
 index|]
 expr_stmt|;
-comment|/* primary dma */
+comment|/* XXX PLAY dma */
 name|dev
 operator|->
 name|id_irq
@@ -6635,8 +6880,22 @@ name|d
 operator|.
 name|drq
 index|[
-literal|1
+literal|0
 index|]
+expr_stmt|;
+comment|/* REC dma */
+name|tmp_d
+operator|.
+name|io_base
+operator|=
+name|d
+operator|.
+name|port
+index|[
+literal|2
+index|]
+operator|-
+literal|4
 expr_stmt|;
 name|tmp_d
 operator|.
@@ -6649,6 +6908,201 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+comment|/* 0x220 */
+name|tmp_d
+operator|.
+name|conf_base
+operator|=
+name|d
+operator|.
+name|port
+index|[
+literal|1
+index|]
+expr_stmt|;
+comment|/* gus control block... */
+name|tmp_d
+operator|.
+name|bd_id
+operator|=
+name|MD_GUSPNP
+expr_stmt|;
+comment|/* reset */
+name|gus_write
+argument_list|(
+name|tmp_d
+operator|.
+name|conf_base
+argument_list|,
+literal|0x4c
+comment|/* _URSTI */
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Pull reset */
+name|DELAY
+argument_list|(
+literal|1000
+operator|*
+literal|30
+argument_list|)
+expr_stmt|;
+comment|/* release reset  and enable DAC */
+name|gus_write
+argument_list|(
+name|tmp_d
+operator|.
+name|conf_base
+argument_list|,
+literal|0x4c
+comment|/* _URSTI */
+argument_list|,
+literal|3
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"resetting the gus...\n"
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|1000
+operator|*
+literal|30
+argument_list|)
+expr_stmt|;
+comment|/* end of reset */
+name|outb
+argument_list|(
+name|tmp_d
+operator|.
+name|alt_base
+argument_list|,
+literal|0xC
+argument_list|)
+expr_stmt|;
+comment|/* enable int and dma */
+comment|/*      * unmute left& right line. Need to go in mode3, unmute,      * and back to mode 2      */
+name|tmp
+operator|=
+name|ad_read
+argument_list|(
+operator|&
+name|tmp_d
+argument_list|,
+literal|0x0c
+argument_list|)
+expr_stmt|;
+name|ad_write
+argument_list|(
+operator|&
+name|tmp_d
+argument_list|,
+literal|0x0c
+argument_list|,
+literal|0x6c
+argument_list|)
+expr_stmt|;
+comment|/* special value to enter mode 3 */
+name|ad_write
+argument_list|(
+operator|&
+name|tmp_d
+argument_list|,
+literal|0x19
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* unmute left */
+name|ad_write
+argument_list|(
+operator|&
+name|tmp_d
+argument_list|,
+literal|0x1b
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* unmute right */
+name|ad_write
+argument_list|(
+operator|&
+name|tmp_d
+argument_list|,
+literal|0x0c
+argument_list|,
+name|tmp
+argument_list|)
+expr_stmt|;
+comment|/* restore old mode */
+comment|/* send codec interrupts on irq1 and only use that one */
+name|gus_write
+argument_list|(
+name|tmp_d
+operator|.
+name|conf_base
+argument_list|,
+literal|0x5a
+argument_list|,
+literal|0x4f
+argument_list|)
+expr_stmt|;
+comment|/* enable access to hidden regs */
+name|tmp
+operator|=
+name|gus_read
+argument_list|(
+name|tmp_d
+operator|.
+name|conf_base
+argument_list|,
+literal|0x5b
+comment|/* IVERI */
+argument_list|)
+expr_stmt|;
+name|gus_write
+argument_list|(
+name|tmp_d
+operator|.
+name|conf_base
+argument_list|,
+literal|0x5b
+argument_list|,
+name|tmp
+operator||
+literal|1
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"GUS: silicon rev %c\n"
+argument_list|,
+literal|'A'
+operator|+
+operator|(
+operator|(
+name|tmp
+operator|&
+literal|0xf
+operator|)
+operator|>>
+literal|4
+operator|)
+argument_list|)
+expr_stmt|;
+name|strcpy
+argument_list|(
+name|tmp_d
+operator|.
+name|name
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
 name|pcmattach
 argument_list|(
 name|dev
@@ -6656,6 +7110,37 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+unit|int gus_mem_write(snddev_info *d, int addr, u_char data) {     gus_writew(d->conf_base, 0x43 , addr& 0xffff );     gus_write(d->conf_base, 0x44 , (addr>>16)& 0xff );     outb(d->conf_base + 7, data); }  u_char gus_mem_read(snddev_info *d, int addr) {     gus_writew(d->conf_base, 0x43 , addr& 0xffff );     gus_write(d->conf_base, 0x44 , (addr>>16)& 0xff );     return inb(d->conf_base + 7); }  void gus_mem_cfg(snddev_info *d) {     int base;     u_char old;     u_char a, b;      printf("configuring gus memory...\n");     gus_writew(d->conf_base, 0x52
+comment|/* LMCFI */
+end_comment
+
+begin_comment
+unit|, 1
+comment|/* 512K*/
+end_comment
+
+begin_comment
+unit|);     old = gus_read(d->conf_base, 0x19);     gus_write(d->conf_base, 0x19, old | 1);
+comment|/* enable enhaced mode */
+end_comment
+
+begin_endif
+unit|for (base = 0; base< 1024; base++) { 	a=gus_mem_read(d, base*1024); 	a = ~a ; 	gus_mem_write(d, base*1024, a); 	b=gus_mem_read(d, base*1024); 	if ( b != a ) 		break ;     }     printf("Have found %d KB ( 0x%x != 0x%x)\n", base, a, b); }
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* gus mem cfg... */
+end_comment
 
 begin_endif
 endif|#

@@ -113,6 +113,10 @@ begin_comment
 comment|/*  * DSP Commands. There are many, and in many cases they are used explicitly  */
 end_comment
 
+begin_comment
+comment|/* these are not used except for programmed I/O (not in this driver) */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -127,6 +131,21 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DSP_ADC8
+value|0x20
+end_define
+
+begin_comment
+comment|/* direct ADC input */
+end_comment
+
+begin_comment
+comment|/* these should be used in the SB 1.0 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DSP_CMD_DAC8
 value|0x14
 end_define
@@ -134,6 +153,96 @@ end_define
 begin_comment
 comment|/* single cycle 8-bit dma out */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|DSP_CMD_ADC8
+value|0x24
+end_define
+
+begin_comment
+comment|/* single cycle 8-bit dma in */
+end_comment
+
+begin_comment
+comment|/* these should be used in the SB 2.0 and 2.01 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DSP_CMD_DAC8_AUTO
+value|0x1c
+end_define
+
+begin_comment
+comment|/* auto 8-bit dma out */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DSP_CMD_ADC8_AUTO
+value|0x2c
+end_define
+
+begin_comment
+comment|/* auto 8-bit dma out */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DSP_CMD_HSSIZE
+value|0x48
+end_define
+
+begin_comment
+comment|/* high speed dma count */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DSP_CMD_HSDAC_AUTO
+value|0x90
+end_define
+
+begin_comment
+comment|/* high speed dac, auto */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DSP_CMD_HSADC_AUTO
+value|0x98
+end_define
+
+begin_comment
+comment|/* high speed adc, auto */
+end_comment
+
+begin_comment
+comment|/* SBPro commands. Some cards (JAZZ, SMW) also support 16 bits */
+end_comment
+
+begin_comment
+comment|/* prepare for dma input */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DSP_CMD_DMAMODE
+parameter_list|(
+name|stereo
+parameter_list|,
+name|bit16
+parameter_list|)
+value|(0xA0 | (stereo ? 8:0) | (bit16 ? 4:0))
+end_define
 
 begin_define
 define|#
@@ -160,18 +269,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DSP_CMD_DAC8_A
-value|0x1c
-end_define
-
-begin_comment
-comment|/* auto 8-bit dma out */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DSP_CMD_DAC2S_A
+name|DSP_CMD_DAC2S_AUTO
 value|0x1f
 end_define
 
@@ -179,37 +277,8 @@ begin_comment
 comment|/* auto 2-bit adpcm dma out (start) */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|DSP_ADC8
-value|0x20
-end_define
-
 begin_comment
-comment|/* direct ADC input */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DSP_CMD_ADC8
-value|0x24
-end_define
-
-begin_comment
-comment|/* single cycle 8-bit dma in */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DSP_CMD_ADC8_A
-value|0x2c
-end_define
-
-begin_comment
-comment|/* auto 8-bit dma out */
+comment|/* SB16 commands */
 end_comment
 
 begin_define
@@ -295,30 +364,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|DSP_CMD_DMAON
+name|DSP_CMD_DMAPAUSE_8
 value|0xD0
 end_define
-
-begin_comment
-comment|/* ??? the comment says Halt DMA */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|DSP_CMD_DMAOFF
-value|0xD4
+name|DSP_CMD_DMAPAUSE_16
+value|0xD5
 end_define
-
-begin_comment
-comment|/* ??? comment says continue dma */
-end_comment
 
 begin_define
 define|#
 directive|define
-name|DSP_CMD_DMAHALT
-value|0xD0
+name|DSP_CMD_DMAEXIT_8
+value|0xDA
+end_define
+
+begin_define
+define|#
+directive|define
+name|DSP_CMD_DMAEXIT_16
+value|0xD9
 end_define
 
 begin_define
@@ -330,17 +398,6 @@ end_define
 
 begin_comment
 comment|/* set time constant */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DSP_CMD_HSSIZE
-value|0x48
-end_define
-
-begin_comment
-comment|/* high speed dma count */
 end_comment
 
 begin_define
@@ -383,22 +440,6 @@ begin_comment
 comment|/* return id bytes */
 end_comment
 
-begin_comment
-comment|/* prepare for dma input */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DSP_CMD_DMAMODE
-parameter_list|(
-name|stereo
-parameter_list|,
-name|bit16
-parameter_list|)
-value|(0xA0 | (stereo ? 8:0) | (bit16 ? 4:0))
-end_define
-
 begin_define
 define|#
 directive|define
@@ -430,24 +471,6 @@ end_if
 begin_comment
 comment|/*** unknown ***/
 end_comment
-
-begin_comment
-comment|/* 	 * D9 and D5 are used on the sb16 on close... maybe a reset of 	 * some subsystem ? 	 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DSP_CMD_D9
-value|0xD9
-end_define
-
-begin_define
-define|#
-directive|define
-name|DSP_CMD_D5
-value|0xD5
-end_define
 
 begin_define
 define|#

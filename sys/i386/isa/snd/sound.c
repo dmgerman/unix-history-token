@@ -1,18 +1,12 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sound/sound.c  *   * Main sound driver for FreeBSD. This file provides the main  * entry points for probe/attach and all i/o demultiplexing, including  * default routines for generic devices.  *   * (C) 1997 Luigi Rizzo (luigi@iet.unipi.it)  *   * Redistribution and use in source and binary forms, with or  * without modification, are permitted provided that the following  * conditions are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above  *    copyright notice, this list of conditions and the following  *    disclaimer in the documentation and/or other materials provided  *    with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS  * IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE  * AUTHOR OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  * For each board type a template "snddev_info" structure contains  * all the relevant parameters, both for configuration and runtime.  *  * In this file we build tables of pointers to the descriptors for  * the various supported boards. The generic probe routine scans  * the table(s) looking for a matching entry, then invokes the  * board-specific probe routine. If successful, a pointer to the  * correct snddev_info is stored in snddev_last_probed, for subsequent  * use in the attach routine.  The generic attach routine copies  * the template to a permanent descriptor (pcm_info[unit] and  * friends), initializes all generic parameters, and calls the  * board-specific attach routine.  *  * On device calls, the generic routines do the checks on unit and  * device parameters, then call the board-specific routines if  * available, or try to perform the task using the default code.  *  */
+comment|/*  * snd/sound.c  *   * Main sound driver for FreeBSD. This file provides the main  * entry points for probe/attach and all i/o demultiplexing, including  * default routines for generic devices.  *   * (C) 1997 Luigi Rizzo (luigi@iet.unipi.it)  *   * Redistribution and use in source and binary forms, with or  * without modification, are permitted provided that the following  * conditions are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above  *    copyright notice, this list of conditions and the following  *    disclaimer in the documentation and/or other materials provided  *    with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS  * IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE  * AUTHOR OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  * For each card type a template "snddev_info" structure contains  * all the relevant parameters, both for configuration and runtime.  *  * In this file we build tables of pointers to the descriptors for  * the various supported cards. The generic probe routine scans  * the table(s) looking for a matching entry, then invokes the  * board-specific probe routine. If successful, a pointer to the  * correct snddev_info is stored in snddev_last_probed, for subsequent  * use in the attach routine. The generic attach routine copies  * the template to a permanent descriptor (pcm_info[unit] and  * friends), initializes all generic parameters, and calls the  * board-specific attach routine.  *  * On device calls, the generic routines do the checks on unit and  * device parameters, then call the board-specific routines if  * available, or try to perform the task using the default code.  *  */
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<i386/isa/snd/sound.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/poll.h>
 end_include
 
 begin_if
@@ -26,31 +20,6 @@ end_if
 begin_comment
 comment|/* from "snd.h" */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|"snd.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NSND
-operator|>
-literal|0
-end_if
-
-begin_error
-error|#
-directive|error
-error|Can't have both Luigi's (pcm0) and voxware (snd0) at the same time.
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -236,23 +205,6 @@ end_decl_stmt
 
 begin_function_decl
 specifier|static
-name|void
-name|print_isadev_info
-parameter_list|(
-name|struct
-name|isa_device
-modifier|*
-name|d
-parameter_list|,
-name|char
-modifier|*
-name|s
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|snddev_info
 modifier|*
 name|generic_snd_probe
@@ -276,7 +228,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * here are the lists of known devices. Similar devices (e.g. all  * sb clones, all mss clones, ... are in the same array.  * All lists of devices of the same type (eg. all pcm, all midi...)  * are in the same array.  * Each probe for a device type gets the pointer to the main array  * and then scans the sublists.  *  * XXX should use DATA_SET to create a linker set for sb_devs and other  * such structures.  */
+comment|/*  * here are the lists of known cards. Similar cards (e.g. all  * sb clones, all mss clones, ... are in the same array.  * All lists of devices of the same type (eg. all pcm, all midi...)  * are in the same array.  * Each probe for a device type gets the pointer to the main array  * and then scans the sublists.  *  * XXX should use DATA_SET to create a linker set for sb_devs and other  * such structures.  */
 end_comment
 
 begin_decl_stmt
@@ -301,6 +253,7 @@ name|sb_devs
 index|[]
 init|=
 block|{
+comment|/* all SB clones	 */
 operator|&
 name|sb_op_desc
 block|,
@@ -317,7 +270,7 @@ name|mss_devs
 index|[]
 init|=
 block|{
-comment|/* MSS-like devices */
+comment|/* all WSS clones	*/
 operator|&
 name|mss_op_desc
 block|,
@@ -335,7 +288,7 @@ name|pcm_devslist
 index|[]
 init|=
 block|{
-comment|/* all pcm devices */
+comment|/* all pcm devices	*/
 name|mss_devs
 block|,
 name|sb_devs
@@ -402,7 +355,7 @@ name|midi_devslist
 index|[]
 init|=
 block|{
-comment|/* all midi devices */
+comment|/* all midi devices	*/
 name|NULL
 block|}
 decl_stmt|;
@@ -665,10 +618,6 @@ argument_list|,
 name|d
 operator|->
 name|bufsize
-argument_list|,
-name|d
-operator|->
-name|dma1
 argument_list|)
 expr_stmt|;
 name|alloc_dbuf
@@ -683,10 +632,6 @@ argument_list|,
 name|d
 operator|->
 name|bufsize
-argument_list|,
-name|d
-operator|->
-name|dma2
 argument_list|)
 expr_stmt|;
 name|isa_dma_acquire
@@ -806,6 +751,18 @@ operator|->
 name|id_id
 expr_stmt|;
 block|}
+name|d
+operator|->
+name|magic
+operator|=
+name|MAGIC
+argument_list|(
+name|dev
+operator|->
+name|id_unit
+argument_list|)
+expr_stmt|;
+comment|/* debugging... */
 comment|/*      * and finally, call the device attach routine      */
 name|stat
 operator|=
@@ -991,90 +948,6 @@ end_function
 
 begin_function
 specifier|static
-name|void
-name|print_isadev_info
-parameter_list|(
-name|struct
-name|isa_device
-modifier|*
-name|d
-parameter_list|,
-name|char
-modifier|*
-name|s
-parameter_list|)
-block|{
-if|if
-condition|(
-name|d
-operator|==
-name|NULL
-condition|)
-return|return ;
-name|printf
-argument_list|(
-literal|"%s%d at 0x%x irq %d drq %d mem %p flags 0x%x en %d confl %d\n"
-argument_list|,
-name|d
-operator|->
-name|id_driver
-condition|?
-name|d
-operator|->
-name|id_driver
-operator|->
-name|name
-else|:
-literal|"NONAME"
-argument_list|,
-name|d
-operator|->
-name|id_unit
-argument_list|,
-call|(
-name|u_short
-call|)
-argument_list|(
-name|d
-operator|->
-name|id_iobase
-argument_list|)
-argument_list|,
-name|ffs
-argument_list|(
-name|d
-operator|->
-name|id_irq
-argument_list|)
-operator|-
-literal|1
-argument_list|,
-name|d
-operator|->
-name|id_drq
-argument_list|,
-name|d
-operator|->
-name|id_maddr
-argument_list|,
-name|d
-operator|->
-name|id_flags
-argument_list|,
-name|d
-operator|->
-name|id_enabled
-argument_list|,
-name|d
-operator|->
-name|id_conflicts
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
 name|snddev_info
 modifier|*
 name|generic_snd_probe
@@ -1108,19 +981,13 @@ name|snddev_last_probed
 operator|=
 name|NULL
 expr_stmt|;
-name|print_isadev_info
-argument_list|(
-name|dev
-argument_list|,
-name|s
-argument_list|)
-expr_stmt|;
 name|saved_dev
 operator|=
 operator|*
 name|dev
 expr_stmt|;
 comment|/* the probe routine might alter parameters */
+comment|/*      * XXX todo: should try to match flags with device type.      */
 for|for
 control|(
 init|;
@@ -1922,9 +1789,9 @@ while|while
 condition|(
 name|d
 operator|->
-name|flags
-operator|&
-name|SND_F_WR_DMA
+name|dbuf_out
+operator|.
+name|dl
 condition|)
 block|{
 comment|/* 	     * we have a pending dma operation, post a read request 	     * and wait for the write to complete. 	     */
@@ -1934,7 +1801,7 @@ name|flags
 operator||=
 name|SND_F_READING
 expr_stmt|;
-name|DDB
+name|DEB
 argument_list|(
 name|printf
 argument_list|(
@@ -2228,9 +2095,9 @@ while|while
 condition|(
 name|d
 operator|->
-name|flags
-operator|&
-name|SND_F_RD_DMA
+name|dbuf_in
+operator|.
+name|dl
 condition|)
 block|{
 comment|/* 	     * we have a pending read dma. Post a write request 	     * and wait for the read to complete (in fact I could 	     * abort the read dma... 	     */
@@ -2529,13 +2396,18 @@ if|if
 condition|(
 name|d
 operator|->
-name|flags
-operator|&
-name|SND_F_WR_DMA
+name|dbuf_out
+operator|.
+name|dl
 condition|)
 name|dsp_wr_dmaupdate
 argument_list|(
+operator|&
+operator|(
 name|d
+operator|->
+name|dbuf_out
+operator|)
 argument_list|)
 expr_stmt|;
 operator|*
@@ -2605,6 +2477,8 @@ literal|40
 argument_list|,
 name|d
 operator|->
+name|dbuf_out
+operator|.
 name|bufsize
 operator|/
 literal|4
@@ -2631,6 +2505,8 @@ literal|40
 argument_list|,
 name|d
 operator|->
+name|dbuf_in
+operator|.
 name|bufsize
 operator|/
 literal|4
@@ -2715,7 +2591,6 @@ operator|*
 operator|)
 name|arg
 decl_stmt|;
-comment|/* 	     * at the moment, only support same format on play& rec 	     */
 name|d
 operator|->
 name|play_speed
@@ -2962,6 +2837,9 @@ operator|=
 name|dsp_wrabort
 argument_list|(
 name|d
+argument_list|,
+literal|1
+comment|/* restart */
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -2986,6 +2864,9 @@ operator|=
 name|dsp_rdabort
 argument_list|(
 name|d
+argument_list|,
+literal|1
+comment|/* restart */
 argument_list|)
 expr_stmt|;
 else|else
@@ -3056,13 +2937,18 @@ if|if
 condition|(
 name|d
 operator|->
-name|flags
-operator|&
-name|SND_F_RD_DMA
+name|dbuf_in
+operator|.
+name|dl
 condition|)
 name|dsp_rd_dmaupdate
 argument_list|(
+operator|&
+operator|(
 name|d
+operator|->
+name|dbuf_in
+operator|)
 argument_list|)
 expr_stmt|;
 operator|*
@@ -3082,8 +2968,12 @@ break|break;
 case|case
 name|FIOASYNC
 case|:
-comment|/* set/clear async i/o */
-comment|/* do nothing, this is called from kern_descrip.c for fcntl() */
+comment|/*set/clear async i/o */
+name|printf
+argument_list|(
+literal|"FIOASYNC\n"
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|SNDCTL_DSP_NONBLOCK
@@ -3174,6 +3064,8 @@ literal|40
 argument_list|,
 name|d
 operator|->
+name|dbuf_out
+operator|.
 name|bufsize
 operator|/
 literal|4
@@ -3215,7 +3107,7 @@ break|break ;
 case|case
 name|SNDCTL_DSP_RESET
 case|:
-name|DDB
+name|DEB
 argument_list|(
 name|printf
 argument_list|(
@@ -3226,18 +3118,24 @@ expr_stmt|;
 name|dsp_wrabort
 argument_list|(
 name|d
+argument_list|,
+literal|1
+comment|/* restart */
 argument_list|)
 expr_stmt|;
 name|dsp_rdabort
 argument_list|(
 name|d
+argument_list|,
+literal|1
+comment|/* restart */
 argument_list|)
 expr_stmt|;
 break|break ;
 case|case
 name|SNDCTL_DSP_SYNC
 case|:
-name|DDB
+name|DEB
 argument_list|(
 name|printf
 argument_list|(
@@ -3258,6 +3156,8 @@ literal|1
 argument_list|,
 name|d
 operator|->
+name|dbuf_out
+operator|.
 name|bufsize
 operator|-
 literal|4
@@ -3310,6 +3210,40 @@ break|break ;
 case|case
 name|SNDCTL_DSP_STEREO
 case|:
+if|if
+condition|(
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|arg
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|arg
+operator|=
+operator|(
+name|d
+operator|->
+name|flags
+operator|&
+name|SND_F_STEREO
+operator|)
+condition|?
+literal|1
+else|:
+literal|0
+expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 operator|*
@@ -3405,18 +3339,6 @@ break|break ;
 case|case
 name|SOUND_PCM_WRITE_CHANNELS
 case|:
-name|printf
-argument_list|(
-literal|"dsp write channels %d\n"
-argument_list|,
-operator|*
-operator|(
-name|int
-operator|*
-operator|)
-name|arg
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|*
@@ -3770,11 +3692,13 @@ name|fragstotal
 operator|=
 name|d
 operator|->
+name|dbuf_in
+operator|.
 name|bufsize
 operator|/
 name|d
 operator|->
-name|play_blocksize
+name|rec_blocksize
 expr_stmt|;
 operator|(
 operator|(
@@ -3788,7 +3712,7 @@ name|fragsize
 operator|=
 name|d
 operator|->
-name|play_blocksize
+name|rec_blocksize
 expr_stmt|;
 break|break ;
 case|case
@@ -3835,6 +3759,8 @@ name|fragstotal
 operator|=
 name|d
 operator|->
+name|dbuf_out
+operator|.
 name|bufsize
 operator|/
 name|d
@@ -3945,6 +3871,20 @@ operator|->
 name|mix_recsrc
 expr_stmt|;
 break|break;
+case|case
+name|SOUND_MIXER_READ_CAPS
+case|:
+comment|/* 	 * XXX - This needs to be fixed when the sound driver actually 	 * supports multiple inputs. 	 */
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|arg
+operator|=
+name|SOUND_CAP_EXCL_INPUT
+expr_stmt|;
+break|break;
 default|default:
 name|DEB
 argument_list|(
@@ -3979,6 +3919,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * function to poll what is currently available.  Used to be select.  */
+end_comment
+
 begin_function
 name|int
 name|sndpoll
@@ -3995,14 +3939,6 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-name|int
-name|lim
-decl_stmt|;
-name|int
-name|revents
-init|=
-literal|0
-decl_stmt|;
 name|int
 name|dev
 decl_stmt|,
@@ -4041,7 +3977,7 @@ name|DEB
 argument_list|(
 name|printf
 argument_list|(
-literal|"sndpoll dev 0x%04x rw 0x%08x\n"
+literal|"sndpoll dev 0x%04x events 0x%08x\n"
 argument_list|,
 name|i_dev
 argument_list|,
@@ -4058,7 +3994,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"select: unit %d not configured\n"
+literal|"poll: unit %d not configured\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -4091,7 +4027,6 @@ name|poll
 operator|==
 name|NULL
 condition|)
-comment|/* is this correct hear? */
 return|return
 operator|(
 operator|(
@@ -4132,18 +4067,22 @@ argument_list|,
 name|p
 argument_list|)
 return|;
+else|else
+block|{
 comment|/* handle it here with the generic code */
-comment|/*      * if the user selected a block size, then we want to use the      * device as a block device, and select will return ready when      * we have a full block.      * In all other cases, select will return when 1 byte is ready.      */
+name|int
+name|lim
+decl_stmt|;
+name|int
+name|revents
+init|=
+literal|0
+decl_stmt|;
+comment|/* 	 * if the user selected a block size, then we want to use the 	 * device as a block device, and select will return ready when 	 * we have a full block. 	 * In all other cases, select will return when 1 byte is ready. 	 */
 name|lim
 operator|=
 literal|1
 expr_stmt|;
-name|flags
-operator|=
-name|spltty
-argument_list|()
-expr_stmt|;
-comment|/* XXX fix the test here for half duplex devices */
 if|if
 condition|(
 name|events
@@ -4169,17 +4108,34 @@ name|d
 operator|->
 name|play_blocksize
 expr_stmt|;
+comment|/* XXX fix the test here for half duplex devices */
+if|if
+condition|(
+literal|1
+comment|/* write is compatible with current mode */
+condition|)
+block|{
+name|flags
+operator|=
+name|spltty
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|d
 operator|->
-name|flags
-operator|&
-name|SND_F_WR_DMA
+name|dbuf_out
+operator|.
+name|dl
 condition|)
 name|dsp_wr_dmaupdate
 argument_list|(
+operator|&
+operator|(
 name|d
+operator|->
+name|dbuf_out
+operator|)
 argument_list|)
 expr_stmt|;
 name|c
@@ -4220,8 +4176,13 @@ operator||
 name|POLLWRNORM
 operator|)
 expr_stmt|;
+name|splx
+argument_list|(
+name|flags
+argument_list|)
+expr_stmt|;
 block|}
-comment|/* XXX fix the test here */
+block|}
 if|if
 condition|(
 name|events
@@ -4247,16 +4208,27 @@ name|d
 operator|->
 name|rec_blocksize
 expr_stmt|;
+comment|/* XXX fix the test here */
 if|if
 condition|(
-operator|!
-operator|(
+literal|1
+comment|/* read is compatible with current mode */
+condition|)
+block|{
+name|flags
+operator|=
+name|spltty
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
 name|d
 operator|->
-name|flags
-operator|&
-name|SND_F_RD_DMA
-operator|)
+name|dbuf_in
+operator|.
+name|dl
+operator|==
+literal|0
 condition|)
 comment|/* dma idle, restart it */
 name|dsp_rdintr
@@ -4267,7 +4239,12 @@ expr_stmt|;
 else|else
 name|dsp_rd_dmaupdate
 argument_list|(
+operator|&
+operator|(
 name|d
+operator|->
+name|dbuf_in
+operator|)
 argument_list|)
 expr_stmt|;
 name|c
@@ -4308,11 +4285,17 @@ operator||
 name|POLLRDNORM
 operator|)
 expr_stmt|;
+name|splx
+argument_list|(
+name|flags
+argument_list|)
+expr_stmt|;
+block|}
 name|DEB
 argument_list|(
 name|printf
 argument_list|(
-literal|"sndpoll on read: %d>= %d flags 0x%08lx\n"
+literal|"sndpoll on read: %d>= %d flags 0x%08x\n"
 argument_list|,
 name|c
 argument_list|,
@@ -4324,15 +4307,24 @@ name|flags
 argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+name|c
+operator|<
+name|lim
+condition|?
+literal|0
+else|:
+literal|1
+return|;
 block|}
-name|splx
-argument_list|(
-name|flags
-argument_list|)
-expr_stmt|;
 return|return
 name|revents
 return|;
+block|}
+return|return
+name|ENXIO
+return|;
+comment|/* notreached */
 block|}
 end_function
 
@@ -4406,7 +4398,7 @@ name|DEB
 argument_list|(
 name|printf
 argument_list|(
-literal|"sndmmap d %p dev 0x%04x ofs 0x%08x nprot 0x%08x\n"
+literal|"sndmmap d 0x%p dev 0x%04x ofs 0x%08x nprot 0x%08x\n"
 argument_list|,
 name|d
 argument_list|,
@@ -4436,9 +4428,11 @@ comment|/* forbidden */
 if|if
 condition|(
 name|offset
-operator|>
+operator|>=
 name|d
 operator|->
+name|dbuf_out
+operator|.
 name|bufsize
 operator|&&
 operator|(
@@ -4458,6 +4452,8 @@ name|offset
 operator|<
 name|d
 operator|->
+name|dbuf_out
+operator|.
 name|bufsize
 condition|)
 return|return
@@ -4494,6 +4490,8 @@ name|offset
 operator|<
 name|d
 operator|->
+name|dbuf_in
+operator|.
 name|bufsize
 operator|)
 condition|)
@@ -4533,15 +4531,6 @@ literal|0x2000
 operator|)
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"name %s\n"
-argument_list|,
-name|d
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
 return|return
 name|i386_btop
 argument_list|(
@@ -4608,6 +4597,18 @@ operator|->
 name|flags
 operator|&
 name|SND_F_PENDING_IO
+operator|||
+name|d
+operator|->
+name|dbuf_out
+operator|.
+name|dl
+operator|||
+name|d
+operator|->
+name|dbuf_in
+operator|.
+name|dl
 condition|)
 block|{
 comment|/* cannot do it now, record the request and return */
@@ -4679,7 +4680,7 @@ name|sprintf
 argument_list|(
 name|status_buf
 argument_list|,
-literal|"FreeBSD Sound Driver "
+literal|"FreeBSD Audio Driver (971023) "
 name|__DATE__
 literal|" "
 name|__TIME__
@@ -5053,29 +5054,13 @@ modifier|*
 name|d
 parameter_list|)
 block|{
-comment|/*      * now set the blocksize so as to guarantee approx 1/4s      * between callbacks.      */
-if|if
-condition|(
-operator|(
-name|d
-operator|->
-name|flags
-operator|&
-name|SND_F_HAS_SIZE
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* make blocksize adaptive to 250ms or max 1/4 of the buf */
 name|int
 name|tmp
 decl_stmt|;
+comment|/*      * compute the sample size, and possibly      * set the blocksize so as to guarantee approx 1/4s      * between callbacks.      */
 name|tmp
 operator|=
-name|d
-operator|->
-name|play_speed
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -5105,6 +5090,35 @@ name|tmp
 operator|+=
 name|tmp
 expr_stmt|;
+name|d
+operator|->
+name|dbuf_out
+operator|.
+name|sample_size
+operator|=
+name|tmp
+expr_stmt|;
+name|tmp
+operator|=
+name|tmp
+operator|*
+name|d
+operator|->
+name|play_speed
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|d
+operator|->
+name|flags
+operator|&
+name|SND_F_HAS_SIZE
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 name|d
 operator|->
 name|play_blocksize
@@ -5139,11 +5153,10 @@ operator|~
 literal|3
 argument_list|)
 expr_stmt|;
+block|}
 name|tmp
 operator|=
-name|d
-operator|->
-name|rec_speed
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -5173,6 +5186,35 @@ name|tmp
 operator|+=
 name|tmp
 expr_stmt|;
+name|tmp
+operator|=
+name|tmp
+operator|*
+name|d
+operator|->
+name|rec_speed
+expr_stmt|;
+name|d
+operator|->
+name|dbuf_in
+operator|.
+name|sample_size
+operator|=
+name|tmp
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|d
+operator|->
+name|flags
+operator|&
+name|SND_F_HAS_SIZE
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 name|d
 operator|->
 name|rec_blocksize
