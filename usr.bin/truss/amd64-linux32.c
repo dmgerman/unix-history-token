@@ -1417,7 +1417,11 @@ name|s_args
 argument_list|,
 name|errorp
 argument_list|,
+name|errorp
+condition|?
 name|i
+else|:
+name|retval
 argument_list|)
 expr_stmt|;
 name|clear_lsc
