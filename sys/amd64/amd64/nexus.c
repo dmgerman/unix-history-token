@@ -1163,6 +1163,25 @@ argument_list|(
 name|child
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|device_get_flags
+argument_list|(
+name|child
+argument_list|)
+condition|)
+name|retval
+operator|+=
+name|printf
+argument_list|(
+literal|" flags %#x"
+argument_list|,
+name|device_get_flags
+argument_list|(
+name|child
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|retval
 operator|+=
 name|printf
