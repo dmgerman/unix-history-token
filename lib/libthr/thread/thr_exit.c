@@ -457,6 +457,22 @@ argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
+comment|/* If we're the last thread, call it quits */
+if|if
+condition|(
+name|TAILQ_EMPTY
+argument_list|(
+operator|&
+name|_thread_list
+argument_list|)
+condition|)
+name|exit
+argument_list|(
+name|curthread
+operator|->
+name|ret
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Retire the architecture specific id so that it can be used for 	 * new threads. 	 */
 name|_retire_thread
 argument_list|(
