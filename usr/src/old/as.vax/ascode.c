@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ascode.c 4.10 %G%"
+literal|"@(#)ascode.c 4.11 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1496,41 +1496,6 @@ operator|->
 name|a_areg1
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VMS
-if|if
-condition|(
-operator|(
-name|vms_obj_ptr
-operator|-
-name|sobuf
-operator|)
-operator|>
-literal|400
-condition|)
-block|{
-name|write
-argument_list|(
-name|objfil
-argument_list|,
-name|sobuf
-argument_list|,
-name|vms_obj_ptr
-operator|-
-name|sobuf
-argument_list|)
-expr_stmt|;
-name|vms_obj_ptr
-operator|=
-name|sobuf
-operator|+
-literal|1
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-endif|VMS
 if|if
 condition|(
 name|reloc_how

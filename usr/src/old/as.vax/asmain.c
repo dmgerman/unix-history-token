@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asmain.c 4.11 %G%"
+literal|"@(#)asmain.c 4.12 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,42 +67,12 @@ directive|include
 file|"asexpr.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|UNIX
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|unix_lang_name
-value|"VAX/UNIX Assembler V%G% 4.11"
+value|"VAX/UNIX Assembler V%G% 4.12"
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VMS
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|vms_lang_name
-value|"VAX/VMS C Assembler V1.00"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-endif|VMS
-end_endif
 
 begin_comment
 comment|/*  *	variables to manage reading the assembly source files  */
@@ -330,39 +300,9 @@ begin_decl_stmt
 name|int
 name|useVM
 init|=
-comment|/*put the temp file in virtual memory*/
-ifdef|#
-directive|ifdef
-name|VMS
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/*VMS has virtual memory (duh)*/
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-endif|VMS
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|UNIX
-end_ifdef
-
-begin_expr_stmt
-literal|0
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|char
@@ -645,28 +585,9 @@ name|char
 modifier|*
 name|tmpdirprefix
 init|=
-ifdef|#
-directive|ifdef
-name|UNIX
 literal|"/tmp/"
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-else|VMS
-end_else
-
-begin_expr_stmt
-literal|"/usr/tmp/"
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 name|int
@@ -884,10 +805,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/*end of UNIX main*/
-end_comment
 
 begin_macro
 name|argprocess

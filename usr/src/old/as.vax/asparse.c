@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asparse.c 4.14 %G%"
+literal|"@(#)asparse.c 4.15 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -769,46 +769,11 @@ argument|); 			seg_number =
 literal|0
 argument|; 		} 	} 	if (seg_type == IDATA) 		seg_number += NLOC; 	flushfield(NBPW/
 literal|4
-argument|); 	dotp =&usedot[seg_number];
-ifdef|#
-directive|ifdef
-name|UNIX
-argument|if (passno==
+argument|); 	dotp =&usedot[seg_number]; 	if (passno==
 literal|2
 argument|) {
 comment|/* go salt away in pass 2*/
-argument|txtfil = usefile[seg_number]; 		relfil = rusefile[seg_number]; 	}
-endif|#
-directive|endif
-endif|UNIX
-ifdef|#
-directive|ifdef
-name|VMS
-argument|if (passno==
-literal|2
-argument|) { 		puchar(vms_obj_ptr,
-literal|6
-argument|);
-comment|/*  setpl  */
-argument|puchar(vms_obj_ptr,seg_number);
-comment|/* psect # */
-argument|plong(vms_obj_ptr,dotp->e_xvalue);
-comment|/*  offset */
-argument|puchar(vms_obj_ptr,
-literal|80
-argument|);
-comment|/*  setrb  */
-argument|if((vms_obj_ptr-sobuf)>
-literal|400
-argument|){ 			write(objfil,sobuf,vms_obj_ptr-sobuf); 			vms_obj_ptr=sobuf+
-literal|1
-argument|;
-comment|/*flush buf*/
-argument|} 	}
-endif|#
-directive|endif
-endif|VMS
-argument|break;
+argument|txtfil = usefile[seg_number]; 		relfil = rusefile[seg_number]; 	} 	break;
 comment|/* 	 *	Storage filler directives: 	 * 	 *	.byte	[<exprlist>] 	 * 	 *	exprlist:  empty | exprlist outexpr 	 *	outexpr:<expr> |<expr> :<expr> 	 */
 argument|case IBYTE:	curlen = NBPW/
 literal|4
@@ -862,43 +827,9 @@ argument|yyerror(
 literal|"Space size not absolute"
 argument|); 	space_value = locxp->e_xvalue;   ospace: 	flushfield(NBPW/
 literal|4
-argument|);
-ifdef|#
-directive|ifdef
-name|UNIX
-argument|{ 		static char spacebuf[
+argument|); 	{ 		static char spacebuf[
 literal|128
-argument|]; 		while (space_value> sizeof(spacebuf)){ 			outs(spacebuf, sizeof(spacebuf)); 			space_value -= sizeof(spacebuf); 		} 		outs(spacebuf, space_value); 	}
-endif|#
-directive|endif
-endif|UNIX
-ifdef|#
-directive|ifdef
-name|VMS
-argument|dotp->e_xvalue += space_value;
-comment|/*bump pc*/
-argument|if (passno==
-literal|2
-argument|){ 	  puchar(vms_obj_ptr,
-literal|81
-argument|);
-comment|/* AUGR  */
-argument|pulong(vms_obj_ptr,space_value);
-comment|/* incr  */
-argument|if ((vms_obj_ptr-sobuf)>
-literal|400
-argument|) { 		write(objfil,sobuf,vms_obj_ptr-sobuf); 		vms_obj_ptr=sobuf+
-literal|1
-argument|;
-comment|/*pur buf*/
-argument|} 	}
-endif|#
-directive|endif
-endif|VMS
-argument|break;
-ifdef|#
-directive|ifdef
-name|UNIX
+argument|]; 		while (space_value> sizeof(spacebuf)){ 			outs(spacebuf, sizeof(spacebuf)); 			space_value -= sizeof(spacebuf); 		} 		outs(spacebuf, space_value); 	} 	break;
 comment|/* 	 *	.fill rep, size, value 	 *	repeat rep times: fill size bytes with (truncated) value 	 *	size must be between 1 and 8 	 */
 argument|case	IFILL: 	shift; 	expr(locxp, val); 	if ( (locxp->e_xtype& XTYPE) != XABS)
 comment|/* tekmdp */
@@ -926,11 +857,7 @@ argument|); 	if (passno ==
 literal|1
 argument|) { 		dotp->e_xvalue += fill_rep * fill_size; 	} else { 		while(fill_rep-->
 literal|0
-argument|) 			bwrite((char *)&locxp->e_xvalue, fill_size, txtfil); 	} 	break;
-endif|#
-directive|endif
-endif|UNIX
-argument|case IASCII:
+argument|) 			bwrite((char *)&locxp->e_xvalue, fill_size, txtfil); 	} 	break;     case IASCII:
 comment|/* .ascii [<stringlist> ] */
 argument|case IASCIZ:
 comment|/* .asciz [<stringlist> ] */
@@ -944,11 +871,7 @@ argument|mystrlen = stringp->sd_strlen; 		mystrlen += (auxval == IASCIZ) ?
 literal|1
 argument|:
 literal|0
-argument|;
-ifdef|#
-directive|ifdef
-name|UNIX
-argument|if (passno ==
+argument|; 		if (passno ==
 literal|2
 argument|){ 			if (stringp->sd_place& STR_CORE){ 				outs(stringp->sd_string, mystrlen); 			} else { 				int	i, nread; 				fseek(strfile, stringp->sd_stroff,
 literal|0
@@ -958,30 +881,7 @@ argument|; i< mystrlen;
 comment|/*VOID*/
 argument|){ 					nread = fread(yytext,
 literal|1
-argument|, 						min(mystrlen - i, 						  sizeof(yytext)), strfile); 					outs(yytext, nread); 					i += nread; 				} 			} 		} else { 			dotp->e_xvalue += mystrlen; 		}
-endif|#
-directive|endif
-endif|UNIX
-ifdef|#
-directive|ifdef
-name|VMS
-argument|{ 			reg int i; 			for (i=
-literal|0
-argument|; i< stringp->str_lg; i++){ 			  dotp->e_xvalue +=
-literal|1
-argument|; 			    if (passno==
-literal|2
-argument|){ 				puchar(vms_obj_ptr,-
-literal|1
-argument|); 			  	puchar(vms_obj_ptr,stringp->str[i]); 			  	if (vms_obj_ptr-sobuf>
-literal|400
-argument|) { 				  write(objfil,sobuf,vms_obj_ptr-sobuf); 				  vms_obj_ptr = sobuf +
-literal|1
-argument|; 			  	} 			    } 			} 		}
-endif|#
-directive|endif
-endif|VMS
-argument|shift;
+argument|, 						min(mystrlen - i, 						  sizeof(yytext)), strfile); 					outs(yytext, nread); 					i += nread; 				} 			} 		} else { 			dotp->e_xvalue += mystrlen; 		} 		shift;
 comment|/*over the STRING*/
 argument|if (val == CM)
 comment|/*could be a split string*/

@@ -1,33 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	Copyright (c) 1982 Regents of the University of California  *	@(#)as.h 4.15 %G%  */
+comment|/*  *	Copyright (c) 1982 Regents of the University of California  *	@(#)as.h 4.16 %G%  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VMS
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|vax
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|VAX
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-endif|VMS
-end_endif
 
 begin_define
 define|#
@@ -41,12 +15,6 @@ include|#
 directive|include
 file|<sys/types.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|UNIX
-end_ifdef
 
 begin_ifdef
 ifdef|#
@@ -94,54 +62,6 @@ begin_endif
 endif|#
 directive|endif
 endif|FLEXNAMES
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-endif|UNIX
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VMS
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|UNIXDEVEL
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<a.out.h>
-end_include
-
-begin_else
-else|#
-directive|else
-else|not UNIXDEVEL
-end_else
-
-begin_include
-include|#
-directive|include
-file|<aout.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-endif|not UNIXDEVEL
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-endif|VMS
 end_endif
 
 begin_define
@@ -280,12 +200,6 @@ name|NCPName
 value|NCPS
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|UNIX
-end_ifdef
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -352,31 +266,6 @@ begin_endif
 endif|#
 directive|endif
 endif|FLEXNAMES
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-endif|UNIX
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VMS
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|NCPName
-value|15
-end_define
-
-begin_endif
-endif|#
-directive|endif
-endif|VMS
 end_endif
 
 begin_comment
@@ -706,25 +595,6 @@ directive|define
 name|OW
 value|0xF
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VMS
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|PAGRND
-value|0x1FFL
-end_define
-
-begin_endif
-endif|#
-directive|endif
-endif|VMS
-end_endif
 
 begin_define
 define|#
@@ -1619,53 +1489,6 @@ name|lastjxxx
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VMS
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|vms_obj_ptr
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* object buffer pointer */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|sobuf
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* object buffer         */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|objfil
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* VMS object file descriptor */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-endif|VMS
-end_endif
-
 begin_comment
 comment|/* 	 *	Lgensym is used to make up funny names for local labels. 	 *	lgensym[i] is the current funny number to put after 	 *	references to if, lgensym[i]-1 is for ib. 	 *	genref[i] is set when the label is referenced before 	 *	it is defined (i.e. 2f) so that we can be sure these 	 *	labels are always defined to avoid weird diagnostics 	 *	from the loader later. 	 */
 end_comment
@@ -2170,12 +1993,6 @@ parameter_list|)
 value|dotp->e_xvalue += (lg); if (passno == 2) bwrite((cp), (lg), (txtfil))
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|UNIX
-end_ifdef
-
 begin_define
 define|#
 directive|define
@@ -2185,34 +2002,6 @@ name|o
 parameter_list|)
 value|outb(o)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-endif|UNIX
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|VMS
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|Outb
-parameter_list|(
-name|o
-parameter_list|)
-value|{*vms_obj_ptr++=-1;*vms_obj_ptr++=(char)o;dotp->e_xvalue+=1;}
-end_define
-
-begin_endif
-endif|#
-directive|endif
-endif|VMS
-end_endif
 
 begin_comment
 comment|/*  *	Most of the time, the argument to flushfield is a power of two constant,  *	the calculations involving it can be optimized to shifts.  */
