@@ -118,7 +118,7 @@ init|=
 block|{
 name|_RUNE_MAGIC_1
 block|,
-literal|"none"
+literal|"NONE"
 block|,
 name|_none_sgetrune
 block|,
