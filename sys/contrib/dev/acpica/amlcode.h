@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: amlcode.h - Definitions for AML, as included in "definition blocks"  *                   Declarations and definitions contained herein are derived  *                   directly from the ACPI specification.  *       $Revision: 58 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: amlcode.h - Definitions for AML, as included in "definition blocks"  *                   Declarations and definitions contained herein are derived  *                   directly from the ACPI specification.  *       $Revision: 62 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1441,7 +1441,7 @@ value|0x04
 end_define
 
 begin_comment
-comment|/*   * Opcode information   */
+comment|/*  * Opcode information  */
 end_comment
 
 begin_comment
@@ -1860,7 +1860,7 @@ value|0x19
 end_define
 
 begin_comment
-comment|/*   * Opcode classes   */
+comment|/*  * Opcode classes  */
 end_comment
 
 begin_define
@@ -2016,133 +2016,146 @@ value|5
 end_define
 
 begin_comment
-comment|/* Field Access Types */
+comment|/*  * FieldFlags  *  * This byte is extracted from the AML and includes three separate  * pieces of information about the field:  * 1) The field access type  * 2) The field update rule  * 3) The lock rule for the field  *  * Bits 00 - 03 : AccessType (AnyAcc, ByteAcc, etc.)  *      04      : LockRule (1 == Lock)  *      05 - 06 : UpdateRule  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|ACCESS_TYPE_MASK
-value|0x0f
+name|AML_FIELD_ACCESS_TYPE_MASK
+value|0x0F
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACCESS_TYPE_SHIFT
-value|0
-end_define
-
-begin_typedef
-typedef|typedef
-enum|enum
-block|{
-name|ACCESS_ANY_ACC
-init|=
-literal|0
-block|,
-name|ACCESS_BYTE_ACC
-init|=
-literal|1
-block|,
-name|ACCESS_WORD_ACC
-init|=
-literal|2
-block|,
-name|ACCESS_DWORD_ACC
-init|=
-literal|3
-block|,
-name|ACCESS_QWORD_ACC
-init|=
-literal|4
-block|,
-comment|/* ACPI 2.0 */
-name|ACCESS_BLOCK_ACC
-init|=
-literal|4
-block|,
-name|ACCESS_SMBSEND_RECV_ACC
-init|=
-literal|5
-block|,
-name|ACCESS_SMBQUICK_ACC
-init|=
-literal|6
-block|}
-name|AML_ACCESS_TYPE
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* Field Lock Rules */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LOCK_RULE_MASK
+name|AML_FIELD_LOCK_RULE_MASK
 value|0x10
 end_define
 
 begin_define
 define|#
 directive|define
-name|LOCK_RULE_SHIFT
-value|4
+name|AML_FIELD_UPDATE_RULE_MASK
+value|0x60
 end_define
+
+begin_comment
+comment|/* 1) Field Access Types */
+end_comment
 
 begin_typedef
 typedef|typedef
 enum|enum
 block|{
-name|GLOCK_NEVER_LOCK
+name|AML_FIELD_ACCESS_ANY
 init|=
-literal|0
+literal|0x00
 block|,
-name|GLOCK_ALWAYS_LOCK
+name|AML_FIELD_ACCESS_BYTE
 init|=
-literal|1
+literal|0x01
+block|,
+name|AML_FIELD_ACCESS_WORD
+init|=
+literal|0x02
+block|,
+name|AML_FIELD_ACCESS_DWORD
+init|=
+literal|0x03
+block|,
+name|AML_FIELD_ACCESS_QWORD
+init|=
+literal|0x04
+block|,
+comment|/* ACPI 2.0 */
+name|AML_FIELD_ACCESS_BUFFER
+init|=
+literal|0x05
+block|,
+comment|/* ACPI 2.0 */
 block|}
+name|AML_ACCESS_TYPE
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* 2) Field Lock Rules */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|AML_FIELD_LOCK_NEVER
+init|=
+literal|0x00
+block|,
+name|AML_FIELD_LOCK_ALWAYS
+init|=
+literal|0x10
+block|,  }
 name|AML_LOCK_RULE
 typedef|;
 end_typedef
 
 begin_comment
-comment|/* Field Update Rules */
+comment|/* 3) Field Update Rules */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|UPDATE_RULE_MASK
-value|0x060
-end_define
-
-begin_define
-define|#
-directive|define
-name|UPDATE_RULE_SHIFT
-value|5
-end_define
 
 begin_typedef
 typedef|typedef
 enum|enum
 block|{
-name|UPDATE_PRESERVE
+name|AML_FIELD_UPDATE_PRESERVE
 init|=
-literal|0
+literal|0x00
 block|,
-name|UPDATE_WRITE_AS_ONES
+name|AML_FIELD_UPDATE_WRITE_AS_ONES
 init|=
-literal|1
+literal|0x20
 block|,
-name|UPDATE_WRITE_AS_ZEROS
+name|AML_FIELD_UPDATE_WRITE_AS_ZEROS
 init|=
-literal|2
-block|}
+literal|0x40
+block|,  }
 name|AML_UPDATE_RULE
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*   * Field Access Attributes.  * This byte is extracted from the AML via the  * AccessAs keyword   */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|AML_FIELD_ATTRIB_SMB_QUICK
+init|=
+literal|0x02
+block|,
+name|AML_FIELD_ATTRIB_SMB_SEND_RCV
+init|=
+literal|0x04
+block|,
+name|AML_FIELD_ATTRIB_SMB_BYTE
+init|=
+literal|0x06
+block|,
+name|AML_FIELD_ATTRIB_SMB_WORD
+init|=
+literal|0x08
+block|,
+name|AML_FIELD_ATTRIB_SMB_BLOCK
+init|=
+literal|0x0A
+block|,
+name|AML_FIELD_ATTRIB_SMB_CALL
+init|=
+literal|0x0E
+block|,  }
+name|AML_ACCESS_ATTRIBUTE
 typedef|;
 end_typedef
 
@@ -2178,15 +2191,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|NUM_REGION_TYPES
-value|7
-end_define
-
-begin_define
-define|#
-directive|define
 name|NUM_ACCESS_TYPES
-value|7
+value|6
 end_define
 
 begin_define
@@ -2215,13 +2221,6 @@ define|#
 directive|define
 name|NUM_FIELD_NAMES
 value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|USER_REGION_BEGIN
-value|0x80
 end_define
 
 begin_endif

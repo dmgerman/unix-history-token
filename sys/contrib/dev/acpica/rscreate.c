@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: rscreate - Create resource lists/tables  *              $Revision: 36 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: rscreate - Create resource lists/tables  *              $Revision: 38 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -146,7 +146,6 @@ name|ListSizeNeeded
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*      * Exit with the error passed back      */
 if|if
 condition|(
 name|ACPI_FAILURE
@@ -161,16 +160,27 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * If the linked list will fit into the available buffer      * call to fill in the list      */
+comment|/*      * Is caller buffer large enough?      */
 if|if
 condition|(
 name|ListSizeNeeded
-operator|<=
+operator|>
 operator|*
 name|OutputBufferLength
 condition|)
 block|{
-comment|/*          * Zero out the return buffer before proceeding          */
+operator|*
+name|OutputBufferLength
+operator|=
+name|ListSizeNeeded
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_BUFFER_OVERFLOW
+argument_list|)
+expr_stmt|;
+block|}
+comment|/*      * Zero out the return buffer before proceeding      */
 name|MEMSET
 argument_list|(
 name|OutputBuffer
@@ -193,7 +203,6 @@ operator|&
 name|OutputBuffer
 argument_list|)
 expr_stmt|;
-comment|/*          * Exit with the error passed back          */
 if|if
 condition|(
 name|ACPI_FAILURE
@@ -219,20 +228,6 @@ name|OutputBuffer
 operator|)
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-operator|*
-name|OutputBufferLength
-operator|=
-name|ListSizeNeeded
-expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_BUFFER_OVERFLOW
-argument_list|)
-expr_stmt|;
-block|}
 operator|*
 name|OutputBufferLength
 operator|=
@@ -363,16 +358,27 @@ name|BufferSizeNeeded
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*      * If the data will fit into the available buffer      * call to fill in the list      */
+comment|/* Is caller buffer large enough? */
 if|if
 condition|(
 name|BufferSizeNeeded
-operator|<=
+operator|>
 operator|*
 name|OutputBufferLength
 condition|)
 block|{
-comment|/*          * Zero out the return buffer before proceeding          */
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_BUFFER_OVERFLOW
+argument_list|)
+expr_stmt|;
+block|}
+operator|*
+name|OutputBufferLength
+operator|=
+name|BufferSizeNeeded
+expr_stmt|;
+comment|/*      * Zero out the return buffer before proceeding      */
 name|MEMSET
 argument_list|(
 name|OutputBuffer
@@ -383,7 +389,7 @@ operator|*
 name|OutputBufferLength
 argument_list|)
 expr_stmt|;
-comment|/*          * Loop through the ACPI_INTERNAL_OBJECTS - Each object should          * contain a UINT32 Address, a UINT8 Pin, a Name and a UINT8          * SourceIndex.          */
+comment|/*      * Loop through the ACPI_INTERNAL_OBJECTS - Each object should      * contain a UINT32 Address, a UINT8 Pin, a Name and a UINT8      * SourceIndex.      */
 name|TopObjectList
 operator|=
 name|PackageObject
@@ -431,7 +437,7 @@ name|Index
 operator|++
 control|)
 block|{
-comment|/*              * Point UserPrt past this current structure              *              * NOTE: On the first iteration, UserPrt->Length will              * be zero because we cleared the return buffer earlier              */
+comment|/*          * Point UserPrt past this current structure          *          * NOTE: On the first iteration, UserPrt->Length will          * be zero because we cleared the return buffer earlier          */
 name|Buffer
 operator|+=
 name|UserPrt
@@ -446,7 +452,7 @@ operator|*
 operator|)
 name|Buffer
 expr_stmt|;
-comment|/*              * Fill in the Length field with the information we              * have at this point.              * The minus four is to subtract the size of the              * UINT8 Source[4] member because it is added below.              */
+comment|/*          * Fill in the Length field with the information we          * have at this point.          * The minus four is to subtract the size of the          * UINT8 Source[4] member because it is added below.          */
 name|UserPrt
 operator|->
 name|Length
@@ -460,13 +466,13 @@ operator|-
 literal|4
 operator|)
 expr_stmt|;
-comment|/*              * Dereference the sub-package              */
+comment|/*          * Dereference the sub-package          */
 name|PackageElement
 operator|=
 operator|*
 name|TopObjectList
 expr_stmt|;
-comment|/*              * The SubObjectList will now point to an array of              * the four IRQ elements: Address, Pin, Source and              * SourceIndex              */
+comment|/*          * The SubObjectList will now point to an array of          * the four IRQ elements: Address, Pin, Source and          * SourceIndex          */
 name|SubObjectList
 operator|=
 name|PackageElement
@@ -475,7 +481,7 @@ name|Package
 operator|.
 name|Elements
 expr_stmt|;
-comment|/*              * 1) First subobject:  Dereference the Address              */
+comment|/*          * 1) First subobject:  Dereference the Address          */
 if|if
 condition|(
 name|ACPI_TYPE_INTEGER
@@ -533,7 +539,7 @@ name|AE_BAD_DATA
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*              * 2) Second subobject: Dereference the Pin              */
+comment|/*          * 2) Second subobject: Dereference the Pin          */
 name|SubObjectList
 operator|++
 expr_stmt|;
@@ -597,7 +603,7 @@ name|AE_BAD_DATA
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*              * 3) Third subobject: Dereference the Source Name              */
+comment|/*          * 3) Third subobject: Dereference the Source Name          */
 name|SubObjectList
 operator|++
 expr_stmt|;
@@ -665,7 +671,27 @@ name|Reference
 operator|.
 name|Node
 expr_stmt|;
-comment|/* TBD: use *remaining* length of the buffer! */
+comment|/* Use *remaining* length of the buffer as max for pathname */
+name|BufferSizeNeeded
+operator|=
+operator|*
+name|OutputBufferLength
+operator|-
+call|(
+name|UINT32
+call|)
+argument_list|(
+operator|(
+name|UINT8
+operator|*
+operator|)
+name|UserPrt
+operator|->
+name|Source
+operator|-
+name|OutputBuffer
+argument_list|)
+expr_stmt|;
 name|Status
 operator|=
 name|AcpiNsHandleToPathname
@@ -676,7 +702,8 @@ operator|*
 operator|)
 name|Node
 argument_list|,
-name|OutputBufferLength
+operator|&
+name|BufferSizeNeeded
 argument_list|,
 name|UserPrt
 operator|->
@@ -717,7 +744,7 @@ operator|.
 name|Pointer
 argument_list|)
 expr_stmt|;
-comment|/*                  * Add to the Length field the length of the string                  */
+comment|/*              * Add to the Length field the length of the string              */
 name|UserPrt
 operator|->
 name|Length
@@ -735,8 +762,8 @@ break|break;
 case|case
 name|ACPI_TYPE_INTEGER
 case|:
-comment|/*                  * If this is a number, then the Source Name                  * is NULL, since the entire buffer was zeroed                  * out, we can leave this alone.                  */
-comment|/*                  * Add to the Length field the length of                  * the UINT32 NULL                  */
+comment|/*              * If this is a number, then the Source Name              * is NULL, since the entire buffer was zeroed              * out, we can leave this alone.              */
+comment|/*              * Add to the Length field the length of              * the UINT32 NULL              */
 name|UserPrt
 operator|->
 name|Length
@@ -788,7 +815,7 @@ operator|->
 name|Length
 argument_list|)
 expr_stmt|;
-comment|/*              * 4) Fourth subobject: Dereference the Source Index              */
+comment|/*          * 4) Fourth subobject: Dereference the Source Index          */
 name|SubObjectList
 operator|++
 expr_stmt|;
@@ -852,11 +879,12 @@ name|AE_BAD_DATA
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*              * Point to the next ACPI_OPERAND_OBJECT              */
+comment|/*          * Point to the next ACPI_OPERAND_OBJECT          */
 name|TopObjectList
 operator|++
 expr_stmt|;
 block|}
+comment|/*      * Report the amount of buffer used      */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -867,26 +895,6 @@ operator|,
 name|OutputBuffer
 operator|)
 argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-operator|*
-name|OutputBufferLength
-operator|=
-name|BufferSizeNeeded
-expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_BUFFER_OVERFLOW
-argument_list|)
-expr_stmt|;
-block|}
-comment|/*      * Report the amount of buffer used      */
-operator|*
-name|OutputBufferLength
-operator|=
-name|BufferSizeNeeded
 expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
@@ -941,7 +949,7 @@ name|LinkedListBuffer
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*      * Params already validated, so we don't re-validate here      *      * Pass the LinkedListBuffer into a module that can calculate      * the buffer size needed for the byte stream.      */
+comment|/*      * Params already validated, so we don't re-validate here      *      * Pass the LinkedListBuffer into a module that calculates      * the buffer size needed for the byte stream.      */
 name|Status
 operator|=
 name|AcpiRsCalculateByteStreamLength
@@ -968,7 +976,6 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*      * Exit with the error passed back      */
 if|if
 condition|(
 name|ACPI_FAILURE
@@ -983,16 +990,27 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * If the linked list will fit into the available buffer      * call to fill in the list      */
+comment|/*      * Is caller buffer large enough?      */
 if|if
 condition|(
 name|ByteStreamSizeNeeded
-operator|<=
+operator|>
 operator|*
 name|OutputBufferLength
 condition|)
 block|{
-comment|/*          * Zero out the return buffer before proceeding          */
+operator|*
+name|OutputBufferLength
+operator|=
+name|ByteStreamSizeNeeded
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_BUFFER_OVERFLOW
+argument_list|)
+expr_stmt|;
+block|}
+comment|/*      * Zero out the return buffer before proceeding      */
 name|MEMSET
 argument_list|(
 name|OutputBuffer
@@ -1015,7 +1033,6 @@ operator|&
 name|OutputBuffer
 argument_list|)
 expr_stmt|;
-comment|/*          * Exit with the error passed back          */
 if|if
 condition|(
 name|ACPI_FAILURE
@@ -1041,20 +1058,6 @@ name|OutputBuffer
 operator|)
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-operator|*
-name|OutputBufferLength
-operator|=
-name|ByteStreamSizeNeeded
-expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_BUFFER_OVERFLOW
-argument_list|)
-expr_stmt|;
-block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_OK

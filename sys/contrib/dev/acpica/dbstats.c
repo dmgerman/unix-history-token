@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbstats - Generation and display of ACPI table statistics  *              $Revision: 47 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbstats - Generation and display of ACPI table statistics  *              $Revision: 49 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -165,6 +165,10 @@ modifier|*
 name|ObjDesc
 parameter_list|)
 block|{
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|ObjDesc2
+decl_stmt|;
 name|UINT32
 name|Type
 decl_stmt|;
@@ -284,8 +288,37 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|ACPI_TYPE_BUFFER_FIELD
+case|:
+name|ObjDesc2
+operator|=
+name|AcpiNsGetSecondaryObject
+argument_list|(
+name|ObjDesc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ObjDesc2
+condition|)
+block|{
+name|AcpiGbl_ObjTypeCount
+index|[
+name|INTERNAL_TYPE_EXTRA
+index|]
+operator|++
+expr_stmt|;
+block|}
+break|break;
+case|case
 name|ACPI_TYPE_REGION
 case|:
+name|AcpiGbl_ObjTypeCount
+index|[
+name|INTERNAL_TYPE_EXTRA
+index|]
+operator|++
+expr_stmt|;
 name|AcpiDbEnumerateObject
 argument_list|(
 name|ObjDesc
@@ -438,15 +471,10 @@ name|ObjHandle
 expr_stmt|;
 name|ObjDesc
 operator|=
-operator|(
-operator|(
-name|ACPI_NAMESPACE_NODE
-operator|*
-operator|)
-name|ObjHandle
-operator|)
-operator|->
-name|Object
+name|AcpiNsGetAttachedObject
+argument_list|(
+name|Node
+argument_list|)
 expr_stmt|;
 name|AcpiDbEnumerateObject
 argument_list|(
@@ -1310,6 +1338,16 @@ argument_list|,
 sizeof|sizeof
 argument_list|(
 name|ACPI_OBJECT_EXTRA
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"Data             %3d\n"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ACPI_OBJECT_DATA
 argument_list|)
 argument_list|)
 expr_stmt|;

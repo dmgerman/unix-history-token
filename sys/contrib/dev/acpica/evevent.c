@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evevent - Fixed and General Purpose AcpiEvent  *                          handling and dispatch  *              $Revision: 51 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evevent - Fixed and General Purpose AcpiEvent  *                          handling and dispatch  *              $Revision: 54 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -86,35 +86,6 @@ name|AE_NO_ACPI_TABLES
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Make sure the BIOS supports ACPI mode */
-if|if
-condition|(
-name|SYS_MODE_LEGACY
-operator|==
-name|AcpiHwGetModeCapabilities
-argument_list|()
-condition|)
-block|{
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_WARN
-operator|,
-literal|"ACPI Mode is not supported!\n"
-operator|)
-argument_list|)
-expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_ERROR
-argument_list|)
-expr_stmt|;
-block|}
-name|AcpiGbl_OriginalMode
-operator|=
-name|AcpiHwGetMode
-argument_list|()
-expr_stmt|;
 comment|/*      * Initialize the Fixed and General Purpose AcpiEvents prior.  This is      * done prior to enabling SCIs to prevent interrupts from occuring      * before handers are installed.      */
 name|Status
 operator|=
@@ -278,10 +249,8 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
+name|NATIVE_UINT
 name|i
-init|=
-literal|0
 decl_stmt|;
 comment|/* Initialize the structure that keeps track of fixed event handlers */
 for|for
@@ -439,7 +408,7 @@ name|StatusRegister
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* power management timer roll over */
+comment|/* Power management timer roll over */
 if|if
 condition|(
 operator|(
@@ -463,7 +432,7 @@ name|ACPI_EVENT_PMTIMER
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* global event (BIOS wants the global lock) */
+comment|/* Global event (BIOS wants the global lock) */
 if|if
 condition|(
 operator|(
@@ -487,7 +456,7 @@ name|ACPI_EVENT_GLOBAL
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* power button event */
+comment|/* Power button event */
 if|if
 condition|(
 operator|(
@@ -511,7 +480,7 @@ name|ACPI_EVENT_POWER_BUTTON
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* sleep button event */
+comment|/* Sleep button event */
 if|if
 condition|(
 operator|(

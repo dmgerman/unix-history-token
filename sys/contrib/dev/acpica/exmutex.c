@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exmutex - ASL Mutex Acquire/Release functions  *              $Revision: 7 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exmutex - ASL Mutex Acquire/Release functions  *              $Revision: 8 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -70,6 +70,24 @@ modifier|*
 name|ObjDesc
 parameter_list|)
 block|{
+name|ACPI_THREAD_STATE
+modifier|*
+name|Thread
+init|=
+name|ObjDesc
+operator|->
+name|Mutex
+operator|.
+name|OwnerThread
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|Thread
+condition|)
+block|{
+return|return;
+block|}
 if|if
 condition|(
 name|ObjDesc
@@ -118,6 +136,19 @@ operator|->
 name|Mutex
 operator|.
 name|Next
+operator|=
+name|ObjDesc
+operator|->
+name|Mutex
+operator|.
+name|Next
+expr_stmt|;
+block|}
+else|else
+block|{
+name|Thread
+operator|->
+name|AcquiredMutexList
 operator|=
 name|ObjDesc
 operator|->
@@ -141,11 +172,21 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 name|ObjDesc
 parameter_list|,
+name|ACPI_THREAD_STATE
+modifier|*
+name|Thread
+parameter_list|)
+block|{
 name|ACPI_OPERAND_OBJECT
 modifier|*
 name|ListHead
-parameter_list|)
-block|{
+decl_stmt|;
+name|ListHead
+operator|=
+name|Thread
+operator|->
+name|AcquiredMutexList
+expr_stmt|;
 comment|/* This object will be the first object in the list */
 name|ObjDesc
 operator|->
@@ -153,7 +194,7 @@ name|Mutex
 operator|.
 name|Prev
 operator|=
-name|ListHead
+name|NULL
 expr_stmt|;
 name|ObjDesc
 operator|->
@@ -162,28 +203,14 @@ operator|.
 name|Next
 operator|=
 name|ListHead
-operator|->
-name|Mutex
-operator|.
-name|Next
 expr_stmt|;
 comment|/* Update old first object to point back to this object */
 if|if
 condition|(
 name|ListHead
-operator|->
-name|Mutex
-operator|.
-name|Next
 condition|)
 block|{
-operator|(
 name|ListHead
-operator|->
-name|Mutex
-operator|.
-name|Next
-operator|)
 operator|->
 name|Mutex
 operator|.
@@ -193,11 +220,9 @@ name|ObjDesc
 expr_stmt|;
 block|}
 comment|/* Update list head */
-name|ListHead
+name|Thread
 operator|->
-name|Mutex
-operator|.
-name|Next
+name|AcquiredMutexList
 operator|=
 name|ObjDesc
 expr_stmt|;
@@ -252,6 +277,8 @@ if|if
 condition|(
 name|WalkState
 operator|->
+name|Thread
+operator|->
 name|CurrentSyncLevel
 operator|>
 name|ObjDesc
@@ -267,18 +294,21 @@ name|AE_AML_MUTEX_ORDER
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * If the mutex is already owned by this thread,      * just increment the acquisition depth      */
+comment|/*      * Support for multiple acquires by the owning thread      */
 if|if
 condition|(
 name|ObjDesc
 operator|->
 name|Mutex
 operator|.
-name|Owner
+name|OwnerThread
 operator|==
 name|WalkState
+operator|->
+name|Thread
 condition|)
 block|{
+comment|/*          * The mutex is already owned by this thread,          * just increment the acquisition depth          */
 name|ObjDesc
 operator|->
 name|Mutex
@@ -322,9 +352,11 @@ name|ObjDesc
 operator|->
 name|Mutex
 operator|.
-name|Owner
+name|OwnerThread
 operator|=
 name|WalkState
+operator|->
+name|Thread
 expr_stmt|;
 name|ObjDesc
 operator|->
@@ -336,6 +368,8 @@ literal|1
 expr_stmt|;
 name|WalkState
 operator|->
+name|Thread
+operator|->
 name|CurrentSyncLevel
 operator|=
 name|ObjDesc
@@ -344,23 +378,14 @@ name|Mutex
 operator|.
 name|SyncLevel
 expr_stmt|;
-comment|/* Link the mutex to the walk state for force-unlock at method exit */
+comment|/* Link the mutex to the current thread for force-unlock at method exit */
 name|AcpiExLinkMutex
 argument_list|(
 name|ObjDesc
 argument_list|,
-operator|(
-name|ACPI_OPERAND_OBJECT
-operator|*
-operator|)
-operator|&
-operator|(
 name|WalkState
 operator|->
-name|WalkList
-operator|->
-name|AcquiredMutexList
-operator|)
+name|Thread
 argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
@@ -416,7 +441,7 @@ name|ObjDesc
 operator|->
 name|Mutex
 operator|.
-name|Owner
+name|OwnerThread
 condition|)
 block|{
 name|return_ACPI_STATUS
@@ -432,9 +457,11 @@ name|ObjDesc
 operator|->
 name|Mutex
 operator|.
-name|Owner
+name|OwnerThread
 operator|!=
 name|WalkState
+operator|->
+name|Thread
 condition|)
 block|{
 name|return_ACPI_STATUS
@@ -453,6 +480,8 @@ operator|.
 name|SyncLevel
 operator|>
 name|WalkState
+operator|->
+name|Thread
 operator|->
 name|CurrentSyncLevel
 condition|)
@@ -489,6 +518,12 @@ name|AE_OK
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Unlink the mutex from the owner's list */
+name|AcpiExUnlinkMutex
+argument_list|(
+name|ObjDesc
+argument_list|)
+expr_stmt|;
 comment|/* Release the mutex */
 name|Status
 operator|=
@@ -502,11 +537,13 @@ name|ObjDesc
 operator|->
 name|Mutex
 operator|.
-name|Owner
+name|OwnerThread
 operator|=
 name|NULL
 expr_stmt|;
 name|WalkState
+operator|->
+name|Thread
 operator|->
 name|CurrentSyncLevel
 operator|=
@@ -515,12 +552,6 @@ operator|->
 name|Mutex
 operator|.
 name|SyncLevel
-expr_stmt|;
-comment|/* Unlink the mutex from the owner's list */
-name|AcpiExUnlinkMutex
-argument_list|(
-name|ObjDesc
-argument_list|)
 expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
@@ -538,20 +569,18 @@ begin_function
 name|ACPI_STATUS
 name|AcpiExReleaseAllMutexes
 parameter_list|(
-name|ACPI_OPERAND_OBJECT
+name|ACPI_THREAD_STATE
 modifier|*
-name|ListHead
+name|Thread
 parameter_list|)
 block|{
 name|ACPI_OPERAND_OBJECT
 modifier|*
 name|Next
 init|=
-name|ListHead
+name|Thread
 operator|->
-name|Mutex
-operator|.
-name|Next
+name|AcquiredMutexList
 decl_stmt|;
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -578,14 +607,13 @@ name|Mutex
 operator|.
 name|Next
 expr_stmt|;
-comment|/* Mark mutex un-owned */
 name|This
 operator|->
 name|Mutex
 operator|.
-name|Owner
+name|AcquisitionDepth
 operator|=
-name|NULL
+literal|1
 expr_stmt|;
 name|This
 operator|->
@@ -603,19 +631,20 @@ name|Next
 operator|=
 name|NULL
 expr_stmt|;
-name|This
-operator|->
-name|Mutex
-operator|.
-name|AcquisitionDepth
-operator|=
-literal|0
-expr_stmt|;
 comment|/* Release the mutex */
 name|AcpiExSystemReleaseMutex
 argument_list|(
 name|This
 argument_list|)
+expr_stmt|;
+comment|/* Mark mutex unowned */
+name|This
+operator|->
+name|Mutex
+operator|.
+name|OwnerThread
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 return|return

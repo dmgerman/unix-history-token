@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utxface - External interfaces for "global" ACPI functions  *              $Revision: 82 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utxface - External interfaces for "global" ACPI functions  *              $Revision: 85 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -59,6 +59,18 @@ begin_include
 include|#
 directive|include
 file|"acexcep.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"acparser.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"acdispat.h"
 end_include
 
 begin_define
@@ -506,6 +518,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/*      * Empty the caches (delete the cached objects) on the assumption that      * the table load filled them up more than they will be at runtime --      * thus wasting non-paged memory.      */
+name|Status
+operator|=
+name|AcpiPurgeCachedObjects
+argument_list|()
+expr_stmt|;
 name|AcpiGbl_StartupFlags
 operator||=
 name|ACPI_INITIALIZED_OK
@@ -542,8 +560,6 @@ operator|=
 name|TRUE
 argument_list|)
 expr_stmt|;
-comment|/* TBD: [Investigate] This is no longer needed?*/
-comment|/*    AcpiUtReleaseMutex (ACPI_MTX_DEBUG_CMD_READY); */
 comment|/* Shutdown and free all resources */
 name|AcpiUtSubsystemShutdown
 argument_list|()
@@ -714,7 +730,7 @@ name|InfoPtr
 operator|->
 name|Flags
 operator|=
-name|AcpiGbl_SystemFlags
+name|SYS_MODE_ACPI
 expr_stmt|;
 comment|/* Timer resolution - 24 or 32 bits  */
 if|if
@@ -820,6 +836,42 @@ operator|.
 name|Count
 expr_stmt|;
 block|}
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*****************************************************************************  *  * FUNCTION:    AcpiPurgeCachedObjects  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: Empty all caches (delete the cached objects)  *  ****************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_STATUS
+name|AcpiPurgeCachedObjects
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|FUNCTION_TRACE
+argument_list|(
+literal|"AcpiPurgeCachedObjects"
+argument_list|)
+expr_stmt|;
+name|AcpiUtDeleteGenericStateCache
+argument_list|()
+expr_stmt|;
+name|AcpiUtDeleteObjectCache
+argument_list|()
+expr_stmt|;
+name|AcpiDsDeleteWalkStateCache
+argument_list|()
+expr_stmt|;
+name|AcpiPsDeleteParseCache
+argument_list|()
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_OK

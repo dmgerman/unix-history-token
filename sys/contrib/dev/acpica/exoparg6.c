@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exoparg6 - AML execution - opcodes with 6 arguments  *              $Revision: 4 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exoparg6 - AML execution - opcodes with 6 arguments  *              $Revision: 6 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -52,7 +52,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*!  * Naming convention for AML interpreter execution routines.  *  * The routines that begin execution of AML opcodes are named with a common  * convention based upon the number of arguments, the number of target operands,  * and whether or not a value is returned:  *  *      AcpiExOpcode_xA_yT_zR  *  * Where:    *  * xA - ARGUMENTS:    The number of arguments (input operands) that are   *                    required for this opcode type (1 through 6 args).  * yT - TARGETS:      The number of targets (output operands) that are required   *                    for this opcode type (0, 1, or 2 targets).  * zR - RETURN VALUE: Indicates whether this opcode type returns a value   *                    as the function return (0 or 1).  *  * The AcpiExOpcode* functions are called via the Dispatcher component with   * fully resolved operands. !*/
+comment|/*!  * Naming convention for AML interpreter execution routines.  *  * The routines that begin execution of AML opcodes are named with a common  * convention based upon the number of arguments, the number of target operands,  * and whether or not a value is returned:  *  *      AcpiExOpcode_xA_yT_zR  *  * Where:  *  * xA - ARGUMENTS:    The number of arguments (input operands) that are  *                    required for this opcode type (1 through 6 args).  * yT - TARGETS:      The number of targets (output operands) that are required  *                    for this opcode type (0, 1, or 2 targets).  * zR - RETURN VALUE: Indicates whether this opcode type returns a value  *                    as the function return (0 or 1).  *  * The AcpiExOpcode* functions are called via the Dispatcher component with  * fully resolved operands. !*/
 end_comment
 
 begin_comment
@@ -253,7 +253,7 @@ block|{
 case|case
 name|AML_MATCH_OP
 case|:
-comment|/*           * Match (SearchPackage[0], MatchOp1[1], MatchObject1[2],           *                          MatchOp2[3], MatchObject2[4], StartIndex[5])          */
+comment|/*          * Match (SearchPackage[0], MatchOp1[1], MatchObject1[2],          *                          MatchOp2[3], MatchObject2[4], StartIndex[5])          */
 comment|/* Validate match comparison sub-opcodes */
 if|if
 condition|(
@@ -379,7 +379,7 @@ name|Value
 operator|=
 name|ACPI_INTEGER_MAX
 expr_stmt|;
-comment|/*          * Examine each element until a match is found.  Within the loop,          * "continue" signifies that the current element does not match          * and the next should be examined.          * Upon finding a match, the loop will terminate via "break" at          * the bottom.  If it terminates "normally", MatchValue will be -1          * (its initial value) indicating that no match was found.  When          * returned as a Number, this will produce the Ones value as specified.          */
+comment|/*          * Examine each element until a match is found.  Within the loop,          * "continue" signifies that the current element does not match          * and the next should be examined.          *          * Upon finding a match, the loop will terminate via "break" at          * the bottom.  If it terminates "normally", MatchValue will be -1          * (its initial value) indicating that no match was found.  When          * returned as a Number, this will produce the Ones value as specified.          */
 for|for
 control|(
 init|;
@@ -412,7 +412,7 @@ index|[
 name|Index
 index|]
 expr_stmt|;
-comment|/*              * Treat any NULL or non-numeric elements as non-matching.              * TBD [Unhandled] - if an element is a Name,              *      should we examine its value?              */
+comment|/*              * Treat any NULL or non-numeric elements as non-matching.              */
 if|if
 condition|(
 operator|!
@@ -429,7 +429,7 @@ condition|)
 block|{
 continue|continue;
 block|}
-comment|/*              * Within these switch statements:              *      "break" (exit from the switch) signifies a match;              *      "continue" (proceed to next iteration of enclosing              *          "for" loop) signifies a non-match.              */
+comment|/*              * "continue" (proceed to next iteration of enclosing              * "for" loop) signifies a non-match.              */
 if|if
 condition|(
 operator|!

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsinit - namespace initialization  *              $Revision: 33 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsinit - namespace initialization  *              $Revision: 35 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -415,9 +415,10 @@ argument_list|)
 expr_stmt|;
 name|ObjDesc
 operator|=
+name|AcpiNsGetAttachedObject
+argument_list|(
 name|Node
-operator|->
-name|Object
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -779,11 +780,11 @@ argument_list|(
 name|ACPI_MTX_NAMESPACE
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_BAD_PARAMETER
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 name|AcpiUtReleaseMutex
 argument_list|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsaccess - Top-level functions for accessing ACPI namespace  *              $Revision: 135 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsaccess - Top-level functions for accessing ACPI namespace  *              $Revision: 141 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -518,12 +518,6 @@ name|NULL
 decl_stmt|;
 name|ACPI_NAMESPACE_NODE
 modifier|*
-name|ScopeToPush
-init|=
-name|NULL
-decl_stmt|;
-name|ACPI_NAMESPACE_NODE
-modifier|*
 name|ThisNode
 init|=
 name|NULL
@@ -553,10 +547,6 @@ operator|&
 operator|~
 name|NS_ERROR_IF_FOUND
 decl_stmt|;
-name|DEBUG_EXEC
-argument_list|(
-argument|UINT32 i;
-argument_list|)
 name|FUNCTION_TRACE
 argument_list|(
 literal|"NsLookup"
@@ -588,11 +578,11 @@ operator|!
 name|AcpiGbl_RootNode
 condition|)
 block|{
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_NO_NAMESPACE
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 comment|/*      * Get the prefix scope.      * A null scope means use the root scope      */
 if|if
@@ -674,15 +664,14 @@ operator|=
 name|Type
 expr_stmt|;
 block|}
-comment|/* TBD: [Restructure] - Move the pathname stuff into a new procedure */
-comment|/* Examine the name pointer */
+comment|/* Examine the pathname */
 if|if
 condition|(
 operator|!
 name|Pathname
 condition|)
 block|{
-comment|/*  8-12-98 ASL Grammar Update supports null NamePath   */
+comment|/* Null NamePath -- is allowed */
 name|NullNamePath
 operator|=
 name|TRUE
@@ -700,7 +689,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_NAMES
 operator|,
-literal|"Null Pathname (Zero segments),  Flags=%x\n"
+literal|"Null Pathname (Zero segments), Flags=%x\n"
 operator|,
 name|Flags
 operator|)
@@ -718,12 +707,12 @@ operator|==
 name|AML_ROOT_PREFIX
 condition|)
 block|{
-comment|/* Pathname is fully qualified, look in root name table */
+comment|/* Pathname is fully qualified, start from the root */
 name|CurrentNode
 operator|=
 name|AcpiGbl_RootNode
 expr_stmt|;
-comment|/* point to segment part */
+comment|/* Point to segment part */
 name|Pathname
 operator|++
 expr_stmt|;
@@ -738,7 +727,6 @@ name|CurrentNode
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Direct reference to root, "\" */
 if|if
 condition|(
 operator|!
@@ -748,6 +736,7 @@ name|Pathname
 operator|)
 condition|)
 block|{
+comment|/* Direct reference to root, "\" */
 name|ThisNode
 operator|=
 name|AcpiGbl_RootNode
@@ -775,7 +764,7 @@ name|PrefixNode
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*              * Handle up-prefix (carat).  More than one prefix              * is supported              */
+comment|/*              * Handle up-prefix (carat).  More than one prefix is supported              */
 while|while
 condition|(
 operator|*
@@ -788,7 +777,7 @@ comment|/* Point to segment part or next ParentPrefix */
 name|Pathname
 operator|++
 expr_stmt|;
-comment|/*  Backup to the parent's scope  */
+comment|/* Backup to the parent's scope  */
 name|ThisNode
 operator|=
 name|AcpiNsGetParentObject
@@ -822,7 +811,7 @@ name|ThisNode
 expr_stmt|;
 block|}
 block|}
-comment|/*          * Examine the name prefix opcode, if any,          * to determine the number of segments          */
+comment|/*          * Examine the name prefix opcode, if any, to determine the number of           * segments          */
 if|if
 condition|(
 operator|*
@@ -831,11 +820,11 @@ operator|==
 name|AML_DUAL_NAME_PREFIX
 condition|)
 block|{
+comment|/* Two segments, point to first segment */
 name|NumSegments
 operator|=
 literal|2
 expr_stmt|;
-comment|/* point to first segment */
 name|Pathname
 operator|++
 expr_stmt|;
@@ -860,6 +849,7 @@ operator|==
 name|AML_MULTI_NAME_PREFIX_OP
 condition|)
 block|{
+comment|/* Extract segment count, point to first segment */
 name|NumSegments
 operator|=
 operator|(
@@ -873,7 +863,6 @@ operator|)
 operator|++
 name|Pathname
 expr_stmt|;
-comment|/* point to first segment */
 name|Pathname
 operator|++
 expr_stmt|;
@@ -893,7 +882,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*              * No Dual or Multi prefix, hence there is only one              * segment and Pathname is already pointing to it.              */
+comment|/*              * No Dual or Multi prefix, hence there is only one segment and               * Pathname is already pointing to it.              */
 name|NumSegments
 operator|=
 literal|1
@@ -910,69 +899,18 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|ACPI_DEBUG
-comment|/* TBD: [Restructure] Make this a procedure */
-comment|/* Debug only: print the entire name that we are about to lookup */
-name|ACPI_DEBUG_PRINT
+name|DEBUG_EXEC
 argument_list|(
-operator|(
-name|ACPI_DB_NAMES
-operator|,
-literal|"["
-operator|)
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
+name|AcpiNsPrintPathname
+argument_list|(
 name|NumSegments
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|ACPI_DEBUG_PRINT_RAW
-argument_list|(
-operator|(
-name|ACPI_DB_NAMES
-operator|,
-literal|"%4.4s/"
-operator|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
+argument_list|,
 name|Pathname
-index|[
-name|i
-operator|*
-literal|4
-index|]
-operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|ACPI_DEBUG_PRINT_RAW
-argument_list|(
-operator|(
-name|ACPI_DB_NAMES
-operator|,
-literal|"]\n"
-operator|)
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-block|}
-comment|/*      * Search namespace for each segment of the name.      * Loop through and verify/add each name segment.      */
+comment|/*      * Search namespace for each segment of the name.  Loop through and       * verify/add each name segment.      */
 while|while
 condition|(
 name|NumSegments
@@ -1235,7 +1173,7 @@ name|WalkState
 operator|)
 condition|)
 block|{
-comment|/*          * If entry is a type which opens a scope,          * push the new scope on the scope stack.          */
+comment|/*          * If entry is a type which opens a scope, push the new scope on the           * scope stack.          */
 if|if
 condition|(
 name|AcpiNsOpensScope
@@ -1244,30 +1182,11 @@ name|TypeToCheckFor
 argument_list|)
 condition|)
 block|{
-comment|/*  8-12-98 ASL Grammar Update supports null NamePath   */
-if|if
-condition|(
-name|NullNamePath
-condition|)
-block|{
-comment|/* TBD: [Investigate] - is this the correct thing to do? */
-name|ScopeToPush
-operator|=
-name|NULL
-expr_stmt|;
-block|}
-else|else
-block|{
-name|ScopeToPush
-operator|=
-name|ThisNode
-expr_stmt|;
-block|}
 name|Status
 operator|=
 name|AcpiDsScopeStackPush
 argument_list|(
-name|ScopeToPush
+name|ThisNode
 argument_list|,
 name|Type
 argument_list|,
@@ -1295,7 +1214,7 @@ name|ACPI_DB_INFO
 operator|,
 literal|"Set global scope to %p\n"
 operator|,
-name|ScopeToPush
+name|ThisNode
 operator|)
 argument_list|)
 expr_stmt|;

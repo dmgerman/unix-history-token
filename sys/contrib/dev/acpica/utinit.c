@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utinit - Common ACPI subsystem initialization  *              $Revision: 102 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utinit - Common ACPI subsystem initialization  *              $Revision: 103 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -35,18 +35,6 @@ begin_include
 include|#
 directive|include
 file|"acevents.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acparser.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"acdispat.h"
 end_include
 
 begin_define
@@ -551,19 +539,8 @@ comment|/* Close the globals */
 name|AcpiUtTerminate
 argument_list|()
 expr_stmt|;
-comment|/* Flush the local cache(s) */
-name|AcpiUtDeleteGenericStateCache
-argument_list|()
-expr_stmt|;
-name|AcpiUtDeleteObjectCache
-argument_list|()
-expr_stmt|;
-name|AcpiDsDeleteWalkStateCache
-argument_list|()
-expr_stmt|;
-comment|/* Close the Parser */
-comment|/* TBD: [Restructure] AcpiPsTerminate () */
-name|AcpiPsDeleteParseCache
+comment|/* Purge the local caches */
+name|AcpiPurgeCachedObjects
 argument_list|()
 expr_stmt|;
 comment|/* Debug only - display leftover memory allocation, if any */

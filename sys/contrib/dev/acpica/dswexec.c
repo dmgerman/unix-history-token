@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dswexec - Dispatcher method execution callbacks;  *                        dispatch to interpreter.  *              $Revision: 79 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dswexec - Dispatcher method execution callbacks;  *                        dispatch to interpreter.  *              $Revision: 82 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -70,7 +70,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*  * Dispatch tables for opcode classes   */
+comment|/*  * Dispatch table for opcode classes  */
 end_comment
 
 begin_decl_stmt
@@ -376,7 +376,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_EXEC
 operator|,
-literal|"Completed a predicate eval=%X Op=%pn"
+literal|"Completed a predicate eval=%X Op=%p\n"
 operator|,
 name|WalkState
 operator|->
@@ -717,13 +717,13 @@ argument_list|)
 expr_stmt|;
 block|}
 break|break;
-comment|/* most operators with arguments */
 case|case
 name|AML_CLASS_EXECUTE
 case|:
 case|case
 name|AML_CLASS_CREATE
 case|:
+comment|/* most operators with arguments */
 comment|/* Start a new result/operand state */
 name|Status
 operator|=
@@ -886,21 +886,21 @@ argument_list|(
 argument|if (ACPI_FAILURE (Status)) {return_ACPI_STATUS (Status);}
 argument_list|)
 empty_stmt|;
+comment|/* Decode the Opcode Class */
 switch|switch
 condition|(
 name|OpClass
 condition|)
 block|{
-comment|/* Decode the Opcode Class */
 case|case
 name|AML_CLASS_ARGUMENT
 case|:
-comment|/* constants, literals, etc.  do nothing */
+comment|/* constants, literals, etc. -- do nothing */
 break|break;
-comment|/* most operators with arguments */
 case|case
 name|AML_CLASS_EXECUTE
 case|:
+comment|/* most operators with arguments */
 comment|/* Build resolved operand stack */
 name|Status
 operator|=
@@ -971,13 +971,46 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ACPI_FAILURE
+name|ACPI_SUCCESS
 argument_list|(
 name|Status
 argument_list|)
 condition|)
 block|{
-comment|/* TBD: must pop and delete operands */
+name|DUMP_OPERANDS
+argument_list|(
+name|WALK_OPERANDS
+argument_list|,
+name|IMODE_EXECUTE
+argument_list|,
+name|AcpiPsGetOpcodeName
+argument_list|(
+name|WalkState
+operator|->
+name|Opcode
+argument_list|)
+argument_list|,
+name|WalkState
+operator|->
+name|NumOperands
+argument_list|,
+literal|"after ExResolveOperands"
+argument_list|)
+expr_stmt|;
+comment|/*              * Dispatch the request to the appropriate interpreter handler              * routine.  There is one routine per opcode "type" based upon the              * number of opcode arguments and return type.              */
+name|Status
+operator|=
+name|AcpiGbl_OpTypeDispatch
+index|[
+name|OpType
+index|]
+operator|(
+name|WalkState
+operator|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -999,7 +1032,8 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*              * On error, we must delete all the operands and clear the               * operand stack              */
+block|}
+comment|/* Always delete the argument objects and clear the operand stack */
 for|for
 control|(
 name|i
@@ -1016,85 +1050,7 @@ name|i
 operator|++
 control|)
 block|{
-name|AcpiUtRemoveReference
-argument_list|(
-name|WalkState
-operator|->
-name|Operands
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
-name|WalkState
-operator|->
-name|Operands
-index|[
-name|i
-index|]
-operator|=
-name|NULL
-expr_stmt|;
-block|}
-name|WalkState
-operator|->
-name|NumOperands
-operator|=
-literal|0
-expr_stmt|;
-goto|goto
-name|Cleanup
-goto|;
-block|}
-name|DUMP_OPERANDS
-argument_list|(
-name|WALK_OPERANDS
-argument_list|,
-name|IMODE_EXECUTE
-argument_list|,
-name|AcpiPsGetOpcodeName
-argument_list|(
-name|WalkState
-operator|->
-name|Opcode
-argument_list|)
-argument_list|,
-name|WalkState
-operator|->
-name|NumOperands
-argument_list|,
-literal|"after ExResolveOperands"
-argument_list|)
-expr_stmt|;
-comment|/*          * Dispatch the request to the appropriate interpreter handler          * routine.  There is one routine per opcode "type" based upon the          * number of opcode arguments and return type.          */
-name|Status
-operator|=
-name|AcpiGbl_OpTypeDispatch
-index|[
-name|OpType
-index|]
-operator|(
-name|WalkState
-operator|)
-expr_stmt|;
-comment|/* Delete argument objects and clear the operand stack */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|WalkState
-operator|->
-name|NumOperands
-condition|;
-name|i
-operator|++
-control|)
-block|{
-comment|/*              * Remove a reference to all operands, including both               * "Arguments" and "Targets".              */
+comment|/*              * Remove a reference to all operands, including both              * "Arguments" and "Targets".              */
 name|AcpiUtRemoveReference
 argument_list|(
 name|WalkState
@@ -1220,7 +1176,7 @@ condition|)
 block|{
 break|break;
 block|}
-comment|/*              * Since the operands will be passed to another              * control method, we must resolve all local              * references here (Local variables, arguments              * to *this* method, etc.)              */
+comment|/*              * Since the operands will be passed to another control method,               * we must resolve all local references here (Local variables,               * arguments to *this* method, etc.)              */
 name|Status
 operator|=
 name|AcpiDsResolveOperands
@@ -1431,7 +1387,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-comment|/*      * ACPI 2.0 support for 64-bit integers:      * Truncate numeric result value if we are executing from a 32-bit ACPI table      */
+comment|/*      * ACPI 2.0 support for 64-bit integers: Truncate numeric         * result value if we are executing from a 32-bit ACPI table      */
 name|AcpiExTruncateFor32bitTable
 argument_list|(
 name|WalkState

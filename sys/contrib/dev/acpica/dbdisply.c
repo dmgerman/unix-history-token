@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: dbdisply - debug display commands  *              $Revision: 57 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: dbdisply - debug display commands  *              $Revision: 60 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -278,6 +278,10 @@ decl_stmt|;
 name|ACPI_NAMESPACE_NODE
 modifier|*
 name|Node
+decl_stmt|;
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|ObjDesc
 decl_stmt|;
 name|UINT32
 name|Display
@@ -738,20 +742,23 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|ObjDesc
+operator|=
+name|AcpiNsGetAttachedObject
+argument_list|(
+name|Node
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|Node
-operator|->
-name|Object
+name|ObjDesc
 condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
 literal|"\nAttached Object (%p):\n"
 argument_list|,
-name|Node
-operator|->
-name|Object
+name|ObjDesc
 argument_list|)
 expr_stmt|;
 if|if
@@ -759,9 +766,7 @@ condition|(
 operator|!
 name|AcpiOsReadable
 argument_list|(
-name|Node
-operator|->
-name|Object
+name|ObjDesc
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -774,9 +779,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|"Invalid internal ACPI Object at address %p\n"
 argument_list|,
-name|Node
-operator|->
-name|Object
+name|ObjDesc
 argument_list|)
 expr_stmt|;
 return|return;
@@ -787,9 +790,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|Node
-operator|->
-name|Object
+name|ObjDesc
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -803,9 +804,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiExDumpObjectDescriptor
 argument_list|(
-name|Node
-operator|->
-name|Object
+name|ObjDesc
 argument_list|,
 literal|1
 argument_list|)

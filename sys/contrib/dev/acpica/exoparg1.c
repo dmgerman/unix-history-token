@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exoparg1 - AML execution - opcodes with 1 argument  *              $Revision: 120 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exoparg1 - AML execution - opcodes with 1 argument  *              $Revision: 124 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -64,7 +64,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*!  * Naming convention for AML interpreter execution routines.  *  * The routines that begin execution of AML opcodes are named with a common  * convention based upon the number of arguments, the number of target operands,  * and whether or not a value is returned:  *  *      AcpiExOpcode_xA_yT_zR  *  * Where:    *  * xA - ARGUMENTS:    The number of arguments (input operands) that are   *                    required for this opcode type (1 through 6 args).  * yT - TARGETS:      The number of targets (output operands) that are required   *                    for this opcode type (0, 1, or 2 targets).  * zR - RETURN VALUE: Indicates whether this opcode type returns a value   *                    as the function return (0 or 1).  *  * The AcpiExOpcode* functions are called via the Dispatcher component with   * fully resolved operands. !*/
+comment|/*!  * Naming convention for AML interpreter execution routines.  *  * The routines that begin execution of AML opcodes are named with a common  * convention based upon the number of arguments, the number of target operands,  * and whether or not a value is returned:  *  *      AcpiExOpcode_xA_yT_zR  *  * Where:  *  * xA - ARGUMENTS:    The number of arguments (input operands) that are  *                    required for this opcode type (1 through 6 args).  * yT - TARGETS:      The number of targets (output operands) that are required  *                    for this opcode type (0, 1, or 2 targets).  * zR - RETURN VALUE: Indicates whether this opcode type returns a value  *                    as the function return (0 or 1).  *  * The AcpiExOpcode* functions are called via the Dispatcher component with  * fully resolved operands. !*/
 end_comment
 
 begin_comment
@@ -110,7 +110,7 @@ name|Opcode
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Examine the opcode */
+comment|/* Examine the AML opcode */
 switch|switch
 condition|(
 name|WalkState
@@ -290,6 +290,7 @@ name|Opcode
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Examine the AML opcode */
 switch|switch
 condition|(
 name|WalkState
@@ -463,6 +464,7 @@ goto|;
 block|}
 break|break;
 block|}
+comment|/* Examine the AML opcode */
 switch|switch
 condition|(
 name|WalkState
@@ -1154,7 +1156,6 @@ name|WalkState
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/*      * These are two obsolete opcodes      */
 case|case
 name|AML_SHIFT_LEFT_BIT_OP
 case|:
@@ -1163,6 +1164,7 @@ case|case
 name|AML_SHIFT_RIGHT_BIT_OP
 case|:
 comment|/*  ShiftRightBit (Source, BitNum) */
+comment|/*          * These are two obsolete opcodes          */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -1208,7 +1210,7 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-comment|/*      * Store the return value computed above into the target object       */
+comment|/*      * Store the return value computed above into the target object      */
 name|Status
 operator|=
 name|AcpiExStore
@@ -1313,7 +1315,7 @@ name|Opcode
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Get the operand and decode the opcode */
+comment|/* Examine the AML opcode */
 switch|switch
 condition|(
 name|WalkState
@@ -1445,7 +1447,7 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-comment|/*           * ReturnDesc is now guaranteed to be an Integer object          * Do the actual increment or decrement           */
+comment|/*          * ReturnDesc is now guaranteed to be an Integer object          * Do the actual increment or decrement          */
 if|if
 condition|(
 name|AML_INCREMENT_OP
@@ -1541,7 +1543,7 @@ break|break;
 case|case
 name|AML_DEBUG_OP
 case|:
-comment|/* Per 1.0b spec, Debug object is of type "DebugObject" */
+comment|/* The Debug Object is of type "DebugObject" */
 name|Type
 operator|=
 name|ACPI_TYPE_DEBUG_OBJECT
@@ -1771,6 +1773,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/*              * Type is guaranteed to be a buffer, string, or package at this              * point (even if the original operand was an object reference, it              * will be resolved and typechecked during operand resolution.)              */
 switch|switch
 condition|(
 name|TempDesc
@@ -1816,28 +1819,22 @@ operator|.
 name|Count
 expr_stmt|;
 break|break;
-case|case
-name|INTERNAL_TYPE_REFERENCE
-case|:
-comment|/* TBD: this must be a reference to a buf/str/pkg?? */
-name|Value
-operator|=
-literal|4
-expr_stmt|;
-break|break;
 default|default:
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Not Buf/Str/Pkg - found type %X\n"
+literal|"SizeOf, Not Buf/Str/Pkg - found type %s\n"
 operator|,
+name|AcpiUtGetTypeName
+argument_list|(
 name|TempDesc
 operator|->
 name|Common
 operator|.
 name|Type
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1945,13 +1942,13 @@ operator|.
 name|Opcode
 condition|)
 block|{
-comment|/* Set Operand[0] to the value of the local/arg */
 case|case
 name|AML_LOCAL_OP
 case|:
 case|case
 name|AML_ARG_OP
 case|:
+comment|/* Set Operand[0] to the value of the local/arg */
 name|AcpiDsMethodDataGetValue
 argument_list|(
 name|Operand
@@ -1996,7 +1993,7 @@ name|TempDesc
 expr_stmt|;
 break|break;
 default|default:
-comment|/* Index op - handled below */
+comment|/* Must be an Index op - handled below */
 break|break;
 block|}
 block|}
@@ -2017,7 +2014,8 @@ block|{
 comment|/* Get the actual object from the Node (This is the dereference) */
 name|ReturnDesc
 operator|=
-operator|(
+name|AcpiNsGetAttachedObject
+argument_list|(
 operator|(
 name|ACPI_NAMESPACE_NODE
 operator|*
@@ -2026,9 +2024,7 @@ name|Operand
 index|[
 literal|0
 index|]
-operator|)
-operator|->
-name|Object
+argument_list|)
 expr_stmt|;
 comment|/* Returning a pointer to the object, add another reference! */
 name|AcpiUtAddReference
@@ -2039,67 +2035,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*              * This must be a reference object produced by the Index              * ASL operation -- check internal opcode              */
-if|if
-condition|(
-operator|(
-name|Operand
-index|[
-literal|0
-index|]
-operator|->
-name|Reference
-operator|.
-name|Opcode
-operator|!=
-name|AML_INDEX_OP
-operator|)
-operator|&&
-operator|(
-name|Operand
-index|[
-literal|0
-index|]
-operator|->
-name|Reference
-operator|.
-name|Opcode
-operator|!=
-name|AML_REF_OF_OP
-operator|)
-condition|)
-block|{
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_ERROR
-operator|,
-literal|"Unknown opcode in ref(%p) - %X\n"
-operator|,
-name|Operand
-index|[
-literal|0
-index|]
-operator|,
-name|Operand
-index|[
-literal|0
-index|]
-operator|->
-name|Reference
-operator|.
-name|Opcode
-operator|)
-argument_list|)
-expr_stmt|;
-name|Status
-operator|=
-name|AE_TYPE
-expr_stmt|;
-goto|goto
-name|Cleanup
-goto|;
-block|}
+comment|/*              * This must be a reference produced by either the Index() or               * RefOf() operator              */
 switch|switch
 condition|(
 name|Operand
@@ -2115,8 +2051,8 @@ block|{
 case|case
 name|AML_INDEX_OP
 case|:
-comment|/*                  * Supported target types for the Index operator are                  * 1) A Buffer                  * 2) A Package                  */
-if|if
+comment|/*                  * The target type for the Index operator must be                  * either a Buffer or a Package                  */
+switch|switch
 condition|(
 name|Operand
 index|[
@@ -2126,10 +2062,11 @@ operator|->
 name|Reference
 operator|.
 name|TargetType
-operator|==
-name|ACPI_TYPE_BUFFER_FIELD
 condition|)
 block|{
+case|case
+name|ACPI_TYPE_BUFFER_FIELD
+case|:
 comment|/*                      * The target is a buffer, we must create a new object that                      * contains one element of the buffer, the element pointed                      * to by the index.                      *                      * NOTE: index into a buffer is NOT a pointer to a                      * sub-buffer of the main buffer, it is only a pointer to a                      * single element (byte) of the buffer!                      */
 name|ReturnDesc
 operator|=
@@ -2152,6 +2089,7 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
+comment|/*                       * Since we are returning the value of the buffer at the                      * indexed location, we don't need to add an additional                      * reference to the buffer itself.                      */
 name|TempDesc
 operator|=
 name|Operand
@@ -2185,23 +2123,10 @@ operator|.
 name|Offset
 index|]
 expr_stmt|;
-comment|/* TBD: [Investigate] (see below) Don't add an additional                      * ref!                      */
-block|}
-elseif|else
-if|if
-condition|(
-name|Operand
-index|[
-literal|0
-index|]
-operator|->
-name|Reference
-operator|.
-name|TargetType
-operator|==
+break|break;
+case|case
 name|ACPI_TYPE_PACKAGE
-condition|)
-block|{
+case|:
 comment|/*                      * The target is a package, we want to return the referenced                      * element of the package.  We must add another reference to                      * this object, however.                      */
 name|ReturnDesc
 operator|=
@@ -2251,15 +2176,14 @@ argument_list|(
 name|ReturnDesc
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
+break|break;
+default|default:
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Unknown TargetType %X in obj %p\n"
+literal|"Unknown Index TargetType %X in obj %p\n"
 operator|,
 name|Operand
 index|[
@@ -2306,6 +2230,38 @@ argument_list|(
 name|ReturnDesc
 argument_list|)
 expr_stmt|;
+break|break;
+default|default:
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_ERROR
+operator|,
+literal|"Unknown opcode in ref(%p) - %X\n"
+operator|,
+name|Operand
+index|[
+literal|0
+index|]
+operator|,
+name|Operand
+index|[
+literal|0
+index|]
+operator|->
+name|Reference
+operator|.
+name|Opcode
+operator|)
+argument_list|)
+expr_stmt|;
+name|Status
+operator|=
+name|AE_TYPE
+expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
 break|break;
 block|}
 block|}

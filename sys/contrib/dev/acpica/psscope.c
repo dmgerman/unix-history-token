@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: psscope - Parser scope stack management routines  *              $Revision: 30 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: psscope - Parser scope stack management routines  *              $Revision: 31 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -262,11 +262,11 @@ operator|!
 name|Scope
 condition|)
 block|{
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_NO_MEMORY
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 name|Scope
 operator|->

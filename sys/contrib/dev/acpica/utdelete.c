@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: utdelete - object deletion and reference count utilities  *              $Revision: 81 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: utdelete - object deletion and reference count utilities  *              $Revision: 83 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -79,6 +79,10 @@ decl_stmt|;
 name|ACPI_OPERAND_OBJECT
 modifier|*
 name|HandlerDesc
+decl_stmt|;
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|SecondDesc
 decl_stmt|;
 name|FUNCTION_TRACE_PTR
 argument_list|(
@@ -340,13 +344,16 @@ name|Object
 operator|)
 argument_list|)
 expr_stmt|;
+name|SecondDesc
+operator|=
+name|AcpiNsGetSecondaryObject
+argument_list|(
+name|Object
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|Object
-operator|->
-name|Region
-operator|.
-name|Extra
+name|SecondDesc
 condition|)
 block|{
 comment|/*              * Free the RegionContext if and only if the handler is one of the              * default handlers -- and therefore, we created the context object              * locally, it was not created by an external caller.              */
@@ -377,11 +384,7 @@ condition|)
 block|{
 name|ObjPointer
 operator|=
-name|Object
-operator|->
-name|Region
-operator|.
-name|Extra
+name|SecondDesc
 operator|->
 name|Extra
 operator|.
@@ -391,11 +394,7 @@ block|}
 comment|/* Now we can free the Extra object */
 name|AcpiUtDeleteObjectDesc
 argument_list|(
-name|Object
-operator|->
-name|Region
-operator|.
-name|Extra
+name|SecondDesc
 argument_list|)
 expr_stmt|;
 block|}
@@ -414,22 +413,21 @@ name|Object
 operator|)
 argument_list|)
 expr_stmt|;
+name|SecondDesc
+operator|=
+name|AcpiNsGetSecondaryObject
+argument_list|(
+name|Object
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-name|Object
-operator|->
-name|BufferField
-operator|.
-name|Extra
+name|SecondDesc
 condition|)
 block|{
 name|AcpiUtDeleteObjectDesc
 argument_list|(
-name|Object
-operator|->
-name|BufferField
-operator|.
-name|Extra
+name|SecondDesc
 argument_list|)
 expr_stmt|;
 block|}
@@ -1211,7 +1209,7 @@ name|Object
 operator|->
 name|BankField
 operator|.
-name|BankRegisterObj
+name|BankObj
 argument_list|,
 name|Action
 argument_list|,

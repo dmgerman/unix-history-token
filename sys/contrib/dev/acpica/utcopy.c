@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: utcopy - Internal to external object translation utilities  *              $Revision: 83 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: utcopy - Internal to external object translation utilities  *              $Revision: 86 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -632,7 +632,7 @@ block|{
 case|case
 name|ACPI_COPY_TYPE_SIMPLE
 case|:
-comment|/*          * This is a simple or null object -- get the size          */
+comment|/*          * This is a simple or null object          */
 name|Status
 operator|=
 name|AcpiUtCopyIsimpleToEsimple
@@ -736,6 +736,7 @@ operator|(
 name|AE_BAD_PARAMETER
 operator|)
 return|;
+break|break;
 block|}
 name|Info
 operator|->
@@ -1468,8 +1469,7 @@ operator|==
 name|ACPI_TYPE_PACKAGE
 condition|)
 block|{
-comment|/*          * Package objects contain other objects (which can be objects)          * buildpackage does it all          *          * TBD: Package conversion must be completed and tested          * NOTE: this code converts packages as input parameters to          * control methods only.  This is a very, very rare case.          */
-comment|/*         Status = AcpiUtCopyEpackageToIpackage(InternalObject,                                                   RetBuffer->Pointer,&RetBuffer->Length); */
+comment|/*          * Packages as external input to control methods are not supported,          */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
@@ -1663,7 +1663,6 @@ operator|!
 name|TargetObject
 condition|)
 block|{
-comment|/* TBD: must delete package created up to this point */
 return|return
 operator|(
 name|AE_NO_MEMORY
@@ -1704,6 +1703,7 @@ operator|(
 name|AE_BAD_PARAMETER
 operator|)
 return|;
+break|break;
 block|}
 return|return
 operator|(
@@ -1794,18 +1794,6 @@ operator|*
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|DestObj
-operator|->
-name|Package
-operator|.
-name|NextElement
-operator|=
-name|DestObj
-operator|->
-name|Package
-operator|.
-name|Elements
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1829,6 +1817,20 @@ name|AE_NO_MEMORY
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Init */
+name|DestObj
+operator|->
+name|Package
+operator|.
+name|NextElement
+operator|=
+name|DestObj
+operator|->
+name|Package
+operator|.
+name|Elements
+expr_stmt|;
+comment|/*      * Copy the package element-by-element by walking the package "tree".      * This handles nested packages of arbitrary depth.      */
 name|Status
 operator|=
 name|AcpiUtWalkPackageTree
@@ -1842,6 +1844,21 @@ argument_list|,
 name|WalkState
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+comment|/* On failure, delete the destination package object */
+name|AcpiUtRemoveReference
+argument_list|(
+name|DestObj
+argument_list|)
+expr_stmt|;
+block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|Status

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acexcep.h - Exception codes returned by the ACPI subsystem  *       $Revision: 50 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acexcep.h - Exception codes returned by the ACPI subsystem  *       $Revision: 53 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -141,7 +141,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|AE_EXIST
+name|AE_ALREADY_EXISTS
 value|(ACPI_STATUS) (0x0007 | AE_CODE_ENVIRONMENTAL)
 end_define
 
@@ -552,8 +552,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|AE_AML_INVALID_INDEX
+value|(ACPI_STATUS) (0x001A | AE_CODE_AML)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AE_AML_REGISTER_LIMIT
+value|(ACPI_STATUS) (0x001B | AE_CODE_AML)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AE_CODE_AML_MAX
-value|0x0019
+value|0x001B
 end_define
 
 begin_comment
@@ -655,7 +669,7 @@ literal|"AE_NOT_FOUND"
 block|,
 literal|"AE_NOT_EXIST"
 block|,
-literal|"AE_EXIST"
+literal|"AE_ALREADY_EXISTS"
 block|,
 literal|"AE_TYPE"
 block|,
@@ -795,6 +809,10 @@ block|,
 literal|"AE_AML_MUTEX_NOT_ACQUIRED"
 block|,
 literal|"AE_AML_INVALID_RESOURCE_TYPE"
+block|,
+literal|"AE_AML_INVALID_INDEX"
+block|,
+literal|"AE_AML_REGISTER_LIMIT"
 block|, }
 decl_stmt|;
 end_decl_stmt

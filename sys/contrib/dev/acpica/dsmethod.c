@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: dsmethod - Parser/Interpreter interface - control method parsing  *              $Revision: 69 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: dsmethod - Parser/Interpreter interface - control method parsing  *              $Revision: 73 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -166,9 +166,10 @@ name|ObjHandle
 expr_stmt|;
 name|ObjDesc
 operator|=
+name|AcpiNsGetAttachedObject
+argument_list|(
 name|Node
-operator|->
-name|Object
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -343,7 +344,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-comment|/* TBD: delete walk state */
+name|AcpiDsDeleteWalkState
+argument_list|(
+name|WalkState
+argument_list|)
+expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -553,9 +558,9 @@ begin_function
 name|ACPI_STATUS
 name|AcpiDsCallControlMethod
 parameter_list|(
-name|ACPI_WALK_LIST
+name|ACPI_THREAD_STATE
 modifier|*
-name|WalkList
+name|Thread
 parameter_list|,
 name|ACPI_WALK_STATE
 modifier|*
@@ -765,7 +770,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-comment|/* TBD: delete walk state */
+name|AcpiDsDeleteWalkState
+argument_list|(
+name|NextWalkState
+argument_list|)
+expr_stmt|;
 goto|goto
 name|Cleanup
 goto|;
@@ -798,7 +807,7 @@ name|NULL
 argument_list|,
 name|ObjDesc
 argument_list|,
-name|WalkList
+name|Thread
 argument_list|)
 expr_stmt|;
 if|if
@@ -815,7 +824,7 @@ goto|goto
 name|Cleanup
 goto|;
 block|}
-comment|/*      * The resolved arguments were put on the previous walk state's operand      * stack.  Operands on the previous walk state stack always      * start at index 0.      * Null terminate the list of arguments       */
+comment|/*      * The resolved arguments were put on the previous walk state's operand      * stack.  Operands on the previous walk state stack always      * start at index 0.      * Null terminate the list of arguments      */
 name|ThisWalkState
 operator|->
 name|Operands

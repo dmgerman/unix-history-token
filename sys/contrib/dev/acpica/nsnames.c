@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsnames - Name manipulation and search  *              $Revision: 64 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsnames - Name manipulation and search  *              $Revision: 65 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -314,18 +314,6 @@ operator|+=
 name|PATH_SEGMENT_LENGTH
 expr_stmt|;
 block|}
-comment|/* Special case for size still 0 - no parent for "special" nodes */
-if|if
-condition|(
-operator|!
-name|Size
-condition|)
-block|{
-name|Size
-operator|=
-name|PATH_SEGMENT_LENGTH
-expr_stmt|;
-block|}
 return|return
 operator|(
 name|Size
@@ -451,6 +439,31 @@ block|{
 name|Status
 operator|=
 name|AE_BUFFER_OVERFLOW
+expr_stmt|;
+goto|goto
+name|Exit
+goto|;
+block|}
+if|if
+condition|(
+name|Size
+operator|<
+name|ACPI_NAME_SIZE
+condition|)
+block|{
+name|UserBuffer
+index|[
+literal|0
+index|]
+operator|=
+literal|'\\'
+expr_stmt|;
+name|UserBuffer
+index|[
+literal|1
+index|]
+operator|=
+literal|0
 expr_stmt|;
 goto|goto
 name|Exit

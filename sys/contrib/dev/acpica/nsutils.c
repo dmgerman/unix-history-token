@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: nsutils - Utilities for accessing ACPI namespace, accessing  *                        parents and siblings and Scope manipulation  *              $Revision: 92 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: nsutils - Utilities for accessing ACPI namespace, accessing  *                        parents and siblings and Scope manipulation  *              $Revision: 93 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -1380,7 +1380,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsMapHandleToNode  *  * PARAMETERS:  Handle          - Handle to be converted to an Node  *  * RETURN:      A Name table entry pointer  *  * DESCRIPTION: Convert a namespace handle to a real Node  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsMapHandleToNode  *  * PARAMETERS:  Handle          - Handle to be converted to an Node  *  * RETURN:      A Name table entry pointer  *  * DESCRIPTION: Convert a namespace handle to a real Node  *  * Note: Real integer handles allow for more verification  *       and keep all pointers within this subsystem.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1395,7 +1395,7 @@ block|{
 name|FUNCTION_ENTRY
 argument_list|()
 expr_stmt|;
-comment|/*      * Simple implementation for now;      * TBD: [Future] Real integer handles allow for more verification      * and keep all pointers within this subsystem!      */
+comment|/*      * Simple implementation.      */
 if|if
 condition|(
 operator|!
@@ -1464,7 +1464,7 @@ modifier|*
 name|Node
 parameter_list|)
 block|{
-comment|/*      * Simple implementation for now;      * TBD: [Future] Real integer handles allow for more verification      * and keep all pointers within this subsystem!      */
+comment|/*      * Simple implementation for now;      */
 return|return
 operator|(
 operator|(

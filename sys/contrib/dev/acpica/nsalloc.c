@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*******************************************************************************  *  * Module Name: nsalloc - Namespace allocation and deletion utilities  *              $Revision: 60 $  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * Module Name: nsalloc - Namespace allocation and deletion utilities  *              $Revision: 62 $  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -245,20 +245,12 @@ name|TotalFreed
 operator|++
 argument_list|)
 expr_stmt|;
-comment|/*      * Detach an object if there is one      */
-if|if
-condition|(
-name|Node
-operator|->
-name|Object
-condition|)
-block|{
+comment|/*      * Detach an object if there is one then delete the node      */
 name|AcpiNsDetachObject
 argument_list|(
 name|Node
 argument_list|)
 expr_stmt|;
-block|}
 name|ACPI_MEM_FREE
 argument_list|(
 name|Node
@@ -270,7 +262,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsInstallNode  *  * PARAMETERS:  WalkState       - Current state of the walk  *              ParentNode      - The parent of the new Node  *              Node            - The new Node to install  *              Type            - ACPI object type of the new Node  *  * RETURN:      None  *  * DESCRIPTION: Initialize a new entry within a namespace table.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsInstallNode  *  * PARAMETERS:  WalkState       - Current state of the walk  *              ParentNode      - The parent of the new Node  *              Node            - The new Node to install  *              Type            - ACPI object type of the new Node  *  * RETURN:      None  *  * DESCRIPTION: Initialize a new namespace node and install it amongst  *              its peers.  *  *              Note: Current namespace lookup is linear search, so the nodes  *              are not linked in any particular order.   *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -322,8 +314,7 @@ operator|->
 name|OwnerId
 expr_stmt|;
 block|}
-comment|/* link the new entry into the parent and existing children */
-comment|/* TBD: Could be first, last, or alphabetic */
+comment|/* Link the new entry into the parent and existing children */
 name|ChildNode
 operator|=
 name|ParentNode

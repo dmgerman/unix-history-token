@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: hwacpi - ACPI Hardware Initialization/Mode Interface  *              $Revision: 46 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: hwacpi - ACPI Hardware Initialization/Mode Interface  *              $Revision: 47 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -89,118 +89,7 @@ name|AE_NO_ACPI_TABLES
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Identify current ACPI/legacy mode   */
-switch|switch
-condition|(
-name|AcpiGbl_SystemFlags
-operator|&
-name|SYS_MODES_MASK
-condition|)
-block|{
-case|case
-operator|(
-name|SYS_MODE_ACPI
-operator|)
-case|:
-name|AcpiGbl_OriginalMode
-operator|=
-name|SYS_MODE_ACPI
-expr_stmt|;
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
-literal|"System supports ACPI mode only.\n"
-operator|)
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-operator|(
-name|SYS_MODE_LEGACY
-operator|)
-case|:
-name|AcpiGbl_OriginalMode
-operator|=
-name|SYS_MODE_LEGACY
-expr_stmt|;
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
-literal|"Tables loaded from buffer, hardware assumed to support LEGACY mode only.\n"
-operator|)
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-operator|(
-name|SYS_MODE_ACPI
-operator||
-name|SYS_MODE_LEGACY
-operator|)
-case|:
-if|if
-condition|(
-name|AcpiHwGetMode
-argument_list|()
-operator|==
-name|SYS_MODE_ACPI
-condition|)
-block|{
-name|AcpiGbl_OriginalMode
-operator|=
-name|SYS_MODE_ACPI
-expr_stmt|;
-block|}
-else|else
-block|{
-name|AcpiGbl_OriginalMode
-operator|=
-name|SYS_MODE_LEGACY
-expr_stmt|;
-block|}
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
-literal|"System supports both ACPI and LEGACY modes.\n"
-operator|)
-argument_list|)
-expr_stmt|;
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_INFO
-operator|,
-literal|"System is currently in %s mode.\n"
-operator|,
-operator|(
-name|AcpiGbl_OriginalMode
-operator|==
-name|SYS_MODE_ACPI
-operator|)
-condition|?
-literal|"ACPI"
-else|:
-literal|"LEGACY"
-operator|)
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-if|if
-condition|(
-name|AcpiGbl_SystemFlags
-operator|&
-name|SYS_MODE_ACPI
-condition|)
-block|{
-comment|/* Target system supports ACPI mode */
-comment|/*          * The purpose of this code is to save the initial state          * of the ACPI event enable registers. An exit function will be          * registered which will restore this state when the application          * exits. The exit function will also clear all of the ACPI event          * status bits prior to restoring the original mode.          *          * The location of the PM1aEvtBlk enable registers is defined as the          * base of PM1aEvtBlk + DIV_2(PM1aEvtBlkLength). Since the spec further          * fully defines the PM1aEvtBlk to be a total of 4 bytes, the offset          * for the enable registers is always 2 from the base. It is hard          * coded here. If this changes in the spec, this code will need to          * be modified. The PM1bEvtBlk behaves as expected.          */
+comment|/*      * Save the initial state of the ACPI event enable registers, so       * we can restore them when we exit. We probably won't exit, though.      *      * The location of the PM1aEvtBlk enable registers is defined as the      * base of PM1aEvtBlk + DIV_2(PM1aEvtBlkLength). Since the spec further      * fully defines the PM1aEvtBlk to be a total of 4 bytes, the offset      * for the enable registers is always 2 from the base. It is hard      * coded here. If this changes in the spec, this code will need to      * be modified. The PM1bEvtBlk behaves as expected.      */
 name|AcpiGbl_Pm1EnableRegisterSave
 operator|=
 operator|(
@@ -213,7 +102,7 @@ argument_list|,
 name|PM1_EN
 argument_list|)
 expr_stmt|;
-comment|/*          * The GPEs behave similarly, except that the length of the register          * block is not fixed, so the buffer must be allocated with malloc          */
+comment|/*      * The GPEs behave similarly, except that the length of the register      * block is not fixed, so the buffer must be allocated with malloc      */
 if|if
 condition|(
 name|ACPI_VALID_ADDRESS
@@ -388,7 +277,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -562,102 +450,6 @@ name|SYS_MODE_LEGACY
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-end_function
-
-begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiHwGetModeCapabilities  *  * PARAMETERS:  none  *  * RETURN:      logical OR of SYS_MODE_ACPI and SYS_MODE_LEGACY determined at initial  *              system state.  *  * DESCRIPTION: Returns capablities of system  *  ******************************************************************************/
-end_comment
-
-begin_function
-name|UINT32
-name|AcpiHwGetModeCapabilities
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|FUNCTION_TRACE
-argument_list|(
-literal|"HwGetModeCapabilities"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
-name|AcpiGbl_SystemFlags
-operator|&
-name|SYS_MODES_MASK
-operator|)
-condition|)
-block|{
-if|if
-condition|(
-name|AcpiHwGetMode
-argument_list|()
-operator|==
-name|SYS_MODE_LEGACY
-condition|)
-block|{
-comment|/*              * Assume that if this call is being made, AcpiInit has been called              * and ACPI support has been established by the presence of the              * tables.  Therefore since we're in SYS_MODE_LEGACY, the system              * must support both modes              */
-name|AcpiGbl_SystemFlags
-operator||=
-operator|(
-name|SYS_MODE_ACPI
-operator||
-name|SYS_MODE_LEGACY
-operator|)
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* TBD: [Investigate] !!! this may be unsafe... */
-comment|/*              * system is is ACPI mode, so try to switch back to LEGACY to see if              * it is supported              */
-name|AcpiHwSetMode
-argument_list|(
-name|SYS_MODE_LEGACY
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|AcpiHwGetMode
-argument_list|()
-operator|==
-name|SYS_MODE_LEGACY
-condition|)
-block|{
-comment|/* Now in SYS_MODE_LEGACY, so both are supported */
-name|AcpiGbl_SystemFlags
-operator||=
-operator|(
-name|SYS_MODE_ACPI
-operator||
-name|SYS_MODE_LEGACY
-operator|)
-expr_stmt|;
-name|AcpiHwSetMode
-argument_list|(
-name|SYS_MODE_ACPI
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* Still in SYS_MODE_ACPI so this must be an ACPI only system */
-name|AcpiGbl_SystemFlags
-operator||=
-name|SYS_MODE_ACPI
-expr_stmt|;
-block|}
-block|}
-block|}
-name|return_VALUE
-argument_list|(
-name|AcpiGbl_SystemFlags
-operator|&
-name|SYS_MODES_MASK
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 

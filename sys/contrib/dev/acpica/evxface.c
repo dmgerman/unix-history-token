@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evxface - External interfaces for ACPI events  *              $Revision: 116 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evxface - External interfaces for ACPI events  *              $Revision: 118 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -124,7 +124,7 @@ condition|)
 block|{
 name|Status
 operator|=
-name|AE_EXIST
+name|AE_ALREADY_EXISTS
 expr_stmt|;
 goto|goto
 name|Cleanup
@@ -480,7 +480,7 @@ condition|)
 block|{
 name|Status
 operator|=
-name|AE_EXIST
+name|AE_ALREADY_EXISTS
 expr_stmt|;
 goto|goto
 name|UnlockAndExit
@@ -630,7 +630,7 @@ condition|)
 block|{
 name|Status
 operator|=
-name|AE_EXIST
+name|AE_ALREADY_EXISTS
 expr_stmt|;
 goto|goto
 name|UnlockAndExit
@@ -1231,7 +1231,7 @@ condition|)
 block|{
 name|Status
 operator|=
-name|AE_EXIST
+name|AE_ALREADY_EXISTS
 expr_stmt|;
 goto|goto
 name|Cleanup

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acstruct.h - Internal structs  *       $Revision: 10 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acstruct.h - Internal structs  *       $Revision: 12 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -98,10 +98,6 @@ decl_stmt|;
 name|UINT8
 name|WalkType
 decl_stmt|;
-name|UINT16
-name|CurrentSyncLevel
-decl_stmt|;
-comment|/* Mutex Sync (nested acquire) level */
 name|UINT16
 name|Opcode
 decl_stmt|;
@@ -255,10 +251,9 @@ decl_stmt|;
 name|ACPI_PARSE_UPWARDS
 name|AscendingCallback
 decl_stmt|;
-name|struct
-name|acpi_walk_list
+name|ACPI_THREAD_STATE
 modifier|*
-name|WalkList
+name|Thread
 decl_stmt|;
 name|struct
 name|acpi_walk_state
@@ -268,28 +263,6 @@ decl_stmt|;
 comment|/* Next WalkState in list */
 block|}
 name|ACPI_WALK_STATE
-typedef|;
-end_typedef
-
-begin_comment
-comment|/*  * Walk list - head of a tree of walk states.  Multiple walk states are created when there  * are nested control methods executing.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_walk_list
-block|{
-name|ACPI_WALK_STATE
-modifier|*
-name|WalkState
-decl_stmt|;
-name|ACPI_OBJECT_MUTEX
-name|AcquiredMutexList
-decl_stmt|;
-comment|/* List of all currently acquired mutexes */
-block|}
-name|ACPI_WALK_LIST
 typedef|;
 end_typedef
 

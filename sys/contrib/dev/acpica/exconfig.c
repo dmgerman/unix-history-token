@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exconfig - Namespace reconfiguration (Load/Unload opcodes)  *              $Revision: 44 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exconfig - Namespace reconfiguration (Load/Unload opcodes)  *              $Revision: 47 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -123,8 +123,8 @@ argument_list|(
 literal|"ExLoadOp"
 argument_list|)
 expr_stmt|;
-comment|/* TBD: [Unhandled] Object can be either a field or an opregion */
-comment|/* Get the table header */
+comment|/* Object can be either a field or an opregion */
+comment|/* TBD: Handle field vs. Opregion *?       /* Get the table header */
 name|TableHeader
 operator|.
 name|Length
@@ -154,7 +154,7 @@ name|AcpiEvAddressSpaceDispatch
 argument_list|(
 name|RgnDesc
 argument_list|,
-name|ACPI_READ_ADR_SPACE
+name|ACPI_READ
 argument_list|,
 operator|(
 name|ACPI_PHYSICAL_ADDRESS
@@ -164,7 +164,7 @@ argument_list|,
 literal|8
 argument_list|,
 operator|(
-name|UINT32
+name|ACPI_INTEGER
 operator|*
 operator|)
 operator|(
@@ -262,7 +262,7 @@ name|AcpiEvAddressSpaceDispatch
 argument_list|(
 name|RgnDesc
 argument_list|,
-name|ACPI_READ_ADR_SPACE
+name|ACPI_READ
 argument_list|,
 operator|(
 name|ACPI_PHYSICAL_ADDRESS
@@ -272,7 +272,7 @@ argument_list|,
 literal|8
 argument_list|,
 operator|(
-name|UINT32
+name|ACPI_INTEGER
 operator|*
 operator|)
 operator|(
@@ -448,11 +448,38 @@ name|Cleanup
 goto|;
 block|}
 comment|/* Add the table to the namespace */
-comment|/* TBD: [Restructure] - change to whatever new interface is appropriate */
-comment|/*     Status = AcpiLoadNamespace ();     if (ACPI_FAILURE (Status))     { */
-comment|/* TBD: [Errors] Unload the table on failure ? */
-comment|/*         goto Cleanup;     } */
-comment|/* TBD: [Investigate] we need a pointer to the table desc */
+name|Status
+operator|=
+name|AcpiNsLoadTable
+argument_list|(
+name|TableInfo
+operator|.
+name|InstalledDesc
+argument_list|,
+name|AcpiGbl_RootNode
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+comment|/* Uninstall table and free the buffer */
+name|AcpiTbUninstallTable
+argument_list|(
+name|TableInfo
+operator|.
+name|InstalledDesc
+argument_list|)
+expr_stmt|;
+goto|goto
+name|Cleanup
+goto|;
+block|}
+comment|/* We need a pointer to the table desc */
 comment|/* Init the table handle */
 name|TableDesc
 operator|->
@@ -472,7 +499,7 @@ name|TableInfo
 operator|.
 name|InstalledDesc
 expr_stmt|;
-comment|/* TBD: store the tabledesc into the DdbHandle target */
+comment|/* Store the tabledesc into the DdbHandle target */
 comment|/* DdbHandle = TableDesc; */
 name|return_ACPI_STATUS
 argument_list|(

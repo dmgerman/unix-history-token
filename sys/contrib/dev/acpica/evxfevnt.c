@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: evxfevnt - External Interfaces, ACPI event disable/enable  *              $Revision: 38 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: evxfevnt - External Interfaces, ACPI event disable/enable  *              $Revision: 42 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -76,13 +76,15 @@ parameter_list|)
 block|{
 name|ACPI_STATUS
 name|Status
+init|=
+name|AE_OK
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
 literal|"AcpiEnable"
 argument_list|)
 expr_stmt|;
-comment|/* Make sure we've got ACPI tables */
+comment|/* Make sure we have ACPI tables */
 if|if
 condition|(
 operator|!
@@ -104,30 +106,30 @@ name|AE_NO_ACPI_TABLES
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Make sure the BIOS supports ACPI mode */
+name|AcpiGbl_OriginalMode
+operator|=
+name|AcpiHwGetMode
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
-name|SYS_MODE_LEGACY
+name|AcpiGbl_OriginalMode
 operator|==
-name|AcpiHwGetModeCapabilities
-argument_list|()
+name|SYS_MODE_ACPI
 condition|)
 block|{
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
-name|ACPI_DB_WARN
+name|ACPI_DB_OK
 operator|,
-literal|"Only legacy mode supported!\n"
+literal|"Already in ACPI mode.\n"
 operator|)
 argument_list|)
 expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_ERROR
-argument_list|)
-expr_stmt|;
 block|}
+else|else
+block|{
 comment|/* Transition to ACPI mode */
 name|Status
 operator|=
@@ -168,6 +170,7 @@ literal|"Transition to ACPI mode successful\n"
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -189,12 +192,22 @@ parameter_list|)
 block|{
 name|ACPI_STATUS
 name|Status
+init|=
+name|AE_OK
 decl_stmt|;
 name|FUNCTION_TRACE
 argument_list|(
 literal|"AcpiDisable"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|AcpiHwGetMode
+argument_list|()
+operator|!=
+name|AcpiGbl_OriginalMode
+condition|)
+block|{
 comment|/* Restore original mode  */
 name|Status
 operator|=
@@ -225,6 +238,7 @@ argument_list|(
 name|Status
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* Unload the SCI interrupt handler  */
 name|AcpiEvRemoveSciHandler

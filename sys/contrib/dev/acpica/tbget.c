@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbget - ACPI Table get* routines  *              $Revision: 56 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbget - ACPI Table get* routines  *              $Revision: 57 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -770,12 +770,6 @@ name|AcpiGbl_DSDT
 operator|->
 name|Length
 argument_list|)
-expr_stmt|;
-comment|/*      * Initialize the capabilities flags.      * Assumes that platform supports ACPI_MODE since we have tables!      */
-name|AcpiGbl_SystemFlags
-operator||=
-name|AcpiHwGetModeCapabilities
-argument_list|()
 expr_stmt|;
 comment|/* Always delete the RSDP mapping, we are done with it */
 name|AcpiTbDeleteAcpiTable

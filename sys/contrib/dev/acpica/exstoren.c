@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exstoren - AML Interpreter object store support,  *                        Store to Node (namespace object)  *              $Revision: 40 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exstoren - AML Interpreter object store support,  *                        Store to Node (namespace object)  *              $Revision: 41 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -107,14 +107,12 @@ argument_list|(
 literal|"ExResolveObject"
 argument_list|)
 expr_stmt|;
-comment|/*      * Ensure we have a Source that can be stored in the target      */
+comment|/*      * Ensure we have a Target that can be stored to      */
 switch|switch
 condition|(
 name|TargetType
 condition|)
 block|{
-comment|/* This case handles the "interchangeable" types Integer, String, and Buffer. */
-comment|/*      * These cases all require only Integers or values that      * can be converted to Integers (Strings or Buffers)      */
 case|case
 name|ACPI_TYPE_BUFFER_FIELD
 case|:
@@ -127,7 +125,7 @@ case|:
 case|case
 name|INTERNAL_TYPE_INDEX_FIELD
 case|:
-comment|/*      * Stores into a Field/Region or into a Buffer/String      * are all essentially the same.      */
+comment|/*          * These cases all require only Integers or values that          * can be converted to Integers (Strings or Buffers)          */
 case|case
 name|ACPI_TYPE_INTEGER
 case|:
@@ -137,6 +135,7 @@ case|:
 case|case
 name|ACPI_TYPE_BUFFER
 case|:
+comment|/*           * Stores into a Field/Region or into a Integer/Buffer/String          * are all essentially the same.  This case handles the           * "interchangeable" types Integer, String, and Buffer.           */
 comment|/* TBD: FIX - check for source==REF, resolve, then check type */
 comment|/*          * If SourceDesc is not a valid type, try to resolve it to one.          */
 if|if

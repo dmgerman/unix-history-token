@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: tbinstal - ACPI table installation and removal  *              $Revision: 45 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: tbinstal - ACPI table installation and removal  *              $Revision: 47 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -425,7 +425,7 @@ condition|)
 block|{
 name|return_ACPI_STATUS
 argument_list|(
-name|AE_EXIST
+name|AE_ALREADY_EXISTS
 argument_list|)
 expr_stmt|;
 block|}

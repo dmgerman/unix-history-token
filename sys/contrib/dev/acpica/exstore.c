@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: exstore - AML Interpreter object store support  *              $Revision: 150 $  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: exstore - AML Interpreter object store support  *              $Revision: 154 $  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -70,7 +70,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExStore  *  * PARAMETERS:  *SourceDesc         - Value to be stored  *              *DestDesc           - Where to store it.  Must be an NS node  *                                    or an ACPI_OPERAND_OBJECT of type  *                                    Reference;   *  * RETURN:      Status  *  * DESCRIPTION: Store the value described by SourceDesc into the location  *              described by DestDesc.  Called by various interpreter  *              functions to store the result of an operation into  *              the destination operand.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExStore  *  * PARAMETERS:  *SourceDesc         - Value to be stored  *              *DestDesc           - Where to store it.  Must be an NS node  *                                    or an ACPI_OPERAND_OBJECT of type  *                                    Reference;  *              WalkState           - Current walk state  *  * RETURN:      Status  *  * DESCRIPTION: Store the value described by SourceDesc into the location  *              described by DestDesc.  Called by various interpreter  *              functions to store the result of an operation into  *              the destination operand -- not just simply the actual STORE  *              ASL operator.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -466,7 +466,7 @@ case|:
 case|case
 name|AML_REVISION_OP
 case|:
-comment|/*          * Storing to a constant is a no-op -- see ACPI Specification          * Delete the reference descriptor, however          */
+comment|/*          * Storing to a constant is a no-op according to the  ACPI           * Specification. (Delete the reference descriptor, however.)          */
 break|break;
 default|default:
 name|ACPI_DEBUG_PRINT
@@ -474,7 +474,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Internal - Unknown Reference subtype %02x\n"
+literal|"Unknown Reference subtype %02x\n"
 operator|,
 name|RefDesc
 operator|->
@@ -484,15 +484,11 @@ name|Opcode
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* TBD: [Restructure] use object dump routine !! */
-name|DUMP_BUFFER
+name|DUMP_ENTRY
 argument_list|(
 name|RefDesc
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ACPI_OPERAND_OBJECT
-argument_list|)
+name|ACPI_LV_ERROR
 argument_list|)
 expr_stmt|;
 name|Status
@@ -511,7 +507,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExStoreObjectToIndex  *  * PARAMETERS:  *SourceDesc           - Value to be stored  *              *Node               - Named object to receive the value  *  * RETURN:      Status  *  * DESCRIPTION: Store the object to the named object.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExStoreObjectToIndex  *  * PARAMETERS:  *SourceDesc             - Value to be stored  *              *DestDesc               - Named object to receive the value  *              WalkState               - Current walk state  *  * RETURN:      Status  *  * DESCRIPTION: Store the object to indexed Buffer or Package element  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -539,12 +535,6 @@ decl_stmt|;
 name|ACPI_OPERAND_OBJECT
 modifier|*
 name|ObjDesc
-decl_stmt|;
-name|UINT32
-name|Length
-decl_stmt|;
-name|UINT32
-name|i
 decl_stmt|;
 name|UINT8
 name|Value
@@ -628,7 +618,7 @@ operator|!
 name|ObjDesc
 condition|)
 block|{
-comment|/*                  * If the ObjDesc is NULL, it means that an uninitialized package                  * element has been used as a destination (this is OK), therefore,                  * we must create the destination element to match the type of the                  * source element NOTE: SourceDesccan be of any type.                  */
+comment|/*                  * If the ObjDesc is NULL, it means that an uninitialized                   * package element has been used as a destination (this is OK),                  * therefore, we must create the destination element to match                   * the type of the source element NOTE: SourceDesc can be of                   * any type.                  */
 name|ObjDesc
 operator|=
 name|AcpiUtCreateInternalObject
@@ -761,9 +751,8 @@ break|break;
 case|case
 name|ACPI_TYPE_BUFFER_FIELD
 case|:
-comment|/* TBD: can probably call the generic Buffer/Field routines */
-comment|/*          * Storing into a buffer at a location defined by an Index.          *          * Each 8-bit element of the source object is written to the          * 8-bit Buffer Field of the Index destination object.          */
-comment|/*          * Set the ObjDesc to the destination object and type check.          */
+comment|/*          * Store into a Buffer (not actually a real BufferField) at a           * location defined by an Index.          *          * The first 8-bit element of the source object is written to the          * 8-bit Buffer location defined by the Index destination object,          * according to the ACPI 2.0 specification.          */
+comment|/*          * Make sure the target is a Buffer          */
 name|ObjDesc
 operator|=
 name|DestDesc
@@ -802,28 +791,7 @@ block|{
 case|case
 name|ACPI_TYPE_INTEGER
 case|:
-comment|/*              * Type is Integer, assign bytewise              * This loop to assign each of the elements is somewhat              * backward because of the Big Endian-ness of IA-64              */
-name|Length
-operator|=
-sizeof|sizeof
-argument_list|(
-name|ACPI_INTEGER
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-name|Length
-init|;
-name|i
-operator|!=
-literal|0
-condition|;
-name|i
-operator|--
-control|)
-block|{
+comment|/* Use the least-significant byte of the integer */
 name|Value
 operator|=
 call|(
@@ -835,165 +803,82 @@ operator|->
 name|Integer
 operator|.
 name|Value
-operator|>>
-operator|(
-name|MUL_8
-argument_list|(
-name|i
-operator|-
-literal|1
-argument_list|)
-operator|)
 argument_list|)
 expr_stmt|;
-name|ObjDesc
-operator|->
-name|Buffer
-operator|.
-name|Pointer
-index|[
-name|DestDesc
-operator|->
-name|Reference
-operator|.
-name|Offset
-index|]
-operator|=
-name|Value
-expr_stmt|;
-block|}
 break|break;
 case|case
 name|ACPI_TYPE_BUFFER
 case|:
-comment|/*              * Type is Buffer, the Length is in the structure.              * Just loop through the elements and assign each one in turn.              */
-name|Length
+name|Value
 operator|=
 name|SourceDesc
 operator|->
 name|Buffer
 operator|.
-name|Length
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
+name|Pointer
+index|[
 literal|0
-init|;
-name|i
-operator|<
-name|Length
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|Value
-operator|=
-name|SourceDesc
-operator|->
-name|Buffer
-operator|.
-name|Pointer
-index|[
-name|i
 index|]
 expr_stmt|;
-name|ObjDesc
-operator|->
-name|Buffer
-operator|.
-name|Pointer
-index|[
-name|DestDesc
-operator|->
-name|Reference
-operator|.
-name|Offset
-index|]
-operator|=
-name|Value
-expr_stmt|;
-block|}
 break|break;
 case|case
 name|ACPI_TYPE_STRING
 case|:
-comment|/*              * Type is String, the Length is in the structure.              * Just loop through the elements and assign each one in turn.              */
-name|Length
+name|Value
 operator|=
 name|SourceDesc
 operator|->
 name|String
 operator|.
-name|Length
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
+name|Pointer
+index|[
 literal|0
-init|;
-name|i
-operator|<
-name|Length
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|Value
-operator|=
-name|SourceDesc
-operator|->
-name|String
-operator|.
-name|Pointer
-index|[
-name|i
 index|]
 expr_stmt|;
-name|ObjDesc
-operator|->
-name|Buffer
-operator|.
-name|Pointer
-index|[
-name|DestDesc
-operator|->
-name|Reference
-operator|.
-name|Offset
-index|]
-operator|=
-name|Value
-expr_stmt|;
-block|}
 break|break;
 default|default:
-comment|/* Other types are invalid */
+comment|/* All other types are invalid */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
 name|ACPI_DB_ERROR
 operator|,
-literal|"Source must be Number/Buffer/String type, not %X\n"
+literal|"Source must be Integer/Buffer/String type, not %s\n"
 operator|,
+name|AcpiUtGetTypeName
+argument_list|(
 name|SourceDesc
 operator|->
 name|Common
 operator|.
 name|Type
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|Status
-operator|=
+name|return_ACPI_STATUS
+argument_list|(
 name|AE_AML_OPERAND_TYPE
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
+comment|/* Store the source value into the target buffer byte */
+name|ObjDesc
+operator|->
+name|Buffer
+operator|.
+name|Pointer
+index|[
+name|DestDesc
+operator|->
+name|Reference
+operator|.
+name|Offset
+index|]
+operator|=
+name|Value
+expr_stmt|;
 break|break;
 default|default:
 name|ACPI_DEBUG_PRINT
@@ -1020,7 +905,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExStoreObjectToNode  *  * PARAMETERS:  *SourceDesc            - Value to be stored  *              *Node                  - Named object to receive the value  *  * RETURN:      Status  *  * DESCRIPTION: Store the object to the named object.  *  *              The Assignment of an object to a named object is handled here  *              The val passed in will replace the current value (if any)  *              with the input value.  *  *              When storing into an object the data is converted to the  *              target object type then stored in the object.  This means  *              that the target object type (for an initialized target) will  *              not be changed by a store operation.  *  *              NOTE: the global lock is acquired early.  This will result  *              in the global lock being held a bit longer.  Also, if the  *              function fails during set up we may get the lock when we  *              don't really need it.  I don't think we care.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExStoreObjectToNode  *  * PARAMETERS:  SourceDesc              - Value to be stored  *              Node                    - Named object to receive the value  *              WalkState               - Current walk state  *  * RETURN:      Status  *  * DESCRIPTION: Store the object to the named object.  *  *              The Assignment of an object to a named object is handled here  *              The value passed in will replace the current value (if any)  *              with the input value.  *  *              When storing into an object the data is converted to the  *              target object type then stored in the object.  This means  *              that the target object type (for an initialized target) will  *              not be changed by a store operation.  *  *              Assumes parameters are already validated.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1059,7 +944,6 @@ argument_list|(
 literal|"ExStoreObjectToNode"
 argument_list|)
 expr_stmt|;
-comment|/*      * Assuming the parameters were already validated      */
 comment|/*      * Get current type of the node, and object attached to Node      */
 name|TargetType
 operator|=
@@ -1282,7 +1166,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExStoreObjectToObject  *  * PARAMETERS:  *SourceDesc            - Value to be stored  *              *DestDesc           - Object to receive the value  *  * RETURN:      Status  *  * DESCRIPTION: Store an object to another object.  *  *              The Assignment of an object to another (not named) object  *              is handled here.  *              The val passed in will replace the current value (if any)  *              with the input value.  *  *              When storing into an object the data is converted to the  *              target object type then stored in the object.  This means  *              that the target object type (for an initialized target) will  *              not be changed by a store operation.  *  *              This module allows destination types of Number, String,  *              and Buffer.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExStoreObjectToObject  *  * PARAMETERS:  SourceDesc              - Value to be stored  *              DestDesc                - Object to receive the value  *              WalkState               - Current walk state  *  * RETURN:      Status  *  * DESCRIPTION: Store an object to another object.  *  *              The Assignment of an object to another (not named) object  *              is handled here.  *              The val passed in will replace the current value (if any)  *              with the input value.  *  *              When storing into an object the data is converted to the  *              target object type then stored in the object.  This means  *              that the target object type (for an initialized target) will  *              not be changed by a store operation.  *  *              This module allows destination types of Number, String,  *              and Buffer.  *  *              Assumes parameters are already validated.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1321,7 +1205,6 @@ argument_list|(
 literal|"ExStoreObjectToObject"
 argument_list|)
 expr_stmt|;
-comment|/*      *  Assuming the parameters are valid!      */
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
