@@ -2242,7 +2242,7 @@ name|m
 operator|->
 name|m_len
 operator|==
-name|NULL
+literal|0
 condition|)
 continue|continue;
 name|buf

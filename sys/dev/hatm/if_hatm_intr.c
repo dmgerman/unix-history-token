@@ -1769,7 +1769,7 @@ name|BUS_DMA_NOWAIT
 argument_list|)
 operator|)
 operator|!=
-name|NULL
+literal|0
 condition|)
 name|panic
 argument_list|(
