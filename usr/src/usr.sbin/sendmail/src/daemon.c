@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.48 (Berkeley) %G% (with daemon mode)"
+literal|"@(#)daemon.c	8.49 (Berkeley) %G% (with daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -54,7 +54,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)daemon.c	8.48 (Berkeley) %G% (without daemon mode)"
+literal|"@(#)daemon.c	8.49 (Berkeley) %G% (without daemon mode)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1864,6 +1864,22 @@ name|i
 index|]
 operator|)
 argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|0
+argument_list|,
+literal|4
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"\ta.k.a.: %s\n"
+argument_list|,
+name|ipbuf
 argument_list|)
 expr_stmt|;
 name|setclass
