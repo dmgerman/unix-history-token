@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)diffdir.c	4.11 (Berkeley) %G%"
+literal|"@(#)diffdir.c	4.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1056,8 +1056,6 @@ name|struct
 name|dir
 modifier|*
 name|dp
-init|=
-literal|0
 decl_stmt|,
 modifier|*
 name|ep
