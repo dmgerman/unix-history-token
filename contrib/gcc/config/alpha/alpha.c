@@ -7292,9 +7292,9 @@ index|]
 operator|==
 literal|'@'
 condition|)
-name|abort
-argument_list|()
-expr_stmt|;
+block|{
+comment|/* We're hosed.  This can happen when the user adds a weak 	 attribute after rtl generation.  They should have gotten 	 a warning about unspecified behaviour from varasm.c.  */
+block|}
 block|}
 end_function
 
