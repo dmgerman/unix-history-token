@@ -385,6 +385,8 @@ decl_stmt|,
 name|child_pgrp
 decl_stmt|,
 name|ret_pid
+decl_stmt|,
+name|setmaclabel
 decl_stmt|;
 name|char
 modifier|*
@@ -455,6 +457,10 @@ name|iscsh
 operator|=
 name|UNSET
 expr_stmt|;
+name|setmaclabel
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -466,7 +472,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"-flmc:"
+literal|"-flmsc:"
 argument_list|)
 operator|)
 operator|!=
@@ -514,6 +520,14 @@ expr_stmt|;
 name|asthem
 operator|=
 literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|'s'
+case|:
+name|setmaclabel
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -1582,7 +1596,18 @@ operator||
 name|LOGIN_SETPATH
 operator||
 name|LOGIN_SETGROUP
+operator||
+name|LOGIN_SETMAC
 operator|)
+expr_stmt|;
+comment|/* 		 * If -s is present, also set the MAC label. 		 */
+if|if
+condition|(
+name|setmaclabel
+condition|)
+name|setwhat
+operator||=
+name|LOGIN_SETMAC
 expr_stmt|;
 comment|/* 		 * Don't touch resource/priority settings if -m has been used 		 * or -l and -c hasn't, and we're not su'ing to root. 		 */
 if|if
@@ -2069,7 +2094,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: su [-] [-flm] [-c class] [login [args]]\n"
+literal|"usage: su [-] [-flms] [-c class] [login [args]]\n"
 argument_list|)
 expr_stmt|;
 name|exit
