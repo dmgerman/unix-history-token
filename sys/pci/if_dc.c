@@ -13009,6 +13009,23 @@ operator||
 name|DC_BUSCTL_MRLE
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Evenly share the bus between receive and transmit process. 	 */
+if|if
+condition|(
+name|DC_IS_INTEL
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+name|DC_SETBIT
+argument_list|(
+name|sc
+argument_list|,
+name|DC_BUSCTL
+argument_list|,
+name|DC_BUSCTL_ARBITRATION
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|DC_IS_DAVICOM
