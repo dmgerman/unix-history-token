@@ -1494,7 +1494,7 @@ operator|&
 name|M_FASTFWD_OURS
 condition|)
 block|{
-comment|/* 		 * ip_fastforward firewall changed dest to local. 		 * We expect ip_len and ip_off in host byte order. 		 */
+comment|/* 		 * Firewall or NAT changed destination to local. 		 * We expect ip_len and ip_off to be in host byte order. 		 */
 name|m
 operator|->
 name|m_flags
@@ -1502,8 +1502,7 @@ operator|&=
 operator|~
 name|M_FASTFWD_OURS
 expr_stmt|;
-comment|/* for reflected mbufs */
-comment|/* Set up some basic stuff */
+comment|/* Set up some basics that will be used later. */
 name|ip
 operator|=
 name|mtod
