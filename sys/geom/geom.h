@@ -980,6 +980,20 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|struct
+name|g_provider
+modifier|*
+name|g_provider_by_name
+parameter_list|(
+name|char
+specifier|const
+modifier|*
+name|arg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|g_getattr__
 parameter_list|(
