@@ -171,7 +171,7 @@ parameter_list|,
 name|tag
 parameter_list|)
 define|\
-value|eventhandler_deregister(&Xeventhandler_list ## name, tag)
+value|eventhandler_deregister(&Xeventhandler_list_ ## name, tag)
 end_define
 
 begin_comment
