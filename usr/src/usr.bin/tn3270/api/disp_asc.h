@@ -15,7 +15,7 @@ decl_stmt|,
 comment|/* Goes between display code and ascii */
 name|asc_disp
 index|[
-literal|128
+literal|256
 index|]
 decl_stmt|;
 end_decl_stmt
