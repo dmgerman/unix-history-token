@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parse.c	5.5 (Berkeley) %G%"
+literal|"@(#)parse.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,6 +31,12 @@ end_comment
 begin_comment
 comment|/*-  * parse.c --  *	Functions to parse a makefile.  *  *	One function, Parse_Init, must be called before any functions  *	in this module are used. After that, the function Parse_File is the  *	main entry point and controls most of the other functions in this  *	module.  *  *	Most important structures are kept in Lsts. Directories for  *	the #include "..." function are kept in the 'parseIncPath' Lst, while  *	those for the #include<...> are kept in the 'sysIncPath' Lst. The  *	targets currently being defined are kept in the 'targets' Lst.  *  *	The variables 'fname' and 'lineno' are used to track the name  *	of the current file and the line number in that file so that error  *	messages can be more meaningful.  *  * Interface:  *	Parse_Init	    	    Initialization function which must be  *	    	  	    	    called before anything else in this module  *	    	  	    	    is used.  *  *	Parse_File	    	    Function used to parse a makefile. It must  *	    	  	    	    be given the name of the file, which should  *	    	  	    	    already have been opened, and a function  *	    	  	    	    to call to read a character from the file.  *  *	Parse_IsVar	    	    Returns TRUE if the given line is a  *	    	  	    	    variable assignment. Used by MainParseArgs  *	    	  	    	    to determine if an argument is a target  *	    	  	    	    or a variable assignment. Used internally  *	    	  	    	    for pretty much the same thing...  *  *	Parse_Error	    	    Function called when an error occurs in  *	    	  	    	    parsing. Used by the variable and  *	    	  	    	    conditional modules.  *	Parse_MainName	    	    Returns a Lst of the main target to create.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<varargs.h>
+end_include
 
 begin_include
 include|#
@@ -692,11 +698,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *---------------------------------------------------------------------  * Parse_Error  --  *	Error message abort function for parsing. Prints out the context  *	of the error (line number and file) as well as the message with  *	two optional arguments.  *  * Results:  *	None  *  * Side Effects:  *	"fatals" is incremented if the level is PARSE_FATAL.  *---------------------------------------------------------------------  */
+comment|/*-  * Parse_Error  --  *	Error message abort function for parsing. Prints out the context  *	of the error (line number and file) as well as the message with  *	two optional arguments.  *  * Results:  *	None  *  * Side Effects:  *	"fatals" is incremented if the level is PARSE_FATAL.  */
 end_comment
 
 begin_comment
-comment|/* VARARGS1 */
+comment|/* VARARGS */
 end_comment
 
 begin_function
@@ -705,42 +711,33 @@ name|Parse_Error
 parameter_list|(
 name|type
 parameter_list|,
-name|fmt
-parameter_list|,
-name|arg1
-parameter_list|,
-name|arg2
+name|va_alist
 parameter_list|)
 name|int
 name|type
 decl_stmt|;
-comment|/* Error type: PARSE_WARNING if just a warning, 			 * PARSE_FATAL if can't continue (after parsing) */
+comment|/* Error type (PARSE_WARNING, PARSE_FATAL) */
+function|va_dcl
+block|{
+name|va_list
+name|ap
+decl_stmt|;
 name|char
 modifier|*
 name|fmt
 decl_stmt|;
-comment|/* printf format string */
-name|int
-name|arg1
-decl_stmt|;
-comment|/* First optional argument for the fmt string */
-name|int
-name|arg2
-decl_stmt|;
-comment|/* Second optional argument for the fmt string */
-block|{
 if|if
 condition|(
-operator|(
 name|type
-operator|!=
+operator|==
 name|PARSE_WARNING
-operator|)
-operator|||
-operator|!
+operator|&&
 name|noWarnings
 condition|)
-block|{
+return|return;
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -758,7 +755,9 @@ name|type
 operator|==
 name|PARSE_WARNING
 condition|)
-block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -766,22 +765,48 @@ argument_list|,
 literal|"Warning: "
 argument_list|)
 expr_stmt|;
-block|}
-name|fprintf
+name|fmt
+operator|=
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
+name|char
+operator|*
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|vfprintf
 argument_list|(
 name|stderr
 argument_list|,
 name|fmt
 argument_list|,
-name|arg1
-argument_list|,
-name|arg2
+name|ap
 argument_list|)
 expr_stmt|;
-name|putc
+name|va_end
 argument_list|(
-literal|'\n'
+name|ap
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
 argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fflush
+argument_list|(
 name|stderr
 argument_list|)
 expr_stmt|;
@@ -791,13 +816,10 @@ name|type
 operator|==
 name|PARSE_FATAL
 condition|)
-block|{
 name|fatals
 operator|+=
 literal|1
 expr_stmt|;
-block|}
-block|}
 block|}
 end_function
 
@@ -2009,10 +2031,7 @@ block|}
 case|case
 name|SingleShell
 case|:
-name|backwards
-operator|=
-literal|1
-expr_stmt|;
+comment|/* backwards = 1; */
 break|break;
 case|case
 name|Order
@@ -5024,17 +5043,6 @@ operator|!
 name|ignComment
 condition|)
 block|{
-if|if
-condition|(
-name|backwards
-operator|||
-operator|(
-name|lastc
-operator|!=
-literal|'\\'
-operator|)
-condition|)
-block|{
 comment|/* 			 * If the character is a hash mark and it isn't escaped 			 * (or we're being compatible), the thing is a comment. 			 * Skip to the end of the line. 			 */
 do|do
 block|{
@@ -5062,16 +5070,6 @@ do|;
 goto|goto
 name|line_read
 goto|;
-block|}
-else|else
-block|{
-comment|/* 			 * Don't add the backslash. Just let the # get copied 			 * over. 			 */
-name|lastc
-operator|=
-name|c
-expr_stmt|;
-continue|continue;
-block|}
 block|}
 break|break;
 case|case

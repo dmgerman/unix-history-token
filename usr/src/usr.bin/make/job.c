@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)job.c	5.7 (Berkeley) %G%"
+literal|"@(#)job.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1530,9 +1530,6 @@ operator|&
 name|JOB_IGNERR
 operator|)
 operator|)
-operator|||
-operator|!
-name|backwards
 operator|)
 operator|)
 operator|||
@@ -1674,8 +1671,6 @@ block|}
 elseif|else
 if|if
 condition|(
-name|backwards
-operator|&&
 name|WIFEXITED
 argument_list|(
 name|status
@@ -1738,8 +1733,6 @@ name|out
 decl_stmt|;
 if|if
 condition|(
-name|backwards
-operator|&&
 operator|!
 name|usePipes
 operator|&&
@@ -2203,8 +2196,6 @@ block|}
 comment|/*      * Now handle the -B-mode stuff. If the beast still isn't finished,      * try and restart the job on the next command. If JobStart says it's      * ok, it's ok. If there's an error, this puppy is done.      */
 if|if
 condition|(
-name|backwards
-operator|&&
 operator|(
 name|status
 operator|.
@@ -4482,16 +4473,11 @@ expr_stmt|;
 comment|/*      * Check the commands now so any attributes from .DEFAULT have a chance      * to migrate to the node      */
 if|if
 condition|(
-operator|!
-name|backwards
-operator|||
-operator|(
 name|job
 operator|->
 name|flags
 operator|&
 name|JOB_FIRST
-operator|)
 condition|)
 block|{
 name|cmdsOK
@@ -4593,9 +4579,10 @@ name|noExec
 operator|=
 name|FALSE
 expr_stmt|;
+comment|/* 	 * used to be backwards; replace when start doing multiple commands 	 * per shell. 	 */
 if|if
 condition|(
-name|backwards
+literal|1
 condition|)
 block|{
 comment|/* 	     * Be compatible: If this is the first time for this node, 	     * verify its commands are ok and open the commands list for 	     * sequential access by later invocations of JobStart. 	     * Once that is done, we take the next command off the list 	     * and print it to the command file. If the command was an 	     * ellipsis, note that there's nothing more to execute. 	     */
@@ -5055,16 +5042,11 @@ expr_stmt|;
 comment|/*      * If we're using pipes to catch output, create the pipe by which we'll      * get the shell's output. If we're using files, print out that we're      * starting a job and then set up its temporary-file name. This is just      * tfile with two extra digits tacked on -- jobno.      */
 if|if
 condition|(
-operator|!
-name|backwards
-operator|||
-operator|(
 name|job
 operator|->
 name|flags
 operator|&
 name|JOB_FIRST
-operator|)
 condition|)
 block|{
 if|if

@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.9 (Berkeley) %G%"
+literal|"@(#)main.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -77,12 +77,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<fcntl.h>
 end_include
 
@@ -101,15 +95,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|"make.h"
+file|<varargs.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|errno
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|"make.h"
+end_include
 
 begin_ifndef
 ifndef|#
@@ -136,18 +129,6 @@ directive|define
 name|MAKEFLAGS
 value|".MAKEFLAGS"
 end_define
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|progName
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Our invocation name */
-end_comment
 
 begin_decl_stmt
 name|Lst
@@ -256,16 +237,6 @@ end_comment
 
 begin_decl_stmt
 name|Boolean
-name|amMake
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* -M flag */
-end_comment
-
-begin_decl_stmt
-name|Boolean
 name|noWarnings
 decl_stmt|;
 end_decl_stmt
@@ -326,16 +297,6 @@ end_comment
 
 begin_decl_stmt
 name|Boolean
-name|backwards
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* -B flag */
-end_comment
-
-begin_decl_stmt
-name|Boolean
 name|ignoreErrors
 decl_stmt|;
 end_decl_stmt
@@ -352,16 +313,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* -s flag */
-end_comment
-
-begin_decl_stmt
-name|Boolean
-name|sysVmake
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* -v flag */
 end_comment
 
 begin_decl_stmt
@@ -404,73 +355,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Initial value for optind when parsing args. Different getopts start it  * differently...  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|int
-name|initOptInd
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|char
-modifier|*
-name|help
-index|[]
-init|=
-block|{
-literal|"-B		Be as backwards-compatible with make as possible without\n\ 		being make."
-block|,
-literal|"-C		Cancel any current indications of compatibility."
-block|,
-literal|"-D<var>	Define the variable<var> with value 1."
-block|,
-literal|"-I<dir>	Specify another directory in which to search for included\n\ 		makefiles."
-block|,
-literal|"-J<num>	Specify maximum overall concurrency."
-block|,
-literal|"-L<num>	Specify maximum local concurrency."
-block|,
-literal|"-M		Be Make as closely as possible."
-block|,
-literal|"-P		Don't use pipes to catch the output of jobs, use files."
-block|,
-literal|"-S		Turn off the -k flag (see below)."
-block|,
-literal|"-W		Don't print warning messages."
-block|,
-literal|"-d<flags>	Turn on debugging output."
-block|,
-literal|"-e		Give environment variables precedence over those in the\n\ 		makefile(s)."
-block|,
-literal|"-f<file>	Specify a(nother) makefile to read"
-block|,
-literal|"-i		Ignore errors from executed commands."
-block|,
-literal|"-k		On error, continue working on targets that do not depend on\n\ 		the one for which an error was detected."
-block|,
-literal|"-n		Don't execute commands, just print them."
-block|,
-literal|"-p<num>	Tell when to print the input graph: 1 (before processing),\n\ 		2 (after processing), or 3 (both)."
-block|,
-literal|"-q		See if anything needs to be done. Exits 1 if so."
-block|,
-literal|"-r		Do not read the system makefile for pre-defined rules."
-block|,
-literal|"-s		Don't print commands as they are executed."
-block|,
-literal|"-t		Update targets by \"touching\" them (see touch(1))."
-block|,
-literal|"-v		Be compatible with System V make. Implies -B."
-block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*-  *----------------------------------------------------------------------  * MainParseArgs --  *	Parse a given argument vector. Called from main() and from  *	Main_ParseArgLine() when the .MAKEFLAGS target is used.  *  *	XXX: Deal with command line overriding .MAKEFLAGS in makefile  *  * Results:  *	None  *  * Side Effects:  *	Various global and local flags will be set depending on the flags  *	given  *----------------------------------------------------------------------  */
+comment|/*-  * MainParseArgs --  *	Parse a given argument vector. Called from main() and from  *	Main_ParseArgLine() when the .MAKEFLAGS target is used.  *  *	XXX: Deal with command line overriding .MAKEFLAGS in makefile  *  * Results:  *	None  *  * Side Effects:  *	Various global and local flags will be set depending on the flags  *	given  */
 end_comment
 
 begin_function
@@ -512,10 +397,6 @@ decl_stmt|;
 name|char
 name|c
 decl_stmt|;
-name|optind
-operator|=
-name|initOptInd
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -527,7 +408,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"BCD:I:J:L:MPSWd:ef:iknp:qrstvh"
+literal|"D:I:J:L:PSWd:ef:iknp:qrstv"
 argument_list|)
 operator|)
 operator|!=
@@ -540,44 +421,6 @@ condition|(
 name|c
 condition|)
 block|{
-case|case
-literal|'B'
-case|:
-name|backwards
-operator|=
-name|TRUE
-expr_stmt|;
-name|Var_Append
-argument_list|(
-name|MAKEFLAGS
-argument_list|,
-literal|"-B"
-argument_list|,
-name|VAR_GLOBAL
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'C'
-case|:
-name|backwards
-operator|=
-name|sysVmake
-operator|=
-name|amMake
-operator|=
-name|FALSE
-expr_stmt|;
-name|Var_Append
-argument_list|(
-name|MAKEFLAGS
-argument_list|,
-literal|"-C"
-argument_list|,
-name|VAR_GLOBAL
-argument_list|)
-expr_stmt|;
-break|break;
 case|case
 literal|'D'
 case|:
@@ -689,23 +532,6 @@ argument_list|(
 name|MAKEFLAGS
 argument_list|,
 name|optarg
-argument_list|,
-name|VAR_GLOBAL
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'M'
-case|:
-name|amMake
-operator|=
-name|TRUE
-expr_stmt|;
-name|Var_Append
-argument_list|(
-name|MAKEFLAGS
-argument_list|,
-literal|"-M"
 argument_list|,
 name|VAR_GLOBAL
 argument_list|)
@@ -1063,96 +889,15 @@ name|VAR_GLOBAL
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-literal|'v'
-case|:
-name|sysVmake
-operator|=
-name|backwards
-operator|=
-name|TRUE
-expr_stmt|;
-name|Var_Append
-argument_list|(
-name|MAKEFLAGS
-argument_list|,
-literal|"-v"
-argument_list|,
-name|VAR_GLOBAL
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'h'
-case|:
+default|default:
 case|case
 literal|'?'
 case|:
-block|{
-name|int
-name|i
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-sizeof|sizeof
-argument_list|(
-name|help
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|help
-index|[
-literal|0
-index|]
-argument_list|)
-condition|;
-name|i
-operator|++
-control|)
-operator|(
-name|void
-operator|)
-name|printf
-argument_list|(
-literal|"%s\n"
-argument_list|,
-name|help
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|c
-operator|==
-literal|'?'
-condition|?
-operator|-
-literal|1
-else|:
-literal|0
-argument_list|)
+name|usage
+argument_list|()
 expr_stmt|;
 block|}
 block|}
-block|}
-comment|/* Take care of encompassing compatibility levels... */
-if|if
-condition|(
-name|amMake
-condition|)
-name|backwards
-operator|=
-name|TRUE
-expr_stmt|;
 name|oldVars
 operator|=
 name|TRUE
@@ -1160,61 +905,46 @@ expr_stmt|;
 comment|/* 	 * See if the rest of the arguments are variable assignments and 	 * perform them if so. Else take them to be targets and stuff them 	 * on the end of the "create" list. 	 */
 for|for
 control|(
-name|i
-operator|=
+name|argv
+operator|+=
 name|optind
 init|;
-name|i
-operator|<
-name|argc
+operator|*
+name|argv
 condition|;
-name|i
 operator|++
+name|argv
 control|)
-block|{
 if|if
 condition|(
 name|Parse_IsVar
 argument_list|(
+operator|*
 name|argv
-index|[
-name|i
-index|]
 argument_list|)
 condition|)
-block|{
 name|Parse_DoVar
 argument_list|(
+operator|*
 name|argv
-index|[
-name|i
-index|]
 argument_list|,
 name|VAR_CMD
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 block|{
 if|if
 condition|(
+operator|!
+operator|*
+operator|*
 name|argv
-index|[
-name|i
-index|]
-index|[
-literal|0
-index|]
-operator|==
-literal|0
 condition|)
-block|{
 name|Punt
 argument_list|(
 literal|"Bogus argument in MainParseArgs"
 argument_list|)
 expr_stmt|;
-block|}
 operator|(
 name|void
 operator|)
@@ -1225,19 +955,16 @@ argument_list|,
 operator|(
 name|ClientData
 operator|)
+operator|*
 name|argv
-index|[
-name|i
-index|]
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 end_function
 
 begin_comment
-comment|/*-  * Main_ParseArgLine --  *  	Used by the parse module when a .MFLAGS or .MAKEFLAGS target  *	is encountered and by main() when reading the .MAKEFLAGS envariable.  *	Takes a line of arguments and breaks it into its  * 	component words and passes those words and the number of them to the  *	MainParseArgs function.  *	The line should have all its leading whitespace removed.  *  * Results:  *	None  *  * Side Effects:  *	Only those that come from the various arguments.  *-----------------------------------------------------------------------  */
+comment|/*-  * Main_ParseArgLine --  *  	Used by the parse module when a .MFLAGS or .MAKEFLAGS target  *	is encountered and by main() when reading the .MAKEFLAGS envariable.  *	Takes a line of arguments and breaks it into its  * 	component words and passes those words and the number of them to the  *	MainParseArgs function.  *	The line should have all its leading whitespace removed.  *  * Results:  *	None  *  * Side Effects:  *	Only those that come from the various arguments.  */
 end_comment
 
 begin_function
@@ -1269,16 +996,18 @@ operator|==
 name|NULL
 condition|)
 return|return;
-while|while
-condition|(
+for|for
+control|(
+init|;
 operator|*
 name|line
 operator|==
 literal|' '
-condition|)
+condition|;
 operator|++
 name|line
-expr_stmt|;
+control|)
+empty_stmt|;
 name|argv
 operator|=
 name|Str_BreakString
@@ -1311,7 +1040,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  * main --  *	The main function, for obvious reasons. Initializes variables  *	and a few modules, then parses the arguments give it in the  *	environment and on the command line. Reads the system makefile  *	followed by either Makefile, makefile or the file given by the  *	-f argument. Sets the .MAKEFLAGS PMake variable based on all the  *	flags it has received by then uses either the Make or the Compat  *	module to create the initial list of targets.  *  * Results:  *	If -q was given, exits -1 if anything was out-of-date. Else it exits  *	0.  *  * Side Effects:  *	The program exits when done. Targets are created. etc. etc. etc.  *  *----------------------------------------------------------------------  */
+comment|/*-  * main --  *	The main function, for obvious reasons. Initializes variables  *	and a few modules, then parses the arguments give it in the  *	environment and on the command line. Reads the system makefile  *	followed by either Makefile, makefile or the file given by the  *	-f argument. Sets the .MAKEFLAGS PMake variable based on all the  *	flags it has received by then uses either the Make or the Compat  *	module to create the initial list of targets.  *  * Results:  *	If -q was given, exits -1 if anything was out-of-date. Else it exits  *	0.  *  * Side Effects:  *	The program exits when done. Targets are created. etc. etc. etc.  */
 end_comment
 
 begin_function
@@ -1330,10 +1059,6 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
 name|Lst
 name|targs
 decl_stmt|;
@@ -1342,10 +1067,6 @@ name|Boolean
 name|outOfDate
 decl_stmt|;
 comment|/* FALSE if all targets up to date */
-name|char
-modifier|*
-name|cp
-decl_stmt|;
 name|create
 operator|=
 name|Lst_Init
@@ -1415,11 +1136,6 @@ operator|=
 name|FALSE
 expr_stmt|;
 comment|/* Print warning messages */
-name|sysVmake
-operator|=
-name|FALSE
-expr_stmt|;
-comment|/* Don't be System V compatible */
 name|jobsRunning
 operator|=
 name|FALSE
@@ -1434,118 +1150,6 @@ operator|=
 name|DEFMAXLOCAL
 expr_stmt|;
 comment|/* Set default local max concurrency */
-comment|/* 	 * Deal with disagreement between different getopt's as to what 	 * the initial value of optind should be by simply saving the 	 * damn thing. 	 */
-name|initOptInd
-operator|=
-name|optind
-expr_stmt|;
-comment|/* 	 * See what the user calls us. If s/he calls us (yuck) "make", then 	 * act like it. Otherwise act like our normal, cheerful self. 	 */
-name|cp
-operator|=
-name|rindex
-argument_list|(
-name|argv
-index|[
-literal|0
-index|]
-argument_list|,
-literal|'/'
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|cp
-operator|!=
-operator|(
-name|char
-operator|*
-operator|)
-name|NULL
-condition|)
-block|{
-name|cp
-operator|+=
-literal|1
-expr_stmt|;
-block|}
-else|else
-block|{
-name|cp
-operator|=
-name|argv
-index|[
-literal|0
-index|]
-expr_stmt|;
-block|}
-name|progName
-operator|=
-name|cp
-expr_stmt|;
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|cp
-argument_list|,
-literal|"make"
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-name|amMake
-operator|=
-name|TRUE
-expr_stmt|;
-comment|/* Be like make */
-name|backwards
-operator|=
-name|TRUE
-expr_stmt|;
-comment|/* Do things the old-fashioned way */
-block|}
-elseif|else
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|cp
-argument_list|,
-literal|"smake"
-argument_list|)
-operator|==
-literal|0
-operator|||
-name|strcmp
-argument_list|(
-name|cp
-argument_list|,
-literal|"vmake"
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-name|sysVmake
-operator|=
-name|backwards
-operator|=
-name|TRUE
-expr_stmt|;
-block|}
-else|else
-block|{
-name|amMake
-operator|=
-name|FALSE
-expr_stmt|;
-name|backwards
-operator|=
-name|FALSE
-expr_stmt|;
-comment|/* Do things MY way, not MAKE's */
-block|}
 comment|/* 	 * Initialize the parsing, directory and variable modules to prepare 	 * for the reading of inclusion paths and variable settings on the 	 * command line 	 */
 name|Dir_Init
 argument_list|()
@@ -1790,11 +1394,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
-ifdef|#
-directive|ifdef
-name|POSIX
+elseif|else
 if|if
 condition|(
 operator|!
@@ -1811,43 +1411,6 @@ argument_list|(
 literal|"Makefile"
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-if|if
-condition|(
-operator|!
-name|ReadMakefile
-argument_list|(
-operator|(
-name|amMake
-operator|||
-name|sysVmake
-operator|)
-condition|?
-literal|"makefile"
-else|:
-literal|"Makefile"
-argument_list|)
-condition|)
-operator|(
-name|void
-operator|)
-name|ReadMakefile
-argument_list|(
-operator|(
-name|amMake
-operator|||
-name|sysVmake
-operator|)
-condition|?
-literal|"Makefile"
-else|:
-literal|"makefile"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-block|}
 name|Var_Append
 argument_list|(
 literal|"MFLAGS"
@@ -2054,10 +1617,10 @@ argument_list|,
 name|TARG_CREATE
 argument_list|)
 expr_stmt|;
+comment|/*  * this was original amMake -- want to allow parallelism, so put this  * back in, eventually.  */
 if|if
 condition|(
-operator|!
-name|amMake
+literal|0
 condition|)
 block|{
 comment|/* 		 * Initialize job module before traversing the graph, now that 		 * any .BEGIN and .END targets have been read.  This is done 		 * only if the -q flag wasn't given (to prevent the .BEGIN from 		 * being executed should it exist). 		 */
@@ -2157,14 +1720,13 @@ comment|/* makefile to read */
 block|{
 if|if
 condition|(
+operator|!
 name|strcmp
 argument_list|(
 name|fname
 argument_list|,
 literal|"-"
 argument_list|)
-operator|==
-literal|0
 condition|)
 block|{
 name|Parse_File
@@ -2324,105 +1886,68 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  * Error --  *	Print an error message given its format and 0, 1, 2 or 3 arguments.  *  * Results:  *	None.  *  * Side Effects:  *	The message is printed.  */
+comment|/*-  * Error --  *	Print an error message given its format.  *  * Results:  *	None.  *  * Side Effects:  *	The message is printed.  */
 end_comment
 
 begin_comment
-comment|/*VARARGS1*/
+comment|/* VARARGS */
 end_comment
 
 begin_function
 name|void
 name|Error
 parameter_list|(
-name|fmt
-parameter_list|,
-name|arg1
-parameter_list|,
-name|arg2
-parameter_list|,
-name|arg3
+name|va_alist
 parameter_list|)
+function|va_dcl
+block|{
+name|va_list
+name|ap
+decl_stmt|;
 name|char
 modifier|*
 name|fmt
 decl_stmt|;
-comment|/* format string */
-name|int
-name|arg1
-decl_stmt|,
-name|arg2
-decl_stmt|,
-name|arg3
-decl_stmt|;
-comment|/* optional arguments */
-block|{
-specifier|static
-name|char
-name|estr
-index|[
-name|BSIZE
-index|]
-decl_stmt|;
-comment|/* output string */
-operator|(
-name|void
-operator|)
-name|sprintf
+name|va_start
 argument_list|(
-name|estr
-argument_list|,
-literal|"%s: "
-argument_list|,
-name|Var_Value
-argument_list|(
-literal|".PMAKE"
-argument_list|,
-name|VAR_GLOBAL
+name|ap
 argument_list|)
+expr_stmt|;
+name|fmt
+operator|=
+name|va_arg
+argument_list|(
+name|ap
+argument_list|,
+name|char
+operator|*
 argument_list|)
 expr_stmt|;
 operator|(
 name|void
 operator|)
-name|sprintf
+name|vfprintf
 argument_list|(
-operator|&
-name|estr
-index|[
-name|strlen
-argument_list|(
-name|estr
-argument_list|)
-index|]
+name|stderr
 argument_list|,
 name|fmt
 argument_list|,
-name|arg1
-argument_list|,
-name|arg2
-argument_list|,
-name|arg3
+name|ap
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
 argument_list|)
 expr_stmt|;
 operator|(
 name|void
 operator|)
-name|strcat
+name|fprintf
 argument_list|(
-name|estr
+name|stderr
 argument_list|,
 literal|"\n"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fputs
-argument_list|(
-name|estr
-argument_list|,
-name|stderr
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2441,30 +1966,16 @@ comment|/*-  * Fatal --  *	Produce a Fatal error message. If jobs are running, w
 end_comment
 
 begin_comment
-comment|/* VARARGS1 */
+comment|/* VARARGS */
 end_comment
 
 begin_function
 name|void
 name|Fatal
 parameter_list|(
-name|fmt
-parameter_list|,
-name|arg1
-parameter_list|,
-name|arg2
+name|va_alist
 parameter_list|)
-name|char
-modifier|*
-name|fmt
-decl_stmt|;
-comment|/* format string */
-name|int
-name|arg1
-decl_stmt|,
-name|arg2
-decl_stmt|;
-comment|/* optional arguments */
+function|va_dcl
 block|{
 if|if
 condition|(
@@ -2475,11 +1986,7 @@ argument_list|()
 expr_stmt|;
 name|Error
 argument_list|(
-name|fmt
-argument_list|,
-name|arg1
-argument_list|,
-name|arg2
+name|va_alist
 argument_list|)
 expr_stmt|;
 if|if
@@ -2507,38 +2014,20 @@ comment|/*  * Punt --  *	Major exception once jobs are being created. Kills all 
 end_comment
 
 begin_comment
-comment|/* VARARGS1 */
+comment|/* VARARGS */
 end_comment
 
 begin_function
 name|void
 name|Punt
 parameter_list|(
-name|fmt
-parameter_list|,
-name|arg1
-parameter_list|,
-name|arg2
+name|va_alist
 parameter_list|)
-name|char
-modifier|*
-name|fmt
-decl_stmt|;
-comment|/* format string */
-name|int
-name|arg1
-decl_stmt|,
-name|arg2
-decl_stmt|;
-comment|/* optional arguments */
+function|va_dcl
 block|{
 name|Error
 argument_list|(
-name|fmt
-argument_list|,
-name|arg1
-argument_list|,
-name|arg2
+name|va_alist
 argument_list|)
 expr_stmt|;
 name|DieHorribly
@@ -2615,6 +2104,31 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_macro
+name|usage
+argument_list|()
+end_macro
+
+begin_block
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"usage: make [-PSWeiknqrstvh] [-D define] [-I include] [-J max_target] \n\t\ [-L max_local] [-d debug] [-f file] [-p #]\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|2
+argument_list|)
+expr_stmt|;
+block|}
+end_block
 
 end_unit
 
