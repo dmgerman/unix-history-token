@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)stddef.h	5.7 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)stddef.h	5.8 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -58,17 +58,28 @@ directive|ifdef
 name|_BSD_WCHAR_T_
 end_ifdef
 
-begin_typedef
-typedef|typedef
-name|_BSD_WCHAR_T_
-name|wchar_t
-typedef|;
-end_typedef
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_ANSI_SOURCE
+end_ifndef
 
 begin_typedef
 typedef|typedef
 name|_BSD_WCHAR_T_
 name|rune_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_typedef
+typedef|typedef
+name|_BSD_WCHAR_T_
+name|wchar_t
 typedef|;
 end_typedef
 
