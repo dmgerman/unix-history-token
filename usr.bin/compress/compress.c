@@ -285,8 +285,6 @@ block|,
 name|DECOMPRESS
 block|}
 name|style
-init|=
-name|COMPRESS
 enum|;
 name|size_t
 name|len
@@ -307,6 +305,10 @@ index|[
 name|MAXPATHLEN
 index|]
 decl_stmt|;
+name|cat
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -377,13 +379,13 @@ literal|"zcat"
 argument_list|)
 condition|)
 block|{
-name|style
-operator|=
-name|DECOMPRESS
-expr_stmt|;
 name|cat
 operator|=
 literal|1
+expr_stmt|;
+name|style
+operator|=
+name|DECOMPRESS
 expr_stmt|;
 block|}
 else|else
@@ -395,8 +397,6 @@ literal|"unknown program name"
 argument_list|)
 expr_stmt|;
 name|bits
-operator|=
-name|cat
 operator|=
 literal|0
 expr_stmt|;
