@@ -1412,6 +1412,10 @@ argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
+name|rval
+operator|=
+literal|1
+expr_stmt|;
 continue|continue;
 block|}
 if|if
