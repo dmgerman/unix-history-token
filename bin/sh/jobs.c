@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: jobs.c,v 1.21 1998/08/24 10:20:36 cracauer Exp $"
+literal|"$Id: jobs.c,v 1.22 1998/08/25 09:33:34 cracauer Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -328,6 +328,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* are we in waitcmd()? */
+end_comment
+
+begin_decl_stmt
+name|int
+name|in_dowait
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* are we in dowait()? */
 end_comment
 
 begin_decl_stmt
@@ -3184,15 +3196,21 @@ name|state
 operator|==
 literal|0
 condition|)
-block|{
+if|if
+condition|(
 name|dowait
 argument_list|(
 literal|1
 argument_list|,
 name|jp
 argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|dotrap
+argument_list|()
 expr_stmt|;
-block|}
 if|#
 directive|if
 name|JOBS
@@ -3439,6 +3457,9 @@ decl_stmt|;
 name|int
 name|sig
 decl_stmt|;
+name|in_dowait
+operator|++
+expr_stmt|;
 name|TRACE
 argument_list|(
 operator|(
@@ -3488,6 +3509,9 @@ operator|==
 literal|0
 condition|)
 do|;
+name|in_dowait
+operator|--
+expr_stmt|;
 if|if
 condition|(
 name|breakwaitcmd
