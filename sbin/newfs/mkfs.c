@@ -5808,7 +5808,7 @@ name|node
 operator|.
 name|di_atime
 operator|.
-name|ts_sec
+name|tv_sec
 operator|=
 name|utime
 expr_stmt|;
@@ -5816,7 +5816,7 @@ name|node
 operator|.
 name|di_mtime
 operator|.
-name|ts_sec
+name|tv_sec
 operator|=
 name|utime
 expr_stmt|;
@@ -5824,7 +5824,7 @@ name|node
 operator|.
 name|di_ctime
 operator|.
-name|ts_sec
+name|tv_sec
 operator|=
 name|utime
 expr_stmt|;

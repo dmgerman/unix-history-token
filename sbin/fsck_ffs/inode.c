@@ -2434,7 +2434,7 @@ name|dp
 operator|->
 name|di_mtime
 operator|.
-name|ts_sec
+name|tv_sec
 argument_list|)
 expr_stmt|;
 name|printf
@@ -2737,7 +2737,7 @@ name|dp
 operator|->
 name|di_atime
 operator|.
-name|ts_sec
+name|tv_sec
 argument_list|)
 expr_stmt|;
 name|dp
