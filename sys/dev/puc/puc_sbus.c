@@ -126,6 +126,13 @@ name|nm
 argument_list|,
 literal|"zs"
 argument_list|)
+operator|&&
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|device_set_desc
