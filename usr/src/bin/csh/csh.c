@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)csh.c	5.34 (Berkeley) %G%"
+literal|"@(#)csh.c	5.35 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -211,7 +211,7 @@ name|STRsource
 block|,
 name|STRmh
 block|,
-name|STRhistfile
+name|STRtildothist
 block|,
 literal|0
 block|}
@@ -2341,6 +2341,34 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Source history before .login so that it is available in .login 	 */
+if|if
+condition|(
+operator|(
+name|cp
+operator|=
+name|value
+argument_list|(
+name|STRhistfile
+argument_list|)
+operator|)
+operator|!=
+name|STRNULL
+condition|)
+name|loadhist
+index|[
+literal|2
+index|]
+operator|=
+name|cp
+expr_stmt|;
+name|dosource
+argument_list|(
+name|loadhist
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|loginsh
@@ -2356,13 +2384,6 @@ name|STRhome
 argument_list|)
 argument_list|,
 name|STRsldotlogin
-argument_list|)
-expr_stmt|;
-name|dosource
-argument_list|(
-name|loadhist
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 block|}

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)const.c	5.5 (Berkeley) %G%"
+literal|"@(#)const.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -855,7 +855,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|Char
-name|STRhistfile
+name|STRtildothist
 index|[]
 init|=
 block|{
@@ -878,6 +878,33 @@ block|,
 literal|'r'
 block|,
 literal|'y'
+block|,
+literal|'\0'
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|Char
+name|STRhistfile
+index|[]
+init|=
+block|{
+literal|'h'
+block|,
+literal|'i'
+block|,
+literal|'s'
+block|,
+literal|'t'
+block|,
+literal|'f'
+block|,
+literal|'i'
+block|,
+literal|'l'
+block|,
+literal|'e'
 block|,
 literal|'\0'
 block|}
