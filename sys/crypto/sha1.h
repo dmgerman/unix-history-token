@@ -128,6 +128,7 @@ expr|struct
 name|sha1_ctxt
 operator|*
 operator|,
+specifier|const
 name|caddr_t
 operator|,
 name|size_t

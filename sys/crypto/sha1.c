@@ -2485,6 +2485,7 @@ name|sha1_ctxt
 modifier|*
 name|ctxt
 decl_stmt|;
+specifier|const
 name|caddr_t
 name|input0
 decl_stmt|;

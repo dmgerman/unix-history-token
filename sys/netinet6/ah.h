@@ -165,6 +165,7 @@ expr|struct
 name|ah_algorithm_state
 operator|*
 operator|,
+specifier|const
 name|caddr_t
 operator|,
 name|size_t

@@ -371,6 +371,7 @@ expr|struct
 name|ah_algorithm_state
 operator|*
 operator|,
+specifier|const
 name|caddr_t
 operator|,
 name|size_t
@@ -441,6 +442,7 @@ expr|struct
 name|ah_algorithm_state
 operator|*
 operator|,
+specifier|const
 name|caddr_t
 operator|,
 name|size_t
@@ -511,6 +513,7 @@ expr|struct
 name|ah_algorithm_state
 operator|*
 operator|,
+specifier|const
 name|caddr_t
 operator|,
 name|size_t
@@ -581,6 +584,7 @@ expr|struct
 name|ah_algorithm_state
 operator|*
 operator|,
+specifier|const
 name|caddr_t
 operator|,
 name|size_t
@@ -651,6 +655,7 @@ expr|struct
 name|ah_algorithm_state
 operator|*
 operator|,
+specifier|const
 name|caddr_t
 operator|,
 name|size_t
@@ -942,6 +947,7 @@ name|ah_algorithm_state
 modifier|*
 name|state
 decl_stmt|;
+specifier|const
 name|caddr_t
 name|addr
 decl_stmt|;
@@ -1381,6 +1387,7 @@ name|ah_algorithm_state
 modifier|*
 name|state
 decl_stmt|;
+specifier|const
 name|caddr_t
 name|addr
 decl_stmt|;
@@ -1999,6 +2006,7 @@ name|ah_algorithm_state
 modifier|*
 name|state
 decl_stmt|;
+specifier|const
 name|caddr_t
 name|addr
 decl_stmt|;
@@ -2597,6 +2605,7 @@ name|ah_algorithm_state
 modifier|*
 name|state
 decl_stmt|;
+specifier|const
 name|caddr_t
 name|addr
 decl_stmt|;
@@ -3230,6 +3239,7 @@ name|ah_algorithm_state
 modifier|*
 name|state
 decl_stmt|;
+specifier|const
 name|caddr_t
 name|addr
 decl_stmt|;
