@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)opendir.c	5.11 (Berkeley) %G%"
+literal|"@(#)opendir.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -160,11 +160,11 @@ return|return
 name|NULL
 return|;
 block|}
-comment|/* 	 * If CLSIZE is an exact multiple of DIRBLKSIZ, use a CLSIZE 	 * buffer that it cluster boundary aligned. 	 * Hopefully this can be a big win someday by allowing page trades 	 * to user space to be done by getdirentries() 	 */
+comment|/* 	 * If CLBYTES is an exact multiple of DIRBLKSIZ, use a CLBYTES 	 * buffer that it cluster boundary aligned. 	 * Hopefully this can be a big win someday by allowing page trades 	 * to user space to be done by getdirentries() 	 */
 if|if
 condition|(
 operator|(
-name|CLSIZE
+name|CLBYTES
 operator|%
 name|DIRBLKSIZ
 operator|)
@@ -178,14 +178,14 @@ name|dd_buf
 operator|=
 name|malloc
 argument_list|(
-name|CLSIZE
+name|CLBYTES
 argument_list|)
 expr_stmt|;
 name|dirp
 operator|->
 name|dd_len
 operator|=
-name|CLSIZE
+name|CLBYTES
 expr_stmt|;
 block|}
 else|else
