@@ -41,11 +41,11 @@ begin_struct
 struct|struct
 name|ng_ksocket_sockopt
 block|{
-name|u_int32_t
+name|int32_t
 name|level
 decl_stmt|;
 comment|/* second arg of [gs]etsockopt() */
-name|u_int32_t
+name|int32_t
 name|name
 decl_stmt|;
 comment|/* third arg of [gs]etsockopt() */
