@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	param.h	4.30	83/02/21	*/
+comment|/*	param.h	4.31	83/03/31	*/
 end_comment
 
 begin_comment
@@ -125,6 +125,17 @@ end_define
 
 begin_comment
 comment|/* max number groups */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NOGROUP
+value|-1
+end_define
+
+begin_comment
+comment|/* marker for empty group set member */
 end_comment
 
 begin_comment
