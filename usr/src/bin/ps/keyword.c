@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)keyword.c	5.17 (Berkeley) %G%"
+literal|"@(#)keyword.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1072,7 +1072,7 @@ argument_list|(
 name|e_pgid
 argument_list|)
 block|,
-name|USHORT
+name|ULONG
 block|,
 name|PIDFMT
 block|}
@@ -1163,7 +1163,7 @@ argument_list|(
 name|p_time
 argument_list|)
 block|,
-name|CHAR
+name|ULONG
 block|,
 literal|"d"
 block|}
@@ -1424,7 +1424,7 @@ argument_list|(
 name|p_slptime
 argument_list|)
 block|,
-name|CHAR
+name|ULONG
 block|,
 literal|"d"
 block|}
@@ -1563,7 +1563,7 @@ argument_list|(
 name|e_tpgid
 argument_list|)
 block|,
-name|USHORT
+name|ULONG
 block|,
 name|PIDFMT
 block|}
@@ -2456,7 +2456,7 @@ argument_list|(
 name|e_pgid
 argument_list|)
 block|,
-name|USHORT
+name|ULONG
 block|,
 name|PIDFMT
 block|}
@@ -2570,7 +2570,7 @@ argument_list|(
 name|p_time
 argument_list|)
 block|,
-name|CHAR
+name|ULONG
 block|,
 literal|"d"
 block|}
@@ -2827,7 +2827,7 @@ argument_list|(
 name|p_slptime
 argument_list|)
 block|,
-name|CHAR
+name|ULONG
 block|,
 literal|"d"
 block|}
@@ -2962,7 +2962,7 @@ argument_list|(
 name|e_tpgid
 argument_list|)
 block|,
-name|USHORT
+name|ULONG
 block|,
 name|PIDFMT
 block|}
