@@ -120,12 +120,10 @@ block|{
 comment|/* Get the read/write mode type: */
 name|type
 operator|=
-name|_thread_fd_table
-index|[
+name|_thread_fd_getflags
+argument_list|(
 name|fd
-index|]
-operator|->
-name|flags
+argument_list|)
 operator|&
 name|O_ACCMODE
 expr_stmt|;
@@ -182,12 +180,10 @@ block|{
 if|if
 condition|(
 operator|(
-name|_thread_fd_table
-index|[
+name|_thread_fd_getflags
+argument_list|(
 name|fd
-index|]
-operator|->
-name|flags
+argument_list|)
 operator|&
 name|O_NONBLOCK
 operator|)

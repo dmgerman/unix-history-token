@@ -168,12 +168,10 @@ argument_list|)
 operator|)
 operator|&&
 operator|(
-name|_thread_fd_table
-index|[
+name|_thread_fd_getflags
+argument_list|(
 name|fd
-index|]
-operator|->
-name|flags
+argument_list|)
 operator|&
 name|O_NONBLOCK
 operator|)
