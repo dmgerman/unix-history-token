@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vm.h	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vm.h	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -122,7 +122,7 @@ end_comment
 begin_typedef
 typedef|typedef
 name|struct
-name|atomic_lk
+name|simplelock
 name|simple_lock_data_t
 typedef|;
 end_typedef
@@ -130,7 +130,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|struct
-name|atomic_lk
+name|simplelock
 modifier|*
 name|simple_lock_t
 typedef|;
@@ -152,46 +152,6 @@ modifier|*
 name|lock_t
 typedef|;
 end_typedef
-
-begin_define
-define|#
-directive|define
-name|simple_lock
-parameter_list|(
-name|l
-parameter_list|)
-value|atomic_lock(l)
-end_define
-
-begin_define
-define|#
-directive|define
-name|simple_lock_init
-parameter_list|(
-name|l
-parameter_list|)
-value|atomic_lock_init(l)
-end_define
-
-begin_define
-define|#
-directive|define
-name|simple_lock_try
-parameter_list|(
-name|l
-parameter_list|)
-value|atomic_lock_try(l)
-end_define
-
-begin_define
-define|#
-directive|define
-name|simple_unlock
-parameter_list|(
-name|l
-parameter_list|)
-value|atomic_unlock(l)
-end_define
 
 begin_include
 include|#
