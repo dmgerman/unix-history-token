@@ -1057,6 +1057,7 @@ comment|/* http://www.sco.com/developers/gabi/latest/ch5.dynamic.html#tag_encodi
 end_comment
 
 begin_function
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -1477,6 +1478,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -1563,6 +1565,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|e_types
@@ -1583,6 +1586,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|ei_versions
@@ -1597,6 +1601,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|ei_classes
@@ -1613,6 +1618,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|ei_data
@@ -1629,6 +1635,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|ei_abis
@@ -1665,6 +1672,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|p_types
@@ -1689,6 +1697,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|p_flags
@@ -1719,6 +1728,7 @@ comment|/* http://www.sco.com/developers/gabi/latest/ch4.sheader.html#sh_type */
 end_comment
 
 begin_function
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -1911,6 +1921,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|sh_flags
@@ -1937,6 +1948,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|st_types
@@ -1957,6 +1969,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|st_bindings
@@ -2680,7 +2693,7 @@ expr_stmt|;
 name|p
 operator|=
 operator|(
-name|void
+name|char
 operator|*
 operator|)
 name|e
@@ -2690,7 +2703,7 @@ expr_stmt|;
 name|sh
 operator|=
 operator|(
-name|void
+name|char
 operator|*
 operator|)
 name|e
@@ -2703,6 +2716,10 @@ name|elf_get_off
 argument_list|(
 name|e
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|sh
 operator|+
 name|shstrndx
@@ -2728,6 +2745,9 @@ name|i
 operator|=
 literal|0
 init|;
+operator|(
+name|u_int64_t
+operator|)
 name|i
 operator|<
 name|shnum
@@ -2742,6 +2762,10 @@ name|elf_get_word
 argument_list|(
 name|e
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|sh
 operator|+
 name|i
@@ -2757,6 +2781,10 @@ name|elf_get_off
 argument_list|(
 name|e
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|sh
 operator|+
 name|i
@@ -2856,6 +2884,9 @@ name|i
 operator|=
 literal|0
 init|;
+operator|(
+name|u_int64_t
+operator|)
 name|i
 operator|<
 name|phnum
@@ -2866,6 +2897,10 @@ control|)
 block|{
 name|v
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|p
 operator|+
 name|i
@@ -2932,6 +2967,9 @@ name|i
 operator|=
 literal|0
 init|;
+operator|(
+name|u_int64_t
+operator|)
 name|i
 operator|<
 name|shnum
@@ -2942,6 +2980,10 @@ control|)
 block|{
 name|v
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|sh
 operator|+
 name|i
@@ -3652,6 +3694,9 @@ name|i
 operator|=
 literal|0
 init|;
+operator|(
+name|u_int64_t
+operator|)
 name|i
 operator|<
 name|phnum
@@ -3662,6 +3707,10 @@ control|)
 block|{
 name|v
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|p
 operator|+
 name|i
@@ -3894,7 +3943,7 @@ name|u_int64_t
 name|size
 decl_stmt|;
 name|u_int64_t
-name|link
+name|shlink
 decl_stmt|;
 name|u_int64_t
 name|info
@@ -3947,6 +3996,9 @@ name|i
 operator|=
 literal|0
 init|;
+operator|(
+name|u_int64_t
+operator|)
 name|i
 operator|<
 name|shnum
@@ -3957,6 +4009,10 @@ control|)
 block|{
 name|v
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|sh
 operator|+
 name|i
@@ -4029,7 +4085,7 @@ argument_list|,
 name|SH_SIZE
 argument_list|)
 expr_stmt|;
-name|link
+name|shlink
 operator|=
 name|elf_get_word
 argument_list|(
@@ -4159,7 +4215,7 @@ name|out
 argument_list|,
 literal|"\tsh_link: %lld\n"
 argument_list|,
-name|link
+name|shlink
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -4319,7 +4375,7 @@ block|{
 name|st
 operator|=
 operator|(
-name|void
+name|char
 operator|*
 operator|)
 name|e
@@ -4550,6 +4606,9 @@ name|i
 operator|=
 literal|0
 init|;
+operator|(
+name|u_int64_t
+operator|)
 name|i
 operator|<
 name|size
@@ -4563,7 +4622,7 @@ block|{
 name|d
 operator|=
 operator|(
-name|void
+name|char
 operator|*
 operator|)
 name|e
@@ -4839,7 +4898,7 @@ expr_stmt|;
 name|v
 operator|=
 operator|(
-name|void
+name|char
 operator|*
 operator|)
 name|e
@@ -4863,6 +4922,9 @@ name|i
 operator|=
 literal|0
 init|;
+operator|(
+name|u_int64_t
+operator|)
 name|i
 operator|<
 name|size
@@ -4875,6 +4937,10 @@ control|)
 block|{
 name|ra
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|v
 operator|+
 name|i
@@ -5046,6 +5112,10 @@ argument_list|)
 expr_stmt|;
 name|v
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|e
 operator|+
 name|offset
@@ -5067,6 +5137,9 @@ name|i
 operator|=
 literal|0
 init|;
+operator|(
+name|u_int64_t
+operator|)
 name|i
 operator|<
 name|size
@@ -5079,6 +5152,10 @@ control|)
 block|{
 name|r
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|v
 operator|+
 name|i
@@ -5273,7 +5350,7 @@ expr_stmt|;
 name|v
 operator|=
 operator|(
-name|void
+name|char
 operator|*
 operator|)
 name|e
@@ -5293,6 +5370,9 @@ name|i
 operator|=
 literal|0
 init|;
+operator|(
+name|u_int64_t
+operator|)
 name|i
 operator|<
 name|size
@@ -5309,6 +5389,10 @@ name|elf_get_addr
 argument_list|(
 name|e
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|v
 operator|+
 name|i
@@ -5354,10 +5438,12 @@ parameter_list|(
 name|Elf32_Ehdr
 modifier|*
 name|e
+name|__unused
 parameter_list|,
 name|void
 modifier|*
 name|sh
+name|__unused
 parameter_list|)
 block|{ }
 end_function
@@ -5398,11 +5484,10 @@ name|desc
 decl_stmt|;
 name|char
 modifier|*
-name|s
-decl_stmt|;
-name|void
-modifier|*
 name|n
+decl_stmt|,
+modifier|*
+name|s
 decl_stmt|;
 name|offset
 operator|=
@@ -5440,7 +5525,7 @@ expr_stmt|;
 name|n
 operator|=
 operator|(
-name|void
+name|char
 operator|*
 operator|)
 name|e
@@ -5463,7 +5548,8 @@ condition|(
 name|n
 operator|<
 operator|(
-name|void
+operator|(
+name|char
 operator|*
 operator|)
 name|e
@@ -5471,6 +5557,7 @@ operator|+
 name|offset
 operator|+
 name|size
+operator|)
 condition|)
 block|{
 name|namesz
@@ -5601,6 +5688,10 @@ name|ELFCLASS32
 case|:
 name|p
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|base
 operator|+
 name|elf32_offsets
@@ -5619,6 +5710,10 @@ name|ELFCLASS64
 case|:
 name|p
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|base
 operator|+
 name|elf64_offsets
@@ -5691,6 +5786,10 @@ name|ELFCLASS32
 case|:
 name|p
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|base
 operator|+
 name|elf32_offsets
@@ -5761,6 +5860,10 @@ name|ELFCLASS64
 case|:
 name|p
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|base
 operator|+
 name|elf64_offsets
@@ -5885,6 +5988,10 @@ name|ELFCLASS32
 case|:
 name|p
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|base
 operator|+
 name|elf32_offsets
@@ -5955,6 +6062,10 @@ name|ELFCLASS64
 case|:
 name|p
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|base
 operator|+
 name|elf64_offsets
@@ -6107,6 +6218,10 @@ name|ELFCLASS32
 case|:
 name|p
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|base
 operator|+
 name|elf32_offsets
@@ -6205,6 +6320,10 @@ name|ELFCLASS64
 case|:
 name|p
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|base
 operator|+
 name|elf64_offsets
@@ -6363,6 +6482,10 @@ name|ELFCLASS32
 case|:
 name|p
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|base
 operator|+
 name|elf32_offsets
@@ -6461,6 +6584,10 @@ name|ELFCLASS64
 case|:
 name|p
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 name|base
 operator|+
 name|elf64_offsets
