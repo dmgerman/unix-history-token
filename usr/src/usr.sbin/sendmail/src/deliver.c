@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.94 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.95 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -8731,6 +8731,14 @@ operator|->
 name|mci_mailer
 operator|->
 name|m_linelimit
+operator|>
+literal|0
+operator|&&
+name|mci
+operator|->
+name|mci_mailer
+operator|->
+name|m_linelimit
 operator|<
 sizeof|sizeof
 name|buf
@@ -9252,6 +9260,14 @@ name|putch
 label|:
 if|if
 condition|(
+name|mci
+operator|->
+name|mci_mailer
+operator|->
+name|m_linelimit
+operator|>
+literal|0
+operator|&&
 name|pos
 operator|>
 name|mci
