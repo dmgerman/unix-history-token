@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * %sccs.include.redist.c%  *  *	@(#)queue.h	7.4 (Berkeley) %G%  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Author: Avadis Tevanian, Jr.  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
+comment|/*   * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)queue.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -190,119 +190,6 @@ parameter_list|,
 name|field
 parameter_list|)
 value|{ \ 	type queue_ptr; \ 	if (queue_ptr = (elm)->field.next) \ 		queue_ptr->field.prev = (elm)->field.prev; \ 	*(elm)->field.prev = queue_ptr; \ 	(elm)->field.next = NOLIST; \ 	(elm)->field.prev = NOLIST; \ }
-end_define
-
-begin_comment
-comment|/*  * Compatibility with old MACH VM code.  */
-end_comment
-
-begin_typedef
-typedef|typedef
-name|struct
-name|queue_entry
-modifier|*
-name|queue_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|struct
-name|queue_entry
-name|queue_head_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|struct
-name|queue_entry
-name|queue_chain_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|struct
-name|queue_entry
-modifier|*
-name|queue_entry_t
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|queue_first
-parameter_list|(
-name|head
-parameter_list|)
-value|((head)->next)
-end_define
-
-begin_define
-define|#
-directive|define
-name|queue_next
-parameter_list|(
-name|elm
-parameter_list|)
-value|((elm)->next)
-end_define
-
-begin_define
-define|#
-directive|define
-name|queue_empty
-parameter_list|(
-name|head
-parameter_list|)
-value|((head)->next == 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|queue_end
-parameter_list|(
-name|elm
-parameter_list|,
-name|head
-parameter_list|)
-value|((elm) == 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|queue_enter
-parameter_list|(
-name|head
-parameter_list|,
-name|elt
-parameter_list|,
-name|type
-parameter_list|,
-name|field
-parameter_list|)
-define|\
-value|queue_enter_tail(head, elt, type, field)
-end_define
-
-begin_define
-define|#
-directive|define
-name|queue_remove_first
-parameter_list|(
-name|head
-parameter_list|,
-name|elt
-parameter_list|,
-name|type
-parameter_list|,
-name|field
-parameter_list|)
-value|{ \ 	elt = queue_first(head); \ 	queue_remove(head, elt, type, field) \ }
 end_define
 
 begin_endif
