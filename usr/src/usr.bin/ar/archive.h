@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Hugh Smith at The University of Guelph.  *  *	@(#)archive.h	5.3 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Hugh Smith at The University of Guelph.  *  *	@(#)archive.h	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -242,17 +242,6 @@ value|{ \ 	if (*argv) { \ 		eval = 1; \ 		do { \ 			(void)fprintf(stderr, \ 			 
 end_define
 
 begin_comment
-comment|/* Old archive format name limit. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ARNAMEMAX
-value|16
-end_define
-
-begin_comment
 comment|/* Header format strings. */
 end_comment
 
@@ -268,6 +257,20 @@ define|#
 directive|define
 name|HDR2
 value|"%-16.16s%-12ld%-6u%-6u%-8o%-10ld%2s"
+end_define
+
+begin_define
+define|#
+directive|define
+name|OLDARMAXNAME
+value|15
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDR3
+value|"%-16.15s%-12ld%-6u%-6u%-8o%-10ld%2s"
 end_define
 
 begin_include

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)misc.c	5.3 (Berkeley) %G%"
+literal|"@(#)misc.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -458,7 +458,7 @@ argument_list|(
 name|dest
 argument_list|)
 argument_list|,
-name|ARNAMEMAX
+name|OLDARMAXNAME
 argument_list|)
 operator|)
 return|;
