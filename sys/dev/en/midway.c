@@ -10594,12 +10594,13 @@ goto|goto
 name|dequeue_drop
 goto|;
 block|}
+comment|/*    * note: don't use the entire buffer space.  if WRTX becomes equal    * to RDTX, the transmitter stops assuming the buffer is empty!  --kjc    */
 if|if
 condition|(
 name|launch
 operator|.
 name|need
-operator|>
+operator|>=
 name|sc
 operator|->
 name|txslot
