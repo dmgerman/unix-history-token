@@ -62,6 +62,7 @@ name|char
 modifier|*
 name|getenv
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -169,6 +170,7 @@ begin_function
 name|int
 name|getenv_int
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
@@ -224,6 +226,7 @@ begin_function
 name|quad_t
 name|getenv_quad
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|name
