@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ct.c	4.5	81/03/11	*/
+comment|/*	ct.c	4.6	81/07/05	*/
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  * GP DR11C driver used for C/A/T  */
+comment|/*  * GP DR11C driver used for C/A/T  *  * BUGS:  *	This driver hasn't been tested in 4.1bsd  */
 end_comment
 
 begin_include
@@ -224,6 +224,13 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
+name|int
+name|br
+decl_stmt|,
+name|cvec
+decl_stmt|;
+comment|/* value-result */
 specifier|register
 name|struct
 name|ctdevice
