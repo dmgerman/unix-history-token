@@ -5,12 +5,12 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)chown.c	4.4 (Berkeley) %G%"
+literal|"@(#)chown.c	4.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * chown [-fr] uid[.gid] file ...  */
+comment|/*  * chown [-fR] uid[.gid] file ...  */
 end_comment
 
 begin_include
@@ -137,7 +137,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: chown [-fr] uid[.gid] file ...\n"
+literal|"usage: chown [-fR] owner[.group] file ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
