@@ -3436,6 +3436,18 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|IPSEC
+name|ipsec_pcbdisconn
+argument_list|(
+name|inp
+operator|->
+name|inp_sp
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|inp
@@ -3451,18 +3463,6 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|IPSEC
-name|ipsec_pcbdisconn
-argument_list|(
-name|inp
-operator|->
-name|inp_sp
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
