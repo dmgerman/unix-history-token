@@ -35,7 +35,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	3.20	%G%	(with DBM)"
+literal|"@(#)alias.c	3.21	%G%	(with DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,7 +51,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)alias.c	3.20	%G%	(without DBM)"
+literal|"@(#)alias.c	3.21	%G%	(without DBM)"
 decl_stmt|;
 end_decl_stmt
 
@@ -375,7 +375,7 @@ decl_stmt|;
 name|time_t
 name|modtime
 decl_stmt|;
-comment|/* 	**  See if the DBM version of the file is out of date with 	**  the text version.  If so, go into 'init' mode automatically. 	**	This only happens if our effective userid owns the DBM 	**	version or if the mode of the database is 777 -- this 	**	is an attempt to avoid protection problems.  Note the 	**	unpalatable hack to see if the stat succeeded. 	*/
+comment|/* 	**  See if the DBM version of the file is out of date with 	**  the text version.  If so, go into 'init' mode automatically. 	**	This only happens if our effective userid owns the DBM 	**	version or if the mode of the database is 666 -- this 	**	is an attempt to avoid protection problems.  Note the 	**	unpalatable hack to see if the stat succeeded. 	*/
 if|if
 condition|(
 name|stat
@@ -462,10 +462,10 @@ name|stb
 operator|.
 name|st_mode
 operator|&
-literal|0777
+literal|0666
 operator|)
 operator|==
-literal|0777
+literal|0666
 operator|||
 name|stb
 operator|.
