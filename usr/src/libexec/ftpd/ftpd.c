@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftpd.c	5.18 (Berkeley) %G%"
+literal|"@(#)ftpd.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -224,7 +224,7 @@ begin_decl_stmt
 specifier|extern
 name|FILE
 modifier|*
-name|popen
+name|ftpd_popen
 argument_list|()
 decl_stmt|,
 modifier|*
@@ -426,7 +426,7 @@ begin_decl_stmt
 name|char
 name|hostname
 index|[
-literal|32
+name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -435,7 +435,7 @@ begin_decl_stmt
 name|char
 name|remotehost
 index|[
-literal|32
+name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -814,6 +814,7 @@ literal|"signal: %m"
 argument_list|)
 expr_stmt|;
 comment|/* handle urgent data inline */
+comment|/* Sequent defines this, but it doesn't work */
 ifdef|#
 directive|ifdef
 name|SO_OOBINLINE
@@ -842,7 +843,6 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
 name|syslog
 argument_list|(
 name|LOG_ERR
@@ -850,10 +850,8 @@ argument_list|,
 literal|"setsockopt: %m"
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
-endif|SO_OOBINLINE
 name|pgid
 operator|=
 name|getpid
@@ -1075,7 +1073,7 @@ name|reply
 argument_list|(
 literal|553
 argument_list|,
-literal|"Local resource failure"
+literal|"Local resource failure: malloc"
 argument_list|)
 expr_stmt|;
 name|dologout
@@ -1592,7 +1590,7 @@ literal|'|'
 condition|)
 name|fin
 operator|=
-name|popen
+name|ftpd_popen
 argument_list|(
 name|name
 operator|+
@@ -1648,7 +1646,7 @@ name|line
 expr_stmt|;
 name|fin
 operator|=
-name|popen
+name|ftpd_popen
 argument_list|(
 name|line
 argument_list|,
@@ -1908,7 +1906,7 @@ literal|'|'
 condition|)
 name|fout
 operator|=
-name|popen
+name|ftpd_popen
 argument_list|(
 operator|&
 name|name
@@ -2143,9 +2141,12 @@ condition|)
 operator|(
 name|void
 operator|)
-name|chown
+name|fchown
 argument_list|(
-name|local
+name|fileno
+argument_list|(
+name|fout
+argument_list|)
 argument_list|,
 name|pw
 operator|->
@@ -3786,23 +3787,21 @@ end_decl_stmt
 
 begin_block
 block|{
-name|struct
-name|stat
-name|st
+name|uid_t
+name|oldeuid
 decl_stmt|;
-name|int
-name|dochown
-init|=
-name|stat
+name|oldeuid
+operator|=
+name|geteuid
+argument_list|()
+expr_stmt|;
+name|seteuid
 argument_list|(
-name|name
-argument_list|,
-operator|&
-name|st
+name|pw
+operator|->
+name|pw_uid
 argument_list|)
-operator|<
-literal|0
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|mkdir
@@ -3814,7 +3813,6 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
 name|reply
 argument_list|(
 literal|550
@@ -3829,32 +3827,17 @@ name|errno
 index|]
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
-if|if
-condition|(
-name|dochown
-condition|)
-operator|(
-name|void
-operator|)
-name|chown
-argument_list|(
-name|name
-argument_list|,
-name|pw
-operator|->
-name|pw_uid
-argument_list|,
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
+else|else
 name|reply
 argument_list|(
 literal|257
 argument_list|,
 literal|"MKD command successful."
+argument_list|)
+expr_stmt|;
+name|seteuid
+argument_list|(
+name|oldeuid
 argument_list|)
 expr_stmt|;
 block|}

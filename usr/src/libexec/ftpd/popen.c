@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)popen.c	5.2 (Berkeley) %G%"
+literal|"@(#)popen.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -68,7 +68,7 @@ end_decl_stmt
 begin_function
 name|FILE
 modifier|*
-name|popen
+name|ftpd_popen
 parameter_list|(
 name|program
 parameter_list|,
