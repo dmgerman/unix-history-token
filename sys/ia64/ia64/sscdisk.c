@@ -354,7 +354,7 @@ name|_debug
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|mddebug
+name|sscdebug
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
