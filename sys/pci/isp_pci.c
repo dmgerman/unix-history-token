@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: isp_pci.c,v 1.13 1999/01/10 02:45:51 mjacob Exp $ */
+comment|/* $Id: isp_pci.c,v 1.13.2.1 1999/05/11 06:09:01 mjacob Exp $ */
 end_comment
 
 begin_comment
@@ -5212,7 +5212,6 @@ operator|->
 name|isp_scratch
 operator|=
 operator|(
-specifier|volatile
 name|caddr_t
 operator|)
 name|malloc
