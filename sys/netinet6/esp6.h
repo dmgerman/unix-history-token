@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: esp.h,v 1.8 2000/07/02 13:23:33 itojun Exp $	*/
+comment|/*	$KAME: esp.h,v 1.16 2000/10/18 21:28:00 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -75,6 +75,26 @@ name|int
 operator|*
 operator|,
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|esp6_ctlinput
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+expr|struct
+name|sockaddr
+operator|*
+operator|,
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

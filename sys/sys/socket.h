@@ -1590,6 +1590,27 @@ parameter_list|)
 value|(_ALIGN(sizeof(struct cmsghdr)) + (l))
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|CMSG_ALIGN
+parameter_list|(
+name|n
+parameter_list|)
+value|_ALIGN(n)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* "Socket"-level control message types: */
 end_comment

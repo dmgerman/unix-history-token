@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: esp.h,v 1.8 2000/07/02 13:23:33 itojun Exp $	*/
+comment|/*	$KAME: esp.h,v 1.16 2000/10/18 21:28:00 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -27,11 +27,31 @@ directive|define
 name|_NETINET6_ESP_H_
 end_define
 
-begin_struct_decl
-struct_decl|struct
-name|secasvar
-struct_decl|;
-end_struct_decl
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_LKM
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|"opt_inet.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
@@ -105,27 +125,17 @@ block|}
 struct|;
 end_struct
 
-begin_struct
-struct|struct
-name|esp_algorithm_state
-block|{
-name|struct
-name|secasvar
-modifier|*
-name|sav
-decl_stmt|;
-name|void
-modifier|*
-name|foo
-decl_stmt|;
-comment|/*per algorithm data - maybe*/
-block|}
-struct|;
-end_struct
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
 
-begin_comment
-comment|/* XXX yet to be defined */
-end_comment
+begin_struct_decl
+struct_decl|struct
+name|secasvar
+struct_decl|;
+end_struct_decl
 
 begin_struct
 struct|struct
@@ -135,6 +145,10 @@ name|size_t
 name|padbound
 decl_stmt|;
 comment|/* pad boundary, in byte */
+name|int
+name|ivlenval
+decl_stmt|;
+comment|/* iv length, in byte */
 name|int
 argument_list|(
 argument|*mature
@@ -156,6 +170,20 @@ name|int
 name|keymax
 decl_stmt|;
 comment|/* in bits */
+name|int
+argument_list|(
+argument|*schedlen
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+specifier|const
+expr|struct
+name|esp_algorithm
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -168,6 +196,11 @@ argument_list|)
 name|__P
 argument_list|(
 operator|(
+specifier|const
+expr|struct
+name|esp_algorithm
+operator|*
+operator|,
 expr|struct
 name|secasvar
 operator|*
@@ -191,6 +224,7 @@ expr|struct
 name|secasvar
 operator|*
 operator|,
+specifier|const
 expr|struct
 name|esp_algorithm
 operator|*
@@ -218,6 +252,7 @@ expr|struct
 name|secasvar
 operator|*
 operator|,
+specifier|const
 expr|struct
 name|esp_algorithm
 operator|*
@@ -226,22 +261,103 @@ name|int
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* not supposed to be called directly */
+name|int
+argument_list|(
+argument|*schedule
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+specifier|const
+expr|struct
+name|esp_algorithm
+operator|*
+operator|,
+expr|struct
+name|secasvar
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+name|int
+argument_list|(
+argument|*blockdecrypt
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+specifier|const
+expr|struct
+name|esp_algorithm
+operator|*
+operator|,
+expr|struct
+name|secasvar
+operator|*
+operator|,
+name|u_int8_t
+operator|*
+operator|,
+name|u_int8_t
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
+name|int
+argument_list|(
+argument|*blockencrypt
+argument_list|)
+name|__P
+argument_list|(
+operator|(
+specifier|const
+expr|struct
+name|esp_algorithm
+operator|*
+operator|,
+expr|struct
+name|secasvar
+operator|*
+operator|,
+name|u_int8_t
+operator|*
+operator|,
+name|u_int8_t
+operator|*
+operator|)
+argument_list|)
+expr_stmt|;
 block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|esp_algorithm
+modifier|*
+name|esp_algorithm_lookup
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|esp_algorithm
-name|esp_algorithms
-index|[]
+name|int
+name|esp_max_ivlen
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -300,14 +416,25 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*_KERNEL*/
-end_comment
+begin_decl_stmt
+specifier|extern
+name|int
+name|esp_schedule
+name|__P
+argument_list|(
+operator|(
+specifier|const
+expr|struct
+name|esp_algorithm
+operator|*
+operator|,
+expr|struct
+name|secasvar
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -334,6 +461,15 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*_KERNEL*/
+end_comment
 
 begin_endif
 endif|#

@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: bf_skey.c,v 1.3 2000/03/27 04:36:27 sumikawa Exp $	*/
+comment|/*	$KAME: bf_skey.c,v 1.5 2000/11/06 13:58:08 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -169,11 +169,9 @@ literal|0
 init|;
 name|i
 operator|<
-operator|(
 name|BF_ROUNDS
 operator|+
 literal|2
-operator|)
 condition|;
 name|i
 operator|++
@@ -293,11 +291,9 @@ literal|0
 init|;
 name|i
 operator|<
-operator|(
 name|BF_ROUNDS
 operator|+
 literal|2
-operator|)
 condition|;
 name|i
 operator|+=

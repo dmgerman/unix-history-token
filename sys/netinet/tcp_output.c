@@ -1304,7 +1304,7 @@ operator|)
 return|;
 name|send
 label|:
-comment|/* 	 * Before ESTABLISHED, force sending of initial options 	 * unless TCP set not to do any options. 	 * NOTE: we assume that the IP/TCP header plus TCP options 	 * always fit in a single mbuf, leaving room for a maximum 	 * link header, i.e. 	 *	max_linkhdr + sizeof (struct tcpiphdr) + optlen<= MHLEN 	 */
+comment|/* 	 * Before ESTABLISHED, force sending of initial options 	 * unless TCP set not to do any options. 	 * NOTE: we assume that the IP/TCP header plus TCP options 	 * always fit in a single mbuf, leaving room for a maximum 	 * link header, i.e. 	 *	max_linkhdr + sizeof (struct tcpiphdr) + optlen<= MCLBYTES 	 */
 name|optlen
 operator|=
 literal|0
@@ -3360,13 +3360,31 @@ comment|/* TODO: IPv6 IP6TOS_ECT bit on */
 ifdef|#
 directive|ifdef
 name|IPSEC
+if|if
+condition|(
 name|ipsec_setsocket
 argument_list|(
 name|m
 argument_list|,
 name|so
 argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|ENOBUFS
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 endif|#
 directive|endif
 comment|/*IPSEC*/

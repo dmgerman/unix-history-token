@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: ip6_fw.h,v 1.3 2000/04/06 08:30:44 sumikawa Exp $	*/
+comment|/*	$KAME: ip6_fw.h,v 1.7 2001/01/24 01:25:33 itojun Exp $	*/
 end_comment
 
 begin_comment

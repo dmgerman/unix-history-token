@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$KAME$	*/
+comment|/*	$KAME: if.c,v 1.15 2001/05/22 06:04:17 jinmei Exp $	*/
 end_comment
 
 begin_comment
@@ -921,6 +921,14 @@ block|{
 case|case
 name|IFT_ETHER
 case|:
+ifdef|#
+directive|ifdef
+name|IFT_IEEE80211
+case|case
+name|IFT_IEEE80211
+case|:
+endif|#
+directive|endif
 return|return
 operator|(
 name|ROUNDUP8
@@ -977,6 +985,14 @@ block|{
 case|case
 name|IFT_ETHER
 case|:
+ifdef|#
+directive|ifdef
+name|IFT_IEEE80211
+case|case
+name|IFT_IEEE80211
+case|:
+endif|#
+directive|endif
 name|ndopt
 operator|->
 name|nd_opt_len
@@ -1378,6 +1394,11 @@ argument_list|,
 name|sdl
 operator|->
 name|sdl_len
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|buf
 argument_list|)
 expr_stmt|;
 return|return

@@ -3,6 +3,10 @@ begin_comment
 comment|/*	$KAME: rijndael.h,v 1.2 2000/10/02 17:14:27 itojun Exp $	*/
 end_comment
 
+begin_comment
+comment|/*	$FreeBSD$	*/
+end_comment
+
 begin_include
 include|#
 directive|include

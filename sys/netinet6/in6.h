@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: in6.h,v 1.48 2000/06/26 15:55:32 itojun Exp $	*/
+comment|/*	$KAME: in6.h,v 1.89 2001/05/27 13:28:35 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -24,7 +24,7 @@ end_ifndef
 begin_error
 error|#
 directive|error
-literal|"do not include netinet6/in6.h directly, include netinet/in.h"
+literal|"do not include netinet6/in6.h directly, include netinet/in.h.  see RFC2553"
 end_error
 
 begin_endif
@@ -44,25 +44,8 @@ directive|define
 name|_NETINET6_IN6_H_
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|_XOPEN_SOURCE
-end_ifndef
-
-begin_include
-include|#
-directive|include
-file|<sys/queue.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|/*  * Identification of the network protocol stack  */
+comment|/*  * Identification of the network protocol stack  * for *BSD-current/release: http://www.kame.net/dev/cvsweb.cgi/kame/COVERAGE  * has the table of implementation/integration differences.  */
 end_comment
 
 begin_define
@@ -75,7 +58,7 @@ begin_define
 define|#
 directive|define
 name|__KAME_VERSION
-value|"20000701/FreeBSD-current"
+value|"20010528/FreeBSD"
 end_define
 
 begin_comment
@@ -252,7 +235,7 @@ comment|/* IP6 address */
 name|u_int32_t
 name|sin6_scope_id
 decl_stmt|;
-comment|/* intface scope id */
+comment|/* scope zone index */
 block|}
 struct|;
 end_struct
@@ -316,6 +299,15 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|struct
+name|sockaddr_in6
+name|sa6_any
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -658,6 +650,38 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_comment
+comment|/* non standard */
+end_comment
+
+begin_comment
+comment|/* see if two addresses are equal in a scope-conscious manner. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SA6_ARE_ADDR_EQUAL
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+define|\
+value|(((a)->sin6_scope_id == 0 || (b)->sin6_scope_id == 0 || \ 	  ((a)->sin6_scope_id == (b)->sin6_scope_id))&& \ 	 (bcmp(&(a)->sin6_addr,&(b)->sin6_addr, sizeof(struct in6_addr)) == 0))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Unspecified  */
 end_comment
@@ -670,7 +694,7 @@ parameter_list|(
 name|a
 parameter_list|)
 define|\
-value|((*(u_int32_t *)(&(a)->s6_addr[0]) == 0)&&	\ 	 (*(u_int32_t *)(&(a)->s6_addr[4]) == 0)&&	\ 	 (*(u_int32_t *)(&(a)->s6_addr[8]) == 0)&&	\ 	 (*(u_int32_t *)(&(a)->s6_addr[12]) == 0))
+value|((*(const u_int32_t *)(const void *)(&(a)->s6_addr[0]) == 0)&&	\ 	 (*(const u_int32_t *)(const void *)(&(a)->s6_addr[4]) == 0)&&	\ 	 (*(const u_int32_t *)(const void *)(&(a)->s6_addr[8]) == 0)&&	\ 	 (*(const u_int32_t *)(const void *)(&(a)->s6_addr[12]) == 0))
 end_define
 
 begin_comment
@@ -685,7 +709,7 @@ parameter_list|(
 name|a
 parameter_list|)
 define|\
-value|((*(u_int32_t *)(&(a)->s6_addr[0]) == 0)&&	\ 	 (*(u_int32_t *)(&(a)->s6_addr[4]) == 0)&&	\ 	 (*(u_int32_t *)(&(a)->s6_addr[8]) == 0)&&	\ 	 (*(u_int32_t *)(&(a)->s6_addr[12]) == ntohl(1)))
+value|((*(const u_int32_t *)(const void *)(&(a)->s6_addr[0]) == 0)&&	\ 	 (*(const u_int32_t *)(const void *)(&(a)->s6_addr[4]) == 0)&&	\ 	 (*(const u_int32_t *)(const void *)(&(a)->s6_addr[8]) == 0)&&	\ 	 (*(const u_int32_t *)(const void *)(&(a)->s6_addr[12]) == ntohl(1)))
 end_define
 
 begin_comment
@@ -700,7 +724,7 @@ parameter_list|(
 name|a
 parameter_list|)
 define|\
-value|((*(u_int32_t *)(&(a)->s6_addr[0]) == 0)&&	\ 	 (*(u_int32_t *)(&(a)->s6_addr[4]) == 0)&&	\ 	 (*(u_int32_t *)(&(a)->s6_addr[8]) == 0)&&	\ 	 (*(u_int32_t *)(&(a)->s6_addr[12]) != 0)&&	\ 	 (*(u_int32_t *)(&(a)->s6_addr[12]) != ntohl(1)))
+value|((*(const u_int32_t *)(const void *)(&(a)->s6_addr[0]) == 0)&&	\ 	 (*(const u_int32_t *)(const void *)(&(a)->s6_addr[4]) == 0)&&	\ 	 (*(const u_int32_t *)(const void *)(&(a)->s6_addr[8]) == 0)&&	\ 	 (*(const u_int32_t *)(const void *)(&(a)->s6_addr[12]) != 0)&&	\ 	 (*(const u_int32_t *)(const void *)(&(a)->s6_addr[12]) != ntohl(1)))
 end_define
 
 begin_comment
@@ -715,7 +739,7 @@ parameter_list|(
 name|a
 parameter_list|)
 define|\
-value|((*(u_int32_t *)(&(a)->s6_addr[0]) == 0)&&	\ 	 (*(u_int32_t *)(&(a)->s6_addr[4]) == 0)&&	\ 	 (*(u_int32_t *)(&(a)->s6_addr[8]) == ntohl(0x0000ffff)))
+value|((*(const u_int32_t *)(const void *)(&(a)->s6_addr[0]) == 0)&&	\ 	 (*(const u_int32_t *)(const void *)(&(a)->s6_addr[4]) == 0)&&	\ 	 (*(const u_int32_t *)(const void *)(&(a)->s6_addr[8]) == ntohl(0x0000ffff)))
 end_define
 
 begin_comment
@@ -1035,8 +1059,33 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * KAME Scope  */
+comment|/*  * Wildcard Socket  */
 end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/*pre-RFC2553*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IN6_IS_ADDR_ANY
+parameter_list|(
+name|a
+parameter_list|)
+value|IN6_IS_ADDR_UNSPECIFIED(a)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -1046,6 +1095,10 @@ end_ifdef
 
 begin_comment
 comment|/*nonstandard*/
+end_comment
+
+begin_comment
+comment|/*  * KAME Scope  */
 end_comment
 
 begin_define
@@ -1059,10 +1112,36 @@ define|\
 value|((IN6_IS_ADDR_LINKLOCAL(a)) ||	\ 	 (IN6_IS_ADDR_MC_LINKLOCAL(a)))
 end_define
 
+begin_define
+define|#
+directive|define
+name|IFA6_IS_DEPRECATED
+parameter_list|(
+name|a
+parameter_list|)
+define|\
+value|((a)->ia6_lifetime.ia6t_preferred != 0&& \ 	 (a)->ia6_lifetime.ia6t_preferred< time_second)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFA6_IS_INVALID
+parameter_list|(
+name|a
+parameter_list|)
+define|\
+value|((a)->ia6_lifetime.ia6t_expire != 0&& \ 	 (a)->ia6_lifetime.ia6t_expire< time_second)
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_comment
 comment|/*  * IP6 route structure  */
@@ -1273,6 +1352,10 @@ begin_comment
 comment|/* icmp6_filter; icmp6 filter */
 end_comment
 
+begin_comment
+comment|/* RFC2292 options */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1281,7 +1364,7 @@ value|19
 end_define
 
 begin_comment
-comment|/* bool; send/rcv if, src/dst addr */
+comment|/* bool; send/recv if, src/dst addr */
 end_comment
 
 begin_define
@@ -1364,16 +1447,40 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IPV6_BINDV6ONLY
+name|IPV6_V6ONLY
 value|27
 end_define
 
 begin_comment
-comment|/* bool; only bind INET6 at null bind */
+comment|/* bool; only bind INET6 at wildcard bind */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IPV6_BINDV6ONLY
+value|IPV6_V6ONLY
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+literal|1
+end_if
+
 begin_comment
-comment|/* for IPsec */
+comment|/*IPSEC*/
 end_comment
 
 begin_define
@@ -1387,6 +1494,11 @@ begin_comment
 comment|/* struct; get/set security policy */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -1398,8 +1510,14 @@ begin_comment
 comment|/* bool; accept FAITH'ed connections */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|1
+end_if
+
 begin_comment
-comment|/* for IPV6FIREWALL */
+comment|/*IPV6FIREWALL*/
 end_comment
 
 begin_define
@@ -1456,6 +1574,11 @@ end_define
 begin_comment
 comment|/* get entire firewall rule chain */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* to define items, should talk with KAME guys first, for *BSD compatibility */
@@ -1852,6 +1975,16 @@ begin_comment
 comment|/* walk timer for router renumbering */
 end_comment
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/*obsolete*/
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1859,27 +1992,17 @@ name|IPV6CTL_MAPPED_ADDR
 value|23
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notdef
-end_ifdef
-
-begin_comment
-comment|/*__NetBSD__ - reserved, don't delete*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IPV6CTL_BINDV6ONLY
-value|24
-end_define
-
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|IPV6CTL_V6ONLY
+value|24
+end_define
 
 begin_define
 define|#
@@ -1914,6 +2037,61 @@ begin_comment
 comment|/* trigger level for dynamic expire */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IPV6CTL_USETEMPADDR
+value|32
+end_define
+
+begin_comment
+comment|/* use temporary addresses (RFC3041) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6CTL_TEMPPLTIME
+value|33
+end_define
+
+begin_comment
+comment|/* preferred lifetime for tmpaddrs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6CTL_TEMPVLTIME
+value|34
+end_define
+
+begin_comment
+comment|/* valid lifetime for tmpaddrs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6CTL_AUTO_LINKLOCAL
+value|35
+end_define
+
+begin_comment
+comment|/* automatic link-local addr assign */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6CTL_RIP6STATS
+value|36
+end_define
+
+begin_comment
+comment|/* raw_ip6 stats */
+end_comment
+
 begin_comment
 comment|/* New entries should be added here from current IPV6CTL_MAXID value. */
 end_comment
@@ -1926,7 +2104,7 @@ begin_define
 define|#
 directive|define
 name|IPV6CTL_MAXID
-value|28
+value|37
 end_define
 
 begin_endif
@@ -1941,13 +2119,6 @@ end_comment
 begin_comment
 comment|/*  * Redefinition of mbuf flags  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|M_ANYCAST6
-value|M_PROTO1
-end_define
 
 begin_define
 define|#
@@ -1986,18 +2157,6 @@ end_ifdef
 begin_struct_decl
 struct_decl|struct
 name|cmsghdr
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|mbuf
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|ifnet
 struct_decl|;
 end_struct_decl
 
@@ -2400,7 +2559,8 @@ expr|struct
 name|in6_addr
 operator|*
 operator|,
-name|u_int
+name|unsigned
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2417,11 +2577,28 @@ expr|struct
 name|cmsghdr
 operator|*
 operator|,
-name|u_int
+name|unsigned
+name|int
 operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* not implemented yet */
+end_comment
+
+begin_endif
+unit|extern int inet6_rthdr_reverse __P((const struct cmsghdr *, struct cmsghdr *));
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|extern
@@ -2479,18 +2656,264 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|inet6_rthdr_reverse
+name|inet6_opt_init
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+name|size_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|inet6_opt_append
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+name|size_t
+operator|,
+name|int
+operator|,
+name|u_int8_t
+operator|,
+name|size_t
+operator|,
+name|u_int8_t
+operator|,
+name|void
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|inet6_opt_finish
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+name|size_t
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|inet6_opt_set_val
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+name|size_t
+operator|,
+name|void
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|inet6_opt_next
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+name|size_t
+operator|,
+name|int
+operator|,
+name|u_int8_t
+operator|*
+operator|,
+name|size_t
+operator|*
+operator|,
+name|void
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|inet6_opt_find
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+name|size_t
+operator|,
+name|int
+operator|,
+name|u_int8_t
+operator|,
+name|size_t
+operator|*
+operator|,
+name|void
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|inet6_opt_get_val
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+name|size_t
+operator|,
+name|void
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|size_t
+name|inet6_rth_space
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+modifier|*
+name|inet6_rth_init
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|inet6_rth_add
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|,
+specifier|const
+expr|struct
+name|in6_addr
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|inet6_rth_reverse
 name|__P
 argument_list|(
 operator|(
 specifier|const
-expr|struct
-name|cmsghdr
+name|void
 operator|*
 operator|,
-expr|struct
-name|cmsghdr
+name|void
 operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|inet6_rth_segments
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|in6_addr
+modifier|*
+name|inet6_rth_getaddr
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|void
+operator|*
+operator|,
+name|int
 operator|)
 argument_list|)
 decl_stmt|;

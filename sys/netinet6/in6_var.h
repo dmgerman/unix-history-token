@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: in6_var.h,v 1.33 2000/05/17 05:07:26 jinmei Exp $	*/
+comment|/*	$KAME: in6_var.h,v 1.56 2001/03/29 05:34:31 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -113,13 +113,18 @@ name|struct
 name|in6_addrlifetime
 name|ia6_lifetime
 decl_stmt|;
-comment|/* NULL = infty */
 name|struct
 name|ifprefix
 modifier|*
 name|ia6_ifpr
 decl_stmt|;
 comment|/* back pointer to ifprefix */
+name|struct
+name|nd_prefix
+modifier|*
+name|ia6_ndpr
+decl_stmt|;
+comment|/* back pointer to the ND prefix 				     * (for autoconfigured addresses only) 				     */
 block|}
 struct|;
 end_struct
@@ -1010,11 +1015,29 @@ name|SIOCGPRLST_IN6
 value|_IOWR('i', 75, struct in6_prlist)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|OSIOCGIFINFO_IN6
+value|_IOWR('i', 76, struct in6_ondireq)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
 name|SIOCGIFINFO_IN6
-value|_IOWR('i', 76, struct in6_ndireq)
+value|_IOWR('i', 108, struct in6_ndireq)
 end_define
 
 begin_define
@@ -1260,6 +1283,50 @@ end_define
 
 begin_comment
 comment|/* deprecated address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IN6_IFF_NODAD
+value|0x20
+end_define
+
+begin_comment
+comment|/* don't perform DAD on this address 					 * (used only at first SIOC* call) 					 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IN6_IFF_AUTOCONF
+value|0x40
+end_define
+
+begin_comment
+comment|/* autoconfigurable address. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IN6_IFF_TEMPORARY
+value|0x80
+end_define
+
+begin_comment
+comment|/* temporary (anonymous) address. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IN6_IFF_NOPFX
+value|0x8000
+end_define
+
+begin_comment
+comment|/* skip kernel prefix management. 					 * XXX: this should be temporary. 					 */
 end_comment
 
 begin_comment
@@ -1594,7 +1661,7 @@ comment|/* struct ifnet *ifp; */
 define|\
 comment|/* struct in6_multi *in6m; */
 define|\
-value|do { \ 	register struct ifmultiaddr *ifma; \ 	for (ifma = (ifp)->if_multiaddrs.lh_first; ifma; \ 	     ifma = ifma->ifma_link.le_next) { \ 		if (ifma->ifma_addr->sa_family == AF_INET6 \&& IN6_ARE_ADDR_EQUAL(&((struct sockaddr_in6 *)ifma->ifma_addr)->sin6_addr, \&(addr))) \ 			break; \ 	} \ 	(in6m) = (struct in6_multi *)(ifma ? ifma->ifma_protospec : 0); \ } while(0)
+value|do { \ 	struct ifmultiaddr *ifma; \ 	for (ifma = (ifp)->if_multiaddrs.lh_first; ifma; \ 	     ifma = ifma->ifma_link.le_next) { \ 		if (ifma->ifma_addr->sa_family == AF_INET6 \&& IN6_ARE_ADDR_EQUAL(&((struct sockaddr_in6 *)ifma->ifma_addr)->sin6_addr, \&(addr))) \ 			break; \ 	} \ 	(in6m) = (struct in6_multi *)(ifma ? ifma->ifma_protospec : 0); \ } while(0)
 end_define
 
 begin_comment
@@ -1636,30 +1703,6 @@ value|do { \ 	(step).i_in6m = in6_multihead.lh_first; \ 		IN6_NEXT_MULTI((step),
 end_define
 
 begin_decl_stmt
-name|int
-name|in6_ifinit
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|ifnet
-operator|*
-operator|,
-expr|struct
-name|in6_ifaddr
-operator|*
-operator|,
-expr|struct
-name|sockaddr_in6
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|in6_multi
 modifier|*
@@ -1697,24 +1740,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
-name|in6_ifscrub
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|ifnet
-operator|*
-operator|,
-expr|struct
-name|in6_ifaddr
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|extern
 name|int
 name|in6_ifindex2scopeid
@@ -1736,6 +1761,9 @@ argument_list|(
 operator|(
 expr|struct
 name|in6_addr
+operator|*
+operator|,
+name|u_char
 operator|*
 operator|)
 argument_list|)
@@ -1786,6 +1814,28 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|in6_update_ifa
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ifnet
+operator|*
+operator|,
+expr|struct
+name|in6_aliasreq
+operator|*
+operator|,
+expr|struct
+name|in6_ifaddr
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|in6_purgeaddr
 name|__P
@@ -1794,7 +1844,31 @@ operator|(
 expr|struct
 name|ifaddr
 operator|*
-operator|,
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|in6if_do_dad
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ifnet
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|in6_purgeif
+name|__P
+argument_list|(
+operator|(
 expr|struct
 name|ifnet
 operator|*
@@ -1906,6 +1980,7 @@ name|ip6_sprintf
 name|__P
 argument_list|(
 operator|(
+specifier|const
 expr|struct
 name|in6_addr
 operator|*
@@ -2061,6 +2136,91 @@ argument_list|(
 operator|(
 expr|struct
 name|ifnet
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|in6_is_addr_deprecated
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|sockaddr_in6
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_struct_decl
+struct_decl|struct
+name|inpcb
+struct_decl|;
+end_struct_decl
+
+begin_decl_stmt
+name|int
+name|in6_embedscope
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|in6_addr
+operator|*
+operator|,
+specifier|const
+expr|struct
+name|sockaddr_in6
+operator|*
+operator|,
+expr|struct
+name|inpcb
+operator|*
+operator|,
+expr|struct
+name|ifnet
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|in6_recoverscope
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|sockaddr_in6
+operator|*
+operator|,
+specifier|const
+expr|struct
+name|in6_addr
+operator|*
+operator|,
+expr|struct
+name|ifnet
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|in6_clearscope
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|in6_addr
 operator|*
 operator|)
 argument_list|)

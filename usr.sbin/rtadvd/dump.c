@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$KAME: dump.c,v 1.10 2000/05/23 11:31:25 itojun Exp $	*/
+comment|/*	$KAME: dump.c,v 1.16 2001/03/21 17:41:13 jinmei Exp $	*/
 end_comment
 
 begin_comment
@@ -17,6 +17,12 @@ begin_include
 include|#
 directive|include
 file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
 end_include
 
 begin_include
@@ -227,6 +233,29 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|rtpref_str
+index|[]
+init|=
+block|{
+literal|"medium"
+block|,
+comment|/* 00 */
+literal|"high"
+block|,
+comment|/* 01 */
+literal|"rsv"
+block|,
+comment|/* 10 */
+literal|"low"
+comment|/* 11 */
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|char
@@ -357,6 +386,19 @@ decl_stmt|;
 name|int
 name|first
 decl_stmt|;
+name|struct
+name|timeval
+name|now
+decl_stmt|;
+name|gettimeofday
+argument_list|(
+operator|&
+name|now
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+comment|/* XXX: unused in most cases */
 for|for
 control|(
 name|rai
@@ -610,7 +652,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"  Flags: %s%s%s MTU: %d\n"
+literal|"  Flags: %s%s%s, "
 argument_list|,
 name|rai
 operator|->
@@ -640,6 +682,33 @@ else|:
 endif|#
 directive|endif
 literal|""
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"Preference: %s, "
+argument_list|,
+name|rtpref_str
+index|[
+operator|(
+name|rai
+operator|->
+name|rtpref
+operator|>>
+literal|3
+operator|)
+operator|&
+literal|0xff
+index|]
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"MTU: %d\n"
 argument_list|,
 name|rai
 operator|->
@@ -686,6 +755,23 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|rai
+operator|->
+name|clockskew
+condition|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"  Clock skew: %ldsec\n"
+argument_list|,
+name|rai
+operator|->
+name|clockskew
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|first
@@ -812,7 +898,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"vltime: infinity, "
+literal|"vltime: infinity"
 argument_list|)
 expr_stmt|;
 else|else
@@ -820,7 +906,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"vltime: %ld, "
+literal|"vltime: %ld"
 argument_list|,
 operator|(
 name|long
@@ -828,6 +914,50 @@ operator|)
 name|pfx
 operator|->
 name|validlifetime
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pfx
+operator|->
+name|vltimeexpire
+operator|!=
+literal|0
+condition|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"(decr,expire %ld), "
+argument_list|,
+operator|(
+name|long
+operator|)
+name|pfx
+operator|->
+name|vltimeexpire
+operator|>
+name|now
+operator|.
+name|tv_sec
+condition|?
+name|pfx
+operator|->
+name|vltimeexpire
+operator|-
+name|now
+operator|.
+name|tv_sec
+else|:
+literal|0
+argument_list|)
+expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|", "
 argument_list|)
 expr_stmt|;
 if|if
@@ -842,7 +972,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"pltime: infinity, "
+literal|"pltime: infinity"
 argument_list|)
 expr_stmt|;
 else|else
@@ -850,7 +980,7 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"pltime: %ld, "
+literal|"pltime: %ld"
 argument_list|,
 operator|(
 name|long
@@ -858,6 +988,50 @@ operator|)
 name|pfx
 operator|->
 name|preflifetime
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|pfx
+operator|->
+name|pltimeexpire
+operator|!=
+literal|0
+condition|)
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|"(decr,expire %ld), "
+argument_list|,
+operator|(
+name|long
+operator|)
+name|pfx
+operator|->
+name|pltimeexpire
+operator|>
+name|now
+operator|.
+name|tv_sec
+condition|?
+name|pfx
+operator|->
+name|pltimeexpire
+operator|-
+name|now
+operator|.
+name|tv_sec
+else|:
+literal|0
+argument_list|)
+expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|fp
+argument_list|,
+literal|", "
 argument_list|)
 expr_stmt|;
 name|fprintf

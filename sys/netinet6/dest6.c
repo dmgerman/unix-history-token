@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: dest6.c,v 1.12 2000/05/05 11:00:57 sumikawa Exp $	*/
+comment|/*	$KAME: dest6.c,v 1.27 2001/03/29 05:34:30 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -33,6 +33,12 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
 end_include
 
 begin_include
@@ -69,6 +75,12 @@ begin_include
 include|#
 directive|include
 file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kernel.h>
 end_include
 
 begin_include
@@ -140,7 +152,6 @@ decl_stmt|,
 name|proto
 decl_stmt|;
 block|{
-specifier|register
 name|struct
 name|mbuf
 modifier|*
@@ -168,6 +179,22 @@ name|u_int8_t
 modifier|*
 name|opt
 decl_stmt|;
+name|struct
+name|ip6_hdr
+modifier|*
+name|ip6
+decl_stmt|;
+name|ip6
+operator|=
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+expr|struct
+name|ip6_hdr
+operator|*
+argument_list|)
+expr_stmt|;
 comment|/* validation of the length of the header */
 ifndef|#
 directive|ifndef
@@ -420,9 +447,6 @@ expr_stmt|;
 break|break;
 default|default:
 comment|/* unknown option */
-if|if
-condition|(
-operator|(
 name|optlen
 operator|=
 name|ip6_unknown_opt
@@ -441,7 +465,10 @@ name|u_int8_t
 operator|*
 argument_list|)
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|optlen
 operator|==
 operator|-
 literal|1

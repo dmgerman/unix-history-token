@@ -1129,7 +1129,7 @@ value|MBUFLOCK(						\ 	MEXTFREE1(m);							\ )
 end_define
 
 begin_comment
-comment|/*  * MFREE(struct mbuf *m, struct mbuf *n)  * Free a single mbuf and associated external storage.  * Place the successor, if any, in n.  */
+comment|/*  * MFREE(struct mbuf *m, struct mbuf *n)  * Free a single mbuf and associated external storage.  * Place the successor, if any, in n.  *  * we do need to check non-first mbuf for m_aux, since some of existing  * code does not call M_PREPEND properly.  * (example: call to bpf_mtap from drivers)  */
 end_comment
 
 begin_define
@@ -1141,7 +1141,7 @@ name|m
 parameter_list|,
 name|n
 parameter_list|)
-value|MBUFLOCK(						\ 	struct mbuf *_mm = (m);						\ 									\ 	KASSERT(_mm->m_type != MT_FREE, ("freeing free mbuf"));		\ 	mbtypes[_mm->m_type]--;						\ 	if (_mm->m_flags& M_EXT)					\ 		MEXTFREE1(m);						\ 	(n) = _mm->m_next;						\ 	_mm->m_type = MT_FREE;						\ 	mbtypes[MT_FREE]++;						\ 	_mm->m_next = mmbfree;						\ 	mmbfree = _mm;							\ 	MMBWAKEUP();							\ )
+value|MBUFLOCK(						\ 	struct mbuf *_mm = (m);						\ 									\ 	KASSERT(_mm->m_type != MT_FREE, ("freeing free mbuf"));		\ 	mbtypes[_mm->m_type]--;						\ 	if ((_mm->m_flags& M_PKTHDR) != 0&& _mm->m_pkthdr.aux) {	\ 		m_freem(_mm->m_pkthdr.aux);				\ 		_mm->m_pkthdr.aux = NULL;				\ 	}								\ 	if (_mm->m_flags& M_EXT)					\ 		MEXTFREE1(m);						\ 	(n) = _mm->m_next;						\ 	_mm->m_type = MT_FREE;						\ 	mbtypes[MT_FREE]++;						\ 	_mm->m_next = mmbfree;						\ 	mmbfree = _mm;							\ 	MMBWAKEUP();							\ )
 end_define
 
 begin_comment
@@ -1314,6 +1314,10 @@ name|af
 decl_stmt|;
 name|int
 name|type
+decl_stmt|;
+name|void
+modifier|*
+name|p
 decl_stmt|;
 block|}
 struct|;
@@ -1937,6 +1941,52 @@ operator|,
 name|int
 operator|,
 name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|mbuf
+modifier|*
+name|m_aux_add2
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|void
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|mbuf
+modifier|*
+name|m_aux_find2
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|,
+name|int
+operator|,
+name|int
+operator|,
+name|void
+operator|*
 operator|)
 argument_list|)
 decl_stmt|;

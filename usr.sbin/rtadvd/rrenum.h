@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$KAME$	*/
+comment|/*	$KAME: rrenum.h,v 1.3 2001/01/21 15:37:14 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -14,27 +14,22 @@ name|__P
 argument_list|(
 operator|(
 name|int
-name|len
 operator|,
 expr|struct
 name|icmp6_router_renum
 operator|*
-name|rr
 operator|,
 expr|struct
 name|in6_pktinfo
 operator|*
-name|pi
 operator|,
 expr|struct
 name|sockaddr_in6
 operator|*
-name|from
 operator|,
 expr|struct
 name|in6_addr
 operator|*
-name|dst
 operator|)
 argument_list|)
 decl_stmt|;

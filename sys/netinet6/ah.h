@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: ah.h,v 1.10 2000/07/02 13:23:33 itojun Exp $	*/
+comment|/*	$KAME: ah.h,v 1.13 2000/10/18 21:28:00 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -27,11 +27,31 @@ directive|define
 name|_NETINET6_AH_H_
 end_define
 
-begin_struct_decl
-struct_decl|struct
-name|secasvar
-struct_decl|;
-end_struct_decl
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_LKM
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|"opt_inet.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
@@ -88,6 +108,18 @@ comment|/* Authentication data */
 block|}
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_struct_decl
+struct_decl|struct
+name|secasvar
+struct_decl|;
+end_struct_decl
 
 begin_struct
 struct|struct
@@ -210,18 +242,19 @@ name|AH_MAXSUMSIZE
 value|16
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|struct
 name|ah_algorithm
-name|ah_algorithms
-index|[]
+modifier|*
+name|ah_algorithm_lookup
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -310,6 +343,7 @@ name|caddr_t
 operator|,
 name|size_t
 operator|,
+specifier|const
 expr|struct
 name|ah_algorithm
 operator|*

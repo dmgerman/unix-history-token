@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: ipcomp.h,v 1.7 2000/05/18 12:45:13 sumikawa Exp $	*/
+comment|/*	$KAME: ipcomp.h,v 1.8 2000/09/26 07:55:14 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -26,6 +26,32 @@ define|#
 directive|define
 name|_NETINET6_IPCOMP_H_
 end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_LKM
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|"opt_inet.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
@@ -164,10 +190,17 @@ end_struct_decl
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|struct
 name|ipcomp_algorithm
-name|ipcomp_algorithms
-index|[]
+modifier|*
+name|ipcomp_algorithm_lookup
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 

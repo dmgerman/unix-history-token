@@ -1431,32 +1431,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|IPSEC
-comment|/* drop it if it does not match the policy */
-comment|/* XXX Is there meaning of check in here ? */
-if|if
-condition|(
-name|ipsec4_in_reject
-argument_list|(
-name|m
-argument_list|,
-name|NULL
-argument_list|)
-condition|)
-block|{
-name|ipsecstat
-operator|.
-name|in_polvio
-operator|++
-expr_stmt|;
-goto|goto
-name|freeit
-goto|;
-block|}
-endif|#
-directive|endif
 comment|/* 	 * Message type specific processing. 	 */
 if|if
 condition|(

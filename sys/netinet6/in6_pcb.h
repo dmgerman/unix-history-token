@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: in6_pcb.h,v 1.5 2000/07/03 06:19:53 itojun Exp $	*/
+comment|/*	$KAME: in6_pcb.h,v 1.13 2001/02/06 09:16:53 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -269,7 +269,7 @@ operator|,
 name|u_int
 operator|,
 expr|struct
-name|in6_addr
+name|sockaddr
 operator|*
 operator|,
 name|u_int
@@ -482,57 +482,6 @@ expr|struct
 name|mbuf
 operator|*
 name|m
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|in6_embedscope
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|in6_addr
-operator|*
-operator|,
-specifier|const
-expr|struct
-name|sockaddr_in6
-operator|*
-operator|,
-expr|struct
-name|inpcb
-operator|*
-operator|,
-expr|struct
-name|ifnet
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|in6_recoverscope
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|sockaddr_in6
-operator|*
-operator|,
-specifier|const
-expr|struct
-name|in6_addr
-operator|*
-operator|,
-expr|struct
-name|ifnet
-operator|*
 operator|)
 argument_list|)
 decl_stmt|;

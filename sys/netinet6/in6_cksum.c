@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: in6_cksum.c,v 1.9 2000/09/09 15:33:31 itojun Exp $	*/
+comment|/*	$KAME: in6_cksum.c,v 1.10 2000/12/03 00:53:59 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -88,7 +88,6 @@ name|off
 parameter_list|,
 name|len
 parameter_list|)
-specifier|register
 name|struct
 name|mbuf
 modifier|*
@@ -103,18 +102,15 @@ decl_stmt|,
 name|len
 decl_stmt|;
 block|{
-specifier|register
 name|u_int16_t
 modifier|*
 name|w
 decl_stmt|;
-specifier|register
 name|int
 name|sum
 init|=
 literal|0
 decl_stmt|;
-specifier|register
 name|int
 name|mlen
 init|=

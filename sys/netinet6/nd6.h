@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: nd6.h,v 1.23 2000/06/04 12:54:57 itojun Exp $	*/
+comment|/*	$KAME: nd6.h,v 1.55 2001/04/27 15:09:49 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -49,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/callout.h>
 end_include
 
 begin_struct
@@ -107,12 +113,13 @@ name|ND6_LLINFO_NOSTATE
 value|-2
 end_define
 
-begin_define
-define|#
-directive|define
-name|ND6_LLINFO_WAITDELETE
-value|-1
-end_define
+begin_comment
+comment|/*  * We don't need the WAITDELETE state any more, but we keep the definition  * in a comment line instead of removing it. This is necessary to avoid  * unintentionally reusing the value for another purpose, which might  * affect backward compatibility with old applications.  * (20000711 jinmei@kame.net)  */
+end_comment
+
+begin_comment
+comment|/* #define ND6_LLINFO_WAITDELETE	-1 */
+end_comment
 
 begin_define
 define|#
@@ -198,6 +205,28 @@ comment|/* CurHopLimit */
 name|u_int8_t
 name|receivedra
 decl_stmt|;
+comment|/* the followings are for privacy extension for addrconf */
+name|u_int8_t
+name|randomseed0
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* upper 64 bits of MD5 digest */
+name|u_int8_t
+name|randomseed1
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* lower 64 bits (usually the EUI64 IFID) */
+name|u_int8_t
+name|randomid
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* current random ID */
 block|}
 struct|;
 end_struct
@@ -299,6 +328,36 @@ end_struct
 
 begin_struct
 struct|struct
+name|in6_defrouter
+block|{
+name|struct
+name|sockaddr_in6
+name|rtaddr
+decl_stmt|;
+name|u_char
+name|flags
+decl_stmt|;
+name|u_short
+name|rtlifetime
+decl_stmt|;
+name|u_long
+name|expire
+decl_stmt|;
+name|u_short
+name|if_index
+decl_stmt|;
+block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|in6_prlist
 block|{
 name|char
@@ -359,6 +418,122 @@ end_struct
 
 begin_struct
 struct|struct
+name|in6_prefix
+block|{
+name|struct
+name|sockaddr_in6
+name|prefix
+decl_stmt|;
+name|struct
+name|prf_ra
+name|raflags
+decl_stmt|;
+name|u_char
+name|prefixlen
+decl_stmt|;
+name|u_char
+name|origin
+decl_stmt|;
+name|u_long
+name|vltime
+decl_stmt|;
+name|u_long
+name|pltime
+decl_stmt|;
+name|u_long
+name|expire
+decl_stmt|;
+name|u_int32_t
+name|flags
+decl_stmt|;
+name|int
+name|refcnt
+decl_stmt|;
+name|u_short
+name|if_index
+decl_stmt|;
+name|u_short
+name|advrtrs
+decl_stmt|;
+comment|/* number of advertisement routers */
+comment|/* struct sockaddr_in6 advrtr[] */
+block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|__packed__
+operator|)
+argument_list|)
+struct|;
+end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_struct
+struct|struct
+name|in6_ondireq
+block|{
+name|char
+name|ifname
+index|[
+name|IFNAMSIZ
+index|]
+decl_stmt|;
+struct|struct
+block|{
+name|u_int32_t
+name|linkmtu
+decl_stmt|;
+comment|/* LinkMTU */
+name|u_int32_t
+name|maxmtu
+decl_stmt|;
+comment|/* Upper bound of LinkMTU */
+name|u_int32_t
+name|basereachable
+decl_stmt|;
+comment|/* BaseReachableTime */
+name|u_int32_t
+name|reachable
+decl_stmt|;
+comment|/* Reachable Time */
+name|u_int32_t
+name|retrans
+decl_stmt|;
+comment|/* Retrans Timer */
+name|u_int32_t
+name|flags
+decl_stmt|;
+comment|/* Flags */
+name|int
+name|recalctm
+decl_stmt|;
+comment|/* BaseReacable re-calculation timer */
+name|u_int8_t
+name|chlim
+decl_stmt|;
+comment|/* CurHopLimit */
+name|u_int8_t
+name|receivedra
+decl_stmt|;
+block|}
+name|ndi
+struct|;
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_struct
+struct|struct
 name|in6_ndireq
 block|{
 name|char
@@ -391,6 +566,24 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* Prefix status */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NDPRF_ONLINK
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|NDPRF_DETACHED
+value|0x2
+end_define
 
 begin_comment
 comment|/* protocol constants */
@@ -495,6 +688,50 @@ end_define
 
 begin_comment
 comment|/* 1024 * 1.5 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEF_TEMP_VALID_LIFETIME
+value|604800
+end_define
+
+begin_comment
+comment|/* 1 week */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DEF_TEMP_PREFERRED_LIFETIME
+value|86400
+end_define
+
+begin_comment
+comment|/* 1 day */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TEMPADDR_REGEN_ADVANCE
+value|5
+end_define
+
+begin_comment
+comment|/* sec */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_TEMP_DESYNC_FACTOR
+value|600
+end_define
+
+begin_comment
+comment|/* 10 min */
 end_comment
 
 begin_define
@@ -612,6 +849,10 @@ name|struct
 name|prf_ra
 name|ndpr_flags
 decl_stmt|;
+name|u_int32_t
+name|ndpr_stateflags
+decl_stmt|;
+comment|/* actual state flags */
 comment|/* list of routers that advertise the prefix: */
 name|LIST_HEAD
 argument_list|(
@@ -624,18 +865,10 @@ expr_stmt|;
 name|u_char
 name|ndpr_plen
 decl_stmt|;
-struct|struct
-name|ndpr_stateflags
-block|{
-comment|/* if this prefix can be regarded as on-link */
-name|u_char
-name|onlink
-range|:
-literal|1
+name|int
+name|ndpr_refcnt
 decl_stmt|;
-block|}
-name|ndpr_stateflags
-struct|;
+comment|/* reference couter from addresses */
 block|}
 struct|;
 end_struct
@@ -666,20 +899,6 @@ define|#
 directive|define
 name|ndpr_raf_auto
 value|ndpr_flags.autonomous
-end_define
-
-begin_define
-define|#
-directive|define
-name|ndpr_statef_onlink
-value|ndpr_stateflags.onlink
-end_define
-
-begin_define
-define|#
-directive|define
-name|ndpr_statef_addmark
-value|ndpr_stateflags.addmark
 end_define
 
 begin_comment
@@ -881,6 +1100,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|nd6_gctimer
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|struct
 name|llinfo_nd6
 name|llinfo_nd6
@@ -912,6 +1138,31 @@ name|nd_prefix
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|nd6_debug
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|nd6log
+parameter_list|(
+name|x
+parameter_list|)
+value|do { if (nd6_debug) log x; } while (0)
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|callout
+name|nd6_timer_ch
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* nd6_rtr.c */
 end_comment
@@ -922,6 +1173,50 @@ name|int
 name|nd6_defifindex
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ip6_desync_factor
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* seconds */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|u_int32_t
+name|ip6_temp_preferred_lifetime
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* seconds */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|u_int32_t
+name|ip6_temp_valid_lifetime
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* seconds */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ip6_temp_regen_advance
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* seconds */
+end_comment
 
 begin_union
 union|union
@@ -1254,7 +1549,9 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
+name|struct
+name|llinfo_nd6
+modifier|*
 name|nd6_free
 name|__P
 argument_list|(
@@ -1337,26 +1634,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
-name|nd6_p2p_rtrequest
-name|__P
-argument_list|(
-operator|(
-name|int
-operator|,
-expr|struct
-name|rtentry
-operator|*
-operator|,
-expr|struct
-name|sockaddr
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|nd6_ioctl
 name|__P
@@ -1402,10 +1679,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* for test */
-end_comment
 
 begin_decl_stmt
 name|int
@@ -1466,6 +1739,20 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|nd6_need_cache
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ifnet
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* nd6_nbr.c */
 end_comment
@@ -1498,10 +1785,12 @@ expr|struct
 name|ifnet
 operator|*
 operator|,
+specifier|const
 expr|struct
 name|in6_addr
 operator|*
 operator|,
+specifier|const
 expr|struct
 name|in6_addr
 operator|*
@@ -1546,10 +1835,12 @@ expr|struct
 name|ifnet
 operator|*
 operator|,
+specifier|const
 expr|struct
 name|in6_addr
 operator|*
 operator|,
+specifier|const
 expr|struct
 name|in6_addr
 operator|*
@@ -1589,6 +1880,20 @@ name|ifaddr
 operator|*
 operator|,
 name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|nd6_dad_stop
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ifaddr
 operator|*
 operator|)
 argument_list|)
@@ -1756,6 +2061,57 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|nd6_prelist_add
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|nd_prefix
+operator|*
+operator|,
+expr|struct
+name|nd_defrouter
+operator|*
+operator|,
+expr|struct
+name|nd_prefix
+operator|*
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nd6_prefix_onlink
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|nd_prefix
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|nd6_prefix_offlink
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|nd_prefix
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|pfxlist_onlink_check
 name|__P
@@ -1788,17 +2144,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|in6_ifdel
+name|struct
+name|nd_prefix
+modifier|*
+name|nd6_prefix_lookup
 name|__P
 argument_list|(
 operator|(
 expr|struct
-name|ifnet
-operator|*
-operator|,
-expr|struct
-name|in6_addr
+name|nd_prefix
 operator|*
 operator|)
 argument_list|)
@@ -1844,6 +2198,23 @@ name|nd6_setdefaultiface
 name|__P
 argument_list|(
 operator|(
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|in6_tmpifadd
+name|__P
+argument_list|(
+operator|(
+specifier|const
+expr|struct
+name|in6_ifaddr
+operator|*
+operator|,
 name|int
 operator|)
 argument_list|)

@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: ah_output.c,v 1.22 2000/07/03 13:23:28 itojun Exp $	*/
+comment|/*	$KAME: ah_output.c,v 1.30 2001/02/21 00:50:53 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -216,6 +216,12 @@ directive|include
 file|<net/net_osdep.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -233,6 +239,11 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * compute AH header size.  * transport mode only.  for tunnel mode, we should implement  * virtual interface, and control MTU/MSS by the interface MTU.  */
 end_comment
@@ -249,6 +260,7 @@ modifier|*
 name|isr
 decl_stmt|;
 block|{
+specifier|const
 name|struct
 name|ah_algorithm
 modifier|*
@@ -319,15 +331,14 @@ goto|;
 comment|/* we need transport mode AH. */
 name|algo
 operator|=
-operator|&
-name|ah_algorithms
-index|[
+name|ah_algorithm_lookup
+argument_list|(
 name|isr
 operator|->
 name|sav
 operator|->
 name|alg_auth
-index|]
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -410,6 +421,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_comment
 comment|/*  * Modify the packet so that it includes the authentication data.  * The mbuf passed must start with IPv4 header.  *  * assumes that the first mbuf contains IPv4 header + option only.  * the function does not modify m.  */
 end_comment
@@ -442,6 +459,7 @@ name|isr
 operator|->
 name|sav
 decl_stmt|;
+specifier|const
 name|struct
 name|ah_algorithm
 modifier|*
@@ -590,14 +608,53 @@ return|;
 block|}
 name|algo
 operator|=
-operator|&
-name|ah_algorithms
-index|[
+name|ah_algorithm_lookup
+argument_list|(
 name|sav
 operator|->
 name|alg_auth
-index|]
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|algo
+condition|)
+block|{
+name|ipseclog
+argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
+literal|"ah4_output: unsupported algorithm: "
+literal|"SPI=%u\n"
+operator|,
+operator|(
+name|u_int32_t
+operator|)
+name|ntohl
+argument_list|(
+name|sav
+operator|->
+name|spi
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+name|ipsecstat
+operator|.
+name|out_inval
+operator|++
+expr_stmt|;
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+return|return
+name|EINVAL
+return|;
+block|}
 name|spi
 operator|=
 name|sav
@@ -1312,6 +1369,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Calculate AH length */
 end_comment
@@ -1328,6 +1390,7 @@ modifier|*
 name|sav
 decl_stmt|;
 block|{
+specifier|const
 name|struct
 name|ah_algorithm
 modifier|*
@@ -1340,14 +1403,21 @@ name|ahlen
 decl_stmt|;
 name|algo
 operator|=
-operator|&
-name|ah_algorithms
-index|[
+name|ah_algorithm_lookup
+argument_list|(
 name|sav
 operator|->
 name|alg_auth
-index|]
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|algo
+condition|)
+return|return
+literal|0
+return|;
 if|if
 condition|(
 name|sav
@@ -1500,6 +1570,7 @@ name|isr
 operator|->
 name|sav
 decl_stmt|;
+specifier|const
 name|struct
 name|ah_algorithm
 modifier|*
@@ -1841,14 +1912,53 @@ return|;
 block|}
 name|algo
 operator|=
-operator|&
-name|ah_algorithms
-index|[
+name|ah_algorithm_lookup
+argument_list|(
 name|sav
 operator|->
 name|alg_auth
-index|]
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|algo
+condition|)
+block|{
+name|ipseclog
+argument_list|(
+operator|(
+name|LOG_ERR
+operator|,
+literal|"ah6_output: unsupported algorithm: "
+literal|"SPI=%u\n"
+operator|,
+operator|(
+name|u_int32_t
+operator|)
+name|ntohl
+argument_list|(
+name|sav
+operator|->
+name|spi
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
+name|ipsec6stat
+operator|.
+name|out_inval
+operator|++
+expr_stmt|;
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+return|return
+name|EINVAL
+return|;
+block|}
 name|spi
 operator|=
 name|sav
@@ -2068,7 +2178,7 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
-name|ipsecstat
+name|ipsec6stat
 operator|.
 name|out_inval
 operator|++
@@ -2186,6 +2296,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
 
 begin_comment
 comment|/*  * Find the final destination if there is loose/strict source routing option.  * Returns NULL if there's no source routing options.  * Returns NULL on errors too.  * Note that this function will return a pointer INTO the given parameter,  * struct mbuf *m.  * The mbuf must be pulled up toward, at least, ip option part.  */
@@ -2572,6 +2688,11 @@ name|NULL
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

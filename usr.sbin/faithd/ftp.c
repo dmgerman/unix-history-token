@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$KAME$	*/
+comment|/*	$KAME: ftp.c,v 1.10 2000/09/14 00:23:39 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -2332,7 +2332,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|exit_error
+name|exit_failure
 argument_list|(
 literal|"setsockopt(IPV6_FAITH): %s"
 argument_list|,
@@ -4809,6 +4809,12 @@ operator|.
 name|ai_family
 operator|=
 name|AF_UNSPEC
+expr_stmt|;
+name|hints
+operator|.
+name|ai_socktype
+operator|=
+name|SOCK_STREAM
 expr_stmt|;
 name|error
 operator|=

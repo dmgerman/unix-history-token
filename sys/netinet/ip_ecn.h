@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: ip_ecn.h,v 1.5 2000/03/27 04:58:38 sumikawa Exp $	*/
+comment|/*	$KAME: ip_ecn.h,v 1.6 2001/05/03 14:51:48 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -14,6 +14,32 @@ end_comment
 begin_comment
 comment|/*  * ECN consideration on tunnel ingress/egress operation.  * http://www.aciri.org/floyd/papers/draft-ipsec-ecn-00.txt  */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_LKM
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|"opt_inet.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -66,6 +92,7 @@ operator|,
 name|u_int8_t
 operator|*
 operator|,
+specifier|const
 name|u_int8_t
 operator|*
 operator|)
@@ -82,6 +109,7 @@ argument_list|(
 operator|(
 name|int
 operator|,
+specifier|const
 name|u_int8_t
 operator|*
 operator|,

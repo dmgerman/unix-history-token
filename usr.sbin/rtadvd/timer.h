@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$KAME: timer.h,v 1.2 2000/05/16 13:34:14 itojun Exp $	*/
+comment|/*	$KAME: timer.h,v 1.3 2000/05/27 11:30:43 jinmei Exp $	*/
 end_comment
 
 begin_comment

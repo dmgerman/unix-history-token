@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: ip6_var.h,v 1.33 2000/06/11 14:59:20 jinmei Exp $	*/
+comment|/*	$KAME: ip6_var.h,v 1.62 2001/05/03 14:51:48 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -246,12 +246,12 @@ name|int
 name|ip6po_hlim
 decl_stmt|;
 comment|/* Hoplimit for outgoing packets */
+comment|/* Outgoing IF/address information */
 name|struct
 name|in6_pktinfo
 modifier|*
 name|ip6po_pktinfo
 decl_stmt|;
-comment|/* Outgoing IF/address information */
 name|struct
 name|sockaddr
 modifier|*
@@ -264,26 +264,30 @@ modifier|*
 name|ip6po_hbh
 decl_stmt|;
 comment|/* Hop-by-Hop options header */
+comment|/* Destination options header (before a routing header) */
 name|struct
 name|ip6_dest
 modifier|*
 name|ip6po_dest1
 decl_stmt|;
-comment|/* Destination options header(1st part) */
+comment|/* Routing header related info. */
 name|struct
 name|ip6po_rhinfo
 name|ip6po_rhinfo
 decl_stmt|;
-comment|/* Routing header related info. */
+comment|/* Destination options header (after a routing header) */
 name|struct
 name|ip6_dest
 modifier|*
 name|ip6po_dest2
 decl_stmt|;
-comment|/* Destination options header(2nd part) */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Control options for incoming packets  */
+end_comment
 
 begin_struct
 struct|struct
@@ -476,6 +480,80 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
+comment|/*  * IPv6 onion peeling state.  * it will be initialized when we come into ip6_input().  * XXX do not make it a kitchen sink!  */
+end_comment
+
+begin_struct
+struct|struct
+name|ip6aux
+block|{
+name|u_int32_t
+name|ip6a_flags
+decl_stmt|;
+define|#
+directive|define
+name|IP6A_SWAP
+value|0x01
+comment|/* swapped home/care-of on packet */
+define|#
+directive|define
+name|IP6A_HASEEN
+value|0x02
+comment|/* HA was present */
+define|#
+directive|define
+name|IP6A_BRUID
+value|0x04
+comment|/* BR Unique Identifier was present */
+define|#
+directive|define
+name|IP6A_RTALERTSEEN
+value|0x08
+comment|/* rtalert present */
+comment|/* ip6.ip6_src */
+name|struct
+name|in6_addr
+name|ip6a_careof
+decl_stmt|;
+comment|/* care-of address of the peer */
+name|struct
+name|in6_addr
+name|ip6a_home
+decl_stmt|;
+comment|/* home address of the peer */
+name|u_int16_t
+name|ip6a_bruid
+decl_stmt|;
+comment|/* BR unique identifier */
+comment|/* ip6.ip6_dst */
+name|struct
+name|in6_ifaddr
+modifier|*
+name|ip6a_dstia6
+decl_stmt|;
+comment|/* my ifaddr that matches ip6_dst */
+comment|/* rtalert */
+name|u_int16_t
+name|ip6a_rtalert
+decl_stmt|;
+comment|/* rtalert option value */
+comment|/* 	 * decapsulation history will be here. 	 * with IPsec it may not be accurate. 	 */
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_comment
 comment|/* flags passed to ip6_output as last parameter */
 end_comment
 
@@ -612,10 +690,17 @@ begin_comment
 comment|/* router renumbering prefix 					 * walk list every 5 sec.    */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ip6_mapped_addr_on
+value|(!ip6_v6only)
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|int
-name|ip6_mapped_addr_on
+name|ip6_v6only
 decl_stmt|;
 end_decl_stmt
 
@@ -750,6 +835,68 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|ip6_auto_linklocal
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ip6_anonportmin
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* minimum ephemeral port */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ip6_anonportmax
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* maximum ephemeral port */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ip6_lowportmin
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* minimum reserved port */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ip6_lowportmax
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* maximum reserved port */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ip6_use_tempaddr
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* whether to use temporary addresses. */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|struct
 name|pr_usrreqs
 name|rip6_usrreqs
@@ -787,6 +934,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_struct_decl
+struct_decl|struct
+name|in6_ifaddr
+struct_decl|;
+end_struct_decl
+
 begin_decl_stmt
 name|void
 name|ip6_init
@@ -819,6 +972,36 @@ argument_list|(
 operator|(
 expr|struct
 name|mbuf
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|in6_ifaddr
+modifier|*
+name|ip6_getdstifaddr
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|ip6_freepcbopts
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ip6_pktopts
 operator|*
 operator|)
 argument_list|)
@@ -918,6 +1101,52 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|struct
+name|mbuf
+modifier|*
+name|ip6_addaux
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|mbuf
+modifier|*
+name|ip6_findaux
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|ip6_delaux
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|ip6_mforward
 name|__P
@@ -985,6 +1214,27 @@ operator|*
 operator|,
 expr|struct
 name|mbuf
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|ip6_notify_pmtu
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|inpcb
+operator|*
+operator|,
+expr|struct
+name|sockaddr_in6
+operator|*
+operator|,
+name|u_int32_t
 operator|*
 operator|)
 argument_list|)
@@ -1108,6 +1358,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|init_ip6pktopts
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|ip6_pktopts
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|ip6_setpktoptions
 name|__P
@@ -1120,6 +1384,8 @@ operator|,
 expr|struct
 name|ip6_pktopts
 operator|*
+operator|,
+name|int
 operator|,
 name|int
 operator|)

@@ -321,6 +321,28 @@ begin_comment
 comment|/* Callback Control Protocol */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PPP_IPV6
+value|0x57
+end_define
+
+begin_comment
+comment|/* Internet Protocol version 6*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPP_IPV6CP
+value|0x8057
+end_define
+
+begin_comment
+comment|/* IPv6 Control Protocol */
+end_comment
+
 begin_comment
 comment|/*  * Values for FCS calculations.  */
 end_comment

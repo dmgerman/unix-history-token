@@ -33,6 +33,7 @@ operator|,
 name|u_int32_t
 operator|*
 operator|,
+specifier|const
 name|u_int32_t
 operator|*
 operator|)
@@ -49,6 +50,7 @@ argument_list|(
 operator|(
 name|int
 operator|,
+specifier|const
 name|u_int32_t
 operator|*
 operator|,

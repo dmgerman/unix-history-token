@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: key_var.h,v 1.8 2000/05/24 17:28:23 itojun Exp $	*/
+comment|/*	$KAME: key_var.h,v 1.9 2000/10/04 11:13:57 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -86,16 +86,67 @@ end_define
 begin_define
 define|#
 directive|define
-name|KEYCTL_MAXID
+name|KEYCTL_ESP_KEYMIN
 value|9
 end_define
 
 begin_define
 define|#
 directive|define
-name|KEYCTL_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ "debug", CTLTYPE_INT }, \ 	{ "spi_try", CTLTYPE_INT }, \ 	{ "spi_min_value", CTLTYPE_INT }, \ 	{ "spi_max_value", CTLTYPE_INT }, \ 	{ "random_int", CTLTYPE_INT }, \ 	{ "larval_lifetime", CTLTYPE_INT }, \ 	{ "blockacq_count", CTLTYPE_INT }, \ 	{ "blockacq_lifetime", CTLTYPE_INT }, \ }
+name|KEYCTL_ESP_AUTH
+value|10
 end_define
+
+begin_define
+define|#
+directive|define
+name|KEYCTL_AH_KEYMIN
+value|11
+end_define
+
+begin_define
+define|#
+directive|define
+name|KEYCTL_MAXID
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|KEYCTL_NAMES
+value|{ \ 	{ 0, 0 }, \ 	{ "debug", CTLTYPE_INT }, \ 	{ "spi_try", CTLTYPE_INT }, \ 	{ "spi_min_value", CTLTYPE_INT }, \ 	{ "spi_max_value", CTLTYPE_INT }, \ 	{ "random_int", CTLTYPE_INT }, \ 	{ "larval_lifetime", CTLTYPE_INT }, \ 	{ "blockacq_count", CTLTYPE_INT }, \ 	{ "blockacq_lifetime", CTLTYPE_INT }, \ 	{ "esp_keymin", CTLTYPE_INT }, \ 	{ "ah_keymin", CTLTYPE_INT }, \ }
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IPSEC_DEBUG
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|KEYCTL_VARS
+value|{ \ 	0, \&key_debug_level, \&key_spi_trycnt, \&key_spi_minval, \&key_spi_maxval, \&key_int_random, \&key_larval_lifetime, \&key_blockacq_count, \&key_blockacq_lifetime, \&ipsec_esp_keymin, \&ipsec_ah_keymin, \ }
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|KEYCTL_VARS
+value|{ \ 	0, \ 	0, \&key_spi_trycnt, \&key_spi_minval, \&key_spi_maxval, \&key_int_random, \&key_larval_lifetime, \&key_blockacq_count, \&key_blockacq_lifetime, \&ipsec_esp_keymin, \&ipsec_ah_keymin, \ }
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#

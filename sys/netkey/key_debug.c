@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: key_debug.c,v 1.23 2000/07/04 04:08:15 itojun Exp $	*/
+comment|/*	$KAME: key_debug.c,v 1.25 2000/07/24 13:23:12 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -70,6 +70,12 @@ directive|include
 file|<sys/mbuf.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/queue.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -93,38 +99,11 @@ directive|include
 file|<netkey/key_var.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPSEC_DEBUG
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<netkey/key_debug.h>
 end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|KEYDEBUG
-parameter_list|(
-name|lev
-parameter_list|,
-name|arg
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#

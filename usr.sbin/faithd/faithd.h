@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$KAME: faithd.h,v 1.2 2000/05/31 03:06:07 itojun Exp $	*/
+comment|/*	$KAME: faithd.h,v 1.6 2000/10/05 22:20:37 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -131,24 +131,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
-name|exit_error
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-name|fmt
-operator|,
-operator|...
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|void
 name|exit_success
 name|__P
 argument_list|(
@@ -156,9 +138,21 @@ operator|(
 specifier|const
 name|char
 operator|*
-name|fmt
 operator|,
 operator|...
+operator|)
+argument_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|__format__
+argument_list|(
+name|__printf__
+argument_list|,
+literal|1
+argument_list|,
+literal|2
+argument_list|)
 operator|)
 argument_list|)
 decl_stmt|;
@@ -174,9 +168,21 @@ operator|(
 specifier|const
 name|char
 operator|*
-name|fmt
 operator|,
 operator|...
+operator|)
+argument_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|__format__
+argument_list|(
+name|__printf__
+argument_list|,
+literal|1
+argument_list|,
+literal|2
+argument_list|)
 operator|)
 argument_list|)
 decl_stmt|;
@@ -193,7 +199,7 @@ begin_define
 define|#
 directive|define
 name|DEFAULT_DIR
-value|"/usr/local/v6/libexec"
+value|"/usr/libexec"
 end_define
 
 begin_define

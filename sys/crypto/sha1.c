@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: sha1.c,v 1.4 2000/03/27 04:36:23 sumikawa Exp $	*/
+comment|/*	$KAME: sha1.c,v 1.5 2000/11/08 06:13:08 itojun Exp $	*/
 end_comment
 
 begin_comment

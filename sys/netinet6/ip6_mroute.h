@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: ip6_mroute.h,v 1.10 2000/05/19 02:38:53 itojun Exp $	*/
+comment|/*	$KAME: ip6_mroute.h,v 1.17 2001/02/10 02:05:52 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -233,7 +233,7 @@ end_endif
 
 begin_typedef
 typedef|typedef
-name|long
+name|u_int32_t
 name|if_mask
 typedef|;
 end_typedef
@@ -277,7 +277,7 @@ typedef|typedef
 struct|struct
 name|if_set
 block|{
-name|fd_mask
+name|if_mask
 name|ifs_bits
 index|[
 name|howmany

@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: udp6_output.c,v 1.14 2000/06/13 10:31:23 itojun Exp $	*/
+comment|/*	$KAME: udp6_output.c,v 1.31 2001/05/21 16:39:15 jinmei Exp $	*/
 end_comment
 
 begin_comment
@@ -31,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/malloc.h>
 end_include
 
 begin_include
@@ -284,13 +290,11 @@ name|control
 parameter_list|,
 name|p
 parameter_list|)
-specifier|register
 name|struct
 name|in6pcb
 modifier|*
 name|in6p
 decl_stmt|;
-specifier|register
 name|struct
 name|mbuf
 modifier|*
@@ -312,7 +316,6 @@ modifier|*
 name|p
 decl_stmt|;
 block|{
-specifier|register
 name|u_int32_t
 name|ulen
 init|=
@@ -375,8 +378,16 @@ name|priv
 decl_stmt|;
 name|int
 name|af
+init|=
+name|AF_INET6
 decl_stmt|,
 name|hlen
+init|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ip6_hdr
+argument_list|)
 decl_stmt|;
 name|int
 name|flags
@@ -421,6 +432,8 @@ operator|&
 name|opt
 argument_list|,
 name|priv
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 operator|!=
@@ -484,6 +497,7 @@ name|in6p_faddr
 argument_list|)
 condition|)
 block|{
+comment|/* how about ::ffff:0.0.0.0 case? */
 name|error
 operator|=
 name|EISCONN
@@ -517,6 +531,40 @@ operator|->
 name|sin6_port
 expr_stmt|;
 comment|/* allow 0 port */
+if|if
+condition|(
+name|IN6_IS_ADDR_V4MAPPED
+argument_list|(
+name|faddr
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|in6p
+operator|->
+name|in6p_flags
+operator|&
+name|IN6P_IPV6_V6ONLY
+operator|)
+condition|)
+block|{
+comment|/* 				 * I believe we should explicitly discard the 				 * packet when mapped addresses are disabled, 				 * rather than send the packet as an IPv6 one. 				 * If we chose the latter approach, the packet 				 * might be sent out on the wire based on the 				 * default route, the situation which we'd 				 * probably want to avoid. 				 * (20010421 jinmei@kame.net) 				 */
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+goto|goto
+name|release
+goto|;
+block|}
+else|else
+name|af
+operator|=
+name|AF_INET
+expr_stmt|;
+block|}
 comment|/* KAME hack: embed scopeid */
 if|if
 condition|(
@@ -591,7 +639,7 @@ name|in6p
 operator|->
 name|in6p_laddr
 expr_stmt|;
-comment|/*XXX*/
+comment|/* XXX */
 if|if
 condition|(
 name|laddr
@@ -661,6 +709,51 @@ goto|goto
 name|release
 goto|;
 block|}
+if|if
+condition|(
+name|IN6_IS_ADDR_V4MAPPED
+argument_list|(
+operator|&
+name|in6p
+operator|->
+name|in6p_faddr
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|in6p
+operator|->
+name|in6p_flags
+operator|&
+name|IN6P_IPV6_V6ONLY
+operator|)
+condition|)
+block|{
+comment|/* 				 * XXX: this case would happen when the 				 * application sets the V6ONLY flag after 				 * connecting the foreign address. 				 * Such applications should be fixed, 				 * so we bark here. 				 */
+name|log
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"udp6_output: IPV6_V6ONLY "
+literal|"option was set for a connected socket\n"
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+goto|goto
+name|release
+goto|;
+block|}
+else|else
+name|af
+operator|=
+name|AF_INET
+expr_stmt|;
+block|}
 name|laddr
 operator|=
 operator|&
@@ -684,32 +777,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
-name|IN6_IS_ADDR_V4MAPPED
-argument_list|(
-name|faddr
-argument_list|)
-condition|)
-block|{
 name|af
-operator|=
-name|AF_INET6
-expr_stmt|;
-name|hlen
-operator|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ip6_hdr
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|af
-operator|=
+operator|==
 name|AF_INET
-expr_stmt|;
+condition|)
 name|hlen
 operator|=
 sizeof|sizeof
@@ -718,7 +789,6 @@ expr|struct
 name|ip
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 	 * Calculate data length and get a mbuf 	 * for UDP and IP6 headers. 	 */
 name|M_PREPEND
 argument_list|(
@@ -954,6 +1024,8 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|IPSEC
+if|if
+condition|(
 name|ipsec_setsocket
 argument_list|(
 name|m
@@ -962,7 +1034,18 @@ name|in6p
 operator|->
 name|in6p_socket
 argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|error
+operator|=
+name|ENOBUFS
 expr_stmt|;
+goto|goto
+name|release
+goto|;
+block|}
 endif|#
 directive|endif
 comment|/*IPSEC*/
@@ -1019,6 +1102,18 @@ condition|(
 name|control
 condition|)
 block|{
+name|ip6_clearpktopts
+argument_list|(
+name|in6p
+operator|->
+name|in6p_outputopts
+argument_list|,
+literal|0
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 name|in6p
 operator|->
 name|in6p_outputopts

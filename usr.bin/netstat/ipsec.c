@@ -8,12 +8,22 @@ comment|/*	$NetBSD: inet.c,v 1.35.2.1 1999/04/29 14:57:08 perry Exp $	*/
 end_comment
 
 begin_comment
+comment|/*	$KAME: ipsec.c,v 1.25 2001/03/12 09:04:39 itojun Exp $	*/
+end_comment
+
+begin_comment
 comment|/*  * Copyright (C) 1995, 1996, 1997, 1998, and 1999 WIDE Project.  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
 comment|/*  * Copyright (c) 1983, 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
 begin_ifndef
 ifndef|#
@@ -144,72 +154,223 @@ directive|ifdef
 name|IPSEC
 end_ifdef
 
-begin_decl_stmt
-specifier|static
+begin_struct
+struct|struct
+name|val2str
+block|{
+name|int
+name|val
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
+name|str
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|val2str
 name|ipsec_ahnames
 index|[]
 init|=
 block|{
+block|{
+name|SADB_AALG_NONE
+block|,
 literal|"none"
+block|, }
 block|,
-literal|"hmac MD5"
+block|{
+name|SADB_AALG_MD5HMAC
 block|,
-literal|"hmac SHA1"
+literal|"hmac-md5"
+block|, }
 block|,
-literal|"keyed MD5"
+block|{
+name|SADB_AALG_SHA1HMAC
 block|,
-literal|"keyed SHA1"
+literal|"hmac-sha1"
+block|, }
+block|,
+block|{
+name|SADB_X_AALG_MD5
+block|,
+literal|"md5"
+block|, }
+block|,
+block|{
+name|SADB_X_AALG_SHA
+block|,
+literal|"sha"
+block|, }
+block|,
+block|{
+name|SADB_X_AALG_NULL
 block|,
 literal|"null"
+block|, }
+block|,
+ifdef|#
+directive|ifdef
+name|SADB_X_AALG_SHA2_256
+block|{
+name|SADB_X_AALG_SHA2_256
+block|,
+literal|"hmac-sha2-256"
+block|, }
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|SADB_X_AALG_SHA2_384
+block|{
+name|SADB_X_AALG_SHA2_384
+block|,
+literal|"hmac-sha2-384"
+block|, }
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|SADB_X_AALG_SHA2_512
+block|{
+name|SADB_X_AALG_SHA2_512
+block|,
+literal|"hmac-sha2-512"
+block|, }
+block|,
+endif|#
+directive|endif
+block|{
+operator|-
+literal|1
+block|,
+name|NULL
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|const
-name|char
-modifier|*
+name|struct
+name|val2str
 name|ipsec_espnames
 index|[]
 init|=
 block|{
+block|{
+name|SADB_EALG_NONE
+block|,
 literal|"none"
+block|, }
 block|,
-literal|"DES CBC"
+block|{
+name|SADB_EALG_DESCBC
 block|,
-literal|"3DES CBC"
+literal|"des-cbc"
+block|, }
 block|,
-literal|"simple"
+block|{
+name|SADB_EALG_3DESCBC
 block|,
-literal|"blowfish CBC"
+literal|"3des-cbc"
+block|, }
 block|,
-literal|"CAST128 CBC"
+block|{
+name|SADB_EALG_NULL
 block|,
-literal|"DES derived IV"
+literal|"null"
+block|, }
+block|,
+ifdef|#
+directive|ifdef
+name|SADB_X_EALG_RC5CBC
+block|{
+name|SADB_X_EALG_RC5CBC
+block|,
+literal|"rc5-cbc"
+block|, }
+block|,
+endif|#
+directive|endif
+block|{
+name|SADB_X_EALG_CAST128CBC
+block|,
+literal|"cast128-cbc"
+block|, }
+block|,
+block|{
+name|SADB_X_EALG_BLOWFISHCBC
+block|,
+literal|"blowfish-cbc"
+block|, }
+block|,
+ifdef|#
+directive|ifdef
+name|SADB_X_EALG_RIJNDAELCBC
+block|{
+name|SADB_X_EALG_RIJNDAELCBC
+block|,
+literal|"rijndael-cbc"
+block|, }
+block|,
+endif|#
+directive|endif
+block|{
+operator|-
+literal|1
+block|,
+name|NULL
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|const
-name|char
-modifier|*
+name|struct
+name|val2str
 name|ipsec_compnames
 index|[]
 init|=
 block|{
-literal|"none"
+block|{
+name|SADB_X_CALG_NONE
 block|,
-literal|"OUI"
+literal|"none"
+block|, }
+block|,
+block|{
+name|SADB_X_CALG_OUI
+block|,
+literal|"oui"
+block|, }
+block|,
+block|{
+name|SADB_X_CALG_DEFLATE
 block|,
 literal|"deflate"
+block|, }
 block|,
-literal|"LZS"
+block|{
+name|SADB_X_CALG_LZS
+block|,
+literal|"lzs"
+block|, }
+block|,
+block|{
+operator|-
+literal|1
+block|,
+name|NULL
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -322,8 +483,8 @@ operator|,
 name|size_t
 operator|,
 specifier|const
-name|char
-operator|*
+expr|struct
+name|val2str
 operator|*
 operator|,
 name|size_t
@@ -364,8 +525,8 @@ name|size_t
 name|histmax
 decl_stmt|;
 specifier|const
-name|char
-modifier|*
+name|struct
+name|val2str
 modifier|*
 name|name
 decl_stmt|;
@@ -384,12 +545,18 @@ decl_stmt|;
 name|size_t
 name|proto
 decl_stmt|;
-for|for
-control|(
+specifier|const
+name|struct
+name|val2str
+modifier|*
+name|p
+decl_stmt|;
 name|first
 operator|=
 literal|1
-operator|,
+expr_stmt|;
+for|for
+control|(
 name|proto
 operator|=
 literal|0
@@ -429,16 +596,39 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+for|for
+control|(
+name|p
+operator|=
+name|name
+init|;
+name|p
+operator|&&
+name|p
+operator|->
+name|str
+condition|;
+name|p
+operator|++
+control|)
+block|{
 if|if
 condition|(
+name|p
+operator|->
+name|val
+operator|==
 name|proto
-operator|<
-name|namemax
+condition|)
+break|break;
+block|}
+if|if
+condition|(
+name|p
 operator|&&
-name|name
-index|[
-name|proto
-index|]
+name|p
+operator|->
+name|str
 condition|)
 block|{
 name|printf
@@ -447,10 +637,9 @@ literal|"\t\t%s: "
 name|LLU
 literal|"\n"
 argument_list|,
-name|name
-index|[
-name|proto
-index|]
+name|p
+operator|->
+name|str
 argument_list|,
 operator|(
 name|CAST
@@ -789,60 +978,6 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__bsdi__
-argument_list|)
-operator|&&
-name|_BSDI_VERSION
-operator|>=
-literal|199802
-end_if
-
-begin_comment
-comment|/* bsdi4 only */
-end_comment
-
-begin_function
-name|void
-name|ipsec_stats0
-parameter_list|(
-name|name
-parameter_list|)
-name|char
-modifier|*
-name|name
-decl_stmt|;
-block|{
-name|printf
-argument_list|(
-literal|"%s:\n"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
-name|skread
-argument_list|(
-name|name
-argument_list|,
-operator|&
-name|ipsecstat_info
-argument_list|)
-expr_stmt|;
-name|print_ipsecstats
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static

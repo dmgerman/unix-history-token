@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: frag6.c,v 1.24 2000/03/25 07:23:41 sumikawa Exp $	*/
+comment|/*	$KAME: frag6.c,v 1.31 2001/05/17 13:45:34 jinmei Exp $	*/
 end_comment
 
 begin_comment
@@ -217,6 +217,10 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* XXX we eventually need splreass6, or some real semaphore */
+end_comment
 
 begin_decl_stmt
 name|int
@@ -794,6 +798,10 @@ expr|struct
 name|ip6_frag
 argument_list|)
 expr_stmt|;
+name|frag6_doing_reass
+operator|=
+literal|1
+expr_stmt|;
 for|for
 control|(
 name|q6
@@ -863,10 +871,15 @@ name|first_frag
 operator|=
 literal|1
 expr_stmt|;
-name|frag6_nfragpackets
-operator|++
-expr_stmt|;
 comment|/* 		 * Enforce upper bound on number of fragmented packets 		 * for which we attempt reassembly; 		 * If maxfrag is 0, never accept fragments. 		 * If maxfrag is -1, accept all fragments without limitation. 		 */
+if|if
+condition|(
+name|ip6_maxfragpackets
+operator|<
+literal|0
+condition|)
+empty_stmt|;
+elseif|else
 if|if
 condition|(
 name|frag6_nfragpackets
@@ -876,27 +889,12 @@ name|u_int
 operator|)
 name|ip6_maxfragpackets
 condition|)
-block|{
-name|ip6stat
-operator|.
-name|ip6s_fragoverflow
+goto|goto
+name|dropfrag
+goto|;
+name|frag6_nfragpackets
 operator|++
 expr_stmt|;
-name|in6_ifstat_inc
-argument_list|(
-name|dstifp
-argument_list|,
-name|ifs6_reass_fail
-argument_list|)
-expr_stmt|;
-name|frag6_freef
-argument_list|(
-name|ip6q
-operator|.
-name|ip6q_prev
-argument_list|)
-expr_stmt|;
-block|}
 name|q6
 operator|=
 operator|(
@@ -1134,6 +1132,10 @@ name|ip6f_offlg
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|frag6_doing_reass
+operator|=
+literal|0
+expr_stmt|;
 return|return
 operator|(
 name|IPPROTO_DONE
@@ -1175,6 +1177,10 @@ argument_list|,
 name|ip6f_offlg
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|frag6_doing_reass
+operator|=
+literal|0
 expr_stmt|;
 return|return
 operator|(
@@ -2124,6 +2130,10 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+name|frag6_doing_reass
+operator|=
+literal|0
+expr_stmt|;
 return|return
 name|IPPROTO_DONE
 return|;
@@ -2466,7 +2476,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * IP timer processing;  * if a timer expires on a reassembly  * queue, discard it.  */
+comment|/*  * IPv6 reassembling timer processing;  * if a timer expires on a reassembly  * queue, discard it.  */
 end_comment
 
 begin_function
@@ -2485,12 +2495,6 @@ init|=
 name|splnet
 argument_list|()
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|extern struct	route_in6 ip6_forward_rt;
-endif|#
-directive|endif
 name|frag6_doing_reass
 operator|=
 literal|1
@@ -2559,6 +2563,10 @@ operator|(
 name|u_int
 operator|)
 name|ip6_maxfragpackets
+operator|&&
+name|ip6q
+operator|.
+name|ip6q_prev
 condition|)
 block|{
 name|ip6stat

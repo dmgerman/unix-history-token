@@ -540,6 +540,10 @@ name|IFT_GIF
 value|0x37
 end_define
 
+begin_comment
+comment|/*0xf0*/
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -547,12 +551,20 @@ name|IFT_FAITH
 value|0x38
 end_define
 
+begin_comment
+comment|/*0xf2*/
+end_comment
+
 begin_define
 define|#
 directive|define
 name|IFT_STF
 value|0x39
 end_define
+
+begin_comment
+comment|/*0xf3*/
+end_comment
 
 begin_define
 define|#
@@ -563,6 +575,17 @@ end_define
 
 begin_comment
 comment|/* Layer 2 Virtual LAN using 802.1Q */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFT_IEEE1394
+value|0x90
+end_define
+
+begin_comment
+comment|/* IEEE1394 High Performance SerialBus*/
 end_comment
 
 begin_endif

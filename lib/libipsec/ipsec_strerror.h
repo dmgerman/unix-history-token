@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: ipsec_strerror.h,v 1.7 2000/05/07 05:25:03 itojun Exp $	*/
+comment|/*	$KAME: ipsec_strerror.h,v 1.8 2000/07/30 00:45:12 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -25,6 +25,7 @@ name|__ipsec_set_strerror
 name|__P
 argument_list|(
 operator|(
+specifier|const
 name|char
 operator|*
 operator|)

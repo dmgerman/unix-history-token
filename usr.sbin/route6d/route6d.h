@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: route6d.h,v 1.3 2000/02/25 06:15:06 itojun Exp $	*/
+comment|/*	$KAME: route6d.h,v 1.4 2001/01/15 03:50:54 inoue Exp $	*/
 end_comment
 
 begin_comment
@@ -48,6 +48,13 @@ define|#
 directive|define
 name|RIP6_RESPONSE
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFC_CHANGED
+value|1
 end_define
 
 begin_struct

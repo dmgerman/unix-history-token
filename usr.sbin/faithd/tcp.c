@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$KAME$	*/
+comment|/*	$KAME: tcp.c,v 1.5 2000/09/29 03:48:31 sakane Exp $	*/
 end_comment
 
 begin_comment
@@ -380,7 +380,10 @@ if|if
 condition|(
 name|pid
 operator|&&
+name|WEXITSTATUS
+argument_list|(
 name|status
+argument_list|)
 condition|)
 name|syslog
 argument_list|(
@@ -393,7 +396,7 @@ argument_list|,
 name|status
 argument_list|)
 expr_stmt|;
-name|exit_failure
+name|exit_success
 argument_list|(
 literal|"terminate connection due to child termination"
 argument_list|)

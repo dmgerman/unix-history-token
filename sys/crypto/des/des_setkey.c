@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: des_setkey.c,v 1.3 2000/03/27 04:36:33 sumikawa Exp $	*/
+comment|/*	$KAME: des_setkey.c,v 1.5 2000/11/06 13:58:09 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -18,6 +18,18 @@ end_comment
 begin_comment
 comment|/* set_key.c v 1.4 eay 24/9/91  * 1.4 Speed up by 400% :-)  * 1.3 added register declarations.  * 1.2 unrolled make_key_sched a bit more  * 1.1 added norm_expand_bits  * 1.0 First working version  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
+end_include
 
 begin_include
 include|#
@@ -37,43 +49,21 @@ directive|include
 file|<crypto/des/sk.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NOPROTO
-end_ifndef
-
 begin_decl_stmt
 specifier|static
 name|int
 name|check_parity
+name|__P
 argument_list|(
+operator|(
 name|des_cblock
 argument_list|(
 operator|*
-name|key
 argument_list|)
+operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-specifier|static
-name|int
-name|check_parity
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|int

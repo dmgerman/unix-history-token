@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: ipsec.h,v 1.33 2000/06/19 14:31:49 sakane Exp $	*/
+comment|/*	$KAME: ipsec.h,v 1.44 2001/03/23 08:08:47 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -26,6 +26,44 @@ define|#
 directive|define
 name|_NETINET6_IPSEC_H_
 end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_LKM
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|KLD_MODULE
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|"opt_inet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_ipsec.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -150,6 +188,23 @@ name|req
 decl_stmt|;
 comment|/* pointer to the ipsec request tree, */
 comment|/* if policy == IPSEC else this value == NULL.*/
+comment|/* 	 * lifetime handler. 	 * the policy can be used without limitiation if both lifetime and 	 * validtime are zero. 	 * "lifetime" is passed by sadb_lifetime.sadb_lifetime_addtime. 	 * "validtime" is passed by sadb_lifetime.sadb_lifetime_usetime. 	 */
+name|long
+name|created
+decl_stmt|;
+comment|/* time created the policy */
+name|long
+name|lastused
+decl_stmt|;
+comment|/* updated every when kernel sends a packet */
+name|long
+name|lifetime
+decl_stmt|;
+comment|/* duration of the lifetime of this policy */
+name|long
+name|validtime
+decl_stmt|;
+comment|/* duration this policy is valid without use */
 block|}
 struct|;
 end_struct
@@ -239,8 +294,8 @@ name|struct
 name|secpolicyindex
 name|spidx
 decl_stmt|;
-name|u_int32_t
-name|tick
+name|long
+name|created
 decl_stmt|;
 comment|/* for lifetime */
 name|int
@@ -363,7 +418,7 @@ comment|/* Policy level */
 end_comment
 
 begin_comment
-comment|/*  * IPSEC, ENTRUST and BYPASS are allowd for setsockopt() in PCB,  * DISCARD, IPSEC and NONE are allowd for setkey() in SPD.  * DISCARD and NONE are allowd for system default.  */
+comment|/*  * IPSEC, ENTRUST and BYPASS are allowed for setsockopt() in PCB,  * DISCARD, IPSEC and NONE are allowed for setkey() in SPD.  * DISCARD and NONE are allowed for system default.  */
 end_comment
 
 begin_define
@@ -737,22 +792,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|IPSECCTL_MAXID
+name|IPSECCTL_ESP_RANDPAD
 value|13
 end_define
 
 begin_define
 define|#
 directive|define
+name|IPSECCTL_MAXID
+value|14
+end_define
+
+begin_define
+define|#
+directive|define
 name|IPSECCTL_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ "def_policy", CTLTYPE_INT }, \ 	{ "esp_trans_deflev", CTLTYPE_INT }, \ 	{ "esp_net_deflev", CTLTYPE_INT }, \ 	{ "ah_trans_deflev", CTLTYPE_INT }, \ 	{ "ah_net_deflev", CTLTYPE_INT }, \ 	{ 0, 0 }, \ 	{ "ah_cleartos", CTLTYPE_INT }, \ 	{ "ah_offsetmask", CTLTYPE_INT }, \ 	{ "dfbit", CTLTYPE_INT }, \ 	{ "ecn", CTLTYPE_INT }, \ 	{ "debug", CTLTYPE_INT }, \ }
+value|{ \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ "def_policy", CTLTYPE_INT }, \ 	{ "esp_trans_deflev", CTLTYPE_INT }, \ 	{ "esp_net_deflev", CTLTYPE_INT }, \ 	{ "ah_trans_deflev", CTLTYPE_INT }, \ 	{ "ah_net_deflev", CTLTYPE_INT }, \ 	{ 0, 0 }, \ 	{ "ah_cleartos", CTLTYPE_INT }, \ 	{ "ah_offsetmask", CTLTYPE_INT }, \ 	{ "dfbit", CTLTYPE_INT }, \ 	{ "ecn", CTLTYPE_INT }, \ 	{ "debug", CTLTYPE_INT }, \ 	{ "esp_randpad", CTLTYPE_INT }, \ }
 end_define
 
 begin_define
 define|#
 directive|define
 name|IPSEC6CTL_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ "def_policy", CTLTYPE_INT }, \ 	{ "esp_trans_deflev", CTLTYPE_INT }, \ 	{ "esp_net_deflev", CTLTYPE_INT }, \ 	{ "ah_trans_deflev", CTLTYPE_INT }, \ 	{ "ah_net_deflev", CTLTYPE_INT }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ "ecn", CTLTYPE_INT }, \ 	{ "debug", CTLTYPE_INT }, \ }
+value|{ \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ "def_policy", CTLTYPE_INT }, \ 	{ "esp_trans_deflev", CTLTYPE_INT }, \ 	{ "esp_net_deflev", CTLTYPE_INT }, \ 	{ "ah_trans_deflev", CTLTYPE_INT }, \ 	{ "ah_net_deflev", CTLTYPE_INT }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ 0, 0 }, \ 	{ "ecn", CTLTYPE_INT }, \ 	{ "debug", CTLTYPE_INT }, \ 	{ "esp_randpad", CTLTYPE_INT }, \ }
 end_define
 
 begin_ifdef
@@ -779,6 +841,20 @@ name|struct
 name|sockaddr
 modifier|*
 name|dst
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ipsec_history
+block|{
+name|int
+name|ih_proto
+decl_stmt|;
+name|u_int32_t
+name|ih_spi
 decl_stmt|;
 block|}
 struct|;
@@ -860,6 +936,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|ip4_ipsec_ecn
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ip4_esp_randpad
 decl_stmt|;
 end_decl_stmt
 
@@ -1261,8 +1344,10 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|ip
+name|mbuf
 operator|*
+operator|,
+name|int
 operator|,
 name|u_int
 operator|,
@@ -1294,6 +1379,21 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
+name|ipsec_delaux
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|ipsec_setsocket
 name|__P
 argument_list|(
@@ -1316,6 +1416,60 @@ name|struct
 name|socket
 modifier|*
 name|ipsec_getsocket
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ipsec_addhist
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|,
+name|int
+operator|,
+name|u_int32_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|ipsec_history
+modifier|*
+name|ipsec_gethist
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|mbuf
+operator|*
+operator|,
+name|int
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
+name|ipsec_clearhist
 name|__P
 argument_list|(
 operator|(
@@ -1390,6 +1544,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|ipsec_strerror

@@ -716,9 +716,24 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IN6P_IPV6_V6ONLY
+value|0x008000
+end_define
+
+begin_comment
+comment|/* restrict AF_INET6 socket for v6 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IN6P_PKTINFO
 value|0x010000
 end_define
+
+begin_comment
+comment|/* receive IP6 dst and I/F */
+end_comment
 
 begin_define
 define|#
@@ -727,86 +742,93 @@ name|IN6P_HOPLIMIT
 value|0x020000
 end_define
 
-begin_define
-define|#
-directive|define
-name|IN6P_NEXTHOP
-value|0x040000
-end_define
+begin_comment
+comment|/* receive hoplimit */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|IN6P_HOPOPTS
-value|0x080000
+value|0x040000
 end_define
+
+begin_comment
+comment|/* receive hop-by-hop options */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|IN6P_DSTOPTS
-value|0x100000
+value|0x080000
 end_define
+
+begin_comment
+comment|/* receive dst options after rthdr */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|IN6P_RTHDR
+value|0x100000
+end_define
+
+begin_comment
+comment|/* receive routing header */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IN6P_RTHDRDSTOPTS
 value|0x200000
 end_define
+
+begin_comment
+comment|/* receive dstoptions before rthdr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IN6P_AUTOFLOWLABEL
+value|0x800000
+end_define
+
+begin_comment
+comment|/* attach flowlabel automatically */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|IN6P_BINDV6ONLY
-value|0x400000
+value|0x10000000
 end_define
+
+begin_comment
+comment|/* do not grab IPv4 traffic */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|INP_CONTROLOPTS
-value|(INP_RECVOPTS|INP_RECVRETOPTS|INP_RECVDSTADDR|\ 					INP_RECVIF|\ 				 IN6P_PKTINFO|IN6P_HOPLIMIT|IN6P_NEXTHOP|\ 				 IN6P_HOPOPTS|IN6P_DSTOPTS|IN6P_RTHDR)
+value|(INP_RECVOPTS|INP_RECVRETOPTS|INP_RECVDSTADDR|\ 					INP_RECVIF|\ 				 IN6P_PKTINFO|IN6P_HOPLIMIT|IN6P_HOPOPTS|\ 				 IN6P_DSTOPTS|IN6P_RTHDR|IN6P_RTHDRDSTOPTS|\ 				 IN6P_AUTOFLOWLABEL)
 end_define
 
 begin_define
 define|#
 directive|define
 name|INP_UNMAPPABLEOPTS
-value|(IN6P_HOPOPTS|IN6P_DSTOPTS|IN6P_RTHDR)
+value|(IN6P_HOPOPTS|IN6P_DSTOPTS|IN6P_RTHDR|\ 				 IN6P_AUTOFLOWLABEL)
 end_define
 
 begin_comment
 comment|/* for KAME src sync over BSD*'s */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|IN6P_RECVOPTS
-value|INP_RECVOPTS
-end_define
-
-begin_define
-define|#
-directive|define
-name|IN6P_RECVRETOPTS
-value|INP_RECVRETOPTS
-end_define
-
-begin_define
-define|#
-directive|define
-name|IN6P_RECVDSTADDR
-value|INP_RECVDSTADDR
-end_define
-
-begin_define
-define|#
-directive|define
-name|IN6P_HDRINCL
-value|INP_HDRINCL
-end_define
 
 begin_define
 define|#

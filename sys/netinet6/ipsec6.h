@@ -4,7 +4,7 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: ipsec.h,v 1.33 2000/06/19 14:31:49 sakane Exp $	*/
+comment|/*	$KAME: ipsec.h,v 1.44 2001/03/23 08:08:47 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -93,6 +93,13 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|ip6_ipsec_ecn
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|ip6_esp_randpad
 decl_stmt|;
 end_decl_stmt
 
@@ -261,6 +268,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_struct_decl
+struct_decl|struct
+name|tcp6cb
+struct_decl|;
+end_struct_decl
+
 begin_decl_stmt
 specifier|extern
 name|size_t
@@ -367,8 +380,10 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|ip6_hdr
+name|mbuf
 operator|*
+operator|,
+name|int
 operator|,
 name|u_int
 operator|,
