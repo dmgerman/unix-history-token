@@ -142,6 +142,7 @@ value|{{reg_l, pola_l, pos_r, len_l}, {reg_r, pola_r, pos_r, len_r}}
 end_define
 
 begin_decl_stmt
+specifier|static
 name|mixer_ent
 name|mix_devices
 index|[

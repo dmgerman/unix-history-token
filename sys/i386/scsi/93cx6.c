@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Interface for the 93C46/26/06 serial eeprom parts.  *  * Copyright (c) 1995 Daniel M. Eischen  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Daniel M. Eischen.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *      $Id: 93cx6.c,v 1.1 1995/07/04 21:16:11 gibbs Exp $  */
+comment|/*  * Interface for the 93C46/26/06 serial eeprom parts.  *  * Copyright (c) 1995 Daniel M. Eischen  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Daniel M. Eischen.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *      $Id: 93cx6.c,v 1.2 1995/09/05 23:51:58 gibbs Exp $  */
 end_comment
 
 begin_comment
@@ -36,6 +36,7 @@ comment|/*  * Right now, we only have to read the SEEPROM.  But we make it easie
 end_comment
 
 begin_struct
+specifier|static
 struct|struct
 name|seeprom_cmd
 block|{
