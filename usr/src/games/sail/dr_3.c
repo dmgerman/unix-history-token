@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)dr_3.c	1.5 83/10/10"
+literal|"@(#)dr_3.c	1.6 83/10/14"
 decl_stmt|;
 end_decl_stmt
 
@@ -251,6 +251,7 @@ name|last
 operator|=
 literal|'\0'
 expr_stmt|;
+comment|/* 		makesignal(sp, "move (%d): %s", 0, turn, sp->file->last); 		*/
 block|}
 comment|/* 	 * Then execute the moves for ALL ships (dead ones too), 	 * saving old positions in row[], col[], dir[], 	 * and the moves in clase[][]. 	 * The new positions are written out. 	 */
 name|n
@@ -460,7 +461,9 @@ argument_list|(
 name|sp
 argument_list|)
 condition|)
-continue|continue;
+goto|goto
+name|cont1
+goto|;
 name|r1
 operator|=
 name|sp
@@ -521,6 +524,15 @@ argument_list|)
 block|{
 if|if
 condition|(
+name|sp
+operator|==
+name|sq
+condition|)
+goto|goto
+name|cont2
+goto|;
+if|if
+condition|(
 operator|(
 name|d2
 operator|=
@@ -532,12 +544,10 @@ name|dir
 operator|)
 operator|==
 literal|0
-operator|||
-name|sp
-operator|==
-name|sq
 condition|)
-continue|continue;
+goto|goto
+name|cont2
+goto|;
 name|r2
 operator|=
 name|sq
@@ -589,7 +599,7 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|grappled2
+name|snagged2
 argument_list|(
 name|sp
 argument_list|,
@@ -1058,9 +1068,10 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+goto|goto
+name|cont2
+goto|;
 block|}
-else|else
-block|{
 name|sq
 operator|->
 name|file
@@ -1085,7 +1096,8 @@ name|dir
 operator|=
 name|d2
 expr_stmt|;
-block|}
+name|cont2
+label|:
 name|l
 operator|++
 expr_stmt|;
@@ -1114,6 +1126,8 @@ name|dir
 operator|=
 name|d1
 expr_stmt|;
+name|cont1
+label|:
 name|n
 operator|++
 expr_stmt|;
