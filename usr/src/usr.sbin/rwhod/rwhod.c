@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rwhod.c	4.16 (Berkeley) 83/06/18"
+literal|"@(#)rwhod.c	4.17 (Berkeley) 83/06/24"
 decl_stmt|;
 end_decl_stmt
 
@@ -1711,13 +1711,6 @@ name|nlist
 modifier|*
 name|nlp
 decl_stmt|;
-name|signal
-argument_list|(
-name|SIGHUP
-argument_list|,
-name|getkmem
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|kmemf
