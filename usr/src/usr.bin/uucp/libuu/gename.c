@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gename.c	5.4 (Berkeley) %G%"
+literal|"@(#)gename.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -26,12 +26,6 @@ directive|include
 file|"uucp.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
 begin_define
 define|#
 directive|define
@@ -40,7 +34,11 @@ value|4
 end_define
 
 begin_comment
-comment|/*******  *	gename(pre, sys, grade, file)	generate file name  *	char grade, *sys, pre, *file;  *  *	return codes:  none  */
+comment|/*LINTLIBRARY*/
+end_comment
+
+begin_comment
+comment|/*  *	generate file name  */
 end_comment
 
 begin_macro
@@ -88,9 +86,11 @@ name|sprintf
 argument_list|(
 name|file
 argument_list|,
-literal|"%c.%.7s%c%.*s"
+literal|"%c.%.*s%c%.*s"
 argument_list|,
 name|pre
+argument_list|,
+name|SYSNSIZE
 argument_list|,
 name|sys
 argument_list|,
@@ -128,7 +128,7 @@ value|5
 end_define
 
 begin_comment
-comment|/*******  *	getseq(snum)	get next sequence number  *	char *snum;  *  *	return codes:  none  */
+comment|/*  *	get next sequence number  */
 end_comment
 
 begin_expr_stmt
@@ -163,6 +163,8 @@ specifier|static
 name|char
 modifier|*
 name|lastchar
+init|=
+name|NULL
 decl_stmt|;
 if|if
 condition|(
@@ -209,9 +211,6 @@ name|ulockf
 argument_list|(
 name|SEQLOCK
 argument_list|,
-operator|(
-name|time_t
-operator|)
 name|SLOCKTIME
 argument_list|)
 condition|)
@@ -222,19 +221,83 @@ literal|5
 argument_list|)
 expr_stmt|;
 block|}
-name|ASSERT
-argument_list|(
+if|if
+condition|(
 name|i
-operator|<
+operator|>=
 name|SLOCKTRIES
-argument_list|,
-literal|"CAN NOT GET"
-argument_list|,
+condition|)
+block|{
+name|int
+name|alphalen
+decl_stmt|;
+name|logent
+argument_list|(
 name|SEQLOCK
 argument_list|,
-literal|0
+literal|"CAN NOT LOCK"
 argument_list|)
 expr_stmt|;
+name|alphalen
+operator|=
+name|strlen
+argument_list|(
+name|alphabet
+argument_list|)
+expr_stmt|;
+name|srand
+argument_list|(
+operator|(
+name|int
+operator|)
+name|time
+argument_list|(
+operator|(
+name|time_t
+operator|*
+operator|)
+literal|0
+argument_list|)
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|1
+init|;
+name|i
+operator|<
+name|SEQLEN
+condition|;
+name|i
+operator|++
+control|)
+operator|*
+name|snum
+operator|++
+operator|=
+name|alphabet
+index|[
+name|rand
+argument_list|()
+operator|%
+name|alphalen
+index|]
+expr_stmt|;
+name|lastchar
+operator|=
+name|alphabet
+expr_stmt|;
+operator|*
+name|snum
+operator|=
+operator|*
+name|lastchar
+operator|++
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 operator|(
@@ -404,26 +467,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-if|if
-condition|(
-operator|(
-name|fd
-operator|=
-name|creat
-argument_list|(
-name|SEQFILE
-argument_list|,
-literal|0666
-argument_list|)
-operator|)
-operator|<
-literal|0
-condition|)
-return|return
-operator|(
-name|FAIL
-operator|)
-return|;
 for|for
 control|(
 name|i
@@ -447,6 +490,22 @@ index|[
 literal|0
 index|]
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|fd
+operator|=
+name|creat
+argument_list|(
+name|SEQFILE
+argument_list|,
+literal|0666
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+return|return;
 block|}
 name|lseek
 argument_list|(
@@ -483,11 +542,7 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+return|return;
 block|}
 end_block
 
