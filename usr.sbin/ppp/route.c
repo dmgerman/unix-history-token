@@ -4496,7 +4496,7 @@ name|s
 operator|=
 name|ID0socket
 argument_list|(
-name|PF_ROUTE
+name|AF_ROUTE
 argument_list|,
 name|SOCK_RAW
 argument_list|,
@@ -5249,7 +5249,7 @@ name|s
 operator|=
 name|ID0socket
 argument_list|(
-name|PF_ROUTE
+name|AF_ROUTE
 argument_list|,
 name|SOCK_RAW
 argument_list|,

@@ -6665,7 +6665,7 @@ name|fd
 operator|=
 name|ID0socket
 argument_list|(
-name|PF_LOCAL
+name|AF_LOCAL
 argument_list|,
 name|SOCK_DGRAM
 argument_list|,

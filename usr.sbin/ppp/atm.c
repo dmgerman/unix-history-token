@@ -830,7 +830,7 @@ name|fd
 operator|=
 name|socket
 argument_list|(
-name|PF_NATM
+name|AF_NATM
 argument_list|,
 name|SOCK_DGRAM
 argument_list|,

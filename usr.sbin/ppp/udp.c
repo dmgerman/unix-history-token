@@ -1127,7 +1127,7 @@ name|fd
 operator|=
 name|socket
 argument_list|(
-name|PF_INET
+name|AF_INET
 argument_list|,
 name|SOCK_DGRAM
 argument_list|,
