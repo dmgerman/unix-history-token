@@ -556,6 +556,22 @@ name|void
 modifier|*
 name|buf
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|PC98
+comment|/* 	 * If a DMA channel is shared, both drivers have to call isa_dmainit 	 * since they don't know that the other driver will do it. 	 * Just return if we're already set up good. 	 * XXX: this only works if they agree on the bouncebuf size.  This 	 * XXX: is typically the case since they are multiple instances of 	 * XXX: the same driver. 	 */
+if|if
+condition|(
+name|dma_bouncebuf
+index|[
+name|chan
+index|]
+operator|!=
+name|NULL
+condition|)
+return|return;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
@@ -571,6 +587,9 @@ argument_list|(
 literal|"isa_dmainit: channel out of range"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PC98
 if|if
 condition|(
 name|dma_bouncebuf
@@ -585,6 +604,8 @@ argument_list|(
 literal|"isa_dmainit: impossible request"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 name|dma_bouncebufsize
