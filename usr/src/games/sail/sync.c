@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)sync.c	2.5 84/02/23"
+literal|"@(#)sync.c	2.6 84/04/28"
 decl_stmt|;
 end_decl_stmt
 
@@ -694,9 +694,9 @@ name|sig2
 argument_list|)
 argument_list|()
 decl_stmt|;
-name|int
+specifier|register
 name|n
-decl_stmt|;
+expr_stmt|;
 name|int
 name|type
 decl_stmt|,
@@ -746,14 +746,13 @@ for|for
 control|(
 name|n
 operator|=
-literal|0
+name|TIMEOUT
 init|;
+operator|--
 name|n
-operator|<
-literal|30
+operator|>=
+literal|0
 condition|;
-name|n
-operator|++
 control|)
 block|{
 ifdef|#
@@ -814,15 +813,15 @@ endif|#
 directive|endif
 name|sleep
 argument_list|(
-literal|2
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
 if|if
 condition|(
 name|n
-operator|>=
-literal|30
+operator|<=
+literal|0
 condition|)
 return|return
 operator|-

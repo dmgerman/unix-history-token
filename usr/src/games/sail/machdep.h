@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sccsid = "@(#)machdep.h	2.4 %G%";  */
+comment|/*  * sccsid = "@(#)machdep.h	2.5 %G%";  */
 end_comment
 
 begin_define
@@ -46,6 +46,17 @@ end_define
 
 begin_comment
 comment|/* player and driver run setuid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TIMEOUT
+value|300
+end_define
+
+begin_comment
+comment|/* Sync() time out */
 end_comment
 
 begin_define
