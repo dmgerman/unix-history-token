@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)mkhosts.c	4.4 (Berkeley) 84/08/28"
+literal|"@(#)mkhosts.c	4.5 (Berkeley) 85/02/18"
 decl_stmt|;
 end_decl_stmt
 
