@@ -446,10 +446,6 @@ argument_list|(
 literal|"Installing crc compensation attack detector."
 argument_list|)
 expr_stmt|;
-name|n
-operator|=
-name|l
-expr_stmt|;
 name|h
 operator|=
 operator|(
@@ -458,10 +454,14 @@ operator|*
 operator|)
 name|xmalloc
 argument_list|(
-name|n
+name|l
 operator|*
 name|HASH_ENTRYSIZE
 argument_list|)
+expr_stmt|;
+name|n
+operator|=
+name|l
 expr_stmt|;
 block|}
 else|else
@@ -473,10 +473,6 @@ operator|>
 name|n
 condition|)
 block|{
-name|n
-operator|=
-name|l
-expr_stmt|;
 name|h
 operator|=
 operator|(
@@ -487,10 +483,14 @@ name|xrealloc
 argument_list|(
 name|h
 argument_list|,
-name|n
+name|l
 operator|*
 name|HASH_ENTRYSIZE
 argument_list|)
+expr_stmt|;
+name|n
+operator|=
+name|l
 expr_stmt|;
 block|}
 block|}

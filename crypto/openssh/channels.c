@@ -824,13 +824,16 @@ name|found
 operator|=
 name|channels_alloc
 expr_stmt|;
+if|if
+condition|(
 name|channels_alloc
-operator|+=
-literal|10
-expr_stmt|;
-name|debug2
+operator|>
+literal|10000
+condition|)
+name|fatal
 argument_list|(
-literal|"channel: expanding %d"
+literal|"channel_new: internal error: channels_alloc %d "
+literal|"too big."
 argument_list|,
 name|channels_alloc
 argument_list|)
@@ -841,12 +844,27 @@ name|xrealloc
 argument_list|(
 name|channels
 argument_list|,
+operator|(
 name|channels_alloc
+operator|+
+literal|10
+operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
 name|Channel
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|channels_alloc
+operator|+=
+literal|10
+expr_stmt|;
+name|debug2
+argument_list|(
+literal|"channel: expanding %d"
+argument_list|,
+name|channels_alloc
 argument_list|)
 expr_stmt|;
 for|for
