@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)asm.c	5.1 (Berkeley) %G%"
+literal|"@(#)asm.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: asm.c,v 1.5 84/12/26 10:38:19 linton Exp $"
+literal|"$Header: asm.c,v 1.2 87/03/25 19:24:09 donn Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -179,6 +179,15 @@ argument_list|,
 name|L_EVALAREF
 argument_list|,
 name|asm_evalaref
+argument_list|)
+expr_stmt|;
+name|language_setop
+argument_list|(
+name|lang
+argument_list|,
+name|L_MODINIT
+argument_list|,
+name|asm_modinit
 argument_list|)
 expr_stmt|;
 name|language_setop
@@ -625,6 +634,21 @@ name|type
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|public
+name|asm_modinit
+parameter_list|(
+name|typetable
+parameter_list|)
+name|Symbol
+name|typetable
+index|[]
+decl_stmt|;
+block|{
+comment|/* nothing for right now */
 block|}
 end_function
 
