@@ -1625,7 +1625,7 @@ begin_define
 define|#
 directive|define
 name|FXP_PHY_DEVICE_MASK
-value|0x03f0
+value|0x3f00
 end_define
 
 begin_define

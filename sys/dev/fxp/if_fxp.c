@@ -2190,7 +2190,7 @@ condition|)
 name|sc
 operator|->
 name|flags
-operator|&=
+operator||=
 name|FXP_FLAG_SERIAL_MEDIA
 expr_stmt|;
 comment|/* 	 * Find out the basic controller type; we currently only 	 * differentiate between a 82557 and greater. 	 */
