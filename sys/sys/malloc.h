@@ -206,14 +206,6 @@ end_expr_stmt
 begin_expr_stmt
 name|MALLOC_DECLARE
 argument_list|(
-name|M_STRING
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_DECLARE
-argument_list|(
 name|M_TEMP
 argument_list|)
 expr_stmt|;
