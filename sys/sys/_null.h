@@ -27,6 +27,10 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* XXX remove the '|| defined(__amd64__)' case when the gcc33 port is updated */
+end_comment
+
 begin_if
 if|#
 directive|if
