@@ -4038,7 +4038,7 @@ name|uz_flags
 operator|&
 name|UMA_ZFLAG_INTERNAL
 operator|)
-operator|!=
+operator|==
 literal|0
 condition|)
 for|for
