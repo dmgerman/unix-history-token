@@ -5366,6 +5366,11 @@ break|break;
 case|case
 literal|'c'
 case|:
+name|warnx
+argument_list|(
+literal|"c obsolete, use ifconfig mediaopt"
+argument_list|)
+expr_stmt|;
 name|wi_setword
 argument_list|(
 name|iface
@@ -5408,6 +5413,11 @@ break|break;
 case|case
 literal|'e'
 case|:
+name|warnx
+argument_list|(
+literal|"e obsolete, use ifconfig wepmode"
+argument_list|)
+expr_stmt|;
 name|wi_setword
 argument_list|(
 name|iface
@@ -5429,6 +5439,11 @@ break|break;
 case|case
 literal|'f'
 case|:
+name|warnx
+argument_list|(
+literal|"f obsolete, use ifconfig channel"
+argument_list|)
+expr_stmt|;
 name|wi_setword
 argument_list|(
 name|iface
@@ -5471,6 +5486,11 @@ break|break;
 case|case
 literal|'k'
 case|:
+name|warnx
+argument_list|(
+literal|"k obsolete, use ifconfig wepkey"
+argument_list|)
+expr_stmt|;
 name|key
 operator|=
 name|optarg
@@ -5500,6 +5520,11 @@ break|break;
 case|case
 literal|'p'
 case|:
+name|warnx
+argument_list|(
+literal|"p obsolete, use ifconfig mediaopt"
+argument_list|)
+expr_stmt|;
 name|wi_setword
 argument_list|(
 name|iface
@@ -5542,6 +5567,11 @@ break|break;
 case|case
 literal|'t'
 case|:
+name|warnx
+argument_list|(
+literal|"t obsolete, use ifconfig meidaopt"
+argument_list|)
+expr_stmt|;
 name|wi_setword
 argument_list|(
 name|iface
@@ -5563,6 +5593,11 @@ break|break;
 case|case
 literal|'n'
 case|:
+name|warnx
+argument_list|(
+literal|"n obsolete, use ifconfig ssid"
+argument_list|)
+expr_stmt|;
 name|wi_setstr
 argument_list|(
 name|iface
@@ -5581,6 +5616,11 @@ break|break;
 case|case
 literal|'s'
 case|:
+name|warnx
+argument_list|(
+literal|"s obsolete, use ifconfig stationname"
+argument_list|)
+expr_stmt|;
 name|wi_setstr
 argument_list|(
 name|iface
@@ -5625,6 +5665,11 @@ break|break;
 case|case
 literal|'q'
 case|:
+name|warnx
+argument_list|(
+literal|"q obsolete, use ifconfig ssid"
+argument_list|)
+expr_stmt|;
 name|wi_setstr
 argument_list|(
 name|iface
@@ -5643,6 +5688,11 @@ break|break;
 case|case
 literal|'S'
 case|:
+name|warnx
+argument_list|(
+literal|"S obsolete, use ifconfig powersleep"
+argument_list|)
+expr_stmt|;
 name|wi_setword
 argument_list|(
 name|iface
@@ -5664,6 +5714,11 @@ break|break;
 case|case
 literal|'T'
 case|:
+name|warnx
+argument_list|(
+literal|"T obsolete, use ifconfig weptxkey"
+argument_list|)
+expr_stmt|;
 name|wi_setword
 argument_list|(
 name|iface
@@ -5687,6 +5742,11 @@ break|break;
 case|case
 literal|'P'
 case|:
+name|warnx
+argument_list|(
+literal|"P obsolete, use ifconfig powersave"
+argument_list|)
+expr_stmt|;
 name|wi_setword
 argument_list|(
 name|iface
