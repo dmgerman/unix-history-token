@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)table.c	1.21 (Berkeley) %G%"
+literal|"@(#)table.c	1.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1825,7 +1825,7 @@ name|TDOUBLE
 block|,
 name|NAREG
 operator||
-name|NASL
+name|NASR
 block|,
 name|RLEFT
 operator||
@@ -1859,7 +1859,7 @@ name|TSHORT
 block|,
 name|NAREG
 operator||
-name|NASL
+name|NASR
 block|,
 name|RLEFT
 operator||
@@ -1893,7 +1893,7 @@ name|TUSHORT
 block|,
 name|NAREG
 operator||
-name|NASL
+name|NASR
 block|,
 name|RLEFT
 operator||
