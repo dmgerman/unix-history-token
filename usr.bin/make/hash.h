@@ -33,12 +33,12 @@ name|Hash_Entry
 modifier|*
 name|next
 decl_stmt|;
-comment|/* Used to link together all the     					 * entries associated with the same 					 * bucket. */
+comment|/* Link entries within same bucket. */
 name|void
 modifier|*
 name|clientData
 decl_stmt|;
-comment|/* Arbitrary piece of data associated     					 * with key. */
+comment|/* Data associated with key. */
 name|unsigned
 name|namehash
 decl_stmt|;
@@ -66,7 +66,7 @@ modifier|*
 modifier|*
 name|bucketPtr
 decl_stmt|;
-comment|/* Pointers to Hash_Entry, one     				 * for each bucket in the table. */
+comment|/* Buckets in the table */
 name|int
 name|size
 decl_stmt|;
@@ -101,12 +101,12 @@ comment|/* Table being searched. */
 name|int
 name|nextIndex
 decl_stmt|;
-comment|/* Next bucket to check (after current). */
+comment|/* Next bucket to check */
 name|Hash_Entry
 modifier|*
 name|hashEntryPtr
 decl_stmt|;
-comment|/* Next entry to check in current bucket. */
+comment|/* Next entry in current bucket */
 block|}
 name|Hash_Search
 typedef|;
@@ -117,7 +117,7 @@ comment|/*  * Macros.  */
 end_comment
 
 begin_comment
-comment|/*  * void * Hash_GetValue(h)  *     Hash_Entry *h;  */
+comment|/*  * void *Hash_GetValue(const Hash_Entry *h)  */
 end_comment
 
 begin_define
@@ -131,7 +131,7 @@ value|((h)->clientData)
 end_define
 
 begin_comment
-comment|/*  * Hash_SetValue(h, val);  *     Hash_Entry *h;  *     char *val;  */
+comment|/*  * Hash_SetValue(Hash_Entry *h, void *val);  */
 end_comment
 
 begin_define
