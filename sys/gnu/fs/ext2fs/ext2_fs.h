@@ -310,24 +310,6 @@ begin_comment
 comment|/*  * The second extended file system magic number  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|notyet
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|EXT2_PRE_02B_MAGIC
-value|0xEF51
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
