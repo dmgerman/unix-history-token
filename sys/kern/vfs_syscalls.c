@@ -17973,9 +17973,9 @@ name|nd
 argument_list|,
 name|LOOKUP
 argument_list|,
-name|LOCKLEAF
-operator||
 name|FOLLOW
+operator||
+name|LOCKLEAF
 argument_list|,
 name|UIO_USERSPACE
 argument_list|,
@@ -18381,6 +18381,8 @@ argument_list|,
 name|LOOKUP
 argument_list|,
 name|FOLLOW
+operator||
+name|LOCKLEAF
 argument_list|,
 name|UIO_USERSPACE
 argument_list|,
@@ -18773,9 +18775,9 @@ name|nd
 argument_list|,
 name|LOOKUP
 argument_list|,
-name|LOCKLEAF
-operator||
 name|FOLLOW
+operator||
+name|LOCKLEAF
 argument_list|,
 name|UIO_USERSPACE
 argument_list|,
