@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_debug.h - i4b debug header file  *	-----------------------------------  *  *	$Id: i4b_debug.h,v 1.15 1999/02/14 09:45:02 hm Exp $   *  *      last edit-date: [Sun Feb 14 10:37:58 1999]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_debug.h - i4b debug header file  *	-----------------------------------  *  *	$Id: i4b_debug.h,v 1.18 1999/04/28 14:50:55 hm Exp $   *  *      last edit-date: [Wed Apr 28 16:50:36 1999]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_define
@@ -886,8 +886,63 @@ end_comment
 begin_define
 define|#
 directive|define
+name|L4_ISPDBG
+value|0x0040
+end_define
+
+begin_comment
+comment|/* isp driver debug messages	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L4_TELDBG
+value|0x0080
+end_define
+
+begin_comment
+comment|/* tel driver debug messages	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L4_TINADBG
+value|0x0100
+end_define
+
+begin_comment
+comment|/* tina driver debug messages	*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L4_TINAMSG
+value|0x0200
+end_define
+
+begin_comment
+comment|/* tina driver messages		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|L4_TINAERR
+value|0x0400
+end_define
+
+begin_comment
+comment|/* tina driver error messages	*/
+end_comment
+
+begin_define
+define|#
+directive|define
 name|L4_DEBUG_MAX
-value|0x003f
+value|0x07ff
 end_define
 
 begin_comment
@@ -898,7 +953,7 @@ begin_define
 define|#
 directive|define
 name|L4_DEBUG_ERR
-value|(L4_ERR)
+value|(L4_ERR | L4_TINADBG |  L4_TINAMSG | L4_TINAERR)
 end_define
 
 begin_ifndef

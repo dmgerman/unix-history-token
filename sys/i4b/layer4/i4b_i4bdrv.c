@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_i4bdrv.c - i4b userland interface driver  *	--------------------------------------------  *  *	$Id: i4b_i4bdrv.c,v 1.3 1999/03/07 16:08:20 hm Exp $   *  *      last edit-date: [Mon Feb 15 10:36:25 1999]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_i4bdrv.c - i4b userland interface driver  *	--------------------------------------------  *  *	$Id: i4b_i4bdrv.c,v 1.44 1999/05/06 08:24:45 hm Exp $   *  *      last edit-date: [Thu May  6 10:05:01 1999]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -14,6 +14,40 @@ include|#
 directive|include
 file|"i4bipr.h"
 end_include
+
+begin_include
+include|#
+directive|include
+file|"i4btel.h"
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__bsdi__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"ibc.h"
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|"i4bisppp.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -259,42 +293,11 @@ directive|include
 file|<i4b/layer4/i4b_l4.h>
 end_include
 
-begin_if
-if|#
-directive|if
-operator|(
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-operator|(
-operator|!
-name|defined
-argument_list|(
-name|__FreeBSD_version
-argument_list|)
-operator|||
-name|__FreeBSD_version
-operator|<
-literal|300001
-operator|)
-operator|)
-operator|||
-name|defined
-argument_list|(
-name|__bsdi__
-argument_list|)
-end_if
-
-begin_comment
-comment|/* do nothing */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OS_USES_POLL
+end_ifdef
 
 begin_include
 include|#
@@ -541,6 +544,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OS_USES_POLL
+end_ifdef
+
 begin_decl_stmt
 name|PDEVSTATIC
 name|int
@@ -563,38 +572,32 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__OpenBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__bsdi__
-argument_list|)
-end_if
+begin_else
+else|#
+directive|else
+end_else
 
-begin_function_decl
+begin_decl_stmt
 name|PDEVSTATIC
 name|int
 name|i4bselect
-parameter_list|(
+name|__P
+argument_list|(
+operator|(
 name|dev_t
 name|dev
-parameter_list|,
+operator|,
 name|int
 name|rw
-parameter_list|,
-name|struct
+operator|,
+expr|struct
 name|proc
-modifier|*
+operator|*
 name|p
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#
@@ -605,6 +608,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* #ifndef __FreeBSD__ */
+end_comment
 
 begin_if
 if|#
@@ -654,18 +661,11 @@ name|i4bioctl
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD_version
-argument_list|)
-operator|&&
-name|__FreeBSD_version
-operator|>=
-literal|300001
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OS_USES_POLL
+end_ifdef
 
 begin_decl_stmt
 name|PDEVSTATIC
@@ -721,16 +721,9 @@ name|nullreset
 block|,
 name|nodevtotty
 block|,
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD_version
-argument_list|)
-operator|&&
-name|__FreeBSD_version
-operator|>=
-literal|300001
+ifdef|#
+directive|ifdef
+name|OS_USES_POLL
 name|i4bpoll
 block|,
 name|nommap
@@ -2051,7 +2044,7 @@ name|shorthold_data
 operator|.
 name|shorthold_algorithm
 operator|=
-name|msg_alg__fix_unit_size
+name|SHA_FIXU
 expr_stmt|;
 name|cd
 operator|->
@@ -2335,6 +2328,12 @@ case|case
 name|I4B_DIALOUT_RESP
 case|:
 block|{
+name|drvr_link_t
+modifier|*
+name|dlt
+init|=
+name|NULL
+decl_stmt|;
 name|msg_dialout_resp_t
 modifier|*
 name|mdrsp
@@ -2347,24 +2346,21 @@ operator|*
 operator|)
 name|data
 expr_stmt|;
+switch|switch
+condition|(
+name|mdrsp
+operator|->
+name|driver
+condition|)
+block|{
 if|#
 directive|if
 name|NI4BIPR
 operator|>
 literal|0
-if|if
-condition|(
-name|mdrsp
-operator|->
-name|driver
-operator|==
+case|case
 name|BDRV_IPR
-condition|)
-block|{
-name|drvr_link_t
-modifier|*
-name|dlt
-decl_stmt|;
+case|:
 name|dlt
 operator|=
 name|ipr_ret_linktab
@@ -2374,6 +2370,76 @@ operator|->
 name|driver_unit
 argument_list|)
 expr_stmt|;
+break|break;
+endif|#
+directive|endif
+if|#
+directive|if
+name|NI4BISPPP
+operator|>
+literal|0
+case|case
+name|BDRV_ISPPP
+case|:
+name|dlt
+operator|=
+name|i4bisppp_ret_linktab
+argument_list|(
+name|mdrsp
+operator|->
+name|driver_unit
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+if|#
+directive|if
+name|NI4BTEL
+operator|>
+literal|0
+case|case
+name|BDRV_TEL
+case|:
+name|dlt
+operator|=
+name|tel_ret_linktab
+argument_list|(
+name|mdrsp
+operator|->
+name|driver_unit
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+if|#
+directive|if
+name|NIBC
+operator|>
+literal|0
+case|case
+name|BDRV_IBC
+case|:
+name|dlt
+operator|=
+name|ibc_ret_linktab
+argument_list|(
+name|mdrsp
+operator|->
+name|driver_unit
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+block|}
+if|if
+condition|(
+name|dlt
+operator|!=
+name|NULL
+condition|)
 call|(
 modifier|*
 name|dlt
@@ -2388,11 +2454,12 @@ argument_list|,
 name|mdrsp
 operator|->
 name|stat
+argument_list|,
+name|mdrsp
+operator|->
+name|cause
 argument_list|)
 expr_stmt|;
-block|}
-endif|#
-directive|endif
 break|break;
 block|}
 comment|/* update timeout value */
@@ -2494,11 +2561,13 @@ name|shorthold_algorithm
 condition|)
 block|{
 case|case
-name|msg_alg__fix_unit_size
+name|SHA_FIXU
 case|:
-comment|/* 				 *	For this algorithm 				 *	unitlen_time, idle_time and earlyhup_time 				 *	are used. 				 */
+comment|/* 					 * For this algorithm unitlen_time, 					 * idle_time and earlyhup_time are used. 					 */
 if|if
 condition|(
+operator|!
+operator|(
 name|mtu
 operator|->
 name|shorthold_data
@@ -2512,7 +2581,7 @@ operator|->
 name|shorthold_data
 operator|.
 name|idle_time
-operator|>
+operator|>=
 literal|0
 operator|&&
 name|mtu
@@ -2522,10 +2591,9 @@ operator|.
 name|earlyhup_time
 operator|>=
 literal|0
+operator|)
 condition|)
 block|{
-break|break;
-block|}
 name|DBGL4
 argument_list|(
 name|L4_ERR
@@ -2541,13 +2609,16 @@ name|error
 operator|=
 name|EINVAL
 expr_stmt|;
+block|}
 break|break;
 case|case
-name|msg_alg__var_unit_size
+name|SHA_VARU
 case|:
-comment|/* 				 *	For this algorithm 				 *	unitlen_time and idle_time are used 				 *	both must be positive integers 				 *	earlyhup_time is not used and must be 0. 				 */
+comment|/* 					 * For this algorithm unitlen_time and 					 * idle_time are used. both must be 					 * positive integers. earlyhup_time is 					 * not used and must be 0. 					 */
 if|if
 condition|(
+operator|!
+operator|(
 name|mtu
 operator|->
 name|shorthold_data
@@ -2561,7 +2632,7 @@ operator|->
 name|shorthold_data
 operator|.
 name|idle_time
-operator|>
+operator|>=
 literal|0
 operator|&&
 name|mtu
@@ -2571,10 +2642,9 @@ operator|.
 name|earlyhup_time
 operator|==
 literal|0
+operator|)
 condition|)
 block|{
-break|break;
-block|}
 name|DBGL4
 argument_list|(
 name|L4_ERR
@@ -2590,6 +2660,7 @@ name|error
 operator|=
 name|EINVAL
 expr_stmt|;
+block|}
 break|break;
 default|default:
 name|DBGL4
@@ -2609,7 +2680,7 @@ name|EINVAL
 expr_stmt|;
 break|break;
 block|}
-comment|/* 			 * any error set above requires us to break 			 * out of the outter switch 			 */
+comment|/* 			 * any error set above requires us to break 			 * out of the outer switch 			 */
 if|if
 condition|(
 name|error
@@ -3459,42 +3530,11 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-operator|(
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-expr|\
-operator|(
-operator|!
-name|defined
-argument_list|(
-name|__FreeBSD_version
-argument_list|)
-operator|||
-operator|(
-name|__FreeBSD_version
-operator|<
-literal|300001
-operator|)
-operator|)
-operator|)
-expr|\
-operator|||
-name|defined
-argument_list|(
-name|__OpenBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__bsdi__
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OS_USES_SELECT
+end_ifdef
 
 begin_comment
 comment|/*---------------------------------------------------------------------------*  *	i4bselect - device driver select routine  *---------------------------------------------------------------------------*/
@@ -3606,7 +3646,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* NetBSD and FreeBSD -current */
+comment|/* OS_USES_SELECT */
 end_comment
 
 begin_comment
@@ -3738,7 +3778,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* defined(__FreeBSD__)&& __FreeBSD__< 3 */
+comment|/* OS_USES_SELECT */
 end_comment
 
 begin_comment

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_ioctl.h - messages kernel<--> userland  *	-------------------------------------------  *  *	$Id: i4b_ioctl.h,v 1.69 1999/03/01 09:04:15 hm Exp $   *  *      last edit-date: [Mon Mar  1 10:01:15 1999]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b_ioctl.h - messages kernel<--> userland  *	-------------------------------------------  *  *	$Id: i4b_ioctl.h,v 1.106 1999/05/19 08:51:14 hm Exp $   *  *      last edit-date: [Wed May 19 10:56:56 1999]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_ifndef
@@ -77,7 +77,7 @@ begin_define
 define|#
 directive|define
 name|REL
-value|71
+value|81
 end_define
 
 begin_comment
@@ -172,12 +172,34 @@ end_comment
 begin_define
 define|#
 directive|define
-name|CTRL_NUMTYPES
+name|CTRL_TINADD
 value|3
 end_define
 
 begin_comment
-comment|/* number of controller types */
+comment|/* Stollmann Tina-dd active card*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTRL_AVMB1
+value|4
+end_define
+
+begin_comment
+comment|/* AVM B1 active card		*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTRL_NUMTYPES
+value|5
+end_define
+
+begin_comment
+comment|/* number of controller types	*/
 end_comment
 
 begin_comment
@@ -415,6 +437,17 @@ begin_comment
 comment|/* AVM FRITZ!CARD PCI		*/
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CARD_TYPEP_PCC16
+value|20
+end_define
+
+begin_comment
+comment|/* ELSA PCC-16			*/
+end_comment
+
 begin_comment
 comment|/*  * in case you add support for more cards, please update:  *  *	isdnd:		support.c, name_of_controller()  *	diehl/diehlctl:	main.c, listall()  *  * and adjust CARD_TYPEP_MAX below.  */
 end_comment
@@ -423,7 +456,7 @@ begin_define
 define|#
 directive|define
 name|CARD_TYPEP_MAX
-value|19
+value|20
 end_define
 
 begin_comment
@@ -663,20 +696,27 @@ begin_comment
 comment|/*---------------------------------------------------------------------------*  *	The shorthold algorithm to use  *---------------------------------------------------------------------------*/
 end_comment
 
-begin_typedef
-typedef|typedef
-enum|enum
-name|msg_shorthold_algorithm
-block|{
-name|msg_alg__fix_unit_size
-block|,
+begin_define
+define|#
+directive|define
+name|SHA_FIXU
+value|0
+end_define
+
+begin_comment
 comment|/* timeout algorithm for fix unit charging */
-name|msg_alg__var_unit_size
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SHA_VARU
+value|1
+end_define
+
+begin_comment
 comment|/* timeout algorithm for variable unit charging */
-block|}
-name|msg_shorthold_algorithm_t
-typedef|;
-end_typedef
+end_comment
 
 begin_comment
 comment|/*---------------------------------------------------------------------------*  *	The shorthold data struct  *---------------------------------------------------------------------------*/
@@ -686,22 +726,22 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|msg_shorthold_algorithm_t
+name|int
 name|shorthold_algorithm
 decl_stmt|;
-comment|/* shorthold algorithm to use */
+comment|/* shorthold algorithm to use	*/
 name|int
 name|unitlen_time
 decl_stmt|;
-comment|/* length of a charging unit		*/
+comment|/* length of a charging unit	*/
 name|int
 name|idle_time
 decl_stmt|;
-comment|/* time without activity on b ch	*/
+comment|/* time without activity on b ch*/
 name|int
 name|earlyhup_time
 decl_stmt|;
-comment|/* safety area at end of unit		*/
+comment|/* safety area at end of unit	*/
 block|}
 name|msg_shorthold_t
 typedef|;
@@ -787,6 +827,10 @@ define|#
 directive|define
 name|MSG_IFSTATE_CHANGED_IND
 value|'o'
+define|#
+directive|define
+name|MSG_DIALOUTNUMBER_IND
+value|'p'
 name|int
 name|cdid
 decl_stmt|;
@@ -1008,6 +1052,42 @@ decl_stmt|;
 comment|/* driver unit number	*/
 block|}
 name|msg_dialout_ind_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*---------------------------------------------------------------------------*  *	dial a number  *---------------------------------------------------------------------------*/
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|msg_hdr_t
+name|header
+decl_stmt|;
+comment|/* common header	*/
+name|int
+name|driver
+decl_stmt|;
+comment|/* driver type		*/
+name|int
+name|driver_unit
+decl_stmt|;
+comment|/* driver unit number	*/
+name|int
+name|cmdlen
+decl_stmt|;
+comment|/* length of string	*/
+name|char
+name|cmd
+index|[
+name|TELNO_MAX
+index|]
+decl_stmt|;
+comment|/* the number to dial	*/
+block|}
+name|msg_dialoutnumber_ind_t
 typedef|;
 end_typedef
 
@@ -1579,6 +1659,10 @@ directive|define
 name|DSTAT_INONLY
 value|3
 comment|/* no outgoing dials allowed */
+name|cause_t
+name|cause
+decl_stmt|;
+comment|/* exact i4b cause */
 block|}
 name|msg_dialout_resp_t
 typedef|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	isdntelctl - i4b set telephone interface options  *	------------------------------------------------  *  *	$Id: main.c,v 1.7 1999/02/16 10:40:18 hm Exp $  *  *      last edit-date: [Tue Feb 16 11:32:09 1999]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	isdntelctl - i4b set telephone interface options  *	------------------------------------------------  *  *	$Id: main.c,v 1.9 1999/04/26 12:10:39 hm Exp $  *  *      last edit-date: [Mon Apr 26 14:07:06 1999]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/i4b_ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/i4b_tel_ioctl.h>
 end_include
 
@@ -146,7 +152,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|opt_R
+name|opt_N
 init|=
 literal|0
 decl_stmt|;
@@ -195,7 +201,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"cgu:AUR?"
+literal|"cgu:AUN?"
 argument_list|)
 operator|)
 operator|!=
@@ -264,9 +270,9 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-literal|'R'
+literal|'N'
 case|:
-name|opt_R
+name|opt_N
 operator|=
 literal|1
 expr_stmt|;
@@ -287,7 +293,7 @@ name|opt_get
 operator|==
 literal|0
 operator|&&
-name|opt_R
+name|opt_N
 operator|==
 literal|0
 operator|&&
@@ -314,7 +320,7 @@ condition|(
 operator|(
 name|opt_get
 operator|+
-name|opt_R
+name|opt_N
 operator|+
 name|opt_U
 operator|+
@@ -431,7 +437,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"device %s uses A-Law sound format\n"
+literal|"device %s does not do A-law/u-law format conversion\n"
 argument_list|,
 name|namebuffer
 argument_list|)
@@ -447,7 +453,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"device %s uses u-Law sound format\n"
+literal|"device %s does ISDN: A-law -> user: u-law format conversion\n"
 argument_list|,
 name|namebuffer
 argument_list|)
@@ -458,12 +464,12 @@ if|if
 condition|(
 name|format
 operator|==
-name|CVT_ALAW_CANON
+name|CVT_ULAW2ALAW
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"device %s uses canonical A-Law sound format\n"
+literal|"device %s does ISDN: u-law -> user: A-law format conversion\n"
 argument_list|,
 name|namebuffer
 argument_list|)
@@ -495,7 +501,7 @@ block|{
 name|int
 name|format
 init|=
-name|CVT_NONE
+name|CVT_ALAW2ULAW
 decl_stmt|;
 if|if
 condition|(
@@ -548,7 +554,7 @@ block|{
 name|int
 name|format
 init|=
-name|CVT_ALAW2ULAW
+name|CVT_ULAW2ALAW
 decl_stmt|;
 if|if
 condition|(
@@ -595,13 +601,13 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|opt_R
+name|opt_N
 condition|)
 block|{
 name|int
 name|format
 init|=
-name|CVT_ALAW_CANON
+name|CVT_NONE
 decl_stmt|;
 if|if
 condition|(
@@ -728,7 +734,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"isdntelctl - i4b telephone i/f control, compiled %s %s\n"
+literal|"isdntelctl - /dev/i4btel control, version %d.%d.%d (%s %s)\n"
+argument_list|,
+name|VERSION
+argument_list|,
+name|REL
+argument_list|,
+name|STEP
 argument_list|,
 name|__DATE__
 argument_list|,
@@ -739,7 +751,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: isdntelctl -g -u<unit> -A -U -c\n"
+literal|"usage: isdntelctl -c -g -u<unit> -A -N -U\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"       -c            clear input queue\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -760,28 +779,21 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"       -A            set interface to A-Law coding\n"
+literal|"       -A            set conversion ISDN: A-law -> user: u-law\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"       -U            set interface to u-Law coding\n"
+literal|"       -U            set conversion ISDN: u-law -> user: A-law\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"       -R            set interface to canonical (regular) A-Law coding\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"       -c            clear input queue\n"
+literal|"       -N            set conversion to no A-law/u-law conversion\n"
 argument_list|)
 expr_stmt|;
 name|fprintf

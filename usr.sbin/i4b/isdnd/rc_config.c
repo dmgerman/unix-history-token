@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b daemon - config file processing  *	-----------------------------------  *  *	$Id: rc_config.c,v 1.40 1999/02/23 16:25:49 hm Exp $   *  *      last edit-date: [Tue Feb 23 16:43:56 1999]  *  *---------------------------------------------------------------------------*/
+comment|/*  * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *---------------------------------------------------------------------------  *  *	i4b daemon - config file processing  *	-----------------------------------  *  *	$Id: rc_config.c,v 1.42 1999/04/29 08:27:10 hm Exp $   *  *      last edit-date: [Thu Apr 29 08:49:46 1999]  *  *---------------------------------------------------------------------------*/
 end_comment
 
 begin_include
@@ -1804,7 +1804,7 @@ index|]
 operator|.
 name|shorthold_algorithm
 operator|=
-name|msg_alg__fix_unit_size
+name|SHA_FIXU
 expr_stmt|;
 block|}
 elseif|else
@@ -1830,7 +1830,7 @@ index|]
 operator|.
 name|shorthold_algorithm
 operator|=
-name|msg_alg__var_unit_size
+name|SHA_VARU
 expr_stmt|;
 block|}
 else|else
@@ -3367,6 +3367,37 @@ name|RTPRIO_NOTUSED
 expr_stmt|;
 endif|#
 directive|endif
+break|break;
+case|case
+name|TINAINITPROG
+case|:
+name|strcpy
+argument_list|(
+name|tinainitprog
+argument_list|,
+name|yylval
+operator|.
+name|str
+argument_list|)
+expr_stmt|;
+name|DBGL
+argument_list|(
+name|DL_RCCF
+argument_list|,
+operator|(
+name|log
+argument_list|(
+name|LL_DBG
+argument_list|,
+literal|"system: tinainitprog = %s"
+argument_list|,
+name|yylval
+operator|.
+name|str
+argument_list|)
+operator|)
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 name|UNITLENGTH
@@ -5638,7 +5669,7 @@ name|shorthold_algorithm
 condition|)
 block|{
 case|case
-name|msg_alg__fix_unit_size
+name|SHA_FIXU
 case|:
 name|s
 operator|=
@@ -5646,7 +5677,7 @@ literal|"fix-unit-size"
 expr_stmt|;
 break|break;
 case|case
-name|msg_alg__var_unit_size
+name|SHA_VARU
 case|:
 name|s
 operator|=
