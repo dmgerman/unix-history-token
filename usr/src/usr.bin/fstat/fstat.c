@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)fstat.c	5.16 (Berkeley) %G%"
+literal|"@(#)fstat.c	5.17 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -203,6 +203,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<strings.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"pathnames.h"
 end_include
 
@@ -275,6 +281,13 @@ define|#
 directive|define
 name|WD
 value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|VP
+value|if (vflg) (void)printf
 end_define
 
 begin_typedef
@@ -600,6 +613,9 @@ argument_list|)
 operator|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -713,11 +729,14 @@ operator|.
 name|n_type
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: No namelist\n"
+literal|"%s: no namelist\n"
 argument_list|,
 name|_PATH_UNIX
 argument_list|)
@@ -829,6 +848,9 @@ operator|==
 name|NULL
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -866,6 +888,9 @@ argument_list|,
 name|_PATH_KMEM
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"USER\t CMD\t      PID    FD\tDEVICE\tINODE\t  SIZE TYPE%s\n"
@@ -1070,10 +1095,8 @@ name|user
 argument_list|)
 condition|)
 block|{
-name|fprintf
+name|VP
 argument_list|(
-name|stderr
-argument_list|,
 literal|"fstat: can't read u for pid %d from %s\n"
 argument_list|,
 name|mproc
@@ -1165,7 +1188,7 @@ name|apte
 argument_list|)
 condition|)
 block|{
-name|printf
+name|VP
 argument_list|(
 literal|"fstat: can't read indir pte to get u for pid %d from %s\n"
 argument_list|,
@@ -1246,7 +1269,7 @@ name|arguutl
 argument_list|)
 condition|)
 block|{
-name|printf
+name|VP
 argument_list|(
 literal|"fstat: can't read page table for u of pid %d from %s\n"
 argument_list|,
@@ -1353,7 +1376,7 @@ operator|*
 name|NBPG
 condition|)
 block|{
-name|printf
+name|VP
 argument_list|(
 literal|"fstat: can't read page %u of u of pid %d from %s\n"
 argument_list|,
@@ -1579,8 +1602,6 @@ condition|)
 block|{
 name|rerr2
 argument_list|(
-name|errno
-argument_list|,
 operator|(
 name|int
 operator|)
@@ -1650,6 +1671,9 @@ name|user
 operator|.
 name|u_comm
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"%-8.8s %-10.10s %5d  "
@@ -1671,6 +1695,9 @@ block|{
 case|case
 name|WD
 case|:
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"  wd"
@@ -1680,6 +1707,9 @@ break|break;
 case|case
 name|TEXT
 case|:
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"text"
@@ -1687,6 +1717,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"%4d"
@@ -1702,6 +1735,9 @@ operator|==
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"* (deallocated)\n"
@@ -1717,6 +1753,9 @@ block|{
 case|case
 name|DTYPE_INODE
 case|:
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"\t%2d, %2d\t%5lu\t"
@@ -1752,6 +1791,9 @@ block|{
 case|case
 name|IFSOCK
 case|:
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"     0\t"
@@ -1761,6 +1803,9 @@ break|break;
 case|case
 name|IFCHR
 case|:
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"%2d, %2d\t"
@@ -1782,6 +1827,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"%6ld\t"
@@ -1792,6 +1840,9 @@ name|i_size
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"%3s %s\n"
@@ -1831,6 +1882,9 @@ name|DTYPE_PORT
 case|case
 name|DTYPE_PORT
 case|:
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"* (fifo / named pipe)\n"
@@ -1840,6 +1894,9 @@ break|break;
 endif|#
 directive|endif
 default|default:
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"* (unknown file type)\n"
@@ -2050,8 +2107,6 @@ condition|)
 block|{
 name|rerr2
 argument_list|(
-name|errno
-argument_list|,
 operator|(
 name|int
 operator|)
@@ -2109,8 +2164,6 @@ condition|)
 block|{
 name|rerr2
 argument_list|(
-name|errno
-argument_list|,
 operator|(
 name|int
 operator|)
@@ -2170,8 +2223,6 @@ condition|)
 block|{
 name|rerr2
 argument_list|(
-name|errno
-argument_list|,
 operator|(
 name|int
 operator|)
@@ -2247,8 +2298,6 @@ condition|)
 block|{
 name|rerr2
 argument_list|(
-name|errno
-argument_list|,
 operator|(
 name|int
 operator|)
@@ -2287,6 +2336,9 @@ name|so_type
 operator|>
 name|STYPEMAX
 condition|)
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"* (%s unk%d %x"
@@ -2303,6 +2355,9 @@ name|so_state
 argument_list|)
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"* (%s %s %x"
@@ -2401,8 +2456,6 @@ condition|)
 block|{
 name|rerr2
 argument_list|(
-name|errno
-argument_list|,
 operator|(
 name|int
 operator|)
@@ -2415,6 +2468,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|" %x"
@@ -2436,6 +2492,9 @@ name|so
 operator|.
 name|so_pcb
 condition|)
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|" %x"
@@ -2460,6 +2519,9 @@ operator|.
 name|so_pcb
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|" %x"
@@ -2518,8 +2580,6 @@ condition|)
 block|{
 name|rerr2
 argument_list|(
-name|errno
-argument_list|,
 operator|(
 name|int
 operator|)
@@ -2597,6 +2657,9 @@ name|cp
 operator|=
 literal|'\0'
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|" %s %x"
@@ -2616,6 +2679,9 @@ block|}
 break|break;
 default|default:
 comment|/* print protocol number and socket address */
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|" %d %x"
@@ -2631,6 +2697,9 @@ name|sock
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|")\n"
@@ -2738,6 +2807,9 @@ literal|"raw"
 expr_stmt|;
 break|break;
 default|default:
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|" %d"
@@ -2747,6 +2819,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|" %s"
@@ -3018,6 +3093,9 @@ name|statbuf
 argument_list|)
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -3059,6 +3137,9 @@ operator|==
 name|NULL
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|fprintf
 argument_list|(
 name|stderr
@@ -3302,11 +3383,7 @@ end_decl_stmt
 
 begin_block
 block|{
-if|if
-condition|(
-name|vflg
-condition|)
-name|printf
+name|VP
 argument_list|(
 literal|"error reading %s from %s"
 argument_list|,
@@ -3322,15 +3399,11 @@ begin_expr_stmt
 specifier|static
 name|rerr2
 argument_list|(
-argument|err
-argument_list|,
 argument|address
 argument_list|,
 argument|what
 argument_list|)
 name|int
-name|err
-operator|,
 name|address
 expr_stmt|;
 end_expr_stmt
@@ -3344,11 +3417,7 @@ end_decl_stmt
 
 begin_block
 block|{
-if|if
-condition|(
-name|vflg
-condition|)
-name|printf
+name|VP
 argument_list|(
 literal|"error %d reading %s at %x from %s\n"
 argument_list|,
@@ -3419,8 +3488,6 @@ argument_list|)
 condition|)
 name|rerr2
 argument_list|(
-name|errno
-argument_list|,
 operator|(
 name|int
 operator|)
@@ -3442,11 +3509,14 @@ specifier|static
 name|usage
 argument_list|()
 block|{
-name|fputs
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-literal|"usage: fstat [-u user] [-p pid] [filename ...]\n"
-argument_list|,
 name|stderr
+argument_list|,
+literal|"usage: fstat [-u user] [-p pid] [filename ...]\n"
 argument_list|)
 block|;
 name|exit
