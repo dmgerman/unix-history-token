@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)output.c	5.5 (Berkeley) %G%"
+literal|"@(#)output.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -127,7 +127,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Display the line which is in the line buffer.  */
+comment|/* display the line which is in the line buffer. */
 end_comment
 
 begin_macro
@@ -494,9 +494,11 @@ expr_stmt|;
 block|}
 end_block
 
-begin_comment
-comment|/*  * Output a message in the lower left corner of the screen  * and wait for carriage return.  */
-end_comment
+begin_decl_stmt
+name|int
+name|cmdstack
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
@@ -507,6 +509,10 @@ init|=
 literal|"  (press RETURN)"
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * Output a message in the lower left corner of the screen  * and wait for carriage return.  */
+end_comment
 
 begin_macro
 name|error
@@ -524,6 +530,9 @@ end_decl_stmt
 
 begin_block
 block|{
+name|int
+name|ch
+decl_stmt|;
 operator|++
 name|errmsgs
 expr_stmt|;
@@ -585,11 +594,20 @@ expr_stmt|;
 name|so_exit
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
 operator|(
-name|void
-operator|)
+name|ch
+operator|=
 name|getchr
 argument_list|()
+operator|)
+operator|!=
+literal|'\n'
+condition|)
+name|cmdstack
+operator|=
+name|ch
 expr_stmt|;
 name|lower_left
 argument_list|()

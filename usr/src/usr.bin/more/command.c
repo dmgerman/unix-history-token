@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)command.c	5.11 (Berkeley) %G%"
+literal|"@(#)command.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1019,6 +1019,33 @@ end_macro
 
 begin_block
 block|{
+specifier|extern
+name|int
+name|cmdstack
+decl_stmt|;
+name|int
+name|ch
+decl_stmt|;
+comment|/* left over from error() routine. */
+if|if
+condition|(
+name|cmdstack
+condition|)
+block|{
+name|ch
+operator|=
+name|cmdstack
+expr_stmt|;
+name|cmdstack
+operator|=
+name|NULL
+expr_stmt|;
+return|return
+operator|(
+name|ch
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|cp
