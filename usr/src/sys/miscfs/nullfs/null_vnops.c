@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * John Heidemann of the UCLA Ficus project.  *  * %sccs.include.redist.c%  *  *	@(#)null_vnops.c	1.7 (Berkeley) %G%  *  * Ancestors:  *	@(#)lofs_vnops.c	1.2 (Berkeley) 6/18/92  *	$Id: lofs_vnops.c,v 1.11 1992/05/30 10:05:43 jsp Exp jsp $  *	...and...  *	@(#)null_vnodeops.c 1.20 92/07/07 UCLA Ficus project  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * John Heidemann of the UCLA Ficus project.  *  * %sccs.include.redist.c%  *  *	@(#)null_vnops.c	7.1 (Berkeley) %G%  *  * Ancestors:  *	@(#)lofs_vnops.c	1.2 (Berkeley) 6/18/92  *	$Id: lofs_vnops.c,v 1.11 1992/05/30 10:05:43 jsp Exp jsp $  *	...and...  *	@(#)null_vnodeops.c 1.20 92/07/07 UCLA Ficus project  */
 end_comment
 
 begin_comment
-comment|/*  * Null Layer  *  * (See mount_null(8) for more information.)  *  * The null layer duplicates a portion of the file system  * name space under a new name.  In this respect, it is  * similar to the loopback file system.  It differs from  * the loopback fs in two respects:  it is implemented using  * a stackable layers techniques, and it's "null-node"s stack above  * all lower-layer vnodes, not just over directory vnodes.  *  * The null layer has two purposes.  First, it serves as a demonstration  * of layering by proving a layer which does nothing.  (It actually  * does everything the loopback file system does, which is slightly  * more than nothing.)  Second, the null layer can serve as a prototype  * layer.  Since it provides all necessary layer framework,  * new file system layers can be created very easily be starting  * with a null layer.  *  * The remainder of this man page examines the null layer as a basis  * for constructing new layers.  *  *  * INSTANTIATING NEW NULL LAYERS  *  * New null layers are created with mount_null(8).  * Mount_null(8) takes two arguments, the pathname  * of the lower vfs (target-pn) and the pathname where the null  * layer will appear in the namespace (alias-pn).  After  * the null layer is put into place, the contents  * of target-pn subtree will be aliased under alias-pn.  *  *  * OPERATION OF A NULL LAYER  *  * The null layer is the minimum file system layer,  * simply bypassing all possible operations to the lower layer  * for processing there.  The majority of its activity centers  * on the bypass routine, though which nearly all vnode operations  * pass.  *  * The bypass routine accepts arbitrary vnode operations for  * handling by the lower layer.  It begins by examing vnode  * operation arguments and replacing any null-nodes by their  * lower-layer equivlants.  It then invokes the operation  * on the lower layer.  Finally, it replaces the null-nodes  * in the arguments and, if a vnode is return by the operation,  * stacks a null-node on top of the returned vnode.  *  * Although bypass handles most operations,   * vop_getattr, _inactive, _reclaim, and _print are not bypassed.  * Vop_getattr must change the fsid being returned.  * Vop_inactive and vop_reclaim are not bypassed so that  * they can handle freeing null-layer specific data.  * Vop_print is not bypassed to avoid excessive debugging  * information.  *  *  * INSTANTIATING VNODE STACKS  *  * Mounting associates the null layer with a lower layer,  * effect stacking two VFSes.  Vnode stacks are instead  * created on demand as files are accessed.  *  * The initial mount creates a single vnode stack for the  * root of the new null layer.  All other vnode stacks  * are created as a result of vnode operations on  * this or other null vnode stacks.  *  * New vnode stacks come into existance as a result of  * an operation which returns a vnode.    * The bypass routine stacks a null-node above the new  * vnode before returning it to the caller.  *  * For example, imagine mounting a null layer with  * "mount_null /usr/include /dev/layer/null".  * Chainging directory to /dev/layer/null will assign  * the root null-node (which was created when the null layer was mounted).  * Now consider opening "sys".  A vop_lookup would be  * done on the root null-node.  This operation would bypass through  * to the lower layer which would return a vnode representing   * the UFS "sys".  Null_bypass then builds a null-node  * aliasing the UFS "sys" and returns this to the caller.  * Later operations on the null-node "sys" will repeat this  * process when constructing other vnode stacks.  *  *  * CREATING OTHER FILE SYSTEM LAYERS  *  * One of the easiest ways to construct new file system layers is to make  * a copy of the null layer, rename all files and variables, and  * then begin modifing the copy.  Sed can be used to easily rename  * all variables.  *  * The umap layer is an example of a layer descended from the   * null layer.  *  *  * INVOKING OPERATIONS ON LOWER LAYERS  *  * There are two techniques to invoke operations on a lower layer   * when the operation cannot be completely bypassed.  Each method  * is appropriate in different situations.  In both cases,  * it is the responsibility of the aliasing layer to make  * the operation arguments "correct" for the lower layer  * by mapping an vnode arguments to the lower layer.  *  * The first approach is to call the aliasing layer's bypass routine.  * This method is most suitable when you wish to invoke the operation  * currently being hanldled on the lower layer.  It has the advantage  * the the bypass routine already must do argument mapping.  * An example of this is null_getattrs in the null layer.  *  * A second approach is to directly invoked vnode operations on  * the lower layer with the VOP_OPERATIONNAME interface.  * The advantage of this method is that it is easy to invoke  * arbitrary operations on the lower layer.  The disadvantage  * is that vnodes arguments must be manualy mapped.  *  */
+comment|/*  * Null Layer  *  * (See mount_null(8) for more information.)  *  * The null layer duplicates a portion of the file system  * name space under a new name.  In this respect, it is  * similar to the loopback file system.  It differs from  * the loopback fs in two respects:  it is implemented using  * a stackable layers techniques, and it's "null-node"s stack above  * all lower-layer vnodes, not just over directory vnodes.  *  * The null layer has two purposes.  First, it serves as a demonstration  * of layering by proving a layer which does nothing.  (It actually  * does everything the loopback file system does, which is slightly  * more than nothing.)  Second, the null layer can serve as a prototype  * layer.  Since it provides all necessary layer framework,  * new file system layers can be created very easily be starting  * with a null layer.  *  * The remainder of this man page examines the null layer as a basis  * for constructing new layers.  *  *  * INSTANTIATING NEW NULL LAYERS  *  * New null layers are created with mount_null(8).  * Mount_null(8) takes two arguments, the pathname  * of the lower vfs (target-pn) and the pathname where the null  * layer will appear in the namespace (alias-pn).  After  * the null layer is put into place, the contents  * of target-pn subtree will be aliased under alias-pn.  *  *  * OPERATION OF A NULL LAYER  *  * The null layer is the minimum file system layer,  * simply bypassing all possible operations to the lower layer  * for processing there.  The majority of its activity centers  * on the bypass routine, though which nearly all vnode operations  * pass.  *  * The bypass routine accepts arbitrary vnode operations for  * handling by the lower layer.  It begins by examing vnode  * operation arguments and replacing any null-nodes by their  * lower-layer equivlants.  It then invokes the operation  * on the lower layer.  Finally, it replaces the null-nodes  * in the arguments and, if a vnode is return by the operation,  * stacks a null-node on top of the returned vnode.  *  * Although bypass handles most operations,   * vop_getattr, _inactive, _reclaim, and _print are not bypassed.  * Vop_getattr must change the fsid being returned.  * Vop_inactive and vop_reclaim are not bypassed so that  * they can handle freeing null-layer specific data.  * Vop_print is not bypassed to avoid excessive debugging  * information.  *  *  * INSTANTIATING VNODE STACKS  *  * Mounting associates the null layer with a lower layer,  * effect stacking two VFSes.  Vnode stacks are instead  * created on demand as files are accessed.  *  * The initial mount creates a single vnode stack for the  * root of the new null layer.  All other vnode stacks  * are created as a result of vnode operations on  * this or other null vnode stacks.  *  * New vnode stacks come into existance as a result of  * an operation which returns a vnode.    * The bypass routine stacks a null-node above the new  * vnode before returning it to the caller.  *  * For example, imagine mounting a null layer with  * "mount_null /usr/include /dev/layer/null".  * Changing directory to /dev/layer/null will assign  * the root null-node (which was created when the null layer was mounted).  * Now consider opening "sys".  A vop_lookup would be  * done on the root null-node.  This operation would bypass through  * to the lower layer which would return a vnode representing   * the UFS "sys".  Null_bypass then builds a null-node  * aliasing the UFS "sys" and returns this to the caller.  * Later operations on the null-node "sys" will repeat this  * process when constructing other vnode stacks.  *  *  * CREATING OTHER FILE SYSTEM LAYERS  *  * One of the easiest ways to construct new file system layers is to make  * a copy of the null layer, rename all files and variables, and  * then begin modifing the copy.  Sed can be used to easily rename  * all variables.  *  * The umap layer is an example of a layer descended from the   * null layer.  *  *  * INVOKING OPERATIONS ON LOWER LAYERS  *  * There are two techniques to invoke operations on a lower layer   * when the operation cannot be completely bypassed.  Each method  * is appropriate in different situations.  In both cases,  * it is the responsibility of the aliasing layer to make  * the operation arguments "correct" for the lower layer  * by mapping an vnode arguments to the lower layer.  *  * The first approach is to call the aliasing layer's bypass routine.  * This method is most suitable when you wish to invoke the operation  * currently being hanldled on the lower layer.  It has the advantage  * that the bypass routine already must do argument mapping.  * An example of this is null_getattrs in the null layer.  *  * A second approach is to directly invoked vnode operations on  * the lower layer with the VOP_OPERATIONNAME interface.  * The advantage of this method is that it is easy to invoke  * arbitrary operations on the lower layer.  The disadvantage  * is that vnodes arguments must be manualy mapped.  *  */
 end_comment
 
 begin_include
@@ -70,7 +70,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nullfs/null.h>
+file|<miscfs/nullfs/null.h>
 end_include
 
 begin_decl_stmt
@@ -97,6 +97,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_generic_args
+comment|/* { 		struct vnodeop_desc *a_desc;<other random data follows, presumably> 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -515,6 +516,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_getattr_args
+comment|/* { 		struct vnode *a_vp; 		struct vattr *a_vap; 		struct ucred *a_cred; 		struct proc *a_p; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -532,7 +534,9 @@ name|ap
 argument_list|)
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 comment|/* Requires that arguments be restored. */
 name|ap
@@ -557,7 +561,9 @@ literal|0
 index|]
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -570,13 +576,16 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_inactive_args
+comment|/* { 		struct vnode *a_vp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
 block|{
 comment|/* 	 * Do nothing (and _don't_ bypass). 	 * Wait to vrele lowervp until reclaim, 	 * so that until then our null_node is in the 	 * cache and reusable. 	 * 	 * NEEDSWORK: Someday, consider inactive'ing 	 * the lowervp and then trying to reactivate it 	 * with capabilities (v_id) 	 * like they do in the name lookup cache code. 	 * That's too much work for now. 	 */
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -589,6 +598,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_reclaim_args
+comment|/* { 		struct vnode *a_vp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -655,7 +665,9 @@ name|lowervp
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -668,6 +680,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_print_args
+comment|/* { 		struct vnode *a_vp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -695,7 +708,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -712,6 +727,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_strategy_args
+comment|/* { 		struct buf *a_bp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -764,7 +780,9 @@ operator|=
 name|savedvp
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -781,6 +799,7 @@ name|ap
 parameter_list|)
 name|struct
 name|vop_bwrite_args
+comment|/* { 		struct buf *a_bp; 	} */
 modifier|*
 name|ap
 decl_stmt|;
@@ -833,7 +852,9 @@ operator|=
 name|savedvp
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function

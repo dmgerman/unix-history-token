@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)lofs_subr.c	1.2 (Berkeley) 6/18/92  *  * $Id: lofs_subr.c,v 1.11 1992/05/30 10:05:43 jsp Exp jsp $  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)null_subr.c	7.1 (Berkeley) %G%  *  * $Id: lofs_subr.c,v 1.11 1992/05/30 10:05:43 jsp Exp jsp $  */
 end_comment
 
 begin_include
@@ -54,7 +54,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nullfs/null.h>
+file|<miscfs/nullfs/null.h>
 end_include
 
 begin_define
@@ -887,13 +887,37 @@ argument_list|(
 name|vp
 argument_list|)
 decl_stmt|;
-if|#
-directive|if
-literal|0
+ifdef|#
+directive|ifdef
+name|notyet
 comment|/* 	 * Can't do this check because vop_reclaim runs 	 * with a funny vop vector. 	 */
-block|if (vp->v_op != null_vnodeop_p) { 		printf ("null_checkvp: on non-null-node\n"); 		while (null_checkvp_barrier)
+if|if
+condition|(
+name|vp
+operator|->
+name|v_op
+operator|!=
+name|null_vnodeop_p
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"null_checkvp: on non-null-node\n"
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+name|null_checkvp_barrier
+condition|)
 comment|/*WAIT*/
-block|; 		panic("null_checkvp"); 	};
+empty_stmt|;
+name|panic
+argument_list|(
+literal|"null_checkvp"
+argument_list|)
+expr_stmt|;
+block|}
+empty_stmt|;
 endif|#
 directive|endif
 if|if
@@ -1044,10 +1068,40 @@ argument_list|)
 expr_stmt|;
 block|}
 empty_stmt|;
-if|#
-directive|if
-literal|0
-block|printf("null %x/%d -> %x/%d [%s, %d]\n", 	        NULLTOV(a), NULLTOV(a)->v_usecount, 		a->null_lowervp, a->null_lowervp->v_usecount, 		fil, lno);
+ifdef|#
+directive|ifdef
+name|notyet
+name|printf
+argument_list|(
+literal|"null %x/%d -> %x/%d [%s, %d]\n"
+argument_list|,
+name|NULLTOV
+argument_list|(
+name|a
+argument_list|)
+argument_list|,
+name|NULLTOV
+argument_list|(
+name|a
+argument_list|)
+operator|->
+name|v_usecount
+argument_list|,
+name|a
+operator|->
+name|null_lowervp
+argument_list|,
+name|a
+operator|->
+name|null_lowervp
+operator|->
+name|v_usecount
+argument_list|,
+name|fil
+argument_list|,
+name|lno
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 return|return
