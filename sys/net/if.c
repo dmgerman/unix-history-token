@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mbuf.h>
 end_include
 
@@ -1414,6 +1420,7 @@ index|[
 literal|32
 index|]
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1647,7 +1654,7 @@ name|if_index
 operator|&&
 name|ifaddr_byindex
 argument_list|(
-name|i
+name|unit
 argument_list|)
 operator|!=
 name|NULL
