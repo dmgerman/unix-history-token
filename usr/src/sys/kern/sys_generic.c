@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)sys_generic.c	6.11 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)sys_generic.c	6.12 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1301,64 +1301,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Select uses bit masks of file descriptors in ints.  * These macros manipulate such bit fields (the filesystem macros use chars).  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NBI
-value|(sizeof(int) * NBBY)
-end_define
-
-begin_comment
-comment|/* bits per int */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NI
-value|howmany(NOFILE, NBI)
-end_define
-
-begin_define
-define|#
-directive|define
-name|tbit
-parameter_list|(
-name|p
-parameter_list|,
-name|n
-parameter_list|)
-value|((p)[(n)/NBI]& (1<< ((n) % NBI)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|sbit
-parameter_list|(
-name|p
-parameter_list|,
-name|n
-parameter_list|)
-value|((p)[(n)/NBI] |= (1<< ((n) % NBI)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|cbit
-parameter_list|(
-name|p
-parameter_list|,
-name|n
-parameter_list|)
-value|((p)[(n)/NBI]&= ~(1<< ((n) % NBI)))
-end_define
-
-begin_comment
 comment|/*  * Select system call.  */
 end_comment
 
@@ -1376,7 +1318,7 @@ block|{
 name|int
 name|nd
 decl_stmt|;
-name|int
+name|fd_set
 modifier|*
 name|in
 decl_stmt|,
@@ -1404,21 +1346,15 @@ name|u
 operator|.
 name|u_ap
 struct|;
-name|int
+name|fd_set
 name|ibits
 index|[
 literal|3
-index|]
-index|[
-name|NI
 index|]
 decl_stmt|,
 name|obits
 index|[
 literal|3
-index|]
-index|[
-name|NI
 index|]
 decl_stmt|;
 name|struct
@@ -1478,7 +1414,7 @@ name|uap
 operator|->
 name|nd
 argument_list|,
-name|NBI
+name|NFDBITS
 argument_list|)
 expr_stmt|;
 define|#
@@ -1490,7 +1426,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|if (uap->name) { \ 		u.u_error = copyin((caddr_t)uap->name, (caddr_t)ibits[x], \ 		    ni * sizeof(int)); \ 		if (u.u_error) \ 			goto done; \ 	}
+value|if (uap->name) { \ 		u.u_error = copyin((caddr_t)uap->name, (caddr_t)&ibits[x], \ 		    ni * sizeof(fd_mask)); \ 		if (u.u_error) \ 			goto done; \ 	}
 name|getbits
 argument_list|(
 name|in
@@ -1863,7 +1799,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|if (uap->name) { \ 		int error = copyout((caddr_t)obits[x], (caddr_t)uap->name, \ 		    ni * sizeof(int)); \ 		if (error) \ 			u.u_error = error; \ 	}
+value|if (uap->name) { \ 		int error = copyout((caddr_t)&obits[x], (caddr_t)uap->name, \ 		    ni * sizeof(fd_mask)); \ 		if (error) \ 			u.u_error = error; \ 	}
 if|if
 condition|(
 name|u
@@ -1968,25 +1904,15 @@ argument|nfd
 argument_list|)
 end_macro
 
-begin_expr_stmt
-name|int
-argument_list|(
-operator|*
+begin_decl_stmt
+name|fd_set
+modifier|*
 name|ibits
-argument_list|)
-index|[
-name|NI
-index|]
-operator|,
-operator|(
-operator|*
+decl_stmt|,
+modifier|*
 name|obits
-operator|)
-index|[
-name|NI
-index|]
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1994,11 +1920,13 @@ specifier|register
 name|int
 name|which
 decl_stmt|,
-name|bits
-decl_stmt|,
 name|i
 decl_stmt|,
 name|j
+decl_stmt|;
+specifier|register
+name|fd_mask
+name|bits
 decl_stmt|;
 name|int
 name|flag
@@ -2069,7 +1997,7 @@ name|nfd
 condition|;
 name|i
 operator|+=
-name|NBI
+name|NFDBITS
 control|)
 block|{
 name|bits
@@ -2078,10 +2006,12 @@ name|ibits
 index|[
 name|which
 index|]
+operator|.
+name|fds_bits
 index|[
 name|i
 operator|/
-name|NBI
+name|NFDBITS
 index|]
 expr_stmt|;
 while|while
@@ -2155,16 +2085,17 @@ name|flag
 argument_list|)
 condition|)
 block|{
-name|sbit
+name|FD_SET
 argument_list|(
+name|i
+operator|+
+name|j
+argument_list|,
+operator|&
 name|obits
 index|[
 name|which
 index|]
-argument_list|,
-name|i
-operator|+
-name|j
 argument_list|)
 expr_stmt|;
 name|n
