@@ -90,6 +90,25 @@ index|[
 name|wordnumber
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|value
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|puts
+argument_list|(
+literal|"Wear what?"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|firstnumber
+operator|)
+return|;
+block|}
 for|for
 control|(
 name|n
@@ -113,20 +132,6 @@ condition|(
 name|value
 condition|)
 block|{
-case|case
-operator|-
-literal|1
-case|:
-name|puts
-argument_list|(
-literal|"Wear what?"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|firstnumber
-operator|)
-return|;
 default|default:
 name|printf
 argument_list|(
