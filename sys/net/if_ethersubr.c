@@ -3175,11 +3175,6 @@ name|sockaddr_dl
 modifier|*
 name|sdl
 decl_stmt|;
-name|if_attach
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
 name|ifp
 operator|->
 name|if_type
@@ -3197,6 +3192,11 @@ operator|->
 name|if_hdrlen
 operator|=
 literal|14
+expr_stmt|;
+name|if_attach
+argument_list|(
+name|ifp
+argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
