@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * PC-card support for sysinstall  *  * $Id: pccard.c,v 1.1 1999/06/17 19:04:56 markm Exp $  *  * Copyright (c) 1997-1999  *	Tatsumi Hosokawa<hosokawa@jp.FreeBSD.org>.  All rights reserved.  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  */
+comment|/*  * PC-card support for sysinstall  *  * $Id: pccard.c,v 1.2 1999/06/30 05:04:37 hosokawa Exp $  *  * Copyright (c) 1997-1999  *	Tatsumi Hosokawa<hosokawa@jp.FreeBSD.org>.  All rights reserved.  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  */
 end_comment
 
 begin_include
@@ -309,6 +309,15 @@ name|pcic_mem
 operator|=
 literal|0xd0000
 expr_stmt|;
+name|variable_set2
+argument_list|(
+literal|"pccard_mem"
+argument_list|,
+literal|"DEFAULT"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 literal|1
@@ -316,6 +325,15 @@ case|:
 name|pcic_mem
 operator|=
 literal|0xd4000
+expr_stmt|;
+name|variable_set2
+argument_list|(
+literal|"pccard_mem"
+argument_list|,
+literal|"0xd4000"
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -325,6 +343,15 @@ name|pcic_mem
 operator|=
 literal|0xd8000
 expr_stmt|;
+name|variable_set2
+argument_list|(
+literal|"pccard_mem"
+argument_list|,
+literal|"0xd8000"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 break|break;
 case|case
 literal|3
@@ -332,6 +359,15 @@ case|:
 name|pcic_mem
 operator|=
 literal|0xdc000
+expr_stmt|;
+name|variable_set2
+argument_list|(
+literal|"pccard_mem"
+argument_list|,
+literal|"0xdc000"
+argument_list|,
+literal|1
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
