@@ -869,6 +869,17 @@ argument_list|(
 name|mtget
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rval
+operator|>
+literal|24
+condition|)
+comment|/* original mtget structure size */
+name|rval
+operator|=
+literal|24
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -910,10 +921,7 @@ operator|)
 operator|&
 name|mtget
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|mtget
-argument_list|)
+name|rval
 argument_list|)
 expr_stmt|;
 goto|goto
