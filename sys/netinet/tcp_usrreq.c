@@ -651,7 +651,7 @@ if|if
 condition|(
 name|inp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|INP_INFO_WUNLOCK
@@ -661,9 +661,8 @@ name|tcbinfo
 argument_list|)
 expr_stmt|;
 return|return
-name|EINVAL
+name|error
 return|;
-comment|/* XXX */
 block|}
 name|INP_LOCK
 argument_list|(
