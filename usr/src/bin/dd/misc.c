@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)misc.c	5.6 (Berkeley) %G%"
+literal|"@(#)misc.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -131,7 +131,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%u+%u records in\n%u+%u records out\n%u bytes transferred in %u secs (%u bytes/sec)\n"
+literal|"%u+%u records in\n%u+%u records out\n"
 argument_list|,
 name|st
 operator|.
@@ -148,18 +148,6 @@ argument_list|,
 name|st
 operator|.
 name|out_part
-argument_list|,
-name|st
-operator|.
-name|bytes
-argument_list|,
-name|secs
-argument_list|,
-name|st
-operator|.
-name|bytes
-operator|/
-name|secs
 argument_list|)
 expr_stmt|;
 operator|(
@@ -285,6 +273,48 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
+name|snprintf
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"%u bytes transferred in %u secs (%u bytes/sec)\n"
+argument_list|,
+name|st
+operator|.
+name|bytes
+argument_list|,
+name|secs
+argument_list|,
+name|st
+operator|.
+name|bytes
+operator|/
+name|secs
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|write
+argument_list|(
+name|STDERR_FILENO
+argument_list|,
+name|buf
+argument_list|,
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
