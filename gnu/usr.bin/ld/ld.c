@@ -37,7 +37,7 @@ comment|/* Written by Richard Stallman with some help from Eric Albert.    Set, 
 end_comment
 
 begin_comment
-comment|/*  *	$Id: ld.c,v 1.27.4.1 1995/06/28 05:54:50 davidg Exp $  */
+comment|/*  *	$Id: ld.c,v 1.27.4.2 1995/08/25 04:39:51 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -2451,13 +2451,6 @@ if|if
 condition|(
 operator|!
 name|nostdlib
-operator|&&
-name|getenv
-argument_list|(
-literal|"LD_NOSTD_PATH"
-argument_list|)
-operator|==
-name|NULL
 condition|)
 name|std_search_path
 argument_list|()
@@ -4041,7 +4034,7 @@ expr_stmt|;
 if|if
 condition|(
 name|fd
-operator|>
+operator|>=
 literal|0
 condition|)
 block|{
@@ -9955,7 +9948,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"open: %s"
+literal|"fopen: %s"
 argument_list|,
 name|output_filename
 argument_list|)

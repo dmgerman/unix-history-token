@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	$Id: ld.h,v 1.13 1995/03/04 17:46:07 nate Exp $  */
+comment|/*  *	$Id: ld.h,v 1.16 1996/04/20 18:27:55 jdp Exp $  */
 end_comment
 
 begin_comment
@@ -2405,6 +2405,45 @@ name|findshlib
 name|__P
 argument_list|(
 operator|(
+name|char
+operator|*
+operator|,
+name|int
+operator|*
+operator|,
+name|int
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|find_lib_file
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|search_lib_dir
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
 name|char
 operator|*
 operator|,
