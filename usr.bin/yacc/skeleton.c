@@ -97,7 +97,11 @@ literal|"#define YYMAJOR 1"
 block|,
 literal|"#define YYMINOR 9"
 block|,
-literal|"#define yyclearin (yychar=(-1))"
+literal|"#define YYLEX yylex()"
+block|,
+literal|"#define YYEMPTY -1"
+block|,
+literal|"#define yyclearin (yychar=(YYEMPTY))"
 block|,
 literal|"#define yyerrok (yyerrflag=0)"
 block|,
