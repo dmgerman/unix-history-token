@@ -366,7 +366,7 @@ comment|*/
 end_comment
 
 begin_comment
-comment|/************************************************************************ / / FUNCTION NAME: interrupt() / / FUNCTION: handle interrupt from operator / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: fork(), exit(), wait(), death(), alarm(), execl(), wmove(),  /	getgid(), signal(), getenv(), wclear(), setuid(), getuid(), setgid(),  /	crmode(), clearok(), waddstr(), cleanup(), wrefresh(), leavegame(),  /	getanswer() / / GLOBAL INPUTS: Player, *stdscr / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Allow player to quit upon hitting the interrupt key. /	If the player wants to quit while in battle, he/she automatically /	dies. /	If SHELL is defined, spawn a shell if the if the question is /	answered with a '!'. /	We are careful to save the state of the screen, and return it /	to its original condition. / /************************************************************************/
+comment|/************************************************************************ / / FUNCTION NAME: interrupt() / / FUNCTION: handle interrupt from operator / / AUTHOR: E. A. Estes, 12/4/85 / / ARGUMENTS: none / / RETURN VALUE: none / / MODULES CALLED: fork(), exit(), wait(), death(), alarm(), execl(), wmove(),  /	getgid(), signal(), getenv(), wclear(), setuid(), getuid(), setgid(),  /	crmode(), clearok(), waddstr(), cleanup(), wrefresh(), leavegame(),  /	getanswer() / / GLOBAL INPUTS: Player, *stdscr / / GLOBAL OUTPUTS: none / / DESCRIPTION: /	Allow player to quit upon hitting the interrupt key. /	If the player wants to quit while in battle, he/she automatically /	dies. / /************************************************************************/
 end_comment
 
 begin_macro
@@ -402,21 +402,6 @@ name|unsigned
 name|savealarm
 decl_stmt|;
 comment|/* to save alarm value */
-ifdef|#
-directive|ifdef
-name|SHELL
-specifier|register
-name|char
-modifier|*
-name|shell
-decl_stmt|;
-comment|/* pointer to shell to spawn */
-name|int
-name|childpid
-decl_stmt|;
-comment|/* pid of spawned process */
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|SYS3
@@ -523,20 +508,6 @@ argument_list|,
 literal|"Quitting now will automatically kill your character.  Still want to ? "
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SHELL
-name|ch
-operator|=
-name|getanswer
-argument_list|(
-literal|"NY!"
-argument_list|,
-name|FALSE
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|ch
 operator|=
 name|getanswer
@@ -546,8 +517,6 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|ch
@@ -563,29 +532,6 @@ comment|/*NOTREACHED*/
 block|}
 else|else
 block|{
-ifdef|#
-directive|ifdef
-name|SHELL
-name|mvaddstr
-argument_list|(
-literal|4
-argument_list|,
-literal|0
-argument_list|,
-literal|"Do you really want to quit [! = Shell] ? "
-argument_list|)
-expr_stmt|;
-name|ch
-operator|=
-name|getanswer
-argument_list|(
-literal|"NY!"
-argument_list|,
-name|FALSE
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|mvaddstr
 argument_list|(
 literal|4
@@ -604,8 +550,6 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|ch
@@ -617,138 +561,6 @@ argument_list|()
 expr_stmt|;
 comment|/*NOTREACHED*/
 block|}
-ifdef|#
-directive|ifdef
-name|SHELL
-if|if
-condition|(
-name|ch
-operator|==
-literal|'!'
-condition|)
-comment|/* shell escape */
-block|{
-if|if
-condition|(
-operator|(
-name|shell
-operator|=
-name|getenv
-argument_list|(
-literal|"SHELL"
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-comment|/* use default */
-name|shell
-operator|=
-name|SHELL
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|childpid
-operator|=
-name|fork
-argument_list|()
-operator|)
-operator|==
-literal|0
-condition|)
-comment|/* in child */
-block|{
-name|clear
-argument_list|()
-expr_stmt|;
-name|refresh
-argument_list|()
-expr_stmt|;
-name|cleanup
-argument_list|(
-name|FALSE
-argument_list|)
-expr_stmt|;
-comment|/* out of curses, close files */
-name|setuid
-argument_list|(
-name|getuid
-argument_list|()
-argument_list|)
-expr_stmt|;
-comment|/* make sure we are running with real uid */
-name|setgid
-argument_list|(
-name|getgid
-argument_list|()
-argument_list|)
-expr_stmt|;
-comment|/* make sure we are running with real gid */
-name|execl
-argument_list|(
-name|shell
-argument_list|,
-name|shell
-argument_list|,
-literal|"-i"
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|execl
-argument_list|(
-name|SHELL
-argument_list|,
-name|SHELL
-argument_list|,
-literal|"-i"
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* last resort */
-name|exit
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/*NOTREACHED*/
-block|}
-else|else
-comment|/* in parent */
-block|{
-while|while
-condition|(
-name|wait
-argument_list|(
-operator|(
-name|int
-operator|*
-operator|)
-name|NULL
-argument_list|)
-operator|!=
-name|childpid
-condition|)
-empty_stmt|;
-comment|/* wait until done */
-name|crmode
-argument_list|()
-expr_stmt|;
-comment|/* restore keyboard */
-name|clearok
-argument_list|(
-name|stdscr
-argument_list|,
-name|TRUE
-argument_list|)
-expr_stmt|;
-comment|/* force redraw of screen */
-block|}
-block|}
-endif|#
-directive|endif
 name|mvaddstr
 argument_list|(
 literal|4
