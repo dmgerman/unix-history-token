@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uba.c	4.4	%G%	*/
+comment|/*	uba.c	4.5	%G%	*/
 end_comment
 
 begin_include
@@ -648,7 +648,7 @@ comment|/*  * Old ubafree(info) is now ubarelse(&info) to avoid races.  */
 end_comment
 
 begin_macro
-name|ubafree
+name|ubarelse
 argument_list|(
 argument|amr
 argument_list|)
