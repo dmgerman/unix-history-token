@@ -11,7 +11,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"@(#)inode.c	3.9 (Berkeley) %G%"
+literal|"@(#)inode.c	3.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -19,6 +19,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
+end_include
 
 begin_include
 include|#
@@ -1421,11 +1427,10 @@ name|char
 modifier|*
 name|p
 decl_stmt|;
-name|char
-name|uidbuf
-index|[
-name|BUFSIZ
-index|]
+name|struct
+name|passwd
+modifier|*
+name|pw
 decl_stmt|;
 name|char
 modifier|*
@@ -1464,7 +1469,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|getpw
+operator|(
+name|pw
+operator|=
+name|getpwuid
 argument_list|(
 operator|(
 name|int
@@ -1472,43 +1480,21 @@ operator|)
 name|dp
 operator|->
 name|di_uid
-argument_list|,
-name|uidbuf
 argument_list|)
-operator|==
+operator|)
+operator|!=
 literal|0
 condition|)
-block|{
-for|for
-control|(
-name|p
-operator|=
-name|uidbuf
-init|;
-operator|*
-name|p
-operator|!=
-literal|':'
-condition|;
-name|p
-operator|++
-control|)
-empty_stmt|;
-operator|*
-name|p
-operator|=
-literal|0
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"%s "
 argument_list|,
-name|uidbuf
+name|pw
+operator|->
+name|pw_name
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|printf
 argument_list|(
 literal|"%d "
@@ -1518,7 +1504,6 @@ operator|->
 name|di_uid
 argument_list|)
 expr_stmt|;
-block|}
 name|printf
 argument_list|(
 literal|"MODE=%o\n"
