@@ -1774,12 +1774,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
 begin_function_decl
 specifier|extern
 name|int
@@ -1809,14 +1803,12 @@ modifier|*
 parameter_list|,
 name|int
 modifier|*
+parameter_list|,
+name|uint16_t
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_macro
 name|__END_DECLS
