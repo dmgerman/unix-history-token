@@ -7046,6 +7046,23 @@ operator|(
 name|error
 operator|)
 return|;
+comment|/* 	 * Relabling network interfaces requires Biba privilege. 	 */
+name|error
+operator|=
+name|mac_biba_subject_privileged
+argument_list|(
+name|subj
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 comment|/* 	 * If the Biba label is to be changed, authorize as appropriate. 	 */
 if|if
 condition|(
