@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: config.h,v 1.9 1999/01/13 19:33:02 obrien Exp $ */
-end_comment
-
-begin_comment
-comment|/* portions derived from     $NetBSD: config.h,v 1.11 1998/08/08 22:33:37 christos Exp $	*/
+comment|/*   * $Id: config.h,v 1.10 1999/02/13 11:06:19 obrien Exp $  *  * portions derived from   *	$NetBSD: config.h,v 1.11 1998/08/08 22:33:37 christos Exp $  *  */
 end_comment
 
 begin_comment
