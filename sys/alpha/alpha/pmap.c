@@ -1956,6 +1956,8 @@ name|cputype
 operator|==
 name|ST_DEC_21000
 operator|||
+name|ST_DEC_4100
+operator|||
 name|cputype
 operator|==
 name|ST_DEC_3000_300
