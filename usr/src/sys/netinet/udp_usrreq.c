@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	udp_usrreq.c	6.3	83/11/06	*/
+comment|/*	udp_usrreq.c	6.3	83/11/14	*/
 end_comment
 
 begin_include
@@ -140,7 +140,7 @@ begin_decl_stmt
 name|int
 name|udpcksum
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -352,6 +352,8 @@ name|m_adj
 argument_list|(
 name|m
 argument_list|,
+name|len
+operator|-
 operator|(
 operator|(
 expr|struct
@@ -362,8 +364,6 @@ name|ui
 operator|)
 operator|->
 name|ip_len
-operator|-
-name|len
 argument_list|)
 expr_stmt|;
 comment|/* (struct ip *)ui->ip_len = len; */
@@ -372,6 +372,10 @@ comment|/* 	 * Checksum extended UDP header and data. 	 */
 if|if
 condition|(
 name|udpcksum
+operator|&&
+name|ui
+operator|->
+name|ui_sum
 condition|)
 block|{
 name|ui
@@ -964,6 +968,9 @@ name|ui_sum
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|ui
 operator|->
 name|ui_sum
@@ -980,6 +987,16 @@ argument_list|)
 operator|+
 name|len
 argument_list|)
+operator|)
+operator|==
+literal|0
+condition|)
+name|ui
+operator|->
+name|ui_sum
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 operator|(
 operator|(
