@@ -2228,6 +2228,13 @@ name|EINVAL
 return|;
 block|}
 comment|/* 	 * Allocate the pages early, before acquiring the lock, 	 * because vm_page_grab() used with VM_ALLOC_RETRY may 	 * block and we can't hold a mutex while blocking. 	 */
+name|VM_OBJECT_LOCK
+argument_list|(
+name|mem
+operator|->
+name|am_obj
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -2246,13 +2253,6 @@ name|PAGE_SIZE
 control|)
 block|{
 comment|/* 		 * Find a page from the object and wire it 		 * down. This page will be mapped using one or more 		 * entries in the GATT (assuming that PAGE_SIZE>= 		 * AGP_PAGE_SIZE. If this is the first call to bind, 		 * the pages will be allocated and zeroed. 		 */
-name|VM_OBJECT_LOCK
-argument_list|(
-name|mem
-operator|->
-name|am_obj
-argument_list|)
-expr_stmt|;
 name|m
 operator|=
 name|vm_page_grab
@@ -2273,13 +2273,6 @@ operator||
 name|VM_ALLOC_RETRY
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_UNLOCK
-argument_list|(
-name|mem
-operator|->
-name|am_obj
-argument_list|)
-expr_stmt|;
 name|AGP_DPF
 argument_list|(
 literal|"found page pa=%#x\n"
@@ -2291,6 +2284,13 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|mem
+operator|->
+name|am_obj
+argument_list|)
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -2317,11 +2317,25 @@ name|error
 operator|=
 name|EINVAL
 expr_stmt|;
+name|VM_OBJECT_LOCK
+argument_list|(
+name|mem
+operator|->
+name|am_obj
+argument_list|)
+expr_stmt|;
 goto|goto
 name|bad
 goto|;
 block|}
 comment|/* 	 * Bind the individual pages and flush the chipset's 	 * TLB. 	 * 	 * XXX Presumably, this needs to be the pci address on alpha 	 * (i.e. use alpha_XXX_dmamap()). I don't have access to any 	 * alpha AGP hardware to check. 	 */
+name|VM_OBJECT_LOCK
+argument_list|(
+name|mem
+operator|->
+name|am_obj
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -2339,13 +2353,6 @@ operator|+=
 name|PAGE_SIZE
 control|)
 block|{
-name|VM_OBJECT_LOCK
-argument_list|(
-name|mem
-operator|->
-name|am_obj
-argument_list|)
-expr_stmt|;
 name|m
 operator|=
 name|vm_page_lookup
@@ -2358,13 +2365,6 @@ name|OFF_TO_IDX
 argument_list|(
 name|i
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|VM_OBJECT_UNLOCK
-argument_list|(
-name|mem
-operator|->
-name|am_obj
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Install entries in the GATT, making sure that if 		 * AGP_PAGE_SIZE< PAGE_SIZE and mem->am_size is not 		 * aligned to PAGE_SIZE, we don't modify too many GATT  		 * entries. 		 */
@@ -2488,6 +2488,13 @@ name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
 block|}
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|mem
+operator|->
+name|am_obj
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Flush the cpu cache since we are providing a new mapping 	 * for these pages. 	 */
 name|agp_flush_cache
 argument_list|()
@@ -2531,11 +2538,13 @@ operator|->
 name|as_lock
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_LOCK
+name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|mem
 operator|->
 name|am_obj
+argument_list|,
+name|MA_OWNED
 argument_list|)
 expr_stmt|;
 for|for
