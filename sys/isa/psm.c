@@ -5781,22 +5781,6 @@ expr_stmt|;
 comment|/* Initialize state */
 name|sc
 operator|->
-name|rsel
-operator|.
-name|si_flags
-operator|=
-literal|0
-expr_stmt|;
-name|sc
-operator|->
-name|rsel
-operator|.
-name|si_pid
-operator|=
-literal|0
-expr_stmt|;
-name|sc
-operator|->
 name|mode
 operator|.
 name|level

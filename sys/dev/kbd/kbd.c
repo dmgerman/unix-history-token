@@ -2287,22 +2287,6 @@ literal|2
 argument_list|)
 expr_stmt|;
 comment|/* XXX */
-name|sc
-operator|->
-name|gkb_rsel
-operator|.
-name|si_flags
-operator|=
-literal|0
-expr_stmt|;
-name|sc
-operator|->
-name|gkb_rsel
-operator|.
-name|si_pid
-operator|=
-literal|0
-expr_stmt|;
 name|splx
 argument_list|(
 name|s

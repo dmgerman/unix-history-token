@@ -127,6 +127,29 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|nselcoll
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* select collisions since boot */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|mtx
+name|sellock
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* select lock variable */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 name|struct
 name|cv
 name|selwait

@@ -39,16 +39,19 @@ begin_struct
 struct|struct
 name|selinfo
 block|{
-name|pid_t
-name|si_pid
-decl_stmt|;
-comment|/* process to be notified */
+name|TAILQ_ENTRY
+argument_list|(
+argument|selinfo
+argument_list|)
+name|si_thrlist
+expr_stmt|;
+comment|/* list hung off of thread */
 name|struct
 name|thread
 modifier|*
 name|si_thread
 decl_stmt|;
-comment|/* thread in that process XXXKSE */
+comment|/* thread waiting */
 name|struct
 name|klist
 name|si_note
@@ -73,6 +76,17 @@ begin_comment
 comment|/* collision occurred */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SEL_WAITING
+parameter_list|(
+name|si
+parameter_list|)
+define|\
+value|((si)->si_thread != NULL || ((si)->si_flags& SI_COLL) != 0)
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -84,6 +98,17 @@ struct_decl|struct
 name|thread
 struct_decl|;
 end_struct_decl
+
+begin_function_decl
+name|void
+name|clear_selinfo_list
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|void

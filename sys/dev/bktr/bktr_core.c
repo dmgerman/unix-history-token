@@ -3504,11 +3504,13 @@ block|}
 comment|/* If someone has a select() on /dev/vbi, inform them */
 if|if
 condition|(
+name|SEL_WAITING
+argument_list|(
+operator|&
 name|bktr
 operator|->
 name|vbi_select
-operator|.
-name|si_pid
+argument_list|)
 condition|)
 block|{
 name|selwakeup

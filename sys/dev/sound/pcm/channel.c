@@ -465,12 +465,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|SEL_WAITING
+argument_list|(
 name|sndbuf_getsel
 argument_list|(
 name|bs
 argument_list|)
-operator|->
-name|si_pid
+argument_list|)
 operator|&&
 name|chn_polltrigger
 argument_list|(

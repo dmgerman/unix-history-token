@@ -1769,6 +1769,9 @@ name|dz
 operator|=
 literal|0
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
 name|sc
 operator|->
 name|rsel
@@ -1785,6 +1788,8 @@ name|si_pid
 operator|=
 literal|0
 expr_stmt|;
+endif|#
+directive|endif
 name|sc
 operator|->
 name|dev
