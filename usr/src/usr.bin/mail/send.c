@@ -42,7 +42,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)send.c	1.4 %G%"
+literal|"@(#)send.c	1.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1412,21 +1412,21 @@ operator|==
 literal|0
 condition|)
 block|{
-name|signal
+name|sigset
 argument_list|(
 name|SIGTSTP
 argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
-name|signal
+name|sigset
 argument_list|(
 name|SIGTTIN
 argument_list|,
 name|SIG_IGN
 argument_list|)
 expr_stmt|;
-name|signal
+name|sigset
 argument_list|(
 name|SIGTTOU
 argument_list|,
@@ -1449,7 +1449,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|signal
+name|sigset
 argument_list|(
 name|i
 argument_list|,
