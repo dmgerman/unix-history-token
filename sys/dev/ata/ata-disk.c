@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/conf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/disk.h>
 end_include
 
@@ -85,12 +91,6 @@ begin_include
 include|#
 directive|include
 file|<sys/fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/conf.h>
 end_include
 
 begin_include
@@ -185,7 +185,7 @@ comment|/* open */
 name|adopen
 block|,
 comment|/* close */
-name|noclose
+name|nullclose
 block|,
 comment|/* read */
 name|physread
