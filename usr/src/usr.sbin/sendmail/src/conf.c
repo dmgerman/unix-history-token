@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.193 (Berkeley) %G%"
+literal|"@(#)conf.c	8.194 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -11800,7 +11800,7 @@ name|sm_getpwuid
 parameter_list|(
 name|uid
 parameter_list|)
-name|uid_t
+name|UID_T
 name|uid
 decl_stmt|;
 block|{
@@ -11975,7 +11975,7 @@ name|tTd
 argument_list|(
 literal|0
 argument_list|,
-literal|4
+literal|40
 argument_list|)
 condition|)
 name|printf
