@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)halt.c	5.9 (Berkeley) %G%"
+literal|"@(#)halt.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -515,10 +515,8 @@ name|pause
 argument_list|()
 expr_stmt|;
 block|}
-name|syscall
+name|reboot
 argument_list|(
-literal|55
-argument_list|,
 name|howto
 argument_list|)
 expr_stmt|;
