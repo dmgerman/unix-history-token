@@ -3354,6 +3354,12 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+name|setgid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|kvmd

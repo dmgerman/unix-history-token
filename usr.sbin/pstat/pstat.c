@@ -1382,6 +1382,15 @@ argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|setgid
+argument_list|(
+name|getgid
+argument_list|()
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
