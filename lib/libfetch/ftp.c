@@ -3879,9 +3879,8 @@ argument_list|,
 name|logname
 argument_list|)
 operator|)
-operator|==
-operator|-
-literal|1
+operator|<
+literal|0
 condition|)
 name|len
 operator|=
