@@ -14817,12 +14817,6 @@ name|adapter
 operator|->
 name|stats
 operator|.
-name|rnbc
-operator|+
-name|adapter
-operator|->
-name|stats
-operator|.
 name|mpc
 operator|+
 name|adapter
