@@ -683,10 +683,6 @@ name|win
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-name|WINDOW
-operator|*
-operator|)
 name|NULL
 return|;
 block|}
@@ -723,6 +719,9 @@ operator|->
 name|_y
 argument_list|)
 expr_stmt|;
+return|return
+name|NULL
+return|;
 block|}
 if|if
 condition|(
@@ -764,6 +763,9 @@ operator|->
 name|_firstch
 argument_list|)
 expr_stmt|;
+return|return
+name|NULL
+return|;
 block|}
 ifdef|#
 directive|ifdef
