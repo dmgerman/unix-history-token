@@ -1189,6 +1189,55 @@ name|long
 name|sz
 decl_stmt|;
 comment|/* in sc_secsize chunks */
+comment|/* 		 * Check for required alignment.  Transfers must be a valid 		 * multiple of the sector size. 		 */
+if|if
+condition|(
+name|bp
+operator|->
+name|b_bcount
+operator|%
+name|vn
+operator|->
+name|sc_secsize
+operator|!=
+literal|0
+operator|||
+name|bp
+operator|->
+name|b_blkno
+operator|%
+operator|(
+name|vn
+operator|->
+name|sc_secsize
+operator|/
+name|DEV_BSIZE
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|bp
+operator|->
+name|b_error
+operator|=
+name|EINVAL
+expr_stmt|;
+name|bp
+operator|->
+name|b_flags
+operator||=
+name|B_ERROR
+operator||
+name|B_INVAL
+expr_stmt|;
+name|biodone
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|pbn
 operator|=
 name|bp
@@ -1578,7 +1627,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"vnstrategy: buffer %p to small for physio"
+literal|"vnstrategy: buffer %p too small for physio"
 operator|,
 name|bp
 operator|)
