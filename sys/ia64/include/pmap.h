@@ -33,6 +33,35 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NKPT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NKPT
+value|30
+end_define
+
+begin_comment
+comment|/* initial number of kernel page tables */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|MAXKPT
+value|(PAGE_SIZE/sizeof(vm_offset_t))
+end_define
+
 begin_comment
 comment|/*  *	Routine:	pmap_kextract  *	Function:  *		Extract the physical page address associated  *		kernel virtual address.  */
 end_comment
@@ -206,11 +235,6 @@ typedef|typedef
 struct|struct
 name|pv_entry
 block|{
-name|struct
-name|ia64_lpte
-name|pv_pte
-decl_stmt|;
-comment|/* pte for collision walker */
 name|pmap_t
 name|pv_pmap
 decl_stmt|;
