@@ -2416,7 +2416,7 @@ operator|--
 expr_stmt|;
 block|}
 comment|/* aiocbe is going away, we need to destroy any knotes */
-comment|/* XXXKSE Note the thread here is used to eventually find the  	 * owning process again, but it is also used to do a fo_close 	 * and that requires the thread. (but does it require the 	 * OWNING thread? (or maybe the running thread?) 	 * There is a semantic problem here...  	 */
+comment|/* XXXKSE Note the thread here is used to eventually find the 	 * owning process again, but it is also used to do a fo_close 	 * and that requires the thread. (but does it require the 	 * OWNING thread? (or maybe the running thread?) 	 * There is a semantic problem here... 	 */
 name|knote_remove
 argument_list|(
 name|FIRST_THREAD_IN_PROC
@@ -2763,7 +2763,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Rundown the jobs for a given process.    */
+comment|/*  * Rundown the jobs for a given process.  */
 end_comment
 
 begin_function
@@ -3240,7 +3240,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-comment|/*          * If we've slept, jobs might have moved from one queue to another.          * Retry rundown if we didn't manage to empty the queues.          */
+comment|/* 	 * If we've slept, jobs might have moved from one queue to another. 	 * Retry rundown if we didn't manage to empty the queues. 	 */
 if|if
 condition|(
 name|TAILQ_FIRST
@@ -4943,7 +4943,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Try the high-performance, low-overhead physio method for eligible  * VCHR devices.  This method doesn't use an aio helper thread, and  * thus has very low overhead.   *  * Assumes that the caller, _aio_aqueue(), has incremented the file  * structure's reference count, preventing its deallocation for the  * duration of this call.   */
+comment|/*  * Try the high-performance, low-overhead physio method for eligible  * VCHR devices.  This method doesn't use an aio helper thread, and  * thus has very low overhead.  *  * Assumes that the caller, _aio_aqueue(), has incremented the file  * structure's reference count, preventing its deallocation for the  * duration of this call.  */
 end_comment
 
 begin_function
