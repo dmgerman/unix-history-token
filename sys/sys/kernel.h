@@ -764,7 +764,7 @@ parameter_list|,
 name|size
 parameter_list|)
 define|\
-value|char *tmp;						\     tmp = getenv((path));				\     if (tmp == NULL)					\        tmp = (defval);					\     strncpy((var), tmp, (size));			\     (var)[(size) - 1] = 0;				\ }
+value|char *tmp;						\     tmp = getenv((path));				\     if (tmp == NULL)					\        tmp = (defval);					\     strncpy((var), tmp, (size));			\     (var)[(size) - 1] = 0;
 end_define
 
 begin_comment
