@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)format.c	4.3 %G%"
+literal|"@(#)format.c	4.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -300,54 +300,6 @@ literal|0
 name|THEN
 break|break;
 name|FI
-name|IF
-name|exact
-name|ANDF
-name|dot
-operator|==
-name|savdot
-name|ANDF
-name|itype
-operator|==
-name|ISP
-name|ANDF
-name|cursym
-operator|->
-name|n_un
-operator|.
-name|n_name
-index|[
-literal|0
-index|]
-operator|==
-literal|'_'
-name|ANDF
-operator|*
-name|fp
-operator|==
-literal|'i'
-name|THEN
-name|exform
-argument_list|(
-literal|1
-argument_list|,
-literal|"x"
-argument_list|,
-name|itype
-argument_list|,
-name|ptype
-argument_list|)
-expr_stmt|;
-name|fp
-operator|++
-expr_stmt|;
-name|printc
-argument_list|(
-name|EOR
-argument_list|)
-expr_stmt|;
-comment|/* entry mask */
-name|ELSE
 name|fp
 init|=
 name|exform
@@ -361,7 +313,6 @@ argument_list|,
 name|ptype
 argument_list|)
 decl_stmt|;
-name|FI
 name|OD
 name|dotinc
 init|=

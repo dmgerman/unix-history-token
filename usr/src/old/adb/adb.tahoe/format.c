@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)format.c	1.4 (Berkeley) %G%"
+literal|"@(#)format.c	1.4 (Berkeley) 4/1/87"
 decl_stmt|;
 end_decl_stmt
 
@@ -261,60 +261,6 @@ literal|0
 name|THEN
 break|break;
 name|FI
-comment|/* check for entry mask */
-name|IF
-name|exact
-name|ANDF
-name|dot
-operator|==
-name|savdot
-name|ANDF
-argument_list|(
-name|cursym
-operator|->
-name|n_type
-operator|&
-name|N_TYPE
-argument_list|)
-operator|==
-name|N_TEXT
-name|ANDF
-name|cursym
-operator|->
-name|n_un
-operator|.
-name|n_name
-index|[
-literal|0
-index|]
-operator|==
-literal|'_'
-name|ANDF
-operator|*
-name|fp
-operator|==
-literal|'i'
-name|THEN
-name|exform
-argument_list|(
-literal|1
-argument_list|,
-literal|"x"
-argument_list|,
-name|itype
-argument_list|,
-name|ptype
-argument_list|)
-expr_stmt|;
-name|fp
-operator|++
-expr_stmt|;
-name|printc
-argument_list|(
-name|EOR
-argument_list|)
-expr_stmt|;
-name|ELSE
 name|fp
 init|=
 name|exform
@@ -328,7 +274,6 @@ argument_list|,
 name|ptype
 argument_list|)
 decl_stmt|;
-name|FI
 name|OD
 name|dotinc
 init|=
