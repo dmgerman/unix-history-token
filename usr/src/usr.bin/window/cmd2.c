@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd2.c	3.7 83/08/22"
+literal|"@(#)cmd2.c	3.8 83/08/25"
 decl_stmt|;
 end_decl_stmt
 
@@ -270,7 +270,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|":terse [off]            Turn on (or off) terse mode.\n"
+literal|":terse [off]              Turn on (or off) terse mode.\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -280,7 +280,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|":label {1-9} string     Label window {1-9}.\n"
+literal|":label {1-9} string       Label window {1-9}.\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -290,7 +290,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|":write {1-9} string     Write ``strings'' to window {1-9}.\n"
+literal|":write {1-9} string       Write ``strings'' to window {1-9}.\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -300,7 +300,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|":escape C               Set escape character to C.\n"
+literal|":escape C                 Set escape character to C.\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -310,7 +310,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|":%%{1-9}                 Select window {1-9}.\n"
+literal|":%%{1-9}                   Select window {1-9}.\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -320,7 +320,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|":window r c nr nc       Open a window at row r column c\n"
+literal|":window r c nr nc [nl]    Open a window at row r column c\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -330,7 +330,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"                        with nr rows and nc colomns.\n"
+literal|"                          with nr rows, nc colomns,\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -340,7 +340,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|":close {1-9}            Close window.\n"
+literal|"                          and nl lines in the buffer.\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -350,7 +350,27 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|":source filename        Execute commands in ``filename''.\n"
+literal|":buffer lines             Set the default window buffer size.\n"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|wwprintf
+argument_list|(
+name|w
+argument_list|,
+literal|":close {1-9}              Close window.\n"
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|wwprintf
+argument_list|(
+name|w
+argument_list|,
+literal|":source filename          Execute commands in ``filename''.\n"
 argument_list|)
 expr_stmt|;
 name|waitnl
@@ -1291,16 +1311,6 @@ operator|!=
 name|framewin
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|wwputs
-argument_list|(
-literal|"reframed"
-argument_list|,
-name|w
-argument_list|)
-expr_stmt|;
 name|wwdelete
 argument_list|(
 name|w
