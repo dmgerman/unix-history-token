@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)boot.c	7.10 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)boot.c	7.11 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -341,8 +341,8 @@ name|char
 modifier|*
 name|addr
 decl_stmt|;
-name|i
-operator|=
+if|if
+condition|(
 name|read
 argument_list|(
 name|io
@@ -359,40 +359,21 @@ argument_list|(
 name|x
 argument_list|)
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|i
 operator|!=
 sizeof|sizeof
 argument_list|(
 name|x
 argument_list|)
 operator|||
-operator|(
+name|N_BADMAG
+argument_list|(
 name|x
-operator|.
-name|a_magic
-operator|!=
-name|OMAGIC
-operator|&&
-name|x
-operator|.
-name|a_magic
-operator|!=
-name|ZMAGIC
-operator|&&
-name|x
-operator|.
-name|a_magic
-operator|!=
-name|NMAGIC
-operator|)
+argument_list|)
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Bad format\n"
+literal|"bad magic #\n"
 argument_list|)
 expr_stmt|;
 return|return;
