@@ -76,7 +76,7 @@ index|[
 literal|8
 index|]
 typedef|;
-comment|/* With "const", gcc 2.8.1 on Solaris thinks that des_cblock *  * and const_des_cblock * are incompatible pointer types.  * I haven't seen that warning on other systems ... I'll look  * what the standard says. */
+comment|/* With "const", gcc 2.8.1 on Solaris thinks that des_cblock *  * and const_des_cblock * are incompatible pointer types. */
 typedef|typedef
 struct|struct
 name|des_ks_struct
@@ -420,6 +420,7 @@ name|int
 name|enc
 parameter_list|)
 function_decl|;
+comment|/* 	This is the DES encryption function that gets called by just about 	every other DES routine in the library.  You should not use this 	function except to implement 'modes' of DES.  I say this because the 	functions that call this routine do the conversion from 'char *' to 	long, and this needs to be done to make sure 'non-aligned' memory 	access do not occur.  The characters are loaded 'little endian'. 	Data is a pointer to 2 unsigned long's and ks is the 	des_key_schedule to use.  enc, is non zero specifies encryption, 	zero if decryption. */
 name|void
 name|des_encrypt
 parameter_list|(
@@ -434,6 +435,7 @@ name|int
 name|enc
 parameter_list|)
 function_decl|;
+comment|/* 	This functions is the same as des_encrypt() except that the DES 	initial permutation (IP) and final permutation (FP) have been left 	out.  As for des_encrypt(), you should not use this function. 	It is used by the routines in the library that implement triple DES. 	IP() des_encrypt2() des_encrypt2() des_encrypt2() FP() is the same 	as des_encrypt() des_encrypt() des_encrypt() except faster :-). */
 name|void
 name|des_encrypt2
 parameter_list|(
@@ -844,14 +846,6 @@ modifier|*
 name|key
 parameter_list|)
 function_decl|;
-name|void
-name|des_random_key
-parameter_list|(
-name|des_cblock
-modifier|*
-name|ret
-parameter_list|)
-function_decl|;
 name|int
 name|des_new_random_key
 parameter_list|(
@@ -878,6 +872,14 @@ name|data
 parameter_list|,
 name|int
 name|size
+parameter_list|)
+function_decl|;
+name|int
+name|des_random_key
+parameter_list|(
+name|des_cblock
+modifier|*
+name|ret
 parameter_list|)
 function_decl|;
 name|int
@@ -944,6 +946,14 @@ name|key
 parameter_list|)
 function_decl|;
 name|int
+name|des_check_key_parity
+parameter_list|(
+name|const_des_cblock
+modifier|*
+name|key
+parameter_list|)
+function_decl|;
+name|int
 name|des_is_weak_key
 parameter_list|(
 name|const_des_cblock
@@ -951,6 +961,7 @@ modifier|*
 name|key
 parameter_list|)
 function_decl|;
+comment|/* des_set_key (= set_key = des_key_sched = key_sched) calls  * des_set_key_checked if global variable des_check_key is set,  * des_set_key_unchecked otherwise. */
 name|int
 name|des_set_key
 parameter_list|(
@@ -964,6 +975,28 @@ parameter_list|)
 function_decl|;
 name|int
 name|des_key_sched
+parameter_list|(
+name|const_des_cblock
+modifier|*
+name|key
+parameter_list|,
+name|des_key_schedule
+name|schedule
+parameter_list|)
+function_decl|;
+name|int
+name|des_set_key_checked
+parameter_list|(
+name|const_des_cblock
+modifier|*
+name|key
+parameter_list|,
+name|des_key_schedule
+name|schedule
+parameter_list|)
+function_decl|;
+name|void
+name|des_set_key_unchecked
 parameter_list|(
 name|const_des_cblock
 modifier|*
@@ -1087,19 +1120,6 @@ name|int
 name|verify
 parameter_list|)
 function_decl|;
-comment|/* Extra functions from Mark Murray<mark@grondar.za> */
-name|void
-name|des_cblock_print_file
-parameter_list|(
-name|const_des_cblock
-modifier|*
-name|cb
-parameter_list|,
-name|FILE
-modifier|*
-name|fp
-parameter_list|)
-function_decl|;
 comment|/* The following definitions provide compatibility with the MIT Kerberos  * library. The des_key_schedule structure is not binary compatible. */
 define|#
 directive|define
@@ -1188,6 +1208,10 @@ define|#
 directive|define
 name|quad_cksum
 value|des_quad_cksum
+define|#
+directive|define
+name|check_parity
+value|des_check_key_parity
 endif|#
 directive|endif
 typedef|typedef
@@ -1198,10 +1222,6 @@ define|#
 directive|define
 name|des_fixup_key_parity
 value|des_set_odd_parity
-define|#
-directive|define
-name|des_check_key_parity
-value|check_parity
 ifdef|#
 directive|ifdef
 name|__cplusplus
