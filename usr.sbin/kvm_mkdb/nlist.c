@@ -662,6 +662,7 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|i386
+comment|/* -hv- 180793 for kernel loaded at 0xfe100000, 			 * ~KERNBASE alone is not correct mask 			 */
 name|rel_off
 operator|=
 operator|(
@@ -671,7 +672,11 @@ operator|.
 name|n_value
 operator|&
 operator|~
+operator|(
 name|KERNBASE
+operator||
+literal|0x00F00000
+operator|)
 operator|)
 operator|+
 name|CLBYTES
