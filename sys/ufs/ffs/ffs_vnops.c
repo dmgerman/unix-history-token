@@ -6598,7 +6598,7 @@ name|vop_getextattr_args
 modifier|*
 name|ap
 parameter_list|)
-comment|/* vop_getextattr { 	IN struct vnode *a_vp; 	IN int a_attrnamespace; 	IN const char *a_name; 	INOUT struct uio *a_uio; 	OUT struct size_t *a_size; 	IN struct ucred *a_cred; 	IN struct thread *a_td; }; */
+comment|/* vop_getextattr { 	IN struct vnode *a_vp; 	IN int a_attrnamespace; 	IN const char *a_name; 	INOUT struct uio *a_uio; 	OUT size_t *a_size; 	IN struct ucred *a_cred; 	IN struct thread *a_td; }; */
 block|{
 name|struct
 name|inode
