@@ -791,6 +791,14 @@ argument_list|)
 expr_stmt|;
 name|iface
 operator|->
+name|index
+operator|=
+name|ifm
+operator|->
+name|ifm_index
+expr_stmt|;
+name|iface
+operator|->
 name|flags
 operator|=
 name|ifm
@@ -799,11 +807,9 @@ name|ifm_flags
 expr_stmt|;
 name|iface
 operator|->
-name|index
+name|mtu
 operator|=
-name|ifm
-operator|->
-name|ifm_index
+literal|0
 expr_stmt|;
 name|iface
 operator|->
@@ -3114,9 +3120,7 @@ name|prompt
 argument_list|,
 literal|"> mtu %d has %d address%s:\n"
 argument_list|,
-name|arg
-operator|->
-name|bundle
+name|iface
 operator|->
 name|mtu
 argument_list|,

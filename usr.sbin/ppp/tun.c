@@ -9,12 +9,6 @@ directive|include
 file|<sys/param.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__FreeBSD__
-end_ifndef
-
 begin_include
 include|#
 directive|include
@@ -24,6 +18,12 @@ end_include
 begin_comment
 comment|/* For IFF_ defines */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__FreeBSD__
+end_ifndef
 
 begin_include
 include|#
@@ -39,6 +39,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<net/route.h>
+end_include
 
 begin_include
 include|#
@@ -256,6 +262,12 @@ directive|include
 file|"mp.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"iface.h"
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -356,6 +368,8 @@ name|ifr_mtu
 operator|=
 name|bundle
 operator|->
+name|iface
+operator|->
 name|mtu
 expr_stmt|;
 if|if
@@ -417,6 +431,8 @@ operator|.
 name|mtu
 operator|=
 name|bundle
+operator|->
+name|iface
 operator|->
 name|mtu
 expr_stmt|;

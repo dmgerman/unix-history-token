@@ -514,6 +514,8 @@ name|ATM_DEVICE
 block|,
 literal|"atm"
 block|,
+literal|0
+block|,
 block|{
 name|CD_NOTREQUIRED
 block|,

@@ -709,6 +709,8 @@ name|UDP_DEVICE
 block|,
 literal|"udp"
 block|,
+literal|0
+block|,
 block|{
 name|CD_NOTREQUIRED
 block|,

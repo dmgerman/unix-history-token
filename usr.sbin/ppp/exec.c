@@ -230,6 +230,8 @@ name|EXEC_DEVICE
 block|,
 literal|"exec"
 block|,
+literal|0
+block|,
 block|{
 name|CD_NOTREQUIRED
 block|,

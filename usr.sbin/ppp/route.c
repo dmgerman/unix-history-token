@@ -3446,6 +3446,8 @@ argument_list|)
 argument_list|,
 name|bundle
 operator|->
+name|iface
+operator|->
 name|mtu
 argument_list|)
 expr_stmt|;
@@ -5627,6 +5629,8 @@ operator|.
 name|rmx_mtu
 operator|=
 name|bundle
+operator|->
+name|iface
 operator|->
 name|mtu
 expr_stmt|;
