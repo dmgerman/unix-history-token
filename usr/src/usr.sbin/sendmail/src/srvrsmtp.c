@@ -21,7 +21,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.34
+literal|3.35
 operator|%
 name|G
 operator|%
@@ -49,7 +49,7 @@ operator|)
 name|srvrsmtp
 operator|.
 name|c
-literal|3.34
+literal|3.35
 operator|%
 name|G
 operator|%
@@ -942,7 +942,7 @@ name|sendall
 argument_list|(
 name|CurEnv
 argument_list|,
-name|FALSE
+name|SendMode
 argument_list|)
 expr_stmt|;
 name|CurEnv
@@ -969,7 +969,7 @@ name|message
 argument_list|(
 literal|"250"
 argument_list|,
-literal|"Sent"
+literal|"Ok"
 argument_list|)
 expr_stmt|;
 block|}

@@ -21,7 +21,7 @@ operator|)
 name|collect
 operator|.
 name|c
-literal|3.53
+literal|3.54
 operator|%
 name|G
 operator|%
@@ -553,7 +553,9 @@ break|break;
 comment|/* check for transparent dot */
 if|if
 condition|(
-name|Smtp
+name|OpMode
+operator|==
+name|MD_SMTP
 operator|&&
 operator|*
 name|bp

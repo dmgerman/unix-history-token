@@ -15,7 +15,7 @@ operator|)
 name|readcf
 operator|.
 name|c
-literal|3.43
+literal|3.44
 operator|%
 name|G
 operator|%
@@ -2372,92 +2372,57 @@ name|bval
 expr_stmt|;
 break|break;
 case|case
-literal|'b'
+literal|'c'
 case|:
-comment|/* operations mode */
-name|Mode
+comment|/* don't connect to "expensive" mailers */
+name|NoConnect
+operator|=
+name|bval
+expr_stmt|;
+break|break;
+case|case
+literal|'d'
+case|:
+comment|/* delivery mode */
+switch|switch
+condition|(
+operator|*
+name|val
+condition|)
+block|{
+case|case
+literal|'\0'
+case|:
+name|SendMode
+operator|=
+name|SM_DELIVER
+expr_stmt|;
+break|break;
+case|case
+name|SM_DELIVER
+case|:
+comment|/* do everything */
+case|case
+name|SM_FORK
+case|:
+comment|/* fork after verification */
+case|case
+name|SM_QUEUE
+case|:
+comment|/* queue only */
+name|SendMode
 operator|=
 operator|*
 name|val
 expr_stmt|;
-switch|switch
-condition|(
-name|Mode
-condition|)
-block|{
-case|case
-name|MD_DAEMON
-case|:
-comment|/* run as a daemon */
-ifdef|#
-directive|ifdef
-name|DAEMON
-name|ArpaMode
-operator|=
-name|Smtp
-operator|=
-name|TRUE
-expr_stmt|;
-else|#
-directive|else
-else|DAEMON
-name|syserr
-argument_list|(
-literal|"Daemon mode not implemented"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-endif|DAEMON
-break|break;
-case|case
-literal|'\0'
-case|:
-comment|/* default: do full delivery */
-name|Mode
-operator|=
-name|MD_DEFAULT
-expr_stmt|;
-comment|/* fall through....... */
-case|case
-name|MD_DELIVER
-case|:
-comment|/* do everything (default) */
-case|case
-name|MD_FORK
-case|:
-comment|/* fork after verification */
-case|case
-name|MD_QUEUE
-case|:
-comment|/* queue only */
-case|case
-name|MD_VERIFY
-case|:
-comment|/* verify only */
-case|case
-name|MD_TEST
-case|:
-comment|/* test addresses */
-case|case
-name|MD_PRINT
-case|:
-comment|/* print queue contents */
-case|case
-name|MD_INITALIAS
-case|:
-comment|/* initialize alias database */
-case|case
-name|MD_FREEZE
-case|:
-comment|/* freeze config file */
 break|break;
 default|default:
 name|syserr
 argument_list|(
-literal|"Unknown operation mode -b%c"
+literal|"Unknown delivery mode %c"
 argument_list|,
-name|Mode
+operator|*
+name|val
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2466,15 +2431,6 @@ name|EX_USAGE
 argument_list|)
 expr_stmt|;
 block|}
-break|break;
-case|case
-literal|'c'
-case|:
-comment|/* don't connect to "expensive" mailers */
-name|NoConnect
-operator|=
-name|bval
-expr_stmt|;
 break|break;
 case|case
 literal|'D'
@@ -2799,14 +2755,6 @@ comment|/* run in verbose mode */
 name|Verbose
 operator|=
 name|bval
-expr_stmt|;
-if|if
-condition|(
-name|Verbose
-condition|)
-name|NoConnect
-operator|=
-name|FALSE
 expr_stmt|;
 break|break;
 ifdef|#

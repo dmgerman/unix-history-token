@@ -21,7 +21,7 @@ operator|)
 name|headers
 operator|.
 name|c
-literal|3.36
+literal|3.37
 operator|%
 name|G
 operator|%
@@ -1453,7 +1453,9 @@ expr_stmt|;
 comment|/* from person */
 if|if
 condition|(
-name|ArpaMode
+name|OpMode
+operator|==
+name|MD_ARPAFTP
 condition|)
 block|{
 specifier|register

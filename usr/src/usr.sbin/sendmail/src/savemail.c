@@ -21,7 +21,7 @@ operator|)
 name|savemail
 operator|.
 name|c
-literal|3.46
+literal|3.47
 operator|%
 name|G
 operator|%
@@ -420,7 +420,13 @@ block|}
 comment|/* 	**  Save the message in dead.letter. 	**	If we weren't mailing back, and the user is local, we 	**	should save the message in dead.letter so that the 	**	poor person doesn't have to type it over again -- 	**	and we all know what poor typists programmers are. 	**	However, if we are running a "smart" protocol, we don't 	**	bother to return the message, since the other end is 	**	expected to handle that. 	*/
 if|if
 condition|(
-name|ArpaMode
+name|OpMode
+operator|==
+name|MD_ARPAFTP
+operator|||
+name|OpMode
+operator|==
+name|MD_SMTP
 condition|)
 return|return;
 name|p
@@ -1011,7 +1017,7 @@ name|sendall
 argument_list|(
 name|ee
 argument_list|,
-name|FALSE
+name|SendMode
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.98		%G%"
+literal|"@(#)sendmail.h	3.99		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1540,13 +1540,13 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/* **  Operation modes **	The default operation mode can be safely changed (except **	that the default cannot be MD_DAEMON). */
+comment|/* **  Operation and send modes ** **	The operation mode describes the basic operation of sendmail. **	This can be set from the command line, and is "send mail" by **	default. ** **	The send mode tells how to send mail.  It can be set in the **	configuration file.  It's setting determines how quickly the **	mail will be delivered versus the load on your system.  If the **	-v (verbose) flag is given, it will be forced to SM_DELIVER **	mode. ** **	The default send mode can be safely changed. */
 end_comment
 
 begin_decl_stmt
 name|EXTERN
 name|char
-name|Mode
+name|OpMode
 decl_stmt|;
 end_decl_stmt
 
@@ -1558,33 +1558,33 @@ begin_define
 define|#
 directive|define
 name|MD_DELIVER
+value|'m'
+end_define
+
+begin_comment
+comment|/* be a mail sender */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MD_ARPAFTP
 value|'a'
 end_define
 
 begin_comment
-comment|/* collect and deliver */
+comment|/* old-style arpanet protocols */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MD_FORK
-value|'f'
+name|MD_SMTP
+value|'s'
 end_define
 
 begin_comment
-comment|/* verify& fork before delivery */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MD_QUEUE
-value|'q'
-end_define
-
-begin_comment
-comment|/* collect& queue, don't deliver */
+comment|/* run SMTP on standard input */
 end_comment
 
 begin_define
@@ -1653,15 +1653,70 @@ begin_comment
 comment|/* freeze the configuration file */
 end_comment
 
+begin_decl_stmt
+name|EXTERN
+name|char
+name|SendMode
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* send mode, see below */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|MD_DEFAULT
-value|MD_DELIVER
+name|SM_DELIVER
+value|'i'
 end_define
 
 begin_comment
-comment|/* default operation mode */
+comment|/* interactive delivery */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SM_QUICKD
+value|'j'
+end_define
+
+begin_comment
+comment|/* deliver w/o queueing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SM_FORK
+value|'b'
+end_define
+
+begin_comment
+comment|/* deliver in background */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SM_QUEUE
+value|'q'
+end_define
+
+begin_comment
+comment|/* queue, don't deliver */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SM_VERIFY
+value|'v'
+end_define
+
+begin_comment
+comment|/* verify only (used internally) */
 end_comment
 
 begin_escape
@@ -1817,17 +1872,6 @@ end_comment
 begin_decl_stmt
 name|EXTERN
 name|bool
-name|Smtp
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* using SMTP over connection */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|bool
 name|SuprErrs
 decl_stmt|;
 end_decl_stmt
@@ -1856,17 +1900,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* only output errors to transcript */
-end_comment
-
-begin_decl_stmt
-name|EXTERN
-name|bool
-name|ArpaMode
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* set if running arpanet protocol */
 end_comment
 
 begin_decl_stmt

@@ -15,7 +15,7 @@ operator|)
 name|err
 operator|.
 name|c
-literal|3.32
+literal|3.33
 operator|%
 name|G
 operator|%
@@ -544,7 +544,9 @@ name|Xscript
 argument_list|,
 literal|"%s\n"
 argument_list|,
-name|Smtp
+name|OpMode
+operator|==
+name|MD_SMTP
 condition|?
 name|msg
 else|:
@@ -583,7 +585,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ArpaMode
+name|OpMode
+operator|==
+name|MD_SMTP
+operator|||
+name|OpMode
+operator|==
+name|MD_ARPAFTP
 condition|)
 name|fprintf
 argument_list|(

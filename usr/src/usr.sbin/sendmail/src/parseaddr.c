@@ -15,7 +15,7 @@ operator|)
 name|parseaddr
 operator|.
 name|c
-literal|3.64
+literal|3.65
 operator|%
 name|G
 operator|%
@@ -1606,7 +1606,7 @@ parameter_list|()
 function_decl|;
 if|if
 condition|(
-name|Mode
+name|OpMode
 operator|==
 name|MD_TEST
 operator|||
@@ -2505,7 +2505,7 @@ block|}
 block|}
 if|if
 condition|(
-name|Mode
+name|OpMode
 operator|==
 name|MD_TEST
 operator|||

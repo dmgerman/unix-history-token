@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.50
+literal|3.51
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.50
+literal|3.51
 operator|%
 name|G
 operator|%
@@ -1841,7 +1841,7 @@ name|sendall
 argument_list|(
 name|CurEnv
 argument_list|,
-name|FALSE
+name|SM_DELIVER
 argument_list|)
 expr_stmt|;
 comment|/* if still not sent, perhaps we should time out.... */

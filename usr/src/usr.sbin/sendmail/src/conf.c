@@ -25,7 +25,7 @@ operator|)
 name|conf
 operator|.
 name|c
-literal|3.63
+literal|3.64
 operator|%
 name|G
 operator|%
@@ -586,7 +586,7 @@ begin_block
 block|{
 if|if
 condition|(
-name|Mode
+name|OpMode
 operator|==
 name|MD_DAEMON
 condition|)
@@ -618,7 +618,7 @@ begin_block
 block|{
 if|if
 condition|(
-name|Mode
+name|OpMode
 operator|==
 name|MD_DAEMON
 condition|)
