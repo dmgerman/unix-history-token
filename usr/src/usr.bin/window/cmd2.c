@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)cmd2.c	3.3 83/08/16"
+literal|"@(#)cmd2.c	3.4 83/08/16"
 decl_stmt|;
 end_decl_stmt
 
@@ -80,7 +80,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"The escape character is %s, which gets you into command mode.\r\n\n"
+literal|"The escape character is %s, which gets you into command mode.\n\n"
 argument_list|,
 name|unctrl
 argument_list|(
@@ -95,7 +95,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"Short commands:\r\n\n"
+literal|"Short commands:\n\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -105,7 +105,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"{1-9}   Select window {1-9} and return to conversation mode.\r\n"
+literal|"{1-9}   Select window {1-9} and return to conversation mode.\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -115,7 +115,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"%%{1-9}  Select window {1-9}.\r\n"
+literal|"%%{1-9}  Select window {1-9}.\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -125,7 +125,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"c{1-9}  Close window {1-9}.\r\n"
+literal|"c{1-9}  Close window {1-9}.\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -135,7 +135,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"C       Close all windows.\r\n"
+literal|"C       Close all windows.\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -145,7 +145,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"S       Show all windows in sequence.\r\n"
+literal|"S       Show all windows in sequence.\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -155,7 +155,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"L       List all windows with their labels.\r\n"
+literal|"L       List all windows with their labels.\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -165,7 +165,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"w       Open a new window.\r\n"
+literal|"w       Open a new window.\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -175,7 +175,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"[^U^D]  Scroll [up, down] half a window.\r\n"
+literal|"[^U^D]  Scroll [up, down] half a window.\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -185,7 +185,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"[^B^F]  Scroll [up, down] a full window.\r\n"
+literal|"[^B^F]  Scroll [up, down] a full window.\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -195,7 +195,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"[hjkl]  Move cursor [left, down, up, right].\r\n"
+literal|"[hjkl]  Move cursor [left, down, up, right].\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -205,7 +205,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"escape  Exit command mode.\r\n"
+literal|"escape  Exit command mode.\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -215,7 +215,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"^L      Redraw screen.\r\n"
+literal|"^L      Redraw screen.\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -225,7 +225,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"^Z      Suspend.\r\n"
+literal|"^Z      Suspend.\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -235,7 +235,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|".       Quit.\r\n"
+literal|".       Quit.\n"
 argument_list|)
 expr_stmt|;
 name|waitnl
@@ -250,7 +250,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"Long commands:\r\n\n"
+literal|"Long commands:\n\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -260,7 +260,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|":terse [off]            Turn on (or off) terse mode.\r\n"
+literal|":terse [off]            Turn on (or off) terse mode.\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -270,7 +270,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|":refresh {1-9} [off]    Turn on (or off) refresh after every newline\r\n"
+literal|":refresh {1-9} [off]    Turn on (or off) refresh after every newline\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -280,7 +280,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"                        for window {1-9}.\r\n"
+literal|"                        for window {1-9}.\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -290,7 +290,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|":label {1-9} string     Label window {1-9}.\r\n"
+literal|":label {1-9} string     Label window {1-9}.\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -300,7 +300,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|":escape C               Set escape character to C.\r\n"
+literal|":escape C               Set escape character to C.\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -310,7 +310,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|":%%{1-9}                 Select window {1-9}.\r\n"
+literal|":%%{1-9}                 Select window {1-9}.\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -320,7 +320,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|":window r c nr nc       Open a window at row r column c\r\n"
+literal|":window r c nr nc       Open a window at row r column c\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -330,7 +330,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"                        with nr rows and nc colomns\r\n"
+literal|"                        with nr rows and nc colomns\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -340,7 +340,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|":source filename        Execute the commands in `filename'.\r\n"
+literal|":source filename        Execute the commands in `filename'.\n"
 argument_list|)
 expr_stmt|;
 name|waitnl
@@ -479,7 +479,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"time\t\tutime\t\tstime\t\tmaxrss\tixrss\tidrss\tisrss\r\n"
+literal|"time\t\tutime\t\tstime\t\tmaxrss\tixrss\tidrss\tisrss\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -541,7 +541,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"%D\t%D\t%D\t%D\r\n"
+literal|"%D\t%D\t%D\t%D\n"
 argument_list|,
 name|rusage
 operator|.
@@ -567,7 +567,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"minflt\tmajflt\tnswap\tinblk\toublk\tmsgsnd\tmsgrcv\tnsigs\tnvcsw\tnivcsw\r\n"
+literal|"minflt\tmajflt\tnswap\tinblk\toublk\tmsgsnd\tmsgrcv\tnsigs\tnvcsw\tnivcsw\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -577,7 +577,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"%D\%D\t%D\t%D\t%D\t%D\t%D\t%D\t%D\t%D\t%D\r\n"
+literal|"%D\t%D\t%D\t%D\t%D\t%D\t%D\t%D\t%D\t%D\n"
 argument_list|,
 name|rusage
 operator|.
@@ -841,7 +841,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"nread\tnreadz\tnreade\tnreadc\tnwrite\tnwritec\tntouched\tnmiss\r\n"
+literal|"nread\tnreadz\tnreade\tnreadc\tnwrite\tnwritec\tnupdt\tntouch\tnmiss\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -851,7 +851,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\r\n"
+literal|"%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n"
 argument_list|,
 name|nread
 argument_list|,
@@ -864,6 +864,8 @@ argument_list|,
 name|wwnwrite
 argument_list|,
 name|wwnwritec
+argument_list|,
+name|wwnupdate
 argument_list|,
 name|wwntouched
 argument_list|,
@@ -973,7 +975,7 @@ name|void
 operator|)
 name|wwputs
 argument_list|(
-literal|"No windows.\r\n"
+literal|"No windows.\n"
 argument_list|,
 name|w
 argument_list|)
@@ -1012,7 +1014,7 @@ name|wwprintf
 argument_list|(
 name|w
 argument_list|,
-literal|"%c   %s\r\n"
+literal|"%c   %s\n"
 argument_list|,
 name|i
 operator|+
@@ -1193,7 +1195,12 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* 	w->ww_mapnl = 1; 	*/
+name|w
+operator|->
+name|ww_mapnl
+operator|=
+literal|1
+expr_stmt|;
 name|w
 operator|->
 name|ww_hasframe
@@ -1294,7 +1301,7 @@ name|void
 operator|)
 name|wwputs
 argument_list|(
-literal|"\r\nType return to continue: "
+literal|"\nType return to continue: "
 argument_list|,
 name|w
 argument_list|)
