@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vd.c	1.2	86/01/05	*/
+comment|/*	vd.c	1.3	86/01/12	*/
 end_comment
 
 begin_include
@@ -594,19 +594,45 @@ end_comment
 begin_macro
 name|vdprobe
 argument_list|(
-argument|addr
+argument|reg
+argument_list|,
+argument|vm
 argument_list|)
 end_macro
 
 begin_decl_stmt
-name|cdr
+name|caddr_t
+name|reg
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|vba_ctlr
 modifier|*
-name|addr
+name|vm
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
+specifier|register
+name|br
+operator|,
+name|cvec
+expr_stmt|;
+comment|/* must be r12, r11 */
+specifier|register
+name|cdr
+modifier|*
+name|cp
+init|=
+operator|(
+name|cdr
+operator|*
+operator|)
+name|reg
+decl_stmt|;
 if|if
 condition|(
 name|badaddr
@@ -614,7 +640,7 @@ argument_list|(
 operator|(
 name|caddr_t
 operator|)
-name|addr
+name|reg
 argument_list|,
 literal|2
 argument_list|)
@@ -624,7 +650,7 @@ operator|(
 literal|0
 operator|)
 return|;
-name|addr
+name|cp
 operator|->
 name|cdr_reset
 operator|=
@@ -637,7 +663,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|addr
+name|cp
 operator|->
 name|cdr_reset
 operator|!=
@@ -655,7 +681,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|addr
+name|cp
 operator|->
 name|cdr_reserved
 operator|=
@@ -667,11 +693,25 @@ literal|3000000
 argument_list|)
 expr_stmt|;
 block|}
+name|br
+operator|=
+literal|0x17
+operator|,
+name|cvec
+operator|=
+literal|0xe0
+operator|+
+name|vm
+operator|->
+name|um_ctlr
+expr_stmt|;
+comment|/* XXX */
 return|return
 operator|(
 sizeof|sizeof
 argument_list|(
-name|cdr
+operator|*
+name|cp
 argument_list|)
 operator|)
 return|;
@@ -4645,10 +4685,14 @@ name|info
 operator|.
 name|type_name
 argument_list|,
-name|dkunit
+name|minor
 argument_list|(
 name|bp
+operator|->
+name|b_dev
 argument_list|)
+operator|>>
+literal|3
 argument_list|,
 literal|'a'
 operator|+

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vxc.c	1.2	86/01/05	*/
+comment|/*	vxc.c	1.3	86/01/12	*/
 end_comment
 
 begin_include
@@ -1260,11 +1260,9 @@ operator||
 name|V_INTR
 argument_list|)
 expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
+ifdef|#
+directive|ifdef
+name|notdef
 block|}
 else|else
 block|{
@@ -1283,7 +1281,14 @@ argument_list|(
 name|n
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 

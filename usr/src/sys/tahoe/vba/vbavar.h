@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vbavar.h	1.1	85/07/21	*/
+comment|/*	vbavar.h	1.2	86/01/12	*/
 end_comment
 
 begin_comment
-comment|/*  * This file contains definitions related to the kernel structures  * for dealing with the Versabus adapters.  *  * Each Versabus controller which is not a device has a vba_ctlr structure.  * Each Versabus device has a vba_device structure.  */
+comment|/*  * This file contains definitions related to the kernel structures  * for dealing with the Versabus adapters.  *  * Each Versabus has a vba_hd structure.  * Each Versabus controller which is not a device has a vba_ctlr structure.  * Each Versabus device has a vba_device structure.  */
 end_comment
 
 begin_ifndef
@@ -12,6 +12,22 @@ ifndef|#
 directive|ifndef
 name|LOCORE
 end_ifndef
+
+begin_comment
+comment|/*  * Per-vba structure.  */
+end_comment
+
+begin_struct
+struct|struct
+name|vba_hd
+block|{
+name|int
+name|vh_lastiv
+decl_stmt|;
+comment|/* last interrupt vector assigned */
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * Per-controller structure.  * (E.g. one for each disk and tape controller, and other things  * which use and release buffered data paths.)  *  * If a controller has devices attached, then there are  * cross-referenced vba_drive structures.  * This structure is the one which is queued in Versabus resource wait,  * and saves the information about Versabus resources which are used.  * The queue of devices waiting to transfer is also attached here.  */
@@ -51,6 +67,11 @@ name|caddr_t
 name|um_addr
 decl_stmt|;
 comment|/* address of device in i/o space */
+name|struct
+name|vba_hd
+modifier|*
+name|um_hd
+decl_stmt|;
 comment|/* the driver saves the prototype command here for use in its go routine */
 name|int
 name|um_cmd
@@ -143,6 +164,11 @@ name|vba_ctlr
 modifier|*
 name|ui_mi
 decl_stmt|;
+name|struct
+name|vba_hd
+modifier|*
+name|ui_hd
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -221,61 +247,9 @@ modifier|*
 name|ud_minfo
 decl_stmt|;
 comment|/* backpointers to vbminit structs */
-name|short
-name|ud_xclu
-decl_stmt|;
-comment|/* want exclusive use of bdp's */
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/*  * Flags to VBA map/bdp allocation routines  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VBA_NEEDBDP
-value|1
-end_define
-
-begin_comment
-comment|/* transfer needs a bdp */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VBA_CANTWAIT
-value|2
-end_define
-
-begin_comment
-comment|/* don't block me */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|VBA_NEED16
-value|3
-end_define
-
-begin_comment
-comment|/* need 16 bit addresses only */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|numvba
-value|1
-end_define
-
-begin_comment
-comment|/* number of vba's */
-end_comment
 
 begin_ifndef
 ifndef|#
@@ -292,6 +266,24 @@ end_ifdef
 begin_comment
 comment|/*  * VBA related kernel variables  */
 end_comment
+
+begin_decl_stmt
+name|int
+name|numvba
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* number of uba's */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|vba_hd
+name|vba_hd
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Vbminit and vbdinit initialize the mass storage controller and  * device tables specifying possible devices.  */

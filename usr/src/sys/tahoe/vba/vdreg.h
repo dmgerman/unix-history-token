@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vdreg.h	1.1	86/01/05	*/
+comment|/*	vdreg.h	1.2	86/01/12	*/
 end_comment
 
 begin_comment
@@ -2045,6 +2045,8 @@ block|,
 literal|0xf2200
 block|,
 literal|0xf2300
+block|,
+literal|0
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	vx.c	1.2	86/01/05	*/
+comment|/*	vx.c	1.3	86/01/12	*/
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ literal|0
 end_if
 
 begin_comment
-comment|/*  *	VIOC-X driver  */
+comment|/*  * VIOC-X driver  */
 end_comment
 
 begin_include
@@ -391,8 +391,21 @@ begin_comment
 comment|/* BOP board no. if indicated by vxtype[] */
 end_comment
 
+begin_decl_stmt
+name|int
+name|vxivec
+index|[
+name|NVIOCX
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* interrupt vector base */
+end_comment
+
 begin_extern
-extern|extern vbrall(
+extern|extern	vbrall(
 end_extern
 
 begin_empty_stmt
@@ -404,12 +417,22 @@ begin_macro
 name|vxprobe
 argument_list|(
 argument|reg
+argument_list|,
+argument|vi
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|caddr_t
 name|reg
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|vba_device
+modifier|*
+name|vi
 decl_stmt|;
 end_decl_stmt
 
@@ -421,6 +444,7 @@ name|br
 decl_stmt|,
 name|cvec
 decl_stmt|;
+comment|/* must be r12, r11 */
 specifier|register
 name|struct
 name|vblok
@@ -525,6 +549,87 @@ operator|(
 literal|0
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|notdef
+comment|/* 	 * Align vioc interrupt vector base to 4 vector 	 * boundary and fitting in 8 bits (is this necessary, 	 * wish we had documentation). 	 */
+if|if
+condition|(
+operator|(
+name|vi
+operator|->
+name|ui_hd
+operator|->
+name|vh_lastiv
+operator|-=
+literal|3
+operator|)
+operator|>
+literal|0xff
+condition|)
+name|vi
+operator|->
+name|ui_hd
+operator|->
+name|vh_lastiv
+operator|=
+literal|0xff
+expr_stmt|;
+name|vxivec
+index|[
+name|vi
+operator|->
+name|ui_unit
+index|]
+operator|=
+name|vi
+operator|->
+name|ui_hd
+operator|->
+name|vh_lastiv
+operator|=
+name|vi
+operator|->
+name|ui_hd
+operator|->
+name|vh_lastiv
+operator|&
+operator|~
+literal|0x3
+expr_stmt|;
+else|#
+directive|else
+name|vxivec
+index|[
+name|vi
+operator|->
+name|ui_unit
+index|]
+operator|=
+literal|0x40
+operator|+
+name|vi
+operator|->
+name|ui_unit
+operator|*
+literal|4
+expr_stmt|;
+endif|#
+directive|endif
+name|br
+operator|=
+literal|0x18
+operator|,
+name|cvec
+operator|=
+name|vxivec
+index|[
+name|vi
+operator|->
+name|ui_unit
+index|]
+expr_stmt|;
+comment|/* XXX */
 return|return
 operator|(
 sizeof|sizeof
@@ -540,13 +645,13 @@ end_block
 begin_expr_stmt
 name|vxattach
 argument_list|(
-name|ui
+name|vi
 argument_list|)
 specifier|register
 expr|struct
 name|vba_device
 operator|*
-name|ui
+name|vi
 expr_stmt|;
 end_expr_stmt
 
@@ -554,18 +659,18 @@ begin_block
 block|{
 name|VIOCBAS
 index|[
-name|ui
+name|vi
 operator|->
 name|ui_unit
 index|]
 operator|=
-name|ui
+name|vi
 operator|->
 name|ui_addr
 expr_stmt|;
 name|vxinit
 argument_list|(
-name|ui
+name|vi
 operator|->
 name|ui_unit
 argument_list|,
@@ -3988,11 +4093,10 @@ index|[
 literal|0
 index|]
 operator|=
+name|vxivec
+index|[
 name|i
-operator|*
-literal|4
-operator|+
-name|VCVECT
+index|]
 expr_stmt|;
 comment|/* ack vector */
 name|cp
@@ -4069,16 +4173,39 @@ operator|!
 name|wait
 condition|)
 return|return;
-while|while
-condition|(
+for|for
+control|(
+name|j
+operator|=
+literal|0
+init|;
 name|cp
 operator|->
 name|cmd
 operator|==
 name|LIDENT
-condition|)
+operator|&&
+name|j
+operator|<
+literal|4000000
+condition|;
+name|j
+operator|++
+control|)
 empty_stmt|;
-comment|/* wait for command completion */
+if|if
+condition|(
+name|j
+operator|>=
+literal|4000000
+condition|)
+name|printf
+argument_list|(
+literal|"vx%d: didn't respond to LIDENT\n"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
 comment|/* calculate address of response buffer */
 name|resp
 operator|=
