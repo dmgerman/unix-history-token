@@ -280,16 +280,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|forward_wakeup
-parameter_list|(
-name|int
-name|cpunum
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|restart_cpus
 parameter_list|(
 name|cpumask_t
