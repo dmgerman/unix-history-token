@@ -282,7 +282,7 @@ argument_list|(
 literal|"getsockname"
 argument_list|)
 expr_stmt|;
-name|_exit
+name|exit
 argument_list|(
 literal|1
 argument_list|)
@@ -604,13 +604,6 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-name|dsyslog
-argument_list|(
-name|LOG_DEBUG
-argument_list|,
-literal|".onalrm: alarm"
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -642,13 +635,6 @@ operator|>
 name|utmpmtime
 condition|)
 block|{
-name|dsyslog
-argument_list|(
-name|LOG_DEBUG
-argument_list|,
-literal|".onalrm: changed\n"
-argument_list|)
-expr_stmt|;
 name|utmpmtime
 operator|=
 name|statbf
@@ -719,11 +705,11 @@ operator|!
 name|utmp
 condition|)
 block|{
-name|dsyslog
+name|syslog
 argument_list|(
-name|LOG_DEBUG
+name|LOG_ERR
 argument_list|,
-literal|".onalrm: malloc failed"
+literal|"malloc failed"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -765,14 +751,6 @@ name|utmp
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-name|dsyslog
-argument_list|(
-name|LOG_DEBUG
-argument_list|,
-literal|".onalrm: ok\n"
-argument_list|)
-expr_stmt|;
 block|}
 end_block
 
@@ -812,15 +790,6 @@ decl_stmt|;
 name|int
 name|offset
 decl_stmt|;
-name|dsyslog
-argument_list|(
-name|LOG_DEBUG
-argument_list|,
-literal|".mailfor: mailfor %s\n"
-argument_list|,
-name|name
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -835,16 +804,7 @@ literal|'@'
 argument_list|)
 operator|)
 condition|)
-block|{
-name|dsyslog
-argument_list|(
-name|LOG_DEBUG
-argument_list|,
-literal|".mailfor: bad format\n"
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
 operator|*
 name|cp
 operator|=
@@ -929,20 +889,24 @@ end_decl_stmt
 
 begin_block
 block|{
-name|FILE
-modifier|*
-name|tp
-decl_stmt|;
-name|struct
-name|sgttyb
-name|gttybuf
-decl_stmt|;
+specifier|static
 name|char
 name|tty
 index|[
 literal|20
 index|]
-decl_stmt|,
+init|=
+literal|"/dev/"
+decl_stmt|;
+name|struct
+name|sgttyb
+name|gttybuf
+decl_stmt|;
+name|FILE
+modifier|*
+name|tp
+decl_stmt|;
+name|char
 name|name
 index|[
 sizeof|sizeof
@@ -965,16 +929,6 @@ decl_stmt|;
 operator|(
 name|void
 operator|)
-name|strcpy
-argument_list|(
-name|tty
-argument_list|,
-literal|"/dev/"
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
 name|strncpy
 argument_list|(
 name|tty
@@ -991,19 +945,6 @@ name|utp
 operator|->
 name|ut_line
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|dsyslog
-argument_list|(
-name|LOG_DEBUG
-argument_list|,
-literal|".notify: notify %s on %s\n"
-argument_list|,
-name|utp
-operator|->
-name|ut_name
-argument_list|,
-name|tty
 argument_list|)
 expr_stmt|;
 if|if
@@ -1030,11 +971,30 @@ name|dsyslog
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|".notify: wrong mode on tty"
+literal|"%s: wrong mode on %s"
+argument_list|,
+name|utp
+operator|->
+name|ut_name
+argument_list|,
+name|tty
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|dsyslog
+argument_list|(
+name|LOG_DEBUG
+argument_list|,
+literal|"notify %s on %s\n"
+argument_list|,
+name|utp
+operator|->
+name|ut_name
+argument_list|,
+name|tty
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|fork
@@ -1080,12 +1040,14 @@ condition|)
 block|{
 name|dsyslog
 argument_list|(
-name|LOG_DEBUG
+name|LOG_ERR
 argument_list|,
-literal|".notify: fopen of tty failed"
+literal|"fopen of tty %s failed"
+argument_list|,
+name|tty
 argument_list|)
 expr_stmt|;
-name|exit
+name|_exit
 argument_list|(
 operator|-
 literal|1
@@ -1193,7 +1155,12 @@ argument_list|,
 name|offset
 argument_list|)
 expr_stmt|;
-name|exit
+name|fclose
+argument_list|(
+name|tp
+argument_list|)
+expr_stmt|;
+name|_exit
 argument_list|(
 literal|0
 argument_list|)
@@ -1260,17 +1227,6 @@ name|off_t
 name|fseek
 parameter_list|()
 function_decl|;
-name|dsyslog
-argument_list|(
-name|LOG_DEBUG
-argument_list|,
-literal|".jkfprint: HERE %s's mail starting at %d\n"
-argument_list|,
-name|name
-argument_list|,
-name|offset
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1286,16 +1242,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
-block|{
-name|dsyslog
-argument_list|(
-name|LOG_DEBUG
-argument_list|,
-literal|".jkfprintf: Can't read the mail\n"
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
 operator|(
 name|void
 operator|)
@@ -1343,23 +1290,25 @@ condition|)
 block|{
 if|if
 condition|(
-name|strncmp
-argument_list|(
-name|line
-argument_list|,
-literal|"From "
-argument_list|,
-literal|5
-argument_list|)
-operator|==
-literal|0
-condition|)
-continue|continue;
-if|if
-condition|(
 name|inheader
 condition|)
 block|{
+if|if
+condition|(
+name|line
+index|[
+literal|0
+index|]
+operator|==
+literal|'\n'
+condition|)
+block|{
+name|inheader
+operator|=
+literal|0
+expr_stmt|;
+continue|continue;
+block|}
 if|if
 condition|(
 name|line
@@ -1375,34 +1324,7 @@ literal|0
 index|]
 operator|==
 literal|'\t'
-condition|)
-continue|continue;
-if|if
-condition|(
-operator|!
-operator|(
-name|cp
-operator|=
-name|strpbrk
-argument_list|(
-name|line
-argument_list|,
-literal|": "
-argument_list|)
-operator|)
 operator|||
-operator|*
-name|cp
-operator|==
-literal|' '
-condition|)
-name|inheader
-operator|=
-literal|0
-expr_stmt|;
-elseif|else
-if|if
-condition|(
 name|strncmp
 argument_list|(
 name|line
@@ -1450,6 +1372,13 @@ argument_list|,
 name|cr
 argument_list|)
 expr_stmt|;
+name|charcnt
+operator|-=
+name|strlen
+argument_list|(
+name|line
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|--
@@ -1457,14 +1386,7 @@ name|linecnt
 operator|<=
 literal|0
 operator|||
-operator|(
 name|charcnt
-operator|-=
-name|strlen
-argument_list|(
-name|line
-argument_list|)
-operator|)
 operator|<=
 literal|0
 condition|)
