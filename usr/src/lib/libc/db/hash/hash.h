@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Margo Seltzer.  *  * %sccs.include.redist.c%  *  *	@(#)hash.h	5.5 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Margo Seltzer.  *  * %sccs.include.redist.c%  *  *	@(#)hash.h	5.6 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -151,6 +151,14 @@ name|int
 name|sshift
 decl_stmt|;
 comment|/* Segment shift */
+name|int
+name|ovfl_point
+decl_stmt|;
+comment|/* Where overflow pages are being allocated */
+name|int
+name|last_freed
+decl_stmt|;
+comment|/* Last overflow page freed */
 name|int
 name|max_bucket
 decl_stmt|;
@@ -411,13 +419,6 @@ define|#
 directive|define
 name|NUMKEY
 value|1038583
-end_define
-
-begin_define
-define|#
-directive|define
-name|VERSION_NO
-value|3
 end_define
 
 begin_define
@@ -711,6 +712,20 @@ define|#
 directive|define
 name|LORDER
 value|hdr.lorder
+end_define
+
+begin_define
+define|#
+directive|define
+name|OVFL_POINT
+value|hdr.ovfl_point
+end_define
+
+begin_define
+define|#
+directive|define
+name|LAST_FREED
+value|hdr.last_freed
 end_define
 
 begin_define
