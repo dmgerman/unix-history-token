@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)inet_addr.c	8.1 (Berkeley) %G%"
+literal|"@(#)inet_addr.c	5.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -134,7 +134,9 @@ block|{
 specifier|register
 name|u_long
 name|val
-decl_stmt|,
+decl_stmt|;
+specifier|register
+name|int
 name|base
 decl_stmt|,
 name|n
@@ -143,12 +145,14 @@ specifier|register
 name|char
 name|c
 decl_stmt|;
-name|u_long
+name|u_int
 name|parts
 index|[
 literal|4
 index|]
-decl_stmt|,
+decl_stmt|;
+specifier|register
+name|u_int
 modifier|*
 name|pp
 init|=
