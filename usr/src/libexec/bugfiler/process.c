@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)process.c	5.1 (Berkeley) 86/11/25"
+literal|"@(#)process.c	5.2 (Berkeley) 87/01/28"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,6 +41,12 @@ begin_include
 include|#
 directive|include
 file|<sys/dir.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -117,6 +123,20 @@ name|int
 name|rval
 decl_stmt|;
 comment|/* read return value */
+name|struct
+name|timeval
+name|tp
+decl_stmt|;
+comment|/* time of day */
+name|struct
+name|timezone
+name|tzp
+decl_stmt|;
+name|char
+modifier|*
+name|ctime
+parameter_list|()
+function_decl|;
 comment|/* copy report to permanent file */
 name|sprintf
 argument_list|(
@@ -242,11 +262,38 @@ name|bfr
 argument_list|)
 expr_stmt|;
 else|else
+block|{
+if|if
+condition|(
+name|gettimeofday
+argument_list|(
+operator|&
+name|tp
+argument_list|,
+operator|&
+name|tzp
+argument_list|)
+condition|)
+name|error
+argument_list|(
+literal|"unable to get time of day."
+argument_list|,
+name|CHN
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"\n%s\n\t%s\t%s\tOwner: Bugs Bunny\n\tStatus: Received\n"
+literal|"\n%s\t\t%s\t%s\t%s\tOwner: Bugs Bunny\n\tComment: Received\n"
 argument_list|,
 name|pfile
+argument_list|,
+name|ctime
+argument_list|(
+operator|&
+name|tp
+operator|.
+name|tv_sec
+argument_list|)
 argument_list|,
 name|mailhead
 index|[
@@ -272,6 +319,7 @@ else|:
 literal|"Subject:\n"
 argument_list|)
 expr_stmt|;
+block|}
 name|REL_LOCK
 expr_stmt|;
 name|fclose
