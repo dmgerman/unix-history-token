@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)resource.h	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)resource.h	7.10 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -272,7 +272,7 @@ begin_define
 define|#
 directive|define
 name|RLIM_INFINITY
-value|(((quad_t)1<< 63) - 1)
+value|(((u_quad_t)1<< 63) - 1)
 end_define
 
 begin_struct
