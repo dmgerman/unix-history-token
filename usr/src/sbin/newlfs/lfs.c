@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lfs.c	5.22 (Berkeley) %G%"
+literal|"@(#)lfs.c	5.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -406,6 +406,9 @@ comment|/* lfs_ivnode */
 name|NULL
 block|,
 comment|/* lfs_seglock */
+literal|0
+block|,
+comment|/* lfs_lockpid */
 literal|0
 block|,
 comment|/* lfs_iocount */
