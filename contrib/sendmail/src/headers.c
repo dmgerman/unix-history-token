@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: headers.c,v 8.286 2004/07/08 17:57:32 ca Exp $"
+literal|"@(#)$Id: headers.c,v 8.287 2004/12/03 18:29:51 ca Exp $"
 argument_list|)
 end_macro
 
@@ -7297,8 +7297,11 @@ name|char
 name|obuf
 index|[
 name|MAXLINE
+operator|+
+literal|256
 index|]
 decl_stmt|;
+comment|/* additional length for h_field */
 name|putflags
 operator|=
 name|PXLF_HEADER
