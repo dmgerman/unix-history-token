@@ -5753,6 +5753,14 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sd
+operator|->
+name|dev
+operator|==
+name|NULL
+condition|)
 name|sd
 operator|->
 name|dev
@@ -6707,6 +6715,14 @@ name|plexes_used
 operator|++
 expr_stmt|;
 comment|/* one more in use */
+if|if
+condition|(
+name|plex
+operator|->
+name|dev
+operator|==
+name|NULL
+condition|)
 name|plex
 operator|->
 name|dev
@@ -7301,6 +7317,14 @@ name|volumes_used
 operator|++
 expr_stmt|;
 comment|/* one more in use */
+if|if
+condition|(
+name|vol
+operator|->
+name|dev
+operator|==
+name|NULL
+condition|)
 name|vol
 operator|->
 name|dev
@@ -8584,21 +8608,6 @@ argument_list|,
 name|plex
 operator|->
 name|name
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|isstriped
-argument_list|(
-name|plex
-argument_list|)
-condition|)
-name|mtx_destroy
-argument_list|(
-operator|&
-name|plex
-operator|->
-name|lockmtx
 argument_list|)
 expr_stmt|;
 name|free_plex
