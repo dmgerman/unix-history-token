@@ -1630,6 +1630,8 @@ name|DIST_COMPAT3X
 expr_stmt|;
 endif|#
 directive|endif
+endif|#
+directive|endif
 if|#
 directive|if
 name|__FreeBSD__
@@ -1639,8 +1641,6 @@ name|Dists
 operator||=
 name|DIST_COMPAT4X
 expr_stmt|;
-endif|#
-directive|endif
 endif|#
 directive|endif
 block|}
