@@ -3561,12 +3561,6 @@ operator|)
 return|;
 block|}
 comment|/* 	 * Allocate an OBJT_SWAP object. 	 * 	 * sc_secsize is PAGE_SIZE'd 	 * 	 * mdio->size is in DEV_BSIZE'd chunks. 	 * Note the truncation. 	 */
-name|mtx_lock
-argument_list|(
-operator|&
-name|vm_mtx
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|secsize
@@ -3586,6 +3580,12 @@ name|PAGE_SIZE
 operator|/
 name|DEV_BSIZE
 operator|)
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->
