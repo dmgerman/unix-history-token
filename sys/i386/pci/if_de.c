@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994 Matt Thomas (thomas@lkg.dec.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: if_de.c,v 1.5 1994/11/10 02:56:48 davidg Exp $  *  */
+comment|/*-  * Copyright (c) 1994 Matt Thomas (thomas@lkg.dec.com)  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: if_de.c,v 1.6 1994/11/13 12:39:38 davidg Exp $  *  */
 end_comment
 
 begin_comment
@@ -10,7 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<de.h>
+file|"de.h"
 end_include
 
 begin_if
@@ -24,55 +24,49 @@ end_if
 begin_include
 include|#
 directive|include
-file|<param.h>
+file|<sys/param.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<systm.h>
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mbuf.h>
+file|<sys/mbuf.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<protosw.h>
+file|<sys/protosw.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<socket.h>
+file|<sys/socket.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ioctl.h>
+file|<sys/ioctl.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<sys/errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<malloc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<syslog.h>
+file|<sys/malloc.h>
 end_include
 
 begin_include
@@ -102,7 +96,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<bpfilter.h>
+file|"bpfilter.h"
 end_include
 
 begin_if
@@ -407,7 +401,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * The DC21040 has a stupid restriction in that the receive  * buffers must be longword aligned.  But since Ethernet  * headers are not a multiple of longwords in size this forces  * the data to non-longword aligned.  Since IP requires the  * data to be longword aligned, we can to copy it after it has  * been DMA'ed in our memory.  *  * Since we have to copy it anyways, we might as well as allocate  * dedicated receive space for the input.  This allows to use a  * small receive buffer size and more ring entries to be able to  * better keep with a foold of tiny Ethernet packets.  *  * The receive space MUST ALWAYS be a multiple of the page size.  * And the number of receive descriptors multiplied by the size  * of the receive buffers must equal the recevive space.  This  * is that we can manipulate the page tables so that even if a  * packet wraps around the end of the receive space, we can   * treat it as virtually contiguous.  */
+comment|/*  * The DC21040 has a stupid restriction in that the receive  * buffers must be longword aligned.  But since Ethernet  * headers are not a multiple of longwords in size this forces  * the data to non-longword aligned.  Since IP requires the  * data to be longword aligned, we need to copy it after it has  * been DMA'ed in our memory.  *  * Since we have to copy it anyways, we might as well as allocate  * dedicated receive space for the input.  This allows to use a  * small receive buffer size and more ring entries to be able to  * better keep with a flood of tiny Ethernet packets.  *  * The receive space MUST ALWAYS be a multiple of the page size.  * And the number of receive descriptors multiplied by the size  * of the receive buffers must equal the recevive space.  This  * is so that we can manipulate the page tables so that even if a  * packet wraps around the end of the receive space, we can   * treat it as virtually contiguous.  */
 end_comment
 
 begin_define
@@ -654,7 +648,7 @@ begin_define
 define|#
 directive|define
 name|TULIP_MAX_TXSEG
-value|32
+value|30
 end_define
 
 begin_define
@@ -667,7 +661,7 @@ parameter_list|,
 name|a2
 parameter_list|)
 define|\
-value|(((u_short *)a1)[0] == ((u_short *)a2)[0] \ 	 || ((u_short *)a1)[1] == ((u_short *)a2)[1] \ 	 || ((u_short *)a1)[2] == ((u_short *)a2)[2])
+value|(((u_short *)a1)[0] == ((u_short *)a2)[0] \&& ((u_short *)a1)[1] == ((u_short *)a2)[1] \&& ((u_short *)a1)[2] == ((u_short *)a2)[2])
 end_define
 
 begin_define
@@ -678,7 +672,7 @@ parameter_list|(
 name|a1
 parameter_list|)
 define|\
-value|(((u_short *)a1)[0] == 0xFFFFU \ 	 || ((u_short *)a1)[1] == 0xFFFFU \ 	 || ((u_short *)a1)[2] == 0xFFFFU)
+value|(((u_short *)a1)[0] == 0xFFFFU \&& ((u_short *)a1)[1] == 0xFFFFU \&& ((u_short *)a1)[2] == 0xFFFFU)
 end_define
 
 begin_function_decl
@@ -2272,7 +2266,7 @@ operator|&
 name|TULIP_DFLAG_TxSETUPPKT
 condition|)
 block|{
-comment|/* 		 * We've just finished processing a setup packet. 		 * Mark that we can finished it.  If there's not 		 * another pending, startup the TULIP receiver. 		 */
+comment|/* 		 * We've just finished processing a setup packet. 		 * Mark that we can finished it.  If there's not 		 * another pending, startup the TULIP receiver. 		 * Make sure we ack the RXSTOPPED so we won't get 		 * an abormal interrupt indication. 		 */
 name|sc
 operator|->
 name|tulip_flags
@@ -2303,6 +2297,15 @@ name|sc
 operator|->
 name|tulip_intrmask
 operator||=
+name|TULIP_STS_RXSTOPPED
+expr_stmt|;
+operator|*
+name|sc
+operator|->
+name|tulip_csrs
+operator|.
+name|csr_status
+operator|=
 name|TULIP_STS_RXSTOPPED
 expr_stmt|;
 operator|*
@@ -2583,7 +2586,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s%d: tulip_txsegment: extremely fragmented packet dropped (%d segments)\n"
+literal|"%s%d: tulip_txsegment: extremely fragmented packet encountered (%d segments)\n"
 argument_list|,
 name|sc
 operator|->
@@ -2944,24 +2947,125 @@ operator|<
 literal|0
 condition|)
 block|{
-if|#
-directive|if
+name|struct
+name|mbuf
+modifier|*
+name|m0
+decl_stmt|;
+name|MGETHDR
+argument_list|(
+name|m0
+argument_list|,
+name|M_DONTWAIT
+argument_list|,
+name|MT_DATA
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|m0
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|>
+name|MHLEN
+condition|)
+block|{
+name|MCLGET
+argument_list|(
+name|m0
+argument_list|,
+name|M_DONTWAIT
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|m0
+operator|->
+name|m_flags
+operator|&
+name|M_EXT
+operator|)
+operator|==
 literal|0
-block|struct mbuf *m0; 	    MGETHDR(m0, M_DONTWAIT, MT_DATA); 	    if (m0 != NULL) { 		if (m->m_pkthdr.len> MHLEN) { 		    MCLGET(m0, M_DONTWAIT); 		    if ((m0->m_flags& M_EXT) == 0) { 			m_freem(m); 			continue; 		    } 		} 		m_copydata(m, 0, mtod(m0, caddr_t), m->m_pkthdr.len); 		m0->m_pkthdr.len = m0->m_len = m->m_pkthdr.len; 		m_freem(m); 		IF_PREPEND(ifq, m0); 		continue; 	    } else {
-endif|#
-directive|endif
+condition|)
+block|{
 name|m_freem
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
 continue|continue;
-if|#
-directive|if
-literal|0
 block|}
-endif|#
-directive|endif
+block|}
+name|m_copydata
+argument_list|(
+name|m
+argument_list|,
+literal|0
+argument_list|,
+name|m0
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+argument_list|,
+name|mtod
+argument_list|(
+name|m0
+argument_list|,
+name|caddr_t
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|m0
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|=
+name|m0
+operator|->
+name|m_len
+operator|=
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+expr_stmt|;
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+name|IF_PREPEND
+argument_list|(
+name|ifq
+argument_list|,
+name|m0
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+else|else
+block|{
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 block|}
 if|if
 condition|(
@@ -3102,17 +3206,6 @@ operator|>
 literal|0
 condition|)
 do|;
-comment|/* 	 * The descriptors have been filled in.  Mark the first 	 * and last segments, indicate we want a transmit complete 	 * interrupt, give the descriptors to the TULIP, and tell 	 * it to transmit! 	 */
-name|IF_ENQUEUE
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|tulip_txq
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
 if|#
 directive|if
 name|NBPFILTER
@@ -3123,6 +3216,8 @@ condition|(
 name|sc
 operator|->
 name|tulip_bpf
+operator|!=
+name|NULL
 condition|)
 name|bpf_mtap
 argument_list|(
@@ -3135,6 +3230,17 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * The descriptors have been filled in.  Mark the first 	 * and last segments, indicate we want a transmit complete 	 * interrupt, give the descriptors to the TULIP, and tell 	 * it to transmit! 	 */
+name|IF_ENQUEUE
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|tulip_txq
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
 name|eop
 operator|->
 name|d_flag
@@ -3277,46 +3383,6 @@ if|if
 condition|(
 name|csr
 operator|&
-name|TULIP_STS_RXINTR
-condition|)
-name|tulip_rx_intr
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|tulip_txinfo
-operator|.
-name|ri_free
-operator|<
-name|sc
-operator|->
-name|tulip_txinfo
-operator|.
-name|ri_max
-condition|)
-block|{
-name|tulip_tx_intr
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|tulip_start
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|tulip_if
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|csr
-operator|&
 name|TULIP_STS_ABNRMLINTR
 condition|)
 block|{
@@ -3351,6 +3417,46 @@ operator|=
 name|sc
 operator|->
 name|tulip_cmdmode
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|csr
+operator|&
+name|TULIP_STS_RXINTR
+condition|)
+name|tulip_rx_intr
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|tulip_txinfo
+operator|.
+name|ri_free
+operator|<
+name|sc
+operator|->
+name|tulip_txinfo
+operator|.
+name|ri_max
+condition|)
+block|{
+name|tulip_tx_intr
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|tulip_start
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|tulip_if
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -3504,10 +3610,108 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
+comment|/* 	 * Some folks don't use the standard ethernet rom format 	 * but instead just put the address in the first 6 bytes 	 * of the rom and let the rest be all 0xffs.  (Can we say 	 * ZNYX???) 	 */
+for|for
+control|(
+name|idx
+operator|=
+literal|6
+init|;
+name|idx
+operator|<
+literal|32
+condition|;
+name|idx
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|sc
+operator|->
+name|tulip_rombuf
+index|[
+name|idx
+index|]
+operator|!=
+literal|0xFF
+condition|)
 return|return
 operator|-
 literal|4
 return|;
+block|}
+comment|/* 	 * Make sure the address is not multicast or locally assigned 	 * that the OUI is not 00-00-00. 	 */
+if|if
+condition|(
+operator|(
+name|sc
+operator|->
+name|tulip_rombuf
+index|[
+literal|0
+index|]
+operator|&
+literal|3
+operator|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|-
+literal|4
+return|;
+if|if
+condition|(
+name|sc
+operator|->
+name|tulip_rombuf
+index|[
+literal|0
+index|]
+operator|==
+literal|0
+operator|&&
+name|sc
+operator|->
+name|tulip_rombuf
+index|[
+literal|1
+index|]
+operator|==
+literal|0
+operator|&&
+name|sc
+operator|->
+name|tulip_rombuf
+index|[
+literal|2
+index|]
+operator|==
+literal|0
+condition|)
+return|return
+operator|-
+literal|4
+return|;
+name|bcopy
+argument_list|(
+name|sc
+operator|->
+name|tulip_rombuf
+argument_list|,
+name|sc
+operator|->
+name|tulip_hwaddr
+argument_list|,
+literal|6
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 if|if
 condition|(
 name|bcmp
@@ -4482,6 +4686,12 @@ argument_list|)
 operator|->
 name|sin_addr
 expr_stmt|;
+name|tulip_addr_filter
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* reset multicast filtering */
 call|(
 modifier|*
 name|ifp
@@ -4847,15 +5057,6 @@ operator|&
 name|sc
 operator|->
 name|tulip_if
-decl_stmt|;
-name|struct
-name|ifaddr
-modifier|*
-name|ifa
-init|=
-name|ifp
-operator|->
-name|if_addrlist
 decl_stmt|;
 name|int
 name|cnt
@@ -5588,7 +5789,7 @@ operator|=
 name|TULIP_DC21040
 expr_stmt|;
 return|return
-literal|"digital dc21040 ethernet"
+literal|"Digital DC21040 Ethernet"
 return|;
 block|}
 if|if
@@ -5606,7 +5807,7 @@ operator|=
 name|TULIP_DC21140
 expr_stmt|;
 return|return
-literal|"digital dc21140 fast ethernet"
+literal|"Digital DC21140 Fast Ethernet"
 return|;
 block|}
 return|return
@@ -6010,7 +6211,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s%d: %s %d.%d ethernet address %s\n"
+literal|"%s%d: %s pass %d.%d ethernet address %s\n"
 argument_list|,
 name|sc
 operator|->
