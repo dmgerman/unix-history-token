@@ -21,7 +21,7 @@ operator|)
 name|collect
 operator|.
 name|c
-literal|4.2
+literal|4.3
 operator|%
 name|G
 operator|%
@@ -615,11 +615,37 @@ name|OpMode
 operator|==
 name|MD_SMTP
 condition|)
+block|{
 name|syserr
 argument_list|(
-literal|"collect: unexpected close"
+literal|"collect: unexpected close, from=%s"
+argument_list|,
+name|CurEnv
+operator|->
+name|e_from
+operator|.
+name|q_paddr
 argument_list|)
 expr_stmt|;
+comment|/* don't return an error indication */
+name|CurEnv
+operator|->
+name|e_to
+operator|=
+name|NULL
+expr_stmt|;
+name|CurEnv
+operator|->
+name|e_flags
+operator|&=
+operator|~
+name|EF_FATALERRS
+expr_stmt|;
+comment|/* and don't try to deliver the partial message either */
+name|finis
+argument_list|()
+expr_stmt|;
+block|}
 comment|/* 	**  Find out some information from the headers. 	**	Examples are who is the from person& the date. 	*/
 name|eatheader
 argument_list|(
