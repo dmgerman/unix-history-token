@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dhu.c	7.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1985, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dhu.c	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1347,6 +1347,10 @@ operator|(
 name|dev
 operator|,
 name|flag
+operator|,
+name|mode
+operator|,
+name|p
 operator|)
 name|dev_t
 name|dev
@@ -1356,6 +1360,16 @@ end_expr_stmt
 begin_decl_stmt
 name|int
 name|flag
+decl_stmt|,
+name|mode
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|proc
+modifier|*
+name|p
 decl_stmt|;
 end_decl_stmt
 
@@ -1398,6 +1412,8 @@ name|l_close
 operator|)
 operator|(
 name|tp
+operator|,
+name|flag
 operator|)
 expr_stmt|;
 operator|(

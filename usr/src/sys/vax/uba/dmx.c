@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dmx.c	7.6 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)dmx.c	7.7 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -704,18 +704,28 @@ return|;
 block|}
 end_block
 
-begin_expr_stmt
+begin_macro
 name|dmxclose
 argument_list|(
-name|tp
+argument|tp
+argument_list|,
+argument|flag
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|tty
-operator|*
+modifier|*
 name|tp
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|flag
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -732,6 +742,8 @@ name|l_close
 operator|)
 operator|(
 name|tp
+operator|,
+name|flag
 operator|)
 expr_stmt|;
 operator|(
