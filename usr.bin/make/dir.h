@@ -36,7 +36,7 @@ comment|/* Number of paths with this directory */
 name|int
 name|hits
 decl_stmt|;
-comment|/* the number of times a file in this 				 * directory has been found */
+comment|/* Number of times a file in this dirextory has 				 * been found  */
 name|Hash_Table
 name|files
 decl_stmt|;

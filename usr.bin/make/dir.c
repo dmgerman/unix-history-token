@@ -102,14 +102,38 @@ begin_decl_stmt
 specifier|static
 name|int
 name|hits
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Found in directory cache */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
 name|misses
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Sad, but not evil misses */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
 name|nearmisses
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Found under search path */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
 name|bigmisses
 decl_stmt|;
 end_decl_stmt
@@ -130,16 +154,16 @@ begin_comment
 comment|/* contents of current directory */
 end_comment
 
+begin_comment
+comment|/* Results of doing a last-resort stat in Dir_FindFile --  * if we have to go to the system to find the file, we might as well  * have its mtime on record.  * XXX: If this is done way early, there's a chance other rules will  * have already updated the file, in which case we'll update it again.  * Generally, there won't be two rules to update a single file, so this  * should be ok, but...  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|Hash_Table
 name|mtimes
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* Results of doing a last-resort stat in 			     * Dir_FindFile -- if we have to go to the 			     * system to find the file, we might as well 			     * have its mtime on record. XXX: If this is done 			     * way early, there's a chance other rules will 			     * have already updated the file, in which case 			     * we'll update it again. Generally, there won't 			     * be two rules to update a single file, so this 			     * should be ok, but... */
-end_comment
 
 begin_function_decl
 specifier|static
@@ -316,7 +340,7 @@ argument_list|(
 name|ln
 argument_list|)
 expr_stmt|;
-comment|/*      * We always need to have dot around, so we increment its reference count      * to make sure it's not destroyed.      */
+comment|/* 	 * We always need to have dot around, so we increment its 	 * reference count to make sure it's not destroyed. 	 */
 name|dot
 operator|->
 name|refCount
@@ -413,10 +437,6 @@ operator|)
 operator|->
 name|name
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
 name|dname
 argument_list|)
 operator|)
@@ -622,7 +642,7 @@ name|search
 argument_list|)
 control|)
 block|{
-comment|/* 	 * See if the file matches the given pattern. Note we follow the UNIX 	 * convention that dot files will only be found if the pattern 	 * begins with a dot (note also that as a side effect of the hashing 	 * scheme, .* won't match . or .. since they aren't hashed). 	 */
+comment|/* 		 * See if the file matches the given pattern. Note we follow 		 * the UNIX convention that dot files will only be found if 		 * the pattern begins with a dot (note also that as a side 		 * effect of the hashing scheme, .* won't match . or .. 		 * since they aren't hashed). 		 */
 if|if
 condition|(
 name|Str_Match
@@ -738,7 +758,7 @@ comment|/* Start of current piece of brace clause */
 name|int
 name|bracelevel
 decl_stmt|;
-comment|/* Number of braces we've seen. If we see a 				 * right brace when this is 0, we've hit the 				 * end of the clause. */
+comment|/* Number of braces we've seen. If we see a right brace 			 * when this is 0, we've hit the end of the clause. */
 name|char
 modifier|*
 name|file
@@ -747,19 +767,19 @@ comment|/* Current expansion */
 name|int
 name|otherLen
 decl_stmt|;
-comment|/* The length of the other pieces of the 				 * expansion (chars before and after the 				 * clause in 'word') */
+comment|/* The length of the other pieces of the expansion 			 * (chars before and after the clause in 'word') */
 name|char
 modifier|*
 name|cp2
 decl_stmt|;
-comment|/* Pointer for checking for wildcards in 				 * expansion before calling Dir_Expand */
+comment|/* Pointer for checking for wildcards in 			 * expansion before calling Dir_Expand */
 name|start
 operator|=
 name|brace
 operator|+
 literal|1
 expr_stmt|;
-comment|/*      * Find the end of the brace clause first, being wary of nested brace      * clauses.      */
+comment|/* 	 * Find the end of the brace clause first, being wary of nested brace 	 * clauses. 	 */
 for|for
 control|(
 name|end
@@ -786,11 +806,9 @@ name|end
 operator|==
 literal|'{'
 condition|)
-block|{
 name|bracelevel
 operator|++
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -808,9 +826,7 @@ operator|==
 literal|0
 operator|)
 condition|)
-block|{
 break|break;
-block|}
 block|}
 if|if
 condition|(
@@ -830,11 +846,9 @@ expr_stmt|;
 return|return;
 block|}
 else|else
-block|{
 name|end
 operator|++
 expr_stmt|;
-block|}
 name|otherLen
 operator|=
 name|brace
@@ -860,7 +874,7 @@ name|cp
 operator|++
 control|)
 block|{
-comment|/* 	 * Find the end of this piece of the clause. 	 */
+comment|/* 		 * Find the end of this piece of the clause. 		 */
 name|bracelevel
 operator|=
 literal|0
@@ -880,11 +894,9 @@ name|cp
 operator|==
 literal|'{'
 condition|)
-block|{
 name|bracelevel
 operator|++
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -902,14 +914,12 @@ operator|<=
 literal|0
 operator|)
 condition|)
-block|{
 break|break;
-block|}
 name|cp
 operator|++
 expr_stmt|;
 block|}
-comment|/* 	 * Allocate room for the combination and install the three pieces. 	 */
+comment|/* 		 * Allocate room for the combination and install the 		 * three pieces. 		 */
 name|file
 operator|=
 name|emalloc
@@ -929,7 +939,6 @@ name|brace
 operator|!=
 name|word
 condition|)
-block|{
 name|strncpy
 argument_list|(
 name|file
@@ -941,14 +950,12 @@ operator|-
 name|word
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|cp
 operator|!=
 name|start
 condition|)
-block|{
 name|strncpy
 argument_list|(
 operator|&
@@ -966,7 +973,6 @@ operator|-
 name|start
 argument_list|)
 expr_stmt|;
-block|}
 name|strcpy
 argument_list|(
 operator|&
@@ -988,7 +994,7 @@ argument_list|,
 name|end
 argument_list|)
 expr_stmt|;
-comment|/* 	 * See if the result has any wildcards in it. If we find one, call 	 * Dir_Expand right away, telling it to place the result on our list 	 * of expansions. 	 */
+comment|/* 		 * See if the result has any wildcards in it. If we find one, 		 * call Dir_Expand right away, telling it to place the result 		 * on our list of expansions. 		 */
 for|for
 control|(
 name|cp2
@@ -1046,7 +1052,7 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-comment|/* 	     * Hit the end w/o finding any wildcards, so stick the expansion 	     * on the end of the list. 	     */
+comment|/* 			 * Hit the end w/o finding any wildcards, so stick 			 * the expansion on the end of the list. 			 */
 name|Lst_AtEnd
 argument_list|(
 name|expansions
@@ -1242,8 +1248,9 @@ expr_stmt|;
 if|if
 condition|(
 name|cp
+operator|!=
+name|NULL
 condition|)
-block|{
 name|DirExpandCurly
 argument_list|(
 name|word
@@ -1255,7 +1262,6 @@ argument_list|,
 name|expansions
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 block|{
 name|cp
@@ -1270,9 +1276,11 @@ expr_stmt|;
 if|if
 condition|(
 name|cp
+operator|!=
+name|NULL
 condition|)
 block|{
-comment|/* 	     * The thing has a directory component -- find the first wildcard 	     * in the string. 	     */
+comment|/* 			 * The thing has a directory component -- find the 			 * first wildcard in the string. 			 */
 for|for
 control|(
 name|cp
@@ -1281,6 +1289,8 @@ name|word
 init|;
 operator|*
 name|cp
+operator|!=
+literal|'\0'
 condition|;
 name|cp
 operator|++
@@ -1320,7 +1330,7 @@ operator|==
 literal|'{'
 condition|)
 block|{
-comment|/* 		 * This one will be fun. 		 */
+comment|/* 				 * This one will be fun. 				 */
 name|DirExpandCurly
 argument_list|(
 name|word
@@ -1343,7 +1353,7 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-comment|/* 		 * Back up to the start of the component 		 */
+comment|/* 				 * Back up to the start of the component 				 */
 name|char
 modifier|*
 name|dirpath
@@ -1359,11 +1369,9 @@ name|cp
 operator|!=
 literal|'/'
 condition|)
-block|{
 name|cp
 operator|--
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|cp
@@ -1374,7 +1382,7 @@ block|{
 name|char
 name|sc
 decl_stmt|;
-comment|/* 		     * If the glob isn't in the first component, try and find 		     * all the components up to the one with a wildcard. 		     */
+comment|/* 					 * If the glob isn't in the first 					 * component, try and find all the 					 * components up to the one with a 					 * wildcard. 					 */
 name|sc
 operator|=
 name|cp
@@ -1405,7 +1413,7 @@ index|]
 operator|=
 name|sc
 expr_stmt|;
-comment|/* 		     * dirpath is null if can't find the leading component 		     * XXX: Dir_FindFile won't find internal components. 		     * i.e. if the path contains ../Etc/Object and we're 		     * looking for Etc, it won't be found. Ah well. 		     * Probably not important. 		     */
+comment|/* 					 * dirpath is null if can't find the 					 * leading component 					 * XXX: Dir_FindFile won't find internal 					 * components. i.e. if the path contains 					 * ../Etc/Object and we're looking for 					 * Etc, * it won't be found. Ah well. 					 * Probably not important. 					 */
 if|if
 condition|(
 name|dirpath
@@ -1476,7 +1484,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 		     * Start the search from the local directory 		     */
+comment|/* 					 * Start the search from the local 					 * directory 					 */
 name|DirExpandInt
 argument_list|(
 name|word
@@ -1490,7 +1498,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 		 * Return the file -- this should never happen. 		 */
+comment|/* 				 * Return the file -- this should never happen. 				 */
 name|DirExpandInt
 argument_list|(
 name|word
@@ -1504,7 +1512,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 	     * First the files in dot 	     */
+comment|/* 			 * First the files in dot 			 */
 name|DirMatchFiles
 argument_list|(
 name|word
@@ -1514,7 +1522,7 @@ argument_list|,
 name|expansions
 argument_list|)
 expr_stmt|;
-comment|/* 	     * Then the files in every other directory on the path. 	     */
+comment|/* 			 * Then the files in every other directory on the path. 			 */
 name|DirExpandInt
 argument_list|(
 name|word
@@ -1620,7 +1628,7 @@ modifier|*
 name|entry
 decl_stmt|;
 comment|/* Entry for mtimes table */
-comment|/*      * Find the final component of the name and note whether it has a      * slash in it (the name, I mean)      */
+comment|/* 	 * Find the final component of the name and note whether it has a 	 * slash in it (the name, I mean) 	 */
 name|cp
 operator|=
 name|strrchr
@@ -1633,6 +1641,8 @@ expr_stmt|;
 if|if
 condition|(
 name|cp
+operator|!=
+name|NULL
 condition|)
 block|{
 name|hasSlash
@@ -1666,7 +1676,7 @@ name|name
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*      * No matter what, we always look for the file in the current directory      * before anywhere else and we *do not* add the ./ to it if it exists.      * This is so there are no conflicts between what the user specifies      * (fish.c) and what pmake finds (./fish.c).      */
+comment|/* 	 * No matter what, we always look for the file in the current directory 	 * before anywhere else and we *do not* add the ./ to it if it exists. 	 * This is so there are no conflicts between what the user specifies 	 * (fish.c) and what pmake finds (./fish.c). 	 */
 if|if
 condition|(
 operator|(
@@ -1759,7 +1769,7 @@ name|NULL
 operator|)
 return|;
 block|}
-comment|/*      * We look through all the directories on the path seeking one which      * contains the final component of the given name and whose final      * component(s) match the name's initial component(s). If such a beast      * is found, we concatenate the directory name and the final component      * and return the resulting string. If we don't find any such thing,      * we go on to phase two...      */
+comment|/* 	 * We look through all the directories on the path seeking one which 	 * contains the final component of the given name and whose final 	 * component(s) match the name's initial component(s). If such a beast 	 * is found, we concatenate the directory name and the final component 	 * and return the resulting string. If we don't find any such thing, 	 * we go on to phase two... 	 */
 while|while
 condition|(
 operator|(
@@ -1823,7 +1833,7 @@ condition|(
 name|hasSlash
 condition|)
 block|{
-comment|/* 		 * If the name had a slash, its initial components and p's 		 * final components must match. This is false if a mismatch 		 * is encountered before all of the initial components 		 * have been checked (p2> name at the end of the loop), or 		 * we matched only part of one of the components of p 		 * along with all the rest of them (*p1 != '/'). 		 */
+comment|/* 				 * If the name had a slash, its initial 				 * components and p's final components must 				 * match. This is false if a mismatch is 				 * encountered before all of the initial 				 * components have been checked (p2> name at 				 * the end of the loop), or we matched only 				 * part of one of the components of p 				 * along with all the rest of them (*p1 != '/'). 				 */
 name|p1
 operator|=
 name|p
@@ -1898,7 +1908,8 @@ argument_list|(
 name|DIR
 argument_list|,
 operator|(
-literal|"component mismatch -- continuing..."
+literal|"component mismatch -- "
+literal|"continuing..."
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1956,7 +1967,7 @@ condition|(
 name|hasSlash
 condition|)
 block|{
-comment|/* 	     * If the file has a leading path component and that component 	     * exactly matches the entire name of the current search 	     * directory, we assume the file doesn't exist and return NULL. 	     */
+comment|/* 			 * If the file has a leading path component and that 			 * component exactly matches the entire name of the 			 * current search directory, we assume the file 			 * doesn't exist and return NULL. 			 */
 for|for
 control|(
 name|p1
@@ -1984,9 +1995,7 @@ operator|,
 name|p2
 operator|++
 control|)
-block|{
 continue|continue;
-block|}
 if|if
 condition|(
 operator|*
@@ -2051,7 +2060,8 @@ argument_list|(
 name|DIR
 argument_list|,
 operator|(
-literal|"must be here but isn't -- returning NULL\n"
+literal|"must be here but isn't --"
+literal|" returning NULL\n"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -2064,7 +2074,7 @@ block|}
 block|}
 block|}
 block|}
-comment|/*      * We didn't find the file on any existing members of the directory.      * If the name doesn't contain a slash, that means it doesn't exist.      * If it *does* contain a slash, however, there is still hope: it      * could be in a subdirectory of one of the members of the search      * path. (eg. /usr/include and sys/types.h. The above search would      * fail to turn up types.h in /usr/include, but it *is* in      * /usr/include/sys/types.h) If we find such a beast, we assume there      * will be more (what else can we assume?) and add all but the last      * component of the resulting name onto the search path (at the      * end). This phase is only performed if the file is *not* absolute.      */
+comment|/* 	 * We didn't find the file on any existing members of the directory. 	 * If the name doesn't contain a slash, that means it doesn't exist. 	 * If it *does* contain a slash, however, there is still hope: it 	 * could be in a subdirectory of one of the members of the search 	 * path. (eg. /usr/include and sys/types.h. The above search would 	 * fail to turn up types.h in /usr/include, but it *is* in 	 * /usr/include/sys/types.h) If we find such a beast, we assume there 	 * will be more (what else can we assume?) and add all but the last 	 * component of the resulting name onto the search path (at the 	 * end). This phase is only performed if the file is *not* absolute. 	 */
 if|if
 condition|(
 operator|!
@@ -2161,7 +2171,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * Checking in dot -- DON'T put a leading ./ on the thing. 		 */
+comment|/* 				 * Checking in dot -- DON'T put a leading ./ 				 * on the thing. 				 */
 name|file
 operator|=
 name|estrdup
@@ -2212,7 +2222,7 @@ argument_list|(
 name|path
 argument_list|)
 expr_stmt|;
-comment|/* 		 * We've found another directory to search. We know there's 		 * a slash in 'file' because we put one there. We nuke it after 		 * finding it and call Dir_AddDir to add this new directory 		 * onto the existing search path. Once that's done, we restore 		 * the slash and triumphantly return the file name, knowing 		 * that should a file in this directory every be referenced 		 * again in such a manner, we will find it without having to do 		 * numerous numbers of access calls. Hurrah! 		 */
+comment|/* 				 * We've found another directory to search. We 				 * know there's a slash in 'file' because we put 				 * one there. We nuke it after finding it and 				 * call Dir_AddDir to add this new directory 				 * onto the existing search path. Once that's 				 * done, we restore the slash and triumphantly 				 * return the file name, knowing that should a 				 * file in this directory every be referenced 				 * again in such a manner, we will find it 				 * without having to do numerous numbers of 				 * access calls. Hurrah! 				 */
 name|cp
 operator|=
 name|strrchr
@@ -2239,7 +2249,7 @@ name|cp
 operator|=
 literal|'/'
 expr_stmt|;
-comment|/* 		 * Save the modification time so if it's needed, we don't have 		 * to fetch it again. 		 */
+comment|/* 				 * Save the modification time so if 				 * it's needed, we don't have to fetch it again. 				 */
 name|DEBUGF
 argument_list|(
 name|DIR
@@ -2328,7 +2338,7 @@ condition|(
 name|checkedDot
 condition|)
 block|{
-comment|/* 	     * Already checked by the given name, since . was in the path, 	     * so no point in proceeding... 	     */
+comment|/* 			 * Already checked by the given name, since . was in 			 * the path, so no point in proceeding... 			 */
 name|DEBUGF
 argument_list|(
 name|DIR
@@ -2345,7 +2355,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/*      * Didn't find it that way, either. Sigh. Phase 3. Add its directory      * onto the search path in any case, just in case, then look for the      * thing in the hash table. If we find it, grand. We return a new      * copy of the name. Otherwise we sadly return a NULL pointer. Sigh.      * Note that if the directory holding the file doesn't exist, this will      * do an extra search of the final directory on the path. Unless something      * weird happens, this search won't succeed and life will be groovy.      *      * Sigh. We cannot add the directory onto the search path because      * of this amusing case:      * $(INSTALLDIR)/$(FILE): $(FILE)      *      * $(FILE) exists in $(INSTALLDIR) but not in the current one.      * When searching for $(FILE), we will find it in $(INSTALLDIR)      * b/c we added it here. This is not good...      */
+comment|/* 	 * Didn't find it that way, either. Sigh. Phase 3. Add its directory 	 * onto the search path in any case, just in case, then look for the 	 * thing in the hash table. If we find it, grand. We return a new 	 * copy of the name. Otherwise we sadly return a NULL pointer. Sigh. 	 * Note that if the directory holding the file doesn't exist, this will 	 * do an extra search of the final directory on the path. Unless 	 * something weird happens, this search won't succeed and life will 	 * be groovy. 	 * 	 * Sigh. We cannot add the directory onto the search path because 	 * of this amusing case: 	 * $(INSTALLDIR)/$(FILE): $(FILE) 	 * 	 * $(FILE) exists in $(INSTALLDIR) but not in the current one. 	 * When searching for $(FILE), we will find it in $(INSTALLDIR) 	 * b/c we added it here. This is not good... 	 */
 ifdef|#
 directive|ifdef
 name|notdef
@@ -2389,15 +2399,11 @@ name|ln
 operator|==
 name|NULL
 condition|)
-block|{
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
-block|}
-else|else
-block|{
 name|p
 operator|=
 name|Lst_Datum
@@ -2405,7 +2411,6 @@ argument_list|(
 name|ln
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|Hash_FindEntry
@@ -2429,15 +2434,11 @@ name|name
 argument_list|)
 operator|)
 return|;
-block|}
-else|else
-block|{
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
-block|}
 else|#
 directive|else
 comment|/* !notdef */
@@ -2585,13 +2586,7 @@ endif|#
 directive|endif
 comment|/* notdef */
 block|}
-end_function
-
-begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Dir_MTime  --  *	Find the modification time of the file described by gn along the  *	search path dirSearchPath.  *  * Results:  *	The modification time or 0 if it doesn't exist  *  * Side Effects:  *	The modification time is placed in the node's mtime slot.  *	If the node didn't have a path entry before, and Dir_FindFile  *	found one for it, the full name is placed in the path slot.  *-----------------------------------------------------------------------  */
-end_comment
-
-begin_function
 name|int
 name|Dir_MTime
 parameter_list|(
@@ -2622,7 +2617,6 @@ name|type
 operator|&
 name|OP_ARCHV
 condition|)
-block|{
 return|return
 operator|(
 name|Arch_MTime
@@ -2631,7 +2625,6 @@ name|gn
 argument_list|)
 operator|)
 return|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -2641,7 +2634,6 @@ name|path
 operator|==
 name|NULL
 condition|)
-block|{
 name|fullName
 operator|=
 name|Dir_FindFile
@@ -2653,23 +2645,19 @@ argument_list|,
 name|dirSearchPath
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 name|fullName
 operator|=
 name|gn
 operator|->
 name|path
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|fullName
 operator|==
 name|NULL
 condition|)
-block|{
 name|fullName
 operator|=
 name|estrdup
@@ -2679,7 +2667,6 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
-block|}
 name|entry
 operator|=
 name|Hash_FindEntry
@@ -2697,7 +2684,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 	 * Only do this once -- the second time folks are checking to 	 * see if the file was actually updated, so we need to actually go 	 * to the filesystem. 	 */
+comment|/* 		 * Only do this once -- the second time folks are checking to 		 * see if the file was actually updated, so we need to 		 * actually go to the filesystem. 		 */
 name|DEBUGF
 argument_list|(
 name|DIR
@@ -2816,14 +2803,12 @@ operator|*
 operator|)
 name|NULL
 condition|)
-block|{
 name|gn
 operator|->
 name|path
 operator|=
 name|fullName
 expr_stmt|;
-block|}
 name|gn
 operator|->
 name|mtime
@@ -2840,13 +2825,7 @@ name|mtime
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Dir_AddDir --  *	Add the given name to the end of the given path. The order of  *	the arguments is backwards so ParseDoDependency can do a  *	Lst_ForEach of its list of paths...  *  * Results:  *	none  *  * Side Effects:  *	A structure is added to the list and the directory is  *	read and hashed.  *-----------------------------------------------------------------------  */
-end_comment
-
-begin_function
 name|void
 name|Dir_AddDir
 parameter_list|(
@@ -2954,10 +2933,6 @@ name|name
 argument_list|)
 operator|)
 operator|!=
-operator|(
-name|DIR
-operator|*
-operator|)
 name|NULL
 condition|)
 block|{
@@ -3029,7 +3004,7 @@ argument_list|(
 name|d_ino
 argument_list|)
 comment|/* d_ino is a sunos4 #define	for d_fileno */
-comment|/* 		 * The sun directory library doesn't check for a 0 inode 		 * (0-inode slots just take up space), so we have to do 		 * it ourselves. 		 */
+comment|/* 				 * The sun directory library doesn't check for 				 * a 0 inode (0-inode slots just take up space), 				 * so we have to do it ourselves. 				 */
 if|if
 condition|(
 name|dp
@@ -3038,13 +3013,11 @@ name|d_fileno
 operator|==
 literal|0
 condition|)
-block|{
 continue|continue;
-block|}
 endif|#
 directive|endif
 comment|/* sun&& d_ino */
-comment|/* Skip the '.' and '..' entries by checking for them 		 * specifically instead of assuming readdir() reuturns them in 		 * that order when first going through a directory.  This is 		 * needed for XFS over NFS filesystems since SGI does not 		 * guarantee that these are the first two entries returned 		 * from readdir(). 		 */
+comment|/* Skip the '.' and '..' entries by checking 				 * for them specifically instead of assuming 				 * readdir() reuturns them in that order when 				 * first going through a directory.  This is 				 * needed for XFS over NFS filesystems since 				 * SGI does not guarantee that these are the 				 * first two entries returned from readdir(). 				 */
 if|if
 condition|(
 name|ISDOT
@@ -3118,13 +3091,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Dir_CopyDir --  *	Callback function for duplicating a search path via Lst_Duplicate.  *	Ups the reference count for the directory.  *  * Results:  *	Returns the Path it was given.  *  * Side Effects:  *	The refCount of the path is incremented.  *  *-----------------------------------------------------------------------  */
-end_comment
-
-begin_function
 name|void
 modifier|*
 name|Dir_CopyDir
@@ -3152,13 +3119,7 @@ name|p
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Dir_MakeFlags --  *	Make a string by taking all the directories in the given search  *	path and preceding them by the given flag. Used by the suffix  *	module to create variables for compilers based on suffix search  *	paths.  *  * Results:  *	The string mentioned above. Note that there is no space between  *	the given flag and each directory. The empty string is returned if  *	Things don't go well.  *  * Side Effects:  *	None  *-----------------------------------------------------------------------  */
-end_comment
-
-begin_function
 name|char
 modifier|*
 name|Dir_MakeFlags
@@ -3267,13 +3228,7 @@ name|str
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Dir_Destroy --  *	Nuke a directory descriptor, if possible. Callback procedure  *	for the suffixes module when destroying a search path.  *  * Results:  *	None.  *  * Side Effects:  *	If no other path references this directory (refCount == 0),  *	the Path and all its data are freed.  *  *-----------------------------------------------------------------------  */
-end_comment
-
-begin_function
 name|void
 name|Dir_Destroy
 parameter_list|(
@@ -3344,13 +3299,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Dir_ClearPath --  *	Clear out all elements of the given search path. This is different  *	from destroying the list, notice.  *  * Results:  *	None.  *  * Side Effects:  *	The path is set to the empty list.  *  *-----------------------------------------------------------------------  */
-end_comment
-
-begin_function
 name|void
 name|Dir_ClearPath
 parameter_list|(
@@ -3385,13 +3334,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/*-  *-----------------------------------------------------------------------  * Dir_Concat --  *	Concatenate two paths, adding the second to the end of the first.  *	Makes sure to avoid duplicates.  *  * Results:  *	None  *  * Side Effects:  *	Reference counts for added dirs are upped.  *  *-----------------------------------------------------------------------  */
-end_comment
-
-begin_function
 name|void
 name|Dir_Concat
 parameter_list|(
@@ -3465,13 +3408,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-end_function
-
-begin_comment
 comment|/********** DEBUG INFO **********/
-end_comment
-
-begin_function
 name|void
 name|Dir_PrintDirectories
 parameter_list|(
@@ -3588,9 +3525,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-end_function
-
-begin_function
 specifier|static
 name|int
 name|DirPrintDir
@@ -3626,9 +3560,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|void
 name|Dir_PrintPath
 parameter_list|(
