@@ -104,6 +104,17 @@ file|<dev/vinum/request.h>
 end_include
 
 begin_comment
+comment|/*  * When a subdisk is reviving or initializing, we  * check to see whether it is still progressing  * and print a warning if not.  We check every 50  * ms, up to a maximum of 5 seconds.  This is the  * counter value.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STALLCOUNT
+value|100
+end_define
+
+begin_comment
 comment|/*  * Take a size in sectors and return a pointer to  * a string which represents the size best.  If lj  * is != 0, return left justified, otherwise in a  * fixed 10 character field suitable for columnar  * printing.  *  * Note this uses a static string: it's only  * intended to be used immediately for printing.  */
 end_comment
 
@@ -3492,7 +3503,7 @@ literal|0
 init|;
 name|times
 operator|<
-literal|20
+name|STALLCOUNT
 condition|;
 name|times
 operator|++
@@ -3526,7 +3537,7 @@ if|if
 condition|(
 name|times
 operator|==
-literal|10
+name|STALLCOUNT
 condition|)
 name|printf
 argument_list|(
@@ -4016,7 +4027,7 @@ literal|0
 init|;
 name|times
 operator|<
-literal|20
+name|STALLCOUNT
 condition|;
 name|times
 operator|++
@@ -4050,7 +4061,7 @@ if|if
 condition|(
 name|times
 operator|==
-literal|10
+name|STALLCOUNT
 condition|)
 name|printf
 argument_list|(
