@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	srt0.c	1.3	86/11/03	*/
+comment|/*	srt0.c	1.4	86/12/19	*/
 end_comment
 
 begin_include
@@ -45,14 +45,38 @@ name|mask
 end_expr_stmt
 
 begin_for
-for|for total disable  	.globl	_entry _entry:
+for|for total disable
 ifndef|#
 directive|ifndef
 name|REL
-for|.word	0x00			# 'call' by relsrt0.
+for|.globl	_device_space _device_space:			# Tapemaster config block
+operator|,
+name|etc
+operator|.
+expr|.
+name|space
+literal|0x1000
+operator|-
+name|RELOC
+operator|.
+name|globl
+name|_entry
+name|_entry
+operator|:
+operator|.
+name|word
+literal|0x00
+operator|#
+literal|'call'
+name|by
+name|relsrt0
+operator|.
 endif|#
 directive|endif
-for|_start: 	mtpr	$HIGH
+name|_start
+operator|:
+name|mtpr
+name|$HIGH
 operator|,
 name|$IPL
 operator|#
@@ -66,16 +90,16 @@ ifdef|#
 directive|ifdef
 name|REL
 name|movl
-name|$RELOC
+name|$BOOTRELOC
 operator|,
 name|sp
 name|movl
-name|$0x800
+name|$RELOC
 decl_stmt|,
 name|r0
 comment|/* source address to copy from */
 name|movl
-name|$RELOC
+name|$BOOTRELOC
 decl_stmt|,
 name|r1
 comment|/* destination address */
@@ -141,6 +165,10 @@ name|mtpr
 name|$0
 decl_stmt|,
 name|$PACC
+name|mtpr
+name|$0
+decl_stmt|,
+name|$PADC
 name|jmp
 modifier|*
 name|abegin
@@ -190,11 +218,30 @@ range|:
 operator|.
 name|long
 name|begin
+ifdef|#
+directive|ifdef
+name|REL
 name|aend
 case|:
 end_case
 
 begin_expr_stmt
+operator|.
+name|long
+name|_end
+operator|-
+name|BOOTRELOC
+name|aedata
+operator|:
+operator|.
+name|long
+name|_edata
+operator|-
+name|BOOTRELOC
+else|#
+directive|else
+name|aend
+operator|:
 operator|.
 name|long
 name|_end
@@ -207,6 +254,8 @@ name|long
 name|_edata
 operator|-
 name|RELOC
+endif|#
+directive|endif
 name|ofp
 operator|:
 operator|.
