@@ -6852,7 +6852,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|u_int8_t
+name|u_int32_t
 name|reg
 decl_stmt|;
 name|m
