@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<pccard/i82365.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -485,6 +491,40 @@ name|u_short
 name|io_port
 decl_stmt|;
 comment|/* the io_port to map this slot on */
+specifier|static
+name|int
+name|num6832
+init|=
+literal|0
+decl_stmt|;
+comment|/* The number of 6832s initialized */
+comment|/* 	 * Some BIOS leave the legacy address uninitialized.  This 	 * insures that the PD6832 puts itself where the driver will 	 * look.  We assume that multiple 6832's should be laid out 	 * sequentially.  We only initialize the first socket's legacy port, 	 * the other is a dummy. 	 */
+name|io_port
+operator|=
+name|PCIC_INDEX_0
+operator|+
+name|num6832
+operator|*
+name|CLPD6832_NUM_REGS
+expr_stmt|;
+if|if
+condition|(
+name|unit
+operator|==
+literal|0
+condition|)
+name|pci_conf_write
+argument_list|(
+name|tag
+argument_list|,
+name|CLPD6832_LEGACY_16BIT_IOADDR
+argument_list|,
+name|io_port
+operator|&
+operator|~
+name|PCI_MAP_IO
+argument_list|)
+expr_stmt|;
 comment|/* 	 * I think this should be a call to pci_map_port, but that 	 * routine won't map regiaters above 0x28, and the register we 	 * need to map is 0x44. 	 */
 name|io_port
 operator|=
@@ -596,6 +636,16 @@ name|CLPD6832_BRIDGE_CONTROL
 argument_list|,
 name|bcr
 argument_list|)
+expr_stmt|;
+comment|/* After initializing 2 sockets, the chip is fully configured */
+if|if
+condition|(
+name|unit
+operator|==
+literal|1
+condition|)
+name|num6832
+operator|++
 expr_stmt|;
 if|if
 condition|(
