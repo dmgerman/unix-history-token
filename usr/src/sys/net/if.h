@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if.h	4.8	82/03/09	*/
+comment|/*	if.h	4.9	82/03/15	*/
 end_comment
 
 begin_comment
@@ -61,6 +61,15 @@ name|struct
 name|mbuf
 modifier|*
 name|ifq_tail
+decl_stmt|;
+name|int
+name|ifq_len
+decl_stmt|;
+name|int
+name|ifq_maxlen
+decl_stmt|;
+name|int
+name|ifq_drops
 decl_stmt|;
 block|}
 name|if_snd
@@ -129,13 +138,33 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IF_QFULL
+parameter_list|(
+name|ifq
+parameter_list|)
+value|((ifq)->ifq_len>= (ifq)->ifq_maxlen)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IF_DROP
+parameter_list|(
+name|ifq
+parameter_list|)
+value|((ifq)->ifq_drops++)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IF_ENQUEUE
 parameter_list|(
 name|ifq
 parameter_list|,
 name|m
 parameter_list|)
-value|{ \ 	(m)->m_act = 0; \ 	if ((ifq)->ifq_tail == 0) \ 		(ifq)->ifq_head = m; \ 	else \ 		(ifq)->ifq_tail->m_act = m; \ 	(ifq)->ifq_tail = m; \ }
+value|{ \ 	(m)->m_act = 0; \ 	if ((ifq)->ifq_tail == 0) \ 		(ifq)->ifq_head = m; \ 	else \ 		(ifq)->ifq_tail->m_act = m; \ 	(ifq)->ifq_tail = m; \ 	(ifq)->ifq_len++; \ }
 end_define
 
 begin_define
@@ -147,7 +176,7 @@ name|ifq
 parameter_list|,
 name|m
 parameter_list|)
-value|{ \ 	(m)->m_act = (ifq)->ifq_head; \ 	if ((ifq)->ifq_tail == 0) \ 		(ifq)->ifq_tail = (m); \ 	(ifq)->ifq_head = (m); \ }
+value|{ \ 	(m)->m_act = (ifq)->ifq_head; \ 	if ((ifq)->ifq_tail == 0) \ 		(ifq)->ifq_tail = (m); \ 	(ifq)->ifq_head = (m); \ 	(ifq)->ifq_len++; \ }
 end_define
 
 begin_define
@@ -159,7 +188,14 @@ name|ifq
 parameter_list|,
 name|m
 parameter_list|)
-value|{ \ 	(m) = (ifq)->ifq_head; \ 	if (m) { \ 		if (((ifq)->ifq_head = (m)->m_act) == 0) \ 			(ifq)->ifq_tail = 0; \ 		(m)->m_act = 0; \ 	} \ }
+value|{ \ 	(m) = (ifq)->ifq_head; \ 	if (m) { \ 		if (((ifq)->ifq_head = (m)->m_act) == 0) \ 			(ifq)->ifq_tail = 0; \ 		(m)->m_act = 0; \ 		(ifq)->ifq_len--; \ 	} \ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFQ_MAXLEN
+value|50
 end_define
 
 begin_ifdef

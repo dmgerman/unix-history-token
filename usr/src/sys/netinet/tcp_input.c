@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_input.c	1.60	82/03/13	*/
+comment|/*	tcp_input.c	1.61	82/03/15	*/
 end_comment
 
 begin_include
@@ -123,12 +123,6 @@ directive|include
 file|"../errno.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notdef
-end_ifdef
-
 begin_decl_stmt
 name|int
 name|tcpprintfs
@@ -136,11 +130,6 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|int
@@ -473,6 +462,10 @@ operator|.
 name|tcps_badsum
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|tcpprintfs
+condition|)
 name|printf
 argument_list|(
 literal|"tcp cksum %x\n"
@@ -520,13 +513,15 @@ goto|goto
 name|drop
 goto|;
 block|}
+name|tlen
+operator|-=
+name|off
+expr_stmt|;
 name|ti
 operator|->
 name|ti_len
 operator|=
 name|tlen
-operator|-
-name|off
 expr_stmt|;
 if|if
 condition|(
@@ -693,7 +688,7 @@ name|ti
 operator|->
 name|ti_flags
 expr_stmt|;
-comment|/* 	 * drop IP header 	 */
+comment|/* 	 * Drop TCP and IP headers. 	 */
 name|off
 operator|+=
 sizeof|sizeof
@@ -1500,6 +1495,20 @@ operator|>
 name|ti
 operator|->
 name|ti_len
+operator|||
+name|todrop
+operator|==
+name|ti
+operator|->
+name|ti_len
+operator|&&
+operator|(
+name|tiflags
+operator|&
+name|TH_FIN
+operator|)
+operator|==
+literal|0
 condition|)
 goto|goto
 name|dropafterack
@@ -1592,7 +1601,7 @@ block|{
 if|if
 condition|(
 name|todrop
-operator|>
+operator|>=
 name|ti
 operator|->
 name|ti_len
@@ -2809,12 +2818,30 @@ expr_stmt|;
 return|return;
 name|dropafterack
 label|:
-comment|/* 	 * Generate an ACK dropping incoming segment. 	 * Make ACK reflect our state. 	 */
+comment|/* 	 * Generate an ACK dropping incoming segment if it occupies 	 * sequence space, where the ACK reflects our state. 	 */
 if|if
 condition|(
+operator|(
 name|tiflags
 operator|&
 name|TH_RST
+operator|)
+operator|||
+name|tlen
+operator|==
+literal|0
+operator|&&
+operator|(
+name|tiflags
+operator|&
+operator|(
+name|TH_SYN
+operator||
+name|TH_FIN
+operator|)
+operator|)
+operator|==
+literal|0
 condition|)
 goto|goto
 name|drop

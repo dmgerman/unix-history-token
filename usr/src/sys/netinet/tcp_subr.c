@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	tcp_subr.c	4.17	82/03/13	*/
+comment|/*	tcp_subr.c	4.18	82/03/15	*/
 end_comment
 
 begin_include
@@ -446,6 +446,8 @@ name|int
 name|win
 init|=
 literal|0
+decl_stmt|,
+name|tlen
 decl_stmt|;
 name|COUNT
 argument_list|(
@@ -506,6 +508,8 @@ argument_list|(
 expr|struct
 name|tcpiphdr
 argument_list|)
+operator|+
+literal|1
 expr_stmt|;
 operator|*
 name|mtod
@@ -534,6 +538,10 @@ expr_stmt|;
 name|flags
 operator|=
 name|TH_ACK
+expr_stmt|;
+name|tlen
+operator|=
+literal|1
 expr_stmt|;
 block|}
 else|else
@@ -626,6 +634,10 @@ expr_stmt|;
 undef|#
 directive|undef
 name|xchg
+name|tlen
+operator|=
+literal|0
+expr_stmt|;
 block|}
 name|ti
 operator|->
@@ -652,6 +664,8 @@ argument_list|(
 expr|struct
 name|tcphdr
 argument_list|)
+operator|+
+name|tlen
 expr_stmt|;
 name|ti
 operator|->
@@ -789,6 +803,8 @@ argument_list|(
 expr|struct
 name|tcpiphdr
 argument_list|)
+operator|+
+name|tlen
 expr_stmt|;
 operator|(
 operator|(
@@ -815,6 +831,8 @@ expr|struct
 name|mbuf
 operator|*
 operator|)
+literal|0
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_usrreq.c	4.9	82/03/13	*/
+comment|/*	raw_usrreq.c	4.10	82/03/15	*/
 end_comment
 
 begin_include
@@ -69,8 +69,16 @@ directive|include
 file|"../errno.h"
 end_include
 
+begin_decl_stmt
+name|int
+name|rawqmaxlen
+init|=
+name|IFQ_MAXLEN
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/*  * Initialize raw connection block q. */
+comment|/*  * Initialize raw connection block q.  */
 end_comment
 
 begin_macro
@@ -95,6 +103,12 @@ name|rcb_prev
 operator|=
 operator|&
 name|rawcb
+expr_stmt|;
+name|rawintrq
+operator|.
+name|ifq_maxlen
+operator|=
+name|IFQ_MAXLEN
 expr_stmt|;
 block|}
 end_block
@@ -246,6 +260,20 @@ operator|=
 name|splimp
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|IF_QFULL
+argument_list|(
+operator|&
+name|rawintrq
+argument_list|)
+condition|)
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+else|else
 name|IF_ENQUEUE
 argument_list|(
 operator|&
@@ -730,6 +758,23 @@ name|PRU_ATTACH
 case|:
 if|if
 condition|(
+operator|(
+name|so
+operator|->
+name|so_state
+operator|&
+name|SS_PRIV
+operator|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|EPERM
+operator|)
+return|;
+if|if
+condition|(
 name|rp
 condition|)
 return|return
@@ -737,7 +782,6 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-empty_stmt|;
 name|error
 operator|=
 name|raw_attach

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if.c	4.9	82/03/09	*/
+comment|/*	if.c	4.10	82/03/15	*/
 end_comment
 
 begin_include
@@ -32,6 +32,14 @@ include|#
 directive|include
 file|"../net/if.h"
 end_include
+
+begin_decl_stmt
+name|int
+name|ifqmaxlen
+init|=
+name|IFQ_MAXLEN
+decl_stmt|;
+end_decl_stmt
 
 begin_macro
 name|ifinit
@@ -66,6 +74,7 @@ name|ifp
 operator|->
 name|if_init
 condition|)
+block|{
 call|(
 modifier|*
 name|ifp
@@ -74,6 +83,25 @@ name|if_init
 call|)
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_snd
+operator|.
+name|ifq_maxlen
+operator|==
+literal|0
+condition|)
+name|ifp
+operator|->
+name|if_snd
+operator|.
+name|ifq_maxlen
+operator|=
+name|ifqmaxlen
+expr_stmt|;
+block|}
 block|}
 end_block
 

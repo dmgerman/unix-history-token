@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_output.c	1.25	82/02/18	*/
+comment|/*	ip_output.c	1.26	82/03/15	*/
 end_comment
 
 begin_include
@@ -69,6 +69,8 @@ argument_list|(
 argument|m
 argument_list|,
 argument|opt
+argument_list|,
+argument|allowbroadcast
 argument_list|)
 end_macro
 
@@ -85,6 +87,12 @@ name|struct
 name|mbuf
 modifier|*
 name|opt
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|allowbroadcast
 decl_stmt|;
 end_decl_stmt
 
@@ -210,6 +218,34 @@ goto|goto
 name|bad
 goto|;
 block|}
+if|if
+condition|(
+operator|!
+name|allowbroadcast
+operator|&&
+name|ifp
+operator|->
+name|if_broadaddr
+operator|.
+name|s_addr
+operator|!=
+literal|0
+operator|&&
+name|ifp
+operator|->
+name|if_broadaddr
+operator|.
+name|s_addr
+operator|==
+name|ip
+operator|->
+name|ip_dst
+operator|.
+name|s_addr
+condition|)
+goto|goto
+name|bad
+goto|;
 comment|/* 	 * If small enough for interface, can just send directly. 	 */
 if|if
 condition|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_input.c	1.31	82/03/09	*/
+comment|/*	ip_input.c	1.32	82/03/15	*/
 end_comment
 
 begin_include
@@ -91,6 +91,14 @@ name|ip_protox
 index|[
 name|IPPROTO_MAX
 index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ipqmaxlen
+init|=
+name|IFQ_MAXLEN
 decl_stmt|;
 end_decl_stmt
 
@@ -220,6 +228,12 @@ operator|=
 name|time
 operator|&
 literal|0xffff
+expr_stmt|;
+name|ipintrq
+operator|.
+name|ifq_maxlen
+operator|=
+name|ipqmaxlen
 expr_stmt|;
 block|}
 end_block
@@ -612,18 +626,6 @@ name|if_addr
 operator|.
 name|s_addr
 operator|&&
-name|ip
-operator|->
-name|ip_dst
-operator|.
-name|s_addr
-operator|!=
-name|ifnet
-operator|->
-name|if_broadaddr
-operator|.
-name|s_addr
-operator|&&
 name|if_ifwithaddr
 argument_list|(
 name|ip
@@ -634,6 +636,12 @@ operator|==
 literal|0
 condition|)
 block|{
+goto|goto
+name|bad
+goto|;
+ifdef|#
+directive|ifdef
+name|notdef
 name|printf
 argument_list|(
 literal|"ip->ip_dst %x ip->ip_ttl %x\n"
@@ -647,13 +655,6 @@ operator|->
 name|ip_ttl
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-literal|1
-condition|)
-goto|goto
-name|bad
-goto|;
 if|if
 condition|(
 operator|--
@@ -700,6 +701,7 @@ argument_list|,
 name|mopt
 argument_list|)
 expr_stmt|;
+comment|/* 0 here means no directed broadcast */
 operator|(
 name|void
 operator|)
@@ -708,11 +710,15 @@ argument_list|(
 name|m0
 argument_list|,
 name|mopt
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 goto|goto
 name|next
 goto|;
+endif|#
+directive|endif
 block|}
 comment|/* 	 * Look for queue of fragments 	 * of this datagram. 	 */
 for|for

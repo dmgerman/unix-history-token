@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* tcp_timer.c 4.15 82/02/25 */
+comment|/* tcp_timer.c 4.16 82/03/15 */
 end_comment
 
 begin_include
@@ -253,6 +253,9 @@ name|struct
 name|inpcb
 modifier|*
 name|ip
+decl_stmt|,
+modifier|*
+name|ipnxt
 decl_stmt|;
 specifier|register
 name|struct
@@ -296,20 +299,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-for|for
-control|(
-init|;
+while|while
+condition|(
 name|ip
 operator|!=
 operator|&
 name|tcb
-condition|;
-name|ip
-operator|=
-name|ip
-operator|->
-name|inp_next
-control|)
+condition|)
 block|{
 name|tp
 operator|=
@@ -325,6 +321,12 @@ operator|==
 literal|0
 condition|)
 continue|continue;
+name|ipnxt
+operator|=
+name|ip
+operator|->
+name|inp_next
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -358,6 +360,7 @@ index|]
 operator|==
 literal|0
 condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -384,6 +387,18 @@ operator|)
 name|i
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ipnxt
+operator|->
+name|inp_prev
+operator|!=
+name|ip
+condition|)
+goto|goto
+name|tpgone
+goto|;
+block|}
 block|}
 name|tp
 operator|->
@@ -400,6 +415,12 @@ name|tp
 operator|->
 name|t_rtt
 operator|++
+expr_stmt|;
+name|tpgone
+label|:
+name|ip
+operator|=
+name|ipnxt
 expr_stmt|;
 block|}
 name|tcp_iss
@@ -715,15 +736,8 @@ name|inp_socket
 operator|->
 name|so_options
 operator|&
-name|SO_NOKEEPALIVE
+name|SO_KEEPALIVE
 condition|)
-name|tp
-operator|->
-name|t_idle
-operator|=
-literal|0
-expr_stmt|;
-else|else
 name|tcp_respond
 argument_list|(
 name|tp
@@ -744,6 +758,13 @@ literal|1
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+else|else
+name|tp
+operator|->
+name|t_idle
+operator|=
+literal|0
 expr_stmt|;
 name|tp
 operator|->

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	raw_ip.c	4.7	82/03/13	*/
+comment|/*	raw_ip.c	4.8	82/03/15	*/
 end_comment
 
 begin_include
@@ -457,6 +457,8 @@ name|mbuf
 operator|*
 operator|)
 literal|0
+argument_list|,
+literal|1
 argument_list|)
 operator|)
 return|;

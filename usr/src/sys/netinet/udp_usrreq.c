@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	udp_usrreq.c	4.21	82/03/03	*/
+comment|/*	udp_usrreq.c	4.22	82/03/15	*/
 end_comment
 
 begin_include
@@ -864,6 +864,14 @@ name|mbuf
 operator|*
 operator|)
 literal|0
+argument_list|,
+name|inp
+operator|->
+name|inp_socket
+operator|->
+name|so_state
+operator|&
+name|SS_PRIV
 argument_list|)
 expr_stmt|;
 return|return;

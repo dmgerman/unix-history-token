@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imphost.c	4.7	82/03/12	*/
+comment|/*	if_imphost.c	4.8	82/03/15	*/
 end_comment
 
 begin_include
@@ -256,6 +256,13 @@ operator|*
 name|mprev
 condition|)
 block|{
+name|mprev
+operator|=
+operator|&
+name|m
+operator|->
+name|m_next
+expr_stmt|;
 name|hp
 operator|=
 operator|&
@@ -309,13 +316,6 @@ condition|)
 goto|goto
 name|foundhost
 goto|;
-name|mprev
-operator|=
-operator|&
-name|m
-operator|->
-name|m_next
-expr_stmt|;
 block|}
 comment|/* 	 * No current host structure, make one. 	 * If our search ran off the end of the 	 * chain of mbuf's, allocate another. 	 */
 if|if
