@@ -38,12 +38,6 @@ directive|include
 file|<sys/param.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|USE_OLD_TTY
-end_define
-
 begin_include
 include|#
 directive|include
@@ -1521,7 +1515,7 @@ if|if
 condition|(
 name|val
 operator|<=
-literal|15
+name|B115200
 condition|)
 return|return
 operator|(
