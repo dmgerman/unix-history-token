@@ -2459,10 +2459,6 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|len
-operator|=
-literal|0
-expr_stmt|;
 switch|switch
 condition|(
 name|ip
@@ -2772,6 +2768,8 @@ argument_list|,
 literal|"ICMP "
 argument_list|)
 expr_stmt|;
+name|len
+operator|+=
 name|snprintf
 argument_list|(
 name|SNPARGS
@@ -2781,7 +2779,7 @@ argument_list|,
 name|len
 argument_list|)
 argument_list|,
-literal|"%s %s"
+literal|"%s"
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -2789,6 +2787,18 @@ name|ip
 operator|->
 name|ip_src
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|snprintf
+argument_list|(
+name|SNPARGS
+argument_list|(
+name|proto
+argument_list|,
+name|len
+argument_list|)
+argument_list|,
+literal|" %s"
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -2800,6 +2810,8 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+name|len
+operator|=
 name|snprintf
 argument_list|(
 name|SNPARGS
@@ -2809,7 +2821,7 @@ argument_list|,
 literal|0
 argument_list|)
 argument_list|,
-literal|"P:%d %s %s"
+literal|"P:%d %s"
 argument_list|,
 name|ip
 operator|->
@@ -2821,6 +2833,18 @@ name|ip
 operator|->
 name|ip_src
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|snprintf
+argument_list|(
+name|SNPARGS
+argument_list|(
+name|proto
+argument_list|,
+name|len
+argument_list|)
+argument_list|,
+literal|" %s"
 argument_list|,
 name|inet_ntoa
 argument_list|(
