@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	utreg.h	81/11/04	4.1	*/
+comment|/*	utreg.h	81/11/06	4.2	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|u_short
 name|utba
 decl_stmt|;
 comment|/* low 16-bits of bus address */
-name|u_short
+name|short
 name|utfc
 decl_stmt|;
 comment|/* frame counter */
@@ -925,14 +925,14 @@ comment|/* illegal function */
 end_comment
 
 begin_comment
-comment|/* those errors we consider "hard" errors */
+comment|/*  * These errors we consider "hard"; UTER_OPI and UTER_RPE  * are considered "soft", at least for the moment.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|UTER_HARD
-value|(UTER_UNS|UTER_DTE|UTER_NEF|UTER_NSG|UTER_PEF|UTER_INC|\ 			 UTER_DPAR|UTER_FMT|UTER_RPE|UTER_RMR|UTER_ILF)
+value|(UTER_UNS|UTER_NEF|UTER_DPAR|UTER_FMT|UTER_RMR|\ 			 UTER_ILR|UTER_ILF)
 end_define
 
 begin_define
@@ -1096,6 +1096,13 @@ define|#
 directive|define
 name|b_command
 value|b_resid
+end_define
+
+begin_define
+define|#
+directive|define
+name|b_state
+value|b_active
 end_define
 
 end_unit
