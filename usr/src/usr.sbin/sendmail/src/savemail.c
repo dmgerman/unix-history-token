@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.26 (Berkeley) %G%"
+literal|"@(#)savemail.c	8.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -243,7 +243,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\nsavemail, errormode = %c, id = %s\n  e_from="
+literal|"\nsavemail, errormode = %c, id = %s, ExitStat = %d\n  e_from="
 argument_list|,
 name|e
 operator|->
@@ -260,6 +260,8 @@ else|:
 name|e
 operator|->
 name|e_id
+argument_list|,
+name|ExitStat
 argument_list|)
 expr_stmt|;
 name|printaddr
