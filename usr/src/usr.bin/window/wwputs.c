@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwputs.c	1.1 83/07/12"
+literal|"@(#)wwputs.c	1.2 83/07/17"
 decl_stmt|;
 end_decl_stmt
 
@@ -41,7 +41,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-specifier|register
 name|struct
 name|ww
 modifier|*
@@ -51,18 +50,31 @@ end_decl_stmt
 
 begin_block
 block|{
+specifier|register
+name|char
+modifier|*
+name|p
+init|=
+name|s
+decl_stmt|;
 while|while
 condition|(
 operator|*
-name|s
-condition|)
-name|wwputc
-argument_list|(
-operator|*
-name|s
+name|p
 operator|++
-argument_list|,
+condition|)
+empty_stmt|;
+name|wwwrite
+argument_list|(
 name|w
+argument_list|,
+name|s
+argument_list|,
+name|p
+operator|-
+name|s
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 block|}

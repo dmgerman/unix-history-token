@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwiomux.c	1.1 83/07/12"
+literal|"@(#)wwiomux.c	1.2 83/07/17"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,16 +56,11 @@ specifier|register
 name|int
 name|n
 decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|p
-decl_stmt|;
 for|for
 control|(
 name|w
 operator|=
-name|_wwhead
+name|wwhead
 init|;
 name|w
 condition|;
@@ -127,7 +122,7 @@ for|for
 control|(
 name|w
 operator|=
-name|_wwhead
+name|wwhead
 init|;
 name|w
 condition|;
@@ -164,26 +159,19 @@ sizeof|sizeof
 name|buf
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|p
-operator|=
-name|buf
-init|;
+if|if
+condition|(
 name|n
-operator|--
 operator|>
 literal|0
-condition|;
-name|p
-operator|++
-control|)
-name|wwputc
+condition|)
+name|wwwrite
 argument_list|(
-operator|*
-name|p
-argument_list|,
 name|w
+argument_list|,
+name|buf
+argument_list|,
+name|n
 argument_list|)
 expr_stmt|;
 block|}

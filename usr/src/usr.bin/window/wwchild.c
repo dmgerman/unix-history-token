@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwchild.c	1.1 83/07/12"
+literal|"@(#)wwchild.c	1.2 83/07/17"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,7 +52,6 @@ decl_stmt|;
 name|int
 name|pid
 decl_stmt|;
-comment|/* 	char buf[100]; 	*/
 while|while
 condition|(
 operator|(
@@ -78,7 +77,7 @@ for|for
 control|(
 name|wp
 operator|=
-name|_wwhead
+name|wwhead
 init|;
 name|wp
 condition|;
@@ -104,11 +103,36 @@ name|ww_state
 operator|=
 name|WW_DEAD
 expr_stmt|;
-comment|/* 				(void) sprintf(buf, "\r\n%d: Died\r\n", pid); 				wwputstr(buf); 				*/
+operator|(
+name|void
+operator|)
+name|wwprintf
+argument_list|(
+name|curwin
+argument_list|,
+literal|"\r\n%d: Died\r\n"
+argument_list|,
+name|pid
+argument_list|)
+expr_stmt|;
 break|break;
 block|}
 block|}
-comment|/* 		if (wp == 0) { 			(void) sprintf(buf, "\r\n%d: No such child\r\n", pid); 			wwputstr(buf); 		} 		*/
+if|if
+condition|(
+name|wp
+operator|==
+literal|0
+condition|)
+name|wwprintf
+argument_list|(
+name|curwin
+argument_list|,
+literal|"\r\n%d: No such child\r\n"
+argument_list|,
+name|pid
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_block

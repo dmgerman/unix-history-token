@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)wwmisc.c	1.1 83/07/12"
+literal|"@(#)wwmisc.c	1.2 83/07/17"
 decl_stmt|;
 end_decl_stmt
 
@@ -30,7 +30,17 @@ begin_decl_stmt
 name|struct
 name|ww
 modifier|*
-name|_wwcurrent
+name|wwhead
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|ww
+modifier|*
+name|curwin
 init|=
 literal|0
 decl_stmt|;
@@ -51,7 +61,7 @@ end_expr_stmt
 
 begin_block
 block|{
-name|_wwcurrent
+name|curwin
 operator|=
 name|wp
 expr_stmt|;
@@ -75,7 +85,7 @@ for|for
 control|(
 name|wp
 operator|=
-name|_wwhead
+name|wwhead
 init|;
 name|wp
 condition|;
