@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: hid.c,v 1.9 1999/10/13 08:10:55 augustss Exp $	*/
+comment|/*	$NetBSD: hid.c,v 1.13 2000/03/27 12:33:53 augustss Exp $	*/
 end_comment
 
 begin_comment
@@ -458,12 +458,17 @@ name|s
 operator|->
 name|cur
 decl_stmt|;
+name|unsigned
 name|int
 name|bTag
 decl_stmt|,
 name|bType
 decl_stmt|,
 name|bSize
+decl_stmt|;
+name|struct
+name|hid_location
+name|oldloc
 decl_stmt|;
 name|u_char
 modifier|*
@@ -1320,12 +1325,24 @@ name|c
 operator|->
 name|next
 expr_stmt|;
+name|oldloc
+operator|=
+name|c
+operator|->
+name|loc
+expr_stmt|;
 name|s
 operator|->
 name|cur
 operator|=
 operator|*
 name|hi
+expr_stmt|;
+name|c
+operator|->
+name|loc
+operator|=
+name|oldloc
 expr_stmt|;
 name|free
 argument_list|(
