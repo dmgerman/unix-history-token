@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lint.c	1.8	(Berkeley)	%G%"
+literal|"@(#)lint.c	1.9	(Berkeley)	%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1088,7 +1088,7 @@ comment|/* conversion ops which are not necessary are also clobbered here */
 comment|/* in addition, any special features (such as rewriting 	   exclusive or) are easily handled here as well */
 argument|register o; 	register unsigned t, tl; 	int s;  	switch( o = p->in.op ){  	case SCONV: 	case PCONV: 		if( p->in.left->in.type==ENUMTY ){ 			p->in.left = pconvert( p->in.left ); 			}
 comment|/* assume conversion takes place; type is inherited */
-argument|t = p->in.type; 		tl = p->in.left->in.type; 		if( aflag&& (tl==LONG||tl==ULONG)&& (t!=LONG&&t!=ULONG) ){ 			werror(
+argument|t = p->in.type; 		tl = p->in.left->in.type; 		if( aflag&& (tl==LONG||tl==ULONG)&& (t!=LONG&&t!=ULONG&&t!=UNDEF) ){ 			werror(
 literal|"long assignment may lose accuracy"
 argument|); 			} 		if( aflag>=
 literal|2
