@@ -1,196 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)tcp_var.h	7.8 (Berkeley) %G%  */
-end_comment
-
-begin_comment
-comment|/*  * TCP configuration:  This is a half-assed attempt to make TCP  * self-configure for a few varieties of 4.2 and 4.3-based unixes.  * If you don't have a) a 4.3bsd vax or b) a 3.x Sun (x<6), check  * this carefully (it's probably not right).  Please send me mail  * if you run into configuration problems.  *  - Van Jacobson (van@lbl-csam.arpa)  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|BSD
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|BSD
-value|42
-end_define
-
-begin_comment
-comment|/* if we're not 4.3, pretend we're 4.2 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|OLDSTAT
-end_define
-
-begin_comment
-comment|/* set if we have to use old netstat binaries */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* #define OLDSTAT	/* set if we have to use old netstat binaries */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|sun
-operator|||
-name|BSD
-operator|<
-literal|43
-end_if
-
-begin_define
-define|#
-directive|define
-name|TCP_COMPAT_42
-end_define
-
-begin_comment
-comment|/* set if we have to interop w/4.2 systems */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|SB_MAX
-end_ifndef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SB_MAXCOUNT
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|SB_MAX
-value|SB_MAXCOUNT
-end_define
-
-begin_comment
-comment|/* Sun has to be a little bit different... */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|SB_MAX
-value|32767
-end_define
-
-begin_comment
-comment|/* XXX */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-endif|SB_MAXCOUNT
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-endif|SB_MAX
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|IP_MAXPACKET
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|IP_MAXPACKET
-value|65535
-end_define
-
-begin_comment
-comment|/* maximum packet size */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * Bill Nowicki pointed out that the page size (CLBYTES) has  * nothing to do with the mbuf cluster size.  So, we followed  * Sun's lead and made the new define MCLBYTES stand for the mbuf  * cluster size.  The following define makes up backwards compatible  * with 4.3 and 4.2.  If CLBYTES is>1024 on your machine, check  * this against the mbuf cluster definitions in /usr/include/sys/mbuf.h.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MCLBYTES
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MCLBYTES
-value|CLBYTES
-end_define
-
-begin_comment
-comment|/* XXX */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * The routine in_localaddr is broken in Sun's 3.4.  We redefine ours  * (in tcp_input.c) so we use can it but won't have a name conflict.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|sun
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|in_localaddr
-value|tcp_in_localaddr
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* --------------- end of TCP config ---------------- */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)tcp_var.h	7.9 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -512,7 +322,7 @@ comment|/* retransmit variables */
 name|tcp_seq
 name|snd_max
 decl_stmt|;
-comment|/* highest sequence number sent 					 * used to recognize retransmits 					 */
+comment|/* highest sequence number sent; 					 * used to recognize retransmits 					 */
 comment|/* congestion control (for slow start, source quench, retransmit after loss) */
 name|u_short
 name|snd_cwnd
@@ -521,8 +331,8 @@ comment|/* congestion-controlled window */
 name|u_short
 name|snd_ssthresh
 decl_stmt|;
-comment|/* snd_cwnd size threshhold for 					 * for slow start exponential to 					 * linear switch */
-comment|/*  * transmit timing stuff.  * srtt and rttvar are stored as fixed point; for convenience in smoothing,  * srtt has 3 bits to the right of the binary point, rttvar has 2.  * "Variance" is actually smoothed difference.  */
+comment|/* snd_cwnd size threshhold for 					 * for slow start exponential to 					 * linear switch 					 */
+comment|/*  * transmit timing stuff.  See below for scale of srtt and rttvar.  * "Variance" is actually smoothed difference.  */
 name|short
 name|t_idle
 decl_stmt|;
@@ -544,9 +354,9 @@ name|t_rttvar
 decl_stmt|;
 comment|/* variance in round-trip time */
 name|u_short
-name|max_rcvd
+name|t_rttmin
 decl_stmt|;
-comment|/* most peer has sent into window */
+comment|/* minimum rtt allowed */
 name|u_short
 name|max_sndwnd
 decl_stmt|;
@@ -568,6 +378,10 @@ define|#
 directive|define
 name|TCPOOB_HADDATA
 value|0x02
+name|short
+name|t_softerror
+decl_stmt|;
+comment|/* possible error not yet reported */
 block|}
 struct|;
 end_struct
@@ -593,6 +407,83 @@ value|(intotcpcb(sotoinpcb(so)))
 end_define
 
 begin_comment
+comment|/*  * The smoothed round-trip time and estimated variance  * are stored as fixed point numbers scaled by the values below.  * For convenience, these scales are also used in smoothing the average  * (smoothed = (1/scale)sample + ((scale-1)/scale)smoothed).  * With these scales, srtt has 3 bits to the right of the binary point,  * and thus an "ALPHA" of 0.875.  rttvar has 2 bits to the right of the  * binary point, and is smoothed with an ALPHA of 0.75.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCP_RTT_SCALE
+value|8
+end_define
+
+begin_comment
+comment|/* multiplier for srtt; 3 bits frac. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCP_RTT_SHIFT
+value|3
+end_define
+
+begin_comment
+comment|/* shift for srtt; 3 bits frac. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCP_RTTVAR_SCALE
+value|4
+end_define
+
+begin_comment
+comment|/* multiplier for rttvar; 2 bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCP_RTTVAR_SHIFT
+value|2
+end_define
+
+begin_comment
+comment|/* multiplier for rttvar; 2 bits */
+end_comment
+
+begin_comment
+comment|/*  * The initial retransmission should happen at rtt + 4 * rttvar.  * Because of the way we do the smoothing, srtt and rttvar  * will each average +1/2 tick of bias.  When we compute  * the retransmit timer, we want 1/2 tick of rounding and  * 1 extra tick because of +-1/2 tick uncertainty in the  * firing of the timer.  The bias will give us exactly the  * 1.5 tick we need.  But, because the bias is  * statistical, we have to test that we don't drop below  * the minimum feasible timer (which is 2 ticks).  * This macro assumes that the value of TCP_RTTVAR_SCALE  * is the same as the multiplier for rttvar.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCP_REXMTVAL
+parameter_list|(
+name|tp
+parameter_list|)
+define|\
+value|(((tp)->t_srtt>> TCP_RTT_SHIFT) + (tp)->t_rttvar)
+end_define
+
+begin_comment
+comment|/* XXX  * We want to avoid doing m_pullup on incoming packets but that  * means avoiding dtom on the tcp reassembly code.  That in turn means  * keeping an mbuf pointer in the reassembly queue (since we might  * have a cluster).  As a quick hack, the source& destination  * port numbers (which are no longer needed once we've located the  * tcpcb) are overlayed with an mbuf pointer.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REASS_MBUF
+parameter_list|(
+name|ti
+parameter_list|)
+value|(*(struct mbuf **)&((ti)->ti_t))
+end_define
+
+begin_comment
 comment|/*  * TCP statistics.  * Many of these should be kept per connection,  * but that's inconvenient at the moment.  */
 end_comment
 
@@ -600,40 +491,6 @@ begin_struct
 struct|struct
 name|tcpstat
 block|{
-ifdef|#
-directive|ifdef
-name|OLDSTAT
-comment|/* 	 * Declare statistics the same as in 4.3 	 * at the start of tcpstat (same size and 	 * position) for netstat. 	 */
-name|int
-name|tcps_rcvbadsum
-decl_stmt|;
-name|int
-name|tcps_rcvbadoff
-decl_stmt|;
-name|int
-name|tcps_rcvshort
-decl_stmt|;
-name|int
-name|tcps_badsegs
-decl_stmt|;
-name|int
-name|tcps_unack
-decl_stmt|;
-define|#
-directive|define
-name|tcps_badsum
-value|tcps_rcvbadsum
-define|#
-directive|define
-name|tcps_badoff
-value|tcps_rcvbadoff
-define|#
-directive|define
-name|tcps_hdrops
-value|tcps_rcvshort
-endif|#
-directive|endif
-endif|OLDSTAT
 ifdef|#
 directive|ifdef
 name|OLDSTAT
@@ -780,12 +637,6 @@ name|u_long
 name|tcps_rcvbyte
 decl_stmt|;
 comment|/* bytes received in sequence */
-ifndef|#
-directive|ifndef
-name|OLDSTAT
-ifndef|#
-directive|ifndef
-name|OLDSTAT
 name|u_long
 name|tcps_rcvbadsum
 decl_stmt|;
@@ -798,8 +649,6 @@ name|u_long
 name|tcps_rcvshort
 decl_stmt|;
 comment|/* packets received too short */
-endif|#
-directive|endif
 endif|#
 directive|endif
 name|u_long
