@@ -62,6 +62,35 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|lqrsavedata
+block|{
+comment|/* Saved on receipt of an LQR */
+name|u_int32_t
+name|InLQRs
+decl_stmt|;
+comment|/* From ifInLQRs */
+name|u_int32_t
+name|InPackets
+decl_stmt|;
+comment|/* From ifInPackets */
+name|u_int32_t
+name|InDiscards
+decl_stmt|;
+comment|/* From ifInDiscards */
+name|u_int32_t
+name|InErrors
+decl_stmt|;
+comment|/* From ifInErrors */
+name|u_int32_t
+name|InOctets
+decl_stmt|;
+comment|/* From InGoodOctets ! */
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  *  We support LQR and ECHO as LQM method  */
 end_comment
@@ -106,6 +135,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|hdlc
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|link
 struct_decl|;
 end_struct_decl
@@ -127,6 +162,29 @@ modifier|*
 parameter_list|,
 specifier|const
 name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|lqrdata
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|lqr_Analyse
+parameter_list|(
+specifier|const
+name|struct
+name|hdlc
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|lqrdata
 modifier|*
 parameter_list|,
 specifier|const
