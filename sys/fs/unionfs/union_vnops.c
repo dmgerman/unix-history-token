@@ -258,13 +258,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|vop_destroyvobject_t
-name|union_destroyvobject
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|vop_fsync_t
 name|union_fsync
 decl_stmt|;
@@ -6206,32 +6199,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * We have nothing to destroy and this operation shouldn't be bypassed.  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|union_destroyvobject
-parameter_list|(
-name|ap
-parameter_list|)
-name|struct
-name|vop_destroyvobject_args
-comment|/* { 		struct vnode *vp; 	} */
-modifier|*
-name|ap
-decl_stmt|;
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
 begin_function
 specifier|static
 name|int
@@ -7319,11 +7286,6 @@ operator|.
 name|vop_deleteextattr
 operator|=
 name|union_deleteextattr
-block|,
-operator|.
-name|vop_destroyvobject
-operator|=
-name|union_destroyvobject
 block|,
 operator|.
 name|vop_fsync

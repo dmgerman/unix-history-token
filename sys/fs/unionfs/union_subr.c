@@ -2513,6 +2513,12 @@ name|v_data
 operator|=
 literal|0
 expr_stmt|;
+name|vp
+operator|->
+name|v_object
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 operator|(
 literal|0
