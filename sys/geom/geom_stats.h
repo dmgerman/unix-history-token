@@ -23,49 +23,63 @@ value|"geom.stats"
 end_define
 
 begin_comment
-comment|/*  * A g_stat contains the statistics we collect on consumers and  * providers.  */
+comment|/*  * A g_stat contains the statistics the kernel collect on consumers and  * providers.  See libgeom(3) for how to get hold of these.  */
 end_comment
 
 begin_struct
 struct|struct
 name|g_stat
 block|{
+name|int
+name|updating
+decl_stmt|;
+comment|/* 				 * If non-zero, the structure is being 				 * updated by the kernel and the contents 				 * should not be used. 				 */
 name|void
 modifier|*
 name|id
 decl_stmt|;
+comment|/* GEOM-identifier for the consumer/provider */
 name|uint64_t
 name|nop
 decl_stmt|;
+comment|/* Number of requests started */
 name|uint64_t
 name|nend
 decl_stmt|;
+comment|/* Number of requests completed */
 name|struct
 name|bintime
-name|it
+name|bt
 decl_stmt|;
+comment|/* Accumulated busy time */
 name|struct
 name|bintime
-name|wentidle
+name|wentbusy
 decl_stmt|;
+comment|/* Busy time accounted for until here */
 struct|struct
 block|{
 name|uint64_t
 name|nop
 decl_stmt|;
+comment|/* Number of requests completed */
 name|uint64_t
 name|nbyte
 decl_stmt|;
+comment|/* Number of bytes completed */
 name|uint64_t
 name|nmem
 decl_stmt|;
+comment|/* Number of ENOMEM request errors */
 name|uint64_t
 name|nerr
 decl_stmt|;
+comment|/* Number of other request errors */
 name|struct
 name|bintime
 name|dt
 decl_stmt|;
+comment|/* Accumulated request processing time */
 block|}
 name|ops
 index|[
