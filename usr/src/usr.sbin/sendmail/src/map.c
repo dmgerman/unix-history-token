@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)map.c	8.65 (Berkeley) %G%"
+literal|"@(#)map.c	8.66 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5626,6 +5626,22 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|38
+argument_list|,
+literal|44
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"got record `%s'\n"
+argument_list|,
+name|host_record
+argument_list|)
+expr_stmt|;
 name|cname
 operator|=
 name|get_column
@@ -5634,7 +5650,7 @@ name|host_record
 argument_list|,
 literal|1
 argument_list|,
-literal|'\t'
+literal|'\0'
 argument_list|,
 name|buf
 argument_list|)
@@ -8669,9 +8685,6 @@ block|{
 name|int
 name|buflen
 decl_stmt|;
-name|char
-name|delim
-decl_stmt|;
 name|int
 name|key_idx
 decl_stmt|;
@@ -8779,10 +8792,6 @@ return|return
 name|FALSE
 return|;
 block|}
-name|delim
-operator|=
-literal|'\t'
-expr_stmt|;
 while|while
 condition|(
 operator|!
@@ -8842,7 +8851,7 @@ name|linebuf
 argument_list|,
 literal|1
 argument_list|,
-name|delim
+literal|'\0'
 argument_list|,
 name|cbuf
 argument_list|)
@@ -8884,7 +8893,7 @@ name|linebuf
 argument_list|,
 name|key_idx
 argument_list|,
-name|delim
+literal|'\0'
 argument_list|,
 name|buf
 argument_list|)
