@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * EISA bus probe and attach routines   *  * Copyright (c) 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: eisaconf.c,v 1.14 1996/01/31 18:02:19 gibbs Exp $  */
+comment|/*  * EISA bus probe and attach routines   *  * Copyright (c) 1995, 1996 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    Justin T. Gibbs.  * 4. Modifications may be freely made to this file if the above conditions  *    are met.  *  *	$Id: eisaconf.c,v 1.15 1996/01/31 18:46:36 gibbs Exp $  */
 end_comment
 
 begin_include
@@ -2243,17 +2243,6 @@ break|break;
 block|}
 block|}
 block|}
-name|e_dev
-operator|->
-name|kdc
-operator|->
-name|kdc_datalen
-operator|+=
-sizeof|sizeof
-argument_list|(
-name|resvaddr_t
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -2539,6 +2528,17 @@ operator|*
 name|reg_count
 operator|)
 operator|++
+expr_stmt|;
+name|e_dev
+operator|->
+name|kdc
+operator|->
+name|kdc_datalen
+operator|+=
+sizeof|sizeof
+argument_list|(
+name|resvaddr_t
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
