@@ -4938,17 +4938,6 @@ decl_stmt|;
 name|vm_object_t
 name|obj
 decl_stmt|;
-name|struct
-name|vnode
-modifier|*
-name|vp
-decl_stmt|;
-name|vp
-operator|=
-name|bp
-operator|->
-name|b_vp
-expr_stmt|;
 name|obj
 operator|=
 name|bp
