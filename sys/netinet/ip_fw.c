@@ -6,13 +6,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|STATEFUL
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
 name|DEB
 parameter_list|(
 name|x
@@ -361,6 +354,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Right now, two fields in the IP header are changed to host format  * by the IP layer before calling the firewall. Ideally, we would like  * to have them in network format so that the packet can be  * used as it comes from the device driver (and is thus readonly).  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|u_int64_t
@@ -548,12 +545,6 @@ literal|"Set upper limit of matches of ipfw rules logged"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_if
-if|#
-directive|if
-name|STATEFUL
-end_if
 
 begin_comment
 comment|/*  * Extension for stateful ipfw.  *  * Dynamic rules are stored in lists accessed through a hash table  * (ipfw_dyn_v) whose size is curr_dyn_buckets. This value can  * be modified through the sysctl variable dyn_buckets which is  * updated when the table becomes empty.  *  * XXX currently there is only one list, ipfw_dyn.  *  * When a packet is received, it is first hashed, then matched  * against the entries in the corresponding list.  * Matching occurs according to the rule type. The default is to  * match the four fields and the protocol, and rules are bidirectional.  *  * For a busy proxy/web server we will have lots of connections to  * the server. We could decide for a rule type where we ignore  * ports (different hashing) and avoid special SYN/RST/FIN handling.  *  * XXX when we decide to support more than one rule type, we should  * repeat the hashing multiple times uing only the useful fields.  * Or, we could run the various tests in parallel, because the  * 'move to front' technique should shorten the average search.  *  * The lifetime of dynamic rules is regulated by dyn_*_lifetime,  * measured in seconds and depending on the flags.  *  * The total number of dynamic rules is stored in dyn_count.  * The max number of dynamic rules is dyn_max. When we reach  * the maximum number of rules we do not create anymore. This is  * done to avoid consuming too much memory, but also too much  * time when searching on each packet (ideally, we should try instead  * to put a limit on the length of the list on each bucket...).  *  * Each dynamic rules holds a pointer to the parent ipfw rule so  * we know what action to perform. Dynamic rules are removed when  * the parent rule is deleted.  * There are some limitations with dynamic rules -- we do not  * obey the 'randomized match', and we do not do multiple  * passes through the firewall.  * XXX check the latter!!!  */
@@ -854,15 +845,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* STATEFUL */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -1103,6 +1085,9 @@ expr|struct
 name|ip
 operator|*
 name|ip
+operator|,
+name|int
+name|offset
 operator|,
 expr|struct
 name|ifnet
@@ -2300,6 +2285,9 @@ name|ip
 modifier|*
 name|ip
 parameter_list|,
+name|int
+name|offset
+parameter_list|,
 name|struct
 name|ifnet
 modifier|*
@@ -2763,13 +2751,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|ip
-operator|->
-name|ip_off
-operator|&
-name|IP_OFFMASK
-operator|)
+name|offset
 operator|==
 literal|0
 condition|)
@@ -2832,13 +2814,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|ip
-operator|->
-name|ip_off
-operator|&
-name|IP_OFFMASK
-operator|)
+name|offset
 operator|==
 literal|0
 condition|)
@@ -2888,13 +2864,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|ip
-operator|->
-name|ip_off
-operator|&
-name|IP_OFFMASK
-operator|)
+name|offset
 operator|==
 literal|0
 condition|)
@@ -2957,13 +2927,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|ip
-operator|->
-name|ip_off
-operator|&
-name|IP_OFFMASK
-operator|)
+name|offset
 operator|==
 literal|0
 condition|)
@@ -2992,13 +2956,7 @@ name|IPPROTO_ICMP
 case|:
 if|if
 condition|(
-operator|(
-name|ip
-operator|->
-name|ip_off
-operator|&
-name|IP_OFFMASK
-operator|)
+name|offset
 operator|==
 literal|0
 condition|)
@@ -3129,13 +3087,9 @@ break|break;
 block|}
 if|if
 condition|(
-operator|(
-name|ip
-operator|->
-name|ip_off
-operator|&
-name|IP_OFFMASK
-operator|)
+name|offset
+operator|!=
+literal|0
 condition|)
 name|snprintf
 argument_list|(
@@ -3148,11 +3102,7 @@ argument_list|)
 argument_list|,
 literal|" Fragment = %d"
 argument_list|,
-name|ip
-operator|->
-name|ip_off
-operator|&
-name|IP_OFFMASK
+name|offset
 argument_list|)
 expr_stmt|;
 else|else
@@ -3294,12 +3244,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-name|STATEFUL
-end_if
 
 begin_function
 specifier|static
@@ -4480,15 +4424,6 @@ comment|/* XXX this just sets the lifetime ... */
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* STATEFUL */
-end_comment
-
 begin_comment
 comment|/*  * given an ip_fw_chain *, lookup_next_rule will return a pointer  * of the same type to the next one. This can be either the jump  * target (for skipto instructions) or the next one in the chain (in  * all other cases including a missing jump target).  * Backward jumps are not allowed, so start looking from the next  * rule...  */
 end_comment
@@ -4716,9 +4651,9 @@ name|skipto
 decl_stmt|,
 name|bridgeCookie
 decl_stmt|;
-if|#
-directive|if
-name|STATEFUL
+name|u_int16_t
+name|ip_len
+decl_stmt|;
 name|int
 name|dyn_checked
 init|=
@@ -4738,8 +4673,6 @@ name|q
 init|=
 name|NULL
 decl_stmt|;
-endif|#
-directive|endif
 comment|/* Special hack for bridging (as usual) */
 if|if
 condition|(
@@ -4756,6 +4689,18 @@ name|cookie
 operator|=
 operator|&
 name|bridgeCookie
+expr_stmt|;
+define|#
+directive|define
+name|BRIDGED
+value|(cookie ==&bridgeCookie)
+name|hlen
+operator|=
+name|ip
+operator|->
+name|ip_hl
+operator|<<
+literal|2
 expr_stmt|;
 block|}
 comment|/* Grab and reset cookie */
@@ -4795,6 +4740,39 @@ name|ip
 operator|->
 name|ip_dst
 expr_stmt|;
+if|if
+condition|(
+literal|0
+operator|&&
+name|BRIDGED
+condition|)
+block|{
+comment|/* not yet... */
+name|offset
+operator|=
+operator|(
+name|ntohs
+argument_list|(
+name|ip
+operator|->
+name|ip_off
+argument_list|)
+operator|&
+name|IP_OFFMASK
+operator|)
+expr_stmt|;
+name|ip_len
+operator|=
+name|ntohs
+argument_list|(
+name|ip
+operator|->
+name|ip_len
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|offset
 operator|=
 operator|(
@@ -4805,6 +4783,13 @@ operator|&
 name|IP_OFFMASK
 operator|)
 expr_stmt|;
+name|ip_len
+operator|=
+name|ip
+operator|->
+name|ip_len
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|offset
@@ -5181,9 +5166,6 @@ condition|)
 goto|goto
 name|got_match
 goto|;
-if|#
-directive|if
-name|STATEFUL
 comment|/* 		 * dynamic rules are checked at the first keep-state or 		 * check-state occurrence. 		 */
 if|if
 condition|(
@@ -5255,8 +5237,6 @@ name|q
 operator|->
 name|bcnt
 operator|+=
-name|ip
-operator|->
 name|ip_len
 expr_stmt|;
 goto|goto
@@ -5275,9 +5255,6 @@ name|IP_FW_F_CHECK_S
 condition|)
 continue|continue ;
 block|}
-endif|#
-directive|endif
-comment|/* stateful ipfw */
 comment|/* Check if rule only valid for bridged packets */
 if|if
 condition|(
@@ -5291,10 +5268,10 @@ operator|)
 operator|!=
 literal|0
 operator|&&
-name|cookie
-operator|!=
-operator|&
-name|bridgeCookie
+operator|!
+operator|(
+name|BRIDGED
+operator|)
 condition|)
 continue|continue;
 if|if
@@ -6165,6 +6142,8 @@ name|NULL
 argument_list|,
 name|ip
 argument_list|,
+name|offset
+argument_list|,
 name|rif
 argument_list|,
 name|oif
@@ -6206,10 +6185,6 @@ condition|)
 continue|continue ;
 name|got_match
 label|:
-if|#
-directive|if
-name|STATEFUL
-comment|/* stateful ipfw */
 comment|/* 		 * If not a dynamic match (q == NULL) and keep-state, install 		 * a new dynamic entry. 		 */
 if|if
 condition|(
@@ -6228,8 +6203,6 @@ argument_list|(
 name|chain
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 operator|*
 name|flow_id
 operator|=
@@ -6247,8 +6220,6 @@ name|f
 operator|->
 name|fw_bcnt
 operator|+=
-name|ip
-operator|->
 name|ip_len
 expr_stmt|;
 name|f
@@ -6275,6 +6246,8 @@ argument_list|(
 name|f
 argument_list|,
 name|ip
+argument_list|,
+name|offset
 argument_list|,
 name|rif
 argument_list|,
@@ -6528,6 +6501,7 @@ case|case
 name|IP_FW_REJECT_RST
 case|:
 block|{
+comment|/* XXX warning, this code writes into the mbuf */
 name|struct
 name|tcphdr
 modifier|*
@@ -6633,8 +6607,6 @@ name|tip
 operator|->
 name|ti_len
 operator|=
-name|ip
-operator|->
 name|ip_len
 operator|-
 name|hlen
@@ -6795,6 +6767,9 @@ operator|(
 literal|0
 operator|)
 return|;
+undef|#
+directive|undef
+name|BRIDGED
 block|}
 end_function
 
@@ -7377,19 +7352,14 @@ name|ip_fw_chain
 modifier|*
 name|next
 decl_stmt|;
-if|#
-directive|if
-name|STATEFUL
 name|remove_dyn_rule
 argument_list|(
 name|fcp
 argument_list|,
 literal|1
-comment|/* force_delete */
+comment|/* delete */
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|next
 operator|=
 name|LIST_NEXT
@@ -8739,9 +8709,6 @@ name|fcp
 operator|->
 name|rule
 expr_stmt|;
-if|#
-directive|if
-name|STATEFUL
 if|if
 condition|(
 name|ipfw_dyn_v
@@ -8796,8 +8763,6 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|buf
 operator|=
 name|malloc
@@ -8915,9 +8880,6 @@ name|bp
 operator|++
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|STATEFUL
 if|if
 condition|(
 name|ipfw_dyn_v
@@ -9059,8 +9021,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|error
 operator|=
 name|sooptcopyout
@@ -9083,9 +9043,6 @@ break|break;
 case|case
 name|IP_FW_FLUSH
 case|:
-if|#
-directive|if
-name|STATEFUL
 name|s
 operator|=
 name|splnet
@@ -9104,8 +9061,6 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 for|for
 control|(
 name|fcp
@@ -9759,9 +9714,6 @@ name|ip_fw_ctl_ptr
 operator|=
 name|old_ctl_ptr
 expr_stmt|;
-if|#
-directive|if
-name|STATEFUL
 name|remove_dyn_rule
 argument_list|(
 name|NULL
@@ -9770,8 +9722,6 @@ literal|1
 comment|/* force delete */
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 while|while
 condition|(
 name|LIST_FIRST

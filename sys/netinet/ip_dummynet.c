@@ -2028,7 +2028,8 @@ name|pkt
 decl_stmt|;
 name|struct
 name|ether_header
-name|hdr
+modifier|*
+name|eh
 decl_stmt|;
 if|if
 condition|(
@@ -2065,8 +2066,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|bcopy
-argument_list|(
+comment|/* 	     * same as ether_input, make eh be a pointer into the mbuf 	     */
+name|eh
+operator|=
 name|mtod
 argument_list|(
 name|pkt
@@ -2076,12 +2078,6 @@ argument_list|,
 expr|struct
 name|ether_header
 operator|*
-argument_list|)
-argument_list|,
-operator|&
-name|hdr
-argument_list|,
-name|ETHER_HDR_LEN
 argument_list|)
 expr_stmt|;
 name|m_adj
@@ -2099,8 +2095,7 @@ argument_list|(
 operator|&
 name|m
 argument_list|,
-operator|&
-name|hdr
+name|eh
 argument_list|,
 name|pkt
 operator|->

@@ -1331,6 +1331,21 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_define
+define|#
+directive|define
+name|SY
+parameter_list|(
+name|parent
+parameter_list|,
+name|var
+parameter_list|,
+name|comment
+parameter_list|)
+define|\
+value|static int var ;				\ 	SYSCTL_INT(parent, OID_AUTO, var, CTLFLAG_RW,&(var), 0, comment);
+end_define
+
 begin_decl_stmt
 name|int
 name|bdg_ipfw_drops
@@ -1422,30 +1437,98 @@ begin_comment
 comment|/* diagnostic vars */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|int
-name|bdg_split_pkts
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
-name|SYSCTL_INT
+name|SY
 argument_list|(
 name|_net_link_ether
 argument_list|,
-name|OID_AUTO
-argument_list|,
 name|bdg_split_pkts
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|bdg_split_pkts
-argument_list|,
-literal|0
 argument_list|,
 literal|"Packets split in bdg_forward"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SY
+argument_list|(
+name|_net_link_ether
+argument_list|,
+name|bdg_thru
+argument_list|,
+literal|"Packets through bridge"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SY
+argument_list|(
+name|_net_link_ether
+argument_list|,
+name|bdg_copied
+argument_list|,
+literal|"Packets copied in bdg_forward"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SY
+argument_list|(
+name|_net_link_ether
+argument_list|,
+name|bdg_copy
+argument_list|,
+literal|"Force copy in bdg_forward"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SY
+argument_list|(
+name|_net_link_ether
+argument_list|,
+name|bdg_predict
+argument_list|,
+literal|"Correctly predicted header location"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SY
+argument_list|(
+name|_net_link_ether
+argument_list|,
+name|bdg_fw_avg
+argument_list|,
+literal|"Cycle counter avg"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SY
+argument_list|(
+name|_net_link_ether
+argument_list|,
+name|bdg_fw_ticks
+argument_list|,
+literal|"Cycle counter item"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SY
+argument_list|(
+name|_net_link_ether
+argument_list|,
+name|bdg_fw_count
+argument_list|,
+literal|"Cycle counter count"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2507,7 +2590,8 @@ decl_stmt|;
 name|int
 name|canfree
 init|=
-literal|0
+operator|!
+name|bdg_copy
 decl_stmt|;
 comment|/* can free the buf at the end if set */
 name|int
@@ -2516,11 +2600,6 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* loop only once */
-name|struct
-name|mbuf
-modifier|*
-name|m
-decl_stmt|;
 comment|/*      * XXX eh might be a pointer within the mbuf (some ethernet drivers      * do that), so we better copy it before doing anything with the mbuf,      * or we might corrupt the header.      */
 name|struct
 name|ether_header
@@ -2529,6 +2608,13 @@ init|=
 operator|*
 name|eh
 decl_stmt|;
+name|DEB
+argument_list|(
+argument|quad_t ticks; ticks = rdtsc();
+argument_list|)
+name|bdg_thru
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|dst
@@ -2687,12 +2773,17 @@ init|=
 name|NULL
 decl_stmt|;
 name|int
-name|off
+name|i
 decl_stmt|;
 name|struct
 name|ip
 modifier|*
 name|ip
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|m
 decl_stmt|;
 name|m
 operator|=
@@ -2750,6 +2841,10 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* for sure, a copy is not needed later. */
+name|bdg_thru
+operator|--
+expr_stmt|;
+comment|/* already accounted for once */
 goto|goto
 name|forward
 goto|;
@@ -2792,7 +2887,30 @@ goto|goto
 name|forward
 goto|;
 comment|/* not an IP packet, ipfw is not appropriate */
-comment|/* 	 * In this section, canfree=1 means m is the same as *m0. 	 * canfree==0 means m is a copy. We need to make a copy here 	 * (to be destroyed on exit from the firewall section) because 	 * the firewall itself might destroy the packet. 	 * (This is not very smart... i should really change ipfw to 	 * leave the pkt alive!) 	 */
+name|i
+operator|=
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|ip
+argument_list|)
+expr_stmt|;
+comment|/* this is what i need to be contiguous */
+if|if
+condition|(
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|<
+name|i
+condition|)
+goto|goto
+name|forward
+goto|;
+comment|/* header too short for an IP pkt, cannot filter */
+comment|/* 	 * If canfree==0 we need to make a copy of the pkt because the firewall 	 * might destroy the packet, and in any case we need to swap fields 	 * same as IP does to put them in host order. 	 * In all cases, make sure that the IP header is contiguous and, 	 * in case of a copy, it resides in the mbuf and not in a cluster. 	 */
 if|if
 condition|(
 name|canfree
@@ -2800,32 +2918,8 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 	     * Need to make a copy. The original is still in *m0. 	     * Make sure that, in the copy, the first mbuf contains 	     * both the ethernet and the ip header. The reason is, 	     * some code up in the stack treats the IP header as rw so 	     * we do not want to share it into a cluster. 	     */
-name|int
-name|needed
-init|=
-name|min
-argument_list|(
-name|MHLEN
-argument_list|,
-literal|14
-operator|+
-name|max_protohdr
-argument_list|)
-decl_stmt|;
-name|needed
-operator|=
-name|min
-argument_list|(
-name|needed
-argument_list|,
-operator|(
-operator|*
-name|m0
-operator|)
-operator|->
-name|m_len
-argument_list|)
+name|bdg_copied
+operator|++
 expr_stmt|;
 name|m
 operator|=
@@ -2855,13 +2949,35 @@ return|return
 name|ENOBUFS
 return|;
 block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|m
+operator|->
+name|m_len
+operator|>=
+name|i
+condition|)
+name|i
+operator|=
+literal|0
+expr_stmt|;
+comment|/* no need to pullup, header is already contiguous */
+if|if
+condition|(
+name|i
+operator|>
+literal|0
+condition|)
+block|{
 name|m
 operator|=
 name|m_pullup
 argument_list|(
 name|m
 argument_list|,
-name|needed
+name|i
 argument_list|)
 expr_stmt|;
 if|if
@@ -2907,8 +3023,8 @@ operator|->
 name|ip_off
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The third parameter to the firewall code is the dst.  interface. 	 * Since we apply checks only on input pkts we use NULL. 	 */
-name|off
+comment|/* 	 * The third parameter to the firewall code is the dst.  interface. 	 * Since we apply checks only on input pkts we use NULL. 	 * The firewall knows this is a bridged packet as the cookie ptr 	 * is NULL. 	 */
+name|i
 operator|=
 call|(
 modifier|*
@@ -2923,6 +3039,7 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+comment|/* cookie */
 argument_list|,
 operator|&
 name|m
@@ -2941,7 +3058,7 @@ name|NULL
 condition|)
 block|{
 comment|/* pkt discarded by firewall */
-comment|/* 	     * At this point, if canfree==1, m and *m0 were the same 	     * thing, so just clear ptr. Otherwise, leave it alone, the 	     * upper layer might still make use of it somewhere. 	     */
+comment|/* 	     * If canfree==1, m and *m0 were the same thing, so just clear 	     * the pointer. Otherwise, leave it alone, the 	     * upper layer might still use the packet somewhere. 	     */
 if|if
 condition|(
 name|canfree
@@ -2982,7 +3099,7 @@ name|m
 expr_stmt|;
 if|if
 condition|(
-name|off
+name|i
 operator|==
 literal|0
 condition|)
@@ -2994,7 +3111,7 @@ name|canfree
 operator|==
 literal|0
 condition|)
-comment|/* destroy the copy */
+comment|/* the packet was a copy, so destroy it */
 name|m_freem
 argument_list|(
 name|m
@@ -3009,12 +3126,58 @@ directive|ifdef
 name|DUMMYNET
 if|if
 condition|(
-name|off
+name|i
 operator|&
 literal|0x10000
 condition|)
 block|{
 comment|/* 	     * pass the pkt to dummynet. Need to include m, dst, rule. 	     * Dummynet consumes the packet in all cases. 	     * Also need to prepend the ethernet header. 	     */
+comment|/* 	     * check the common case of eh pointing already into the mbuf 	     */
+if|if
+condition|(
+operator|(
+name|void
+operator|*
+operator|)
+name|eh
+operator|+
+name|ETHER_HDR_LEN
+operator|==
+operator|(
+name|void
+operator|*
+operator|)
+name|m
+operator|->
+name|m_data
+condition|)
+block|{
+name|m
+operator|->
+name|m_data
+operator|-=
+name|ETHER_HDR_LEN
+expr_stmt|;
+name|m
+operator|->
+name|m_len
+operator|+=
+name|ETHER_HDR_LEN
+expr_stmt|;
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|+=
+name|ETHER_HDR_LEN
+expr_stmt|;
+name|bdg_predict
+operator|++
+expr_stmt|;
+block|}
+else|else
+block|{
 name|M_PREPEND
 argument_list|(
 name|m
@@ -3061,10 +3224,11 @@ argument_list|,
 name|ETHER_HDR_LEN
 argument_list|)
 expr_stmt|;
+block|}
 name|dummynet_io
 argument_list|(
 operator|(
-name|off
+name|i
 operator|&
 literal|0xffff
 operator|)
@@ -3162,7 +3326,7 @@ name|min
 argument_list|(
 name|MHLEN
 argument_list|,
-literal|14
+name|ETHER_HDR_LEN
 operator|+
 name|max_protohdr
 argument_list|)
@@ -3222,6 +3386,11 @@ name|last
 condition|)
 block|{
 comment|/* need to forward packet */
+name|struct
+name|mbuf
+modifier|*
+name|m
+decl_stmt|;
 if|if
 condition|(
 name|canfree
@@ -3271,6 +3440,52 @@ return|;
 comment|/* the original is still there... */
 block|}
 comment|/* 	     * Last part of ether_output: add header, queue pkt and start 	     * output if interface not yet active. 	     */
+comment|/* 	     * check the common case of eh pointing already into the mbuf 	     */
+if|if
+condition|(
+operator|(
+name|void
+operator|*
+operator|)
+name|eh
+operator|+
+name|ETHER_HDR_LEN
+operator|==
+operator|(
+name|void
+operator|*
+operator|)
+name|m
+operator|->
+name|m_data
+condition|)
+block|{
+name|m
+operator|->
+name|m_data
+operator|-=
+name|ETHER_HDR_LEN
+expr_stmt|;
+name|m
+operator|->
+name|m_len
+operator|+=
+name|ETHER_HDR_LEN
+expr_stmt|;
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+operator|+=
+name|ETHER_HDR_LEN
+expr_stmt|;
+name|bdg_predict
+operator|++
+expr_stmt|;
+block|}
+else|else
+block|{
 name|M_PREPEND
 argument_list|(
 name|m
@@ -3306,6 +3521,7 @@ argument_list|,
 name|ETHER_HDR_LEN
 argument_list|)
 expr_stmt|;
+block|}
 name|s
 operator|=
 name|splimp
@@ -3532,6 +3748,12 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+name|DEB
+argument_list|(
+argument|bdg_fw_ticks += (u_long)(rdtsc() - ticks) ; bdg_fw_count++ ; 	if (bdg_fw_count !=
+literal|0
+argument|) bdg_fw_avg = bdg_fw_ticks/bdg_fw_count;
+argument_list|)
 return|return
 name|error
 return|;
