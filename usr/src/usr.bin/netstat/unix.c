@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)unix.c	5.15 (Berkeley) %G%"
+literal|"@(#)unix.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -71,7 +71,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/kinfo.h>
+file|<sys/sysctl.h>
 end_include
 
 begin_include
@@ -230,7 +230,7 @@ name|kvm_getfiles
 argument_list|(
 name|kvmd
 argument_list|,
-name|KINFO_FILE
+name|KERN_FILE
 argument_list|,
 literal|0
 argument_list|,
