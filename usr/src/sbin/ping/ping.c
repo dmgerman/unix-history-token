@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ping.c	4.9 (Berkeley) %G%"
+literal|"@(#)ping.c	4.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -581,9 +581,37 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|hp
 condition|)
 block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"ping: %s: "
+argument_list|,
+name|av
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+name|herror
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|to
 operator|->
 name|sin_family
@@ -628,30 +656,6 @@ operator|.
 name|s_addr
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|printf
-argument_list|(
-literal|"%s: unknown host %s\n"
-argument_list|,
-name|argv
-index|[
-literal|0
-index|]
-argument_list|,
-name|av
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
