@@ -8584,9 +8584,7 @@ argument|, error); 		} else 			sbp_execute_ocb(ocb, NULL,
 literal|0
 argument|,
 literal|0
-argument|); 		break; 	} 	case XPT_CALC_GEOMETRY: 	{ 		struct ccb_calc_geometry *ccg; 		u_int32_t size_mb; 		u_int32_t secs_per_cylinder; 		int extended =
-literal|1
-argument|; 		ccg =&ccb->ccg;  		if (ccg->block_size ==
+argument|); 		break; 	} 	case XPT_CALC_GEOMETRY: 	{ 		struct ccb_calc_geometry *ccg;  		ccg =&ccb->ccg; 		if (ccg->block_size ==
 literal|0
 argument|) { 			printf(
 literal|"sbp_action1: block_size is 0.\n"
@@ -8616,21 +8614,10 @@ literal|500000
 argument|(uintmax_t)
 endif|#
 directive|endif
-argument|ccg->volume_size); END_DEBUG  		size_mb = ccg->volume_size 			/ ((
-literal|1024L
-argument|*
-literal|1024L
-argument|) / ccg->block_size);  		if (size_mb>=
-literal|1024
-argument|&& extended) { 			ccg->heads =
-literal|255
-argument|; 			ccg->secs_per_track =
-literal|63
-argument|; 		} else { 			ccg->heads =
-literal|64
-argument|; 			ccg->secs_per_track =
-literal|32
-argument|; 		} 		secs_per_cylinder = ccg->heads * ccg->secs_per_track; 		ccg->cylinders = ccg->volume_size / secs_per_cylinder; 		ccb->ccb_h.status = CAM_REQ_CMP; 		xpt_done(ccb); 		break; 	} 	case XPT_RESET_BUS:
+argument|ccg->volume_size); END_DEBUG  		cam_calc_geometry(ccg,
+comment|/*extended*/
+literal|1
+argument|); 		xpt_done(ccb); 		break; 	} 	case XPT_RESET_BUS:
 comment|/* Reset the specified SCSI bus */
 argument|{  SBP_DEBUG(
 literal|1
