@@ -32,7 +32,7 @@ comment|/* not lint */
 end_comment
 
 begin_comment
-comment|/* $Header: /home/ncvs/src/usr.bin/lex/main.c,v 1.1.1.2 1996/06/19 20:26:16 nate Exp $ */
+comment|/* $Header: /home/ncvs/src/usr.bin/lex/main.c,v 1.3 1996/06/19 20:47:29 nate Exp $ */
 end_comment
 
 begin_include
@@ -3994,7 +3994,7 @@ condition|)
 block|{
 name|outn
 argument_list|(
-literal|"\n#include<FlexLexer.h>"
+literal|"\n#include<g++/FlexLexer.h>"
 argument_list|)
 expr_stmt|;
 if|if
