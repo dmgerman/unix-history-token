@@ -310,7 +310,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Due to the RMP packet layout, we'll run into alignment problems  * on machines that can't access (or don't, by default, align) words  * on half-word boundaries.  If you know that your machine does not suffer  * from this problem, add it to the vax/tahoe/m68k #define below.  *  * The following macros are used to deal with this problem:  *	WORDZE(w)	Return True if u_word `w' is zero, False otherwise.  *	ZEROWORD(w)	Set u_word `w' to zero.  *	COPYWORD(w1,w2)	Copy u_word `w1' to `w2'.  *	GETWORD(w,i)	Copy u_word `w' into int `i'.  *	PUTWORD(i,w)	Copy int `i' into u_word `w'.  *   * N.B. Endianness is handled by use of ntohl/htonl  */
+comment|/*  * Due to the RMP packet layout, we'll run into alignment problems  * on machines that can't access (or don't, by default, align) words  * on half-word boundaries.  If you know that your machine does not suffer  * from this problem, add it to the vax/tahoe/m68k #define below.  *  * The following macros are used to deal with this problem:  *	WORDZE(w)	Return True if u_word `w' is zero, False otherwise.  *	ZEROWORD(w)	Set u_word `w' to zero.  *	COPYWORD(w1,w2)	Copy u_word `w1' to `w2'.  *	GETWORD(w,i)	Copy u_word `w' into int `i'.  *	PUTWORD(i,w)	Copy int `i' into u_word `w'.  *  * N.B. Endianness is handled by use of ntohl/htonl  */
 end_comment
 
 begin_if
