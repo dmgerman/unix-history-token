@@ -19,71 +19,27 @@ directive|define
 name|__GNUC_VA_LIST
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__sparc_v9__
-end_ifdef
-
-begin_typedef
-typedef|typedef
-name|long
-name|long
-name|__va_greg
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|double
-name|__va_freg
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|__va_greg
-modifier|*
-name|__va_next_o
-decl_stmt|;
-comment|/* next available %o* register */
-name|__va_greg
-modifier|*
-name|__va_next_o_limit
-decl_stmt|;
-comment|/* past last available %o* register */
-name|__va_freg
-modifier|*
-name|__va_next_fp
-decl_stmt|;
-comment|/* next available %f* register */
-name|__va_freg
-modifier|*
-name|__va_next_fp_limit
-decl_stmt|;
-comment|/* last available %f* register */
-name|__va_greg
-modifier|*
-name|__va_next_stack
-decl_stmt|;
-comment|/* next extended word on stack */
-block|}
-name|__gnuc_va_list
-typedef|;
-end_typedef
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|__svr4__
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__linux__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__arch64__
+argument_list|)
+end_if
 
 begin_comment
 comment|/* This has to be a char * to be compatible with Sun.    i.e., we have to pass a `va_list' to vsprintf.  */
@@ -125,15 +81,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* not __sparc_v9__ */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* not __GNUC_VA_LIST */
 end_comment
 
@@ -161,39 +108,23 @@ directive|ifdef
 name|_STDARG_H
 end_ifdef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__sparc_v9__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|va_start
-parameter_list|(
-name|AP
-parameter_list|,
-name|LASTARG
-parameter_list|)
-define|\
-value|__extension__ \   ({ \      AP.__va_next_o = (__va_greg *) __builtin_saveregs (); \      AP.__va_next_o_limit = (AP.__va_next_o + \ 			     (__builtin_args_info (0)< 6 ? 6 - __builtin_args_info (0) : 0)); \      AP.__va_next_fp = (__va_freg *) AP.__va_next_o_limit; \      AP.__va_next_fp_limit = (AP.__va_next_fp + \ 			      (__builtin_args_info (1)< 16 ? (16 - __builtin_args_info (1) + 1) / 2 : 0)); \      AP.__va_next_stack = (__va_greg *) __builtin_next_arg (LASTARG); \   })
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_comment
 comment|/* Call __builtin_next_arg even though we aren't using its value, so that    we can verify that LASTARG is correct.  */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__GCC_NEW_VARARGS__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__arch64__
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -231,15 +162,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not __sparc_v9__ */
-end_comment
-
 begin_else
 else|#
 directive|else
@@ -259,33 +181,19 @@ name|va_dcl
 value|int __builtin_va_alist;...
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__sparc_v9__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|va_start
-parameter_list|(
-name|AP
-parameter_list|)
-define|\
-value|__extension__ \   ({ \      AP.__va_next_o = (__va_greg *) __builtin_saveregs (); \      AP.__va_next_o_limit = (AP.__va_next_o + \ 			     (__builtin_args_info (0)< 6 ? 6 - __builtin_args_info (0) : 0)); \      AP.__va_next_fp = (__va_freg *) AP.__va_next_o_limit; \      AP.__va_next_fp_limit = (AP.__va_next_fp + \ 			      (__builtin_args_info (1)< 16 ? (16 - __builtin_args_info (1) + 1) / 2 : 0)); \      AP.__va_next_stack = (__va_greg *) __builtin_next_arg (__builtin_va_alist) \        - (__builtin_args_info (0)>= 6 || __builtin_args_info (1)>= 16 ? 1 : 0); \   })
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__GCC_NEW_VARARGS__
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__arch64__
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -317,15 +225,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not __sparc_v9__ */
-end_comment
 
 begin_endif
 endif|#
@@ -450,8 +349,25 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__sparc_v9__
+name|__arch64__
 end_ifdef
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|int
+name|__ptrint
+name|__attribute__
+typedef|((
+name|__mode__
+typedef|(
+name|__DI__
+typedef|)));
+end_typedef
+
+begin_comment
+comment|/* ??? TODO: little endian support */
+end_comment
 
 begin_define
 define|#
@@ -463,17 +379,13 @@ parameter_list|,
 name|TYPE
 parameter_list|)
 define|\
-value|__extension__							\ (*({int __type = __builtin_classify_type (* (TYPE *) 0);	\   void * __result;						\   if (__type == __real_type_class)
+value|__extension__							\ (*({int __type = __builtin_classify_type (* (TYPE *) 0);	\   char * __result;						\   if (__type == __real_type_class)
 comment|/* float? */
-value|\     {								\       __va_freg *__r;						\
-comment|/* see PASS_IN_REG_P in gcc's sparc.h */
-value|\       if (pvar.__va_next_fp< pvar.__va_next_fp_limit		\&& ((__r = (__va_freg *) (((__va_greg) pvar.__va_next_fp + sizeof (TYPE) - 1)& ~(__va_greg) (sizeof (TYPE) - 1))) \< pvar.__va_next_fp_limit))			\ 	{							\ 	  pvar.__va_next_fp = __r + (sizeof (TYPE) + 7) / 8;	\ 	}							\       else							\ 	{							\ 	  __r = (__va_freg *) pvar.__va_next_stack;		\ 	  pvar.__va_next_stack += (sizeof (TYPE) + 7) / 8;	\ 	}							\       __result = __r;						\     }								\   else if (__type< __record_type_class)
+value|\     {								\       if (__alignof__ (TYPE) == 16)				\ 	(pvar) = (void *) (((__ptrint) (pvar) + 15)& -16);	\       __result = (pvar);					\       (pvar) = (char *) (pvar) + sizeof (TYPE);			\     }								\   else if (__type< __record_type_class)
 comment|/* integer? */
-value|\     {								\       __va_greg *__r;						\       if (pvar.__va_next_o< pvar.__va_next_o_limit)		\ 	__r = pvar.__va_next_o++;				\       else							\ 	__r = pvar.__va_next_stack++;				\
-comment|/* adjust for 4 byte ints */
-value|\       __result = (char *) __r + 8 - sizeof (TYPE);		\     }								\   else
+value|\     {								\       (pvar) = (char *) (pvar) + 8;				\       __result = (char *) (pvar) - sizeof (TYPE);		\     }								\   else
 comment|/* aggregate object */
-value|\     {								\       void **__r;						\       if (pvar.__va_next_o< pvar.__va_next_o_limit)		\ 	__r = (void **) pvar.__va_next_o++;			\       else							\ 	__r = (void **) pvar.__va_next_stack++;			\       __result = *__r;						\     }								\   (TYPE *) __result;}))
+value|\     {								\       if (sizeof (TYPE)<= 8)					\ 	{							\ 	  __result = (pvar);					\ 	  (pvar) = (char *) (pvar) + 8;				\ 	}							\       else if (sizeof (TYPE)<= 16)				\ 	{							\ 	  if (__alignof__ (TYPE) == 16)				\ 	    (pvar) = (void *) (((__ptrint) (pvar) + 15)& -16);	\ 	  __result = (pvar);					\ 	  (pvar) = (char *) (pvar) + 16;			\ 	}							\       else							\ 	{							\ 	  __result = * (void **) (pvar);			\ 	  (pvar) = (char *) (pvar) + 8;				\ 	}							\     }								\   (TYPE *) __result;}))
 end_define
 
 begin_else
@@ -482,7 +394,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* not __sparc_v9__ */
+comment|/* not __arch64__ */
 end_comment
 
 begin_define
@@ -523,8 +435,24 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* not __sparc_v9__ */
+comment|/* not __arch64__ */
 end_comment
+
+begin_comment
+comment|/* Copy __gnuc_va_list into another variable of this type.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__va_copy
+parameter_list|(
+name|dest
+parameter_list|,
+name|src
+parameter_list|)
+value|(dest) = (src)
+end_define
 
 begin_endif
 endif|#

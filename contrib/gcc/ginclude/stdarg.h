@@ -57,7 +57,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<va-clipper.h>
+file|"va-clipper.h"
 end_include
 
 begin_else
@@ -74,7 +74,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<va-m88k.h>
+file|"va-m88k.h"
 end_include
 
 begin_else
@@ -91,7 +91,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<va-i860.h>
+file|"va-i860.h"
 end_include
 
 begin_else
@@ -108,7 +108,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<va-pa.h>
+file|"va-pa.h"
 end_include
 
 begin_else
@@ -125,7 +125,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<va-mips.h>
+file|"va-mips.h"
 end_include
 
 begin_else
@@ -142,7 +142,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<va-sparc.h>
+file|"va-sparc.h"
 end_include
 
 begin_else
@@ -159,7 +159,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<va-i960.h>
+file|"va-i960.h"
 end_include
 
 begin_else
@@ -176,7 +176,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<va-alpha.h>
+file|"va-alpha.h"
 end_include
 
 begin_else
@@ -196,12 +196,17 @@ name|defined
 argument_list|(
 name|__H8300H__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__H8300S__
+argument_list|)
 end_if
 
 begin_include
 include|#
 directive|include
-file|<va-h8300.h>
+file|"va-h8300.h"
 end_include
 
 begin_else
@@ -217,16 +222,125 @@ argument_list|(
 name|__PPC__
 argument_list|)
 operator|&&
+operator|(
 name|defined
 argument_list|(
 name|_CALL_SYSV
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|)
 end_if
 
 begin_include
 include|#
 directive|include
-file|<va-ppc.h>
+file|"va-ppc.h"
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__arc__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"va-arc.h"
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__M32R__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"va-m32r.h"
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__sh__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"va-sh.h"
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__mn10300__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"va-mn10300.h"
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__mn10200__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"va-mn10200.h"
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__v850__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"va-v850.h"
 end_include
 
 begin_else
@@ -409,10 +523,18 @@ end_comment
 begin_if
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|__arm__
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__ARMEB__
+argument_list|)
+operator|)
 operator|||
 name|defined
 argument_list|(
@@ -487,6 +609,22 @@ begin_comment
 comment|/* big-endian */
 end_comment
 
+begin_comment
+comment|/* Copy __gnuc_va_list into another variable of this type.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__va_copy
+parameter_list|(
+name|dest
+parameter_list|,
+name|src
+parameter_list|)
+value|(dest) = (src)
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -494,6 +632,60 @@ end_endif
 
 begin_comment
 comment|/* _STDARG_H */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not v850 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not mn10200 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not mn10300 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not sh */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not m32r */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not arc */
 end_comment
 
 begin_endif
@@ -638,11 +830,27 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__svr4__
-end_ifdef
+argument_list|)
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|_SCO_DS
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__VA_LIST
+argument_list|)
+operator|)
+end_if
 
 begin_comment
 comment|/* SVR4.2 uses _VA_LIST for an internal alias for va_list,    so we must avoid testing it and setting it here.    SVR4 uses _VA_LIST as a flag in stdarg.h, but we should    have no conflict with that.  */
@@ -700,6 +908,23 @@ name|va_list
 typedef|;
 end_typedef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_SCO_DS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|__VA_LIST
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_endif
 endif|#
 directive|endif
@@ -715,7 +940,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* not __svr4__ */
+comment|/* not __svr4__ || _SCO_DS */
 end_comment
 
 begin_comment

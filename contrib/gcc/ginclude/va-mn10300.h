@@ -50,13 +50,15 @@ name|_VARARGS_H
 argument_list|)
 end_if
 
-begin_if
-if|#
-directive|if
-name|__GNUC__
-operator|>
-literal|1
-end_if
+begin_define
+define|#
+directive|define
+name|__gnuc_va_start
+parameter_list|(
+name|AP
+parameter_list|)
+value|(AP = (__gnuc_va_list)__builtin_saveregs())
+end_define
 
 begin_define
 define|#
@@ -64,58 +66,6 @@ directive|define
 name|__va_ellipsis
 value|...
 end_define
-
-begin_define
-define|#
-directive|define
-name|__gnuc_va_start
-parameter_list|(
-name|AP
-parameter_list|)
-value|((AP) = (va_list)__builtin_saveregs())
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|va_alist
-value|__va_a__, __va_b__, __va_c__, __va_d__
-end_define
-
-begin_define
-define|#
-directive|define
-name|__va_ellipsis
-end_define
-
-begin_define
-define|#
-directive|define
-name|__gnuc_va_start
-parameter_list|(
-name|AP
-parameter_list|)
-define|\
-value|(AP) = (double *)&__va_a__,&__va_b__,&__va_c__,&__va_d__, \   (AP) = (double *)((char *)(AP) + 4)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __GNUC__> 1 */
-end_comment
-
-begin_comment
-comment|/* Call __builtin_next_arg even though we aren't using its value, so that    we can verify that LASTARG is correct.  */
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -141,15 +91,18 @@ else|#
 directive|else
 end_else
 
-begin_comment
-comment|/* The ... causes current_function_varargs to be set in cc1.  */
-end_comment
+begin_define
+define|#
+directive|define
+name|va_alist
+value|__builtin_va_alist
+end_define
 
 begin_define
 define|#
 directive|define
 name|va_dcl
-value|long va_alist; __va_ellipsis
+value|int __builtin_va_alist; __va_ellipsis
 end_define
 
 begin_define
@@ -159,7 +112,7 @@ name|va_start
 parameter_list|(
 name|AP
 parameter_list|)
-value|__gnuc_va_start (AP)
+value|AP=(char *)&__builtin_va_alist
 end_define
 
 begin_endif
@@ -167,24 +120,26 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* Now stuff common to both varargs& stdarg implementations.  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|va_arg
+name|__va_rounded_size
 parameter_list|(
-name|AP
-parameter_list|,
 name|TYPE
 parameter_list|)
 define|\
-value|(*(sizeof(TYPE)> 8 ?						\    ((AP = (__gnuc_va_list) ((char *)AP - sizeof (int))),	\     (((TYPE *) (void *) (*((int *) (AP))))))			\    :((AP =							\       (__gnuc_va_list) ((long)((char *)AP - sizeof (TYPE))	\& (sizeof(TYPE)> 4 ? ~0x7 : ~0x3))),	\      (((TYPE *) (void *) ((char *)AP + ((8 - sizeof(TYPE)) % 4)))))))
+value|(((sizeof (TYPE) + sizeof (int) - 1) / sizeof (int)) * sizeof (int))
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_undef
+undef|#
+directive|undef
 name|va_end
-end_ifndef
+end_undef
 
 begin_function_decl
 name|void
@@ -194,15 +149,6 @@ name|__gnuc_va_list
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* Defined in libgcc.a */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -214,30 +160,23 @@ parameter_list|)
 value|((void)0)
 end_define
 
-begin_comment
-comment|/* Copy __gnuc_va_list into another variable of this type.  */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|__va_copy
+name|va_arg
 parameter_list|(
-name|dest
+name|AP
 parameter_list|,
-name|src
+name|TYPE
 parameter_list|)
-value|(dest) = (src)
+define|\
+value|(sizeof (TYPE)> 8							\   ? (AP = (__gnuc_va_list) ((char *) (AP) + __va_rounded_size (char *)),\     **((TYPE **) (void *) ((char *) (AP) - __va_rounded_size (char *))))\   : (AP = (__gnuc_va_list) ((char *) (AP) + __va_rounded_size (TYPE)),	\     *((TYPE *) (void *) ((char *) (AP) - __va_rounded_size (TYPE)))))
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* defined (_STDARG_H) || defined (_VARARGS_H) */
-end_comment
 
 end_unit
 
