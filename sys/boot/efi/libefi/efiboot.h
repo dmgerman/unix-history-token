@@ -171,6 +171,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Find EFI network resources */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|efinet_init_driver
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Wrapper over EFI filesystems. */
 end_comment
 
@@ -277,6 +291,34 @@ name|int
 name|efi_autoload
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_struct_decl
+struct_decl|struct
+name|bootinfo
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|preloaded_file
+struct_decl|;
+end_struct_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|bi_load
+parameter_list|(
+name|struct
+name|bootinfo
+modifier|*
+parameter_list|,
+name|struct
+name|preloaded_file
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
