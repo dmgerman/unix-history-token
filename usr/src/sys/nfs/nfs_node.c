@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_node.c	7.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_node.c	7.20 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -611,13 +611,18 @@ name|np
 operator|->
 name|n_flag
 operator|=
-name|NLOCKED
+literal|0
 expr_stmt|;
 name|insque
 argument_list|(
 name|np
 argument_list|,
 name|nh
+argument_list|)
+expr_stmt|;
+name|nfs_lock
+argument_list|(
+name|vp
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -1172,6 +1177,9 @@ name|u_procp
 operator|->
 name|p_pid
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sleep
 argument_list|(
 operator|(
@@ -1313,6 +1321,51 @@ name|np
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_block
+
+begin_comment
+comment|/*  * Check for a locked nfsnode  */
+end_comment
+
+begin_macro
+name|nfs_islocked
+argument_list|(
+argument|vp
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|struct
+name|vnode
+modifier|*
+name|vp
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+if|if
+condition|(
+name|VTONFS
+argument_list|(
+name|vp
+argument_list|)
+operator|->
+name|n_flag
+operator|&
+name|NLOCKED
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_block
 
