@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_clock.c	4.16	81/03/09	*/
+comment|/*	kern_clock.c	4.17	81/04/02	*/
 end_comment
 
 begin_include
@@ -1357,6 +1357,27 @@ decl_stmt|;
 name|int
 name|s
 decl_stmt|;
+comment|/* DEBUGGING CODE */
+name|int
+name|ttrstrt
+parameter_list|()
+function_decl|;
+if|if
+condition|(
+name|fun
+operator|==
+name|ttrstrt
+operator|&&
+name|arg
+operator|==
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"timeout ttrstr arg"
+argument_list|)
+expr_stmt|;
+comment|/* END DEBUGGING CODE */
 name|t
 operator|=
 name|tim
