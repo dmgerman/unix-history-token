@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: time.c,v 1.11 1998/08/24 10:16:59 cracauer Exp $"
+literal|"$Id: time.c,v 1.12 1998/10/13 14:52:32 des Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -119,6 +119,12 @@ begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -203,6 +209,8 @@ decl_stmt|,
 name|lflag
 decl_stmt|,
 name|status
+decl_stmt|,
+name|pflag
 decl_stmt|;
 name|struct
 name|timeval
@@ -236,6 +244,8 @@ name|aflag
 operator|=
 name|lflag
 operator|=
+name|pflag
+operator|=
 literal|0
 expr_stmt|;
 while|while
@@ -249,7 +259,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"alo:"
+literal|"alo:p"
 argument_list|)
 operator|)
 operator|!=
@@ -286,6 +296,14 @@ case|:
 name|ofn
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'p'
+case|:
+name|pflag
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -404,6 +422,10 @@ case|case
 literal|0
 case|:
 comment|/* child */
+name|errno
+operator|=
+literal|0
+expr_stmt|;
 name|execvp
 argument_list|(
 operator|*
@@ -420,11 +442,25 @@ operator|*
 name|argv
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|errno
+operator|==
+name|ENOENT
+condition|)
 name|_exit
 argument_list|(
-literal|1
+literal|127
 argument_list|)
 expr_stmt|;
+comment|/* POSIX: utility could not be found */
+else|else
+name|_exit
+argument_list|(
+literal|126
+argument_list|)
+expr_stmt|;
+comment|/* POSIX: utility could not be invoked */
 comment|/* NOTREACHED */
 block|}
 comment|/* parent */
@@ -540,6 +576,74 @@ name|tv_usec
 operator|+=
 literal|1000000
 expr_stmt|;
+if|if
+condition|(
+name|pflag
+condition|)
+block|{
+comment|/* POSIX wants output that must look like 		"real %f\nuser %f\nsys %f\n" and requires 		at least two digits after the radix. */
+name|fprintf
+argument_list|(
+name|out
+argument_list|,
+literal|"real %ld.%02ld\n"
+argument_list|,
+name|after
+operator|.
+name|tv_sec
+argument_list|,
+name|after
+operator|.
+name|tv_usec
+operator|/
+literal|10000
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|out
+argument_list|,
+literal|"user %ld.%02ld\n"
+argument_list|,
+name|ru
+operator|.
+name|ru_utime
+operator|.
+name|tv_sec
+argument_list|,
+name|ru
+operator|.
+name|ru_utime
+operator|.
+name|tv_usec
+operator|/
+literal|10000
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|out
+argument_list|,
+literal|"sys %ld.%02ld\n"
+argument_list|,
+name|ru
+operator|.
+name|ru_stime
+operator|.
+name|tv_sec
+argument_list|,
+name|ru
+operator|.
+name|ru_stime
+operator|.
+name|tv_usec
+operator|/
+literal|10000
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|fprintf
 argument_list|(
 name|out
@@ -599,6 +703,7 @@ operator|/
 literal|10000
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|lflag
@@ -908,7 +1013,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: time [-al] [-o file] command\n"
+literal|"usage: time [-alp] [-o file] command\n"
 argument_list|)
 expr_stmt|;
 name|exit
