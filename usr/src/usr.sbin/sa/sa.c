@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)sa.c	4.7 (Berkeley) 84/07/15"
+literal|"@(#)sa.c	4.8 (Berkeley) 84/07/18"
 decl_stmt|;
 end_decl_stmt
 
@@ -2391,9 +2391,11 @@ literal|"%11.2f%s"
 argument_list|,
 name|a
 operator|/
+operator|(
 literal|60
 operator|*
 literal|64.
+operator|)
 argument_list|,
 name|cp
 argument_list|)
@@ -2680,6 +2682,8 @@ operator|.
 name|ac_comm
 index|[
 name|NC
+operator|-
+literal|1
 index|]
 expr_stmt|;
 operator|*
