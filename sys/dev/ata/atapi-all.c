@@ -1029,6 +1029,8 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|ata_command
 argument_list|(
 name|atp
@@ -1053,7 +1055,11 @@ literal|0
 argument_list|,
 name|ATA_WAIT_INTR
 argument_list|)
-expr_stmt|;
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 if|if
 condition|(
 name|atapi_wait
@@ -1498,7 +1504,13 @@ directive|ifdef
 name|ATAPI_DEBUG
 name|printf
 argument_list|(
-literal|"atapi: phew, got back from tsleep\n"
+literal|"%s: phew, got back from tsleep\n"
+argument_list|,
+name|request
+operator|->
+name|device
+operator|->
+name|devname
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1552,7 +1564,13 @@ directive|ifdef
 name|ATAPI_DEBUG
 name|printf
 argument_list|(
-literal|"atapi: starting %s "
+literal|"%s: starting %s "
+argument_list|,
+name|request
+operator|->
+name|device
+operator|->
+name|devname
 argument_list|,
 name|atapi_cmd2str
 argument_list|(
@@ -1785,6 +1803,8 @@ name|ATAPI_F_DMA_USED
 expr_stmt|;
 block|}
 comment|/* start ATAPI operation */
+if|if
+condition|(
 name|ata_command
 argument_list|(
 name|atp
@@ -1820,6 +1840,15 @@ else|:
 literal|0
 argument_list|,
 name|ATA_IMMEDIATE
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"%s: failure to send ATAPI packet command\n"
+argument_list|,
+name|atp
+operator|->
+name|devname
 argument_list|)
 expr_stmt|;
 if|if
@@ -1952,7 +1981,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"atapi_transfer: device hanging on packet cmd\n"
+literal|"%s: failure to execute ATAPI packet command\n"
+argument_list|,
+name|atp
+operator|->
+name|devname
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2062,7 +2095,11 @@ directive|ifdef
 name|ATAPI_DEBUG
 name|printf
 argument_list|(
-literal|"atapi_interrupt: enter\n"
+literal|"%s: atapi_interrupt: enter\n"
+argument_list|,
+name|atp
+operator|->
+name|devname
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2136,7 +2173,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"atapi_interrupt: command interrupt, but no DRQ\n"
+literal|"%s: command interrupt, but no DRQ\n"
+argument_list|,
+name|atp
+operator|->
+name|devname
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2202,7 +2243,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"atapi_interrupt: timeout waiting for status"
+literal|"%s: timeout waiting for status"
+argument_list|,
+name|atp
+operator|->
+name|devname
 argument_list|)
 expr_stmt|;
 name|atp
@@ -2338,7 +2383,11 @@ directive|ifdef
 name|ATAPI_DEBUG
 name|printf
 argument_list|(
-literal|"atapi_interrupt: length=%d reason=0x%02x\n"
+literal|"%s: length=%d reason=0x%02x\n"
+argument_list|,
+name|atp
+operator|->
+name|devname
 argument_list|,
 name|length
 argument_list|,
@@ -2381,25 +2430,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ata%d-%s: %s trying to write on read buffer\n"
+literal|"%s: %s trying to write on read buffer\n"
 argument_list|,
 name|atp
 operator|->
-name|controller
-operator|->
-name|lun
-argument_list|,
-operator|(
-name|atp
-operator|->
-name|unit
-operator|==
-name|ATA_MASTER
-operator|)
-condition|?
-literal|"master"
-else|:
-literal|"slave"
+name|devname
 argument_list|,
 name|atapi_cmd2str
 argument_list|(
@@ -2455,25 +2490,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ata%d-%s: %s trying to read on write buffer\n"
+literal|"%s: %s trying to read on write buffer\n"
 argument_list|,
 name|atp
 operator|->
-name|controller
-operator|->
-name|lun
-argument_list|,
-operator|(
-name|atp
-operator|->
-name|unit
-operator|==
-name|ATA_MASTER
-operator|)
-condition|?
-literal|"master"
-else|:
-literal|"slave"
+name|devname
 argument_list|,
 name|atapi_cmd2str
 argument_list|(
@@ -2502,25 +2523,11 @@ name|ATAPI_P_DONEDRQ
 case|:
 name|printf
 argument_list|(
-literal|"ata%d-%s: %s DONEDRQ\n"
+literal|"%s: %s DONEDRQ\n"
 argument_list|,
 name|atp
 operator|->
-name|controller
-operator|->
-name|lun
-argument_list|,
-operator|(
-name|atp
-operator|->
-name|unit
-operator|==
-name|ATA_MASTER
-operator|)
-condition|?
-literal|"master"
-else|:
-literal|"slave"
+name|devname
 argument_list|,
 name|atapi_cmd2str
 argument_list|(
@@ -2621,7 +2628,11 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"atapi_interrupt: %s size problem, %d bytes residue\n"
+literal|"%s: %s size problem, %d bytes residue\n"
+argument_list|,
+name|atp
+operator|->
+name|devname
 argument_list|,
 operator|(
 name|request
@@ -2649,7 +2660,11 @@ goto|;
 default|default:
 name|printf
 argument_list|(
-literal|"atapi_interrupt: unknown transfer phase %d\n"
+literal|"%s: unknown transfer phase %d\n"
+argument_list|,
+name|atp
+operator|->
+name|devname
 argument_list|,
 name|reason
 argument_list|)
@@ -2788,7 +2803,11 @@ name|ATAPI_SK_RESERVED
 case|:
 name|printf
 argument_list|(
-literal|"atapi_error: %s - timeout error = %02x\n"
+literal|"%s: %s - timeout error = %02x\n"
+argument_list|,
+name|atp
+operator|->
+name|devname
 argument_list|,
 name|atapi_cmd2str
 argument_list|(
@@ -2826,7 +2845,11 @@ name|ATAPI_SK_RECOVERED_ERROR
 case|:
 name|printf
 argument_list|(
-literal|"atapi_error: %s - recovered error\n"
+literal|"%s: %s - recovered error\n"
+argument_list|,
+name|atp
+operator|->
+name|devname
 argument_list|,
 name|atapi_cmd2str
 argument_list|(
@@ -2872,7 +2895,11 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"atapi: %s - %s asc=%02x ascq=%02x error=%02x\n"
+literal|"%s: %s - %s asc=%02x ascq=%02x error=%02x\n"
+argument_list|,
+name|atp
+operator|->
+name|devname
 argument_list|,
 name|atapi_cmd2str
 argument_list|(
@@ -2961,7 +2988,13 @@ directive|ifdef
 name|ATAPI_DEBUG
 name|printf
 argument_list|(
-literal|"atapi_interrupt: error=0x%02x\n"
+literal|"%s: error=0x%02x\n"
+argument_list|,
+name|request
+operator|->
+name|device
+operator|->
+name|devname
 argument_list|,
 name|request
 operator|->
@@ -3238,7 +3271,7 @@ name|data
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"atapi: %s %02x"
+literal|"%s %02x"
 argument_list|,
 name|label
 argument_list|,
@@ -3337,7 +3370,13 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"atapi_interrupt: read data overrun %d/%d\n"
+literal|"%s: read data overrun %d/%d\n"
+argument_list|,
+name|request
+operator|->
+name|device
+operator|->
+name|devname
 argument_list|,
 name|length
 argument_list|,
@@ -3563,7 +3602,13 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"atapi_interrupt: write data underrun %d/%d\n"
+literal|"%s: write data underrun %d/%d\n"
+argument_list|,
+name|request
+operator|->
+name|device
+operator|->
+name|devname
 argument_list|,
 name|length
 argument_list|,
@@ -3755,25 +3800,11 @@ name|NULL
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"ata%d-%s: atapi_timeout: cmd=%s - resetting\n"
+literal|"%s: atapi_timeout: cmd=%s - resetting\n"
 argument_list|,
 name|atp
 operator|->
-name|controller
-operator|->
-name|lun
-argument_list|,
-operator|(
-name|atp
-operator|->
-name|unit
-operator|==
-name|ATA_MASTER
-operator|)
-condition|?
-literal|"master"
-else|:
-literal|"slave"
+name|devname
 argument_list|,
 name|atapi_cmd2str
 argument_list|(

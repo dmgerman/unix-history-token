@@ -924,24 +924,6 @@ return|return
 literal|"AcerLabs Aladdin ATA controller"
 return|;
 case|case
-literal|0x4d33105a
-case|:
-return|return
-literal|"Promise Ultra/33 ATA controller"
-return|;
-case|case
-literal|0x4d38105a
-case|:
-return|return
-literal|"Promise Ultra/66 ATA controller"
-return|;
-case|case
-literal|0x00041103
-case|:
-return|return
-literal|"HighPoint HPT366 ATA controller"
-return|;
-case|case
 literal|0x05711106
 case|:
 comment|/* 82c586& 82c686 */
@@ -972,6 +954,30 @@ return|;
 block|}
 return|return
 literal|"VIA Apollo ATA controller"
+return|;
+case|case
+literal|0x55131039
+case|:
+return|return
+literal|"SiS 5591 ATA controller"
+return|;
+case|case
+literal|0x4d33105a
+case|:
+return|return
+literal|"Promise Ultra/33 ATA controller"
+return|;
+case|case
+literal|0x4d38105a
+case|:
+return|return
+literal|"Promise Ultra/66 ATA controller"
+return|;
+case|case
+literal|0x00041103
+case|:
+return|return
+literal|"HighPoint HPT366 ATA controller"
 return|;
 comment|/* unsupported but known chipsets, generic DMA only */
 case|case
@@ -4016,6 +4022,11 @@ name|timeout
 init|=
 literal|0
 decl_stmt|;
+name|DELAY
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|timeout

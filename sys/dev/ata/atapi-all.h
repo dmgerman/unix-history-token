@@ -1257,6 +1257,11 @@ name|unit
 decl_stmt|;
 comment|/* ATA_MASTER or ATA_SLAVE */
 name|int8_t
+modifier|*
+name|devname
+decl_stmt|;
+comment|/* this devices name */
+name|int8_t
 name|cmd
 decl_stmt|;
 comment|/* last cmd executed */
