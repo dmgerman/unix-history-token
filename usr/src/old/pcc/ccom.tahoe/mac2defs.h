@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	mac2defs.h	1.3	86/07/27	*/
+comment|/*	mac2defs.h	1.4	88/01/19	*/
 end_comment
 
 begin_comment
@@ -334,7 +334,7 @@ begin_define
 define|#
 directive|define
 name|SIREG
-value|(SPECIAL|6)
+value|(SPECIAL|7)
 end_define
 
 begin_comment
