@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: $Hdr: dcm.c 1.17 89/10/01$  *  *	@(#)dcm.c	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 University of Utah.  * Copyright (c) 1982, 1986, 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * the Systems Programming Group of the University of Utah Computer  * Science Department.  *  * %sccs.include.redist.c%  *  * from: $Hdr: dcm.c 1.17 89/10/01$  *  *	@(#)dcm.c	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2605,7 +2605,6 @@ operator|++
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * TS_WOPEN catches a race when switching to polling mode from dcmrint 	 */
 if|if
 condition|(
 operator|(
@@ -2613,11 +2612,7 @@ name|tp
 operator|->
 name|t_state
 operator|&
-operator|(
 name|TS_ISOPEN
-operator||
-name|TS_WOPEN
-operator|)
 operator|)
 operator|==
 literal|0
@@ -4669,7 +4664,7 @@ name|DDB_INTR
 condition|)
 name|printf
 argument_list|(
-literal|"dcmstart(%d): head %x tail %x outqcc %d ch %d\n"
+literal|"dcmstart(%d): head %x tail %x outqcc %d\n"
 argument_list|,
 name|UNIT
 argument_list|(
@@ -4687,8 +4682,6 @@ operator|->
 name|t_outq
 operator|.
 name|c_cc
-argument_list|,
-name|tch
 argument_list|)
 expr_stmt|;
 endif|#
