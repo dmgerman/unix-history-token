@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sys_bsd.c	1.15 (Berkeley) %G%"
+literal|"@(#)sys_bsd.c	1.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,6 +40,12 @@ argument_list|(
 name|unix
 argument_list|)
 end_if
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
 
 begin_include
 include|#
@@ -1378,35 +1384,15 @@ operator|=
 name|getpid
 argument_list|()
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|NOT43
-argument_list|)
-name|myPid
-operator|=
-operator|-
-name|myPid
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* defined(NOT43) */
-name|ioctl
+name|fcntl
 argument_list|(
 name|fd
 argument_list|,
-name|SIOCSPGRP
+name|F_SETOWN
 argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
 name|myPid
 argument_list|)
 expr_stmt|;
-comment|/* set my pid */
 block|}
 end_function
 
