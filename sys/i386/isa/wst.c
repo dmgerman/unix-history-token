@@ -12,26 +12,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|"wst.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_ddb.h"
 end_include
-
-begin_if
-if|#
-directive|if
-name|NWST
-operator|>
-literal|0
-operator|&&
-name|NWDC
-operator|>
-literal|0
-end_if
 
 begin_include
 include|#
@@ -4323,15 +4305,6 @@ argument_list|,
 argument|NULL
 argument_list|)
 end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NWST&& NWDC */
-end_comment
 
 end_unit
 

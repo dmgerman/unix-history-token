@@ -16,24 +16,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"wfd.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NWFD
-operator|>
-literal|0
-operator|&&
-name|NWDC
-operator|>
-literal|0
-end_if
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -3685,15 +3667,6 @@ argument_list|,
 argument|NULL
 argument_list|)
 end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NWFD&& NWDC */
-end_comment
 
 end_unit
 

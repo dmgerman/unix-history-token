@@ -6,30 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"wdc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"wcd.h"
-end_include
-
-begin_if
-if|#
-directive|if
-name|NWCD
-operator|>
-literal|0
-operator|&&
-name|NWDC
-operator|>
-literal|0
-end_if
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -9544,15 +9520,6 @@ argument_list|,
 argument|NULL
 argument_list|)
 end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NWCD&& NWDC */
-end_comment
 
 end_unit
 

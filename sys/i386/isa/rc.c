@@ -13,14 +13,6 @@ directive|include
 file|"rc.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|NRC
-operator|>
-literal|0
-end_if
-
 begin_comment
 comment|/*#define RCDEBUG*/
 end_comment
@@ -8459,15 +8451,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_block
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NRC */
-end_comment
 
 end_unit
 

@@ -9,14 +9,6 @@ directive|include
 file|"tw.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|NTW
-operator|>
-literal|0
-end_if
-
 begin_comment
 comment|/*  * Driver configuration parameters  */
 end_comment
@@ -5443,15 +5435,6 @@ end_endif
 
 begin_comment
 comment|/* HIRESTIME */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NTW */
 end_comment
 
 end_unit

@@ -17,14 +17,6 @@ directive|include
 file|"wt.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|NWT
-operator|>
-literal|0
-end_if
-
 begin_include
 include|#
 directive|include
@@ -5494,15 +5486,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* NWT */
-end_comment
 
 end_unit
 
