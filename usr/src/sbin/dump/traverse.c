@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)traverse.c	5.15 (Berkeley) %G%"
+literal|"@(#)traverse.c	5.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -50,12 +50,6 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/stat.h>
 end_include
 
 begin_include
@@ -121,6 +115,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_include
+include|#
+directive|include
+file|<sys/stat.h>
+end_include
 
 begin_include
 include|#
@@ -385,6 +385,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|dp
 operator|->
 name|di_mtime
@@ -400,6 +401,17 @@ operator|>=
 name|spcl
 operator|.
 name|c_ddate
+operator|)
+operator|&&
+operator|(
+name|dp
+operator|->
+name|di_flags
+operator|&
+name|NODUMP
+operator|)
+operator|!=
+name|NODUMP
 condition|)
 block|{
 name|SETINO
