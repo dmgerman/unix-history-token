@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ps.c	5.4 (Berkeley) %G%"
+literal|"@(#)ps.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -630,6 +630,9 @@ end_endif
 begin_decl_stmt
 name|int
 name|chkpid
+init|=
+operator|-
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -1760,7 +1763,8 @@ if|if
 condition|(
 name|chkpid
 operator|!=
-literal|0
+operator|-
+literal|1
 operator|&&
 name|chkpid
 operator|!=
