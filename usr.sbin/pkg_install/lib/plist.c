@@ -1718,6 +1718,12 @@ name|fexists
 argument_list|(
 name|tmp
 argument_list|)
+operator|&&
+operator|!
+name|issymlink
+argument_list|(
+name|tmp
+argument_list|)
 condition|)
 block|{
 name|warnx
@@ -2177,6 +2183,12 @@ elseif|else
 if|if
 condition|(
 name|isdir
+argument_list|(
+name|dir
+argument_list|)
+operator|&&
+operator|!
+name|issymlink
 argument_list|(
 name|dir
 argument_list|)

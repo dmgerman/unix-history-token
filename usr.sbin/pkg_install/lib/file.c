@@ -105,7 +105,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Quick check to see if something is a directory */
+comment|/* Quick check to see if something is a directory or symlink to a directory */
 end_comment
 
 begin_function
@@ -123,7 +123,7 @@ name|sb
 decl_stmt|;
 if|if
 condition|(
-name|stat
+name|lstat
 argument_list|(
 name|fname
 argument_list|,
@@ -179,7 +179,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Check to see if file is a dir, and is empty */
+comment|/* Check to see if file is a dir or symlink to a dir, and is empty */
 end_comment
 
 begin_function
@@ -294,6 +294,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Returns TRUE if file is a regular file or symlink pointing to a regular  * file  */
+end_comment
+
 begin_function
 name|Boolean
 name|isfile
@@ -336,7 +340,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Check to see if file is a file and is empty. If nonexistent or not    a file, say "it's empty", otherwise return TRUE if zero sized. */
+comment|/*   * Check to see if file is a file or symlink pointing to a file and is empty.  * If nonexistent or not a file, say "it's empty", otherwise return TRUE if  * zero sized.  */
 end_comment
 
 begin_function
@@ -386,6 +390,51 @@ return|;
 block|}
 return|return
 name|TRUE
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/* Returns TRUE if file is a symbolic link. */
+end_comment
+
+begin_function
+name|Boolean
+name|issymlink
+parameter_list|(
+name|char
+modifier|*
+name|fname
+parameter_list|)
+block|{
+name|struct
+name|stat
+name|sb
+decl_stmt|;
+if|if
+condition|(
+name|lstat
+argument_list|(
+name|fname
+argument_list|,
+operator|&
+name|sb
+argument_list|)
+operator|!=
+name|FAIL
+operator|&&
+name|S_ISLNK
+argument_list|(
+name|sb
+operator|.
+name|st_mode
+argument_list|)
+condition|)
+return|return
+name|TRUE
+return|;
+return|return
+name|FALSE
 return|;
 block|}
 end_function
