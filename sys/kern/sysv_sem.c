@@ -4117,6 +4117,8 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
 name|copyin
 argument_list|(
 name|real_arg
