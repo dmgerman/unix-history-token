@@ -23,6 +23,7 @@ file|<sys/cdefs.h>
 end_include
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|insecure
 decl_stmt|;
