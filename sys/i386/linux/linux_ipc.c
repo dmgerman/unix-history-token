@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer   *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: linux_ipc.c,v 1.1 1995/06/25 17:32:36 sos Exp $  */
+comment|/*-  * Copyright (c) 1994-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer   *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software withough specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  *  $Id: linux_ipc.c,v 1.2 1995/11/22 07:43:47 bde Exp $  */
 end_comment
 
 begin_include
@@ -685,22 +685,11 @@ modifier|*
 name|retval
 parameter_list|)
 block|{
-struct|struct
+name|struct
 name|shmat_args
-block|{
-name|int
-name|shmid
-decl_stmt|;
-name|void
-modifier|*
-name|shmaddr
-decl_stmt|;
-name|int
-name|shmflg
-decl_stmt|;
-block|}
+comment|/* { 	int shmid; 	void *shmaddr; 	int shmflg;     } */
 name|bsd_args
-struct|;
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -805,16 +794,11 @@ modifier|*
 name|retval
 parameter_list|)
 block|{
-struct|struct
+name|struct
 name|shmdt_args
-block|{
-name|void
-modifier|*
-name|shmaddr
-decl_stmt|;
-block|}
+comment|/* { 	void *shmaddr;     } */
 name|bsd_args
-struct|;
+decl_stmt|;
 name|bsd_args
 operator|.
 name|shmaddr
@@ -856,21 +840,11 @@ modifier|*
 name|retval
 parameter_list|)
 block|{
-struct|struct
+name|struct
 name|shmget_args
-block|{
-name|key_t
-name|key
-decl_stmt|;
-name|int
-name|size
-decl_stmt|;
-name|int
-name|shmflg
-decl_stmt|;
-block|}
+comment|/* { 	key_t key; 	int size; 	int shmflg;     } */
 name|bsd_args
-struct|;
+decl_stmt|;
 name|bsd_args
 operator|.
 name|key
@@ -936,23 +910,11 @@ name|struct
 name|linux_shmid_ds
 name|linux_shmid
 decl_stmt|;
-struct|struct
-name|shmctl_args
-block|{
-name|int
-name|shmid
-decl_stmt|;
-name|int
-name|cmd
-decl_stmt|;
 name|struct
-name|shmid_ds
-modifier|*
-name|buf
-decl_stmt|;
-block|}
+name|shmctl_args
+comment|/* { 	int shmid; 	int cmd; 	struct shmid_ds *buf;     } */
 name|bsd_args
-struct|;
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
