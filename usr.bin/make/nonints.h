@@ -157,7 +157,7 @@ begin_function_decl
 name|void
 name|For_Run
 parameter_list|(
-name|void
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -427,6 +427,8 @@ name|Parse_FromString
 parameter_list|(
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -124,6 +124,10 @@ name|Lst
 name|lst
 decl_stmt|;
 comment|/* List of variables	*/
+name|int
+name|lineno
+decl_stmt|;
+comment|/* Line #		*/
 block|}
 name|For
 typedef|;
@@ -897,6 +901,10 @@ name|VAR_GLOBAL
 argument_list|,
 name|FALSE
 argument_list|)
+argument_list|,
+name|arg
+operator|->
+name|lineno
 argument_list|)
 expr_stmt|;
 name|Var_Delete
@@ -925,7 +933,8 @@ begin_function
 name|void
 name|For_Run
 parameter_list|(
-name|void
+name|int
+name|lineno
 parameter_list|)
 block|{
 name|For
@@ -963,6 +972,12 @@ operator|.
 name|lst
 operator|=
 name|forLst
+expr_stmt|;
+name|arg
+operator|.
+name|lineno
+operator|=
+name|lineno
 expr_stmt|;
 name|forVar
 operator|=
