@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)envelope.c	8.27 (Berkeley) %G%"
+literal|"@(#)envelope.c	8.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3175,9 +3175,6 @@ expr_stmt|;
 comment|/* save the domain spec if this mailer wants it */
 if|if
 condition|(
-operator|!
-name|internal
-operator|&&
 name|e
 operator|->
 name|e_from

@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.35 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	8.36 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	8.35 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	8.36 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1241,7 +1241,8 @@ name|nullmailer
 operator|.
 name|m_sh_rwset
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
 end_expr_stmt
 
