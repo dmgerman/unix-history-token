@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	user.h	4.5	81/02/23	*/
+comment|/*	user.h	4.6	81/03/03	*/
 end_comment
 
 begin_ifdef
@@ -241,9 +241,11 @@ parameter_list|()
 function_decl|;
 comment|/* disposition of signals */
 name|int
-name|u_cfcode
+name|u_code
 decl_stmt|;
-comment|/* ``code'' to trap when CM faulted */
+comment|/* ``code'' to trap */
+comment|/* on SIGILL code passes compatibility mode fault address  */
+comment|/* on SIGFPE code passes more specific kind of floating point fault */
 name|int
 modifier|*
 name|u_ar0
