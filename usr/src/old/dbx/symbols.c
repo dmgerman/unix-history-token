@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)symbols.c	5.3 (Berkeley) %G%"
+literal|"@(#)symbols.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: symbols.c,v 1.6 84/12/26 10:42:31 linton Exp $"
+literal|"$Header: symbols.c,v 1.3 87/03/26 23:17:35 donn Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -174,6 +174,8 @@ name|VAR
 block|,
 name|ARRAY
 block|,
+name|OPENARRAY
+block|,
 name|DYNARRAY
 block|,
 name|SUBARRAY
@@ -248,6 +250,35 @@ name|Rangetype
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|INREG
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|STK
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXT
+value|2
+end_define
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|integer
+name|Storage
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
 name|Symbol
@@ -260,10 +291,21 @@ name|language
 decl_stmt|;
 name|Symclass
 name|class
+range|:
+literal|8
 decl_stmt|;
-name|Integer
+name|Storage
+name|storage
+range|:
+literal|2
+decl_stmt|;
+name|unsigned
+name|int
 name|level
+range|:
+literal|6
 decl_stmt|;
+comment|/* for variables stored on stack only */
 name|Symbol
 name|type
 decl_stmt|;
@@ -540,7 +582,7 @@ name|isreg
 parameter_list|(
 name|s
 parameter_list|)
-value|(s->level< 0)
+value|(s->storage == INREG)
 end_define
 
 begin_include
@@ -592,14 +634,14 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Symbol table structure currently does not support deletions.  */
+comment|/*  * Symbol table structure currently does not support deletions.  * Hash table size is a power of two to make hashing faster.  * Using a non-prime is ok since we aren't doing rehashing.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|HASHTABLESIZE
-value|2003
+value|8192
 end_define
 
 begin_decl_stmt
@@ -619,7 +661,7 @@ name|hash
 parameter_list|(
 name|name
 parameter_list|)
-value|((((unsigned) name)>> 2) mod HASHTABLESIZE)
+value|((((unsigned) name)>> 2)& (HASHTABLESIZE - 1))
 end_define
 
 begin_comment
@@ -630,7 +672,7 @@ begin_define
 define|#
 directive|define
 name|SYMBLOCKSIZE
-value|100
+value|1000
 end_define
 
 begin_typedef
@@ -704,6 +746,7 @@ name|newpool
 argument_list|,
 sizeof|sizeof
 argument_list|(
+operator|*
 name|newpool
 argument_list|)
 argument_list|)
@@ -955,6 +998,12 @@ operator|->
 name|language
 operator|=
 name|primlang
+expr_stmt|;
+name|s
+operator|->
+name|storage
+operator|=
+name|EXT
 expr_stmt|;
 name|s
 operator|->
@@ -2200,9 +2249,9 @@ if|if
 condition|(
 name|s
 operator|->
-name|level
-operator|<
-literal|0
+name|storage
+operator|==
+name|INREG
 condition|)
 block|{
 name|r
@@ -2304,7 +2353,7 @@ name|isglobal
 parameter_list|(
 name|s
 parameter_list|)
-value|(s->level == 1)
+value|(s->storage == EXT)
 end_define
 
 begin_define
@@ -2314,7 +2363,7 @@ name|islocaloff
 parameter_list|(
 name|s
 parameter_list|)
-value|(s->level>= 2 and s->symvalue.offset< 0)
+value|(s->storage == STK and s->symvalue.offset< 0)
 end_define
 
 begin_define
@@ -2324,7 +2373,7 @@ name|isparamoff
 parameter_list|(
 name|s
 parameter_list|)
-value|(s->level>= 2 and s->symvalue.offset>= 0)
+value|(s->storage == STK and s->symvalue.offset>= 0)
 end_define
 
 begin_function
@@ -2613,9 +2662,14 @@ name|VAR
 expr_stmt|;
 name|s
 operator|->
+name|storage
+operator|=
+name|INREG
+expr_stmt|;
+name|s
+operator|->
 name|level
 operator|=
-operator|-
 literal|3
 expr_stmt|;
 name|s
@@ -3281,6 +3335,9 @@ name|elsize
 expr_stmt|;
 break|break;
 case|case
+name|OPENARRAY
+case|:
+case|case
 name|DYNARRAY
 case|:
 name|r
@@ -3363,6 +3420,10 @@ break|break;
 case|case
 name|TYPE
 case|:
+comment|/* 	     * This causes problems on the IRIS because of the compiler bug 	     * with stab offsets for parameters.  Not sure it's really 	     * necessary anyway. 	     */
+ifndef|#
+directive|ifndef
+name|IRIS
 if|if
 condition|(
 name|t
@@ -3390,6 +3451,8 @@ name|t
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|r
 operator|=
 name|size
@@ -3728,7 +3791,7 @@ name|t
 operator|->
 name|class
 operator|==
-name|DYNARRAY
+name|OPENARRAY
 condition|)
 block|{
 name|r
@@ -3896,7 +3959,7 @@ name|t
 operator|->
 name|class
 operator|==
-name|DYNARRAY
+name|OPENARRAY
 argument_list|)
 return|;
 block|}
@@ -4349,9 +4412,24 @@ name|t1
 operator|->
 name|language
 operator|==
-name|primlang
+name|nil
 condition|)
 block|{
+if|if
+condition|(
+name|t2
+operator|->
+name|language
+operator|==
+name|nil
+condition|)
+block|{
+name|b
+operator|=
+name|false
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 name|t2
@@ -4363,6 +4441,9 @@ condition|)
 block|{
 name|b
 operator|=
+operator|(
+name|boolean
+operator|)
 name|primlang_typematch
 argument_list|(
 name|rtype
@@ -4406,48 +4487,21 @@ block|}
 elseif|else
 if|if
 condition|(
-name|t2
+name|t1
 operator|->
 name|language
 operator|==
 name|primlang
 condition|)
 block|{
-name|b
-operator|=
-call|(
-name|boolean
-call|)
-argument_list|(
-operator|*
-name|language_op
-argument_list|(
-name|t1
-operator|->
-name|language
-argument_list|,
-name|L_TYPEMATCH
-argument_list|)
-argument_list|)
-argument_list|(
-name|t1
-argument_list|,
-name|t2
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
 if|if
 condition|(
-name|t1
+name|t2
 operator|->
 name|language
 operator|==
-name|nil
-condition|)
-block|{
-if|if
-condition|(
+name|primlang
+name|or
 name|t2
 operator|->
 name|language
@@ -4457,7 +4511,18 @@ condition|)
 block|{
 name|b
 operator|=
-name|false
+name|primlang_typematch
+argument_list|(
+name|rtype
+argument_list|(
+name|t1
+argument_list|)
+argument_list|,
+name|rtype
+argument_list|(
+name|t2
+argument_list|)
+argument_list|)
 expr_stmt|;
 block|}
 else|else

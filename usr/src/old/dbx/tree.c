@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tree.c	5.2 (Berkeley) %G%"
+literal|"@(#)tree.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Header: tree.c,v 1.5 84/12/26 10:42:55 linton Exp $"
+literal|"$Header: tree.c,v 1.3 87/07/08 21:38:59 donn Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1151,6 +1151,18 @@ name|nodetype
 argument_list|,
 name|nil
 argument_list|)
+expr_stmt|;
+name|r
+operator|->
+name|nodetype
+operator|->
+name|language
+operator|=
+name|p
+operator|->
+name|nodetype
+operator|->
+name|language
 expr_stmt|;
 break|break;
 case|case
