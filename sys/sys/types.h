@@ -679,9 +679,15 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_INO_T_DECLARED
+end_ifndef
+
 begin_typedef
 typedef|typedef
-name|__uint32_t
+name|__ino_t
 name|ino_t
 typedef|;
 end_typedef
@@ -689,6 +695,17 @@ end_typedef
 begin_comment
 comment|/* inode number */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|_INO_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -746,9 +763,15 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_NLINK_T_DECLARED
+end_ifndef
+
 begin_typedef
 typedef|typedef
-name|__uint16_t
+name|__nlink_t
 name|nlink_t
 typedef|;
 end_typedef
@@ -756,6 +779,17 @@ end_typedef
 begin_comment
 comment|/* link count */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|_NLINK_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
