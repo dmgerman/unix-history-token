@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	7.65 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vnode.h	7.66 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -459,9 +459,28 @@ name|u_quad_t
 name|va_filerev
 decl_stmt|;
 comment|/* file modification number */
+name|u_int
+name|va_cflags
+decl_stmt|;
+comment|/* operations flags, see below */
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * Flags for va_cflags.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VA_UTIMES_NULL
+value|0x01
+end_define
+
+begin_comment
+comment|/* utimes argument was NULL */
+end_comment
 
 begin_comment
 comment|/*  * Flags for ioflag.  */

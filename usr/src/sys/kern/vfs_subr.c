@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.95 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	7.96 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -883,6 +883,12 @@ operator|->
 name|va_gen
 operator|=
 name|VNOVAL
+expr_stmt|;
+name|vap
+operator|->
+name|va_cflags
+operator|=
+literal|0
 expr_stmt|;
 block|}
 end_function
