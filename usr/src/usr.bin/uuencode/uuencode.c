@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)uuencode.c	5.7 (Berkeley) %G%"
+literal|"@(#)uuencode.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -348,6 +348,8 @@ operator|=
 name|buf
 init|;
 name|n
+operator|>
+literal|0
 condition|;
 name|n
 operator|-=
