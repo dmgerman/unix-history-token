@@ -443,7 +443,7 @@ begin_define
 define|#
 directive|define
 name|MAXHOSTNAMELEN
-value|64
+value|256
 end_define
 
 begin_endif
