@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lpq.c	4.5 (Berkeley) %G%"
+literal|"@(#)lpq.c	4.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -666,6 +666,11 @@ else|else
 name|displayq
 argument_list|(
 name|lflag
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
