@@ -636,6 +636,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SD_F_AUTOVCHAN
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
 name|SD_F_PRIO_RD
 value|0x10000000
 end_define
@@ -765,6 +772,13 @@ define|#
 directive|define
 name|SND_CDEV_MAJOR
 value|30
+end_define
+
+begin_define
+define|#
+directive|define
+name|SND_MAXVCHANS
+value|255
 end_define
 
 begin_comment
