@@ -1299,12 +1299,6 @@ return|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NOT_YET_XXX
-end_ifdef
-
 begin_function
 specifier|static
 name|int
@@ -1321,10 +1315,6 @@ name|rid
 parameter_list|,
 name|u_int32_t
 name|offset
-parameter_list|,
-name|u_int32_t
-modifier|*
-name|deltap
 parameter_list|)
 block|{
 return|return
@@ -1340,17 +1330,10 @@ argument_list|,
 name|rid
 argument_list|,
 name|offset
-argument_list|,
-name|deltap
 argument_list|)
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static
@@ -1645,6 +1628,13 @@ argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
+name|card_set_memory_offset
+argument_list|,
+name|pccard_set_memory_offset
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
 name|card_get_memory_offset
 argument_list|,
 name|pccard_get_memory_offset
@@ -1672,13 +1662,6 @@ argument_list|(
 name|card_deactivate_function
 argument_list|,
 name|pccard_deactivate_function
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|card_set_memory_offset
-argument_list|,
-name|pccard_set_memory_offset
 argument_list|)
 block|,
 name|DEVMETHOD

@@ -6100,10 +6100,6 @@ name|rid
 parameter_list|,
 name|u_int32_t
 name|offset
-parameter_list|,
-name|u_int32_t
-modifier|*
-name|deltap
 parameter_list|)
 block|{
 name|struct
@@ -6137,16 +6133,6 @@ name|card
 operator|=
 name|offset
 expr_stmt|;
-if|if
-condition|(
-name|deltap
-condition|)
-operator|*
-name|deltap
-operator|=
-literal|0
-expr_stmt|;
-comment|/* XXX BAD XXX */
 return|return
 operator|(
 name|cinfo
