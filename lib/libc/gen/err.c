@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: err.c,v 1.4 1998/09/12 21:02:22 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -736,7 +736,7 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
-name|vwarn
+name|vwarnx
 argument_list|(
 name|fmt
 argument_list|,
