@@ -2792,6 +2792,21 @@ operator|=
 name|phdr
 expr_stmt|;
 break|break;
+case|case
+name|PT_INTERP
+case|:
+name|link_elf_error
+argument_list|(
+literal|"Unsupported file type"
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|ENOEXEC
+expr_stmt|;
+goto|goto
+name|out
+goto|;
 block|}
 operator|++
 name|phdr
