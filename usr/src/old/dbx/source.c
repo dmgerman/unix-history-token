@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)source.c 1.3 %G%"
+literal|"@(#)source.c 1.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -128,7 +128,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|int
+name|long
 name|Seekaddr
 typedef|;
 end_typedef
@@ -416,9 +416,6 @@ name|fseek
 argument_list|(
 name|f
 argument_list|,
-operator|(
-name|long
-operator|)
 name|srcaddr
 argument_list|(
 name|lb
@@ -617,7 +614,7 @@ name|int
 name|c
 decl_stmt|;
 specifier|register
-name|Lineno
+name|Seekaddr
 name|count
 decl_stmt|;
 specifier|register
