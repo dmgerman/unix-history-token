@@ -10450,7 +10450,7 @@ expr|struct
 name|script
 operator|*
 operator|)
-name|vm_page_alloc_contig
+name|contigmalloc
 argument_list|(
 name|round_page
 argument_list|(
@@ -10461,11 +10461,17 @@ name|script
 argument_list|)
 argument_list|)
 argument_list|,
+name|M_DEVBUF
+argument_list|,
+name|M_WAITOK
+argument_list|,
 literal|0
 argument_list|,
 literal|0xffffffff
 argument_list|,
 name|PAGE_SIZE
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -10494,7 +10500,6 @@ name|M_WAITOK
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* XXX JGibbs - Use contigmalloc */
 if|if
 condition|(
 sizeof|sizeof
@@ -10515,7 +10520,7 @@ expr|struct
 name|scripth
 operator|*
 operator|)
-name|vm_page_alloc_contig
+name|contigmalloc
 argument_list|(
 name|round_page
 argument_list|(
@@ -10526,11 +10531,17 @@ name|scripth
 argument_list|)
 argument_list|)
 argument_list|,
+name|M_DEVBUF
+argument_list|,
+name|M_WAITOK
+argument_list|,
 literal|0
 argument_list|,
 literal|0xffffffff
 argument_list|,
 name|PAGE_SIZE
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
