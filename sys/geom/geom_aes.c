@@ -828,7 +828,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|g_io_fail
+name|g_io_deliver
 argument_list|(
 name|bp
 argument_list|,
@@ -876,7 +876,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|g_io_fail
+name|g_io_deliver
 argument_list|(
 name|bp
 argument_list|,
@@ -1071,7 +1071,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|g_io_fail
+name|g_io_deliver
 argument_list|(
 name|bp
 argument_list|,
@@ -1103,15 +1103,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|bp
-operator|->
-name|bio_error
-operator|=
-name|EOPNOTSUPP
-expr_stmt|;
 name|g_io_deliver
 argument_list|(
 name|bp
+argument_list|,
+name|EOPNOTSUPP
 argument_list|)
 expr_stmt|;
 return|return;

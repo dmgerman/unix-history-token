@@ -496,7 +496,7 @@ operator|&
 name|di
 argument_list|)
 expr_stmt|;
-name|g_io_fail
+name|g_io_deliver
 argument_list|(
 name|bp
 argument_list|,
@@ -869,15 +869,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|bp
-operator|->
-name|bio_error
-operator|=
-name|error
-expr_stmt|;
 name|g_io_deliver
 argument_list|(
 name|bp
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 block|}

@@ -1860,6 +1860,24 @@ name|g_ioctl
 modifier|*
 name|gio
 decl_stmt|;
+name|struct
+name|g_consumer
+modifier|*
+name|cp
+decl_stmt|;
+name|u_char
+modifier|*
+name|buf
+decl_stmt|;
+name|off_t
+name|secoff
+decl_stmt|;
+name|u_int
+name|secsize
+decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 comment|/* We don't need topology for now */
 name|g_topology_unlock
 argument_list|()
@@ -1908,9 +1926,7 @@ operator|->
 name|data
 expr_stmt|;
 comment|/* Validate and modify our slice instance to match */
-name|bp
-operator|->
-name|bio_error
+name|error
 operator|=
 name|g_bsd_modify
 argument_list|(
@@ -1919,14 +1935,10 @@ argument_list|,
 name|dl
 argument_list|)
 expr_stmt|;
-comment|/* picks up topology lock */
+comment|/* picks up topology lock on success */
 if|if
 condition|(
-name|bp
-operator|->
-name|bio_error
-operator|!=
-literal|0
+name|error
 condition|)
 block|{
 name|g_topology_lock
@@ -1935,6 +1947,8 @@ expr_stmt|;
 name|g_io_deliver
 argument_list|(
 name|bp
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1957,8 +1971,11 @@ comment|/* return the request */
 name|g_io_deliver
 argument_list|(
 name|bp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 end_function
 
@@ -2093,15 +2110,11 @@ operator|->
 name|inram
 argument_list|)
 expr_stmt|;
-name|bp
-operator|->
-name|bio_error
-operator|=
-literal|0
-expr_stmt|;
 name|g_io_deliver
 argument_list|(
 name|bp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -2129,7 +2142,7 @@ if|if
 condition|(
 name|error
 condition|)
-name|g_io_fail
+name|g_io_deliver
 argument_list|(
 name|bp
 argument_list|,

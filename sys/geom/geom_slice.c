@@ -684,18 +684,14 @@ operator|->
 name|length
 condition|)
 block|{
-name|bp
-operator|->
-name|bio_error
-operator|=
-name|EINVAL
-expr_stmt|;
-comment|/* XXX: EWHAT ? */
 name|g_io_deliver
 argument_list|(
 name|bp
+argument_list|,
+name|EINVAL
 argument_list|)
 expr_stmt|;
+comment|/* XXX: EWHAT ? */
 return|return;
 block|}
 name|bp2
@@ -712,7 +708,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|g_io_fail
+name|g_io_deliver
 argument_list|(
 name|bp
 argument_list|,
@@ -970,7 +966,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|g_io_fail
+name|g_io_deliver
 argument_list|(
 name|bp
 argument_list|,
@@ -994,15 +990,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|bp
-operator|->
-name|bio_error
-operator|=
-name|EOPNOTSUPP
-expr_stmt|;
 name|g_io_deliver
 argument_list|(
 name|bp
+argument_list|,
+name|EOPNOTSUPP
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1285,7 +1277,15 @@ name|g_trace
 argument_list|(
 name|G_T_TOPOLOGY
 argument_list|,
-literal|"g_slice_config()"
+literal|"g_slice_config(%s, %d, %d)"
+argument_list|,
+name|gp
+operator|->
+name|name
+argument_list|,
+name|index
+argument_list|,
+name|how
 argument_list|)
 expr_stmt|;
 name|g_topology_assert
