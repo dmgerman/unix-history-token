@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.3	%G%	*/
+comment|/*	machdep.c	4.4	%G%	*/
 end_comment
 
 begin_include
@@ -184,7 +184,69 @@ name|pte
 modifier|*
 name|pte
 decl_stmt|;
+comment|/* 	 * Initialize error message buffer (at end of core). 	 */
+name|maxmem
+operator|-=
+name|CLSIZE
+expr_stmt|;
+name|pte
+operator|=
+name|msgbufmap
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|CLSIZE
+condition|;
+name|i
+operator|++
+control|)
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+name|pte
+operator|++
+operator|=
+name|PG_V
+operator||
+name|PG_KW
+operator||
+operator|(
+name|maxmem
+operator|+
+name|i
+operator|)
+expr_stmt|;
+name|mtpr
+argument_list|(
+name|TBIA
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Good {morning,afternoon,evening,night}. 	 */
+name|printf
+argument_list|(
+name|version
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"real mem  = %d\n"
+argument_list|,
+name|ctob
+argument_list|(
+name|maxmem
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 name|VAX
@@ -209,21 +271,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|printf
-argument_list|(
-name|version
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"real mem  = %d\n"
-argument_list|,
-name|ctob
-argument_list|(
-name|maxmem
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Allow for the u. area of process 0 and its (single) 	 * page of page tables. 	 */
 name|unixsize
 operator|=
