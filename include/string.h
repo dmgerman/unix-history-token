@@ -288,6 +288,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|strerror_r
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+name|char
+operator|*
+operator|,
+name|size_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|size_t
 name|strlen
 name|__P
