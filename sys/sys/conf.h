@@ -335,7 +335,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * Note: d_thread_t is provided as a transition aid for those drivers  * that treat struct proc/struct thread as an opaque data type and  * exist in substantially the same form in both 4.x and 5.x.  Writers  * of drivers that dips into the d_thread_t structure should use  * struct thread or struct proc as appropriate for the version of the  * OS they are using.  It is provided in lieu of each device driver  * inventing its own way of doing this.  While it does violate style(9)  * in a number of ways, this violation is deemed to be less  * important than the benefits that a uniform API between releases  * gives.  *  * Users of struct thread/struct proc that aren't device drivers should  * not use d_thread_t.  It is used here only as a shorthand to prevent  * lines from wrapping.  */
+comment|/*  * Note: d_thread_t is provided as a transition aid for those drivers  * that treat struct proc/struct thread as an opaque data type and  * exist in substantially the same form in both 4.x and 5.x.  Writers  * of drivers that dips into the d_thread_t structure should use  * struct thread or struct proc as appropriate for the version of the  * OS they are using.  It is provided in lieu of each device driver  * inventing its own way of doing this.  While it does violate style(9)  * in a number of ways, this violation is deemed to be less  * important than the benefits that a uniform API between releases  * gives.  *  * Users of struct thread/struct proc that aren't device drivers should  * not use d_thread_t.  */
 end_comment
 
 begin_typedef
@@ -360,8 +360,8 @@ name|oflags
 typedef|,
 name|int
 name|devtype
-typedef|,
-name|d_thread_t
+typedef|, 			  struct
+name|thread
 modifier|*
 name|td
 typedef|));
@@ -381,8 +381,8 @@ name|fflag
 typedef|,
 name|int
 name|devtype
-typedef|,
-name|d_thread_t
+typedef|, 			   struct
+name|thread
 modifier|*
 name|td
 typedef|));
@@ -417,8 +417,8 @@ name|data
 typedef|,
 name|int
 name|fflag
-typedef|,
-name|d_thread_t
+typedef|, struct
+name|thread
 modifier|*
 name|td
 typedef|));
@@ -493,8 +493,8 @@ name|dev
 typedef|,
 name|int
 name|events
-typedef|,
-name|d_thread_t
+typedef|, struct
+name|thread
 modifier|*
 name|td
 typedef|));
@@ -618,8 +618,8 @@ name|data
 typedef|,
 name|int
 name|flag
-typedef|,
-name|d_thread_t
+typedef|, struct
+name|thread
 modifier|*
 name|td
 typedef|));
