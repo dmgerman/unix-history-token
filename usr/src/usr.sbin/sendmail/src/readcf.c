@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)readcf.c	5.44 (Berkeley) %G%"
+literal|"@(#)readcf.c	5.45 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2199,15 +2199,9 @@ name|SMTPLINELIM
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|bitnset
-argument_list|(
-name|M_8BITS
-argument_list|,
-name|m
-operator|->
-name|m_flags
-argument_list|)
+name|ConfigLevel
+operator|<
+literal|2
 condition|)
 name|setbitn
 argument_list|(

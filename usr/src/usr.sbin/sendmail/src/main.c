@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.54 (Berkeley) %G%"
+literal|"@(#)main.c	5.55 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -514,7 +514,7 @@ end_decl_stmt
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|SYSTEM5
+name|SYS5TZ
 end_ifndef
 
 begin_comment
@@ -2220,7 +2220,7 @@ end_if
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|SYSTEM5
+name|SYS5TZ
 end_ifdef
 
 begin_comment

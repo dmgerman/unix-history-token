@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	5.25 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	5.26 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -209,25 +209,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* # define DBM		1	/* use DBM library (requires -ldbm) */
-end_comment
-
-begin_comment
-comment|/* # define NDBM	1	/* new DBM library available (requires DBM) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NEWDB
-value|1
-end_define
-
-begin_comment
-comment|/* use new 4.4bsd database package db(3) */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -343,6 +324,31 @@ end_define
 begin_comment
 comment|/* use System V lockf instead of flock */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SYS5TZ
+value|1
+end_define
+
+begin_comment
+comment|/* use System V style timezones */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|index
+value|strchr
+end_define
+
+begin_define
+define|#
+directive|define
+name|rindex
+value|strrchr
+end_define
 
 begin_endif
 endif|#
