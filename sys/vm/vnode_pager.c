@@ -1184,24 +1184,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-name|void
-name|vnode_pager_freepage
-parameter_list|(
-name|m
-parameter_list|)
-name|vm_page_t
-name|m
-decl_stmt|;
-block|{
-name|vm_page_free
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_comment
 comment|/*  * calculate the linear (byte) disk address of specified virtual  * file address  */
 end_comment
@@ -2405,7 +2387,7 @@ operator|!=
 name|reqpage
 condition|)
 block|{
-name|vnode_pager_freepage
+name|vm_page_free
 argument_list|(
 name|m
 index|[
@@ -2483,7 +2465,7 @@ operator|!=
 name|reqpage
 condition|)
 block|{
-name|vnode_pager_freepage
+name|vm_page_free
 argument_list|(
 name|m
 index|[
@@ -2548,7 +2530,7 @@ name|i
 operator|!=
 name|reqpage
 condition|)
-name|vnode_pager_freepage
+name|vm_page_free
 argument_list|(
 name|m
 index|[
@@ -2699,7 +2681,7 @@ name|vnp_size
 argument_list|)
 expr_stmt|;
 block|}
-name|vnode_pager_freepage
+name|vm_page_free
 argument_list|(
 name|m
 index|[
@@ -2749,7 +2731,7 @@ name|j
 operator|++
 control|)
 block|{
-name|vnode_pager_freepage
+name|vm_page_free
 argument_list|(
 name|m
 index|[
@@ -2787,7 +2769,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|vnode_pager_freepage
+name|vm_page_free
 argument_list|(
 name|m
 index|[
@@ -3335,7 +3317,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|vnode_pager_freepage
+name|vm_page_free
 argument_list|(
 name|mt
 argument_list|)

@@ -42,19 +42,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|void
-name|vnode_pager_freepage
-name|__P
-argument_list|(
-operator|(
-name|vm_page_t
-name|m
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|vnode
 modifier|*
