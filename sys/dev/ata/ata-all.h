@@ -1585,7 +1585,7 @@ name|u_int64_t
 parameter_list|,
 name|u_int16_t
 parameter_list|,
-name|u_int8_t
+name|u_int16_t
 parameter_list|,
 name|int
 parameter_list|)

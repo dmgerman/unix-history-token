@@ -6612,7 +6612,7 @@ parameter_list|,
 name|u_int16_t
 name|count
 parameter_list|,
-name|u_int8_t
+name|u_int16_t
 name|feature
 parameter_list|,
 name|int
