@@ -371,7 +371,7 @@ name|ic
 argument_list|,
 name|IEEE80211_MSG_CRYPTO
 argument_list|,
-literal|"[%s] key (id %u) is invalid\n"
+literal|"[%s] key id %u is not set (encap)\n"
 argument_list|,
 name|ether_sprintf
 argument_list|(
@@ -466,7 +466,7 @@ name|ic
 argument_list|,
 name|IEEE80211_MSG_CRYPTO
 argument_list|,
-literal|"[%s] key (id %u) is invalid\n"
+literal|"[%s] key id %u is not set (decap)\n"
 argument_list|,
 name|ether_sprintf
 argument_list|(

@@ -932,7 +932,6 @@ operator|->
 name|wk_keytsc
 operator|++
 expr_stmt|;
-comment|/* XXX wrap at 48 bits */
 return|return
 literal|1
 return|;
@@ -1255,7 +1254,7 @@ name|tc_ic
 argument_list|,
 name|IEEE80211_MSG_CRYPTO
 argument_list|,
-literal|"[%s] Missing ExtIV for TKIP cipher\n"
+literal|"[%s] missing ExtIV for TKIP cipher\n"
 argument_list|,
 name|ether_sprintf
 argument_list|(
@@ -1294,7 +1293,7 @@ name|ic
 argument_list|,
 name|IEEE80211_MSG_CRYPTO
 argument_list|,
-literal|"[%s] Discard frame due to countermeasures (%s)\n"
+literal|"[%s] discard frame due to countermeasures (%s)\n"
 argument_list|,
 name|ether_sprintf
 argument_list|(
@@ -5780,7 +5779,6 @@ operator|->
 name|wk_keytsc
 operator|++
 expr_stmt|;
-comment|/* XXX wrap at 48 bits */
 if|if
 condition|(
 call|(
