@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)genassym.c	7.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ralph Campbell.  *  * %sccs.include.redist.c%  *  *	@(#)genassym.c	7.4 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -295,6 +295,13 @@ argument_list|(
 literal|"#define\tPMAP_HASH_MASK2 0x%x\n"
 argument_list|,
 name|PMAP_HASH_MASK2
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"#define\tVM_MIN_ADDRESS 0x%x\n"
+argument_list|,
+name|VM_MIN_ADDRESS
 argument_list|)
 expr_stmt|;
 name|printf
