@@ -815,6 +815,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|__collate_load_error
+operator|&&
+name|c
+operator|<=
+name|test
+operator|&&
+name|test
+operator|<=
+name|c2
+operator|)
+operator|||
+operator|(
 name|__collate_range_cmp
 argument_list|(
 name|c
@@ -832,6 +845,7 @@ name|c2
 argument_list|)
 operator|<=
 literal|0
+operator|)
 condition|)
 name|ok
 operator|=
