@@ -122,13 +122,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/segments.h>
+file|<machine/intr_machdep.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<i386/isa/intr_machdep.h>
+file|<machine/segments.h>
 end_include
 
 begin_include
@@ -679,6 +679,9 @@ argument_list|()
 condition|)
 block|{
 comment|/* Execute Sleep */
+name|intr_suspend
+argument_list|()
+expr_stmt|;
 name|p_gdt
 operator|=
 operator|(
@@ -942,7 +945,7 @@ literal|0
 block|initializecpu();
 endif|#
 directive|endif
-name|icu_reinit
+name|intr_resume
 argument_list|()
 expr_stmt|;
 if|if
