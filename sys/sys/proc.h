@@ -18,16 +18,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<machine/proc.h>
-end_include
-
-begin_comment
-comment|/* Machine-dependent proc substruct. */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<sys/callout.h>
 end_include
 
@@ -99,6 +89,16 @@ include|#
 directive|include
 file|<sys/ucred.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/proc.h>
+end_include
+
+begin_comment
+comment|/* Machine-dependent proc substruct. */
+end_comment
 
 begin_comment
 comment|/*  * One structure allocated per session.  */
