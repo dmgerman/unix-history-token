@@ -2604,6 +2604,19 @@ name|td_state
 operator|=
 name|TDS_SWAPPED
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|p
+operator|->
+name|p_sflag
+operator|&
+name|PS_SWAPPINGIN
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 name|p
 operator|->
 name|p_sflag
@@ -2616,6 +2629,7 @@ operator|&
 name|proc0
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* END INLINE EXPANSION */
 block|}
@@ -2827,6 +2841,19 @@ name|td_state
 operator|=
 name|TDS_SWAPPED
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|p
+operator|->
+name|p_sflag
+operator|&
+name|PS_SWAPPINGIN
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 name|p
 operator|->
 name|p_sflag
@@ -2839,6 +2866,7 @@ operator|&
 name|proc0
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* END INLINE EXPANSION */
 goto|goto
@@ -3419,6 +3447,19 @@ name|td_state
 operator|=
 name|TDS_SWAPPED
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|p
+operator|->
+name|p_sflag
+operator|&
+name|PS_SWAPPINGIN
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 name|p
 operator|->
 name|p_sflag
@@ -3431,6 +3472,7 @@ operator|&
 name|proc0
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{

@@ -1953,6 +1953,21 @@ name|td_state
 operator|=
 name|TDS_SWAPPED
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_sflag
+operator|&
+name|PS_SWAPPINGIN
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 name|td
 operator|->
 name|td_proc
@@ -1967,7 +1982,7 @@ operator|&
 name|proc0
 argument_list|)
 expr_stmt|;
-comment|/* XXXKSE */
+block|}
 block|}
 comment|/* END INLINE EXPANSION */
 block|}

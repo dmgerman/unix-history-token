@@ -1791,6 +1791,21 @@ name|p_comm
 operator|)
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|ke
+operator|->
+name|ke_proc
+operator|->
+name|p_sflag
+operator|&
+name|PS_INMEM
+argument_list|,
+operator|(
+literal|"runq_add: process swapped out"
+operator|)
+argument_list|)
+expr_stmt|;
 name|pri
 operator|=
 name|ke
@@ -2129,6 +2144,21 @@ literal|"runq_choose: No KSE on thread"
 operator|)
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|ke
+operator|->
+name|ke_proc
+operator|->
+name|p_sflag
+operator|&
+name|PS_INMEM
+argument_list|,
+operator|(
+literal|"runq_choose: process swapped out"
+operator|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ke
@@ -2200,6 +2230,21 @@ operator|&
 name|sched_lock
 argument_list|,
 name|MA_OWNED
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|ke
+operator|->
+name|ke_proc
+operator|->
+name|p_sflag
+operator|&
+name|PS_INMEM
+argument_list|,
+operator|(
+literal|"runq_remove: process swapped out"
+operator|)
 argument_list|)
 expr_stmt|;
 name|pri

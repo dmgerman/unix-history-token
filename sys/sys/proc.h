@@ -2666,6 +2666,21 @@ value|do {							\ 	PROC_LOCK_ASSERT((p), MA_OWNED);				\ 	(--(p)->p_lock);					
 end_define
 
 begin_comment
+comment|/* Check whether a thread is safe to be swapped out. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|thread_safetoswapout
+parameter_list|(
+name|td
+parameter_list|)
+define|\
+value|((td)->td_state == TDS_RUNQ ||	\ 		 (td)->td_state == TDS_SLP)
+end_define
+
+begin_comment
 comment|/* Lock and unlock process arguments. */
 end_comment
 
