@@ -305,7 +305,7 @@ name|X
 parameter_list|,
 name|V
 parameter_list|)
-value|{ \ 	(X)->type[1] = ((V)>> 8)& 0xff; \ 	(X)->type[0] = ((V)& 0xff); \ }
+value|{ \ 	(X)->type[0] = ((V)>> 8)& 0xff; \ 	(X)->type[1] = ((V)& 0xff); \ }
 end_define
 
 begin_ifdef

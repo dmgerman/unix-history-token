@@ -398,18 +398,12 @@ name|AF_INET6
 condition|)
 name|etype
 operator|=
-name|htons
-argument_list|(
 name|ETHERTYPE_IPV6
-argument_list|)
 expr_stmt|;
 else|else
 name|etype
 operator|=
-name|htons
-argument_list|(
 name|ETHERTYPE_IP
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -656,7 +650,7 @@ argument_list|,
 name|etype
 argument_list|)
 expr_stmt|;
-comment|/* note: already in network order */
+comment|/* note: in host order */
 block|}
 else|else
 name|bcopy
