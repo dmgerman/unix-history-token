@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ranlib.c	5.1 (Berkeley) %G%"
+literal|"@(#)ranlib.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -501,7 +501,6 @@ expr_stmt|;
 name|fixdate
 argument_list|(
 operator|*
-operator|++
 name|argv
 argument_list|)
 expr_stmt|;
