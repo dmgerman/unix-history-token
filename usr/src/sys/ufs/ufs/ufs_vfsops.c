@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vfsops.c	7.68 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)ufs_vfsops.c	7.69 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -987,6 +987,37 @@ name|caddr_t
 name|w
 decl_stmt|;
 block|{
+specifier|register
+name|struct
+name|radix_node_head
+modifier|*
+name|rnh
+init|=
+operator|(
+expr|struct
+name|radix_node_head
+operator|*
+operator|)
+name|w
+decl_stmt|;
+call|(
+modifier|*
+name|rnh
+operator|->
+name|rnh_deladdr
+call|)
+argument_list|(
+name|rn
+operator|->
+name|rn_key
+argument_list|,
+name|rn
+operator|->
+name|rn_mask
+argument_list|,
+name|rnh
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 operator|(
@@ -1070,7 +1101,7 @@ argument_list|,
 operator|(
 name|caddr_t
 operator|)
-literal|0
+name|rnh
 argument_list|)
 expr_stmt|;
 name|free
