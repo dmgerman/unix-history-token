@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1987, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)malloc.h	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1987, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)malloc.h	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -695,6 +695,39 @@ end_comment
 begin_define
 define|#
 directive|define
+name|M_NFSRVDESC
+value|59
+end_define
+
+begin_comment
+comment|/* NFS server socket descriptor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_NFSDIROFF
+value|60
+end_define
+
+begin_comment
+comment|/* NFS directory offset data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_NFSBIGFH
+value|61
+end_define
+
+begin_comment
+comment|/* NFS version 3 file handle */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|M_TEMP
 value|74
 end_define
@@ -836,7 +869,13 @@ value|\ 	"ISOFS mount",
 comment|/* 57 M_ISOFSMNT */
 value|\ 	"ISOFS node",
 comment|/* 58 M_ISOFSNODE */
-value|\ 	NULL, NULL, NULL, NULL, NULL, \ 	NULL, NULL, NULL, NULL, NULL, \ 	NULL, NULL, NULL, NULL, NULL, \ 	"temp",
+value|\ 	"NFSV3 srvdesc",
+comment|/* 59 M_NFSRVDESC */
+value|\ 	"NFSV3 diroff",
+comment|/* 60 M_NFSDIROFF */
+value|\ 	"NFSV3 bigfh",
+comment|/* 61 M_NFSBIGFH */
+value|\ 	NULL, NULL, \ 	NULL, NULL, NULL, NULL, NULL, \ 	NULL, NULL, NULL, NULL, NULL, \ 	"temp",
 comment|/* 74 M_TEMP */
 value|\ }
 end_define
