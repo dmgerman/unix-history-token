@@ -501,8 +501,6 @@ begin_decl_stmt
 name|FILE
 modifier|*
 name|listf
-init|=
-name|stderr
 decl_stmt|;
 end_decl_stmt
 
@@ -593,6 +591,10 @@ name|LC_ALL
 argument_list|,
 literal|""
 argument_list|)
+expr_stmt|;
+name|listf
+operator|=
+name|stderr
 expr_stmt|;
 comment|/* 	 * Keep a reference to cwd, so we can always come back home. 	 */
 name|cwdfd
