@@ -148,6 +148,16 @@ value|{					\         while ((p).p_end> (p).p_path + 1&& (p).p_end[-1] == '/')	\
 end_define
 
 begin_decl_stmt
+specifier|static
+name|char
+name|emptystring
+index|[]
+init|=
+literal|""
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|PATH_T
 name|to
 init|=
@@ -156,7 +166,7 @@ name|to
 operator|.
 name|p_path
 block|,
-literal|""
+name|emptystring
 block|,
 literal|""
 block|}
@@ -165,15 +175,20 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|Rflag
-decl_stmt|,
 name|iflag
 decl_stmt|,
 name|pflag
 decl_stmt|,
-name|rflag
-decl_stmt|,
 name|fflag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|Rflag
+decl_stmt|,
+name|rflag
 decl_stmt|,
 name|vflag
 decl_stmt|;
@@ -811,9 +826,10 @@ name|dne
 decl_stmt|,
 name|badcp
 decl_stmt|,
-name|nlen
-decl_stmt|,
 name|rval
+decl_stmt|;
+name|size_t
+name|nlen
 decl_stmt|;
 name|char
 modifier|*
@@ -949,6 +965,7 @@ operator|=
 literal|1
 expr_stmt|;
 continue|continue;
+default|default:
 block|}
 comment|/* 		 * If we are in case (2) or (3) above, we need to append the                  * source name to the target name.                  */
 if|if
@@ -1371,7 +1388,8 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"cannot overwrite directory %s with non-directory %s"
+literal|"cannot overwrite directory %s with "
+literal|"non-directory %s"
 argument_list|,
 name|to
 operator|.

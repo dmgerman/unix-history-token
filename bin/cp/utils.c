@@ -53,12 +53,6 @@ directive|include
 file|<sys/stat.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -440,7 +434,6 @@ operator|(
 literal|1
 operator|)
 return|;
-empty_stmt|;
 block|}
 name|rval
 operator|=
@@ -793,7 +786,7 @@ name|int
 name|len
 decl_stmt|;
 name|char
-name|link
+name|llink
 index|[
 name|PATH_MAX
 index|]
@@ -809,11 +802,11 @@ name|p
 operator|->
 name|fts_path
 argument_list|,
-name|link
+name|llink
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|link
+name|llink
 argument_list|)
 operator|-
 literal|1
@@ -839,7 +832,7 @@ literal|1
 operator|)
 return|;
 block|}
-name|link
+name|llink
 index|[
 name|len
 index|]
@@ -877,7 +870,7 @@ if|if
 condition|(
 name|symlink
 argument_list|(
-name|link
+name|llink
 argument_list|,
 name|to
 operator|.
@@ -889,7 +882,7 @@ name|warn
 argument_list|(
 literal|"symlink: %s"
 argument_list|,
-name|link
+name|llink
 argument_list|)
 expr_stmt|;
 return|return
@@ -1081,14 +1074,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_define
-define|#
-directive|define
-name|RETAINBITS
-define|\
-value|(S_ISUID | S_ISGID | S_ISVTX | S_IRWXU | S_IRWXG | S_IRWXO)
-end_define
 
 begin_function
 name|int
