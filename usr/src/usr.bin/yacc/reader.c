@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)reader.c	5.4 (Berkeley) %G%"
+literal|"@(#)reader.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1804,13 +1804,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-name|putc
-argument_list|(
-literal|'/'
-argument_list|,
-name|f
-argument_list|)
-expr_stmt|;
 name|need_newline
 operator|=
 literal|1
