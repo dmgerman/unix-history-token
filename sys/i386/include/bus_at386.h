@@ -291,7 +291,7 @@ name|bus_size_t
 name|offset
 parameter_list|,
 name|bus_size_t
-name|site
+name|size
 parameter_list|,
 name|bus_space_handle_t
 modifier|*
