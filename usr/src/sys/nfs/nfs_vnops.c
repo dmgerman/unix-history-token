@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_vnops.c	7.41 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the University of California, Berkeley.  The name of the  * University may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  *	@(#)nfs_vnops.c	7.42 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -849,6 +849,8 @@ argument_list|,
 name|u
 operator|.
 name|u_procp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|nfsm_reqdone
@@ -946,13 +948,15 @@ if|if
 condition|(
 name|error
 operator|=
-name|nfs_getattr
+name|nfs_dogetattr
 argument_list|(
 name|vp
 argument_list|,
 name|vap
 argument_list|,
 name|cred
+argument_list|,
+literal|0
 argument_list|)
 condition|)
 return|return
@@ -1302,6 +1306,66 @@ end_decl_stmt
 
 begin_block
 block|{
+return|return
+operator|(
+name|nfs_dogetattr
+argument_list|(
+name|vp
+argument_list|,
+name|vap
+argument_list|,
+name|cred
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+return|;
+block|}
+end_block
+
+begin_expr_stmt
+name|nfs_dogetattr
+argument_list|(
+name|vp
+argument_list|,
+name|vap
+argument_list|,
+name|cred
+argument_list|,
+name|tryhard
+argument_list|)
+specifier|register
+expr|struct
+name|vnode
+operator|*
+name|vp
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+name|struct
+name|vattr
+modifier|*
+name|vap
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|ucred
+modifier|*
+name|cred
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|tryhard
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
 specifier|register
 name|caddr_t
 name|cp
@@ -1391,6 +1455,8 @@ argument_list|,
 name|u
 operator|.
 name|u_procp
+argument_list|,
+name|tryhard
 argument_list|)
 expr_stmt|;
 name|nfsm_loadattr
@@ -1727,6 +1793,8 @@ argument_list|,
 name|u
 operator|.
 name|u_procp
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|nfsm_loadattr
@@ -2035,7 +2103,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|nfs_getattr
+name|nfs_dogetattr
 argument_list|(
 name|vdp
 argument_list|,
@@ -2045,6 +2113,8 @@ argument_list|,
 name|ndp
 operator|->
 name|ni_cred
+argument_list|,
+literal|0
 argument_list|)
 operator|&&
 name|vattr
@@ -2177,6 +2247,8 @@ argument_list|,
 name|u
 operator|.
 name|u_procp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|nfsmout
@@ -3115,6 +3187,8 @@ argument_list|,
 name|NFSPROC_READLINK
 argument_list|,
 name|procp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|nfsm_strsiz
@@ -3363,6 +3437,8 @@ argument_list|,
 name|NFSPROC_READ
 argument_list|,
 name|procp
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|nfsm_loadattr
@@ -3645,6 +3721,8 @@ argument_list|,
 name|NFSPROC_WRITE
 argument_list|,
 name|procp
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|nfsm_loadattr
@@ -3996,6 +4074,8 @@ argument_list|,
 name|u
 operator|.
 name|u_procp
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|nfsm_reqdone
@@ -4265,6 +4345,8 @@ argument_list|,
 name|u
 operator|.
 name|u_procp
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|nfsm_mtofh
@@ -4489,6 +4571,8 @@ argument_list|,
 name|u
 operator|.
 name|u_procp
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|nfsm_reqdone
@@ -4688,6 +4772,8 @@ argument_list|,
 name|u
 operator|.
 name|u_procp
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|nfsm_reqdone
@@ -4886,6 +4972,8 @@ argument_list|,
 name|u
 operator|.
 name|u_procp
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|nfsm_reqdone
@@ -5192,6 +5280,8 @@ argument_list|,
 name|u
 operator|.
 name|u_procp
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|nfsm_reqdone
@@ -5387,6 +5477,8 @@ argument_list|,
 name|u
 operator|.
 name|u_procp
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|nfsm_reqdone
@@ -5714,6 +5806,8 @@ argument_list|,
 name|u
 operator|.
 name|u_procp
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|nfsm_reqdone
@@ -6002,6 +6096,8 @@ argument_list|,
 name|u
 operator|.
 name|u_procp
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|nfsm_mtofh
@@ -6112,6 +6208,8 @@ argument_list|,
 name|u
 operator|.
 name|u_procp
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|nfsm_mtofh
@@ -6332,6 +6430,8 @@ argument_list|,
 name|u
 operator|.
 name|u_procp
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|nfsm_reqdone
@@ -6502,7 +6602,7 @@ operator|)
 operator|==
 literal|0
 operator|&&
-name|nfs_getattr
+name|nfs_dogetattr
 argument_list|(
 name|vp
 argument_list|,
@@ -6510,6 +6610,8 @@ operator|&
 name|vattr
 argument_list|,
 name|cred
+argument_list|,
+literal|0
 argument_list|)
 operator|==
 literal|0
@@ -6866,6 +6968,8 @@ argument_list|,
 name|NFSPROC_READDIR
 argument_list|,
 name|procp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|siz
@@ -7863,6 +7967,8 @@ argument_list|,
 name|u
 operator|.
 name|u_procp
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -8511,7 +8617,10 @@ block|{
 name|nfsmap_want
 operator|++
 expr_stmt|;
-name|sleep
+operator|(
+name|void
+operator|)
+name|tsleep
 argument_list|(
 operator|(
 name|caddr_t
@@ -8522,6 +8631,10 @@ argument_list|,
 name|PZERO
 operator|-
 literal|1
+argument_list|,
+literal|"nfsmap"
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
