@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<locale.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<paths.h>
 end_include
 
@@ -444,6 +450,19 @@ name|LIST_INIT
 argument_list|(
 operator|&
 name|arglist
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+operator|(
+name|void
+operator|)
+name|setlocale
+argument_list|(
+name|LC_ALL
+argument_list|,
+literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
