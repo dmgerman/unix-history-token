@@ -14,19 +14,13 @@ block|{
 specifier|volatile
 name|u_int64_t
 name|reg
-name|__attribute__
-decl|((
-name|aligned
+name|__aligned
 decl|(64
-decl_stmt|)
-block|)
-typedef|);
+decl_stmt|);
+block|}
+name|tsunami_reg
+typedef|;
 end_typedef
-
-begin_empty_stmt
-unit|} tsunami_reg
-empty_stmt|;
-end_empty_stmt
 
 begin_comment
 comment|/* notes */

@@ -132,14 +132,9 @@ name|stack
 index|[
 literal|16384
 index|]
-name|__attribute__
-argument_list|(
-operator|(
-name|aligned
+name|__aligned
 argument_list|(
 literal|16
-argument_list|)
-operator|)
 argument_list|)
 decl_stmt|;
 specifier|static

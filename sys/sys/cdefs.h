@@ -412,6 +412,18 @@ directive|define
 name|__unused
 end_define
 
+begin_define
+define|#
+directive|define
+name|__packed
+end_define
+
+begin_define
+define|#
+directive|define
+name|__aligned
+end_define
+
 begin_endif
 endif|#
 directive|endif
@@ -451,6 +463,18 @@ begin_define
 define|#
 directive|define
 name|__unused
+end_define
+
+begin_define
+define|#
+directive|define
+name|__packed
+end_define
+
+begin_define
+define|#
+directive|define
+name|__aligned
 end_define
 
 begin_endif
@@ -493,6 +517,23 @@ define|#
 directive|define
 name|__unused
 value|__attribute__((__unused__))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__packed
+value|__attribute__((__packed__))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__aligned
+parameter_list|(
+name|x
+parameter_list|)
+value|__attribute__((__aligned__(x)))
 end_define
 
 begin_endif
