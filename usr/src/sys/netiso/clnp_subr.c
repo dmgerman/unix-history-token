@@ -16,7 +16,7 @@ comment|/* $Source: /var/src/sys/netiso/RCS/clnp_subr.c,v $ */
 end_comment
 
 begin_comment
-comment|/*	@(#)clnp_subr.c	7.7 (Berkeley) %G% */
+comment|/*	@(#)clnp_subr.c	7.8 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -1259,6 +1259,10 @@ argument_list|,
 name|m
 argument_list|,
 name|next_hop
+argument_list|,
+name|route
+operator|.
+name|ro_rt
 argument_list|)
 expr_stmt|;
 block|}
@@ -1281,6 +1285,10 @@ name|seg_off
 argument_list|,
 comment|/* flags */
 literal|0
+argument_list|,
+name|route
+operator|.
+name|ro_rt
 argument_list|)
 expr_stmt|;
 block|}
@@ -1906,11 +1914,7 @@ name|ro_rt
 operator|->
 name|rt_flags
 operator|&
-operator|(
 name|RTF_GATEWAY
-operator||
-name|RTF_HOST
-operator|)
 condition|)
 operator|*
 name|first_hop

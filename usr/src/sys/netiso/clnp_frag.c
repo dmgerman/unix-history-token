@@ -16,7 +16,7 @@ comment|/* $Source: /var/src/sys/netiso/RCS/clnp_frag.c,v $ */
 end_comment
 
 begin_comment
-comment|/*	@(#)clnp_frag.c	7.7 (Berkeley) %G% */
+comment|/*	@(#)clnp_frag.c	7.8 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -166,6 +166,8 @@ argument_list|,
 argument|segoff
 argument_list|,
 argument|flags
+argument_list|,
+argument|rt
 argument_list|)
 end_macro
 
@@ -233,6 +235,18 @@ end_decl_stmt
 
 begin_comment
 comment|/* flags passed to clnp_output */
+end_comment
+
+begin_decl_stmt
+name|struct
+name|rtentry
+modifier|*
+name|rt
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* route if direct ether */
 end_comment
 
 begin_block
@@ -896,6 +910,8 @@ argument_list|,
 name|frag_hdr
 argument_list|,
 name|first_hop
+argument_list|,
+name|rt
 argument_list|)
 decl_stmt|;
 else|#
@@ -914,6 +930,8 @@ argument_list|,
 name|frag_hdr
 argument_list|,
 name|first_hop
+argument_list|,
+name|rt
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2811,6 +2829,8 @@ argument_list|,
 argument|m
 argument_list|,
 argument|dst
+argument_list|,
+argument|rt
 argument_list|)
 end_macro
 
@@ -2835,6 +2855,14 @@ name|struct
 name|sockaddr
 modifier|*
 name|dst
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|rtentry
+modifier|*
+name|rt
 decl_stmt|;
 end_decl_stmt
 
@@ -2920,6 +2948,8 @@ argument_list|,
 name|dup
 argument_list|,
 name|dst
+argument_list|,
+name|rt
 argument_list|)
 expr_stmt|;
 block|}
@@ -2942,6 +2972,8 @@ argument_list|,
 name|m
 argument_list|,
 name|dst
+argument_list|,
+name|rt
 argument_list|)
 expr_stmt|;
 return|return
@@ -3004,6 +3036,8 @@ argument_list|,
 name|m
 argument_list|,
 name|dst
+argument_list|,
+name|rt
 argument_list|)
 expr_stmt|;
 return|return
@@ -3028,6 +3062,8 @@ argument_list|,
 name|m
 argument_list|,
 name|dst
+argument_list|,
+name|rt
 argument_list|)
 expr_stmt|;
 return|return

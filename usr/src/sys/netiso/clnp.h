@@ -16,7 +16,7 @@ comment|/* $Source: /var/src/sys/netiso/RCS/clnp.h,v $ */
 end_comment
 
 begin_comment
-comment|/*	@(#)clnp.h	7.5 (Berkeley) %G% */
+comment|/*	@(#)clnp.h	7.6 (Berkeley) %G% */
 end_comment
 
 begin_ifndef
@@ -1494,7 +1494,7 @@ parameter_list|,
 name|m
 parameter_list|)
 define|\
-value|troll_output(clcp->clc_ifa->ia_ifp, m, clcp->clc_firsthop)
+value|troll_output(clcp->clc_ifa->ia_ifp, m, clcp->clc_firsthop, clcp->clc_rt)
 end_define
 
 begin_define
@@ -1545,7 +1545,7 @@ parameter_list|,
 name|m
 parameter_list|)
 define|\
-value|(*clcp->clc_ifa->ia_ifp->if_output)(clcp->clc_ifa->ia_ifp, m, clcp->clc_firsthop)
+value|(*clcp->clc_ifa->ia_ifp->if_output)(clcp->clc_ifa->ia_ifp, m, clcp->clc_firsthop, clcp->clc_rt)
 end_define
 
 begin_define
@@ -1642,6 +1642,12 @@ modifier|*
 name|clc_ifa
 decl_stmt|;
 comment|/* ptr to interface (points into 											the route structure) */
+name|struct
+name|rtentry
+modifier|*
+name|clc_rt
+decl_stmt|;
+comment|/* ptr to rtentry (points into 											the route structure) */
 name|struct
 name|mbuf
 modifier|*
