@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	sys_socket.c	6.3	84/08/29	*/
+comment|/*	sys_socket.c	6.4	85/03/18	*/
 end_comment
 
 begin_include
@@ -422,6 +422,8 @@ return|return
 operator|(
 name|ifioctl
 argument_list|(
+name|so
+argument_list|,
 name|cmd
 argument_list|,
 name|data
