@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rwhod.c	5.14 (Berkeley) %G%"
+literal|"@(#)rwhod.c	5.15 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,7 +55,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -169,10 +169,6 @@ begin_decl_stmt
 name|struct
 name|sockaddr_in
 name|sin
-init|=
-block|{
-name|AF_INET
-block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -180,7 +176,7 @@ begin_decl_stmt
 name|char
 name|myname
 index|[
-literal|32
+name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -744,6 +740,12 @@ expr_stmt|;
 block|}
 name|sin
 operator|.
+name|sin_family
+operator|=
+name|AF_INET
+expr_stmt|;
+name|sin
+operator|.
 name|sin_port
 operator|=
 name|sp
@@ -907,36 +909,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-ifdef|#
-directive|ifdef
-name|notdef
-if|if
-condition|(
-name|gethostbyname
-argument_list|(
-name|wd
-operator|.
-name|wd_hostname
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-name|syslog
-argument_list|(
-name|LOG_WARNING
-argument_list|,
-literal|"%s: unknown host"
-argument_list|,
-name|wd
-operator|.
-name|wd_hostname
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|wd
@@ -1027,9 +999,9 @@ continue|continue;
 block|}
 if|#
 directive|if
-name|vax
-operator|||
-name|pdp11
+name|ENDIAN
+operator|!=
+name|BIG_ENDIAN
 block|{
 name|int
 name|i
