@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)update.c	4.7 (Berkeley) %G%"
+literal|"@(#)update.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -67,12 +67,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdlib.h>
 end_include
 
@@ -86,12 +80,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"pathnames.h"
 end_include
 
 begin_function
@@ -109,54 +97,6 @@ function_decl|;
 name|daemon
 argument_list|(
 literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|open
-argument_list|(
-name|_PATH_BIN
-argument_list|,
-name|O_RDONLY
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|open
-argument_list|(
-name|_PATH_USR
-argument_list|,
-name|O_RDONLY
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|open
-argument_list|(
-name|_PATH_USRBIN
-argument_list|,
-name|O_RDONLY
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|open
-argument_list|(
-name|_PATH_USRLIB
-argument_list|,
-name|O_RDONLY
 argument_list|,
 literal|0
 argument_list|)
