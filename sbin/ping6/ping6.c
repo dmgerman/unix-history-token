@@ -13737,7 +13737,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: ping6 [-dfHmnNqvwW"
+literal|"usage: ping6 [-dfH"
+ifdef|#
+directive|ifdef
+name|IPV6_USE_MIN_MTU
+literal|"m"
+endif|#
+directive|endif
+literal|"nNqtvwW"
 ifdef|#
 directive|ifdef
 name|IPV6_REACHCONF
