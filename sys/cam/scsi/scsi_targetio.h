@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Ioctl definitions for the Target Mode SCSI Proccessor Target driver for CAM.  *  * Copyright (c) 1998 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: scsi_targetio.h,v 1.1 1998/09/15 06:36:34 gibbs Exp $  */
+comment|/*  * Ioctl definitions for the Target Mode SCSI Proccessor Target driver for CAM.  *  * Copyright (c) 1998 Justin T. Gibbs.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE FOR  * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: scsi_targetio.h,v 1.2 1999/03/05 23:25:11 gibbs Exp $  */
 end_comment
 
 begin_ifndef
@@ -50,6 +50,16 @@ directive|include
 file|<cam/cam_ccb.h>
 end_include
 
+begin_expr_stmt
+name|TAILQ_HEAD
+argument_list|(
+name|ccb_queue
+argument_list|,
+name|ccb_hdr
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Determine and clear exception state in the driver */
 end_comment
@@ -74,10 +84,18 @@ name|TARG_EXCEPT_BUS_RESET_SEEN
 init|=
 literal|0x04
 block|,
-name|TARG_EXCEPT_UNKNOWN_ATIO
+name|TARG_EXCEPT_ABORT_SEEN
 init|=
 literal|0x08
-block|, }
+block|,
+name|TARG_EXCEPT_ABORT_TAG_SEEN
+init|=
+literal|0x10
+block|,
+name|TARG_EXCEPT_UNKNOWN_ATIO
+init|=
+literal|0x80
+block|}
 name|targ_exception
 typedef|;
 end_typedef
@@ -133,6 +151,10 @@ block|,
 name|UA_BUS_RESET
 init|=
 literal|0x02
+block|,
+name|UA_BDR
+init|=
+literal|0x04
 block|}
 name|ua_types
 typedef|;
@@ -171,6 +193,10 @@ decl_stmt|;
 name|struct
 name|scsi_sense_data
 name|sense_data
+decl_stmt|;
+name|struct
+name|ccb_queue
+name|held_queue
 decl_stmt|;
 block|}
 struct|;
