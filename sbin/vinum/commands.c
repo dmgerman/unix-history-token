@@ -4810,14 +4810,21 @@ return|return;
 block|}
 if|if
 condition|(
+operator|(
 name|plex
 operator|.
 name|organization
 operator|!=
 name|plex_concat
+operator|)
+comment|/* not a cat plex, */
+operator|&&
+operator|(
+operator|!
+name|force
+operator|)
 condition|)
 block|{
-comment|/* not a cat plex, */
 name|fprintf
 argument_list|(
 name|stderr
