@@ -6831,7 +6831,9 @@ modifier|*
 name|bp
 decl_stmt|;
 name|ufs_daddr_t
-name|blkno
+name|fragno
+decl_stmt|,
+name|cgbno
 decl_stmt|;
 name|int
 name|i
@@ -7153,7 +7155,7 @@ name|cg_time
 operator|=
 name|time_second
 expr_stmt|;
-name|bno
+name|cgbno
 operator|=
 name|dtogd
 argument_list|(
@@ -7178,13 +7180,13 @@ operator|->
 name|fs_bsize
 condition|)
 block|{
-name|blkno
+name|fragno
 operator|=
 name|fragstoblks
 argument_list|(
 name|fs
 argument_list|,
-name|bno
+name|cgbno
 argument_list|)
 expr_stmt|;
 if|if
@@ -7196,7 +7198,7 @@ name|fs
 argument_list|,
 name|blksfree
 argument_list|,
-name|blkno
+name|fragno
 argument_list|)
 condition|)
 block|{
@@ -7233,7 +7235,7 @@ name|fs
 argument_list|,
 name|blksfree
 argument_list|,
-name|blkno
+name|fragno
 argument_list|)
 expr_stmt|;
 name|ffs_clusteracct
@@ -7242,7 +7244,7 @@ name|fs
 argument_list|,
 name|cgp
 argument_list|,
-name|blkno
+name|fragno
 argument_list|,
 literal|1
 argument_list|)
@@ -7279,7 +7281,7 @@ name|cbtocylno
 argument_list|(
 name|fs
 argument_list|,
-name|bno
+name|cgbno
 argument_list|)
 expr_stmt|;
 name|cg_blks
@@ -7295,7 +7297,7 @@ name|cbtorpos
 argument_list|(
 name|fs
 argument_list|,
-name|bno
+name|cgbno
 argument_list|)
 index|]
 operator|++
@@ -7314,13 +7316,13 @@ else|else
 block|{
 name|bbase
 operator|=
-name|bno
+name|cgbno
 operator|-
 name|fragnum
 argument_list|(
 name|fs
 argument_list|,
-name|bno
+name|cgbno
 argument_list|)
 expr_stmt|;
 comment|/* 		 * decrement the counts associated with the old frags 		 */
@@ -7379,7 +7381,7 @@ name|isset
 argument_list|(
 name|blksfree
 argument_list|,
-name|bno
+name|cgbno
 operator|+
 name|i
 argument_list|)
@@ -7420,7 +7422,7 @@ name|setbit
 argument_list|(
 name|blksfree
 argument_list|,
-name|bno
+name|cgbno
 operator|+
 name|i
 argument_list|)
@@ -7481,7 +7483,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* 		 * if a complete block has been reassembled, account for it 		 */
-name|blkno
+name|fragno
 operator|=
 name|fragstoblks
 argument_list|(
@@ -7498,7 +7500,7 @@ name|fs
 argument_list|,
 name|blksfree
 argument_list|,
-name|blkno
+name|fragno
 argument_list|)
 condition|)
 block|{
@@ -7543,7 +7545,7 @@ name|fs
 argument_list|,
 name|cgp
 argument_list|,
-name|blkno
+name|fragno
 argument_list|,
 literal|1
 argument_list|)
