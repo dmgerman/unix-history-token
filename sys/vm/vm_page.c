@@ -4447,7 +4447,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Grab a page, waiting until we are waken up due to the page  * changing state.  We keep on waiting, if the page continues  * to be in the object.  If the page doesn't exist, allocate it.  *  * This routine may block.  */
+comment|/*  * Grab a page, waiting until we are waken up due to the page  * changing state.  We keep on waiting, if the page continues  * to be in the object.  If the page doesn't exist, first allocate it  * and then conditionally zero it.  *  * This routine may block.  */
 end_comment
 
 begin_function
@@ -4586,7 +4586,9 @@ name|vm_page_unlock_queues
 argument_list|()
 expr_stmt|;
 return|return
+operator|(
 name|m
+operator|)
 return|;
 block|}
 block|}
@@ -4634,7 +4636,9 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 goto|goto
 name|retrylookup
@@ -4662,7 +4666,9 @@ name|m
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|m
+operator|)
 return|;
 block|}
 end_function
