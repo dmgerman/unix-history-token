@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)whoami.c	4.1 (Berkeley) %G%"
+literal|"@(#)whoami.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|pp
 operator|=
 name|getpwuid
 argument_list|(
-name|getuid
+name|geteuid
 argument_list|()
 argument_list|)
 expr_stmt|;
