@@ -488,7 +488,7 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|debug
+name|ftpdebug
 decl_stmt|;
 end_decl_stmt
 
@@ -1422,9 +1422,9 @@ operator|(
 name|char
 operator|*
 operator|,
-name|long
+name|off_t
 operator|,
-name|long
+name|time_t
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1661,7 +1661,7 @@ break|break;
 case|case
 literal|'d'
 case|:
-name|debug
+name|ftpdebug
 operator|++
 expr_stmt|;
 break|break;
@@ -1825,7 +1825,7 @@ break|break;
 case|case
 literal|'v'
 case|:
-name|debug
+name|ftpdebug
 operator|=
 literal|1
 expr_stmt|;
@@ -3203,7 +3203,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|fatal
+name|fatalerror
 argument_list|(
 literal|"Ran out of memory."
 argument_list|)
@@ -3267,7 +3267,7 @@ decl_stmt|;
 block|{
 if|if
 condition|(
-name|debug
+name|ftpdebug
 condition|)
 name|syslog
 argument_list|(
@@ -3400,7 +3400,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|fatal
+name|fatalerror
 argument_list|(
 literal|"Ran out of memory."
 argument_list|)
@@ -6784,7 +6784,7 @@ name|ident
 operator|==
 name|NULL
 condition|)
-name|fatal
+name|fatalerror
 argument_list|(
 literal|"Ran out of memory."
 argument_list|)
@@ -6817,31 +6817,11 @@ argument_list|(
 name|proctitle
 argument_list|)
 argument_list|,
-literal|"%s: anonymous(%s)/%.*s"
+literal|"%s: anonymous(%s)/%s"
 argument_list|,
 name|remotehost
 argument_list|,
 name|hostname
-argument_list|,
-call|(
-name|int
-call|)
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|proctitle
-argument_list|)
-operator|-
-sizeof|sizeof
-argument_list|(
-name|remotehost
-argument_list|)
-operator|-
-sizeof|sizeof
-argument_list|(
-literal|": anonymous/"
-argument_list|)
-argument_list|)
 argument_list|,
 name|passwd
 argument_list|)
@@ -6858,29 +6838,9 @@ argument_list|(
 name|proctitle
 argument_list|)
 argument_list|,
-literal|"%s: anonymous/%.*s"
+literal|"%s: anonymous/%s"
 argument_list|,
 name|remotehost
-argument_list|,
-call|(
-name|int
-call|)
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|proctitle
-argument_list|)
-operator|-
-sizeof|sizeof
-argument_list|(
-name|remotehost
-argument_list|)
-operator|-
-sizeof|sizeof
-argument_list|(
-literal|": anonymous/"
-argument_list|)
-argument_list|)
 argument_list|,
 name|passwd
 argument_list|)
@@ -6921,7 +6881,8 @@ name|reply
 argument_list|(
 literal|230
 argument_list|,
-literal|"User %s logged in, access restrictions apply."
+literal|"User %s logged in, "
+literal|"access restrictions apply."
 argument_list|,
 name|pw
 operator|->
@@ -7672,13 +7633,16 @@ block|}
 comment|/* 			 * We must do this seek to "current" position 			 * because we are changing from reading to 			 * writing. 			 */
 if|if
 condition|(
-name|fseek
+name|fseeko
 argument_list|(
 name|fout
 argument_list|,
-literal|0L
+operator|(
+name|off_t
+operator|)
+literal|0
 argument_list|,
-name|L_INCR
+name|SEEK_CUR
 argument_list|)
 operator|<
 literal|0
@@ -10568,7 +10532,7 @@ argument_list|)
 expr_stmt|;
 block|}
 name|void
-name|fatal
+name|fatalerror
 parameter_list|(
 name|s
 parameter_list|)
@@ -10697,7 +10661,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|debug
+name|ftpdebug
 condition|)
 block|{
 name|syslog
@@ -10817,7 +10781,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|debug
+name|ftpdebug
 condition|)
 block|{
 name|syslog
@@ -14053,10 +14017,10 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-name|long
+name|off_t
 name|size
 decl_stmt|;
-name|long
+name|time_t
 name|start
 decl_stmt|;
 block|{
@@ -14106,7 +14070,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%.20s!%s!%s!%s/%s!%ld!%ld\n"
+literal|"%.20s!%s!%s!%s/%s!%qd!%ld\n"
 argument_list|,
 name|ctime
 argument_list|(
@@ -14124,8 +14088,16 @@ name|path
 argument_list|,
 name|name
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|size
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|now
 operator|-
 name|start
@@ -14135,6 +14107,7 @@ name|now
 operator|==
 name|start
 operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|write
