@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: w.c,v 1.16.2.4 1997/08/29 05:30:12 imp Exp $"
+literal|"$Id: w.c,v 1.16.2.5 1998/03/08 14:31:56 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1163,7 +1163,7 @@ expr_stmt|;
 define|#
 directive|define
 name|HEADER
-value|"USER             TTY FROM              LOGIN@  IDLE WHAT\n"
+value|"USER     TTY FROM              LOGIN@  IDLE WHAT\n"
 define|#
 directive|define
 name|WUSED
