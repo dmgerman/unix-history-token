@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)startup.c	4.7 (Berkeley) %G%"
+literal|"@(#)startup.c	4.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -812,6 +812,31 @@ operator|&
 name|net
 expr_stmt|;
 block|}
+name|rt
+operator|=
+name|rtlookup
+argument_list|(
+name|dst
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rt
+operator|&&
+name|equal
+argument_list|(
+operator|&
+name|ifp
+operator|->
+name|int_addr
+argument_list|,
+operator|&
+name|rt
+operator|->
+name|rt_router
+argument_list|)
+condition|)
+return|return;
 if|if
 condition|(
 name|ifp
@@ -832,11 +857,13 @@ operator|->
 name|int_name
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|rt
-operator|=
-name|rtlookup
+condition|)
+name|rtdelete
 argument_list|(
-name|dst
+name|rt
 argument_list|)
 expr_stmt|;
 name|rtadd
@@ -863,15 +890,6 @@ name|IFF_PASSIVE
 operator||
 name|IFF_REMOTE
 operator|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|rt
-condition|)
-name|rtdelete
-argument_list|(
-name|rt
 argument_list|)
 expr_stmt|;
 block|}
