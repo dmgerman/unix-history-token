@@ -6325,6 +6325,15 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|f
+operator|->
+name|state
+operator|!=
+name|OPENED
+condition|)
+return|return;
 comment|/*      * Start the timer for the next interval.      */
 name|assert
 argument_list|(
