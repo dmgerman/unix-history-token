@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)px_header.c	5.1 (Berkeley) %G%"
+literal|"@(#)px_header.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -49,16 +49,6 @@ end_endif
 begin_comment
 comment|/*  * pxheader - program to sit in front of interpreter code to make shell mods  *	      unnecessary to make Pascal obj's look like real programs.  *  * This program lives in /usr/lib/px_header  * Bill Joy UCB February 6, 1978  */
 end_comment
-
-begin_decl_stmt
-specifier|static
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)px_header.c 5.1 %G%"
-decl_stmt|;
-end_decl_stmt
 
 begin_include
 include|#
