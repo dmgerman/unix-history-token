@@ -1277,6 +1277,11 @@ name|totalwritechars
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -1295,7 +1300,9 @@ literal|"ansitape: usage: ansitape -{rxtc}[flnvb] [filename] [label] [filename] 
 argument_list|)
 expr_stmt|;
 name|exit
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 end_block

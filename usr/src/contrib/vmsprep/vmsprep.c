@@ -983,6 +983,11 @@ argument_list|(
 name|mover
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -1068,7 +1073,9 @@ literal|"vmsprep:  usage:  vmsprep dirname [dirname...] \n"
 argument_list|)
 expr_stmt|;
 name|exit
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 end_block
