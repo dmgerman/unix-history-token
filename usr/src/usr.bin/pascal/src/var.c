@@ -9,7 +9,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)var.c 1.10 %G%"
+literal|"@(#)var.c 1.11 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1099,7 +1099,7 @@ literal|0
 condition|)
 block|{
 return|return
-literal|0
+name|x
 return|;
 block|}
 if|if

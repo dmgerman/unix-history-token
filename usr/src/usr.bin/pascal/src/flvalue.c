@@ -353,9 +353,7 @@ expr|struct
 name|formalrtn
 argument_list|)
 argument_list|,
-name|nl
-operator|+
-name|TSTR
+name|NIL
 argument_list|,
 name|NOREG
 argument_list|)
