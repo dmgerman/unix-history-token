@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_prf.c	7.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)subr_prf.c	7.16 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -161,6 +161,22 @@ begin_comment
 comment|/* standard console putc */
 end_comment
 
+begin_function_decl
+name|int
+function_decl|(
+modifier|*
+name|v_putc
+function_decl|)
+parameter_list|()
+init|=
+name|cnputc
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* routine to putc on virtual console */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -185,21 +201,70 @@ begin_comment
 comment|/* pointer to console "window" tty */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KADB
+end_ifdef
+
+begin_extern
+extern|extern	cngetc(
+end_extern
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|/* standard console getc */
+end_comment
+
+begin_extern
+extern|extern	cnpoll(
+end_extern
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_function_decl
 name|int
 function_decl|(
 modifier|*
-name|v_putc
+name|v_getc
 function_decl|)
 parameter_list|()
 init|=
-name|cnputc
+name|cngetc
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* routine to putc on virtual console */
+comment|/* "" getc from virtual console */
 end_comment
+
+begin_function_decl
+name|int
+function_decl|(
+modifier|*
+name|v_poll
+function_decl|)
+parameter_list|()
+init|=
+name|cnpoll
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* kdb hook to enable input polling */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_extern
 extern|extern	cnputc(
