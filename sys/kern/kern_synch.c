@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kern_synch.c	8.9 (Berkeley) 5/19/95  * $Id$  */
+comment|/*-  * Copyright (c) 1982, 1986, 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)kern_synch.c	8.9 (Berkeley) 5/19/95  * $Id: kern_synch.c,v 1.29 1997/02/22 09:39:12 peter Exp $  */
 end_comment
 
 begin_include
@@ -1866,10 +1866,19 @@ name|s
 decl_stmt|,
 name|u
 decl_stmt|;
+name|int
+name|x
+decl_stmt|;
 name|struct
 name|timeval
 name|tv
 decl_stmt|;
+comment|/* 	 * XXX this spl is almost unnecessary.  It is partly to allow for 	 * sloppy callers that don't do it (issignal() via CURSIG() is the 	 * main offender).  It is partly to work around a bug in the i386 	 * cpu_switch() (the ipl is not preserved).  We ran for years 	 * without it.  I think there was only a interrupt latency problem. 	 * The main caller, tsleep(), does an splx() a couple of instructions 	 * after calling here.  The buggy caller, issignal(), usually calls 	 * here at spl0() and sometimes returns at splhigh().  The process 	 * then runs for a little too long at splhigh().  The ipl gets fixed 	 * when the process returns to user mode (or earlier). 	 * 	 * It would probably be better to always call here at spl0(). Callers 	 * are prepared to give up control to another process, so they must 	 * be prepared to be interrupted.  The clock stuff here may not 	 * actually need splstatclock(). 	 */
+name|x
+operator|=
+name|splstatclock
+argument_list|()
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SIMPLELOCK_DEBUG
@@ -1879,13 +1888,11 @@ name|p
 operator|->
 name|p_simple_locks
 condition|)
-block|{
 name|printf
 argument_list|(
 literal|"sleep: holding simple lock"
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 comment|/* 	 * Compute the amount of time during which the current 	 * process was running, and add that to its total so far. 	 */
@@ -2065,6 +2072,11 @@ name|microtime
 argument_list|(
 operator|&
 name|runtime
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|x
 argument_list|)
 expr_stmt|;
 block|}
