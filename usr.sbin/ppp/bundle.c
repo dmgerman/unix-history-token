@@ -1362,7 +1362,7 @@ name|datalink_Close
 argument_list|(
 name|dl
 argument_list|,
-name|CLOSE_NORMAL
+name|CLOSE_STAYDOWN
 argument_list|)
 expr_stmt|;
 name|fsm2initial
