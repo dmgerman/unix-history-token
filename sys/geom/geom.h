@@ -77,12 +77,6 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|g_event
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
 name|g_stat
 struct_decl|;
 end_struct_decl
@@ -372,11 +366,6 @@ argument|g_geom
 argument_list|)
 name|geom
 expr_stmt|;
-name|struct
-name|g_event
-modifier|*
-name|event
-decl_stmt|;
 name|u_int
 name|protect
 decl_stmt|;
@@ -389,7 +378,7 @@ define|#
 directive|define
 name|G_CLASS_INITIALIZER
 define|\
-value|.class = { 0, 0 },	\ 	.geom = { 0 },		\ 	.event = 0,		\ 	.protect = 0
+value|.class = { 0, 0 },	\ 	.geom = { 0 },		\ 	.protect = 0
 end_define
 
 begin_comment
@@ -465,11 +454,6 @@ decl_stmt|;
 name|void
 modifier|*
 name|softc
-decl_stmt|;
-name|struct
-name|g_event
-modifier|*
-name|event
 decl_stmt|;
 name|unsigned
 name|flags
@@ -549,11 +533,6 @@ name|acw
 decl_stmt|,
 name|ace
 decl_stmt|;
-name|struct
-name|g_event
-modifier|*
-name|event
-decl_stmt|;
 name|int
 name|spoiled
 decl_stmt|;
@@ -613,11 +592,6 @@ name|ace
 decl_stmt|;
 name|int
 name|error
-decl_stmt|;
-name|struct
-name|g_event
-modifier|*
-name|event
 decl_stmt|;
 name|TAILQ_ENTRY
 argument_list|(

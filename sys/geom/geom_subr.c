@@ -445,19 +445,6 @@ argument_list|()
 expr_stmt|;
 name|KASSERT
 argument_list|(
-name|gp
-operator|->
-name|event
-operator|==
-name|NULL
-argument_list|,
-operator|(
-literal|"g_destroy_geom() with event"
-operator|)
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
 name|LIST_EMPTY
 argument_list|(
 operator|&
@@ -676,19 +663,6 @@ argument_list|)
 expr_stmt|;
 name|g_topology_assert
 argument_list|()
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|cp
-operator|->
-name|event
-operator|==
-name|NULL
-argument_list|,
-operator|(
-literal|"g_destroy_consumer() with event"
-operator|)
-argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
@@ -1011,19 +985,6 @@ name|cp
 decl_stmt|;
 name|g_topology_assert
 argument_list|()
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|pp
-operator|->
-name|event
-operator|==
-name|NULL
-argument_list|,
-operator|(
-literal|"g_destroy_provider() with event"
-operator|)
-argument_list|)
 expr_stmt|;
 name|KASSERT
 argument_list|(
