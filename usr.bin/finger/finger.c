@@ -178,6 +178,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+name|d_first
+init|=
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|char
 name|tbuf
 index|[
