@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_inode.c	7.76 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1986, 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_inode.c	7.77 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -104,16 +104,6 @@ name|int
 name|lfs_init
 parameter_list|()
 block|{
-ifdef|#
-directive|ifdef
-name|VERBOSE
-name|printf
-argument_list|(
-literal|"lfs_init\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|ufs_init
@@ -164,18 +154,6 @@ name|dinode
 modifier|*
 name|ldip
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|VERBOSE
-name|printf
-argument_list|(
-literal|"lfs_ifind: inode %d\n"
-argument_list|,
-name|ino
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 for|for
 control|(
 name|cnt
@@ -252,16 +230,6 @@ name|inode
 modifier|*
 name|ip
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|VERBOSE
-name|printf
-argument_list|(
-literal|"lfs_update\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|vp
@@ -559,16 +527,6 @@ name|seg
 decl_stmt|,
 name|size
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|VERBOSE
-name|printf
-argument_list|(
-literal|"lfs_truncate\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|ip
 operator|=
 name|VTOI

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_alloc.c	7.50 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_alloc.c	7.51 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -148,16 +148,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|VERBOSE
-name|printf
-argument_list|(
-literal|"lfs_valloc\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* Get the head of the freelist. */
 name|fs
 operator|=
@@ -622,18 +612,6 @@ name|error
 decl_stmt|,
 name|i
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|VERBOSE
-name|printf
-argument_list|(
-literal|"lfs_vcreate: ino %d\n"
-argument_list|,
-name|ino
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* Create the vnode. */
 if|if
 condition|(
@@ -864,6 +842,7 @@ decl_stmt|;
 name|ino_t
 name|ino
 decl_stmt|;
+comment|/* Get the inode number and file system. */
 name|ip
 operator|=
 name|VTOI
@@ -873,21 +852,6 @@ operator|->
 name|a_pvp
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VERBOSE
-name|printf
-argument_list|(
-literal|"lfs_vfree: free %d\n"
-argument_list|,
-name|ip
-operator|->
-name|i_number
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* Get the inode number and file system. */
 name|fs
 operator|=
 name|ip

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_balloc.c	7.34 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_balloc.c	7.35 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -120,16 +120,6 @@ modifier|*
 name|ap
 decl_stmt|;
 block|{
-ifdef|#
-directive|ifdef
-name|VERBOSE
-name|printf
-argument_list|(
-literal|"lfs_bmap\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Check for underlying vnode requests and ensure that logical 	 * to physical mapping is requested. 	 */
 if|if
 condition|(
@@ -288,22 +278,6 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VERBOSE
-name|printf
-argument_list|(
-literal|"lfs_bmap: block number %d, inode %d\n"
-argument_list|,
-name|bn
-argument_list|,
-name|ip
-operator|->
-name|i_number
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 ifdef|#
 directive|ifdef
 name|DIAGNOSTIC
@@ -719,25 +693,6 @@ name|off
 decl_stmt|,
 name|sh
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|VERBOSE
-name|printf
-argument_list|(
-literal|"lfs_getlbns: bn %d, inode %d\n"
-argument_list|,
-name|bn
-argument_list|,
-name|VTOI
-argument_list|(
-name|vp
-argument_list|)
-operator|->
-name|i_number
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|nump
