@@ -33,7 +33,7 @@ name|__CC_SUPPORTS___INLINE
 end_ifdef
 
 begin_comment
-comment|/*  *	cpu_critical_enter:  *  *	This routine is called from critical_enter() on the 0->1 transition  *	of td_critnest, prior to it being incremented to 1.  *  *	If new-style critical section handling we do not have to do anything.  *	However, as a side effect any interrupts occuring while td_critnest  *	is non-zero will be deferred.  */
+comment|/*  *	cpu_critical_enter:  *  *	This routine is called from critical_enter() on the 0->1 transition  *	of td_critnest, prior to it being incremented to 1.  */
 end_comment
 
 begin_function
@@ -61,7 +61,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	cpu_critical_exit:  *  *	This routine is called from critical_exit() on a 1->0 transition  *	of td_critnest, after it has been decremented to 0.  We are  *	exiting the last critical section.  *  *	Note that the td->critnest (1->0) transition interrupt race against  *	our int_pending/unpend() check below is handled by the interrupt  *	code for us, so we do not have to do anything fancy.  */
+comment|/*  *	cpu_critical_exit:  *  *	This routine is called from critical_exit() on a 1->0 transition  *	of td_critnest, after it has been decremented to 0.  We are  *	exiting the last critical section.  */
 end_comment
 
 begin_function
