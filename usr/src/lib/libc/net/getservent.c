@@ -1,12 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	getservent.c	4.3	82/11/14	*/
+comment|/*	getservent.c	4.4	82/12/17	*/
 end_comment
 
 begin_include
 include|#
 directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
 end_include
 
 begin_include
@@ -40,7 +46,7 @@ name|char
 name|SERVDB
 index|[]
 init|=
-literal|"/usr/lib/services"
+literal|"/etc/services"
 decl_stmt|;
 end_decl_stmt
 
@@ -348,9 +354,15 @@ name|serv
 operator|.
 name|s_port
 operator|=
+name|htons
+argument_list|(
+operator|(
+name|u_short
+operator|)
 name|atoi
 argument_list|(
 name|p
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|serv

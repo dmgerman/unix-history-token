@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	getnetent.c	4.5	82/11/14	*/
+comment|/*	getnetent.c	4.6	82/12/17	*/
 end_comment
 
 begin_include
@@ -37,10 +37,10 @@ end_define
 begin_decl_stmt
 specifier|static
 name|char
-modifier|*
 name|NETDB
+index|[]
 init|=
-literal|"/usr/lib/networks"
+literal|"/etc/networks"
 decl_stmt|;
 end_decl_stmt
 

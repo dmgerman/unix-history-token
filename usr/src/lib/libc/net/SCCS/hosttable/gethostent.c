@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	gethostent.c	4.3	82/11/14	*/
+comment|/*	gethostent.c	4.4	82/12/17	*/
 end_comment
 
 begin_include
@@ -57,7 +57,7 @@ name|char
 name|HOSTDB
 index|[]
 init|=
-literal|"/usr/lib/hosts"
+literal|"/etc/hosts"
 decl_stmt|;
 end_decl_stmt
 

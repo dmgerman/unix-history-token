@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	getprotoent.c	4.3	82/11/14	*/
+comment|/*	getprotoent.c	4.4	82/12/17	*/
 end_comment
 
 begin_include
@@ -37,10 +37,10 @@ end_define
 begin_decl_stmt
 specifier|static
 name|char
-modifier|*
 name|PROTODB
+index|[]
 init|=
-literal|"/usr/lib/protocols"
+literal|"/etc/protocols"
 decl_stmt|;
 end_decl_stmt
 
