@@ -554,6 +554,14 @@ block|,
 block|{
 name|DEVICE_TYPE_NETWORK
 block|,
+literal|"em"
+block|,
+literal|"Intel(R) PRO/1000 ethernet card"
+block|}
+block|,
+block|{
+name|DEVICE_TYPE_NETWORK
+block|,
 literal|"ex"
 block|,
 literal|"Intel EtherExpress Pro/10 ethernet card"
