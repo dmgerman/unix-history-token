@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ps.c	6.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)ps.c	6.5 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -117,7 +117,23 @@ decl_stmt|,
 name|psattach
 argument_list|()
 decl_stmt|,
-name|psintr
+name|psextsync
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|psclockintr
+argument_list|()
+decl_stmt|,
+name|pssystemintr
+argument_list|()
+decl_stmt|,
+name|psdeviceintr
+argument_list|()
+decl_stmt|,
+name|psdmaintr
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -210,7 +226,7 @@ define|#
 directive|define
 name|PSWAIT
 parameter_list|()
-value|{register short int i, j; i=20000; while((i-- != 0)\&& (((j=psaddr->ps_iostat)&DIOREADY)==0));}
+value|{register short i, j; i=20000; while((i-- != 0)\&& (((j=psaddr->ps_iostat)&DIOREADY)==0));}
 end_define
 
 begin_struct
@@ -326,6 +342,8 @@ block|,
 name|WAITING_RF
 block|,
 name|WAITING_START
+block|,
+name|STOPPED_MAP
 block|}
 name|mode
 enum|;
@@ -397,6 +415,15 @@ decl_stmt|;
 name|int
 name|ps_icnt
 decl_stmt|;
+name|int
+name|last_request2
+decl_stmt|;
+name|int
+name|last_funnyrequest
+decl_stmt|;
+name|int
+name|funny_cnt
+decl_stmt|;
 block|}
 name|ps
 index|[
@@ -439,6 +466,62 @@ operator|*
 operator|)
 name|reg
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|lint
+name|br
+operator|=
+literal|0
+expr_stmt|;
+name|cvec
+operator|=
+name|br
+expr_stmt|;
+name|br
+operator|=
+name|cvec
+expr_stmt|;
+name|psclockintr
+argument_list|(
+operator|(
+name|dev_t
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+name|pssystemintr
+argument_list|(
+operator|(
+name|dev_t
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+name|psdeviceintr
+argument_list|(
+operator|(
+name|dev_t
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+name|psdmaintr
+argument_list|(
+operator|(
+name|dev_t
+operator|)
+literal|0
+argument_list|)
+expr_stmt|;
+name|psextsync
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|psaddr
 operator|->
 name|ps_iostat
@@ -538,18 +621,20 @@ begin_comment
 comment|/*ARGSUSED*/
 end_comment
 
-begin_expr_stmt
+begin_macro
 name|psattach
 argument_list|(
-name|ui
+argument|ui
 argument_list|)
-specifier|register
-expr|struct
+end_macro
+
+begin_decl_stmt
+name|struct
 name|uba_device
-operator|*
+modifier|*
 name|ui
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{  }
@@ -666,6 +751,14 @@ name|psp
 operator|->
 name|ps_refresh
 operator|.
+name|mode
+operator|=
+name|STOPPED_RF
+expr_stmt|;
+name|psp
+operator|->
+name|ps_refresh
+operator|.
 name|waiting
 operator|=
 literal|0
@@ -698,6 +791,14 @@ name|psp
 operator|->
 name|ps_map
 operator|.
+name|mode
+operator|=
+name|STOPPED_MAP
+expr_stmt|;
+name|psp
+operator|->
+name|ps_map
+operator|.
 name|waiting
 operator|=
 literal|0
@@ -720,6 +821,14 @@ literal|0
 expr_stmt|;
 name|psp
 operator|->
+name|ps_clock
+operator|.
+name|missed
+operator|=
+literal|0
+expr_stmt|;
+name|psp
+operator|->
 name|ps_refresh
 operator|.
 name|icnt
@@ -733,6 +842,14 @@ operator|=
 name|psp
 operator|->
 name|ps_clock
+operator|.
+name|icnt
+operator|=
+literal|0
+expr_stmt|;
+name|psp
+operator|->
+name|ps_hit
 operator|.
 name|icnt
 operator|=
@@ -835,6 +952,9 @@ name|AUTOREF
 expr_stmt|;
 name|unmaptouser
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|psaddr
 argument_list|)
 expr_stmt|;
@@ -1001,6 +1121,9 @@ name|n
 operator|=
 name|fuword
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|waddr
 operator|++
 argument_list|)
@@ -1053,6 +1176,9 @@ name|arg
 operator|=
 name|fuword
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|waddr
 operator|++
 argument_list|)
@@ -1118,6 +1244,9 @@ name|n
 operator|=
 name|fuword
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|waddr
 operator|++
 argument_list|)
@@ -1170,6 +1299,9 @@ name|arg
 operator|=
 name|fuword
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|waddr
 operator|++
 argument_list|)
@@ -1202,6 +1334,9 @@ name|arg
 operator|=
 name|fuword
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|waddr
 operator|++
 argument_list|)
@@ -1290,6 +1425,9 @@ name|arg
 operator|=
 name|fuword
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|waddr
 operator|++
 argument_list|)
@@ -1321,6 +1459,9 @@ name|arg
 operator|=
 name|fuword
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|waddr
 operator|++
 argument_list|)
@@ -1431,6 +1572,9 @@ name|arg
 operator|=
 name|fuword
 argument_list|(
+operator|(
+name|caddr_t
+operator|)
 name|waddr
 operator|++
 argument_list|)
@@ -1685,7 +1829,7 @@ define|#
 directive|define
 name|SAVEPSADDR
 parameter_list|()
-value|{register short int i, x;x=spl6();i=psaddr->ps_addr;\ 		while(((i=psaddr->ps_iostat)&DIOREADY)==0);\ 		savepsaddr=psaddr->ps_data;splx(x);}
+value|{register short i,xx1;xx1=spl6();i=psaddr->ps_addr;\ 		while(((psaddr->ps_iostat)&DIOREADY)==0);\ 		savepsaddr=psaddr->ps_data;splx(xx1);}
 end_define
 
 begin_define
@@ -1693,7 +1837,7 @@ define|#
 directive|define
 name|RESTORPSADDR
 parameter_list|()
-value|{register int x,i;x=spl6();\ 		while(((i=psaddr->ps_iostat)&DIOREADY)==0);\ 		psaddr->ps_addr=savepsaddr;splx(x);}
+value|{register short xx2;xx2=spl6();\ 		while(((psaddr->ps_iostat)&DIOREADY)==0);\ 		psaddr->ps_addr=savepsaddr;splx(xx2);}
 end_define
 
 begin_macro
@@ -1801,6 +1945,9 @@ operator|!=
 name|TIME_RF
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|psrfnext
 argument_list|(
 name|psp
@@ -1912,6 +2059,8 @@ decl_stmt|;
 name|short
 name|int
 name|request
+decl_stmt|,
+name|tmp
 decl_stmt|;
 specifier|register
 name|int
@@ -1952,8 +2101,20 @@ operator|=
 name|psaddr
 operator|->
 name|ps_data
+expr_stmt|;
+name|request
+operator|=
+name|request
 operator|&
 literal|0377
+expr_stmt|;
+name|psp
+operator|->
+name|last_request2
+operator|=
+name|psp
+operator|->
+name|last_request
 expr_stmt|;
 name|psp
 operator|->
@@ -1961,6 +2122,34 @@ name|last_request
 operator|=
 name|request
 expr_stmt|;
+if|if
+condition|(
+name|request
+operator|&
+operator|(
+operator|~
+operator|(
+name|HALT_REQ
+operator||
+name|RFSTOP_REQ
+operator||
+name|HIT_REQ
+operator|)
+operator|)
+condition|)
+block|{
+name|psp
+operator|->
+name|last_funnyrequest
+operator|=
+name|request
+expr_stmt|;
+name|psp
+operator|->
+name|funny_cnt
+operator|++
+expr_stmt|;
+block|}
 name|PSWAIT
 argument_list|()
 expr_stmt|;
@@ -1970,12 +2159,7 @@ name|ps_addr
 operator|=
 name|SYSREQ
 expr_stmt|;
-name|PSWAIT
-argument_list|()
-expr_stmt|;
-name|psaddr
-operator|->
-name|ps_data
+name|tmp
 operator|=
 name|request
 operator|&
@@ -1989,6 +2173,15 @@ operator|)
 operator|)
 expr_stmt|;
 comment|/* acknowledge */
+name|PSWAIT
+argument_list|()
+expr_stmt|;
+name|psaddr
+operator|->
+name|ps_data
+operator|=
+name|tmp
+expr_stmt|;
 if|if
 condition|(
 name|request
@@ -2011,6 +2204,10 @@ expr_stmt|;
 name|psmapstop
 argument_list|(
 name|psaddr
+argument_list|,
+name|psp
+argument_list|,
+name|request
 argument_list|)
 expr_stmt|;
 comment|/* kill it dead */
@@ -2065,6 +2262,7 @@ block|}
 block|}
 if|if
 condition|(
+operator|(
 name|psp
 operator|->
 name|ps_map
@@ -2072,9 +2270,9 @@ operator|.
 name|state
 operator|==
 name|AUTO_MAP
-condition|)
-if|if
-condition|(
+operator|)
+operator|&&
+operator|(
 operator|!
 name|psmapnext
 argument_list|(
@@ -2082,6 +2280,7 @@ name|psp
 argument_list|,
 name|psaddr
 argument_list|)
+operator|)
 condition|)
 block|{
 name|psp
@@ -2100,6 +2299,17 @@ argument_list|,
 name|psaddr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|psp
+operator|->
+name|ps_refresh
+operator|.
+name|state
+operator|==
+name|AUTO_RF
+condition|)
+block|{
 if|if
 condition|(
 name|psp
@@ -2138,6 +2348,19 @@ name|mode
 operator|=
 name|WAITING_RF
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|EXTERNAL_SYNC
+name|x
+operator|=
+name|spl6
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+operator|(
+name|void
+operator|)
 name|psrfnext
 argument_list|(
 name|psp
@@ -2145,7 +2368,16 @@ argument_list|,
 name|psaddr
 argument_list|)
 expr_stmt|;
-comment|/* start rf */
+ifdef|#
+directive|ifdef
+name|EXTERNAL_SYNC
+name|splx
+argument_list|(
+name|x
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 name|psp
@@ -2156,6 +2388,40 @@ name|mode
 operator|=
 name|WAITING_RF
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* no auto refresh */
+if|if
+condition|(
+name|psp
+operator|->
+name|ps_dbuffer
+operator|.
+name|state
+operator|==
+name|ON_DB
+condition|)
+comment|/* fill other db */
+name|psdbswitch
+argument_list|(
+name|psp
+argument_list|,
+name|psaddr
+argument_list|)
+expr_stmt|;
+else|else
+operator|(
+name|void
+operator|)
+name|psmapnext
+argument_list|(
+name|psp
+argument_list|,
+name|psaddr
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 name|tryrf
@@ -2314,6 +2580,9 @@ name|psaddr
 argument_list|)
 expr_stmt|;
 else|else
+operator|(
+name|void
+operator|)
 name|psmapnext
 argument_list|(
 name|psp
@@ -2340,24 +2609,6 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-operator|!
-name|psp
-operator|->
-name|ps_clock
-operator|.
-name|ticked
-operator|||
-operator|!
-name|psrfnext
-argument_list|(
-name|psp
-argument_list|,
-name|psaddr
-argument_list|)
-condition|)
-block|{
 name|psp
 operator|->
 name|ps_refresh
@@ -2366,7 +2617,24 @@ name|mode
 operator|=
 name|SYNCING_RF
 expr_stmt|;
-block|}
+if|if
+condition|(
+name|psp
+operator|->
+name|ps_clock
+operator|.
+name|ticked
+condition|)
+operator|(
+name|void
+operator|)
+name|psrfnext
+argument_list|(
+name|psp
+argument_list|,
+name|psaddr
+argument_list|)
+expr_stmt|;
 name|psp
 operator|->
 name|ps_clock
@@ -2374,14 +2642,6 @@ operator|.
 name|ticked
 operator|=
 literal|0
-expr_stmt|;
-name|psp
-operator|->
-name|ps_refresh
-operator|.
-name|mode
-operator|=
-name|SYNCING_RF
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -2456,6 +2716,13 @@ end_decl_stmt
 
 begin_block
 block|{
+name|unsigned
+name|short
+name|int
+name|start
+decl_stmt|,
+name|last
+decl_stmt|;
 if|if
 condition|(
 name|psp
@@ -2486,6 +2753,8 @@ name|srcntr
 operator|++
 index|]
 argument_list|,
+literal|0
+argument_list|,
 name|psp
 argument_list|,
 name|psaddr
@@ -2515,8 +2784,8 @@ operator|==
 name|ON_DB
 condition|)
 block|{
-name|psrfstart
-argument_list|(
+name|start
+operator|=
 name|psp
 operator|->
 name|ps_dbuffer
@@ -2529,6 +2798,22 @@ name|ps_dbuffer
 operator|.
 name|rbuffer
 index|]
+expr_stmt|;
+name|last
+operator|=
+name|start
+operator|+
+name|psp
+operator|->
+name|ps_dbuffer
+operator|.
+name|dbsize
+expr_stmt|;
+name|psrfstart
+argument_list|(
+name|start
+argument_list|,
+name|last
 argument_list|,
 name|psp
 argument_list|,
@@ -2563,6 +2848,8 @@ name|psrfstart
 argument_list|(
 argument|dfaddr
 argument_list|,
+argument|last
+argument_list|,
 argument|psp
 argument_list|,
 argument|psaddr
@@ -2570,9 +2857,12 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+name|unsigned
 name|short
 name|int
 name|dfaddr
+decl_stmt|,
+name|last
 decl_stmt|;
 end_decl_stmt
 
@@ -2596,6 +2886,7 @@ end_decl_stmt
 
 begin_block
 block|{
+name|short
 name|int
 name|dummy
 decl_stmt|;
@@ -2620,6 +2911,19 @@ expr_stmt|;
 name|PSWAIT
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|last
+operator|!=
+literal|0
+condition|)
+name|psaddr
+operator|->
+name|ps_data
+operator|=
+name|last
+expr_stmt|;
+else|else
 name|dummy
 operator|=
 name|psaddr
@@ -2647,6 +2951,10 @@ name|RUNNING_RF
 expr_stmt|;
 block|}
 end_block
+
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
 
 begin_expr_stmt
 name|psrfstop
@@ -2741,6 +3049,9 @@ argument_list|,
 name|psaddr
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|psmapnext
 argument_list|(
 name|psp
@@ -2856,6 +3167,8 @@ name|unsigned
 name|short
 name|int
 name|start
+decl_stmt|,
+name|last
 decl_stmt|;
 name|PSWAIT
 argument_list|()
@@ -2880,11 +3193,6 @@ operator|==
 name|ON_DB
 condition|)
 block|{
-name|psaddr
-operator|->
-name|ps_data
-operator|=
-operator|(
 name|start
 operator|=
 name|psp
@@ -2900,7 +3208,10 @@ name|ps_dbuffer
 operator|.
 name|rbuffer
 index|]
-operator|)
+expr_stmt|;
+name|last
+operator|=
+name|start
 operator|+
 name|psp
 operator|->
@@ -2910,7 +3221,13 @@ name|dbsize
 operator|-
 literal|2
 expr_stmt|;
-comment|/* 2 for a refresh halt command */
+comment|/* 2 for halt cmd */
+name|psaddr
+operator|->
+name|ps_data
+operator|=
+name|last
+expr_stmt|;
 name|PSWAIT
 argument_list|()
 expr_stmt|;
@@ -2959,6 +3276,8 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
+name|unsigned
+name|short
 name|int
 name|dfaddr
 decl_stmt|;
@@ -2984,9 +3303,6 @@ end_decl_stmt
 
 begin_block
 block|{
-name|int
-name|data
-decl_stmt|;
 name|PSWAIT
 argument_list|()
 expr_stmt|;
@@ -3028,10 +3344,22 @@ expr_stmt|;
 block|}
 end_block
 
+begin_decl_stmt
+name|int
+name|pskillcnt
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|psmapstop
 argument_list|(
 name|psaddr
+argument_list|,
+name|psp
+argument_list|,
+name|request
 argument_list|)
 specifier|register
 expr|struct
@@ -3041,7 +3369,52 @@ name|psaddr
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|register
+name|struct
+name|ps
+modifier|*
+name|psp
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|short
+name|int
+name|request
+decl_stmt|;
+end_decl_stmt
+
 begin_block
+block|{
+specifier|register
+name|int
+name|i
+decl_stmt|;
+name|request
+operator|=
+name|request
+operator|&
+operator|(
+name|HALT_REQ
+operator||
+name|MOSTOP_REQ
+operator|)
+expr_stmt|;
+comment|/* overkill?? */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|pskillcnt
+condition|;
+name|i
+operator|++
+control|)
 block|{
 name|PSWAIT
 argument_list|()
@@ -3059,9 +3432,9 @@ name|psaddr
 operator|->
 name|ps_data
 operator|=
-literal|0
+name|IOUT
 expr_stmt|;
-comment|/* zero MAI bit */
+comment|/* zero MAI& MAO bits */
 name|PSWAIT
 argument_list|()
 expr_stmt|;
@@ -3080,7 +3453,26 @@ name|ps_data
 operator|=
 literal|0
 expr_stmt|;
-comment|/* zero input address register */
+comment|/* 0 input address register */
+name|PSWAIT
+argument_list|()
+expr_stmt|;
+name|psaddr
+operator|->
+name|ps_addr
+operator|=
+name|MAOA
+expr_stmt|;
+name|PSWAIT
+argument_list|()
+expr_stmt|;
+name|psaddr
+operator|->
+name|ps_data
+operator|=
+literal|0
+expr_stmt|;
+comment|/* 0 output address register */
 name|PSWAIT
 argument_list|()
 expr_stmt|;
@@ -3097,11 +3489,17 @@ name|psaddr
 operator|->
 name|ps_data
 operator|=
-name|HALT_REQ
-operator||
-name|MOSTOP_REQ
+name|request
 expr_stmt|;
-comment|/* overkill?? */
+block|}
+name|psp
+operator|->
+name|ps_map
+operator|.
+name|mode
+operator|=
+name|STOPPED_MAP
+expr_stmt|;
 block|}
 end_block
 
@@ -3159,6 +3557,10 @@ expr_stmt|;
 block|}
 end_block
 
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
+
 begin_macro
 name|psreset
 argument_list|(
@@ -3175,6 +3577,10 @@ end_decl_stmt
 begin_block
 block|{ }
 end_block
+
+begin_comment
+comment|/*ARGSUSED*/
+end_comment
 
 begin_macro
 name|psextsync
@@ -3275,6 +3681,9 @@ expr_stmt|;
 name|SAVEPSADDR
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|psrfnext
 argument_list|(
 name|psp
