@@ -12,7 +12,7 @@ comment|/*  * Copyright (c) 1996 Charles M. Hannum.  All rights reserved.  * Cop
 end_comment
 
 begin_comment
-comment|/* $Id: bus.h,v 1.2 1998/04/19 15:28:30 bde Exp $ */
+comment|/* $Id: bus.h,v 1.3 1998/05/06 01:45:47 gibbs Exp $ */
 end_comment
 
 begin_ifndef
@@ -65,14 +65,14 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|u_long
+name|u_int
 name|bus_addr_t
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|u_long
+name|u_int
 name|bus_size_t
 typedef|;
 end_typedef
@@ -143,7 +143,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|u_long
+name|u_int
 name|bus_space_handle_t
 typedef|;
 end_typedef

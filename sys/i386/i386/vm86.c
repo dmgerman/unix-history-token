@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997 Jonathan Lemon  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: vm86.c,v 1.14 1998/08/11 16:06:10 bde Exp $  */
+comment|/*-  * Copyright (c) 1997 Jonathan Lemon  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: vm86.c,v 1.15 1998/08/16 00:05:05 bde Exp $  */
 end_comment
 
 begin_include
@@ -300,7 +300,7 @@ name|__inline
 name|void
 name|GET_VEC
 parameter_list|(
-name|u_long
+name|u_int
 name|vec
 parameter_list|,
 name|u_short
@@ -332,7 +332,7 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|u_long
+name|u_int
 name|MAKE_VEC
 parameter_list|(
 name|u_short
@@ -402,7 +402,7 @@ name|__inline
 name|void
 name|PUSHL
 parameter_list|(
-name|u_long
+name|u_int
 name|x
 parameter_list|,
 name|struct
@@ -482,7 +482,7 @@ end_function
 begin_function
 specifier|static
 name|__inline
-name|u_long
+name|u_int
 name|POPL
 parameter_list|(
 name|struct
@@ -491,7 +491,7 @@ modifier|*
 name|vmf
 parameter_list|)
 block|{
-name|u_long
+name|u_int
 name|x
 init|=
 name|fuword
@@ -545,7 +545,7 @@ decl_stmt|;
 name|u_char
 name|i_byte
 decl_stmt|;
-name|u_long
+name|u_int
 name|temp_flags
 decl_stmt|;
 name|int
@@ -1672,7 +1672,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|u_long
+name|u_int
 modifier|*
 name|addr
 decl_stmt|;
@@ -1928,7 +1928,7 @@ expr_stmt|;
 name|addr
 operator|=
 operator|(
-name|u_long
+name|u_int
 operator|*
 operator|)
 name|ext
@@ -1953,7 +1953,7 @@ operator|)
 operator|/
 sizeof|sizeof
 argument_list|(
-name|u_long
+name|u_int
 argument_list|)
 condition|;
 name|i
