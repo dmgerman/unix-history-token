@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992, 1993 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)fdesc_vnops.c	7.5 (Berkeley) %G%  *  * $Id: fdesc_vnops.c,v 1.12 1993/04/06 16:17:17 jsp Exp $  */
+comment|/*  * Copyright (c) 1992 The Regents of the University of California  * Copyright (c) 1990, 1992, 1993 Jan-Simon Pendry  * All rights reserved.  *  * This code is derived from software donated to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)fdesc_vnops.c	7.6 (Berkeley) %G%  *  * $Id: fdesc_vnops.c,v 1.12 1993/04/06 16:17:17 jsp Exp $  */
 end_comment
 
 begin_comment
@@ -250,6 +250,8 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|loop
+label|:
 comment|/* get stashed copy of the vnode */
 if|if
 condition|(
@@ -274,16 +276,19 @@ if|if
 condition|(
 operator|*
 name|nvpp
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|vget
 argument_list|(
 operator|*
 name|nvpp
 argument_list|)
-operator|==
-literal|0
 condition|)
-block|{
+goto|goto
+name|loop
+goto|;
 name|VOP_UNLOCK
 argument_list|(
 operator|*
@@ -304,7 +309,7 @@ return|;
 block|}
 block|}
 comment|/* 	 * otherwise lock the array while we call getnewvnode 	 * since that can block. 	 */
-while|while
+if|if
 condition|(
 name|fdescvplock
 operator|&
@@ -326,6 +331,9 @@ argument_list|,
 name|PINOD
 argument_list|)
 expr_stmt|;
+goto|goto
+name|loop
+goto|;
 block|}
 name|fdescvplock
 operator||=
