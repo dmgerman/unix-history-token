@@ -6363,7 +6363,7 @@ name|page_scan_mode
 decl_stmt|;
 comment|/* page scan mode */
 name|u_int8_t
-name|class
+name|uclass
 index|[
 name|NG_HCI_CLASS_SIZE
 index|]
