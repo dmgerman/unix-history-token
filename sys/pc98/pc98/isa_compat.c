@@ -230,6 +230,8 @@ operator|->
 name|ports
 operator|==
 name|NULL
+operator|&&
+name|bootverbose
 condition|)
 name|printf
 argument_list|(
@@ -307,6 +309,8 @@ operator|->
 name|memory
 operator|==
 name|NULL
+operator|&&
+name|bootverbose
 condition|)
 name|printf
 argument_list|(
@@ -380,6 +384,8 @@ operator|->
 name|drq
 operator|==
 name|NULL
+operator|&&
+name|bootverbose
 condition|)
 name|printf
 argument_list|(
@@ -455,6 +461,8 @@ operator|->
 name|irq
 operator|==
 name|NULL
+operator|&&
+name|bootverbose
 condition|)
 name|printf
 argument_list|(
@@ -1418,7 +1426,7 @@ name|isa_compat_methods
 expr_stmt|;
 name|driver
 operator|->
-name|softc
+name|size
 operator|=
 sizeof|sizeof
 argument_list|(
