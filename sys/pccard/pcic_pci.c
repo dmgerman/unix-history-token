@@ -1323,6 +1323,81 @@ end_function
 
 begin_function
 specifier|static
+specifier|const
+name|char
+modifier|*
+name|pcic_pci_cardtype
+parameter_list|(
+name|u_int32_t
+name|stat
+parameter_list|)
+block|{
+if|if
+condition|(
+name|stat
+operator|&
+name|CB_SS_NOTCARD
+condition|)
+return|return
+operator|(
+literal|"Cardtype unrecognized by bridge"
+operator|)
+return|;
+if|if
+condition|(
+operator|(
+name|stat
+operator|&
+operator|(
+name|CB_SS_16BIT
+operator||
+name|CB_SS_CB
+operator|)
+operator|)
+operator|==
+operator|(
+name|CB_SS_16BIT
+operator||
+name|CB_SS_CB
+operator|)
+condition|)
+return|return
+operator|(
+literal|"16-bit and 32-bit (can't happen)"
+operator|)
+return|;
+if|if
+condition|(
+name|stat
+operator|&
+name|CB_SS_16BIT
+condition|)
+return|return
+operator|(
+literal|"16-bit pccard"
+operator|)
+return|;
+if|if
+condition|(
+name|stat
+operator|&
+name|CB_SS_CB
+condition|)
+return|return
+operator|(
+literal|"32-bit cardbus"
+operator|)
+return|;
+return|return
+operator|(
+literal|"none (can't happen)"
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|void
 name|pcic_cd_event
 parameter_list|(
@@ -1414,7 +1489,12 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"Unsupported card type inserted\n"
+literal|"Unsupported card: %s\n"
+argument_list|,
+name|pcic_pci_cardtype
+argument_list|(
+name|stat
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
