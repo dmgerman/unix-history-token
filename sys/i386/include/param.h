@@ -323,21 +323,6 @@ begin_comment
 comment|/* pages of u-area */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|UPAGES_HOLE
-value|2
-end_define
-
-begin_comment
-comment|/* pages of "hole" at top of user space where */
-end_comment
-
-begin_comment
-comment|/* the upages used to be. DO NOT CHANGE! */
-end_comment
-
 begin_comment
 comment|/*  * Constants related to network buffer management.  * MCLBYTES must be no larger than CLBYTES (the software page size), and,  * on machines that exchange pages of input or output buffers with mbuf  * clusters (MAPPED_MBUFS), MCLBYTES must also be an integral multiple  * of the hardware page size.  */
 end_comment

@@ -428,7 +428,7 @@ begin_define
 define|#
 directive|define
 name|UMAXPTEOFF
-value|(NPTEPG-UPAGES_HOLE)
+value|(NPTEPG)
 end_define
 
 begin_comment
