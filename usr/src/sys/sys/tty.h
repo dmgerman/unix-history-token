@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty.h	7.4 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty.h	7.5 (Berkeley) %G%  */
 end_comment
 
 begin_ifdef
@@ -131,10 +131,12 @@ modifier|*
 name|t_session
 decl_stmt|;
 comment|/* tty */
-name|pid_t
-name|t_pgid
+name|struct
+name|pgrp
+modifier|*
+name|t_pgrp
 decl_stmt|;
-comment|/* tty */
+comment|/* foreground process group */
 name|char
 name|t_line
 decl_stmt|;
@@ -656,6 +658,34 @@ end_define
 begin_comment
 comment|/* Parity error */
 end_comment
+
+begin_comment
+comment|/*  * Macros  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|isctty
+parameter_list|(
+name|p
+parameter_list|,
+name|tp
+parameter_list|)
+value|((p)->p_session == (tp)->t_session&& \ 			 (p)->p_flag&SCTTY)
+end_define
+
+begin_define
+define|#
+directive|define
+name|isbackground
+parameter_list|(
+name|p
+parameter_list|,
+name|tp
+parameter_list|)
+value|(isctty((p), (tp))&& \ 				(p)->p_pgrp != (tp)->t_pgrp)
+end_define
 
 begin_comment
 comment|/*  * Modem control commands (driver).  */
