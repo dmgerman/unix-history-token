@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.123 (Berkeley) 10/12/96 (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.125 (Berkeley) 11/8/96 (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.123 (Berkeley) 10/12/96 (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.125 (Berkeley) 11/8/96 (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -4944,8 +4944,11 @@ modifier|*
 name|e
 decl_stmt|;
 block|{
-name|int
+name|pid_t
 name|childpid
+decl_stmt|;
+name|sigfunc_t
+name|chldsig
 decl_stmt|;
 if|if
 condition|(
@@ -4953,6 +4956,21 @@ operator|!
 name|OneXact
 condition|)
 block|{
+comment|/* 		**  Disable child process reaping, in case ETRN has preceeded 		**  MAIL command. 		*/
+ifdef|#
+directive|ifdef
+name|SIGCHLD
+name|chldsig
+operator|=
+name|setsignal
+argument_list|(
+name|SIGCHLD
+argument_list|,
+name|SIG_IGN
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|childpid
 operator|=
 name|dofork
@@ -5060,6 +5078,22 @@ name|finis
 argument_list|()
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|SIGCHLD
+comment|/* restore the child signal */
+operator|(
+name|void
+operator|)
+name|setsignal
+argument_list|(
+name|SIGCHLD
+argument_list|,
+name|chldsig
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|1
