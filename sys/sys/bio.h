@@ -414,18 +414,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
-name|bioqdisksort
-parameter_list|(
-name|foo
-parameter_list|,
-name|bar
-parameter_list|)
-value|bioq_disksort(foo, bar)
-end_define
-
 begin_function_decl
 name|struct
 name|bio
