@@ -124,7 +124,7 @@ file|<vm/vm_map.h>
 end_include
 
 begin_comment
-comment|/*  * mb_alloc: network buffer allocator  */
+comment|/*  * mb_alloc: network buffer allocator  *  * XXX: currently, the "low watermark" sysctl is marked read-only as its  * effects are not completely implemented.  To be fixed soon.  */
 end_comment
 
 begin_comment
@@ -986,7 +986,7 @@ name|OID_AUTO
 argument_list|,
 name|mbuf_lowm
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|mbuf_lowm
@@ -1028,7 +1028,7 @@ name|OID_AUTO
 argument_list|,
 name|clust_lowm
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|clust_lowm

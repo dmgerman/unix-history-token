@@ -1404,6 +1404,9 @@ argument_list|,
 name|mbuf_hiwm
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NOTYET
 name|printf
 argument_list|(
 literal|"\tMbuf cache low watermark: %d\n"
@@ -1411,6 +1414,8 @@ argument_list|,
 name|mbuf_lowm
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"\tMaximum possible: %d\n"
@@ -1731,6 +1736,9 @@ argument_list|,
 name|clust_hiwm
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|NOTYET
 name|printf
 argument_list|(
 literal|"\tCluster cache low watermark: %d\n"
@@ -1738,6 +1746,8 @@ argument_list|,
 name|clust_lowm
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"\tMaximum possible: %d\n"
