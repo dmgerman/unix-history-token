@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)strip.c	4.1 (Berkeley) %G%"
+literal|"@(#)strip.c	4.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,7 @@ begin_define
 define|#
 directive|define
 name|BUFSIZ
-value|BSIZE
+value|1024
 end_define
 
 begin_decl_stmt
