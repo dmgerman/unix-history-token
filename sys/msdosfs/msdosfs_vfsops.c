@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vfsops.c,v 1.27 1998/02/23 14:57:50 kato Exp $ */
+comment|/*	$Id: msdosfs_vfsops.c,v 1.28 1998/02/23 16:44:32 ache Exp $ */
 end_comment
 
 begin_comment
@@ -5373,6 +5373,8 @@ block|,
 name|msdosfs_sync
 block|,
 name|msdosfs_vget
+block|,
+name|vfs_vrele
 block|,
 name|msdosfs_fhtovp
 block|,

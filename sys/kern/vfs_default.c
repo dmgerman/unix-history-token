@@ -48,8 +48,62 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/poll.h>
 end_include
+
+begin_comment
+comment|/*  * VFS operations  */
+end_comment
+
+begin_comment
+comment|/*  * Complement to all vpp returning ops.  * XXX - initially only to get rid of WILLRELE.  */
+end_comment
+
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
+begin_function
+name|int
+name|vfs_vrele
+parameter_list|(
+name|mp
+parameter_list|,
+name|vp
+parameter_list|)
+name|struct
+name|mount
+modifier|*
+name|mp
+decl_stmt|;
+name|struct
+name|vnode
+modifier|*
+name|vp
+decl_stmt|;
+block|{
+name|vrele
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * vnode operations  */
+end_comment
 
 begin_decl_stmt
 specifier|static
