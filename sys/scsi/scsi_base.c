@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file   * is totally correct for any given task and users of this file must   * accept responsibility for any damage that occurs from the application of this  * file.  *   * Written by Julian Elischer (julian@dialix.oz.au)  *      $Id: scsi_base.c,v 1.24 1995/03/21 11:21:01 dufault Exp $  */
+comment|/*  * Written By Julian ELischer  * Copyright julian Elischer 1993.  * Permission is granted to use or redistribute this file in any way as long  * as this notice remains. Julian Elischer does not guarantee that this file   * is totally correct for any given task and users of this file must   * accept responsibility for any damage that occurs from the application of this  * file.  *   * Written by Julian Elischer (julian@dialix.oz.au)  *      $Id: scsi_base.c,v 1.25 1995/03/28 07:57:23 bde Exp $  */
 end_comment
 
 begin_define
@@ -2356,12 +2356,12 @@ goto|goto
 name|retry
 goto|;
 block|}
-block|}
 name|retval
 operator|=
 name|EIO
 expr_stmt|;
 comment|/* Too many retries */
+block|}
 if|if
 condition|(
 name|bp
@@ -2370,12 +2370,6 @@ block|{
 name|bp
 operator|->
 name|b_error
-operator|=
-literal|0
-expr_stmt|;
-name|bp
-operator|->
-name|b_resid
 operator|=
 literal|0
 expr_stmt|;
