@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savecore.c	5.3 (Berkeley) %G%"
+literal|"@(#)savecore.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -377,7 +377,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|unsigned
+name|char
+modifier|*
 name|malloc
 parameter_list|()
 function_decl|;
@@ -866,10 +867,6 @@ condition|)
 block|{
 name|dp
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|strlen
@@ -1853,10 +1850,6 @@ name|char
 modifier|*
 name|cp
 init|=
-operator|(
-name|char
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|strlen
@@ -2176,6 +2169,17 @@ return|;
 block|}
 end_block
 
+begin_define
+define|#
+directive|define
+name|BUFPAGES
+value|(256*1024/NBPG)
+end_define
+
+begin_comment
+comment|/* 1/4 Mb */
+end_comment
+
 begin_macro
 name|save_core
 argument_list|()
@@ -2187,20 +2191,10 @@ specifier|register
 name|int
 name|n
 decl_stmt|;
-name|char
-name|buffer
-index|[
-literal|32
-operator|*
-name|NBPG
-index|]
-decl_stmt|;
 specifier|register
 name|char
 modifier|*
 name|cp
-init|=
-name|buffer
 decl_stmt|;
 specifier|register
 name|int
@@ -2215,6 +2209,31 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
+name|cp
+operator|=
+name|malloc
+argument_list|(
+name|BUFPAGES
+operator|*
+name|NBPG
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cp
+operator|==
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"can't malloc buffer\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|bounds
 operator|=
 name|read_number
@@ -2383,9 +2402,9 @@ argument_list|,
 operator|(
 name|dumpsize
 operator|>
-literal|32
+name|BUFPAGES
 condition|?
-literal|32
+name|BUFPAGES
 else|:
 name|dumpsize
 operator|)
@@ -2459,6 +2478,11 @@ expr_stmt|;
 name|fclose
 argument_list|(
 name|fp
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|cp
 argument_list|)
 expr_stmt|;
 block|}
