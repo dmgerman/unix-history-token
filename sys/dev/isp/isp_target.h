@@ -2098,14 +2098,18 @@ begin_define
 define|#
 directive|define
 name|DFLT_CMND_CNT
-value|32
+value|0xfe
 end_define
+
+begin_comment
+comment|/* unmonitored */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|DFLT_INOT_CNT
-value|4
+value|16
 end_define
 
 begin_function_decl
@@ -2200,11 +2204,11 @@ value|0x100
 end_define
 
 begin_comment
-comment|/*  * Handle an asynchronous event  */
+comment|/*  * Handle an asynchronous event  *  * Return nonzero if the interrupt that generated this event has been dismissed.  */
 end_comment
 
 begin_function_decl
-name|void
+name|int
 name|isp_target_async
 parameter_list|(
 name|struct
