@@ -449,10 +449,14 @@ argument_list|,
 name|needstat
 condition|?
 name|FTS_PHYSICAL
+operator||
+name|FTS_NOCHDIR
 else|:
 name|FTS_PHYSICAL
 operator||
 name|FTS_NOSTAT
+operator||
+name|FTS_NOCHDIR
 argument_list|,
 operator|(
 name|int
