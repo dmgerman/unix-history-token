@@ -559,6 +559,24 @@ endif|#
 directive|endif
 end_endif
 
+begin_function_decl
+name|int
+name|wctob
+parameter_list|(
+name|wint_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|wint_t
+name|btowc
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_macro
 name|__END_DECLS
 end_macro
