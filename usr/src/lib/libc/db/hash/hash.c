@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)hash.c	5.27 (Berkeley) %G%"
+literal|"@(#)hash.c	5.28 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2290,6 +2290,9 @@ name|lseek
 argument_list|(
 name|fp
 argument_list|,
+operator|(
+name|off_t
+operator|)
 literal|0
 argument_list|,
 name|SEEK_SET
