@@ -454,7 +454,7 @@ comment|/* Version number of package */
 end_comment
 
 begin_comment
-comment|/* #define VERSION "2.13" */
+comment|/* #define VERSION "2.13.2" */
 end_comment
 
 begin_comment
