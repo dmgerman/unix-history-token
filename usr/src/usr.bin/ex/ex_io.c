@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)ex_io.c	7.13 (Berkeley) %G%"
+literal|"@(#)ex_io.c	7.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1296,6 +1296,7 @@ block|{
 ifndef|#
 directive|ifndef
 name|vms
+comment|/* Never have meta-characters in vms */
 specifier|register
 name|char
 modifier|*
@@ -1323,34 +1324,18 @@ argument_list|,
 literal|"~{[*?$`'\"\\"
 argument_list|)
 condition|)
-if|if
-condition|(
-name|any
-argument_list|(
-operator|*
-name|cp
-argument_list|,
-literal|"~{[*?$`'\"\\"
-argument_list|)
-condition|)
 return|return
 operator|(
 literal|1
 operator|)
 return|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-else|#
-directive|else
-return|return
-literal|0
-return|;
-comment|/* Never have meta-characters in vms */
-endif|#
-directive|endif
 block|}
 end_block
 
