@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	hpreg.h	4.7	81/03/17	*/
+comment|/*	hpreg.h	4.8	81/06/27	*/
 end_comment
 
 begin_struct
@@ -708,7 +708,7 @@ define|#
 directive|define
 name|HPER1_HARD
 define|\
-value|(HPER1_UNS|HPER1_WLE|HPER1_IAE|HPER1_AOE|\ 	 HPER1_FER|HPER1_RMR|HPER1_ILR|HPER1_ILF)
+value|(HPER1_WLE|HPER1_IAE|HPER1_AOE|\ 	 HPER1_FER|HPER1_RMR|HPER1_ILR|HPER1_ILF)
 end_define
 
 begin_comment
