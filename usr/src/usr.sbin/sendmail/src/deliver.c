@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.52 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.53 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -75,6 +75,14 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|SmtpError
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* **  SENDALL -- actually send all the messages. ** **	Parameters: **		e -- the envelope to send. **		mode -- the delivery mode to use.  If SM_DEFAULT, use **			the current e->e_sendmode. ** **	Returns: **		none. ** **	Side Effects: **		Scans the send lists and sends everything it finds. **		Delivers any appropriate error messages. **		If we are running in a non-interactive mode, takes the **			appropriate action. */
@@ -2152,11 +2160,6 @@ name|int
 name|checkcompat
 parameter_list|()
 function_decl|;
-specifier|extern
-name|char
-name|SmtpError
-index|[]
-decl_stmt|;
 name|errno
 operator|=
 literal|0
@@ -6548,11 +6551,6 @@ block|{
 ifdef|#
 directive|ifdef
 name|SMTP
-specifier|extern
-name|char
-name|SmtpError
-index|[]
-decl_stmt|;
 name|statmsg
 operator|=
 name|SmtpError
