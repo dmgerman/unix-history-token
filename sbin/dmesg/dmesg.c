@@ -802,8 +802,9 @@ name|ep
 operator|-
 name|p
 argument_list|)
-operator|+
-literal|1
+expr_stmt|;
+name|p
+operator|++
 expr_stmt|;
 block|}
 for|for
@@ -830,8 +831,9 @@ name|ep
 operator|-
 name|p
 argument_list|)
-operator|+
-literal|1
+expr_stmt|;
+name|nextp
+operator|++
 expr_stmt|;
 comment|/* Skip ^<[0-9]+> syslog sequences. */
 if|if

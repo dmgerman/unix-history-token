@@ -256,8 +256,9 @@ name|fp
 operator|->
 name|_r
 argument_list|)
-operator|+
-literal|1
+expr_stmt|;
+name|src
+operator|++
 expr_stmt|;
 block|}
 name|fp
