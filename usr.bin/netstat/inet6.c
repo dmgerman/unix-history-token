@@ -2388,7 +2388,6 @@ name|struct
 name|icmp6stat
 name|icmp6stat
 decl_stmt|;
-specifier|register
 name|int
 name|i
 decl_stmt|,
@@ -2521,7 +2520,7 @@ expr_stmt|;
 define|#
 directive|define
 name|NELEM
-value|(sizeof(icmp6stat.icp6s_outhist)/sizeof(icmp6stat.icp6s_outhist[0]))
+value|(int)(sizeof(icmp6stat.icp6s_outhist)/sizeof(icmp6stat.icp6s_outhist[0]))
 for|for
 control|(
 name|first
@@ -2623,7 +2622,7 @@ expr_stmt|;
 define|#
 directive|define
 name|NELEM
-value|(sizeof(icmp6stat.icp6s_inhist)/sizeof(icmp6stat.icp6s_inhist[0]))
+value|(int)(sizeof(icmp6stat.icp6s_inhist)/sizeof(icmp6stat.icp6s_inhist[0]))
 for|for
 control|(
 name|first
