@@ -1903,6 +1903,11 @@ name|nbp
 operator|->
 name|b_bcount
 expr_stmt|;
+name|BUF_KERNPROC
+argument_list|(
+name|nbp
+argument_list|)
+expr_stmt|;
 name|VOP_STRATEGY
 argument_list|(
 name|nbp
