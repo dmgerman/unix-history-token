@@ -3035,6 +3035,18 @@ name|void
 operator|)
 name|printf
 argument_list|(
+literal|"%9u pages in VM cache\n"
+argument_list|,
+name|sum
+operator|.
+name|v_cache_count
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
 literal|"%9u pages wired down\n"
 argument_list|,
 name|sum
