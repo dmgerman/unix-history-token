@@ -74,7 +74,7 @@ comment|/* 8-10 compat */
 end_comment
 
 begin_comment
-comment|/* 11-12 obsolete or unusedor unused  */
+comment|/* 11-12 obsolete or unused */
 end_comment
 
 begin_define
