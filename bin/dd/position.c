@@ -157,6 +157,24 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* Don't try to read a really weird amount (like negative). */
+if|if
+condition|(
+name|in
+operator|.
+name|offset
+operator|<
+literal|0
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s: illegal offset"
+argument_list|,
+literal|"iseek/skip"
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Read the data.  If a pipe, read until satisfy the number of bytes 	 * being skipped.  No differentiation for reading complete and partial 	 * blocks for other devices. 	 */
 for|for
 control|(
@@ -385,6 +403,24 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* Don't try to read a really weird amount (like negative). */
+if|if
+condition|(
+name|out
+operator|.
+name|offset
+operator|<
+literal|0
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s: illegal offset"
+argument_list|,
+literal|"oseek/seek"
+argument_list|)
+expr_stmt|;
 comment|/* If no read access, try using mtio. */
 if|if
 condition|(
