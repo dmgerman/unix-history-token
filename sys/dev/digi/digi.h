@@ -286,16 +286,6 @@ name|struct
 name|termios
 name|lt_out
 decl_stmt|;
-name|u_int
-name|do_timestamp
-decl_stmt|;
-name|u_int
-name|do_dcd_timestamp
-decl_stmt|;
-name|struct
-name|timeval
-name|dcd_timestamp
-decl_stmt|;
 name|u_long
 name|bytes_in
 decl_stmt|,

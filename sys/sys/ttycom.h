@@ -754,19 +754,8 @@ begin_comment
 comment|/* enable/get timestamp 						 * of last input event */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|TIOCDCDTIMESTAMP
-value|_IOR('t', 88, struct timeval)
-end_define
-
 begin_comment
-comment|/* enable/get timestamp 						 * of last DCd rise */
-end_comment
-
-begin_comment
-comment|/* 88 slip; conflicts */
+comment|/* 88 slip, ppp; conflicts */
 end_comment
 
 begin_define
