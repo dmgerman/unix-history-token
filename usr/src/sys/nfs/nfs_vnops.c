@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	8.2 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vnops.c	8.3 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1391,17 +1391,6 @@ name|int
 name|nfs_numasync
 init|=
 literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Queue head for nfsiod's */
-end_comment
-
-begin_decl_stmt
-name|struct
-name|queue_entry
-name|nfs_bufq
 decl_stmt|;
 end_decl_stmt
 
@@ -3366,6 +3355,8 @@ operator|=
 name|vget
 argument_list|(
 name|vdp
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -11717,7 +11708,7 @@ name|vp
 operator|->
 name|v_dirtyblkhd
 operator|.
-name|le_next
+name|lh_first
 init|;
 name|bp
 condition|;
@@ -11732,7 +11723,7 @@ name|bp
 operator|->
 name|b_vnbufs
 operator|.
-name|qe_next
+name|le_next
 expr_stmt|;
 if|if
 condition|(
@@ -11990,7 +11981,7 @@ name|vp
 operator|->
 name|v_dirtyblkhd
 operator|.
-name|le_next
+name|lh_first
 condition|)
 block|{
 ifdef|#

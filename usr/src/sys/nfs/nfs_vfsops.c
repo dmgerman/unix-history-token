@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vfsops.c	8.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Rick Macklem at The University of Guelph.  *  * %sccs.include.redist.c%  *  *	@(#)nfs_vfsops.c	8.2 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -1192,21 +1192,21 @@ argument_list|(
 literal|"nfs_mountroot: vfs_lock"
 argument_list|)
 expr_stmt|;
-name|rootfs
-operator|=
+name|TAILQ_INSERT_TAIL
+argument_list|(
+operator|&
+name|mountlist
+argument_list|,
 name|mp
+argument_list|,
+name|mnt_list
+argument_list|)
 expr_stmt|;
 name|mp
 operator|->
-name|mnt_next
-operator|=
-name|mp
-expr_stmt|;
-name|mp
-operator|->
-name|mnt_prev
-operator|=
-name|mp
+name|mnt_flag
+operator||=
+name|MNT_ROOTFS
 expr_stmt|;
 name|mp
 operator|->
@@ -1393,6 +1393,24 @@ argument_list|,
 name|which
 argument_list|)
 expr_stmt|;
+name|bzero
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|mp
+argument_list|,
+operator|(
+name|u_long
+operator|)
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|mount
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|mp
 operator|->
 name|mnt_op
@@ -1405,12 +1423,6 @@ operator|->
 name|mnt_flag
 operator|=
 name|mountflag
-expr_stmt|;
-name|mp
-operator|->
-name|mnt_mounth
-operator|=
-name|NULLVP
 expr_stmt|;
 name|MGET
 argument_list|(
@@ -2786,9 +2798,13 @@ condition|(
 operator|!
 name|doforce
 operator|||
+operator|(
 name|mp
-operator|==
-name|rootfs
+operator|->
+name|mnt_flag
+operator|&
+name|MNT_ROOTFS
+operator|)
 condition|)
 return|return
 operator|(
@@ -3176,15 +3192,21 @@ name|vp
 operator|=
 name|mp
 operator|->
-name|mnt_mounth
+name|mnt_vnodelist
+operator|.
+name|lh_first
 init|;
 name|vp
+operator|!=
+name|NULL
 condition|;
 name|vp
 operator|=
 name|vp
 operator|->
-name|v_mountf
+name|v_mntvnodes
+operator|.
+name|le_next
 control|)
 block|{
 comment|/* 		 * If the vnode that we are about to sync is no longer 		 * associated with this mount point, start over. 		 */
@@ -3210,7 +3232,7 @@ name|vp
 operator|->
 name|v_dirtyblkhd
 operator|.
-name|le_next
+name|lh_first
 operator|==
 name|NULL
 condition|)
@@ -3220,6 +3242,8 @@ condition|(
 name|vget
 argument_list|(
 name|vp
+argument_list|,
+literal|1
 argument_list|)
 condition|)
 goto|goto
