@@ -2418,6 +2418,12 @@ block|}
 struct|;
 end_struct
 
+begin_decl_stmt
+name|vfs_statfs_t
+name|__vfs_statfs
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -2518,7 +2524,7 @@ name|SBP
 parameter_list|,
 name|P
 parameter_list|)
-value|(*(MP)->mnt_op->vfs_statfs)(MP, SBP, P)
+value|__vfs_statfs((MP), (SBP), (P))
 end_define
 
 begin_define
