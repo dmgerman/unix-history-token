@@ -8295,7 +8295,7 @@ name|tv
 operator|.
 name|tv_sec
 operator|>
-name|SHRT_MAX
+name|INT_MAX
 operator|/
 name|hz
 operator|||
@@ -8321,7 +8321,7 @@ name|bad
 goto|;
 block|}
 comment|/* assert(tick> 0); */
-comment|/* assert(ULONG_MAX - SHRT_MAX>= 1000000); */
+comment|/* assert(ULONG_MAX - INT_MAX>= 1000000); */
 name|val
 operator|=
 call|(
@@ -8345,7 +8345,7 @@ if|if
 condition|(
 name|val
 operator|>
-name|SHRT_MAX
+name|INT_MAX
 condition|)
 block|{
 name|error
