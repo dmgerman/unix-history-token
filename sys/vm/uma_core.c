@@ -1442,7 +1442,7 @@ decl_stmt|;
 name|int
 name|cpu
 decl_stmt|;
-comment|/* 	 * Flush out the per cpu queues. 	 * 	 * XXX This causes unneccisary thrashing due to immediately having 	 * empty per cpu queues.  I need to improve this. 	 */
+comment|/* 	 * Flush out the per cpu queues. 	 * 	 * XXX This causes unnecessary thrashing due to immediately having 	 * empty per cpu queues.  I need to improve this. 	 */
 comment|/* 	 * We have to lock each cpu cache before locking the zone 	 */
 name|ZONE_UNLOCK
 argument_list|(
@@ -2515,7 +2515,7 @@ modifier|*
 name|p
 decl_stmt|;
 comment|/* Returned page */
-comment|/* 	 * XXX The original zone allocator did this, but I don't think it's 	 * neccisary in current. 	 */
+comment|/* 	 * XXX The original zone allocator did this, but I don't think it's 	 * necessary in current. 	 */
 if|if
 condition|(
 name|lockstatus
