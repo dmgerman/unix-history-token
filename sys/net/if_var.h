@@ -74,16 +74,31 @@ begin_comment
 comment|/* get TAILQ macros */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<sys/mbuf.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
+
 begin_include
 include|#
 directive|include
-file|<machine/mutex.h>
+file|<sys/mutex.h>
 end_include
 
 begin_expr_stmt
