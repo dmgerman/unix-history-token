@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_subr.c	6.1	83/07/29	*/
+comment|/*	kern_subr.c	6.2	84/07/08	*/
 end_comment
 
 begin_include
@@ -149,10 +149,10 @@ name|uio_segflg
 condition|)
 block|{
 case|case
-literal|0
+name|UIO_USERSPACE
 case|:
 case|case
-literal|2
+name|UIO_USERISPACE
 case|:
 if|if
 condition|(
@@ -198,7 +198,7 @@ operator|)
 return|;
 break|break;
 case|case
-literal|1
+name|UIO_SYSSPACE
 case|:
 if|if
 condition|(
@@ -370,7 +370,7 @@ name|uio_segflg
 condition|)
 block|{
 case|case
-literal|0
+name|UIO_USERSPACE
 case|:
 if|if
 condition|(
@@ -392,7 +392,7 @@ operator|)
 return|;
 break|break;
 case|case
-literal|1
+name|UIO_SYSSPACE
 case|:
 operator|*
 name|iov
@@ -403,7 +403,7 @@ name|c
 expr_stmt|;
 break|break;
 case|case
-literal|2
+name|UIO_USERISPACE
 case|:
 if|if
 condition|(
@@ -548,7 +548,7 @@ name|uio_segflg
 condition|)
 block|{
 case|case
-literal|0
+name|UIO_USERSPACE
 case|:
 name|c
 operator|=
@@ -561,7 +561,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-literal|1
+name|UIO_SYSSPACE
 case|:
 name|c
 operator|=
@@ -574,7 +574,7 @@ literal|0377
 expr_stmt|;
 break|break;
 case|case
-literal|2
+name|UIO_USERISPACE
 case|:
 name|c
 operator|=

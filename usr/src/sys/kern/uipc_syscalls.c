@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	uipc_syscalls.c	6.2	83/09/25	*/
+comment|/*	uipc_syscalls.c	6.3	84/07/08	*/
 end_comment
 
 begin_include
@@ -2105,7 +2105,7 @@ name|auio
 operator|.
 name|uio_segflg
 operator|=
-literal|0
+name|UIO_USERSPACE
 expr_stmt|;
 name|auio
 operator|.
@@ -2991,7 +2991,7 @@ name|auio
 operator|.
 name|uio_segflg
 operator|=
-literal|0
+name|UIO_USERSPACE
 expr_stmt|;
 name|auio
 operator|.
