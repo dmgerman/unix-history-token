@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id$  *  * This program patches a filesystem into a kernel made with MFS_ROOT  * option.  */
+comment|/*  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<phk@login.dknet.dk> wrote this file.  As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.   Poul-Henning Kamp  * ----------------------------------------------------------------------------  *  * $Id: write_mfs_in_kernel.c,v 1.3 1997/02/22 14:10:31 peter Exp $  *  * This program patches a filesystem into a kernel made with MFS_ROOT  * option.  */
 end_comment
 
 begin_include
@@ -51,7 +51,21 @@ directive|include
 file|<ufs/ffs/fs.h>
 end_include
 
+begin_decl_stmt
+specifier|static
+name|int
+name|force
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* don't check for zeros, may corrupt kernel */
+end_comment
+
 begin_function
+name|int
 name|main
 parameter_list|(
 name|int
@@ -76,11 +90,20 @@ name|p
 decl_stmt|,
 modifier|*
 name|q
+decl_stmt|,
+modifier|*
+name|prog
 decl_stmt|;
 name|int
 name|fd_kernel
 decl_stmt|,
 name|fd_fs
+decl_stmt|,
+name|ch
+decl_stmt|,
+name|errs
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|stat
@@ -91,18 +114,72 @@ decl_stmt|;
 name|u_long
 name|l
 decl_stmt|;
+name|prog
+operator|=
+operator|*
+name|argv
+expr_stmt|;
+while|while
+condition|(
+operator|(
+name|ch
+operator|=
+name|getopt
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|,
+literal|"f"
+argument_list|)
+operator|)
+operator|!=
+name|EOF
+condition|)
+switch|switch
+condition|(
+name|ch
+condition|)
+block|{
+case|case
+literal|'f'
+case|:
+name|force
+operator|=
+literal|1
+operator|-
+name|force
+expr_stmt|;
+break|break;
+default|default:
+name|errs
+operator|++
+expr_stmt|;
+block|}
+name|argc
+operator|-=
+name|optind
+expr_stmt|;
+name|argv
+operator|+=
+name|optind
+expr_stmt|;
 if|if
 condition|(
+name|errs
+operator|||
 name|argc
-operator|<
-literal|3
+operator|!=
+literal|2
 condition|)
 block|{
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage:\n\t%s kernel fs\n"
+literal|"Usage:\n\t%s [-f] kernel fs\n"
+argument_list|,
+name|prog
 argument_list|)
 expr_stmt|;
 name|exit
@@ -111,6 +188,10 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
+operator|--
+name|argv
+expr_stmt|;
+comment|/* original prog did not use getopt(3) */
 name|fd_kernel
 operator|=
 name|open
@@ -372,6 +453,11 @@ argument_list|)
 expr_stmt|;
 name|found
 label|:
+if|if
+condition|(
+operator|!
+name|force
+condition|)
 for|for
 control|(
 name|l
@@ -518,6 +604,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * I added a '-f' option to force writing the image into the kernel, even when  * there is already data (i.e. not zero) in the written area. This is useful  * to rewrite a changed MFS-image. Beware: If the written image is larger than  * the space reserved in the kernel (with option MFS_ROOT) then  * THIS WILL CORRUPT THE KERNEL!  *  */
+end_comment
 
 end_unit
 
