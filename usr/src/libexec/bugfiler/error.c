@@ -28,6 +28,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<bug.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<syslog.h>
 end_include
 
@@ -36,38 +42,6 @@ include|#
 directive|include
 file|<stdio.h>
 end_include
-
-begin_include
-include|#
-directive|include
-file|<bug.h>
-end_include
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|distf
-decl_stmt|,
-comment|/* redist temp file */
-name|tmpname
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* temporary file used */
-end_comment
-
-begin_decl_stmt
-name|short
-name|made_dist
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* if dist file made */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -105,7 +79,7 @@ argument_list|)
 condition|)
 name|error
 argument_list|(
-literal|"unable to open error file %s.\n"
+literal|"can't open error file %s.\n"
 argument_list|,
 name|ERROR_FILE
 argument_list|)
@@ -191,14 +165,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|strcat
-argument_list|(
-name|strcpy
+name|sprintf
 argument_list|(
 name|logmsg
 argument_list|,
-literal|"bugfiler: "
-argument_list|)
+literal|"bugfiler: %s"
 argument_list|,
 name|fmt
 argument_list|)
@@ -213,16 +184,6 @@ name|arg
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|made_dist
-condition|)
-comment|/* unlink redist file if necessary */
-name|unlink
-argument_list|(
-name|distf
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|METOO
@@ -233,7 +194,6 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-else|!METOO
 name|exit
 argument_list|(
 name|OK
@@ -241,7 +201,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-endif|METOO
 block|}
 end_block
 

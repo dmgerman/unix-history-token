@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)process.c	5.2 (Berkeley) 87/01/28"
+literal|"@(#)process.c	5.3 (Berkeley) 87/04/11"
 decl_stmt|;
 end_decl_stmt
 
@@ -40,12 +40,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/dir.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/time.h>
 end_include
 
@@ -55,44 +49,11 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|HEADER
-name|mailhead
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* mail headers */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|lfd
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* lock file descriptor */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|dir
-index|[]
-decl_stmt|,
-comment|/* directory */
-name|folder
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* sub-directory */
-end_comment
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
 
 begin_decl_stmt
 name|char
@@ -108,7 +69,7 @@ comment|/* permanent file name */
 end_comment
 
 begin_comment
-comment|/*  * process --  *	process a bug report  */
+comment|/*  * process --  *	copy report to permanent file,  *	update summary file.  */
 end_comment
 
 begin_macro
@@ -128,16 +89,62 @@ name|timeval
 name|tp
 decl_stmt|;
 comment|/* time of day */
-name|struct
-name|timezone
-name|tzp
+name|int
+name|lfd
 decl_stmt|;
+comment|/* lock file descriptor */
 name|char
 modifier|*
 name|ctime
 parameter_list|()
 function_decl|;
-comment|/* copy report to permanent file */
+if|if
+condition|(
+name|access
+argument_list|(
+name|LOCK_FILE
+argument_list|,
+name|R_OK
+argument_list|)
+operator|||
+operator|(
+name|lfd
+operator|=
+name|open
+argument_list|(
+name|LOCK_FILE
+argument_list|,
+name|O_RDONLY
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+operator|<
+literal|0
+condition|)
+name|error
+argument_list|(
+literal|"can't find lock file %s."
+argument_list|,
+name|LOCK_FILE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|flock
+argument_list|(
+name|lfd
+argument_list|,
+name|LOCK_EX
+argument_list|)
+condition|)
+name|error
+argument_list|(
+literal|"can't get lock."
+argument_list|,
+name|CHN
+argument_list|)
+expr_stmt|;
 name|sprintf
 argument_list|(
 name|pfile
@@ -177,7 +184,7 @@ operator|)
 condition|)
 name|error
 argument_list|(
-literal|"unable to create permanent bug file %s."
+literal|"can't create %s."
 argument_list|,
 name|pfile
 argument_list|)
@@ -212,6 +219,8 @@ name|ERR
 operator|&&
 name|rval
 condition|)
+if|if
+condition|(
 name|write
 argument_list|(
 name|fileno
@@ -223,8 +232,15 @@ name|bfr
 argument_list|,
 name|rval
 argument_list|)
-expr_stmt|;
-name|REL_LOCK
+operator|!=
+name|rval
+condition|)
+name|error
+argument_list|(
+literal|"write to %s failed."
+argument_list|,
+name|pfile
+argument_list|)
 expr_stmt|;
 comment|/* append information to the summary file */
 name|sprintf
@@ -237,8 +253,6 @@ name|dir
 argument_list|,
 name|SUMMARY_FILE
 argument_list|)
-expr_stmt|;
-name|GET_LOCK
 expr_stmt|;
 if|if
 condition|(
@@ -256,13 +270,11 @@ operator|)
 condition|)
 name|error
 argument_list|(
-literal|"unable to append to summary file %s."
+literal|"can't append to summary file %s."
 argument_list|,
 name|bfr
 argument_list|)
 expr_stmt|;
-else|else
-block|{
 if|if
 condition|(
 name|gettimeofday
@@ -270,13 +282,17 @@ argument_list|(
 operator|&
 name|tp
 argument_list|,
-operator|&
-name|tzp
+operator|(
+expr|struct
+name|timezone
+operator|*
+operator|)
+name|NULL
 argument_list|)
 condition|)
 name|error
 argument_list|(
-literal|"unable to get time of day."
+literal|"can't get time of day."
 argument_list|,
 name|CHN
 argument_list|)
@@ -319,9 +335,19 @@ else|:
 literal|"Subject:\n"
 argument_list|)
 expr_stmt|;
-block|}
-name|REL_LOCK
+operator|(
+name|void
+operator|)
+name|flock
+argument_list|(
+name|lfd
+argument_list|,
+name|LOCK_UN
+argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|fclose
 argument_list|(
 name|stdout
@@ -354,10 +380,14 @@ block|;
 comment|/* directory pointer */
 specifier|register
 name|int
-name|n
+name|highval
+block|,
+name|newval
 block|;
-comment|/* number values */
-name|GET_LOCK
+specifier|register
+name|char
+operator|*
+name|C
 block|;
 name|sprintf
 argument_list|(
@@ -382,23 +412,19 @@ name|bfr
 argument_list|)
 operator|)
 condition|)
-block|{
-name|REL_LOCK
-expr_stmt|;
 name|error
 argument_list|(
-literal|"unable to read folder directory %s."
+literal|"can't read folder directory %s."
 argument_list|,
 name|bfr
 argument_list|)
 expr_stmt|;
-block|}
 end_expr_stmt
 
 begin_for
 for|for
 control|(
-name|n
+name|highval
 operator|=
 literal|0
 init|;
@@ -410,20 +436,57 @@ name|dirp
 argument_list|)
 condition|;
 control|)
-name|n
+for|for
+control|(
+name|C
 operator|=
-name|MAX
-argument_list|(
-name|n
-argument_list|,
+name|d
+operator|->
+name|d_name
+init|;
+condition|;
+operator|++
+name|C
+control|)
+if|if
+condition|(
+operator|!
+operator|*
+name|C
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|newval
+operator|=
 name|atoi
 argument_list|(
 name|d
 operator|->
 name|d_name
 argument_list|)
-argument_list|)
+operator|)
+operator|>
+name|highval
+condition|)
+name|highval
+operator|=
+name|newval
 expr_stmt|;
+break|break;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|isdigit
+argument_list|(
+operator|*
+name|C
+argument_list|)
+condition|)
+break|break;
 end_for
 
 begin_expr_stmt
@@ -438,7 +501,7 @@ begin_return
 return|return
 operator|(
 operator|++
-name|n
+name|highval
 operator|)
 return|;
 end_return

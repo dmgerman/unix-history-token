@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bugfiler.c	5.6 (Berkeley) 86/11/25"
+literal|"@(#)bugfiler.c	5.7 (Berkeley) 87/04/11"
 decl_stmt|;
 end_decl_stmt
 
@@ -65,7 +65,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<sys/file.h>
 end_include
 
 begin_include
@@ -74,46 +74,11 @@ directive|include
 file|<pwd.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|optarg
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* getopt arguments */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|optind
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|lfd
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* lock file descriptor */
-end_comment
-
-begin_decl_stmt
-name|short
-name|do_redist
-init|=
-name|YES
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* redistribut BR */
-end_comment
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
 
 begin_decl_stmt
 name|char
@@ -155,6 +120,12 @@ modifier|*
 name|argv
 decl_stmt|;
 block|{
+specifier|extern
+name|char
+modifier|*
+name|optarg
+decl_stmt|;
+comment|/* getopt arguments */
 specifier|register
 name|struct
 name|passwd
@@ -167,19 +138,38 @@ name|int
 name|ch
 decl_stmt|;
 comment|/* getopts char */
-specifier|register
-name|short
+name|int
 name|do_ack
-init|=
-name|YES
-decl_stmt|;
+decl_stmt|,
 comment|/* acknowledge bug report */
+name|do_redist
+decl_stmt|;
+comment|/* redistribut BR */
+name|char
+modifier|*
+name|argfolder
+decl_stmt|,
+comment|/* folder name provided */
+modifier|*
+name|strcpy
+argument_list|()
+decl_stmt|;
 name|struct
 name|passwd
 modifier|*
 name|getpwnam
 parameter_list|()
 function_decl|;
+name|do_ack
+operator|=
+name|do_redist
+operator|=
+name|YES
+expr_stmt|;
+name|argfolder
+operator|=
+name|NULL
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -191,7 +181,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ar"
+literal|"af:r"
 argument_list|)
 operator|)
 operator|!=
@@ -214,6 +204,14 @@ name|NO
 expr_stmt|;
 break|break;
 case|case
+literal|'f'
+case|:
+name|argfolder
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
 literal|'r'
 case|:
 name|do_redist
@@ -227,7 +225,7 @@ case|:
 default|default:
 name|error
 argument_list|(
-literal|"usage: bugfiler [-ar] [maildir]"
+literal|"usage: bugfiler [-ar] [-f folder]"
 argument_list|,
 name|CHN
 argument_list|)
@@ -247,41 +245,11 @@ operator|)
 condition|)
 name|error
 argument_list|(
-literal|"bugs person %s is unknown"
+literal|"can't find bugs login."
 argument_list|,
 name|BUGS_ID
 argument_list|)
 expr_stmt|;
-name|argv
-operator|+=
-name|optind
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|argv
-condition|)
-block|{
-comment|/* change to argument directory */
-if|if
-condition|(
-name|chdir
-argument_list|(
-operator|*
-name|argv
-argument_list|)
-condition|)
-name|error
-argument_list|(
-literal|"can't move to %s."
-argument_list|,
-operator|*
-name|argv
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* change to bugs home directory */
-elseif|else
 if|if
 condition|(
 name|chdir
@@ -291,9 +259,10 @@ operator|->
 name|pw_dir
 argument_list|)
 condition|)
+comment|/* change to bugs home directory */
 name|error
 argument_list|(
-literal|"can't move to %s."
+literal|"can't chdir to %s."
 argument_list|,
 name|pwd
 operator|->
@@ -318,6 +287,9 @@ argument_list|,
 name|BUGS_ID
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|umask
 argument_list|(
 literal|2
@@ -327,45 +299,34 @@ comment|/* everything is 664 */
 name|seterr
 argument_list|()
 expr_stmt|;
+comment|/* redirect to log file */
 name|logit
 argument_list|()
 expr_stmt|;
+comment|/* log report arrival */
 name|make_copy
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|access
+comment|/* save copy in case */
+name|gethead
 argument_list|(
-name|LOCK_FILE
-argument_list|,
-name|R_OK
-argument_list|)
-operator|||
-operator|(
-name|lfd
-operator|=
-name|open
-argument_list|(
-name|LOCK_FILE
-argument_list|,
-name|O_RDONLY
-argument_list|,
-literal|0
-argument_list|)
-operator|)
-operator|<
-literal|0
-condition|)
-name|error
-argument_list|(
-literal|"can't read lock file %s."
-argument_list|,
-name|LOCK_FILE
+name|do_redist
 argument_list|)
 expr_stmt|;
-name|gethead
-argument_list|()
+if|if
+condition|(
+name|argfolder
+condition|)
+comment|/* specific folder requested */
+operator|(
+name|void
+operator|)
+name|strcpy
+argument_list|(
+name|dir
+argument_list|,
+name|argfolder
+argument_list|)
 expr_stmt|;
 name|process
 argument_list|()
@@ -400,6 +361,9 @@ condition|)
 name|redist
 argument_list|()
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|unlink
 argument_list|(
 name|tmpname
@@ -414,7 +378,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * make_copy --  *	make a copy of the bug report  */
+comment|/*  * make_copy --  *	make a copy of bug report in error folder  */
 end_comment
 
 begin_expr_stmt
@@ -432,55 +396,27 @@ block|;
 comment|/* temp file descriptor */
 name|char
 operator|*
-name|mktemp
-argument_list|()
-block|,
-operator|*
 name|strcpy
 argument_list|()
 block|;
-comment|/* use O_EXCL, since may not be able to get a lock file */
-for|for
-control|(
-name|cnt
-operator|=
-literal|0
-init|;
-name|cnt
-operator|<
-literal|20
-condition|;
-operator|++
-name|cnt
-control|)
-if|if
-condition|(
 operator|(
-name|tfd
-operator|=
-name|open
-argument_list|(
-name|mktemp
-argument_list|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|tmpname
 argument_list|,
 name|TMP_BUG
 argument_list|)
+block|;
+if|if
+condition|(
+name|tfd
+operator|=
+name|mkstemp
+argument_list|(
+name|tmpname
 argument_list|)
-argument_list|,
-name|O_WRONLY
-operator||
-name|O_CREAT
-operator||
-name|O_EXCL
-argument_list|,
-literal|0664
-argument_list|)
-operator|)
-operator|>=
-literal|0
 condition|)
 block|{
 while|while
@@ -517,6 +453,9 @@ argument_list|,
 name|cnt
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|tfd
@@ -526,7 +465,7 @@ return|return;
 block|}
 name|error
 argument_list|(
-literal|"unable to make copy using %s.\n"
+literal|"can't make copy using %s.\n"
 argument_list|,
 name|tmpname
 argument_list|)
@@ -550,10 +489,6 @@ name|struct
 name|timeval
 name|tp
 decl_stmt|;
-name|struct
-name|timezone
-name|tzp
-decl_stmt|;
 name|char
 modifier|*
 name|ctime
@@ -566,13 +501,17 @@ argument_list|(
 operator|&
 name|tp
 argument_list|,
-operator|&
-name|tzp
+operator|(
+expr|struct
+name|timezone
+operator|*
+operator|)
+name|NULL
 argument_list|)
 condition|)
 name|error
 argument_list|(
-literal|"unable to get time of day."
+literal|"can't get time of day."
 argument_list|,
 name|CHN
 argument_list|)

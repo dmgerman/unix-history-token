@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)reply.c	5.1 (Berkeley) 86/11/25"
+literal|"@(#)reply.c	5.2 (Berkeley) 87/04/11"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,20 +43,8 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|HEADER
-name|mailhead
-index|[]
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
-comment|/* mail headers */
-end_comment
-
-begin_comment
-comment|/*  * reply --  *	tell the user we got their bug report  */
+comment|/*  * reply --  *	tell the user we got their silly little bug report  */
 end_comment
 
 begin_macro
@@ -95,17 +83,9 @@ argument_list|()
 decl_stmt|;
 name|char
 modifier|*
-name|mktemp
-argument_list|()
-decl_stmt|,
-modifier|*
-name|strcpy
-argument_list|()
-decl_stmt|,
-modifier|*
 name|index
-argument_list|()
-decl_stmt|;
+parameter_list|()
+function_decl|;
 if|if
 condition|(
 name|mailhead
@@ -541,6 +521,9 @@ name|ERR
 operator|&&
 name|rval
 condition|)
+operator|(
+name|void
+operator|)
 name|write
 argument_list|(
 name|fileno
@@ -553,6 +536,9 @@ argument_list|,
 name|rval
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|close
 argument_list|(
 name|afd

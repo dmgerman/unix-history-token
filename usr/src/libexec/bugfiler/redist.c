@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)redist.c	5.1 (Berkeley) 86/11/25"
+literal|"@(#)redist.c	5.2 (Berkeley) 87/04/11"
 decl_stmt|;
 end_decl_stmt
 
@@ -43,38 +43,6 @@ directive|include
 file|<bug.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|HEADER
-name|mailhead
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* mail headers */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|distf
-decl_stmt|,
-comment|/* redist temp file */
-name|pfile
-index|[]
-decl_stmt|,
-comment|/* permanent bug file */
-name|folder
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* system name */
-end_comment
-
 begin_comment
 comment|/*  * redist --  *	Redistribute a bug report to those people indicated in the  *	redistribution list file.  */
 end_comment
@@ -86,31 +54,35 @@ end_macro
 
 begin_block
 block|{
+specifier|extern
+name|FILE
+modifier|*
+name|dfp
+decl_stmt|;
+comment|/* dist file fp */
+specifier|extern
+name|char
+name|pfile
+index|[]
+decl_stmt|;
+comment|/* permanent bug file */
 specifier|register
 name|char
 modifier|*
 name|C1
 decl_stmt|,
-comment|/* traveling chars */
 modifier|*
 name|C2
 decl_stmt|;
 specifier|register
 name|int
 name|first
-init|=
-name|YES
 decl_stmt|;
 comment|/* if first blank line */
 name|FILE
 modifier|*
 name|pf
 decl_stmt|,
-comment|/* pipe pointer */
-modifier|*
-name|dfp
-decl_stmt|,
-comment|/* dist file fp */
 modifier|*
 name|popen
 argument_list|()
@@ -118,18 +90,25 @@ decl_stmt|;
 name|char
 modifier|*
 name|index
-argument_list|()
-decl_stmt|,
-modifier|*
-name|mktemp
-argument_list|()
-decl_stmt|;
+parameter_list|()
+function_decl|;
+name|sprintf
+argument_list|(
+name|bfr
+argument_list|,
+literal|"%s/%s"
+argument_list|,
+name|dir
+argument_list|,
+name|DIST_FILE
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
 name|freopen
 argument_list|(
-name|DIST_FILE
+name|bfr
 argument_list|,
 literal|"r"
 argument_list|,
@@ -377,36 +356,24 @@ name|C1
 control|)
 empty_stmt|;
 block|}
-name|fputs
+name|putc
 argument_list|(
-literal|"\n"
+literal|'\n'
 argument_list|,
 name|pf
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|(
+name|rewind
+argument_list|(
 name|dfp
-operator|=
-name|fopen
-argument_list|(
-name|distf
-argument_list|,
-literal|"r"
-argument_list|)
-operator|)
-condition|)
-name|error
-argument_list|(
-literal|"unable to read temporary file %s."
-argument_list|,
-name|distf
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
+for|for
+control|(
+name|first
+operator|=
+name|YES
+init|;
 name|fgets
 argument_list|(
 name|bfr
@@ -418,7 +385,8 @@ argument_list|)
 argument_list|,
 name|dfp
 argument_list|)
-condition|)
+condition|;
+control|)
 if|if
 condition|(
 operator|*
@@ -458,19 +426,20 @@ argument_list|,
 name|pf
 argument_list|)
 expr_stmt|;
-name|fclose
-argument_list|(
-name|dfp
-argument_list|)
-expr_stmt|;
+operator|(
+name|void
+operator|)
 name|pclose
 argument_list|(
 name|pf
 argument_list|)
 expr_stmt|;
-name|unlink
+operator|(
+name|void
+operator|)
+name|fclose
 argument_list|(
-name|distf
+name|dfp
 argument_list|)
 expr_stmt|;
 block|}

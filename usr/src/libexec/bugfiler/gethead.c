@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)gethead.c	5.1 (Berkeley) 86/11/25"
+literal|"@(#)gethead.c	5.2 (Berkeley) 87/04/11"
 decl_stmt|;
 end_decl_stmt
 
@@ -35,12 +35,6 @@ begin_include
 include|#
 directive|include
 file|<sys/stat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/dir.h>
 end_include
 
 begin_include
@@ -199,39 +193,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
-name|short
-name|do_redist
-decl_stmt|,
-comment|/* if redistributing report */
-name|made_dist
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* if dist file needs removing */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-name|tmpname
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* temp bug report file */
-end_comment
-
-begin_decl_stmt
-name|char
+name|FILE
 modifier|*
-name|distf
-init|=
-name|TMP_FILE
-decl_stmt|,
-comment|/* redist temp file */
+name|dfp
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* distf file pointer */
+end_comment
+
+begin_decl_stmt
+name|char
 name|dir
 index|[
 name|MAXNAMLEN
@@ -251,8 +224,16 @@ end_comment
 
 begin_macro
 name|gethead
-argument_list|()
+argument_list|(
+argument|redist
+argument_list|)
 end_macro
+
+begin_decl_stmt
+name|int
+name|redist
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -262,12 +243,6 @@ modifier|*
 name|hp
 decl_stmt|;
 comment|/* mail header pointer */
-specifier|register
-name|FILE
-modifier|*
-name|dfp
-decl_stmt|;
-comment|/* distf file pointer */
 name|char
 modifier|*
 name|strcpy
@@ -276,46 +251,64 @@ decl_stmt|,
 modifier|*
 name|malloc
 argument_list|()
-decl_stmt|,
-modifier|*
-name|mktemp
-argument_list|()
 decl_stmt|;
 if|if
 condition|(
-name|do_redist
-operator|&&
-operator|(
+name|redist
+condition|)
+block|{
+name|int
+name|fd
+decl_stmt|;
+name|char
+modifier|*
+name|distf
+decl_stmt|;
+name|distf
+operator|=
+literal|"/tmp/BUG_XXXXXX"
+expr_stmt|;
+if|if
+condition|(
 operator|!
-name|mktemp
+operator|(
+name|fd
+operator|=
+name|mkstemp
 argument_list|(
 name|distf
 argument_list|)
+operator|)
 operator|||
 operator|!
 operator|(
 name|dfp
 operator|=
-name|fopen
+name|fdopen
 argument_list|(
-name|distf
+name|fd
 argument_list|,
-literal|"w"
+literal|"w+"
 argument_list|)
-operator|)
 operator|)
 condition|)
 name|error
 argument_list|(
-literal|"unable to create redistribution file %s."
+literal|"can't create redistribution file %s."
 argument_list|,
 name|distf
 argument_list|)
 expr_stmt|;
-name|made_dist
-operator|=
-name|YES
+comment|/* disappear after last reference is closed */
+operator|(
+name|void
+operator|)
+name|unlink
+argument_list|(
+name|distf
+argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -330,7 +323,7 @@ argument_list|)
 condition|)
 name|error
 argument_list|(
-literal|"unable to read temporary bug file %s."
+literal|"can't read temporary bug file %s."
 argument_list|,
 name|tmpname
 argument_list|)
@@ -437,11 +430,14 @@ operator|)
 condition|)
 name|error
 argument_list|(
-literal|"unable to allocate space for header search."
+literal|"malloc failed."
 argument_list|,
 name|CHN
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|hp
@@ -473,7 +469,7 @@ operator|->
 name|redist
 operator|)
 operator|&&
-name|do_redist
+name|redist
 condition|)
 name|fputs
 argument_list|(
@@ -498,15 +494,6 @@ argument_list|(
 literal|"no readable \"Index:\" header in bug report."
 argument_list|,
 name|CHN
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|do_redist
-condition|)
-name|fclose
-argument_list|(
-name|dfp
 argument_list|)
 expr_stmt|;
 block|}
@@ -566,7 +553,6 @@ operator|(
 name|NO
 operator|)
 return|;
-comment|/* backward compatible, deal with "bin/from.c" */
 if|if
 condition|(
 name|C
@@ -579,6 +565,7 @@ literal|'/'
 argument_list|)
 condition|)
 block|{
+comment|/* deal with "bin/from.c" */
 if|if
 condition|(
 name|C
