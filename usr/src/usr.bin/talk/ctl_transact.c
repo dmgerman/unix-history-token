@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ctl_transact.c	1.2 (Berkeley) %G%"
+literal|"@(#)ctl_transact.c	1.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -111,18 +111,6 @@ name|struct
 name|timeval
 name|wait
 decl_stmt|;
-name|wait
-operator|.
-name|tv_sec
-operator|=
-name|CTL_WAIT
-expr_stmt|;
-name|wait
-operator|.
-name|tv_usec
-operator|=
-literal|0
-expr_stmt|;
 name|msg
 operator|.
 name|type
@@ -150,6 +138,18 @@ expr_stmt|;
 comment|/* 	 * keep sending the message until a response of the right 	 * type is obtained 	 */
 do|do
 block|{
+name|wait
+operator|.
+name|tv_sec
+operator|=
+name|CTL_WAIT
+expr_stmt|;
+name|wait
+operator|.
+name|tv_usec
+operator|=
+literal|0
+expr_stmt|;
 comment|/* keep sending the message until a response is obtained */
 do|do
 block|{
@@ -209,6 +209,9 @@ name|read_mask
 operator|=
 name|ctl_mask
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|nready
 operator|=
 name|select
@@ -225,10 +228,7 @@ argument_list|,
 operator|&
 name|wait
 argument_list|)
-expr_stmt|;
-while|while
-condition|(
-name|nready
+operator|)
 operator|<
 literal|0
 condition|)
