@@ -2959,7 +2959,7 @@ directive|endif
 default|default:
 return|return
 operator|(
-name|ENOTTY
+name|ENOIOCTL
 operator|)
 return|;
 block|}
