@@ -4,23 +4,43 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * stlload.c  -- stallion intelligent multiport down loader.  *  * Copyright (c) 1994-1996 Greg Ungerer (gerg@stallion.oz.au).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Greg Ungerer.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id$  */
+comment|/*  * stlload.c  -- stallion intelligent multiport down loader.  *  * Copyright (c) 1994-1996 Greg Ungerer (gerg@stallion.oz.au).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Greg Ungerer.  * 4. Neither the name of the author nor the names of any co-contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
 comment|/*****************************************************************************/
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|lint
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|rcsid
+index|[]
+init|=
+literal|"$Id$"
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* not lint */
+end_comment
 
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<err.h>
 end_include
 
 begin_include
@@ -32,7 +52,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<stdio.h>
 end_include
 
 begin_include
@@ -45,6 +65,12 @@ begin_include
 include|#
 directive|include
 file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -104,13 +130,6 @@ name|oldimage
 init|=
 name|BOOTDIR
 literal|"/2681.sys"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|progname
 decl_stmt|;
 end_decl_stmt
 
@@ -238,6 +257,7 @@ comment|/*  *	Declare internal function prototypes here.  */
 end_comment
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -282,6 +302,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|()
@@ -290,79 +311,11 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [OPTION]\n\n"
+literal|"%s\n%s\n"
 argument_list|,
-name|progname
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
+literal|"usage: stlload [-vhVR] [-i image-file] [-c control-device] [-r rx-buf-size]"
 argument_list|,
-literal|"    -h      print this information\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"    -v      print full diagnotsic trace\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"    -V      show version information and exit\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"    -i      specify image file to use\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"    -b      download board number\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"    -d      specify memory device to use\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"    -B      enable slave boot banner\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"    -R      reset board only\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"    -t      set size of TX slave buffer\n"
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"    -r      set size of RX slave buffer\n"
+literal|"               [-t tx-buf-size] [-B boot-banner] [-b unit-number]"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -595,8 +548,6 @@ decl_stmt|,
 name|sigok
 decl_stmt|,
 name|n
-decl_stmt|,
-name|rc
 decl_stmt|;
 if|if
 condition|(
@@ -625,17 +576,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: failed to open memory device %s, errno=%d\n"
-argument_list|,
-name|progname
+literal|"failed to open memory device %s"
 argument_list|,
 name|memdevice
-argument_list|,
-name|errno
 argument_list|)
 expr_stmt|;
 return|return
@@ -669,15 +614,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: ioctl(STL_BSTOP) failed, errno=%d\n"
-argument_list|,
-name|progname
-argument_list|,
-name|errno
+literal|"ioctl(STL_BSTOP)"
 argument_list|)
 expr_stmt|;
 return|return
@@ -710,15 +649,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: ioctl(STL_BRESET) failed, errno=%d\n"
-argument_list|,
-name|progname
-argument_list|,
-name|errno
+literal|"ioctl(STL_BRESET)"
 argument_list|)
 expr_stmt|;
 return|return
@@ -761,15 +694,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: ioctl(STL_BINTR) failed, errno=%d\n"
-argument_list|,
-name|progname
-argument_list|,
-name|errno
+literal|"ioctl(STL_BINTR)"
 argument_list|)
 expr_stmt|;
 return|return
@@ -807,17 +734,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: failed to open image file %s, errno=%d\n"
-argument_list|,
-name|progname
+literal|"failed to open image file %s"
 argument_list|,
 name|image
-argument_list|,
-name|errno
 argument_list|)
 expr_stmt|;
 return|return
@@ -855,17 +776,11 @@ operator|!=
 name|CDK_SIGADDR
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: lseek(%x) failed on memory file, errno=%d\n"
-argument_list|,
-name|progname
+literal|"lseek(%x) failed on memory file"
 argument_list|,
 name|CDK_FEATADDR
-argument_list|,
-name|errno
 argument_list|)
 expr_stmt|;
 return|return
@@ -893,15 +808,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: read of ROM signature failed, errno=%d\n"
-argument_list|,
-name|progname
-argument_list|,
-name|errno
+literal|"read of ROM signature failed"
 argument_list|)
 expr_stmt|;
 return|return
@@ -958,17 +867,11 @@ operator|!=
 name|CDK_SIGADDR
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: lseek(%x) failed on memory file, errno=%d\n"
-argument_list|,
-name|progname
+literal|"lseek(%x) failed on memory file"
 argument_list|,
 name|CDK_FEATADDR
-argument_list|,
-name|errno
 argument_list|)
 expr_stmt|;
 return|return
@@ -996,15 +899,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: read of ROM signature failed, errno=%d\n"
-argument_list|,
-name|progname
-argument_list|,
-name|errno
+literal|"read of ROM signature failed"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1079,13 +976,9 @@ operator|!
 name|sigok
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: unknown signature from board\n"
-argument_list|,
-name|progname
+literal|"unknown signature from board"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1134,15 +1027,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: read of image file failed, errno=%d\n"
-argument_list|,
-name|progname
-argument_list|,
-name|errno
+literal|"read of image file failed"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1166,17 +1053,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: lseek(%x) failed on memory file, errno=%d\n"
-argument_list|,
-name|progname
+literal|"lseek(%x) failed on memory file"
 argument_list|,
 name|CDK_FEATADDR
-argument_list|,
-name|errno
 argument_list|)
 expr_stmt|;
 return|return
@@ -1200,15 +1081,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: write to memory device failed, errno=%d\n"
-argument_list|,
-name|progname
-argument_list|,
-name|errno
+literal|"write to memory device failed"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1232,17 +1107,11 @@ operator|!=
 literal|0x1000
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: lseek(%x) failed on image file, errno=%d\n"
-argument_list|,
-name|progname
+literal|"lseek(%x) failed on image file"
 argument_list|,
 name|CDK_FEATADDR
-argument_list|,
-name|errno
 argument_list|)
 expr_stmt|;
 return|return
@@ -1266,17 +1135,11 @@ operator|!=
 literal|0x1000
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: lseek(%x) failed on memory device, errno=%d\n"
-argument_list|,
-name|progname
+literal|"lseek(%x) failed on memory device"
 argument_list|,
 name|CDK_FEATADDR
-argument_list|,
-name|errno
 argument_list|)
 expr_stmt|;
 return|return
@@ -1307,15 +1170,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: read of image file failed, errno=%d\n"
-argument_list|,
-name|progname
-argument_list|,
-name|errno
+literal|"read of image file failed"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1339,15 +1196,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: write to memory device failed, errno=%d\n"
-argument_list|,
-name|progname
-argument_list|,
-name|errno
+literal|"write to memory device failed"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1400,17 +1251,11 @@ operator|!=
 name|CDK_FEATADDR
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: lseek(%x) failed on memory device, errno=%d\n"
-argument_list|,
-name|progname
+literal|"lseek(%x) failed on memory device"
 argument_list|,
 name|CDK_FEATADDR
-argument_list|,
-name|errno
 argument_list|)
 expr_stmt|;
 return|return
@@ -1438,15 +1283,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: write to memory device failed, errno=%d\n"
-argument_list|,
-name|progname
-argument_list|,
-name|errno
+literal|"write to memory device failed"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1480,17 +1319,11 @@ operator|!=
 name|CDK_RDYADDR
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: lseek(%x) failed on memory device, errno=%d\n"
-argument_list|,
-name|progname
+literal|"lseek(%x) failed on memory device"
 argument_list|,
 name|CDK_RDYADDR
-argument_list|,
-name|errno
 argument_list|)
 expr_stmt|;
 return|return
@@ -1519,15 +1352,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: write to memory device failed, errno=%d\n"
-argument_list|,
-name|progname
-argument_list|,
-name|errno
+literal|"write to memory device failed"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1561,15 +1388,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: ioctl(STL_BINTR) failed, errno=%d\n"
-argument_list|,
-name|progname
-argument_list|,
-name|errno
+literal|"ioctl(STL_BINTR) failed"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1635,18 +1456,11 @@ operator|!=
 name|CDK_RDYADDR
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: lseek(%x) failed on memory device, "
-literal|"errno=%d\n"
-argument_list|,
-name|progname
+literal|"lseek(%x) failed on memory device"
 argument_list|,
 name|CDK_RDYADDR
-argument_list|,
-name|errno
 argument_list|)
 expr_stmt|;
 return|return
@@ -1671,15 +1485,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: read of image file failed, errno=%d\n"
-argument_list|,
-name|progname
-argument_list|,
-name|errno
+literal|"read of image file failed"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1704,13 +1512,9 @@ operator|!=
 name|CDK_ALIVEMARKER
 condition|)
 block|{
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: slave image failed to start\n"
-argument_list|,
-name|progname
+literal|"slave image failed to start"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1734,17 +1538,11 @@ operator|!=
 name|CDK_RDYADDR
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: lseek(%x) failed on memory device, errno=%d\n"
-argument_list|,
-name|progname
+literal|"lseek(%x) failed on memory device"
 argument_list|,
 name|CDK_RDYADDR
-argument_list|,
-name|errno
 argument_list|)
 expr_stmt|;
 return|return
@@ -1773,15 +1571,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: write to memory device failed, errno=%d\n"
-argument_list|,
-name|progname
-argument_list|,
-name|errno
+literal|"write to memory device failed"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1824,15 +1616,9 @@ operator|<
 literal|0
 condition|)
 block|{
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: ioctl(STL_BSTART) failed, errno=%d\n"
-argument_list|,
-name|progname
-argument_list|,
-name|errno
+literal|"ioctl(STL_BSTART) failed"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1885,13 +1671,6 @@ name|optind
 operator|=
 literal|0
 expr_stmt|;
-name|progname
-operator|=
-name|argv
-index|[
-literal|0
-index|]
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -1921,9 +1700,7 @@ literal|'V'
 case|:
 name|printf
 argument_list|(
-literal|"%s version %s\n"
-argument_list|,
-name|progname
+literal|"stlload version %s\n"
 argument_list|,
 name|version
 argument_list|)
@@ -2056,24 +1833,15 @@ operator|>=
 literal|8
 operator|)
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: invalid board number %d specified\n"
-argument_list|,
-name|progname
+literal|"invalid board number %d specified"
 argument_list|,
 name|brdnr
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 name|sprintf
 argument_list|(
 name|devstr
@@ -2129,24 +1897,15 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: memory device %s does not exist\n"
-argument_list|,
-name|progname
+literal|"memory device %s does not exist"
 argument_list|,
 name|memdevice
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 operator|(
@@ -2159,24 +1918,15 @@ operator|)
 operator|!=
 name|S_IFCHR
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: memory device %s is not a char device\n"
-argument_list|,
-name|progname
+literal|"memory device %s is not a char device"
 argument_list|,
 name|memdevice
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|stat
@@ -2189,24 +1939,15 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-block|{
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+literal|1
 argument_list|,
-literal|"%s: image file %s does not exist\n"
-argument_list|,
-name|progname
+literal|"image file %s does not exist"
 argument_list|,
 name|image
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 comment|/*  *	All argument checking is now done. So lets get this show on the road.  */
 if|if
 condition|(
