@@ -29,6 +29,13 @@ begin_comment
 comment|/* type definitions */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DB_LINES_PER_PAGE
+value|20
+end_define
+
 begin_typedef
 typedef|typedef
 name|void
@@ -46,6 +53,18 @@ parameter_list|,
 name|char
 modifier|*
 name|modif
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
+name|db_page_calloutfcn_t
+parameter_list|(
+name|void
+modifier|*
+name|arg
 parameter_list|)
 function_decl|;
 end_typedef
@@ -419,6 +438,24 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|db_setup_paging
+parameter_list|(
+name|db_page_calloutfcn_t
+modifier|*
+name|callout
+parameter_list|,
+name|void
+modifier|*
+name|arg
+parameter_list|,
+name|int
+name|maxlines
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|db_skip_to_eol
 parameter_list|(
 name|void
@@ -654,6 +691,12 @@ unit|db_cmdfcn_t	db_help_cmd; db_cmdfcn_t	db_show_all_threads; db_cmdfcn_t	ipc_p
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+name|db_page_calloutfcn_t
+name|db_simple_pager
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* Scare the user with backtrace of curthread to console. */

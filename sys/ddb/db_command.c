@@ -1361,6 +1361,16 @@ argument_list|,
 name|modif
 argument_list|)
 expr_stmt|;
+name|db_setup_paging
+argument_list|(
+name|NULL
+argument_list|,
+name|NULL
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|cmd
