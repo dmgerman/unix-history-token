@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1992 William F. Jolitz, TeleMuse  * All rights reser
 end_comment
 
 begin_comment
-comment|/*  * Changes Copyright (C) 1995, David Greenman& John Dyson; This software may  * be used, modified, copied, distributed, and sold, in both source and  * binary form provided that the above copyright and these terms are  * retained. Under no circumstances is the author responsible for the proper  * functioning of this software, nor does the author assume any responsibility  * for damages incurred with its use.  *  *	$Id: subr_rlist.c,v 1.16 1996/03/02 22:57:45 dyson Exp $  */
+comment|/*  * Changes Copyright (C) 1995, David Greenman& John Dyson; This software may  * be used, modified, copied, distributed, and sold, in both source and  * binary form provided that the above copyright and these terms are  * retained. Under no circumstances is the author responsible for the proper  * functioning of this software, nor does the author assume any responsibility  * for damages incurred with its use.  *  *	$Id: subr_rlist.c,v 1.17 1996/03/03 21:10:52 dyson Exp $  */
 end_comment
 
 begin_include
@@ -131,7 +131,7 @@ block|{
 name|int
 name|s
 init|=
-name|splhigh
+name|splvm
 argument_list|()
 decl_stmt|;
 name|rl
@@ -312,7 +312,7 @@ name|s
 decl_stmt|;
 name|s
 operator|=
-name|splhigh
+name|splvm
 argument_list|()
 expr_stmt|;
 while|while
@@ -742,7 +742,7 @@ literal|0
 decl_stmt|;
 name|s
 operator|=
-name|splhigh
+name|splvm
 argument_list|()
 expr_stmt|;
 while|while
