@@ -3879,11 +3879,11 @@ name|ggeom
 modifier|*
 name|gp
 parameter_list|,
-name|size_t
+name|int
 modifier|*
 name|name_len
 parameter_list|,
-name|size_t
+name|int
 modifier|*
 name|status_len
 parameter_list|)
@@ -3898,7 +3898,7 @@ name|gconfig
 modifier|*
 name|conf
 decl_stmt|;
-name|size_t
+name|int
 name|len
 decl_stmt|;
 name|assert
@@ -4120,10 +4120,10 @@ name|ggeom
 modifier|*
 name|gp
 parameter_list|,
-name|size_t
+name|int
 name|name_len
 parameter_list|,
-name|size_t
+name|int
 name|status_len
 parameter_list|)
 block|{
@@ -4185,9 +4185,6 @@ name|printf
 argument_list|(
 literal|"%*s"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|name_len
 argument_list|,
 name|name
@@ -4220,9 +4217,6 @@ name|printf
 argument_list|(
 literal|"  %*s"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|status_len
 argument_list|,
 name|conf
@@ -4243,9 +4237,6 @@ name|printf
 argument_list|(
 literal|"  %*s"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|status_len
 argument_list|,
 literal|"N/A"
@@ -4276,16 +4267,10 @@ name|printf
 argument_list|(
 literal|"%*s  %*s"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|name_len
 argument_list|,
 literal|""
 argument_list|,
-operator|(
-name|int
-operator|)
 name|status_len
 argument_list|,
 literal|""
@@ -4348,7 +4333,7 @@ name|ggeom
 modifier|*
 name|gp
 decl_stmt|;
-name|size_t
+name|int
 name|name_len
 decl_stmt|,
 name|status_len
@@ -4650,16 +4635,10 @@ name|printf
 argument_list|(
 literal|"%*s  %*s  %s\n"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|name_len
 argument_list|,
 literal|"Name"
 argument_list|,
-operator|(
-name|int
-operator|)
 name|status_len
 argument_list|,
 literal|"Status"
