@@ -225,7 +225,7 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 name|void
 name|clear_fsc
 parameter_list|()
