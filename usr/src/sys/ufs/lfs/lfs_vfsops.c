@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	8.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_vfsops.c	8.17 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -249,6 +249,9 @@ decl_stmt|;
 comment|/* 	 * Get vnodes for swapdev and rootdev. 	 */
 if|if
 condition|(
+operator|(
+name|error
+operator|=
 name|bdevvp
 argument_list|(
 name|swapdev
@@ -256,7 +259,11 @@ argument_list|,
 operator|&
 name|swapdev_vp
 argument_list|)
+operator|)
 operator|||
+operator|(
+name|error
+operator|=
 name|bdevvp
 argument_list|(
 name|rootdev
@@ -264,12 +271,20 @@ argument_list|,
 operator|&
 name|rootvp
 argument_list|)
+operator|)
 condition|)
-name|panic
+block|{
+name|printf
 argument_list|(
-literal|"ffs_mountroot: can't setup bdevvp's"
+literal|"lfs_mountroot: can't setup bdevvp's"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|error
