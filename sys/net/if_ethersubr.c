@@ -2783,13 +2783,6 @@ return|return;
 block|}
 block|}
 block|}
-name|ether_demux
-argument_list|(
-name|ifp
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
 comment|/* First chunk of an mbuf contains good entropy */
 if|if
 condition|(
@@ -2808,6 +2801,13 @@ argument_list|,
 literal|0
 argument_list|,
 name|RANDOM_NET
+argument_list|)
+expr_stmt|;
+name|ether_demux
+argument_list|(
+name|ifp
+argument_list|,
+name|m
 argument_list|)
 expr_stmt|;
 block|}
