@@ -132,7 +132,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|BADSIG
+name|SIG_ERR
 operator|)
 return|;
 return|return
