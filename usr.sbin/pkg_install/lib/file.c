@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: file.c,v 1.9 1995/05/10 23:00:16 jkh Exp $"
+literal|"$Id: file.c,v 1.10 1995/05/30 03:50:05 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -56,14 +56,19 @@ modifier|*
 name|fname
 parameter_list|)
 block|{
+name|struct
+name|stat
+name|dummy
+decl_stmt|;
 if|if
 condition|(
 operator|!
-name|access
+name|lstat
 argument_list|(
 name|fname
 argument_list|,
-name|F_OK
+operator|&
+name|dummy
 argument_list|)
 condition|)
 return|return
