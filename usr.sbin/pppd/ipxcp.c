@@ -21,7 +21,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ipxcp.c,v 1.5 1997/03/04 03:39:32 paulus Exp $"
+literal|"$Id: ipxcp.c,v 1.6 1998/03/25 03:08:16 paulus Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -823,7 +823,7 @@ name|sprintf
 argument_list|(
 name|b
 argument_list|,
-literal|"%lx"
+literal|"%x"
 argument_list|,
 name|ipxaddr
 argument_list|)
@@ -1420,16 +1420,6 @@ modifier|*
 name|f
 decl_stmt|;
 block|{
-name|u_int32_t
-name|network
-decl_stmt|;
-name|int
-name|unit
-init|=
-name|f
-operator|->
-name|unit
-decl_stmt|;
 name|wo
 operator|->
 name|req_node
@@ -1595,13 +1585,6 @@ name|f
 decl_stmt|;
 block|{
 name|int
-name|unit
-init|=
-name|f
-operator|->
-name|unit
-decl_stmt|;
-name|int
 name|len
 decl_stmt|;
 name|len
@@ -1699,19 +1682,6 @@ modifier|*
 name|lenp
 decl_stmt|;
 block|{
-name|int
-name|len
-init|=
-operator|*
-name|lenp
-decl_stmt|;
-name|int
-name|unit
-init|=
-name|f
-operator|->
-name|unit
-decl_stmt|;
 comment|/*  * Add the options to the record.  */
 if|if
 condition|(
@@ -1940,13 +1910,6 @@ name|int
 name|len
 decl_stmt|;
 block|{
-name|int
-name|unit
-init|=
-name|f
-operator|->
-name|unit
-decl_stmt|;
 name|u_short
 name|cilen
 decl_stmt|,
@@ -2183,13 +2146,6 @@ name|int
 name|len
 decl_stmt|;
 block|{
-name|int
-name|unit
-init|=
-name|f
-operator|->
-name|unit
-decl_stmt|;
 name|u_char
 name|citype
 decl_stmt|,
@@ -2662,13 +2618,6 @@ name|int
 name|len
 decl_stmt|;
 block|{
-name|int
-name|unit
-init|=
-name|f
-operator|->
-name|unit
-decl_stmt|;
 name|u_short
 name|cilen
 decl_stmt|,
@@ -2905,13 +2854,6 @@ name|int
 name|reject_if_disagree
 decl_stmt|;
 block|{
-name|int
-name|unit
-init|=
-name|f
-operator|->
-name|unit
-decl_stmt|;
 name|u_char
 modifier|*
 name|cip
@@ -2928,16 +2870,10 @@ decl_stmt|;
 comment|/* Parsed len, type */
 name|u_short
 name|cishort
-decl_stmt|,
-name|ts
 decl_stmt|;
 comment|/* Parsed short value */
 name|u_int32_t
-name|tl
-decl_stmt|,
 name|cinetwork
-decl_stmt|,
-name|outnet
 decl_stmt|;
 comment|/* Parsed address values */
 name|int
@@ -2969,11 +2905,6 @@ operator|*
 name|len
 decl_stmt|;
 comment|/* Length left */
-name|u_char
-name|maxslotindex
-decl_stmt|,
-name|cflag
-decl_stmt|;
 comment|/*      * Reset all his options.      */
 name|BZERO
 argument_list|(
@@ -4020,10 +3951,6 @@ operator|!
 name|reject_if_disagree
 condition|)
 block|{
-name|u_char
-modifier|*
-name|ps
-decl_stmt|;
 if|if
 condition|(
 name|rc
@@ -4449,11 +4376,6 @@ modifier|*
 name|f
 decl_stmt|;
 block|{
-name|u_int32_t
-name|ournn
-decl_stmt|,
-name|network
-decl_stmt|;
 name|IPXCPDEBUG
 argument_list|(
 operator|(
@@ -4509,13 +4431,6 @@ modifier|*
 name|script
 decl_stmt|;
 block|{
-name|int
-name|unit
-init|=
-name|f
-operator|->
-name|unit
-decl_stmt|;
 name|char
 name|strspeed
 index|[

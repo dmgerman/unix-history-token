@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: pppstats.c,v 1.19 1997/04/30 06:00:27 paulus Exp $"
+literal|"$Id: pppstats.c,v 1.22 1998/03/31 23:48:03 paulus Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -96,12 +96,6 @@ directive|include
 file|<sys/ioctl.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<net/ppp_defs.h>
-end_include
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -118,6 +112,12 @@ begin_comment
 comment|/* *BSD, Linux, NeXT, Ultrix etc. */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_linux_
+end_ifndef
+
 begin_include
 include|#
 directive|include
@@ -127,8 +127,80 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/ppp_defs.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if_ppp.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* Linux */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__GLIBC__
+operator|>=
+literal|2
+end_if
+
+begin_include
+include|#
+directive|include
+file|<net/if.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<linux/if.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<linux/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<linux/ppp_defs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<linux/if_ppp.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _linux_ */
+end_comment
 
 begin_else
 else|#
@@ -148,6 +220,12 @@ end_include
 begin_comment
 comment|/* SVR4, Solaris 2, SunOS 4, OSF/1, etc. */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<net/ppp_defs.h>
+end_include
 
 begin_include
 include|#

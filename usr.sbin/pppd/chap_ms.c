@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: chap_ms.c,v 1.5 1997/11/27 06:08:10 paulus Exp $"
+literal|"$Id: chap_ms.c,v 1.8 1998/04/01 00:15:43 paulus Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -75,6 +75,23 @@ include|#
 directive|include
 file|<unistd.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CRYPT_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<crypt.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1078,13 +1095,6 @@ name|MAX_NT_PASSWORD
 operator|*
 literal|2
 index|]
-decl_stmt|;
-specifier|static
-name|int
-name|low_byte_first
-init|=
-operator|-
-literal|1
 decl_stmt|;
 comment|/* Initialize the Unicode version of the secret (== password). */
 comment|/* This implicitly supports 8-bit ISO8859/1 characters. */
