@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)outbound.c	3.1 (Berkeley) %G%"
+literal|"@(#)outbound.c	3.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1684,8 +1684,6 @@ argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
-for|for
-control|(
 name|i
 operator|=
 name|Addr3270
@@ -1700,18 +1698,8 @@ index|[
 literal|1
 index|]
 argument_list|)
-init|;
-name|i
-operator|!=
-name|BufferAddress
-condition|;
-name|BufferAddress
-operator|=
-name|ScreenInc
-argument_list|(
-name|BufferAddress
-argument_list|)
-control|)
+expr_stmt|;
+do|do
 block|{
 if|if
 condition|(
@@ -1749,7 +1737,21 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|BufferAddress
+operator|=
+name|ScreenInc
+argument_list|(
+name|BufferAddress
+argument_list|)
+expr_stmt|;
 block|}
+do|while
+condition|(
+name|i
+operator|!=
+name|BufferAddress
+condition|)
+do|;
 name|buffer
 operator|+=
 literal|2
