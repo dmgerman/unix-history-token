@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (Mostly) Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *      $Id: aha1542.c,v 1.46 1995/08/23 23:02:22 gibbs Exp $  */
+comment|/*  * (Mostly) Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *      $Id: aha1542.c,v 1.47 1995/09/19 18:55:04 bde Exp $  */
 end_comment
 
 begin_comment
@@ -94,6 +94,16 @@ include|#
 directive|include
 file|<machine/clock.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/cpu.h>
+end_include
+
+begin_comment
+comment|/* XXX for bootverbose: a funny place */
+end_comment
 
 begin_endif
 endif|#
@@ -1310,6 +1320,7 @@ comment|/* 0x42 ('B') = AHA-1640 */
 comment|/* 0x43 ('C') = AHA-1542C */
 comment|/* 0x44 ('D') = AHA-1542CF */
 comment|/* 0x45 ('E') = AHA-1542CF, BIOS v2.01 */
+comment|/* 0x46 ('F') = AHA-1542CP, "Plug'nPlay" */
 name|u_char
 name|spec_opts
 decl_stmt|;
@@ -4031,12 +4042,29 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/* Macro to determine that a rev is potentially a new valid one  * so that the driver doesn't keep breaking on new revs as it  * did for the CF and CP.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PROBABLY_NEW_BOARD
+parameter_list|(
+name|REV
+parameter_list|)
+value|(REV> 0x43&& REV< 0x56)
+end_define
+
 begin_function
 specifier|static
 name|char
 modifier|*
 name|board_rev
 parameter_list|(
+name|int
+name|unit
+parameter_list|,
 name|int
 name|type
 parameter_list|)
@@ -4088,7 +4116,43 @@ case|:
 return|return
 literal|"AHA-1542CF BIOS v2.01"
 return|;
+case|case
+literal|0x46
+case|:
+return|return
+literal|"AHA-1542CP"
+return|;
 default|default:
+if|if
+condition|(
+name|PROBABLY_NEW_BOARD
+argument_list|(
+name|type
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"aha%d: Assuming type %02x is a new board.\n"
+argument_list|,
+name|unit
+argument_list|,
+name|type
+argument_list|)
+expr_stmt|;
+return|return
+literal|"New Adaptec rev?"
+return|;
+block|}
+name|printf
+argument_list|(
+literal|"aha%d: type %02x is an unknown board.\n"
+argument_list|,
+name|unit
+argument_list|,
+name|type
+argument_list|)
+expr_stmt|;
 return|return
 literal|"Unknown board"
 return|;
@@ -4119,6 +4183,10 @@ name|ahadata
 index|[
 name|unit
 index|]
+decl_stmt|;
+name|char
+modifier|*
+name|desc
 decl_stmt|;
 name|unsigned
 name|char
@@ -4410,54 +4478,56 @@ name|flags
 operator|=
 name|SDEV_BOUNCE
 expr_stmt|;
-comment|/* 	 * If we are a 1542C or 1542CF disable the extended bios so that the 	 * mailbox interface is unlocked. 	 * This is also true for the 1542B Version 3.20. First Adaptec 	 * board that supports>1Gb drives. 	 * No need to check the extended bios flags as some of the 	 * extensions that cause us problems are not flagged in that byte. 	 */
-name|printf
-argument_list|(
-literal|"aha%d: %s-V%c.%c"
-argument_list|,
-name|unit
-argument_list|,
+define|#
+directive|define
+name|PRVERBOSE
+parameter_list|(
+name|x
+parameter_list|)
+value|if (bootverbose) printf x
+comment|/* 	 * If we are a new type of 1542 board (anything newer than a 1542C) 	 * then disable the extended bios so that the 	 * mailbox interface is unlocked. 	 * This is also true for the 1542B Version 3.20. First Adaptec 	 * board that supports>1Gb drives. 	 * No need to check the extended bios flags as some of the 	 * extensions that cause us problems are not flagged in that byte. 	 */
+name|desc
+operator|=
 name|board_rev
 argument_list|(
+name|unit
+argument_list|,
 name|inquire
 operator|.
 name|boardid
 argument_list|)
-argument_list|,
+expr_stmt|;
+name|PRVERBOSE
+argument_list|(
+operator|(
+literal|"aha%d: Rev %02x (%s) V%c.%c"
+operator|,
+name|unit
+operator|,
+name|inquire
+operator|.
+name|boardid
+operator|,
+name|desc
+operator|,
 name|inquire
 operator|.
 name|revision_1
-argument_list|,
+operator|,
 name|inquire
 operator|.
 name|revision_2
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
+name|PROBABLY_NEW_BOARD
+argument_list|(
 name|inquire
 operator|.
 name|boardid
-operator|==
-literal|0x43
-operator|)
-operator|||
-operator|(
-name|inquire
-operator|.
-name|boardid
-operator|==
-literal|0x44
-operator|)
-operator|||
-operator|(
-name|inquire
-operator|.
-name|boardid
-operator|==
-literal|0x45
-operator|)
+argument_list|)
 operator|||
 operator|(
 name|inquire
@@ -4516,9 +4586,11 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* AHADEBUG */
-name|printf
+name|PRVERBOSE
 argument_list|(
+operator|(
 literal|", enabling mailbox"
+operator|)
 argument_list|)
 expr_stmt|;
 name|aha_cmd
@@ -4546,29 +4618,12 @@ block|}
 comment|/* Which boards support residuals?  Some early 1542A's apparently 	 * don't.  The 1542B with V0.5 of the software does, so I've 	 * arbitrarily set that as the earliest rev. 	 */
 if|if
 condition|(
-operator|(
+name|PROBABLY_NEW_BOARD
+argument_list|(
 name|inquire
 operator|.
 name|boardid
-operator|==
-literal|0x43
-operator|)
-operator|||
-operator|(
-name|inquire
-operator|.
-name|boardid
-operator|==
-literal|0x44
-operator|)
-operator|||
-operator|(
-name|inquire
-operator|.
-name|boardid
-operator|==
-literal|0x45
-operator|)
+argument_list|)
 operator|||
 operator|(
 name|inquire
@@ -4593,9 +4648,11 @@ operator|)
 operator|)
 condition|)
 block|{
-name|printf
+name|PRVERBOSE
 argument_list|(
+operator|(
 literal|", enabling residuals"
+operator|)
 argument_list|)
 expr_stmt|;
 name|aha
@@ -4611,7 +4668,7 @@ operator|=
 name|AHA_INIT_SG_RESID_CCB
 expr_stmt|;
 block|}
-comment|/* Which boards support target operations?  The 1542C completely 	 * locks up the SCSI bus if you enable them.  I'm only sure 	 * about the B. 	 */
+comment|/* Which boards support target operations?  The 1542C completely 	 * locks up the SCSI bus if you enable them.  I'm only sure 	 * about the B, which was sold in the OEM market as a target 	 * board. 	 */
 if|if
 condition|(
 name|inquire
@@ -4621,9 +4678,11 @@ operator|==
 literal|0x41
 condition|)
 block|{
-name|printf
+name|PRVERBOSE
 argument_list|(
+operator|(
 literal|", target ops"
+operator|)
 argument_list|)
 expr_stmt|;
 name|aha
@@ -4633,26 +4692,23 @@ operator||=
 name|SDEV_TARGET_OPS
 expr_stmt|;
 block|}
-name|printf
+name|PRVERBOSE
 argument_list|(
+operator|(
 literal|"\n"
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * setup dma channel from jumpers and save int 	 * level 	 */
-name|printf
+name|PRVERBOSE
 argument_list|(
+operator|(
 literal|"aha%d: reading board settings, "
-argument_list|,
+operator|,
 name|unit
+operator|)
 argument_list|)
 expr_stmt|;
-define|#
-directive|define
-name|PRNT
-parameter_list|(
-name|x
-parameter_list|)
-value|printf(x)
 if|if
 condition|(
 name|inquire
@@ -4718,11 +4774,6 @@ name|aha_dma
 operator|=
 literal|0
 expr_stmt|;
-name|PRNT
-argument_list|(
-literal|"dma=0 "
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|CHAN5
@@ -4746,11 +4797,6 @@ operator|->
 name|aha_dma
 operator|=
 literal|5
-expr_stmt|;
-name|PRNT
-argument_list|(
-literal|"dma=5 "
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -4776,11 +4822,6 @@ name|aha_dma
 operator|=
 literal|6
 expr_stmt|;
-name|PRNT
-argument_list|(
-literal|"dma=6 "
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|CHAN7
@@ -4805,16 +4846,13 @@ name|aha_dma
 operator|=
 literal|7
 expr_stmt|;
-name|PRNT
-argument_list|(
-literal|"dma=7 "
-argument_list|)
-expr_stmt|;
 break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"illegal dma jumper setting\n"
+literal|"aha%d: illegal dma jumper setting\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 return|return
@@ -4823,6 +4861,17 @@ name|EIO
 operator|)
 return|;
 block|}
+name|PRVERBOSE
+argument_list|(
+operator|(
+literal|"dma=%d "
+operator|,
+name|aha
+operator|->
+name|aha_dma
+operator|)
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|conf
@@ -4839,11 +4888,6 @@ name|aha_int
 operator|=
 literal|9
 expr_stmt|;
-name|PRNT
-argument_list|(
-literal|"int=9 "
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|INT10
@@ -4853,11 +4897,6 @@ operator|->
 name|aha_int
 operator|=
 literal|10
-expr_stmt|;
-name|PRNT
-argument_list|(
-literal|"int=10 "
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -4869,11 +4908,6 @@ name|aha_int
 operator|=
 literal|11
 expr_stmt|;
-name|PRNT
-argument_list|(
-literal|"int=11 "
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|INT12
@@ -4883,11 +4917,6 @@ operator|->
 name|aha_int
 operator|=
 literal|12
-expr_stmt|;
-name|PRNT
-argument_list|(
-literal|"int=12 "
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -4899,11 +4928,6 @@ name|aha_int
 operator|=
 literal|14
 expr_stmt|;
-name|PRNT
-argument_list|(
-literal|"int=14 "
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|INT15
@@ -4914,16 +4938,13 @@ name|aha_int
 operator|=
 literal|15
 expr_stmt|;
-name|PRNT
-argument_list|(
-literal|"int=15 "
-argument_list|)
-expr_stmt|;
 break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"illegal int jumper setting\n"
+literal|"aha%d: illegal int jumper setting\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 return|return
@@ -4932,6 +4953,17 @@ name|EIO
 operator|)
 return|;
 block|}
+name|PRVERBOSE
+argument_list|(
+operator|(
+literal|"int=%d "
+operator|,
+name|aha
+operator|->
+name|aha_int
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* who are we on the scsi bus? */
 name|aha
 operator|->
@@ -4940,6 +4972,17 @@ operator|=
 name|conf
 operator|.
 name|scsi_dev
+expr_stmt|;
+name|PRVERBOSE
+argument_list|(
+operator|(
+literal|"id=%d "
+operator|,
+name|aha
+operator|->
+name|aha_scsi_dev
+operator|)
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Change the bus on/off times to not clash with other dma users. 	 */
 name|aha_cmd
@@ -4999,9 +5042,11 @@ return|;
 block|}
 else|#
 directive|else
-name|printf
+name|PRVERBOSE
 argument_list|(
+operator|(
 literal|" (bus speed defaulted)\n"
+operator|)
 argument_list|)
 expr_stmt|;
 endif|#
