@@ -45,26 +45,23 @@ begin_struct
 struct|struct
 name|snoop
 block|{
-name|int
-name|snp_unit
+name|dev_t
+name|snp_target
 decl_stmt|;
-comment|/* Pty unit number to snoop on */
-name|int
-name|snp_type
-decl_stmt|;
-comment|/* Type same as st_type later  */
+comment|/* major/minor number of device*/
 name|u_long
 name|snp_len
-decl_stmt|,
+decl_stmt|;
+comment|/* buffer data length	       */
+name|u_long
 name|snp_base
 decl_stmt|;
-comment|/* Buffer data len and base    */
+comment|/* buffer data base	       */
 name|u_long
 name|snp_blen
 decl_stmt|;
 comment|/* Overall buffer len	       */
-name|char
-modifier|*
+name|caddr_t
 name|snp_buf
 decl_stmt|;
 comment|/* Data buffer		       */
@@ -106,43 +103,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * This is structure to be passed  * to ioctl() so we can define different  * types of tty's..  */
-end_comment
-
-begin_struct
-struct|struct
-name|snptty
-block|{
-name|int
-name|st_unit
-decl_stmt|;
-name|int
-name|st_type
-decl_stmt|;
-define|#
-directive|define
-name|ST_PTY
-value|0
-comment|/* Regular Pty       */
-define|#
-directive|define
-name|ST_VTY
-value|1
-comment|/* Vty for SysCons.. */
-define|#
-directive|define
-name|ST_SIO
-value|2
-comment|/* Serial lines	     */
-define|#
-directive|define
-name|ST_MAXTYPE
-value|2
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/*  * Theese are snoop io controls  * SNPSTTY accepts 'struct snptty' as input.  * If ever type or  unit set to -1,snoop device  * detached from it's current tty.  */
 end_comment
 
@@ -150,14 +110,14 @@ begin_define
 define|#
 directive|define
 name|SNPSTTY
-value|_IOW('T', 90, struct snptty)
+value|_IOW('T', 90, dev_t)
 end_define
 
 begin_define
 define|#
 directive|define
 name|SNPGTTY
-value|_IOR('T', 89, struct snptty)
+value|_IOR('T', 89, dev_t)
 end_define
 
 begin_comment

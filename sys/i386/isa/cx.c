@@ -4292,26 +4292,6 @@ operator|(
 literal|0
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-return|return
-operator|(
-name|ttselect
-argument_list|(
-name|dev
-argument_list|,
-name|flag
-argument_list|,
-name|p
-argument_list|)
-operator|)
-return|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|__bsdi__
 return|return
 operator|(
 name|ttyselect
@@ -4329,8 +4309,6 @@ name|p
 argument_list|)
 operator|)
 return|;
-endif|#
-directive|endif
 block|}
 end_function
 

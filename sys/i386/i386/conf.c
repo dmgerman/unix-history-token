@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) UNIX System Laboratories, Inc.  All or some portions
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)conf.c	5.8 (Berkeley) 5/12/91  *	$Id: conf.c,v 1.66 1995/02/15 12:01:24 jkh Exp $  */
+comment|/*  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * William Jolitz.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)conf.c	5.8 (Berkeley) 5/12/91  *	$Id: conf.c,v 1.67 1995/02/21 04:26:35 jkh Exp $  */
 end_comment
 
 begin_include
@@ -153,6 +153,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|nodevtotty
+value|(d_ttycv_t *)nullop
+end_define
+
+begin_define
+define|#
+directive|define
 name|nxopen
 value|(d_open_t *)enxio
 end_define
@@ -225,6 +232,13 @@ define|#
 directive|define
 name|nxmmap
 value|(d_mmap_t *)enxio
+end_define
+
+begin_define
+define|#
+directive|define
+name|nxdevtotty
+value|(d_ttycv_t *)nullop
 end_define
 
 begin_define
@@ -1885,6 +1899,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|d_select_t
+name|scselect
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|d_ioctl_t
 name|scioctl
 decl_stmt|;
@@ -1897,11 +1917,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
-name|struct
-name|tty
-name|sccons
-index|[]
+name|d_ttycv_t
+name|scdevtotty
 decl_stmt|;
 end_decl_stmt
 
@@ -1941,6 +1958,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|scselect
+value|nxselect
+end_define
+
+begin_define
+define|#
+directive|define
 name|scioctl
 value|nxioctl
 end_define
@@ -1955,8 +1979,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|sccons
-value|NULL
+name|scdevtotty
+value|nxdevtotty
 end_define
 
 begin_endif
@@ -1995,6 +2019,12 @@ end_decl_stmt
 begin_decl_stmt
 name|d_select_t
 name|cttyselect
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_ttycv_t
+name|cttydevtotty
 decl_stmt|;
 end_decl_stmt
 
@@ -2062,7 +2092,11 @@ end_decl_stmt
 begin_decl_stmt
 name|d_rdwr_t
 name|ptsread
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_rdwr_t
 name|ptswrite
 decl_stmt|;
 end_decl_stmt
@@ -2070,6 +2104,12 @@ end_decl_stmt
 begin_decl_stmt
 name|d_stop_t
 name|ptsstop
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|d_select_t
+name|ptsselect
 decl_stmt|;
 end_decl_stmt
 
@@ -2104,17 +2144,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|d_ioctl_t
-name|ptyioctl
+name|d_ttycv_t
+name|ptydevtotty
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|extern
-name|struct
-name|tty
-name|pt_tty
-index|[]
+name|d_ioctl_t
+name|ptyioctl
 decl_stmt|;
 end_decl_stmt
 
@@ -2149,6 +2186,13 @@ define|#
 directive|define
 name|ptswrite
 value|nxwrite
+end_define
+
+begin_define
+define|#
+directive|define
+name|ptsselect
+value|nxselect
 end_define
 
 begin_define
@@ -2189,13 +2233,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|pt_tty
-value|NULL
-end_define
-
-begin_define
-define|#
-directive|define
 name|ptcselect
 value|nxselect
 end_define
@@ -2205,6 +2242,13 @@ define|#
 directive|define
 name|ptsstop
 value|nullstop
+end_define
+
+begin_define
+define|#
+directive|define
+name|ptydevtotty
+value|nxdevtotty
 end_define
 
 begin_endif
@@ -2549,6 +2593,12 @@ name|twselect
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|d_ttycv_t
+name|twdevtotty
+decl_stmt|;
+end_decl_stmt
+
 begin_else
 else|#
 directive|else
@@ -2587,6 +2637,13 @@ define|#
 directive|define
 name|twselect
 value|nxselect
+end_define
+
+begin_define
+define|#
+directive|define
+name|twdevtotty
+value|nxdevtotty
 end_define
 
 begin_endif
@@ -3292,21 +3349,18 @@ name|siostop
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|d_ttycv_t
+name|siodevtotty
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
 name|sioreset
 value|nxreset
 end_define
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|tty
-name|sio_tty
-index|[]
-decl_stmt|;
-end_decl_stmt
 
 begin_else
 else|#
@@ -3372,8 +3426,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|sio_tty
-value|(struct tty *)NULL
+name|siodevtotty
+value|nxdevtotty
 end_define
 
 begin_endif
@@ -3971,15 +4025,6 @@ name|cxstop
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|tty
-name|cx_tty
-index|[]
-decl_stmt|;
-end_decl_stmt
-
 begin_else
 else|#
 directive|else
@@ -4032,13 +4077,6 @@ define|#
 directive|define
 name|cxselect
 value|nxselect
-end_define
-
-begin_define
-define|#
-directive|define
-name|cx_tty
-value|(struct tty *)NULL
 end_define
 
 begin_endif
@@ -4543,6 +4581,12 @@ name|cyselect
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|d_ttycv_t
+name|cydevtotty
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -4563,15 +4607,6 @@ directive|define
 name|cystrategy
 value|nxstrategy
 end_define
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|tty
-name|cy_tty
-index|[]
-decl_stmt|;
-end_decl_stmt
 
 begin_else
 else|#
@@ -4651,8 +4686,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|cy_tty
-value|(struct tty *)NULL
+name|cydevtotty
+value|nxdevtotty
 end_define
 
 begin_endif
@@ -4710,21 +4745,18 @@ name|ityselect
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|d_ttycv_t
+name|itydevtotty
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
 name|ityreset
 value|nxreset
 end_define
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|tty
-name|ity_tty
-index|[]
-decl_stmt|;
-end_decl_stmt
 
 begin_else
 else|#
@@ -4783,8 +4815,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|ity_tty
-value|(struct tty *)NULL
+name|itydevtotty
+value|nxdevtotty
 end_define
 
 begin_endif
@@ -5199,7 +5231,7 @@ name|nullstop
 block|,
 name|nullreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 comment|/* console */
 name|cnselect
@@ -5225,7 +5257,7 @@ name|nullstop
 block|,
 name|nullreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 comment|/* tty */
 name|cttyselect
@@ -5251,7 +5283,7 @@ name|nullstop
 block|,
 name|nullreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 comment|/* memory */
 name|mmselect
@@ -5277,7 +5309,7 @@ name|nostop
 block|,
 name|nullreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 comment|/* wd */
 name|seltrue
@@ -5303,7 +5335,7 @@ name|nostop
 block|,
 name|noreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 comment|/* swap */
 name|noselect
@@ -5329,10 +5361,10 @@ name|ptsstop
 block|,
 name|nullreset
 block|,
-name|pt_tty
+name|ptydevtotty
 block|,
 comment|/* ttyp */
-name|ttselect
+name|ptsselect
 block|,
 name|nommap
 block|,
@@ -5355,7 +5387,7 @@ name|nullstop
 block|,
 name|nullreset
 block|,
-name|pt_tty
+name|ptydevtotty
 block|,
 comment|/* ptyp */
 name|ptcselect
@@ -5381,7 +5413,7 @@ name|nostop
 block|,
 name|nullreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 comment|/* klog */
 name|logselect
@@ -5407,7 +5439,7 @@ name|nostop
 block|,
 name|nullreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 comment|/* tputer */
 name|bquselect
@@ -5433,7 +5465,7 @@ name|nostop
 block|,
 name|nullreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 comment|/* Fd (!=fd) */
 name|seltrue
@@ -5459,7 +5491,7 @@ name|nostop
 block|,
 name|nullreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 comment|/* wt */
 name|seltrue
@@ -5485,7 +5517,7 @@ name|nostop
 block|,
 name|nullreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 comment|/* Spigot */
 name|spigot_select
@@ -5511,10 +5543,10 @@ name|nullstop
 block|,
 name|nullreset
 block|,
-name|sccons
+name|scdevtotty
 block|,
 comment|/* sc */
-name|ttselect
+name|scselect
 block|,
 name|scmmap
 block|,
@@ -5537,7 +5569,7 @@ name|nostop
 block|,
 name|nullreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 comment|/* sd */
 name|seltrue
@@ -5563,7 +5595,7 @@ name|nostop
 block|,
 name|nullreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 comment|/* st */
 name|seltrue
@@ -5589,7 +5621,7 @@ name|nostop
 block|,
 name|nullreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 comment|/* cd */
 name|seltrue
@@ -5615,7 +5647,7 @@ name|nullstop
 block|,
 name|nullreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 comment|/* lpt */
 name|seltrue
@@ -5641,7 +5673,7 @@ name|nostop
 block|,
 name|nullreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 comment|/* ch */
 name|noselect
@@ -5667,7 +5699,7 @@ name|nostop
 block|,
 name|nullreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 comment|/* scsi */
 name|suselect
@@ -5694,7 +5726,7 @@ name|nullstop
 block|,
 name|nullreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 comment|/* tw */
 name|twselect
@@ -5704,7 +5736,7 @@ block|,
 name|nostrat
 block|}
 block|,
-comment|/*  * If you need a cdev major number for a driver that you intend to donate  * back to the group or release publically, please contact the FreeBSD team  * by sending mail to "FreeBSD-hackers@freefall.cdrom.com".  * If you assign one yourself it may conflict with someone else.  * Otherwise, simply use the one reserved for local use.  */
+comment|/*  * If you need a cdev major number for a driver that you intend to donate  * back to the group or release publically, please contact the FreeBSD team  * by sending mail to "hackers@freebsd.org".  * If you assign one yourself it may conflict with someone else.  * Otherwise, simply use the one reserved for local use.  */
 comment|/* character device 20 is reserved for local use */
 block|{
 name|nxopen
@@ -5722,7 +5754,7 @@ name|nxstop
 block|,
 name|nxreset
 block|,
-name|NULL
+name|nxdevtotty
 block|,
 name|nxselect
 block|,
@@ -5747,7 +5779,7 @@ name|nostop
 block|,
 name|nullreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 comment|/* psm mice */
 name|psmselect
@@ -5773,7 +5805,7 @@ name|nostop
 block|,
 name|nullreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 comment|/* fd (!=Fd) */
 name|noselect
@@ -5799,7 +5831,7 @@ name|nostop
 block|,
 name|nullreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 comment|/* bpf */
 name|bpfselect
@@ -5825,7 +5857,7 @@ name|nostop
 block|,
 name|nullreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 comment|/* pcaudio */
 name|pcaselect
@@ -5851,7 +5883,7 @@ name|nostop
 block|,
 name|nullreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 comment|/* vat */
 name|vaselect
@@ -5877,7 +5909,7 @@ name|nostop
 block|,
 name|nullreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 comment|/* spkr */
 name|seltrue
@@ -5903,7 +5935,7 @@ name|nostop
 block|,
 name|nullreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 comment|/* mse */
 name|mseselect
@@ -5929,7 +5961,7 @@ name|siostop
 block|,
 name|sioreset
 block|,
-name|sio_tty
+name|siodevtotty
 block|,
 comment|/* sio */
 name|sioselect
@@ -5955,7 +5987,7 @@ name|nostop
 block|,
 name|nullreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 comment|/* mitsumi cd */
 name|seltrue
@@ -5981,7 +6013,7 @@ name|nostop
 block|,
 name|nullreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 comment|/* sound */
 name|sndselect
@@ -6007,7 +6039,7 @@ name|nostop
 block|,
 name|nullreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 comment|/* unknown */
 name|seltrue
@@ -6034,7 +6066,7 @@ name|nostop
 block|,
 name|nullreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 name|noselect
 block|,
@@ -6059,7 +6091,7 @@ name|lkmstop
 block|,
 name|lkmreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 name|lkmselect
 block|,
@@ -6084,7 +6116,7 @@ name|lkmstop
 block|,
 name|lkmreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 name|lkmselect
 block|,
@@ -6109,7 +6141,7 @@ name|lkmstop
 block|,
 name|lkmreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 name|lkmselect
 block|,
@@ -6134,7 +6166,7 @@ name|lkmstop
 block|,
 name|lkmreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 name|lkmselect
 block|,
@@ -6159,7 +6191,7 @@ name|lkmstop
 block|,
 name|lkmreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 name|lkmselect
 block|,
@@ -6184,7 +6216,7 @@ name|lkmstop
 block|,
 name|lkmreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 name|lkmselect
 block|,
@@ -6209,9 +6241,9 @@ name|nostop
 block|,
 name|nullreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
-comment|/* laptop APM */
+comment|/* APM */
 name|seltrue
 block|,
 name|nommap
@@ -6235,7 +6267,7 @@ name|nostop
 block|,
 name|nullreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 comment|/* cortex */
 name|seltrue
@@ -6261,7 +6293,7 @@ name|nostop
 block|,
 name|nullreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 comment|/* socksys */
 name|seltrue
@@ -6287,7 +6319,7 @@ name|cxstop
 block|,
 name|nullreset
 block|,
-name|cx_tty
+name|nodevtotty
 block|,
 comment|/* cronyx */
 name|cxselect
@@ -6313,7 +6345,7 @@ name|nostop
 block|,
 name|nullreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 comment|/* vn */
 name|seltrue
@@ -6339,7 +6371,7 @@ name|nostop
 block|,
 name|nullreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 comment|/* GPIB */
 name|seltrue
@@ -6365,7 +6397,7 @@ name|nostop
 block|,
 name|nullreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 comment|/* sony cd */
 name|seltrue
@@ -6391,7 +6423,7 @@ name|nostop
 block|,
 name|nullreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 comment|/* pana cd */
 name|seltrue
@@ -6417,7 +6449,7 @@ name|nostop
 block|,
 name|nullreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 comment|/* gsc */
 name|seltrue
@@ -6443,8 +6475,9 @@ name|cystop
 block|,
 name|cyreset
 block|,
-name|cy_tty
+name|cydevtotty
 block|,
+comment|/*cyclades*/
 name|cyselect
 block|,
 name|cymmap
@@ -6452,7 +6485,6 @@ block|,
 name|cystrategy
 block|}
 block|,
-comment|/* cyclades */
 block|{
 name|sscopen
 block|,
@@ -6469,7 +6501,7 @@ name|nostop
 block|,
 name|nullreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 comment|/* scsi super */
 name|sscselect
@@ -6495,7 +6527,7 @@ name|nxstop
 block|,
 name|nxreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 comment|/* pcmcia */
 name|nxselect
@@ -6521,7 +6553,7 @@ name|nostop
 block|,
 name|nullreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 comment|/*joystick */
 name|seltrue
@@ -6547,7 +6579,7 @@ name|nostop
 block|,
 name|nullreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 comment|/* tunnel */
 name|tunselect
@@ -6573,7 +6605,7 @@ name|nostop
 block|,
 name|nullreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 comment|/* snoop */
 name|snpselect
@@ -6599,7 +6631,7 @@ name|nostop
 block|,
 name|nullreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 comment|/* nic */
 name|seltrue
@@ -6625,7 +6657,7 @@ name|nostop
 block|,
 name|nullreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 comment|/* isdn */
 name|seltrue
@@ -6651,7 +6683,7 @@ name|nostop
 block|,
 name|ityreset
 block|,
-name|ity_tty
+name|itydevtotty
 block|,
 comment|/* ity */
 name|ityselect
@@ -6677,7 +6709,7 @@ name|nostop
 block|,
 name|nullreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 comment|/* itel */
 name|seltrue
@@ -6703,7 +6735,7 @@ name|nxstop
 block|,
 name|nxreset
 block|,
-name|NULL
+name|nxdevtotty
 block|,
 comment|/* unused */
 name|seltrue
@@ -6729,7 +6761,7 @@ name|nostop
 block|,
 name|nullreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 comment|/* ispy */
 name|seltrue
@@ -6755,7 +6787,7 @@ name|nostop
 block|,
 name|nullreset
 block|,
-name|NULL
+name|nodevtotty
 block|,
 comment|/* nnic */
 name|seltrue

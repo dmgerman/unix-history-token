@@ -5,12 +5,12 @@ name|char
 name|_ittyid
 index|[]
 init|=
-literal|"@(#)$Id: iitty.c,v 1.1 1995/02/14 15:00:32 jkh Exp $"
+literal|"@(#)$Id: iitty.c,v 1.2 1995/02/15 06:28:28 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*******************************************************************************  *  II - Version 0.1 $Revision: 1.1 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  * $Log: iitty.c,v $  * Revision 1.1  1995/02/14  15:00:32  jkh  * An ISDN driver that supports the EDSS1 and the 1TR6 ISDN interfaces.  * EDSS1 is the "Euro-ISDN", 1TR6 is the soon obsolete german ISDN Interface.  * Obtained from: Dietmar Friede<dfriede@drnhh.neuhaus.de> and  * 	Juergen Krause<jkr@saarlink.de>  *  * This is only one part - the rest to follow in a couple of hours.  * This part is a benign import, since it doesn't affect anything else.  *  *  ******************************************************************************/
+comment|/*******************************************************************************  *  II - Version 0.1 $Revision: 1.2 $   $State: Exp $  *  * Copyright 1994 Dietmar Friede  *******************************************************************************  * Bug reports, patches, comments, suggestions should be sent to:  *  *	jkr@saarlink.de or jkrause@guug.de  *  *******************************************************************************  * $Log: iitty.c,v $  * Revision 1.2  1995/02/15  06:28:28  jkh  * Fix up include paths, nuke some warnings.  *  * Revision 1.1  1995/02/14  15:00:32  jkh  * An ISDN driver that supports the EDSS1 and the 1TR6 ISDN interfaces.  * EDSS1 is the "Euro-ISDN", 1TR6 is the soon obsolete german ISDN Interface.  * Obtained from: Dietmar Friede<dfriede@drnhh.neuhaus.de> and  * 	Juergen Krause<jkr@saarlink.de>  *  * This is only one part - the rest to follow in a couple of hours.  * This part is a benign import, since it doesn't affect anything else.  *  *  ******************************************************************************/
 end_comment
 
 begin_include
@@ -1656,6 +1656,48 @@ block|}
 end_function
 
 begin_function
+name|struct
+name|tty
+modifier|*
+name|itydevtotty
+parameter_list|(
+name|dev_t
+name|dev
+parameter_list|)
+block|{
+specifier|register
+name|int
+name|unit
+init|=
+name|UNIT
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|unit
+operator|>=
+name|next_if
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+return|return
+operator|(
+operator|&
+name|ity_tty
+index|[
+name|unit
+index|]
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
 name|int
 name|ityselect
 parameter_list|(
@@ -1671,11 +1713,35 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-return|return
-operator|(
-name|ttselect
+specifier|register
+name|int
+name|unit
+init|=
+name|UNIT
 argument_list|(
 name|dev
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|unit
+operator|>=
+name|next_if
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+return|return
+operator|(
+name|ttyselect
+argument_list|(
+operator|&
+name|ity_tty
+index|[
+name|unit
+index|]
 argument_list|,
 name|rw
 argument_list|,
