@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mkmakefile.c	5.6 (Berkeley) %G%"
+literal|"@(#)mkmakefile.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -722,6 +722,35 @@ argument_list|,
 name|dst
 argument_list|,
 name|maxusers
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|op
+operator|=
+name|mkopt
+init|;
+name|op
+condition|;
+name|op
+operator|=
+name|op
+operator|->
+name|op_next
+control|)
+name|fprintf
+argument_list|(
+name|ofp
+argument_list|,
+literal|"%s=%s\n"
+argument_list|,
+name|op
+operator|->
+name|op_name
+argument_list|,
+name|op
+operator|->
+name|op_value
 argument_list|)
 expr_stmt|;
 while|while
