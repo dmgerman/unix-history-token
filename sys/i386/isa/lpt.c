@@ -692,8 +692,8 @@ condition|(
 name|dvp
 operator|->
 name|id_iobase
-operator|==
-literal|0xffff
+operator|<
+literal|0
 condition|)
 block|{
 comment|/* port? */
