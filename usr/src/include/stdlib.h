@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)stdlib.h	5.19 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1990 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)stdlib.h	5.20 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -835,6 +835,29 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|radixsort
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|u_char
+operator|*
+operator|*
+operator|,
+name|int
+operator|,
+specifier|const
+name|u_char
+operator|*
+operator|,
+name|u_int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|sradixsort
 name|__P
 argument_list|(
 operator|(
