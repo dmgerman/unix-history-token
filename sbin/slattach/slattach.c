@@ -44,7 +44,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id$"
+literal|"$Id: slattach.c,v 1.21 1996/12/10 17:07:44 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/ioctl.h>
 end_include
 
@@ -78,7 +84,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/time.h>
 end_include
 
 begin_include
