@@ -6061,7 +6061,7 @@ index|[
 name|MAXPATHLEN
 index|]
 init|=
-literal|"/boot/kernel;/boot/modules;/modules"
+literal|"/boot/kernel;/boot/modules"
 decl_stmt|;
 end_decl_stmt
 
