@@ -696,7 +696,7 @@ parameter_list|,
 name|w
 parameter_list|)
 define|\
-value|(((x)& (1<< ((w) - 1))) != 0 ? (-1L - ((x) ^ ((1<< (w)) - 1))) : (x))
+value|(((x)& (1L<< ((w) - 1))) != 0 ? \ 	    (-1L - ((x) ^ ((1L<< (w)) - 1))) : (x))
 end_define
 
 begin_if
