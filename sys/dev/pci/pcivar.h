@@ -572,6 +572,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|pci_chip_match
+parameter_list|(
+name|struct
+name|device
+modifier|*
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* low level PCI config register functions provided by pcibus.c */
 end_comment
