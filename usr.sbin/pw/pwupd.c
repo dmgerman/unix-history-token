@@ -795,7 +795,7 @@ argument_list|(
 name|_MASTERPASSWD
 argument_list|)
 argument_list|,
-literal|0600
+literal|0644
 argument_list|,
 name|pwbuf
 argument_list|,

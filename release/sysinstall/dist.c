@@ -2252,7 +2252,7 @@ name|msgYesNo
 argument_list|(
 literal|"Would you like to install the FreeBSD ports collection?\n\n"
 literal|"This will give you ready access to over 5800 ported software packages,\n"
-literal|"at a cost of around 100MB of disk space when \"clean\" and possibly\n"
+literal|"at a cost of around 70MB of disk space when \"clean\" and possibly\n"
 literal|"much more than that when a lot of the distribution tarballs are loaded\n"
 literal|"(unless you have the extra discs available from a FreeBSD CD/DVD distribution\n"
 literal|"and can mount them on /cdrom, in which case this is far less of a problem).\n\n"

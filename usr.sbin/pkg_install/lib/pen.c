@@ -529,7 +529,7 @@ name|chmod
 argument_list|(
 name|pen
 argument_list|,
-literal|0700
+literal|0755
 argument_list|)
 operator|==
 name|FAIL

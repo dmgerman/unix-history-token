@@ -476,13 +476,6 @@ operator|=
 operator|&
 name|image_params
 expr_stmt|;
-comment|/* 	 * Lock the process and set the P_INEXEC flag to indicate that 	 * it should be left alone until we're done here.  This is 	 * necessary to avoid race conditions - e.g. in ptrace() - 	 * that might allow a local user to illicitly obtain elevated 	 * privileges. 	 */
-name|p
-operator|->
-name|p_flag
-operator||=
-name|P_INEXEC
-expr_stmt|;
 comment|/* 	 * Initialize part of the common data 	 */
 name|imgp
 operator|->
@@ -1474,7 +1467,7 @@ name|ndp
 operator|->
 name|ni_vp
 expr_stmt|;
-comment|/*          * Notify others that we exec'd, and clear the P_INEXEC flag          * as we're now a bona fide freshly-execed process.          */
+comment|/* 	 * notify others that we exec'd 	 */
 name|KNOTE
 argument_list|(
 operator|&
@@ -1484,13 +1477,6 @@ name|p_klist
 argument_list|,
 name|NOTE_EXEC
 argument_list|)
-expr_stmt|;
-name|p
-operator|->
-name|p_flag
-operator|&=
-operator|~
-name|P_INEXEC
 expr_stmt|;
 comment|/* 	 * If tracing the process, trap to debugger so breakpoints 	 * 	can be set before the program executes. 	 */
 name|STOPEVENT
@@ -1730,14 +1716,6 @@ operator|)
 return|;
 name|exec_fail
 label|:
-comment|/* we're done here, clear P_INEXEC */
-name|p
-operator|->
-name|p_flag
-operator|&=
-operator|~
-name|P_INEXEC
-expr_stmt|;
 if|if
 condition|(
 name|imgp

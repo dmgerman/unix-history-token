@@ -973,16 +973,6 @@ argument_list|,
 name|p
 argument_list|)
 operator|&&
-operator|(
-name|p
-operator|->
-name|p_flag
-operator|&
-name|P_INEXEC
-operator|)
-operator|==
-literal|0
-operator|&&
 operator|!
 name|p_trespass
 argument_list|(

@@ -3539,17 +3539,6 @@ operator|)
 operator|->
 name|v_mount
 expr_stmt|;
-if|if
-condition|(
-name|mp
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|EBADF
-operator|)
-return|;
 name|sp
 operator|=
 operator|&

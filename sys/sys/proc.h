@@ -1106,17 +1106,6 @@ begin_comment
 comment|/* have alternate signal stack */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|P_INEXEC
-value|0x8000000
-end_define
-
-begin_comment
-comment|/* Process is in execve(). */
-end_comment
-
 begin_comment
 comment|/*  * MOVE TO ucred.h?  *  * Shareable process credentials (always resident).  This includes a reference  * to the current user credentials as well as real and saved ids that may be  * used to change ids.  */
 end_comment

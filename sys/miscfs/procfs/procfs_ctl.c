@@ -427,22 +427,6 @@ block|{
 name|int
 name|error
 decl_stmt|;
-comment|/* Can't trace a process that's currently exec'ing. */
-if|if
-condition|(
-operator|(
-name|p
-operator|->
-name|p_flag
-operator|&
-name|P_INEXEC
-operator|)
-operator|!=
-literal|0
-condition|)
-return|return
-name|EAGAIN
-return|;
 comment|/* 	 * Authorization check: rely on normal debugging protection, except 	 * allow processes to disengage debugging on a process onto which 	 * they have previously attached, but no longer have permission to 	 * debug. 	 */
 if|if
 condition|(
