@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	6.2 (Berkeley) %G%"
+literal|"@(#)main.c	6.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2932,14 +2932,7 @@ operator|+
 literal|1
 argument_list|)
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"Invalid control characters in address\n"
-argument_list|)
-expr_stmt|;
 continue|continue;
-block|}
 do|do
 block|{
 specifier|extern

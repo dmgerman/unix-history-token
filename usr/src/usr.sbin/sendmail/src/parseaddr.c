@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)parseaddr.c	6.2 (Berkeley) %G%"
+literal|"@(#)parseaddr.c	6.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -535,15 +535,23 @@ if|if
 condition|(
 operator|(
 operator|(
+operator|(
 name|int
 operator|)
 operator|*
 name|addr
+operator|)
 operator|&
 literal|0377
 operator|)
 operator|>=
 literal|'\040'
+operator|||
+name|isspace
+argument_list|(
+operator|*
+name|addr
+argument_list|)
 condition|)
 continue|continue;
 name|setstat
@@ -553,7 +561,7 @@ argument_list|)
 expr_stmt|;
 name|usrerr
 argument_list|(
-literal|"address contained invalid control characters"
+literal|"Address contained invalid control characters"
 argument_list|)
 expr_stmt|;
 return|return
