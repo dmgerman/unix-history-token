@@ -116,7 +116,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/pccard/pccarddevs.h>
+file|"pccarddevs.h"
 end_include
 
 begin_include
