@@ -849,6 +849,8 @@ name|warnx
 argument_list|(
 literal|"nfsd count %d; reset to %d"
 argument_list|,
+name|nfsdcnt
+argument_list|,
 name|DEFNFSDCNT
 argument_list|)
 expr_stmt|;
@@ -988,6 +990,8 @@ block|{
 name|warnx
 argument_list|(
 literal|"nfsd count %d; reset to %d"
+argument_list|,
+name|nfsdcnt
 argument_list|,
 name|DEFNFSDCNT
 argument_list|)
