@@ -235,7 +235,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t%s attach dest [-l lockfile]\n"
+literal|"\t%s attach dest [-l lockfile] [-p pass-phrase]\n"
 argument_list|,
 name|p
 argument_list|)
@@ -253,7 +253,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t%s init /dev/dest [-i] [-f filename] [-L lockfile]\n"
+literal|"\t%s init /dev/dest [-i] [-f filename] [-L lockfile] [-P pass-phrase]\n"
 argument_list|,
 name|p
 argument_list|)
@@ -262,7 +262,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t%s setkey dest [-n key] [-l lockfile] [-L lockfile]\n"
+literal|"\t%s setkey dest [-n key] [-l lockfile] [-p pass-phrase] [-L new-lockfile] [-P new-pass-phrase]\n"
 argument_list|,
 name|p
 argument_list|)
@@ -271,7 +271,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\t%s destroy dest [-n key] [-l lockfile] [-L lockfile]\n"
+literal|"\t%s destroy dest [-n key] [-l lockfile] [-p pass-phrase] [-L lockfile]\n"
 argument_list|,
 name|p
 argument_list|)
@@ -4083,10 +4083,6 @@ argument_list|(
 name|dest
 argument_list|,
 name|O_RDWR
-operator||
-name|O_CREAT
-argument_list|,
-literal|0644
 argument_list|)
 expr_stmt|;
 if|if
@@ -4094,6 +4090,13 @@ condition|(
 name|dfd
 operator|<
 literal|0
+operator|&&
+name|dest
+index|[
+literal|0
+index|]
+operator|!=
+literal|'/'
 condition|)
 block|{
 if|if
@@ -4134,10 +4137,6 @@ argument_list|(
 name|buf
 argument_list|,
 name|O_RDWR
-operator||
-name|O_CREAT
-argument_list|,
-literal|0644
 argument_list|)
 expr_stmt|;
 block|}
