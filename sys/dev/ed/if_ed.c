@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Device driver for National Semiconductor DS8390/WD83C690 based ethernet  *   adapters. By David Greenman, 29-April-1993  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * Currently supports the Western Digital/SMC 8003 and 8013 series,  *   the SMC Elite Ultra (8216), the 3Com 3c503, the NE1000 and NE2000,  *   and a variety of similar clones.  *  * $Id: if_ed.c,v 1.60 1994/12/31 17:09:56 jkh Exp $  */
+comment|/*  * Device driver for National Semiconductor DS8390/WD83C690 based ethernet  *   adapters. By David Greenman, 29-April-1993  *  * Copyright (C) 1993, David Greenman. This software may be used, modified,  *   copied, distributed, and sold, in both source and binary form provided  *   that the above copyright and these terms are retained. Under no  *   circumstances is the author responsible for the proper functioning  *   of this software, nor does the author assume any responsibility  *   for damages incurred with its use.  *  * Currently supports the Western Digital/SMC 8003 and 8013 series,  *   the SMC Elite Ultra (8216), the 3Com 3c503, the NE1000 and NE2000,  *   and a variety of similar clones.  *  * $Id: if_ed.c,v 1.61 1995/01/01 03:54:34 davidg Exp $  */
 end_comment
 
 begin_include
@@ -8326,6 +8326,8 @@ block|{
 name|unsigned
 name|short
 name|len
+decl_stmt|,
+name|dma_len
 decl_stmt|;
 name|struct
 name|mbuf
@@ -8363,6 +8365,25 @@ name|mp
 operator|->
 name|m_len
 expr_stmt|;
+name|dma_len
+operator|=
+name|len
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|isa16bit
+operator|&&
+operator|(
+name|dma_len
+operator|&
+literal|1
+operator|)
+condition|)
+name|dma_len
+operator|++
+expr_stmt|;
 comment|/* select page 0 registers */
 name|outb
 argument_list|(
@@ -8398,7 +8419,7 @@ name|nic_addr
 operator|+
 name|ED_P0_RBCR0
 argument_list|,
-name|len
+name|dma_len
 argument_list|)
 expr_stmt|;
 name|outb
@@ -8409,7 +8430,7 @@ name|nic_addr
 operator|+
 name|ED_P0_RBCR1
 argument_list|,
-name|len
+name|dma_len
 operator|>>
 literal|8
 argument_list|)
