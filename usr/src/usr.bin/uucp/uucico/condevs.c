@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)condevs.c	5.18 (Berkeley) %G%"
+literal|"@(#)condevs.c	5.19	(Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -723,19 +723,28 @@ argument_list|,
 literal|"r"
 argument_list|)
 expr_stmt|;
-name|ASSERT
-argument_list|(
+if|if
+condition|(
 name|dfp
-operator|!=
+operator|==
 name|NULL
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
 argument_list|,
-literal|"CAN'T OPEN"
+literal|"fopen(%s) failed: %m"
 argument_list|,
 name|DEVFILE
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
+name|cleanup
+argument_list|(
+name|FAIL
+argument_list|)
+expr_stmt|;
+block|}
 while|while
 condition|(
 operator|(
@@ -1418,19 +1427,28 @@ argument_list|,
 literal|"r"
 argument_list|)
 expr_stmt|;
-name|ASSERT
-argument_list|(
+if|if
+condition|(
 name|dfp
-operator|!=
+operator|==
 name|NULL
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
 argument_list|,
-literal|"Can't open"
+literal|"fopen(%s) failed: %m"
 argument_list|,
 name|DEVFILE
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
+name|cleanup
+argument_list|(
+name|FAIL
+argument_list|)
+expr_stmt|;
+block|}
 name|acustatus
 operator|=
 literal|0
@@ -1554,7 +1572,16 @@ argument_list|)
 operator|==
 name|SAME
 condition|)
+block|{
+name|nobrand
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 break|break;
+block|}
 name|strncpy
 argument_list|(
 name|nobrand
