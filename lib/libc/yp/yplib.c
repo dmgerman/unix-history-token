@@ -15,7 +15,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: yplib.c,v 1.7 1995/04/21 18:04:22 wpaul Exp $"
+literal|"$Id: yplib.c,v 1.8 1995/04/26 19:03:05 wpaul Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -774,19 +774,19 @@ return|return
 literal|"Success"
 return|;
 case|case
-literal|1
+name|YPBIND_ERR_ERR
 case|:
 return|return
 literal|"Internal ypbind error"
 return|;
 case|case
-literal|2
+name|YPBIND_ERR_NOSERV
 case|:
 return|return
 literal|"Domain not bound"
 return|;
 case|case
-literal|3
+name|YPBIND_ERR_RESC
 case|:
 return|return
 literal|"System resource allocation failure"
@@ -796,7 +796,7 @@ name|sprintf
 argument_list|(
 name|err
 argument_list|,
-literal|"Unknown ypbind error %d\n"
+literal|"Unknown ypbind error: #%d\n"
 argument_list|,
 name|incode
 argument_list|)
