@@ -995,6 +995,9 @@ name|int
 name|verbose
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|WITH_SSL
 comment|/* Init the SSL library and context */
 if|if
 condition|(
@@ -1216,6 +1219,33 @@ operator|(
 literal|0
 operator|)
 return|;
+else|#
+directive|else
+operator|(
+name|void
+operator|)
+name|conn
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|verbose
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"SSL support disabled\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1437,6 +1467,9 @@ operator|)
 return|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|WITH_SSL
 if|if
 condition|(
 name|conn
@@ -1459,6 +1492,8 @@ name|len
 argument_list|)
 expr_stmt|;
 else|else
+endif|#
+directive|endif
 name|rlen
 operator|=
 name|read
@@ -1980,6 +2015,9 @@ name|errno
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|WITH_SSL
 if|if
 condition|(
 name|conn
@@ -2002,6 +2040,8 @@ name|len
 argument_list|)
 expr_stmt|;
 else|else
+endif|#
+directive|endif
 name|wlen
 operator|=
 name|write

@@ -43,6 +43,12 @@ name|HTTP_DEFAULT_PROXY_PORT
 value|3128
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_SSL
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -72,6 +78,11 @@ include|#
 directive|include
 file|<openssl/err.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Connection */
@@ -110,6 +121,9 @@ name|int
 name|err
 decl_stmt|;
 comment|/* last protocol reply code */
+ifdef|#
+directive|ifdef
+name|WITH_SSL
 name|SSL
 modifier|*
 name|ssl
@@ -130,6 +144,8 @@ modifier|*
 name|ssl_meth
 decl_stmt|;
 comment|/* SSL method */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct

@@ -3287,6 +3287,14 @@ argument_list|(
 name|conn
 argument_list|)
 expr_stmt|;
+comment|/* grrr */
+name|errno
+operator|=
+name|EAUTH
+expr_stmt|;
+name|_fetch_syserr
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|NULL
