@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	@(#)if_hdh.c	6.4 (Berkeley) %G% */
+comment|/*	@(#)if_hdh.c	6.5 (Berkeley) %G% */
 end_comment
 
 begin_comment
@@ -2099,8 +2099,6 @@ argument_list|,
 name|lcn
 argument_list|,
 name|cc
-argument_list|,
-name|cnt
 argument_list|)
 expr_stmt|;
 block|}
@@ -2316,8 +2314,6 @@ argument_list|,
 argument|lcn
 argument_list|,
 argument|cc
-argument_list|,
-argument|rcnt
 argument_list|)
 end_macro
 
@@ -2328,8 +2324,6 @@ decl_stmt|,
 name|lcn
 decl_stmt|,
 name|cc
-decl_stmt|,
-name|rcnt
 decl_stmt|;
 end_decl_stmt
 
