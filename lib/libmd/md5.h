@@ -26,6 +26,7 @@ end_comment
 begin_typedef
 typedef|typedef
 struct|struct
+name|MD5Context
 block|{
 name|unsigned
 name|long
