@@ -1,14 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00098  * --------------------         -----   ----------------------  *  * 16 Feb 93	Julian Elischer		ADDED for SCSI system  */
-end_comment
-
-begin_comment
-comment|/*  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  */
-end_comment
-
-begin_comment
-comment|/* $Log: * */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id$  */
 end_comment
 
 begin_include
@@ -582,6 +574,24 @@ block|,
 name|SC_ONE_LU
 block|}
 block|,
+block|{
+name|T_READONLY
+block|,
+name|T_REMOV
+block|,
+literal|"PIONEER "
+block|,
+literal|"CD-ROM DRM-600  "
+block|,
+literal|"any"
+block|,
+name|cdattach
+block|,
+literal|"cd"
+block|,
+name|SC_MORE_LUS
+block|}
+block|,
 endif|#
 directive|endif
 endif|NCD
@@ -849,6 +859,8 @@ name|targ
 argument_list|,
 name|lun
 argument_list|,
+name|scsi_switch
+argument_list|,
 operator|&
 name|maybe_more
 argument_list|)
@@ -1049,6 +1061,8 @@ name|target
 parameter_list|,
 name|lu
 parameter_list|,
+name|scsi_switch
+parameter_list|,
 name|maybe_more
 parameter_list|)
 name|int
@@ -1062,6 +1076,14 @@ decl|*
 name|maybe_more
 decl_stmt|;
 end_function
+
+begin_decl_stmt
+name|struct
+name|scsi_switch
+modifier|*
+name|scsi_switch
+decl_stmt|;
+end_decl_stmt
 
 begin_block
 block|{
@@ -1139,7 +1161,13 @@ condition|)
 continue|continue;
 name|printf
 argument_list|(
-literal|"  dev%d,lu%d: %s - PRECONFIGURED -\n"
+literal|"%s%d targ %d lun %d:<%s> - PRECONFIGURED -\n"
+argument_list|,
+name|scsi_switch
+operator|->
+name|name
+argument_list|,
+name|unit
 argument_list|,
 name|target
 argument_list|,
@@ -1875,19 +1903,21 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"  dev%d,lu%d: type %d:%d(%s%s),%s '%s%s%s' scsi%d\n"
+literal|"%s%d targ %d lun %d: type %d(%s) %s<%s%s%s> SCSI%d\n"
+argument_list|,
+name|scsi_switch
+operator|->
+name|name
+argument_list|,
+name|unit
 argument_list|,
 name|target
 argument_list|,
 name|lu
 argument_list|,
-name|qualifier
-argument_list|,
 name|type
 argument_list|,
 name|dtype
-argument_list|,
-name|qtype
 argument_list|,
 name|remov
 condition|?
@@ -1908,6 +1938,34 @@ operator|&
 name|SID_ANSII
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|qtype
+index|[
+literal|0
+index|]
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s%d targ %d lun %d: qulaifier %d(%s)\n"
+argument_list|,
+name|scsi_switch
+operator|->
+name|name
+argument_list|,
+name|unit
+argument_list|,
+name|target
+argument_list|,
+name|lu
+argument_list|,
+name|qualifier
+argument_list|,
+name|qtype
+argument_list|)
+expr_stmt|;
+block|}
 comment|/***********************************************\ 	* Try make as good a match as possible with	* 	* available sub drivers	 			* 	\***********************************************/
 name|bestmatch
 operator|=

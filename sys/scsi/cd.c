@@ -1,20 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|char
-name|rev
-index|[]
-init|=
-literal|"$Revision: 1.5 $"
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00098  * --------------------         -----   ----------------------  *  * 16 Feb 93	Julian Elischer		ADDED for SCSI system  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  *  *	$Id$  */
 end_comment
 
 begin_define
@@ -663,7 +649,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cd present\n"
+literal|"cd%d: cd present\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 block|}
@@ -671,7 +659,9 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"drive empty\n"
+literal|"cd%d: drive empty\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 block|}
@@ -1280,7 +1270,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"doing a wakeup from NOMASK mode\n"
+literal|"cd%d: doing a wakeup from NOMASK mode\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 name|wakeup
@@ -4621,7 +4613,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"could not get size of unit %d\n"
+literal|"cd%d: could not get size\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -5927,7 +5919,7 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|"cannot prevent/allow on cd%d\n"
+literal|"cd%d: cannot prevent/allow\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -6526,7 +6518,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cd_scsi_cmd%d: controller busy"
+literal|"cd%d: scsi_cmd controller busy"
 literal|" (this should never happen)\n"
 argument_list|,
 name|unit
@@ -7020,7 +7012,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cd%d: soft error(corrected) "
+literal|"cd%d: soft error(corrected)"
 argument_list|,
 name|unit
 argument_list|)
@@ -7036,7 +7028,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"block no. %d (decimal)"
+literal|" block no. %d (decimal)"
 argument_list|,
 operator|(
 name|sense
@@ -7119,7 +7111,7 @@ name|silent
 condition|)
 name|printf
 argument_list|(
-literal|"cd%d: not ready\n "
+literal|"cd%d: not ready\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -7140,7 +7132,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cd%d: medium error "
+literal|"cd%d: medium error"
 argument_list|,
 name|unit
 argument_list|)
@@ -7156,7 +7148,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"block no. %d (decimal)"
+literal|" block no. %d (decimal)"
 argument_list|,
 operator|(
 name|sense
@@ -7239,7 +7231,7 @@ name|silent
 condition|)
 name|printf
 argument_list|(
-literal|"cd%d: non-media hardware failure\n "
+literal|"cd%d: non-media hardware failure\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -7259,7 +7251,7 @@ name|silent
 condition|)
 name|printf
 argument_list|(
-literal|"cd%d: illegal request\n "
+literal|"cd%d: illegal request\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -7279,7 +7271,7 @@ name|silent
 condition|)
 name|printf
 argument_list|(
-literal|"cd%d: Unit attention.\n "
+literal|"cd%d: Unit attention\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -7330,7 +7322,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cd%d: attempted protection violation "
+literal|"cd%d: attempted protection violation"
 argument_list|,
 name|unit
 argument_list|)
@@ -7346,7 +7338,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"block no. %d (decimal)\n"
+literal|" block no. %d (decimal)"
 argument_list|,
 operator|(
 name|sense
@@ -7430,7 +7422,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cd%d: block wrong state (worm)\n "
+literal|"cd%d: block wrong state (worm)"
 argument_list|,
 name|unit
 argument_list|)
@@ -7446,7 +7438,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"block no. %d (decimal)\n"
+literal|" block no. %d (decimal)"
 argument_list|,
 operator|(
 name|sense
@@ -7549,7 +7541,7 @@ name|silent
 condition|)
 name|printf
 argument_list|(
-literal|"cd%d: copy aborted\n "
+literal|"cd%d: copy aborted\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -7569,7 +7561,7 @@ name|silent
 condition|)
 name|printf
 argument_list|(
-literal|"cd%d: command aborted\n "
+literal|"cd%d: command aborted\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -7590,7 +7582,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cd%d: search returned\n "
+literal|"cd%d: search returned"
 argument_list|,
 name|unit
 argument_list|)
@@ -7606,7 +7598,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"block no. %d (decimal)\n"
+literal|" block no. %d (decimal)"
 argument_list|,
 operator|(
 name|sense
@@ -7689,7 +7681,7 @@ name|silent
 condition|)
 name|printf
 argument_list|(
-literal|"cd%d: volume overflow\n "
+literal|"cd%d: volume overflow\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -7710,7 +7702,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cd%d: verify miscompare\n "
+literal|"cd%d: verify miscompare"
 argument_list|,
 name|unit
 argument_list|)
@@ -7726,7 +7718,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"block no. %d (decimal)\n"
+literal|" block no. %d (decimal)"
 argument_list|,
 operator|(
 name|sense
@@ -7809,7 +7801,7 @@ name|silent
 condition|)
 name|printf
 argument_list|(
-literal|"cd%d: unknown error key\n "
+literal|"cd%d: unknown error key\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -7829,9 +7821,10 @@ condition|(
 operator|!
 name|silent
 condition|)
+block|{
 name|printf
 argument_list|(
-literal|"cd%d: error code %d\n"
+literal|"cd%d: error code %d"
 argument_list|,
 name|unit
 argument_list|,
@@ -7850,14 +7843,10 @@ name|error_code
 operator|&
 name|SSD_ERRCODE_VALID
 condition|)
-if|if
-condition|(
-operator|!
-name|silent
-condition|)
+block|{
 name|printf
 argument_list|(
-literal|"block no. %d (decimal)\n"
+literal|" block no. %d (decimal)"
 argument_list|,
 operator|(
 name|sense
@@ -7895,6 +7884,13 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 return|return
 operator|(
 name|EIO
@@ -7921,89 +7917,17 @@ return|;
 block|}
 end_function
 
-begin_macro
-name|show_mem
-argument_list|(
-argument|address
-argument_list|,
-argument|num
-argument_list|)
-end_macro
-
-begin_decl_stmt
-name|unsigned
-name|char
-modifier|*
-name|address
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|num
-decl_stmt|;
-end_decl_stmt
-
-begin_block
-block|{
-name|int
-name|x
-decl_stmt|,
-name|y
-decl_stmt|;
-name|printf
-argument_list|(
-literal|"------------------------------"
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|y
-operator|=
+begin_if
+if|#
+directive|if
 literal|0
-init|;
-name|y
-operator|<
-name|num
-condition|;
-name|y
-operator|+=
-literal|1
-control|)
-block|{
-if|if
-condition|(
-operator|!
-operator|(
-name|y
-operator|%
-literal|16
-operator|)
-condition|)
-name|printf
-argument_list|(
-literal|"\n%03d: "
-argument_list|,
-name|y
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%02x "
-argument_list|,
-operator|*
-name|address
-operator|++
-argument_list|)
-expr_stmt|;
-block|}
-name|printf
-argument_list|(
-literal|"\n------------------------------\n"
-argument_list|)
-expr_stmt|;
-block|}
-end_block
+end_if
+
+begin_endif
+unit|show_mem(address,num) unsigned char   *address; int     num; { 	int x,y; 	printf("------------------------------"); 	for (y = 0; y<num; y += 1) 	{ 		if(!(y % 16)) 			printf("\n%03d: ",y); 		printf("%02x ",*address++); 	} 	printf("\n------------------------------\n"); }
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

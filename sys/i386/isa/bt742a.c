@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00098  * --------------------         -----   ----------------------  *  * 16 Feb 93	Julian Elischer		ADDED for SCSI system  */
-end_comment
-
-begin_comment
-comment|/*  * HISTORY  * $Log:	bt742a.c,v $  * Revision 1.12  93/08/07  13:20:44  julian  * replace private timeout stuff with system timeout calls.  *   * Revision 1.11  93/05/27  13:39:52  root  * Enable mail box round-robin scheme by new host adapter command appeared  *  at FirmWare V3.31 ( This release is shipped without testing at V3.31 )  *   * Revision 1.10  93/05/22  16:38:22  root  * under OSF, the dev_pic must be set up before it's used.  * was only done ifndef OSF.  *   * Revision 1.9  93/05/07  11:37:24  root  * fix SLEEPTIME calculation.  *   * Revision 1.8  93/05/07  11:27:00  root  * Merge with 1.7.1  *   * Revision 1.7.1 1993/01/01  04:01:02  amurai  * Basically this modification fixes 'doesn't take command' issue   * that occured on FirmWare V3.30  *  - Using IN/OUT mail box as round-robin for reducing I/O bus cycle  *    and interrupts.  *  - Print out routine are ifdef'ed rather than just 'if (flags)'  *    for perfomance.  *  * Revision 1.7  1992/08/24  22:40:16  jason  * BIG_DMA ifdef for 512 dma segments instead of 128 segments  *  * Revision 1.6  1992/08/24  21:01:58  jason  * many changes and bugfixes for osf1  *  * Revision 1.5  1992/07/31  01:22:03  julian  * support improved scsi.h layout  *  * Revision 1.4  1992/07/25  03:11:26  julian  * check each request fro sane flags.  *  * Revision 1.3  1992/07/24  00:52:45  julian  * improved timeout handling.  * added support for two arguments to the sd_done (or equiv) call so that  * they can pre-queue several arguments.  * slightly clean up error handling  *  * Revision 1.2  1992/07/17  22:03:54  julian  * upgraded the timeout code.  * added support for UIO-based i/o (as used for pmem operations)  *  * Revision 1.1  1992/05/27  00:51:12  balsup  * machkern/cor merge  *   */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *	$Id$  */
 end_comment
 
 begin_comment
@@ -2105,6 +2101,8 @@ name|scsi_switch
 name|bt_switch
 init|=
 block|{
+literal|"bt"
+block|,
 name|bt_scsi_cmd
 block|,
 name|btminphys
@@ -2282,7 +2280,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"bt_cmd: bt742a host not idle(0x%x)\n"
+literal|"bt%d: bt_cmd, host not idle(0x%x)\n"
+argument_list|,
+name|unit
 argument_list|,
 name|sts
 argument_list|)
@@ -2376,7 +2376,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"bt_cmd: bt742a cmd/data port full\n"
+literal|"bt%d: bt_cmd, cmd/data port full\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 name|outb
@@ -2459,7 +2461,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"bt_cmd: bt742a cmd/data port empty %d\n"
+literal|"bt%d: bt_cmd, cmd/data port empty %d\n"
+argument_list|,
+name|unit
 argument_list|,
 name|ocnt
 argument_list|)
@@ -2527,7 +2531,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"bt_cmd: bt742a host not finished(0x%x)\n"
+literal|"bt%d: bt_cmd, host not finished(0x%x)\n"
+argument_list|,
+name|unit
 argument_list|,
 name|sts
 argument_list|)
@@ -2640,7 +2646,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"bt: unit number (%d) too high\n"
+literal|"bt%d: unit number too high\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -2829,11 +2835,6 @@ index|[
 name|unit
 index|]
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"\n  **"
-argument_list|)
-expr_stmt|;
 endif|#
 directive|endif
 endif|__386BSD__
@@ -2876,17 +2877,6 @@ name|dev
 operator|->
 name|dev_unit
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|__386BSD__
-name|printf
-argument_list|(
-literal|" probing for scsi devices**\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-endif|__386BSD__
 comment|/***********************************************\ 	* ask the adapter what subunits are present	* 	\***********************************************/
 name|scsi_attachdevs
 argument_list|(
@@ -2917,19 +2907,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* defined(OSF) */
-ifdef|#
-directive|ifdef
-name|__386BSD__
-name|printf
-argument_list|(
-literal|"bt%d"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-endif|__386BSD__
 return|return;
 block|}
 end_block
@@ -3033,7 +3010,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Available Free mbo post\n"
+literal|"bt%d: Available Free mbo post\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 comment|/* Disable MBO available interrupt */
@@ -3087,7 +3066,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"bt_intr: bt742a cmd/data port full\n"
+literal|"bt%d: bt_intr, cmd/data port full\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 name|outb
@@ -3473,7 +3454,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"bt%02d: mbi at 0x%08x should be found, stat=%02x..resync\n"
+literal|"bt%d: mbi at 0x%08x should be found, stat=%02x..resync\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -4041,7 +4022,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"bt_send_mbo: bt742a cmd/data port full\n"
+literal|"bt%d: bt_send_mbo, cmd/data port full\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 name|outb
@@ -4551,7 +4534,7 @@ directive|ifdef
 name|__386BSD__
 name|printf
 argument_list|(
-literal|"bt%d board settings,"
+literal|"bt%d reading board settings, "
 argument_list|,
 name|unit
 argument_list|)
@@ -4961,7 +4944,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"bt_ccb_free is NOT initialized but init here\n "
+literal|"bt%d: bt_ccb_free is NOT initialized but init here\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 name|bt_ccb_free
@@ -5607,7 +5592,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Already done?"
+literal|"bt%d: Already done?\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 name|xs
@@ -5630,7 +5617,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Not in use?"
+literal|"bt%d: Not in use?\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 name|xs
@@ -6195,7 +6184,7 @@ block|{
 comment|/* there's still data, must have run out of segs! */
 name|printf
 argument_list|(
-literal|"bt_scsi_cmd%d: more than %d DMA segs\n"
+literal|"bt%d: bt_scsi_cmd, more than %d DMA segs\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -6867,7 +6856,7 @@ name|adapter
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"bt%d:%d device timed out\n"
+literal|"bt%d: %d device timed out\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -6924,7 +6913,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"bt%d not taking commands!\n"
+literal|"bt%d: not taking commands!\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -6946,7 +6935,9 @@ comment|/* abort timed out */
 block|{
 name|printf
 argument_list|(
-literal|"Abort Operation has timed out.\n"
+literal|"bt%d: Abort Operation has timed out\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 name|ccb
@@ -6977,7 +6968,9 @@ comment|/* abort the operation that has timed out */
 block|{
 name|printf
 argument_list|(
-literal|"Try to abort\n"
+literal|"bt%d: Try to abort\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 name|bt_send_mbo

@@ -1,14 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * (Mostly) Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *  * PATCHES MAGIC                LEVEL   PATCH THAT GOT US HERE  * --------------------         -----   ----------------------  * CURRENT PATCH LEVEL:         1       00098  * --------------------         -----   ----------------------  *  * 16 Feb 93	Julian Elischer		ADDED for SCSI system  */
+comment|/*  * (Mostly) Written by Julian Elischer (julian@tfs.com)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  *	$Id$  */
 end_comment
 
 begin_comment
 comment|/*  * Ported to run under 386BSD by Julian Elischer (julian@tfs.com) Sept 1992  */
-end_comment
-
-begin_comment
-comment|/*  * HISTORY  * $Log:	aha1542.c,v $  * Revision 1.4  93/08/07  13:17:25  julian  * replaced private timeout stuff with system timeout calls  *   * Revision 1.3  93/05/22  16:51:18  root  * set up  dev->dev_pic before it's needed for OSF  *   * Revision 1.2  93/05/07  11:40:27  root  * fixed SLEEPTIME calculation  *   * Revision 1.1  93/05/07  11:14:03  root  * Initial revision  *   * Revision 1.6  1992/08/24  21:01:58  jason  * many changes and bugfixes for osf1  *  * Revision 1.5  1992/07/31  01:22:03  julian  * support improved scsi.h layout  *  * Revision 1.4  1992/07/25  03:11:26  julian  * check each request fro sane flags.  *  * Revision 1.3  1992/07/24  00:52:45  julian  * improved timeout handling.  * added support for two arguments to the sd_done (or equiv) call so that  * they can pre-queue several arguments.  * slightly clean up error handling  *  * Revision 1.2  1992/07/17  22:03:54  julian  * upgraded the timeout code.  * added support for UIO-based i/o (as used for pmem operations)  *  * Revision 1.1  1992/05/27  00:51:12  balsup  * machkern/cor merge  */
 end_comment
 
 begin_comment
@@ -1903,6 +1899,8 @@ name|scsi_switch
 name|aha_switch
 init|=
 block|{
+literal|"aha"
+block|,
 name|aha_scsi_cmd
 block|,
 name|ahaminphys
@@ -2084,7 +2082,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"aha_cmd: aha1542 host not idle(0x%x)\n"
+literal|"aha%d: aha_cmd, host not idle(0x%x)\n"
+argument_list|,
+name|unit
 argument_list|,
 name|sts
 argument_list|)
@@ -2178,7 +2178,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"aha_cmd: aha1542 cmd/data port full\n"
+literal|"aha%d: aha_cmd, cmd/data port full\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 name|outb
@@ -2261,7 +2263,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"aha_cmd: aha1542 cmd/data port empty %d\n"
+literal|"aha%d: aha_cmd, cmd/data port empty %d\n"
+argument_list|,
+name|unit
 argument_list|,
 name|ocnt
 argument_list|)
@@ -2329,7 +2333,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"aha_cmd: aha1542 host not finished(0x%x)\n"
+literal|"aha%d: aha_cmd, host not finished(0x%x)\n"
+argument_list|,
+name|unit
 argument_list|,
 name|sts
 argument_list|)
@@ -2442,7 +2448,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"aha: unit number (%d) too high\n"
+literal|"aha%d: unit number too high\n"
 argument_list|,
 name|unit
 argument_list|)
@@ -2653,17 +2659,9 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* !defined(OSF) */
-ifdef|#
-directive|ifdef
+ifndef|#
+directive|ifndef
 name|__386BSD__
-name|printf
-argument_list|(
-literal|"\n  **"
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-else|__386BSD__
 name|printf
 argument_list|(
 literal|"port=%x spl=%d\n"
@@ -2719,17 +2717,6 @@ name|dev
 operator|->
 name|dev_unit
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|__386BSD__
-name|printf
-argument_list|(
-literal|" probing for scsi devices**\n"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-endif|__386BSD__
 comment|/***********************************************\ 	* ask the adapter what subunits are present	* 	\***********************************************/
 name|scsi_attachdevs
 argument_list|(
@@ -2760,19 +2747,6 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* defined(OSF) */
-ifdef|#
-directive|ifdef
-name|__386BSD__
-name|printf
-argument_list|(
-literal|"aha%d"
-argument_list|,
-name|unit
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-endif|__386BSD__
 return|return;
 block|}
 end_block
@@ -3554,7 +3528,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"exiting but not in use! "
+literal|"aha%d: exiting but not in use!\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 name|Debugger
@@ -3921,7 +3897,7 @@ directive|ifdef
 name|__386BSD__
 name|printf
 argument_list|(
-literal|"aha%d reading board settings, "
+literal|"aha%d: reading board settings, "
 argument_list|,
 name|unit
 argument_list|)
@@ -3932,6 +3908,7 @@ name|PRNT
 parameter_list|(
 name|x
 parameter_list|)
+value|printf(x)
 else|#
 directive|else
 else|__386BSD__
@@ -3952,6 +3929,12 @@ value|printf(x)
 endif|#
 directive|endif
 endif|__386BSD__
+name|DELAY
+argument_list|(
+literal|1000
+argument_list|)
+expr_stmt|;
+comment|/* for Bustek 545 */
 name|aha_cmd
 argument_list|(
 name|unit
@@ -4598,7 +4581,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"not in use!"
+literal|"aha%d: not in use!\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 name|Debugger
@@ -4620,7 +4605,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Already done! check device retry code "
+literal|"aha%d: Already done! check device retry code\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 name|Debugger
@@ -4686,7 +4673,9 @@ name|AHA_MBO_FREE
 condition|)
 name|printf
 argument_list|(
-literal|"MBO not free\n"
+literal|"aha%d: MBO not free\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 comment|/***********************************************\ 	* Put all the arguments for the xfer in the ccb	* 	\***********************************************/
@@ -5206,7 +5195,7 @@ block|{
 comment|/* there's still data, must have run out of segs! */
 name|printf
 argument_list|(
-literal|"aha_scsi_cmd%d: more than %d DMA segs\n"
+literal|"aha%d: aha_scsi_cmd, more than %d DMA segs\n"
 argument_list|,
 name|unit
 argument_list|,
@@ -5631,7 +5620,9 @@ operator|)
 condition|)
 name|printf
 argument_list|(
-literal|"cmd fail\n"
+literal|"aha%d: cmd fail\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 name|aha_abortmbx
@@ -5760,7 +5751,9 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"abort failed in wait\n"
+literal|"aha%d: abort failed in wait\n"
+argument_list|,
+name|unit
 argument_list|)
 expr_stmt|;
 name|ccb
@@ -5924,7 +5917,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"%d nSEC ok, use "
+literal|"%d nSEC ok, using "
 argument_list|,
 name|retval
 argument_list|)
@@ -5963,7 +5956,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%d nSEC "
+literal|"%d nSEC\n"
 argument_list|,
 name|retval2
 argument_list|)
@@ -5978,7 +5971,7 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|".. slower failed, abort.\n"
+literal|".. slower failed, abort\n"
 argument_list|,
 name|retval
 argument_list|)
@@ -6320,7 +6313,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"aha%d not taking commands!\n"
+literal|"aha%d: not taking commands!\n"
 argument_list|,
 name|unit
 argument_list|)
