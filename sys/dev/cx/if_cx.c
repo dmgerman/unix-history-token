@@ -7997,7 +7997,7 @@ name|t
 parameter_list|,
 name|tp
 parameter_list|)
-value|(!(t->c_iflag& (ICRNL | IGNCR | IMAXBEL | INLCR | ISTRIP | IXON))\&& (!(tp->t_iflag& BRKINT) || (tp->t_iflag& IGNBRK))\&& (!(tp->t_iflag& PARMRK)\ 		|| (tp->t_iflag& (IGNPAR | IGNBRK)) == (IGNPAR | IGNBRK))\&& !(t->c_lflag& (ECHO | ICANON | IEXTEN | ISIG | PENDIN))\&& linesw[tp->t_line].l_rint == ttyinput)
+value|(!(t->c_iflag& (ICRNL | IGNCR | IMAXBEL | INLCR | ISTRIP | IXON))\&& (!(tp->t_iflag& BRKINT) || (tp->t_iflag& IGNBRK))\&& (!(tp->t_iflag& PARMRK)\ 		|| (tp->t_iflag& (IGNPAR | IGNBRK)) == (IGNPAR | IGNBRK))\&& !(t->c_lflag& (ECHO | ICANON | IEXTEN | ISIG | PENDIN))\&& linesw[tp->t_line]->l_rint == ttyinput)
 comment|/*  * Error callback function.  */
 specifier|static
 name|void

@@ -5658,7 +5658,7 @@ name|linesw
 index|[
 name|t
 index|]
-operator|.
+operator|->
 name|l_open
 operator|)
 operator|(
@@ -13883,7 +13883,7 @@ name|tp
 operator|->
 name|t_line
 index|]
-operator|.
+operator|->
 name|l_rint
 operator|==
 name|ttyinput
@@ -13910,7 +13910,7 @@ name|tp
 operator|->
 name|t_line
 index|]
-operator|.
+operator|->
 name|l_hotchar
 operator|)
 return|;

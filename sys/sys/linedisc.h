@@ -224,6 +224,7 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|linesw
+modifier|*
 name|linesw
 index|[]
 decl_stmt|;
@@ -312,7 +313,7 @@ name|tp
 operator|->
 name|t_line
 index|]
-operator|.
+operator|->
 name|l_open
 operator|)
 operator|(
@@ -350,7 +351,7 @@ name|tp
 operator|->
 name|t_line
 index|]
-operator|.
+operator|->
 name|l_close
 operator|)
 operator|(
@@ -393,7 +394,7 @@ name|tp
 operator|->
 name|t_line
 index|]
-operator|.
+operator|->
 name|l_read
 operator|)
 operator|(
@@ -438,7 +439,7 @@ name|tp
 operator|->
 name|t_line
 index|]
-operator|.
+operator|->
 name|l_write
 operator|)
 operator|(
@@ -489,7 +490,7 @@ name|tp
 operator|->
 name|t_line
 index|]
-operator|.
+operator|->
 name|l_ioctl
 operator|)
 operator|(
@@ -533,7 +534,7 @@ name|tp
 operator|->
 name|t_line
 index|]
-operator|.
+operator|->
 name|l_rint
 operator|)
 operator|(
@@ -568,7 +569,7 @@ name|tp
 operator|->
 name|t_line
 index|]
-operator|.
+operator|->
 name|l_start
 operator|)
 operator|(
@@ -604,7 +605,7 @@ name|tp
 operator|->
 name|t_line
 index|]
-operator|.
+operator|->
 name|l_modem
 operator|)
 operator|(
