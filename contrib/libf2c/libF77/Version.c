@@ -18,7 +18,7 @@ name|char
 name|__G77_LIBF77_VERSION__
 index|[]
 init|=
-literal|"3.2.1 20020831 (prerelease)"
+literal|"3.2.1 20020916 (prerelease)"
 decl_stmt|;
 end_decl_stmt
 
