@@ -3624,6 +3624,12 @@ name|d_secsize
 expr_stmt|;
 name|dev
 operator|->
+name|si_bsize_best
+operator|=
+name|BLKDEV_IOSIZE
+expr_stmt|;
+name|dev
+operator|->
 name|si_bsize_max
 operator|=
 name|MAXBSIZE
