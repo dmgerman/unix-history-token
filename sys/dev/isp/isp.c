@@ -1776,7 +1776,7 @@ name|isp_ultramode
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 			 * If we're in Ultra Mode, we have to be 60Mhz clock- 			 * even for the SBus version. 			 */
+comment|/* 			 * If we're in Ultra Mode, we have to be 60MHz clock- 			 * even for the SBus version. 			 */
 name|isp
 operator|->
 name|isp_clock
@@ -3336,7 +3336,7 @@ name|isp_state
 operator|=
 name|ISP_RESETSTATE
 expr_stmt|;
-comment|/* 	 * Okay- now that we have new firmware running, we now (re)set our 	 * notion of how many luns we support. This is somewhat tricky because 	 * if we haven't loaded firmware, we sometimes do not have an easy way 	 * of knowing how many luns we support. 	 * 	 * Expanded lun firmware gives you 32 luns for SCSI cards and 	 * 16384 luns for Fibre Channel cards. 	 * 	 * It turns out that even for QLogic 2100s with ROM 1.10 and above 	 * we do get a firmware attributes word returned in mailbox register 6. 	 * 	 * Because the lun is in a a different position in the Request Queue 	 * Entry structure for Fibre Channel with expanded lun firmware, we 	 * can only support one lun (lun zero) when we don't know what kind 	 * of firmware we're running. 	 * 	 * Note that we only do this once (the first time thru isp_reset) 	 * because we may be called again after firmware has been loaded once 	 * and released. 	 */
+comment|/* 	 * Okay- now that we have new firmware running, we now (re)set our 	 * notion of how many luns we support. This is somewhat tricky because 	 * if we haven't loaded firmware, we sometimes do not have an easy way 	 * of knowing how many luns we support. 	 * 	 * Expanded lun firmware gives you 32 luns for SCSI cards and 	 * 16384 luns for Fibre Channel cards. 	 * 	 * It turns out that even for QLogic 2100s with ROM 1.10 and above 	 * we do get a firmware attributes word returned in mailbox register 6. 	 * 	 * Because the lun is in a different position in the Request Queue 	 * Entry structure for Fibre Channel with expanded lun firmware, we 	 * can only support one lun (lun zero) when we don't know what kind 	 * of firmware we're running. 	 */
 if|if
 condition|(
 name|IS_SCSI
@@ -5327,6 +5327,32 @@ operator|~
 name|ICBOPT_TGT_ENABLE
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|isp
+operator|->
+name|isp_role
+operator|&
+name|ISP_ROLE_INITIATOR
+condition|)
+block|{
+name|fcp
+operator|->
+name|isp_fwoptions
+operator|&=
+operator|~
+name|ICBOPT_INI_DISABLE
+expr_stmt|;
+block|}
+else|else
+block|{
+name|fcp
+operator|->
+name|isp_fwoptions
+operator||=
+name|ICBOPT_INI_DISABLE
+expr_stmt|;
+block|}
 comment|/* 	 * Propagate all of this into the ICB structure. 	 */
 name|icbp
 operator|->
@@ -5477,6 +5503,46 @@ name|icb_hardaddr
 operator|=
 name|loopid
 expr_stmt|;
+if|if
+condition|(
+name|icbp
+operator|->
+name|icb_hardaddr
+operator|>=
+literal|125
+condition|)
+block|{
+comment|/* 		 * We end up with a Loop ID of 255 for F-Port topologies 		 */
+if|if
+condition|(
+name|icbp
+operator|->
+name|icb_hardaddr
+operator|!=
+literal|255
+condition|)
+block|{
+name|isp_prt
+argument_list|(
+name|isp
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"bad hard address %u- resetting to zero"
+argument_list|,
+name|icbp
+operator|->
+name|icb_hardaddr
+argument_list|)
+expr_stmt|;
+block|}
+name|icbp
+operator|->
+name|icb_hardaddr
+operator|=
+literal|0
+expr_stmt|;
+block|}
 comment|/* 	 * Right now we just set extended options to prefer point-to-point 	 * over loop based upon some soft config options. 	 *  	 * NB: for the 2300, ICBOPT_EXTENDED is required. 	 */
 if|if
 condition|(
@@ -5555,12 +5621,32 @@ argument_list|)
 condition|)
 block|{
 comment|/* 			 * QLogic recommends that FAST Posting be turned 			 * off for 23XX cards and instead allow the HBA 			 * to write response queue entries and interrupt 			 * after a delay (ZIO). 			 * 			 * If we set ZIO, it will disable fast posting, 			 * so we don't need to clear it in fwoptions. 			 */
+ifndef|#
+directive|ifndef
+name|ISP_NO_ZIO
 name|icbp
 operator|->
 name|icb_xfwoptions
 operator||=
 name|ICBXOPT_ZIO
 expr_stmt|;
+else|#
+directive|else
+name|icbp
+operator|->
+name|icb_fwoptions
+operator||=
+name|ICBOPT_FAST_POST
+expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+literal|0
+comment|/* 			 * Values, in 100us increments. The default 			 * is 2 (200us) if a value 0 (default) is 			 * selected. 			 */
+block|icbp->icb_idelaytimer = 2;
+endif|#
+directive|endif
 if|if
 condition|(
 name|isp
@@ -5871,6 +5957,25 @@ argument_list|(
 name|isp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|icbp
+operator|->
+name|icb_rqstqlen
+operator|<
+literal|1
+condition|)
+block|{
+name|isp_prt
+argument_list|(
+name|isp
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"bad request queue length"
+argument_list|)
+expr_stmt|;
+block|}
 name|icbp
 operator|->
 name|icb_rsltqlen
@@ -5880,6 +5985,25 @@ argument_list|(
 name|isp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|icbp
+operator|->
+name|icb_rsltqlen
+operator|<
+literal|1
+condition|)
+block|{
+name|isp_prt
+argument_list|(
+name|isp
+argument_list|,
+name|ISP_LOGERR
+argument_list|,
+literal|"bad result queue length"
+argument_list|)
+expr_stmt|;
+block|}
 name|icbp
 operator|->
 name|icb_rqstaddr
@@ -7332,7 +7456,7 @@ index|]
 operator|&
 literal|0xff
 expr_stmt|;
-comment|/* 	 * Check to see if we're on a fabric by trying to see if we 	 * can talk to the fabric name server. This can be a bit 	 * tricky because if we're a 2100, we should check always 	 * (in case we're connected to an server doing aliasing). 	 */
+comment|/* 	 * Check to see if we're on a fabric by trying to see if we 	 * can talk to the fabric name server. This can be a bit 	 * tricky because if we're a 2100, we should check always 	 * (in case we're connected to a server doing aliasing). 	 */
 name|fcp
 operator|->
 name|isp_onfabric
@@ -15374,7 +15498,6 @@ argument_list|,
 operator|(
 name|void
 operator|*
-operator|*
 operator|)
 operator|&
 name|qep
@@ -15550,7 +15673,6 @@ name|optr
 argument_list|,
 operator|(
 name|void
-operator|*
 operator|*
 operator|)
 operator|&
@@ -18727,7 +18849,7 @@ expr_stmt|;
 block|}
 break|break;
 block|}
-comment|/* 		 * Free any dma resources. As a side effect, this may 		 * also do any cache flushing necessary for data coherence.			 */
+comment|/* 		 * Free any DMA resources. As a side effect, this may 		 * also do any cache flushing necessary for data coherence.			 */
 if|if
 condition|(
 name|XS_XFRLEN
@@ -20269,6 +20391,20 @@ argument_list|,
 literal|"FATAL CONNECTION ERROR"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ISP_FW_CRASH_DUMP
+name|isp_async
+argument_list|(
+name|isp
+argument_list|,
+name|ISPASYNC_FW_CRASH
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|isp_async
 argument_list|(
 name|isp
@@ -20292,6 +20428,8 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 operator|-
@@ -20622,15 +20760,9 @@ literal|1
 operator|)
 return|;
 block|}
-else|#
-directive|else
-name|optrp
-operator|=
-name|optrp
-expr_stmt|;
-comment|/* FALLTHROUGH */
 endif|#
 directive|endif
+comment|/* FALLTHROUGH */
 case|case
 name|RQSTYPE_REQUEST
 case|:
@@ -23100,6 +23232,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|u_int16_t
 name|mbpscsi
 index|[]
@@ -24072,6 +24205,7 @@ end_endif
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|u_int16_t
 name|mbpfc
 index|[]
@@ -25296,7 +25430,7 @@ name|NULL
 block|,
 name|NULL
 block|,
-name|NULL
+literal|"DRIVER HEARTBEAT"
 block|,
 name|NULL
 block|,
@@ -25396,8 +25530,6 @@ parameter_list|)
 block|{
 name|unsigned
 name|int
-name|lim
-decl_stmt|,
 name|ibits
 decl_stmt|,
 name|obits
@@ -25406,6 +25538,7 @@ name|box
 decl_stmt|,
 name|opcode
 decl_stmt|;
+specifier|const
 name|u_int16_t
 modifier|*
 name|mcp
@@ -25422,46 +25555,12 @@ name|mcp
 operator|=
 name|mbpfc
 expr_stmt|;
-name|lim
-operator|=
-operator|(
-sizeof|sizeof
-argument_list|(
-name|mbpfc
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|mbpfc
-index|[
-literal|0
-index|]
-argument_list|)
-operator|)
-expr_stmt|;
 block|}
 else|else
 block|{
 name|mcp
 operator|=
 name|mbpscsi
-expr_stmt|;
-name|lim
-operator|=
-operator|(
-sizeof|sizeof
-argument_list|(
-name|mbpscsi
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|mbpscsi
-index|[
-literal|0
-index|]
-argument_list|)
-operator|)
 expr_stmt|;
 block|}
 name|opcode
@@ -25668,6 +25767,7 @@ name|box
 decl_stmt|,
 name|opcode
 decl_stmt|;
+specifier|const
 name|u_int16_t
 modifier|*
 name|mcp
@@ -28132,6 +28232,20 @@ decl_stmt|;
 name|u_int16_t
 name|handle
 decl_stmt|;
+if|if
+condition|(
+name|IS_FC
+argument_list|(
+name|isp
+argument_list|)
+condition|)
+block|{
+name|isp_mark_getpdb_all
+argument_list|(
+name|isp
+argument_list|)
+expr_stmt|;
+block|}
 name|isp_reset
 argument_list|(
 name|isp
@@ -32343,7 +32457,7 @@ name|isp
 argument_list|,
 name|ISP_LOGALL
 argument_list|,
-literal|"isp_fw_dump: SRAM dumped succesfully"
+literal|"isp_fw_dump: SRAM dumped successfully"
 argument_list|)
 expr_stmt|;
 name|FCPARAM
@@ -33243,7 +33357,7 @@ name|isp
 argument_list|,
 name|ISP_LOGALL
 argument_list|,
-literal|"isp_fw_dump: SRAM dumped succesfully"
+literal|"isp_fw_dump: SRAM dumped successfully"
 argument_list|)
 expr_stmt|;
 name|FCPARAM
