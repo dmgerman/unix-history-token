@@ -15,7 +15,7 @@ operator|)
 name|parseaddr
 operator|.
 name|c
-literal|3.53
+literal|3.54
 operator|%
 name|G
 operator|%
@@ -523,7 +523,7 @@ name|NSTATES
 index|]
 init|=
 block|{
-comment|/*	oldst	newst>	OPR	ATM	QST	SPC	ONE	*/
+comment|/*	oldst	chtype>	OPR	ATM	QST	SPC	ONE	*/
 comment|/*OPR*/
 name|OPR
 operator||
@@ -569,7 +569,7 @@ name|QST
 block|,
 name|QST
 block|,
-name|QST
+name|OPR
 operator||
 name|MB
 block|,
