@@ -65,8 +65,7 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-name|void
-modifier|*
+name|u_int32_t
 name|pap
 decl_stmt|;
 name|u_char
@@ -149,8 +148,7 @@ index|[
 literal|12
 index|]
 decl_stmt|;
-name|void
-modifier|*
+name|u_int32_t
 name|oem_table_pointer
 decl_stmt|;
 name|u_short
@@ -159,8 +157,7 @@ decl_stmt|;
 name|u_short
 name|entry_count
 decl_stmt|;
-name|void
-modifier|*
+name|u_int32_t
 name|apic_address
 decl_stmt|;
 name|u_short
@@ -302,8 +299,7 @@ decl_stmt|;
 name|u_char
 name|apic_flags
 decl_stmt|;
-name|void
-modifier|*
+name|u_int32_t
 name|apic_address
 decl_stmt|;
 block|}
