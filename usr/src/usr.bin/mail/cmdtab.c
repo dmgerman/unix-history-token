@@ -19,7 +19,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)cmdtab.c	2.4 %G%"
+literal|"@(#)cmdtab.c	2.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -91,6 +91,9 @@ name|sendmail
 argument_list|()
 decl_stmt|,
 name|from
+argument_list|()
+decl_stmt|,
+name|copycmd
 argument_list|()
 decl_stmt|;
 end_decl_stmt
@@ -380,6 +383,18 @@ block|,
 name|shell
 block|,
 name|I
+operator||
+name|STRLIST
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|"copy"
+block|,
+name|copycmd
+block|,
+name|M
 operator||
 name|STRLIST
 block|,
