@@ -3048,6 +3048,12 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
+name|int
+name|s
+init|=
+name|splnet
+argument_list|()
+decl_stmt|;
 specifier|const
 name|node_p
 name|node
@@ -3192,6 +3198,11 @@ argument_list|(
 name|node
 argument_list|)
 expr_stmt|;
+name|splx
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -3209,6 +3220,12 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
+name|int
+name|s
+init|=
+name|splnet
+argument_list|()
+decl_stmt|;
 specifier|const
 name|node_p
 name|node
@@ -3248,6 +3265,11 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 block|}
