@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Digital Equipment Corp.  *  * %sccs.include.redist.c%  *  *	@(#)if_qe.c	7.20 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Digital Equipment Corp.  *  * %sccs.include.redist.c%  *  *	@(#)if_qe.c	7.21 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -4147,6 +4147,8 @@ name|struct
 name|ether_header
 modifier|*
 name|eh
+decl_stmt|,
+name|ehm
 decl_stmt|;
 name|struct
 name|mbuf
@@ -4307,6 +4309,25 @@ literal|0
 condition|)
 return|return;
 comment|/* 	 * Pull packet off interface.  Off is nonzero if packet 	 * has trailing header; qeget will then force this header 	 * information to be at the front, but we still have to drop 	 * the type and length which are at the front of any trailer data. 	 */
+name|bcopy
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+name|eh
+argument_list|,
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|ehm
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ehm
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|m
 operator|=
 name|if_ubaget
@@ -4339,7 +4360,8 @@ name|sc
 operator|->
 name|qe_if
 argument_list|,
-name|eh
+operator|&
+name|ehm
 argument_list|,
 name|m
 argument_list|)
