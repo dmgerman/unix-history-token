@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.70 (Berkeley) %G%"
+literal|"@(#)conf.c	8.71 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3216,6 +3216,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HASSETPROCTITLE
+end_ifndef
+
 begin_decl_stmt
 name|char
 name|ProcTitleBuf
@@ -3464,6 +3470,11 @@ directive|endif
 comment|/* SETPROCTITLE */
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_escape
 end_escape
