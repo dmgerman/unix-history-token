@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: ftp_strat.c,v 1.21 1996/07/08 10:08:03 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  * Copyright (c) 1995  * 	Gary J Palmer. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * The new sysinstall program.  *  * This is probably the last attempt in the `sysinstall' line, the next  * generation being slated to essentially a complete rewrite.  *  * $Id: ftp_strat.c,v 1.22 1996/07/09 14:28:14 jkh Exp $  *  * Copyright (c) 1995  *	Jordan Hubbard.  All rights reserved.  * Copyright (c) 1995  * 	Gary J Palmer. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    verbatim and that no modifications are made prior to this  *    point in the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY JORDAN HUBBARD ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL JORDAN HUBBARD OR HIS PETS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, LIFE OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -159,6 +159,8 @@ return|return
 name|FALSE
 return|;
 block|}
+name|try
+label|:
 name|cp
 operator|=
 name|variable_get
@@ -174,9 +176,7 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
-literal|"%s is not set!"
-argument_list|,
-name|VAR_FTP_PATH
+literal|"You haven't specified an FTP server!"
 argument_list|)
 expr_stmt|;
 return|return
@@ -369,7 +369,7 @@ goto|goto
 name|punt
 goto|;
 block|}
-comment|/* Give it a shot - can't hurt to try and zoom in if we can, unless the release is set to __RELEASE which signifies that it's not set */
+comment|/* Give it a shot - can't hurt to try and zoom in if we can, unless the release is set to        __RELEASE which signifies that it's not set */
 name|rel
 operator|=
 name|variable_get
@@ -407,17 +407,63 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|msgConfirm
+block|{
+if|if
+condition|(
+operator|!
+name|msgYesNo
 argument_list|(
 literal|"Warning:  Can't CD to `%s' distribution on this\n"
-literal|"FTP server.  You may need to visit the Options menu\n"
-literal|"to set the release name explicitly if this FTP server\n"
-literal|"isn't exporting a CD (or some other custom release) at\n"
-literal|"the top level as a release tree."
+literal|"FTP server.  You may need to visit a different\n"
+literal|"server for the release you're trying to fetch\n"
+literal|"or go to the Options menu and to set the release\n"
+literal|"name to explicitly match what's available on\n"
+literal|"%s.\n\n"
+literal|"Would you like to select another FTP server?"
 argument_list|,
 name|rel
+argument_list|,
+name|hostname
+argument_list|)
+condition|)
+block|{
+name|dialog_clear_norefresh
+argument_list|()
+expr_stmt|;
+name|variable_unset
+argument_list|(
+name|VAR_FTP_PATH
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|dmenuOpenSimple
+argument_list|(
+operator|&
+name|MenuMediaFTP
+argument_list|,
+name|FALSE
+argument_list|)
+condition|)
+goto|goto
+name|punt
+goto|;
+else|else
+block|{
+name|cp
+operator|=
+name|variable_get
+argument_list|(
+name|VAR_FTP_PATH
+argument_list|)
+expr_stmt|;
+goto|goto
+name|try
+goto|;
+block|}
+block|}
+block|}
 elseif|else
 if|if
 condition|(
@@ -464,6 +510,11 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|variable_unset
+argument_list|(
+name|VAR_FTP_PATH
+argument_list|)
+expr_stmt|;
 return|return
 name|FALSE
 return|;
