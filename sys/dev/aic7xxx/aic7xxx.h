@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Core definitions and data structures shareable across OS platforms.  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * Copyright (c) 2000-2001 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic7xxx.h#62 $  *  * $FreeBSD$  */
+comment|/*  * Core definitions and data structures shareable across OS platforms.  *  * Copyright (c) 1994-2001 Justin T. Gibbs.  * Copyright (c) 2000-2001 Adaptec Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  *  * $Id: //depot/aic7xxx/aic7xxx/aic7xxx.h#70 $  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -287,6 +287,44 @@ parameter_list|)
 define|\
 value|(0x01<< (SCB_GET_TARGET_OFFSET(ahc, scb)))
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AHC_DEBUG
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SCB_IS_SILENT
+parameter_list|(
+name|scb
+parameter_list|)
+define|\
+value|((ahc_debug& AHC_SHOW_MASKED_ERRORS) == 0		\&& (((scb)->flags& SCB_SILENT) != 0))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SCB_IS_SILENT
+parameter_list|(
+name|scb
+parameter_list|)
+define|\
+value|(((scb)->flags& SCB_SILENT) != 0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -922,7 +960,16 @@ comment|/* 64Byte SCBs enabled */
 name|AHC_SCB_CONFIG_USED
 init|=
 literal|0x4000000
+block|,
 comment|/* No SEEPROM but SCB2 had info. */
+name|AHC_NO_BIOS_INIT
+init|=
+literal|0x8000000
+block|,
+comment|/* No BIOS left over settings. */
+name|AHC_DISABLE_PCI_PERR
+init|=
+literal|0x10000000
 block|}
 name|ahc_flag
 typedef|;
@@ -1222,6 +1269,11 @@ comment|/* 					  * We detected a parity or CRC 					  * error that has effected
 name|SCB_TARGET_SCB
 init|=
 literal|0x2000
+block|,
+name|SCB_SILENT
+init|=
+literal|0x4000
+comment|/* 					  * Be quiet about transmission type 					  * errors.  They are expected and we 					  * don't want to upset the user.  This 					  * flag is typically used during DV. 					  */
 block|}
 name|scb_flag
 typedef|;
@@ -1758,7 +1810,7 @@ begin_define
 define|#
 directive|define
 name|AHC_ASYNC_XFER_PERIOD
-value|0x44
+value|0x45
 end_define
 
 begin_define
@@ -1798,6 +1850,20 @@ define|#
 directive|define
 name|AHC_SYNCRATE_FAST
 value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHC_SYNCRATE_MAX
+value|AHC_SYNCRATE_DT
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHC_SYNCRATE_MIN
+value|13
 end_define
 
 begin_comment
@@ -2531,10 +2597,6 @@ name|pci_cachesize
 decl_stmt|;
 name|u_int
 name|stack_size
-decl_stmt|;
-name|uint16_t
-modifier|*
-name|saved_stack
 decl_stmt|;
 comment|/* Per-Unit descriptive information */
 specifier|const
@@ -4003,8 +4065,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|AHC_DEBUG_SEQUENCER
+name|AHC_SHOW_MASKED_ERRORS
 value|0x1000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AHC_DEBUG_SEQUENCER
+value|0x2000
 end_define
 
 begin_endif
