@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)append.c	5.5 (Berkeley) %G%"
+literal|"@(#)append.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -140,7 +140,7 @@ name|CF
 name|cf
 decl_stmt|;
 name|int
-name|rval
+name|eval
 decl_stmt|;
 name|afd
 operator|=
@@ -190,14 +190,19 @@ argument_list|,
 name|WPAD
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
+for|for
+control|(
+name|eval
+operator|=
+literal|0
+init|;
 name|file
 operator|=
 operator|*
 name|argv
 operator|++
-condition|)
+condition|;
+control|)
 block|{
 if|if
 condition|(
@@ -232,7 +237,7 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|rval
+name|eval
 operator|=
 literal|1
 expr_stmt|;
@@ -291,7 +296,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|rval
+name|eval
 operator|)
 return|;
 block|}

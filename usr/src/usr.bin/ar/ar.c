@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ar.c	5.9 (Berkeley) %G%"
+literal|"@(#)ar.c	5.10 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -177,8 +177,6 @@ name|optind
 decl_stmt|;
 name|int
 name|c
-decl_stmt|,
-name|rval
 decl_stmt|;
 name|char
 modifier|*
@@ -847,8 +845,8 @@ name|usage
 argument_list|()
 expr_stmt|;
 block|}
-name|rval
-operator|=
+name|exit
+argument_list|(
 call|(
 modifier|*
 name|fcall
@@ -856,10 +854,6 @@ call|)
 argument_list|(
 name|argv
 argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|rval
 argument_list|)
 expr_stmt|;
 block|}
