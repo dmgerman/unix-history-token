@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: usbdi.h,v 1.49 2001/01/23 17:04:30 augustss Exp $	*/
+comment|/*	$NetBSD: usbdi.h,v 1.50 2001/04/12 01:18:24 thorpej Exp $	*/
 end_comment
 
 begin_comment
@@ -1477,12 +1477,39 @@ directive|ifdef
 name|USB_USE_SOFTINTR
 end_ifdef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__HAVE_GENERIC_SOFT_INTERRUPTS
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|splusb
 value|splsoftnet
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|splusb
+value|splsoftclock
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __HAVE_GENERIC_SOFT_INTERRUPTS */
+end_comment
 
 begin_else
 else|#
@@ -1500,6 +1527,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* USB_USE_SOFTINTR */
+end_comment
 
 begin_define
 define|#
