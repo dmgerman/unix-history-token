@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1996 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: sys_pipe.c,v 1.1 1996/01/28 23:38:26 dyson Exp $  */
+comment|/*  * Copyright (c) 1996 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Absolutely no warranty of function or purpose is made by the author  *    John S. Dyson.  * 4. This work was done expressly for inclusion into FreeBSD.  Other use  *    is allowed if this notation is included.  * 5. Modifications may be freely made to this file if the above conditions  *    are met.  *  * $Id: sys_pipe.c,v 1.2 1996/01/29 02:57:33 dyson Exp $  */
 end_comment
 
 begin_ifndef
@@ -1288,21 +1288,26 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|(
 name|nread
 operator|>
 literal|0
-operator|)
-operator|||
-operator|(
+condition|)
+break|break;
+if|if
+condition|(
 name|rpipe
 operator|->
 name|pipe_state
 operator|&
 name|PIPE_NBIO
-operator|)
 condition|)
+block|{
+name|error
+operator|=
+name|EAGAIN
+expr_stmt|;
 break|break;
+block|}
 if|if
 condition|(
 name|rpipe
@@ -1641,7 +1646,7 @@ name|SIGPIPE
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|EPIPE
 return|;
 block|}
 operator|++
@@ -1896,7 +1901,10 @@ argument_list|,
 name|SIGPIPE
 argument_list|)
 expr_stmt|;
-break|break;
+name|error
+operator|=
+name|EPIPE
+expr_stmt|;
 block|}
 block|}
 block|}
