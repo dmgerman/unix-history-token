@@ -1279,7 +1279,7 @@ operator|&=
 operator|~
 name|FLAG_PERMUTE
 expr_stmt|;
-elseif|else
+comment|/* 	 * Code "else if (*options == '-')" was here. 	 * Try to be more GNU compatible, configure's use us! 	 */
 if|if
 condition|(
 operator|*
