@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Synchronous PPP/Cisco link level subroutines.  * Keepalive protocol implemented in both Cisco and PPP modes.  *  * Copyright (C) 1994-1996 Cronyx Engineering Ltd.  * Author: Serge Vakulenko,<vak@cronyx.ru>  *  * Heavily revamped to conform to RFC 1661.  * Copyright (C) 1997, Joerg Wunsch.  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * From: Version 2.4, Thu Apr 30 17:17:21 MSD 1997  *  * $Id: if_spppsubr.c,v 1.49 1998/12/26 12:14:31 phk Exp $  */
+comment|/*  * Synchronous PPP/Cisco link level subroutines.  * Keepalive protocol implemented in both Cisco and PPP modes.  *  * Copyright (C) 1994-1996 Cronyx Engineering Ltd.  * Author: Serge Vakulenko,<vak@cronyx.ru>  *  * Heavily revamped to conform to RFC 1661.  * Copyright (C) 1997, Joerg Wunsch.  *  * This software is distributed with NO WARRANTIES, not even the implied  * warranties for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  * Authors grant any other persons or organisations permission to use  * or modify this software as long as this message is kept with the software,  * all derivative works or modified versions.  *  * From: Version 2.4, Thu Apr 30 17:17:21 MSD 1997  *  * $Id: if_spppsubr.c,v 1.50 1998/12/26 12:43:26 phk Exp $  */
 end_comment
 
 begin_include
@@ -3856,6 +3856,15 @@ name|rv
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|debug
+init|=
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_DEBUG
+decl_stmt|;
 name|s
 operator|=
 name|splimp
@@ -4117,11 +4126,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_DEBUG
+name|debug
 condition|)
 name|log
 argument_list|(
@@ -10006,7 +10011,7 @@ argument_list|(
 name|LOG_INFO
 argument_list|,
 name|SPP_FMT
-literal|"Down event (carrier loss), taking interface down.\n"
+literal|"Down event, taking interface down.\n"
 argument_list|,
 name|SPP_ARGS
 argument_list|(
@@ -11954,16 +11959,8 @@ modifier|*
 name|sp
 parameter_list|)
 block|{
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-operator|&
-name|sp
-operator|->
-name|pp_if
-decl_stmt|;
+name|STDDCL
+expr_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -12088,9 +12085,13 @@ name|pp_phase
 operator|=
 name|PHASE_NETWORK
 expr_stmt|;
+if|if
+condition|(
+name|debug
+condition|)
 name|log
 argument_list|(
-name|LOG_INFO
+name|LOG_DEBUG
 argument_list|,
 name|SPP_FMT
 literal|"phase %s\n"
@@ -12283,16 +12284,8 @@ modifier|*
 name|sp
 parameter_list|)
 block|{
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-operator|&
-name|sp
-operator|->
-name|pp_if
-decl_stmt|;
+name|STDDCL
+expr_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -12305,9 +12298,13 @@ name|pp_phase
 operator|=
 name|PHASE_TERMINATE
 expr_stmt|;
+if|if
+condition|(
+name|debug
+condition|)
 name|log
 argument_list|(
-name|LOG_INFO
+name|LOG_DEBUG
 argument_list|,
 name|SPP_FMT
 literal|"phase %s\n"
@@ -12412,25 +12409,21 @@ modifier|*
 name|sp
 parameter_list|)
 block|{
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-operator|&
-name|sp
-operator|->
-name|pp_if
-decl_stmt|;
+name|STDDCL
+expr_stmt|;
 name|sp
 operator|->
 name|pp_phase
 operator|=
 name|PHASE_ESTABLISH
 expr_stmt|;
+if|if
+condition|(
+name|debug
+condition|)
 name|log
 argument_list|(
-name|LOG_INFO
+name|LOG_DEBUG
 argument_list|,
 name|SPP_FMT
 literal|"phase %s\n"
@@ -12488,25 +12481,21 @@ modifier|*
 name|sp
 parameter_list|)
 block|{
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-operator|&
-name|sp
-operator|->
-name|pp_if
-decl_stmt|;
+name|STDDCL
+expr_stmt|;
 name|sp
 operator|->
 name|pp_phase
 operator|=
 name|PHASE_DEAD
 expr_stmt|;
+if|if
+condition|(
+name|debug
+condition|)
 name|log
 argument_list|(
-name|LOG_INFO
+name|LOG_DEBUG
 argument_list|,
 name|SPP_FMT
 literal|"phase %s\n"
@@ -20224,16 +20213,8 @@ modifier|*
 name|sp
 parameter_list|)
 block|{
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-operator|&
-name|sp
-operator|->
-name|pp_if
-decl_stmt|;
+name|STDDCL
+expr_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -20246,9 +20227,13 @@ name|pp_phase
 operator|=
 name|PHASE_NETWORK
 expr_stmt|;
+if|if
+condition|(
+name|debug
+condition|)
 name|log
 argument_list|(
-name|LOG_INFO
+name|LOG_DEBUG
 argument_list|,
 name|SPP_FMT
 literal|"phase %s\n"
