@@ -2689,8 +2689,7 @@ modifier|*
 parameter_list|,
 name|u_int32_t
 parameter_list|,
-name|void
-modifier|*
+name|intptr_t
 parameter_list|)
 function_decl|;
 end_function_decl

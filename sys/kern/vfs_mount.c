@@ -4375,7 +4375,7 @@ name|NULL
 argument_list|,
 name|VQ_MOUNT
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -5640,7 +5640,7 @@ name|NULL
 argument_list|,
 name|VQ_UNMOUNT
 argument_list|,
-name|NULL
+literal|0
 argument_list|)
 expr_stmt|;
 name|vfs_mount_destroy

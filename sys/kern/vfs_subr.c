@@ -16642,8 +16642,7 @@ parameter_list|,
 name|u_int32_t
 name|event
 parameter_list|,
-name|void
-modifier|*
+name|intptr_t
 name|data
 name|__unused
 parameter_list|)

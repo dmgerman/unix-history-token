@@ -186,6 +186,14 @@ name|nfs_rpcops
 modifier|*
 name|nm_rpcops
 decl_stmt|;
+name|int
+name|nm_tprintf_initial_delay
+decl_stmt|;
+comment|/* initial delay */
+name|int
+name|nm_tprintf_delay
+decl_stmt|;
+comment|/* interval for messages */
 comment|/* NFSv4 */
 name|uint64_t
 name|nm_clientid
@@ -225,6 +233,42 @@ name|mp
 parameter_list|)
 value|((struct nfsmount *)((mp)->mnt_data))
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NFS_TPRINTF_INITIAL_DELAY
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NFS_TPRINTF_INITIAL_DELAY
+value|12
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NFS_TPRINTF_DELAY
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|NFS_TPRINTF_DELAY
+value|30
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

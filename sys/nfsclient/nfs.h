@@ -426,6 +426,17 @@ begin_comment
 comment|/* Want above */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NFSSTA_TIMEO
+value|0x10000000
+end_define
+
+begin_comment
+comment|/* Experiencing a timeout */
+end_comment
+
 begin_comment
 comment|/*  * XXX to allow amd to include nfs.h without nfsproto.h  */
 end_comment
@@ -717,7 +728,7 @@ parameter_list|,
 name|e
 parameter_list|)
 define|\
-value|((e) != EINTR&& (e) != ERESTART&& (e) != EWOULDBLOCK&& \ 		((s)& PR_CONNREQUIRED) == 0)
+value|((e) != EINTR&& (e) != EIO&& \ 		 (e) != ERESTART&& (e) != EWOULDBLOCK&& \ 		((s)& PR_CONNREQUIRED) == 0)
 end_define
 
 begin_comment
@@ -789,6 +800,10 @@ name|int
 name|r_rtt
 decl_stmt|;
 comment|/* RTT for rpc */
+name|int
+name|r_lastmsg
+decl_stmt|;
+comment|/* last tprintf */
 name|struct
 name|thread
 modifier|*
@@ -855,12 +870,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|R_INTR
+name|R_RESENDERR
 value|0x08
 end_define
 
 begin_comment
-comment|/* intr mnt, signal pending */
+comment|/* Resend failed */
 end_comment
 
 begin_define
@@ -1106,6 +1121,20 @@ name|p
 parameter_list|)
 define|\
 value|((HEXTOC(p[0])<< 4) + HEXTOC(p[1]))
+end_define
+
+begin_comment
+comment|/* nfs_sigintr() helper, when 'rep' has all we need */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFS_SIGREP
+parameter_list|(
+name|rep
+parameter_list|)
+value|nfs_sigintr((rep)->r_nmp, (rep), (rep)->r_td)
 end_define
 
 begin_ifdef
@@ -1434,6 +1463,58 @@ parameter_list|,
 name|struct
 name|thread
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|nfs_up
+parameter_list|(
+name|struct
+name|nfsreq
+modifier|*
+parameter_list|,
+name|struct
+name|nfsmount
+modifier|*
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|nfs_down
+parameter_list|(
+name|struct
+name|nfsreq
+modifier|*
+parameter_list|,
+name|struct
+name|nfsmount
+modifier|*
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
