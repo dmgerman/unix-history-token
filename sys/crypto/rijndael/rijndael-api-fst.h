@@ -8,7 +8,7 @@ comment|/*	$KAME: rijndael-api-fst.h,v 1.6 2001/05/27 00:23:23 itojun Exp $	*/
 end_comment
 
 begin_comment
-comment|/*  * rijndael-api-fst.h   v2.3   April '2000  *  * Optimised ANSI C code  *  * #define INTERMEDIATE_VALUE_KAT to generate the Intermediate Value Known Answer Test.  */
+comment|/*  * rijndael-api-fst.h   v2.3   April '2000  *  * Optimised ANSI C code  *  */
 end_comment
 
 begin_ifndef
@@ -30,7 +30,7 @@ file|<crypto/rijndael/rijndael-alg-fst.h>
 end_include
 
 begin_comment
-comment|/*  Defines: 	Add any additional defines you need */
+comment|/*  Generic Defines  */
 end_comment
 
 begin_define
@@ -100,7 +100,7 @@ comment|/* Default number of bits in a cipher block */
 end_comment
 
 begin_comment
-comment|/*  Error Codes - CHANGE POSSIBLE: inclusion of additional error codes  */
+comment|/*  Error Codes  */
 end_comment
 
 begin_define
@@ -195,13 +195,13 @@ comment|/*  Unknown error */
 end_comment
 
 begin_comment
-comment|/*  CHANGE POSSIBLE:  inclusion of algorithm specific defines  */
+comment|/*  Algorithm-specific Defines  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|MAX_KEY_SIZE
+name|RIJNDAEL_MAX_KEY_SIZE
 value|64
 end_define
 
@@ -212,7 +212,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MAX_IV_SIZE
+name|RIJNDAEL_MAX_IV_SIZE
 value|16
 end_define
 
@@ -221,7 +221,7 @@ comment|/* # bytes needed to represent an IV  */
 end_comment
 
 begin_comment
-comment|/*  Typedefs:  	Typedef'ed data storage elements.  Add any algorithm specific  parameters at the bottom of the structs as appropriate. */
+comment|/*  Typedefs  */
 end_comment
 
 begin_comment
@@ -243,57 +243,42 @@ comment|/* Length of the key  */
 name|char
 name|keyMaterial
 index|[
-name|MAX_KEY_SIZE
+name|RIJNDAEL_MAX_KEY_SIZE
 operator|+
 literal|1
 index|]
 decl_stmt|;
 comment|/* Raw key data in ASCII, e.g., user input or KAT values */
-comment|/*  The following parameters are algorithm dependent, replace or add as necessary  */
 name|int
-name|ROUNDS
+name|Nr
 decl_stmt|;
 comment|/* key-length-dependent number of rounds */
-name|int
-name|blockLen
-decl_stmt|;
-comment|/* block length */
-union|union
-block|{
-name|u_int8_t
-name|xkS8
-index|[
-name|RIJNDAEL_MAXROUNDS
-operator|+
-literal|1
-index|]
-index|[
-literal|4
-index|]
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* key schedule		*/
 name|u_int32_t
-name|xkS32
-index|[
-name|RIJNDAEL_MAXROUNDS
-operator|+
-literal|1
-index|]
+name|rk
 index|[
 literal|4
+operator|*
+operator|(
+name|RIJNDAEL_MAXNR
+operator|+
+literal|1
+operator|)
 index|]
 decl_stmt|;
-comment|/* key schedule		*/
-block|}
-name|xKeySched
-union|;
-define|#
-directive|define
-name|keySched
-value|xKeySched.xkS8
+comment|/* key schedule */
+name|u_int32_t
+name|ek
+index|[
+literal|4
+operator|*
+operator|(
+name|RIJNDAEL_MAXNR
+operator|+
+literal|1
+operator|)
+index|]
+decl_stmt|;
+comment|/* CFB1 key schedule (encryption only) */
 block|}
 name|keyInstance
 typedef|;
@@ -315,15 +300,10 @@ comment|/* MODE_ECB, MODE_CBC, or MODE_CFB1 */
 name|u_int8_t
 name|IV
 index|[
-name|MAX_IV_SIZE
+name|RIJNDAEL_MAX_IV_SIZE
 index|]
 decl_stmt|;
 comment|/* A possible Initialization Vector for ciphering */
-comment|/*  Add any algorithm specific parameters needed here  */
-name|int
-name|blockLen
-decl_stmt|;
-comment|/* Sample: Handles non-128 bit block sizes (if available) */
 block|}
 name|cipherInstance
 typedef|;
@@ -333,27 +313,19 @@ begin_comment
 comment|/*  Function prototypes  */
 end_comment
 
-begin_comment
-comment|/*  CHANGED: nothing 	TODO: implement the following extensions to setup 192-bit and 256-bit block lengths:         makeKeyEx():    parameter blockLen added                         -- this parameter is absolutely necessary if you want to                         setup the round keys in a variable block length setting  	    cipherInitEx(): parameter blockLen added (for obvious reasons)		  */
-end_comment
-
 begin_function_decl
 name|int
 name|rijndael_makeKey
 parameter_list|(
 name|keyInstance
 modifier|*
-name|key
 parameter_list|,
 name|u_int8_t
-name|direction
 parameter_list|,
 name|int
-name|keyLen
 parameter_list|,
 name|char
 modifier|*
-name|keyMaterial
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -364,14 +336,11 @@ name|rijndael_cipherInit
 parameter_list|(
 name|cipherInstance
 modifier|*
-name|cipher
 parameter_list|,
 name|u_int8_t
-name|mode
 parameter_list|,
 name|char
 modifier|*
-name|IV
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -382,22 +351,17 @@ name|rijndael_blockEncrypt
 parameter_list|(
 name|cipherInstance
 modifier|*
-name|cipher
 parameter_list|,
 name|keyInstance
 modifier|*
-name|key
 parameter_list|,
 name|u_int8_t
 modifier|*
-name|input
 parameter_list|,
 name|int
-name|inputLen
 parameter_list|,
 name|u_int8_t
 modifier|*
-name|outBuffer
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -408,22 +372,17 @@ name|rijndael_padEncrypt
 parameter_list|(
 name|cipherInstance
 modifier|*
-name|cipher
 parameter_list|,
 name|keyInstance
 modifier|*
-name|key
 parameter_list|,
 name|u_int8_t
 modifier|*
-name|input
 parameter_list|,
 name|int
-name|inputOctets
 parameter_list|,
 name|u_int8_t
 modifier|*
-name|outBuffer
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -434,22 +393,17 @@ name|rijndael_blockDecrypt
 parameter_list|(
 name|cipherInstance
 modifier|*
-name|cipher
 parameter_list|,
 name|keyInstance
 modifier|*
-name|key
 parameter_list|,
 name|u_int8_t
 modifier|*
-name|input
 parameter_list|,
 name|int
-name|inputLen
 parameter_list|,
 name|u_int8_t
 modifier|*
-name|outBuffer
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -460,69 +414,20 @@ name|rijndael_padDecrypt
 parameter_list|(
 name|cipherInstance
 modifier|*
-name|cipher
 parameter_list|,
 name|keyInstance
 modifier|*
-name|key
 parameter_list|,
 name|u_int8_t
 modifier|*
-name|input
 parameter_list|,
 name|int
-name|inputOctets
 parameter_list|,
 name|u_int8_t
 modifier|*
-name|outBuffer
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INTERMEDIATE_VALUE_KAT
-end_ifdef
-
-begin_function_decl
-name|int
-name|rijndael_cipherUpdateRounds
-parameter_list|(
-name|cipherInstance
-modifier|*
-name|cipher
-parameter_list|,
-name|keyInstance
-modifier|*
-name|key
-parameter_list|,
-name|u_int8_t
-modifier|*
-name|input
-parameter_list|,
-name|int
-name|inputLen
-parameter_list|,
-name|u_int8_t
-modifier|*
-name|outBuffer
-parameter_list|,
-name|int
-name|Rounds
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* INTERMEDIATE_VALUE_KAT */
-end_comment
 
 begin_endif
 endif|#
