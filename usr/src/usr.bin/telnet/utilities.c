@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)utilities.c	1.15 (Berkeley) %G%"
+literal|"@(#)utilities.c	1.16 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -265,6 +265,7 @@ comment|/*  * The following are routines used to print out debugging information
 end_comment
 
 begin_decl_stmt
+name|unsigned
 name|char
 name|NetTraceFile
 index|[
@@ -3294,56 +3295,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|MSDOS
-argument_list|)
-end_if
-
-begin_function
-name|void
-name|ExitPerror
-parameter_list|(
-name|string
-parameter_list|,
-name|returnCode
-parameter_list|)
-name|char
-modifier|*
-name|string
-decl_stmt|;
-name|int
-name|returnCode
-decl_stmt|;
-block|{
-name|SetForExit
-argument_list|()
-expr_stmt|;
-name|perror
-argument_list|(
-name|string
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-name|returnCode
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* defined(MSDOS) */
-end_comment
 
 end_unit
 

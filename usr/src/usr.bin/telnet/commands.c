@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)commands.c	1.22 (Berkeley) %G%"
+literal|"@(#)commands.c	1.23 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -169,11 +169,19 @@ directive|include
 file|<netinet/in_systm.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|sun
-end_ifndef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|vax
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|tahoe
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -187,7 +195,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* sun */
+comment|/* vax */
 end_comment
 
 begin_endif
@@ -3233,6 +3241,7 @@ name|handler
 function_decl|)
 parameter_list|()
 function_decl|;
+name|unsigned
 name|char
 modifier|*
 name|charp
@@ -3298,9 +3307,6 @@ block|,
 literal|0
 block|}
 block|,
-ifndef|#
-directive|ifndef
-name|CRAY
 block|{
 literal|"flushoutput"
 block|,
@@ -3311,8 +3317,6 @@ block|,
 name|termFlushCharp
 block|}
 block|,
-endif|#
-directive|endif
 block|{
 literal|"interrupt"
 block|,
@@ -3379,9 +3383,6 @@ block|,
 name|termKillCharp
 block|}
 block|,
-ifndef|#
-directive|ifndef
-name|CRAY
 block|{
 literal|"lnext"
 block|,
@@ -3442,8 +3443,6 @@ block|,
 name|termStopCharp
 block|}
 block|,
-endif|#
-directive|endif
 block|{
 literal|0
 block|}
@@ -3468,6 +3467,16 @@ end_macro
 
 begin_block
 block|{
+name|Setlist
+index|[
+literal|5
+index|]
+operator|.
+name|charp
+operator|=
+operator|&
+name|termFlushChar
+expr_stmt|;
 name|Setlist
 index|[
 literal|6
@@ -3517,6 +3526,66 @@ name|charp
 operator|=
 operator|&
 name|termKillChar
+expr_stmt|;
+name|Setlist
+index|[
+literal|13
+index|]
+operator|.
+name|charp
+operator|=
+operator|&
+name|termLiteralNextChar
+expr_stmt|;
+name|Setlist
+index|[
+literal|14
+index|]
+operator|.
+name|charp
+operator|=
+operator|&
+name|termSuspChar
+expr_stmt|;
+name|Setlist
+index|[
+literal|15
+index|]
+operator|.
+name|charp
+operator|=
+operator|&
+name|termRprntChar
+expr_stmt|;
+name|Setlist
+index|[
+literal|16
+index|]
+operator|.
+name|charp
+operator|=
+operator|&
+name|termWerasChar
+expr_stmt|;
+name|Setlist
+index|[
+literal|17
+index|]
+operator|.
+name|charp
+operator|=
+operator|&
+name|termStartChar
+expr_stmt|;
+name|Setlist
+index|[
+literal|18
+index|]
+operator|.
+name|charp
+operator|=
+operator|&
+name|termStopChar
 expr_stmt|;
 block|}
 end_block
@@ -4764,7 +4833,7 @@ block|}
 block|,
 ifdef|#
 directive|ifdef
-name|KLUDEGLINEMODE
+name|KLUDGELINEMODE
 block|{
 literal|""
 block|,
@@ -4772,7 +4841,7 @@ literal|"(or disable obsolete line-by-line mode)"
 block|,
 literal|0
 block|}
-block|;
+block|,
 endif|#
 directive|endif
 block|{
@@ -4787,7 +4856,7 @@ block|}
 block|,
 ifdef|#
 directive|ifdef
-name|KLUDEGLINEMODE
+name|KLUDGELINEMODE
 block|{
 literal|""
 block|,
@@ -4795,7 +4864,7 @@ literal|"(or enable obsolete line-by-line mode)"
 block|,
 literal|0
 block|}
-block|;
+block|,
 endif|#
 directive|endif
 block|{
@@ -5758,24 +5827,6 @@ argument_list|(
 name|TN3270
 argument_list|)
 end_if
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CRAY
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|vfork
-value|fork
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_macro
 name|shell
@@ -7003,7 +7054,7 @@ if|if
 condition|(
 name|kludgelinemode
 operator|&&
-name|my_want_state_is_wont
+name|my_want_state_is_dont
 argument_list|(
 name|TELOPT_SGA
 argument_list|)
@@ -7370,19 +7421,6 @@ name|srlen
 decl_stmt|;
 endif|#
 directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|MSDOS
-argument_list|)
-name|char
-modifier|*
-name|cp
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* defined(MSDOS) */
 if|if
 condition|(
 name|connected
@@ -7477,51 +7515,6 @@ return|return
 literal|0
 return|;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|MSDOS
-argument_list|)
-for|for
-control|(
-name|cp
-operator|=
-name|argv
-index|[
-literal|1
-index|]
-init|;
-operator|*
-name|cp
-condition|;
-name|cp
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|isupper
-argument_list|(
-operator|*
-name|cp
-argument_list|)
-condition|)
-block|{
-operator|*
-name|cp
-operator|=
-name|tolower
-argument_list|(
-operator|*
-name|cp
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-endif|#
-directive|endif
-comment|/* defined(MSDOS) */
 if|#
 directive|if
 name|defined

@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)telnet.c	5.43 (Berkeley) %G%"
+literal|"@(#)telnet.c	5.44 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -52,12 +52,6 @@ end_include
 begin_comment
 comment|/* By the way, we need to include curses.h before telnet.h since,  * among other things, telnet.h #defines 'DO', which is a variable  * declared in curses.h.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<curses.h>
-end_include
 
 begin_endif
 endif|#
@@ -337,6 +331,7 @@ comment|/* CTRL(x) is not portable */
 end_comment
 
 begin_decl_stmt
+name|unsigned
 name|char
 modifier|*
 name|prompt
@@ -1897,6 +1892,12 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|setconnmode
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Set new tty mode */
 block|}
 name|set_my_state_wont
 argument_list|(
@@ -2451,7 +2452,7 @@ end_ifdef
 
 begin_decl_stmt
 name|char
-name|ttytype
+name|termbuf
 index|[
 literal|1024
 index|]
@@ -2491,7 +2492,7 @@ if|if
 condition|(
 name|tgetent
 argument_list|(
-name|ttytype
+name|termbuf
 argument_list|,
 name|tname
 argument_list|)
@@ -2499,7 +2500,7 @@ operator|==
 literal|1
 condition|)
 block|{
-name|ttytype
+name|termbuf
 index|[
 literal|1023
 index|]
@@ -2539,6 +2540,26 @@ return|;
 block|}
 end_block
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|termbuf
+value|ttytype
+end_define
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|ttytype
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -2559,11 +2580,6 @@ name|int
 name|first
 init|=
 literal|1
-decl_stmt|;
-specifier|extern
-name|char
-name|ttytype
-index|[]
 decl_stmt|;
 specifier|static
 name|char
@@ -2624,7 +2640,7 @@ name|tnamep
 operator|=
 name|mklist
 argument_list|(
-name|ttytype
+name|termbuf
 argument_list|,
 name|tname
 argument_list|)
@@ -3865,7 +3881,7 @@ argument_list|)
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|CRAY
+name|SYSV_TERMIO
 name|initfunc
 argument_list|(
 name|SLC_SUSP
@@ -3891,7 +3907,7 @@ argument_list|)
 expr_stmt|;
 ifndef|#
 directive|ifndef
-name|CRAY
+name|SYSV_TERMIO
 name|initfunc
 argument_list|(
 name|SLC_EW
@@ -3931,7 +3947,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|CRAY
+name|SYSV_TERMIO
 name|spc_data
 index|[
 name|SLC_XON

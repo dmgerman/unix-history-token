@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	1.11 (Berkeley) %G%"
+literal|"@(#)main.c	1.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -142,6 +142,11 @@ argument_list|()
 expr_stmt|;
 name|prompt
 operator|=
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|argv
 index|[
 literal|0
