@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: freebsd.h,v 1.8 1999/04/22 17:45:01 obrien Exp $ */
+comment|/* $Id: freebsd-native.h,v 1.1 1999/04/28 18:48:05 obrien Exp $ */
 end_comment
 
 begin_comment
@@ -111,6 +111,24 @@ begin_define
 define|#
 directive|define
 name|bsd4_4
+end_define
+
+begin_comment
+comment|/* Tell gcc to locate libgcc.a for us according to the -m rules.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|LIBGCC_SPEC
+end_undef
+
+begin_define
+define|#
+directive|define
+name|LIBGCC_SPEC
+define|\
+value|"%{!shared:%{!pthread:%{!kthread:libgcc.a%s}}%{pthread|kthread:libgcc_r.a%s}}"
 end_define
 
 end_unit
