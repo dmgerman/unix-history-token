@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1980 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* "@(#)as.h 4.1 %G%" */
+comment|/* "@(#)as.h 4.2 %G%" */
 end_comment
 
 begin_ifdef
