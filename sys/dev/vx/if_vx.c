@@ -29,6 +29,36 @@ operator|>
 literal|0
 end_if
 
+begin_if
+if|#
+directive|if
+name|NVX
+operator|<
+literal|4
+end_if
+
+begin_comment
+comment|/* These cost 4 bytes apiece, so give us 4 */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|NVX
+end_undef
+
+begin_define
+define|#
+directive|define
+name|NVX
+value|4
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
