@@ -1039,6 +1039,7 @@ endif|#
 directive|endif
 comment|/* PT_SETDBREGS */
 default|default:
+break|break;
 block|}
 name|write
 operator|=
