@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: ldconfig.c,v 1.27 1998/09/06 20:43:25 jdp Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -16,7 +16,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: newfs_msdos.c,v 1.6 1998/12/07 14:09:17 rnordier Exp $"
+literal|"$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * natd - Network Address Translation Daemon for FreeBSD.  *  * This software is provided free of charge, with no   * warranty of any kind, either expressed or implied.  * Use at your own risk.  *   * You may copy, modify and distribute this software (natd.h) freely.  *  * Ari Suutari<suutari@iki.fi>  *  *	$Id: natd.h,v 1.2.2.1 1999/03/24 17:12:59 brian Exp $  */
+comment|/*  * natd - Network Address Translation Daemon for FreeBSD.  *  * This software is provided free of charge, with no   * warranty of any kind, either expressed or implied.  * Use at your own risk.  *   * You may copy, modify and distribute this software (natd.h) freely.  *  * Ari Suutari<suutari@iki.fi>  *  * $FreeBSD$  */
 end_comment
 
 begin_define
