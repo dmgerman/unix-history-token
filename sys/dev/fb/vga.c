@@ -70,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -13567,14 +13573,20 @@ operator|>
 literal|0
 name|printf
 argument_list|(
-literal|"vga_mmap_buf(): window:0x%x, offset:0x%x\n"
+literal|"vga_mmap_buf(): window:0x%jx, offset:0x%jx\n"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|adp
 operator|->
 name|va_info
 operator|.
 name|vi_window
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|offset
 argument_list|)
 expr_stmt|;
