@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_conv.c,v 1.4 1995/03/29 18:48:06 ache Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment

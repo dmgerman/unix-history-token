@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Driver for a device we can't identify.  * by Julian Elischer (julian@tfs.com)  *  *      $Id: uk.c,v 1.9 1995/05/30 08:13:56 rgrimes Exp $  *  * If you find that you are adding any code to this file look closely  * at putting it in "scsi_driver.c" instead.  */
+comment|/*  * Driver for a device we can't identify.  * by Julian Elischer (julian@tfs.com)  *  * $FreeBSD$  *  * If you find that you are adding any code to this file look closely  * at putting it in "scsi_driver.c" instead.  */
 end_comment
 
 begin_include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Keyboard definitions  *	from: unknown origin, 386BSD 0.1  *	$Id: kbd.h,v 1.3 1993/11/07 17:44:33 wollman Exp $  */
+comment|/*  * Keyboard definitions  *	from: unknown origin, 386BSD 0.1  * $FreeBSD$  */
 end_comment
 
 begin_ifndef

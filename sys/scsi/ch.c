@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by grefen@?????  * Based on scsi drivers by Julian Elischer (julian@tfs.com)  *  *      $Id: ch.c,v 1.21 1995/05/30 08:13:22 rgrimes Exp $  */
+comment|/*  * Written by grefen@?????  * Based on scsi drivers by Julian Elischer (julian@tfs.com)  *  * $FreeBSD$  */
 end_comment
 
 begin_include

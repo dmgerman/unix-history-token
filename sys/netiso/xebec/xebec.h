@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /pub/FreeBSD/FreeBSD-CVS/src/sys/netiso/xebec/Attic/xebec.h,v 1.1.1.1 1994/05/24 10:07:40 rgrimes Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment

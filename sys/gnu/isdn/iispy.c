@@ -5,7 +5,7 @@ name|char
 name|_ispyid
 index|[]
 init|=
-literal|"@(#)$Id: iispy.c,v 1.4 1995/09/08 11:06:56 bde Exp $"
+literal|"@(#)$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

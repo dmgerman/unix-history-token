@@ -5,7 +5,7 @@ name|char
 name|_if_iiid
 index|[]
 init|=
-literal|"@(#)$Id: if_ii.c,v 1.2 1995/02/15 06:28:26 jkh Exp $"
+literal|"@(#)$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_vnops.c,v 1.17.2.4 1995/10/26 09:17:31 davidg Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment

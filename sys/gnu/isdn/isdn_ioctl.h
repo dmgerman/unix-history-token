@@ -5,7 +5,7 @@ name|char
 name|_isdn_ioctl_id
 index|[]
 init|=
-literal|"@(#)$Id: isdn_ioctl.h,v 1.1 1995/02/14 15:00:35 jkh Exp $"
+literal|"@(#)$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

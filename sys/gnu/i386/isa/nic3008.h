@@ -5,7 +5,7 @@ name|char
 name|nic38hid
 index|[]
 init|=
-literal|"@(#)$Id: nic3008.h,v 1.1 1995/01/25 14:06:18 jkr Exp jkr $"
+literal|"@(#)$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

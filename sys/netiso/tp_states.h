@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: tp_states.h,v 1.3 1994/08/05 12:33:30 davidg Exp $  */
+comment|/*  * $FreeBSD$  */
 end_comment
 
 begin_ifndef

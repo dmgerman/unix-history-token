@@ -5,7 +5,7 @@ name|char
 name|_itelid
 index|[]
 init|=
-literal|"@(#)$Id: iitel.c,v 1.5 1995/09/08 11:06:57 bde Exp $"
+literal|"@(#)$FreeBSD$"
 decl_stmt|;
 end_decl_stmt
 

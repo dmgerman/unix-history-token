@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: msdosfs_fat.c,v 1.6 1995/04/11 16:43:20 bde Exp $ */
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment

@@ -4,7 +4,7 @@ comment|/*#define SCSIDEBUG 1*/
 end_comment
 
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)  *  *	$Id: scsi_debug.h,v 1.1 1993/11/18 05:02:54 rgrimes Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
