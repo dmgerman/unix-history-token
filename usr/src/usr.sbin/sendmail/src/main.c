@@ -51,7 +51,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.128
+literal|3.129
 operator|%
 name|G
 operator|%
@@ -265,6 +265,15 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_extern
+extern|extern intsig(
+end_extern
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
 begin_if
 if|if
 condition|(
@@ -347,7 +356,7 @@ name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
-name|finis
+name|intsig
 argument_list|)
 expr_stmt|;
 end_if
@@ -371,7 +380,7 @@ name|signal
 argument_list|(
 name|SIGHUP
 argument_list|,
-name|finis
+name|intsig
 argument_list|)
 expr_stmt|;
 end_if
@@ -384,7 +393,7 @@ name|signal
 argument_list|(
 name|SIGTERM
 argument_list|,
-name|finis
+name|intsig
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3027,6 +3036,36 @@ name|exit
 argument_list|(
 name|ExitStat
 argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  INTSIG -- clean up on interrupt ** **	This just arranges to call finis. ** **	Parameters: **		none. ** **	Returns: **		none. ** **	Side Effects: **		Arranges to not unlink the qf and df files. */
+end_comment
+
+begin_macro
+name|intsig
+argument_list|()
+end_macro
+
+begin_block
+block|{
+name|CurEnv
+operator|->
+name|e_df
+operator|=
+name|CurEnv
+operator|->
+name|e_qf
+operator|=
+name|NULL
+expr_stmt|;
+name|finis
+argument_list|()
 expr_stmt|;
 block|}
 end_block
