@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)route.h	8.3 (Berkeley) 4/19/94  * $Id: route.h,v 1.7 1995/01/23 02:00:35 wollman Exp $  */
+comment|/*  * Copyright (c) 1980, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)route.h	8.3 (Berkeley) 4/19/94  * $Id: route.h,v 1.8 1995/01/24 04:47:33 bde Exp $  */
 end_comment
 
 begin_ifndef
@@ -630,472 +630,268 @@ block|}
 struct|;
 end_struct
 
-begin_define
+begin_expr_stmt
+unit|<<<<<<
+operator|<
+name|route
+operator|.
+name|h
 define|#
 directive|define
 name|RTM_VERSION
 value|5
-end_define
-
-begin_comment
 comment|/* Up the ante and ignore older versions */
-end_comment
-
-begin_define
+operator|||
+operator|||
+operator|||
+operator||
+literal|1.5.4.1
+define|#
+directive|define
+name|RTM_VERSION
+value|3
+comment|/* Up the ante and ignore older versions */
+operator|==
+operator|==
+operator|==
+operator|=
+define|#
+directive|define
+name|RTM_VERSION
+value|3
+comment|/* Up the ante and ignore older versions */
+ifdef|#
+directive|ifdef
+name|TTCP
+undef|#
+directive|undef
+name|RTM_VERSION
+define|#
+directive|define
+name|RTM_VERSION
+value|4
+comment|/* T/TCP requires changes in the rmx */
+endif|#
+directive|endif
+operator|>>>
+operator|>>>
+operator|>
+operator|/
+name|tmp
+operator|/
+name|T4000726
 define|#
 directive|define
 name|RTM_ADD
 value|0x1
-end_define
-
-begin_comment
 comment|/* Add Route */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|RTM_DELETE
 value|0x2
-end_define
-
-begin_comment
 comment|/* Delete Route */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|RTM_CHANGE
 value|0x3
-end_define
-
-begin_comment
 comment|/* Change Metrics or flags */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|RTM_GET
 value|0x4
-end_define
-
-begin_comment
 comment|/* Report Metrics */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|RTM_LOSING
 value|0x5
-end_define
-
-begin_comment
 comment|/* Kernel Suspects Partitioning */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|RTM_REDIRECT
 value|0x6
-end_define
-
-begin_comment
 comment|/* Told to use different route */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|RTM_MISS
 value|0x7
-end_define
-
-begin_comment
 comment|/* Lookup failed on this address */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|RTM_LOCK
 value|0x8
-end_define
-
-begin_comment
 comment|/* fix specified metrics */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|RTM_OLDADD
 value|0x9
-end_define
-
-begin_comment
 comment|/* caused by SIOCADDRT */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|RTM_OLDDEL
 value|0xa
-end_define
-
-begin_comment
 comment|/* caused by SIOCDELRT */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|RTM_RESOLVE
 value|0xb
-end_define
-
-begin_comment
 comment|/* req to resolve dst to LL addr */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|RTM_NEWADDR
 value|0xc
-end_define
-
-begin_comment
 comment|/* address being added to iface */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|RTM_DELADDR
 value|0xd
-end_define
-
-begin_comment
 comment|/* address being removed from iface */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|RTM_IFINFO
 value|0xe
-end_define
-
-begin_comment
 comment|/* iface going up/down etc. */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|RTV_MTU
 value|0x1
-end_define
-
-begin_comment
 comment|/* init or lock _mtu */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|RTV_HOPCOUNT
 value|0x2
-end_define
-
-begin_comment
 comment|/* init or lock _hopcount */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|RTV_EXPIRE
 value|0x4
-end_define
-
-begin_comment
 comment|/* init or lock _hopcount */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|RTV_RPIPE
 value|0x8
-end_define
-
-begin_comment
 comment|/* init or lock _recvpipe */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|RTV_SPIPE
 value|0x10
-end_define
-
-begin_comment
 comment|/* init or lock _sendpipe */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|RTV_SSTHRESH
 value|0x20
-end_define
-
-begin_comment
 comment|/* init or lock _ssthresh */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|RTV_RTT
 value|0x40
-end_define
-
-begin_comment
 comment|/* init or lock _rtt */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|RTV_RTTVAR
 value|0x80
-end_define
-
-begin_comment
 comment|/* init or lock _rttvar */
-end_comment
-
-begin_comment
 comment|/*  * Bitmask values for rtm_addr.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|RTA_DST
 value|0x1
-end_define
-
-begin_comment
 comment|/* destination sockaddr present */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|RTA_GATEWAY
 value|0x2
-end_define
-
-begin_comment
 comment|/* gateway sockaddr present */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|RTA_NETMASK
 value|0x4
-end_define
-
-begin_comment
 comment|/* netmask sockaddr present */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|RTA_GENMASK
 value|0x8
-end_define
-
-begin_comment
 comment|/* cloning mask sockaddr present */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|RTA_IFP
 value|0x10
-end_define
-
-begin_comment
 comment|/* interface name sockaddr present */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|RTA_IFA
 value|0x20
-end_define
-
-begin_comment
 comment|/* interface addr sockaddr present */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|RTA_AUTHOR
 value|0x40
-end_define
-
-begin_comment
 comment|/* sockaddr for author of redirect */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|RTA_BRD
 value|0x80
-end_define
-
-begin_comment
 comment|/* for NEWADDR, broadcast or p-p dest addr */
-end_comment
-
-begin_comment
 comment|/*  * Index offsets for sockaddr array for alternate internal encoding.  */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|RTAX_DST
 value|0
-end_define
-
-begin_comment
 comment|/* destination sockaddr present */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|RTAX_GATEWAY
 value|1
-end_define
-
-begin_comment
 comment|/* gateway sockaddr present */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|RTAX_NETMASK
 value|2
-end_define
-
-begin_comment
 comment|/* netmask sockaddr present */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|RTAX_GENMASK
 value|3
-end_define
-
-begin_comment
 comment|/* cloning mask sockaddr present */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|RTAX_IFP
 value|4
-end_define
-
-begin_comment
 comment|/* interface name sockaddr present */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|RTAX_IFA
 value|5
-end_define
-
-begin_comment
 comment|/* interface addr sockaddr present */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|RTAX_AUTHOR
 value|6
-end_define
-
-begin_comment
 comment|/* sockaddr for author of redirect */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|RTAX_BRD
 value|7
-end_define
-
-begin_comment
 comment|/* for NEWADDR, broadcast or p-p dest addr */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|RTAX_MAX
 value|8
-end_define
-
-begin_comment
 comment|/* size of array to allocate */
-end_comment
-
-begin_struct
-struct|struct
+expr|struct
 name|rt_addrinfo
 block|{
 name|int
 name|rti_addrs
-decl_stmt|;
-name|struct
+block|; 	struct
 name|sockaddr
-modifier|*
+operator|*
 name|rti_info
 index|[
 name|RTAX_MAX
 index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
+block|; }
+expr_stmt|;
+end_expr_stmt
 
 begin_struct
 struct|struct
