@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)check.c	5.1 (Berkeley) %G%"
+literal|"@(#)check.c	5.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -179,6 +179,39 @@ index|[
 literal|1
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|varIsSet
+argument_list|(
+literal|"$unsafeassign"
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|size
+argument_list|(
+name|p1
+operator|->
+name|nodetype
+argument_list|)
+operator|!=
+name|size
+argument_list|(
+name|p2
+operator|->
+name|nodetype
+argument_list|)
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"incompatible sizes"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+elseif|else
 if|if
 condition|(
 name|not
