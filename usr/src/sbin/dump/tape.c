@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)tape.c	5.26 (Berkeley) %G%"
+literal|"@(#)tape.c	5.27 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1953,6 +1953,10 @@ literal|0
 expr_stmt|;
 endif|#
 directive|endif
+name|prev
+operator|=
+name|NULL
+expr_stmt|;
 for|for
 control|(
 name|p
@@ -2047,6 +2051,17 @@ operator|->
 name|count
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|prev
+operator|==
+name|NULL
+condition|)
+name|quit
+argument_list|(
+literal|"rollforward: protocol botch"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|prev
@@ -2810,6 +2825,7 @@ name|nexttape
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|p
 operator|=
 name|index
@@ -2818,6 +2834,9 @@ name|tape
 argument_list|,
 literal|','
 argument_list|)
+operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 operator|*
