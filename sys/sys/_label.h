@@ -26,6 +26,17 @@ name|MAC_MAX_POLICIES
 value|4
 end_define
 
+begin_define
+define|#
+directive|define
+name|MAC_FLAG_INITIALIZED
+value|0x0000001
+end_define
+
+begin_comment
+comment|/* Is initialized for use. */
+end_comment
+
 begin_struct
 struct|struct
 name|label
