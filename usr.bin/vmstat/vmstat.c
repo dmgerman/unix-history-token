@@ -2008,7 +2008,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%6ld%6ld "
+literal|"%8ld%6ld "
 argument_list|,
 name|pgtok
 argument_list|(
@@ -2292,7 +2292,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" procs   memory     page%*s"
+literal|" procs      memory     page%*s"
 argument_list|,
 literal|20
 argument_list|,
@@ -2341,7 +2341,7 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|" r b w   avm   fre  flt  re  pi  po  fr  sr "
+literal|" r b w     avm   fre  flt  re  pi  po  fr  sr "
 argument_list|)
 expr_stmt|;
 for|for
