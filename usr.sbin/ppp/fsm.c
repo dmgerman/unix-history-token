@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *		PPP Finite State Machine for LCP/IPCP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: fsm.c,v 1.24 1997/12/13 02:37:23 brian Exp $  *  *  TODO:  *		o Refer loglevel for log output  *		o Better option log display  */
+comment|/*  *		PPP Finite State Machine for LCP/IPCP  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: fsm.c,v 1.25 1997/12/24 09:28:58 brian Exp $  *  *  TODO:  *		o Refer loglevel for log output  *		o Better option log display  */
 end_comment
 
 begin_include
@@ -3319,7 +3319,11 @@ name|fp
 operator|->
 name|LogLevel
 argument_list|,
-literal|"RecvResetReq\n"
+literal|"RecvResetReq(%d)\n"
+argument_list|,
+name|lhp
+operator|->
+name|id
 argument_list|)
 expr_stmt|;
 name|CcpRecvResetReq
@@ -3327,13 +3331,21 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+comment|/*    * All sendable compressed packets are queued in the PRI_NORMAL modem    * output queue.... dump 'em to the priority queue so that they arrive    * at the peer before our ResetAck.    */
+name|SequenceQueues
+argument_list|()
+expr_stmt|;
 name|LogPrintf
 argument_list|(
 name|fp
 operator|->
 name|LogLevel
 argument_list|,
-literal|"SendResetAck\n"
+literal|"SendResetAck(%d)\n"
+argument_list|,
+name|lhp
+operator|->
+name|id
 argument_list|)
 expr_stmt|;
 name|FsmOutput
@@ -3342,9 +3354,9 @@ name|fp
 argument_list|,
 name|CODE_RESETACK
 argument_list|,
-name|fp
+name|lhp
 operator|->
-name|reqid
+name|id
 argument_list|,
 name|NULL
 argument_list|,
@@ -3386,11 +3398,19 @@ name|fp
 operator|->
 name|LogLevel
 argument_list|,
-literal|"RecvResetAck\n"
+literal|"RecvResetAck(%d)\n"
+argument_list|,
+name|lhp
+operator|->
+name|id
 argument_list|)
 expr_stmt|;
 name|CcpResetInput
-argument_list|()
+argument_list|(
+name|lhp
+operator|->
+name|id
+argument_list|)
 expr_stmt|;
 name|fp
 operator|->

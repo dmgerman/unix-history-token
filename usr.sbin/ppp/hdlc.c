@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *	     PPP High Level Link Control (HDLC) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: hdlc.c,v 1.25 1997/12/24 09:29:00 brian Exp $  *  *	TODO:  */
+comment|/*  *	     PPP High Level Link Control (HDLC) Module  *  *	    Written by Toshiharu OHNO (tony-o@iij.ad.jp)  *  *   Copyright (C) 1993, Internet Initiative Japan, Inc. All rights reserverd.  *  * Redistribution and use in source and binary forms are permitted  * provided that the above copyright notice and this paragraph are  * duplicated in all such forms and that any documentation,  * advertising materials, and other materials related to such  * distribution and use acknowledge that the software was developed  * by the Internet Initiative Japan, Inc.  The name of the  * IIJ may not be used to endorse or promote products derived  * from this software without specific prior written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $Id: hdlc.c,v 1.26 1998/01/06 00:58:31 brian Exp $  *  *	TODO:  */
 end_comment
 
 begin_include
@@ -1430,36 +1430,19 @@ operator|!
 name|DEV_IS_SYNC
 condition|)
 block|{
-name|fcs
-operator|=
-name|HdlcFcs
-argument_list|(
-name|INITFCS
-argument_list|,
-name|MBUF_CTOP
-argument_list|(
-name|mhp
-argument_list|)
-argument_list|,
-name|mhp
+name|mfcs
 operator|->
 name|cnt
-argument_list|)
+operator|=
+literal|0
 expr_stmt|;
 name|fcs
 operator|=
-name|HdlcFcs
+name|HdlcFcsBuf
 argument_list|(
-name|fcs
+name|INITFCS
 argument_list|,
-name|MBUF_CTOP
-argument_list|(
-name|bp
-argument_list|)
-argument_list|,
-name|bp
-operator|->
-name|cnt
+name|mhp
 argument_list|)
 expr_stmt|;
 name|fcs
@@ -1490,6 +1473,12 @@ operator|=
 name|fcs
 operator|>>
 literal|8
+expr_stmt|;
+name|mfcs
+operator|->
+name|cnt
+operator|=
+literal|2
 expr_stmt|;
 block|}
 name|LogDumpBp
@@ -2522,6 +2511,14 @@ expr_stmt|;
 comment|/*    * If proto isn't PROTO_COMPD, we still want to pass it to the    * decompression routines so that the dictionary's updated    */
 if|if
 condition|(
+name|CcpFsm
+operator|.
+name|state
+operator|==
+name|ST_OPENED
+condition|)
+if|if
+condition|(
 name|proto
 operator|==
 name|PROTO_COMPD
@@ -2557,14 +2554,6 @@ operator|==
 literal|0x21
 condition|)
 comment|/* Network Layer protocol */
-if|if
-condition|(
-name|CcpFsm
-operator|.
-name|state
-operator|==
-name|ST_OPENED
-condition|)
 name|CcpDictSetup
 argument_list|(
 name|proto
