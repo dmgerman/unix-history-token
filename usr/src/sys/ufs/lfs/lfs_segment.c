@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_segment.c	7.25 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_segment.c	7.26 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2277,6 +2277,13 @@ name|ino
 operator|==
 name|LFS_IFILE_INUM
 condition|)
+block|{
+name|daddr
+operator|=
+name|fs
+operator|->
+name|lfs_idaddr
+expr_stmt|;
 name|fs
 operator|->
 name|lfs_idaddr
@@ -2285,6 +2292,9 @@ name|bp
 operator|->
 name|b_blkno
 expr_stmt|;
+block|}
+else|else
+block|{
 name|LFS_IENTRY
 argument_list|(
 name|ifp
@@ -2315,23 +2325,7 @@ argument_list|(
 name|ibp
 argument_list|)
 expr_stmt|;
-name|redo_ifile
-operator|=
-operator|(
-name|ino
-operator|==
-name|LFS_IFILE_INUM
-operator|&&
-operator|!
-operator|(
-name|ibp
-operator|->
-name|b_flags
-operator|&
-name|B_GATHERED
-operator|)
-operator|)
-expr_stmt|;
+block|}
 comment|/* 	 * No need to update segment usage if there was no former inode address 	 * or if the last inode address is in the current partial segment. 	 */
 if|if
 condition|(
@@ -2424,7 +2418,7 @@ name|bp
 argument_list|)
 expr_stmt|;
 name|redo_ifile
-operator||=
+operator|=
 operator|(
 name|ino
 operator|==
