@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright 1994, Massachusetts Institute of Technology.  All Rights Reserved.  *  * You may copy this file verbatim until I find the official   * Institute boilerplate.  *  * $Id: in_rmx.c,v 1.6 1994/12/13 22:32:45 wollman Exp $  */
+comment|/*  * Copyright 1994, Massachusetts Institute of Technology.  All Rights Reserved.  *  * You may copy this file verbatim until I find the official   * Institute boilerplate.  *  * $Id: in_rmx.c,v 1.7 1994/12/21 17:25:52 wollman Exp $  */
 end_comment
 
 begin_comment
@@ -138,12 +138,7 @@ operator|*
 operator|)
 name|treenodes
 decl_stmt|;
-name|struct
-name|in_rtq
-modifier|*
-name|inr
-decl_stmt|;
-comment|/* 	 * For IP, all non-host routes are automatically cloning. 	 */
+comment|/* 	 * For IP, all unicast non-host routes are automatically cloning. 	 */
 if|if
 condition|(
 operator|!
@@ -159,12 +154,46 @@ name|RTF_CLONING
 operator|)
 operator|)
 condition|)
+block|{
+name|struct
+name|sockaddr_in
+modifier|*
+name|sin
+init|=
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|)
+name|rt_key
+argument_list|(
+name|rt
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|IN_MULTICAST
+argument_list|(
+name|ntohl
+argument_list|(
+name|sin
+operator|->
+name|sin_addr
+operator|.
+name|s_addr
+argument_list|)
+argument_list|)
+condition|)
+block|{
 name|rt
 operator|->
 name|rt_flags
 operator||=
 name|RTF_PRCLONING
 expr_stmt|;
+block|}
+block|}
 return|return
 name|rn_addroute
 argument_list|(
@@ -273,11 +302,11 @@ begin_define
 define|#
 directive|define
 name|RTQ_REALLYOLD
-value|4*60*60
+value|60*60
 end_define
 
 begin_comment
-comment|/* four hours is ``really old'' */
+comment|/* one hour is ``really old'' */
 end_comment
 
 begin_decl_stmt
@@ -289,7 +318,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * On last reference drop, add the route to the queue so that it can be  * timed out.  */
+comment|/*  * On last reference drop, mark the route as belong to us so that it can be  * timed out.  */
 end_comment
 
 begin_function
@@ -320,11 +349,19 @@ operator|*
 operator|)
 name|rn
 decl_stmt|;
-name|struct
-name|in_rtq
-modifier|*
-name|inr
-decl_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|rt
+operator|->
+name|rt_flags
+operator|&
+name|RTF_UP
+operator|)
+condition|)
+return|return;
+comment|/* prophylactic measures */
 if|if
 condition|(
 operator|(
@@ -379,25 +416,6 @@ name|rtq_reallyold
 expr_stmt|;
 block|}
 end_function
-
-begin_define
-define|#
-directive|define
-name|RTQ_TIMEOUT
-value|60
-end_define
-
-begin_comment
-comment|/* run once a minute */
-end_comment
-
-begin_decl_stmt
-name|int
-name|rtq_timeout
-init|=
-name|RTQ_TIMEOUT
-decl_stmt|;
-end_decl_stmt
 
 begin_struct
 struct|struct
@@ -601,6 +619,25 @@ return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|RTQ_TIMEOUT
+value|600
+end_define
+
+begin_comment
+comment|/* run no less than once every ten minutes */
+end_comment
+
+begin_decl_stmt
+name|int
+name|rtq_timeout
+init|=
+name|RTQ_TIMEOUT
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -653,8 +690,6 @@ name|time
 operator|.
 name|tv_sec
 operator|+
-literal|10
-operator|*
 name|rtq_timeout
 expr_stmt|;
 name|arg
