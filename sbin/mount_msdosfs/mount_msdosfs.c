@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: mount_msdos.c,v 1.1 1994/09/19 15:30:36 dfr Exp $"
+literal|"$Id: mount_msdos.c,v 1.2 1994/09/22 22:16:35 wollman Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -345,6 +345,8 @@ name|mopts
 argument_list|,
 operator|&
 name|mntflags
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 break|break;
