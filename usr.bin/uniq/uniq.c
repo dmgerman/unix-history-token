@@ -54,7 +54,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: uniq.c,v 1.1.1.1.8.1 1997/08/22 06:41:11 charnier Exp $"
+literal|"$Id: uniq.c,v 1.1.1.1.8.2 1997/08/29 05:30:06 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -243,6 +243,13 @@ decl_stmt|,
 modifier|*
 name|p
 decl_stmt|;
+name|int
+name|iflag
+init|=
+literal|0
+decl_stmt|,
+name|comp
+decl_stmt|;
 name|obsolete
 argument_list|(
 name|argv
@@ -259,7 +266,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"-cdf:s:u"
+literal|"-cdif:s:u"
 argument_list|)
 operator|)
 operator|!=
@@ -292,6 +299,14 @@ case|case
 literal|'d'
 case|:
 name|dflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'i'
+case|:
+name|iflag
 operator|=
 literal|1
 expr_stmt|;
@@ -589,12 +604,30 @@ block|}
 comment|/* If different, print; set previous to new value. */
 if|if
 condition|(
+name|iflag
+condition|)
+name|comp
+operator|=
+name|strcasecmp
+argument_list|(
+name|t1
+argument_list|,
+name|t2
+argument_list|)
+expr_stmt|;
+else|else
+name|comp
+operator|=
 name|strcmp
 argument_list|(
 name|t1
 argument_list|,
 name|t2
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|comp
 condition|)
 block|{
 name|show
@@ -665,6 +698,9 @@ block|{
 if|if
 condition|(
 name|cflag
+operator|&&
+operator|*
+name|str
 condition|)
 operator|(
 name|void
@@ -1032,7 +1068,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: uniq [-c | -du] [-f fields] [-s chars] [input [output]]\n"
+literal|"usage: uniq [-c | -du | -i] [-f fields] [-s chars] [input [output]]\n"
 argument_list|)
 expr_stmt|;
 name|exit
