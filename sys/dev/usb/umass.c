@@ -10212,6 +10212,15 @@ name|sc
 operator|->
 name|cam_scsi_command
 expr_stmt|;
+name|rcmdlen
+operator|=
+sizeof|sizeof
+argument_list|(
+name|sc
+operator|->
+name|cam_scsi_command
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sc
