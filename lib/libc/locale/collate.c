@@ -130,7 +130,7 @@ parameter_list|,
 name|d
 parameter_list|)
 define|\
-value|do { \ 		if(fread(a, b, c, d) != c) { \ 			fclose(d); \ 			return -1; \ 		} \ 	} while(0)
+value|do { \ 		if (fread(a, b, c, d) != c) { \ 			fclose(d); \ 			return -1; \ 		} \ 	} while(0)
 end_define
 
 begin_decl_stmt
