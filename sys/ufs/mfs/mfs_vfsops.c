@@ -1135,9 +1135,9 @@ name|DEV_BSIZE
 expr_stmt|;
 name|dev
 operator|->
-name|si_bsize_max
+name|si_iosize_max
 operator|=
-name|MAXBSIZE
+name|DFLTPHYS
 expr_stmt|;
 name|addaliasu
 argument_list|(
@@ -1725,9 +1725,9 @@ name|DEV_BSIZE
 expr_stmt|;
 name|rootdev
 operator|->
-name|si_bsize_max
+name|si_iosize_max
 operator|=
-name|MAXBSIZE
+name|DFLTPHYS
 expr_stmt|;
 name|mfs_minor
 operator|++

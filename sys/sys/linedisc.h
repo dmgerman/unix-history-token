@@ -137,9 +137,9 @@ name|__sid_bsize_best
 decl_stmt|;
 comment|/* optimal block size */
 name|int
-name|__sid_bsize_max
+name|__sid_iosize_max
 decl_stmt|;
-comment|/* maximum block size */
+comment|/* maximum I/O size */
 block|}
 name|__si_disk
 struct|;
@@ -188,8 +188,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|si_bsize_max
-value|__si_u.__si_disk.__sid_bsize_max
+name|si_iosize_max
+value|__si_u.__si_disk.__sid_iosize_max
 end_define
 
 begin_comment
