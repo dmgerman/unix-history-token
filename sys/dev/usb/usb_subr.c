@@ -5896,13 +5896,6 @@ name|parent
 operator|)
 argument_list|)
 expr_stmt|;
-name|usbd_add_dev_event
-argument_list|(
-name|USB_EVENT_DEVICE_ATTACH
-argument_list|,
-name|dev
-argument_list|)
-expr_stmt|;
 name|err
 operator|=
 name|usbd_probe_and_attach
@@ -5934,6 +5927,13 @@ name|err
 operator|)
 return|;
 block|}
+name|usbd_add_dev_event
+argument_list|(
+name|USB_EVENT_DEVICE_ATTACH
+argument_list|,
+name|dev
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|USBD_NORMAL_COMPLETION
