@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/consio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/disklabel.h>
 end_include
 
@@ -1360,6 +1366,9 @@ name|struct
 name|stat
 name|sb
 decl_stmt|;
+name|int
+name|need_eject
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -1393,11 +1402,23 @@ argument_list|(
 literal|"/mnt2"
 argument_list|)
 expr_stmt|;
+name|need_eject
+operator|=
+literal|0
+expr_stmt|;
+name|CDROMInitQuiet
+operator|=
+literal|1
+expr_stmt|;
 while|while
 condition|(
 literal|1
 condition|)
 block|{
+if|if
+condition|(
+name|need_eject
+condition|)
 name|msgConfirm
 argument_list|(
 literal|"Please insert a FreeBSD live filesystem CD/DVD and press return"
@@ -1428,9 +1449,39 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+name|need_eject
+operator|&&
 name|msgYesNo
 argument_list|(
-literal|"Unable to mount the disc - do you want to try again?"
+literal|"Unable to mount the disc. Do you want to try again?"
+argument_list|)
+operator|!=
+literal|0
+condition|)
+return|return
+name|DITEM_FAILURE
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|file_readable
+argument_list|(
+literal|"/dist/rescue/ldconfig"
+argument_list|)
+condition|)
+block|{
+name|mediaClose
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|need_eject
+operator|&&
+name|msgYesNo
+argument_list|(
+literal|"Unable to find a FreeBSD live filesystem. Do you want to try again?"
 argument_list|)
 operator|!=
 literal|0
@@ -1441,7 +1492,19 @@ return|;
 block|}
 else|else
 break|break;
+name|CDROMInitQuiet
+operator|=
+literal|0
+expr_stmt|;
+name|need_eject
+operator|=
+literal|1
+expr_stmt|;
 block|}
+name|CDROMInitQuiet
+operator|=
+literal|0
+expr_stmt|;
 comment|/* Since the fixit code expects everything to be in /mnt2, and the CDROM mounting stuff /dist, do      * a little kludge dance here..      */
 if|if
 condition|(
@@ -1614,6 +1677,10 @@ expr_stmt|;
 name|mediaClose
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|need_eject
+condition|)
 name|msgConfirm
 argument_list|(
 literal|"Please remove the FreeBSD fixit CDROM/DVD now."
@@ -2298,6 +2365,27 @@ condition|)
 name|systemResumeDialog
 argument_list|()
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|OnVTY
+condition|)
+block|{
+name|ioctl
+argument_list|(
+literal|0
+argument_list|,
+name|VT_ACTIVATE
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|msgInfo
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|dialog_clear
 argument_list|()

@@ -1960,6 +1960,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|CDROMInitQuiet
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Don't whine if mount(2) fails */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|DebugFD
 decl_stmt|;
 end_decl_stmt
