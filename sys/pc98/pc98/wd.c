@@ -213,7 +213,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/isa/atapi.h>
+file|<pc98/pc98/atapi.h>
 end_include
 
 begin_function_decl
