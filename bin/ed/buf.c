@@ -32,7 +32,7 @@ modifier|*
 specifier|const
 name|rcsid
 init|=
-literal|"$Id: buf.c,v 1.11 1997/03/24 05:45:29 imp Exp $"
+literal|"$Id: buf.c,v 1.12 1997/08/07 21:33:39 steve Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -890,12 +890,27 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|mktemp
+argument_list|(
+name|sfn
+argument_list|)
+operator|==
+name|NULL
+operator|||
 operator|(
 name|fd
 operator|=
-name|mkstemp
+name|open
 argument_list|(
 name|sfn
+argument_list|,
+name|O_RDWR
+operator||
+name|O_CREAT
+operator||
+name|O_EXCL
+argument_list|,
+literal|0666
 argument_list|)
 operator|)
 operator|==
