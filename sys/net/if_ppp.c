@@ -2214,15 +2214,14 @@ name|sc_flags
 operator|&
 name|SC_DEBUG
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"ppp%d: comp_alloc failed\n"
-argument_list|,
+operator|&
 name|sc
 operator|->
 name|sc_if
-operator|.
-name|if_unit
+argument_list|,
+literal|"comp_alloc failed\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -2315,15 +2314,14 @@ name|sc_flags
 operator|&
 name|SC_DEBUG
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"ppp%d: decomp_alloc failed\n"
-argument_list|,
+operator|&
 name|sc
 operator|->
 name|sc_if
-operator|.
-name|if_unit
+argument_list|,
+literal|"decomp_alloc failed\n"
 argument_list|)
 expr_stmt|;
 name|error
@@ -2357,15 +2355,14 @@ name|sc_flags
 operator|&
 name|SC_DEBUG
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"ppp%d: no compressor for [%x %x %x], %x\n"
-argument_list|,
+operator|&
 name|sc
 operator|->
 name|sc_if
-operator|.
-name|if_unit
+argument_list|,
+literal|"no compressor for [%x %x %x], %x\n"
 argument_list|,
 name|ccp_option
 index|[
@@ -3686,13 +3683,11 @@ name|NPMODE_PASS
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|if_printf
 argument_list|(
-literal|"ppp%d: af%d not supported\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_unit
+argument_list|,
+literal|"af%d not supported\n"
 argument_list|,
 name|dst
 operator|->
@@ -5941,13 +5936,11 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|printf
+name|if_printf
 argument_list|(
-literal|"ppp%d: got %d bytes\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_unit
+argument_list|,
+literal|"got %d bytes\n"
 argument_list|,
 name|ilen
 argument_list|)
@@ -6140,13 +6133,11 @@ name|sc_flags
 operator|&
 name|SC_DEBUG
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"ppp%d: decompress failed %d\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_unit
+argument_list|,
+literal|"decompress failed %d\n"
 argument_list|,
 name|rv
 argument_list|)
@@ -6374,13 +6365,11 @@ name|sc_flags
 operator|&
 name|SC_DEBUG
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"ppp%d: VJ uncompress failed on type comp\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_unit
+argument_list|,
+literal|"VJ uncompress failed on type comp\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -6697,13 +6686,11 @@ name|sc_flags
 operator|&
 name|SC_DEBUG
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"ppp%d: VJ uncompress failed on type uncomp\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_unit
+argument_list|,
+literal|"VJ uncompress failed on type uncomp\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -7167,13 +7154,11 @@ name|sc_flags
 operator|&
 name|SC_DEBUG
 condition|)
-name|printf
+name|if_printf
 argument_list|(
-literal|"ppp%d: input queue full\n"
-argument_list|,
 name|ifp
-operator|->
-name|if_unit
+argument_list|,
+literal|"input queue full\n"
 argument_list|)
 expr_stmt|;
 name|ifp
