@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sleep.c	5.4 (Berkeley) %G%"
+literal|"@(#)sleep.c	5.5 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,7 +55,19 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
 end_include
 
 begin_function
@@ -84,11 +96,14 @@ operator|!=
 literal|2
 condition|)
 block|{
-name|fputs
+operator|(
+name|void
+operator|)
+name|fprintf
 argument_list|(
-literal|"usage: sleep time\n"
-argument_list|,
 name|stderr
+argument_list|,
+literal|"usage: sleep time\n"
 argument_list|)
 expr_stmt|;
 name|exit
