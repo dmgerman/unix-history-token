@@ -242,12 +242,6 @@ directive|include
 file|<vm/uma.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/user.h>
-end_include
-
 begin_comment
 comment|/* Required to be non-static for SysVR4 emulator */
 end_comment
