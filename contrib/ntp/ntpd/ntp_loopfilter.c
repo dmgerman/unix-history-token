@@ -134,7 +134,7 @@ value|.128
 end_define
 
 begin_comment
-comment|/* default max offset (s) */
+comment|/* default step offset (s) */
 end_comment
 
 begin_define
@@ -146,28 +146,6 @@ end_define
 
 begin_comment
 comment|/* default panic offset (s) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CLOCK_MAXSTAB
-value|2e-6
-end_define
-
-begin_comment
-comment|/* max frequency stability (s/s) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CLOCK_MAXERR
-value|1e-2
-end_define
-
-begin_comment
-comment|/* max phase jitter (s) */
 end_comment
 
 begin_define
@@ -195,12 +173,23 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CLOCK_FLL
+value|8.
+end_define
+
+begin_comment
+comment|/* FLL loop gain */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CLOCK_AVG
 value|4.
 end_define
 
 begin_comment
-comment|/* FLL loop gain */
+comment|/* parameter averaging constant */
 end_comment
 
 begin_define
@@ -233,7 +222,7 @@ value|86400.
 end_define
 
 begin_comment
-comment|/* one day of seconds */
+comment|/* one day of seconds (s) */
 end_comment
 
 begin_define
@@ -262,22 +251,22 @@ begin_define
 define|#
 directive|define
 name|CLOCK_ALLAN
-value|1024.
+value|10
 end_define
 
 begin_comment
-comment|/* min Allan intercept (s) */
+comment|/* min Allan intercept (log2 s) */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|CLOCK_ADF
-value|1e11
+name|PPS_MAXAGE
+value|120
 end_define
 
 begin_comment
-comment|/* Allan deviation factor */
+comment|/* kernel pps signal timeout (s) */
 end_comment
 
 begin_comment
@@ -354,17 +343,6 @@ begin_comment
 comment|/*  * Kernel PLL/PPS state machine. This is used with the kernel PLL  * modifications described in the README.kernel file.  *  * If kernel support for the ntp_adjtime() system call is available, the  * ntp_control flag is set. The ntp_enable and kern_enable flags can be  * set at configuration time or run time using ntpdc. If ntp_enable is  * false, the discipline loop is unlocked and no correctios of any kind  * are made. If both ntp_control and kern_enable are set, the kernel  * support is used as described above; if false, the kernel is bypassed  * entirely and the daemon PLL used instead.  *  * Each update to a prefer peer sets pps_stratum if it survives the  * intersection algorithm and its time is within range. The PPS time  * discipline is enabled (STA_PPSTIME bit set in the status word) when  * pps_stratum is true and the PPS frequency discipline is enabled. If  * the PPS time discipline is enabled and the kernel reports a PPS  * signal is present, the pps_control variable is set to the current  * time. If the current time is later than pps_control by PPS_MAXAGE  * (120 s), this variable is set to zero.  *  * If an external clock is present, the clock driver sets STA_CLK in the  * status word. When the local clock driver sees this bit, it updates  * via this routine, which then calls ntp_adjtime() with the STA_PLL bit  * set to zero, in which case the system clock is not adjusted. This is  * also a signal for the external clock driver to discipline the system  * clock.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PPS_MAXAGE
-value|120
-end_define
-
-begin_comment
-comment|/* kernel pps signal timeout (s) */
-end_comment
-
 begin_comment
 comment|/*  * Program variables that can be tinkered.  */
 end_comment
@@ -418,7 +396,7 @@ comment|/* step timeout (s) */
 end_comment
 
 begin_decl_stmt
-name|double
+name|u_char
 name|allan_xpt
 init|=
 name|CLOCK_ALLAN
@@ -426,8 +404,70 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* minimum Allan intercept (s) */
+comment|/* minimum Allan intercept (log2 s) */
 end_comment
+
+begin_comment
+comment|/*  * Hybrid PLL/FLL parameters. These were chosen by experiment using a  * MatLab program. The parameters were fudged to match a pure PLL at  * poll intervals of 64 s and lower and a pure FLL at poll intervals of  * 4096 s and higher. Between these extremes the parameters were chosen  * as a geometric series of intervals while holding the overshoot to  * less than 5 percent.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|double
+name|fll
+index|[]
+init|=
+block|{
+literal|0.
+block|,
+literal|1.
+operator|/
+literal|64
+block|,
+literal|1.
+operator|/
+literal|32
+block|,
+literal|1.
+operator|/
+literal|16
+block|,
+literal|1.
+operator|/
+literal|8
+block|,
+literal|1.
+operator|/
+literal|4
+block|,
+literal|1.
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|double
+name|pll
+index|[]
+init|=
+block|{
+literal|1.
+block|,
+literal|1.4
+block|,
+literal|2.
+block|,
+literal|2.8
+block|,
+literal|4.1
+block|,
+literal|7.
+block|,
+literal|12.
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Program variables  */
@@ -941,6 +981,9 @@ name|int
 name|retval
 decl_stmt|;
 comment|/* return value */
+name|int
+name|i
+decl_stmt|;
 comment|/* 	 * If the loop is opened, monitor and record the offsets 	 * anyway in order to determine the open-loop response. 	 */
 ifdef|#
 directive|ifdef
@@ -1580,7 +1623,7 @@ comment|/* 		 * We come here in the normal case for linear phase and 		 * freque
 default|default:
 name|allow_panic
 operator|=
-name|TRUE
+name|FALSE
 expr_stmt|;
 if|if
 condition|(
@@ -1640,44 +1683,69 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 			 * Compute the FLL and PLL frequency adjustments 			 * conditioned on intricate weighting factors. 			 * For the FLL, the averaging interval is 			 * clamped to a minimum of 1024 s and the gain 			 * is decreased from unity for mu above 1024 s 			 * to zero below 256 s. For the PLL, the 			 * averaging interval is clamped not to exceed 			 * the sustem poll interval. No gain factor is 			 * necessary, since the frequency steering above 			 * 1024 s is negligible. Particularly for the 			 * PLL, these measures allow oversampling, but 			 * not undersampling and insure stability even 			 * when the rules of fair engagement are broken. 			 */
+comment|/* 			 * Compute the FLL and PLL frequency adjustments 			 * conditioned on intricate weighting factors. 			 * The gain factors depend on the poll interval 			 * and Allan intercept. For the FLL, the 			 * averaging interval is clamped to a minimum of 			 * 1024 s and the gain increased in stages from 			 * zero for poll intervals below half the Allan 			 * intercept to unity above twice the Allan 			 * intercept. For the PLL, the averaging 			 * interval is clamped not to exceed the poll 			 * interval. No gain factor is necessary, since 			 * the frequency steering above the Allan 			 * intercept is negligible. Particularly for the 			 * PLL, these measures allow oversampling, but 			 * not undersampling and insure stability even 			 * when the rules of fair engagement are broken. 			 */
+name|i
+operator|=
+name|sys_poll
+operator|-
+name|allan_xpt
+operator|+
+literal|4
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|<
+literal|0
+condition|)
+name|i
+operator|=
+literal|0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|i
+operator|>
+literal|6
+condition|)
+name|i
+operator|=
+literal|6
+expr_stmt|;
+name|etemp
+operator|=
+name|fll
+index|[
+name|i
+index|]
+expr_stmt|;
 name|dtemp
 operator|=
 name|max
 argument_list|(
 name|mu
 argument_list|,
+name|ULOGTOD
+argument_list|(
 name|allan_xpt
 argument_list|)
-expr_stmt|;
-name|etemp
-operator|=
-name|min
-argument_list|(
-name|max
-argument_list|(
-literal|0
-argument_list|,
-name|mu
-operator|-
-name|CLOCK_MINSEC
-argument_list|)
-operator|/
-name|allan_xpt
-argument_list|,
-literal|1.
 argument_list|)
 expr_stmt|;
 name|flladj
 operator|=
+operator|(
 name|fp_offset
+operator|-
+name|clock_offset
+operator|)
 operator|*
 name|etemp
 operator|/
 operator|(
 name|dtemp
 operator|*
-name|CLOCK_AVG
+name|CLOCK_FLL
 operator|)
 expr_stmt|;
 name|dtemp
@@ -2386,8 +2454,6 @@ argument_list|,
 name|sys_jitter
 operator|*
 literal|1e6
-operator|/
-name|mu
 argument_list|,
 name|clock_stability
 operator|*
@@ -2422,6 +2488,9 @@ parameter_list|)
 block|{
 name|double
 name|adjustment
+decl_stmt|;
+name|int
+name|i
 decl_stmt|;
 comment|/* 	 * Update the dispersion since the last update. In contrast to 	 * NTPv3, NTPv4 does not declare unsynchronized after one day, 	 * since the dispersion check serves this function. Also, 	 * since the poll interval can exceed one day, the old test 	 * would be counterproductive. Note we do this even with 	 * external clocks, since the clock driver will recompute the 	 * maximum error and the local clock driver will pick it up and 	 * pass to the common refclock routines. Very elegant. 	 */
 name|sys_rootdispersion
@@ -2499,16 +2568,53 @@ name|FLAG_PREFER
 condition|)
 return|return;
 block|}
+comment|/* 	 * This ugly bit of business is necessary in order to move the 	 * pole frequency higher in FLL mode. This is necessary for loop 	 * stability. 	 */
+name|i
+operator|=
+name|sys_poll
+operator|-
+name|allan_xpt
+operator|+
+literal|4
+expr_stmt|;
+if|if
+condition|(
+name|i
+operator|<
+literal|0
+condition|)
+name|i
+operator|=
+literal|0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|i
+operator|>
+literal|6
+condition|)
+name|i
+operator|=
+literal|6
+expr_stmt|;
 name|adjustment
 operator|=
 name|clock_offset
 operator|/
+operator|(
+name|pll
+index|[
+name|i
+index|]
+operator|*
 name|ULOGTOD
 argument_list|(
 name|SHIFT_PLL
 operator|+
 name|sys_poll
 argument_list|)
+operator|)
 expr_stmt|;
 name|clock_offset
 operator|-=
@@ -3079,6 +3185,9 @@ name|CLOCK_ALLAN
 expr_stmt|;
 name|allan_xpt
 operator|=
+operator|(
+name|u_char
+operator|)
 name|freq
 expr_stmt|;
 break|break;

@@ -2597,7 +2597,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|double
+name|u_char
 name|allan_xpt
 decl_stmt|;
 end_decl_stmt

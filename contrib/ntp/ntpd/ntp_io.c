@@ -133,6 +133,12 @@ begin_comment
 comment|/* Some old linux systems at least have in_system.h instead. */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_NETINET_IN_SYSTEM_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -144,15 +150,31 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* HAVE_NETINET_IN_SYSTM_H */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_NETINET_IP_H
+end_ifdef
 
 begin_include
 include|#
 directive|include
 file|<netinet/ip.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -197,6 +219,13 @@ include|#
 directive|include
 file|<arpa/inet.h>
 end_include
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|listen_to_virtual_ips
+decl_stmt|;
+end_decl_stmt
 
 begin_if
 if|#
@@ -1254,6 +1283,35 @@ condition|)
 continue|continue;
 if|if
 condition|(
+name|debug
+condition|)
+name|printf
+argument_list|(
+literal|"after getifaddrs(), considering %s (%s)\n"
+argument_list|,
+name|ifap
+operator|->
+name|ifa_name
+argument_list|,
+name|inet_ntoa
+argument_list|(
+operator|(
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|)
+name|ifap
+operator|->
+name|ifa_addr
+operator|)
+operator|->
+name|sin_addr
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|ifap
 operator|->
 name|ifa_flags
@@ -1284,6 +1342,9 @@ name|s_addr
 argument_list|)
 operator|!=
 literal|0x7f000001
+operator|&&
+operator|!
+name|listen_to_virtual_ips
 condition|)
 continue|continue;
 block|}
@@ -1539,6 +1600,7 @@ operator|++
 control|)
 if|if
 condition|(
+operator|(
 name|inter_list
 index|[
 name|j
@@ -1560,7 +1622,9 @@ operator|.
 name|sin_addr
 operator|.
 name|s_addr
+operator|)
 operator|==
+operator|(
 name|inter_list
 index|[
 name|i
@@ -1582,6 +1646,7 @@ operator|.
 name|sin_addr
 operator|.
 name|s_addr
+operator|)
 condition|)
 block|{
 if|if
@@ -1981,10 +2046,6 @@ name|size
 operator|)
 control|)
 block|{
-specifier|extern
-name|int
-name|listen_to_virtual_ips
-decl_stmt|;
 name|size
 operator|=
 sizeof|sizeof
@@ -2369,12 +2430,18 @@ directive|else
 comment|/* not IFF_LOCAL_LOOPBACK and not IFF_LOOPBACK */
 comment|/* test against 127.0.0.1 (yuck!!) */
 operator|(
-name|inter_list
-index|[
-name|i
-index|]
-operator|.
-name|sin
+operator|(
+operator|*
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|)
+operator|&
+name|ifr
+operator|->
+name|ifr_addr
+operator|)
 operator|.
 name|sin_addr
 operator|.
@@ -5841,7 +5908,6 @@ comment|/*  * input_handler - receive packets asynchronously  */
 end_comment
 
 begin_function
-specifier|extern
 name|void
 name|input_handler
 parameter_list|(
@@ -7176,6 +7242,13 @@ parameter_list|)
 block|{
 if|#
 directive|if
+operator|!
+name|defined
+argument_list|(
+name|MPE
+argument_list|)
+operator|&&
+operator|(
 name|defined
 argument_list|(
 name|SIOCGIFCONF
@@ -7185,6 +7258,7 @@ name|defined
 argument_list|(
 name|SYS_WINNT
 argument_list|)
+operator|)
 specifier|register
 name|int
 name|i

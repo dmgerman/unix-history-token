@@ -4880,21 +4880,13 @@ name|constant
 operator|=
 name|sys_tai
 expr_stmt|;
-if|if
-condition|(
+operator|(
+name|void
+operator|)
 name|ntp_adjtime
 argument_list|(
 operator|&
 name|ntv
-argument_list|)
-operator|==
-name|TIME_ERROR
-condition|)
-name|msyslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"kernel TAI update failed"
 argument_list|)
 expr_stmt|;
 endif|#

@@ -21,6 +21,13 @@ directive|include
 file|"ntp_machine.h"
 end_include
 
+begin_if
+if|#
+directive|if
+operator|!
+name|HAVE_MKTIME
+end_if
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1059,6 +1066,22 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+name|int
+name|mktime_bs
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

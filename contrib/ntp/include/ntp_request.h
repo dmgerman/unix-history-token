@@ -94,7 +94,50 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * The req_pkt_tail structure is used by ntpd to adjust for different  * packet sizes that may arrive.  */
+end_comment
+
+begin_struct
+struct|struct
+name|req_pkt_tail
+block|{
+name|l_fp
+name|tstamp
+decl_stmt|;
+comment|/* time stamp, for authentication */
+name|keyid_t
+name|keyid
+decl_stmt|;
+comment|/* encryption key */
+name|char
+name|mac
+index|[
+name|MAX_MAC_LEN
+operator|-
+sizeof|sizeof
+argument_list|(
+name|u_int32
+argument_list|)
+index|]
+decl_stmt|;
+comment|/* (optional) 8 byte auth code */
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * Input packet lengths.  One with the mac, one without.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|REQ_LEN_HDR
+value|8
+end_define
+
+begin_comment
+comment|/* 4 * u_char + 2 * u_short */
 end_comment
 
 begin_define
@@ -1031,7 +1074,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|INFO_FLAG_PLL_SYNC
+name|INFO_FLAG_CAL
 value|0x10
 end_define
 
@@ -1774,6 +1817,50 @@ end_comment
 
 begin_struct
 struct|struct
+name|old_conf_peer
+block|{
+name|u_int32
+name|peeraddr
+decl_stmt|;
+comment|/* address to poll */
+name|u_char
+name|hmode
+decl_stmt|;
+comment|/* mode, either broadcast, active or client */
+name|u_char
+name|version
+decl_stmt|;
+comment|/* version number to poll with */
+name|u_char
+name|minpoll
+decl_stmt|;
+comment|/* min host poll interval */
+name|u_char
+name|maxpoll
+decl_stmt|;
+comment|/* max host poll interval */
+name|u_char
+name|flags
+decl_stmt|;
+comment|/* flags for this request */
+name|u_char
+name|ttl
+decl_stmt|;
+comment|/* time to live (multicast) or refclock mode */
+name|u_short
+name|unused
+decl_stmt|;
+comment|/* unused */
+name|keyid_t
+name|keyid
+decl_stmt|;
+comment|/* key to use for this association */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|conf_peer
 block|{
 name|u_int32
@@ -1904,28 +1991,28 @@ begin_define
 define|#
 directive|define
 name|SYS_FLAG_BCLIENT
-value|0x1
+value|0x01
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYS_FLAG_PPS
-value|0x2
+value|0x02
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYS_FLAG_NTP
-value|0x4
+value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
 name|SYS_FLAG_KERNEL
-value|0x8
+value|0x08
 end_define
 
 begin_define
@@ -1940,6 +2027,20 @@ define|#
 directive|define
 name|SYS_FLAG_FILEGEN
 value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYS_FLAG_AUTH
+value|0x40
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYS_FLAG_CAL
+value|0x80
 end_define
 
 begin_comment

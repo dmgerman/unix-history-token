@@ -40,6 +40,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|"ntp_machine.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ntp_fp.h"
 end_include
 
@@ -155,11 +161,33 @@ directive|include
 file|<netdb.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_SIGNAL_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<sys/signal.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -1858,7 +1886,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-bBdqsv] [-a key#] [-e delay] [-k file] [-p samples] [-o version#] [-r rate] [-t timeo] server ...\n"
+literal|"usage: %s [-bBdqsuv] [-a key#] [-e delay] [-k file] [-p samples] [-o version#] [-r rate] [-t timeo] server ...\n"
 argument_list|,
 name|progname
 argument_list|)
@@ -3029,6 +3057,8 @@ name|l_fp
 name|t10
 decl_stmt|,
 name|t23
+decl_stmt|,
+name|tmp
 decl_stmt|;
 name|l_fp
 name|org
@@ -3573,9 +3603,26 @@ argument_list|)
 expr_stmt|;
 comment|/* pkt->org == t3 */
 comment|/* now have (t2 - t3) and (t0 - t1).	Calculate (ci) and (di) */
+comment|/* 	 * Calculate (ci) = ((t1 - t0) / 2) + ((t2 - t3) / 2) 	 * For large offsets this may prevent an overflow on '+' 	 */
 name|ci
 operator|=
 name|t10
+expr_stmt|;
+name|L_RSHIFT
+argument_list|(
+operator|&
+name|ci
+argument_list|)
+expr_stmt|;
+name|tmp
+operator|=
+name|t23
+expr_stmt|;
+name|L_RSHIFT
+argument_list|(
+operator|&
+name|tmp
+argument_list|)
 expr_stmt|;
 name|L_ADD
 argument_list|(
@@ -3583,13 +3630,7 @@ operator|&
 name|ci
 argument_list|,
 operator|&
-name|t23
-argument_list|)
-expr_stmt|;
-name|L_RSHIFT
-argument_list|(
-operator|&
-name|ci
+name|tmp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Calculate di in t23 in full precision, then truncate 	 * to an s_fp. 	 */
@@ -4268,8 +4309,27 @@ name|delay
 operator|==
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|debug
+condition|)
+name|printf
+argument_list|(
+literal|"%s: Server dropped: no data\n"
+argument_list|,
+name|ntoa
+argument_list|(
+operator|&
+name|server
+operator|->
+name|srcadr
+argument_list|)
+argument_list|)
+expr_stmt|;
 continue|continue;
 comment|/* no data */
+block|}
 if|if
 condition|(
 name|server
@@ -4278,8 +4338,27 @@ name|stratum
 operator|>
 name|NTP_INFIN
 condition|)
+block|{
+if|if
+condition|(
+name|debug
+condition|)
+name|printf
+argument_list|(
+literal|"%s: Server dropped: strata too high\n"
+argument_list|,
+name|ntoa
+argument_list|(
+operator|&
+name|server
+operator|->
+name|srcadr
+argument_list|)
+argument_list|)
+expr_stmt|;
 continue|continue;
 comment|/* stratum no good */
+block|}
 if|if
 condition|(
 name|server
@@ -4289,6 +4368,23 @@ operator|>
 name|NTP_MAXWGT
 condition|)
 block|{
+if|if
+condition|(
+name|debug
+condition|)
+name|printf
+argument_list|(
+literal|"%s: Server dropped: server too far away\n"
+argument_list|,
+name|ntoa
+argument_list|(
+operator|&
+name|server
+operator|->
+name|srcadr
+argument_list|)
+argument_list|)
+expr_stmt|;
 continue|continue;
 comment|/* too far away */
 block|}
@@ -4300,8 +4396,27 @@ name|leap
 operator|==
 name|LEAP_NOTINSYNC
 condition|)
+block|{
+if|if
+condition|(
+name|debug
+condition|)
+name|printf
+argument_list|(
+literal|"%s: Server dropped: Leap not in sync\n"
+argument_list|,
+name|ntoa
+argument_list|(
+operator|&
+name|server
+operator|->
+name|srcadr
+argument_list|)
+argument_list|)
+expr_stmt|;
 continue|continue;
 comment|/* he's in trouble */
+block|}
 if|if
 condition|(
 operator|!
@@ -4319,6 +4434,23 @@ name|reftime
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|debug
+condition|)
+name|printf
+argument_list|(
+literal|"%s: Server dropped: server is very broken\n"
+argument_list|,
+name|ntoa
+argument_list|(
+operator|&
+name|server
+operator|->
+name|srcadr
+argument_list|)
+argument_list|)
+expr_stmt|;
 continue|continue;
 comment|/* very broken host */
 block|}
@@ -4341,6 +4473,23 @@ operator|>=
 name|NTP_MAXAGE
 condition|)
 block|{
+if|if
+condition|(
+name|debug
+condition|)
+name|printf
+argument_list|(
+literal|"%s: Server dropped: Server has gone too long without sync\n"
+argument_list|,
+name|ntoa
+argument_list|(
+operator|&
+name|server
+operator|->
+name|srcadr
+argument_list|)
+argument_list|)
+expr_stmt|;
 continue|continue;
 comment|/* too long without sync */
 block|}
@@ -4353,6 +4502,23 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|debug
+condition|)
+name|printf
+argument_list|(
+literal|"%s: Server dropped: Server is untrusted\n"
+argument_list|,
+name|ntoa
+argument_list|(
+operator|&
+name|server
+operator|->
+name|srcadr
+argument_list|)
+argument_list|)
+expr_stmt|;
 continue|continue;
 block|}
 comment|/* 		 * This one seems sane.  Find where he belongs 		 * on the list. 		 */

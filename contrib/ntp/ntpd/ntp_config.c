@@ -118,11 +118,22 @@ directive|include
 file|<ctype.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_PARAM_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<sys/param.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -224,7 +235,7 @@ comment|/*  * These routines are used to read the configuration file at  * start
 end_comment
 
 begin_comment
-comment|/*  * We understand the following configuration entries and defaults.  *  * peer [ addr ] [ version 3 ] [ key 0 ] [ minpoll 6 ] [ maxpoll 10 ]  * server [ addr ] [ version 3 ] [ key 0 ] [ minpoll 6 ] [ maxpoll 10 ]  * broadcast [ addr ] [ version 3 ] [ key 0 ] [ ttl 1 ]  * broadcastclient  * multicastclient [ 224.0.1.1 ]  * manycastclient [ addr ] [ version 3 ] [ key 0 ] [ minpoll 6 ] [ maxpoll 10 ]  * manycastserver [ 224.0.1.1 ]  * broadcastdelay 0.0102  * restrict [ addr ] [ mask 255.255.255.0 ] ignore|noserve|notrust|noquery  * driftfile file_name  * keys file_name  * publickey file_name  * privatekey file_name  * statsdir /var/NTP/  * filegen peerstats [ file peerstats ] [ type day ] [ link ]  * clientlimit [ n ]  * clientperiod [ 3600 ]  * trustedkey [ key ]  * requestkey [ key]  * controlkey [ key ]  * trap [ addr ]  * fudge [ addr ] [ stratum ] [ refid ] ...  * pidfile [ ]  * setvar [ ]  * logfile logfile  * logconfig [+|-|=][{sync|sys|peer|clock}{{,all}{info|statistics|events|status}}]...  * enable auth|bclient|pll|kernel|monitor|stats  * disable auth|bclient|pll|kernel|monitor|stats  * phone ...  * pps device [assert|clear] [hardpps]  * priority high|normal  */
+comment|/*  * We understand the following configuration entries and defaults.  *  * peer [ addr ] [ version 3 ] [ key 0 ] [ minpoll 6 ] [ maxpoll 10 ]  * server [ addr ] [ version 3 ] [ key 0 ] [ minpoll 6 ] [ maxpoll 10 ]  * broadcast [ addr ] [ version 3 ] [ key 0 ] [ ttl 1 ]  * broadcastclient  * multicastclient [ 224.0.1.1 ]  * manycastclient [ addr ] [ version 3 ] [ key 0 ] [ minpoll 6 ] [ maxpoll 10 ]  * manycastserver [ 224.0.1.1 ]  * broadcastdelay 0.0102  * restrict [ addr ] [ mask 255.255.255.0 ] ignore|noserve|notrust|noquery  * driftfile file_name  * keys file_name  * publickey file_name  * privatekey file_name  * statsdir /var/NTP/  * filegen peerstats [ file peerstats ] [ type day ] [ link ]  * clientlimit [ n ]  * clientperiod [ 3600 ]  * trustedkey [ key ]  * requestkey [ key]  * controlkey [ key ]  * trap [ addr ]  * fudge [ addr ] [ stratum ] [ refid ] ...  * pidfile [ ]  * setvar [ ]  * logfile logfile  * logconfig [+|-|=][{sync|sys|peer|clock}{{,all}{info|statistics|events|status}}]...  * enable auth|bclient|pll|kernel|monitor|stats|calibrate  * disable auth|bclient|pll|kernel|monitor|stats|calibrate  * phone ...  * pps device [assert|clear] [hardpps]  * priority high|normal  */
 end_comment
 
 begin_comment
@@ -943,6 +954,12 @@ name|PROTO_BROADCLIENT
 block|}
 block|,
 block|{
+literal|"calibrate"
+block|,
+name|PROTO_CAL
+block|}
+block|,
+block|{
 literal|"kernel"
 block|,
 name|PROTO_KERNEL
@@ -961,21 +978,15 @@ name|PROTO_NTP
 block|}
 block|,
 block|{
-literal|"stats"
-block|,
-name|PROTO_FILEGEN
-block|}
-block|,
-block|{
 literal|"pps"
 block|,
 name|PROTO_PPS
 block|}
 block|,
 block|{
-literal|"calibrate"
+literal|"stats"
 block|,
-name|PROTO_CAL
+name|PROTO_FILEGEN
 block|}
 block|,
 block|{
@@ -8813,7 +8824,7 @@ name|fprintf
 argument_list|(
 name|res_fp
 argument_list|,
-literal|"%s %d %d %d %d %d %d %d %s\n"
+literal|"%s %d %d %d %d %d %d %u %s\n"
 argument_list|,
 name|name
 argument_list|,
@@ -8845,7 +8856,7 @@ literal|1
 condition|)
 name|printf
 argument_list|(
-literal|"config: %s %d %d %d %d %x %d %08x %s\n"
+literal|"config: %s %d %d %d %d %x %d %u %s\n"
 argument_list|,
 name|name
 argument_list|,

@@ -23,6 +23,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|"ntp_machine.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ntpd.h"
 end_include
 
@@ -98,6 +104,12 @@ begin_comment
 comment|/*wjm*/
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_PARAM_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -109,15 +121,42 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* VMS */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_SIGNAL_H
+end_ifdef
 
 begin_include
 include|#
 directive|include
 file|<sys/signal.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -632,10 +671,12 @@ begin_decl_stmt
 name|HANDLE
 name|WaitHandles
 index|[
-literal|2
+literal|3
 index|]
 init|=
 block|{
+name|NULL
+block|,
 name|NULL
 block|,
 name|NULL
@@ -1515,9 +1556,19 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|HAVE_GETUID
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|MPE
+argument_list|)
+comment|/* MPE lacks the concept of root */
 block|{
 name|uid_t
 name|uid
@@ -3110,6 +3161,14 @@ operator|=
 name|get_timer_handle
 argument_list|()
 expr_stmt|;
+name|WaitHandles
+index|[
+literal|2
+index|]
+operator|=
+name|get_io_event
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -3175,8 +3234,37 @@ name|WAIT_OBJECT_0
 operator|+
 literal|2
 case|:
+comment|/* Io event */
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|debug
+operator|>
+literal|3
+condition|)
 block|{
-comment|/* Windows message */
+name|printf
+argument_list|(
+literal|"IoEvent occurred\n"
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+break|break;
+if|#
+directive|if
+literal|1
+comment|/* 				 * FIXME: According to the documentation for WaitForMultipleObjectsEx 				 *        this is not possible. This may be a vestigial from when this was 				 *        MsgWaitForMultipleObjects, maybe it should be removed? 				 */
+case|case
+name|WAIT_OBJECT_0
+operator|+
+literal|3
+case|:
+comment|/* windows message */
+block|{
 name|MSG
 name|msg
 decl_stmt|;
@@ -3221,6 +3309,8 @@ expr_stmt|;
 block|}
 block|}
 break|break;
+endif|#
+directive|endif
 case|case
 name|WAIT_IO_COMPLETION
 case|:

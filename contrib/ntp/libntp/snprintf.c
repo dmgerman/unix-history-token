@@ -5,6 +5,13 @@ directive|include
 file|<config.h>
 end_include
 
+begin_if
+if|#
+directive|if
+operator|!
+name|HAVE_SNPRINTF
+end_if
+
 begin_include
 include|#
 directive|include
@@ -250,6 +257,22 @@ endif|#
 directive|endif
 block|}
 end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_decl_stmt
+name|int
+name|snprintf_bs
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
