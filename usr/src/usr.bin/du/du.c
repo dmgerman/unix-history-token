@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)du.c	5.10 (Berkeley) %G%"
+literal|"@(#)du.c	5.11 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -426,6 +426,33 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|FTS_SL
+case|:
+if|if
+condition|(
+name|p
+operator|->
+name|fts_level
+operator|==
+name|FTS_ROOTLEVEL
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fts_set
+argument_list|(
+name|fts
+argument_list|,
+name|p
+argument_list|,
+name|FTS_FOLLOW
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+comment|/* FALLTHROUGH */
 default|default:
 if|if
 condition|(
