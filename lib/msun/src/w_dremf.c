@@ -3,6 +3,10 @@ begin_comment
 comment|/*  * dremf() wrapper for remainderf().  *  * Written by J.T. Conklin,<jtc@wimsey.com>  * Placed into the Public Domain, 1994.  */
 end_comment
 
+begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -19,15 +23,12 @@ begin_function
 name|float
 name|dremf
 parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
 name|float
 name|x
-decl_stmt|,
+parameter_list|,
+name|float
 name|y
-decl_stmt|;
+parameter_list|)
 block|{
 return|return
 name|remainderf
