@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rcmd.c	4.4 %G%"
+literal|"@(#)rcmd.c	4.5 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -69,12 +69,6 @@ decl_stmt|,
 modifier|*
 name|sprintf
 argument_list|()
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|rcmdoptions
 decl_stmt|;
 end_decl_stmt
 
@@ -149,9 +143,6 @@ decl_stmt|;
 name|char
 name|c
 decl_stmt|;
-name|short
-name|port
-decl_stmt|;
 name|int
 name|lport
 init|=
@@ -209,10 +200,6 @@ name|s
 operator|=
 name|rresvport
 argument_list|(
-name|rcmdoptions
-operator||
-name|SO_KEEPALIVE
-argument_list|,
 operator|&
 name|lport
 argument_list|)
@@ -369,7 +356,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|port
+name|lport
 operator|=
 literal|0
 expr_stmt|;
@@ -387,10 +374,6 @@ name|s2
 init|=
 name|rresvport
 argument_list|(
-name|rcmdoptions
-operator||
-name|SO_ACCEPTCONN
-argument_list|,
 operator|&
 name|lport
 argument_list|)
@@ -426,26 +409,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|socketaddr
-argument_list|(
-name|s2
-argument_list|,
-operator|&
-name|sin2
-argument_list|)
-expr_stmt|;
-name|port
-operator|=
-name|htons
-argument_list|(
-operator|(
-name|u_short
-operator|)
-name|sin2
-operator|.
-name|sin_port
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -455,7 +418,7 @@ name|num
 argument_list|,
 literal|"%d"
 argument_list|,
-name|port
+name|lport
 argument_list|)
 expr_stmt|;
 operator|(
@@ -516,7 +479,7 @@ argument_list|(
 literal|"accept"
 argument_list|)
 expr_stmt|;
-name|port
+name|lport
 operator|=
 literal|0
 expr_stmt|;
@@ -703,7 +666,7 @@ name|bad2
 label|:
 if|if
 condition|(
-name|port
+name|lport
 condition|)
 operator|(
 name|void
@@ -736,16 +699,12 @@ end_block
 begin_macro
 name|rresvport
 argument_list|(
-argument|options
-argument_list|,
 argument|alport
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|int
-name|options
-decl_stmt|,
 modifier|*
 name|alport
 decl_stmt|;
