@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	8.63 (Berkeley) 1/11/94"
+literal|"@(#)main.c	8.65 (Berkeley) 1/23/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -802,7 +802,7 @@ argument_list|,
 name|G_SNAPSHOT
 argument_list|)
 expr_stmt|;
-comment|/* Build and initialize the first/current screen. */
+comment|/* 	 * Build and initialize the first/current screen.  This is a bit 	 * tricky.  If an error is returned, we may or may not have a 	 * screen structure.  If we have a screen structure, put it on a 	 * display queue so that the error messages get displayed. 	 */
 if|if
 condition|(
 name|screen_init
@@ -819,14 +819,23 @@ block|{
 if|if
 condition|(
 name|sp
-operator|==
+operator|!=
 name|NULL
 condition|)
+name|CIRCLEQ_INSERT_HEAD
+argument_list|(
+operator|&
+name|__global_list
+operator|->
+name|dq
+argument_list|,
+name|sp
+argument_list|,
+name|q
+argument_list|)
+expr_stmt|;
 goto|goto
-name|err2
-goto|;
-goto|goto
-name|err1
+name|err
 goto|;
 block|}
 name|sp
@@ -924,7 +933,7 @@ argument_list|)
 condition|)
 comment|/* Set the window size. */
 goto|goto
-name|err1
+name|err
 goto|;
 if|if
 condition|(
@@ -935,12 +944,13 @@ argument_list|)
 condition|)
 comment|/* Options initialization. */
 goto|goto
-name|err1
+name|err
 goto|;
 if|if
 condition|(
 name|readonly
 condition|)
+comment|/* Global read-only bit. */
 name|O_SET
 argument_list|(
 name|sp
@@ -953,6 +963,7 @@ condition|(
 name|silent
 condition|)
 block|{
+comment|/* Ex batch mode. */
 name|O_CLR
 argument_list|(
 name|sp
@@ -1054,6 +1065,10 @@ name|a
 operator|.
 name|bp
 operator|=
+operator|(
+name|CHAR_T
+operator|*
+operator|)
 name|path
 expr_stmt|;
 name|a
@@ -1121,7 +1136,7 @@ name|sp
 argument_list|)
 condition|)
 goto|goto
-name|err1
+name|err
 goto|;
 ifdef|#
 directive|ifdef
@@ -1135,7 +1150,7 @@ argument_list|)
 condition|)
 comment|/* Digraph initialization. */
 goto|goto
-name|err1
+name|err
 goto|;
 endif|#
 directive|endif
@@ -1218,7 +1233,7 @@ name|NULL
 argument_list|)
 expr_stmt|;
 goto|goto
-name|err1
+name|err
 goto|;
 block|}
 else|else
@@ -1407,7 +1422,7 @@ name|tag_f
 argument_list|)
 condition|)
 goto|goto
-name|err1
+name|err
 goto|;
 elseif|else
 if|if
@@ -1424,7 +1439,7 @@ name|rec_f
 argument_list|)
 condition|)
 goto|goto
-name|err1
+name|err
 goto|;
 comment|/* Append any remaining arguments as file names. */
 if|if
@@ -1462,7 +1477,7 @@ operator|==
 name|NULL
 condition|)
 goto|goto
-name|err1
+name|err
 goto|;
 comment|/* 	 * If no recovery or tag file, get an EXF structure. 	 * If no argv file, use a temporary file. 	 */
 if|if
@@ -1507,7 +1522,7 @@ operator|==
 name|NULL
 condition|)
 goto|goto
-name|err1
+name|err
 goto|;
 if|if
 condition|(
@@ -1523,7 +1538,7 @@ literal|0
 argument_list|)
 condition|)
 goto|goto
-name|err1
+name|err
 goto|;
 block|}
 comment|/* Set up the argument pointer. */
@@ -1703,7 +1718,7 @@ literal|0
 argument_list|)
 condition|)
 goto|goto
-name|err1
+name|err
 goto|;
 block|}
 elseif|else
@@ -1731,7 +1746,7 @@ literal|0
 argument_list|)
 condition|)
 goto|goto
-name|err1
+name|err
 goto|;
 if|if
 condition|(
@@ -1752,7 +1767,7 @@ literal|0
 argument_list|)
 condition|)
 goto|goto
-name|err1
+name|err
 goto|;
 if|if
 condition|(
@@ -1770,7 +1785,7 @@ literal|0
 argument_list|)
 condition|)
 goto|goto
-name|err1
+name|err
 goto|;
 block|}
 comment|/* Vi reads from the terminal. */
@@ -1803,7 +1818,7 @@ literal|"Vi's standard input must be a terminal."
 argument_list|)
 expr_stmt|;
 goto|goto
-name|err1
+name|err
 goto|;
 block|}
 for|for
@@ -1826,7 +1841,7 @@ name|ep
 argument_list|)
 condition|)
 goto|goto
-name|err2
+name|err
 goto|;
 comment|/* 		 * Edit the next screen on the display queue, or, move 		 * a screen from the hidden queue to the display queue. 		 */
 if|if
@@ -1925,7 +1940,7 @@ name|sp
 argument_list|)
 condition|)
 goto|goto
-name|err2
+name|err
 goto|;
 break|break;
 case|case
@@ -1939,7 +1954,7 @@ name|sp
 argument_list|)
 condition|)
 goto|goto
-name|err2
+name|err
 goto|;
 break|break;
 case|case
@@ -1953,7 +1968,7 @@ name|sp
 argument_list|)
 condition|)
 goto|goto
-name|err2
+name|err
 goto|;
 break|break;
 default|default:
@@ -1962,7 +1977,6 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Two error paths.  The first means that something failed before 	 * we called a screen routine.  Swap the message pointers between 	 * the SCR and the GS, so messages get displayed.  The second is 	 * something failed in a screen.  NOTE: sp may be GONE when the 	 * screen returns, so only the gp can be trusted. 	 */
 name|eval
 operator|=
 literal|0
@@ -1971,28 +1985,13 @@ if|if
 condition|(
 literal|0
 condition|)
-block|{
-name|err1
-label|:
-name|gp
-operator|->
-name|msgq
-operator|.
-name|lh_first
-operator|=
-name|sp
-operator|->
-name|msgq
-operator|.
-name|lh_first
-expr_stmt|;
-name|err2
+name|err
 label|:
 name|eval
 operator|=
 literal|1
 expr_stmt|;
-block|}
+comment|/* 	 * NOTE: sp may be GONE when the screen returns, so only 	 * the gp can be trusted. 	 */
 name|gs_end
 argument_list|(
 name|gp
@@ -2007,7 +2006,10 @@ name|gp
 argument_list|,
 name|G_ISFROMTTY
 argument_list|)
-operator|&&
+condition|)
+operator|(
+name|void
+operator|)
 name|tcsetattr
 argument_list|(
 name|STDIN_FILENO
@@ -2018,13 +2020,6 @@ operator|&
 name|gp
 operator|->
 name|original_termios
-argument_list|)
-condition|)
-name|err
-argument_list|(
-literal|1
-argument_list|,
-literal|"tcsetattr"
 argument_list|)
 expr_stmt|;
 name|exit

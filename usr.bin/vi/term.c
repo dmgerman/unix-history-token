@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)term.c	8.40 (Berkeley) 1/8/94"
+literal|"@(#)term.c	8.41 (Berkeley) 1/23/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -2510,11 +2510,7 @@ literal|0
 operator|)
 return|;
 block|}
-return|return
-operator|(
-literal|1
-operator|)
-return|;
+comment|/* NOTREACHED */
 block|}
 end_function
 

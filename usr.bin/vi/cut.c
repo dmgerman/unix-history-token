@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cut.c	8.19 (Berkeley) 1/11/94"
+literal|"@(#)cut.c	8.20 (Berkeley) 1/23/94"
 decl_stmt|;
 end_decl_stmt
 
@@ -239,6 +239,12 @@ argument_list|(
 name|CUT_DELETE
 argument_list|)
 operator|&&
+operator|(
+name|LF_ISSET
+argument_list|(
+name|CUT_LINEMODE
+argument_list|)
+operator|||
 name|fm
 operator|->
 name|lno
@@ -246,6 +252,7 @@ operator|!=
 name|tm
 operator|->
 name|lno
+operator|)
 condition|)
 block|{
 operator|(
