@@ -1157,9 +1157,14 @@ expr_stmt|;
 if|if
 condition|(
 name|l_struct
+operator|&&
+operator|!
+name|ps
+operator|.
+name|p_l_follow
 condition|)
 block|{
-comment|/* if last token was 'struct', then this token 				 * should be treated as a declaration */
+comment|/* if last token was 'struct' and we're not 				 * in parentheses, then this token 				 * should be treated as a declaration */
 name|l_struct
 operator|=
 name|false
@@ -1184,9 +1189,13 @@ name|ps
 operator|.
 name|last_u_d
 operator|=
+name|l_struct
+expr_stmt|;
+comment|/* Operator after identifier is binary 				 * unless last token was 'struct' */
+name|l_struct
+operator|=
 name|false
 expr_stmt|;
-comment|/* Operator after identifier is binary */
 name|last_code
 operator|=
 name|ident
@@ -1326,19 +1335,12 @@ case|case
 literal|3
 case|:
 comment|/* a "struct" */
-if|if
-condition|(
-name|ps
-operator|.
-name|p_l_follow
-condition|)
-break|break;
-comment|/* inside parens: cast */
+comment|/* 		 * Next time around, we will want to know that we have had a 		 * 'struct' 		 */
 name|l_struct
 operator|=
 name|true
 expr_stmt|;
-comment|/* 		 * Next time around, we will want to know that we have had a 		 * 'struct' 		 */
+comment|/* FALLTHROUGH */
 case|case
 literal|4
 case|:
@@ -1354,14 +1356,21 @@ name|ps
 operator|.
 name|cast_mask
 operator||=
+operator|(
 literal|1
 operator|<<
 name|ps
 operator|.
 name|p_l_follow
+operator|)
+operator|&
+operator|~
+name|ps
+operator|.
+name|sizeof_mask
 expr_stmt|;
 break|break;
-comment|/* inside parens: cast */
+comment|/* inside parens: cast, param list or sizeof */
 block|}
 name|last_code
 operator|=
