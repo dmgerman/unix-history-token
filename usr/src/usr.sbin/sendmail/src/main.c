@@ -57,7 +57,7 @@ operator|)
 expr|main
 operator|.
 name|c
-literal|3.65
+literal|3.66
 operator|%
 name|G
 operator|%
@@ -978,11 +978,24 @@ case|case
 literal|'D'
 case|:
 comment|/* run as a daemon */
+ifdef|#
+directive|ifdef
+name|DAEMON
 name|Daemon
 operator|=
 name|TRUE
 expr_stmt|;
-comment|/* explicit fall-through */
+else|#
+directive|else
+name|syserr
+argument_list|(
+literal|"Daemon mode not implemented"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+endif|DAEMON
+break|break;
 case|case
 literal|'q'
 case|:
@@ -1231,6 +1244,9 @@ block|}
 endif|#
 directive|endif
 endif|DEBUG
+ifdef|#
+directive|ifdef
+name|DAEMON
 comment|/* 	**  If a daemon, wait for a request. 	**	getrequests will always return in a child. 	*/
 if|if
 condition|(
@@ -1239,6 +1255,9 @@ condition|)
 name|getrequests
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
+endif|DAEMON
 ifdef|#
 directive|ifdef
 name|SMTP

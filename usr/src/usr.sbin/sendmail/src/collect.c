@@ -21,7 +21,7 @@ operator|)
 name|collect
 operator|.
 name|c
-literal|3.33
+literal|3.34
 operator|%
 name|G
 operator|%
@@ -275,7 +275,7 @@ argument_list|,
 sizeof|sizeof
 name|buf
 argument_list|,
-name|stdin
+name|InChannel
 argument_list|)
 operator|==
 name|NULL
@@ -323,7 +323,7 @@ argument_list|,
 sizeof|sizeof
 name|buf
 argument_list|,
-name|stdin
+name|InChannel
 argument_list|)
 expr_stmt|;
 name|fixcrlf
@@ -337,20 +337,20 @@ block|}
 endif|#
 directive|endif
 endif|NOTUNIX
-comment|/* 	**  Copy stdin to temp file& do message editing. 	**	To keep certain mailers from getting confused, 	**	and to keep the output clean, lines that look 	**	like UNIX "From" lines are deleted in the header, 	**	and prepended with ">" in the body. 	*/
+comment|/* 	**  Copy InChannel to temp file& do message editing. 	**	To keep certain mailers from getting confused, 	**	and to keep the output clean, lines that look 	**	like UNIX "From" lines are deleted in the header, 	**	and prepended with ">" in the body. 	*/
 for|for
 control|(
 init|;
 operator|!
 name|feof
 argument_list|(
-name|stdin
+name|InChannel
 argument_list|)
 condition|;
 operator|!
 name|feof
 argument_list|(
-name|stdin
+name|InChannel
 argument_list|)
 operator|&&
 name|fgets
@@ -360,7 +360,7 @@ argument_list|,
 sizeof|sizeof
 name|buf
 argument_list|,
-name|stdin
+name|InChannel
 argument_list|)
 operator|!=
 name|NULL
@@ -400,7 +400,7 @@ name|c
 operator|=
 name|getc
 argument_list|(
-name|stdin
+name|InChannel
 argument_list|)
 operator|)
 operator|==
@@ -443,7 +443,7 @@ operator|-
 name|buf
 operator|)
 argument_list|,
-name|stdin
+name|InChannel
 argument_list|)
 operator|==
 name|NULL
@@ -462,7 +462,7 @@ condition|(
 operator|!
 name|feof
 argument_list|(
-name|stdin
+name|InChannel
 argument_list|)
 condition|)
 operator|(
@@ -472,7 +472,7 @@ name|ungetc
 argument_list|(
 name|c
 argument_list|,
-name|stdin
+name|InChannel
 argument_list|)
 expr_stmt|;
 name|MsgSize
@@ -535,7 +535,7 @@ argument_list|,
 sizeof|sizeof
 name|buf
 argument_list|,
-name|stdin
+name|InChannel
 argument_list|)
 expr_stmt|;
 name|fixcrlf
@@ -553,13 +553,13 @@ init|;
 operator|!
 name|feof
 argument_list|(
-name|stdin
+name|InChannel
 argument_list|)
 condition|;
 operator|!
 name|feof
 argument_list|(
-name|stdin
+name|InChannel
 argument_list|)
 operator|&&
 name|fgets
@@ -569,7 +569,7 @@ argument_list|,
 sizeof|sizeof
 name|buf
 argument_list|,
-name|stdin
+name|InChannel
 argument_list|)
 operator|!=
 name|NULL

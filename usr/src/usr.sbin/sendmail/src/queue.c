@@ -45,7 +45,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.9
+literal|3.10
 operator|%
 name|G
 operator|%
@@ -73,7 +73,7 @@ operator|)
 name|queue
 operator|.
 name|c
-literal|3.9
+literal|3.10
 operator|%
 name|G
 operator|%
@@ -673,6 +673,16 @@ condition|)
 break|break;
 block|}
 end_for
+
+begin_comment
+comment|/* no work to do -- just exit */
+end_comment
+
+begin_expr_stmt
+name|finis
+argument_list|()
+expr_stmt|;
+end_expr_stmt
 
 begin_escape
 unit|}

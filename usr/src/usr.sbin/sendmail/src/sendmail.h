@@ -27,7 +27,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	3.60		%G%"
+literal|"@(#)sendmail.h	3.61		%G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1180,7 +1180,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|s_addr
+name|s_address
 value|s_value.sv_addr
 end_define
 
