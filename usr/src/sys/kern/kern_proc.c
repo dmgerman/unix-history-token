@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	4.1	%G%	*/
+comment|/*	kern_proc.c	4.2	%G%	*/
 end_comment
 
 begin_include
@@ -2669,6 +2669,9 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 			 * Protect this process from future 			 * tty signals, clear TSTP/TTIN/TTOU if pending, 			 * and set SDETACH bit on procs. 			 */
+operator|(
+name|void
+operator|)
 name|spgrp
 argument_list|(
 name|q

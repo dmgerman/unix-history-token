@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_synch.c	4.1	%G%	*/
+comment|/*	kern_synch.c	4.2	%G%	*/
 end_comment
 
 begin_include
@@ -1723,6 +1723,9 @@ operator|(
 literal|1
 operator|)
 return|;
+operator|(
+name|void
+operator|)
 name|spl6
 argument_list|()
 expr_stmt|;

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trap.c	4.1	%G%	*/
+comment|/*	trap.c	4.2	%G%	*/
 end_comment
 
 begin_include
@@ -432,6 +432,9 @@ name|runrun
 condition|)
 block|{
 comment|/* 		 * Since we are u.u_procp, clock will normally just change 		 * our priority without moving us from one queue to another 		 * (since the running process is not on a queue.) 		 * If that happened after we setrq ourselves but before we 		 * swtch()'ed, we might not be on the queue indicated by 		 * our priority. 		 */
+operator|(
+name|void
+operator|)
 name|spl6
 argument_list|()
 expr_stmt|;
@@ -916,6 +919,9 @@ name|runrun
 condition|)
 block|{
 comment|/* 		 * Since we are u.u_procp, clock will normally just change 		 * our priority without moving us from one queue to another 		 * (since the running process is not on a queue.) 		 * If that happened after we setrq ourselves but before we 		 * swtch()'ed, we might not be on the queue indicated by 		 * our priority. 		 */
+operator|(
+name|void
+operator|)
 name|spl6
 argument_list|()
 expr_stmt|;
