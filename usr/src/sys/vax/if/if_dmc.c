@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_dmc.c	4.22	82/12/17	*/
+comment|/*	if_dmc.c	4.23	83/02/20	*/
 end_comment
 
 begin_include
@@ -28,7 +28,7 @@ begin_decl_stmt
 name|int
 name|dmcdebug
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -161,6 +161,28 @@ include|#
 directive|include
 file|"../vaxuba/ubavar.h"
 end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DMC_USEMAINT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|DMC_USEMAINT
+value|1
+end_define
+
+begin_comment
+comment|/* use maintenance mode */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Driver information for auto-configuration stuff.  */
@@ -992,6 +1014,10 @@ name|DMC_CNTLI
 argument_list|,
 literal|0
 argument_list|,
+name|DMC_USEMAINT
+condition|?
+name|DMC_MAINT
+else|:
 literal|0
 argument_list|)
 expr_stmt|;
@@ -1575,7 +1601,9 @@ name|c_cc
 operator|==
 literal|0
 condition|)
-return|return;
+goto|goto
+name|out
+goto|;
 name|addr
 operator|->
 name|bsel0
@@ -1622,6 +1650,13 @@ operator|->
 name|bsel0
 operator||=
 name|DMC_IEI
+expr_stmt|;
+name|out
+label|:
+name|dmxint
+argument_list|(
+name|unit
+argument_list|)
 expr_stmt|;
 block|}
 end_block
@@ -1680,6 +1715,8 @@ decl_stmt|;
 name|int
 name|arg
 decl_stmt|,
+name|arg2
+decl_stmt|,
 name|cmd
 decl_stmt|,
 name|len
@@ -1695,19 +1732,36 @@ name|ui
 operator|->
 name|ui_addr
 expr_stmt|;
-name|arg
-operator|=
-name|addr
-operator|->
-name|sel6
-expr_stmt|;
 name|cmd
 operator|=
 name|addr
 operator|->
 name|bsel2
 operator|&
-literal|7
+literal|0xff
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|cmd
+operator|&
+name|DMC_RDYO
+operator|)
+operator|==
+literal|0
+condition|)
+return|return;
+name|arg2
+operator|=
+name|addr
+operator|->
+name|sel4
+expr_stmt|;
+name|arg
+operator|=
+name|addr
+operator|->
+name|sel6
 expr_stmt|;
 name|addr
 operator|->
@@ -1732,6 +1786,8 @@ expr_stmt|;
 switch|switch
 condition|(
 name|cmd
+operator|&
+literal|07
 condition|)
 block|{
 case|case
