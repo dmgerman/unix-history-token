@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)mount.c	5.35 (Berkeley) %G%"
+literal|"@(#)mount.c	5.36 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -405,10 +405,6 @@ name|struct
 name|fstab
 modifier|*
 name|fs
-decl_stmt|;
-specifier|register
-name|int
-name|cnt
 decl_stmt|;
 name|int
 name|all
@@ -891,6 +887,10 @@ name|type
 argument_list|,
 name|options
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -1041,6 +1041,10 @@ name|type
 argument_list|,
 name|options
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -1150,14 +1154,15 @@ specifier|extern
 name|int
 name|errno
 decl_stmt|;
-specifier|register
-name|int
-name|cnt
+name|union
+name|wait
+name|status
+decl_stmt|;
+name|pid_t
+name|pid
 decl_stmt|;
 name|int
 name|argc
-decl_stmt|,
-name|status
 decl_stmt|,
 name|i
 decl_stmt|;
@@ -1491,6 +1496,9 @@ condition|(
 name|verbose
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"exec: %s"
@@ -1507,10 +1515,15 @@ init|;
 name|i
 operator|<
 name|argc
+operator|-
+literal|1
 condition|;
 name|i
 operator|++
 control|)
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|" %s"
@@ -1521,6 +1534,9 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"\n"
@@ -1534,7 +1550,7 @@ condition|)
 break|break;
 if|if
 condition|(
-name|i
+name|pid
 operator|=
 name|vfork
 argument_list|()
@@ -1542,7 +1558,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|i
+name|pid
 operator|==
 operator|-
 literal|1
@@ -1563,7 +1579,7 @@ if|if
 condition|(
 name|waitpid
 argument_list|(
-name|i
+name|pid
 argument_list|,
 operator|&
 name|status
@@ -1624,7 +1640,11 @@ argument_list|)
 expr_stmt|;
 name|perror
 argument_list|(
-literal|""
+operator|(
+name|char
+operator|*
+operator|)
+name|NULL
 argument_list|)
 expr_stmt|;
 name|exit
@@ -1767,9 +1787,10 @@ operator|&
 name|ISBGRND
 condition|)
 name|exit
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
-else|else
 return|return
 operator|(
 literal|0
@@ -1798,13 +1819,18 @@ expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
-name|long
+specifier|register
+name|short
 name|flags
 decl_stmt|;
 end_decl_stmt
 
 begin_block
 block|{
+specifier|register
+name|int
+name|first
+decl_stmt|;
 if|if
 condition|(
 name|opflags
@@ -1812,6 +1838,9 @@ operator|&
 name|ISBGRND
 condition|)
 return|return;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
 literal|"%s on %s"
@@ -1823,13 +1852,44 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+operator|(
+name|flags
+operator|&
+name|MNT_VISFLAGMASK
+operator|)
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|first
+operator|=
+literal|0
+expr_stmt|;
+define|#
+directive|define
+name|PR
+parameter_list|(
+name|msg
+parameter_list|)
+value|(void)printf("%s%s", !first++ ? " (" : ", ", msg)
+if|if
+condition|(
 name|flags
 operator|&
 name|MNT_RDONLY
 condition|)
-name|printf
+name|PR
 argument_list|(
-literal|" (read-only)"
+literal|"read-only"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1838,9 +1898,9 @@ name|flags
 operator|&
 name|MNT_NOEXEC
 condition|)
-name|printf
+name|PR
 argument_list|(
-literal|" (noexec)"
+literal|"noexec"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1849,9 +1909,9 @@ name|flags
 operator|&
 name|MNT_NOSUID
 condition|)
-name|printf
+name|PR
 argument_list|(
-literal|" (nosuid)"
+literal|"nosuid"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1860,9 +1920,9 @@ name|flags
 operator|&
 name|MNT_NODEV
 condition|)
-name|printf
+name|PR
 argument_list|(
-literal|" (nodev)"
+literal|"nodev"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1871,9 +1931,9 @@ name|flags
 operator|&
 name|MNT_SYNCHRONOUS
 condition|)
-name|printf
+name|PR
 argument_list|(
-literal|" (synchronous)"
+literal|"synchronous"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1882,9 +1942,9 @@ name|flags
 operator|&
 name|MNT_QUOTA
 condition|)
-name|printf
+name|PR
 argument_list|(
-literal|" (with quotas)"
+literal|"with quotas"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1893,9 +1953,9 @@ name|flags
 operator|&
 name|MNT_LOCAL
 condition|)
-name|printf
+name|PR
 argument_list|(
-literal|" (local)"
+literal|"local"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1910,20 +1970,23 @@ name|flags
 operator|&
 name|MNT_EXRDONLY
 condition|)
-name|printf
+name|PR
 argument_list|(
-literal|" (NFS exported read-only)"
+literal|"NFS exported read-only"
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|PR
 argument_list|(
-literal|" (NFS exported)"
+literal|"NFS exported"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|printf
 argument_list|(
-literal|"\n"
+literal|")\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2049,7 +2112,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|long
+name|int
 modifier|*
 name|flagp
 decl_stmt|;
@@ -2066,16 +2129,14 @@ name|int
 name|negative
 decl_stmt|;
 name|char
-modifier|*
 name|optbuf
 index|[
 name|BUFSIZ
 index|]
-decl_stmt|,
-modifier|*
-name|strtok
-argument_list|()
 decl_stmt|;
+operator|(
+name|void
+operator|)
 name|strcpy
 argument_list|(
 name|optbuf
@@ -2100,6 +2161,10 @@ name|opt
 operator|=
 name|strtok
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|,
 literal|","
@@ -2302,6 +2367,10 @@ block|}
 block|}
 end_block
 
+begin_comment
+comment|/* ARGSUSED */
+end_comment
+
 begin_macro
 name|getufsopts
 argument_list|(
@@ -2319,7 +2388,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|long
+name|int
 modifier|*
 name|flagp
 decl_stmt|;
@@ -2368,11 +2437,6 @@ name|char
 modifier|*
 name|opt
 decl_stmt|;
-name|char
-modifier|*
-name|strtok
-parameter_list|()
-function_decl|;
 for|for
 control|(
 name|opt
@@ -2390,6 +2454,10 @@ name|opt
 operator|=
 name|strtok
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|,
 literal|","
@@ -2576,7 +2644,7 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-name|long
+name|short
 name|vfstype
 decl_stmt|;
 end_decl_stmt
@@ -2735,11 +2803,6 @@ specifier|register
 name|int
 name|i
 decl_stmt|;
-name|char
-modifier|*
-name|malloc
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|fslist
@@ -2812,11 +2875,14 @@ operator|*
 operator|)
 name|malloc
 argument_list|(
-operator|(
+call|(
+name|size_t
+call|)
+argument_list|(
 name|i
 operator|+
 literal|2
-operator|)
+argument_list|)
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -3778,6 +3844,10 @@ name|stat
 expr_stmt|;
 name|perror
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
 name|NULL
 argument_list|)
 expr_stmt|;
