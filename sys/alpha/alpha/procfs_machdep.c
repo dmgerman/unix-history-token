@@ -70,12 +70,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fs/procfs/procfs.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/vm.h>
 end_include
 
