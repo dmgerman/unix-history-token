@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	5.33 (Berkeley) %G% (with queueing)"
+literal|"@(#)queue.c	5.34 (Berkeley) %G% (with queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)queue.c	5.33 (Berkeley) %G% (without queueing)"
+literal|"@(#)queue.c	5.34 (Berkeley) %G% (without queueing)"
 decl_stmt|;
 end_decl_stmt
 
@@ -3413,7 +3413,7 @@ directive|ifdef
 name|LOCKF
 if|if
 condition|(
-name|flock
+name|lockf
 argument_list|(
 name|fileno
 argument_list|(
