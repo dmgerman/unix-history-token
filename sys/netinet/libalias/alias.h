@@ -4,7 +4,7 @@ comment|/*lint -save -library Flexelint comment for external headers */
 end_comment
 
 begin_comment
-comment|/*     Alias.h defines the outside world interfaces for the packet     aliasing software.      This software is placed into the public domain with no restrictions     on its distribution.      $Id: alias.h,v 1.7 1998/01/16 12:56:07 bde Exp $ */
+comment|/*     Alias.h defines the outside world interfaces for the packet     aliasing software.      This software is placed into the public domain with no restrictions     on its distribution.      $Id: alias.h,v 1.8 1998/04/19 21:42:05 brian Exp $ */
 end_comment
 
 begin_ifndef
@@ -191,6 +191,17 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|int
+name|PacketAliasPptp
+parameter_list|(
+name|struct
+name|in_addr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|struct
 name|alias_link
 modifier|*
@@ -298,161 +309,19 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*    In version 2.2, the function names were rationalized    to all be of the form PacketAlias...  These are the    old function names for backwards compatibility */
+comment|/* Transparent Proxying */
 end_comment
 
 begin_function_decl
 specifier|extern
 name|int
-name|SaveFragmentPtr
+name|PacketAliasProxyRule
 parameter_list|(
 name|char
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|GetNextFragmentPtr
-parameter_list|(
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|FragmentAliasIn
-parameter_list|(
-name|char
-modifier|*
-parameter_list|,
-name|char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|SetPacketAliasAddress
-parameter_list|(
-name|struct
-name|in_addr
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|InitPacketAlias
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|unsigned
-name|int
-name|SetPacketAliasMode
-parameter_list|(
-name|unsigned
-name|int
-parameter_list|,
-name|unsigned
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|PacketAliasIn2
-parameter_list|(
-name|char
-modifier|*
-parameter_list|,
-name|struct
-name|in_addr
-parameter_list|,
-name|int
-name|maxpacketsize
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|PacketAliasOut2
-parameter_list|(
-name|char
-modifier|*
-parameter_list|,
-name|struct
-name|in_addr
-parameter_list|,
-name|int
-name|maxpacketsize
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|int
-name|PacketAliasPermanentLink
-parameter_list|(
-name|struct
-name|in_addr
-parameter_list|,
-name|u_short
-parameter_list|,
-name|struct
-name|in_addr
-parameter_list|,
-name|u_short
-parameter_list|,
-name|u_short
-parameter_list|,
-name|u_char
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|u_short
-name|InternetChecksum
-parameter_list|(
-name|u_short
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Obsolete constant */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PKT_ALIAS_NEW_LINK
-value|5
-end_define
 
 begin_comment
 comment|/********************** Mode flags ********************/
@@ -507,7 +376,7 @@ value|0x08
 end_define
 
 begin_comment
-comment|/* If PKT_ALIAS_UNREGISTERED_ONLY is set, then only packets with with 	unregistered source addresses will be aliased (along with those 	of the ppp host maching itself.  Private addresses are those         in the following ranges:  		10.0.0.0     ->   10.255.255.255 		172.16.0.0   ->   172.31.255.255 		192.168.0.0  ->   192.168.255.255  */
+comment|/* If PKT_ALIAS_UNREGISTERED_ONLY is set, then only packets with with 	unregistered source addresses will be aliased (along with those 	of the ppp host maching itself.  Private addresses are those         in the following ranges: 		10.0.0.0     ->   10.255.255.255 		172.16.0.0   ->   172.31.255.255 		192.168.0.0  ->   192.168.255.255  */
 end_comment
 
 begin_define
@@ -549,6 +418,28 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* If PKT_ALIAS_PROXY_ONLY is set, then NAT will be disabled and only       transparent proxying performed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PKT_ALIAS_PROXY_ONLY
+value|0x40
+end_define
+
+begin_comment
+comment|/* If PKT_ALIAS_REVERSE is set, the actions of PacketAliasIn()       and PacketAliasOut() are reversed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PKT_ALIAS_REVERSE
+value|0x80
+end_define
 
 begin_comment
 comment|/* Return Codes */
