@@ -2697,7 +2697,7 @@ argument_list|(
 name|int
 argument_list|)
 decl_stmt|;
-name|int
+name|size_t
 name|i
 init|=
 literal|0
@@ -4436,7 +4436,7 @@ modifier|*
 name|var
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 for|for
@@ -8792,7 +8792,7 @@ name|Objid
 modifier|*
 name|obj_cur
 decl_stmt|;
-name|int
+name|size_t
 name|x
 decl_stmt|;
 name|int
