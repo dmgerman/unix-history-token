@@ -288,15 +288,46 @@ begin_comment
 comment|/* max number of types above */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_WEAK_SEEDING
+end_ifdef
+
 begin_define
 define|#
 directive|define
 name|NSHUFF
-value|100
+value|0
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !USE_WEAK_SEEDING */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NSHUFF
+value|50
 end_define
 
 begin_comment
-comment|/* to drop part of seed -> 1st value correlation */
+comment|/* to drop some "seed -> 1st value" linearity */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !USE_WEAK_SEEDING */
 end_comment
 
 begin_decl_stmt
