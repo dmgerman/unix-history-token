@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdbparam.h	7.7 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1988 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)kdbparam.h	7.8 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -56,7 +56,7 @@ name|ishiddenreg
 parameter_list|(
 name|p
 parameter_list|)
-value|((p)<=&reglist[8])
+value|((p)<=&kdbreglist[8])
 end_define
 
 begin_define
@@ -111,7 +111,7 @@ define|#
 directive|define
 name|clrsstep
 parameter_list|()
-value|(pcb.pcb_psl&= ~TBIT)
+value|(kdbpcb.pcb_psl&= ~TBIT)
 end_define
 
 begin_define
@@ -119,7 +119,7 @@ define|#
 directive|define
 name|setsstep
 parameter_list|()
-value|(pcb.pcb_psl |= TBIT)
+value|(kdbpcb.pcb_psl |= TBIT)
 end_define
 
 begin_define
@@ -139,7 +139,7 @@ name|getprevpc
 parameter_list|(
 name|fp
 parameter_list|)
-value|get((off_t)(fp)-8, DSP)
+value|kdbget((off_t)(fp)-8, DSP)
 end_define
 
 begin_comment
@@ -153,7 +153,7 @@ name|getprevframe
 parameter_list|(
 name|fp
 parameter_list|)
-value|(get((off_t)(fp), DSP)&~3)
+value|(kdbget((off_t)(fp), DSP)&~3)
 end_define
 
 begin_comment
@@ -167,7 +167,7 @@ name|getnargs
 parameter_list|(
 name|fp
 parameter_list|)
-value|(((get((off_t)(fp)-4, DSP)&0xffff)-4)/4)
+value|(((kdbget((off_t)(fp)-4, DSP)&0xffff)-4)/4)
 end_define
 
 begin_define
@@ -212,7 +212,7 @@ name|getsignalpc
 parameter_list|(
 name|fp
 parameter_list|)
-value|get((off_t)(fp)+44, DSP)
+value|kdbget((off_t)(fp)+44, DSP)
 end_define
 
 begin_comment
