@@ -1286,7 +1286,19 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
-comment|/*  	 * The dynamic loader may be called from a thread, we have 	 * limited amounts of stack available so we cannot use alloca(). 	 * 	 	 	 */
+comment|/* The relocation for the dynamic loader has already been done. */
+if|if
+condition|(
+name|obj
+operator|==
+name|obj_rtld
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/*  	 * The dynamic loader may be called from a thread, we have 	 * limited amounts of stack available so we cannot use alloca(). 	 */
 name|cache
 operator|=
 name|mmap
