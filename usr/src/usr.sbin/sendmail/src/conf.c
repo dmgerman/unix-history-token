@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)conf.c	8.196 (Berkeley) %G%"
+literal|"@(#)conf.c	8.197 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -3040,11 +3040,6 @@ name|defined
 argument_list|(
 name|BSD4_3
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|_AUX_SOURCE
-argument_list|)
 return|return
 name|signal
 argument_list|(
@@ -3629,6 +3624,27 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_AUX_SOURCE
+end_ifdef
+
+begin_decl_stmt
+name|struct
+name|nlist
+name|Nl
+index|[
+literal|2
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_decl_stmt
 name|struct
 name|nlist
@@ -3640,16 +3656,24 @@ block|{
 name|LA_AVENRUN
 block|}
 block|,
-define|#
-directive|define
-name|X_AVENRUN
-value|0
 block|{
 literal|0
 block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|X_AVENRUN
+value|0
+end_define
 
 begin_macro
 name|getla
@@ -3773,6 +3797,23 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_AUX_SOURCE
+name|strcpy
+argument_list|(
+name|Nl
+index|[
+name|X_AVENRUN
+index|]
+operator|.
+name|n_name
+argument_list|,
+name|LA_AVENRUN
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|_AIX3
