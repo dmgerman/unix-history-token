@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@jp.FreeBSD.org>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  * Copyright (c) 1997 Poul-Henning Kamp<phk@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.90 1999/07/10 18:08:48 iwasaki Exp $  */
+comment|/*  * APM (Advanced Power Management) BIOS Device Driver  *  * Copyright (c) 1994 UKAI, Fumitoshi.  * Copyright (c) 1994-1995 by HOSOKAWA, Tatsumi<hosokawa@jp.FreeBSD.org>  * Copyright (c) 1996 Nate Williams<nate@FreeBSD.org>  * Copyright (c) 1997 Poul-Henning Kamp<phk@FreeBSD.org>  *  * This software may be used, modified, copied, and distributed, in  * both source and binary form provided that the above copyright and  * these terms are retained. Under no circumstances is the author  * responsible for the proper functioning of this software, nor does  * the author assume any responsibility for damages incurred with its  * use.  *  * Sep, 1994	Implemented on FreeBSD 1.1.5.1R (Toshiba AVS001WD)  *  *	$Id: apm.c,v 1.91 1999/07/22 14:45:22 iwasaki Exp $  */
 end_comment
 
 begin_include
@@ -3179,7 +3179,7 @@ comment|/* device driver definitions */
 end_comment
 
 begin_comment
-comment|/*  * probe APM (dummy):  *  * APM probing routine is placed on locore.s and apm_init.S because  * this process forces the CPU to turn to real mode or V86 mode.  * Current version uses real mode, but in a future version, we want  * to use V86 mode in APM initialization.  *   * XXX If VM86 is defined, we do.  */
+comment|/*  * probe APM  */
 end_comment
 
 begin_function
@@ -4050,7 +4050,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Attach APM:  *  * Initialize APM driver (APM BIOS itself has been initialized in locore.s)  */
+comment|/*  * Attach APM:  *  * Initialize APM driver  */
 end_comment
 
 begin_function
