@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	if_imp.c	4.29	82/04/28	*/
+comment|/*	if_imp.c	4.30	82/05/02	*/
 end_comment
 
 begin_include
@@ -2251,9 +2251,6 @@ operator|)
 operator|)
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|notdef
 name|error
 operator|=
 name|hp
@@ -2262,15 +2259,9 @@ name|h_flags
 operator|&
 name|HF_DEAD
 condition|?
-name|EHOSTDEAD
+name|EHOSTDOWN
 else|:
 name|EHOSTUNREACH
-expr_stmt|;
-else|#
-directive|else
-name|error
-operator|=
-name|ENETUNREACH
 expr_stmt|;
 name|hp
 operator|->
@@ -2288,8 +2279,6 @@ expr_stmt|;
 goto|goto
 name|bad
 goto|;
-endif|#
-directive|endif
 block|}
 comment|/* 		 * If IMP would block, queue until RFNM 		 */
 if|if

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ip_icmp.c	4.15	82/04/25	*/
+comment|/*	ip_icmp.c	4.16	82/05/02	*/
 end_comment
 
 begin_include
@@ -71,7 +71,7 @@ begin_decl_stmt
 name|int
 name|icmpprintfs
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -988,7 +988,7 @@ begin_decl_stmt
 name|int
 name|generateicmpmsgs
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
