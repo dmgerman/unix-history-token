@@ -29,6 +29,15 @@ name|ptm_event
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|CTASSERT
+parameter_list|(
+name|foo
+parameter_list|)
+end_define
+
 begin_comment
 comment|/* bio.h */
 end_comment
@@ -396,8 +405,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|M_ZERO
+name|M_NOWAIT
 value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_ZERO
+value|2
 end_define
 
 begin_decl_stmt
