@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)fmt.c	5.2	%G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)fmt.c	5.3	%G%  */
 end_comment
 
 begin_comment
@@ -107,6 +107,24 @@ begin_ifdef
 ifdef|#
 directive|ifdef
 name|tahoe
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SYLMX
+value|300
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|hp300
 end_ifdef
 
 begin_define
