@@ -1223,7 +1223,7 @@ name|RES_DEBUG
 condition|)
 name|printf
 argument_list|(
-literal|"res_search static buffer too small"
+literal|"res_search static buffer too small\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1485,7 +1485,7 @@ name|RES_DEBUG
 condition|)
 name|printf
 argument_list|(
-literal|"res_search static buffer too small"
+literal|"res_search static buffer too small\n"
 argument_list|)
 expr_stmt|;
 endif|#
