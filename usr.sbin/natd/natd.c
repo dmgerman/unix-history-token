@@ -4657,7 +4657,7 @@ operator|!=
 name|str
 condition|)
 return|return
-name|htons
+name|htonl
 argument_list|(
 name|port
 argument_list|)
