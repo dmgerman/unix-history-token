@@ -31,7 +31,7 @@ name|char
 modifier|*
 name|SccsId
 init|=
-literal|"@(#)aux.c	2.3 %G%"
+literal|"@(#)aux.c	2.4 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1569,6 +1569,10 @@ name|int
 name|s_cond
 decl_stmt|;
 comment|/* Saved state of conditionals */
+name|int
+name|s_loading
+decl_stmt|;
+comment|/* Loading .mailrc, etc. */
 block|}
 name|sstack
 index|[
@@ -1695,6 +1699,19 @@ operator|.
 name|s_cond
 operator|=
 name|cond
+expr_stmt|;
+name|sstack
+index|[
+name|ssp
+index|]
+operator|.
+name|s_loading
+operator|=
+name|loading
+expr_stmt|;
+name|loading
+operator|=
+literal|0
 expr_stmt|;
 name|cond
 operator|=
@@ -1830,6 +1847,15 @@ index|]
 operator|.
 name|s_cond
 expr_stmt|;
+name|loading
+operator|=
+name|sstack
+index|[
+name|ssp
+index|]
+operator|.
+name|s_loading
+expr_stmt|;
 name|input
 operator|=
 name|sstack
@@ -1848,7 +1874,7 @@ literal|0
 condition|)
 name|sourcing
 operator|=
-literal|0
+name|loading
 expr_stmt|;
 return|return
 operator|(
