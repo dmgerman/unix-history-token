@@ -1156,6 +1156,16 @@ argument_list|(
 literal|"getting screensaver info"
 argument_list|)
 expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"%s: No such screensaver\n"
+argument_list|,
+name|opt
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
