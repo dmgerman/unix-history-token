@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pl_1.c	1.11 83/10/14"
+literal|"@(#)pl_1.c	1.12 83/10/14"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,6 +45,14 @@ argument_list|()
 decl_stmt|,
 name|child
 argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|isplayer
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -213,13 +221,19 @@ init|;
 condition|;
 control|)
 block|{
-name|prompt
-argument_list|()
-expr_stmt|;
 switch|switch
 condition|(
 name|sgetch
 argument_list|(
+literal|"~\b"
+argument_list|,
+operator|(
+expr|struct
+name|ship
+operator|*
+operator|)
+literal|0
+argument_list|,
 literal|0
 argument_list|)
 condition|)

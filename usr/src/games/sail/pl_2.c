@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pl_2.c	1.5 83/10/10"
+literal|"@(#)pl_2.c	1.6 83/10/14"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,9 +31,9 @@ define|#
 directive|define
 name|turnfirst
 parameter_list|(
-name|buf
+name|x
 parameter_list|)
-value|(*buf == 'r' || *buf == 'l')
+value|(*x == 'r' || *x == 'l')
 end_define
 
 begin_macro
@@ -149,6 +149,12 @@ decl_stmt|,
 name|dir
 decl_stmt|;
 name|char
+name|prompt
+index|[
+literal|60
+index|]
+decl_stmt|;
+name|char
 name|buf
 index|[
 literal|60
@@ -183,16 +189,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|Signal
+name|sprintf
 argument_list|(
-literal|"move (%d,%c%d): "
+name|prompt
 argument_list|,
-operator|(
-expr|struct
-name|ship
-operator|*
-operator|)
-literal|0
+literal|"move (%d,%c%d): "
 argument_list|,
 name|ma
 argument_list|,
@@ -207,21 +208,13 @@ argument_list|)
 expr_stmt|;
 name|sgetstr
 argument_list|(
+name|prompt
+argument_list|,
 name|buf
 argument_list|,
 sizeof|sizeof
 name|buf
 argument_list|)
-expr_stmt|;
-name|buf
-index|[
-sizeof|sizeof
-name|movebuf
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
 expr_stmt|;
 name|dir
 operator|=
@@ -773,6 +766,9 @@ name|men
 init|=
 literal|0
 decl_stmt|;
+name|char
+name|c
+decl_stmt|;
 name|crew
 index|[
 literal|0
@@ -1035,11 +1031,15 @@ literal|2
 index|]
 condition|)
 block|{
-name|Signal
+name|c
+operator|=
+name|sgetch
 argument_list|(
 literal|"How many more to board the %s (%c%c)? "
 argument_list|,
 name|sp
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|parties
@@ -1049,6 +1049,8 @@ argument_list|,
 name|sp
 argument_list|,
 literal|0
+argument_list|,
+name|c
 argument_list|)
 expr_stmt|;
 block|}
@@ -1077,11 +1079,15 @@ literal|2
 index|]
 condition|)
 block|{
-name|Signal
+name|c
+operator|=
+name|sgetch
 argument_list|(
 literal|"Crew sections to board the %s (%c%c) (3 max) ?"
 argument_list|,
 name|sp
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|parties
@@ -1091,6 +1097,8 @@ argument_list|,
 name|sp
 argument_list|,
 literal|0
+argument_list|,
+name|c
 argument_list|)
 expr_stmt|;
 block|}
@@ -1103,7 +1111,9 @@ literal|2
 index|]
 condition|)
 block|{
-name|Signal
+name|c
+operator|=
+name|sgetch
 argument_list|(
 literal|"How many sections to repel boarders? "
 argument_list|,
@@ -1113,6 +1123,8 @@ name|ship
 operator|*
 operator|)
 literal|0
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|parties
@@ -1122,6 +1134,8 @@ argument_list|,
 name|ms
 argument_list|,
 literal|1
+argument_list|,
+name|c
 argument_list|)
 expr_stmt|;
 block|}
@@ -1136,6 +1150,8 @@ argument_list|,
 name|to
 argument_list|,
 name|isdefense
+argument_list|,
+name|buf
 argument_list|)
 specifier|register
 expr|struct
@@ -1160,6 +1176,12 @@ name|isdefense
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|char
+name|buf
+decl_stmt|;
+end_decl_stmt
+
 begin_block
 block|{
 specifier|register
@@ -1174,9 +1196,6 @@ name|struct
 name|BP
 modifier|*
 name|ptr
-decl_stmt|;
-name|int
-name|buf
 decl_stmt|;
 name|int
 name|temp
@@ -1206,13 +1225,6 @@ name|crew
 index|[
 name|k
 index|]
-expr_stmt|;
-name|buf
-operator|=
-name|sgetch
-argument_list|(
-literal|1
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1646,8 +1658,8 @@ end_macro
 
 begin_block
 block|{
-name|int
-name|buf
+name|char
+name|c
 decl_stmt|;
 name|char
 modifier|*
@@ -1690,7 +1702,9 @@ name|ptr
 operator|=
 name|mc
 expr_stmt|;
-name|Signal
+name|c
+operator|=
+name|sgetch
 argument_list|(
 literal|"Repair (hull, guns, rigging)? "
 argument_list|,
@@ -1700,18 +1714,13 @@ name|ship
 operator|*
 operator|)
 literal|0
-argument_list|)
-expr_stmt|;
-name|buf
-operator|=
-name|sgetch
-argument_list|(
+argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|buf
+name|c
 condition|)
 block|{
 case|case
@@ -1782,7 +1791,7 @@ literal|0
 expr_stmt|;
 switch|switch
 condition|(
-name|buf
+name|c
 condition|)
 block|{
 case|case
@@ -1822,7 +1831,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 else|else
-name|buf
+name|c
 operator|=
 literal|0
 expr_stmt|;
@@ -1881,7 +1890,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 else|else
-name|buf
+name|c
 operator|=
 literal|0
 expr_stmt|;
@@ -1927,7 +1936,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 else|else
-name|buf
+name|c
 operator|=
 literal|0
 expr_stmt|;
@@ -2040,7 +2049,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 else|else
-name|buf
+name|c
 operator|=
 literal|0
 expr_stmt|;
@@ -2049,7 +2058,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|buf
+name|c
 condition|)
 name|Signal
 argument_list|(
@@ -2119,8 +2128,8 @@ end_macro
 
 begin_block
 block|{
-name|int
-name|buf
+name|char
+name|c
 decl_stmt|;
 specifier|register
 name|loadL
@@ -2174,7 +2183,9 @@ operator|!
 name|loadR
 condition|)
 block|{
-name|Signal
+name|c
+operator|=
+name|sgetch
 argument_list|(
 literal|"Load which broadside (left or right)? "
 argument_list|,
@@ -2184,18 +2195,13 @@ name|ship
 operator|*
 operator|)
 literal|0
-argument_list|)
-expr_stmt|;
-name|buf
-operator|=
-name|sgetch
-argument_list|(
+argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|buf
+name|c
 operator|==
 literal|'r'
 condition|)
@@ -2222,7 +2228,9 @@ operator|!
 name|loadR
 condition|)
 block|{
-name|Signal
+name|c
+operator|=
+name|sgetch
 argument_list|(
 literal|"Reload with (round, double, chain, grape)? "
 argument_list|,
@@ -2232,18 +2240,13 @@ name|ship
 operator|*
 operator|)
 literal|0
-argument_list|)
-expr_stmt|;
-name|buf
-operator|=
-name|sgetch
-argument_list|(
+argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
-name|buf
+name|c
 condition|)
 block|{
 case|case

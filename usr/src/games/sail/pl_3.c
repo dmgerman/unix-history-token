@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)pl_3.c	1.3 83/10/14"
+literal|"@(#)pl_3.c	1.4 83/10/14"
 decl_stmt|;
 end_decl_stmt
 
@@ -463,7 +463,9 @@ operator|<
 literal|6
 condition|)
 block|{
-name|Signal
+switch|switch
+condition|(
+name|sgetch
 argument_list|(
 literal|"Aim for hull or rigging? "
 argument_list|,
@@ -473,12 +475,7 @@ name|ship
 operator|*
 operator|)
 literal|0
-argument_list|)
-expr_stmt|;
-switch|switch
-condition|(
-name|sgetch
-argument_list|(
+argument_list|,
 literal|1
 argument_list|)
 condition|)
@@ -521,7 +518,9 @@ block|}
 block|}
 else|else
 block|{
-name|Signal
+if|if
+condition|(
+name|sgetch
 argument_list|(
 literal|"Fire? "
 argument_list|,
@@ -531,12 +530,7 @@ name|ship
 operator|*
 operator|)
 literal|0
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|sgetch
-argument_list|(
+argument_list|,
 literal|1
 argument_list|)
 operator|==
@@ -1033,34 +1027,32 @@ name|roll
 argument_list|)
 expr_stmt|;
 block|}
-name|Scroll2
-argument_list|()
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|wprintw
+name|Signal
 argument_list|(
-name|scroll_w
-argument_list|,
 literal|"Damage inflicted on the %s:"
+argument_list|,
+operator|(
+expr|struct
+name|ship
+operator|*
+operator|)
+literal|0
 argument_list|,
 name|closest
 operator|->
 name|shipname
 argument_list|)
 expr_stmt|;
-name|Scroll
-argument_list|()
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|wprintw
+name|Signal
 argument_list|(
-name|scroll_w
-argument_list|,
 literal|"\t%d HULL, %d GUNS, %d CREW, %d RIGGING"
+argument_list|,
+operator|(
+expr|struct
+name|ship
+operator|*
+operator|)
+literal|0
 argument_list|,
 name|hhits
 argument_list|,
@@ -1189,6 +1181,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|r
 operator|<
 literal|0
@@ -1196,6 +1189,7 @@ operator|||
 name|r
 operator|>
 literal|1
+operator|)
 operator|&&
 operator|!
 name|grappled2
@@ -1206,17 +1200,14 @@ name|sp
 argument_list|)
 condition|)
 continue|continue;
-name|Signal
-argument_list|(
-literal|"Attempt to grapple or ungrapple %s (%c%c): "
-argument_list|,
-name|sp
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|sgetch
 argument_list|(
+literal|"Attempt to grapple or ungrapple %s (%c%c): "
+argument_list|,
+name|sp
+argument_list|,
 literal|1
 argument_list|)
 condition|)
@@ -1554,17 +1545,14 @@ name|s
 operator|->
 name|toship
 expr_stmt|;
-name|Signal
-argument_list|(
-literal|"Attempt to unfoul with the %s (%c%c)? "
-argument_list|,
-name|to
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|sgetch
 argument_list|(
+literal|"Attempt to unfoul with the %s (%c%c)? "
+argument_list|,
+name|to
+argument_list|,
 literal|1
 argument_list|)
 operator|==
@@ -1651,20 +1639,10 @@ specifier|register
 name|char
 name|c
 decl_stmt|;
-name|Signal
+name|sgetstr
 argument_list|(
 literal|"What ship? "
 argument_list|,
-operator|(
-expr|struct
-name|ship
-operator|*
-operator|)
-literal|0
-argument_list|)
-expr_stmt|;
-name|sgetstr
-argument_list|(
 name|buf
 argument_list|,
 sizeof|sizeof
