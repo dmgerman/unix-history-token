@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)CONFIG.c	5.2 (Berkeley) %G%"
+literal|"@(#)CONFIG.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -51,7 +51,7 @@ name|char
 modifier|*
 name|err_file
 init|=
-literal|"LIBDIR/ERRORSTRINGS"
+literal|"LIBDATA/ERRORSTRINGS"
 decl_stmt|;
 end_decl_stmt
 
@@ -61,7 +61,7 @@ name|err_pathlen
 init|=
 sizeof|sizeof
 argument_list|(
-literal|"LIBDIR/"
+literal|"LIBDATA/"
 argument_list|)
 operator|-
 literal|1
@@ -77,7 +77,7 @@ name|char
 modifier|*
 name|how_file
 init|=
-literal|"LIBDIR/HOWFILE\0"
+literal|"LIBDATA/HOWFILE\0"
 decl_stmt|;
 end_decl_stmt
 
@@ -87,7 +87,7 @@ name|how_pathlen
 init|=
 sizeof|sizeof
 argument_list|(
-literal|"LIBDIR/"
+literal|"LIBDATA/"
 argument_list|)
 operator|-
 literal|1
@@ -109,7 +109,7 @@ name|char
 modifier|*
 name|px_header
 init|=
-literal|"LIBDIR/px_header"
+literal|"LIBEXEC/px_header"
 decl_stmt|;
 end_decl_stmt
 
