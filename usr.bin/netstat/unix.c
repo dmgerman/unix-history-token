@@ -20,7 +20,7 @@ name|char
 name|unix_c_rcsid
 index|[]
 init|=
-literal|"$Id: unix.c,v 1.3 1993/11/17 20:19:25 wollman Exp $"
+literal|"$Id: unix.c,v 1.4 1994/01/23 15:06:14 davidg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -680,7 +680,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Active UNIX domain sockets\n"
+literal|"Active local domain sockets\n"
 argument_list|)
 expr_stmt|;
 name|printf
