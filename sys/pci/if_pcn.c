@@ -2338,6 +2338,27 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+comment|/* Initialize our mutex. */
+name|mtx_init
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|pcn_mtx
+argument_list|,
+name|device_get_nameunit
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+name|PCN_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Handle power management nonsense. 	 */
 name|command
 operator|=
@@ -2789,27 +2810,6 @@ goto|goto
 name|fail
 goto|;
 block|}
-comment|/* Initialize our mutex. */
-name|mtx_init
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|pcn_mtx
-argument_list|,
-name|device_get_nameunit
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
-name|PCN_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 comment|/* Reset the adapter. */
 name|pcn_reset
 argument_list|(
