@@ -426,6 +426,8 @@ comment|/* call out to any cpu-becoming-idle events */
 name|EVENTHANDLER_FAST_INVOKE
 argument_list|(
 name|idle_event
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
