@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_syscalls.c	7.25 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)lfs_syscalls.c	7.26 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -838,7 +838,13 @@ name|bp
 operator|->
 name|b_flags
 operator|&
+operator|(
+name|B_DELWRI
+operator||
+name|B_DONE
+operator||
 name|B_CACHE
+operator|)
 operator|)
 operator|&&
 operator|(
