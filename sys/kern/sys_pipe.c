@@ -5660,6 +5660,7 @@ name|error
 operator|=
 name|ENOTTY
 expr_stmt|;
+break|break;
 block|}
 name|PIPE_UNLOCK
 argument_list|(
