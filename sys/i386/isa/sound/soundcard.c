@@ -30,25 +30,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_kern.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_param.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/pmap.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_extern.h>
 end_include
 
 begin_include
@@ -60,19 +42,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/isa/sound/dev_table.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<i386/isa/isa_device.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<i386/isa/isa.h>
 end_include
 
 begin_comment
