@@ -424,6 +424,9 @@ if|if
 condition|(
 operator|!
 name|p
+operator|||
+operator|!
+name|p
 operator|->
 name|p_prison
 condition|)
