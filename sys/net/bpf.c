@@ -4397,6 +4397,16 @@ decl_stmt|;
 name|u_int
 name|slen
 decl_stmt|;
+comment|/* 	 * Lockless read to avoid cost of locking the interface if there are 	 * no descriptors attached. 	 */
+if|if
+condition|(
+name|bp
+operator|->
+name|bif_dlist
+operator|==
+name|NULL
+condition|)
+return|return;
 name|BPFIF_LOCK
 argument_list|(
 name|bp
@@ -4643,6 +4653,16 @@ name|pktlen
 decl_stmt|,
 name|slen
 decl_stmt|;
+comment|/* 	 * Lockless read to avoid cost of locking the interface if there are 	 * no descriptors attached. 	 */
+if|if
+condition|(
+name|bp
+operator|->
+name|bif_dlist
+operator|==
+name|NULL
+condition|)
+return|return;
 name|pktlen
 operator|=
 name|m_length
@@ -4852,6 +4872,16 @@ name|pktlen
 decl_stmt|,
 name|slen
 decl_stmt|;
+comment|/* 	 * Lockless read to avoid cost of locking the interface if there are 	 * no descriptors attached. 	 */
+if|if
+condition|(
+name|bp
+operator|->
+name|bif_dlist
+operator|==
+name|NULL
+condition|)
+return|return;
 name|pktlen
 operator|=
 name|m_length
