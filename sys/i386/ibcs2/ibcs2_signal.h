@@ -345,28 +345,28 @@ begin_define
 define|#
 directive|define
 name|IBCS2_SIG_DFL
-value|(ibcs2_sig_t)(0)
+value|((ibcs2_sig_t)0)
 end_define
 
 begin_define
 define|#
 directive|define
 name|IBCS2_SIG_ERR
-value|(ibcs2_sig_t)(-1)
+value|((ibcs2_sig_t)-1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|IBCS2_SIG_IGN
-value|(ibcs2_sig_t)(1)
+value|((ibcs2_sig_t)1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|IBCS2_SIG_HOLD
-value|(ibcs2_sig_t)(2)
+value|((ibcs2_sig_t)2)
 end_define
 
 begin_define
