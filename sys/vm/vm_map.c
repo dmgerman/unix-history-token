@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_map.c	8.3 (Berkeley) 1/12/94  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_map.c,v 1.147 1999/02/03 01:57:16 dillon Exp $  */
+comment|/*  * Copyright (c) 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * The Mach Operating System project at Carnegie-Mellon University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	from: @(#)vm_map.c	8.3 (Berkeley) 1/12/94  *  *  * Copyright (c) 1987, 1990 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Avadis Tevanian, Jr., Michael Wayne Young  *  * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *  * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND  * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *  * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  *  * $Id: vm_map.c,v 1.148 1999/02/07 21:48:22 dillon Exp $  */
 end_comment
 
 begin_comment
@@ -1225,7 +1225,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_map_insert:  *  *	Inserts the given whole VM object into the target  *	map at the specified address range.  The object's  *	size should match that of the address range.  *  *	Requires that the map be locked, and leaves it so.  */
+comment|/*  *	vm_map_insert:  *  *	Inserts the given whole VM object into the target  *	map at the specified address range.  The object's  *	size should match that of the address range.  *  *	Requires that the map be locked, and leaves it so.  *  *	If object is non-NULL, ref count must be bumped by caller  *	prior to making call to account for the new entry.  */
 end_comment
 
 begin_function
@@ -1266,12 +1266,6 @@ decl_stmt|;
 name|vm_map_entry_t
 name|temp_entry
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|vm_object_t prev_object;
-endif|#
-directive|endif
 name|u_char
 name|protoeflags
 decl_stmt|;
@@ -1411,15 +1405,53 @@ name|protoeflags
 operator||=
 name|MAP_ENTRY_NOFAULT
 expr_stmt|;
-comment|/* 	 * See if we can avoid creating a new entry by extending one of our 	 * neighbors.  Or at least extend the object. 	 */
+if|if
+condition|(
+name|object
+condition|)
+block|{
+comment|/* 		 * When object is non-NULL, it could be shared with another 		 * process.  We have to set or clear OBJ_ONEMAPPING  		 * appropriately. 		 */
 if|if
 condition|(
 operator|(
 name|object
-operator|==
-name|NULL
+operator|->
+name|ref_count
+operator|>
+literal|1
 operator|)
-operator|&&
+operator|||
+operator|(
+name|object
+operator|->
+name|shadow_count
+operator|!=
+literal|0
+operator|)
+condition|)
+block|{
+name|vm_object_clear_flag
+argument_list|(
+name|object
+argument_list|,
+name|OBJ_ONEMAPPING
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|vm_object_set_flag
+argument_list|(
+name|object
+argument_list|,
+name|OBJ_ONEMAPPING
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
 operator|(
 name|prev_entry
 operator|!=
@@ -1553,7 +1585,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* 			 * Coalesced the two objects.  Can we extend the 			 * previous map entry to include the new range? 			 */
+comment|/* 			 * We were able to extend the object.  Determine if we 			 * can extend the previous map entry to include the  			 * new range as well. 			 */
 if|if
 condition|(
 operator|(
@@ -1599,21 +1631,13 @@ name|end
 operator|=
 name|end
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* 				 * (no longer applies) 				 */
-block|if ((cow& MAP_NOFAULT) == 0) { 					prev_object = prev_entry->object.vm_object; 					default_pager_convert_to_swapq(prev_object); 				}
-endif|#
-directive|endif
 return|return
 operator|(
 name|KERN_SUCCESS
 operator|)
 return|;
 block|}
-else|else
-block|{
+comment|/* 			 * If we can extend the object but cannot extend the 			 * map entry, we have to create a new map entry.  We 			 * must bump the ref count on the extended object to 			 * account for it. 			 */
 name|object
 operator|=
 name|prev_entry
@@ -1645,7 +1669,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-block|}
+comment|/* 	 * NOTE: if conditionals fail, object can be NULL here.  This occurs 	 * in things like the buffer map where we manage kva but do not manage 	 * backing objects. 	 */
 comment|/* 	 * Create a new entry 	 */
 name|new_entry
 operator|=
@@ -1692,49 +1716,6 @@ name|avail_ssize
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-name|object
-condition|)
-block|{
-if|if
-condition|(
-operator|(
-name|object
-operator|->
-name|ref_count
-operator|>
-literal|1
-operator|)
-operator|||
-operator|(
-name|object
-operator|->
-name|shadow_count
-operator|!=
-literal|0
-operator|)
-condition|)
-block|{
-name|vm_object_clear_flag
-argument_list|(
-name|object
-argument_list|,
-name|OBJ_ONEMAPPING
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|vm_object_set_flag
-argument_list|(
-name|object
-argument_list|,
-name|OBJ_ONEMAPPING
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 if|if
 condition|(
 name|map
@@ -1816,13 +1797,6 @@ name|first_free
 operator|=
 name|new_entry
 expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|/* 	 * (no longer applies) 	 */
-block|default_pager_convert_to_swapq(object);
-endif|#
-directive|endif
 return|return
 operator|(
 name|KERN_SUCCESS
@@ -2798,7 +2772,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_map_find finds an unallocated region in the target address  *	map with the given length.  The search is defined to be  *	first-fit from the specified address; the region found is  *	returned in the same parameter.  *  */
+comment|/*  *	vm_map_find finds an unallocated region in the target address  *	map with the given length.  The search is defined to be  *	first-fit from the specified address; the region found is  *	returned in the same parameter.  *  *	If object is non-NULL, ref count must be bumped by caller  *	prior to making call to account for the new entry.  */
 end_comment
 
 begin_function
