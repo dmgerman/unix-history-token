@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  Written by Paul Popelka (paulp@uts.amdahl.com)  *  *  You can do anything you want with this software,  *    just don't say you wrote it,  *    and don't remove this notice.  *  *  This software is provided "as is".  *  *  The author supplies this software to be publicly  *  redistributed on the understanding that the author  *  is not responsible for the correct functioning of  *  this software in any circumstances and is not liable  *  for any damages caused by this software.  *  *  October 1992  *  *	$Id: pcfs_vnops.c,v 1.3 1993/11/25 01:37:14 wollman Exp $  */
+comment|/*  *  Written by Paul Popelka (paulp@uts.amdahl.com)  *  *  You can do anything you want with this software,  *    just don't say you wrote it,  *    and don't remove this notice.  *  *  This software is provided "as is".  *  *  The author supplies this software to be publicly  *  redistributed on the understanding that the author  *  is not responsible for the correct functioning of  *  this software in any circumstances and is not liable  *  for any damages caused by this software.  *  *  October 1992  *  *	$Id: pcfs_vnops.c,v 1.4 1993/12/19 00:54:32 wollman Exp $  */
 end_comment
 
 begin_include
@@ -293,6 +293,20 @@ condition|?
 literal|0
 else|:
 name|ATTR_READONLY
+expr_stmt|;
+if|if
+condition|(
+name|vap
+operator|->
+name|va_mode
+operator|&
+name|VEXEC
+condition|)
+name|ndirp
+operator|->
+name|deAttributes
+operator||=
+name|ATTR_HIDDEN
 expr_stmt|;
 name|ndirp
 operator|->
@@ -838,9 +852,29 @@ operator|&
 name|ATTR_READONLY
 operator|)
 condition|?
-literal|0555
+literal|0444
 else|:
-literal|0777
+literal|0666
+expr_stmt|;
+if|if
+condition|(
+name|dep
+operator|->
+name|de_Attributes
+operator|&
+name|ATTR_HIDDEN
+operator|||
+name|dep
+operator|->
+name|de_Attributes
+operator|&
+name|ATTR_DIRECTORY
+condition|)
+name|vap
+operator|->
+name|va_mode
+operator||=
+literal|0111
 expr_stmt|;
 if|if
 condition|(
@@ -1376,7 +1410,35 @@ operator|)
 name|VNOVAL
 condition|)
 block|{
-comment|/* We ignore the read and execute bits */
+comment|/* We ignore the read bits */
+if|if
+condition|(
+name|vap
+operator|->
+name|va_mode
+operator|&
+name|VEXEC
+operator|&&
+name|vp
+operator|->
+name|v_type
+operator|!=
+name|VDIR
+condition|)
+name|dep
+operator|->
+name|de_Attributes
+operator||=
+name|ATTR_HIDDEN
+expr_stmt|;
+else|else
+name|dep
+operator|->
+name|de_Attributes
+operator|&=
+operator|~
+name|ATTR_HIDDEN
+expr_stmt|;
 if|if
 condition|(
 name|vap
