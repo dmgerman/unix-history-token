@@ -1102,7 +1102,7 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
-name|SLIST_FIRST
+name|STAILQ_FIRST
 argument_list|(
 name|rl
 argument_list|)

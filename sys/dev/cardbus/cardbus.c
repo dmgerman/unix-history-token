@@ -526,7 +526,7 @@ decl_stmt|;
 name|int
 name|type
 decl_stmt|;
-name|SLIST_FOREACH
+name|STAILQ_FOREACH
 argument_list|(
 argument|rle
 argument_list|,
@@ -896,7 +896,7 @@ name|count
 operator|=
 literal|0
 expr_stmt|;
-name|SLIST_FOREACH
+name|STAILQ_FOREACH
 argument_list|(
 argument|rle
 argument_list|,
@@ -942,7 +942,7 @@ name|count
 operator|=
 literal|0
 expr_stmt|;
-name|SLIST_FOREACH
+name|STAILQ_FOREACH
 argument_list|(
 argument|rle
 argument_list|,
@@ -2910,7 +2910,7 @@ modifier|*
 name|rle
 decl_stmt|;
 comment|/* Free all allocated resources */
-name|SLIST_FOREACH
+name|STAILQ_FOREACH
 argument_list|(
 argument|rle
 argument_list|,

@@ -5160,6 +5160,14 @@ argument_list|,
 name|dinfo
 argument_list|)
 expr_stmt|;
+name|resource_list_init
+argument_list|(
+operator|&
+name|dinfo
+operator|->
+name|resources
+argument_list|)
+expr_stmt|;
 name|pci_cfg_save
 argument_list|(
 name|dinfo
@@ -5841,8 +5849,6 @@ argument_list|(
 name|dinfo
 argument_list|)
 expr_stmt|;
-comment|/*XXX???*/
-comment|/* resource_list_init(&dinfo->cfg.resources); */
 if|if
 condition|(
 name|bootverbose

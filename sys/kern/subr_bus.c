@@ -8966,7 +8966,7 @@ modifier|*
 name|rl
 parameter_list|)
 block|{
-name|SLIST_INIT
+name|STAILQ_INIT
 argument_list|(
 name|rl
 argument_list|)
@@ -8998,7 +8998,7 @@ condition|(
 operator|(
 name|rle
 operator|=
-name|SLIST_FIRST
+name|STAILQ_FIRST
 argument_list|(
 name|rl
 argument_list|)
@@ -9018,7 +9018,7 @@ argument_list|(
 literal|"resource_list_free: resource entry is busy"
 argument_list|)
 expr_stmt|;
-name|SLIST_REMOVE_HEAD
+name|STAILQ_REMOVE_HEAD
 argument_list|(
 name|rl
 argument_list|,
@@ -9184,7 +9184,7 @@ argument_list|(
 literal|"resource_list_add: can't record entry"
 argument_list|)
 expr_stmt|;
-name|SLIST_INSERT_HEAD
+name|STAILQ_INSERT_TAIL
 argument_list|(
 name|rl
 argument_list|,
@@ -9271,7 +9271,7 @@ name|resource_list_entry
 modifier|*
 name|rle
 decl_stmt|;
-name|SLIST_FOREACH
+name|STAILQ_FOREACH
 argument_list|(
 argument|rle
 argument_list|,
@@ -9360,7 +9360,7 @@ argument_list|(
 literal|"resource_list_delete: resource has not been released"
 argument_list|)
 expr_stmt|;
-name|SLIST_REMOVE
+name|STAILQ_REMOVE
 argument_list|(
 name|rl
 argument_list|,
@@ -9830,7 +9830,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Yes, this is kinda cheating */
-name|SLIST_FOREACH
+name|STAILQ_FOREACH
 argument_list|(
 argument|rle
 argument_list|,

@@ -2507,7 +2507,7 @@ name|child
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Claim any unallocated resources to keep other 			 * devices from using them. 			 */
-name|SLIST_FOREACH
+name|STAILQ_FOREACH
 argument_list|(
 argument|rle
 argument_list|,
@@ -2724,7 +2724,7 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
-name|SLIST_FIRST
+name|STAILQ_FIRST
 argument_list|(
 name|rl
 argument_list|)
@@ -3619,7 +3619,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* 		 * Claim any unallocated resources to keep other 		 * devices from using them. 		 */
-name|SLIST_FOREACH
+name|STAILQ_FOREACH
 argument_list|(
 argument|rle
 argument_list|,
@@ -3791,7 +3791,7 @@ argument_list|)
 condition|)
 continue|continue;
 comment|/* 		 * Free resources which we were holding on behalf of 		 * the device. 		 */
-name|SLIST_FOREACH
+name|STAILQ_FOREACH
 argument_list|(
 argument|rle
 argument_list|,
@@ -3864,7 +3864,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* 			 * Claim any unallocated resources to keep other 			 * devices from using them. 			 */
-name|SLIST_FOREACH
+name|STAILQ_FOREACH
 argument_list|(
 argument|rle
 argument_list|,

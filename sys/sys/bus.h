@@ -399,7 +399,7 @@ begin_struct
 struct|struct
 name|resource_list_entry
 block|{
-name|SLIST_ENTRY
+name|STAILQ_ENTRY
 argument_list|(
 argument|resource_list_entry
 argument_list|)
@@ -436,7 +436,7 @@ struct|;
 end_struct
 
 begin_expr_stmt
-name|SLIST_HEAD
+name|STAILQ_HEAD
 argument_list|(
 name|resource_list
 argument_list|,
