@@ -22,13 +22,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|<machine/ansi.h>
+file|<sys/cdefs.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
+file|<machine/ansi.h>
 end_include
 
 begin_ifdef
@@ -48,6 +48,30 @@ begin_undef
 undef|#
 directive|undef
 name|_BSD_SIZE_T_
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_BSD_SOCKLEN_T_
+end_ifdef
+
+begin_typedef
+typedef|typedef
+name|_BSD_SOCKLEN_T_
+name|socklen_t
+typedef|;
+end_typedef
+
+begin_undef
+undef|#
+directive|undef
+name|_BSD_SOCKLEN_T_
 end_undef
 
 begin_endif
@@ -683,34 +707,6 @@ directive|define
 name|SCOPE_DELIMITER
 value|'%'
 end_define
-
-begin_comment
-comment|/*  * data types - basically forward decl for getnameinfo()  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_BSD_SOCKLEN_T_
-end_ifdef
-
-begin_typedef
-typedef|typedef
-name|_BSD_SOCKLEN_T_
-name|socklen_t
-typedef|;
-end_typedef
-
-begin_undef
-undef|#
-directive|undef
-name|_BSD_SOCKLEN_T_
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|__BEGIN_DECLS
