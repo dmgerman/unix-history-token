@@ -473,24 +473,42 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IFCAP_HWCSUM
+name|IFCAP_RXCSUM
 value|0x0001
 end_define
 
 begin_comment
-comment|/* can do hardware checksums */
+comment|/* can offload checksum on RX */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFCAP_TXCSUM
+value|0x0002
+end_define
+
+begin_comment
+comment|/* can offload checksum on TX */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|IFCAP_NETCONS
-value|0x0002
+value|0x0004
 end_define
 
 begin_comment
 comment|/* can be a network console */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|IFCAP_HWCSUM
+value|(IFCAP_RXCSUM | IFCAP_TXCSUM)
+end_define
 
 begin_define
 define|#
