@@ -20,13 +20,9 @@ name|copyright
 index|[]
 init|=
 literal|"$Id: dispatch.c,v 1.63.2.3 2002/11/17 02:26:57 dhankins Exp $ Copyright (c) 1995-2002 The Internet Software Consortium.  All rights reserved.\n"
+literal|"$FreeBSD$\n"
 decl_stmt|;
 end_decl_stmt
-
-begin_expr_stmt
-literal|"$FreeBSD$\n"
-expr_stmt|;
-end_expr_stmt
 
 begin_endif
 endif|#
