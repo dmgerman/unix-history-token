@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1985, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
+comment|/*  * Copyright (c) 1985, 1988, 1990 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  */
 end_comment
 
 begin_ifndef
@@ -14,7 +14,7 @@ name|char
 name|copyright
 index|[]
 init|=
-literal|"@(#) Copyright (c) 1985, 1988 Regents of the University of California.\n\  All rights reserved.\n"
+literal|"@(#) Copyright (c) 1985, 1988, 1990 Regents of the University of California.\n\  All rights reserved.\n"
 decl_stmt|;
 end_decl_stmt
 
@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ftpd.c	5.36	(Berkeley) %G%"
+literal|"@(#)ftpd.c	5.37 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -102,6 +102,18 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in_systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/ip.h>
 end_include
 
 begin_define
@@ -678,6 +690,8 @@ decl_stmt|,
 name|on
 init|=
 literal|1
+decl_stmt|,
+name|tos
 decl_stmt|;
 name|char
 modifier|*
@@ -775,6 +789,47 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|IP_TOS
+name|tos
+operator|=
+name|IPTOS_LOWDELAY
+expr_stmt|;
+if|if
+condition|(
+name|setsockopt
+argument_list|(
+literal|0
+argument_list|,
+name|IPPROTO_IP
+argument_list|,
+name|IP_TOS
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|tos
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"setsockopt (IP_TOS): %m"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|data_source
 operator|.
 name|sin_port
@@ -3082,6 +3137,47 @@ operator|->
 name|pw_uid
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|IP_TOS
+name|on
+operator|=
+name|IPTOS_THROUGHPUT
+expr_stmt|;
+if|if
+condition|(
+name|setsockopt
+argument_list|(
+name|s
+argument_list|,
+name|IPPROTO_IP
+argument_list|,
+name|IP_TOS
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|on
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"setsockopt (IP_TOS): %m"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|fdopen
@@ -3160,6 +3256,8 @@ name|int
 name|retry
 init|=
 literal|0
+decl_stmt|,
+name|tos
 decl_stmt|;
 name|file_size
 operator|=
@@ -3286,6 +3384,39 @@ name|pdata
 operator|=
 name|s
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|IP_TOS
+name|tos
+operator|=
+name|IPTOS_LOWDELAY
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|setsockopt
+argument_list|(
+name|s
+argument_list|,
+name|IPPROTO_IP
+argument_list|,
+name|IP_TOS
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+operator|&
+name|tos
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|reply
 argument_list|(
 literal|150
