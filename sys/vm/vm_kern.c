@@ -497,6 +497,11 @@ expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
+name|vm_page_unmanage
+argument_list|(
+name|mem
+argument_list|)
+expr_stmt|;
 name|vm_page_wakeup
 argument_list|(
 name|mem
