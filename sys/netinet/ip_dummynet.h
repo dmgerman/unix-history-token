@@ -16,11 +16,11 @@ name|_IP_DUMMYNET_H
 end_define
 
 begin_comment
-comment|/*  * Definition of dummynet data structures.  * We first start with the heap which is used by the scheduler.  *  * Each list contains a set of parameters identifying the pipe, and  * a set of packets queued on the pipe itself.  *  * I could have used queue macros, but the management i have  * is pretty simple and this makes the code more portable.  */
+comment|/*  * Definition of dummynet data structures. In the structures, I decided  * not to use the macros in<sys/queue.h> in the hope of making the code  * easier to port to other architectures. The type of lists and queue we  * use here is pretty simple anyways.  */
 end_comment
 
 begin_comment
-comment|/*  * The key for the heap is used for two different values    1. timer ticks- max 10K/second, so 32 bits are enough    2. virtual times. These increase in steps of len/x, where len is the       packet length, and x is either the weight of the flow, or the       sum of all weights.       If we limit to max 1000 flows and a max weight of 100, then       x needs 17 bits. The packet size is 16 bits, so we can easily       overflow if we do not allow errors.   */
+comment|/*  * We start with a heap, which is used in the scheduler to decide when  * to transmit packets etc.  *  * The key for the heap is used for two different values:  *  * 1. timer ticks- max 10K/second, so 32 bits are enough;  *  * 2. virtual times. These increase in steps of len/x, where len is the  *    packet length, and x is either the weight of the flow, or the  *    sum of all weights.  *    If we limit to max 1000 flows and a max weight of 100, then  *    x needs 17 bits. The packet size is 16 bits, so we can easily  *    overflow if we do not allow errors.  * So we use a key "dn_key" which is 64 bits. Some macros are used to  * compare key values and handle wraparounds.  * MAX64 returns the largest of two key values.  * MY_M is used as a shift count when doing fixed point arithmetic  * (a better name would be useful...).  */
 end_comment
 
 begin_typedef
@@ -82,10 +82,6 @@ parameter_list|)
 value|((int64_t)((a)-(b))>= 0)
 end_define
 
-begin_comment
-comment|/* XXX check names of next two macros */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -113,6 +109,10 @@ begin_comment
 comment|/*  * XXX With this scaling, max 1000 flows, max weight 100, 1Gbit/s, the  * virtual time wraps every 15 days.  */
 end_comment
 
+begin_comment
+comment|/*  * The OFFSET_OF macro is used to return the offset of a field within  * a structure. It is used by the heap management routines.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -124,6 +124,10 @@ name|field
 parameter_list|)
 value|((int)&( ((type *)0)->field) )
 end_define
+
+begin_comment
+comment|/*  * A heap entry is made of a key and a pointer to the actual  * object stored in the heap.  * The heap is an array of dn_heap_entry entries, dynamically allocated.  * Current size is "size", with "elements" actually in use.  * The heap normally supports only ordered insert and extract from the top.  * If we want to extract an object from the middle of the heap, we  * have to know where the object itself is located in the heap (or we  * need to scan the whole array). To this purpose, an object has a  * field (int) which contains the index of the object itself into the  * heap. When the object is moved, the field must also be updated.  * The offset of the index in the object is stored in the 'offset'  * field in the heap descriptor. The assumption is that this offset  * is non-zero if we want to support extract from the middle.  */
+end_comment
 
 begin_struct
 struct|struct
@@ -178,7 +182,7 @@ value|MT_CONTROL
 end_define
 
 begin_comment
-comment|/*  * struct dn_pkt identifies a packet in the dummynet queue. The  * first part is really an m_hdr for implementation purposes, and some  * fields are saved there. When passing the packet back to the ip_input/  * ip_output(), the struct is prepended to the mbuf chain with type  * MT_DUMMYNET, and contains the pointer to the matching rule.  */
+comment|/*  * struct dn_pkt identifies a packet in the dummynet queue. The  * first part is really an m_hdr for implementation purposes, and some  * fields are saved there. When passing the packet back to the ip_input/  * ip_output()/bdg_forward, the struct is prepended to the mbuf chain with type  * MT_DUMMYNET, and contains the pointer to the matching rule.  *  * Note: there is no real need to make this structure contain an m_hdr,  * in the future this should be changed to a normal data structure.  */
 end_comment
 
 begin_struct
@@ -252,11 +256,11 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Overall structure (with WFQ):  We have 3 data structures definining a pipe and associated queues:  + dn_pipe, which contains the main configuration parameters related    to delay and bandwidth  + dn_flow_set which contains WFQ configuration, flow    masks, plr and RED configuration  + dn_flow_queue which is the per-flow queue.  Multiple dn_flow_set can be linked to the same pipe, and multiple  dn_flow_queue can be linked to the same dn_flow_set.   During configuration we set the dn_flow_set and dn_pipe parameters.  At runtime: packets are sent to the dn_flow_set (either WFQ ones, or  the one embedded in the dn_pipe for fixed-rate flows) which in turn  dispatches them to the appropriate dn_flow_queue (created dynamically  according to the masks).  The transmit clock for fixed rate flows (ready_event) selects the  dn_flow_queue to be used to transmit the next packet. For WF2Q,  wfq_ready_event() extract a pipe which in turn selects the right  flow using a number of heaps defined into the pipe.   *  */
+comment|/*  * Overall structure of dummynet (with WF2Q+):  In dummynet, packets are selected with the firewall rules, and passed to two different objects: PIPE or QUEUE.  A QUEUE is just a queue with configurable size and queue management policy. It is also associated with a mask (to discriminate among different flows), a weight (used to give different shares of the bandwidth to different flows) and a "pipe", which essentially supplies the transmit clock for all queues associated with that pipe.  A PIPE emulates a fixed-bandwidth link, whose bandwidth is configurable.  The "clock" for a pipe can come from either an internal timer, or from the transmit interrupt of an interface. A pipe is also associated with one (or more, if masks are used) queue, where all packets for that pipe are stored.  The bandwidth available on the pipe is shared by the queues associated with that pipe (only one in case the packet is sent to a PIPE) according to the WF2Q+ scheduling algorithm and the configured weights.  In general, incoming packets are stored in the appropriate queue, which is then placed into one of a few heaps managed by a scheduler to decide when the packet should be extracted. The scheduler (a function called dummynet()) is run at every timer tick, and grabs queues from the head of the heaps when they are ready for processing.  There are three data structures definining a pipe and associated queues:   + dn_pipe, which contains the main configuration parameters related    to delay and bandwidth;  + dn_flow_set, which contains WF2Q+ configuration, flow    masks, plr and RED configuration;  + dn_flow_queue, which is the per-flow queue (containing the packets)  Multiple dn_flow_set can be linked to the same pipe, and multiple dn_flow_queue can be linked to the same dn_flow_set. All data structures are linked in a linear list which is used for housekeeping purposes.  During configuration, we create and initialize the dn_flow_set and dn_pipe structures (a dn_pipe also contains a dn_flow_set).  At runtime: packets are sent to the appropriate dn_flow_set (either WFQ ones, or the one embedded in the dn_pipe for fixed-rate flows), which in turn dispatches them to the appropriate dn_flow_queue (created dynamically according to the masks).  The transmit clock for fixed rate flows (ready_event()) selects the dn_flow_queue to be used to transmit the next packet. For WF2Q, wfq_ready_event() extract a pipe which in turn selects the right flow using a number of heaps defined into the pipe itself.   *  */
 end_comment
 
 begin_comment
-comment|/*  * We use per flow queues. Hashing is used to select the right slot,  * then we scan the list to match the flow-id.  */
+comment|/*  * per flow queue. This contains the flow identifier, the queue  * of packets, counters, and parameters used to support both RED and  * WF2Q+.  */
 end_comment
 
 begin_struct
@@ -347,6 +351,10 @@ comment|/* setting F< S means the timestamp is invalid. We only need      * to t
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * flow_set descriptor. Contains the "template" parameters for the  * queue configuration, and pointers to the hash table of dn_flow_queue's.  *  * The hash table is an array of lists -- we identify the slot by  * hashing the flow-id, then scan the list looking for a match.  * The size of the hash table (buckets) is configurable on a per-queue  * basis.  */
+end_comment
 
 begin_struct
 struct|struct
@@ -531,7 +539,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Pipe descriptor. Contains global parameters, delay-line queue.  *   * For WF2Q support it also has 3 heaps holding dn_flow_queue:  *   not_eligible_heap, for queues whose start time is higher  *	than the virtual time. Sorted by start time.  *   scheduler_heap, for queues eligible for scheduling. Sorted by  *	finish time.  *   backlogged_heap, all flows in the two heaps above, sorted by  *	start time. This is used to compute the virtual time.  *  */
+comment|/*  * Pipe descriptor. Contains global parameters, delay-line queue,  * and the flow_set used for fixed-rate queues.  *   * For WF2Q support it also has 4 heaps holding dn_flow_queue:  *   not_eligible_heap, for queues whose start time is higher  *	than the virtual time. Sorted by start time.  *   scheduler_heap, for queues eligible for scheduling. Sorted by  *	finish time.  *   backlogged_heap, all flows in the two heaps above, sorted by  *	start time. This is used to compute the virtual time.  *   idle_heap, all flows that are idle and can be removed. We  *	do that on each tick so we do not slow down too much  *	operations during forwarding.  *  */
 end_comment
 
 begin_struct
