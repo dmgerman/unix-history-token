@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	8.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)vfs_subr.c	8.4 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -679,12 +679,11 @@ name|makedev
 argument_list|(
 name|nblkdev
 operator|+
-literal|11
+name|mtype
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 name|mp
 operator|->
 name|mnt_stat
@@ -717,6 +716,8 @@ operator|=
 name|makedev
 argument_list|(
 name|nblkdev
+operator|+
+name|mtype
 argument_list|,
 name|xxxfs_mntid
 argument_list|)
