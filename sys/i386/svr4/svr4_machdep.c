@@ -401,9 +401,12 @@ name|uc
 operator|->
 name|uc_stack
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|DONE_MORE_SIGALTSTACK_WORK
+argument_list|)
 name|struct
 name|sigacts
 modifier|*
@@ -694,7 +697,10 @@ expr_stmt|;
 comment|/* 	 * Set the signal stack 	 */
 if|#
 directive|if
+name|defined
+argument_list|(
 name|DONE_MORE_SIGALTSTACK_WORK
+argument_list|)
 name|bsd_to_svr4_sigaltstack
 argument_list|(
 name|sf
@@ -760,17 +766,17 @@ name|uc
 operator|->
 name|uc_flags
 operator|=
-name|SVR4_UC_STACK
-operator||
 name|SVR4_UC_SIGMASK
 operator||
 name|SVR4_UC_CPU
+operator||
+name|SVR4_UC_STACK
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Set to ucontext specified.  * has been taken.  Reset signal mask and  * stack state from context.  * Return to previous pc and psl as specified by  * context left by sendsig. Check carefully to  * make sure that the user has not modified the  * psl to gain improper privileges or to cause  * a machine fault.  */
+comment|/*  * Set to ucontext specified. Reset signal mask and  * stack state from context.  * Return to previous pc and psl as specified by  * context left by sendsig. Check carefully to  * make sure that the user has not modified the  * psl to gain improper privileges or to cause  * a machine fault.  */
 end_comment
 
 begin_function
@@ -792,6 +798,12 @@ modifier|*
 name|uc
 decl_stmt|;
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DONE_MORE_SIGALTSTACK_WORK
+argument_list|)
 name|struct
 name|sigacts
 modifier|*
@@ -801,6 +813,8 @@ name|p
 operator|->
 name|p_sigacts
 decl_stmt|;
+endif|#
+directive|endif
 specifier|register
 name|struct
 name|trapframe
@@ -856,6 +870,17 @@ condition|)
 return|return
 literal|0
 return|;
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"svr4_setcontext(%d)\n"
+operator|,
+name|p
+operator|->
+name|p_pid
+operator|)
+argument_list|)
+expr_stmt|;
 name|tf
 operator|=
 name|p
@@ -868,6 +893,9 @@ comment|/* 	 * Restore register context. 	 */
 ifdef|#
 directive|ifdef
 name|VM86
+warning|#
+directive|warning
+literal|"VM86 doesn't work yet, please don't try to use it."
 if|if
 condition|(
 name|r
@@ -1170,6 +1198,50 @@ operator|&
 name|SVR4_UC_SIGMASK
 condition|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DEBUG_SVR4
+argument_list|)
+block|{
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|4
+condition|;
+name|i
+operator|++
+control|)
+name|DPRINTF
+argument_list|(
+operator|(
+literal|"\tuc_sigmask[%d] = %lx\n"
+operator|,
+name|i
+operator|,
+name|uc
+operator|->
+name|uc_sigmask
+operator|.
+name|bits
+index|[
+name|i
+index|]
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|svr4_to_bsd_sigset
 argument_list|(
 operator|&
@@ -1491,9 +1563,12 @@ name|si_trap
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DEBUG_SVR4
+argument_list|)
 name|printf
 argument_list|(
 literal|"sig %d code %ld\n"
@@ -1503,11 +1578,7 @@ argument_list|,
 name|code
 argument_list|)
 expr_stmt|;
-name|panic
-argument_list|(
-literal|"svr4_getsiginfo"
-argument_list|)
-expr_stmt|;
+comment|/*		panic("svr4_getsiginfo");*/
 endif|#
 directive|endif
 break|break;
@@ -1578,6 +1649,21 @@ decl_stmt|;
 name|int
 name|oonstack
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DEBUG_SVR4
+argument_list|)
+name|printf
+argument_list|(
+literal|"svr4_sendsig(%d)\n"
+argument_list|,
+name|sig
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|tf
 operator|=
 name|p
@@ -1628,9 +1714,6 @@ name|svr4_sigframe
 operator|*
 operator|)
 operator|(
-operator|(
-name|caddr_t
-operator|)
 name|p
 operator|->
 name|p_sigstk
@@ -1690,13 +1773,19 @@ argument_list|,
 name|oonstack
 argument_list|)
 expr_stmt|;
-name|DPRINTF
+if|#
+directive|if
+name|defined
 argument_list|(
-operator|(
+name|DEBUG_SVR4
+argument_list|)
+name|printf
+argument_list|(
 literal|"obtained ucontext\n"
-operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|svr4_getsiginfo
 argument_list|(
 operator|&
@@ -1716,13 +1805,19 @@ operator|->
 name|tf_eip
 argument_list|)
 expr_stmt|;
-name|DPRINTF
+if|#
+directive|if
+name|defined
 argument_list|(
-operator|(
+name|DEBUG_SVR4
+argument_list|)
+name|printf
+argument_list|(
 literal|"obtained siginfo\n"
-operator|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|frame
 operator|.
 name|sf_signum
@@ -1757,9 +1852,12 @@ name|sf_handler
 operator|=
 name|catcher
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|DEBUG_SVR4
+argument_list|)
 name|printf
 argument_list|(
 literal|"sig = %d, sip %p, ucp = %p, handler = %p\n"
@@ -2043,6 +2141,9 @@ case|:
 ifdef|#
 directive|ifdef
 name|USER_LDT
+warning|#
+directive|warning
+literal|"USER_LDT doesn't work - are you sure you want this?"
 block|{
 name|struct
 name|i386_set_ldt_args
