@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,13 +35,18 @@ directive|ifndef
 name|lint
 end_ifndef
 
+begin_comment
+comment|/* static char sccsid[] = "@(#)route.c	8.3 (Berkeley) 3/19/94"; */
+end_comment
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-name|sccsid
+name|rcsid
 index|[]
 init|=
-literal|"@(#)route.c	8.3 (Berkeley) 3/19/94"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
@@ -183,6 +189,18 @@ begin_include
 include|#
 directive|include
 file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sysexits.h>
 end_include
 
 begin_struct
@@ -439,6 +457,40 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|ccitt_addr
+name|__P
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|,
+expr|struct
+name|sockaddr_x25
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|__dead
+name|void
+name|usage
+name|__P
+argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+argument_list|)
+name|__dead2
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|__dead
 name|void
@@ -446,6 +498,7 @@ name|usage
 parameter_list|(
 name|cp
 parameter_list|)
+specifier|const
 name|char
 modifier|*
 name|cp
@@ -455,14 +508,9 @@ if|if
 condition|(
 name|cp
 condition|)
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"route: botched keyword: %s\n"
+literal|"bad keyword: %s"
 argument_list|,
 name|cp
 argument_list|)
@@ -479,73 +527,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* NOTREACHED */
-block|}
-end_function
-
-begin_function
-name|void
-name|quit
-parameter_list|(
-name|s
-parameter_list|)
-name|char
-modifier|*
-name|s
-decl_stmt|;
-block|{
-name|int
-name|sverrno
-init|=
-name|errno
-decl_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"route: "
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|s
-condition|)
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: "
-argument_list|,
-name|s
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|sverrno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
+name|EX_USAGE
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
@@ -741,8 +723,10 @@ name|s
 operator|<
 literal|0
 condition|)
-name|quit
+name|err
 argument_list|(
+name|EX_OSERR
+argument_list|,
 literal|"socket"
 argument_list|)
 expr_stmt|;
@@ -879,12 +863,10 @@ condition|(
 name|uid
 condition|)
 block|{
-name|errno
-operator|=
-name|EACCES
-expr_stmt|;
-name|quit
+name|errx
 argument_list|(
+name|EX_NOPERM
+argument_list|,
 literal|"must be root to alter routing table"
 argument_list|)
 expr_stmt|;
@@ -1052,8 +1034,10 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|quit
+name|err
 argument_list|(
+name|EX_OSERR
+argument_list|,
 literal|"route-sysctl-estimate"
 argument_list|)
 expr_stmt|;
@@ -1070,8 +1054,10 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|quit
+name|err
 argument_list|(
+name|EX_OSERR
+argument_list|,
 literal|"malloc"
 argument_list|)
 expr_stmt|;
@@ -1095,9 +1081,11 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|quit
+name|err
 argument_list|(
-literal|"actual retrieval of routing table"
+name|EX_OSERR
+argument_list|,
+literal|"route-sysctl-get"
 argument_list|)
 expr_stmt|;
 name|lim
@@ -1248,19 +1236,9 @@ operator|->
 name|rtm_msglen
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"route: write to routing socket: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"write to routing socket"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1635,13 +1613,14 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
+comment|/* XXX - why not inet_ntoa()? */
 define|#
 directive|define
 name|C
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)& 0xff)
+value|(unsigned)((x)& 0xff)
 name|in
 operator|.
 name|s_addr
@@ -2605,12 +2584,10 @@ condition|(
 name|uid
 condition|)
 block|{
-name|errno
-operator|=
-name|EACCES
-expr_stmt|;
-name|quit
+name|errx
 argument_list|(
+name|EX_NOPERM
+argument_list|,
 literal|"must be root to alter routing table"
 argument_list|)
 expr_stmt|;
@@ -3119,6 +3096,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
+ifdef|#
+directive|ifdef
+name|CRUFT
 name|int
 name|ret
 init|=
@@ -3200,6 +3180,8 @@ literal|0
 expr_stmt|;
 continue|continue;
 block|}
+endif|#
+directive|endif
 operator|(
 name|void
 operator|)
@@ -4483,21 +4465,11 @@ literal|1
 operator|)
 return|;
 block|}
-operator|(
-name|void
-operator|)
-name|fprintf
+name|errx
 argument_list|(
-name|stderr
+name|EX_NOHOST
 argument_list|,
-literal|"%s: bad value\n"
-argument_list|,
-name|s
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
+literal|"bad address: %s"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4930,8 +4902,12 @@ name|sprintf
 argument_list|(
 name|mybuf
 argument_list|,
-literal|"%XH.%s%s"
+literal|"%lxH.%s%s"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|ntohl
 argument_list|(
 name|net
@@ -5047,8 +5023,10 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|quit
+name|err
 argument_list|(
+name|EX_OSERR
+argument_list|,
 literal|"route-sysctl-estimate"
 argument_list|)
 expr_stmt|;
@@ -5065,8 +5043,10 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|quit
+name|err
 argument_list|(
+name|EX_OSERR
+argument_list|,
 literal|"malloc"
 argument_list|)
 expr_stmt|;
@@ -5090,8 +5070,10 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|quit
+name|err
 argument_list|(
+name|EX_OSERR
+argument_list|,
 literal|"actual retrieval of interface table"
 argument_list|)
 expr_stmt|;
@@ -5345,7 +5327,7 @@ operator|.
 name|sa
 operator|.
 name|sa_family
-operator|==
+operator|=
 name|AF_LINK
 expr_stmt|;
 name|so_ifp
@@ -5353,7 +5335,7 @@ operator|.
 name|sa
 operator|.
 name|sa_len
-operator|==
+operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -5596,19 +5578,9 @@ name|l
 operator|<
 literal|0
 condition|)
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warn
 argument_list|(
-name|stderr
-argument_list|,
-literal|"route: read from routing socket: %s\n"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"read from routing socket"
 argument_list|)
 expr_stmt|;
 else|else
@@ -6156,8 +6128,11 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"pid: %d, seq %d, errno %d, flags:"
+literal|"pid: %ld, seq %d, errno %d, flags:"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|rtm
 operator|->
 name|rtm_pid
@@ -6271,14 +6246,9 @@ operator|!=
 name|RTM_VERSION
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"routing message version %d not understood\n"
+literal|"routing message version %d not understood"
 argument_list|,
 name|rtm
 operator|->
@@ -6296,13 +6266,8 @@ operator|>
 name|msglen
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
+name|warnx
 argument_list|(
-name|stderr
-argument_list|,
 literal|"message length mismatch, in packet %d, returned %d\n"
 argument_list|,
 name|rtm
@@ -6320,25 +6285,17 @@ operator|->
 name|rtm_errno
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"RTM_GET: %s (errno %d)\n"
-argument_list|,
-name|strerror
-argument_list|(
+name|errno
+operator|=
 name|rtm
 operator|->
 name|rtm_errno
-argument_list|)
+expr_stmt|;
+name|warn
+argument_list|(
+literal|"message indicates error %d"
 argument_list|,
-name|rtm
-operator|->
-name|rtm_errno
+name|errno
 argument_list|)
 expr_stmt|;
 return|return;
@@ -6616,7 +6573,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%8d%c "
+literal|"%8ld%c "
 argument_list|,
 name|rtm
 operator|->
@@ -6632,7 +6589,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%8d%c "
+literal|"%8ld%c "
 argument_list|,
 name|rtm
 operator|->
@@ -6648,7 +6605,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%8d%c "
+literal|"%8ld%c "
 argument_list|,
 name|rtm
 operator|->
@@ -6664,7 +6621,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%8d%c "
+literal|"%8ld%c "
 argument_list|,
 name|msec
 argument_list|(
@@ -6683,7 +6640,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%8d%c "
+literal|"%8ld%c "
 argument_list|,
 name|msec
 argument_list|(
@@ -6702,7 +6659,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%8d%c "
+literal|"%8ld%c "
 argument_list|,
 name|rtm
 operator|->
@@ -6718,7 +6675,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%8d%c "
+literal|"%8ld%c "
 argument_list|,
 name|rtm
 operator|->
@@ -6753,7 +6710,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%8d%c\n"
+literal|"%8ld%c\n"
 argument_list|,
 name|rtm
 operator|->
@@ -7071,11 +7028,15 @@ condition|)
 return|return;
 while|while
 condition|(
+operator|(
 name|i
 operator|=
 operator|*
 name|s
 operator|++
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 if|if
@@ -7459,6 +7420,9 @@ init|=
 name|VIRGIN
 decl_stmt|,
 name|new
+init|=
+literal|0
+comment|/* foil gcc */
 decl_stmt|;
 name|bzero
 argument_list|(
