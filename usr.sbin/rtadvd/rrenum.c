@@ -1147,7 +1147,7 @@ argument_list|,
 name|rpm
 argument_list|)
 operator|!=
-name|NULL
+literal|0
 operator|)
 condition|)
 return|return

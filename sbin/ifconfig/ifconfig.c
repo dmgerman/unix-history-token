@@ -3853,7 +3853,7 @@ argument_list|)
 expr_stmt|;
 name|clearaddr
 operator|=
-name|NULL
+literal|0
 expr_stmt|;
 block|}
 block|}
