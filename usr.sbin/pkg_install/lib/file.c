@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: file.c,v 1.21 1996/03/12 06:12:43 jkh Exp $"
+literal|"$Id: file.c,v 1.22 1996/06/20 18:33:51 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1091,17 +1091,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|Verbose
-condition|)
-name|printf
-argument_list|(
-literal|"tar command returns %d status\n"
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
 name|exit
 argument_list|(
 name|i
@@ -1128,6 +1117,20 @@ operator|&
 name|pstat
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Verbose
+condition|)
+name|printf
+argument_list|(
+literal|"tar command returns %d status\n"
+argument_list|,
+name|WEXITSTATUS
+argument_list|(
+name|pstat
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
