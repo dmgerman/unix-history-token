@@ -144,7 +144,7 @@ literal|4096
 name|u_char
 name|valid
 decl_stmt|;
-comment|/* map of valid DEV_BSIZE chunks */
+comment|/* map of valid DEV_BSIZE chunks (O) */
 name|u_char
 name|dirty
 decl_stmt|;
@@ -157,7 +157,7 @@ literal|8192
 name|u_short
 name|valid
 decl_stmt|;
-comment|/* map of valid DEV_BSIZE chunks */
+comment|/* map of valid DEV_BSIZE chunks (O) */
 name|u_short
 name|dirty
 decl_stmt|;
@@ -170,7 +170,7 @@ literal|16384
 name|u_int
 name|valid
 decl_stmt|;
-comment|/* map of valid DEV_BSIZE chunks */
+comment|/* map of valid DEV_BSIZE chunks (O) */
 name|u_int
 name|dirty
 decl_stmt|;
@@ -183,7 +183,7 @@ literal|32768
 name|u_long
 name|valid
 decl_stmt|;
-comment|/* map of valid DEV_BSIZE chunks */
+comment|/* map of valid DEV_BSIZE chunks (O) */
 name|u_long
 name|dirty
 decl_stmt|;
