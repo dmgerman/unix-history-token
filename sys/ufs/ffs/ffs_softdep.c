@@ -20498,6 +20498,12 @@ name|b_xflags
 operator||=
 name|BX_BKGRDWAIT
 expr_stmt|;
+name|FREE_LOCK_INTERLOCKED
+argument_list|(
+operator|&
+name|lk
+argument_list|)
+expr_stmt|;
 name|tsleep
 argument_list|(
 operator|&
@@ -20510,6 +20516,12 @@ argument_list|,
 literal|"getbuf"
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|ACQUIRE_LOCK_INTERLOCKED
+argument_list|(
+operator|&
+name|lk
 argument_list|)
 expr_stmt|;
 if|if
