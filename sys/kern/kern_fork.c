@@ -2954,6 +2954,12 @@ operator|&
 name|sched_lock
 argument_list|)
 expr_stmt|;
+name|p2
+operator|->
+name|p_state
+operator|=
+name|PRS_NORMAL
+expr_stmt|;
 name|setrunqueue
 argument_list|(
 name|td2
@@ -3314,13 +3320,6 @@ name|p_state
 operator|=
 name|PRS_NORMAL
 expr_stmt|;
-name|td
-operator|->
-name|td_state
-operator|=
-name|TDS_RUNNING
-expr_stmt|;
-comment|/* Already done in switch() on 386. */
 comment|/* 	 * Finish setting up thread glue.  We need to initialize 	 * the thread into a td_critnest=1 state.  Some platforms 	 * may have already partially or fully initialized td_critnest 	 * and/or td_md.md_savecrit (when applciable). 	 * 	 * see<arch>/<arch>/critical.c 	 */
 name|sched_lock
 operator|.
