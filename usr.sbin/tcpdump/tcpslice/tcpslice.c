@@ -42,7 +42,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: tcpslice.c,v 1.5 1998/01/20 07:30:27 charnier Exp $"
+literal|"$Id: tcpslice.c,v 1.6 1999/01/15 05:46:28 imp Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1307,18 +1307,6 @@ decl_stmt|;
 name|int
 name|val
 decl_stmt|;
-name|struct
-name|timeval
-name|now
-decl_stmt|;
-name|struct
-name|timezone
-name|tz
-decl_stmt|;
-name|struct
-name|tm
-name|tmnow
-decl_stmt|;
 define|#
 directive|define
 name|SET_VAL
@@ -1329,37 +1317,6 @@ name|rhs
 parameter_list|)
 define|\
 value|if (is_delta)		\ 		lhs += rhs;	\ 	else			\ 		lhs = rhs
-if|if
-condition|(
-name|gettimeofday
-argument_list|(
-operator|&
-name|now
-argument_list|,
-operator|&
-name|tz
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|err
-argument_list|(
-literal|1
-argument_list|,
-literal|"gettimeofday"
-argument_list|)
-expr_stmt|;
-name|tmnow
-operator|=
-operator|*
-name|localtime
-argument_list|(
-operator|&
-name|now
-operator|.
-name|tv_sec
-argument_list|)
-expr_stmt|;
 comment|/* Loop through the time string parsing one specification at 	 * a time.  Each specification has the form<number><letter> 	 * where<number> indicates the amount of time and<letter> 	 * the units. 	 */
 for|for
 control|(
@@ -1458,7 +1415,7 @@ case|:
 if|if
 condition|(
 name|val
-operator|>
+operator|>=
 literal|1900
 condition|)
 name|val
@@ -1471,19 +1428,23 @@ condition|(
 name|val
 operator|<
 literal|100
+operator|&&
+operator|!
+name|is_delta
 condition|)
+block|{
+if|if
+condition|(
+name|val
+operator|<
+literal|69
+condition|)
+comment|/* Same hack as date */
 name|val
 operator|+=
-operator|(
-name|tmnow
-operator|.
-name|tm_year
-operator|/
-literal|100
-operator|)
-operator|*
 literal|100
 expr_stmt|;
+block|}
 name|SET_VAL
 argument_list|(
 name|t
