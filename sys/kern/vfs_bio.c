@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.190 1999/01/08 17:31:14 eivind Exp $  */
+comment|/*  * Copyright (c) 1994,1997 John S. Dyson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice immediately at the beginning of the file, without modification,  *    this list of conditions, and the following disclaimer.  * 2. Absolutely no warranty of function or purpose is made by the author  *		John S. Dyson.  *  * $Id: vfs_bio.c,v 1.191 1999/01/10 01:58:25 eivind Exp $  */
 end_comment
 
 begin_comment
@@ -6000,9 +6000,13 @@ name|object
 decl_stmt|;
 name|vm_offset_t
 name|boffset
-decl_stmt|,
-name|offset
 decl_stmt|;
+if|#
+directive|if
+literal|0
+block|vm_offset_t offset;
+endif|#
+directive|endif
 comment|/* 	 * We qualify the scan for modified pages on whether the 	 * object has been flushed yet.  The OBJ_WRITEABLE flag 	 * is not cleared simply by protecting pages off. 	 */
 if|if
 condition|(
@@ -6278,9 +6282,6 @@ name|struct
 name|bufhashhdr
 modifier|*
 name|bh
-decl_stmt|;
-name|int
-name|maxsize
 decl_stmt|;
 if|#
 directive|if
@@ -9067,8 +9068,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"biodone: foff(%d)/m->pindex(%d) mismatch\n"
+literal|"biodone: foff(%lu)/m->pindex(%d) mismatch\n"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|foff
 argument_list|,
 name|m
@@ -10421,8 +10426,6 @@ parameter_list|)
 block|{
 name|int
 name|i
-decl_stmt|,
-name|size
 decl_stmt|,
 name|mask
 init|=
