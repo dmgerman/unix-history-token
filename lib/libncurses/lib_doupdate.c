@@ -898,7 +898,7 @@ begin_define
 define|#
 directive|define
 name|BLANK
-value|' '|A_NORMAL
+value|(' '|A_NORMAL)
 end_define
 
 begin_function
