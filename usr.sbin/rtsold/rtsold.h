@@ -47,6 +47,10 @@ name|mediareqok
 decl_stmt|;
 comment|/* wheter the IF supports SIOCGIFMEDIA */
 name|int
+name|otherconfig
+decl_stmt|;
+comment|/* need a separate protocol for the "other" 				 * configuration */
+name|int
 name|state
 decl_stmt|;
 name|int
@@ -137,6 +141,14 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|dflag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|otherconf_script
 decl_stmt|;
 end_decl_stmt
 
