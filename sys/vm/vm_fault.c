@@ -740,8 +740,19 @@ name|vaddr
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Make a reference to this object to prevent its disposal while we 	 * are messing with it.  Once we have the reference, the map is free 	 * to be diddled.  Since objects reference their shadows (and copies), 	 * they will stay around as well. 	 */
+comment|/* 	 * Make a reference to this object to prevent its disposal while we 	 * are messing with it.  Once we have the reference, the map is free 	 * to be diddled.  Since objects reference their shadows (and copies), 	 * they will stay around as well. 	 * 	 * Bump the paging-in-progress count to prevent size changes (e.g.  	 * truncation operations) during I/O.  This must be done after 	 * obtaining the vnode lock in order to avoid possible deadlocks. 	 */
 name|vm_object_reference
+argument_list|(
+name|fs
+operator|.
+name|first_object
+argument_list|)
+expr_stmt|;
+name|fs
+operator|.
+name|vp
+operator|=
+name|vnode_pager_lock
 argument_list|(
 name|fs
 operator|.
@@ -755,17 +766,6 @@ operator|.
 name|first_object
 argument_list|,
 literal|1
-argument_list|)
-expr_stmt|;
-name|fs
-operator|.
-name|vp
-operator|=
-name|vnode_pager_lock
-argument_list|(
-name|fs
-operator|.
-name|first_object
 argument_list|)
 expr_stmt|;
 if|if
