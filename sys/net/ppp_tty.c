@@ -370,6 +370,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|pppasyncdetach
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Some useful mbuf macros not in mbuf.h.  */
 end_comment
@@ -503,13 +512,26 @@ modifier|*
 name|dummy
 decl_stmt|;
 block|{
-comment|/* register line discipline */
-name|linesw
-index|[
+name|ldisc_register
+argument_list|(
 name|PPPDISC
-index|]
-operator|=
+argument_list|,
+operator|&
 name|pppdisc
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|pppasyncdetach
+parameter_list|()
+block|{
+name|ldisc_deregister
+argument_list|(
+name|PPPDISC
+argument_list|)
 expr_stmt|;
 block|}
 end_function

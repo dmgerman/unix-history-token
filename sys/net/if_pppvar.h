@@ -269,6 +269,12 @@ name|int
 name|sc_rawin_count
 decl_stmt|;
 comment|/* # in sc_rawin */
+name|LIST_ENTRY
+argument_list|(
+argument|ppp_softc
+argument_list|)
+name|sc_list
+expr_stmt|;
 block|}
 struct|;
 end_struct
