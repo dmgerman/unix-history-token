@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1995, 1996 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)sendmail.h	8.209 (Berkeley) 11/8/96  */
+comment|/*  * Copyright (c) 1983, 1995, 1996 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)sendmail.h	8.216 (Berkeley) 12/1/96  */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ name|char
 name|SmailSccsId
 index|[]
 init|=
-literal|"@(#)sendmail.h	8.209		11/8/96"
+literal|"@(#)sendmail.h	8.216		12/1/96"
 decl_stmt|;
 end_decl_stmt
 
@@ -179,11 +179,19 @@ begin_comment
 comment|/* LOG */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DAEMON
-end_ifdef
+begin_if
+if|#
+directive|if
+name|NETINET
+operator|||
+name|NETUNIX
+operator|||
+name|NETISO
+operator|||
+name|NETNS
+operator|||
+name|NETX25
+end_if
 
 begin_include
 include|#
@@ -1609,6 +1617,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|M_NONULLS
+value|'1'
+end_define
+
+begin_comment
+comment|/* don't send null bytes */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|M_EBCDIC
 value|'3'
 end_define
@@ -1626,6 +1645,17 @@ end_define
 
 begin_comment
 comment|/* use ruleset 5 after local aliasing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_7BITHDRS
+value|'6'
+end_define
+
+begin_comment
+comment|/* strip headers to 7 bits even in 8 bit path */
 end_comment
 
 begin_define
@@ -5918,11 +5948,19 @@ begin_comment
 comment|/* **  Regular UNIX sockaddrs are too small to handle ISO addresses, so **  we are forced to declare a supertype here. */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DAEMON
-end_ifdef
+begin_if
+if|#
+directive|if
+name|NETINET
+operator|||
+name|NETUNIX
+operator|||
+name|NETISO
+operator|||
+name|NETNS
+operator|||
+name|NETX25
+end_if
 
 begin_union
 union|union
@@ -6034,6 +6072,37 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|DAEMON
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|bool
+name|validate_connection
+name|__P
+argument_list|(
+operator|(
+name|SOCKADDR
+operator|*
+operator|,
+name|char
+operator|*
+operator|,
+name|ENVELOPE
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -7224,6 +7293,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* GID to become for bulk of run */
+end_comment
+
+begin_decl_stmt
+name|EXTERN
+name|bool
+name|IgnoreHostStatus
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* ignore long term host status files */
 end_comment
 
 begin_decl_stmt
@@ -8722,6 +8802,19 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|void
+name|proc_list_clear
+name|__P
+argument_list|(
+operator|(
+name|void
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|void
 name|buffer_errors
 name|__P
 argument_list|(
@@ -9079,11 +9172,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|void
+name|bool
 name|runqueue
 name|__P
 argument_list|(
 operator|(
+name|bool
+operator|,
 name|bool
 operator|)
 argument_list|)
@@ -9298,26 +9393,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|bool
-name|validate_connection
-name|__P
-argument_list|(
-operator|(
-name|SOCKADDR
-operator|*
-operator|,
-name|char
-operator|*
-operator|,
-name|ENVELOPE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|bool
 name|path_is_dir
 name|__P
 argument_list|(
@@ -9377,6 +9452,19 @@ operator|(
 name|int
 operator|,
 name|sigfunc_t
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|blocksignal
+name|__P
+argument_list|(
+operator|(
+name|int
 operator|)
 argument_list|)
 decl_stmt|;

@@ -15,11 +15,11 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|SMTP
-end_ifdef
+end_if
 
 begin_decl_stmt
 specifier|static
@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.125 (Berkeley) 11/8/96 (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.131 (Berkeley) 12/1/96 (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.125 (Berkeley) 11/8/96 (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.131 (Berkeley) 12/1/96 (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -66,11 +66,11 @@ directive|include
 file|<errno.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
 name|SMTP
-end_ifdef
+end_if
 
 begin_comment
 comment|/* **  SMTP -- run the SMTP protocol. ** **	Parameters: **		none. ** **	Returns: **		never. ** **	Side Effects: **		Reads commands from the input channel and processes **			them. */
@@ -508,6 +508,7 @@ block|{
 specifier|register
 name|char
 modifier|*
+specifier|volatile
 name|p
 decl_stmt|;
 specifier|register
@@ -601,6 +602,9 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* count of ETRN commands */
+name|bool
+name|ok
+decl_stmt|;
 name|char
 name|inp
 index|[
@@ -743,9 +747,14 @@ argument_list|,
 name|CurSmtpClient
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|LOG
+argument_list|)
+operator|&&
+name|DAEMON
 if|if
 condition|(
 name|LogLevel
@@ -3580,8 +3589,12 @@ name|QueueLimitRecipient
 operator|=
 name|id
 expr_stmt|;
+name|ok
+operator|=
 name|runqueue
 argument_list|(
+name|TRUE
+argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
@@ -3589,6 +3602,10 @@ name|QueueLimitRecipient
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+name|ok
+condition|)
 name|message
 argument_list|(
 literal|"250 Queuing for node %s started"
@@ -3722,8 +3739,8 @@ literal|"250 Initial submission"
 argument_list|)
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
 name|SMTPDEBUG
 case|case
 name|CMDDBGQSHOW
@@ -4947,30 +4964,21 @@ block|{
 name|pid_t
 name|childpid
 decl_stmt|;
-name|sigfunc_t
-name|chldsig
-decl_stmt|;
 if|if
 condition|(
 operator|!
 name|OneXact
 condition|)
 block|{
-comment|/* 		**  Disable child process reaping, in case ETRN has preceeded 		**  MAIL command. 		*/
-ifdef|#
-directive|ifdef
-name|SIGCHLD
-name|chldsig
-operator|=
-name|setsignal
+comment|/* 		**  Disable child process reaping, in case ETRN has preceeded 		**  MAIL command, and then fork. 		*/
+operator|(
+name|void
+operator|)
+name|blocksignal
 argument_list|(
 name|SIGCHLD
-argument_list|,
-name|SIG_IGN
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|childpid
 operator|=
 name|dofork
@@ -4988,6 +4996,14 @@ argument_list|(
 literal|"451 %s: cannot fork"
 argument_list|,
 name|label
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|releasesignal
+argument_list|(
+name|SIGCHLD
 argument_list|)
 expr_stmt|;
 return|return
@@ -5078,22 +5094,15 @@ name|finis
 argument_list|()
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|SIGCHLD
 comment|/* restore the child signal */
 operator|(
 name|void
 operator|)
-name|setsignal
+name|releasesignal
 argument_list|(
 name|SIGCHLD
-argument_list|,
-name|chldsig
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|1
@@ -5116,6 +5125,24 @@ argument_list|(
 name|e
 argument_list|,
 name|FALSE
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|setsignal
+argument_list|(
+name|SIGCHLD
+argument_list|,
+name|SIG_DFL
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|releasesignal
+argument_list|(
+name|SIGCHLD
 argument_list|)
 expr_stmt|;
 block|}

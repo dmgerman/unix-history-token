@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)util.c	8.109 (Berkeley) 11/16/96"
+literal|"@(#)util.c	8.113 (Berkeley) 11/24/96"
 decl_stmt|;
 end_decl_stmt
 
@@ -491,8 +491,11 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"\n\t%08x="
+literal|"\n\t%08lx="
 argument_list|,
+operator|(
+name|u_long
+operator|)
 operator|*
 name|av
 argument_list|)
@@ -1169,9 +1172,6 @@ name|bp
 init|=
 name|buf
 decl_stmt|;
-name|int
-name|l
-decl_stmt|;
 if|if
 condition|(
 operator|*
@@ -1463,8 +1463,14 @@ literal|"safefile(%s, uid=%d, gid=%d, flags=%x, mode=%o):\n"
 argument_list|,
 name|fn
 argument_list|,
+operator|(
+name|int
+operator|)
 name|uid
 argument_list|,
+operator|(
+name|int
+operator|)
 name|gid
 argument_list|,
 name|flags
@@ -2129,14 +2135,20 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"\t[final dir %s uid %d mode %o] %s\n"
+literal|"\t[final dir %s uid %d mode %lo] %s\n"
 argument_list|,
 name|fn
 argument_list|,
+operator|(
+name|int
+operator|)
 name|stbuf
 operator|.
 name|st_uid
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|stbuf
 operator|.
 name|st_mode
@@ -2297,6 +2309,37 @@ return|;
 block|}
 if|if
 condition|(
+name|st
+operator|->
+name|st_nlink
+operator|>
+literal|1
+condition|)
+block|{
+if|if
+condition|(
+name|tTd
+argument_list|(
+literal|44
+argument_list|,
+literal|4
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"\t[link count %d]\tEPERM\n"
+argument_list|,
+name|st
+operator|->
+name|st_nlink
+argument_list|)
+expr_stmt|;
+return|return
+name|EPERM
+return|;
+block|}
+if|if
+condition|(
 name|uid
 operator|==
 literal|0
@@ -2445,16 +2488,32 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"\t[uid %d, stat %o, mode %o] "
+literal|"\t[uid %d, nlink %d, stat %lo, mode %lo] "
 argument_list|,
+operator|(
+name|int
+operator|)
 name|st
 operator|->
 name|st_uid
 argument_list|,
+operator|(
+name|int
+operator|)
+name|st
+operator|->
+name|st_nlink
+argument_list|,
+operator|(
+name|u_long
+operator|)
 name|st
 operator|->
 name|st_mode
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|mode
 argument_list|)
 expr_stmt|;
@@ -3422,6 +3481,9 @@ name|TrafficLogFile
 argument_list|,
 literal|"%05d>>> "
 argument_list|,
+operator|(
+name|int
+operator|)
 name|getpid
 argument_list|()
 argument_list|)
@@ -3668,6 +3730,9 @@ literal|"%s!\n%05d>>>  "
 argument_list|,
 name|l
 argument_list|,
+operator|(
+name|int
+operator|)
 name|getpid
 argument_list|()
 argument_list|)
@@ -4067,8 +4132,11 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"xfclose(%x) %s %s\n"
+literal|"xfclose(%lx) %s %s\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|fp
 argument_list|,
 name|a
@@ -4392,6 +4460,9 @@ name|TrafficLogFile
 argument_list|,
 literal|"%05d<<< [EOF]\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|getpid
 argument_list|()
 argument_list|)
@@ -4414,6 +4485,9 @@ name|TrafficLogFile
 argument_list|,
 literal|"%05d<<< %s"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|getpid
 argument_list|()
 argument_list|,
@@ -8457,6 +8531,48 @@ literal|0
 condition|)
 name|CurChildren
 operator|--
+expr_stmt|;
+block|}
+end_function
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/* **  PROC_LIST_CLEAR -- clear the process list ** **	Parameters: **		none. ** **	Returns: **		none. */
+end_comment
+
+begin_function
+name|void
+name|proc_list_clear
+parameter_list|()
+block|{
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|ProcListSize
+condition|;
+name|i
+operator|++
+control|)
+name|ProcListVec
+index|[
+name|i
+index|]
+operator|=
+name|NO_PID
+expr_stmt|;
+name|CurChildren
+operator|=
+literal|0
 expr_stmt|;
 block|}
 end_function

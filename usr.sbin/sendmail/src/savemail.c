@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)savemail.c	8.100 (Berkeley) 9/27/96"
+literal|"@(#)savemail.c	8.101 (Berkeley) 11/24/96"
 decl_stmt|;
 end_decl_stmt
 
@@ -1544,12 +1544,15 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\n*** Return To Sender: msg=\"%s\", depth=%d, e=%x, returnq="
+literal|"\n*** Return To Sender: msg=\"%s\", depth=%d, e=%lx, returnq="
 argument_list|,
 name|msg
 argument_list|,
 name|returndepth
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|e
 argument_list|)
 expr_stmt|;
