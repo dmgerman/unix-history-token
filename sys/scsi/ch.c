@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by grefen@convex.com (probably moved by now)  * Based on scsi drivers by Julian Elischer (julian@tfs.com)  *  *      $Id: ch.c,v 1.31 1996/03/10 18:17:53 davidg Exp $  */
+comment|/*  * Written by grefen@convex.com (probably moved by now)  * Based on scsi drivers by Julian Elischer (julian@tfs.com)  *  *      $Id: ch.c,v 1.32 1996/03/27 18:50:07 bde Exp $  */
 end_comment
 
 begin_include
@@ -13,6 +13,12 @@ begin_include
 include|#
 directive|include
 file|<ch.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_scsi.h"
 end_include
 
 begin_include
