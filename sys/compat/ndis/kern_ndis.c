@@ -358,6 +358,14 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
+comment|/* Initialize subsystems */
+name|ndis_libinit
+argument_list|()
+expr_stmt|;
+name|ntoskrnl_libinit
+argument_list|()
+expr_stmt|;
+comment|/* Initialize TX buffer UMA zone. */
 name|ndis_packet_zone
 operator|=
 name|uma_zcreate
@@ -413,6 +421,14 @@ case|:
 case|case
 name|MOD_SHUTDOWN
 case|:
+comment|/* Shut down subsystems */
+name|ndis_libfini
+argument_list|()
+expr_stmt|;
+name|ntoskrnl_libfini
+argument_list|()
+expr_stmt|;
+comment|/* Remove zones */
 name|uma_zdestroy
 argument_list|(
 name|ndis_packet_zone
@@ -4424,12 +4440,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|ndis_libfini
-argument_list|()
-expr_stmt|;
-name|ntoskrnl_libfini
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -4573,13 +4583,6 @@ name|ENOEXEC
 operator|)
 return|;
 block|}
-comment|/* Initialize subsystems */
-name|ndis_libinit
-argument_list|()
-expr_stmt|;
-name|ntoskrnl_libinit
-argument_list|()
-expr_stmt|;
 comment|/* Locate the driver entry point */
 name|pe_get_optional_header
 argument_list|(
