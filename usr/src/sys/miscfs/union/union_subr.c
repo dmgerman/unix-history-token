@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 Jan-Simon Pendry  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_subr.c	8.14 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1994 Jan-Simon Pendry  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_subr.c	8.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3144,8 +3144,7 @@ decl_stmt|;
 name|struct
 name|vnode
 modifier|*
-modifier|*
-name|vpp
+name|wvp
 decl_stmt|;
 name|struct
 name|componentname
@@ -3164,7 +3163,8 @@ name|um
 argument_list|,
 name|dvp
 argument_list|,
-name|vpp
+operator|&
+name|wvp
 argument_list|,
 name|cnp
 argument_list|,
@@ -3197,8 +3197,7 @@ return|;
 block|}
 if|if
 condition|(
-operator|*
-name|vpp
+name|wvp
 condition|)
 block|{
 name|VOP_ABORTOP
@@ -3216,14 +3215,8 @@ argument_list|)
 expr_stmt|;
 name|vrele
 argument_list|(
-operator|*
-name|vpp
+name|wvp
 argument_list|)
-expr_stmt|;
-operator|*
-name|vpp
-operator|=
-name|NULLVP
 expr_stmt|;
 return|return
 operator|(
