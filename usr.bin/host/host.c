@@ -43,7 +43,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: host.c,v 1.2 1994/09/22 21:52:03 pst Exp $"
+literal|"$Id: host.c,v 1.3 1995/05/30 06:30:50 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1792,13 +1792,13 @@ end_block
 begin_macro
 name|hperror
 argument_list|(
-argument|errno
+argument|errnum
 argument_list|)
 end_macro
 
 begin_decl_stmt
 name|int
-name|errno
+name|errnum
 decl_stmt|;
 end_decl_stmt
 
@@ -1806,7 +1806,7 @@ begin_block
 block|{
 switch|switch
 condition|(
-name|errno
+name|errnum
 condition|)
 block|{
 case|case
@@ -2158,7 +2158,7 @@ modifier|*
 modifier|*
 name|domain
 decl_stmt|;
-name|int
+name|u_int
 name|n
 decl_stmt|;
 name|int
@@ -3894,6 +3894,15 @@ case|:
 case|case
 name|T_ISDN
 case|:
+block|{
+name|u_char
+modifier|*
+name|cp2
+init|=
+name|cp
+operator|+
+name|dlen
+decl_stmt|;
 if|if
 condition|(
 name|n
@@ -3927,11 +3936,19 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
+name|cp
+operator|<
+name|cp2
+operator|)
+operator|&&
+operator|(
 name|n
 operator|=
 operator|*
 name|cp
 operator|++
+operator|)
 condition|)
 block|{
 if|if
@@ -3954,6 +3971,25 @@ expr_stmt|;
 name|cp
 operator|+=
 name|n
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|type
+operator|==
+name|T_HINFO
+condition|)
+if|if
+condition|(
+name|doprint
+condition|)
+name|fprintf
+argument_list|(
+name|file
+argument_list|,
+literal|"\n; *** Warning *** OS-type missing"
+argument_list|)
 expr_stmt|;
 block|}
 break|break;
@@ -4142,13 +4178,32 @@ name|doprint
 condition|)
 if|if
 condition|(
+name|type
+operator|==
+name|T_MX
+condition|)
+name|fprintf
+argument_list|(
+name|file
+argument_list|,
+literal|" (pri=%d) by "
+argument_list|,
+name|_getshort
+argument_list|(
+name|cp
+argument_list|)
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|verbose
 condition|)
 name|fprintf
 argument_list|(
 name|file
 argument_list|,
-literal|"\t%ld "
+literal|"\t%d "
 argument_list|,
 name|_getshort
 argument_list|(
@@ -4379,10 +4434,19 @@ operator|--
 control|)
 if|if
 condition|(
+operator|(
 operator|*
 name|cp
 operator|==
 literal|'\n'
+operator|)
+operator|||
+operator|(
+operator|*
+name|cp
+operator|==
+literal|'"'
+operator|)
 condition|)
 block|{
 if|if
@@ -4876,7 +4940,7 @@ name|verbose
 condition|?
 literal|"MX"
 else|:
-literal|"mail is handled by"
+literal|"mail is handled"
 operator|)
 return|;
 case|case
@@ -7187,6 +7251,9 @@ literal|"Query refused"
 operator|)
 return|;
 break|break;
+ifdef|#
+directive|ifdef
+name|NOCHANGE
 case|case
 name|NOCHANGE
 case|:
@@ -7196,6 +7263,8 @@ literal|"No change"
 operator|)
 return|;
 break|break;
+endif|#
+directive|endif
 case|case
 name|NO_INFO
 case|:

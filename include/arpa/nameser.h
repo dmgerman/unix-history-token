@@ -6,13 +6,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_NAMESER_H_
+name|_ARPA_NAMESER_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_NAMESER_H_
+name|_ARPA_NAMESER_H_
 end_define
 
 begin_include
@@ -47,7 +47,7 @@ begin_define
 define|#
 directive|define
 name|__BIND
-value|19940417
+value|19950621
 end_define
 
 begin_comment
@@ -180,7 +180,7 @@ value|53
 end_define
 
 begin_comment
-comment|/*  * Currently define	d opcodes  */
+comment|/*  * Currently defined opcodes  */
 end_comment
 
 begin_define
@@ -217,8 +217,29 @@ comment|/* nameserver status query */
 end_comment
 
 begin_comment
-comment|/* 0x3		   reserved */
+comment|/*#define xxx		0x3 */
 end_comment
+
+begin_comment
+comment|/* 0x3 reserved */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NS_NOTIFY_OP
+value|0x4
+end_define
+
+begin_comment
+comment|/* notify secondary of SOA change */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ALLOW_UPDATES
+end_ifdef
 
 begin_comment
 comment|/* non standard - supports ALLOW_UPDATES stuff from Mike Schwartz */
@@ -301,8 +322,13 @@ begin_comment
 comment|/* incremental zone referesh */
 end_comment
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  * Currently define	d response codes  */
+comment|/*  * Currently defined response codes  */
 end_comment
 
 begin_define
@@ -371,6 +397,12 @@ begin_comment
 comment|/* query refused */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ALLOW_UPDATES
+end_ifdef
+
 begin_comment
 comment|/* non standard */
 end_comment
@@ -385,6 +417,11 @@ end_define
 begin_comment
 comment|/* update failed to change db */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Type values for resources and queries  */
@@ -442,7 +479,7 @@ value|5
 end_define
 
 begin_comment
-comment|/* connonical name */
+comment|/* canonical name */
 end_comment
 
 begin_define
@@ -643,6 +680,72 @@ begin_comment
 comment|/* reverse NSAP lookup (deprecated) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|T_SIG
+value|24
+end_define
+
+begin_comment
+comment|/* security signature */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_KEY
+value|25
+end_define
+
+begin_comment
+comment|/* security key */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_PX
+value|26
+end_define
+
+begin_comment
+comment|/* X.400 mail mapping */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_GPOS
+value|27
+end_define
+
+begin_comment
+comment|/* geographical position (withdrawn) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_AAAA
+value|28
+end_define
+
+begin_comment
+comment|/* IP6 Address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T_LOC
+value|29
+end_define
+
+begin_comment
+comment|/* Location Information */
+end_comment
+
 begin_comment
 comment|/* non standard */
 end_comment
@@ -689,17 +792,6 @@ end_define
 
 begin_comment
 comment|/* Unspecified format (binary data) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|T_SA
-value|200
-end_define
-
-begin_comment
-comment|/* shuffle address */
 end_comment
 
 begin_comment
@@ -899,15 +991,9 @@ literal|1
 decl_stmt|;
 comment|/* recursion available */
 name|unsigned
-name|pr
-range|:
-literal|1
-decl_stmt|;
-comment|/* primary server req'd (!standard) */
-name|unsigned
 name|unused
 range|:
-literal|2
+literal|3
 decl_stmt|;
 comment|/* unused bits (MBZ as of 4.9.3a3) */
 name|unsigned
@@ -968,15 +1054,9 @@ comment|/* response code */
 name|unsigned
 name|unused
 range|:
-literal|2
+literal|3
 decl_stmt|;
 comment|/* unused bits (MBZ as of 4.9.3a3) */
-name|unsigned
-name|pr
-range|:
-literal|1
-decl_stmt|;
-comment|/* primary server req'd (!standard) */
 name|unsigned
 name|ra
 range|:
@@ -1151,7 +1231,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !_NAMESER_H_ */
+comment|/* !_ARPA_NAMESER_H_ */
 end_comment
 
 end_unit

@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: res_init.c,v 1.3 1994/09/25 17:45:39 pst Exp $"
+literal|"$Id: res_init.c,v 1.4 1995/05/30 05:40:55 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -57,6 +57,12 @@ begin_include
 include|#
 directive|include
 file|<sys/socket.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/time.h>
 end_include
 
 begin_include
@@ -113,6 +119,12 @@ directive|include
 file|<string.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"res_config.h"
+end_include
+
 begin_decl_stmt
 specifier|static
 name|void
@@ -135,6 +147,27 @@ ifdef|#
 directive|ifdef
 name|RESOLVSORT
 end_ifdef
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|sort_mask
+index|[]
+init|=
+literal|"/&"
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|ISSORTMASK
+parameter_list|(
+name|ch
+parameter_list|)
+value|(strchr(sort_mask, ch) != NULL)
+end_define
 
 begin_decl_stmt
 specifier|static
@@ -170,12 +203,10 @@ begin_comment
 comment|/*  * Set up default settings.  If the configuration file exist, the values  * there will have precedence.  Otherwise, the server address is set to  * INADDR_ANY and the default domain name comes from the gethostname().  *  * An interrim version of this code (BIND 4.9, pre-4.4BSD) used 127.0.0.1  * rather than INADDR_ANY ("0.0.0.0") as the default name server address  * since it was noted that INADDR_ANY actually meant ``the first interface  * you "ifconfig"'d at boot time'' and if this was a SLIP or PPP interface,  * it had to be "up" in order for you to reach your own name server.  It  * was later decided that since the recommended practice is to always  * install local static routes through 127.0.0.1 for all your network  * interfaces, that we could solve this problem without a code change.  *  * The configuration file should always be used, since it is the only way  * to specify a default domain.  If you are running a server on your local  * machine, you should say "nameserver 0.0.0.0" or "nameserver 127.0.0.1"  * in the configuration file.  *  * Return 0 if completes successfully, -1 on error  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|res_init
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|()
 block|{
 specifier|register
 name|FILE
@@ -194,8 +225,6 @@ decl_stmt|;
 specifier|register
 name|int
 name|n
-decl_stmt|,
-name|dots
 decl_stmt|;
 name|char
 name|buf
@@ -233,7 +262,15 @@ name|net
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * These four fields used to be statically initialized.  This made 	 * it hard to use this code in a shared library.  It is necessary, 	 * now that we're doing dynamic initialization here, that we preserve 	 * the old semantics: if an application modifies one of these three 	 * fields of _res before res_init() is called, res_init() will not 	 * alter them.  Of course, if an application is setting them to 	 * _zero_ before calling res_init(), hoping to override what used 	 * to be the static default, we can't detect it and unexpected results 	 * will follow.  Zero for any of these fields would make no sense, 	 * so one can safely assume that the applications were already getting 	 * unexpected results. 	 */
+ifndef|#
+directive|ifndef
+name|RFC1535
+name|int
+name|dots
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* 	 * These three fields used to be statically initialized.  This made 	 * it hard to use this code in a shared library.  It is necessary, 	 * now that we're doing dynamic initialization here, that we preserve 	 * the old semantics: if an application modifies one of these three 	 * fields of _res before res_init() is called, res_init() will not 	 * alter them.  Of course, if an application is setting them to 	 * _zero_ before calling res_init(), hoping to override what used 	 * to be the static default, we can't detect it and unexpected results 	 * will follow.  Zero for any of these fields would make no sense, 	 * so one can safely assume that the applications were already getting 	 * unexpected results. 	 * 	 * _res.options is tricky since some apps were known to diddle the bits 	 * before res_init() was first called. We can't replicate that semantic 	 * with dynamic initialization (they may have turned bits off that are 	 * set in RES_DEFAULT).  Our solution is to declare such applications 	 * "broken".  They could fool us by setting RES_INIT but none do (yet). 	 */
 if|if
 condition|(
 operator|!
@@ -263,15 +300,34 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
+operator|(
 name|_res
 operator|.
 name|options
+operator|&
+name|RES_INIT
+operator|)
 condition|)
 name|_res
 operator|.
 name|options
 operator|=
 name|RES_DEFAULT
+expr_stmt|;
+comment|/* 	 * This one used to initialize implicitly to zero, so unless the app 	 * has set it to something in particular, we can randomize it now. 	 */
+if|if
+condition|(
+operator|!
+name|_res
+operator|.
+name|id
+condition|)
+name|_res
+operator|.
+name|id
+operator|=
+name|res_randomid
+argument_list|()
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -512,6 +568,16 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+define|#
+directive|define
+name|MATCH
+parameter_list|(
+name|line
+parameter_list|,
+name|name
+parameter_list|)
+define|\
+value|(!strncmp(line, name, sizeof(name) - 1)&& \ 	(line[sizeof(name) - 1] == ' ' || \ 	 line[sizeof(name) - 1] == '\t'))
 if|if
 condition|(
 operator|(
@@ -549,37 +615,25 @@ block|{
 comment|/* skip comments */
 if|if
 condition|(
-operator|(
 operator|*
 name|buf
 operator|==
 literal|';'
-operator|)
 operator|||
-operator|(
 operator|*
 name|buf
 operator|==
 literal|'#'
-operator|)
 condition|)
 continue|continue;
 comment|/* read default domain name */
 if|if
 condition|(
-operator|!
-name|strncmp
+name|MATCH
 argument_list|(
 name|buf
 argument_list|,
 literal|"domain"
-argument_list|,
-sizeof|sizeof
-argument_list|(
-literal|"domain"
-argument_list|)
-operator|-
-literal|1
 argument_list|)
 condition|)
 block|{
@@ -684,19 +738,11 @@ block|}
 comment|/* set search list */
 if|if
 condition|(
-operator|!
-name|strncmp
+name|MATCH
 argument_list|(
 name|buf
 argument_list|,
 literal|"search"
-argument_list|,
-sizeof|sizeof
-argument_list|(
-literal|"search"
-argument_list|)
-operator|-
-literal|1
 argument_list|)
 condition|)
 block|{
@@ -914,19 +960,11 @@ block|}
 comment|/* read nameservers to query */
 if|if
 condition|(
-operator|!
-name|strncmp
+name|MATCH
 argument_list|(
 name|buf
 argument_list|,
 literal|"nameserver"
-argument_list|,
-sizeof|sizeof
-argument_list|(
-literal|"nameserver"
-argument_list|)
-operator|-
-literal|1
 argument_list|)
 operator|&&
 name|nserv
@@ -1036,19 +1074,11 @@ directive|ifdef
 name|RESOLVSORT
 if|if
 condition|(
-operator|!
-name|strncmp
+name|MATCH
 argument_list|(
 name|buf
 argument_list|,
 literal|"sortlist"
-argument_list|,
-sizeof|sizeof
-argument_list|(
-literal|"sortlist"
-argument_list|)
-operator|-
-literal|1
 argument_list|)
 condition|)
 block|{
@@ -1116,10 +1146,17 @@ condition|(
 operator|*
 name|cp
 operator|&&
+operator|!
+name|ISSORTMASK
+argument_list|(
+operator|*
+name|cp
+argument_list|)
+operator|&&
 operator|*
 name|cp
 operator|!=
-literal|'/'
+literal|';'
 operator|&&
 name|isascii
 argument_list|(
@@ -1171,9 +1208,10 @@ name|a
 expr_stmt|;
 if|if
 condition|(
+name|ISSORTMASK
+argument_list|(
 name|n
-operator|==
-literal|'/'
+argument_list|)
 condition|)
 block|{
 operator|*
@@ -1190,6 +1228,11 @@ while|while
 condition|(
 operator|*
 name|cp
+operator|&&
+operator|*
+name|cp
+operator|!=
+literal|';'
 operator|&&
 name|isascii
 argument_list|(
@@ -1297,7 +1340,6 @@ expr_stmt|;
 block|}
 operator|*
 name|cp
-operator|++
 operator|=
 name|n
 expr_stmt|;
@@ -1308,19 +1350,11 @@ endif|#
 directive|endif
 if|if
 condition|(
-operator|!
-name|strncmp
+name|MATCH
 argument_list|(
 name|buf
 argument_list|,
 literal|"options"
-argument_list|,
-sizeof|sizeof
-argument_list|(
-literal|"options"
-argument_list|)
-operator|-
-literal|1
 argument_list|)
 condition|)
 block|{
@@ -1373,7 +1407,6 @@ name|fp
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*if(fopen)*/
 if|if
 condition|(
 name|_res
@@ -1384,10 +1417,7 @@ literal|0
 index|]
 operator|==
 literal|0
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 name|gethostname
 argument_list|(
 name|buf
@@ -1414,11 +1444,9 @@ argument_list|,
 literal|'.'
 argument_list|)
 operator|)
+operator|!=
+name|NULL
 condition|)
-block|{
-operator|(
-name|void
-operator|)
 name|strcpy
 argument_list|(
 name|_res
@@ -1430,8 +1458,6 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
-block|}
 comment|/* find components of local domain that might be searched */
 if|if
 condition|(
@@ -1512,9 +1538,7 @@ name|dots
 operator|<
 name|LOCALDOMAINPARTS
 condition|)
-block|{
 break|break;
-block|}
 name|cp
 operator|=
 name|strchr
@@ -1542,6 +1566,9 @@ name|pp
 operator|=
 name|NULL
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 name|_res
@@ -1570,7 +1597,6 @@ condition|;
 name|pp
 operator|++
 control|)
-block|{
 name|printf
 argument_list|(
 literal|";;\t%s\n"
@@ -1579,13 +1605,15 @@ operator|*
 name|pp
 argument_list|)
 expr_stmt|;
-block|}
 name|printf
 argument_list|(
 literal|";;\t..END..\n"
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* DEBUG */
 endif|#
 directive|endif
 comment|/*!RFC1535*/
@@ -1603,7 +1631,6 @@ operator|)
 operator|!=
 name|NULL
 condition|)
-block|{
 name|res_setoptions
 argument_list|(
 name|cp
@@ -1611,7 +1638,6 @@ argument_list|,
 literal|"env"
 argument_list|)
 expr_stmt|;
-block|}
 name|_res
 operator|.
 name|options
@@ -1624,7 +1650,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
@@ -1655,6 +1681,9 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 name|_res
@@ -1663,7 +1692,6 @@ name|options
 operator|&
 name|RES_DEBUG
 condition|)
-block|{
 name|printf
 argument_list|(
 literal|";; res_setoptions(\"%s\", \"%s\")...\n"
@@ -1673,7 +1701,8 @@ argument_list|,
 name|source
 argument_list|)
 expr_stmt|;
-block|}
+endif|#
+directive|endif
 while|while
 condition|(
 operator|*
@@ -1748,6 +1777,9 @@ name|ndots
 operator|=
 name|RES_MAXNDOTS
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 name|_res
@@ -1756,7 +1788,6 @@ name|options
 operator|&
 name|RES_DEBUG
 condition|)
-block|{
 name|printf
 argument_list|(
 literal|";;\tndots=%d\n"
@@ -1766,7 +1797,8 @@ operator|.
 name|ndots
 argument_list|)
 expr_stmt|;
-block|}
+endif|#
+directive|endif
 block|}
 elseif|else
 if|if
@@ -1787,6 +1819,9 @@ literal|1
 argument_list|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 if|if
 condition|(
 operator|!
@@ -1820,6 +1855,8 @@ argument_list|(
 literal|";;\tdebug\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{
@@ -1853,6 +1890,10 @@ ifdef|#
 directive|ifdef
 name|RESOLVSORT
 end_ifdef
+
+begin_comment
+comment|/* XXX - should really support CIDR which means explicit masks always. */
+end_comment
 
 begin_function
 specifier|static
@@ -1909,7 +1950,6 @@ name|IN_CLASSB_NET
 argument_list|)
 operator|)
 return|;
-else|else
 return|return
 operator|(
 name|htonl
@@ -1925,6 +1965,44 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function
+name|u_int16_t
+name|res_randomid
+parameter_list|()
+block|{
+name|struct
+name|timeval
+name|now
+decl_stmt|;
+name|gettimeofday
+argument_list|(
+operator|&
+name|now
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0xffff
+operator|&
+operator|(
+name|now
+operator|.
+name|tv_sec
+operator|^
+name|now
+operator|.
+name|tv_usec
+operator|^
+name|getpid
+argument_list|()
+operator|)
+operator|)
+return|;
+block|}
+end_function
 
 end_unit
 

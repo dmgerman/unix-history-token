@@ -34,7 +34,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: herror.c,v 1.1.1.1 1994/05/27 04:57:15 rgrimes Exp $"
+literal|"$Id: herror.c,v 1.2 1995/05/30 05:40:49 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -78,13 +78,14 @@ file|<string.h>
 end_include
 
 begin_decl_stmt
+specifier|const
 name|char
 modifier|*
 name|h_errlist
 index|[]
 init|=
 block|{
-literal|"Error 0"
+literal|"Resolver Error 0 (no error)"
 block|,
 literal|"Unknown host"
 block|,
@@ -212,18 +213,13 @@ operator|->
 name|iov_base
 operator|=
 operator|(
-name|u_int
+name|char
+operator|*
 operator|)
+name|hstrerror
+argument_list|(
 name|h_errno
-operator|<
-name|h_nerr
-condition|?
-name|h_errlist
-index|[
-name|h_errno
-index|]
-else|:
-literal|"Unknown error"
+argument_list|)
 expr_stmt|;
 name|v
 operator|->
@@ -270,6 +266,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|hstrerror
@@ -280,20 +277,36 @@ name|int
 name|err
 decl_stmt|;
 block|{
+if|if
+condition|(
+name|err
+operator|<
+literal|0
+condition|)
 return|return
 operator|(
-name|u_int
+literal|"Resolver internal error"
 operator|)
+return|;
+elseif|else
+if|if
+condition|(
 name|err
 operator|<
 name|h_nerr
-condition|?
+condition|)
+return|return
+operator|(
 name|h_errlist
 index|[
 name|err
 index|]
-else|:
+operator|)
+return|;
+return|return
+operator|(
 literal|"Unknown resolver error"
+operator|)
 return|;
 block|}
 end_function

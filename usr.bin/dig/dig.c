@@ -11,7 +11,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: dig.c,v 1.3 1995/05/09 13:13:21 rgrimes Exp $"
+literal|"$Id: dig.c,v 1.4 1995/05/30 06:29:46 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -157,7 +157,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../../usr.sbin/nslookup/res.h"
+file|"res.h"
 end_include
 
 begin_define
@@ -348,16 +348,8 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|queryType
-init|=
-name|T_A
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
+decl_stmt|,
 name|queryClass
-init|=
-name|C_IN
 decl_stmt|;
 end_decl_stmt
 
@@ -489,7 +481,7 @@ operator|++
 expr_stmt|;
 break|break;
 case|case
-name|NULL
+literal|'\0'
 case|:
 case|case
 literal|'\n'
@@ -586,12 +578,25 @@ argument_list|(
 name|NAMESERVER_PORT
 argument_list|)
 decl_stmt|;
+comment|/* Wierd stuff for SPARC alignment, hurts nothing else. */
+union|union
+block|{
+name|HEADER
+name|header_
+decl_stmt|;
 name|u_char
-name|packet
+name|packet_
 index|[
 name|PACKETSZ
 index|]
 decl_stmt|;
+block|}
+name|packet_
+union|;
+define|#
+directive|define
+name|packet
+value|(packet_.packet_)
 name|u_char
 name|answer
 index|[
@@ -661,13 +666,7 @@ name|int
 name|tmp
 decl_stmt|;
 name|int
-name|qtype
-init|=
-literal|1
-decl_stmt|,
-name|qclass
-init|=
-literal|1
+name|qtypeSet
 decl_stmt|;
 name|int
 name|addrflag
@@ -785,6 +784,10 @@ name|pfcode
 operator|=
 name|PRF_DEF
 expr_stmt|;
+name|qtypeSet
+operator|=
+literal|0
+expr_stmt|;
 name|gethostname
 argument_list|(
 name|myhostname
@@ -876,6 +879,10 @@ name|read
 argument_list|(
 name|fp
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|res_x
 argument_list|,
@@ -1172,11 +1179,13 @@ name|qptr
 argument_list|)
 expr_stmt|;
 comment|/* defaults */
-name|qtype
+name|queryType
 operator|=
-name|qclass
+name|T_NS
+expr_stmt|;
+name|queryClass
 operator|=
-literal|1
+name|C_IN
 expr_stmt|;
 name|zone
 operator|=
@@ -1433,7 +1442,7 @@ operator|==
 literal|'0'
 condition|)
 block|{
-name|qclass
+name|queryClass
 operator|=
 name|tmp
 expr_stmt|;
@@ -1454,7 +1463,7 @@ name|NULL
 argument_list|)
 condition|)
 block|{
-name|qclass
+name|queryClass
 operator|=
 name|tmp
 expr_stmt|;
@@ -1493,9 +1502,12 @@ operator|==
 literal|'0'
 condition|)
 block|{
-name|qtype
+name|queryType
 operator|=
 name|tmp
+expr_stmt|;
+name|qtypeSet
+operator|++
 expr_stmt|;
 block|}
 elseif|else
@@ -1514,9 +1526,12 @@ name|NULL
 argument_list|)
 condition|)
 block|{
-name|qtype
+name|queryType
 operator|=
 name|tmp
+expr_stmt|;
+name|qtypeSet
+operator|++
 expr_stmt|;
 block|}
 else|else
@@ -1533,14 +1548,18 @@ literal|'x'
 case|:
 if|if
 condition|(
-name|qtype
-operator|==
-name|T_A
+operator|!
+name|qtypeSet
 condition|)
-name|qtype
+block|{
+name|queryType
 operator|=
 name|T_ANY
 expr_stmt|;
+name|qtypeSet
+operator|++
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -1762,7 +1781,7 @@ name|anyflag
 operator|++
 condition|)
 block|{
-name|qclass
+name|queryClass
 operator|=
 name|C_ANY
 expr_stmt|;
@@ -1787,9 +1806,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|qtype
+name|queryType
 operator|=
 name|tmp
+expr_stmt|;
+name|qtypeSet
+operator|++
 expr_stmt|;
 block|}
 block|}
@@ -1815,7 +1837,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|qclass
+name|queryClass
 operator|=
 name|tmp
 expr_stmt|;
@@ -1955,6 +1977,10 @@ name|write
 argument_list|(
 name|fp
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|_res
 argument_list|,
@@ -2419,6 +2445,23 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+if|if
+condition|(
+operator|*
+name|domain
+operator|&&
+operator|!
+name|qtypeSet
+condition|)
+block|{
+name|queryType
+operator|=
+name|T_A
+expr_stmt|;
+name|qtypeSet
+operator|++
+expr_stmt|;
+block|}
 name|bytes_out
 operator|=
 name|n
@@ -2429,9 +2472,9 @@ name|QUERY
 argument_list|,
 name|domain
 argument_list|,
-name|qclass
+name|queryClass
 argument_list|,
-name|qtype
+name|queryType
 argument_list|,
 name|NULL
 argument_list|,
@@ -4977,6 +5020,9 @@ if|if
 condition|(
 name|len
 operator|>
+operator|(
+name|u_int
+operator|)
 name|answerLen
 condition|)
 block|{

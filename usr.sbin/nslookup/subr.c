@@ -25,7 +25,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: subr.c,v 1.2 1994/09/22 21:50:41 pst Exp $"
+literal|"$Id: subr.c,v 1.3 1995/05/30 03:49:20 rgrimes Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -1167,6 +1167,9 @@ literal|"Query refused"
 operator|)
 return|;
 break|break;
+ifdef|#
+directive|ifdef
+name|NOCHANGE
 case|case
 name|NOCHANGE
 case|:
@@ -1176,6 +1179,8 @@ literal|"No change"
 operator|)
 return|;
 break|break;
+endif|#
+directive|endif
 case|case
 name|TIME_OUT
 case|:
@@ -1430,6 +1435,23 @@ name|T_MX
 operator|)
 return|;
 comment|/* mail exchanger */
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|type
+argument_list|,
+literal|"PX"
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|T_PX
+operator|)
+return|;
+comment|/* mapping information */
 if|if
 condition|(
 name|strcasecmp
@@ -1823,6 +1845,23 @@ return|;
 comment|/* NSAP address */
 if|if
 condition|(
+name|strcasecmp
+argument_list|(
+name|type
+argument_list|,
+literal|"NSAP_PTR"
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|T_NSAP_PTR
+operator|)
+return|;
+comment|/* NSAP reverse pointer */
+if|if
+condition|(
 name|errorfile
 condition|)
 name|fprintf
@@ -1980,6 +2019,14 @@ literal|"mail exchanger"
 operator|)
 return|;
 case|case
+name|T_PX
+case|:
+return|return
+operator|(
+literal|"mapping information"
+operator|)
+return|;
+case|case
 name|T_TXT
 case|:
 return|return
@@ -2033,6 +2080,14 @@ case|:
 return|return
 operator|(
 literal|"nsap address"
+operator|)
+return|;
+case|case
+name|T_NSAP_PTR
+case|:
+return|return
+operator|(
+literal|"domain name pointer"
 operator|)
 return|;
 case|case
