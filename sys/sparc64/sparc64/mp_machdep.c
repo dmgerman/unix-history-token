@@ -391,6 +391,8 @@ name|i
 index|]
 operator|.
 name|te_va
+argument_list|,
+name|TS_4M
 argument_list|)
 expr_stmt|;
 name|tp
@@ -1347,6 +1349,8 @@ operator|=
 name|TV_VPN
 argument_list|(
 name|va
+argument_list|,
+name|TS_8K
 argument_list|)
 expr_stmt|;
 name|csa
