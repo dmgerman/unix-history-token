@@ -184,7 +184,7 @@ begin_define
 define|#
 directive|define
 name|lprintf
-value|if(scu->flags& DEBUG) printf
+value|if(scu->flags& FLAG_DEBUG) printf
 end_define
 
 begin_else
@@ -1539,7 +1539,7 @@ name|scu
 operator|->
 name|flags
 operator|=
-name|DEBUG
+name|FLAG_DEBUG
 expr_stmt|;
 name|lprintf
 argument_list|(
@@ -1883,7 +1883,7 @@ operator|->
 name|flags
 operator|&=
 operator|~
-name|DEBUG
+name|FLAG_DEBUG
 expr_stmt|;
 return|return
 name|PROBE_SUCCESS
@@ -1932,7 +1932,7 @@ name|scu
 operator|->
 name|flags
 operator||=
-name|DEBUG
+name|FLAG_DEBUG
 expr_stmt|;
 name|lprintf
 argument_list|(
@@ -2033,7 +2033,7 @@ operator|->
 name|flags
 operator|&=
 operator|~
-name|DEBUG
+name|FLAG_DEBUG
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -2276,7 +2276,7 @@ name|scu
 operator|->
 name|flags
 operator||=
-name|DEBUG
+name|FLAG_DEBUG
 expr_stmt|;
 else|else
 name|scu
@@ -2284,7 +2284,7 @@ operator|->
 name|flags
 operator|&=
 operator|~
-name|DEBUG
+name|FLAG_DEBUG
 expr_stmt|;
 switch|switch
 condition|(
@@ -2570,7 +2570,7 @@ name|flags
 operator|&=
 operator|~
 operator|(
-name|DEBUG
+name|FLAG_DEBUG
 operator||
 name|OPEN
 operator||

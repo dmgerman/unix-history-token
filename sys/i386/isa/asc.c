@@ -4,7 +4,7 @@ comment|/* asc.c - device driver for hand scanners  *  * Current version support
 end_comment
 
 begin_comment
-comment|/*  * $Id: asc.c,v 1.13 1995/12/16 21:32:19 bde Exp $  */
+comment|/*  * $Id: asc.c,v 1.14 1995/12/22 15:39:41 bde Exp $  */
 end_comment
 
 begin_include
@@ -310,7 +310,7 @@ begin_define
 define|#
 directive|define
 name|lprintf
-value|if(scu->flags& DEBUG) printf
+value|if(scu->flags& FLAG_DEBUG) printf
 end_define
 
 begin_else
