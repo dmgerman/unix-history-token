@@ -7132,6 +7132,12 @@ name|cnt
 operator|=
 literal|0
 expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|uma_mtx
+argument_list|)
+expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|z
@@ -7142,6 +7148,12 @@ argument|uz_link
 argument_list|)
 name|cnt
 operator|++
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|uma_mtx
+argument_list|)
 expr_stmt|;
 name|MALLOC
 argument_list|(
