@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1980, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)csh.h	5.17 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1980, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)csh.h	5.18 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -2364,27 +2364,6 @@ modifier|*
 name|evalp
 decl_stmt|;
 end_decl_stmt
-
-begin_struct
-specifier|extern
-struct|struct
-name|mesg
-block|{
-name|char
-modifier|*
-name|iname
-decl_stmt|;
-comment|/* name from /usr/include */
-name|char
-modifier|*
-name|pname
-decl_stmt|;
-comment|/* print name */
-block|}
-name|mesg
-index|[]
-struct|;
-end_struct
 
 begin_comment
 comment|/* word_chars is set by default to WORD_CHARS but can be overridden by    the worchars variable--if unset, reverts to WORD_CHARS */
