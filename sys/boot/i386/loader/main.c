@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: main.c,v 1.5 1998/09/17 23:52:15 msmith Exp $  */
+comment|/*-  * Copyright (c) 1998 Michael Smith<msmith@freebsd.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$Id: main.c,v 1.6 1998/09/18 02:03:30 msmith Exp $  */
 end_comment
 
 begin_comment
@@ -22,6 +22,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/bootinfo.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/reboot.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"bootstrap.h"
 end_include
 
@@ -36,6 +48,46 @@ include|#
 directive|include
 file|"btxv86.h"
 end_include
+
+begin_comment
+comment|/* Arguments passed in from the boot1/boot2 loader */
+end_comment
+
+begin_struct
+specifier|static
+struct|struct
+block|{
+name|u_int32_t
+name|howto
+decl_stmt|;
+name|u_int32_t
+name|bootdev
+decl_stmt|;
+name|u_int32_t
+name|res0
+decl_stmt|;
+name|u_int32_t
+name|res1
+decl_stmt|;
+name|u_int32_t
+name|res2
+decl_stmt|;
+name|u_int32_t
+name|bootinfo
+decl_stmt|;
+block|}
+modifier|*
+name|kargs
+struct|;
+end_struct
+
+begin_decl_stmt
+name|struct
+name|bootinfo
+modifier|*
+name|initial_bootinfo
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|struct
@@ -95,6 +147,29 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+comment|/* Pick up arguments */
+name|kargs
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|__args
+expr_stmt|;
+name|initial_bootinfo
+operator|=
+operator|(
+expr|struct
+name|bootinfo
+operator|*
+operator|)
+name|PTOV
+argument_list|(
+name|kargs
+operator|->
+name|bootinfo
+argument_list|)
+expr_stmt|;
 comment|/*       * Initialise the heap as early as possible.  Once this is done, malloc() is usable.      *      * XXX better to locate end of memory and use that      */
 name|setheap
 argument_list|(
@@ -119,7 +194,24 @@ operator|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/*       * XXX Chicken-and-egg problem; we want to have console output early, but some      * console attributes may depend on reading from eg. the boot device, which we      * can't do yet.      *      * We can use printf() etc. once this is done.      */
+comment|/*       * XXX Chicken-and-egg problem; we want to have console output early, but some      * console attributes may depend on reading from eg. the boot device, which we      * can't do yet.      *      * We can use printf() etc. once this is done.      * If the previous boot stage has requested a serial console, prefer that.      */
+if|if
+condition|(
+name|kargs
+operator|->
+name|howto
+operator|&
+name|RB_SERIAL
+condition|)
+name|setenv
+argument_list|(
+literal|"console"
+argument_list|,
+literal|"com"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|cons_probe
 argument_list|()
 expr_stmt|;
@@ -457,9 +549,12 @@ name|argv
 index|[]
 parameter_list|)
 block|{
+name|mallocstats
+argument_list|()
+expr_stmt|;
 name|printf
 argument_list|(
-literal|"heap base at %p, top at %p, used %d\n"
+literal|"heap base at %p, top at %p"
 argument_list|,
 name|end
 argument_list|,
@@ -467,13 +562,6 @@ name|sbrk
 argument_list|(
 literal|0
 argument_list|)
-argument_list|,
-name|sbrk
-argument_list|(
-literal|0
-argument_list|)
-operator|-
-name|end
 argument_list|)
 expr_stmt|;
 return|return
