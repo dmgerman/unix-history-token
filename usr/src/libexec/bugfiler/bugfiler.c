@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)bugfiler.c	4.8 (Berkeley) %G%"
+literal|"@(#)bugfiler.c	4.9 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2015,7 +2015,7 @@ operator|->
 name|h_info
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Strip of leading "/", "usr/", "src/" or "sys/". 	 */
+comment|/* 	 * Strip of leading "/", "usr/", or "src/". 	 */
 name|cp1
 operator|=
 name|hp
@@ -2047,41 +2047,9 @@ name|cp1
 argument_list|,
 literal|"src/"
 argument_list|)
-operator|||
-name|substr
-argument_list|(
-name|cp1
-argument_list|,
-literal|"sys/"
-argument_list|)
 condition|)
 name|cp1
 operator|+=
-literal|4
-expr_stmt|;
-comment|/*  	 * Don't toss "sys/" if nothing else is given for 	 * a folder name, this is a valid folder as well. 	 */
-if|if
-condition|(
-name|index
-argument_list|(
-name|cp1
-argument_list|,
-literal|'/'
-argument_list|)
-operator|==
-name|NULL
-operator|&&
-name|substr
-argument_list|(
-name|cp1
-operator|-
-literal|4
-argument_list|,
-literal|"sys/"
-argument_list|)
-condition|)
-name|cp1
-operator|-=
 literal|4
 expr_stmt|;
 comment|/* 	 * Read the folder name and remove it from the index line. 	 */
