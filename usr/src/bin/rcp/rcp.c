@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rcp.c	5.5 (Berkeley) %G%"
+literal|"@(#)rcp.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -819,6 +819,10 @@ argument_list|,
 name|src
 argument_list|,
 name|tuser
+condition|?
+name|tuser
+else|:
+literal|""
 argument_list|,
 name|tuser
 condition|?
@@ -852,6 +856,10 @@ argument_list|,
 name|src
 argument_list|,
 name|tuser
+condition|?
+name|tuser
+else|:
+literal|""
 argument_list|,
 name|tuser
 condition|?
