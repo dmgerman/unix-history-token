@@ -944,17 +944,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IN6P_BINDV6ONLY
-value|0x10000000
-end_define
-
-begin_comment
-comment|/* do not grab IPv4 traffic */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|INP_CONTROLOPTS
 value|(INP_RECVOPTS|INP_RECVRETOPTS|INP_RECVDSTADDR|\ 					INP_RECVIF|\ 				 IN6P_PKTINFO|IN6P_HOPLIMIT|IN6P_HOPOPTS|\ 				 IN6P_DSTOPTS|IN6P_RTHDR|IN6P_RTHDRDSTOPTS|\ 				 IN6P_AUTOFLOWLABEL)
 end_define
