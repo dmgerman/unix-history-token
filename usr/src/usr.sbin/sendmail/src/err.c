@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)err.c	8.17 (Berkeley) %G%"
+literal|"@(#)err.c	8.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1324,6 +1324,10 @@ name|int
 name|errno
 decl_stmt|;
 block|{
+name|char
+modifier|*
+name|dnsmsg
+decl_stmt|;
 specifier|static
 name|char
 name|buf
@@ -1358,6 +1362,10 @@ endif|#
 directive|endif
 comment|/* SMTP */
 comment|/* 	**  Handle special network error codes. 	** 	**	These are 4.2/4.3bsd specific; they should be in daemon.c. 	*/
+name|dnsmsg
+operator|=
+name|NULL
+expr_stmt|;
 switch|switch
 condition|(
 name|errno
@@ -1524,49 +1532,41 @@ name|HOST_NOT_FOUND
 operator|+
 name|E_DNSBASE
 case|:
-return|return
-operator|(
-literal|"Name server: %s: host not found"
-operator|,
-name|CurHostName
-operator|)
-return|;
+name|dnsmsg
+operator|=
+literal|"host not found"
+expr_stmt|;
+break|break;
 case|case
 name|TRY_AGAIN
 operator|+
 name|E_DNSBASE
 case|:
-return|return
-operator|(
-literal|"Name server: %s: host name lookup failure"
-operator|,
-name|CurHostName
-operator|)
-return|;
+name|dnsmsg
+operator|=
+literal|"host name lookup failure"
+expr_stmt|;
+break|break;
 case|case
 name|NO_RECOVERY
 operator|+
 name|E_DNSBASE
 case|:
-return|return
-operator|(
-literal|"Name server: %s: non-recoverable error"
-operator|,
-name|CurHostName
-operator|)
-return|;
+name|dnsmsg
+operator|=
+literal|"non-recoverable error"
+expr_stmt|;
+break|break;
 case|case
 name|NO_DATA
 operator|+
 name|E_DNSBASE
 case|:
-return|return
-operator|(
-literal|"Name server: %s: no data known"
-operator|,
-name|CurHostName
-operator|)
-return|;
+name|dnsmsg
+operator|=
+literal|"no data known"
+expr_stmt|;
+break|break;
 endif|#
 directive|endif
 case|case
@@ -1575,6 +1575,65 @@ case|:
 comment|/* SunOS gives "Not owner" -- this is the POSIX message */
 return|return
 literal|"Operation not permitted"
+return|;
+block|}
+if|if
+condition|(
+name|dnsmsg
+operator|!=
+name|NULL
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|strcpy
+argument_list|(
+name|buf
+argument_list|,
+literal|"Name server: "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|CurHostName
+operator|!=
+name|NULL
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|strcat
+argument_list|(
+name|buf
+argument_list|,
+name|CurHostName
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strcat
+argument_list|(
+name|buf
+argument_list|,
+literal|": "
+argument_list|)
+expr_stmt|;
+block|}
+operator|(
+name|void
+operator|)
+name|strcat
+argument_list|(
+name|buf
+argument_list|,
+name|dnsmsg
+argument_list|)
+expr_stmt|;
+return|return
+name|buf
 return|;
 block|}
 if|if
