@@ -203,7 +203,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* PROPOSAL: each unit needs: status, mixer, dsp, dspW, audio, sequencer, midi-in, seq2, sndproc = 9 devices dspW and audio are deprecated. dsp needs min 64 channels, will give it 256  minor = (unit<< 12) + (dev<< 8) + channel currently minor = (channel<< 8) + (unit<< 4) + dev  nomenclature: 	/dev/pcmX/dsp.(0..255) 	/dev/pcmX/dspW 	/dev/pcmX/audio 	/dev/pcmX/status 	/dev/pcmX/mixer 	[etc.] */
+comment|/* PROPOSAL: each unit needs: status, mixer, dsp, dspW, audio, sequencer, midi-in, seq2, sndproc = 9 devices dspW and audio are deprecated. dsp needs min 64 channels, will give it 256  minor = (unit<< 12) + (dev<< 8) + channel currently minor = (channel<< 8) + (unit<< 4) + dev  nomenclature: 	/dev/pcmX/dsp.(0..255) 	/dev/pcmX/dspW 	/dev/pcmX/audio 	/dev/pcmX/status 	/dev/pcmX/mixer 	[etc.]  currently: minor = (channel<< 8) + (unit<< 4) + dev */
 end_comment
 
 begin_define
@@ -1078,6 +1078,9 @@ name|SND_DEV_DSP
 case|:
 case|case
 name|SND_DEV_DSP16
+case|:
+case|case
+name|SND_DEV_NORESET
 case|:
 return|return
 name|d

@@ -626,6 +626,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SND_DEV_NORESET
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
 name|DSP_DEFAULT_SPEED
 value|8000
 end_define

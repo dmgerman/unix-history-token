@@ -56,18 +56,6 @@ end_define
 
 begin_function_decl
 specifier|static
-name|int
-name|chn_reinit
-parameter_list|(
-name|pcm_channel
-modifier|*
-name|c
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|void
 name|chn_stintr
 parameter_list|(
@@ -724,6 +712,8 @@ name|buf
 parameter_list|)
 block|{
 name|int
+name|a
+decl_stmt|,
 name|l
 decl_stmt|,
 name|w
@@ -772,6 +762,18 @@ return|return
 name|EBUSY
 return|;
 block|}
+name|a
+operator|=
+operator|(
+literal|1
+operator|<<
+name|c
+operator|->
+name|align
+operator|)
+operator|-
+literal|1
+expr_stmt|;
 name|c
 operator|->
 name|flags
@@ -896,8 +898,28 @@ name|b
 operator|->
 name|fp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|l
 operator|&
-name|DMA_ALIGN_MASK
+name|a
+condition|)
+name|panic
+argument_list|(
+literal|"unaligned write %d, %d"
+argument_list|,
+name|l
+argument_list|,
+name|a
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+name|l
+operator|&=
+operator|~
+name|a
 expr_stmt|;
 name|w
 operator|=
@@ -1576,20 +1598,7 @@ modifier|*
 name|c
 parameter_list|)
 block|{
-if|if
-condition|(
-operator|!
-name|c
-operator|->
-name|buffer
-operator|.
-name|dl
-condition|)
-name|chn_reinit
-argument_list|(
-name|c
-argument_list|)
-expr_stmt|;
+comment|/*	if (!c->buffer.dl) chn_reinit(c); */
 if|if
 condition|(
 name|c
@@ -2710,7 +2719,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|chn_reinit
 parameter_list|(

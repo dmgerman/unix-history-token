@@ -5,6 +5,17 @@ end_comment
 
 begin_function_decl
 name|int
+name|chn_reinit
+parameter_list|(
+name|pcm_channel
+modifier|*
+name|c
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|chn_write
 parameter_list|(
 name|pcm_channel

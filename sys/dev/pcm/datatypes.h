@@ -286,6 +286,9 @@ index|[
 literal|16
 index|]
 decl_stmt|;
+name|int
+name|align
+decl_stmt|;
 name|pcmfeed_init_t
 modifier|*
 name|init
@@ -507,6 +510,9 @@ decl_stmt|;
 name|pcm_feeder
 modifier|*
 name|feeder
+decl_stmt|;
+name|u_int32_t
+name|align
 decl_stmt|;
 name|int
 name|volume
