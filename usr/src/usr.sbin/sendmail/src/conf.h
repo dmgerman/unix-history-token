@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.96 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1983 Eric P. Allman  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)conf.h	8.97 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1130,6 +1130,37 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* 4.1.x specifics */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSETSID
+value|1
+end_define
+
+begin_comment
+comment|/* has Posix setsid(2) call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASSETVBUF
+value|1
+end_define
+
+begin_comment
+comment|/* we have setvbuf(3) in libc */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -1895,17 +1926,15 @@ begin_comment
 comment|/* setproctitle is in libc */
 end_comment
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
+begin_undef
+undef|#
+directive|undef
 name|SETPROCTITLE
-value|1
-end_define
+end_undef
+
+begin_comment
+comment|/* so don't redefine it in conf.c */
+end_comment
 
 begin_endif
 endif|#
