@@ -4,7 +4,7 @@ comment|/* Copyright (c) 1979 Regents of the University of California */
 end_comment
 
 begin_comment
-comment|/* static char sccsid[] = "@(#)libpc.h 1.5 %G%"; */
+comment|/* static char sccsid[] = "@(#)libpc.h 1.6 %G%"; */
 end_comment
 
 begin_function_decl
@@ -62,6 +62,14 @@ begin_function_decl
 specifier|extern
 name|long
 name|ERROR
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|EXCEPT
 parameter_list|()
 function_decl|;
 end_function_decl
