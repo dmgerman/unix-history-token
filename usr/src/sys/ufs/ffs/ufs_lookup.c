@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ufs_lookup.c	4.1	%G%	*/
+comment|/*	ufs_lookup.c	4.2	%G%	*/
 end_comment
 
 begin_include
@@ -247,6 +247,31 @@ operator|==
 literal|'!'
 condition|)
 break|break;
+if|if
+condition|(
+name|flag
+operator|==
+literal|1
+operator|&&
+name|c
+operator|==
+operator|(
+literal|'/'
+operator||
+literal|0200
+operator|)
+condition|)
+block|{
+name|u
+operator|.
+name|u_error
+operator|=
+name|ENOENT
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 if|if
 condition|(
 name|cp
