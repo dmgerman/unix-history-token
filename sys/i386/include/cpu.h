@@ -308,6 +308,11 @@ name|defined
 argument_list|(
 name|I486_CPU
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|KLD_MODULE
+argument_list|)
 name|struct
 name|bintime
 name|bt
