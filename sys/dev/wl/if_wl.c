@@ -339,6 +339,10 @@ name|bus_space_handle_t
 name|bh
 decl_stmt|;
 name|struct
+name|mtx
+name|wl_mtx
+decl_stmt|;
+name|struct
 name|callout_handle
 name|watchdog_ch
 decl_stmt|;
@@ -370,6 +374,26 @@ directive|endif
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|WL_LOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_lock(&(_sc)->wl_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WL_UNLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_unlock(&(_sc)->wl_mtx)
+end_define
 
 begin_function_decl
 specifier|static
@@ -1250,8 +1274,6 @@ name|unsigned
 name|long
 name|junk
 decl_stmt|,
-name|oldpri
-decl_stmt|,
 name|sirq
 decl_stmt|;
 name|int
@@ -1328,11 +1350,6 @@ parameter_list|,
 name|hacr
 parameter_list|)
 value|outw((base), (hacr))
-name|oldpri
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
 name|PCMD
 argument_list|(
 name|base
@@ -1361,11 +1378,6 @@ name|DELAYCONST
 argument_list|)
 expr_stmt|;
 comment|/*>> 4 clocks at 6MHz */
-name|splx
-argument_list|(
-name|oldpri
-argument_list|)
-expr_stmt|;
 comment|/* clear reset command and set PIO#1 in autoincrement mode */
 name|PCMD
 argument_list|(
@@ -1663,6 +1675,25 @@ operator|&
 name|sc
 operator|->
 name|wl_if
+expr_stmt|;
+name|mtx_init
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|wl_mtx
+argument_list|,
+name|device_get_nameunit
+argument_list|(
+name|device
+argument_list|)
+argument_list|,
+name|MTX_NETWORK_LOCK
+argument_list|,
+name|MTX_DEF
+operator||
+name|MTX_RECURSE
+argument_list|)
 expr_stmt|;
 name|error
 operator|=
@@ -2224,6 +2255,11 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+name|WL_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* reset the board */
 name|sc
 operator|->
@@ -2286,6 +2322,19 @@ expr_stmt|;
 name|wl_deallocate_resources
 argument_list|(
 name|device
+argument_list|)
+expr_stmt|;
+name|WL_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|mtx_destroy
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|wl_mtx
 argument_list|)
 expr_stmt|;
 return|return
@@ -3327,9 +3376,6 @@ decl_stmt|;
 name|int
 name|stat
 decl_stmt|;
-name|u_long
-name|oldpri
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|WLDEBUG
@@ -3372,11 +3418,6 @@ operator|)
 literal|0
 condition|)
 return|return;
-name|oldpri
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3452,11 +3493,6 @@ name|unit
 argument_list|)
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|oldpri
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -4115,6 +4151,11 @@ name|cu_status
 decl_stmt|,
 name|scb_command
 decl_stmt|;
+name|WL_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|WLDEBUG
@@ -4288,6 +4329,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|WL_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return;
 comment|/* genuinely still busy */
 block|}
@@ -4335,6 +4381,11 @@ argument_list|(
 literal|"wl%d: busy?!"
 argument_list|,
 name|unit
+argument_list|)
+expr_stmt|;
+name|WL_UNLOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4439,6 +4490,11 @@ operator|~
 name|IFF_OACTIVE
 expr_stmt|;
 block|}
+name|WL_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 end_function
@@ -5246,8 +5302,6 @@ init|=
 literal|0
 decl_stmt|;
 name|int
-name|opri
-decl_stmt|,
 name|error
 init|=
 literal|0
@@ -5284,6 +5338,11 @@ name|cpt
 decl_stmt|;
 endif|#
 directive|endif
+name|WL_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|WLDEBUG
@@ -5306,11 +5365,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|opri
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
 switch|switch
 condition|(
 name|cmd
@@ -5591,11 +5645,18 @@ name|i
 index|]
 argument_list|)
 condition|)
+block|{
+name|WL_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EFAULT
 operator|)
 return|;
+block|}
 block|}
 break|break;
 comment|/* copy the PSA in from the caller; we only copy _some_ values */
@@ -5656,11 +5717,18 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
+name|WL_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EFAULT
 operator|)
 return|;
+block|}
 comment|/* check IRQ value */
 name|irqval
 operator|=
@@ -6013,14 +6081,21 @@ argument_list|,
 name|MMC_EEDATALrv
 argument_list|)
 argument_list|)
-comment|/* 2.4 Gz: EEPROM word      */
 condition|)
+block|{
+comment|/* 2.4 Gz: EEPROM word      */
+name|WL_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EFAULT
 operator|)
 return|;
 comment|/* 2.4 Gz:		    */
+block|}
 if|if
 condition|(
 name|subyte
@@ -6041,14 +6116,21 @@ argument_list|,
 name|MMC_EEDATALrv
 argument_list|)
 argument_list|)
-comment|/* 2.4 Gz: EEPROM word      */
 condition|)
+block|{
+comment|/* 2.4 Gz: EEPROM word      */
+name|WL_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EFAULT
 operator|)
 return|;
 comment|/* 2.4 Gz:		    */
+block|}
 block|}
 break|break;
 ifdef|#
@@ -6163,11 +6245,18 @@ name|cpt
 operator|++
 argument_list|)
 condition|)
+block|{
+name|WL_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EFAULT
 operator|)
 return|;
+block|}
 block|}
 break|break;
 endif|#
@@ -6186,9 +6275,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|splx
+name|WL_UNLOCK
 argument_list|(
-name|opri
+name|sc
 argument_list|)
 expr_stmt|;
 return|return
@@ -6236,6 +6325,11 @@ argument_list|,
 name|unit
 argument_list|)
 expr_stmt|;
+name|WL_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|wl_ac
@@ -6246,6 +6340,11 @@ name|if_oerrors
 operator|++
 expr_stmt|;
 name|wlinit
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|WL_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -6294,6 +6393,11 @@ name|int_type
 decl_stmt|,
 name|int_type1
 decl_stmt|;
+name|WL_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|WLDEBUG
@@ -6361,6 +6465,11 @@ condition|)
 block|{
 comment|/* return if no interrupt from 82586 */
 comment|/* commented out. jrb.  it happens when reinit occurs 	   printf("wlintr: int_type %x, dump follows\n", int_type); 	   wldump(unit); 	   */
+name|WL_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 if|if
@@ -6840,6 +6949,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|WL_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 end_function
@@ -11107,8 +11221,6 @@ name|base
 decl_stmt|;
 name|int
 name|i
-decl_stmt|,
-name|oldpri
 decl_stmt|;
 name|u_short
 name|crc
@@ -11159,12 +11271,6 @@ operator|=
 literal|0x55
 expr_stmt|;
 comment|/* default to 'bad' until programming complete */
-name|oldpri
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
-comment|/* ick, long pause */
 name|PCMD
 argument_list|(
 name|base
@@ -11295,11 +11401,6 @@ argument_list|(
 name|base
 argument_list|,
 name|HACR_DEFAULT
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|oldpri
 argument_list|)
 expr_stmt|;
 block|}
