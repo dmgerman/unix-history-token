@@ -227,6 +227,12 @@ name|itc_frequency
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SMP
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|timecounter_get_t
@@ -285,6 +291,11 @@ literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Values for timerX_state: */
@@ -365,16 +376,21 @@ name|last_time
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-specifier|static
-name|u_int32_t
-name|calibrate_clocks
-parameter_list|(
-name|u_int32_t
-name|firmware_freq
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* not used yet */
+end_comment
+
+begin_endif
+unit|static u_int32_t calibrate_clocks(u_int32_t firmware_freq);
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
@@ -542,6 +558,9 @@ name|freq
 operator|/
 name|hz
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|SMP
 name|ia64_timecounter
 operator|.
 name|tc_frequency
@@ -554,6 +573,8 @@ operator|&
 name|ia64_timecounter
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ia64_set_itm
 argument_list|(
 name|ia64_get_itc
@@ -583,168 +604,46 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|u_int32_t
-name|calibrate_clocks
-parameter_list|(
-name|u_int32_t
-name|firmware_freq
-parameter_list|)
-block|{
-name|u_int32_t
-name|start_pcc
-decl_stmt|,
-name|stop_pcc
-decl_stmt|;
-name|int
-name|sec
-decl_stmt|,
-name|start_sec
-decl_stmt|;
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|printf
-argument_list|(
-literal|"Calibrating clock(s) ... "
-argument_list|)
-expr_stmt|;
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* not used yet */
+end_comment
+
+begin_comment
+unit|static u_int32_t calibrate_clocks(u_int32_t firmware_freq) { 	u_int32_t start_pcc, stop_pcc; 	int sec, start_sec;  	if (bootverbose) 	        printf("Calibrating clock(s) ... ");
 comment|/* Read the mc146818A seconds counter. */
-if|if
-condition|(
-name|CLOCK_GETSECS
-argument_list|(
-name|clockdev
-argument_list|,
-operator|&
-name|sec
-argument_list|)
-condition|)
-goto|goto
-name|fail
-goto|;
+end_comment
+
+begin_comment
+unit|if (CLOCK_GETSECS(clockdev,&sec)) 		goto fail;
 comment|/* Wait for the mC146818A seconds counter to change. */
-name|start_sec
-operator|=
-name|sec
-expr_stmt|;
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
-if|if
-condition|(
-name|CLOCK_GETSECS
-argument_list|(
-name|clockdev
-argument_list|,
-operator|&
-name|sec
-argument_list|)
-condition|)
-goto|goto
-name|fail
-goto|;
-if|if
-condition|(
-name|sec
-operator|!=
-name|start_sec
-condition|)
-break|break;
-block|}
+end_comment
+
+begin_comment
+unit|start_sec = sec; 	for (;;) { 		if (CLOCK_GETSECS(clockdev,&sec)) 			goto fail; 		if (sec != start_sec) 			break; 	}
 comment|/* Start keeping track of the PCC. */
-name|start_pcc
-operator|=
-name|ia64_get_itc
-argument_list|()
-expr_stmt|;
+end_comment
+
+begin_comment
+unit|start_pcc = ia64_get_itc();
 comment|/* 	 * Wait for the mc146818A seconds counter to change. 	 */
-name|start_sec
-operator|=
-name|sec
-expr_stmt|;
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
-if|if
-condition|(
-name|CLOCK_GETSECS
-argument_list|(
-name|clockdev
-argument_list|,
-operator|&
-name|sec
-argument_list|)
-condition|)
-goto|goto
-name|fail
-goto|;
-if|if
-condition|(
-name|sec
-operator|!=
-name|start_sec
-condition|)
-break|break;
-block|}
+end_comment
+
+begin_comment
+unit|start_sec = sec; 	for (;;) { 		if (CLOCK_GETSECS(clockdev,&sec)) 			goto fail; 		if (sec != start_sec) 			break; 	}
 comment|/* 	 * Read the PCC again to work out frequency. 	 */
-name|stop_pcc
-operator|=
-name|ia64_get_itc
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|bootverbose
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"PCC clock: %u Hz (firmware %u Hz)\n"
-argument_list|,
-name|stop_pcc
-operator|-
-name|start_pcc
-argument_list|,
-name|firmware_freq
-argument_list|)
-expr_stmt|;
-block|}
-return|return
-operator|(
-name|stop_pcc
-operator|-
-name|start_pcc
-operator|)
-return|;
-name|fail
-label|:
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|printf
-argument_list|(
-literal|"failed, using firmware default of %u Hz\n"
-argument_list|,
-name|firmware_freq
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|firmware_freq
-operator|)
-return|;
-block|}
-end_function
+end_comment
+
+begin_endif
+unit|stop_pcc = ia64_get_itc();  	if (bootverbose) { 	        printf("PCC clock: %u Hz (firmware %u Hz)\n", 		       stop_pcc - start_pcc, firmware_freq); 	} 	return (stop_pcc - start_pcc);  fail: 	if (bootverbose) 	        printf("failed, using firmware default of %u Hz\n", 		       firmware_freq); 	return (firmware_freq); }
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
@@ -1465,6 +1364,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SMP
+end_ifndef
+
 begin_function
 specifier|static
 name|unsigned
@@ -1482,6 +1387,11 @@ argument_list|()
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|int
