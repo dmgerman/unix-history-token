@@ -2430,11 +2430,6 @@ name|B_CLUSTEROK
 operator|)
 condition|)
 block|{
-name|BUF_UNLOCK
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
 name|vfs_bio_awrite
 argument_list|(
 name|bp

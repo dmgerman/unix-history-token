@@ -1158,11 +1158,6 @@ operator|!
 name|wait
 condition|)
 block|{
-name|BUF_UNLOCK
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -1287,18 +1282,11 @@ argument_list|()
 expr_stmt|;
 block|}
 else|else
-block|{
-name|BUF_UNLOCK
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
 name|vfs_bio_awrite
 argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* 		 * Since we may have slept during the I/O, we need  		 * to start from a known point. 		 */
 name|VI_LOCK
 argument_list|(
