@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	kern_proc.c	3.23	%G%	*/
+comment|/*	kern_proc.c	3.24	%G%	*/
 end_comment
 
 begin_include
@@ -653,6 +653,14 @@ argument_list|(
 name|ip
 argument_list|,
 name|nc
+operator|+
+operator|(
+name|na
+operator|+
+literal|4
+operator|)
+operator|*
+name|NBPW
 argument_list|)
 expr_stmt|;
 if|if

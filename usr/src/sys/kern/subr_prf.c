@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	subr_prf.c	3.3	%G%	*/
+comment|/*	subr_prf.c	3.4	%G%	*/
 end_comment
 
 begin_include
@@ -37,6 +37,12 @@ begin_include
 include|#
 directive|include
 file|"../h/mtpr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/reboot.h"
 end_include
 
 begin_ifdef
@@ -587,7 +593,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Panic is called on unresolvable  * fatal errors.  * It syncs, prints "panic: mesg" and  * then loops.  */
+comment|/*  * Panic is called on unresolvable fatal errors.  * It syncs, prints "panic: mesg", and then reboots.  */
 end_comment
 
 begin_macro
@@ -628,7 +634,14 @@ control|(
 init|;
 condition|;
 control|)
-empty_stmt|;
+name|boot
+argument_list|(
+name|RB_PANIC
+argument_list|,
+name|RB_AUTOBOOT
+argument_list|)
+expr_stmt|;
+comment|/* 0 = automatic */
 block|}
 end_block
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	3.25	%G%	*/
+comment|/*	machdep.c	3.26	%G%	*/
 end_comment
 
 begin_include
@@ -81,12 +81,24 @@ directive|include
 file|"../h/uba.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"../h/cons.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/reboot.h"
+end_include
+
 begin_decl_stmt
 name|char
 name|version
 index|[]
 init|=
-literal|"VM/UNIX (Berkeley Version 3.25) %H% \n"
+literal|"VM/UNIX (Berkeley Version 3.26) %H% \n"
 decl_stmt|;
 end_decl_stmt
 
@@ -113,10 +125,10 @@ block|,
 comment|/* etc/ */
 literal|0x74696e69
 block|,
-comment|/* init */
-literal|0x006d762e
+comment|/* init" */
+literal|0x00000000
 block|,
-comment|/* .vm";  0 */
+comment|/* \0\0\0";  0 */
 literal|0x00000014
 block|,
 comment|/* [&"init", */
@@ -1537,6 +1549,174 @@ name|ubareset
 argument_list|()
 expr_stmt|;
 block|}
+block|}
+end_block
+
+begin_decl_stmt
+name|int
+name|waittime
+init|=
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_macro
+name|boot
+argument_list|(
+argument|panic
+argument_list|,
+argument|arghowto
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+name|panic
+decl_stmt|,
+name|arghowto
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+specifier|register
+name|int
+name|howto
+decl_stmt|;
+comment|/* r11 == how to boot */
+specifier|register
+name|int
+name|devtype
+decl_stmt|;
+comment|/* r10 == major of root dev */
+name|howto
+operator|=
+name|arghowto
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"howto %d\n"
+argument_list|,
+name|howto
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|howto
+operator|&
+name|RB_NOSYNC
+operator|)
+operator|==
+literal|0
+operator|&&
+name|waittime
+operator|<
+literal|0
+condition|)
+block|{
+name|waittime
+operator|=
+literal|0
+expr_stmt|;
+name|update
+argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"updating (wait"
+argument_list|)
+expr_stmt|;
+while|while
+condition|(
+operator|++
+name|waittime
+operator|<=
+literal|10
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"."
+argument_list|)
+expr_stmt|;
+name|sleep
+argument_list|(
+operator|(
+name|caddr_t
+operator|)
+operator|&
+name|lbolt
+argument_list|,
+name|PZERO
+argument_list|)
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|") done\n"
+argument_list|)
+expr_stmt|;
+block|}
+name|splx
+argument_list|(
+literal|0x1f
+argument_list|)
+expr_stmt|;
+comment|/* extreme priority */
+name|devtype
+operator|=
+name|major
+argument_list|(
+name|rootdev
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|howto
+operator|&
+name|RB_HALT
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+while|while
+condition|(
+operator|(
+name|mfpr
+argument_list|(
+name|TXCS
+argument_list|)
+operator|&
+name|TXCS_RDY
+operator|)
+operator|==
+literal|0
+condition|)
+continue|continue;
+name|mtpr
+argument_list|(
+name|TXDB
+argument_list|,
+name|panic
+operator|==
+name|RB_PANIC
+condition|?
+name|TXDB_AUTOR
+else|:
+name|TXDB_BOOT
+argument_list|)
+expr_stmt|;
+block|}
+for|for
+control|(
+init|;
+condition|;
+control|)
+asm|asm("halt");
 block|}
 end_block
 
