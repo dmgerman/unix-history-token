@@ -1532,13 +1532,21 @@ index|]
 operator|=
 name|fd
 expr_stmt|;
+if|if
+condition|(
+name|fdp
+operator|->
+name|fd_knlistsize
+operator|<
+literal|0
+condition|)
 name|fdp
 operator|->
 name|fd_knlistsize
 operator|=
 literal|0
 expr_stmt|;
-comment|/* mark this fdesc as having a kq */
+comment|/* this process has a kq */
 name|kq
 operator|->
 name|kq_fdp
