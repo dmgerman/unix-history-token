@@ -1430,8 +1430,6 @@ decl_stmt|,
 name|sapipe
 decl_stmt|;
 name|int
-name|tmpint
-decl_stmt|,
 name|ch
 decl_stmt|,
 name|dofork
