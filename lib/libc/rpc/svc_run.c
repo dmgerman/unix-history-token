@@ -32,7 +32,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: svc_run.c,v 1.3 1996/06/10 00:49:19 jraynard Exp $"
+literal|"$Id: svc_run.c,v 1.4 1996/12/30 15:14:29 peter Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -174,6 +174,8 @@ condition|(
 name|select
 argument_list|(
 name|svc_maxfd
+operator|+
+literal|1
 argument_list|,
 name|fds
 argument_list|,
@@ -241,7 +243,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 default|default:
-comment|/* XXX What the hell?? what if fds == NULL?? */
+comment|/* if fds == NULL, select() can't return a result */
 name|svc_getreqset2
 argument_list|(
 name|fds
