@@ -760,11 +760,6 @@ expr_stmt|;
 name|PV_LOCK
 argument_list|()
 expr_stmt|;
-name|pv_dump
-argument_list|(
-name|pvh
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|pstp
@@ -819,11 +814,6 @@ condition|)
 name|pv_remove_phys
 argument_list|(
 name|pstp
-argument_list|)
-expr_stmt|;
-name|pv_dump
-argument_list|(
-name|pvh
 argument_list|)
 expr_stmt|;
 name|PV_UNLOCK
