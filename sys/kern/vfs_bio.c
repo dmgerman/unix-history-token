@@ -14369,8 +14369,6 @@ decl_stmt|;
 name|int
 name|npages
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 name|npages
 operator|=
 name|bp
