@@ -688,7 +688,7 @@ name|sprintf
 argument_list|(
 name|name
 argument_list|,
-literal|"%s/r%s%c"
+literal|"%sr%s%c"
 argument_list|,
 name|_PATH_DEV
 argument_list|,
@@ -1314,6 +1314,13 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
+name|printf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
 block|}
 name|argc
 operator|--
