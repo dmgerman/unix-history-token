@@ -724,6 +724,10 @@ comment|/* 	 * Reset everything 	 */
 name|bzero
 argument_list|(
 operator|(
+name|void
+operator|*
+operator|)
+operator|(
 name|uintptr_t
 operator|)
 name|vct

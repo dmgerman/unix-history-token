@@ -263,6 +263,10 @@ comment|/* 	 * Clear all RAM to initial value of zero. 	 * This makes sure we do
 name|bzero
 argument_list|(
 operator|(
+name|void
+operator|*
+operator|)
+operator|(
 name|uintptr_t
 operator|)
 name|eup
