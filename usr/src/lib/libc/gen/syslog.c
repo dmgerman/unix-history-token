@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslog.c	4.6 (Berkeley) %G%"
+literal|"@(#)syslog.c	4.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -154,18 +154,49 @@ begin_comment
 comment|/* string to tag the entry with */
 end_comment
 
+begin_comment
+comment|/* mask of priorities to be logged */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|int
 name|LogMask
 init|=
-literal|0xffffffff
+operator|~
+operator|(
+name|mask
+argument_list|(
+name|KERN_EMERG
+argument_list|)
+operator||
+name|mask
+argument_list|(
+name|KERN_ALERT
+argument_list|)
+operator||
+name|mask
+argument_list|(
+name|KERN_ERR
+argument_list|)
+operator||
+name|mask
+argument_list|(
+name|KERN_FAIL
+argument_list|)
+operator||
+name|mask
+argument_list|(
+name|KERN_RECOV
+argument_list|)
+operator||
+name|mask
+argument_list|(
+name|KERN_INFO
+argument_list|)
+operator|)
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* mask of priorities to be logged */
-end_comment
 
 begin_decl_stmt
 specifier|static
