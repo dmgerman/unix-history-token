@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)refresh.c	5.7 (Berkeley) %G%"
+literal|"@(#)refresh.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -998,11 +998,19 @@ directive|ifdef
 name|DEBUG
 name|__TRACE
 argument_list|(
-literal|"makech: 1: wx = %d, lx = %d\n"
+literal|"makech: 1: wx = %d, lx = %d, newy = %d, newx = %d\n"
 argument_list|,
 name|wx
 argument_list|,
 name|lx
+argument_list|,
+name|y
+argument_list|,
+name|wx
+operator|+
+name|win
+operator|->
+name|_begx
 argument_list|)
 expr_stmt|;
 endif|#
