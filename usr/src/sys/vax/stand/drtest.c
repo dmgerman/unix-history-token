@@ -206,7 +206,7 @@ name|SECTSIZ
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Testing %s, chunk size is %d\n"
+literal|"Testing %s, chunk size is %d bytes\n"
 argument_list|,
 name|buf
 argument_list|,
@@ -264,9 +264,13 @@ if|if
 condition|(
 name|i
 operator|%
+operator|(
 name|st
 operator|.
 name|ntrak
+operator|*
+literal|5
+operator|)
 operator|==
 literal|0
 condition|)
