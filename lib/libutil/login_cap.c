@@ -501,6 +501,13 @@ expr_stmt|;
 name|free
 argument_list|(
 name|lc
+operator|->
+name|lc_cap
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|lc
 argument_list|)
 expr_stmt|;
 if|if
