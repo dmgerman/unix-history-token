@@ -2221,6 +2221,11 @@ operator|->
 name|vr_miibus
 argument_list|)
 expr_stmt|;
+name|VR_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|vr_setcfg
 argument_list|(
 name|sc
@@ -2228,6 +2233,11 @@ argument_list|,
 name|mii
 operator|->
 name|mii_media_active
+argument_list|)
+expr_stmt|;
+name|VR_UNLOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 block|}
