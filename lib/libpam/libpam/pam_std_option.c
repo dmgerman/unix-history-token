@@ -20,12 +20,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<security/pam_modules.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
@@ -44,7 +38,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pam_mod_misc.h"
+file|<security/pam_appl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<security/pam_mod_misc.h>
 end_include
 
 begin_comment

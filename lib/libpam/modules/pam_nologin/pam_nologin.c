@@ -379,11 +379,11 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|pam_prompt
+name|pam_error
 argument_list|(
 name|pamh
 argument_list|,
-name|PAM_ERROR_MSG
+literal|"%s"
 argument_list|,
 name|mtmp
 argument_list|,

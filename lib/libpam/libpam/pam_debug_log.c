@@ -20,12 +20,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<security/pam_modules.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<libgen.h>
 end_include
 
@@ -62,7 +56,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"pam_mod_misc.h"
+file|<security/pam_appl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<security/openpam.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<security/pam_mod_misc.h>
 end_include
 
 begin_define
@@ -427,15 +433,13 @@ argument_list|,
 name|ap
 argument_list|)
 expr_stmt|;
-name|pam_prompt
+name|pam_error
 argument_list|(
 name|pamh
 argument_list|,
-name|PAM_ERROR_MSG
+literal|"%s"
 argument_list|,
 name|statusmsg
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|free

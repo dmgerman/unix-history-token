@@ -109,12 +109,6 @@ directive|include
 file|<security/pam_mod_misc.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<security/_pam_macros.h>
-end_include
-
 begin_enum
 enum|enum
 block|{
@@ -585,10 +579,12 @@ name|pamh
 argument_list|,
 name|PAM_PROMPT_ECHO_OFF
 argument_list|,
-name|prompt
-argument_list|,
 operator|&
 name|token
+argument_list|,
+literal|"%s"
+argument_list|,
+name|prompt
 argument_list|)
 expr_stmt|;
 if|if
@@ -599,12 +595,6 @@ name|PAM_SUCCESS
 condition|)
 name|PAM_RETURN
 argument_list|(
-name|retval
-operator|==
-name|PAM_CONV_AGAIN
-condition|?
-name|PAM_INCOMPLETE
-else|:
 name|PAM_AUTHINFO_UNAVAIL
 argument_list|)
 expr_stmt|;
@@ -715,11 +705,13 @@ block|}
 block|}
 block|}
 else|else
+block|{
 name|PAM_LOG
 argument_list|(
 literal|"Ignoring supplied password structure"
 argument_list|)
 expr_stmt|;
+block|}
 name|PAM_LOG
 argument_list|(
 literal|"Done anonymous"

@@ -641,7 +641,7 @@ else|else
 block|{
 name|retval
 operator|=
-name|pam_get_pass
+name|pam_get_authtok
 argument_list|(
 name|pamh
 argument_list|,
@@ -649,9 +649,6 @@ operator|&
 name|pass
 argument_list|,
 name|password_prompt
-argument_list|,
-operator|&
-name|options
 argument_list|)
 expr_stmt|;
 if|if
@@ -751,7 +748,7 @@ expr_stmt|;
 comment|/* 		 * User unknown. 		 * Encrypt a dummy password so as to not give away too much. 		 */
 name|retval
 operator|=
-name|pam_get_pass
+name|pam_get_authtok
 argument_list|(
 name|pamh
 argument_list|,
@@ -759,9 +756,6 @@ operator|&
 name|pass
 argument_list|,
 name|password_prompt
-argument_list|,
-operator|&
-name|options
 argument_list|)
 expr_stmt|;
 if|if
@@ -937,12 +931,6 @@ name|char
 name|rhostip
 index|[
 name|MAXHOSTNAMELEN
-index|]
-decl_stmt|;
-name|char
-name|buf
-index|[
-literal|128
 index|]
 decl_stmt|;
 name|pam_std_option
@@ -1215,14 +1203,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pam_error
 argument_list|(
-name|buf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
+name|pamh
 argument_list|,
 literal|"Warning: your account expires on %s"
 argument_list|,
@@ -1233,17 +1216,6 @@ name|pwd
 operator|->
 name|pw_expire
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|pam_prompt
-argument_list|(
-name|pamh
-argument_list|,
-name|PAM_ERROR_MSG
-argument_list|,
-name|buf
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -1310,14 +1282,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|snprintf
+name|pam_error
 argument_list|(
-name|buf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
+name|pamh
 argument_list|,
 literal|"Warning: your password expires on %s"
 argument_list|,
@@ -1328,17 +1295,6 @@ name|pwd
 operator|->
 name|pw_change
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|pam_prompt
-argument_list|(
-name|pamh
-argument_list|,
-name|PAM_ERROR_MSG
-argument_list|,
-name|buf
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -1773,7 +1729,7 @@ else|else
 block|{
 name|retval
 operator|=
-name|pam_get_pass
+name|pam_get_authtok
 argument_list|(
 name|pamh
 argument_list|,
@@ -1781,9 +1737,6 @@ operator|&
 name|pass
 argument_list|,
 name|PASSWORD_PROMPT_EXPIRED
-argument_list|,
-operator|&
-name|options
 argument_list|)
 expr_stmt|;
 if|if
@@ -2026,10 +1979,12 @@ name|pamh
 argument_list|,
 name|PAM_PROMPT_ECHO_OFF
 argument_list|,
-name|NEW_PASSWORD_PROMPT_1
-argument_list|,
 operator|&
 name|new_pass
+argument_list|,
+literal|"%s"
+argument_list|,
+name|NEW_PASSWORD_PROMPT_1
 argument_list|)
 expr_stmt|;
 if|if
@@ -2064,10 +2019,12 @@ name|pamh
 argument_list|,
 name|PAM_PROMPT_ECHO_OFF
 argument_list|,
-name|NEW_PASSWORD_PROMPT_2
-argument_list|,
 operator|&
 name|new_pass_
+argument_list|,
+literal|"%s"
+argument_list|,
+name|NEW_PASSWORD_PROMPT_2
 argument_list|)
 expr_stmt|;
 if|if
@@ -2770,6 +2727,7 @@ specifier|const
 name|char
 modifier|*
 name|user
+name|__unused
 parameter_list|,
 specifier|const
 name|char
@@ -2779,7 +2737,7 @@ parameter_list|)
 block|{
 name|struct
 name|master_yppasswd
-name|master_yppasswd
+name|master_yppwd
 decl_stmt|;
 name|struct
 name|passwd
@@ -2796,7 +2754,7 @@ name|tv
 decl_stmt|;
 name|struct
 name|yppasswd
-name|yppasswd
+name|yppwd
 decl_stmt|;
 name|CLIENT
 modifier|*
@@ -2877,7 +2835,7 @@ condition|(
 name|suser_override
 condition|)
 block|{
-name|master_yppasswd
+name|master_yppwd
 operator|.
 name|newpw
 operator|.
@@ -2890,7 +2848,7 @@ operator|->
 name|pw_passwd
 argument_list|)
 expr_stmt|;
-name|master_yppasswd
+name|master_yppwd
 operator|.
 name|newpw
 operator|.
@@ -2903,7 +2861,7 @@ operator|->
 name|pw_name
 argument_list|)
 expr_stmt|;
-name|master_yppasswd
+name|master_yppwd
 operator|.
 name|newpw
 operator|.
@@ -2913,7 +2871,7 @@ name|pwd
 operator|->
 name|pw_uid
 expr_stmt|;
-name|master_yppasswd
+name|master_yppwd
 operator|.
 name|newpw
 operator|.
@@ -2923,7 +2881,7 @@ name|pwd
 operator|->
 name|pw_gid
 expr_stmt|;
-name|master_yppasswd
+name|master_yppwd
 operator|.
 name|newpw
 operator|.
@@ -2933,7 +2891,7 @@ name|pwd
 operator|->
 name|pw_expire
 expr_stmt|;
-name|master_yppasswd
+name|master_yppwd
 operator|.
 name|newpw
 operator|.
@@ -2943,7 +2901,7 @@ name|pwd
 operator|->
 name|pw_change
 expr_stmt|;
-name|master_yppasswd
+name|master_yppwd
 operator|.
 name|newpw
 operator|.
@@ -2953,7 +2911,7 @@ name|pwd
 operator|->
 name|pw_fields
 expr_stmt|;
-name|master_yppasswd
+name|master_yppwd
 operator|.
 name|newpw
 operator|.
@@ -2966,7 +2924,7 @@ operator|->
 name|pw_gecos
 argument_list|)
 expr_stmt|;
-name|master_yppasswd
+name|master_yppwd
 operator|.
 name|newpw
 operator|.
@@ -2979,7 +2937,7 @@ operator|->
 name|pw_dir
 argument_list|)
 expr_stmt|;
-name|master_yppasswd
+name|master_yppwd
 operator|.
 name|newpw
 operator|.
@@ -2992,7 +2950,7 @@ operator|->
 name|pw_shell
 argument_list|)
 expr_stmt|;
-name|master_yppasswd
+name|master_yppwd
 operator|.
 name|newpw
 operator|.
@@ -3016,7 +2974,7 @@ argument_list|(
 literal|""
 argument_list|)
 expr_stmt|;
-name|master_yppasswd
+name|master_yppwd
 operator|.
 name|oldpass
 operator|=
@@ -3025,7 +2983,7 @@ argument_list|(
 literal|""
 argument_list|)
 expr_stmt|;
-name|master_yppasswd
+name|master_yppwd
 operator|.
 name|domain
 operator|=
@@ -3034,7 +2992,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|yppasswd
+name|yppwd
 operator|.
 name|newpw
 operator|.
@@ -3047,7 +3005,7 @@ operator|->
 name|pw_passwd
 argument_list|)
 expr_stmt|;
-name|yppasswd
+name|yppwd
 operator|.
 name|newpw
 operator|.
@@ -3060,7 +3018,7 @@ operator|->
 name|pw_name
 argument_list|)
 expr_stmt|;
-name|yppasswd
+name|yppwd
 operator|.
 name|newpw
 operator|.
@@ -3070,7 +3028,7 @@ name|pwd
 operator|->
 name|pw_uid
 expr_stmt|;
-name|yppasswd
+name|yppwd
 operator|.
 name|newpw
 operator|.
@@ -3080,7 +3038,7 @@ name|pwd
 operator|->
 name|pw_gid
 expr_stmt|;
-name|yppasswd
+name|yppwd
 operator|.
 name|newpw
 operator|.
@@ -3093,7 +3051,7 @@ operator|->
 name|pw_gecos
 argument_list|)
 expr_stmt|;
-name|yppasswd
+name|yppwd
 operator|.
 name|newpw
 operator|.
@@ -3106,7 +3064,7 @@ operator|->
 name|pw_dir
 argument_list|)
 expr_stmt|;
-name|yppasswd
+name|yppwd
 operator|.
 name|newpw
 operator|.
@@ -3119,7 +3077,7 @@ operator|->
 name|pw_shell
 argument_list|)
 expr_stmt|;
-name|yppasswd
+name|yppwd
 operator|.
 name|oldpass
 operator|=
@@ -3326,7 +3284,7 @@ if|if
 condition|(
 name|suser_override
 condition|)
-name|master_yppasswd
+name|master_yppwd
 operator|.
 name|newpw
 operator|.
@@ -3340,7 +3298,7 @@ name|salt
 argument_list|)
 expr_stmt|;
 else|else
-name|yppasswd
+name|yppwd
 operator|.
 name|newpw
 operator|.
@@ -3455,7 +3413,7 @@ operator|=
 name|yppasswdproc_update_master_1
 argument_list|(
 operator|&
-name|master_yppasswd
+name|master_yppwd
 argument_list|,
 name|clnt
 argument_list|)
@@ -3466,7 +3424,7 @@ operator|=
 name|yppasswdproc_update_1
 argument_list|(
 operator|&
-name|yppasswd
+name|yppwd
 argument_list|,
 name|clnt
 argument_list|)

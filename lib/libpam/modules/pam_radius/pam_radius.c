@@ -1181,7 +1181,7 @@ argument_list|)
 expr_stmt|;
 name|retval
 operator|=
-name|pam_get_pass
+name|pam_get_authtok
 argument_list|(
 name|pamh
 argument_list|,
@@ -1189,9 +1189,6 @@ operator|&
 name|pass
 argument_list|,
 name|PASSWORD_PROMPT
-argument_list|,
-operator|&
-name|options
 argument_list|)
 expr_stmt|;
 if|if
@@ -1382,6 +1379,12 @@ name|pamh
 argument_list|,
 name|PAM_USER
 argument_list|,
+operator|(
+specifier|const
+name|void
+operator|*
+operator|*
+operator|)
 operator|&
 name|tmpuser
 argument_list|)

@@ -988,7 +988,7 @@ name|TAC_AUTHEN_STATUS_GETPASS
 condition|)
 name|retval
 operator|=
-name|pam_get_pass
+name|pam_get_authtok
 argument_list|(
 name|pamh
 argument_list|,
@@ -1005,9 +1005,6 @@ condition|?
 name|srvr_msg
 else|:
 literal|"Password:"
-argument_list|,
-operator|&
-name|options
 argument_list|)
 expr_stmt|;
 name|free
@@ -1093,6 +1090,11 @@ name|PAM_PROMPT_ECHO_ON
 else|:
 name|PAM_PROMPT_ECHO_OFF
 argument_list|,
+operator|&
+name|data_msg
+argument_list|,
+literal|"%s"
+argument_list|,
 name|srvr_msg
 index|[
 literal|0
@@ -1103,9 +1105,6 @@ condition|?
 name|srvr_msg
 else|:
 literal|"Data:"
-argument_list|,
-operator|&
-name|data_msg
 argument_list|)
 expr_stmt|;
 name|free

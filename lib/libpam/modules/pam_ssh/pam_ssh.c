@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -760,7 +766,7 @@ expr_stmt|;
 comment|/* 	 * Pass prompt message to application and receive 	 * passphrase. 	 */
 name|retval
 operator|=
-name|pam_get_pass
+name|pam_get_authtok
 argument_list|(
 name|pamh
 argument_list|,
@@ -768,9 +774,6 @@ operator|&
 name|pass
 argument_list|,
 name|NEED_PASSPHRASE
-argument_list|,
-operator|&
-name|options
 argument_list|)
 expr_stmt|;
 if|if

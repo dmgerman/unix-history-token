@@ -211,7 +211,6 @@ index|[
 name|OPIE_SECRET_MAX
 index|]
 decl_stmt|;
-specifier|const
 name|char
 modifier|*
 name|user
@@ -400,7 +399,7 @@ argument_list|)
 expr_stmt|;
 name|retval
 operator|=
-name|pam_get_pass
+name|pam_get_authtok
 argument_list|(
 name|pamh
 argument_list|,
@@ -408,9 +407,6 @@ operator|&
 name|response
 argument_list|,
 name|prompt
-argument_list|,
-operator|&
-name|options
 argument_list|)
 expr_stmt|;
 if|if
