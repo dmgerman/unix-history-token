@@ -113,6 +113,13 @@ end_include
 
 begin_decl_stmt
 specifier|static
+name|d_open_t
+name|random_open
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|d_read_t
 name|random_read
 decl_stmt|;
@@ -154,11 +161,7 @@ name|random_cdevsw
 init|=
 block|{
 comment|/* open */
-operator|(
-name|d_open_t
-operator|*
-operator|)
-name|nullop
+name|random_open
 block|,
 comment|/* close */
 operator|(
@@ -356,7 +359,7 @@ index|]
 operator|.
 name|thresh
 argument_list|,
-literal|100
+literal|160
 argument_list|,
 literal|"Slow pool reseed threshhold"
 argument_list|)
@@ -385,6 +388,55 @@ literal|"Slow pool over-threshhold reseed"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_function
+specifier|static
+name|int
+name|random_open
+parameter_list|(
+name|dev_t
+name|dev
+parameter_list|,
+name|int
+name|flags
+parameter_list|,
+name|int
+name|fmt
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|FWRITE
+operator|)
+operator|&&
+operator|(
+name|securelevel
+operator|>
+literal|0
+operator|||
+name|suser
+argument_list|(
+name|p
+argument_list|)
+operator|)
+condition|)
+return|return
+name|EPERM
+return|;
+else|else
+return|return
+literal|0
+return|;
+block|}
+end_function
 
 begin_function
 specifier|static

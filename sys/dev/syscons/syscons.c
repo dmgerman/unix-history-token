@@ -15856,7 +15856,6 @@ condition|)
 name|sc_touch_scrn_saver
 argument_list|()
 expr_stmt|;
-comment|/* do the /dev/random device a favour */
 if|if
 condition|(
 operator|!
@@ -15868,10 +15867,13 @@ operator|)
 condition|)
 name|random_harvest
 argument_list|(
-operator|(
-name|u_int64_t
-operator|)
+operator|&
 name|c
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|c
+argument_list|)
 argument_list|,
 literal|1
 argument_list|,

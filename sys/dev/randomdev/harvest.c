@@ -85,7 +85,10 @@ name|struct
 name|timespec
 modifier|*
 parameter_list|,
-name|u_int64_t
+name|void
+modifier|*
+parameter_list|,
+name|u_int
 parameter_list|,
 name|u_int
 parameter_list|,
@@ -116,7 +119,10 @@ name|struct
 name|timespec
 modifier|*
 parameter_list|,
-name|u_int64_t
+name|void
+modifier|*
+parameter_list|,
+name|u_int
 parameter_list|,
 name|u_int
 parameter_list|,
@@ -159,8 +165,12 @@ begin_function
 name|void
 name|random_harvest
 parameter_list|(
-name|u_int64_t
+name|void
+modifier|*
 name|entropy
+parameter_list|,
+name|u_int
+name|count
 parameter_list|,
 name|u_int
 name|bits
@@ -196,6 +206,8 @@ operator|&
 name|timebuf
 argument_list|,
 name|entropy
+argument_list|,
+name|count
 argument_list|,
 name|bits
 argument_list|,

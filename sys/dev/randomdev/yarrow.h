@@ -85,7 +85,10 @@ name|struct
 name|timespec
 modifier|*
 parameter_list|,
-name|u_int64_t
+name|void
+modifier|*
+parameter_list|,
+name|u_int
 parameter_list|,
 name|u_int
 parameter_list|,
@@ -111,7 +114,7 @@ begin_function_decl
 name|void
 name|write_random
 parameter_list|(
-name|char
+name|void
 modifier|*
 parameter_list|,
 name|u_int
