@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	7.33 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)mount.h	7.34 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -652,7 +652,6 @@ name|vpp
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* int uid,		should be uid_t */
 name|int
 argument_list|(
 argument|*vfs_quotactl
@@ -668,7 +667,7 @@ operator|,
 name|int
 name|cmds
 operator|,
-name|u_int
+name|uid_t
 name|uid
 operator|,
 name|caddr_t
@@ -719,6 +718,16 @@ name|mp
 operator|,
 name|int
 name|waitfor
+operator|,
+expr|struct
+name|ucred
+operator|*
+name|cred
+operator|,
+expr|struct
+name|proc
+operator|*
+name|p
 operator|)
 argument_list|)
 expr_stmt|;
@@ -738,9 +747,6 @@ expr|struct
 name|fid
 operator|*
 name|fhp
-operator|,
-name|int
-name|setgen
 operator|,
 expr|struct
 name|vnode
@@ -882,9 +888,13 @@ name|VFS_SYNC
 parameter_list|(
 name|MP
 parameter_list|,
-name|WAITFOR
+name|WAIT
+parameter_list|,
+name|C
+parameter_list|,
+name|P
 parameter_list|)
-value|(*(MP)->mnt_op->vfs_sync)(MP, WAITFOR)
+value|(*(MP)->mnt_op->vfs_sync)(MP, WAIT, C, P)
 end_define
 
 begin_define
@@ -896,12 +906,9 @@ name|MP
 parameter_list|,
 name|FIDP
 parameter_list|,
-name|SG
-parameter_list|,
 name|VPP
 parameter_list|)
-define|\
-value|(*(MP)->mnt_op->vfs_fhtovp)(MP, FIDP, SG, VPP)
+value|(*(MP)->mnt_op->vfs_fhtovp)(MP, FIDP, VPP)
 end_define
 
 begin_define
