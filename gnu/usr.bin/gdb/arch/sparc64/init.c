@@ -822,6 +822,9 @@ expr_stmt|;
 name|_initialize_ser_tcp
 argument_list|()
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|CROSS_DEBUGGER
 name|_initialize_sparc64fbsd_nat
 argument_list|()
 expr_stmt|;
@@ -849,6 +852,8 @@ expr_stmt|;
 name|_initialize_svr4_lm
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 name|_initialize_remote
 argument_list|()
 expr_stmt|;

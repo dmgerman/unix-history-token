@@ -852,6 +852,9 @@ expr_stmt|;
 name|_initialize_ser_tcp
 argument_list|()
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|CROSS_DEBUGGER
 name|_initialize_kernel_u_addr
 argument_list|()
 expr_stmt|;
@@ -879,6 +882,8 @@ expr_stmt|;
 name|_initialize_thread_db
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 name|_initialize_remote
 argument_list|()
 expr_stmt|;

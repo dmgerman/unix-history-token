@@ -489,12 +489,23 @@ begin_comment
 comment|/* nativefile */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CROSS_DEBUGGER
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|GDB_NM_FILE
 value|config/i386/nm-fbsd64.h
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define to 1 so<sys/proc.h> gets a definition of anon_hdl.  Works    around a<sys/proc.h> problem on IRIX 5.  */

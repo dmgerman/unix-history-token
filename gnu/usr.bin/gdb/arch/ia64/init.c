@@ -821,6 +821,9 @@ expr_stmt|;
 name|_initialize_ser_tcp
 argument_list|()
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|CROSS_DEBUGGER
 name|_initialize_fbsd_proc
 argument_list|()
 expr_stmt|;
@@ -839,6 +842,8 @@ expr_stmt|;
 name|_initialize_inftarg
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 name|_initialize_remote
 argument_list|()
 expr_stmt|;
