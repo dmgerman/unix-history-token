@@ -339,84 +339,8 @@ end_define
 
 begin_decl_stmt
 specifier|static
-name|d_strategy_t
-name|mdstrategy
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|d_open_t
-name|mdopen
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|d_close_t
-name|mdclose
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|d_ioctl_t
-name|mdioctl
-decl_stmt|,
 name|mdctlioctl
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|cdevsw
-name|md_cdevsw
-init|=
-block|{
-comment|/* open */
-name|mdopen
-block|,
-comment|/* close */
-name|mdclose
-block|,
-comment|/* read */
-name|physread
-block|,
-comment|/* write */
-name|physwrite
-block|,
-comment|/* ioctl */
-name|mdioctl
-block|,
-comment|/* poll */
-name|nopoll
-block|,
-comment|/* mmap */
-name|nommap
-block|,
-comment|/* strategy */
-name|mdstrategy
-block|,
-comment|/* name */
-name|MD_NAME
-block|,
-comment|/* maj */
-name|CDEV_MAJOR
-block|,
-comment|/* dump */
-name|nodump
-block|,
-comment|/* psize */
-name|nopsize
-block|,
-comment|/* flags */
-name|D_DISK
-operator||
-name|D_CANFREE
-operator||
-name|D_MEMDISK
-block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -457,14 +381,6 @@ block|,
 comment|/* maj */
 name|CDEV_MAJOR
 block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|cdevsw
-name|mddisk_cdevsw
 decl_stmt|;
 end_decl_stmt
 
@@ -1457,6 +1373,95 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|static
+name|d_strategy_t
+name|mdstrategy
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_open_t
+name|mdopen
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_close_t
+name|mdclose
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|d_ioctl_t
+name|mdioctl
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|cdevsw
+name|md_cdevsw
+init|=
+block|{
+comment|/* open */
+name|mdopen
+block|,
+comment|/* close */
+name|mdclose
+block|,
+comment|/* read */
+name|physread
+block|,
+comment|/* write */
+name|physwrite
+block|,
+comment|/* ioctl */
+name|mdioctl
+block|,
+comment|/* poll */
+name|nopoll
+block|,
+comment|/* mmap */
+name|nommap
+block|,
+comment|/* strategy */
+name|mdstrategy
+block|,
+comment|/* name */
+name|MD_NAME
+block|,
+comment|/* maj */
+name|CDEV_MAJOR
+block|,
+comment|/* dump */
+name|nodump
+block|,
+comment|/* psize */
+name|nopsize
+block|,
+comment|/* flags */
+name|D_DISK
+operator||
+name|D_CANFREE
+operator||
+name|D_MEMDISK
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|cdevsw
+name|mddisk_cdevsw
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|int
@@ -1666,6 +1671,106 @@ operator|(
 name|ENOIOCTL
 operator|)
 return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|mdstrategy
+parameter_list|(
+name|struct
+name|bio
+modifier|*
+name|bp
+parameter_list|)
+block|{
+name|struct
+name|md_s
+modifier|*
+name|sc
+decl_stmt|;
+if|if
+condition|(
+name|md_debug
+operator|>
+literal|1
+condition|)
+name|printf
+argument_list|(
+literal|"mdstrategy(%p) %s %x, %jd, %jd %ld, %p)\n"
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|bp
+argument_list|,
+name|devtoname
+argument_list|(
+name|bp
+operator|->
+name|bio_dev
+argument_list|)
+argument_list|,
+name|bp
+operator|->
+name|bio_flags
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|bp
+operator|->
+name|bio_blkno
+argument_list|,
+operator|(
+name|intmax_t
+operator|)
+name|bp
+operator|->
+name|bio_pblkno
+argument_list|,
+name|bp
+operator|->
+name|bio_bcount
+operator|/
+name|DEV_BSIZE
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|bp
+operator|->
+name|bio_data
+argument_list|)
+expr_stmt|;
+name|sc
+operator|=
+name|bp
+operator|->
+name|bio_dev
+operator|->
+name|si_drv1
+expr_stmt|;
+comment|/* XXX: LOCK(sc->lock) */
+name|bioqdisksort
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|bio_queue
+argument_list|,
+name|bp
+argument_list|)
+expr_stmt|;
+comment|/* XXX: UNLOCK(sc->lock) */
+name|wakeup
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2495,106 +2600,6 @@ operator|-
 literal|1
 operator|)
 return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|mdstrategy
-parameter_list|(
-name|struct
-name|bio
-modifier|*
-name|bp
-parameter_list|)
-block|{
-name|struct
-name|md_s
-modifier|*
-name|sc
-decl_stmt|;
-if|if
-condition|(
-name|md_debug
-operator|>
-literal|1
-condition|)
-name|printf
-argument_list|(
-literal|"mdstrategy(%p) %s %x, %jd, %jd %ld, %p)\n"
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-name|bp
-argument_list|,
-name|devtoname
-argument_list|(
-name|bp
-operator|->
-name|bio_dev
-argument_list|)
-argument_list|,
-name|bp
-operator|->
-name|bio_flags
-argument_list|,
-operator|(
-name|intmax_t
-operator|)
-name|bp
-operator|->
-name|bio_blkno
-argument_list|,
-operator|(
-name|intmax_t
-operator|)
-name|bp
-operator|->
-name|bio_pblkno
-argument_list|,
-name|bp
-operator|->
-name|bio_bcount
-operator|/
-name|DEV_BSIZE
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-name|bp
-operator|->
-name|bio_data
-argument_list|)
-expr_stmt|;
-name|sc
-operator|=
-name|bp
-operator|->
-name|bio_dev
-operator|->
-name|si_drv1
-expr_stmt|;
-comment|/* XXX: LOCK(sc->lock) */
-name|bioqdisksort
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|bio_queue
-argument_list|,
-name|bp
-argument_list|)
-expr_stmt|;
-comment|/* XXX: UNLOCK(sc->lock) */
-name|wakeup
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
