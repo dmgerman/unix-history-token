@@ -112,18 +112,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/cpu.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/reg.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/frame.h>
 end_include
 
@@ -136,7 +124,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/md_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/pcb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/reg.h>
 end_include
 
 begin_include

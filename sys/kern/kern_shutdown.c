@@ -180,13 +180,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/pcb.h>
+file|<machine/cpu.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/md_var.h>
+file|<machine/pcb.h>
 end_include
 
 begin_include

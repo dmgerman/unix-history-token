@@ -114,7 +114,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/cpu.h>
+file|<machine/clock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/fpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/mca.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/md_var.h>
 end_include
 
 begin_include
@@ -138,18 +156,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/clock.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/mca.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/sal.h>
 end_include
 
@@ -157,12 +163,6 @@ begin_include
 include|#
 directive|include
 file|<machine/smp.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/fpu.h>
 end_include
 
 begin_include

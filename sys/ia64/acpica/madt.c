@@ -12,7 +12,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/cpu.h>
+file|<machine/md_var.h>
 end_include
 
 begin_decl_stmt

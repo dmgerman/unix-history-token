@@ -1334,26 +1334,5 @@ directive|endif
 block|}
 end_function
 
-begin_comment
-comment|/*  * Tell whether this address is in some physical memory region.  * Currently used by the kernel coredump code in order to avoid  * dumping the ``ISA memory hole'' which could cause indefinite hangs,  * or other unpredictable behaviour.  */
-end_comment
-
-begin_function
-name|int
-name|is_physical_memory
-parameter_list|(
-name|addr
-parameter_list|)
-name|vm_offset_t
-name|addr
-decl_stmt|;
-block|{
-comment|/* 	 * stuff other tests for known memory-mapped devices (PCI?) 	 * here 	 */
-return|return
-literal|1
-return|;
-block|}
-end_function
-
 end_unit
 
