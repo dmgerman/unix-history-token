@@ -244,17 +244,6 @@ directive|endif
 end_endif
 
 begin_decl_stmt
-name|char
-modifier|*
-name|path_fcodes
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* locate database */
-end_comment
-
-begin_decl_stmt
 name|int
 name|f_mmap
 decl_stmt|;
@@ -611,6 +600,11 @@ name|dbv
 init|=
 name|NULL
 decl_stmt|;
+name|char
+modifier|*
+name|path_fcodes
+decl_stmt|;
+comment|/* locate database */
 ifdef|#
 directive|ifdef
 name|MMAP
@@ -1027,7 +1021,7 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-name|path_fcodes
+name|db
 argument_list|,
 literal|"r"
 argument_list|)
@@ -1041,7 +1035,7 @@ literal|1
 argument_list|,
 literal|"`%s'"
 argument_list|,
-name|path_fcodes
+name|db
 argument_list|)
 expr_stmt|;
 comment|/* count only chars or lines */
@@ -1054,7 +1048,7 @@ name|statistic
 argument_list|(
 name|fp
 argument_list|,
-name|path_fcodes
+name|db
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1112,7 +1106,7 @@ literal|1
 argument_list|,
 literal|"fseek to begin of ``%s''\n"
 argument_list|,
-name|path_fcodes
+name|db
 argument_list|)
 expr_stmt|;
 if|if
@@ -1126,7 +1120,7 @@ argument_list|,
 operator|*
 name|s
 argument_list|,
-name|path_fcodes
+name|db
 argument_list|)
 expr_stmt|;
 else|else
@@ -1137,7 +1131,7 @@ argument_list|,
 operator|*
 name|s
 argument_list|,
-name|path_fcodes
+name|db
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -1224,7 +1218,7 @@ name|fd
 operator|=
 name|open
 argument_list|(
-name|path_fcodes
+name|db
 argument_list|,
 name|O_RDONLY
 argument_list|)
@@ -1250,7 +1244,7 @@ literal|1
 argument_list|,
 literal|"`%s'"
 argument_list|,
-name|path_fcodes
+name|db
 argument_list|)
 expr_stmt|;
 name|len
@@ -1297,7 +1291,7 @@ literal|1
 argument_list|,
 literal|"mmap ``%s''"
 argument_list|,
-name|path_fcodes
+name|db
 argument_list|)
 expr_stmt|;
 comment|/* foreach search string ... */
@@ -1335,7 +1329,7 @@ name|int
 operator|)
 name|len
 argument_list|,
-name|path_fcodes
+name|db
 argument_list|)
 expr_stmt|;
 else|else
@@ -1351,7 +1345,7 @@ name|int
 operator|)
 name|len
 argument_list|,
-name|path_fcodes
+name|db
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -1392,7 +1386,7 @@ name|warn
 argument_list|(
 literal|"munmap %s\n"
 argument_list|,
-name|path_fcodes
+name|db
 argument_list|)
 expr_stmt|;
 operator|(
