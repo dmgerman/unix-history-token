@@ -1557,7 +1557,7 @@ begin_define
 define|#
 directive|define
 name|LINUX_NCC
-value|19
+value|8
 end_define
 
 begin_comment
