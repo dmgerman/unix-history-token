@@ -927,6 +927,17 @@ argument_list|(
 name|LOGIN_CAP
 argument_list|)
 block|}
+if|if
+condition|(
+name|lc
+operator|!=
+name|NULL
+condition|)
+name|login_close
+argument_list|(
+name|lc
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 name|chdir
