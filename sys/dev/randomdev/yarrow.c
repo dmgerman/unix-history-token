@@ -144,6 +144,10 @@ begin_comment
 comment|/* When enough entropy has been harvested, asynchronously "stir" it in */
 end_comment
 
+begin_comment
+comment|/* The regate task is run at splsofttq()                               */
+end_comment
+
 begin_decl_stmt
 specifier|static
 name|struct
@@ -1231,6 +1235,15 @@ decl_stmt|;
 name|u_int64_t
 name|genval
 decl_stmt|;
+name|intrmask_t
+name|mask
+decl_stmt|;
+comment|/* The reseed task must not be jumped on */
+name|mask
+operator|=
+name|splsofttq
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|gate
@@ -1527,6 +1540,11 @@ name|retval
 expr_stmt|;
 block|}
 block|}
+name|splx
+argument_list|(
+name|mask
+argument_list|)
+expr_stmt|;
 return|return
 name|retval
 return|;
@@ -1551,12 +1569,25 @@ index|[
 name|KEYSIZE
 index|]
 decl_stmt|;
+name|intrmask_t
+name|mask
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
-comment|/* printf("Generator gate\n"); */
+name|printf
+argument_list|(
+literal|"Generator gate\n"
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
+comment|/* The reseed task must not be jumped on */
+name|mask
+operator|=
+name|splsofttq
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1643,6 +1674,11 @@ operator|)
 name|temp
 argument_list|,
 name|KEYSIZE
+argument_list|)
+expr_stmt|;
+name|splx
+argument_list|(
+name|mask
 argument_list|)
 expr_stmt|;
 block|}
