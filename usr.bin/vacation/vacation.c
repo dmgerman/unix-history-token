@@ -11,6 +11,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -34,23 +35,26 @@ directive|ifndef
 name|lint
 end_ifndef
 
-begin_decl_stmt
-specifier|static
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"From: @(#)vacation.c	8.2 (Berkeley) 1/26/94"
-decl_stmt|;
-end_decl_stmt
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static char sccsid[] = "@(#)from: vacation.c	8.2 (Berkeley) 1/26/94";
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: vacation.c,v 1.10 1997/08/28 04:40:51 imp Exp $"
+literal|"$Id$"
 decl_stmt|;
 end_decl_stmt
 
