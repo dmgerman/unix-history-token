@@ -662,10 +662,16 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* 		 * Wire the page into memory 		 */
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_wire
 argument_list|(
 name|m
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 comment|/* 		 * We're done with tmap now. 		 * But reference the object first, so that we won't loose 		 * it. 		 */
 name|vm_object_reference
@@ -717,12 +723,18 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* 		 * release the page and the object 		 */
+name|vm_page_lock_queues
+argument_list|()
+expr_stmt|;
 name|vm_page_unwire
 argument_list|(
 name|m
 argument_list|,
 literal|1
 argument_list|)
+expr_stmt|;
+name|vm_page_unlock_queues
+argument_list|()
 expr_stmt|;
 name|vm_object_deallocate
 argument_list|(
