@@ -3210,6 +3210,10 @@ decl_stmt|;
 name|pd_entry_t
 name|pde
 decl_stmt|;
+name|rtval
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|pmap
@@ -3217,7 +3221,9 @@ operator|==
 name|NULL
 condition|)
 return|return
-literal|0
+operator|(
+name|rtval
+operator|)
 return|;
 name|PMAP_LOCK
 argument_list|(
@@ -3301,14 +3307,6 @@ operator|&
 name|PAGE_MASK
 operator|)
 expr_stmt|;
-name|PMAP_UNLOCK
-argument_list|(
-name|pmap
-argument_list|)
-expr_stmt|;
-return|return
-name|rtval
-return|;
 block|}
 name|PMAP_UNLOCK
 argument_list|(
@@ -3316,7 +3314,9 @@ name|pmap
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+operator|(
+name|rtval
+operator|)
 return|;
 block|}
 end_function
