@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cleanerd.c	5.3 (Berkeley) %G%"
+literal|"@(#)cleanerd.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1027,7 +1027,7 @@ directive|ifdef
 name|VERBOSE
 name|printf
 argument_list|(
-literal|"clean_fs: cleaning %d segments in file system %s\n"
+literal|"clean_fs: found %d segments to clean in file system %s\n"
 argument_list|,
 name|i
 argument_list|,
@@ -1073,6 +1073,7 @@ condition|;
 operator|++
 name|sp
 control|)
+block|{
 if|if
 condition|(
 name|clean_segment
@@ -1114,6 +1115,21 @@ argument_list|(
 literal|"lfs_segclean failed"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VERBOSE
+name|printf
+argument_list|(
+literal|"Completed cleaning segment %d\n"
+argument_list|,
+name|sp
+operator|->
+name|sl_id
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
 name|free
 argument_list|(
 name|segs
@@ -1800,7 +1816,7 @@ name|err
 argument_list|(
 literal|0
 argument_list|,
-literal|"clean_segment: lfs_bmapv failed"
+literal|"clean_segment: lfs_markv failed"
 argument_list|)
 expr_stmt|;
 return|return
