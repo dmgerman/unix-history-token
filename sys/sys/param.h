@@ -201,6 +201,17 @@ begin_comment
 comment|/* max hostname size */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SPECNAMELEN
+value|15
+end_define
+
+begin_comment
+comment|/* max length of devicename */
+end_comment
+
 begin_comment
 comment|/* More types and definitions used throughout the kernel. */
 end_comment

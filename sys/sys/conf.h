@@ -27,13 +27,6 @@ directive|include
 file|<sys/eventhandler.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|SPECNAMELEN
-value|15
-end_define
-
 begin_struct_decl
 struct_decl|struct
 name|tty
