@@ -12,7 +12,7 @@ name|char
 modifier|*
 name|rcsid
 init|=
-literal|"$Id: pen.c,v 1.12 1995/04/22 13:58:44 jkh Exp $"
+literal|"$Id: pen.c,v 1.13 1995/04/26 07:43:35 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -73,6 +73,14 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|PlayPen
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Make a temporary directory to play in and chdir() to it, returning  * pathname of previous working directory.  */
 end_comment
@@ -129,6 +137,10 @@ name|Pen
 argument_list|,
 literal|"/var/tmp/instmp.XXXXXX"
 argument_list|)
+expr_stmt|;
+name|PlayPen
+operator|=
+name|Pen
 expr_stmt|;
 block|}
 else|else
@@ -249,6 +261,10 @@ literal|"Not enough free space to create `%s'.\nPlease set your PKG_TMPDIR envir
 argument_list|,
 name|Pen
 argument_list|)
+expr_stmt|;
+name|PlayPen
+operator|=
+name|NULL
 expr_stmt|;
 block|}
 if|if
