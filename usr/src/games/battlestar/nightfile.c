@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)nightfile.c	8.1 (Berkeley) %G%"
+literal|"@(#)nightfile.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -31,7 +31,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"externs.h"
+file|"extern.h"
 end_include
 
 begin_decl_stmt
