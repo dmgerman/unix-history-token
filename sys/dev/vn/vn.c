@@ -941,7 +941,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|int
+name|long
 name|sz
 decl_stmt|;
 name|struct
@@ -1176,9 +1176,10 @@ name|auio
 operator|.
 name|uio_offset
 operator|=
+name|dbtob
+argument_list|(
 name|bn
-operator|*
-name|DEV_BSIZE
+argument_list|)
 expr_stmt|;
 name|auio
 operator|.
@@ -1292,13 +1293,16 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|daddr_t
+name|long
 name|bsize
+decl_stmt|,
+name|resid
+decl_stmt|;
+name|off_t
+name|byten
 decl_stmt|;
 name|int
 name|flags
-decl_stmt|,
-name|resid
 decl_stmt|;
 name|caddr_t
 name|addr
@@ -1313,7 +1317,7 @@ operator|=
 name|getvnbuf
 argument_list|()
 expr_stmt|;
-name|bn
+name|byten
 operator|=
 name|dbtob
 argument_list|(
@@ -1385,9 +1389,14 @@ name|vn
 operator|->
 name|sc_vp
 argument_list|,
-name|bn
+call|(
+name|daddr_t
+call|)
+argument_list|(
+name|byten
 operator|/
 name|bsize
+argument_list|)
 argument_list|,
 operator|&
 name|vp
@@ -1407,9 +1416,6 @@ name|error
 operator|==
 literal|0
 operator|&&
-operator|(
-name|long
-operator|)
 name|nbn
 operator|==
 operator|-
@@ -1431,7 +1437,7 @@ literal|0
 expr_stmt|;
 name|off
 operator|=
-name|bn
+name|byten
 operator|%
 name|bsize
 expr_stmt|;
@@ -1507,7 +1513,8 @@ argument|VN_IO
 argument_list|)
 name|printf
 argument_list|(
-literal|"vnstrategy: vp %p/%p bn 0x%lx/0x%lx sz 0x%x\n"
+comment|/* XXX no %qx in kernel.  Synthesize it. */
+literal|"vnstrategy: vp %p/%p bn 0x%lx%08lx/0x%lx sz 0x%x\n"
 argument_list|,
 name|vn
 operator|->
@@ -1515,7 +1522,19 @@ name|sc_vp
 argument_list|,
 name|vp
 argument_list|,
-name|bn
+call|(
+name|long
+call|)
+argument_list|(
+name|byten
+operator|>>
+literal|32
+argument_list|)
+argument_list|,
+operator|(
+name|u_long
+operator|)
+name|byten
 argument_list|,
 name|nbn
 argument_list|,
@@ -1764,7 +1783,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|bn
+name|byten
 operator|+=
 name|sz
 expr_stmt|;
