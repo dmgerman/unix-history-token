@@ -251,11 +251,22 @@ name|FRAME_TRAPARG_A2
 value|29
 end_define
 
+begin_comment
+comment|/* this is a flag area to see whether we need to restore all registers */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FRAME_FLAGS
+value|30
+end_define
+
 begin_define
 define|#
 directive|define
 name|FRAME_SW_SIZE
-value|(FRAME_TRAPARG_A2 + 1)
+value|(FRAME_FLAGS + 1)
 end_define
 
 begin_define
@@ -263,6 +274,13 @@ define|#
 directive|define
 name|FRAME_HW_OFFSET
 value|FRAME_SW_SIZE
+end_define
+
+begin_define
+define|#
+directive|define
+name|FRAME_FLAGS_SYSCALL
+value|0x1
 end_define
 
 begin_define
