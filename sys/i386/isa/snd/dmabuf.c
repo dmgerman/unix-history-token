@@ -381,6 +381,20 @@ name|rl
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|DEB
+argument_list|(
+argument|printf(
+literal|"wrintr: dl %d -> %d\n"
+argument|, b->dl, l);
+argument_list|)
+if|if
+condition|(
+name|b
+operator|->
+name|dl
+operator|!=
+literal|0
+condition|)
 name|d
 operator|->
 name|callback
@@ -1643,6 +1657,12 @@ operator|&=
 name|DMA_ALIGN_MASK
 expr_stmt|;
 comment|/* realign sizes */
+name|DEB
+argument_list|(
+argument|printf(
+literal|"rdintr: dl %d -> %d\n"
+argument|, b->dl, l);
+argument_list|)
 if|if
 condition|(
 name|l
@@ -1653,12 +1673,14 @@ name|dl
 condition|)
 block|{
 comment|/* for any reason, size has changed. Stop and restart */
+if|if
+condition|(
 name|b
 operator|->
 name|dl
-operator|=
-name|l
-expr_stmt|;
+operator|>
+literal|0
+condition|)
 name|d
 operator|->
 name|callback
@@ -1669,6 +1691,12 @@ name|SND_CB_RD
 operator||
 name|SND_CB_STOP
 argument_list|)
+expr_stmt|;
+name|b
+operator|->
+name|dl
+operator|=
+name|l
 expr_stmt|;
 name|d
 operator|->

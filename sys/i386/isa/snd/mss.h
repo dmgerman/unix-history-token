@@ -286,7 +286,7 @@ value|(SOUND_MASK_LINE | SOUND_MASK_MIC | SOUND_MASK_CD|SOUND_MASK_IMIX)
 end_define
 
 begin_comment
-comment|/*  * Table of mixer registers. There is a default table for the  * AD1848/CS423x clones, and one for the OPTI931. As more WSS  * clones come out, there ought to be more tables.  *  * Fields in the table are : polarity, register, offset, bits  *  * The channel numbering used by individual soundcards is not fixed.  * Some cards have assigned different meanings for the AUX1, AUX2  * and LINE inputs. Some have different features...  *  * Following there is a macro ...MIXER_DEVICES which is a bitmap  * of all non-zero fields in the table.  * MODE1_MIXER_DEVICES is the basic mixer of the 1848 in mode 1  * registers I0..I15)  *  */
+comment|/*  * Table of mixer registers. There is a default table for the  * AD1848/CS423x clones, and one for the OPTI931. As more MSS  * clones come out, there ought to be more tables.  *  * Fields in the table are : polarity, register, offset, bits  *  * The channel numbering used by individual soundcards is not fixed.  * Some cards have assigned different meanings for the AUX1, AUX2  * and LINE inputs. Some have different features...  *  * Following there is a macro ...MIXER_DEVICES which is a bitmap  * of all non-zero fields in the table.  * MODE1_MIXER_DEVICES is the basic mixer of the 1848 in mode 1  * registers I0..I15)  *  */
 end_comment
 
 begin_decl_stmt

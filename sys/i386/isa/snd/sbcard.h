@@ -74,25 +74,25 @@ name|DSP_DATA_AVL16
 value|(io_base + 0xF)
 end_define
 
+begin_define
+define|#
+directive|define
+name|SB_MIX_ADDR
+value|0x4
+end_define
+
+begin_define
+define|#
+directive|define
+name|SB_MIX_DATA
+value|0x5
+end_define
+
 begin_if
 if|#
 directive|if
 literal|0
 end_if
-
-begin_define
-define|#
-directive|define
-name|MIXER_ADDR
-value|(io_base + 0x4)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MIXER_DATA
-value|(io_base + 0x5)
-end_define
 
 begin_define
 define|#
@@ -729,12 +729,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BD_F_NOREC
+name|BD_F_SB16X
 value|0x0200
 end_define
 
 begin_comment
-comment|/* recording not supported on this board */
+comment|/* this is a vibra16X or clone */
 end_comment
 
 begin_define

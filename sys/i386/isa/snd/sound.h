@@ -178,6 +178,36 @@ begin_comment
 comment|/* for DELAY */
 end_comment
 
+begin_comment
+comment|/*  * the following assumes that FreeBSD 3.X uses poll(2) instead of select(2).  * This change dates to late 1997.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD__
+operator|>=
+literal|3
+end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/poll.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|d_select_t
+value|d_poll_t
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_else
 else|#
 directive|else
@@ -481,7 +511,7 @@ comment|/* primary I/O address for the board */
 name|int
 name|alt_base
 decl_stmt|;
-comment|/* some codecs are accessible as SB+WSS... */
+comment|/* some codecs are accessible as SB+MSS... */
 name|int
 name|conf_base
 decl_stmt|;

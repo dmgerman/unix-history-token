@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * sound/ad1848.c  *   * Driver for Microsoft Sound System/Windows Sound System (mss)  * -compatible boards. This includes:  *   * AD1848, CS4248, CS423x, OPTi931, Yamaha SA2 and many others.  *  * Copyright Luigi Rizzo, 1997,1998  * Copyright by Hannu Savolainen 1994, 1995  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer  *    in the documentation and/or other materials provided with the  *    distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS''  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A  * PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR  * OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *   * Full data sheets in PDF format for the MSS-compatible chips  * are available at  *  *	http://www.crystal.com/ for the CS42XX series, or  *	http://www.opti.com/	for the OPTi931  */
+comment|/*  * sound/ad1848.c  *   * Driver for Microsoft Sound System/Windows Sound System (mss)  * -compatible boards. This includes:  *   * AD1848, CS4248, CS423x, OPTi931, Yamaha OPL/SAx and many others.  *  * Copyright Luigi Rizzo, 1997,1998  * Copyright by Hannu Savolainen 1994, 1995  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer  *    in the documentation and/or other materials provided with the  *    distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS''  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A  * PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR  * OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF  * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED  * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *   * Full data sheets in PDF format for the MSS-compatible chips  * are available at  *  *	http://www.crystal.com/ for the CS42XX series, or  *	http://www.opti.com/	for the OPTi931  */
 end_comment
 
 begin_include
@@ -1628,7 +1628,7 @@ name|d
 operator|->
 name|play_fmt
 expr_stmt|;
-comment|/* no split format on the WSS */
+comment|/* no split format on the MSS */
 name|snd_set_blocksize
 argument_list|(
 name|d
@@ -2308,6 +2308,7 @@ name|masked
 operator||=
 name|mc11
 expr_stmt|;
+comment|/*      * the nice OPTi931 sets the IRQ line before setting the bits in      * mc11. So, on some occasions I have to retry (max 10 times).      */
 if|if
 condition|(
 name|mc11
@@ -2333,14 +2334,27 @@ operator|&
 literal|1
 condition|)
 block|{
-name|printf
+name|DEB
 argument_list|(
+argument|printf(
 literal|"one more try...\n"
+argument|);
 argument_list|)
-expr_stmt|;
+if|if
+condition|(
+operator|--
+name|loops
+condition|)
 goto|goto
 name|again
 goto|;
+else|else
+name|DDB
+argument_list|(
+argument|printf(
+literal|"opti_intr: irq but mc11 not set!...\n"
+argument|);
+argument_list|)
 block|}
 if|if
 condition|(
@@ -2348,7 +2362,6 @@ name|loops
 operator|==
 literal|10
 condition|)
-block|{
 name|printf
 argument_list|(
 literal|"ouch, intr but nothing in mcir11 0x%02x\n"
@@ -2356,7 +2369,6 @@ argument_list|,
 name|mc11
 argument_list|)
 expr_stmt|;
-block|}
 return|return;
 block|}
 if|if
@@ -5653,6 +5665,10 @@ if|if
 condition|(
 name|id
 operator|==
+literal|0x3500630e
+operator|||
+name|id
+operator|==
 literal|0x3600630e
 condition|)
 name|s
@@ -5702,6 +5718,17 @@ condition|)
 name|s
 operator|=
 literal|"SoundscapeVIVO"
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|vend_id
+operator|==
+literal|0x0008a865
+condition|)
+name|s
+operator|=
+literal|"Yamaha SA3"
 expr_stmt|;
 if|if
 condition|(
@@ -5849,6 +5876,10 @@ literal|0x3000a865
 operator|||
 name|vend_id
 operator|==
+literal|0x0008a865
+operator|||
+name|vend_id
+operator|==
 literal|0x8140d315
 condition|)
 block|{
@@ -5978,6 +6009,10 @@ case|case
 literal|0x3000a865
 case|:
 comment|/* Yamaha SA3 */
+case|case
+literal|0x0000a865
+case|:
+comment|/* Yamaha SA3 again */
 name|dev
 operator|->
 name|id_iobase
@@ -6072,6 +6107,10 @@ name|MD_CS4237
 expr_stmt|;
 break|break;
 case|case
+literal|0x3500630e
+case|:
+comment|/* CS4236 */
+case|case
 literal|0x3600630e
 case|:
 comment|/* CS4236 */
@@ -6124,10 +6163,10 @@ condition|(
 operator|(
 name|vend_id
 operator|&
-literal|0x2000ffff
+literal|0x0000ffff
 operator|)
 operator|==
-literal|0x2000a865
+literal|0x0000a865
 condition|)
 block|{
 comment|/* special volume setting for the Yamaha... */
@@ -6616,7 +6655,7 @@ name|DV_PNP_SBCODEC
 condition|)
 block|{
 comment|/* sb-compatible codec */
-comment|/* 	 * the 931 is not a real SB, it has important pieces of 	 * hardware controlled by both the WSS and the SB port... 	 */
+comment|/* 	 * the 931 is not a real SB, it has important pieces of 	 * hardware controlled by both the MSS and the SB port... 	 */
 name|printf
 argument_list|(
 literal|"--- opti931 in sb mode ---\n"
@@ -6631,7 +6670,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* MCIR6 wss disable, sb enable */
+comment|/* MCIR6 mss disable, sb enable */
 comment|/* 	 * swap the main and alternate iobase address since we want 	 * to work in sb mode. 	 */
 name|dev
 operator|->
@@ -6690,7 +6729,7 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-comment|/* MCIR6: wss enable, sb disable */
+comment|/* MCIR6: mss enable, sb disable */
 name|opti_write
 argument_list|(
 name|p
