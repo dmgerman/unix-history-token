@@ -3434,8 +3434,8 @@ operator|-
 literal|2
 condition|)
 block|{
-ifdef|#
-directive|ifdef
+ifndef|#
+directive|ifndef
 name|ARCHAIC
 name|ip
 operator|=
