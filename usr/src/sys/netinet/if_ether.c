@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_ether.c	7.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982, 1986, 1988 Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_ether.c	7.17 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -1777,22 +1777,17 @@ begin_comment
 comment|/*  * ARP for Internet protocols on 10 Mb/s Ethernet.  * Algorithm is that given in RFC 826.  * In addition, a sanity check is performed on the sender  * protocol address, to catch impersonators.  * We also handle negotiations for use of trailer protocol:  * ARP replies for protocol type ETHERTYPE_TRAIL are sent  * along with IP replies if we want trailers sent to us,  * and also send them in response to IP replies.  * This allows either end to announce the desire to receive  * trailer packets.  * We reply to requests for ETHERTYPE_TRAIL protocol as well,  * but don't normally send requests.  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|in_arpinput
-argument_list|(
-argument|m
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|m
+parameter_list|)
 name|struct
 name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 specifier|register
 name|struct
@@ -2842,7 +2837,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Free an arp entry.  */
