@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	6.72 (Berkeley) %G%"
+literal|"@(#)deliver.c	6.73 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -5125,6 +5125,19 @@ name|rcode
 operator|=
 name|EX_SOFTWARE
 expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|rcode
+operator|==
+name|EX_TEMPFAIL
+condition|)
+block|{
+comment|/* try next MX site */
+goto|goto
+name|tryhost
+goto|;
 block|}
 block|}
 elseif|else
