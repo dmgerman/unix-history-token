@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rexec.c	5.2 (Berkeley) %G%"
+literal|"@(#)rexec.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -74,17 +74,13 @@ begin_extern
 extern|extern	errno;
 end_extern
 
-begin_decl_stmt
+begin_function_decl
 name|char
 modifier|*
 name|index
-argument_list|()
-decl_stmt|,
-modifier|*
-name|sprintf
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|int

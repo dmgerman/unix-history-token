@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rcmd.c	5.13 (Berkeley) %G%"
+literal|"@(#)rcmd.c	5.14 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -104,17 +104,13 @@ begin_extern
 extern|extern	errno;
 end_extern
 
-begin_decl_stmt
+begin_function_decl
 name|char
 modifier|*
 name|index
-argument_list|()
-decl_stmt|,
-modifier|*
-name|sprintf
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_macro
 name|rcmd

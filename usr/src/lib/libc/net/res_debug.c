@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_debug.c	5.20 (Berkeley) %G%"
+literal|"@(#)res_debug.c	5.21 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1797,15 +1797,6 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|sprintf
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/*  * Return a string for the type  */
 end_comment
@@ -2041,8 +2032,9 @@ endif|#
 directive|endif
 comment|/* ALLOW_T_UNSPEC */
 default|default:
-return|return
 operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|nbuf
@@ -2051,6 +2043,10 @@ literal|"%d"
 argument_list|,
 name|type
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|nbuf
 operator|)
 return|;
 block|}
@@ -2096,8 +2092,9 @@ literal|"ANY"
 operator|)
 return|;
 default|default:
-return|return
 operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|nbuf
@@ -2106,6 +2103,10 @@ literal|"%d"
 argument_list|,
 name|class
 argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|nbuf
 operator|)
 return|;
 block|}

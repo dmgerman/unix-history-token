@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ruserpass.c	5.2 (Berkeley) %G%"
+literal|"@(#)ruserpass.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -821,6 +821,9 @@ name|hdir
 operator|=
 literal|"."
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|buf
@@ -5280,6 +5283,9 @@ operator|++
 operator|=
 name|mch
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|stemp

@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cpp.c	1.16 %G%"
+literal|"@(#)cpp.c	1.17 %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -7564,6 +7564,9 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|vp
@@ -7602,6 +7605,9 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|vp

@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)ruptime.c	5.3 (Berkeley) %G%"
+literal|"@(#)ruptime.c	5.4 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -161,17 +161,13 @@ name|now
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 name|char
 modifier|*
 name|malloc
-argument_list|()
-decl_stmt|,
-modifier|*
-name|sprintf
-argument_list|()
-decl_stmt|;
-end_decl_stmt
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|int

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)stdio.h	5.3 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1980 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)stdio.h	5.4 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -314,28 +314,16 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|vax
-end_ifdef
-
 begin_function_decl
-name|char
-modifier|*
+name|int
 name|sprintf
 parameter_list|()
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* too painful to do right */
+comment|/* here until everyone does it right */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

@@ -36,7 +36,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)sysline.c	5.7 (Berkeley) %G%"
+literal|"@(#)sysline.c	5.8 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -4580,8 +4580,9 @@ index|[
 literal|150
 index|]
 decl_stmt|;
-name|stringcat
-argument_list|(
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|tempbuf
@@ -4594,6 +4595,10 @@ name|b
 argument_list|,
 name|c
 argument_list|)
+expr_stmt|;
+name|stringcat
+argument_list|(
+name|tempbuf
 argument_list|,
 operator|-
 literal|1

@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)syslog.c	5.11 (Berkeley) %G%"
+literal|"@(#)syslog.c	5.12 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -373,6 +373,9 @@ name|o
 operator|=
 name|outline
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|o
@@ -395,6 +398,9 @@ operator|&
 name|now
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|o
@@ -444,6 +450,9 @@ operator|&
 name|LOG_PID
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|o
@@ -563,6 +572,9 @@ name|olderrno
 operator|>
 name|sys_nerr
 condition|)
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|b
@@ -602,6 +614,9 @@ name|b
 operator|=
 literal|'\0'
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|o

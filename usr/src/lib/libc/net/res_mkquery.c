@@ -24,7 +24,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)res_mkquery.c	6.5 (Berkeley) %G%"
+literal|"@(#)res_mkquery.c	6.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -63,15 +63,6 @@ include|#
 directive|include
 file|<resolv.h>
 end_include
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|sprintf
-parameter_list|()
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/*  * Form all types of queries.  * Returns the size of the result or -1.  */
@@ -477,8 +468,10 @@ index|]
 operator|!=
 literal|'\0'
 condition|)
-name|dname
-operator|=
+block|{
+operator|(
+name|void
+operator|)
 name|sprintf
 argument_list|(
 name|dnbuf
@@ -492,6 +485,11 @@ operator|.
 name|defdname
 argument_list|)
 expr_stmt|;
+name|dname
+operator|=
+name|dnbuf
+expr_stmt|;
+block|}
 block|}
 comment|/* 	 * perform opcode specific processing 	 */
 switch|switch
