@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)types.h	7.25 (Berkeley) %G%  */
+comment|/*-  * Copyright (c) 1982, 1986, 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)types.h	7.26 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -68,6 +68,18 @@ typedef|typedef
 name|unsigned
 name|short
 name|ushort
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Sys V compatibility */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|int
+name|uint
 typedef|;
 end_typedef
 
@@ -321,32 +333,11 @@ directive|include
 file|<machine/ansi.h>
 end_include
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|_ANSI_SOURCE
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|_POSIX_SOURCE
-argument_list|)
-end_if
-
 begin_include
 include|#
 directive|include
 file|<machine/types.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -618,7 +609,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * Forward structure declarations for function prototypes.  * We include the common structures that cross subsystem boundaries here;  * others are mostly used in the same place that the structure is defined.  */
+comment|/*  * Forward structure declarations for function prototypes.  We include the  * common structures that cross subsystem boundaries here; others are mostly  * used in the same place that the structure is defined.  */
 end_comment
 
 begin_struct_decl
