@@ -27,7 +27,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)domain.c	5.5 (Berkeley) %G% (no MXDOMAIN)"
+literal|"@(#)domain.c	5.6 (Berkeley) %G% (no MXDOMAIN)"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,7 +55,7 @@ name|char
 name|SccsId
 index|[]
 init|=
-literal|"@(#)domain.c	5.5 (Berkeley) %G%"
+literal|"@(#)domain.c	5.6 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -123,16 +123,13 @@ name|h_errno
 decl_stmt|;
 end_decl_stmt
 
-begin_define
-define|#
-directive|define
+begin_function_decl
+specifier|extern
+name|u_short
 name|getshort
-value|_getshort
-end_define
-
-begin_comment
-comment|/* XXX hack attack! */
-end_comment
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_macro
 name|getmxrr
@@ -1581,6 +1578,56 @@ block|}
 return|return;
 block|}
 end_block
+
+begin_function
+name|u_short
+name|getshort
+parameter_list|(
+name|msgp
+parameter_list|)
+name|char
+modifier|*
+name|msgp
+decl_stmt|;
+block|{
+specifier|register
+name|u_char
+modifier|*
+name|p
+init|=
+operator|(
+name|u_char
+operator|*
+operator|)
+name|msgp
+decl_stmt|;
+specifier|register
+name|int
+name|u
+decl_stmt|;
+name|u
+operator|=
+operator|*
+name|p
+operator|++
+operator|<<
+literal|8
+expr_stmt|;
+return|return
+operator|(
+call|(
+name|u_short
+call|)
+argument_list|(
+name|u
+operator||
+operator|*
+name|p
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
 
 begin_endif
 endif|#
