@@ -496,9 +496,14 @@ argument_list|)
 expr_stmt|;
 name|lock
 operator|=
+operator|&
 name|plex
 operator|->
 name|lock
+index|[
+operator|-
+literal|1
+index|]
 expr_stmt|;
 comment|/* start again */
 name|foundlocks
@@ -724,7 +729,7 @@ operator|-
 literal|1
 condition|)
 comment|/* we were full, */
-name|wakeup_one
+name|wakeup
 argument_list|(
 operator|&
 name|plex
@@ -733,7 +738,7 @@ name|usedlocks
 argument_list|)
 expr_stmt|;
 comment|/* get a waiter if one's there */
-name|wakeup_one
+name|wakeup
 argument_list|(
 operator|(
 name|void
