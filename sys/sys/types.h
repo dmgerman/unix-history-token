@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)types.h	8.6 (Berkeley) 2/19/95  * $Id: types.h,v 1.28 1999/01/27 19:01:44 dillon Exp $  */
+comment|/*-  * Copyright (c) 1982, 1986, 1991, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  * (c) UNIX System Laboratories, Inc.  * All or some portions of this file are derived from material licensed  * to the University of California by American Telephone and Telegraph  * Co. or Unix System Laboratories, Inc. and are reproduced herein with  * the permission of UNIX System Laboratories, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)types.h	8.6 (Berkeley) 2/19/95  * $Id: types.h,v 1.29 1999/01/28 00:57:54 dillon Exp $  */
 end_comment
 
 begin_ifndef
@@ -447,49 +447,76 @@ begin_comment
 comment|/*  * minor() gives a cookie instead of an index since we don't want to  * change the meanings of bits 0-15 or waste time and space shifting  * bits 16-31 for devices that don't use them.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|major
-parameter_list|(
-name|x
-parameter_list|)
-value|((int)(((u_int)(x)>> 8)&0xff))
-end_define
-
-begin_comment
-comment|/* major number */
-end_comment
-
-begin_define
-define|#
-directive|define
+begin_function
+specifier|static
+name|__inline
+name|int
 name|minor
 parameter_list|(
-name|x
+name|dev_t
+name|dev
 parameter_list|)
-value|((int)((x)&0xffff00ff))
-end_define
+block|{
+return|return
+operator|(
+name|dev
+operator|&
+literal|0xffff00ff
+operator|)
+return|;
+block|}
+end_function
 
-begin_comment
-comment|/* minor number */
-end_comment
+begin_function
+specifier|static
+name|__inline
+name|int
+name|major
+parameter_list|(
+name|dev_t
+name|dev
+parameter_list|)
+block|{
+return|return
+operator|(
+operator|(
+name|dev
+operator|&
+literal|0xff00
+operator|)
+operator|>>
+literal|8
+operator|)
+return|;
+block|}
+end_function
 
-begin_define
-define|#
-directive|define
+begin_function
+specifier|static
+name|__inline
+name|dev_t
 name|makedev
 parameter_list|(
+name|int
 name|x
 parameter_list|,
+name|int
 name|y
 parameter_list|)
-value|((dev_t)(((x)<< 8) | (y)))
-end_define
-
-begin_comment
-comment|/* create dev_t */
-end_comment
+block|{
+return|return
+operator|(
+operator|(
+name|x
+operator|<<
+literal|8
+operator|)
+operator||
+name|y
+operator|)
+return|;
+block|}
+end_function
 
 begin_endif
 endif|#
