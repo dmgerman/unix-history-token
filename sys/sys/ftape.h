@@ -116,6 +116,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|QCV_HDRMAGIC
+value|0xaa55aa55
+end_define
+
+begin_comment
+comment|/* Magic for header segment */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QCV_FSMAGIC
+value|0x33cc33cc
+end_define
+
+begin_comment
+comment|/* Magic for fileset */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|UCHAR
 value|unsigned char
 end_define
@@ -444,6 +466,28 @@ end_define
 
 begin_comment
 comment|/* Get hardware inf */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QIOSENDHDR
+value|_IOW('q', 18, QIC_Segment)
+end_define
+
+begin_comment
+comment|/* Send header      */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QIORECVHDR
+value|_IOWR('q', 19, QIC_Segment)
+end_define
+
+begin_comment
+comment|/* Receive header   */
 end_comment
 
 begin_comment
