@@ -1980,9 +1980,6 @@ operator|+
 literal|1
 expr_stmt|;
 comment|/* FALLTHROUGH */
-goto|goto
-name|fp_begin
-goto|;
 case|case
 literal|'f'
 case|:
