@@ -2115,17 +2115,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* don't compare unit numbers if this is the first time to attach. */
-if|if
-condition|(
-name|unit
-operator|<
-literal|0
-condition|)
-name|unit
-operator|=
-name|new_unit
-expr_stmt|;
 comment|/* iff the unit number changes either invoke config_cmd or punt. */
 if|if
 condition|(
@@ -2202,6 +2191,17 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/* don't compare unit numbers if this is the first time to attach. */
+if|if
+condition|(
+name|unit
+operator|<
+literal|0
+condition|)
+name|unit
+operator|=
+name|new_unit
+expr_stmt|;
 if|if
 condition|(
 name|new_unit
