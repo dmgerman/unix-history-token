@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/uio.h>
 end_include
 
@@ -73,6 +79,30 @@ begin_include
 include|#
 directive|include
 file|<sys/interrupt.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/bus.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rman.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/resource.h>
 end_include
 
 begin_include
@@ -144,6 +174,12 @@ begin_include
 include|#
 directive|include
 file|<pccard/slot.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pccard/pccard_nbk.h>
 end_include
 
 begin_include
@@ -698,7 +734,7 @@ decl_stmt|;
 comment|/* This isn't strictly correct, but works because of initialize order */
 name|printf
 argument_list|(
-literal|"Initializing PC-card drivers:"
+literal|"pccard: initalizing drivers:"
 argument_list|)
 expr_stmt|;
 for|for
@@ -717,6 +753,12 @@ name|drv
 operator|->
 name|next
 control|)
+block|{
+name|pccnbk_wrap_old_driver
+argument_list|(
+name|drv
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|" %s"
@@ -726,6 +768,7 @@ operator|->
 name|name
 argument_list|)
 expr_stmt|;
+block|}
 name|cdevsw_add
 argument_list|(
 operator|&
@@ -826,7 +869,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Driver %s already loaded\n"
+literal|"pccard: driver %s already loaded\n"
 argument_list|,
 name|drv
 operator|->
@@ -1352,15 +1395,6 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"Return IRQ=%d\n"
-argument_list|,
-name|slt
-operator|->
-name|irq
-argument_list|)
-expr_stmt|;
 name|slt
 operator|->
 name|ctrl
@@ -1476,6 +1510,9 @@ modifier|*
 name|slt
 parameter_list|)
 block|{
+name|device_t
+name|pccarddev
+decl_stmt|;
 name|struct
 name|pccard_devinfo
 modifier|*
@@ -1485,6 +1522,15 @@ name|int
 name|i
 decl_stmt|;
 comment|/* 	 * Unload all the drivers on this slot. Note we can't 	 * remove the device structures themselves, because this 	 * may be called from the event routine, which is called 	 * from the slot controller's ISR, and removing the structures 	 * shouldn't happen during the middle of some driver activity. 	 * 	 * Note that a race condition is possible here; if a 	 * driver is accessing the device and it is removed, then 	 * all bets are off... 	 */
+name|pccarddev
+operator|=
+name|devclass_get_device
+argument_list|(
+name|pccard_devclass
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|devi
@@ -1501,11 +1547,53 @@ name|devi
 operator|->
 name|next
 control|)
+block|{
 name|unregister_device_interrupt
 argument_list|(
 name|devi
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|devi
+operator|->
+name|isahd
+operator|.
+name|id_device
+operator|!=
+literal|0
+condition|)
+block|{
+name|pccnbk_release_resources
+argument_list|(
+name|devi
+operator|->
+name|isahd
+operator|.
+name|id_device
+argument_list|)
+expr_stmt|;
+name|device_delete_child
+argument_list|(
+name|pccarddev
+argument_list|,
+name|devi
+operator|->
+name|isahd
+operator|.
+name|id_device
+argument_list|)
+expr_stmt|;
+name|devi
+operator|->
+name|isahd
+operator|.
+name|id_device
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
 comment|/* Power off the slot 1/2 second after removal of the card */
 name|slt
 operator|->
@@ -1718,7 +1806,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Card disabled, slot %d\n"
+literal|"pccard: card disabled, slot %d\n"
 argument_list|,
 name|slt
 operator|->
@@ -2099,7 +2187,7 @@ name|NUM_IO_WINDOWS
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"PC-Card %s (%d mem& %d I/O windows)\n"
+literal|"pcic: pccard bridge %s (%d mem& %d I/O windows)\n"
 argument_list|,
 name|ctrl
 operator|->
@@ -2423,6 +2511,15 @@ name|pccard_device
 modifier|*
 name|drv
 decl_stmt|;
+name|device_t
+name|pccarddev
+decl_stmt|;
+name|char
+name|devnam
+index|[
+literal|128
+index|]
+decl_stmt|;
 name|int
 name|err
 decl_stmt|,
@@ -2432,6 +2529,31 @@ literal|0
 decl_stmt|,
 name|s
 decl_stmt|;
+name|pccarddev
+operator|=
+name|devclass_get_device
+argument_list|(
+name|pccard_devclass
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|snprintf
+argument_list|(
+name|devnam
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|devnam
+argument_list|)
+argument_list|,
+literal|"pccard-%s"
+argument_list|,
+name|desc
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
 name|drv
 operator|=
 name|find_driver
@@ -2498,7 +2620,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"pccard %s%d: still running\n"
+literal|"pccard: %s%d still running\n"
 argument_list|,
 name|devi
 operator|->
@@ -2672,7 +2794,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"pccard_alloc_intr failed for irq %d\n"
+literal|"pccard: alloc intr failed irq %d\n"
 argument_list|,
 name|irq
 argument_list|)
@@ -2797,6 +2919,16 @@ name|desc
 operator|->
 name|iobase
 expr_stmt|;
+name|devi
+operator|->
+name|isahd
+operator|.
+name|id_iosize
+operator|=
+name|desc
+operator|->
+name|iosize
+expr_stmt|;
 name|bcopy
 argument_list|(
 name|desc
@@ -2881,6 +3013,116 @@ name|id_maddr
 operator|=
 literal|0
 expr_stmt|;
+comment|/* 	 * XXX I think the following should be done in an attach 	 * routine, but can't seem to slip the knot to get it working 	 * right.  This is one reason I call this a kludge 	 */
+name|devi
+operator|->
+name|isahd
+operator|.
+name|id_device
+operator|=
+name|device_add_child
+argument_list|(
+name|pccarddev
+argument_list|,
+name|devnam
+argument_list|,
+name|devi
+operator|->
+name|isahd
+operator|.
+name|id_unit
+argument_list|,
+name|devi
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|err
+operator|=
+name|pccnbk_alloc_resources
+argument_list|(
+name|devi
+operator|->
+name|isahd
+operator|.
+name|id_device
+argument_list|)
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|device_delete_child
+argument_list|(
+name|pccarddev
+argument_list|,
+name|devi
+operator|->
+name|isahd
+operator|.
+name|id_device
+argument_list|)
+expr_stmt|;
+name|devi
+operator|->
+name|isahd
+operator|.
+name|id_device
+operator|=
+literal|0
+expr_stmt|;
+name|free
+argument_list|(
+name|devi
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|err
+operator|)
+return|;
+block|}
+name|snprintf
+argument_list|(
+name|devnam
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|devnam
+argument_list|)
+argument_list|,
+literal|"compat %s"
+argument_list|,
+name|desc
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+name|device_set_desc
+argument_list|(
+name|devi
+operator|->
+name|isahd
+operator|.
+name|id_device
+argument_list|,
+name|devnam
+argument_list|)
+expr_stmt|;
+name|BUS_PRINT_CHILD
+argument_list|(
+name|pccarddev
+argument_list|,
+name|devi
+operator|->
+name|isahd
+operator|.
+name|id_device
+argument_list|)
+expr_stmt|;
 name|devi
 operator|->
 name|next
@@ -2922,7 +3164,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"pccard %s%d: Enable failed %d\n"
+literal|"pccard: %s%d Enable failed %d\n"
 argument_list|,
 name|devi
 operator|->
@@ -2983,6 +3225,31 @@ name|unregister_device_interrupt
 argument_list|(
 name|devi
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|devi
+operator|->
+name|isahd
+operator|.
+name|id_device
+condition|)
+name|pccnbk_release_resources
+argument_list|(
+name|devi
+operator|->
+name|isahd
+operator|.
+name|id_device
+argument_list|)
+expr_stmt|;
+name|devi
+operator|->
+name|isahd
+operator|.
+name|id_device
+operator|=
+name|NULL
 expr_stmt|;
 comment|/* 	 *	Remove from device list on this slot. 	 */
 if|if
@@ -3125,7 +3392,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Card inserted, slot %d\n"
+literal|"pccard: card inserted, slot %d\n"
 argument_list|,
 name|slt
 operator|->
@@ -3234,7 +3501,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Card removed, slot %d\n"
+literal|"pccard: card removed, slot %d\n"
 argument_list|,
 name|slt
 operator|->
@@ -3363,7 +3630,7 @@ return|return;
 comment|/* 	 * XXX - Should 'debounce' these for drivers that have recently 	 * been removed. 	 */
 name|printf
 argument_list|(
-literal|"Slot %d, unfielded interrupt (%d)\n"
+literal|"pccard: slot %d, unfielded interrupt (%d)\n"
 argument_list|,
 name|slt
 operator|->

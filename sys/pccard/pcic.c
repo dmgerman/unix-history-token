@@ -2869,7 +2869,7 @@ name|cinfo
 operator|.
 name|name
 operator|=
-literal|"Intel 82365"
+literal|"i82365"
 expr_stmt|;
 break|break;
 case|case
