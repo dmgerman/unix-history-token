@@ -4444,13 +4444,17 @@ name|vp
 condition|)
 name|vn_lock
 argument_list|(
-argument|attribute->uele_backing_vnode
+name|attribute
+operator|->
+name|uele_backing_vnode
 argument_list|,
-argument|LK_EXCLUSIVE LK_RETRY
+name|LK_EXCLUSIVE
+operator||
+name|LK_RETRY
 argument_list|,
-argument|td
+name|td
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|ioflag
 operator|=
 name|IO_NODELOCKED
