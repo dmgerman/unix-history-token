@@ -15,7 +15,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: read.c,v 1.2 1993/11/03 00:52:11 paul Exp $"
+literal|"$Id: read.c,v 1.3 1993/11/30 20:55:43 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -5400,6 +5400,9 @@ decl_stmt|;
 name|segT
 name|seg
 decl_stmt|;
+name|SKIP_WHITESPACE
+argument_list|()
+expr_stmt|;
 name|name
 operator|=
 name|input_line_pointer
@@ -5626,6 +5629,9 @@ decl_stmt|;
 name|int
 name|aux
 decl_stmt|;
+name|SKIP_WHITESPACE
+argument_list|()
+expr_stmt|;
 name|name
 operator|=
 name|input_line_pointer

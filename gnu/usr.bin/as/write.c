@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: write.c,v 1.2 1993/11/03 00:52:28 paul Exp $"
+literal|"$Id: write.c,v 1.3 1993/11/30 20:55:47 jkh Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -4042,32 +4042,6 @@ name|fx_addsy
 operator|=
 name|NULL
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|PIC
-name|add_symbolP
-operator|=
-name|fixP
-operator|->
-name|fx_addsy
-operator|=
-name|fixP
-operator|->
-name|fx_gotsy
-expr_stmt|;
-if|if
-condition|(
-name|add_symbolP
-condition|)
-name|add_symbol_segment
-operator|=
-name|S_GET_SEGMENT
-argument_list|(
-name|add_symbolP
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 else|else
 block|{
@@ -4143,6 +4117,43 @@ comment|/* if absolute */
 block|}
 block|}
 comment|/* if sub_symbolP */
+ifdef|#
+directive|ifdef
+name|PIC
+comment|/* 		 * Bring _GLOBAL_OFFSET_TABLE_ forward, now we've had the 		 * chance to collapse any accompanying symbols into a number. 		 * This is the sequel of the hack in expr.c to parse operands 		 * of the form `_GLOBAL_OFFSET_TABLE_+(L1-L2)'. Note that 		 * _GLOBAL_OFFSET_TABLE_ can only be an "add symbol". 		 */
+if|if
+condition|(
+name|add_symbolP
+operator|==
+name|NULL
+operator|&&
+name|fixP
+operator|->
+name|fx_gotsy
+operator|!=
+name|NULL
+condition|)
+block|{
+name|add_symbolP
+operator|=
+name|fixP
+operator|->
+name|fx_addsy
+operator|=
+name|fixP
+operator|->
+name|fx_gotsy
+expr_stmt|;
+name|add_symbol_segment
+operator|=
+name|S_GET_SEGMENT
+argument_list|(
+name|add_symbolP
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|add_symbolP
@@ -4260,6 +4271,10 @@ name|fx_r_type
 operator|!=
 name|RELOC_GLOB_DAT
 operator|&&
+ifdef|#
+directive|ifdef
+name|TC_I386
+comment|/* XXX - This must be rationalized */
 name|fixP
 operator|->
 name|fx_r_type
@@ -4272,6 +4287,8 @@ name|fx_r_type
 operator|!=
 name|RELOC_GOTOFF
 operator|&&
+endif|#
+directive|endif
 operator|(
 name|fixP
 operator|->
