@@ -54,7 +54,7 @@ begin_define
 define|#
 directive|define
 name|DS1_RECPRIMARY
-value|0
+value|1
 end_define
 
 begin_define
