@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * OMRON Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)bmc.c	7.5 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1992 OMRON Corporation.  * Copyright (c) 1992 The Regents of the University of California.  * All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * OMRON Corporation.  *  * %sccs.include.redist.c%  *  *	@(#)bmc.c	7.6 (Berkeley) %G%  */
 end_comment
 
 begin_define
@@ -2886,6 +2886,20 @@ name|code
 operator|,
 name|tp
 operator|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|rr
+operator|&
+name|RR_TXRDY
+condition|)
+block|{
+name|sio
+operator|->
+name|sio_cmd
+operator|=
+name|WR0_RSTPEND
 expr_stmt|;
 block|}
 block|}
