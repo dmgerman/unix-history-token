@@ -4138,6 +4138,13 @@ condition|(
 name|error
 condition|)
 block|{
+name|uma_zdestroy
+argument_list|(
+name|sc
+operator|->
+name|uma
+argument_list|)
+expr_stmt|;
 name|mddestroy
 argument_list|(
 name|sc
