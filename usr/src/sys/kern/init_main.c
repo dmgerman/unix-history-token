@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	init_main.c	4.14	81/04/23	*/
+comment|/*	init_main.c	4.15	81/04/28	*/
 end_comment
 
 begin_include
@@ -338,6 +338,9 @@ name|bswinit
 argument_list|()
 expr_stmt|;
 name|iinit
+argument_list|()
+expr_stmt|;
+name|ptinit
 argument_list|()
 expr_stmt|;
 name|rootdir
