@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)reply.c	5.2 (Berkeley) 87/04/11"
+literal|"@(#)reply.c	5.3 (Berkeley) 87/07/20"
 decl_stmt|;
 end_decl_stmt
 
@@ -469,13 +469,14 @@ operator|.
 name|line
 argument_list|)
 expr_stmt|;
-name|putc
+name|fputs
 argument_list|(
-literal|'\n'
+literal|"Precedence: bulk\n\n"
 argument_list|,
 name|pf
 argument_list|)
 expr_stmt|;
+comment|/* vacation(1) uses this... */
 name|fflush
 argument_list|(
 name|pf
