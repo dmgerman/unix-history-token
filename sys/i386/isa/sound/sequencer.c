@@ -7878,7 +7878,8 @@ name|POLLWRNORM
 operator||
 name|POLLHUP
 operator|)
-expr|;
+operator|)
+return|;
 block|}
 end_function
 
