@@ -4,7 +4,7 @@ comment|/*	$NetBSD: uhci.c,v 1.22 1999/01/08 11:58:25 augustss Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	FreeBSD $Id: uhci.c,v 1.6 1999/01/07 23:31:33 n_hibma Exp $ */
+comment|/*	FreeBSD $Id: uhci.c,v 1.7 1999/01/10 18:42:51 n_hibma Exp $ */
 end_comment
 
 begin_comment
@@ -1679,6 +1679,11 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* disable interrupts */
+name|uhci_busreset
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* Allocate and initialize real frame array. */
 name|r
 operator|=
@@ -1746,11 +1751,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* set frame list */
-name|uhci_busreset
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 comment|/* Allocate the dummy QH where bulk traffic will be queued. */
 name|bsqh
 operator|=
