@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	rx.c	4.11	83/04/06	*/
+comment|/*	rx.c	4.12	83/04/09	*/
 end_comment
 
 begin_include
@@ -22,7 +22,7 @@ comment|/*  * RX02 floppy disk device driver  *  */
 end_comment
 
 begin_comment
-comment|/*  * 	Note: If the drive subsystem is  * 	powered off at boot time, the controller won't interrupt!  */
+comment|/*  * TODO:  *	- Make the driver automatically detect the density of  *	  the floppy disks ( this is easily done using the   *	  'read status' command )  *  * 	Note: If the drive subsystem is  * 	powered off at boot time, the controller won't interrupt!  */
 end_comment
 
 begin_include
@@ -247,7 +247,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* per drive buffer queue heads */
+comment|/* per drive buffers */
 end_comment
 
 begin_comment
@@ -284,9 +284,9 @@ value|0x07
 comment|/* density and mapping flags */
 define|#
 directive|define
-name|RXF_OPEN
+name|RXF_LOCK
 value|0x10
-comment|/* open */
+comment|/* exclusive use */
 define|#
 directive|define
 name|RXF_DDMK
@@ -297,35 +297,38 @@ directive|define
 name|RXF_USEWDDS
 value|0x40
 comment|/* write deleted-data sector */
+define|#
+directive|define
+name|RXF_FORMAT
+value|0x80
+comment|/* format in progress */
 name|int
 name|sc_csbits
 decl_stmt|;
 comment|/* constant bits for CS register */
-name|caddr_t
-name|sc_uaddr
-decl_stmt|;
-comment|/* save orig. unibus address while */
-comment|/* doing multisector transfers */
-name|long
-name|sc_bcnt
-decl_stmt|;
-comment|/* save total transfer count for */
-comment|/* multisector transfers */
-name|long
-name|sc_resid
-decl_stmt|;
-comment|/* no of bytes left to transfer in multisect */
-comment|/* operations */
-name|int
-name|sc_offset
-decl_stmt|;
-comment|/* raw mode kludge: gives the offset into */
-comment|/* a block of DEV_BSIZE for the current */
-comment|/* request */
 name|int
 name|sc_open
 decl_stmt|;
 comment|/* count number of opens */
+name|int
+name|sc_offset
+decl_stmt|;
+comment|/* raw mode kludge to avoid restricting */
+comment|/* single sector transfers to start on */
+comment|/* DEV_BSIZE boundaries */
+comment|/* 	 * The rest of this structure is used to  	 * store temporaries while simulating multi  	 * sector transfers 	 */
+name|caddr_t
+name|sc_uaddr
+decl_stmt|;
+comment|/* unibus base address */
+name|long
+name|sc_bcnt
+decl_stmt|;
+comment|/* total transfer count */
+name|long
+name|sc_resid
+decl_stmt|;
+comment|/* no of bytes left to transfer */
 block|}
 name|rx_softc
 index|[
@@ -759,9 +762,6 @@ name|rx_ctlr
 modifier|*
 name|rxc
 decl_stmt|;
-name|int
-name|ctlr
-decl_stmt|;
 if|if
 condition|(
 name|unit
@@ -808,20 +808,16 @@ operator|==
 literal|0
 condition|)
 block|{
-name|ctlr
-operator|=
-name|ui
-operator|->
-name|ui_mi
-operator|->
-name|um_ctlr
-expr_stmt|;
 name|rxc
 operator|=
 operator|&
 name|rx_ctlr
 index|[
-name|ctlr
+name|ui
+operator|->
+name|ui_mi
+operator|->
+name|um_ctlr
 index|]
 expr_stmt|;
 name|sc
@@ -891,6 +887,46 @@ argument_list|()
 expr_stmt|;
 comment|/* start watchdog */
 block|}
+block|}
+else|else
+block|{
+if|if
+condition|(
+operator|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|RXF_DBLDEN
+operator|)
+operator|!=
+operator|(
+name|dev
+operator|&
+name|RXF_DBLDEN
+operator|)
+condition|)
+block|{
+comment|/*  			 * Can't open the device if the density does  			 * not match the currently selected density  			 */
+return|return
+operator|(
+name|ENODEV
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_flags
+operator|&
+name|RXF_LOCK
+condition|)
+return|return
+operator|(
+name|EBUSY
+operator|)
+return|;
 block|}
 return|return
 operator|(
@@ -962,6 +998,17 @@ name|rxwstart
 operator|--
 expr_stmt|;
 block|}
+name|printf
+argument_list|(
+literal|"rxclose: dev=0x%x, sc_open=%d\n"
+argument_list|,
+name|dev
+argument_list|,
+name|sc
+operator|->
+name|sc_open
+argument_list|)
+expr_stmt|;
 block|}
 end_block
 
@@ -2478,7 +2525,7 @@ name|bp
 operator|->
 name|b_error
 operator|=
-name|EIO
+name|EBUSY
 expr_stmt|;
 name|bp
 operator|->
@@ -3430,7 +3477,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|EIO
+name|ENXIO
 operator|)
 return|;
 name|sc
@@ -3549,7 +3596,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|EIO
+name|ENXIO
 operator|)
 return|;
 name|sc
@@ -3588,7 +3635,7 @@ block|}
 end_block
 
 begin_comment
-comment|/*  * Control routine:  * processes three kinds of requests:  *  *	(1) Set density (i.e., format the diskette) according to   *		  that specified by the open device.  *	(2) Arrange for the next sector to be written with a deleted-  *		  data mark.  *	(3) Report whether the last sector read had a deleted-data mark  *		  (by returning with an EIO error code if it did).  *  * Requests relating to deleted-data marks can be handled right here.  * A "set density" (format) request, however, must additionally be   * processed through "rxstart", just like a read or write request.  */
+comment|/*  * Control routine:  * processes three kinds of requests:  *  *	(1) Set density (i.e., format the diskette) according to   *		  that specified by the open device.  *	(2) Arrange for the next sector to be written with a deleted-  *		  data mark.  *	(3) Report whether the last sector read had a deleted-data mark  *  * Requests relating to deleted-data marks can be handled right here.  * A "set density" (format) request, however, must additionally be   * processed through "rxstart", just like a read or write request.  */
 end_comment
 
 begin_comment
@@ -3674,6 +3721,19 @@ condition|)
 return|return
 operator|(
 name|EBADF
+operator|)
+return|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_open
+operator|>
+literal|1
+condition|)
+return|return
+operator|(
+name|EBUSY
 operator|)
 return|;
 return|return
@@ -3823,7 +3883,9 @@ name|sc
 operator|->
 name|sc_flags
 operator|=
-name|RXS_FORMAT
+name|RXF_FORMAT
+operator||
+name|RXF_LOCK
 expr_stmt|;
 name|bp
 operator|->
@@ -3881,6 +3943,13 @@ name|caddr_t
 operator|)
 name|bp
 argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_flags
+operator|&=
+operator|~
+name|RXF_LOCK
 expr_stmt|;
 return|return
 operator|(
