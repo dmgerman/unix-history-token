@@ -455,7 +455,7 @@ name|ts
 operator|->
 name|tv_nsec
 operator|*
-literal|18446744073
+literal|18446744073ULL
 expr_stmt|;
 comment|/* int(2^64 / 1000000000) */
 block|}
@@ -543,7 +543,7 @@ name|tv
 operator|->
 name|tv_usec
 operator|*
-literal|18446744073709
+literal|18446744073709ULL
 expr_stmt|;
 comment|/* int(2^64 / 1000000) */
 block|}
