@@ -2461,6 +2461,8 @@ name|r
 argument_list|,
 name|EF_RELOC_REL
 argument_list|,
+literal|0
+argument_list|,
 name|offset
 argument_list|,
 name|len
@@ -2515,6 +2517,8 @@ argument_list|,
 name|a
 argument_list|,
 name|EF_RELOC_RELA
+argument_list|,
+literal|0
 argument_list|,
 name|offset
 argument_list|,

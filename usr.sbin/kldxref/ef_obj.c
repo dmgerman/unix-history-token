@@ -1101,7 +1101,9 @@ modifier|*
 name|a
 decl_stmt|;
 name|Elf_Off
-name|secoff
+name|secbase
+decl_stmt|,
+name|dataoff
 decl_stmt|;
 name|int
 name|error
@@ -1178,6 +1180,12 @@ name|sec
 operator|=
 operator|-
 literal|1
+expr_stmt|;
+name|secbase
+operator|=
+name|dataoff
+operator|=
+literal|0
 expr_stmt|;
 for|for
 control|(
@@ -1264,10 +1272,9 @@ index|]
 operator|.
 name|sec
 expr_stmt|;
-name|secoff
+comment|/* We relocate to address 0. */
+name|secbase
 operator|=
-name|memaddr
-operator|-
 operator|(
 name|char
 operator|*
@@ -1280,6 +1287,18 @@ name|i
 index|]
 operator|.
 name|addr
+operator|-
+name|ef
+operator|->
+name|address
+expr_stmt|;
+name|dataoff
+operator|=
+name|memaddr
+operator|-
+name|ef
+operator|->
+name|address
 expr_stmt|;
 break|break;
 block|}
@@ -1377,7 +1396,9 @@ name|r
 argument_list|,
 name|EF_RELOC_REL
 argument_list|,
-name|secoff
+name|secbase
+argument_list|,
+name|dataoff
 argument_list|,
 name|len
 argument_list|,
@@ -1478,7 +1499,9 @@ name|a
 argument_list|,
 name|EF_RELOC_RELA
 argument_list|,
-name|secoff
+name|secbase
+argument_list|,
+name|dataoff
 argument_list|,
 name|len
 argument_list|,

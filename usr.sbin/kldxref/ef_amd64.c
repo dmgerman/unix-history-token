@@ -40,7 +40,7 @@ file|"ef.h"
 end_include
 
 begin_comment
-comment|/*  * Apply relocations to the values we got from the file.  */
+comment|/*  * Apply relocations to the values we got from the file. `relbase' is the  * target relocation address of the section, and `dataoff' is the target  * relocation address of the data in `dest'.  */
 end_comment
 
 begin_function
@@ -55,13 +55,16 @@ parameter_list|,
 specifier|const
 name|void
 modifier|*
-name|data
+name|reldata
 parameter_list|,
 name|int
-name|type
+name|reltype
 parameter_list|,
 name|Elf_Off
-name|offset
+name|relbase
+parameter_list|,
+name|Elf_Off
+name|dataoff
 parameter_list|,
 name|size_t
 name|len
@@ -105,7 +108,7 @@ name|rela
 decl_stmt|;
 switch|switch
 condition|(
-name|type
+name|reltype
 condition|)
 block|{
 case|case
@@ -118,7 +121,7 @@ specifier|const
 name|Elf_Rel
 operator|*
 operator|)
-name|data
+name|reldata
 expr_stmt|;
 name|where
 operator|=
@@ -129,12 +132,18 @@ operator|)
 operator|(
 name|dest
 operator|+
+name|relbase
+operator|+
 name|rel
 operator|->
 name|r_offset
 operator|-
-name|offset
+name|dataoff
 operator|)
+expr_stmt|;
+name|addend
+operator|=
+literal|0
 expr_stmt|;
 name|rtype
 operator|=
@@ -165,7 +174,7 @@ specifier|const
 name|Elf_Rela
 operator|*
 operator|)
-name|data
+name|reldata
 expr_stmt|;
 name|where
 operator|=
@@ -176,11 +185,13 @@ operator|)
 operator|(
 name|dest
 operator|+
+name|relbase
+operator|+
 name|rela
 operator|->
 name|r_offset
 operator|-
-name|offset
+name|dataoff
 operator|)
 expr_stmt|;
 name|addend
@@ -250,7 +261,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|type
+name|reltype
 operator|==
 name|EF_RELOC_REL
 condition|)
@@ -388,6 +399,8 @@ operator|(
 name|Elf_Addr
 operator|)
 name|addend
+operator|+
+name|relbase
 expr_stmt|;
 name|val
 operator|=

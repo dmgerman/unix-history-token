@@ -34,7 +34,7 @@ file|"ef.h"
 end_include
 
 begin_comment
-comment|/*  * Apply relocations to the values we got from the file.  */
+comment|/*  * Apply relocations to the values we got from the file. `relbase' is the  * target relocation address of the section, and `dataoff' is the target  * relocation address of the data in `dest'.  */
 end_comment
 
 begin_function
@@ -49,13 +49,16 @@ parameter_list|,
 specifier|const
 name|void
 modifier|*
-name|data
+name|reldata
 parameter_list|,
 name|int
-name|type
+name|reltype
 parameter_list|,
 name|Elf_Off
-name|offset
+name|relbase
+parameter_list|,
+name|Elf_Off
+name|dataoff
 parameter_list|,
 name|size_t
 name|len
@@ -75,7 +78,7 @@ name|w
 decl_stmt|;
 switch|switch
 condition|(
-name|type
+name|reltype
 condition|)
 block|{
 case|case
@@ -83,21 +86,25 @@ name|EF_RELOC_RELA
 case|:
 name|a
 operator|=
-name|data
+name|reldata
 expr_stmt|;
 if|if
 condition|(
+name|relbase
+operator|+
 name|a
 operator|->
 name|r_offset
 operator|>=
-name|offset
+name|dataoff
 operator|&&
+name|relbase
+operator|+
 name|a
 operator|->
 name|r_offset
 operator|<
-name|offset
+name|dataoff
 operator|+
 name|len
 condition|)
@@ -115,12 +122,13 @@ block|{
 case|case
 name|R_SPARC_RELATIVE
 case|:
-comment|/* load address is 0 */
 name|w
 operator|=
 name|a
 operator|->
 name|r_addend
+operator|+
+name|relbase
 expr_stmt|;
 name|memcpy
 argument_list|(
@@ -131,11 +139,13 @@ operator|)
 name|dest
 operator|+
 operator|(
+name|relbase
+operator|+
 name|a
 operator|->
 name|r_offset
 operator|-
-name|offset
+name|dataoff
 operator|)
 argument_list|,
 operator|&
