@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.29 (Berkeley) %G% (with SMTP)"
+literal|"@(#)srvrsmtp.c	8.30 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)srvrsmtp.c	8.29 (Berkeley) %G% (without SMTP)"
+literal|"@(#)srvrsmtp.c	8.30 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -426,6 +426,17 @@ name|skipword
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|MAXBADCOMMANDS
+value|25
+end_define
+
+begin_comment
+comment|/* maximum number of bad commands */
+end_comment
 
 begin_expr_stmt
 name|smtp
@@ -2465,6 +2476,8 @@ argument_list|,
 name|MyHostName
 argument_list|)
 expr_stmt|;
+name|doquit
+label|:
 comment|/* avoid future 050 messages */
 name|disconnect
 argument_list|(
@@ -2636,6 +2649,25 @@ case|case
 name|CMDERROR
 case|:
 comment|/* unknown command */
+if|if
+condition|(
+operator|++
+name|badcommands
+operator|>
+name|MAXBADCOMMANDS
+condition|)
+block|{
+name|message
+argument_list|(
+literal|"421 %s Too many bad commands; closing connection"
+argument_list|,
+name|MyHostName
+argument_list|)
+expr_stmt|;
+goto|goto
+name|doquit
+goto|;
+block|}
 name|message
 argument_list|(
 literal|"500 Command unrecognized"
