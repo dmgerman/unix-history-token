@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)recipient.c	8.86 (Berkeley) %G%"
+literal|"@(#)recipient.c	8.87 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2195,6 +2195,27 @@ operator||=
 name|QBOGUSSHELL
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|bitset
+argument_list|(
+name|EF_VRFYONLY
+argument_list|,
+name|e
+operator|->
+name|e_flags
+argument_list|)
+condition|)
+block|{
+comment|/* don't do any more now */
+name|a
+operator|->
+name|q_flags
+operator||=
+name|QVERIFIED
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 operator|!
