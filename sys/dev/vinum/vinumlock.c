@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *    * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumlock.c,v 1.8 1999/01/14 02:52:13 grog Exp grog $  */
+comment|/*-  * Copyright (c) 1997, 1998  *	Nan Yang Computer Services Limited.  All rights reserved.  *  *  This software is distributed under the so-called ``Berkeley  *  License'':  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by Nan Yang Computer  *      Services Limited.  * 4. Neither the name of the Company nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * This software is provided ``as is'', and any express or implied  * warranties, including, but not limited to, the implied warranties of  * merchantability and fitness for a particular purpose are disclaimed.  * In no event shall the company or contributors be liable for any  * direct, indirect, incidental, special, exemplary, or consequential  * damages (including, but not limited to, procurement of substitute  * goods or services; loss of use, data, or profits; or business  * interruption) however caused and on any theory of liability, whether  * in contract, strict liability, or tort (including negligence or  * otherwise) arising in any way out of the use of this software, even if  * advised of the possibility of such damage.  *  * $Id: vinumlock.c,v 1.9 1999/03/13 03:26:00 grog Exp grog $  */
 end_comment
 
 begin_define
@@ -22,22 +22,47 @@ file|<dev/vinum/vinumhdr.h>
 end_include
 
 begin_comment
-comment|/*  * Lock routines.  Currently, we lock either an individual volume  * or the global configuration.  I don't think tsleep and  * wakeup are SMP safe. FIXME XXX   */
+comment|/*  * Lock routines.  Currently, we lock either an individual volume  * or the global configuration.  I don't think tsleep and  * wakeup are SMP safe. FIXME XXX  */
 end_comment
 
 begin_comment
 comment|/* Lock a drive, wait if it's in use */
 end_comment
 
-begin_function
+begin_if
+if|#
+directive|if
+name|VINUMDEBUG
+end_if
+
+begin_decl_stmt
 name|int
 name|lockdrive
-parameter_list|(
-name|struct
+argument_list|(
+expr|struct
 name|drive
-modifier|*
+operator|*
 name|drive
-parameter_list|)
+argument_list|,
+name|char
+operator|*
+name|file
+argument_list|,
+name|int
+name|line
+argument_list|)
+else|#
+directive|else
+name|int
+name|lockdrive
+argument_list|(
+expr|struct
+name|drive
+operator|*
+name|drive
+argument_list|)
+endif|#
+directive|endif
 block|{
 name|int
 name|error
@@ -66,6 +91,39 @@ operator|)
 condition|)
 block|{
 comment|/* by us! */
+ifdef|#
+directive|ifdef
+name|VINUMDEBUG
+name|log
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"vinum lockdrive: already locking %s from %s:%d, called from %s:%d\n"
+argument_list|,
+name|drive
+operator|->
+name|label
+operator|.
+name|name
+argument_list|,
+name|drive
+operator|->
+name|lockfilename
+argument_list|,
+name|drive
+operator|->
+name|lockline
+argument_list|,
+name|basename
+argument_list|(
+name|file
+argument_list|)
+argument_list|,
+name|line
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|log
 argument_list|(
 name|LOG_WARNING
@@ -79,6 +137,8 @@ operator|.
 name|name
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 literal|0
 return|;
@@ -96,7 +156,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 	 * There are problems sleeping on a unique identifier, 	 * since the drive structure can move, and the unlock 	 * function can be called after killing the drive. 	 * Solve this by waiting on this function; the number 	 * of conflicts is negligible  	 */
+comment|/* 	 * There are problems sleeping on a unique identifier, 	 * since the drive structure can move, and the unlock 	 * function can be called after killing the drive. 	 * Solve this by waiting on this function; the number 	 * of conflicts is negligible. 	 */
 if|if
 condition|(
 operator|(
@@ -138,11 +198,46 @@ operator|->
 name|p_pid
 expr_stmt|;
 comment|/* it's a panic error if curproc is null */
+ifdef|#
+directive|ifdef
+name|VINUMDEBUG
+name|bcopy
+argument_list|(
+name|basename
+argument_list|(
+name|file
+argument_list|)
+argument_list|,
+name|drive
+operator|->
+name|lockfilename
+argument_list|,
+literal|15
+argument_list|)
+expr_stmt|;
+name|drive
+operator|->
+name|lockfilename
+index|[
+literal|15
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+comment|/* truncate if necessary */
+name|drive
+operator|->
+name|lockline
+operator|=
+name|line
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 literal|0
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/* Unlock a drive and let the next one at it */
@@ -211,7 +306,7 @@ name|flags
 operator||=
 name|VF_LOCKING
 expr_stmt|;
-comment|/* 	 * It would seem to make more sense to sleep on 	 * the address 'vol'.  Unfortuntaly we can't 	 * guarantee that this address won't change due to 	 * table expansion.  The address we choose won't change.  	 */
+comment|/* 	 * It would seem to make more sense to sleep on 	 * the address 'vol'.  Unfortuntaly we can't 	 * guarantee that this address won't change due to 	 * table expansion.  The address we choose won't change. 	 */
 if|if
 condition|(
 operator|(
@@ -349,7 +444,7 @@ name|flags
 operator||=
 name|VF_LOCKING
 expr_stmt|;
-comment|/* 	 * It would seem to make more sense to sleep on 	 * the address 'plex'.  Unfortunately we can't 	 * guarantee that this address won't change due to 	 * table expansion.  The address we choose won't change.  	 */
+comment|/* 	 * It would seem to make more sense to sleep on 	 * the address 'plex'.  Unfortunately we can't 	 * guarantee that this address won't change due to 	 * table expansion.  The address we choose won't change. 	 */
 if|if
 condition|(
 operator|(
