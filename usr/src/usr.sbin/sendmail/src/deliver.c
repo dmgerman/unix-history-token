@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)deliver.c	8.21 (Berkeley) %G%"
+literal|"@(#)deliver.c	8.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1748,6 +1748,38 @@ operator|->
 name|q_next
 control|)
 block|{
+ifdef|#
+directive|ifdef
+name|XDEBUG
+name|char
+name|wbuf
+index|[
+name|MAXNAME
+operator|+
+literal|20
+index|]
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|sprintf
+argument_list|(
+name|wbuf
+argument_list|,
+literal|"sendall(%s)"
+argument_list|,
+name|q
+operator|->
+name|q_paddr
+argument_list|)
+expr_stmt|;
+name|checkfd012
+argument_list|(
+name|wbuf
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|mode
@@ -1863,6 +1895,16 @@ name|Verbose
 operator|=
 name|oldverbose
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|XDEBUG
+name|checkfd012
+argument_list|(
+literal|"end of sendenvelope"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|mode
