@@ -118,6 +118,12 @@ directive|include
 file|<signal.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -8377,11 +8383,6 @@ name|int
 name|c
 decl_stmt|;
 block|{
-name|char
-modifier|*
-name|rindex
-parameter_list|()
-function_decl|;
 if|if
 condition|(
 name|pure_alphabetic
@@ -12391,10 +12392,6 @@ condition|)
 block|{
 name|char
 modifier|*
-name|rindex
-argument_list|()
-decl_stmt|,
-modifier|*
 name|temp
 decl_stmt|;
 if|if
@@ -12474,10 +12471,6 @@ operator|++
 control|)
 block|{
 name|char
-modifier|*
-name|rindex
-argument_list|()
-decl_stmt|,
 modifier|*
 name|temp
 init|=
@@ -12733,10 +12726,6 @@ block|}
 else|else
 block|{
 name|char
-modifier|*
-name|rindex
-argument_list|()
-decl_stmt|,
 modifier|*
 name|temp
 init|=
@@ -17332,10 +17321,6 @@ condition|)
 block|{
 name|char
 modifier|*
-name|rindex
-argument_list|()
-decl_stmt|,
-modifier|*
 name|temp
 decl_stmt|;
 if|if
@@ -19819,10 +19804,6 @@ name|possible_meta_prefixes
 index|[]
 decl_stmt|;
 name|char
-modifier|*
-name|rindex
-argument_list|()
-decl_stmt|,
 modifier|*
 name|funname
 decl_stmt|,
