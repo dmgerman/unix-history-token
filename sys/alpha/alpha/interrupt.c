@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: interrupt.c,v 1.6 1998/11/15 18:25:15 dfr Exp $ */
+comment|/* $Id: interrupt.c,v 1.7 1998/11/18 23:51:40 dfr Exp $ */
 end_comment
 
 begin_comment
@@ -95,12 +95,6 @@ directive|include
 file|<machine/intr.h>
 end_include
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -113,8 +107,14 @@ directive|include
 file|<sys/device.h>
 end_include
 
+begin_decl_stmt
+name|struct
+name|evcnt
+name|clock_intr_evcnt
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-unit|struct evcnt clock_intr_evcnt;
 comment|/* event counter for clock intrs. */
 end_comment
 
@@ -128,11 +128,6 @@ include|#
 directive|include
 file|<machine/intrcnt.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
@@ -265,18 +260,22 @@ operator|.
 name|v_intr
 operator|++
 expr_stmt|;
-if|#
-directive|if
-literal|0
 ifdef|#
 directive|ifdef
 name|EVCNT_COUNTERS
-block|clock_intr_evcnt.ev_count++;
+name|clock_intr_evcnt
+operator|.
+name|ev_count
+operator|++
+expr_stmt|;
 else|#
 directive|else
-block|intrcnt[INTRCNT_CLOCK]++;
-endif|#
-directive|endif
+name|intrcnt
+index|[
+name|INTRCNT_CLOCK
+index|]
+operator|++
+expr_stmt|;
 endif|#
 directive|endif
 if|if
@@ -1035,6 +1034,12 @@ modifier|*
 name|arg
 decl_stmt|;
 comment|/* argument to handler */
+specifier|volatile
+name|long
+modifier|*
+name|cntp
+decl_stmt|;
+comment|/* interrupt counter */
 block|}
 struct|;
 end_struct
@@ -1069,6 +1074,11 @@ name|void
 modifier|*
 modifier|*
 name|cookiep
+parameter_list|,
+specifier|volatile
+name|long
+modifier|*
+name|cntp
 parameter_list|)
 block|{
 name|int
@@ -1127,6 +1137,23 @@ operator|->
 name|arg
 operator|=
 name|arg
+expr_stmt|;
+if|if
+condition|(
+name|cntp
+condition|)
+name|i
+operator|->
+name|cntp
+operator|=
+name|cntp
+expr_stmt|;
+else|else
+name|i
+operator|->
+name|cntp
+operator|=
+name|NULL
 expr_stmt|;
 name|s
 operator|=
@@ -1229,6 +1256,11 @@ name|alpha_intr
 modifier|*
 name|i
 decl_stmt|;
+specifier|volatile
+name|long
+modifier|*
+name|cntp
+decl_stmt|;
 name|int
 name|h
 init|=
@@ -1269,6 +1301,21 @@ name|vector
 operator|==
 name|vector
 condition|)
+block|{
+if|if
+condition|(
+name|cntp
+operator|=
+name|i
+operator|->
+name|cntp
+condition|)
+operator|(
+operator|*
+name|cntp
+operator|)
+operator|++
+expr_stmt|;
 name|i
 operator|->
 name|intr
@@ -1278,6 +1325,7 @@ operator|->
 name|arg
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
