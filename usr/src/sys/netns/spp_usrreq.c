@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)spp_usrreq.c	6.15 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1984, 1985 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)spp_usrreq.c	6.15 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -933,9 +933,11 @@ name|si
 argument_list|)
 condition|)
 block|{
-goto|goto
-name|drop
-goto|;
+name|m_freem
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 block|}
 operator|(
 name|void
@@ -4205,6 +4207,12 @@ name|s_shdr
 operator|.
 name|si_s
 expr_stmt|;
+break|break;
+default|default:
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
 block|}
 operator|*
 name|value
@@ -4366,6 +4374,12 @@ operator|&
 name|SP_EM
 expr_stmt|;
 block|}
+break|break;
+default|default:
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
 block|}
 name|m_freem
 argument_list|(
