@@ -94,6 +94,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"pathnames.h"
 end_include
 
@@ -143,7 +149,24 @@ name|dbfd
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|void
+name|printuser
+name|__P
+argument_list|(
+operator|(
+expr|struct
+name|passwd
+operator|*
+operator|,
+name|int
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function
+name|int
 name|main
 parameter_list|(
 name|argc
@@ -356,30 +379,22 @@ begin_comment
 comment|/*  * print out info for specified password entry  */
 end_comment
 
-begin_macro
+begin_function
+name|void
 name|printuser
-argument_list|(
-argument|pw
-argument_list|,
-argument|printfail
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|pw
+parameter_list|,
+name|printfail
+parameter_list|)
 name|struct
 name|passwd
 modifier|*
 name|pw
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|int
 name|printfail
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 name|struct
 name|betinfo
@@ -635,7 +650,7 @@ literal|"*----------------------*\n\n"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 end_unit
 
