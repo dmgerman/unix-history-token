@@ -40,7 +40,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)rlogind.c	8.1 (Berkeley) %G%"
+literal|"@(#)rlogind.c	8.2 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1001,7 +1001,7 @@ literal|"ROOT Kerberos login from %s.%s@%s on %s\n"
 argument|, 				    kdata->pname, kdata->pinst, kdata->prealm, 				    hostname);
 endif|#
 directive|endif
-argument|execl(_PATH_LOGIN,
+argument|execle(_PATH_LOGIN,
 literal|"login"
 argument|,
 literal|"-p"
@@ -1009,13 +1009,17 @@ argument|,
 literal|"-h"
 argument|, hostname,
 literal|"-f"
-argument|, lusername, (char *)NULL); 		} else 			execl(_PATH_LOGIN,
+argument|,
+literal|"--"
+argument|, lusername, NULL, env); 		} else 			execle(_PATH_LOGIN,
 literal|"login"
 argument|,
 literal|"-p"
 argument|,
 literal|"-h"
-argument|, hostname, lusername, (char *)NULL);
+argument|, hostname,
+literal|"--"
+argument|, lusername, NULL, env);
 endif|#
 directive|endif
 comment|/* OLD_LOGIN */
@@ -1049,9 +1053,9 @@ argument|); 	oobdata[
 literal|0
 argument|]&= ~TIOCPKT_WINDOW;
 comment|/* we know he heard */
-argument|bcopy(cp+
+argument|memmove(&w, cp+
 literal|4
-argument|, (char *)&w, sizeof(w)); 	w.ws_row = ntohs(w.ws_row); 	w.ws_col = ntohs(w.ws_col); 	w.ws_xpixel = ntohs(w.ws_xpixel); 	w.ws_ypixel = ntohs(w.ws_ypixel); 	(void)ioctl(pty, TIOCSWINSZ,&w); 	return (
+argument|, sizeof(w)); 	w.ws_row = ntohs(w.ws_row); 	w.ws_col = ntohs(w.ws_col); 	w.ws_xpixel = ntohs(w.ws_xpixel); 	w.ws_ypixel = ntohs(w.ws_ypixel); 	(void)ioctl(pty, TIOCSWINSZ,&w); 	return (
 literal|4
 argument|+sizeof (w)); }
 comment|/*  * rlogin "protocol" machine.  */
@@ -1268,7 +1272,7 @@ argument|) 			fatal(STDOUT_FILENO, errmsg,
 literal|0
 argument|); 		*buf++ = c; 	} while (c !=
 literal|0
-argument|); }  extern	char **environ;  void char *speeds[] = {
+argument|); }  void char *speeds[] = {
 literal|"0"
 argument_list|,
 literal|"50"
