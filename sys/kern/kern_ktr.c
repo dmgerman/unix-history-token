@@ -1381,13 +1381,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
-name|NUM_LINES_PER_PAGE
-value|18
-end_define
-
 begin_macro
 name|DB_SHOW_COMMAND
 argument_list|(
@@ -1487,7 +1480,7 @@ argument_list|,
 operator|&
 name|quit
 argument_list|,
-name|DB_LINES_PER_PAGE
+name|db_lines_per_page
 argument_list|)
 expr_stmt|;
 while|while

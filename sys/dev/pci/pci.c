@@ -7432,7 +7432,7 @@ argument_list|,
 operator|&
 name|quit
 argument_list|,
-name|DB_LINES_PER_PAGE
+name|db_lines_per_page
 argument_list|)
 expr_stmt|;
 for|for
@@ -7949,7 +7949,7 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"pci_alloc_map: unexpedly can't find resource."
+literal|"pci_alloc_map: unexpectedly can't find resource."
 argument_list|)
 expr_stmt|;
 name|rle

@@ -260,7 +260,7 @@ argument_list|,
 operator|&
 name|pager_quit
 argument_list|,
-name|DB_LINES_PER_PAGE
+name|db_lines_per_page
 argument_list|)
 expr_stmt|;
 name|pager_quit

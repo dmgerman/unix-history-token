@@ -33,7 +33,7 @@ begin_define
 define|#
 directive|define
 name|DB_LINES_PER_PAGE
-value|20
+value|db_lines_per_page
 end_define
 
 begin_typedef
@@ -174,6 +174,13 @@ begin_decl_stmt
 specifier|extern
 name|db_expr_t
 name|db_tab_stop_width
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|db_expr_t
+name|db_lines_per_page
 decl_stmt|;
 end_decl_stmt
 
