@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)eval.c	5.2 (Berkeley) %G%"
+literal|"@(#)eval.c	5.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -6172,9 +6172,13 @@ begin_comment
 comment|/*  * Send a message to the current support person.  */
 end_comment
 
-begin_decl_stmt
-name|ifdef
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|MAINTAINER
+end_ifdef
+
+begin_decl_stmt
 specifier|static
 name|char
 name|maintainer
