@@ -2817,23 +2817,14 @@ name|out
 goto|;
 name|no_fault_in
 label|:
-comment|/* 		 * Additionally check the privilege level. We don't want to 		 * panic when we're in the gateway page, running at user 		 * level. 		 */
+comment|/* 		 * Additionally check the privilege level. We don't want to 		 * panic when we're in the gateway page, running at user 		 * level. This happens for the signal trampolines. 		 */
 if|if
 condition|(
 operator|!
-name|user
-operator|&&
-operator|(
+name|TRAPF_USERMODE
+argument_list|(
 name|framep
-operator|->
-name|tf_special
-operator|.
-name|psr
-operator|&
-name|IA64_PSR_CPL
-operator|)
-operator|==
-name|IA64_PSR_CPL_KERN
+argument_list|)
 condition|)
 block|{
 comment|/* Check for copyin/copyout fault. */
