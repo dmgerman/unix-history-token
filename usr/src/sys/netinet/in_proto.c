@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	in_proto.c	5.1	82/07/31	*/
+comment|/*	in_proto.c	5.2	82/08/01	*/
 end_comment
 
 begin_include
@@ -19,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|"../h/protosw.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"../h/domain.h"
 end_include
 
 begin_include
@@ -137,6 +143,14 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|extern
+name|int
+name|raw_usrreq
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * IMP protocol family: raw interface.  * Using the raw interface entry to get the timer routine  * in is a kludge.  */
 end_comment
@@ -180,7 +194,7 @@ block|{
 block|{
 literal|0
 block|,
-literal|0
+name|PF_INET
 block|,
 literal|0
 block|,
@@ -322,44 +336,7 @@ literal|0
 block|,
 literal|0
 block|, }
-block|,
-if|#
-directive|if
-name|NIMP
-operator|>
-literal|0
-block|{
-name|SOCK_RAW
-block|,
-name|PF_IMPLINK
-block|,
-literal|0
-block|,
-name|PR_ATOMIC
-operator||
-name|PR_ADDR
-block|,
-literal|0
-block|,
-name|rimp_output
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|raw_usrreq
-block|,
-literal|0
-block|,
-literal|0
-block|,
-name|hostslowtimo
-block|,
-literal|0
 block|, }
-endif|#
-directive|endif
-block|}
 decl_stmt|;
 end_decl_stmt
 
@@ -394,6 +371,91 @@ index|]
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|NIMP
+operator|>
+literal|0
+end_if
+
+begin_decl_stmt
+name|struct
+name|protosw
+name|impsw
+index|[]
+init|=
+block|{
+block|{
+name|SOCK_RAW
+block|,
+name|PF_IMPLINK
+block|,
+literal|0
+block|,
+name|PR_ATOMIC
+operator||
+name|PR_ADDR
+block|,
+literal|0
+block|,
+name|rimp_output
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|raw_usrreq
+block|,
+literal|0
+block|,
+literal|0
+block|,
+name|hostslowtimo
+block|,
+literal|0
+block|, }
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|domain
+name|impdomain
+init|=
+block|{
+name|AF_IMPLINK
+block|,
+literal|"imp"
+block|,
+name|impsw
+block|,
+operator|&
+name|impsw
+index|[
+sizeof|sizeof
+argument_list|(
+name|impsw
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|impsw
+index|[
+literal|0
+index|]
+argument_list|)
+index|]
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
