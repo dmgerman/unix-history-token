@@ -3306,8 +3306,10 @@ name|_pw_passwd
 operator|.
 name|pw_fields
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
+comment|/* Impossible value */
 if|if
 condition|(
 name|_minuscnt
@@ -3473,6 +3475,21 @@ argument_list|(
 name|result
 argument_list|)
 expr_stmt|;
+comment|/* No hits in the plus or minus lists: Bzzt! reject. */
+if|if
+condition|(
+name|_pw_passwd
+operator|.
+name|pw_fields
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|result
 operator|=
 name|resultbuf
@@ -3759,8 +3776,10 @@ name|_pw_passwd
 operator|.
 name|pw_fields
 operator|=
-literal|0
+operator|-
+literal|1
 expr_stmt|;
+comment|/* Impossible value */
 if|if
 condition|(
 name|_minuscnt
@@ -3924,6 +3943,19 @@ argument_list|(
 name|result
 argument_list|)
 expr_stmt|;
+comment|/* No plus or minus hits: Bzzzt! reject. */
+if|if
+condition|(
+name|_pw_passwd
+operator|.
+name|pw_fields
+operator|==
+operator|-
+literal|1
+condition|)
+goto|goto
+name|tryagain
+goto|;
 if|if
 condition|(
 name|result
