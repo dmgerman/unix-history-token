@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)headers.c	6.2 (Berkeley) %G%"
+literal|"@(#)headers.c	6.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -148,8 +148,6 @@ name|line
 expr_stmt|;
 if|if
 condition|(
-name|def
-operator|&&
 operator|*
 name|p
 operator|==
