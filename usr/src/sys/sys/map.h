@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	map.h	4.2	81/02/19	*/
+comment|/*	map.h	4.3	81/02/27	*/
 end_comment
 
 begin_comment
@@ -30,47 +30,26 @@ end_ifdef
 begin_decl_stmt
 name|struct
 name|map
+modifier|*
 name|swapmap
-index|[
-name|SMAPSIZ
-index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* space for swap allocation */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AMAPSIZ
-value|25
-end_define
 
 begin_decl_stmt
 name|struct
 name|map
+modifier|*
 name|argmap
-index|[
-name|AMAPSIZ
-index|]
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 name|struct
 name|map
+modifier|*
 name|kernelmap
-index|[
-name|NPROC
-index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* space for kernel map for user page tables */
-end_comment
 
 begin_endif
 endif|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	ubareg.h	4.14	81/02/26	*/
+comment|/*	ubareg.h	4.15	81/02/27	*/
 end_comment
 
 begin_comment
@@ -31,6 +31,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
 
 begin_comment
 comment|/*  * UBA registers  */
@@ -114,6 +120,11 @@ comment|/* no maps for device address space */
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#
@@ -641,6 +652,12 @@ begin_comment
 comment|/* shift to data path designator */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
+
 begin_comment
 comment|/*  * Each UNIBUS mass storage controller has uba_minfo structure,  * and a uba_dinfo structure (as below) for each attached drive.  */
 end_comment
@@ -783,6 +800,11 @@ block|}
 struct|;
 end_struct
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -826,6 +848,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
 
 begin_comment
 comment|/*  * This structure exists per-uba.  */
@@ -906,12 +934,29 @@ modifier|*
 name|uh_map
 decl_stmt|;
 block|}
+struct|;
+end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|KERNEL
+end_ifdef
+
+begin_decl_stmt
+name|struct
+name|uba_hd
 name|uba_hd
 index|[
 name|MAXNUBA
 index|]
-struct|;
-end_struct
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Each UNIBUS driver defines entries for a set of routines  * as well as an array of types which are acceptable to it.  */
@@ -990,6 +1035,11 @@ block|}
 struct|;
 end_struct
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * unibus maps  */
 end_comment
@@ -1062,6 +1112,12 @@ end_comment
 begin_comment
 comment|/*  * UNIBUS related kernel variables  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCORE
+end_ifndef
 
 begin_ifdef
 ifdef|#
@@ -1160,6 +1216,11 @@ name|Xua3int
 argument_list|()
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

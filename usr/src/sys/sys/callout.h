@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	callout.h	4.3	81/02/27	*/
+comment|/*	callout.h	4.4	81/02/27	*/
 end_comment
 
 begin_comment
@@ -9,7 +9,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|callo
+name|callout
 block|{
 name|int
 name|c_time
@@ -40,7 +40,7 @@ end_ifdef
 begin_decl_stmt
 specifier|extern
 name|struct
-name|callo
+name|callout
 modifier|*
 name|callout
 decl_stmt|;
@@ -49,7 +49,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
-name|ncallo
+name|ncallout
 decl_stmt|;
 end_decl_stmt
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	buf.h	4.9	81/02/27	*/
+comment|/*	buf.h	4.10	81/02/27	*/
 end_comment
 
 begin_comment
@@ -206,6 +206,14 @@ end_decl_stmt
 begin_comment
 comment|/* the buffer pool itself */
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|buffers
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
