@@ -1,8 +1,4 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/* Copyright (c) 1983 Regents of the University of California */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -15,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)symtab.c	3.14	(Berkeley)	83/07/08"
+literal|"@(#)symtab.c	3.15	(Berkeley)	83/08/11"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,6 +19,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* Copyright (c) 1983 Regents of the University of California */
+end_comment
 
 begin_comment
 comment|/*  * These routines maintain the symbol table which tracks the state  * of the file system being restored. They provide lookup by either  * name or inode number. They also provide for creation, deletion,  * and renaming of entries. Because of the dynamic nature of pathnames,  * names should not be saved, but always constructed just before they  * are needed, by calling "myname".  */

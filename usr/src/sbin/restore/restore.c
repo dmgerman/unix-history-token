@@ -1,8 +1,4 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
-begin_comment
-comment|/* Copyright (c) 1983 Regents of the University of California */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -15,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)restore.c	3.16	(Berkeley)	83/05/15"
+literal|"@(#)restore.c	3.17	(Berkeley)	83/08/11"
 decl_stmt|;
 end_decl_stmt
 
@@ -23,6 +19,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* Copyright (c) 1983 Regents of the University of California */
+end_comment
 
 begin_include
 include|#
