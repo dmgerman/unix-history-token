@@ -3758,12 +3758,6 @@ block|,
 literal|0
 block|,
 literal|""
-block|,
-literal|0
-block|,
-block|{
-literal|0
-block|}
 block|}
 decl_stmt|;
 end_decl_stmt
