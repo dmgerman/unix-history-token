@@ -1629,8 +1629,11 @@ name|i_size
 expr_stmt|;
 name|flags
 operator|=
-literal|0
+name|ioflag
+operator|&
+name|B_SEQMASK
 expr_stmt|;
+comment|/* sequential heuristic high 16 bits */
 if|if
 condition|(
 operator|(
@@ -1646,7 +1649,7 @@ name|vp
 argument_list|)
 condition|)
 name|flags
-operator|=
+operator||=
 name|B_SYNC
 expr_stmt|;
 if|if

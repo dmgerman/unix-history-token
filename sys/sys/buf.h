@@ -1972,12 +1972,34 @@ end_comment
 begin_define
 define|#
 directive|define
+name|B_SEQMASK
+value|0x7FFF0000
+end_define
+
+begin_comment
+comment|/* sequential heuristic mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|B_SEQSHIFT
+value|16
+end_define
+
+begin_comment
+comment|/* sequential heuristic shift */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|B_CLRBUF
 value|0x01
 end_define
 
 begin_comment
-comment|/* Request allocated buffer be cleared. */
+comment|/* cleared invalid areas of buffer */
 end_comment
 
 begin_define
