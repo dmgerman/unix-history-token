@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Written by Julian Elischer (julian@tfs.com)(now julian@DIALix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * $Id: st.c,v 1.17 1994/08/02 07:52:34 davidg Exp $  */
+comment|/*  * Written by Julian Elischer (julian@tfs.com)(now julian@DIALix.oz.au)  * for TRW Financial Systems for use under the MACH(2.5) operating system.  *  * TRW Financial Systems, in accordance with their agreement with Carnegie  * Mellon University, makes this software available to CMU to distribute  * or use in any manner that they see fit as long as this message is kept with  * the software. For this reason TFS also grants any other persons or  * organisations permission to use or modify this software.  *  * TFS supplies this software to be publicly redistributed  * on the understanding that TFS is not responsible for the correct  * functioning of this software in any circumstances.  *  * $Id: st.c,v 1.18 1994/08/31 06:17:49 davidg Exp $  */
 end_comment
 
 begin_comment
@@ -192,6 +192,12 @@ end_define
 begin_comment
 comment|/* maximum density code specified 					 * in SCSI II spec. */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NEW_SCSICONF
+end_ifndef
 
 begin_comment
 comment|/*  * Define various devices that we know mis-behave in some way,  * and note how they are bad, so we can correct for them  */
@@ -630,6 +636,15 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NEW_SCSICONF */
+end_comment
+
 begin_decl_stmt
 name|errval
 name|st_space
@@ -842,12 +857,23 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NEW_SCSICONF
+end_ifndef
+
 begin_function_decl
 name|void
 name|st_identify_drive
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|errval
@@ -948,12 +974,17 @@ name|u_int32
 name|blkmax
 decl_stmt|;
 comment|/* max blk size                       */
+ifndef|#
+directive|ifndef
+name|NEW_SCSICONF
 name|struct
 name|rogues
 modifier|*
 name|rogues
 decl_stmt|;
 comment|/* if we have a rogue entry           */
+endif|#
+directive|endif
 comment|/*--------------------parameters reported by the device for this media--------*/
 name|u_int32
 name|numblks
@@ -973,6 +1004,15 @@ name|drive_quirks
 decl_stmt|;
 comment|/* quirks of this drive               */
 comment|/*--------------------How we should set up when openning each minor device----*/
+ifdef|#
+directive|ifdef
+name|NEW_SCSICONF
+name|st_modes
+name|modes
+decl_stmt|;
+comment|/* plus more for each mode            */
+else|#
+directive|else
 name|struct
 name|modes
 name|modes
@@ -981,6 +1021,8 @@ literal|4
 index|]
 decl_stmt|;
 comment|/* plus more for each mode            */
+endif|#
+directive|endif
 name|u_int8
 name|modeflags
 index|[
@@ -1347,11 +1389,23 @@ operator|=
 name|sc_link
 expr_stmt|;
 comment|/* 	 * Check if the drive is a known criminal and take 	 * Any steps needed to bring it into line 	 */
+ifdef|#
+directive|ifdef
+name|NEW_SCSICONF
+name|st_loadquirks
+argument_list|(
+name|st
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|st_identify_drive
 argument_list|(
 name|unit
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Use the subdriver to request information regarding 	 * the drive. We cannot use interrupts yet, so the 	 * request must specify this. 	 */
 if|if
 condition|(
@@ -1473,6 +1527,12 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NEW_SCSICONF
+end_ifndef
 
 begin_comment
 comment|/*  * Use the inquiry routine in 'scsi_base' to get drive info so we can  * Further tailor our behaviour.  */
@@ -1854,6 +1914,15 @@ block|}
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NEW_SCSICONF */
+end_comment
+
 begin_comment
 comment|/*  * initialise the subdevices to the default (QUIRK) state.  * this will remove any setting made by the system operator or previous  * operations.  */
 end_comment
@@ -1873,6 +1942,54 @@ block|{
 name|int
 name|i
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|NEW_SCSICONF
+name|struct
+name|st_mode
+modifier|*
+name|mode
+decl_stmt|;
+name|struct
+name|st_mode
+modifier|*
+name|mode2
+decl_stmt|;
+name|mode
+operator|=
+operator|(
+expr|struct
+name|st_mode
+operator|*
+operator|)
+name|st
+operator|->
+name|sc_link
+operator|->
+name|devmodes
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|mode
+condition|)
+return|return;
+name|st
+operator|->
+name|quirks
+operator|=
+name|st
+operator|->
+name|drive_quirks
+operator|=
+name|st
+operator|->
+name|sc_link
+operator|->
+name|quirks
+expr_stmt|;
+else|#
+directive|else
 name|struct
 name|modes
 modifier|*
@@ -1899,6 +2016,8 @@ name|rogues
 operator|->
 name|modes
 expr_stmt|;
+endif|#
+directive|endif
 name|mode2
 operator|=
 name|st
@@ -1925,8 +2044,8 @@ name|mode2
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|modes
+operator|*
+name|mode2
 argument_list|)
 argument_list|)
 expr_stmt|;
