@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994 Jan-Simon Pendry  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_subr.c	8.16 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1994 Jan-Simon Pendry  * Copyright (c) 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Jan-Simon Pendry.  *  * %sccs.include.redist.c%  *  *	@(#)union_subr.c	8.17 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -2601,6 +2601,10 @@ argument_list|(
 name|lvp
 argument_list|,
 name|FREAD
+argument_list|,
+name|cred
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -2694,6 +2698,10 @@ argument_list|(
 name|lvp
 argument_list|,
 name|FREAD
+argument_list|,
+name|cred
+argument_list|,
+name|p
 argument_list|)
 expr_stmt|;
 operator|(
@@ -3752,6 +3760,10 @@ argument_list|(
 name|vp
 argument_list|,
 name|fmode
+argument_list|,
+name|cred
+argument_list|,
+name|p
 argument_list|)
 operator|)
 return|;
