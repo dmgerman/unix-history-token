@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)od.c	5.6 (Berkeley) %G%"
+literal|"@(#)od.c	5.7 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -586,8 +586,14 @@ end_decl_stmt
 begin_decl_stmt
 name|int
 name|addr_base
+init|=
+literal|8
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* default address base is OCTAL */
+end_comment
 
 begin_decl_stmt
 name|long
@@ -2393,7 +2399,7 @@ name|same
 operator|>=
 literal|0
 operator|&&
-name|strncmp
+name|bufncmp
 argument_list|(
 name|dbuf
 argument_list|,
@@ -4864,6 +4870,62 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_macro
+name|bufncmp
+argument_list|(
+argument|a
+argument_list|,
+argument|b
+argument_list|,
+argument|n
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|char
+modifier|*
+name|a
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+modifier|*
+name|b
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|n
+decl_stmt|;
+end_decl_stmt
+
+begin_block
+block|{
+while|while
+condition|(
+name|n
+operator|--
+condition|)
+if|if
+condition|(
+operator|*
+name|a
+operator|++
+operator|!=
+operator|*
+name|b
+operator|++
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+end_block
 
 begin_macro
 name|offset
