@@ -707,7 +707,10 @@ name|node_p
 name|node
 parameter_list|,
 name|int
-name|ln
+name|bypass
+parameter_list|,
+name|int
+name|linkNum
 parameter_list|,
 name|struct
 name|mbuf
@@ -729,7 +732,10 @@ name|node_p
 name|node
 parameter_list|,
 name|int
-name|ln
+name|bypass
+parameter_list|,
+name|int
+name|linkNum
 parameter_list|,
 name|struct
 name|mbuf
@@ -748,10 +754,10 @@ name|int
 name|ng_ppp_mp_input
 parameter_list|(
 name|node_p
-name|nd
+name|node
 parameter_list|,
 name|int
-name|ln
+name|linkNum
 parameter_list|,
 name|struct
 name|mbuf
@@ -1582,6 +1588,9 @@ case|:
 case|case
 name|NGM_PPP_CLR_LINK_STATS
 case|:
+case|case
+name|NGM_PPP_GETCLR_LINK_STATS
+case|:
 block|{
 name|struct
 name|ng_ppp_link_stat
@@ -1665,8 +1674,8 @@ operator|->
 name|header
 operator|.
 name|cmd
-operator|==
-name|NGM_PPP_GET_LINK_STATS
+operator|!=
+name|NGM_PPP_CLR_LINK_STATS
 condition|)
 block|{
 name|NG_MKRESPONSE
@@ -1711,7 +1720,16 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+if|if
+condition|(
+name|msg
+operator|->
+name|header
+operator|.
+name|cmd
+operator|!=
+name|NGM_PPP_GET_LINK_STATS
+condition|)
 name|bzero
 argument_list|(
 name|stats
@@ -1922,7 +1940,7 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* Is link active? */
+comment|/* Convert index into a link number */
 name|linkNum
 operator|=
 operator|(
@@ -1946,34 +1964,6 @@ name|index
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|priv
-operator|->
-name|conf
-operator|.
-name|links
-index|[
-name|linkNum
-index|]
-operator|.
-name|enableLink
-condition|)
-block|{
-name|NG_FREE_DATA
-argument_list|(
-name|m
-argument_list|,
-name|meta
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
-block|}
 comment|/* Stats */
 name|priv
 operator|->
@@ -2000,11 +1990,23 @@ name|m_pkthdr
 operator|.
 name|len
 expr_stmt|;
-comment|/* Dispatch incoming frame */
+comment|/* Dispatch incoming frame (if not enabled, to bypass) */
 return|return
 name|ng_ppp_input
 argument_list|(
 name|node
+argument_list|,
+operator|!
+name|priv
+operator|->
+name|conf
+operator|.
+name|links
+index|[
+name|linkNum
+index|]
+operator|.
+name|enableLink
 argument_list|,
 name|linkNum
 argument_list|,
@@ -2020,7 +2022,7 @@ condition|(
 name|index
 condition|)
 block|{
-comment|/* Downwards flowing data */
+comment|/* Outgoing data */
 case|case
 name|HOOK_INDEX_ATALK
 case|:
@@ -2354,12 +2356,19 @@ name|EINVAL
 operator|)
 return|;
 break|break;
-comment|/* Upwards flowing data */
+comment|/* Incoming data */
 case|case
 name|HOOK_INDEX_VJC_IP
 case|:
 if|if
 condition|(
+operator|!
+name|priv
+operator|->
+name|conf
+operator|.
+name|enableIP
+operator|||
 operator|!
 name|priv
 operator|->
@@ -2437,17 +2446,13 @@ return|;
 block|}
 break|break;
 default|default:
-name|KASSERT
+name|panic
 argument_list|(
-literal|0
-argument_list|,
-operator|(
 literal|"%s: bogus index 0x%x"
-operator|,
+argument_list|,
 name|__FUNCTION__
-operator|,
+argument_list|,
 name|index
-operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2457,6 +2462,7 @@ condition|(
 name|index
 condition|)
 block|{
+comment|/* Outgoing data */
 case|case
 name|HOOK_INDEX_INET
 case|:
@@ -2674,6 +2680,10 @@ name|ng_ppp_output
 argument_list|(
 name|node
 argument_list|,
+name|index
+operator|==
+name|HOOK_INDEX_BYPASS
+argument_list|,
 name|NG_PPP_BUNDLE_LINKNUM
 argument_list|,
 name|m
@@ -2688,13 +2698,12 @@ case|:
 case|case
 name|HOOK_INDEX_DECOMPRESS
 case|:
-case|case
-name|HOOK_INDEX_VJC_IP
-case|:
 return|return
 name|ng_ppp_input
 argument_list|(
 name|node
+argument_list|,
+literal|0
 argument_list|,
 name|NG_PPP_BUNDLE_LINKNUM
 argument_list|,
@@ -2703,6 +2712,19 @@ argument_list|,
 name|meta
 argument_list|)
 return|;
+case|case
+name|HOOK_INDEX_VJC_IP
+case|:
+name|outHook
+operator|=
+name|priv
+operator|->
+name|hooks
+index|[
+name|HOOK_INDEX_INET
+index|]
+expr_stmt|;
+break|break;
 block|}
 comment|/* Send packet out hook */
 name|NG_SEND_DATA
@@ -2758,6 +2780,11 @@ name|node
 argument_list|)
 expr_stmt|;
 name|ng_unname
+argument_list|(
+name|node
+argument_list|)
+expr_stmt|;
+name|ng_ppp_free_frags
 argument_list|(
 name|node
 argument_list|)
@@ -2853,6 +2880,9 @@ name|ng_ppp_input
 parameter_list|(
 name|node_p
 name|node
+parameter_list|,
+name|int
+name|bypass
 parameter_list|,
 name|int
 name|linkNum
@@ -3011,6 +3041,14 @@ name|EINVAL
 operator|)
 return|;
 block|}
+comment|/* Bypass frame? */
+if|if
+condition|(
+name|bypass
+condition|)
+goto|goto
+name|bypass
+goto|;
 comment|/* Check protocol */
 switch|switch
 condition|(
@@ -3205,6 +3243,8 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* For unknown/inactive protocols, forward out the bypass hook */
+name|bypass
+label|:
 if|if
 condition|(
 name|outHook
@@ -3328,6 +3368,9 @@ name|node_p
 name|node
 parameter_list|,
 name|int
+name|bypass
+parameter_list|,
+name|int
 name|linkNum
 parameter_list|,
 name|struct
@@ -3348,6 +3391,8 @@ operator|->
 name|private
 decl_stmt|;
 name|int
+name|len
+decl_stmt|,
 name|error
 decl_stmt|;
 comment|/* Check for bundle virtual link */
@@ -3389,6 +3434,9 @@ block|}
 comment|/* Check link status */
 if|if
 condition|(
+operator|!
+name|bypass
+operator|&&
 operator|!
 name|priv
 operator|->
@@ -3432,6 +3480,14 @@ operator|)
 return|;
 block|}
 comment|/* Deliver frame */
+name|len
+operator|=
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+expr_stmt|;
 name|NG_SEND_DATA
 argument_list|(
 name|error
@@ -3475,10 +3531,6 @@ index|]
 operator|.
 name|xmitOctets
 operator|+=
-name|m
-operator|->
-name|m_pkthdr
-operator|.
 name|len
 expr_stmt|;
 name|priv
@@ -3490,10 +3542,6 @@ index|]
 operator|.
 name|bytesInQueue
 operator|+=
-name|m
-operator|->
-name|m_pkthdr
-operator|.
 name|len
 expr_stmt|;
 name|microtime
@@ -3944,6 +3992,8 @@ return|return
 name|ng_ppp_input
 argument_list|(
 name|node
+argument_list|,
+literal|0
 argument_list|,
 name|NG_PPP_BUNDLE_LINKNUM
 argument_list|,
@@ -4497,6 +4547,8 @@ condition|?
 name|ng_ppp_input
 argument_list|(
 name|node
+argument_list|,
+literal|0
 argument_list|,
 name|NG_PPP_BUNDLE_LINKNUM
 argument_list|,
@@ -5309,6 +5361,8 @@ operator|=
 name|ng_ppp_output
 argument_list|(
 name|node
+argument_list|,
+literal|0
 argument_list|,
 name|linkNum
 argument_list|,
@@ -6774,6 +6828,42 @@ index|[
 name|i
 index|]
 operator|.
+name|enableLink
+operator|&&
+name|priv
+operator|->
+name|links
+index|[
+name|i
+index|]
+operator|!=
+name|NULL
+condition|)
+name|newNumLinksActive
+operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|newConf
+operator|->
+name|links
+index|[
+name|i
+index|]
+operator|.
+name|enableLink
+condition|)
+continue|continue;
+if|if
+condition|(
+name|newConf
+operator|->
+name|links
+index|[
+name|i
+index|]
+operator|.
 name|mru
 operator|<
 name|MP_MIN_LINK_MRU
@@ -6837,37 +6927,12 @@ operator|(
 literal|0
 operator|)
 return|;
-if|if
-condition|(
-name|newConf
-operator|->
-name|links
-index|[
-name|i
-index|]
-operator|.
-name|enableLink
-operator|&&
-name|priv
-operator|->
-name|links
-index|[
-name|i
-index|]
-operator|!=
-name|NULL
-condition|)
-name|newNumLinksActive
-operator|++
-expr_stmt|;
 block|}
 comment|/* Check bundle parameters */
 if|if
 condition|(
-name|priv
+name|newConf
 operator|->
-name|conf
-operator|.
 name|enableMultilink
 operator|&&
 name|newConf
@@ -6875,23 +6940,6 @@ operator|->
 name|mrru
 operator|<
 name|MP_MIN_MRRU
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-comment|/* At most one link can be active unless multi-link is enabled */
-if|if
-condition|(
-operator|!
-name|newConf
-operator|->
-name|enableMultilink
-operator|&&
-name|newNumLinksActive
-operator|>
-literal|1
 condition|)
 return|return
 operator|(
@@ -6956,7 +7004,24 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* Configuration change is valid */
+comment|/* At most one link can be active unless multi-link is enabled */
+if|if
+condition|(
+operator|!
+name|newConf
+operator|->
+name|enableMultilink
+operator|&&
+name|newNumLinksActive
+operator|>
+literal|1
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* Configuration change would be valid */
 return|return
 operator|(
 literal|1

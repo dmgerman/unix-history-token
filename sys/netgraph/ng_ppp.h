@@ -249,6 +249,9 @@ comment|/* takes link #, returns stats struct */
 name|NGM_PPP_CLR_LINK_STATS
 block|,
 comment|/* takes link #, clears link stats */
+name|NGM_PPP_GETCLR_LINK_STATS
+block|,
+comment|/* takes link #, returns& clrs stats */
 block|}
 enum|;
 end_enum
