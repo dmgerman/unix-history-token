@@ -318,8 +318,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|FBTYPE_LASTPLUSONE
+name|FBTYPE_TGA2
 value|27
+end_define
+
+begin_define
+define|#
+directive|define
+name|FBTYPE_LASTPLUSONE
+value|28
 end_define
 
 begin_comment
@@ -1055,7 +1062,7 @@ decl_stmt|;
 name|int
 name|vi_planes
 decl_stmt|;
-name|u_int
+name|vm_offset_t
 name|vi_window
 decl_stmt|;
 comment|/* physical address */
@@ -1065,7 +1072,7 @@ decl_stmt|;
 name|size_t
 name|vi_window_gran
 decl_stmt|;
-name|u_int
+name|vm_offset_t
 name|vi_buffer
 decl_stmt|;
 comment|/* physical address */
@@ -1133,6 +1140,13 @@ index|[
 literal|64
 index|]
 decl_stmt|;
+name|vm_offset_t
+name|vi_registers
+decl_stmt|;
+comment|/* physical address */
+name|vm_offset_t
+name|vi_registers_size
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1199,6 +1213,11 @@ directive|define
 name|KD_TGA
 value|7
 comment|/* TGA */
+define|#
+directive|define
+name|KD_TGA2
+value|8
+comment|/* TGA2 */
 name|char
 modifier|*
 name|va_name
@@ -1264,16 +1283,16 @@ define|#
 directive|define
 name|V_ADP_ATTACHED
 value|(1<< 19)
-name|int
+name|vm_offset_t
 name|va_io_base
 decl_stmt|;
 name|int
 name|va_io_size
 decl_stmt|;
-name|int
+name|vm_offset_t
 name|va_crtc_addr
 decl_stmt|;
-name|int
+name|vm_offset_t
 name|va_mem_base
 decl_stmt|;
 name|int
@@ -1330,6 +1349,25 @@ name|void
 modifier|*
 name|va_token
 decl_stmt|;
+name|int
+name|va_model
+decl_stmt|;
+name|int
+name|va_little_bitian
+decl_stmt|;
+name|int
+name|va_little_endian
+decl_stmt|;
+name|int
+name|va_buffer_alias
+decl_stmt|;
+name|vm_offset_t
+name|va_registers
+decl_stmt|;
+comment|/* virtual address */
+name|vm_offset_t
+name|va_registers_size
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1364,22 +1402,22 @@ decl_stmt|;
 name|int
 name|va_flags
 decl_stmt|;
-name|int
+name|vm_offset_t
 name|va_io_base
 decl_stmt|;
 name|int
 name|va_io_size
 decl_stmt|;
-name|int
+name|vm_offset_t
 name|va_crtc_addr
 decl_stmt|;
-name|int
+name|vm_offset_t
 name|va_mem_base
 decl_stmt|;
 name|int
 name|va_mem_size
 decl_stmt|;
-name|u_int
+name|vm_offset_t
 name|va_window
 decl_stmt|;
 comment|/* virtual address */
@@ -1389,7 +1427,7 @@ decl_stmt|;
 name|size_t
 name|va_window_gran
 decl_stmt|;
-name|u_int
+name|vm_offset_t
 name|va_unused0
 decl_stmt|;
 name|size_t

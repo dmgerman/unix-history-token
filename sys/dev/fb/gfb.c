@@ -2394,10 +2394,6 @@ name|video_adapter_t
 modifier|*
 name|adp
 parameter_list|)
-name|video_adapter_t
-modifier|*
-name|adp
-decl_stmt|;
 block|{
 name|int
 name|off

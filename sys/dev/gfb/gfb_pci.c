@@ -200,12 +200,17 @@ directive|include
 file|"opt_fb.h"
 end_include
 
-begin_decl_stmt
-specifier|static
-name|devclass_t
-name|gfb_devclass
-decl_stmt|;
-end_decl_stmt
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static devclass_t gfb_devclass;
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#

@@ -2837,7 +2837,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s%d: port:0x%x-0x%x, crtc:0x%x, mem:0x%x 0x%x\n"
+literal|"%s%d: port:0x%lx-0x%lx, crtc:0x%lx, mem:0x%lx 0x%x\n"
 argument_list|,
 name|FB_DRIVER_NAME
 argument_list|,
@@ -2845,10 +2845,16 @@ name|adp
 operator|->
 name|va_index
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|adp
 operator|->
 name|va_io_base
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|adp
 operator|->
 name|va_io_base
@@ -2859,10 +2865,16 @@ name|va_io_size
 operator|-
 literal|1
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|adp
 operator|->
 name|va_crtc_addr
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|adp
 operator|->
 name|va_mem_base
@@ -3063,8 +3075,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"win:0x%x\n"
+literal|"win:0x%lx\n"
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|info
 operator|->
 name|vi_window

@@ -886,7 +886,9 @@ if|if
 condition|(
 name|scp
 operator|->
-name|cursor_height
+name|curs_attr
+operator|.
+name|height
 operator|<=
 literal|0
 condition|)
