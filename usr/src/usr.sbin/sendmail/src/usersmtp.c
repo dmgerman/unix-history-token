@@ -27,7 +27,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.31 (Berkeley) %G% (with SMTP)"
+literal|"@(#)usersmtp.c	8.32 (Berkeley) %G% (with SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -42,7 +42,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)usersmtp.c	8.31 (Berkeley) %G% (without SMTP)"
+literal|"@(#)usersmtp.c	8.32 (Berkeley) %G% (without SMTP)"
 decl_stmt|;
 end_decl_stmt
 
@@ -1727,14 +1727,34 @@ operator|==
 literal|250
 condition|)
 block|{
-name|mci
-operator|->
-name|mci_exitstat
-operator|=
-name|EX_OK
-expr_stmt|;
 return|return
 name|EX_OK
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|r
+operator|==
+literal|501
+operator|||
+name|r
+operator|==
+literal|553
+condition|)
+block|{
+comment|/* syntax error in arguments */
+name|smtpquit
+argument_list|(
+name|m
+argument_list|,
+name|mci
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+return|return
+name|EX_DATAERR
 return|;
 block|}
 elseif|else
@@ -1746,12 +1766,6 @@ literal|552
 condition|)
 block|{
 comment|/* signal service unavailable */
-name|mci
-operator|->
-name|mci_exitstat
-operator|=
-name|EX_UNAVAILABLE
-expr_stmt|;
 name|smtpquit
 argument_list|(
 name|m
@@ -1804,12 +1818,6 @@ name|mci
 argument_list|,
 name|e
 argument_list|)
-expr_stmt|;
-name|mci
-operator|->
-name|mci_exitstat
-operator|=
-name|EX_PROTOCOL
 expr_stmt|;
 return|return
 name|EX_PROTOCOL
