@@ -389,25 +389,25 @@ name|u_int64_t
 name|bitmask_high64
 decl_stmt|;
 comment|/* f127 - f64 */
-name|struct
+name|union
 name|_ia64_fpreg
 modifier|*
 name|fp_low_preserved
 decl_stmt|;
 comment|/* f2 - f5 */
-name|struct
+name|union
 name|_ia64_fpreg
 modifier|*
 name|fp_low_volatile
 decl_stmt|;
 comment|/* f6 - f15 */
-name|struct
+name|union
 name|_ia64_fpreg
 modifier|*
 name|fp_high_preserved
 decl_stmt|;
 comment|/* f16 - f31 */
-name|struct
+name|union
 name|_ia64_fpreg
 modifier|*
 name|fp_high_volatile
