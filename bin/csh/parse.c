@@ -28,7 +28,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: parse.c,v 1.6 1997/08/07 21:42:13 steve Exp $"
+literal|"$Id: parse.c,v 1.7 1998/05/06 06:50:56 charnier Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -45,6 +45,12 @@ end_endif
 begin_comment
 comment|/* not lint */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
 begin_include
 include|#
