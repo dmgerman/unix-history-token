@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1997 Semen Ustimenko  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: smc83c170.h,v 1.7 1998/04/15 17:47:08 bde Exp $  *  */
+comment|/*-  * Copyright (c) 1997 Semen Ustimenko  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      $Id: smc83c170.h,v 1.14 1998/07/03 23:59:09 galv Exp $  *  */
 end_comment
 
 begin_comment
@@ -10,22 +10,15 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EPIC_MAX_DEVICES
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
 name|TX_RING_SIZE
-value|16
+value|8
 end_define
 
 begin_define
 define|#
 directive|define
 name|RX_RING_SIZE
-value|16
+value|8
 end_define
 
 begin_define
@@ -49,22 +42,11 @@ name|ETHER_MAX_FRAME_LEN
 value|(ETHER_MAX_LEN + ETHER_CRC_LEN)
 end_define
 
-begin_comment
-comment|/* Shall be moved to ../net/if_mib.h */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|dot3VendorSMC
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|dot3ChipSetSMC83c170
-value|1
+name|EPIC_LINK_DOWN
+value|0x00000001
 end_define
 
 begin_comment
@@ -1093,7 +1075,14 @@ end_define
 begin_define
 define|#
 directive|define
-name|TXCON_LOOPBACK_MODE_FULL_DUPLEX
+name|TXCON_LOOPBACK_MODE
+value|0x00000006
+end_define
+
+begin_define
+define|#
+directive|define
+name|TXCON_FULL_DUPLEX
 value|0x00000006
 end_define
 
@@ -1104,12 +1093,78 @@ name|TXCON_SLOT_TIME
 value|0x00000078
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|EARLY_TX
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
 name|TXCON_DEFAULT
-value|(TXCON_SLOT_TIME|TXCON_EARLY_TRANSMIT_ENABLE)
+value|(TXCON_SLOT_TIME | TXCON_EARLY_TRANSMIT_ENABLE)
 end_define
+
+begin_define
+define|#
+directive|define
+name|TRANSMIT_THRESHOLD
+value|0x40
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|TXCON_DEFAULT
+value|(TXCON_SLOT_TIME)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|EARLY_RX
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|RXCON_DEFAULT
+value|(RXCON_EARLY_RECEIVE_ENABLE | RXCON_SAVE_ERRORED_PACKETS)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|RXCON_DEFAULT
+value|(0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * National Semiconductor's DP83840A Registers and bits  */
@@ -1368,6 +1423,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|QS6612_MCTL
+value|17
+end_define
+
+begin_define
+define|#
+directive|define
 name|QS6612_INTSTAT
 value|29
 end_define
@@ -1378,6 +1440,36 @@ directive|define
 name|QS6612_INTMASK
 value|30
 end_define
+
+begin_define
+define|#
+directive|define
+name|MCTL_T4_PRESENT
+value|0x1000
+end_define
+
+begin_comment
+comment|/* External T4 Enabled, ignored */
+end_comment
+
+begin_comment
+comment|/* if AutoNeg is enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MCTL_BTEXT
+value|0x0800
+end_define
+
+begin_comment
+comment|/* Reduces 10baset squelch level */
+end_comment
+
+begin_comment
+comment|/* for extended cable length */
+end_comment
 
 begin_define
 define|#
@@ -1596,26 +1688,12 @@ begin_struct
 struct|struct
 name|epic_rx_buffer
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|RX_TO_MBUF
-argument_list|)
 name|struct
 name|mbuf
 modifier|*
 name|mbuf
 decl_stmt|;
 comment|/* mbuf receiving packet */
-else|#
-directive|else
-name|caddr_t
-name|data
-decl_stmt|;
-comment|/* or static address */
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
@@ -1624,26 +1702,12 @@ begin_struct
 struct|struct
 name|epic_tx_buffer
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|TX_FRAG_LIST
-argument_list|)
 name|struct
 name|mbuf
 modifier|*
 name|mbuf
 decl_stmt|;
 comment|/* mbuf contained packet */
-else|#
-directive|else
-name|caddr_t
-name|data
-decl_stmt|;
-comment|/* Tx buffer address */
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
@@ -1689,19 +1753,11 @@ name|epic_tx_desc
 modifier|*
 name|tx_desc
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|TX_FRAG_LIST
-argument_list|)
 name|struct
 name|epic_frag_list
 modifier|*
 name|tx_flist
 decl_stmt|;
-endif|#
-directive|endif
 if|#
 directive|if
 name|defined
@@ -1717,6 +1773,9 @@ directive|endif
 name|struct
 name|arpcom
 name|epic_ac
+decl_stmt|;
+name|u_int32_t
+name|flags
 decl_stmt|;
 name|u_int32_t
 name|phyid
@@ -1749,10 +1808,6 @@ name|csr
 decl_stmt|;
 endif|#
 directive|endif
-name|struct
-name|ifmib_iso_8802_3
-name|dot3stats
-decl_stmt|;
 block|}
 name|epic_softc_t
 typedef|;
@@ -1946,6 +2001,32 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|PHY_READ_2
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|)
+value|epic_read_phy_register(sc,reg)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PHY_WRITE_2
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|,
+name|val
+parameter_list|)
+value|epic_write_phy_register(sc,reg,val)
+end_define
 
 begin_decl_stmt
 specifier|static
@@ -2189,6 +2270,34 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
+name|epic_stop_activity
+name|__P
+argument_list|(
+operator|(
+name|epic_softc_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|epic_start_activity
+name|__P
+argument_list|(
+operator|(
+name|epic_softc_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
 name|epic_set_rx_mode
 name|__P
 argument_list|(
@@ -2232,6 +2341,20 @@ begin_decl_stmt
 specifier|static
 name|void
 name|epic_init_phy
+name|__P
+argument_list|(
+operator|(
+name|epic_softc_t
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|epic_dump_state
 name|__P
 argument_list|(
 operator|(
@@ -2350,7 +2473,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|u_int16_t
 name|epic_read_phy_register
 name|__P
 argument_list|(
