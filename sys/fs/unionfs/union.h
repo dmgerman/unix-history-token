@@ -540,27 +540,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|void
-name|union_vm_coherency
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|vnode
-operator|*
-operator|,
-expr|struct
-name|uio
-operator|*
-operator|,
-name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
 begin_extern
 extern|extern int (*union_dircheckp
 end_extern
