@@ -1158,8 +1158,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"cannot access DPMEM at 0x%x (shadowed?)\n"
+literal|"cannot access DPMEM at 0x%llx (shadowed?)\n"
 argument_list|,
+operator|(
+name|long
+name|long
+operator|)
 name|gdt
 operator|->
 name|sc_dpmembase
