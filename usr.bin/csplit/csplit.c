@@ -1458,6 +1458,16 @@ operator|==
 literal|0
 condition|)
 break|break;
+if|if
+condition|(
+name|ftello
+argument_list|(
+name|ofp
+argument_list|)
+operator|==
+literal|0
+condition|)
+break|break;
 block|}
 do|while
 condition|(
