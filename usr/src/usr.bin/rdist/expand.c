@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)expand.c	4.11 (Berkeley) 84/12/06"
+literal|"@(#)expand.c	4.12 (Berkeley) 85/02/04"
 decl_stmt|;
 end_decl_stmt
 
@@ -25,6 +25,13 @@ include|#
 directive|include
 file|"defs.h"
 end_include
+
+begin_define
+define|#
+directive|define
+name|GAVSIZ
+value|NCARGS / 6
+end_define
 
 begin_define
 define|#
@@ -161,7 +168,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Take a list of names and expand any macros, etc.  * wh = E_VARS if expanding variables.  * wh = E_SHELL if expanding shell characters.  * wh = E_TILDE if expanding `~'.  * or any of these or'ed together.  */
+comment|/*  * Take a list of names and expand any macros, etc.  * wh = E_VARS if expanding variables.  * wh = E_SHELL if expanding shell characters.  * wh = E_TILDE if expanding `~'.  * or any of these or'ed together.  *  * Major portions of this were snarfed from csh/sh.glob.c.  */
 end_comment
 
 begin_function
@@ -502,9 +509,9 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-name|error
+name|yyerror
 argument_list|(
-literal|"no variable name after '$'\n"
+literal|"no variable name after '$'"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -536,12 +543,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|error
+name|yyerror
 argument_list|(
-literal|"unmatched %c\n"
-argument_list|,
-operator|*
-name|cp
+literal|"unmatched '{'"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -562,9 +566,9 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-name|error
+name|yyerror
 argument_list|(
-literal|"no variable name after '$'\n"
+literal|"no variable name after '$'"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -823,10 +827,15 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|error
+name|strcat
 argument_list|(
-literal|"unknown user %s\n"
+name|buf
 argument_list|,
+literal|": unknown user name"
+argument_list|)
+expr_stmt|;
+name|yyerror
+argument_list|(
 name|buf
 operator|+
 literal|1
@@ -1416,16 +1425,26 @@ argument_list|)
 expr_stmt|;
 name|patherr2
 label|:
-name|error
+name|strcat
 argument_list|(
-literal|"%s: %s\n"
+name|path
 argument_list|,
+literal|": "
+argument_list|)
+expr_stmt|;
+name|strcat
+argument_list|(
 name|path
 argument_list|,
 name|sys_errlist
 index|[
 name|errno
 index|]
+argument_list|)
+expr_stmt|;
+name|yyerror
+argument_list|(
+name|path
 argument_list|)
 expr_stmt|;
 block|}
@@ -1573,9 +1592,9 @@ operator|!
 operator|*
 name|pe
 condition|)
-name|error
+name|yyerror
 argument_list|(
-literal|"Missing ]\n"
+literal|"Missing ']'"
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -1590,11 +1609,18 @@ operator|!
 operator|*
 name|pe
 condition|)
-name|fatal
+block|{
+name|yyerror
 argument_list|(
-literal|"Missing }\n"
+literal|"Missing '}'"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 for|for
 control|(
 name|pl
@@ -1763,9 +1789,9 @@ operator|!
 operator|*
 name|pm
 condition|)
-name|error
+name|yyerror
 argument_list|(
-literal|"Missing ]\n"
+literal|"Missing ']'"
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -2030,11 +2056,18 @@ name|cc
 operator|==
 literal|0
 condition|)
-name|fatal
+block|{
+name|yyerror
 argument_list|(
-literal|"Missing ]\n"
+literal|"Missing ']'"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 continue|continue;
 case|case
 literal|'*'
@@ -2108,7 +2141,11 @@ return|;
 default|default:
 if|if
 condition|(
+operator|(
 name|c
+operator|&
+name|TRIM
+operator|)
 operator|!=
 name|scc
 condition|)
@@ -2384,11 +2421,18 @@ name|cc
 operator|==
 literal|0
 condition|)
-name|fatal
+block|{
+name|yyerror
 argument_list|(
-literal|"Missing ]\n"
+literal|"Missing ']'"
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 continue|continue;
 case|case
 literal|'*'
@@ -2535,9 +2579,9 @@ name|eargc
 operator|>=
 name|GAVSIZ
 condition|)
-name|error
+name|yyerror
 argument_list|(
-literal|"Arguments too long\n"
+literal|"Arguments too long"
 argument_list|)
 expr_stmt|;
 name|eargv
@@ -2625,11 +2669,13 @@ name|pathp
 operator|>=
 name|lastpathp
 condition|)
-name|fatal
+name|yyerror
 argument_list|(
-literal|"Pathname too long\n"
+literal|"Pathname too long"
 argument_list|)
 expr_stmt|;
+else|else
+block|{
 operator|*
 name|pathp
 operator|++
@@ -2641,6 +2687,7 @@ name|pathp
 operator|=
 literal|'\0'
 expr_stmt|;
+block|}
 block|}
 end_block
 
@@ -2810,7 +2857,7 @@ condition|)
 block|{
 name|error
 argument_list|(
-literal|"unknown user %s\n"
+literal|"%s: unknown user name\n"
 argument_list|,
 name|file
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	defs.h	4.14	84/06/28	*/
+comment|/*	defs.h	4.15	85/02/04	*/
 end_comment
 
 begin_include
@@ -36,13 +36,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -238,20 +232,6 @@ define|#
 directive|define
 name|INMAX
 value|3500
-end_define
-
-begin_define
-define|#
-directive|define
-name|NCARGS
-value|10240
-end_define
-
-begin_define
-define|#
-directive|define
-name|GAVSIZ
-value|NCARGS / 6
 end_define
 
 begin_comment

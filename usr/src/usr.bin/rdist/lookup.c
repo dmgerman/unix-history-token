@@ -11,7 +11,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)lookup.c	4.5 (Berkeley) 84/02/16"
+literal|"@(#)lookup.c	4.6 (Berkeley) 85/02/04"
 decl_stmt|;
 end_decl_stmt
 
@@ -403,6 +403,12 @@ name|syment
 modifier|*
 name|s
 decl_stmt|;
+name|char
+name|buf
+index|[
+literal|256
+index|]
+decl_stmt|;
 if|if
 condition|(
 name|debug
@@ -493,13 +499,22 @@ name|s_type
 operator|!=
 name|CONST
 condition|)
-name|fatal
+block|{
+name|sprintf
 argument_list|(
-literal|"%s redefined\n"
+name|buf
+argument_list|,
+literal|"%s redefined"
 argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+name|yyerror
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 return|return
 operator|(
@@ -515,13 +530,25 @@ name|action
 operator|==
 name|LOOKUP
 condition|)
-name|fatal
+block|{
+name|yyerror
 argument_list|(
-literal|"%s not defined"
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|"%s undefined"
 argument_list|,
 name|name
 argument_list|)
+argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 name|s
 operator|=
 name|ALLOC
