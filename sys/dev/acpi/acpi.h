@@ -128,6 +128,42 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*Event Structure */
+end_comment
+
+begin_struct
+struct|struct
+name|acpi_event
+block|{
+name|STAILQ_ENTRY
+argument_list|(
+argument|acpi_event
+argument_list|)
+name|ae_q
+expr_stmt|;
+define|#
+directive|define
+name|ACPI_EVENT_TYPE_FIXEDREG
+value|0
+define|#
+directive|define
+name|ACPI_EVENT_TYPE_GPEREG
+value|1
+define|#
+directive|define
+name|ACPI_EVENT_TYPE_EC
+value|2
+name|int
+name|ae_type
+decl_stmt|;
+name|int
+name|ae_arg
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/* softc */
 end_comment
 
@@ -170,6 +206,12 @@ decl_stmt|;
 name|int
 name|broken_wakeuplogic
 decl_stmt|;
+name|u_int32_t
+name|gpe0_mask
+decl_stmt|;
+name|u_int32_t
+name|gpe1_mask
+decl_stmt|;
 name|int
 name|enabled
 decl_stmt|;
@@ -193,6 +235,13 @@ argument_list|,
 argument|acpi_powerres_device
 argument_list|)
 name|acpi_powerres_devlist
+expr_stmt|;
+name|STAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|acpi_event
+argument_list|)
+name|event
 expr_stmt|;
 block|}
 name|acpi_softc_t
@@ -289,6 +338,21 @@ name|acpi_softc_t
 modifier|*
 parameter_list|,
 name|u_int8_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*Event queue*/
+end_comment
+
+begin_function_decl
+name|void
+name|acpi_queue_event
+parameter_list|(
+name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
