@@ -2887,14 +2887,14 @@ else|else
 block|{
 name|m2
 operator|=
-name|m_copypacket
+name|m_dup
 argument_list|(
 name|m
 argument_list|,
 name|M_NOWAIT
 argument_list|)
 expr_stmt|;
-comment|/* XXX m_dup()? */
+comment|/* XXX m_copypacket() */
 if|if
 condition|(
 name|m2
