@@ -4580,7 +4580,7 @@ argument_list|()
 expr_stmt|;
 name|errno
 operator|=
-name|EDOFUS
+name|EDOOFUS
 expr_stmt|;
 return|return
 operator|(
@@ -4704,7 +4704,7 @@ argument_list|()
 expr_stmt|;
 name|errno
 operator|=
-name|EDOFUS
+name|EDOOFUS
 expr_stmt|;
 return|return;
 block|}
@@ -4786,7 +4786,7 @@ argument_list|()
 expr_stmt|;
 name|errno
 operator|=
-name|EDOFUS
+name|EDOOFUS
 expr_stmt|;
 return|return
 operator|(

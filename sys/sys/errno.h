@@ -1141,7 +1141,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|EDOFUS
+name|EDOOFUS
 value|88
 end_define
 

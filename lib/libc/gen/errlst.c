@@ -341,7 +341,7 @@ comment|/* 87 - ENOATTR */
 comment|/* General */
 literal|"Programming error"
 block|,
-comment|/* 88 - EDOFUS */
+comment|/* 88 - EDOOFUS */
 block|}
 decl_stmt|;
 end_decl_stmt
