@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	%H%	4.1	kern_clock.c	*/
+comment|/*	kern_clock.c	4.2	%G%	*/
 end_comment
 
 begin_include
@@ -745,10 +745,17 @@ operator|>=
 name|HZ
 condition|)
 block|{
+if|#
+directive|if
+name|VAX
+operator|==
+literal|780
 specifier|extern
 name|int
 name|hangcnt
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|BASEPRI
@@ -770,6 +777,11 @@ operator|)
 name|spl1
 argument_list|()
 expr_stmt|;
+if|#
+directive|if
+name|VAX
+operator|==
+literal|780
 comment|/* 		 * machdep.c:unhang uses hangcnt to make sure uba 		 * doesn't forget to interrupt (this has been observed). 		 * This prevents an accumulation of< 5 second uba failures 		 * from summing to a uba reset. 		 */
 if|if
 condition|(
@@ -778,6 +790,8 @@ condition|)
 name|hangcnt
 operator|--
 expr_stmt|;
+endif|#
+directive|endif
 name|runrun
 operator|++
 expr_stmt|;
@@ -1229,6 +1243,11 @@ endif|#
 directive|endif
 block|}
 block|}
+if|#
+directive|if
+name|VAX
+operator|==
+literal|780
 if|if
 condition|(
 operator|!
@@ -1240,6 +1259,8 @@ condition|)
 name|unhang
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|USERMODE

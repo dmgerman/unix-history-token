@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	trap.c	4.2	%G%	*/
+comment|/*	trap.c	4.3	%G%	*/
 end_comment
 
 begin_include
@@ -188,11 +188,13 @@ block|{
 default|default:
 name|printf
 argument_list|(
-literal|"trap type %d, code = %x\n"
+literal|"trap type %d, code = %x, pc = %x\n"
 argument_list|,
 name|type
 argument_list|,
 name|code
+argument_list|,
+name|pc
 argument_list|)
 expr_stmt|;
 name|panic

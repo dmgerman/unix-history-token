@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	machdep.c	4.2	%G%	*/
+comment|/*	machdep.c	4.3	%G%	*/
 end_comment
 
 begin_include
@@ -98,7 +98,7 @@ name|char
 name|version
 index|[]
 init|=
-literal|"VM/UNIX (Berkeley Version 4.2) %G% \n"
+literal|"VM/UNIX (Berkeley Version 4.1) 11/10/80 \n"
 decl_stmt|;
 end_decl_stmt
 
@@ -110,10 +110,10 @@ init|=
 block|{
 literal|0x9f19af9f
 block|,
-comment|/* pushab [&"init.vm",0]; pushab */
+comment|/* pushab [&"init",0]; pushab */
 literal|0x02dd09af
 block|,
-comment|/* "/etc/init.vm"; pushl $2 */
+comment|/* "/etc/init"; pushl $2 */
 literal|0xbc5c5ed0
 block|,
 comment|/* movl sp,ap; chmk */
@@ -185,11 +185,30 @@ modifier|*
 name|pte
 decl_stmt|;
 comment|/* 	 * Good {morning,afternoon,evening,night}. 	 */
+if|#
+directive|if
+name|VAX
+operator|==
+literal|780
 name|tocons
 argument_list|(
 name|TXDB_CWSI
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|VAX
+operator|==
+literal|750
+name|tocons
+argument_list|(
+name|TXDB_CCSF
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|printf
 argument_list|(
 name|version
@@ -1433,6 +1452,14 @@ name|MEMINTVL
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|VAX
+operator|==
+literal|780
+end_if
+
 begin_define
 define|#
 directive|define
@@ -1447,6 +1474,37 @@ name|MERLOG
 value|0x10000000
 end_define
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MUNCORR
+value|0xc0000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MCORERR
+value|0x40000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|MERLOG
+value|(MUNCORR|MCORERR)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_macro
 name|memchk
 argument_list|()
@@ -1454,6 +1512,11 @@ end_macro
 
 begin_block
 block|{
+if|#
+directive|if
+name|VAX
+operator|==
+literal|780
 specifier|register
 name|int
 name|c
@@ -1463,6 +1526,19 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+else|#
+directive|else
+specifier|register
+name|int
+name|c
+init|=
+name|mcr
+index|[
+literal|0
+index|]
+decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|c
@@ -1470,6 +1546,11 @@ operator|&
 name|MERLOG
 condition|)
 block|{
+if|#
+directive|if
+name|VAX
+operator|==
+literal|780
 name|printf
 argument_list|(
 literal|"MEMERR: mcra %X mcrb %X mcrc %X\n"
@@ -1498,6 +1579,34 @@ operator||
 name|MHIERR
 operator|)
 expr_stmt|;
+else|#
+directive|else
+name|printf
+argument_list|(
+literal|"MEMERR: csr0 %X csr1 %X csr2 %X\n"
+argument_list|,
+name|c
+argument_list|,
+name|mcr
+index|[
+literal|1
+index|]
+argument_list|,
+name|mcr
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
+name|mcr
+index|[
+literal|0
+index|]
+operator|=
+name|MERLOG
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
@@ -1593,6 +1702,14 @@ block|}
 block|}
 end_block
 
+begin_if
+if|#
+directive|if
+name|VAX
+operator|==
+literal|780
+end_if
+
 begin_decl_stmt
 name|int
 name|hangcnt
@@ -1655,6 +1772,11 @@ expr_stmt|;
 block|}
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -1762,26 +1884,22 @@ argument_list|(
 name|rootdev
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|VAX
+operator|==
+literal|780
 if|if
 condition|(
-operator|(
 name|howto
 operator|&
 name|RB_HALT
-operator|)
 condition|)
-block|{
-name|tocons
-argument_list|(
-literal|0xf01
-argument_list|)
-expr_stmt|;
 name|tocons
 argument_list|(
 name|TXDB_WSI
 argument_list|)
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -1795,11 +1913,6 @@ else|else
 block|{
 name|tocons
 argument_list|(
-literal|0xf01
-argument_list|)
-expr_stmt|;
-name|tocons
-argument_list|(
 name|TXDB_WSI
 argument_list|)
 expr_stmt|;
@@ -1810,6 +1923,32 @@ argument_list|)
 expr_stmt|;
 comment|/* defboo.cmd, not restar.cmd */
 block|}
+endif|#
+directive|endif
+if|#
+directive|if
+name|VAX
+operator|==
+literal|750
+if|if
+condition|(
+name|howto
+operator|&
+name|RB_HALT
+condition|)
+empty_stmt|;
+else|else
+name|tocons
+argument_list|(
+name|TXDB_BOOT
+argument_list|)
+expr_stmt|;
+block|{
+asm|asm("movl r11,r5");
+block|}
+comment|/* where boot flags go on comet */
+endif|#
+directive|endif
 for|for
 control|(
 init|;
