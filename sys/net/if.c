@@ -7281,11 +7281,6 @@ name|AF_INET
 condition|)
 name|arp_ifinit
 argument_list|(
-operator|(
-expr|struct
-name|arpcom
-operator|*
-operator|)
 name|ifp
 argument_list|,
 name|ifa
