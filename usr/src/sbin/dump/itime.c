@@ -5,7 +5,7 @@ name|char
 modifier|*
 name|sccsid
 init|=
-literal|"@(#)itime.c	1.12 (Berkeley) %G%"
+literal|"@(#)itime.c	1.13 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -1003,7 +1003,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This is an estimation of the number of TP_BSIZE blocks in the file.  * It assumes that there are no unallocated blocks; hence  * the estimate may be high  */
+comment|/*  * This is an estimation of the number of TP_BSIZE blocks in the file.  * It estimates the number of blocks in files with holes by assuming  * that all of the blocks accounted for by di_blocks are data blocks  * (when some of the blocks are usually used for indirect pointers);  * hence the estimate may be high.  */
 end_comment
 
 begin_macro
@@ -1025,12 +1025,28 @@ begin_block
 block|{
 name|long
 name|s
+decl_stmt|,
+name|t
 decl_stmt|;
+comment|/*  	 * ip->di_size is the size of the file in bytes.  	 * ip->di_blocks stores the number of sectors actually in the file.  	 * If there are more sectors than the size would indicate, this just  	 *	means that there are indirect blocks in the file or unused 	 *	sectors in the last file block;	we can safely ignore these 	 *	(s = t below).  	 * If the file is bigger than the number of sectors would indicate,  	 *	then the file has holes in it.  In this case we must use the  	 *	block count to estimate the number of data blocks used, but  	 *	we use the actual size for estimating the number of indirect  	 *	dump blocks (t vs. s in the indirect block calculation).  	 */
 name|esize
 operator|++
 expr_stmt|;
-comment|/* calc number of TP_BSIZE blocks */
 name|s
+operator|=
+name|howmany
+argument_list|(
+name|dbtob
+argument_list|(
+name|ip
+operator|->
+name|di_blocks
+argument_list|)
+argument_list|,
+name|TP_BSIZE
+argument_list|)
+expr_stmt|;
+name|t
 operator|=
 name|howmany
 argument_list|(
@@ -1040,6 +1056,16 @@ name|di_size
 argument_list|,
 name|TP_BSIZE
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|s
+operator|>
+name|t
+condition|)
+name|s
+operator|=
+name|t
 expr_stmt|;
 if|if
 condition|(
@@ -1054,12 +1080,12 @@ operator|*
 name|NDADDR
 condition|)
 block|{
-comment|/* calc number of indirect blocks on the dump tape */
+comment|/* calculate the number of indirect blocks on the dump tape */
 name|s
 operator|+=
 name|howmany
 argument_list|(
-name|s
+name|t
 operator|-
 name|NDADDR
 operator|*
