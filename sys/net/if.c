@@ -4690,6 +4690,27 @@ argument_list|,
 name|link_state
 argument_list|)
 expr_stmt|;
+name|log
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"%s: link state changed to %s\n"
+argument_list|,
+name|ifp
+operator|->
+name|if_xname
+argument_list|,
+operator|(
+name|link_state
+operator|==
+name|LINK_STATE_UP
+operator|)
+condition|?
+literal|"UP"
+else|:
+literal|"DOWN"
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function
