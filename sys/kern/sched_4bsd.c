@@ -104,6 +104,24 @@ define|\
 value|min((e), INVERSE_ESTCPU_WEIGHT * (NICE_WEIGHT * (PRIO_MAX - PRIO_MIN) - \     RQ_PPQ) + INVERSE_ESTCPU_WEIGHT - 1)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SMP
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|INVERSE_ESTCPU_WEIGHT
+value|(8 * smp_cpus)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -114,6 +132,11 @@ end_define
 begin_comment
 comment|/* 1 / (priorities per estcpu level). */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
