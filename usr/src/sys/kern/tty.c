@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty.c	6.19 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1982 Regents of the University of California.  * All rights reserved.  The Berkeley software License Agreement  * specifies the terms and conditions for redistribution.  *  *	@(#)tty.c	6.20 (Berkeley) %G%  */
 end_comment
 
 begin_include
@@ -3634,6 +3634,14 @@ name|TS_TYPEN
 operator|)
 operator|==
 literal|0
+operator|&&
+operator|(
+name|t_flags
+operator|&
+name|PASS8
+operator|)
+operator|==
+literal|0
 condition|)
 name|c
 operator|&=
@@ -5985,6 +5993,12 @@ name|error
 operator|=
 name|ureadc
 argument_list|(
+name|t_flags
+operator|&
+name|PASS8
+condition|?
+name|c
+else|:
 name|c
 operator|&
 literal|0177
