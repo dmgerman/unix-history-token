@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)paths.h	5.17 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1989 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)paths.h	5.18 (Berkeley) %G%  */
 end_comment
 
 begin_ifndef
@@ -24,6 +24,17 @@ define|#
 directive|define
 name|_PATH_DEFPATH
 value|"/usr/bin:/bin"
+end_define
+
+begin_comment
+comment|/* All standard utilities path. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_PATH_STDPATH
+value|"/usr/bin:/bin:/usr/sbin"
 end_define
 
 begin_define
