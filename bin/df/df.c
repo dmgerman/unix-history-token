@@ -1842,11 +1842,9 @@ name|blocksize
 decl_stmt|;
 specifier|static
 name|int
-name|timesthrough
-decl_stmt|;
-specifier|static
-name|size_t
 name|headerlen
+decl_stmt|,
+name|timesthrough
 decl_stmt|;
 specifier|static
 specifier|const
@@ -1935,9 +1933,6 @@ name|mwp
 operator|->
 name|total
 argument_list|,
-operator|(
-name|int
-operator|)
 name|headerlen
 argument_list|)
 expr_stmt|;
@@ -2316,7 +2311,7 @@ specifier|static
 name|long
 name|blocksize
 decl_stmt|;
-name|size_t
+name|int
 name|dummy
 decl_stmt|;
 if|if
