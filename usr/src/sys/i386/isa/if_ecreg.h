@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_ecreg.h	7.1 (Berkeley) %G%  */
+comment|/*  * Copyright (c) 1991 The Regents of the University of California.  * All rights reserved.  *  * %sccs.include.redist.c%  *  *	@(#)if_ecreg.h	7.2 (Berkeley) %G%  */
 end_comment
 
 begin_comment
@@ -419,6 +419,9 @@ name|data1
 decl_stmt|;
 comment|/* addr len, no src ins, lpbk, prmble */
 name|u_char
+name|priority
+decl_stmt|;
+name|u_char
 name|ifspacing
 decl_stmt|;
 name|u_char
@@ -439,7 +442,7 @@ value|1
 define|#
 directive|define
 name|M_TNOCR
-value|4
+value|8
 name|u_char
 name|cdf_cds
 decl_stmt|;
