@@ -396,15 +396,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|siointr
-value|cyintr
-end_define
-
-begin_define
-define|#
-directive|define
 name|siointr1
-value|cyintr1
+value|cyintr
 end_define
 
 begin_define
@@ -1214,11 +1207,12 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* PCI driver entry point. */
+comment|/* PCI driver entry points. */
 end_comment
 
 begin_function_decl
-name|int
+name|void
+modifier|*
 name|cyattach_common
 parameter_list|(
 name|cy_addr
@@ -1231,8 +1225,15 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+name|driver_intr_t
+name|siointr1
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|ointhand2_t
-name|siointr
+name|cyointr
 decl_stmt|;
 end_decl_stmt
 
@@ -1375,18 +1376,6 @@ name|com
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static	void	siointr1(struct com_s *com);
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|static
@@ -2263,7 +2252,12 @@ block|{
 name|int
 name|adapter
 decl_stmt|;
-name|adapter
+name|struct
+name|com_s
+modifier|*
+name|com
+decl_stmt|;
+name|com
 operator|=
 name|cyattach_common
 argument_list|(
@@ -2279,15 +2273,23 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|adapter
-operator|<
-literal|0
+name|com
+operator|==
+name|NULL
 condition|)
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+name|adapter
+operator|=
+name|com
+operator|->
+name|unit
+operator|/
+name|CY_MAX_PORTS
+expr_stmt|;
 comment|/* 	 * XXX 	 * This kludge is to allow ISA/PCI device specifications in the 	 * kernel config file to be in any order. 	 */
 if|if
 condition|(
@@ -2321,9 +2323,8 @@ name|isdp
 operator|->
 name|id_ointr
 operator|=
-name|siointr
+name|cyointr
 expr_stmt|;
-comment|/* isdp->id_ri_flags |= RI_FAST; XXX unimplemented - use newbus! */
 return|return
 operator|(
 literal|1
@@ -2333,7 +2334,8 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
+modifier|*
 name|cyattach_common
 parameter_list|(
 name|cy_iobase
@@ -2391,8 +2393,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-operator|-
-literal|1
+name|NULL
 operator|)
 return|;
 block|}
@@ -2413,8 +2414,7 @@ literal|0
 condition|)
 return|return
 operator|(
-operator|-
-literal|1
+name|NULL
 operator|)
 return|;
 name|cy_nr_cd1400s
@@ -2781,7 +2781,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 block|}
@@ -3047,7 +3047,12 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|com_addr
+argument_list|(
 name|adapter
+operator|*
+name|CY_MAX_PORTS
+argument_list|)
 operator|)
 return|;
 block|}
@@ -4806,15 +4811,43 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
-name|siointr
+name|cyointr
 parameter_list|(
-name|unit
-parameter_list|)
 name|int
 name|unit
+parameter_list|)
+block|{
+name|siointr1
+argument_list|(
+name|com_addr
+argument_list|(
+name|unit
+operator|*
+name|CY_MAX_PORTS
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|siointr1
+parameter_list|(
+name|vcom
+parameter_list|)
+name|void
+modifier|*
+name|vcom
 decl_stmt|;
 block|{
+name|struct
+name|com_s
+modifier|*
+name|basecom
+decl_stmt|;
 name|int
 name|baseu
 decl_stmt|;
@@ -4833,33 +4866,45 @@ decl_stmt|;
 name|u_char
 name|status
 decl_stmt|;
+name|int
+name|unit
+decl_stmt|;
 name|COM_LOCK
 argument_list|()
 expr_stmt|;
 comment|/* XXX could this be placed down lower in the loop? */
-name|baseu
+name|basecom
 operator|=
-name|unit
+operator|(
+expr|struct
+name|com_s
 operator|*
+operator|)
+name|vcom
+expr_stmt|;
+name|baseu
+operator|=
+name|basecom
+operator|->
+name|unit
+expr_stmt|;
+name|cy_align
+operator|=
+name|basecom
+operator|->
+name|cy_align
+expr_stmt|;
+name|cy_iobase
+operator|=
+name|basecom
+operator|->
+name|cy_iobase
+expr_stmt|;
+name|unit
+operator|=
+name|baseu
+operator|/
 name|CY_MAX_PORTS
-expr_stmt|;
-name|cy_align
-operator|=
-name|com_addr
-argument_list|(
-name|baseu
-argument_list|)
-operator|->
-name|cy_align
-expr_stmt|;
-name|cy_iobase
-operator|=
-name|com_addr
-argument_list|(
-name|baseu
-argument_list|)
-operator|->
-name|cy_iobase
 expr_stmt|;
 comment|/* check each CD1400 in turn */
 for|for
@@ -6864,18 +6909,6 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static void siointr1(com) 	struct com_s	*com; { }
-endif|#
-directive|endif
-end_endif
 
 begin_function
 specifier|static

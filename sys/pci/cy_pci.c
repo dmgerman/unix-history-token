@@ -190,31 +190,26 @@ value|0x0d
 end_define
 
 begin_function_decl
-specifier|extern
-name|int
-name|cyattach_common
-parameter_list|(
 name|void
 modifier|*
+name|cyattach_common
+parameter_list|(
+name|u_char
+specifier|volatile
+modifier|*
+name|iobase
 parameter_list|,
 name|int
+name|cy_align
 parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* Not exactly correct */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
+begin_decl_stmt
+name|driver_intr_t
 name|cyintr
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -409,13 +404,14 @@ name|irq_cookie
 decl_stmt|,
 modifier|*
 name|vaddr
+decl_stmt|,
+modifier|*
+name|vsc
 decl_stmt|;
 name|u_int32_t
 name|ioport
 decl_stmt|;
 name|int
-name|adapter
-decl_stmt|,
 name|irq_setup
 decl_stmt|,
 name|ioport_rid
@@ -539,7 +535,7 @@ argument_list|(
 name|mem_res
 argument_list|)
 expr_stmt|;
-name|adapter
+name|vsc
 operator|=
 name|cyattach_common
 argument_list|(
@@ -550,9 +546,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|adapter
-operator|<
-literal|0
+name|vsc
+operator|==
+name|NULL
 condition|)
 block|{
 name|device_printf
@@ -566,7 +562,6 @@ goto|goto
 name|fail
 goto|;
 block|}
-comment|/* 	 * Allocate our interrupt. 	 * XXX	Using the ISA interrupt handler directly is a bit of a violation 	 *	since it doesn't actually take the same argument. For PCI, the 	 *	argument is a void * token, but for ISA it is a unit. Since 	 *	there is no overlap in PCI/ISA unit numbers for this driver, and 	 *	since the ISA driver must handle the interrupt anyway, we use 	 *	the unit number as the token even for PCI. 	 */
 name|irq_rid
 operator|=
 literal|0
@@ -627,17 +622,9 @@ name|INTR_TYPE_TTY
 operator||
 name|INTR_FAST
 argument_list|,
-operator|(
-name|driver_intr_t
-operator|*
-operator|)
 name|cyintr
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-name|adapter
+name|vsc
 argument_list|,
 operator|&
 name|irq_cookie
@@ -667,17 +654,9 @@ name|irq_res
 argument_list|,
 name|INTR_TYPE_TTY
 argument_list|,
-operator|(
-name|driver_intr_t
-operator|*
-operator|)
 name|cyintr
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-name|adapter
+name|vsc
 argument_list|,
 operator|&
 name|irq_cookie
