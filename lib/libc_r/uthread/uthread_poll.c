@@ -177,9 +177,14 @@ literal|0
 condition|)
 block|{
 comment|/* a timeout less than zero but not == INFTIM is invalid */
+name|errno
+operator|=
+name|EINVAL
+expr_stmt|;
 return|return
 operator|(
-name|EINVAL
+operator|-
+literal|1
 operator|)
 return|;
 block|}
