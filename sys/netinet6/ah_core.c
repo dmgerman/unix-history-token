@@ -1127,6 +1127,9 @@ block|,
 name|ah_hmac_ripemd160_result
 block|, }
 block|,
+ifdef|#
+directive|ifdef
+name|ENABLE_AES_XCBC_MAC
 block|{
 name|ah_sumsiz_1216
 block|,
@@ -1144,7 +1147,10 @@ name|ah_aes_xcbc_mac_loop
 block|,
 name|ah_aes_xcbc_mac_result
 block|, }
-block|, 	}
+block|,
+endif|#
+directive|endif
+block|}
 decl_stmt|;
 switch|switch
 condition|(
@@ -1241,6 +1247,9 @@ index|[
 literal|8
 index|]
 return|;
+ifdef|#
+directive|ifdef
+name|ENABLE_AES_XCBC_MAC
 case|case
 name|SADB_X_AALG_AES_XCBC_MAC
 case|:
@@ -1251,6 +1260,8 @@ index|[
 literal|9
 index|]
 return|;
+endif|#
+directive|endif
 default|default:
 return|return
 name|NULL

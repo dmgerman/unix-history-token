@@ -4,15 +4,11 @@ comment|/*	$FreeBSD$	*/
 end_comment
 
 begin_comment
-comment|/*	$NetBSD: rijndael-api-fst.h,v 1.5 2003/07/16 05:08:09 itojun Exp $	*/
+comment|/*	$KAME: rijndael-api-fst.h,v 1.6 2001/05/27 00:23:23 itojun Exp $	*/
 end_comment
 
 begin_comment
-comment|/*	$KAME: rijndael-api-fst.h,v 1.9 2003/07/16 05:09:38 itojun Exp $	*/
-end_comment
-
-begin_comment
-comment|/**  * rijndael-api-fst.h  *  * @version 2.9 (December 2000)  *  * Optimised ANSI C code for the Rijndael cipher (now AES)  *  * @author Vincent Rijmen<vincent.rijmen@esat.kuleuven.ac.be>  * @author Antoon Bosselaers<antoon.bosselaers@esat.kuleuven.ac.be>  * @author Paulo Barreto<paulo.barreto@terra.com.br>  *  * This code is hereby placed in the public domain.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ''AS IS'' AND ANY EXPRESS  * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR  * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * Acknowledgements:  *  * We are deeply indebted to the following people for their bug reports,  * fixes, and improvement suggestions to this implementation. Though we  * tried to list all contributions, we apologise in advance for any  * missing reference.  *  * Andrew Bales<Andrew.Bales@Honeywell.com>  * Markus Friedl<markus.friedl@informatik.uni-erlangen.de>  * John Skodon<skodonj@webquill.com>  */
+comment|/*  * rijndael-api-fst.h   v2.3   April '2000  *  * Optimised ANSI C code  *  * #define INTERMEDIATE_VALUE_KAT to generate the Intermediate Value Known Answer Test.  */
 end_comment
 
 begin_ifndef
@@ -34,7 +30,7 @@ file|<crypto/rijndael/rijndael-alg-fst.h>
 end_include
 
 begin_comment
-comment|/*  Generic Defines  */
+comment|/*  Defines: 	Add any additional defines you need */
 end_comment
 
 begin_define
@@ -95,20 +91,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TRUE
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|FALSE
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
 name|BITSPERBLOCK
 value|128
 end_define
@@ -118,7 +100,7 @@ comment|/* Default number of bits in a cipher block */
 end_comment
 
 begin_comment
-comment|/*  Error Codes  */
+comment|/*  Error Codes - CHANGE POSSIBLE: inclusion of additional error codes  */
 end_comment
 
 begin_define
@@ -213,13 +195,13 @@ comment|/*  Unknown error */
 end_comment
 
 begin_comment
-comment|/*  Algorithm-specific Defines  */
+comment|/*  CHANGE POSSIBLE:  inclusion of algorithm specific defines  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|RIJNDAEL_MAX_KEY_SIZE
+name|MAX_KEY_SIZE
 value|64
 end_define
 
@@ -230,7 +212,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|RIJNDAEL_MAX_IV_SIZE
+name|MAX_IV_SIZE
 value|16
 end_define
 
@@ -239,16 +221,8 @@ comment|/* # bytes needed to represent an IV  */
 end_comment
 
 begin_comment
-comment|/*  Typedefs  */
+comment|/*  Typedefs:  	Typedef'ed data storage elements.  Add any algorithm specific  parameters at the bottom of the structs as appropriate. */
 end_comment
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|char
-name|BYTE
-typedef|;
-end_typedef
 
 begin_comment
 comment|/*  The structure for key information */
@@ -258,7 +232,7 @@ begin_typedef
 typedef|typedef
 struct|struct
 block|{
-name|BYTE
+name|u_int8_t
 name|direction
 decl_stmt|;
 comment|/* Key used for encrypting or decrypting? */
@@ -269,42 +243,57 @@ comment|/* Length of the key  */
 name|char
 name|keyMaterial
 index|[
-name|RIJNDAEL_MAX_KEY_SIZE
+name|MAX_KEY_SIZE
 operator|+
 literal|1
 index|]
 decl_stmt|;
 comment|/* Raw key data in ASCII, e.g., user input or KAT values */
+comment|/*  The following parameters are algorithm dependent, replace or add as necessary  */
 name|int
-name|Nr
+name|ROUNDS
 decl_stmt|;
 comment|/* key-length-dependent number of rounds */
-name|u_int32_t
-name|rk
+name|int
+name|blockLen
+decl_stmt|;
+comment|/* block length */
+union|union
+block|{
+name|u_int8_t
+name|xkS8
 index|[
-literal|4
-operator|*
-operator|(
-name|RIJNDAEL_MAXNR
+name|RIJNDAEL_MAXROUNDS
 operator|+
 literal|1
-operator|)
 index|]
-decl_stmt|;
-comment|/* key schedule */
-name|u_int32_t
-name|ek
 index|[
 literal|4
-operator|*
-operator|(
-name|RIJNDAEL_MAXNR
-operator|+
-literal|1
-operator|)
+index|]
+index|[
+literal|4
 index|]
 decl_stmt|;
-comment|/* CFB1 key schedule (encryption only) */
+comment|/* key schedule		*/
+name|u_int32_t
+name|xkS32
+index|[
+name|RIJNDAEL_MAXROUNDS
+operator|+
+literal|1
+index|]
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* key schedule		*/
+block|}
+name|xKeySched
+union|;
+define|#
+directive|define
+name|keySched
+value|xKeySched.xkS8
 block|}
 name|keyInstance
 typedef|;
@@ -319,17 +308,22 @@ typedef|typedef
 struct|struct
 block|{
 comment|/* changed order of the components */
-name|BYTE
+name|u_int8_t
 name|mode
 decl_stmt|;
 comment|/* MODE_ECB, MODE_CBC, or MODE_CFB1 */
-name|BYTE
+name|u_int8_t
 name|IV
 index|[
-name|RIJNDAEL_MAX_IV_SIZE
+name|MAX_IV_SIZE
 index|]
 decl_stmt|;
 comment|/* A possible Initialization Vector for ciphering */
+comment|/*  Add any algorithm specific parameters needed here  */
+name|int
+name|blockLen
+decl_stmt|;
+comment|/* Sample: Handles non-128 bit block sizes (if available) */
 block|}
 name|cipherInstance
 typedef|;
@@ -339,19 +333,27 @@ begin_comment
 comment|/*  Function prototypes  */
 end_comment
 
+begin_comment
+comment|/*  CHANGED: nothing 	TODO: implement the following extensions to setup 192-bit and 256-bit block lengths:         makeKeyEx():    parameter blockLen added                         -- this parameter is absolutely necessary if you want to                         setup the round keys in a variable block length setting  	    cipherInitEx(): parameter blockLen added (for obvious reasons)		  */
+end_comment
+
 begin_function_decl
 name|int
 name|rijndael_makeKey
 parameter_list|(
 name|keyInstance
 modifier|*
+name|key
 parameter_list|,
-name|BYTE
+name|u_int8_t
+name|direction
 parameter_list|,
 name|int
+name|keyLen
 parameter_list|,
 name|char
 modifier|*
+name|keyMaterial
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -362,11 +364,14 @@ name|rijndael_cipherInit
 parameter_list|(
 name|cipherInstance
 modifier|*
+name|cipher
 parameter_list|,
-name|BYTE
+name|u_int8_t
+name|mode
 parameter_list|,
 name|char
 modifier|*
+name|IV
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -377,17 +382,22 @@ name|rijndael_blockEncrypt
 parameter_list|(
 name|cipherInstance
 modifier|*
+name|cipher
 parameter_list|,
 name|keyInstance
 modifier|*
+name|key
 parameter_list|,
-name|BYTE
+name|u_int8_t
 modifier|*
+name|input
 parameter_list|,
 name|int
+name|inputLen
 parameter_list|,
-name|BYTE
+name|u_int8_t
 modifier|*
+name|outBuffer
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -398,17 +408,22 @@ name|rijndael_padEncrypt
 parameter_list|(
 name|cipherInstance
 modifier|*
+name|cipher
 parameter_list|,
 name|keyInstance
 modifier|*
+name|key
 parameter_list|,
-name|BYTE
+name|u_int8_t
 modifier|*
+name|input
 parameter_list|,
 name|int
+name|inputOctets
 parameter_list|,
-name|BYTE
+name|u_int8_t
 modifier|*
+name|outBuffer
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -419,17 +434,22 @@ name|rijndael_blockDecrypt
 parameter_list|(
 name|cipherInstance
 modifier|*
+name|cipher
 parameter_list|,
 name|keyInstance
 modifier|*
+name|key
 parameter_list|,
-name|BYTE
+name|u_int8_t
 modifier|*
+name|input
 parameter_list|,
 name|int
+name|inputLen
 parameter_list|,
-name|BYTE
+name|u_int8_t
 modifier|*
+name|outBuffer
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -440,17 +460,57 @@ name|rijndael_padDecrypt
 parameter_list|(
 name|cipherInstance
 modifier|*
+name|cipher
 parameter_list|,
 name|keyInstance
 modifier|*
+name|key
 parameter_list|,
-name|BYTE
+name|u_int8_t
 modifier|*
+name|input
 parameter_list|,
 name|int
+name|inputOctets
 parameter_list|,
-name|BYTE
+name|u_int8_t
 modifier|*
+name|outBuffer
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INTERMEDIATE_VALUE_KAT
+end_ifdef
+
+begin_function_decl
+name|int
+name|rijndael_cipherUpdateRounds
+parameter_list|(
+name|cipherInstance
+modifier|*
+name|cipher
+parameter_list|,
+name|keyInstance
+modifier|*
+name|key
+parameter_list|,
+name|u_int8_t
+modifier|*
+name|input
+parameter_list|,
+name|int
+name|inputLen
+parameter_list|,
+name|u_int8_t
+modifier|*
+name|outBuffer
+parameter_list|,
+name|int
+name|Rounds
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -461,7 +521,16 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __RIJNDAEL_API_FST_H */
+comment|/* INTERMEDIATE_VALUE_KAT */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  __RIJNDAEL_API_FST_H */
 end_comment
 
 end_unit
