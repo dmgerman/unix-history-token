@@ -4264,15 +4264,15 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
+name|swp_pager_async_iodone
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
 name|vm_mtx
-argument_list|)
-expr_stmt|;
-name|swp_pager_async_iodone
-argument_list|(
-name|bp
 argument_list|)
 expr_stmt|;
 name|splx
@@ -4430,6 +4430,12 @@ name|splvm
 argument_list|()
 expr_stmt|;
 comment|/* 	 * remove the mapping for kernel virtual 	 */
+name|mtx_lock
+argument_list|(
+operator|&
+name|vm_mtx
+argument_list|)
+expr_stmt|;
 name|pmap_qremove
 argument_list|(
 operator|(
@@ -4671,6 +4677,12 @@ argument_list|,
 name|bp
 operator|->
 name|b_npages
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_mtx
 argument_list|)
 expr_stmt|;
 comment|/* 	 * release the physical I/O buffer 	 */
