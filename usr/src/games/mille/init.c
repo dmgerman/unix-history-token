@@ -367,7 +367,9 @@ name|r
 argument_list|)
 expr_stmt|;
 name|die
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 block|}
 name|temp
@@ -972,7 +974,6 @@ elseif|else
 if|if
 condition|(
 operator|(
-operator|(
 name|Window
 operator|==
 name|W_FULL
@@ -981,13 +982,6 @@ name|Finished
 operator|)
 operator|^
 name|was_full
-operator|)
-operator|||
-name|pp
-operator|->
-name|was_finished
-operator|!=
-name|Finished
 condition|)
 block|{
 name|move
