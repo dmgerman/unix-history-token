@@ -6226,7 +6226,7 @@ name|void
 modifier|*
 name|args
 parameter_list|,
-name|short
+name|int
 name|flags
 parameter_list|,
 name|int

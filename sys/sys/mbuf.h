@@ -138,14 +138,14 @@ name|int
 name|mh_len
 decl_stmt|;
 comment|/* amount of data in this mbuf */
+name|int
+name|mh_flags
+decl_stmt|;
+comment|/* flags; see below */
 name|short
 name|mh_type
 decl_stmt|;
 comment|/* type of data in this mbuf */
-name|short
-name|mh_flags
-decl_stmt|;
-comment|/* flags; see below */
 block|}
 struct|;
 end_struct
@@ -1903,7 +1903,7 @@ parameter_list|,
 name|void
 modifier|*
 parameter_list|,
-name|short
+name|int
 parameter_list|,
 name|int
 parameter_list|)
