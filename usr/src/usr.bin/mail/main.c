@@ -39,7 +39,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	5.21 (Berkeley) %G%"
+literal|"@(#)main.c	5.22 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -115,11 +115,6 @@ name|ef
 decl_stmt|;
 name|char
 name|nosrc
-init|=
-literal|0
-decl_stmt|;
-name|char
-name|isedit
 init|=
 literal|0
 decl_stmt|;
@@ -642,35 +637,18 @@ comment|/* 	 * Ok, we are reading mail. 	 * Decide whether we are editing a mail
 if|if
 condition|(
 name|ef
-operator|!=
+operator|==
 name|NOSTR
 condition|)
-name|isedit
-operator|++
-expr_stmt|;
-else|else
 name|ef
 operator|=
 literal|"%"
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|ef
-operator|=
-name|expand
-argument_list|(
-name|ef
-argument_list|)
-operator|)
-operator|==
-name|NOSTR
-operator|||
 name|setfile
 argument_list|(
 name|ef
-argument_list|,
-name|isedit
 argument_list|)
 operator|<
 literal|0
@@ -681,31 +659,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* error already reported */
-if|if
-condition|(
-operator|!
-name|edit
-operator|&&
-name|msgCount
-operator|==
-literal|0
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"No mail for %s\n"
-argument_list|,
-name|myname
-argument_list|)
-expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|setjmp

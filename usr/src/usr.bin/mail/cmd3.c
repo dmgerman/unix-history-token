@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)cmd3.c	5.18 (Berkeley) %G%"
+literal|"@(#)cmd3.c	5.19 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -2642,10 +2642,6 @@ end_expr_stmt
 
 begin_block
 block|{
-name|char
-modifier|*
-name|cp
-decl_stmt|;
 if|if
 condition|(
 name|argv
@@ -2665,39 +2661,10 @@ return|;
 block|}
 if|if
 condition|(
-operator|(
-name|cp
-operator|=
-name|expand
-argument_list|(
-operator|*
-name|argv
-argument_list|)
-operator|)
-operator|==
-name|NOSTR
-condition|)
-return|return
-literal|1
-return|;
-name|strcpy
-argument_list|(
-name|prevfile
-argument_list|,
-name|mailname
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|setfile
 argument_list|(
-name|cp
-argument_list|,
-operator|*
 operator|*
 name|argv
-operator|!=
-literal|'%'
 argument_list|)
 operator|<
 literal|0

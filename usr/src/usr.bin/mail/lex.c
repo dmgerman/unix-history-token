@@ -15,7 +15,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)lex.c	5.17 (Berkeley) %G%"
+literal|"@(#)lex.c	5.18 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -60,15 +60,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Set up editing on the given file name.  * If isedit is true, we are considered to be editing the file,  * otherwise we are reading our mail which has signficance for  * mbox and so forth.  */
+comment|/*  * Set up editing on the given file name.  * If the first character of name is %, we are considered to be  * editing the file, otherwise we are reading our mail which has  * signficance for mbox and so forth.  */
 end_comment
 
 begin_macro
 name|setfile
 argument_list|(
 argument|name
-argument_list|,
-argument|isedit
 argument_list|)
 end_macro
 
@@ -92,6 +90,29 @@ name|struct
 name|stat
 name|stb
 decl_stmt|;
+name|char
+name|isedit
+init|=
+operator|*
+name|name
+operator|!=
+literal|'%'
+decl_stmt|;
+name|char
+modifier|*
+name|who
+init|=
+name|name
+index|[
+literal|1
+index|]
+condition|?
+name|name
+operator|+
+literal|1
+else|:
+name|myname
+decl_stmt|;
 specifier|static
 name|int
 name|shudclob
@@ -108,6 +129,23 @@ decl_stmt|;
 if|if
 condition|(
 operator|(
+name|name
+operator|=
+name|expand
+argument_list|(
+name|name
+argument_list|)
+operator|)
+operator|==
+name|NOSTR
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+if|if
+condition|(
+operator|(
 name|ibuf
 operator|=
 name|fopen
@@ -121,6 +159,18 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|isedit
+operator|&&
+name|errno
+operator|==
+name|ENOENT
+condition|)
+goto|goto
+name|nomail
+goto|;
 name|perror
 argument_list|(
 name|name
@@ -288,6 +338,13 @@ name|edit
 operator|=
 name|isedit
 expr_stmt|;
+name|strcpy
+argument_list|(
+name|prevfile
+argument_list|,
+name|mailname
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|name
@@ -389,6 +446,32 @@ name|sawcom
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|edit
+operator|&&
+name|msgCount
+operator|==
+literal|0
+condition|)
+block|{
+name|nomail
+label|:
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"No mail for %s\n"
+argument_list|,
+name|who
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 return|return
 operator|(
 literal|0
