@@ -11,7 +11,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"@(#)main.c	4.2 (Berkeley) %G%"
+literal|"@(#)main.c	4.3 (Berkeley) %G%"
 decl_stmt|;
 end_decl_stmt
 
@@ -451,13 +451,6 @@ specifier|extern
 name|int
 name|data
 decl_stmt|;
-name|int
-name|how
-init|=
-literal|1
-operator|+
-literal|1
-decl_stmt|;
 if|if
 condition|(
 name|connected
@@ -477,8 +470,9 @@ argument_list|(
 name|cout
 argument_list|)
 argument_list|,
-operator|&
-name|how
+literal|1
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 name|fclose
@@ -502,8 +496,9 @@ name|shutdown
 argument_list|(
 name|data
 argument_list|,
-operator|&
-name|how
+literal|1
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 operator|(
